@@ -4,8 +4,7 @@
 
 #set ($user = $data.User)
 #if (!$user.hasLoggedIn())
-<p class="alert">Sorry, you need to $link.setPage("Login.vm").setLabel("Login") first before
-trying to access this page.</p>
+<p class="alert">$l10n.ToAccessPage $link.setPage("Login.vm").setLabel("Login").</p>
 #else
 
 #set ($acl = $securityAdmin.getACL($user))

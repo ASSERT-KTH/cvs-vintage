@@ -6,10 +6,10 @@
 #set ($copyToModules = $user.getCopyToModules($scarabR.CurrentModule))
 #if (!$issueId || $issueId.length() == 0 || !$issue)
 
-  <p><strong class="alert">Sorry, the requested issue could not be found.</strong></p>
+  <p><strong class="alert">$l10n.CouldNotFindIssue</strong></p>
 
 #elseif ($copyToModules.isEmpty())
-  <p><strong class="alert">Sorry, there are no modules available as destination modules for this issue.</strong></p>
+  <p><strong class="alert">$l10n.NoDestinationModuleAvailable</strong></p>
 
 #else
 
@@ -22,7 +22,7 @@
 <input type="hidden" name="id" value="$issueId" />
 <input type="hidden" name="$scarabG.Constant.NEXT_TEMPLATE" value="MoveIssue2.vm" />
 
-<h3>Issue to be copied/moved</h3>
+<h3>$l10n.IssueToBeCopied</h3>
 <table width="100%" border="1" cellspacing="2" cellpadding="3">
  <tr>
 #if ($issue.DefaultTextAttributeValue)
@@ -31,8 +31,8 @@
 #if ($attVal)
   <th>$attVal.RModuleAttribute.DisplayValue</th>
 #end
-  <th>Date committed</th>
-  <th>Committed by</th>
+  <th>$l10n.DateCommitted</th>
+  <th>$l10n.CommittedBy</th>
  </tr>
  <tr class="a">
 #if ($attVal)
@@ -48,10 +48,10 @@
  </tr>
 </table>
 
-<h4>Copy / move information</h4>
+<h4>$l10n.CopyInfo</h4>
 <div class="axial"> <table border="1" cellspacing="2" cellpadding="3">
 <tr>
-<th width="120">Destination module</th>
+<th width="120">$l10n.DestinationModule</th>
 <td>
 #fieldErrorMsg($moveIssueGroup.ModuleId "")
 <select name="$moveIssueGroup.ModuleId.Key">
@@ -67,7 +67,7 @@
 </td>
 </tr>
 <tr>
-<th>Action</th>
+<th>$l10n.Action</th>
 #set ($userAction = $moveIssueGroup.Action)
 #if (!$userAction || $userAction.toString().length() == 0)
    #set ($userAction = 'copy')

@@ -7,7 +7,7 @@
 #if (!$issueId || $issueId.length() == 0 || !$issue)
 
 <h3>Error</h3>
-<p class="alert">Sorry, the requested issue could not be found.</p>
+<p class="alert">$l10n.CouldNotFindIssue</p>
 
 #else
 
@@ -42,7 +42,7 @@
 #set ($attrValues = $issue.AllAttributeValuesMap)
 #set ($attrInput = $intake.AttributeValue.mapTo($attVal))
 
-<h3>Issue to be copied/moved</h3>
+<h3>$l10n.IssueToBeCopied</h3>
 <table width="100%" border="1" cellspacing="2" cellpadding="3">
  <tr>
 #if ($issue.DefaultTextAttributeValue)
@@ -51,8 +51,8 @@
 #if ($attVal)
   <th>$attVal.RModuleAttribute.DisplayValue</th>
 #end
-  <th>Date committed</th>
-  <th>Committed by</th>
+  <th>$l10n.DateCommitted</th>
+  <th>$l10n.CommittedBy</th>
  </tr>
  <tr class="a">
 #if ($attVal)
@@ -71,21 +71,21 @@
 <div class="axial">
 <table border="1" cellspacing="2" cellpadding="3">
 <tr>
-<th width="120">Destination module</th>
+<th width="120">$l10n.DestinationModule</th>
 <td>$newModule.Name</td>
 <tr>
-<th>Action</th>
+<th>$l10n.Action</th>
 <td>$selectAction</td>
 </tr>
 </table>
 </div>
 
-<h3>Attribute mapping results</h3>
+<h3>$l10n.AttributeMappingResults</h3>
 <div class="sidebyside">
 <table border="1" cellspacing="2" cellpadding="3" width="100%">
  <tr>
-  <th>Attributes from issue to be copied/moved</th>
-  <th>Matching attributes in destination module</th>
+  <th>$l10n.AttributesToBeCopied</th>
+  <th>$l10n.MatchingAttributes</th>
  </tr>
  <tr>
   <td>
@@ -113,8 +113,8 @@
  <div class="datatablechild">
   <table width="100%" border="1" cellspacing="2" cellpadding="3">
    <tr>
-    <th>Attribute name (alias)</th>
-    <th>Value (list option/content)</th>
+    <th>$l10n.AttributeName</th>
+    <th>$l10n.Value</th>
    </tr>
    #foreach ($attr in $matchingAttributes)
     #indexedRows($velocityCount)
@@ -135,12 +135,12 @@
 </div>
 
 #if (!$orphanAttributes.isEmpty())
- <h3>Attributes that do not exist in destination Module (saved as comment)</h3>
+ <h3>$l10n.AttributesThatDoNotExist</h3>
  <table width="100%" border="1" cellspacing="2" cellpadding="3">
   <tr>
-   ##<th>Include</th>
-   <th>Attribute name</th>
-   <th>Option name</th>
+   ##<th>$l10n.Include</th>
+   <th>$l10n.AttributeName</th>
+   <th>$l10n.OptionName</th>
   </tr>
   #foreach($attr in $orphanAttributes)
    #indexedRows($velocityCount)
