@@ -245,7 +245,7 @@
     <jar jarfile="${build.dir}/client/deploy.jar"
          basedir="${build.classes.dir}"
          manifest="${etc.dir}/deploy.mf"
-         includes="org/jboss/jmx/interfaces/JMXAdaptor.class,org/jboss/jmx/client/Deployer.class,org/jboss/jmx/server/JMXAdaptorImpl_Stub.class,org/jboss/ejb/CacheKey.class,org/jboss/util/FastKey.class"
+         includes="org/jboss/jmx/interfaces/JMXAdaptor.class,org/jboss/jmx/client/Deployer.class,org/jboss/jmx/server/JMXAdaptorImpl_Stub.class,org/jboss/ejb/CacheKey.class,org/jboss/util/FastKey.class,org/jboss/deployment/DeploymentException.class,org/jboss/deployment/J2eeDeploymentException.class"
     />
 
     <jar jarfile="${build.dir}/client/stop.jar"
