@@ -3,7 +3,7 @@
                                  Release Notes
                                  =============
 
-$Id: RELEASE-NOTES-3.3.1.txt,v 1.2 2001/11/14 03:02:24 larryi Exp $
+$Id: RELEASE-NOTES-3.3.1.txt,v 1.3 2001/11/17 06:34:08 billbarker Exp $
 
 
 This document describes the changes that have been made since the
@@ -32,6 +32,8 @@ Bug No.  Description
          if you have Apache forwarding SSL requests to a Tomcat that doesn't
          have JSSE installed.
 
+	 Fixed logic for response.encodeURL() so that it will work correctly 
+	 if the input URL includes an anchor tag.
 
 Server:
 
