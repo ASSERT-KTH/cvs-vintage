@@ -1,4 +1,4 @@
-// $Id: FigClass.java,v 1.75 2003/09/20 13:10:46 bobtarling Exp $
+// $Id: FigClass.java,v 1.76 2003/10/12 00:32:39 d00mst Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -26,7 +26,7 @@
 // Classes: FigClass
 // Original Author: abonner
 
-// $Id: FigClass.java,v 1.75 2003/09/20 13:10:46 bobtarling Exp $
+// $Id: FigClass.java,v 1.76 2003/10/12 00:32:39 d00mst Exp $
 
 // 21 Mar 2002: Jeremy Bennett (mail@jeremybennett.com). Fix for ever
 // increasing vertical size of classes with stereotypes (issue 745).
@@ -1001,8 +1001,10 @@ public class FigClass extends FigNodeModelElement {
         if (me.isConsumed())
             return;
         super.mouseClicked(me);
+	if ((me.getModifiersEx() & MouseEvent.SHIFT_DOWN_MASK) != 0
+	    && TargetManager.getInstance().getTargets().size() > 0)
+	    return;
 
-        boolean targetIsSet = false;
         int i = 0;
         Editor ce = Globals.curEditor();
         Selection sel = ce.getSelectionManager().findSelectionFor(this);
@@ -1018,8 +1020,6 @@ public class FigClass extends FigNodeModelElement {
 		* (me.getY() - f.getY() - 3)
 		/ _attrVec.getHeight();
             if (i >= 0 && i < v.size() - 1) {
-                targetIsSet = true;
-                //    me.consume();
                 f = (Fig) v.elementAt(i + 1);
                 ((CompartmentFigText) f).setHighlighted(true);
                 highlightedFigText = (CompartmentFigText) f;
@@ -1031,19 +1031,12 @@ public class FigClass extends FigNodeModelElement {
 		* (me.getY() - f.getY() - 3)
 		/ _operVec.getHeight();
             if (i >= 0 && i < v.size() - 1) {
-                targetIsSet = true;
-                //    me.consume();
                 f = (Fig) v.elementAt(i + 1);
                 ((CompartmentFigText) f).setHighlighted(true);
                 highlightedFigText = (CompartmentFigText) f;
                 TargetManager.getInstance().setTarget(f);
             }
         }
-        
-        if (targetIsSet == false)
-	    TargetManager.getInstance().setTarget(getOwner());
-            
-
     }
 
     /**

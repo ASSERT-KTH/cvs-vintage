@@ -1,4 +1,4 @@
-// $Id: FigInterface.java,v 1.50 2003/09/20 13:10:46 bobtarling Exp $
+// $Id: FigInterface.java,v 1.51 2003/10/12 00:32:39 d00mst Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -417,7 +417,10 @@ public class FigInterface extends FigNodeModelElement {
 
     public void mouseClicked(MouseEvent me) {
         super.mouseClicked(me);
-        boolean targetIsSet = false;
+	if ((me.getModifiersEx() & MouseEvent.SHIFT_DOWN_MASK) != 0
+	    && TargetManager.getInstance().getTargets().size() > 0)
+	    return;
+
         int i = 0;
         Editor ce = Globals.curEditor();
         Selection sel = ce.getSelectionManager().findSelectionFor(this);
@@ -433,17 +436,12 @@ public class FigInterface extends FigNodeModelElement {
 		* (me.getY() - f.getY() - 3)
 		/ _operVec.getHeight();
             if (i >= 0 && i < v.size() - 1) {
-                targetIsSet = true;
                 me.consume();
                 f = (Fig) v.elementAt(i + 1);
                 ((CompartmentFigText) f).setHighlighted(true);
                 highlightedFigText = (CompartmentFigText) f;
                 TargetManager.getInstance().setTarget(f);
             }
-        }
-        if (targetIsSet == false) {
-            me.consume();
-            TargetManager.getInstance().setTarget(getOwner());
         }
     }
 
