@@ -20,6 +20,7 @@ import org.columba.mail.command.FolderCommandReference;
 import org.columba.mail.config.FolderItem;
 import org.columba.mail.folder.FolderTreeNode;
 import org.columba.mail.folder.command.ExpungeFolderCommand;
+import org.columba.mail.folder.virtual.VirtualFolder;
 import org.columba.mail.gui.frame.AbstractMailFrameController;
 import org.columba.mail.gui.tree.selection.TreeSelectionChangedEvent;
 import org.columba.mail.util.MailResourceLoader;
@@ -82,14 +83,11 @@ public class ExpungeFolderAction
 			if (folder != null) {
 
 				FolderItem item = folder.getFolderItem();
-				/*
-				if (item.get("property", "accessrights").equals("user"))
-					setEnabled(true);
-				else
-					setEnabled(false);
-				*/
 				
-				setEnabled(true);
+				if ( folder instanceof VirtualFolder )
+					setEnabled(false);
+				else
+					setEnabled(true);
 			}
 		} else
 			setEnabled(false);
