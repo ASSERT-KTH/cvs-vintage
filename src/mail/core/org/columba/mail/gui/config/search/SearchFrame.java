@@ -84,7 +84,7 @@ public class SearchFrame extends JDialog implements ActionListener {
 		JPanel bottom = new JPanel(new BorderLayout());
 		bottom.setBorder(BorderFactory.createEmptyBorder(17, 0, 0, 0));
 		JPanel buttonPanel = new JPanel(new GridLayout(1, 3, 5, 0));
-		searchButton = new JButton("Search");
+		searchButton = new JButton(MailResourceLoader.getString("dialog", "filter", "search"));
 		searchButton.setIcon(ImageLoader.getImageIcon("stock_search-16.png"));
 		searchButton.addActionListener(this);
 		searchButton.setActionCommand("SEARCH");
