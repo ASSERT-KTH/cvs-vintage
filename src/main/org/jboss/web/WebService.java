@@ -17,14 +17,14 @@ import java.util.Enumeration;
 
 import javax.management.*;
 
-import org.jboss.util.ServiceMBeanSupport;
+import org.jboss.system.ServiceMBeanSupport;
 
 /** The WebService implementation. It configures a WebServer instance to
  perform dynamic class and resource loading.
 
  *   @author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>.
  *   @author <a href="mailto:Scott.Stark@jboss.org">Scott Stark</a>.
- *   @version $Revision: 1.9 $
+ *   @version $Revision: 1.10 $
  */
 public class WebService
    extends ServiceMBeanSupport
