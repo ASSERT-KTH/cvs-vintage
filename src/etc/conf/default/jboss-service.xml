@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE server>
-<!-- $Id: jboss-service.xml,v 1.61 2002/08/06 04:14:47 chirino Exp $ -->
+<!-- $Id: jboss-service.xml,v 1.62 2002/08/13 09:10:31 lqd Exp $ -->
 
 <!-- ===================================================================== -->
 <!--                                                                       -->
@@ -123,6 +123,13 @@
     <attribute name="ValidateDTDs">false</attribute>
     <attribute name="MetricsEnabled">false</attribute>
     <attribute name="VerifierVerbose">true</attribute>
+
+    <!--
+        StrictVerifier: Setting this to 'true' will cause all deployments
+        to fail when the Verifier detected a problem with the contained
+        Beans.
+    -->
+    <attribute name="StrictVerifier">true</attribute>
 
     <depends>jboss:service=TransactionManager</depends>
     <depends>jboss:service=WebService</depends>

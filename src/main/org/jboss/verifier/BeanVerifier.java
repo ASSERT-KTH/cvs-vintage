@@ -19,15 +19,13 @@ package org.jboss.verifier;
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  *
  * This package and its source code is available at www.jboss.org
- * $Id: BeanVerifier.java,v 1.14 2002/06/04 15:18:09 lqd Exp $
+ * $Id: BeanVerifier.java,v 1.15 2002/08/13 09:10:31 lqd Exp $
  */
 
  
 // standard imports
 import java.util.Iterator;
 import java.net.URL;
-import java.beans.beancontext.BeanContextServicesSupport;
-
 
 // non-standard class dependencies
 import org.jboss.verifier.strategy.VerificationContext;
@@ -47,27 +45,28 @@ import org.jboss.metadata.EntityMetaData;
 import org.jboss.metadata.SessionMetaData;
 import org.jboss.metadata.MessageDrivenMetaData;
 
-
 /**
  * Attempts to verify the spec compliance of the beans in a given
- * EJB-JAR file. Works against EJB spec 1.1. Built for use in JBoss
- * project.
+ * EJB-JAR file. Works against EJB spec 1.1 and 2.0. Built for use in
+ * JBoss project.
  *
  * @see     org.jboss.verifier.strategy.VerificationStrategy
  * @see     org.jboss.verifier.factory.VerificationEventFactory
  *
  * @author  <a href="mailto:juha.lindfors@jboss.org">Juha Lindfors</a>
- * @version $Revision: 1.14 $
+ * @version $Revision: 1.15 $
  * @since   JDK 1.3
  */
 public class BeanVerifier
    implements VerificationContext
 {
    private ApplicationMetaData ejbMetaData = null;
-   private URL  ejbURL = null;
+   private URL ejbURL = null;
    private ClassLoader ejbClassLoader = null;
 
    private VerificationStrategy verifier = null;
+
+   private boolean success = true;
 
    /*
     * Support class which handles the event notification logic.
@@ -126,7 +125,7 @@ public class BeanVerifier
 
          if (bean.isEntity())
          {
-               verifier.checkEntity((EntityMetaData)bean);
+            verifier.checkEntity((EntityMetaData)bean);
          }
          else if (bean.isSession())
          {
@@ -134,9 +133,20 @@ public class BeanVerifier
          }
          else
          {
-               verifier.checkMessageBean((MessageDrivenMetaData)bean);
+            verifier.checkMessageBean((MessageDrivenMetaData)bean);
          }
       }
+   }
+
+   /**
+    * Check if the Verifier was successful
+    *
+    * @return <code>true</code> if all Beans have been verified,
+    *   <code>false</code> otherwise.
+    */
+   public boolean getSuccess()
+   {
+      return success;
    }
 
    /*
@@ -163,6 +173,8 @@ public class BeanVerifier
 
    public void fireSpecViolation( VerificationEvent event )
    {
+      // A Spec Violation has been found. Mark as unsuccessful.
+      success = false;
       events.fireSpecViolation(event);
    }
 
@@ -202,15 +214,20 @@ public class BeanVerifier
     */
    protected void setVerifier( String version )
    {
-      if (VERSION_1_1.equals(version))
+      if( VERSION_1_1.equals(version) )
+      {
          verifier = new EJBVerifier11(this);
-      else if (VERSION_2_0.equals(version))
+      }
+      else if( VERSION_2_0.equals(version) )
+      {
          verifier = new EJBVerifier20(this);
+      }
       else
+      {
          throw new IllegalArgumentException( UNRECOGNIZED_VERSION +
             ": " + version);
-    }
-
+      }
+   }
 
    /*
     * accessor for reference to the verification strategy in use
@@ -219,7 +236,6 @@ public class BeanVerifier
    {
       return verifier;
    }
-
 
    /*
     * String constants
