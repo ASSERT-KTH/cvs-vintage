@@ -5,21 +5,13 @@ $page.setTitle("Assign users")
 #set ($module = $scarabR.CurrentModule)
 #set ($issueType = $scarabR.CurrentIssueType)
 #set ($userAttrs = $module.getUserAttributes($issueType)) 
-
-#set ($issueIdList = $data.Parameters.getString("issueIdList"))
-#if ($issueIdList)
- #set ($issueList = $issueIdList)
-#else
- #set ($issueList = $data.Parameters.getStrings("issue_ids"))
-#end
-
-<h2>$page.Title</h2>
+#set ($issueList = $data.Parameters.getStrings("issue_ids"))
 
 #if ($userAttrs.isEmpty())
  <p><strong class="alert">
   There are no active user attributes to which to assign users.
  </strong></p>
-#elseif (!$issueList || $issueList.isEmpty())
+#elseif (!$issueList )
  <p><strong class="alert">
  Please select an issue or issues with which to associate users.
  </strong></p>
@@ -31,9 +23,8 @@ $page.setTitle("Assign users")
 
 <form action="$actionLink" method="post">
 <input type="hidden" name="action" value="AssignIssue" />
-#foreach ($id in $issueList)
-  <input type="hidden" name="issue_ids" value="$id" />
-  <input type="hidden" name="id" value="$id" />
+#foreach ($issueId in $issueList)
+  <input type="hidden" name="issue_ids" value="$issueId" />
 #end
   
 <div class="functnbar">
@@ -41,7 +32,14 @@ $page.setTitle("Assign users")
 </div>
 </form>
 
-<p><a href="$link.setPage("AssignIssue.vm")#add.setPathInfo("issueList" ,"$issueList" )">Click here</a> to select users to associate with this issue</p>
+#set ($mylink = $link.setPage("AssignIssue.vm"))
+
+#foreach ($issueId in $issueList)
+   #set ($mylink = $mylink.addPathInfo("issue_ids", $issueId))
+#end
+$mylink
+
+<p><a href="${mylink}#add">Click here</a> to select users to associate with this issue</p>
 		
 
 ##ASSIGNEE LIST
@@ -51,8 +49,8 @@ $page.setTitle("Assign users")
 <form action="$actionLink" method="post">
 <input type="hidden" name="action" value="AssignIssue" />
 <input type="hidden" name="id" value="$issue.UniqueId" />
-#foreach ($id in $issueList)
-  <input type="hidden" name="issue_ids" value="$id" />
+#foreach ($issueId in $issueList)
+  <input type="hidden" name="issue_ids" value="$issueId" />
 #end
 
 <h3>Personnel associated with the issue $issue.UniqueId</h3>
@@ -109,29 +107,26 @@ $intake.declareGroups()
 
 <form action="$actionLink" method="post">
 <input type="hidden" name="action" value="AssignIssue" />
-#foreach ($id in $issueList)
- <input type="hidden" name="issue_ids" value="$id" />
- <input type="hidden" name="id" value="$id" />
+#foreach ($issueId in $issueList)
+ <input type="hidden" name="issue_ids" value="$issueId" />
 #end
 <div class="functnbar2">
 <input type="submit" value="Done" name="eventSubmit_doDone" />
 </div>
 </form>
 
-<a name="add"></a>
 
 
 ## USER SEARCH
 <form action="$actionLink" method="post">
 <input type="hidden" name="action" value="AssignIssue" />
-#foreach ($id in $issueList)
- <input type="hidden" name="issue_ids" value="$id" />
- <input type="hidden" name="id" value="$id" />
+#foreach ($issueId in $issueList)
+ <input type="hidden" name="issue_ids" value="$issueId" />
 #end
 
-#set ($searchString = $data.Parameters.getString("searchString"))
+#set ($searchString = $data.Parameters.getString("searchString" , ""))
 
-<h3>Users</h3>
+<a name="add"><h3>Users</h3></a> 
 <div class="axial">
 <table border="0" cellspacing="2" cellpadding="3">
   <tr>
