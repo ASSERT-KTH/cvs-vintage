@@ -15,6 +15,9 @@ import java.sql.SQLException;
 import java.util.Iterator;
 import java.util.List;
 import javax.sql.DataSource;
+import javax.transaction.Status;
+import javax.transaction.Transaction;
+import javax.transaction.TransactionManager;
 
 import org.jboss.ejb.plugins.cmp.jdbc.bridge.JDBCCMRFieldBridge;
 import org.jboss.ejb.plugins.cmp.jdbc.bridge.JDBCEntityBridge;
@@ -29,7 +32,7 @@ import org.jboss.logging.Logger;
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
  * @author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
  * @author <a href="mailto:justin@j-m-f.demon.co.uk">Justin Forder</a>
- * @version $Revision: 1.13 $
+ * @version $Revision: 1.14 $
  */
 public class JDBCStopCommand {
 
@@ -98,21 +101,24 @@ public class JDBCStopCommand {
       }
 
       // since we use the pools, we have to do this within a transaction
-      try 
-      {
-         manager.getContainer().getTransactionManager().begin ();         
-      }
-      catch (Exception e)
-      {
-         log.error("Could not get transaction to drop table in", e);
-         return;
-      } // end of try-catch
+
+      // suspend the current transaction
+      TransactionManager tm = manager.getContainer().getTransactionManager();
+      Transaction oldTransaction = null;
       try {
-         // get the connection
-         con = dataSource.getConnection();
+         oldTransaction = tm.suspend();
+      } catch(Exception e) {
+         log.error("Could not suspend current transaction before drop table. " +
+               "'" + tableName + "' will not be dropped.", e);
+      }
+
+      try {
+         // start the new transaction
+         tm.begin();
+
          Statement statement = null;
-         try {        
-            // create the statement
+         try {
+            con = dataSource.getConnection();
             statement = con.createStatement();
          
             // execute sql
@@ -124,16 +130,33 @@ public class JDBCStopCommand {
          {
             JDBCUtil.safeClose(statement);
             JDBCUtil.safeClose(con);
-         } // end of finally
-         manager.getContainer().getTransactionManager().commit ();
-      } 
-      catch(Exception e) 
-      {
+         }
+
+         // commit the new transaction
+         tm.commit();
+      } catch(Exception e) {
          log.debug("Could not drop table " + tableName);
+
+         // try to rollback the new transaction
          try {
-            manager.getContainer().getTransactionManager().rollback ();
+            if(tm.getStatus() != Status.STATUS_NO_TRANSACTION) {
+               tm.rollback();
+            }
          } catch(Exception _e) {
             log.error("Could not roll back transaction: ", e);
+         }
+      } finally {
+         try {
+            // suspend the new transaction
+            tm.suspend();
+
+            // resume the old transaction
+            if(oldTransaction != null) {
+               tm.resume(oldTransaction);
+            }
+         } catch(Exception e) {
+            log.error("Could not reattach original transaction after " +
+                  "drop table");
          }
       }
    }

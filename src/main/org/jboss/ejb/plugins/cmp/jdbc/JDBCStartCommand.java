@@ -43,7 +43,7 @@ import org.jboss.logging.Logger;
  * @author <a href="mailto:shevlandj@kpi.com.au">Joe Shevland</a>
  * @author <a href="mailto:justin@j-m-f.demon.co.uk">Justin Forder</a>
  * @author <a href="mailto:michel.anke@wolmail.nl">Michel de Groot</a>
- * @version $Revision: 1.25 $
+ * @version $Revision: 1.26 $
  */
 public class JDBCStartCommand {
 
@@ -159,10 +159,7 @@ public class JDBCStartCommand {
          Connection con = null;
          Statement statement = null;
          try {        
-            // get the connection
             con = dataSource.getConnection();
-
-            // create the statement
             statement = con.createStatement();
          
             // execute sql
