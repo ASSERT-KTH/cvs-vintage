@@ -165,16 +165,27 @@ public abstract class AbstractFolder extends AddressbookTreeNode implements
 		return cacheStorage.getContactItemMap();
 	}
 
-	public boolean exists(String email) throws Exception{
+	/**
+	 * Check if contact exists with email or displayname.
+	 * 
+	 * @param contact		given contact email or displayname
+	 * @return				contact UID, if exists. Otherwise, null
+	 * @throws Exception
+	 */
+	public Object exists(String contact) throws Exception{
 		Iterator it = getContactItemMap().iterator();
 		while ( it.hasNext()) {
 			ContactItem item = (ContactItem) it.next();
 			String address = item.getAddress();
+			String displayname = item.getDisplayName();
 			
-			if ( address.equals(email)) return true;
+			if ( address.equalsIgnoreCase(contact)) return item.getUid();
+			if ( displayname.equalsIgnoreCase(contact)) return item.getUid();
+			
 		}
-		return false;
+		return null;
 	}
+	
 
 	/**
 	 * save header-cache (HeaderItemList)

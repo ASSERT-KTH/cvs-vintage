@@ -27,6 +27,8 @@ public interface ContactStorage {
 
 	int count();
 
+	Object exists(String contact) throws Exception;
+	
 	boolean exists(Object uid) throws Exception;
 
 	Contact get(Object uid) throws Exception;

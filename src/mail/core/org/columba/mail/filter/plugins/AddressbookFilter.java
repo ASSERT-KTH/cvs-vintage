@@ -53,12 +53,15 @@ public class AddressbookFilter extends AbstractFilter {
         org.columba.addressbook.folder.AbstractFolder addressbook = org.columba.addressbook.facade.FolderFacade
                 .getCollectedAddresses();
 
-        if (addressbook.exists(address.getMailAddress())) return true;
+        Object contactUid = addressbook.exists(address.getMailAddress());
+        if (contactUid != null) return true;
 
         addressbook = org.columba.addressbook.facade.FolderFacade
                 .getAddressbook(101);
 
-        if (addressbook.exists(address.getMailAddress())) return true;
+        contactUid = addressbook.exists(address.getMailAddress());
+        
+        if (contactUid != null) return true;
 
         return false;
     }

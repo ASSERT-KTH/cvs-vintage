@@ -21,12 +21,16 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Vector;
 
+import org.columba.addressbook.folder.ContactStorage;
 import org.columba.addressbook.folder.GroupFolder;
 import org.columba.addressbook.main.AddressbookInterface;
+import org.columba.addressbook.model.Contact;
 import org.columba.addressbook.model.ContactItem;
 import org.columba.addressbook.model.ContactItemMap;
 import org.columba.addressbook.model.HeaderItem;
 import org.columba.addressbook.model.HeaderItemList;
+import org.columba.addressbook.model.VCARD;
+import org.columba.core.main.MainInterface;
 
 /**
  * @version 1.0
@@ -38,11 +42,11 @@ public class ListParser {
 	}
 
 	/**
-	 * Create list from String containing comma-separated email
-	 * addresses.
+	 * Create list from String containing comma-separated email addresses.
 	 * 
-	 * @param str		string
-	 * @return			list
+	 * @param str
+	 *            string
+	 * @return list
 	 */
 	public static List createListFromString(String str) {
 		List result = new Vector();
@@ -86,11 +90,12 @@ public class ListParser {
 	}
 
 	/**
-	 * Flatten mixed list containing contacts and groups to a 
-	 * new list containing only contacts.
+	 * Flatten mixed list containing contacts and groups to a new list
+	 * containing only contacts.
 	 * 
-	 * @param list		mixed list
-	 * @return			list containing only contacts
+	 * @param list
+	 *            mixed list
+	 * @return list containing only contacts
 	 */
 	public static List flattenList(List list) {
 		List result = new Vector();
@@ -123,7 +128,48 @@ public class ListParser {
 				}
 			} else {
 				// contact item
-				result.add(s);
+
+				// check if valid email address
+				if ( AddressParser.isValid(s)) {
+					// add address to list
+					result.add(s);
+					continue;
+				}
+				
+				// this is not a valid email address
+				// -> check if its a contact displayname
+				// -> if so, retrieve email address from contact folder
+				
+				// look into both folders
+				ContactStorage personal = (ContactStorage) AddressbookInterface.addressbookTreeModel
+						.getFolder(101);
+				ContactStorage collected = (ContactStorage) AddressbookInterface.addressbookTreeModel
+						.getFolder(102);
+
+				// try to find a matching contact item
+				Contact item = null;
+				try {
+
+					Object uid = personal.exists(s);
+					if (uid != null) {
+						item = personal.get(uid);
+					}
+
+					uid = collected.exists(s);
+					if (uid != null)
+						item = collected.get(uid);
+
+				} catch (Exception e) {
+					if (MainInterface.DEBUG)
+						e.printStackTrace();
+				}
+
+				// if match found
+				if (item != null)
+					result
+							.add(item.get(VCARD.EMAIL,
+									VCARD.EMAIL_TYPE_INTERNET));
+
 			}
 
 		}
@@ -132,11 +178,12 @@ public class ListParser {
 	}
 
 	/**
-	 * Create list containing only strings from a HeaderItemList 
-	 * containing HeaderItem objects.
+	 * Create list containing only strings from a HeaderItemList containing
+	 * HeaderItem objects.
 	 * 
-	 * @param list		HeaderItemList containing HeaderItem objects
-	 * @return			list containing only strings
+	 * @param list
+	 *            HeaderItemList containing HeaderItem objects
+	 * @return list containing only strings
 	 */
 	public static List createStringListFromItemList(HeaderItemList list) {
 		List result = new Vector();
@@ -149,48 +196,17 @@ public class ListParser {
 			}
 
 			result.add(item.getDisplayName());
-
-			/*
-			 * if (item.isContact()) { String address = ((ContactItem)
-			 * item).getAddress();
-			 * 
-			 * 
-			 * if (address == null) { address = ((ContactItem)
-			 * item).getDisplayName(); }
-			 * 
-			 * if (address == null) { continue; }
-			 * 
-			 * result.add(address);
-			 *  } else {
-			 *  // group item GroupItem groupItem = (GroupItem) item; int uid =
-			 * groupItem.getFolderUid(); GroupFolder folder = (GroupFolder)
-			 * AddressbookInterface.addressbookTreeModel .getFolder(uid);
-			 * 
-			 * ContactItemMap map = null; try { map =
-			 * folder.getContactItemMap(); } catch (Exception e) { // TODO
-			 * Auto-generated catch block e.printStackTrace(); } if (map ==
-			 * null) continue;
-			 * 
-			 * Iterator it2 = map.iterator(); while (it2.hasNext()) {
-			 * ContactItem i = (ContactItem) it2.next(); String address =
-			 * i.getAddress();
-			 * 
-			 * if (address == null) { continue; }
-			 * 
-			 * result.add(address); }
-			 *  }
-			 */
 		}
 
 		return result;
 	}
 
 	/**
-	 * Create comma-separated String representation of a
-	 * list of String objects.
+	 * Create comma-separated String representation of a list of String objects.
 	 * 
-	 * @param list		list containing String objects
-	 * @return			String representation
+	 * @param list
+	 *            list containing String objects
+	 * @return String representation
 	 */
 	public static String createStringFromList(List list) {
 		StringBuffer output = new StringBuffer();
