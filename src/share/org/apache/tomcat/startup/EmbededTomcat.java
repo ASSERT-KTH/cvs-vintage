@@ -46,18 +46,29 @@ public class EmbededTomcat {
     protected Vector requestInt=null;
     protected Vector connectors=new Vector();
 
+    ClassLoader parentClassLoader;
+    ClassLoader appsClassLoader;
+    ClassLoader commonClassLoader;
+    ClassLoader containerClassLoader;
+    String home=".";
+    String install=null;
+    
+    boolean sandbox=false;
+    
     // configurable properties
     protected int debug=0;
     
     public EmbededTomcat() {
     }
 
-    // -------------------- Properties - set before start
-
+    // -------------------- 
+    
     public ContextManager getContextManager() {
 	return contextM;
     }
     
+    // -------------------- Properties - set before start
+
     /** Set debugging - must be called before anything else
      */
     public void setDebug( int debug ) {
@@ -65,7 +76,49 @@ public class EmbededTomcat {
 	contextM.setDebug( debug );
     }
 
+    public void setParentClassLoader( ClassLoader cl ) {
+	this.parentClassLoader=cl;
+    }
 
+    public void setCommonClassLoader( ClassLoader cl ) {
+	this.commonClassLoader=cl;
+    }
+
+    public void setAppsClassLoader( ClassLoader cl ) {
+	this.appsClassLoader=cl;
+    }
+
+    public void setContainerClassLoader( ClassLoader cl ) {
+	this.containerClassLoader=cl;
+    }
+    
+
+
+    public void setHome( String s ) {
+	home=s;
+	//System.getProperties().put(ContextManager.TOMCAT_HOME, s);
+	contextM.setHome( s );
+    }
+
+    public void setInstall(String install) {
+	this.install=install;
+	//System.getProperties().put( ContextManager.TOMCAT_INSTALL, install);
+	contextM.setInstallDir( install );
+    }
+
+    /** Tomcat will run in a sandboxed environment, under SecurityManager
+     */
+    public void setSandbox( boolean b ) {
+	sandbox=b;
+    }
+
+    // -------------------- Access tomcat state --------------------
+
+    public boolean isInitialized() {
+	return initialized;
+    }
+
+    
     // -------------------- Application Modules --------------------
 
     /** This is an adapter object that provides callbacks into the
@@ -146,7 +199,7 @@ public class EmbededTomcat {
 
     // -------------------- Context add/remove --------------------
 
-    boolean initialized=false;
+    protected boolean initialized=false;
     
     /** Add and init a context. Must be called after all modules are added.
      */
@@ -234,6 +287,18 @@ public class EmbededTomcat {
     protected void initContextManager()
 	throws TomcatException 
     {
+	if( initialized ) return;
+	if ( sandbox )
+	    contextM.setProperty( "sandbox", "true");
+	
+	ClassLoader cl=parentClassLoader;
+	
+	if (cl==null) cl=this.getClass().getClassLoader();
+	contextM.setParentLoader(cl);
+	contextM.setCommonLoader(commonClassLoader);
+	contextM.setContainerLoader(containerClassLoader);
+	contextM.setAppsLoader(appsClassLoader);
+	
 	if(requestInt==null)  initDefaultInterceptors();
 	
 	for( int i=0; i< requestInt.size() ; i++ ) {
@@ -250,16 +315,172 @@ public class EmbededTomcat {
 	initialized=true;
     }
 
-    // no AutoSetup !
+
+    protected void initDefaultInterceptors() {
+	addModules( getDefaultModules() );
+    }
+
+    // -------------------- execute() --------------------
+
+    /** Main and Ant action. It's expected to be overriden with completely
+	different functionality - do not use super.execute(), but call
+	directly the methods you need.
+     */
+    public void execute() throws Exception {
+	processArgs(args);
+	
+	// Configure the server
+	tryConfigSnapshot();
+	// 	tryProperties();
+	// 	tryServerXml();
+	// 	tryDefault();
+	
+	// Set context manager properties
+
+	// Init 
+	if( ! initialized ) {
+	    initContextManager();
+
+	    // Save config for later use
+	    writeSnapshot();
+	}
+	
+	// Start
+	start();
+    }
+
+    // -------------------- Snapshot --------------------
+    String confSnap="tomcatconfig.snapshot";
+    boolean modified=true;
+    protected boolean fastStart=false; // default
+    
+    /** Save a snapshot of the server config, for fast start
+     */
+    public void writeSnapshot() throws TomcatException {
+	if( fastStart && modified ) {
+	    try {
+		long time1=System.currentTimeMillis();
+		OutputStream out=
+		    new BufferedOutputStream(new FileOutputStream( confSnap ));
+		ObjectOutputStream oos=new ObjectOutputStream( out );
+		oos.writeObject( contextM );
+		oos.close();
+		long time2=System.currentTimeMillis();
+		log( "Snapshot save time " + ( time2-time1));
+	    } catch( IOException ex ) {
+		log("Error saving state ", ex );
+	    }
+	}
+    }
+
+    public void tryConfigSnapshot() {
+	if( fastStart ) { // && ! modified
+	    try {
+		long time1=System.currentTimeMillis();
+			
+		File f=new File( confSnap );
+		if( ! f.exists() ) {
+		    return;
+		}
+		// Check if f is newer than server.xml, etc
+		
+		InputStream in=
+		    new BufferedInputStream(new FileInputStream( confSnap ));
+		ObjectInputStream ois=new ObjectInputStream( in );
+		contextM=(ContextManager)ois.readObject();
+
+		// check dependencies
+		
+		// Post read fixes
+		ois.close();
+		long time2=System.currentTimeMillis();
+		System.out.println( "Snapshot read time " + ( time2-time1));
+		initialized=true;
+	    } catch( Exception ex ) {
+		ex.printStackTrace();
+		log( "Error reading snapshot ", ex );
+	    }
+	}
+    }
+
+    private boolean isFastStart() {
+	return fastStart && ! modified;
+    }
+
+    private void checkConfigSnapshot() {
+	try {
+	    FileInputStream in=new FileInputStream( confSnap );
+	    ObjectInputStream ois=new ObjectInputStream( in );
+	    ContextManager cm=(ContextManager)ois.readObject();
+	} catch( Exception ex ) {
+	    log("Error reading state ", ex );
+	}
+	modified=true;
+    }
+    
+
+
+    // -------------------- Main --------------------
+    protected String args[]=null;
+
+    public void setArgs( String args[] ) {
+	this.args=args;
+    }
+
+    public boolean processArgs(String args[]) {
+	for (int i = 0; i < args.length; i++) {
+	    String arg = args[i];
+
+	    if (arg.equals("-sandbox")) {
+		sandbox=true;
+	    } else if (arg.equals("-fastStart")) {
+		fastStart=true;
+	    } else if (arg.equals("-h") || arg.equals("-home")) {
+		i++;
+		if (i < args.length)
+		    setHome( args[i] );
+		else
+		    return false;
+	    } else if (arg.equals("-i") || arg.equals("-install")) {
+		i++;
+		if (i < args.length)
+		    setInstall( args[i] );
+		else
+		    return false;
+	    }
+	}
+	return true;
+    }
+    
+    public static void main(String args[] ) {
+	EmbededTomcat tomcat=new EmbededTomcat();
+	tomcat.fastStart=true;
+	try {
+	    tomcat.setArgs( args );
+            tomcat.execute();
+	} catch(Exception ex ) {
+	    tomcat.log("main", ex);
+	    System.exit(1);
+	}
+    }
+
+    // -------------------- Default modules ( hardcoded )
+
+    /** Override this method to set a different set of modules
+     */
+    protected String[] getDefaultModules() {
+	return moduleSet1;
+    }
 
     protected String moduleSet1[] = {
 	"org.apache.tomcat.modules.config.PathSetter", 
 	"org.apache.tomcat.facade.WebXmlReader",
 	"org.apache.tomcat.modules.config.PolicyInterceptor",
-	"org.apache.tomcat.modules.config.LoaderInterceptor12",
+	"org.apache.tomcat.modules.config.LoaderInterceptor11",
 	"org.apache.tomcat.modules.generators.ErrorHandler",
 	"org.apache.tomcat.modules.config.WorkDirSetup",
 	"org.apache.tomcat.modules.session.SessionId",
+	"org.apache.tomcat.modules.mappers.DecodeInterceptor",
 	"org.apache.tomcat.modules.mappers.SimpleMapper1",
 	"org.apache.tomcat.modules.generators.InvokerInterceptor",
 	"org.apache.tomcat.facade.JspInterceptor",
@@ -269,7 +490,7 @@ public class EmbededTomcat {
 	"org.apache.tomcat.facade.Servlet22Interceptor",
 	"org.apache.tomcat.modules.aaa.AccessInterceptor",
 	"org.apache.tomcat.modules.aaa.CredentialsInterceptor",
-	"org.apache.tomcat.modules.mappers.Jdk12Interceptor"
+	"org.apache.tomcat.modules.generators.Jdk12Interceptor"
     };
     
     protected String moduleSet2[] = {
@@ -277,22 +498,27 @@ public class EmbededTomcat {
 	"org.apache.tomcat.modules.config.ServerXmlReader",
     };
     
-    protected void initDefaultInterceptors() {
-	addModules( moduleSet1 );
+    // -------------------- Utils --------------------
+
+
+    public void log( String s ) {
+	if( contextM==null )
+	    System.out.println("EmbededTomcat: " + s );
+	else
+	    contextM.log( s );
+    }
+    public void log( String s, Throwable t ) {
+	if( contextM==null ) {
+	    System.out.println("EmbededTomcat: " + s );
+	    t.printStackTrace();
+	} else
+	    contextM.log( s, t );
     }
 
     protected void addModules(String set[] ) {
 	for( int i=0; i<set.length; i++ ) {
 	    addInterceptor( createModule( set[i] ));
 	}
-    }
-
-    // -------------------- Utils --------------------
-    public void log( String s ) {
-	contextM.log( s );
-    }
-    public void log( String s, Throwable t ) {
-	contextM.log( s, t );
     }
 
     private BaseInterceptor createModule( String classN ) {
