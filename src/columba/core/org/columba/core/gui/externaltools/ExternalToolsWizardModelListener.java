@@ -31,10 +31,10 @@ import org.columba.core.xml.XmlElement;
  * 
  * @author fdietz
  */
-public class ExternalToolsWizardModelListener implements WizardModelListener {
+class ExternalToolsWizardModelListener implements WizardModelListener {
 
 	protected DataModel data;
-	boolean finished = false;
+	protected boolean finished = false;
 
 	public ExternalToolsWizardModelListener(DataModel data) {
 		this.data = data;
@@ -42,7 +42,6 @@ public class ExternalToolsWizardModelListener implements WizardModelListener {
 
 	public void wizardFinished(WizardModelEvent e) {
 
-		
 		// get selected plugin
 		AbstractExternalToolsPlugin plugin =
 			(AbstractExternalToolsPlugin) data.getData("Plugin");
@@ -68,16 +67,12 @@ public class ExternalToolsWizardModelListener implements WizardModelListener {
 			}
 		}
 		
-		
 		finished = true;
 	}
 
-	public void stepShown(WizardModelEvent e) {
-	}
-	public void wizardCanceled(WizardModelEvent e) {
-	}
-	public void wizardModelChanged(WizardModelEvent e) {
-	}
+	public void stepShown(WizardModelEvent e) {}
+	public void wizardCanceled(WizardModelEvent e) {}
+	public void wizardModelChanged(WizardModelEvent e) {}
 	
 	public boolean isFinished()
 	{
