@@ -278,7 +278,9 @@ public class LuceneSearchEngine
 		ListTools.substract(result, deleted);
 
 		//DEBUG
-		checkResult(result, worker);
+		if( MainInterface.DEBUG) {
+			checkResult(result, worker);
+		}
 
 		return result;
 	}
@@ -471,7 +473,7 @@ public class LuceneSearchEngine
 		try {
 			while (it.hasNext()) {
 				if (!folder.exists(it.next(), wc))
-					throw new Exception("Assertion failed");
+					throw new Exception("Mail found in index but doesn't exist in mailbox");
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
