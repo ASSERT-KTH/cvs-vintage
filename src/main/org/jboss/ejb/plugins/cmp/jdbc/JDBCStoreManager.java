@@ -60,7 +60,7 @@ import org.jboss.util.LRUCachePolicy;
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
  * @see org.jboss.ejb.EntityPersistenceStore
- * @version $Revision: 1.40 $
+ * @version $Revision: 1.41 $
  */
 public class JDBCStoreManager implements EntityPersistenceStore
 {
@@ -410,31 +410,8 @@ public class JDBCStoreManager implements EntityPersistenceStore
       // Set up Commands
       commandFactory = new JDBCCommandFactory(this);
       
-      // Create store manager life cycle commands
-      initCommand = commandFactory.createInitCommand();
-      startCommand = commandFactory.createStartCommand();
-      stopCommand = commandFactory.createStopCommand();
-      destroyCommand = commandFactory.createDestroyCommand();
-      
-      /// Create ejb life cycle commands
-      createBeanClassInstanceCommand =
-            commandFactory.createCreateBeanClassInstanceCommand();
-      initEntityCommand = commandFactory.createInitEntityCommand();
-      findEntityCommand = commandFactory.createFindEntityCommand();
-      findEntitiesCommand = commandFactory.createFindEntitiesCommand();
-      createEntityCommand = commandFactory.createCreateEntityCommand();
-      removeEntityCommand = commandFactory.createRemoveEntityCommand();
-      loadEntityCommand = commandFactory.createLoadEntityCommand();
-      isModifiedCommand = commandFactory.createIsModifiedCommand();
-      storeEntityCommand = commandFactory.createStoreEntityCommand();
-      activateEntityCommand = commandFactory.createActivateEntityCommand();
-      passivateEntityCommand = commandFactory.createPassivateEntityCommand();
-      
-      loadRelationCommand = commandFactory.createLoadRelationCommand();
-      deleteRelationsCommand = commandFactory.createDeleteRelationsCommand();
-      insertRelationsCommand = commandFactory.createInsertRelationsCommand();
-
       // Execute the init command
+      initCommand = commandFactory.createInitCommand();
       initCommand.execute();
    }
 
@@ -447,6 +424,30 @@ public class JDBCStoreManager implements EntityPersistenceStore
     * This method will create the database table and compile the queries.
     */
    private void startStoreManager() throws Exception {
+      // Store manager life cycle commands
+      startCommand = commandFactory.createStartCommand();
+      stopCommand = commandFactory.createStopCommand();
+      destroyCommand = commandFactory.createDestroyCommand();
+      
+      // Entity commands
+      initEntityCommand = commandFactory.createInitEntityCommand();
+      createBeanClassInstanceCommand =
+            commandFactory.createCreateBeanClassInstanceCommand();
+      findEntityCommand = commandFactory.createFindEntityCommand();
+      findEntitiesCommand = commandFactory.createFindEntitiesCommand();
+      createEntityCommand = commandFactory.createCreateEntityCommand();
+      removeEntityCommand = commandFactory.createRemoveEntityCommand();
+      loadEntityCommand = commandFactory.createLoadEntityCommand();
+      isModifiedCommand = commandFactory.createIsModifiedCommand();
+      storeEntityCommand = commandFactory.createStoreEntityCommand();
+      activateEntityCommand = commandFactory.createActivateEntityCommand();
+      passivateEntityCommand = commandFactory.createPassivateEntityCommand();
+      
+      // Relation commands
+      loadRelationCommand = commandFactory.createLoadRelationCommand();
+      deleteRelationsCommand = commandFactory.createDeleteRelationsCommand();
+      insertRelationsCommand = commandFactory.createInsertRelationsCommand();
+
       // Create the query manager
       queryManager = new JDBCQueryManager(this);
       
