@@ -19,20 +19,21 @@
 // File: EditorFrame.java
 // Class: EditorFrame
 // original author: jrobbins@ics.uci.edu
-// $Id: EditorFrame.java,v 1.1 1998/01/26 22:19:21 jrobbins Exp $
+// $Id: EditorFrame.java,v 1.2 1998/02/12 02:20:42 jrobbins Exp $
 
 package uci.gef;
 
 import java.awt.*;
+import uci.graph.*;
 
 /** Needs-More-Work: This is dead code and will be removed in the next
  *  release. */
 
 public class EditorFrame extends ForwardingFrame {
 
-  public EditorFrame(NetList n) {
+  public EditorFrame(GraphModel gm) {
     super(new Dimension(400, 300));
-    setEventHandler(new Editor(n, this));
+    setEventHandler(new Editor(gm, this));
     ((Editor)getEventHandler()).frame(this);
   }
 

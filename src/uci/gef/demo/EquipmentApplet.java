@@ -19,7 +19,7 @@
 // File: EquipmentApplet.java
 // Classes: EquipmentApplet
 // Original Author: ics125b spring 1996
-// $Id: EquipmentApplet.java,v 1.1 1998/01/26 22:19:26 jrobbins Exp $
+// $Id: EquipmentApplet.java,v 1.2 1998/02/12 02:22:59 jrobbins Exp $
 
 package uci.gef.demo;
 
@@ -28,6 +28,7 @@ import java.awt.*;
 import java.util.*;
 import uci.util.*;
 import uci.gef.*;
+import uci.graph.*;
 
 /** An example application to show off <B>some</B> of the capabilities
  *  of the UCI Graph Editing Framework. This example is about
@@ -56,7 +57,8 @@ public class EquipmentApplet extends Applet {
   private Editor ed;
 
   /** The net-level model to edit */
-  private NetList net;
+  //private NetList net;
+  private GraphModel gm;
 
   /** The example palette, shows Nodes for computer equipment */
   Palette palette;
@@ -76,8 +78,8 @@ public class EquipmentApplet extends Applet {
   /** Construct a new EquipmentApplet */
   public EquipmentApplet() {
     System.out.println("making an example");
-    net = new NetList();
-    net.name("Sample Network");
+    gm = new DefaultGraphModel();
+    //net.name("Sample Network");
 
     palette = new EquipmentPalette();
     shapePalette = new PaletteFig();
@@ -103,7 +105,7 @@ public class EquipmentApplet extends Applet {
 
   public void setupWindows() {
     ForwardingPanel awt_comp;
-    ed = new Editor(net);
+    ed = new Editor(gm);
     Globals.setStatusBar(ed);
     ed.show();
     //
@@ -147,7 +149,7 @@ public class EquipmentApplet extends Applet {
     masterPalette = null;
     topPalette = null;
     ed = null;
-    net = null;
+    gm = null;
     palette = null;
     shapePalette = null;
   }

@@ -19,7 +19,7 @@
 // File: NetList.java
 // Classes: NetList
 // Original Author: ics125b spring 1996
-// $Id: NetList.java,v 1.1 1998/01/26 22:19:25 jrobbins Exp $
+// $Id: NetList.java,v 1.2 1998/02/12 02:20:59 jrobbins Exp $
 
 package uci.gef;
 
@@ -62,10 +62,10 @@ public class NetList extends NetPrimitive {
   public String name() { return _name; }
 
   /** Reply the vector of nodes */
-  public Vector nodes() { return _nodes; }
+  public Vector getNodes() { return _nodes; }
 
   /** Reply the vector of edges */
-  public Vector edges() { return _edges; }
+  public Vector getEdges() { return _edges; }
 
   /** Add a node to this NetList. Needs-More-Work: should I send a
    *  notification? This is called from the Editor when a

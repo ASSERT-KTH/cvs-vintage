@@ -19,7 +19,7 @@
 // File: SampleNode.java
 // Classes: SampleNode
 // Original Author: ics125b spring 1996
-// $Id: SampleNode.java,v 1.2 1998/02/11 22:30:23 jrobbins Exp $
+// $Id: SampleNode.java,v 1.3 1998/02/12 02:23:08 jrobbins Exp $
 
 package uci.gef.demo;
 
@@ -47,10 +47,10 @@ public class SampleNode extends NetNode {
     */
 
   public void initialize(NetNode deft, Object model) {
-    addPort(east = new SamplePort(this));
-    addPort(west = new SamplePort(this));
-    addPort(north = new SamplePort2(this));
-    addPort(south = new SamplePort2(this));
+    addPort(east = new SamplePort2(this));
+    addPort(west = new SamplePort2(this));
+    addPort(north = new SamplePort(this));
+    addPort(south = new SamplePort(this));
    }
 
   public FigNode makePresentation(Layer lay) {

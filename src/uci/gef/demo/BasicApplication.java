@@ -19,13 +19,14 @@
 // File: BasicApplication.java
 // Class: BasicApplication
 // original author: jrobbins@ics.uci.edu
-// $Id: BasicApplication.java,v 1.1 1998/01/26 22:19:26 jrobbins Exp $
+// $Id: BasicApplication.java,v 1.2 1998/02/12 02:22:56 jrobbins Exp $
 
 package uci.gef.demo;
 
 import java.awt.*;
 import java.lang.*;
 import uci.gef.*;
+import uci.graph.*;
 
 /** A simple example of the minimum code needed to build an
  *  application using GEF. */
@@ -43,7 +44,7 @@ public class BasicApplication {
   // constructors
 
   public BasicApplication() {
-    _ed = new Editor(new NetList());
+    _ed = new Editor(new DefaultGraphModel());
     _ed.setTitle("Untitled");
     _ed.show();
     _palFrame = new Frame();

@@ -19,7 +19,7 @@
 // File: LayerDiagram.java
 // Classes: LayerDiagram
 // Original Author: jrobbins@ics.uci.edu
-// $Id: LayerDiagram.java,v 1.1 1998/01/26 22:19:23 jrobbins Exp $
+// $Id: LayerDiagram.java,v 1.2 1998/02/12 02:20:45 jrobbins Exp $
 
 package uci.gef;
 
@@ -131,16 +131,16 @@ public class LayerDiagram extends Layer {
     //notify?
   }
 
-  /** Find the Fig that is being used to visualize the
+  /** Find the FigNode that is being used to visualize the
    * given NetPort, or null if there is none in this layer. */
-  public FigNode getPortFig(NetPort prt) {
+  public FigNode getPortFig(Object port) {
     Enumeration figs = elements();
     while (figs.hasMoreElements()) {
       Fig f = (Fig) figs.nextElement();
       if (f instanceof FigNode) {
 	FigNode fn = (FigNode) f;
-	Fig find_fig = fn.getPortFig(prt);
-	if (find_fig != null) return fn;
+	Fig port_fig = fn.getPortFig(port);
+	if (port_fig != null) return fn;
       }
     }
     return null;
