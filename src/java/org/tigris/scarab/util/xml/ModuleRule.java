@@ -49,7 +49,6 @@ package org.tigris.scarab.util.xml;
 import org.xml.sax.Attributes;
 
 import org.apache.commons.digester.Digester;
-
 import org.apache.torque.om.NumberKey;
 
 import org.tigris.scarab.om.ScarabModule;
@@ -77,18 +76,11 @@ public class ModuleRule extends BaseRule
      */
     public void begin(Attributes attributes) throws Exception
     {
-        log().debug("(" + getState() + ") module begin()");
-        if(getState().equals(XMLImport.STATE_DB_INSERTION))
-        {
-            doInsertionAtBegin(attributes);
-        }
-        else if (getState().equals(XMLImport.STATE_DB_VALIDATION))
-        {
-            doValidationAtBegin(attributes);
-        }
+        log().debug("(" + getState() + ") module begin");
+        super.doInsertionOrValidationAtBegin(attributes);
     }
     
-    private void doInsertionAtBegin(Attributes attributes) throws Exception
+    protected void doInsertionAtBegin(Attributes attributes) throws Exception
     {
         ScarabModule module = null;
         
@@ -107,7 +99,7 @@ public class ModuleRule extends BaseRule
         digester.push(module);
     }
     
-    private void doValidationAtBegin(Attributes attributes) throws Exception
+    protected void doValidationAtBegin(Attributes attributes) throws Exception
     {
         digester.push(attributes.getValue("id"));
         
@@ -131,14 +123,17 @@ public class ModuleRule extends BaseRule
      */
     public void end() throws Exception
     {
-        log().debug("(" + getState() + ") module end()");
-        if(getState().equals(XMLImport.STATE_DB_INSERTION))
-        {
-            ScarabModule module = (ScarabModule)digester.pop();
-        }
-        else if (getState().equals(XMLImport.STATE_DB_VALIDATION))
-        {
-            String moduleCode = (String)digester.pop();
-        }
+        log().debug("(" + getState() + ") module end");
+        super.doInsertionOrValidationAtEnd();
+    }
+    
+    protected void doInsertionAtEnd()
+    {
+        ScarabModule module = (ScarabModule)digester.pop();
+    }
+    
+    protected void doValidationAtEnd()
+    {
+        String moduleCode = (String)digester.pop();
     }
 }

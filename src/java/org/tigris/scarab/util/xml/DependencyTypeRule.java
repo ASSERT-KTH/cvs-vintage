@@ -62,7 +62,7 @@ public class DependencyTypeRule extends BaseRule
     {
         super(digester, state);
     }
-
+    
     /**
      * This method is called when the body of a matching XML element
      * is encountered.  If the element has no body, this method is
@@ -70,7 +70,8 @@ public class DependencyTypeRule extends BaseRule
      *
      * @param text The text of the body of this element
      */
-    public void body(String text) throws Exception
+    public void body(String text)
+        throws Exception
     {
         log().debug("(" + getState() + ") dependency type body: " +text);
         DependType dependType = DependType.findDependTypeByName(text);

@@ -83,7 +83,7 @@ public class ModuleNameRule extends BaseRule
         module.setDescription(moduleName);
         digester.push(module);
     }
-
+    
     protected void doValidationAtBody(String moduleName)
     {
     }

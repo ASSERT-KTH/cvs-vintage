@@ -51,7 +51,6 @@ import org.xml.sax.Attributes;
 import org.apache.commons.digester.Digester;
 
 import org.tigris.scarab.om.Issue;
-import org.tigris.scarab.om.Transaction;
 
 /**
  * Handler for the xpath "scarab/module/issue"
@@ -74,7 +73,7 @@ public class IssueRule extends BaseRule
      */
     public void begin(Attributes attributes) throws Exception
     {
-        log().debug("(" + getState() + ") issue begin()");
+        log().debug("(" + getState() + ") issue begin");
         digester.push(attributes.getValue("id"));
     }
     
@@ -84,17 +83,17 @@ public class IssueRule extends BaseRule
      */
     public void end() throws Exception
     {
-        log().debug("(" + getState() + ") issue end()");
-        
-        if(getState().equals(XMLImport.STATE_DB_INSERTION))
-        {
-            Transaction transaction = (Transaction)digester.pop();
-            Issue issue = (Issue)digester.pop();
-        }
-        else if(getState().equals(XMLImport.STATE_DB_VALIDATION))
-        {
-            //push the issueXmlId out
-            digester.pop();
-        }
+        log().debug("(" + getState() + ") issue end");
+        super.doInsertionOrValidationAtEnd();
+    }
+    
+    protected void doInsertionAtEnd()
+    {
+        Issue issue = (Issue)digester.pop();
+    }
+    
+    protected void doValidationAtEnd()
+    {
+        String xmlId = (String)digester.pop();
     }
 }

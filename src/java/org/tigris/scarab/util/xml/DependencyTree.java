@@ -254,13 +254,6 @@ public class DependencyTree
                     DependencyNode node = (DependencyNode)unresolvedDependencies.get(j);
                     Depend depend = Depend.getInstance();
                     depend.setDependType(node.getDependType());
-//                    if(node.getNodeType().equals(DependencyNode.NODE_TYPE_CHILD))
-//                    {
-//                        depend.setObserverId(getIssueId(node.getParentOrChildId()));
-//                        depend.setObservedId(getIssueId(unresolvedIssueId));
-//                        depend.save();
-//                    }
-//we only need to insert the same depend relationship ONCE
                     if (node.getNodeType().equals(DependencyNode.NODE_TYPE_PARENT))
                     {
                         depend.setObserverId(getIssueId(unresolvedIssueId));

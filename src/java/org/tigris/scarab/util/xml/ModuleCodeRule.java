@@ -104,10 +104,10 @@ public class ModuleCodeRule extends BaseRule
         if(!existingModuleCode.equals(moduleCode))
         {
             throw new Exception("The existing module with module id: " + 
-                                moduleId + " has module code: " + 
-                                existingModuleCode + 
-                                " which is not same as the import module code: " + 
-                                moduleCode);
+                                    moduleId + " has module code: " + 
+                                    existingModuleCode + 
+                                    " which is not same as the import module code: " + 
+                                    moduleCode);
         }
         else
         {

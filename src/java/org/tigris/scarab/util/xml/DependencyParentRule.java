@@ -70,7 +70,7 @@ public class DependencyParentRule extends BaseRule
      */
     public void body(String text) throws Exception
     {
-        log().debug("(" + getState() + ") dependancy parent body: " + text);
+        log().debug("(" + getState() + ") dependency parent body: " + text);
         digester.push(text);
         digester.push(DependencyNode.NODE_TYPE_PARENT);
     }

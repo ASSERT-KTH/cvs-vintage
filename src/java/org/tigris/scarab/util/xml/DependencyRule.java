@@ -51,7 +51,6 @@ import org.apache.commons.digester.Digester;
 import org.tigris.scarab.om.Issue;
 import org.tigris.scarab.om.DependType;
 import org.tigris.scarab.om.Depend;
-import org.tigris.scarab.om.Transaction;
 
 /**
  * Handler for the xpath "scarab/module/issue/dependency"
@@ -73,7 +72,7 @@ public class DependencyRule extends BaseRule
      */
     public void end() throws Exception
     {
-        log().debug("(" + getState() + ") dependency end()");
+        log().debug("(" + getState() + ") dependency end");
         super.doInsertionOrValidationAtEnd();
     }
     
@@ -105,43 +104,23 @@ public class DependencyRule extends BaseRule
         Object obj = digester.pop();
         digester.push(obj);
     }
-
-    protected void doInsertionAtEnd() throws Exception
+    
+    protected void doInsertionAtEnd()
+        throws Exception
     {
         String nodeType = (String)digester.pop();
         String parentOrChildIssueXmlId = (String)digester.pop();
         DependType dependType = (DependType)digester.pop();
-        Transaction transaction = (Transaction)digester.pop();
         Issue issue = (Issue)digester.pop();
         String issueXmlId = getDependencyTree().getIssueXmlId(issue.getIssueId());
         Depend depend = Depend.getInstance();
         depend.setDependType(dependType);
-/*
-        we only need to save the SAME depend relationship ONCE
-        if (nodeType.equals(DependencyNode.NODE_TYPE_CHILD)) 
-        {
-            if(getDependencyTree().isIssueResolvedYet(parentOrChildIssueXmlId)) 
-            {
-                depend.setObserverId(getDependencyTree().getIssueId(parentOrChildIssueXmlId));
-                depend.setObservedId(issue.getIssueId());
-                depend.save();
-            }
-            else
-            {
-                resolve at the end 
-                getDependencyTree().addIssueDependency(issueXmlId, 
-                                              new DependencyNode(nodeType, issueXmlId, 
-                                                                 parentOrChildIssueXmlId, 
-                                                                 dependType, true));
-            }
-        } 
-*/
         if (nodeType.equals(DependencyNode.NODE_TYPE_PARENT)) 
         {
             if(getDependencyTree().isIssueResolvedYet(parentOrChildIssueXmlId)) 
             {
                 log().debug("parent dependency of " + parentOrChildIssueXmlId + 
-                          " has been resolved");
+                                " has been resolved");
                 depend.setObserverId(issue.getIssueId());
                 depend.setObservedId(getDependencyTree().getIssueId(parentOrChildIssueXmlId));
                 depend.save();
@@ -149,18 +128,17 @@ public class DependencyRule extends BaseRule
             else
             {
                 log().debug("can't resolve the parent dependency of " + 
-                    parentOrChildIssueXmlId);
+                                parentOrChildIssueXmlId);
                 //resolve at the end 
                 DependencyNode dn = new DependencyNode(nodeType, issueXmlId, 
                                                        parentOrChildIssueXmlId, 
                                                        dependType, false);
-
+                
                 getDependencyTree().addIssueDependency(issueXmlId, dn);
             }
             
         } 
         
         digester.push(issue);
-        digester.push(transaction);
     }
 }
