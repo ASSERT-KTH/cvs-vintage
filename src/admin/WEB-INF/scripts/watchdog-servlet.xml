@@ -19,9 +19,9 @@
 	<pathelement 
 		path="../lib/client.jar" />
 	<pathelement 
-		path="../../../../lib/jaxp.jar" />
+		path="../../../../lib/container/jaxp.jar" />
 	<pathelement 
-		path="../../../../lib/parser.jar" />
+		path="../../../../lib/container/parser.jar" />
       </classpath>
       <arg value="-f" />
       <arg value="webapps/servlet-tests/WEB-INF/servlet-moo.xml" />
