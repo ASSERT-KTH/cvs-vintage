@@ -311,31 +311,5 @@ public class Config {
             optionsFile.getName());
     }
 
-    /**
-     * Method getLoggingPropertyFile.
-     * @return File
-     */
-    public static File getLoggingPropertyFile() {
-        File configDirectory = ConfigPath.getConfigDirectory();
-
-        loggerPropertyFile = new File(configDirectory, "log4j.properties");
-
-        File loggingDirectory = new File(configDirectory, "log");
-        DiskIO.ensureDirectory(loggingDirectory);
-
-        if (loggerPropertyFile.exists() == false) {
-            String str = LogProperty.createPropertyString(loggingDirectory);
-
-            //DefaultConfig.copy("core", "log4j.properties", configDirectory);
-            loggerPropertyFile = new File(configDirectory, "log4j.properties");
-
-            try {
-                DiskIO.saveStringInFile(loggerPropertyFile, str);
-            } catch (IOException ex) {
-                ex.printStackTrace();
-            }
-        }
-
-        return loggerPropertyFile;
-    }
+   
 }
