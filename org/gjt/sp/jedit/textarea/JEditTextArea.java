@@ -51,7 +51,7 @@ import org.gjt.sp.util.Log;
  * jEdit's text component.
  *
  * @author Slava Pestov
- * @version $Id: JEditTextArea.java,v 1.117 2002/05/13 07:34:49 spestov Exp $
+ * @version $Id: JEditTextArea.java,v 1.118 2002/05/13 10:21:01 spestov Exp $
  */
 public class JEditTextArea extends JComponent
 {
@@ -1375,13 +1375,19 @@ public class JEditTextArea extends JComponent
 	 */
 	public void selectToMatchingBracket()
 	{
+		// since we might change it below
+		int caret = this.caret;
+
 		int offset = caret - buffer.getLineStartOffset(caretLine);
 
 		if(buffer.getLineLength(caretLine) == 0)
 			return;
 
 		if(offset == buffer.getLineLength(caretLine))
+		{
+			caret--;
 			offset--;
+		}
 
 		int bracket = TextUtilities.findMatchingBracket(buffer,caretLine,offset);
 
@@ -1390,11 +1396,14 @@ public class JEditTextArea extends JComponent
 			Selection s;
 
 			if(bracket < caret)
+			{
+				moveCaretPosition(caret,false);
 				s = new Selection.Range(++bracket,caret);
+			}
 			else
 			{
 				moveCaretPosition(caret + 1,false);
-				s = new Selection.Range(caret,bracket);
+				s = new Selection.Range(caret + 1,bracket);
 			}
 
 			addToSelection(s);
