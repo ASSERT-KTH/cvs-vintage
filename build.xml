@@ -129,7 +129,7 @@
       <!-- no dependencies -->
       <include name="org/apache/tomcat/startup/Main.java"/>    
       <include name="org/apache/tomcat/util/compat/**"/>    
-      <include name="org/apache/tomcat/util/IntrospectionUtils.java"/>    
+      <exclude name="**/util/compat/Jdk12Support.java" unless="jdk12.present"/>      <include name="org/apache/tomcat/util/IntrospectionUtils.java"/>    
     </javac>
     <jar jarfile="${tomcat.build}/lib/tomcat.jar" 
 	 basedir="${tomcat.build}/classes" 
