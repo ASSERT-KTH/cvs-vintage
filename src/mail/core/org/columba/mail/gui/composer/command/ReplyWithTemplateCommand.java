@@ -92,7 +92,7 @@ public class ReplyWithTemplateCommand extends ReplyCommand {
             StringBuffer bodyText;
             Integer[] address = bodyPart.getAddress();
 
-            String quotedBodyText = createQuotedBody(folder, uids, address);
+            String quotedBodyText = createQuotedBody(bodyPart.getHeader(), folder, uids, address);
 
             // get answer from template
             String templateBody = getTemplateBody();

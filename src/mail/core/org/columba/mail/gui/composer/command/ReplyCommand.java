@@ -39,6 +39,9 @@ import org.columba.mail.gui.composer.util.QuoteFilterInputStream;
 import org.columba.mail.main.MailInterface;
 import org.columba.mail.parser.text.HtmlParser;
 import org.columba.mail.util.MailResourceLoader;
+import org.columba.ristretto.coder.Base64DecoderInputStream;
+import org.columba.ristretto.coder.CharsetDecoderInputStream;
+import org.columba.ristretto.coder.QuotedPrintableDecoderInputStream;
 import org.columba.ristretto.message.Address;
 import org.columba.ristretto.message.AddressListRenderer;
 import org.columba.ristretto.message.BasicHeader;
@@ -132,7 +135,7 @@ public class ReplyCommand extends FolderCommand {
             StringBuffer bodyText;
             Integer[] address = bodyPart.getAddress();
 
-            String quotedBodyText = createQuotedBody(folder, uids, address);
+            String quotedBodyText = createQuotedBody(bodyPart.getHeader(), folder, uids, address);
 
             // debug output
             LOG.fine("Quoted body text:\n" + quotedBodyText);
@@ -190,10 +193,26 @@ public class ReplyCommand extends FolderCommand {
         model.setAccountItem(accountItem);
     }
 
-    protected String createQuotedBody(MessageFolder folder, Object[] uids,
+    protected String createQuotedBody(MimeHeader header, MessageFolder folder, Object[] uids,
             Integer[] address) throws IOException, Exception {
         InputStream bodyStream = folder.getMimePartBodyStream(uids[0], address);
-
+        
+        // Do decoding stuff
+        switch( header.getContentTransferEncoding() ) {
+        	case MimeHeader.QUOTED_PRINTABLE : {
+        		bodyStream = new QuotedPrintableDecoderInputStream(bodyStream);
+        		break;
+        	}
+        	
+        	case MimeHeader.BASE64 : {
+        		bodyStream = new Base64DecoderInputStream(bodyStream);
+        	}
+        }
+        String charset = header.getContentParameter("charset");
+        if( charset != null ) {
+        	bodyStream = new CharsetDecoderInputStream(bodyStream, Charset.forName(charset));
+        }
+        
         String quotedBody;
         // Quote original message - different methods for text and html
         if (model.isHtml()) {

@@ -17,6 +17,7 @@
 package org.columba.mail.gui.composer.command;
 
 import java.io.InputStream;
+import java.nio.charset.Charset;
 import java.util.Iterator;
 import java.util.List;
 
@@ -33,10 +34,14 @@ import org.columba.mail.folder.MessageFolder;
 import org.columba.mail.gui.composer.ComposerController;
 import org.columba.mail.gui.composer.ComposerModel;
 import org.columba.mail.main.MailInterface;
+import org.columba.ristretto.coder.Base64DecoderInputStream;
+import org.columba.ristretto.coder.CharsetDecoderInputStream;
+import org.columba.ristretto.coder.QuotedPrintableDecoderInputStream;
 import org.columba.ristretto.message.BasicHeader;
 import org.columba.ristretto.message.Header;
 import org.columba.ristretto.message.LocalMimePart;
 import org.columba.ristretto.message.Message;
+import org.columba.ristretto.message.MimeHeader;
 import org.columba.ristretto.message.MimePart;
 import org.columba.ristretto.message.MimeTree;
 import org.columba.ristretto.message.StreamableMimePart;
@@ -130,15 +135,34 @@ public class OpenMessageWithComposerCommand extends FolderCommand {
 		}
 
 		if (bodyPart != null) {
-			if (bodyPart.getHeader().getMimeType().getSubtype().equals("html")) {
+			MimeHeader header = bodyPart.getHeader();
+			if (header.getMimeType().getSubtype().equals("html")) {
 				// html
 				model.setHtml(true);
 			} else {
 				model.setHtml(false);
 			}
+			InputStream bodyStream = folder.getMimePartBodyStream(uid, bodyPart.getAddress());
+			
+	        // Do decoding stuff
+	        switch( header.getContentTransferEncoding() ) {
+	        	case MimeHeader.QUOTED_PRINTABLE : {
+	        		bodyStream = new QuotedPrintableDecoderInputStream(bodyStream);
+	        		break;
+	        	}
+	        	
+	        	case MimeHeader.BASE64 : {
+	        		bodyStream = new Base64DecoderInputStream(bodyStream);
+	        	}
+	        }
+	        String charset = header.getContentParameter("charset");
+	        if( charset != null ) {
+	        	bodyStream = new CharsetDecoderInputStream(bodyStream, Charset.forName(charset));
+	        	model.setCharset(Charset.forName(charset));
+	        }
 
 			model.setBodyText(StreamUtils.readInString(
-					folder.getMimePartBodyStream(uid, bodyPart.getAddress()))
+					bodyStream)
 					.toString());
 
 		}
