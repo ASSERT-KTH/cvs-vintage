@@ -17,6 +17,7 @@
 //All Rights Reserved.
 package org.columba.mail.smtp.command;
 
+import java.io.IOException;
 import java.text.MessageFormat;
 
 import javax.swing.JOptionPane;
@@ -26,6 +27,8 @@ import org.columba.core.command.CommandProcessor;
 import org.columba.core.command.ICommandReference;
 import org.columba.core.command.Worker;
 import org.columba.core.command.WorkerStatusController;
+import org.columba.core.gui.statusbar.event.WorkerStatusChangeListener;
+import org.columba.core.gui.statusbar.event.WorkerStatusChangedEvent;
 import org.columba.mail.command.ComposerCommandReference;
 import org.columba.mail.command.MailFolderCommandReference;
 import org.columba.mail.composer.MessageComposer;
@@ -189,24 +192,8 @@ public class SendMessageCommand extends Command {
 				"message", "send_message_connect"));
 
 		// open connection
-		SMTPServer server = new SMTPServer(item);
+		final SMTPServer server = new SMTPServer(item);
 
-		/*
-		 * try { server.openConnection(); } catch (UnknownHostException e2) {
-		 * Object[] options = new String[] { MailResourceLoader.getString("",
-		 * "global", "ok").replaceAll("&", "") }; int result =
-		 * JOptionPane.showOptionDialog(null,
-		 * MailResourceLoader.getString("dialog", "error", "unknown_host"),
-		 * e2.getLocalizedMessage(), JOptionPane.DEFAULT_OPTION,
-		 * JOptionPane.ERROR_MESSAGE, null, options, options[0]);
-		 * 
-		 * showComposer = true;
-		 * 
-		 * throw new CommandCancelledException(); } catch (IOException e2) {
-		 * e2.printStackTrace();
-		 * 
-		 * showComposer = true; throw new CommandCancelledException(); }
-		 */
 
 		try {
 			server.openConnection();
@@ -224,8 +211,31 @@ public class SendMessageCommand extends Command {
 			worker.setDisplayText(MailResourceLoader.getString("statusbar",
 					"message", "send_message"));
 
+			WorkerStatusChangeListener listener = new WorkerStatusChangeListener() {
+				public void workerStatusChanged(WorkerStatusChangedEvent e) {
+					if( e.getSource().cancelled() ) {
+						try {
+							server.dropConnection();
+						} catch (IOException e1) {							
+						}
+					}
+					
+				}				
+			};
+			
+			// important for cancel
+			worker.addWorkerStatusChangeListener(listener);
+			
 			// send message
 			server.sendMessage(message, worker);
+			
+			// not needed anymore
+			worker.removeWorkerStatusChangeListener(listener);
+			
+			if( worker.cancelled() ) {
+				showComposer = true;
+				return;
+			}
 			
 			// mark as read
 			Flags flags = new Flags();

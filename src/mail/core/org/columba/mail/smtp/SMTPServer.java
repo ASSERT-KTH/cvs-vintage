@@ -66,7 +66,7 @@ import org.columba.ristretto.smtp.SMTPProtocol;
  * @author fdietz, Timo Stich <tstich@users.sourceforge.net>
  *  
  */
-public class SMTPServer {
+public class SMTPServer  {
 
 	private static final int CLOSED = 0;
 
@@ -484,5 +484,10 @@ public class SMTPServer {
 		String host = smtpItem.get("host");
 
 		return host;
+	}
+	
+	public void dropConnection() throws IOException {
+		protocol.dropConnection();
+		state = CLOSED;
 	}
 }

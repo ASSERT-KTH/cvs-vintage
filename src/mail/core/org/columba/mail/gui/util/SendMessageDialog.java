@@ -176,7 +176,7 @@ public void workerStatusChanged(WorkerStatusChangedEvent e) {
 	 * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
 	 */
 	public void actionPerformed(ActionEvent arg0) {
-		if (arg0.equals("CANCEL")) {
+		if (arg0.getActionCommand().equals("CANCEL")) {
 			// send cancel event to worker
 			worker.cancel();
 			setVisible(false);

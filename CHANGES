@@ -16,7 +16,9 @@ New features:
 - cleanup of SpamAssassin plugin, added filter action
 - integration of JDIC (https://jdic.dev.java.net/) for trayicon support
   and opening attachments with the system's default application 
-  
+- sending messages can now be canceled
+- more progress updates on IMAP operations
+
 Fixed bugs:
 - #1097936, textviewer should be initialized empty
 - tablemodel didn't update if null, header-cache default fields were modified
@@ -80,7 +82,7 @@ New features:
   
 
 Fixed bugs:
-- #773118 é in name of Directory (tstich)
+- #773118 ? in name of Directory (tstich)
 - #1014346 IMAP rename problems (tstich)
 - #1014345 IMAP Subscribe problems (tstich)
 - #1015839, incoming/move spam custom folder is mixed (fdietz)

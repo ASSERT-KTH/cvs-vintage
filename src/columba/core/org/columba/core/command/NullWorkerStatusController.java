@@ -27,6 +27,14 @@ import org.columba.core.gui.statusbar.event.WorkerStatusChangeListener;
  * Window>Preferences>Java>Code Generation.
  */
 public class NullWorkerStatusController implements WorkerStatusController {
+	/* (non-Javadoc)
+	 * @see org.columba.core.command.WorkerStatusController#removeWorkerStatusChangeListener(org.columba.core.gui.statusbar.event.WorkerStatusChangeListener)
+	 */
+	public void removeWorkerStatusChangeListener(
+			WorkerStatusChangeListener listener) {
+		// TODO Auto-generated method stub
+
+	}
     private static NullWorkerStatusController myInstance;
 
     protected NullWorkerStatusController() {

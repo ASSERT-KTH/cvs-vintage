@@ -78,4 +78,9 @@ public interface WorkerStatusController {
     public void addWorkerStatusChangeListener(WorkerStatusChangeListener l);
 
     public int getTimeStamp();
+
+	/**
+	 * @param listener
+	 */
+	public void removeWorkerStatusChangeListener(WorkerStatusChangeListener listener);
 }
