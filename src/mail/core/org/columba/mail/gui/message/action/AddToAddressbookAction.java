@@ -30,6 +30,7 @@ import org.columba.mail.gui.message.URLObservable;
 import org.columba.mail.gui.message.util.ColumbaURL;
 import org.columba.mail.util.MailResourceLoader;
 import org.columba.ristretto.message.Address;
+import org.columba.ristretto.parser.ParserException;
 
 
 /**
@@ -70,10 +71,14 @@ public class AddToAddressbookAction extends AbstractColumbaAction
             return;
         }
 
-        // create Address from URL
-        Address address = new Address(url.getSender(), url.getEmailAddress());
-        // add contact to addressbook
-        ContactFacade.addContact(selectedFolder.getUid(), address.toString());
+        try {
+			// create Address from URL
+			Address address = Address.parse(url.getSender());
+			// add contact to addressbook
+			ContactFacade.addContact(selectedFolder.getUid(), address.toString());
+		} catch (ParserException e) {
+			e.printStackTrace();
+		}
     }
 
     /* (non-Javadoc)
