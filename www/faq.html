@@ -6,7 +6,7 @@
 <body bgcolor="#ffffff">
 
 <h2>Scarab - Frequently Asked Questions</h2>
-<h4>$Id: faq.html,v 1.22 2003/04/17 23:40:42 dlr Exp $</h4>
+<h4>$Id: faq.html,v 1.23 2003/05/17 01:25:48 dlr Exp $</h4>
 
 <hr noshade="noshade" size="1" />
 
@@ -219,16 +219,16 @@ is open source is badly needed.
 
 <p>
 Here is my configuration for the 
-<a href="http://issues.whichever.com/">Scarab Live Server</a>:
+<a href="http://scarab.collab.net:8080/">Scarab Live Server</a>:
 </p>
 
 <pre>
 NameVirtualHost 157.22.245.3
 &lt;VirtualHost 157.22.245.3&gt;
-    ServerName issues.whichever.com
+    ServerName scarab.collab.net:8080
     RewriteEngine on
-    RewriteRule /(.+) http://issues.whichever.com:8081/$1 [P]
-    ProxyPassReverse / http://issues.whichever.com:8081/s/
+    RewriteRule /(.+) http://scarab.collab.net:8080:8081/$1 [P]
+    ProxyPassReverse / http://scarab.collab.net:8080:8081/s/
 &lt;/VirtualHost&gt;
 </pre>
 
@@ -487,7 +487,7 @@ I can't seem to access Scarab's self hosting issue tracker on port 8081.
 
 <p>
 This has been fixed. We created a proxy system. Please try to connect on port
-80 now. This is the <a href="http://issues.whichever.com/">http://issues.whichever.com/</a> 
+80 now. This is the <a href="http://scarab.collab.net:8080/">http://scarab.collab.net:8080/</a> 
 of the live issue tracker. Please do not use it for testing. If you want to use
 a Scarab instance for testing, please use this address of the instance which is 
 rebuilt nightly from CVS: 
