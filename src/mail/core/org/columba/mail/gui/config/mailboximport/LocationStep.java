@@ -121,8 +121,19 @@ class LocationStep extends AbstractStep implements ActionListener {
                                                         "dialog",
                                                         "mailboximport",
                                                         "files"));
+                                        StringBuffer toolTip = new StringBuffer();
+                                        toolTip.append("<html><body>");
+                                        int i = 0;
+                                        for (; i < sourceFiles.length - 1; i++) {
+                                                toolTip.append(sourceFiles[i].getPath());
+                                                toolTip.append("<br>");
+                                        }
+                                        toolTip.append(sourceFiles[i].getPath());
+                                        toolTip.append("</body></html>");
+                                        sourceButton.setToolTipText(toolTip.toString());
                                 } else {
-                                        sourceButton.setText(sourceFiles[0].getName());
+                                        sourceButton.setText(sourceFiles[0].getPath());
+                                        sourceButton.setToolTipText(null);
                                 }
                                 updateCanFinish();
 			}
