@@ -30,15 +30,14 @@ public class AllTests {
         TestSuite suite = new TestSuite(
             "Test for org.columba.mail.filter.plugins");
         //$JUnit-BEGIN$
-        suite.addTestSuite(HeaderfieldFilterTest.class);
-        suite.addTestSuite(AbstractFilterTestCase.class);
-        suite.addTestSuite(SizeFilterTest.class);
-        suite.addTestSuite(AccountFilterTest.class);
-        suite.addTestSuite(BodyFilterTest.class);
-        suite.addTestSuite(ColorFilterTest.class);
         suite.addTestSuite(DateFilterTest.class);
+        suite.addTestSuite(ColorFilterTest.class);
+        suite.addTestSuite(HeaderfieldFilterTest.class);
         suite.addTestSuite(FlagsFilterTest.class);
+        suite.addTestSuite(BodyFilterTest.class);
         suite.addTestSuite(PriorityFilterTest.class);
+        suite.addTestSuite(AccountFilterTest.class);
+        suite.addTestSuite(SizeFilterTest.class);
         //$JUnit-END$
         return suite;
     }

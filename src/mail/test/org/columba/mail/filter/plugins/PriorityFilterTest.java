@@ -17,19 +17,89 @@
 //All Rights Reserved.
 package org.columba.mail.filter.plugins;
 
+import org.columba.core.xml.XmlElement;
+import org.columba.mail.filter.FilterCriteria;
 
 /**
  * @author fdietz
- *
+ *  
  */
-public class PriorityFilterTest extends AbstractFilterTestCase{
+public class PriorityFilterTest extends AbstractFilterTestCase {
 
     /**
-     * 
+     *  
      */
     public PriorityFilterTest(String arg0) {
         super(arg0);
-        
+
     }
 
+    public void testHighest() throws Exception {
+        // add message to folder
+        Object uid = addMessage();
+
+        getSourceFolder().setAttribute(uid, "columba.priority", new Integer(1));
+
+        // create filter configuration
+        FilterCriteria criteria = new FilterCriteria(new XmlElement("criteria"));
+        criteria.setType("Priority");
+        criteria.setCriteria("is");
+        criteria.setPattern("Highest");
+
+        // create filter
+        PriorityFilter filter = new PriorityFilter();
+
+        // init configuration
+        filter.setUp(criteria);
+
+        // execute filter
+        boolean result = filter.process(getSourceFolder(), uid);
+        assertEquals("filter result", true, result);
+    }
+
+    public void testNormal() throws Exception {
+        // add message to folder
+        Object uid = addMessage();
+
+        getSourceFolder().setAttribute(uid, "columba.priority", new Integer(3));
+
+        // create filter configuration
+        FilterCriteria criteria = new FilterCriteria(new XmlElement("criteria"));
+        criteria.setType("Priority");
+        criteria.setCriteria("is");
+        criteria.setPattern("Normal");
+
+        // create filter
+        PriorityFilter filter = new PriorityFilter();
+
+        // init configuration
+        filter.setUp(criteria);
+
+        // execute filter
+        boolean result = filter.process(getSourceFolder(), uid);
+        assertEquals("filter result", true, result);
+    }
+
+    public void testLowest() throws Exception {
+        // add message to folder
+        Object uid = addMessage();
+
+        getSourceFolder().setAttribute(uid, "columba.priority", new Integer(5));
+
+        // create filter configuration
+        FilterCriteria criteria = new FilterCriteria(new XmlElement("criteria"));
+        criteria.setType("Priority");
+        criteria.setCriteria("is");
+        criteria.setPattern("Lowest");
+
+        // create filter
+        PriorityFilter filter = new PriorityFilter();
+
+        // init configuration
+        filter.setUp(criteria);
+
+        // execute filter
+        boolean result = filter.process(getSourceFolder(), uid);
+        assertEquals("filter result", true, result);
+    }
 }

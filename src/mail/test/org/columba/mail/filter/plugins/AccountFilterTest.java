@@ -17,6 +17,9 @@
 //All Rights Reserved.
 package org.columba.mail.filter.plugins;
 
+import org.columba.core.xml.XmlElement;
+import org.columba.mail.filter.FilterCriteria;
+
 
 /**
  * @author fdietz
@@ -32,4 +35,49 @@ public class AccountFilterTest extends AbstractFilterTestCase {
         
     }
 
+    public void testAccountWithUid0() throws Exception {
+        // add message to folder
+        Object uid = addMessage();
+
+        getSourceFolder().setAttribute(uid, "columba.accountuid", new Integer(0));
+
+        // create filter configuration
+        FilterCriteria criteria = new FilterCriteria(new XmlElement("criteria"));
+        criteria.setType("Account");
+        criteria.setCriteria("is");
+        criteria.set("account.uid",0);
+
+        // create filter
+        AccountFilter filter = new AccountFilter();
+
+        // init configuration
+        filter.setUp(criteria);
+
+        // execute filter
+        boolean result = filter.process(getSourceFolder(), uid);
+        assertEquals("filter result", true, result);
+    }
+    
+    public void testAccountWithUid1() throws Exception {
+        // add message to folder
+        Object uid = addMessage();
+
+        getSourceFolder().setAttribute(uid, "columba.accountuid", new Integer(1));
+
+        // create filter configuration
+        FilterCriteria criteria = new FilterCriteria(new XmlElement("criteria"));
+        criteria.setType("Account");
+        criteria.setCriteria("is");
+        criteria.set("account.uid",1);
+
+        // create filter
+        AccountFilter filter = new AccountFilter();
+
+        // init configuration
+        filter.setUp(criteria);
+
+        // execute filter
+        boolean result = filter.process(getSourceFolder(), uid);
+        assertEquals("filter result", true, result);
+    }
 }

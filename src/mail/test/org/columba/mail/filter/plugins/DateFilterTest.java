@@ -17,7 +17,6 @@
 //All Rights Reserved.
 package org.columba.mail.filter.plugins;
 
-import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
 
@@ -39,20 +38,25 @@ public class DateFilterTest extends AbstractFilterTestCase {
        
     }
 
-    public void test() throws Exception {
+    /**
+     * Test date before.
+     * 
+     * @throws Exception
+     */
+    public void testBefore() throws Exception {
         // add message to folder
         Object uid = addMessage();
        
         GregorianCalendar c = new GregorianCalendar();
         c.set(2004,5,10);
-        
-        getSourceFolder().setAttribute(uid, "columba.date", c.getTime());
+        Date date = c.getTime();
+        getSourceFolder().setAttribute(uid, "columba.date", date);
         
         // create filter configuration
         FilterCriteria criteria = new FilterCriteria(new XmlElement("criteria"));
         criteria.setType("Date");
         criteria.setCriteria("before");
-        criteria.setPattern("2003");
+        criteria.setPattern("Mar 17, 2005");
         
         // create filter
         DateFilter filter = new DateFilter();
@@ -63,5 +67,36 @@ public class DateFilterTest extends AbstractFilterTestCase {
         // execute filter
         boolean result = filter.process(getSourceFolder(), uid);
         assertEquals("filter result", true, result);
+    }
+    
+    /**
+     * Test date after.
+     * 
+     * @throws Exception
+     */
+    public void testAfter() throws Exception {
+        // add message to folder
+        Object uid = addMessage();
+       
+        GregorianCalendar c = new GregorianCalendar();
+        c.set(2004,5,10);
+        Date date = c.getTime();
+        getSourceFolder().setAttribute(uid, "columba.date", date);
+        
+        // create filter configuration
+        FilterCriteria criteria = new FilterCriteria(new XmlElement("criteria"));
+        criteria.setType("Date");
+        criteria.setCriteria("after");
+        criteria.setPattern("Mar 17, 2005");
+        
+        // create filter
+        DateFilter filter = new DateFilter();
+
+        // init configuration
+        filter.setUp(criteria);
+
+        // execute filter
+        boolean result = filter.process(getSourceFolder(), uid);
+        assertEquals("filter result", false, result);
     }
 }
