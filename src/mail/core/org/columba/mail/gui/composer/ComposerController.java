@@ -366,7 +366,7 @@ public class ComposerController
 	protected AbstractFrameView createView() {
 		ComposerView view = new ComposerView(this);
 
-		view.init();
+		//view.init();
 		
 		return view;
 	}

@@ -18,6 +18,10 @@
 		<menuitem action="ExternalEditor"/>	
 	</menu>
 	
+	<menu name="menu_view" extensionpoint="show_hide">
+	 <menuitem checkboxaction="ViewAccountInfoPanel" />
+	</menu>
+	
 	<menu name="menu_view" extensionpoint="bottom">
 		<menuitem checkboxaction="ViewAddressbook"/>
 		<menuitem imenu="CharacterEncodingMenu" />

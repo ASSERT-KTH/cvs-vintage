@@ -23,6 +23,10 @@
 		<menuitem action="MailAccount"/>
 	</menu>
 	
+	<menu name="menu_view" extensionpoint="show_hide">
+		<menuitem checkboxaction="ViewFolderInfoPanel" />
+	</menu>
+	
 	<menu name="menu_view" extensionpoint="top">
 		<menuitem imenu="SortMessagesMenu"/>
 		<separator/>

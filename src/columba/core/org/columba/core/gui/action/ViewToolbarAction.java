@@ -18,8 +18,11 @@ package org.columba.core.gui.action;
 
 import java.awt.event.ActionEvent;
 
+import javax.swing.JCheckBoxMenuItem;
+
 import org.columba.core.action.CheckBoxAction;
 import org.columba.core.gui.frame.AbstractFrameController;
+import org.columba.core.gui.frame.AbstractFrameView;
 import org.columba.mail.util.MailResourceLoader;
 
 public class ViewToolbarAction extends CheckBoxAction {
@@ -45,7 +48,7 @@ public class ViewToolbarAction extends CheckBoxAction {
 			'1',
 			null);
 
-		//getCheckBoxMenuItem().setSelected( getInitState() );
+		
 	}
 
 	/* (non-Javadoc)
@@ -53,18 +56,26 @@ public class ViewToolbarAction extends CheckBoxAction {
 	 */
 	public void actionPerformed(ActionEvent evt) {
 
-		frameController.getView().showToolbar(getState());
+		frameController.getView().showToolbar();
 	}
 
 	/* (non-Javadoc)
 	 * @see org.columba.core.action.CheckBoxAction#getInitState()
 	 */
 	protected boolean getInitState() {
-      try{
-		return getFrameController().getView().isToolbarVisible();
-      }catch(java.lang.NullPointerException ex){
-        return(false);
-      }
+	
+	  return frameController.isToolbarEnabled(AbstractFrameView.MAIN_TOOLBAR);
 	}
 
+	/* (non-Javadoc)
+	 * @see org.columba.core.action.CheckBoxAction#setCheckBoxMenuItem(javax.swing.JCheckBoxMenuItem)
+	 */
+	public void setCheckBoxMenuItem(JCheckBoxMenuItem checkBoxMenuItem, AbstractFrameView frameView) {
+		
+		super.setCheckBoxMenuItem(checkBoxMenuItem);
+		
+		getCheckBoxMenuItem().setSelected( getInitState() );
+	}
+
+	
 }

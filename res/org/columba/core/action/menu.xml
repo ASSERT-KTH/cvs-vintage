@@ -42,7 +42,7 @@
 		<separator/>
 		<menu name="menu_view_show_hide">
 			<menuitem checkboxaction="ViewToolbar"/>	
-			<extensionpoint name="view_hide"/>
+			<extensionpoint name="show_hide"/>
 		</menu>
 		<separator/>
 		<extensionpoint name="top"/>

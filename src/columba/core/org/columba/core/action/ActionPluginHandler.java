@@ -28,6 +28,7 @@ public class ActionPluginHandler extends AbstractPluginHandler{
 	
 	protected XmlElement parentNode;
 
+	
 	/**
 	 * @see org.columba.core.plugin.AbstractPluginHandler#getNames()
 	 */

@@ -30,7 +30,6 @@ import org.columba.core.main.MainInterface;
 import org.columba.core.xml.XmlElement;
 import org.columba.mail.command.FolderCommand;
 import org.columba.mail.command.FolderCommandReference;
-import org.columba.mail.config.MailConfig;
 import org.columba.mail.folder.command.CopyMessageCommand;
 import org.columba.mail.folder.command.MoveMessageCommand;
 import org.columba.mail.gui.action.GlobalActionCollection;
@@ -155,6 +154,7 @@ public class MailFrameController extends AbstractFrameController {
 		return actionListener;
 	}
 
+	/*
 	protected void changeToolbars() {
 		ViewItem item = MailConfig.getMainFrameOptionsConfig().getViewItem();
 
@@ -182,7 +182,7 @@ public class MailFrameController extends AbstractFrameController {
 		}
 
 	}
-
+	*/
 	public void close() {
 
 		tableController.saveColumnConfig();
@@ -233,9 +233,6 @@ public class MailFrameController extends AbstractFrameController {
 		XmlElement child = super.createDefaultConfiguration(id);
 
 		XmlElement toolbars = new XmlElement("toolbars");
-		toolbars.addAttribute("show_main", "true");
-		toolbars.addAttribute("show_filter", "true");
-		toolbars.addAttribute("show_folderinfo", "true");
 		child.addElement(toolbars);
 		XmlElement splitpanes = new XmlElement("splitpanes");
 		splitpanes.addAttribute("main", "200");

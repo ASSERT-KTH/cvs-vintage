@@ -42,6 +42,9 @@ import org.columba.core.util.WindowMaximizer;
 public abstract class AbstractFrameView
 	extends JFrame
 	implements WindowListener {
+		
+	public static final String MAIN_TOOLBAR = "main";
+	
 	protected AbstractFrameController frameController;
 	protected Menu menu;
 
@@ -68,9 +71,9 @@ public abstract class AbstractFrameView
 		toolbarPane = new JPanel();
 		toolbarPane.setLayout(new BoxLayout(toolbarPane, BoxLayout.Y_AXIS));
 		panel.add(toolbarPane, BorderLayout.NORTH);
+
+		init();
 	}
-	
-	
 
 	public void init() {
 		menu = createMenu(frameController);
@@ -84,8 +87,9 @@ public abstract class AbstractFrameView
 	}
 
 	public boolean isToolbarVisible() {
-		return toolbar.getVisible();
-		//frameController.getItem().getBoolean("toolbar", "visible");
+
+		return frameController.isToolbarEnabled(MAIN_TOOLBAR);
+		
 	}
 
 	public void loadWindowPosition() {
@@ -134,18 +138,21 @@ public abstract class AbstractFrameView
 		item.set("maximized", isMaximized);
 	}
 
-	public void showToolbar(boolean b) {
+	public void showToolbar() {
 
-		// TODO fix configuration changes
+		boolean b = isToolbarVisible();
 
 		if (toolbar == null)
 			return;
+
 		if (b) {
-			toolbarPane.add(toolbar);
-			//frameController.getItem().set("toolbar", "visible", "true");
+			toolbarPane.remove(toolbar);
+			frameController.enableToolbar(MAIN_TOOLBAR, false);
+
 		} else {
-			toolbarPane.removeAll();
-			//frameController.getItem().set("toolbar", "visible", "false");
+			frameController.enableToolbar(MAIN_TOOLBAR, true);
+			toolbarPane.add(toolbar);
+
 		}
 
 		validate();
@@ -204,6 +211,7 @@ public abstract class AbstractFrameView
 	protected abstract Menu createMenu(AbstractFrameController controller);
 
 	protected abstract ToolBar createToolbar(AbstractFrameController controller);
+
 	/**
 	 * @return FrameController
 	 */

@@ -77,7 +77,7 @@ public class AddressbookFrameView extends AbstractFrameView {
 	}
 
 	public void init( TreeView tree, TableView table) {
-		super.init();
+		
 		
 		Container c = getContentPane();
 

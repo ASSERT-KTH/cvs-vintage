@@ -2,18 +2,25 @@
 <!-- <!DOCTYPE folderlist SYSTEM "folder.dtd"> -->
 
 <actionlist>
+
+ <!-- file menu -->
  <action name="NewMessage" class="org.columba.mail.gui.action.NewMessageAction"/>
  <action name="ReceiveSend" class="org.columba.mail.gui.action.ReceiveSendAction"/>
  <action name="SendAll" class="org.columba.mail.smtp.SendAllMessagesAction"/>
  <action name="Receive" class="org.columba.mail.pop3.ReceiveMessagesAction"/>
+ <action name="ReceiveMenu" class="org.columba.mail.pop3.FetchMessageSubMenu"/>
+ <action name="ManageServerMenu" class="org.columba.mail.pop3.ManageServerSubMenu"/>
+ 
+ <!-- edit menu -->
  <action name="SearchMessage" class="org.columba.mail.gui.action.SearchMessageAction"/> 
  <action name="MailAccount" class="org.columba.mail.gui.action.MailAccountAction"/>
  <action name="GlobalOptions" class="org.columba.mail.gui.action.GlobalOptionsAction"/>
+ 
+ <!-- view menu -->
  <action name="SortMessagesMenu" class="org.columba.mail.gui.table.action.SortMessagesMenu"/>
+ <action name="ViewFolderInfoPanel" class="org.columba.mail.gui.action.ViewFolderInfoPanelAction"/>
  <action name="ThreadedView" class="org.columba.mail.gui.table.action.ThreadedViewAction"/>
  <action name="ViewMessageSource" class="org.columba.mail.gui.table.action.ViewMessageSourceAction"/>
- <action name="ReceiveMenu" class="org.columba.mail.pop3.FetchMessageSubMenu"/>
- <action name="ManageServerMenu" class="org.columba.mail.pop3.ManageServerSubMenu"/>
  <action name="CharacterEncodingMenu" class="org.columba.mail.gui.util.CharacterEncodingSubMenu"/>
  
  <!-- message menu -->
@@ -76,6 +83,7 @@
  <action name="SendLater" class="org.columba.mail.gui.composer.action.SendLaterAction"/>
  <action name="SignMessage" class="org.columba.mail.gui.composer.action.SignMessageAction"/>
  <action name="Spellcheck" class="org.columba.mail.gui.composer.action.SpellcheckAction"/>
+ <action name="ViewAccountInfoPanel" class="org.columba.mail.gui.composer.action.ViewAccountInfoPanelAction" />
  
  <!-- attachment -->
  <action name="OpenAttachment" class="org.columba.mail.gui.attachment.action.OpenAction"/>

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- <!DOCTYPE options SYSTEM "mainframeoptions.dtd"> -->
 
-<toolbar visible="true">
+<toolbar>
     <button action="Send"/>
 	<button action="AttachFile"/>
 	<separator></separator>

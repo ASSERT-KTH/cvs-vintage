@@ -15,15 +15,19 @@
 //All Rights Reserved.
 package org.columba.mail.gui.message;
 
+import java.awt.Font;
 import java.awt.Insets;
 import java.net.URL;
 
 import javax.swing.JTextPane;
 import javax.swing.text.html.HTMLDocument;
 import javax.swing.text.html.HTMLEditorKit;
+import javax.swing.text.html.StyleSheet;
 
+import org.columba.core.config.Config;
 import org.columba.core.io.DiskIO;
 import org.columba.core.logging.ColumbaLogger;
+import org.columba.core.xml.XmlElement;
 import org.columba.mail.gui.message.util.DocumentParser;
 import org.columba.mail.message.HeaderInterface;
 
@@ -48,7 +52,7 @@ public class HeaderViewer extends JTextPane {
 	private static final String INNER_TABLE_PROPERTIES =
 		"border=\"0\" cellspacing=\"0\" cellpadding=\"0\" align=\"left\" width=\"100%\"";
 	private static final String GLOBAL_CSS =
-		"td {font-family:Dialog; font-size:12pt}";
+		"td {font-family:Dialog; font-size:8pt}";
 	private static final String CSS =
 		"<style type=\"text/css\"><!--" + GLOBAL_CSS + "--></style>";
 
@@ -59,7 +63,9 @@ public class HeaderViewer extends JTextPane {
 	public HeaderViewer() {
 		setMargin(new Insets(5, 5, 5, 5));
 		setEditable(false);
+
 		HTMLEditorKit editorKit = new HTMLEditorKit();
+		editorKit.setStyleSheet(initStyleSheet(editorKit));
 		setEditorKit(editorKit);
 
 		URL baseUrl = DiskIO.getResourceURL("org/columba/core/images/");
@@ -76,6 +82,30 @@ public class HeaderViewer extends JTextPane {
 		keys[4] = "To";
 		keys[5] = "Cc";
 		keys[6] = "Bcc";
+
+		//setFont(font);
+
+	}
+
+	protected StyleSheet initStyleSheet(HTMLEditorKit editorKit) {
+		XmlElement mainFont =
+			Config.get("options").getElement("/options/gui/mainfont");
+		String name = mainFont.getAttribute("name");
+		String size = mainFont.getAttribute("size");
+		size = "12";
+		Font font = new Font(name, Font.PLAIN, Integer.parseInt(size));
+
+		StyleSheet style = editorKit.getStyleSheet();
+
+		String s =
+			"<style type=\"text/css\"><!--td {font-family:\""
+				+ name
+				+ "\"; font-size:\""
+				+ size
+				+ "pt\"}--></style>";
+		style.addRule(s);
+
+		return style;
 	}
 
 	void setHeader(HeaderInterface header, boolean hasAttachments)
@@ -117,7 +147,7 @@ public class HeaderViewer extends JTextPane {
 			buf.append("<IMG SRC=\"stock_attach.png\"></TD>");
 
 			buf.append("<TD " + RIGHT_COLUMN_PROPERTIES + ">");
-			buf.append(" " +   "</TD>");
+			buf.append(" " + "</TD>");
 		}
 
 		buf.append("</TABLE></BODY></HTML>");

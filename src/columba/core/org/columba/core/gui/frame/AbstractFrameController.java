@@ -70,15 +70,34 @@ public abstract class AbstractFrameController {
 		selectionManager = new SelectionManager();
 		init();
 
-		view = createView();
+		initActions();
 
+		view = createView();
+		//view.init();
+		
 		initInternActions();
+	}
+
+	protected void initActions() {
+		/*
+		ActionPluginHandler handler = null;
+		try {
+
+			handler =
+				(ActionPluginHandler) MainInterface.pluginManager.getHandler(
+					"org.columba.core.action");
+			handler.initGuiElements();
+		} catch (PluginHandlerNotFoundException ex) {
+			ex.printStackTrace();
+			return;
+		}
+		*/
 	}
 
 	protected XmlElement createDefaultConfiguration(String id) {
 		XmlElement child = (XmlElement) defaultView.clone();
 		child.addAttribute("id", id);
-		
+
 		return child;
 	}
 
@@ -107,16 +126,15 @@ public abstract class AbstractFrameController {
 		//model.saveAndUnregister(id);
 	}
 
-
 	public void close() {
 		ColumbaLogger.log.info("closing FrameController");
 
 		view.saveWindowPosition();
 
 		view.setVisible(false);
-		
+
 		FrameModel.close(this);
-		
+
 		//FrameModel.close(this);
 		//model.unregister(id);
 
@@ -125,13 +143,12 @@ public abstract class AbstractFrameController {
 
 	abstract protected AbstractFrameView createView();
 
-	public void openView()
-	{	
+	public void openView() {
 		view.loadWindowPosition();
-		
+
 		view.setVisible(true);
 	}
-	
+
 	/**
 	 * @return ViewItem
 	 */
@@ -145,6 +162,16 @@ public abstract class AbstractFrameController {
 	 */
 	public void setViewItem(ViewItem item) {
 		this.viewItem = item;
+	}
+	
+	public void enableToolbar(String id, boolean enable)
+	{
+		getViewItem().set("toolbars", id, enable);
+	}
+	
+	public boolean isToolbarEnabled(String id)
+	{
+		return getViewItem().getBoolean("toolbars", id, true);
 	}
 
 	/**
@@ -172,11 +199,12 @@ public abstract class AbstractFrameController {
 	public void setSelectionManager(SelectionManager selectionManager) {
 		this.selectionManager = selectionManager;
 	}
-	
-	public void executeCutAction() {};
-	public void executeCopyAction() {};
-	public void executePasteAction() {};
-	
-	
+
+	public void executeCutAction() {
+	};
+	public void executeCopyAction() {
+	};
+	public void executePasteAction() {
+	};
 
 }

@@ -33,6 +33,7 @@ import org.columba.core.gui.menu.Menu;
 import org.columba.core.gui.toolbar.ToolBar;
 import org.columba.mail.config.MailConfig;
 import org.columba.mail.gui.composer.menu.ComposerMenu;
+import org.columba.mail.gui.composer.util.IdentityInfoPanel;
 import org.columba.mail.util.MailResourceLoader;
 
 /**
@@ -42,50 +43,42 @@ import org.columba.mail.util.MailResourceLoader;
  */
 public class ComposerView extends AbstractFrameView {
 
-	
+	public static final String ACCOUNTINFOPANEL = "accountinfopanel";
+
 	private JSplitPane rightSplitPane;
 	private JSplitPane mainSplitPane;
 	private Container editorPane;
 
-	public ComposerView(AbstractFrameController controller)
-	{
+	public ComposerView(AbstractFrameController controller) {
 		super(controller);
-		setTitle(MailResourceLoader.getString("dialog","composer","composerview_title")); //$NON-NLS-1$
-		
+		setTitle(MailResourceLoader.getString("dialog", "composer", "composerview_title")); //$NON-NLS-1$
+
 	}
-	
-	
-	
-	public void setMainDividerLocation( int i )
-	{
+
+	public void setMainDividerLocation(int i) {
 		mainSplitPane.setDividerLocation(i);
 	}
-	
-	public void setRightDividerLocation( int i )
-	{
+
+	public void setRightDividerLocation(int i) {
 		rightSplitPane.setDividerLocation(i);
 	}
-	
-	
-	public int getMainDividerLocation()
-	{
+
+	public int getMainDividerLocation() {
 		return mainSplitPane.getDividerLocation();
 	}
-	
-	public int getRightDividerLocation()
-	{
+
+	public int getRightDividerLocation() {
 		return rightSplitPane.getDividerLocation();
 	}
-	
-	
-	public void init()
-	{
+
+	public void init() {
 		super.init();
+		
 		Container contentPane;
-		
+
 		contentPane = getContentPane();
-		
-		ComposerController controller = (ComposerController)frameController;
+
+		ComposerController controller = (ComposerController) frameController;
 		/*
 		setJMenuBar( new ComposerMenu(composerInterface) );
 		
@@ -99,34 +92,43 @@ public class ComposerView extends AbstractFrameView {
 		toolbarPanel.add( composerInterface.identityInfoPanel, BorderLayout.CENTER );
 		contentPane.add(toolbarPanel, BorderLayout.NORTH);
 		*/
+
 		
-		toolbarPane.add(controller.getIdentityInfoPanel());
+		if ( isAccountInfoPanelVisible() )
+			toolbarPane.add(controller.getIdentityInfoPanel());
+		
 		
 		rightSplitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT);
 		rightSplitPane.setBorder(null);
-		rightSplitPane.add( controller.getHeaderController().view, JSplitPane.LEFT);
-		rightSplitPane.add( controller.getAttachmentController().view, JSplitPane.RIGHT );
+		rightSplitPane.add(
+			controller.getHeaderController().view,
+			JSplitPane.LEFT);
+		rightSplitPane.add(
+			controller.getAttachmentController().view,
+			JSplitPane.RIGHT);
 		rightSplitPane.setDividerSize(5);
 		rightSplitPane.setDividerLocation(400);
-		
-		JPanel topPanel = new JPanel();
-		topPanel.setBorder( BorderFactory.createEmptyBorder(0,5,0,0) );
-		
-		JLabel subjectLabel = new JLabel(MailResourceLoader.getString("dialog","composer","subject"));	 //$NON-NLS-1$
-		subjectLabel.setDisplayedMnemonic(MailResourceLoader.getMnemonic("dialog","composer","subject"));
 
-		JLabel smtpLabel = new JLabel(MailResourceLoader.getString("dialog","composer","identity")); //$NON-NLS-1$
-		smtpLabel.setDisplayedMnemonic(MailResourceLoader.getMnemonic("dialog","composer","identity"));
-		
-		JLabel priorityLabel = new JLabel(MailResourceLoader.getString("dialog","composer","priority"));				 //$NON-NLS-1$
-		priorityLabel.setDisplayedMnemonic(MailResourceLoader.getMnemonic("dialog","composer","priority"));
-		
+		JPanel topPanel = new JPanel();
+		topPanel.setBorder(BorderFactory.createEmptyBorder(0, 5, 0, 0));
+
+		JLabel subjectLabel = new JLabel(MailResourceLoader.getString("dialog", "composer", "subject")); //$NON-NLS-1$
+		subjectLabel.setDisplayedMnemonic(
+			MailResourceLoader.getMnemonic("dialog", "composer", "subject"));
+
+		JLabel smtpLabel = new JLabel(MailResourceLoader.getString("dialog", "composer", "identity")); //$NON-NLS-1$
+		smtpLabel.setDisplayedMnemonic(
+			MailResourceLoader.getMnemonic("dialog", "composer", "identity"));
+
+		JLabel priorityLabel = new JLabel(MailResourceLoader.getString("dialog", "composer", "priority")); //$NON-NLS-1$
+		priorityLabel.setDisplayedMnemonic(
+			MailResourceLoader.getMnemonic("dialog", "composer", "priority"));
+
 		GridBagLayout gridbag = new GridBagLayout();
-		
+
 		topPanel.setLayout(gridbag);
 
 		GridBagConstraints c = new GridBagConstraints();
-
 
 		c.anchor = GridBagConstraints.WEST;
 		c.gridx = 0;
@@ -157,7 +159,7 @@ public class ComposerView extends AbstractFrameView {
 		c.gridwidth = GridBagConstraints.RELATIVE;
 		gridbag.setConstraints(subjectLabel, c);
 		topPanel.add(subjectLabel);
-		
+
 		c.fill = GridBagConstraints.HORIZONTAL;
 		c.gridx = 1;
 		c.gridy = 1;
@@ -165,54 +167,51 @@ public class ComposerView extends AbstractFrameView {
 		c.weightx = 1.0;
 		gridbag.setConstraints(controller.getSubjectController().view, c);
 		topPanel.add(controller.getSubjectController().view);
-		
-		
+
 		JPanel editorPanel = new JPanel();
 		editorPanel.setBorder(null);
-		editorPanel.setLayout( new BorderLayout() );
-		JScrollPane scrollPane = new JScrollPane(controller.getEditorController().view);
-		editorPanel.add( scrollPane, BorderLayout.CENTER );
-		
+		editorPanel.setLayout(new BorderLayout());
+		JScrollPane scrollPane =
+			new JScrollPane(controller.getEditorController().view);
+		editorPanel.add(scrollPane, BorderLayout.CENTER);
+
 		JPanel centerPanel = new JPanel();
-		centerPanel.setBorder(BorderFactory.createEmptyBorder(0,0,0,0));
-		centerPanel.setLayout( new BorderLayout() );
-		
-		centerPanel.add( topPanel, BorderLayout.NORTH );
-		centerPanel.add( editorPanel, BorderLayout.CENTER );
-		
-			
+		centerPanel.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 0));
+		centerPanel.setLayout(new BorderLayout());
+
+		centerPanel.add(topPanel, BorderLayout.NORTH);
+		centerPanel.add(editorPanel, BorderLayout.CENTER);
+
 		mainSplitPane = new JSplitPane(JSplitPane.VERTICAL_SPLIT);
 		mainSplitPane.setBorder(null);
-		mainSplitPane.add(
-			rightSplitPane,
-			JSplitPane.TOP);
-			
+		mainSplitPane.add(rightSplitPane, JSplitPane.TOP);
+
 		mainSplitPane.add(centerPanel, JSplitPane.BOTTOM);
 		mainSplitPane.setDividerSize(5);
 		mainSplitPane.setDividerLocation(150);
-		
+
 		contentPane.add(mainSplitPane, BorderLayout.CENTER);
-		
+
 		/*
 		JLabel statusBar = new JLabel(MailResourceLoader.getString("dialog","composer","statusbar_label")); //$NON-NLS-1$
 		Border border = BorderFactory.createEtchedBorder(1);
 		Border margin = new EmptyBorder(2, 0, 2, 0);
 		statusBar.setBorder(new CompoundBorder(margin, border));
-
+		
 		contentPane.add(statusBar, BorderLayout.SOUTH);
 		*/
 		pack();
-		
+
 		//setSize( new Dimension(580,640) );
 	}
-	
-	
+
 	/* (non-Javadoc)
 	 * @see org.columba.core.gui.FrameView#createMenu(org.columba.core.gui.FrameController)
 	 */
 	protected Menu createMenu(AbstractFrameController controller) {
-		Menu menu = new ComposerMenu("org/columba/core/action/menu.xml",controller);
-				menu.extendMenuFromFile("org/columba/mail/action/composer_menu.xml");
+		Menu menu =
+			new ComposerMenu("org/columba/core/action/menu.xml", controller);
+		menu.extendMenuFromFile("org/columba/mail/action/composer_menu.xml");
 		return menu;
 	}
 
@@ -220,7 +219,9 @@ public class ComposerView extends AbstractFrameView {
 	 * @see org.columba.core.gui.FrameView#createToolbar(org.columba.core.gui.FrameController)
 	 */
 	protected ToolBar createToolbar(AbstractFrameController controller) {
-		return new ToolBar( MailConfig.get("composer_toolbar").getElement("toolbar"), controller);
+		return new ToolBar(
+			MailConfig.get("composer_toolbar").getElement("toolbar"),
+			controller);
 	}
 
 	/* (non-Javadoc)
@@ -229,6 +230,62 @@ public class ComposerView extends AbstractFrameView {
 	public void loadWindowPosition() {
 
 		super.loadWindowPosition();
+	}
+
+	public IdentityInfoPanel getAccountInfoPanel() {
+		ComposerController controller = (ComposerController) frameController;
+		return controller.getIdentityInfoPanel();
+	}
+
+	/* (non-Javadoc)
+		 * @see org.columba.core.gui.frame.AbstractFrameView#showToolbar()
+		 */
+	public void showToolbar() {
+
+		boolean b = isToolbarVisible();
+
+		if (toolbar == null)
+			return;
+
+		if (b) {
+			toolbarPane.remove(toolbar);
+			frameController.enableToolbar(MAIN_TOOLBAR, false);
+
+		} else {
+			if (isAccountInfoPanelVisible()) {
+				toolbarPane.removeAll();
+				toolbarPane.add(toolbar);
+				toolbarPane.add(getAccountInfoPanel());
+			} else
+				toolbarPane.add(toolbar);
+
+			frameController.enableToolbar(MAIN_TOOLBAR, true);
+
+		}
+
+		validate();
+		repaint();
+	}
+
+	public void showAccountInfoPanel() {
+		boolean b = isAccountInfoPanelVisible();
+
+		if (b) {
+			toolbarPane.remove(getAccountInfoPanel());
+			frameController.enableToolbar(ACCOUNTINFOPANEL, false);
+		} else {
+
+			toolbarPane.add(getAccountInfoPanel());
+
+			frameController.enableToolbar(ACCOUNTINFOPANEL, true);
+		}
+
+		validate();
+		repaint();
+	}
+
+	public boolean isAccountInfoPanelVisible() {
+		return frameController.isToolbarEnabled(ACCOUNTINFOPANEL);
 	}
 
 }
