@@ -241,7 +241,7 @@ public class ScarabLocalizationTool
             if (obj != null && 
                 !(obj instanceof SkipFiltering) && 
                 !(obj instanceof Number) 
-                ) 
+               ) 
             {
                 args[i] = ReferenceInsertionFilter.filter(obj.toString());
             }

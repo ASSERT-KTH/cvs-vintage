@@ -96,7 +96,7 @@ public class ReportUserAttribute
             result = ObjectUtils.equals(userId, rua.getUserId())
                 && ObjectUtils.equals(attributeId, rua.getAttributeId());
         }
-        Log.get().debug("Compare " + obj + " and " + this + " -> " + result );
+        Log.get().debug("Compare " + obj + " and " + this + " -> " + result);
         
         return result;
     }

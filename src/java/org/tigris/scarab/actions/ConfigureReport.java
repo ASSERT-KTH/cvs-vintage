@@ -86,7 +86,7 @@ import org.apache.commons.betwixt.io.BeanWriter;
 /**
     This class is responsible for report generation forms
     @author <a href="mailto:jmcnally@collab.net">John D. McNally</a>
-    @version $Id: ConfigureReport.java,v 1.5 2003/02/01 22:44:50 jon Exp $
+    @version $Id: ConfigureReport.java,v 1.6 2003/02/04 11:25:59 jon Exp $
 */
 public class ConfigureReport 
     extends RequireLoginFirstAction
@@ -97,7 +97,7 @@ public class ConfigureReport
     private static final String ADD_USER = "add_user";
     private static final String SELECTED_USER = "select_user";
 
-    public void doSaveinfo( RunData data, TemplateContext context )
+    public void doSaveinfo(RunData data, TemplateContext context)
         throws Exception
     {
         ScarabLocalizationTool l10n = getLocalizationTool(context);
@@ -109,7 +109,7 @@ public class ConfigureReport
             setNoPermissionMessage(context);
             setTarget(data, "reports,ReportList.vm");                        
         }
-        else if ( intake.isAllValid() ) 
+        else if (intake.isAllValid()) 
         {
             Group intakeReport = 
                 intake.get("Report", report.getQueryKey(), false);
@@ -134,7 +134,7 @@ public class ConfigureReport
         }
     }
 
-    public void doSelectheading( RunData data, TemplateContext context )
+    public void doSelectheading(RunData data, TemplateContext context)
         throws Exception
     {
         // the form will carry over the selected heading. just make sure
@@ -143,7 +143,7 @@ public class ConfigureReport
         intake.removeAll();
     }
 
-    public void doSettype( RunData data, TemplateContext context )
+    public void doSettype(RunData data, TemplateContext context)
         throws Exception
     {
         ValueParser params = data.getParameters();
@@ -174,7 +174,7 @@ public class ConfigureReport
         }
     }
 
-    public void doAddoptions( RunData data, TemplateContext context )
+    public void doAddoptions(RunData data, TemplateContext context)
         throws Exception
     {
         ScarabRequestTool scarabR = getScarabRequestTool(context);
@@ -185,7 +185,7 @@ public class ConfigureReport
             setNoPermissionMessage(context);
             setTarget(data, "reports,ReportList.vm");                        
         }
-        else if ( intake.isAllValid() ) 
+        else if (intake.isAllValid()) 
         {
             ScarabLocalizationTool l10n = getLocalizationTool(context);
 
@@ -208,7 +208,7 @@ public class ConfigureReport
             {
                 AttributeValue aval = (AttributeValue)avMap.get(i.next());
                 Group group = intake.get("AttributeValue", aval.getQueryKey());
-                if ( group != null ) 
+                if (group != null) 
                 {
                     group.setProperties(aval);
                 }                
@@ -306,11 +306,11 @@ public class ConfigureReport
     {
         int size = attValues.size();
         List setAVs = new ArrayList(size);
-        for ( int i=0; i<size; i++ ) 
+        for (int i=0; i<size; i++) 
         {
             AttributeValue attVal = (AttributeValue) attValues.get(i);
-            if ( attVal.getOptionId() != null || attVal.getValue() != null
-                 || attVal.getUserId() != null ) 
+            if (attVal.getOptionId() != null || attVal.getValue() != null
+                 || attVal.getUserId() != null) 
             {
                 setAVs.add(attVal);
             }
@@ -349,7 +349,7 @@ public class ConfigureReport
         if (type != heading.calculateType() 
             || heading.getReportGroups() != null) 
         {
-            if ( heading.getReportGroups() != null ) 
+            if (heading.getReportGroups() != null) 
             {
                scarabR.setAlertMessage(l10n.get("CouldNotMakeRequestedChange"));                
             }
@@ -605,7 +605,7 @@ public class ConfigureReport
         intake.removeAll();
     }        
 
-    public void doAddgroup( RunData data, TemplateContext context )
+    public void doAddgroup(RunData data, TemplateContext context)
         throws Exception
     {
         ScarabUser user = (ScarabUser)data.getUser();
@@ -654,11 +654,11 @@ public class ConfigureReport
             UIReportGroup group = new UIReportGroup();
             Group intakeGroup = intake.get("UIReportGroup", 
                                            group.getQueryKey(), false);
-            if ( intakeGroup != null ) 
+            if (intakeGroup != null) 
             {
                 intakeGroup.setProperties(group);
-                if ( group.getDisplayValue() != null 
-                     && group.getDisplayValue().length() > 0 ) 
+                if (group.getDisplayValue() != null 
+                     && group.getDisplayValue().length() > 0) 
                 {
                     ReportHeading heading = report.getReportDefinition()
                         .getAxis(axis).getHeading(level);
@@ -671,7 +671,7 @@ public class ConfigureReport
         }
     }
 
-    public void doDeletegroup( RunData data, TemplateContext context )
+    public void doDeletegroup(RunData data, TemplateContext context)
         throws Exception
     {
         ScarabUser user = (ScarabUser)data.getUser();
@@ -688,7 +688,7 @@ public class ConfigureReport
 
         ValueParser params = data.getParameters();
         String[] groupIndices = params.getStrings("selectgroup");
-        if ( groupIndices == null || groupIndices.length == 0) 
+        if (groupIndices == null || groupIndices.length == 0) 
         {
             scarabR.setAlertMessage(l10n.get("NoGroupSelected"));
         }
@@ -706,13 +706,13 @@ public class ConfigureReport
             scarabR.setConfirmMessage(l10n.get("SelectedGroupDeleted"));
                         
             /* intake way
-            for ( int i=groups.size()-1; i>=0; i-- ) 
+            for (int i=groups.size()-1; i>=0; i--) 
             {
                 ReportGroup rgroup = (ReportGroup)groups.get(i);
                 UIReportGroup uirg = new UIReportGroup(rgroup.getName());
                 Group intakeGroup = intake.get("UIReportGroup", 
                                                uirg.getQueryKey(), false);
-                if ( intakeGroup != null ) 
+                if (intakeGroup != null) 
                 {
                     intakeGroup.setProperties(uirg);
                     if (uirg.isSelected())
@@ -725,7 +725,7 @@ public class ConfigureReport
         }
     }
 
-    public void doEditgroupname( RunData data, TemplateContext context )
+    public void doEditgroupname(RunData data, TemplateContext context)
         throws Exception
     {
         ScarabUser user = (ScarabUser)data.getUser();
@@ -742,7 +742,7 @@ public class ConfigureReport
 
         ValueParser params = data.getParameters();
         String[] groupIndices = params.getStrings("selectgroup");
-        if ( groupIndices == null || groupIndices.length == 0) 
+        if (groupIndices == null || groupIndices.length == 0) 
         {
             scarabR.setAlertMessage(l10n.get("NoGroupSelected"));
         }
@@ -763,7 +763,7 @@ public class ConfigureReport
         }
     }
 
-    public void doSavegroups( RunData data, TemplateContext context )
+    public void doSavegroups(RunData data, TemplateContext context)
         throws Exception
     {
         ScarabUser user = (ScarabUser)data.getUser();
@@ -858,7 +858,7 @@ public class ConfigureReport
     }
 
 
-    public void doAdddate( RunData data, TemplateContext context )
+    public void doAdddate(RunData data, TemplateContext context)
         throws Exception
     {
         ScarabRequestTool scarabR = getScarabRequestTool(context);
@@ -907,7 +907,7 @@ public class ConfigureReport
         scarabR.setConfirmMessage(l10n.get("DateAdded"));
     }
 
-    public void doDeletedate( RunData data, TemplateContext context )
+    public void doDeletedate(RunData data, TemplateContext context)
         throws Exception
     {
         ScarabUser user = (ScarabUser)data.getUser();
@@ -983,7 +983,7 @@ public class ConfigureReport
         setTarget(data, "reports,ConfineDataset.vm");
     }
 
-    public void doConfinedataset( RunData data, TemplateContext context )
+    public void doConfinedataset(RunData data, TemplateContext context)
         throws Exception
     {
         ScarabUser user = (ScarabUser)data.getUser();
@@ -1018,7 +1018,7 @@ public class ConfigureReport
     }
 
 
-    public void doSwaprowcol( RunData data, TemplateContext context )
+    public void doSwaprowcol(RunData data, TemplateContext context)
         throws Exception
     {
         ScarabUser user = (ScarabUser)data.getUser();

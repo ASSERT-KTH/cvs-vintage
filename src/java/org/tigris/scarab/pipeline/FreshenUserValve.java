@@ -74,7 +74,7 @@ import org.tigris.scarab.om.MITListManager;
  * This valve clears any stale data out of the user due to aborted wizards.  
  *
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: FreshenUserValve.java,v 1.8 2003/02/03 19:12:22 jmcnally Exp $
+ * @version $Id: FreshenUserValve.java,v 1.9 2003/02/04 11:26:02 jon Exp $
  */
 public class FreshenUserValve 
     extends AbstractValve
@@ -103,7 +103,7 @@ public class FreshenUserValve
     /**
      * @see org.apache.turbine.Valve#invoke(RunData, ValveContext)
      */
-    public void invoke( RunData data, ValveContext context )
+    public void invoke(RunData data, ValveContext context)
         throws IOException, TurbineException
     {
         ScarabUser user = (ScarabUser)data.getUser();
@@ -133,7 +133,7 @@ public class FreshenUserValve
         String removeMitKey = 
             parameters.getString(ScarabConstants.REMOVE_CURRENT_MITLIST_QKEY);
         if (removeMitKey != null 
-            || !xmitScreens.containsKey(data.getTarget()) )
+            || !xmitScreens.containsKey(data.getTarget()))
         {
             Log.get().debug("xmit list set to null");
             user.setCurrentMITList(null);
@@ -160,7 +160,7 @@ public class FreshenUserValve
         // should add the currently reporting issue here as well
 
         // Pass control to the next Valve in the Pipeline
-        context.invokeNext( data );
+        context.invokeNext(data);
     }
 
     private void setCurrentModule(ScarabUser user, RunData data)

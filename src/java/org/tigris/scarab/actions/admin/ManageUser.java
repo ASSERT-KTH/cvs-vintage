@@ -76,14 +76,14 @@ import org.tigris.scarab.tools.ScarabGlobalTool;
  * Action(s).
  *
  * @author <a href="mailto:dr@bitonic.com">Douglas B. Robertson</a>
- * @version $Id: ManageUser.java,v 1.14 2002/10/23 21:42:33 jon Exp $
+ * @version $Id: ManageUser.java,v 1.15 2003/02/04 11:26:00 jon Exp $
  */
 public class ManageUser extends RequireLoginFirstAction
 {
     /**
      * This manages clicking the Add User button
      */
-    public void doAdduser( RunData data, TemplateContext context ) throws Exception
+    public void doAdduser(RunData data, TemplateContext context) throws Exception
     {
         ScarabRequestTool scarabR = getScarabRequestTool(context);
         String template = getCurrentTemplate(data, null);
@@ -155,7 +155,7 @@ public class ManageUser extends RequireLoginFirstAction
         }
     }
     
-    public void doEdituser( RunData data, TemplateContext context ) throws Exception
+    public void doEdituser(RunData data, TemplateContext context) throws Exception
     {
         ScarabRequestTool scarabR = getScarabRequestTool(context);
         String template = getCurrentTemplate(data, null);
@@ -255,7 +255,7 @@ public class ManageUser extends RequireLoginFirstAction
         }
     }
     
-    public void doDeleteuser( RunData data, TemplateContext context )
+    public void doDeleteuser(RunData data, TemplateContext context)
         throws Exception
     {
         getScarabRequestTool(context)
@@ -271,7 +271,7 @@ public class ManageUser extends RequireLoginFirstAction
     /**
      * This manages clicking the 'Update Roles' button
      */
-    public void doRoles( RunData data, TemplateContext context )
+    public void doRoles(RunData data, TemplateContext context)
         throws Exception
     {
         String username = data.getParameters().getString("username");
@@ -294,7 +294,7 @@ public class ManageUser extends RequireLoginFirstAction
                 
                 String formGroupRole = data.getParameters().getString(groupRole);
                 
-                if ( formGroupRole != null && !acl.hasRole(roles[j], groups[i]))
+                if (formGroupRole != null && !acl.hasRole(roles[j], groups[i]))
                 {
                     TurbineSecurity.grant(user, groups[i], roles[j]);
                 }
@@ -311,7 +311,7 @@ public class ManageUser extends RequireLoginFirstAction
     /**
      * 
      */
-    public void doGotoedituser( RunData data, TemplateContext context )
+    public void doGotoedituser(RunData data, TemplateContext context)
         throws Exception
     {
         String userName = data.getParameters().getString("username");
@@ -329,7 +329,7 @@ public class ManageUser extends RequireLoginFirstAction
     /**
      * 
      */
-    public void doGotoeditroles( RunData data, TemplateContext context )
+    public void doGotoeditroles(RunData data, TemplateContext context)
         throws Exception
     {
         String userName = data.getParameters().getString("username");
@@ -346,7 +346,7 @@ public class ManageUser extends RequireLoginFirstAction
     /**
      * 
      */
-    public void doGotodeleteuser( RunData data, TemplateContext context )
+    public void doGotodeleteuser(RunData data, TemplateContext context)
         throws Exception
     {
         setTarget(data, "admin,DeleteUser.vm");
@@ -355,7 +355,7 @@ public class ManageUser extends RequireLoginFirstAction
     /**
      * 
      */
-    public void doGotoadduser( RunData data, TemplateContext context )
+    public void doGotoadduser(RunData data, TemplateContext context)
         throws Exception
     {
         setTarget(data, "admin,AddUser.vm");
@@ -364,7 +364,7 @@ public class ManageUser extends RequireLoginFirstAction
     /**
      * This manages clicking the 'Search' button
      */
-    public void doSearch( RunData data, TemplateContext context )
+    public void doSearch(RunData data, TemplateContext context)
         throws Exception
     {
         ScarabGlobalTool gTool = 
@@ -395,7 +395,7 @@ public class ManageUser extends RequireLoginFirstAction
     /**
      * calls doSearch()
      */
-    public void doPerform( RunData data, TemplateContext context )
+    public void doPerform(RunData data, TemplateContext context)
         throws Exception
     {
         doSearch(data, context);

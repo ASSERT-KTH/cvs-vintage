@@ -69,14 +69,14 @@ import org.tigris.scarab.screens.SelectModule;
  * showing up in the log files.
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: ReferenceInsertionFilter.java,v 1.15 2002/11/07 01:41:03 jmcnally Exp $
+ * @version $Id: ReferenceInsertionFilter.java,v 1.16 2003/02/04 11:26:03 jon Exp $
  */
 public class ReferenceInsertionFilter
     implements ReferenceInsertionEventHandler, NullSetEventHandler
 {
 
 
-    public boolean shouldLogOnNullSet( String lhs, String rhs )
+    public boolean shouldLogOnNullSet(String lhs, String rhs)
     {
         return false;
     }
@@ -104,14 +104,14 @@ public class ReferenceInsertionFilter
                 !reference.startsWith("$intake.declare") &&
                 // localization tool pre-filters data
                 !reference.startsWith("$l10n")
-               )
+              )
             {
                 // we are already a String
                 result = filter((String)value);
             }
         }
         // don't filter links and some other known to be safe elements
-        else if ( !(value instanceof SkipFiltering) )
+        else if (!(value instanceof SkipFiltering))
         {
             // We convert the object to a string and output the result
             result = filter(value.toString());

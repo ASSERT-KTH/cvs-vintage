@@ -65,7 +65,7 @@ import org.tigris.scarab.util.ScarabException;
  *
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: IssueType.java,v 1.38 2003/02/04 00:54:23 dlr Exp $
+ * @version $Id: IssueType.java,v 1.39 2003/02/04 11:26:01 jon Exp $
  */
 public  class IssueType 
     extends org.tigris.scarab.om.BaseIssueType
@@ -100,12 +100,12 @@ public  class IssueType
     public IssueType getTemplateIssueType()
         throws Exception
     {
-        if ( templateIssueType == null ) 
+        if (templateIssueType == null) 
         {        
             Criteria crit = new Criteria();
             crit.add(IssueTypePeer.PARENT_ID, getIssueTypeId());
             List results = IssueTypePeer.doSelect(crit);
-            if (results.isEmpty() || results.size()>1 )
+            if (results.isEmpty() || results.size()>1)
             {
                 throw new ScarabException("There has been an error.");
             }
@@ -158,12 +158,12 @@ public  class IssueType
     {
         IssueType result = null;
         Object obj = ScarabCache.get(ISSUE_TYPE, GET_INSTANCE, issueTypeName); 
-        if ( obj == null ) 
+        if (obj == null) 
         {        
             Criteria crit = new Criteria();
             crit.add(IssueTypePeer.NAME, issueTypeName);
             List issueTypes = IssueTypePeer.doSelect(crit);
-            if(issueTypes == null || issueTypes.size() == 0 )
+            if(issueTypes == null || issueTypes.size() == 0)
             {
                 throw new ScarabException("Invalid issue type: " +
                                           issueTypeName);
@@ -424,7 +424,7 @@ public  class IssueType
         Boolean activeBool = (activeOnly ? Boolean.TRUE : Boolean.FALSE);
         Object obj = getMethodResult().get(this, GET_R_ISSUETYPE_ATTRIBUTES, 
                                            activeBool, attributeType); 
-        if ( obj == null ) 
+        if (obj == null) 
         {        
             Criteria crit = new Criteria();
             crit.add(RIssueTypeAttributePeer.ISSUE_TYPE_ID, 
@@ -432,7 +432,7 @@ public  class IssueType
             crit.addAscendingOrderByColumn(
                 RIssueTypeAttributePeer.PREFERRED_ORDER);
             
-            if ( activeOnly )
+            if (activeOnly)
             {
                 crit.add(RIssueTypeAttributePeer.ACTIVE, true);
             }
@@ -511,10 +511,10 @@ public  class IssueType
             rias = getRIssueTypeAttributes(false, NON_USER);
         }
         Iterator i = rias.iterator();
-        while ( i.hasNext() )
+        while (i.hasNext())
         {
             RIssueTypeAttribute tempRia = (RIssueTypeAttribute)i.next();
-            if ( tempRia.getAttribute().equals(attribute) )
+            if (tempRia.getAttribute().equals(attribute))
             {
                 ria = tempRia;
                 break;
@@ -541,7 +541,7 @@ public  class IssueType
         List rIssueTypeAttributes = getRIssueTypeAttributes(activeOnly, USER);
         List userAttributes = new ArrayList();
 
-        for ( int i=0; i<rIssueTypeAttributes.size(); i++ )
+        for (int i=0; i<rIssueTypeAttributes.size(); i++)
         {
             Attribute att = ((RIssueTypeAttribute)rIssueTypeAttributes.get(i)).getAttribute();
             userAttributes.add(att);
@@ -560,7 +560,7 @@ public  class IssueType
         List itAttributes = getRIssueTypeAttributes(false, attributeType);
         int last = 0;
 
-        for ( int i=0; i<itAttributes.size(); i++ )
+        for (int i=0; i<itAttributes.size(); i++)
         {
                int order = ((RIssueTypeAttribute) itAttributes.get(i))
                          .getOrder();
@@ -584,7 +584,7 @@ public  class IssueType
         List issueTypeOptions = getRIssueTypeOptions(attribute);
         int last = 0;
 
-        for ( int i=0; i<issueTypeOptions.size(); i++ )
+        for (int i=0; i<issueTypeOptions.size(); i++)
         {
                int order = ((RIssueTypeOption) issueTypeOptions.get(i))
                          .getOrder();
@@ -631,15 +631,15 @@ public  class IssueType
 
         if (allRIssueTypeOptions != null)
         {
-            if ( activeOnly )
+            if (activeOnly)
             {
                 List activeRIssueTypeOptions =
                     new ArrayList(allRIssueTypeOptions.size());
-                for ( int i=0; i<allRIssueTypeOptions.size(); i++ )
+                for (int i=0; i<allRIssueTypeOptions.size(); i++)
                 {
                     RIssueTypeOption rio =
                         (RIssueTypeOption)allRIssueTypeOptions.get(i);
-                    if ( rio.getActive() )
+                    if (rio.getActive())
                     {
                         activeRIssueTypeOptions.add(rio);
                     }
@@ -657,7 +657,7 @@ public  class IssueType
         List rIssueTypeOpts = null;
         Object obj = ScarabCache.get(this, GET_ALL_R_ISSUETYPE_OPTIONS, 
                                      attribute); 
-        if ( obj == null ) 
+        if (obj == null) 
         {        
             List options = attribute.getAttributeOptions(false);
             NumberKey[] optIds = null;
@@ -669,7 +669,7 @@ public  class IssueType
             {
                 optIds = new NumberKey[options.size()];
             }
-            for ( int i=optIds.length-1; i>=0; i-- )
+            for (int i=optIds.length-1; i>=0; i--)
             {
                 optIds[i] = ((AttributeOption)options.get(i)).getOptionId();
             }
@@ -700,10 +700,10 @@ public  class IssueType
         RIssueTypeOption rio = null;
         List rios = getRIssueTypeOptions(option.getAttribute(), false);
         Iterator i = rios.iterator();
-        while ( i.hasNext() )
+        while (i.hasNext())
         {
             rio = (RIssueTypeOption)i.next();
-            if ( rio.getAttributeOption().equals(option) )
+            if (rio.getAttributeOption().equals(option))
             {
                 break;
             }
@@ -724,12 +724,12 @@ public  class IssueType
         List rIssueTypeAttributes = getRIssueTypeAttributes(false,
                                                             attributeType);
         List attrs = new ArrayList();
-        for ( int i=0; i<rIssueTypeAttributes.size(); i++ )
+        for (int i=0; i<rIssueTypeAttributes.size(); i++)
         {
             attrs.add(
                ((RIssueTypeAttribute) rIssueTypeAttributes.get(i)).getAttribute());
         }
-        for ( int i=0; i<allAttributes.size(); i++ )
+        for (int i=0; i<allAttributes.size(); i++)
         {
             Attribute att = (Attribute)allAttributes.get(i);
             if (!attrs.contains(att))
@@ -752,7 +752,7 @@ public  class IssueType
         List issueTypeOptions = new ArrayList();
         if (rIssueTypeOptions != null)
         {
-            for ( int i=0; i<rIssueTypeOptions.size(); i++ )
+            for (int i=0; i<rIssueTypeOptions.size(); i++)
             {
                 issueTypeOptions.add(
                    ((RIssueTypeOption) rIssueTypeOptions.get(i)).getAttributeOption());
@@ -762,7 +762,7 @@ public  class IssueType
         List allOptions = attribute.getAttributeOptions(true);
         List availOptions = new ArrayList();
 
-        for ( int i=0; i<allOptions.size(); i++ )
+        for (int i=0; i<allOptions.size(); i++)
         {
             AttributeOption option = (AttributeOption)allOptions.get(i);
             if (!issueTypeOptions.contains(option))

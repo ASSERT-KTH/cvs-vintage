@@ -60,7 +60,7 @@ import org.tigris.scarab.services.cache.ScarabCache;
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
- * @version $Id: DependTypeManager.java,v 1.7 2002/10/24 22:59:26 jon Exp $
+ * @version $Id: DependTypeManager.java,v 1.8 2003/02/04 11:26:00 jon Exp $
  */
 public class DependTypeManager
     extends BaseDependTypeManager
@@ -97,12 +97,12 @@ public class DependTypeManager
         DependType result = null;
         Object obj = ScarabCache.get(DEPENDTYPE, FIND_DEPENDTYPE_BY_NAME, 
                                      dependTypeName); 
-        if ( obj == null ) 
+        if (obj == null) 
         {        
             Criteria crit = new Criteria();
             crit.add(DependTypePeer.DEPEND_TYPE_NAME, dependTypeName);
             List dependTypes = DependTypePeer.doSelect(crit);
-            if (dependTypes == null || dependTypes.size() == 0 )
+            if (dependTypes == null || dependTypes.size() == 0)
             {
                 throw new TorqueException("Invalid issue depend type: " + 
                                     dependTypeName);
@@ -129,7 +129,7 @@ public class DependTypeManager
     {
         List result = null;
         Object obj = getMethodResult().get(this.toString(), GET_ALL); 
-        if ( obj == null ) 
+        if (obj == null) 
         {        
             result = DependTypePeer.doSelect(new Criteria());
             getMethodResult().put(result, this.toString(), GET_ALL);

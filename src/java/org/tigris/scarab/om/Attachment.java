@@ -81,7 +81,7 @@ import org.tigris.scarab.util.word.SearchFactory;
  *
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: Attachment.java,v 1.52 2003/01/29 01:09:23 jon Exp $
+ * @version $Id: Attachment.java,v 1.53 2003/02/04 11:26:00 jon Exp $
  */
 public class Attachment 
     extends BaseAttachment
@@ -114,7 +114,7 @@ public class Attachment
      */
     public void setFileName(String name)
     {
-        if ( name == null ) 
+        if (name == null) 
         {
             super.setFileName(null);
         }
@@ -122,7 +122,7 @@ public class Attachment
         {
             // look for both '/' and '\' as path separators
             int start = name.lastIndexOf('/')+1;
-            if ( start == 0 ) 
+            if (start == 0) 
             {
                 start = name.lastIndexOf('\\')+1;                
             }
@@ -150,7 +150,7 @@ public class Attachment
     public void setFile(FileItem  v) 
     {
         fileItem = v;
-        if ( getMimeType() == null ) 
+        if (getMimeType() == null) 
         {
             setMimeType(v.getContentType());
         }
@@ -211,7 +211,7 @@ public class Attachment
     public void save(Connection dbCon)
         throws TorqueException
     {
-        if ( getIssue().isNew() ) 
+        if (getIssue().isNew()) 
         {
             throw new TorqueException("Cannot save an attachment before saving"
                                       + " the issue to which it is attached.");
@@ -240,12 +240,12 @@ public class Attachment
         try
         {
             FileItem file = getFile();
-            if ( file != null ) 
+            if (file != null) 
             {        
                 File uploadFile = 
                     new File(getRepositoryDirectory(),getRelativePath());
                 File parent = uploadFile.getParentFile();
-                if ( !parent.exists() ) 
+                if (!parent.exists()) 
                 {
                     mkdirs(parent);
                 }                
@@ -260,12 +260,12 @@ public class Attachment
         /*
          * index the text for searching.
          */
-        if ( AttachmentTypePeer.COMMENT_PK.equals(getTypeId()) ) 
+        if (AttachmentTypePeer.COMMENT_PK.equals(getTypeId())) 
         {
             try
             {
                 SearchIndex searchIndex = SearchFactory.getInstance();
-                if ( searchIndex != null ) 
+                if (searchIndex != null) 
                 {
                     searchIndex.index(this);
                 }
@@ -282,7 +282,7 @@ public class Attachment
      */
     synchronized private static void mkdirs(File path)
     {
-        if ( !path.exists() ) 
+        if (!path.exists()) 
         {
             path.mkdirs();
         }
@@ -306,13 +306,13 @@ public class Attachment
     public String getRelativePath()
         throws ScarabException, Exception
     {
-        if ( isNew() ) 
+        if (isNew()) 
         {
             throw new ScarabException("Path is not set prior to saving.");
         }        
         String path = null;
         String filename = getFileName();
-        if ( filename != null ) 
+        if (filename != null) 
         {
             // moduleId/(issue_IdCount/1000)/issueID_attID_filename
             StringBuffer sb = new StringBuffer(30+filename.length());
@@ -338,7 +338,7 @@ public class Attachment
         String path = null;
         String prefix = getRepositoryDirectory();
         String suffix = getRelativePath();
-        if ( suffix != null ) 
+        if (suffix != null) 
         {
             path = new StringBuffer(prefix.length() + suffix.length() + 1)
             .append(prefix).append(File.separator).append(suffix).toString();
@@ -356,14 +356,14 @@ public class Attachment
     public static String getRepositoryDirectory()
         throws Exception
     {
-        if ( fileRepo == null ) 
+        if (fileRepo == null) 
         {
             String testPath = Turbine.getConfiguration()
                 .getString(ScarabConstants.ATTACHMENTS_REPO_KEY);
-            if ( testPath.startsWith("/") ) 
+            if (testPath.startsWith("/")) 
             {
                 File testDir = new File(testPath);                
-                if ( !testDir.exists() ) 
+                if (!testDir.exists()) 
                 {
                     mkdirs(testDir);
                 }
@@ -374,7 +374,7 @@ public class Attachment
                 // test for existence within the webapp directory.
                 String testPath2 = Turbine.getRealPath(testPath);
                 File testDir = new File(testPath2);
-                if ( !testDir.exists() ) 
+                if (!testDir.exists()) 
                 {
                     mkdirs(testDir);
                 }
@@ -407,7 +407,7 @@ public class Attachment
             out = new BufferedOutputStream(new FileOutputStream(f));
             byte[] bytes = new byte[2048];
             int s = 0;
-            while ( (s = in.read(bytes)) != -1 )
+            while ((s = in.read(bytes)) != -1)
             {
                 out.write(bytes,0,s);
             }

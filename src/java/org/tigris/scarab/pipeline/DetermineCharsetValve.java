@@ -61,13 +61,13 @@ import org.apache.log4j.Category;
  * This valve determines the charset to use when parsing request parameters.
  *
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: DetermineCharsetValve.java,v 1.5 2003/01/10 04:54:03 jmcnally Exp $
+ * @version $Id: DetermineCharsetValve.java,v 1.6 2003/02/04 11:26:02 jon Exp $
  */
 public class DetermineCharsetValve 
     extends AbstractValve
 {
     private static final Category log = 
-        Category.getInstance( DetermineCharsetValve.class );
+        Category.getInstance(DetermineCharsetValve.class);
         
     private static final String KEY = 
         ResetCacheValve.class.getName() + ".start";
@@ -78,7 +78,7 @@ public class DetermineCharsetValve
     /**
      * @see org.apache.turbine.Valve#invoke(RunData, ValveContext)
      */
-    public void invoke( RunData data, ValveContext context )
+    public void invoke(RunData data, ValveContext context)
         throws IOException, TurbineException
     {
         // if we are forcing a particular charset, use it.  Hopefully
@@ -102,6 +102,6 @@ public class DetermineCharsetValve
         }
         
         // Pass control to the next Valve in the Pipeline
-        context.invokeNext( data );
+        context.invokeNext(data);
     }
 }

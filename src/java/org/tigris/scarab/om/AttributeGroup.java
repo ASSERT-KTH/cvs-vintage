@@ -117,7 +117,7 @@ public  class AttributeGroup
         throws TorqueException
     {
         NumberKey id = me.getModuleId();
-        if ( id == null) 
+        if (id == null) 
         {
             throw new TorqueException("Modules must be saved prior to " +
                                       "being associated with other objects.");
@@ -135,7 +135,7 @@ public  class AttributeGroup
     {
         Module module = null;
         ObjectKey id = getModuleId();
-        if ( id != null ) 
+        if (id != null) 
         {
             module = ModuleManager.getInstance(id);
         }
@@ -157,7 +157,7 @@ public  class AttributeGroup
     {
         List result = null;
         Object obj = getMethodResult().get(this, GET_ATTRIBUTES); 
-        if ( obj == null ) 
+        if (obj == null) 
         {        
             Criteria crit = new Criteria()
                 .add(RAttributeAttributeGroupPeer.GROUP_ID, 
@@ -220,7 +220,7 @@ public  class AttributeGroup
         RAttributeAttributeGroup result = null;
         Object obj = ScarabCache.get(this, GET_R_ATTRIBUTE_ATTRGROUP, 
                                      attribute); 
-        if ( obj == null ) 
+        if (obj == null) 
         {        
             Criteria crit = new Criteria()
                 .add(RAttributeAttributeGroupPeer.GROUP_ID, 
@@ -241,7 +241,7 @@ public  class AttributeGroup
     }
 
 
-    public void delete( ScarabUser user, Module module )
+    public void delete(ScarabUser user, Module module)
          throws Exception
     {                
         String permission = null;
@@ -340,7 +340,7 @@ public  class AttributeGroup
         }            
     }
 
-    public void addAttribute( Attribute attribute )
+    public void addAttribute(Attribute attribute)
          throws Exception
     {                
         IssueType issueType = getIssueType();
@@ -415,8 +415,8 @@ public  class AttributeGroup
         getMethodResult().remove(this, AttributeGroup.GET_ATTRIBUTES);
     }
 
-    public void deleteAttribute( Attribute attribute, ScarabUser user,
-                                 Module module )
+    public void deleteAttribute(Attribute attribute, ScarabUser user,
+                                 Module module)
          throws Exception
     {                
         String permission = null;
@@ -526,13 +526,13 @@ public  class AttributeGroup
         getMethodResult().remove(this, AttributeGroup.GET_ATTRIBUTES);
     }
 
-    private RAttributeAttributeGroup addRAttributeAttributeGroup( Attribute attribute )
+    private RAttributeAttributeGroup addRAttributeAttributeGroup(Attribute attribute)
          throws Exception
     {                
         RAttributeAttributeGroup raag = new RAttributeAttributeGroup();
         raag.setGroupId(getAttributeGroupId());
         raag.setAttributeId(attribute.getAttributeId());
-        raag.setOrder(getAttributes().size() +1 );
+        raag.setOrder(getAttributes().size() +1);
         return raag;
     }
 

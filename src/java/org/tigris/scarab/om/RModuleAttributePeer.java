@@ -75,12 +75,12 @@ public class RModuleAttributePeer
      *
      * @param pk
      */
-    public static RModuleAttribute retrieveByPK( ObjectKey pk )
+    public static RModuleAttribute retrieveByPK(ObjectKey pk)
         throws TorqueException
     {
         RModuleAttribute result = null;
         Object obj = ScarabCache.get(RMODULEATTRIBUTE_PEER, RETRIEVE_BY_PK, pk); 
-        if ( obj == null ) 
+        if (obj == null) 
         {        
             result = BaseRModuleAttributePeer.retrieveByPK(pk);
             ScarabCache.put(result, RMODULEATTRIBUTE_PEER, RETRIEVE_BY_PK, pk);

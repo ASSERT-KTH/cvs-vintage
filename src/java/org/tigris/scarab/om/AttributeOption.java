@@ -80,7 +80,7 @@ import org.tigris.scarab.services.cache.ScarabCache;
   * TurbineGlobalCache service.
   *
   * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
-  * @version $Id: AttributeOption.java,v 1.28 2003/01/16 22:44:38 jmcnally Exp $
+  * @version $Id: AttributeOption.java,v 1.29 2003/02/04 11:26:00 jon Exp $
   */
 public class AttributeOption 
     extends BaseAttributeOption
@@ -167,7 +167,7 @@ public class AttributeOption
      */
     public Attribute getAttribute() throws TorqueException
     {
-        if ( aAttribute==null && (getAttributeId() != null) )
+        if (aAttribute==null && (getAttributeId() != null))
         {
             aAttribute = AttributeManager.getInstance(getAttributeId());
             
@@ -234,7 +234,7 @@ public class AttributeOption
         throws Exception
     {
         List parents = getParents();
-        for ( int i=parents.size()-1; i>=0; i-- ) 
+        for (int i=parents.size()-1; i>=0; i--) 
         {
             AttributeOption parent = (AttributeOption) 
                 parents.get(i);
@@ -266,7 +266,7 @@ public class AttributeOption
         throws Exception
     {
         List children = getChildren();
-        for ( int i=children.size()-1; i>=0; i-- ) 
+        for (int i=children.size()-1; i>=0; i--) 
         {
             AttributeOption child = (AttributeOption) 
                 children.get(i);
@@ -739,7 +739,7 @@ public class AttributeOption
         }
         else
         {
-            while ( st.hasMoreTokens() ) 
+            while (st.hasMoreTokens()) 
             {
                 String id = st.nextToken();
                 AttributeOption ao = 
@@ -784,7 +784,7 @@ public class AttributeOption
     {
         walkTree(option);
         ArrayList list = new ArrayList();
-        for ( int j=orderedTree.size()-1; j>=0; j-- )
+        for (int j=orderedTree.size()-1; j>=0; j--)
         {
             AttributeOption ao = (AttributeOption) orderedTree.get(j);
             System.out.println (
@@ -803,7 +803,7 @@ public class AttributeOption
         throws Exception
     {
         List children = option.getChildren();
-        for ( int j=children.size()-1; j>=0; j-- ) 
+        for (int j=children.size()-1; j>=0; j--) 
         {
             AttributeOption ao = (AttributeOption) children.get(j);
             if (ao.hasChildren())

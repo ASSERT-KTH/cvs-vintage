@@ -69,7 +69,7 @@ import org.tigris.scarab.util.Log;
  *
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
  * @author <a href="mailto:jon@collab.net">Jon Scott Stevens</a>
- * @version $Id: UpdateSearchIndex.java,v 1.11 2003/01/02 02:35:14 jmcnally Exp $
+ * @version $Id: UpdateSearchIndex.java,v 1.12 2003/02/04 11:26:00 jon Exp $
  */
 public class UpdateSearchIndex extends RequireLoginFirstAction
 {
@@ -84,7 +84,7 @@ public class UpdateSearchIndex extends RequireLoginFirstAction
         tg = null;
     }    
 
-    public void doPerform( RunData data, TemplateContext context )
+    public void doPerform(RunData data, TemplateContext context)
         throws Exception
     {
         ScarabRequestTool scarabR = getScarabRequestTool(context);

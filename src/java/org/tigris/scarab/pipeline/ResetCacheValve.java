@@ -60,7 +60,7 @@ import org.tigris.scarab.services.cache.ScarabCache;
  * multiple, duplicate db queries.  
  *
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: ResetCacheValve.java,v 1.5 2002/11/22 20:33:54 jmcnally Exp $
+ * @version $Id: ResetCacheValve.java,v 1.6 2003/02/04 11:26:02 jon Exp $
  */
 public final class ResetCacheValve 
     extends AbstractValve
@@ -68,13 +68,13 @@ public final class ResetCacheValve
     /**
      * @see org.apache.turbine.Valve#invoke(RunData, ValveContext)
      */
-    public final void invoke( RunData data, ValveContext context )
+    public final void invoke(RunData data, ValveContext context)
         throws IOException, TurbineException
     {
         // clear the short-term cache
         ScarabCache.clear();
 
         // Pass control to the next Valve in the Pipeline
-        context.invokeNext( data );
+        context.invokeNext(data);
     }
 }

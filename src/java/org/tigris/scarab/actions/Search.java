@@ -81,7 +81,7 @@ import org.tigris.scarab.util.ScarabConstants;
  * @author <a href="mailto:jmcnally@collab.net">John D. McNally</a>
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: Search.java,v 1.104 2003/02/04 01:01:19 elicia Exp $
+ * @version $Id: Search.java,v 1.105 2003/02/04 11:26:00 jon Exp $
  */
 public class Search extends RequireLoginFirstAction
 {
@@ -188,7 +188,7 @@ public class Search extends RequireLoginFirstAction
         }
     }
 
-    public boolean doEditqueryinfo( RunData data, TemplateContext context )
+    public boolean doEditqueryinfo(RunData data, TemplateContext context)
         throws Exception
     {
         boolean success = false;

@@ -73,14 +73,14 @@ import org.tigris.scarab.services.cache.ScarabCache;
 
 /**
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
- * @version $Id: ModuleAttributeEdit.java,v 1.25 2002/12/05 16:20:45 jon Exp $
+ * @version $Id: ModuleAttributeEdit.java,v 1.26 2003/02/04 11:26:00 jon Exp $
  */
 public class ModuleAttributeEdit extends RequireLoginFirstAction
 {
     /**
      * Changes the properties of existing AttributeOptions.
      */
-    public synchronized void doSave ( RunData data, TemplateContext context )
+    public synchronized void doSave (RunData data, TemplateContext context)
         throws Exception
     {
         ScarabRequestTool scarabR = getScarabRequestTool(context);
@@ -101,7 +101,7 @@ public class ModuleAttributeEdit extends RequireLoginFirstAction
         }
 
         IntakeTool intake = getIntakeTool(context);
-        if ( intake.isAllValid())
+        if (intake.isAllValid())
         {
             Module me = scarabR.getCurrentModule();
             List rmos = me.getRModuleOptions(attribute, issueType, false);
@@ -136,8 +136,8 @@ public class ModuleAttributeEdit extends RequireLoginFirstAction
     /**
      * Unmaps attribute options to modules.
      */
-    public void doDeleteattributeoptions( RunData data,
-                                          TemplateContext context ) 
+    public void doDeleteattributeoptions(RunData data,
+                                          TemplateContext context) 
         throws Exception
     {
         ScarabRequestTool scarabR = getScarabRequestTool(context);
@@ -207,8 +207,8 @@ public class ModuleAttributeEdit extends RequireLoginFirstAction
     /**
      * Selects option to add to attribute.
      */
-    public void doSelectattributeoption( RunData data, 
-                                         TemplateContext context )
+    public void doSelectattributeoption(RunData data, 
+                                         TemplateContext context)
         throws Exception
     {
         ScarabRequestTool scarabR = getScarabRequestTool(context);

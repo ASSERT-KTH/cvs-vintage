@@ -74,7 +74,7 @@ import org.tigris.scarab.tools.ScarabLocalizationTool;
  * This class is responsible for building a list of Module/IssueTypes.
  *
  * @author <a href="mailto:jmcnally@collab.net">John D. McNally</a>
- * @version $Id: DefineXModuleList.java,v 1.12 2003/01/24 19:52:59 jmcnally Exp $
+ * @version $Id: DefineXModuleList.java,v 1.13 2003/02/04 11:25:59 jon Exp $
  */
 public class DefineXModuleList extends RequireLoginFirstAction
 {
@@ -303,7 +303,7 @@ public class DefineXModuleList extends RequireLoginFirstAction
             // (ASM) but because ScarabUserImpl does not extend ASM, it
             // lives here :-(
             MITList mitList = user.getCurrentMITList();
-            if (mitList.getScarabUser() == null  ) 
+            if (mitList.getScarabUser() == null ) 
             {
                 mitList.setScarabUser(user);
             }

@@ -95,9 +95,9 @@ public class SnippetRenderer
         log.debug("Rendering snippet " + template);
         try 
         {
-            result = Module.handleRequest( 
+            result = Module.handleRequest(
                 Module.getTemplateContext(data), 
-                Turbine.getResolver().getTemplate(SNIPPETS, template) );
+                Turbine.getResolver().getTemplate(SNIPPETS, template));
         }
         catch (Exception e)
         {

@@ -73,7 +73,7 @@ import org.tigris.scarab.om.ScarabUser;
  * This class deals with modifying Global Artifact Types.
  *
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
- * @version $Id: GlobalArtifactTypeCreate.java,v 1.29 2003/02/04 03:09:11 elicia Exp $
+ * @version $Id: GlobalArtifactTypeCreate.java,v 1.30 2003/02/04 11:26:00 jon Exp $
  */
 public class GlobalArtifactTypeCreate extends RequireLoginFirstAction
 {
@@ -81,7 +81,7 @@ public class GlobalArtifactTypeCreate extends RequireLoginFirstAction
     /**
      * creates or edits global artifact type
      */
-    public void doSave( RunData data, TemplateContext context )
+    public void doSave(RunData data, TemplateContext context)
         throws Exception
     {
         IntakeTool intake = getIntakeTool(context);
@@ -90,7 +90,7 @@ public class GlobalArtifactTypeCreate extends RequireLoginFirstAction
         IssueType issueType = getScarabRequestTool(context).getIssueType();
         Group group = intake.get("IssueType", issueType.getQueryKey());
 
-        if ( intake.isAllValid() ) 
+        if (intake.isAllValid()) 
         {
             if (issueType.getIssueTypeId() == null)
             {
@@ -98,7 +98,7 @@ public class GlobalArtifactTypeCreate extends RequireLoginFirstAction
                 // make sure name is unique
                 Field field = group.get("Name");
                 String name = field.toString();
-                if ( IssueTypePeer.isUnique(name, null) ) 
+                if (IssueTypePeer.isUnique(name, null)) 
                 {
                     group.setProperties(issueType);
                     issueType.setParentId(IssueTypePeer.ROOT_KEY);
@@ -136,7 +136,7 @@ public class GlobalArtifactTypeCreate extends RequireLoginFirstAction
     /**
      * Adds or modifies an issue type's attribute groups.
      */
-    public void doSavegroups ( RunData data, TemplateContext context )
+    public void doSavegroups (RunData data, TemplateContext context)
         throws Exception
     {
         IntakeTool intake = getIntakeTool(context);
@@ -235,8 +235,8 @@ public class GlobalArtifactTypeCreate extends RequireLoginFirstAction
     /**
      * Redirects to create new user attribute screen.
      */
-    public void doCreatenewuserattribute( RunData data, 
-                                          TemplateContext context )
+    public void doCreatenewuserattribute(RunData data, 
+                                          TemplateContext context)
         throws Exception
     {
         IntakeTool intake = getIntakeTool(context);
@@ -250,8 +250,8 @@ public class GlobalArtifactTypeCreate extends RequireLoginFirstAction
     /**
      * Creates new attribute group.
      */
-    public AttributeGroup doCreatenewgroup ( RunData data, 
-                                             TemplateContext context )
+    public AttributeGroup doCreatenewgroup (RunData data, 
+                                             TemplateContext context)
         throws Exception
     {
         ScarabRequestTool scarabR = getScarabRequestTool(context);
@@ -264,7 +264,7 @@ public class GlobalArtifactTypeCreate extends RequireLoginFirstAction
     /**
      * Deletes an attribute group.
      */
-    public void doDeletegroup ( RunData data, TemplateContext context )
+    public void doDeletegroup (RunData data, TemplateContext context)
         throws Exception
     {
         ScarabUser user = (ScarabUser)data.getUser();
@@ -310,7 +310,7 @@ public class GlobalArtifactTypeCreate extends RequireLoginFirstAction
     /**
      * Selects attribute to add to issue type.
      */
-    public void doSelectuserattribute( RunData data, TemplateContext context )
+    public void doSelectuserattribute(RunData data, TemplateContext context)
         throws Exception
     {
         ScarabRequestTool scarabR = getScarabRequestTool(context);
@@ -344,7 +344,7 @@ public class GlobalArtifactTypeCreate extends RequireLoginFirstAction
     /**
      * Unmaps attributes to issue types.
      */
-    public void doDeleteuserattribute( RunData data, TemplateContext context ) 
+    public void doDeleteuserattribute(RunData data, TemplateContext context) 
         throws Exception
     {
         ScarabRequestTool scarabR = getScarabRequestTool(context);
@@ -386,7 +386,7 @@ public class GlobalArtifactTypeCreate extends RequireLoginFirstAction
     /**
      * Adds or modifies user attributes' properties
      */
-    public void doSaveuserattributes ( RunData data, TemplateContext context )
+    public void doSaveuserattributes (RunData data, TemplateContext context)
         throws Exception
     {
         IntakeTool intake = getIntakeTool(context);

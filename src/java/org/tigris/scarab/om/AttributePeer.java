@@ -102,7 +102,7 @@ public class AttributePeer
             cacheKey = GET_USER_ATTRIBUTES;
         }
         Object obj = ScarabCache.get(ATTRIBUTE_PEER, cacheKey);
-        if ( obj == null ) 
+        if (obj == null) 
         {        
             Criteria crit = new Criteria();
             crit.add(AttributePeer.ATTRIBUTE_ID, 0, Criteria.NOT_EQUAL);

@@ -67,11 +67,11 @@ import org.tigris.scarab.tools.ScarabRequestTool;
  * that lasts until the server is restarted or it is revoked.
  *
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: SetInfoMessage.java,v 1.1 2002/11/18 04:38:27 jmcnally Exp $
+ * @version $Id: SetInfoMessage.java,v 1.2 2003/02/04 11:26:00 jon Exp $
  */
 public class SetInfoMessage extends RequireLoginFirstAction
 {
-    public void doPerform( RunData data, TemplateContext context )
+    public void doPerform(RunData data, TemplateContext context)
         throws Exception
     {
         String msg = data.getParameters().getString("msg");

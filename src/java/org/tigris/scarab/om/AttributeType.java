@@ -61,7 +61,7 @@ import org.tigris.scarab.services.cache.ScarabCache;
  * This class represents an AttributeType
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: AttributeType.java,v 1.13 2002/08/20 20:46:26 jmcnally Exp $
+ * @version $Id: AttributeType.java,v 1.14 2003/02/04 11:26:00 jon Exp $
  */
 public class AttributeType 
     extends BaseAttributeType
@@ -103,11 +103,11 @@ public class AttributeType
         "";
         List result = null;
         Object obj = ScarabCache.get(this, , 
-                                     ); 
-        if ( obj == null ) 
+                                    ); 
+        if (obj == null) 
         {        
 
-            ScarabCache.put(result, this, , );
+            ScarabCache.put(result, this, ,);
         }
         else 
         {
@@ -125,7 +125,7 @@ public class AttributeType
     {
         AttributeClass result = null;
         Object obj = ScarabCache.get(this, GET_ATTRIBUTE_CLASS);
-        if ( obj == null ) 
+        if (obj == null) 
         {
             result = super.getAttributeClass();
             ScarabCache.put(result, this, GET_ATTRIBUTE_CLASS);
@@ -143,7 +143,7 @@ public class AttributeType
         AttributeType result = null;
         Object obj = ScarabCache.get(ATTRIBUTETYPE, GET_INSTANCE, 
                                      attributeTypeName); 
-        if ( obj == null ) 
+        if (obj == null) 
         {        
             Criteria crit = new Criteria();
             crit.add(AttributeTypePeer.ATTRIBUTE_TYPE_NAME, attributeTypeName);

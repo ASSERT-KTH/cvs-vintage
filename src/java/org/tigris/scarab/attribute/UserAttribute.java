@@ -58,7 +58,7 @@ import org.tigris.scarab.om.ScarabUserManager;
 /**
  *
  * @author <a href="mailto:jmcnally@collab.net">John D. McNally</a>
- * @version $Revision: 1.19 $ $Date: 2002/10/24 22:59:26 $
+ * @version $Revision: 1.20 $ $Date: 2003/02/04 11:26:00 $
  */
 public class UserAttribute extends AttributeValue
 {
@@ -84,7 +84,7 @@ public class UserAttribute extends AttributeValue
         // can't throw an exception, so just log it
         try
         {
-            if ( username != null ) 
+            if (username != null) 
             {
                 ScarabUser user = ScarabUserManager
                     .getInstance(username, getIssue().getIdDomain());

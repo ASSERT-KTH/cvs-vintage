@@ -51,7 +51,7 @@ public class RModuleOptionManager
             new NumberKey(issueTypeId.toString()), 
             new NumberKey(optionId.toString())
         };
-        return getInstance( new ComboKey(keys) );
+        return getInstance(new ComboKey(keys));
     }
 
     public static final RModuleOption getInstance(Module module, 
@@ -63,6 +63,6 @@ public class RModuleOptionManager
             issueType.getIssueTypeId(),
             option.getOptionId()
         };
-        return getInstance( new ComboKey(keys) );
+        return getInstance(new ComboKey(keys));
     }
 }

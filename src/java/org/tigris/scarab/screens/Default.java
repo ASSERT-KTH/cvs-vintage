@@ -71,7 +71,7 @@ import org.tigris.scarab.om.ScarabUser;
  * duplication of code.
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: Default.java,v 1.65 2002/10/24 22:59:28 jon Exp $
+ * @version $Id: Default.java,v 1.66 2003/02/04 11:26:02 jon Exp $
  */
 public class Default extends TemplateSecureScreen
 {
@@ -94,7 +94,7 @@ public class Default extends TemplateSecureScreen
     /**
      * builds up the context for display of variables on the page.
      */
-    protected void doBuildTemplate( RunData data, TemplateContext context )
+    protected void doBuildTemplate(RunData data, TemplateContext context)
         throws Exception 
     {
         ScarabRequestTool scarabR = getScarabRequestTool(context);
@@ -132,7 +132,7 @@ public class Default extends TemplateSecureScreen
      * sets the template to Login.vm if the user hasn't logged in yet
      * or if the user does not have the base permissions.
      */
-    protected boolean isAuthorized( RunData data ) throws Exception
+    protected boolean isAuthorized(RunData data) throws Exception
     {
         return checkAuthorized(data);
     }
@@ -201,9 +201,9 @@ public class Default extends TemplateSecureScreen
     public static void setTargetSelectModule(RunData data)
     {
         getTemplateContext(data)
-            .put( ScarabConstants.NEXT_TEMPLATE,
+            .put(ScarabConstants.NEXT_TEMPLATE,
                           data.getParameters()
-                          .getString(ScarabConstants.NEXT_TEMPLATE) );
+                          .getString(ScarabConstants.NEXT_TEMPLATE));
 
         setTarget(data, Turbine.getConfiguration()
                 .getString("scarab.CurrentModuleTemplate", "SelectModule.vm"));        
@@ -211,8 +211,8 @@ public class Default extends TemplateSecureScreen
 
     public static void setTargetLogin(RunData data)
     {
-        getTemplateContext(data).put( ScarabConstants.NEXT_TEMPLATE, 
-            data.getParameters().getString("template") );
+        getTemplateContext(data).put(ScarabConstants.NEXT_TEMPLATE, 
+            data.getParameters().getString("template"));
         setTarget(data, "Login.vm");        
     }
 

@@ -62,14 +62,14 @@ import org.tigris.scarab.util.ScarabConstants;
  * Sends XML Export settings contents directly to the output stream.
  *
  * @author <a href="mailto:jon@collab.net">Jon Scott Stevens</a>
- * @version $Id: ViewXMLExportSettings.java,v 1.4 2003/01/24 00:07:35 jon Exp $
+ * @version $Id: ViewXMLExportSettings.java,v 1.5 2003/02/04 11:26:02 jon Exp $
  */
 public class ViewXMLExportSettings extends Default
 {
     /**
      * builds up the context for display of variables on the page.
      */
-    public void doBuildTemplate( RunData data, TemplateContext context )
+    public void doBuildTemplate(RunData data, TemplateContext context)
         throws Exception 
     {
         super.doBuildTemplate(data, context);

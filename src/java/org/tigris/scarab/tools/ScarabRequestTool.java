@@ -440,7 +440,7 @@ try{
             String optId = getIntakeTool()
                 .get("AttributeOption", IntakeTool.DEFAULT_KEY)
                 .get("OptionId").toString();
-            if ( optId == null || optId.length() == 0 )
+            if (optId == null || optId.length() == 0)
             {
                 attributeOption = AttributeOption.getInstance();
             }
@@ -539,10 +539,10 @@ try{
                 String attId = getIntakeTool()
                     .get("Attribute", IntakeTool.DEFAULT_KEY)
                     .get("Id").toString();
-                if ( attId == null || attId.length() == 0 )
+                if (attId == null || attId.length() == 0)
                 {
                     attId = data.getParameters().getString("attId");
-                    if ( attId == null || attId.length() == 0 )
+                    if (attId == null || attId.length() == 0)
                     { 
                         attribute = AttributeManager.getInstance();
                     }
@@ -673,7 +673,7 @@ try{
                     Iterator i = rmas.iterator();
                     while (i.hasNext()) 
                     {
-                        result.add( ((RModuleAttribute)i.next()).getAttribute() );
+                        result.add(((RModuleAttribute)i.next()).getAttribute());
                     }
                 }
             }
@@ -701,7 +701,7 @@ try{
             {
                 String queryId = data.getParameters()
                     .getString("queryId"); 
-                if ( queryId == null || queryId.length() == 0 )
+                if (queryId == null || queryId.length() == 0)
                 {
                     query = Query.getInstance();
                 }
@@ -732,7 +732,7 @@ try{
                 String templateId = data.getParameters()
                     .getString("templateId"); 
 
-                if ( templateId == null || templateId.length() == 0 )
+                if (templateId == null || templateId.length() == 0)
                 {
                     templateInfo = IssueTemplateInfo.getInstance();
                 }
@@ -761,7 +761,7 @@ try{
             .getString("templateId"); 
         try
         {
-            if ( templateId == null || templateId.length() == 0 )
+            if (templateId == null || templateId.length() == 0)
             {
                 template = getCurrentModule().getNewIssue(getIssueType(
                                    getCurrentIssueType().getTemplateId().toString()));
@@ -788,7 +788,7 @@ try{
         Issue template = null;
         try
         {
-            if ( templateId == null || templateId.length() == 0 )
+            if (templateId == null || templateId.length() == 0)
             {
                 ScarabLocalizationTool l10n = getLocalizationTool();
                 setAlertMessage(l10n.get("NoTemplateId"));
@@ -818,7 +818,7 @@ try{
             {
                 String dependId = getIntakeTool()
                     .get("Depend", IntakeTool.DEFAULT_KEY).get("Id").toString();
-                if ( dependId == null || dependId.length() == 0 )
+                if (dependId == null || dependId.length() == 0)
                 {
                     depend = DependManager.getInstance();
                 }
@@ -882,10 +882,10 @@ try{
         {
             Group att = getIntakeTool()
                 .get("Attachment", IntakeTool.DEFAULT_KEY, false);
-            if ( att != null ) 
+            if (att != null) 
             {            
                 String attId =  att.get("Id").toString();
-                if ( attId == null || attId.length() == 0 )
+                if (attId == null || attId.length() == 0)
                 {
                     attachment = new Attachment();
                 }
@@ -915,7 +915,7 @@ try{
             String attGroupId = getIntakeTool()
                 .get("AttributeGroup", IntakeTool.DEFAULT_KEY)
                 .get("AttributeGroupId").toString();
-            if ( attGroupId == null || attGroupId.length() == 0 )
+            if (attGroupId == null || attGroupId.length() == 0)
             {
                 group = new AttributeGroup();
             }
@@ -973,11 +973,11 @@ try{
     public IssueType getIssueType()
         throws Exception
     {
-        if ( issueType == null ) 
+        if (issueType == null) 
         {
             String key = data.getParameters()
                 .getString("issuetypeid");
-            if ( key == null ) 
+            if (key == null) 
             {
                 // get new issue type
                 issueType = new IssueType();
@@ -1022,13 +1022,13 @@ try{
             ComboKey rModAttId = (ComboKey)getIntakeTool()
                 .get("RModuleAttribute", IntakeTool.DEFAULT_KEY)
                 .get("Id").getValue();
-            if ( rModAttId == null )
+            if (rModAttId == null)
             {
                 NumberKey attId = (NumberKey)getIntakeTool()
                     .get("Attribute", IntakeTool.DEFAULT_KEY)
                     .get("Id").getValue();
                 Module currentModule = getCurrentModule();
-                if ( attId != null && currentModule != null )
+                if (attId != null && currentModule != null)
                 {
                     NumberKey[] nka = {attId, currentModule.getModuleId()};
                     rma = RModuleAttributeManager
@@ -1074,7 +1074,7 @@ try{
       try{
         String modId = getIntakeTool()
             .get("Module", IntakeTool.DEFAULT_KEY).get("Id").toString();
-        if ( modId == null || modId.length() == 0 )
+        if (modId == null || modId.length() == 0)
         {
             module = ModuleManager.getInstance();
         }
@@ -1096,7 +1096,7 @@ try{
     public Module getModule(String key)
     {
         Module me = null;
-        if ( key != null && key.length() > 0 ) 
+        if (key != null && key.length() > 0) 
         {
             try
             {
@@ -1220,11 +1220,11 @@ try{
     public Issue getReportingIssue()
         throws Exception
     {
-        if ( reportingIssue == null ) 
+        if (reportingIssue == null) 
         {
             String key = data.getParameters()
                 .getString(ScarabConstants.REPORTING_ISSUE);
-            if ( key == null ) 
+            if (key == null) 
             {
                 getNewReportingIssue();
             }
@@ -1235,7 +1235,7 @@ try{
 
                 // if reportingIssue is still null, the parameter must have
                 // been stale, just get a new issue
-                if ( reportingIssue == null ) 
+                if (reportingIssue == null) 
                 {
                     getNewReportingIssue();                    
                 }
@@ -1292,7 +1292,7 @@ try{
             String issueId = null;
             Group issueGroup = getIntakeTool()
                 .get("Issue", IntakeTool.DEFAULT_KEY, false);
-            if ( issueGroup != null ) 
+            if (issueGroup != null) 
             {            
                 issueId =  issueGroup.get("Id").toString();
             }
@@ -1300,7 +1300,7 @@ try{
             {
                 issueId = data.getParameters().getString("id");
             }
-            if ( issueId == null || issueId.length() == 0 )
+            if (issueId == null || issueId.length() == 0)
             {
                 issue = getCurrentModule()
                     .getNewIssue(getCurrentIssueType());
@@ -1383,11 +1383,11 @@ try{
 
         Group issueGroup = getIntakeTool()
             .get("Issue", IntakeTool.DEFAULT_KEY, false);
-        if ( issueGroup != null ) 
+        if (issueGroup != null) 
         {            
             NumberKey[] issueIds =  (NumberKey[])
                 issueGroup.get("Ids").getValue();
-            if ( issueIds != null )
+            if (issueIds != null)
             {
                 issues = getIssues(Arrays.asList(issueIds));
             }
@@ -1453,7 +1453,7 @@ try{
                 }
                 if (invalidIds != null) 
                 {                
-                    setAlertMessage( getLocalizationTool()
+                    setAlertMessage(getLocalizationTool()
                         .format("SomeIssueIdsNotValid", invalidIds.toString()));
                 }
             }
@@ -1552,7 +1552,7 @@ try{
     {
         Intake intake = null;
         String param = data.getParameters().getString(parameter);
-        if ( param == null ) 
+        if (param == null) 
         {            
             intake = getIntakeTool();
         }
@@ -1625,7 +1625,7 @@ try{
             StringValueParser parser = new StringValueParser();
             parser.parse(query, '&', '=', true);
             String[] userList = parser.getStrings("user_list");
-            if ( userList != null && userList.length > 0)
+            if (userList != null && userList.length > 0)
             {
                 for (int i =0; i<userList.length; i++)
                 {
@@ -1637,7 +1637,7 @@ try{
 
             // Set intake properties
             Group searchGroup = intake.get("SearchIssue", 
-                                           search.getQueryKey() );
+                                           search.getQueryKey());
 
             Field minDate = searchGroup.get("MinDate");
             if (minDate != null && minDate.toString().length() > 0)
@@ -1674,7 +1674,7 @@ try{
             {
                 AttributeValue aval = (AttributeValue)avMap.get(i.next());
                 Group group = intake.get("AttributeValue", aval.getQueryKey());
-                if ( group != null ) 
+                if (group != null) 
                 {
                     group.setProperties(aval);
                 }                
@@ -1760,7 +1760,7 @@ try{
         List results = null;
         Object obj = 
             ScarabCache.get(search, "getUnprotectedCurrentSearchResults"); 
-        if ( obj == null ) 
+        if (obj == null) 
         {       
             results = getUncachedCurrentSearchResults();
             ScarabCache
@@ -1800,9 +1800,9 @@ try{
             if (queryError.startsWith(SearchIndex.PARSE_ERROR)) 
             {
                 Log.get().info(queryError);
-                setAlertMessage( new SimpleSkipFiltering(
+                setAlertMessage(new SimpleSkipFiltering(
                     l10n.format("QueryParserError", 
-                        new SnippetRenderer(data, "TextQueryHelp.vm")) ) );
+                        new SnippetRenderer(data, "TextQueryHelp.vm"))));
             }
             else 
             {
@@ -2048,15 +2048,15 @@ try{
     public ReportBridge getReport()
         throws Exception
     {
-        if ( reportGenerator == null ) 
+        if (reportGenerator == null) 
         {
             String key = data.getParameters()
                 .getString(ScarabConstants.CURRENT_REPORT);
             ValueParser parameters = data.getParameters();
             String id = parameters.getString("report_id");
-            if ( id == null || id.length() == 0 ) 
+            if (id == null || id.length() == 0) 
             {
-                if ( key == null ) 
+                if (key == null) 
                 {
                     reportGenerator = getNewReport();
                 }
@@ -2067,7 +2067,7 @@ try{
                     
                     // if reportingIssue is still null, the parameter must have
                     // been stale, just get a new issue
-                    if ( reportGenerator == null ) 
+                    if (reportGenerator == null) 
                     {
                         reportGenerator = getNewReport();                    
                     }
@@ -2127,8 +2127,8 @@ try{
         for (int i =0; i<keys.length; i++)
         {
             String key = keys[i].toString();
-            if ( key.startsWith("rep") || key.startsWith("intake")
-                 || key.startsWith("ofg") )
+            if (key.startsWith("rep") || key.startsWith("intake")
+                 || key.startsWith("ofg"))
             {
                 String[] values = params.getStrings(key);
                 for (int j=0; j<values.length; j++)
@@ -2303,7 +2303,7 @@ try{
      * 
      * @param nbrItmsPerPage negative value returns full list
      */
-    public List getPaginatedList( List fullList, int pgNbr, int nbrItmsPerPage)
+    public List getPaginatedList(List fullList, int pgNbr, int nbrItmsPerPage)
     {
         List pageResults = null;
         try 
@@ -2660,7 +2660,7 @@ try{
      *
      * or
      *
-     * $scarabG.log( $scarabR.reportTimer("bar") )
+     * $scarabG.log($scarabR.reportTimer("bar"))
      * </code></pre>
      *
      * The labels are useful when output is directed to a log file, it can 

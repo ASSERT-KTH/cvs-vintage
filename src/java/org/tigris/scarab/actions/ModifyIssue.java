@@ -92,7 +92,7 @@ import org.tigris.scarab.util.Log;
  * This class is responsible for edit issue forms.
  * ScarabIssueAttributeValue
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
- * @version $Id: ModifyIssue.java,v 1.146 2003/01/18 00:56:21 jon Exp $
+ * @version $Id: ModifyIssue.java,v 1.147 2003/02/04 11:25:59 jon Exp $
  */
 public class ModifyIssue extends BaseModifyIssue
 {
@@ -225,7 +225,7 @@ public class ModifyIssue extends BaseModifyIssue
                     }
                     // The attribute is being undefined. 
                     else if (oldValue != null && newValue.length() == 0 && 
-                             oldValue.length() != 0 )
+                             oldValue.length() != 0)
                     {
                         aval2.setValue(null);
                         newAttVals.put(aval.getAttributeId(), aval2);

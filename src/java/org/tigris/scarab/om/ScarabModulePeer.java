@@ -98,7 +98,7 @@ public class ScarabModulePeer
      *         the same name exists.
      * @throws Exception a generic exception.
      */
-    public static boolean checkExists( Group group )
+    public static boolean checkExists(Group group)
         throws DataBackendException, Exception
     {
         Criteria criteria = new Criteria();

@@ -58,7 +58,7 @@ import org.apache.fulcrum.TurbineServices;
  * This class provides access to security properties
  *
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: ScarabSecurity.java,v 1.19 2002/10/24 22:59:30 jon Exp $
+ * @version $Id: ScarabSecurity.java,v 1.20 2003/02/04 11:26:03 jon Exp $
  */
 public class ScarabSecurity 
     extends BaseService
@@ -203,7 +203,7 @@ public class ScarabSecurity
      */
     private void addPerm(List perms, String perm)
     {
-        if ( perm != null && perm.length() > 0 && !perms.contains(perm))
+        if (perm != null && perm.length() > 0 && !perms.contains(perm))
         {
             perms.add(perm);
         }
@@ -211,7 +211,7 @@ public class ScarabSecurity
 
     protected List getAllPermissionsImpl()
     {
-        if ( allPermissions == null ) 
+        if (allPermissions == null) 
         {
             List tmpPerms = new ArrayList();
             addPerm(tmpPerms, ScarabSecurity.ISSUE__EDIT);

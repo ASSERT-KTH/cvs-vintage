@@ -123,7 +123,7 @@ import org.tigris.scarab.workflow.WorkflowFactory;
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: AbstractScarabModule.java,v 1.75 2003/02/01 02:56:34 jon Exp $
+ * @version $Id: AbstractScarabModule.java,v 1.76 2003/02/04 11:26:00 jon Exp $
  */
 public abstract class AbstractScarabModule
     extends BaseObject
@@ -431,7 +431,7 @@ public abstract class AbstractScarabModule
         Boolean activeBool = activeOnly ? Boolean.TRUE : Boolean.FALSE;
         Object obj = getMethodResult().get(this, GET_ATTRIBUTE_GROUPS,
                                            issueType, activeBool);
-        if ( obj == null )
+        if (obj == null)
         {
             Criteria crit = new Criteria()
                 .add(AttributeGroupPeer.MODULE_ID, getModuleId())
@@ -463,7 +463,7 @@ public abstract class AbstractScarabModule
         AttributeGroup group = null;
         Object obj = ScarabCache.get(this, GET_ATTRIBUTE_GROUP, 
                                      issueType, attribute); 
-        if ( obj == null )
+        if (obj == null)
         {
             Criteria crit = new Criteria()
                 .add(AttributeGroupPeer.MODULE_ID, getModuleId())
@@ -567,14 +567,14 @@ public abstract class AbstractScarabModule
         throws Exception
     {
         ScarabUser[] users = null;
-        if ( attribute.isUserAttribute() ) 
+        if (attribute.isUserAttribute()) 
         {
             String permission = attribute.getPermission();
-            if ( permission == null ) 
+            if (permission == null) 
             {
                 throw new ScarabException("Attribute: " + attribute.getName() + 
                          " has no permission associated with it, so no users"
-                         + " can be associated with it." );
+                         + " can be associated with it.");
             }
             else 
             {
@@ -606,7 +606,7 @@ public abstract class AbstractScarabModule
     {
         List reports = null;
         Object obj = ScarabCache.get(this, GET_SAVED_REPORTS, user); 
-        if ( obj == null ) 
+        if (obj == null) 
         {        
             Criteria crit = new Criteria()
                 .add(ReportPeer.DELETED, 0);
@@ -648,7 +648,7 @@ public abstract class AbstractScarabModule
     {
         List moduleAttributes = getRModuleAttributes(criteria);
         List attributes = new ArrayList(moduleAttributes.size());
-        for ( int i=0; i<moduleAttributes.size(); i++ )
+        for (int i=0; i<moduleAttributes.size(); i++)
         {
             attributes.add(
                ((RModuleAttribute) moduleAttributes.get(i)).getAttribute());
@@ -674,7 +674,7 @@ public abstract class AbstractScarabModule
         List rModuleAttributes = getRModuleAttributes(issueType, activeOnly, USER);
         List userAttributes = new ArrayList();
 
-        for ( int i=0; i<rModuleAttributes.size(); i++ )
+        for (int i=0; i<rModuleAttributes.size(); i++)
         {
             Attribute att = ((RModuleAttribute)rModuleAttributes.get(i)).getAttribute();
             userAttributes.add(att);
@@ -714,7 +714,7 @@ public abstract class AbstractScarabModule
         List moduleAttributes = getRModuleAttributes(issueType, false, attributeType);
         int last = 0;
 
-        for ( int i=0; i<moduleAttributes.size(); i++ )
+        for (int i=0; i<moduleAttributes.size(); i++)
         {
                int order = ((RModuleAttribute) moduleAttributes.get(i))
                          .getOrder();
@@ -739,7 +739,7 @@ public abstract class AbstractScarabModule
         List moduleOptions = getRModuleOptions(attribute, issueType);
         int last = 0;
 
-        for ( int i=0; i<moduleOptions.size(); i++ )
+        for (int i=0; i<moduleOptions.size(); i++)
         {
                int order = ((RModuleOption) moduleOptions.get(i))
                          .getOrder();
@@ -770,14 +770,14 @@ public abstract class AbstractScarabModule
         }
         else
         {
-            for ( int i=0; i<rModuleAttributes.size(); i++ )
+            for (int i=0; i<rModuleAttributes.size(); i++)
             {
                 moduleAttributes.add(
                    ((RModuleAttribute) rModuleAttributes.get(i)).getAttribute());
             }
 
 
-            for ( int i=0; i<allAttributes.size(); i++ )
+            for (int i=0; i<allAttributes.size(); i++)
             {
                 Attribute att = (Attribute)allAttributes.get(i);
                 if (!moduleAttributes.contains(att))
@@ -802,7 +802,7 @@ public abstract class AbstractScarabModule
         List moduleOptions = new ArrayList();
         if (rModuleOptions != null)
         {
-            for ( int i=0; i<rModuleOptions.size(); i++ )
+            for (int i=0; i<rModuleOptions.size(); i++)
             {
                 moduleOptions.add(
                    ((RModuleOption) rModuleOptions.get(i)).getAttributeOption());
@@ -812,7 +812,7 @@ public abstract class AbstractScarabModule
         List allOptions = attribute.getAttributeOptions(true);
         List availOptions = new ArrayList();
 
-        for ( int i=0; i<allOptions.size(); i++ )
+        for (int i=0; i<allOptions.size(); i++)
         {
             AttributeOption option = (AttributeOption)allOptions.get(i);
             if (!moduleOptions.contains(option) && !option.getDeleted())
@@ -833,7 +833,7 @@ public abstract class AbstractScarabModule
         List result = null;
         Object obj = ScarabCache.get(this, GET_DEFAULT_RMODULE_USERATTRIBUTES, 
                                      issueType); 
-        if ( obj == null ) 
+        if (obj == null) 
         {        
             result = new LinkedList();
             Attribute[] attributes = new Attribute[3];
@@ -870,7 +870,7 @@ public abstract class AbstractScarabModule
             while (i.hasNext() && count < 3)            
             {
                 Attribute a = ((RModuleAttribute)i.next()).getAttribute();
-                if ( !a.equals(attributes[0]) && !a.equals(attributes[1]) ) 
+                if (!a.equals(attributes[0]) && !a.equals(attributes[1])) 
                 {
                     attributes[count++] = a;
                 }                
@@ -909,7 +909,7 @@ public abstract class AbstractScarabModule
     {
         Attribute result = null;
         Object obj = ScarabCache.get(this, GET_DEFAULT_TEXT_ATTRIBUTE); 
-        if ( obj == null ) 
+        if (obj == null) 
         {        
             // get related RMAs
             Criteria crit = new Criteria()
@@ -927,14 +927,14 @@ public abstract class AbstractScarabModule
             while (i.hasNext()) 
             {
                 RModuleAttribute rma = (RModuleAttribute)i.next();
-                if ( rma.getDefaultTextFlag() ) 
+                if (rma.getDefaultTextFlag()) 
                 {
                     result = rma.getAttribute();
                     break;
                 }
             }
             
-            if ( result == null ) 
+            if (result == null) 
             {
                 // locate the highest ranked text attribute
                 i = rmas.iterator();
@@ -942,7 +942,7 @@ public abstract class AbstractScarabModule
                 {
                     RModuleAttribute rma = (RModuleAttribute)i.next();
                     Attribute testAttr = rma.getAttribute();
-                    if ( testAttr.isTextAttribute() && 
+                    if (testAttr.isTextAttribute() && 
                          getAttributeGroup(issueType, testAttr).getActive()) 
                     {
                         result = testAttr;
@@ -974,13 +974,13 @@ public abstract class AbstractScarabModule
      * gets a list of the Issue Types for this module. only shows
      * active issue types
      */
-    public List getIssueTypes( boolean activeOnly)
+    public List getIssueTypes(boolean activeOnly)
         throws Exception
     {
         List types = null;
         Object obj = ScarabCache.get(this, GET_ISSUE_TYPES, 
                                      new Boolean(activeOnly)); 
-        if ( obj == null ) 
+        if (obj == null) 
         {        
             Criteria crit = new Criteria();
             crit.addJoin(RModuleIssueTypePeer.ISSUE_TYPE_ID, 
@@ -1013,7 +1013,7 @@ public abstract class AbstractScarabModule
     {
         List types = null;
         Object obj = getMethodResult().get(this, GET_NAV_ISSUE_TYPES); 
-        if ( obj == null ) 
+        if (obj == null) 
         {        
             Criteria crit = new Criteria();
             crit.addJoin(RModuleIssueTypePeer.ISSUE_TYPE_ID, 
@@ -1160,7 +1160,7 @@ public abstract class AbstractScarabModule
         List attributes = null;
         Object obj = ScarabCache.get(this, GET_QUICK_SEARCH_ATTRIBUTES, 
                                      issueType); 
-        if ( obj == null ) 
+        if (obj == null) 
         {        
             Criteria crit = new Criteria(3)
                 .add(RModuleAttributePeer.QUICK_SEARCH, true);
@@ -1188,7 +1188,7 @@ public abstract class AbstractScarabModule
         List attributes = null;
         Object obj = ScarabCache.get(this, GET_REQUIRED_ATTRIBUTES, 
                                      issueType); 
-        if ( obj == null ) 
+        if (obj == null) 
         {        
             Criteria crit = new Criteria(3)
                 .add(RModuleAttributePeer.REQUIRED, true);
@@ -1265,10 +1265,10 @@ public abstract class AbstractScarabModule
             rmas = getRModuleAttributes(issueType, false, NON_USER);
         }
         Iterator i = rmas.iterator();
-        while ( i.hasNext() )
+        while (i.hasNext())
         {
             RModuleAttribute tempRma = (RModuleAttribute)i.next();
-            if ( tempRma.getAttribute().equals(attribute) )
+            if (tempRma.getAttribute().equals(attribute))
             {
                 rma = tempRma;
                 break;
@@ -1306,7 +1306,7 @@ public abstract class AbstractScarabModule
         Boolean activeBool = (activeOnly ? Boolean.TRUE : Boolean.FALSE);
         Object obj = getMethodResult().get(this, GET_R_MODULE_ATTRIBUTES, 
             issueType,  activeBool, attributeType); 
-        if ( obj == null ) 
+        if (obj == null) 
         {        
             Criteria crit = new Criteria();
             crit.add(RModuleAttributePeer.ISSUE_TYPE_ID, 
@@ -1317,7 +1317,7 @@ public abstract class AbstractScarabModule
             crit.addAscendingOrderByColumn(
                 RModuleAttributePeer.DISPLAY_VALUE);
             
-            if ( activeOnly )
+            if (activeOnly)
             {
                 crit.add(RModuleAttributePeer.ACTIVE, true);
             }
@@ -1365,7 +1365,7 @@ public abstract class AbstractScarabModule
         throws Exception
     {
         Criteria crit = new Criteria();
-        crit.add(RModuleAttributePeer.MODULE_ID, getModuleId() );
+        crit.add(RModuleAttributePeer.MODULE_ID, getModuleId());
         crit.add(RModuleAttributePeer.ISSUE_TYPE_ID, 
                  issueType.getIssueTypeId());
         crit.addJoin(RModuleAttributePeer.ATTRIBUTE_ID, 
@@ -1405,15 +1405,15 @@ public abstract class AbstractScarabModule
 
         if (allRModuleOptions != null)
         {
-            if ( activeOnly )
+            if (activeOnly)
             {
                 List activeRModuleOptions =
                     new ArrayList(allRModuleOptions.size());
-                for ( int i=0; i<allRModuleOptions.size(); i++ )
+                for (int i=0; i<allRModuleOptions.size(); i++)
                 {
                     RModuleOption rmo =
                         (RModuleOption)allRModuleOptions.get(i);
-                    if ( rmo.getActive() )
+                    if (rmo.getActive())
                     {
                         activeRModuleOptions.add(rmo);
                     }
@@ -1431,7 +1431,7 @@ public abstract class AbstractScarabModule
         List rModOpts = null;
         Object obj = ScarabCache.get(this, GET_ALL_R_MODULE_OPTIONS, 
                                      attribute, issueType); 
-        if ( obj == null ) 
+        if (obj == null) 
         {        
             List options = attribute.getAttributeOptions(true);
             NumberKey[] optIds = null;
@@ -1443,7 +1443,7 @@ public abstract class AbstractScarabModule
             {
                 optIds = new NumberKey[options.size()];
             }
-            for ( int i=optIds.length-1; i>=0; i-- )
+            for (int i=optIds.length-1; i>=0; i--)
             {
                 optIds[i] = ((AttributeOption)options.get(i)).getOptionId();
             }
@@ -1465,7 +1465,7 @@ public abstract class AbstractScarabModule
                     prevModule = module;
                     module = (AbstractScarabModule)prevModule.getParent();
                 }
-                while ( rModOpts.size() == 0 &&
+                while (rModOpts.size() == 0 &&
                         !ROOT_ID.equals(prevModule.getPrimaryKey()));
             }
             ScarabCache.put(rModOpts, this, GET_ALL_R_MODULE_OPTIONS, 
@@ -1486,10 +1486,10 @@ public abstract class AbstractScarabModule
         List rmos = getRModuleOptions(option.getAttribute(),
                                       issueType, false);
         Iterator i = rmos.iterator();
-        while ( i.hasNext() )
+        while (i.hasNext())
         {
             rmo = (RModuleOption)i.next();
-            if ( rmo.getAttributeOption().equals(option) )
+            if (rmo.getAttributeOption().equals(option))
             {
                 break;
             }
@@ -1511,7 +1511,7 @@ public abstract class AbstractScarabModule
         {
             List rModuleOptions = getOptionTree(attribute, issueType, false);
             attributeOptions = new ArrayList(rModuleOptions.size());
-            for ( int i=0; i<rModuleOptions.size(); i++ )
+            for (int i=0; i<rModuleOptions.size(); i++)
             {
                 attributeOptions.add(
                     ((RModuleOption)rModuleOptions.get(i)).getAttributeOption());
@@ -1546,7 +1546,7 @@ public abstract class AbstractScarabModule
         Boolean activeBool = (activeOnly ? Boolean.TRUE : Boolean.FALSE);
         Object obj = getMethodResult().get(this, GET_LEAF_R_MODULE_OPTIONS, 
                                            attribute, issueType, activeBool); 
-        if ( obj == null ) 
+        if (obj == null) 
         {        
             rModOpts = getRModuleOptions(attribute, issueType, activeOnly);
             if (rModOpts != null)
@@ -1554,26 +1554,26 @@ public abstract class AbstractScarabModule
                 
                 // put options in a map for searching
                 Map optionsMap = new HashMap((int)(rModOpts.size()*1.5));
-                for ( int i=rModOpts.size()-1; i>=0; i-- )
+                for (int i=rModOpts.size()-1; i>=0; i--)
                 {
                     RModuleOption rmo = (RModuleOption)rModOpts.get(i);
                     optionsMap.put(rmo.getOptionId(), null);
                 }
                 
                 // remove options with descendants in the list
-                for ( int i=rModOpts.size()-1; i>=0; i-- )
+                for (int i=rModOpts.size()-1; i>=0; i--)
                 {
                     AttributeOption option =
                         ((RModuleOption)rModOpts.get(i)).getAttributeOption();
                     List descendants = option.getChildren();
-                    if ( descendants != null )
+                    if (descendants != null)
                     {
-                        for ( int j=descendants.size()-1; j>=0; j-- )
+                        for (int j=descendants.size()-1; j>=0; j--)
                         {
                             AttributeOption descendant =
                                 (AttributeOption)descendants.get(j);
-                            if ( optionsMap
-                                 .containsKey(descendant.getOptionId()) )
+                            if (optionsMap
+                                 .containsKey(descendant.getOptionId()))
                             {
                                 rModOpts.remove(i);
                                 break;
@@ -1632,22 +1632,22 @@ public abstract class AbstractScarabModule
         List[] ancestors = new List[size];
 
         // find all ancestors
-        for ( int i=size-1; i>=0; i-- )
+        for (int i=size-1; i>=0; i--)
         {
             AttributeOption option =
                 ((RModuleOption)moduleOptions.get(i)).getAttributeOption();
             ancestors[i] = option.getAncestors();
         }
 
-        for ( int i=0; i<size; i++ )
+        for (int i=0; i<size; i++)
         {
             RModuleOption moduleOption = (RModuleOption)moduleOptions.get(i);
             int level = 1;
-            if ( ancestors[i] != null )
+            if (ancestors[i] != null)
             {
                 // Set level for first ancestor as the option is only
                 // shown once. 
-                for ( int j=ancestors[i].size()-1; j>=0; j-- )
+                for (int j=ancestors[i].size()-1; j>=0; j--)
                 {
                     AttributeOption ancestor =
                         (AttributeOption)ancestors[i].get(j);
@@ -1659,7 +1659,7 @@ public abstract class AbstractScarabModule
                         if (ancestor.getOptionId()
                             .equals(potentialParent.getOptionId()) &&
                             !ancestor.getOptionId()
-                            .equals(moduleOption.getOptionId())    ) 
+                            .equals(moduleOption.getOptionId())   ) 
                         {
                             moduleOption.setLevel(level++);
                         }
@@ -1681,7 +1681,7 @@ public abstract class AbstractScarabModule
     {
         List types = null;
         Object obj = ScarabCache.get(this, GET_R_MODULE_ISSUE_TYPES); 
-        if ( obj == null ) 
+        if (obj == null) 
         {        
             Criteria crit = new Criteria();
             crit.add(RModuleIssueTypePeer.MODULE_ID, getModuleId())
@@ -1904,7 +1904,7 @@ public abstract class AbstractScarabModule
     {
         List templateTypes = new ArrayList();
         Object obj = ScarabCache.get(this, GET_TEMPLATE_TYPES); 
-        if ( obj == null ) 
+        if (obj == null) 
         {        
             Criteria crit = new Criteria();
             crit.add(RModuleIssueTypePeer.MODULE_ID, getModuleId())
@@ -1956,7 +1956,7 @@ public abstract class AbstractScarabModule
     {
         List queries = null;
         Object obj = ScarabCache.get(this, GET_UNAPPROVED_QUERIES); 
-        if ( obj == null ) 
+        if (obj == null) 
         {        
             Criteria crit = new Criteria(3);
             crit.add(QueryPeer.APPROVED, 0)
@@ -1978,7 +1978,7 @@ public abstract class AbstractScarabModule
     {
         List templates = null;
         Object obj = ScarabCache.get(this, GET_UNAPPROVED_TEMPLATES); 
-        if ( obj == null ) 
+        if (obj == null) 
         {        
             Criteria crit = new Criteria(3);
             crit.add(IssueTemplateInfoPeer.APPROVED, 0)
@@ -2189,7 +2189,7 @@ public abstract class AbstractScarabModule
         while (rmits.hasNext()) 
         {
             regex.append('|')
-                .append( ((RModuleIssueType)rmits.next()).getDisplayName() );
+                .append(((RModuleIssueType)rmits.next()).getDisplayName());
         }
         regex.append(REGEX_SUFFIX);
         return regex.toString();

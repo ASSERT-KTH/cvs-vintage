@@ -52,7 +52,7 @@ public class RModuleAttributeManager
             new NumberKey(attributeId.toString()), 
             new NumberKey(issueTypeId.toString())
         };
-        return getInstance( new ComboKey(keys) );
+        return getInstance(new ComboKey(keys));
     }
 }
 

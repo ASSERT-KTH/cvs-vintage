@@ -75,12 +75,12 @@ public class AttachmentPeer
      *
      * @param pk
      */
-    public static Attachment retrieveByPK( ObjectKey pk )
+    public static Attachment retrieveByPK(ObjectKey pk)
         throws TorqueException
     {
         Attachment result = null;
         Object obj = ScarabCache.get(ATTACHMENT_PEER, RETRIEVE_BY_PK, pk); 
-        if ( obj == null ) 
+        if (obj == null) 
         {        
             result = BaseAttachmentPeer.retrieveByPK(pk);
             ScarabCache.put(result, ATTACHMENT_PEER, RETRIEVE_BY_PK, pk);

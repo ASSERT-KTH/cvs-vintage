@@ -73,12 +73,12 @@ import org.tigris.scarab.actions.base.RequireLoginFirstAction;
  * This class is responsible for managing the query lists (deleting queries).
  *    
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
- * @version $Id: QueryList.java,v 1.19 2002/12/30 17:54:37 jon Exp $
+ * @version $Id: QueryList.java,v 1.20 2003/02/04 11:25:59 jon Exp $
  */
 public class QueryList extends RequireLoginFirstAction
 {
 
-    public void doSave( RunData data, TemplateContext context )
+    public void doSave(RunData data, TemplateContext context)
         throws Exception
     {
         IntakeTool intake = getIntakeTool(context);        
@@ -135,7 +135,7 @@ public class QueryList extends RequireLoginFirstAction
     } 
 
 
-    public void doDeletequeries( RunData data, TemplateContext context )
+    public void doDeletequeries(RunData data, TemplateContext context)
         throws Exception
     {
         Object[] keys = data.getParameters().getKeys();
@@ -167,13 +167,13 @@ public class QueryList extends RequireLoginFirstAction
         } 
     } 
 
-    public void doNewquery( RunData data, TemplateContext context )
+    public void doNewquery(RunData data, TemplateContext context)
         throws Exception
     {
         setTarget(data, "AdvancedQuery.vm");     
     }
         
-    public void doCopyquery( RunData data, TemplateContext context )
+    public void doCopyquery(RunData data, TemplateContext context)
         throws Exception
     {
         ParameterParser pp = data.getParameters();

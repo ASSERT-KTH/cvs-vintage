@@ -93,7 +93,7 @@ import org.apache.commons.lang.StringUtils;
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
- * @version $Id: Issue.java,v 1.265 2003/02/03 20:29:27 jmcnally Exp $
+ * @version $Id: Issue.java,v 1.266 2003/02/04 11:26:00 jon Exp $
  */
 public class Issue 
     extends BaseIssue
@@ -235,7 +235,7 @@ public class Issue
     public String getFederatedId()
         throws TorqueException
     {
-        if ( getIdDomain() != null ) 
+        if (getIdDomain() != null) 
         {
             return getIdDomain() + '-' + getUniqueId();
         }
@@ -265,7 +265,7 @@ public class Issue
         public FederatedId(String id)
         {
             int dash = id.indexOf('-');
-            if ( dash > 0 ) 
+            if (dash > 0) 
             {
                 domainId = id.substring(0, dash);
                 setUniqueId(id.substring(dash+1));
@@ -289,20 +289,20 @@ public class Issue
             // required, will keep it safe for now.
             StringBuffer code = new StringBuffer(4);
             int max = id.length() < 4 ? id.length() : 4;
-            for ( int i=0; i<max; i++) 
+            for (int i=0; i<max; i++) 
             {
                 char c = id.charAt(i);
-                if ( c != '0' && c != '1' && c != '2' && c != '3' && c != '4'
-                     && c != '5' && c != '6' && c != '7' && c!='8' && c!='9' )
+                if (c != '0' && c != '1' && c != '2' && c != '3' && c != '4'
+                     && c != '5' && c != '6' && c != '7' && c!='8' && c!='9')
                 {
                     code.append(c);
                 }
             }
-            if ( code.length() != 0 ) 
+            if (code.length() != 0) 
             {
                 prefix = code.toString();                 
             }
-            count = Integer.parseInt( id.substring(code.length()) );
+            count = Integer.parseInt(id.substring(code.length()));
             
         }
 
@@ -736,7 +736,7 @@ public class Issue
     {
         Module module = null;
         ObjectKey id = getModuleId();
-        if ( id != null ) 
+        if (id != null) 
         {
             module = ModuleManager.getInstance(id);
         }
@@ -787,22 +787,22 @@ public class Issue
         {
             obj = getMethodResult().get(this, GET_MODULE_ATTRVALUES_MAP);
         }        
-        if ( obj == null ) 
+        if (obj == null) 
         {        
             List attributes = getModule().getActiveAttributes(getIssueType());
             Map siaValuesMap = getAttributeValuesMap();
             result = new SequencedHashMap((int)(1.25*attributes.size() + 1));
-            for ( int i=0; i<attributes.size(); i++ ) 
+            for (int i=0; i<attributes.size(); i++) 
             {
                 String key = ((Attribute)attributes.get(i)).getName().toUpperCase();
-                if ( siaValuesMap.containsKey(key) ) 
+                if (siaValuesMap.containsKey(key)) 
                 {
-                    result.put( key, siaValuesMap.get(key) );
+                    result.put(key, siaValuesMap.get(key));
                 }
                 else 
                 {
                     AttributeValue aval = AttributeValue
-                        .getNewInstance( ((Attribute)attributes.get(i)), this);
+                        .getNewInstance(((Attribute)attributes.get(i)), this);
                     addAttributeValue(aval);
                     siaValuesMap.put(
                         aval.getAttribute().getName().toUpperCase(), aval);
@@ -841,18 +841,18 @@ public class Issue
     {
         AttributeValue result = null;
         Object obj = ScarabCache.get(this, GET_ATTRVALUE, attribute); 
-        if ( obj == null ) 
+        if (obj == null) 
         {        
-            if ( isNew() ) 
+            if (isNew()) 
             {
                 List avals = getAttributeValues();
-                if ( avals != null ) 
+                if (avals != null) 
                 {
                     Iterator i = avals.iterator();
                     while (i.hasNext()) 
                     {
                         AttributeValue tempAval = (AttributeValue)i.next();
-                        if ( tempAval.getAttribute().equals(attribute)) 
+                        if (tempAval.getAttribute().equals(attribute)) 
                         {
                             result = tempAval;
                             break;
@@ -895,18 +895,18 @@ public class Issue
     {
         List result = null;
         Object obj = ScarabCache.get(this, GET_ATTRVALUES, attribute); 
-        if ( obj == null ) 
+        if (obj == null) 
         {        
-            if ( isNew() ) 
+            if (isNew()) 
             {
                 List avals = getAttributeValues();
-                if ( avals != null ) 
+                if (avals != null) 
                 {
                     Iterator i = avals.iterator();
                     while (i.hasNext()) 
                     {
                         AttributeValue tempAval = (AttributeValue)i.next();
-                        if ( tempAval.getAttribute().equals(attribute)) 
+                        if (tempAval.getAttribute().equals(attribute)) 
                         {
                             result = new ArrayList();
                             result.add(tempAval);
@@ -968,17 +968,17 @@ public class Issue
         throws Exception
     {
         List orderedValues = new ArrayList(values.size());
-        for ( int j=0; j<attributes.size(); j++ ) 
+        for (int j=0; j<attributes.size(); j++) 
         {
             AttributeValue av = (AttributeValue) values
-                .remove(  ((Attribute)attributes.get(j)).getName().toUpperCase() );
-            if ( av != null ) 
+                .remove( ((Attribute)attributes.get(j)).getName().toUpperCase());
+            if (av != null) 
             {
                 orderedValues.add(av);
             }
         }
         Iterator iter = values.values().iterator();
-        while ( iter.hasNext() ) 
+        while (iter.hasNext()) 
         {
             orderedValues.add((AttributeValue)iter.next());
         }
@@ -993,13 +993,13 @@ public class Issue
     {
         Map result = null;
         Object obj = ScarabCache.get(this, GET_ATTRIBUTE_VALUES_MAP); 
-        if ( obj == null ) 
+        if (obj == null) 
         {
             Criteria crit = new Criteria(2)
                 .add(AttributeValuePeer.DELETED, false);        
             List siaValues = getAttributeValues(crit);
-            result = new HashMap( (int)(1.25*siaValues.size() + 1) );
-            for ( int i=0; i<siaValues.size(); i++ ) 
+            result = new HashMap((int)(1.25*siaValues.size() + 1));
+            for (int i=0; i<siaValues.size(); i++) 
             {
                 AttributeValue att = (AttributeValue) siaValues.get(i);
                 String name = att.getAttribute().getName();
@@ -1025,8 +1025,8 @@ public class Issue
     {
         Map moduleAtts = getModuleAttributeValuesMap();
         Map issueAtts = getAttributeValuesMap();
-        Map allValuesMap = new HashMap( (int)(1.25*(moduleAtts.size() + 
-                                            issueAtts.size())+1) );
+        Map allValuesMap = new HashMap((int)(1.25*(moduleAtts.size() + 
+                                            issueAtts.size())+1));
 
         allValuesMap.putAll(moduleAtts);
         allValuesMap.putAll(issueAtts);
@@ -1052,18 +1052,18 @@ public class Issue
         {
             AttributeValue aval = (AttributeValue)avMap.get(i.next());
             
-            if ( aval.getOptionId() == null && aval.getValue() == null ) 
+            if (aval.getOptionId() == null && aval.getValue() == null) 
             {
-                for ( int j=attributes.size()-1; j>=0; j-- ) 
+                for (int j=attributes.size()-1; j>=0; j--) 
                 {
-                    if ( aval.getAttribute().getPrimaryKey().equals(
-                         ((Attribute)attributes.get(j)).getPrimaryKey() )) 
+                    if (aval.getAttribute().getPrimaryKey().equals(
+                         ((Attribute)attributes.get(j)).getPrimaryKey())) 
                     {
                         result = false;
                         break;
                     }                    
                 }
-                if ( !result ) 
+                if (!result) 
                 {
                     break;
                 }
@@ -1086,18 +1086,18 @@ public class Issue
         ScarabUser[] users = getModule().getEligibleUsers(attribute);
         // remove those already assigned
         List assigneeAVs = getAttributeValues(attribute);
-        if ( users != null && assigneeAVs != null ) 
+        if (users != null && assigneeAVs != null) 
         {        
-            for ( int i=users.length-1; i>=0; i-- ) 
+            for (int i=users.length-1; i>=0; i--) 
             {
-                for ( int j=assigneeAVs.size()-1; j>=0; j-- ) 
+                for (int j=assigneeAVs.size()-1; j>=0; j--) 
                 {
                     AttributeValue av = (AttributeValue)assigneeAVs.get(j);
                     NumberKey avUserId = av.getUserId();
                     NumberKey userUserId = users[i].getUserId();
-                    if ( av != null && avUserId != null && 
+                    if (av != null && avUserId != null && 
                          userUserId != null && 
-                         avUserId.equals( userUserId ) )
+                         avUserId.equals(userUserId))
                     {
                         users[i] = null;
                         break;
@@ -1107,9 +1107,9 @@ public class Issue
         }
 
         List eligibleUsers = new ArrayList(users.length);
-        for ( int i=0; i<users.length; i++ ) 
+        for (int i=0; i<users.length; i++) 
         {
-            if ( users[i] != null )
+            if (users[i] != null)
             {
                 eligibleUsers.add(users[i]);
             }
@@ -1166,7 +1166,7 @@ public class Issue
     {
         List result = null;
         Object obj = ScarabCache.get(this, GET_USERS_TO_EMAIL, action); 
-        if ( obj == null ) 
+        if (obj == null) 
         {        
             List users = new ArrayList();
             try
@@ -1260,12 +1260,12 @@ public class Issue
         {
             obj = getMethodResult().get(this, GET_USER_ATTRIBUTEVALUES); 
         }
-        if ( obj == null ) 
+        if (obj == null) 
         {        
             List attributeList = getModule().getUserAttributes(getIssueType(), true);
             List attributeIdList = new ArrayList();
             
-            for ( int i=0; i<attributeList.size(); i++ ) 
+            for (int i=0; i<attributeList.size(); i++) 
             {
                 Attribute att = (Attribute) attributeList.get(i);
                 attributeIdList.add(att.getAttributeId());
@@ -1311,7 +1311,7 @@ public class Issue
         throws Exception
     {
         ActivitySet activitySet = null;
-        if ( !isNew() ) 
+        if (!isNew()) 
         {
             Object obj = null;
             // see Cache Note in getModuleAttributeValuesMap()
@@ -1367,10 +1367,10 @@ public class Issue
         throws Exception
     {
         Date result = null;
-        if ( !isNew() ) 
+        if (!isNew()) 
         {
             Object obj = ScarabCache.get(this, GET_CREATED_DATE); 
-            if ( obj == null ) 
+            if (obj == null) 
             {        
                 ActivitySet activitySet = getInitialActivitySet();
                 result = activitySet.getCreatedDate();
@@ -1392,10 +1392,10 @@ public class Issue
         throws Exception
     {
         ScarabUser result = null;
-        if ( !isNew() ) 
+        if (!isNew()) 
         {
             Object obj = ScarabCache.get(this, GET_CREATED_BY); 
-            if ( obj == null ) 
+            if (obj == null) 
             {        
                 ActivitySet activitySet = getInitialActivitySet();
                 if (activitySet != null)
@@ -1418,7 +1418,7 @@ public class Issue
         return result;
     }
 
-    public boolean isCreatingUser( ScarabUser user)
+    public boolean isCreatingUser(ScarabUser user)
          throws Exception
     {                
          return (getCreatedBy().getUserId().equals(user.getUserId()));
@@ -1433,10 +1433,10 @@ public class Issue
         throws Exception
     {
         ActivitySet t = null;
-        if ( !isNew() ) 
+        if (!isNew()) 
         {
             Object obj = ScarabCache.get(this, GET_LAST_TRANSACTION); 
-            if ( obj == null ) 
+            if (obj == null) 
             {        
                 Criteria crit = new Criteria();
                 crit.addJoin(ActivitySetPeer.TRANSACTION_ID, 
@@ -1449,7 +1449,7 @@ public class Issue
                 crit.setDistinct();
                 crit.addDescendingOrderByColumn(ActivitySetPeer.CREATED_DATE);
                 List activitySets = ActivitySetPeer.doSelect(crit);
-                if ( activitySets.size() > 0 ) 
+                if (activitySets.size() > 0) 
                 {
                     t = (ActivitySet)activitySets.get(0);
                 }
@@ -1472,10 +1472,10 @@ public class Issue
         throws Exception
     {
         Date result = null;
-        if ( !isNew() ) 
+        if (!isNew()) 
         {
             ActivitySet t = getLastActivitySet();
-            if ( t == null)
+            if (t == null)
             {
                 result = getCreatedDate();
             }
@@ -1496,10 +1496,10 @@ public class Issue
         throws Exception
     {
         ScarabUser result = null;
-        if ( !isNew() ) 
+        if (!isNew()) 
         {
             ActivitySet t = getLastActivitySet();
-            if ( t == null)
+            if (t == null)
             {
                 result = getCreatedBy();
             }
@@ -1565,7 +1565,7 @@ public class Issue
         {
             obj = getMethodResult().get(this, GET_COMMENTS, fullBool);
         }
-        if ( obj == null ) 
+        if (obj == null) 
         {        
             Criteria crit = new Criteria()
                 .add(AttachmentPeer.ISSUE_ID, getIssueId())
@@ -1614,7 +1614,7 @@ public class Issue
         {
             obj = getMethodResult().get(this, GET_URLS);
         } 
-        if ( obj == null ) 
+        if (obj == null) 
         {        
             Criteria crit = new Criteria()
                 .add(AttachmentPeer.ISSUE_ID, getIssueId())
@@ -1658,7 +1658,7 @@ public class Issue
         {
             obj = getMethodResult().get(this, GET_EXISTING_ATTACHMENTS); 
         }
-        if ( obj == null ) 
+        if (obj == null) 
         {        
             Criteria crit = new Criteria()
                 .add(AttachmentPeer.ISSUE_ID, getIssueId())
@@ -1928,7 +1928,7 @@ public class Issue
         {
             obj = getMethodResult().get(this, GET_CHILDREN); 
         }
-        if ( obj == null ) 
+        if (obj == null) 
         {        
             Criteria crit = new Criteria()
                 .add(DependPeer.OBSERVED_ID, getIssueId());
@@ -1980,7 +1980,7 @@ public class Issue
         {
             obj = getMethodResult().get(this, GET_PARENTS); 
         }
-        if ( obj == null ) 
+        if (obj == null) 
         {        
             Criteria crit = new Criteria()
                 .add(DependPeer.OBSERVER_ID, getIssueId());
@@ -2085,7 +2085,7 @@ public class Issue
     {
         Depend result = null;
         Object obj = ScarabCache.get(this, GET_DEPENDENCY, childIssue); 
-        if ( obj == null ) 
+        if (obj == null) 
         {
             Criteria crit = new Criteria(2)
                 .add(DependPeer.OBSERVED_ID, getIssueId())        
@@ -2103,11 +2103,11 @@ public class Issue
                 crit2.add(DependPeer.DELETED, false);
             }
             List depends2 = DependPeer.doSelect(crit2);
-            if (depends.size() > 0 )
+            if (depends.size() > 0)
             {
                 result = (Depend)depends.get(0);
             }
-            else if (depends2.size() > 0 )
+            else if (depends2.size() > 0)
             {
                 result = (Depend)depends2.get(0);
             }
@@ -2140,16 +2140,16 @@ public class Issue
         // remove unset AttributeValues before saving
         List attValues = getAttributeValues();
         // reverse order since removing from list
-        for ( int i=attValues.size()-1; i>=0; i-- ) 
+        for (int i=attValues.size()-1; i>=0; i--) 
         {
             AttributeValue attVal = (AttributeValue) attValues.get(i);
-            if ( !attVal.isSet() ) 
+            if (!attVal.isSet()) 
             {
                 attValues.remove(i);
             }
         }
 
-        if ( isNew() ) 
+        if (isNew()) 
         {
             // set the issue id
             setIdDomain(module.getDomain());
@@ -2222,7 +2222,7 @@ public class Issue
         String prefix = module.getCode();
 
         String domain = module.getDomain();            
-        if ( domain != null && domain.length() > 0 ) 
+        if (domain != null && domain.length() > 0) 
         { 
             prefix = domain + "-" + prefix;
         }
@@ -2255,7 +2255,7 @@ public class Issue
     {
         List result = null;
         Object obj = ScarabCache.get(this, GET_TEMPLATE_TYPES); 
-        if ( obj == null ) 
+        if (obj == null) 
         {        
             Criteria crit = new Criteria()
                 .add(IssueTypePeer.ISSUE_TYPE_ID, 
@@ -2279,7 +2279,7 @@ public class Issue
     {
         IssueTemplateInfo result = null;
         Object obj = ScarabCache.get(this, GET_TEMPLATEINFO); 
-        if ( obj == null ) 
+        if (obj == null) 
         {        
             Criteria crit = new Criteria(1);
             crit.add(IssueTemplateInfoPeer.ISSUE_ID, getIssueId());
@@ -2524,7 +2524,7 @@ public class Issue
     {
         Date result = null;
         Object obj = ScarabCache.get(this, GET_CLOSED_DATE); 
-        if ( obj == null ) 
+        if (obj == null) 
         {  
             Attribute attribute = null;
             try
@@ -2544,8 +2544,8 @@ public class Issue
             }
 
             AttributeValue status = getAttributeValue(attribute);
-            if ( status != null && status.getOptionId()
-                 .equals(AttributeOption.STATUS__CLOSED__PK) ) 
+            if (status != null && status.getOptionId()
+                 .equals(AttributeOption.STATUS__CLOSED__PK)) 
             {
                 // the issue is currently closed, we can get the date
                 Criteria crit = new Criteria()
@@ -2553,12 +2553,12 @@ public class Issue
                     .add(ActivityPeer.ATTRIBUTE_ID, AttributePeer.STATUS__PK)
                     .addJoin(ActivityPeer.TRANSACTION_ID, 
                              ActivitySetPeer.TRANSACTION_ID)
-                    .add( ActivityPeer.NEW_OPTION_ID, 
-                      AttributeOption.STATUS__CLOSED__PK )
+                    .add(ActivityPeer.NEW_OPTION_ID, 
+                      AttributeOption.STATUS__CLOSED__PK)
                     .addDescendingOrderByColumn(ActivitySetPeer.CREATED_DATE);
                 
                 List activitySets = ActivitySetPeer.doSelect(crit);
-                if ( activitySets.size() > 0 ) 
+                if (activitySets.size() > 0) 
                 {
                     result = ((ActivitySet)activitySets.get(0))
                         .getCreatedDate();
@@ -2589,7 +2589,7 @@ public class Issue
             .add(IssueVotePeer.ISSUE_ID, getIssueId())
             .add(IssueVotePeer.USER_ID, user.getUserId());
         List votes = IssueVotePeer.doSelect(crit);
-        if ( votes != null && votes.size() != 0 ) 
+        if (votes != null && votes.size() != 0) 
         {
             issueVote = (IssueVote)votes.get(0);
             previousVotes = issueVote.getVotes();
@@ -2602,7 +2602,7 @@ public class Issue
         }
 
         // check if the module accepts multiple votes
-        if ( !getModule().allowsMultipleVoting() && previousVotes > 0 )
+        if (!getModule().allowsMultipleVoting() && previousVotes > 0)
         {
             throw new ScarabException("User " + user.getUserName() + 
                 " attempted to vote multiple times for issue " + getUniqueId()
@@ -2619,7 +2619,7 @@ public class Issue
                  AttributePeer.TOTAL_VOTES__PK);
         List voteValues = getAttributeValues(crit);
         TotalVotesAttribute voteValue = null;
-        if ( voteValues.size() == 0 ) 
+        if (voteValues.size() == 0) 
         {
             voteValue = new TotalVotesAttribute();
             voteValue.setIssue(this);
@@ -2798,7 +2798,7 @@ public class Issue
      * Checks permission and approves or rejects issue template. If template
      * is approved, template type set to "module", else set to "personal".
      */
-    public void approve( ScarabUser user, boolean approved )
+    public void approve(ScarabUser user, boolean approved)
          throws Exception, ScarabException
 
     {                
@@ -2826,7 +2826,7 @@ public class Issue
      * Only the creating user can delete a personal template.
      * Only project owner or admin can delete a project-wide template.
      */
-    public void delete( ScarabUser user )
+    public void delete(ScarabUser user)
          throws Exception, ScarabException
     {                
         Module module = getModule();
@@ -2858,19 +2858,19 @@ public class Issue
     {
         AttributeValue result = null;
         Object obj = ScarabCache.get(this, GET_DEFAULT_TEXT_ATTRIBUTEVALUE); 
-        if ( obj == null ) 
+        if (obj == null) 
         {        
             Attribute defaultTextAttribute = 
                 getModule().getDefaultTextAttribute(getIssueType());
             
-            if ( defaultTextAttribute != null ) 
+            if (defaultTextAttribute != null) 
             {
                 ObjectKey attributeId = defaultTextAttribute.getAttributeId();
                 List avs = getAttributeValues();
-                for ( int i=0; i<avs.size(); i++ ) 
+                for (int i=0; i<avs.size(); i++) 
                 {
                     AttributeValue testAV = (AttributeValue)avs.get(i);
-                    if ( attributeId.equals(testAV.getAttributeId()) ) 
+                    if (attributeId.equals(testAV.getAttributeId())) 
                     {
                         result = testAV;
                     }
@@ -2891,10 +2891,10 @@ public class Issue
     {
         String result = null;
         Object obj = ScarabCache.get(this, GET_DEFAULT_TEXT); 
-        if ( obj == null ) 
+        if (obj == null) 
         {        
             AttributeValue emailAV = getDefaultTextAttributeValue();
-            if ( emailAV != null ) 
+            if (emailAV != null) 
             {
                 result = emailAV.getValue();
             }        
@@ -2922,7 +2922,7 @@ public class Issue
      * Checks if user has permission to enter issue.
      * @deprecated user.hasPermission(ScarabSecurity.ISSUE__ENTER, module)
      */
-    public boolean hasEnterPermission( ScarabUser user, Module module)
+    public boolean hasEnterPermission(ScarabUser user, Module module)
         throws Exception
     {                
         boolean hasPerm = false;
@@ -2939,7 +2939,7 @@ public class Issue
      * Checks if user has permission to edit issue.
      * @deprecated user.hasPermission(ScarabSecurity.ISSUE__EDIT, module)
      */
-    public boolean hasEditPermission( ScarabUser user, Module module)
+    public boolean hasEditPermission(ScarabUser user, Module module)
         throws Exception
     {                
         boolean hasPerm = false;
@@ -2956,7 +2956,7 @@ public class Issue
      * Checks if user has permission to move issue to destination module.
      * @deprecated user.hasPermission(ScarabSecurity.ISSUE__EDIT, module)
      */
-    public boolean hasMovePermission( ScarabUser user, Module module)
+    public boolean hasMovePermission(ScarabUser user, Module module)
         throws Exception
     {                
         boolean hasPerm = false;
@@ -3712,13 +3712,13 @@ public class Issue
     {
         List users = null;
         Object obj = ScarabCache.get(this, GET_ASSOCIATED_USERS); 
-        if ( obj == null ) 
+        if (obj == null) 
         {        
             List attributeList = getModule()
                 .getUserAttributes(getIssueType(), true);
             List attributeIdList = new ArrayList();
             
-            for ( int i=0; i<attributeList.size(); i++ ) 
+            for (int i=0; i<attributeList.size(); i++) 
             {
                 Attribute att = (Attribute) attributeList.get(i);
                 RModuleAttribute modAttr = getModule().
@@ -3738,7 +3738,7 @@ public class Issue
                 crit.setDistinct();
                 
                 List attValues = getAttributeValues(crit);
-                for ( int i=0; i<attValues.size(); i++ ) 
+                for (int i=0; i<attValues.size(); i++) 
                 {
                     List item = new ArrayList(2);
                     AttributeValue attVal = (AttributeValue) attValues.get(i);

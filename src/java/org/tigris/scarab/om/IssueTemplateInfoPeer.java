@@ -32,7 +32,7 @@ public class IssueTemplateInfoPeer
     {
         List templates = null;
         Object obj = ScarabCache.get("IssueTemplateInfoPeer",GET_ALL_TEMPLATES,                                     user, issueType); 
-        if ( obj == null ) 
+        if (obj == null) 
         {        
             Criteria crit = new Criteria()
                 .add(IssuePeer.MODULE_ID, me.getModuleId())
@@ -49,7 +49,7 @@ public class IssueTemplateInfoPeer
             Criteria.Criterion cPriv1 = crit.getNewCriterion(
                 IssueTemplateInfoPeer.SCOPE_ID, Scope.PERSONAL__PK, 
                 Criteria.EQUAL);
-            cPriv1.and( crit.getNewCriterion(ActivitySetPeer.CREATED_BY, 
+            cPriv1.and(crit.getNewCriterion(ActivitySetPeer.CREATED_BY, 
                 user.getUserId(),  Criteria.EQUAL));
             Criteria.Criterion cGlob = crit.getNewCriterion(
                 IssueTemplateInfoPeer.SCOPE_ID, Scope.MODULE__PK,

@@ -66,14 +66,14 @@ import org.tigris.scarab.tools.ScarabLocalizationTool;
  * This class is responsible for creating / updating Scarab Modules
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: ModifyModule.java,v 1.28 2002/10/23 21:29:26 jon Exp $
+ * @version $Id: ModifyModule.java,v 1.29 2003/02/04 11:25:59 jon Exp $
  */
 public class ModifyModule extends RequireLoginFirstAction
 {
     /**
      * Process Update button which updates a Module
      */
-    public void doUpdate( RunData data, TemplateContext context ) 
+    public void doUpdate(RunData data, TemplateContext context) 
         throws Exception
     {
         String template = getCurrentTemplate(data, null);
@@ -150,7 +150,7 @@ public class ModifyModule extends RequireLoginFirstAction
     /**
      * Process Create button which creates a new Module
      */
-    public void doCreate( RunData data, TemplateContext context ) 
+    public void doCreate(RunData data, TemplateContext context) 
         throws Exception
     {
         String template = getCurrentTemplate(data, null);

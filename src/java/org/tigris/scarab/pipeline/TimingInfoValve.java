@@ -66,13 +66,13 @@ import org.tigris.scarab.tools.ScarabRequestTool;
  * with DEBUG=true for it to be functional.
  *
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: TimingInfoValve.java,v 1.1 2002/11/22 20:33:54 jmcnally Exp $
+ * @version $Id: TimingInfoValve.java,v 1.2 2003/02/04 11:26:02 jon Exp $
  */
 public class TimingInfoValve 
     extends AbstractValve
 {
     private static final Logger log = 
-        Logger.getLogger( TimingInfoValve.class );
+        Logger.getLogger(TimingInfoValve.class);
         
     private static final String KEY = 
         TimingInfoValve.class.getName() + ".start";
@@ -82,7 +82,7 @@ public class TimingInfoValve
     /**
      * @see org.apache.turbine.Valve#invoke(RunData, ValveContext)
      */
-    public void invoke( RunData data, ValveContext context )
+    public void invoke(RunData data, ValveContext context)
         throws IOException, TurbineException
     {
         if (DEBUG) 
@@ -123,6 +123,6 @@ public class TimingInfoValve
         }
             
         // Pass control to the next Valve in the Pipeline
-        context.invokeNext( data );
+        context.invokeNext(data);
     }
 }

@@ -33,12 +33,12 @@ public class IssueTypePeer
      * FIXME: is this method implementation (with the caching) still done this way? -jss
      * @param pk
      */
-    public static IssueType retrieveByPK( ObjectKey pk )
+    public static IssueType retrieveByPK(ObjectKey pk)
         throws TorqueException
     {
         IssueType result = null;
         Object obj = ScarabCache.get(ISSUE_TYPE_PEER, RETRIEVE_BY_PK, pk); 
-        if ( obj == null ) 
+        if (obj == null) 
         {        
             result = BaseIssueTypePeer.retrieveByPK(pk);
             ScarabCache.put(result, ISSUE_TYPE_PEER, RETRIEVE_BY_PK, pk);
@@ -61,7 +61,7 @@ public class IssueTypePeer
         List result = null;
         Boolean b = deleted ? Boolean.TRUE : Boolean.FALSE;
         Object obj = ScarabCache.get(ISSUE_TYPE_PEER, GET_ALL_ISSUE_TYPES, b); 
-        if ( obj == null ) 
+        if (obj == null) 
         {        
             Criteria c = new Criteria();
             c.add(IssueTypePeer.PARENT_ID, 0);
@@ -143,14 +143,14 @@ public class IssueTypePeer
         Criteria crit = new Criteria().add(IssueTypePeer.NAME, name);
         crit.setIgnoreCase(true);
         List types = IssueTypePeer.doSelect(crit);
-        if ( types.size() == 0 ) 
+        if (types.size() == 0) 
         {
             unique = true;
         }
         else 
         {
             IssueType it = (IssueType)types.get(0);
-            if ( id != null && it.getPrimaryKey().equals(id) ) 
+            if (id != null && it.getPrimaryKey().equals(id)) 
             {
                 unique = true;
             }

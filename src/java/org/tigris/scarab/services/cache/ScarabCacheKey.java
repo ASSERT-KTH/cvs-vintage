@@ -206,7 +206,7 @@ public class ScarabCacheKey
     public boolean equals(Object obj)
     {
         boolean equal = false;
-        if ( obj instanceof ScarabCacheKey ) 
+        if (obj instanceof ScarabCacheKey) 
         {
             ScarabCacheKey sck = (ScarabCacheKey)obj;
             equal = sck.n == n;

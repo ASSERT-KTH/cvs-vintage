@@ -72,7 +72,7 @@ import org.tigris.scarab.util.Log;
  * being the Group implementation.
  *
  * @author <a href="mailto:jmcnally@collab.net">John D. McNally</a>
- * @version $Id: ScarabDBSecurityService.java,v 1.6 2002/10/24 22:59:30 jon Exp $
+ * @version $Id: ScarabDBSecurityService.java,v 1.7 2003/02/04 11:26:03 jon Exp $
  */
 public class ScarabDBSecurityService extends DBSecurityService
 {
@@ -82,7 +82,7 @@ public class ScarabDBSecurityService extends DBSecurityService
      * @param a <code>Criteria</code> of Group selection.
      * @return a set of Groups that meet the specified Criteria.
      */
-    public GroupSet getGroups( Criteria criteria )
+    public GroupSet getGroups(Criteria criteria)
         throws DataBackendException
     {
         List groups = null;
@@ -108,12 +108,12 @@ public class ScarabDBSecurityService extends DBSecurityService
      * @throws DataBackendException if there was an error accessing the data backend.
      * @throws UnknownEntityException if the group does not exist.
      */
-    public void saveGroup( Group group )
+    public void saveGroup(Group group)
         throws DataBackendException, UnknownEntityException
     {
         try
         {
-            if ( !((Persistent)group).isNew() ) 
+            if (!((Persistent)group).isNew()) 
             {
                 group.save();
             }
@@ -133,14 +133,14 @@ public class ScarabDBSecurityService extends DBSecurityService
      * @throws DataBackendException if there was an error accessing the data backend.
      * @throws EntityExistsException if the group already exists.
      */
-    public synchronized Group addGroup( Group group ) 
+    public synchronized Group addGroup(Group group) 
         throws DataBackendException, EntityExistsException
     {
         boolean groupExists = false;
         try
         {
             lockExclusive();
-            if ( ((Persistent)group).isNew() ) 
+            if (((Persistent)group).isNew()) 
             {
                 group.save();
                 // add the group to system-wide cache
@@ -170,13 +170,13 @@ public class ScarabDBSecurityService extends DBSecurityService
      * data backend.
      * @throws UnknownEntityException if the group does not exist.
      */
-    public synchronized void removeGroup( Group group )
+    public synchronized void removeGroup(Group group)
         throws DataBackendException, UnknownEntityException
     {
         try
         {
             lockExclusive();
-            if ( !((Persistent)group).isNew() ) 
+            if (!((Persistent)group).isNew()) 
             {
                 ((Module)group).setDeleted(true);
                 group.save();
@@ -205,7 +205,7 @@ public class ScarabDBSecurityService extends DBSecurityService
      * data backend.
      * @throws UnknownEntityException if the group does not exist.
      */
-    public synchronized void renameGroup( Group group, String name )
+    public synchronized void renameGroup(Group group, String name)
         throws DataBackendException, UnknownEntityException
     {
         throw new DataBackendException("rename is not supported");

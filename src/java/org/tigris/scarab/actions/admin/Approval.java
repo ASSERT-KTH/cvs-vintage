@@ -85,7 +85,7 @@ import org.tigris.scarab.services.security.ScarabSecurity;
  * This class is responsible for managing the approval process.
  *
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
- * @version $Id: Approval.java,v 1.31 2003/02/03 07:19:31 jon Exp $
+ * @version $Id: Approval.java,v 1.32 2003/02/04 11:26:00 jon Exp $
  */
 public class Approval extends RequireLoginFirstAction
 {
@@ -102,7 +102,7 @@ public class Approval extends RequireLoginFirstAction
     private static final Integer REJECTED = QUERY;
     private static final Integer APPROVED = ISSUE_ENTRY_TEMPLATE;
     
-    public void doSubmit( RunData data, TemplateContext context )
+    public void doSubmit(RunData data, TemplateContext context)
         throws Exception
     {
         ScarabRequestTool scarabR = (ScarabRequestTool)context
@@ -273,9 +273,9 @@ public class Approval extends RequireLoginFirstAction
                     {
                         try
                         {
-                            TurbineSecurity.grant( user, 
+                            TurbineSecurity.grant(user, 
                               (org.apache.fulcrum.security.entity.Group)module,
-                              TurbineSecurity.getRole(role) );
+                              TurbineSecurity.getRole(role));
                         }
                         catch (DataBackendException e)
                         {
@@ -285,7 +285,7 @@ public class Approval extends RequireLoginFirstAction
                                 TurbineSecurity.getACL(user);
                             if (acl.hasRole(TurbineSecurity.getRole(role), 
                                (org.apache.fulcrum.security.entity.Group)module
-                               )) 
+                              )) 
                             {
                                 String key = 
                                     "RolePreviouslyApprovedForUserInModule";

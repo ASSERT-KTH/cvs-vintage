@@ -70,21 +70,21 @@ import org.tigris.scarab.services.cache.ScarabCache;
 
 /**
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
- * @version $Id: IssueTypeAttributeEdit.java,v 1.7 2002/10/29 19:09:49 elicia Exp $
+ * @version $Id: IssueTypeAttributeEdit.java,v 1.8 2003/02/04 11:26:00 jon Exp $
  */
 public class IssueTypeAttributeEdit extends RequireLoginFirstAction
 {
     /**
      * Changes the properties of existing AttributeOptions.
      */
-    public synchronized void doSave( RunData data, TemplateContext context )
+    public synchronized void doSave(RunData data, TemplateContext context)
         throws Exception
     {
         IntakeTool intake = getIntakeTool(context);
         ScarabRequestTool scarabR = getScarabRequestTool(context);
         Attribute attribute = scarabR.getAttribute();
 
-        if ( intake.isAllValid())
+        if (intake.isAllValid())
         {
             IssueType issueType = scarabR.getIssueType();
             List rios = issueType.getRIssueTypeOptions(attribute, false);
@@ -107,8 +107,8 @@ public class IssueTypeAttributeEdit extends RequireLoginFirstAction
     /**
      * Unmaps attribute options to issueTypes.
      */
-    public void doDeleteissuetypeoptions( RunData data,
-                                          TemplateContext context ) 
+    public void doDeleteissuetypeoptions(RunData data,
+                                          TemplateContext context) 
         throws Exception
     {
         ScarabRequestTool scarabR = getScarabRequestTool(context);
@@ -150,8 +150,8 @@ public class IssueTypeAttributeEdit extends RequireLoginFirstAction
     /**
      * Selects option to add to attribute.
      */
-    public void doSelectissuetypeoption( RunData data, 
-                                         TemplateContext context )
+    public void doSelectissuetypeoption(RunData data, 
+                                         TemplateContext context)
         throws Exception
     {
         ScarabRequestTool scarabR = getScarabRequestTool(context);

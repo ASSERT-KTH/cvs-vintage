@@ -100,7 +100,7 @@ public class QueryPeer
             Serializable[] key = {QUERY_PEER, GET_QUERIES, module, null, 
                 issueType, user, sortColumn, sortPolarity, type};
             Object obj = QueryManager.getMethodResult().get(key);
-            if ( obj == null ) 
+            if (obj == null) 
             {
             Criteria crit = new Criteria()
                 .add(QueryPeer.DELETED, 0);

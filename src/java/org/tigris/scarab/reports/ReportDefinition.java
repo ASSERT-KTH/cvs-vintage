@@ -457,7 +457,7 @@ public class ReportDefinition
                 new StringBuffer(10*heading.getReportGroups().size());
             for (Iterator i = heading.getReportGroups().iterator(); i.hasNext();) 
             {
-                sb.append( ((ReportGroup)i.next()).getName() )
+                sb.append(((ReportGroup)i.next()).getName())
                   .append('/');
             }
             sb.setLength(sb.length() - 1);

@@ -108,9 +108,9 @@ public class HandleRoleRequests extends RequireLoginFirstAction
                 
                 if (autoApprove) 
                 {
-                    TurbineSecurity.grant( user, 
+                    TurbineSecurity.grant(user, 
                         (org.apache.fulcrum.security.entity.Group)module, 
-                        TurbineSecurity.getRole(role) );
+                        TurbineSecurity.getRole(role));
                     getScarabRequestTool(context).setConfirmMessage(
                         "Your role request was granted.");    
                 }

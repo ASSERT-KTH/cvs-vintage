@@ -73,7 +73,7 @@ public  class RModuleIssueType
     {
         Module module = null;
         ObjectKey id = getModuleId();
-        if ( id != null ) 
+        if (id != null) 
         {
             module = ModuleManager.getInstance(id);
         }
@@ -85,7 +85,7 @@ public  class RModuleIssueType
     /**
      * Checks if user has permission to delete module-issue type mapping.
      */
-    public void delete( ScarabUser user )
+    public void delete(ScarabUser user)
          throws Exception
     {                
         Module module = getModule();

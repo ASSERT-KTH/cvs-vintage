@@ -62,14 +62,14 @@ import org.tigris.scarab.om.ScarabUser;
  * list as selected for editing.
  *
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: XModuleList.java,v 1.2 2002/10/24 22:59:30 jon Exp $
+ * @version $Id: XModuleList.java,v 1.3 2003/02/04 11:26:03 jon Exp $
  */
 public class XModuleList extends Default
 {
     /**
      * builds up the context for display of variables on the page.
      */
-    public void doBuildTemplate( RunData data, TemplateContext context )
+    public void doBuildTemplate(RunData data, TemplateContext context)
         throws Exception 
     {
         super.doBuildTemplate(data, context);

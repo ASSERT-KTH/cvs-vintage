@@ -26,12 +26,12 @@ public class AttributeGroupPeer
      *
      * @param ObjectKey pk
      */
-    public static AttributeGroup retrieveByPK( ObjectKey pk )
+    public static AttributeGroup retrieveByPK(ObjectKey pk)
         throws TorqueException
     {
         AttributeGroup result = null;
         Object obj = ScarabCache.get(ATTRIBUTEGROUP_PEER, RETRIEVE_BY_PK, pk); 
-        if ( obj == null ) 
+        if (obj == null) 
         {        
             result = BaseAttributeGroupPeer.retrieveByPK(pk);
             ScarabCache.put(result, ATTRIBUTEGROUP_PEER, RETRIEVE_BY_PK, pk);

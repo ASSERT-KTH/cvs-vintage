@@ -81,7 +81,7 @@ import org.apache.log4j.Category;
  * implementation needs.
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: ScarabUserImpl.java,v 1.88 2003/01/24 20:00:47 jmcnally Exp $
+ * @version $Id: ScarabUserImpl.java,v 1.89 2003/02/04 11:26:01 jon Exp $
  */
 public class ScarabUserImpl 
     extends BaseScarabUserImpl 
@@ -325,12 +325,12 @@ public class ScarabUserImpl
         // turbine's security sql does not dominate.
         String moduleKey = (module == null) ? null : module.getQueryKey();
         Object obj = getTemp("hasPermission" + perm + moduleKey);
-        if ( obj == null ) 
+        if (obj == null) 
         {        
         try
         {
             AccessControlList acl = TurbineSecurity.getACL(this);
-            if ( acl != null ) 
+            if (acl != null) 
             {
                 if (module != null)
                 {
@@ -437,7 +437,7 @@ public class ScarabUserImpl
     {        
         Module[] result = null;
         Object obj = ScarabCache.get(this, GET_MODULES, permissions); 
-        if ( obj == null ) 
+        if (obj == null) 
         {        
             Criteria crit = new Criteria();
             crit.setDistinct();
@@ -458,10 +458,10 @@ public class ScarabUserImpl
             {
                 List scarabModules = ScarabModulePeer.doSelect(crit);
                 // check for permissions in global, if so get all modules
-                for ( int i=scarabModules.size()-1; i>=0; i--) 
+                for (int i=scarabModules.size()-1; i>=0; i--) 
                 {
-                    if ( Module.ROOT_ID.equals( 
-                     ((Module)scarabModules.get(i)).getModuleId()) ) 
+                    if (Module.ROOT_ID.equals(
+                     ((Module)scarabModules.get(i)).getModuleId())) 
                     {
                         crit = new Criteria();
                         if (!showDeletedModules)
@@ -473,7 +473,7 @@ public class ScarabUserImpl
                     }
                 }
                 result = new Module[scarabModules.size()];
-                for ( int i=scarabModules.size()-1; i>=0; i--) 
+                for (int i=scarabModules.size()-1; i>=0; i--) 
                 {
                     result[i] = (Module)scarabModules.get(i);
                 }
@@ -516,7 +516,7 @@ public class ScarabUserImpl
     {
         List result = null;
         Object obj = ScarabCache.get(this, GET_ROLES, module); 
-        if ( obj == null ) 
+        if (obj == null) 
         {        
             Criteria crit = new Criteria();
             crit.setDistinct();
@@ -527,7 +527,7 @@ public class ScarabUserImpl
             result = TurbineRolePeer.doSelect(crit);
             
             // check the global module
-            if ( !Module.ROOT_ID.equals(module.getModuleId()) ) 
+            if (!Module.ROOT_ID.equals(module.getModuleId())) 
             {
                 crit = new Criteria();
                 crit.setDistinct();
@@ -537,9 +537,9 @@ public class ScarabUserImpl
                              TurbineUserGroupRolePeer.ROLE_ID);
                 List globalRoles = TurbineRolePeer.doSelect(crit);
                 
-                for ( int i=0; i<globalRoles.size(); i++ ) 
+                for (int i=0; i<globalRoles.size(); i++) 
                 {
-                    if ( !result.contains(globalRoles.get(i)) ) 
+                    if (!result.contains(globalRoles.get(i))) 
                     {
                         result.add(globalRoles.get(i));
                     }

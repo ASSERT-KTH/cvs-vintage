@@ -74,12 +74,12 @@ public class DependPeer
      * Retrieve a single object by pk
      *
      * @param pk
-    public static Depend retrieveByPK( ObjectKey pk )
+    public static Depend retrieveByPK(ObjectKey pk)
         throws TorqueException
     {
         Depend result = null;
         Object obj = ScarabCache.get(DEPEND_PEER, RETRIEVE_BY_PK, pk); 
-        if ( obj == null ) 
+        if (obj == null) 
         {        
             result = BaseDependPeer.retrieveByPK(pk);
             ScarabCache.put(result, DEPEND_PEER, RETRIEVE_BY_PK, pk);

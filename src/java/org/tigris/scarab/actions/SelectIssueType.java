@@ -67,14 +67,14 @@ import org.tigris.scarab.actions.base.RequireLoginFirstAction;
  * not in the templates.
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: SelectIssueType.java,v 1.14 2002/12/26 21:30:53 elicia Exp $
+ * @version $Id: SelectIssueType.java,v 1.15 2003/02/04 11:26:00 jon Exp $
  */
 public class SelectIssueType extends RequireLoginFirstAction
 {
     /**
      * Main action execution.
      */
-    public void doSelect( RunData data, TemplateContext context ) throws Exception
+    public void doSelect(RunData data, TemplateContext context) throws Exception
     {
         // set the next issue type
         String newIssueType = 
@@ -118,7 +118,7 @@ public class SelectIssueType extends RequireLoginFirstAction
     /**
         calls doSelect().
     */
-    public void doPerform( RunData data, TemplateContext context ) throws Exception
+    public void doPerform(RunData data, TemplateContext context) throws Exception
     {
         doSelect(data, context);
     }

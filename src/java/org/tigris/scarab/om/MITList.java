@@ -63,7 +63,7 @@ import org.tigris.scarab.services.security.ScarabSecurity;
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: MITList.java,v 1.14 2003/01/24 20:00:47 jmcnally Exp $
+ * @version $Id: MITList.java,v 1.15 2003/02/04 11:26:01 jon Exp $
  */
 public  class MITList 
     extends org.tigris.scarab.om.BaseMITList
@@ -456,7 +456,7 @@ public  class MITList
             {
                 RModuleAttribute rma = (RModuleAttribute)i.next();
                 Attribute att = rma.getAttribute();
-                if ( rma.getActive() && isCommon(att)) 
+                if (rma.getActive() && isCommon(att)) 
                 {
                     matchingAttributes.add(att);   
                 }            
@@ -556,7 +556,7 @@ public  class MITList
         {
             RModuleUserAttribute rmua = (RModuleUserAttribute)i.next();
             Attribute att = rmua.getAttribute();
-            if ( isCommon(att)) 
+            if (isCommon(att)) 
             {
                 matchingRMUAs.add(rmua);   
             }            
@@ -935,7 +935,7 @@ public  class MITList
             MITListItem newItem = MITListItemManager.getInstance();
             newItem.setModuleId(module.getModuleId());
             newItem.setIssueTypeId(
-                ((RModuleIssueType)rmits.next()).getIssueTypeId() );
+                ((RModuleIssueType)rmits.next()).getIssueTypeId());
             newItem.setListId(getListId());
             items.add(newItem);
         }                            

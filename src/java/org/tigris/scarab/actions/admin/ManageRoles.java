@@ -70,7 +70,7 @@ import org.tigris.scarab.actions.base.RequireLoginFirstAction;
  * Action(s).
  *
  * @author <a href="mailto:dr@bitonic.com">Douglas B. Robertson</a>
- * @version $Id: ManageRoles.java,v 1.8 2002/10/23 21:42:06 jon Exp $
+ * @version $Id: ManageRoles.java,v 1.9 2003/02/04 11:26:00 jon Exp $
  */
 public class ManageRoles extends RequireLoginFirstAction
 {
@@ -78,7 +78,7 @@ public class ManageRoles extends RequireLoginFirstAction
     /**
      * 
      */
-    public void doGotoaddrole( RunData data, TemplateContext context )
+    public void doGotoaddrole(RunData data, TemplateContext context)
         throws Exception
     {
         setTarget(data, "admin,AddRole.vm");
@@ -87,7 +87,7 @@ public class ManageRoles extends RequireLoginFirstAction
     /**
      * 
      */
-    public void doGotoeditrole( RunData data, TemplateContext context )
+    public void doGotoeditrole(RunData data, TemplateContext context)
         throws Exception
     {
         setTarget(data, "admin,EditRole.vm");
@@ -96,7 +96,7 @@ public class ManageRoles extends RequireLoginFirstAction
     /**
      * 
      */
-    public void doGotodeleterole( RunData data, TemplateContext context )
+    public void doGotodeleterole(RunData data, TemplateContext context)
         throws Exception
     {
         setTarget(data, "admin,DeleteRole.vm");
@@ -105,7 +105,7 @@ public class ManageRoles extends RequireLoginFirstAction
     /** 
      * Manages the adding of a new role when the 'Add Role' button is pressed.
      */
-    public void doAddrole( RunData data, TemplateContext context )
+    public void doAddrole(RunData data, TemplateContext context)
         throws Exception
     {
         IntakeTool intake = getIntakeTool(context);
@@ -149,7 +149,7 @@ public class ManageRoles extends RequireLoginFirstAction
     /**
      * Manages the editing of an existing role when the 'Update Role' button is pressed.
      */
-    public void doEditrole( RunData data, TemplateContext context )
+    public void doEditrole(RunData data, TemplateContext context)
         throws Exception
     {
         /*
@@ -207,7 +207,7 @@ public class ManageRoles extends RequireLoginFirstAction
      * This manages the clicking of the 'Confirm Delete' button and actually
      * deletes the Role.
      */
-    public void doDeleterole( RunData data, TemplateContext context )
+    public void doDeleterole(RunData data, TemplateContext context)
         throws Exception
     {
         /*
@@ -227,7 +227,7 @@ public class ManageRoles extends RequireLoginFirstAction
     /**
      This manages clicking the Cancel button
      */
-    public void doCancel( RunData data, TemplateContext context ) throws Exception
+    public void doCancel(RunData data, TemplateContext context) throws Exception
     {
         setTarget(data, data.getParameters()
                       .getString(ScarabConstants.CANCEL_TEMPLATE, "admin,AdminIndex.vm"));
@@ -236,7 +236,7 @@ public class ManageRoles extends RequireLoginFirstAction
     /**
      calls doCancel()
      */
-    public void doPerform( RunData data, TemplateContext context )
+    public void doPerform(RunData data, TemplateContext context)
         throws Exception
     {
         doCancel(data,context);

@@ -64,7 +64,7 @@ public  class RIssueTypeOption
     implements Persistent
 {
 
-    public void delete( ScarabUser user, Module module )
+    public void delete(ScarabUser user, Module module)
          throws Exception
     {                
         if (user.hasPermission(ScarabSecurity.DOMAIN__EDIT, module))

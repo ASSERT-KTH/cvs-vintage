@@ -78,10 +78,10 @@ public  class RIssueTypeAttribute
             List rias = getIssueType().getRIssueTypeAttributes(false);
             
             // make sure no other rma is selected
-            for ( int i=0; i<rias.size(); i++ ) 
+            for (int i=0; i<rias.size(); i++) 
             {
                 RIssueTypeAttribute ria = (RIssueTypeAttribute)rias.get(i);
-                if ( ria.getDefaultTextFlag() ) 
+                if (ria.getDefaultTextFlag()) 
                 {
                     ria.setDefaultTextFlag(false);
                     ria.save();
@@ -105,7 +105,7 @@ public  class RIssueTypeAttribute
         return false;
     }
 
-    public void delete( ScarabUser user )
+    public void delete(ScarabUser user)
          throws Exception
     {                
         Criteria c = new Criteria()
@@ -136,7 +136,7 @@ public  class RIssueTypeAttribute
     /**
      * Copies this object's properties.
      */
-    public RIssueTypeAttribute copyRia( )
+    public RIssueTypeAttribute copyRia()
          throws Exception
     {                
         RIssueTypeAttribute ria = new RIssueTypeAttribute(); 

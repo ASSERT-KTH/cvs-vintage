@@ -83,7 +83,7 @@ import org.tigris.scarab.services.cache.ScarabCache;
  * methodology</a> to be implemented.
  *
  * @author <a href="mailto:dr@bitonic.com">Douglas B. Robertson</a>
- * @version $Id: SecurityAdminTool.java,v 1.10 2002/10/24 22:59:30 jon Exp $
+ * @version $Id: SecurityAdminTool.java,v 1.11 2003/02/04 11:26:03 jon Exp $
  */
 public class SecurityAdminTool 
     implements SecurityAdminScope, Serializable
@@ -204,7 +204,7 @@ public class SecurityAdminTool
     {
         List result = null;
         Object obj = ScarabCache.get(this, HAS_REQUESTED_ROLE, user); 
-        if ( obj == null ) 
+        if (obj == null) 
         {        
             Criteria crit = new Criteria();
             crit.add(PendingGroupUserRolePeer.USER_ID, user.getUserId());
@@ -285,7 +285,7 @@ public class SecurityAdminTool
     {
         List result = null;
         Object obj = ScarabCache.get(this, GET_PENDING, module); 
-        if ( obj == null ) 
+        if (obj == null) 
         {        
             Criteria crit = new Criteria();
             crit.add(PendingGroupUserRolePeer.GROUP_ID, module.getModuleId());

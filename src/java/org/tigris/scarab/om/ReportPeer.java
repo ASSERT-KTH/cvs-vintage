@@ -52,11 +52,11 @@ public class ReportPeer
             .add(NAME, name)
             .add(DELETED, false);
         List reports = doSelect(crit);
-        if ( reports.size() == 1 ) 
+        if (reports.size() == 1) 
         {
             report = (Report)reports.get(0);
         }
-        else if ( reports.size() > 1 ) 
+        else if (reports.size() > 1) 
         {
             throw new ScarabException(
                 "Multiple reports are active under the name, " + name + 
@@ -71,12 +71,12 @@ public class ReportPeer
      *
      * @param pk
      */
-    public static Report retrieveByPK( ObjectKey pk )
+    public static Report retrieveByPK(ObjectKey pk)
         throws TorqueException
     {
         Report result = null;
         Object obj = ScarabCache.get(REPORT_PEER, RETRIEVE_BY_PK, pk); 
-        if ( obj == null ) 
+        if (obj == null) 
         {        
             result = BaseReportPeer.retrieveByPK(pk);
             ScarabCache.put(result, REPORT_PEER, RETRIEVE_BY_PK, pk);

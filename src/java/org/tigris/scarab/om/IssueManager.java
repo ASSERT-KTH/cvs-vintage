@@ -55,7 +55,7 @@ public class IssueManager
     {
         Issue result = null;
         Object obj = getMethodResult().get(ISSUE, GET_ISSUE_BY_ID, fid); 
-        if ( obj != null ) 
+        if (obj != null) 
         {        
             try 
             {
@@ -78,14 +78,14 @@ public class IssueManager
             }
         }
 
-        if ( result == null ) 
+        if (result == null) 
         {        
             Criteria crit = new Criteria(5)
                 .add(IssuePeer.ID_PREFIX, fid.getPrefix())
                 .add(IssuePeer.ID_COUNT, fid.getCount());
             crit.setIgnoreCase(true);
             
-            if (  fid.getDomain() != null ) 
+            if ( fid.getDomain() != null) 
             {
                 crit.add(IssuePeer.ID_DOMAIN, fid.getDomain());    
             }

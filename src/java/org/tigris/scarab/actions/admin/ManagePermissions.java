@@ -69,7 +69,7 @@ import org.tigris.scarab.actions.base.RequireLoginFirstAction;
  * Action(s).
  *
  * @author <a href="mailto:dr@bitonic.com">Douglas B. Robertson</a>
- * @version $Id: ManagePermissions.java,v 1.6 2002/10/23 21:41:45 jon Exp $
+ * @version $Id: ManagePermissions.java,v 1.7 2003/02/04 11:26:00 jon Exp $
  */
 public class ManagePermissions extends RequireLoginFirstAction
 {
@@ -77,7 +77,7 @@ public class ManagePermissions extends RequireLoginFirstAction
     /**
      * 
      */
-    public void doGotoaddpermission( RunData data, TemplateContext context )
+    public void doGotoaddpermission(RunData data, TemplateContext context)
         throws Exception
     {
         setTarget(data, "admin,AddPermission.vm");
@@ -86,7 +86,7 @@ public class ManagePermissions extends RequireLoginFirstAction
     /**
      * 
      */
-    public void doGotodeletepermission( RunData data, TemplateContext context )
+    public void doGotodeletepermission(RunData data, TemplateContext context)
         throws Exception
     {
         setTarget(data, "admin,DeletePermission.vm");
@@ -95,7 +95,7 @@ public class ManagePermissions extends RequireLoginFirstAction
     /** 
      * Manages the adding of a new role when the 'Add Role' button is pressed.
      */
-    public void doAddpermission( RunData data, TemplateContext context )
+    public void doAddpermission(RunData data, TemplateContext context)
         throws Exception
     {
          IntakeTool intake = getIntakeTool(context);
@@ -138,7 +138,7 @@ public class ManagePermissions extends RequireLoginFirstAction
      * This manages the clicking of the 'Confirm Delete' button and actually
      * deletes the Permission.
      */
-    public void doDeletepermission( RunData data, TemplateContext context )
+    public void doDeletepermission(RunData data, TemplateContext context)
         throws Exception
     {
         String name = data.getParameters().getString("name");
@@ -154,7 +154,7 @@ public class ManagePermissions extends RequireLoginFirstAction
     /**
      * This manages clicking the Cancel button
      */
-    public void doCancel( RunData data, TemplateContext context ) throws Exception
+    public void doCancel(RunData data, TemplateContext context) throws Exception
     {
         setTarget(data, data.getParameters()
                       .getString(ScarabConstants.CANCEL_TEMPLATE, "admin,AdminIndex.vm"));
@@ -163,7 +163,7 @@ public class ManagePermissions extends RequireLoginFirstAction
     /**
      * calls doCancel()
      */
-    public void doPerform( RunData data, TemplateContext context )
+    public void doPerform(RunData data, TemplateContext context)
         throws Exception
     {
         doCancel(data,context);

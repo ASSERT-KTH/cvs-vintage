@@ -75,12 +75,12 @@ public class IssuePeer
      *
      * @param pk
      */
-    public static Issue retrieveByPK( ObjectKey pk )
+    public static Issue retrieveByPK(ObjectKey pk)
         throws TorqueException
     {
         Issue result = null;
         Object obj = ScarabCache.get(ISSUE_PEER, RETRIEVE_BY_PK, pk); 
-        if ( obj == null ) 
+        if (obj == null) 
         {        
             result = BaseIssuePeer.retrieveByPK(pk);
             ScarabCache.put(result, ISSUE_PEER, RETRIEVE_BY_PK, pk);

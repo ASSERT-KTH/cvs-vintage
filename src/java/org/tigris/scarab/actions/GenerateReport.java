@@ -70,7 +70,7 @@ import org.tigris.scarab.util.ScarabConstants;
 /**
     This class is responsible for report generation forms
     @author <a href="mailto:jmcnally@collab.net">John D. McNally</a>
-    @version $Id: GenerateReport.java,v 1.26 2003/01/24 19:52:59 jmcnally Exp $
+    @version $Id: GenerateReport.java,v 1.27 2003/02/04 11:25:59 jon Exp $
 */
 public class GenerateReport 
     extends RequireLoginFirstAction
@@ -78,7 +78,7 @@ public class GenerateReport
     private static final String NO_PERMISSION_MESSAGE = 
         "NoPermissionToEditReport";
 
-    public void doCreatenew( RunData data, TemplateContext context )
+    public void doCreatenew(RunData data, TemplateContext context)
         throws Exception
     {
         String key = data.getParameters()
@@ -92,7 +92,7 @@ public class GenerateReport
     }
     
 
-    public void doSavereport( RunData data, TemplateContext context )
+    public void doSavereport(RunData data, TemplateContext context)
         throws Exception
     {
         ScarabLocalizationTool l10n = getLocalizationTool(context);
@@ -103,10 +103,10 @@ public class GenerateReport
             setNoPermissionMessage(context);
             setTarget(data, "reports,ReportList.vm");                        
         }
-        else if ( intake.isAllValid() ) 
+        else if (intake.isAllValid()) 
         {
             // make sure report has a name
-            if ( report.getName() == null || report.getName().length() == 0 ) 
+            if (report.getName() == null || report.getName().length() == 0) 
             {
                 Group intakeReport = 
                     intake.get("Report", report.getQueryKey(), false);
@@ -121,7 +121,7 @@ public class GenerateReport
                 }
             }
 
-            if ( report.getName() == null || report.getName().length() == 0 ) 
+            if (report.getName() == null || report.getName().length() == 0) 
             {
                 getScarabRequestTool(context)
                     .setAlertMessage(l10n.get("SavedReportsMustHaveName"));
@@ -159,7 +159,7 @@ public class GenerateReport
     /**
         Edits the stored story.
     */
-    public void doEditstoredreport( RunData data, TemplateContext context )
+    public void doEditstoredreport(RunData data, TemplateContext context)
          throws Exception
     {
         Intake intake = getIntakeTool(context);
@@ -171,14 +171,14 @@ public class GenerateReport
     /**
         Runs the stored story.
     */
-    public void doRunstoredreport( RunData data, TemplateContext context )
+    public void doRunstoredreport(RunData data, TemplateContext context)
          throws Exception
     {        
         populateReport(data, context);
         setTarget(data, "reports,Report_1.vm");
     }
 
-    public void doDeletereport( RunData data, TemplateContext context )
+    public void doDeletereport(RunData data, TemplateContext context)
         throws Exception
     {
         ReportBridge report = populateReport(data, context);
@@ -191,7 +191,7 @@ public class GenerateReport
         setTarget(data, "reports,Step1.vm");
     }
 
-    public void doDeletestoredreport( RunData data, TemplateContext context )
+    public void doDeletestoredreport(RunData data, TemplateContext context)
         throws Exception
     {
         ScarabUser user = (ScarabUser)data.getUser();
@@ -213,7 +213,7 @@ public class GenerateReport
        }
      }
 
-    public void doPrint( RunData data, TemplateContext context )
+    public void doPrint(RunData data, TemplateContext context)
         throws Exception
     {
         populateReport(data, context);

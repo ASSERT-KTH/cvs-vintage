@@ -84,7 +84,7 @@ import org.apache.lucene.search.Hits;
  * Support for searching/indexing text
  *
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: LuceneAdapter.java,v 1.22 2003/01/24 19:10:15 jmcnally Exp $
+ * @version $Id: LuceneAdapter.java,v 1.23 2003/02/04 11:26:03 jon Exp $
  */
 public class LuceneAdapter 
     implements SearchIndex
@@ -116,16 +116,16 @@ public class LuceneAdapter
     {
         path = Turbine.getConfiguration().getString(INDEX_PATH);
         File indexDir = new File(path);
-        if ( !indexDir.isAbsolute() ) 
+        if (!indexDir.isAbsolute()) 
         {
             path = Turbine.getRealPath(path);
             indexDir = new File(path);
         }
         
         boolean createIndex = false;
-        if ( indexDir.exists() ) 
+        if (indexDir.exists()) 
         {
-            if ( indexDir.listFiles().length == 0 ) 
+            if (indexDir.listFiles().length == 0) 
             {
                 createIndex = true;
             }       
@@ -185,10 +185,10 @@ public class LuceneAdapter
         NumberKey[] result;
         List issueIds = null; 
         // if there are no words to search for return no results 
-        if ( queryText.size() != 0 || attachmentQueryText.size() != 0)
+        if (queryText.size() != 0 || attachmentQueryText.size() != 0)
         {
             // attributes
-            for ( int j=attributeIds.size()-1; j>=0; j-- ) 
+            for (int j=attributeIds.size()-1; j>=0; j--) 
             {
                 NumberKey[] ids = (NumberKey[])attributeIds.get(j);
                 String query = (String) queryText.get(j);
@@ -197,7 +197,7 @@ public class LuceneAdapter
             }
 
             // attachments
-            for ( int j=attachmentIds.size()-1; j>=0; j-- ) 
+            for (int j=attachmentIds.size()-1; j>=0; j--) 
             {
                 NumberKey[] ids = (NumberKey[])attachmentIds.get(j);
                 String query = (String) attachmentQueryText.get(j);
@@ -207,7 +207,7 @@ public class LuceneAdapter
 
             // put results into final form
             result = new NumberKey[issueIds.size()];
-            for ( int i=0; i<issueIds.size(); i++ ) 
+            for (int i=0; i<issueIds.size(); i++) 
             {
                 result[i] = (NumberKey)issueIds.get(i);
             }
@@ -231,15 +231,15 @@ public class LuceneAdapter
             query.trim();
         }
         
-                if ( ids != null && ids.length != 0 ) 
+                if (ids != null && ids.length != 0) 
                 {
                     fullQuery.append("+((");
-                    for ( int i=ids.length-1; i>=0; i-- ) 
+                    for (int i=ids.length-1; i>=0; i--) 
                     {
                         fullQuery.append(key)
                             .append(':')
                             .append(ids[i].toString());
-                        if ( i != 0 ) 
+                        if (i != 0) 
                         {
                             fullQuery.append(" OR ");
                         }
@@ -274,21 +274,21 @@ public class LuceneAdapter
                 Hits hits = is.search(q);
                 // remove duplicates
                 Map deduper = new HashMap((int)(1.25*hits.length()+1));
-                for ( int i=0; i<hits.length(); i++) 
+                for (int i=0; i<hits.length(); i++) 
                 {
-                    deduper.put( hits.doc(i).get(ISSUE_ID), null );
+                    deduper.put(hits.doc(i).get(ISSUE_ID), null);
                     Log.get().debug("Possible issueId from search: " + 
                                   hits.doc(i).get(ISSUE_ID));
                 }
                 is.close();
                 
-                if ( issueIds == null ) 
+                if (issueIds == null) 
                 {
                     issueIds = new ArrayList(deduper.size());
                     Iterator iter = deduper.keySet().iterator();
                     while (iter.hasNext()) 
                     {
-                        issueIds.add( new NumberKey((String)iter.next()) );
+                        issueIds.add(new NumberKey((String)iter.next()));
                         Log.get().debug("Adding issueId from search: " + 
                                   issueIds.get(issueIds.size()-1));
                     }
@@ -306,10 +306,10 @@ public class LuceneAdapter
      */
     private void removeUniqueElements(List list, Map map)
     {
-        for ( int i=list.size()-1; i>=0; i-- ) 
+        for (int i=list.size()-1; i>=0; i--) 
         {
             Object obj = list.get(i);
-            if ( !map.containsKey(obj.toString()) ) 
+            if (!map.containsKey(obj.toString())) 
             {
                 Log.get().debug("removing issueId from search: " + obj);
                 list.remove(i);
@@ -358,7 +358,7 @@ public class LuceneAdapter
             Query q = QueryParser.parse("+" + VALUE_ID + ":" + valId, TEXT, 
                                         new PorterStemAnalyzer());
             Hits hits = is.search(q);
-            if ( hits.length() > 0) 
+            if (hits.length() > 0) 
             {
                 String mesg = "An error in Lucene prevented removing " + 
                     "stale data for AttributeValue with ID=" + valId;
@@ -366,17 +366,17 @@ public class LuceneAdapter
                 throw new ScarabException(mesg, npe);
             }
         }
-        if ( deletedDocs > 1 ) 
+        if (deletedDocs > 1) 
         {
             throw new ScarabException("Multiple AttributeValues in Lucene" +
                                       "index with same ValueId: " + valId);
         }
         /*
-        System.out.println("deleting valId: " + valId );
+        System.out.println("deleting valId: " + valId);
         IndexSearcher is = new IndexSearcher(path); 
-        Hits hits = is.search( "+" + VALUE_ID + ":" + valId);
-        System.out.println("deleting previous: " + hits.length() );
-        if ( hits.length() > 1) 
+        Hits hits = is.search("+" + VALUE_ID + ":" + valId);
+        System.out.println("deleting previous: " + hits.length());
+        if (hits.length() > 1) 
         {
             throw new ScarabException("Multiple AttributeValues in Lucene" +
                                       "index with same ValueId: " + valId);
@@ -474,7 +474,7 @@ public class LuceneAdapter
             Query q = QueryParser.parse("+" + ATTACHMENT_ID + ":" + attId, 
                                         TEXT, new PorterStemAnalyzer());
             Hits hits = is.search(q);
-            if ( hits.length() > 0) 
+            if (hits.length() > 0) 
             {
                 String mesg = "An error in Lucene prevented removing " + 
                     "stale data for Attachment with ID=" + attId;
@@ -482,7 +482,7 @@ public class LuceneAdapter
                 throw new ScarabException(mesg, npe);
             }
         }
-        if ( deletedDocs > 1 ) 
+        if (deletedDocs > 1) 
         {
             throw new ScarabException("Multiple Attachments in Lucene" +
                                       "index with same Id: " + attId);

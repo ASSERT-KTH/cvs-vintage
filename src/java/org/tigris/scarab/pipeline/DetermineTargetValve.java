@@ -60,7 +60,7 @@ import org.tigris.scarab.util.Log;
  * This valve determines the target template.  
  *
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: DetermineTargetValve.java,v 1.3 2002/10/29 18:43:44 jon Exp $
+ * @version $Id: DetermineTargetValve.java,v 1.4 2003/02/04 11:26:02 jon Exp $
  */
 public class DetermineTargetValve 
     extends AbstractValve
@@ -68,15 +68,15 @@ public class DetermineTargetValve
     /**
      * @see org.apache.turbine.Valve#invoke(RunData, ValveContext)
      */
-    public void invoke( RunData data, ValveContext context )
+    public void invoke(RunData data, ValveContext context)
         throws IOException, TurbineException
     {
         ParameterParser parameters = data.getParameters();
-        if ( ! data.hasTarget() )
+        if (! data.hasTarget())
         {
             String target = parameters.getString("template");
 
-            if ( target != null )
+            if (target != null)
             {
                 data.setTarget(target);
                 Log.get().debug("Set target from request parameter");
@@ -87,18 +87,18 @@ public class DetermineTargetValve
             }
             else
             {
-                data.setTarget( Turbine.getConfiguration().getString(
-                    Turbine.TEMPLATE_HOMEPAGE ) );
+                data.setTarget(Turbine.getConfiguration().getString(
+                    Turbine.TEMPLATE_HOMEPAGE));
                 Log.get().debug("Set target using default value");
             }
         }
         
-        if ( Log.get().isDebugEnabled() )
+        if (Log.get().isDebugEnabled())
         {
-            Log.get().debug( "Target is now: " + data.getTarget() );
+            Log.get().debug("Target is now: " + data.getTarget());
         }
 
         // Pass control to the next Valve in the Pipeline
-        context.invokeNext( data );
+        context.invokeNext(data);
     }
 }

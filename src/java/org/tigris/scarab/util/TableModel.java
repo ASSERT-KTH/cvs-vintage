@@ -57,7 +57,7 @@ import java.util.Date;
  * 
  *
  * @author <a href="mailto:jmcnally@collab.net">John D. McNally</a>
- * @version $Id: TableModel.java,v 1.4 2002/10/24 22:26:53 jon Exp $
+ * @version $Id: TableModel.java,v 1.5 2003/02/04 11:26:03 jon Exp $
  */
 public abstract class TableModel
     // implements Retrievable
@@ -137,7 +137,7 @@ public abstract class TableModel
         {
             int colspan = 1;
             List subHeadings = getSubHeadings();
-            if ( subHeadings != null && subHeadings.size() > 0 )
+            if (subHeadings != null && subHeadings.size() > 0)
             { 
                 colspan = subHeadings.size();
             }
@@ -158,24 +158,24 @@ public abstract class TableModel
         {
             int rowspan = 1;
             List subHeadings = getSubHeadings();
-            if ( subHeadings != null && subHeadings.size() > 0 )
+            if (subHeadings != null && subHeadings.size() > 0)
             { 
                 rowspan = subHeadings.size();
             }
         
             /*
-            while ( subHeadings != null || subHeadings.size() > 0 )
+            while (subHeadings != null || subHeadings.size() > 0)
             {                
                 subHeadings = recurseHeadings
                 
                 int size = subHeadings.size();
-                for ( int i=0; i<size; i++ ) 
+                for (int i=0; i<size; i++) 
                 {
                     int max = 1;
                     List recurseHeadings = 
                         ((Heading)subHeadings.get(i)).getSubHeadings();
-                    while ( recurseHeadings != null 
-                            && recurseHeadings.size() > 0 ) 
+                    while (recurseHeadings != null 
+                            && recurseHeadings.size() > 0) 
                     {
                         int test = recurseHeadings.size();
                         max = (test > max) ? test : max;

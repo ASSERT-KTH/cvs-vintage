@@ -90,7 +90,7 @@ public class AntServlet
         super.init(config);
 
         String command = config.getInitParameter("build_command");
-        if ( command != null)
+        if (command != null)
         {
             BUILD_COMMAND = command;
             System.out.println ("AntServlet Command: " + 
@@ -126,7 +126,7 @@ public class AntServlet
         String refresh = req.getParameter("refresh");
         String target =  req.getParameter("target");
         
-        if ( target == null )
+        if (target == null)
         {
             target = new String("");
         }
@@ -142,7 +142,7 @@ public class AntServlet
             out.println("<title>Ant Servlet</title>");
             
             // write the refresh tag if necessary 
-            if ( refresh != null )
+            if (refresh != null)
             {
                 out.println("<meta http-equiv=Refresh content=" + refresh + "/>");
             }
@@ -166,7 +166,7 @@ public class AntServlet
                                            pro.getInputStream()));
                 String inline = null;
                 out.println("<pre>");
-                while( ( inline = in.readLine() ) != null )
+                while((inline = in.readLine()) != null)
                 {
                     out.println(inline);
                     out.flush();
@@ -175,7 +175,7 @@ public class AntServlet
                 out.flush();
                 returnValue = pro.waitFor();
             }
-            catch ( Exception ignored )
+            catch (Exception ignored)
             {
             }
             finally

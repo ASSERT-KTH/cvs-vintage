@@ -57,14 +57,14 @@ import org.tigris.scarab.actions.base.RequireLoginFirstAction;
  * Sets the home page to the current target
  *  
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: SetHomePage.java,v 1.3 2002/07/18 16:06:58 jon Exp $
+ * @version $Id: SetHomePage.java,v 1.4 2003/02/04 11:26:00 jon Exp $
  */
 public class SetHomePage extends RequireLoginFirstAction
 {
     /**
        Sets the home page to the current target
     */
-    public void doPerform( RunData data, TemplateContext context ) throws Exception
+    public void doPerform(RunData data, TemplateContext context) throws Exception
     {
         ((ScarabUser)data.getUser()).setHomePage(data.getTarget());
     }

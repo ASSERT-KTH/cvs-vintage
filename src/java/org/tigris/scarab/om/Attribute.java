@@ -73,7 +73,7 @@ import org.tigris.scarab.services.cache.ScarabCache;
   * and AttributeOption objects.
   *
   * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
-  * @version $Id: Attribute.java,v 1.55 2003/01/18 19:35:26 jon Exp $
+  * @version $Id: Attribute.java,v 1.56 2003/02/04 11:26:00 jon Exp $
   */
 public class Attribute 
     extends BaseAttribute
@@ -155,7 +155,7 @@ public class Attribute
     {
         Attribute result = null;
         Object obj = ScarabCache.get(ATTRIBUTE, GET_INSTANCE, attributeName); 
-        if ( obj == null ) 
+        if (obj == null) 
         {        
             Criteria crit = new Criteria();
             crit.add (AttributePeer.ATTRIBUTE_NAME, attributeName);
@@ -233,7 +233,7 @@ public class Attribute
     {
         List result = null;
         Object obj = ScarabCache.get(ATTRIBUTE, GET_ALL_ATTRIBUTE_TYPES); 
-        if ( obj == null ) 
+        if (obj == null) 
         {        
             result = AttributeTypePeer.doSelect(new Criteria());
             ScarabCache.put(result, ATTRIBUTE, GET_ALL_ATTRIBUTE_TYPES);
@@ -254,7 +254,7 @@ public class Attribute
     {
         AttributeType result = null;
         Object obj = ScarabCache.get(this, GET_ATTRIBUTE_TYPE);
-        if ( obj == null ) 
+        if (obj == null) 
         {
             result = super.getAttributeType();
             ScarabCache.put(result, this, GET_ATTRIBUTE_TYPE);
@@ -274,7 +274,7 @@ public class Attribute
     {
         List result = null;
         Object obj = ScarabCache.get(ATTRIBUTE, GET_ALL_ATTRIBUTES); 
-        if ( obj == null ) 
+        if (obj == null) 
         {        
             result = AttributePeer.doSelect(new Criteria());
             ScarabCache.put(result, ATTRIBUTE, GET_ALL_ATTRIBUTES);
@@ -289,7 +289,7 @@ public class Attribute
     public boolean isOptionAttribute()
         throws TorqueException
     {
-        if ( getTypeId() != null ) 
+        if (getTypeId() != null) 
         {
             return getAttributeType().getAttributeClass().getName()
                 .equals(SELECT_ONE);
@@ -300,7 +300,7 @@ public class Attribute
     public boolean isUserAttribute()
         throws TorqueException
     {
-        if ( getTypeId() != null ) 
+        if (getTypeId() != null) 
         {
             return getAttributeType().getAttributeClass().getName()
                 .equals(USER_ATTRIBUTE);
@@ -312,9 +312,9 @@ public class Attribute
         throws Exception
     {
         boolean isText = false;
-        if ( getTypeId() != null ) 
+        if (getTypeId() != null) 
         {
-            for ( int i=0; i<TEXT_TYPES.length && !isText; i++ ) 
+            for (int i=0; i<TEXT_TYPES.length && !isText; i++) 
             {
                 isText = TEXT_TYPES[i].equals(getAttributeType().getName());
             }
@@ -407,7 +407,7 @@ public class Attribute
     {
         List result = null;
         Object obj = ScarabCache.get(this, GET_ALL_ATTRIBUTE_OPTIONS); 
-        if ( obj == null ) 
+        if (obj == null) 
         {
             Criteria crit = new Criteria();
             crit.addJoin(AttributeOptionPeer.OPTION_ID, 
@@ -490,7 +490,7 @@ public class Attribute
     {
         List result = null;
         Object obj = ScarabCache.get(this, GET_ORDERED_ROPTIONOPTION_LIST); 
-        if ( obj == null ) 
+        if (obj == null) 
         {        
             if (orderedROptionOptionList == null)
             {
@@ -551,13 +551,13 @@ public class Attribute
     {
         List allOptions = getAllAttributeOptions();
         List nonDeleted = new ArrayList(allOptions.size());
-        if ( includeDeleted ) 
+        if (includeDeleted) 
         {
             return allOptions;
         }
         else 
         {
-            for ( int i=0; i<allOptions.size(); i++ ) 
+            for (int i=0; i<allOptions.size(); i++) 
             {
                 AttributeOption option = (AttributeOption)allOptions.get(i);
                 if (!option.getDeleted())
@@ -584,11 +584,11 @@ public class Attribute
             optionsMap = new HashMap((int)(1.25*attributeOptionsWithDeleted.size()+1));
     
             attributeOptionsWithoutDeleted = new ArrayList(attributeOptionsWithDeleted.size());
-            for ( int i=0; i<attributeOptionsWithDeleted.size(); i++ ) 
+            for (int i=0; i<attributeOptionsWithDeleted.size(); i++) 
             {
                 AttributeOption option = (AttributeOption)attributeOptionsWithDeleted.get(i);
                 optionsMap.put(option.getOptionId(), option);
-                if ( !option.getDeleted() ) 
+                if (!option.getDeleted()) 
                 {
                     attributeOptionsWithoutDeleted.add(attributeOptionsWithDeleted.get(i));
                 }

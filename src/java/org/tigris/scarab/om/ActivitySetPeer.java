@@ -75,12 +75,12 @@ public class ActivitySetPeer
      *
      * @param pk
      */
-    public static ActivitySet retrieveByPK( ObjectKey pk )
+    public static ActivitySet retrieveByPK(ObjectKey pk)
         throws TorqueException
     {
         ActivitySet result = null;
         Object obj = ScarabCache.get(TRANSACTION_PEER, RETRIEVE_BY_PK, pk); 
-        if ( obj == null ) 
+        if (obj == null) 
         {        
             result = BaseActivitySetPeer.retrieveByPK(pk);
             ScarabCache.put(result, TRANSACTION_PEER, RETRIEVE_BY_PK, pk);

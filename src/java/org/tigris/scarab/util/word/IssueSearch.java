@@ -261,7 +261,7 @@ public class IssueSearch
         List newAvs = getAttributeValues();
         while (avs.hasNext())
         {
-            newAvs.add( ((AttributeValue)avs.next()).copy() );
+            newAvs.add(((AttributeValue)avs.next()).copy());
         }
     }
 
@@ -363,9 +363,9 @@ public class IssueSearch
             {
                 Attribute attribute = (Attribute)i.next();
                 String key = attribute.getName().toUpperCase();
-                if ( siaValuesMap.containsKey(key) ) 
+                if (siaValuesMap.containsKey(key)) 
                 {
-                    result.put( key, siaValuesMap.get(key) );
+                    result.put(key, siaValuesMap.get(key));
                 }
                 else 
                 {
@@ -470,15 +470,15 @@ public class IssueSearch
     public NumberKey[] getTextScope()
         throws Exception
     {
-        if ( textScope == null ) 
+        if (textScope == null) 
         {
             textScope = getTextScopeForAll();
         }
         else
         {
-            for ( int i=textScope.length-1; i>=0; i-- ) 
+            for (int i=textScope.length-1; i>=0; i--) 
             {
-                if ( textScope[i].equals(ALL_TEXT) ) 
+                if (textScope[i].equals(ALL_TEXT)) 
                 {
                     textScope = getTextScopeForAll();
                     break;
@@ -497,10 +497,10 @@ public class IssueSearch
     {
         NumberKey[] textScope = null;
         List textAttributes = getQuickSearchTextAttributeValues();
-        if ( textAttributes != null ) 
+        if (textAttributes != null) 
         {
             textScope = new NumberKey[textAttributes.size()];
-            for ( int j=textAttributes.size()-1; j>=0; j-- ) 
+            for (int j=textAttributes.size()-1; j>=0; j--) 
             {
                 textScope[j] = ((AttributeValue)
                                 textAttributes.get(j)).getAttributeId();
@@ -518,9 +518,9 @@ public class IssueSearch
     {
         if (v != null) 
         {
-            for ( int i=v.length-1; i>=0; i-- ) 
+            for (int i=v.length-1; i>=0; i--) 
             {
-                if ( v[i].equals(ALL_TEXT) ) 
+                if (v[i].equals(ALL_TEXT)) 
                 {
                     v = getTextScopeForAll();
                     break;
@@ -537,9 +537,9 @@ public class IssueSearch
         }
         else if (this.textScope != null && this.textScope.length == v.length)
         {
-            for ( int i=v.length-1; i>=0; i-- ) 
+            for (int i=v.length-1; i>=0; i--) 
             {
-                if ( !v[i].equals(this.textScope[i]) ) 
+                if (!v[i].equals(this.textScope[i])) 
                 {
                     modified = true;
                     this.textScope = v;            
@@ -570,7 +570,7 @@ public class IssueSearch
      */
     public void setMinId(String  v) 
     {
-        if ( v != null && v.length() == 0 ) 
+        if (v != null && v.length() == 0) 
         {
             v = null;
         }
@@ -597,7 +597,7 @@ public class IssueSearch
      */
     public void setMaxId(String  v) 
     {
-        if ( v != null && v.length() == 0 ) 
+        if (v != null && v.length() == 0) 
         {
             v = null;
         }
@@ -624,7 +624,7 @@ public class IssueSearch
      */
     public void setMinDate(String  v) 
     {
-        if ( v != null && v.length() == 0 ) 
+        if (v != null && v.length() == 0) 
         {
             v = null;
         }
@@ -651,7 +651,7 @@ public class IssueSearch
      */
     public void setMaxDate(String  v) 
     {
-        if ( v != null && v.length() == 0 ) 
+        if (v != null && v.length() == 0) 
         {
             v = null;
         }
@@ -691,7 +691,7 @@ public class IssueSearch
      */
     public NumberKey getStateChangeAttributeId() 
     {
-        if ( stateChangeAttributeId == null ) 
+        if (stateChangeAttributeId == null) 
         {
             return AttributePeer.STATUS__PK;
         }
@@ -771,7 +771,7 @@ public class IssueSearch
      */
     public void setStateChangeFromDate(String  v) 
     {
-        if ( v != null && v.length() == 0 ) 
+        if (v != null && v.length() == 0) 
         {
             v = null;
         }
@@ -798,7 +798,7 @@ public class IssueSearch
      */
     public void setStateChangeToDate(String  v) 
     {
-        if ( v != null && v.length() == 0 ) 
+        if (v != null && v.length() == 0) 
         {
             v = null;
         }
@@ -840,7 +840,7 @@ public class IssueSearch
     public String getSortPolarity() 
     {
         String polarity = null;
-        if ( DESC.equals(sortPolarity) ) 
+        if (DESC.equals(sortPolarity)) 
         {
             polarity = DESC;
         }        
@@ -925,7 +925,7 @@ public class IssueSearch
                 {
                     AttributeValue a1 = (AttributeValue)avList.get(i);
                     AttributeValue a2 = (AttributeValue)lastUsedAVList.get(i);
-                    if ( !ObjectUtils.equals(a1.getOptionId(), a2.getOptionId())
+                    if (!ObjectUtils.equals(a1.getOptionId(), a2.getOptionId())
                          || !ObjectUtils.equals(a1.getUserId(), a2.getUserId())
                          //|| a1.getNumericValue() != a2.getNumericValue()
                          || !ObjectUtils.equals(a1.getValue(), a2.getValue()))
@@ -982,12 +982,12 @@ public class IssueSearch
         SequencedHashMap searchValues = getCommonAttributeValuesMap();
         List searchAttributes = new ArrayList(searchValues.size());
 
-        for ( int i=0; i<searchValues.size(); i++ ) 
+        for (int i=0; i<searchValues.size(); i++) 
         {
             AttributeValue searchValue = 
                 (AttributeValue)searchValues.getValue(i);
-            if ( (!quickSearchOnly || searchValue.isQuickSearchAttribute())
-                 && searchValue.getAttribute().isTextAttribute() ) 
+            if ((!quickSearchOnly || searchValue.isQuickSearchAttribute())
+                 && searchValue.getAttribute().isTextAttribute()) 
             {
                 searchAttributes.add(searchValue);
             }
@@ -1033,12 +1033,12 @@ public class IssueSearch
         SequencedHashMap searchValues = getCommonAttributeValuesMap();
         List searchAttributeValues = new ArrayList(searchValues.size());
 
-        for ( int i=0; i<searchValues.size(); i++ ) 
+        for (int i=0; i<searchValues.size(); i++) 
         {
             AttributeValue searchValue = 
                 (AttributeValue)searchValues.getValue(i);
-            if ( (!quickSearchOnly || searchValue.isQuickSearchAttribute())
-                 && searchValue instanceof OptionAttribute ) 
+            if ((!quickSearchOnly || searchValue.isQuickSearchAttribute())
+                 && searchValue instanceof OptionAttribute) 
             {
                 searchAttributeValues.add(searchValue);
             }
@@ -1057,11 +1057,11 @@ public class IssueSearch
     {
         int size = attValues.size();
         List setAVs = new ArrayList(size);
-        for ( int i=0; i<size; i++ ) 
+        for (int i=0; i<size; i++) 
         {
             AttributeValue attVal = (AttributeValue) attValues.get(i);
-            if ( attVal.getOptionId() != null || attVal.getValue() != null
-                 || attVal.getUserId() != null ) 
+            if (attVal.getOptionId() != null || attVal.getValue() != null
+                 || attVal.getUserId() != null) 
             {
                 setAVs.add(attVal);
             }
@@ -1071,7 +1071,7 @@ public class IssueSearch
 
     private void addMinimumVotes(Criteria crit)
     {
-        if ( minVotes > 0 ) 
+        if (minVotes > 0) 
         {
             crit.addJoin(AttributeValuePeer.ISSUE_ID, IssuePeer.ISSUE_ID)
                 .add(AttributeValuePeer.ATTRIBUTE_ID, 
@@ -1094,15 +1094,15 @@ public class IssueSearch
     {
         // check limits to see which ones are present
         // if neither are present, do nothing
-        if ( (minId != null && minId.length() != 0)
-              || (maxId != null && maxId.length() != 0) ) 
+        if ((minId != null && minId.length() != 0)
+              || (maxId != null && maxId.length() != 0)) 
         {
             StringBuffer sb = new StringBuffer();
             String domain = null;
             String prefix = null;
             Issue.FederatedId minFid = null;
             Issue.FederatedId maxFid = null;
-            if ( minId == null || minId.length() == 0 ) 
+            if (minId == null || minId.length() == 0) 
             {
                 maxFid = new Issue.FederatedId(maxId);
                 setDefaults(null, maxFid);
@@ -1112,7 +1112,7 @@ public class IssueSearch
                 domain = maxFid.getDomain();
                 prefix = maxFid.getPrefix();
             }
-            else if ( maxId == null || maxId.length() == 0 ) 
+            else if (maxId == null || maxId.length() == 0) 
             {
                 minFid = new Issue.FederatedId(minId);
                 setDefaults(minFid, null);
@@ -1131,10 +1131,10 @@ public class IssueSearch
                 // make sure min id is less than max id and that the character
                 // parts are equal otherwise skip the query, there are no 
                 // matches
-                if ( minFid.getCount() <= maxFid.getCount() 
+                if (minFid.getCount() <= maxFid.getCount() 
                      && StringUtils.equals(minFid.getPrefix(), maxFid.getPrefix())
                      && StringUtils
-                     .equals( minFid.getDomain(), maxFid.getDomain() ))
+                     .equals(minFid.getDomain(), maxFid.getDomain()))
                 {
                     addAnd(sb);
                     sb.append(IssuePeer.ID_COUNT).append(">=")
@@ -1175,20 +1175,20 @@ public class IssueSearch
         Module module = getModule();
         if (module != null) 
         {
-            if ( minFid != null && minFid.getDomain() == null ) 
+            if (minFid != null && minFid.getDomain() == null) 
             {
                 minFid.setDomain(module.getDomain());
             }
-            if ( maxFid != null && maxFid.getDomain() == null ) 
+            if (maxFid != null && maxFid.getDomain() == null) 
             {
                 maxFid.setDomain(module.getDomain());
             }
-            if ( minFid != null && minFid.getPrefix() == null ) 
+            if (minFid != null && minFid.getPrefix() == null) 
             {
                 minFid.setPrefix(module.getCode());
             }            
         }
-        if ( maxFid != null && maxFid.getPrefix() == null ) 
+        if (maxFid != null && maxFid.getPrefix() == null) 
         {
             if (minFid == null) 
             {
@@ -1215,21 +1215,21 @@ public class IssueSearch
         throws ParseException
     {
         Date date = null;
-        if ( dateString != null ) 
+        if (dateString != null) 
         {
-            if ( dateString.indexOf(':') == -1 )
+            if (dateString.indexOf(':') == -1)
             {
                 String[] patterns = {"MM/dd/yy", "yyyy-MM-dd"};
                 date = parseDate(dateString, patterns);
         
                 // one last try with the default locale format
-                if ( date == null ) 
+                if (date == null) 
                 {
                     date = DateFormat.getDateInstance().parse(dateString);
                 }
 
                 // add 24 hours to max date so it is inclusive
-                if ( addTwentyFourHours ) 
+                if (addTwentyFourHours) 
                 {                
                     date.setTime(date.getTime() + 86399999);
                 }
@@ -1240,7 +1240,7 @@ public class IssueSearch
                 date = parseDate(dateString, patterns);
         
                 // one last try with the default locale format
-                if ( date == null ) 
+                if (date == null) 
                 {
                     date = DateFormat.getDateTimeInstance().parse(dateString);
                 }
@@ -1269,7 +1269,7 @@ public class IssueSearch
            and throwing a ParseException when having a wrong input*/
         Date date = null;
 
-        if ( s == null ) 
+        if (s == null) 
         {
             throw new ParseException("Input string was null", -1);
         }
@@ -1279,7 +1279,7 @@ public class IssueSearch
             formatter = new SimpleDateFormat();
         }
         
-        for ( int i=0; i<patterns.length; i++) 
+        for (int i=0; i<patterns.length; i++) 
         {
             formatter.applyPattern(patterns[i]);
             try
@@ -1290,7 +1290,7 @@ public class IssueSearch
             {
                 // ignore
             }
-            if ( date != null ) 
+            if (date != null) 
             {
                 break;
             }
@@ -1305,15 +1305,15 @@ public class IssueSearch
     {
         // check limits to see which ones are present
         // if neither are present, do nothing
-        if ( minUtilDate != null || maxUtilDate != null ) 
+        if (minUtilDate != null || maxUtilDate != null) 
         {
             DB adapter = Torque.getDB(Torque.getDefaultDB());
-            if ( minUtilDate == null ) 
+            if (minUtilDate == null) 
             {
                 sb.append(column).append('<')
                     .append(adapter.getDateString(maxUtilDate));
             }
-            else if ( maxUtilDate == null ) 
+            else if (maxUtilDate == null) 
             {
                 sb.append(column).append(">=")
                     .append(adapter.getDateString(minUtilDate));
@@ -1323,7 +1323,7 @@ public class IssueSearch
                 // make sure min id is less than max id and that the character
                 // parts are equal otherwise skip the query, there are no 
                 // matches
-                if ( minUtilDate.before(maxUtilDate) )
+                if (minUtilDate.before(maxUtilDate))
                 {
                     sb.append(column).append(">=")
                         .append(adapter.getDateString(minUtilDate));
@@ -1352,10 +1352,10 @@ public class IssueSearch
         throws Exception
     {
         Map attrMap = new HashMap((int)(attValues.size()*1.25));
-        for ( int j=0; j<attValues.size(); j++ ) 
+        for (int j=0; j<attValues.size(); j++) 
         {
             AttributeValue multiAV = (AttributeValue)attValues.get(j);
-            if ( multiAV instanceof OptionAttribute )
+            if (multiAV instanceof OptionAttribute)
             {
                 NumberKey index = multiAV.getAttributeId();
                 List options = (List)attrMap.get(index);
@@ -1367,7 +1367,7 @@ public class IssueSearch
                 
                 //pull any chained values out to create a flat list
                 List chainedValues = multiAV.getValueList();
-                for ( int i=0; i<chainedValues.size(); i++ ) 
+                for (int i=0; i<chainedValues.size(); i++) 
                 {
                     AttributeValue aval = (AttributeValue)chainedValues.get(i);
                     buildOptionList(options, aval);
@@ -1381,7 +1381,7 @@ public class IssueSearch
             String alias = "av" + entry.getKey();
             List options = (List)entry.getValue();
             String c2 = null;
-            if ( options.size() == 1 ) 
+            if (options.size() == 1) 
             {
                 c2 = alias + '.' + AV_OPTION_ID + '=' 
                     + options.get(0);
@@ -1434,7 +1434,7 @@ public class IssueSearch
                 .getDescendants(issueType);
         }
         
-        if ( descendants.size() == 0 ) 
+        if (descendants.size() == 0) 
         {
             options.add(aval.getOptionId());
         }
@@ -1442,8 +1442,8 @@ public class IssueSearch
         { 
             for (Iterator i=descendants.iterator(); i.hasNext();) 
             {
-                options.add( ((RModuleOption)i.next())
-                    .getOptionId() );
+                options.add(((RModuleOption)i.next())
+                    .getOptionId());
             }
         }
     }
@@ -1556,8 +1556,8 @@ public class IssueSearch
                     List userIds = (List)entry.getValue();
                     attrCrit.append('(');
                     addUserActivityFragment(attrCrit, userIds);
-                    attrCrit.append( AND +
-                        ACTIVITYALIAS + '.' + ATTRIBUTE_ID + '=' + attrId );
+                    attrCrit.append(AND +
+                        ACTIVITYALIAS + '.' + ATTRIBUTE_ID + '=' + attrId);
                     attrCrit.append(')');
                 }
             }
@@ -1657,15 +1657,15 @@ public class IssueSearch
     private void addUserActivityFragment(StringBuffer sb, List userIds)
     {
         sb.append(ACTIVITYALIAS + '.' + END_DATE + 
-                  IS_NULL + AND + ACTIVITYALIAS_NEW_USER_ID );
+                  IS_NULL + AND + ACTIVITYALIAS_NEW_USER_ID);
         if (userIds.size() == 1) 
         {
             sb.append('=').append(userIds.get(0));
         }
         else 
         {
-            sb.append( IN + 
-                       StringUtils.join(userIds.iterator(), ",") + ')' );
+            sb.append(IN + 
+                       StringUtils.join(userIds.iterator(), ",") + ')');
         }
     }
 
@@ -1681,19 +1681,19 @@ public class IssueSearch
             // Check your configuration.
             throw new Exception("No index available to search");
         }
-        if ( getSearchWords() != null && getSearchWords().length() != 0 )
+        if (getSearchWords() != null && getSearchWords().length() != 0)
         {
             searchIndex.addQuery(getTextScope(), getSearchWords());
             searchCriteriaExists = true;
         }
         else 
         {
-            for ( int i=0; i<attValues.size(); i++ ) 
+            for (int i=0; i<attValues.size(); i++) 
             {
                 AttributeValue aval = (AttributeValue)attValues.get(i);
-                if ( aval instanceof StringAttribute 
+                if (aval instanceof StringAttribute 
                      && aval.getValue() != null 
-                     && aval.getValue().length() != 0 )
+                     && aval.getValue().length() != 0)
                 {
                     searchCriteriaExists = true;
                     NumberKey[] id = {aval.getAttributeId()};
@@ -1725,24 +1725,24 @@ public class IssueSearch
     {
         NumberKey oldOptionId = getStateChangeFromOptionId();
         NumberKey newOptionId = getStateChangeToOptionId();
-        if ( oldOptionId != null || newOptionId != null )
+        if (oldOptionId != null || newOptionId != null)
         {
             from.append(INNER_JOIN + ActivityPeer.TABLE_NAME + ON +
                         ActivityPeer.ISSUE_ID + '=' + IssuePeer.ISSUE_ID);
 
-            if ( oldOptionId == null ) 
+            if (oldOptionId == null) 
             {
                 from.append(AND).append(ActivityPeer.NEW_OPTION_ID).append('=')
                     .append(newOptionId);
             }
-            else if ( newOptionId == null ) 
+            else if (newOptionId == null) 
             {
                 from.append(AND).append(ActivityPeer.OLD_OPTION_ID).append('=')
                     .append(oldOptionId);
             }
             // make sure the old and new options are different, otherwise
             // do not add to criteria.
-            else if ( !oldOptionId.equals(newOptionId) )
+            else if (!oldOptionId.equals(newOptionId))
             {
                 from.append(AND).append(ActivityPeer.NEW_OPTION_ID)
                     .append('=').append(newOptionId);
@@ -1758,9 +1758,9 @@ public class IssueSearch
             // add dates, if given
             Date minUtilDate = parseDate(getStateChangeFromDate(), false);
             Date maxUtilDate = parseDate(getStateChangeToDate(), true);
-            if ( minUtilDate != null || maxUtilDate != null ) 
+            if (minUtilDate != null || maxUtilDate != null) 
             {
-                from.append( INNER_JOIN + ActivitySetPeer.TABLE_NAME + ON +
+                from.append(INNER_JOIN + ActivitySetPeer.TABLE_NAME + ON +
                              ActivitySetPeer.TRANSACTION_ID + '=' +
                              ActivityPeer.TRANSACTION_ID);
                 from.append(AND);
@@ -1804,7 +1804,7 @@ public class IssueSearch
         // search for issues based on text
         NumberKey[] matchingIssueIds = getTextMatches(setAttValues);
 
-        if ( matchingIssueIds == null || matchingIssueIds.length > 0 )
+        if (matchingIssueIds == null || matchingIssueIds.length > 0)
         {
             addIssueIdRange(whereClause);
             //addMinimumVotes(whereClause);
@@ -1850,7 +1850,7 @@ public class IssueSearch
             // the matchingIssueIds are text search matches.  if length == 0,
             // then no need to search further.  if null then there was no
             // text to search, so continue the search process.
-            if ( matchingIssueIds == null || matchingIssueIds.length > 0 ) 
+            if (matchingIssueIds == null || matchingIssueIds.length > 0) 
             {            
                 // Get matching issues, with sort criteria
                 StringBuffer sql = new StringBuffer(255);
@@ -1888,7 +1888,7 @@ public class IssueSearch
             StringBuffer from = new StringBuffer();
             StringBuffer where = new StringBuffer();
             NumberKey[] matchingIssueIds = addCoreSearchCriteria(from, where);
-            if ( matchingIssueIds == null || matchingIssueIds.length > 0 ) 
+            if (matchingIssueIds == null || matchingIssueIds.length > 0) 
             {
                 String sql = 
                     "SELECT count(DISTINCT " + IssuePeer.ISSUE_ID + ") FROM " +
@@ -1973,7 +1973,7 @@ public class IssueSearch
             {
                 String sortId = sortAttrId.toString();
                 Attribute att = AttributeManager.getInstance(sortAttrId);
-                if ( att.isOptionAttribute())
+                if (att.isOptionAttribute())
                 {
                     // add the sort column
                     sortColumn = "sortRMO.PREFERRED_ORDER";

@@ -65,7 +65,7 @@ import org.tigris.scarab.tools.ScarabLocalizationTool;
  *  a couple methods useful for Scarab.
  *   
  *  @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- *  @version $Id: ScarabTemplateAction.java,v 1.28 2002/10/23 21:46:09 jon Exp $
+ *  @version $Id: ScarabTemplateAction.java,v 1.29 2003/02/04 11:26:00 jon Exp $
  */
 public abstract class ScarabTemplateAction extends TemplateAction
 {
@@ -203,31 +203,31 @@ public abstract class ScarabTemplateAction extends TemplateAction
                    .getString(ScarabConstants.OTHER_TEMPLATE);
     }
 
-    public void doSave( RunData data, TemplateContext context )
+    public void doSave(RunData data, TemplateContext context)
         throws Exception
     {
     }
 
-    public void doGonext( RunData data, TemplateContext context )
+    public void doGonext(RunData data, TemplateContext context)
         throws Exception
     {
         setTarget(data, getNextTemplate(data));            
     }
 
-    public void doGotoothertemplate( RunData data, 
-                                     TemplateContext context )
+    public void doGotoothertemplate(RunData data, 
+                                     TemplateContext context)
         throws Exception
     {
         setTarget(data, getOtherTemplate(data));            
     }
 
-    public void doRefresh( RunData data, TemplateContext context )
+    public void doRefresh(RunData data, TemplateContext context)
         throws Exception
     {
         setTarget(data, getCurrentTemplate(data));            
     }
 
-    public void doReset( RunData data, TemplateContext context )
+    public void doReset(RunData data, TemplateContext context)
         throws Exception
     {
         IntakeTool intake = getIntakeTool(context);
@@ -235,17 +235,17 @@ public abstract class ScarabTemplateAction extends TemplateAction
         setTarget(data, getCurrentTemplate(data));            
     }
         
-    public void doCancel( RunData data, TemplateContext context )
+    public void doCancel(RunData data, TemplateContext context)
         throws Exception
     {
         setTarget(data, getCancelTemplate(data));            
     }
 
-    public void doDone( RunData data, TemplateContext context )
+    public void doDone(RunData data, TemplateContext context)
         throws Exception
     {
-        doSave( data, context);
-        doCancel( data, context);
+        doSave(data, context);
+        doCancel(data, context);
     }
 
 

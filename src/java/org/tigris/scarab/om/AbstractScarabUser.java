@@ -72,7 +72,7 @@ import org.tigris.scarab.util.Log;
  * 
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: AbstractScarabUser.java,v 1.62 2003/01/24 20:00:46 jmcnally Exp $
+ * @version $Id: AbstractScarabUser.java,v 1.63 2003/02/04 11:26:00 jon Exp $
  */
 public abstract class AbstractScarabUser 
     extends BaseObject 
@@ -259,7 +259,7 @@ public abstract class AbstractScarabUser
             lastlength = last.length();
         }        
         StringBuffer sb = new StringBuffer(firstlength + lastlength + 1);
-        if (firstlength > 0 ) 
+        if (firstlength > 0) 
         {
             sb.append(first);
             if (lastlength > 0) 
@@ -267,7 +267,7 @@ public abstract class AbstractScarabUser
                 sb.append(' ');
             }
         }
-        if ( lastlength > 0) 
+        if (lastlength > 0) 
         {
             sb.append(last);
         }
@@ -384,7 +384,7 @@ public abstract class AbstractScarabUser
         List result = null;
         Object obj = ScarabCache.get(this, GET_R_MODULE_USERATTRIBUTES, 
                                      module, issueType); 
-        if ( obj == null ) 
+        if (obj == null) 
         {        
             Criteria crit = new Criteria()
                 .add(RModuleUserAttributePeer.USER_ID, getUserId())
@@ -423,7 +423,7 @@ public abstract class AbstractScarabUser
         RModuleUserAttribute result = null;
         Object obj = ScarabCache.get(this, GET_R_MODULE_USERATTRIBUTE, 
                                      module, attribute, issueType); 
-        if ( obj == null ) 
+        if (obj == null) 
         {        
             Criteria crit = new Criteria(4)
                 .add(RModuleUserAttributePeer.USER_ID, getUserId())
@@ -451,11 +451,11 @@ public abstract class AbstractScarabUser
             }
             
             List muas = RModuleUserAttributePeer.doSelect(crit);
-            if ( muas.size() == 1 ) 
+            if (muas.size() == 1) 
             {
                 result = (RModuleUserAttribute)muas.get(0);
             }
-            else if ( muas.isEmpty() )
+            else if (muas.isEmpty())
             {
                 result = 
                     getNewRModuleUserAttribute(attribute, module, issueType);
@@ -509,7 +509,7 @@ public abstract class AbstractScarabUser
         throws ScarabException
     {
         String key = null;
-        if ( issue == null ) 
+        if (issue == null) 
         {
             throw new ScarabException("Null Issue is not allowed.");
         }
@@ -527,7 +527,7 @@ public abstract class AbstractScarabUser
      */
     public void setReportingIssue(String key, Issue issue)
     {
-        if ( issue == null ) 
+        if (issue == null) 
         {
             issueMap.remove(key);
         }
@@ -582,7 +582,7 @@ public abstract class AbstractScarabUser
         throws ScarabException
     {
         String key = null;
-        if ( report == null ) 
+        if (report == null) 
         {
             throw new ScarabException("Null Report is not allowed.");
         }
@@ -600,7 +600,7 @@ public abstract class AbstractScarabUser
      */
     public void setCurrentReport(String key, ReportBridge report)
     {
-        if ( report == null ) 
+        if (report == null) 
         {
             reportMap.remove(key);
         }
@@ -648,7 +648,7 @@ public abstract class AbstractScarabUser
         List result = null;
         Object obj = ScarabCache.get(this, GET_DEFAULT_QUERY_USER, 
                                      me, issueType); 
-        if ( obj == null ) 
+        if (obj == null) 
         {        
             Criteria crit = new Criteria();
             crit.add(RQueryUserPeer.USER_ID, getUserId());
@@ -900,7 +900,7 @@ public abstract class AbstractScarabUser
         Module[] userModules = getModules(ScarabSecurity.ISSUE__SEARCH);
         if (userModules != null && (userModules.length > 1 ||
                 userModules.length == 1 && !userModules[0].isGlobalModule())
-            ) 
+           ) 
         {
             List moduleIds = new ArrayList(userModules.length);
             for (int i=0; i<userModules.length; i++) 
@@ -991,9 +991,9 @@ public abstract class AbstractScarabUser
             moduleName = searchString;
         }
         
-        if ( moduleName != null && moduleName.length() > 0 )
+        if (moduleName != null && moduleName.length() > 0)
         {
-            for ( int i=rmits.size()-1; i>=0; i-- )
+            for (int i=rmits.size()-1; i>=0; i--)
             {
                 String name = ((RModuleIssueType)rmits.get(i))
                     .getModule().getRealName();
@@ -1003,9 +1003,9 @@ public abstract class AbstractScarabUser
                 }
             }
         }
-        if ( issueTypeName != null && issueTypeName.length() > 0 )
+        if (issueTypeName != null && issueTypeName.length() > 0)
         {
-            for ( int i=rmits.size()-1; i>=0; i-- )
+            for (int i=rmits.size()-1; i>=0; i--)
             {
                 String name = ((RModuleIssueType)rmits.get(i))
                     .getDisplayName();
@@ -1160,7 +1160,7 @@ public abstract class AbstractScarabUser
     }
     private void setCurrentMITList(Object key, MITList list)
     {
-        if ( list == null ) 
+        if (list == null) 
         {
             mitListMap.remove(key);
         }
@@ -1263,7 +1263,7 @@ public abstract class AbstractScarabUser
     }
     private void setMostRecentQuery(Object key, String queryString)
     {
-        if ( queryString == null ) 
+        if (queryString == null) 
         {
             mostRecentQueryMap.remove(key);
             mostRecentQueryMITMap.remove(key);

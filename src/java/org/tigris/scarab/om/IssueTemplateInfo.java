@@ -80,8 +80,8 @@ public  class IssueTemplateInfo
     }
 
 
-    public void saveAndSendEmail( ScarabUser user, Module module, 
-                                  TemplateContext context )
+    public void saveAndSendEmail(ScarabUser user, Module module, 
+                                  TemplateContext context)
         throws Exception
     {
         Issue issue = IssuePeer.retrieveByPK(getIssueId());
@@ -138,7 +138,7 @@ public  class IssueTemplateInfo
      * Checks permission and approves or rejects template. If template
      * is approved,template type set to "module", else set to "personal".
      */
-    public void approve( ScarabUser user, boolean approved )
+    public void approve(ScarabUser user, boolean approved)
          throws Exception
     {                
         Module module = getIssue().getModule();

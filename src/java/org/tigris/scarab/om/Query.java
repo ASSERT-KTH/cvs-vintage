@@ -172,7 +172,7 @@ public class Query
     {
         Module module = null;
         ObjectKey id = getModuleId();
-        if ( id != null ) 
+        if (id != null) 
         {
             module = ModuleManager.getInstance(id);
         }
@@ -188,8 +188,8 @@ public class Query
         return new Query();
     }
 
-    public boolean saveAndSendEmail( ScarabUser user, Module module, 
-                                     TemplateContext context )
+    public boolean saveAndSendEmail(ScarabUser user, Module module, 
+                                     TemplateContext context)
         throws Exception
     {
         // If it's a module scoped query, user must have Item | Approve 
@@ -300,7 +300,7 @@ public class Query
     {
         RQueryUser result = new RQueryUser();
         Object obj = ScarabCache.get(this, GET_R_QUERY_USER, user); 
-        if ( obj == null ) 
+        if (obj == null) 
         {        
             Criteria crit = new Criteria();
             crit.add(RQueryUserPeer.QUERY_ID, getQueryId());
@@ -327,7 +327,7 @@ public class Query
      * Checks permission and approves or rejects query. If query
      * is approved, query type set to "module", else set to "personal".
      */
-    public void approve( ScarabUser user, boolean approved )
+    public void approve(ScarabUser user, boolean approved)
          throws Exception
     {                
         Module module = getModule();
@@ -353,7 +353,7 @@ public class Query
      * Only the creating user can delete a personal query.
      * Only project owner or admin can delete a project-wide query.
      */
-    public void delete( ScarabUser user )
+    public void delete(ScarabUser user)
          throws Exception
     {                
         Module module = getModule();
@@ -383,7 +383,7 @@ public class Query
      * Only the creating user can delete a personal query.
      * Only project owner or admin can delete a project-wide query.
      */
-    public void copyQuery( ScarabUser user )
+    public void copyQuery(ScarabUser user)
          throws Exception
     {                
          Query newQuery = new Query();

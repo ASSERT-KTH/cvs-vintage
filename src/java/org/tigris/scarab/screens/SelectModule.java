@@ -65,14 +65,14 @@ import org.apache.torque.om.NumberKey;
  * in SelectModule.vm
  *
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: SelectModule.java,v 1.7 2002/07/24 22:14:18 jmcnally Exp $
+ * @version $Id: SelectModule.java,v 1.8 2003/02/04 11:26:02 jon Exp $
  */
 public class SelectModule extends Default
 {
     /**
      * builds up the context for display of variables on the page.
      */
-    public void doBuildTemplate( RunData data, TemplateContext context )
+    public void doBuildTemplate(RunData data, TemplateContext context)
         throws Exception 
     {
         super.doBuildTemplate(data, context);
@@ -107,7 +107,7 @@ public class SelectModule extends Default
                 Log.get().error("Could not determine homepage", e);
                 homePage = "Index.vm";
             }
-            return super.setPage( homePage, moduleId);
+            return super.setPage(homePage, moduleId);
         }
     }
 }

@@ -77,14 +77,14 @@ import org.tigris.scarab.services.cache.ScarabCache;
  * action methods on RModuleAttribute table
  *      
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
- * @version $Id: ArtifactTypeEdit.java,v 1.41 2003/02/04 03:09:11 elicia Exp $
+ * @version $Id: ArtifactTypeEdit.java,v 1.42 2003/02/04 11:26:00 jon Exp $
  */
 public class ArtifactTypeEdit extends RequireLoginFirstAction
 {
     /**
      * Adds or modifies an issue type's properties.
      */
-    public boolean doSaveinfo ( RunData data, TemplateContext context )
+    public boolean doSaveinfo (RunData data, TemplateContext context)
         throws Exception
     {
         boolean success = true;
@@ -122,7 +122,7 @@ public class ArtifactTypeEdit extends RequireLoginFirstAction
     /**
      * Adds or modifies an issue type's attribute groups.
      */
-    public boolean doSavegroups ( RunData data, TemplateContext context )
+    public boolean doSavegroups (RunData data, TemplateContext context)
         throws Exception
     {
         boolean success = true;
@@ -254,7 +254,7 @@ public class ArtifactTypeEdit extends RequireLoginFirstAction
     /**
      * Adds or modifies user attributes' properties
      */
-    public void doSaveuserattributes ( RunData data, TemplateContext context )
+    public void doSaveuserattributes (RunData data, TemplateContext context)
         throws Exception
     {
         IntakeTool intake = getIntakeTool(context);
@@ -295,8 +295,8 @@ public class ArtifactTypeEdit extends RequireLoginFirstAction
     /**
      * Creates new attribute group.
      */
-    public AttributeGroup doCreatenewgroup ( RunData data, 
-                                             TemplateContext context )
+    public AttributeGroup doCreatenewgroup (RunData data, 
+                                             TemplateContext context)
         throws Exception
     {
         ScarabRequestTool scarabR = getScarabRequestTool(context);
@@ -310,7 +310,7 @@ public class ArtifactTypeEdit extends RequireLoginFirstAction
     /**
      * Deletes an attribute group.
      */
-    public void doDeletegroup ( RunData data, TemplateContext context )
+    public void doDeletegroup (RunData data, TemplateContext context)
         throws Exception
     {
         ScarabRequestTool scarabR = getScarabRequestTool(context);
@@ -366,7 +366,7 @@ public class ArtifactTypeEdit extends RequireLoginFirstAction
     /**
      * Unmaps attributes to modules.
      */
-    public void doDeleteuserattribute( RunData data, TemplateContext context ) 
+    public void doDeleteuserattribute(RunData data, TemplateContext context) 
         throws Exception
     {
         ScarabRequestTool scarabR = getScarabRequestTool(context);
@@ -426,8 +426,8 @@ public class ArtifactTypeEdit extends RequireLoginFirstAction
     }
 
 
-    public void doCreatenewuserattribute( RunData data, 
-                                            TemplateContext context )
+    public void doCreatenewuserattribute(RunData data, 
+                                            TemplateContext context)
         throws Exception
     {
         IntakeTool intake = getIntakeTool(context);
@@ -441,7 +441,7 @@ public class ArtifactTypeEdit extends RequireLoginFirstAction
     /**
      * Selects attribute to add to issue type.
      */
-    public void doSelectuserattribute( RunData data, TemplateContext context )
+    public void doSelectuserattribute(RunData data, TemplateContext context)
         throws Exception
     {
         ScarabRequestTool scarabR = getScarabRequestTool(context);
@@ -482,7 +482,7 @@ public class ArtifactTypeEdit extends RequireLoginFirstAction
     /*
      * Manages clicking of the AllDone button
      */
-    public void doDone( RunData data, TemplateContext context )
+    public void doDone(RunData data, TemplateContext context)
         throws Exception
     {
         boolean infoSuccess = doSaveinfo(data, context);

@@ -68,7 +68,7 @@ import org.tigris.scarab.util.ScarabConstants;
  * administrator action and only persists until the server is restarted.
  *
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: SetInfoMessageValve.java,v 1.1 2002/11/18 04:38:27 jmcnally Exp $
+ * @version $Id: SetInfoMessageValve.java,v 1.2 2003/02/04 11:26:02 jon Exp $
  */
 public class SetInfoMessageValve 
     extends AbstractValve
@@ -78,14 +78,14 @@ public class SetInfoMessageValve
     /**
      * @see org.apache.turbine.Valve#invoke(RunData, ValveContext)
      */
-    public void invoke( RunData data, ValveContext context )
+    public void invoke(RunData data, ValveContext context)
         throws IOException, TurbineException
     {
         ((ScarabRequestTool)Module.getTemplateContext(data)
             .get(ScarabConstants.SCARAB_REQUEST_TOOL)).setInfoMessage(message);
 
         // Pass control to the next Valve in the Pipeline
-        context.invokeNext( data );
+        context.invokeNext(data);
     }
 
     public static void setMessage(String msg)

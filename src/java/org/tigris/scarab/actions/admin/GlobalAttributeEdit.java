@@ -75,7 +75,7 @@ import org.tigris.scarab.services.cache.ScarabCache;
  * This class deals with modifying Global Attributes.
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: GlobalAttributeEdit.java,v 1.35 2003/01/23 20:17:41 elicia Exp $
+ * @version $Id: GlobalAttributeEdit.java,v 1.36 2003/02/04 11:26:00 jon Exp $
  */
 public class GlobalAttributeEdit extends RequireLoginFirstAction
 {
@@ -83,14 +83,14 @@ public class GlobalAttributeEdit extends RequireLoginFirstAction
      * Used on GlobalAttributeEdit.vm to modify Attribute Name/Description/Type
      * Use doSaveoptions to modify the options.
      */
-    public void doSaveattributedata( RunData data, TemplateContext context )
+    public void doSaveattributedata(RunData data, TemplateContext context)
         throws Exception
     {
         IntakeTool intake = getIntakeTool(context);
         ScarabRequestTool scarabR = getScarabRequestTool(context);
         ScarabLocalizationTool l10n = getLocalizationTool(context);
 
-        if ( intake.isAllValid() )
+        if (intake.isAllValid())
         {
             Attribute attr = scarabR.getAttribute();
             Group attrGroup = null;
@@ -133,7 +133,7 @@ public class GlobalAttributeEdit extends RequireLoginFirstAction
      * AttributeOption or add a new one if the name doesn't already exist.
      */
     public synchronized void 
-        doSaveoptions( RunData data, TemplateContext context )
+        doSaveoptions(RunData data, TemplateContext context)
         throws Exception
     {
         IntakeTool intake = (IntakeTool)context
@@ -143,7 +143,7 @@ public class GlobalAttributeEdit extends RequireLoginFirstAction
         ScarabLocalizationTool l10n = getLocalizationTool(context);
         boolean newAdded = false;
 
-        if ( intake.isAllValid() ) 
+        if (intake.isAllValid()) 
         {
             // get the Attribute that we are working on
             Attribute attribute = scarabR.getAttribute();
@@ -224,7 +224,7 @@ public class GlobalAttributeEdit extends RequireLoginFirstAction
                     ParentChildAttributeOption.getInstance();
                 Group newPCAOGroup = intake.get("ParentChildAttributeOption", 
                                                 newPCAO.getQueryKey());
-                if ( newPCAOGroup != null ) 
+                if (newPCAOGroup != null) 
                 {
                     try
                     {
@@ -305,7 +305,7 @@ public class GlobalAttributeEdit extends RequireLoginFirstAction
     /*
      * Manages clicking of the AllDone button
      */
-    public void doDone( RunData data, TemplateContext context )
+    public void doDone(RunData data, TemplateContext context)
         throws Exception
     {
         doSaveattributedata(data, context);
@@ -319,7 +319,7 @@ public class GlobalAttributeEdit extends RequireLoginFirstAction
     /*
      * Manages clicking of the cancel button
      */
-    public void doCancel( RunData data, TemplateContext context )
+    public void doCancel(RunData data, TemplateContext context)
         throws Exception
     {
         // If they came from the manage module page,
@@ -356,7 +356,7 @@ public class GlobalAttributeEdit extends RequireLoginFirstAction
                 scarabR.setConfirmMessage("The attribute has been added.");
             }
             ScarabCache.clear();
-            setTarget( data, lastTemplate);
+            setTarget(data, lastTemplate);
         }
         else
         {

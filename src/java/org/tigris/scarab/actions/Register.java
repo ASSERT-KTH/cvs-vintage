@@ -79,7 +79,7 @@ import org.xbill.DNS.Type;
  * Action.
  *   
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: Register.java,v 1.33 2002/10/23 21:31:40 jon Exp $
+ * @version $Id: Register.java,v 1.34 2003/02/04 11:26:00 jon Exp $
  */
 public class Register extends ScarabTemplateAction
 {
@@ -125,7 +125,7 @@ public class Register extends ScarabTemplateAction
      * template. As a result, the user will go to the 
      * RegisterConfirm.vm screen.
      */
-    public void doRegister( RunData data, TemplateContext context ) 
+    public void doRegister(RunData data, TemplateContext context) 
         throws Exception
     {
         String template = getCurrentTemplate(data, null);
@@ -336,7 +336,7 @@ public class Register extends ScarabTemplateAction
      * template. As a result, this will end up sending
      * the user to the Confirm screen.
      */
-    public void doConfirm( RunData data, TemplateContext context ) 
+    public void doConfirm(RunData data, TemplateContext context) 
         throws Exception
     {
         String template = getCurrentTemplate(data, null);

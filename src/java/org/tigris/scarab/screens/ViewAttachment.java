@@ -68,14 +68,14 @@ import org.tigris.scarab.om.AttachmentManager;
  * Sends file contents directly to the output stream.
  *
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: ViewAttachment.java,v 1.10 2003/01/27 17:34:33 jmcnally Exp $
+ * @version $Id: ViewAttachment.java,v 1.11 2003/02/04 11:26:02 jon Exp $
  */
 public class ViewAttachment extends Default
 {
     /**
      * builds up the context for display of variables on the page.
      */
-    public void doBuildTemplate( RunData data, TemplateContext context )
+    public void doBuildTemplate(RunData data, TemplateContext context)
         throws Exception 
     {
         super.doBuildTemplate(data, context);
@@ -105,7 +105,7 @@ public class ViewAttachment extends Default
             bis = new BufferedInputStream(new FileInputStream(f));
             byte[] bytes = new byte[2048];
             int s = 0;
-            while ( (s = bis.read(bytes)) != -1 )
+            while ((s = bis.read(bytes)) != -1)
             {
                 try
                 {

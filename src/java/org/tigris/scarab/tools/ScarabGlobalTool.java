@@ -102,7 +102,7 @@ import org.apache.turbine.Turbine;
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
  * @author <a href="mailto:dr@bitonic.com">Douglas B. Robertson</a>
- * @version $Id: ScarabGlobalTool.java,v 1.51 2003/01/31 19:37:13 jon Exp $
+ * @version $Id: ScarabGlobalTool.java,v 1.52 2003/02/04 11:26:03 jon Exp $
  */
 public class ScarabGlobalTool implements ScarabGlobalScope
 {
@@ -413,7 +413,7 @@ public class ScarabGlobalTool implements ScarabGlobalScope
     public Object[] reverse(Object[] a)
     {
         Object[] b = new Object[a.length];
-        for ( int i=a.length-1; i>=0; i--) 
+        for (int i=a.length-1; i>=0; i--) 
         {
             b[a.length-1-i] = a[i];
         }
@@ -432,7 +432,7 @@ public class ScarabGlobalTool implements ScarabGlobalScope
     {
         int size = a.size();
         List b = new ArrayList(size);
-        for ( int i=size-1; i>=0; i--) 
+        for (int i=size-1; i>=0; i--) 
         {
             b.add(a.get(i));
         }
@@ -476,7 +476,7 @@ public class ScarabGlobalTool implements ScarabGlobalScope
         int to = Math.min(toIndex.intValue(), a.length); 
         to = Math.max(to, from); 
         Object[] b = new Object[from-to];
-        for ( int i=from-1; i>=to; i--) 
+        for (int i=from-1; i>=to; i--) 
         {
             b[i-to] = a[i];
         }

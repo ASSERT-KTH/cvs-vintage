@@ -60,7 +60,7 @@ import org.tigris.scarab.actions.base.RequireLoginFirstAction;
  * and redirect to the defined template.
  *       
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: Redirect.java,v 1.3 2002/07/08 18:11:15 jmcnally Exp $
+ * @version $Id: Redirect.java,v 1.4 2003/02/04 11:26:00 jon Exp $
  */
 public class Redirect extends RequireLoginFirstAction
 {
@@ -74,7 +74,7 @@ public class Redirect extends RequireLoginFirstAction
         // set the next template
         String nextTemplate = data.getParameters()
             .getString(ScarabConstants.NEXT_TEMPLATE, 
-                       ((ScarabUser)data.getUser()).getHomePage() );
+                       ((ScarabUser)data.getUser()).getHomePage());
 
         setTarget(data, nextTemplate);
     }
