@@ -51,6 +51,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.Calendar;
+import java.util.Collections;
 
 import org.apache.fulcrum.security.entity.User;
 import org.apache.fulcrum.security.entity.Group;
@@ -81,7 +82,7 @@ import org.apache.log4j.Category;
  * implementation needs.
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: ScarabUserImpl.java,v 1.90 2003/03/20 00:57:31 jon Exp $
+ * @version $Id: ScarabUserImpl.java,v 1.91 2003/03/25 01:10:19 dlr Exp $
  */
 public class ScarabUserImpl 
     extends BaseScarabUserImpl 
@@ -163,12 +164,10 @@ public class ScarabUserImpl
                 perms = (String[])permList.toArray(perms);
                 
                 Module[] modules = getPrivateModules(perms, showDeletedModules);
-                if (modules == null || modules.length == 0)
-                {
-                    return new ArrayList();
-                }
-                return Arrays.asList(modules);
+                return (modules == null || modules.length == 0
+                        ? Collections.EMPTY_LIST : Arrays.asList(modules));
             }
+
             /**
              * @see org.tigris.scarab.om.ScarabUser#getModules(String)
              */
