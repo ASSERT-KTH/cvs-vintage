@@ -8,7 +8,7 @@
   <!ENTITY targets    SYSTEM "../tools/etc/buildfragments/targets.ent">
 ]>
 
-<!-- $Id: build.xml,v 1.141 2003/03/09 00:23:10 jboynes Exp $ -->
+<!-- $Id: build.xml,v 1.142 2003/03/15 22:40:47 dsundstrom Exp $ -->
 
 <!--+======================================================================+-->
 <!--| JBoss (The OpenSource J2EE WebOS) Build File                         |-->
@@ -199,6 +199,7 @@
 	     excludedtags="@version,@author">
       <fileset dir="${source.java}">
         <include name="org/jboss/aspect/jmx/*.java"/>
+        <include name="org/jboss/copy/ObjectCopier.java"/>
         <include name="org/jboss/deployment/EARDeployer.java"/>
         <include name="org/jboss/ejb/EjbModule.java"/>
         <include name="org/jboss/ejb/EJBDeployer.java"/>
@@ -365,6 +366,10 @@
         <!-- Exclude key factory stuff -->
         <exclude name="org/jboss/ejb/plugins/keygenerator/uuid/**"/>
         <exclude name="org/jboss/ejb/plugins/keygenerator/hilo/**"/>
+
+
+        <!-- Exclude object copier -->
+        <exclude name="org/jboss/copy/**"/>
       </fileset>
 
       <!-- HACK -->
@@ -601,6 +606,17 @@ THE INTERCEPTOR INHERITANCE MODEL IS SCREWED. REMOVE WHEN INTERCEPTORS ARE UNIFI
       <fileset dir="${build.classes}">
         <include name="org/jboss/ejb/plugins/keygenerator/uuid/**"/>
         <include name="org/jboss/ejb/plugins/keygenerator/hilo/**"/>
+      </fileset>
+    </jar>
+    
+    <!-- object-copier.sar -->
+    <jar jarfile="${build.lib}/object-copier.sar"
+         manifest="${build.etc}/default.mf">
+      <fileset dir="${build.classes}">
+        <include name="org/jboss/copy/**"/>
+      </fileset>
+      <fileset dir="${build.resources}/copy">
+        <include name="**/*"/>
       </fileset>
     </jar>
 
