@@ -286,6 +286,9 @@
         <filter token="LOG_LEVEL_SCARAB" value="${scarab.log.level.scarab}"/>
         <filter token="LOG_FILE_SCARAB" value="${scarab.log.file.scarab}"/>
         <filter token="LOG_APPEND_SCARAB" value="${scarab.log.append.scarab}"/>
+        <filter token="LOG_LEVEL_SCARAB_XML_IMPORT" value="${scarab.log.level.scarabxmlimport}"/>
+        <filter token="LOG_FILE_SCARAB_XML_IMPORT" value="${scarab.log.file.scarabxmlimport}"/>
+        <filter token="LOG_APPEND_SCARAB_XML_IMPORT" value="${scarab.log.append.scarabxmlimport}"/>
         <filter token="LOG_LEVEL_TURBINE" value="${scarab.log.level.turbine}"/>
         <filter token="LOG_FILE_TURBINE" value="${scarab.log.file.turbine}"/>
         <filter token="LOG_APPEND_TURBINE" value="${scarab.log.append.turbine}"/>
