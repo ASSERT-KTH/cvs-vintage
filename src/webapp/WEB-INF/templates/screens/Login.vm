@@ -1,8 +1,4 @@
 <div class="app" id="loginDONOTCHANGETHISID">
-
-<p>$l10n.format("IfYouAreNotRegistered", $link.omitModule().setPage("Register.vm"))</p>
-<p>$l10n.format("ForgotYourPassword", $link.omitModule().setPage("ForgotPassword.vm"))</p>
-
 <h3>$l10n.Login</h3>
 
 #set ($nextTemplate = $data.Parameters.getString($scarabG.Constant.NEXT_TEMPLATE, ""))
@@ -24,28 +20,87 @@
 #set ($loginGroup = $intake.Login.Default)
 <div class="axial">
 <table cellpadding="3" cellspacing="2" border="0">
- <tr>
+
+ <tr valign="top">
   <th>$l10n.Username</th>
-  <td>
-  <input name="$loginGroup.Username.Key" value="$!loginGroup.Username.Value" size="25" type="text" />
-  #fieldErrorMsg ($loginGroup.Username "")
+  <td nowrap="nowrap"><input name="$loginGroup.Username.Key" value="$!loginGroup.Username.Value" size="25" type="text" /></td>
+  <td nowrap="nowrap">#fieldHint ($loginGroup.Username)</td>
+ </tr>
+
+ <tr valign="top">
+  <th>$l10n.Password</th>
+  <td nowrap="nowrap"><input name="$loginGroup.Password.Key" value="" size="25" type="password" /></td>
+  <td nowrap="nowrap">#fieldHint ($loginGroup.Password)</td>
+ </tr>
+
+
+
+ <tr>
+   <td height="1" colspan="3"></td>
+ </tr>
+
+ <tr>
+  <th nowrap="nowrap">$l10n.ForgotPassword</th>
+  <td colspan="2">
+   <a style="text-decoration:none;" href='$link.omitModule().setPage("ForgotPassword.vm")'>
+     $l10n.ResetPassword
+     <img src="$staticLink.setPath("/images/icon_rightarrow.gif")" border="0"/>
+   </a>
   </td>
  </tr>
+
  <tr>
-  <th>$l10n.Password</th>
-  <td>
-  <input name="$loginGroup.Password.Key" value="" size="25" type="password" />
-  #fieldErrorMsg ($loginGroup.Password "")
+  <th nowrap="nowrap">$l10n.NotRegistered</th>
+  <td colspan="2">
+   <a style="text-decoration:none;" href='$link.omitModule().setPage("Register.vm")'>
+     $l10n.RegisterNewUser
+     <img src="$staticLink.setPath("/images/icon_rightarrow.gif")" border="0"/>
+   </a>
   </td>
  </tr>
 </table>
 </div>
-#if ($scarabR.anonymousLoginAllowed)
-  <div>$l10n.format("AnonymousAccess", $link.omitModule().setPage("SelectModule.vm"))</div>
-#end
 <div class="functnbar2">
 <input type="submit" name="eventSubmit_doLogin" value="$l10n.Login" onclick="document.login.eventSubmit_doLogin.disabled=true;document.login.submit()" />
 </div>
+
+#if ($scarabR.anonymousLoginAllowed)
+  <h3>$l10n.PublicModules</h3>
+
+#set ($userModules = $data.User.Modules)
+#if ($userModules.size() > 0)
+<table border="1" cellspacing="2" cellpadding="3" width="100%">
+<tr>
+    <th>$l10n.Name</th>
+    <th>$l10n.Description</th>
+</tr>
+
+#foreach ($module in $userModules)
+ #if (!$module.isGlobalModule())
+  #indexedRows($velocityCount)
+   <td>
+     $modulelink.setPage("$module.ModuleId").setLabel($module.Name)
+   </td>
+   <td>
+     $module.Description
+   </td>
+  </tr>
+  #end
+#end
+
+</table>
+
+#else
+<p class="infomark"><em>
+$l10n.format("YouCannotAccessModules", $link.setPage("Login.vm").addPathInfo($scarabG.Constant.NEXT_TEMPLATE, "SelectModule.vm"))
+</em></p>
+#end
+
+
+
+
+
+#end
 
 $intake.declareGroups()
 

@@ -281,6 +281,13 @@
 #end
 #end
 
+#macro (fieldHint $field)
+#if ($field && $field.Message.length() > 0 && !$field.isValid())
+<div class="warningmark"><strong>$l10n.get($field.Message)</strong></div>
+#end
+#end
+
+
 #macro (actionMessage)
 #if ($data.Message)
   #confirm($data.Message)
