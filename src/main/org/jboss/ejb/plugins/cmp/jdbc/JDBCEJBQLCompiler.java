@@ -62,6 +62,7 @@ import org.jboss.ejb.plugins.cmp.ejbql.ASTStringLiteral;
 import org.jboss.ejb.plugins.cmp.ejbql.ASTStringParenthetical;
 import org.jboss.ejb.plugins.cmp.ejbql.ASTSubstring;
 import org.jboss.ejb.plugins.cmp.ejbql.ASTUCase;
+import org.jboss.ejb.plugins.cmp.ejbql.ASTValueClassComparison;
 import org.jboss.ejb.plugins.cmp.ejbql.ASTWhere;
 import org.jboss.ejb.plugins.cmp.ejbql.SimpleNode;
 
@@ -86,7 +87,7 @@ import org.jboss.ejb.plugins.cmp.jdbc.metadata.JDBCTypeMappingMetaData;
  * Compiles EJB-QL and JBossQL into SQL.
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
- * @version $Revision: 1.5 $
+ * @version $Revision: 1.6 $
  */
 public class JDBCEJBQLCompiler extends BasicVisitor {
 
@@ -305,7 +306,7 @@ public class JDBCEJBQLCompiler extends BasicVisitor {
    }
 
    // verify that parameter is the same type as the entity
-   private void verrifyParameterEntityType(
+   private void verifyParameterEntityType(
          int number,
          JDBCEntityBridge entity) {
 
@@ -345,7 +346,7 @@ public class JDBCEJBQLCompiler extends BasicVisitor {
          ASTParameter toParam = (ASTParameter)toNode;
 
          // can only compare like kind entities
-         verrifyParameterEntityType(toParam.number, fromEntity);
+         verifyParameterEntityType(toParam.number, fromEntity);
 
          inputParameters.addAll(QueryParameter.createParameters(
                   toParam.number - 1,
@@ -869,7 +870,7 @@ public class JDBCEJBQLCompiler extends BasicVisitor {
          ASTParameter fromParam = (ASTParameter)node.jjtGetChild(0);
 
          // can only compare like kind entities
-         verrifyParameterEntityType(fromParam.number, toChildEntity);
+         verifyParameterEntityType(fromParam.number, toChildEntity);
          
          fromParamNumber = fromParam.number;
       } else {
@@ -983,6 +984,67 @@ public class JDBCEJBQLCompiler extends BasicVisitor {
       
       buf.append(")");
       
+      return buf;
+   }
+
+   public Object visit(ASTValueClassComparison node, Object data) {
+      BlockStringBuffer buf = (BlockStringBuffer)data;
+
+      boolean not = (node.opp == "<>");
+      buf.append("(");
+      if(not) {
+         buf.append("NOT(");
+      }
+
+      // setup the from path
+      ASTPath fromPath = (ASTPath)node.jjtGetChild(0);
+      joinPaths.add(fromPath);
+      String fromAlias = getAlias((String)fromPath.getPath(fromPath.size()-2));
+      JDBCCMPFieldBridge fromCMPField = 
+            (JDBCCMPFieldBridge)fromPath.getCMPField();
+
+      Node toNode = node.jjtGetChild(1);
+      if(toNode instanceof ASTParameter) {
+         ASTParameter toParam = (ASTParameter)toNode;
+
+         // can only compare like kind entities
+         Class parameterType = getParameterType(toParam.number);
+         if(!(fromCMPField.getFieldType().equals(parameterType))) {
+            throw new IllegalStateException("Only like types can be " +
+                  "compared: from CMP field=" + fromCMPField.getFieldType() +
+                  " to parameter=" + parameterType);
+         }
+
+         inputParameters.addAll(QueryParameter.createParameters(
+                  toParam.number - 1,
+                  fromCMPField));
+
+         buf.append(SQLUtil.getWhereClause(fromCMPField, fromAlias));   
+      } else {
+         ASTPath toPath = (ASTPath)toNode;
+         joinPaths.add(toPath);
+         String toAlias = getAlias((String)toPath.getPath(toPath.size()-2));
+         JDBCCMPFieldBridge toCMPField = 
+               (JDBCCMPFieldBridge)toPath.getCMPField();
+
+         // can only compare like kind entities
+         if(!(fromCMPField.getFieldType().equals(toCMPField.getFieldType()))) {
+            throw new IllegalStateException("Only like types can be " +
+                  "compared: from CMP field=" + fromCMPField.getFieldType() +
+                  " to CMP field=" + toCMPField.getFieldType());
+         }
+ 
+         buf.append(SQLUtil.getSelfCompareWhereClause(
+               fromCMPField,
+               fromAlias, 
+               toAlias));   
+      }   
+
+      if(not) {
+         buf.append(")");
+      }
+      buf.append(")");
+
       return buf;
    }
 

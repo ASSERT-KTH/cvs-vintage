@@ -27,7 +27,7 @@ import org.jboss.ejb.plugins.cmp.jdbc.bridge.JDBCFieldBridge;
  * SQLUtil helps with building sql statements.
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
- * @version $Revision: 1.11 $
+ * @version $Revision: 1.12 $
  */
 public class SQLUtil {
    public static String fixTableName(String tableName, DataSource dataSource) 
@@ -594,6 +594,13 @@ public class SQLUtil {
    //    [AND fromIdentifier.pkColumnName1=toIdentifier.fkColumnName1 
    //    [AND fromIdentifier.pkColumnName2=toIdentifier.fkColumnName2 [...]]] 
    // =======================================================================
+
+   public static String getSelfCompareWhereClause(
+         JDBCFieldBridge field, String fromIdentifier, String toIdentifier) {
+
+      return getSelfCompareWhereClause(
+            field.getJDBCType(), fromIdentifier, toIdentifier);
+   }
 
    public static String getSelfCompareWhereClause(
          List fields, String fromIdentifier, String toIdentifier) {

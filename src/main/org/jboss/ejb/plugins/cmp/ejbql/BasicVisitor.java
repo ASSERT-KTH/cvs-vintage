@@ -13,7 +13,7 @@ package org.jboss.ejb.plugins.cmp.ejbql;
  * extensions translate just a few elements of the tree.
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
- * @version $Revision: 1.2 $
+ * @version $Revision: 1.3 $
  */                            
 public class BasicVisitor implements JBossQLParserVisitor {
    public Object visit(SimpleNode node, Object data) {
@@ -218,6 +218,14 @@ public class BasicVisitor implements JBossQLParserVisitor {
    }
 
    public Object visit(ASTEntityComparison node, Object data) {
+      BlockStringBuffer buf = (BlockStringBuffer)data;
+      node.jjtGetChild(0).jjtAccept(this, data);
+      buf.append(" ").append(node.opp).append(" ");
+      node.jjtGetChild(1).jjtAccept(this, data);
+      return data;
+   }
+
+   public Object visit(ASTValueClassComparison node, Object data) {
       BlockStringBuffer buf = (BlockStringBuffer)data;
       node.jjtGetChild(0).jjtAccept(this, data);
       buf.append(" ").append(node.opp).append(" ");
