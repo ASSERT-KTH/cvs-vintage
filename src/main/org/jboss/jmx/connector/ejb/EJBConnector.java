@@ -85,7 +85,7 @@ import org.jboss.jmx.connector.notification.RMINotificationSender;
 * and the EJB-Adaptor (meaning the EJB-Container).
 *
 * @author Andreas Schaefer (andreas.schaefer@madplanet.com)
-* @version $Revision: 1.3 $
+* @version $Revision: 1.4 $
 **/
 public class EJBConnector
    implements JMXConnector, EJBConnectorMBean
@@ -225,6 +225,8 @@ public class EJBConnector
    {
       try {
          Context lJNDIContext = null;
+         // The Adaptor can be registered on another JNDI-Server therefore
+         // the user can overwrite the Provider URL
          if( mJNDIServer != null ) {
             Hashtable lProperties = new Hashtable();
             lProperties.put( Context.PROVIDER_URL, mJNDIServer );
@@ -232,9 +234,6 @@ public class EJBConnector
          } else {
             lJNDIContext = new InitialContext();
          }
-         System.out.println( "JNDI Context properties: " + lJNDIContext.getEnvironment() +
-            ", JNDI name: " + pJNDIName
-         );
          Object aEJBRef = lJNDIContext.lookup( pJNDIName );
          AdaptorHome aHome = (AdaptorHome) 
             PortableRemoteObject.narrow( aEJBRef, AdaptorHome.class );
@@ -652,19 +651,24 @@ public class EJBConnector
             // NotificationListener directly a MBean must be loaded
             // and then added as new listener
             try {
+               // Create the remote Notification listener (from server view: sender)
                Listener lRemoteListener = new Listener(
                   pListener,
                   pHandback,
                   pName
                );
+               // Export the RMI object to become a callback object
                UnicastRemoteObject.exportObject( lRemoteListener );
+               // Register the listener as MBean on the remote JMX server
                ObjectName lName = createMBean(
                   "org.jboss.jmx.connector.notification.RMINotificationListener",
                   new ObjectName( "EJBAdaptor:id=" + lRemoteListener.getId() ),
                   new Object[] { lRemoteListener },
                   new String[] { RMINotificationSender.class.getName() }
                ).getObjectName();
+               // Add this MBean now as listener on the server
                mAdaptor.addNotificationListener( pName, lName, pFilter, lRemoteListener.getHandback() );
+               // Add this listener on the client to remove it when the client goes down
                mListeners.addElement( lRemoteListener );
             }
             catch( Exception e ) {
@@ -679,14 +683,20 @@ public class EJBConnector
             break;
          case NOTIFICATION_TYPE_JMS:
             try {
-               // Get the JMX QueueConnectionFactory from the J2EE server
+               // Get the JMS QueueConnectionFactory from the J2EE server
                QueueConnection lConnection = getQueueConnection( mOptions[ 0 ] );
+               // Create JMS Session and create temporary Queue
                QueueSession lSession = lConnection.createQueueSession( false, Session.AUTO_ACKNOWLEDGE );
                Queue lQueue = lSession.createTemporaryQueue();
+               // Create "remote" listener and register on the JMX server through the adaptor
                JMSNotificationListener lRemoteListener = new JMSNotificationListener( mOptions[ 0 ], lQueue );
                mAdaptor.addNotificationListener( pName, lRemoteListener, pFilter, null );
+               // Create JMS message receiver, create local message listener and set it as message
+               // listener to the receiver
                QueueReceiver lReceiver = lSession.createReceiver( lQueue, null );
                lReceiver.setMessageListener( new JMSClientNotificationListener( pListener, pHandback ) );
+               // Add the listener as registered listener to enable the connector to remove it
+               // when going down or the client request to remove it
                mListeners.addElement( new JMSListenerSet( pName, pListener, lRemoteListener ) );
             }
             catch( Exception e ) {
@@ -936,16 +946,18 @@ public class EJBConnector
 	}
 
    /**
-   * Listener wrapper around the remote RMI Notification Listener
+   * RMI Sender Instance working as listener to retrieve the
+   * notifications from the remote server and handing over to
+   * the clients listener.
+   * <br>
+   * From the client view it is a listener from the server view
+   * it is a sender.
    **/
    public class Listener implements RMINotificationSender {
 
-      private NotificationListener         mLocalListener;
+      private NotificationListener        mLocalListener;
       private ObjectHandler               mHandbackHandler;
-      private Object                     mHandback;
-      //AS This is necessary becasue to remove all of the registered
-      //AS listeners when the connection is going down.
-      //AS But maybe this is the wrong place !!
+      private Object                      mHandback;
       private ObjectName                  mObjectName;
       
       public Listener(
@@ -988,8 +1000,7 @@ public class EJBConnector
       }
       
       /**
-      * @return                     Object Handler of the given Handback
-      *                           object
+      * @return Object Handler of the given Handback object
       **/
       public ObjectHandler getHandback() {
          return mHandbackHandler;

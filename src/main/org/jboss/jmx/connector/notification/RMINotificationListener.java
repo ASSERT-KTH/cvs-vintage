@@ -42,8 +42,6 @@ public class RMINotificationListener
     *
     * @param pNotificationSender The Notification Sender using RMI to
     *                            transport
-    *
-    * @
     **/
    public RMINotificationListener( RMINotificationSender pNotificationSender ) {
       mRemoteSender = pNotificationSender;
@@ -59,8 +57,6 @@ public class RMINotificationListener
 	*
 	* @param pNotification				NotificationEvent
 	* @param pHandback					Handback object
-	*
-	* @throws RemoteException			If a Remote Exception occurred
 	*/
 	public void handleNotification(
 		Notification pNotification,
@@ -72,5 +68,30 @@ public class RMINotificationListener
       catch( RemoteException re ) {
          re.printStackTrace();
       }
+   }
+   
+   /**
+   * Test if this and the given Object are equal. This is true if the given
+   * object both refer to the same local listener
+   *
+   * @param pTest						Other object to test if equal
+   *
+   * @return							True if both are of same type and
+   *									refer to the same local listener
+   **/
+   public boolean equals( Object pTest ) {
+      if( pTest instanceof RMINotificationListener ) {
+         return mRemoteSender.equals(
+            ( (RMINotificationListener) pTest).mRemoteSender
+         );
+      }
+      return false;
+   }
+   
+   /**
+   * @return							Hashcode of the remote listener
+   **/
+   public int hashCode() {
+      return mRemoteSender.hashCode();
    }
 }

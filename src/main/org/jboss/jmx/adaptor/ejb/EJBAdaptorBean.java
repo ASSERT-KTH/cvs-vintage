@@ -1,11 +1,9 @@
-// ----------------------------------------------------------------------------
-// File: EJBAdaptorBean.java
-// Copyright ( c ) 2001 JBoss Group.  All rights reserved.
-// Version: $Revision: 1.2 $
-// Last Checked In: $Date: 2001/09/13 07:38:15 $
-// Last Checked In By: $Author: schaefera $
-// ----------------------------------------------------------------------------
-
+/*
+* JBoss, the OpenSource J2EE webOS
+*
+* Distributable under LGPL license.
+* See terms of license at gnu.org.
+*/
 package org.jboss.jmx.adaptor.ejb;
 
 import java.util.ArrayList;
@@ -21,7 +19,6 @@ import javax.ejb.FinderException;
 import javax.ejb.RemoveException;
 import javax.ejb.SessionBean;
 import javax.ejb.SessionContext;
-// import javax.management.;
 import javax.management.Attribute;
 import javax.management.AttributeList;
 import javax.management.AttributeNotFoundException;
@@ -53,7 +50,7 @@ import org.jboss.jmx.ObjectHandler;
 * MBean Server.
 *
 * @author Andreas Schaefer
-* @version $Revision: 1.2 $
+* @version $Revision: 1.3 $
 *
 * @ejb:ejb-name jmx/ejb/Adaptor
 * @ejb:stateless-session
@@ -118,6 +115,20 @@ public class EJBAdaptorBean
    }
    
    /**
+   * Instantiate the given class on the remote MBeanServer and returns a Object 
+   * Handler you can use to register it as a MBean with {@link #registerMBean
+   * registerMBean()} or as a parameter to createMBean() or instantiate()
+   * method which takes it as a parameter.
+   *
+   * @param pClassName Class name of the class to be loaded and instantiated
+   * @param pLoaderName Name of the classloader to be used to
+   *                    load this class
+   *
+   * @return Object handler. Please use this handler to register it as MBean
+   *         or as a parameter in the other methods as a parameter. The
+   *         server-side connector will look up for an object handler parameter
+   *         and then replace the object handler by the effective object.
+   *
    * @ejb:remote-method
    **/
    public ObjectHandler instantiate(
@@ -178,6 +189,8 @@ public class EJBAdaptorBean
          pParams,
          pSignature
       );
+      // Instantiate the Object on the Server and then create and return the
+      // remote reference
       return assignObjectHandler(
          mServer.instantiate(
             pClassName,
@@ -420,12 +433,8 @@ public class EJBAdaptorBean
       NotCompliantMBeanException,
       RemoteException
    {
-      if( !( pObjectHandler instanceof ObjectHandler ) ) {
-         throw new IllegalArgumentException(
-            "You can only register local objects referenced by ObjectHandler"
-         );
-      }
       return mServer.registerMBean(
+         // Replace the Remote Reference by the actual object
          checkForObjectHandler( pObjectHandler ),
          pNameToAssign
       );
@@ -814,8 +823,6 @@ public class EJBAdaptorBean
       InstanceNotFoundException,
       RemoteException
    {
-      System.out.println( "EJBAdaptorBean.addNotificationListener(), name: " + pName.getCanonicalName() +
-         ", listener: " + pListener.getCanonicalName() );
       mServer.addNotificationListener( pName, pListener, pFilter, pHandback );
    }
 

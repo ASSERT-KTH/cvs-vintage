@@ -35,6 +35,9 @@ public class JMSNotificationListener
    implements NotificationListener, Serializable
 {
 
+   // JMS Queue Session and Sender must be created on the server-side
+   // therefore they are transient and created on the first notification
+   // call
    private transient QueueSender mSender;
    private transient QueueSession mSession;
    private String mJNDIName;

@@ -12,21 +12,12 @@ import javax.jms.JMSException;
 import javax.jms.Message;
 import javax.jms.MessageListener;
 import javax.jms.ObjectMessage;
-/*
-import javax.jms.Queue;
-import javax.jms.QueueConnection;
-import javax.jms.QueueConnectionFactory;
-import javax.jms.QueueReceiver;
-import javax.jms.QueueSender;
-import javax.jms.QueueSession;
-import javax.jms.Session;
-*/
 
 import javax.management.Notification;
 import javax.management.NotificationListener;
 
 /**
-* Local JMX Listener to receive the message and send to the listener
+* Local JMS Listener to receive the message and send to the listener
 **/
 public class JMSClientNotificationListener implements MessageListener {
 
@@ -43,6 +34,8 @@ public class JMSClientNotificationListener implements MessageListener {
 
    public void onMessage( Message pMessage ) {
       try {
+         // Unpack the Notification from the Message and hand it over to the clients
+         // Notification Listener
          Notification lNotification = (Notification) ( (ObjectMessage) pMessage ).getObject();
          mLocalListener.handleNotification( lNotification, mHandback );
       }
