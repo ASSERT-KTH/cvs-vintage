@@ -24,7 +24,7 @@ import org.jboss.metadata.QueryMetaData;
  * on the query specifiection type.
  *    
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
- * @version $Revision: 1.10 $
+ * @version $Revision: 1.11 $
  */
 public class JDBCQueryMetaDataFactory {
    private JDBCEntityMetaData entity;
@@ -112,7 +112,7 @@ public class JDBCQueryMetaDataFactory {
       }
 
       throw new DeploymentException(
-            "Error in query spedification for method " + method.getName());
+            "Error in query specification for method " + method.getName());
    }
 
    private Method[] getQueryMethods(Element queryElement)
