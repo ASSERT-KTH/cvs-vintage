@@ -1,5 +1,5 @@
 /*
- * @(#)BodyJspWriter.java	1.7 99/08/08
+ * @(#)BodyContent.java	1.12 99/10/08
  * 
  * Copyright (c) 1999 Sun Microsystems, Inc. All Rights Reserved.
  * 
@@ -24,31 +24,37 @@ package javax.servlet.jsp.tagext;
 import java.io.Reader;
 import java.io.Writer;
 import java.io.IOException;
-import java.io.PrintWriter;
-
-import javax.servlet.jsp.JspWriter;
+import javax.servlet.jsp.*;
 
 /**
  * A JspWriter subclass that can be used to process body evaluations
  * so they can re-extracted later on.
  */
 
-public abstract class BodyJspWriter extends JspWriter {
+public abstract class BodyContent extends JspWriter {
     
     /**
-     * Construct a BodyJspWriter.
+     * Protected constructor.
      *
-     * Only to be used by a subclass.
-     * TODO -- buffering issues to be revisited after Monday.
+     * Unbounded buffer,  no autoflushing.
      */
 
-    protected BodyJspWriter(int buffersize, boolean autoflush) {
-	super(buffersize, autoflush);
+    protected BodyContent(JspWriter e) {
+	super(UNBOUNDED_BUFFER , false);
+	this.enclosingWriter = e;
+    }
+
+    /**
+     * Redefine flush().
+     * It is not valid to flush.
+     */
+
+    public void flush() throws IOException {
+	throw new IOException("Illegal to flush within a custom tag");
     }
 
     /**
      * Clear the body.
-     * TODO -- need to clarify this
      */
     
     public void clearBody() {
@@ -61,30 +67,47 @@ public abstract class BodyJspWriter extends JspWriter {
     }
 
     /**
-     * Return the value of this BodyJspWriter as a Reader.
+     * Return the value of this BodyContent as a Reader.
      * Note: this is after evaluation!!  There are no scriptlets,
      * etc in this stream.
      *
-     * @returns the value of this BodyJspWriter as a Reader
+     * @returns the value of this BodyContent as a Reader
      */
     public abstract Reader getReader();
 
     /**
-     * Return the value of the BodyJspWriter as a String.
+     * Return the value of the BodyContent as a String.
      * Note: this is after evaluation!!  There are no scriptlets,
      * etc in this stream.
      *
-     * @returns the value of the BodyJspWriter as a String
+     * @returns the value of the BodyContent as a String
      */
     public abstract String getString();
 	
     /**
-     * Write the contents of this BodyJspWriter into a Writer.
+     * Write the contents of this BodyContent into a Writer.
      * Subclasses are likely to do interesting things with the
      * implementation so some things are extra efficient.
      *
      * @param out The writer into which to place the contents of
      * this body evaluation
      */
+
     public abstract void writeOut(Writer out);
-}
+
+    /**
+     * Get the enclosing JspWriter
+     *
+     * @returns the enclosing JspWriter passed at construction time
+     */
+
+    public JspWriter getEnclosingWriter() {
+	return enclosingWriter;
+    }
+
+    /**
+     * private fields
+     */
+    
+    private JspWriter enclosingWriter;
+ }

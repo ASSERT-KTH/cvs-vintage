@@ -1,5 +1,5 @@
 /*
- * @(#)JspWriter.java	1.8 99/05/30
+ * @(#)JspWriter.java	1.10 99/10/08
  * 
  * Copyright (c) 1999 Sun Microsystems, Inc. All Rights Reserved.
  * 
@@ -58,6 +58,12 @@ abstract public class JspWriter extends java.io.Writer {
      */
 
     public static final int	DEFAULT_BUFFER = -1;
+
+    /**
+     * constant indicating that the Writer is buffered and is unbounded; this is used in BodyContent
+     */
+
+    public static final int	UNBOUNDED_BUFFER = -2;
 
     /**
      * protected constructor.

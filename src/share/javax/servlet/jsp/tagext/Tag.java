@@ -206,15 +206,15 @@ public abstract class Tag {
     // Actions related to body evaluation
 
     /**
-     * Set the BodyJspWriter.
+     * Set the BodyContent.
      * It will be invoked at most once per action invocation.
      * Will not be invoked if there is no body evaluation.
      *
      * Frequently it is not redefined by Tag author.
      *
-     * @param b the BodyJspWriter
+     * @param b the BodyContent
      */
-    public void setBodyOut(BodyJspWriter b) {
+    public void setBodyOut(BodyContent b) {
 	this.bodyOut = b;
     }
 
@@ -344,7 +344,7 @@ public abstract class Tag {
 
     /**
      * @return the value of the "out" JspWriter prior to pushing
-     * a BodyJspWriter
+     * a BodyContent
      */
 
     protected final JspWriter getPreviousOut() {
@@ -355,7 +355,7 @@ public abstract class Tag {
      * @return the value of the current "out" JspWriter
      */
 
-    protected final BodyJspWriter getBodyOut() {
+    protected final BodyContent getBodyOut() {
 	return bodyOut;
     }
 
@@ -370,7 +370,7 @@ public abstract class Tag {
     private Hashtable     values;
     
     // protected fields
-    protected BodyJspWriter bodyOut;
+    protected BodyContent bodyOut;
     protected PageContext pageContext;
     protected TagData     tagData;
 }

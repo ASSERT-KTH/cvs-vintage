@@ -1,5 +1,5 @@
 /*
- * @(#)PageContext.java	1.19 99/08/09
+ * @(#)PageContext.java	1.21 99/10/07
  * 
  * Copyright (c) 1999 Sun Microsystems, Inc. All Rights Reserved.
  * 
@@ -35,7 +35,7 @@ import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
-import javax.servlet.jsp.tagext.BodyJspWriter;
+import javax.servlet.jsp.tagext.BodyContent;
 
 /**
  * <p>
@@ -467,14 +467,14 @@ abstract public class PageContext {
     abstract public void handlePageException(Exception e) throws ServletException, IOException;
 
     /**
-     * Return a new BodyJspWriter object, save the current "out" JspWriter,
+     * Return a new BodyContent object, save the current "out" JspWriter,
      * and update the value of the "out" attribute in the page scope
      * attribute namespace of the PageContext
      *
-     * @return the new BodyJspWriter
+     * @return the new BodyContent
      */
 
-    public BodyJspWriter pushBody() {
+    public BodyContent pushBody() {
         return null; // XXX to implement
     }
          
