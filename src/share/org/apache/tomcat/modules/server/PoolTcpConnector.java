@@ -205,7 +205,7 @@ public abstract class PoolTcpConnector extends BaseInterceptor
     public void setServerSoTimeout( int i ) {
 	ep.setServerSoTimeout( i );
     }
-    
+   
     // -------------------- Getters --------------------
     
     public PoolTcpEndpoint getEndpoint() {
@@ -220,7 +220,7 @@ public abstract class PoolTcpConnector extends BaseInterceptor
 	return ep.getAddress();
     }
 
-    // -------------------- SocketFactory attriubtes --------------------
+    // -------------------- SocketFactory attributes --------------------
     public void setKeystore( String k ) {
 	attributes.put( "keystore", k);
     }
