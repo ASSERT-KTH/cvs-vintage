@@ -141,12 +141,12 @@ public class AutoSetup extends BaseInterceptor {
 		// we will add the directory to the path
 		name=fname;
 	    }
-	    
+
 	    // XXX XXX Add a .xml case
 	    // If a "path.xml" file is found in webapps/, it will be loaded
 	    // as a <context> fragment ( what will allow setting options
 	    // for contexts or automatic config for contexts with different base)
-	    
+
 	    // Decode path
 
 	    // Path will be based on the War name
@@ -155,22 +155,27 @@ public class AutoSetup extends BaseInterceptor {
 	    String path="/" + name; // decode(name)
 	    //	    System.out.println("XXX : " + path );
 	    if( path.equals("/ROOT") )
-		path="";
-	    
+		    path="";
+
 	    if(  definedContexts.get(path) == null ) {
-		// if no explicit set up
-		Context ctx=new Context();
-		ctx.setContextManager( cm );
-		ctx.setPath(path);
-		// use absolute filename based on CM home instead of relative
-		// don't assume HOME==TOMCAT_HOME
-		File f=new File( webappD, name);
-		ctx.setDocBase( f.getAbsolutePath() );
-		if( debug > 0 ) log("automatic add " + ctx.toString() + " " + path);
-		cm.addContext(ctx);
-	    } else {
-		if( debug>0) log("Already set up: " + path + " " + definedContexts.get(path));
-	    }
+		    // if no explicit set up and is a directory
+            File f=new File( webappD, name);
+            if (f.isDirectory()) {
+                Context ctx=new Context();
+                ctx.setContextManager( cm );
+                ctx.setPath(path);
+                // use absolute filename based on CM home instead of relative
+                // don't assume HOME==TOMCAT_HOME
+                ctx.setDocBase( f.getAbsolutePath() );
+                if( debug > 0 )
+                    log("automatic add " + ctx.toString() + " " + path);
+                cm.addContext(ctx);
+            } else {
+                if( debug>0)
+                log("Already set up: " + path + " "
+                        + definedContexts.get(path));
+            }
+            }
 	}
     }
 
