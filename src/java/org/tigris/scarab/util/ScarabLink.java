@@ -70,7 +70,7 @@ import org.tigris.scarab.om.ScarabUser;
     @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
     @author <a href="mailto:jmcnally@collab.net">John McNally</a>
     @author <a href="mailto:maartenc@tigris.org">Maarten Coene</a>
-    @version $Id: ScarabLink.java,v 1.29 2002/01/18 22:26:13 jon Exp $
+    @version $Id: ScarabLink.java,v 1.30 2002/01/20 12:19:36 maartenc Exp $
 */
 public class ScarabLink extends TemplateLink
                         implements InitableRecyclable
@@ -117,6 +117,20 @@ public class ScarabLink extends TemplateLink
     public TemplateLink setPage(String t)
     {
         String moduleid = data.getParameters().getString(ScarabConstants.CURRENT_MODULE);
+        return setPage(t, moduleid);
+    }
+
+
+    /**
+     * Sets the template variable used by the Template Service. The moduleid
+     * of the new selected module is given.
+     *
+     * @param t A String with the template name.
+     * @param moduleid The id of the new selected module.
+     * @return A TemplateLink.
+     */
+    public TemplateLink setPage(String t, String moduleid)
+    {
         if (moduleid != null && moduleid.length() > 0)
         {
             addPathInfo(ScarabConstants.CURRENT_MODULE, moduleid);
