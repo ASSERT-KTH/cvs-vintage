@@ -98,7 +98,7 @@ import org.gjt.sp.util.Log;
  * @see org.gjt.sp.jedit.ServiceManager
  *
  * @author Slava Pestov
- * @version $Id: PluginJAR.java,v 1.46 2004/03/28 00:07:26 spestov Exp $
+ * @version $Id: PluginJAR.java,v 1.47 2004/04/20 19:58:39 spestov Exp $
  * @since jEdit 4.2pre1
  */
 public class PluginJAR
@@ -548,69 +548,66 @@ public class PluginJAR
 	 */
 	public void deactivatePlugin(boolean exit)
 	{
-		synchronized(this)
-		{
-			if(!activated)
-				return;
+		if(!activated)
+			return;
 
-			activated = false;
+		if(!exit)
+		{
+			// buffers retain a reference to the fold handler in
+			// question... and the easiest way to handle fold
+			// handler unloading is this...
+			Buffer buffer = jEdit.getFirstBuffer();
+			while(buffer != null)
+			{
+				if(buffer.getFoldHandler() != null
+					&& buffer.getFoldHandler().getClass()
+					.getClassLoader() == classLoader)
+				{
+					buffer.setFoldHandler(
+						new DummyFoldHandler());
+				}
+				buffer = buffer.getNext();
+			}
+		}
+
+		if(plugin != null && !(plugin instanceof EditPlugin.Broken))
+		{
+			if(plugin instanceof EBPlugin)
+				EditBus.removeFromBus((EBPlugin)plugin);
+
+			try
+			{
+				plugin.stop();
+			}
+			catch(Throwable t)
+			{
+				Log.log(Log.ERROR,this,"Error while "
+					+ "stopping plugin:");
+				Log.log(Log.ERROR,this,t);
+			}
+
+			plugin = new EditPlugin.Deferred(
+				plugin.getClassName());
+			plugin.jar = (EditPlugin.JAR)this;
+
+			EditBus.send(new PluginUpdate(this,
+				PluginUpdate.DEACTIVATED,exit));
 
 			if(!exit)
 			{
-				// buffers retain a reference to the fold handler in
-				// question... and the easiest way to handle fold
-				// handler unloading is this...
-				Buffer buffer = jEdit.getFirstBuffer();
-				while(buffer != null)
+				// see if this is a 4.1-style plugin
+				String activate = jEdit.getProperty("plugin."
+					+ plugin.getClassName() + ".activate");
+
+				if(activate == null)
 				{
-					if(buffer.getFoldHandler() != null
-						&& buffer.getFoldHandler().getClass()
-						.getClassLoader() == classLoader)
-					{
-						buffer.setFoldHandler(
-							new DummyFoldHandler());
-					}
-					buffer = buffer.getNext();
-				}
-			}
-
-			if(plugin != null && !(plugin instanceof EditPlugin.Broken))
-			{
-				if(plugin instanceof EBPlugin)
-					EditBus.removeFromBus((EBPlugin)plugin);
-
-				try
-				{
-					plugin.stop();
-				}
-				catch(Throwable t)
-				{
-					Log.log(Log.ERROR,this,"Error while "
-						+ "stopping plugin:");
-					Log.log(Log.ERROR,this,t);
-				}
-
-				plugin = new EditPlugin.Deferred(
-					plugin.getClassName());
-				plugin.jar = (EditPlugin.JAR)this;
-
-				EditBus.send(new PluginUpdate(this,
-					PluginUpdate.DEACTIVATED,exit));
-
-				if(!exit)
-				{
-					// see if this is a 4.1-style plugin
-					String activate = jEdit.getProperty("plugin."
-						+ plugin.getClassName() + ".activate");
-
-					if(activate == null)
-					{
-						breakPlugin();
-						jEdit.pluginError(path,"plugin-error.not-42",null);
-					}
+					breakPlugin();
+					jEdit.pluginError(path,"plugin-error.not-42",null);
 				}
 			}
 		}
+
+		activated = false;
 	} //}}}
 
 	//{{{ getDockablesURI() method
