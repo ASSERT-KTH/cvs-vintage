@@ -1,9 +1,10 @@
 /*
-* JBoss, the OpenSource J2EE webOS
-*
-* Distributable under LGPL license.
-* See terms of license at gnu.org.
-*/
+ * JBoss, the OpenSource J2EE webOS
+ *
+ * Distributable under LGPL license.
+ * See terms of license at gnu.org.
+ */
+
 package org.jboss.system;
 
 import java.beans.PropertyEditor;
@@ -28,7 +29,7 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import org.jboss.deployment.DeploymentException;
 import org.jboss.logging.Logger;
-import org.jboss.util.DOMWriter;
+import org.jboss.util.xml.DOMWriter;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -36,23 +37,23 @@ import org.w3c.dom.NodeList;
 import org.w3c.dom.Text;
 
 /**
-* Service configuration helper.
-*
-* @author <a href="mailto:marc@jboss.org">Marc Fleury</a>
-* @author <a href="mailto:hiram@jboss.org">Hiram Chirino</a>
-* @version $Revision: 1.17 $
-*
-* <p><b>20010830 marc fleury:</b>
-* <ul>
-*   <li>Initial import
-* </ul>
-* <p><b>20010831 hiram chirino:</b>
-* <ul>
-*   <li>Added suppport for org.w3c.dom.Element type mbean attributes.
-*      The first child Element of the &lt;attribute ...&gt; is used
-*      to set the value of the attribute.
-* </ul>
-*/
+ * Service configuration helper.
+ *
+ * @author <a href="mailto:marc@jboss.org">Marc Fleury</a>
+ * @author <a href="mailto:hiram@jboss.org">Hiram Chirino</a>
+ * @version $Revision: 1.18 $
+ *
+ * <p><b>20010830 marc fleury:</b>
+ * <ul>
+ *   <li>Initial import
+ * </ul>
+ * <p><b>20010831 hiram chirino:</b>
+ * <ul>
+ *   <li>Added suppport for org.w3c.dom.Element type mbean attributes.
+ *      The first child Element of the &lt;attribute ...&gt; is used
+ *      to set the value of the attribute.
+ * </ul>
+ */
 public class ServiceConfigurator
 {
    /** Primitive type name -> class map. */
