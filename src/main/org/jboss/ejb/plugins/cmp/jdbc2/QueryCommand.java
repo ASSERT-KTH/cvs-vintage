@@ -16,7 +16,7 @@ import java.util.Collection;
 
 /**
  * @author <a href="mailto:alex@jboss.org">Alexey Loubyansky</a>
- * @version <tt>$Revision: 1.2 $</tt>
+ * @version <tt>$Revision: 1.3 $</tt>
  */
 public interface QueryCommand
 {
@@ -25,6 +25,6 @@ public interface QueryCommand
    public Collection fetchCollection(Schema schema, GenericEntityObjectFactory factory, Object[] args)
       throws FinderException;
 
-   public Object fetchOne(Schema schema, Object[] args)
+   public Object fetchOne(Schema schema, GenericEntityObjectFactory factory, Object[] args)
       throws FinderException;
 }

@@ -7,6 +7,7 @@
 package org.jboss.ejb.plugins.cmp.jdbc2.schema;
 
 import org.jboss.ejb.plugins.cmp.jdbc.metadata.JDBCEntityMetaData;
+import org.jboss.ejb.plugins.cmp.jdbc.JDBCUtil;
 import org.jboss.ejb.plugins.cmp.jdbc2.bridge.JDBCEntityBridge2;
 import org.jboss.ejb.plugins.cmp.jdbc2.bridge.JDBCCMRFieldBridge2;
 import org.jboss.deployment.DeploymentException;
@@ -18,22 +19,27 @@ import javax.transaction.RollbackException;
 import javax.transaction.SystemException;
 import javax.transaction.Status;
 import javax.transaction.Transaction;
+import javax.sql.DataSource;
 import java.sql.SQLException;
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.DatabaseMetaData;
 
 /**
  * @author <a href="mailto:alex@jboss.org">Alexey Loubyansky</a>
- * @version <tt>$Revision: 1.2 $</tt>
+ * @version <tt>$Revision: 1.3 $</tt>
  */
 public class Schema
 {
-   private Table[] tables;
+   private EntityTable[] entityTables;
+   private RelationTable[] relationTables;
 
    private TransactionLocal localViews = new TransactionLocal()
    {
       protected Object initialValue()
       {
          Transaction tx = getTransaction();
-         Views views = new Views(tx, new Table.View[tables.length]);
+         Views views = new Views(tx);
          Synchronization sync = new SchemaSynchronization(views);
 
          try
@@ -55,52 +61,116 @@ public class Schema
       }
    };
 
-   public EntityTable createTable(JDBCEntityMetaData metadata, JDBCEntityBridge2 entity)
+   public EntityTable createEntityTable(JDBCEntityMetaData metadata, JDBCEntityBridge2 entity)
       throws DeploymentException
    {
-      if(tables == null)
+      if(entityTables == null)
       {
-         tables = new Table[1];
+         entityTables = new EntityTable[1];
       }
       else
       {
-         Table[] tmp = tables;
-         tables = new Table[tmp.length + 1];
-         System.arraycopy(tmp, 0, tables, 0, tmp.length);
+         EntityTable[] tmp = entityTables;
+         entityTables = new EntityTable[tmp.length + 1];
+         System.arraycopy(tmp, 0, entityTables, 0, tmp.length);
       }
 
-      EntityTable table = new EntityTable(metadata, entity, this, tables.length - 1);
-      tables[tables.length - 1] = table;
+      EntityTable table = new EntityTable(metadata, entity, this, entityTables.length - 1);
+      entityTables[entityTables.length - 1] = table;
       return table;
    }
 
    public RelationTable createRelationTable(JDBCCMRFieldBridge2 leftField, JDBCCMRFieldBridge2 rightField)
       throws DeploymentException
    {
-      if(tables == null)
+      if(relationTables == null)
       {
-         tables = new EntityTable[1];
+         relationTables = new RelationTable[1];
       }
       else
       {
-         Table[] tmp = tables;
-         tables = new Table[tmp.length + 1];
-         System.arraycopy(tmp, 0, tables, 0, tmp.length);
+         RelationTable[] tmp = relationTables;
+         relationTables = new RelationTable[tmp.length + 1];
+         System.arraycopy(tmp, 0, relationTables, 0, tmp.length);
       }
 
-      RelationTable table = new RelationTable(leftField, rightField, this, tables.length - 1);
-      tables[tables.length - 1] = table;
+      RelationTable table = new RelationTable(leftField, rightField, this, relationTables.length - 1);
+      relationTables[relationTables.length - 1] = table;
       return table;
    }
 
-   public Table.View getView(Table table)
+   public void resolveTableReferences() throws DeploymentException
+   {
+      Connection con = null;
+      try
+      {
+         final DataSource ds = entityTables[0].getDataSource();
+         con = ds.getConnection();
+         final DatabaseMetaData db = con.getMetaData();
+
+         for(int i = 0; i < entityTables.length; ++i)
+         {
+            EntityTable pkTable = entityTables[i];
+            ResultSet rs = null;
+            try
+            {
+               rs = db.getExportedKeys(null, null, pkTable.getTableName());
+               while(rs.next())
+               {
+                  String fkTableName = rs.getString(7);
+                  EntityTable fkTable = null;
+                  for(int j = 0; j < entityTables.length; ++j)
+                  {
+                     if(entityTables[j].getTableName().equalsIgnoreCase(fkTableName))
+                     {
+                        fkTable = entityTables[j];
+                        break;
+                     }
+                  }
+
+                  if(fkTable != null)
+                  {
+                     pkTable.addReferencedBy(fkTable);
+                     fkTable.addReference(pkTable);
+                  }
+               }
+            }
+            finally
+            {
+               JDBCUtil.safeClose(rs);
+            }
+         }
+      }
+      catch(SQLException e)
+      {
+         throw new DeploymentException("Failed to order tables: " + e.getMessage(), e);
+      }
+      finally
+      {
+         JDBCUtil.safeClose(con);
+      }
+   }
+
+   public Table.View getView(EntityTable table)
    {
       Views views = (Views) localViews.get();
-      Table.View view = views.views[table.getTableId()];
+      Table.View view = views.entityViews[table.getTableId()];
       if(view == null)
       {
          view = table.createView(views.tx);
-         views.views[table.getTableId()] = view;
+         views.entityViews[table.getTableId()] = view;
+      }
+      return view;
+   }
+
+   public Table.View getView(RelationTable table)
+   {
+      Views views = (Views) localViews.get();
+      Table.View view = views.relationViews[table.getTableId()];
+      if(view == null)
+      {
+         view = table.createView(views.tx);
+         views.relationViews[table.getTableId()] = view;
       }
       return view;
    }
@@ -108,18 +178,91 @@ public class Schema
    public void flush()
    {
       Views views = (Views) localViews.get();
-      for(int i = 0; i < views.views.length; ++i)
+
+      Table.View[] relationViews = views.relationViews;
+      if(relationViews != null)
       {
-         Table.View view = views.views[i];
+         for(int i = 0; i < relationViews.length; ++i)
+         {
+            final Table.View view = relationViews[i];
+            if(view != null)
+            {
+               try
+               {
+                  view.flushDeleted(views);
+               }
+               catch(SQLException e)
+               {
+                  throw new EJBException("Failed to delete many-to-many relationships: " + e.getMessage(), e);
+               }
+            }
+         }
+      }
+
+      final Table.View[] entityViews = views.entityViews;
+      for(int i = 0; i < entityViews.length; ++i)
+      {
+         Table.View view = entityViews[i];
          if(view != null)
          {
             try
             {
-               view.flush();
+               view.flushDeleted(views);
             }
             catch(SQLException e)
             {
-               throw new EJBException("Failed to synchronize data: " + e.getMessage(), e);
+               throw new EJBException("Failed to delete instances: " + e.getMessage(), e);
+            }
+         }
+      }
+
+      for(int i = 0; i < entityViews.length; ++i)
+      {
+         Table.View view = entityViews[i];
+         if(view != null)
+         {
+            try
+            {
+               view.flushCreated(views);
+            }
+            catch(SQLException e)
+            {
+               throw new EJBException("Failed to create instances: " + e.getMessage(), e);
+            }
+         }
+      }
+
+      for(int i = 0; i < entityViews.length; ++i)
+      {
+         Table.View view = entityViews[i];
+         if(view != null)
+         {
+            try
+            {
+               view.flushUpdated();
+            }
+            catch(SQLException e)
+            {
+               throw new EJBException("Failed to update instances: " + e.getMessage(), e);
+            }
+         }
+      }
+
+      if(relationViews != null)
+      {
+         for(int i = 0; i < relationViews.length; ++i)
+         {
+            final Table.View view = relationViews[i];
+            if(view != null)
+            {
+               try
+               {
+                  view.flushCreated(views);
+               }
+               catch(SQLException e)
+               {
+                  throw new EJBException("Failed to create many-to-many relationships: " + e.getMessage(), e);
+               }
             }
          }
       }
@@ -127,15 +270,17 @@ public class Schema
 
    // Inner
 
-   private class Views
+   public class Views
    {
       public final Transaction tx;
-      public final Table.View[] views;
+      public final Table.View[] entityViews;
+      public final Table.View[] relationViews;
 
-      public Views(Transaction tx, Table.View[] views)
+      public Views(Transaction tx)
       {
          this.tx = tx;
-         this.views = views;
+         this.entityViews = new Table.View[entityTables.length];
+         this.relationViews = relationTables == null ? null : new Table.View[relationTables.length];
       }
    }
 
@@ -152,9 +297,9 @@ public class Schema
       {
          flush();
 
-         for(int i = 0; i < views.views.length; ++i)
+         for(int i = 0; i < views.entityViews.length; ++i)
          {
-            Table.View view = views.views[i];
+            Table.View view = views.entityViews[i];
             if(view != null)
             {
                view.beforeCompletion();
@@ -164,25 +309,27 @@ public class Schema
 
       public void afterCompletion(int status)
       {
-         if(status != Status.STATUS_MARKED_ROLLBACK)
+         if(status == Status.STATUS_MARKED_ROLLBACK ||
+            status == Status.STATUS_ROLLEDBACK ||
+            status == Status.STATUS_ROLLING_BACK)
          {
-            for(int i = 0; i < views.views.length; ++i)
+            for(int i = 0; i < views.entityViews.length; ++i)
             {
-               Table.View view = views.views[i];
+               Table.View view = views.entityViews[i];
                if(view != null)
                {
-                  view.committed();
+                  view.rolledback();
                }
             }
          }
          else
          {
-            for(int i = 0; i < views.views.length; ++i)
+            for(int i = 0; i < views.entityViews.length; ++i)
             {
-               Table.View view = views.views[i];
+               Table.View view = views.entityViews[i];
                if(view != null)
                {
-                  view.rolledback();
+                  view.committed();
                }
             }
          }

@@ -11,7 +11,7 @@ import java.sql.SQLException;
 
 /**
  * @author <a href="mailto:alex@jboss.org">Alexey Loubyansky</a>
- * @version <tt>$Revision: 1.2 $</tt>
+ * @version <tt>$Revision: 1.3 $</tt>
  */
 public interface Table
 {
@@ -23,7 +23,11 @@ public interface Table
 
    public interface View
    {
-      void flush() throws SQLException;
+      void flushDeleted(Schema.Views views) throws SQLException;
+
+      void flushCreated(Schema.Views views) throws SQLException;
+
+      void flushUpdated() throws SQLException;
 
       void beforeCompletion();
       

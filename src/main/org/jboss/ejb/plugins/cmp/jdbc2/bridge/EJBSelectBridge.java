@@ -23,7 +23,7 @@ import java.util.Collection;
 
 /**
  * @author <a href="mailto:alex@jboss.org">Alexey Loubyansky</a>
- * @version <tt>$Revision: 1.2 $</tt>
+ * @version <tt>$Revision: 1.3 $</tt>
  */
 public class EJBSelectBridge
    implements SelectorBridge
@@ -87,16 +87,17 @@ public class EJBSelectBridge
 
    public Object execute(Object[] args) throws FinderException
    {
+      JDBCStoreManager2 manager = command.getStoreManager();
+      GenericEntityObjectFactory factory = (metadata.isResultTypeMappingLocal() ?
+         (GenericEntityObjectFactory)manager.getContainer().getLocalProxyFactory() : manager.getContainer().getProxyFactory());
+
       Object result;
       switch(returnType)
       {
          case SINGLE:
-            result = command.fetchOne(schema, args);
+            result = command.fetchOne(schema, factory, args);
             break;
          case COLLECTION:
-            JDBCStoreManager2 manager = command.getStoreManager();
-            GenericEntityObjectFactory factory = (metadata.isResultTypeMappingLocal() ?
-               (GenericEntityObjectFactory)manager.getContainer().getLocalProxyFactory() : manager.getContainer().getProxyFactory());
             result = command.fetchCollection(schema, factory, args);
             break;
          default:

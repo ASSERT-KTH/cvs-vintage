@@ -30,7 +30,7 @@ import java.sql.SQLException;
 
 /**
  * @author <a href="mailto:alex@jboss.org">Alexey Loubyansky</a>
- * @version <tt>$Revision: 1.2 $</tt>
+ * @version <tt>$Revision: 1.3 $</tt>
  */
 public abstract class AbstractQueryCommand implements QueryCommand
 {
@@ -124,24 +124,6 @@ public abstract class AbstractQueryCommand implements QueryCommand
          }
 
          rs = ps.executeQuery();
-
-         /*
-         if(rs.next())
-         {
-            result = collectionFactory.newCollection();
-            Object pk = resultReader.readRow(rs);
-            CollectionFactory.UTIL.add(result, factory, pk);
-            while(rs.next())
-            {
-               pk = resultReader.readRow(rs);
-               CollectionFactory.UTIL.add(result, factory, pk);
-            }
-         }
-         else
-         {
-            result = Collections.EMPTY_SET;
-         }
-         */
       }
       catch(Exception e)
       {
@@ -158,15 +140,15 @@ public abstract class AbstractQueryCommand implements QueryCommand
       return result;
    }
 
-   public Object fetchOne(Schema schema, Object[] args) throws FinderException
+   public Object fetchOne(Schema schema, GenericEntityObjectFactory factory, Object[] args) throws FinderException
    {
       schema.flush();
-      return executeFetchOne(args);
+      return executeFetchOne(args, factory);
    }
 
    // Protected
 
-   protected Object executeFetchOne(Object[] args) throws FinderException
+   protected Object executeFetchOne(Object[] args, GenericEntityObjectFactory factory) throws FinderException
    {
       Object pk;
       Connection con = null;
@@ -193,13 +175,27 @@ public abstract class AbstractQueryCommand implements QueryCommand
          rs = ps.executeQuery();
          if(rs.next())
          {
-            pk = resultReader.readRow(rs);
+            pk = resultReader.readRow(rs, factory);
+            if(rs.next())
+            {
+               List list = new ArrayList();
+               list.add(pk);
+               list.add(resultReader.readRow(rs, factory));
+               while(rs.next())
+               {
+                  list.add(resultReader.readRow(rs, factory));
+               }
+               throw new FinderException("More than one instance matches the single-object finder criteria: " + list);
+            }
          }
          else
          {
-            //pk = null;
             throw new ObjectNotFoundException();
          }
+      }
+      catch(FinderException e)
+      {
+         throw e;
       }
       catch(Exception e)
       {
@@ -242,20 +238,11 @@ public abstract class AbstractQueryCommand implements QueryCommand
    private static interface CollectionFactory
    {
       Collection newCollection();
-
-      class UTIL
-      {
-         static void add(Collection col, GenericEntityObjectFactory factory, Object id)
-         {
-            Object o = (id == null ? null : factory.getEntityEJBObject(id));
-            col.add(o);
-         }
-      }
    }
 
    private static interface ResultReader
    {
-      Object readRow(ResultSet rs) throws SQLException;
+      Object readRow(ResultSet rs, GenericEntityObjectFactory factory) throws SQLException;
    }
 
    private static class EntityReader implements ResultReader
@@ -267,9 +254,10 @@ public abstract class AbstractQueryCommand implements QueryCommand
          this.entity = entity;
       }
 
-      public Object readRow(ResultSet rs)
+      public Object readRow(ResultSet rs, GenericEntityObjectFactory factory)
       {
-         return entity.getTable().loadRow(rs);
+         final Object pk = entity.getTable().loadRow(rs);
+         return pk == null ? null : factory.getEntityEJBObject(pk);
       }
    };
 
@@ -282,7 +270,7 @@ public abstract class AbstractQueryCommand implements QueryCommand
          this.field = field;
       }
 
-      public Object readRow(ResultSet rs) throws SQLException
+      public Object readRow(ResultSet rs, GenericEntityObjectFactory factory) throws SQLException
       {
          return field.loadArgumentResults(rs, 1);
       }
@@ -297,7 +285,7 @@ public abstract class AbstractQueryCommand implements QueryCommand
          this.function = function;
       }
 
-      public Object readRow(ResultSet rs) throws SQLException
+      public Object readRow(ResultSet rs, GenericEntityObjectFactory factory) throws SQLException
       {
          return function.readResult(rs);
       }
@@ -324,12 +312,12 @@ public abstract class AbstractQueryCommand implements QueryCommand
             if(rs.next())
             {
                result = collectionFactory.newCollection();
-               Object pk = resultReader.readRow(rs);
-               CollectionFactory.UTIL.add(result, factory, pk);
+               Object instance = resultReader.readRow(rs, factory);
+               result.add(instance);
                while(rs.next())
                {
-                  pk = resultReader.readRow(rs);
-                  CollectionFactory.UTIL.add(result, factory, pk);
+                  instance = resultReader.readRow(rs, factory);
+                  result.add(instance);
                }
             }
             else

@@ -44,7 +44,7 @@ import java.sql.SQLException;
 
 /**
  * @author <a href="mailto:alex@jboss.org">Alexey Loubyansky</a>
- * @version <tt>$Revision: 1.4 $</tt>
+ * @version <tt>$Revision: 1.5 $</tt>
  */
 public class JDBCStoreManager2
    implements JDBCEntityPersistenceStore
@@ -161,6 +161,8 @@ public class JDBCStoreManager2
             JDBCStoreManager2 manager = (JDBCStoreManager2)managers.get(i);
             manager.startCmd.addForeignKeyConstraints();
          }
+
+         schema.resolveTableReferences();
       }
    }
 
@@ -298,8 +300,7 @@ public class JDBCStoreManager2
       throws FinderException
    {
       QueryCommand query = queryFactory.getQueryCommand(finderMethod);
-      final Object id = query.fetchOne(schema, args);
-      return id == null ? null : factory.getEntityEJBObject(id);
+      return query.fetchOne(schema, factory, args);
    }
 
    public Collection findEntities(Method finderMethod, Object[] args, EntityEnterpriseContext instance, GenericEntityObjectFactory factory)

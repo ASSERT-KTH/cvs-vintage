@@ -21,7 +21,7 @@ import java.util.Iterator;
 
 /**
  * @author <a href="mailto:alex@jboss.org">Alexey Loubyansky</a>
- * @version <tt>$Revision: 1.2 $</tt>
+ * @version <tt>$Revision: 1.3 $</tt>
  */
 public class QueryFactory
 {
@@ -35,7 +35,7 @@ public class QueryFactory
 
    public QueryCommand getQueryCommand(Method queryMethod) throws FinderException
    {
-      QueryCommand queryCommand = (QueryCommand)queriesByMethod.get(queryMethod.getName());
+      QueryCommand queryCommand = (QueryCommand)queriesByMethod.get(queryMethod);
       if(queryCommand == null)
       {
          throw new FinderException("Unknown query method: " + queryMethod);
@@ -45,18 +45,22 @@ public class QueryFactory
 
    public void init() throws DeploymentException
    {
+      Method findByPkMethod;
       Class home = entity.getHomeClass();
       if(home != null)
       {
          try
          {
-            home.getMethod("findByPrimaryKey", new Class[]{entity.getPrimaryKeyClass()});
+            findByPkMethod = home.getMethod("findByPrimaryKey", new Class[]{entity.getPrimaryKeyClass()});
          }
          catch(NoSuchMethodException e)
          {
             throw new DeploymentException("Home interface " + home.getClass().getName() +
                " does not contain findByPrimaryKey(" + entity.getPrimaryKeyClass().getName() + ")");
          }
+
+         FindByPrimaryKeyCommand findByPk = new FindByPrimaryKeyCommand(entity);
+         queriesByMethod.put(findByPkMethod, findByPk);
       }
 
       Class local = entity.getLocalHomeClass();
@@ -64,17 +68,17 @@ public class QueryFactory
       {
          try
          {
-            local.getMethod("findByPrimaryKey", new Class[]{entity.getPrimaryKeyClass()});
+            findByPkMethod = local.getMethod("findByPrimaryKey", new Class[]{entity.getPrimaryKeyClass()});
          }
          catch(NoSuchMethodException e)
          {
             throw new DeploymentException("Local home interface " + home.getClass().getName() +
                " does not contain findByPrimaryKey(" + entity.getPrimaryKeyClass().getName() + ")");
          }
-      }
 
-      FindByPrimaryKeyCommand findByPk = new FindByPrimaryKeyCommand(entity);
-      queriesByMethod.put("findByPrimaryKey", findByPk);
+         FindByPrimaryKeyCommand findByPk = new FindByPrimaryKeyCommand(entity);
+         queriesByMethod.put(findByPkMethod, findByPk);
+      }
 
       //
       // Defined finders - Overrides automatic finders.
@@ -89,12 +93,12 @@ public class QueryFactory
             if(q instanceof JDBCJBossQLQueryMetaData)
             {
                QueryCommand queryCommand = new JBossQLQueryCommand(entity, (JDBCJBossQLQueryMetaData)q);
-               queriesByMethod.put(q.getMethod().getName(), queryCommand);
+               queriesByMethod.put(q.getMethod(), queryCommand);
             }
             else if(q instanceof JDBCQlQueryMetaData)
             {
                QueryCommand queryCommand = new EJBQLQueryCommand(entity, (JDBCQlQueryMetaData)q);
-               queriesByMethod.put(q.getMethod().getName(), queryCommand);
+               queriesByMethod.put(q.getMethod(), queryCommand);
             }
             else
             {

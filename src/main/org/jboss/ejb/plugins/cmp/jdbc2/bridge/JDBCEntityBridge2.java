@@ -36,7 +36,7 @@ import java.util.List;
 
 /**
  * @author <a href="mailto:alex@jboss.org">Alexey Loubyansky</a>
- * @version <tt>$Revision: 1.3 $</tt>
+ * @version <tt>$Revision: 1.4 $</tt>
  */
 public class JDBCEntityBridge2
    implements JDBCAbstractEntityBridge
@@ -60,7 +60,7 @@ public class JDBCEntityBridge2
       this.metadata = metadata;
       log = Logger.getLogger(this.getClass().getName() + "." + metadata.getName());
 
-      table = manager.getSchema().createTable(metadata, this);
+      table = manager.getSchema().createEntityTable(metadata, this);
    }
 
    // Public

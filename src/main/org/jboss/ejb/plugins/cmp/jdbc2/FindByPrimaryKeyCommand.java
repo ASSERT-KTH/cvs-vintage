@@ -14,6 +14,7 @@ import org.jboss.ejb.plugins.cmp.jdbc.JDBCEntityPersistenceStore;
 import org.jboss.ejb.plugins.cmp.jdbc.JDBCTypeFactory;
 import org.jboss.ejb.plugins.cmp.jdbc.metadata.JDBCTypeMappingMetaData;
 import org.jboss.ejb.plugins.cmp.jdbc.metadata.JDBCFunctionMappingMetaData;
+import org.jboss.ejb.GenericEntityObjectFactory;
 import org.jboss.logging.Logger;
 import org.jboss.deployment.DeploymentException;
 
@@ -23,7 +24,7 @@ import javax.ejb.ObjectNotFoundException;
 
 /**
  * @author <a href="mailto:alex@jboss.org">Alexey Loubyansky</a>
- * @version <tt>$Revision: 1.2 $</tt>
+ * @version <tt>$Revision: 1.3 $</tt>
  */
 public class FindByPrimaryKeyCommand
    extends AbstractQueryCommand
@@ -78,7 +79,7 @@ public class FindByPrimaryKeyCommand
       setEntityReader(entity);
    }
 
-   public Object fetchOne(Schema schema, Object[] args) throws FinderException
+   public Object fetchOne(Schema schema, GenericEntityObjectFactory factory, Object[] args) throws FinderException
    {
       Object pk = args[0];
       if(pk == null)
@@ -86,16 +87,21 @@ public class FindByPrimaryKeyCommand
          throw new IllegalStateException("Null argument for findByPrimaryKey");
       }
 
-      boolean cached = entity.getTable().hasRow(args[0]);
+      Object instance;
+      boolean cached = entity.getTable().hasRow(pk);
       if(!cached)
       {
-         pk = super.executeFetchOne(args);
-         if(pk == null)
+         instance = super.executeFetchOne(args, factory);
+         if(instance == null)
          {
             throw new ObjectNotFoundException("Instance not find: entity=" + entity.getEntityName() + ", pk=" + pk);
          }
       }
+      else
+      {
+         instance = factory.getEntityEJBObject(pk);
+      }
 
-      return pk;
+      return instance;
    }
 }

@@ -32,7 +32,7 @@ import org.jboss.logging.Logger;
  * Compiles EJB-QL and JBossQL into SQL using OUTER and INNER joins.
  *
  * @author <a href="mailto:alex@jboss.org">Alex Loubyansky</a>
- * @version $Revision: 1.13 $
+ * @version $Revision: 1.14 $
  */
 public final class EJBQLToSQL92Compiler
    implements QLCompiler, JBossQLParserVisitor
@@ -620,24 +620,30 @@ public final class EJBQLToSQL92Compiler
 
          JDBCFieldBridge field = (JDBCFieldBridge) path.getField();
 
-         if(field.getJDBCType() == null)
+         if(field instanceof JDBCAbstractCMRFieldBridge)
          {
-            JDBCAbstractCMRFieldBridge cmrField = (JDBCAbstractCMRFieldBridge) field;
+            JDBCAbstractCMRFieldBridge cmrField = (JDBCAbstractCMRFieldBridge)field;
+            final String alias;
             final JDBCFieldBridge[] keyFields;
-            if(cmrField.getMetaData().getRelationMetaData().isTableMappingStyle())
+
+            if(cmrField.hasForeignKey())
             {
-               keyFields = cmrField.getRelatedCMRField().getEntity().getPrimaryKeyFields();
+               alias = aliasManager.getAlias(path.getPath(path.size() - 2));
+               keyFields = cmrField.getForeignKeyFields();
             }
             else
             {
-               keyFields = (
-                  cmrField.hasForeignKey()
-                  ? cmrField.getForeignKeyFields()
-                  : cmrField.getRelatedCMRField().getForeignKeyFields()
-                  );
+               alias = aliasManager.getAlias(path.getPath());
+               if(cmrField.getMetaData().getRelationMetaData().isTableMappingStyle())
+               {
+                  keyFields = cmrField.getRelatedCMRField().getEntity().getPrimaryKeyFields();
+               }
+               else
+               {
+                  keyFields = cmrField.getRelatedCMRField().getForeignKeyFields();
+               }
             }
 
-            String alias = aliasManager.getAlias(path.getPath());
             SQLUtil.getIsNullClause(node.not, keyFields, alias, sql);
          }
          else

@@ -22,7 +22,7 @@ import java.sql.PreparedStatement;
 
 /**
  * @author <a href="mailto:alex@jboss.org">Alexey Loubyansky</a>
- * @version <tt>$Revision: 1.2 $</tt>
+ * @version <tt>$Revision: 1.3 $</tt>
  */
 public class RelationTable
    implements Table
@@ -361,10 +361,18 @@ public class RelationTable
 
       // Table.View implementation
 
-      public void flush() throws SQLException
+      public void flushDeleted(Schema.Views views) throws SQLException
       {
          delete(this);
+      }
+
+      public void flushCreated(Schema.Views views) throws SQLException
+      {
          insert(this);
+      }
+
+      public void flushUpdated() throws SQLException
+      {
       }
 
       public void beforeCompletion()

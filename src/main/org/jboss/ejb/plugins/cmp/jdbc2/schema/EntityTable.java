@@ -46,7 +46,7 @@ import java.util.HashMap;
  * todo refactor optimistic locking
  *
  * @author <a href="mailto:alex@jboss.org">Alexey Loubyansky</a>
- * @version <tt>$Revision: 1.9 $</tt>
+ * @version <tt>$Revision: 1.10 $</tt>
  */
 public class EntityTable
    implements Table
@@ -81,6 +81,9 @@ public class EntityTable
    private Cache cache;
    private ServiceControllerMBean serviceController;
    private ObjectName cacheName;
+
+   private int[] references;
+   private int[] referencedBy;
 
    public EntityTable(JDBCEntityMetaData metadata, JDBCEntityBridge2 entity, Schema schema, int tableId)
       throws DeploymentException
@@ -323,6 +326,80 @@ public class EntityTable
       return fieldsTotal++;
    }
 
+   public void addReference(EntityTable table)
+   {
+      boolean wasRegistered = false;
+      if(references != null)
+      {
+         for(int i = 0; i < references.length; ++i)
+         {
+            if(references[i] == table.getTableId())
+            {
+               wasRegistered = true;
+               break;
+            }
+         }
+
+         if(!wasRegistered)
+         {
+            int[] tmp = references;
+            references = new int[references.length + 1];
+            System.arraycopy(tmp, 0, references, 0, tmp.length);
+            references[tmp.length] = table.getTableId();
+         }
+      }
+      else
+      {
+         references = new int[1];
+         references[0] = table.getTableId();
+      }
+
+      if(!wasRegistered)
+      {
+         if(log.isTraceEnabled())
+         {
+            log.trace("references " + table.getTableName());
+         }
+      }
+   }
+
+   public void addReferencedBy(EntityTable table)
+   {
+      boolean wasRegistered = false;
+      if(referencedBy != null)
+      {
+         for(int i = 0; i < referencedBy.length; ++i)
+         {
+            if(referencedBy[i] == table.getTableId())
+            {
+               wasRegistered = true;
+               break;
+            }
+         }
+
+         if(!wasRegistered)
+         {
+            int[] tmp = referencedBy;
+            referencedBy = new int[referencedBy.length + 1];
+            System.arraycopy(tmp, 0, referencedBy, 0, tmp.length);
+            referencedBy[tmp.length] = table.getTableId();
+         }
+      }
+      else
+      {
+         referencedBy = new int[1];
+         referencedBy[0] = table.getTableId();
+      }
+
+      if(!wasRegistered)
+      {
+         if(log.isTraceEnabled())
+         {
+            log.trace("referenced by " + table.getTableName());
+         }
+      }
+   }
+
    public DataSource getDataSource()
    {
       return dataSource;
@@ -336,18 +413,17 @@ public class EntityTable
 
    public Object loadRow(ResultSet rs)
    {
-      Row row = null;
       View view = getView();
       Object pk = view.loadPk(rs);
       if(pk != null)
       {
-         row = view.loadRow(rs, pk);
+         view.loadRow(rs, pk);
       }
       else if(log.isTraceEnabled())
       {
          log.trace("loaded pk is null.");
       }
-      return row.pk;
+      return pk;
    }
 
    public Row getRow(Object id)
@@ -440,15 +516,6 @@ public class EntityTable
 
    private void delete(View view) throws SQLException
    {
-      if(view.deleted == null)
-      {
-         if(log.isTraceEnabled())
-         {
-            log.trace("no rows to delete");
-         }
-         return;
-      }
-
       JDBCCMPFieldBridge2[] pkFields = (JDBCCMPFieldBridge2[]) entity.getPrimaryKeyFields();
 
       Connection con = null;
@@ -508,15 +575,6 @@ public class EntityTable
 
    private void update(View view) throws SQLException
    {
-      if(view.dirty == null)
-      {
-         if(log.isTraceEnabled())
-         {
-            log.trace("no rows to update");
-         }
-         return;
-      }
-
       JDBCCMPFieldBridge2[] tableFields = (JDBCCMPFieldBridge2[]) entity.getTableFields();
       JDBCCMPFieldBridge2[] pkFields = (JDBCCMPFieldBridge2[]) entity.getPrimaryKeyFields();
 
@@ -593,15 +651,6 @@ public class EntityTable
 
    private void insert(View view) throws SQLException
    {
-      if(dontFlushCreated || view.created == null)
-      {
-         if(log.isTraceEnabled())
-         {
-            log.trace("no rows to insert");
-         }
-         return;
-      }
-
       JDBCCMPFieldBridge2[] tableFields = (JDBCCMPFieldBridge2[]) entity.getTableFields();
       Connection con = null;
       PreparedStatement ps = null;
@@ -910,11 +959,70 @@ public class EntityTable
 
       // Table.View implementation
 
-      public void flush() throws SQLException
+      public void flushDeleted(Schema.Views views) throws SQLException
       {
+         if(deleted == null)
+         {
+            if(log.isTraceEnabled())
+            {
+               log.trace("no rows to delete");
+            }
+            return;
+         }
+
+         if(referencedBy != null)
+         {
+            for(int i = 0; i < referencedBy.length; ++i)
+            {
+               final Table.View view = views.entityViews[referencedBy[i]];
+               if(view != null)
+               {
+                  view.flushDeleted(views);
+               }
+            }
+         }
+
          delete(this);
-         update(this);
+      }
+
+      public void flushCreated(Schema.Views views) throws SQLException
+      {
+         if(created == null || dontFlushCreated)
+         {
+            if(log.isTraceEnabled())
+            {
+               log.trace("no rows to insert");
+            }
+            return;
+         }
+
+         if(references != null)
+         {
+            for(int i = 0; i < references.length; ++i)
+            {
+               final Table.View view = views.entityViews[references[i]];
+               if(view != null)
+               {
+                  view.flushCreated(views);
+               }
+            }
+         }
+
          insert(this);
+      }
+
+      public void flushUpdated() throws SQLException
+      {
+         if(dirty == null)
+         {
+            if(log.isTraceEnabled())
+            {
+               log.trace("no rows to update");
+            }
+            return;
+         }
+
+         update(this);
       }
 
       public void beforeCompletion()
@@ -957,35 +1065,35 @@ public class EntityTable
             {
                //if(cursor.lockedForUpdate)
                //{
-                  cache.lock(cursor.pk);
-                  try
+               cache.lock(cursor.pk);
+               try
+               {
+                  switch(cursor.state)
                   {
-                     switch(cursor.state)
-                     {
-                        case CLEAN:
-                           cache.put(tx, cursor.pk, cursor.fields, cursor.relations);
-                           break;
-                        case DELETED:
-                           try
-                           {
-                              cache.remove(tx, cursor.pk);
-                           }
-                           catch(Exception e)
-                           {
-                              log.warn(e.getMessage());
-                           }
-                           break;
-                        default:
-                           throw new IllegalStateException("Unexpected row state: table=" +
-                              entity.getTableName() +
-                              ", pk=" + cursor.pk + ", state=" + cursor.state);
-                     }
+                     case CLEAN:
+                        cache.put(tx, cursor.pk, cursor.fields, cursor.relations);
+                        break;
+                     case DELETED:
+                        try
+                        {
+                           cache.remove(tx, cursor.pk);
+                        }
+                        catch(Exception e)
+                        {
+                           log.warn(e.getMessage());
+                        }
+                        break;
+                     default:
+                        throw new IllegalStateException("Unexpected row state: table=" +
+                           entity.getTableName() +
+                           ", pk=" + cursor.pk + ", state=" + cursor.state);
                   }
-                  finally
-                  {
-                     cache.unlock(cursor.pk);
-                  }
-                  //cursor.lockedForUpdate = false;
+               }
+               finally
+               {
+                  cache.unlock(cursor.pk);
+               }
+               //cursor.lockedForUpdate = false;
                //}
                cursor = cursor.nextCacheUpdate;
             }

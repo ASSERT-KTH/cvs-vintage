@@ -62,7 +62,7 @@ import java.security.Principal;
 
 /**
  * @author <a href="mailto:alex@jboss.org">Alexey Loubyansky</a>
- * @version <tt>$Revision: 1.2 $</tt>
+ * @version <tt>$Revision: 1.3 $</tt>
  */
 public class JDBCCMRFieldBridge2
    extends JDBCAbstractCMRFieldBridge
@@ -794,11 +794,13 @@ public class JDBCCMRFieldBridge2
       {
          if(value == null)
          {
-            throw new IllegalStateException("Can't set collection-valued CMR field to null: " +
+            throw new IllegalArgumentException("Can't set collection-valued CMR field to null: " +
                entity.getEntityName() + "." + getFieldName());
          }
 
-         Set newValue = (Set) value;
+         destroyExistingRelationships(ctx);
+
+         Collection newValue = (Collection) value;
          if(!newValue.isEmpty())
          {
             Set copy = new HashSet(newValue);
@@ -1398,8 +1400,7 @@ public class JDBCCMRFieldBridge2
          }
 
          Set ids = argumentToIdSet(c);
-
-         return state.getLoadedValue(ctx).contains(ids);
+         return state.getLoadedValue(ctx).containsAll(ids);
       }
 
       public boolean removeAll(Collection c)
