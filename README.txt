@@ -1,4 +1,4 @@
-$Id: README.txt,v 1.52 2002/12/19 22:57:12 jon Exp $
+$Id: README.txt,v 1.53 2002/12/29 00:11:29 jon Exp $
 
 Welcome to Scarab!
 
@@ -29,15 +29,31 @@ The version of torque used with scarab must be compiled with Ant 1.4.x
 Tomcat 4.0.4 or higher   --> <http://jakarta.apache.org/tomcat/>
                              (Note: Tomcat 4.1.x is included with Scarab.)
 
-MySQL 3.23 or higher       --> <http://www.mysql.org/>
+MySQL 3.23.x/4.x         --> <http://www.mysql.org/>
                            OR
-Postgresql 7.3 or higher --> <http://www.postgresql.org/>
+Postgresql 7.3.x         --> <http://www.postgresql.org/>
 
-NOTE: Scarab is known to not work when compiled with Jikes 1.16, but does
-work when compiled with Jikes 1.17.
+NOTE: Scarab requires Jikes 1.18 or higher to compile. Please do not try
+      with Jikes 1.17 as it is buggy.
+
+NOTE: If you want to use the faster/newer JDBC driver with MySQL, you can
+      download it from the MySQL website and use them instead. We do not
+      distribute it because it is GPL. To use it, just copy the .jar
+      file into your scarab/lib directory and put this in your
+      build.properties file: scarab.jdbc.driver.jar=mysql-connector*.jar
+      
+      http://www.mysql.com/downloads/api-jdbc-dev.html
+
+NOTE: If you are using an existing Tomcat 4.1.x installation, you MUST
+      *move* the common/endorsed/xercesImpl.jar to the server/lib
+      directory. Please note that if you have any existing web
+      applications that depend on Xerces 2, you will need to copy that
+      .jar file into their WEB-INF/lib in order to make things work
+      properly after the move.
 
 You must have the JAVA_HOME environment variable properly set to be the 
-location of your JDK installation directory.
+location of your SDK installation directory. On MacOSX, this path is:
+/System/Library/Frameworks/JavaVM.framework/Home
 
 You must have Ant installed and ANT_HOME defined in your environment as
 well as ANT_HOME/bin in your PATH.
@@ -70,7 +86,7 @@ do not guarantee that Scarab will work on other databases.
 All of the necessary .jar files for building and running Scarab are
 included in the /lib directory and the build system is setup to include
 these into your classpath for you. Please do not add any jar files to
-your classpath.
+your CLASSPATH as it may cause compile errors.
 
 If you already have an existing webserver or service running on ports
 8080 and 8005, and you are using Scarab's version of Tomcat, you will
