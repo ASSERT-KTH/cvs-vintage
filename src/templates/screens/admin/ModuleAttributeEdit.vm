@@ -19,7 +19,7 @@ On this screen, one can modify a module's Attribute information.
 
 <form action="$link.setPage("admin,ModuleAttributeEdit.vm")" method="get">
 <input type="hidden" name="action" value="admin.ModifyModuleAttributes" />
-<input type="hidden" name="$scarabG.Constant.NEXT_TEMPLATE" value="admin,ModuleAttributeEdit.vm" />
+<input type="hidden" name="$scarabG.Constant.NEXT_TEMPLATE" value="admin,ManageArtifactTypes.vm" />
 <input type="hidden" name="$scarabG.Constant.OTHER_TEMPLATE" value="admin,AttributeOptionSelect.vm" />
 <input type="hidden" name="attributeid" value="$attribute.AttributeId" />
 <input type="hidden" name="issueTypeId" value="$data.Parameters.getString("issueTypeId")">
