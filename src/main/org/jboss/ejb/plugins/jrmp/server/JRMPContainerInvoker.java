@@ -21,6 +21,7 @@ import java.security.Principal;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
+import java.util.Map;
 import java.util.HashMap;
 import java.util.Properties;
 
@@ -75,7 +76,7 @@ import org.w3c.dom.Element;
  *		@author <a href="mailto:sebastien.alborini@m4x.org">Sebastien Alborini</a>
  *      @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
  *		@author <a href="mailto:jplindfo@cc.helsinki.fi">Juha Lindfors</a>
- *      @version $Revision: 1.33 $
+ *      @version $Revision: 1.34 $
  */
 public class JRMPContainerInvoker
    extends RemoteServer
@@ -96,8 +97,8 @@ public class JRMPContainerInvoker
    // The Stateless Object can be one.
    protected EJBObject statelessObject;
 
-   protected HashMap beanMethodInvokerMap;
-   protected HashMap homeMethodInvokerMap;
+   protected Map beanMethodInvokerMap;
+   protected Map homeMethodInvokerMap;
    
    protected ContainerInvoker ciDelegate; // Delegate depending on JDK version
 
@@ -152,17 +153,13 @@ public class JRMPContainerInvoker
       Method[] methods = ((ContainerInvokerContainer)container).getRemoteClass().getMethods();
       beanMethodInvokerMap = new HashMap();
       for (int i = 0; i < methods.length; i++)
-      {
-         beanMethodInvokerMap.put(new Integer(RemoteMethodInvocation.calculateHash(methods[i])), methods[i]);
-      }
-
+         beanMethodInvokerMap.put(new Long(RemoteMethodInvocation.calculateHash(methods[i])), methods[i]);
+      
       methods = ((ContainerInvokerContainer)container).getHomeClass().getMethods();
       homeMethodInvokerMap = new HashMap();
       for (int i = 0; i < methods.length; i++)
-      {
-         homeMethodInvokerMap.put(new Integer(RemoteMethodInvocation.calculateHash(methods[i])), methods[i]);
-      }
-
+         homeMethodInvokerMap.put(new Long(RemoteMethodInvocation.calculateHash(methods[i])), methods[i]);
+         
       try
       {
 
@@ -170,7 +167,7 @@ public class JRMPContainerInvoker
          Method getEJBObjectMethod = Class.forName("javax.ejb.Handle").getMethod("getEJBObject", new Class[0]);
 
          // Hash it
-         homeMethodInvokerMap.put(new Integer(RemoteMethodInvocation.calculateHash(getEJBObjectMethod)),getEJBObjectMethod);
+         homeMethodInvokerMap.put(new Long(RemoteMethodInvocation.calculateHash(getEJBObjectMethod)),getEJBObjectMethod);
       } catch (Exception e)
       {
          Logger.exception(e);
