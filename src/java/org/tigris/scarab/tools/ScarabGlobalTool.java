@@ -91,7 +91,7 @@ import org.apache.turbine.Turbine;
  * methodology</a> to be implemented.
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: ScarabGlobalTool.java,v 1.33 2002/08/20 22:08:46 jon Exp $
+ * @version $Id: ScarabGlobalTool.java,v 1.34 2002/08/20 22:09:29 jon Exp $
  */
 public class ScarabGlobalTool implements ScarabGlobalScope
 {
@@ -109,7 +109,7 @@ public class ScarabGlobalTool implements ScarabGlobalScope
     private FieldMethodizer security = null;
 
     private static final String buildVersion = 
-        Turbine.getConfiguration().getString("scarab.build.version");
+        Turbine.getConfiguration().getString("scarab.build.version", "");
 
     public void init(Object data)
     {
