@@ -35,6 +35,12 @@ import ru.novosoft.uml.foundation.core.*;
 import java.util.*;
 import java.awt.*;
 
+/**
+ * @deprecated as of ArgoUml 0.13.5 (10-may-2003),
+ *             replaced by {@link org.argouml.uml.ui.foundation.core.UMLModelElementClientDependencyListModel},
+ *             this class is part of the 'old'(pre 0.13.*) implementation of proppanels
+ *             that used reflection a lot.
+ */
 public class UMLClientDependencyListModel extends UMLModelElementListModel  {
 
     private final static String _nullLabel = "(null)";
@@ -163,7 +169,39 @@ public class UMLClientDependencyListModel extends UMLModelElementListModel  {
             targetElement.setClientDependencies(moveDownUtil(targetElement.getClientDependencies(),index));
         }
     }
-    /**     *  This method builds a context (pop-up) menu for the list.       *     *  @param popup popup menu     *  @param index index of selected list item     *  @return "true" if popup menu should be displayed     */    public boolean buildPopup(JPopupMenu popup,int index) {        UMLUserInterfaceContainer container = getContainer();        UMLListMenuItem open = new UMLListMenuItem(container.localize("Open"),this,"open",index);        UMLListMenuItem delete = new UMLListMenuItem(container.localize("Delete"),this,"delete",index);        if(getModelElementSize() <= 0) {            open.setEnabled(false);            delete.setEnabled(false);        }        popup.add(open);        UMLListMenuItem add =new UMLListMenuItem(container.localize("Add"),this,"add",index);        if(_upper >= 0 && getModelElementSize() >= _upper) {            add.setEnabled(false);        }        popup.add(add);        popup.add(delete);        /*        UMLListMenuItem moveUp = new UMLListMenuItem(container.localize("Move Up"),this,"moveUp",index);        if(index == 0) moveUp.setEnabled(false);        popup.add(moveUp);        UMLListMenuItem moveDown = new UMLListMenuItem(container.localize("Move Down"),this,"moveDown",index);        if(index == getSize()-1) moveDown.setEnabled(false);        popup.add(moveDown);        */        return true;    }
+    /**
+     *  This method builds a context (pop-up) menu for the list.  
+     *
+     *  @param popup popup menu
+     *  @param index index of selected list item
+     *  @return "true" if popup menu should be displayed
+     */
+    public boolean buildPopup(JPopupMenu popup,int index) {
+        UMLUserInterfaceContainer container = getContainer();
+        UMLListMenuItem open = new UMLListMenuItem(container.localize("Open"),this,"open",index);
+        UMLListMenuItem delete = new UMLListMenuItem(container.localize("Delete"),this,"delete",index);
+        if(getModelElementSize() <= 0) {
+            open.setEnabled(false);
+            delete.setEnabled(false);
+        }
+
+        popup.add(open);
+        UMLListMenuItem add =new UMLListMenuItem(container.localize("Add"),this,"add",index);
+        if(_upper >= 0 && getModelElementSize() >= _upper) {
+            add.setEnabled(false);
+        }
+        popup.add(add);
+        popup.add(delete);
+        /*
+        UMLListMenuItem moveUp = new UMLListMenuItem(container.localize("Move Up"),this,"moveUp",index);
+        if(index == 0) moveUp.setEnabled(false);
+        popup.add(moveUp);
+        UMLListMenuItem moveDown = new UMLListMenuItem(container.localize("Move Down"),this,"moveDown",index);
+        if(index == getSize()-1) moveDown.setEnabled(false);
+        popup.add(moveDown);
+        */
+        return true;
+    }
     
 }
 

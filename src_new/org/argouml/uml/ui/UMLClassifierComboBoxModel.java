@@ -24,7 +24,7 @@
 // File: UMLClassifierComboBoxModel.java
 // Classes: UMLClassifierComboBoxModel
 // Original Author: 
-// $Id: UMLClassifierComboBoxModel.java,v 1.9 2003/01/01 19:39:48 kataka Exp $
+// $Id: UMLClassifierComboBoxModel.java,v 1.10 2003/05/10 12:38:41 alexb Exp $
 
 // 23 Apr 2002: Jeremy Bennett (mail@jeremybennett.com). Layout tidied up and
 // mods made following bug fixing in UMLComboBoxModel. getModel() and
@@ -47,7 +47,12 @@ import ru.novosoft.uml.foundation.core.MClassifier;
 import ru.novosoft.uml.foundation.core.MModelElement;
 import ru.novosoft.uml.model_management.MModel;
 
-
+/**
+ * @deprecated as of ArgoUml 0.13.5 (10-may-2003),
+ *             replaced by ?,
+ *             this class is part of the 'old'(pre 0.13.*) implementation of proppanels
+ *             that used reflection a lot.
+ */
 public class UMLClassifierComboBoxModel extends UMLComboBoxModel  {
     protected static Category cat = 
         Category.getInstance(UMLClassifierComboBoxModel.class);

@@ -21,7 +21,7 @@
 // CALIFORNIA HAS NO OBLIGATIONS TO PROVIDE MAINTENANCE, SUPPORT,
 // UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 
-// $Id: UMLActorAssociationListModel.java,v 1.4 2002/12/06 20:48:22 kataka Exp $
+// $Id: UMLActorAssociationListModel.java,v 1.5 2003/05/10 12:38:43 alexb Exp $
 
 package org.argouml.uml.ui.behavior.use_cases;
 
@@ -38,6 +38,11 @@ import org.argouml.uml.ui.UMLUserInterfaceContainer;
  * Binary relation list model for associations with actors
  * 
  * @author jaap.branderhorst@xs4all.nl
+ *
+ * @deprecated as of ArgoUml 0.13.5 (10-may-2003),
+ *             replaced by {@link org.argouml.uml.ui.foundation.core.PropPanelClassifier#getAssociationEndScroll()},
+ *             this class is part of the 'old'(pre 0.13.*) implementation of proppanels
+ *             that used reflection a lot.
  */
 public class UMLActorAssociationListModel extends UMLConnectionListModel {
 

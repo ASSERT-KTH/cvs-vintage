@@ -21,7 +21,7 @@
 // CALIFORNIA HAS NO OBLIGATIONS TO PROVIDE MAINTENANCE, SUPPORT,
 // UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 
-// $Id: UMLUseCaseAssociationListModel.java,v 1.2 2002/09/16 21:34:43 kataka Exp $
+// $Id: UMLUseCaseAssociationListModel.java,v 1.3 2003/05/10 12:38:43 alexb Exp $
 
 package org.argouml.uml.ui.behavior.use_cases;
 
@@ -47,6 +47,11 @@ import ru.novosoft.uml.foundation.core.MModelElement;
  * Binary relation list model for associations with usecases
  * 
  * @author jaap.branderhorst@xs4all.nl
+ *
+ * @deprecated as of ArgoUml 0.13.5 (10-may-2003),
+ *             replaced by {@link org.argouml.uml.ui.foundation.core.PropPanelClassifier#getAssociationEndScroll()},
+ *             this class is part of the 'old'(pre 0.13.*) implementation of proppanels
+ *             that used reflection a lot.
  */
 public class UMLUseCaseAssociationListModel
 	extends UMLConnectionListModel {

@@ -24,7 +24,7 @@
 // File: PropPanelModifiers.java
 // Classes: PropPanelModifiers
 // Original Author: mail@jeremybennett.com
-// $Id: PropPanelModifiers.java,v 1.2 2003/05/10 02:48:33 bobtarling Exp $
+// $Id: PropPanelModifiers.java,v 1.3 2003/05/10 12:38:41 alexb Exp $
 
 // 21 Mar 2002: Jeremy Bennett (mail@jeremybennett.com). Created to help with
 // writing PropPanels.
@@ -43,6 +43,11 @@ import org.argouml.uml.ui.*;
  *
  * <p>A modifier panel is restricted to a specific number of columns. It only
  *   adds {@link UMLCheckBox} entities.
+ *
+ * @deprecated as of ArgoUml 0.13.5 (10-may-2003),
+ *             replaced by {@link org.argouml.uml.ui.foundation.core.PropPanelClassifier#_modifiersPanel},
+ *             this class is part of the 'old'(pre 0.13.*) implementation of proppanels
+ *             that used reflection a lot.
  */
 public class PropPanelModifiers extends JPanel {
     

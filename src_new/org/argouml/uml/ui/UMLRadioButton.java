@@ -36,13 +36,35 @@ import org.argouml.ui.ProjectBrowser;
 
 import ru.novosoft.uml.MElementEvent;
 
+/**
+ * @deprecated as of ArgoUml 0.13.5 (10-may-2003),
+ *             replaced by {@link org.argouml.uml.ui.UMLRadioButtonPanel},
+ *             this class is part of the 'old'(pre 0.13.*) implementation of proppanels
+ *             that used reflection a lot.
+ */
 public class UMLRadioButton extends JRadioButton implements ItemListener, 
                                                             UMLUserInterfaceComponent {
     protected static Category cat = Category.getInstance(UMLRadioButton.class);
-                                                                        
-	private class BooleanSetter implements Runnable {		JRadioButton _field = null;		boolean _newValue = false;		public BooleanSetter(JRadioButton field, boolean newValue) {			_field = field;			_newValue = newValue;		}		/**         * @see java.lang.Runnable#run()         */        public void run() {        	_field.setSelected(_newValue);        }	}			
+                                                                
+        
+	private class BooleanSetter implements Runnable {
+		JRadioButton _field = null;
+		boolean _newValue = false;
+		public BooleanSetter(JRadioButton field, boolean newValue) {
+			_field = field;
+			_newValue = newValue;
+		}
+		/**
+         * @see java.lang.Runnable#run()
+         */
+        public void run() {
+        	_field.setSelected(_newValue);
+        }
+	}
+			
     private UMLUserInterfaceContainer _container;
-    private UMLBooleanProperty _property;    private ButtonGroup _group = null;
+    private UMLBooleanProperty _property;
+    private ButtonGroup _group = null;
     
     /** Creates new BooleanChangeListener */
     public UMLRadioButton(String label,UMLUserInterfaceContainer container,
@@ -52,7 +74,8 @@ public class UMLRadioButton extends JRadioButton implements ItemListener,
         _property = property;
         addItemListener(this);
         update();
-    }    
+    }
+    
     public UMLRadioButton(String label,UMLUserInterfaceContainer container,
                           UMLBooleanProperty property, boolean select) {
         super(label, select);
@@ -62,8 +85,16 @@ public class UMLRadioButton extends JRadioButton implements ItemListener,
         update();
     }
     public void itemStateChanged(final ItemEvent event) {
-		cat.debug(getAccessibleContext().getAccessibleName()+" itemStateChanged "+event.getStateChange());		try {
-        	_property.setProperty(_container.getTarget(),event.getStateChange() == ItemEvent.SELECTED);		}		catch (PropertyVetoException ve) {			ProjectBrowser.getInstance().getStatusBar().showStatus(ve.getMessage());			setSelected(_property.getProperty(_container.getTarget()));    	}        // yes we should update        update();
+		cat.debug(getAccessibleContext().getAccessibleName()+" itemStateChanged "+event.getStateChange());
+		try {
+        	_property.setProperty(_container.getTarget(),event.getStateChange() == ItemEvent.SELECTED);
+		}
+		catch (PropertyVetoException ve) {
+			ProjectBrowser.getInstance().getStatusBar().showStatus(ve.getMessage());
+			setSelected(_property.getProperty(_container.getTarget()));
+    	}
+        // yes we should update
+        update();
     }
 
     public void targetChanged() {
@@ -102,8 +133,12 @@ public class UMLRadioButton extends JRadioButton implements ItemListener,
         Object target = _container.getTarget();
         boolean sel = isSelected();
         boolean newState = _property.getProperty(_container.getTarget());
-        if (newState && sel != newState){        	        	SwingUtilities.invokeLater(new BooleanSetter(this, true));
+        if (newState && sel != newState){
+        	
+        	SwingUtilities.invokeLater(new BooleanSetter(this, true));
         }
     }  //...end of update()...
 
-        }   //...end of class...
+        
+
+}   //...end of class...

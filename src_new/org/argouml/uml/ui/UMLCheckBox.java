@@ -22,8 +22,23 @@
 // UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 
 package org.argouml.uml.ui;
-import java.awt.event.ItemEvent;import java.awt.event.ItemListener;import java.beans.PropertyVetoException;import javax.swing.JCheckBox;import org.argouml.ui.ProjectBrowser;import org.argouml.ui.targetmanager.TargetManager;import ru.novosoft.uml.MElementEvent;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
+import java.beans.PropertyVetoException;
 
+import javax.swing.JCheckBox;
+
+import org.argouml.ui.ProjectBrowser;
+import org.argouml.ui.targetmanager.TargetManager;
+
+import ru.novosoft.uml.MElementEvent;
+
+/**
+ * @deprecated as of ArgoUml 0.13.5 (10-may-2003),
+ *             replaced by {@link org.argouml.uml.ui.UMLCheckBox2},
+ *             this class is part of the 'old'(pre 0.13.*) implementation of proppanels
+ *             that used reflection a lot.
+ */
 public class UMLCheckBox extends JCheckBox implements ItemListener, UMLUserInterfaceComponent {
 
     private UMLUserInterfaceContainer _container;
@@ -38,8 +53,15 @@ public class UMLCheckBox extends JCheckBox implements ItemListener, UMLUserInter
         update();
     }
 
-    public void itemStateChanged(final ItemEvent event) {    	try {
-        _property.setProperty(_container.getTarget(),event.getStateChange() == ItemEvent.SELECTED);    	}    	catch (PropertyVetoException ve) {    		ProjectBrowser.getInstance().getStatusBar().showStatus(ve.getMessage());    	}    	update();        
+    public void itemStateChanged(final ItemEvent event) {
+    	try {
+        _property.setProperty(_container.getTarget(),event.getStateChange() == ItemEvent.SELECTED);
+    	}
+    	catch (PropertyVetoException ve) {
+    		ProjectBrowser.getInstance().getStatusBar().showStatus(ve.getMessage());
+    	}
+    	update();
+        
     }
 
     public void targetChanged() {

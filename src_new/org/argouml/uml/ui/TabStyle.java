@@ -24,7 +24,7 @@
 // File: TabStyle.java
 // Classes: TabStyle
 // Original Author:
-// $Id: TabStyle.java,v 1.13 2003/05/06 21:52:16 alexb Exp $
+// $Id: TabStyle.java,v 1.14 2003/05/10 12:38:41 alexb Exp $
 
 // 12 Apr 2002: Jeremy Bennett (mail@jeremybennett.com). Extended to support
 // use case style panel that handles optional display of extension points.
@@ -71,6 +71,9 @@ import org.argouml.uml.diagram.use_case.ui.FigUseCase;
 import org.argouml.uml.diagram.use_case.ui.StylePanelFigUseCase;
 import org.tigris.gef.presentation.Fig;
 
+/**
+ * Provides support for changing the appearance of a diagram element.
+ */
 public class TabStyle
     extends TabSpawnable
     implements TabFigTarget, PropertyChangeListener, DelayedVChangeListener {

@@ -1,9 +1,36 @@
-// Copyright (c) 1996-99 The Regents of the University of California. All// Rights Reserved. Permission to use, copy, modify, and distribute this// software and its documentation without fee, and without a written// agreement is hereby granted, provided that the above copyright notice// and this paragraph appear in all copies.  This software program and// documentation are copyrighted by The Regents of the University of// California. The software program and documentation are supplied "AS// IS", without any accompanying services from The Regents. The Regents// does not warrant that the operation of the program will be// uninterrupted or error-free. The end-user understands that the program// was developed for research purposes and is advised not to rely// exclusively on the program for any reason.  IN NO EVENT SHALL THE// UNIVERSITY OF CALIFORNIA BE LIABLE TO ANY PARTY FOR DIRECT, INDIRECT,// SPECIAL, INCIDENTAL, OR CONSEQUENTIAL DAMAGES, INCLUDING LOST PROFITS,// ARISING OUT OF THE USE OF THIS SOFTWARE AND ITS DOCUMENTATION, EVEN IF// THE UNIVERSITY OF CALIFORNIA HAS BEEN ADVISED OF THE POSSIBILITY OF// SUCH DAMAGE. THE UNIVERSITY OF CALIFORNIA SPECIFICALLY DISCLAIMS ANY// WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF// MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE. THE SOFTWARE// PROVIDED HEREUNDER IS ON AN "AS IS" BASIS, AND THE UNIVERSITY OF// CALIFORNIA HAS NO OBLIGATIONS TO PROVIDE MAINTENANCE, SUPPORT,// UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
+// Copyright (c) 1996-99 The Regents of the University of California. All
+// Rights Reserved. Permission to use, copy, modify, and distribute this
+// software and its documentation without fee, and without a written
+// agreement is hereby granted, provided that the above copyright notice
+// and this paragraph appear in all copies.  This software program and
+// documentation are copyrighted by The Regents of the University of
+// California. The software program and documentation are supplied "AS
+// IS", without any accompanying services from The Regents. The Regents
+// does not warrant that the operation of the program will be
+// uninterrupted or error-free. The end-user understands that the program
+// was developed for research purposes and is advised not to rely
+// exclusively on the program for any reason.  IN NO EVENT SHALL THE
+// UNIVERSITY OF CALIFORNIA BE LIABLE TO ANY PARTY FOR DIRECT, INDIRECT,
+// SPECIAL, INCIDENTAL, OR CONSEQUENTIAL DAMAGES, INCLUDING LOST PROFITS,
+// ARISING OUT OF THE USE OF THIS SOFTWARE AND ITS DOCUMENTATION, EVEN IF
+// THE UNIVERSITY OF CALIFORNIA HAS BEEN ADVISED OF THE POSSIBILITY OF
+// SUCH DAMAGE. THE UNIVERSITY OF CALIFORNIA SPECIFICALLY DISCLAIMS ANY
+// WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
+// MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE. THE SOFTWARE
+// PROVIDED HEREUNDER IS ON AN "AS IS" BASIS, AND THE UNIVERSITY OF
+// CALIFORNIA HAS NO OBLIGATIONS TO PROVIDE MAINTENANCE, SUPPORT,
+// UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 
 
 package org.argouml.uml.ui;
 
-import java.util.Collection;import javax.swing.JPopupMenu;import org.argouml.model.uml.UmlFactory;import ru.novosoft.uml.foundation.core.MAttribute;import ru.novosoft.uml.foundation.core.MClassifier;
+import java.util.Collection;
+
+import javax.swing.JPopupMenu;
+
+import org.argouml.model.uml.UmlFactory;
+import ru.novosoft.uml.foundation.core.MAttribute;
+import ru.novosoft.uml.foundation.core.MClassifier;
 /**
  *   This class implements a list model for the attributes of a classifier.
  *   Used with a UMLList to display a list of attributes.  Since attributes
@@ -14,6 +41,11 @@ import java.util.Collection;import javax.swing.JPopupMenu;import org.argouml
  *   @author Curt Arnold
  *   @see UMLModelElementListModel
  *   @see UMLList
+ *
+ * @deprecated as of ArgoUml 0.13.5 (10-may-2003),
+ *             replaced by {@link org.argouml.uml.ui.foundation.core.UMLClassAttributeListModel},
+ *             this class is part of the 'old'(pre 0.13.*) implementation of proppanels
+ *             that used reflection a lot.
  */
 public class UMLAttributesListModel extends UMLModelElementCachedListModel  {
 
@@ -141,7 +173,41 @@ public class UMLAttributesListModel extends UMLModelElementCachedListModel  {
             classifier.setFeatures(swap(oldFeatures,index,_attributes.get(index),_attributes.get(index+1)));
             fireContentsChanged(this,index,index+1);
         }
-    }        /**     *  This method builds a context (pop-up) menu for the list.       *     *  @param popup popup menu     *  @param index index of selected list item     *  @return "true" if popup menu should be displayed     */    public boolean buildPopup(JPopupMenu popup,int index) {        UMLUserInterfaceContainer container = getContainer();        UMLListMenuItem open = new UMLListMenuItem(container.localize("Open"),this,"open",index);        UMLListMenuItem delete = new UMLListMenuItem(container.localize("Delete"),this,"delete",index);        if(getModelElementSize() <= 0) {            open.setEnabled(false);            delete.setEnabled(false);        }        popup.add(open);        UMLListMenuItem add =new UMLListMenuItem(container.localize("New"),this,"add",index);        if(_upper >= 0 && getModelElementSize() >= _upper) {            add.setEnabled(false);        }        popup.add(add);        popup.add(delete);        /*        UMLListMenuItem moveUp = new UMLListMenuItem(container.localize("Move Up"),this,"moveUp",index);        if(index == 0) moveUp.setEnabled(false);        popup.add(moveUp);        UMLListMenuItem moveDown = new UMLListMenuItem(container.localize("Move Down"),this,"moveDown",index);        if(index == getSize()-1) moveDown.setEnabled(false);        popup.add(moveDown);        */        return true;    }
+    }
+    
+    /**
+     *  This method builds a context (pop-up) menu for the list.  
+     *
+     *  @param popup popup menu
+     *  @param index index of selected list item
+     *  @return "true" if popup menu should be displayed
+     */
+    public boolean buildPopup(JPopupMenu popup,int index) {
+        UMLUserInterfaceContainer container = getContainer();
+        UMLListMenuItem open = new UMLListMenuItem(container.localize("Open"),this,"open",index);
+        UMLListMenuItem delete = new UMLListMenuItem(container.localize("Delete"),this,"delete",index);
+        if(getModelElementSize() <= 0) {
+            open.setEnabled(false);
+            delete.setEnabled(false);
+        }
+
+        popup.add(open);
+        UMLListMenuItem add =new UMLListMenuItem(container.localize("New"),this,"add",index);
+        if(_upper >= 0 && getModelElementSize() >= _upper) {
+            add.setEnabled(false);
+        }
+        popup.add(add);
+        popup.add(delete);
+        /*
+        UMLListMenuItem moveUp = new UMLListMenuItem(container.localize("Move Up"),this,"moveUp",index);
+        if(index == 0) moveUp.setEnabled(false);
+        popup.add(moveUp);
+        UMLListMenuItem moveDown = new UMLListMenuItem(container.localize("Move Down"),this,"moveDown",index);
+        if(index == getSize()-1) moveDown.setEnabled(false);
+        popup.add(moveDown);
+        */
+        return true;
+    }
 }
 
 

@@ -41,6 +41,11 @@ import org.argouml.application.api.*;
  *  This class is implements a tree model for ownedElements of a MNamespace
  *
  *  @author Curt Arnold
+ *
+ * @deprecated as of ArgoUml 0.13.5 (10-may-2003),
+ *             replaced by nothing,
+ *             this class is part of the 'old'(pre 0.13.*) implementation of proppanels
+ *             that used reflection a lot.
  */
 public class UMLOwnedElementRootNode extends UMLTreeRootNode  {
     
@@ -84,13 +89,15 @@ public class UMLOwnedElementRootNode extends UMLTreeRootNode  {
             add.add(new UMLTreeMenuItem("Actor",container,"addActor",false));
             _nodeList.add(new UMLMetaclassInstanceTreeNode(container,this,
                 "Use Cases",MUseCase.class,null));
-            add.add(new UMLTreeMenuItem("Use Case",container,"addUseCase",false));            /*
+            add.add(new UMLTreeMenuItem("Use Case",container,"addUseCase",false));
+            /*
             _nodeList.add(new UMLMetaclassInstanceTreeNode(container,this,
                 "Associations",MAssociation.class,null));
             add.add(new UMLTreeMenuItem("Association",container,"addAssociation",false));
             _nodeList.add(new UMLMetaclassInstanceTreeNode(container,this, 
                 "Generalizations",MGeneralization.class,null));
-            add.add(new UMLTreeMenuItem("Generalization",container,"addGeneralization",false));            */
+            add.add(new UMLTreeMenuItem("Generalization",container,"addGeneralization",false));
+            */
 //            _nodeList.add(new UMLMetaclassInstanceTreeNode(container,this,
 //                "Abstractions",MAbstraction.class,null));
 //            add.add(new UMLTreeMenuItem("Abstraction",container,"addAbstraction",false));

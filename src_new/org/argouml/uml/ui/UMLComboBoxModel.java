@@ -1,4 +1,4 @@
-// $Id: UMLComboBoxModel.java,v 1.17 2002/12/27 10:08:02 linus Exp $
+// $Id: UMLComboBoxModel.java,v 1.18 2003/05/10 12:38:42 alexb Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,7 +25,7 @@
 // File: UMLComboBoxModel.java
 // Classes: UMLComboBoxModel
 // Original Author: 
-// $Id: UMLComboBoxModel.java,v 1.17 2002/12/27 10:08:02 linus Exp $
+// $Id: UMLComboBoxModel.java,v 1.18 2003/05/10 12:38:42 alexb Exp $
 
 package org.argouml.uml.ui;
 
@@ -60,6 +60,11 @@ import ru.novosoft.uml.behavior.use_cases.*;
  *   have the same fully qualified name, then they will appear only once in the
  *   list. This causes problems for example with lists of objects in diagrams,
  *   where default naming means newly created objects have the same name.</p>
+ *
+ * @deprecated as of ArgoUml 0.13.5 (10-may-2003),
+ *             replaced by {@link org.argouml.uml.ui.UMLComboBoxModel2},
+ *             this class is part of the 'old'(pre 0.13.*) implementation of proppanels
+ *             that used reflection a lot.
  */
 
 public class UMLComboBoxModel extends AbstractListModel implements

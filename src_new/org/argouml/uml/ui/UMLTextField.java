@@ -23,7 +23,7 @@
 // File: UMLTextField.java
 // Classes: UMLTextField
 // Original Author: not known
-// $Id: UMLTextField.java,v 1.21 2003/04/29 19:25:08 kataka Exp $
+// $Id: UMLTextField.java,v 1.22 2003/05/10 12:38:42 alexb Exp $
 // 25 Apr 2002: Jeremy Bennett (mail@jeremybennett.com). Extended to support
 // the FigUseCase.
 // 3 May 2002: Jeremy Bennett (mail@jeremybennett.com). Extended to mark the
@@ -52,7 +52,13 @@ import ru.novosoft.uml.foundation.core.MClassifier;
 /**
  *  This class handles the updating of text as it is typed into the text field on one
  *  of the many property panels. By catching the MElementEvent dispatched from NSUML it
- *  updates the diagram as each character is typed. */
+ *  updates the diagram as each character is typed.
+ *
+ * @deprecated as of ArgoUml 0.13.5 (10-may-2003),
+ *             replaced by {@link org.argouml.uml.ui.UMLTextField2},
+ *             this class is part of the 'old'(pre 0.13.*) implementation of proppanels
+ *             that used reflection a lot.
+ */
 public class UMLTextField
     extends JTextField
     implements DocumentListener, UMLUserInterfaceComponent, FocusListener {
