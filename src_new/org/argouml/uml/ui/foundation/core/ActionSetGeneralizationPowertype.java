@@ -1,4 +1,4 @@
-// $Id: ActionSetGeneralizationPowertype.java,v 1.8 2004/02/08 12:45:27 mvw Exp $
+// $Id: ActionSetGeneralizationPowertype.java,v 1.9 2004/09/19 21:06:25 mvw Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -39,7 +39,8 @@ public class ActionSetGeneralizationPowertype extends UMLChangeAction {
 
    
 
-    public static final ActionSetGeneralizationPowertype SINGLETON = new ActionSetGeneralizationPowertype();
+    private static final ActionSetGeneralizationPowertype SINGLETON = 
+        new ActionSetGeneralizationPowertype();
     
     /**
      * Constructor for ActionSetStructuralFeatureType.
@@ -75,6 +76,15 @@ public class ActionSetGeneralizationPowertype extends UMLChangeAction {
             ModelFacade.setPowertype(gen, newClassifier);
         }
         
+    }
+
+
+
+    /**
+     * @return Returns the SINGLETON.
+     */
+    public static ActionSetGeneralizationPowertype getInstance() {
+        return SINGLETON;
     }
 
 }

@@ -1,4 +1,4 @@
-// $Id: ActionNewModelElementConstraint.java,v 1.4 2003/09/17 23:25:21 bobtarling Exp $
+// $Id: ActionNewModelElementConstraint.java,v 1.5 2004/09/19 21:06:25 mvw Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -37,7 +37,7 @@ import org.argouml.uml.ui.AbstractActionNewModelElement;
 public class ActionNewModelElementConstraint
     extends AbstractActionNewModelElement {
 
-    public final static ActionNewModelElementConstraint SINGLETON = 
+    private static final ActionNewModelElementConstraint SINGLETON = 
         new ActionNewModelElementConstraint();
     
     /**
@@ -54,7 +54,17 @@ public class ActionNewModelElementConstraint
      */
     public void actionPerformed(ActionEvent e) {
         super.actionPerformed(e);
-        CoreFactory.getFactory().buildConstraint(/*(MModelElement)*/ getTarget());
+        CoreFactory.getFactory().buildConstraint(/*(MModelElement)*/ 
+                getTarget());
+    }
+
+
+
+    /**
+     * @return Returns the SINGLETON.
+     */
+    public static ActionNewModelElementConstraint getInstance() {
+        return SINGLETON;
     }
 
 }

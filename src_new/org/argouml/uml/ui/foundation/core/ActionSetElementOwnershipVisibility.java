@@ -1,4 +1,4 @@
-// $Id: ActionSetElementOwnershipVisibility.java,v 1.10 2004/02/08 12:45:27 mvw Exp $
+// $Id: ActionSetElementOwnershipVisibility.java,v 1.11 2004/09/19 21:06:25 mvw Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -22,7 +22,7 @@
 // CALIFORNIA HAS NO OBLIGATIONS TO PROVIDE MAINTENANCE, SUPPORT,
 // UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 
-// $Header: /tmp/cvs-vintage/argouml/argouml/src_new/org/argouml/uml/ui/foundation/core/Attic/ActionSetElementOwnershipVisibility.java,v 1.10 2004/02/08 12:45:27 mvw Exp $
+
 package org.argouml.uml.ui.foundation.core;
 
 import java.awt.event.ActionEvent;
@@ -42,19 +42,30 @@ import org.argouml.uml.ui.UMLButtonGroup;
  */
 public class ActionSetElementOwnershipVisibility extends AbstractAction {
 
-    private UMLButtonGroup _group;
+    private UMLButtonGroup group;
     
-    public final static String PUBLIC_ACTION_COMMAND = "public";
-    public final static String PROTECTED_ACTION_COMMAND = "protected";
-    public final static String PRIVATE_ACTION_COMMAND = "private";
+    /**
+     * PUBLIC_ACTION_COMMAND determines visibility.
+     */
+    public static final String PUBLIC_ACTION_COMMAND = "public";
+    
+    /**
+     * PROTECTED_ACTION_COMMAND determines visibility.
+     */
+    public static final String PROTECTED_ACTION_COMMAND = "protected";
+    
+    /**
+     * PRIVATE_ACTION_COMMAND determines visibility.
+     */
+    public static final String PRIVATE_ACTION_COMMAND = "private";
 
     /**
      * Constructor for ActionSetElementOwnershipVisibility.
-     * @param group
+     * @param g the button group
      */
-    public ActionSetElementOwnershipVisibility(UMLButtonGroup group) {
+    public ActionSetElementOwnershipVisibility(UMLButtonGroup g) {
         super();
-        _group = group;
+        group = g;
     }
     
     /**
@@ -62,21 +73,25 @@ public class ActionSetElementOwnershipVisibility extends AbstractAction {
      */
     public void actionPerformed(ActionEvent e) {
         if (e.getSource() instanceof JRadioButton) {
-            Object target = _group.getTarget();
+            Object target = group.getTarget();
             if (org.argouml.model.ModelFacade.isAModelElement(target)) {
                 Object m = /*(MModelElement)*/ target;
                 String command = e.getActionCommand();
                 if (command.equals(PUBLIC_ACTION_COMMAND)) {
-                    ModelFacade.setVisibility(m, ModelFacade.PUBLIC_VISIBILITYKIND);
-                    
+                    ModelFacade.setVisibility(m, 
+                            ModelFacade.PUBLIC_VISIBILITYKIND);
                 } else
 		    if (command.equals(PRIVATE_ACTION_COMMAND)) {
-			ModelFacade.setVisibility(m, ModelFacade.PRIVATE_VISIBILITYKIND);
+			ModelFacade.setVisibility(m, 
+			        ModelFacade.PRIVATE_VISIBILITYKIND);
 		    } else
 			if (command.equals(PROTECTED_ACTION_COMMAND)) {
-			    ModelFacade.setVisibility(m, ModelFacade.PROTECTED_VISIBILITYKIND);
+			    ModelFacade.setVisibility(m, 
+			            ModelFacade.PROTECTED_VISIBILITYKIND);
 			} else
-			    throw new IllegalArgumentException("Illegal action. Actioncommand was not correct. It was " + command);
+			    throw new IllegalArgumentException("Illegal action."
+			        + " Actioncommand was not correct. It was " 
+			        + command);
             }
         }
     }

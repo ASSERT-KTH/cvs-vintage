@@ -1,4 +1,4 @@
-// $Id: UMLStructuralFeatureChangeabilityRadioButtonPanel.java,v 1.9 2004/02/08 12:45:28 mvw Exp $
+// $Id: UMLStructuralFeatureChangeabilityRadioButtonPanel.java,v 1.10 2004/09/19 21:06:25 mvw Exp $
 // Copyright (c) 1996-2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -22,7 +22,7 @@
 // CALIFORNIA HAS NO OBLIGATIONS TO PROVIDE MAINTENANCE, SUPPORT,
 // UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 
-// $Id: UMLStructuralFeatureChangeabilityRadioButtonPanel.java,v 1.9 2004/02/08 12:45:28 mvw Exp $
+// $Id: UMLStructuralFeatureChangeabilityRadioButtonPanel.java,v 1.10 2004/09/19 21:06:25 mvw Exp $
 package org.argouml.uml.ui.foundation.core;
 
 import java.util.HashMap;
@@ -42,18 +42,26 @@ public class UMLStructuralFeatureChangeabilityRadioButtonPanel
     private static Map labelTextsAndActionCommands = new HashMap();
 
     static {
-        labelTextsAndActionCommands.put(Translator.localize("UMLMenu", "label.changeability-addonly"), ActionSetChangeability.ADDONLY_COMMAND);
-        labelTextsAndActionCommands.put(Translator.localize("UMLMenu", "label.changeability-changeable"), ActionSetChangeability.CHANGEABLE_COMMAND);
-        labelTextsAndActionCommands.put(Translator.localize("UMLMenu", "label.changeability-frozen"), ActionSetChangeability.FROZEN_COMMAND);
+        labelTextsAndActionCommands.put(Translator.localize("UMLMenu", 
+                "label.changeability-addonly"), 
+                ActionSetChangeability.ADDONLY_COMMAND);
+        labelTextsAndActionCommands.put(Translator.localize("UMLMenu", 
+                "label.changeability-changeable"), 
+                ActionSetChangeability.CHANGEABLE_COMMAND);
+        labelTextsAndActionCommands.put(Translator.localize("UMLMenu", 
+                "label.changeability-frozen"), 
+                ActionSetChangeability.FROZEN_COMMAND);
     }
 
     /**
      * Constructor for UMLAssociationEndChangeabilityRadioButtonPanel.
-     * @param title
-     * @param horizontal
+     * @param title the title for the panel
+     * @param horizontal determines the orientation
      */
-    public UMLStructuralFeatureChangeabilityRadioButtonPanel(String title, boolean horizontal) {
-        super(title, labelTextsAndActionCommands, "changeability", ActionSetChangeability.SINGLETON, horizontal);
+    public UMLStructuralFeatureChangeabilityRadioButtonPanel(
+            String title, boolean horizontal) {
+        super(title, labelTextsAndActionCommands, "changeability", 
+                ActionSetChangeability.getInstance(), horizontal);
     }
 
     /**
@@ -62,8 +70,10 @@ public class UMLStructuralFeatureChangeabilityRadioButtonPanel
     public void buildModel() {
         if (getTarget() != null) {
             Object target = /*(MStructuralFeature)*/ getTarget();
-            Object/*MChangeableKind*/ kind = ModelFacade.getChangeability(target);
-            if (kind == null || kind.equals(ModelFacade.ADD_ONLY_CHANGEABLEKIND)) {
+            Object/*MChangeableKind*/ kind = 
+                ModelFacade.getChangeability(target);
+            if (kind == null 
+                    || kind.equals(ModelFacade.ADD_ONLY_CHANGEABLEKIND)) {
                 setSelected(ActionSetChangeability.ADDONLY_COMMAND);
             } else if (kind.equals(ModelFacade.CHANGEABLE_CHANGEABLEKIND)) {
                 setSelected(ActionSetChangeability.CHANGEABLE_COMMAND); 

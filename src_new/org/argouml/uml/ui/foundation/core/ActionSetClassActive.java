@@ -1,4 +1,4 @@
-// $Id: ActionSetClassActive.java,v 1.1 2004/07/18 08:08:49 mkl Exp $
+// $Id: ActionSetClassActive.java,v 1.2 2004/09/19 21:06:25 mvw Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -37,7 +37,8 @@ import org.argouml.uml.ui.UMLCheckBox2;
  */
 public class ActionSetClassActive extends UMLChangeAction {
 
-    public static final ActionSetClassActive SINGLETON = new ActionSetClassActive();
+    private static final ActionSetClassActive SINGLETON = 
+        new ActionSetClassActive();
 
     /**
      * Constructor.
@@ -59,5 +60,12 @@ public class ActionSetClassActive extends UMLChangeAction {
                 ModelFacade.setActive(m, source.isSelected());                
             }
         }
+    }
+
+    /**
+     * @return Returns the SINGLETON.
+     */
+    public static ActionSetClassActive getInstance() {
+        return SINGLETON;
     }
 }

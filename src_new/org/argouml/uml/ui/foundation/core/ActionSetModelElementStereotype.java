@@ -1,4 +1,4 @@
-// $Id: ActionSetModelElementStereotype.java,v 1.10 2004/02/08 12:45:27 mvw Exp $
+// $Id: ActionSetModelElementStereotype.java,v 1.11 2004/09/19 21:06:25 mvw Exp $
 // Copyright (c) 1996-2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -40,7 +40,8 @@ import org.argouml.uml.ui.UMLComboBox2;
  */
 public class ActionSetModelElementStereotype extends UMLChangeAction {
 
-    public static final ActionSetModelElementStereotype SINGLETON = new ActionSetModelElementStereotype();
+    private static final ActionSetModelElementStereotype SINGLETON = 
+        new ActionSetModelElementStereotype();
 
     /**
      * Constructor for ActionSetModelElementStereotype.
@@ -48,8 +49,6 @@ public class ActionSetModelElementStereotype extends UMLChangeAction {
     protected ActionSetModelElementStereotype() {
         super(Translator.localize("Set"), true, NO_ICON);
     }
-
-
    
     /**
      * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
@@ -62,12 +61,13 @@ public class ActionSetModelElementStereotype extends UMLChangeAction {
         if (source instanceof UMLComboBox2) {
             UMLComboBox2 combo = (UMLComboBox2) source;
             if (ModelFacade.isAStereotype(combo.getSelectedItem())) 
-                newStereo = /*(MStereotype)*/ combo.getSelectedItem();                                
+                newStereo = /*(MStereotype)*/ combo.getSelectedItem();
             if (ModelFacade.isAModelElement(combo.getTarget())) {
                 target = /*(MModelElement)*/ combo.getTarget();
                 oldStereo = null;
                 if (ModelFacade.getStereotypes(target).size() > 0) {
-                    oldStereo = ModelFacade.getStereotypes(target).iterator().next();
+                    oldStereo = ModelFacade.getStereotypes(target)
+                        .iterator().next();
                 }
             }
 	    if ("".equals(combo.getSelectedItem()))
@@ -76,13 +76,21 @@ public class ActionSetModelElementStereotype extends UMLChangeAction {
         if (newStereo != oldStereo && target != null) {
 	    if (newStereo != null) {
 		newStereo = /*(MStereotype)*/
-			ModelManagementHelper.getHelper().getCorrespondingElement(
+		    ModelManagementHelper.getHelper().getCorrespondingElement(
 				  newStereo,
 				  ModelFacade.getModel(target));
 	    }
-            ExtensionMechanismsHelper.getHelper().setStereoType(target, newStereo);
+            ExtensionMechanismsHelper.getHelper()
+                .setStereoType(target, newStereo);
             super.actionPerformed(e);
         }
+    }
+
+    /**
+     * @return Returns the SINGLETON.
+     */
+    public static ActionSetModelElementStereotype getInstance() {
+        return SINGLETON;
     }
             
     

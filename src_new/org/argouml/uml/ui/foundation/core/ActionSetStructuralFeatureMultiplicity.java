@@ -1,4 +1,4 @@
-// $Id: ActionSetStructuralFeatureMultiplicity.java,v 1.5 2003/09/07 18:03:13 bobtarling Exp $
+// $Id: ActionSetStructuralFeatureMultiplicity.java,v 1.6 2004/09/19 21:06:25 mvw Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -22,7 +22,7 @@
 // CALIFORNIA HAS NO OBLIGATIONS TO PROVIDE MAINTENANCE, SUPPORT,
 // UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 
-// $Id: ActionSetStructuralFeatureMultiplicity.java,v 1.5 2003/09/07 18:03:13 bobtarling Exp $
+// $Id: ActionSetStructuralFeatureMultiplicity.java,v 1.6 2004/09/19 21:06:25 mvw Exp $
 package org.argouml.uml.ui.foundation.core;
 
 import org.argouml.model.ModelFacade;
@@ -36,7 +36,7 @@ import org.argouml.uml.ui.ActionSetMultiplicity;
 public class ActionSetStructuralFeatureMultiplicity
     extends ActionSetMultiplicity {
 
-    public static final ActionSetStructuralFeatureMultiplicity SINGLETON =
+    private static final ActionSetStructuralFeatureMultiplicity SINGLETON =
         new ActionSetStructuralFeatureMultiplicity();
 
     /**
@@ -47,16 +47,25 @@ public class ActionSetStructuralFeatureMultiplicity
     }
 
     /**
-     * @see org.argouml.uml.ui.ActionSetMultiplicity#setSelectedItem(java.lang.Object, java.lang.Object)
+     * @see org.argouml.uml.ui.ActionSetMultiplicity#setSelectedItem(
+     * java.lang.Object, java.lang.Object)
      */
     public void setSelectedItem(Object item, Object target) {
-        if (target != null && org.argouml.model.ModelFacade.isAStructuralFeature(target)) {
+        if (target != null 
+                && org.argouml.model.ModelFacade.isAStructuralFeature(target)) {
             if (org.argouml.model.ModelFacade.isAMultiplicity(item)) {
                 ModelFacade.setMultiplicity(target, item);
             } else
                  ModelFacade.setMultiplicity(target, null);
 
         }
+    }
+
+    /**
+     * @return Returns the sINGLETON.
+     */
+    public static ActionSetStructuralFeatureMultiplicity getInstance() {
+        return SINGLETON;
     }
 
 }

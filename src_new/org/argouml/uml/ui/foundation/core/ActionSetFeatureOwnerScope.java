@@ -1,4 +1,4 @@
-// $Id: ActionSetFeatureOwnerScope.java,v 1.7 2004/02/08 12:45:27 mvw Exp $
+// $Id: ActionSetFeatureOwnerScope.java,v 1.8 2004/09/19 21:06:25 mvw Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -38,7 +38,8 @@ import org.argouml.uml.ui.UMLCheckBox2;
  */
 public class ActionSetFeatureOwnerScope extends UMLChangeAction {
 
-    public static final ActionSetFeatureOwnerScope SINGLETON = new ActionSetFeatureOwnerScope();
+    private static final ActionSetFeatureOwnerScope SINGLETON = 
+        new ActionSetFeatureOwnerScope();
 
     /**
      * Constructor for ActionSetElementOwnershipSpecification.
@@ -58,12 +59,21 @@ public class ActionSetFeatureOwnerScope extends UMLChangeAction {
             if (org.argouml.model.ModelFacade.isAFeature(target)) {
                 Object m = /*(MFeature)*/ target;
                 if (source.isSelected()) {
-                    ModelFacade.setOwnerScope(m, ModelFacade.CLASSIFIER_SCOPEKIND);
+                    ModelFacade.setOwnerScope(m, 
+                            ModelFacade.CLASSIFIER_SCOPEKIND);
                 } else {
-                    ModelFacade.setOwnerScope(m, ModelFacade.INSTANCE_SCOPEKIND);
+                    ModelFacade.setOwnerScope(m, 
+                            ModelFacade.INSTANCE_SCOPEKIND);
                 }
             }
         }
+    }
+
+    /**
+     * @return Returns the SINGLETON.
+     */
+    public static ActionSetFeatureOwnerScope getInstance() {
+        return SINGLETON;
     }
 
 }

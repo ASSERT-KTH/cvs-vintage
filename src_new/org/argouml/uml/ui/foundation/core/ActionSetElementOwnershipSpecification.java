@@ -1,4 +1,4 @@
-// $Id: ActionSetElementOwnershipSpecification.java,v 1.7 2004/02/08 12:45:27 mvw Exp $
+// $Id: ActionSetElementOwnershipSpecification.java,v 1.8 2004/09/19 21:06:25 mvw Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -37,7 +37,8 @@ import org.argouml.uml.ui.UMLCheckBox2;
  */
 public class ActionSetElementOwnershipSpecification extends UMLChangeAction {
 
-    public static final ActionSetElementOwnershipSpecification SINGLETON = new ActionSetElementOwnershipSpecification();
+    private static final ActionSetElementOwnershipSpecification SINGLETON = 
+        new ActionSetElementOwnershipSpecification();
 
     /**
      * Constructor for ActionSetElementOwnershipSpecification.
@@ -56,9 +57,17 @@ public class ActionSetElementOwnershipSpecification extends UMLChangeAction {
             Object target = source.getTarget();
             if (org.argouml.model.ModelFacade.isAModelElement(target)) {
                 Object m = /*(MModelElement)*/ target;
-                ModelFacade.setSpecification(m, !ModelFacade.isSpecification(m));
+                ModelFacade.setSpecification(m, 
+                        !ModelFacade.isSpecification(m));
             }
         }
+    }
+
+    /**
+     * @return Returns the SINGLETON.
+     */
+    public static ActionSetElementOwnershipSpecification getInstance() {
+        return SINGLETON;
     }
 
 }

@@ -1,4 +1,4 @@
-// $Id: ActionSetChangeability.java,v 1.4 2004/02/08 12:45:27 mvw Exp $
+// $Id: ActionSetChangeability.java,v 1.5 2004/09/19 21:06:25 mvw Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -38,11 +38,23 @@ import org.argouml.uml.ui.UMLRadioButtonPanel;
  */
 public class ActionSetChangeability extends UMLChangeAction {
 
-    public static final ActionSetChangeability SINGLETON = new ActionSetChangeability();
+    private static final ActionSetChangeability SINGLETON = 
+        new ActionSetChangeability();
 
-    public final static String ADDONLY_COMMAND = "addonly";
-    public final static String CHANGEABLE_COMMAND = "changeable";
-    public final static String FROZEN_COMMAND = "frozen";
+    /**
+     * ADDONLY_COMMAND determines a changeability kind.
+     */
+    public static final String ADDONLY_COMMAND = "addonly";
+    
+    /**
+     * CHANGEABLE_COMMAND determines a changeability kind.
+     */
+    public static final String CHANGEABLE_COMMAND = "changeable";
+    
+    /**
+     * FROZEN_COMMAND determines a changeability kind.
+     */
+    public static final String FROZEN_COMMAND = "frozen";
 
     /**
      * Constructor for ActionSetElementOwnershipSpecification.
@@ -59,7 +71,8 @@ public class ActionSetChangeability extends UMLChangeAction {
         if (e.getSource() instanceof JRadioButton) {
             JRadioButton source = (JRadioButton) e.getSource();
             String actionCommand = source.getActionCommand();
-            Object target = ((UMLRadioButtonPanel) source.getParent()).getTarget();
+            Object target = 
+                ((UMLRadioButtonPanel) source.getParent()).getTarget();
             if (ModelFacade.isAAssociationEnd(target)
 		|| ModelFacade.isAAttribute(target)) {
                 Object m = /*(MAssociationEnd)*/ target;
@@ -74,5 +87,12 @@ public class ActionSetChangeability extends UMLChangeAction {
                 ModelFacade.setChangeability(m, kind);
             }
         }
+    }
+
+    /**
+     * @return Returns the SINGLETON.
+     */
+    public static ActionSetChangeability getInstance() {
+        return SINGLETON;
     }
 }

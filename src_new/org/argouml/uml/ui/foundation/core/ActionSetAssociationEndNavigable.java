@@ -1,4 +1,4 @@
-// $Id: ActionSetAssociationEndNavigable.java,v 1.6 2004/02/08 12:45:27 mvw Exp $
+// $Id: ActionSetAssociationEndNavigable.java,v 1.7 2004/09/19 21:06:25 mvw Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -38,7 +38,7 @@ import org.argouml.uml.ui.UMLCheckBox2;
  */
 public class ActionSetAssociationEndNavigable extends UMLChangeAction {
 
-    public static final ActionSetAssociationEndNavigable SINGLETON = 
+    private static final ActionSetAssociationEndNavigable SINGLETON = 
 	new ActionSetAssociationEndNavigable();
 
     /**
@@ -58,8 +58,15 @@ public class ActionSetAssociationEndNavigable extends UMLChangeAction {
             Object target = source.getTarget();
             if (org.argouml.model.ModelFacade.isAAssociationEnd(target)) {
                 Object m = /*(MAssociationEnd)*/ target;
-                ModelFacade.setNavigable(m, source.isSelected());                
+                ModelFacade.setNavigable(m, source.isSelected());
             }
         }
+    }
+
+    /**
+     * @return Returns the SINGLETON.
+     */
+    public static ActionSetAssociationEndNavigable getInstance() {
+        return SINGLETON;
     }
 }

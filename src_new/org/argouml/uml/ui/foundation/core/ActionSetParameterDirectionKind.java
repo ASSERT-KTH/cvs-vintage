@@ -1,4 +1,4 @@
-// $Id: ActionSetParameterDirectionKind.java,v 1.1 2004/07/25 09:14:37 mkl Exp $
+// $Id: ActionSetParameterDirectionKind.java,v 1.2 2004/09/19 21:06:25 mvw Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -41,15 +41,28 @@ import org.argouml.uml.ui.UMLRadioButtonPanel;
  */
 public class ActionSetParameterDirectionKind extends UMLChangeAction {
 
-    public static final ActionSetParameterDirectionKind SINGLETON = new ActionSetParameterDirectionKind();
+    private static final ActionSetParameterDirectionKind SINGLETON = 
+        new ActionSetParameterDirectionKind();
 
-    public final static String IN_COMMAND = "in";
+    /**
+     * IN_COMMAND determines the kind of direction.
+     */
+    public static final String IN_COMMAND = "in";
 
-    public final static String OUT_COMMAND = "out";
+    /**
+     * OUT_COMMAND determines the kind of direction.
+     */
+    public static final String OUT_COMMAND = "out";
 
-    public final static String INOUT_COMMAND = "inout";
+    /**
+     * INOUT_COMMAND determines the kind of direction.
+     */
+    public static final String INOUT_COMMAND = "inout";
 
-    public final static String RETURN_COMMAND = "return";
+    /**
+     * RETURN_COMMAND determines the kind of direction.
+     */
+    public static final String RETURN_COMMAND = "return";
 
     /**
      * Constructor for ActionSetElementOwnershipSpecification.
@@ -83,5 +96,12 @@ public class ActionSetParameterDirectionKind extends UMLChangeAction {
                 ModelFacade.setKind(m, kind);
             }
         }
+    }
+
+    /**
+     * @return Returns the sINGLETON.
+     */
+    public static ActionSetParameterDirectionKind getInstance() {
+        return SINGLETON;
     }
 }

@@ -1,4 +1,4 @@
-// $Id: ActionSetGeneralizableElementLeaf.java,v 1.7 2004/07/18 08:08:49 mkl Exp $
+// $Id: ActionSetGeneralizableElementLeaf.java,v 1.8 2004/09/19 21:06:25 mvw Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -22,7 +22,7 @@
 // CALIFORNIA HAS NO OBLIGATIONS TO PROVIDE MAINTENANCE, SUPPORT,
 // UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 
-// $Id: ActionSetGeneralizableElementLeaf.java,v 1.7 2004/07/18 08:08:49 mkl Exp $
+// $Id: ActionSetGeneralizableElementLeaf.java,v 1.8 2004/09/19 21:06:25 mvw Exp $
 package org.argouml.uml.ui.foundation.core;
 
 import java.awt.event.ActionEvent;
@@ -39,7 +39,8 @@ import org.argouml.uml.ui.UMLCheckBox2;
  */
 public class ActionSetGeneralizableElementLeaf extends UMLChangeAction {
 
-    public static final ActionSetGeneralizableElementLeaf SINGLETON = new ActionSetGeneralizableElementLeaf();
+    private static final ActionSetGeneralizableElementLeaf SINGLETON = 
+        new ActionSetGeneralizableElementLeaf();
 
     /**
      * Constructor for ActionSetElementOwnershipSpecification.
@@ -56,11 +57,18 @@ public class ActionSetGeneralizableElementLeaf extends UMLChangeAction {
         if (e.getSource() instanceof UMLCheckBox2) {
             UMLCheckBox2 source = (UMLCheckBox2) e.getSource();
             Object target = source.getTarget();
-            if (org.argouml.model.ModelFacade.isAGeneralizableElement(target) ||
-                    ModelFacade.isAOperation(target)) {
-                ModelFacade.setLeaf(target, source.isSelected());                
+            if (org.argouml.model.ModelFacade.isAGeneralizableElement(target) 
+                    || ModelFacade.isAOperation(target)) {
+                ModelFacade.setLeaf(target, source.isSelected());
             }
         }
+    }
+
+    /**
+     * @return Returns the SINGLETON.
+     */
+    public static ActionSetGeneralizableElementLeaf getInstance() {
+        return SINGLETON;
     }
 
 }

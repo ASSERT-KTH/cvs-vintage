@@ -1,4 +1,4 @@
-// $Id: PropPanelModelElement.java,v 1.81 2004/09/12 16:47:14 mvw Exp $
+// $Id: PropPanelModelElement.java,v 1.82 2004/09/19 21:06:25 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -382,7 +382,7 @@ public abstract class PropPanelModelElement extends PropPanel {
         if (namespaceComboBox == null) {
             namespaceComboBox = new UMLSearchableComboBox(
                     namespaceComboBoxModel,
-                    ActionSetModelElementNamespace.SINGLETON, true);
+                    ActionSetModelElementNamespace.getInstance(), true);
         }
         return namespaceComboBox;
 
@@ -394,7 +394,7 @@ public abstract class PropPanelModelElement extends PropPanel {
     protected JComboBox getStereotypeComboBox() {
         if (stereotypeComboBox == null) {
             stereotypeComboBox = new UMLComboBox2(stereotypeComboBoxModel,
-                    ActionSetModelElementStereotype.SINGLETON);
+                    ActionSetModelElementStereotype.getInstance());
         }
         return stereotypeComboBox;
     }
@@ -488,7 +488,7 @@ public abstract class PropPanelModelElement extends PropPanel {
         if (constraintScroll == null) {
             JList constraintList = new UMLMutableLinkedList(
                     constraintListModel, null,
-                    ActionNewModelElementConstraint.SINGLETON);
+                    ActionNewModelElementConstraint.getInstance());
             constraintScroll = new JScrollPane(constraintList);
         }
         return constraintScroll;

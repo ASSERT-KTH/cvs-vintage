@@ -1,4 +1,4 @@
-// $Id: UMLAssociationEndTargetScopeCheckbox.java,v 1.8 2004/02/08 12:45:27 mvw Exp $
+// $Id: UMLAssociationEndTargetScopeCheckbox.java,v 1.9 2004/09/19 21:06:25 mvw Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -22,7 +22,7 @@
 // CALIFORNIA HAS NO OBLIGATIONS TO PROVIDE MAINTENANCE, SUPPORT,
 // UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 
-// $Id: UMLAssociationEndTargetScopeCheckbox.java,v 1.8 2004/02/08 12:45:27 mvw Exp $
+// $Id: UMLAssociationEndTargetScopeCheckbox.java,v 1.9 2004/09/19 21:06:25 mvw Exp $
 package org.argouml.uml.ui.foundation.core;
 
 import org.argouml.i18n.Translator;
@@ -40,7 +40,8 @@ public class UMLAssociationEndTargetScopeCheckbox extends UMLCheckBox2 {
      * Constructor for UMLAssociationEndTargetScopeCheckbox.
      */
     public UMLAssociationEndTargetScopeCheckbox() {
-        super(Translator.localize("UMLMenu", "label.targetscope-classifier"), ActionSetAssociationEndTargetScope.SINGLETON, "ordering");
+        super(Translator.localize("UMLMenu", "label.targetscope-classifier"), 
+                ActionSetAssociationEndTargetScope.getInstance(), "ordering");
     }
 
     /**

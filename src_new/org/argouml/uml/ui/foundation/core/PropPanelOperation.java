@@ -1,4 +1,4 @@
-// $Id: PropPanelOperation.java,v 1.58 2004/09/16 21:09:24 mvw Exp $
+// $Id: PropPanelOperation.java,v 1.59 2004/09/19 21:06:25 mvw Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -121,7 +121,7 @@ public class PropPanelOperation extends PropPanelFeature {
         addButton(new PropPanelButton2(this, new ActionNavigateOwner()));
         addButton(new PropPanelButton2(this, 
                         ActionAddOperation.getSingleton()));
-        addButton(new PropPanelButton2(this, ActionNewParameter.SINGLETON));
+        addButton(new PropPanelButton2(this, ActionNewParameter.getInstance()));
         new PropPanelButton(this, getButtonPanel(), signalIcon,
                 localize("New Raised Signal"), "buttonAddRaisedSignal", null);
         addButton(new PropPanelButton2(this, new ActionRemoveFromModel()));

@@ -1,4 +1,4 @@
-// $Id: UMLParameterDirectionKindRadioButtonPanel.java,v 1.1 2004/07/25 09:14:37 mkl Exp $
+// $Id: UMLParameterDirectionKindRadioButtonPanel.java,v 1.2 2004/09/19 21:06:25 mvw Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -22,7 +22,7 @@
 // CALIFORNIA HAS NO OBLIGATIONS TO PROVIDE MAINTENANCE, SUPPORT,
 // UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 
-// $Id: UMLParameterDirectionKindRadioButtonPanel.java,v 1.1 2004/07/25 09:14:37 mkl Exp $
+// $Id: UMLParameterDirectionKindRadioButtonPanel.java,v 1.2 2004/09/19 21:06:25 mvw Exp $
 package org.argouml.uml.ui.foundation.core;
 
 import java.util.HashMap;
@@ -56,14 +56,14 @@ public class UMLParameterDirectionKindRadioButtonPanel extends
     /**
      * Constructor.
      * 
-     * @param title
-     * @param horizontal
+     * @param title the title of the panel
+     * @param horizontal determines the orientation
      */
     public UMLParameterDirectionKindRadioButtonPanel(String title,
             boolean horizontal) {
         // TODO: i18n
         super(title, labelTextsAndActionCommands, "ParameterKind:",
-                ActionSetParameterDirectionKind.SINGLETON, horizontal);
+                ActionSetParameterDirectionKind.getInstance(), horizontal);
     }
 
     /**

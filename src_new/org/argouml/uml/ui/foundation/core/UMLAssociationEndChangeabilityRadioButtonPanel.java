@@ -1,4 +1,4 @@
-// $Id: UMLAssociationEndChangeabilityRadioButtonPanel.java,v 1.6 2004/02/08 12:45:27 mvw Exp $
+// $Id: UMLAssociationEndChangeabilityRadioButtonPanel.java,v 1.7 2004/09/19 21:06:25 mvw Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -22,7 +22,7 @@
 // CALIFORNIA HAS NO OBLIGATIONS TO PROVIDE MAINTENANCE, SUPPORT,
 // UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 
-// $Id: UMLAssociationEndChangeabilityRadioButtonPanel.java,v 1.6 2004/02/08 12:45:27 mvw Exp $
+// $Id: UMLAssociationEndChangeabilityRadioButtonPanel.java,v 1.7 2004/09/19 21:06:25 mvw Exp $
 package org.argouml.uml.ui.foundation.core;
 
 import java.util.HashMap;
@@ -37,23 +37,32 @@ import org.argouml.uml.ui.UMLRadioButtonPanel;
  * @author jaap.branderhorst@xs4all.nl	
  * @since Jan 4, 2003
  */
-public class UMLAssociationEndChangeabilityRadioButtonPanel extends UMLRadioButtonPanel {
+public class UMLAssociationEndChangeabilityRadioButtonPanel 
+    extends UMLRadioButtonPanel {
 
     private static Map labelTextsAndActionCommands = new HashMap();
 
     static {
-        labelTextsAndActionCommands.put(Translator.localize("UMLMenu", "label.changeability-addonly"), ActionSetChangeability.ADDONLY_COMMAND);
-        labelTextsAndActionCommands.put(Translator.localize("UMLMenu", "label.changeability-changeable"), ActionSetChangeability.CHANGEABLE_COMMAND);
-        labelTextsAndActionCommands.put(Translator.localize("UMLMenu", "label.changeability-frozen"), ActionSetChangeability.FROZEN_COMMAND);
+        labelTextsAndActionCommands.put(Translator.localize("UMLMenu", 
+                "label.changeability-addonly"), 
+                ActionSetChangeability.ADDONLY_COMMAND);
+        labelTextsAndActionCommands.put(Translator.localize("UMLMenu", 
+                "label.changeability-changeable"), 
+                ActionSetChangeability.CHANGEABLE_COMMAND);
+        labelTextsAndActionCommands.put(Translator.localize("UMLMenu", 
+                "label.changeability-frozen"), 
+                ActionSetChangeability.FROZEN_COMMAND);
     }
 
     /**
      * Constructor for UMLAssociationEndChangeabilityRadioButtonPanel.
-     * @param title
-     * @param horizontal
+     * @param title the title for the panel
+     * @param horizontal determines the orientation
      */
-    public UMLAssociationEndChangeabilityRadioButtonPanel(String title, boolean horizontal) {
-        super(title, labelTextsAndActionCommands, "changeability", ActionSetChangeability.SINGLETON, horizontal);
+    public UMLAssociationEndChangeabilityRadioButtonPanel(
+            String title, boolean horizontal) {
+        super(title, labelTextsAndActionCommands, "changeability", 
+                ActionSetChangeability.getInstance(), horizontal);
     }
 
     /**
@@ -63,7 +72,8 @@ public class UMLAssociationEndChangeabilityRadioButtonPanel extends UMLRadioButt
         if (getTarget() != null) {
             Object target = /*(MAssociationEnd)*/ getTarget();
             Object kind = ModelFacade.getChangeability(target);
-            if (kind == null || kind.equals(ActionSetChangeability.CHANGEABLE_COMMAND)) {
+            if (kind == null 
+                || kind.equals(ActionSetChangeability.CHANGEABLE_COMMAND)) {
                 setSelected(ActionSetChangeability.CHANGEABLE_COMMAND);
             } else
 		if (kind.equals(ActionSetChangeability.ADDONLY_COMMAND)) {

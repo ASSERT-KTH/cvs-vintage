@@ -1,4 +1,4 @@
-// $Id: UMLBehavioralFeatureQueryCheckBox.java,v 1.2 2004/07/31 08:31:58 mkl Exp $
+// $Id: UMLBehavioralFeatureQueryCheckBox.java,v 1.3 2004/09/19 21:06:25 mvw Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -22,7 +22,7 @@
 // CALIFORNIA HAS NO OBLIGATIONS TO PROVIDE MAINTENANCE, SUPPORT,
 // UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 
-// $Id: UMLBehavioralFeatureQueryCheckBox.java,v 1.2 2004/07/31 08:31:58 mkl Exp $
+// $Id: UMLBehavioralFeatureQueryCheckBox.java,v 1.3 2004/09/19 21:06:25 mvw Exp $
 package org.argouml.uml.ui.foundation.core;
 
 import org.argouml.i18n.Translator;
@@ -38,7 +38,7 @@ public class UMLBehavioralFeatureQueryCheckBox extends UMLCheckBox2 {
      */
     public UMLBehavioralFeatureQueryCheckBox() {
         super(Translator.localize("UMLMenu", "label.query"),
-                ActionSetBehavioralFeatureQuery.SINGLETON, "isQuery");
+                ActionSetBehavioralFeatureQuery.getInstance(), "isQuery");
     }
 
     /**

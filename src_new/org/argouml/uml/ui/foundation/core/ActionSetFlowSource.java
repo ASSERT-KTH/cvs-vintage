@@ -1,4 +1,4 @@
-// $Id: ActionSetFlowSource.java,v 1.9 2004/02/08 12:45:27 mvw Exp $
+// $Id: ActionSetFlowSource.java,v 1.10 2004/09/19 21:06:25 mvw Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -39,7 +39,8 @@ import org.argouml.uml.ui.UMLComboBox2;
  */
 public class ActionSetFlowSource extends UMLChangeAction {
 
-    public static final ActionSetFlowSource SINGLETON = new ActionSetFlowSource();
+    private static final ActionSetFlowSource SINGLETON = 
+        new ActionSetFlowSource();
 
     /**
      * Constructor for ActionSetElementOwnershipSpecification.
@@ -60,7 +61,8 @@ public class ActionSetFlowSource extends UMLChangeAction {
                 Object flow = /*(MFlow)*/ target;
                 Object old = null;
                 if (!ModelFacade.getSources(flow).isEmpty()) {
-                    old = /*(MModelElement)*/ ModelFacade.getSources(flow).toArray()[0];
+                    old = /*(MModelElement)*/ 
+                        ModelFacade.getSources(flow).toArray()[0];
                 }
                 if (old != source.getSelectedItem()) {
                     if (source.getSelectedItem() != null) {
@@ -71,6 +73,13 @@ public class ActionSetFlowSource extends UMLChangeAction {
                 }
             }
         }
+    }
+
+    /**
+     * @return Returns the SINGLETON.
+     */
+    public static ActionSetFlowSource getInstance() {
+        return SINGLETON;
     }
 
 }

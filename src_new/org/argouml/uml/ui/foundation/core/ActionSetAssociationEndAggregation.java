@@ -1,5 +1,5 @@
-// $Id: ActionSetAssociationEndAggregation.java,v 1.8 2004/02/08 12:45:27 mvw Exp $
-// Copyright (c) 1996-2002 The Regents of the University of California. All
+// $Id: ActionSetAssociationEndAggregation.java,v 1.9 2004/09/19 21:06:25 mvw Exp $
+// Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
 // agreement is hereby granted, provided that the above copyright notice
@@ -40,12 +40,23 @@ import org.argouml.uml.ui.UMLRadioButtonPanel;
  */
 public class ActionSetAssociationEndAggregation extends UMLChangeAction {
 
-    public static final ActionSetAssociationEndAggregation SINGLETON = 
+    private static final ActionSetAssociationEndAggregation SINGLETON = 
 	new ActionSetAssociationEndAggregation();
 
-    public final static String AGGREGATE_COMMAND = "aggregate";
-    public final static String COMPOSITE_COMMAND = "composite";
-    public final static String NONE_COMMAND = "none";
+    /**
+     * AGGREGATE_COMMAND defines an aggregation kind.
+     */
+    public static final String AGGREGATE_COMMAND = "aggregate";
+    
+    /**
+     * COMPOSITE_COMMAND defines an aggregation kind.
+     */
+    public static final String COMPOSITE_COMMAND = "composite";
+    
+    /**
+     * NONE_COMMAND defines an aggregation kind.
+     */
+    public static final String NONE_COMMAND = "none";
 
     /**
      * Constructor for ActionSetElementOwnershipSpecification.
@@ -62,7 +73,8 @@ public class ActionSetAssociationEndAggregation extends UMLChangeAction {
         if (e.getSource() instanceof JRadioButton) {
             JRadioButton source = (JRadioButton) e.getSource();
             String actionCommand = source.getActionCommand();
-            Object target = ((UMLRadioButtonPanel) source.getParent()).getTarget();
+            Object target = ((UMLRadioButtonPanel) source.getParent())
+                .getTarget();
             if (org.argouml.model.ModelFacade.isAAssociationEnd(target)) {
                 Object m = /*(MAssociationEnd)*/ target;
                 Object/*MAggregationKind*/ kind = null;
@@ -76,6 +88,13 @@ public class ActionSetAssociationEndAggregation extends UMLChangeAction {
                 ModelFacade.setAggregation(m, kind);
             }
         }
+    }
+
+    /**
+     * @return Returns the SINGLETON.
+     */
+    public static ActionSetAssociationEndAggregation getInstance() {
+        return SINGLETON;
     }
 
 }

@@ -1,4 +1,4 @@
-// $Id: ActionSetAssociationEndMultiplicity.java,v 1.1 2004/07/25 13:13:56 mkl Exp $
+// $Id: ActionSetAssociationEndMultiplicity.java,v 1.2 2004/09/19 21:06:25 mvw Exp $
 // Copyright (c) 2003-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -37,7 +37,8 @@ import org.argouml.uml.ui.ActionSetMultiplicity;
 public class ActionSetAssociationEndMultiplicity extends ActionSetMultiplicity {
 
 
-    public static final ActionSetAssociationEndMultiplicity SINGLETON = new ActionSetAssociationEndMultiplicity();
+    private static final ActionSetAssociationEndMultiplicity SINGLETON = 
+        new ActionSetAssociationEndMultiplicity();
 
     /**
      * Constructor.
@@ -47,7 +48,8 @@ public class ActionSetAssociationEndMultiplicity extends ActionSetMultiplicity {
     }
 
     /**
-     * @see org.argouml.uml.ui.ActionSetMultiplicity#setSelectedItem(java.lang.Object, java.lang.Object)
+     * @see org.argouml.uml.ui.ActionSetMultiplicity#setSelectedItem(
+     * java.lang.Object, java.lang.Object)
      */
     public void setSelectedItem(Object item, Object target) {
         if (target != null
@@ -59,5 +61,12 @@ public class ActionSetAssociationEndMultiplicity extends ActionSetMultiplicity {
 
         }
 
+    }
+
+    /**
+     * @return Returns the SINGLETON.
+     */
+    public static ActionSetAssociationEndMultiplicity getInstance() {
+        return SINGLETON;
     }
 }

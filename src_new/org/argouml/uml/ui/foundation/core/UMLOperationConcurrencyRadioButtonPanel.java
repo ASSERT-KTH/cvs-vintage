@@ -1,4 +1,4 @@
-// $Id: UMLOperationConcurrencyRadioButtonPanel.java,v 1.1 2004/07/24 15:40:56 mkl Exp $
+// $Id: UMLOperationConcurrencyRadioButtonPanel.java,v 1.2 2004/09/19 21:06:25 mvw Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -22,7 +22,7 @@
 // CALIFORNIA HAS NO OBLIGATIONS TO PROVIDE MAINTENANCE, SUPPORT,
 // UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 
-// $Id: UMLOperationConcurrencyRadioButtonPanel.java,v 1.1 2004/07/24 15:40:56 mkl Exp $
+// $Id: UMLOperationConcurrencyRadioButtonPanel.java,v 1.2 2004/09/19 21:06:25 mvw Exp $
 package org.argouml.uml.ui.foundation.core;
 
 import java.util.HashMap;
@@ -54,14 +54,14 @@ public class UMLOperationConcurrencyRadioButtonPanel extends
     /**
      * Constructor.
      * 
-     * @param title
-     * @param horizontal
+     * @param title the title of the panel
+     * @param horizontal determines the orientation
      */
     public UMLOperationConcurrencyRadioButtonPanel(String title,
             boolean horizontal) {
         // TODO: i18n
         super(title, labelTextsAndActionCommands, "Concurrency",
-                ActionSetOperationConcurrencyKind.SINGLETON, horizontal);
+                ActionSetOperationConcurrencyKind.getInstance(), horizontal);
     }
 
     /**
@@ -73,13 +73,16 @@ public class UMLOperationConcurrencyRadioButtonPanel extends
             Object kind = ModelFacade.getConcurrency(target);
             if (kind == null
                     || kind.equals(ModelFacade.SEQUENTIAL_CONCURRENCYKIND)) {
-                setSelected(ActionSetOperationConcurrencyKind.SEQUENTIAL_COMMAND);
+                setSelected(ActionSetOperationConcurrencyKind
+                        .SEQUENTIAL_COMMAND);
             } else if (kind.equals(ModelFacade.GUARDED_CONCURRENCYKIND)) {
                 setSelected(ActionSetOperationConcurrencyKind.GUARDED_COMMAND);
             } else if (kind.equals(ModelFacade.CONCURRENT_CONCURRENCYKIND)) {
-                setSelected(ActionSetOperationConcurrencyKind.CONCURRENT_COMMAND);
+                setSelected(ActionSetOperationConcurrencyKind
+                        .CONCURRENT_COMMAND);
             } else {
-                setSelected(ActionSetOperationConcurrencyKind.SEQUENTIAL_COMMAND);
+                setSelected(ActionSetOperationConcurrencyKind
+                        .SEQUENTIAL_COMMAND);
             }
         }
     }

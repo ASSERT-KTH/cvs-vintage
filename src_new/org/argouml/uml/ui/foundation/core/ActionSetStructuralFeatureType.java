@@ -1,4 +1,4 @@
-// $Id: ActionSetStructuralFeatureType.java,v 1.9 2004/02/08 12:45:27 mvw Exp $
+// $Id: ActionSetStructuralFeatureType.java,v 1.10 2004/09/19 21:06:25 mvw Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -37,7 +37,7 @@ import org.argouml.uml.ui.UMLComboBox2;
  */
 public class ActionSetStructuralFeatureType extends UMLChangeAction {
 
-    public static final ActionSetStructuralFeatureType SINGLETON =
+    private static final ActionSetStructuralFeatureType SINGLETON =
         new ActionSetStructuralFeatureType();
 
     /**
@@ -70,14 +70,21 @@ public class ActionSetStructuralFeatureType extends UMLChangeAction {
         }
         if (newClassifier != oldClassifier && attr != null) {
             if (newClassifier != null) {
-                newClassifier =
-                    /*(MClassifier)*/ ModelManagementHelper.getHelper().getCorrespondingElement(
+                newClassifier = /*(MClassifier)*/ ModelManagementHelper
+                    .getHelper().getCorrespondingElement(
                                     newClassifier,
                                     ModelFacade.getModel(attr));
             }
 
             ModelFacade.setType(attr, newClassifier);
         }
+    }
+
+    /**
+     * @return Returns the sINGLETON.
+     */
+    public static ActionSetStructuralFeatureType getInstance() {
+        return SINGLETON;
     }
 
 }

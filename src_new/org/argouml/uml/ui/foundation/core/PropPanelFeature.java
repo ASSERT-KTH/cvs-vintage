@@ -1,4 +1,4 @@
-// $Id: PropPanelFeature.java,v 1.11 2004/09/12 16:47:14 mvw Exp $
+// $Id: PropPanelFeature.java,v 1.12 2004/09/19 21:06:25 mvw Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -87,7 +87,7 @@ public abstract class PropPanelFeature extends PropPanelModelElement {
                 ownerComboBoxModel = new UMLFeatureOwnerComboBoxModel();
             }
             ownerComboBox = new UMLComboBox2(ownerComboBoxModel,
-                    ActionSetFeatureOwner.SINGLETON);
+                    ActionSetFeatureOwner.getInstance());
         }
         return ownerComboBox;
     }
