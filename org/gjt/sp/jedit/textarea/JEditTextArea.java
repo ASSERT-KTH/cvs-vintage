@@ -50,7 +50,7 @@ import org.gjt.sp.util.Log;
  * jEdit's text component.
  *
  * @author Slava Pestov
- * @version $Id: JEditTextArea.java,v 1.95 2002/02/20 03:17:23 spestov Exp $
+ * @version $Id: JEditTextArea.java,v 1.96 2002/02/20 06:34:13 spestov Exp $
  */
 public class JEditTextArea extends JComponent
 {
@@ -6036,7 +6036,8 @@ loop:			for(int i = lineNo + 1; i < getLineCount(); i++)
 				return;
 			}
 
-			quickCopyDrag = ((evt.getModifiers() & MouseEvent.BUTTON2_MASK) != 0);
+			quickCopyDrag = (isQuickCopyEnabled()
+				&& (evt.getModifiers() & MouseEvent.BUTTON2_MASK) != 0);
 			blink = true;
 			invalidateLine(caretLine);
 
@@ -6335,11 +6336,13 @@ loop:			for(int i = lineNo + 1; i < getLineCount(); i++)
 				if(offset == getLineStartOffset(mouseLine))
 					mouse = offset;
 				else if(offset == getLineEndOffset(mouseLine) - 1
-					&& mouseLine != buffer.getLineCount() - 1)
+					&& mouseLine != getBuffer().getLineCount() - 1)
 					mouse = getLineEndOffset(mouseLine);
 				else
 					mouse = getLineEndOffset(mouseLine) - 1;
 			}
+
+			mouse = Math.min(getBuffer().getLength(),mouse);
 
 			if(mouse == caret)
 				return;

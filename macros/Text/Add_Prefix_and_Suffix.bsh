@@ -21,7 +21,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
- * $Id: Add_Prefix_and_Suffix.bsh,v 1.2 2001/11/06 15:04:21 jgellene Exp $
+ * $Id: Add_Prefix_and_Suffix.bsh,v 1.3 2002/02/20 06:34:13 spestov Exp $
  *
  * Notes on use:
  *
@@ -47,7 +47,7 @@ void prefixSuffixDialog()
 {
     // create dialog object and set its features
     title = "Add prefix and suffix to selected lines";
-    dialog = new JDialog(view, title, false);
+    dialog = new JDialog(view, title, true);
     content = new JPanel(new BorderLayout());
     content.setBorder(new EmptyBorder(12, 12, 12, 12));
     dialog.setContentPane(content);
@@ -119,8 +119,8 @@ void prefixSuffixDialog()
 
         // text manipulation begins here using calls
         // to jEdit methods
-		selectedLines = textArea.getSelectedLines();
-		for(i = 0; i < selectedLines.length; ++i)
+        selectedLines = textArea.getSelectedLines();
+        for(i = 0; i < selectedLines.length; ++i)
         {
             offsetBOL = textArea.getLineStartOffset(selectedLines[i]);
             textArea.setCaretPosition(offsetBOL);
