@@ -3,7 +3,7 @@
                                  Release Notes
                                  =============
 
-$Id: RELEASE-NOTES-3.3.1.txt,v 1.39 2002/02/24 03:52:00 larryi Exp $
+$Id: RELEASE-NOTES-3.3.1.txt,v 1.40 2002/02/26 03:53:50 billbarker Exp $
 
 
 This document describes the changes that have been made since the
@@ -248,6 +248,9 @@ Bug No.  Description
 
 6518	 Fix an edge condition where in some cases a JSP file beginning with
 	 a number wouldn't get mangled correctly.
+
+6604	 Fix a problem when using the AccessLog without a "Default Context" 
+	 defined.  
 
 Configuration:
 
