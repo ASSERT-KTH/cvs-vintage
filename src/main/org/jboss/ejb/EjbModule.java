@@ -85,7 +85,7 @@ import org.w3c.dom.Element;
  * @author <a href="mailto:d_jencks@users.sourceforge.net">David Jencks</a>
  * @author <a href="mailto:reverbel@ime.usp.br">Francisco Reverbel</a>
  * @author <a href="mailto:Adrian.Brock@HappeningTimes.com">Adrian.Brock</a>
- * @version $Revision: 1.25 $
+ * @version $Revision: 1.26 $
  *
  * @jmx:mbean extends="org.jboss.system.ServiceMBean"
  */
@@ -478,6 +478,23 @@ public class EjbModule
          ObjectName jmxName =  con.getJmxName();
          int jmxHash = jmxName.hashCode();
          Registry.unbind(new Integer(jmxHash));
+         // Unregister the web classloader
+         //Removing the wcl should probably be done in stop of the container,
+         // but I don't want to look for errors today.
+         //Certainly the attempt needs to be before con.destroy 
+         //where the reference is discarded.
+         ClassLoader wcl = con.getWebClassLoader();
+         if( wcl != null )
+         {
+            try
+            {
+               webServer.removeClassLoader(wcl);
+            }
+            catch(Throwable e)
+            {
+               log.warn("Failed to unregister webClassLoader", e);
+            }
+         }
          // Remove JSR-77 EJB-Wrapper
          if( con.mEJBObjectName != null )
          {
@@ -499,19 +516,6 @@ public class EjbModule
          {
             log.error("unexpected exception destroying Container: " + jmxName, e);
          } // end of try-catch
-         // Unregister the web classloader
-         ClassLoader wcl = con.getWebClassLoader();
-         if( wcl != null )
-         {
-            try
-            {
-               webServer.removeClassLoader(wcl);
-            }
-            catch(Throwable e)
-            {
-               log.warn("Failed to unregister webClassLoader", e);
-            }
-         }
       }
       log.info( "Remove JSR-77 EJB Module: " + getModuleName() );
       if (getModuleName() != null) 
