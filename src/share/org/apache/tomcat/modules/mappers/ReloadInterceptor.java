@@ -191,6 +191,7 @@ public class ReloadInterceptor extends  BaseInterceptor
 		ctx1.setReloadable( ctx.getReloadable());
 		ctx1.setDebug( ctx.getDebug());
 		ctx1.setHost( ctx.getHost());
+		ctx1.setTrusted( ctx.isTrusted());
 		e=ctx.getHostAliases();
 		while( e.hasMoreElements())
 		    ctx1.addHostAlias( (String)e.nextElement());
