@@ -207,7 +207,7 @@ The cmp-field element contains the configuration of a cmp-field.
 -->
 <!ELEMENT cmp-field (field-name, read-only?, read-time-out?,
          column-name?, not-null?, ((jdbc-type, sql-type) | (property+))?,
-         auto-increment?, dbindex? )>
+         auto-increment?, dbindex?, check-dirty-after-get?, state-factory? )>
 
 
 <!--
@@ -266,6 +266,21 @@ cmp-field element this must match a flattened propety of the
 dependent-value-class field type.
 -->
 <!ELEMENT property-name (#PCDATA)>
+
+
+<!--
+Can be true or false.
+If true, the field will be checked for dirty state at synchronization time.
+By default, all fields except for the fields of primitive and their wrapper types
+are checked for dirty state after get.
+-->
+<!ELEMENT check-dirty-after-get (#PCDATA)>
+
+<!--
+Fully qualified class name of the implementation of
+ org.jboss.ejb.plugins.cmp.jdbc.CMPFieldStateFactory.
+-->
+<!ELEMENT state-factory (#PCDATA)>
 
 <!--
 Contains the named load groups.
