@@ -32,7 +32,7 @@ import org.jboss.ejb.plugins.jaws.bmp.CustomFindByEntitiesCommand;
  * @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
  * @author <a href="mailto:shevlandj@kpi.com.au">Joe Shevland</a>
  * @author <a href="mailto:justin@j-m-f.demon.co.uk">Justin Forder</a>
- * @version $Revision: 1.7 $
+ * @version $Revision: 1.8 $
  */
 public class JDBCFindEntitiesCommand implements JPMFindEntitiesCommand
 {
@@ -51,7 +51,10 @@ public class JDBCFindEntitiesCommand implements JPMFindEntitiesCommand
       // defined and automatic finders.
       Class ejbClass = null;
       try {
-      	  ejbClass = Class.forName(factory.getMetaData().getEntity().getEjbClass());
+      	  ejbClass = 
+             factory.getContainer()
+                    .getClassLoader()
+                    .loadClass(factory.getMetaData().getEntity().getEjbClass());
 
 	      Method[] customMethods = ejbClass.getMethods();
 	      
