@@ -1,8 +1,8 @@
 
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/service/connector/Attic/Ajp13ConnectorResponse.java,v 1.4 2000/05/30 06:16:48 costin Exp $
- * $Revision: 1.4 $
- * $Date: 2000/05/30 06:16:48 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/service/connector/Attic/Ajp13ConnectorResponse.java,v 1.5 2000/07/18 18:42:46 craigmcc Exp $
+ * $Revision: 1.5 $
+ * $Date: 2000/07/18 18:42:46 $
  *
  * ====================================================================
  *
@@ -77,7 +77,7 @@ public class Ajp13ConnectorResponse extends ResponseImpl
 {
 	public static final int  MAX_SEND_SIZE = TcpConnector.MAX_PACKET_SIZE - 
 	                                         TcpConnector.H_SIZE - 
-	                                         2;
+	                                         4;
 	
     public static final byte JK_AJP13_SEND_BODY_CHUNK   = 3;
     public static final byte JK_AJP13_SEND_HEADERS      = 4;
