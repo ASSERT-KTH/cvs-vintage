@@ -55,6 +55,7 @@
            debug="on"
            deprecation="off"
            optimize="off"
+	   includes="org/**"
            excludes="**/tomcat/**,**/activation/**,**/*BeanInfo.java"
     />
     
