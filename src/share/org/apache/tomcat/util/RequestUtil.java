@@ -81,10 +81,12 @@ public class RequestUtil {
 
     public static Hashtable readFormData( Request request ) {
 
-        String contentType=request.getContentType().toLowerCase();
-        if (contentType.indexOf(";")>0)
-            contentType=contentType.substring(0,contentType.indexOf(";")-1);
-        contentType = contentType.trim();
+        String contentType=request.getContentType();
+	if (contentType != null) {
+            if (contentType.indexOf(";")>0)
+                contentType=contentType.substring(0,contentType.indexOf(";")-1);
+            contentType = contentType.toLowerCase().trim();
+        }
 
 	int contentLength=request.getContentLength();
 
