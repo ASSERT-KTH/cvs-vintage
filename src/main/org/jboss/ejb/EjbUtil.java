@@ -20,6 +20,7 @@ import org.jboss.deployment.MainDeployerMBean;
 import org.jboss.logging.Logger;
 import org.jboss.metadata.ApplicationMetaData;
 import org.jboss.metadata.BeanMetaData;
+import org.jboss.util.Strings;
 
 /** Utility methods for resolving ejb-ref and ejb-local-ref within the
  * scope of a deployment.
@@ -27,7 +28,7 @@ import org.jboss.metadata.BeanMetaData;
  * @author <a href="mailto:criege@riege.com">Christian Riege</a>
  * @author Scott.Stark@jboss.org
  *
- * @version $Revision: 1.3 $
+ * @version $Revision: 1.4 $
  */
 public final class EjbUtil
 {
@@ -111,6 +112,10 @@ public final class EjbUtil
       String ejbName = link.substring( link.indexOf('#') + 1 );
       String us = di.url.toString();
 
+      // Remove the trailing slash for unpacked deployments
+      if (us.charAt(us.length()-1) == '/')
+         us = us.substring(0, us.length()-1);
+
       String ourPath = us.substring( 0, us.lastIndexOf('/') );
 
       if( log.isTraceEnabled() )
@@ -138,7 +143,7 @@ public final class EjbUtil
 
       try
       {
-         target = new URL( ourPath );
+         target = Strings.toURL(ourPath);
       }
       catch( MalformedURLException mue )
       {
