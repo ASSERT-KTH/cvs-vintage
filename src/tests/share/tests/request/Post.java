@@ -30,7 +30,7 @@ public class Post extends TestableBase {
         StringBuffer msg = new StringBuffer("");
         String testsKey = props.getProperty("tests");
         String debugS = props.getProperty("Debug");
-        debug = Boolean.valueOf(debugS).booleanValue();   
+        debug = Boolean.valueOf(debugS).booleanValue();
 
         if (testsKey != null) {
             Vector tests = new Vector();
@@ -42,17 +42,17 @@ public class Post extends TestableBase {
             }
 
             Enumeration testNames = tests.elements();
-  
+
             while (testNames.hasMoreElements()) {
 
                 String testId = (String)testNames.nextElement();
 
                 if (! test(testId)) {
-                     status = false;
-                     String description = props.getProperty("test." + testId +
-                        ".description");
-                     msg.append("\tTest " + testId + " : " +
-                         description);
+                    status = false;
+                    String description = props.getProperty("test." + testId +
+                                                           ".description");
+                    msg.append("\tTest " + testId + " : " +
+                               description);
                 }
             }
         }
@@ -67,9 +67,9 @@ public class Post extends TestableBase {
     }
 
     private void init() {
-        
-        InputStream in = 
-            this.getClass().getResourceAsStream(PropFileName); 
+
+        InputStream in =
+          this.getClass().getResourceAsStream(PropFileName);
         if (in != null) {
             try {
                 props.load(in);
@@ -88,23 +88,25 @@ public class Post extends TestableBase {
 
         String response = dispatch(testId);
         String magnitude = props.getProperty("test." + testId + ".magnitude", "true");
-        boolean testCondition = Boolean.valueOf(magnitude).booleanValue(); 
+        boolean testCondition = Boolean.valueOf(magnitude).booleanValue();
 
-	String responseKey = props.getProperty("test." + testId + ".response");
-	boolean responseStatus = (response.indexOf(responseKey) > -1) ? true : false;
-	
-	if( testCondition!=responseStatus) {
-	    System.out.println("POST error in " + testId );
-	    System.out.println("Expecting: " + responseKey);
-	    System.out.println("Response: " + response);
-	}
+        String responseKey = props.getProperty("test." + testId + ".response");
+        boolean responseStatus = (response.indexOf(responseKey) > -1) ? true : false;
+
+        if( testCondition!=responseStatus) {
+            System.out.println("POST error in " + testId );
+            if (testCondition != true)
+                System.out.print("Not ");
+            System.out.println("Expecting: " + responseKey);
+            System.out.println("Response: " + response);
+        }
         return testCondition==responseStatus;
     }
 
     private String dispatch(String testId) {
         boolean responseStatus = false;
-	String response="";
-	
+        String response="";
+
         openIO();
 
         if (ready()) {
@@ -119,20 +121,20 @@ public class Post extends TestableBase {
 
         closeIO();
 
-        return response; 
+        return response;
     }
 
     private void openIO() {
         if (ready()) {
             closeIO();
         }
-        
+
         try {
             s = SocketHelper.getSocket();
             pw = new PrintWriter(new OutputStreamWriter(
-                s.getOutputStream()));
+                                   s.getOutputStream()));
             br = new BufferedReader(new InputStreamReader(
-                s.getInputStream()));
+                                      s.getInputStream()));
         } catch (UnknownHostException uhe) {
             uhe.printStackTrace();
         } catch (UnsupportedEncodingException uee) {
@@ -164,16 +166,16 @@ public class Post extends TestableBase {
 
     private void writeRequest(String testId)
     throws IOException {
-    	String request = props.getProperty("test." + testId + ".request");
+        String request = props.getProperty("test." + testId + ".request");
         if (request == null) {
             return;
         }
-    	String description = props.getProperty("test." + testId + ".description");
-    	String response = props.getProperty("test." + testId + ".response");
-    	String host = props.getProperty("test." + testId + ".host");
-    	String connection = props.getProperty("test." + testId + ".connection");
-    	String encoding = props.getProperty("test." + testId + ".encoding");
-    	String content = props.getProperty("test." + testId + ".content");
+        String description = props.getProperty("test." + testId + ".description");
+        String response = props.getProperty("test." + testId + ".response");
+        String host = props.getProperty("test." + testId + ".host");
+        String connection = props.getProperty("test." + testId + ".connection");
+        String encoding = props.getProperty("test." + testId + ".encoding");
+        String content = props.getProperty("test." + testId + ".content");
 
 
         if (this.debug)
@@ -196,7 +198,7 @@ public class Post extends TestableBase {
         }
 
         pw.flush();
-    
+
     }
 
     private String getResponse()
@@ -206,18 +208,18 @@ public class Post extends TestableBase {
 
         if (this.debug)
             System.out.println("<--------");
-	try {
-	    while ((line = br.readLine()) != null) {
-		if (this.debug)
-		    System.out.println("\t" + line);
-		sb.append(line);
-		sb.append('\n');
-	    }
-	} catch(java.net.SocketException ex ) {
-	    // server closed connection before reading the request.
-	    // Happens on Linux - it is safe to ignore the request.
-	    //	    System.out.println("Connection reset by peer - before full request read ");
-	}
+        try {
+            while ((line = br.readLine()) != null) {
+                if (this.debug)
+                    System.out.println("\t" + line);
+                sb.append(line);
+                sb.append('\n');
+            }
+        } catch(java.net.SocketException ex ) {
+            // server closed connection before reading the request.
+            // Happens on Linux - it is safe to ignore the request.
+            //	    System.out.println("Connection reset by peer - before full request read ");
+        }
 
         if (this.debug)
             System.out.println("-------->");
@@ -231,8 +233,8 @@ public class Post extends TestableBase {
     private PrintWriter pw = null;
     private BufferedReader br = null;
     private Properties props = null;
-        
-    private static final String PropFileName = "post.properties"; 
+
+    private static final String PropFileName = "post.properties";
     private boolean debug = false;
 
 }
