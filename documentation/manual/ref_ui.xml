@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<!-- $Id: ref_ui.xml,v 1.18 2004/01/03 21:48:25 mvw Exp $ -->
+<!-- $Id: ref_ui.xml,v 1.19 2004/01/25 06:46:15 mvw Exp $ -->
 
 <!--
 
@@ -419,8 +419,9 @@ own chapters.
         desired on the screen.</para>
 
       <para>This is achieved <!--through use of &button1; double click--> as described
-        in sections <xref linkend="s1.ref.edit_mouse"/> and
-        <xref linkend="s1.ref.details_mouse"/>.</para>
+        in section <xref linkend="s1.ref.edit_mouse"/>.
+        <!-- TODO: Description of details pane removed. To be added again! -->
+        </para>
 
       <note><para>There is no equivalent function for the explorer or to-do
         panes.</para></note>
