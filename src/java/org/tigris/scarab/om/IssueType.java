@@ -64,7 +64,7 @@ import org.tigris.scarab.util.ScarabException;
  *
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: IssueType.java,v 1.21 2002/05/15 22:03:18 jon Exp $
+ * @version $Id: IssueType.java,v 1.22 2002/06/20 22:41:57 elicia Exp $
  */
 public  class IssueType 
     extends org.tigris.scarab.om.BaseIssueType
@@ -193,5 +193,23 @@ public  class IssueType
         newTemplate.setParentId(newIssueType.getIssueTypeId());
         newTemplate.save();
         return newIssueType;
+    }
+
+    /**
+     * Delete mappings with all modules
+     */
+    public void deleteModuleMappings(ScarabUser user)
+        throws Exception
+    {
+        Criteria crit = new Criteria();
+        crit.add(RModuleIssueTypePeer.ISSUE_TYPE_ID, 
+                 getIssueTypeId());
+        List rmits = RModuleIssueTypePeer.doSelect(crit);
+        for (int i=0; i<rmits.size(); i++)
+        {
+            RModuleIssueType rmit = (RModuleIssueType)rmits.get(i);
+            rmit.delete(user);
+        }
+        ScarabCache.clear();
     }
 }

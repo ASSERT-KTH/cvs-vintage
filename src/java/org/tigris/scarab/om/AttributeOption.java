@@ -69,6 +69,7 @@ import org.apache.fulcrum.cache.GlobalCacheService;
 import org.apache.fulcrum.TurbineServices;
 
 import org.tigris.scarab.util.ScarabException;
+import org.tigris.scarab.services.cache.ScarabCache;
 
 /** 
   * This class deals with AttributeOptions. For more details
@@ -85,7 +86,7 @@ import org.tigris.scarab.util.ScarabException;
   * TurbineGlobalCache service.
   *
   * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
-  * @version $Id: AttributeOption.java,v 1.25 2002/04/26 20:24:46 jmcnally Exp $
+  * @version $Id: AttributeOption.java,v 1.26 2002/06/20 22:41:57 elicia Exp $
   */
 public class AttributeOption 
     extends BaseAttributeOption
@@ -439,6 +440,18 @@ public class AttributeOption
            parent = roo.getOption1Option();
         }
         return parent;
+    }
+
+    /**
+     * Delete mappings with all modules and issue types.
+     */
+    public void deleteModuleMappings(ScarabUser user)
+        throws Exception
+    {
+        Criteria crit = new Criteria();
+        crit.add(RModuleOptionPeer.OPTION_ID, getOptionId());
+        RModuleOptionPeer.doDelete(crit);
+        ScarabCache.clear();
     }
 
     /**
