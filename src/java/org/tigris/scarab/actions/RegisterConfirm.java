@@ -55,6 +55,7 @@ import org.apache.turbine.util.*;
 import org.apache.turbine.om.security.*;
 import org.apache.turbine.om.security.peer.*;
 import org.apache.turbine.services.resources.*;
+import org.apache.turbine.services.security.*;
 import org.apache.turbine.modules.*;
 import org.apache.turbine.modules.actions.*;
 // Scarab Stuff
@@ -69,7 +70,7 @@ import org.tigris.scarab.util.*;
         page.
         
     @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
-    @version $Id: RegisterConfirm.java,v 1.3 2001/01/15 07:50:39 jon Exp $
+    @version $Id: RegisterConfirm.java,v 1.4 2001/01/16 08:31:38 jon Exp $
 */
 public class RegisterConfirm extends VelocityAction
 {

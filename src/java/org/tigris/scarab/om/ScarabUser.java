@@ -54,6 +54,7 @@ import org.apache.turbine.om.peer.BasePeer;
 import org.apache.turbine.om.security.*;
 import org.apache.turbine.util.*;
 import org.apache.turbine.util.db.*;
+import org.apache.turbine.services.security.*;
 import org.apache.turbine.services.uniqueid.*;
 // Scarab
 import org.tigris.scarab.om.peer.ScarabUserPeer;
@@ -67,7 +68,7 @@ import org.tigris.scarab.baseom.peer.*;
     implementation needs.
 
     @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
-    @version $Id: ScarabUser.java,v 1.6 2001/01/04 03:02:11 jon Exp $
+    @version $Id: ScarabUser.java,v 1.7 2001/01/16 08:31:39 jon Exp $
 */
 public class ScarabUser extends org.apache.turbine.om.security.TurbineUser
 {    
@@ -129,21 +130,11 @@ public class ScarabUser extends org.apache.turbine.om.security.TurbineUser
     public void createNewUser()
         throws Exception
     {
-        if(ScarabUserPeer.checkExists(this))
-            throw new Exception ( "Sorry, a user with that loginid already exists!" );
-        
         // get a unique id for validating the user
         String uniqueId = TurbineUniqueId.getPseudorandomId().substring(0,10);
         // add it to the perm table
-        setPerm(ScarabUserPeer.getColumnName("CONFIRM_VALUE"), uniqueId);
-        // add it to the criteria for insert into the database
-        Criteria crit = getCriteria();        
-        crit.add (ScarabUserPeer.getColumnName("CONFIRM_VALUE"), uniqueId);
-
-        // insert the user into the database
-        ScarabUserPeer.doInsert(crit);
-        
-        // FIXME: need to define here what roles the new user starts out having.
+        setConfirmed(false, uniqueId);
+        TurbineSecurity.addUser (this, getPassword());
     }
     
     /**
@@ -201,7 +192,7 @@ public class ScarabUser extends org.apache.turbine.om.security.TurbineUser
             Criteria criteria = new Criteria();            
             criteria.add (ScarabUserPeer.getColumnName(ScarabUserPeer.USER_ID),
                           ((org.apache.turbine.om.security.TurbineUser)user)
-                          .getIdAsLong() );
+                          .getPrimaryKeyAsLong() );
             criteria.add (ScarabUserPeer.getColumnName(User.CONFIRM_VALUE), 
                           ScarabUserPeer.CONFIRM_DATA);
             ScarabUserPeer.doUpdate(criteria);
@@ -274,7 +265,7 @@ public class ScarabUser extends org.apache.turbine.om.security.TurbineUser
     public Vector getModules() throws Exception
     {
         Criteria crit = new Criteria(3)
-            .add(ScarabRModuleUserPeer.USER_ID, getId())
+            .add(ScarabRModuleUserPeer.USER_ID, getPrimaryKeyAsLong())
             .add(ScarabRModuleUserPeer.DELETED, false);
         Vector srmvs = ScarabRModuleUserPeer.doSelectJoinScarabModule(crit);
         // each srmvs represents a unique ScarabModule, so we do not 

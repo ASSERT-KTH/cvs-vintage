@@ -63,7 +63,7 @@ import org.apache.turbine.util.db.*;
     This is an object representation of the Issue table.
 
     @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
-    @version $Id: Issue.java,v 1.1 2001/01/03 07:03:26 jmcnally Exp $
+    @version $Id: Issue.java,v 1.2 2001/01/16 08:31:39 jon Exp $
 */
 public class Issue extends BaseScarabObject
 {
@@ -276,7 +276,7 @@ public class Issue extends BaseScarabObject
                     throw new Exception ( "Missing project_id!" );
             }
             setId(new Integer(project_id));
-            setCreatedBy( ((ScarabUser)data.getUser()).getIdAsInt() );
+            setCreatedBy( ((ScarabUser)data.getUser()).getPrimaryKeyAsInt() );
             setCreatedDate( new Date() );
         }
 

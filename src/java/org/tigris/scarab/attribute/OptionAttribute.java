@@ -57,7 +57,7 @@ import java.util.*;
  * this is a superclass for attributes which use option lists (SelectOne & Voted)
  *
  * @author <a href="mailto:fedor.karpelevitch@home.com">Fedor</a>
- * @version $Revision: 1.1 $ $Date: 2000/12/18 05:03:29 $
+ * @version $Revision: 1.2 $ $Date: 2001/01/16 08:31:39 $
  */
 public abstract class OptionAttribute extends Attribute
 {
@@ -80,7 +80,7 @@ public abstract class OptionAttribute extends Attribute
         for (int i=0; i<opts.size(); i++)
         {
             opt = (ScarabAttributeOption)opts.get(i);
-            optsById.put(new Integer(opt.getIdAsInt()), opt);
+            optsById.put(new Integer(opt.getPrimaryKeyAsInt()), opt);
             optsByNum.put(new Integer(opt.getNumericValue()), opt);
         }
         Object[] res = {opts, optsById, optsByNum};

@@ -59,7 +59,7 @@ import java.util.*;
 /**
  *
  * @author <a href="mailto:fedor.karpelevitch@home.com">Fedor</a>
- * @version $Revision: 1.3 $ $Date: 2001/01/03 21:41:39 $
+ * @version $Revision: 1.4 $ $Date: 2001/01/16 08:31:39 $
  */
 public abstract class VotedAttribute extends OptionAttribute
 {
@@ -81,7 +81,7 @@ public abstract class VotedAttribute extends OptionAttribute
         ScarabIssueAttributeVote vote;
         Criteria crit = new Criteria();
         crit.add(ScarabIssueAttributeVotePeer.ATTRIBUTE_ID, getId())
-            .add(ScarabIssueAttributeVotePeer.ISSUE_ID, getIssue().getIdAsInt());
+            .add(ScarabIssueAttributeVotePeer.ISSUE_ID, getIssue().getPrimaryKeyAsLong());
         Vector res = ScarabIssueAttributeVotePeer.doSelect(crit);
         for (i=0; i<res.size(); i++)
         {
@@ -90,7 +90,7 @@ public abstract class VotedAttribute extends OptionAttribute
         }
         Criteria crit1 = new Criteria()
             .add(ScarabIssueAttributeValuePeer.ATTRIBUTE_ID, getId())
-            .add(ScarabIssueAttributeValuePeer.ISSUE_ID, getIssue().getIdAsInt());
+            .add(ScarabIssueAttributeValuePeer.ISSUE_ID, getIssue().getPrimaryKeyAsLong());
         if (ScarabIssueAttributeValuePeer.doSelect(crit1).size()==1)
             loaded = true;
         result = computeResult();
@@ -111,12 +111,12 @@ public abstract class VotedAttribute extends OptionAttribute
      */
     public void setValue(String newValue,RunData data) throws Exception
     {
-        Integer userId = new Integer(((ScarabUser)data.getUser()).getIdAsInt());
+        Integer userId = new Integer(((ScarabUser)data.getUser()).getPrimaryKeyAsInt());
         ScarabAttributeOption vote = getOptionById(Integer.parseInt(newValue));
         Criteria crit = new Criteria();
-        crit.add(ScarabIssueAttributeVotePeer.ISSUE_ID, getIssue().getId())
+        crit.add(ScarabIssueAttributeVotePeer.ISSUE_ID, getIssue().getPrimaryKeyAsLong())
             .add(ScarabIssueAttributeVotePeer.ATTRIBUTE_ID, getId())
-            .add(ScarabIssueAttributeVotePeer.USER_ID, ((TurbineUser)data.getUser()).getIdAsLong());
+            .add(ScarabIssueAttributeVotePeer.USER_ID, ((TurbineUser)data.getUser()).getPrimaryKeyAsLong());
         if (votes.containsKey(userId))
         {
             if (newValue == null)

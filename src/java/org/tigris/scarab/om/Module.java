@@ -63,7 +63,7 @@ import org.tigris.scarab.util.*;
 
     @author <a href="mailto:jmcnally@collab.net">John D. McNally</a>
     @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
-    @version $Id: Module.java,v 1.1 2001/01/03 07:03:26 jmcnally Exp $
+    @version $Id: Module.java,v 1.2 2001/01/16 08:31:39 jon Exp $
 */
 public class Module extends BaseScarabObject
 {
@@ -254,7 +254,7 @@ public class Module extends BaseScarabObject
                     throw new Exception ( "Missing project_id!" );
             }
             setId(new Integer(project_id));
-            setCreatedBy( ((ScarabUser)data.getUser()).getIdAsInt() );
+            setCreatedBy( ((ScarabUser)data.getUser()).getPrimaryKeyAsInt() );
             setCreatedDate( new Date() );
         }
 

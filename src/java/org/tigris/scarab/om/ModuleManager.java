@@ -64,7 +64,7 @@ import org.apache.turbine.util.template.*;
     This class contains code for dealing with Modules.
 
     @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
-    @version $Id: ModuleManager.java,v 1.3 2001/01/03 06:58:33 jmcnally Exp $
+    @version $Id: ModuleManager.java,v 1.4 2001/01/16 08:31:39 jon Exp $
 */
 public class ModuleManager
 {
@@ -125,7 +125,7 @@ public class ModuleManager
         throws Exception
     {
         int visitorid = ((org.apache.turbine.om.security.TurbineUser)
-                         data.getUser()).getIdAsInt();
+                         data.getUser()).getPrimaryKeyAsInt();
         if (visitorid <= 0)
             return null;
         
@@ -141,9 +141,9 @@ public class ModuleManager
         for (Enumeration e = result.elements();e.hasMoreElements(); )
         {
             ScarabModule sm = (ScarabModule) e.nextElement();
-            names[i] = new Integer(sm.getIdAsInt()).toString();
+            names[i] = new Integer(sm.getPrimaryKeyAsInt()).toString();
             values[i] = sm.getName();
-            if (selectedModule != null && sm.getIdAsInt() == selectedModule.intValue())
+            if (selectedModule != null && sm.getPrimaryKeyAsInt() == selectedModule.intValue())
                 selected[i] = true;
             else
                 selected[i] = false;    
@@ -201,9 +201,9 @@ public class ModuleManager
                 throw new Exception ("Could not find a registered user for the project qa contact!");
 
             sm.setOwnerId( ((org.apache.turbine.om.security.TurbineUser)
-                            project_owner).getIdAsInt() );
+                            project_owner).getPrimaryKeyAsInt() );
             sm.setQaContactId( ((org.apache.turbine.om.security.TurbineUser)
-                                project_qacontact).getIdAsInt() );
+                                project_qacontact).getPrimaryKeyAsInt() );
         }
         return sm;
     }
@@ -252,10 +252,10 @@ public class ModuleManager
 
         // you are related to a new project
         Criteria crit = new Criteria();
-        crit.add (ScarabRModuleUserPeer.MODULE_ID, module.getIdAsLong());
+        crit.add (ScarabRModuleUserPeer.MODULE_ID, module.getPrimaryKeyAsLong());
         crit.add (ScarabRModuleUserPeer.USER_ID, 
                   ((org.apache.turbine.om.security.TurbineUser)
-                   data.getUser()).getIdAsLong());
+                   data.getUser()).getPrimaryKeyAsLong());
         ScarabRModuleUserPeer.doInsert(crit);
     }
 }
