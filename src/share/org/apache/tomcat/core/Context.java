@@ -492,8 +492,8 @@ public class Context {
 	new WorkDirInterceptor().contextInit( this );
 
 	// Read context's web.xml
-	new WebXmlInterceptor().contextInit( this );
-	// new WebXmlReader().contextInit( this );
+	// new WebXmlInterceptor().contextInit( this );
+	new WebXmlReader().contextInit( this );
 
 	// load initial servlets
 	new LoadOnStartupInterceptor().contextInit( this );
