@@ -842,6 +842,100 @@
           </mapping>
         </type-mapping>
 
+        <type-mapping> 
+            <name>MS SQLSERVER2000</name> 
+            
+            <mapping> 
+                <java-type>java.lang.Integer</java-type> 
+                <jdbc-type>INTEGER</jdbc-type> 
+                <sql-type>INTEGER</sql-type> 
+            </mapping> 
+  
+            <mapping> 
+                <java-type>java.lang.Character</java-type> 
+                <jdbc-type>CHAR</jdbc-type> 
+                <sql-type>CHAR</sql-type> 
+            </mapping> 
+  
+            <mapping> 
+                <java-type>java.lang.Short</java-type> 
+                <jdbc-type>SMALLINT</jdbc-type> 
+                <sql-type>SMALLINT</sql-type> 
+            </mapping> 
+  
+            <mapping> 
+                <java-type>java.lang.Long</java-type> 
+                <jdbc-type>BIGINT</jdbc-type> 
+                <sql-type>BIGINT</sql-type> 
+            </mapping> 
+  
+            <mapping> 
+                <java-type>java.math.BigDecimal</java-type> 
+                <jdbc-type>VARCHAR</jdbc-type> 
+                <sql-type>VARCHAR(256)</sql-type> 
+            </mapping> 
+  
+            <mapping> 
+                <java-type>java.lang.String</java-type> 
+                <jdbc-type>VARCHAR</jdbc-type> 
+                <sql-type>VARCHAR(256)</sql-type> 
+            </mapping> 
+  
+            <mapping> 
+                <java-type>java.lang.Object</java-type> 
+                <jdbc-type>JAVA_OBJECT</jdbc-type> 
+                <sql-type>IMAGE</sql-type> 
+            </mapping> 
+  
+            <mapping> 
+                <java-type>java.lang.Byte</java-type> 
+                <jdbc-type>TINYINT</jdbc-type> 
+                <sql-type>TINYINT</sql-type> 
+            </mapping> 
+  
+            <mapping> 
+                <java-type>java.sql.Timestamp</java-type> 
+                <jdbc-type>TIMESTAMP</jdbc-type> 
+                <sql-type>TIMESTAMP</sql-type> 
+            </mapping> 
+  
+            <mapping> 
+                <java-type>java.sql.Date</java-type> 
+                <jdbc-type>DATE</jdbc-type> 
+                <sql-type>DATETIME</sql-type> 
+            </mapping> 
+  
+            <mapping> 
+                <java-type>java.sql.Time</java-type> 
+                <jdbc-type>TIME</jdbc-type> 
+                <sql-type>DATETIME</sql-type> 
+            </mapping> 
+  
+            <mapping> 
+                <java-type>java.util.Date</java-type> 
+                <jdbc-type>DATE</jdbc-type> 
+                <sql-type>DATETIME</sql-type> 
+            </mapping> 
+  
+            <mapping> 
+                <java-type>java.lang.Boolean</java-type> 
+                <jdbc-type>BIT</jdbc-type> 
+                <sql-type>BIT</sql-type> 
+            </mapping> 
+  
+            <mapping> 
+                <java-type>java.lang.Float</java-type> 
+                <jdbc-type>REAL</jdbc-type> 
+                <sql-type>REAL</sql-type> 
+            </mapping> 
+  
+            <mapping> 
+                <java-type>java.lang.Double</java-type> 
+                <jdbc-type>DOUBLE</jdbc-type> 
+                <sql-type>FLOAT</sql-type> 
+            </mapping> 
+        </type-mapping>
+        
         <type-mapping>
           <name>DB2/400</name>
           <mapping>
