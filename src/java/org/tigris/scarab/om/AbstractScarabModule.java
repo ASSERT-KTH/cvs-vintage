@@ -125,7 +125,7 @@ import org.tigris.scarab.reports.ReportBridge;
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: AbstractScarabModule.java,v 1.105 2003/07/23 05:30:03 venkatesh Exp $
+ * @version $Id: AbstractScarabModule.java,v 1.106 2003/07/26 02:29:30 jmcnally Exp $
  */
 public abstract class AbstractScarabModule
     extends BaseObject
@@ -1781,10 +1781,7 @@ public abstract class AbstractScarabModule
                  getModuleId());
         crit.add(RModuleIssueTypePeer.ISSUE_TYPE_ID,
                  issueType.getIssueTypeId());
-        crit.addSelectColumn("count(" + 
-                             RModuleIssueTypePeer.ISSUE_TYPE_ID + ")");
-        return ((Record)RModuleIssueTypePeer.doSelectVillageRecords(crit)
-            .get(0)).getValue(1).asInt() > 0;
+        return RModuleIssueTypePeer.count(crit) > 0;
     }
 
     /**

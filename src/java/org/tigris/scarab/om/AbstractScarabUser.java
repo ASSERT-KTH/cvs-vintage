@@ -77,7 +77,7 @@ import org.tigris.scarab.util.ScarabConstants;
  * 
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: AbstractScarabUser.java,v 1.84 2003/07/10 23:08:43 jmcnally Exp $
+ * @version $Id: AbstractScarabUser.java,v 1.85 2003/07/26 02:29:30 jmcnally Exp $
  */
 public abstract class AbstractScarabUser 
     extends BaseObject 
@@ -826,6 +826,52 @@ public abstract class AbstractScarabUser
         return result;
     }
 
+
+    /**
+     * @see ScarabUser#getSearchableRMITs(String, String, String, String).
+     * This list does not include
+     * RModuleIssueTypes that are part of the current MITList.
+     */
+    public boolean hasAnySearchableRMITs()
+        throws Exception    
+    {
+        boolean result = false;
+        List moduleIds = getSearchableModuleIds();
+        if (!moduleIds.isEmpty()) 
+        {
+            Criteria crit = new Criteria();
+            crit.addIn(RModuleIssueTypePeer.MODULE_ID, moduleIds);
+            result = (RModuleIssueTypePeer.count(crit) > 0);
+        }
+        return result;
+    }
+
+    private List getSearchableModuleIds()
+        throws Exception    
+    {
+        Module[] userModules = getModules(ScarabSecurity.ISSUE__SEARCH);
+        List moduleIds;
+        if (userModules != null && (userModules.length > 1 ||
+                userModules.length == 1 && !userModules[0].isGlobalModule())
+           ) 
+        {
+            moduleIds = new ArrayList(userModules.length);
+            for (int i=0; i<userModules.length; i++) 
+            {
+                Module module = userModules[i];
+                if (!module.isGlobalModule()) 
+                {
+                    moduleIds.add(module.getModuleId()); 
+                }                
+            }
+        }
+        else 
+        {
+            moduleIds = Collections.EMPTY_LIST;
+        }
+        return moduleIds;
+    }
+
     /**
      * @see ScarabUser#getSearchableRMITs(String, String, String, String).
      * This list does not include
@@ -835,21 +881,14 @@ public abstract class AbstractScarabUser
                                    String sortColumn, String sortPolarity)
         throws Exception    
     {
-        List result = null;
-        Module[] userModules = getModules(ScarabSecurity.ISSUE__SEARCH);
-        if (userModules != null && (userModules.length > 1 ||
-                userModules.length == 1 && !userModules[0].isGlobalModule())
-           ) 
+        List moduleIds = getSearchableModuleIds();
+        List result;
+        if (moduleIds.isEmpty()) 
         {
-            List moduleIds = new ArrayList(userModules.length);
-            for (int i=0; i<userModules.length; i++) 
-            {
-                Module module = userModules[i];
-                if (!module.isGlobalModule()) 
-                {
-                    moduleIds.add(module.getModuleId()); 
-                }                
-            }
+            result = Collections.EMPTY_LIST;
+        }
+        else 
+        {
             Criteria crit = new Criteria();
             crit.addIn(RModuleIssueTypePeer.MODULE_ID, moduleIds);
             crit.addJoin(RModuleIssueTypePeer.ISSUE_TYPE_ID,
@@ -903,10 +942,6 @@ public abstract class AbstractScarabUser
             result = RModuleIssueTypePeer.doSelect(crit);
             filterRMITList(result, searchField, searchString);
             sortRMITList(result, sortColumn, sortPolarity);
-        }
-        else 
-        {
-            result = Collections.EMPTY_LIST;
         }
         
         return result;

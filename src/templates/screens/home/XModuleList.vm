@@ -1,6 +1,4 @@
 #set ($user = $data.User)
-#set ($isEdit = $data.Parameters.getString("queryId", "").length() > 0)
-
 <div class="app" id="xmodulelist">
 
 <div class="tabs">
@@ -16,6 +14,8 @@
 	</tr>
   </table>
 </div>
+
+#if ($user.hasAnySearchableRMITs())
 
 <form method="post" action="$link.setPage("home,XModuleList.vm")">
 <input type="hidden" name="action" value="DefineXModuleList" />
@@ -55,4 +55,8 @@
 
 $intake.declareGroups()
 </form>
+
+#else
+   <p><em>$l10n.NoMoreIssueTypes</em></p>
+#end
 </div>

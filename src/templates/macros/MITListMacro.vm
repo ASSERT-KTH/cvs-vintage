@@ -30,6 +30,8 @@
 
 <h3>$l10n.BuildListOfIssueTypes</h3>
 
+#set ($mitList = $user.CurrentMITList)
+#set ($isEdit = $data.Parameters.getString("queryId", "").length() > 0)
 #if (!$isEdit && $mitList && !$mitList.isEmpty())
 <div class="functnbar">
  <input type="submit" name="eventSubmit_do$event" value="$buttonName" />
