@@ -54,7 +54,7 @@ import org.gjt.sp.util.Log;
  *
  * @author Slava Pestov
  * @author John Gellene (API documentation)
- * @version $Id: JEditTextArea.java,v 1.194 2003/03/11 02:02:04 spestov Exp $
+ * @version $Id: JEditTextArea.java,v 1.195 2003/03/11 03:50:06 spestov Exp $
  */
 public class JEditTextArea extends JComponent
 {
@@ -6328,7 +6328,8 @@ loop:			for(int i = lineNo + 1; i < getLineCount(); i++)
 				// XXX: getMarkPosition() deprecated!
 				resizeSelection(getMarkPosition(),dragStart,extraEndVirt,control);
 
-				moveCaretPosition(dragStart,false);
+				if(!quickCopyDrag)
+					moveCaretPosition(dragStart,false);
 
 				// so that shift-click-drag works
 				dragStartLine = getMarkLine();

@@ -24,6 +24,7 @@ package org.gjt.sp.jedit.gui;
 
 //{{{ Imports
 import javax.swing.*;
+import java.awt.event.*;
 import java.awt.*;
 import org.gjt.sp.jedit.*;
 //}}}
@@ -31,7 +32,7 @@ import org.gjt.sp.jedit.*;
 /**
  * A container for dockable windows. This class should never be used
  * directly.
- * @version $Id: FloatingWindowContainer.java,v 1.9 2003/01/12 03:08:24 spestov Exp $
+ * @version $Id: FloatingWindowContainer.java,v 1.10 2003/03/11 03:50:05 spestov Exp $
  * @since jEdit 4.0pre1
  */
 public class FloatingWindowContainer extends JFrame implements DockableWindowContainer
@@ -42,6 +43,17 @@ public class FloatingWindowContainer extends JFrame implements DockableWindowCon
 		this.dockableWindowManager = dockableWindowManager;
 		setIconImage(GUIUtilities.getPluginIcon());
 		setDefaultCloseOperation(DISPOSE_ON_CLOSE);
+
+		Box caption = new Box(BoxLayout.X_AXIS);
+		caption.add(menu = new RolloverButton(GUIUtilities
+			.loadIcon("ToolbarMenu.gif")));
+		menu.addMouseListener(new MouseHandler());
+		Box separatorBox = new Box(BoxLayout.Y_AXIS);
+		separatorBox.add(Box.createVerticalStrut(3));
+		separatorBox.add(new JSeparator(JSeparator.HORIZONTAL));
+		separatorBox.add(Box.createVerticalStrut(3));
+		caption.add(separatorBox);
+		getContentPane().add(BorderLayout.NORTH,caption);
 	} //}}}
 
 	//{{{ register() method
@@ -112,5 +124,26 @@ public class FloatingWindowContainer extends JFrame implements DockableWindowCon
 	//{{{ Private members
 	private DockableWindowManager dockableWindowManager;
 	private DockableWindowManager.Entry entry;
+	private JButton menu;
 	//}}}
+
+	//{{{ MouseHandler class
+	class MouseHandler extends MouseAdapter
+	{
+		JPopupMenu popup;
+
+		public void mousePressed(MouseEvent evt)
+		{
+			if(popup != null && popup.isVisible())
+				popup.setVisible(false);
+			else
+			{
+				popup = dockableWindowManager.createPopupMenu(
+					entry.factory.name);
+				GUIUtilities.showPopupMenu(popup,
+					menu,menu.getX(),menu.getY() + menu.getHeight(),
+					false);
+			}
+		}
+	} //}}}
 }
