@@ -81,7 +81,7 @@ import org.tigris.scarab.util.word.SearchFactory;
  *
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: Attachment.java,v 1.47 2002/10/24 22:59:26 jon Exp $
+ * @version $Id: Attachment.java,v 1.48 2002/10/25 21:47:32 jmcnally Exp $
  */
 public class Attachment 
     extends BaseAttachment
@@ -479,8 +479,14 @@ public class Attachment
         BufferedOutputStream out = null;
         try
         {
+            File f = new File(path);
+            if (!f.getParentFile().exists()) 
+            {
+                f.getParentFile().mkdirs();
+            }
+            
             in = new BufferedInputStream(new FileInputStream(getFullPath()));
-            out = new BufferedOutputStream(new FileOutputStream(path));
+            out = new BufferedOutputStream(new FileOutputStream(f));
             byte[] bytes = new byte[2048];
             int s = 0;
             while ( (s = in.read(bytes)) != -1 )
