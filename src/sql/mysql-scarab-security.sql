@@ -52,6 +52,11 @@ insert into TURBINE_USER (USER_ID, LOGIN_NAME, PASSWORD_VALUE, FIRST_NAME, LAST_
     values (5, 'elicia@collab.net', 'NWoZK3kTsExUV00Ywo1G5jlUKKs=', 'Elicia', 'David', 'elicia@collab.net', 'CONFIRMED' );
 insert into TURBINE_USER (USER_ID, LOGIN_NAME, PASSWORD_VALUE, FIRST_NAME, LAST_NAME, EMAIL, CONFIRM_VALUE ) 
     values (6, 'e@elicia.org', 'NWoZK3kTsExUV00Ywo1G5jlUKKs=', 'Observer', 'Test', 'e@elicia.org', 'CONFIRMED' );
+insert into TURBINE_USER (USER_ID, LOGIN_NAME, PASSWORD_VALUE, FIRST_NAME, LAST_NAME, EMAIL, CONFIRM_VALUE ) 
+    values (7, 'nreizer@collab.net', 'NWoZK3kTsExUV00Ywo1G5jlUKKs=', 'Neal', 'Reizer', 'nreizer@collab.net', 'CONFIRMED' );
+insert into TURBINE_USER (USER_ID, LOGIN_NAME, PASSWORD_VALUE, FIRST_NAME, LAST_NAME, EMAIL, CONFIRM_VALUE ) 
+    values (8, 'tberry@collab.net', 'NWoZK3kTsExUV00Ywo1G5jlUKKs=', 'Thena', 'Berry', 'tberry@collab.net', 'CONFIRMED' );
+
 
 # create a temporary table.
 
