@@ -73,20 +73,7 @@ $renderer.render("navigations", $data, $template, "Default.vm")
  </td>
  <td width="100%" id="bodycol">
  <!-- Scarab - App -->
- <div id="topmodule">
-  <table border="0" cellspacing="0" cellpadding="3" width="100%">
-  <tr>
-   <td nowrap="nowrap">
-  <div id="navsearch">
-$renderer.render("navigations", $data, "SearchNav.vm")
-  </div>
-   </td>
-  </tr>
-  </table>
- </div>
- <!-- Scarab - App -->
-#actionErrorMsg()
-$renderer.render("screens", $data, $template)
+$renderer.render("layouts", $data, "MainContent.vm")
 <!-- Structural Elements -->
  </td>
  </tr>

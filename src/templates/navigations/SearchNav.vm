@@ -1,3 +1,9 @@
+<div id="topmodule">
+ <table border="0" cellspacing="0" cellpadding="3" width="100%">
+  <tr>
+   <td nowrap="nowrap">
+    <div id="navsearch">
+
 <form action="$link.setPage("IssueList.vm").setAction("Search")" method="get">
      #set ($module = $scarabR.CurrentModule)
      #if ($module)
@@ -26,3 +32,10 @@
       <a href="$link.setPage("Search.vm")">Custom</a>
      </small>
 </form>
+
+    </div>
+   </td>
+  </tr>
+ </table>
+</div>
+
