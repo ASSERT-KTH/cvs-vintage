@@ -58,7 +58,7 @@ import org.apache.torque.om.Persistent;
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
- * @version $Id: DependManager.java,v 1.7 2002/10/24 22:59:26 jon Exp $
+ * @version $Id: DependManager.java,v 1.8 2003/01/18 00:57:21 jon Exp $
  */
 public class DependManager
     extends BaseDependManager
@@ -73,17 +73,26 @@ public class DependManager
     {
         super();
         validFields = new HashMap();
+        validFields.put(DependPeer.DEPEND_ID, null);
         validFields.put(DependPeer.OBSERVER_ID, null);
         validFields.put(DependPeer.OBSERVED_ID, null);
+        validFields.put(DependPeer.DEPEND_TYPE_ID, null);
+        validFields.put(DependPeer.DELETED, null);
     }
 
     protected Persistent putInstanceImpl(Persistent om)
         throws TorqueException
     {
         Persistent oldOm = super.putInstanceImpl(om);
-        List listeners = (List)listenersMap.get(DependPeer.OBSERVER_ID);
+        List listeners = (List)listenersMap.get(DependPeer.DEPEND_ID);
+        notifyListeners(listeners, oldOm, om);
+        listeners = (List)listenersMap.get(DependPeer.OBSERVER_ID);
         notifyListeners(listeners, oldOm, om);
         listeners = (List)listenersMap.get(DependPeer.OBSERVED_ID);
+        notifyListeners(listeners, oldOm, om);
+        listeners = (List)listenersMap.get(DependPeer.DEPEND_TYPE_ID);
+        notifyListeners(listeners, oldOm, om);
+        listeners = (List)listenersMap.get(DependPeer.DELETED);
         notifyListeners(listeners, oldOm, om);
         return oldOm;
     }
