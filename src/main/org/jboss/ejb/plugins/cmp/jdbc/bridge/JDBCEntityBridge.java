@@ -64,7 +64,7 @@ import org.jboss.logging.Logger;
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
  * @author <a href="mailto:loubyansky@ua.fm">Alex Loubyansky</a>
  * @author <a href="mailto:heiko.rupp@cellent.de">Heiko W. Rupp</a>
- * @version $Revision: 1.40 $
+ * @version $Revision: 1.41 $
  */
 public class JDBCEntityBridge implements EntityBridge
 {
@@ -551,10 +551,7 @@ public class JDBCEntityBridge implements EntityBridge
       for(int i = 0; i < tableFields.length; ++i)
       {
          JDBCCMPFieldBridge field = tableFields[i];
-         if(loadGroup[i] &&
-            !(field.isLoaded(ctx) ||
-            field.isReadOnly() && !field.isReadTimedOut(ctx) ||
-            field.isPrimaryKeyMember()))
+         if(loadGroup[i] && !field.isPrimaryKeyMember() && !field.isLoaded(ctx))
          {
             entityState.setLoadRequired(i);
             ++fieldsToLoad;
