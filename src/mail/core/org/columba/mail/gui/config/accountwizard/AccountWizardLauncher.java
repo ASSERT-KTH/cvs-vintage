@@ -57,7 +57,7 @@ public class AccountWizardLauncher {
                                 "dialog",
                                 "accountwizard",
                                 "title"),
-                                ImageLoader.getSmallImageIcon("stock_preferences-32.png"));
+                                ImageLoader.getSmallImageIcon("stock_preferences.png"));
         CSH.setHelpIDString(wizard, "getting_started_1");
         JavaHelpSupport.enableHelp(wizard, HelpManager.getHelpBroker());
         wizard.pack();

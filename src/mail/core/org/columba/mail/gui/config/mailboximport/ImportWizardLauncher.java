@@ -63,7 +63,7 @@ public class ImportWizardLauncher {
                                 "dialog",
                                 "mailboximport",
                                 "title"),
-                                ImageLoader.getSmallImageIcon("stock_convert-32.png"));
+                                ImageLoader.getSmallImageIcon("stock_convert.png"));
                 CSH.setHelpIDString(wizard, "organising_and_managing_your_email_1");
                 JavaHelpSupport.enableHelp(wizard, HelpManager.getHelpBroker());
                 wizard.pack();
