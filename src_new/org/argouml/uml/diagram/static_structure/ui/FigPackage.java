@@ -24,7 +24,7 @@
 // File: FigPackage.java
 // Classes: FigPackage
 // Original Author: agauthie@ics.uci.edu
-// $Id: FigPackage.java,v 1.9 2002/04/03 16:13:56 mkl Exp $
+// $Id: FigPackage.java,v 1.10 2002/09/08 09:00:21 d00mst Exp $
 
 package org.argouml.uml.diagram.static_structure.ui;
 
@@ -436,22 +436,16 @@ public class FigPackage extends FigNodeModelElement {
     MModelElement me = (MModelElement) getOwner();
     MNamespace m = null;
     ProjectBrowser pb = ProjectBrowser.TheInstance;
-    if (encloser != null && (encloser.getOwner() instanceof MPackage)) {
-      m = (MNamespace) encloser.getOwner();
-    }
-    else {
-      if (pb.getTarget() instanceof UMLDiagram) {
-	m = (MNamespace) ((UMLDiagram)pb.getTarget()).getNamespace();
-      }
-    }
     try {
        // If moved into an Package
-        if (encloser.getOwner() instanceof MPackage) {
-             me.setNamespace(m);
+        if (encloser != null && encloser.getOwner() instanceof MPackage) {
+             me.setNamespace((MNamespace) encloser.getOwner());
         }
 
         // If default Namespace is not already set
-        if (me.getNamespace() == null) {
+        if (me.getNamespace() == null &&
+	    pb.getTarget() instanceof UMLDiagram) {
+	  m = (MNamespace) ((UMLDiagram)pb.getTarget()).getNamespace();
           me.setNamespace(m);
         }
     }

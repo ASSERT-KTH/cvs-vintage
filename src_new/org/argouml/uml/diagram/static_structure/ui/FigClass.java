@@ -24,7 +24,7 @@
 // File: FigClass.java
 // Classes: FigClass
 // Original Author: abonner
-// $Id: FigClass.java,v 1.30 2002/08/24 15:59:35 d00mst Exp $
+// $Id: FigClass.java,v 1.31 2002/09/08 09:00:21 d00mst Exp $
 
 // 21 Mar 2002: Jeremy Bennett (mail@jeremybennett.com). Fix for ever
 // increasing vertical size of classes with stereotypes (issue 745).
@@ -571,20 +571,22 @@ public class FigClass extends FigNodeModelElement {
     MModelElement me = (MModelElement) getOwner();
     MNamespace m = null;
     ProjectBrowser pb = ProjectBrowser.TheInstance;
-    if (me.getNamespace() == null) {
-    if ((encloser == null && me.getNamespace() == null) ||
-        (encloser != null && encloser.getOwner() instanceof MPackage)) {
-      if (encloser != null) {
-        m = (MNamespace) encloser.getOwner();
-      } else if (pb.getTarget() instanceof UMLDiagram) {
-	    m = (MNamespace) ((UMLDiagram)pb.getTarget()).getNamespace();
-      }
-      try {
-        me.setNamespace(m);
-      } catch (Exception e) {
-        Argo.log.error("could not set package", e);
-      }
+
+    try {
+       // If moved into an Package
+        if (encloser != null && encloser.getOwner() instanceof MPackage) {
+             me.setNamespace((MNamespace) encloser.getOwner());
+        }
+
+        // If default Namespace is not already set
+        if (me.getNamespace() == null &&
+	    pb.getTarget() instanceof UMLDiagram) {
+	  m = (MNamespace) ((UMLDiagram)pb.getTarget()).getNamespace();
+          me.setNamespace(m);
+        }
     }
+    catch (Exception e) {
+      System.out.println("could not set package due to:"+e + "' at "+encloser);
     }
 
     // The next if-clause is important for the Deployment-diagram
