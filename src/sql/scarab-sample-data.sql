@@ -4427,7 +4427,7 @@ insert into SCARAB_ACTIVITY(ACTIVITY_ID, ISSUE_ID, ATTRIBUTE_ID, TRANSACTION_ID,
 update ID_TABLE set NEXT_ID='2' where TABLE_NAME='PACD';
 
 /* make this issue a child issue of issue 1 */
-insert into SCARAB_DEPEND values (1, 2, 3, 0);
+insert into SCARAB_DEPEND values (1, 1, 2, 3, 0);
 
 
 /* Insert a relationship between user_ids 2,4,5 and module_ids 5,6 */
