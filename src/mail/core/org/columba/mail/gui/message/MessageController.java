@@ -44,13 +44,16 @@ import org.columba.core.charset.CharsetOwnerInterface;
 import org.columba.core.command.CommandProcessor;
 import org.columba.core.gui.focus.FocusManager;
 import org.columba.core.gui.focus.FocusOwner;
+import org.columba.core.gui.frame.DefaultContainer;
 import org.columba.core.gui.frame.FrameMediator;
 import org.columba.core.gui.menu.ColumbaPopupMenu;
-import org.columba.core.gui.util.URLController;
+import org.columba.core.gui.mimetype.MimeTypeViewer;
 import org.columba.mail.command.IFolderCommandReference;
 import org.columba.mail.folder.IMailbox;
 import org.columba.mail.gui.attachment.AttachmentController;
 import org.columba.mail.gui.attachment.IAttachmentController;
+import org.columba.mail.gui.composer.ComposerController;
+import org.columba.mail.gui.composer.ComposerModel;
 import org.columba.mail.gui.frame.MailFrameMediator;
 import org.columba.mail.gui.message.command.ViewMessageCommand;
 import org.columba.mail.gui.message.filter.PGPMessageFilter;
@@ -244,12 +247,25 @@ public class MessageController implements HyperlinkListener, MouseListener,
 
         if (url == null) { return; }
 
-        URLController c = new URLController();
+        getUrlObservable().setUrl(new ColumbaURL(url));
+        
+        //URLController c = new URLController();
 
         if (url.getProtocol().equalsIgnoreCase("mailto")) {
-            c.compose(url.getFile());
+        	// open composer
+        	ComposerController controller = new ComposerController();
+    		new DefaultContainer(controller);
+
+    		ComposerModel model = new ComposerModel();
+    		model.setTo(url.getFile());
+    		
+            // apply model
+            controller.setComposerModel(model);
+            
+            controller.updateComponents(true);
         } else {
-            c.open(url);
+        	// open url
+        	new MimeTypeViewer().openURL(url);
         }
     }
 

@@ -20,8 +20,10 @@ import java.util.Observable;
 import java.util.Observer;
 
 import org.columba.core.action.AbstractColumbaAction;
+import org.columba.core.gui.frame.DefaultContainer;
 import org.columba.core.gui.frame.FrameMediator;
-import org.columba.core.gui.util.URLController;
+import org.columba.mail.gui.composer.ComposerController;
+import org.columba.mail.gui.composer.ComposerModel;
 import org.columba.mail.gui.frame.MessageViewOwner;
 import org.columba.mail.gui.message.URLObservable;
 import org.columba.mail.gui.message.util.ColumbaURL;
@@ -56,8 +58,17 @@ public class ComposeMessageAction extends AbstractColumbaAction implements
 	 * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
 	 */
 	public void actionPerformed(ActionEvent evt) {
-		URLController c = new URLController();
-		c.compose(url.getEmailAddress());
+		ComposerController controller = new ComposerController();
+		new DefaultContainer(controller);
+
+		ComposerModel model = new ComposerModel();
+		model.setTo(url.getEmailAddress());
+		
+        // apply model
+        controller.setComposerModel(model);
+        
+        controller.updateComponents(true);
+ 
 	}
 
 	/*
