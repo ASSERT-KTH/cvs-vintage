@@ -1,4 +1,4 @@
-// $Id: ProjectMemberModel.java,v 1.17 2004/01/29 07:41:41 linus Exp $
+// $Id: ProjectMemberModel.java,v 1.18 2004/02/08 11:21:20 d00mst Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -109,7 +109,8 @@ public class ProjectMemberModel extends ProjectMember {
      * interface is removed.
      */
     public void save(String path, boolean overwrite) throws Exception {
-        save(path, overwrite, null);
+
+	throw new UnsupportedOperationException("This operation is no longer supported");
     }
 
     /**
@@ -119,30 +120,7 @@ public class ProjectMemberModel extends ProjectMember {
     public void save(String path, boolean overwrite, Writer writer)
         throws Exception {
 
-        if (writer == null) {
-            throw new IllegalArgumentException("No Writer specified!");
-        }
-
-        //if (!path.endsWith("/")) path += "/";
-        //String fullpath = path + getName();
-
-        XMIWriter xmiwriter = null;
-
-        try {
-
-            xmiwriter = new XMIWriter((MModel) _model, writer);
-            xmiwriter.gen();
-        } catch (Exception ex) {
-            logNotContainedElements(xmiwriter);
-            throw ex;
-        } finally {
-            if (xmiwriter != null) {
-                if (!xmiwriter.getNotContainedElements().isEmpty()) {
-                    logNotContainedElements(xmiwriter);
-                    throw new IncompleteXMIException();
-                }
-            }
-        }
+	save(writer);
     }
 
     /**
