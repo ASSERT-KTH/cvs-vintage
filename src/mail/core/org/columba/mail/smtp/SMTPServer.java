@@ -15,6 +15,7 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003.
 //
 //All Rights Reserved.
+
 package org.columba.mail.smtp;
 
 import org.columba.core.command.CommandCancelledException;
@@ -24,7 +25,7 @@ import org.columba.core.command.WorkerStatusController;
 
 import org.columba.mail.composer.SendableMessage;
 import org.columba.mail.config.AccountItem;
-import org.columba.mail.config.IdentityItem;
+import org.columba.mail.config.Identity;
 import org.columba.mail.config.ImapItem;
 import org.columba.mail.config.PopItem;
 import org.columba.mail.config.SmtpItem;
@@ -35,7 +36,6 @@ import org.columba.mail.util.MailResourceLoader;
 
 import org.columba.ristretto.auth.AuthenticationFactory;
 import org.columba.ristretto.message.Address;
-import org.columba.ristretto.parser.AddressParser;
 import org.columba.ristretto.parser.ParserException;
 import org.columba.ristretto.pop3.protocol.POP3Exception;
 import org.columba.ristretto.progress.ProgressObserver;
@@ -88,9 +88,9 @@ public class SMTPServer {
     protected SMTPProtocol protocol;
 
     protected AccountItem accountItem;
-
-    protected IdentityItem identityItem;
-
+    
+    protected Identity identity;
+    
     protected String fromAddress;
 
     protected Object observer;
@@ -105,7 +105,7 @@ public class SMTPServer {
 
         this.accountItem = accountItem;
 
-        identityItem = accountItem.getIdentityItem();
+        identity = accountItem.getIdentity();
         state = CLOSED;
     }
 
@@ -128,7 +128,7 @@ public class SMTPServer {
 
         // Init Values
         // user's email address
-        fromAddress = identityItem.get("address");
+        fromAddress = identity.getAddress().getMailAddress();
 
         // POP3 server host name
         SmtpItem smtpItem = accountItem.getSmtpItem();
@@ -288,8 +288,8 @@ public class SMTPServer {
                     protocol.auth(authMechanism, username, password);
                     authenticated = true;
                 } catch (SMTPException e) {
-                    passDialog.showDialog(username, accountItem.getSmtpItem()
-                            .get("host"), new String(password), savePassword);
+                    passDialog.showDialog(username, smtpItem.get("host"),
+                            new String(password), savePassword);
 
                     if (!passDialog.success()) {
                         return false;
@@ -302,11 +302,10 @@ public class SMTPServer {
 
             // authentication was successful
             // -> save name/password
-            accountItem.getSmtpItem().set("user", username);
-
-            accountItem.getSmtpItem().set("save_password", savePassword);
+            smtpItem.set("user", username);
+            smtpItem.set("save_password", savePassword);
             if (savePassword) {
-                accountItem.getSmtpItem().set("password", new String(password));
+                smtpItem.set("password", new String(password));
             }
         }
 
@@ -442,23 +441,13 @@ public class SMTPServer {
             throws SMTPException, IOException {
         // send from address and recipient list to SMTP server
         // ->all addresses have to be normalized
-        Address fromAddress;
-
-        try {
-            fromAddress = AddressParser.parseAddress(identityItem
-                    .get("address"));
-        } catch (ParserException e) {
-            throw new SMTPException(e);
-        }
-
-        protocol.mail(fromAddress);
+        protocol.mail(identity.getAddress());
 
         Iterator recipients = message.getRecipients().iterator();
 
         while (recipients.hasNext()) {
             try {
-                protocol.rcpt(AddressParser.parseAddress((String) recipients
-                        .next()));
+                protocol.rcpt(Address.parse((String) recipients.next()));
             } catch (ParserException e1) {
                 e1.printStackTrace();
             }

@@ -13,9 +13,11 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
 //
 //All Rights Reserved.
+
 package org.columba.mail.gui.config.accountwizard;
 
 import net.javaprog.ui.wizard.AbstractStep;
+import net.javaprog.ui.wizard.DataLookup;
 import net.javaprog.ui.wizard.DataModel;
 import net.javaprog.ui.wizard.DefaultDataLookup;
 
@@ -25,18 +27,14 @@ import org.columba.core.gui.util.WizardTextField;
 
 import org.columba.mail.util.MailResourceLoader;
 
+import org.columba.ristretto.message.Address;
+import org.columba.ristretto.parser.ParserException;
+
 import java.lang.reflect.Method;
 
-import javax.swing.Box;
-import javax.swing.BoxLayout;
-import javax.swing.JComponent;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.JTextField;
-import javax.swing.SwingUtilities;
+import javax.swing.*;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
-
 
 class IdentityStep extends AbstractStep {
     protected DataModel data;
@@ -65,16 +63,6 @@ class IdentityStep extends AbstractStep {
                     "dialog", "accountwizard", "name"));
         middlePanel.addLabel(nameLabel);
         nameTextField = new JTextField();
-
-        Method method = null;
-
-        try {
-            method = nameTextField.getClass().getMethod("getText", null);
-        } catch (NoSuchMethodException nsme) {
-        }
-
-        data.registerDataLookup("Identity.name",
-            new DefaultDataLookup(nameTextField, method, null));
 
         DocumentListener fieldListener = new DocumentListener() {
                 public void removeUpdate(DocumentEvent e) {
@@ -116,8 +104,6 @@ class IdentityStep extends AbstractStep {
                     "dialog", "accountwizard", "address"));
         middlePanel.addLabel(addressLabel);
         addressTextField = new JTextField();
-        data.registerDataLookup("Identity.address",
-            new DefaultDataLookup(addressTextField, method, null));
         addressTextField.getDocument().addDocumentListener(fieldListener);
         addressLabel.setLabelFor(addressTextField);
         middlePanel.addTextField(addressTextField);
@@ -129,6 +115,10 @@ class IdentityStep extends AbstractStep {
                     "dialog", "accountwizard", "accountname"));
         middlePanel.addLabel(accountNameLabel);
         accountNameTextField = new JTextField();
+        Method method = null;
+        try {
+            method = accountNameTextField.getClass().getMethod("getText", null);
+        } catch (NoSuchMethodException nsme) {}
         data.registerDataLookup("Identity.accountName",
             new DefaultDataLookup(accountNameTextField, method, null));
         accountNameTextField.getDocument().addDocumentListener(fieldListener);
@@ -139,6 +129,17 @@ class IdentityStep extends AbstractStep {
                 "Bill's private mail"));
         component.add(middlePanel);
 
+        data.registerDataLookup("Identity.address", new DataLookup() {
+            public Object lookupData() {
+                try {
+                    Address address = Address.parse(addressTextField.getText());
+                    address.setDisplayName(nameTextField.getText());
+                    return address;
+                } catch (ParserException pe) {
+                    return null;
+                }
+            }
+        });
         return component;
     }
 

@@ -15,6 +15,7 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003.
 //
 //All Rights Reserved.
+
 package org.columba.mail.config;
 
 import java.net.URL;
@@ -24,11 +25,13 @@ import org.columba.core.io.DiskIO;
 import org.columba.core.xml.XmlElement;
 import org.columba.core.xml.XmlIO;
 
+import org.columba.ristretto.message.Address;
+
 public class AccountList extends DefaultItem {
 
-    int nextUid;
+    protected int nextUid;
 
-    AccountItem defaultAccount;
+    protected AccountItem defaultAccount;
 
     public AccountList(XmlElement root) {
         super(root);
@@ -113,11 +116,12 @@ public class AccountList extends DefaultItem {
 
         for (int i = 0; i < count(); i++) {
             AccountItem item = get(i);
-            IdentityItem identity = item.getIdentityItem();
-            String str = (String) identity.get("address");
+            Identity identity = item.getIdentity();
+            String str = identity.getAddress().toString();
             if (address.indexOf(str) != -1) {
-            // found match
-            return item; }
+                // found match
+                return item;
+            }
         }
         return null;
     }
@@ -138,8 +142,9 @@ public class AccountList extends DefaultItem {
                 server = account.getElement("imapserver");
             }
 
-            if (server.getAttribute("host").equals(host)) { return new AccountItem(
-                    account); }
+            if (server.getAttribute("host").equals(host)) {
+                return new AccountItem(account);
+            }
         }
 
         for (int i = 0; i < count(); i++) {
@@ -147,26 +152,15 @@ public class AccountList extends DefaultItem {
 
             identity = account.getElement("identity");
 
-            if (identity.getAttribute("address").indexOf(address) != -1) { return new AccountItem(
-                    account); }
+            if (identity.getAttribute("address").indexOf(address) != -1) {
+                return new AccountItem(account);
+            }
         }
 
         return null;
     }
 
-    /*
-     * public String hostGetAccountName(String host) { for (int i = 0; i <
-     * count(); i++) { AccountItem item = (AccountItem) get(i); String s = null;
-     * if (item.isPopAccount()) { PopItem pop = item.getPopItem(); s =
-     * pop.getHost(); } else { ImapItem imap = item.getImapItem(); s =
-     * imap.getHost(); }
-     * 
-     * if (s.equals(host)) return item.getName(); }
-     * 
-     * return null; }
-     */
     public AccountItem addEmptyAccount(String type) {
-        
         // path to account templates for POP3/IMAP
         String hstr = "org/columba/mail/config/account_template.xml";
         URL url = DiskIO.getResourceURL(hstr);

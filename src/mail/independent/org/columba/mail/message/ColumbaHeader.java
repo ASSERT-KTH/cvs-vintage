@@ -13,6 +13,7 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
 //
 //All Rights Reserved.
+
 package org.columba.mail.message;
 
 import org.columba.core.gui.util.ColorFactory;
@@ -27,7 +28,6 @@ import org.columba.ristretto.message.Header;
 import org.columba.ristretto.message.MimeHeader;
 import org.columba.ristretto.message.MimeType;
 import org.columba.ristretto.parser.HeaderParser;
-
 
 /**
  * Represents a RFC822-compliant header
@@ -79,7 +79,7 @@ public class ColumbaHeader {
         if (from != null) {
             attributes.put("columba.from", from);
         } else {
-            attributes.put("columba.from", new Address(""));
+            attributes.put("columba.from", "");
         }
 
         Address[] to = basicHeader.getTo();
@@ -88,7 +88,7 @@ public class ColumbaHeader {
             //We save only the first item in the to-list
             attributes.put("columba.to", to[0]);
         } else {
-            attributes.put("columba.to", new Address(""));
+            attributes.put("columba.to", "");
         }
 
         Address[] cc = basicHeader.getCc();
@@ -97,7 +97,7 @@ public class ColumbaHeader {
             //We save only the first item in the cc-list            
             attributes.put("columba.cc", cc[0]);
         } else {
-            attributes.put("columba.cc", new Address(""));
+            attributes.put("columba.cc", "");
         }
 
         attributes.put("columba.host", "");

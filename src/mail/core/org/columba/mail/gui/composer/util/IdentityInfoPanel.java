@@ -13,13 +13,15 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
 //
 //All Rights Reserved.
+
 package org.columba.mail.gui.composer.util;
 
 import org.columba.core.gui.util.CInfoPanel;
 import org.columba.core.gui.util.ImageLoader;
 
 import org.columba.mail.config.AccountItem;
-import org.columba.mail.config.IdentityItem;
+
+import org.columba.ristretto.message.Address;
 
 import java.awt.Color;
 import java.awt.GridBagConstraints;
@@ -28,7 +30,6 @@ import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
-
 
 public class IdentityInfoPanel extends CInfoPanel {
     private JLabel label;
@@ -76,10 +77,7 @@ public class IdentityInfoPanel extends CInfoPanel {
 
     public void set(AccountItem item) {
         String accountName = item.getName();
-
-        IdentityItem identity = item.getIdentityItem();
-        String address = identity.get("address");
-        String name = identity.get("name");
+        Address identity = item.getIdentity().getAddress();
 
         if (item.isPopAccount()) {
             label.setIcon(image1);
@@ -87,7 +85,7 @@ public class IdentityInfoPanel extends CInfoPanel {
             label.setIcon(image2);
         }
 
-        label.setText(accountName + ":    " + name + " <" + address + ">");
+        label.setText(accountName + ":    " + identity.toString());
 
         revalidate();
         repaint();

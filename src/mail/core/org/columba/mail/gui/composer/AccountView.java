@@ -13,12 +13,14 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
 //
 //All Rights Reserved. Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
+
 package org.columba.mail.gui.composer;
 
 import org.columba.core.gui.util.ImageLoader;
 
 import org.columba.mail.config.AccountItem;
-import org.columba.mail.config.IdentityItem;
+
+import org.columba.ristretto.message.Address;
 
 import java.awt.Component;
 
@@ -27,7 +29,6 @@ import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.ListCellRenderer;
-
 
 /**
  * @author frd
@@ -50,8 +51,8 @@ public class AccountView extends JComboBox {
 
 
 class AccountListRenderer extends JLabel implements ListCellRenderer {
-    ImageIcon image1;
-    ImageIcon image2;
+    protected ImageIcon image1;
+    protected ImageIcon image2;
 
     public AccountListRenderer() {
         setOpaque(true);
@@ -72,13 +73,9 @@ class AccountListRenderer extends JLabel implements ListCellRenderer {
         if (value != null) {
             AccountItem item = (AccountItem) value;
             String accountName = item.getName();
-            IdentityItem identity = item.getIdentityItem();
-            String address = identity.get("address");
-            String name = identity.get("name");
+            Address identity = item.getIdentity().getAddress();
 
-            String result = accountName + ":   " + name + " <" + address + ">";
-
-            setText(result);
+            setText(accountName + ":   " + identity.toString());
 
             if (item.isPopAccount()) {
                 setIcon(image1);

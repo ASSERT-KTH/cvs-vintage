@@ -13,6 +13,7 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
 //
 //All Rights Reserved.
+
 package org.columba.mail.config;
 
 import org.columba.core.config.DefaultItem;
@@ -20,11 +21,12 @@ import org.columba.core.xml.XmlElement;
 
 import org.columba.mail.main.MailInterface;
 
+import org.columba.ristretto.parser.ParserException;
 
 public class AccountItem extends DefaultItem {
     private AccountItem defaultAccount;
     private boolean pop3;
-    private IdentityItem identity;
+    private Identity identity;
     private PopItem pop;
     private ImapItem imap;
     private SmtpItem smtp;
@@ -147,32 +149,29 @@ public class AccountItem extends DefaultItem {
         return imap;
     }
 
-    public IdentityItem getIdentityItem() {
+    /**
+     * Returns the identity used with this account.
+     */
+    public Identity getIdentity() {
         if (identity == null) {
-            identity = new IdentityItem(getRoot().getElement("identity"));
-        }
-
-        if (identity.getBoolean("use_default_account")) {
-            // return default-account identityItem instead
-            IdentityItem item = MailInterface.config.getAccountList()
-                                                    .getDefaultAccount()
-                                                    .getIdentityItem();
-
-            return item;
+            XmlElement e = getRoot().getElement("identity");
+            if (Boolean.valueOf(e.getAttribute("use_default_account", "false"))
+                    .booleanValue()) {
+                // return default-account identityItem instead
+                return MailInterface.config.getAccountList().getDefaultAccount()
+                        .getIdentity();
+            } else {
+                try {
+                    identity = new Identity(e);
+                } catch (ParserException ex) {
+                    ex.printStackTrace();
+                }
+            }
         }
 
         return identity;
     }
 
-    /*
-    public boolean isPopAccount()
-    {
-        if ( pop == null )
-            return false;
-        else
-            return true;
-    }
-    */
     public void setName(String str) {
         set("name", str);
     }

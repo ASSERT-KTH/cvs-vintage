@@ -13,6 +13,7 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
 //
 //All Rights Reserved.
+
 package org.columba.mail.mailchecking;
 
 import org.columba.core.action.AbstractColumbaAction;
@@ -24,7 +25,6 @@ import org.columba.mail.config.AccountItem;
 import java.awt.event.ActionEvent;
 
 import javax.swing.Timer;
-
 
 /**
  * For each account there exists one check action.
@@ -56,7 +56,7 @@ public abstract class AbstractMailCheckingAction extends AbstractColumbaAction {
     private void createName() {
         //	generate label for menuitem
         String name = accountItem.getName();
-        String address = accountItem.getIdentityItem().get("address");
+        String address = accountItem.getIdentity().getAddress().getMailAddress();
         String menuItemName = name + " (" + address + ")";
 
         putValue(AbstractColumbaAction.NAME, menuItemName);

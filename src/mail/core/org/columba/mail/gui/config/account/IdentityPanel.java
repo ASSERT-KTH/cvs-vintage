@@ -25,23 +25,19 @@ import org.columba.core.gui.util.DefaultFormBuilder;
 import org.columba.core.gui.util.LabelWithMnemonic;
 
 import org.columba.mail.config.AccountItem;
-import org.columba.mail.config.IdentityItem;
+import org.columba.mail.config.Identity;
 import org.columba.mail.main.MailInterface;
 import org.columba.mail.util.MailResourceLoader;
+
+import org.columba.ristretto.message.Address;
+import org.columba.ristretto.parser.ParserException;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 import java.io.File;
 
-import javax.swing.JButton;
-import javax.swing.JCheckBox;
-import javax.swing.JFileChooser;
-import javax.swing.JLabel;
-import javax.swing.JOptionPane;
-import javax.swing.JPanel;
-import javax.swing.JTextArea;
-import javax.swing.JTextField;
+import javax.swing.*;
 
 public class IdentityPanel extends DefaultPanel implements ActionListener {
     private JLabel nameLabel;
@@ -57,73 +53,65 @@ public class IdentityPanel extends DefaultPanel implements ActionListener {
     private JCheckBox defaultAccountCheckBox;
     private JButton selectSignatureButton;
     private JCheckBox attachsignatureCheckBox;
-    private JTextArea attachsignatureTextArea;
-    private IdentityItem identityItem;
-    private AccountItem accountItem;
+    private AccountItem account;
 
     //private ConfigFrame frame;
-    public IdentityPanel(AccountItem account, IdentityItem identity) {
+    public IdentityPanel(AccountItem account) {
         super();
 
         //this.frame = frame;
-        this.accountItem = account;
-        this.identityItem = identity;
+        this.account = account;
 
         initComponents();
-
         layoutComponents();
-
         updateComponents(true);
     }
 
-    protected String getAccountName() {
-        return accountnameTextField.getText();
-    }
-
-    protected String getAddress() {
-        return addressTextField.getText();
-    }
-
     protected void updateComponents(boolean b) {
+        Identity identity = account.getIdentity();
         if (b) {
-            accountnameTextField.setText(accountItem.getName());
-            nameTextField.setText(identityItem.get("name"));
-            addressTextField.setText(identityItem.get("address"));
-            replyaddressTextField.setText(identityItem.get("reply_address"));
-            organisationTextField.setText(identityItem.get("organisation"));
+            accountnameTextField.setText(account.getName());
+            Address address = identity.getAddress();
+            nameTextField.setText(address.getDisplayName());
+            addressTextField.setText(address.getMailAddress());
+            address = identity.getReplyToAddress();
+            replyaddressTextField.setText(address.getMailAddress());
+            organisationTextField.setText(identity.getOrganisation());
+            File signature = identity.getSignature();
+            selectSignatureButton.setText(
+                    signature == null ? "~/.signature" : signature.getPath());
 
-            selectSignatureButton.setText(identityItem.get("attach_file"));
+            attachsignatureCheckBox.setSelected(signature != null);
 
-            /*
-             * attachsignatureTextArea.setText(identityItem.getSignature());
-             */
-            attachsignatureCheckBox.setSelected(identityItem.getBoolean(
-                    "attach_signature"));
-
-            defaultAccountCheckBox.setSelected(MailInterface.config.getAccountList()
-                                                                   .getDefaultAccountUid() == accountItem.getInteger(
-                    "uid"));
+            defaultAccountCheckBox.setSelected(
+                    MailInterface.config.getAccountList().getDefaultAccountUid()
+                        == account.getInteger("uid"));
         } else {
-            if (nameTextField.getText() != null) {
-                identityItem.set("name", nameTextField.getText());
+            try {
+                Address address = Address.parse(addressTextField.getText());
+                if (nameTextField.getText() != null) {
+                    address.setDisplayName(nameTextField.getText());
+                }
+                identity.setAddress(address);
+                if (replyaddressTextField.getText().length() > 0) {
+                    address = Address.parse(replyaddressTextField.getText());
+                } else {
+                    address = null;
+                }
+                identity.setReplyToAddress(address);
+            } catch (ParserException pe) {} //does not occur
+            identity.setOrganisation(organisationTextField.getText());
+            if (attachsignatureCheckBox.isSelected()) {
+                identity.setSignature(new File(selectSignatureButton.getText()));
+            } else {
+                identity.setSignature(null);
             }
 
-            identityItem.set("address", addressTextField.getText());
-            identityItem.set("organisation", organisationTextField.getText());
-            identityItem.set("reply_address", replyaddressTextField.getText());
-
-            identityItem.set("signature_file", selectSignatureButton.getText());
-
-            /*
-             * identityItem.setSignature(attachsignatureTextArea.getText());
-             */
-            identityItem.set("attach_signature",
-                attachsignatureCheckBox.isSelected());
-
-            accountItem.setName(accountnameTextField.getText());
+            account.setName(accountnameTextField.getText());
 
             if (defaultAccountCheckBox.isSelected()) {
-                MailInterface.config.getAccountList().setDefaultAccount(accountItem.getUid());
+                MailInterface.config.getAccountList().setDefaultAccount(
+                    account.getUid());
             }
         }
     }
@@ -369,35 +357,33 @@ public class IdentityPanel extends DefaultPanel implements ActionListener {
     }
 
     public boolean isFinished() {
-        boolean result = true;
-
-        String name = getAccountName();
-        String address = getAddress();
-
-        if (name.length() == 0) {
-            JOptionPane.showMessageDialog(null,
+        String address = addressTextField.getText();
+        if (accountnameTextField.getText().length() == 0) {
+            JOptionPane.showMessageDialog(this,
                 MailResourceLoader.getString("dialog", "account", "namelabel"));
-
-            //$NON-NLS-1$
             return false;
         } else if (address.length() == 0) {
-            JOptionPane.showMessageDialog(null,
+            JOptionPane.showMessageDialog(this,
                 MailResourceLoader.getString("dialog", "account", "addresslabel"));
-
-            //$NON-NLS-1$
             return false;
+        } else {
+            try {
+                Address.parse(address);
+            } catch (ParserException pe) {
+                JOptionPane.showMessageDialog(this,
+                    MailResourceLoader.getString("dialog", "account", "invalidaddress"));
+                return false;
+            }
         }
-
         return true;
     }
 
     public void actionPerformed(ActionEvent e) {
         String action = e.getActionCommand();
 
-        if (action.equals("CHOOSE")) //$NON-NLS-1$
-         {
+        if (action.equals("CHOOSE")) {
             JFileChooser fc = new JFileChooser();
-            int returnVal = fc.showOpenDialog(null);
+            int returnVal = fc.showOpenDialog(this);
 
             if (returnVal == JFileChooser.APPROVE_OPTION) {
                 File file = fc.getSelectedFile();

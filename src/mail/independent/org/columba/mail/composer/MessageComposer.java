@@ -13,6 +13,7 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
 //
 //All Rights Reserved.
+
 package org.columba.mail.composer;
 
 import org.columba.addressbook.folder.HeaderItem;
@@ -22,7 +23,7 @@ import org.columba.core.command.WorkerStatusController;
 import org.columba.core.xml.XmlElement;
 
 import org.columba.mail.config.AccountItem;
-import org.columba.mail.config.IdentityItem;
+import org.columba.mail.config.Identity;
 import org.columba.mail.config.PGPItem;
 import org.columba.mail.gui.composer.ComposerModel;
 import org.columba.mail.main.MailInterface;
@@ -52,7 +53,6 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
-
 
 public class MessageComposer {
     private ComposerModel model;
@@ -89,9 +89,9 @@ public class MessageComposer {
                 EncodedWord.QUOTED_PRINTABLE).toString());
 
         AccountItem item = model.getAccountItem();
-        IdentityItem identity = item.getIdentityItem();
+        Identity identity = item.getIdentity();
 
-        header.set("From", identity.get("address"));
+        header.set("From", identity.getAddress().toString());
         header.set("X-Priority", model.getPriority());
 
         /*
@@ -105,17 +105,17 @@ if (priority != null) {
 */
         header.set("Mime-Version", "1.0");
 
-        String organisation = identity.get("organisation");
+        String organisation = identity.getOrganisation();
 
-        if (organisation.length() > 0) {
+        if (organisation != null && organisation.length() > 0) {
             header.set("Organisation", organisation);
         }
 
         // reply-to
-        String replyAddress = identity.get("reply_address");
+        Address replyAddress = identity.getReplyToAddress();
 
-        if (replyAddress.length() > 0) {
-            header.set("Reply-To", replyAddress);
+        if (replyAddress != null) {
+            header.set("Reply-To", replyAddress.getMailAddress());
         }
 
         String messageID = MessageIDGenerator.generate();
@@ -136,7 +136,7 @@ if (priority != null) {
         header.set("X-Mailer",
             "Columba v" + org.columba.core.main.MainInterface.version);
 
-        header.set("columba.from", new Address(identity.get("address")));
+        header.set("columba.from", identity.getAddress());
 
         // date
         Date date = new Date();
@@ -162,8 +162,7 @@ if (priority != null) {
  * @return The signature for the mail as a String. The Signature is character encoded with the caracter set from the
  * model
  */
-    protected String getSignature(IdentityItem item) {
-        File file = new File(item.get("signature_file"));
+    protected String getSignature(File file) {
         StringBuffer strbuf = new StringBuffer();
 
         try {
@@ -199,35 +198,6 @@ BufferedReader in =
 
         return null;
     }
-
-    /*
-        protected String getSignature(IdentityItem item) {
-
-                File file = new File(item.getSignatureFile());
-                StringBuffer strbuf = new StringBuffer();
-                try {
-                        //BufferedReader in = new BufferedReader(new FileReader(file));
-                        BufferedReader in =
-                                new BufferedReader(
-                                        new InputStreamReader(
-                                                new FileInputStream(file),
-                                                model.getCharsetName()));
-                        String str;
-
-                        while ((str = in.readLine()) != null) {
-                                strbuf.append(str + "\n");
-                        }
-
-                        in.close();
-                } catch (IOException ex) {
-                        ex.printStackTrace();
-                        return "";
-                }
-
-                return strbuf.toString();
-
-        }
-*/
 
     /**
  * Composes a multipart/alternative mime part for the body of a message
@@ -328,11 +298,11 @@ BufferedReader in =
 
         // add signature if defined
         AccountItem item = model.getAccountItem();
-        IdentityItem identity = item.getIdentityItem();
-        boolean appendSignature = identity.getBoolean("attach_signature");
+        Identity identity = item.getIdentity();
+        File signatureFile = identity.getSignature();
 
-        if (appendSignature == true) {
-            String signature = getSignature(identity);
+        if (signatureFile != null) {
+            String signature = getSignature(signatureFile);
 
             if (signature != null) {
                 buf.append("\r\n\r\n");
@@ -396,11 +366,11 @@ BufferedReader in =
         }
 
         AccountItem item = model.getAccountItem();
-        IdentityItem identity = item.getIdentityItem();
-        boolean appendSignature = identity.getBoolean("attach_signature");
+        Identity identity = item.getIdentity();
+        File signatureFile = identity.getSignature();
 
-        if (appendSignature == true) {
-            String signature = getSignature(identity);
+        if (signatureFile != null) {
+            String signature = getSignature(signatureFile);
 
             if (signature != null) {
                 body = body + "\r\n\r\n" + signature;
@@ -501,7 +471,7 @@ BufferedReader in =
             if ((idStr == null) || (idStr.length() == 0)) {
                 //  Set id on from address
                 item.set("id",
-                    model.getAccountItem().getIdentityItem().get("address"));
+                    model.getAccountItem().getIdentity().getAddress().getMailAddress());
             }
 
             PGPMimePart signPart = new PGPMimePart(new MimeHeader("multipart",
@@ -539,7 +509,7 @@ BufferedReader in =
 
         if (headerItemList.size() > 0) {
             header.set("columba.to",
-                new Address((String) ((HeaderItem) headerItemList.get(0)).get(
+                Address.parse((String) ((HeaderItem) headerItemList.get(0)).get(
                         "displayname")));
         }
 
@@ -547,7 +517,7 @@ BufferedReader in =
 
         if (headerItemList.size() > 0) {
             header.set("columba.cc",
-                new Address((String) ((HeaderItem) headerItemList.get(0)).get(
+                Address.parse((String) ((HeaderItem) headerItemList.get(0)).get(
                         "displayname")));
         }
 

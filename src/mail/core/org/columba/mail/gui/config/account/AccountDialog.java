@@ -15,6 +15,7 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003.
 //
 //All Rights Reserved.
+
 package org.columba.mail.gui.config.account;
 
 import org.columba.core.gui.util.ButtonWithMnemonic;
@@ -22,7 +23,6 @@ import org.columba.core.gui.util.DialogStore;
 import org.columba.core.help.HelpManager;
 
 import org.columba.mail.config.AccountItem;
-import org.columba.mail.config.IdentityItem;
 import org.columba.mail.config.SmtpItem;
 import org.columba.mail.folder.imap.IMAPRootFolder;
 import org.columba.mail.main.MailInterface;
@@ -41,7 +41,9 @@ import javax.swing.JPanel;
 import javax.swing.JTabbedPane;
 import javax.swing.KeyStroke;
 
-
+/**
+ * Dialog for managing accounts and their settings.
+ */
 public class AccountDialog implements ActionListener {
     private JDialog dialog;
     private AccountItem accountItem;
@@ -68,8 +70,7 @@ public class AccountDialog implements ActionListener {
     }
 
     protected void createPanels() {
-        IdentityItem identityItem = accountItem.getIdentityItem();
-        identityPanel = new IdentityPanel(accountItem, identityItem);
+        identityPanel = new IdentityPanel(accountItem);
 
         receiveOptionsPanel = new ReceiveOptionsPanel(dialog, accountItem);
 
@@ -185,7 +186,7 @@ public class AccountDialog implements ActionListener {
     protected boolean isFinished() {
         boolean result = identityPanel.isFinished();
 
-        if (result == false) {
+        if (!result) {
             tp.setSelectedComponent(identityPanel);
 
             return false;
@@ -193,7 +194,7 @@ public class AccountDialog implements ActionListener {
 
         result = incomingServerPanel.isFinished();
 
-        if (result == false) {
+        if (!result) {
             tp.setSelectedComponent(incomingServerPanel);
 
             return false;
@@ -201,7 +202,7 @@ public class AccountDialog implements ActionListener {
 
         result = outgoingServerPanel.isFinished();
 
-        if (result == false) {
+        if (!result) {
             tp.setSelectedComponent(outgoingServerPanel);
 
             return false;
@@ -216,9 +217,7 @@ public class AccountDialog implements ActionListener {
         if (action.equals("OK")) //$NON-NLS-1$
          {
             // check if the user entered valid data
-            boolean isFinished = isFinished();
-
-            if (isFinished == false) {
+            if (!isFinished()) {
                 return;
             }
 
@@ -246,8 +245,7 @@ public class AccountDialog implements ActionListener {
             MailInterface.mailCheckingManager.update();
 
             dialog.setVisible(false);
-        } else if (action.equals("CANCEL")) //$NON-NLS-1$
-         {
+        } else if (action.equals("CANCEL")) {
             dialog.setVisible(false);
         }
     }

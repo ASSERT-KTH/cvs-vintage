@@ -13,16 +13,15 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
 //
 //All Rights Reserved.
+
 package org.columba.mail.gui.config.accountwizard;
 
 import net.javaprog.ui.wizard.DataModel;
 import net.javaprog.ui.wizard.WizardModelEvent;
 import net.javaprog.ui.wizard.WizardModelListener;
 
-import org.columba.core.main.MainInterface;
-
 import org.columba.mail.config.AccountItem;
-import org.columba.mail.config.IdentityItem;
+import org.columba.mail.config.Identity;
 import org.columba.mail.config.ImapItem;
 import org.columba.mail.config.PopItem;
 import org.columba.mail.folder.AbstractFolder;
@@ -30,6 +29,7 @@ import org.columba.mail.folder.imap.IMAPFolder;
 import org.columba.mail.folder.imap.IMAPRootFolder;
 import org.columba.mail.main.MailInterface;
 
+import org.columba.ristretto.message.Address;
 
 class AccountCreator implements WizardModelListener {
     protected DataModel data;
@@ -49,10 +49,7 @@ class AccountCreator implements WizardModelListener {
         }
 
         account.setName((String) data.getData("Identity.accountName"));
-
-        IdentityItem identity = account.getIdentityItem();
-        identity.set("name", (String) data.getData("Identity.name"));
-        identity.set("address", (String) data.getData("Identity.address"));
+        account.getIdentity().setAddress((Address)data.getData("Identity.address"));
 
         if (type.equals("POP3")) {
             PopItem pop = account.getPopItem();
@@ -69,7 +66,7 @@ class AccountCreator implements WizardModelListener {
             //       -> this way "path" would be handled in the factory, too
             // parent directory for mail folders
             // for example: ".columba/mail/"
-            String path = MainInterface.config.getConfigDirectory() + "/mail/";
+            String path = MailInterface.config.getConfigDirectory().getPath();
 
             IMAPRootFolder parentFolder = new IMAPRootFolder(account, path);
             ((AbstractFolder) MailInterface.treeModel.getRoot()).add(parentFolder);
