@@ -137,7 +137,11 @@ public class PolicyInterceptor extends BaseInterceptor {
 	FilePermission fp = new FilePermission(base + "/-", "read");
 	if( fp != null )
 	    p.add((Permission)fp);
-	
+	// JspFactory.getPageContext() runs in JSP Context and needs the below
+	// permission during the init of a servlet generated from a JSP.
+	PropertyPermission pp = new PropertyPermission("line.separator","read");
+	if( pp != null )
+	    p.add((Permission)pp);
     }
     
     public void contextInit( Context context)
@@ -184,7 +188,7 @@ public class PolicyInterceptor extends BaseInterceptor {
 		    p.add((Permission)enum.nextElement());
 		}
 	    }
-	    
+
 	    ProtectionDomain pd = new ProtectionDomain(cs,p);
 	    context.setProtectionDomain(pd);
 	    // new permissions - added context manager and file to whatever was
