@@ -61,7 +61,7 @@ import org.jboss.ejb.plugins.local.BaseLocalContainerInvoker;
  * @author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
  * @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
  * @author <a href="mailto:Scott_Stark@displayscape.com">Scott Stark</a>.
- * @version $Revision: 1.48 $
+ * @version $Revision: 1.49 $
  */
 public abstract class Container
 {
@@ -616,8 +616,8 @@ public abstract class Container
             securityDomain = metaData.getApplicationMetaData().getSecurityDomain();
          if( securityDomain != null )
          {
-            log.debug("Binding securityDomain: "+securityDomain+ " to JDNI ENC as: security-domain");
-            bind(envCtx, "security-domain", new LinkRef(securityDomain));
+            log.debug("Binding securityDomain: "+securityDomain+ " to JDNI ENC as: security/security-domain");
+            bind(envCtx, "security/security-domain", new LinkRef(securityDomain));
          }
 
          log.debug("End java:comp/env for EJB: "+beanMetaData.getEjbName());
