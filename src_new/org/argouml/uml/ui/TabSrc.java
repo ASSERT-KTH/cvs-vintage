@@ -1,4 +1,4 @@
-// $Id: TabSrc.java,v 1.19 2004/09/01 16:36:41 mvw Exp $
+// $Id: TabSrc.java,v 1.20 2004/09/01 22:37:33 bobtarling Exp $
 // Copyright (c) 1996-2001 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -113,7 +113,7 @@ public class TabSrc
     public void setTarget(Object t) {
 
         t = (t instanceof Fig) ? ((Fig) t).getOwner() : t;
-        setTarget(t);
+        super.setTarget(t);
         _notationName = null;
         setShouldBeEnabled(false);
         if (ModelFacade.isAModelElement(t))
