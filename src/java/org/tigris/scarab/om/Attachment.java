@@ -64,6 +64,7 @@ import org.apache.torque.util.Criteria;
 
 import org.apache.commons.fileupload.FileItem;
 
+import org.tigris.scarab.util.Log;
 import org.tigris.scarab.util.ScarabConstants;
 import org.tigris.scarab.util.ScarabException;
 import org.tigris.scarab.util.word.SearchIndex;
@@ -82,7 +83,7 @@ import org.tigris.scarab.util.word.SearchFactory;
  *
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: Attachment.java,v 1.59 2003/04/28 16:54:58 jmcnally Exp $
+ * @version $Id: Attachment.java,v 1.60 2003/07/25 21:38:10 dlr Exp $
  */
 public class Attachment 
     extends BaseAttachment
@@ -316,13 +317,14 @@ public class Attachment
         if (filename != null) 
         {
             // moduleId/(issue_IdCount/1000)/issueID_attID_filename
-            StringBuffer sb = new StringBuffer(30+filename.length());
+            StringBuffer sb = new StringBuffer(30 + filename.length());
             Issue issue = getIssue();
-            sb.append("mod").append(issue.getModule().getQueryKey());
-            sb.append('/');
-            int count = issue.getIdCount();
-            sb.append(count/1000).append('/').append(issue.getUniqueId())
-                .append('_').append(getQueryKey()).append('_')
+            sb.append("mod").append(issue.getModule().getQueryKey())
+                .append(File.separator)
+                .append(issue.getIdCount() / 1000)
+                .append(File.separator)
+                .append(issue.getUniqueId()).append('_')
+                .append(getQueryKey()).append('_')
                 .append(filename);
             path = sb.toString();
         }
@@ -330,24 +332,21 @@ public class Attachment
     }
 
     /**
-     * Prepends the base repository path to the path returned 
-     * by getRelativePath(). 
+     * @return Prepends the base repository path to the path returned
+     * by {@link #getRelativePath()}, returns <code>null</code> {@link
+     * #getRelativePath()} does.
      */
     public String getFullPath()
         throws Exception
     {
         String path = null;
-        String prefix = getRepositoryDirectory();
-        String suffix = getRelativePath();
-        if (suffix != null) 
+        String relativePath = getRelativePath();
+        if (relativePath != null) 
         {
-            path = new StringBuffer(prefix.length() + suffix.length() + 1)
-            .append(prefix).append(File.separator).append(suffix).toString();
+            path = getRepositoryDirectory() + File.separator + relativePath;
         }
-        
         return path;
     }
-
 
     /**
      * Get the repository path info as given in the configuration.  if the
@@ -373,13 +372,13 @@ public class Attachment
             else 
             {                
                 // test for existence within the webapp directory.
-                String testPath2 = Turbine.getRealPath(testPath);
-                File testDir = new File(testPath2);
+                testPath = Turbine.getRealPath(testPath);
+                File testDir = new File(testPath);
                 if (!testDir.exists()) 
                 {
                     mkdirs(testDir);
                 }
-                fileRepo = testPath2;
+                fileRepo = testPath;
             }
         }
         return fileRepo;
@@ -407,10 +406,10 @@ public class Attachment
             in = new BufferedInputStream(new FileInputStream(from));
             out = new BufferedOutputStream(new FileOutputStream(f));
             byte[] bytes = new byte[2048];
-            int s = 0;
-            while ((s = in.read(bytes)) != -1)
+            int nbrRead = 0;
+            while ((nbrRead = in.read(bytes)) != -1)
             {
-                out.write(bytes,0,s);
+                out.write(bytes, 0, nbrRead);
             }
         }
         finally
@@ -421,7 +420,7 @@ public class Attachment
             }
             catch (Exception e)
             {
-                // ignore
+                Log.get().debug(e.getMessage());
             }
             try
             {
@@ -429,7 +428,7 @@ public class Attachment
             }
             catch (Exception e)
             {
-                // ignore
+                Log.get().debug(e.getMessage());
             }
         }
     }
