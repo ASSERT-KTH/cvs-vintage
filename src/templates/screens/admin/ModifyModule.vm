@@ -85,14 +85,37 @@
    <th>* Parent module</th>
    <td> 
      #set ($userModules = $data.User.EditableModules)
-    <select name="$moduleGroup.ParentId.Key">
-      <option value="0">Root Module</option>
+
+#* Debugging
      #foreach ($userModule in $userModules)
-        #if ($userModule.RealName.equals($userModule.Parent.RealName))
-          <option selected="selected" value="$userModule.ModuleId">$userModule.Name</option>
-        #else
-          <option value="$userModule.ModuleId">$userModule.Name</option>
-        #end
+     [userModule.RealName: $userModule.RealName]<br />
+     [userModule.Parent.RealName: $userModule.Parent.RealName]<br />
+     [moduleId.toString(): $moduleId.toString()]<br />
+     [userModule.ModuleId.toString(): $userModule.ModuleId.toString()]<br />
+     [editModule.Parent.ModuleId: $editModule.Parent.ModuleId] <br />
+     #end
+*#
+    <select name="$moduleGroup.ParentId.Key">
+    #if ($editModule && $editModule.Parent.ModuleId.toString() == "0")
+      <option value="0" selected="selected">Global</option>    
+    #else
+      <option value="0">Global</option>
+    #end
+     #foreach ($userModule in $userModules)
+       ## we can't assign ourselves as the parent
+       #if (!$moduleId.toString().equals($userModule.ModuleId.toString()))
+         ## if we are editing an existing module, select the right one in the popup
+         #if ($editModule && ($editModule.Parent.ModuleId.toString().equals($userModule.ModuleId.toString()) || $editModule.Parent.ModuleId.toString().equals($userModule.Parent.ModuleId.toString())))
+           <option selected="selected" value="$userModule.ModuleId">[$userModule.Name] $userModule.RealName</option>
+           <option selected="selected" value="$userModule.Parent.ModuleId">[$userModule.Parent.Name] $userModule.Parent.RealName</option>
+         #else
+           <option value="$userModule.ModuleId">[$userModule.Name] $userModule.RealName</option>
+           ## we already show the global module above, so don't show it again.
+           #if ($userModule.Parent.ModuleId.toString() != "0")
+           <option value="$userModule.Parent.ModuleId">[$userModule.Parent.Name] $userModule.Parent.RealName</option>
+           #end
+         #end
+       #end
      #end
     </select>
     #fieldErrorMsg($moduleGroup.ParentId "")
