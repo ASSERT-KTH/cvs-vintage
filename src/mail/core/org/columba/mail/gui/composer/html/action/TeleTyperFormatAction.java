@@ -50,6 +50,12 @@ public class TeleTyperFormatAction extends CheckBoxAction implements Observer {
 				"menu",
 				"composer",
 				"menu_format_teletyper_tooltip"));
+		
+		// TODO: Register with observables
+
+		// TODO: Enable based on text/html setting when implemented
+		
+		setEnabled(false);
 	}
 
 	/**
@@ -60,6 +66,10 @@ public class TeleTyperFormatAction extends CheckBoxAction implements Observer {
 		 * @see java.util.Observer#update(java.util.Observable, java.lang.Object)
 		 */
 	public void update(Observable arg0, Object arg1) {
+		
+		// TODO: Implement (as BoldFormatAction etc.)
+		
+		/*
 		Boolean isSelected = (Boolean) arg1;
 
 		if (isSelected.equals(Boolean.TRUE)) {
@@ -69,6 +79,7 @@ public class TeleTyperFormatAction extends CheckBoxAction implements Observer {
 			// no selection
 			setEnabled(false);
 		}
+		*/
 
 	}
 

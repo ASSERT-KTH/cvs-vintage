@@ -51,25 +51,20 @@ public class ComposerModel {
 	boolean signMessage;
 	boolean encryptMessage;
 	
-	/** Is the model holding a html message (true) or plain text (false) */
-	private boolean isHtmlMessage;
+	/** 
+	 * Flag indicating whether this model holds a html
+	 * message (true) or plain text (false)
+	 */
+	private boolean isHtmlMessage; 
 
 	/**
-	 * Create a new model with an empty plain text message (default behaviour)
+	 * Create a new model with an empty plain text message
+	 * (default behaviour)
 	 */
 	public ComposerModel() {
 		this(null, false);		// default ~ plain text
-		/*	
-		message = new ColumbaMessage();
-
-		toList = new Vector();
-		ccList = new Vector();
-		bccList = new Vector();
-
-		attachments = new Vector();
-
-		charsetName = "auto";*/
 	}
+
 	/**
 	 * Creates a new model with a plain text message
 	 * @param message	Initial message to hold in the model
@@ -77,17 +72,6 @@ public class ComposerModel {
 
 	public ComposerModel(ColumbaMessage message) {
 		this(message,false);
-		/*
-		this.message = message;
-
-		toList = new Vector();
-		ccList = new Vector();
-		bccList = new Vector();
-
-		attachments = new Vector();
-
-		charsetName = "auto";
-*/
 	}
 
 	/**
@@ -332,29 +316,26 @@ public class ComposerModel {
 	}
 
 	/**
-	 * Returns whether this model holds a html message or plain text
-	 * @return	True for html, false for plain text
+	 * Returns whether the model holds a html message or plain text
+	 * @return	True for html, false for text
 	 */
 	public boolean isHtml() {
 		return isHtmlMessage;
 	}
-	
-	/**
-	 * Sets whether the message hold by the model should be treated as
-	 * html or plain text
-	 * @param	html	True for html, false for plain text
+
+	/** 
+	 * Sets whether the model holds a html message or plain text
+	 * @param	html	True for html, false for text
 	 */
 	public void setHtml(boolean html) {
 		isHtmlMessage = html;
 	}
-
 
 	/*
 	public AbstractFrameController createInstance(String id) {
 		return new ComposerController(id, this);
 	}
 	*/
-	
 
 	public List getRCPTVector() {
 		List output = new Vector();

@@ -26,7 +26,8 @@ import org.columba.mail.util.MailResourceLoader;
  * Submenu for choosing the font size settings
  * "-2, -1, 0, 1, 2, 3" 
  * 
- * TODO: add actionPerformed-method
+ * TODO: add actionPerformed-method, and enabling/disabling based on html/text
+ *       
  * 
  * @author fdietz
  */
@@ -48,6 +49,9 @@ public class FontSizeMenu extends IMenu {
 				"menu_format_font_size"));
 
 		initMenu();
+		
+		// TODO: Enable when implemented
+		setEnabled(false);
 	}
 
 	protected void initMenu() {

@@ -23,6 +23,8 @@ import org.columba.mail.util.MailResourceLoader;
 /**
  * Left justify selected paragraph "align="center" in <p>-tag
  *
+ * TODO: Add actionPerformed etc. etc.
+ * 
  * @author fdietz
  */
 public class CenterJustifyAction extends CheckBoxAction {
@@ -49,6 +51,10 @@ public class CenterJustifyAction extends CheckBoxAction {
 		setLargeIcon(ImageLoader.getImageIcon("stock_text_align_center.png"));
 		setSmallIcon(
 			ImageLoader.getSmallImageIcon("stock_text_align_center-16.png"));
+			
+		// TODO: Can be enabled when implemented
+		
+		setEnabled(false);
 	}
 
 }

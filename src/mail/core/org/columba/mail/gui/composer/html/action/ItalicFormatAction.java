@@ -19,12 +19,11 @@ import java.awt.event.ActionEvent;
 import java.util.Observable;
 import java.util.Observer;
 
-import javax.swing.text.AttributeSet;
-import javax.swing.text.StyleConstants;
-
 import org.columba.core.action.CheckBoxAction;
 import org.columba.core.gui.frame.AbstractFrameController;
 import org.columba.core.gui.util.ImageLoader;
+import org.columba.core.xml.XmlElement;
+import org.columba.mail.config.MailConfig;
 import org.columba.mail.gui.composer.ComposerController;
 import org.columba.mail.gui.composer.html.HtmlEditorController;
 import org.columba.mail.gui.composer.html.util.FormatInfo;
@@ -64,6 +63,18 @@ public class ItalicFormatAction extends CheckBoxAction implements Observer {
 			.getEditorController()
 			.addObserver(
 			this);
+
+		// register for changes to editor type (text / html)
+		XmlElement optionsElement =
+			MailConfig.get("composer_options").getElement("/options");
+		XmlElement htmlElement = optionsElement.getElement("html");
+		if (htmlElement == null)
+			htmlElement = optionsElement.addSubElement("html");
+		String enableHtml = htmlElement.getAttribute("enable", "false");
+		htmlElement.addObserver(this);
+		
+		// set initial enabled state
+		setEnabled((new Boolean(enableHtml)).booleanValue());
 	}
 
 	/**
@@ -75,17 +86,27 @@ public class ItalicFormatAction extends CheckBoxAction implements Observer {
 	 * @see java.util.Observer#update(java.util.Observable, java.lang.Object)
 	 */
 	public void update(Observable arg0, Object arg1) {
-		
-		if (arg1 == null) {
-			return; 
-		}
-		
-		// check if current text is bold or not - and set state accordingly
-		FormatInfo info = (FormatInfo) arg1;
-		boolean isItalic = info.isItalic();		
 
-		// notify all observers to change their selection state
-		getObservable().setSelected(isItalic);
+		if (arg0 instanceof HtmlEditorController) {
+			// check if current text is italic or not - and set state accordingly
+			FormatInfo info = (FormatInfo) arg1;
+			boolean isItalic = info.isItalic();		
+
+			// notify all observers to change their selection state
+			getObservable().setSelected(isItalic);
+
+		} else if (arg0 instanceof XmlElement) {
+			// possibly change btw. html and text
+			XmlElement e = (XmlElement) arg0;
+
+			if (e.getName().equals("html")) {
+				String enableHtml = e.getAttribute("enable", "false");
+				boolean html = (new Boolean(enableHtml)).booleanValue();
+				
+				// This action should only be enabled in html mode
+				setEnabled(html);
+			}
+		}
 	}
 
 	/* (non-Javadoc)

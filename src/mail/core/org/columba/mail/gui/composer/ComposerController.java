@@ -20,6 +20,8 @@ import java.awt.event.ComponentEvent;
 import java.awt.event.ComponentListener;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
+import java.util.Observable;
+import java.util.Observer;
 
 import org.columba.addressbook.folder.Folder;
 import org.columba.addressbook.folder.HeaderItem;
@@ -38,6 +40,7 @@ import org.columba.mail.config.MailConfig;
 import org.columba.mail.gui.composer.html.HtmlEditorController;
 import org.columba.mail.gui.composer.text.*;
 import org.columba.mail.gui.composer.util.IdentityInfoPanel;
+import org.columba.mail.parser.text.HtmlParser;
 import org.columba.mail.util.AddressCollector;
 
 /**
@@ -46,8 +49,10 @@ import org.columba.mail.util.AddressCollector;
  * controller for message composer dialog
  */
 public class ComposerController
-	extends AbstractFrameController
-	implements CharsetListener, CharsetOwnerInterface, ComponentListener, WindowListener {
+		extends AbstractFrameController
+		implements CharsetListener, CharsetOwnerInterface, 
+				   ComponentListener, WindowListener,
+				   Observer {
 
 	private IdentityInfoPanel identityInfoPanel;
 	private AttachmentController attachmentController;
@@ -315,6 +320,7 @@ public class ComposerController
 
 		// set default html or text based on stored option
 		// ... can be overridden by setting the composer model
+		
 		XmlElement optionsElement =
 			MailConfig.get("composer_options").getElement("/options");
 		XmlElement htmlElement = optionsElement.getElement("html");
@@ -322,9 +328,16 @@ public class ComposerController
 		if (htmlElement == null)
 			htmlElement = optionsElement.addSubElement("html");
 		String enableHtml = htmlElement.getAttribute("enable", "false");
+		
 		// set model based on configuration
-		if ( enableHtml.equals("true")) getModel().setHtml(true);
-			else getModel().setHtml(false);
+		if ( enableHtml.equals("true")) {
+			getModel().setHtml(true);
+		} else {
+			getModel().setHtml(false);
+		}
+		
+		// Add the composer controller as observer
+		htmlElement.addObserver(this);
 
 		// init controller for the editor depending on message type
 		if (getModel().isHtml())
@@ -378,17 +391,41 @@ public class ComposerController
 
 		if (wasHtml != composerModel.isHtml()) {
 			// new editor controller needed
-			if (composerModel.isHtml())
-				editorController = new HtmlEditorController(this);
-			else
-				editorController = new TextEditorController(this);
-
-			// an update of the view is also necessary.
-			 ((ComposerView) getView()).setNewEditorView();
+			switchEditor(composerModel.isHtml());
 		}
 
 		// Update all component according to the new model
 		updateComponents(true);
+	}
+
+	/**
+	 * Private utility for switching btw. html and text.
+	 * This includes instantiating a new editor controller
+	 * and refreshing the editor view accordingly.
+	 * <br>
+	 * Pre-condition: The caller should set the composer model
+	 * before calling this method. If a message was already entered
+	 * in the UI, then updateComponents should have been called to 
+	 * synchronize model with view before switching, else data will be lost.
+	 * <br>
+	 * Post-condition: The caller must call updateComponents afterwards
+	 * to display model data using the new controller-view pair
+	 * 
+	 * @param	html	True if we should switch to html, false for text
+	 */
+	private void switchEditor(boolean html) {
+		if (composerModel.isHtml()) {
+			ColumbaLogger.log.info("Switching to html editor");
+			editorController.deleteObservers(); // clean up
+			editorController = new HtmlEditorController(this);
+		} else {
+			ColumbaLogger.log.info("Switching to text editor");
+			editorController.deleteObservers(); // clean up
+			editorController = new TextEditorController(this);
+		}
+
+		// an update of the view is also necessary.
+		((ComposerView) getView()).setNewEditorView();
 	}
 
 	/* *20030831, karlpeder* Using method on super class instead
@@ -412,4 +449,44 @@ public class ComposerController
 	public void setCharsetManager(CharsetManager manager) {
 		charsetManager = manager;
 	}
+	
+	
+	/**
+	 * Used for listenen to the enable html option
+	 * 
+	 * @see java.util.Observer#update(java.util.Observable, java.lang.Object)
+	 */
+	public void update(Observable o, Object arg) {
+		XmlElement e = (XmlElement) o;
+
+		if (e.getName().equals("html")) {
+			// switch btw. html and text if necessary
+			String enableHtml = e.getAttribute("enable", "false");
+			boolean html = (new Boolean(enableHtml)).booleanValue();
+			boolean wasHtml = composerModel.isHtml();
+			
+			composerModel.setHtml(html);
+			if (html != wasHtml) {
+				// sync model with the current (old) view
+				updateComponents(false);
+				
+				// convert body text to comply with new editor format
+				String oldBody = composerModel.getBodyText();
+				String newBody;
+				if (html) {
+					ColumbaLogger.log.info("Converting body text to html");
+					newBody = HtmlParser.textToHtml(oldBody, "", null);
+				} else {
+					ColumbaLogger.log.info("Converting body text to text");
+					newBody = HtmlParser.htmlToText(oldBody);
+				}
+				composerModel.setBodyText(newBody);
+				
+				// switch editor and resync view with model
+				switchEditor(composerModel.isHtml());
+				updateComponents(true);
+			}
+		}
+	}
+	
 }

@@ -21,6 +21,8 @@ import org.columba.core.logging.ColumbaLogger;
 import org.columba.core.main.MainInterface;
 import org.columba.core.plugin.ActionPluginHandler;
 import org.columba.core.plugin.PluginHandlerNotFoundException;
+import org.columba.core.xml.XmlElement;
+import org.columba.mail.config.MailConfig;
 import org.columba.mail.gui.composer.ComposerController;
 import org.columba.mail.gui.composer.html.action.FontSizeMenu;
 import org.columba.mail.gui.composer.html.action.ParagraphMenu;
@@ -68,6 +70,16 @@ public class HtmlToolbar implements ActionListener, Observer {
 
 		// register for text selection changes
 		controller.getEditorController().addObserver(this);
+
+		// register for changes to editor type (text / html)
+		XmlElement optionsElement =
+			MailConfig.get("composer_options").getElement("/options");
+		XmlElement htmlElement = optionsElement.getElement("html");
+		if (htmlElement == null)
+			htmlElement = optionsElement.addSubElement("html");
+		String enableHtml = htmlElement.getAttribute("enable", "false");
+		htmlElement.addObserver(this);
+		
 	}
 
 	protected void initComponents(PanelBuilder builder) throws Exception {
@@ -102,6 +114,17 @@ public class HtmlToolbar implements ActionListener, Observer {
 		sizeComboBox.addActionListener(this);
 		sizeComboBox.setSelectedIndex(2);
 		sizeComboBox.setFocusable(false);
+
+		// set initial enabled state of combo boxes
+		XmlElement optionsElement =
+			MailConfig.get("composer_options").getElement("/options");
+		XmlElement htmlElement = optionsElement.getElement("html");
+		String enableHtml = htmlElement.getAttribute("enable", "false");
+		paragraphComboBox.setEnabled(
+				(new Boolean(enableHtml)).booleanValue());
+
+		// TODO: sizeComboBox can be enabled as paragraphComboBox when implemented
+		sizeComboBox.setEnabled(false);
 		
 		ToggleToolbarButton boldFormatButton =
 			new ToggleToolbarButton(
@@ -173,32 +196,47 @@ public class HtmlToolbar implements ActionListener, Observer {
 	 */
 	public void update(Observable arg0, Object arg1) {
 		
-		if (arg1 == null) {
-			return; 
-		}
-	
-		// Handling of paragraph combo box
-	
-		// select the item in the combo box corresponding to present format
-		FormatInfo info = (FormatInfo) arg1;
-		if        (info.isHeading1()) {
-			selectInParagraphComboBox(HTML.Tag.H1);
-		} else if (info.isHeading2()) {
-			selectInParagraphComboBox(HTML.Tag.H2);
-		} else if (info.isHeading3()) {
-			selectInParagraphComboBox(HTML.Tag.H3);
-		} else if (info.isPreformattet()) {
-			selectInParagraphComboBox(HTML.Tag.PRE);
-		} else if (info.isAddress()) {
-			selectInParagraphComboBox(HTML.Tag.ADDRESS);
-		} else {
-			// select the "Normal" entry as default
-			selectInParagraphComboBox(HTML.Tag.P);
-		}
+		if (arg0 instanceof HtmlEditorController) {
 
-		// Font size combo box
+			// Handling of paragraph combo box
+	
+			// select the item in the combo box corresponding to present format
+			FormatInfo info = (FormatInfo) arg1;
+			if        (info.isHeading1()) {
+				selectInParagraphComboBox(HTML.Tag.H1);
+			} else if (info.isHeading2()) {
+				selectInParagraphComboBox(HTML.Tag.H2);
+			} else if (info.isHeading3()) {
+				selectInParagraphComboBox(HTML.Tag.H3);
+			} else if (info.isPreformattet()) {
+				selectInParagraphComboBox(HTML.Tag.PRE);
+			} else if (info.isAddress()) {
+				selectInParagraphComboBox(HTML.Tag.ADDRESS);
+			} else {
+				// select the "Normal" entry as default
+				selectInParagraphComboBox(HTML.Tag.P);
+			}
+
+			// Font size combo box
 		
-		// TODO: Add handling for font size combo box
+			// TODO: Add handling for font size combo box
+
+		} else if (arg0 instanceof XmlElement) {
+			// possibly change btw. html and text
+			XmlElement e = (XmlElement) arg0;
+
+			if (e.getName().equals("html")) {
+				String enableHtml = e.getAttribute("enable", "false");
+				boolean html = (new Boolean(enableHtml)).booleanValue();
+	
+				// paragraphComboBox should only be enabled in html mode			
+				paragraphComboBox.setEnabled(html);
+
+				// TODO: Add handling for font size combo box
+				
+			}
+		}
+					
 				
 	}
 	

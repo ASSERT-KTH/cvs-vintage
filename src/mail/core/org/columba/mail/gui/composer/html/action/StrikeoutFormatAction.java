@@ -56,6 +56,11 @@ public class StrikeoutFormatAction extends CheckBoxAction implements Observer {
 		setSmallIcon(
 			ImageLoader.getSmallImageIcon("stock_text_strikethrough-16.png"));
 
+		// TODO: Register with observables
+
+		// TODO: Enable based on text/html setting when implemented
+		
+		setEnabled(false);
 	}
 
 	/**
@@ -66,6 +71,10 @@ public class StrikeoutFormatAction extends CheckBoxAction implements Observer {
 		 * @see java.util.Observer#update(java.util.Observable, java.lang.Object)
 		 */
 	public void update(Observable arg0, Object arg1) {
+		
+		// TODO: Implement (as BoldFormatAction etc.)
+		
+		/*
 		Boolean isSelected = (Boolean) arg1;
 
 		if (isSelected.equals(Boolean.TRUE)) {
@@ -75,6 +84,7 @@ public class StrikeoutFormatAction extends CheckBoxAction implements Observer {
 			// no selection
 			setEnabled(false);
 		}
+		*/
 
 	}
 

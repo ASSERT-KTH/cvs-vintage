@@ -27,7 +27,8 @@ import javax.swing.text.html.HTML;
 
 import org.columba.core.action.IMenu;
 import org.columba.core.gui.frame.AbstractFrameController;
-import org.columba.core.logging.ColumbaLogger;
+import org.columba.core.xml.XmlElement;
+import org.columba.mail.config.MailConfig;
 import org.columba.mail.gui.composer.ComposerController;
 import org.columba.mail.gui.composer.html.HtmlEditorController;
 import org.columba.mail.gui.composer.html.util.FormatInfo;
@@ -102,6 +103,18 @@ public class ParagraphMenu extends IMenu
 			.getEditorController()
 			.addObserver(
 			this);
+
+		// register for changes to editor type (text / html)
+		XmlElement optionsElement =
+			MailConfig.get("composer_options").getElement("/options");
+		XmlElement htmlElement = optionsElement.getElement("html");
+		if (htmlElement == null)
+			htmlElement = optionsElement.addSubElement("html");
+		String enableHtml = htmlElement.getAttribute("enable", "false");
+		htmlElement.addObserver(this);
+		
+		// set initial enabled state
+		setEnabled((new Boolean(enableHtml)).booleanValue());
 		
 	}
 
@@ -133,25 +146,35 @@ public class ParagraphMenu extends IMenu
 	 */
 	public void update(Observable arg0, Object arg1) {
 		
-		if (arg1 == null) {
-			return; 
-		}
-	
-		// select the menu item corresponding to present format
-		FormatInfo info = (FormatInfo) arg1;
-		if        (info.isHeading1()) {
-			selectMenuItem(HTML.Tag.H1);
-		} else if (info.isHeading2()) {
-			selectMenuItem(HTML.Tag.H2);
-		} else if (info.isHeading3()) {
-			selectMenuItem(HTML.Tag.H3);
-		} else if (info.isPreformattet()) {
-			selectMenuItem(HTML.Tag.PRE);
-		} else if (info.isAddress()) {
-			selectMenuItem(HTML.Tag.ADDRESS);
-		} else {
-			// select the "Normal" entry as default
-			selectMenuItem(HTML.Tag.P);
+		if (arg0 instanceof HtmlEditorController) {
+			// select the menu item corresponding to present format
+			FormatInfo info = (FormatInfo) arg1;
+			if        (info.isHeading1()) {
+				selectMenuItem(HTML.Tag.H1);
+			} else if (info.isHeading2()) {
+				selectMenuItem(HTML.Tag.H2);
+			} else if (info.isHeading3()) {
+				selectMenuItem(HTML.Tag.H3);
+			} else if (info.isPreformattet()) {
+				selectMenuItem(HTML.Tag.PRE);
+			} else if (info.isAddress()) {
+				selectMenuItem(HTML.Tag.ADDRESS);
+			} else {
+				// select the "Normal" entry as default
+				selectMenuItem(HTML.Tag.P);
+			}
+
+		} else if (arg0 instanceof XmlElement) {
+			// possibly change btw. html and text
+			XmlElement e = (XmlElement) arg0;
+
+			if (e.getName().equals("html")) {
+				String enableHtml = e.getAttribute("enable", "false");
+				boolean html = (new Boolean(enableHtml)).booleanValue();
+				
+				// This action should only be enabled in html mode
+				setEnabled(html);
+			}
 		}
 				
 	}

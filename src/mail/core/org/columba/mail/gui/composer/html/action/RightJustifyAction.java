@@ -23,6 +23,8 @@ import org.columba.mail.util.MailResourceLoader;
 /**
  * Left justify selected paragraph "align="right" in <p>-tag
  *
+ * TODO: Add actionPerformed etc. etc.
+ * 
  * @author fdietz
  */
 public class RightJustifyAction extends CheckBoxAction {
@@ -49,6 +51,10 @@ public class RightJustifyAction extends CheckBoxAction {
 		setLargeIcon(ImageLoader.getImageIcon("stock_text_align_right.png"));
 		setSmallIcon(
 			ImageLoader.getSmallImageIcon("stock_text_align_right-16.png"));
+
+		// TODO: Can be enabled when implemented
+		
+		setEnabled(false);
 	}
 
 }

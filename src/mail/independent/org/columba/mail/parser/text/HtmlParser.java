@@ -56,6 +56,13 @@ public class HtmlParser {
 	 * 			(moved from org.columba.mail.gui.message.util.DocumentParser) 
 	 */
 	public static String stripHtmlTags(String s, boolean breakToNl) {
+		
+		// TODO: The stripping of html tags adds far too much whitespace and extra lines
+		//       ... especially when the original html is indented and
+		//       p tags are placed on separate lines...
+		
+		// TODO: Headings (h1, h2, h3) needs to be handled the same way as p tags
+		 
 		// initial check of input:
 		if (s == null)
 			return null;
@@ -117,6 +124,9 @@ public class HtmlParser {
 	 * 			(moved from org.columba.mail.gui.message.util.DocumentParser)
 	 */
 	public static String restoreSpecialCharacters(String s) {
+		
+		// TODO: Handling of special char codes ala &#230; needs to be handled
+		
 		// initial check of input:
 		if (s == null)
 			return null;
@@ -189,6 +199,61 @@ public class HtmlParser {
 		// stripHtmlTags called with true ~ p & br => newlines
 		String text = stripHtmlTags(html, true);
 		return restoreSpecialCharacters(text);
+	}
+
+	/**
+	 * Replaces special chars - <,>,&,\t,\n," - with the special
+	 * entities used in html (amp, nbsp, ...). Then the complete
+	 * text is surrounded with proper html tags: Starting- and
+	 * ending html tag, header section and body section.
+	 * The complete body section is sorround with p tags.
+	 * <br>
+	 * This is the same as first calling substituteSpecialCharacters
+	 * and then add starting and ending html tags etc.
+	 * <br>
+	 * Further more urls and email adresses are converted into links
+	 * Optionally a title and css definition is inserted in the 
+	 * html header.
+	 * <br>
+	 * 
+	 * TODO: Add support for smilies and coloring of quoted text
+	 * 
+	 * @param	text	Text to convert to html
+	 * @param	title	Title to include in header, not used if null
+	 * @param	css		Style sheet def. to include in header, 
+	 * 					not used if null.
+	 * 					The input shall not include the style tag
+	 * @return	Text converted to html
+	 * @author	Karl Peder Olesen (karlpeder), 20030916
+	 */
+	public static String textToHtml(
+			String text, String title, String css) {
+
+		// convert special characters
+		String html = HtmlParser.substituteSpecialCharacters(text);
+
+		// parse for urls / email adresses and substite with HTML-code
+		html = HtmlParser.substituteURL(html);
+		html = HtmlParser.substituteEmailAddress(html);
+
+		// insert surrounding html tags
+		StringBuffer buf = new StringBuffer();
+		buf.append("<html><head>");
+		if (title != null) {
+			buf.append("<title>");
+			buf.append(title);
+			buf.append("</title>");
+		}
+		if (css != null) {
+			buf.append("<style type=\"text/css\"><!-- ");
+			buf.append(css);
+			buf.append(" --></style>");
+		}
+		buf.append("</head><body><p>");
+		buf.append(html);
+		buf.append("</p></body></html>");
+		
+		return buf.toString();
 	}
 
 	/**	
