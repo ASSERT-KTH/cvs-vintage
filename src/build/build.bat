@@ -1,4 +1,7 @@
 @echo off
+@if not "%ECHO%" == ""  echo %ECHO%
+@if "%OS%" == "Windows_NT"  setlocal
+
 REM convenience bat file to build with
 
 set CP=..\..\lib\ant.jar
