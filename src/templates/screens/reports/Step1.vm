@@ -13,36 +13,38 @@
    </table>
   </div>
 <h3>Summary information</h3>
-<div><strong>Considering saving this report?</strong></div>
-If so,  enter the following information (it can be edited later).
+<h4>Considering saving this report?</h4>
+<p>If so,  enter the following information (it can be edited later).</p>
 <form method="get" action="$action">
 <div class="axial">
  <table border="0" cellspacing="2" cellpadding="3">
   <tr>
-   <th width="120">report name</th>
+   <th width="120">Report name</th>
    <td>
    <input type="text" size="30" maxlength="255"
                 name="$intakeReport.Name.Key" value="$intakeReport.Name" />
    </td>
   </tr>
   <tr>
-   <th width="120">report description (optional)</th>
+   <th width="120">Report description (optional)</th>
    <td>
-                <textarea name="$intakeReport.Description.Key"
-                    rows="3" cols="30">$intakeReport.Description</textarea>
-            </td>
+     <textarea name="$intakeReport.Description.Key" rows="3" cols="30">$intakeReport.Description</textarea>
+ </td>
   </tr>
  </table>
-    <h3>Type of report</h3>
-    <div><strong>Comparative analysis</strong></div>
-    <p>map attributes, attribute options, to  attributes, attribute options,
-        or users for a single date/time</p>
-    <div><strong>Rate of change</strong></div>
-    <p>map attributes, attribute options, or users to multiple dates in an
-        array</p>
+ </div>
+
+<h3>Type of report</h3>
+<h4>Comparative analysis</h4>
+<p>map attributes, attribute options, to  attributes, attribute options,
+   or users for a single date/time</p>
+<h4>Rate of change</h4>
+<p>map attributes, attribute options, or users to multiple dates in an
+   array</p>
+<div class="axial">
  <table border="1" cellspacing="2" cellpadding="3">
   <tr>
-   <th width="120">type of report</th>
+   <th width="120">Type of report</th>
    <td>
 #if ($data.Parameters.getString($intakeReport.Type.Key))
     #set ( $reporttype = $data.Parameters.getInt($intakeReport.Type.Key) )
@@ -61,9 +63,14 @@ If so,  enter the following information (it can be edited later).
   </tr>
  </table>
 </div>
-<p class="functnbar">
-    <input type="submit" value="Continue" name="eventSubmit_doStep1" />
-</p>
+<div class="functnbar2">
+<table cellpadding="4" cellspacing="0" border="1">
+ <tr>
+  <td class="firstchild"><input type="submit" value="Continue" name="eventSubmit_doStep1" />
+</td>
+ </tr>
+</table>
+</div>
 #addReportHiddenInputs($report "reports,Step1.vm")
 $intake.declareGroups()
 </form>

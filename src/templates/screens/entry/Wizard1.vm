@@ -16,10 +16,14 @@ $page.setTitle("Enter issue")
 </table>
 </div>
 <form name="ReportForm" method="get" action="$action">
-<p class="functnbar">
-<input type="submit" name="eventSubmit_doCheckforduplicates" value="Check for duplicates" />&#160;
-<input type="reset" value="Reset" />
-</p>
+<div class="functnbar">
+<table cellpadding="4" cellspacing="0" border="1">
+ <tr>
+  <td class="firstchild"><input type="submit" name="eventSubmit_doCheckforduplicates" value="Check for duplicates" />&#160;
+<input type="reset" value="Reset" /></td>
+ </tr>
+</table>
+</div>
 #set ($privateTemplateList = $module.getPrivateTemplates($user))
 #set ($globalTemplateList = $module.GlobalTemplates)
 #if ($privateTemplateList.size() > 0 || $globalTemplateList.size() > 0)
@@ -75,10 +79,13 @@ $page.setTitle("Enter issue")
 #end
     </table>
 </div>
-<p class="functnbar">
-<input type="submit" name="eventSubmit_doCheckforduplicates" value="Check For Duplicates" />&#160;
-<input type="reset" value="Reset" />
-</p>
-$intake.declareGroups()
+<div class="functnbar2">
+<table cellpadding="4" cellspacing="0" border="1">
+ <tr>
+  <td class="firstchild"><input type="submit" name="eventSubmit_doCheckforduplicates" value="Check for duplicates" />&#160;
+<input type="reset" value="Reset" /></td>
+ </tr>
+</table>
+</div>$intake.declareGroups()
 </form>
 </div>

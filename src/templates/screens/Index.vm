@@ -39,7 +39,7 @@ per project.</small>
  </td>
  <td>&nbsp;&nbsp;</td>
  <td width="50%">
-  <div><a href="$link.setPage("Approval.vm")"><strong>Approve / reject user submissions</strong></a></div>
+  <div><a href="$link.setPage("Approval.vm")"><strong>Approve/reject user submissions</strong></a></div>
 <small>Review and respond interface for user submissions including, role
 promotions, saved queries, templates, automated alert emails,
 etc.</small>

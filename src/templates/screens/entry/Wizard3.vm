@@ -1,4 +1,4 @@
-$page.setTitle("Enter Issue")
+$page.setTitle("Enter issue")
 #set ($issue = $scarabR.ReportingIssue)
 #set ($action = $link.setPage("entry,Wizard3.vm").setAction("ReportIssue").toString())
 #set ($attrValues = $issue.ModuleAttributeValuesMap)
@@ -7,38 +7,45 @@ $page.setTitle("Enter Issue")
 #set ($templateId = $data.Parameters.getString("templateId"))
 #set ($template = $scarabR.getIssue($templateId))
 #set ($templAttrValues = $template.ModuleAttributeValuesMap)
-   <div class="app" id="div2-1-0">
-                <h2>Enter issue (2.1.0)</h2>
-                <div class="tabs">
-                        <table cellpadding="3" cellspacing="0" border="0">
-                        <tr>
-                        <th>1: Summary info</th>
-                        <td>2: <a href="#" title="view duplicate check information">Duplicate check</a></td>
-                        <td>3: <a href="#" title="view verbose information">Verbose info</a></td>
-                        </tr>
-                        </table>
-                </div>
-                <p class="functnbar"><input type="submit" value="check for dupes" />&#160;<input type="reset" value="Reset form" /></p>
+<div class="app" id="div2-1-0">
+<h2>Enter issue (2.1.0)</h2>
+<div class="tabs">
+  <table cellpadding="3" cellspacing="0" border="0">
+  <tr>
+  <th>1: Summary info</th>
+  <td>2: <a href="#" title="view duplicate check information">Duplicate check</a></td>
+  <td>3: <a href="#" title="view verbose information">Verbose info</a></td>
+  </tr>
+  </table>
+</div>
+
+<div class="functnbar">
+<table cellpadding="4" cellspacing="0" border="1">
+ <tr>
+  <td class="firstchild"><input type="submit" value="Check for dupes" />&#160;<input type="reset" value="Reset form" /></td>
+ </tr>
+</table>
+</div>
 <form method="get" action="$action">
 #set ($privateTemplateList = $module.getPrivateTemplates($user))
 #set ($globalTemplateList = $module.GlobalTemplates)
 #if ($privateTemplateList.size() > 0 || $globalTemplateList.size() > 0)
-                <h3>Apply issue entry template</h3>
-                <div class="axial">
-                        <table width="100%" cellpadding="3" cellspacing="2" border="1">
-                     <tr>
-                     <th width="120">templates</th>
-                     <td><select name="templateId">
-                #foreach ($template in $privateTemplateList)
-                <option value="$template.IssueId">$template.TemplateInfo.Name
-                #end
-                #foreach ($template in $globalTemplateList)
-                <option value="$template.IssueId">$template.TemplateInfo.Name
-                #end
-                        </select> &#160;<input type="submit" value="Select" name="eventSubmit_doGotowizard3" /> &#160;<a href="#">template list</a></td>
-                        </tr>
-                        </table>
-                </div>
+ <h3>Apply issue entry template</h3>
+ <div class="axial">
+         <table width="100%" cellpadding="3" cellspacing="2" border="1">
+      <tr>
+      <th width="120">Templates</th>
+      <td><select name="templateId">
+ #foreach ($template in $privateTemplateList)
+ <option value="$template.IssueId">$template.TemplateInfo.Name
+ #end
+ #foreach ($template in $globalTemplateList)
+ <option value="$template.IssueId">$template.TemplateInfo.Name
+ #end
+         </select> &#160;<input type="submit" value="Select" name="eventSubmit_doGotowizard3" /> &#160;<a href="#">template list</a></td>
+         </tr>
+         </table>
+ </div>
 #end
 </form>
 <form method="get" action="$link.setPage("entry,Wizard3.vm")">
@@ -99,7 +106,7 @@ $page.setTitle("Enter Issue")
 <div class="axial">
     <table cellpadding="3" cellspacing="2" border="0">
      <tr>
-      <th>Attachment Description</th>
+      <th>Attachment description</th>
 #set ( $atch = $scarabR.Attachment )
 #set( $intakeAttachment = $intake.Attachment.mapTo($atch) )
       <td>
@@ -125,12 +132,12 @@ $page.setTitle("Enter Issue")
      </tr>
     </table>
 </div>
-<br/>
-<div class="axial">
+
+<div class="axial stb">
     <table cellpadding="3" cellspacing="2" border="0">
      <tr>
      <th>
-      workflow options</th>
+      Workflow options</th>
      <td>
     return to&#160;
    <input type="radio" name="nextTemplate"
@@ -144,10 +151,13 @@ $page.setTitle("Enter Issue")
       </tr>
     </table>
 </div>
-<p class="functnbar">
-<input type="submit" name="eventSubmit_doEnterissue" value="Save Issue" />&#160;
-<input type="reset" value="Reset" />
-</p>
+<div class="functnbar2">
+<table cellpadding="4" cellspacing="0" border="1">
+ <tr>
+  <td class="firstchild"><input type="submit" value="Check for dupes" />&#160;<input type="reset" value="Reset form" /></td>
+ </tr>
+</table>
+</div>
 $intake.declareGroups()
 </form>
 </div>

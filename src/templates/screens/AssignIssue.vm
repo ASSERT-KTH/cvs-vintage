@@ -1,5 +1,5 @@
 <div class="app" id="assignissue">
-$page.setTitle("Assign Users to Issue")
+$page.setTitle("Assign users to issue")
 <h2>$page.Title</h2>
 #if ( !$actionLink )
  #set ( $actionLink = $link.setPage("AssignIssue.vm").setAction("AssignIssue").addPathInfo("nextTemplate", "Index.vm") )
@@ -28,9 +28,7 @@ $page.setTitle("Assign Users to Issue")
 <form action="$actionLink" method="get">
 <div class="functnbar"><table cellpadding="4" cellspacing="0" border="1">
  <tr>
-  <td class="firstchild"><input type="submit" name="eventSubmit_doSubmit" value="Submit" /></td>
- <td><input type="submit" name="eventSubmit_doCancel" value="Cancel" /></td>
- <td><input type="reset" value="Reset" /></td>
+  <td class="firstchild"><input type="submit" name="eventSubmit_doSubmit" value="Submit" /> &nbsp;<input type="submit" name="eventSubmit_doCancel" value="Cancel" />&nbsp; <input type="reset" value="Reset" /></td>
  </tr>
  </table>
 </div>
@@ -106,14 +104,12 @@ $page.setTitle("Assign Users to Issue")
 <p>
 <textarea name="$intakeAttachment.DataAsString.Key" rows="4" cols="40">$!intakeAttachment.DataAsString</textarea>
 </p>
-<div class="functnbar2"><table cellpadding="4" cellspacing="0" border="1">
+<div class="functnbar2">
+<table cellpadding="4" cellspacing="0" border="1">
  <tr>
-  <td class="firstchild"><input type="submit" name="eventSubmit_doSubmit" value="Submit" /></td>
- <td><input type="submit" name="eventSubmit_doCancel" value="Cancel" /></td>
- <td><input type="reset" value="Reset" /></td>
+  <td class="firstchild"><input type="submit" name="eventSubmit_doSubmit" value="Submit" /> &nbsp;<input type="submit" name="eventSubmit_doCancel" value="Cancel" />&nbsp; <input type="reset" value="Reset" /></td>
  </tr>
  </table>
-</div>
-$intake.declareGroups()
+</div>$intake.declareGroups()
 </form>
 </div>

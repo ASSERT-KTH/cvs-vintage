@@ -34,7 +34,7 @@
                rows="5">$!attrInput.Value</textarea>
         #else
            <input name= "$attrInput.Value.Key"
-                value="$!attrInput.Value" size="20" type="text">
+                value="$!attrInput.Value" size="20" type="text" />
         #end
     #end
           </td>
@@ -62,7 +62,7 @@
         #set( $attCommentGroup = $intake.Attachment.setKey("attCommentKey") )
          #fieldErrorMsg($attCommentGroup.DataAsString "<br />")
            <textarea rows="4" cols="35" name ="$attCommentGroup.DataAsString.Key">$!attCommentGroup.DataAsString.Value</textarea>
-           <input type="hidden" name="$attCommentGroup.Name.Key" value="comment">
+           <input type="hidden" name="$attCommentGroup.Name.Key" value="comment" />
            <p>
 Please add a comment to explain your change(s)
 </p>
@@ -116,8 +116,8 @@ Please add a comment to explain your change(s)
        #datatitle ("Related Links")
         <table width="100%" border="1" cellspacing="2" cellpadding="3">
          <tr>
-          <th><img src="/scarab/images/icon_uparrow.gif" width="13" height="8" alt="sort" border="0" />
-              <img src="/scarab/images/icon_downarrow.gif" width="13" height="8" alt="sort" border="0" />
+          <th><img src="/scarab/images/icon_uparrow.gif" width="13" height="8" alt="sort ascending" title="sort ascending" border="0" />
+              <img src="/scarab/images/icon_downarrow.gif" width="13" height="8" alt="sort descending" title="sort descending" border="0" />
           </th>
           <th>URL</th>
           <th>Description</th>
@@ -130,7 +130,7 @@ Please add a comment to explain your change(s)
          #end
           <td>
           #if ($canEdit)
-            <input type="checkbox" name="url_delete_$url.AttachmentId"/>
+            <input type="checkbox" name="url_delete_$url.AttachmentId" />
           #else
             &nbsp;
           #end
@@ -149,19 +149,19 @@ Please add a comment to explain your change(s)
          </td>
           <td>
          #fieldErrorMsg($urlGroup.DataAsString "<br />")
-         <input type="text" size="25" name="$urlGroup.DataAsString.Key" value="$!urlGroup.DataAsString"/>
+         <input type="text" size="25" name="$urlGroup.DataAsString.Key" value="$!urlGroup.DataAsString" />
           </td>
          </tr>
     #end
         </table>
     #if ($canEdit)
-           <p><input type="submit" value="add url" name="eventSubmit_doSubmiturl"  />&#160;<input type="submit" value="delete url"  name="eventSubmit_doDeleteurl" /></p>
+           <p><input type="submit" value="Add url" name="eventSubmit_doSubmiturl"  />&#160;<input type="submit" value="Delete url"  name="eventSubmit_doDeleteurl" /></p>
     #end
 #end
 ## ADD DEPENDENCY
 #if ($canEdit)
 #set( $dependGroup = $intake.Depend.setKey("dependKey") )
-<input type="hidden" name="$dependGroup.ObserverId.Key" value="$currentIssue.IssueId">
+<input type="hidden" name="$dependGroup.ObserverId.Key" value="$currentIssue.IssueId" />
 #datatitle ("Add Dependency")
  #if (!$dependGroup.ObservedId.Message.equals(""))
  <p><strong class="alert">$dependGroup.ObservedId.Message</strong></p>
@@ -183,7 +183,7 @@ Please add a comment to explain your change(s)
   </select></p>
     </td>
  </tr>
-<tr><td>&nbsp;</td><td><input type="submit" value="add dependency"  name="eventSubmit_doAdddependency" /></td></tr>
+<tr><td>&nbsp;</td><td><input type="submit" value="Add dependency"  name="eventSubmit_doAdddependency" /></td></tr>
 </table>
 </div>
 #end
@@ -305,15 +305,15 @@ Please add a comment to explain your change(s)
         #set( $commentGroup = $intake.Attachment.setKey("commentKey") )
         #fieldErrorMsg($commentGroup.DataAsString "<br />")
            <textarea rows="2" cols="35" name ="$commentGroup.DataAsString.Key"></textarea>
-           <input type="hidden" name="$commentGroup.Name.Key" value="comment">
+           <input type="hidden" name="$commentGroup.Name.Key" value="comment" />
           </td>
          </tr>
          <tr>
          <td>&nbsp;</td>
          <td>
-           <input type="submit" value="add comment" name="eventSubmit_doSubmitcomment"/>&#160;
+           <input type="submit" value="Add comment" name="eventSubmit_doSubmitcomment" />&#160;
          #if ($security.hasPermission("Module | Edit"))
-           <input type="submit" value="edit comment(s)" name="eventSubmit_doEditcomment"/>
+           <input type="submit" value="edit comment(s)" name="eventSubmit_doEditcomment" />
          #end
          </td>
     #end

@@ -13,11 +13,17 @@
    </tr>
    </table>
   </div>
-  <p class="functnbar">
-            <a href="#" title="define row/column criteria">
-                3a: Define row/column criteria</a> | <strong>
-            3b: Select row/column content</strong>
-        </p>
+<div class="functnbar">
+<table cellpadding="4" cellspacing="0" border="1">
+ <tr>
+  <td class="firstchild">
+  <a href="#" title="define row/column criteria">
+                3a: Define row/column criteria</a> | 
+            3b: Select row/column content
+        </td>
+  </tr>
+ </table>
+</div>
 <h3>Select row/column content</h3>
 <form method="get" action="$action">
 <div class="axial">
@@ -40,32 +46,32 @@
   <tr>
    <th>Column: date(s)</th>
    <td>
-                <table border="1" cellspacing="2" cellpadding="3">
-                    <tr>
-                        <th nowrap="nowrap">Date #</th>
-                        <th>Date setting</th>
-                    </tr>
+   <table border="1" cellspacing="2" cellpadding="3">
+       <tr>
+           <th nowrap="nowrap">Date #</th>
+           <th>Date setting</th>
+       </tr>
 #set ($finalCount = 1)
 #set ($finalKey = "0" )
 #foreach ($date in $report.ReportDates)
     #set ($intakeDate = $intake.ReportDate.mapTo($date))
-                    #rows()
-                        <td width="120">
-                            <input type="checkbox"
-                                name="$intakeDate.Selected.Key" />
-                            &nbsp;date $velocityCount:
-                        </td>
-                        <td>
+   #rows()
+       <td width="120">
+           <input type="checkbox"
+               name="$intakeDate.Selected.Key" />
+           &nbsp;date $velocityCount:
+       </td>
+       <td>
     #if ($intakeDate.Date.isValid())
         ## don't show the last entered value
         #set ($value = $intakeDate.Date)
     #else
         #set ($value = $format.getDate("MM/dd/yy HH:mm", $date.Date))
     #end
-                <input type="text" size="20" name="$intakeDate.Date.Key"
-                    value="$intakeDate.Date" />
-                        </td>
-                    </tr>
+ <input type="text" size="20" name="$intakeDate.Date.Key"
+     value="$intakeDate.Date" />
+         </td>
+     </tr>
     #set ($finalCount = $velocityCount + 1)
     #set ($finalKey = "$velocityCount" )
 #end
@@ -81,26 +87,32 @@
         #set ($value = $intakeDate.Date)
     #end
   <td>
-            <input type="text" size="20" name="$intakeDate.Date.Key"
-                    value="$value" />
- </tr>
-                </table>
-                <p>
-                    <input type="submit" value="Add date fields"
-                        name="eventSubmit_doStep3_2badddate" />&nbsp;
-                    <input type="submit" value="Remove date fields"
-                        name="eventSubmit_doStep3_2bdeletedate" />
-                </p>
+<input type="text" size="20" name="$intakeDate.Date.Key"
+    value="$value" />
+</tr>
+</table>
+<p>
+    <input type="submit" value="Add date fields"
+        name="eventSubmit_doStep3_2badddate" />&nbsp;
+    <input type="submit" value="Remove date fields"
+        name="eventSubmit_doStep3_2bdeletedate" />
+</p>
    </td>
   </tr>
  </table>
 </div>
-<p class="functnbar">
-    <input type="submit" value="Generate report"
+<div class="functnbar2">
+<table cellpadding="4" cellspacing="0" border="1">
+ <tr>
+  <td class="firstchild">
+  <input type="submit" value="Generate report"
         name="eventSubmit_doStep3_2b" />
     &nbsp;
     <input type="submit" value="Cancel" name="eventSubmit_doCancel" />
-</p>
+        </td>
+  </tr>
+ </table>
+</div>
 #addReportHiddenInputs($report "reports,Step3_2b")
 $intake.declareGroups()
 </form>

@@ -12,54 +12,64 @@
    </tr>
    </table>
   </div>
-  <p class="functnbar">
-            <strong>3a: Define row/column criteria</strong>
+<div class="functnbar">
+<table cellpadding="4" cellspacing="0" border="1">
+ <tr>
+  <td class="firstchild">3a: Define row/column criteria
              |
             3b: Select row/column content
-        </p>
+        </td>
+ </tr>
+</table>
+</div>
 <h3>Report content: Comparative analysis</h3>
 <form method="get" action="$action">
 <div class="axial">
- <table cellpadding="3" cellspacing="2" border="0">
-  <tr>
-   <th width="120">report date</th>
-             <td>
-                <input type="text" size="20" name="$intakeReport.NewDate.Key"
-                    value="$intakeReport.NewDate" />
-                <p>Leave blank for current date/time</p>
-            </td>
-        </tr>
-  <tr>
-   <th>rows: criteria</th>
-   <td>
-       <select name="$intakeReport.Axis1Category.Key">
-           <option value="">select criteria</option>
+<table cellpadding="3" cellspacing="2" border="0">
+<tr>
+<th width="120">report date</th>
+ <td>
+    <input type="text" size="20" name="$intakeReport.NewDate.Key"
+        value="$intakeReport.NewDate" />
+    <p>Leave blank for current date/time</p>
+</td>
+</tr>
+<tr>
+<th>rows: criteria</th>
+<td>
+  <select name="$intakeReport.Axis1Category.Key">
+      <option value="">select criteria</option>
 #set ($options = $scarabR.Report.AxisCategories)
 #foreach ( $option in $options )
-             <option value="$option.Value">$option.Name</option>
+        <option value="$option.Value">$option.Name</option>
 #end
-       </select>
-   </td>
-  </tr>
-  <tr>
-   <th>columns: criteria</th>
-   <td>
-       <select name="$intakeReport.Axis2Category.Key">
-           <option value="">select criteria</option>
+  </select>
+</td>
+</tr>
+<tr>
+<th>Columns: criteria</th>
+<td>
+  <select name="$intakeReport.Axis2Category.Key">
+      <option value="">select criteria</option>
 #set ($options = $scarabR.Report.AxisCategories)
 #foreach ( $option in $options )
-             <option value="$option.Value"$option.Selected>$option.Name</option>
+        <option value="$option.Value"$option.Selected>$option.Name</option>
 #end
-       </select>
-   </td>
-  </tr>
- </table>
+  </select>
+</td>
+</tr>
+</table>
 </div>
-<p class="functnbar">
-    <input type="submit" value="Continue" name="eventSubmit_doStep3_1a" />
+<div class="functnbar2">
+<table cellpadding="4" cellspacing="0" border="1">
+ <tr>
+  <td class="firstchild"><input type="submit" value="Continue" name="eventSubmit_doStep3_1a" />
     &nbsp;
     <!-- <input type="submit" value="back" /> -->
-</p>
+        </td>
+ </tr>
+</table>
+</div>
 #addReportHiddenInputs($report "reports,Step3_1a.vm")
 $intake.declareGroups()
 </form>

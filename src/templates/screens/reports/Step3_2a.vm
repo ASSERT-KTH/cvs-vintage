@@ -12,10 +12,15 @@
    </tr>
    </table>
   </div>
-<p class="functnbar">
-    <strong>3a: Define row/column criteria</strong> |
+<div class="functnbar">
+<table cellpadding="4" cellspacing="0" border="1">
+ <tr>
+  <td class="firstchild">3a: Define row/column criteria |
     3b: Select row/column content
-</p>
+</td>
+  </tr>
+ </table>
+</div>
 <h3>Report content: Rate of change analysis</h3>
 <form method="get" action="$action">
 <div class="axial">
@@ -23,14 +28,14 @@
      <tr>
    <th width="120">Rows: criteria</th>
    <td>
-       <select name="$intakeReport.Axis1Category.Key">
-           <option value="">select criteria</option>
+<select name="$intakeReport.Axis1Category.Key">
+    <option value="">select criteria</option>
 #set ($options = $scarabR.Report.AxisCategories)
 #foreach ( $option in $options )
-             <option value="$option.Value">$option.Name</option>
+      <option value="$option.Value">$option.Name</option>
 #end
-       </select>
-   </td>
+</select>
+</td>
   </tr>
   <tr>
    <th width="120">Columns: date(s)</th>
@@ -38,11 +43,16 @@
   </tr>
  </table>
 </div>
-<p class="functnbar">
-    <input type="submit" value="Continue" name="eventSubmit_doStep3_2a" />
+<div class="functnbar2">
+<table cellpadding="4" cellspacing="0" border="1">
+ <tr>
+  <td class="firstchild"><input type="submit" value="Continue" name="eventSubmit_doStep3_2a" />
     &nbsp;
     <!-- <input type="submit" value="back" /> -->
-</p>
+</td>
+  </tr>
+ </table>
+</div>
 #addReportHiddenInputs($report $link.CurrentView)
 $intake.declareGroups()
 </form>

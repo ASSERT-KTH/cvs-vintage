@@ -1,5 +1,5 @@
 <div class="app" id="moveissue2">
-$page.setTitle("Copy / Move Issue")
+$page.setTitle("Copy/move issue")
 <h2>$page.Title</h2>
 #set ($action = $link.setPage("MoveIssue2.vm").setAction("MoveIssue").addPathInfo("nextTemplate", "Links.vm"))
 #set ($issueId = $data.Parameters.getString("issue_id"))
@@ -9,25 +9,24 @@ $page.setTitle("Copy / Move Issue")
 <form method="post" action="$action">
 <input type="hidden" name="id" value="$issueId" />
 <input type="hidden" name="module_id" value="$moduleId" />
-<div class="functnbar">
 #if ($select_action.equals("move") )
  #set ($tmp = "Move")
 #else
  #set ($tmp = "Copy")
 #end
-<table cellpadding="0" cellspacing="0" border="0">
+<div class="functnbar">
+<table cellpadding="4" cellspacing="0" border="1">
  <tr>
-  <td><input type="submit" value="Back" name="eventSubmit_doBacktoone" /></td>
-  <td><input type="submit" value="$tmp Issue" name="eventSubmit_doSaveissue" /></td>
+  <td class="firstchild"><input type="submit" value="Back" name="eventSubmit_doBacktoone" />&nbsp; <input type="submit" value="$tmp Issue" name="eventSubmit_doSaveissue" /></td>
  </tr>
 </table>
 </div>
-<h3>Issue to be Copied / Moved</h3>
+<h3>Issue to be copied/moved</h3>
 <table width="100%" border="1" cellspacing="2" cellpadding="3">
  <tr>
   <th>Summary</th>
-  <th>Date Committed</th>
-  <th>Committed By</th>
+  <th>Date committed</th>
+  <th>Committed by</th>
  </tr>
  <tr class="a">
   <td>
@@ -43,7 +42,7 @@ $page.setTitle("Copy / Move Issue")
   </td>
  </tr>
 </table>
-<h3>Destination Project</h3>
+<h3>Destination project</h3>
 <p>
  #set($newModule = $scarabR.getModule($moduleId))
  $newModule.Name
@@ -56,22 +55,22 @@ $page.setTitle("Copy / Move Issue")
 </p>
 <p><input type="radio" name="select_action" value="move"
 #if ($select_action.equals("move") )
- checked
+ checked="checked"
 #end /> Move
 </p>
-<h3>Attribute Mapping Results</h3>
+<h3>Attribute mapping results</h3>
 <div class="sidebyside">
 <table border="1" cellspacing="2" cellpadding="3" width="100%">
  <tr>
-  <th>Attributes from Issue to be Copied/Moved</th>
-  <th>Matching Attributes in Destination Module</th>
+  <th>Attributes from issue to be copied/moved</th>
+  <th>Matching attributes in destination module</th>
  </tr>
  <tr>
   <td>
   <div class="datatablechild">
    <table width="100%" border="1" cellspacing="2" cellpadding="3">
     <tr>
-     <th>Attribute Name (alias)</th>
+     <th>Attribute name (alias)</th>
      <th>Value (list option/content)</th>
     </tr>
     #foreach( $attr in $matchingAttributes )
@@ -92,7 +91,7 @@ $page.setTitle("Copy / Move Issue")
  <div class="datatablechild">
   <table width="100%" border="1" cellspacing="2" cellpadding="3">
    <tr>
-    <th>Attribute Name (alias)</th>
+    <th>Attribute name (alias)</th>
     <th>Value (list option/content)</th>
    </tr>
    #foreach( $attr in $matchingAttributes )
@@ -117,8 +116,8 @@ $page.setTitle("Copy / Move Issue")
  <table width="100%" border="1" cellspacing="2" cellpadding="3">
   <tr>
    <th>Include</th>
-   <th>Attribute Name</th>
-   <th>Pption Name</th>
+   <th>Attribute name</th>
+   <th>Option name</th>
   </tr>
   #foreach( $attr in $orphanAttributes )
    #indexedRows($velocityCount)
@@ -129,24 +128,19 @@ $page.setTitle("Copy / Move Issue")
   #end
  </table>
 #end
-<div class="functnbar">
 #if ($select_action.equals("move") )
 #set ($tmp = "Move")
 #else
 #set ($tmp = "Copy")
 #end
-<div class="functnbar">
-#if ($select_action.equals("move") )
- #set ($tmp = "Move")
-#else
- #set ($tmp = "Copy")
-#end
-<table cellpadding="0" cellspacing="0" border="0">
+
+<div class="functnbar2">
+<table cellpadding="4" cellspacing="0" border="1">
  <tr>
-  <td><input type="submit" value="Back" name="eventSubmit_doBacktoone" /></td>
-  <td><input type="submit" value="$tmp Issue" name="eventSubmit_doSaveissue" /></td>
+  <td class="firstchild"><input type="submit" value="Back" name="eventSubmit_doBacktoone" />&nbsp; <input type="submit" value="$tmp Issue" name="eventSubmit_doSaveissue" /></td>
  </tr>
 </table>
 </div>
+
 </form>
 </div>

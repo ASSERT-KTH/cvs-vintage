@@ -1,6 +1,6 @@
 $page.setTitle("Confirm new account information")
 <div id="registerconfirm" class="app">
-<h3>$page.Title</h3>
+<h2>$page.Title</h2>
 ## get the user out of the temp hashtable
 #set ($user = $data.User.getTemp($scarabG.Constant.SESSION_REGISTER))
 #if (!$user.FirstName)

@@ -1,6 +1,6 @@
 $page.setTitle("Scarab Registration")
   <div id="register" class="app">
-   <h3>$page.Title</h3>
+   <h2>$page.Title</h2>
    <form name="RegisterForm" action="$link.setPage("Register.vm")" method="post">
    <p>* Required field</p>
     <input type="hidden" name="action" value="Register" />

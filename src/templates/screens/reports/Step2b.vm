@@ -11,10 +11,14 @@
    </tr>
    </table>
   </div>
-<p class="functnbar">
-    <a href="#" title="select pfa(s)">2a: Select PFA(s)</a> | <strong>
-    2b: PFA display options</strong>
-</p>
+<div class="functnbar">
+<table cellpadding="4" cellspacing="0" border="1">
+ <tr>
+  <td class="firstchild"><a href="#" title="select pfa(s)">2a: Select PFA(s)</a> | <strong>
+    2b: PFA display options</strong></td>
+ </tr>
+</table>
+</div>
 <h3>Define PFA Groups</h3>
 <h4>Grouping PFA options</h4>
 <p>In cases where primary filter attribute options represent similar traits
@@ -26,12 +30,17 @@ output.</p>
 <p>If there are no groups, each PFA/option will appear as a separate
 column.</p>
 <form method="get" action="$action">
-<p class="functnbar">
-    <input type="submit" name="eventSubmit_doStep2baddgroup" value="Add group" />
+<div class="functnbar">
+<table cellpadding="4" cellspacing="0" border="1">
+ <tr>
+  <td class="firstchild"><input type="submit" name="eventSubmit_doStep2baddgroup" value="Add group" />
     &nbsp;
     <input type="submit" name="eventSubmit_doStep2bdeletegroup"
         value="Delete group" />
-</p>
+</td>
+   </tr>
+   </table>
+  </div>
 <table width="100%" border="1" cellspacing="2" cellpadding="3">
  <tr>
   <th nowrap="nowrap">&nbsp;</th>
@@ -66,12 +75,18 @@ column.</p>
                 name="$intakeOptionGroup.DisplayValue.Key" /></td>
  </tr>
 </table>
-<p class="functnbar">
-    <input type="submit" name="eventSubmit_doStep2baddgroup" value="Add group" />
+
+<div class="functnbar">
+<table cellpadding="4" cellspacing="0" border="1">
+ <tr>
+  <td class="firstchild"><input type="submit" name="eventSubmit_doStep2baddgroup" value="Add group" />
     &nbsp;
     <input type="submit" name="eventSubmit_doStep2bdeletegroup"
         value="Delete group" />
-</p>
+</td>
+ </tr>
+</table>
+</div>
 #if ($report.OptionGroups && $report.OptionGroups.size() > 0)
 <h3>Grouping PFA/Options</h3>
 <table width="100%" border="1" cellspacing="2" cellpadding="3">
@@ -97,11 +112,16 @@ column.</p>
     #end
 </table>
 #end
-<p class="functnbar">
-    <input type="submit" value="Continue"  name="eventSubmit_doStep2b" />
+<div class="functnbar2">
+<table cellpadding="4" cellspacing="0" border="1">
+ <tr>
+  <td class="firstchild"><input type="submit" value="Continue"  name="eventSubmit_doStep2b" />
     &nbsp;
     <input type="submit" value="Cancel"  name="eventSubmit_doCancel" />
-</p>
+</td>
+ </tr>
+</table>
+</div>
 #addReportHiddenInputs($report "reports,Step2b.vm")
 $intake.declareGroups()
 </form>

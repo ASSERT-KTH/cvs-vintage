@@ -1,3 +1,4 @@
+<div id="savequery" class="app">
 #set ($action = $link.setPage("SaveQuery.vm").setAction("Search").addPathInfo("nextTemplate", "QueryList.vm"))
 #set ($query = $scarabR.Query)
 #set ($queryGroup = $intake.Query.mapTo($query))
@@ -7,36 +8,46 @@
 <form method="post" action="$action" >
 <input type="hidden" name="$queryGroup.Value.Key" value="$queryString" />
 #if ($queryString)
-<p class="functnbar"><input type="submit" value="Save/submit" name="eventSubmit_doSavequery" />&#160;<input type="submit" value="Cancel" name="eventSubmit_doCancel"  /></p>
+<div class="functnbar">
+<table cellpadding="4" cellspacing="0" border="1">
+ <tr>
+  <td class="firstchild"><input type="submit" value="Save/submit" name="eventSubmit_doSavequery" />&#160;<input type="submit" value="Cancel" name="eventSubmit_doCancel"  /></td>
+  </tr>
+ </table>
+</div>
 <h3>Save Your Query</h3>
-      <div class="axial">
-       <table cellpadding="3" cellspacing="2" border="0">
-        <tr>
-         <th width="120">query name</th>
-         <td>#fieldErrorMsg($queryGroup.Name "")<input type="text" name="$queryGroup.Name.Key" size="25" value="$!queryGroup.Name" /></td>
-        </tr>
-        <tr>
-         <th width="120">query description</th>
-         <td><textarea name="$queryGroup.Description.Key" rows="4" cols="40">$!queryGroup.Description</textarea></td>
-        </tr>
-        <tr>
-         <th width="120">Availability</th>
-         <td>#queryTypeSelectBox ($query)
-         </td>
-        </tr>
-        <tr>
-         <th width="120">location</th>
-         <td>current project '$module.Name'</td>
-         <input type = "hidden" name="$queryGroup.ModuleId.Key" value = "$module.ModuleId" />
+<div class="axial">
+ <table cellpadding="3" cellspacing="2" border="0">
+  <tr>
+   <th width="120">Query name</th>
+   <td>#fieldErrorMsg($queryGroup.Name "")<input type="text" name="$queryGroup.Name.Key" size="25" value="$!queryGroup.Name" /></td>
+  </tr>
+  <tr>
+   <th width="120">Query description</th>
+   <td><textarea name="$queryGroup.Description.Key" rows="4" cols="40">$!queryGroup.Description</textarea></td>
+  </tr>
+  <tr>
+   <th width="120">Availability</th>
+   <td>#queryTypeSelectBox ($query)
+   </td>
+  </tr>
+  <tr>
+   <th width="120">Location</th>
+   <td>current project '$module.Name'</td>
+   <input type = "hidden" name="$queryGroup.ModuleId.Key" value = "$module.ModuleId" /></td>
+  </tr>
+ </table>
+</div>
+<div class="functnbar">
+<table cellpadding="4" cellspacing="0" border="1">
+ <tr>
+  <td class="firstchild"><input type="submit" value="Save/submit" name="eventSubmit_doSavequery" />&#160;<input type="submit" value="Cancel" name="eventSubmit_doCancel"  /></td>
         </tr>
        </table>
       </div>
-<p class="functnbar"><input type="submit" value="Save/submit" name="eventSubmit_doSavequery" />&#160;<input type="submit" value="Cancel" name="eventSubmit_doCancel" /></p>
-     </div></td>
-    </tr>
-   </table>
 $intake.declareGroups()
 #else
-  <p class="alert">No query to save. Please <a href="$link.setPage("AdvancedQuery.vm")">enter a query.</a>
+  <p><strong class="alert">No query to save. Please <a href="$link.setPage("AdvancedQuery.vm")">enter a query.</a></strong></p>
 #end
 </form>
+</div>

@@ -97,9 +97,7 @@ $page.setTitle("Approve/reject user submitted items")
 </div>
  <div class="functnbar2"><table cellpadding="4" cellspacing="0" border="1">
  <tr>
-  <td class="firstchild"><input type="submit" value="Submit" name="eventSubmit_doSubmit" />&#160;</td>
-   <td><input type="submit" value="Cancel" name="eventSubmit_doCancel" />&#160;</td>
-   <td><input type="submit" value="Clear form" /></td>
+  <td class="firstchild"><input type="submit" value="Submit" name="eventSubmit_doSubmit" />&#160; <input type="submit" value="Cancel" name="eventSubmit_doCancel" />&#160; <input type="submit" value="Clear form" /></td>
   </tr>
  </table>
  </div>

@@ -1,22 +1,22 @@
 <div class="app" id="editquery">
-$page.setTitle("Edit Query")
+$page.setTitle("Edit query")
 #set ( $queryId = $data.Parameters.getString("queryId"))
 #set ( $currentQuery = $scarabR.getQuery() )
 #set ( $queryGroup = $intake.Query.mapTo($currentQuery))
 #set ($module = $scarabR.CurrentModule)
 #set ($action = $link.setPage("EditQuery.vm").setAction("Search").addPathInfo("nextTemplate", "EditQuery.vm"))
-<h2>Edit Query $currentQuery.Name</h2>
+<h2>Edit query $currentQuery.Name</h2>
 <form action="$action" method="post">
 <input type="hidden" name="queryId" value="$queryId" />
 <input type="hidden" name="$queryGroup.Value.Key" value="$currentQuery.Value" />
 <div class="axial">
  <table cellpadding="3" cellspacing="2" border="0">
   <tr>
-   <th width="120">query name</th>
+   <th width="120">Query name</th>
    <td>#fieldErrorMsg($queryGroup.Name "") <input type="text" name="$queryGroup.Name.Key" size="25" value="$!queryGroup.Name" /></td>
   </tr>
   <tr>
-   <th width="120">query description</th>
+   <th width="120">Query description</th>
    <td><textarea name="$queryGroup.Description.Key" rows="4" cols="40">$!queryGroup.Description</textarea></td>
   </tr>
   <tr>
@@ -24,7 +24,7 @@ $page.setTitle("Edit Query")
    <td>#queryTypeSelectBox ($currentQuery)</td>
   </tr>
   <tr>
-   <th width="120">location</th>
+   <th width="120">Location</th>
    <td>current project '$module.Name'</td>
    <input type = "hidden" name="$queryGroup.ModuleId.Key" value = "$module.ModuleId" />
   </tr>
@@ -32,8 +32,7 @@ $page.setTitle("Edit Query")
 </div>
 <div class="functnbar"><table cellpadding="4" cellspacing="0" border="1">
  <tr>
-  <td class="firstchild"><input type="submit" name="eventSubmit_doSavequery" value="Save" />&#160;</td>
-  <td><input type="submit" name="eventSubmit_doCancel" value="Cancel" /></td>
+  <td class="firstchild"><input type="submit" name="eventSubmit_doSavequery" value="Save" />&#160; <input type="submit" name="eventSubmit_doCancel" value="Cancel" /></td>
  </tr>
 </table>
 </div>
@@ -83,11 +82,9 @@ $page.setTitle("Edit Query")
 #end
 <div class="functnbar2"><table cellpadding="4" cellspacing="0" border="1">
  <tr>
-  <td class="firstchild"><input type="submit" name="eventSubmit_doSavequery" value="Save" />&#160;</td>
-  <td><input type="submit" name="eventSubmit_doCancel" value="Cancel" /></td>
+  <td class="firstchild"><input type="submit" name="eventSubmit_doSavequery" value="Save" />&#160; <input type="submit" name="eventSubmit_doCancel" value="Cancel" /></td>
  </tr>
 </table>
-</div>
-$intake.declareGroups()
+</div>$intake.declareGroups()
 </form>
 </div>

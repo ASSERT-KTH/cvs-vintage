@@ -1,5 +1,5 @@
 <div class="app" id="moveissue">
-$page.setTitle("Copy / Move Issue")
+$page.setTitle("Copy/move issue")
 <h2>$page.Title</h2>
 #set ($action = $link.setPage("MoveIssue.vm").setAction("MoveIssue").addPathInfo("nextTemplate", "MoveIssue2.vm"))
 #set ($user = $data.User)
@@ -15,12 +15,12 @@ $page.setTitle("Copy / Move Issue")
  </tr>
 </table>
 </div>
-<h3>Issue to be Copied / Moved</h3>
+<h3>Issue to be copied/moved</h3>
 <table width="100%" border="1" cellspacing="2" cellpadding="3">
  <tr>
   <th>Summary</th>
-  <th>Date Committed</th>
-  <th>Committed By</th>
+  <th>Date committed</th>
+  <th>Committed by</th>
  </tr>
  <tr class="a">
   <td>
@@ -36,7 +36,7 @@ $page.setTitle("Copy / Move Issue")
   </td>
  </tr>
 </table>
-<h3>Destination Module</h3>
+<h3>Destination module</h3>
 <p>
 <select name="module_id">
  <option>Select Module...</option>

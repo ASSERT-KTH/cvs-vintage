@@ -162,8 +162,7 @@
 #if ($template != "reports,Step2.vm")
 #if ($report.AttributesAndOptionsForGrouping)
     #foreach ($ao in $report.AttributesAndOptionsForGrouping)
-    <input type="hidden" name="$ir.AttributesAndOptionsForGrouping.Key"
-        value="$ao" />
+    <input type="hidden" name="$ir.AttributesAndOptionsForGrouping.Key" value="$ao" />
     #end
 #end
 #end
@@ -171,8 +170,7 @@
 #if ($report.OptionGroups)
     #foreach ($group in $report.OptionGroups)
         #set ($intakeOptionGroup = $intake.OptionGroup.mapTo($group))
-        <input type="hidden" name="$intakeOptionGroup.DisplayValue.Key"
-            value="$intakeOptionGroup.DisplayValue" />
+        <input type="hidden" name="$intakeOptionGroup.DisplayValue.Key"  value="$intakeOptionGroup.DisplayValue" />
         #if ($group.Options)
             #foreach ($option in $group.Options)
                 <input type="hidden" name="ofg$option.QueryKey"

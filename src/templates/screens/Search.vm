@@ -1,66 +1,72 @@
 #set ($module = $scarabR.CurrentModule)
-      <div class="app" id="search.vm">
-       <h2>custom search (2.2.0.x)</h2>
-        <form action="$link.setPage("Search.vm")" method="get">
-        <input type="hidden" name="nextTemplate" value="IssueList.vm" />
-        <input type="hidden" name="action" value="Search" />
-        <input type="hidden" name="searchType" value="custom" />
-       <p class="functnbar">
-        <input type="submit" name="eventSubmit_doSearch"
-            value="Search" />&#160;
-        <input type="submit" name="eventSubmit_doCancel"
-            value="Cancel" />
-       </p>
+ <div class="app" id="search">
+  <h2>Custom search (2.2.0.x)</h2>
+   <form action="$link.setPage("Search.vm")" method="get">
+   <input type="hidden" name="nextTemplate" value="IssueList.vm" />
+   <input type="hidden" name="action" value="Search" />
+   <input type="hidden" name="searchType" value="custom" />
+<div class="functnbar">
+<table cellpadding="4" cellspacing="0" border="1">
+ <tr>
+  <td class="firstchild">
+<input type="submit" name="eventSubmit_doSearch"
+      value="Search" />&#160;
+  <input type="submit" name="eventSubmit_doCancel"
+      value="Cancel" />
+</td>
+   </tr>
+  </table>
+ </div>
 #set ( $search = $scarabR.Search )
 #set ( $searchGroup = $intake.SearchIssue.mapTo($search) )
 #set ( $searchTextAttributes = $search.QuickSearchTextAttributeValues )
 #set ( $searchValues = $search.QuickSearchOptionAttributeValues )
 #if ($searchTextAttributes.size() != 0)
-       <h3>text search</h3>
+       <h3>Text search</h3>
        <div class="axial">
         <table border="0" cellspacing="2" cellpadding="3">
          <tr>
-          <th width="120">select text attributes</th>
+          <th width="120">Select text attributes</th>
           <td>
     ## default to first attribute if none was selected previously
     #if ( $searchGroup.TextScope.isSet() )
         #set ($selectedIds = $searchGroup.TextScope.Value)
         #set ($selected = "")
     #else
-        #set ($selected = " selected")
+        #set ($selected = " selected\=\"selected\"")
     #end
     <select name="$searchGroup.TextScope.Key" size="5" multiple>
     #if ($searchTextAttributes.size() > 4)
-        <option value="$search.ALL_TEXT"$selected>Search All</option>
+        <option value="$search.ALL_TEXT"$selected>Search all</option>
         #set ($selected = "")
     #end
-    #foreach ( $att in $searchTextAttributes )
-        #if ($selectedIds)
-            #foreach ( $id in $selectedIds )
-                #if ($id == $att.PrimaryKey)
-                    #set ($selected = " selected")
-                #end
-            #end
-        #end
-        <option value="$att.QueryKey"$selected>$att.Name</option>
+#foreach ( $att in $searchTextAttributes )
+  #if ($selectedIds)
+      #foreach ( $id in $selectedIds )
+          #if ($id == $att.PrimaryKey)
+              #set ($selected = " selected")
+          #end
+      #end
+  #end
+  <option value="$att.QueryKey"$selected>$att.Name</option>
         #set ($selected = "")
     #end
     </select>
-          </td>
-         </tr>
-         <tr>
-          <th width="120">enter search string</th>
-          <td>
-             <textarea name="$searchGroup.SearchWords.Key"
-                 rows="2" cols="30">$!searchGroup.SearchWords</textarea>
-          </td>
-         </tr>
-        </table>
-       </div>
+   </td>
+  </tr>
+  <tr>
+   <th width="120">Enter search string</th>
+   <td>
+      <textarea name="$searchGroup.SearchWords.Key"
+          rows="2" cols="30">$!searchGroup.SearchWords</textarea>
+   </td>
+  </tr>
+ </table>
+</div>
 #end
-       <h3>multiple / single choice search</h3>
-       <div class="axial">
-        <table border="0" cellspacing="2" cellpadding="3">
+ <h3>Multiple/single choice search</h3>
+ <div class="axial">
+  <table border="0" cellspacing="2" cellpadding="3">
 #foreach ( $attVal in $searchValues )
      ##set ( $attrInput = $intake.AttributeValue.mapTo($attVal) )
      #if ( $attVal.Attribute.AttributeType.ValidationKey )
@@ -68,13 +74,13 @@
      #elseif ($attVal.Attribute.AttributeType.Name == "combo-box" )
         #set ( $field = "OptionId" )
      #end
-         <tr>
-          <th width="120">$attVal.Attribute.Name</th>
-          <td>
-        #attrValueErrorMsg ( $attVal $field )
-        #attrValueHierarchySelect ($attVal $field "")
-          </td>
-         </tr>
+  <tr>
+   <th width="120">$attVal.Attribute.Name</th>
+   <td>
+ #attrValueErrorMsg ( $attVal $field )
+ #attrValueHierarchySelect ($attVal $field "")
+   </td>
+  </tr>
 #end
         </table>
        </div>
@@ -86,13 +92,17 @@ issues per page:
 <input type="radio" name="resultsPerPage" value="75" /> 75
 <input type="radio" name="resultsPerPage" value="100" /> 100
 </p>
-       <p><a href="#">edit custom search - not implemented</a></p>
-       <p class="functnbar">
-        <input type="submit" name="eventSubmit_doSearch"
-            value="Search" />&#160;
-        <input type="submit" name="eventSubmit_doCancel"
-            value="Cancel" />
-       </p>
-        $intake.declareGroups()
-        </form>
-      </div>
+<p><a href="#">edit custom search - not implemented</a></p>
+<div class="functnbar2">
+<table cellpadding="4" cellspacing="0" border="1">
+<tr>
+<td class="firstchild"><input type="submit" name="eventSubmit_doSearch"
+value="Search" />&#160;
+<input type="submit" name="eventSubmit_doCancel"
+value="Cancel" /></td>
+   </tr>
+  </table>
+ </div>
+ $intake.declareGroups()
+ </form>
+</div>

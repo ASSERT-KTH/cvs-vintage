@@ -12,18 +12,22 @@
    </tr>
    </table>
   </div>
-<p class="functnbar">
-    <strong>2a: Select PFA(s)</strong> |
-    2b: PFA display options
-</p>
+<div class="functnbar">
+<table cellpadding="4" cellspacing="0" border="1">
+ <tr>
+  <td class="firstchild">2a: Select PFA(s) |
+    2b: PFA display options</td>
+ </tr>
+</table>
+</div>
 <h3>Select primary filter attribute(s)</h3>
-<div><strong>Primary filter attribute</strong></div>
+<h4>Primary filter attribute</h4>
 <p>This selection defines the subset of issues that this report will be drawn
 from. It is often useful (but not required) to set the primary filter
 attribute "state" or "status", limiting the report to options such as "open",
 "open unassigned", "open assigned", "closed", or a combination of several of
 these options.</p>
-<p><strong>note:</strong> Selecting the attribute's name will select all
+<p><strong>Note:</strong> Selecting the attribute's name will select all
 options within that attribute. If you choose to "continue", without defining
 PFA groups, each selected Attribute and/or Attribute Option will appear as a
 seperate column (i.e. side-by-side comparison).</p>
@@ -31,7 +35,7 @@ seperate column (i.e. side-by-side comparison).</p>
 <div class="axial">
  <table border="0" cellspacing="2" cellpadding="3">
   <tr>
-   <th width="120">attributes</th>
+   <th width="120">Attributes</th>
    <td>
    <select name="$intakeReport.AttributesAndOptionsForGrouping.Key"
                 multiple="multiple" size="20">
@@ -41,13 +45,17 @@ seperate column (i.e. side-by-side comparison).</p>
   </tr>
  </table>
 </div>
-<p class="functnbar">
-    <input type="submit" value="Continue"  name="eventSubmit_doStep2agoto3" />
+<div class="functnbar">
+<table cellpadding="4" cellspacing="0" border="1">
+ <tr>
+  <td class="firstchild"><input type="submit" value="Continue"  name="eventSubmit_doStep2agoto3" />
     &nbsp;
     <input type="submit" value="Define PFA/Option(s) group(s)"
         name="eventSubmit_doStep2agoto2b" />&nbsp;
-    <input type="submit" value="Cancel"  name="eventSubmit_doCancel" />
-</p>
+    <input type="submit" value="Cancel"  name="eventSubmit_doCancel" /></td>
+ </tr>
+</table>
+</div>
 #addReportHiddenInputs($report "reports,Step2.vm")
 $intake.declareGroups()
 </form>

@@ -12,11 +12,16 @@
    </tr>
    </table>
   </div>
-<p class="functnbar">
+<div class="functnbar">
+<table cellpadding="4" cellspacing="0" border="1">
+ <tr>
+  <td class="firstchild">
     <a href="#" title="define row/column criteria">
         3a: Define row/column criteria</a> |
-    <strong>3b: Select row/column content</strong>
-</p>
+    3b: Select row/column content</td>
+   </tr>
+   </table>
+  </div>
 <h3>Select row/column content</h3>
 <form method="get" action="$action">
 <div class="axial">
@@ -53,12 +58,18 @@
   </tr>
  </table>
 </div>
-<p class="functnbar">
+<div class="functnbar2">
+<table cellpadding="4" cellspacing="0" border="1">
+ <tr>
+  <td class="firstchild">
     <input type="submit" value="Generate report"
             name="eventSubmit_doStep3_1b" />
     &nbsp;
     <input type="submit" value="Cancel" name="eventSubmit_doCancel" />
-</p>
+</td>
+   </tr>
+   </table>
+  </div>
 #addReportHiddenInputs($report "reports,Step3_1b.vm")
 $intake.declareGroups()
 </form>
