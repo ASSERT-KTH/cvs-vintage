@@ -77,7 +77,7 @@
     <input type="checkbox" name="$issueGroup.Ids.Key" value="$issue.IssueId" />
   #end
   </td>
-  <td><strong>$issue.UniqueId</strong></td>
+  <td><strong><a href="$link.setPage("ViewIssue.vm").addPathInfo("id",$issue.UniqueId)">$issue.UniqueId</a></strong></td>
 #foreach ($attrGroup in $module.getDedupeAttributeGroups($issueType))
    #foreach ($attr in $attrGroup.Attributes)
       #set ($rma = $module.getRModuleAttribute($attr, $issueType))
