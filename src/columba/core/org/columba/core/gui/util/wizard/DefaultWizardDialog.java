@@ -14,6 +14,9 @@
 //
 //All Rights Reserved.
 //$Log: DefaultWizardDialog.java,v $
+//Revision 1.2  2003/02/04 19:02:13  fdietz
+//[bug]account-wizard never received focus - using DialogStore now to handle it correctly
+//
 //Revision 1.1  2003/02/03 14:58:41  fdietz
 //[intern]wizard fixes
 //
@@ -41,6 +44,7 @@ import javax.swing.JPanel;
 import javax.swing.UIManager;
 import javax.swing.border.CompoundBorder;
 
+import org.columba.core.gui.util.DialogStore;
 import org.columba.core.logging.ColumbaLogger;
 
 /**
@@ -51,7 +55,7 @@ import org.columba.core.logging.ColumbaLogger;
  * To enable and disable the creation of type comments go to
  * Window>Preferences>Java>Code Generation.
  */
-public class DefaultWizardDialog extends JDialog implements ActionListener {
+public class DefaultWizardDialog implements ActionListener {
 
 	private JButton nextButton;
 	private JButton prevButton;
@@ -67,12 +71,13 @@ public class DefaultWizardDialog extends JDialog implements ActionListener {
 
 	public static Dimension WINDOW_DIMENSION = new Dimension(640, 480);
 
+	protected JDialog dialog;
 	/**
 	 * Constructor for DefaultWizardDialog.
 	 * @throws HeadlessException
 	 */
 	public DefaultWizardDialog() throws HeadlessException {
-		super();
+		dialog = DialogStore.getDialog();
 
 		DefaultWizardPanel p = getSequence().getFirstPanel();
 
@@ -96,15 +101,15 @@ public class DefaultWizardDialog extends JDialog implements ActionListener {
 		cancelButton.addActionListener(this);
 		init(p);
 
-		getContentPane().add(p, BorderLayout.CENTER);
+		dialog.getContentPane().add(p, BorderLayout.CENTER);
 
 		//nextButton.setEnabled(true);
 
 		updateWindow(p);
 
-		setLocationRelativeTo(null);
+		dialog.setLocationRelativeTo(null);
 
-		setVisible(true);
+		dialog.setVisible(true);
 
 	}
 
@@ -175,27 +180,27 @@ public class DefaultWizardDialog extends JDialog implements ActionListener {
 
 	protected void init(DefaultWizardPanel p) {
 
-		getContentPane().setLayout(new BorderLayout());
+		dialog.getContentPane().setLayout(new BorderLayout());
 
-		getContentPane().add(
+		dialog.getContentPane().add(
 			createTopPanel(p.getTitle(), p.getDescription(), p.getIcon()),
 			BorderLayout.NORTH);
 
 		//add(createPanel(listener), BorderLayout.CENTER);
 
-		getContentPane().add(p, BorderLayout.CENTER);
+		dialog.getContentPane().add(p, BorderLayout.CENTER);
 
 		//nextButton.setEnabled(false);
 		//getRootPane().setDefaultButton(nextButton);
 
 		if (getSequence().isLast(p)) {
 
-			getRootPane().setDefaultButton(finishButton);
+			dialog.getRootPane().setDefaultButton(finishButton);
 
 		} else {
 			//nextButton.setEnabled( true );
 
-			getRootPane().setDefaultButton(nextButton);
+			dialog.getRootPane().setDefaultButton(nextButton);
 			nextButton.setEnabled(true);
 			//nextButton.requestFocusInWindow();
 		}
@@ -229,7 +234,7 @@ public class DefaultWizardDialog extends JDialog implements ActionListener {
 
 		innerPanel.add(cancelButton);
 
-		getContentPane().add(lower, BorderLayout.SOUTH);
+		dialog.getContentPane().add(lower, BorderLayout.SOUTH);
 
 	}
 
@@ -240,7 +245,7 @@ public class DefaultWizardDialog extends JDialog implements ActionListener {
 		String action = e.getActionCommand();
 
 		if (action.equals("NEXT")) {
-			getContentPane().removeAll();
+			dialog.getContentPane().removeAll();
 			DefaultWizardPanel p = getSequence().getNextPanel();
 
 			init(p);
@@ -248,7 +253,7 @@ public class DefaultWizardDialog extends JDialog implements ActionListener {
 			updateWindow(p);
 
 		} else if (action.equals("PREV")) {
-			getContentPane().removeAll();
+			dialog.getContentPane().removeAll();
 			DefaultWizardPanel p = getSequence().getPreviousPanel();
 
 			init(p);
@@ -257,24 +262,24 @@ public class DefaultWizardDialog extends JDialog implements ActionListener {
 
 		} else if (action.equals("CANCEL")) {
 
-			setVisible(false);
+			dialog.setVisible(false);
 		}
 	}
 
 	protected void updateWindow(DefaultWizardPanel p) {
 		//pack();
 
-		setVisible(false);
+		dialog.setVisible(false);
 		Dimension d = WINDOW_DIMENSION;
-		Dimension size = getSize();
+		Dimension size = dialog.getSize();
 
 		if ((size.width < d.width) || (size.height < d.height)) {
-			setSize(d);
-			setLocationRelativeTo(null);
+			dialog.setSize(d);
+			dialog.setLocationRelativeTo(null);
 		}
 
-		validate();
-		repaint();
+		dialog.validate();
+		dialog.repaint();
 
 		JComponent c = p.getFocusComponent();
 		if (c != null) {
@@ -288,7 +293,7 @@ public class DefaultWizardDialog extends JDialog implements ActionListener {
 				nextButton.requestFocusInWindow();
 		}
 
-		setVisible(true);
+		dialog.setVisible(true);
 
 	}
 
