@@ -29,31 +29,23 @@ all of the required distributions.
   you should set ANT_HOME using the DOS 8.3 name.  Also, add "$ANT_HOME/bin"
   (%ANT_HOME%/bin for Windows) to your PATH.
 
-* Download JAXP version 1.0.1 from <http://java.sun.com/xml> and install it
-  in the $JAKARTA_HOME directory.
-
 * If you want to include SSL support, download the Java Secure Sockets
   Extension (JSSE) implementation (current version number is 1.0.2) from
   <http://java.sun.com/products/jsse> and install it into $JAKARTA_HOME.
 
-* Obtain the following source distributions either from anonymous CVS (see
+* Obtain the following source distribution(s) either from anonymous CVS (see
   <http://jakarta.apache.org/site/cvsindex.html> for details) or by
   downloading the appropriate source archives from the Jakarta site
   (see <http://jakarta.apache.org/site/sourceindex.html>):
 
   jakarta-tomcat
-  jakarta-tomcat-connectors
-  jakarta-tomcat-jasper
 
-  If you download source archives, you will need to expand them and rename
+  If you download source archive(s), you will need to expand them and rename
   the resulting directories to match the following build directory structure.
-  JAXP and JSSE are shown below as well.
+  JSSE is shown below as well.
 
   <$JAKARTA_HOME>
       jakarta-tomcat
-      jakarta-tomcat-connectors
-      jakarta-tomcat-jasper
-      jaxp1.0.1
       jsse1.0.2  optional
       
 
