@@ -1,4 +1,4 @@
-// $Id: ExplorerTree.java,v 1.13 2003/11/08 13:02:28 alexb Exp $
+// $Id: ExplorerTree.java,v 1.14 2003/11/09 12:34:24 alexb Exp $
 // Copyright (c) 1996-2001 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -309,7 +309,6 @@ extends DisplayTextTree
                     this.addSelectionRow(j);
                 }
             }
-            
         }
     }
     
@@ -328,12 +327,28 @@ extends DisplayTextTree
                 List targets = new ArrayList();
                 if (paths != null) {
                     for (int i = 0; i < paths.length; i++) {
-                        if (e.isAddedPath(paths[i]))
-                            targets.add(
-                                ((DefaultMutableTreeNode)paths[i]
-                                    .getLastPathComponent())
-                                        .getUserObject()
-                                );
+                        if (e.isAddedPath(paths[i])){
+                            
+                            Object element = ((DefaultMutableTreeNode)paths[i]
+                                                .getLastPathComponent())
+                                                    .getUserObject();
+                            
+                            // add a new target for notifying the other views
+                            targets.add(element);
+                            
+                            // scan the visible rows for duplicates of this elem
+                            int rows = getRowCount();
+                            for (int row = 0; row < rows; row++) {
+                                Object rowItem =
+                                ((DefaultMutableTreeNode)getPathForRow(row)
+                                .getLastPathComponent())
+                                .getUserObject();
+                                if (rowItem == element && 
+                                    !(isRowSelected(row)) ) {
+                                    addSelectionRow(row);
+                                }
+                            }
+                        }
                     }
                 }
                 TargetManager.getInstance().setTargets(targets);
