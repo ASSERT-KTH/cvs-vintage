@@ -22,6 +22,7 @@
 <input type="hidden" name="$scarabG.Constant.CANCEL_TEMPLATE" value="$cancelTemplate" />
 <input type="hidden" name="groupId" value="$!data.Parameters.getString("groupId")" />
 <input type="hidden" name="issueTypeId" value="$!data.Parameters.getString("issueTypeId")" />
+<input type="hidden" name="pageNum" value="$!data.Parameters.getString("pageNum")" />
 
 <div class="functnbar">
 #if (!$createNew)
