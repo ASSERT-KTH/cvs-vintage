@@ -31,6 +31,7 @@ import java.io.Serializable;
 import java.rmi.Remote;
 import java.util.Hashtable;
 
+import javax.naming.CompositeName;
 import javax.naming.Context;
 import javax.naming.Name;
 import javax.naming.NameParser;
@@ -86,20 +87,21 @@ public class IIOPReferenceContextWrapper implements Context {
      * @return a <code>Referenceable ((IIOPRemoteReference)o).getReference()</code> if o is a IIOPRemoteReference
      *         and the inititial object o if else
      */
-    private Object resolveObject(Object o) throws NamingException {
+    private Object resolveObject(Object o, Name name) throws NamingException {
 	try {
 	    //TODO: May we can do a narrow ? 
 	    if (o instanceof IIOPRemoteReference) {
 		// build of the Referenceable object with is Reference
 		Reference objRef = ((IIOPRemoteReference)o).getReference();
 		ObjectFactory objFact = (ObjectFactory)(Class.forName(objRef.getFactoryClassName())).newInstance(); 
-		return objFact.getObjectInstance(objRef,null,null,null);
+		return objFact.getObjectInstance(objRef,name,this,iiopContext.getEnvironment());
 	    } else if (o instanceof IIOPRemoteResource) {
 		return ((IIOPRemoteResource)o).getResource();
 	    } else {
 		return o;
 	    }
 	} catch (Exception e) {
+		e.printStackTrace();
 	    throw new NamingException("" + e);
 	}
     }
@@ -171,11 +173,11 @@ public class IIOPReferenceContextWrapper implements Context {
 // The Javadoc is deferred to the Context interface.
    
     public Object lookup(String name) throws NamingException {
-	return resolveObject(iiopContext.lookup(name));
+	return resolveObject(iiopContext.lookup(name), new CompositeName(name));
     }
 
     public Object lookup(Name name) throws NamingException {
-	return resolveObject(iiopContext.lookup(name));
+	return resolveObject(iiopContext.lookup(name), name);
     }
 
     public void bind(String name, Object obj) throws NamingException {
