@@ -53,10 +53,10 @@
 <div class="axial">
 <table cellpadding="3" cellspacing="2" border="0">
 <tr>
-<th>Date/time committed</th>
+<th>$l10n.DateCommitted</th>
 <td>$format.getDate($scarabR.DateFormat, $currentIssue.CreatedDate)</td>
 </tr>
-<th>Last date/time modified</th>
+<th>$l10n.LastModified</th>
 <td>$format.getDate($scarabR.DateFormat, $currentIssue.ModifiedDate)</td>
 </tr> </table>
 </div>
@@ -135,7 +135,7 @@
 </div>
 
 <div class="functnbar3">
-<input type="submit" value="Save changes" name="eventSubmit_doSubmitattributes" />
+<input type="submit" value="$l10n.SaveChanges" name="eventSubmit_doSubmitattributes" />
 </div>
 #end
 #end
@@ -154,7 +154,7 @@
   #set ($createdUser = $currentIssue.CreatedBy)
   <td><a href="mailTo:$createdUser.Email">$!createdUser.Name</a></td>
   <td>$createdUser.UserName</td>
-  <td>Committed by</td>
+  <td>$l10n.CommittedBy</td>
 </tr>
 
 #set ($userAttVals = $currentIssue.UserAttributeValues)
@@ -194,10 +194,10 @@
 
 #if ($canEdit)
 <div class="functnbar3">
-##<input type="submit" value="Add new" name="eventSubmit_doAssign" />&#160;
-##<input type="submit" value="Delete selected" name="eventSubmit_doUnassign" />&#160;
+##<input type="submit" value="$l10n.AddNew" name="eventSubmit_doAssign" />&#160;
+##<input type="submit" value="$l10n.DeleteSelected" name="eventSubmit_doUnassign" />&#160;
 #if ($scarabR.hasPermission($scarabG.Permission.ISSUE__ASSIGN, $module))
-<input type="submit" value="Edit list" name="eventSubmit_doEditassignees" />
+<input type="submit" value="$l10n.EditList" name="eventSubmit_doEditassignees" />
 #end
 </div>
 #end
@@ -232,7 +232,7 @@ $l10n.NoComments
 
   #if ($isEditComments)
    <div class="functnbar3">
-   <input type="submit" value="Edit comment(s)" name="eventSubmit_doEditcomment" />
+   <input type="submit" value="$l10n.EditComment" name="eventSubmit_doEditcomment" />
    </div>
       #elseif ($canEditComments && !$comments.isEmpty())
          <div align="right"><small>
@@ -253,7 +253,7 @@ $l10n.NoComments
      </tr>
    </table>
    <div class="functnbar3">
-      <input type="submit" value="Save" name="eventSubmit_doSubmitcomment" />
+      <input type="submit" value="$l10n.Save" name="eventSubmit_doSubmitcomment" />
    </div>
   #end
 
@@ -262,10 +262,10 @@ $l10n.NoComments
 #if ($currentIssue.isCommentsLong())
   #if ($fullComments.equals("true"))
     #set ($commentsLink = $link.setPage("ViewIssue.vm").addPathInfo("id", $currentIssue.UniqueId).addPathInfo("fullcomments", "false").addPathInfo("tab", $tab))
-    <p><a href="$commentsLink">Hide complete comment list</a></p>
+    <p><a href="$commentsLink">$l10n.HideCommentList</a></p>
   #else
     #set ($commentsLink = $link.setPage("ViewIssue.vm").addPathInfo("id", $currentIssueId).addPathInfo("fullcomments", "true").addPathInfo("tab", $tab))
-    <p><a href="$commentsLink">Show complete comment list</a></p>
+    <p><a href="$commentsLink">$l10n.ShowCommentList</a></p>
   #end
 #end
 #end
@@ -275,7 +275,7 @@ $l10n.NoComments
 ## URLS
 <h3>$l10n.RelatedLinks</h3>
 #if ($currentIssue.Urls.isEmpty() && !$canEdit)
-    There are no links in this issue.
+    $l10n.NoLinks
 #else
  <table width="100%" border="1" cellspacing="2" cellpadding="3">
    <tr>
@@ -334,11 +334,11 @@ $l10n.NoComments
   #if ($canEdit)
 <div class="functnbar3">
   #if (!$currentIssue.Urls.isEmpty())
-  <input type="submit" value="Save" name="eventSubmit_doSaveurl" />&#160;
+  <input type="submit" value="$l10n.Save" name="eventSubmit_doSaveurl" />&#160;
   #end
-  <input type="submit" value="Add new link" name="eventSubmit_doSubmiturl" />&#160;
+  <input type="submit" value="$l10n.AddNew" name="eventSubmit_doSubmiturl" />&#160;
   #if (!$currentIssue.Urls.isEmpty())
-  <input type="submit" value="Delete link"  name="eventSubmit_doDeleteurl" />
+  <input type="submit" value="$l10n.Delete"  name="eventSubmit_doDeleteurl" />
   #end
 </div>
   #end
@@ -387,7 +387,7 @@ $l10n.NoAttachments
 
 #if ($canEdit)
 <div class="functnbar3">
-  <input type="submit" value="Delete attachment" name="eventSubmit_doDeletefile" />
+  <input type="submit" value="$l10n.DeleteAttachment" name="eventSubmit_doDeletefile" />
 </div>
 #end
 #end
@@ -436,7 +436,7 @@ $l10n.NoAttachments
 </div>
 
 <div class="functnbar3">
-  <input type="submit" value="Add attachment" name="eventSubmit_doSubmitfile"  />
+  <input type="submit" value="$l10n.AddAttachment" name="eventSubmit_doSubmitfile"  />
 </div>
 #end
 
@@ -535,7 +535,7 @@ $l10n.NoDependencies
   <p class="alert">$newDependGroup.TypeId.Message</p>
  #end
  <select name="$newDependGroup.TypeId.Key" class="select">
-   <option value="">Choose dependency type</option>
+   <option value="">$l10n.ChooseDependencyType</option>
  #foreach ($dependType in $currentIssue.AllDependencyTypes)
    #set ($selected = false)
    #if ($dependType.DependTypeId.toString().equals($newDependGroup.TypeId.toString()))
@@ -552,11 +552,11 @@ $l10n.NoDependencies
 #if ($canEdit)
 <div class="functnbar3">
 #if (!$issueParents.isEmpty() || !$issueChildren.isEmpty())
-   <input type="submit" value="Save changes"  name="eventSubmit_doUpdatedependencies" />&nbsp;
+   <input type="submit" value="$l10n.SaveChanges"  name="eventSubmit_doUpdatedependencies" />&nbsp;
 #end
-   <input type="submit" value="Add new child" name="eventSubmit_doAdddependency" />&nbsp;
+   <input type="submit" value="$l10n.AddNewChild" name="eventSubmit_doAdddependency" />&nbsp;
 #if (!$issueParents.isEmpty() || !$issueChildren.isEmpty())
-  <input type="submit" value="Delete selected"  name="eventSubmit_doUpdatedependencies" />
+  <input type="submit" value="$l10n.DeleteSelected"  name="eventSubmit_doUpdatedependencies" />
 #end
 </div>
 #end
@@ -638,10 +638,10 @@ $l10n.NoDependencies
 
 <div class="functnbar2">
 #if (!$moveToModules.isEmpty() && ($data.User.hasPermission($scarabG.Permission.MODULE__EDIT, $scarabR.CurrentModule)))
-    <input type="submit" value="Move this issue" name="eventSubmit_doMove" />&#160;
+    <input type="submit" value="$l10n.MoveIssue" name="eventSubmit_doMove" />&#160;
 #end
 #if (!$copyToModules.isEmpty())
-    <input type="submit" value="Copy this issue" name="eventSubmit_doCopy" />
+    <input type="submit" value="$l10n.CopyIssue" name="eventSubmit_doCopy" />
 #end
 </div>
 

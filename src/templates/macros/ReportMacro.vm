@@ -186,27 +186,27 @@
    <tr>
 
 #if ($template == "reports,Step1.vm")
-   <th>1: Summary info</th>
+   <th>1: $l10n.SummaryInfo</th>
 #else
     #set ($wizardLink = $link.setPage("reports,Step1.vm"))
     #if ($reportParameters)
         #set ($wizardLink = $wizardLink.addPathInfo($reportParameters))
     #end
-   <td><a href="$wizardLink">1: Summary info</a></td>
+   <td><a href="$wizardLink">1: $l10n.SummaryInfo</a></td>
 #end
 
 #if ($template == "reports,Step2.vm" || $template == "reports,Step2b.vm")
-   <th>2: Confine report data-set</th>
+   <th>2: $l10n.ConfineReportDataSet=Confine report data-set</th>
 #else
     #set ($wizardLink = $link.setPage("reports,Step2.vm"))
     #if ($reportParameters)
         #set ($wizardLink = $wizardLink.addPathInfo($reportParameters))
     #end
-   <td><a href="$wizardLink">2: Select report data-set</a></td>
+   <td><a href="$wizardLink">2: $l10n.SelectReportDataSet</a></td>
 #end
 
 #if ($template == "reports,Step3_1a.vm" || $template == "reports,Step3_1b.vm" || $template == "reports,Step3_2a.vm" || $template == "reports,Step3_2b.vm" )
-   <th>3:Select row/column heading(s)</th>
+   <th>3: $l10n.RowColumnHeadings</th>
 #else
     #if ($report.Type == 1)
         #set ($wizardLink = $link.setPage("reports,Step3_2a.vm"))
@@ -216,7 +216,7 @@
     #if ($reportParameters)
         #set ($wizardLink = $wizardLink.addPathInfo($reportParameters))
     #end
-   <td><a href="$wizardLink">3:Select row/column heading(s)</a></td>
+   <td><a href="$wizardLink">3: $l10n.RowColumnHeadings</a></td>
 #end
    </tr>
    </table>

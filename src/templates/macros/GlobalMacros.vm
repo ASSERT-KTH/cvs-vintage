@@ -11,7 +11,7 @@
 <select name="$attrInput.get($optionFieldName).Key"
    #if($size.length())size="$size"#end #if($multiple.equals("true"))multiple="multiple"#end>
   #if ($size.length() == 0)
-   <option value="">Choose...</option>
+   <option value="">$l10n.Choose</option>
   #end
   #if ($module.getLeafRModuleOptions($attr, $issueType))
   #foreach ($option in $module.getLeafRModuleOptions($attr, $issueType))
@@ -55,7 +55,7 @@
 <select name="$attrInput.get($optionFieldName).Key"
   #if($size.length())size="$size"#end #if($multiple)multiple="multiple"#end>
   #if ($size.length() == 0)
-  <option value="">Choose...</option>
+  <option value="">$l10n.Choose</option>
   #end
   #foreach ($option in $module.getLeafRModuleOptions($attr, $scarabR.CurrentIssueType))
     #if ($currentValue && $option.OptionId == $currentValue)
@@ -77,7 +77,7 @@
     <option value="$dependType.DependTypeId">$dependType.Name</option>
     #end
   #end
-  <option value="none">Remove dependency</option>
+  <option value="none">$l10n.RemoveDependency</option>
 </select>
 #end
 
@@ -116,7 +116,7 @@
 <select name="$attrInput.get($optionFieldName).Key"
 #if($size.length() != 0)size="$size"#end #if($multiple)multiple="multiple"#end>
   #if ($size.length() == 0)
-  <option value="">Choose...</option>
+  <option value="">$l10n.Choose</option>
   #end
   #foreach ($option in $module.getOptionTree($attr, $scarabR.CurrentIssueType))
     #set ($selected = false)
@@ -179,7 +179,7 @@
 
 #macro (fieldErrorMsg $field $br)
 #if ($field && $field.Message.length() > 0 && !$field.isValid())
-<p class="alert"><small><strong>Alert!</strong>&#160;$field.Message</small></p>$br
+<p class="alert"><small><strong>$l10n.Alert</strong>&#160;$field.Message</small></p>$br
 #end
 #end
 
@@ -200,7 +200,7 @@
 
 #macro (stdIntakeMsg)
 #if (!$intake.isAllValid())
-<p class="alert">Please check your form fields for errors and resubmit.</p>
+<p class="alert">$l10n.CheckForErrors</p>
 #end
 #end
 
@@ -263,7 +263,7 @@
      #if($size.length())size="$size"#end>
 #end
  #if ($size.length() == 0)
- <option value="">Choose...</option>
+ <option value="">$l10n.Choose</option>
  #end
    #foreach ($user in $module.getUsers($attr.Permission))
    #if ($attrInput.UserId.Value && $user.PrimaryKey == $attrInput.UserId.Value)
@@ -294,7 +294,7 @@
      #if($size.length())size="$size"#end>
 #end
  #if ($size.length() == 0)
- <option value="">Choose...</option>
+ <option value="">$l10n.Choose</option>
  #end
    #foreach ($user in $module.getUsers($attr.Permission))
    #if ($user.PrimaryKey.toString().equals($currentValue.toString()))
@@ -329,7 +329,7 @@
 #end
 
 #macro (frequencySelectBox $id)
-<option value="" >Choose</option>
+<option value="" >$l10n.Choose</option>
   #foreach ($frequency in $scarabR.Frequencies)
     <option value = "$frequency.FrequencyId" #if($frequency.FrequencyId.equals($id)) selected="selected" #end>
     $frequency.Name
@@ -456,7 +456,7 @@ $scarabR.IssuePosInList of $scarabR.CurrentSearchResults.size()
 #macro (printCollisionInfo)
 #if ($lastActivities && !$lastActivities.isEmpty())
   <p class="info">
-  Here is the last activity to occur prior to your suggested changes:
+  $l10n.LastActivity
   </p>
   <ul class="info">
   #foreach ($obj in $lastActivities)

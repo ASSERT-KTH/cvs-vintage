@@ -9,7 +9,7 @@
 #set ($attrValues = $search.CommonAttributeValuesMap)
 #set ($user = $data.User)
 		
-<h3>Issue types selected for this query</h3>
+<h3>$l10n.SelectedIssueTypes</h3>
 <div class="colbar">
 #if ($user.CurrentMITList)
   #set ($list = $user.CurrentMITList)
@@ -29,17 +29,17 @@
 ## a new query, otherwise we need to keep track of a lot of info. 
 #if ($user.CurrentMITList.isModifiable() && $queryId)
     <div class="functnbar3">
-    <input type="submit" value="Edit list" 
+    <input type="submit" value="$l10n.EditList" 
         name="eventSubmit_doRedirecttocrossmodulequery" />
     </div>
 #end
 
-<h3>Issue ID query</h3>
+<h3>$l10n.IssueIDQuery</h3>
 <div class="axial">
 <table cellpadding="3" cellspacing="2" border="0">
 <tr>
 <th width="120">
-    Issue ID range
+    $l10n.IssueIDRange
     #fieldErrorMsg($searchGroup.MinId "")
     #fieldErrorMsg($searchGroup.MaxId "")
 </th>
@@ -52,7 +52,7 @@ from:&#160;<input type="text" size="20"
 </tr>
 <tr>
 <th width="120">
-    Issue creation date range
+    $l10n.CreationDateRange
 </th>
 <td>
     #fieldErrorMsg($searchGroup.MinDate "")
@@ -61,7 +61,7 @@ from:&#160;<input type="text" size="20"
     name="$searchGroup.MinDate.Key" value="$searchGroup.MinDate.toString()" />
 &#160;&#160;to:&#160;<input type="text" size="20"
     name="$searchGroup.MaxDate.Key" value="$searchGroup.MaxDate.toString()" />
-<p><small>(e.g. MM/DD/YYYY hh:mm)</small></p>
+<p><small>$l10n.DateEg</small></p>
 </td>
 </tr>
 </table>
@@ -70,7 +70,7 @@ from:&#160;<input type="text" size="20"
 ## ATTRIBUTES
 <div class="axial">
 #if ( $search.isXMITSearch() )
- <h3>Common Attributes</h3>
+ <h3>$l10n.CommonAttributes</h3>
  <table cellpadding="3" cellspacing="2" border="0">
  #foreach ( $attKey in $attrValues.sequence() )
      #set ( $attVal = $attrValues.get($attKey) )
@@ -102,18 +102,18 @@ from:&#160;<input type="text" size="20"
 
 ##PERSONNEL
 #set ($loopVar = 0)
-<h3>Personnel association search</h3>
+<h3>$l10n.PersonnelSearch</h3>
 <table width="100%" border="1" cellspacing="2" cellpadding="3">
 <tr>
 #set ($userAttrs = $search.UserAttributes) 
 #set ($userList = $data.Parameters.getStrings("user_list"))
 
 #if ($userList && !$userList.isEmpty())
-<th nowrap="nowrap">Select</th>
-<th align="left"><strong>Name</strong></th>
+<th nowrap="nowrap">$l10n.Select</th>
+<th align="left"><strong>$l10n.Name</strong></th>
 #end
-<th align="left"><strong>Username</strong></th>
-<th align="left"><strong>Association</strong></th>
+<th align="left"><strong>$l10n.Username</strong></th>
+<th align="left"><strong>$l10n.Association</strong></th>
 </tr>
 
 #foreach ($userId in $userList)
@@ -139,10 +139,10 @@ from:&#160;<input type="text" size="20"
    <select name="user_attr_$userId" size="" >
       <option value="any"
          #if ($selectedAttr.equals("any")) selected="selected" #end
-         >Any</option>
+         >$l10n.Any</option>
       <option value="created_by"
          #if ($selectedAttr.equals("created_by")) selected="selected" #end
-         >Committed by:</option>
+         >$l10n.CommittedBy</option>
     #foreach ($selectUserAttr in $userAttrs)
        #set ($selected = false)
        #if ($selectedAttr.equals($selectUserAttr.AttributeId.toString())) 
@@ -167,8 +167,8 @@ from:&#160;<input type="text" size="20"
 #end
   <td><input type="text" name="add_user" /></td>
   <td><select name="add_user_attr" size="">
-      <option value="any">Any</option>
-      <option value="created_by">Committed by:</option>
+      <option value="any">$l10n.Any</option>
+      <option value="created_by">$l10n.CommittedBy</option>
     #foreach ($selectUserAttr in $userAttrs)
       <option value="$selectUserAttr.AttributeId">$selectUserAttr.Name:</option>
     #end
@@ -177,19 +177,19 @@ from:&#160;<input type="text" size="20"
 </tr>
 </table> 
 <div class="functnbar3">
-<input type="submit" value="Add new" name="eventSubmit_doAdduser" />&nbsp;
+<input type="submit" value="$l10n.AddNew" name="eventSubmit_doAdduser" />&nbsp;
 #if ($userList && $scarabG.sizeOfArray($userList) > 0)
-<input type="submit" value="Delete selected" name="eventSubmit_doRemoveusers" />&nbsp;
+<input type="submit" value="$l10n.DeleteSelected" name="eventSubmit_doRemoveusers" />&nbsp;
 #end
-<input type="submit" value="Edit list" name="eventSubmit_doGotoothertemplate" />
+<input type="submit" value="$l10n.EditList" name="eventSubmit_doGotoothertemplate" />
 </div>
 
 ## STATE CHANGE QUERY
-<h3>State change query</h3>
+<h3>$l10n.StateChangeQuery</h3>
 <div class="axial">
 <table cellpadding="3" cellspacing="2" border="0">
 <tr>
- <th width="120">Attribute</th>
+ <th width="120">$l10n.Attribute</th>
  <td>
      <select name="$searchGroup.StateChangeAttributeId.Key">
 #foreach ( $attKey in $attrValues.sequence() )
@@ -211,18 +211,18 @@ from:&#160;<input type="text" size="20"
     #end
 #end
      </select>
-     <input name="eventSubmit_doRefresh" value="Update Options" type="submit" />
+     <input name="eventSubmit_doRefresh" value="$l10n.UpdateOptions" type="submit" />
  </td>
 </tr>
 <tr>
- <th width="120">State change query</th>
+ <th width="120">$l10n.StateChangeQuery</th>
  <td>
   <select name="$searchGroup.StateChangeFromOptionId.Key">
     #set ( $selected = false )
     #if ( !$searchGroup.StateChangeFromOptionId.Value )
   #set ( $selected = true )
  #end
-    <option#selected($selected) value="">any value</option>
+    <option#selected($selected) value="">$l10n.AnyValue</option>
 
 #if ( $search.isXMITSearch() )
  #set ( $options = $search.getLeafRModuleOptions($selectedAttribute))
@@ -241,13 +241,13 @@ from:&#160;<input type="text" size="20"
         $option.DisplayValue
                 </option>
 #end
-  </select> to
+  </select> $l10n.To
   <select name="$searchGroup.StateChangeToOptionId.Key">
     #set ( $selected = false )
     #if ( !$searchGroup.StateChangeToOptionId.Value )
       #set ( $selected = true )
     #end
-    <option#selected($selected) value="">any value</option>
+    <option#selected($selected) value="">$l10n.AnyValue</option>
 #foreach ($option in $options)
     #set ( $selected = false )
     #if ( $searchGroup.StateChangeToOptionId.Value && $option.OptionId == $searchGroup.StateChangeToOptionId.Value )
@@ -272,21 +272,21 @@ from:&#160;<input type="text" size="20"
         to
         <input type="text" size=20 name="$searchGroup.StateChangeToDate.Key"
             value="$searchGroup.StateChangeToDate">
-        <p><small>(e.g. MM/DD/YYYY hh:mm)</small></p>
+        <p><small>$l10n.DateEg</small></p>
     </td>
  </tr>
 </table>
 </div>
 
 
-<h3>Search results view prefs</h3>
+<h3>$l10n.ResultPrefs</h3>
 <div class="axial">
 <table cellpadding="3" cellspacing="2" border="0">
 <tr>
- <th width="120">Sort by</th>
+ <th width="120">$l10n.SortBy</th>
  <td>
  <select name="$searchGroup.SortAttributeId.Key">
-    <option value="">Choose...</option>
+    <option value="">$l10n.Choose</option>
 #foreach ( $attKey in $attrValues.sequence() )
   #set ( $attribute = $attrValues.get($attKey).Attribute )
    <option value="$attribute.AttributeId">
@@ -296,16 +296,16 @@ from:&#160;<input type="text" size="20"
 </select>&#160;
 <select name="$searchGroup.SortPolarity.Key">
     <option value="asc">
-        ascending
+        $l10n.Ascending
     </option>
     <option value="desc">
-        descending
+        $l10n.Descending
     </option>
 </select>
 </td>
 </tr>
 <tr>
-<th width="120">Issues per page</th>
+<th width="120">$l10n.IssuesPerPage</th>
 <td>
 <input type="radio" name="resultsPerPage" value="25" checked="checked" /> 25
 <input type="radio" name="resultsPerPage" value="50" /> 50
@@ -363,7 +363,7 @@ from:&#160;<input type="text" size="20"
 <select name="$attrInput.get($optionFieldName).Key"
 #if($size.length() != 0)size="$size"#end #if($multiple)multiple="multiple"#end>
   #if ($size.length() == 0)
-  <option value="">Choose...</option>
+  <option value="">$l10n.Choose</option>
   #end
   #foreach ($option in $search.getCommonOptionTree($attr))
     #set ($selected = false)
