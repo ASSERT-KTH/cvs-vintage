@@ -30,7 +30,7 @@ import org.w3c.dom.Element;
  * @author <a href="mailto:vincent.harcq@hubmethods.com">Vincent Harcq</a>
  * @author <a href="mailto:loubyansky@hotmail.com">Alex Loubyansky</a>
  *
- * @version $Revision: 1.19 $
+ * @version $Revision: 1.20 $
  */
 public final class JDBCCMPFieldMetaData {
    /**
@@ -530,8 +530,8 @@ public final class JDBCCMPFieldMetaData {
       // unknown primary key
       this.unknownPkField = defaultValues.isUnknownPkField();
 
-      // is the field auto-increment?
-      autoIncrement = defaultValues.isAutoIncrement();
+      // not auto-increment because it represents a foreign key
+      autoIncrement = false;
    }
 
    /**
