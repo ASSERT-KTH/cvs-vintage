@@ -1,4 +1,4 @@
-// $Id: TabDiagram.java,v 1.44 2004/09/11 06:34:51 mvw Exp $
+// $Id: TabDiagram.java,v 1.45 2004/10/20 06:07:45 linus Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -447,7 +447,7 @@ class ArgoJGraph extends JGraph {
 
     /**
      * Make a new {@link JGraph} with a the {@link GraphModel} and 
-     * {@link Layer} from the given Diagram.
+     * {@link org.tigris.gef.base.Layer} from the given Diagram.
      *
      * @param d The Diagram.
      */

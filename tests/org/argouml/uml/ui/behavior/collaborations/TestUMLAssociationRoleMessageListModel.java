@@ -1,4 +1,4 @@
-// $Id: TestUMLAssociationRoleMessageListModel.java,v 1.5 2004/02/24 08:28:19 linus Exp $
+// $Id: TestUMLAssociationRoleMessageListModel.java,v 1.6 2004/10/20 06:07:44 linus Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -56,7 +56,7 @@ public class TestUMLAssociationRoleMessageListModel
     }
 
     /**
-     * @see org.argouml.uml.ui.AbstractUMLModelElementListModel2Test#buildModel(org.argouml.uml.ui.UMLUserInterfaceContainer)
+     * @see org.argouml.uml.ui.AbstractUMLModelElementListModel2Test#buildModel()
      */
     protected void buildModel() {
         model = new UMLAssociationRoleMessageListModel();
@@ -75,7 +75,7 @@ public class TestUMLAssociationRoleMessageListModel
     }
 
     /**
-     * @see org.argouml.uml.ui.AbstractUMLModelElementListModel2Test#removeHalfModel(ru.novosoft.uml.MBase)
+     * @see org.argouml.uml.ui.AbstractUMLModelElementListModel2Test#removeHalfModel(ru.novosoft.uml.MBase[])
      */
     protected void removeHalfModel(MBase[] elements) {
         for (int i = 0; i < 5; i++) {

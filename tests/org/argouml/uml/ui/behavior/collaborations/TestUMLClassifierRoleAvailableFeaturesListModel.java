@@ -1,4 +1,4 @@
-// $Id: TestUMLClassifierRoleAvailableFeaturesListModel.java,v 1.6 2004/02/24 08:28:19 linus Exp $
+// $Id: TestUMLClassifierRoleAvailableFeaturesListModel.java,v 1.7 2004/10/20 06:07:44 linus Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -31,7 +31,6 @@ import org.argouml.model.uml.foundation.core.CoreFactory;
 import org.argouml.uml.ui.AbstractUMLModelElementListModel2Test;
 
 import ru.novosoft.uml.MBase;
-import ru.novosoft.uml.behavior.collaborations.MClassifierRole;
 import ru.novosoft.uml.foundation.core.MClassifier;
 import ru.novosoft.uml.foundation.core.MFeature;
 
@@ -61,7 +60,7 @@ public class TestUMLClassifierRoleAvailableFeaturesListModel
     }
 
     /**
-     * @see org.argouml.uml.ui.AbstractUMLModelElementListModel2Test#buildModel(org.argouml.uml.ui.UMLUserInterfaceContainer)
+     * @see org.argouml.uml.ui.AbstractUMLModelElementListModel2Test#buildModel()
      */
     protected void buildModel() {
         model = new UMLClassifierRoleAvailableFeaturesListModel();
@@ -72,7 +71,7 @@ public class TestUMLClassifierRoleAvailableFeaturesListModel
      */
     protected MBase[] fillModel() {
         MFeature[] features = new MFeature[10];
-        for (int i = 0; i < 10; i++) {
+        for (int i = 0; i < features.length; i++) {
             features[i] = CoreFactory.getFactory().createOperation();
             base.addFeature(features[i]);
         }
@@ -80,7 +79,7 @@ public class TestUMLClassifierRoleAvailableFeaturesListModel
     }
 
     /**
-     * @see org.argouml.uml.ui.AbstractUMLModelElementListModel2Test#removeHalfModel(ru.novosoft.uml.MBase)
+     * @see org.argouml.uml.ui.AbstractUMLModelElementListModel2Test#removeHalfModel(ru.novosoft.uml.MBase[])
      */
     protected void removeHalfModel(MBase[] elements) {
         for (int i = 0; i < 5; i++) {
@@ -94,8 +93,7 @@ public class TestUMLClassifierRoleAvailableFeaturesListModel
     protected void setUp() throws Exception {
         super.setUp();
         base = CoreFactory.getFactory().createClass();
-        CollaborationsHelper.getHelper().addBase(((MClassifierRole) elem),
-						 base);
+        CollaborationsHelper.getHelper().addBase(elem, base);
     }
 
     /**

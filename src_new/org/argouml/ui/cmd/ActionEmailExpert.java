@@ -1,4 +1,4 @@
-// $Id: ActionEmailExpert.java,v 1.1 2004/09/28 19:45:05 mvw Exp $
+// $Id: ActionEmailExpert.java,v 1.2 2004/10/20 06:07:44 linus Exp $
 // Copyright (c) 2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -75,7 +75,7 @@ public class ActionEmailExpert extends ToDoItemAction {
                     + "?subject=" + subject 
                     + "&body=" + dsgr); 
             } catch (Exception ex) {
-                /*ignore for now*/;
+                /*ignore for now*/
             }
         } else {
             EmailExpertDialog dialog = new EmailExpertDialog();
@@ -85,7 +85,7 @@ public class ActionEmailExpert extends ToDoItemAction {
     }
 
     /**
-     * @see org.argouml.ui.ToDoItemAction#shouldBeEnabled(java.lang.Object)
+     * @see org.argouml.ui.cmd.ToDoItemAction#shouldBeEnabled(java.lang.Object)
      */
     public boolean shouldBeEnabled(Object target) {
         return getRememberedTarget() != null 
