@@ -1,6 +1,6 @@
 #!/bin/sh
 
-VERSION=0.12.0
+VERSION=1.0_M2
 
 # change directory
 
