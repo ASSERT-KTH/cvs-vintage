@@ -9,11 +9,9 @@ set BUILDFILE=build.xml
 
 if "%JAVA_HOME%" == "" goto JavaHomeError
 
-if exist %JAVA_HOME%\lib\tools.jar set CLASSPATH=%CLASSPATH%;%JAVA_HOME%\lib\tools.jar
+set BUILDCLASSPATH=%JAVA_HOME%\lib\tools.jar;..\src\tomcat-4.0\lib\jaxp.jar;..\src\tomcat-4.0\lib\crimson.jar;ant-1.2.jar
 
-set CLASSPATH=%CLASSPATH%;ant-1.2.jar
-
-%JAVA_HOME%\bin\java -classpath %CLASSPATH% org.apache.tools.ant.Main -buildfile %BUILDFILE% %1 %2 %3 %4 %5 %6 %7 %8 %9
+%JAVA_HOME%\bin\java -classpath %BUILDCLASSPATH% org.apache.tools.ant.Main -buildfile %BUILDFILE% %1 %2 %3 %4 %5 %6 %7 %8 %9
 
 goto End
 
