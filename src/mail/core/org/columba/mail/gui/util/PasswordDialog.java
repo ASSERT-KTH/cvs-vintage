@@ -21,7 +21,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 import javax.swing.*;
-import javax.swing.border.AbstractBorder;
 
 import org.columba.core.gui.util.ImageLoader;
 import org.columba.mail.util.MailResourceLoader;
@@ -55,7 +54,7 @@ public class PasswordDialog implements ActionListener {
 		JPanel bottom = new JPanel();
 		bottom.setLayout(new BorderLayout());
 		//bottom.setLayout( new BoxLayout( bottom, BoxLayout.X_AXIS ) );
-		bottom.setBorder(BorderFactory.createEmptyBorder(10, 5, 10, 5));
+		bottom.setBorder(BorderFactory.createEmptyBorder(17, 12, 11, 11));
 
 		//bottom.add( Box.createHorizontalStrut());
 
@@ -75,10 +74,10 @@ public class PasswordDialog implements ActionListener {
 		//$NON-NLS-1$ //$NON-NLS-2$
 
 		JPanel buttonPanel = new JPanel();
-		buttonPanel.setLayout(new GridLayout(1, 3, 10, 0));
-		buttonPanel.add(helpButton);
-		buttonPanel.add(cancelButton);
+		buttonPanel.setLayout(new GridLayout(1, 3, 5, 0));
 		buttonPanel.add(okButton);
+		buttonPanel.add(cancelButton);
+		buttonPanel.add(helpButton);
 
 		//bottom.add( Box.createHorizontalGlue() );
 
@@ -128,16 +127,11 @@ public class PasswordDialog implements ActionListener {
 					"dialog",
 					"password",
 					"save_password"));
-		if (save)
-			checkbox.setSelected(true);
-		else
-			checkbox.setSelected(false);
+                checkbox.setSelected(save);
 
 		dialog = new JDialog(frame, true);
 		dialog.setTitle(
 			MailResourceLoader.getString("dialog", "password", "dialog_title"));
-
-		dialog.getContentPane().setLayout(new BorderLayout());
 
 		JPanel centerPanel = new JPanel();
 		centerPanel.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
@@ -172,30 +166,17 @@ public class PasswordDialog implements ActionListener {
 		centerPanel.add(checkbox);
 
 		JPanel bottomPanel = new JPanel();
-		bottomPanel.setBorder(new WizardTopBorder());
 		bottomPanel.setLayout(new BorderLayout());
 
 		JPanel buttonPanel = createButtonPanel();
 		bottomPanel.add(buttonPanel, BorderLayout.CENTER);
 
 		dialog.getContentPane().add(bottomPanel, BorderLayout.SOUTH);
-
-		dialog.pack();
-
 		dialog.getRootPane().setDefaultButton(okButton);
-
-		java.awt.Dimension dim = dialog.getSize();
-
-		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-
-		dialog.setLocation(
-			screenSize.width / 2 - dim.width / 2,
-			screenSize.height / 2 - dim.height / 2);
-
+		dialog.pack();
+		dialog.setLocationRelativeTo(null);
 		dialog.show();
-
 		passwordField.requestFocus();
-
 	}
 
 	public char[] getPassword() {
@@ -236,27 +217,6 @@ public class PasswordDialog implements ActionListener {
 		} else if (action.equals("CANCEL")) {
 			bool = false;
 			dialog.dispose();
-		}
-	}
-
-	public class WizardTopBorder extends AbstractBorder {
-		protected Insets borderInsets = new Insets(2, 0, 0, 0);
-
-		public void paintBorder(
-			Component c,
-			Graphics g,
-			int x,
-			int y,
-			int w,
-			int h) {
-			g.setColor(UIManager.getColor("Button.darkShadow"));
-			g.drawLine(x, y, x + w - 1, y);
-			g.setColor(Color.white);
-			g.drawLine(x, y + 1, x + w - 1, y + 1);
-		}
-
-		public Insets getBorderInsets(Component c) {
-			return borderInsets;
 		}
 	}
 }
