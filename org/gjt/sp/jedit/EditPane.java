@@ -33,7 +33,7 @@ import org.gjt.sp.util.Log;
  * A panel containing a text area. Each edit pane can edit one buffer at
  * a time.
  * @author Slava Pestov
- * @version $Id: EditPane.java,v 1.3 2001/09/10 12:12:50 spestov Exp $
+ * @version $Id: EditPane.java,v 1.4 2001/09/28 14:12:09 spestov Exp $
  */
 public class EditPane extends JPanel implements EBComponent
 {
@@ -198,7 +198,7 @@ public class EditPane extends JPanel implements EBComponent
 			buffer.putProperty(Buffer.SELECTION,selection);
 
 		buffer.putProperty(Buffer.SCROLL_VERT,new Integer(
-			textArea.getFirstLine()));
+			buffer.virtualToPhysical(textArea.getFirstLine())));
 		buffer.putProperty(Buffer.SCROLL_HORIZ,new Integer(
 			textArea.getHorizontalOffset()));
 	}
@@ -225,7 +225,7 @@ public class EditPane extends JPanel implements EBComponent
 			textArea.setSelection(selection);
 
 		if(firstLine != null)
-			textArea.setFirstLine(firstLine.intValue());
+			textArea.setFirstLine(buffer.physicalToVirtual(firstLine.intValue()));
 
 		if(horizontalOffset != null)
 			textArea.setHorizontalOffset(horizontalOffset.intValue());
