@@ -1,13 +1,6 @@
 #set ($currentModule = $scarabR.CurrentModule)
 <div id="selectmodule" class="app">
 
-#set ($user = $data.User)
-#if (!$user.hasLoggedIn())
-<p class="infomark"><em>$l10n.ToAccessPage $link.setPage("Login.vm").setLabel("Login").</em></p>
-#else
-#if ($link.setPage("RequestRoles.vm").addPathInfo($scarabG.Constant.NEXT_TEMPLATE, "SelectModule.vm").isAllowed() && !$user.isUserAnonymous())
-<p>$l10n.format("RequestRolesInOtherModules", $link)</p>
-#end
 
 #if ($currentModule)
 <h3>$l10n.CurrentModule</h3>
@@ -64,6 +57,17 @@
 $l10n.format("YouCannotAccessModules", $link.setPage("Login.vm").addPathInfo($scarabG.Constant.NEXT_TEMPLATE, "SelectModule.vm"))
 </em></p>
 #end
+#set ($user = $data.User)
+#if (!$user.hasLoggedIn())
+<p class="infomark"><em>$l10n.ToAccessPage $link.setPage("Login.vm").setLabel("Login").</em></p>
+#else
+#if ($link.setPage("RequestRoles.vm").addPathInfo($scarabG.Constant.NEXT_TEMPLATE, "SelectModule.vm").isAllowed() && !$user.isUserAnonymous())
+<div class="functnbar2">
+<input type="submit" name="link" value="$l10n.RequestRoles" onclick="self.location.href='$link'" />
+$l10n.RequestRolesInOtherModules
+</div>
+#end
+
 #end
 
 </div>
