@@ -85,5 +85,15 @@ public class MessageNode extends DefaultMutableTreeNode {
 	public String getParsedSubject() {
 		return parsedSubject;
 	}
+	
+	public static Object[] toUidArray( MessageNode[] nodes )
+	{
+		Object[] newUidList = new Object[nodes.length];
+		for (int i = 0; i < nodes.length; i++) {
+			newUidList[i] = nodes[i].getUid();
+			//System.out.println("node=" + newUidList[i]);
+		}
+		return newUidList;
+	}
 
 }

@@ -10,6 +10,7 @@ import org.columba.mail.command.FolderCommandReference;
 import org.columba.mail.folder.Folder;
 import org.columba.mail.gui.frame.MailFrameController;
 import org.columba.mail.gui.table.TableChangedEvent;
+import org.columba.mail.gui.table.util.MessageNode;
 import org.columba.main.MainInterface;
 
 /**
@@ -23,7 +24,7 @@ import org.columba.main.MainInterface;
 public class CopyMessageCommand extends FolderCommand {
 
 	protected Folder destFolder;
-	
+
 	/**
 	 * Constructor for CopyMessageCommand.
 	 * @param frameController
@@ -33,17 +34,18 @@ public class CopyMessageCommand extends FolderCommand {
 		FrameController frameController,
 		DefaultCommandReference[] references) {
 		super(frameController, references);
-		
+
 		commandType = Command.UNDOABLE_OPERATION;
 	}
-	
+
 	public void updateGUI() throws Exception {
 		MailFrameController frame = (MailFrameController) frameController;
-		
-		TableChangedEvent ev = new TableChangedEvent( TableChangedEvent.UPDATE, destFolder);
-		 
+
+		TableChangedEvent ev =
+			new TableChangedEvent(TableChangedEvent.UPDATE, destFolder);
+
 		frame.tableController.tableChanged(ev);
-		
+
 		MainInterface.treeModel.nodeChanged(destFolder);
 	}
 
@@ -56,7 +58,7 @@ public class CopyMessageCommand extends FolderCommand {
 
 		FolderCommandReference[] r = (FolderCommandReference[]) getReferences();
 
-		Object[] uids = r[0].getUids();
+		Object[] uids = MessageNode.toUidArray( (MessageNode[]) r[0].getUids());
 
 		Folder folder = (Folder) r[0].getFolder();
 		destFolder = (Folder) r[1].getFolder();
@@ -65,20 +67,21 @@ public class CopyMessageCommand extends FolderCommand {
 
 		ColumbaLogger.log.debug("src=" + folder + " dest=" + destFolder);
 
-		
-		worker.setDisplayText("Copying messages to "+destFolder.getName()+"...");
+		worker.setDisplayText(
+			"Copying messages to " + destFolder.getName() + "...");
 		worker.setProgressBarMaximum(uids.length);
-		
+
 		for (int i = 0; i < uids.length; i++) {
 			worker.setProgressBarValue(i);
-			
+
 			Object uid = uids[i];
 			//ColumbaLogger.log.debug("copying UID=" + uid);
 
-			String source = folder.getMessageSource(uid, worker);
-			
-			
-			destUids[i] = destFolder.addMessage(source, worker);
+			if (folder.exists(uid, worker)) {
+				String source = folder.getMessageSource(uid, worker);
+
+				destUids[i] = destFolder.addMessage(source, worker);
+			}
 		}
 
 		r[1].setUids(destUids);

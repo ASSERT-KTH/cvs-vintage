@@ -52,7 +52,7 @@ public class SendAllMessagesCommand extends FolderCommand {
 		Object[] uids = outboxFolder.getUids(worker);
 
 		for (int i = 0; i < uids.length; i++) {
-			if (outboxFolder.exists(uids[i]) == true) {
+			if (outboxFolder.exists(uids[i], worker) == true) {
 				SendableMessage message =
 					(SendableMessage) outboxFolder.getMessage(uids[i], worker);
 				sendListManager.add(message);

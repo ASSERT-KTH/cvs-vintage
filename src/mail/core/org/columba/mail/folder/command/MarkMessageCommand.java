@@ -9,6 +9,7 @@ import org.columba.mail.command.FolderCommandReference;
 import org.columba.mail.folder.Folder;
 import org.columba.mail.gui.frame.MailFrameController;
 import org.columba.mail.gui.table.TableChangedEvent;
+import org.columba.mail.gui.table.util.MessageNode;
 import org.columba.main.MainInterface;
 
 /**
@@ -61,7 +62,7 @@ public class MarkMessageCommand extends FolderCommand {
 		markVariant = r[0].getMarkVariant();
 		ColumbaLogger.log.debug("src=" + folder);
 
-		folder.markMessage(uids, markVariant , worker);
+		folder.markMessage(MessageNode.toUidArray( (MessageNode[]) uids ), markVariant , worker);
 		
 		
 	}

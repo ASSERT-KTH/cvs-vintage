@@ -53,41 +53,11 @@ public class ExpungeFolderCommand extends FolderCommand {
 		FolderCommandReference[] r = (FolderCommandReference[]) getReferences();
 
 		srcFolder = (Folder) r[0].getFolder();
-		//Object[] uids = srcFolder.getUids(worker);
+		Object[] uids = srcFolder.getUids(worker);
 
-		srcFolder.expungeFolder(worker);
+		srcFolder.expungeFolder(uids, worker);
 		
-		/*
-		Folder destFolder = (Folder) r[1].getFolder();
-
-		for (int i = 0; i < uids.length; i++) {
-			Object uid = uids[i];
-
-			ColumbaHeader h = srcFolder.getMessageHeader(uid, worker);
-			Boolean expunged = (Boolean) h.get("columba.flags.expunged");
-
-			ColumbaLogger.log.debug("expunged=" + expunged);
-
-			if (expunged.equals(Boolean.TRUE)) {
-				// move message to trash
-
-				ColumbaLogger.log.info(
-					"moving message with UID " + uid + " to trash");
-					
-				// copy message
-				String source = srcFolder.getMessageSource(uid, worker);
-				Object newUid = destFolder.addMessage(source, worker);
-				
-				// undo mark-as-expunged flag
-				ColumbaHeader newHeader = destFolder.getMessageHeader(newUid,worker);
-				newHeader.set("columba.flags.expunged", Boolean.FALSE);
-				
-				// remove message
-				srcFolder.removeMessage(uid);
-
-			}
-		}
-		*/
+		
 	}
 
 }

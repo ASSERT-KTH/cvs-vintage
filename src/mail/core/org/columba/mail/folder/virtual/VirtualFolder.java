@@ -56,6 +56,10 @@ public class VirtualFolder extends Folder {
 		nextUid = next;
 	}
 
+	public boolean exists(Object uid, WorkerStatusController worker) throws Exception {
+		return headerList.containsKey(uid);
+	}
+	
 	public HeaderList getHeaderList(WorkerStatusController worker)
 		throws Exception {
 
@@ -179,7 +183,7 @@ public class VirtualFolder extends Folder {
 	/**
 	 * @see org.columba.modules.mail.folder.Folder#expungeFolder(WorkerStatusController)
 	 */
-	public void expungeFolder(WorkerStatusController worker) throws Exception {
+	public void expungeFolder(Object[] uids, WorkerStatusController worker) throws Exception {
 	}
 
 	/**

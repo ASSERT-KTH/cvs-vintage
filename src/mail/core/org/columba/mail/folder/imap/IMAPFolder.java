@@ -382,8 +382,8 @@ public class IMAPFolder extends RemoteFolder {
 		return null;
 	}
 
-	public boolean exists(Object uid) throws Exception {
-		return true;
+	public boolean exists(Object uid, WorkerStatusController worker) throws Exception {
+		return cache.getHeaderList(worker).containsKey(uid);
 	}
 
 	protected void markMessage(
@@ -450,16 +450,16 @@ public class IMAPFolder extends RemoteFolder {
 		return uids;
 	}
 
-	public void expungeFolder(WorkerStatusController worker) throws Exception {
+	public void expungeFolder(Object[] uids, WorkerStatusController worker) throws Exception {
 
 		boolean result = getStore().expunge(worker, getImapPath());
 		if (result == false)
 			return;
 
-		Object[] uids = getUids(worker);
+		Object[] uids2 = getUids(worker);
 
 		for (int i = 0; i < uids.length; i++) {
-			Object uid = uids[i];
+			Object uid = uids2[i];
 
 			ColumbaHeader h = (ColumbaHeader) headerList.getHeader(uid);
 

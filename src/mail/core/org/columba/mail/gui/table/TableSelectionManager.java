@@ -20,6 +20,7 @@ import org.columba.mail.gui.tree.TreeSelectionManager;
  */
 public class TableSelectionManager extends TreeSelectionManager implements FolderSelectionListener{
 
+	// these uids are MessageNode[] !!!!!
 	protected Object[] uids;
 
 	

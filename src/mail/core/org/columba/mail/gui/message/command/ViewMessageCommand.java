@@ -10,6 +10,7 @@ import org.columba.mail.command.FolderCommandReference;
 import org.columba.mail.config.MailConfig;
 import org.columba.mail.folder.Folder;
 import org.columba.mail.gui.frame.MailFrameController;
+import org.columba.mail.gui.table.util.MessageNode;
 import org.columba.mail.message.AbstractMessage;
 import org.columba.mail.message.HeaderInterface;
 import org.columba.mail.message.MimePart;
@@ -43,13 +44,13 @@ public class ViewMessageCommand extends FolderCommand {
 
 	private void getData(
 		Folder srcFolder,
-		Object uid,
+		MessageNode messageNode,
 		WorkerStatusController wsc)
 		throws Exception {
 		
 		this.folder = srcFolder;
-		this.uid = uid;
-		
+		//this.messageNode = messageNode;
+		this.uid = messageNode.getUid();
 
 		bodyPart = null;
 
@@ -122,7 +123,7 @@ public class ViewMessageCommand extends FolderCommand {
 	 */
 	public void execute(Worker worker) throws Exception {
 		FolderCommandReference[] r = (FolderCommandReference[]) getReferences();
-		getData((Folder) r[0].getFolder(), r[0].getUids()[0], worker);
+		getData((Folder) r[0].getFolder(), (MessageNode) r[0].getUids()[0], worker);
 	}
 
 }

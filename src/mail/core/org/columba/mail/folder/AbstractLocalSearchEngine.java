@@ -92,7 +92,7 @@ public abstract class AbstractLocalSearchEngine
 		Vector v = new Vector();
 
 		for (int i = 0; i < uids.length; i++) {
-			if (folder.exists(uids[i]) == false)
+			if (folder.exists(uids[i], worker) == false)
 				continue;
 
 			AbstractMessage message = folder.getMessage(uids[i], worker);
@@ -117,7 +117,7 @@ public abstract class AbstractLocalSearchEngine
 		Date searchPattern = transformDate(pattern);
 
 		for (int i = 0; i < uids.length; i++) {
-			if (folder.exists(uids[i]) == false)
+			if (folder.exists(uids[i], worker) == false)
 				continue;
 
 			AbstractMessage message = folder.getMessage(uids[i], worker);
@@ -155,7 +155,7 @@ public abstract class AbstractLocalSearchEngine
 		Integer searchPattern = transformSize(pattern);
 
 		for (int i = 0; i < uids.length; i++) {
-			if (folder.exists(uids[i]) == false)
+			if (folder.exists(uids[i], worker) == false)
 				continue;
 			AbstractMessage message = folder.getMessage(uids[i], worker);
 			boolean b = processSize(message, searchPattern, condition, worker);
@@ -202,7 +202,7 @@ public abstract class AbstractLocalSearchEngine
 			return new Vector();
 
 		for (int i = 0; i < uids.length; i++) {
-			if (folder.exists(uids[i]) == false)
+			if (folder.exists(uids[i], worker) == false)
 				continue;
 			AbstractMessage message = folder.getMessage(uids[i], worker);
 			boolean b =
@@ -225,7 +225,7 @@ public abstract class AbstractLocalSearchEngine
 		Integer priority = transformPriority(pattern);
 
 		for (int i = 0; i < uids.length; i++) {
-			if (folder.exists(uids[i]) == false)
+			if (folder.exists(uids[i], worker) == false)
 				continue;
 			AbstractMessage message = folder.getMessage(uids[i], worker);
 			boolean b = processPriority(message, priority, condition, worker);
@@ -254,7 +254,7 @@ public abstract class AbstractLocalSearchEngine
 		String bodyText = pattern;
 
 		for (int i = 0; i < uids.length; i++) {
-			if (folder.exists(uids[i]) == false)
+			if (folder.exists(uids[i], worker) == false)
 				continue;
 			AbstractMessage message = folder.getMessage(uids[i], worker);
 			boolean b = processBody(message, pattern, condition, worker);
@@ -274,7 +274,7 @@ public abstract class AbstractLocalSearchEngine
 		FilterRule rule = filter.getFilterRule();
 
 		Vector v = processCriteria(rule, uids, worker);
-		printList(v);
+		//printList(v);
 
 		return v.toArray();
 
@@ -289,7 +289,7 @@ public abstract class AbstractLocalSearchEngine
 		Object[] uids = folder.getUids(worker);
 
 		Vector v = processCriteria(rule, uids, worker);
-		printList(v);
+		//printList(v);
 
 		return v.toArray();
 

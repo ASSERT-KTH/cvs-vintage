@@ -55,6 +55,32 @@ public class TempFolder extends Folder {
 		headerList.clear();
 		messageList.clear();
 	}
+	
+	public void expungeFolder(Object[] uids, WorkerStatusController worker) throws Exception {
+		for (int i = 0; i < uids.length; i++) {
+			Object uid = uids[i];
+
+			ColumbaHeader h = getMessageHeader(uid, worker);
+			Boolean expunged = (Boolean) h.get("columba.flags.expunged");
+
+			//ColumbaLogger.log.debug("expunged=" + expunged);
+
+			if (expunged.equals(Boolean.TRUE)) {
+				// move message to trash
+
+				ColumbaLogger.log.info(
+					"moving message with UID " + uid + " to trash");
+
+				// remove message
+				removeMessage(uid, worker);
+
+			}
+		}
+	}
+	
+	public boolean exists(Object uid, WorkerStatusController worker) throws Exception {
+		return headerList.containsKey(uid);
+	}
 
 	protected Object generateNextUid() {
 		return new Integer(nextUid++);

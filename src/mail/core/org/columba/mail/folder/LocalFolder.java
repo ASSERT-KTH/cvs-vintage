@@ -68,7 +68,7 @@ public abstract class LocalFolder extends Folder {
 
 	public abstract DataStorageInterface getDataStorageInstance();
 
-	public boolean exists(Object uid) throws Exception {
+	public boolean exists(Object uid, WorkerStatusController worker) throws Exception {
 		return getDataStorageInstance().exists(uid);
 	}
 
@@ -118,7 +118,7 @@ public abstract class LocalFolder extends Folder {
 		if (aktMessage != null) {
 			if (aktMessage.getUID().equals(uid)) {
 				// this message is already cached
-				ColumbaLogger.log.info("using already cached message..");
+				//ColumbaLogger.log.info("using already cached message..");
 
 				return aktMessage;
 			}

@@ -43,6 +43,11 @@ public class CachedMHFolder extends MHFolder {
 		cache.save(null);
 	}
 
+	public boolean exists(Object uid, WorkerStatusController worker)
+		throws Exception {
+		return cache.getHeaderList(worker).containsKey(uid);
+	}
+
 	public ColumbaHeader getMessageHeader(
 		Object uid,
 		WorkerStatusController worker)
@@ -106,11 +111,14 @@ public class CachedMHFolder extends MHFolder {
 		return newUid;
 	}
 
-	public void expungeFolder(WorkerStatusController worker) throws Exception {
-		Object[] uids = getUids(worker);
+	public void expungeFolder(Object[] uids, WorkerStatusController worker)
+		throws Exception {
 
 		for (int i = 0; i < uids.length; i++) {
 			Object uid = uids[i];
+
+			if (exists(uid, worker) == false)
+				continue;
 
 			ColumbaHeader h = getMessageHeader(uid, worker);
 			Boolean expunged = (Boolean) h.get("columba.flags.expunged");
@@ -156,7 +164,7 @@ public class CachedMHFolder extends MHFolder {
 				{
 					if (h.get("columba.flags.recent").equals(Boolean.TRUE))
 						getMessageFolderInfo().decRecent();
-						
+
 					if (h.get("columba.flags.seen").equals(Boolean.FALSE))
 						getMessageFolderInfo().decUnseen();
 
@@ -170,7 +178,6 @@ public class CachedMHFolder extends MHFolder {
 				}
 			case MarkMessageCommand.MARK_AS_EXPUNGED :
 				{
-					
 
 					h.set("columba.flags.expunged", Boolean.TRUE);
 					break;
@@ -190,13 +197,14 @@ public class CachedMHFolder extends MHFolder {
 		throws Exception {
 
 		for (int i = 0; i < uids.length; i++) {
-			markMessage(uids[i], variant, worker);
+			if (exists(uids[i], worker)) {
+				markMessage(uids[i], variant, worker);
+			}
 		}
 	}
 
 	public Hashtable getAttributes() {
 		Hashtable attributes = new Hashtable();
-
 		attributes.put("accessrights", "user");
 		attributes.put("messagefolder", "true");
 		attributes.put("type", "columba");
@@ -204,7 +212,6 @@ public class CachedMHFolder extends MHFolder {
 		attributes.put("accessrights", "true");
 		attributes.put("add", "true");
 		attributes.put("remove", "true");
-
 		return attributes;
 	}
 
@@ -214,10 +221,8 @@ public class CachedMHFolder extends MHFolder {
 
 	public Object[] getUids(WorkerStatusController worker) throws Exception {
 		cache.getHeaderList(worker);
-
 		int count = cache.count();
 		Object[] uids = new Object[count];
-
 		int i = 0;
 		for (Enumeration e = cache.getHeaderList(worker).keys();
 			e.hasMoreElements();

@@ -3,11 +3,11 @@ package org.columba.mail.gui.message.command;
 import org.columba.core.command.DefaultCommandReference;
 import org.columba.core.command.Worker;
 import org.columba.core.gui.FrameController;
-import org.columba.core.logging.ColumbaLogger;
 import org.columba.mail.command.FolderCommand;
 import org.columba.mail.command.FolderCommandReference;
 import org.columba.mail.folder.Folder;
 import org.columba.mail.gui.frame.MailFrameController;
+import org.columba.mail.gui.table.util.MessageNode;
 
 /**
  * @author freddy
@@ -58,7 +58,7 @@ public class ViewMessageSourceCommand extends FolderCommand {
 
 		FolderCommandReference[] r = (FolderCommandReference[]) getReferences();
 
-		Object[] uids = r[0].getUids();
+		Object[] uids = MessageNode.toUidArray( (MessageNode[]) r[0].getUids());
 
 		Folder folder = (Folder) r[0].getFolder();
 

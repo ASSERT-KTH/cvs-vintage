@@ -9,6 +9,7 @@ import org.columba.mail.command.FolderCommandReference;
 import org.columba.mail.folder.Folder;
 import org.columba.mail.gui.frame.MailFrameController;
 import org.columba.mail.gui.table.TableChangedEvent;
+import org.columba.mail.gui.table.util.MessageNode;
 import org.columba.main.MainInterface;
 
 /**
@@ -24,8 +25,7 @@ public class MoveMessageCommand extends FolderCommand {
 	protected Folder destFolder;
 	protected Folder srcFolder;
 	protected Object[] uids;
-	
-	
+
 	/**
 	 * Constructor for MoveMessageCommand.
 	 * @param frameController
@@ -36,18 +36,20 @@ public class MoveMessageCommand extends FolderCommand {
 		DefaultCommandReference[] references) {
 		super(frameController, references);
 	}
-	
+
 	public void updateGUI() throws Exception {
 		MailFrameController frame = (MailFrameController) frameController;
-		
-		TableChangedEvent ev = new TableChangedEvent( TableChangedEvent.UPDATE, destFolder);
-		 
+
+		TableChangedEvent ev =
+			new TableChangedEvent(TableChangedEvent.UPDATE, destFolder);
+
 		frame.tableController.tableChanged(ev);
-		
-		TableChangedEvent ev2 = new TableChangedEvent( TableChangedEvent.UPDATE, srcFolder);
-		 
+
+		TableChangedEvent ev2 =
+			new TableChangedEvent(TableChangedEvent.UPDATE, srcFolder);
+
 		frame.tableController.tableChanged(ev2);
-		
+
 		MainInterface.treeModel.nodeChanged(destFolder);
 		MainInterface.treeModel.nodeChanged(srcFolder);
 	}
@@ -61,31 +63,38 @@ public class MoveMessageCommand extends FolderCommand {
 
 		FolderCommandReference[] r = (FolderCommandReference[]) getReferences();
 
-		uids = r[0].getUids();
+		Object[] uids = MessageNode.toUidArray( (MessageNode[]) r[0].getUids());
 
 		srcFolder = (Folder) r[0].getFolder();
 		destFolder = (Folder) r[1].getFolder();
 
 		ColumbaLogger.log.debug("src=" + srcFolder + " dest=" + destFolder);
 
-		worker.setDisplayText("Moving messages to "+destFolder.getName()+"...");
+		worker.setDisplayText(
+			"Moving messages to " + destFolder.getName() + "...");
 		worker.setProgressBarMaximum(uids.length);
-		
+
 		for (int i = 0; i < uids.length; i++) {
 			worker.setProgressBarValue(i);
 			Object uid = uids[i];
 
-			ColumbaLogger.log.debug("copying UID=" + uid);
+			if (srcFolder.exists(uid, worker)) {
 
-			String source = srcFolder.getMessageSource(uid, worker);
+				ColumbaLogger.log.debug("copying UID=" + uid);
 
-			destFolder.addMessage(source, worker);
+				String source = srcFolder.getMessageSource(uid, worker);
+
+				destFolder.addMessage(source, worker);
+			}
 
 		}
 
-		srcFolder.markMessage(uids, MarkMessageCommand.MARK_AS_EXPUNGED, worker);
-		
-		srcFolder.expungeFolder(worker);
+		srcFolder.markMessage(
+			uids,
+			MarkMessageCommand.MARK_AS_EXPUNGED,
+			worker);
+
+		srcFolder.expungeFolder(uids, worker);
 
 	}
 

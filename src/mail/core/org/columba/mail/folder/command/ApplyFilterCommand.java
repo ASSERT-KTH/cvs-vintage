@@ -5,12 +5,13 @@ import org.columba.core.command.CompoundCommand;
 import org.columba.core.command.DefaultCommandReference;
 import org.columba.core.command.Worker;
 import org.columba.core.gui.FrameController;
-import org.columba.main.MainInterface;
 import org.columba.mail.command.FolderCommandReference;
 import org.columba.mail.filter.Filter;
 import org.columba.mail.filter.FilterList;
 import org.columba.mail.folder.Folder;
 import org.columba.mail.gui.frame.MailFrameController;
+import org.columba.mail.gui.table.util.MessageNode;
+import org.columba.main.MainInterface;
 
 /**
  * @author freddy
@@ -47,7 +48,7 @@ public class ApplyFilterCommand extends Command{
 		FolderCommandReference[] r = (FolderCommandReference[]) getReferences();
 
 		Folder srcFolder = (Folder) r[0].getFolder();
-		Object[] uids = srcFolder.getUids(worker);
+		Object[] uids = MessageNode.toUidArray( (MessageNode[]) r[0].getUids());
 
 		FilterList list = srcFolder.getFilterList();
 		

@@ -418,13 +418,15 @@ public class TableController
 		if (nodes.length == 0)
 			return;
 
+		/*
 		newUidList = new Object[nodes.length];
 		for (int i = 0; i < nodes.length; i++) {
 			newUidList[i] = nodes[i].getUid();
 			//System.out.println("node=" + newUidList[i]);
 		}
-
-		getTableSelectionManager().fireMessageSelectionEvent(null, newUidList);
+		*/
+		
+		getTableSelectionManager().fireMessageSelectionEvent(null, nodes);
 
 	}
 

@@ -245,7 +245,7 @@ public abstract class Folder extends FolderTreeNode {
 		}
 	}
 	
-	public abstract void expungeFolder(WorkerStatusController worker ) throws Exception;
+	public abstract void expungeFolder(Object[] uids, WorkerStatusController worker ) throws Exception;
 	
 
 	/**
@@ -267,7 +267,7 @@ public abstract class Folder extends FolderTreeNode {
 	 * @return boolean true, if message exists
 	 * @throws Exception
 	 */
-	public abstract boolean exists( Object uid ) throws Exception;
+	public abstract boolean exists( Object uid, WorkerStatusController worker ) throws Exception;
 		
 	/**
 	 * Method getHeaderList.
