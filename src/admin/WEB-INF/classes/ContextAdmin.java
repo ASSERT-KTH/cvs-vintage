@@ -83,9 +83,6 @@ public class ContextAdmin {
 	    v.addElement("ATTRIBUTE: " + RequestUtil.URLDecode(context.getAttribute(key).toString()));
 	}
 
-	if (context.getDefaultServlet() != null)
-	    v.addElement("DEFAULT SERVLET NAME: " + context.getDefaultServlet().getServletName());
-
 	v.addElement("SERVER INFO: " + context.getEngineHeader());
 
 	String[] s = new String[v.size()];
