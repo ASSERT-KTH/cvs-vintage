@@ -89,7 +89,7 @@ import org.tigris.scarab.util.export.ExportFormat;
  * @author <a href="mailto:jmcnally@collab.net">John D. McNally</a>
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: Search.java,v 1.134 2003/05/23 09:39:20 dlr Exp $
+ * @version $Id: Search.java,v 1.135 2003/06/16 23:44:52 elicia Exp $
  */
 public class Search extends RequireLoginFirstAction
 {
@@ -427,13 +427,11 @@ public class Search extends RequireLoginFirstAction
                 data.getParameters().setString("queryId", go);
                 doRunstoredquery(data, context);
             }
-            else if (go.equals("AdvancedQuery.vm"))
+            else if (go.equals("Search.vm") || go.equals("home,ModuleQuery.vm"))
             {
-                // reset current query
-                user.setMostRecentQuery(null);
-
                 // reset selected users map
                 scarabR.resetSelectedUsers();
+
                 setTarget(data, go);
             }
             else if (go.equals("mostRecent"))

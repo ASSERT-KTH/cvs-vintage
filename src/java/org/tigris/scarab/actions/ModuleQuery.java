@@ -72,7 +72,7 @@ import org.tigris.scarab.util.Log;
  * to define a query or running a canned query and listing the results.
  *
  * @author <a href="mailto:jmcnally@collab.net">John D. McNally</a>
- * @version $Id: ModuleQuery.java,v 1.13 2003/05/15 18:42:23 jmcnally Exp $
+ * @version $Id: ModuleQuery.java,v 1.14 2003/06/16 23:44:52 elicia Exp $
  */
 public class ModuleQuery extends RequireLoginFirstAction
 {
@@ -145,6 +145,9 @@ public class ModuleQuery extends RequireLoginFirstAction
                 IssueSearch is = scarabR.getNewSearch();
                 context.put("searchPutInContext", is);
                 */
+                // reset selected users map
+                scarabR.resetSelectedUsers();
+
                 setTarget(data, "AdvancedQuery.vm");
             }
             catch (java.lang.IllegalArgumentException e)
