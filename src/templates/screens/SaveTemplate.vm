@@ -10,6 +10,8 @@
 <div class="functnbar$var">
 #if ($currentTemplate.IssueId)
   <input type="submit" value="Use template" name="eventSubmit_doUsetemplate" />&#160;
+#else
+  <input type="submit" value="Save new" name="eventSubmit_doCreatenew"  />
 #end
 <input type="submit" value="Reset" name="eventSubmit_doReset"  />&#160; 
 <input type="submit" value="Done" name="eventSubmit_doDone"  />&#160; 
@@ -17,9 +19,15 @@
 </div>
 #end
 
+#if (!$currentTemplate.IssueId)
+    #set ($pageTitle = "Save template")
+#else
+    #set ($pageTitle = "Edit template '$templateInfo.Name'")
+#end
+
 <div class="app" id="savetemplate">
 
-<h2>$page.Title</h2>
+<h2>$pageTitle</h2>
 
 <form method="post" action="$link.setPage("SaveTemplate.vm").setAction("TemplateList")">
 <input type="hidden" name="$scarabG.Constant.NEXT_TEMPLATE" value="TemplateList.vm" />
@@ -69,9 +77,11 @@
 </table>
 </div>
 
-<div class="functnbar3">
-<input type="submit" value="Save changes" name="eventSubmit_doSavetemplateinfo" />&#160;
-</div>
+#if ($currentTemplate.IssueId)
+    <div class="functnbar3">
+    <input type="submit" value="Save changes" name="eventSubmit_doEdittemplateinfo" />&#160;
+    </div>
+#end
 
 <h3>Template Attributes</h3>
 
@@ -117,9 +127,11 @@
   #end
 #end
 
-<div class="functnbar3">
-<input type="submit" value="Save changes" name="eventSubmit_doSave" />&#160;
-</div>
+#if ($currentTemplate.IssueId)
+    <div class="functnbar3">
+    <input type="submit" value="Save changes" name="eventSubmit_doEditvalues" />&#160;
+    </div>
+#end
 
 #SaveTemplateBar("2")
 
