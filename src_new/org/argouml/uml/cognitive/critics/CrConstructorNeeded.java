@@ -28,7 +28,7 @@
 // File: CrConstructorNeeded.java
 // Classes: CrConstructorNeeded
 // Original Author: jrobbins@ics.uci.edu
-// $Id: CrConstructorNeeded.java,v 1.3 2002/03/12 14:43:55 linus Exp $
+// $Id: CrConstructorNeeded.java,v 1.4 2002/03/15 10:31:57 jeremybennett Exp $
 
 // 28 Jan 2002: Jeremy Bennett (mail@jeremybennett.com). Bug in detecting
 // constructors with explicit void returns fixed.
@@ -39,6 +39,8 @@
 // 4 Feb 2002: Jeremy Bennett (mail@jeremybennett.com). Code factored by use of
 // static methods in central org.argouml.cognitive.critics.CriticUtils utility
 // class.
+
+// 15 Feb 2002: Jeremy Bennett (mail@jeremybennett.com). Ccomments corrected.
 
 
 package org.argouml.uml.cognitive.critics;
@@ -132,26 +134,21 @@ public class CrConstructorNeeded extends CrUML {
             return NO_PROBLEM;
         }
 
-        // Cast to the class, initialise a boolean to track if we've found the
-        // problem and get all the features (attributes and operations)
+        // Cast to the class, check for uninitialised instance variables and
+        // constructor as per JavaDoc above.
 
         MClass cls = (MClass) dm;
-
-        // First see if we have any uninitialised instance variables. If not,
-        // then we don't need a constructor, so have no problem.
 
         if (!(CriticUtils.hasUninitInstanceVariables(cls))) {
             return NO_PROBLEM;
         }
 
-        // We have some instance variables that are not initialised, so we need
-        // a constructor. If we don't find one, there is a problem.
-
         if (CriticUtils.hasConstructor(cls)) {
             return NO_PROBLEM;
         }
-        else
+        else {
             return PROBLEM_FOUND;
+        }
     }
 
 } /* end class CrConstructorNeeded */
