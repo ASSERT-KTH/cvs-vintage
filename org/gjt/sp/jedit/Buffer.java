@@ -66,7 +66,7 @@ import org.gjt.sp.util.*;
  * </ul>
  *
  * @author Slava Pestov
- * @version $Id: Buffer.java,v 1.167 2003/05/12 03:05:19 spestov Exp $
+ * @version $Id: Buffer.java,v 1.168 2003/05/12 04:04:14 spestov Exp $
  */
 public class Buffer
 {
@@ -4140,8 +4140,7 @@ loop:		for(int i = 0; i < seg.count; i++)
 		{
 			try
 			{
-				((BufferChangeListener)bufferListeners.elementAt(i))
-					.wrapModeChanged(this);
+				getListener(i).wrapModeChanged(this);
 			}
 			catch(Throwable t)
 			{
