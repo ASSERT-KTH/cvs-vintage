@@ -49,32 +49,33 @@ package org.tigris.scarab.actions;
 // Turbine Stuff 
 import java.util.List;
 
-import org.apache.turbine.TemplateContext;
-import org.apache.turbine.RunData;
-import org.apache.turbine.tool.IntakeTool;
 import org.apache.fulcrum.intake.model.Group;
 import org.apache.fulcrum.security.TurbineSecurity;
+import org.apache.torque.oid.IDBroker;
+import org.apache.torque.util.BasePeer;
 import org.apache.turbine.ParameterParser;
-
-// Scarab Stuff
+import org.apache.turbine.RunData;
+import org.apache.turbine.TemplateContext;
+import org.apache.turbine.tool.IntakeTool;
+import org.tigris.scarab.actions.base.RequireLoginFirstAction;
 import org.tigris.scarab.om.GlobalParameter;
 import org.tigris.scarab.om.GlobalParameterManager;
 import org.tigris.scarab.om.Issue;
-import org.tigris.scarab.om.ScarabModule;
-import org.tigris.scarab.om.ScarabUser;
-import org.tigris.scarab.util.Log;
-import org.tigris.scarab.actions.base.RequireLoginFirstAction;
 import org.tigris.scarab.om.Module;
 import org.tigris.scarab.om.ModuleManager;
+import org.tigris.scarab.om.ScarabModule;
+import org.tigris.scarab.om.ScarabUser;
 import org.tigris.scarab.services.security.ScarabSecurity;
 import org.tigris.scarab.tools.ScarabLocalizationTool;
 import org.tigris.scarab.tools.ScarabRequestTool;
+import org.tigris.scarab.tools.localization.L10NKeySet;
+import org.tigris.scarab.util.Log;
 
 /**
  * This class is responsible for creating / updating Scarab Modules
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: ModifyModule.java,v 1.38 2004/05/10 21:04:44 dabbous Exp $
+ * @version $Id: ModifyModule.java,v 1.39 2004/11/04 15:47:42 dep4b Exp $
  */
 public class ModifyModule extends RequireLoginFirstAction
 {
@@ -113,7 +114,7 @@ public class ModifyModule extends RequireLoginFirstAction
             {
                 setTarget(data, template);
                 scarabR.setAlertMessage(
-                    l10n.get("CouldNotLocateModuleGroup"));
+                    L10NKeySet.CouldNotLocateModuleGroup);
                 return;
             }
             else
@@ -124,8 +125,7 @@ public class ModifyModule extends RequireLoginFirstAction
                 // in the module.
                 if (!user.hasPermission(ScarabSecurity.MODULE__EDIT, me))
                 {
-                    scarabR.setAlertMessage(
-                        l10n.get(NO_PERMISSION_MESSAGE));
+                    scarabR.setAlertMessage(NO_PERMISSION_MESSAGE);
                     intake.remove(moduleGroup);
                     setTarget(data, nextTemplate);
                     return;
@@ -139,8 +139,7 @@ public class ModifyModule extends RequireLoginFirstAction
 
                 if (newParent.getParent() == me)
                 {
-                    scarabR.setAlertMessage(
-                        l10n.get("CircularParentChildRelationship"));
+                    scarabR.setAlertMessage(L10NKeySet.CircularParentChildRelationship);
                     intake.remove(moduleGroup);
                     setTarget(data, template);
                     return;
@@ -148,8 +147,7 @@ public class ModifyModule extends RequireLoginFirstAction
                 else if (!user.hasPermission(ScarabSecurity.MODULE__EDIT, origParent) && 
                     origParent.getModuleId() != newParent.getModuleId())
                 {
-                    scarabR.setAlertMessage(
-                        l10n.get("NoPermissionInParentModule"));
+                    scarabR.setAlertMessage(L10NKeySet.NoPermissionInParentModule);
                     setTarget(data, template);
                     return;
                 }
@@ -170,6 +168,14 @@ public class ModifyModule extends RequireLoginFirstAction
                                 issue.save();
                             }
                         }
+                        //Update the ID table to reflect the module code r
+                        // FIXME: Using SQL because IDBroker doesn't have a Peer yet.
+                        String idTable = IDBroker.TABLE_NAME.substring(0, 
+                                IDBroker.TABLE_NAME.indexOf('.'));
+                        String sql = "update " + idTable 
+                         + " SET TABLE_NAME='" + newCode + "' WHERE TABLE_NAME='" +
+                         origCode + "'";
+                        BasePeer.executeStatement(sql);                                                
                     }
                     else
                     {
@@ -195,7 +201,7 @@ public class ModifyModule extends RequireLoginFirstAction
 
                 intake.remove(moduleGroup);
                 setTarget(data, nextTemplate);
-                scarabR.setConfirmMessage(l10n.get("ModuleUpdated"));
+                scarabR.setConfirmMessage(L10NKeySet.ModuleUpdated);
             }
         }
     }
@@ -242,8 +248,7 @@ public class ModifyModule extends RequireLoginFirstAction
                 data.setACL(TurbineSecurity.getACL(data.getUser()));
                 data.save();
 
-                scarabR.setConfirmMessage(
-                    l10n.get("NewModuleCreated"));
+                scarabR.setConfirmMessage(L10NKeySet.NewModuleCreated);
             }
             catch (Exception e)
             {

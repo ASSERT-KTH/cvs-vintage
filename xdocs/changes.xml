@@ -7,6 +7,9 @@
 
   <body>
     <release version="b20" date="in dev">  
+      <action dev="epugh" type="fix" due-to="C. G. Brown" issue-id="SCB1378">
+        Renaming module code causes multiple issues to have same ID count
+      </action>            
       <action dev="epugh" type="fix" due-to="Michael Wever" issue-id="SCB1380">
         Update to the latest version of Turbine 3.0 that uses XStream to 
         load the pipeline instead of the old and deprecated commons-xo.
