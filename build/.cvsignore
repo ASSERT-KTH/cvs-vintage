@@ -3,3 +3,4 @@ velocity.log
 velocity.log.1
 build.properties.*
 *.log
+build-torque.xml
