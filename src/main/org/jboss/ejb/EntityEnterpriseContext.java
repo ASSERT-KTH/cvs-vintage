@@ -22,7 +22,7 @@ import javax.transaction.Transaction;
 *	@see EnterpriseContext
 *	@author Rickard Öberg (rickard.oberg@telkel.com)
 *   @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
-*	@version $Revision: 1.13 $
+*	@version $Revision: 1.14 $
 */
 public class EntityEnterpriseContext
 extends EnterpriseContext
@@ -67,6 +67,7 @@ extends EnterpriseContext
 		this.valid = false;
 		key = null;
 		persistenceCtx = null;
+		ejbObject = null;
 	}
 
     public void discard()
