@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/util/Attic/MimeHeaderField.java,v 1.3 2000/02/16 17:46:58 costin Exp $
- * $Revision: 1.3 $
- * $Date: 2000/02/16 17:46:58 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/util/Attic/MimeHeaderField.java,v 1.4 2000/05/02 19:58:41 costin Exp $
+ * $Revision: 1.4 $
+ * $Date: 2000/05/02 19:58:41 $
  *
  * ====================================================================
  *
@@ -100,7 +100,7 @@ public class MimeHeaderField {
     /**
      * The header field Date value.
      */
-
+    
     protected final HttpDate dateValue = new HttpDate(0);
 
     /**
@@ -326,8 +326,8 @@ public class MimeHeaderField {
 	    buf_offset += intGetBytes(intValue, buf, buf_offset);
 	    break;
 	case T_DATE:
-	    buf_offset += dateValue.getBytes(buf, buf_offset,
-	        HttpDate.DATELEN);
+	    buf_offset += getBytes(dateValue, buf, buf_offset,
+					     DATELEN);
 	    break;
 	}
 
@@ -337,6 +337,18 @@ public class MimeHeaderField {
 	return buf_offset - start_pt;
     }
 
+    
+    private static final String DATESTR = "Sun, 06 Nov 1994 08:49:37 GMT";
+    private static final int DATELEN = DATESTR.length();
+    
+    private int getBytes(HttpDate dateValue, byte[] buf, int off, int len) {
+	String dateString = HttpDate.rfc1123Format.format(dateValue.getCalendar().getTime());
+	byte[] b = dateString.getBytes();
+	System.arraycopy(b, 0, buf, off, DATELEN);
+	return DATELEN;
+    }    
+
+    
     /**
      * Parses a header field from a subarray of bytes.
      * @param b the bytes to parse

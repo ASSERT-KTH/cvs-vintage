@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/util/Attic/HttpDate.java,v 1.3 2000/02/14 04:59:42 costin Exp $
- * $Revision: 1.3 $
- * $Date: 2000/02/14 04:59:42 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/util/Attic/HttpDate.java,v 1.4 2000/05/02 19:58:41 costin Exp $
+ * $Revision: 1.4 $
+ * $Date: 2000/05/02 19:58:41 $
  *
  * ====================================================================
  *
@@ -80,26 +80,22 @@ import org.apache.tomcat.core.Constants;
  * @author Jason Hunter [jch@eng.sun.com]
  * @author James Todd [gonzo@eng.sun.com]
  */
-
 public class HttpDate extends Ascii {
 
-    private StringManager sm =
+    private static StringManager sm =
         StringManager.getManager("org.apache.tomcat.util");
 
-    // ONLY FOR COMPAT -- KILL ASAP -- just make sure that dependant
-    // classes know what's up. ref. MimeHeaderField
-    private static final String DATESTR = "Sun, 06 Nov 1994 08:49:37 GMT";
-    public static final int DATELEN = DATESTR.length();
-    // END COMPAT -- DON'T FORGET TO KILL
-    
-    // we force our locale here as all http dates are in english
-    private final static Locale loc = Locale.US;
+    /** US locale - all HTTP dates are in english
+     */
+    public final static Locale LOCALE_US = Locale.US;
 
-    // all http dates are expressed as time at GMT
-    private final static TimeZone zone = TimeZone.getTimeZone("GMT");
+    /** GMT timezone - all HTTP dates are on GMT
+     */
+    public final static TimeZone GMT_ZONE = TimeZone.getTimeZone("GMT");
 
-    // format for RFC 1123 date string -- "Sun, 06 Nov 1994 08:49:37 GMT"
-    private final static String rfc1123Pattern =
+    /** format for RFC 1123 date string -- "Sun, 06 Nov 1994 08:49:37 GMT"
+     */
+    public final static String RFC1123_PATTERN =
         "EEE, dd MMM yyyyy HH:mm:ss z";
 
     // format for RFC 1036 date string -- "Sunday, 06-Nov-94 08:49:37 GMT"
@@ -110,24 +106,37 @@ public class HttpDate extends Ascii {
     private final static String asctimePattern =
         "EEE MMM d HH:mm:ss yyyyy";
 
-    private final static SimpleDateFormat rfc1123Format =
-	new SimpleDateFormat(rfc1123Pattern, loc);
+    /** Pattern used for old cookies
+     */
+    public final static String OLD_COOKIE_PATTERN = "EEE, dd-MMM-yyyy HH:mm:ss z";
     
-    private final static SimpleDateFormat rfc1036Format =
-	new SimpleDateFormat(rfc1036Pattern, loc);
     
-    private final static SimpleDateFormat asctimeFormat =
-	new SimpleDateFormat(asctimePattern, loc);
+    /** DateFormat to be used to format dates
+     */
+    public final static SimpleDateFormat rfc1123Format =
+	new SimpleDateFormat(RFC1123_PATTERN, LOCALE_US);
+    
+    /** DateFormat to be used to format old netscape cookies
+     */
+    public final static SimpleDateFormat oldCookieFormat =
+	new SimpleDateFormat(OLD_COOKIE_PATTERN, LOCALE_US);
+    
+    public final static SimpleDateFormat rfc1036Format =
+	new SimpleDateFormat(rfc1036Pattern, LOCALE_US);
+    
+    public final static SimpleDateFormat asctimeFormat =
+	new SimpleDateFormat(asctimePattern, LOCALE_US);
     
     static {
-	rfc1123Format.setTimeZone(zone);
-	rfc1036Format.setTimeZone(zone);
-	asctimeFormat.setTimeZone(zone);
+	rfc1123Format.setTimeZone(GMT_ZONE);
+	oldCookieFormat.setTimeZone(GMT_ZONE);
+	rfc1036Format.setTimeZone(GMT_ZONE);
+	asctimeFormat.setTimeZone(GMT_ZONE);
     }
     
     // protected so that oldcookieexpiry in cookieutils can use
     // yes, this is sloppy as crap and could stand to be done better.
-    protected Calendar calendar = new GregorianCalendar(zone, loc);
+    protected Calendar calendar = new GregorianCalendar(GMT_ZONE, LOCALE_US);
 
     public HttpDate() {
         calendar.setTime(new Date(System.currentTimeMillis()));
@@ -198,21 +207,11 @@ public class HttpDate extends Ascii {
         return calendar.getTime().getTime();
     }
 
+    public  Calendar getCalendar() {
+        return calendar;
+    }
+
     public static long getCurrentTime() {
         return System.currentTimeMillis();
     }
-
-    // KILL, THIS IS ONLY HERE FOR TEMP COMPAT as MimeHeaderField uses it.
-    public int getBytes(byte[] buf, int off, int len) {
-	if (len < DATELEN) {
-            String msg = sm.getString("httpDate.iae", new Integer(len));
-
-	    throw new IllegalArgumentException(msg);
-	}
-
-	String dateString = rfc1123Format.format(calendar.getTime());
-	byte[] b = dateString.getBytes();
-	System.arraycopy(b, 0, buf, off, DATELEN);
-	return DATELEN;
-    }    
 }
