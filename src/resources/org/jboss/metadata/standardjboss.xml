@@ -4,8 +4,8 @@
 	<secure>false</secure>
     <container-configurations>
         
-		<container-configuration configuration-class="org.jboss.ejb.deployment.EntityContainerConfiguration">
-	 		<container-name>Default CMP EntityBean</container-name>
+		<container-configuration>
+	 		<container-name>Standard CMP EntityBean</container-name>
 	 		<call-logging>false</call-logging>
 			<container-invoker>org.jboss.ejb.plugins.jrmp13.server.JRMPContainerInvoker</container-invoker>
 			<instance-pool>org.jboss.ejb.plugins.EntityInstancePool</instance-pool>
@@ -23,8 +23,8 @@
 			<commit-option>A</commit-option>
         </container-configuration>
 		
-		<container-configuration configuration-class="org.jboss.ejb.deployment.StatelessSessionContainerConfiguration">
-			<container-name>Default Stateless SessionBean</container-name>
+		<container-configuration>
+			<container-name>Standard Stateless SessionBean</container-name>
 			<call-logging>false</call-logging>
 			<container-invoker>org.jboss.ejb.plugins.jrmp13.server.JRMPContainerInvoker</container-invoker>
 			<instance-pool>org.jboss.ejb.plugins.StatelessSessionInstancePool</instance-pool>
@@ -40,8 +40,8 @@
 			</container-pool-conf>
 		</container-configuration>
 		
-		<container-configuration configuration-class="org.jboss.ejb.deployment.StatefulSessionContainerConfiguration">
-			<container-name>Default Stateful SessionBean</container-name>
+		<container-configuration>
+			<container-name>Standard Stateful SessionBean</container-name>
 			<call-logging>false</call-logging>
 			<container-invoker>org.jboss.ejb.plugins.jrmp13.server.JRMPContainerInvoker</container-invoker>
 			<instance-cache>org.jboss.ejb.plugins.NoPassivationStatefulSessionInstanceCache</instance-cache>
@@ -52,8 +52,8 @@
 			</container-invoker-conf>
 		</container-configuration>
 		
-       	<container-configuration configuration-class="org.jboss.ejb.deployment.EntityContainerConfiguration">
-			<container-name>Default BMP EntityBean</container-name>
+       	<container-configuration>
+			<container-name>Standard BMP EntityBean</container-name>
 		 	<call-logging>false</call-logging>
 		 	<container-invoker>org.jboss.ejb.plugins.jrmp13.server.JRMPContainerInvoker</container-invoker>
 		 	<instance-pool>org.jboss.ejb.plugins.EntityInstancePool</instance-pool>

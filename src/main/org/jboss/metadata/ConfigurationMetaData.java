@@ -15,15 +15,15 @@ import org.jboss.ejb.DeploymentException;
  *      
  *   @see <related>
  *   @author <a href="mailto:sebastien.alborini@m4x.org">Sebastien Alborini</a>
- *   @version $Revision: 1.1 $
+ *   @version $Revision: 1.2 $
  */
 public class ConfigurationMetaData extends MetaData {
     
 	// Constants -----------------------------------------------------
-    public static final String DEFAULT_CMP = "Default CMP EntityBean";
-	public static final String DEFAULT_BMP = "Default BMP EntityBean";
-	public static final String DEFAULT_STATELESS = "Default Stateless SessionBean";
-	public static final String DEFAULT_STATEFUL = "Default Stateful SessionBean";
+    public static final String DEFAULT_CMP = "Standard CMP EntityBean";
+	public static final String DEFAULT_BMP = "Standard BMP EntityBean";
+	public static final String DEFAULT_STATELESS = "Standard Stateless SessionBean";
+	public static final String DEFAULT_STATEFUL = "Standard Stateful SessionBean";
 	
 	public static final byte A_COMMIT_OPTION = 0;
 	public static final byte B_COMMIT_OPTION = 1;

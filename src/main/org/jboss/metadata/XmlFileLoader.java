@@ -25,7 +25,7 @@ import org.jboss.ejb.DeploymentException;
  *
  *   @see <related>
  *   @author <a href="mailto:sebastien.alborini@m4x.org">Sebastien Alborini</a>
- *   @version $Revision: 1.1 $
+ *   @version $Revision: 1.2 $
  */
 public class XmlFileLoader {
    	// Constants -----------------------------------------------------
@@ -85,13 +85,13 @@ public class XmlFileLoader {
 		
 		// Load jbossdefault.xml from the default classLoader
 		// we always load defaults first
-		URL defaultJbossUrl = getClass().getResource("defaultjboss.xml");
+		URL defaultJbossUrl = getClass().getResource("standardjboss.xml");
 		
 		if (defaultJbossUrl == null) {
-			throw new DeploymentException("no defaultjboss.xml found");
+			throw new DeploymentException("no standardjboss.xml found");
 		}
 		
-		System.out.println("Loading defaultjboss.xml : " + defaultJbossUrl.toString());
+		System.out.println("Loading standardjboss.xml : " + defaultJbossUrl.toString());
 		Document defaultJbossDocument = getDocument(defaultJbossUrl);
 		
 		metaData.setUrl(defaultJbossUrl);
