@@ -1,4 +1,4 @@
-// $Id: UmlModelListener.java,v 1.24 2004/12/27 16:03:22 bobtarling Exp $
+// $Id: UmlModelListener.java,v 1.25 2004/12/27 18:34:10 bobtarling Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -27,8 +27,8 @@ package org.argouml.model.uml;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 
-import org.argouml.kernel.Project;
-import org.argouml.kernel.ProjectManager;
+import javax.swing.Action;
+
 import org.argouml.model.Model;
 
 /**
@@ -44,21 +44,35 @@ public class UmlModelListener implements PropertyChangeListener {
     /**
      * Singleton instance.
      */
-    private static UmlModelListener singleton = new UmlModelListener();
+    private static final UmlModelListener INSTANCE = new UmlModelListener();
 
+    /**
+     * The action to enable when the model changes.
+     */
+    private Action saveAction;
+    
     /**
      * Singleton instance access method.
      *
      * @return the singleton instance.
      */
     public static UmlModelListener getInstance() {
-        return singleton;
+        return INSTANCE;
     }
 
     /**
      * Don't allow instantiation.
      */
     private UmlModelListener() {
+    }
+    
+    /**
+     * Register the Action that will be enabled whenever a model
+     * change takes place.
+     * @param action the action to be enabled on model change.
+     */
+    public void setSaveAction(Action action) {
+        saveAction = action;
     }
 
     /**
@@ -75,19 +89,8 @@ public class UmlModelListener implements PropertyChangeListener {
         if (pce.getNewValue() != null
             && !pce.getNewValue().equals(pce.getOldValue()))
         {
-            Project cp = ProjectManager.getManager().getCurrentProject();
-
-            if (cp != null) {
-                // TODO: We should not be calling the project here.
-                // We have 2 alternatives.
-                // 1. Instead the project should be listening for
-                // change events from the model and should change
-                // its own needsSave flag.
-                // 2. ArgoUML should register its save action with
-                // the model component. The model component can
-                // then enable that save action whenever it chooses.
-                // Bob Tarling 27 Dec 2004
-                cp.setNeedsSave(true);
+            if (saveAction != null) {
+                saveAction.setEnabled(true);
             }
         }
     

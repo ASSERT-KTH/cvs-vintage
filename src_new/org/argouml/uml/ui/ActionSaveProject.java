@@ -1,4 +1,4 @@
-// $Id: ActionSaveProject.java,v 1.39 2004/12/26 11:14:45 mvw Exp $
+// $Id: ActionSaveProject.java,v 1.40 2004/12/27 18:34:14 bobtarling Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -64,11 +64,15 @@ public class ActionSaveProject extends ActionFileOperations {
     /**
      * The singleton.
      */
-    public static final ActionSaveProject SINGLETON = new ActionSaveProject(); 
+    private static final ActionSaveProject INSTANCE = new ActionSaveProject(); 
 
     ////////////////////////////////////////////////////////////////
     // constructors
 
+    public static ActionSaveProject getInstance() {
+        return INSTANCE;
+    }
+    
     /**
      * The constructor.
      */
@@ -221,12 +225,12 @@ public class ActionSaveProject extends ActionFileOperations {
 	return false;
     }
 
-    /**
-     * @see org.argouml.uml.ui.UMLAction#shouldBeEnabled()
-     */
-    public boolean shouldBeEnabled() {
-        super.shouldBeEnabled();
-        Project p = ProjectManager.getManager().getCurrentProject();
-        return (p != null && p.needsSave());
-    }
+//    /**
+//     * @see org.argouml.uml.ui.UMLAction#shouldBeEnabled()
+//     */
+//    public boolean shouldBeEnabled() {
+//        super.shouldBeEnabled();
+//        Project p = ProjectManager.getManager().getCurrentProject();
+//        return (p != null && p.needsSave());
+//    }
 } /* end class ActionSaveProject */

@@ -1,4 +1,4 @@
-// $Id: ActionFileOperations.java,v 1.6 2004/12/26 11:14:44 mvw Exp $
+// $Id: ActionFileOperations.java,v 1.7 2004/12/27 18:34:14 bobtarling Exp $
 // Copyright (c) 2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -110,8 +110,8 @@ public abstract class ActionFileOperations extends UMLAction {
             if (response == JOptionPane.YES_OPTION) {
                 boolean safe = false;
 
-                if (ActionSaveProject.SINGLETON.shouldBeEnabled()) {
-                    safe = ActionSaveProject.SINGLETON.trySave(true);
+                if (ActionSaveProject.getInstance().isEnabled()) {
+                    safe = ActionSaveProject.getInstance().trySave(true);
                 }
                 if (!safe) {
                     safe = ActionSaveProjectAs.SINGLETON.trySave(false);

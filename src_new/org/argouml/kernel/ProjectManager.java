@@ -1,4 +1,4 @@
-// $Id: ProjectManager.java,v 1.38 2004/11/29 15:24:27 mvw Exp $
+// $Id: ProjectManager.java,v 1.39 2004/12/27 18:34:11 bobtarling Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -32,7 +32,9 @@ import javax.swing.event.EventListenerList;
 
 import org.apache.log4j.Logger;
 import org.argouml.cognitive.Designer;
+import org.argouml.model.uml.UmlModelListener;
 import org.argouml.ui.ArgoDiagram;
+import org.argouml.uml.ui.ActionSaveProject;
 
 /**
  * This class manages the projects loaded in argouml.
@@ -111,6 +113,11 @@ public final class ProjectManager implements PropertyChangeListener {
      */
     private ProjectManager() {
         super();
+        // Register the save action with the UmlModelListener
+        // so that any changes to the model will enable the
+        // save button/menu item etc.
+        UmlModelListener.getInstance()
+            .setSaveAction(ActionSaveProject.getInstance());
     }
 
     /**
