@@ -93,7 +93,7 @@ import org.tigris.scarab.services.security.ScarabSecurity;
  * This class is responsible for managing the approval process.
  *
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
- * @version $Id: Approval.java,v 1.27 2002/10/10 01:05:44 jmcnally Exp $
+ * @version $Id: Approval.java,v 1.28 2002/10/22 22:26:53 jon Exp $
  */
 public class Approval extends RequireLoginFirstAction
 {
@@ -274,8 +274,11 @@ public class Approval extends RequireLoginFirstAction
                     .getString(user.getUserName());
                 if (role != null && role.length() > 0) 
                 {
-                    if (!role.equalsIgnoreCase("defer") 
-                        && !role.equalsIgnoreCase("deny")) 
+                    if (role.equalsIgnoreCase("deny"))
+                    {
+                        pending.delete();
+                    }
+                    else if (!role.equalsIgnoreCase("defer"))
                     {
                         try
                         {
@@ -318,14 +321,10 @@ public class Approval extends RequireLoginFirstAction
                         }
                         pending.delete();
                     }
-                    else if (role.equalsIgnoreCase("deny"))
-                    {
-                        pending.delete();
-                    }
                 }
             }
             scarabR.setConfirmMessage(l10n.get("AllRolesProcessed"));
-        }        
+        }
         setTarget(data, nextTemplate);
     }
 
