@@ -84,8 +84,6 @@ public class AbstractFolderTst extends TestCase {
 		File file = new File("test_config");
 		file.mkdir();
 
-		//MailMain.getInstance();
-
 		new Config(file);
 
 		Main.DEBUG = true;

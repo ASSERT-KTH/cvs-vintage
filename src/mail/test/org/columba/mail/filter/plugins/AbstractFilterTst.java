@@ -22,6 +22,7 @@ import java.io.File;
 
 import junit.framework.TestCase;
 
+import org.columba.core.config.Config;
 import org.columba.mail.folder.FolderTstHelper;
 import org.columba.mail.folder.MHFolderFactory;
 import org.columba.mail.folder.MailboxTstFactory;
@@ -37,93 +38,102 @@ import org.columba.mail.folder.MessageFolder;
  */
 public class AbstractFilterTst extends TestCase {
 
-    protected MessageFolder sourceFolder;
-    protected MailboxTstFactory factory;
+	protected MessageFolder sourceFolder;
 
-    /**
-     * Constructor for test.
-     * <p>
-     * This is used when executing this individual test only or
-     * by the ant task.
-     * <p>
-     */
-    public AbstractFilterTst(String test) {
-        super(test);
+	protected MailboxTstFactory factory;
 
-        this.factory = new MHFolderFactory();
-    }
-    
-    /**
-     * Constructor for AbstractFilterTest.
-     * @param arg0
-     * @param factory 
-     */
-    public AbstractFilterTst(MailboxTstFactory factory, String arg0 ) {
-        super(arg0);
-        this.factory = factory;
-    }
+	/**
+	 * Constructor for test.
+	 * <p>
+	 * This is used when executing this individual test only or by the ant task.
+	 * <p>
+	 */
+	public AbstractFilterTst(String test) {
+		super(test);
 
-    /**
-     * @return Returns the folder.
-     */
-    public MessageFolder getSourceFolder() {
-        return sourceFolder;
-    }
+		this.factory = new MHFolderFactory();
+	}
 
-    /**
-     * @see TestCase#setUp()
-     */
-    protected void setUp() throws Exception {
-    	
-    	sourceFolder = factory.createFolder(1);
-    	
-        //		 create MH folder
-        // -> use homeDirectory as top-level folder
-        // -> this has to be an absolute path
-/*        sourceFolder = new CachedMHFolder("test", "CachedMHFolder",
-                FolderTstHelper.homeDirectory + "/folders/");*/
-    }
+	/**
+	 * Constructor for AbstractFilterTest.
+	 * 
+	 * @param arg0
+	 * @param factory
+	 */
+	public AbstractFilterTst(MailboxTstFactory factory, String arg0) {
+		super(arg0);
+		this.factory = factory;
+	}
 
-    /**
-     * @see TestCase#tearDown()
-     */
-    protected void tearDown() throws Exception {
-        File f = sourceFolder.getDirectoryFile();
+	/**
+	 * @return Returns the folder.
+	 */
+	public MessageFolder getSourceFolder() {
+		return sourceFolder;
+	}
 
-        // delete all mails in folder
-        File[] list = f.listFiles();
+	/**
+	 * @see TestCase#setUp()
+	 */
+	protected void setUp() throws Exception {
 
-        for (int i = 0; i < list.length; i++) {
-            list[i].delete();
-        }
+		//    	 create config-folder
+		File file = new File("test_config");
+		file.mkdir();
 
-        // delete folder
-        f.delete();
-        
-        sourceFolder.removeFolder();
-    }
+		new Config(file);
 
-    /**
-     * Add message to test folder.
-     * 
-     * @throws Exception
-     */
-    public Object addMessage() throws Exception {
-        // add message "0.eml" as inputstream to folder
-        String input = FolderTstHelper.getString(0);
-        System.out.println("input=" + input);
+		sourceFolder = factory.createFolder(1);
 
-        // create stream from string
-        ByteArrayInputStream inputStream = FolderTstHelper
-                .getByteArrayInputStream(input);
+		//		 create MH folder
+		// -> use homeDirectory as top-level folder
+		// -> this has to be an absolute path
+		/*
+		 * sourceFolder = new CachedMHFolder("test", "CachedMHFolder",
+		 * FolderTstHelper.homeDirectory + "/folders/");
+		 */
+	}
 
-        // add stream to folder
-        Object uid = getSourceFolder().addMessage(inputStream);
+	/**
+	 * @see TestCase#tearDown()
+	 */
+	protected void tearDown() throws Exception {
+		File f = sourceFolder.getDirectoryFile();
 
-        // close stream
-        inputStream.close();
+		// delete all mails in folder
+		File[] list = f.listFiles();
 
-        return uid;
-    }
- 
+		for (int i = 0; i < list.length; i++) {
+			list[i].delete();
+		}
+
+		// delete folder
+		f.delete();
+
+		sourceFolder.removeFolder();
+	}
+
+	/**
+	 * Add message to test folder.
+	 * 
+	 * @throws Exception
+	 */
+	public Object addMessage() throws Exception {
+		// add message "0.eml" as inputstream to folder
+		String input = FolderTstHelper.getString(0);
+		System.out.println("input=" + input);
+
+		// create stream from string
+		ByteArrayInputStream inputStream = FolderTstHelper
+				.getByteArrayInputStream(input);
+
+		// add stream to folder
+		Object uid = getSourceFolder().addMessage(inputStream);
+
+		// close stream
+		inputStream.close();
+
+		return uid;
+	}
+
 }

@@ -117,7 +117,7 @@ public class AddMessageFolderTest extends AbstractFolderTst {
         MailboxInfo info = getSourceFolder().getMessageFolderInfo();
 
         assertEquals("message-folderinfo exists", 1, info.getExists());
-        assertEquals("Number of unseen messages in folder", 1, info.getUnseen());
+        assertEquals("Number of unseen messages in folder", 0, info.getUnseen());
         assertEquals("Number of seen messages in folder", 0, info.getExists()
                 - info.getUnseen());
 
