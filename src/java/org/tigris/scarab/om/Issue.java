@@ -96,7 +96,7 @@ import org.apache.commons.lang.StringUtils;
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
- * @version $Id: Issue.java,v 1.292 2003/04/22 00:11:02 dlr Exp $
+ * @version $Id: Issue.java,v 1.293 2003/04/23 00:15:22 dlr Exp $
  */
 public class Issue 
     extends BaseIssue
@@ -392,6 +392,12 @@ public class Issue
         }
     }
 
+    /**
+     * @param module The current module.
+     * @param theList A textual representation of the list of issues
+     * to parse.
+     * @param The parsed list of issue identifiers.
+     */
     public static List parseIssueList(Module module, String theList)
         throws Exception
     {
@@ -401,12 +407,13 @@ public class Issue
         {
             if (issues[i].indexOf('*') != -1)
             {
-                // probably better to use more Torque here, but this is definitely going
-                // to be faster and more efficient.
-                String sql =
-                    "SELECT CONCAT(" + IssuePeer.ID_PREFIX + ',' +  IssuePeer.ID_COUNT + ')' +
-                    " FROM " + IssuePeer.TABLE_NAME + " WHERE " + 
-                    IssuePeer.ID_PREFIX + " = '" + module.getCode() + '\'';
+                // Probably better to use more Torque here, but this
+                // is definitely going to be faster and more
+                // efficient.
+                String sql = "SELECT CONCAT(" + IssuePeer.ID_PREFIX + ',' +
+                    IssuePeer.ID_COUNT + ") FROM " + IssuePeer.TABLE_NAME +
+                    " WHERE " + IssuePeer.ID_PREFIX + " = '" +
+                    module.getCode() + '\'';
                 List records = BasePeer.executeQuery(sql);
                 for (Iterator j = records.iterator(); j.hasNext();)
                 {
@@ -415,16 +422,18 @@ public class Issue
                 }
             }
             // check for a -
-            else if (issues[i].indexOf("-") == -1)
+            else if (issues[i].indexOf('-') == -1)
             {
                 // Make sure user is not trying to access issues from another
                 // module.
                 FederatedId fid = createFederatedId(module, issues[i]);
-                if(!fid.getPrefix().equalsIgnoreCase(module.getCode()))
+                if (!fid.getPrefix().equalsIgnoreCase(module.getCode()))
                 {
-                    throw new Exception("Issue id prefix " + fid.getPrefix()
-                        + " is not out of the currently selected module: " 
-                        + module.getCode());
+                    String[] args = { fid.getPrefix(), module.getCode() };
+                    throw new Exception(Localization.format
+                                        (ScarabConstants.DEFAULT_BUNDLE_NAME,
+                                         module.getLocale(),
+                                         "IssueIDPrefixNotForModule", args));
                 }
                 results.add(issues[i]);
             }
@@ -433,30 +442,42 @@ public class Issue
                 String[] issue = StringUtils.split(issues[i], "-");
                 if (issue.length != 2)
                 {
-                    throw new Exception("Id range not valid: " + issues[i]);
+                    throw new Exception(Localization.format
+                                        (ScarabConstants.DEFAULT_BUNDLE_NAME,
+                                         module.getLocale(),
+                                         "IssueIDRangeNotValid", issues[i]));
                 }
                 FederatedId fidStart = createFederatedId(module, issue[0]);
                 FederatedId fidStop = createFederatedId(module, issue[1]);
                 if (!fidStart.getPrefix().equalsIgnoreCase(module.getCode()) ||
                     !fidStop.getPrefix().equalsIgnoreCase(module.getCode()))
                 {
-                    throw new Exception("Issue id prefixes are not in the " + 
-                        "currently selected module: " + module.getCode());
+                    throw new Exception(Localization.format
+                                        (ScarabConstants.DEFAULT_BUNDLE_NAME,
+                                         module.getLocale(),
+                                         "IssueIDPrefixesNotForModule",
+                                         module.getCode()));
                 }
-                else if (!fidStart.getPrefix().equalsIgnoreCase(fidStop.getPrefix()))
+                else if (!fidStart.getPrefix()
+                         .equalsIgnoreCase(fidStop.getPrefix()))
                 {
-                    throw new Exception("Issue id prefixes do not match: " + 
-                        fidStart.getPrefix() + " is not equal to " + fidStop.getPrefix());
+                    String[] args = { fidStart.getPrefix(),
+                                      fidStop.getPrefix() };
+                    throw new Exception(Localization.format
+                                        (ScarabConstants.DEFAULT_BUNDLE_NAME,
+                                         module.getLocale(),
+                                         "IssueIDPrefixesDoNotMatch", args));
                 }
                 else if (fidStart.getCount() > fidStop.getCount())
                 {
-                    throw new Exception("Issue id range not valid: " + 
-                        fidStart.getCount() + " is greater than " + fidStop.getCount());
+                    FederatedId swap = fidStart;
+                    fidStart = fidStop;
+                    fidStop = swap;
                 }
+
                 for (int j = fidStart.getCount(); j <= fidStop.getCount();j++)
                 {
-                    String tmp = fidStart.getPrefix() + j;
-                    results.add(tmp);
+                    results.add(fidStart.getPrefix() + j);
                 }
             }
         }
