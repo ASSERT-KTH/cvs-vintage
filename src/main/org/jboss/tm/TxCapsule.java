@@ -45,7 +45,7 @@ import org.jboss.util.timeout.TimeoutFactory;
  *  @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
  *  @author <a href="mailto:osh@sparre.dk">Ole Husgaard</a>
  *
- *  @version $Revision: 1.21 $
+ *  @version $Revision: 1.22 $
  */
 class TxCapsule implements TimeoutTarget
 {
@@ -53,16 +53,38 @@ class TxCapsule implements TimeoutTarget
 
    // Trace enabled flag
    static private final boolean trace = false;
-   // Constructor for Xid instances
-   private static Constructor xidConstructor = null;
 
    // Code meaning "no heuristics seen", must not be XAException.XA_HEURxxx
-   static private final int HEUR_NONE     = XAException.XA_RETRY;
+   static private final int HEUR_NONE = XAException.XA_RETRY;
 
    // Attributes ----------------------------------------------------
-   private HashMap branchXids;
 
    // Static --------------------------------------------------------
+
+   /**
+    *  Constructor for Xid instances of specified class, or null.
+    */
+   private static Constructor xidConstructor = null;
+
+   /**
+    *  Initialize the Xid constructor.
+    */
+   static {
+      String name = System.getProperty("jboss.xa.xidclass",
+                                       "org.jboss.tm.XidImpl");
+
+      if (!name.equals("org.jboss.tm.XidImpl")) {
+         try {
+            Class cls = Class.forName(name);
+
+            xidConstructor = cls.getConstructor(new Class[]{ Integer.TYPE,
+                                                             byte[].class,
+                                                             byte[].class });
+         } catch (Exception e) {
+            System.out.println("Unable to load Xid class '"+name+"': " + e);
+         }
+      }
+   }
 
    // Constructors --------------------------------------------------
 
@@ -75,24 +97,21 @@ class TxCapsule implements TimeoutTarget
     */
    TxCapsule(TxManager tm, long timeout)
    {
-      this(tm);
+      xid = new XidImpl();
+
+      if (xidConstructor != null) {
+         // Allocate constructor argument array.
+         xidConstructorArgs = new Object[3];
+         // First constructor argument is always the same: Pre-init it.
+         xidConstructorArgs[0] = new Integer(xid.getFormatId());
+      }
+
+      this.tm = tm;
 
       status = Status.STATUS_ACTIVE;
 
       start = System.currentTimeMillis();
       this.timeout = TimeoutFactory.createTimeout(start+timeout, this);
-      branchXids = new HashMap();
-   }
-
-   /**
-    *  Create a new TxCapsule.
-    *
-    *  @param tm The transaction manager for this transaction.
-    */
-   private TxCapsule(TxManager tm)
-   {
-      xid = createXid();
-      this.tm = tm;
 
       if (trace)
          Logger.debug("TxCapsule: Created new instance for tx=" + toString());
@@ -120,7 +139,8 @@ class TxCapsule implements TimeoutTarget
       done = false;
       resourcesEnded = false;
 
-      xid = createXid();
+      xid = new XidImpl();
+      lastBranchId = 0; // BQIDs start over again in scope of the new GID.
 
       status = Status.STATUS_ACTIVE;
       heuristicCode = HEUR_NONE;
@@ -163,7 +183,7 @@ class TxCapsule implements TimeoutTarget
             // We are in the second commit phase, and have decided
             // to commit, but now we get a timeout and should rollback.
             // So we end up with a mixed decision.
-            gotHeuristic(null, XAException.XA_HEURMIX);
+            gotHeuristic(-1, XAException.XA_HEURMIX);
             status = Status.STATUS_MARKED_ROLLBACK;
             return; // commit will fail
 
@@ -199,11 +219,6 @@ class TxCapsule implements TimeoutTarget
    }
 
    // Package protected ---------------------------------------------
-
-   Xid getXid()
-   {
-	  return xid;
-   }
 
    /**
     *  Import a transaction encapsulated here.
@@ -486,14 +501,7 @@ class TxCapsule implements TimeoutTarget
          }
 
          try {
-            endResource(xaRes, flag);
-            if (flag == XAResource.TMSUSPEND)
-               resourceState[idx] = RS_SUSPENDED;
-            else {
-               if (flag == XAResource.TMFAIL)
-                  status = Status.STATUS_MARKED_ROLLBACK;
-               resourceState[idx] = RS_ENDED;
-            }
+            endResource(idx, flag);
             return true;
          } catch(XAException e) {
             Logger.warning("XAException: tx=" + toString() + " errorCode=" +
@@ -561,37 +569,30 @@ class TxCapsule implements TimeoutTarget
             int idx = findResource(xaRes);
 
             if (idx != -1) {
-               if (resourceState[idx] == RS_SUSPENDED) {
-                  startResource(xaRes, XAResource.TMRESUME, (Xid)branchXids.get(xaRes));
-                  resourceState[idx] = RS_ENLISTED;
-                  return true;
-               } else if (resourceState[idx] == RS_ENDED) {
-                  startResource(xaRes, XAResource.TMJOIN, (Xid)branchXids.get(xaRes));
-                  resourceState[idx] = RS_ENLISTED;
-                  return true;
-               } else
+               if (resourceState[idx] == RS_ENLISTED)
                   return false; // already enlisted
+
+               startResource(idx);
+               return true;
             }
 /* This optimization hangs the Oracle XAResource
    when you perform xaCon.start(Xid, TMJOIN)
+*/
+if (xidConstructor == null) {
             for (int i = 0; i < resourceCount; ++i) {
-               if (xaRes.isSameRM(resources[i])) {
-                  Xid parentXid = (Xid)branchXids.get(resources[i]);
-                  startResource(xaRes, XAResource.TMJOIN, parentXid);
-                  addResource(xaRes);  // Do we still need to do this?
+               if (resourceSameRM[i] == -1 && xaRes.isSameRM(resources[i])) {
+                  // The xaRes is new. We register the xaRes with the Xid
+                  // that the RM has previously seen from this transaction,
+                  // and note that it has the same RM.
+                  startResource(addResource(xaRes, resourceXids[i], i));
+
                   return true;
                }
             }
-*/
-            // New resource
-            // According to the JTA spec we should create a new
-            // transaction branch here.
-            Xid useXid = xid;
-            if(resourceCount > 0) {
-                useXid = createXid((Xid)branchXids.get(resources[resourceCount-1]));
-            }
-            startResource(xaRes, XAResource.TMNOFLAGS, useXid);
-            addResource(xaRes);
+}
+
+            // New resource and new RM: Create a new transaction branch.
+            startResource(addResource(xaRes, createXidBranch(), -1));
             return true;
          } catch(XAException e) {
             Logger.warning("XAException: tx=" + toString() + " errorCode=" +
@@ -644,10 +645,17 @@ class TxCapsule implements TimeoutTarget
          case Status.STATUS_COMMITTED:
             throw new IllegalStateException("Already committed.");
          case Status.STATUS_MARKED_ROLLBACK:
-            //throw new RollbackException("Already marked for rollback");
+// OSH: EntitySynchronizationInterceptor bug is fixed long ago,
+// and since nobody seems to get the warning anymore it should
+// be safe to be JTA-conformant.
+// In case of trouble, try changing "true" below to "false".
+if (true)
+            throw new RollbackException("Already marked for rollback");
+else {
             // Workaround for EntitySynchronizationInterceptor bug.
             Logger.warning("TxCapsule: Violating JTA by adding synchronization to a transaction marked for rollback.");
             break;
+}
          case Status.STATUS_ROLLING_BACK:
             throw new RollbackException("Already started rolling back.");
          case Status.STATUS_ROLLEDBACK:
@@ -706,7 +714,7 @@ class TxCapsule implements TimeoutTarget
    private int syncAllocSize = 1;
 
    /**
-    *  Count of ynchronizations for this transaction.
+    *  Count of synchronizations for this transaction.
     */
    private int syncCount = 0;
 
@@ -721,11 +729,24 @@ class TxCapsule implements TimeoutTarget
     */
    private int[] resourceState = new int[1];
 
+   private final static int RS_NEW           = 0; // not yet enlisted
    private final static int RS_ENLISTED      = 1; // enlisted
    private final static int RS_SUSPENDED     = 2; // suspended
    private final static int RS_ENDED         = 3; // not associated
    private final static int RS_VOTE_READONLY = 4; // voted read-only
    private final static int RS_VOTE_OK       = 5; // voted ok
+
+   /**
+    *  Index of the first XAResource representing the same resource manager,
+    *  or <code>-1</code> if this XAResource is the first XAResource in this
+    *  transaction that represents its resource manager.
+    */
+   private int[] resourceSameRM = new int[1];
+
+   /**
+    *  A list of the XARessources that have participated in this transaction.
+    */
+   private Xid[] resourceXids = new Xid[1];
 
    /**
     *  Size of allocated resource arrays.
@@ -744,9 +765,22 @@ class TxCapsule implements TimeoutTarget
    private boolean resourcesEnded = false;
 
    /**
-    *  The ID of this transaction.
+    *  The ID of this transaction. This Xid corresponds to the root branch
+    *  of the transaction branch tree, and is never passed outside this
+    *  package.
     */
-   private Xid xid; // Transaction id
+   private XidImpl xid;
+
+   /**
+    *  Xid constructor arguments. Never used unless <code>xidConstructor</code>
+    *  is <code>null</code>.
+    */
+   private Object[] xidConstructorArgs = null;
+
+   /**
+    *  Last branch id used.
+    */
+   private int lastBranchId = 0;
 
    /**
     *  Status of this transaction.
@@ -900,14 +934,11 @@ class TxCapsule implements TimeoutTarget
 
          while (locked) {
             try {
+               // Wakeup happens when:
+               // - notify() is called from unlock()
+               // - notifyAll is called from instanceDone()
                wait();
             } catch (InterruptedException ex) {}
-
-            // MF FIXME: don't we need a notify() in this case?
-            // we need to release all the thread waiting on this lock
-
-            // OSH: notifyAll() is done in instanceDone()
-            // and notify() is done in unlock().
 
             if (done || myIncarnation != incarnationCount)
               throw new IllegalStateException("Transaction has now terminated");
@@ -957,18 +988,31 @@ class TxCapsule implements TimeoutTarget
     *  Return index of XAResource, or <code>-1</code> if not found.
     */
     private int findResource(XAResource xaRes) {
-        int pos = -1;
-        for (int i = 0; i < resourceCount; ++i)
-            if(xaRes == resources[i])
-                pos = i;
+       // A linear search may seem slow, but please note that
+       // the number of XA resources registered with a transaction
+       // are usually low.
+       for (int idx = 0; idx < resourceCount; ++idx)
+          if (xaRes == resources[idx])
+             return idx;
 
-        return pos;
+       return -1;
     }
 
    /**
     *  Add a resource, expanding tables if needed.
+    *
+    *  @param xaRes The new XA resource to add. It is assumed that the
+    *         resource is not already in the table of XA resources.
+    *  @param branchXid The Xid for the transaction branch that is to
+    *         be used for associating with this resource.
+    *  @param idxSameRM The index in our XA resource tables of the first
+    *         XA resource having the same resource manager as
+    *         <code>xaRes</code>, or <code>-1</code> if <code>xaRes</code>
+    *         is the first resource seen with this resource manager.
+    *
+    *  @return The index of the new resource in our internal tables.
     */
-   private void addResource(XAResource xaRes)
+   private int addResource(XAResource xaRes, Xid branchXid, int idxSameRM)
    {
       if (resourceCount == resourceAllocSize) {
          // expand tables
@@ -981,10 +1025,21 @@ class TxCapsule implements TimeoutTarget
          int[] stat = new int[resourceAllocSize];
          System.arraycopy(resourceState, 0, stat, 0, resourceCount);
          resourceState = stat;
+
+         Xid[] xids = new Xid[resourceAllocSize];
+         System.arraycopy(resourceXids, 0, xid, 0, resourceCount);
+         resourceXids = xids;
+
+         int[] sameRM = new int[resourceAllocSize];
+         System.arraycopy(resourceSameRM, 0, sameRM, 0, resourceCount);
+         resourceSameRM = sameRM;
       }
       resources[resourceCount] = xaRes;
-      resourceState[resourceCount] = RS_ENLISTED;
-      ++resourceCount;
+      resourceState[resourceCount] = RS_NEW;
+      resourceXids[resourceCount] = branchXid;
+      resourceSameRM[resourceCount] = idxSameRM;
+
+      return resourceCount++;
    }
 
    /**
@@ -1004,51 +1059,108 @@ class TxCapsule implements TimeoutTarget
    }
 
    /**
-    *  Call <code>start()</code> on the XAResource.
+    *  Call <code>start()</code> on a XAResource and update
+    *  internal state information.
     *  This will release the lock while calling out.
+    *
+    *  @param idx The index of the resource in our internal tables.
     */
-   private void startResource(XAResource xaRes, int flags, Xid currentBranchXid)
+   private void startResource(int idx)
       throws XAException
    {
-        if(trace)
-            Logger.debug("TxCapsule.startResource(" + XidImpl.toString(currentBranchXid) +
-                         ") entered: " + xaRes.toString() +
-                         " flags=" + flags);
+      int flags = XAResource.TMJOIN;
+
+      if (resourceSameRM[idx] == -1) {
+         switch (resourceState[idx]) {
+            case RS_NEW:
+               flags = XAResource.TMNOFLAGS;
+               break;
+            case RS_SUSPENDED:
+               flags = XAResource.TMRESUME;
+               break;
+         }
+      }
+
+      if (trace)
+         Logger.debug("TxCapsule.startResource(" +
+                      XidImpl.toString(resourceXids[idx]) +
+                      ") entered: " + resources[idx].toString() +
+                      " flags=" + flags);
+
       unlock();
       // OSH FIXME: resourceState could be incorrect during this callout.
       try {
-         xaRes.start(currentBranchXid, flags);
-         branchXids.put(xaRes, currentBranchXid);
+         try {
+            resources[idx].start(resourceXids[idx], flags);
+         } catch(XAException e) {
+            throw e;
+         } catch (Throwable t) {
+            if (trace)
+               Logger.exception(t);
+            status = Status.STATUS_MARKED_ROLLBACK;
+            return;
+         }
+
+         // Now the XA resource is associated with a transaction.
+         resourceState[idx] = RS_ENLISTED;
       } finally {
          lock();
-         if(trace)
-            Logger.debug("TxCapsule.startResource(" + XidImpl.toString(currentBranchXid) +
-                         ") leaving: " + xaRes.toString() +
+         if (trace)
+            Logger.debug("TxCapsule.startResource(" +
+                         XidImpl.toString(resourceXids[idx]) +
+                         ") leaving: " + resources[idx].toString() +
                          " flags=" + flags);
       }
    }
 
    /**
-    *  Call <code>end()</code> on the XAResource.
+    *  Call <code>end()</code> on the XAResource and update
+    *  internal state information.
     *  This will release the lock while calling out.
+    *
+    *  @param idx The index of the resource in our internal tables.
+    *  @param flag The flag argument for the end() call.
     */
-   private void endResource(XAResource xaRes, int flag)
+   private void endResource(int idx, int flag)
       throws XAException
    {
-      Xid useXid = (Xid)branchXids.get(xaRes);
-      if(trace)
-          Logger.debug("TxCapsule.endResource(" + XidImpl.toString(useXid) +
-                       ") entered: " + xaRes.toString() +
+      if (trace)
+          Logger.debug("TxCapsule.endResource(" +
+                       XidImpl.toString(resourceXids[idx]) +
+                       ") entered: " + resources[idx].toString() +
                        " flag=" + flag);
       unlock();
       // OSH FIXME: resourceState could be incorrect during this callout.
       try {
-         xaRes.end(useXid, flag);
+         try {
+            resources[idx].end(resourceXids[idx], flag);
+         } catch(XAException e) {
+            throw e;
+         } catch (Throwable t) {
+            if (trace)
+               Logger.exception(t);
+            status = Status.STATUS_MARKED_ROLLBACK;
+            // Resource may or may not be ended after illegal exception.
+            // We just assume it ended.
+            resourceState[idx] = RS_ENDED;
+            return;
+         }
+
+
+         // Update our internal state information
+         if (flag == XAResource.TMSUSPEND)
+            resourceState[idx] = RS_SUSPENDED;
+         else {
+            if (flag == XAResource.TMFAIL)
+               status = Status.STATUS_MARKED_ROLLBACK;
+            resourceState[idx] = RS_ENDED;
+         }
       } finally {
          lock();
-         if(trace)
-             Logger.debug("TxCapsule.endResource(" + XidImpl.toString(useXid) +
-                          ") leaving: " + xaRes.toString() +
+         if (trace)
+             Logger.debug("TxCapsule.endResource(" +
+                          XidImpl.toString(resourceXids[idx]) +
+                          ") leaving: " + resources[idx].toString() +
                           " flag=" + flag);
       }
    }
@@ -1058,9 +1170,9 @@ class TxCapsule implements TimeoutTarget
     */
    private void endResources()
    {
-      for (int i = 0; i < resourceCount; i++) {
+      for (int idx = 0; idx < resourceCount; idx++) {
          try {
-            if (resourceState[i] == RS_SUSPENDED) {
+            if (resourceState[idx] == RS_SUSPENDED) {
                // This is mad, but JTA 1.0.1 spec says on page 41:
                // "If TMSUSPEND is specified in flags, the transaction
                // branch is temporarily suspended in incomplete state.
@@ -1073,13 +1185,13 @@ class TxCapsule implements TimeoutTarget
                // a suspended state.
                // But the Minerva XA pool does not like that we call end()
                // two times in a row, so we resume before ending.
-               startResource(resources[i], XAResource.TMRESUME, (Xid)branchXids.get(resources[i]));
-               resourceState[i] = RS_ENLISTED;
+               startResource(idx);
             }
-            if (resourceState[i] == RS_ENLISTED) {
-              Logger.debug("endresources("+i+"): state="+resourceState[i]);
-              endResource(resources[i], XAResource.TMSUCCESS);
-              resourceState[i] = RS_ENDED;
+            if (resourceState[idx] == RS_ENLISTED) {
+              if (trace)
+                  Logger.debug("endresources(" + idx + "): state=" +
+                               resourceState[idx]);
+               endResource(idx, XAResource.TMSUCCESS);
             }
          } catch(XAException e) {
             Logger.warning("XAException: tx=" + toString() + " errorCode=" +
@@ -1100,8 +1212,16 @@ class TxCapsule implements TimeoutTarget
    {
       unlock();
       try {
-         for (int i = 0; i < syncCount; i++)
-            sync[i].beforeCompletion();
+         for (int i = 0; i < syncCount; i++) {
+            try {
+               sync[i].beforeCompletion();
+            } catch (Throwable t) {
+               if (trace)
+                  Logger.exception(t);
+               status = Status.STATUS_MARKED_ROLLBACK;
+               break;
+            }
+         }
       } finally {
          lock();
       }
@@ -1116,8 +1236,14 @@ class TxCapsule implements TimeoutTarget
       // Assert: Status indicates: Too late to add new synchronizations.
       unlock();
       try {
-         for (int i = 0; i < syncCount; i++)
-            sync[i].afterCompletion(status);
+         for (int i = 0; i < syncCount; i++) {
+            try {
+               sync[i].afterCompletion(status);
+            } catch (Throwable t) {
+               if (trace)
+                  Logger.exception(t);
+            }
+         }
       } finally {
          lock();
       }
@@ -1125,11 +1251,18 @@ class TxCapsule implements TimeoutTarget
 
    /**
     *  We got another heuristic.
+    *
     *  Promote <code>heuristicCode</code> if needed and tell
     *  the resource to forget the heuristic.
     *  This will release the lock while calling out.
+    *
+    *  @param resIdx The index of the XA resource that got a
+    *         heurictic in our internal tables, or <code>-1</code>
+    *         if the heuristic came from here.
+    *  @param code The heuristic code, one of
+    *         <code>XAException.XA_HEURxxx</code>.
     */
-   private void gotHeuristic(XAResource resource, int code)
+   private void gotHeuristic(int resIdx, int code)
    {
       switch (code) {
       case XAException.XA_HEURMIX:
@@ -1160,10 +1293,10 @@ class TxCapsule implements TimeoutTarget
          throw new IllegalArgumentException();
       }
 
-      if (resource != null) {
+      if (resIdx != -1) {
          try {
             unlock();
-            resource.forget((Xid)branchXids.get(resource));
+            resources[resIdx].forget(resourceXids[resIdx]);
          } catch (XAException e) {
             Logger.warning("XAException at forget(): errorCode=" +
                            getStringXAErrorCode(e.errorCode));
@@ -1230,12 +1363,26 @@ class TxCapsule implements TimeoutTarget
       }
 
       // Clear content of collections.
+      for (int i = 0; i < syncCount; ++i)
+         sync[i] = null; // release for GC
       syncCount = 0;
+
+      for (int i = 0; i < transactionCount; ++i)
+         transactions[i] = null; // release for GC
       transactionCount = 0;
+
+      for (int i = 0; i < resourceCount; ++i) {
+         resources[i] = null; // release for GC
+         resourceXids[i] = null; // release for GC
+      }
       resourceCount = 0;
 
+      // If using a special class, second constructor argument is now useless.
+      if (xidConstructor != null)
+        xidConstructorArgs[1] = null; // This now needs initializing
+
       // This instance is now ready for reuse (when we release the lock).
-      tm.releaseTxCapsule(this);
+      tm.releaseTxCapsule(this, xid);
    }
 
    /**
@@ -1260,6 +1407,9 @@ class TxCapsule implements TimeoutTarget
          if (status != Status.STATUS_PREPARING)
             return false;
 
+         if (resourceSameRM[i] != -1)
+           continue; // This RM already prepared.
+
          XAResource resource = resources[i];
 
          try {
@@ -1267,7 +1417,7 @@ class TxCapsule implements TimeoutTarget
 
             unlock();
             try {
-               vote = resources[i].prepare((Xid)branchXids.get(resources[i]));
+               vote = resources[i].prepare(resourceXids[i]);
             } finally {
                lock();
             }
@@ -1289,12 +1439,12 @@ class TxCapsule implements TimeoutTarget
             case XAException.XA_HEURCOM:
                // Heuristic commit is not that bad when preparing.
                // But it means trouble if we have to rollback.
-               gotHeuristic(resources[i], e.errorCode);
+               gotHeuristic(i, e.errorCode);
                break;
             case XAException.XA_HEURRB:
             case XAException.XA_HEURMIX:
             case XAException.XA_HEURHAZ:
-               gotHeuristic(resources[i], e.errorCode);
+               gotHeuristic(i, e.errorCode);
                if (status == Status.STATUS_PREPARING)
                   status = Status.STATUS_MARKED_ROLLBACK;
                break;
@@ -1306,6 +1456,11 @@ class TxCapsule implements TimeoutTarget
                   status = Status.STATUS_MARKED_ROLLBACK;
                break;
             }
+         } catch (Throwable t) {
+            if (trace)
+               Logger.exception(t);
+            if (status == Status.STATUS_PREPARING)
+               status = Status.STATUS_MARKED_ROLLBACK;
          }
       }
 
@@ -1324,11 +1479,15 @@ class TxCapsule implements TimeoutTarget
       status = Status.STATUS_COMMITTING;
 
       for (int i = 0; i < resourceCount; i++) {
-         if(trace) {
-            Logger.debug("TxCapsule.commitResources(): resourceStates["+i+"]="+resourceState[i]);
-         }
+         if (trace)
+            Logger.debug("TxCapsule.commitResources(): " +
+                         "resourceStates["+i+"]="+resourceState[i]);
+
          if (!onePhase && resourceState[i] != RS_VOTE_OK)
-           continue;
+           continue; // Voted read-only at prepare phase.
+
+         if (resourceSameRM[i] != -1)
+           continue; // This RM already committed.
 
          // Abort commit on state change.
          if (status != Status.STATUS_COMMITTING)
@@ -1337,7 +1496,7 @@ class TxCapsule implements TimeoutTarget
          try {
             unlock();
             try {
-               resources[i].commit((Xid)branchXids.get(resources[i]), onePhase);
+               resources[i].commit(resourceXids[i], onePhase);
             } finally {
                lock();
             }
@@ -1347,7 +1506,7 @@ class TxCapsule implements TimeoutTarget
             case XAException.XA_HEURCOM:
             case XAException.XA_HEURMIX:
             case XAException.XA_HEURHAZ:
-               gotHeuristic(resources[i], e.errorCode);
+               gotHeuristic(i, e.errorCode);
                break;
             default:
                Logger.warning("XAException: tx=" + toString() + " errorCode=" +
@@ -1356,10 +1515,15 @@ class TxCapsule implements TimeoutTarget
                break;
             }
             try {
-               resources[i].forget((Xid)branchXids.get(resources[i]));
-            } catch(XAException forgetEx) {}
-         } finally {
-            branchXids.remove(resources[i]);
+               // OSH: Why this?
+               // Heuristics only exist if we go one of the heuristic
+               // error codes, and for these forget() is called from
+               // gotHeuristic(). 
+               resources[i].forget(resourceXids[i]);
+            } catch (XAException forgetEx) {}
+         } catch (Throwable t) {
+            if (trace)
+               Logger.exception(t);
          }
       }
 
@@ -1382,7 +1546,7 @@ class TxCapsule implements TimeoutTarget
          try {
             unlock();
             try {
-               resources[i].rollback((Xid)branchXids.get(resources[i]));
+               resources[i].rollback(resourceXids[i]);
             } finally {
                lock();
             }
@@ -1390,12 +1554,12 @@ class TxCapsule implements TimeoutTarget
             switch (e.errorCode) {
             case XAException.XA_HEURRB:
                // Heuristic rollback is not that bad when rolling back.
-               gotHeuristic(resources[i], e.errorCode);
+               gotHeuristic(i, e.errorCode);
                break;
             case XAException.XA_HEURCOM:
             case XAException.XA_HEURMIX:
             case XAException.XA_HEURHAZ:
-               gotHeuristic(resources[i], e.errorCode);
+               gotHeuristic(i, e.errorCode);
                break;
             default:
                Logger.warning("XAException: tx=" + toString() + " errorCode=" +
@@ -1404,61 +1568,54 @@ class TxCapsule implements TimeoutTarget
                break;
             }
             try {
-                resources[i].forget((Xid)branchXids.get(resources[i]));
-            } catch(XAException forgetEx) {}
-         } finally {
-            branchXids.remove(resources[i]);
+               // OSH: Why this?
+               // Heuristics only exist if we go one of the heuristic
+               // error codes, and for these forget() is called from
+               // gotHeuristic(). 
+               resources[i].forget(resourceXids[i]);
+            } catch (XAException forgetEx) {}
+         } catch (Throwable t) {
+            if (trace)
+               Logger.exception(t);
          }
       }
 
       status = Status.STATUS_ROLLEDBACK;
    }
 
-    private Xid createXid() {
-       if (xidConstructor == null) {
-          String name = System.getProperty("jboss.xa.xidclass", "org.jboss.tm.XidImpl");
+   /**
+    *  Create an Xid representing a new branch of this transaction.
+    */
+   private Xid createXidBranch() {
+      int branchId = ++lastBranchId;
 
-          try {
-             Class cls = Class.forName(name);
-             xidConstructor = cls.getConstructor(new Class[]{Integer.TYPE, byte[].class, byte[].class});
-          } catch (Exception e) {
-             System.out.println("Unable to load Xid class '"+name+"'");
-          }
-       }
+      if (xidConstructor == null)
+         return new XidImpl(xid, branchId);
+      else {
+         try {
+            if (xidConstructorArgs[1] == null) {
+              // First branching of this global transaction id.
+              // Oracle XA driver needs the full length GID.
+              byte[] gidShort = xid.getGlobalTransactionId();
+              byte[] gid = new byte[Xid.MAXGTRIDSIZE];
+              System.arraycopy(gidShort, 0, gid, 0, gidShort.length);
+              xidConstructorArgs[1] = gid;
+            }
 
-       try {
-          Object xid = xidConstructor.newInstance(new Object[]{new Integer(XidImpl.getJbossFormatId()),
-                                                               XidImpl.getGlobalIdString(XidImpl.getNextId()),
-                                                               XidImpl.noBranchQualifier});
-          return (Xid)xid;
-       } catch (Exception e) {
-          System.out.println("Unable to create an Xid (reverting to default impl): "+e);
-          return new XidImpl(XidImpl.getJbossFormatId(), XidImpl.getGlobalIdString(XidImpl.getNextId()), XidImpl.noBranchQualifier);
-       }
-    }
+            // Oracle XA driver needs the full length BQID.
+            byte[] bqidShort = Integer.toString(branchId).getBytes();
+            byte[] bqid = new byte[Xid.MAXBQUALSIZE];
+            System.arraycopy(bqidShort, 0, bqid, 0, bqidShort.length);
+            xidConstructorArgs[2] = bqid;
 
-    private Xid createXid(Xid lastBranch) {
-       if (xidConstructor == null) {
-          String name = System.getProperty("jboss.xa.xidclass", "org.jboss.tm.XidImpl");
-
-          try {
-             Class cls = Class.forName(name);
-             xidConstructor = cls.getConstructor(new Class[]{Integer.TYPE, byte[].class, byte[].class});
-          } catch (Exception e) {
-             System.out.println("Unable to load Xid class '"+name+"'");
-          }
-       }
-
-       try {
-          Object xid = xidConstructor.newInstance(new Object[]{new Integer(XidImpl.getJbossFormatId()),
-                                                               XidImpl.getGlobalIdString(XidImpl.getNextId()),
-                                                               XidImpl.getNextBranchQualifier(lastBranch.getBranchQualifier())});
-          return (Xid)xid;
-       } catch (Exception e) {
-          System.out.println("Unable to create an Xid (reverting to default impl): "+e);
-          return new XidImpl(XidImpl.getJbossFormatId(), XidImpl.getGlobalIdString(XidImpl.getNextId()), XidImpl.noBranchQualifier);
-       }
-    }
+            return (Xid)xidConstructor.newInstance(xidConstructorArgs);
+         } catch (Exception e) {
+            System.out.println("Unable to create an Xid " +
+                               "(reverting to default impl): " + e);
+            return new XidImpl(xid, branchId);
+         }
+      }
+   }
 
    // Inner classes -------------------------------------------------
 }

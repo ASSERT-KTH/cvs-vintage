@@ -36,7 +36,7 @@ import org.jboss.util.ServiceMBeanSupport;
  *      
  *   @see TxManager
  *   @author Rickard Öberg (rickard.oberg@telkel.com)
- *   @version $Revision: 1.5 $
+ *   @version $Revision: 1.6 $
  */
 public class TransactionManagerService
    extends ServiceMBeanSupport
@@ -69,8 +69,8 @@ public class TransactionManagerService
    protected void startService()
       throws Exception
    {
-       // Create a new TM
-       tm = new TxManager();
+       // Get a reference to the TxManager singleton.
+       tm = TxManager.getInstance();
        
        // Set timeout
        tm.setTransactionTimeout(timeout);

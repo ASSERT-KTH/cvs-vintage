@@ -38,7 +38,7 @@ import org.jboss.logging.Logger;
  *  @author Rickard Öberg (rickard.oberg@telkel.com)
  *  @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
  *  @author <a href="mailto:osh@sparre.dk">Ole Husgaard</a>
- *  @version $Revision: 1.25 $
+ *  @version $Revision: 1.26 $
  */
 public class TxManager
 implements TransactionManager
@@ -54,9 +54,30 @@ implements TransactionManager
    long timeOut = 5*60*1000; 
     
    // Static --------------------------------------------------------
-    
+ 
+   /**
+    *  The singleton instance.
+    */
+   private static TxManager singleton = new TxManager();
+
+   /**
+    *  Get a reference to the singleton instance.
+    */
+   static TxManager getInstance()
+   {
+      return singleton;
+   }
+
    // Constructors --------------------------------------------------
-    
+ 
+   /**
+    *  Private constructor for singleton. Use getInstance() to obtain
+    *  a reference to the singleton.
+    */
+   private TxManager()
+   {
+   }
+
    // Public --------------------------------------------------------
 
    public void begin()
@@ -225,9 +246,53 @@ implements TransactionManager
     
    public void associateThread(Transaction transaction)
    {
+      //
       // If the transaction has travelled, we have to import it.
+      //
+      // This implicit import will go away at some point in the
+      // future and be replaced by an explicit import by calling
+      // importTPC().
+      // That will make it possible to only propagate XidImpl over the
+      // wire so that we no longer have to handle multible Transaction
+      // frontends for each transaction.
+      //
       if (transaction != null && transaction instanceof TransactionImpl) {
          TransactionImpl tx = (TransactionImpl)transaction;
+
+         if (tx.importNeeded())
+            transaction = importTPC(transaction);
+      }
+
+      // Associate with the thread
+      threadTx.set(transaction);
+   }
+
+   /**
+    *  Import a transaction propagation context into this TM.
+    *  The TPC is loosely typed, as we may (at a later time) want to
+    *  import TPCs that come from other transaction monitors without
+    *  offloading the conversion to the client.
+    *
+    *  @param tpc The transaction propagation context that we want to
+    *             import into this TM. Currently this is an instance
+    *             of TransactionImpl. Later this will be changed to an
+    *             instance of XidImpl. And at some later time this may
+    *             even be an instance of a transaction propagation context
+    *             from another kind of transaction monitor like 
+    *             org.omg.CosTransactions.PropagationContext. 
+    *
+    *  @return A transaction representing this transaction propagation
+    *          context, or null if this TPC cannot be imported.
+    */
+   public Transaction importTPC(Object tpc)
+   {
+      if (tpc instanceof TransactionImpl) {
+         // TODO: Change to just return the transaction without importing.
+         // A raw TransactionImpl will only be used for optimized local calls,
+         // where the import will not be needed.
+         // But that will have to wait until remote calls use XidImpl instead,
+         // otherwise we cannot distinguish cases.
+         TransactionImpl tx = (TransactionImpl)tpc;
 
          if (tx.importNeeded()) {
             synchronized(tx) {
@@ -242,38 +307,23 @@ implements TransactionManager
                }
             }
          }
-      }
+         return tx;
+      } else if (tpc instanceof XidImpl)
+         Logger.warning("XidImpl import not yet implemented.");
+      else
+         Logger.warning("Cannot import transaction propagation context: " +
+                        tpc.toString());
+      return null;
+   }
 
-      // Associate with the thread
-      threadTx.set(transaction);
-   }
-    
-    
    // Package protected ---------------------------------------------
-    
-   // There has got to be something better :)
-   static TxManager getTransactionManager()
-   {
-      try {
-         javax.naming.InitialContext context = new javax.naming.InitialContext();
-            
-         //One tx in naming
-         Logger.log("Calling get manager from JNDI");
-         TxManager manager = (TxManager) context.lookup("java:/TransactionManager");
-         Logger.log("Returning TM " + manager.hashCode());
-            
-         return manager;
-      } catch (Exception e ) {
-         return null;
-      }
-   }
     
    /**
     *  Release the given txCapsule for reuse.
     */
-   void releaseTxCapsule(TxCapsule txCapsule)
+   void releaseTxCapsule(TxCapsule txCapsule, XidImpl xid)
    {
-      activeCapsules.remove(txCapsule.getXid());
+      activeCapsules.remove(xid);
 
       SoftReference ref = new SoftReference(txCapsule);
       synchronized (inactiveCapsules) {
@@ -281,6 +331,22 @@ implements TransactionManager
       }
    }
 
+   /**
+    *  Return an Xid that identifies the transaction associated
+    *  with the invoking thread, or <code>null</code> if the invoking
+    *  thread is not associated with a transaction.
+    *  This is used for JRMP transaction context propagation.
+    */
+   Xid getXid()
+   {
+      Transaction current = (Transaction)threadTx.get();
+
+      // If no transaction or unknown transaction class, return null.
+      if (current == null || !(current instanceof TransactionImpl))
+         return null;
+
+      return ((TransactionImpl)current).xid;
+   }
 
    // Protected -----------------------------------------------------
 

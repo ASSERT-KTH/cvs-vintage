@@ -35,7 +35,7 @@ import javax.transaction.xa.XAException;
  *  @author Rickard Öberg (rickard.oberg@telkel.com)
  *  @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
  *  @author <a href="mailto:osh@sparre.dk">Ole Husgaard</a>
- *  @version $Revision: 1.11 $
+ *  @version $Revision: 1.12 $
  */
 public class TransactionImpl
    implements Transaction, Serializable
@@ -188,7 +188,7 @@ public class TransactionImpl
 
    /**
     *  Setter for property done.
-    *  No argument for this mutator; we can only set to false.
+    *  No argument for this mutator; we can only set to true.
     *  This will also clear the txCapsule reference.
     */
    synchronized void setDone()
