@@ -156,10 +156,7 @@ public class AddressCellEditor
 
 	}
 
-	public void keyPressed(KeyEvent e) {
-		char ch = e.getKeyChar();
-
-	}
+	public void keyPressed(KeyEvent e) {}
 
 	public void keyReleased(KeyEvent e) {
 

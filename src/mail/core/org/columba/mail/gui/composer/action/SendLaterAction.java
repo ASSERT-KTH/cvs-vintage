@@ -73,14 +73,13 @@ public class SendLaterAction extends FrameAction {
 		final ComposerController composerController =
 			(ComposerController) getFrameController();
 
-		if (composerController.checkState() == false)
+		if (!composerController.checkState())
 			return;
 
 		AccountItem item =
 			((ComposerModel) composerController.getModel()).getAccountItem();
 		SpecialFoldersItem folderItem = item.getSpecialFoldersItem();
 		String str = folderItem.get("drafts");
-		int destUid = Integer.parseInt(str);
 		OutboxFolder destFolder =
 			(OutboxFolder) MainInterface.treeModel.getFolder(103);
 
