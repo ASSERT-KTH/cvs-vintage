@@ -557,7 +557,7 @@ public class Issue
      * been assigned to this issue, they will not show up in this list.
      *
      * @return a <code>List</code> value
-     */
+     * DEPRECATED
     public List getEligibleAssignees()
         throws Exception
     {
@@ -598,10 +598,11 @@ public class Issue
 
         return eligibleUsers;
     }
+    */
 
     /**
      * Returns userids, the value of the "AssignedTo" Attribute 
-     */
+     * DEPRECATED
     public List getAssigneeAttributeValues() throws Exception
     {
         ArrayList assignees = new ArrayList();
@@ -616,11 +617,47 @@ public class Issue
         }
         return attValues;
     }
+     */
+
+    /**
+     * Returns users assigned to all user attributes.
+     */
+    public List getAssociatedUsers() throws Exception
+    {
+        ArrayList assignees = new ArrayList();
+        List attributeList = getModule().getUserAttributes(getIssueType());
+        List attributeIdList = new ArrayList();
+
+        for ( int i=0; i<attributeList.size(); i++ ) 
+        {
+            Attribute att = (Attribute) attributeList.get(i);
+            attributeIdList.add(att.getAttributeId());
+        }
+
+        Criteria crit = new Criteria()
+            .addIn(AttributeValuePeer.ATTRIBUTE_ID, attributeIdList)
+            .add(AttributeValuePeer.DELETED, false);
+        crit.setDistinct();
+
+        List attValues = getAttributeValues(crit);
+        for ( int i=0; i<attValues.size(); i++ ) 
+        {
+            AttributeValue attVal = (AttributeValue) attValues.get(i);
+            ScarabUser su = UserManager.getInstance(attVal.getUserId());
+            assignees.add(su);
+        }
+        ScarabUser createdBy = getCreatedBy();
+        if (!assignees.contains(createdBy))
+        { 
+            assignees.add(createdBy);
+        }
+        return assignees;
+    }
 
     /**
      * Returns list of user(s) who are assigned to the issue,
      * Plus the user who created the issue, and who last modified it.
-     */
+     * DEPRECATED
     public List getAssociatedUsers() throws Exception
     {
         List associatedUsersIds = new ArrayList();
@@ -654,6 +691,7 @@ public class Issue
         }
         return associatedUsers;
     }
+     */
 
     
     /**
@@ -1345,7 +1383,6 @@ public class Issue
      * @param attachmentText a <code>String</code> value
      * @param assigner a <code>ScarabUser</code> value
      * @exception Exception if an error occurs
-     */
     public void assignUsers(List newAssignees, String attachmentText, 
                             ScarabUser assigner, Attribute attribute)
         throws Exception
@@ -1412,6 +1449,8 @@ public class Issue
         }
         save();
     }
+     */
+
 
     /**
      * Checks permission and approves or rejects issue template. 
