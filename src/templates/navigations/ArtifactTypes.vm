@@ -25,7 +25,6 @@
 $link.setPage("reports,Step1.vm").setLabel("New Report").addPathInfo($scarabG.Constant.REMOVE_CURRENT_REPORT, $currentReportKey).removePathInfo($scarabG.Constant.CURRENT_REPORT)
     <div><small>$link</small></div>
 #end
-##    <div><small>Saved reports</small></div>
     </div>
   #else
     <div><small>$link.setPage("$wizardScreen").setAction("SelectIssueType").setPathInfo($scarabG.Constant.NEXT_TEMPLATE, "$wizardScreen").setPathInfo("newissuetype", "$issueType.IssueTypeId").setLabel("$rmit.DisplayText")</small></div>
