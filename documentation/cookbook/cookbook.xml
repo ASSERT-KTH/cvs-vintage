@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<!-- $Id: cookbook.xml,v 1.79 2003/01/13 19:49:17 linus Exp $ -->
+<!-- $Id: cookbook.xml,v 1.80 2003/01/17 20:06:36 linus Exp $ -->
 
 <!DOCTYPE book SYSTEM "../docbook-setup/docbookx/docbookx.dtd" [
 <!ENTITY cookbookmodules SYSTEM "cookbook_modules.xml">
@@ -32,7 +32,7 @@
          </authorgroup>
          <legalnotice>
              <para>
- Copyright (c) 1996-2002 The Regents of the University of California. All
+ Copyright (c) 1996-2003 The Regents of the University of California. All
  Rights Reserved. Permission to use, copy, modify, and distribute this
  software and its documentation without fee, and without a written
  agreement is hereby granted, provided that the above copyright notice
@@ -6795,7 +6795,7 @@ original author (if you want).
 Like this:
 <programlisting>
 // &dollar;Id&dollar;
-// Copyright (c) 2002 The Regents of the University of California. All
+// Copyright (c) 2003 The Regents of the University of California. All
 // ...
 
 // Classes: blabla, blabla (all classes of interest in this file)
