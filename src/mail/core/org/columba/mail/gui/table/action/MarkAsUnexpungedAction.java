@@ -15,20 +15,19 @@
 //All Rights Reserved.
 package org.columba.mail.gui.table.action;
 
+import java.awt.event.ActionEvent;
+
 import org.columba.core.action.AbstractColumbaAction;
 import org.columba.core.gui.frame.FrameMediator;
 import org.columba.core.gui.selection.SelectionChangedEvent;
 import org.columba.core.gui.selection.SelectionListener;
 import org.columba.core.main.MainInterface;
-
 import org.columba.mail.command.FolderCommandReference;
 import org.columba.mail.folder.command.MarkMessageCommand;
 import org.columba.mail.gui.frame.AbstractMailFrameController;
 import org.columba.mail.gui.frame.MailFrameMediator;
 import org.columba.mail.gui.table.selection.TableSelectionChangedEvent;
-
-import java.awt.event.ActionEvent;
-
+import org.columba.mail.util.MailResourceLoader;
 
 /**
  * @author frd
@@ -36,33 +35,51 @@ import java.awt.event.ActionEvent;
  * To change the template for this generated type comment go to
  * Window>Preferences>Java>Code Generation>Code and Comments
  */
-public class MarkAsUnexpungedAction extends AbstractColumbaAction
-    implements SelectionListener {
-    public MarkAsUnexpungedAction(FrameMediator frameMediator) {
-        // TODO: i18n missing here
-        super(frameMediator, "Not Expunged");
+public class MarkAsUnexpungedAction
+	extends AbstractColumbaAction
+	implements SelectionListener {
+	public MarkAsUnexpungedAction(FrameMediator frameMediator) {
 
-        setEnabled(false);
+		super(
+			frameMediator,
+			MailResourceLoader.getString(
+				"menu",
+				"mainframe",
+				"menu_message_markasnotexpunged"));
+				
+		// tooltip text
+		putValue(
+			SHORT_DESCRIPTION,
+			MailResourceLoader
+				.getString(
+					"menu",
+					"mainframe",
+					"menu_message_markasnotexpunged_tooltip")
+				.replaceAll("&", ""));
+		setEnabled(false);
 
-        ((MailFrameMediator) frameMediator).registerTableSelectionListener(this);
-    }
+		((MailFrameMediator) frameMediator).registerTableSelectionListener(
+			this);
+	}
 
-    /* (non-Javadoc)
-     * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
-     */
-    public void actionPerformed(ActionEvent evt) {
-        FolderCommandReference[] r = ((AbstractMailFrameController) getFrameMediator()).getTableSelection();
-        r[0].setMarkVariant(MarkMessageCommand.MARK_AS_UNEXPUNGED);
+	/* (non-Javadoc)
+	 * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
+	 */
+	public void actionPerformed(ActionEvent evt) {
+		FolderCommandReference[] r=
+			((AbstractMailFrameController) getFrameMediator())
+				.getTableSelection();
+		r[0].setMarkVariant(MarkMessageCommand.MARK_AS_UNEXPUNGED);
 
-        MarkMessageCommand c = new MarkMessageCommand(r);
+		MarkMessageCommand c= new MarkMessageCommand(r);
 
-        MainInterface.processor.addOp(c);
-    }
+		MainInterface.processor.addOp(c);
+	}
 
-    /* (non-Javadoc)
-     * @see org.columba.core.gui.util.SelectionListener#selectionChanged(org.columba.core.gui.util.SelectionChangedEvent)
-     */
-    public void selectionChanged(SelectionChangedEvent e) {
-        setEnabled(((TableSelectionChangedEvent) e).getUids().length > 0);
-    }
+	/* (non-Javadoc)
+	 * @see org.columba.core.gui.util.SelectionListener#selectionChanged(org.columba.core.gui.util.SelectionChangedEvent)
+	 */
+	public void selectionChanged(SelectionChangedEvent e) {
+		setEnabled(((TableSelectionChangedEvent) e).getUids().length > 0);
+	}
 }
