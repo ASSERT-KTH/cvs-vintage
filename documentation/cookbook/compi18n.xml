@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<!-- $Id: compi18n.xml,v 1.3 2003/06/14 21:15:03 linus Exp $ -->
+<!-- $Id: compi18n.xml,v 1.4 2003/07/09 11:28:47 linus Exp $ -->
 
   <sect1 id="internationalization">
     <title>Internationalization</title>
@@ -7,13 +7,13 @@
 	<primary>Internationalization</primary>
       </indexterm>
       <indexterm>
-	<primary>i18n</primary>
+	<primary>I18n</primary>
       </indexterm>
       <indexterm>
 	<primary>Localization</primary>
       </indexterm>
       <indexterm>
-	<primary>l10n</primary>
+	<primary>L10n</primary>
       </indexterm>
       <indexterm>
 	<primary>ResourceBundles</primary>
@@ -52,8 +52,7 @@ This is set up in <classname>org.argouml.application.Main</classname>.
       <sect2>
 	<title>Organizing translators</title>
 	<indexterm>
-	  <primary>Language</primary>
-	  <secondary>teams</secondary>
+	  <primary>Language teams</primary>
 	</indexterm>
 	<indexterm>
 	  <primary>Translators</primary>

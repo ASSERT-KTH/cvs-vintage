@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<!-- $Id: cookbook.in,v 1.1 2003/07/07 01:59:10 linus Exp $ -->
+<!-- $Id: cookbook.in,v 1.2 2003/07/09 11:28:47 linus Exp $ -->
 
 <!DOCTYPE book SYSTEM "../docbook-setup/docbookx/docbookx.dtd" [
 <!ENTITY building SYSTEM "building.xml">
@@ -399,8 +399,7 @@ problems found by themselves and others.
     <title>ArgoUML Design, The Big Picture</title>
 
     <indexterm>
-      <primary>ArgoUML</primary>
-      <secondary>Design</secondary>
+      <primary>ArgoUML Design</primary>
     </indexterm>
     <para>
 Currently this is more of a base for discussion and
@@ -2708,5 +2707,7 @@ LINK: <ulink url="http://www.cocons.org/publications/CCL_plugin_for_ArgoUML.pdf"
 </chapter>
 
   &processes;
+
+  <index/>
 
 </book>

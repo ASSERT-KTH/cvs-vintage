@@ -1,11 +1,10 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<!-- $Id: standard.xml,v 1.2 2003/05/04 10:56:27 linus Exp $ -->
+<!-- $Id: standard.xml,v 1.3 2003/07/09 11:28:47 linus Exp $ -->
 
   <chapter id="standards">
     <title>Standards for coding in ArgoUML</title>
     <indexterm>
-      <primary>Coding</primary>
-      <secondary>Standards</secondary>
+      <primary>Coding Standards</primary>
     </indexterm>
     <indexterm>
       <primary>Standards</primary>
