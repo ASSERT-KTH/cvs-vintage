@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/service/Attic/Ajp22ConnectionHandler.java,v 1.2 1999/10/24 17:34:03 costin Exp $
- * $Revision: 1.2 $
- * $Date: 1999/10/24 17:34:03 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/service/Attic/Ajp22ConnectionHandler.java,v 1.3 1999/10/28 05:15:30 costin Exp $
+ * $Revision: 1.3 $
+ * $Date: 1999/10/28 05:15:30 $
  *
  * ====================================================================
  *
@@ -100,9 +100,6 @@ public class Ajp22ConnectionHandler  implements  TcpConnectionHandler {
     //    "Shortcuts" to be added here ( Vhost and context set by Apache, etc)
     // XXX handleEndpoint( Endpoint x )
     public void processConnection(TcpConnection connection) {
-	Ajp22Response rresponse=null;
-	Ajp22Request  rrequest=null;
-    
 	Socket socket;
 
 	try {
@@ -111,29 +108,19 @@ public class Ajp22ConnectionHandler  implements  TcpConnectionHandler {
 	    
 	    socket=connection.getSocket();
 	    
-	    if( ! recycle_is_broken ) {
-		msg=new MessageConnector(socket);
-		rresponse = new Ajp22Response(msg);
-		//		rresponse.setProtocol( this );
-		rrequest = new Ajp22Request(msg);
-		rrequest.setResponse(rresponse);
-		rresponse.setRequest(rrequest);
-	    }
+	    msg=new MessageConnector(socket);
+	    Ajp22Response rresponse = new Ajp22Response(msg);
+	    //		rresponse.setProtocol( this );
+	    Request rrequest = new Request();
+	    Ajp22Request reqA = new Ajp22Request(msg);
+	    rrequest.setRequestAdapter( reqA );
+	    rrequest.setResponse(rresponse);
+	    rresponse.setRequest(rrequest);
 	    boolean moreRequests=true;
             while( moreRequests ) { // XXX how to exit ? // request.hasMoreRequests()) {
-		if(recycle_is_broken) {
-		    // create new objects for GC until reuse is fixed
-		    msg=new MessageConnector(socket);
-		    rresponse = new Ajp22Response(msg);
-		    //		    rresponse.setProtocol( this );
-		    rrequest = new Ajp22Request(msg);
-		    rrequest.setResponse(rresponse);
-		    rresponse.setRequest(rrequest);
-		}
-		
 		// XXX this should be implemented here!
 		try {
-		    int err=rrequest.readNextRequest();
+		    int err=reqA.readNextRequest();
 		    if( err<0 ) {
 			moreRequests=false;
 			break;
@@ -285,7 +272,7 @@ class MessageConnector implements Ajp22Constants {
 }
 
 
-class Ajp22Request extends Request {
+class Ajp22Request extends RequestAdapterImpl {
     MessageConnector proto;
     Hashtable env_vars;
 
@@ -358,11 +345,8 @@ class Ajp22Request extends Request {
 	
 	setInternalVars();
 
-	processCookies();
-	
 	contentLength = headers.getIntHeader("content-length");
 	contentType = headers.getHeader("content-type");
-	charEncoding = getCharsetFromContentType(contentType);
 	return 0;
     }    
 
@@ -384,12 +368,10 @@ class Ajp22Request extends Request {
 
     private void setInternalVars() {
 	method= (String)env_vars.get("REQUEST_METHOD");
+
 	protocol=(String)env_vars.get("SERVER_PROTOCOL");
 	requestURI=(String)env_vars.get("REQUEST_URI");
 	queryString=(String)env_vars.get("QUERY_STRING");
-	if ((queryString != null ) && ! "".equals(queryString)) {
-            processFormData(queryString);
-        }
 	if(requestURI==null) requestURI="xxx"; //XXX
 	// XXX: fix it!
 	if (requestURI.indexOf("?") > -1) {
@@ -412,14 +394,14 @@ class Ajp22Request extends Request {
 		hostHeader = hostHeader.substring(0,i);
 	    }
 	    
-	    this.setServerName(hostHeader);
+	    serverName=hostHeader;
 	} else {
 	    // XXX
 	    // this is crap having to do this lookup -- we
 	    // need a better solution
 	    //    InetAddress localAddress = socket.getLocalAddress();
 	    //rrequest.setServerName(localAddress.getHostName());
-	    this.setServerName("localhost");
+	    serverName="localhost";
 	}
 
 		
@@ -427,7 +409,7 @@ class Ajp22Request extends Request {
 }
 
 
-class Ajp22Response extends ResponseImpl implements Ajp22Constants {
+class Ajp22Response extends Response implements Ajp22Constants {
     MessageConnector proto;
     Ajp22ServletOS rout;
 

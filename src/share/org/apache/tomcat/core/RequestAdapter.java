@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/core/Attic/RequestAdapter.java,v 1.1 1999/10/24 17:21:20 costin Exp $
- * $Revision: 1.1 $
- * $Date: 1999/10/24 17:21:20 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/core/Attic/RequestAdapter.java,v 1.2 1999/10/28 05:15:24 costin Exp $
+ * $Revision: 1.2 $
+ * $Date: 1999/10/28 05:15:24 $
  *
  * ====================================================================
  *
@@ -93,17 +93,32 @@ public interface RequestAdapter {
     public String getScheme();
     
     public String getMethod();
-    
+
     public String getRequestURI();
 
+    public String getQueryString();
+
     public String getProtocol();
+    
+    // XXX temporary - to keep everything working
+    public MimeHeaders getMimeHeaders();
     
     public  Enumeration getHeaderNames();
 
     public  String getHeader(String name);
-    
+
+    /** You can either provide an implementation of ServletInputStream or
+	return BufferedServletInputStream( RequsetAdapter ), and implement
+	doRead();
+     */
     public  ServletInputStream getInputStream() throws IOException;
-    
+
+    /** Fill in the buffer. This method is probably easier to implement than
+	previous.
+	This method should only be called from SerlvetInputStream implementations.
+	No need to implement it if your adapter implements ServletInputStream.
+     */
+    public  int doRead( byte b[], int off, int len ) throws IOException;
 
     // Required - connection info 
     public String getServerName();
@@ -138,8 +153,6 @@ public interface RequestAdapter {
     // What's after Servlet name, before "?"
     public String getPathInfo();
 
-    public String getQueryString();
-
     // Parameters - if the server can parse parameters faster
     // Note: there is a tricky requirement in Servlet API
     // regarding POST parameters ( you can't read the body until you are
@@ -170,6 +183,5 @@ public interface RequestAdapter {
     
     public String getContentType();
 
-    // You're no longer needed, go away
     public  void recycle(); 
 }

@@ -1,4 +1,4 @@
-/* $Id: WelcomeFileTest.java,v 1.2 1999/10/14 23:48:55 akv Exp $
+/* $Id: WelcomeFileTest.java,v 1.3 1999/10/28 05:15:34 costin Exp $
  */
 
 /**
@@ -93,6 +93,7 @@ public class WelcomeFileTest extends TestableBase {
 	} catch (Exception e) {
   	    testResult.setStatus(false);
   	    testResult.setMessage("Exception: " + e);
+	    e.printStackTrace();
   	    return testResult; 
   	}
     }

@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/service/Attic/Ajp11ConnectionHandler.java,v 1.3 1999/10/24 17:34:03 costin Exp $
- * $Revision: 1.3 $
- * $Date: 1999/10/24 17:34:03 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/service/Attic/Ajp11ConnectionHandler.java,v 1.4 1999/10/28 05:15:30 costin Exp $
+ * $Revision: 1.4 $
+ * $Date: 1999/10/28 05:15:30 $
  *
  * ====================================================================
  *
@@ -106,8 +106,12 @@ public class Ajp11ConnectionHandler implements  TcpConnectionHandler {
         try {
 	    Socket socket=connection.getSocket();
 	    socket.setSoLinger( true, 100);
-
-	    AJPRequest request = new AJPRequest(socket); // todo: clean ConnectionHandler, make it abstract
+	    //XXX recycle
+	    Request request=new Request();
+	    
+	    AJPRequestAdapter reqA = new AJPRequestAdapter(socket); // todo: clean ConnectionHandler, make it abstract
+	    request.setRequestAdapter( reqA );
+	    
 	    AJPResponse response = new AJPResponse();
             response.setOutputStream(socket.getOutputStream());
 	    int count = 1;
@@ -115,14 +119,7 @@ public class Ajp11ConnectionHandler implements  TcpConnectionHandler {
 	    request.setResponse(response);
 	    response.setRequest(request);
 
-	    request.readNextRequest();
-
-	    if (response.getStatus() >= 400) {
-		response.finish();
-		
-		socket.close();
-		return;
-	    } 
+	    reqA.readNextRequest();
 
 	    // resolve the server that we are for
 
@@ -146,11 +143,11 @@ public class Ajp11ConnectionHandler implements  TcpConnectionHandler {
     }
 }
 
-class AJPRequest extends Request {
+class AJPRequestAdapter extends RequestAdapterImpl {
     StringManager sm = StringManager.getManager("org.apache.tomcat.service");
     Socket socket;
     
-    public AJPRequest(Socket so) {
+    public AJPRequestAdapter(Socket so) {
 	this.socket=so;
     }
     
@@ -168,15 +165,16 @@ class AJPRequest extends Request {
 	protocol=(String)env_vars.get("SERVER_PROTOCOL");
 	requestURI=(String)env_vars.get("REQUEST_URI");
 	queryString=(String)env_vars.get("QUERY_STRING");
-	if ((queryString != null ) && ! "".equals(queryString)) {
-            processFormData(queryString);
-        }
-	// todo: fix it!
-	if (requestURI.indexOf("?") > -1) {
-	    //            queryString = requestURI.substring(
-	    //			       requestURI.indexOf("?") + 1, requestURI.length());
-            //processFormData(queryString);
-	    requestURI = requestURI.substring(0, requestURI.indexOf("?"));
+	
+	// lazy
+ 	// if ((queryString != null ) && ! "".equals(queryString)) {
+	//             processFormData(queryString);
+	//         }
+
+	// AJP11 will send CGI vars, and REQUEST_URI includes query string 
+	int idQ= requestURI.indexOf("?");
+	if ( idQ > -1) {
+	    requestURI = requestURI.substring(0, idQ);
         }
 	// 	System.out.println("Request: " + requestURI );
 	// 	System.out.println("Query: " + queryString );
@@ -193,11 +191,11 @@ class AJPRequest extends Request {
 	// XXX: bug, fix it
 	remoteHost=(String)env_vars.get("REMOTE_ADDR");
 
-	processCookies();
+	// lazy	processCookies();
 	
 	contentLength = headers.getIntHeader("content-length");
 	contentType = headers.getHeader("content-type");
-	charEncoding = getCharsetFromContentType(contentType);
+	// lazy	charEncoding = getCharsetFromContentType(contentType);
 	    
 	// XXX
 	// detect for real whether or not we have more requests

@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/core/Attic/RequestUtil.java,v 1.1 1999/10/24 16:53:19 costin Exp $
- * $Revision: 1.1 $
- * $Date: 1999/10/24 16:53:19 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/core/Attic/RequestUtil.java,v 1.2 1999/10/28 05:15:25 costin Exp $
+ * $Revision: 1.2 $
+ * $Date: 1999/10/28 05:15:25 $
  *
  * ====================================================================
  *
@@ -192,6 +192,7 @@ public class RequestUtil {
     public static void processFormData(String data, Hashtable parameters) {
         // XXX
         // there's got to be a faster way of doing this.
+	if( data==null ) return; // no parameters
         StringTokenizer tok = new StringTokenizer(data, "&", false);
         while (tok.hasMoreTokens()) {
             String pair = tok.nextToken();

@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/server/Attic/ServletInputStreamImpl.java,v 1.1 1999/10/09 00:20:48 duncan Exp $
- * $Revision: 1.1 $
- * $Date: 1999/10/09 00:20:48 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/server/Attic/ServletInputStreamImpl.java,v 1.2 1999/10/28 05:15:29 costin Exp $
+ * $Revision: 1.2 $
+ * $Date: 1999/10/28 05:15:29 $
  *
  * ====================================================================
  *
@@ -77,13 +77,13 @@ import org.apache.tomcat.core.*;
 
 class ServletInputStreamImpl extends BufferedServletInputStream {
 
-    private ServerRequest request;
+    //    private ServerRequest request;
     private InputStream in;
 
     
-    ServletInputStreamImpl(ServerRequest request, InputStream in) {
+    ServletInputStreamImpl(InputStream in) {
 	super();
-	this.request = request;
+	//	this.request = request;
 	this.in = in;
     }
     public int doRead() throws IOException {

@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/server/Attic/ServerResponse.java,v 1.1 1999/10/09 00:20:48 duncan Exp $
- * $Revision: 1.1 $
- * $Date: 1999/10/09 00:20:48 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/server/Attic/ServerResponse.java,v 1.2 1999/10/28 05:15:28 costin Exp $
+ * $Revision: 1.2 $
+ * $Date: 1999/10/28 05:15:28 $
  *
  * ====================================================================
  *
@@ -81,7 +81,7 @@ import javax.servlet.http.*;
  * @author Harish Prabandham
  */
 
-public class ServerResponse extends ResponseImpl {
+public class ServerResponse extends Response {
     protected StringManager sm =
         StringManager.getManager(Constants.Package);
     

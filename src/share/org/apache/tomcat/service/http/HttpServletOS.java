@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/service/http/Attic/HttpServletOS.java,v 1.1 1999/10/09 00:20:51 duncan Exp $
- * $Revision: 1.1 $
- * $Date: 1999/10/09 00:20:51 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/service/http/Attic/HttpServletOS.java,v 1.2 1999/10/28 05:15:33 costin Exp $
+ * $Revision: 1.2 $
+ * $Date: 1999/10/28 05:15:33 $
  *
  * ====================================================================
  *
@@ -75,13 +75,13 @@ import javax.servlet.http.*;
 
 public class HttpServletOS extends BufferedServletOutputStream  { 
     OutputStream out;
-    ResponseImpl response;
+    Response response;
     
     // XXX clean up
     public HttpServletOS() {
     }
 
-    public HttpServletOS(ResponseImpl response, OutputStream out) {
+    public HttpServletOS(Response response, OutputStream out) {
 	setOutputStream( out);
 	setResponse( response) ;
     }
@@ -90,7 +90,7 @@ public class HttpServletOS extends BufferedServletOutputStream  {
 	this.out=out;
     }
 
-    public void setResponse( ResponseImpl response ) {
+    public void setResponse( Response response ) {
 	this.response=response;
     }
 

@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/service/connector/Attic/Ajp23ConnectionHandler.java,v 1.1 1999/10/09 00:20:48 duncan Exp $
- * $Revision: 1.1 $
- * $Date: 1999/10/09 00:20:48 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/service/connector/Attic/Ajp23ConnectionHandler.java,v 1.2 1999/10/28 05:15:31 costin Exp $
+ * $Revision: 1.2 $
+ * $Date: 1999/10/28 05:15:31 $
  *
  * ====================================================================
  *
@@ -105,7 +105,9 @@ public class Ajp23ConnectionHandler implements  TcpConnectionHandler {
 	    socket=connection.getSocket();
 	    TcpConnector con=new TcpConnector( socket );
 	    ConnectorResponse rresponse=new ConnectorResponse(con);
-	    ConnectorRequest  rrequest=new ConnectorRequest(con);
+	    Request  rrequest=new Request();
+	    ConnectorRequest  reqA=new ConnectorRequest(con);
+	    rrequest.setRequestAdapter( reqA ); 
 
 	    boolean moreRequests=true;
             while( moreRequests ) { // XXX how to exit ? // request.hasMoreRequests()) {
@@ -121,7 +123,7 @@ public class Ajp23ConnectionHandler implements  TcpConnectionHandler {
 		int type=msg.getInt();
 		//		msg.dump("Received: ");
 		
-		err=rrequest.decodeRequest(msg);
+		err=reqA.decodeRequest(msg);
 
 		contextM.service( rrequest, rresponse);
 

@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/core/Request.java,v 1.5 1999/10/25 18:56:22 costin Exp $
- * $Revision: 1.5 $
- * $Date: 1999/10/25 18:56:22 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/core/Request.java,v 1.6 1999/10/28 05:15:24 costin Exp $
+ * $Revision: 1.6 $
+ * $Date: 1999/10/28 05:15:24 $
  *
  * ====================================================================
  *
@@ -81,44 +81,39 @@ import javax.servlet.http.*;
  * @author Harish Prabandham
  */
 public class Request  {
-    // RequestAdapterImpl
-    protected String scheme = Constants.Request.HTTP;
-    protected String method;
+    // XXX used by forward to override, need a better
+    // mechanism
     protected String requestURI;
-    protected String protocol;
-    protected MimeHeaders headers = new MimeHeaders();
-    protected String serverName = "";
-    protected int serverPort;
-    protected String remoteAddr;
-    protected String remoteHost;
-    protected ServletInputStream in;
-    // End RequestAdapterImpl
-
-
-    //  RequestAdapterImpl Hints
+    protected String queryString;
+ 
+   //  RequestAdapterImpl Hints
+    String serverName;
     protected Vector cookies = new Vector();
 
     protected String contextPath;
     protected String lookupPath;
     protected String servletPath;
     protected String pathInfo;
-    protected String queryString;
     
     protected Hashtable parameters = new Hashtable();
     protected String reqSessionId;
     protected int contentLength = -1;
-    protected String contentType = "";
+    protected String contentType = null;
     protected String charEncoding = null;
     protected String authType;
     protected String remoteUser;
 
     // Request 
+    protected RequestAdapter reqA;
     protected Response response;
     protected HttpServletRequestFacade requestFacade;
     protected Context context;
     protected Hashtable attributes = new Hashtable();
     protected ServerSession serverSession;
+
     protected boolean didReadFormData;
+    protected boolean didParameters;
+    protected boolean didCookies;
     // end "Request" variables    
 
     protected StringManager sm =
@@ -127,68 +122,95 @@ public class Request  {
     public Request() {
         requestFacade = new HttpServletRequestFacade(this);
     }
-
+    
+    public void setRequestAdapter( RequestAdapter reqA) {
+	this.reqA=reqA;
+    }
+    
     // Begin Adapter
     public String getScheme() {
-        return scheme;
+        return reqA.getScheme();
     }
     
     public String getMethod() {
-        return method;
+        return reqA.getMethod();
     }
     
     public String getRequestURI() {
-        return requestURI;
+        if( requestURI!=null) return requestURI;
+	return reqA.getRequestURI();
+    }
+
+    // XXX used by forward
+    public String getQueryString() {
+	if( queryString != null ) return queryString;
+        return reqA.getQueryString();
     }
     
     public String getProtocol() {
-        return protocol;
+        return reqA.getProtocol();
     }
     
     public String getHeader(String name) {
-        return headers.getHeader(name);
+        return reqA.getHeader(name);
     }
 
     public Enumeration getHeaderNames() {
-        return headers.names();
+        return reqA.getHeaderNames();
     }
     
     public ServletInputStream getInputStream()
-    throws IOException {
-    	if (in == null) {
-            String msg = sm.getString("serverRequest.inputStream.npe");
-
-    	    throw new IOException(msg);
-    	}
-
-    	return in;    
+	throws IOException {
+	return reqA.getInputStream();
     }
 
+    // XXX server IP and/or Host:
     public String getServerName() {
+	if(serverName!=null) return serverName;
+	serverName=reqA.getServerName();
+	if(serverName!=null) return serverName;
+
+	String hostHeader = this.getHeader("host");
+	if (hostHeader != null) {
+	    int i = hostHeader.indexOf(':');
+	    if (i > -1) {
+		hostHeader = hostHeader.substring(0,i);
+	    }
+	    serverName=hostHeader;
+	    return serverName;
+	}
+	// default to localhost - and warn
+	System.out.println("No server name, defaulting to localhost");
+	serverName="localhost";
 	return serverName;
     }
 
     public int getServerPort() {
-        return serverPort;
+        return reqA.getServerPort();
     }
     
     public String getRemoteAddr() {
-        return remoteAddr;
+        return reqA.getRemoteAddr();
     }
     
     public String getRemoteHost() {
-	return remoteHost;
+	return reqA.getRemoteHost();
     }    
     
-    // End Adapter
+    // End Adapter "required" fields
 
-    // Adapter hints
     public String getLookupPath() {
 	return lookupPath;
     }
     
 
     public String[] getParameterValues(String name) {
+	if(!didParameters) {
+	    String qString=getQueryString();
+	    if(qString!=null) {
+		processFormData(qString);
+	    }
+	}
 	if (!didReadFormData) {
 	    readFormData();
 	}
@@ -197,6 +219,9 @@ public class Request  {
     }
     
     public Enumeration getParameterNames() {
+	if(!didParameters) {
+	    processFormData(getQueryString());
+	}
 	if (!didReadFormData) {
 	    readFormData();
 	}
@@ -210,15 +235,30 @@ public class Request  {
     }
     
     public String getCharacterEncoding() {
-        return charEncoding;
+        if(charEncoding!=null) return charEncoding;
+	charEncoding=reqA.getCharacterEncoding();
+	if(charEncoding!=null) return charEncoding;
+	
+        charEncoding = getCharsetFromContentType(getContentType());
+	return charEncoding;
     }
 
     public int getContentLength() {
-        return contentLength;
+        if( contentLength > -1 ) return contentLength;
+	contentLength = reqA.getContentLength();
+	if( contentLength > -1 ) return contentLength;
+	contentLength = getIntHeader("content-length");
+	return contentLength;
     }
     
     public String getContentType() {
-    	return contentType;   
+	if(contentType != null) return contentType;   
+	contentType= reqA.getContentType();
+	if(contentType != null) return contentType;
+	contentType = getHeader("content-type");
+	if(contentType != null) return contentType;
+	// can be null!! - 
+	return contentType;
     }
     
     
@@ -226,10 +266,6 @@ public class Request  {
         return pathInfo;
     }
     
-    public String getQueryString() {
-        return queryString;
-    }
-
     public String getRemoteUser() {
         return remoteUser;
     }
@@ -257,12 +293,13 @@ public class Request  {
     public void setResponse(Response response) {
 	this.response = response;
     }
-
+    
     // Called after a Context is found, adjust all other paths.
     // XXX XXX XXX
     public void setContext(Context context) {
 	this.context = context;
 	contextPath = context.getPath();
+	String requestURI = getRequestURI();
 	lookupPath = requestURI.substring(contextPath.length(),
             requestURI.length());
 
@@ -272,7 +309,7 @@ public class Request  {
 	if (qindex > -1) {
 	    lookupPath = lookupPath.substring(0, qindex);
 	}
-
+	
 	if (lookupPath.length() < 1) {
 	    lookupPath = "/";
 	}
@@ -281,6 +318,13 @@ public class Request  {
 
     public Cookie[] getCookies() {
 	// XXX need to use Cookie[], Vector is not needed
+	if( ! didCookies ) {
+	    // XXX need a better test
+	    // XXX need to use adapter for hings
+	    didCookies=true;
+	    processCookies();
+	}
+	
 	Cookie[] cookieArray = new Cookie[cookies.size()];
 	
 	for (int i = 0; i < cookies.size(); i ++) {
@@ -340,45 +384,46 @@ public class Request  {
     }
 
     // -------------------- Setters
-    public void setURI(String requestURI) {
-        this.requestURI = requestURI;
-    }
+//     public void setURI(String requestURI) {
+//         this.requestURI = requestURI;
+//     }
 
 
-    public void setHeaders( MimeHeaders h ) {
-	headers=h;
-    }
+//     public void setHeaders( MimeHeaders h ) {
+// 	headers=h;
+//     }
 
-    public void setServletInputStream( ServletInputStream in ) {
-	this.in=in;
-    }
+//     public void setServletInputStream( ServletInputStream in ) {
+// 	this.in=in;
+//     }
 
-    public void setServerPort( int port ) {
-	serverPort=port;
-    }
+//     public void setServerPort( int port ) {
+// 	serverPort=port;
+//     }
     
-    public void setRemoteAddress(String addr) {
-	this.remoteAddr = addr;
-    }
+//     public void setRemoteAddress(String addr) {
+// 	this.remoteAddr = addr;
+//     }
 
-    public void setRemoteHost( String host ) {
-	this.remoteHost=host;
-    }
+//     public void setRemoteHost( String host ) {
+// 	this.remoteHost=host;
+//     }
 
-    public void setMethod( String meth ) {
-	this.method=meth;
-    }
+//     public void setMethod( String meth ) {
+// 	this.method=meth;
+//     }
 
-    public void setProtocol( String protocol ) {
-	this.protocol=protocol;
-    }
+//     public void setProtocol( String protocol ) {
+// 	this.protocol=protocol;
+//     }
 
     public void setRequestURI( String r ) {
-	this.requestURI=r;
+ 	this.requestURI=r;
     }
 
     public void setParameters( Hashtable h ) {
 	this.parameters=h;
+	// XXX Should we override query parameters ??
     }
         
     public void setContentLength( int  len ) {
@@ -404,13 +449,16 @@ public class Request  {
     public void setPathInfo(String pathInfo) {
         this.pathInfo = pathInfo;
     }
+
+    /** Set query string - will be called by forward
+     */
     public void setQueryString(String queryString) {
-        this.queryString = queryString;
+	this.queryString = queryString;
     }
     
-    public void setScheme(String scheme) {
-        this.scheme = scheme;
-    }
+//     public void setScheme(String scheme) {
+//         this.scheme = scheme;
+//     }
     
     public void setRequestedSessionId(String reqSessionId) {
 	this.reqSessionId = reqSessionId;
@@ -428,7 +476,8 @@ public class Request  {
     // XXX
     // the server name should be pulled from a server object of some
     // sort, not just set and got.
-    
+
+    /** Virtual host */
     public void setServerName(String serverName) {
 	this.serverName = serverName;
     }
@@ -453,16 +502,16 @@ public class Request  {
 
     // -------------------- Facade for MimeHeaders
     public long getDateHeader(String name) {
-        return headers.getDateHeader(name);
+	return reqA.getMimeHeaders().getDateHeader(name);
     }
     
     public Enumeration getHeaders(String name) {
-        Vector v = this.headers.getHeadersVector(name);
+	Vector v = reqA.getMimeHeaders().getHeadersVector(name);
 	return v.elements();
     }
     
     public int getIntHeader(String name)  {
-        return headers.getIntHeader(name);
+        return reqA.getMimeHeaders().getIntHeader(name);
     }
     
     // -------------------- Utils - facade for RequestUtil
@@ -474,6 +523,9 @@ public class Request  {
     
     private void readFormData() {
 	didReadFormData = true;
+	if(!didParameters) {
+	    processFormData(getQueryString());
+	}
 
 	Hashtable postParameters=RequestUtil.readFormData( this );
 	if(postParameters!=null)
@@ -490,6 +542,7 @@ public class Request  {
     // well together. FIX
     
     public void processFormData(String data) {
+	didParameters=true;
 	RequestUtil.processFormData( data, parameters );
     }
 
@@ -524,26 +577,23 @@ public class Request  {
 
     public void recycle() {
 	response = null;
-	scheme = Constants.Request.HTTP;
 	context = null;
         attributes.clear();
         parameters.clear();
         cookies.removeAllElements();
-        method = null;
-	protocol = null;
-        requestURI = null;
-        queryString = null;
+	//        requestURI = null;
+	//        queryString = null;
         contentLength = -1;
-        contentType = "";
+        contentType = null;
         charEncoding = null;
         authType = null;
         remoteUser = null;
         reqSessionId = null;
 	serverSession = null;
+	didParameters = false;
 	didReadFormData = false;
+	didCookies = false;
+	if( reqA!=null) reqA.recycle();// XXX avoid double recycle
 	//	moreRequests = false;
-	in = null;
-    	headers.clear();
-	serverName = "";
     }
 }

@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/core/Attic/ServletWrapper.java,v 1.3 1999/10/22 21:52:10 costin Exp $
- * $Revision: 1.3 $
- * $Date: 1999/10/22 21:52:10 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/core/Attic/ServletWrapper.java,v 1.4 1999/10/28 05:15:26 costin Exp $
+ * $Revision: 1.4 $
+ * $Date: 1999/10/28 05:15:26 $
  *
  * ====================================================================
  *
@@ -225,7 +225,7 @@ class ServletWrapper {
                 Constants.JSP.Directive.Compile.Name + "=" +
                 Constants.JSP.Directive.Compile.Value;
 
-            request.setURI(getContext().getPath() + requestURI);
+            request.setRequestURI(getContext().getPath() + requestURI);
             request.setContext(getContext());
             request.getSession(true);
 

@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/core/Attic/RequestAdapterImpl.java,v 1.2 1999/10/25 18:56:22 costin Exp $
- * $Revision: 1.2 $
- * $Date: 1999/10/25 18:56:22 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/core/Attic/RequestAdapterImpl.java,v 1.3 1999/10/28 05:15:24 costin Exp $
+ * $Revision: 1.3 $
+ * $Date: 1999/10/28 05:15:24 $
  *
  * ====================================================================
  *
@@ -78,12 +78,13 @@ public class RequestAdapterImpl implements  RequestAdapter {
     protected String scheme;
     protected String method;
     protected String requestURI;
+    protected String queryString;
     protected String protocol;
     protected MimeHeaders headers;
-    ServletInputStream in;
+    protected ServletInputStream in;
     
-    String serverName;
-    int serverPort;
+    protected String serverName;
+    protected int serverPort;
     protected String remoteAddr;
     protected String remoteHost;
 
@@ -95,8 +96,7 @@ public class RequestAdapterImpl implements  RequestAdapter {
     protected String lookupPath;
     protected String servletPath;
     protected String pathInfo;
-    protected String queryString;
-    
+
     protected Hashtable parameters;
     protected String reqSessionId;
     protected int contentLength;
@@ -131,8 +131,16 @@ public class RequestAdapterImpl implements  RequestAdapter {
         return requestURI;
     }
     
+    public String getQueryString() {
+	return queryString;
+    }
+
     public String getProtocol() {
         return protocol;
+    }
+    
+    public MimeHeaders getMimeHeaders() {
+	return headers;
     }
     
     public String getHeader(String name) {
@@ -163,6 +171,10 @@ public class RequestAdapterImpl implements  RequestAdapter {
     public String getRemoteHost() {
 	return remoteHost;
     }    
+
+    public  int doRead( byte b[], int off, int len ) throws IOException {
+	return -1; // not implemented - implement getInputStream 
+    }
     
     // -------------------- "cooked" info --------------------
     // Hints = return null if you don't know,
@@ -194,10 +206,6 @@ public class RequestAdapterImpl implements  RequestAdapter {
 
     // What's after Servlet name, before "?"
     public String getPathInfo() {
-	return null;
-    }
-
-    public String getQueryString() {
 	return null;
     }
 

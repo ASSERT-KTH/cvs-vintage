@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/service/connector/Attic/DoorConnectionHandler.java,v 1.2 1999/10/28 05:15:31 costin Exp $
- * $Revision: 1.2 $
- * $Date: 1999/10/28 05:15:31 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/core/Attic/ResponseAdapter.java,v 1.1 1999/10/28 05:15:25 costin Exp $
+ * $Revision: 1.1 $
+ * $Date: 1999/10/28 05:15:25 $
  *
  * ====================================================================
  *
@@ -62,111 +62,42 @@
  */ 
 
 
-package org.apache.tomcat.service.connector;
+package org.apache.tomcat.core;
 
-import java.io.*;
-import java.net.*;
-import java.util.*;
-import org.apache.tomcat.core.*;
 import org.apache.tomcat.util.*;
-//import org.apache.tomcat.server.*;
+import java.io.*;
+import java.util.*;
 import javax.servlet.*;
 import javax.servlet.http.*;
 
+/**
+ * Low-level representation of a Response in a server adapter.
+ * 
+ * @author costin@eng.sun.com
+ */
+public interface ResponseAdapter {
 
-interface DoorFunction {
-    void call(MsgBuffer buf);
-}
+    public void setStatus( int status, String message);
+    
+    public void addHeader( String name, String value );
 
-class Door {
+    // XXX This one or multiple addHeader?
+    // Probably not a big deal - but an adapter may have
+    // an optimized version for this one ( on round-trip only )
+    public void addMimeHeaders(MimeHeaders headers);
 
-    static {
-	System.out.println("Loading libdoor");
-	System.loadLibrary("doorJNI");
-	System.out.println("Loaded ok");
-    }
-
-    public static native long open(String name);
-    public static native void close( long doorid );
-
-    /** buff is used for both input/output
-	@return size of result
+    /** Signal that we're done with a particular request, the
+	server can go on and read more requests or close the socket
     */
-    public static native int call(long doorid, byte buff[], int argsize);
-    public static native int info(long doorid);
+    public void endResponse();
 
-
-    public static final int DOOR_PRIVATE=2; /* from sys/door.h */
-    public static final int DOOR_UNREF=1;
-
-    /** cookie can't be used - it is used by java wrapper to point to proc
+    /** Either implement ServletOutputStream or return BufferedServletOutputStream(this)
+	and implement doWrite();
      */
-    public static native long create(String name, DoorFunction proc, int attr);
-    public static native long destroy(long id, String name);
-
-}
-
-
-public class DoorConnectionHandler implements DoorFunction {
-    ContextManager contextM;
+    public ServletOutputStream getServletOutputStream() throws IOException;
     
-    public DoorConnectionHandler() {
-	super();
-    }
-
-    public void init( ) {
-	Door.create("/tmp/apache.door", this, 0);
-    }
-
-    public void setContextManager( ContextManager contextM ) {
-	this.contextM=contextM;
-    }
-
-    /* Incoming packet */
-    public void call( MsgBuffer buf ) {
-	try {
-	    MsgConnector con=new DoorConnector();
-	    Request rrequest=new Request();
-	    ConnectorResponse rresponse=new ConnectorResponse(con);
-	    ConnectorRequest  reqA=new ConnectorRequest(con);
-	    rrequest.setRequestAdapter( reqA );
-
-
-	    contextM.service( rrequest, rresponse );
-	} catch (Exception e) {
-	    e.printStackTrace();
-	}
-    }
-
-}
-
-class DoorConnector implements MsgConnector {
-    public static final int SEND_BODY_CHUNK=3;
-    public static final int MAX_PACKET_SIZE=4096;
-    public static final int SEND_HEADERS=2;
-    
-    static final int H_SIZE=4;
-    static final int CONTEXT='C';
-    static final int SERVLET='S';
-    static final int HOSTNAME='N';
-    static final int ENV='E';
-    static final int HEADER='H';
-    static final int END_REQUEST='Z';
-    
-    
-    static final int MAX_REQUEST_SIZE=4096;
-
-    MsgBuffer msg;
-    
-    public DoorConnector () throws IOException {
-	msg=new MsgBuffer( MAX_PACKET_SIZE );
-    }    
-
-    public MsgBuffer getMsgBuffer() {
-	return msg;
-    }
-    
-    public void send(MsgBuffer msg ) throws IOException {
-
-    }
+    /** Write a chunk of bytes. Should be called only from ServletOutputStream implementations,
+	No need to implement it if your adapter implements ServletOutputStream.
+     */
+    public void doWrite( byte buffer[], int pos, int count) throws IOException ;
 }

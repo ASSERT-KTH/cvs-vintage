@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/service/http/Attic/HttpResponse.java,v 1.2 1999/10/19 23:38:32 costin Exp $
- * $Revision: 1.2 $
- * $Date: 1999/10/19 23:38:32 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/service/http/Attic/HttpResponse.java,v 1.3 1999/10/28 05:15:33 costin Exp $
+ * $Revision: 1.3 $
+ * $Date: 1999/10/28 05:15:33 $
  *
  * ====================================================================
  *
@@ -74,7 +74,7 @@ import javax.servlet.*;
 import javax.servlet.http.*;
 
 
-public class HttpResponse extends ResponseImpl  {
+public class HttpResponse extends Response {
     OutputStream os;
 
     public HttpResponse() {

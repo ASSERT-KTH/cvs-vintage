@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/core/Response.java,v 1.1 1999/10/09 00:30:16 duncan Exp $
- * $Revision: 1.1 $
- * $Date: 1999/10/09 00:30:16 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/core/Response.java,v 1.2 1999/10/28 05:15:25 costin Exp $
+ * $Revision: 1.2 $
+ * $Date: 1999/10/28 05:15:25 $
  *
  * ====================================================================
  *
@@ -69,7 +69,7 @@ import java.net.*;
 import java.util.*;
 import javax.servlet.*;
 import javax.servlet.http.*;
-
+import org.apache.tomcat.util.*;
 /**
  * 
  * @author James Duncan Davidson [duncan@eng.sun.com]
@@ -77,9 +77,10 @@ import javax.servlet.http.*;
  * @author James Todd [gonzo@eng.sun.com]
  * @author Harish Prabandham
  */
+public class Response {
+    protected StringManager sm =
+        StringManager.getManager(Constants.Package);
 
-public abstract class Response {
-    
     protected Request request;
     protected HttpServletResponseFacade responseFacade;
     protected Vector userCookies = new Vector();
@@ -92,6 +93,17 @@ public abstract class Response {
     protected int contentLength = -1;
     protected int status = 200; 
     private Locale locale = new Locale(Constants.Locale.Default, "");
+
+    protected MimeHeaders headers = new MimeHeaders();
+    protected BufferedServletOutputStream out;
+    protected PrintWriter writer;
+
+    protected boolean usingStream = false;
+    protected boolean usingWriter = false;
+    protected boolean started = false;
+    protected boolean committed = false;
+    protected boolean omitHeaders = false;
+    protected String serverHeader = null;
     
     public Response() {
         responseFacade = new HttpServletResponseFacade(this);
@@ -107,7 +119,170 @@ public abstract class Response {
 	this.request = request;
     }
 
+    public boolean isStarted() {
+	return started;
+    }
+
+    public boolean isCommitted() {
+	return committed;
+    }
+
+    public String getServerHeader() {
+        return serverHeader;
+    }
+
+    public void setServerHeader(String serverHeader) {
+        this.serverHeader = serverHeader;
+    }
+
+    public void setOmitHeaders(boolean omitHeaders) {
+	this.omitHeaders = omitHeaders;
+    }
+    
+    public void setBufferedServeletOutputStream(
+        BufferedServletOutputStream out) {
+	this.out=out;
+    }
+    
+    public void recycle() {
+	userCookies.removeAllElements();
+	systemCookies.removeAllElements();
+	contentType = Constants.ContentType.Default;
+        locale = new Locale(Constants.Locale.Default, "");
+	characterEncoding = System.getProperty("file.encoding",
+					       Constants.CharacterEncoding.Default);
+	contentLength = -1;
+	status = 200;
+	headers.clear();
+	usingWriter = false;
+	usingStream = false;
+	writer=null;
+	out = null;
+	started = false;
+	committed = false;
+	omitHeaders=false;
+    }
+    
+    public void finish() throws IOException {
+	try {
+	    if (usingWriter && (writer != null)) {
+	        writer.flush();
+	    }
+	    out.reallyFlush();
+	} catch (SocketException e) {
+	    return;  // munch
+	}
+    }
+ 
+    public boolean containsHeader(String name) {
+	return headers.containsHeader(name);
+    }
+
+    // XXX
+    // mark whether or not we are being used as a stream our writer
+    
+    public ServletOutputStream getOutputStream() {
+	started = true;
+
+	if (usingWriter) {
+	    String msg = sm.getString("serverResponse.outputStream.ise");
+
+	    throw new IllegalStateException(msg);
+	}
+
+	usingStream = true;
+
+	return out;
+    }
+
+    public PrintWriter getWriter() throws IOException {
+	started = true;
+
+	if (usingStream) {
+	    String msg = sm.getString("serverResponse.writer.ise");
+
+	    throw new IllegalStateException(msg);
+	}
+
+	usingWriter = true;
+
+	if (writer == null) {
+	    String encoding = getCharacterEncoding();
+
+	    if ((encoding == null) || "Default".equals(encoding) )
+	        writer = new PrintWriter(new OutputStreamWriter(out));
+	    else
+		try {
+		    writer = new PrintWriter(new OutputStreamWriter(out, encoding));
+		} catch (java.io.UnsupportedEncodingException ex) {
+		    // if we don't do that, the runtime exception will propagate
+		    // and we'll try to send an error page - but surprise, we
+		    // still can't get the Writer to send the error page...
+		    writer = new PrintWriter( new OutputStreamWriter(out));
+
+		    // Deal with strange encodings - webmaster should see a message
+		    // and install encoding classes - n new, unknown language was discovered,
+		    // and they read our site!
+		    System.out.println("Unsuported encoding: " + encoding );
+		}
+	}
+
+	out.setUsingWriter (usingWriter);
+	
+	return writer;
+    }
+    
+    public void setDateHeader(String name, long date) {
+	headers.putDateHeader(name, date);
+    }
+
+    public void addDateHeader(String name, long date) {
+        headers.addDateHeader(name, date);
+    }
+    
+    public void setHeader(String name, String value) {
+	headers.putHeader(name, value);
+    }
+
+    public void addHeader(String name, String value) {
+        headers.addHeader(name, value);
+    }
+    
+    public void setIntHeader(String name, int value) {
+	headers.putIntHeader(name, value);
+    }
+
+    public void addIntHeader(String name, int value) {
+        headers.addIntHeader(name, value);
+    }
+    
+    public int getBufferSize() {
+	return out.getBufferSize();
+    }
+    
+    public void setBufferSize(int size) throws IllegalStateException {
+
+	// Force the PrintWriter to flush the data to the OutputStream.
+	if (usingWriter == true) writer.flush();
+	
+	if (out.isContentWritten() == true) {
+	    String msg = sm.getString("servletOutputStreamImpl.setbuffer.ise");
+	    throw new IllegalStateException (msg); 
+	}
+	out.setBufferSize(size);
+    }
+    
+    /*
+     * Methodname "isCommitted" already taken by Response class.
+     */
+    public boolean isBufferCommitted() {
+	return out.isCommitted();
+    }
+    
     public void reset() throws IllegalStateException {
+	// Force the PrintWriter to flush its data to the output
+        // stream before resetting the output stream
+        //
 	userCookies.removeAllElements();  // keep system (session) cookies
 	contentType = Constants.ContentType.Default;
         locale = new Locale(Constants.Locale.Default, "");
@@ -115,19 +290,84 @@ public abstract class Response {
             Constants.CharacterEncoding.Default);
 	contentLength = -1;
 	status = 200;
+
+	if (usingWriter == true) 
+	    writer.flush();
+	
+	// Reset the stream
+	out.reset();
+
+        // Clear the cookies and such
+
+        // Clear the headers
+        headers.clear();
+    }
+    
+    public void flushBuffer() throws IOException {
+	if (usingWriter == true)
+	    writer.flush();
+	
+	out.reallyFlush();
     }
 
-    public void recycle() {
-	userCookies.removeAllElements();
-	systemCookies.removeAllElements();
-	contentType = Constants.ContentType.Default;
-        locale = new Locale(Constants.Locale.Default, "");
-	characterEncoding = System.getProperty("file.encoding",
-            Constants.CharacterEncoding.Default);
-	contentLength = -1;
-	status = 200;
+    
+    /** Set server-specific headers */
+    protected void fixHeaders() throws IOException {
+	//	System.out.println( "Fixing headers" );
+	headers.putIntHeader("Status", status);
+        headers.putHeader("Content-Type", contentType);
+
+	// Generated by Server!!!
+	//headers.putDateHeader("Date",System.currentTimeMillis());
+        //headers.putHeader("Server",getServerHeader());
+
+        if (contentLength != -1) {
+            headers.putIntHeader("Content-Length", contentLength);
+        }
+	
+        // write cookies
+        Enumeration cookieEnum = null;
+        cookieEnum = systemCookies.elements();
+        while (cookieEnum.hasMoreElements()) {
+            Cookie c  = (Cookie)cookieEnum.nextElement();
+            headers.putHeader( CookieTools.getCookieHeaderName(c),
+			       CookieTools.getCookieHeaderValue(c));
+	    if( c.getVersion() == 1 ) {
+		// add a version 0 header too.
+		// XXX what if the user set both headers??
+		Cookie c0 = (Cookie)c.clone();
+		c0.setVersion(0);            
+		headers.putHeader( CookieTools.getCookieHeaderName(c0),
+				   CookieTools.getCookieHeaderValue(c0));
+	    }
+        }
+	// XXX duplicated code, ugly
+        cookieEnum = userCookies.elements();
+        while (cookieEnum.hasMoreElements()) {
+            Cookie c  = (Cookie)cookieEnum.nextElement();
+            headers.putHeader( CookieTools.getCookieHeaderName(c),
+			       CookieTools.getCookieHeaderValue(c));
+	    if( c.getVersion() == 1 ) {
+		// add a version 0 header too.
+		// XXX what if the user set both headers??
+		Cookie c0 = (Cookie)c.clone();
+		c0.setVersion(0);            
+		headers.putHeader( CookieTools.getCookieHeaderName(c0),
+				   CookieTools.getCookieHeaderValue(c0));
+	    }
+        }
+	// XXX
+        // do something with content encoding here
     }
 
+    // XXX should be abstract
+    public void endResponse() throws IOException {
+    }
+
+    // XXX should be abstract
+    public void writeHeaders() throws IOException {
+    }
+    
     public void addCookie(Cookie cookie) {
 	userCookies.addElement(cookie);
     }
@@ -135,8 +375,6 @@ public abstract class Response {
     public void addSystemCookie(Cookie cookie) {
 	systemCookies.addElement(cookie);
     }
-
-    public abstract boolean containsHeader(String name);
 
     public Locale getLocale() {
         return locale;
@@ -178,11 +416,6 @@ public abstract class Response {
     public String getCharacterEncoding() {
 	return characterEncoding;
     }
-
-    public abstract boolean isStarted();
-    public abstract boolean isCommitted();
-    public abstract ServletOutputStream getOutputStream();
-    public abstract PrintWriter getWriter() throws IOException;
 
     public void setContentType(String contentType) {
         this.contentType = contentType;
@@ -359,17 +592,4 @@ public abstract class Response {
 	    out.close();
 	}
     }
-    
-    public abstract void setDateHeader(String name, long date);    
-    public abstract void setHeader(String name, String value);
-    public abstract void setIntHeader(String name, int value);
-    public abstract void addDateHeader(String name, long date);    
-    public abstract void addHeader(String name, String value);
-    public abstract void addIntHeader(String name, int value);
-
-    public abstract int getBufferSize();
-    public abstract void setBufferSize(int size) throws IllegalStateException;
-    public abstract boolean isBufferCommitted();
-    // reset() implemented above
-    public abstract void flushBuffer() throws IOException;
 }

@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/server/Attic/ConnectionHandler.java,v 1.1 1999/10/09 00:20:47 duncan Exp $
- * $Revision: 1.1 $
- * $Date: 1999/10/09 00:20:47 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/server/Attic/ConnectionHandler.java,v 1.2 1999/10/28 05:15:28 costin Exp $
+ * $Revision: 1.2 $
+ * $Date: 1999/10/28 05:15:28 $
  *
  * ====================================================================
  *
@@ -82,7 +82,8 @@ class ConnectionHandler extends Thread {
     protected StringManager sm =
         StringManager.getManager(Constants.Package);
     protected EndpointManager manager;
-    protected ServerRequest request = new ServerRequest();
+    protected Request request = new Request();
+    protected HttpRequestAdapter reqA= new HttpRequestAdapter();
     protected ServerResponse response = new ServerResponse();
     protected Endpoint endpoint;
     protected Socket socket;
@@ -109,6 +110,7 @@ class ConnectionHandler extends Thread {
         
     void recycle() {
         request.recycle();
+	reqA.recycle();
         response.recycle();
         endpoint = null;
         socket = null;
@@ -124,18 +126,20 @@ class ConnectionHandler extends Thread {
         
         try {
 	    int count = 1;
-
-            request.setSocket(socket);
+	    // XXX should be in init or main ?
+	    request.setRequestAdapter( reqA );
+	    
+            reqA.setSocket(socket);
             response.setSocket(socket);
 
-            while(request.hasMoreRequests()) {
+            while(reqA.hasMoreRequests()) {
 
 	        // XXX
                 //    bind response to request, and vice versa
 
 	        request.setResponse(response);
 	        response.setRequest(request);
-		request.readNextRequest();
+		reqA.readNextRequest(response);
 
 		// XXX
                 //    don't do headers if request protocol is http/0.9

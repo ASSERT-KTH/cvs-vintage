@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/core/Attic/BufferedServletOutputStream.java,v 1.1 1999/10/09 00:30:00 duncan Exp $
- * $Revision: 1.1 $
- * $Date: 1999/10/09 00:30:00 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/core/Attic/BufferedServletOutputStream.java,v 1.2 1999/10/28 05:15:23 costin Exp $
+ * $Revision: 1.2 $
+ * $Date: 1999/10/28 05:15:23 $
  *
  * ====================================================================
  * 
@@ -101,7 +101,7 @@ public abstract class BufferedServletOutputStream extends ServletOutputStream {
     protected int totalCount = 0;
     protected boolean committed = false;
     protected boolean closed = false;
-    ResponseImpl response;
+    Response response;
     
     protected BufferedServletOutputStream() {
 	//	System.out.println("new BOS " + closed);
@@ -117,7 +117,7 @@ public abstract class BufferedServletOutputStream extends ServletOutputStream {
 	response.writeHeaders();
     }
 
-    public void setResponse( ResponseImpl response ) {
+    public void setResponse( Response response ) {
 	this.response=response;
     }
 

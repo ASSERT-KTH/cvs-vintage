@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/server/Attic/ServerRequest.java,v 1.4 1999/10/25 22:48:59 costin Exp $
- * $Revision: 1.4 $
- * $Date: 1999/10/25 22:48:59 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/server/Attic/ServerRequest.java,v 1.5 1999/10/28 05:15:28 costin Exp $
+ * $Revision: 1.5 $
+ * $Date: 1999/10/28 05:15:28 $
  *
  * ====================================================================
  *
@@ -72,169 +72,39 @@ import java.util.*;
 import javax.servlet.*;
 import javax.servlet.http.*;
 
+
 /**
+ * @deprecated Tomcat standalone doesn't use it, and nobody else should ( costin )
  *
  * @author James Duncan Davidson [duncan@eng.sun.com]
  * @author James Todd [gonzo@eng.sun.com]
  * @author Jason Hunter [jch@eng.sun.com]
  * @author Harish Prabandham
  */
-
 public class ServerRequest extends Request {
 
     private StringManager sm =
         StringManager.getManager(Constants.Package);
-    private Socket socket;
-    private boolean moreRequests = false;
 
     public ServerRequest() {
         super();
+	this.reqA=new HttpRequestAdapter();
     }
 
     void setSocket(Socket socket) {
-        this.socket = socket;
-    	moreRequests = true;
+	((HttpRequestAdapter)reqA).setSocket(socket);
     }
 
     public Socket getSocket() {
-        return this.socket;
+        return ((HttpRequestAdapter)reqA).getSocket();
     }
 
     boolean hasMoreRequests() {
-        return moreRequests;
+        return ((HttpRequestAdapter)reqA).hasMoreRequests();
     }
     
     void readNextRequest() throws IOException {
-	InputStream sin = socket.getInputStream();
-	ServletInputStreamImpl sis = new ServletInputStreamImpl(this, sin);
-	this.in=sis;
-	
-	processRequestLine(sis.readLine());
-
-	// XXX
-	//    return if an error was detected in processing the
-	//    request line
-
-        if (response.getStatus() >=
-	    HttpServletResponse.SC_BAD_REQUEST) {
-            return;
-	}
-
-	// for 0.9, we don't have headers!
-	if(protocol!=null)
-	    headers.read(sis);
-	processCookies();
-
-	contentLength = headers.getIntHeader("content-length");
-	contentType = headers.getHeader("content-type");
-        charEncoding = getCharsetFromContentType(contentType);
-
-	// XXX
-	// detect for real whether or not we have more requests
-	// coming
-
-	moreRequests = false;	
+	((HttpRequestAdapter)reqA).readNextRequest(response);
     }    
     
-    public int getServerPort() {
-        return socket.getLocalPort();
-    }
-    
-    public String getRemoteAddr() {
-        return socket.getInetAddress().getHostAddress();
-    }
-    
-    public String getRemoteHost() {
-	return socket.getInetAddress().getHostName();
-    }    
-    
-    public void processRequestLine(String line) {
-        String buffer = line.trim();
-	int firstDelim = buffer.indexOf(' ');
-	int lastDelim = buffer.lastIndexOf(' ');
-	// default - set it to HTTP/0.9 or null if we can parse the request
-	//protocol = "HTTP/1.0";
-
-	if (firstDelim == -1 && lastDelim == -1) {
-	    if (buffer.trim().length() > 0) {
-	        firstDelim = buffer.trim().length();
-		lastDelim = buffer.trim().length();
-	    }
-	}
-
-	if (firstDelim != lastDelim) {
-	    String s = buffer.substring(firstDelim, lastDelim);
-
-	    if (s.trim().length() == 0) {
-	        firstDelim = lastDelim;
-	    }
-	}
-
-	if (firstDelim != lastDelim) {
-	    method = buffer.substring(0, firstDelim).trim();
-	    protocol = buffer.substring(lastDelim + 1).trim();
-	    requestURI = buffer.substring(firstDelim + 1, lastDelim).trim();
-	} else if (firstDelim != -1 && lastDelim != -1) {
-	    method = buffer.substring(0, firstDelim).trim();
-	    protocol = null;
-	    if (lastDelim < buffer.length()) {
-	        requestURI = buffer.substring(lastDelim + 1).trim();
-	    }
-	}
-
-	if (protocol != null &&
-	    ! protocol.toLowerCase().startsWith("http/")) {
-	    requestURI += " " + protocol;
-	    protocol = null;
-	}
-
-        int requestErrorCode = 0; 
-
-	// see if request looks right
-
-	try {
-	    int len = line.length();
-
-	    if (len < 2) {
-	        requestErrorCode = HttpServletResponse.SC_BAD_REQUEST;
-	    } else if (/* line.charAt(len - 2) != '\r' || Correct, but will break C clients */
-                line.charAt(len - 1) != '\n') {
-	        requestErrorCode =
-		    HttpServletResponse.SC_REQUEST_URI_TOO_LONG;
-		// XXX
-		// For simplicity we assume there's an HTTP/1.0 on the end
-		// We should check to be sure.
-		protocol = "HTTP/1.0";
-	    }
-	} catch (StringIndexOutOfBoundsException siobe) {
-	}
-
-	// see if uri is well formed
-
-        if (requestErrorCode == 0 &&
-	    (requestURI == null || requestURI.indexOf(' ') > -1 ||
-	        requestURI.indexOf('/') != 0)) {
-	    requestErrorCode = HttpServletResponse.SC_BAD_REQUEST;
-	}
-
-	if (requestErrorCode != 0) {
-            try {
-	        response.sendError(requestErrorCode);
-	    } catch (IOException ioe) {
-            }
-
-	    return;
-	}
-
-        // get query string and
-        // parse out the request line parameters if possible
-        
-        if (requestURI.indexOf("?") > -1) {
-            queryString = requestURI.substring(
-                requestURI.indexOf("?") + 1, requestURI.length());
-            processFormData(queryString);
-	    requestURI = requestURI.substring(0, requestURI.indexOf("?"));
-        }
-    }
-
 }
