@@ -74,7 +74,7 @@ import org.gjt.sp.jedit.textarea.*;
  *
  * @author Slava Pestov
  * @author John Gellene (API documentation)
- * @version $Id: View.java,v 1.68 2003/04/02 01:45:26 spestov Exp $
+ * @version $Id: View.java,v 1.69 2003/04/03 04:37:02 spestov Exp $
  */
 public class View extends JFrame implements EBComponent
 {
@@ -1096,11 +1096,26 @@ public class View extends JFrame implements EBComponent
 
 		getContentPane().add(BorderLayout.CENTER,dockableWindowManager);
 
+		dockableWindowManager.init();
+
 		// tool bar and status bar gets added in propertiesChanged()
 		// depending in the 'tool bar alternate layout' setting.
 		propertiesChanged();
 
-		dockableWindowManager.init(config);
+		if(!plainView)
+		{
+			if(config.top != null && config.top.length() != 0)
+				dockableWindowManager.showDockableWindow(config.top);
+
+			if(config.left != null && config.left.length() != 0)
+				dockableWindowManager.showDockableWindow(config.left);
+
+			if(config.bottom != null && config.bottom.length() != 0)
+				dockableWindowManager.showDockableWindow(config.bottom);
+
+			if(config.right != null && config.right.length() != 0)
+				dockableWindowManager.showDockableWindow(config.right);
+		}
 
 		setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
 		addWindowListener(new WindowHandler());

@@ -32,7 +32,7 @@ import org.gjt.sp.jedit.*;
  * Manages low-level text display tasks.
  * @since jEdit 4.2pre1
  * @author Slava Pestov
- * @version $Id: DisplayManager.java,v 1.16 2003/04/02 18:25:27 spestov Exp $
+ * @version $Id: DisplayManager.java,v 1.17 2003/04/03 04:37:02 spestov Exp $
  */
 public class DisplayManager
 {
@@ -648,9 +648,9 @@ public class DisplayManager
 			if(skew >= screenLines)
 				skew = screenLines - 1;
 
+			textArea.chunkCache.setFirstLine(scrollLine,physicalLine,skew);
 			textArea.updateScrollBars();
 			textArea.recalculateLastPhysicalLine();
-			textArea.chunkCache.setFirstLine(scrollLine,physicalLine,skew);
 		} //}}}
 
 		//{{{ reset() method
