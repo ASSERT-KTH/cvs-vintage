@@ -17,12 +17,12 @@
 //All Rights Reserved.
 package org.columba.mail.main;
 
+import jargs.gnu.CmdLineParser;
+
 import org.columba.core.util.GlobalResourceLoader;
 import org.columba.mail.gui.action.NewMessageAction;
 import org.columba.mail.gui.composer.ComposerModel;
 import org.columba.mail.parser.MailUrlParser;
-
-import jargs.gnu.CmdLineParser;
 
 /**
  * Parsing the commandline arguments and setting states, that can be used from

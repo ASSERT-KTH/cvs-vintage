@@ -25,6 +25,7 @@ import javax.swing.event.TreeWillExpandListener;
 import javax.swing.tree.ExpandVetoException;
 import javax.swing.tree.TreePath;
 
+import org.columba.core.command.CommandProcessor;
 import org.columba.core.gui.frame.FrameMediator;
 import org.columba.core.gui.menu.ColumbaPopupMenu;
 import org.columba.core.main.MainInterface;
@@ -121,7 +122,7 @@ public class TreeController implements TreeWillExpandListener,
 
 		this.selectedFolder = folder;
 
-		MainInterface.processor.addOp(new ViewHeaderListCommand(
+		CommandProcessor.getInstance().addOp(new ViewHeaderListCommand(
 				getFrameController(),
 				((MailFrameMediator) getFrameController()).getTreeSelection()));
 	}

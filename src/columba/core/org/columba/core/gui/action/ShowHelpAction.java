@@ -15,13 +15,13 @@
 //All Rights Reserved.
 package org.columba.core.gui.action;
 
+import java.awt.event.ActionEvent;
+
 import org.columba.core.action.AbstractColumbaAction;
 import org.columba.core.gui.frame.FrameMediator;
 import org.columba.core.gui.util.ImageLoader;
 import org.columba.core.help.HelpManager;
 import org.columba.core.util.GlobalResourceLoader;
-
-import java.awt.event.ActionEvent;
 
 
 /**

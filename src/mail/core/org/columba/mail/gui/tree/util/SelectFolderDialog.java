@@ -38,6 +38,7 @@ import javax.swing.event.TreeSelectionEvent;
 import javax.swing.event.TreeSelectionListener;
 import javax.swing.tree.TreePath;
 
+import org.columba.core.command.CommandProcessor;
 import org.columba.core.gui.frame.FrameMediator;
 import org.columba.core.gui.util.ButtonWithMnemonic;
 import org.columba.core.main.MainInterface;
@@ -47,7 +48,6 @@ import org.columba.mail.folder.MessageFolder;
 import org.columba.mail.gui.frame.TreeViewOwner;
 import org.columba.mail.gui.tree.TreeModel;
 import org.columba.mail.gui.tree.command.CreateAndSelectSubFolderCommand;
-import org.columba.mail.main.MailInterface;
 import org.columba.mail.util.MailResourceLoader;
 import org.frappucino.swing.SortedJTree;
 import org.frappucino.swing.SortedTreeModelDecorator;
@@ -243,7 +243,7 @@ public class SelectFolderDialog extends JDialog implements ActionListener,
 					.getSelected());
 			r.setFolderName(name);
 
-			MainInterface.processor.addOp(new CreateAndSelectSubFolderCommand(
+			CommandProcessor.getInstance().addOp(new CreateAndSelectSubFolderCommand(
 					tree, r));
 		}
 	}

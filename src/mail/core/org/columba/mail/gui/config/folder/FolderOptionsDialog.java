@@ -42,12 +42,12 @@ import javax.swing.UIManager;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
+import org.columba.core.command.CommandProcessor;
 import org.columba.core.gui.util.ButtonWithMnemonic;
 import org.columba.core.gui.util.CTabbedPane;
 import org.columba.core.gui.util.LabelWithMnemonic;
 import org.columba.core.gui.util.MultiLineLabel;
 import org.columba.core.help.HelpManager;
-import org.columba.core.main.MainInterface;
 import org.columba.core.xml.XmlElement;
 import org.columba.mail.command.FolderCommandReference;
 import org.columba.mail.config.FolderItem;
@@ -478,7 +478,7 @@ public class FolderOptionsDialog extends JDialog implements ActionListener,
 					FolderCommandReference r = new FolderCommandReference(
 							folder);
 					r.setFolderName(nameTextField.getText());
-					MainInterface.processor.addOp(new RenameFolderCommand(r));
+					CommandProcessor.getInstance().addOp(new RenameFolderCommand(r));
 				}
 			}
 
@@ -517,7 +517,7 @@ public class FolderOptionsDialog extends JDialog implements ActionListener,
 					// execute resyncing command
 					FolderCommandReference r = new FolderCommandReference(
 							folder);
-					MainInterface.processor
+					CommandProcessor.getInstance()
 							.addOp(new SyncSearchEngineCommand(r));
 				} else {
 					//engine = new LocalSearchEngine(localFolder);
@@ -531,7 +531,7 @@ public class FolderOptionsDialog extends JDialog implements ActionListener,
 
 			// re-select folder to make changes visible to the user
 			FolderCommandReference r = new FolderCommandReference(folder);
-			MainInterface.processor.addOp(new ViewHeaderListCommand(
+			CommandProcessor.getInstance().addOp(new ViewHeaderListCommand(
 					getMediator(), r));
 		}
 	}
@@ -567,7 +567,7 @@ public class FolderOptionsDialog extends JDialog implements ActionListener,
 
 			FolderCommandReference r = new FolderCommandReference(folder);
 			r.setDestFile(destFile);
-			MainInterface.processor.addOp(new ExportFolderCommand(r));
+			CommandProcessor.getInstance().addOp(new ExportFolderCommand(r));
 		} else if (action.equals("RESET")) { //$NON-NLS-1$
 
 			FolderItem item = folder.getConfiguration();

@@ -16,7 +16,6 @@
 package org.columba.core.print;
 
 import java.awt.Graphics2D;
-
 import java.util.Vector;
 
 

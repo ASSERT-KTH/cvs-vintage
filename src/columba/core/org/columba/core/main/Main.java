@@ -19,8 +19,6 @@ package org.columba.core.main;
 import javax.swing.RepaintManager;
 
 import org.columba.addressbook.main.AddressbookMain;
-import org.columba.core.backgroundtask.BackgroundTaskManager;
-import org.columba.core.command.CommandProcessor;
 import org.columba.core.config.Config;
 import org.columba.core.gui.ClipboardManager;
 import org.columba.core.gui.focus.FocusManager;
@@ -89,19 +87,10 @@ public class Main {
 
 		// load user-customized language pack
 		GlobalResourceLoader.loadLanguage();
+		
+		//MainInterface.pluginManager = new PluginManager();
 
-		MainInterface.clipboardManager = new ClipboardManager();
-		MainInterface.focusManager = new FocusManager();
-
-		MainInterface.processor = new CommandProcessor();
-
-		MainInterface.pluginManager = new PluginManager();
-
-		// load core plugin handlers
-		MainInterface.pluginManager
-				.addHandlers("org/columba/core/plugin/pluginhandler.xml");
-
-		MainInterface.backgroundTaskManager = new BackgroundTaskManager();
+		//MainInterface.backgroundTaskManager = new BackgroundTaskManager();
 
 		// init addressbook component
 		AddressbookMain.getInstance();
@@ -109,7 +98,7 @@ public class Main {
 		// init mail component
 		MailMain.getInstance();
 
-		MainInterface.pluginManager.initPlugins();
+		PluginManager.getInstance().initPlugins();
 
 		ThemeSwitcher.setTheme();
 
@@ -119,7 +108,7 @@ public class Main {
 		// set application wide font
 		FontProperties.setFont();
 
-		MainInterface.frameModel = new FrameModel();
+	
 
 		// handle commandline parameters
 		handleCommandLineParameters(args);
@@ -128,13 +117,13 @@ public class Main {
 			frame.setVisible(false);
 		}
 
-		if (MainInterface.frameModel.getOpenFrames().length == 0) {
-			MainInterface.frameModel.openStoredViews();
+		if (FrameModel.getInstance().getOpenFrames().length == 0) {
+			FrameModel.getInstance().openStoredViews();
 		}
 
 		// initialize native code wrapper
 		MainInterface.nativeWrapper = new NativeWrapperHandler(
-				MainInterface.frameModel.getOpenFrames()[0].getFrameMediator());
+				FrameModel.getInstance().getOpenFrames()[0].getFrameMediator());
 
 	}
 

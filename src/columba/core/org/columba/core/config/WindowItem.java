@@ -15,10 +15,10 @@
 //All Rights Reserved.
 package org.columba.core.config;
 
-import org.columba.core.xml.XmlElement;
-
 import java.awt.Dimension;
 import java.awt.Point;
+
+import org.columba.core.xml.XmlElement;
 
 
 public class WindowItem extends DefaultItem {

@@ -15,15 +15,14 @@
 //All Rights Reserved.
 package org.columba.core.gui.focus;
 
-import org.columba.core.action.AbstractColumbaAction;
-
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
-
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Vector;
+
+import org.columba.core.action.AbstractColumbaAction;
 
 /**
  * 
@@ -79,10 +78,16 @@ public class FocusManager implements FocusListener {
 	 * last available focus owner
 	 */
 	FocusOwner last = null;
+	
+	private static FocusManager instance = new FocusManager();
 
 	public FocusManager() {
 		list = new Vector();
 		map = new HashMap();
+	}
+	
+	public static FocusManager getInstance() {
+		return instance;
 	}
 
 	/**

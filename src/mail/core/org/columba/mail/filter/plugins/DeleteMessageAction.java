@@ -16,7 +16,7 @@
 package org.columba.mail.filter.plugins;
 
 import org.columba.core.command.Command;
-import org.columba.core.main.MainInterface;
+import org.columba.core.command.CommandProcessor;
 import org.columba.mail.command.FolderCommandReference;
 import org.columba.mail.filter.FilterAction;
 import org.columba.mail.folder.MessageFolder;
@@ -43,7 +43,7 @@ public class DeleteMessageAction extends AbstractFilterAction {
 
         MarkMessageCommand c = new MarkMessageCommand(r);
 
-        MainInterface.processor.addOp(c);
+        CommandProcessor.getInstance().addOp(c);
 
         
         r = new FolderCommandReference(srcFolder);

@@ -3,11 +3,11 @@
  */
 package org.columba.core.xml;
 
-import junit.framework.TestCase;
-
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+
+import junit.framework.TestCase;
 
 
 /**

@@ -15,13 +15,13 @@
 //All Rights Reserved.
 package org.columba.mail.mailchecking;
 
+import org.columba.core.command.CommandProcessor;
 import org.columba.core.main.MainInterface;
 import org.columba.mail.command.FolderCommandReference;
 import org.columba.mail.config.AccountItem;
 import org.columba.mail.folder.command.CheckForNewMessagesCommand;
 import org.columba.mail.folder.imap.IMAPRootFolder;
 import org.columba.mail.gui.tree.TreeModel;
-import org.columba.mail.main.MailInterface;
 
 /**
  * IMAP mail checking item.
@@ -53,7 +53,7 @@ public class IMAPMailCheckingAction extends AbstractMailCheckingAction {
 				.getImapFolder(accountUid);
 		FolderCommandReference r = new FolderCommandReference(imapRootFolder);
 
-		MainInterface.processor.addOp(new CheckForNewMessagesCommand(this, r));
+		CommandProcessor.getInstance().addOp(new CheckForNewMessagesCommand(this, r));
 	}
 
 	/**

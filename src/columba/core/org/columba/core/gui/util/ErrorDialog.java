@@ -41,7 +41,7 @@ import javax.swing.UIManager;
 
 import net.javaprog.ui.wizard.plaf.basic.SingleSideEtchedBorder;
 
-import org.columba.core.main.MainInterface;
+import org.columba.core.gui.frame.FrameModel;
 import org.columba.core.util.GlobalResourceLoader;
 import org.columba.mail.gui.util.URLController;
 
@@ -93,7 +93,7 @@ public class ErrorDialog extends JDialog implements ActionListener {
 	private Throwable ex;
 
 	public ErrorDialog(String message, Throwable ex) {
-		super(MainInterface.frameModel.getActiveFrame(), true);
+		super(FrameModel.getInstance().getActiveFrame(), true);
 
 		this.message = message;
 		this.ex = ex;

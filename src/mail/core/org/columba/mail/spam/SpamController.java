@@ -26,6 +26,7 @@ import java.util.logging.Logger;
 
 import javax.swing.JOptionPane;
 
+import org.columba.core.gui.frame.FrameModel;
 import org.columba.core.io.CloneStreamMaster;
 import org.columba.core.main.MainInterface;
 import org.macchiato.DBWrapper;
@@ -287,7 +288,7 @@ public class SpamController {
 				e.printStackTrace();
 			}
 			//TODO (@author fdietz): i18n
-			int value = JOptionPane.showConfirmDialog(MainInterface.frameModel
+			int value = JOptionPane.showConfirmDialog(FrameModel.getInstance()
 					.getActiveFrame(),
 					"An error occured while saving the spam database.\n"
 							+ "Try again?", "Error saving database",

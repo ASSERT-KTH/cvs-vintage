@@ -31,7 +31,6 @@ import org.columba.mail.folder.MessageFolder;
 import org.columba.mail.folder.virtual.VirtualFolder;
 import org.columba.mail.gui.config.filter.ConfigFrame;
 import org.columba.mail.gui.tree.TreeModel;
-import org.columba.mail.main.MailInterface;
 import org.columba.ristretto.message.Header;
 
 

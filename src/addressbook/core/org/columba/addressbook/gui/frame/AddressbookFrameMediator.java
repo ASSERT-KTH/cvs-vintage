@@ -15,13 +15,12 @@
 //All Rights Reserved.
 package org.columba.addressbook.gui.frame;
 
-import org.columba.addressbook.gui.table.TableController;
-import org.columba.addressbook.gui.tree.TreeController;
-
-import org.columba.core.gui.frame.FrameMediator;
-
 import javax.swing.event.ListSelectionListener;
 import javax.swing.event.TreeSelectionListener;
+
+import org.columba.addressbook.gui.table.TableController;
+import org.columba.addressbook.gui.tree.TreeController;
+import org.columba.core.gui.frame.FrameMediator;
 
 
 /**

@@ -15,9 +15,9 @@
 //All Rights Reserved.
 package org.columba.core.gui.plugin;
 
-import org.columba.core.plugin.Plugin;
-
 import javax.swing.JPanel;
+
+import org.columba.core.plugin.Plugin;
 
 
 /**

@@ -32,6 +32,7 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.text.View;
 
+import org.columba.core.command.CommandProcessor;
 import org.columba.core.config.ViewItem;
 import org.columba.core.config.WindowItem;
 import org.columba.core.gui.menu.ColumbaMenu;
@@ -127,7 +128,7 @@ public class DefaultContainer extends JFrame implements Container,
 		setTitle("");
 
 		//		register statusbar at global taskmanager
-		statusBar = new StatusBar(MainInterface.processor.getTaskManager());
+		statusBar = new StatusBar(CommandProcessor.getInstance().getTaskManager());
 
 		//		 add tooltip handler
 		mouseTooltipHandler = new TooltipMouseHandler(statusBar);
@@ -535,7 +536,7 @@ public class DefaultContainer extends JFrame implements Container,
 		// Tell frame model that frame is closing. If this frame hasn't been
 		// opened using FrameModel methods, FrameModel.close does nothing.
 		//
-		MainInterface.frameModel.close(this);
+		FrameModel.getInstance().close(this);
 
 	}
 

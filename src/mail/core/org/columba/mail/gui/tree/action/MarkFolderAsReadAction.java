@@ -18,6 +18,7 @@ package org.columba.mail.gui.tree.action;
 import java.awt.event.ActionEvent;
 
 import org.columba.core.action.AbstractColumbaAction;
+import org.columba.core.command.CommandProcessor;
 import org.columba.core.gui.frame.FrameMediator;
 import org.columba.core.gui.selection.SelectionChangedEvent;
 import org.columba.core.gui.selection.SelectionListener;
@@ -66,7 +67,7 @@ public class MarkFolderAsReadAction extends AbstractColumbaAction implements Sel
     public void actionPerformed(ActionEvent e) {
         FolderCommandReference r = (FolderCommandReference) frameMediator.getSelectionManager()
                                                                              .getSelection("mail.tree");
-        MainInterface.processor.addOp(new MarkFolderAsReadCommand(r));
+        CommandProcessor.getInstance().addOp(new MarkFolderAsReadCommand(r));
     }
 
     /** {@inheritDoc} */

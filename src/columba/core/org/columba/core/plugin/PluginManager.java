@@ -30,6 +30,7 @@ import java.util.Map;
 import java.util.Vector;
 import java.util.logging.Logger;
 
+import org.columba.core.gui.plugin.AbstractConfigPlugin;
 import org.columba.core.io.DiskIO;
 import org.columba.core.main.MainInterface;
 import org.columba.core.xml.XmlElement;
@@ -85,6 +86,8 @@ public class PluginManager {
      *  
      */
     protected Hashtable pluginHandlers;
+    
+    private static PluginManager instance = new PluginManager();
 
     /**
      * Constructor for PluginManager.
@@ -94,6 +97,13 @@ public class PluginManager {
 
         // init map
         pluginHandlers = new Hashtable(10);
+        
+    	// load core plugin handlers
+        addHandlers("org/columba/core/plugin/pluginhandler.xml");
+    }
+    
+    public static PluginManager getInstance() {
+    	return instance;
     }
 
     public String addPlugin(File folder) {

@@ -15,15 +15,15 @@
 //All Rights Reserved.
 package org.columba.core.gui.externaltools;
 
-import net.javaprog.ui.wizard.AbstractStep;
-
-import org.columba.core.gui.util.MultiLineLabel;
-import org.columba.core.util.GlobalResourceLoader;
-
 import java.awt.BorderLayout;
 
 import javax.swing.JComponent;
 import javax.swing.JPanel;
+
+import net.javaprog.ui.wizard.AbstractStep;
+
+import org.columba.core.gui.util.MultiLineLabel;
+import org.columba.core.util.GlobalResourceLoader;
 
 
 /**

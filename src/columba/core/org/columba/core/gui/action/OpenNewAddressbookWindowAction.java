@@ -22,8 +22,8 @@ import java.awt.event.ActionEvent;
 
 import org.columba.core.action.AbstractColumbaAction;
 import org.columba.core.gui.frame.FrameMediator;
+import org.columba.core.gui.frame.FrameModel;
 import org.columba.core.gui.util.ImageLoader;
-import org.columba.core.main.MainInterface;
 import org.columba.core.plugin.PluginLoadingFailedException;
 import org.columba.core.util.GlobalResourceLoader;
 
@@ -55,7 +55,7 @@ public class OpenNewAddressbookWindowAction extends AbstractColumbaAction {
    
 
 		try {
-			MainInterface.frameModel.openView( "Addressbook");
+			FrameModel.getInstance().openView( "Addressbook");
 		} catch (PluginLoadingFailedException e) {
 			e.printStackTrace();
 		}

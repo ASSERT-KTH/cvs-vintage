@@ -23,6 +23,7 @@ import java.util.logging.Logger;
 
 import javax.swing.Timer;
 
+import org.columba.core.command.CommandProcessor;
 import org.columba.core.gui.selection.SelectionChangedEvent;
 import org.columba.core.gui.selection.SelectionListener;
 import org.columba.core.main.MainInterface;
@@ -149,7 +150,7 @@ public class MarkAsReadTimer implements ActionListener, SelectionListener,
 
         MarkMessageCommand c = new MarkMessageCommand(r);
 
-        MainInterface.processor.addOp(c);
+        CommandProcessor.getInstance().addOp(c);
 
         value++;
     }

@@ -15,13 +15,14 @@
 //All Rights Reserved.
 package org.columba.core.facade;
 
+import java.io.File;
+
 import org.columba.core.io.TempFileStore;
 import org.columba.core.main.MainInterface;
+import org.columba.core.plugin.PluginManager;
 import org.columba.core.plugin.PluginResourceLoader;
 import org.columba.core.xml.XmlElement;
 import org.columba.core.xml.XmlIO;
-
-import java.io.File;
 
 /**
  * @author fdietz
@@ -67,7 +68,7 @@ public class Facade {
 	 * @return XmlIO
 	 */
 	public static XmlIO getPluginConfiguration(String pluginId) {
-		return MainInterface.pluginManager.getConfiguration(pluginId);
+		return PluginManager.getInstance().getConfiguration(pluginId);
 	}
 
 	public static PluginResourceLoader createPluginResourceLoader(

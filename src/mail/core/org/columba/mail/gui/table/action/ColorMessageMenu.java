@@ -24,10 +24,10 @@ import java.awt.event.ActionListener;
 import javax.swing.JMenuItem;
 
 import org.columba.core.action.IMenu;
+import org.columba.core.command.CommandProcessor;
 import org.columba.core.gui.frame.FrameMediator;
 import org.columba.core.gui.selection.SelectionChangedEvent;
 import org.columba.core.gui.selection.SelectionListener;
-import org.columba.core.main.MainInterface;
 import org.columba.mail.command.FolderCommandReference;
 import org.columba.mail.folder.command.ColorMessageCommand;
 import org.columba.mail.gui.frame.MailFrameMediator;
@@ -99,7 +99,7 @@ public class ColorMessageMenu extends IMenu implements ActionListener,
 			r.setColorValue(0);
 
 			// pass command to scheduler
-			MainInterface.processor.addOp(new ColorMessageCommand(r));
+			CommandProcessor.getInstance().addOp(new ColorMessageCommand(r));
 		} else {
 			// which menuitem was selected?
 			int result = -1;
@@ -116,7 +116,7 @@ public class ColorMessageMenu extends IMenu implements ActionListener,
 			r.setColorValue(colors[result].getRGB());
 
 			// pass command to scheduler
-			MainInterface.processor.addOp(new ColorMessageCommand(r));
+			CommandProcessor.getInstance().addOp(new ColorMessageCommand(r));
 		}
 	}
 

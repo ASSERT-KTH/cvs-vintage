@@ -15,6 +15,9 @@
 //All Rights Reserved.
 package org.columba.core.pluginhandler;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import org.columba.core.action.AbstractColumbaAction;
 import org.columba.core.action.IMenu;
 import org.columba.core.gui.frame.FrameMediator;
@@ -22,9 +25,6 @@ import org.columba.core.io.DiskIO;
 import org.columba.core.plugin.AbstractPluginHandler;
 import org.columba.core.xml.XmlElement;
 import org.columba.core.xml.XmlIO;
-
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * Every action in Columba is handled by this class.

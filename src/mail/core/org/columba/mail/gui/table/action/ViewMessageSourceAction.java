@@ -21,6 +21,7 @@ import java.awt.event.KeyEvent;
 import javax.swing.KeyStroke;
 
 import org.columba.core.action.AbstractColumbaAction;
+import org.columba.core.command.CommandProcessor;
 import org.columba.core.gui.frame.FrameMediator;
 import org.columba.core.gui.selection.SelectionChangedEvent;
 import org.columba.core.gui.selection.SelectionListener;
@@ -64,7 +65,7 @@ public class ViewMessageSourceAction extends AbstractColumbaAction
         ViewMessageSourceCommand c = new ViewMessageSourceCommand(getFrameMediator(),
                 r);
 
-        MainInterface.processor.addOp(c);
+        CommandProcessor.getInstance().addOp(c);
     }
 
     /* (non-Javadoc)

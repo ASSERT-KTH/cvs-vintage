@@ -6,12 +6,11 @@
  */
 package org.columba.core.gui.plugin;
 
-import org.columba.core.main.MainInterface;
-
-import org.frappucino.treetable.AbstractTreeTableModel;
-
 import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.TreePath;
+
+import org.columba.core.plugin.PluginManager;
+import org.frappucino.treetable.AbstractTreeTableModel;
 
 
 /**
@@ -82,7 +81,7 @@ public class PluginTreeTableModel extends AbstractTreeTableModel {
             // enable/disable plugin
             String id = node.getId();
 
-            MainInterface.pluginManager.setEnabled(id,
+            PluginManager.getInstance().setEnabled(id,
                 ((Boolean) value).booleanValue());
         }
     }

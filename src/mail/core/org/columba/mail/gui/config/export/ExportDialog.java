@@ -53,15 +53,14 @@ import javax.swing.tree.TreeSelectionModel;
 
 import net.javaprog.ui.wizard.plaf.basic.SingleSideEtchedBorder;
 
+import org.columba.core.command.CommandProcessor;
 import org.columba.core.gui.util.ButtonWithMnemonic;
 import org.columba.core.help.HelpManager;
-import org.columba.core.main.MainInterface;
 import org.columba.mail.command.FolderCommandReference;
 import org.columba.mail.folder.AbstractFolder;
 import org.columba.mail.folder.command.ExportFolderCommand;
 import org.columba.mail.gui.tree.TreeModel;
 import org.columba.mail.gui.tree.util.FolderTreeCellRenderer;
-import org.columba.mail.main.MailInterface;
 import org.columba.mail.util.MailResourceLoader;
 import org.frappucino.checkabletree.CheckableItem;
 import org.frappucino.checkabletree.CheckableTree;
@@ -283,7 +282,7 @@ public class ExportDialog extends JDialog implements ActionListener {
 				r.setDestFile(destFile);
 
 				//              execute the command
-				MainInterface.processor.addOp(new ExportFolderCommand(r));
+				CommandProcessor.getInstance().addOp(new ExportFolderCommand(r));
 			}
 
 		}

@@ -30,8 +30,8 @@ import org.columba.addressbook.main.AddressbookInterface;
 import org.columba.addressbook.plugin.FolderPluginHandler;
 import org.columba.core.config.DefaultXmlConfig;
 import org.columba.core.gui.util.NotifyDialog;
-import org.columba.core.main.MainInterface;
 import org.columba.core.plugin.PluginHandlerNotFoundException;
+import org.columba.core.plugin.PluginManager;
 import org.columba.core.xml.XmlElement;
 
 public class AddressbookTreeModel extends DefaultTreeModel implements TreeModel {
@@ -107,7 +107,7 @@ public class AddressbookTreeModel extends DefaultTreeModel implements TreeModel 
 		FolderPluginHandler handler = null;
 
 		try {
-			handler = (FolderPluginHandler) MainInterface.pluginManager
+			handler = (FolderPluginHandler) PluginManager.getInstance()
 					.getHandler("org.columba.addressbook.folder");
 		} catch (PluginHandlerNotFoundException ex) {
 			NotifyDialog d = new NotifyDialog();

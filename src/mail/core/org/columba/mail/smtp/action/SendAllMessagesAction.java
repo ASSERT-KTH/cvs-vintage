@@ -21,6 +21,7 @@ import java.awt.event.KeyEvent;
 import javax.swing.KeyStroke;
 
 import org.columba.core.action.AbstractColumbaAction;
+import org.columba.core.command.CommandProcessor;
 import org.columba.core.gui.frame.FrameMediator;
 import org.columba.core.gui.util.ImageLoader;
 import org.columba.core.main.ConnectionStateImpl;
@@ -28,7 +29,6 @@ import org.columba.core.main.MainInterface;
 import org.columba.mail.command.FolderCommandReference;
 import org.columba.mail.folder.outbox.OutboxFolder;
 import org.columba.mail.gui.tree.TreeModel;
-import org.columba.mail.main.MailInterface;
 import org.columba.mail.smtp.command.SendAllMessagesCommand;
 import org.columba.mail.util.MailResourceLoader;
 
@@ -81,6 +81,6 @@ public class SendAllMessagesAction extends AbstractColumbaAction {
 		SendAllMessagesCommand c = new SendAllMessagesCommand(this,
 				frameMediator, r);
 
-		MainInterface.processor.addOp(c);
+		CommandProcessor.getInstance().addOp(c);
 	}
 }

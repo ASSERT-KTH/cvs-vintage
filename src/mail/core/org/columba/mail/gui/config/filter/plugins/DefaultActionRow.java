@@ -27,9 +27,9 @@ import javax.swing.JPanel;
 import org.columba.core.gui.frame.FrameMediator;
 import org.columba.core.gui.util.ComboMenu;
 import org.columba.core.gui.util.NotifyDialog;
-import org.columba.core.main.MainInterface;
 import org.columba.core.plugin.Plugin;
 import org.columba.core.plugin.PluginHandlerNotFoundException;
+import org.columba.core.plugin.PluginManager;
 import org.columba.mail.filter.FilterAction;
 import org.columba.mail.gui.config.filter.ActionList;
 import org.columba.mail.plugin.FilterActionPluginHandler;
@@ -81,7 +81,7 @@ public class DefaultActionRow implements Plugin {
 		FilterActionPluginHandler pluginHandler = null;
 
 		try {
-			pluginHandler = (FilterActionPluginHandler) MainInterface.pluginManager
+			pluginHandler = (FilterActionPluginHandler) PluginManager.getInstance()
 					.getHandler("org.columba.mail.filteraction");
 		} catch (PluginHandlerNotFoundException ex) {
 			NotifyDialog d = new NotifyDialog();

@@ -19,12 +19,12 @@ import java.util.Enumeration;
 import java.util.logging.Logger;
 
 import org.columba.core.backgroundtask.TaskInterface;
+import org.columba.core.command.CommandProcessor;
 import org.columba.core.main.MainInterface;
 import org.columba.mail.command.FolderCommandReference;
 import org.columba.mail.folder.AbstractFolder;
 import org.columba.mail.folder.command.SaveFolderConfigurationCommand;
 import org.columba.mail.gui.tree.TreeModel;
-import org.columba.mail.main.MailInterface;
 
 
 /**
@@ -53,7 +53,7 @@ public class SaveAllFoldersPlugin implements TaskInterface {
 
             LOG.info("Saving folder " + child.getName());
 
-            MainInterface.processor.addOp(new SaveFolderConfigurationCommand(r));
+            CommandProcessor.getInstance().addOp(new SaveFolderConfigurationCommand(r));
 
             saveFolder(child);
         }

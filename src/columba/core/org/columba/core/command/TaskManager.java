@@ -18,14 +18,15 @@
 
 package org.columba.core.command;
 
-import org.columba.core.util.Mutex;
-import org.columba.core.util.SwingWorker.ThreadVar;
-
 import java.util.Iterator;
 import java.util.List;
 import java.util.Vector;
 
 import javax.swing.event.EventListenerList;
+
+import org.columba.core.gui.statusbar.StatusBar;
+import org.columba.core.util.Mutex;
+import org.columba.core.util.SwingWorker.ThreadVar;
 
 /**
  * TaskManager keeps a list of currently running {@link Worker} objects.

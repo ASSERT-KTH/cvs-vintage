@@ -21,7 +21,6 @@ import java.io.File;
 
 import org.columba.addressbook.config.AddressbookConfig;
 import org.columba.addressbook.main.AddressbookInterface;
-import org.columba.core.backgroundtask.BackgroundTaskManager;
 import org.columba.core.config.Config;
 import org.columba.core.io.DiskIO;
 import org.columba.core.main.MainInterface;
@@ -72,7 +71,7 @@ public class AbstractComposerTst extends AbstractFolderTst {
                 MainInterface.config);
         
         // init background manager (needed by ShutdownManager)
-        MainInterface.backgroundTaskManager = new BackgroundTaskManager();
+        //MainInterface.backgroundTaskManager = new BackgroundTaskManager();
         
         AccountList list = MailInterface.config.getAccountList();
         list.addEmptyAccount("pop3");

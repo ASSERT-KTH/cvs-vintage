@@ -22,6 +22,7 @@ import javax.swing.JComponent;
 import javax.swing.TransferHandler;
 import javax.swing.tree.TreePath;
 
+import org.columba.core.command.CommandProcessor;
 import org.columba.core.facade.DialogFacade;
 import org.columba.core.main.MainInterface;
 import org.columba.mail.command.FolderCommandReference;
@@ -131,7 +132,7 @@ public class TreeViewTransferHandler extends TransferHandler {
 		result.setDestinationFolder(destFolder);
 
 		CopyMessageCommand command = new MoveMessageCommand(result);
-		MainInterface.processor.addOp(command);
+		CommandProcessor.getInstance().addOp(command);
 		dataWasImported = true;
 
 		return dataWasImported;
@@ -164,7 +165,7 @@ public class TreeViewTransferHandler extends TransferHandler {
 		commandRef.setDestinationFolder(treeView.getDropTargetFolder());
 		treeView.resetDropTargetFolder();
 
-		MainInterface.processor.addOp(new MoveFolderCommand(commandRef));
+		CommandProcessor.getInstance().addOp(new MoveFolderCommand(commandRef));
 	}
 
 	/** {@inheritDoc} */

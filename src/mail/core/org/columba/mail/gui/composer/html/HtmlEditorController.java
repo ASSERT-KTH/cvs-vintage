@@ -33,7 +33,7 @@ import javax.swing.text.Document;
 import javax.swing.text.EditorKit;
 import javax.swing.text.html.HTML;
 
-import org.columba.core.main.MainInterface;
+import org.columba.core.gui.focus.FocusManager;
 import org.columba.mail.gui.composer.AbstractEditorController;
 import org.columba.mail.gui.composer.ComposerController;
 import org.columba.mail.gui.composer.html.util.FormatInfo;
@@ -63,7 +63,7 @@ public class HtmlEditorController extends AbstractEditorController
         // create view (by passing null as document, the view creates it)
         view = new HtmlEditorView(this, null);
 
-        MainInterface.focusManager.registerComponent(this);
+        FocusManager.getInstance().registerComponent(this);
         view.addCaretListener(this);
     }
 
@@ -450,7 +450,7 @@ public class HtmlEditorController extends AbstractEditorController
      */
     public void caretUpdate(CaretEvent e) {
         // update state of actions such as cut, copy, paste, undo...
-        MainInterface.focusManager.updateActions();
+    	FocusManager.getInstance().updateActions();
 
         // get info on current text selection
         boolean textSelected = false;

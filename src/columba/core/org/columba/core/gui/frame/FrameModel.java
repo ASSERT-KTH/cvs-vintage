@@ -31,6 +31,7 @@ import org.columba.core.config.ViewItem;
 import org.columba.core.main.MainInterface;
 import org.columba.core.plugin.PluginHandlerNotFoundException;
 import org.columba.core.plugin.PluginLoadingFailedException;
+import org.columba.core.plugin.PluginManager;
 import org.columba.core.pluginhandler.FramePluginHandler;
 import org.columba.core.shutdown.ShutdownManager;
 import org.columba.core.xml.XmlElement;
@@ -63,6 +64,8 @@ public class FrameModel {
 
 	protected FramePluginHandler handler;
 
+	private static FrameModel instance = new FrameModel();
+	
 	/**
 	 * we cache instances for later re-use
 	 */
@@ -78,7 +81,7 @@ public class FrameModel {
 
 		// get plugin handler for handling frames
 		try {
-			handler = (FramePluginHandler) MainInterface.pluginManager
+			handler = (FramePluginHandler) PluginManager.getInstance()
 					.getHandler("org.columba.core.frame");
 		} catch (PluginHandlerNotFoundException ex) {
 			throw new RuntimeException(ex);
@@ -93,6 +96,10 @@ public class FrameModel {
 		});
 	}
 
+	public static FrameModel getInstance() {
+		return instance;
+	}
+	
 	/**
 	 * Close all frames and re-open them again.
 	 * <p>

@@ -35,9 +35,9 @@ import javax.swing.JPanel;
 import javax.swing.JPasswordField;
 import javax.swing.KeyStroke;
 
+import org.columba.core.gui.frame.FrameModel;
 import org.columba.core.gui.util.ButtonWithMnemonic;
 import org.columba.core.gui.util.ImageLoader;
-import org.columba.core.main.MainInterface;
 import org.columba.mail.util.MailResourceLoader;
 
 
@@ -122,7 +122,7 @@ public class PGPPassphraseDialog implements ActionListener {
                     "password", "save_passphrase"));
         checkbox.setSelected(save);
 
-        dialog = new JDialog(MainInterface.frameModel.getActiveFrame(), true);
+        dialog = new JDialog(FrameModel.getInstance().getActiveFrame(), true);
         dialog.setTitle(MailResourceLoader.getString("dialog", "password",
                 "dialog_title_passphrase"));
 

@@ -16,24 +16,24 @@
 
 package org.columba.core.gui.statusbar;
 
-import org.columba.core.command.*;
-import org.columba.core.config.ThemeItem;
-import org.columba.core.gui.toolbar.ToolbarButton;
-import org.columba.core.gui.util.ImageLoader;
-import org.columba.core.main.MainInterface;
-
 import java.awt.Dimension;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-
 import java.io.File;
-
 import java.util.Properties;
 
 import javax.swing.ImageIcon;
 import javax.swing.JOptionPane;
 import javax.swing.Timer;
+
+import org.columba.core.command.TaskManager;
+import org.columba.core.command.TaskManagerEvent;
+import org.columba.core.command.TaskManagerListener;
+import org.columba.core.config.ThemeItem;
+import org.columba.core.gui.toolbar.ToolbarButton;
+import org.columba.core.gui.util.ImageLoader;
+import org.columba.core.main.MainInterface;
 
 /**
  * Animated image showing background activity.

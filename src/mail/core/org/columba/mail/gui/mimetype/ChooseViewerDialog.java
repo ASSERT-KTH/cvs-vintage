@@ -35,10 +35,10 @@ import javax.swing.KeyStroke;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 
+import org.columba.core.gui.frame.FrameModel;
 import org.columba.core.gui.util.ButtonWithMnemonic;
 import org.columba.core.gui.util.CheckBoxWithMnemonic;
 import org.columba.core.gui.util.LabelWithMnemonic;
-import org.columba.core.main.MainInterface;
 import org.columba.mail.util.MailResourceLoader;
 
 
@@ -53,7 +53,7 @@ public class ChooseViewerDialog extends JDialog implements ActionListener {
 
     public ChooseViewerDialog(String contentType, String contentSubtype,
         boolean save) {
-    	super(MainInterface.frameModel.getActiveFrame(), true);
+    	super(FrameModel.getInstance().getActiveFrame(), true);
     	
         setTitle(MailResourceLoader.getString("dialog",
                     "mimetypeviewer", "dialog_title") + " " + contentType +

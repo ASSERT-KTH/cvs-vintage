@@ -21,8 +21,8 @@ import java.util.logging.Logger;
 import javax.swing.tree.DefaultMutableTreeNode;
 
 import org.columba.core.action.AbstractColumbaAction;
+import org.columba.core.command.CommandProcessor;
 import org.columba.core.gui.frame.FrameMediator;
-import org.columba.core.main.MainInterface;
 import org.columba.mail.command.FolderCommandReference;
 import org.columba.mail.folder.MessageFolder;
 import org.columba.mail.gui.frame.MailFrameMediator;
@@ -122,7 +122,7 @@ public class DownAction extends AbstractColumbaAction {
             FolderCommandReference refNew = new FolderCommandReference(r.getFolder(), nextUids);
 
             // view the message under the new node
-            MainInterface.processor.addOp(new ViewMessageCommand(
+            CommandProcessor.getInstance().addOp(new ViewMessageCommand(
                     frameController, refNew));
         }
     }

@@ -32,7 +32,13 @@ public class ClipboardManager {
     protected FolderCommandReference messageSelection;
     protected int cutAction;
 
+    private static ClipboardManager instance = new ClipboardManager();
+    
     public ClipboardManager() {
+    }
+    
+    public static ClipboardManager getInstance() {
+    	return instance;
     }
 
     public void setOperation(int op) {

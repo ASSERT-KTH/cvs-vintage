@@ -25,9 +25,9 @@ import java.util.logging.Logger;
 import javax.swing.JComponent;
 import javax.swing.JPopupMenu;
 
+import org.columba.core.command.CommandProcessor;
 import org.columba.core.gui.frame.FrameMediator;
 import org.columba.core.gui.menu.ColumbaPopupMenu;
-import org.columba.core.main.MainInterface;
 import org.columba.mail.gui.attachment.action.OpenAction;
 import org.columba.mail.gui.attachment.command.SaveAttachmentTemporaryCommand;
 import org.columba.ristretto.message.MimeTree;
@@ -141,7 +141,7 @@ public class AttachmentController {
 					getFrameController().getSelectionManager().getHandler(
 							"mail.attachment").getSelection());
 			LOG.fine("Waiting for command to complete.");
-			MainInterface.processor.addOp(command);
+			CommandProcessor.getInstance().addOp(command);
 
 			command.waitForCommandToComplete();
 

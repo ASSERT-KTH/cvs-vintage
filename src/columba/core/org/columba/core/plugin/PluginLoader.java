@@ -15,18 +15,16 @@
 //All Rights Reserved.
 package org.columba.core.plugin;
 
-import org.columba.core.loader.ExternalClassLoader;
-import org.columba.core.main.MainInterface;
-import org.columba.core.pluginhandler.*;
-import org.columba.core.scripting.AbstractInterpreter;
-
 import java.io.File;
-
 import java.net.URL;
-
 import java.util.List;
 import java.util.Vector;
 import java.util.logging.Logger;
+
+import org.columba.core.loader.ExternalClassLoader;
+import org.columba.core.main.MainInterface;
+import org.columba.core.pluginhandler.InterpreterHandler;
+import org.columba.core.scripting.AbstractInterpreter;
 
 
 /**
@@ -106,7 +104,7 @@ public final class PluginLoader {
             return new ExternalClassLoader(url).instanciate(className, args);
         }
 
-        InterpreterHandler handler = (InterpreterHandler) MainInterface.pluginManager.getHandler(
+        InterpreterHandler handler = (InterpreterHandler) PluginManager.getInstance().getHandler(
                 "org.columba.core.interpreter");
 
         Object instance = handler.getInterpreter(type);

@@ -15,6 +15,7 @@
 //All Rights Reserved.
 package org.columba.mail.pop3.command;
 
+import org.columba.core.command.CommandProcessor;
 import org.columba.core.command.CompoundCommand;
 import org.columba.core.command.DefaultCommandReference;
 import org.columba.core.command.WorkerStatusController;
@@ -30,7 +31,6 @@ import org.columba.mail.folder.RootFolder;
 import org.columba.mail.folder.command.MarkMessageCommand;
 import org.columba.mail.folder.command.MoveMessageCommand;
 import org.columba.mail.gui.tree.TreeModel;
-import org.columba.mail.main.MailInterface;
 import org.columba.mail.message.ColumbaMessage;
 import org.columba.mail.spam.command.CommandHelper;
 import org.columba.mail.spam.command.ScoreMessageCommand;
@@ -130,7 +130,7 @@ public class AddPOP3MessageCommand extends FolderCommand {
 				FolderCommandReference ref2 = new FolderCommandReference(
 						inboxFolder, trash, new Object[] { uid });
 
-				MainInterface.processor.addOp(new MoveMessageCommand(ref2));
+				CommandProcessor.getInstance().addOp(new MoveMessageCommand(ref2));
 			} else {
 				// move message to user-configured folder (generally "Junk"
 				// folder)
@@ -141,7 +141,7 @@ public class AddPOP3MessageCommand extends FolderCommand {
 				FolderCommandReference ref2 = new FolderCommandReference(
 						inboxFolder, destFolder, new Object[] { uid });
 
-				MainInterface.processor.addOp(new MoveMessageCommand(ref2));
+				CommandProcessor.getInstance().addOp(new MoveMessageCommand(ref2));
 
 			}
 
@@ -170,7 +170,7 @@ public class AddPOP3MessageCommand extends FolderCommand {
 				CompoundCommand command = filter
 						.getCommand(inboxFolder, result);
 
-				MainInterface.processor.addOp(command);
+				CommandProcessor.getInstance().addOp(command);
 			}
 		}
 	}

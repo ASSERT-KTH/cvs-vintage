@@ -15,23 +15,21 @@
 //All Rights Reserved.
 package org.columba.core.gui.themes.plugin;
 
+import java.awt.Dimension;
+import java.util.List;
+
+import javax.swing.UIManager;
+
+import org.columba.core.main.MainInterface;
+import org.columba.core.xml.XmlElement;
+
 import com.jgoodies.clearlook.ClearLookManager;
 import com.jgoodies.clearlook.ClearLookMode;
-
 import com.jgoodies.plaf.FontSizeHints;
 import com.jgoodies.plaf.LookUtils;
 import com.jgoodies.plaf.Options;
 import com.jgoodies.plaf.plastic.PlasticLookAndFeel;
 import com.jgoodies.plaf.plastic.PlasticTheme;
-
-import org.columba.core.main.MainInterface;
-import org.columba.core.xml.XmlElement;
-
-import java.awt.Dimension;
-
-import java.util.List;
-
-import javax.swing.UIManager;
 
 
 /**

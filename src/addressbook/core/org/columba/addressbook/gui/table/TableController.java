@@ -37,6 +37,7 @@ import org.columba.addressbook.gui.table.model.FilterDecorator;
 import org.columba.addressbook.gui.table.model.SortDecorator;
 import org.columba.addressbook.gui.tree.AddressbookTreeNode;
 import org.columba.addressbook.model.ContactItem;
+import org.columba.core.gui.focus.FocusManager;
 import org.columba.core.gui.focus.FocusOwner;
 import org.columba.core.gui.util.ErrorDialog;
 import org.columba.core.main.MainInterface;
@@ -82,7 +83,7 @@ public class TableController implements TreeSelectionListener, FolderListener,
 		view.addMouseListener(new TableMouseListener(this));
 
 		// register as focus owner
-		MainInterface.focusManager.registerComponent(this);
+		FocusManager.getInstance().registerComponent(this);
 	}
 
 	/**

@@ -18,10 +18,10 @@ package org.columba.mail.gui.table.action;
 import java.awt.event.ActionEvent;
 
 import org.columba.core.action.AbstractColumbaAction;
+import org.columba.core.command.CommandProcessor;
 import org.columba.core.gui.frame.FrameMediator;
 import org.columba.core.gui.selection.SelectionChangedEvent;
 import org.columba.core.gui.selection.SelectionListener;
-import org.columba.core.main.MainInterface;
 import org.columba.mail.command.FolderCommandReference;
 import org.columba.mail.gui.composer.command.ReplyAsAttachmentCommand;
 import org.columba.mail.gui.frame.MailFrameMediator;
@@ -57,7 +57,7 @@ public class ReplyAsAttachmentAction extends AbstractColumbaAction
      */
     public void actionPerformed(ActionEvent evt) {
         FolderCommandReference r = ((MailFrameMediator) getFrameMediator()).getTableSelection();
-        MainInterface.processor.addOp(new ReplyAsAttachmentCommand(r));
+        CommandProcessor.getInstance().addOp(new ReplyAsAttachmentCommand(r));
     }
 
     /* (non-Javadoc)

@@ -15,11 +15,11 @@
 //All Rights Reserved.
 package org.columba.addressbook.main;
 
-import org.columba.addressbook.folder.AddressbookFolder;
-import org.columba.addressbook.folder.AbstractFolder;
-import org.columba.addressbook.gui.tree.AddressbookTreeModel;
-
 import java.util.Enumeration;
+
+import org.columba.addressbook.folder.AbstractFolder;
+import org.columba.addressbook.folder.AddressbookFolder;
+import org.columba.addressbook.gui.tree.AddressbookTreeModel;
 
 
 public class AddressbookExitWorker {

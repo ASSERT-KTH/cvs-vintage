@@ -18,7 +18,6 @@ package org.columba.addressbook.facade;
 
 import org.columba.addressbook.folder.AbstractFolder;
 import org.columba.addressbook.gui.tree.AddressbookTreeModel;
-import org.columba.addressbook.main.AddressbookInterface;
 
 /**
  * Contact folder-related functionality.

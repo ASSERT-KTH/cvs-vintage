@@ -40,10 +40,11 @@ import javax.swing.text.html.HTMLDocument;
 import org.columba.core.charset.CharsetEvent;
 import org.columba.core.charset.CharsetListener;
 import org.columba.core.charset.CharsetOwnerInterface;
+import org.columba.core.command.CommandProcessor;
+import org.columba.core.gui.focus.FocusManager;
 import org.columba.core.gui.focus.FocusOwner;
 import org.columba.core.gui.frame.FrameMediator;
 import org.columba.core.gui.menu.ColumbaPopupMenu;
-import org.columba.core.main.MainInterface;
 import org.columba.mail.folder.MessageFolder;
 import org.columba.mail.gui.attachment.AttachmentController;
 import org.columba.mail.gui.frame.MailFrameMediator;
@@ -122,7 +123,7 @@ public class MessageController implements HyperlinkListener, MouseListener,
 
         ((CharsetOwnerInterface) getFrameController()).addCharsetListener(this);
 
-        MainInterface.focusManager.registerComponent(this);
+        FocusManager.getInstance().registerComponent(this);
 
         urlObservable = new URLObservable();
     }
@@ -341,7 +342,7 @@ public class MessageController implements HyperlinkListener, MouseListener,
      * @see org.columba.core.util.CharsetListener#charsetChanged(org.columba.core.util.CharsetEvent)
      */
     public void charsetChanged(CharsetEvent e) {
-        MainInterface.processor.addOp(new ViewMessageCommand(
+    	CommandProcessor.getInstance().addOp(new ViewMessageCommand(
                 getFrameController(),
                 ((MailFrameMediator) getFrameController())
                         .getTableSelection()));
@@ -501,7 +502,7 @@ public class MessageController implements HyperlinkListener, MouseListener,
      * @see javax.swing.event.CaretListener#caretUpdate(javax.swing.event.CaretEvent)
      */
     public void caretUpdate(CaretEvent arg0) {
-        MainInterface.focusManager.updateActions();
+    	FocusManager.getInstance().updateActions();
     }
 
     /**

@@ -25,7 +25,6 @@ import org.columba.core.charset.CharsetEvent;
 import org.columba.core.charset.CharsetListener;
 import org.columba.core.charset.CharsetOwnerInterface;
 import org.columba.core.config.ViewItem;
-import org.columba.core.gui.frame.Container;
 import org.columba.core.gui.frame.DefaultFrameController;
 import org.columba.core.gui.selection.SelectionListener;
 import org.columba.mail.command.FolderCommandReference;

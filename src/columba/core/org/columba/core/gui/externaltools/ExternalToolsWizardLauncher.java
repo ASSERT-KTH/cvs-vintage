@@ -17,6 +17,8 @@
 //All Rights Reserved.
 package org.columba.core.gui.externaltools;
 
+import javax.help.CSH;
+
 import net.javaprog.ui.wizard.DataLookup;
 import net.javaprog.ui.wizard.DataModel;
 import net.javaprog.ui.wizard.DefaultWizardModel;
@@ -28,11 +30,9 @@ import net.javaprog.ui.wizard.WizardModel;
 import org.columba.core.externaltools.AbstractExternalToolsPlugin;
 import org.columba.core.gui.util.ImageLoader;
 import org.columba.core.help.HelpManager;
-import org.columba.core.main.MainInterface;
 import org.columba.core.plugin.PluginHandlerNotFoundException;
+import org.columba.core.plugin.PluginManager;
 import org.columba.core.pluginhandler.ExternalToolsPluginHandler;
-
-import javax.help.CSH;
 
 
 /**
@@ -49,7 +49,7 @@ public class ExternalToolsWizardLauncher {
         ExternalToolsPluginHandler handler = null;
 
         try {
-            handler = (ExternalToolsPluginHandler) MainInterface.pluginManager.getHandler(
+            handler = (ExternalToolsPluginHandler) PluginManager.getInstance().getHandler(
                     "org.columba.core.externaltools");
         } catch (PluginHandlerNotFoundException e) {
             e.printStackTrace();

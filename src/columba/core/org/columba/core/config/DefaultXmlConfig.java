@@ -15,11 +15,10 @@
 //All Rights Reserved.
 package org.columba.core.config;
 
-import org.columba.core.xml.XmlIO;
-
 import java.io.File;
-
 import java.net.MalformedURLException;
+
+import org.columba.core.xml.XmlIO;
 
 
 public class DefaultXmlConfig extends XmlIO {

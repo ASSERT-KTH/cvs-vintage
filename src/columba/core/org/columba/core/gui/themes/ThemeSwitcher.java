@@ -25,6 +25,7 @@ import javax.swing.UIManager;
 
 import org.columba.core.gui.themes.plugin.AbstractThemePlugin;
 import org.columba.core.main.MainInterface;
+import org.columba.core.plugin.PluginManager;
 import org.columba.core.pluginhandler.ThemePluginHandler;
 import org.columba.core.xml.XmlElement;
 
@@ -49,7 +50,7 @@ public class ThemeSwitcher {
         String pluginName = null;
         try {
             // get plugin-handler
-            ThemePluginHandler handler = (ThemePluginHandler) MainInterface.pluginManager
+            ThemePluginHandler handler = (ThemePluginHandler) PluginManager.getInstance()
                     .getHandler("org.columba.core.theme");
 
             // if no theme available -> set "Plastic" as default

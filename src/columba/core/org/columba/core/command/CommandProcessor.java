@@ -45,9 +45,15 @@ public class CommandProcessor implements Runnable {
 	private TaskManager taskManager;
 
 	private int timeStamp;
+	
+	private static CommandProcessor instance;
 
 	public CommandProcessor() {
 		this(true);
+	}
+	
+	public static CommandProcessor getInstance() {
+		return instance;
 	}
 
 	/**

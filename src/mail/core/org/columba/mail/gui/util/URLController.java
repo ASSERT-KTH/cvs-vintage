@@ -25,10 +25,9 @@ import javax.swing.JPopupMenu;
 
 import org.columba.addressbook.gui.tree.AddressbookTreeModel;
 import org.columba.addressbook.gui.tree.util.SelectAddressbookFolderDialog;
-import org.columba.addressbook.main.AddressbookInterface;
 import org.columba.addressbook.model.Contact;
 import org.columba.addressbook.model.VCARD;
-import org.columba.core.main.MainInterface;
+import org.columba.core.gui.frame.FrameModel;
 import org.columba.core.plugin.PluginLoadingFailedException;
 import org.columba.core.xml.XmlElement;
 import org.columba.mail.gui.composer.ComposerController;
@@ -109,7 +108,7 @@ public class URLController implements ActionListener {
 
         try {
             ComposerController controller = (ComposerController)
-                MainInterface.frameModel.openView("Composer");
+FrameModel.getInstance().openView("Composer");
             controller.setComposerModel(model);
         } catch (PluginLoadingFailedException plfe) {} //should not occur
     }

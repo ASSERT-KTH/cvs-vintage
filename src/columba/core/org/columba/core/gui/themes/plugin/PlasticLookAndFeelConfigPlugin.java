@@ -15,16 +15,8 @@
 //All Rights Reserved.
 package org.columba.core.gui.themes.plugin;
 
-import com.jgoodies.plaf.plastic.PlasticLookAndFeel;
-import com.jgoodies.plaf.plastic.PlasticTheme;
-
-import org.columba.core.gui.plugin.AbstractConfigPlugin;
-import org.columba.core.main.MainInterface;
-import org.columba.core.xml.XmlElement;
-
 import java.awt.BorderLayout;
 import java.awt.Component;
-
 import java.util.List;
 
 import javax.swing.DefaultListCellRenderer;
@@ -33,6 +25,13 @@ import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.ListCellRenderer;
+
+import org.columba.core.gui.plugin.AbstractConfigPlugin;
+import org.columba.core.main.MainInterface;
+import org.columba.core.xml.XmlElement;
+
+import com.jgoodies.plaf.plastic.PlasticLookAndFeel;
+import com.jgoodies.plaf.plastic.PlasticTheme;
 
 
 /**

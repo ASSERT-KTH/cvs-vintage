@@ -22,8 +22,8 @@ import javax.swing.JList;
 import javax.swing.UIManager;
 
 import org.columba.core.gui.util.NotifyDialog;
-import org.columba.core.main.MainInterface;
 import org.columba.core.plugin.PluginHandlerNotFoundException;
+import org.columba.core.plugin.PluginManager;
 import org.columba.mail.plugin.FilterPluginHandler;
 
 
@@ -43,7 +43,7 @@ public class CriteriaComboBoxRenderer extends DefaultListCellRenderer {
         super();
 
         try {
-            pluginHandler = (FilterPluginHandler) MainInterface.pluginManager.getHandler(
+            pluginHandler = (FilterPluginHandler) PluginManager.getInstance().getHandler(
                     "org.columba.mail.filter");
         } catch (PluginHandlerNotFoundException ex) {
             NotifyDialog d = new NotifyDialog();

@@ -33,10 +33,11 @@ import javax.swing.JOptionPane;
 import org.columba.core.command.CommandCancelledException;
 import org.columba.core.command.StatusObservable;
 import org.columba.core.command.StatusObservableImpl;
+import org.columba.core.gui.frame.FrameModel;
 import org.columba.core.gui.util.MultiLineLabel;
-import org.columba.core.main.MainInterface;
 import org.columba.core.plugin.PluginHandlerNotFoundException;
 import org.columba.core.plugin.PluginLoadingFailedException;
+import org.columba.core.plugin.PluginManager;
 import org.columba.core.xml.XmlElement;
 import org.columba.mail.config.PopItem;
 import org.columba.mail.gui.config.account.IncomingServerPanel;
@@ -95,7 +96,7 @@ public class POP3Store {
         
         try {
             handler = (POP3PreProcessingFilterPluginHandler)
-                MainInterface.pluginManager.getHandler(
+PluginManager.getInstance().getHandler(
                     "org.columba.mail.pop3preprocessingfilter");
         } catch (PluginHandlerNotFoundException ex) {
             LOG.severe("POP3 preprocessing filter plugin handler not found");
@@ -373,7 +374,7 @@ public class POP3Store {
                         // Some error in the client/server communication
                         //  --> fall back to default login process
                         int result = JOptionPane.showConfirmDialog(
-                            MainInterface.frameModel.getActiveFrame(),
+                        		FrameModel.getInstance().getActiveFrame(),
                             new MultiLineLabel(e.getMessage() + "\n" +
                                 MailResourceLoader.getString("dialog", "error",
                                 "authentication_fallback_to_default")),

@@ -15,9 +15,9 @@
 //All Rights Reserved.
 package org.columba.core.gui.plugin;
 
-import org.columba.core.main.MainInterface;
-
 import javax.swing.tree.DefaultMutableTreeNode;
+
+import org.columba.core.plugin.PluginManager;
 
 
 /**
@@ -127,7 +127,7 @@ public class PluginNode extends DefaultMutableTreeNode {
  */
     public boolean hasInfo() {
         if (hasInfo == null) {
-            hasInfo = Boolean.valueOf(MainInterface.pluginManager.getInfoURL(id) != null);
+            hasInfo = Boolean.valueOf(PluginManager.getInstance().getInfoURL(id) != null);
         }
 
         return hasInfo.booleanValue();

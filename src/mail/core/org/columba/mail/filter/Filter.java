@@ -19,7 +19,7 @@ package org.columba.mail.filter;
 import org.columba.core.command.Command;
 import org.columba.core.command.CompoundCommand;
 import org.columba.core.config.DefaultItem;
-import org.columba.core.main.MainInterface;
+import org.columba.core.plugin.PluginManager;
 import org.columba.core.xml.XmlElement;
 import org.columba.mail.filter.plugins.AbstractFilterAction;
 import org.columba.mail.folder.MessageFolder;
@@ -135,7 +135,7 @@ public class Filter extends DefaultItem {
 		CompoundCommand c = new CompoundCommand();
 
 		// get plugin handler for filter actions
-		FilterActionPluginHandler pluginHandler = (FilterActionPluginHandler) MainInterface.pluginManager
+		FilterActionPluginHandler pluginHandler = (FilterActionPluginHandler) PluginManager.getInstance()
 				.getHandler("org.columba.mail.filteraction");
 
 		// get list of all filter actions

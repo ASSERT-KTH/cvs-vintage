@@ -26,7 +26,6 @@ import org.columba.addressbook.gui.dialog.group.EditGroupDialog;
 import org.columba.addressbook.gui.frame.AddressbookFrameMediator;
 import org.columba.addressbook.gui.tree.AddressbookTreeModel;
 import org.columba.addressbook.gui.tree.AddressbookTreeNode;
-import org.columba.addressbook.main.AddressbookInterface;
 import org.columba.addressbook.model.Group;
 import org.columba.addressbook.util.AddressbookResourceLoader;
 import org.columba.core.gui.frame.FrameMediator;

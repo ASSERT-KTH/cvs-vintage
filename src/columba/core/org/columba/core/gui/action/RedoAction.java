@@ -16,17 +16,20 @@
 
 package org.columba.core.gui.action;
 
-import org.columba.core.action.AbstractColumbaAction;
-import org.columba.core.command.*;
-import org.columba.core.gui.frame.FrameMediator;
-import org.columba.core.gui.util.ImageLoader;
-import org.columba.core.main.MainInterface;
-import org.columba.core.util.GlobalResourceLoader;
-
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
 
 import javax.swing.KeyStroke;
+
+import org.columba.core.action.AbstractColumbaAction;
+import org.columba.core.command.CommandProcessor;
+import org.columba.core.command.TaskManager;
+import org.columba.core.command.TaskManagerEvent;
+import org.columba.core.command.TaskManagerListener;
+import org.columba.core.gui.focus.FocusManager;
+import org.columba.core.gui.frame.FrameMediator;
+import org.columba.core.gui.util.ImageLoader;
+import org.columba.core.util.GlobalResourceLoader;
 
 public class RedoAction extends AbstractColumbaAction implements TaskManagerListener {
     protected TaskManager taskManager;
@@ -55,13 +58,13 @@ public class RedoAction extends AbstractColumbaAction implements TaskManagerList
 
         setEnabled(false);
         
-        taskManager = MainInterface.processor.getTaskManager();
+        taskManager = CommandProcessor.getInstance().getTaskManager();
         taskManager.addTaskManagerListener(this);
-        MainInterface.focusManager.setRedoAction(this);
+        FocusManager.getInstance().setRedoAction(this);
     }
 
     public void actionPerformed(ActionEvent evt) {
-        MainInterface.focusManager.redo();
+    	FocusManager.getInstance().redo();
     }
 
     public void workerAdded(TaskManagerEvent e) {

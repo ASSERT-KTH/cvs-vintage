@@ -3,9 +3,9 @@
  */
 package org.columba.core.gui.util;
 
-import junit.framework.TestCase;
-
 import java.awt.Color;
+
+import junit.framework.TestCase;
 
 
 /**

@@ -25,8 +25,7 @@ import javax.swing.JOptionPane;
 import org.columba.addressbook.folder.AbstractFolder;
 import org.columba.addressbook.model.Contact;
 import org.columba.addressbook.util.AddressbookResourceLoader;
-
-import org.columba.core.main.MainInterface;
+import org.columba.core.gui.frame.FrameModel;
 import org.columba.core.plugin.Plugin;
 
 /**
@@ -102,7 +101,7 @@ public abstract class DefaultAddressbookImporter implements Plugin {
         try {
             importAddressbook(sourceFile);
         } catch (Exception ex) {
-            JOptionPane.showMessageDialog(MainInterface.frameModel.getActiveFrame(),
+            JOptionPane.showMessageDialog(FrameModel.getInstance().getActiveFrame(),
                 AddressbookResourceLoader.getString("dialog",
                     "addressbookimport", "addressbook_import_failed"), "",
                 JOptionPane.ERROR_MESSAGE);
@@ -110,12 +109,12 @@ public abstract class DefaultAddressbookImporter implements Plugin {
         }
 
         if (getCount() == 0) {
-            JOptionPane.showMessageDialog(MainInterface.frameModel.getActiveFrame(), 
+            JOptionPane.showMessageDialog(FrameModel.getInstance().getActiveFrame(), 
                 AddressbookResourceLoader.getString("dialog",
                     "addressbookimport", "addressbook_import_failed_2"), "",
                 JOptionPane.ERROR_MESSAGE);
         } else {
-            JOptionPane.showMessageDialog(MainInterface.frameModel.getActiveFrame(),
+            JOptionPane.showMessageDialog(FrameModel.getInstance().getActiveFrame(),
                 AddressbookResourceLoader.getString("dialog",
                     "addressbookimport", "addressbook_import_was_successfull"),
                 AddressbookResourceLoader.getString("dialog", "contact",

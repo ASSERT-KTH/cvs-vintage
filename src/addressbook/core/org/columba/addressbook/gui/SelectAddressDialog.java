@@ -44,7 +44,6 @@ import org.columba.addressbook.gui.list.AddressbookDNDListView;
 import org.columba.addressbook.gui.list.AddressbookListModel;
 import org.columba.addressbook.gui.tree.AddressbookTreeModel;
 import org.columba.addressbook.gui.tree.util.SelectAddressbookFolderDialog;
-import org.columba.addressbook.main.AddressbookInterface;
 import org.columba.addressbook.model.HeaderItem;
 import org.columba.addressbook.model.HeaderItemList;
 import org.columba.addressbook.util.AddressbookResourceLoader;

@@ -15,16 +15,15 @@
 //All Rights Reserved.
 package org.columba.addressbook.gui.tree.util;
 
-import org.columba.addressbook.gui.tree.AddressbookTreeNode;
-
-import org.columba.core.gui.util.ImageLoader;
-
 import java.awt.Component;
 
 import javax.swing.ImageIcon;
 import javax.swing.JTree;
 import javax.swing.border.Border;
 import javax.swing.tree.DefaultTreeCellRenderer;
+
+import org.columba.addressbook.gui.tree.AddressbookTreeNode;
+import org.columba.core.gui.util.ImageLoader;
 
 
 public class AddressbookTreeCellRenderer extends DefaultTreeCellRenderer {

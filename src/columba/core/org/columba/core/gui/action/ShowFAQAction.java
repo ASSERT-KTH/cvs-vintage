@@ -15,16 +15,14 @@
 //All Rights Reserved.
 package org.columba.core.gui.action;
 
+import java.awt.event.ActionEvent;
+import java.net.MalformedURLException;
+import java.net.URL;
+
 import org.columba.core.action.AbstractColumbaAction;
 import org.columba.core.gui.frame.FrameMediator;
 import org.columba.core.util.GlobalResourceLoader;
-
 import org.columba.mail.gui.util.URLController;
-
-import java.awt.event.ActionEvent;
-
-import java.net.MalformedURLException;
-import java.net.URL;
 
 
 /**

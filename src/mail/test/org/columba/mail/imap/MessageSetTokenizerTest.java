@@ -15,9 +15,9 @@
 //All Rights Reserved.
 package org.columba.mail.imap;
 
-import junit.framework.TestCase;
-
 import java.util.List;
+
+import junit.framework.TestCase;
 
 
 /**

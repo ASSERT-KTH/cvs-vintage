@@ -15,14 +15,14 @@
 //All Rights Reserved.
 package org.columba.core.gui.menu;
 
+import javax.swing.Action;
+import javax.swing.ImageIcon;
+import javax.swing.JMenuItem;
+
 import org.columba.core.action.AbstractColumbaAction;
 import org.columba.core.gui.util.ImageUtil;
 import org.columba.core.gui.util.MnemonicSetter;
 import org.columba.core.help.HelpManager;
-
-import javax.swing.Action;
-import javax.swing.ImageIcon;
-import javax.swing.JMenuItem;
 
 
 /**

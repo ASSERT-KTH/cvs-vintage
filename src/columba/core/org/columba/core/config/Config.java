@@ -17,16 +17,20 @@
 //All Rights Reserved.
 package org.columba.core.config;
 
+import java.io.File;
+import java.io.IOException;
+import java.util.Hashtable;
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+import java.util.logging.Logger;
+
 import org.columba.core.io.DiskIO;
 import org.columba.core.shutdown.ShutdownManager;
 import org.columba.core.util.OSInfo;
 import org.columba.core.xml.XmlElement;
-
-import java.io.File;
-import java.io.IOException;
-
-import java.util.*;
-import java.util.logging.Logger;
+import org.columba.core.xml.XmlIO;
 
 /**
  * Main entrypoint for configuration management.

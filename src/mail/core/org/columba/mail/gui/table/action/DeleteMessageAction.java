@@ -21,11 +21,11 @@ import java.awt.event.KeyEvent;
 import javax.swing.KeyStroke;
 
 import org.columba.core.action.AbstractColumbaAction;
+import org.columba.core.command.CommandProcessor;
 import org.columba.core.gui.frame.FrameMediator;
 import org.columba.core.gui.selection.SelectionChangedEvent;
 import org.columba.core.gui.selection.SelectionListener;
 import org.columba.core.gui.util.ImageLoader;
-import org.columba.core.main.MainInterface;
 import org.columba.mail.command.FolderCommandReference;
 import org.columba.mail.folder.MessageFolder;
 import org.columba.mail.folder.RootFolder;
@@ -96,9 +96,9 @@ public class DeleteMessageAction extends AbstractColumbaAction
         if (uid == trash.getUid()) {
             // trash folder is selected
             //  -> delete message
-            MainInterface.processor.addOp(new MarkMessageCommand(r));
+        	CommandProcessor.getInstance().addOp(new MarkMessageCommand(r));
 
-            MainInterface.processor.addOp(new ExpungeFolderCommand(r));
+        	CommandProcessor.getInstance().addOp(new ExpungeFolderCommand(r));
         } else {
             // -> move messages to trash
             MessageFolder destFolder = trash;
@@ -108,7 +108,7 @@ public class DeleteMessageAction extends AbstractColumbaAction
 
             MoveMessageCommand c = new MoveMessageCommand(result);
 
-            MainInterface.processor.addOp(c);
+            CommandProcessor.getInstance().addOp(c);
         }
         
         // if this is a message-viewer frame viewing a message only

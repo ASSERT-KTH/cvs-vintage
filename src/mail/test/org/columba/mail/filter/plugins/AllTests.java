@@ -20,13 +20,13 @@ package org.columba.mail.filter.plugins;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
-import org.columba.mail.folder.IMAPTstFactory;
-import org.columba.mail.folder.MHFolderFactory;
-import org.columba.mail.folder.MailboxTstFactory;
-
 import junit.framework.Test;
 import junit.framework.TestCase;
 import junit.framework.TestSuite;
+
+import org.columba.mail.folder.IMAPTstFactory;
+import org.columba.mail.folder.MHFolderFactory;
+import org.columba.mail.folder.MailboxTstFactory;
 
 /**
  * @author fdietz

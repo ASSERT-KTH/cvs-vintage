@@ -16,16 +16,11 @@
 
 package org.columba.core.util;
 
-import org.columba.core.main.MainInterface;
-import org.columba.core.xml.XmlElement;
-
 import java.io.File;
 import java.io.FileFilter;
-
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLClassLoader;
-
 import java.util.Enumeration;
 import java.util.HashSet;
 import java.util.Hashtable;
@@ -35,6 +30,9 @@ import java.util.ResourceBundle;
 import java.util.Set;
 import java.util.StringTokenizer;
 import java.util.logging.Logger;
+
+import org.columba.core.main.MainInterface;
+import org.columba.core.xml.XmlElement;
 
 /**
  * This is the core class to handle i18n in columba, loading, handling and returning localized strings.

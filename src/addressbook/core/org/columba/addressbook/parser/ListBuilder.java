@@ -24,7 +24,6 @@ import java.util.Vector;
 import org.columba.addressbook.folder.ContactStorage;
 import org.columba.addressbook.folder.GroupFolder;
 import org.columba.addressbook.gui.tree.AddressbookTreeModel;
-import org.columba.addressbook.main.AddressbookInterface;
 import org.columba.addressbook.model.Contact;
 import org.columba.addressbook.model.ContactItem;
 import org.columba.addressbook.model.ContactItemMap;

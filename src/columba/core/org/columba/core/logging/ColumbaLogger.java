@@ -15,19 +15,17 @@
 //All Rights Reserved.
 package org.columba.core.logging;
 
-import org.columba.core.main.MainInterface;
-
-import org.columba.ristretto.log.RistrettoLogger;
-
 import java.io.File;
 import java.io.IOException;
-
 import java.util.logging.ConsoleHandler;
 import java.util.logging.FileHandler;
 import java.util.logging.Handler;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.logging.SimpleFormatter;
+
+import org.columba.core.main.MainInterface;
+import org.columba.ristretto.log.RistrettoLogger;
 
 /**
  * Depending on the debug flag (--debug command line option reflected

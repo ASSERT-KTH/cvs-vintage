@@ -30,8 +30,8 @@ import java.util.List;
 import java.util.logging.Logger;
 
 import org.columba.core.command.CommandCancelledException;
+import org.columba.core.command.CommandProcessor;
 import org.columba.core.command.StatusObservable;
-import org.columba.core.main.MainInterface;
 import org.columba.core.xml.XmlElement;
 import org.columba.mail.command.FolderCommandReference;
 import org.columba.mail.config.AccountItem;
@@ -345,7 +345,7 @@ public class IMAPFolder extends RemoteFolder {
 
 				// if "automatically apply filter" is selected & there are new messages
 				if (applyFilter) {
-					MainInterface.processor.addOp(new ApplyFilterCommand(new FolderCommandReference(this, newUids.toArray())));
+					CommandProcessor.getInstance().addOp(new ApplyFilterCommand(new FolderCommandReference(this, newUids.toArray())));
 				}
 
 			}

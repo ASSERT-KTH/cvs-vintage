@@ -18,10 +18,10 @@ package org.columba.mail.gui.attachment.action;
 import java.awt.event.ActionEvent;
 
 import org.columba.core.action.AbstractColumbaAction;
+import org.columba.core.command.CommandProcessor;
 import org.columba.core.gui.frame.FrameMediator;
 import org.columba.core.gui.selection.SelectionChangedEvent;
 import org.columba.core.gui.selection.SelectionListener;
-import org.columba.core.main.MainInterface;
 import org.columba.mail.gui.attachment.command.OpenWithAttachmentCommand;
 import org.columba.mail.gui.attachment.selection.AttachmentSelectionChangedEvent;
 import org.columba.mail.gui.frame.MailFrameMediator;
@@ -55,7 +55,7 @@ public class OpenWithAction extends AbstractColumbaAction
      * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
      */
     public void actionPerformed(ActionEvent evt) {
-        MainInterface.processor.addOp(new OpenWithAttachmentCommand(
+    	CommandProcessor.getInstance().addOp(new OpenWithAttachmentCommand(
                 getFrameMediator().getSelectionManager()
                     .getHandler("mail.attachment").getSelection()));
     }

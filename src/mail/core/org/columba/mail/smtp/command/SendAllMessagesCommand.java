@@ -20,6 +20,7 @@ import java.util.Vector;
 
 import javax.swing.Action;
 
+import org.columba.core.command.CommandProcessor;
 import org.columba.core.command.DefaultCommandReference;
 import org.columba.core.command.Worker;
 import org.columba.core.command.WorkerStatusController;
@@ -160,7 +161,7 @@ public class SendAllMessagesCommand extends FolderCommand {
 		// start move command
 		MoveMessageCommand c = new MoveMessageCommand(r);
 
-		MainInterface.processor.addOp(c);
+		CommandProcessor.getInstance().addOp(c);
 	}
 
 	/**

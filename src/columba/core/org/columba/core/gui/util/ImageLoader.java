@@ -17,19 +17,14 @@
 //All Rights Reserved.
 package org.columba.core.gui.util;
 
-import org.columba.core.io.DiskIO;
-
 import java.awt.Image;
 import java.awt.Toolkit;
-
 import java.io.BufferedInputStream;
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
-
 import java.net.URL;
-
 import java.util.Hashtable;
 import java.util.Properties;
 import java.util.ResourceBundle;
@@ -38,6 +33,8 @@ import java.util.zip.ZipException;
 import java.util.zip.ZipFile;
 
 import javax.swing.ImageIcon;
+
+import org.columba.core.io.DiskIO;
 
 public class ImageLoader {
 	static boolean ICON_SET = false;

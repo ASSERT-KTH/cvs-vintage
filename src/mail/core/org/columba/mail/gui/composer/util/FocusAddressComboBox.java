@@ -21,8 +21,8 @@ import javax.swing.JComponent;
 import javax.swing.event.CaretEvent;
 import javax.swing.event.CaretListener;
 
+import org.columba.core.gui.focus.FocusManager;
 import org.columba.core.gui.focus.FocusOwner;
-import org.columba.core.main.MainInterface;
 import org.frappucino.addresscombobox.AddressComboBox;
 
 /**
@@ -41,7 +41,7 @@ public class FocusAddressComboBox extends AddressComboBox implements
 		super();
 
 		//		 register at focus manager
-		MainInterface.focusManager.registerComponent(this);
+		FocusManager.getInstance().registerComponent(this);
 
 		//		 register caret listener
 		getTextEditor().addCaretListener(this);
@@ -54,7 +54,7 @@ public class FocusAddressComboBox extends AddressComboBox implements
 		super(arg0);
 
 		//		 register at focus manager
-		MainInterface.focusManager.registerComponent(this);
+		FocusManager.getInstance().registerComponent(this);
 
 		// register caret listener
 		getTextEditor().addCaretListener(this);
@@ -197,6 +197,6 @@ public class FocusAddressComboBox extends AddressComboBox implements
 	 * @see javax.swing.event.CaretListener#caretUpdate(javax.swing.event.CaretEvent)
 	 */
 	public void caretUpdate(CaretEvent arg0) {
-		MainInterface.focusManager.updateActions();
+		FocusManager.getInstance().updateActions();
 	}
 }

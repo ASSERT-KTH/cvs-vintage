@@ -15,10 +15,12 @@
 //All Rights Reserved.
 package org.columba.mail.main;
 
+import org.columba.core.backgroundtask.BackgroundTaskManager;
 import org.columba.core.backgroundtask.TaskInterface;
 import org.columba.core.main.DefaultMain;
 import org.columba.core.main.MainInterface;
 import org.columba.core.plugin.PluginHandlerNotFoundException;
+import org.columba.core.plugin.PluginManager;
 import org.columba.core.pluginhandler.ActionPluginHandler;
 import org.columba.core.shutdown.ShutdownManager;
 import org.columba.mail.config.MailConfig;
@@ -50,10 +52,10 @@ public class MailMain extends DefaultMain {
         renderer.addMimePartRenderer(new MultipartEncryptedRenderer());
 
         // Init Plugins
-        MainInterface.pluginManager.addHandlers("org/columba/mail/plugin/pluginhandler.xml");
+        PluginManager.getInstance().addHandlers("org/columba/mail/plugin/pluginhandler.xml");
         
         try {
-            ((ActionPluginHandler) MainInterface.pluginManager.getHandler(
+            ((ActionPluginHandler) PluginManager.getInstance().getHandler(
                 "org.columba.core.action")).addActionList(
                 "org/columba/mail/action/action.xml");
         } catch (PluginHandlerNotFoundException ex) {
@@ -61,14 +63,14 @@ public class MailMain extends DefaultMain {
         }
         
         TaskInterface plugin = new SaveAllFoldersPlugin();
-        MainInterface.backgroundTaskManager.register(plugin);
+        BackgroundTaskManager.getInstance().register(plugin);
 
         plugin = new SavePOP3CachePlugin();
-        MainInterface.backgroundTaskManager.register(plugin);
+        BackgroundTaskManager.getInstance().register(plugin);
         ShutdownManager.getShutdownManager().register(plugin);
 
         plugin = new SaveSpamDBPlugin();
-        MainInterface.backgroundTaskManager.register(plugin);
+        BackgroundTaskManager.getInstance().register(plugin);
         ShutdownManager.getShutdownManager().register(plugin);
 
         // initialize cached headers which can be configured by the user

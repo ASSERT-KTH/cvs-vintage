@@ -18,9 +18,7 @@
 package org.columba.mail.filter.plugins;
 
 import org.columba.core.xml.XmlElement;
-
 import org.columba.mail.filter.FilterCriteria;
-import org.columba.mail.folder.MailboxTstFactory;
 
 
 /**

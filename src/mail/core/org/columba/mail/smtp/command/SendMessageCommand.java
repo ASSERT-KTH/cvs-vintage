@@ -21,6 +21,7 @@ import java.text.MessageFormat;
 
 import javax.swing.JOptionPane;
 
+import org.columba.core.command.CommandProcessor;
 import org.columba.core.command.DefaultCommandReference;
 import org.columba.core.command.Worker;
 import org.columba.core.command.WorkerStatusController;
@@ -38,7 +39,6 @@ import org.columba.mail.gui.composer.ComposerModel;
 import org.columba.mail.gui.composer.command.SaveMessageCommand;
 import org.columba.mail.gui.tree.TreeModel;
 import org.columba.mail.gui.util.SendMessageDialog;
-import org.columba.mail.main.MailInterface;
 import org.columba.mail.pgp.CancelledException;
 import org.columba.mail.smtp.SMTPServer;
 import org.columba.mail.util.MailResourceLoader;
@@ -243,7 +243,7 @@ public class SendMessageCommand extends FolderCommand {
 
 			SaveMessageCommand c = new SaveMessageCommand(ref);
 
-			MainInterface.processor.addOp(c);
+			CommandProcessor.getInstance().addOp(c);
 
 			// -> get source reference of message
 			// when replying this is the original sender's message
@@ -253,7 +253,7 @@ public class SendMessageCommand extends FolderCommand {
 				// mark message as answered
 				ref2.setMarkVariant(MarkMessageCommand.MARK_AS_ANSWERED);
 				MarkMessageCommand c1 = new MarkMessageCommand(ref2);
-				MainInterface.processor.addOp(c1);
+				CommandProcessor.getInstance().addOp(c1);
 			}
 
 			//	display status message

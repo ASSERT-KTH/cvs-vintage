@@ -18,7 +18,7 @@
 package org.columba.core.facade;
 
 import org.columba.core.command.Command;
-import org.columba.core.main.MainInterface;
+import org.columba.core.command.CommandProcessor;
 
 /**
  * Command handling.
@@ -33,6 +33,6 @@ public class CommandFacade {
 	 * @param c		command to be executed
 	 */
 	public static void executeCommand(Command c) {
-		MainInterface.processor.addOp(c);
+		CommandProcessor.getInstance().addOp(c);
 	}
 }

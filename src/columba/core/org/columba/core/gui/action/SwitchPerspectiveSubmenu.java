@@ -26,7 +26,7 @@ import javax.swing.JRadioButtonMenuItem;
 import org.columba.core.action.IMenu;
 import org.columba.core.gui.frame.Container;
 import org.columba.core.gui.frame.FrameMediator;
-import org.columba.core.main.MainInterface;
+import org.columba.core.gui.frame.FrameModel;
 import org.columba.core.plugin.PluginLoadingFailedException;
 
 /**
@@ -107,19 +107,19 @@ public class SwitchPerspectiveSubmenu extends IMenu implements ActionListener {
 
 		if (action.equals("MAIL")) {
 			try {
-				MainInterface.frameModel.switchView(container, MAIL_PERSPECTIVE);
+				FrameModel.getInstance().switchView(container, MAIL_PERSPECTIVE);
 			} catch (PluginLoadingFailedException e) {
 				e.printStackTrace();
 			}
 		} else if (action.equals("ADDRESSBOOK")) {
 			try {
-				MainInterface.frameModel.switchView(container, ADDRESSBOOK_PERSPECTIVE);
+				FrameModel.getInstance().switchView(container, ADDRESSBOOK_PERSPECTIVE);
 			} catch (PluginLoadingFailedException e) {
 				e.printStackTrace();
 			}
 		} else if (action.equals("CHAT")) {
 			try {
-				MainInterface.frameModel.switchView(container, CHAT_PERSPECTIVE);
+				FrameModel.getInstance().switchView(container, CHAT_PERSPECTIVE);
 			} catch (PluginLoadingFailedException e) {
 				e.printStackTrace();
 			}

@@ -25,10 +25,9 @@ import net.javaprog.ui.wizard.WizardModel;
 
 import org.columba.addressbook.plugin.ImportPluginHandler;
 import org.columba.addressbook.util.AddressbookResourceLoader;
-
 import org.columba.core.gui.util.ImageLoader;
-import org.columba.core.main.MainInterface;
 import org.columba.core.plugin.PluginHandlerNotFoundException;
+import org.columba.core.plugin.PluginManager;
 
 /**
  * Responsible for launching the addressbook import wizard.
@@ -40,7 +39,7 @@ public class ImportWizardLauncher {
         final ImportPluginHandler pluginHandler;
 
         try {
-            pluginHandler = (ImportPluginHandler) MainInterface.pluginManager.getHandler(
+            pluginHandler = (ImportPluginHandler) PluginManager.getInstance().getHandler(
                     "org.columba.addressbook.import");
         } catch (PluginHandlerNotFoundException ex) {
             throw new RuntimeException(ex);

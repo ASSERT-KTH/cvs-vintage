@@ -17,10 +17,12 @@ package org.columba.addressbook.main;
 
 import org.columba.addressbook.config.AddressbookConfig;
 import org.columba.addressbook.shutdown.SaveAllAddressbooksPlugin;
+import org.columba.core.backgroundtask.BackgroundTaskManager;
 import org.columba.core.backgroundtask.TaskInterface;
 import org.columba.core.main.DefaultMain;
 import org.columba.core.main.MainInterface;
 import org.columba.core.plugin.PluginHandlerNotFoundException;
+import org.columba.core.plugin.PluginManager;
 import org.columba.core.pluginhandler.ActionPluginHandler;
 import org.columba.core.shutdown.ShutdownManager;
 
@@ -38,17 +40,17 @@ public class AddressbookMain extends DefaultMain {
 		AddressbookInterface.config = new AddressbookConfig(MainInterface.config);
 		
 		 // init addressbook plugin handlers
-        MainInterface.pluginManager.addHandlers("org/columba/addressbook/plugin/pluginhandler.xml");
+		PluginManager.getInstance().addHandlers("org/columba/addressbook/plugin/pluginhandler.xml");
        
         try {
-            ((ActionPluginHandler) MainInterface.pluginManager.getHandler(
+            ((ActionPluginHandler) PluginManager.getInstance().getHandler(
                 "org.columba.core.action")).addActionList(
                 "org/columba/addressbook/action/action.xml");
         } catch (PluginHandlerNotFoundException ex) {
         }
 
         TaskInterface plugin = new SaveAllAddressbooksPlugin();
-        MainInterface.backgroundTaskManager.register(plugin);
+        BackgroundTaskManager.getInstance().register(plugin);
         ShutdownManager.getShutdownManager().register(plugin);
 		
 	}

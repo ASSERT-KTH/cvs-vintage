@@ -24,6 +24,7 @@ import java.util.logging.Logger;
 
 import org.columba.core.main.MainInterface;
 import org.columba.core.plugin.PluginHandlerNotFoundException;
+import org.columba.core.plugin.PluginManager;
 import org.columba.core.pluginhandler.ExternalToolsPluginHandler;
 import org.columba.mail.config.PGPItem;
 import org.columba.mail.main.MailInterface;
@@ -118,7 +119,7 @@ public class JSCFController
       try
       {
         LOG.fine("try to get the handler");
-        handler = (ExternalToolsPluginHandler) MainInterface.pluginManager
+        handler = (ExternalToolsPluginHandler) PluginManager.getInstance()
             .getHandler("org.columba.core.externaltools");
         LOG.fine("recived Handler ... getting path from it");
         path = handler.getLocationOfExternalTool("gpg").getPath();

@@ -26,12 +26,10 @@ import junit.framework.TestCase;
 
 import org.columba.addressbook.config.AddressbookConfig;
 import org.columba.addressbook.main.AddressbookInterface;
-import org.columba.core.backgroundtask.BackgroundTaskManager;
 import org.columba.core.command.CommandProcessor;
 import org.columba.core.config.Config;
 import org.columba.core.logging.ColumbaLogger;
 import org.columba.core.main.MainInterface;
-import org.columba.core.plugin.PluginManager;
 import org.columba.mail.config.MailConfig;
 import org.columba.mail.main.MailInterface;
 import org.columba.mail.main.MailMain;
@@ -88,9 +86,7 @@ public class AbstractFolderTst extends TestCase {
      * @see TestCase#setUp()
      */
     protected void setUp() throws Exception {
-    	
-    	MainInterface.processor = new CommandProcessor();
-    	
+    		
     	// create config-folder
         File file = new File("test_config");
         file.mkdir();
@@ -106,9 +102,9 @@ public class AbstractFolderTst extends TestCase {
                 MainInterface.config);
         
         // init background manager (needed by ShutdownManager)
-        MainInterface.backgroundTaskManager = new BackgroundTaskManager();
+        //MainInterface.backgroundTaskManager = new BackgroundTaskManager();
         
-        MainInterface.pluginManager = new PluginManager();
+        //PluginManager.getInstance() = new PluginManager();
         
         MailMain.getInstance();
       

@@ -22,9 +22,9 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
 
-import org.columba.mail.folder.FolderTstHelper;
-
 import junit.framework.TestCase;
+
+import org.columba.mail.folder.FolderTstHelper;
 
 /**
  * @author fdietz

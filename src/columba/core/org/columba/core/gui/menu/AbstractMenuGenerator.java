@@ -28,6 +28,7 @@ import org.columba.core.gui.frame.FrameMediator;
 import org.columba.core.io.DiskIO;
 import org.columba.core.main.MainInterface;
 import org.columba.core.plugin.PluginHandlerNotFoundException;
+import org.columba.core.plugin.PluginManager;
 import org.columba.core.pluginhandler.ActionPluginHandler;
 import org.columba.core.xml.XmlElement;
 import org.columba.core.xml.XmlIO;
@@ -178,7 +179,7 @@ public abstract class AbstractMenuGenerator {
                     //try {
                         AbstractColumbaAction action=null;
 						try {
-							action = ((ActionPluginHandler) MainInterface.pluginManager.getHandler(
+							action = ((ActionPluginHandler) PluginManager.getInstance().getHandler(
 							        "org.columba.core.action")).getAction(next.getAttribute(
 							            "action"), frameMediator);
 						} catch (PluginHandlerNotFoundException e) {
@@ -199,7 +200,7 @@ public abstract class AbstractMenuGenerator {
                         }
                 } else if (next.getAttribute("checkboxaction") != null) {
                     try {
-                        AbstractSelectableAction action = (AbstractSelectableAction) ((ActionPluginHandler) MainInterface.pluginManager.getHandler(
+                        AbstractSelectableAction action = (AbstractSelectableAction) ((ActionPluginHandler) PluginManager.getInstance().getHandler(
                                 "org.columba.core.action")).getAction(next.getAttribute(
                                     "checkboxaction"), frameMediator);
 
@@ -218,7 +219,7 @@ public abstract class AbstractMenuGenerator {
                     }
                 } else if (next.getAttribute("imenu") != null) {
                     try {
-                        IMenu imenu = ((ActionPluginHandler) MainInterface.pluginManager.getHandler(
+                        IMenu imenu = ((ActionPluginHandler) PluginManager.getInstance().getHandler(
                                 "org.columba.core.action")).getIMenu(next.getAttribute(
                                     "imenu"), frameMediator);
 

@@ -25,9 +25,9 @@ import javax.swing.JPanel;
 import javax.swing.JProgressBar;
 import javax.swing.ListCellRenderer;
 
+import org.columba.core.command.CommandProcessor;
 import org.columba.core.command.TaskManager;
 import org.columba.core.command.Worker;
-import org.columba.core.main.MainInterface;
 
 
 /**
@@ -46,7 +46,7 @@ public class TaskRenderer extends JPanel implements ListCellRenderer {
     public TaskRenderer() {
         super();
 
-        tm = MainInterface.processor.getTaskManager();
+        tm = CommandProcessor.getInstance().getTaskManager();
         
         setBorder(BorderFactory.createEmptyBorder(2,2,2,2));
         

@@ -17,7 +17,6 @@ package org.columba.core.gui.action;
 
 import org.columba.core.action.IMenu;
 import org.columba.core.gui.frame.FrameMediator;
-
 import org.columba.mail.util.MailResourceLoader;
 
 

@@ -15,9 +15,6 @@
 //All Rights Reserved.
 package org.columba.core.gui.plugin;
 
-import org.columba.core.main.MainInterface;
-import org.columba.core.xml.XmlElement;
-
 import java.awt.Component;
 import java.awt.Font;
 import java.awt.FontMetrics;
@@ -29,6 +26,9 @@ import javax.swing.JTree;
 import javax.swing.SwingConstants;
 import javax.swing.SwingUtilities;
 import javax.swing.tree.DefaultTreeCellRenderer;
+
+import org.columba.core.plugin.PluginManager;
+import org.columba.core.xml.XmlElement;
 
 
 /**
@@ -50,7 +50,7 @@ public class DescriptionTreeRenderer extends DefaultTreeCellRenderer {
         PluginNode node = (PluginNode) value;
 
         String id = node.getId();
-        XmlElement e = MainInterface.pluginManager.getPluginElement(id);
+        XmlElement e = PluginManager.getInstance().getPluginElement(id);
         String description = null;
 
         if (e == null) {

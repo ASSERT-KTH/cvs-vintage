@@ -15,9 +15,9 @@
 //All Rights Reserved.
 package org.columba.core.config;
 
-import org.columba.core.xml.XmlElement;
-
 import java.awt.Font;
+
+import org.columba.core.xml.XmlElement;
 
 
 /**

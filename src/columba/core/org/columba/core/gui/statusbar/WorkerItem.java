@@ -15,12 +15,12 @@
 //All Rights Reserved.
 package org.columba.core.gui.statusbar;
 
-import org.columba.core.util.SwingWorker;
-
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 import javax.swing.Timer;
+
+import org.columba.core.util.SwingWorker;
 
 
 class WorkerItem {

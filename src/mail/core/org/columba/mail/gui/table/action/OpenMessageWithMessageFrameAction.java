@@ -18,11 +18,11 @@ package org.columba.mail.gui.table.action;
 import java.awt.event.ActionEvent;
 
 import org.columba.core.action.AbstractColumbaAction;
+import org.columba.core.command.CommandProcessor;
 import org.columba.core.gui.frame.DefaultContainer;
 import org.columba.core.gui.frame.FrameMediator;
 import org.columba.core.gui.selection.SelectionChangedEvent;
 import org.columba.core.gui.selection.SelectionListener;
-import org.columba.core.main.MainInterface;
 import org.columba.mail.command.FolderCommandReference;
 import org.columba.mail.gui.frame.MailFrameMediator;
 import org.columba.mail.gui.frame.ThreePaneMailFrameController;
@@ -71,7 +71,7 @@ public class OpenMessageWithMessageFrameAction extends AbstractColumbaAction
 
 		c.setTableSelection(r);
 
-		MainInterface.processor.addOp(new ViewMessageCommand(c, r));
+		CommandProcessor.getInstance().addOp(new ViewMessageCommand(c, r));
 
 	}
 

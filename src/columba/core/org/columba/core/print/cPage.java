@@ -20,7 +20,6 @@ import java.awt.Graphics2D;
 import java.awt.print.PageFormat;
 import java.awt.print.Paper;
 import java.awt.print.Printable;
-
 import java.util.Iterator;
 import java.util.List;
 import java.util.Vector;

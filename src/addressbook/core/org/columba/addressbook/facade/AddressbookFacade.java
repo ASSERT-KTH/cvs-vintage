@@ -16,7 +16,6 @@
 package org.columba.addressbook.facade;
 
 import org.columba.addressbook.main.AddressbookInterface;
-
 import org.columba.core.xml.XmlElement;
 
 

@@ -21,9 +21,9 @@ import java.awt.datatransfer.Transferable;
 import javax.swing.JComponent;
 import javax.swing.TransferHandler;
 
+import org.columba.core.command.CommandProcessor;
 import org.columba.core.command.CompoundCommand;
 import org.columba.core.gui.frame.FrameMediator;
-import org.columba.core.main.MainInterface;
 import org.columba.mail.command.FolderCommandReference;
 import org.columba.mail.folder.command.ExpungeFolderCommand;
 import org.columba.mail.folder.command.MarkMessageCommand;
@@ -82,7 +82,7 @@ public class TableViewTransferHandler extends TransferHandler {
             CompoundCommand command = new CompoundCommand();
             command.add(markCommand);
             command.add(expungeCommand);
-            MainInterface.processor.addOp(command);
+            CommandProcessor.getInstance().addOp(command);
         }
     }
 

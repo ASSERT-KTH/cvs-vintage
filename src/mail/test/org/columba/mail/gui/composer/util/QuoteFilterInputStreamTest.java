@@ -15,13 +15,13 @@
 //All Rights Reserved.
 package org.columba.mail.gui.composer.util;
 
-import junit.framework.TestCase;
-
-import org.columba.core.io.StreamUtils;
-
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+
+import junit.framework.TestCase;
+
+import org.columba.core.io.StreamUtils;
 
 
 public class QuoteFilterInputStreamTest extends TestCase {

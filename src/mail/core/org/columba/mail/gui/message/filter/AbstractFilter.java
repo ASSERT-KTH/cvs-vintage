@@ -23,7 +23,6 @@ import org.columba.mail.folder.temp.TempFolder;
 import org.columba.mail.gui.attachment.selection.AttachmentSelectionHandler;
 import org.columba.mail.gui.table.selection.TableSelectionHandler;
 import org.columba.mail.gui.tree.TreeModel;
-import org.columba.mail.main.MailInterface;
 import org.columba.mail.message.ColumbaMessage;
 
 /**

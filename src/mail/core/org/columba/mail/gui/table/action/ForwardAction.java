@@ -23,11 +23,11 @@ import java.util.Observer;
 import javax.swing.KeyStroke;
 
 import org.columba.core.action.AbstractColumbaAction;
+import org.columba.core.command.CommandProcessor;
 import org.columba.core.gui.frame.FrameMediator;
 import org.columba.core.gui.selection.SelectionChangedEvent;
 import org.columba.core.gui.selection.SelectionListener;
 import org.columba.core.gui.util.ImageLoader;
-import org.columba.core.main.MainInterface;
 import org.columba.core.xml.XmlElement;
 import org.columba.mail.command.FolderCommandReference;
 import org.columba.mail.gui.composer.command.ForwardCommand;
@@ -99,9 +99,9 @@ public class ForwardAction extends AbstractColumbaAction
         FolderCommandReference r = ((MailFrameMediator) getFrameMediator()).getTableSelection();
 
         if (forwardStyle.equals("attachment")) {
-            MainInterface.processor.addOp(new ForwardCommand(r));
+        	CommandProcessor.getInstance().addOp(new ForwardCommand(r));
         } else {
-            MainInterface.processor.addOp(new ForwardInlineCommand(r));
+        	CommandProcessor.getInstance().addOp(new ForwardInlineCommand(r));
         }
     }
 

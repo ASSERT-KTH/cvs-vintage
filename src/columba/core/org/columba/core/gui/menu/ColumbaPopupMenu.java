@@ -15,10 +15,10 @@
 //All Rights Reserved.
 package org.columba.core.gui.menu;
 
+import javax.swing.JPopupMenu;
+
 import org.columba.core.gui.frame.FrameMediator;
 import org.columba.core.xml.XmlElement;
-
-import javax.swing.JPopupMenu;
 
 
 /**

@@ -16,14 +16,10 @@
 
 package org.columba.core.main;
 
-import org.columba.core.backgroundtask.BackgroundTaskManager;
-import org.columba.core.command.CommandProcessor;
 import org.columba.core.config.Config;
 import org.columba.core.gui.ClipboardManager;
 import org.columba.core.gui.focus.FocusManager;
-import org.columba.core.gui.frame.FrameModel;
 import org.columba.core.nativ.NativeWrapperHandler;
-import org.columba.core.plugin.PluginManager;
 
 /**
  * Main Interface keeping static instances of all objects
@@ -37,25 +33,6 @@ public class MainInterface {
 
     /** Configuration file management */
     public static Config config;
-    
-    /** Maintains references to all open frames */
-    public static FrameModel frameModel;
-
-    /** Scheduler */
-    public static CommandProcessor processor;
-    public static PluginManager pluginManager;
-
-    /**
-     * Tasks which are executed by a timer in the background
-     * if the program is currently in idle mode
-     */
-    public static BackgroundTaskManager backgroundTaskManager;
-
-    /** Every component using cut/copy/paste/etc. uses this manager */
-    public static ClipboardManager clipboardManager;
-
-    /** Focus manager needed for cut/copy/paste/etc. */
-    public static FocusManager focusManager;
 
     /** Wrapper for native code */
     public static NativeWrapperHandler nativeWrapper;

@@ -26,7 +26,6 @@ import javax.swing.JPanel;
 
 import org.columba.core.config.ViewItem;
 import org.columba.core.gui.frame.ContentPane;
-import org.columba.core.gui.frame.DefaultContainer;
 import org.columba.mail.command.FolderCommandReference;
 import org.columba.mail.folder.MessageFolder;
 import org.columba.mail.gui.attachment.selection.AttachmentSelectionHandler;

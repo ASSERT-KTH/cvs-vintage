@@ -15,9 +15,9 @@
 //All Rights Reserved.
 package org.columba.core.util;
 
-import org.columba.core.command.TaskManager;
-
 import javax.swing.SwingUtilities;
+
+import org.columba.core.command.TaskManager;
 
 
 /**

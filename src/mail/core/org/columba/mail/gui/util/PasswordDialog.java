@@ -39,6 +39,7 @@ import javax.swing.JPanel;
 import javax.swing.JPasswordField;
 import javax.swing.KeyStroke;
 
+import org.columba.core.gui.frame.FrameModel;
 import org.columba.core.gui.util.ButtonWithMnemonic;
 import org.columba.core.gui.util.ImageLoader;
 import org.columba.core.main.MainInterface;
@@ -65,7 +66,7 @@ public class PasswordDialog extends JDialog implements ActionListener {
 	private JButton helpButton;
 
 	public PasswordDialog() {
-		super(MainInterface.frameModel.getActiveFrame(), true);
+		super(FrameModel.getInstance().getActiveFrame(), true);
 
 	}
 

@@ -19,11 +19,11 @@ import java.awt.event.ActionEvent;
 import java.util.logging.Logger;
 
 import org.columba.core.action.AbstractColumbaAction;
+import org.columba.core.command.CommandProcessor;
 import org.columba.core.gui.frame.FrameMediator;
 import org.columba.core.gui.selection.SelectionChangedEvent;
 import org.columba.core.gui.selection.SelectionListener;
 import org.columba.core.gui.util.ImageLoader;
-import org.columba.core.main.MainInterface;
 import org.columba.mail.command.FolderCommandReference;
 import org.columba.mail.folder.command.SaveMessageSourceAsCommand;
 import org.columba.mail.gui.frame.MailFrameMediator;
@@ -72,7 +72,7 @@ public class SaveMessageSourceAsAction extends AbstractColumbaAction
 
         SaveMessageSourceAsCommand c = new SaveMessageSourceAsCommand(r);
 
-        MainInterface.processor.addOp(c);
+        CommandProcessor.getInstance().addOp(c);
     }
 
     /**

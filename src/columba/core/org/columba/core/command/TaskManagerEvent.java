@@ -16,8 +16,6 @@
 
 package org.columba.core.command;
 
-import org.columba.core.command.Worker;
-
 import java.util.EventObject;
 
 /**

@@ -17,9 +17,9 @@
 //All Rights Reserved.
 package org.columba.core.main;
 
-import org.columba.core.util.GlobalResourceLoader;
-
 import jargs.gnu.CmdLineParser;
+
+import org.columba.core.util.GlobalResourceLoader;
 
 /**
  * Parsing the commandline arguments and setting states, that can be used from

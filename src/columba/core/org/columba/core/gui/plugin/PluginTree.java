@@ -17,7 +17,7 @@ import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.TreeNode;
 import javax.swing.tree.TreePath;
 
-import org.columba.core.main.MainInterface;
+import org.columba.core.plugin.PluginManager;
 import org.columba.core.xml.XmlElement;
 import org.frappucino.treetable.Tree;
 import org.frappucino.treetable.TreeTable;
@@ -134,14 +134,14 @@ public class PluginTree extends TreeTable {
 
         initCategories(root);
 
-        List list = MainInterface.pluginManager.getIds();
+        List list = PluginManager.getInstance().getIds();
         ListIterator it = list.listIterator();
 
         while (it.hasNext()) {
             // plugin id
             String id = (String) it.next();
 
-            XmlElement pluginElement = MainInterface.pluginManager
+            XmlElement pluginElement = PluginManager.getInstance()
                     .getPluginElement(id);
 
             addPlugin(pluginElement);

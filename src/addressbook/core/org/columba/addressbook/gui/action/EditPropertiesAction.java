@@ -36,6 +36,7 @@ import org.columba.addressbook.gui.tree.TreeController;
 import org.columba.addressbook.model.Contact;
 import org.columba.addressbook.model.Group;
 import org.columba.addressbook.util.AddressbookResourceLoader;
+import org.columba.core.gui.focus.FocusManager;
 import org.columba.core.gui.focus.FocusOwner;
 import org.columba.core.gui.frame.FrameMediator;
 import org.columba.core.gui.util.ErrorDialog;
@@ -78,7 +79,7 @@ public class EditPropertiesAction extends DefaultTableAction implements
 	public void actionPerformed(ActionEvent evt) {
 		AddressbookFrameMediator mediator = (AddressbookFrameMediator) frameMediator;
 
-		FocusOwner focusOwner = MainInterface.focusManager.getCurrentOwner();
+		FocusOwner focusOwner = FocusManager.getInstance().getCurrentOwner();
 
 		TableController table = ((AddressbookFrameMediator) frameMediator)
 				.getTable();
@@ -165,7 +166,7 @@ public class EditPropertiesAction extends DefaultTableAction implements
 			return;
 		}
 
-		FocusOwner focusOwner = MainInterface.focusManager.getCurrentOwner();
+		FocusOwner focusOwner = FocusManager.getInstance().getCurrentOwner();
 
 		TableController table = ((AddressbookFrameMediator) frameMediator)
 				.getTable();
@@ -190,7 +191,7 @@ public class EditPropertiesAction extends DefaultTableAction implements
 	public void valueChanged(TreeSelectionEvent e) {
 		TreePath path = e.getNewLeadSelectionPath();
 
-		FocusOwner focusOwner = MainInterface.focusManager.getCurrentOwner();
+		FocusOwner focusOwner = FocusManager.getInstance().getCurrentOwner();
 
 		TreeController tree = ((AddressbookFrameMediator) frameMediator)
 				.getTree();

@@ -29,8 +29,8 @@ import javax.swing.JFileChooser;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
+import org.columba.core.gui.focus.FocusManager;
 import org.columba.core.gui.focus.FocusOwner;
-import org.columba.core.main.MainInterface;
 import org.columba.core.nativ.mimetype.LookupMimetypeHandler;
 import org.columba.mail.util.MailResourceLoader;
 import org.columba.ristretto.io.FileSource;
@@ -74,7 +74,7 @@ public class AttachmentController implements KeyListener, FocusOwner, ListSelect
         view.addPopupListener(new PopupListener());
 
         // register Component as FocusOwner
-        MainInterface.focusManager.registerComponent(this);
+        FocusManager.getInstance().registerComponent(this);
 
         fileChooser = new JFileChooser();
 
@@ -318,7 +318,7 @@ public class AttachmentController implements KeyListener, FocusOwner, ListSelect
 
     /** {@inheritDoc} */
     public void valueChanged(ListSelectionEvent arg0) {
-        MainInterface.focusManager.updateActions();
+    	FocusManager.getInstance().updateActions();
     }
 
     /** ******************** MouseListener **************************** */

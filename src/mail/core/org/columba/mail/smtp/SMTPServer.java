@@ -31,8 +31,8 @@ import javax.swing.JOptionPane;
 import org.columba.core.command.CommandCancelledException;
 import org.columba.core.command.ProgressObservedInputStream;
 import org.columba.core.command.WorkerStatusController;
+import org.columba.core.gui.frame.FrameModel;
 import org.columba.core.gui.util.MultiLineLabel;
-import org.columba.core.main.MainInterface;
 import org.columba.mail.composer.SendableMessage;
 import org.columba.mail.config.AccountItem;
 import org.columba.mail.config.Identity;
@@ -275,7 +275,7 @@ public class SMTPServer {
 						//  --> fall back to default login process
 						int result = JOptionPane
 								.showConfirmDialog(
-										MainInterface.frameModel
+										FrameModel.getInstance()
 												.getActiveFrame(),
 										new MultiLineLabel(
 												e.getMessage()

@@ -17,16 +17,15 @@
 //All Rights Reserved.
 package org.columba.core.gui.util;
 
-import org.columba.core.main.MainInterface;
-import org.columba.core.xml.XmlElement;
-
 import java.awt.Font;
-
 import java.util.Observable;
 import java.util.Observer;
 
 import javax.swing.UIManager;
 import javax.swing.plaf.FontUIResource;
+
+import org.columba.core.main.MainInterface;
+import org.columba.core.xml.XmlElement;
 
 
 /**

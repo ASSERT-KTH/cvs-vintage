@@ -22,8 +22,8 @@ import javax.swing.tree.TreePath;
 
 import org.columba.addressbook.folder.AbstractFolder;
 import org.columba.addressbook.gui.frame.AddressbookFrameController;
+import org.columba.core.gui.focus.FocusManager;
 import org.columba.core.gui.focus.FocusOwner;
-import org.columba.core.main.MainInterface;
 
 /**
  * 
@@ -46,7 +46,7 @@ public class TreeController implements FocusOwner {
 		view = new TreeView(frameController);
 		
 //		 register as focus owner
-		MainInterface.focusManager.registerComponent(this);
+		FocusManager.getInstance().registerComponent(this);
 	}
 
 	/**

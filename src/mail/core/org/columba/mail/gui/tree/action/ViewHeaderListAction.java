@@ -20,6 +20,7 @@ package org.columba.mail.gui.tree.action;
 import java.awt.event.ActionEvent;
 
 import org.columba.core.action.AbstractColumbaAction;
+import org.columba.core.command.CommandProcessor;
 import org.columba.core.gui.frame.FrameMediator;
 import org.columba.core.main.MainInterface;
 import org.columba.mail.command.FolderCommandReference;
@@ -29,7 +30,6 @@ import org.columba.mail.gui.frame.TableViewOwner;
 import org.columba.mail.gui.message.MessageController;
 import org.columba.mail.gui.table.TableController;
 import org.columba.mail.gui.table.command.ViewHeaderListCommand;
-import org.columba.mail.gui.table.selection.TableSelectionHandler;
 
 public class ViewHeaderListAction extends AbstractColumbaAction {
 	/**
@@ -52,7 +52,7 @@ public class ViewHeaderListAction extends AbstractColumbaAction {
 		
 		if ((references.getFolder() instanceof MessageFolder)) {
 			// view message list
-			MainInterface.processor.addOp(new ViewHeaderListCommand(
+			CommandProcessor.getInstance().addOp(new ViewHeaderListCommand(
 					getFrameMediator(), references));
 		} else {
 			// clear message list

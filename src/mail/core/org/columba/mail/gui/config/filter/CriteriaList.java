@@ -40,9 +40,9 @@ import javax.swing.JScrollPane;
 
 import org.columba.core.gui.util.ImageLoader;
 import org.columba.core.gui.util.NotifyDialog;
-import org.columba.core.main.MainInterface;
 import org.columba.core.plugin.AbstractPluginHandler;
 import org.columba.core.plugin.PluginHandlerNotFoundException;
+import org.columba.core.plugin.PluginManager;
 import org.columba.mail.filter.Filter;
 import org.columba.mail.filter.FilterCriteria;
 import org.columba.mail.filter.FilterRule;
@@ -59,7 +59,7 @@ public class CriteriaList extends JPanel implements ActionListener, ItemListener
 		super();
 
 		try {
-			pluginHandler = MainInterface.pluginManager
+			pluginHandler = PluginManager.getInstance()
 					.getHandler("org.columba.mail.filter");
 		} catch (PluginHandlerNotFoundException ex) {
 			NotifyDialog d = new NotifyDialog();

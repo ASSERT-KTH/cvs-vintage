@@ -15,9 +15,9 @@
 //All Rights Reserved.
 package org.columba.core.io;
 
-import org.columba.core.main.MainInterface;
-
 import java.io.File;
+
+import org.columba.core.main.MainInterface;
 
 /**
  * Factory to create temporary Files on the file storage.

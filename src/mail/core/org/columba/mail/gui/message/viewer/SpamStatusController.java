@@ -22,7 +22,7 @@ import java.awt.event.ActionListener;
 
 import javax.swing.JComponent;
 
-import org.columba.core.main.MainInterface;
+import org.columba.core.command.CommandProcessor;
 import org.columba.mail.command.FolderCommandReference;
 import org.columba.mail.folder.MessageFolder;
 import org.columba.mail.folder.command.MarkMessageCommand;
@@ -89,12 +89,12 @@ public class SpamStatusController implements Viewer, ActionListener {
 		FolderCommandReference r = mediator.getTableSelection();
 
 		// learn message as non spam
-		MainInterface.processor.addOp(new LearnMessageAsHamCommand(r));
+		CommandProcessor.getInstance().addOp(new LearnMessageAsHamCommand(r));
 
 		// mark as not spam
 		r.setMarkVariant(MarkMessageCommand.MARK_AS_NOTSPAM);
 		MarkMessageCommand c = new MarkMessageCommand(r);
-		MainInterface.processor.addOp(c);
+		CommandProcessor.getInstance().addOp(c);
 	}
 
 	/**

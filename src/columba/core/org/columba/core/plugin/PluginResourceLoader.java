@@ -16,14 +16,10 @@
 
 package org.columba.core.plugin;
 
-import org.columba.core.main.MainInterface;
-
 import java.io.File;
-
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLClassLoader;
-
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
@@ -45,7 +41,7 @@ public class PluginResourceLoader {
  */
     public PluginResourceLoader(String pluginId) {
         this.pluginId = pluginId;
-        pluginFolder = MainInterface.pluginManager.getFolder(pluginId);
+        pluginFolder = PluginManager.getInstance().getFolder(pluginId);
         map = new HashMap();
     }
 

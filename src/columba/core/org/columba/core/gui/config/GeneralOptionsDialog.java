@@ -42,6 +42,7 @@ import net.javaprog.ui.wizard.plaf.basic.SingleSideEtchedBorder;
 
 import org.columba.core.config.GuiItem;
 import org.columba.core.gui.frame.Container;
+import org.columba.core.gui.frame.FrameModel;
 import org.columba.core.gui.plugin.ConfigurationDialog;
 import org.columba.core.gui.themes.ThemeSwitcher;
 import org.columba.core.gui.util.ButtonWithMnemonic;
@@ -53,6 +54,7 @@ import org.columba.core.help.HelpManager;
 import org.columba.core.main.MainInterface;
 import org.columba.core.plugin.PluginHandlerNotFoundException;
 import org.columba.core.plugin.PluginLoadingFailedException;
+import org.columba.core.plugin.PluginManager;
 import org.columba.core.pluginhandler.ConfigPluginHandler;
 import org.columba.core.pluginhandler.ThemePluginHandler;
 import org.columba.core.util.GlobalResourceLoader;
@@ -116,7 +118,7 @@ public class GeneralOptionsDialog extends JDialog implements ActionListener {
 
         try {
             // get theme plugin-handler
-            handler = (ThemePluginHandler) MainInterface.pluginManager.getHandler(
+            handler = (ThemePluginHandler) PluginManager.getInstance().getHandler(
                     "org.columba.core.theme");
         } catch (PluginHandlerNotFoundException ex) {
             ex.printStackTrace();
@@ -124,7 +126,7 @@ public class GeneralOptionsDialog extends JDialog implements ActionListener {
 
         try {
             // get config plugin-handler
-            configHandler = (ConfigPluginHandler) MainInterface.pluginManager.getHandler(
+            configHandler = (ConfigPluginHandler) PluginManager.getInstance().getHandler(
                     "org.columba.core.config");
         } catch (PluginHandlerNotFoundException ex) {
             ex.printStackTrace();
@@ -466,7 +468,7 @@ public class GeneralOptionsDialog extends JDialog implements ActionListener {
             ThemeSwitcher.setTheme();
 
             // notify frame to update
-            Container[] m = MainInterface.frameModel.getOpenFrames();
+            Container[] m = FrameModel.getInstance().getOpenFrames();
             for ( int i=0; i<m.length; i++) {
                 JFrame frame = m[i].getFrame();
                 ThemeSwitcher.updateFrame(frame);

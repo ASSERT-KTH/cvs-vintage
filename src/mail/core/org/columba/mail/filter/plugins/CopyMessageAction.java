@@ -23,7 +23,6 @@ import org.columba.mail.filter.FilterAction;
 import org.columba.mail.folder.MessageFolder;
 import org.columba.mail.folder.command.CopyMessageCommand;
 import org.columba.mail.gui.tree.TreeModel;
-import org.columba.mail.main.MailInterface;
 
 /**
  * @author freddy

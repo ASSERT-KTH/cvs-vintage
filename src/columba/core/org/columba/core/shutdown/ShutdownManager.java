@@ -17,11 +17,7 @@
 //All Rights Reserved.
 package org.columba.core.shutdown;
 
-import org.columba.core.main.MainInterface;
-import org.columba.core.util.GlobalResourceLoader;
-
 import java.awt.Component;
-
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
@@ -29,6 +25,13 @@ import java.util.logging.Logger;
 
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
+
+import org.columba.core.backgroundtask.BackgroundTaskManager;
+import org.columba.core.command.Command;
+import org.columba.core.command.CommandProcessor;
+import org.columba.core.main.MainInterface;
+import org.columba.core.session.ColumbaServer;
+import org.columba.core.util.GlobalResourceLoader;
 
 /**
  * Manages all tasks which are responsible for doing clean-up work when shutting
@@ -103,10 +106,10 @@ public class ShutdownManager {
             public void run() {
                 // stop background-manager so it doesn't interfere with
                 // shutdown manager
-                MainInterface.backgroundTaskManager.stop();
+            	BackgroundTaskManager.getInstance().stop();
 
                 while (!isShutdownHook()
-                        && (MainInterface.processor.getTaskManager().count() > 0)) {
+                        && (CommandProcessor.getInstance().getTaskManager().count() > 0)) {
                     // ask user to kill pending running commands or wait
                     Object[] options = {
                             GlobalResourceLoader.getString(RESOURCE_PATH,
@@ -159,7 +162,8 @@ public class ShutdownManager {
                 //we don't need to check for running commands here because
                 // there aren't
                 //any, shutdown plugins only use this thread
-                dialog.close();
+                if ( dialog != null)
+                	dialog.close();
             }
         }, "ShutdownManager");
         setShutdownHook(true);

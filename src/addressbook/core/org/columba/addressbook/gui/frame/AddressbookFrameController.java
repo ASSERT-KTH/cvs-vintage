@@ -36,13 +36,12 @@ import org.columba.addressbook.gui.tree.TreeController;
 import org.columba.addressbook.main.AddressbookInterface;
 import org.columba.addressbook.util.AddressbookResourceLoader;
 import org.columba.core.config.ViewItem;
-import org.columba.core.gui.frame.Container;
 import org.columba.core.gui.frame.ContainerInfoPanel;
 import org.columba.core.gui.frame.ContentPane;
 import org.columba.core.gui.frame.DefaultFrameController;
 import org.columba.core.gui.util.UIFSplitPane;
-import org.columba.core.main.MainInterface;
 import org.columba.core.plugin.PluginHandlerNotFoundException;
+import org.columba.core.plugin.PluginManager;
 import org.columba.core.pluginhandler.MenuPluginHandler;
 
 /**
@@ -128,7 +127,7 @@ public class AddressbookFrameController extends DefaultFrameController
 		getContainer().extendMenuFromFile(this,
 				"org/columba/addressbook/action/menu.xml");
 		try {
-			((MenuPluginHandler) MainInterface.pluginManager
+			((MenuPluginHandler) PluginManager.getInstance()
 					.getHandler("org.columba.addressbook.menu"))
 					.insertPlugins(getContainer().getMenu());
 		} catch (PluginHandlerNotFoundException ex) {

@@ -45,6 +45,7 @@ import javax.swing.event.ListSelectionListener;
 
 import net.javaprog.ui.wizard.plaf.basic.SingleSideEtchedBorder;
 
+import org.columba.core.command.CommandProcessor;
 import org.columba.core.command.TaskManager;
 import org.columba.core.command.TaskManagerEvent;
 import org.columba.core.command.TaskManagerListener;
@@ -53,7 +54,6 @@ import org.columba.core.gui.statusbar.event.WorkerStatusChangeListener;
 import org.columba.core.gui.statusbar.event.WorkerStatusChangedEvent;
 import org.columba.core.gui.util.ButtonWithMnemonic;
 import org.columba.core.help.HelpManager;
-import org.columba.core.main.MainInterface;
 import org.columba.core.util.GlobalResourceLoader;
 import org.columba.mail.gui.config.filter.FilterTransferHandler;
 
@@ -91,7 +91,7 @@ public class TaskManagerDialog extends JDialog
 
 	public static TaskManagerDialog createInstance() {
 		if (instance == null) {
-			instance = new TaskManagerDialog(MainInterface.processor
+			instance = new TaskManagerDialog(CommandProcessor.getInstance()
 					.getTaskManager());
 		}
 

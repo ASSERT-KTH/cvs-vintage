@@ -16,12 +16,9 @@
 package org.columba.core.print;
 
 import java.awt.Graphics2D;
-
 import java.lang.reflect.Array;
 import java.lang.reflect.Method;
-
 import java.text.DateFormat;
-
 import java.util.Date;
 
 

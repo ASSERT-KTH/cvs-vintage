@@ -26,6 +26,7 @@ import javax.swing.event.CaretListener;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 
+import org.columba.core.gui.focus.FocusManager;
 import org.columba.core.main.MainInterface;
 import org.columba.core.xml.XmlElement;
 import org.columba.mail.gui.composer.AbstractEditorController;
@@ -79,7 +80,7 @@ public class TextEditorController extends AbstractEditorController
 
         view = new TextEditorView(this, document);
 
-        MainInterface.focusManager.registerComponent(this);
+        FocusManager.getInstance().registerComponent(this);
 
         view.addCaretListener(this);
 
@@ -291,7 +292,7 @@ public class TextEditorController extends AbstractEditorController
      * @see javax.swing.event.CaretListener#caretUpdate(javax.swing.event.CaretEvent)
      */
     public void caretUpdate(CaretEvent arg0) {
-        MainInterface.focusManager.updateActions();
+    	FocusManager.getInstance().updateActions();
     }
 
     /********************** Methods necessary to hide view from clients *******/

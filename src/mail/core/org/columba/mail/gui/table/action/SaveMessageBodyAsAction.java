@@ -20,11 +20,11 @@ import java.nio.charset.Charset;
 
 import org.columba.core.action.AbstractColumbaAction;
 import org.columba.core.charset.CharsetOwnerInterface;
+import org.columba.core.command.CommandProcessor;
 import org.columba.core.gui.frame.FrameMediator;
 import org.columba.core.gui.selection.SelectionChangedEvent;
 import org.columba.core.gui.selection.SelectionListener;
 import org.columba.core.gui.util.ImageLoader;
-import org.columba.core.main.MainInterface;
 import org.columba.mail.command.FolderCommandReference;
 import org.columba.mail.folder.command.SaveMessageBodyAsCommand;
 import org.columba.mail.gui.frame.MailFrameMediator;
@@ -68,7 +68,7 @@ public class SaveMessageBodyAsAction extends AbstractColumbaAction
         // get active charset - necessary to decode msg for saving
         Charset charset = ((CharsetOwnerInterface) getFrameMediator()).getCharset();
         SaveMessageBodyAsCommand c = new SaveMessageBodyAsCommand(r, charset);
-        MainInterface.processor.addOp(c);
+        CommandProcessor.getInstance().addOp(c);
     }
 
     /**

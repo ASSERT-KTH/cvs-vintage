@@ -15,13 +15,13 @@
 //All Rights Reserved.
 package org.columba.core.pluginhandler;
 
+import java.io.File;
+
 import org.columba.core.externaltools.AbstractExternalToolsPlugin;
 import org.columba.core.gui.externaltools.ExternalToolsWizardLauncher;
 import org.columba.core.main.MainInterface;
 import org.columba.core.plugin.AbstractPluginHandler;
 import org.columba.core.xml.XmlElement;
-
-import java.io.File;
 
 
 /**

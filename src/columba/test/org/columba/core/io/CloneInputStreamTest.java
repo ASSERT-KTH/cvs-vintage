@@ -15,12 +15,11 @@
 //All Rights Reserved.
 package org.columba.core.io;
 
-import junit.framework.TestCase;
-
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
-
 import java.util.Random;
+
+import junit.framework.TestCase;
 
 
 public class CloneInputStreamTest extends TestCase {

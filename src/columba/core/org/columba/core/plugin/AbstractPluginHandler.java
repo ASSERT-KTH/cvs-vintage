@@ -326,7 +326,7 @@ public abstract class AbstractPluginHandler implements PluginHandler {
 			XmlElement action = parentNode.getElement(i);
 			String s = action.getAttribute("name");
 
-			XmlElement element = MainInterface.pluginManager
+			XmlElement element = PluginManager.getInstance()
 					.getPluginElement(s);
 
 			if (element == null) {

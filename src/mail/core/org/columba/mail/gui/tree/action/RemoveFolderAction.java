@@ -20,6 +20,7 @@ import java.awt.event.ActionEvent;
 import javax.swing.JOptionPane;
 
 import org.columba.core.action.AbstractColumbaAction;
+import org.columba.core.command.CommandProcessor;
 import org.columba.core.gui.frame.FrameMediator;
 import org.columba.core.gui.selection.SelectionChangedEvent;
 import org.columba.core.gui.selection.SelectionListener;
@@ -88,7 +89,7 @@ public class RemoveFolderAction extends AbstractColumbaAction implements
 			}
 		}
 
-		MainInterface.processor.addOp(new RemoveFolderCommand(r));
+		CommandProcessor.getInstance().addOp(new RemoveFolderCommand(r));
 	}
 
 	/*

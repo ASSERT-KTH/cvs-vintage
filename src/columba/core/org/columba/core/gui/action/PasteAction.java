@@ -15,16 +15,16 @@
 //All Rights Reserved.
 package org.columba.core.gui.action;
 
-import org.columba.core.action.AbstractColumbaAction;
-import org.columba.core.gui.frame.FrameMediator;
-import org.columba.core.gui.util.ImageLoader;
-import org.columba.core.main.MainInterface;
-import org.columba.core.util.GlobalResourceLoader;
-
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
 
 import javax.swing.KeyStroke;
+
+import org.columba.core.action.AbstractColumbaAction;
+import org.columba.core.gui.focus.FocusManager;
+import org.columba.core.gui.frame.FrameMediator;
+import org.columba.core.gui.util.ImageLoader;
+import org.columba.core.util.GlobalResourceLoader;
 
 
 public class PasteAction extends AbstractColumbaAction {
@@ -51,14 +51,14 @@ public class PasteAction extends AbstractColumbaAction {
         setShowToolBarText(false);
 
         setEnabled(false);
-        MainInterface.focusManager.setPasteAction(this);
+        FocusManager.getInstance().setPasteAction(this);
     }
 
     /* (non-Javadoc)
      * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
      */
     public void actionPerformed(ActionEvent evt) {
-        MainInterface.focusManager.paste();
+    	FocusManager.getInstance().paste();
     }
 
     /* (non-Javadoc)

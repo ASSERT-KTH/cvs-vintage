@@ -25,6 +25,7 @@ import javax.swing.JTable;
 import javax.swing.JTree;
 import javax.swing.TransferHandler;
 
+import org.columba.core.command.CommandProcessor;
 import org.columba.core.main.MainInterface;
 import org.columba.mail.command.FolderCommandReference;
 import org.columba.mail.folder.MessageFolder;
@@ -109,7 +110,7 @@ public class MessageTransferHandler extends TransferHandler {
 
 		CopyMessageCommand command = new CopyMessageCommand(reference);
 
-		MainInterface.processor.addOp(command);
+		CommandProcessor.getInstance().addOp(command);
 
 		return true;
 	}

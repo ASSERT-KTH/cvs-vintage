@@ -18,10 +18,10 @@ package org.columba.mail.gui.table.action;
 import java.awt.event.ActionEvent;
 
 import org.columba.core.action.AbstractColumbaAction;
+import org.columba.core.command.CommandProcessor;
 import org.columba.core.gui.frame.FrameMediator;
 import org.columba.core.gui.selection.SelectionChangedEvent;
 import org.columba.core.gui.selection.SelectionListener;
-import org.columba.core.main.MainInterface;
 import org.columba.mail.command.FolderCommandReference;
 import org.columba.mail.gui.frame.MailFrameMediator;
 import org.columba.mail.gui.frame.TableViewOwner;
@@ -112,7 +112,7 @@ public class NextUnreadMessageAction extends AbstractColumbaAction implements
 		//		 necessary for the message-frame only
 		r.setUids(new Object[] { nextNode.getUid() });
 		((MailFrameMediator) getFrameMediator()).setTableSelection(r);
-		MainInterface.processor.addOp(new ViewMessageCommand(
+		CommandProcessor.getInstance().addOp(new ViewMessageCommand(
 				getFrameMediator(), r));
 		//		 select message in message list
 		table.setSelected(new Object[] { nextNode.getUid() });

@@ -21,8 +21,8 @@ import java.io.File;
 import javax.swing.JOptionPane;
 
 import org.columba.core.command.WorkerStatusController;
+import org.columba.core.gui.frame.FrameModel;
 import org.columba.core.gui.util.ImageLoader;
-import org.columba.core.main.MainInterface;
 import org.columba.mail.folder.MessageFolder;
 import org.columba.ristretto.io.CharSequenceSource;
 import org.columba.ristretto.io.SourceInputStream;
@@ -141,7 +141,7 @@ public abstract class AbstractMailboxImporter {
             } catch (Exception ex) {
                 //TODO (@author fdietz): i18n
                 int result = JOptionPane.showConfirmDialog(
-                    MainInterface.frameModel.getActiveFrame(),
+                		FrameModel.getInstance().getActiveFrame(),
                     "An error occured while importing a message. Try again?",
                     "Retry message import?", 
                     JOptionPane.YES_NO_CANCEL_OPTION, JOptionPane.WARNING_MESSAGE);

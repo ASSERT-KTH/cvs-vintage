@@ -17,19 +17,6 @@
 //All Rights Reserved.
 package org.columba.core.gui.externaltools;
 
-import net.javaprog.ui.wizard.plaf.basic.SingleSideEtchedBorder;
-
-import org.columba.core.externaltools.AbstractExternalToolsPlugin;
-import org.columba.core.gui.util.ButtonWithMnemonic;
-import org.columba.core.gui.util.DoubleClickListener;
-import org.columba.core.gui.util.InfoViewerDialog;
-import org.columba.core.help.HelpManager;
-import org.columba.core.main.MainInterface;
-import org.columba.core.plugin.PluginHandlerNotFoundException;
-import org.columba.core.pluginhandler.ExternalToolsPluginHandler;
-
-import org.columba.mail.util.MailResourceLoader;
-
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
@@ -59,6 +46,18 @@ import javax.swing.SwingConstants;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
+import net.javaprog.ui.wizard.plaf.basic.SingleSideEtchedBorder;
+
+import org.columba.core.externaltools.AbstractExternalToolsPlugin;
+import org.columba.core.gui.util.ButtonWithMnemonic;
+import org.columba.core.gui.util.DoubleClickListener;
+import org.columba.core.gui.util.InfoViewerDialog;
+import org.columba.core.help.HelpManager;
+import org.columba.core.plugin.PluginHandlerNotFoundException;
+import org.columba.core.plugin.PluginManager;
+import org.columba.core.pluginhandler.ExternalToolsPluginHandler;
+import org.columba.mail.util.MailResourceLoader;
+
 
 /**
  * Shows a list of external tools used in Columba.
@@ -87,7 +86,7 @@ public class ExternalToolsDialog extends JDialog implements ActionListener,
         setTitle("External Tools");
 
         try {
-            handler = (ExternalToolsPluginHandler) MainInterface.pluginManager.getHandler(
+            handler = (ExternalToolsPluginHandler) PluginManager.getInstance().getHandler(
                     "org.columba.core.externaltools");
         } catch (PluginHandlerNotFoundException e) {
             e.printStackTrace();

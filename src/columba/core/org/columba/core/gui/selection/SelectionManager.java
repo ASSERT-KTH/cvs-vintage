@@ -15,9 +15,9 @@
 //All Rights Reserved.
 package org.columba.core.gui.selection;
 
-import org.columba.core.command.DefaultCommandReference;
-
 import java.util.Hashtable;
+
+import org.columba.core.command.DefaultCommandReference;
 
 /**
  * Manages selection handling of a complete frame which can have many different

@@ -15,12 +15,12 @@
 //All Rights Reserved.
 package org.columba.core.gui.menu;
 
-import org.columba.core.gui.frame.FrameMediator;
-import org.columba.core.xml.XmlElement;
-
 import java.util.ListIterator;
 
 import javax.swing.JMenuBar;
+
+import org.columba.core.gui.frame.FrameMediator;
+import org.columba.core.xml.XmlElement;
 
 /**
  * @author frd

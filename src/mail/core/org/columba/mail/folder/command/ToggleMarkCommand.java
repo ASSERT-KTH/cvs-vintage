@@ -21,11 +21,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.columba.core.command.Command;
+import org.columba.core.command.CommandProcessor;
 import org.columba.core.command.DefaultCommandReference;
 import org.columba.core.command.StatusObservableImpl;
 import org.columba.core.command.Worker;
 import org.columba.core.command.WorkerStatusController;
-import org.columba.core.main.MainInterface;
 import org.columba.mail.command.FolderCommand;
 import org.columba.mail.command.FolderCommandReference;
 import org.columba.mail.config.AccountItem;
@@ -33,7 +33,6 @@ import org.columba.mail.folder.AbstractFolder;
 import org.columba.mail.folder.MessageFolder;
 import org.columba.mail.folder.RootFolder;
 import org.columba.mail.gui.tree.TreeModel;
-import org.columba.mail.main.MailInterface;
 import org.columba.mail.spam.command.CommandHelper;
 import org.columba.mail.spam.command.LearnMessageAsHamCommand;
 import org.columba.mail.spam.command.LearnMessageAsSpamCommand;
@@ -242,7 +241,7 @@ public class ToggleMarkCommand extends FolderCommand {
 				// create reference
 				FolderCommandReference ref2 = new FolderCommandReference(
 						srcFolder, destFolder, new Object[] { uids[j] });
-				MainInterface.processor.addOp(new MoveMessageCommand(ref2));
+				CommandProcessor.getInstance().addOp(new MoveMessageCommand(ref2));
 
 			} else {
 				// move message to trash
@@ -253,7 +252,7 @@ public class ToggleMarkCommand extends FolderCommand {
 				FolderCommandReference ref2 = new FolderCommandReference(
 						srcFolder, trash, new Object[] { uids[j] });
 
-				MainInterface.processor.addOp(new MoveMessageCommand(ref2));
+				CommandProcessor.getInstance().addOp(new MoveMessageCommand(ref2));
 
 			}
 

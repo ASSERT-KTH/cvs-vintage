@@ -13,9 +13,9 @@
 //All Rights Reserved.
 package org.columba.core.plugin;
 
-import org.columba.core.xml.XmlElement;
-
 import java.util.ListIterator;
+
+import org.columba.core.xml.XmlElement;
 
 
 /**

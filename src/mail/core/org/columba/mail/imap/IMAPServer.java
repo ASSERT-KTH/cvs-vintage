@@ -35,8 +35,10 @@ import javax.swing.JOptionPane;
 
 import org.columba.core.command.Command;
 import org.columba.core.command.CommandCancelledException;
+import org.columba.core.command.CommandProcessor;
 import org.columba.core.command.NullWorkerStatusController;
 import org.columba.core.command.StatusObservable;
+import org.columba.core.gui.frame.FrameModel;
 import org.columba.core.gui.util.MultiLineLabel;
 import org.columba.core.main.MainInterface;
 import org.columba.core.util.ListTools;
@@ -530,7 +532,7 @@ public class IMAPServer implements IMAPListener {
 						//  --> fall back to default login process
 						int result = JOptionPane
 								.showConfirmDialog(
-										MainInterface.frameModel
+										FrameModel.getInstance()
 												.getActiveFrame(),
 										new MultiLineLabel(
 												e.getMessage()
@@ -1771,7 +1773,7 @@ public class IMAPServer implements IMAPListener {
 		
 			// Trigger synchronization of the IMAPFolder
 			Command updateFolderCommand = new CheckForNewMessagesCommand(null, new FolderCommandReference(imapRoot));
-			MainInterface.processor.addOp(updateFolderCommand);
+			CommandProcessor.getInstance().addOp(updateFolderCommand);
 		}
 	}
 	/**
@@ -1782,7 +1784,7 @@ public class IMAPServer implements IMAPListener {
 
 		// Trigger synchronization of the IMAPFolder
 		Command updateFlagCommand = new UpdateFlagCommand(new FolderCommandReference(selectedFolder), arg1);
-		MainInterface.processor.addOp(updateFlagCommand);
+		CommandProcessor.getInstance().addOp(updateFlagCommand);
 	}
 	/**
 	 * @see org.columba.ristretto.imap.IMAPListener#parseError(java.lang.String)

@@ -15,9 +15,9 @@
 //All Rights Reserved.
 package org.columba.core.config;
 
-import org.columba.core.xml.XmlElement;
-
 import java.awt.Color;
+
+import org.columba.core.xml.XmlElement;
 
 
 public class ThemeItem extends DefaultItem {

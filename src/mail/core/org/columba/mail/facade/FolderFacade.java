@@ -21,7 +21,6 @@ import java.util.Enumeration;
 
 import org.columba.mail.folder.AbstractFolder;
 import org.columba.mail.gui.tree.TreeModel;
-import org.columba.mail.main.MailInterface;
 
 /**
  * Provides access to mailbox folders.

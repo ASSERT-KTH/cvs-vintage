@@ -17,10 +17,9 @@
 //All Rights Reserved.
 package org.columba.core.pluginhandler;
 
-import org.columba.core.plugin.AbstractPluginHandler;
-import org.columba.core.xml.XmlElement;
-
 import javax.swing.UIManager;
+
+import org.columba.core.plugin.AbstractPluginHandler;
 
 
 /**

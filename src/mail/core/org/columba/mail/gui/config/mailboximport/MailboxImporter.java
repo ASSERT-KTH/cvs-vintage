@@ -23,6 +23,7 @@ import net.javaprog.ui.wizard.DataModel;
 import net.javaprog.ui.wizard.WizardModelEvent;
 import net.javaprog.ui.wizard.WizardModelListener;
 
+import org.columba.core.command.CommandProcessor;
 import org.columba.core.main.MainInterface;
 import org.columba.core.plugin.PluginLoadingFailedException;
 import org.columba.mail.command.ImportFolderCommandReference;
@@ -57,7 +58,7 @@ class MailboxImporter implements WizardModelListener {
 
 		ImportFolderCommandReference r = new ImportFolderCommandReference(
 				(AbstractFolder) args[0], (File[]) args[1], importer);
-		MainInterface.processor.addOp(new ImportMessageCommand(r));
+		CommandProcessor.getInstance().addOp(new ImportMessageCommand(r));
 	}
 
 	public void stepShown(WizardModelEvent e) {

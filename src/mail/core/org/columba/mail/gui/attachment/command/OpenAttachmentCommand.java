@@ -22,13 +22,13 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.columba.core.command.Command;
+import org.columba.core.command.CommandProcessor;
 import org.columba.core.command.DefaultCommandReference;
 import org.columba.core.command.Worker;
 import org.columba.core.command.WorkerStatusController;
 import org.columba.core.gui.frame.DefaultContainer;
 import org.columba.core.io.StreamUtils;
 import org.columba.core.io.TempFileStore;
-import org.columba.core.main.MainInterface;
 import org.columba.mail.command.FolderCommandReference;
 import org.columba.mail.folder.MessageFolder;
 import org.columba.mail.folder.temp.TempFolder;
@@ -36,7 +36,6 @@ import org.columba.mail.gui.message.command.ViewMessageCommand;
 import org.columba.mail.gui.messageframe.MessageFrameController;
 import org.columba.mail.gui.mimetype.MimeTypeViewer;
 import org.columba.mail.gui.tree.TreeModel;
-import org.columba.mail.main.MailInterface;
 import org.columba.ristretto.coder.Base64DecoderInputStream;
 import org.columba.ristretto.coder.QuotedPrintableDecoderInputStream;
 import org.columba.ristretto.message.MimeHeader;
@@ -90,7 +89,7 @@ public class OpenAttachmentCommand extends SaveAttachmentCommand {
 			c.setTreeSelection(r);
 			c.setTableSelection(r);
 
-			MainInterface.processor.addOp(new ViewMessageCommand(c, r));
+			CommandProcessor.getInstance().addOp(new ViewMessageCommand(c, r));
 
 			//inline = true;
 			//openInlineMessage(part, tempFile);

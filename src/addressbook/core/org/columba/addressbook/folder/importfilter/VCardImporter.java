@@ -21,10 +21,6 @@ import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.FileInputStream;
 
-import net.wimpi.pim.Pim;
-import net.wimpi.pim.contact.io.ContactUnmarshaller;
-import net.wimpi.pim.factory.ContactIOFactory;
-
 import org.columba.addressbook.folder.AbstractFolder;
 import org.columba.addressbook.model.Contact;
 import org.columba.addressbook.parser.VCardParser;

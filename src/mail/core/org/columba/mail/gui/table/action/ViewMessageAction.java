@@ -19,6 +19,7 @@ import java.awt.event.ActionEvent;
 import java.util.logging.Logger;
 
 import org.columba.core.action.AbstractColumbaAction;
+import org.columba.core.command.CommandProcessor;
 import org.columba.core.gui.frame.FrameMediator;
 import org.columba.core.main.MainInterface;
 import org.columba.mail.command.FolderCommandReference;
@@ -61,7 +62,7 @@ public class ViewMessageAction extends AbstractColumbaAction {
             oldUid = uids[0];
 
             // show selected message
-            MainInterface.processor.addOp(new ViewMessageCommand(
+            CommandProcessor.getInstance().addOp(new ViewMessageCommand(
                     getFrameMediator(), references));
         } else if ( uids.length == 0){
         	// no message selected

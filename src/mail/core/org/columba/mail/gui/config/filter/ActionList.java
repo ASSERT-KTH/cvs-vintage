@@ -43,6 +43,7 @@ import org.columba.core.gui.frame.FrameMediator;
 import org.columba.core.gui.util.ImageLoader;
 import org.columba.core.main.MainInterface;
 import org.columba.core.plugin.PluginHandlerNotFoundException;
+import org.columba.core.plugin.PluginManager;
 import org.columba.mail.filter.Filter;
 import org.columba.mail.filter.FilterAction;
 import org.columba.mail.filter.FilterActionList;
@@ -135,7 +136,7 @@ public class ActionList extends JPanel implements ActionListener, ItemListener {
         
         try {
             pluginHandler = (FilterActionPluginHandler)
-                MainInterface.pluginManager.getHandler(
+PluginManager.getInstance().getHandler(
                     "org.columba.mail.filteraction");
         } catch (PluginHandlerNotFoundException ex) {
             if (MainInterface.DEBUG) {

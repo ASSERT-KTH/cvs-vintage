@@ -16,19 +16,20 @@
 
 package org.columba.core.gui.menu;
 
-import org.columba.core.action.AbstractColumbaAction;
-import org.columba.core.action.AbstractSelectableAction;
-import org.columba.core.gui.frame.FrameMediator;
-import org.columba.core.main.MainInterface;
-import org.columba.core.pluginhandler.ActionPluginHandler;
-import org.columba.core.xml.XmlElement;
-
 import java.util.List;
 import java.util.ListIterator;
 import java.util.logging.Logger;
 
 import javax.swing.JCheckBoxMenuItem;
 import javax.swing.JPopupMenu;
+
+import org.columba.core.action.AbstractColumbaAction;
+import org.columba.core.action.AbstractSelectableAction;
+import org.columba.core.gui.frame.FrameMediator;
+import org.columba.core.main.MainInterface;
+import org.columba.core.plugin.PluginManager;
+import org.columba.core.pluginhandler.ActionPluginHandler;
+import org.columba.core.xml.XmlElement;
 
 /**
  * @author frd
@@ -82,7 +83,7 @@ public class PopupMenuGenerator extends AbstractMenuGenerator {
             if (name.equals("menuitem")) {
                 if (next.getAttribute("action") != null) {
                     try {
-                        AbstractColumbaAction action = ((ActionPluginHandler) MainInterface.pluginManager.getHandler(
+                        AbstractColumbaAction action = ((ActionPluginHandler) PluginManager.getInstance().getHandler(
                                 "org.columba.core.action")).getAction(next.getAttribute(
                                     "action"), frameMediator);
 
@@ -105,7 +106,7 @@ public class PopupMenuGenerator extends AbstractMenuGenerator {
                     }
                 } else if (next.getAttribute("checkboxaction") != null) {
                     try {
-                        AbstractSelectableAction action = (AbstractSelectableAction) ((ActionPluginHandler) MainInterface.pluginManager.getHandler(
+                        AbstractSelectableAction action = (AbstractSelectableAction) ((ActionPluginHandler) PluginManager.getInstance().getHandler(
                                 "org.columba.core.action")).getAction(next.getAttribute(
                                     "checkboxaction"), frameMediator);
                         JCheckBoxMenuItem menuitem = new JCheckBoxMenuItem(action);
@@ -119,7 +120,7 @@ public class PopupMenuGenerator extends AbstractMenuGenerator {
                     }
                 } else if (next.getAttribute("imenu") != null) {
                     try {
-                        menu.add(((ActionPluginHandler) MainInterface.pluginManager.getHandler(
+                        menu.add(((ActionPluginHandler) PluginManager.getInstance().getHandler(
                                 "org.columba.core.action")).getIMenu(
                                 next.getAttribute("imenu"), frameMediator));
                     } catch (Exception e) {

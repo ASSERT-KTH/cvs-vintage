@@ -17,13 +17,12 @@
 //All Rights Reserved.
 package org.columba.addressbook.gui.action;
 
-import org.columba.addressbook.gui.frame.AddressbookFrameMediator;
-
-import org.columba.core.action.AbstractColumbaAction;
-import org.columba.core.gui.frame.FrameMediator;
-
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
+
+import org.columba.addressbook.gui.frame.AddressbookFrameMediator;
+import org.columba.core.action.AbstractColumbaAction;
+import org.columba.core.gui.frame.FrameMediator;
 
 /**
  * Adds a table selection listener to DefaultTreeAction.

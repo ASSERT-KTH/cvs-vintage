@@ -38,7 +38,6 @@ import org.columba.mail.folder.MessageFolder;
 import org.columba.mail.gui.tree.TreeModel;
 import org.columba.mail.gui.tree.util.SelectFolderDialog;
 import org.columba.mail.gui.tree.util.TreeNodeList;
-import org.columba.mail.main.MailInterface;
 import org.columba.mail.util.MailResourceLoader;
 
 import com.jgoodies.forms.builder.DefaultFormBuilder;

@@ -15,23 +15,22 @@
 //All Rights Reserved.
 package org.columba.core.gui.toolbar;
 
-import org.columba.core.action.AbstractColumbaAction;
-import org.columba.core.gui.frame.FrameMediator;
-import org.columba.core.gui.statusbar.ImageSequenceTimer;
-import org.columba.core.main.MainInterface;
-import org.columba.core.plugin.PluginHandlerNotFoundException;
-import org.columba.core.pluginhandler.ActionPluginHandler;
-import org.columba.core.xml.XmlElement;
-
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
-
 import java.util.ListIterator;
 import java.util.ResourceBundle;
 import java.util.logging.Logger;
 
 import javax.swing.Box;
 import javax.swing.JToolBar;
+
+import org.columba.core.action.AbstractColumbaAction;
+import org.columba.core.gui.frame.FrameMediator;
+import org.columba.core.gui.statusbar.ImageSequenceTimer;
+import org.columba.core.plugin.PluginHandlerNotFoundException;
+import org.columba.core.plugin.PluginManager;
+import org.columba.core.pluginhandler.ActionPluginHandler;
+import org.columba.core.xml.XmlElement;
 
 
 /**
@@ -98,7 +97,7 @@ public class ColumbaToolBar extends JToolBar {
                  buttonElement = (XmlElement) iterator.next();
 
                  if (buttonElement.getName().equals("button")) {
-                     addButton(((ActionPluginHandler) MainInterface.pluginManager.getHandler(
+                     addButton(((ActionPluginHandler) PluginManager.getInstance().getHandler(
                              "org.columba.core.action")).getAction(
                              buttonElement.getAttribute("action"),
                              frameController));
@@ -126,7 +125,7 @@ public class ColumbaToolBar extends JToolBar {
         //add(Box.createHorizontalGlue());
        
         try {
-			addButton(((ActionPluginHandler) MainInterface.pluginManager.getHandler(
+			addButton(((ActionPluginHandler) PluginManager.getInstance().getHandler(
 			"org.columba.core.action")).getAction(
 			"Cancel",
 			frameController));

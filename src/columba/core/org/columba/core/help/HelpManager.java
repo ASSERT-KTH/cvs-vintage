@@ -20,17 +20,19 @@ import java.awt.Component;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-
 import java.net.URL;
-
 import java.util.Locale;
 
 import javax.help.HelpBroker;
 import javax.help.HelpSet;
 import javax.help.JHelp;
 import javax.help.TextHelpModel;
-
-import javax.swing.*;
+import javax.swing.JFrame;
+import javax.swing.JMenu;
+import javax.swing.JMenuBar;
+import javax.swing.JMenuItem;
+import javax.swing.JOptionPane;
+import javax.swing.UIManager;
 
 /**
  * @author fdietz

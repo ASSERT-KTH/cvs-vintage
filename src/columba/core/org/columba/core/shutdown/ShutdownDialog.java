@@ -15,9 +15,6 @@
 //All Rights Reserved.
 package org.columba.core.shutdown;
 
-import org.columba.core.gui.util.ImageLoader;
-import org.columba.core.util.GlobalResourceLoader;
-
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.Font;
@@ -30,6 +27,9 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JProgressBar;
 import javax.swing.Timer;
+
+import org.columba.core.gui.util.ImageLoader;
+import org.columba.core.util.GlobalResourceLoader;
 
 
 /**

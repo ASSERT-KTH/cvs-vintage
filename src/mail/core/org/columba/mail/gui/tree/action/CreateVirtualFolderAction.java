@@ -36,7 +36,6 @@ import org.columba.mail.gui.frame.MailFrameMediator;
 import org.columba.mail.gui.tree.TreeModel;
 import org.columba.mail.gui.tree.selection.TreeSelectionChangedEvent;
 import org.columba.mail.gui.tree.util.CreateFolderDialog;
-import org.columba.mail.main.MailInterface;
 import org.columba.mail.util.MailResourceLoader;
 
 /**

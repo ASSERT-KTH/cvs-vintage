@@ -20,7 +20,6 @@ package org.columba.mail.folder.command;
 import org.columba.addressbook.facade.ContactFacade;
 import org.columba.addressbook.gui.tree.AddressbookTreeModel;
 import org.columba.addressbook.gui.tree.util.SelectAddressbookFolderDialog;
-import org.columba.addressbook.main.AddressbookInterface;
 import org.columba.core.command.DefaultCommandReference;
 import org.columba.core.command.StatusObservableImpl;
 import org.columba.core.command.WorkerStatusController;

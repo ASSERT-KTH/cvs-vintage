@@ -17,17 +17,17 @@
 //All Rights Reserved.
 package org.columba.core.gui.toolbar;
 
-import org.columba.core.action.AbstractColumbaAction;
-import org.columba.core.config.GuiItem;
-import org.columba.core.gui.menu.CButton;
-import org.columba.core.gui.util.ImageUtil;
-import org.columba.core.main.MainInterface;
-
 import java.awt.Insets;
 
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.SwingConstants;
+
+import org.columba.core.action.AbstractColumbaAction;
+import org.columba.core.config.GuiItem;
+import org.columba.core.gui.menu.CButton;
+import org.columba.core.gui.util.ImageUtil;
+import org.columba.core.main.MainInterface;
 
 
 public class ToolbarButton extends CButton {

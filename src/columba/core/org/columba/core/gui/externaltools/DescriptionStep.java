@@ -15,17 +15,8 @@
 //All Rights Reserved.
 package org.columba.core.gui.externaltools;
 
-import net.javaprog.ui.wizard.AbstractStep;
-import net.javaprog.ui.wizard.DataModel;
-
-import org.columba.core.externaltools.AbstractExternalToolsPlugin;
-import org.columba.core.util.GlobalResourceLoader;
-
-import org.columba.mail.gui.util.URLLabel;
-
 import java.awt.BorderLayout;
 import java.awt.Font;
-
 import java.net.URL;
 
 import javax.swing.JComponent;
@@ -35,6 +26,13 @@ import javax.swing.JTextPane;
 import javax.swing.UIManager;
 import javax.swing.text.html.HTMLEditorKit;
 import javax.swing.text.html.StyleSheet;
+
+import net.javaprog.ui.wizard.AbstractStep;
+import net.javaprog.ui.wizard.DataModel;
+
+import org.columba.core.externaltools.AbstractExternalToolsPlugin;
+import org.columba.core.util.GlobalResourceLoader;
+import org.columba.mail.gui.util.URLLabel;
 
 
 /**

@@ -16,11 +16,11 @@
 
 package org.columba.core.config;
 
-import org.columba.core.xml.XmlElement;
-
 import java.io.File;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
+import org.columba.core.xml.XmlElement;
 
 public class OptionsXmlConfig extends DefaultXmlConfig {
 

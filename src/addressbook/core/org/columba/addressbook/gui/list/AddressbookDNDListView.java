@@ -15,8 +15,6 @@
 //All Rights Reserved.
 package org.columba.addressbook.gui.list;
 
-import org.columba.addressbook.model.HeaderItem;
-
 import java.awt.Point;
 import java.awt.datatransfer.StringSelection;
 import java.awt.datatransfer.Transferable;
@@ -37,6 +35,8 @@ import java.awt.image.BufferedImage;
 
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
+
+import org.columba.addressbook.model.HeaderItem;
 
 
 //import sun.security.krb5.internal.i;

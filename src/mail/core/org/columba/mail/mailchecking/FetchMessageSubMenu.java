@@ -22,7 +22,6 @@ import java.util.Observer;
 import org.columba.core.action.AbstractColumbaAction;
 import org.columba.core.action.IMenu;
 import org.columba.core.gui.frame.FrameMediator;
-import org.columba.mail.main.MailInterface;
 import org.columba.mail.util.MailResourceLoader;
 
 /**

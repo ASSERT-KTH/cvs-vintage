@@ -15,12 +15,12 @@
 //All Rights Reserved.
 package org.columba.core.util;
 
-import junit.framework.TestCase;
-
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.Random;
+
+import junit.framework.TestCase;
 
 
 /**

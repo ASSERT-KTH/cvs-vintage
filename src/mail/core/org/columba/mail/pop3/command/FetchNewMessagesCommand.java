@@ -24,6 +24,7 @@ import javax.swing.Action;
 
 import org.columba.core.command.Command;
 import org.columba.core.command.CommandCancelledException;
+import org.columba.core.command.CommandProcessor;
 import org.columba.core.command.DefaultCommandReference;
 import org.columba.core.command.StatusObservableImpl;
 import org.columba.core.command.Worker;
@@ -171,7 +172,7 @@ public class FetchNewMessagesCommand extends Command {
 		// and calls apply-filter on this specific message
 		FolderCommandReference r = new FolderCommandReference(inboxFolder, message);
 
-		MainInterface.processor.addOp(new AddPOP3MessageCommand(r));
+		CommandProcessor.getInstance().addOp(new AddPOP3MessageCommand(r));
 	}
 
 	protected int calculateTotalSize(List uidList) throws Exception {

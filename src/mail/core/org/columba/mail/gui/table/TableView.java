@@ -25,6 +25,7 @@ import javax.swing.tree.TreePath;
 import org.columba.core.gui.util.ImageLoader;
 import org.columba.core.main.MainInterface;
 import org.columba.core.plugin.PluginHandlerNotFoundException;
+import org.columba.core.plugin.PluginManager;
 import org.columba.mail.gui.table.model.HeaderTableModel;
 import org.columba.mail.gui.table.model.MessageNode;
 import org.columba.mail.gui.table.model.TableModelSorter;
@@ -61,7 +62,7 @@ public class TableView extends TreeTable {
 
         // load plugin handler used for the columns
         try {
-            handler = (TableRendererPluginHandler) MainInterface.pluginManager
+            handler = (TableRendererPluginHandler) PluginManager.getInstance()
                     .getHandler("org.columba.mail.tablerenderer");
         } catch (PluginHandlerNotFoundException ex) {
             ex.printStackTrace();

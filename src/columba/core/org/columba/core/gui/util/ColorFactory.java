@@ -17,7 +17,6 @@
 package org.columba.core.gui.util;
 
 import java.awt.Color;
-
 import java.util.Hashtable;
 import java.util.Map;
 

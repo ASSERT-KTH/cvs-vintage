@@ -18,8 +18,6 @@ package org.columba.addressbook.shutdown;
 import org.columba.addressbook.folder.AddressbookFolder;
 import org.columba.addressbook.gui.tree.AddressbookTreeModel;
 import org.columba.addressbook.gui.tree.AddressbookTreeNode;
-import org.columba.addressbook.main.AddressbookInterface;
-
 import org.columba.core.backgroundtask.TaskInterface;
 
 

@@ -27,10 +27,11 @@ import javax.swing.table.JTableHeader;
 import javax.swing.table.TableColumn;
 import javax.swing.tree.TreePath;
 
+import org.columba.core.gui.ClipboardManager;
+import org.columba.core.gui.focus.FocusManager;
 import org.columba.core.gui.focus.FocusOwner;
 import org.columba.core.gui.frame.FrameMediator;
 import org.columba.core.gui.menu.ColumbaPopupMenu;
-import org.columba.core.main.MainInterface;
 import org.columba.mail.command.FolderCommandReference;
 import org.columba.mail.folder.AbstractFolder;
 import org.columba.mail.folder.MessageFolder;
@@ -198,7 +199,7 @@ public class TableController implements FocusOwner, ListSelectionListener,
 		new TableHeaderMouseListener(this, getTableModelSorter());
 
 		// register at focus manager
-		MainInterface.focusManager.registerComponent(this);
+		FocusManager.getInstance().registerComponent(this);
 
 		// we need this for the focus manager
 		getView().getSelectionModel().addListSelectionListener(this);
@@ -600,11 +601,11 @@ public class TableController implements FocusOwner, ListSelectionListener,
 	 * @see org.columba.core.gui.focus.FocusOwner#isPasteActionEnabled()
 	 */
 	public boolean isPasteActionEnabled() {
-		if (MainInterface.clipboardManager.getMessageSelection() == null) {
+		if (ClipboardManager.getInstance().getMessageSelection() == null) {
 			return false;
 		}
 
-		if (MainInterface.clipboardManager.getMessageSelection() != null) {
+		if (ClipboardManager.getInstance().getMessageSelection() != null) {
 			return true;
 		}
 
@@ -688,7 +689,7 @@ public class TableController implements FocusOwner, ListSelectionListener,
 	public void valueChanged(ListSelectionEvent arg0) {
 
 		// enable/disable cut/copy/paste/selectall actions
-		MainInterface.focusManager.updateActions();
+		FocusManager.getInstance().updateActions();
 
 		// if user is currently changing selection, don't do anything
 		// -> wait until the final selection is available

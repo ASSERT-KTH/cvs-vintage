@@ -33,8 +33,8 @@ import org.columba.core.gui.frame.ContentPane;
 import org.columba.core.gui.selection.SelectionChangedEvent;
 import org.columba.core.gui.selection.SelectionListener;
 import org.columba.core.gui.util.UIFSplitPane;
-import org.columba.core.main.MainInterface;
 import org.columba.core.plugin.PluginHandlerNotFoundException;
+import org.columba.core.plugin.PluginManager;
 import org.columba.core.pluginhandler.MenuPluginHandler;
 import org.columba.mail.command.FolderCommandReference;
 import org.columba.mail.folder.AbstractFolder;
@@ -271,7 +271,7 @@ public class ThreePaneMailFrameController extends AbstractMailFrameController
 		getContainer().extendMenuFromFile(this, "org/columba/mail/action/menu.xml");
 
 		try {
-			((MenuPluginHandler) MainInterface.pluginManager
+			((MenuPluginHandler) PluginManager.getInstance()
 					.getHandler("org.columba.mail.menu"))
 					.insertPlugins(getContainer().getMenu());
 		} catch (PluginHandlerNotFoundException ex) {

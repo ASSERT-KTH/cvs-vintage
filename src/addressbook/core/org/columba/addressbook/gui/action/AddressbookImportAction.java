@@ -15,13 +15,12 @@
 //All Rights Reserved.
 package org.columba.addressbook.gui.action;
 
+import java.awt.event.ActionEvent;
+
 import org.columba.addressbook.gui.dialog.importfilter.ImportWizardLauncher;
 import org.columba.addressbook.util.AddressbookResourceLoader;
-
 import org.columba.core.action.AbstractColumbaAction;
 import org.columba.core.gui.frame.FrameMediator;
-
-import java.awt.event.ActionEvent;
 
 /**
  * @author frd

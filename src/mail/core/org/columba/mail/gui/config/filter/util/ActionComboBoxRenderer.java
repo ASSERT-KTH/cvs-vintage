@@ -22,8 +22,8 @@ import javax.swing.JList;
 import javax.swing.UIManager;
 
 import org.columba.core.gui.util.NotifyDialog;
-import org.columba.core.main.MainInterface;
 import org.columba.core.plugin.PluginHandlerNotFoundException;
+import org.columba.core.plugin.PluginManager;
 import org.columba.mail.plugin.FilterActionPluginHandler;
 
 
@@ -43,7 +43,7 @@ public class ActionComboBoxRenderer extends DefaultListCellRenderer {
         super();
 
         try {
-            pluginHandler = (FilterActionPluginHandler) MainInterface.pluginManager.getHandler(
+            pluginHandler = (FilterActionPluginHandler) PluginManager.getInstance().getHandler(
                     "org.columba.mail.filteraction");
         } catch (PluginHandlerNotFoundException ex) {
             NotifyDialog d = new NotifyDialog();

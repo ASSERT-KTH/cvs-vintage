@@ -15,26 +15,24 @@
 //All Rights Reserved.
 package org.columba.core.gui.action;
 
+import java.awt.event.ActionEvent;
+import java.awt.event.KeyEvent;
+import java.nio.charset.Charset;
+
+import javax.swing.KeyStroke;
+
 import org.columba.core.action.AbstractColumbaAction;
 import org.columba.core.charset.CharsetOwnerInterface;
+import org.columba.core.command.CommandProcessor;
 import org.columba.core.gui.frame.FrameMediator;
 import org.columba.core.gui.selection.SelectionChangedEvent;
 import org.columba.core.gui.selection.SelectionListener;
 import org.columba.core.gui.util.ImageLoader;
-import org.columba.core.main.MainInterface;
-
 import org.columba.mail.command.FolderCommandReference;
 import org.columba.mail.folder.command.PrintMessageCommand;
 import org.columba.mail.gui.frame.AbstractMailFrameController;
 import org.columba.mail.gui.table.selection.TableSelectionChangedEvent;
 import org.columba.mail.util.MailResourceLoader;
-
-import java.awt.event.ActionEvent;
-import java.awt.event.KeyEvent;
-
-import java.nio.charset.Charset;
-
-import javax.swing.KeyStroke;
 
 
 public class PrintAction extends AbstractColumbaAction
@@ -78,7 +76,7 @@ public class PrintAction extends AbstractColumbaAction
 
         Charset charset = ((CharsetOwnerInterface) getFrameMediator()).getCharset();
         PrintMessageCommand c = new PrintMessageCommand(r, charset);
-        MainInterface.processor.addOp(c);
+        CommandProcessor.getInstance().addOp(c);
     }
 
     /**

@@ -16,16 +16,16 @@
 
 package org.columba.core.gui.config;
 
-import org.columba.core.gui.util.NotifyDialog;
-import org.columba.core.main.MainInterface;
-import org.columba.core.plugin.PluginHandlerNotFoundException;
-import org.columba.core.pluginhandler.ThemePluginHandler;
-
 import java.awt.Component;
 
+import javax.swing.DefaultListCellRenderer;
 import javax.swing.JLabel;
 import javax.swing.JList;
-import javax.swing.DefaultListCellRenderer;
+
+import org.columba.core.gui.util.NotifyDialog;
+import org.columba.core.plugin.PluginHandlerNotFoundException;
+import org.columba.core.plugin.PluginManager;
+import org.columba.core.pluginhandler.ThemePluginHandler;
 
 /**
  * Renders UI themes.
@@ -37,7 +37,7 @@ public class ThemeComboBoxRenderer extends DefaultListCellRenderer {
         super();
 
         try {
-            pluginHandler = (ThemePluginHandler) MainInterface.pluginManager.getHandler(
+            pluginHandler = (ThemePluginHandler) PluginManager.getInstance().getHandler(
                     "org.columba.core.theme");
         } catch (PluginHandlerNotFoundException ex) {
             NotifyDialog d = new NotifyDialog();

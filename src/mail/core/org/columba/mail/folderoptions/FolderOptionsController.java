@@ -17,6 +17,7 @@ package org.columba.mail.folderoptions;
 
 import org.columba.core.main.MainInterface;
 import org.columba.core.plugin.PluginHandlerNotFoundException;
+import org.columba.core.plugin.PluginManager;
 import org.columba.core.xml.XmlElement;
 
 import org.columba.mail.config.FolderItem;
@@ -84,7 +85,7 @@ public class FolderOptionsController {
 
         // init plugin handler
         try {
-            handler = (FolderOptionsPluginHandler) MainInterface.pluginManager.getHandler(
+            handler = (FolderOptionsPluginHandler) PluginManager.getInstance().getHandler(
                     "org.columba.mail.folderoptions");
         } catch (PluginHandlerNotFoundException e) {
             // TODO (@author fdietz): show error dialoghere

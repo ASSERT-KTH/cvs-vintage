@@ -17,12 +17,12 @@
 //All Rights Reserved.
 package org.columba.core.pluginhandler;
 
-import org.columba.core.gui.menu.ColumbaPopupMenu;
+import java.util.Iterator;
+
 import org.columba.core.gui.menu.ColumbaMenu;
+import org.columba.core.gui.menu.ColumbaPopupMenu;
 import org.columba.core.plugin.AbstractPluginHandler;
 import org.columba.core.xml.XmlElement;
-
-import java.util.Iterator;
 
 
 /**

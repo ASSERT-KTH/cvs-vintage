@@ -15,11 +15,10 @@
 //All Rights Reserved.
 package org.columba.core.externaltools;
 
-import org.columba.core.plugin.Plugin;
-
 import java.io.File;
-
 import java.net.URL;
+
+import org.columba.core.plugin.Plugin;
 
 
 /**

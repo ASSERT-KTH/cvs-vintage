@@ -49,8 +49,8 @@ public class CutAction extends AbstractColumbaAction {
     public void actionPerformed(ActionEvent arg0) {
         // add current selection to clipboard
         // cut action
-        MainInterface.clipboardManager.setOperation(ClipboardManager.CUT_ACTION);
+    	ClipboardManager.getInstance().setOperation(ClipboardManager.CUT_ACTION);
 
-        MainInterface.clipboardManager.setMessageSelection((FolderCommandReference) ((MailFrameMediator)frameController).getTableSelection());
+    	ClipboardManager.getInstance().setMessageSelection((FolderCommandReference) ((MailFrameMediator)frameController).getTableSelection());
     }
 }

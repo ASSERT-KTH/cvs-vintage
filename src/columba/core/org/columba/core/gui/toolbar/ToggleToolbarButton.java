@@ -15,22 +15,20 @@
 //All Rights Reserved.
 package org.columba.core.gui.toolbar;
 
-import org.columba.core.action.AbstractSelectableAction;
-import org.columba.core.gui.util.ButtonStateAdapter;
-import org.columba.core.gui.util.ImageUtil;
-
 import java.awt.Insets;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
-
 import java.beans.PropertyChangeListener;
-
 import java.lang.reflect.Proxy;
 
 import javax.swing.Action;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.JToggleButton;
+
+import org.columba.core.action.AbstractSelectableAction;
+import org.columba.core.gui.util.ButtonStateAdapter;
+import org.columba.core.gui.util.ImageUtil;
 
 
 /**

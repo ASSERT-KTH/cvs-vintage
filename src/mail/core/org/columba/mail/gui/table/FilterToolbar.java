@@ -40,7 +40,6 @@ import org.columba.mail.gui.config.search.SearchFrame;
 import org.columba.mail.gui.frame.MailFrameMediator;
 import org.columba.mail.gui.table.model.TableModelFilter;
 import org.columba.mail.gui.tree.TreeModel;
-import org.columba.mail.main.MailInterface;
 import org.columba.mail.util.MailResourceLoader;
 
 import com.jgoodies.forms.builder.PanelBuilder;

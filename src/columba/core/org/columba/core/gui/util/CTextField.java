@@ -17,12 +17,11 @@
 //All Rights Reserved.
 package org.columba.core.gui.util;
 
-import org.columba.core.gui.focus.FocusOwner;
-
-import org.columba.mail.gui.composer.util.UndoDocument;
-
 import javax.swing.JComponent;
 import javax.swing.JTextField;
+
+import org.columba.core.gui.focus.FocusOwner;
+import org.columba.mail.gui.composer.util.UndoDocument;
 
 
 /**

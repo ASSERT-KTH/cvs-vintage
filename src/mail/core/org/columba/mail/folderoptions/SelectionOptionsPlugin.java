@@ -17,8 +17,6 @@
 //All Rights Reserved.
 package org.columba.mail.folderoptions;
 
-import javax.swing.event.ListSelectionEvent;
-
 import org.columba.core.config.DefaultItem;
 import org.columba.core.xml.XmlElement;
 import org.columba.mail.folder.MessageFolder;

@@ -15,12 +15,11 @@
 //All Rights Reserved.
 package org.columba.core.externaltools;
 
-import org.columba.core.util.OSInfo;
-
 import java.io.File;
-
 import java.net.MalformedURLException;
 import java.net.URL;
+
+import org.columba.core.util.OSInfo;
 
 
 /**

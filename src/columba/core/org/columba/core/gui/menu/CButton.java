@@ -15,12 +15,12 @@
 //All Rights Reserved.
 package org.columba.core.gui.menu;
 
-import org.columba.core.action.AbstractColumbaAction;
-import org.columba.core.help.HelpManager;
-
 import javax.swing.Action;
 import javax.swing.Icon;
 import javax.swing.JButton;
+
+import org.columba.core.action.AbstractColumbaAction;
+import org.columba.core.help.HelpManager;
 
 
 /**

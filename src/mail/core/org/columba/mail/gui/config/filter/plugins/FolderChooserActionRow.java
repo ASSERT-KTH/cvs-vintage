@@ -29,7 +29,6 @@ import org.columba.mail.gui.config.filter.ActionList;
 import org.columba.mail.gui.tree.TreeModel;
 import org.columba.mail.gui.tree.util.SelectFolderDialog;
 import org.columba.mail.gui.tree.util.TreeNodeList;
-import org.columba.mail.main.MailInterface;
 
 public class FolderChooserActionRow extends DefaultActionRow implements
 		ActionListener {

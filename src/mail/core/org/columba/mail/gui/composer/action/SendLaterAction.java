@@ -18,9 +18,9 @@ package org.columba.mail.gui.composer.action;
 import java.awt.event.ActionEvent;
 
 import org.columba.core.action.AbstractColumbaAction;
+import org.columba.core.command.CommandProcessor;
 import org.columba.core.gui.frame.FrameMediator;
 import org.columba.core.gui.util.ImageLoader;
-import org.columba.core.main.MainInterface;
 import org.columba.mail.command.ComposerCommandReference;
 import org.columba.mail.command.FolderCommandReference;
 import org.columba.mail.config.AccountItem;
@@ -31,7 +31,6 @@ import org.columba.mail.gui.composer.ComposerController;
 import org.columba.mail.gui.composer.ComposerModel;
 import org.columba.mail.gui.composer.command.SaveMessageCommand;
 import org.columba.mail.gui.tree.TreeModel;
-import org.columba.mail.main.MailInterface;
 import org.columba.mail.util.MailResourceLoader;
 
 /**
@@ -74,7 +73,7 @@ public class SendLaterAction extends AbstractColumbaAction {
 		ComposerCommandReference r =new ComposerCommandReference(composerController, destFolder);
 
 		SaveMessageCommand c = new SaveMessageCommand(r);
-		MainInterface.processor.addOp(c);
+		CommandProcessor.getInstance().addOp(c);
 
 		//      -> get source reference of message
 		// when replying this is the original sender's message
@@ -85,7 +84,7 @@ public class SendLaterAction extends AbstractColumbaAction {
 			// mark message as answered
 			ref2.setMarkVariant(MarkMessageCommand.MARK_AS_ANSWERED);
 			MarkMessageCommand c1 = new MarkMessageCommand(ref2);
-			MainInterface.processor.addOp(c1);
+			CommandProcessor.getInstance().addOp(c1);
 		}
 
 		composerController.getContainer().close();

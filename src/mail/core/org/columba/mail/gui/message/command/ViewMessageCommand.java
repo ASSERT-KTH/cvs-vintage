@@ -19,12 +19,12 @@ package org.columba.mail.gui.message.command;
 import javax.swing.JOptionPane;
 
 import org.columba.core.command.Command;
+import org.columba.core.command.CommandProcessor;
 import org.columba.core.command.DefaultCommandReference;
 import org.columba.core.command.StatusObservableImpl;
 import org.columba.core.command.Worker;
 import org.columba.core.command.WorkerStatusController;
 import org.columba.core.gui.frame.FrameMediator;
-import org.columba.core.main.MainInterface;
 import org.columba.mail.command.FolderCommand;
 import org.columba.mail.command.FolderCommandReference;
 import org.columba.mail.folder.FolderInconsistentException;
@@ -122,7 +122,7 @@ public class ViewMessageCommand extends FolderCommand {
 					JOptionPane.DEFAULT_OPTION, JOptionPane.ERROR_MESSAGE,
 					null, options, options[0]);
 
-			MainInterface.processor.addOp(new ViewHeaderListCommand(
+			CommandProcessor.getInstance().addOp(new ViewHeaderListCommand(
 					getFrameMediator(), r));
 
 			return;

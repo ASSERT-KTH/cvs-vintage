@@ -16,24 +16,30 @@
 
 package org.columba.core.gui.plugin;
 
-import net.javaprog.ui.wizard.plaf.basic.SingleSideEtchedBorder;
-
-import org.columba.core.gui.util.ButtonWithMnemonic;
-import org.columba.core.help.HelpManager;
-import org.columba.core.main.MainInterface;
-import org.columba.core.plugin.PluginHandlerNotFoundException;
-import org.columba.core.plugin.PluginLoadingFailedException;
-import org.columba.core.pluginhandler.ConfigPluginHandler;
-
-import org.columba.mail.util.MailResourceLoader;
-
 import java.awt.BorderLayout;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 
-import javax.swing.*;
+import javax.swing.BorderFactory;
+import javax.swing.JButton;
+import javax.swing.JComponent;
+import javax.swing.JDialog;
+import javax.swing.JFrame;
+import javax.swing.JPanel;
+import javax.swing.KeyStroke;
+import javax.swing.SwingConstants;
+
+import net.javaprog.ui.wizard.plaf.basic.SingleSideEtchedBorder;
+
+import org.columba.core.gui.util.ButtonWithMnemonic;
+import org.columba.core.help.HelpManager;
+import org.columba.core.plugin.PluginHandlerNotFoundException;
+import org.columba.core.plugin.PluginLoadingFailedException;
+import org.columba.core.plugin.PluginManager;
+import org.columba.core.pluginhandler.ConfigPluginHandler;
+import org.columba.mail.util.MailResourceLoader;
 
 /**
  * @author frd
@@ -51,7 +57,7 @@ public class ConfigurationDialog extends JDialog implements ActionListener {
         // modal dialog
         super((JFrame)null, true);
 
-        ConfigPluginHandler h = (ConfigPluginHandler) MainInterface.pluginManager.getHandler(
+        ConfigPluginHandler h = (ConfigPluginHandler) PluginManager.getInstance().getHandler(
                 "org.columba.core.config");
 
         plugin = (AbstractConfigPlugin) h.getPlugin(pluginId, null);

@@ -24,8 +24,8 @@ import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 
 import org.columba.core.gui.frame.FrameMediator;
-import org.columba.core.main.MainInterface;
 import org.columba.core.plugin.PluginHandlerNotFoundException;
+import org.columba.core.plugin.PluginManager;
 import org.columba.core.pluginhandler.MenuPluginHandler;
 import org.columba.core.xml.XmlElement;
 
@@ -61,7 +61,7 @@ public class ColumbaMenu extends JMenuBar {
 		menuGenerator.createMenuBar(this);
 
 		try {
-			((MenuPluginHandler) MainInterface.pluginManager
+			((MenuPluginHandler) PluginManager.getInstance()
 					.getHandler("org.columba.core.menu")).insertPlugins(this);
 		} catch (PluginHandlerNotFoundException ex) {
 			throw new RuntimeException(ex);

@@ -17,12 +17,12 @@
 //All Rights Reserved.
 package org.columba.addressbook.gui.table.renderer;
 
-import org.columba.core.gui.util.ImageLoader;
-
 import java.awt.Component;
 
 import javax.swing.ImageIcon;
 import javax.swing.JTable;
+
+import org.columba.core.gui.util.ImageLoader;
 
 
 /**

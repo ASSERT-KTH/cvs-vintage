@@ -34,8 +34,8 @@ import javax.swing.text.html.HTML;
 import org.columba.core.action.AbstractSelectableAction;
 import org.columba.core.gui.toolbar.ToggleToolbarButton;
 import org.columba.core.gui.util.LabelWithMnemonic;
-import org.columba.core.main.MainInterface;
 import org.columba.core.plugin.PluginHandlerNotFoundException;
+import org.columba.core.plugin.PluginManager;
 import org.columba.core.pluginhandler.ActionPluginHandler;
 import org.columba.core.xml.XmlElement;
 import org.columba.mail.gui.composer.ComposerController;
@@ -112,7 +112,7 @@ implements ActionListener, Observer, ContainerListener {
         ActionPluginHandler handler = null;
 
         try {
-            handler = (ActionPluginHandler) MainInterface.pluginManager.getHandler(
+            handler = (ActionPluginHandler) PluginManager.getInstance().getHandler(
                     "org.columba.core.action");
         } catch (PluginHandlerNotFoundException e) {
             e.printStackTrace();

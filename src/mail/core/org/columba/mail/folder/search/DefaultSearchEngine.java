@@ -25,7 +25,7 @@ import java.util.ListIterator;
 import javax.swing.JOptionPane;
 
 import org.columba.core.command.StatusObservable;
-import org.columba.core.main.MainInterface;
+import org.columba.core.plugin.PluginManager;
 import org.columba.core.util.ListTools;
 import org.columba.mail.filter.Filter;
 import org.columba.mail.filter.FilterCriteria;
@@ -116,7 +116,7 @@ public class DefaultSearchEngine {
         AbstractFilter instance = null;
 
         try {
-            AbstractFilterPluginHandler handler = (AbstractFilterPluginHandler) MainInterface.pluginManager.getHandler(
+            AbstractFilterPluginHandler handler = (AbstractFilterPluginHandler) PluginManager.getInstance().getHandler(
                     "org.columba.mail.filter");
             instance = (AbstractFilter) handler.getActionPlugin(type, null);
         } catch (Exception ex) {

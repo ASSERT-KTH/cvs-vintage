@@ -21,14 +21,8 @@ import org.columba.core.command.StatusObservableImpl;
 import org.columba.core.command.Worker;
 import org.columba.core.command.WorkerStatusController;
 import org.columba.core.gui.frame.FrameMediator;
-import org.columba.core.main.MainInterface;
 import org.columba.mail.command.FolderCommandReference;
-import org.columba.mail.config.AccountItem;
-import org.columba.mail.config.FolderItem;
-import org.columba.mail.config.ImapItem;
 import org.columba.mail.folder.MessageFolder;
-import org.columba.mail.folder.command.ApplyFilterCommand;
-import org.columba.mail.folder.imap.IMAPRootFolder;
 import org.columba.mail.gui.frame.TableViewOwner;
 import org.columba.mail.message.HeaderList;
 

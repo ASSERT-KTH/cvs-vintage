@@ -18,8 +18,8 @@
 package org.columba.addressbook.folder;
 
 import org.columba.addressbook.model.Contact;
-import org.columba.addressbook.model.HeaderItem;
 import org.columba.addressbook.model.ContactItemMap;
+import org.columba.addressbook.model.HeaderItem;
 import org.columba.addressbook.model.VCARD;
 
 /**

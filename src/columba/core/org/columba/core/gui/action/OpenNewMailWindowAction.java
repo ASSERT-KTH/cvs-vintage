@@ -19,8 +19,8 @@ import java.awt.event.ActionEvent;
 
 import org.columba.core.action.AbstractColumbaAction;
 import org.columba.core.gui.frame.FrameMediator;
+import org.columba.core.gui.frame.FrameModel;
 import org.columba.core.gui.util.ImageLoader;
-import org.columba.core.main.MainInterface;
 import org.columba.core.plugin.PluginLoadingFailedException;
 import org.columba.core.util.GlobalResourceLoader;
 
@@ -42,7 +42,7 @@ public class OpenNewMailWindowAction extends AbstractColumbaAction {
 	public void actionPerformed(ActionEvent evt) {
 
 		try {
-			MainInterface.frameModel.openView("ThreePaneMail");
+			FrameModel.getInstance().openView("ThreePaneMail");
 		} catch (PluginLoadingFailedException e) {
 			e.printStackTrace();
 		}

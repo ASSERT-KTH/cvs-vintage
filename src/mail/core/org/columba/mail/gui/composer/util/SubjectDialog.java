@@ -29,8 +29,8 @@ import javax.swing.JTextField;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 
+import org.columba.core.gui.frame.FrameModel;
 import org.columba.core.gui.util.ButtonWithMnemonic;
-import org.columba.core.main.MainInterface;
 import org.columba.mail.util.MailResourceLoader;
 
 
@@ -46,7 +46,7 @@ public class SubjectDialog extends JDialog implements ActionListener {
     JButton[] buttons = new JButton[1];
 
     public SubjectDialog() {
-    	super(MainInterface.frameModel.getActiveFrame(), true);
+    	super(FrameModel.getInstance().getActiveFrame(), true);
     }
 
     public void showDialog(String subject) {

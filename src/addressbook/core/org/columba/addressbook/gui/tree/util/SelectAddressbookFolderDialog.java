@@ -43,7 +43,6 @@ import org.columba.addressbook.folder.AbstractFolder;
 import org.columba.addressbook.folder.AddressbookFolder;
 import org.columba.addressbook.gui.tree.AddressbookTreeModel;
 import org.columba.addressbook.gui.tree.AddressbookTreeNode;
-import org.columba.addressbook.main.AddressbookInterface;
 import org.columba.addressbook.util.AddressbookResourceLoader;
 import org.columba.core.gui.util.ButtonWithMnemonic;
 

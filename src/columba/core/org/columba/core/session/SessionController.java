@@ -16,12 +16,17 @@
 
 package org.columba.core.session;
 
-import org.columba.core.main.MainInterface;
-import org.columba.core.util.GlobalResourceLoader;
-
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
 
 import javax.swing.JOptionPane;
+
+import org.columba.core.main.MainInterface;
+import org.columba.core.util.GlobalResourceLoader;
 
 /**
  * Contains the logic necessary to search for running Columba sessions and

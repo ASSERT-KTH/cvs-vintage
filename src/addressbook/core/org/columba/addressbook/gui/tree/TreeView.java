@@ -23,7 +23,6 @@ import javax.swing.ListSelectionModel;
 import org.columba.addressbook.folder.AbstractFolder;
 import org.columba.addressbook.gui.frame.AddressbookFrameController;
 import org.columba.addressbook.gui.tree.util.AddressbookTreeCellRenderer;
-import org.columba.addressbook.main.AddressbookInterface;
 
 
 /**

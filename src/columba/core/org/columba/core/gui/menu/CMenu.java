@@ -15,9 +15,9 @@
 //All Rights Reserved.
 package org.columba.core.gui.menu;
 
-import org.columba.core.gui.util.MnemonicSetter;
-
 import javax.swing.JMenu;
+
+import org.columba.core.gui.util.MnemonicSetter;
 
 
 /**

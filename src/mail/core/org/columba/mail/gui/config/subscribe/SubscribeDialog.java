@@ -47,9 +47,9 @@ import javax.swing.tree.DefaultTreeModel;
 import net.javaprog.ui.wizard.plaf.basic.SingleSideEtchedBorder;
 
 import org.columba.core.command.Command;
+import org.columba.core.command.CommandProcessor;
 import org.columba.core.gui.util.ButtonWithMnemonic;
 import org.columba.core.help.HelpManager;
-import org.columba.core.main.MainInterface;
 import org.columba.mail.command.FolderCommandReference;
 import org.columba.mail.folder.imap.IMAPRootFolder;
 import org.columba.mail.gui.config.filter.FilterTransferHandler;
@@ -99,7 +99,7 @@ public class SubscribeDialog extends JDialog implements ActionListener,
 
 		Command c = new SynchronizeFolderListCommand(
 				new SubscribeCommandReference(root, this));
-		MainInterface.processor.addOp(c);
+		CommandProcessor.getInstance().addOp(c);
 	}
 
 	private void subscribe() {
@@ -107,7 +107,7 @@ public class SubscribeDialog extends JDialog implements ActionListener,
 
 		Command c = new SubscribeFolderCommand(new SubscribeCommandReference(
 				root, this, selection.getMailbox()));
-		MainInterface.processor.addOp(c);
+		CommandProcessor.getInstance().addOp(c);
 	}
 
 	private void unsubscribe() {
@@ -115,7 +115,7 @@ public class SubscribeDialog extends JDialog implements ActionListener,
 
 		Command c = new UnsubscribeFolderCommand(new SubscribeCommandReference(
 				root, this, selection.getMailbox()));
-		MainInterface.processor.addOp(c);
+		CommandProcessor.getInstance().addOp(c);
 	}
 
 	/**
@@ -258,7 +258,7 @@ public class SubscribeDialog extends JDialog implements ActionListener,
 
 		Command c = new FetchSubFolderListCommand(new FolderCommandReference(
 				root));
-		MainInterface.processor.addOp(c);
+		CommandProcessor.getInstance().addOp(c);
 
 		setVisible(false);
 	}

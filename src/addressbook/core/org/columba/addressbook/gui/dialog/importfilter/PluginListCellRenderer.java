@@ -15,17 +15,16 @@
 //All Rights Reserved.
 package org.columba.addressbook.gui.dialog.importfilter;
 
-import org.columba.addressbook.plugin.ImportPluginHandler;
-
-import org.columba.core.gui.util.NotifyDialog;
-import org.columba.core.main.MainInterface;
-import org.columba.core.plugin.PluginHandlerNotFoundException;
-
 import java.awt.Component;
 
 import javax.swing.DefaultListCellRenderer;
 import javax.swing.JList;
 import javax.swing.UIManager;
+
+import org.columba.addressbook.plugin.ImportPluginHandler;
+import org.columba.core.gui.util.NotifyDialog;
+import org.columba.core.plugin.PluginHandlerNotFoundException;
+import org.columba.core.plugin.PluginManager;
 
 
 public class PluginListCellRenderer extends DefaultListCellRenderer {
@@ -35,7 +34,7 @@ public class PluginListCellRenderer extends DefaultListCellRenderer {
         super();
 
         try {
-            pluginHandler = (ImportPluginHandler) MainInterface.pluginManager.getHandler(
+            pluginHandler = (ImportPluginHandler) PluginManager.getInstance().getHandler(
                     "org.columba.addressbook.import");
         } catch (PluginHandlerNotFoundException ex) {
             NotifyDialog d = new NotifyDialog();
