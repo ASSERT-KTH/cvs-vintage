@@ -93,7 +93,7 @@ import org.apache.commons.lang.StringUtils;
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
- * @version $Id: Issue.java,v 1.251 2002/12/29 01:19:02 jon Exp $
+ * @version $Id: Issue.java,v 1.252 2003/01/04 01:00:15 elicia Exp $
  */
 public class Issue 
     extends BaseIssue
@@ -2121,7 +2121,20 @@ public class Issue
         Attachment attachment = new Attachment();
 
         Module oldModule = getModule();
-        newIssue = newModule.getNewIssue(newIssueType);
+     
+        // If moving to a new issue type, just change the issue type id
+        // otherwise, create fresh issue
+        if (getModule().getModuleId().equals(newModule.getModuleId()) 
+            && !getIssueType().getIssueTypeId().equals(newIssueType.getIssueTypeId())
+            && action.equals("move"))
+        {
+            newIssue = this;
+            newIssue.setIssueType(newIssueType);
+        }
+        else
+        {
+            newIssue = newModule.getNewIssue(newIssueType);
+        }
         newIssue.save();
         Attribute zeroAttribute = AttributeManager
             .getInstance(new NumberKey("0"));
@@ -2237,7 +2250,7 @@ public class Issue
         activitySet2.save();
 
         // Generate comment
-        // If moving issue, delete original
+        // If moving issue to new module, delete original
         String comment = null;
         String comment2 = null;
         if (action.equals("copy"))
@@ -2265,8 +2278,12 @@ public class Issue
                ScarabConstants.DEFAULT_BUNDLE_NAME,
                Locale.getDefault(),
                "MoveCopyString", args6);
-            // delete original issue
-            delete(user);
+            // if moved to new module, delete original issue
+            if (!newModule.getModuleId().equals(getModule().getModuleId()))
+            {
+                setDeleted(true);
+                save();
+            }
         }
 
         // Save activity record
@@ -2287,21 +2304,24 @@ public class Issue
                                 getUniqueId(), newIssue.getUniqueId());
 
         // Save activity record for old issue
-        Object[] args2 = {
-            comment2,
-            newIssue.getUniqueId(),
-            newModule.getName(),
-            newIssueType.getName()
-        };
-        desc = Localization.format(
-            ScarabConstants.DEFAULT_BUNDLE_NAME,
-            Locale.getDefault(),
-            "MovedIssueDescription", args2);
+        if (!getIssueId().equals(newIssue.getIssueId()))
+        {
+            Object[] args2 = {
+                comment2,
+                newIssue.getUniqueId(),
+                newModule.getName(),
+                newIssueType.getName()
+            };
+            desc = Localization.format(
+                ScarabConstants.DEFAULT_BUNDLE_NAME,
+                Locale.getDefault(),
+                "MovedIssueDescription", args2);
 
-        ActivityManager
-            .createTextActivity(this, zeroAttribute, activitySet2,
-                                desc, null,
-                                getUniqueId(), newIssue.getUniqueId());
+            ActivityManager
+                .createTextActivity(this, zeroAttribute, activitySet2,
+                                    desc, null,
+                                    getUniqueId(), newIssue.getUniqueId());
+        }
 
         return newIssue;
     }

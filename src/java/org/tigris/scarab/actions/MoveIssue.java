@@ -84,7 +84,7 @@ import org.tigris.scarab.services.security.ScarabSecurity;
  *
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: MoveIssue.java,v 1.42 2002/11/26 20:04:02 elicia Exp $
+ * @version $Id: MoveIssue.java,v 1.43 2003/01/04 01:00:15 elicia Exp $
  */
 public class MoveIssue extends RequireLoginFirstAction
 {
@@ -131,20 +131,31 @@ public class MoveIssue extends RequireLoginFirstAction
             return;
         }
           
+        String selectAction = moveIssue.get("Action").toString();
         ScarabUser user = (ScarabUser)data.getUser();
+        boolean changeModule = !newModuleId.equals(oldModule.getModuleId());
+        boolean changeIssueType = !newIssueTypeId.equals(issue.getIssueType().getIssueTypeId());
 
         // Check permissions
-        if (!user.hasPermission(ScarabSecurity.ISSUE__MOVE, oldModule)
-            || !user.hasPermission(ScarabSecurity.ISSUE__MOVE, newModule))
+        // Must have ISSUE_ENTER in new module
+        // If moving to a new module, must have ISSUE_MOVE in old module
+        // If moving to a new issue type, must have ISSUE_EDIT in old module
+        if (!user.hasPermission(ScarabSecurity.ISSUE__ENTER, newModule))
         {
             data.setMessage(l10n.get(NO_PERMISSION_MESSAGE));
             return;
         }
+        if ("move".equals(selectAction))
+        {
+            if (changeModule && !user.hasPermission(ScarabSecurity.ISSUE__MOVE, oldModule) || (changeIssueType && !user.hasPermission(ScarabSecurity.ISSUE__EDIT, oldModule)))
+            {
+                data.setMessage(l10n.get(NO_PERMISSION_MESSAGE));
+                return;
+            }
+        }
         // Do not allow user to move issue if source and destination
         // Module and issue type are the same
-        if (moveIssue.get("Action").toString().equals("move")
-            && newModuleId.equals(oldModule.getModuleId())
-            && newIssueTypeId.equals(issue.getIssueType().getIssueTypeId()))
+        if ("move".equals(selectAction) && !changeModule && !changeIssueType)
         {
             scarabR.setAlertMessage(l10n.get("CannotMoveToSameModule"));
             return;
@@ -166,6 +177,7 @@ public class MoveIssue extends RequireLoginFirstAction
         throws Exception
     {
         IntakeTool intake = getIntakeTool(context);
+        ScarabRequestTool scarabR = getScarabRequestTool(context);
         if (!intake.isAllValid())
         {
             return;
@@ -186,6 +198,8 @@ public class MoveIssue extends RequireLoginFirstAction
                .getInstance(new NumberKey(newIssueTypeId));
         String selectAction = moveIssue.get("Action").toString();
         ScarabUser user = (ScarabUser)data.getUser();
+        boolean changeModule = !newModuleId.equals(oldModule.getModuleId());
+        boolean changeIssueType = !newIssueTypeId.equals(issue.getIssueType().getIssueTypeId());
 
         // Get selected non-matching attributes to save in comment
         ArrayList commentAttrs = new ArrayList();
@@ -201,10 +215,29 @@ public class MoveIssue extends RequireLoginFirstAction
         }
         String reason = data.getParameters().getString("reason");
 
+        // placed in the context for the email to be able to access them
+        context.put("reason", reason);
+        context.put("action", selectAction);
+        context.put("oldModule", oldModule);
+        context.put("newModule", newModule.getName());
+        context.put("newIssueType", newIssueType.getName());
+
+
         // Do the copy/move
-        Issue newIssue = issue.move(newModule, newIssueType, selectAction, user,
-                                    reason, commentAttrs);
-        getScarabRequestTool(context).setConfirmMessage(l10n.get(DEFAULT_MSG));
+        Issue newIssue = null;
+        try
+        {
+            newIssue = issue.move(newModule, newIssueType, 
+                                  selectAction, user,
+                                  reason, commentAttrs);
+        }
+        catch (Exception e)
+        {
+            scarabR.setAlertMessage(e.getMessage());
+            return;
+        }
+        scarabR.setConfirmMessage(l10n.get(DEFAULT_MSG));
+        context.put("issue", newIssue);
 
         // generate comment
         Object[] msgArgs = {
@@ -227,14 +260,6 @@ public class MoveIssue extends RequireLoginFirstAction
                 "MovedIssueEmailSubject",
                 msgArgs);
         }
-
-        // placed in the context for the email to be able to access them
-        context.put("reason", reason);
-        context.put("action", selectAction);
-        context.put("issue", newIssue);
-        context.put("oldModule", oldModule);
-        context.put("newModule", newModule.getName());
-        context.put("newIssueType", newIssueType.getName());
 
         // Send notification email
         String[] replyToUser = newModule.getSystemEmail();

@@ -73,7 +73,7 @@ import org.tigris.scarab.util.Log;
  * 
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: AbstractScarabUser.java,v 1.59 2002/11/26 18:59:08 elicia Exp $
+ * @version $Id: AbstractScarabUser.java,v 1.60 2003/01/04 01:00:15 elicia Exp $
  */
 public abstract class AbstractScarabUser 
     extends BaseObject 
@@ -302,7 +302,7 @@ public abstract class AbstractScarabUser
     }
 
     /**
-     * @see org.tigris.scarab.om.ScarabUser#getEditableModules(Module)
+     * Get modules user can copy to.
      */
     public List getCopyToModules(Module currentModule)
         throws Exception
@@ -311,34 +311,33 @@ public abstract class AbstractScarabUser
         Module[] userModules = getModules(ScarabSecurity.ISSUE__ENTER);
         for (int i=0; i<userModules.length; i++)
         {
-             Module module = userModules[i];
+            Module module = userModules[i];
              if (!module.isGlobalModule())
              {
                  copyToModules.add(module);
              }
-         }
-         return copyToModules;
+        }
+        return copyToModules;
     }
 
+    /**
+     * Get modules user can move to.
+     * If user has Move permission, can move to any module
+     * If they have Edit permission, can move to another issue type.
+     */
     public List getMoveToModules(Module currentModule)
         throws Exception
     {
         List moveToModules = new ArrayList();
-        Module[] userModules = getModules(ScarabSecurity.ISSUE__ENTER);
-        for (int i=0; i<userModules.length; i++)
+        if (hasPermission(ScarabSecurity.ISSUE__MOVE, currentModule))
         {
-             Module module = userModules[i];
-             // Can move issue to this module if it is not the current module,
-             // Or if it has more issue types than the current one (can
-             // Move to a different issue type within this module)
-             if ((!module.isGlobalModule())
-                && ((!module.getModuleId().equals(currentModule.getModuleId())
-                 || module.getIssueTypes(true).size() > 1)))
-             {
-                 moveToModules.add(module);
-             }
-         }
-         return moveToModules;
+            moveToModules = getCopyToModules(currentModule);
+        }
+        else if (hasPermission(ScarabSecurity.ISSUE__EDIT, currentModule))
+        {
+            moveToModules.add(currentModule);
+        }
+        return moveToModules;
     }
 
     /**
@@ -359,12 +358,10 @@ public abstract class AbstractScarabUser
             Module module = (Module)userModules.get(i);
             Module parent = module.getParent();
 
-//System.out.println ("Module: " + module.getModuleId() + ": " + module.getName());
             if (!editModules.contains(module) && parent != currEditModule)
             {
                 if (hasPermission(ScarabSecurity.MODULE__EDIT, module))
                 {
-//System.out.println ("Added Module: " + module.getModuleId() + ": " + module.getName());
                     editModules.add(module);
                 }
             }
