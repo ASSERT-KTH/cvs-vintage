@@ -1,4 +1,4 @@
-// $Id: TestLinkedHashSet.java,v 1.2 2003/06/29 23:18:56 linus Exp $
+// $Id: TestLinkedHashSet.java,v 1.3 2003/07/01 06:49:59 linus Exp $
 // Copyright (c) 2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -32,8 +32,6 @@
 package org.argouml.util;
 
 import junit.framework.*;
-import java.util.HashSet;
-import java.util.Collection;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.Arrays;
