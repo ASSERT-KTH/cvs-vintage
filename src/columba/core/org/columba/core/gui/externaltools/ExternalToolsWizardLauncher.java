@@ -82,7 +82,7 @@ public class ExternalToolsWizardLauncher {
 		WizardModel model =
 			new DefaultWizardModel(
 				new Step[] {
-					new InfoStep(data),
+					new InfoStep(),
 					new DescriptionStep(data),
 					new LocationStep(data)});
 

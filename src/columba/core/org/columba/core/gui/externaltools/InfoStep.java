@@ -21,7 +21,6 @@ import javax.swing.JComponent;
 import javax.swing.JPanel;
 
 import net.javaprog.ui.wizard.AbstractStep;
-import net.javaprog.ui.wizard.DataModel;
 
 import org.columba.core.gui.util.MultiLineLabel;
 
@@ -33,26 +32,16 @@ import org.columba.core.gui.util.MultiLineLabel;
  */
 public class InfoStep extends AbstractStep {
 
-	DataModel data;
-
-	/**
-	 * @param arg0
-	 * @param arg1
-	 */
-	public InfoStep(DataModel data) {
+	public InfoStep() {
 		// TODO: i18n
 		super("Info", "Info Description");
-
-		this.data = data;
 	}
 
 	/* (non-Javadoc)
 		 * @see net.javaprog.ui.wizard.AbstractStep#createComponent()
 		 */
 	protected JComponent createComponent() {
-
-		JPanel panel = new JPanel();
-		panel.setLayout(new BorderLayout());
+		JPanel panel = new JPanel(new BorderLayout());
 
 		MultiLineLabel label =
 			new MultiLineLabel("This is the configuration wizard of an external tool Columba needs in order to offer you certain functionality.");
@@ -65,7 +54,5 @@ public class InfoStep extends AbstractStep {
 	/* (non-Javadoc)
 	 * @see net.javaprog.ui.wizard.Step#prepareRendering()
 	 */
-	public void prepareRendering() {
-
-	}
+	public void prepareRendering() {}
 }
