@@ -5,120 +5,143 @@
 
 
 <form method="post" action="$action" >
-  <h2>Saved query list</h2>
+#if ($user.UserId)
+<P>
+<div class="functnbar">
+<table cellpadding="0" cellspacing="0" border="0">
+<tr>
+<th>General functions</th>
+<td rowspan="2"><img src="../csi/images/seperator.gif" width="2" height="35" alt="" border="0" /></td>
+
+<th>Select list item(s) to:</th>
+<td rowspan="2"><img src="../csi/images/seperator.gif" width="2" height="35" alt="" border="0" /></td>
+
+</tr>
+<tr>
+<td><input type="submit" value="save" class="bttn" name="eventSubmit_doSavefrequencies" />&nbsp;<input type="submit" value="cancel" class="bttn" name="eventSubmit_doCancel" />&nbsp;<input type="submit" value="new" class="bttn" name="eventSubmit_doNewquery" /></td>                       
+
+<td><input type="submit" value="copy" class="bttn" name="eventSubmit_doCopyquery" />&nbsp;
+   #if ($security.hasPermission("Item | Delete") || !$module.getPrivateQueries($user).isEmpty())
+<input type="submit" value="delete" class="bttn" name="eventSubmit_doDeletequeries" />
+   #end
+&nbsp;<input type="submit" value="subscribe" class="bttn" name="eventSubmit_doSubscribe" />&nbsp;<input type="submit" value="unsubscribe" class="bttn" name="eventSubmit_doUnsubscribe" /></td>
+</tr>
+#end
+
+
+
+<h2>Saved query list</h2>
 
 #if (!$user.UserId)
-    If you wish to see your personal queries, <a href="$link.setPage("Login.vm")">log in.</a>
-  #if ( $module.GlobalQueries.isEmpty() )
-    #set ($noQueries = "true")
-  #end
-#elseif ( ($module.getPrivateQueries($user).isEmpty())
-     && ($module.GlobalQueries.isEmpty())) 
-    #set ($noQueries = "true")
+   If you wish to see your personal queries or to edit your subscriptions to a query, <a href="$link.setPage("Login.vm")">log in.</a>
+   #if ( $module.GlobalQueries.isEmpty() )
+     #set ($noQueries = "true")
+   #end
+#elseif ( ($module.getPrivateQueries($user).isEmpty()) && ($module.GlobalQueries.isEmpty())) 
+   #set ($noQueries = "true")
 #end
 
 #if ($noQueries.equals("true"))
     <div class="alert">There are no stored queries.</div>
 #else
 
- ##      <p>&#171; previous | 1 of 1 | next &#187; </p>
+##      <p>&#171; previous | 1 of 1 | next &#187; </p>
 
-       <p>Click on location to execute</p>
+<p>Click on location to execute</p>
 
-       <table width="100%" border="1" cellspacing="2" cellpadding="3">
-        <tr>
-         <th nowrap="nowrap">
-         <img src="/scarab/images/icon_uparrow.gif" width="13" height="8" alt="sort" border="0" />
-         <img src="/scarab/images/icon_downarrow.gif" width="13" height="8" alt="sort" border="0" />
-         </th>
-
-         <th>Query name:</th>
-
-         <th>Query descr:</th>
-
-         <th>Availability:</th>
-
-         <th>Location: (click to execute)</th>
-         
-         <th>author:</th>
-
+<table width="100%" border="1" cellspacing="2" cellpadding="3">
+<tr>
+        <th nowrap="nowrap">
+        <img src="/scarab/images/icon_uparrow.gif" width="13" height="8" alt="sort" border="0" />
+        <img src="/scarab/images/icon_downarrow.gif" width="13" height="8" alt="sort" border="0" />
+        </th>
+        <th><a href="#" title="sort">subscr</a></th>
+        <th><a href="#" title="sort">subsr frequency</a></th>
+        <th><a href="#" title="sort">Query name</a></th>
+        <th><a href="#" title="sort">Query description</a></th>
+        <th><a href="#" title="sort">Location</a></th>
+        <th><a href="#" title="sort">initiated by</a></th>
         </tr>
-
-
+        
 #foreach ( $query in $module.getPrivateQueries($user) )
 
-         #if( $velocityCount % 2 > 0 )
-            <tr class="a">
-         #else 
-            <tr class="b">
-         #end
-         <td><input type="checkbox" name="delete_$query.QueryId"/></td>
+         #rows ()
+        <td><input type="checkbox" name="action_$query.QueryId"/></td>
+        <td>&nbsp;</td>
+        <td>&nbsp;</td>
+        <td><a href="$query.getEditLink($link.toString())">$query.Name</a></td>
+        <td>#if($query.Description)  $query.Description #else &nbsp; #end</td>
 
-         <td><a href="$query.getEditLink($link.toString())">$query.Name</a></td>
-
-         <td>#if($query.Description)  $query.Description #else &nbsp; #end</td>
-
-         <td>$query.QueryType.Name 
+         <td><a href="$query.getExecuteLink($link.toString())">$query.QueryType.Name</a>
            #if (!$query.Approved)
              (until approved)
            #end
          </td>
-
-         <td><a href="$query.getExecuteLink($link.toString())">project '$scarabR.getModule($query.ModuleId.toString()).Name'</a></td>
-
         #set ($createdUser = $scarabR.getUser($query.UserId.toString()) )
          <td><a href="mailTo:$createdUser.Email">$createdUser.UserName</a></td>
         </tr>
+
 #end
 
 #foreach ( $query in $module.GlobalQueries )
 
-         #if( $velocityCount % 2 > 0 )
-            <tr class="a">
-         #else 
-            <tr class="b">
-         #end
-         <td>
-      #if ($security.hasPermission("Item | Delete"))
-            <input type="checkbox" name="delete_$query.QueryId"/>
-      #else
-            &nbsp;
-      #end
-         </td>
+         #rows ()
+        <td><input type="checkbox" name="action_$query.QueryId"/></td>
+        <td>#if ($query.isUserSubscribed($user.UserId)) y #else n #end</td>
+        <td> 
+           #if ($query.isUserSubscribed($user.UserId))
+              #set ($id = $query.getSubscription($user.UserId).SubscriptionFrequency)
+           #else
+              #set ($id = $query.SubscriptionFrequency)
+           #end
+        <select name="frequency_$query.QueryId">
+        #frequencySelectBox ($query $id)
+        </select></td>
+        #if ($security.hasPermission("Item | Approve"))
+        <td><a href="$query.getEditLink($link.toString())">$query.Name</a></td>
+        #else
+        <td>$query.Name</td>
+        #end
+        <td>#if($query.Description)  $query.Description #else &nbsp; #end</td>
 
-         <td>
-          #if ($security.hasPermission("Item | Delete"))
-            <a href="$query.getEditLink($link.toString())">$query.Name</a>
-          #else
-            $query.Name
-          #end
-         </td>
-
-         <td>#if($query.Description)  $query.Description #else &nbsp; #end</td>
-
-         <td>$query.QueryType.Name 
+        <td><a href="$query.getExecuteLink($link.toString())">$query.QueryType.Name</a>
            #if (!$query.Approved)
              (until approved)
            #end
          </td>
-
-         <td><a href="$query.getExecuteLink($link.toString())">project '$scarabR.getModule($query.ModuleId.toString()).Name'</a></td>
-
         #set ($createdUser = $scarabR.getUser($query.UserId.toString()) )
          <td><a href="mailTo:$createdUser.Email">$createdUser.UserName</a></td>
         </tr>
 #end
-
       </table>
 
 ##       <p>&#171; previous | 1 of 1 | next &#187; </p>
 
-<p class="functnbar">
-      #if ($security.hasPermission("Item | Delete") || !$module.getPrivateQueries($user).isEmpty())
-<input type="submit" value="delete selected" name="eventSubmit_doDeletequeries" />&#160;
-      #end
-<input type="submit" value="cancel" name="eventSubmit_doCancel" />
-</p>
+ 
+#if ($user.UserId)
+<P>
+<div class="functnbar">
+<table cellpadding="0" cellspacing="0" border="0">
+<tr>
+<th>General functions</th>
+<td rowspan="2"><img src="../csi/images/seperator.gif" width="2" height="35" alt="" border="0" /></td>
+
+<th>Select list item(s) to:</th>
+<td rowspan="2"><img src="../csi/images/seperator.gif" width="2" height="35" alt="" border="0" /></td>
+
+</tr>
+<tr>
+<td><input type="submit" value="save" class="bttn" name="eventSubmit_doSavefrequencies" />&nbsp;<input type="submit" value="cancel" class="bttn" name="eventSubmit_doCancel" />&nbsp;<input type="submit" value="new" class="bttn" name="eventSubmit_doNewquery" /></td>                       
+
+<td><input type="submit" value="copy" class="bttn" name="eventSubmit_doCopyquery" />&nbsp;
+   #if ($security.hasPermission("Item | Delete") || !$module.getPrivateQueries($user).isEmpty())
+<input type="submit" value="delete" class="bttn" name="eventSubmit_doDeletequeries" />
+   #end
+&nbsp;<input type="submit" value="subscribe" class="bttn" name="eventSubmit_doSubscribe" />&nbsp;<input type="submit" value="unsubscribe" class="bttn" name="eventSubmit_doUnsubscribe" /></td>
+</tr>
+#end
+</table>
+</div>
 
       </div>
      </td>
