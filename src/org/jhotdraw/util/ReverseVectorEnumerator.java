@@ -1,5 +1,5 @@
 /*
- * @(#)ReverseVectorEnumerator.java 5.1
+ * @(#)ReverseVectorEnumerator.java 5.2
  *
  */
 

@@ -1,5 +1,5 @@
 /*
- * @(#)HJDError.java 5.1
+ * @(#)HJDError.java 5.2
  *
  */
 

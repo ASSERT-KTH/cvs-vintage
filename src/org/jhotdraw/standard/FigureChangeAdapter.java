@@ -1,12 +1,11 @@
 /*
- * @(#)FigureChangeAdapter.java 5.1
+ * @(#)FigureChangeAdapter.java 5.2
  *
  */
 
-package CH.ifa.draw.framework;
+package CH.ifa.draw.standard;
 
-import java.awt.Rectangle;
-import java.util.EventListener;
+import CH.ifa.draw.framework.*;
 
 /**
  * Empty implementation of FigureChangeListener.
