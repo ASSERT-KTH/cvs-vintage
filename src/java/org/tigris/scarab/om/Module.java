@@ -58,7 +58,7 @@ import org.apache.turbine.services.db.om.NumberKey;
 import org.apache.turbine.services.db.om.Persistent;
 import org.apache.turbine.services.db.util.Criteria;
 import org.apache.turbine.services.db.util.IDBroker;
-import org.apache.turbine.services.db.om.peer.BasePeer;
+import org.apache.turbine.services.db.util.BasePeer;
 
 // Scarab classes
 import org.tigris.scarab.services.module.ModuleEntity;

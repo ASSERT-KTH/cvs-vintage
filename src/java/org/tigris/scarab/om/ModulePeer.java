@@ -8,7 +8,7 @@ import com.workingdogs.village.*;
 
 // Turbine classes
 import org.apache.turbine.services.security.entity.Group;
-import org.apache.turbine.services.db.om.peer.BasePeer;
+import org.apache.turbine.services.db.util.BasePeer;
 import org.apache.turbine.services.db.util.Criteria;
 import org.apache.turbine.util.*;
 import org.apache.turbine.services.security.util.DataBackendException;

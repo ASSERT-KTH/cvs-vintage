@@ -7,7 +7,6 @@ import java.util.*;
 import com.workingdogs.village.*;
 
 // Turbine classes
-import org.apache.turbine.services.db.om.peer.*;
 import org.apache.turbine.services.db.*;
 import org.apache.turbine.services.db.map.*;
 import org.apache.turbine.services.db.pool.DBConnection;

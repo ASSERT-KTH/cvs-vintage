@@ -5,7 +5,7 @@ import java.util.*;
 
 // Turbine classes
 import org.apache.turbine.services.db.om.*;
-import org.apache.turbine.services.db.om.peer.BasePeer;
+import org.apache.turbine.services.db.util.BasePeer;
 import org.apache.turbine.services.db.util.Criteria;
 import org.apache.turbine.util.ObjectUtils;
 import org.apache.turbine.util.StringUtils;
