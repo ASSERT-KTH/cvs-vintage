@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/jasper/runtime/JspWriterImpl.java,v 1.1 1999/10/09 00:20:40 duncan Exp $
- * $Revision: 1.1 $
- * $Date: 1999/10/09 00:20:40 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/jasper/runtime/JspWriterImpl.java,v 1.2 2000/05/12 21:59:11 costin Exp $
+ * $Revision: 1.2 $
+ * $Date: 2000/05/12 21:59:11 $
  *
  * ====================================================================
  * 
@@ -100,6 +100,10 @@ public class JspWriterImpl extends JspWriter {
 
     protected boolean flushed = false;
 
+    public JspWriterImpl() {
+	super( defaultCharBufferSize, true );
+    }
+
     /**
      * Create a buffered character-output stream that uses a default-sized
      * output buffer.
@@ -129,7 +133,19 @@ public class JspWriterImpl extends JspWriter {
 	nextChar = 0;
     }
 
+    void init( ServletResponse response, int sz, boolean autoFlush ) {
+	this.response= response;
+	if( sz > 0 && ( cb == null || sz > cb.length ) )
+	    cb=new char[sz];
+	nextChar = 0;
+	this.autoFlush=autoFlush;
+	this.bufferSize=sz;
+    }
 
+    void recycle() {
+	
+    }
+    
     /**
      * Flush the output buffer to the underlying character stream, without
      * flushing the stream itself.  This method is non-private only so that it
@@ -209,7 +225,7 @@ public class JspWriterImpl extends JspWriter {
             if (out != null)
                 out.close();
             out = null;
-            cb = null;
+	    //            cb = null;
         }
     }
 

@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/jasper/runtime/JspFactoryImpl.java,v 1.1 1999/10/09 00:20:39 duncan Exp $
- * $Revision: 1.1 $
- * $Date: 1999/10/09 00:20:39 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/jasper/runtime/JspFactoryImpl.java,v 1.2 2000/05/12 21:59:10 costin Exp $
+ * $Revision: 1.2 $
+ * $Date: 2000/05/12 21:59:10 $
  *
  * ====================================================================
  * 
@@ -68,6 +68,8 @@ import javax.servlet.jsp.JspFactory;
 import javax.servlet.jsp.JspEngineInfo;
 import javax.servlet.jsp.PageContext;
 
+import org.apache.tomcat.util.SimplePool;
+
 /**
  * Implementation of JspFactory from the spec. Helps create
  * PageContext and other animals.  
@@ -75,6 +77,9 @@ import javax.servlet.jsp.PageContext;
  * @author Anil K. Vijendran
  */
 public class JspFactoryImpl extends JspFactory {
+    private SimplePool pool=new SimplePool( 100 );
+    private static final boolean usePool=true;
+
     public PageContext getPageContext(Servlet servlet, ServletRequest request,
                                       ServletResponse response, 
 				      String errorPageURL, 
@@ -82,7 +87,13 @@ public class JspFactoryImpl extends JspFactory {
                                       boolean autoflush) 
     {
         try {
-            PageContext pc =  new PageContextImpl(this);
+	    PageContext pc;
+	    if( usePool ) {
+		pc=(PageContextImpl)pool.get();
+		if( pc == null ) pc= new PageContextImpl(this);
+	    } else {
+		pc =  new PageContextImpl(this);
+	    }
             pc.initialize(servlet, request, response, errorPageURL, 
                           needsSession, bufferSize, autoflush);
             return pc;
@@ -95,6 +106,8 @@ public class JspFactoryImpl extends JspFactory {
 
     public void releasePageContext(PageContext pc) {
         pc.release();
+	if( usePool)
+	    pool.put( pc );
     }
 
     static class SunJspEngineInfo extends JspEngineInfo {

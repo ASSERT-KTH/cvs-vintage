@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/jasper/runtime/PageContextImpl.java,v 1.7 2000/04/05 18:42:03 akv Exp $
- * $Revision: 1.7 $
- * $Date: 2000/04/05 18:42:03 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/jasper/runtime/PageContextImpl.java,v 1.8 2000/05/12 21:59:11 costin Exp $
+ * $Revision: 1.8 $
+ * $Date: 2000/05/12 21:59:11 $
  *
  * ====================================================================
  *
@@ -131,8 +131,10 @@ public class PageContextImpl extends PageContext {
 	    throw new IllegalStateException("Page needs a session and none is available");
 
 	// initialize the initial out ...
-
-	this.out = _createOut(bufferSize, autoFlush); // throws
+	if( out == null ) 
+	    out = _createOut(bufferSize, autoFlush); // throws
+	else
+	    ((JspWriterImpl)out).init(response, bufferSize, autoFlush );
 
 	if (this.out == null)
 	    throw new IllegalStateException("failed initialize JspWriter");
@@ -162,7 +164,7 @@ public class PageContextImpl extends PageContext {
 	autoFlush    = true;
 	request      = null;
 	response     = null;
-	out	     = null; // out is closed elsewhere
+	// Reuse	out	     = null; // out is closed elsewhere
 	session      = null;
 
 	attributes.clear();
