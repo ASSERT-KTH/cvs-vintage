@@ -38,7 +38,7 @@ import org.gjt.sp.jedit.*;
  * A container for dockable windows. This class should never be used
  * directly.
  * @author Slava Pestov
- * @version $Id: PanelWindowContainer.java,v 1.71 2003/06/11 01:15:32 spestov Exp $
+ * @version $Id: PanelWindowContainer.java,v 1.72 2003/12/16 01:58:57 spestov Exp $
  * @since jEdit 4.0pre1
  */
 public class PanelWindowContainer implements DockableWindowContainer
@@ -333,6 +333,16 @@ public class PanelWindowContainer implements DockableWindowContainer
 		{
 			buttonPanel.add((AbstractButton)buttons.get(i));
 		}
+	} //}}}
+
+	//{{{ getWrappedDimension() method
+	/**
+	 * Returns the width or height of wrapped rows or columns.
+	 */
+	int getWrappedDimension(int dimension)
+	{
+		return ((ButtonLayout)buttonPanel.getLayout())
+			.getWrappedDimension(buttonPanel,dimension);
 	} //}}}
 
 	//}}}
@@ -679,6 +689,66 @@ public class PanelWindowContainer implements DockableWindowContainer
 		//{{{ removeLayoutComponent() method
 		public void removeLayoutComponent(Component comp) {} //}}}
 
+		//{{{ getWrappedDimension() method
+		/**
+		 * Returns the width or height of wrapped rows or columns.
+		 */
+		int getWrappedDimension(JComponent parent, int dimension)
+		{
+			Insets insets = ((JComponent)parent).getBorder()
+				.getBorderInsets((JComponent)parent);
+
+			Component[] comp = parent.getComponents();
+			if(comp.length <= 2)
+				return 0;
+
+			Dimension dim = comp[2].getPreferredSize();
+
+			if(position.equals(DockableWindowManager.TOP)
+				|| position.equals(DockableWindowManager.BOTTOM))
+			{
+				int width = dimension - insets.right;
+				int rowHeight = Math.max(dim.height,closeBox.getPreferredSize().width);
+				int x = rowHeight * 2 + insets.left;
+				Dimension returnValue = new Dimension(0,rowHeight
+					+ insets.top + insets.bottom);
+
+				for(int i = 2; i < comp.length; i++)
+				{
+					int btnWidth = comp[i].getPreferredSize().width;
+					if(btnWidth + x > width)
+					{
+						returnValue.height += rowHeight;
+						x = insets.left;
+					}
+
+					x += btnWidth;
+				}
+				return returnValue.height;
+			}
+			else
+			{
+				int height = dimension - insets.bottom;
+				int colWidth = Math.max(dim.width,closeBox.getPreferredSize().height);
+				int y = colWidth * 2 + insets.top;
+				Dimension returnValue = new Dimension(colWidth
+					+ insets.left + insets.right,0);
+
+				for(int i = 2; i < comp.length; i++)
+				{
+					int btnHeight = comp[i].getPreferredSize().height;
+					if(btnHeight + y > height)
+					{
+						returnValue.width += colWidth;
+						y = insets.top;
+					}
+
+					y += btnHeight;
+				}
+				return returnValue.width;
+			}
+		} //}}}
+
 		//{{{ preferredLayoutSize() method
 		public Dimension preferredLayoutSize(Container parent)
 		{
@@ -708,11 +778,11 @@ public class PanelWindowContainer implements DockableWindowContainer
 					int btnWidth = comp[i].getPreferredSize().width;
 					if(btnWidth + x > width)
 					{
-						x = btnWidth + insets.left;
 						returnValue.height += rowHeight;
+						x = insets.left;
 					}
-					else
-						x += btnWidth;
+
+					x += btnWidth;
 				}
 				return returnValue;
 			}
@@ -787,6 +857,14 @@ public class PanelWindowContainer implements DockableWindowContainer
 					comp[i].setBounds(x,y,btnWidth,rowHeight);
 					x += btnWidth;
 				}
+
+				if(y + rowHeight != parent.getHeight())
+				{
+					parent.setSize(
+						parent.getWidth(),
+						y + rowHeight);
+					((JComponent)parent).revalidate();
+				}
 			}
 			else
 			{
@@ -807,6 +885,13 @@ public class PanelWindowContainer implements DockableWindowContainer
 					}
 					comp[i].setBounds(x,y,colWidth,btnHeight);
 					y += btnHeight;
+				}
+
+				if(x + colWidth != parent.getWidth())
+				{
+					parent.setSize(x + colWidth,
+						parent.getHeight());
+					((JComponent)parent).revalidate();
 				}
 			}
 		} //}}}
