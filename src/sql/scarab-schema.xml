@@ -2,7 +2,7 @@
 <!DOCTYPE database SYSTEM
           "http://jakarta.apache.org/turbine/dtd/database.dtd">
 
-<!-- $Id: scarab-schema.xml,v 1.83 2002/02/14 00:36:03 jmcnally Exp $ -->
+<!-- $Id: scarab-schema.xml,v 1.84 2002/02/23 22:03:20 jmcnally Exp $ -->
 
 <database name="@DATABASE_PROP_NAME@">
 <!--
@@ -1198,7 +1198,7 @@
     <!--
         Default subscription frequency.
     -->
-    <column name="DEFAULT_SUBSCRIPTION_FREQUENCY_ID" javaName="SubscriptionFrequency" required="false" type="INTEGER"></column>
+    <column name="SUBSCRIPTION_FREQUENCY_ID" required="false" type="INTEGER" />
 
     <foreign-key foreignTable="TURBINE_USER">
         <reference local="USER_ID" foreign="USER_ID"/>
@@ -1213,7 +1213,7 @@
         <reference local="ISSUE_TYPE_ID" foreign="ISSUE_TYPE_ID"/>
     </foreign-key>
     <foreign-key foreignTable="SCARAB_FREQUENCY">
-        <reference local="DEFAULT_SUBSCRIPTION_FREQUENCY_ID" foreign="FREQUENCY_ID"/>
+        <reference local="SUBSCRIPTION_FREQUENCY_ID" foreign="FREQUENCY_ID"/>
     </foreign-key>
 </table>
 

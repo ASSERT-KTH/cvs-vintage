@@ -70,7 +70,7 @@ Go to your $link.setPage("QueryList.vm").setLabel("Stored Query List").
    <th width="120">Default frequency</th>
    <td>
    <select name="$queryGroup.Frequency.Key">
-   #frequencySelectBox ($currentQuery $currentQuery.SubscriptionFrequency)
+   #frequencySelectBox($currentQuery.SubscriptionFrequencyId)
    </select></td>
   </tr>
  </table>
