@@ -31,7 +31,7 @@ import org.jboss.logging.Logger;
  * Compiles EJB-QL and JBossQL into SQL using OUTER and INNER joins.
  *
  * @author <a href="mailto:alex@jboss.org">Alex Loubyansky</a>
- * @version $Revision: 1.9 $
+ * @version $Revision: 1.10 $
  */
 public final class EJBQLToSQL92Compiler
    implements QLCompiler, JBossQLParserVisitor
@@ -719,7 +719,8 @@ public final class EJBQLToSQL92Compiler
 
          sql.append(SQLUtil.WHERE);
 
-         SQLUtil.getSelfCompareWhereClause(colEntity.getPrimaryKeyFields(), parentAlias, localParentAlias, sql);
+         JDBCAbstractEntityBridge col0 = (JDBCAbstractEntityBridge)colPath.getEntity(0);
+         SQLUtil.getSelfCompareWhereClause(col0.getPrimaryKeyFields(), parentAlias, localParentAlias, sql);
          sql.append(SQLUtil.AND);
          SQLUtil.getWhereClause(colEntity.getPrimaryKeyFields(), colAlias + "_local", sql);
       }
@@ -764,22 +765,25 @@ public final class EJBQLToSQL92Compiler
          }
 
          sql.append(SQLUtil.WHERE);
+
+         JDBCAbstractEntityBridge member0 = (JDBCAbstractEntityBridge)memberPath.getEntity(0);
+         String member0Alias = aliasManager.getAlias(memberPath.getPath(0));
          if(memberPath.size() > 1)
          {
             SQLUtil.getSelfCompareWhereClause(colEntity.getPrimaryKeyFields(),
                memberAlias + "_local",
                colAlias + "_local",
                sql);
-            String memberParent = aliasManager.getAlias(memberPath.getPath(0));
+
             sql.append(SQLUtil.AND);
-            SQLUtil.getSelfCompareWhereClause(colEntity.getPrimaryKeyFields(),
-               memberParent,
-               memberParent + "_local",
+            SQLUtil.getSelfCompareWhereClause(member0.getPrimaryKeyFields(),
+               member0Alias,
+               member0Alias + "_local",
                sql);
          }
          else
          {
-            SQLUtil.getSelfCompareWhereClause(colEntity.getPrimaryKeyFields(), memberAlias, colAlias + "_local", sql);
+            SQLUtil.getSelfCompareWhereClause(member0.getPrimaryKeyFields(), memberAlias, colAlias + "_local", sql);
          }
       }
 
@@ -1377,8 +1381,8 @@ public final class EJBQLToSQL92Compiler
                   }
 
                   join(joinAlias, sql);
-                  leftAlias = joinAlias;
                }
+               leftAlias = joinAlias;
             }
          }
       }
