@@ -13,6 +13,7 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
 //
 //All Rights Reserved.
+
 package org.columba.mail.gui.attachment;
 
 import java.awt.event.MouseAdapter;
@@ -23,7 +24,6 @@ import java.io.File;
 import javax.swing.JPopupMenu;
 import javax.swing.JScrollPane;
 
-import org.columba.core.util.SwingWorker;
 import org.columba.mail.gui.attachment.action.OpenAction;
 import org.columba.mail.gui.attachment.util.IconPanel;
 import org.columba.mail.gui.frame.MailFrameController;
@@ -95,13 +95,11 @@ public class AttachmentController {
 			 */
 	}
 
-	public MailFrameController getFrameController()
-	{
+	public MailFrameController getFrameController()	{
 		return mailFrameController;
 	}
 
 	public AttachmentView getView() {
-
 		return view;
 	}
 
@@ -109,11 +107,8 @@ public class AttachmentController {
 		return model;
 	}
 
-	
-
 	public boolean setMimePartTree(MimePartTree collection) {
 		return getView().setMimePartTree(collection);
-
 	}
 
 	/*
@@ -199,5 +194,4 @@ public class AttachmentController {
 	public MailFrameController getMailFrameController() {
 		return mailFrameController;
 	}
-
 }
