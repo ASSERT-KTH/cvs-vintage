@@ -20,10 +20,20 @@ you are installing all of the required distributions.
   and add "$JAVA_HOME/bin" to your PATH.  Configure the CLASSPATH environment
   variable as well, if required.
 
-* Download and install the Java API for XML Parsing implementation (current
-  version number is 1.0) from <http://java.sun.com/xml>.  Make sure that the
-  "jaxp.jar" and "parser.jar" files are on your class path.  (NOTE:  In the
-  future it will be possible to use any JAXP-compliant parser).
+* Download and install an XML parser that is compliant with the Java API for
+  XML Parsing specification.  You will need to add the appropriate JAR files
+  for your parser to your system classpath.  Parsers known to work with
+  Tomcat include:
+
+  * The JAXP reference implementation (version 1.0 or later), which can be
+    downloaded from <http://java.sun.com/xml>.
+
+  * The Xerces parser (version 1.1.2 or later), which can be downloaded
+    from <http://xml.apache.org>.
+
+* Download and install the Java API for XML Parsing implementation (get version
+  1.0 or later) from <http://java.sun.com/xml>.  Make sure that the
+  "jaxp.jar" and "parser.jar" files are on your class path.
 
 * Download and install the Ant distribution (subproject "jakarta-ant") into
   a directory named "$JAKARTA_HOME/jakarta-ant".  If you have downloaded the
@@ -35,7 +45,7 @@ you are installing all of the required distributions.
 	bootstrap		<-- Windows
 
   This should result in the creation of a file "ant.jar" in the "lib"
-  subdirectory, which will be used when building Watchdog.
+  subdirectory, which will be used when building Tomcat.
 
 * Download and install the Servletapi distribution (subproject
   "jakarta-servletapi") into a subdirectory named
@@ -48,13 +58,14 @@ you are installing all of the required distributions.
 	build dist		<-- Windows
 
   This should result in the creation of a file "servlet.jar" in the "lib"
-  subdirectory, which will be used when building Watchdog.
+  subdirectory, which will be used when building Tomcat.
 
 * Download the source distribution of Tomcat (subpackage "jakarta-tomcat"),
   or check it out via anonymous CVS, into a subdirectory named
-  "$JAKARTA_HOME/jakarta-tomcat".  You can now build an "unpacked" version
-  of Tomcat (quicker builds because no time is spent JARing up results)
-  by executing the following commands:
+  "$JAKARTA_HOME/jakarta-tomcat".  If you are using Java2 (JDK 1.2 or later),
+  make sure you have the "tools.jar" file from your JDK in your classpath.
+  You can now build an "unpacked" version of Tomcat (quicker builds because
+  no time is spent JARing up results) by executing the following commands:
 
 	cd $JAKARTA_HOME/jakarta-tomcat
 	./build.sh		<-- Unix
@@ -64,13 +75,13 @@ you are installing all of the required distributions.
 
 	cd $JAKARTA_HOME/build/tomcat
 	./bin/startup.sh	<-- Unix
-	bin\startup		<-- Indows
+	bin\startup		<-- Windows
 
   and it can be shut down as follows:
 
 	cd $JAKARTA_HOME/build/tomcat
 	./bin/shutdown.sh	<-- Unix
-	bin\shutdown		<-- Indows
+	bin\shutdown		<-- Windows
 
 * You can also build a binary distribution version of Tomcat as follows:
 
@@ -100,7 +111,7 @@ You can run the "unpacked" version of Tomcat as follows:
 
 	cd $JAKARTA_HOME/build/tomcat
 	./bin/startup.sh	<-- Unix
-	bin\startup		<-- Indows
+	bin\startup		<-- Windows
 
 * You can now access the default web pages from a web browser at URL:
 
@@ -118,7 +129,7 @@ You can run the "distribution" version of Tomcat as follows:
 
 	cd $JAKARTA_HOME/dist/tomcat
 	./bin/startup.sh	<-- Unix
-	bin\startup		<-- Indows
+	bin\startup		<-- Windows
 
 * You can now access the default web pages from a web browser at URL:
 
