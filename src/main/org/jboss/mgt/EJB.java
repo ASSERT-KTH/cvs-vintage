@@ -30,6 +30,7 @@ public class EJB
 
    private String mClass;
    private int mType;
+   private boolean mDeployed;
 
    // -------------------------------------------------------------------------
    // Constructors
@@ -37,10 +38,13 @@ public class EJB
 
    /**
     * @param pName Name of the Servlet
+    * @param pType Type of the EJB
+    * @param pDeployed True if the EJB is deployed now
     **/
    public EJB(
       String pName,
-      int pType
+      int pType,
+      boolean pDeployed
    ) {
       super( pName );
       mType = pType;
@@ -55,6 +59,13 @@ public class EJB
     **/
    public int getType() {
       return mType;
+   }
+
+   /**
+    * @return True if the EJB is deployed now
+    **/
+   public boolean isDeployed() {
+      return mDeployed;
    }
 
    public String toString() {

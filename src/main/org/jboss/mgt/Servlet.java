@@ -22,6 +22,7 @@ public class Servlet
 
    private String mClass;
    private Map mParameters;
+   private boolean mLoaded;
 
    // -------------------------------------------------------------------------
    // Constructors
@@ -31,11 +32,13 @@ public class Servlet
     * @param pName Name of the Servlet
     * @param pClassName Name of the class the servlet is based on
     * @param pParameters Map of the Servlet Parameters
+    * @param pLoaded True if the servlet is loaded now
     **/
    public Servlet(
       String pName,
       String pClassName,
-      Map pParameters
+      Map pParameters,
+      boolean pLoaded
    ) {
       super( pName );
       mClass = pClassName;
@@ -60,6 +63,13 @@ public class Servlet
     **/
    public Map getParameters() {
       return mParameters;
+   }
+   
+   /**
+    * @return True if the servlet is loaded now
+    **/
+   public boolean isLoaded() {
+      return mLoaded;
    }
 
    public String toString() {
