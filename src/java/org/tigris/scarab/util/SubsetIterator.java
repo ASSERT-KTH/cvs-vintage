@@ -56,26 +56,41 @@ public class SubsetIterator
     public static final SubsetIterator EMPTY = new EmptySubsetIterator();
 
     private Iterator i;
-    int offset;
-    int limit;
-    int count;
+    private final int offset;
+    private final int elements;
+    private int currentPosition;
     
     /**
-     *
+     * Constructs an itarator on a subset of the given iterator.
+     * The SubsetIterator starts with the offset-element and iterates
+     * over <code>elements</code> elements
+     * 
+     * @param i      the Iterator to subset
+     * @param offset the position of the first element of the subset
+     * @param element  the number of elements the subset should have. 
      */
-    public SubsetIterator(Iterator i, int offset, int limit)
+    public SubsetIterator(Iterator i, int offset, int elements)
     {
+     
         this.i = i;
         this.offset = offset;
-        this.limit = limit;
-        count = 0;
+        this.elements = elements;
+        currentPosition = 0;
     }
 
-    private SubsetIterator()
+    /**
+     * Constructs an itarator on a subset of the given iterator.
+     * The SubsetIterator starts with the offset-element and iterates
+     * over all elements
+     * 
+     * @param i      the Iterator to subset
+     * @param offset the position of the first element of the subset
+     */
+    public SubsetIterator(Iterator i, int offset)
     {
-        this.i = Collections.EMPTY_SET.iterator();
+        this(i, offset, Integer.MAX_VALUE);
     }
-
+    
     private Boolean hasNext;
     public boolean hasNext()
     {
@@ -88,7 +103,6 @@ public class SubsetIterator
     }
 
     boolean firstCall = true;
-    Object value;
     private boolean internalIterate()
     {
         if (firstCall) 
@@ -99,8 +113,8 @@ public class SubsetIterator
             }
             firstCall = false;
         }
-        count++;
-        return i.hasNext() && (limit < 0 || count <= limit);
+        currentPosition++;
+        return i.hasNext() && currentPosition <= elements;
     }
 
     public Object next()
@@ -129,7 +143,7 @@ class EmptySubsetIterator extends SubsetIterator
     {
         super(Collections.EMPTY_SET.iterator(), 0, 0);
     }
-
+    
     public boolean hasNext()
     {
         return false;

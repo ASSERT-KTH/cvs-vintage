@@ -46,89 +46,45 @@ package org.tigris.scarab.util;
  * individuals on behalf of Collab.Net.
  */ 
 
-import java.util.NoSuchElementException;
 import org.tigris.scarab.util.IteratorWithSize;
 
-public class SubsetIteratorWithSize 
+public class SubsetIteratorWithSize extends SubsetIterator
     implements IteratorWithSize
 {
-    private IteratorWithSize i;
-    final int offset;
-    final int limit;
-    final int size;
-    int count;
+    private final int size;
 
     /**
-     *
+     * Constructs an itarator on a subset of the given iterator.
+     * The SubsetIterator starts with the offset-element, iterates
+     * over <code>elements</code> elements and can return the size
+     * 
+     * @param i      the IteratorWithSize to subset
+     * @param offset the position of the first element of the subset
+     * @param elements the number of elements the subset should have
      */
-    public SubsetIteratorWithSize(IteratorWithSize i, int offset, int limit)
+    public SubsetIteratorWithSize(IteratorWithSize i, int offset, int elements)
     {
-        this.i = i;
-        this.offset = offset;
-        this.limit = limit;
-        count = 0;
-        int isize = i.size();
-        size = (offset + limit > isize) ? isize - offset : limit;
+        super(i, offset, elements);
+        this.size = (offset + elements > i.size()) ? i.size() - offset : elements;
     }
 
-    private Boolean hasNext;
-    public boolean hasNext()
+    /**
+     * Constructs an itarator on a subset of the given iterator.
+     * The SubsetIteratorWithSize starts with the offset-element and iterates
+     * over limit elements and can return its size
+     * 
+     * @param i      the IteratorWithSize to subset
+     * @param offset the position of the first element of the subset
+     * @param elements the number of elements the subset should have
+     */
+    public SubsetIteratorWithSize(IteratorWithSize i, int offset)
     {
-        if (hasNext == null) 
-        {
-            hasNext = (internalIterate()) 
-                ? Boolean.TRUE : Boolean.FALSE;
-        }
-        return hasNext.booleanValue();
-    }
-
-    boolean firstCall = true;
-    private boolean internalIterate()
-    {
-        if (firstCall) 
-        {
-            for (int m = 0; i.hasNext() && m < offset; m++) 
-            {
-                i.next();
-            }
-            firstCall = false;
-        }
-        count++;
-        //System.out.println("Subset iterator: i.hasNext()=" + i.hasNext() +
-        //                   "; limit=" + limit + "; count=" + count);
-        return i.hasNext() && (limit < 0 || count <= limit);
-    }
-
-    public Object next()
-    {
-        if (hasNext()) 
-        {
-            hasNext = null;
-            return i.next();
-        }
-        else 
-        {
-            throw new NoSuchElementException("Iterator is exhausted");
-        }
-    }
-
-    public void remove()
-    {
-        i.remove();
+        super(i, offset);
+        this.size = i.size()-offset;
     }
     
     public int size()
     {
         return size;
-    }
-
-    public int limit()
-    {
-        return limit;
-    }
-    
-    public int offset()
-    {
-        return offset;
     }
 }
