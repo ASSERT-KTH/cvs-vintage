@@ -19,6 +19,7 @@ package org.columba.addressbook.gui.autocomplete;
 
 import java.util.Hashtable;
 import java.util.Iterator;
+import java.util.Vector;
 
 import org.columba.addressbook.folder.AbstractFolder;
 import org.columba.addressbook.main.AddressbookInterface;
@@ -26,8 +27,10 @@ import org.columba.addressbook.model.ContactItem;
 import org.columba.addressbook.model.GroupItem;
 import org.columba.addressbook.model.HeaderItem;
 import org.columba.addressbook.model.HeaderItemList;
+import org.frappucino.addresscombobox.ItemProvider;
 
-public class AddressCollector {
+public class AddressCollector implements ItemProvider {
+
 	private Hashtable _adds;
 
 	private static AddressCollector instance;
@@ -66,7 +69,7 @@ public class AddressCollector {
 			} else {
 				// group item
 				GroupItem item = (GroupItem) headerItem;
-				
+
 				addAddress(item.getDisplayName(), item);
 			}
 		}
@@ -95,5 +98,24 @@ public class AddressCollector {
 
 	public void clear() {
 		_adds.clear();
+	}
+
+	/**
+	 * @see org.frappucino.addresscombobox.ItemProvider#getMatchingItems(java.lang.String)
+	 */
+	public Object[] getMatchingItems(String s) {
+		Object[] items = getAddresses();
+
+		Vector v = new Vector();
+		//		 for each JComboBox item
+		for (int k = 0; k < items.length; k++) {
+			// to lower case
+			String item = items[k].toString().toLowerCase();
+			// compare if item starts with str
+			if (item.startsWith(s.toLowerCase())) {
+				v.add(item);
+			}
+		}
+		return v.toArray();
 	}
 }

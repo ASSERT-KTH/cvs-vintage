@@ -16,12 +16,10 @@
 package org.columba.mail.gui.composer;
 
 import java.nio.charset.Charset;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Vector;
 import java.util.logging.Logger;
 
-import org.columba.addressbook.model.ContactItem;
 import org.columba.addressbook.parser.AddressParser;
 import org.columba.addressbook.parser.ListParser;
 import org.columba.mail.command.FolderCommandReference;
@@ -31,7 +29,6 @@ import org.columba.mail.message.ColumbaMessage;
 import org.columba.ristretto.message.Address;
 import org.columba.ristretto.message.Header;
 import org.columba.ristretto.message.StreamableMimePart;
-import org.columba.ristretto.parser.ParserException;
 
 /**
  * @author frd
@@ -64,12 +61,12 @@ public class ComposerModel {
 	private boolean signMessage;
 
 	private boolean encryptMessage;
-	
+
 	/**
 	 * source reference
 	 * <p>
-	 * When replying/forwarding this is the original message
-	 * you selected in the message-list and replied to
+	 * When replying/forwarding this is the original message you selected in the
+	 * message-list and replied to
 	 */
 	private FolderCommandReference[] ref;
 
@@ -131,39 +128,35 @@ public class ComposerModel {
 		bccList = new Vector();
 		attachments = new Vector();
 	}
-	
+
 	/**
 	 * Set source reference.
 	 * <p>
 	 * The message you are for example replying to.
 	 * 
-	 * @param ref	source reference
+	 * @param ref
+	 *            source reference
 	 */
 	public void setSourceReference(FolderCommandReference[] ref) {
 		this.ref = ref;
 	}
-	
+
 	/**
 	 * Get source reference.
 	 * <p>
 	 * The message you are for example replying to.
 	 * 
-	 * @return		source reference
+	 * @return source reference
 	 */
 	public FolderCommandReference[] getSourceReference() {
 		return ref;
 	}
 
 	public void setTo(Address[] a) {
+		getToList().clear();
+
 		for (int i = 0; i < a.length; i++) {
-			ContactItem item = new ContactItem();
-			item.setDisplayName(a[i].getShortAddress());
-
-			item.setAddress(a[i].getMailAddress());
-
-			item.setHeader("To");
-
-			getToList().add(item);
+			getToList().add(a[i].toString());
 		}
 	}
 
@@ -178,37 +171,8 @@ public class ComposerModel {
 			return;
 		}
 
-		/*
-		 * int index = s.indexOf(","); if (index != -1) { String to = s; Vector
-		 * v = ListParser.parseString(to);
-		 * 
-		 * for (int i = 0; i < v.size(); i++) { System.out.println("model add:" +
-		 * v.get(i)); HeaderItem item = new HeaderItem(HeaderItem.CONTACT);
-		 * item.add("displayname", (String) v.get(i)); item.add("field", "To");
-		 * getToList().add(item); } } else { HeaderItem item = new
-		 * HeaderItem(HeaderItem.CONTACT); item.add("displayname", s);
-		 * item.add("field", "To"); getToList().add(item); }
-		 */
 		List v = ListParser.createListFromString(s);
-
-		for (Iterator it = v.iterator(); it.hasNext();) {
-			String str = (String) it.next();
-
-			// for (int i = 0; i < v.size(); i++) {
-			ContactItem item = new ContactItem();
-			Address adr;
-			try {
-				adr = Address.parse(str);
-				item.setDisplayName(adr.getShortAddress());
-				item.setAddress(adr.getMailAddress());
-				item.setHeader("To");
-
-				getToList().add(item);
-			} catch (ParserException e) {
-				e.printStackTrace();
-			}
-
-		}
+		toList = v;
 	}
 
 	public void setHeaderField(String key, String value) {
@@ -407,12 +371,14 @@ public class ComposerModel {
 	public List getRCPTVector() {
 		List output = new Vector();
 
-		List v = ListParser.createStringListFromItemList(getToList());
-		output.addAll(AddressParser.normalizeRCPTVector(v));
-		v = ListParser.createStringListFromItemList(getCcList());
-		output.addAll(AddressParser.normalizeRCPTVector(v));
-		v = ListParser.createStringListFromItemList(getBccList());
-		output.addAll(AddressParser.normalizeRCPTVector(v));
+		output.addAll(AddressParser.normalizeRCPTVector(ListParser
+				.flattenList(getToList())));
+
+		output.addAll(AddressParser.normalizeRCPTVector(ListParser
+				.flattenList(getCcList())));
+
+		output.addAll(AddressParser.normalizeRCPTVector(ListParser
+				.flattenList(getBccList())));
 
 		return output;
 	}

@@ -16,250 +16,133 @@
 package org.columba.mail.gui.composer;
 
 import java.awt.Component;
-import java.awt.Dimension;
-import java.awt.Rectangle;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
-import javax.swing.JComboBox;
-import javax.swing.JTable;
-import javax.swing.JTextField;
-import javax.swing.table.TableColumn;
+import javax.swing.JButton;
+import javax.swing.JPanel;
 
-import org.columba.addressbook.model.ContactItem;
-import org.columba.addressbook.model.HeaderItem;
-import org.columba.mail.gui.composer.util.AddressComboBox;
-import org.columba.mail.gui.composer.util.DisplaynameEditor;
-import org.columba.mail.gui.composer.util.DisplaynameRenderer;
-import org.columba.mail.gui.composer.util.FieldEditor;
-import org.columba.mail.gui.composer.util.FieldRenderer;
-import org.columba.mail.gui.composer.util.RecipientsTableModel;
+import org.columba.addressbook.gui.autocomplete.AddressCollector;
+import org.columba.mail.gui.composer.action.AddressbookAction;
+import org.frappucino.addresscombobox.AddressComboBox;
 
+import com.jgoodies.forms.builder.PanelBuilder;
+import com.jgoodies.forms.layout.CellConstraints;
+import com.jgoodies.forms.layout.FormLayout;
 
 /**
- * JTable including a nested JComboBox.
- * <p>
- * Table contains two column. The first for choosing To:, Cc: or Bcc:,
- * the second column for recipients;
- * <p>
- * TODO: HeaderView should extend AddressbookTableView !
- *
+ * 
  * @author fdietz
  */
-public class HeaderView extends JTable {
-    private HeaderController controller;
-    private JComboBox fieldComboBox;
-    private RecipientsTableModel model;
-    private AddressComboBox comboBox;
-    private DisplaynameEditor addressEditor;
+public class HeaderView extends JPanel implements ActionListener{
+	
+	private HeaderController controller;
 
-    public HeaderView(HeaderController controller) {
-        super();
+	private JButton toButton;
 
-        this.controller = controller;
+	private JButton ccButton;
 
-        model = new RecipientsTableModel();
+	private JButton bccButton;
 
-        setModel(model);
+	private AddressComboBox toComboBox;
 
-        addressEditor = new DisplaynameEditor(this);
+	private AddressComboBox ccComboBox;
 
-        getColumn("displayname").setCellEditor(addressEditor);
-        getColumn("displayname").setCellRenderer(new DisplaynameRenderer());
+	private AddressComboBox bccComboBox;
 
-        TableColumn tc = getColumn("field");
-        tc.setMaxWidth(80);
-        tc.setMinWidth(80);
-        fieldComboBox = new JComboBox();
-        fieldComboBox.addItem("To");
-        fieldComboBox.addItem("Cc");
-        fieldComboBox.addItem("Bcc");
+	public HeaderView(HeaderController controller) {
+		super();
 
-        getColumn("field").setCellEditor(new FieldEditor(fieldComboBox));
+		this.controller = controller;
 
-        //getColumn("field").setCellEditor(new DefaultCellEditor(fieldComboBox));
-        getColumn("field").setCellRenderer(new FieldRenderer());
+		
+		initComponents();
+		
+		layoutComponents();
+		
+		layoutComponents();
+	}
+	
+	public void initAutocompletion() {
+		toComboBox.setItemProvider(AddressCollector.getInstance());
+		ccComboBox.setItemProvider(AddressCollector.getInstance());
+		bccComboBox.setItemProvider(AddressCollector.getInstance());
+	}
+	
+	/**
+	 * 
+	 */
+	protected void layoutComponents() {
+		// Create a FormLayout instance.
+		FormLayout layout = new FormLayout(
+				"max(50dlu;default), 3dlu, fill:default:grow, 2dlu",
 
-        setShowHorizontalLines(true);
-        setShowVerticalLines(false);
-        setIntercellSpacing(new Dimension(0, 2));
-        setRowHeight(getRowHeight() + 6);
+				// 2 columns
+				"fill:default, 3dlu, fill:default, 3dlu, fill:default, 3dlu");
 
-        setAutoResizeMode(AUTO_RESIZE_ALL_COLUMNS);
-        setTableHeader(null);
-    }
+		// 3 row
+		PanelBuilder builder = new PanelBuilder(this, layout);
+		CellConstraints cc = new CellConstraints();
 
-    public void removeSelected() {
-        int[] indices = getSelectedRows();
-        HeaderItem[] items = new HeaderItem[indices.length];
+		builder.add(toButton, cc.xy(1, 1));
+		builder.add(toComboBox, cc.xy(3, 1));
 
-        for (int i = 0; i < indices.length; i++) {
-            items[i] = getAddressbookTableModel().get(indices[i]);
-        }
+		builder.add(ccButton, cc.xy(1, 3));
+		builder.add(ccComboBox, cc.xy(3, 3));
 
-        getAddressbookTableModel().removeItems(items);
-    }
+		builder.add(bccButton, cc.xy(1, 5));
+		builder.add(bccComboBox, cc.xy(3, 5));
+	}
 
-    public void initFocus(Component c) {
-        ((JTextField) addressEditor.getEditor().getEditorComponent()).setNextFocusableComponent(c);
+	protected void initComponents() {
+		
+		toButton = new JButton("To:");
+		toButton.addActionListener(this);
+		ccButton = new JButton("Cc:");
+		ccButton.addActionListener(this);
+		bccButton = new JButton("Bcc:");
+		bccButton.addActionListener(this);
+		
+		toComboBox = new AddressComboBox();
+		ccComboBox = new AddressComboBox();
+		toComboBox.setNextFocusableComponent(ccComboBox);
+		bccComboBox = new AddressComboBox();
+		ccComboBox.setNextFocusableComponent(bccComboBox);
+	}
 
-        addressEditor.setNextFocusableComponent(c);
-    }
+	/**
+	 * Init focus.
+	 * 
+	 * @param c		subject JTextField component
+	 */
+	public void initFocus(Component c) {
+		bccComboBox.setNextFocusableComponent(c);
+	}
 
-    public RecipientsTableModel getAddressbookTableModel() {
-        return model;
-    }
+	/**
+	 * @return Returns the bccComboBox.
+	 */
+	public AddressComboBox getBccComboBox() {
+		return bccComboBox;
+	}
+	/**
+	 * @return Returns the ccComboBox.
+	 */
+	public AddressComboBox getCcComboBox() {
+		return ccComboBox;
+	}
+	/**
+	 * @return Returns the toComboBox.
+	 */
+	public AddressComboBox getToComboBox() {
+		return toComboBox;
+	}
+	
+	/**
+	 * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
+	 */
+	public void actionPerformed(ActionEvent arg0) {
+		new AddressbookAction(controller.getComposerController()).actionPerformed(null);
 
-    private void makeVisible(int row, int column) {
-        Rectangle r = getCellRect(row, column, true);
-
-        scrollRectToVisible(r);
-    }
-
-    public void focusToTextField() {
-        JComboBox box = (JComboBox) getEditorComponent();
-
-        if (box == null) {
-            return;
-        }
-
-        JTextField textfield = (JTextField) box.getEditor().getEditorComponent();
-
-        textfield.requestFocus();
-    }
-
-    private void addEmptyRow() {
-        /*
-if (emptyRowExists())
-                return;
-*/
-        ContactItem item = new ContactItem();
-        item.setDisplayName("");
-        item.setHeader("To");
-        
-        try {
-            model.addItem(item);
-        } catch (Exception ex) {
-            ex.printStackTrace();
-        }
-
-        makeVisible(getRowCount() - 1, 1);
-    }
-
-    public void editLastRow() {
-        int row = getRowCount() - 1;
-
-        if (editCellAt(row, 1)) {
-            focusToTextField();
-        }
-    }
-
-    private boolean isEmpty(int row) {
-        HeaderItem item1 = (HeaderItem) model.getValueAt(row, 1);
-
-        String value = (String) item1.getDisplayName();
-
-        return value.length() == 0;
-    }
-
-    private boolean emptyRowExists() {
-        int rowCount = getRowCount();
-
-        if (rowCount == 0) {
-            return false;
-        }
-
-        HeaderItem item1 = (HeaderItem) model.getValueAt(rowCount - 1, 1);
-
-        String value = (String) item1.getDisplayName();
-
-        return value.length() == 0;
-    }
-
-    public void setHeaderItem(HeaderItem item) {
-        int row = getEditingRow();
-
-        if (row != -1) {
-            // be sure that the old field value (to:, cc:, bcc:) is
-            // properly set 
-            HeaderItem old = model.get(row);
-            String oldField = (String) old.getHeader();
-
-            String newField = (String) item.getHeader();
-
-            if (newField == null) {
-                item.setHeader( oldField);
-            } else if (newField.length() == 0) {
-                item.setHeader( oldField);
-            }
-        }
-
-        model.setHeaderItem(row, item);
-    }
-
-    /**
- * Remove selected row.
- *
- */
-    public void removeEditingRow() {
-        int rowCount = getRowCount();
-
-        int row = getEditingRow();
-        int column = getEditingColumn();
-
-        if (row == 0) {
-            // one row should always be available
-            return;
-        }
-
-        if ((row != -1) && (column != -1)) {
-            getCellEditor(row, column).stopCellEditing();
-        }
-
-        model.remove(row);
-
-        boolean b;
-
-        if (row == 0) {
-            b = editCellAt(0, 1);
-        } else {
-            b = editCellAt(row - 1, 1);
-        }
-
-        if (b) {
-            focusToTextField();
-        }
-    }
-
-    public void appendRow() {
-        if (isEditing()) {
-            // cancel editor, if necessary
-            // (if this is not happening we can't add another row
-            // without loosing table data
-            removeEditor();
-        }
-
-        // if not available
-        if (!emptyRowExists()) {
-            addEmptyRow();
-        }
-
-        // start editing in last row
-        editLastRow();
-    }
-
-    /**
- * Remove all empty rows.
- *
- */
-    public void cleanupHeaderItemList() {
-        for (int i = getRowCount() - 1; i >= 0; i--) {
-            boolean b = isEmpty(i);
-
-            if (b) {
-                HeaderItem[] items = new HeaderItem[1];
-                items[0] = model.get(i);
-
-                model.removeItems(items);
-            }
-        }
-    }
+	}
 }

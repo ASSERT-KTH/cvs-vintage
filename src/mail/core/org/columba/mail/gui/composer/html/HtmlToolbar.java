@@ -53,7 +53,7 @@ import javax.swing.text.html.HTML;
  *
  * @author fdietz
  */
-public class HtmlToolbar implements ActionListener, Observer, ContainerListener {
+public class HtmlToolbar extends JPanel implements ActionListener, Observer, ContainerListener {
 
     /** JDK 1.4+ logging framework logger, used for logging. */
     private static final Logger LOG = Logger.getLogger("org.columba.mail.gui.composer.html");
@@ -72,12 +72,12 @@ public class HtmlToolbar implements ActionListener, Observer, ContainerListener 
     /**
      *
      */
-    public HtmlToolbar(ComposerController controller, PanelBuilder builder) {
+    public HtmlToolbar(ComposerController controller) {
         super();
         this.controller = controller;
 
         try {
-            initComponents(builder);
+            initComponents();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -101,7 +101,7 @@ public class HtmlToolbar implements ActionListener, Observer, ContainerListener 
         htmlElement.addObserver(this);
     }
 
-    protected void initComponents(PanelBuilder builder)
+    protected void initComponents()
         throws Exception {
         CellConstraints cc = new CellConstraints();
 
@@ -158,16 +158,16 @@ public class HtmlToolbar implements ActionListener, Observer, ContainerListener 
         ToggleToolbarButton rightJustifyButton = new ToggleToolbarButton((AbstractSelectableAction) handler.getAction(
                     "RightJustifyAction", getFrameController()));
 
-        builder.add(paraLabel, cc.xy(1, 7));
+        //builder.add(paraLabel, cc.xy(1, 7));
 
         // nested panel
-        JPanel panel = new JPanel();
+      
         FormLayout layout = new FormLayout(
                 "default, 3dlu, default, 3dlu, default, 3dlu, "
                 + "default, 3dlu, default, 3dlu, default, 3dlu, "
                 + "default, 6dlu, default, 3dlu, default, 3dlu, "
                 + "default, 3dlu", "fill:default");
-        PanelBuilder b = new PanelBuilder(panel, layout);
+        PanelBuilder b = new PanelBuilder(this, layout);
 
         CellConstraints c = new CellConstraints();
 
@@ -182,7 +182,7 @@ public class HtmlToolbar implements ActionListener, Observer, ContainerListener 
         b.add(centerJustifyButton, cc.xy(17, 1));
         b.add(rightJustifyButton, cc.xy(19, 1));
 
-        builder.add(panel, cc.xy(3, 7));
+        //builder.add(panel, cc.xy(1, 7));
     }
 
     /**

@@ -57,9 +57,6 @@ public class AddressbookAction extends AbstractColumbaAction {
 	public void actionPerformed(ActionEvent evt) {
 		ComposerController composerController = ((ComposerController) getFrameMediator());
 
-		composerController.getHeaderController().getView()
-				.cleanupHeaderItemList();
-
 		SelectAddressDialog dialog = new SelectAddressDialog(composerController
 				.getView().getFrame(), composerController.getHeaderController()
 				.getHeaderItemLists());

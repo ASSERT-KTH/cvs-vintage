@@ -218,6 +218,8 @@ public class ComposerController extends AbstractFrameController implements
 
 		headerController.view.initFocus(subjectController.view);
 
+		
+		
 		return view;
 	}
 
@@ -232,7 +234,10 @@ public class ComposerController extends AbstractFrameController implements
 	public void openView() {
 		super.openView();
 		initAddressCompletion();
-		headerController.getView().editLastRow();
+		
+		getHeaderController().getView().initAutocompletion();
+		
+		headerController.view.getToComboBox().requestFocusInWindow();
 	}
 
 	/*

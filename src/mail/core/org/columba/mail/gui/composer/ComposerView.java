@@ -77,6 +77,7 @@ public class ComposerView extends AbstractFrameView
         attachmentScrollPane.setBorder(BorderFactory.createEmptyBorder(1, 1, 1,
                 1));
 
+        /*
         rightSplitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT);
 
         //rightSplitPane.setBorder(BorderFactory.createEmptyBorder(0,0,0,0));
@@ -86,12 +87,14 @@ public class ComposerView extends AbstractFrameView
         hs.setBorder(BorderFactory.createEmptyBorder(1, 1, 1, 1));
         hs.setPreferredSize(new Dimension(200, 100));
 
+        
         rightSplitPane.add(hs, JSplitPane.LEFT);
 
         rightSplitPane.add(attachmentScrollPane, JSplitPane.RIGHT);
         rightSplitPane.setDividerSize(5);
         rightSplitPane.setDividerLocation(400);
-
+        */
+        
         JPanel topPanel = new JPanel();
         topPanel.setBorder(BorderFactory.createEmptyBorder(5, 5, 0, 0));
 
@@ -105,7 +108,7 @@ public class ComposerView extends AbstractFrameView
                     "dialog", "composer", "priority"));
 
         // Create a FormLayout instance. 
-        FormLayout layout = new FormLayout("max(20dlu;pref), 3dlu, fill:default:grow, 2dlu",
+        FormLayout layout = new FormLayout("center:max(50dlu;default), 3dlu, fill:default:grow, 2dlu",
                 
             // 2 columns
             "fill:default, 3dlu,fill:default, 3dlu, fill:default, 3dlu, fill:default, 3dlu");
@@ -136,15 +139,16 @@ public class ComposerView extends AbstractFrameView
 
         builder.add(smtpPanel, cc.xy(3, 1));
 
-        builder.add(rightSplitPane, cc.xywh(1, 3, 3, 1));
+        builder.add(controller.getHeaderController().getView(), cc.xywh(1, 3, 4, 1));
 
         builder.add(subjectLabel, cc.xy(1, 5));
 
         builder.add(controller.getSubjectController().view, cc.xy(3, 5));
 
         // add JPanel with useful HTML related actions.
-        HtmlToolbar htmlToolbar = new HtmlToolbar(controller, builder);
-
+        HtmlToolbar htmlToolbar = new HtmlToolbar(controller);
+        builder.add(htmlToolbar, cc.xywh(1, 7, 4, 1));
+        
         editorPanel = new JPanel();
         editorPanel.setBorder(null);
         editorPanel.setLayout(new BorderLayout());
@@ -162,6 +166,8 @@ public class ComposerView extends AbstractFrameView
 
         centerPanel.add(topPanel, BorderLayout.NORTH);
         centerPanel.add(editorPanel, BorderLayout.CENTER);
+        
+        centerPanel.add(attachmentScrollPane, BorderLayout.SOUTH);
 
         /*
         JPanel mainPanel = new JPanel();
@@ -173,6 +179,7 @@ public class ComposerView extends AbstractFrameView
         contentPane.add(centerPanel, BorderLayout.CENTER);
 
         pack();
+        
     }
 
     /**

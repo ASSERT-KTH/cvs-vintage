@@ -25,8 +25,8 @@ import org.columba.addressbook.folder.GroupFolder;
 import org.columba.addressbook.main.AddressbookInterface;
 import org.columba.addressbook.model.ContactItem;
 import org.columba.addressbook.model.ContactItemMap;
-import org.columba.addressbook.model.GroupItem;
 import org.columba.addressbook.model.HeaderItem;
+import org.columba.addressbook.model.HeaderItemList;
 
 /**
  * @version 1.0
@@ -37,16 +37,23 @@ public class ListParser {
 	public ListParser() {
 	}
 
-	public static List createListFromString(String list) {
+	/**
+	 * Create list from String containing comma-separated email
+	 * addresses.
+	 * 
+	 * @param str		string
+	 * @return			list
+	 */
+	public static List createListFromString(String str) {
 		List result = new Vector();
 
 		int pos = 0;
 		boolean bracket = false;
 		StringBuffer buf = new StringBuffer();
-		int listLength = list.length();
+		int listLength = str.length();
 
 		while (pos < listLength) {
-			char ch = list.charAt(pos);
+			char ch = str.charAt(pos);
 
 			if ((ch == ',') && (bracket == false)) {
 				// found new message
@@ -78,7 +85,60 @@ public class ListParser {
 		return result;
 	}
 
-	public static List createStringListFromItemList(List list) {
+	/**
+	 * Flatten mixed list containing contacts and groups to a 
+	 * new list containing only contacts.
+	 * 
+	 * @param list		mixed list
+	 * @return			list containing only contacts
+	 */
+	public static List flattenList(List list) {
+		List result = new Vector();
+
+		for (Iterator it = list.iterator(); it.hasNext();) {
+			String s = (String) it.next();
+			GroupFolder groupFolder = AddressbookInterface.addressbookTreeModel
+					.getGroupFolder(s);
+			// if its a group item
+			if (groupFolder != null) {
+				ContactItemMap map = null;
+				try {
+					map = groupFolder.getContactItemMap();
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+				if (map == null)
+					continue;
+
+				Iterator it2 = map.iterator();
+				while (it2.hasNext()) {
+					ContactItem i = (ContactItem) it2.next();
+					String address = i.getAddress();
+
+					if (address == null) {
+						continue;
+					}
+
+					result.add(address);
+				}
+			} else {
+				// contact item
+				result.add(s);
+			}
+
+		}
+
+		return result;
+	}
+
+	/**
+	 * Create list containing only strings from a HeaderItemList 
+	 * containing HeaderItem objects.
+	 * 
+	 * @param list		HeaderItemList containing HeaderItem objects
+	 * @return			list containing only strings
+	 */
+	public static List createStringListFromItemList(HeaderItemList list) {
 		List result = new Vector();
 
 		for (Iterator it = list.iterator(); it.hasNext();) {
@@ -88,103 +148,60 @@ public class ListParser {
 				continue;
 			}
 
-			if (item.isContact()) {
-				String address = isValid((ContactItem) item);
+			result.add(item.getDisplayName());
 
-				if (address == null) {
-					continue;
-				}
-
-				result.add(address);
-
-			} else {
-
-				// group item
-				GroupItem groupItem = (GroupItem) item;
-				int uid = groupItem.getFolderUid();
-				GroupFolder folder = (GroupFolder) AddressbookInterface.addressbookTreeModel
-						.getFolder(uid);
-
-				ContactItemMap map = null;
-				try {
-					map = folder.getContactItemMap();
-				} catch (Exception e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-				if (map == null)
-					continue;
-
-				Iterator it2 = map.iterator();
-				while (it2.hasNext()) {
-					ContactItem i = (ContactItem) it2.next();
-					String address = isValid(i);
-
-					if (address == null) {
-						continue;
-					}
-
-					result.add(address);
-				}
-
-			}
+			/*
+			 * if (item.isContact()) { String address = ((ContactItem)
+			 * item).getAddress();
+			 * 
+			 * 
+			 * if (address == null) { address = ((ContactItem)
+			 * item).getDisplayName(); }
+			 * 
+			 * if (address == null) { continue; }
+			 * 
+			 * result.add(address);
+			 *  } else {
+			 *  // group item GroupItem groupItem = (GroupItem) item; int uid =
+			 * groupItem.getFolderUid(); GroupFolder folder = (GroupFolder)
+			 * AddressbookInterface.addressbookTreeModel .getFolder(uid);
+			 * 
+			 * ContactItemMap map = null; try { map =
+			 * folder.getContactItemMap(); } catch (Exception e) { // TODO
+			 * Auto-generated catch block e.printStackTrace(); } if (map ==
+			 * null) continue;
+			 * 
+			 * Iterator it2 = map.iterator(); while (it2.hasNext()) {
+			 * ContactItem i = (ContactItem) it2.next(); String address =
+			 * i.getAddress();
+			 * 
+			 * if (address == null) { continue; }
+			 * 
+			 * result.add(address); }
+			 *  }
+			 */
 		}
 
 		return result;
 	}
 
+	/**
+	 * Create comma-separated String representation of a
+	 * list of String objects.
+	 * 
+	 * @param list		list containing String objects
+	 * @return			String representation
+	 */
 	public static String createStringFromList(List list) {
 		StringBuffer output = new StringBuffer();
 
 		for (Iterator it = list.iterator(); it.hasNext();) {
-			HeaderItem item = (HeaderItem) it.next();
-
-			if (item == null) {
+			String address = (String) it.next();
+			if (address == null) {
 				continue;
 			}
-
-			if (item.isContact()) {
-				String address = isValid((ContactItem) item);
-
-				if (address == null) {
-					continue;
-				}
-
-				output.append(address);
-
-				output.append(",");
-			} else {
-				//				 group item
-				GroupItem groupItem = (GroupItem) item;
-				int uid = groupItem.getFolderUid();
-				GroupFolder folder = (GroupFolder) AddressbookInterface.addressbookTreeModel
-						.getFolder(uid);
-
-				ContactItemMap map = null;
-				try {
-					map = folder.getContactItemMap();
-				} catch (Exception e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-				if (map == null)
-					continue;
-
-				Iterator it2 = map.iterator();
-				while (it2.hasNext()) {
-					ContactItem i = (ContactItem) it2.next();
-					String address = isValid(i);
-
-					if (address == null) {
-						continue;
-					}
-
-					output.append(address);
-
-					output.append(",");
-				}
-
-			}
+			output.append(address);
+			output.append(",");
 		}
 
 		if (output.length() > 0) {

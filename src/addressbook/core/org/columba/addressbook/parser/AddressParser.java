@@ -41,82 +41,6 @@ public class AddressParser {
 		}
 	}
 
-	public static String quoteAddress(String str) {
-		str = str.trim();
-
-		//System.out.println("address ["+str+"]");
-		StringBuffer buf = new StringBuffer();
-
-		int index = str.indexOf("<");
-
-		// example: fdietz@gmx.de
-		if (index == -1) {
-			return str;
-		}
-
-		// example: <fdietz@gmx.de
-		if (index == 0) {
-			return str;
-		}
-
-		// whats left :
-		//  - Frederik Dietz <fdietz@gmx.de>
-		//  - Frederik Dietz<fdietz@gmx.de>
-		//  - "Frederik Dietz"<fdietz@gmx.de>
-		//  - "Frederik Dietz" <fdietz@gmx.de>
-		//  - "FrederikDietz"<fdietz@gmx.de>
-		int index2 = str.indexOf(" ");
-
-		// example: Frederik<fdietz@gmx.de>
-		if (index2 == -1) {
-			return str;
-		}
-
-		// examples:
-		//  - FrederikDietz <fdietz@gmx.de>
-		//  - "FrederikDietz" <fdietz@gmx.de>
-		if (index2 == (index - 1)) {
-			// remove space
-			buf.append(str.substring(0, index2));
-			buf.append(str.substring(index, str.length()));
-
-			//System.out.println("address:"+buf);
-			return buf.toString();
-		}
-
-		// examples:
-		//  - Frederik Dietz<fdietz@gmx.de>
-		//  - "Frederik Dietz"<fdietz@gmx.de>
-		int index3 = str.indexOf("\"");
-
-		if (index3 == -1) {
-			// no " character
-			buf.append("\"");
-			buf.append(str.substring(0, index - 1));
-			buf.append("\"");
-			buf.append(str.substring(index, str.length()));
-
-			return buf.toString();
-		} else {
-			int index4 = str.indexOf("\"", index3 + 1);
-
-			if ((index2 > index3) && (index2 < index4)) {
-				int index5 = str.indexOf(" ", index2 + 1);
-
-				if (index5 != -1) {
-					buf.append(str.substring(0, index5));
-					buf.append(str.substring(index, str.length()));
-
-					return buf.toString();
-				} else {
-					return str;
-				}
-			}
-		}
-
-		return buf.toString();
-	}
-
 	/**
 	 * to normalize Mail-addresses given in an Vector in
 	 * 
@@ -175,32 +99,5 @@ public class AddressParser {
 		}
 
 		return out;
-	}
-
-	public static String normalizeAddress(String mailaddress) {
-		String new_address = "";
-
-		// System.out.println("[DEBUG!!!!] mailaddress: "+mailaddress);
-		StringTokenizer strToken = new StringTokenizer(mailaddress, "<");
-
-		if (strToken.countTokens() == 2) {
-			// the first token is irrelevant
-			strToken.nextToken();
-
-			// the next token is an token with the whole Mailaddress
-			new_address = "<" + strToken.nextToken();
-
-			// System.out.println("[DEBUG1] new_address: "+new_address);
-		} else {
-			// just look if the first character alrady an <
-			// so can use this mailaddress as the correct address
-			if (mailaddress.charAt(0) == '<') {
-				new_address = mailaddress;
-			} else {
-				new_address = "<" + mailaddress + ">";
-			}
-		}
-
-		return new_address;
 	}
 }
