@@ -50,6 +50,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
+import java.util.HashMap;
 import java.util.Calendar;
 
 import org.apache.fulcrum.security.entity.User;
@@ -89,7 +90,7 @@ import org.apache.log4j.Category;
  * implementation needs.
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: ScarabUserImpl.java,v 1.79 2002/07/19 00:07:25 jmcnally Exp $
+ * @version $Id: ScarabUserImpl.java,v 1.80 2002/08/01 18:16:31 elicia Exp $
  */
 public class ScarabUserImpl 
     extends BaseScarabUserImpl 
@@ -933,15 +934,6 @@ public class ScarabUserImpl
         internalUser.setThreadKey(key);
     }
 
-    public boolean canMakeTransition(AttributeOption fromOption, 
-                                     AttributeOption toOption,
-                                     Issue issue,
-                                     Module module,               
-                                     IssueType issueType)
-        throws Exception
-   {
-        return true;
-   }
 
     /**
      * The current module
@@ -992,5 +984,30 @@ public class ScarabUserImpl
         throws Exception
     {
         internalUser.updateIssueListAttributes(attributes);
+    }
+
+    /**
+     * @see org.tigris.scarab.om.ScarabUser#canMakeTransition
+     */
+    public boolean canMakeTransition(AttributeOption fromOption, 
+                                     AttributeOption toOption,
+                                     Issue issue,
+                                     Module module,               
+                                     IssueType issueType)
+        throws Exception
+    {
+        return true;
+    }
+
+    /**
+     * @see org.tigris.scarab.om.ScarabUser#checkWorkflow
+     */
+    public String checkWorkflow(AttributeOption fromOption, 
+                                AttributeOption toOption,
+                                Issue issue, HashMap newAttVals,
+                                ScarabUser user)
+        throws Exception
+    {
+        return null;
     }
 }

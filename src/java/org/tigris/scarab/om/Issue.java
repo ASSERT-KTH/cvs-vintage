@@ -93,7 +93,7 @@ import org.apache.commons.lang.StringUtils;
  * @author <a href="mailto:jmcnally@collab.new">John McNally</a>
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
- * @version $Id: Issue.java,v 1.175 2002/07/30 22:48:15 jmcnally Exp $
+ * @version $Id: Issue.java,v 1.176 2002/08/01 18:16:31 elicia Exp $
  */
 public class Issue 
     extends BaseIssue
@@ -2503,24 +2503,40 @@ public class Issue
     /*
     *  Sets AttributeValues for an issue based on a hashmap of attribute values
     */
-    public void setProperties(HashMap newAttVals, ActivitySet activitySet)
+    public String setProperties(HashMap newAttVals, ActivitySet activitySet,
+                                ScarabUser user)
         throws Exception
     {
         SequencedHashMap avMap = getModuleAttributeValuesMap(); 
         AttributeValue oldAttVal = null;
         AttributeValue newAttVal = null;
         Iterator iter = avMap.iterator();
+        String msg = null;
+
         while (iter.hasNext())
         {
             oldAttVal = (AttributeValue)avMap.get(iter.next());
             newAttVal = (AttributeValue)newAttVals.get(oldAttVal.getAttributeId());
+
             if (newAttVal != null)
             {
-                oldAttVal.startActivitySet(activitySet);
-                oldAttVal.setProperties(newAttVal);
-                oldAttVal.save();
+                if (oldAttVal.getOptionId() != null 
+                    && newAttVal.getAttribute().isOptionAttribute())
+                {
+                    AttributeOption fromOption = oldAttVal.getAttributeOption();
+                    AttributeOption toOption = newAttVal.getAttributeOption();
+                    msg = user.checkWorkflow(fromOption, toOption, this, 
+                                             newAttVals, user);
+                }
+                if (msg == null)
+                {
+                    oldAttVal.startActivitySet(activitySet);
+                    oldAttVal.setProperties(newAttVal);
+                    oldAttVal.save();
+                }
             }
         }
+        return msg;
     }
 
 }

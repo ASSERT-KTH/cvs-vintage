@@ -46,6 +46,7 @@ package org.tigris.scarab.om;
  * individuals on behalf of Collab.Net.
  */
 import java.util.List;
+import java.util.HashMap;
 import java.util.Calendar;
 
 import org.apache.fulcrum.security.entity.User;
@@ -62,7 +63,7 @@ import org.tigris.scarab.util.ScarabException;
  * This is an interface which describes what a ScarabUser is...
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: ScarabUser.java,v 1.73 2002/07/19 00:07:25 jmcnally Exp $
+ * @version $Id: ScarabUser.java,v 1.74 2002/08/01 18:16:31 elicia Exp $
  */
 public interface ScarabUser extends User
 {
@@ -389,11 +390,25 @@ public interface ScarabUser extends User
      */
     public void setThreadKey(Integer key);
 
+    /**
+     * Checks to see if this user has permission to 
+     * Transition from one attribute option to another.
+     */
     public boolean canMakeTransition(AttributeOption fromOption, 
                                      AttributeOption toOption,
                                      Issue issue,
                                      Module module,               
                                      IssueType issueType)
+        throws Exception;
+
+    /**
+     * Checks to see if an attribute option transition is dependant 
+     * Upon other attribute(s) being set.
+     */
+    public String checkWorkflow(AttributeOption fromOption, 
+                                AttributeOption toOption,
+                                Issue issue, HashMap newAttVals,
+                                ScarabUser user)
         throws Exception;
 
     /**
