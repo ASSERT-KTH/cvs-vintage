@@ -17,15 +17,21 @@ import javax.transaction.Transaction;
 /**
 *   The Invocation object is the generic object flowing through our interceptors
 *
+*   The heart of it is the payload map that can contain anything we then put readers on them
+*   The first "reader" is this "Invocation" object that can interpret the data in it. 
+* 
+*   Essentially we can carry ANYTHING from the client to the server, we keep a series of 
+*   of predifined variables and method calls to get at the pointers.  But really it is just 
+*   a repository of objects. 
 *
 *   @see <related>
 *   @author  <a href="mailto:marc@jboss.org">Marc Fleury</a>
-*   @version $Revision: 1.1 $
+*   @version $Revision: 1.2 $
 *   Revisions:
 *
 *   <p><b>Revisions:</b>
 *
-*   <p><b>20211002 marc fleury:</b>
+*   <p><b>2001114 marc fleury:</b>
 *   <ul>
 *   <li> Initial check-in
 *   </ul>
@@ -33,148 +39,136 @@ import javax.transaction.Transaction;
 
 public class Invocation
 {
-
-   // Attributes ----------------------------------------------------
-
+   
+   // Attributes ---------------------------------------------------- 
+   
    /**
-    *  The transaction of this invocation.
-    */
-   public Transaction tx;
-
-   /**
-    *  The security identity of this invocation.
-    */
-   public Principal identity;
-
-   /**
-    *  The security credentials of this invocation.
-    */
-   public Object credential;
-
-
-   /**
-   * The linked list of object names, in String form, that the invocation must go through
-   * Should move to a real linked list in the future (so we don't have to update the full
-   * variable to include new interceptor flows
-   * We could keep track of the mbeans to see in this object with an incremented index
-   * there would be no central intelligence but this "invocation" that knows where to go next
+   * The payload is a repository of everything associated with the invocation
+   * with the exception of the generic transaction and security information above.
    */
-   public String[] mbeans;
-   
-   
-   /**
-    * The payload is a repository of everything associated with the invocation
-    * with the exception of the generic transaction and security information above.
-    */
    public Map payload;
    
-     
+   
    
    // Static --------------------------------------------------------
-
-
-   /*
-   * We are using the generic payload to store some of our data, we define the integer entries.
+   
+   
+   /**
+   * We are using the generic payload to store some of our data, we define some integer entries.
+   * These are just some variables that we define for use in "typed" getters and setters. 
+   * One can define anything either in here explicitely or through the use of external calls to getValue
    */
    public static final Integer
-      METHOD = new Integer(new String("METHOD").hashCode()), 
-      ARGUMENTS = new Integer(new String("ARGUMENTS").hashCode());
- 
+   // Transactional information with the invocation
+   TRANSACTION = new Integer(new String("TRANSACTION").hashCode()),
+   PRINCIPAL = new Integer(new String("PRINCIPAL").hashCode()),
+   CREDENTIAL = new Integer(new String("CREDENTIAL").hashCode()),
+   
+   // We can keep a reference to an abstract "container" this invocation is associated with
+   CONTAINER = new Integer(new String("CONTAINER").hashCode()),
+   // The type can be any qualifier for the invocation, anything (used in EJB)
+   TYPE = new Integer(new String("TYPE").hashCode()),
+   // The Cache-ID associates an instance in cache somewhere on the server with this invocation
+   CACHE_ID = new Integer(new String("CACHE_ID").hashCode()),
+   // The invocation can be a method invocation, we give the method to call
+   METHOD = new Integer(new String("METHOD").hashCode()), 
+   // The arguments of the method to call
+   ARGUMENTS = new Integer(new String("ARGUMENTS").hashCode()),
+   // Enterprise context
+   ENTERPRISE_CONTEXT = new Integer(new String("ENTERPRISE_CONTEXT").hashCode());
+   
    // Constructors --------------------------------------------------
-
-   /**
-    * Invocation creation
-    */
-   public Invocation(Transaction tx, 
-                     Principal identity, 
-                     Object credential,
-                     String[] mbeans,
-                     Method method,
-                     Object[] arguments)
+   
+   public Invocation() 
    {
-      
-      //The generic variables
-      this.tx = tx;
-      this.identity = identity;
-      this.credential = credential;
-      
-      // The generic payload
-      this.payload = new HashMap();
-      
-      // The invocation
-      setMBeans(mbeans);
-      setMethod(method);
-      setArguments(arguments);
-      
+      //For externalization only
    }
-
-
+   /**
+   * Invocation creation
+   */
+   public Invocation(Map payload) 
+   {   
+      // The generic payload
+      this.payload = payload; 
+   }
+   
+   public Invocation(
+      Object id, 
+      Method m, 
+      Object[] args, 
+      Transaction tx, 
+      Principal identity, 
+      Object credential)
+   {
+           
+      this.payload = new HashMap();
+      setId(id);
+      setMethod(m);
+      setArguments(args);    
+      setPrincipal(identity);
+      setCredential(credential);
+   }
+   
    // Public --------------------------------------------------------
-
-   /**
-    * set and get on transaction
-    */
-   public void setTransaction(Transaction tx) { this.tx = tx; }
-
-   public Transaction getTransaction() { return tx; }
-
    
    /**
-    *  Change the security identity of this invocation.
-    */
-   public void setPrincipal(Principal identity) { this.identity = identity; }
-
-   public Principal getPrincipal() { return identity;}
-
-   
-   /**
-    *  Change the security credentials of this invocation.
-    */
-   public void setCredential(Object credential) { this.credential = credential; }
-
-   public Object getCredential() { return credential; }
-   
-   
-   /* 
-   * The mbeans this invocation must go through (most cases will be one until we mbeanify all interceptors
-   *
-   * marcf fixme: I suspect it is the way to go but am open to "should the interceptors all be mbeans 
-   * discussions"
+   * The generic getter and setter is really all that one needs to talk to this object
+   * We introduce typed getters and setters for convenience and code readability in the codebase
    */
-   public void setMBeans(String[] mbeans) { this.mbeans = mbeans; }
    
-   public String[] getMBeans(String[] mbeans) { return mbeans; }
-
-   
-   /**
-    *  set and get on method Return the invocation method.
-    */
-   public void setMethod(Method method) { payload.put(METHOD, method);}
-
-   public Method getMethod() { return (Method) payload.get(METHOD);}
-
-   
-   /**
-    *  Return the invocation argument list.
-    */
-   public void setArguments(Object[] arguments) { payload.put(ARGUMENTS, arguments); }
-   
-   public Object[] getArguments() { return (Object[]) payload.get(ARGUMENTS); }
-
-      
-   /*
-   * The generic store of variables
-   */
+   //The generic store of variables
    public void setValue(Object key, Object value) { payload.put(key, value); }
-   
    public Object getValue(Object key) { return payload.get(key); }
    
+   /**
+   * Convenience typed getters, use pre-declared keys in the store, but it all comes back to the payload  
+   */
+   
+   // set and get on transaction
+   public void setTransaction(Transaction tx) { payload.put(TRANSACTION, tx); }
+   public Transaction getTransaction() { return (Transaction) getValue(TRANSACTION); }
+   
+   //  Change the security identity of this invocation.
+   public void setPrincipal(Principal principal) { payload.put(PRINCIPAL, principal);}
+   public Principal getPrincipal() { return (Principal) getValue(PRINCIPAL);}
+   
+   //  Change the security credentials of this invocation.
+   public void setCredential(Object credential) { payload.put(CREDENTIAL, credential);}
+   public Object getCredential() { return getValue(CREDENTIAL); }
+   
+   // A container for server side association
+   public void setContainer(Object container) { payload.put(CONTAINER, container);}
+   public Object getContainer() { return getValue(CONTAINER);}
+   
+   // An arbitrary type
+   public void setType(String type) {payload.put(TYPE, type);}
+   public String getType() {return (String) getValue(TYPE);} 
+   
+   //Return the invocation target ID.  Can be used to identify a cached object
+   public void setId(Object id) { payload.put(CACHE_ID, id);}
+   public Object getId() { return getValue(CACHE_ID);}
+   
+   // set and get on method Return the invocation method.
+   public void setMethod(Method method) { payload.put(METHOD, method);}
+   public Method getMethod() { return (Method) getValue(METHOD);}
+   
+   // A list of arguments for the method
+   public void setArguments(Object[] arguments) { payload.put(ARGUMENTS, arguments); } 
+   public Object[] getArguments() { return (Object[]) getValue(ARGUMENTS); }
+   
+   /**
+   * marcf: SCOTT WARNING! I removed the "setPrincipal" that was called here
+   */
+   public void setEnterpriseContext(Object ctx) { payload.put(ENTERPRISE_CONTEXT, ctx);}
+      
+   public Object getEnterpriseContext() { return (Object) payload.get(ENTERPRISE_CONTEXT);}
+   
    // Package protected ---------------------------------------------
-
+   
    // Protected -----------------------------------------------------
-
+   
    // Private -------------------------------------------------------
-
+   
    // Inner classes -------------------------------------------------
 
 }
