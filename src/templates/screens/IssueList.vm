@@ -25,6 +25,7 @@ $page.setTitle("Queue list")
 #end
 <form action="$action" method="post">
 <input type="hidden" name="pageNum" value="$pageNum" />
+<input type="hidden" name="$scarabG.Constant.CURRENT_QUERY" value="$queryString" />
 
 ## PAGINATION
 #if( $paginated)
