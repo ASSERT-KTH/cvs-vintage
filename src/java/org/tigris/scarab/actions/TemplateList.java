@@ -85,10 +85,11 @@ import org.tigris.scarab.util.ScarabException;
 
 
 /**
- * This class is responsible for report managing enter issue templates.
+ * This class is responsible for report managing issue entry
+ * templates.
  *   
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
- * @version $Id: TemplateList.java,v 1.50 2003/07/19 22:57:53 elicia Exp $
+ * @version $Id: TemplateList.java,v 1.51 2003/07/29 23:24:26 dlr Exp $
  */
 public class TemplateList extends RequireLoginFirstAction
 {
@@ -175,8 +176,22 @@ public class TemplateList extends RequireLoginFirstAction
                                       scarabR.getCurrentModule(), context);
                     if (success)
                     {
-                        data.getParameters().add("templateId", issue.getIssueId().toString());
                         scarabR.setConfirmMessage(l10n.get("NewTemplateCreated"));
+
+                        // For a module-scoped template which is now
+                        // pending approval, the user may not have
+                        // permission to edit the new issue template.
+                        if (info.canEdit((ScarabUser) data.getUser()))
+                        {
+                            data.getParameters().add
+                                ("templateId", issue.getIssueId().toString());
+                        }
+                        else
+                        {
+                            // Display the list of issue templates.
+                            setTarget(data, "TemplateList.vm");
+                            doPerform(data, context);
+                        }
                     }
                     else
                     {
