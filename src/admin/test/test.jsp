@@ -17,6 +17,17 @@ This page will show the result of executing the sanity test suite.
 %>
 <% out.flush(); 
    if( request.getParameter("target") == null ) return;
+
+   String port = request.getParameter("port");
+   String colonPort;
+   try {
+       colonPort = ":" + port;
+       if ( Integer.parseInt(port) == 80 )
+           colonPort = "";
+   } catch (Exception e) {
+      out.println("ERROR: Invalid port number!");
+      return;
+   }
 %>
 
 <ant:gtest />
@@ -33,6 +44,7 @@ This page will show the result of executing the sanity test suite.
   <ant:property name="debug"  param="debug" />
   <ant:property name="outputType" value="none"  />
   <ant:property name="port" param="port" />
+  <ant:property name="colonPort" value="<%= colonPort %>" />
   <ant:property name="http.protocol" param="server.proto" />
   <ant:property name="host" param="host" />
 </ant:ant>
