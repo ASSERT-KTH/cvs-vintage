@@ -1,4 +1,4 @@
-// $Id: StylePanelFigInterface.java,v 1.4 2003/06/30 21:59:33 linus Exp $
+// $Id: StylePanelFigInterface.java,v 1.5 2003/09/15 20:23:02 jjones Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -47,6 +47,11 @@ public class StylePanelFigInterface extends StylePanelFig {
     protected JCheckBox _operCheckBox = new JCheckBox("Operations");
     protected JLabel _displayLabel = new JLabel("Display: ");
 
+    /**
+     * Flag to indicate that a refresh is going on.
+     */
+    private boolean _refreshTransaction = false;
+
     ////////////////////////////////////////////////////////////////
     // contructors
 
@@ -83,10 +88,12 @@ public class StylePanelFigInterface extends StylePanelFig {
     // accessors
 
     public void refresh() {
+        _refreshTransaction = true;        
 	super.refresh();
 	org.argouml.uml.diagram.static_structure.ui.FigInterface ti =
 	    (org.argouml.uml.diagram.static_structure.ui.FigInterface) _target;
 	_operCheckBox.setSelected(ti.isOperationVisible());
+        _refreshTransaction = false;
     }
 
     ////////////////////////////////////////////////////////////////
@@ -101,12 +108,15 @@ public class StylePanelFigInterface extends StylePanelFig {
 
 
     public void itemStateChanged(ItemEvent e) {
+        if (!_refreshTransaction) {    
 	Object src = e.getSource();
 
 	if (src == _operCheckBox) {
 	    ((org.argouml.uml.diagram.static_structure.ui.FigInterface) _target).setOperationVisible(_operCheckBox.isSelected());
+            markNeedsSave();
 	}
 	else super.itemStateChanged(e);
+        }
     }
 
 

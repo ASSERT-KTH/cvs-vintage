@@ -1,4 +1,4 @@
-// $Id: StylePanelFigUseCase.java,v 1.3 2003/06/29 23:52:22 linus Exp $
+// $Id: StylePanelFigUseCase.java,v 1.4 2003/09/15 20:23:13 jjones Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,7 +25,7 @@
 // File: StylePanelFigUseCase.java
 // Classes: StylePanelFigUseCase
 // Original Author: mail@jeremybennett.com
-// $Id: StylePanelFigUseCase.java,v 1.3 2003/06/29 23:52:22 linus Exp $
+// $Id: StylePanelFigUseCase.java,v 1.4 2003/09/15 20:23:13 jjones Exp $
 
 // 12 Apr 2002: Jeremy Bennett (mail@jeremybennett.com). Created to support
 // optional display of extension points.
@@ -80,6 +80,10 @@ public class StylePanelFigUseCase extends StylePanelFig {
 
     protected JLabel _displayLabel = new JLabel("Display: ");
 
+    /**
+     * Flag to indicate that a refresh is going on.
+     */
+    private boolean _refreshTransaction = false;
 
     ///////////////////////////////////////////////////////////////////////////
     //
@@ -153,6 +157,8 @@ public class StylePanelFigUseCase extends StylePanelFig {
 
     public void refresh() {
 
+        _refreshTransaction = true;
+        
         // Invoke the parent refresh first
 
         super.refresh();
@@ -160,6 +166,8 @@ public class StylePanelFigUseCase extends StylePanelFig {
         FigUseCase target = (FigUseCase) getTarget();
 
         _epCheckBox.setSelected(target.isExtensionPointVisible());
+        
+        _refreshTransaction = false;
     }
 
 
@@ -177,17 +185,21 @@ public class StylePanelFigUseCase extends StylePanelFig {
      */
 
     public void itemStateChanged(ItemEvent e) {
-        Object src = e.getSource();
+        if (!_refreshTransaction) {
+            Object src = e.getSource();
 
-        // If it was the check box, reset it, otherwise invoke the parent.
+            // If it was the check box, reset it, otherwise invoke the parent.
 
-        if (src == _epCheckBox) {
-            FigUseCase target = (FigUseCase) getTarget();
+            if (src == _epCheckBox) {
+                FigUseCase target = (FigUseCase) getTarget();
 
-            target.setExtensionPointVisible(_epCheckBox.isSelected());
-        }
-        else {
-            super.itemStateChanged(e);
+                target.setExtensionPointVisible(_epCheckBox.isSelected());
+            
+                markNeedsSave();
+            }
+            else {
+                super.itemStateChanged(e);
+            }
         }
     }
 
