@@ -51,15 +51,13 @@ import org.w3c.dom.Node;
 *
 * @author    <a href="mailto:peter.antman@tim.se">Peter Antman</a> .
 * @author    <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
-* @author    <a href="mailto:sebastien.alborini@m4x.org">Sebastien Alborini </a>
+* @author    <a href="mailto:sebastien.alborini@m4x.org">Sebastien Alborini
+*      </a>
 * @author    <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
 * @author    <a href="mailto:jason@planet57.com">Jason Dillon</a>
-* @version   $Revision: 1.36 $
-* <p><b>20011219 marc fleury</b>
-* <ul>
-* <li> use of the container invoker here is silly and a good example of why the proxy generation is not mixed with invokers now
-*</ul>
+* @version   $Revision: 1.37 $
 */
+
 public class JMSContainerInvoker
 implements ContainerInvoker, XmlLoadable
 {
@@ -199,12 +197,13 @@ implements ContainerInvoker, XmlLoadable
    
    // ContainerInvoker implementation
    
-   /**
+/*
    * Gets the EJBHome attribute of the JMSContainerInvoker object
    *
    * @return   The EJBHome value
    */
    public Object getEJBHome()
+
    {
       throw new Error("Not valid for MessageDriven beans");
    }
@@ -237,6 +236,7 @@ implements ContainerInvoker, XmlLoadable
    * @return    The EntityEJBObject value
    */
    public Object getEntityEJBObject(Object id)
+
    {
       throw new Error("Not valid for MessageDriven beans");
    }
@@ -249,17 +249,20 @@ implements ContainerInvoker, XmlLoadable
    * @return    The StatefulSessionEJBObject value
    */
    public Object getStatefulSessionEJBObject(Object id)
+
    {
       throw new Error("Not valid for MessageDriven beans");
    }
    
    /**
+
    * Gets the StatelessSessionEJBObject attribute of the JMSContainerInvoker
    * object
    *
    * @return   The StatelessSessionEJBObject value
    */
    public Object getStatelessSessionEJBObject()
+
    {
       throw new Error("Not valid for MessageDriven beans");
    }
@@ -392,7 +395,7 @@ implements ContainerInvoker, XmlLoadable
       {
          serverSessionPoolFactoryJNDI = "java:/" + serverSessionPoolFactoryJNDI;
       }
-   
+
    
    
    }
@@ -404,15 +407,18 @@ implements ContainerInvoker, XmlLoadable
    * @throws Exception  Failed to initalize.
    */
    public void create() throws Exception
+
    {
       log.debug("initializing");
       
       // Set up Dead Letter Queue handler
       
       if (useDLQ) {
+
          dlqHandler = new DLQHandler();
-         dlqHandler.importXml(mdbConfig);
+         dlqHandler.importXml(dlqConfig);
          dlqHandler.create();
+
       }
       
       // Store TM reference locally - should we test for CMT Required
@@ -584,9 +590,10 @@ implements ContainerInvoker, XmlLoadable
       Object credential)
    throws Exception
    {
+
       Invocation mi =
       new Invocation(id, m, args, tx, identity, credential);
-      
+
       // Set the right context classloader
       ClassLoader oldCl = Thread.currentThread().getContextClassLoader();
       Thread.currentThread().setContextClassLoader(container.getClassLoader());
