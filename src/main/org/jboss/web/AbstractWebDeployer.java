@@ -145,7 +145,7 @@ thread context ClassLoader as was used to dispatch the http service request.
    extends="org.jboss.deployment.SubDeployerMBean"
 
 @author  Scott.Stark@jboss.org
-@version $Revision: 1.21 $
+@version $Revision: 1.22 $
 */
 public abstract class AbstractWebDeployer
 {
@@ -509,7 +509,7 @@ public abstract class AbstractWebDeployer
       log.debug("linkResourceRefs");
       linkResourceRefs(resourceRefs, envCtx);
       log.debug("linkMessageDestinationRefs");
-      linkMessageDestinationRefs(metaData, envCtx);
+      linkMessageDestinationRefs(metaData, envCtx, di);
       Iterator ejbRefs = metaData.getEjbReferences();
       log.debug("linkEjbRefs");
       linkEjbRefs(ejbRefs, envCtx, di);
@@ -615,7 +615,7 @@ public abstract class AbstractWebDeployer
       }
    }
 
-   protected void linkMessageDestinationRefs(WebMetaData metaData, Context envCtx)
+   protected void linkMessageDestinationRefs(WebMetaData metaData, Context envCtx, DeploymentInfo di)
       throws NamingException, DeploymentException
    {
       Iterator enum = metaData.getMessageDestinationReferences();
@@ -632,7 +632,7 @@ public abstract class AbstractWebDeployer
          {
             if (jndiName == null)
             {
-               MessageDestinationMetaData messageDestination = metaData.getMessageDestination(link);
+               MessageDestinationMetaData messageDestination = EjbUtil.findMessageDestination(server, di, link);
                if (messageDestination == null)
                   throw new DeploymentException("message-destination-ref '" + refName + 
                      "' message-destination-link '" + link + "' not found and no jndi-name in jboss-web.xml");
