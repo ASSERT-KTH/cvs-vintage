@@ -57,8 +57,8 @@
   #foreach ($user in $searchResults)
     <tr class="a">
     <td><input type="checkbox" name="user_list" value="$user.UserId" /></td>
-    <td><strong>$!user.Name</strong></td>
-    <td><a href="mailTo:$user.Email">$user.UserName</a></td>
+    <td><a href="mailTo:$user.Email"><strong>$!user.Name</strong></a></td>
+    <td>$user.UserName</td>
     </tr>
    #end
 </table>  
