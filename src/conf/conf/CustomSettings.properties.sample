@@ -1,5 +1,5 @@
 # -------------------------------------------------------------------
-# $Id: CustomSettings.properties,v 1.5 2004/03/27 00:40:05 pledbrook Exp $
+# $Id: CustomSettings.properties.sample,v 1.1 2004/05/10 18:21:51 thierrylach Exp $
 #
 # This is the custom settings file for Scarab.  You may override any
 # of Scarab's settings in TurbineResources.properties and Scarab.properties
@@ -27,23 +27,16 @@
 #       TurbineResources.properties
 #
 
-system.mail.host=smtp.nildram.co.uk
-system.mail.smtp.from=scarab@cacoethes.co.uk
+#system.mail.host=localhost
+#system.mail.smtp.from=
 #session.timeout = 1800
 #services.UploadService.repository=WEB-INF
 #searchindex.path=WEB-INF/index
 
-torque.database.default=scarab
-torque.database.scarab.adapter=postgresql
-torque.dsfactory.scarab.pool.validationQuery=SELECT 1
-torque.dsfactory.scarab.connection.driver = org.postgresql.Driver
-torque.dsfactory.scarab.connection.url = jdbc:postgresql://evergreen:5432/scarab
-torque.dsfactory.scarab.connection.user = scarab
-torque.dsfactory.scarab.connection.password = G0ld1l0ck5
-
-scarab.http.domain=redwood
-scarab.http.scheme=http
-scarab.http.port=8080
+#scarab.http.domain=
+#scarab.http.scheme=http
+#scarab.http.scriptname=/scarab/issues
+#scarab.http.port=8080
 
 #torque.database.default=scarab
 
