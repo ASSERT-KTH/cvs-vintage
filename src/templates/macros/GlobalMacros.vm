@@ -17,7 +17,7 @@
    <option value="">$l10n.Choose</option>
   #end
   #if ($module.getLeafRModuleOptions($attr, $issueType))
-  #foreach ($option in $module.getLeafRModuleOptions($attr, $issueType))
+  #foreach ($option in $module.getOptionTree($attr, $issueType))
     #set ($selected = false)
     #set ($canMakeTransition = true)
     #if ($newValues && $newValues.toString() != '')
@@ -42,8 +42,9 @@
          #set ($canMakeTransition = $scarabG.Workflow.canMakeTransition($data.User, $scarabR.getAttributeOption("0"), $option.getAttributeOption(), $scarabR.Issue))
     #end
     #if ($canMakeTransition)
-      <option value="$option.OptionId"#selected($selected)>
-        $option.DisplayValue </option>
+    <option value="$option.OptionId"#selected($selected)>
+#foreach ($i in [0..$option.Level])#if($i != 0)&nbsp;&nbsp;&nbsp;&nbsp;#end#end
+          $option.DisplayValue</option>
     #end
   #end
   #end
@@ -65,12 +66,14 @@
   #if ($size.length() == 0)
   <option value="">$l10n.Choose</option>
   #end
-  #foreach ($option in $module.getLeafRModuleOptions($attr, $scarabR.CurrentIssueType))
+  #foreach ($option in $module.getOptionTree($attr, $scarabR.CurrentIssueType))
+    #set ($selected = false)
     #if ($currentValue && $option.OptionId == $currentValue)
-      <option selected="selected" value="$option.OptionId">$option.DisplayValue</option>
-    #else
-      <option value="$option.OptionId">$option.DisplayValue</option>
+         #set ($selected = true)
     #end
+    <option value="$option.OptionId"#selected($selected)>
+    #foreach ($i in [0..$option.Level])#if($i != 0)&nbsp;&nbsp;&nbsp;&nbsp;#end#end
+          $option.DisplayValue</option>
   #end
 </select>
 #end
