@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<!-- $Id: frontis.xml,v 1.22 2005/02/24 19:03:46 mvw Exp $ -->
+<!-- $Id: frontis.xml,v 1.23 2005/03/20 16:24:34 mvw Exp $ -->
 <!--
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
@@ -34,13 +34,13 @@ The frontispiece information about the book.
 <bookinfo>
   <date>5/17/2002</date>
 
-  <title>&argouml; User Manual</title>
+  <title>ArgoUML User Manual</title>
   <subtitle>A tutorial and reference description</subtitle>
 
   <abstract>
     <para>
 This version of the manual is intended to describe 
-the version &argoversion; of &argouml;.
+the version &argoversion; of ArgoUML.
 </para>
   </abstract>
   <authorgroup>
