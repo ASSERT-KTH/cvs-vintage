@@ -54,10 +54,10 @@
  */
 
 /***************************************************************************
- * Description: Experimental bi-directionl protocol.                       *
+ * Description: Bi-directional protocol.                       *
  * Author:      Costin <costin@costin.dnt.ro>                              *
  * Author:      Gal Shachor <shachor@il.ibm.com>                           *
- * Version:     $Revision: 1.4 $                                           *
+ * Version:     $Revision: 1.5 $                                           *
  ***************************************************************************/
 
 #include "jk_pool.h"
@@ -710,16 +710,16 @@ int JK_METHOD ajp13_worker_factory(jk_worker_t **w,
     
     jk_log(l, 
            JK_LOG_DEBUG, 
-           "Into ajp23_worker_factory\n");
+           "Into ajp13_worker_factory\n");
     if(NULL == name || NULL == w) {
         jk_log(l, 
                JK_LOG_ERROR, 
-               "In ajp23_worker_factory, NULL parameters\n");
+               "In ajp13_worker_factory, NULL parameters\n");
 	    return JK_FALSE;
     }
         
     if(!private_data) {
-        jk_log(l, JK_LOG_ERROR, "In ajp23_worker_factory, NULL parameters\n");
+        jk_log(l, JK_LOG_ERROR, "In ajp13_worker_factory, NULL parameters\n");
 	    return JK_FALSE;
     }
 
@@ -727,7 +727,7 @@ int JK_METHOD ajp13_worker_factory(jk_worker_t **w,
     
     if(!private_data->name) {
 	    free(private_data);
-	    jk_log(l, JK_LOG_ERROR, "In ajp23_worker_factory, malloc failed\n");
+	    jk_log(l, JK_LOG_ERROR, "In ajp13_worker_factory, malloc failed\n");
 	    return JK_FALSE;
     } 
 
