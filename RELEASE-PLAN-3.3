@@ -1,0 +1,126 @@
+NOTE: This document is the first cut at a release plan for the next
+dot release of Tomcat. Nothing in this document should be
+considered authoritative until it has been discussed and approved
+on the TOMCAT-DEV mailing list.
+
+
+
+			Tomcat 3.3 Release Plan 
+			=======================
+
+Objective: 
+
+    The objective of the proposed 3.3 release is to complete the development 
+    of jakarta-tomcat 3.x  and achieve the stated goals of providing a 
+    production quality 2.2/1.1 servlet container. 
+
+Goals:
+
+    The following goals should be met in executing this plan:
+
+    1. No regressions compared with 3.2. 
+
+    2. Fixing the bugs found after and during 3.2 release cycle. 
+
+    3. Full review of the code, making sure the modularity and 
+       extensibility goals have been achieved.
+  
+    4. Make sure that the refactoring is clean, and maintainance will be
+       easier that 3.2
+
+    5. Ensure that the performance is (significantly) better than
+       3.2
+
+Tomcat 3.3 Milestone 1 Release:
+
+	Code Freeze/Tag Date:	Feb 1, 2001 (?)
+	Release Manager:	???
+
+    The build must pass all watchdog and all existing test suites. It should
+    work on both JDK1.1 and JDK1.2. 
+
+    After the build of Milestone 1, work should start in reviewing all the 
+    classes and interfaces in tomcat.core, and any feedback should be 
+    discussed and incorporated. Also, the documentation will be reviewed 
+    and improved. 
+    
+    In paralel, work will start on fixing a significant number ( most ? ) of 
+    bugs that were reported  and fixed in 3.2 and post 3.2. This work will
+    continue during the beta period.
+
+    Whenever possible, we should try to create a self-test case ( using
+    the current self-test application and GTest ).
+    More documentations should be added on running GTest and simplify the
+    test application. 
+
+Tomcat 3.3 BiWeekly milestones:
+    
+    After the first milestone, we will periodically build milestones in
+    order to track the evolution. ( see also the testing plan at the end ).
+
+Tomcat 3.3 Beta:
+
+	Code Freeze/Tag Date:	March 15, 2001 (?)
+	Release Manager:	???
+
+     No major change will be done after the Beta is build without a 
+     vote. 
+
+     No major bug ( spec compliance or stability ) should be open in order to
+     enter beta.
+
+     During the beta period we will fix all remaining bugs and run the manual
+     tests for the bugs that have no automated test case.
+
+Tomcat 3.3 Final Release
+
+	Code Freeze Date:	Apr 5, 2001 (?)
+	Release Manager:	???
+
+    The final build. The pre-requisite for the release is having no bugs in
+    the test suite, resolution for all known bugs and aproval by the community.
+    
+
+Release criteria
+================
+
+Given that this will be proposed as the final release of tomcat3.x the 
+standards of quality and testing will be significantly higher than in
+ previous releases. 
+
+1. Tomcat 3.3 should have no regression compared with 3.2. 
+Any reported regression is a show-stopper and a release can't be made
+before it is resovled. 
+
+2. Open bugs should be resolved.
+
+3. Tomcat 3.3 should be tested with existing, complex applications  ( cocoon, 
+ bugrat, etc ).
+
+Platorms.
+ We must make sure that tomcat is tested ( at least watchdog + self-test )
+with at least Linux, Solaris, Windows 9x, Windows NT/2000. 
+
+JDK.
+ We must test tomcat with at least JDK1.1 and Java2 (multiple versions if 
+ possible) . The tests should also include a stress test ( a high load
+ "ab" running for a long time )
+
+Configurations
+ Tomcat must be tested standalone, with Apache 1.3, Apache 2.0 and
+( possibly ) with IIS and NES ( low priority ).
+
+
+Maintainance Plan
+=================
+
+After tomcat 3.3 is released, no major development should go on into the main
+branch. 
+
+The release team should consist of at least 3 people, and will fix any major
+bugs that will be found after the 3.3 release, and propose to the group
+minor releases, if absolutely needed ( security or stability bugs ).
+In any case, no backward-incompatible or major changes should be made.
+
+
+
