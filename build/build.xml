@@ -236,7 +236,7 @@
         <echo message="|      Rebuilding Torque CVS Version       |"/>
         <echo message="|                                          |"/>
         <echo message="+------------------------------------------+"/>
-        <ant antfile="build.xml" 
+        <ant antfile="build-torque.xml" 
                 dir="${turbine.dir}/build" target="main">
             <property name="build.dir" value="../bin"/>
             <property name="build.dest" value="../bin/classes"/>
@@ -381,7 +381,7 @@
               todir="${torque.dir.scarab}/schema"/>
         <copy file="${src.conf.dir}/torque.props" 
               overwrite="true" todir="${torque.dir.scarab}/config"/>
-        <ant antfile="torque.xml" dir="${torque.dir.scarab}" 
+        <ant antfile="build.xml" dir="${torque.dir.scarab}" 
                 target="project-om">
             <property name="torque.home" value="${torque.dir.scarab}"/>
         </ant>
