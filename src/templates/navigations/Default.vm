@@ -1,10 +1,9 @@
-<div><strong>
 #if ($data.User.hasLoggedIn())
-    $link.setPage("SelectModule.vm").setLabel("Select module")
+    <div><strong>$link.setPage("SelectModule.vm").setLabel("Select module")</strong></div>
 #else
-    $link.setPage("Login.vm").setLabel("Login")
+    <div><strong>$link.setPage("Login.vm").setLabel("Login")</div></strong>
+    <div><strong>$link.setPage("Register.vm").setLabel("Register")</div></strong>
 #end
-</strong></div>
 
 ## ARTIFACT TYPES
 #if ($scarabR.CurrentModule.NavIssueTypes)
