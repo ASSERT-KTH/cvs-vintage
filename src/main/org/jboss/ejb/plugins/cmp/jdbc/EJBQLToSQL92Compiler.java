@@ -24,19 +24,14 @@ import org.jboss.ejb.plugins.cmp.jdbc.bridge.JDBCFieldBridge;
 import org.jboss.ejb.plugins.cmp.jdbc.metadata.JDBCReadAheadMetaData;
 import org.jboss.ejb.plugins.cmp.jdbc.metadata.JDBCTypeMappingMetaData;
 import org.jboss.ejb.plugins.cmp.jdbc.metadata.JDBCRelationMetaData;
-import org.jboss.ejb.plugins.cmp.jdbc.QLCompiler;
-import org.jboss.ejb.plugins.cmp.jdbc.AliasManager;
-import org.jboss.ejb.plugins.cmp.jdbc.JDBCTypeFactory;
-import org.jboss.ejb.plugins.cmp.jdbc.JDBCStoreManager;
-import org.jboss.ejb.plugins.cmp.jdbc.SQLUtil;
-import org.jboss.ejb.plugins.cmp.jdbc.QueryParameter;
+import org.jboss.ejb.plugins.cmp.jdbc.metadata.JDBCFunctionMappingMetaData;
 import org.jboss.logging.Logger;
 
 /**
  * Compiles EJB-QL and JBossQL into SQL using OUTER and INNER joins.
  *
  * @author <a href="mailto:alex@jboss.org">Alex Loubyansky</a>
- * @version $Revision: 1.2 $
+ * @version $Revision: 1.3 $
  */
 public final class EJBQLToSQL92Compiler
    implements QLCompiler, JBossQLParserVisitor
@@ -54,13 +49,10 @@ public final class EJBQLToSQL92Compiler
    private Map leftJoinPaths = new HashMap();
    private Map innerJoinPaths = new HashMap();
    private Map identifierToTable = new HashMap();
-   private Map colMemIdToRangeVar = new HashMap();
-   private StringBuffer fromRestriction = new StringBuffer();
 
    // mapping metadata
    private JDBCTypeMappingMetaData typeMapping;
    private JDBCTypeFactory typeFactory;
-   private boolean subquerySupported;
 
    // output objects
    private boolean forceDistinct;
@@ -169,7 +161,6 @@ public final class EJBQLToSQL92Compiler
       typeFactory = null;
       typeMapping = null;
       aliasManager = null;
-      subquerySupported = true;
       forceDistinct = false;
       limitParam = 0;
       limitValue = 0;
@@ -180,9 +171,7 @@ public final class EJBQLToSQL92Compiler
       countCompositePk = false;
       leftJoinPaths.clear();
       innerJoinPaths.clear();
-      fromRestriction.delete(0, fromRestriction.length());
       identifierToTable.clear();
-      colMemIdToRangeVar.clear();
    }
 
    public String getSQL()
@@ -267,7 +256,6 @@ public final class EJBQLToSQL92Compiler
          typeMapping.getAliasHeaderSuffix(),
          typeMapping.getAliasMaxLength()
       );
-      subquerySupported = typeMapping.isSubquerySupported();
    }
 
    private Class getParameterType(int index)
@@ -342,15 +330,7 @@ public final class EJBQLToSQL92Compiler
       StringBuffer sql = (StringBuffer) data;
       sql.append(selectClause)
          .append(fromClause);
-      if(fromRestriction.length() > 0)
-      {
-         sql.append(SQLUtil.WHERE).append(fromRestriction);
-         if(whereClause != null && whereClause.length() > 0)
-         {
-            sql.append(" AND (").append(whereClause).append(')');
-         }
-      }
-      else if(whereClause != null && whereClause.length() > 0)
+      if(whereClause != null && whereClause.length() > 0)
       {
          sql.append(SQLUtil.WHERE).append(whereClause);
       }
@@ -711,8 +691,7 @@ public final class EJBQLToSQL92Compiler
 
    public Object visit(ASTValueClassComparison node, Object data)
    {
-      log.debug("ASTValueClassComparison>");
-      return data;
+      throw new IllegalStateException("Value class comparison is not yet supported.");
    }
 
    public Object visit(ASTEntityComparison node, Object data)
@@ -792,55 +771,92 @@ public final class EJBQLToSQL92Compiler
 
    public Object visit(ASTConcat node, Object data)
    {
-      log.debug("ASTConcat>");
+      StringBuffer buf = (StringBuffer)data;
+      JDBCFunctionMappingMetaData function = typeMapping.getFunctionMapping(JDBCTypeMappingMetaData.CONCAT);
+      Object[] args = childrenToStringArr(2, node);
+      function.getFunctionSql(args, buf);
       return data;
    }
 
    public Object visit(ASTSubstring node, Object data)
    {
-      log.debug("ASTSubstring>");
+      StringBuffer buf = (StringBuffer)data;
+      JDBCFunctionMappingMetaData function = typeMapping.getFunctionMapping(JDBCTypeMappingMetaData.SUBSTRING);
+      Object[] args = childrenToStringArr(3, node);
+      function.getFunctionSql(args, buf);
       return data;
    }
 
    public Object visit(ASTUCase node, Object data)
    {
-      log.debug("ASTUCase>");
+      StringBuffer buf = (StringBuffer)data;
+      JDBCFunctionMappingMetaData function = typeMapping.getFunctionMapping(JDBCTypeMappingMetaData.UCASE);
+      Object[] args = childrenToStringArr(1, node);
+      function.getFunctionSql(args, buf);
       return data;
    }
 
    public Object visit(ASTLCase node, Object data)
    {
-      log.debug("ASTLCase>");
+      StringBuffer buf = (StringBuffer)data;
+      JDBCFunctionMappingMetaData function = typeMapping.getFunctionMapping(JDBCTypeMappingMetaData.LCASE);
+      Object[] args = childrenToStringArr(1, node);
+      function.getFunctionSql(args, buf);
       return data;
    }
 
    public Object visit(ASTLength node, Object data)
    {
-      log.debug("ASTLength>");
+      StringBuffer buf = (StringBuffer)data;
+      JDBCFunctionMappingMetaData function = typeMapping.getFunctionMapping(JDBCTypeMappingMetaData.LENGTH);
+      Object[] args = childrenToStringArr(1, node);
+      function.getFunctionSql(args, buf);
       return data;
    }
 
    public Object visit(ASTLocate node, Object data)
    {
-      log.debug("ASTLocate>");
+      StringBuffer buf = (StringBuffer)data;
+      JDBCFunctionMappingMetaData function = typeMapping.getFunctionMapping(JDBCTypeMappingMetaData.LOCATE);
+      Object[] args = new Object[3];
+      args[0] = node.jjtGetChild(0).jjtAccept(this, new StringBuffer()).toString();
+      args[1] = node.jjtGetChild(1).jjtAccept(this, new StringBuffer()).toString();
+      if(node.jjtGetNumChildren() == 3)
+      {
+         args[2] = node.jjtGetChild(2).jjtAccept(this, new StringBuffer()).toString();
+      }
+      else
+      {
+         args[2] = "1";
+      }
+      function.getFunctionSql(args, buf);
       return data;
    }
 
    public Object visit(ASTAbs node, Object data)
    {
-      log.debug("ASTAbs>");
+      StringBuffer buf = (StringBuffer)data;
+      JDBCFunctionMappingMetaData function = typeMapping.getFunctionMapping(JDBCTypeMappingMetaData.ABS);
+      Object[] args = childrenToStringArr(1, node);
+      function.getFunctionSql(args, buf);
       return data;
    }
 
    public Object visit(ASTSqrt node, Object data)
    {
-      log.debug("ASTSqrt>");
+      StringBuffer buf = (StringBuffer)data;
+      JDBCFunctionMappingMetaData function = typeMapping.getFunctionMapping(JDBCTypeMappingMetaData.SQRT);
+      Object[] args = childrenToStringArr(1, node);
+      function.getFunctionSql(args, buf);
       return data;
    }
 
    public Object visit(ASTMod node, Object data)
    {
-      log.debug("ASTMod>");
+      StringBuffer buf = (StringBuffer)data;
+      JDBCFunctionMappingMetaData function = JDBCTypeMappingMetaData.MOD_FUNC;
+      Object[] args = childrenToStringArr(2, node);
+      function.getFunctionSql(args, buf);
       return data;
    }
 
@@ -1005,35 +1021,11 @@ public final class EJBQLToSQL92Compiler
    {
       ASTPath path = (ASTPath) node.jjtGetChild(0);
 
-      final JDBCCMRFieldBridge cmrField = (JDBCCMRFieldBridge) path.getCMRField();
-      final JDBCCMPFieldBridge[] keyFields;
-      if(cmrField.getRelationMetaData().isTableMappingStyle())
-      {
-         keyFields = cmrField.getRelatedJDBCEntity().getPrimaryKeyFields();
-      }
-      else
-      {
-         keyFields = (
-            cmrField.hasForeignKey()
-            ? cmrField.getForeignKeyFields()
-            : cmrField.getRelatedCMRField().getForeignKeyFields()
-            );
-      }
-
       // assign the same alias for path and identifier
       ASTIdentifier id = (ASTIdentifier) node.jjtGetChild(1);
       String alias = aliasManager.getAlias(id.identifier);
       aliasManager.addAlias(path.getPath(), alias);
 
-      /*
-      if(fromRestriction.length() > 0)
-      {
-         fromRestriction.append(SQLUtil.AND);
-      }
-      SQLUtil.getIsNullClause(true, keyFields, alias, fromRestriction);
-
-      addLeftJoinPath(path);
-      */
       addInnerJoinPath(path);
 
       return data;
@@ -1041,13 +1033,10 @@ public final class EJBQLToSQL92Compiler
 
    public Object visit(ASTRangeVariableDeclaration node, Object data)
    {
-      //StringBuffer sql = (StringBuffer) data;
       ASTAbstractSchema schema = (ASTAbstractSchema) node.jjtGetChild(0);
       JDBCEntityBridge entity = (JDBCEntityBridge) schema.entity;
       ASTIdentifier id = (ASTIdentifier) node.jjtGetChild(1);
-      //final String alias = aliasManager.getAlias(id.identifier);
       declareTable(id.identifier, entity.getTableName());
-
       return data;
    }
 
@@ -1260,5 +1249,15 @@ public final class EJBQLToSQL92Compiler
 
          log.debug("added inner-join path: " + path.getPath() + ", " + identifier + "=" + alias);
       }
+   }
+
+   private Object[] childrenToStringArr(int numChildren, Node node)
+   {
+      Object[] args = new Object[numChildren];
+      for(int i = 0; i < numChildren; ++i)
+      {
+         args[i] = node.jjtGetChild(i).jjtAccept(this, new StringBuffer()).toString();
+      }
+      return args;
    }
 }
