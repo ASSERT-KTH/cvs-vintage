@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE server>
-<!-- $Id: cache-invalidation-service.xml,v 1.1 2002/09/30 13:09:35 slaboure Exp $ -->
+<!-- $Id: cache-invalidation-service.xml,v 1.2 2002/09/30 13:33:29 slaboure Exp $ -->
 
 <!-- ===================================================================== -->
 <!--                                                                       -->
@@ -17,7 +17,11 @@
 
 <!--
 	Uncomment if you want to activate the cache invalidation mechanism accross
-	nodes using the JMS bridge -->
+	nodes using the JMS bridge 
+
+	PropagationMode can be : IN_OUT = 1, IN_ONLY = 2, OUT_ONLY = 3
+	
+-->
 <!--
   <mbean code="org.jboss.mq.server.jmx.Topic"
 	 name="jboss.mq.destination:service=Topic,name=JMSCacheInvalidationBridge">
@@ -32,8 +36,7 @@
      <attribute name="InvalidationManager">jboss.cache:service=InvalidationManager</attribute>
      <attribute name="ConnectionFactoryName">java:/ConnectionFactory</attribute>
      <attribute name="TopicName">topic/JMSCacheInvalidationBridge</attribute>
-     <attribute name="PropagationMode">1</attribute> <!-- IN_OUT = 1, IN_ONLY = 2, OUT_ONLY = 3 -->
-
+     <attribute name="PropagationMode">1</attribute> 
   </mbean>
 -->
      
