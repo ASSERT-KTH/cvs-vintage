@@ -44,6 +44,7 @@
 #end
 </div>
 
+#asterisk()
 
 ## PRIMARY INFO
 #if ($tab.equals("1") || $tab.equals("all"))
