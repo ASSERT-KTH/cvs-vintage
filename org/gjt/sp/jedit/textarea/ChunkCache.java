@@ -36,7 +36,7 @@ import org.gjt.sp.jedit.syntax.*;
  * text area for painting text.
  *
  * @author Slava Pestov
- * @version $Id: ChunkCache.java,v 1.64 2003/03/23 18:02:19 spestov Exp $
+ * @version $Id: ChunkCache.java,v 1.65 2003/03/23 19:56:56 spestov Exp $
  */
 class ChunkCache
 {
@@ -342,19 +342,6 @@ class ChunkCache
 		if(!info.chunksValid)
 			throw new InternalError("Not up-to-date: " + screenLine);
 		return info;
-	} //}}}
-
-	//{{{ getScreenLineCount() method
-	int getScreenLineCount(int physicalLine)
-	{
-		int screenLines = buffer.getScreenLineCount(physicalLine);
-		if(screenLines == 0)
-		{
-			LineInfo[] infos = getLineInfosForPhysicalLine(physicalLine);
-			screenLines = infos.length;
-			buffer.setScreenLineCount(physicalLine,screenLines);
-		}
-		return screenLines;
 	} //}}}
 
 	//{{{ getSubregionOfOffset() method
