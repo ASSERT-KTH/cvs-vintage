@@ -26,6 +26,7 @@ import javax.naming.Context;
 import javax.naming.InitialContext;
 import javax.naming.Name;
 import javax.naming.NamingException;
+import javax.naming.NameNotFoundException;
 import javax.sql.DataSource;
 
 import org.jboss.logging.Log;
@@ -40,7 +41,7 @@ import org.jboss.proxy.InvocationHandler;
  *      
  *   @see <related>
  *   @author Rickard Öberg (rickard.oberg@telkel.com)
- *   @version $Revision: 1.2 $
+ *   @version $Revision: 1.3 $
  */
 public class DataSourceImpl
    extends ServiceMBeanSupport
@@ -95,7 +96,7 @@ public class DataSourceImpl
       throws Exception
    {
       // Bind in JNDI
-      new InitialContext().bind(jndiName, this);
+      bind(new InitialContext(), jndiName, this);
       
 //DEBUG      log.log("Connection pool for "+url+" bound to "+jndiName);
       
@@ -202,6 +203,28 @@ public class DataSourceImpl
       }
    }
    
+	// Private -------------------------------------------------------
+   private void bind(Context ctx, String name, Object val)
+      throws NamingException
+   {
+      // Bind val to name in ctx, and make sure that all intermediate contexts exist
+      
+      Name n = ctx.getNameParser("").parse(name);
+      while (n.size() > 1)
+      {
+         String ctxName = n.get(0);
+         try
+         {
+            ctx = (Context)ctx.lookup(ctxName);
+         } catch (NameNotFoundException e)
+         {
+            ctx = ctx.createSubcontext(ctxName);
+         }
+         n = n.getSuffix(1);
+      }
+      
+      ctx.bind(n.get(0), val);
+   }
 }
 
 class ConnectionProxy
@@ -244,6 +267,7 @@ class ConnectionProxy
       }
    }
    
+   // Package protected  --------------------------------------------
    void close()
    {
       try
