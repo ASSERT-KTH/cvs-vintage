@@ -1,4 +1,4 @@
-// $Id: Import.java,v 1.64 2004/10/18 13:43:15 mkl Exp $
+// $Id: Import.java,v 1.65 2004/11/25 15:36:26 bobtarling Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -178,11 +178,6 @@ public class Import {
 				       + "Default import module not found");
         JComponent chooser = module.getChooser(this);
         dialog = new JDialog(ProjectBrowser.getInstance(), "Import sources");
-        dialog.addWindowListener(new WindowAdapter() {
-            public void windowClosing(WindowEvent evt) {
-                disposeDialog();
-            }
-        });
 
         dialog.setModal(true);
         dialog.getParent().setEnabled(false);
