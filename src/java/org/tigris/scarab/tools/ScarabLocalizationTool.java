@@ -115,26 +115,32 @@ public class ScarabLocalizationTool
      */
     public String getTitle()
     {
-        String title = getProperty(TITLE_PROP);
+        String title = findProperty(TITLE_PROP, false);
         if (title == null)
         {
             // Either the property name doesn't correspond to a
             // localization key, or the localization property pointed
-            // to by the key doesn't have a value.
-            // TODO: Supply a *localized* default.
-            title = "Scarab";
+            // to by the key doesn't have a value.  Try the default.
+            title = findProperty(TITLE_PROP, true);
+
+            // If no default localization this category of template
+            // property was available, we return null so the VTL
+            // renders literally and the problem can be detected.
         }
         return title;
     }
 
     /**
-     * Gets the localized version of the value of
+     * Retrieves the localized version of the value of
      * <code>property</code>.
      *
      * @param property The name of the property whose value to
      * retrieve.
+     * @param useDefaultScope Whether or not to use the default scope
+     * (defined by the <code>DEFAULT_SCOPE</code> constant).
+     * @return The localized property value.
      */
-    protected String getProperty(String property)
+    protected String findProperty(String property, boolean useDefaultScope)
     {
         String value = null;
         if (properties != null)
@@ -143,7 +149,8 @@ public class ScarabLocalizationTool
 
             // HELP: Not sure if values like "entry/Wizard1.vm.title"
             // will be valid keys for Java .properties files...
-            String templateName = data.getTarget();
+            String templateName =
+                (useDefaultScope ? DEFAULT_SCOPE : data.getTarget());
             if (templateName == null)
             {
                 templateName = DEFAULT_SCOPE;
