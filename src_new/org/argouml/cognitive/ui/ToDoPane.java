@@ -1,4 +1,4 @@
-// $Id: ToDoPane.java,v 1.29 2003/11/25 10:58:16 jhraigniac Exp $
+// $Id: ToDoPane.java,v 1.30 2003/12/08 11:46:00 jhraigniac Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -90,7 +90,7 @@ import org.tigris.gef.util.VectorSet;
  *  ToDoPerspective skill = new ToDoBySkill();
  *</pre>
 
- * $Id: ToDoPane.java,v 1.29 2003/11/25 10:58:16 jhraigniac Exp $
+ * $Id: ToDoPane.java,v 1.30 2003/12/08 11:46:00 jhraigniac Exp $
  */
 public class ToDoPane extends JPanel
     implements ItemListener,
@@ -210,8 +210,7 @@ public class ToDoPane extends JPanel
         if (doSplash) {
             SplashScreen splash = SplashScreen.getInstance();
 	    splash.getStatusBar().showStatus(
-	            Translator.localize(BUNDLE, 
-				  "statusmsg.bar.making-todopane"));
+	            Translator.localize("statusmsg.bar.making-todopane"));
             splash.getStatusBar().showProgress(25);
         }
         
@@ -394,16 +393,16 @@ public class ToDoPane extends JPanel
     private static String formatCountLabel(int size) {
         switch (size) {
 	case 0:
-	    return Translator.localize("Cognitive", "todopane.label.no-items");
+	    return Translator.localize("label.todopane.no-items");
 	case 1:
 	    return MessageFormat.
-		format(Translator.localize("Cognitive", "todopane.label.item"),
+		format(Translator.localize("label.todopane.item"),
 		       new Object[] {
 			   new Integer(size) 
 		       });
 	default:
 	    return MessageFormat.
-		format(Translator.localize("Cognitive", "todopane.label.items"),
+		format(Translator.localize("label.todopane.items"),
 		       new Object[] {
 			   new Integer(size) 
 		       });

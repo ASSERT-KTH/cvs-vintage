@@ -1,4 +1,4 @@
-// $Id: ArgoDialog.java,v 1.7 2003/11/26 15:16:25 jjones Exp $
+// $Id: ArgoDialog.java,v 1.8 2003/12/08 11:46:00 jhraigniac Exp $
 // Copyright (c) 2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -74,7 +74,7 @@ public class ArgoDialog extends org.argouml.swingext.Dialog {
     
     protected void nameButton(AbstractButton button, String key) {
         if (button != null) {
-            button.setText(Translator.localize(BUNDLE, key));
+            button.setText(Translator.localize(key));
             String mnemonic = Translator.localize(BUNDLE, key + MNEMONIC_KEY_SUFFIX);
             if (mnemonic != null && mnemonic.length() > 0) {
                 button.setMnemonic(mnemonic.charAt(0));

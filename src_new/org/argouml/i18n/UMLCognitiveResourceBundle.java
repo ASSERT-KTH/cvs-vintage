@@ -25,7 +25,7 @@
 // File: UMLCognitiveResourceBundle.java
 // Classes: UMLCognitiveResourceBundle
 // Original Author: Curt Arnold
-// $Id: UMLCognitiveResourceBundle.java,v 1.20 2003/11/28 16:56:00 jhraigniac Exp $
+// $Id: UMLCognitiveResourceBundle.java,v 1.21 2003/12/08 11:46:00 jhraigniac Exp $
 
 // 4 Feb 2002: Jeremy Bennett (mail@jeremybennett.com). Fixed description of
 // CrConstructorNeeded, CrConsiderSingleton and CrSingletonViolated.
@@ -84,8 +84,6 @@ public class UMLCognitiveResourceBundle extends ListResourceBundle {
         {"decision.storage", "Storage"},
         {"decision.uncategorized", "Uncategorized"},
 
-        {"goal.unspecified", "Unspecified"},
-
         {"knowledge.completeness", "Completeness"},
         {"knowledge.consistency", "Consistency"},
         {"knowledge.correctness", "Correctness"},
@@ -97,35 +95,6 @@ public class UMLCognitiveResourceBundle extends ListResourceBundle {
         {"knowledge.semantics", "Semantics"},
         {"knowledge.syntax", "Syntax"},
         {"knowledge.tool", "Tool"},
-
-        {"todopane.label.no-items", " No Items "},
-        {"todopane.label.item", " {0} Item "},
-        {"todopane.label.items", " {0} Items "},
-
-        {"docpane.label.documentation", "Documentation"},
-        {"docpane.label.author", "Author"},
-        {"docpane.label.version", "Version"},
-        {"docpane.label.since", "Since"},
-        {"docpane.label.deprecated", "Deprecated"},
-        {"docpane.label.see", "See"},
-
-        {"stylepane.label.bounds", "Bounds"},
-        {"stylepane.label.fill", "Fill"},
-        {"stylepane.label.no-fill", "No Fill"},
-        {"stylepane.label.line", "Line"},
-        {"stylepane.label.no-line", "No Line"},
-        {"stylepane.label.shadow", "Shadow"},
-        {"stylepane.label.no-shadow", "No Shadow"},
-        {"stylepane.label.custom", "Custom"},
-
-        {"taggedvaluespane.label.tag", "Tag"},
-        {"taggedvaluespane.label.value", "Value"},
-
-        {"button.open", "Open"},
-        {"button.back", "Back"},
-        {"button.next", "Next"},
-        {"button.finish", "Finish"},
-        {"button.help", "Help"},
 
         {"mnemonic.button.back", "B"},
         {"mnemonic.button.next", "N"},

@@ -1,4 +1,4 @@
-// $Id: Goal.java,v 1.7 2003/11/25 10:58:12 jhraigniac Exp $
+// $Id: Goal.java,v 1.8 2003/12/08 11:46:00 jhraigniac Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -32,7 +32,7 @@ public class Goal {
     
     ////////////////////////////////////////////////////////////////
     // constants
-    public static final Goal UNSPEC = new Goal("goal.unspecified", 1);
+    public static final Goal UNSPEC = new Goal("label.goal.unspecified", 1);
 		       
     ////////////////////////////////////////////////////////////////
     // instance variables
@@ -42,7 +42,7 @@ public class Goal {
     ////////////////////////////////////////////////////////////////
     // constructor
     public Goal(String n, int p) {
-	setName(Translator.localize("Cognitive", n));
+	setName(Translator.localize(n));
 	setPriority(p);
     }
 				   

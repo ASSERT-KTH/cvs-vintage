@@ -1,5 +1,5 @@
 
-// $Id: TabTaggedValues.java,v 1.28 2003/11/25 10:58:13 jhraigniac Exp $
+// $Id: TabTaggedValues.java,v 1.29 2003/12/08 11:46:00 jhraigniac Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -194,7 +194,6 @@ class TableModelTaggedValues extends AbstractTableModel
 	       DelayedVChangeListener,
 	       MElementListener
 {
-    private static final String BUNDLE = "Cognitive";
 
     ////////////////
     // instance varables
@@ -225,8 +224,8 @@ class TableModelTaggedValues extends AbstractTableModel
     public int getColumnCount() { return 2; }
 
     public String  getColumnName(int c) {
-	if (c == 0) return Translator.localize(BUNDLE, "taggedvaluespane.label.tag");
-	if (c == 1) return Translator.localize(BUNDLE, "taggedvaluespane.label.value");
+	if (c == 0) return Translator.localize("label.taggedvaluespane.tag");
+	if (c == 1) return Translator.localize("label.taggedvaluespane.value");
 	return "XXX";
     }
 
