@@ -46,11 +46,15 @@ package org.tigris.scarab.actions;
  * individuals on behalf of Collab.Net.
  */ 
 
+import java.util.List;
+
 // Turbine Stuff 
 import org.apache.turbine.Turbine;
 import org.apache.turbine.TemplateContext;
 import org.apache.turbine.RunData;
 import org.apache.turbine.ParameterParser;
+import org.apache.turbine.tool.IntakeTool;
+import org.apache.fulcrum.intake.model.Group;
 
 import org.apache.torque.om.NumberKey; 
 
@@ -60,6 +64,8 @@ import org.tigris.scarab.om.QueryPeer;
 import org.tigris.scarab.om.RQueryUser;
 import org.tigris.scarab.om.ScarabUser;
 import org.tigris.scarab.om.ScarabUserImpl;
+import org.tigris.scarab.om.IssueType;
+import org.tigris.scarab.services.module.ModuleEntity;
 import org.tigris.scarab.util.ScarabConstants;
 import org.tigris.scarab.tools.ScarabRequestTool;
 import org.tigris.scarab.actions.base.RequireLoginFirstAction;
@@ -68,10 +74,68 @@ import org.tigris.scarab.actions.base.RequireLoginFirstAction;
     This class is responsible for managing the query lists (deleting queries).
     ScarabIssueAttributeValue
     @author <a href="mailto:elicia@collab.net">Elicia David</a>
-    @version $Id: QueryList.java,v 1.3 2001/09/30 18:31:38 jon Exp $
+    @version $Id: QueryList.java,v 1.4 2001/10/26 00:31:13 elicia Exp $
 */
 public class QueryList extends RequireLoginFirstAction
 {
+
+    public void doSave( RunData data, TemplateContext context )
+        throws Exception
+    {
+        IntakeTool intake = getIntakeTool(context);        
+        ScarabRequestTool scarabR = getScarabRequestTool(context);
+        ScarabUser user = (ScarabUser)data.getUser();
+        ModuleEntity me = scarabR.getCurrentModule();
+        IssueType issueType = scarabR.getCurrentIssueType();
+        Query query;
+
+        Object[] keys = data.getParameters().getKeys();
+        String key;
+        String queryId;
+        String frequencyId;
+        int defaultCount = 0;
+
+        // Delete previous defaults
+        user.resetDefaultQuery(me, issueType);
+
+        for (int i =0; i<keys.length; i++)
+        {
+            key = keys[i].toString();
+            // Save frequency id's.
+            if (key.startsWith("frequency_"))
+            {
+               queryId = key.substring(10);
+               query = (Query) QueryPeer
+                      .retrieveByPK(new NumberKey(queryId));
+               frequencyId = data.getParameters()
+                            .getString(key);
+               RQueryUser rqu = query.getRQueryUser(user);
+               if (rqu != null && rqu.getIsSubscribed())
+               {
+                   rqu.setSubscriptionFrequency(frequencyId);
+                   rqu.save();
+               }
+            }
+            // Save default query.
+            else if (key.startsWith("default_"))
+            {
+                defaultCount ++;
+                if (defaultCount > 1)
+                {
+                    data.setMessage("You can only select one default query"
+                                    + " for each module and issue type.");
+                }
+
+                queryId = key.substring(8);
+                query = (Query) QueryPeer
+                       .retrieveByPK(new NumberKey(queryId));
+                RQueryUser rqu = query.getRQueryUser(user);
+                rqu.setIsdefault(true);
+                rqu.save();
+            }
+        }
+    } 
+
     public void doDeletequeries( RunData data, TemplateContext context )
         throws Exception
     {
@@ -121,21 +185,8 @@ public class QueryList extends RequireLoginFirstAction
                frequencyId = data.getParameters()
                             .getString("frequency_" + queryId);
                query = (Query) QueryPeer
-                                     .retrieveByPK(new NumberKey(queryId));
-               if (query.isUserSubscribed(user.getUserId()))
-               {
-                   data.setMessage("You are already subscribed " + 
-                                  "to query 'query.Name'.");               
-               }
-               else
-               {
-                   RQueryUser rqu = new RQueryUser();
-                   rqu.setUserId(user.getUserId());
-                   rqu.setQuery(query);
-                   rqu.setSubscriptionFrequency(frequencyId);
-                   rqu.save();
-               }
-
+                              .retrieveByPK(new NumberKey(queryId));
+               query.subscribe(user, frequencyId);
             }
         } 
     } 
@@ -148,7 +199,6 @@ public class QueryList extends RequireLoginFirstAction
         String queryId;
         Query query;
         ScarabUser user = (ScarabUser)data.getUser();
-        ScarabRequestTool scarabR = getScarabRequestTool(context);
 
         for (int i =0; i<keys.length; i++)
         {
@@ -158,59 +208,11 @@ public class QueryList extends RequireLoginFirstAction
                queryId = key.substring(7);
                query = (Query) QueryPeer
                        .retrieveByPK(new NumberKey(queryId));
-               if (!query.isUserSubscribed(user.getUserId()))
-               {
-                   data.setMessage("You are not subscribed " +
-                                   "to query 'query.Name'.");               
-               }
-               else
-               {
-                   try
-                   {
-                       RQueryUser rqu = query
-                                 .getSubscription(user.getUserId());
-                       rqu.doDelete(user, scarabR.getCurrentModule());
-                   }
-                   catch (Exception e)
-                   {
-                       data.setMessage(ScarabConstants.NO_PERMISSION_MESSAGE);
-                   }
-               }
-
+               query.unSubscribe(user);
             }
         } 
     } 
 
-    public void doSavefrequencies( RunData data, TemplateContext context )
-        throws Exception
-    {
-        Object[] keys = data.getParameters().getKeys();
-        String key;
-        String queryId;
-        String frequencyId;
-        Query query;
-        ScarabUser user = (ScarabUser)data.getUser();
-
-        for (int i =0; i<keys.length; i++)
-        {
-            key = keys[i].toString();
-            if (key.startsWith("frequency_"))
-            {
-               queryId = key.substring(10);
-               query = (Query) QueryPeer
-                      .retrieveByPK(new NumberKey(queryId));
-               frequencyId = data.getParameters()
-                            .getString(key);
-               if (query.isUserSubscribed(user.getUserId()))
-               {
-                   RQueryUser rqu = query
-                             .getSubscription(user.getUserId());
-                   rqu.setSubscriptionFrequency(frequencyId);
-                   rqu.save();
-               }
-            }
-        }
-    } 
 
     public void doNewquery( RunData data, TemplateContext context )
         throws Exception
