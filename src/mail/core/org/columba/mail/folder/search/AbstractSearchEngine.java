@@ -152,16 +152,13 @@ public abstract class AbstractSearchEngine {
 
 					String type = criteria.getType();
 
-					AbstractFilter instance;
 					b &= processRule(uid, worker, criteria, type);
 				}
 
 				if (b)
 					result.add(uid);
 			}
-		}
-		// MATCH_ANY
-		else {
+		} else { // MATCH ANY
 			while (it.hasNext()) {
 
 				b = false;
@@ -172,7 +169,6 @@ public abstract class AbstractSearchEngine {
 
 					String type = criteria.getType();
 
-					AbstractFilter instance;
 					b = processRule(uid, worker, criteria, type);
 				}
 

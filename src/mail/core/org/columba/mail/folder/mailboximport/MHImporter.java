@@ -40,7 +40,6 @@ public class MHImporter extends DefaultMailboxImporter {
 	 */
 	public void importMailboxFile(File directory, WorkerStatusController worker, Folder destFolder)
 		throws Exception {
-		boolean success = false;
 
 		File[] list = directory.listFiles(MHMessageFileFilter.getInstance());
 
@@ -56,17 +55,13 @@ public class MHImporter extends DefaultMailboxImporter {
 
 			if ((file.exists()) && (file.length() > 0)) {
 				importMessage(file, worker);
-
 			}
-
 		}
-
 	}
 
 	protected void importMessage(File file, WorkerStatusController worker)
 		throws Exception {
 
-		boolean success = false;
 
 		StringBuffer strbuf = new StringBuffer();
 
@@ -82,5 +77,4 @@ public class MHImporter extends DefaultMailboxImporter {
 
 		saveMessage(strbuf.toString(), worker, getDestinationFolder());
 	}
-
 }

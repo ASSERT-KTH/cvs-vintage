@@ -267,11 +267,10 @@ public class LuceneSearchEngine
 		return result;
 	}
 
-	protected LinkedList queryEngine(
-		FilterRule filter,
+	protected LinkedList queryEngine(FilterRule filter,
 		WorkerStatusController worker)
 		throws Exception {
-		Integer uid;
+                
 		Query query = getLuceneQuery(filter, analyzer);
 
 		LinkedList result = search(query);
@@ -391,9 +390,8 @@ public class LuceneSearchEngine
 
 		ColumbaLogger.log.debug("Lucene: Merging RAMIndex to FileIndex");
 
-		Document doc;
-
 		/*
+		Document doc;
 		for( int i=0; i<ramReader.numDocs(); i++) {
 			doc = ramReader.document(i);
 			if( !deleted.contains(new Integer(ramReader.document(i).getField("uid").stringValue())) ) {

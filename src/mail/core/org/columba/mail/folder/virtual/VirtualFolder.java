@@ -241,8 +241,6 @@ public class VirtualFolder extends Folder {
 		int uid = getFolderItem().getInteger("property", "source_uid");
 		Folder srcFolder = (Folder) MainInterface.treeModel.getFolder(uid);
 
-		boolean result = false;
-
 		XmlElement filter = getFolderItem().getRoot().getElement("filter");
 
 		if (filter == null) {
@@ -277,10 +275,6 @@ public class VirtualFolder extends Folder {
 		throws Exception {
 
 		Folder folder = parent;
-
-		FolderItem item = null;
-
-		boolean result = false;
 
 		Object[] resultUids = folder.searchMessages(filter, worker);
 
@@ -566,8 +560,6 @@ public class VirtualFolder extends Folder {
 		for (Enumeration e = list.keys(); e.hasMoreElements();) {
 			Folder srcFolder = (Folder) e.nextElement();
 			Vector v = (Vector) list.get(srcFolder);
-
-			int size = 1;
 
 			/*
 			// check if we need a destination folder 
