@@ -25,7 +25,7 @@
 // File: GeneratorDisplay.java
 // Classes: GeneratorDisplay
 // Original Author: jrobbins@ics.uci.edu
-// $Id: GeneratorDisplay.java,v 1.34 2002/10/23 14:56:30 mkl Exp $
+// $Id: GeneratorDisplay.java,v 1.35 2002/10/28 04:14:01 mkl Exp $
 
 // 5 Mar 2002: Jeremy Bennett (mail@jeremybennett.com). Return text for
 // operations that have no return parameter made "" rather than ": void??"
@@ -816,14 +816,22 @@ public String generateConcurrency(MCallConcurrencyKind concurrency) {
   public String generateStateBody(MState m) {
       String s = "";
 
-      MAction entry = m.getEntry();
-      MAction exit = m.getExit();
-      if (entry != null) {
-	  String entryStr = Generate(entry);
+      MAction entryAction = m.getEntry();
+      MAction doAction = m.getDoActivity();
+      MAction exitAction = m.getExit();
+      if (entryAction != null) {
+	  String entryStr = Generate(entryAction);
 	  if (entryStr.length() > 0) s += "entry / " + entryStr;
       }
-      if (exit != null) {
-	  String exitStr = Generate(exit);
+      if (doAction != null) {
+          String doStr = Generate(doAction);
+          if (doStr.length() > 0) {
+              if (s.length() > 0) s += '\n';
+              s += "do / " + doStr;
+          }
+      }
+      if (exitAction != null) {
+	  String exitStr = Generate(exitAction);
 	  if (s.length() > 0) s += "\n";
 	  if (exitStr.length() > 0) s += "exit / " + exitStr;
       }
