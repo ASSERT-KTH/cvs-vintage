@@ -25,13 +25,7 @@
 #if ($canEdit)
 <form action="$link.setPage("admin,ModifyModule.vm").addPathInfo("moduleid","$currentModule.ModuleId")" method="post">
 <div class="functnbar2">
-<table cellpadding="4" cellspacing="0" border="1">
- <tr>
-  <td class="firstchild">
   <input type="submit" name="maxumusDorkus" value="Edit" />
-  </td>
- </tr>
-</table>
 </div>
 </form>
 #end
