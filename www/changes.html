@@ -1,4 +1,4 @@
-<!-- $Id: changes.html,v 1.15 2002/02/02 19:24:40 jmcnally Exp $ -->
+<!-- $Id: changes.html,v 1.16 2002/02/04 22:29:06 jon Exp $ -->
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2//EN">
 <html>
 
@@ -27,6 +27,9 @@
                 <li>Added script for managing the updating of the database between
                     version revisions. (JSS)</li>
                 <li>Can now add multiple attributes or attribute options to a module, at once. (EWD)</li>
+                <li>Schema change: Moved SCARAB_MODULE.DEDUPE to SCARAB_R_MODULE_ISSUE_TYPE.DEDUPE (EWD)</li>
+                <li>Added schema upgrade management script as well as a .sql file which
+                    will perform the schema change documented above (JSS, EWD)</li>
             </ul>
         </td>
     </tr>
@@ -54,6 +57,8 @@
                     selected option was invalid due to cross-site scripting
                     prevention algorithm.  This has been fixed in Search, 
                     AdvancedSearch, ConfigureIssueList, ViewIssue. (JDM)</li>
+                <li>SelectArtifactType.vm was showing inactive issue types (JSS)</li>
+                <li>admin,GlobalArtifactTypeEdit.vm artifact -&gt; issue terminology fix (JSS)</li>
             </ul>
         </td>
     </tr>
