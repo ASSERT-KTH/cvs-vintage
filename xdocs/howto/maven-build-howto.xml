@@ -39,14 +39,14 @@ In most cases you will utilize Maven as follows:
 
 <source>
 1:> cd $SCARAB_ROOT
-2:> maven compile
+2:> maven war:webapp -D maven.test.skip
 3:> maven scarab:database
 </source>
 
 <ul><li> 1: cd $SCARAB_ROOT<br/>
          go to the root directory of your Scarab source installation.</li>
-    <li> 2: maven compile<br/>
-         Create the torque database layer and the java class files</li>
+    <li> 2: maven war:webapp -D maven.test.skip<br/>
+         Create the webapp in target/scarab</li>
     <li> 3: maven scarab:database<br/>
          Finally create the database. You will be prompted for input.</li>
 </ul>

@@ -623,8 +623,8 @@ with ant:
 
 with Maven:
 
-    maven compile
-    maven war
+    maven java:compile
+    maven war:webapp -Dmaven.test.skip
     
 </source>
 <p>

@@ -24,7 +24,7 @@ Oracle, try the following:
         directory *before* building Scarab.
         If the jar is named to match the regular expression *oracle*.jar,
         the existing build process will copy it as necessary.</li>
-    <li>Create a scarab/build/build.properties file.</li>
+    <li>Create a scarab/build.properties file.</li>
     <li>In it, fill out the following properties with the right information
 pertaining to Oracle...ie: for database.*.url, create an Oracle JDBC URL.
 For database.type, put 'oracle'. For jdbc.driver, put the Oracle

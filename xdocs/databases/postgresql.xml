@@ -5,7 +5,7 @@ Postgresql and to allow Scarab to connect to Postgres, please try the
 following directions:
 </p><ol>
 <li>
-    Create a scarab/build/build.properties file. There are instructions
+    Create a scarab/build.properties file. There are instructions
     in the SCARAB/README.txt file which detail why you want to do this.
 </li>
 <li>
