@@ -135,7 +135,7 @@ public  class AttributeGroup
         throws TorqueException
     {
         Module module = null;
-        ObjectKey id = getPrimaryKey();
+        Integer id = getModuleId();
         if ( id != null ) 
         {
             module = ModuleManager.getInstance(id);
