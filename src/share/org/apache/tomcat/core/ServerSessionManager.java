@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/core/Attic/ServerSessionManager.java,v 1.1 1999/10/09 00:30:19 duncan Exp $
- * $Revision: 1.1 $
- * $Date: 1999/10/09 00:30:19 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/core/Attic/ServerSessionManager.java,v 1.2 1999/10/22 21:52:09 costin Exp $
+ * $Revision: 1.2 $
+ * $Date: 1999/10/22 21:52:09 $
  *
  * ====================================================================
  *
@@ -108,10 +108,12 @@ public class ServerSessionManager {
 	String sessionId = null;
 	ServerSession session = null;
 
-	Enumeration enum = request.getCookies().elements();
-
-	while (enum.hasMoreElements()) {
-	    Cookie cookie = (Cookie)enum.nextElement();
+	//	Enumeration enum = request.getCookies().elements();
+	Cookie cookies[]=request.getCookies(); // assert !=null
+	
+	//while (enum.hasMoreElements()) {
+	for( int i=0; i<cookies.length; i++ ) {
+	    Cookie cookie = cookies[i]; // (Cookie)enum.nextElement();
 
 	    if (cookie.getName().equals(
                 Constants.Cookie.SESSION_COOKIE_NAME)) {

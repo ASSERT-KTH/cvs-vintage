@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/core/Attic/ServletWrapper.java,v 1.2 1999/10/15 03:20:26 harishp Exp $
- * $Revision: 1.2 $
- * $Date: 1999/10/15 03:20:26 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/core/Attic/ServletWrapper.java,v 1.3 1999/10/22 21:52:10 costin Exp $
+ * $Revision: 1.3 $
+ * $Date: 1999/10/22 21:52:10 $
  *
  * ====================================================================
  *
@@ -209,7 +209,10 @@ class ServletWrapper {
         if (path != null &&
             servletClass == null &&
             servletClassName == null) {
-            Request request = new ServerRequest();
+	    // XXX XXX XXX
+	    // core shouldn't depend on a particular connector!
+	    // need to find out what this code does!
+	    Request request = new ServerRequest();
             Response response = new ServerResponse();
 
             request.recycle();

@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/core/Attic/HttpServletRequestFacade.java,v 1.1 1999/10/09 00:30:05 duncan Exp $
- * $Revision: 1.1 $
- * $Date: 1999/10/09 00:30:05 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/core/Attic/HttpServletRequestFacade.java,v 1.2 1999/10/22 21:52:06 costin Exp $
+ * $Revision: 1.2 $
+ * $Date: 1999/10/22 21:52:06 $
  *
  * ====================================================================
  *
@@ -131,14 +131,15 @@ implements HttpServletRequest {
     }
 
     public Cookie[] getCookies() {
-	Vector cookies = request.getCookies();
-	Cookie[] cookieArray = new Cookie[cookies.size()];
-
-	for (int i = 0; i < cookies.size(); i ++) {
-	    cookieArray[i] = (Cookie)cookies.elementAt(i);    
-	}
-
-        return cookieArray;
+	return request.getCookies();
+	// 	Vector cookies = request.getCookies();
+	// 	Cookie[] cookieArray = new Cookie[cookies.size()];
+	
+	// 	for (int i = 0; i < cookies.size(); i ++) {
+	// 	    cookieArray[i] = (Cookie)cookies.elementAt(i);    
+	// 	}
+	
+	//         return cookieArray;
     }
 
     public long getDateHeader(String name) {

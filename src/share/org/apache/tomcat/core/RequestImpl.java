@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/core/Attic/RequestImpl.java,v 1.1 1999/10/09 00:30:16 duncan Exp $
- * $Revision: 1.1 $
- * $Date: 1999/10/09 00:30:16 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/core/Attic/RequestImpl.java,v 1.2 1999/10/22 21:52:08 costin Exp $
+ * $Revision: 1.2 $
+ * $Date: 1999/10/22 21:52:08 $
  *
  * ====================================================================
  *
@@ -79,9 +79,35 @@ import javax.servlet.http.*;
  * @author Jason Hunter [jch@eng.sun.com]
  * @author Harish Prabandham
  */
-
-public class RequestImpl extends Request {
+public class RequestImpl implements Request {
     
+    protected Response response;
+    protected HttpServletRequestFacade requestFacade;
+    protected String scheme = Constants.Request.HTTP;
+    protected Context context;
+    protected Hashtable attributes = new Hashtable();
+    protected Hashtable parameters = new Hashtable();
+    protected Vector cookies = new Vector();
+    protected String protocol;
+
+    protected String requestURI;
+    protected String contextPath;
+    protected String lookupPath;
+    protected String servletPath;
+    protected String pathInfo;
+    protected String queryString;
+    
+    protected String method;
+    protected int contentLength = -1;
+    protected String contentType = "";
+    protected String charEncoding = null;
+    protected String authType;
+    protected String remoteUser;
+    protected String reqSessionId;
+    protected ServerSession serverSession;
+    protected boolean didReadFormData;
+    // end "Request" variables    
+
     protected StringManager sm =
         StringManager.getManager(Constants.Package);
     protected ServletInputStream in;
@@ -90,18 +116,307 @@ public class RequestImpl extends Request {
     protected int serverPort;
     protected String remoteAddr;
     protected String remoteHost;
-    
+
     public RequestImpl() {
-        super();
+        requestFacade = new HttpServletRequestFacade(this);
     }
 
+    public HttpServletRequestFacade getFacade() {
+	return requestFacade;
+    }
+
+    public void setURI(String requestURI) {
+        this.requestURI = requestURI;
+    }
+
+    public void setContext(Context context) {
+	this.context = context;
+	contextPath = context.getPath();
+	lookupPath = requestURI.substring(contextPath.length(),
+            requestURI.length());
+
+	// check for ? string on lookuppath
+	int qindex = lookupPath.indexOf("?");
+
+	if (qindex > -1) {
+	    lookupPath = lookupPath.substring(0, qindex);
+	}
+
+	if (lookupPath.length() < 1) {
+	    lookupPath = "/";
+	}
+    }
+
+    public String getLookupPath() {
+	return lookupPath;
+    }
+    
+    public Context getContext() {
+	return context;
+    }
+
+    // XXX - changed from package protected to public so
+    //       that we can call this from ConnectionHandler.java
+
+    public void setResponse(Response response) {
+	this.response = response;
+    }
+    
     public void recycle() {
-	super.recycle();
+	response = null;
+	scheme = Constants.Request.HTTP;
+	context = null;
+        attributes.clear();
+        parameters.clear();
+        cookies.removeAllElements();
+        method = null;
+	protocol = null;
+        requestURI = null;
+        queryString = null;
+        contentLength = -1;
+        contentType = "";
+        charEncoding = null;
+        authType = null;
+        remoteUser = null;
+        reqSessionId = null;
+	serverSession = null;
+	didReadFormData = false;
 	//	moreRequests = false;
 	in = null;
     	headers.clear();
 	serverName = "";
     }
+    
+    public Object getAttribute(String name) {
+        return attributes.get(name);
+    }
+
+    public void setAttribute(String name, Object value) {
+        attributes.put(name, value);
+    }
+
+    public void removeAttribute(String name) {
+	attributes.remove(name);
+    }
+    
+    public Enumeration getAttributeNames() {
+        return attributes.keys();
+    }
+    
+    public String[] getParameterValues(String name) {
+	if (!didReadFormData) {
+	    readFormData();
+	}
+
+        return (String[])parameters.get(name);
+    }
+    
+    public Enumeration getParameterNames() {
+	if (!didReadFormData) {
+	    readFormData();
+	}
+
+        return parameters.keys();
+    }
+    
+    private void readFormData() {
+	didReadFormData = true;
+
+	if (contentType != null &&
+            contentType.equals("application/x-www-form-urlencoded")) {
+
+	    try {
+		ServletInputStream is=getInputStream();
+                Hashtable postParameters =
+		    HttpUtils.parsePostData(contentLength, is);
+		parameters = mergeParameters(parameters, postParameters);
+	    }
+	    catch (IOException e) {
+		// nothing
+	    }
+        }
+    }
+
+    private Hashtable mergeParameters(Hashtable one, Hashtable two) {
+	// Try some shortcuts
+	if (one.size() == 0) {
+	    return two;
+	}
+
+	if (two.size() == 0) {
+	    return one;
+	}
+
+	Hashtable combined = (Hashtable) one.clone();
+
+        Enumeration e = two.keys();
+
+	while (e.hasMoreElements()) {
+	    String name = (String) e.nextElement();
+	    String[] oneValue = (String[]) one.get(name);
+	    String[] twoValue = (String[]) two.get(name);
+	    String[] combinedValue;
+
+	    if (oneValue == null) {
+		combinedValue = twoValue;
+	    }
+
+	    else {
+		combinedValue = new String[oneValue.length + twoValue.length];
+
+	        System.arraycopy(oneValue, 0, combinedValue, 0,
+                    oneValue.length);
+	        System.arraycopy(twoValue, 0, combinedValue,
+                    oneValue.length, twoValue.length);
+	    }
+
+	    combined.put(name, combinedValue);
+	}
+
+	return combined;
+    }
+
+    public ApplicationSession getSession() {
+        return getSession(true);
+    }
+
+    public ServerSession getServerSession(boolean create) {
+	if (context == null) {
+	    System.out.println("CONTEXT WAS NEVER SET");
+	    return null;
+	}
+
+	if (serverSession == null && create) {
+            serverSession =
+		ServerSessionManager.getManager()
+		    .getServerSession(this, response, create);
+            serverSession.accessed();
+	}
+
+	return serverSession;
+    }
+    
+    public ApplicationSession getSession(boolean create) {
+	getServerSession(create);
+	ApplicationSession appSession = null;
+	if (serverSession != null) {
+	    appSession = serverSession.getApplicationSession(context, create);
+	}
+
+	return appSession;
+
+	//  if (reqSessionId != null) {
+//  	    //Session session = context.getSession(reqSessionId);
+//  	    //if (session == null) {
+//  	    //session = context.createSession(reqSessionId);
+//  	    //}
+//  	    //return session;
+//  	    System.out.println("DANGER, SESSIONS ARE NOT WORKING");
+//  	} else {
+//  	    if (create) {
+//  		Session session = serverSession.createSession(response);
+//  		return session;
+//  	    } else {
+//  		return null;
+//  	    }
+//  	}
+    }
+
+    public String getRequestURI() {
+        return requestURI;
+    }
+    
+    public String getAuthType() {
+    	return authType;    
+    }
+    
+    public void setAuthType(String authType) {
+        this.authType = authType;
+    }
+
+    public String getCharacterEncoding() {
+        return charEncoding;
+    }
+
+    public void setCharacterEncoding(String charEncoding) {
+	this.charEncoding = charEncoding;
+    }
+    
+    public int getContentLength() {
+        return contentLength;
+    }
+    
+    public String getContentType() {
+    	return contentType;   
+    }
+    
+    public Cookie[] getCookies() {
+	Cookie[] cookieArray = new Cookie[cookies.size()];
+	
+	for (int i = 0; i < cookies.size(); i ++) {
+	    cookieArray[i] = (Cookie)cookies.elementAt(i);    
+	}
+	
+	return cookieArray;
+	//        return cookies;
+    }
+    
+    public String getMethod() {
+        return method;
+    }
+    
+    public String getPathInfo() {
+        return pathInfo;
+    }
+    
+    public void setPathInfo(String pathInfo) {
+        this.pathInfo = pathInfo;
+    }
+    
+    public String getProtocol() {
+        return protocol;
+    }
+    
+    public String getQueryString() {
+        return queryString;
+    }
+
+    public void setQueryString(String queryString) {
+        this.queryString = queryString;
+    }
+    
+    public String getRemoteUser() {
+        return remoteUser;
+    }
+    
+    public String getScheme() {
+        return scheme;
+    }
+    
+    public void setScheme(String scheme) {
+        this.scheme = scheme;
+    }
+    
+    public void setRequestedSessionId(String reqSessionId) {
+	this.reqSessionId = reqSessionId;
+    }
+    
+    public String getRequestedSessionId() {
+        return reqSessionId;
+    }
+
+    public void setServerSession(ServerSession serverSession) {
+	this.serverSession = serverSession;
+    }
+    
+    public void setServletPath(String servletPath) {
+	this.servletPath = servletPath;
+    }
+    
+    public String getServletPath() {
+        return servletPath;
+    }
+    
 
     public long getDateHeader(String name) {
         return headers.getDateHeader(name);
@@ -343,10 +658,6 @@ public class RequestImpl extends Request {
 
     public void setRequestURI( String r ) {
 	this.requestURI=r;
-    }
-
-    public void setQueryString( String q ) {
-	this.queryString=q;
     }
 
     public void setParameters( Hashtable h ) {

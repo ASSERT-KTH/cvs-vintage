@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/core/Request.java,v 1.1 1999/10/09 00:30:15 duncan Exp $
- * $Revision: 1.1 $
- * $Date: 1999/10/09 00:30:15 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/core/Request.java,v 1.2 1999/10/22 21:52:07 costin Exp $
+ * $Revision: 1.2 $
+ * $Date: 1999/10/22 21:52:07 $
  *
  * ====================================================================
  *
@@ -70,6 +70,11 @@ import java.util.*;
 import javax.servlet.*;
 import javax.servlet.http.*;
 
+/* XXX
+   - add comments
+   - more clean-up
+   - make it minimal!
+*/
 
 /**
  * Server neutral form of the request from a client. Subclasses can
@@ -81,344 +86,135 @@ import javax.servlet.http.*;
  * @author Harish Prabandham
  */
 
-public abstract class Request {
-
-    protected Response response;
-    protected HttpServletRequestFacade requestFacade;
-    protected String scheme = Constants.Request.HTTP;
-    protected Context context;
-    protected Hashtable attributes = new Hashtable();
-    protected Hashtable parameters = new Hashtable();
-    protected Vector cookies = new Vector();
-    protected String protocol;
-
-    protected String requestURI;
-    protected String contextPath;
-    protected String lookupPath;
-    protected String servletPath;
-    protected String pathInfo;
-    protected String queryString;
+public interface Request {
+    // Core parts of the request
+    public String getMethod();
     
-    protected String method;
-    protected int contentLength = -1;
-    protected String contentType = "";
-    protected String charEncoding = null;
-    protected String authType;
-    protected String remoteUser;
-    protected String reqSessionId;
-    protected ServerSession serverSession;
-    protected boolean didReadFormData;
+    public String getRequestURI();
+
+    public String getProtocol();
     
-    public Request() {
-        requestFacade = new HttpServletRequestFacade(this);
-    }
+    public String getQueryString();
 
-    public HttpServletRequestFacade getFacade() {
-	return requestFacade;
-    }
-
-    void setURI(String requestURI) {
-        this.requestURI = requestURI;
-    }
-
-    void setContext(Context context) {
-	this.context = context;
-	contextPath = context.getPath();
-	lookupPath = requestURI.substring(contextPath.length(),
-            requestURI.length());
-
-	// check for ? string on lookuppath
-	int qindex = lookupPath.indexOf("?");
-
-	if (qindex > -1) {
-	    lookupPath = lookupPath.substring(0, qindex);
-	}
-
-	if (lookupPath.length() < 1) {
-	    lookupPath = "/";
-	}
-    }
-
-    public String getLookupPath() {
-	return lookupPath;
-    }
+    public String getScheme();
     
-    public Context getContext() {
-	return context;
-    }
-
-    // XXX - changed from package protected to public so
-    //       that we can call this from ConnectionHandler.java
-
-    public void setResponse(Response response) {
-	this.response = response;
-    }
+    public String getServerName();
     
-    protected void recycle() {
-	response = null;
-	scheme = Constants.Request.HTTP;
-	context = null;
-        attributes.clear();
-        parameters.clear();
-        cookies.removeAllElements();
-        method = null;
-	protocol = null;
-        requestURI = null;
-        queryString = null;
-        contentLength = -1;
-        contentType = "";
-        charEncoding = null;
-        authType = null;
-        remoteUser = null;
-        reqSessionId = null;
-	serverSession = null;
-	didReadFormData = false;
-    }
-    
-    public Object getAttribute(String name) {
-        return attributes.get(name);
-    }
+    public int getServerPort();
 
-    public void setAttribute(String name, Object value) {
-        attributes.put(name, value);
-    }
-
-    public void removeAttribute(String name) {
-	attributes.remove(name);
-    }
+    public String getRemoteAddr();
     
-    public Enumeration getAttributeNames() {
-        return attributes.keys();
-    }
-    
-    public String[] getParameterValues(String name) {
-	if (!didReadFormData) {
-	    readFormData();
-	}
+    public String getRemoteHost();
 
-        return (String[])parameters.get(name);
-    }
+    public  ServletInputStream getInputStream() throws IOException;
     
-    public Enumeration getParameterNames() {
-	if (!didReadFormData) {
-	    readFormData();
-	}
+    public  BufferedReader getReader() throws IOException;
 
-        return parameters.keys();
-    }
     
-    private void readFormData() {
-	didReadFormData = true;
+    // Attributes - we can have the attribute stuff in a
+    // separate class
+    public Object getAttribute(String name);
 
-	if (contentType != null &&
-            contentType.equals("application/x-www-form-urlencoded")) {
+    public void setAttribute(String name, Object value);
 
-	    try {
-		ServletInputStream is=getInputStream();
-                Hashtable postParameters =
-		    HttpUtils.parsePostData(contentLength, is);
-		parameters = mergeParameters(parameters, postParameters);
-	    }
-	    catch (IOException e) {
-		// nothing
-	    }
-        }
-    }
+    public void removeAttribute(String name);
 
-    private Hashtable mergeParameters(Hashtable one, Hashtable two) {
-	// Try some shortcuts
-	if (one.size() == 0) {
-	    return two;
-	}
+    public Enumeration getAttributeNames();
 
-	if (two.size() == 0) {
-	    return one;
-	}
 
-	Hashtable combined = (Hashtable) one.clone();
+    // Parameters
+    public String[] getParameterValues(String name);
 
-        Enumeration e = two.keys();
+    public Enumeration getParameterNames();
 
-	while (e.hasMoreElements()) {
-	    String name = (String) e.nextElement();
-	    String[] oneValue = (String[]) one.get(name);
-	    String[] twoValue = (String[]) two.get(name);
-	    String[] combinedValue;
-
-	    if (oneValue == null) {
-		combinedValue = twoValue;
-	    }
-
-	    else {
-		combinedValue = new String[oneValue.length + twoValue.length];
-
-	        System.arraycopy(oneValue, 0, combinedValue, 0,
-                    oneValue.length);
-	        System.arraycopy(twoValue, 0, combinedValue,
-                    oneValue.length, twoValue.length);
-	    }
-
-	    combined.put(name, combinedValue);
-	}
-
-	return combined;
-    }
-
-    public ApplicationSession getSession() {
-        return getSession(true);
-    }
-
-    ServerSession getServerSession(boolean create) {
-	if (context == null) {
-	    System.out.println("CONTEXT WAS NEVER SET");
-	    return null;
-	}
-
-	if (serverSession == null && create) {
-            serverSession =
-		ServerSessionManager.getManager()
-		    .getServerSession(this, response, create);
-            serverSession.accessed();
-	}
-
-	return serverSession;
-    }
     
-    public ApplicationSession getSession(boolean create) {
-	getServerSession(create);
-	ApplicationSession appSession = null;
-	if (serverSession != null) {
-	    appSession = serverSession.getApplicationSession(context, create);
-	}
+    /** Return the parsed Cookies
+     */
+    public Cookie[] getCookies();
+    // Original:    public Vector getCookies();
 
-	return appSession;
+    // Context
+    // after it is found, allow as to recalculate all other "gets"
+    public void setContext(Context context); 
+    
+    public String getLookupPath();
 
-	//  if (reqSessionId != null) {
-//  	    //Session session = context.getSession(reqSessionId);
-//  	    //if (session == null) {
-//  	    //session = context.createSession(reqSessionId);
-//  	    //}
-//  	    //return session;
-//  	    System.out.println("DANGER, SESSIONS ARE NOT WORKING");
-//  	} else {
-//  	    if (create) {
-//  		Session session = serverSession.createSession(response);
-//  		return session;
-//  	    } else {
-//  		return null;
-//  	    }
-//  	}
-    }
+    public Context getContext();
 
-    public String getRequestURI() {
-        return requestURI;
-    }
+    public String getPathInfo();
     
-    public String getAuthType() {
-    	return authType;    
-    }
-    
-    public void setAuthType(String authType) {
-        this.authType = authType;
-    }
+    public void setPathInfo(String pathInfo);
 
-    public String getCharacterEncoding() {
-        return charEncoding;
-    }
+    public String getServletPath();
 
-    public void setCharacterEncoding(String charEncoding) {
-	this.charEncoding = charEncoding;
-    }
-    
-    public int getContentLength() {
-        return contentLength;
-    }
-    
-    public String getContentType() {
-    	return contentType;   
-    }
-    
-    Vector getCookies() {
-        return cookies;
-    }
-    
-    public abstract long getDateHeader(String name);
-    
-    public abstract String getHeader(String name);
 
-    public abstract Enumeration getHeaders(String name);
-    
-    public abstract int getIntHeader(String name);
-    
-    public abstract Enumeration getHeaderNames();
-    
-    public abstract ServletInputStream getInputStream()
-    throws IOException;
-    
-    public abstract BufferedReader getReader()
-    throws IOException;
-        
-    public String getMethod() {
-        return method;
-    }
-    
-    public String getPathInfo() {
-        return pathInfo;
-    }
-    
-    public void setPathInfo(String pathInfo) {
-        this.pathInfo = pathInfo;
-    }
-    
-    public String getProtocol() {
-        return protocol;
-    }
-    
-    public String getQueryString() {
-        return queryString;
-    }
+    // Session
+    public ApplicationSession getSession();
 
-    public void setQueryString(String queryString) {
-        this.queryString = queryString;
-    }
+    public ApplicationSession getSession(boolean create);
     
-    public String getRemoteUser() {
-        return remoteUser;
-    }
-    
-    public String getScheme() {
-        return scheme;
-    }
-    
-    public void setScheme(String scheme) {
-        this.scheme = scheme;
-    }
-    
-    public abstract String getServerName();
-    
-    public abstract int getServerPort();
+    public String getRequestedSessionId();
 
-    public abstract String getRemoteAddr();
+    public ServerSession getServerSession(boolean create);
     
-    public abstract String getRemoteHost();
 
-    void setRequestedSessionId(String reqSessionId) {
-	this.reqSessionId = reqSessionId;
-    }
+    // Authentication
+    public String getAuthType();
     
-    public String getRequestedSessionId() {
-        return reqSessionId;
-    }
+    public void setAuthType(String authType);
 
-    void setServerSession(ServerSession serverSession) {
-	this.serverSession = serverSession;
-    }
+
+    // Headers and special Headers
+    public String getCharacterEncoding();
+
+    public int getContentLength();
     
-    void setServletPath(String servletPath) {
-	this.servletPath = servletPath;
-    }
+    public String getContentType();
+
+    public String getRemoteUser();
+
+    public  long getDateHeader(String name);
     
-    public String getServletPath() {
-        return servletPath;
-    }
+    public  String getHeader(String name);
+
+    public  Enumeration getHeaders(String name);
+    
+    public  int getIntHeader(String name);
+    
+    public  Enumeration getHeaderNames();
+    
+
+    // Setters - should go away
+//     public void setCharacterEncoding(String charEncoding);
+    
+    public void setQueryString(String queryString);// used in ForwardRequest
+    
+//     public void setScheme(String scheme);
+    
+
+//     // ????
+    public void setRequestedSessionId(String reqSessionId);// used by ServerSessionManager
+    
+//     // ????
+    public void setServerSession(ServerSession serverSession);// Used by Context.handleRequest ?
+    
+    public void setServletPath(String servletPath);// Used by Context.handleRequest ?
+    
+//     // Internal 
+//     // Does Request needs to know the Response?
+    public void setResponse(Response response);// XXX used only in ServletWrapper - shouldn't
+    public  void setURI(String requestURI); // XXX used in ServletWrapper, need to clean up 
+
+    // not needed, but it may be usefull
+    public HttpServletRequestFacade getFacade();
+
+
+    // Removed methods:
+    
+    // Should go to RequestUtil
+    //public  void readFormData();
+    //public Hashtable mergeParameters(Hashtable one, Hashtable two);
+
+    // Connector-specific, maybe in a separate interface
+    public  void recycle(); // used in strange places - ServletWrapper
 }
