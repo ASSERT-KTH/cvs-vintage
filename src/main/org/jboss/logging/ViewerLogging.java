@@ -9,46 +9,47 @@ package org.jboss.logging;
 import java.awt.*;
 import java.io.*;
 import java.text.*;
+import java.util.*;
 import javax.management.*;
 import javax.swing.*;
 import javax.swing.table.*;
 
 /**
- *      
+ *
  *   @see <related>
  *   @author Rickard Öberg (rickard.oberg@telkel.com)
- *   @version $Revision: 1.2 $
+ *   @version $Revision: 1.3 $
  */
 public class ViewerLogging
    implements ViewerLoggingMBean, MBeanRegistration, NotificationListener
 {
    // Constants -----------------------------------------------------
-    
+
    // Attributes ----------------------------------------------------
    PrintStream out;
    DateFormat fmt = new SimpleDateFormat();
-   
+
    Log log = new Log("Viewer logging");
-   
+
    DefaultTableModel tableModel;
-   
+
    String source;
    String sourceList;
-      
+
    // Static --------------------------------------------------------
 
    // Constructors --------------------------------------------------
    public ViewerLogging()
    {
    }
-   
+
    public ViewerLogging(String source)
    {
       this.source = source;
-      
+
       sourceList = ","+source+",";
    }
-   
+
    // Public --------------------------------------------------------
    public void initGui()
    {
@@ -61,17 +62,17 @@ public class ViewerLogging
       columnModel.getColumn(0).setMaxWidth(150);
       columnModel.getColumn(1).setMaxWidth(100);
       JScrollPane sp = new JScrollPane(events);
-      
+
       frame.getContentPane().add(sp, BorderLayout.CENTER);
-      
+
       if (source != null)
          frame.getContentPane().add(new JLabel("Source filter:"+source), BorderLayout.NORTH);
-      
+
       frame.resize(500,500);
       frame.show();
    }
-   
-   
+
+
    // NotificationListener implementation ---------------------------
    public void handleNotification(Notification n,
                                   java.lang.Object handback)
@@ -81,35 +82,35 @@ public class ViewerLogging
          if (sourceList != null)
             if (sourceList.indexOf(n.getUserData().toString()) == -1)
                return;
-         
-//         tableModel.addRow(new Object[] { fmt.format(n.getTimeStamp()), n.getUserData(), n.getMessage() });
+
+         tableModel.addRow(new Object[] { fmt.format(new Date(n.getTimeStamp())), n.getUserData(), n.getMessage() });
       } catch (Throwable e)
       {
          Logger.exception(e);
       }
    }
-   
+
    // MBeanRegistration implementation ------------------------------
    public ObjectName preRegister(MBeanServer server, ObjectName name)
       throws java.lang.Exception
    {
-      // initGui();
-      
+      initGui();
+
       log.log("Logging started");
-      
+
       server.addNotificationListener(new ObjectName(server.getDefaultDomain(),"service","Log"),this,null,null);
-      
+
       return new ObjectName("DefaultDomain:service=Logging,type=Viewer");
    }
-   
-   public void postRegister(java.lang.Boolean registrationDone) 
+
+   public void postRegister(java.lang.Boolean registrationDone)
    {
    }
-   
+
    public void preDeregister()
-      throws java.lang.Exception 
+      throws java.lang.Exception
    {}
-   
+
    public void postDeregister() {}
 }
 
