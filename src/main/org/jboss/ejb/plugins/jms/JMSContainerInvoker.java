@@ -45,18 +45,24 @@ import org.jboss.metadata.MessageDrivenMetaData;
 import org.jboss.jms.jndi.JMSProviderAdapter;
 import org.jboss.jms.asf.ServerSessionPoolFactory;
 
+import org.exolab.jms.client.JmsServerSessionPool;
+
 import org.w3c.dom.Element;
+
+import javax.management.MBeanServerFactory;
+import javax.management.MBeanServer;
+import javax.management.ObjectName;
 
 /**
  * ContainerInvoker for JMS MessageDrivenBeans, based on JRMPContainerInvoker.
  *      <description>
- *  
+ *   
  *      @see <related>
  *      @author Peter Antman (peter.antman@tim.se)
  *      @author Rickard Öberg (rickard.oberg@telkel.com)
  *      @author <a href="mailto:sebastien.alborini@m4x.org">Sebastien Alborini</a>
  *      @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
- *      @version $Revision: 1.10 $
+ *      @version $Revision: 1.11 $
  */
 public class JMSContainerInvoker implements
 ContainerInvoker, XmlLoadable
@@ -205,7 +211,24 @@ ContainerInvoker, XmlLoadable
        
        // Set up pool
        ServerSessionPoolFactory poolFactory = (ServerSessionPoolFactory)jbossContext.lookup(serverSessionPoolFactoryJNDI);
-       
+
+       // jndiSuffix is merely the name that the user has given the MDB.
+       // since the jndi name contains the message type I have to split at the "/"
+       // if there is no slash then I use the entire jndi name.....
+       String jndiSuffix = "";
+       if(destinationJNDI != null){
+		   int indexOfSlash = destinationJNDI.indexOf("/");
+		   if(indexOfSlash != -1){
+	         jndiSuffix = destinationJNDI.substring(indexOfSlash+1);
+		   }else{
+			 jndiSuffix = destinationJNDI;
+		   }
+
+	   // if the jndi name from jboss.xml is null then lets use the ejbName
+	   }else{
+	       jndiSuffix = config.getEjbName();
+	   }
+       MBeanServer server = (MBeanServer)MBeanServerFactory.findMBeanServer(null).iterator().next();       
        
        if (destinationType.equals("javax.jms.Topic")) 
 	   {
@@ -230,7 +253,18 @@ ContainerInvoker, XmlLoadable
 		   }
 	       
 	       // Lookup destination
-	       Topic topic = (Topic)context.lookup(destinationJNDI);
+           // First Try a lookup.
+           // If that lookup fails then try to contact the MBeanServer and inoke a new...
+           // Then do lookup again..
+	       String topicJndi = "topic/"+jndiSuffix;
+	       Topic topic;
+	       try{
+	          topic = (Topic)context.lookup(topicJndi);
+		   }catch(NamingException ne){
+			  Logger.log("JndiName not found:"+topicJndi + "...attempting to recover");
+			  server.invoke(new ObjectName("JMS","service","JMSServer"), "newTopic", new Object[]{jndiSuffix}, new String[] {"java.lang.String"});
+			  topic = (Topic)context.lookup(topicJndi);
+		   }
 	       
 	       pool = poolFactory.
 		   getServerSessionPool(
@@ -293,10 +327,23 @@ ContainerInvoker, XmlLoadable
 		       queueConnection = queueFactory.createQueueConnection();
 		   }
 
-	       // Lookup destination
-	       Queue queue = (Queue)context.lookup(destinationJNDI);
+              // Lookup destination
+              // First Try a lookup.
+	      // If that lookup fails then try to contact the MBeanServer and inoke a new...
+              // Then do lookup again..
+	      String queueJndi = "queue/"+jndiSuffix;
+	      Queue queue;
+	      try
+                {
+	        queue = (Queue)context.lookup(queueJndi);
+		}
+                catch(NamingException ne){
+		  Logger.log("JndiName not found:"+queueJndi + "...attempting to recover");
+		  server.invoke(new ObjectName("JMS:service=JMSServer"), "newQueue", new Object[]{jndiSuffix}, new String[] {"java.lang.String"});
+		  queue = (Queue)context.lookup(queueJndi);
+		}
 	       
-	       pool = poolFactory.
+	      pool = poolFactory.
 		   getServerSessionPool(
 					queueConnection,
 					maxPoolSize, 
