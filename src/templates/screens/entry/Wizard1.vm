@@ -36,10 +36,8 @@ $page.setTitle("Enter New Issue")
     </th>
     <td>
     #if ( $attVal.Attribute.AttributeType.Name == "string" )
-$attVal.Value<br>
         #attrValueText ( $attVal "50" )
     #else
-$attVal.Value<br>
         #attrValueLeafSelect ($attVal $field "")
     #end
      #attrValueErrorMsg ( $attVal $field )
