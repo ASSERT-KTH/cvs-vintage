@@ -39,7 +39,7 @@ import org.gjt.sp.util.Log;
  * this file out.
  * @since jEdit 4.0pre4
  * @author Slava Pestov
- * @version $Id: Java14.java,v 1.11 2002/12/24 17:35:22 spestov Exp $
+ * @version $Id: Java14.java,v 1.12 2002/12/25 20:44:55 spestov Exp $
  */
 public class Java14
 {
@@ -141,8 +141,6 @@ public class Java14
 		int dbg;
 		public void mouseWheelMoved(MouseWheelEvent e)
 		{
-			System.err.println((dbg++) + ": wheel mouse scrolled: "
-				+ e.getScrollAmount());
 			JEditTextArea textArea = (JEditTextArea)e.getSource();
 
 			/****************************************************

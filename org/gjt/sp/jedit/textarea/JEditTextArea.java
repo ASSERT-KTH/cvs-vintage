@@ -50,7 +50,7 @@ import org.gjt.sp.util.Log;
  * jEdit's text component.
  *
  * @author Slava Pestov
- * @version $Id: JEditTextArea.java,v 1.156 2002/12/24 17:35:24 spestov Exp $
+ * @version $Id: JEditTextArea.java,v 1.157 2002/12/25 20:44:55 spestov Exp $
  */
 public class JEditTextArea extends JComponent
 {
@@ -622,7 +622,6 @@ public class JEditTextArea extends JComponent
 			point = null;
 		//}}}
 
-		System.err.println("scrolling");
 		//{{{ STAGE 2 -- scroll vertically
 		if(line == physLastLine + 1)
 		{

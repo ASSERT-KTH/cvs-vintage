@@ -36,7 +36,7 @@ import org.gjt.sp.util.Log;
 /**
  * A VFS that lists local root filesystems.
  * @author Slava Pestov
- * @version $Id: FileRootsVFS.java,v 1.10 2002/12/24 17:35:23 spestov Exp $
+ * @version $Id: FileRootsVFS.java,v 1.11 2002/12/25 20:44:55 spestov Exp $
  */
 public class FileRootsVFS extends VFS
 {
@@ -157,7 +157,8 @@ public class FileRootsVFS extends VFS
 	//{{{ listRoots() method
 	private static File[] listRoots()
 	{
-		if(getRoots != null)
+		// will finish this later
+		/* if(getRoots != null)
 		{
 			try
 			{
@@ -170,7 +171,7 @@ public class FileRootsVFS extends VFS
 				return null;
 			}
 		}
-		else if (OperatingSystem.isMacOS())
+		else */ if (OperatingSystem.isMacOS())
 		{
 			// Nasty hardcoded values
 			File[] volumes = new File("/Volumes").listFiles();
