@@ -45,7 +45,8 @@ import org.xml.sax.SAXException;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.DocumentBuilder;
 
-import org.jboss.logging.Log;
+import org.apache.log4j.Category;
+
 import org.jboss.util.Service;
 import org.jboss.util.ServiceFactory;
 import org.jboss.util.ServiceMBeanSupport;
@@ -66,7 +67,7 @@ import org.jboss.util.XmlHelper;
  * @author  <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>.
  * @author  <a href="mailto:Scott_Stark@displayscape.com">Scott Stark</a>.
  * @author  <a href="mailto:jason@planet57.com">Jason Dillon</a>
- * @version $Revision: 1.33 $
+ * @version $Revision: 1.34 $
  * Revisions:
  *
  * 20010622 scott.stark: Clean up the unsafe downcast of Throwable to Exception
@@ -113,7 +114,7 @@ implements ConfigurationServiceMBean
    
    
    /** Instance logger. */
-   private final Log log = Log.createLog(getName());
+   private final Category log = Category.getInstance(this.getClass());
    
    /** The MBean server which this service is registered in. */
    private MBeanServer server;
@@ -368,8 +369,7 @@ implements ConfigurationServiceMBean
          catch (FileNotFoundException e)
          {
             log.error("Configuration file " + confFile.getFile() +
-            " must be available and writable.");
-            log.exception(e);
+                      " must be available and writable.", e);
          }
          finally
          {
@@ -659,8 +659,7 @@ implements ConfigurationServiceMBean
                catch (Throwable ex)
                {
                   log.error("Could not create MBean " +
-                  objectName + "(" + code + ")");
-                  logException(ex);
+                            objectName + "(" + code + ")", ex);
                   
                   // Ah what the heck.. skip it
                   continue;
@@ -714,7 +713,7 @@ implements ConfigurationServiceMBean
             arg = Class.forName(type);
       } catch (ClassNotFoundException e)
       {
-         log.error("Unable to check parameter of type '" + type + "'");
+         log.error("Unable to check parameter of type '" + type + "'", e);
          return false;
       }
       
@@ -723,7 +722,7 @@ implements ConfigurationServiceMBean
          cls = Class.forName(className);
       } catch (ClassNotFoundException e)
       {
-         log.error("Unable to check MBean of type '" + className + "'");
+         log.error("Unable to check MBean of type '" + className + "'", e);
          return false;
       }
       
@@ -852,7 +851,7 @@ implements ConfigurationServiceMBean
          e = ((ReflectionException)e).getTargetException();
       }
       
-      log.exception(e);
+      log.error("error", e);
    }
    
    /**
@@ -906,8 +905,8 @@ implements ConfigurationServiceMBean
          // Log a warning if the mbean does not implement
          // any Service methods
          if (opCount == 0)
-            log.warning(objectName +
-            " does not implement any Service methods");
+            log.warn(objectName +
+                     " does not implement any Service methods");
       }
       
       /**
