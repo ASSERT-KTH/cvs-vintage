@@ -1,4 +1,4 @@
-// $Id: ModelFacade.java,v 1.204 2004/08/10 19:29:10 mvw Exp $
+// $Id: ModelFacade.java,v 1.205 2004/08/18 21:12:39 mvw Exp $
 // Copyright (c) 2003-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -3859,7 +3859,7 @@ public class ModelFacade {
         if (handle instanceof MParameter) {
             return ((MParameter) handle).getType();
         }
-        if(handle instanceof MObjectFlowState) {
+        if (handle instanceof MObjectFlowState) {
             return ((MObjectFlowState) handle).getType();
         }
         
@@ -4474,6 +4474,18 @@ public class ModelFacade {
 	illegalArgument(classifierRole, instance);
     }
 
+    /**
+     * @author mvw
+     * @param classifierInState the classifierInState
+     * @param state the state that will be linked
+     */
+    public static void addInState(Object classifierInState, Object state) {
+        if (classifierInState instanceof MClassifierInState 
+                && state instanceof MState) {
+            ((MClassifierInState) classifierInState).addInState((MState) state);
+        } else
+            illegalArgument(classifierInState, state);
+    }
 
     /**
      * Adds a feature to some classifier.
