@@ -28,7 +28,7 @@ import org.jboss.deployment.DeploymentException;
  *   @author <a href="mailto:sebastien.alborini@m4x.org">Sebastien Alborini</a>
  *   @author <a href="mailto:peter.antman@tim.se">Peter Antman</a>.
  *   @author <a href="mailto:Scott.Stark@jboss.org">Scott Stark</a>.
- *   @version $Revision: 1.26 $
+ *   @version $Revision: 1.27 $
  */
 public class ApplicationMetaData extends MetaData
 {
@@ -502,18 +502,32 @@ public class ApplicationMetaData extends MetaData
          {
             Element conf = (Element)iterator.next();
             String confName = getElementContent(getUniqueChild(conf, "container-name"));
-            
-            // find the configuration if it has already been defined
-            // (allow jboss.xml to modify a standard conf)
-            ConfigurationMetaData configurationMetaData = getConfigurationMetaDataByName(confName);
-            
-            // create it if necessary
-            if (configurationMetaData == null)
+            String parentConfName = conf.getAttribute("extends");
+            if( parentConfName != null && parentConfName.trim().length() == 0 )
+               parentConfName = null;
+            /* Allow the configuration to inherit from a standard configuration. This
+             is determined by looking for a configuration matching the name given
+             by the extends attribute, or if extends was not specified, an
+             existing configuration with the same.
+             */
+            ConfigurationMetaData configurationMetaData = null;
+            if( parentConfName != null )
+            {
+               configurationMetaData = getConfigurationMetaDataByName(parentConfName);
+               // Make a copy of the existing configuration
+               configurationMetaData = (ConfigurationMetaData) configurationMetaData.clone();
+               configurations.put(confName, configurationMetaData);
+            }
+            if( configurationMetaData == null )
+               configurationMetaData = getConfigurationMetaDataByName(confName);
+
+            // Create a new configuration if none was found
+            if( configurationMetaData == null )
             {
                configurationMetaData = new ConfigurationMetaData(confName);
                configurations.put(confName, configurationMetaData);
             }
-            
+
             try
             {
                configurationMetaData.importJbossXml(conf);
