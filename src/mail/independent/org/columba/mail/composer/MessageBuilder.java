@@ -60,18 +60,7 @@ public class MessageBuilder {
 
 	public final static int OPEN = 6;
 
-	private static MessageBuilder instance;
-
-	public MessageBuilder() {
-
-	}
-
-	public static MessageBuilder getInstance() {
-		if (instance == null)
-			instance = new MessageBuilder();
-
-		return instance;
-	}
+	private MessageBuilder() {}
 
 	/**
 	 * 
@@ -83,17 +72,13 @@ public class MessageBuilder {
 	 *                to search for.
 	 **/
 	public static boolean isAlreadyReply(String subject, String pattern) {
-
-		if (subject == null)
-			return false;
-
-		if (subject.length() == 0)
+		if (subject == null || subject.length() == 0)
 			return false;
 
 		String str = subject.toLowerCase();
 
 		// for example: "Re: this is a subject"
-		if (str.startsWith(pattern) == true)
+		if (str.startsWith(pattern))
 			return true;
 
 		// for example: "[columba-users]Re: this is a subject"
@@ -119,7 +104,7 @@ public class MessageBuilder {
 		String subject = (String) header.get("Subject");
 
 		// if subject doesn't start already with "Re:" prepend it
-		if (isAlreadyReply(subject, "re:") == false)
+		if (!isAlreadyReply(subject, "re:"))
 			subject = "Re: " + subject;
 
 		return subject;
@@ -141,7 +126,7 @@ public class MessageBuilder {
 		String subject = (String) header.get("Subject");
 
 		// if subject doesn't start already with "Fwd:" prepend it
-		if (isAlreadyReply(subject, "fwd:") == false)
+		if (!isAlreadyReply(subject, "fwd:"))
 			subject = "Fwd: " + subject;
 
 		return subject;
@@ -202,12 +187,10 @@ public class MessageBuilder {
 		StringBuffer buf = new StringBuffer();
 		buf.append(sender);
 		if (to != null) {
-
 			buf.append(",");
 			buf.append(to);
 		}
 		if (cc != null) {
-
 			buf.append(",");
 			buf.append(cc);
 		}
@@ -273,7 +256,6 @@ public class MessageBuilder {
 			if (references != null) {
 				references = references + " " + messageId;
 				model.setHeaderField("References", references);
-
 			}
 		}
 	}
@@ -320,7 +302,6 @@ public class MessageBuilder {
 
 		// decode bodytext
 		try {
-
 			bodyText = decoder.decode(bodyPart.getBody(), charset);
 		} catch (UnsupportedEncodingException e) {
 		}
@@ -352,10 +333,7 @@ public class MessageBuilder {
 			bodyText = HtmlParser.htmlToText(bodyText);
 		}
 
-		String quotedBodyText = BodyTextParser.quote(bodyText);
-
-		return quotedBodyText;
-
+		return BodyTextParser.quote(bodyText);
 	}
 
 	/** 
@@ -374,7 +352,7 @@ public class MessageBuilder {
 	 *                  (for example: MessageBuilder.REPLY, .REPLY_TO_ALL)
 	 * 
 	 */
-	public void createMessage(
+	public static void createMessage(
 		Message message,
 		ComposerModel model,
 		int operation) {
@@ -437,7 +415,6 @@ public class MessageBuilder {
 			}
 			model.setBodyText(bodyText);
 		}
-
 	}
 
 	/** 
@@ -470,7 +447,6 @@ public class MessageBuilder {
 			} catch (ClassCastException ex) {
 				System.out.println("skipping header item");
 			}
-
 		}
 
 		model.setTo((String) header.get("To"));
@@ -504,7 +480,6 @@ public class MessageBuilder {
 			String str = "";
 			try {
 				str = decoder.decode(mp.getBody(), null);
-
 			} catch (UnsupportedEncodingException e) {
 			}
 
@@ -524,9 +499,7 @@ public class MessageBuilder {
 				mp.setBody(str);
 				model.addMimePart(mp);
 			}
-
 		}
-
 	}
 
 	/********************** addressbook stuff ***********************/
@@ -540,45 +513,35 @@ public class MessageBuilder {
 	 *        -> should be in core, or even better addressbook
 	 *
 	 */
-	public void addSenderToAddressbook(String sender) {
+	public static void addSenderToAddressbook(String sender) {
+		if (sender != null && sender.length() > 0) {
+                        org.columba.addressbook.folder.Folder selectedFolder =
+                                org
+                                        .columba
+                                        .addressbook
+                                        .facade
+                                        .FolderFacade
+                                        .getCollectedAddresses();
 
-		if (sender != null) {
-			if (sender.length() > 0) {
+                        // this can be a list of recipients
+                        List list = ListParser.parseString(sender);
+                        Iterator it = list.iterator();
+                        while (it.hasNext()) {
+                                String address =
+                                        AddressParser.getAddress((String) it.next());
 
-				org.columba.addressbook.folder.Folder selectedFolder =
-					org
-						.columba
-						.addressbook
-						.facade
-						.FolderFacade
-						.getCollectedAddresses();
+                                if (!selectedFolder.exists(address)) {
+                                        ContactCard card = new ContactCard();
 
-				// this can be a list of recipients
-				List list = ListParser.parseString(sender);
-				Iterator it = list.iterator();
-				while (it.hasNext()) {
-					String address =
-						AddressParser.getAddress((String) it.next());
-					System.out.println("address:" + address);
+                                        String fn = AddressParser.getDisplayname(sender);
 
-					if (!selectedFolder.exists(address)) {
-						ContactCard card = new ContactCard();
+                                        card.set("fn", fn);
+                                        card.set("displayname", fn);
+                                        card.set("email", "internet", address);
 
-						String fn = AddressParser.getDisplayname(sender);
-						System.out.println("fn=" + fn);
-
-						card.set("fn", fn);
-						card.set("displayname", fn);
-						card.set("email", "internet", address);
-
-						selectedFolder.add(card);
-					}
-
+                                        selectedFolder.add(card);
 				}
-
 			}
 		}
-
 	}
-
 }

@@ -13,6 +13,7 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
 //
 //All Rights Reserved.
+
 package org.columba.mail.gui.composer.command;
 
 import org.columba.core.command.DefaultCommandReference;
@@ -101,7 +102,7 @@ public class ForwardInlineCommand extends FolderCommand {
 		
 		controller = new ComposerController();
 
-		MessageBuilder.getInstance().createMessage(
+		MessageBuilder.createMessage(
 			message,
 			model,
 			MessageBuilder.FORWARD_INLINE);
@@ -112,13 +113,10 @@ public class ForwardInlineCommand extends FolderCommand {
 	/**
 	 * @see org.columba.core.command.Command#undo(Worker)
 	 */
-	public void undo(Worker worker) throws Exception {
-	}
+	public void undo(Worker worker) throws Exception {}
 
 	/**
 	 * @see org.columba.core.command.Command#redo(Worker)
 	 */
-	public void redo(Worker worker) throws Exception {
-	}
-
+	public void redo(Worker worker) throws Exception {}
 }
