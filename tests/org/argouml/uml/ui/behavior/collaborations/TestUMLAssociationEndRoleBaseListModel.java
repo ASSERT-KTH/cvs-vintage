@@ -1,4 +1,4 @@
-// $Id: TestUMLAssociationEndRoleBaseListModel.java,v 1.17 2005/01/25 21:34:43 linus Exp $
+// $Id: TestUMLAssociationEndRoleBaseListModel.java,v 1.18 2005/01/26 20:20:27 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -62,10 +62,8 @@ public class TestUMLAssociationEndRoleBaseListModel extends TestCase {
             Model.getCollaborationsFactory().buildCollaboration(classifier);
 
         elem = Model.getCollaborationsFactory().createAssociationEndRole();
-        baseEnd = Model.getCoreFactory().createAssociationEnd();
-        baseAssoc = Model.getCoreFactory().createAssociation();
 
-        Model.getCoreHelper().addOwnedElement(collaboration, baseEnd);
+        baseAssoc = Model.getCoreFactory().createAssociation();
         Model.getCoreHelper().addOwnedElement(collaboration, baseAssoc);
 
         Object from =
@@ -80,7 +78,9 @@ public class TestUMLAssociationEndRoleBaseListModel extends TestCase {
 
         Model.getCoreHelper().setAssociation(elem, assocRole);
         Model.getCollaborationsHelper().setBase(assocRole, baseAssoc);
-        // Model.getCoreHelper().setAssociation(baseEnd, baseAssoc);
+
+        baseEnd = Model.getCoreFactory().createAssociationEnd();
+        Model.getCoreHelper().setAssociation(baseEnd, baseAssoc);
 
         model = new UMLAssociationEndRoleBaseListModel();
         model.setTarget(elem);
@@ -90,12 +90,12 @@ public class TestUMLAssociationEndRoleBaseListModel extends TestCase {
      * @see junit.framework.TestCase#tearDown()
      */
     protected void tearDown() throws Exception {
-        super.tearDown();
         Model.getUmlFactory().delete(elem);
         Model.getUmlFactory().delete(assocRole);
         Model.getUmlFactory().delete(baseAssoc);
         Model.getUmlFactory().delete(baseEnd);
         model = null;
+        super.tearDown();
     }
 
     /**
@@ -126,7 +126,7 @@ public class TestUMLAssociationEndRoleBaseListModel extends TestCase {
     public void testRemove() {
         Model.getCollaborationsHelper().setBase(elem, baseEnd);
 
-        Model.getCollaborationsHelper().setBase(elem, baseEnd);
+        Model.getCollaborationsHelper().setBase(elem, null);
 
         assertEquals(0, model.getSize());
     }
