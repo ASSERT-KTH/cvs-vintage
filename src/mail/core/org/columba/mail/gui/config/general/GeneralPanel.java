@@ -21,18 +21,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.Locale;
 
-import javax.swing.BorderFactory;
-import javax.swing.Box;
-import javax.swing.BoxLayout;
-import javax.swing.JButton;
-import javax.swing.JCheckBox;
-import javax.swing.JComboBox;
-import javax.swing.JLabel;
-import javax.swing.JMenu;
-import javax.swing.JMenuItem;
-import javax.swing.JPanel;
-import javax.swing.JPopupMenu;
-import javax.swing.JTextField;
+import javax.swing.*;
 
 import org.columba.core.config.Config;
 import org.columba.core.config.GuiItem;
@@ -58,7 +47,7 @@ public class GeneralPanel extends JPanel implements ActionListener {
 
 	public void updateComponents(boolean b) {
 
-		if (b == true) {
+		if (b) {
 
 			XmlElement markasread =
 				MailConfig.get("options").getElement("/options/markasread");
@@ -80,22 +69,22 @@ public class GeneralPanel extends JPanel implements ActionListener {
 
 			GuiItem item = Config.getOptionsConfig().getGuiItem();
 			boolean withIcon = false;
-			if (item.getBoolean("toolbar", "enable_icon") == true)
+			if (item.getBoolean("toolbar", "enable_icon"))
 				withIcon = true;
 			boolean enableText = false;
-			if (item.getBoolean("toolbar", "enable_text") == true)
+			if (item.getBoolean("toolbar", "enable_text"))
 				enableText = true;
 			boolean alignment = false;
-			if (item.getBoolean("toolbar", "text_position") == true)
+			if (item.getBoolean("toolbar", "text_position"))
 				alignment = true;
 
 			int state = -1;
-			if ((withIcon == true) && (enableText == false))
+			if (withIcon && !enableText)
 				state = 0;
-			else if ((withIcon == false) && (enableText == true))
+			else if (!withIcon && enableText)
 				state = 1;
-			else if ((withIcon == true) && (enableText == true)) {
-				if (alignment == true)
+			else if (withIcon && enableText) {
+				if (alignment)
 					state = 2;
 				else
 					state = 3;
@@ -115,28 +104,28 @@ public class GeneralPanel extends JPanel implements ActionListener {
 					"/options/html");
 
 			if (preferHtmlCheckBox.isSelected())
-				html.addAttribute("prefer", "true");
+				html.addAttribute("prefer", Boolean.TRUE.toString());
 			else
-				html.addAttribute("prefer", "false");
+				html.addAttribute("prefer", Boolean.FALSE.toString());
 
 			GuiItem item = Config.getOptionsConfig().getGuiItem();
 
 			int state = toolbarComboBox.getSelectedIndex();
 
 			if (state == 0) {
-				item.set("toolbar", "enable_text", "false");
-				item.set("toolbar", "enable_icon", "true");
+				item.set("toolbar", "enable_text", Boolean.FALSE.toString());
+				item.set("toolbar", "enable_icon", Boolean.TRUE.toString());
 			} else if (state == 1) {
-				item.set("toolbar", "enable_text", "true");
-				item.set("toolbar", "enable_icon", "false");
+				item.set("toolbar", "enable_text", Boolean.TRUE.toString());
+				item.set("toolbar", "enable_icon", Boolean.FALSE.toString());
 			} else if (state >= 2) {
-				item.set("toolbar", "enable_text", "true");
-				item.set("toolbar", "enable_icon", "true");
+				item.set("toolbar", "enable_text", Boolean.TRUE.toString());
+				item.set("toolbar", "enable_icon", Boolean.TRUE.toString());
 
 				if (state == 2)
-					item.set("toolbar", "text_position", "true");
+					item.set("toolbar", "text_position", Boolean.TRUE.toString());
 				else
-					item.set("toolbar", "text_position", "false");
+					item.set("toolbar", "text_position", Boolean.FALSE.toString());
 
 			}
 
