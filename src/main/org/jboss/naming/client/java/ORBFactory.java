@@ -18,7 +18,7 @@ import org.omg.CORBA.ORB;
  * An object factory that creates an ORB on the client
  *  
  * @author Adrian Brock (adrian@jboss.com)
- * @version $Revision: 1.3 $
+ * @version $Revision: 1.4 $
  */
 public class ORBFactory
 {
@@ -59,25 +59,6 @@ public class ORBFactory
             // Create the singleton ORB
             orb = ORB.init(new String[0], properties);
             
-            // Start the orb
-            new Thread
-            (
-               new Runnable()
-               {
-                  public void run()
-                  {
-                     try
-                     {
-                        orb.run();
-                     }
-                     catch (Throwable t)
-                     {
-                        log.warn("Error running ORB", t);
-                     }
-                  }
-               }, 
-               "ORB thread"
-            ).start(); 
          }
          return orb;
       }
