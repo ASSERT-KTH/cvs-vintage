@@ -26,9 +26,9 @@ import java.util.*;
  * @author <a href="mailto:Scott.Stark@jboss.org">Scott Stark</a>
  * @author <a href="mailto:criege@riege.com">Christian Riege</a>
  * @author <a href="mailto:Christoph.Jung@infor.de">Christoph G. Jung</a>.
- * @author <a href="mailto:Thomas.Diesler@arcor.de">Thomas Diesler</a>.
+ * @author <a href="mailto:Thomas.Diesler@jboss.org">Thomas Diesler</a>.
  *
- * @version $Revision: 1.51 $
+ * @version $Revision: 1.52 $
  */
 public class ApplicationMetaData
    extends MetaData
@@ -42,10 +42,9 @@ public class ApplicationMetaData
    protected int ejbMinorVersion;
    /** ArrayList<BeanMetaData> for the ejbs */
    private ArrayList beans = new ArrayList();
-   /**
-    * List of relations in this application.
-    * Items are instance of RelationMetaData.
-    */
+   /** A HashMap<String, String> for webservice description publish locations */
+   private HashMap webserviceDescriptions = new HashMap();
+   /** List<RelationMetaData> of relations in this application. */
    private ArrayList relationships = new ArrayList();
    /** The assembly-descriptor */
    private AssemblyDescriptorMetaData assemblyDescriptor = new AssemblyDescriptorMetaData();
@@ -138,6 +137,12 @@ public class ApplicationMetaData
 
       // not found
       return null;
+   }
+
+   public String getWsdlPublishLocationByName(String name)
+   {
+      // if not found, the we will use default
+      return (String) webserviceDescriptions.get(name);
    }
 
    /**
@@ -833,6 +838,24 @@ public class ApplicationMetaData
          {
             throw new DeploymentException("Error in jboss.xml for " +
                "Bean " + ejbName + ": " + e.getMessage());
+         }
+
+         try
+         {
+            // WebserviceDescriptions
+            iterator = getChildrenByTagName(entBeans, "webservice-description");
+            while (iterator.hasNext())
+            {
+               Element wsd = (Element) iterator.next();
+               String wsdName = getElementContent(getUniqueChild(wsd, "webservice-description-name"));
+               String wsdlPublishLocation = getOptionalChildContent(wsd, "wsdl-publish-location");
+               webserviceDescriptions.put(wsdName, wsdlPublishLocation);
+            }
+         }
+         catch (DeploymentException e)
+         {
+            throw new DeploymentException("Error in jboss.xml for webservice description: "
+                    + e.getMessage());
          }
       }
 

@@ -4,7 +4,7 @@
 This is the XML DTD for the JBoss 4.0 EJB deployment descriptor.
 The DOCTYPE is:
 
-$Id: jboss_4_0.dtd,v 1.14 2004/08/02 19:23:41 tdiesler Exp $
+$Id: jboss_4_0.dtd,v 1.15 2004/08/10 13:58:46 tdiesler Exp $
 
   <!DOCTYPE jboss PUBLIC
       "-//JBoss//DTD JBOSS 4.0//EN"
@@ -84,6 +84,11 @@ Overview of the architecture of jboss.xml
       <resource-ref>
       <resource-env-ref>
     </message-driven>
+
+    <webservice-description>
+      <webservice-description-name>
+      <wsdl-publish-location>
+    </webservice-description>
 
   </enterprise-beans>
 
@@ -378,7 +383,7 @@ jnp-context?)>
 
   Used in: jboss
 -->
-<!ELEMENT enterprise-beans (session | entity | message-driven)*>
+<!ELEMENT enterprise-beans ((session | entity | message-driven)*, webservice-description*)>
 
 <!--
   The entity element holds information specific to jboss and not declared
@@ -583,13 +588,6 @@ properties that should be associated with the call/stub for the port.
 Used in: service-ref
 -->
 <!ELEMENT port-component-ref (service-endpoint-interface?, call-property*)>
-
-<!-- The wsdl-override element the actual wsdl docuement the web service client
-uses to connect to the remote service. It overrides the value of wsdl-file in ejb-jar.xml.
-
-Used in: service-ref
--->
-<!ELEMENT wsdl-override (#PCDATA)>
 
 <!-- Fully qualified name of service endpoint interface
 -->
@@ -1494,3 +1492,52 @@ Used in: port-component
 -->
 <!ELEMENT transport-guarantee (#PCDATA)>
 
+<!--
+Runtime information about a web service.
+
+wsdl-publish-location is optionally used to specify
+where the final wsdl and any dependent files should be stored.  This location
+resides on the file system from which deployment is initiated.
+-->
+<!ELEMENT webservice-description ( webservice-description-name, wsdl-publish-location? )>
+
+<!--
+Unique name of a webservice within a module
+-->
+<!ELEMENT webservice-description-name ( #PCDATA )>
+
+<!--
+This is a valid URL pointing to a final WSDL document. It is optional.
+If specified, the WSDL document at this URL will be used during
+deployment instead of the WSDL document associated with the
+service-ref in the standard deployment descriptor.
+
+Examples :
+
+  // available via HTTP
+  <wsdl-override>http://localhost:8000/myservice/myport?WSDL</wsdl-override>
+
+  // in a file
+  <wsdl-override>file:/home/user1/myfinalwsdl.wsdl</wsdl-override>
+
+-->
+<!ELEMENT wsdl-override ( #PCDATA )>
+
+<!--
+file: URL of a directory to which a web-service-description's wsdl should be
+published during deployment.  Any required files will be published to this
+directory, preserving their location relative to the module-specific
+wsdl directory(META-INF/wsdl or WEB-INF/wsdl).
+
+Example :
+
+  For an ejb.jar whose webservices.xml wsdl-file element contains
+    META-INF/wsdl/a/Foo.wsdl
+
+  <wsdl-publish-location>file:/home/user1/publish
+  </wsdl-publish-location>
+
+  The final wsdl will be stored in /home/user1/publish/a/Foo.wsdl
+
+-->
+<!ELEMENT wsdl-publish-location ( #PCDATA )>
