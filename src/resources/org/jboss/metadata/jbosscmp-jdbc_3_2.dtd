@@ -137,7 +137,7 @@ Specifies the read ahead strategy.
             <eager-load-group>*</eager-load-group>
          </read-ahead>
 -->
-<!ELEMENT read-ahead (strategy, page-size?, eager-load-group?)>
+<!ELEMENT read-ahead (strategy, page-size?, eager-load-group?, left-join*)>
 
 <!--
 Specifies the strategy used to read-ahead data in queries.
@@ -155,6 +155,31 @@ Specifies the number of entities that will be read in a single
 read-ahead load query.
 -->
 <!ELEMENT page-size (#PCDATA)>
+
+
+<!--
+Specifies a related entity that will be fetched on-find with LEFT JOIN.
+
+   <read-ahead>
+      <strategy>on-find</strategy>
+      <eager-load-group>report</eager-load-group>
+      <left-join cmr-field="lineItems"/>
+         <left-join cmr-field="product" eager-load-group="short"/>
+      </left-join>
+      <left-join cmr-field="customer" eager-load-group="basic"/>
+   </read-ahead>
+-->
+<!ELEMENT left-join (left-join*)>
+
+<!--
+The CMR field name to LEFT JOIN.
+-->
+<!ATTLIST left-join cmr-field CDATA  #REQUIRED>
+
+<!--
+The eager load group of the related entity.
+-->
+<!ATTLIST left-join eager-load-group CDATA  #IMPLIED>
 
 
 <!--
