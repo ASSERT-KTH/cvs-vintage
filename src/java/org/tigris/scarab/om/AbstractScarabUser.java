@@ -71,7 +71,7 @@ import org.tigris.scarab.util.Log;
  * 
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: AbstractScarabUser.java,v 1.70 2003/04/03 03:19:06 jmcnally Exp $
+ * @version $Id: AbstractScarabUser.java,v 1.71 2003/04/03 22:36:42 dlr Exp $
  */
 public abstract class AbstractScarabUser 
     extends BaseObject 
@@ -1250,18 +1250,52 @@ public abstract class AbstractScarabUser
         }
     }
 
+    private void setUsersMap(Map map, Map users)
+        throws Exception
+    {
+        Object key = (users != null ? getGenThreadKey() : getThreadKey());
+        if (key == null)
+        {
+            // With no hash key, this method won't work.
+            return;
+        }
+
+        if (users != null && users.size() >= MAX_INDEPENDENT_WINDOWS)
+        {
+            try
+            {
+                // Set a reasonable limit on the number of open lists.
+                int intKey = Integer.parseInt(String.valueOf(key));
+                int count = 0;
+                for (int i = intKey - 1; i >= 0; i--)
+                {
+                    String testKey = String.valueOf(i);
+                    if (map.get(testKey) != null)
+                    {
+                        if (++count >= MAX_INDEPENDENT_WINDOWS)
+                        {
+                            users.remove(testKey);
+                        }
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                // FIXME: I18N
+                Log.get().warn("Error possibly resulting in memory leak", e);
+            }
+        }
+
+        map.put(key, users);
+    }
+
     /**
      * @see org.tigris.scarab.om.ScarabUser#getAssociatedUsersMap()
      */
     public Map getAssociatedUsersMap()
         throws Exception
     {
-        return getAssociatedUsersMap(getGenThreadKey());
-    }
-    private Map getAssociatedUsersMap(Object key)
-        throws Exception
-    {
-        return (Map)associatedUsersMap.get(key);
+        return (Map) associatedUsersMap.get(getGenThreadKey());
     }
 
     /**
@@ -1270,46 +1304,7 @@ public abstract class AbstractScarabUser
     public void setAssociatedUsersMap(Map associatedUsers)
         throws Exception
     {
-        if (associatedUsers != null) 
-        {
-            setAssociatedUsersMap(getGenThreadKey(), associatedUsers);            
-        }
-        else if (getThreadKey() != null)
-        {
-            setAssociatedUsersMap(getThreadKey(), associatedUsers);
-        }
-    }
-
-    private void setAssociatedUsersMap(Object key, Map associatedUsers)
-        throws Exception
-    {
-        try
-        {
-            if (associatedUsers.size() >= MAX_INDEPENDENT_WINDOWS) 
-            {
-                // make sure lists are not being accumulated, set a 
-                // reasonable limit of MAX_INDEPENDENT_WINDOWS open lists
-                int intKey = Integer.parseInt(String.valueOf(key));
-                int count = 0;
-                for (int i=intKey-1; i>=0; i--) 
-                {
-                    String testKey = String.valueOf(i);
-                    if (getAssociatedUsersMap(testKey) != null) 
-                    {
-                        if (++count >= MAX_INDEPENDENT_WINDOWS) 
-                        {
-                            associatedUsers.remove(testKey);
-                        }
-                    }
-                }
-            }
-        }
-        catch (Exception e)
-        {
-            Log.get().error("Nonfatal error clearing old queries.  "
-                            + "This could be a memory leak.", e);
-        }
-        associatedUsersMap.put(key, associatedUsers);
+        setUsersMap(associatedUsersMap, associatedUsers);
     }
 
     /**
@@ -1318,64 +1313,16 @@ public abstract class AbstractScarabUser
     public Map getSelectedUsersMap()
         throws Exception
     {
-        return getSelectedUsersMap(getGenThreadKey());
-    }
-    private Map getSelectedUsersMap(Object key)
-        throws Exception
-    {
-        Map selectedUsers = null;
-        if (selectedUsersMap != null && selectedUsersMap.get(key) != null)
-        {
-            selectedUsers = (Map)selectedUsersMap.get(key);
-        }
-        return selectedUsers;
+        return (Map) selectedUsersMap.get(getGenThreadKey());
     }
 
     /**
-     * @see org.tigris.scarab.om.ScarabUser#setAssociatedUsersMap(Map)
+     * @see org.tigris.scarab.om.ScarabUser#setSelectedUsersMap(Map)
      */
     public void setSelectedUsersMap(Map selectedUsers)
         throws Exception
     {
-        if (selectedUsers != null) 
-        {
-            setSelectedUsersMap(getGenThreadKey(), selectedUsers);
-        }
-        else if (getThreadKey() != null)
-        {
-            setSelectedUsersMap(getThreadKey(), selectedUsers);
-        }
-    }
-    private void setSelectedUsersMap(Object key, Map selectedUsers)
-        throws Exception
-    {
-        try
-        {
-            if (selectedUsers.size() >= MAX_INDEPENDENT_WINDOWS) 
-            {
-                // make sure lists are not being accumulated, set a 
-                // reasonable limit of MAX_INDEPENDENT_WINDOWS open lists
-                int intKey = Integer.parseInt(String.valueOf(key));
-                int count = 0;
-                for (int i=intKey-1; i>=0; i--) 
-                {
-                    String testKey = String.valueOf(i);
-                    if (getSelectedUsersMap(testKey) != null) 
-                    {
-                        if (++count >= MAX_INDEPENDENT_WINDOWS) 
-                        {
-                            selectedUsers.remove(testKey);
-                        }
-                    }
-                }
-            }
-        }
-        catch (Exception e)
-        {
-            Log.get().error("Nonfatal error clearing old queries.  "
-                            + "This could be a memory leak.", e);
-        }
-        selectedUsersMap.put(key, selectedUsers);
+        setUsersMap(selectedUsersMap, selectedUsers);
     }
 
     /**
