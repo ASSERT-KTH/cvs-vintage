@@ -14,7 +14,9 @@
 	<button action="NextMessage" />
 	<separator/>
 	-->
+	<!--
 	<button action="ShowContextSpecificHelp"/>
 	<separator/>
+	-->
 	<button action="Cancel"/>
 </toolbar>    
