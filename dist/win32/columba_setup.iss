@@ -3,7 +3,7 @@
 
 [Setup]
 AppName=Columba
-AppVerName=Columba 0.12.0
+AppVerName=Columba 0.12.1
 AppPublisherURL=http://columba.sourceforge.net/
 AppSupportURL=http://columba.sourceforge.net/
 AppUpdatesURL=http://columba.sourceforge.net/
@@ -28,11 +28,11 @@ Source: lib\jakarta-oro-2.0.6.jar; DestDir: {app}\lib\
 Source: lib\jargs.jar; DestDir: {app}\lib\
 Source: lib\log4j.jar; DestDir: {app}\lib\
 Source: lib\lucene-1.3-rc1.jar; DestDir: {app}\lib\
-Source: lib\jwizz-0.1.0.jar; DestDir: {app}\lib\
+Source: lib\jwizz-0.1.1.jar; DestDir: {app}\lib\
 Source: lib\plastic.jar; DestDir: {app}\lib\
 Source: AUTHORS; DestDir: {app}
 Source: CHANGES; DestDir: {app}
-Source: native\win32\launcher\bin\columba.exe; DestDir: {app}; DestName: columba.exe; Components: JDK14 JDK13
+Source: native\win32\launcher\bin\columba.exe; DestDir: {app}; DestName: columba.exe
 Source: columba.jar; DestDir: {app}
 Source: LICENSE; DestDir: {app}
 Source: README; DestDir: {app}
@@ -50,11 +50,10 @@ Name: {group}\README; Filename: notepad.exe; Parameters: README; WorkingDir: {ap
 Filename: {app}\columba.exe; Description: Launch Columba; Flags: nowait postinstall skipifsilent; WorkingDir: {app}
 
 [_ISTool]
-EnableISX=false
+EnableISX=true
 UseAbsolutePaths=true
 
 [Dirs]
-Name: {app}\ext; Components: JDK13
 
 [Registry]
 Root: HKLM; SubKey: SOFTWARE\Clients\Mail\Columba; ValueType: string; ValueName: ; ValueData: Columba
@@ -64,11 +63,15 @@ Root: HKLM; SubKey: SOFTWARE\Clients\Mail\Columba\Protocols\mailto; ValueType: s
 Root: HKLM; SubKey: SOFTWARE\Clients\Mail\Columba\Protocols\mailto; ValueType: string; ValueName: ; ValueData: URL:MailTo-Protokoll
 Root: HKLM; SubKey: SOFTWARE\Clients\Mail\Columba\Protocols\mailto\shell\open\command; ValueType: string; ValueData: {app}\columba --mailurl %1
 
-[Types]
-Name: JDK14; Description: For people running JDK/JRE 1.4
-Name: JDK13; Description: For people running JDK/JRE 1.3
 
-[Components]
-Name: JDK14; Description: Launcher for JDK 1.4; Types: JDK14
-Name: JDK13; Description: Launcher for JDK 1.3 and Libs; Types: JDK13
-Name: CORE; Description: Core Columba components; Types: JDK13 JDK14
+[Code]
+//* Getting Java version from registry *//
+function getJavaVersion(): String;
+var
+     javaVersion: String;
+begin
+     javaVersion := '';
+     RegQueryStringValue(HKLM, 'SOFTWARE\JavaSoft\Java Runtime Environment', 'CurrentVersion', javaVersion);
+     GetVersionNumbersString(javaVersion, javaVersion);
+     Result := javaVersion;
+end;
