@@ -1,4 +1,4 @@
-// $Id: AbstractGoRule.java,v 1.15 2003/09/29 18:51:52 alexb Exp $
+// $Id: AbstractGoRule.java,v 1.16 2003/10/02 22:03:04 alexb Exp $
 // Copyright (c) 2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -41,6 +41,9 @@ import org.apache.log4j.Logger;
  * one. Via the abstract method getChildren the children of some tree
  * element in a perspective are returned.  Only the returned children
  * are shown for some tree element.
+ *
+ * <p>Since the new Explorer implemnentation,
+ *    the only method used in go rules is the getChildren() method.
  *
  *
  * @author jaap.branderhorst@xs4all.nl

@@ -1,4 +1,4 @@
-// $Id: NavPerspective.java,v 1.31 2003/06/30 18:00:23 linus Exp $
+// $Id: NavPerspective.java,v 1.32 2003/10/02 22:03:04 alexb Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -38,11 +38,8 @@ import java.util.Iterator;
  * <p>This class represents:
  *   - a navigation tree model / perspective (which is a collection of GoRules)
  *
- * <p>16 Apr 2002: Jeremy Bennett (mail@jeremybennett.com). Extended to support
- * the display of extends/includes and extension points in the package centric
- * view.
- *
- * <p>$Id: NavPerspective.java,v 1.31 2003/06/30 18:00:23 linus Exp $
+ * @deprecated since 0.15.2 replace with ExplorerPerspective,
+ *             remove in 0.15.3
  */
 public class NavPerspective
     extends TreeModelComposite

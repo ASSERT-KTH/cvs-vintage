@@ -1,4 +1,4 @@
-// $Id: NavigatorConfigDialog.java,v 1.14 2003/09/29 18:51:52 alexb Exp $
+// $Id: NavigatorConfigDialog.java,v 1.15 2003/10/02 22:03:04 alexb Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -51,7 +51,9 @@ import org.tigris.gef.util.Converter;
 /**
  * The "Configure Perspectives" dialog.
  *
- * This class will need work done on it after issue 1739.
+ * This class will need work done on it after issue 1739/2245.
+ *
+ * It is not used at the moment until the explorer becomes stable.
  *
  */
 public class NavigatorConfigDialog extends JDialog
