@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<!-- $Id: cookbook.xml,v 1.102 2003/05/01 09:46:51 linus Exp $ -->
+<!-- $Id: cookbook.xml,v 1.103 2003/05/02 11:18:52 linus Exp $ -->
 
 <!DOCTYPE book SYSTEM "../docbook-setup/docbookx/docbookx.dtd" [
 <!ENTITY building SYSTEM "building.xml">
@@ -2240,13 +2240,8 @@ Module that allows to extend ArgoUML using scheme.
 	      <listitem>
 		<para><filename class="directory">junit</filename></para>
 		<para>
-Module that is used during the development and contains 
-junit test cases as well as the junit infrastructure needed to run
-these tests.
-</para>
-		<para>
-These tests are the ones that needs the GUI to run. 
-The JUnit tests that can run without the GUI are located in 
+Old directory with JUnit tests.
+These should be migrated to and all new JUnit tests should be created in
 the directory <filename class="directory">tests</filename>.
 </para>
 	      </listitem>
@@ -2301,6 +2296,7 @@ All source code for ArgoUML including pictures of icons.
 	  <para>
 All source code for JUnit tests of everything that is in the src_new
 directory.
+See <xref linkend="junittests"/>.
 </para>
 	</listitem>
 
