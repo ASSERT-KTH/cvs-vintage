@@ -24,7 +24,7 @@
 // File: SelectionObject.java
 // Classes: SelectionObject
 // Original Author: 5eichler@informatik.uni-hamburg.de
-// $Id: SelectionObject.java,v 1.5 2002/08/19 20:43:49 kataka Exp $
+// $Id: SelectionObject.java,v 1.6 2002/08/22 12:47:34 kataka Exp $
 
 
 package org.argouml.uml.diagram.deployment.ui;
@@ -129,23 +129,23 @@ public class SelectionObject extends SelectionWButtons {
     boolean reverse = false;
     switch (hand.index) {
     case 10: //add link
-      edgeClass = MLinkImpl.class;
+      edgeClass = MLink.class;
       by = cy;
       bx = cx + cw/2;
       break;
     case 11: //add link
-      edgeClass = MLinkImpl.class;
+      edgeClass = MLink.class;
       reverse = true;
       by = cy + ch;
       bx = cx + cw/2;
       break;
     case 12: //add link
-      edgeClass = MLinkImpl.class;
+      edgeClass = MLink.class;
       by = cy + ch/2;
       bx = cx + cw;
       break;
     case 13: // add link
-      edgeClass = MLinkImpl.class;
+      edgeClass = MLink.class;
       reverse = true;
       by = cy + ch/2;
       bx = cx;

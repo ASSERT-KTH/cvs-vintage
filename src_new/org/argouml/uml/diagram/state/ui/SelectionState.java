@@ -24,7 +24,7 @@
 // File: SelectionState.java
 // Classes: SelectionState
 // Original Author: jrobbins@ics.uci.edu
-// $Id: SelectionState.java,v 1.5 2002/08/19 20:43:49 kataka Exp $
+// $Id: SelectionState.java,v 1.6 2002/08/22 12:43:05 kataka Exp $
 
 package org.argouml.uml.diagram.state.ui;
 
@@ -141,12 +141,12 @@ public class SelectionState extends SelectionWButtons {
     boolean reverse = false;
     switch (hand.index) {
     case 12: //add outgoing
-      edgeClass = MTransitionImpl.class;
+      edgeClass = MTransition.class;
       by = cy + ch/2;
       bx = cx + cw;
       break;
     case 13: // add incoming
-      edgeClass = MTransitionImpl.class;
+      edgeClass = MTransition.class;
       reverse = true;
       by = cy + ch/2;
       bx = cx;

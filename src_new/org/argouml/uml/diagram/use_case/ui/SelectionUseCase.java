@@ -24,7 +24,7 @@
 // File: SelectionUseCase.java
 // Classes: SelectionUseCase
 // Original Author: jrobbins@ics.uci.edu
-// $Id: SelectionUseCase.java,v 1.4 2002/08/19 20:43:49 kataka Exp $
+// $Id: SelectionUseCase.java,v 1.5 2002/08/22 12:42:25 kataka Exp $
 
 package org.argouml.uml.diagram.use_case.ui;
 
@@ -146,23 +146,23 @@ public class SelectionUseCase extends SelectionWButtons {
     boolean reverse = false;
     switch (hand.index) {
     case 10: //add superclass
-      edgeClass = MGeneralizationImpl.class;
+      edgeClass = MGeneralization.class;
       by = cy;
       bx = cx + cw/2;
       break;
     case 11: //add subclass
-      edgeClass = MGeneralizationImpl.class;
+      edgeClass = MGeneralization.class;
       reverse = true;
       by = cy + ch;
       bx = cx + cw/2;
       break;
     case 12: //add assoc
-      edgeClass = MAssociationImpl.class;
+      edgeClass = MAssociation.class;
       by = cy + ch/2;
       bx = cx + cw;
       break;
     case 13: // add assoc
-      edgeClass = MAssociationImpl.class;
+      edgeClass = MAssociation.class;
       reverse = true;
       by = cy + ch/2;
       bx = cx;

@@ -24,7 +24,7 @@
 // File: SelectionComponent.java
 // Classes: SelectionComponent
 // Original Author: 5eichler@informatik.uni-hamburg.de
-// $Id: SelectionComponent.java,v 1.4 2002/08/19 20:43:49 kataka Exp $
+// $Id: SelectionComponent.java,v 1.5 2002/08/22 12:48:22 kataka Exp $
 
 package org.argouml.uml.diagram.deployment.ui;
 
@@ -127,24 +127,24 @@ public class SelectionComponent extends SelectionWButtons {
     boolean reverse = false;
     switch (hand.index) {
     case 10: //add dep
-      edgeClass = MDependencyImpl.class;
+      edgeClass = MDependency.class;
       reverse = true;
       by = cy;
       bx = cx + cw/2;
       break;
     case 11: //add dep
-      edgeClass = MDependencyImpl.class;
+      edgeClass = MDependency.class;
       by = cy + ch;
       bx = cx + cw/2;
       break;
     case 12: //add dep
-      edgeClass = MDependencyImpl.class;
+      edgeClass = MDependency.class;
       reverse = true;
       by = cy + ch/2;
       bx = cx + cw;
       break;
     case 13: // add dep
-      edgeClass = MDependencyImpl.class;
+      edgeClass = MDependency.class;
       by = cy + ch/2;
       bx = cx;
       break;

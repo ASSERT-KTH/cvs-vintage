@@ -24,7 +24,7 @@
 // File: SelectionActor.java
 // Classes: SelectionActor
 // Original Author: jrobbins@ics.uci.edu
-// $Id: SelectionActor.java,v 1.5 2002/08/19 20:43:49 kataka Exp $
+// $Id: SelectionActor.java,v 1.6 2002/08/22 12:42:25 kataka Exp $
 
 package org.argouml.uml.diagram.use_case.ui;
 
@@ -118,12 +118,12 @@ public class SelectionActor extends SelectionWButtons {
     boolean reverse = false;
     switch (hand.index) {
     case 12: //add assoc
-      edgeClass = MAssociationImpl.class;
+      edgeClass = MAssociation.class;
       by = cy + ch/2;
       bx = cx + cw;
       break;
     case 13: // add assoc
-      edgeClass = MAssociationImpl.class;
+      edgeClass = MAssociation.class;
       reverse = true;
       by = cy + ch/2;
       bx = cx;
