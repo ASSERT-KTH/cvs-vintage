@@ -42,6 +42,9 @@
   <property name="ant.home" value="${install.dir}/jakarta-ant-1.3"/>
   <property name="jsse.home" value="${install.dir}/jsse1.0.2"/>
   <property name="jaxp.home" value="${install.dir}/jaxp1.0.1"/>
+  <property name="ant.bin" value="${ant.home}/bin"/>
+  <property name="ant.lib" value="${ant.home}/lib"/>
+  <property name="jsse.lib" value="${jsse.home}/lib"/>
 
   <!-- Binaries checked in ( servlet.jar is not likely to change, 
       the 2.2 spec is final -->
@@ -55,7 +58,7 @@
     <available property="jsse.present.runtime" 
 	       classname="javax.net.ssl.SSLServerSocket"/>
     <available property="jsse.present" 
-	       file="${jsse.home}/lib/jsse.jar"/>
+	       file="${jsse.lib}/jsse.jar"/>
     <available property="jdk12.present" 
 	       classname="java.security.PrivilegedAction"/>
   </target>
@@ -107,13 +110,13 @@
     <!-- include ant, it is used for testing and will be used for
     configuration and few other tasks -->
     <copy todir="${tomcat.build}/bin">
-            <fileset dir="${ant.home}/bin"/>
+            <fileset dir="${ant.bin}"/>
         </copy>
 
     <copy tofile="${tomcat.build}/lib/container/jaxp.jar" 
-	  file="${ant.home}/lib/jaxp.jar"/>
+	  file="${ant.lib}/jaxp.jar"/>
     <copy tofile="${tomcat.build}/lib/container/parser.jar" 
-	  file="${ant.home}/lib/parser.jar"/>
+	  file="${ant.lib}/parser.jar"/>
     <copy tofile="${tomcat.build}/lib/container/jaxp.jar" 
 	  file="${jaxp.home}/jaxp.jar"/>
     <copy tofile="${tomcat.build}/lib/container/parser.jar" 
@@ -157,9 +160,9 @@
 	   deprecation="off" 
 	   srcdir="src/share">
       <classpath>
-	<pathelement location="${jsse.home}/lib/jsse.jar"/>
-	<pathelement location="${jsse.home}/lib/jnet.jar"/>
-	<pathelement location="${jsse.home}/lib/jcert.jar"/>
+	<pathelement location="${jsse.lib}/jsse.jar"/>
+	<pathelement location="${jsse.lib}/jnet.jar"/>
+	<pathelement location="${jsse.lib}/jcert.jar"/>
       </classpath>
       <include name="org/apache/tomcat/util/**"/>    
       <exclude name="**/util/net/SSLSocketFactory.java" unless="jsse.present"/>
@@ -421,7 +424,7 @@
       <fileset dir="src/admin"/>
     </copy>
     <copy tofile="${tomcat.build}/webapps/admin/WEB-INF/lib/ant.jar" 
-	  file="${ant.home}/lib/ant.jar"/>
+	  file="${ant.lib}/ant.jar"/>
     <javac srcdir="src/admin/WEB-INF/classes" 
 	   optimize="${optimize}" 
 	   destdir="${tomcat.build}/webapps/admin/WEB-INF/classes" 
