@@ -125,7 +125,7 @@ import org.tigris.scarab.reports.ReportBridge;
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: AbstractScarabModule.java,v 1.104 2003/07/21 23:58:51 jmcnally Exp $
+ * @version $Id: AbstractScarabModule.java,v 1.105 2003/07/23 05:30:03 venkatesh Exp $
  */
 public abstract class AbstractScarabModule
     extends BaseObject
@@ -1128,7 +1128,7 @@ public abstract class AbstractScarabModule
         {        
             Criteria crit = new Criteria(3)
                 .add(RModuleAttributePeer.QUICK_SEARCH, true);
-            addActiveAndOrderByClause(crit, issueType);
+            addOrderByClause(crit, issueType);
             attributes = getAttributes(crit);
             ScarabCache.put(attributes, this, GET_QUICK_SEARCH_ATTRIBUTES, 
                             issueType);
@@ -1156,7 +1156,8 @@ public abstract class AbstractScarabModule
         {        
             Criteria crit = new Criteria(3)
                 .add(RModuleAttributePeer.REQUIRED, true);
-            addActiveAndOrderByClause(crit, issueType);
+            crit.add(RModuleAttributePeer.ACTIVE, true);
+            addOrderByClause(crit, issueType);
             List temp =  getAttributes(crit);
             List requiredAttributes  = new ArrayList();
             for (int i=0; i <temp.size(); i++)
@@ -1193,7 +1194,8 @@ public abstract class AbstractScarabModule
         if (obj == null)
         {
             Criteria crit = new Criteria(2);
-            addActiveAndOrderByClause(crit, issueType);
+            crit.add(RModuleAttributePeer.ACTIVE, true);
+            addOrderByClause(crit, issueType);
             attributes = getAttributes(crit);
             ScarabCache.put(attributes, this, GET_ACTIVE_ATTRIBUTES, 
                             issueType);
@@ -1205,9 +1207,8 @@ public abstract class AbstractScarabModule
         return attributes;
     }
 
-    private void addActiveAndOrderByClause(Criteria crit, IssueType issueType)
+    private void addOrderByClause(Criteria crit, IssueType issueType)
     {
-        crit.add(RModuleAttributePeer.ACTIVE, true);
         crit.addAscendingOrderByColumn(RModuleAttributePeer.PREFERRED_ORDER);
         crit.addAscendingOrderByColumn(RModuleAttributePeer.DISPLAY_VALUE);
         crit.add(RModuleAttributePeer.ISSUE_TYPE_ID, 
