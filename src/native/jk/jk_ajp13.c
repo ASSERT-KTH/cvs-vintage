@@ -56,7 +56,7 @@
 /***************************************************************************
  * Description: Experimental bi-directionl protocol handler.               *
  * Author:      Gal Shachor <shachor@il.ibm.com>                           *
- * Version:     $Revision: 1.4 $                                           *
+ * Version:     $Revision: 1.5 $                                           *
  ***************************************************************************/
 
 
@@ -77,6 +77,7 @@
 #define SC_A_SSL_CERT           (unsigned char)7
 #define SC_A_SSL_CIPHER         (unsigned char)8
 #define SC_A_SSL_SESSION        (unsigned char)9
+#define SC_A_REQ_ATTRIBUTE      (unsigned char)10
 #define SC_A_ARE_DONE           (unsigned char)0xFF
 
 /*
@@ -454,6 +455,19 @@ int ajp13_marshal_into_msgb(jk_msg_buf_t *msg,
                    "Error ajp13_marshal_into_msgb - Error appending the SSL session\n");
 
             return JK_FALSE;
+        }
+    }
+
+    if(s->num_attributes > 0) {
+        for(i = 0 ; i < s->num_attributes ; i++) {
+            if(0 != jk_b_append_byte(msg, SC_A_REQ_ATTRIBUTE)       ||
+               0 != jk_b_append_string(msg, s->attributes_names[i]) ||
+               0 != jk_b_append_string(msg, s->attributes_values[i])) {
+                jk_log(l, JK_LOG_ERROR, 
+                   "Error ajp13_marshal_into_msgb - Error appending attribute %s=%s\n",
+                   s->attributes_names[i], s->attributes_values[i]);
+                return JK_FALSE;
+            }
         }
     }
 

@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/service/connector/Attic/Ajp13ConnectorRequest.java,v 1.4 2000/06/06 14:08:43 shachor Exp $
- * $Revision: 1.4 $
- * $Date: 2000/06/06 14:08:43 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/service/connector/Attic/Ajp13ConnectorRequest.java,v 1.5 2000/06/23 10:32:39 shachor Exp $
+ * $Revision: 1.5 $
+ * $Date: 2000/06/23 10:32:39 $
  *
  * ====================================================================
  *
@@ -79,16 +79,17 @@ public class Ajp13ConnectorRequest extends RequestImpl
 	                                         
 	public static final byte JK_AJP13_GET_BODY_CHUNK = 6;
 	
-    public static final byte SC_A_CONTEXT      = 1;
-    public static final byte SC_A_SERVLET_PATH = 2;
-    public static final byte SC_A_REMOTE_USER  = 3;
-    public static final byte SC_A_AUTH_TYPE    = 4;
-    public static final byte SC_A_QUERY_STRING = 5;
-    public static final byte SC_A_JVM_ROUTE    = 6;
-    public static final byte SC_A_SSL_CERT     = 7;
-    public static final byte SC_A_SSL_CIPHER   = 8;
-    public static final byte SC_A_SSL_SESSION  = 9;
-    public static final byte SC_A_ARE_DONE     = (byte)0xFF;
+    public static final byte SC_A_CONTEXT       = 1;
+    public static final byte SC_A_SERVLET_PATH  = 2;
+    public static final byte SC_A_REMOTE_USER   = 3;
+    public static final byte SC_A_AUTH_TYPE     = 4;
+    public static final byte SC_A_QUERY_STRING  = 5;
+    public static final byte SC_A_JVM_ROUTE     = 6;
+    public static final byte SC_A_SSL_CERT      = 7;
+    public static final byte SC_A_SSL_CIPHER    = 8;
+    public static final byte SC_A_SSL_SESSION   = 9;
+    public static final byte SC_A_REQ_ATTRIBUTE = 10;
+    public static final byte SC_A_ARE_DONE      = (byte)0xFF;
 
     public static final String []methodTransArray = {
         "OPTIONS",
@@ -199,20 +200,25 @@ public class Ajp13ConnectorRequest extends RequestImpl
 
                 case SC_A_SSL_CERT     :
                     isSSL = true;
-		    attributes.put("javax.servlet.request.X509Certificate",
-	                           msg.getString());
+		            attributes.put("javax.servlet.request.X509Certificate",
+	                               msg.getString());
                 break;
 
                 case SC_A_SSL_CIPHER   :
                     isSSL = true;
-		    attributes.put("javax.servlet.request.cipher_suite",
-	                           msg.getString());
+		            attributes.put("javax.servlet.request.cipher_suite",
+	                               msg.getString());
                 break;
 
                 case SC_A_SSL_SESSION  :
                     isSSL = true;
-		    attributes.put("javax.servlet.request.ssl_session",
-	                           msg.getString());
+		            attributes.put("javax.servlet.request.ssl_session",
+	                               msg.getString());
+                break;
+
+                case SC_A_REQ_ATTRIBUTE :
+                    isSSL = true;
+		            attributes.put(msg.getString(), msg.getString());
                 break;
 
                 default:
