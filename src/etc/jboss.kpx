@@ -1,5 +1,5 @@
 <?xml version='1.0'?>
-<kawaproject timestamp="Fri May 12 11:23:46 2000">
+<kawaproject timestamp="Fri May 12 12:18:49 2000">
 <versioninfo>
 <documentversion>
 <major>"0"</major>
@@ -1097,6 +1097,14 @@
 <name>"interfaces"</name>
 <file>
 <dirty>"1"</dirty>
+<relativepath>"..\main\org\jboss\ejb\plugins\jrmp12\interfaces\EntityProxy.java"</relativepath>
+<scmstatus id="2">
+<userstring>""</userstring>
+<userinteger>"0"</userinteger>
+</scmstatus>
+</file>
+<file>
+<dirty>"1"</dirty>
 <relativepath>"..\main\org\jboss\ejb\plugins\jrmp12\interfaces\HomeProxy.java"</relativepath>
 <scmstatus id="0">
 <userstring>""</userstring>
@@ -1163,7 +1171,7 @@
 <file>
 <dirty>"1"</dirty>
 <relativepath>"..\main\org\jboss\ejb\plugins\jrmp13\interfaces\StatelessSessionProxy.java"</relativepath>
-<scmstatus id="0">
+<scmstatus id="2">
 <userstring>""</userstring>
 <userinteger>"0"</userinteger>
 </scmstatus>
