@@ -77,6 +77,8 @@ import org.apache.tomcat.util.log.*;
  *
  * You don't have to insert this in server.xml - it's better to add it
  * manually, to be sure it is first.
+ *
+ * Will set: tomcat.home, CM.home, CM.installDir, CM.workDir, Ctx.absolutePath
  * 
  * ( based on DefaultCMSetter )
  *
@@ -176,29 +178,9 @@ public final class PathSetter extends BaseInterceptor {
 				 workDir);
 	}
 	cm.setWorkDir( workDir );
-        initLoggers(cm.getLoggers());
 
 	if(debug>1) log( "Setting: " + cm.getInstallDir() + " " +
 			 cm.getHome() + " " + workDir);
-    }
-
-    private void initLoggers(Hashtable Loggers){
-        if( Loggers!=null ){
-            Enumeration el=Loggers.elements();
-            while( el.hasMoreElements()){
-                Logger l=(Logger)el.nextElement();
-                String path=l.getPath();
-                if( path!=null ) {
-                    File f=new File( path );
-                    if( ! f.isAbsolute() ) {
-                        File wd= new File(cm.getHome(), f.getPath());
-                        l.setPath( wd.getAbsolutePath() );
-                    }
-                    // create the files, ready to log.
-                }
-                l.open();
-            }
-        }
     }
 
     /** Adjust paths for a context - make the base and all loggers
@@ -229,15 +211,6 @@ public final class PathSetter extends BaseInterceptor {
 		 cm.getHome());
 	}
 	
-	// this would belong to a logger interceptor ?
-	Log loghelper=ctx.getLog();
-	Log loghelperServlet=ctx.getServletLog();
-	
-	if( loghelper!=null && loghelper.getLogger() != null )
-	    cm.addLogger( loghelper.getLogger() );
-	if( loghelperServlet != null &&
-	    loghelperServlet.getLogger() != null)
-	    cm.addLogger( loghelperServlet.getLogger() );
     }
 }
 
