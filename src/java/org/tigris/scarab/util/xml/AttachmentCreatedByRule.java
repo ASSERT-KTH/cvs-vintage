@@ -48,8 +48,6 @@ package org.tigris.scarab.util.xml;
 
 import java.util.ArrayList;
 
-import org.apache.commons.digester.Digester;
-
 import org.apache.fulcrum.security.TurbineSecurity;
 
 import org.tigris.scarab.om.ScarabUser;
@@ -66,10 +64,9 @@ public class AttachmentCreatedByRule extends BaseRule
     /**
      * Calls super(digester, state, userList)
      */
-    public AttachmentCreatedByRule(Digester digester, String state, 
-                                   ArrayList userList)
+    public AttachmentCreatedByRule(ImportBean ib)
     {
-        super(digester, state, userList);
+        super(ib);
     }
     
     /**
@@ -81,16 +78,17 @@ public class AttachmentCreatedByRule extends BaseRule
      */
     public void body(String text) throws Exception
     {
-        log().debug("(" + getState() + ") attachment created by body: " + text);
+        log().debug("(" + getImportBean().getState() + 
+            ") attachment created by body: " + text);
         super.doInsertionOrValidationAtBody(text);
     }
     
     protected void doInsertionAtBody(String text) throws Exception
     {
-        Attachment attachment = (Attachment)digester.pop();
+        Attachment attachment = (Attachment)getDigester().pop();
         ScarabUser user = (ScarabUser)TurbineSecurity.getUser(text);
         attachment.setCreatedBy(user.getUserId());
-        digester.push(attachment);
+        getDigester().push(attachment);
     }
     
     protected void doValidationAtBody(String text) throws Exception

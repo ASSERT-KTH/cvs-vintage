@@ -46,9 +46,7 @@ package org.tigris.scarab.util.xml;
  * individuals on behalf of Collab.Net.
  */
 
-import org.apache.commons.digester.Digester;
-
-import org.tigris.scarab.om.ScarabModule;
+import org.tigris.scarab.om.Module;
 
 /**
  * Handler for the xpath "scarab/module/name"
@@ -58,9 +56,9 @@ import org.tigris.scarab.om.ScarabModule;
  */
 public class ModuleNameRule extends BaseRule
 {
-    public ModuleNameRule(Digester digester, String state)
+    public ModuleNameRule(ImportBean ib)
     {
-        super(digester, state);
+        super(ib);
     }
     
     /**
@@ -72,16 +70,18 @@ public class ModuleNameRule extends BaseRule
      */
     public void body(String text) throws Exception
     {
-        log().debug("(" + getState() + ") module name body: " + text);
+        log().debug("(" + getImportBean().getState() + ") module name body: " + text);
         super.doInsertionOrValidationAtBody(text);
     }
     
     protected void doInsertionAtBody(String moduleName)
     {
-        ScarabModule module = (ScarabModule)digester.pop();
+        // FIXME: don't pop anymore.
+        Module module = (Module)getDigester().pop();
+        module = getImportBean().getModule();
         module.setRealName(moduleName);
         module.setDescription(moduleName);
-        digester.push(module);
+        getDigester().push(module);
     }
     
     protected void doValidationAtBody(String moduleName)

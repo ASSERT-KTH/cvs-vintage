@@ -63,7 +63,7 @@ import org.tigris.scarab.util.TurbineInitialization;
  * an Ant xml file.
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: XMLImport.java,v 1.9 2002/03/22 05:07:05 jon Exp $
+ * @version $Id: XMLImport.java,v 1.10 2002/03/28 03:55:22 jon Exp $
  */
 public class XMLImport extends MatchingTask
 {
@@ -201,7 +201,7 @@ public class XMLImport extends MatchingTask
         {
             if (getXmlValidation())
             {
-                parse (getXmlFile(), STATE_XML_VALIDATION);
+                parse(getXmlFile(), STATE_XML_VALIDATION);
                 log().info("XMLValidation is done without any errors found");
             }
             
@@ -233,10 +233,17 @@ public class XMLImport extends MatchingTask
     {
         DependencyTree dependencyTree = new DependencyTree();
         ArrayList userList = new ArrayList();
-        
+        ArrayList roleList = new ArrayList();
+
+        ImportBean ib = new ImportBean();
+        ib.setState(state);
+        ib.setUserList(userList);
+        ib.setRoleList(roleList);
+        ib.setDependencyTree(dependencyTree);
+
         if (state.equals(STATE_DB_VALIDATION) || state.equals(STATE_DB_INSERTION))
         {
-            addRules(state, dependencyTree, userList);
+            addRules(ib, state, dependencyTree, userList, roleList);
         }
 
         getDigester().parse(xmlFile.getAbsolutePath());
@@ -282,40 +289,47 @@ public class XMLImport extends MatchingTask
     /**
      * Adds rules to the instance of the digester
      */
-    protected void addRules(String state, 
-                            DependencyTree dependencyTree, ArrayList userList)
+    protected void addRules(ImportBean ib, String state, 
+                            DependencyTree dependencyTree,
+                            ArrayList userList, ArrayList roleList)
     {
-        getDigester().addRule("scarab/user", new UserRule(getDigester(), state, userList));
-        getDigester().addRule("scarab/user/firstname", new PropertyRule(getDigester(), state, "user-firstname"));
-        getDigester().addRule("scarab/user/lastname", new PropertyRule(getDigester(), state, "user-lastname"));
-        getDigester().addRule("scarab/user/email", new PropertyRule(getDigester(), state, "user-email"));
-        getDigester().addRule("scarab/module", new ModuleRule(getDigester(), state, dependencyTree));
-        getDigester().addRule("scarab/module/name", new ModuleNameRule(getDigester(), state));
-        getDigester().addRule("scarab/module/code", new ModuleCodeRule(getDigester(), state));
-        getDigester().addRule("scarab/module/issue", new IssueRule(getDigester(), state));
-        getDigester().addRule("scarab/module/issue/artifact-type", new ArtifactTypeRule(getDigester(), state, dependencyTree));
-        getDigester().addRule("scarab/module/issue/dependency", new DependencyRule(getDigester(), state, dependencyTree));
-        getDigester().addRule("scarab/module/issue/dependency/type", new DependencyTypeRule(getDigester(),state));
-        getDigester().addRule("scarab/module/issue/dependency/child", new DependencyChildRule(getDigester(), state));
-        getDigester().addRule("scarab/module/issue/dependency/parent", new DependencyParentRule(getDigester(), state));
-        getDigester().addRule("scarab/module/issue/attachment", new AttachmentRule(getDigester(), state));
-        getDigester().addRule("scarab/module/issue/attachment/name", new AttachmentNameRule(getDigester(), state));
-        getDigester().addRule("scarab/module/issue/attachment/type", new AttachmentTypeRule(getDigester(), state));
-        getDigester().addRule("scarab/module/issue/attachment/path", new AttachmentPathRule(getDigester(), state));
-        getDigester().addRule("scarab/module/issue/attachment/data", new AttachmentDataRule(getDigester(), state));
-        getDigester().addRule("scarab/module/issue/attachment/mimetype", new AttachmentMimetypeRule(getDigester(), state));
-        getDigester().addRule("scarab/module/issue/attachment/created-date", new AttachmentCreatedDateRule(getDigester(), state));
-        getDigester().addRule("scarab/module/issue/attachment/modified-date", new AttachmentModifiedDateRule(getDigester(), state));
-        getDigester().addRule("scarab/module/issue/attachment/created-by", new AttachmentCreatedByRule(getDigester(), state, userList));
-        getDigester().addRule("scarab/module/issue/attachment/modified-by", new AttachmentModifiedByRule(getDigester(), state, userList));
-        getDigester().addRule("scarab/module/issue/transaction", new TransactionRule(getDigester(), state));
-        getDigester().addRule("scarab/module/issue/transaction/type", new TransactionTypeRule(getDigester(), state));
-        getDigester().addRule("scarab/module/issue/transaction/committed-by", new TransactionCommittedByRule(getDigester(), state, userList));
-        getDigester().addRule("scarab/module/issue/transaction/activity", new ActivityRule(getDigester(), state, userList));
-        getDigester().addRule("scarab/module/issue/transaction/activity/attribute/name", new ActivityAttributeNameRule(getDigester(), state));
-        getDigester().addRule("scarab/module/issue/transaction/activity/attribute/value", new ActivityAttributeValueRule(getDigester(), state));
-        getDigester().addRule("scarab/module/issue/transaction/activity/attribute/old-value", new ActivityAttributeOldValueRule(getDigester(), state));
-        getDigester().addRule("scarab/module/issue/transaction/activity/attribute/type", new ActivityAttributeTypeRule(getDigester(), state));
-        getDigester().addRule("scarab/module/issue/transaction/activity/description", new ActivityDescriptionRule(getDigester(), state));
+
+
+        getDigester().addRule("scarab/module", new ModuleRule(ib));
+        getDigester().addRule("scarab/module/name", new ModuleNameRule(ib));
+        getDigester().addRule("scarab/module/code", new ModuleCodeRule(ib));
+        getDigester().addRule("scarab/module/issue", new IssueRule(ib));
+        getDigester().addRule("scarab/module/issue/artifact-type", new ArtifactTypeRule(ib));
+        getDigester().addRule("scarab/module/issue/dependency", new DependencyRule(ib));
+        getDigester().addRule("scarab/module/issue/dependency/type", new DependencyTypeRule(ib));
+        getDigester().addRule("scarab/module/issue/dependency/child", new DependencyChildRule(ib));
+        getDigester().addRule("scarab/module/issue/dependency/parent", new DependencyParentRule(ib));
+        getDigester().addRule("scarab/module/issue/attachment", new AttachmentRule(ib));
+        getDigester().addRule("scarab/module/issue/attachment/name", new AttachmentNameRule(ib));
+        getDigester().addRule("scarab/module/issue/attachment/type", new AttachmentTypeRule(ib));
+        getDigester().addRule("scarab/module/issue/attachment/path", new AttachmentPathRule(ib));
+        getDigester().addRule("scarab/module/issue/attachment/data", new AttachmentDataRule(ib));
+        getDigester().addRule("scarab/module/issue/attachment/mimetype", new AttachmentMimetypeRule(ib));
+        getDigester().addRule("scarab/module/issue/attachment/created-date", new AttachmentCreatedDateRule(ib));
+        getDigester().addRule("scarab/module/issue/attachment/modified-date", new AttachmentModifiedDateRule(ib));
+        getDigester().addRule("scarab/module/issue/attachment/created-by", new AttachmentCreatedByRule(ib));
+        getDigester().addRule("scarab/module/issue/attachment/modified-by", new AttachmentModifiedByRule(ib));
+        getDigester().addRule("scarab/module/issue/transaction", new TransactionRule(ib));
+        getDigester().addRule("scarab/module/issue/transaction/type", new TransactionTypeRule(ib));
+        getDigester().addRule("scarab/module/issue/transaction/committed-by", new TransactionCommittedByRule(ib));
+        getDigester().addRule("scarab/module/issue/transaction/activity", new ActivityRule(ib));
+        getDigester().addRule("scarab/module/issue/transaction/activity/attribute/name", new ActivityAttributeNameRule(ib));
+        getDigester().addRule("scarab/module/issue/transaction/activity/attribute/value", new ActivityAttributeValueRule(ib));
+        getDigester().addRule("scarab/module/issue/transaction/activity/attribute/old-value", new ActivityAttributeOldValueRule(ib));
+        getDigester().addRule("scarab/module/issue/transaction/activity/attribute/type", new ActivityAttributeTypeRule(ib));
+        getDigester().addRule("scarab/module/issue/transaction/activity/description", new ActivityDescriptionRule(ib));
+        getDigester().addRule("scarab/module/user", new UserRule(ib));
+        ib.setIdentifier("user-firstname");
+        getDigester().addRule("scarab/module/user/firstname", new PropertyRule(ib));
+        ib.setIdentifier("user-lastname");
+        getDigester().addRule("scarab/module/user/lastname", new PropertyRule(ib));
+        ib.setIdentifier("user-email");
+        getDigester().addRule("scarab/module/user/email", new PropertyRule(ib));
+        getDigester().addRule("scarab/module/user/role", new RoleRule(ib));
     }
 }

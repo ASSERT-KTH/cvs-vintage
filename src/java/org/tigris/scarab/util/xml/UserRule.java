@@ -46,10 +46,10 @@ package org.tigris.scarab.util.xml;
  * individuals on behalf of Collab.Net.
  */
 
-import java.util.ArrayList;
+import java.util.List;
 import java.util.Calendar;
 
-import org.apache.commons.digester.Digester;
+import org.xml.sax.Attributes;
 
 import org.apache.commons.util.GenerateUniqueId;
 
@@ -68,9 +68,20 @@ public class UserRule extends BaseRule
 {
     private static final int UNIQUE_ID_MAX_LEN = 10;
     
-    public UserRule(Digester digester, String state, ArrayList userList)
+    public UserRule(ImportBean ib)
     {
-        super(digester, state, userList);
+        super(ib);
+    }
+
+    /**
+     * This method is called when the beginning of a matching XML element
+     * is encountered.
+     *
+     * @param attributes The attribute list of this element
+     */
+    public void begin(Attributes attributes) throws Exception
+    {
+        log().debug("(" + getImportBean().getState() + ") user begin");
     }
     
     /**
@@ -80,8 +91,9 @@ public class UserRule extends BaseRule
     public void end()
         throws Exception
     {
-        log().debug("(" + getState() + ") user end");
         super.doInsertionOrValidationAtEnd();
+        getImportBean().getRoleList().clear();
+        log().debug("(" + getImportBean().getState() + ") user end");
     }
     
     /**
@@ -93,10 +105,20 @@ public class UserRule extends BaseRule
     protected void doInsertionAtEnd()
         throws Exception
     {
-        String email = (String)digester.pop();
-        String lastName = (String)digester.pop();
-        String firstName = (String)digester.pop();
-        
+        // pop off the stack in reverse order!
+        List roles = getImportBean().getRoleList();
+        String email = (String)getDigester().pop();
+        String lastName = (String)getDigester().pop();
+        if (lastName == null)
+        {
+            lastName = "";
+        }
+        String firstName = (String)getDigester().pop();
+        if (firstName == null)
+        {
+            firstName = "";
+        }
+
         ScarabUser user;
         try
         {
@@ -118,24 +140,33 @@ public class UserRule extends BaseRule
             user.createNewUser();
             ScarabUserImpl.confirmUser(email);
             user.setPasswordExpire(Calendar.getInstance());
+            log().debug("(" + getImportBean().getState() + ") added user: " + email);
         }
     }
-    
+
     /**
      * handle the validation.  
      */
     protected void doValidationAtEnd()
         throws Exception
     {
-        String email = (String)digester.pop();
-        String lastName = (String)digester.pop();
-        String firstName = (String)digester.pop();
-        
-        if (getUserList().contains(email))
+        // pop off the stack in reverse order!
+        String email = (String)getDigester().pop();
+        String lastName = (String)getDigester().pop();
+        String firstName = (String)getDigester().pop();
+        List roles = getImportBean().getRoleList();
+        log().debug("(" + getImportBean().getState() + ") user has: " + roles.size() + " roles");
+
+
+        if (getImportBean().getUserList().contains(email))
         {
-            throw new Exception("User: " + email + ", already defined");
+            log().debug("(" + getImportBean().getState() + ") user: " + 
+                email + ", already defined; ignoring");
+// multiple users may be defined, just ignore them.
+            return;
+//            throw new Exception("User: " + email + ", already defined");
         }
         
-        getUserList().add(email);
+        getImportBean().getUserList().add(email);
     }
 }

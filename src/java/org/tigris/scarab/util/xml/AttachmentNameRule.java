@@ -46,8 +46,6 @@ package org.tigris.scarab.util.xml;
  * individuals on behalf of Collab.Net.
  */
 
-import org.apache.commons.digester.Digester;
-
 import org.tigris.scarab.om.Attachment;
 
 /**
@@ -58,9 +56,9 @@ import org.tigris.scarab.om.Attachment;
  */
 public class AttachmentNameRule extends BaseRule
 {
-    public AttachmentNameRule(Digester digester, String state)
+    public AttachmentNameRule(ImportBean ib)
     {
-        super(digester, state);
+        super(ib);
     }
     
     /**
@@ -72,15 +70,15 @@ public class AttachmentNameRule extends BaseRule
      */
     public void body(String text) throws Exception
     {
-        log().debug("(" + getState() + ") attachment type body");
+        log().debug("(" + getImportBean().getState() + ") attachment type body");
         super.doInsertionOrValidationAtBody(text);
     }
     
     protected void doInsertionAtBody(String text)
     {
-        Attachment attachment = (Attachment)digester.pop();
+        Attachment attachment = (Attachment)getDigester().pop();
         attachment.setName(text);
-        digester.push(attachment);
+        getDigester().push(attachment);
     }
     
     protected void doValidationAtBody(String text)

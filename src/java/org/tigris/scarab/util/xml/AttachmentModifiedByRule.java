@@ -45,9 +45,6 @@ package org.tigris.scarab.util.xml;
  * This software consists of voluntary contributions made by many
  * individuals on behalf of Collab.Net.
  */
-import java.util.ArrayList;
-
-import org.apache.commons.digester.Digester;
 
 import org.apache.fulcrum.security.TurbineSecurity;
 
@@ -62,10 +59,9 @@ import org.tigris.scarab.om.Attachment;
  */
 public class AttachmentModifiedByRule extends BaseRule
 {
-    public AttachmentModifiedByRule(Digester digester, String state, 
-                                    ArrayList userList)
+    public AttachmentModifiedByRule(ImportBean ib)
     {
-        super(digester, state, userList);
+        super(ib);
     }
     
     /**
@@ -77,7 +73,7 @@ public class AttachmentModifiedByRule extends BaseRule
      */
     public void body(String text) throws Exception
     {
-        log().debug("(" + getState() + ") attachment modified by body: " + text);
+        log().debug("(" + getImportBean().getState() + ") attachment modified by body: " + text);
         super.doInsertionOrValidationAtBody(text);
     }
     
@@ -85,16 +81,16 @@ public class AttachmentModifiedByRule extends BaseRule
     {
         if (text != null && !text.trim().equals(""))
         {
-            Attachment attachment = (Attachment)digester.pop();
+            Attachment attachment = (Attachment)getDigester().pop();
             ScarabUser user = (ScarabUser)TurbineSecurity.getUser(text);
             attachment.setModifiedBy(user.getUserId());
-            digester.push(attachment);
+            getDigester().push(attachment);
         }
     }
     
     protected void doValidationAtBody(String text) throws Exception
     {
-        if (text != null && !text.trim().equals(""))
+        if (text != null && text.trim().length() != 0)
         {
             validateUser(text);
         }

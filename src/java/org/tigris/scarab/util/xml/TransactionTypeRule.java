@@ -46,8 +46,6 @@ package org.tigris.scarab.util.xml;
  * individuals on behalf of Collab.Net.
  */
 
-import org.apache.commons.digester.Digester;
-
 import org.tigris.scarab.om.TransactionType;
 import org.tigris.scarab.om.TransactionTypePeer;
 
@@ -59,12 +57,11 @@ import org.tigris.scarab.om.TransactionTypePeer;
  */
 public class TransactionTypeRule extends BaseRule
 {
-    private boolean foundCreateTransactionType;
+    private boolean foundCreateTransactionType = false;
     
-    public TransactionTypeRule(Digester digester, String state)
+    public TransactionTypeRule(ImportBean ib)
     {
-        super(digester, state);
-        foundCreateTransactionType = false;
+        super(ib);
     }
     
     /**
@@ -76,32 +73,38 @@ public class TransactionTypeRule extends BaseRule
      */
     public void body(String text) throws Exception
     {
-        log().debug("(" + getState() + ") transaction type body: " + text);
+        log().debug("(" + getImportBean().getState() + 
+            ") transaction type body: " + text);
         super.doInsertionOrValidationAtBody(text);
     }
     
     protected void doInsertionAtBody(String transactionTypeName)
         throws Exception
     {
-        TransactionType transactionType = TransactionType.getInstance(transactionTypeName);
+        TransactionType transactionType = 
+            TransactionType.getInstance(transactionTypeName);
         checkCreateTransaction(transactionType);
-        digester.push(transactionType);
+        getDigester().push(transactionType);
     }
     
     protected void doValidationAtBody(String transactionTypeName)
         throws Exception
     {
-        TransactionType transactionType = TransactionType.getInstance(transactionTypeName);
+        TransactionType transactionType = 
+            TransactionType.getInstance(transactionTypeName);
         checkCreateTransaction(transactionType);
     }
     
     private void checkCreateTransaction(TransactionType transactionType)
         throws Exception
     {
-        if (transactionType.getTypeId().equals(TransactionTypePeer.CREATE_ISSUE__PK)) {
+        if (transactionType.getTypeId()
+            .equals(TransactionTypePeer.CREATE_ISSUE__PK))
+        {
             foundCreateTransactionType = true;
         }
-        if (!foundCreateTransactionType) {
+        if (!foundCreateTransactionType)
+        {
             throw new Exception("Create transaction must be the first transaction");
         }
     }

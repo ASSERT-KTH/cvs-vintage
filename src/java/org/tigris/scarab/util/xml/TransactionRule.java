@@ -48,8 +48,6 @@ package org.tigris.scarab.util.xml;
 
 import org.xml.sax.Attributes;
 
-import org.apache.commons.digester.Digester;
-
 import org.tigris.scarab.om.Transaction;
 import org.tigris.scarab.om.Issue;
 
@@ -61,9 +59,9 @@ import org.tigris.scarab.om.Issue;
  */
 public class TransactionRule extends BaseRule
 {
-    public TransactionRule(Digester digester, String state)
+    public TransactionRule(ImportBean ib)
     {
-        super(digester, state);
+        super(ib);
     }
     
     /**
@@ -74,7 +72,8 @@ public class TransactionRule extends BaseRule
      */
     public void begin(Attributes attributes) throws Exception
     {
-        log().debug("(" + getState() + ") transaction begin");
+        log().debug("(" + getImportBean().getState() + 
+            ") transaction begin");
         super.doInsertionOrValidationAtBegin(attributes);
     }
     
@@ -82,7 +81,7 @@ public class TransactionRule extends BaseRule
     {
         Transaction transaction = new Transaction();
         log().debug("transaction id: " + attributes.getValue("id"));
-        digester.push(transaction);
+        getDigester().push(transaction);
     }
     
     protected void doValidationAtBegin(Attributes attributes)
@@ -95,15 +94,15 @@ public class TransactionRule extends BaseRule
      */
     public void end() throws Exception
     {
-        log().debug("(" + getState() + ") transaction end");
         super.doInsertionOrValidationAtEnd();
+        log().debug("(" + getImportBean().getState() + ") transaction end");
     }
     
     protected void doInsertionAtEnd() throws Exception
     {
-        Transaction transaction = (Transaction)digester.pop();
-        Issue issue = (Issue)digester.pop();
-        digester.push(issue);
+        Transaction transaction = (Transaction)getDigester().pop();
+        Issue issue = (Issue)getDigester().pop();
+        getDigester().push(issue);
     }
     
     protected void doValidationAtEnd() throws Exception

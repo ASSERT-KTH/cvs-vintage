@@ -46,9 +46,7 @@ package org.tigris.scarab.util.xml;
  * individuals on behalf of Collab.Net.
  */
 
-import org.apache.commons.digester.Digester;
-
-import org.tigris.scarab.om.ScarabModule;
+import org.tigris.scarab.om.Module;
 import org.tigris.scarab.om.Issue;
 import org.tigris.scarab.om.IssueType;
 
@@ -64,10 +62,9 @@ public class ArtifactTypeRule extends BaseRule
     /**
      * Sets the state and DependencyTree and calls super(digester)
      */
-    public ArtifactTypeRule(Digester digester, String state, 
-                            DependencyTree dependTree)
+    public ArtifactTypeRule(ImportBean ib)
     {
-        super(digester, state, dependTree);
+        super(ib);
     }
     
     /**
@@ -79,15 +76,18 @@ public class ArtifactTypeRule extends BaseRule
      */
     public void body(String text) throws Exception
     {
-        log().debug("(" + getState() + ") artifact type body: " + text);
+        log().debug("(" + getImportBean().getState() + 
+            ") artifact type body: " + text);
         super.doInsertionOrValidationAtBody(text);
     }
     
     protected void doInsertionAtBody(String artifactTypeName)
         throws Exception
     {
-        String xmlIssueId = (String)digester.pop();
-        ScarabModule module = (ScarabModule)digester.pop();
+        String xmlIssueId = (String)getDigester().pop();
+        // FIXME: no pop tart!
+        Module module = (Module)getDigester().pop();
+        module = getImportBean().getModule();
         IssueType issueType = IssueType.getInstance(artifactTypeName);
         issueType.setName(artifactTypeName);
         Issue issue = Issue.getNewInstance(module, issueType);
@@ -96,18 +96,18 @@ public class ArtifactTypeRule extends BaseRule
         // note the xmlIssueId here doesn't contain the module 
         // prefix,but we need the prefix for 
         // the key of dependency tree
-        String xmlId = module.getCode()+ xmlIssueId;
-        getDependencyTree().addIssueId(xmlId, issue.getIssueId());
-        digester.push(module);
-        digester.push(issue);
+        String xmlId = module.getCode() + xmlIssueId;
+        getImportBean().getDependencyTree().addIssueId(xmlId, issue.getIssueId());
+        getDigester().push(module);
+        getDigester().push(issue);
     }
     
     protected void doValidationAtBody(String artifactTypeName)
     {
-        String xmlIssueId = (String)digester.pop();
-        String moduleCode = (String)digester.pop();
+        String xmlIssueId = (String)getDigester().pop();
+        String moduleCode = (String)getDigester().pop();
         String xmlId = moduleCode + xmlIssueId;
-        digester.push(moduleCode);
-        digester.push(xmlId);
+        getDigester().push(moduleCode);
+        getDigester().push(xmlId);
     }
 }

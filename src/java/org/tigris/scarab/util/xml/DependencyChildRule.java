@@ -46,8 +46,6 @@ package org.tigris.scarab.util.xml;
  * individuals on behalf of Collab.Net.
  */
 
-import org.apache.commons.digester.Digester;
-
 /**
  * Handler for the xpath "scarab/module/issue/dependency/child"
  *
@@ -56,9 +54,9 @@ import org.apache.commons.digester.Digester;
  */
 public class DependencyChildRule extends BaseRule
 {
-    public DependencyChildRule(Digester digester, String state)
+    public DependencyChildRule(ImportBean ib)
     {
-        super(digester, state);
+        super(ib);
     }
     
     /**
@@ -70,8 +68,9 @@ public class DependencyChildRule extends BaseRule
      */
     public void body(String text) throws Exception
     {
-        log().debug("(" + getState() + ") dependancy child body: " + text);
-        digester.push(text);
-        digester.push(DependencyNode.NODE_TYPE_CHILD);
+        log().debug("(" + getImportBean().getState() + 
+            ") dependancy child body: " + text);
+        getDigester().push(text);
+        getDigester().push(DependencyNode.NODE_TYPE_CHILD);
     }
 }

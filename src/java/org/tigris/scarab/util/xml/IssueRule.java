@@ -48,8 +48,6 @@ package org.tigris.scarab.util.xml;
 
 import org.xml.sax.Attributes;
 
-import org.apache.commons.digester.Digester;
-
 import org.tigris.scarab.om.Issue;
 
 /**
@@ -60,9 +58,9 @@ import org.tigris.scarab.om.Issue;
  */
 public class IssueRule extends BaseRule 
 {
-    public IssueRule(Digester digester, String state)
+    public IssueRule(ImportBean ib)
     {
-        super(digester, state);
+        super(ib);
     }
     
     /**
@@ -73,8 +71,8 @@ public class IssueRule extends BaseRule
      */
     public void begin(Attributes attributes) throws Exception
     {
-        log().debug("(" + getState() + ") issue begin");
-        digester.push(attributes.getValue("id"));
+        log().debug("(" + getImportBean().getState() + ") issue begin");
+        getDigester().push(attributes.getValue("id"));
     }
     
     /**
@@ -83,17 +81,17 @@ public class IssueRule extends BaseRule
      */
     public void end() throws Exception
     {
-        log().debug("(" + getState() + ") issue end");
         super.doInsertionOrValidationAtEnd();
+        log().debug("(" + getImportBean().getState() + ") issue end");
     }
     
     protected void doInsertionAtEnd()
     {
-        Issue issue = (Issue)digester.pop();
+        Issue issue = (Issue)getDigester().pop();
     }
     
     protected void doValidationAtEnd()
     {
-        String xmlId = (String)digester.pop();
+        String xmlId = (String)getDigester().pop();
     }
 }

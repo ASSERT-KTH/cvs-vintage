@@ -46,25 +46,19 @@ package org.tigris.scarab.util.xml;
  * individuals on behalf of Collab.Net.
  */
 
-import org.apache.fulcrum.security.TurbineSecurity;
-
-import org.tigris.scarab.om.ScarabUser;
-import org.tigris.scarab.om.Transaction;
-import org.tigris.scarab.om.TransactionType;
-
 /**
- * Handler for the xpath "scarab/module/issue/transaction/committed-by"
+ * Handler for the xpath "scarab/module/user/role".
  *
- * @author <a href="mailto:kevin.minshull@bitonic.com">Kevin Minshull</a>
- * @author <a href="mailto:richard.han@bitonic.com">Richard Han</a>
+ * @author <a href="mailto:jon@collab.net">Jon Scott Stevens</a>
  */
-public class TransactionCommittedByRule extends BaseRule
+public class RoleRule extends BaseRule 
 {
-    public TransactionCommittedByRule(ImportBean ib)
+
+    public RoleRule(ImportBean ib)
     {
         super(ib);
     }
-    
+
     /**
      * This method is called when the body of a matching XML element
      * is encountered.  If the element has no body, this method is
@@ -72,27 +66,13 @@ public class TransactionCommittedByRule extends BaseRule
      *
      * @param text The text of the body of this element
      */
-    public void body(String text)
-        throws Exception
+    public void body(String text) throws Exception
     {
-        log().debug("(" + getImportBean().getState() + 
-            ") transaction committed by body: " + text);
-        super.doInsertionOrValidationAtBody(text);
-    }
-    
-    protected void doInsertionAtBody(String committedByName)
-        throws Exception
-    {
-        ScarabUser user = (ScarabUser)TurbineSecurity.getUser(committedByName);
-        TransactionType transactionType = (TransactionType)getDigester().pop();
-        Transaction transaction = (Transaction)getDigester().pop();
-        transaction.create(transactionType.getTypeId(), user, null);
-        getDigester().push(transaction);
-    }
-    
-    protected void doValidationAtBody(String committedByName)
-        throws Exception
-    {
-        validateUser(committedByName);
+        if (text != null && text.length() > 0)
+        {
+            getImportBean().getRoleList().add(text);
+            log().debug("(" + getImportBean().getState() + 
+                ") added role: " + text);
+        }
     }
 }

@@ -46,8 +46,6 @@ package org.tigris.scarab.util.xml;
  * individuals on behalf of Collab.Net.
  */
 
-import org.apache.commons.digester.Digester;
-
 /**
  * Generic handler to push the text onto the stack.
  *
@@ -56,8 +54,6 @@ import org.apache.commons.digester.Digester;
  */
 public class PropertyRule extends BaseRule
 {
-    /** String identifing this particular <code>TestRule</code> */
-    private String identifier = null;
     
     /**
      * Base constructor.
@@ -65,10 +61,9 @@ public class PropertyRule extends BaseRule
      * @param digester The digester with which this rule is associated
      * @param identifier Used to tell which PropertyRule is which
      */
-    public PropertyRule(Digester digester, String state, String identifier)
+    public PropertyRule(ImportBean ib)
     {
-        super(digester, state);
-        this.identifier = identifier;
+        super(ib);
     }
 
     /**
@@ -76,7 +71,7 @@ public class PropertyRule extends BaseRule
      */
     public String getIdentifier()
     {
-        return identifier;
+        return getImportBean().getIdentifier();
     }
     
     /** 
@@ -84,7 +79,7 @@ public class PropertyRule extends BaseRule
      */
     public String toString()
     {
-        return identifier;
+        return getImportBean().getIdentifier();
     }
 
     /**
@@ -96,7 +91,8 @@ public class PropertyRule extends BaseRule
      */
     public void body(String text) throws Exception
     {
-        log().debug("(" + getState() + ") " + identifier + " body: " + text);
-        digester.push(text);
+        log().debug("(" + getImportBean().getState() + ") " + 
+            getImportBean().getIdentifier() + " body: " + text);
+        getDigester().push(text);
     }
 }

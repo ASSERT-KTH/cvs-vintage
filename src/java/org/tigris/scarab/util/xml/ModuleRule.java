@@ -46,12 +46,14 @@ package org.tigris.scarab.util.xml;
  * individuals on behalf of Collab.Net.
  */
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.xml.sax.Attributes;
 
-import org.apache.commons.digester.Digester;
 import org.apache.torque.om.NumberKey;
 
-import org.tigris.scarab.om.ScarabModule;
+import org.tigris.scarab.om.Module;
 import org.tigris.scarab.om.ModuleManager;
 
 /**
@@ -62,10 +64,9 @@ import org.tigris.scarab.om.ModuleManager;
  */
 public class ModuleRule extends BaseRule
 {
-    public ModuleRule(Digester digester, String state, 
-                      DependencyTree dependTree)
+    public ModuleRule(ImportBean ib)
     {
-        super(digester, state, dependTree);
+        super(ib);
     }
     
     /**
@@ -76,42 +77,45 @@ public class ModuleRule extends BaseRule
      */
     public void begin(Attributes attributes) throws Exception
     {
-        log().debug("(" + getState() + ") module begin");
+        log().debug("(" + getImportBean().getState() + ") module begin");
         super.doInsertionOrValidationAtBegin(attributes);
     }
     
     protected void doInsertionAtBegin(Attributes attributes) throws Exception
     {
-        ScarabModule module = null;
+        Module module = null;
         
         // try to find the module
         try
         {
-            module = (ScarabModule)ModuleManager
+            module = (Module)ModuleManager
                 .getInstance(new NumberKey(attributes.getValue("id")));
         }
         catch (Exception e)
         {
-            module = (ScarabModule)ModuleManager.getInstance();
+            module = (Module)ModuleManager.getInstance();
         }
-        module.setParentId(attributes.getValue("parent"));
+        module.setParentId(new NumberKey(attributes.getValue("parent")));
         module.setOwnerId("0");
-        digester.push(module);
+        getDigester().push(module);
+        getImportBean().setModule(module);
+        log().debug("(" + getImportBean().getState() + 
+            ") digested module: " + module.getName());
     }
     
     protected void doValidationAtBegin(Attributes attributes) throws Exception
     {
-        digester.push(attributes.getValue("id"));
+        getDigester().push(attributes.getValue("id"));
         
         try
         {
-            ScarabModule parentModule = (ScarabModule)ModuleManager
+            Module parentModule = (Module)ModuleManager
                 .getInstance(new NumberKey(attributes.getValue("parent")));
         }
         catch (Exception e)
         {
             // store it for check later in file
-            getDependencyTree().addModuleDependency(
+            getImportBean().getDependencyTree().addModuleDependency(
                 new NumberKey(attributes.getValue("id")), 
                 new NumberKey(attributes.getValue("parent")));
         }
@@ -123,17 +127,25 @@ public class ModuleRule extends BaseRule
      */
     public void end() throws Exception
     {
-        log().debug("(" + getState() + ") module end");
         super.doInsertionOrValidationAtEnd();
+        List userList = getImportBean().getUserList();
+        if (userList != null && userList.size() > 0)
+        {
+            log().debug("(" + getImportBean().getState() + ") module has: " 
+                + userList.size() + " users");
+            getImportBean().getUserList().clear();
+        }
+        log().debug("(" + getImportBean().getState() + ") module end");
+        
     }
     
     protected void doInsertionAtEnd()
     {
-        ScarabModule module = (ScarabModule)digester.pop();
+        Module module = (Module)getDigester().pop();
     }
     
     protected void doValidationAtEnd()
     {
-        String moduleCode = (String)digester.pop();
+        String moduleCode = (String)getDigester().pop();
     }
 }

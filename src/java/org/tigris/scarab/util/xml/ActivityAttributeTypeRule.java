@@ -46,7 +46,6 @@ package org.tigris.scarab.util.xml;
  * individuals on behalf of Collab.Net.
  */
 
-import org.apache.commons.digester.Digester;
 import org.tigris.scarab.om.AttributeType;
 
 /**
@@ -60,9 +59,9 @@ public class ActivityAttributeTypeRule extends BaseRule
     /**
      * Constructor just calls super
      */
-    public ActivityAttributeTypeRule(Digester digester, String state)
+    public ActivityAttributeTypeRule(ImportBean ib)
     {
-        super(digester, state);
+        super(ib);
     }
     
     /**
@@ -74,10 +73,11 @@ public class ActivityAttributeTypeRule extends BaseRule
      */
     public void body(String text) throws Exception
     {
-        log().debug("(" + getState() + ") activity attribute type body: " + text);
+        log().debug("(" + getImportBean().getState() + 
+            ") activity attribute type body: " + text);
         AttributeType issueType = AttributeType.getInstance(text);
-        ActivityInfo activityInfo = (ActivityInfo)digester.pop();
+        ActivityInfo activityInfo = (ActivityInfo)getDigester().pop();
         activityInfo.setType(issueType);
-        digester.push(activityInfo);
+        getDigester().push(activityInfo);
     }
 }

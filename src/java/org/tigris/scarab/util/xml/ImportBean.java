@@ -46,53 +46,103 @@ package org.tigris.scarab.util.xml;
  * individuals on behalf of Collab.Net.
  */
 
-import org.apache.fulcrum.security.TurbineSecurity;
+import java.util.List;
+import java.util.ArrayList;
 
-import org.tigris.scarab.om.ScarabUser;
-import org.tigris.scarab.om.Transaction;
-import org.tigris.scarab.om.TransactionType;
+import org.tigris.scarab.om.Module;
+import org.apache.commons.digester.Digester;
 
 /**
- * Handler for the xpath "scarab/module/issue/transaction/committed-by"
  *
- * @author <a href="mailto:kevin.minshull@bitonic.com">Kevin Minshull</a>
- * @author <a href="mailto:richard.han@bitonic.com">Richard Han</a>
+ * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
+ * @version $Id: ImportBean.java,v 1.1 2002/03/28 03:55:22 jon Exp $
  */
-public class TransactionCommittedByRule extends BaseRule
+public class ImportBean
 {
-    public TransactionCommittedByRule(ImportBean ib)
+    private String state = null;
+    private Digester digester = null;
+    private DependencyTree dependencyTree = null;
+    private List roleList = null;
+    private List userList = null;
+    private Module module = null;
+    /** String identifing this particular <code>TestRule</code> */
+    private String identifier = null;
+
+    public String getState()
     {
-        super(ib);
+        return this.state;
     }
     
-    /**
-     * This method is called when the body of a matching XML element
-     * is encountered.  If the element has no body, this method is
-     * not called at all.
-     *
-     * @param text The text of the body of this element
-     */
-    public void body(String text)
-        throws Exception
+    public void setState(String value)
     {
-        log().debug("(" + getImportBean().getState() + 
-            ") transaction committed by body: " + text);
-        super.doInsertionOrValidationAtBody(text);
+        this.state = value;
     }
     
-    protected void doInsertionAtBody(String committedByName)
-        throws Exception
+    public Digester getDigester()
     {
-        ScarabUser user = (ScarabUser)TurbineSecurity.getUser(committedByName);
-        TransactionType transactionType = (TransactionType)getDigester().pop();
-        Transaction transaction = (Transaction)getDigester().pop();
-        transaction.create(transactionType.getTypeId(), user, null);
-        getDigester().push(transaction);
+        return this.digester;
     }
     
-    protected void doValidationAtBody(String committedByName)
-        throws Exception
+    public void setDigester(Digester value)
     {
-        validateUser(committedByName);
+        this.digester = value;
+    }
+    
+    public DependencyTree getDependencyTree()
+    {
+        return this.dependencyTree;
+    }
+    
+    public void setDependencyTree(DependencyTree value)
+    {
+        this.dependencyTree = value;
+    }
+    
+    public List getRoleList()
+    {
+        if (this.roleList == null)
+        {
+            this.roleList = new ArrayList();
+        }
+        return this.roleList;
+    }
+    
+    public void setRoleList(List value)
+    {
+        this.roleList = value;
+    }
+
+    public List getUserList()
+    {
+        if (this.userList == null)
+        {
+            this.userList = new ArrayList();
+        }
+        return this.userList;
+    }
+    
+    public void setUserList(List value)
+    {
+        this.userList = value;
+    }
+
+    public Module getModule()
+    {
+        return this.module;
+    }
+    
+    public void setModule(Module value)
+    {
+        this.module = value;
+    }
+
+    public String getIdentifier()
+    {
+        return this.identifier;
+    }
+    
+    public void setIdentifier(String value)
+    {
+        this.identifier = value;
     }
 }

@@ -50,8 +50,6 @@ import java.text.SimpleDateFormat;
 
 import org.xml.sax.Attributes;
 
-import org.apache.commons.digester.Digester;
-
 import org.tigris.scarab.om.Attachment;
 
 /**
@@ -63,9 +61,9 @@ import org.tigris.scarab.om.Attachment;
 public class AttachmentModifiedDateRule extends BaseRule
 {
 
-    public AttachmentModifiedDateRule(Digester digester, String state)
+    public AttachmentModifiedDateRule(ImportBean ib)
     {
-        super(digester, state);
+        super(ib);
     }
     
     /**
@@ -76,8 +74,9 @@ public class AttachmentModifiedDateRule extends BaseRule
      */
     public void begin(Attributes attributes) throws Exception
     {
-        log().debug("(" + getState() + ") attachment modified date begin");
-        digester.push(attributes.getValue("format"));
+        log().debug("(" + getImportBean().getState() + 
+            ") attachment modified date begin");
+        getDigester().push(attributes.getValue("format"));
     }
     
     /**
@@ -89,23 +88,24 @@ public class AttachmentModifiedDateRule extends BaseRule
      */
     public void body(String text) throws Exception
     {
-        log().debug("(" + getState() + ") attachment modified date body: " + text);
+        log().debug("(" + getImportBean().getState() + 
+            ") attachment modified date body: " + text);
         super.doInsertionOrValidationAtBody(text);
     }
     
     protected void doInsertionAtBody(String date) throws Exception
     {
-        String format = (String)digester.pop();
+        String format = (String)getDigester().pop();
         SimpleDateFormat sdf = new SimpleDateFormat(format);
         sdf.setLenient(false);
-        Attachment attachment = (Attachment)digester.pop();
+        Attachment attachment = (Attachment)getDigester().pop();
         attachment.setModifiedDate(sdf.parse(date));
-        digester.push(attachment);
+        getDigester().push(attachment);
     }
 
     protected void doValidationAtBody(String date) throws Exception
     {
-        String format = (String)digester.pop();
+        String format = (String)getDigester().pop();
         SimpleDateFormat sdf = new SimpleDateFormat(format);
         sdf.parse(date);
     }

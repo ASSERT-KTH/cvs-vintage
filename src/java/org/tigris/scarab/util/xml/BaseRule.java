@@ -67,60 +67,24 @@ import org.tigris.scarab.om.ScarabUser;
  */
 public abstract class BaseRule extends Rule
 {
-    private String state = null;
-    private DependencyTree dependencyTree = null;
-    private ArrayList userList = null;
+    private ImportBean ib = null;
     private static Category cat = 
         Category.getInstance(org.tigris.scarab.util.xml.XMLImport.class);
-    
-    /**
-     * Sets the state and calls super(digester)
-     */
-    protected BaseRule(Digester digester, String state)
+
+    protected BaseRule(ImportBean ib)
     {
-        super(digester);
-        this.state = state;
+        super(ib.getDigester());
+        this.ib = ib;
     }
-    
-    /**
-     * Sets the state and DependencyTree and calls super(digester)
-     */
-    protected BaseRule(Digester digester, String state, 
-                       DependencyTree dependencyTree)
-    {
-        this(digester, state);
-        this.dependencyTree = dependencyTree;
-    }
-    
-    public BaseRule(Digester digester, String state, ArrayList userList)
-    {
-        this(digester, state);
-        this.userList = userList;
-    }
-    
+
     public Category log()
     {
         return cat;
     }
-    
-    public String getState()
+
+    public ImportBean getImportBean()
     {
-        return this.state;
-    }
-    
-    public Digester getDigester()
-    {
-        return this.digester;
-    }
-    
-    public DependencyTree getDependencyTree()
-    {
-        return this.dependencyTree;
-    }    
-    
-    public List getUserList()
-    {
-        return this.userList;
+        return this.ib;
     }
     
     /**
@@ -133,11 +97,11 @@ public abstract class BaseRule extends Rule
     protected void doInsertionOrValidationAtBegin(Attributes attributes)
         throws Exception
     {
-        if(getState().equals(XMLImport.STATE_DB_INSERTION))
+        if (getImportBean().getState().equals(XMLImport.STATE_DB_INSERTION))
         {
             doInsertionAtBegin(attributes);
         }
-        else if (getState().equals(XMLImport.STATE_DB_VALIDATION))
+        else if (getImportBean().getState().equals(XMLImport.STATE_DB_VALIDATION))
         {
             doValidationAtBegin(attributes);
         }
@@ -153,11 +117,11 @@ public abstract class BaseRule extends Rule
     protected void doInsertionOrValidationAtBody(String text)
         throws Exception
     {
-        if(getState().equals(XMLImport.STATE_DB_INSERTION))
+        if (getImportBean().getState().equals(XMLImport.STATE_DB_INSERTION))
         {
             doInsertionAtBody(text);
         }
-        else if (getState().equals(XMLImport.STATE_DB_VALIDATION))
+        else if (getImportBean().getState().equals(XMLImport.STATE_DB_VALIDATION))
         {
             doValidationAtBody(text);
         }
@@ -170,11 +134,11 @@ public abstract class BaseRule extends Rule
     protected void doInsertionOrValidationAtEnd()
         throws Exception
     {
-        if(getState().equals(XMLImport.STATE_DB_INSERTION))
+        if (getImportBean().getState().equals(XMLImport.STATE_DB_INSERTION))
         {
             doInsertionAtEnd();
         }
-        else if (getState().equals(XMLImport.STATE_DB_VALIDATION))
+        else if (getImportBean().getState().equals(XMLImport.STATE_DB_VALIDATION))
         {
             doValidationAtEnd();
         }
@@ -228,7 +192,7 @@ public abstract class BaseRule extends Rule
         }
         catch(Exception e)
         {
-            if (!userList.contains(username))
+            if (!getImportBean().getUserList().contains(username))
             {
                 throw new Exception("User: " + username + ", is not defined");
             }

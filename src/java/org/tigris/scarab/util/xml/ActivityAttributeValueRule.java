@@ -46,8 +46,6 @@ package org.tigris.scarab.util.xml;
  * individuals on behalf of Collab.Net.
  */
 
-import org.apache.commons.digester.Digester;
-
 /**
  * Handler for the xpath "scarab/module/issue/transaction/activity/activity-attribute/value"
  *
@@ -56,9 +54,9 @@ import org.apache.commons.digester.Digester;
  */
 public class ActivityAttributeValueRule extends BaseRule
 {
-    public ActivityAttributeValueRule(Digester digester, String state)
+    public ActivityAttributeValueRule(ImportBean ib)
     {
-        super(digester, state);
+        super(ib);
     }
 
     /**
@@ -70,9 +68,10 @@ public class ActivityAttributeValueRule extends BaseRule
      */
     public void body(String text) throws Exception
     {
-        log().debug("(" + getState() + ") activity attribute value body: " + text);
-        ActivityInfo activityInfo = (ActivityInfo)digester.pop();
+        log().debug("(" + getImportBean().getState() + 
+            ") activity attribute value body: " + text);
+        ActivityInfo activityInfo = (ActivityInfo)getDigester().pop();
         activityInfo.setValue(text);
-        digester.push(activityInfo);
+        getDigester().push(activityInfo);
     }
 }

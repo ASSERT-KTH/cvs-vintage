@@ -46,9 +46,7 @@ package org.tigris.scarab.util.xml;
  * individuals on behalf of Collab.Net.
  */
 
-import org.apache.commons.digester.Digester;
-
-import org.tigris.scarab.om.ScarabModule;
+import org.tigris.scarab.om.Module;
 import org.tigris.scarab.om.ModuleManager;
 
 import org.apache.torque.om.NumberKey;
@@ -61,9 +59,9 @@ import org.apache.torque.om.NumberKey;
  */
 public class ModuleCodeRule extends BaseRule
 {
-    public ModuleCodeRule(Digester digester, String state)
+    public ModuleCodeRule(ImportBean ib)
     {
-        super(digester, state);
+        super(ib);
     }
     
     /**
@@ -75,29 +73,29 @@ public class ModuleCodeRule extends BaseRule
      */
     public void body(String text) throws Exception
     {
-        log().debug("(" + getState() + ") module code body: " + text);
+        log().debug("(" + getImportBean().getState() + 
+            ") module code body: " + text);
         super.doInsertionOrValidationAtBody(text);
     }
     
     protected void doInsertionAtBody(String moduleCode)
         throws Exception
     {
-        ScarabModule module = (ScarabModule)digester.pop();
+        // FIXME: get rid of the pop tart
+        Module module = (Module)getDigester().pop();
+        module = getImportBean().getModule();
         module.setCode(moduleCode);
-        if (module.isNew())
-        {
-            module.save();
-        }
-        digester.push(module);
+        module.save();
+        getDigester().push(module);
     }
     
     protected void doValidationAtBody(String moduleCode)
         throws Exception
     {
-        ScarabModule module;
-        String moduleId = (String)digester.pop();
-        
-        module = (ScarabModule)ModuleManager
+        Module module;
+        String moduleId = (String)getDigester().pop();
+// FIXME: this should use getImportBean().getModule()
+        module = (Module)ModuleManager
             .getInstance(new NumberKey(moduleId));
         //make sure the existing module has the same code
         String existingModuleCode = module.getCode();
@@ -111,7 +109,7 @@ public class ModuleCodeRule extends BaseRule
         }
         else
         {
-            digester.push(moduleCode);
+            getDigester().push(moduleCode);
         }
     }
 }

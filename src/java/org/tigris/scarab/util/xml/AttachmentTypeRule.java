@@ -46,8 +46,6 @@ package org.tigris.scarab.util.xml;
  * individuals on behalf of Collab.Net.
  */
 
-import org.apache.commons.digester.Digester;
-
 import org.tigris.scarab.om.Attachment;
 import org.tigris.scarab.om.AttachmentType;
 
@@ -59,9 +57,9 @@ import org.tigris.scarab.om.AttachmentType;
  */
 public class AttachmentTypeRule extends BaseRule
 {
-    public AttachmentTypeRule(Digester digester, String state)
+    public AttachmentTypeRule(ImportBean ib)
     {
-        super(digester, state);
+        super(ib);
     }
 
     /**
@@ -73,21 +71,21 @@ public class AttachmentTypeRule extends BaseRule
      */
     public void body(String text) throws Exception
     {
-        log().debug("(" + getState() +") attachment type body: " + text);
+        log().debug("(" + getImportBean().getState() +") attachment type body: " + text);
         super.doInsertionOrValidationAtBody(text);
     }
     
     protected void doInsertionAtBody(String attachmentTypeName)
         throws Exception
     {
-        Attachment attachment = (Attachment)digester.pop();
+        Attachment attachment = (Attachment)getDigester().pop();
         AttachmentType attachmentType = AttachmentType.getInstance(attachmentTypeName);
         if (attachmentType == null)
         {
             throw new Exception("Invalid attachment type: " + attachmentTypeName);
         }
         attachment.setAttachmentType(attachmentType);
-        digester.push(attachment);
+        getDigester().push(attachment);
     }
 
     protected void doValidationAtBody(String attachmentTypeName)

@@ -52,8 +52,6 @@ import java.io.FileWriter;
 
 import org.xml.sax.Attributes;
 
-import org.apache.commons.digester.Digester;
-
 import org.tigris.scarab.om.Issue;
 import org.tigris.scarab.om.Attachment;
 
@@ -65,9 +63,9 @@ import org.tigris.scarab.om.Attachment;
  */
 public class AttachmentRule extends BaseRule
 {
-    public AttachmentRule(Digester digester, String state)
+    public AttachmentRule(ImportBean ib)
     {
-        super(digester, state);
+        super(ib);
     }
     
     /**
@@ -78,14 +76,15 @@ public class AttachmentRule extends BaseRule
      */
     public void begin(Attributes attributes) throws Exception
     {
-        log().debug("(" + getState() + ") attachment begin");
+        log().debug("(" + getImportBean().getState() + 
+            ") attachment begin");
         super.doInsertionOrValidationAtBegin(attributes);
     }
     
     protected void doInsertionAtBegin(Attributes attributes)
     {
         Attachment attachment = new Attachment();
-        digester.push(attachment);
+        getDigester().push(attachment);
     }
     
     protected void doValidationAtBegin(Attributes attributes)
@@ -98,8 +97,8 @@ public class AttachmentRule extends BaseRule
      */
     public void end() throws Exception
     {
-        log().debug("(" + getState() + ") attachment end");
         super.doInsertionOrValidationAtEnd();
+        log().debug("(" + getImportBean().getState() + ") attachment end");
     }
     
     protected void doInsertionAtEnd()
@@ -108,10 +107,10 @@ public class AttachmentRule extends BaseRule
         // FIXME! I have probably messed this up, as I did not follow 
         // the logic. Are we taking an existing Attachment that has been
         // stored previously and assigning it to a new issue? -jdm
-        Attachment attachment = (Attachment)digester.pop();
+        Attachment attachment = (Attachment)getDigester().pop();
         String path = attachment.getFullPath();
 
-        Issue issue = (Issue)digester.pop();
+        Issue issue = (Issue)getDigester().pop();
         attachment.setIssueId(issue.getIssueId());
         String newPath = attachment.getFullPath();
 
@@ -143,7 +142,7 @@ public class AttachmentRule extends BaseRule
             }            
         }
         attachment.save();
-        digester.push(issue);
+        getDigester().push(issue);
     }
     
     protected void doValidationAtEnd()

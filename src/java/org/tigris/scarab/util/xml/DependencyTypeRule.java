@@ -46,8 +46,6 @@ package org.tigris.scarab.util.xml;
  * individuals on behalf of Collab.Net.
  */
 
-import org.apache.commons.digester.Digester;
-
 import org.tigris.scarab.om.DependType;
 
 /**
@@ -58,9 +56,9 @@ import org.tigris.scarab.om.DependType;
  */
 public class DependencyTypeRule extends BaseRule
 {
-    public DependencyTypeRule(Digester digester, String state)
+    public DependencyTypeRule(ImportBean ib)
     {
-        super(digester, state);
+        super(ib);
     }
     
     /**
@@ -73,8 +71,8 @@ public class DependencyTypeRule extends BaseRule
     public void body(String text)
         throws Exception
     {
-        log().debug("(" + getState() + ") dependency type body: " +text);
+        log().debug("(" + getImportBean().getState() + ") dependency type body: " + text);
         DependType dependType = DependType.findDependTypeByName(text);
-        digester.push(dependType);
+        getDigester().push(dependType);
     }
 }

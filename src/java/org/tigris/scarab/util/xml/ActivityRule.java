@@ -49,8 +49,6 @@ import java.util.ArrayList;
 
 import org.xml.sax.Attributes;
 
-import org.apache.commons.digester.Digester;
-
 import org.tigris.scarab.om.Activity;
 import org.tigris.scarab.om.Transaction;
 import org.tigris.scarab.om.TransactionTypePeer;
@@ -69,11 +67,9 @@ import org.tigris.scarab.om.ParentChildAttributeOption;
  */
 public class ActivityRule extends BaseRule
 {
-    public ActivityRule(Digester digester,
-                        String state, 
-                        ArrayList userList)
+    public ActivityRule(ImportBean ib)
     {
-        super(digester, state, userList);
+        super(ib);
     }
     
     /**
@@ -84,20 +80,21 @@ public class ActivityRule extends BaseRule
      */
     public void begin(Attributes attributes) throws Exception
     {
-        log().debug("(" + getState() + ") activity begin()");
+        log().debug("(" + getImportBean().getState() + 
+            ") activity begin()");
         super.doInsertionOrValidationAtBegin(attributes);
     }
     
     protected void doInsertionAtBegin(Attributes attributes)
     {
         ActivityInfo activityInfo = new ActivityInfo();
-        digester.push(activityInfo);
+        getDigester().push(activityInfo);
     }
     
     protected void doValidationAtBegin(Attributes attributes)
     {
         ActivityInfo activityInfo = new ActivityInfo();
-        digester.push(activityInfo);
+        getDigester().push(activityInfo);
     }
     
     /**
@@ -106,8 +103,9 @@ public class ActivityRule extends BaseRule
      */
     public void end() throws Exception
     {
-        log().debug("(" + getState() + ") activity end()");
         super.doInsertionOrValidationAtEnd();
+        log().debug("(" + getImportBean().getState() + 
+            ") activity end()");
     }
     
     /**
@@ -119,9 +117,9 @@ public class ActivityRule extends BaseRule
     protected void doInsertionAtEnd()
         throws Exception
     {
-        ActivityInfo activityInfo = (ActivityInfo)digester.pop();
-        Transaction transaction = (Transaction)digester.pop();
-        Issue issue = (Issue)digester.pop();
+        ActivityInfo activityInfo = (ActivityInfo)getDigester().pop();
+        Transaction transaction = (Transaction)getDigester().pop();
+        Issue issue = (Issue)getDigester().pop();
         Attribute attribute = Attribute.getInstance(activityInfo.getName());
         if(attribute == null)
         {
@@ -143,7 +141,8 @@ public class ActivityRule extends BaseRule
             }
         }
         
-        AttributeValue attributeValue = AttributeValue.getNewInstance(attribute, issue);
+        AttributeValue attributeValue = 
+            AttributeValue.getNewInstance(attribute, issue);
         
         if (attribute.isOptionAttribute())
         {
@@ -168,7 +167,8 @@ public class ActivityRule extends BaseRule
             attributeValue.setValue(activityInfo.getValue());
         }
         
-        if (transaction.getTransactionType().getTypeId().equals(TransactionTypePeer.CREATE_ISSUE__PK))
+        if (transaction.getTransactionType().getTypeId()
+            .equals(TransactionTypePeer.CREATE_ISSUE__PK))
         {
             attributeValue.startTransaction(transaction);
             attributeValue.save();
@@ -176,21 +176,24 @@ public class ActivityRule extends BaseRule
         else
         {
             Activity activity = new Activity();
-            activity.create(issue, attribute, activityInfo.getDescription(), transaction,
-                            activityInfo.getOldValue(), activityInfo.getValue());
+            activity.create(issue, attribute, activityInfo.getDescription(), 
+                            transaction, activityInfo.getOldValue(), 
+                            activityInfo.getValue());
         }
         
-        digester.push(issue);
-        digester.push(transaction);
+        getDigester().push(issue);
+        getDigester().push(transaction);
     }
     
     protected void doValidationAtEnd()
         throws Exception
     {
-        ActivityInfo activityInfo = (ActivityInfo)digester.pop();
-        if (activityInfo.getName().equals("Assigned To")) {
+        ActivityInfo activityInfo = (ActivityInfo)getDigester().pop();
+        if (activityInfo.getName().equals("Assigned To"))
+        {
             validateUser(activityInfo.getValue());
-            if (activityInfo.getOldValue() != null) {
+            if (activityInfo.getOldValue() != null)
+            {
                 validateUser(activityInfo.getOldValue());
             }
         }

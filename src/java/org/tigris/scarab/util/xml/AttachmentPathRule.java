@@ -48,8 +48,6 @@ package org.tigris.scarab.util.xml;
 
 import java.io.File;
 
-import org.apache.commons.digester.Digester;
-
 import org.tigris.scarab.om.Attachment;
 
 /**
@@ -60,9 +58,9 @@ import org.tigris.scarab.om.Attachment;
  */
 public class AttachmentPathRule extends BaseRule
 {
-    public AttachmentPathRule(Digester digester, String state)
+    public AttachmentPathRule(ImportBean ib)
     {
-        super(digester, state);
+        super(ib);
     }
     
     /**
@@ -74,7 +72,8 @@ public class AttachmentPathRule extends BaseRule
      */
     public void body(String text) throws Exception
     {
-        log().debug("(" + getState() + ") attachment path body: " + text);
+        log().debug("(" + getImportBean().getState() + 
+            ") attachment path body: " + text);
         File file = new File(text);
         if (!file.exists() || !file.isFile())
         {
@@ -86,9 +85,9 @@ public class AttachmentPathRule extends BaseRule
     protected void doInsertionAtBody(String text)
         throws Exception
     {
-        Attachment attachment = (Attachment)digester.pop();
+        Attachment attachment = (Attachment)getDigester().pop();
         attachment.setFileName(text);
-        digester.push(attachment);
+        getDigester().push(attachment);
     }
     
     protected void doValidationAtBody(String text)
