@@ -22,6 +22,8 @@ import javax.swing.JTable;
 import javax.swing.UIManager;
 
 import org.columba.mail.gui.table.model.MessageNode;
+import org.columba.mail.message.ColumbaHeader;
+import org.columba.ristretto.message.Address;
 
 public class FromRenderer extends DefaultLabelRenderer {
 
@@ -60,7 +62,9 @@ public class FromRenderer extends DefaultLabelRenderer {
 			return this;
 		}
 
-		setText( (String) ((MessageNode) value).getHeader().get("columba.from"));
+		ColumbaHeader header = (ColumbaHeader) ((MessageNode) value).getHeader();
+		
+		setText( ((Address)header.get("columba.from")).getShortAddress());
 
 		return super.getTableCellRendererComponent(
 			table,
