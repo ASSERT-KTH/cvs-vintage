@@ -37,7 +37,7 @@ Password:
         $login.Password.Message<br>
     #end
    <input name= "$login.Password.Key"
-        value="" size="25" type="text" onchange="document.login.submit();">
+        value="" size="25" type="password" onchange="document.login.submit();">
 </p>
 
 <input type="submit" name="eventSubmit_doLogin" value="Login">
