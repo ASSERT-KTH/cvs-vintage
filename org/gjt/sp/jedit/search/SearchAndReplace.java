@@ -60,7 +60,7 @@ import org.gjt.sp.util.Log;
  *
  * @author Slava Pestov
  * @author John Gellene (API documentation)
- * @version $Id: SearchAndReplace.java,v 1.57 2003/10/10 23:46:24 spestov Exp $
+ * @version $Id: SearchAndReplace.java,v 1.58 2004/02/24 03:46:51 spestov Exp $
  */
 public class SearchAndReplace
 {
@@ -414,7 +414,7 @@ public class SearchAndReplace
 	{
 		// component that will parent any dialog boxes
 		Component comp = SearchDialog.getSearchDialog(view);
-		if(comp == null)
+		if(comp == null || !comp.isShowing())
 			comp = view;
 
 		boolean repeat = false;

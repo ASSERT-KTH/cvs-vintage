@@ -40,7 +40,7 @@ import org.gjt.sp.jedit.*;
 /**
  * Search and replace dialog.
  * @author Slava Pestov
- * @version $Id: SearchDialog.java,v 1.51 2004/02/22 20:00:54 spestov Exp $
+ * @version $Id: SearchDialog.java,v 1.52 2004/02/24 03:46:51 spestov Exp $
  */
 public class SearchDialog extends EnhancedDialog implements EBComponent
 {
@@ -71,7 +71,7 @@ public class SearchDialog extends EnhancedDialog implements EBComponent
 	 */
 	public static void preloadSearchDialog(View view)
 	{
-		if(OperatingSystem.isMacOS())
+		if(Debug.DISABLE_SEARCH_DIALOG_POOL)
 			return;
 
 		SearchDialog dialog = new SearchDialog(view);
