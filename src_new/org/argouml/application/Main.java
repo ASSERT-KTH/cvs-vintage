@@ -1,4 +1,4 @@
-// $Id: Main.java,v 1.85 2003/09/22 18:58:42 bobtarling Exp $
+// $Id: Main.java,v 1.86 2003/10/05 13:08:41 linus Exp $
 // Copyright (c) 1996-2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -28,6 +28,7 @@ import java.awt.Cursor;
 import java.awt.Dimension;
 import java.awt.Toolkit;
 import java.io.File;
+import java.io.InputStream;
 import java.io.IOException;
 import java.net.URL;
 import java.util.Enumeration;
@@ -41,7 +42,10 @@ import javax.swing.JOptionPane;
 import javax.swing.ToolTipManager;
 
 import org.apache.log4j.Logger;
+import org.apache.log4j.BasicConfigurator;
 import org.apache.log4j.PropertyConfigurator;
+import org.apache.log4j.Logger;
+import org.apache.log4j.Level;
 import org.argouml.application.api.Argo;
 import org.argouml.application.api.CommandLineInterface;
 import org.argouml.application.api.Configuration;
@@ -516,19 +520,27 @@ public class Main {
          
         if (System.getProperty("log4j.configuration") == null) {
             Properties props = new Properties();
-            try {            
-                props.load(ClassLoader.getSystemResourceAsStream(DEFAULT_LOGGING_CONFIGURATION));
+	    InputStream stream = null;
+            try {
+		stream =
+		    ClassLoader.getSystemResourceAsStream(
+		        DEFAULT_LOGGING_CONFIGURATION);
+
+		if (stream != null)
+		    props.load(stream);
             }
             catch (IOException io) {
                 io.printStackTrace();
                 System.exit(-1);
             }
-            PropertyConfigurator.configure(props);
-            // BasicConfigurator.configure();
-            /*
-	      Logger.getRootLogger().getLoggerRepository().setThreshold(
-	      Level.WARN);
-	    */
+
+	    PropertyConfigurator.configure(props);
+
+	    if (stream == null) {
+		BasicConfigurator.configure();
+		Logger.getRootLogger().getLoggerRepository()
+		    .setThreshold(Level.OFF);
+	    }
         }
         
         // initLogging();
