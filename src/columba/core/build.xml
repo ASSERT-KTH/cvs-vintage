@@ -1,12 +1,10 @@
 <?xml version="1.0"?>
 
-
-<project name="columba" default="compile">
-	<property name="currsrc" value="${src}"/>
-	
+<project name="columba.core" default="compile">
 	<target name="compile">
-		<echo message="compile columba core"/>
-		<javac srcdir="${currsrc}" destdir="${dest}" classpath="${ownclasspath}" encoding="ISO-8859-1" debug="yes">
+		<echo message="Compile Columba core"/>
+		<javac srcdir="${src.columba.core}" destdir="${dest}" encoding="ISO-8859-1" debug="${debugbuild}">
+			<classpath refid="compile.classpath"/>
 			<exclude name="**/*.html"/>
 			<exclude name="**/*.xml"/>
 		</javac>

@@ -1,22 +1,22 @@
 <?xml version="1.0"?>
 
-<project name="columba.test" default="compile">
+<project name="addressbook.test" default="test">
 	<target name="compile">
-		<echo message="Compile Columba test"/>
-		<javac srcdir="${src.columba.test}" destdir="${test.dest}" encoding="ISO-8859-1" debug="${debugbuild}">
+		<echo message="Compile Addressbook test"/>
+		<javac srcdir="${src.addressbook.test}" destdir="${test.dest}" encoding="ISO-8859-1" debug="${debugbuild}">
 			<classpath refid="compile.test.classpath"/>
 			<exclude name="**/*.html"/>
 			<exclude name="**/*.xml"/>
 		</javac>
 	</target>
-	
+
 	<target name="test" description="runs all tests for columba. Failures only reported on console.">
-		<echo message="Test Columba core"/>		
+		<echo message="Test Addressbook"/>		
 		<junit fork="no" haltonfailure="no">
 			<classpath refid="run.test.classpath" />
 			<formatter type="xml"/>
 			<batchtest todir="${report.base}" >
-				<fileset dir="${src.columba.test}">
+				<fileset dir="${src.addressbook.test}">
 					<include name="**/*Test*.java"/>
 					<exclude name="**/AllTests.java"/>
 				</fileset>

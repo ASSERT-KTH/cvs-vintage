@@ -1,12 +1,10 @@
 <?xml version="1.0"?>
 
-
-<project name="columba" default="compile">
-	<property name="currsrc" value="${src}"/>
-	
+<project name="addressbook.core" default="compile">
 	<target name="compile">
-		<echo message="compile addressbook core"/>
-		<javac srcdir="${currsrc}" destdir="${dest}" classpath="${ownclasspath}" encoding="ISO-8859-1" debug="yes">
+		<echo message="Compile Addressbook core"/>
+		<javac srcdir="${src.addressbook.core}" destdir="${dest}" encoding="ISO-8859-1" debug="${debugbuild}">
+			<classpath refid="compile.classpath"/>
 			<exclude name="**/*.html"/>
 			<exclude name="**/*.xml"/>
 		</javac>
