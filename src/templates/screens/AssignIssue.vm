@@ -81,9 +81,11 @@
 			<td><a href="mailto:$assignedUser.Email">$assignedUser.UserName</a></td>
 			<td><select name="$attrInput.AttributeId.Key">
 			 #foreach ($selectUserAttr in $userAttrs)
-				<option value="$selectUserAttr.AttributeId"
-				#if ($attrInput.AttributeId.toString().equals($selectUserAttr.AttributeId.toString())) selected='selected' #end
-				 />$selectUserAttr.Name</option>
+                #set ($selected = "")
+				#if ($attrInput.AttributeId.toString().equals($selectUserAttr.AttributeId.toString())) 
+                    #set ($selected = 'selected')
+                #end
+				<option value="$selectUserAttr.AttributeId" $selected >$selectUserAttr.Name</option>
 			 #end
 			   </select></td>
 			</tr>
