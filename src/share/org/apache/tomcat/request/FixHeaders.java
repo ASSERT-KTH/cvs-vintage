@@ -1,8 +1,4 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/service/connector/Attic/ConnectorResponse.java,v 1.4 2000/02/01 07:37:39 costin Exp $
- * $Revision: 1.4 $
- * $Date: 2000/02/01 07:37:39 $
- *
  * ====================================================================
  *
  * The Apache Software License, Version 1.1
@@ -62,77 +58,88 @@
  */ 
 
 
-package org.apache.tomcat.service.connector;
+package org.apache.tomcat.request;
 
+import org.apache.tomcat.core.*;
+import org.apache.tomcat.util.*;
+import org.apache.tomcat.deployment.*;
 import java.io.*;
 import java.net.*;
 import java.util.*;
-import org.apache.tomcat.core.*;
-import org.apache.tomcat.util.*;
-//import org.apache.tomcat.server.*;
-import javax.servlet.*;
 import javax.servlet.http.*;
 
-
-public class ConnectorResponse extends ResponseImpl {
-    public static final int SEND_HEADERS=2;
-    public static final int END_RESPONSE=5;
-
-    MsgConnector con;
-    ConnectorServletOS rout;
-
-    public ConnectorResponse(MsgConnector con) {
-        super();
-	this.con=con;
-	rout=new ConnectorServletOS(con);
-	rout.setResponse( this );
-	this.out=rout;
+/**
+ *  Will generate the output headers ( cookies, etc ) plus tomcat-specific headers.
+ * 
+ */
+public class FixHeaders implements RequestInterceptor {
+    
+    public FixHeaders() {
     }
-
-    public void recycle() {
-	super.recycle();
-	rout.recycle();
-
-	rout=new ConnectorServletOS(con);
-	rout.setResponse( this );
-
-	out=rout;
-    }
-
-    // XXX if more headers that MAX_SIZE, send 2 packets!   
-    public void endHeaders() throws IOException {
-	super.endHeaders();
 	
-        if (request.getProtocol() == null) {
-            return;
+    public int requestMap(Request request ) {
+	return 0;
+    }
+
+    public int contextMap( Request rrequest ) {
+	return 0;
+    }
+
+    public int beforeBody( Request request, Response response ) {
+	HttpDate date = new HttpDate(System.currentTimeMillis());
+	response.setHeader("Date", date.toString());
+	response.setHeader("Status", Integer.toString(response.getStatus()));
+        response.setHeader("Content-Type", response.getContentType());
+
+	String contentLanguage=response.getLocale().getLanguage();
+	if (contentLanguage != null) {
+            response.setHeader("Content-Language",contentLanguage);
+        }
+
+	// context is null if we are in a error handler before the context is
+	// set ( i.e. 414, wrong request )
+	if( request.getContext() != null)
+	    response.setHeader("Servlet-Engine", request.getContext().getEngineHeader());
+
+
+	int contentLength=response.getContentLength();
+        if (contentLength != -1) {
+            response.setHeader("Content-Length", Integer.toString(contentLength));
+        }
+
+        // write cookies
+        Enumeration cookieEnum = null;
+        cookieEnum = response.getSystemCookies();
+        while (cookieEnum.hasMoreElements()) {
+            Cookie c  = (Cookie)cookieEnum.nextElement();
+            response.addHeader( CookieTools.getCookieHeaderName(c),
+			       CookieTools.getCookieHeaderValue(c));
+	    if( c.getVersion() == 1 ) {
+		// add a version 0 header too.
+		// XXX what if the user set both headers??
+		Cookie c0 = (Cookie)c.clone();
+		c0.setVersion(0);
+		response.addHeader( CookieTools.getCookieHeaderName(c0),
+				    CookieTools.getCookieHeaderValue(c0));
+	    }
         }
 	
-	MsgBuffer msg=con.getMsgBuffer();
-	msg.reset();
-	msg.appendInt( SEND_HEADERS );
-	msg.appendInt( headers.size() );
-
-	Enumeration e = headers.names();
-	while (e.hasMoreElements()) {
-	    String headerName = (String)e.nextElement();
-	    String headerValue = headers.getHeader(headerName);
-	    msg.appendString( headerName);
-	    msg.appendString( headerValue);
-	}
-
-	msg.end();
-	con.send( msg );
-     }
-
-
-    public void finish() throws IOException {
-	super.finish();
-	MsgBuffer msg=con.getMsgBuffer();
-	msg.reset();
-	msg.appendInt( END_RESPONSE );
-	msg.end();
-	con.send( msg );
+	// XXX duplicated code, ugly
+        cookieEnum = response.getCookies();
+        while (cookieEnum.hasMoreElements()) {
+            Cookie c  = (Cookie)cookieEnum.nextElement();
+            response.addHeader( CookieTools.getCookieHeaderName(c),
+		       CookieTools.getCookieHeaderValue(c));
+	    if( c.getVersion() == 1 ) {
+		// add a version 0 header too.
+		// XXX what if the user set both headers??
+		Cookie c0 = (Cookie)c.clone();
+		c0.setVersion(0);
+		response.addHeader( CookieTools.getCookieHeaderName(c0),
+				   CookieTools.getCookieHeaderValue(c0));
+	    }
+        }
+	return 0;
     }
-
 
 }

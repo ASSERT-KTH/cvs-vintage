@@ -351,11 +351,6 @@ public class ContextManager {
 		return;
 	    }
 
-	    //    don't do headers if request protocol is http/0.9
-	    if (rrequest.getProtocol() == null) {
-		rresponse.setOmitHeaders(true);
-	    }
-
 	    // XXX Hardcoded - it will be changed in the next step.( costin )
 
 	    processRequest( rrequest );
@@ -373,13 +368,13 @@ public class ContextManager {
 	    // finish and clean up
 	    rresponse.finish();
 	    
-	    // protocol notification
-	    rresponse.endResponse();
-	    
 	} catch (Exception e) {
+	    if(e instanceof IOException && "Broken pipe".equals(e.getMessage()) ) {
+	    }
 	    // XXX
 	    // this isn't what we want, we want to log the problem somehow
 	    System.out.println("HANDLER THREAD PROBLEM: " + e);
+	    System.out.println("Request: " + rrequest);
 	    e.printStackTrace();
 	}
     }
@@ -397,11 +392,11 @@ public class ContextManager {
 	if(debug>2) log("");
 
 	for( int i=0; i< requestInterceptors.size(); i++ ) {
-	    ((RequestInterceptor)requestInterceptors.elementAt(i)).handleRequestContextMap( req );
+	    ((RequestInterceptor)requestInterceptors.elementAt(i)).contextMap( req );
 	}
 
 	for( int i=0; i< requestInterceptors.size(); i++ ) {
-	    ((RequestInterceptor)requestInterceptors.elementAt(i)).handleRequest( req );
+	    ((RequestInterceptor)requestInterceptors.elementAt(i)).requestMap( req );
 	}
 
 	if(debug>2) log("After processing: ");
@@ -410,6 +405,13 @@ public class ContextManager {
 	return 0;
     }
 
+    int doBeforeBody( Request req, Response res ) {
+	for( int i=0; i< requestInterceptors.size(); i++ ) {
+	    ((RequestInterceptor)requestInterceptors.elementAt(i)).beforeBody( req, res );
+	}
+	return 0;
+    }
+    
     // -------------------- Sub-Request mechanism --------------------
 
     // comment from Apache http_request.c

@@ -321,7 +321,7 @@ class AJP12RequestAdapter extends RequestImpl {
 class AJP12ResponseAdapter extends HttpResponseAdapter {
     /** Override setStatus
      */
-    public void setStatus( int status, String message) throws IOException {
+    protected void sendStatus( int status, String message)  throws IOException {
 	statusSB.setLength(0);
 	statusSB.append("Status: " ).append( status ).append("\r\n");
 	sout.write(statusSB.toString().getBytes());

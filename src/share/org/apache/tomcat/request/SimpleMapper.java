@@ -94,7 +94,7 @@ public class SimpleMapper  implements  RequestInterceptor {
     /** First step of request porcessing is finding the Context.
      *  Advanced mappers will do only one parsing.
      */
-    public int handleRequestContextMap( Request rrequest ) {
+    public int contextMap( Request rrequest ) {
 	// someone else set it up, no need to worry
 	if( rrequest.getContext() != null )
 	    return OK;
@@ -116,7 +116,7 @@ public class SimpleMapper  implements  RequestInterceptor {
     }
 
 
-    public int handleRequest(Request req) {
+    public int requestMap(Request req) {
 	Context context=req.getContext();
 	String path=req.getLookupPath();
         ServletWrapper wrapper = null;
@@ -152,7 +152,9 @@ public class SimpleMapper  implements  RequestInterceptor {
 	return OK;
     }
 
-
+    public int beforeBody( Request request, Response response) {
+	return 0;
+    }
 
     /** Get an exact match ( /catalog ) - rule 1 in 10.1
      */

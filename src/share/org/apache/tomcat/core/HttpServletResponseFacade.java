@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/core/Attic/HttpServletResponseFacade.java,v 1.1 1999/10/09 00:30:06 duncan Exp $
- * $Revision: 1.1 $
- * $Date: 1999/10/09 00:30:06 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/core/Attic/HttpServletResponseFacade.java,v 1.2 2000/02/01 07:37:36 costin Exp $
+ * $Revision: 1.2 $
+ * $Date: 2000/02/01 07:37:36 $
  *
  * ====================================================================
  *
@@ -151,7 +151,7 @@ implements HttpServletResponse {
     }
 
     public void sendError(int sc) throws IOException {
-	response.sendError(sc);
+	response.sendError(sc, "No detailed message");
     }
     
     public void sendError(int sc, String msg) throws IOException {
@@ -159,18 +159,12 @@ implements HttpServletResponse {
     }
 
     public void sendRedirect(String location)
-    throws IOException, IllegalArgumentException {
+	throws IOException, IllegalArgumentException
+    {
         if (location == null) {
             String msg = sm.getString("hsrf.redirect.iae");
-
             throw new IllegalArgumentException(msg);
 	}
-
-        // XXX
-	// we want to do a better check than this in the future,
-	// but as this isn't used on every hit, we'll do it the
-	// slow way for now
-
         response.sendRedirect(location);
     }
     
@@ -183,11 +177,11 @@ implements HttpServletResponse {
     }
 
     public void setDateHeader(String name, long date) {
-	response.setDateHeader(name, date);
+	response.setHeader(name, new HttpDate(date).toString());
     }
 
     public void addDateHeader(String name, long value) {
-	response.addDateHeader(name, value);
+	response.addHeader(name, new HttpDate(value).toString());
     }
     
     public void setHeader(String name, String value) {
@@ -199,11 +193,11 @@ implements HttpServletResponse {
     }
     
     public void setIntHeader(String name, int value) {
-	response.setIntHeader(name, value);
+	response.setHeader(name, Integer.toString(value));
     }
 
     public void addIntHeader(String name, int value) {
-        response.addIntHeader(name, value);
+        response.addHeader(name, Integer.toString(value));
     }
     
     public void setStatus(int sc) {
@@ -242,7 +236,6 @@ implements HttpServletResponse {
      *
      * @deprecated
      */
-    
     public void setStatus(int sc, String msg) {
 	response.setStatus(sc);
     }    

@@ -81,7 +81,7 @@ public class DefaultServlet extends HttpServlet {
     ServletContext contextF;
     private Context context;
     String docBase;
-    int debug=1;
+    int debug=0;
     
     public void init() throws ServletException {
 	contextF = getServletContext();

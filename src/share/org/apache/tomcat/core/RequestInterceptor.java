@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/core/Attic/RequestInterceptor.java,v 1.2 2000/01/30 04:22:46 costin Exp $
- * $Revision: 1.2 $
- * $Date: 2000/01/30 04:22:46 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/core/Attic/RequestInterceptor.java,v 1.3 2000/02/01 07:37:36 costin Exp $
+ * $Revision: 1.3 $
+ * $Date: 2000/02/01 07:37:36 $
  *
  * ====================================================================
  *
@@ -75,14 +75,18 @@ public interface RequestInterceptor {
     
     /** Will detect the context path for a request
      */
-    //    public int contextMap(Request request);
-    // XXX name will change!
-    public int handleRequestContextMap(Request request);
+    public int contextMap(Request request);
 
     /** Handle mapping inside a context
      */
-    //    public int requestMap(Request request);
+    public int requestMap(Request request);
 
+    /** Called before the first body write, and before sending
+     *  the headers. The interceptor have a chance to change the
+     *  output headers.
+     */
+    public int beforeBody( Request request, Response response);
+    
     /** Security
      */
     //    public int authentication(Request request);
@@ -99,5 +103,4 @@ public interface RequestInterceptor {
 
     //    public int log(Request request);
 
-    public int handleRequest( Request request);
 }

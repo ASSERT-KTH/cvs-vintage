@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/service/Attic/Ajp11ConnectionHandler.java,v 1.12 2000/01/15 23:30:23 costin Exp $
- * $Revision: 1.12 $
- * $Date: 2000/01/15 23:30:23 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/service/Attic/Ajp11ConnectionHandler.java,v 1.13 2000/02/01 07:37:38 costin Exp $
+ * $Revision: 1.13 $
+ * $Date: 2000/02/01 07:37:38 $
  *
  * ====================================================================
  *
@@ -314,7 +314,7 @@ class Ajp11 {
 class Ajp11ResponseAdapter extends HttpResponseAdapter {
     /** Override setStatus
      */
-    public void setStatus( int status, String message) throws IOException {
+    public void sendStatus( int status, String message) throws IOException {
 	statusSB.setLength(0);
 	statusSB.append("Status: " ).append( status ).append("\r\n");
 	sout.write(statusSB.toString().getBytes());

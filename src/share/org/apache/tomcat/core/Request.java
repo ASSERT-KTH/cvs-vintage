@@ -73,32 +73,70 @@ import javax.servlet.http.*;
  *
  */
 public interface Request  {
-    // Required fields
 
+    // -------------------- Basic Request properties --------------------
     public String getScheme() ;
 
     public String getMethod() ;
 
     public String getRequestURI() ;
 
+    public void setRequestURI( String r ) ;
+
     public String getQueryString() ;
 
     public String getProtocol() ;
 
-    public String getHeader(String name) ;
-
-    public Enumeration getHeaderNames() ;
-
-    
-    public ServletInputStream getInputStream() 	throws IOException;
-
     public String getServerName() ;
 
+    public void setServerName(String serverName) ;
+    
     public int getServerPort() ;
         
     public String getRemoteAddr() ;
 
     public String getRemoteHost() ;
+
+    // -------------------- Headers -------------------- 
+    public String getHeader(String name) ;
+
+    public Enumeration getHeaderNames() ;
+    
+    public MimeHeaders getMimeHeaders();
+
+    public long getDateHeader(String name) ;
+
+    public Enumeration getHeaders(String name) ;
+
+    public int getIntHeader(String name)  ;
+
+    //-------------------- "Computed" properties --------------------
+    // ( directly derived from headers or request paths )
+
+    /** Return the cookies
+     */
+    public String[] getCookieHeaders();
+
+    public Cookie[] getCookies() ;
+
+    public int getContentLength() ;
+
+    public void setContentLength( int  len ) ;
+
+    public String getContentType() ;
+
+    public void setContentType( String type ) ;
+
+    public void setCharEncoding( String enc ) ;
+
+    public String getCharacterEncoding() ;
+
+    // -------------------- Mapping --------------------
+    // Will be set by mappers
+    
+    public String getContextPath();
+
+    public String getServletName();
 
     // Hints - will be set by Interceptors if not set
     // by adapter
@@ -106,39 +144,17 @@ public interface Request  {
 
     public void setLookupPath( String l ) ;
 
-    public String getAuthType() ;
-
-
     String getPathTranslated() ;
 
     public String getPathInfo() ;
 
-    String getRemoteUser() ;
-
-    boolean isSecure() ;
-	
-    Principal getUserPrincipal() ;
-
-    boolean isUserInRole(String role) ;
-
-    public String getRequestedSessionId() ;
-
-    public void setRequestedSessionId(String reqSessionId) ;
+    public void setPathInfo(String pathInfo) ;
+    
+    public void setServletPath(String servletPath) ;
 
     public String getServletPath() ;
 
-    boolean isRequestedSessionIdFromCookie() ;
-
-    boolean isRequestedSessionIdFromURL() ;
-
-    
     public void updatePaths() ;//XXX - not to be used, use RD
-
-    public void setContext(Context context) ;
-
-    public HttpSession getSession(boolean create) ;
-
-    boolean isRequestedSessionIdValid() ;
 
     public String getResolvedServlet() ;
 
@@ -158,34 +174,47 @@ public interface Request  {
 
     public void setResourceName( String m ) ;
 
-    public void setRequestURI( String r ) ;
+    // -------------------- Security --------------------
+    // Will be set by security interceptors
+    public String getAuthType() ;
 
+    public void setAuthType(String authType) ;
+
+    String getRemoteUser() ;
+
+    boolean isSecure() ;
+	
+    Principal getUserPrincipal() ;
+
+    boolean isUserInRole(String role) ;
+
+
+    // -------------------- Session --------------------
+    // Will be set by session interceptors
+    public String getRequestedSessionId() ;
+
+    public void setRequestedSessionId(String reqSessionId) ;
+
+    boolean isRequestedSessionIdFromCookie() ;
+
+    boolean isRequestedSessionIdFromURL() ;
+
+    public void setSession(HttpSession serverSession) ;
+
+    public HttpSession getSession(boolean create) ;
+
+    boolean isRequestedSessionIdValid() ;
+
+    // -------------------- Parameters --------------------
+    // Derived from parsing query string and body (for POST)
 
     public void setParameters( Hashtable h ) ;
 
     public Hashtable getParameters() ;
 
-    public void setContentLength( int  len ) ;
-
-    public void setContentType( String type ) ;
-
-    public void setCharEncoding( String enc ) ;
-
-    public void setAuthType(String authType) ;
-
-
-    public void setPathInfo(String pathInfo) ;
-
     /** Set query string - will be called by forward
      */
     public void setQueryString(String queryString) ;
-
-    
-    // -------------------- Computed fields - will be computed if not set
-    // ( computed at invocation time ! )
-    public Cookie[] getCookies() ;
-
-    public Context getContext() ;
 
     public String[] getParameterValues(String name) ;
 
@@ -193,25 +222,8 @@ public interface Request  {
 
     Hashtable getParametersCopy() ;
 
-    public String getCharacterEncoding() ;
-
-    public int getContentLength() ;
-
-    public String getContentType() ;
     
-    public HttpServletRequestFacade getFacade() ;
-
-    public void setResponse(Response response) ;
-
-    public Response getResponse() ;
-    public RequestDispatcher getRequestDispatcher(String path);
-    
-    // -------------------- LookupResult 
-    public void setSession(HttpSession serverSession) ;
-    public void setServletPath(String servletPath) ;
-
-    public void setServerName(String serverName) ;
-
+    // -------------------- Attributes --------------------
     public Object getAttribute(String name) ;
     public void setAttribute(String name, Object value) ;
 
@@ -219,32 +231,10 @@ public interface Request  {
 
     public Enumeration getAttributeNames() ;
 
-    // -------------------- Facade for MimeHeaders
-    public long getDateHeader(String name) ;
-
-    public Enumeration getHeaders(String name) ;
-
-    public int getIntHeader(String name)  ;
-
-    // -------------------- Utils - facade for RequestUtil
+    // -------------------- Input --------------------
     public BufferedReader getReader() 	throws IOException;
 
-
-    // -------------------- End utils
-    public void recycle() ;
-
-    public MimeHeaders getMimeHeaders();
-
-    /** Return the cookies
-     */
-    public String[] getCookieHeaders();
-
-    // server may have it pre-calculated - return null if
-    // it doesn't
-    public String getContextPath();
-
-    // Servlet name ( a smart server may use aliases and rewriting !!! )
-    public String getServletName();
+    public ServletInputStream getInputStream() 	throws IOException;
 
     /** Fill in the buffer. This method is probably easier to implement than
 	previous.
@@ -259,5 +249,19 @@ public interface Request  {
     public int doRead() throws IOException;
     
 
+    // -------------------- Internal methods --------------------
+    public void recycle() ;
+
+    public Response getResponse() ;
+
+    public void setContext(Context context) ;
+
+    public HttpServletRequestFacade getFacade() ;
+
+    public void setResponse(Response response) ;
+
+    public Context getContext() ;
+
+    public RequestDispatcher getRequestDispatcher(String path);
 
 }

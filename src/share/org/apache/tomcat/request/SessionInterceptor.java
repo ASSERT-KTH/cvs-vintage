@@ -82,7 +82,7 @@ public class SessionInterceptor implements RequestInterceptor {
     public SessionInterceptor() {
     }
 	
-    public int handleRequest(Request request ) {
+    public int requestMap(Request request ) {
 	// look for session id -- cookies only right now
 	String sessionId = null;
 
@@ -111,7 +111,11 @@ public class SessionInterceptor implements RequestInterceptor {
 	return 0;
     }
 
-    public int handleRequestContextMap( Request rrequest ) {
+    public int contextMap( Request rrequest ) {
+	return 0;
+    }
+
+    public int beforeBody( Request rrequest, Response response ) {
 	return 0;
     }
 

@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/core/Attic/IncludedResponse.java,v 1.3 2000/01/12 19:54:01 costin Exp $
- * $Revision: 1.3 $
- * $Date: 2000/01/12 19:54:01 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/core/Attic/IncludedResponse.java,v 1.4 2000/02/01 07:37:36 costin Exp $
+ * $Revision: 1.4 $
+ * $Date: 2000/02/01 07:37:36 $
  *
  * ====================================================================
  *
@@ -91,8 +91,15 @@ extends HttpServletResponseFacade {
     
     public void sendError(int sc, String msg) throws IOException {
 	//	/*XXX*/ try {throw new Exception(); } catch(Exception ex) {ex.printStackTrace();}
-        getRealResponse().sendBodyText("Included servlet error: " + sc +
-                                       ": " + msg + "\r\n");
+	String s="Included servlet error: " + sc + ": " + msg + "\r\n";
+        Response response=getRealResponse();
+	if( response.isUsingStream() ) {
+	    ServletOutputStream out = response.getOutputStream();
+	    out.print(s);
+	} else {
+	    PrintWriter out = response.getWriter();
+	    out.print(s);
+	}
     }
 
     public void sendRedirect(String location) throws IOException {

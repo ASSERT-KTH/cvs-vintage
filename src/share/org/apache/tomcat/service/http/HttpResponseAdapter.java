@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/service/http/Attic/HttpResponseAdapter.java,v 1.4 2000/01/15 23:30:26 costin Exp $
- * $Revision: 1.4 $
- * $Date: 2000/01/15 23:30:26 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/service/http/Attic/HttpResponseAdapter.java,v 1.5 2000/02/01 07:37:39 costin Exp $
+ * $Revision: 1.5 $
+ * $Date: 2000/02/01 07:37:39 $
  *
  * ====================================================================
  *
@@ -99,52 +99,44 @@ public class HttpResponseAdapter extends  ResponseImpl {
 	headersSB.setLength(0);
     }
 
-    public void setStatus( int status, String message ) throws IOException {
+    public void setOutputStream(OutputStream os) {
+	sout = os;
+    }
+
+    static final byte CRLF[]= { (byte)'\r', (byte)'\n' };
+    
+    public void endHeaders()  throws IOException {
+	super.endHeaders();
+	
+	sendStatus( status, ResponseImpl.getMessage( status ));
+
+	Enumeration e = headers.names();
+	while (e.hasMoreElements()) {
+	    String name = (String)e.nextElement();
+	    String value = headers.getHeader(name);
+	    headersSB.setLength(0);
+	    headersSB.append(name).append(": ").append(value).append("\r\n");
+	    try {
+		sout.write( headersSB.toString().getBytes(Constants.CharacterEncoding.Default) );
+	    } catch( IOException ex ) {
+		ex.printStackTrace();
+		//XXX mark the error - should abandon everything 
+	    }
+	}
+	sout.write( CRLF, 0, 2 );
+	sout.flush();
+    }
+
+    /** Needed for AJP  support - the only difference between AJP response and
+	HTTP response is the status line
+    */
+    protected void sendStatus( int status, String message ) throws IOException {
 	// statusSB.reset();
 	statusSB.append("HTTP/1.0 ").append(status);
 	if(message!=null) statusSB.append(" ").append(message);
 	statusSB.append("\r\n");
 	sout.write(statusSB.toString().getBytes(Constants.CharacterEncoding.Default));
 	statusSB.setLength(0);
-    }
-    
-    public void setOutputStream(OutputStream os) {
-	sout = os;
-    }
-
-    public void addHeader(String name, String value) { //throws IOException{
-	headersSB.setLength(0);
-	headersSB.append(name).append(": ").append(value).append("\r\n");
-	try {
-	    sout.write( headersSB.toString().getBytes(Constants.CharacterEncoding.Default) );
-	} catch( IOException ex ) {
-	    ex.printStackTrace();
-	    //XXX mark the error - should abandon everything 
-	}
-    }
-    
-    public void addMimeHeaders(MimeHeaders headers) throws IOException {
-	headersSB.setLength(0);
-	int size = headers.size();
-        for (int i = 0; i < size; i++) {
-            MimeHeaderField h = headers.getField(i);
-            headersSB.append(h).append("\r\n");
-        }
-	sout.write( headersSB.toString().getBytes(Constants.CharacterEncoding.Default) );
-    }
-
-    static final byte CRLF[]= { (byte)'\r', (byte)'\n' };
-    
-    public void endHeaders()  throws IOException {
-	sout.write( CRLF, 0, 2 );
-    }
-
-    public void endResponse() throws IOException {
-	sout.flush();
-    }
-
-    public ServletOutputStream getServletOutputStream() throws IOException {
-	return null; // use default
     }
 
     public void doWrite( byte buffer[], int pos, int count) throws IOException {

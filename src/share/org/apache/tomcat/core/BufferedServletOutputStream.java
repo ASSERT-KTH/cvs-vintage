@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/core/Attic/BufferedServletOutputStream.java,v 1.7 2000/01/15 23:30:19 costin Exp $
- * $Revision: 1.7 $
- * $Date: 2000/01/15 23:30:19 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/core/Attic/BufferedServletOutputStream.java,v 1.8 2000/02/01 07:37:36 costin Exp $
+ * $Revision: 1.8 $
+ * $Date: 2000/02/01 07:37:36 $
  *
  * ====================================================================
  * 
@@ -121,13 +121,7 @@ public class BufferedServletOutputStream extends ServletOutputStream {
 	resA.doWrite( buffer, pos, count);
     }
 
-    protected void endResponse() throws IOException {
-	resA.endResponse();
-    }
-
     protected void sendHeaders() throws IOException {
- 	if(resA!=null)
- 	    resA.writeHeaders();
 	if(resA!=null)
 	    resA.endHeaders();
     }
@@ -259,7 +253,6 @@ public class BufferedServletOutputStream extends ServletOutputStream {
 	reallyFlush();
 	closed = true;
 	//	out.close();
-	endResponse();
     }
 
     public boolean isContentWritten() {

@@ -77,117 +77,107 @@ import org.apache.tomcat.util.*;
  * @author costin@dnt.ro
  */
 public interface Response {
-
-    public HttpServletResponseFacade getFacade() ;
-
-    public void setRequest(Request request) ;
-
-    public boolean isStarted() ;
-
-    public boolean isCommitted() ;
-
-    public String getServerHeader() ;
-
-    public void setServerHeader(String serverHeader) ;
-
-    public void setOmitHeaders(boolean omitHeaders) ;
-
-    public void recycle() ;
-
-    public void finish() throws IOException ;
-
+    // -------------------- Headers -------------------- 
     public boolean containsHeader(String name) ;
 
+    public void setHeader(String name, String value) ;
 
+    public void addHeader(String name, String value) ;
+
+    /** Signal that we're done with the headers, and body will follow.
+     *  Any implementation needs to notify ContextManager, to allow
+     *  interceptors to fix headers.
+     */
+    public void endHeaders() throws IOException;
+
+    // -------------------- Output method --------------------
+    /** True if getOutputStream or getWriter was called.
+     *  XXX change it to "if any output was writen"
+     *
+     *  Used by RD.forward() and ServletWrapper.error()
+     */
+    public boolean isStarted() ;
+
+    /** True if getOutputStream was called.
+     *  Used to avoid the ugly try getWriter() catch getOutputStream.
+     */
+    public boolean isUsingStream();
+    
+    /** Signal that we're done with a particular request, the
+	server can go on and read more requests or close the socket
+    */
+    public void finish() throws IOException ;
+
+    /** Either re-implement getOutputStream or return BufferedServletOutputStream(this)
+	and implement doWrite();
+     */
     public ServletOutputStream getOutputStream() ;
 
     public PrintWriter getWriter() throws IOException ;
 
-    public void setDateHeader(String name, long date) ;
+    /** Write a chunk of bytes. Should be called only from ServletOutputStream implementations,
+     *	No need to implement it if your adapter implements ServletOutputStream.
+     *  Headers and status will be written before this method is exceuted.
+     */
+    public void doWrite( byte buffer[], int pos, int count) throws IOException ;
 
-    public void addDateHeader(String name, long date) ;
-
-    public void setHeader(String name, String value) ;
-
-
-    public void addHeader(String name, String value) ;
-
-
-    public void setIntHeader(String name, int value) ;
-
-    public void addIntHeader(String name, int value) ;
-
+    // -------------------- Buffering --------------------
+    
     public int getBufferSize() ;
 
     public void setBufferSize(int size) throws IllegalStateException ;
 
-    /*
-     * Methodname "isCommitted" already taken by Response class.
-     */
     public boolean isBufferCommitted() ;
 
     public void reset() throws IllegalStateException ;
 
     public void flushBuffer() throws IOException ;
 
-
-    /** Set server-specific headers */
-    void fixHeaders() throws IOException ;
-
-    /** Signal that we're done with a particular request, the
-	server can go on and read more requests or close the socket
-    */
-    public void endResponse() throws IOException ;
-
-    // XXX should be abstract
-    public void writeHeaders() throws IOException ;
+    // -------------------- Cookies --------------------
 
     public void addCookie(Cookie cookie) ;
 
     public void addSystemCookie(Cookie cookie) ;
 
+    public Enumeration getCookies();
+
+    public Enumeration getSystemCookies();
+
+    // -------------------- Response properties --------------------
     public Locale getLocale() ;
 
     public void setLocale(Locale locale) ;
 
-    String constructLocalizedContentType(String type, Locale loc) ;
-
+    /**  translate locale into encoding. 
+     */
     public String getCharacterEncoding() ;
 
     public void setContentType(String contentType) ;
 
+    public String getContentType();
+
     public void setContentLength(int contentLength) ;
 
+    public int getContentLength() ;
+
+    public void setStatus(int status);
+
     public int getStatus() ;
-
-    public void setStatus(int status) ;
-
-    public void sendError(int sc) throws IOException ;
-
+    
+    // -------------------- Error --------------------
+    // XXX, not needed, can be in Facade!!
     public void sendError(int sc, String msg) throws IOException ;
 
     public void sendRedirect(String location) throws IOException ;
 
+    // -------------------- Internal methods --------------------
+    public HttpServletResponseFacade getFacade() ;
 
-    public void sendBodyText(String s) throws IOException ;
-
-
-    public void addMimeHeaders(MimeHeaders headers) throws IOException;
-
-    /** Signal that we're done with the headers, and body will follow.
-	The adapter doesn't have to maintain state, it's done inside the engine
-    */
-    public void endHeaders() throws IOException;
-
-    /** Either implement ServletOutputStream or return BufferedServletOutputStream(this)
-	and implement doWrite();
-     */
-    public ServletOutputStream getServletOutputStream() throws IOException;
+    public void setRequest(Request request) ;
     
-    /** Write a chunk of bytes. Should be called only from ServletOutputStream implementations,
-     *	No need to implement it if your adapter implements ServletOutputStream.
-     *  Headers and status will be written before this method is exceuted.
-     */
-    public void doWrite( byte buffer[], int pos, int count) throws IOException ;
+    public Request getRequest() ;
+
+    public void recycle() ;
+
 
 }

@@ -59,6 +59,7 @@
 package org.apache.tomcat.servlets;
 
 import org.apache.tomcat.util.*;
+import org.apache.tomcat.core.*;
 import java.io.*;
 import java.net.*;
 import java.util.*;
@@ -80,15 +81,135 @@ import javax.servlet.http.*;
  */
 public class DefaultErrorPage extends HttpServlet {
 
-    public void service(HttpServletRequest request,
-			HttpServletResponse response)
+    public void service(HttpServletRequest requestH,
+			HttpServletResponse responseH)
 	throws ServletException, IOException
     {
-	StringWriter sw = new StringWriter();
-	PrintWriter pw = new PrintWriter(sw);
+	Request request=((HttpServletRequestFacade)requestH).getRealRequest();
+	Response response=request.getResponse();
+
+	// use internal APIs - we can avoid them,but it's easier and faster
+	int status=response.getStatus();
+	String msg=(String)request.getAttribute("javax.servlet.error.message");
 
 	Throwable e= (Throwable)request.getAttribute("tomcat.error.throwable");
+	if( e!=null ) {
+	    sendError(request, response, 500, exceptionString( e ));
+	    return;
+	}
+
+	if( status==HttpServletResponse.SC_MOVED_TEMPORARILY) {
+	    redirect( request, response, msg);
+	} else {
+	    sendError( request, response, status, msg);
+
+	}
+    }
+
+    // -------------------- Redirect to error page if any --------------------
+    public void sendError(Request request, Response response, int sc, String msg) throws IOException {
+	response.setStatus(sc);
+	Context context = request.getContext();
+
+	if (context == null) {
+	    sendPrivateError(request, response, sc, msg);
+	    return;
+	}
+
+	String path = context.getErrorPage(String.valueOf(sc));
+	//System.out.println("X " + path + " " + request + " " + response + " " + (path==null));
+	if (path == null) {
+	    sendPrivateError(request, response, sc, msg);
+	    return;
+	}
 	
+	RequestDispatcher rd = context.getRequestDispatcher(path);
+	if( rd==null) {
+	    //  System.out.println("No error page for " + path);
+	    sendPrivateError( request, response, sc, msg);
+	    return;
+	}
+	
+	try {
+	    if( response.isStarted() )
+		rd.forward(request.getFacade(), response.getFacade());
+	    else
+		rd.include(request.getFacade(), response.getFacade());
+	} catch (ServletException se) {
+	    sendPrivateError(request, response, sc, msg);
+	}
+
+	// XXX
+	// we only should set this if we are the head, not in an include
+    }
+
+    // -------------------- Default error page --------------------
+    private void sendPrivateError(Request request, Response response, int sc, String msg) throws IOException {
+	response.setContentType("text/html");
+
+	StringBuffer buf = new StringBuffer();
+	buf.append("<h1>Error: " + sc + "</h1>\r\n");
+	buf.append(msg + "\r\n");
+
+	if( response.isUsingStream() ) {
+	    ServletOutputStream out = response.getOutputStream();
+	    out.print(buf.toString());
+	} else {
+	    PrintWriter out = response.getWriter();
+	    out.print(buf.toString());
+	}
+    }
+
+    // -------------------- Redirect page --------------------
+    public void redirect(Request request, Response response, String location) throws IOException {
+        location = makeAbsolute(request, location);
+	response.setContentType("text/html");	// ISO-8859-1 default
+	response.setHeader("Location", location);
+
+	StringBuffer buf = new StringBuffer();
+	buf.append("<head><title>Document moved</title></head>\r\n");
+	buf.append("<body><h1>Document moved</h1>\r\n");
+	buf.append("This document has moved <a href=\"");
+	buf.append(location);
+	buf.append("\">here</a>.<p>\r\n");
+	buf.append("</body>\r\n");
+
+	String body = buf.toString();
+
+	response.setContentLength(body.length());
+
+	if( response.isUsingStream() ) {
+	    ServletOutputStream out = response.getOutputStream();
+	    out.print(body);
+	} else {
+	    PrintWriter out = response.getWriter();
+	    out.print(body);
+	}
+    }
+
+    private String makeAbsolute(Request request, String location) {
+        URL url = null;
+        try {
+	    // Try making a URL out of the location
+	    // Throws an exception if the location is relative
+            url = new URL(location);
+	} catch (MalformedURLException e) {
+	    String requrl = HttpUtils.getRequestURL(request.getFacade()).toString();
+	    try {
+	        url = new URL(new URL(requrl), location);
+	    }
+	    catch (MalformedURLException ignored) {
+	        // Give up
+	        return location;
+	    }
+	}
+        return url.toString();
+    }
+
+    // -------------------- Internal error page  --------------------
+    public String exceptionString( Throwable e) {
+	StringWriter sw = new StringWriter();
+	PrintWriter pw = new PrintWriter(sw);
 	pw.println("<b>Internal Servlet Error:</b><br>");
         pw.println("<pre>");
 	if( e != null ) 
@@ -98,10 +219,10 @@ public class DefaultErrorPage extends HttpServlet {
         if (e instanceof ServletException) {
 	    printRootCause((ServletException) e, pw);
 	}
-	
-	response.sendError(500, sw.toString());
+	return sw.toString();
     }
-
+	
+	
     /** A bit of recursion - print all traces in the stack
      */
     void printRootCause(ServletException e, PrintWriter out) {
@@ -118,4 +239,6 @@ public class DefaultErrorPage extends HttpServlet {
 	    }
 	}
     }
+
+
 }
