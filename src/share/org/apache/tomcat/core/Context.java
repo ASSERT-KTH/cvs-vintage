@@ -63,6 +63,8 @@ package org.apache.tomcat.core;
 import org.apache.tomcat.context.*;
 import org.apache.tomcat.facade.*;
 import org.apache.tomcat.util.*;
+import java.security.*;
+import java.lang.reflect.*;
 import org.apache.tomcat.logging.*;
 import java.io.*;
 import java.net.*;
@@ -118,6 +120,9 @@ public class Context {
 
     private File workDir;
 
+    // Security Permissions for webapps and jsp for this context
+    Permissions perms = null;
+ 
     //    private RequestSecurityProvider rsProvider;
 
     private Vector contextInterceptors = new Vector();
@@ -1004,6 +1009,41 @@ public class Context {
 	}
 	return rInterceptors;
     }
+
+     /**
+      * Adds a Permission to a Permissions object which will be used as
+      * the Permissions for this Context.  These are the Permissions
+      * set using the <Permission> element within the <Context> server.xml element.
+      */
+     public void setPermission(String className, String attr, String value) {
+         try {
+             if( perms == null )
+                 perms = new Permissions();
+             Class c=Class.forName(className);
+             Constructor con=c.getConstructor(new Class[]{String.class,String.class});
+             Object [] args=new Object[2];
+             args[0] = attr;
+             args[1] = value;
+             Permission p = (Permission)con.newInstance(args);
+             perms.add(p);
+         } catch( ClassNotFoundException ex ) {
+             System.out.println("SecurityManager Class not found: " + className);
+             System.exit(1);
+         } catch( Exception ex ) {
+             System.out.println("SecurityManager Class could not be loaded: " + className);
+             ex.printStackTrace();
+             System.exit(1);
+         }
+         System.out.println("SecurityManager, " + className + ", \"" + attr + "\", \"" + value + "\" added");
+     }  
+ 
+     /**
+      * Get the SecurityManager Permissions for this Context.
+      */
+     public Object getPermissions() {
+         return perms;
+     }
+
 
     /** @deprecated - use getDocBase and URLUtil if you need it as URL
      *  NOT USED INSIDE TOMCAT - ONLY IN OLD J2EE CONNECTORS !

@@ -48,6 +48,7 @@ echo Usage:
 echo tomcat (start^|run^|env^|stop)
 echo         start - start tomcat in a separate window
 echo         run   - start tomcat in the current window
+echo               -security - use a SecurityManager when starting
 echo         env   - setup the environment for tomcat
 echo         stop  - stop tomcat
 echo         ant   - run ant with tomcat context
@@ -57,13 +58,25 @@ goto cleanup
 :startServer
 echo Starting tomcat in new window
 echo Using classpath: %CLASSPATH%
+if "%2" == "-security" goto startSecure
 start java %TOMCAT_OPTS% -Dtomcat.home="%TOMCAT_HOME%" org.apache.tomcat.startup.Tomcat %2 %3 %4 %5 %6 %7 %8 %9
 goto cleanup
+
+:startSecure
+echo Starting with a SecurityManager
+start java %TOMCAT_OPTS% -Djava.security.manager -Djava.security.policy=="%TOMCAT_HOME%/conf/tomcat.policy" -Dtomcat.home="%TOMCAT_HOME%" org.apache.tomcat.startup.Tomcat %3 %4 %5 %6 %7 %8 %9
+to cleanup
 
 :runServer
 rem Start the Tomcat Server
 echo Using classpath: %CLASSPATH%
+if "%2" == "-security" goto runSecure
 java %TOMCAT_OPTS% -Dtomcat.home="%TOMCAT_HOME%" org.apache.tomcat.startup.Tomcat %2 %3 %4 %5 %6 %7 %8 %9
+goto cleanup
+
+:runSecure
+echo Starting with a SecurityManager
+java %TOMCAT_OPTS% -Djava.security.manager -Djava.security.policy=="%TOMCAT_HOME%/conf/tomcat.policy" -Dtomcat.home="%TOMCAT_HOME%" org.apache.tomcat.startup.Tomcat %3 %4 %5 %6 %7 %8 %9
 goto cleanup
 
 :stopServer

@@ -9,10 +9,9 @@ OS=linux
 
 ## 
 
+AP20_INCL=-I${APACHE_HOME}/include/apr  -I${APACHE_HOME}/include
 JAVA_INCL=-I${JAVA_HOME}/include -I${JAVA_HOME}/include/${OS}
 JAVA_LIB=-L${JAVA_HOME}/jre/lib/${ARCH} -L${JAVA_HOME}/lib/${ARCH}/native_threads
-
-AP20_INCL=-I${APACHE_HOME}/include/apr  -I${APACHE_HOME}/include
 AP20SRC_INCL=-I. -I${AP20_SRC}/modules/standard -I${AP20_SRC} -I${AP20_SRC}/include -I${AP20_SRC}/lib/apr/include -I${AP20_SRC}/os/unix
 
 CFLAGS=-DHAVE_CONFIG_H -g -fpic  -DSHARED_MODULE -O2 -D_REENTRANT -pthread -DLINUX -Wall

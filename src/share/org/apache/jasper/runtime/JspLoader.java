@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/jasper/runtime/JspLoader.java,v 1.6 2000/02/13 06:25:25 akv Exp $
- * $Revision: 1.6 $
- * $Date: 2000/02/13 06:25:25 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/jasper/runtime/JspLoader.java,v 1.7 2000/05/26 18:55:17 costin Exp $
+ * $Revision: 1.7 $
+ * $Date: 2000/05/26 18:55:17 $
  *
  * ====================================================================
  * 
@@ -72,6 +72,8 @@ import java.util.Hashtable;
 import java.util.Vector;
 import java.util.zip.ZipFile;
 import java.util.zip.ZipEntry;
+
+import java.security.*;
 
 import org.apache.jasper.JasperException;
 import org.apache.jasper.Constants;
@@ -170,14 +172,34 @@ public class JspLoader extends ClassLoader {
                     fileName = className.substring(beg, end) + ".class";
                     fileName = outputDir + File.separatorChar + fileName;
                 }
-                FileInputStream fin = new FileInputStream(fileName);
-                ByteArrayOutputStream baos = new ByteArrayOutputStream();
-                byte buf[] = new byte[1024];
-                for(int i = 0; (i = fin.read(buf)) != -1; )
-                    baos.write(buf, 0, i);
-                fin.close();
-                baos.close();
-                byte[] classBytes = baos.toByteArray();
+                byte [] classBytes = null;
+                /**
+                 * When using a SecurityManager and a JSP page itself triggers
+                 * another JSP due to an errorPage or from a jsp:include,
+                 * the loadClass must be performed with the Permissions of
+                 * this class using doPriviledged because the parent JSP
+                 * may not have sufficient Permissions.
+                 */
+                if( System.getSecurityManager() != null ) {
+                    class doInit implements PrivilegedAction {
+                        private String fileName;
+                        public doInit(String file) {
+                            fileName = file;
+                        }
+                        public Object run() {
+                            return loadClassDataFromFile(fileName);
+                        }
+                    }
+                    doInit di = new doInit(fileName);
+                    classBytes = (byte [])AccessController.doPrivileged(di);
+                } else {
+                    classBytes = loadClassDataFromFile(fileName);
+                }
+                if( classBytes == null ) {
+                    throw new ClassNotFoundException(Constants.getString(
+                                             "jsp.error.unable.loadclass", 
+                                              new Object[] {className})); 
+                }
                 return defClass(className, classBytes);
             }
 	} catch (Exception ex) {
@@ -192,7 +214,33 @@ public class JspLoader extends ClassLoader {
      * make this public at some point of time. 
      */
     private final Class defClass(String className, byte[] classData) {
+        // If a SecurityManager is being used, set the ProtectionDomain
+        // for this clas when it is defined.
+        Object pd = options.getProtectionDomain();
+        if( pd != null )
+            return defineClass(className, classData, 0, classData.length, (ProtectionDomain)pd);
         return defineClass(className, classData, 0, classData.length);
+    }
+
+    /**
+     * Load JSP class data from file, method may be called from
+     * within a doPriviledged if a SecurityManager is installed.
+     */
+    private byte[] loadClassDataFromFile(String fileName) {
+        byte[] classBytes = null;
+        try {
+            FileInputStream fin = new FileInputStream(fileName);
+            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+            byte buf[] = new byte[1024];
+            for(int i = 0; (i = fin.read(buf)) != -1; )
+                baos.write(buf, 0, i);
+            fin.close();
+            baos.close();
+            classBytes = baos.toByteArray();
+        } catch(Exception ex) {
+            return null;
+        }
+        return classBytes;
     }
 
     private Vector jars = new Vector();

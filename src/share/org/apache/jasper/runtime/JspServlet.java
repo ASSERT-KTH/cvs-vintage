@@ -411,11 +411,12 @@ public class JspServlet extends HttpServlet {
         
         try {
             outDated = compiler.compile();
-            if ((jspClass == null) || (compiler.isOutDated())) {
+            if ( (jspClass == null) || (compiler.isOutDated()) ) {
                 synchronized ( this ) {
-                    if ((jspClass == null) || (compiler.isOutDated() ))
+                    if ((jspClass == null) || (compiler.isOutDated() ))  {
                         outDated = compiler.compile();
-                }
+                    }
+		}
             }
         } catch (FileNotFoundException ex) {
             throw ex;

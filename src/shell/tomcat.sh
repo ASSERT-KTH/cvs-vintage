@@ -1,6 +1,6 @@
 #!/bin/sh
 #
-# $Id: tomcat.sh,v 1.16 2000/03/31 20:31:31 craigmcc Exp $
+# $Id: tomcat.sh,v 1.17 2000/05/26 18:55:33 costin Exp $
 
 # Shell script to start and stop the server
 
@@ -118,7 +118,12 @@ export CLASSPATH
 if [ "$1" = "start" ] ; then 
   shift 
   echo Using classpath: ${CLASSPATH}
+  if [ "$1" = "-security" ] ; then
+    echo Starting with a SecurityManager
+    $JAVACMD $TOMCAT_OPTS -Djava.security.manager -Djava.security.policy==${TOMCAT_HOME}/conf/tomcat.policy -Dtomcat.home=${TOMCAT_HOME}  org.apache.tomcat.startup.Tomcat "$@" &
+  else
   $JAVACMD $TOMCAT_OPTS -Dtomcat.home=${TOMCAT_HOME}  org.apache.tomcat.startup.Tomcat "$@" &
+  fi
 #   $JAVACMD org.apache.tomcat.shell.Startup "$@" &
 
 elif [ "$1" = "stop" ] ; then 
@@ -130,7 +135,12 @@ elif [ "$1" = "stop" ] ; then
 elif [ "$1" = "run" ] ; then 
   shift 
   echo Using classpath: ${CLASSPATH}
+  if [ "$1" = "-security" ] ; then
+    echo Starting with a SecurityManager
+    $JAVACMD $TOMCAT_OPTS -Djava.security.manager -Djava.security.policy==${TOMCAT_HOME}/conf/tomcat.policy -Dtomcat.home=${TOMCAT_HOME} org.apache.tomcat.startup.Tomcat "$@"
+  else
   $JAVACMD $TOMCAT_OPTS -Dtomcat.home=${TOMCAT_HOME} org.apache.tomcat.startup.Tomcat "$@" 
+  fi
 #  $JAVACMD org.apache.tomcat.shell.Startup "$@" 
   # no &
 
@@ -155,6 +165,7 @@ else
   echo "tomcat (start|env|run|stop|ant)"
   echo "        start - start tomcat in the background"
   echo "        run   - start tomcat in the foreground"
+  echo "              -security - use a SecurityManager when starting"
   echo "        stop  - stop tomcat"
   echo "        env  -  set CLASSPATH and TOMCAT_HOME env. variables"
   echo "        ant  - run ant script in tomcat context ( classes, directories, etc)"

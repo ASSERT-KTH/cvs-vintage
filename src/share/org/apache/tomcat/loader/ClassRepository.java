@@ -56,81 +56,27 @@
  * [Additional notices, if required by prior licensing conditions]
  *
  */ 
+package org.apache.tomcat.loader;
 
-package org.apache.tomcat.core;
-
-import org.apache.tomcat.util.*;
 import java.io.*;
-import java.net.*;
+import java.lang.*;
 import java.util.*;
 import java.security.*;
 
-// This is not a class loader, any "normal" class loader can be used.
+public class ClassRepository {
+    private File file;
+    private ProtectionDomain protectionDomain;
 
-// XXX Should be named DynamicLoader - has nothing specific to servlets
+    public ClassRepository( File f, ProtectionDomain pd) {
+	file = f;
+	protectionDomain = pd;
+    } 
 
-/** Handle servlet and resource reloading
- */
-public interface ServletLoader {
+    public File getFile() {
+	return file;
+    }
 
-    /** Check if we need to reload one particular class.
-     *  No check is done for dependent classes.
-     *  The final decision about reloading is left to the caller.
-     */
-    public boolean shouldReload( String className );
-
-    /** Check if we need to reload. All loaded classes are
-     *  checked.
-     *  The final decision about reloading is left to the caller.
-     */
-    public boolean shouldReload();
-
-    /** Reset the class loader. The caller should take all actions
-     *  required by this step ( free resources for GC, etc)
-     */
-    public void reload();
-
-    /** Return a real class loader
-     */
-    public ClassLoader getClassLoader();
-    
-    /** Handle servlet loading. Same as getClassLoader().loadClass(name, true); 
-     */
-    public Class loadClass( String name)
-	throws ClassNotFoundException;
-
-
-    /** Return the class loader view of the class path
-     */
-    public String getClassPath();
-
-
-    /** Add a new directory or jar to the class loader.
-     *  Optionally, a SecurityManager ProtectionDomain can
-     *  be specified for use by the ClassLoader when defining
-     *  a class loaded from this entry in the repository.
-     *  Not all loaders can add resources dynamically -
-     *  that may require a reload.
-     */
-    public void addRepository( File f, ProtectionDomain pd );
-    // XXX notify if it can't add it
-    
-    
-    /** Add a new remote repository. Not all class loader will
-     *  support remote resources, use File if it's a local resource.
-     */
-    public void addRepository( URL url );
-    // XXX notify if it can't add it
-
+    public ProtectionDomain getProtectionDomain() {
+	return protectionDomain;
+    }
 }
-
-
-
-
-
-
-
-
-
-
-

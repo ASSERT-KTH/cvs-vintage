@@ -67,6 +67,7 @@ import org.apache.tomcat.util.*;
 import java.io.*;
 import java.net.*;
 import java.util.*;
+import java.security.*;
 import javax.servlet.http.*;
 
 import org.apache.tomcat.logging.*;
@@ -199,18 +200,72 @@ public class DefaultCMSetter extends BaseInterceptor {
 
     private void initURLs(Context context) {
 	ServletLoader loader=context.getServletLoader();
-	if( loader==null) return;
+        ContextManager cm = context.getContextManager();
+        if( loader==null || cm == null) return;
+        SecurityManager sm = System.getSecurityManager();
+        Permissions p = null;
+
+        String base = context.getDocBase();
+
+        /**
+         * Initialize default FilePermissions for Context if using SecurityManager
+         */
+        if( sm != null ) {
+            p = context.getPermissions();
+            if( p == null ) {
+                // Clone the Permissions to overcome readonly status
+                Permissions perms = cm.getPermissions();
+                p = new Permissions();
+                Enumeration enum=perms.elements();
+                while(enum.hasMoreElements()) {
+                    p.add((Permission)enum.nextElement());
+                }
+                // Add default read "-" FilePermission for docBase, classes, lib
+                FilePermission fp;
+                fp = new FilePermission(base + "-", "read");
+                if( fp != null )
+                    p.add((Permission)fp);
+            }
+        }
 
 	// Add "WEB-INF/classes"
 
-	String base = context.getDocBase();
 	File dir = new File(base + "/WEB-INF/classes");
 
         // GS, Fix for the jar@lib directory problem.
         // Thanks for Kevin Jones for providing the fix.
         dir = getAbsolute(dir, context);
 	if( dir.exists() ) {
-	    loader.addRepository( dir );
+            ProtectionDomain pd = null;
+            try {
+                if( sm != null ) {
+                    // Set the Default Security Permissions
+                    URL url = new URL("file:" + dir.getAbsolutePath());
+                    CodeSource cs = new CodeSource(url,null);
+                    pd = new ProtectionDomain(cs,p);
+                }
+                loader.addRepository( dir, pd );
+            } catch(Exception ex) {
+                System.out.println("Security init for Context " + base + " failed");
+            }
+        }
+
+        // Create ProtectionDomain for JSP's for use by JSP Engine if using SecurityManager
+        if( sm != null ) {
+            File work = (File) context.getAttribute(Constants.ATTRIB_WORKDIR);
+            if( work.exists() ) {
+                ProtectionDomain pd = null;
+                try {
+                    // Set the Default Security Permissions
+                    URL url = new URL("file:" + work.getAbsolutePath());
+                    CodeSource cs = new CodeSource(url,null);
+                    pd = new ProtectionDomain(cs,p);
+//                    loader.addRepository( work, pd );
+                    context.setAttribute(Constants.ATTRIB_JSP_ProtectionDomain, pd);
+                } catch(Exception ex) {
+                    System.out.println("Security init for Context " + base + " failed");
+                }
+            }
 	}
 
 	File f =  new File(base + "/WEB-INF/lib");
@@ -221,7 +276,19 @@ public class DefaultCMSetter extends BaseInterceptor {
 	for(int i=0; i < jars.size(); ++i) {
 	    String jarfile = (String) jars.elementAt(i);
 	    File jarF=new File(f, jarfile );
-	    loader.addRepository( getAbsolute( jarF, context) );
+            ProtectionDomain pd = null;
+            try {
+                // Setup ProtectionDomain for jar files if using SecurityManager
+                if( sm != null ) {
+                    // Set the Default Security Permissions
+                    URL url = new URL("file:" + jarF.getAbsolutePath());
+                    CodeSource cs = new CodeSource(url,null);
+                    pd = new ProtectionDomain(cs,p);
+                }
+                loader.addRepository( getAbsolute( jarF, context), pd );
+            } catch(Exception ex) {  
+                System.out.println("Security init for Context " + base + " failed");
+            }
 	}
     }
 

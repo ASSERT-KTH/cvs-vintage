@@ -128,6 +128,8 @@ public interface Response {
      */
     public ServletOutputStream getOutputStream() ;
 
+    public void doWrite( byte buffer[], int pos, int count) throws IOException;
+    
     public PrintWriter getWriter() throws IOException ;
 
     /** True if we are in an included servlet

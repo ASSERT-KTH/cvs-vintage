@@ -57,10 +57,12 @@ package org.apache.tomcat.loader;
 //package org.apache.java.lang;
 
 import java.io.*;
+import java.lang.*;
 import java.net.*;
 import java.text.*;
 import java.util.*;
 import java.util.zip.*;
+import java.security.*;
 
 /**
  * A class loader that loads classes from directories and/or zip-format
@@ -116,10 +118,15 @@ import java.util.zip.*;
  * @author Martin Pool
  * @author Jim Heintz
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version $Revision: 1.4 $ $Date: 2000/03/23 23:34:36 $
+ * @version $Revision: 1.5 $ $Date: 2000/05/26 18:55:27 $
  * @see java.lang.ClassLoader
  */
 public class AdaptiveClassLoader extends ClassLoader {
+
+    /**
+     * Instance of the SecurityManager installed.
+     */
+    static private SecurityManager sm;
 
     /**
      * Generation counter, incremented for each classloader as they are
@@ -201,16 +208,16 @@ public class AdaptiveClassLoader extends ClassLoader {
         // Verify that all the repository are valid.
         Enumeration e = classRepository.elements();
         while(e.hasMoreElements()) {
-            Object o = e.nextElement();
+            ClassRepository cp = (ClassRepository) e.nextElement();
             File file;
             String[] files;
             int i;
 
             // Check to see if element is a File instance.
             try {
-                file = (File) o;
+                file = cp.getFile();
             } catch (ClassCastException objectIsNotFile) {
-                throw new IllegalArgumentException("Object " + o
+                throw new IllegalArgumentException("Object " + cp
                     + "is not a valid \"File\" instance");
             }
 	    //	    org.apache.java.io.XXX
@@ -240,6 +247,11 @@ public class AdaptiveClassLoader extends ClassLoader {
                 }
             }
         }
+
+       // Install the SecurityManager if not already installed
+       if( generationCounter == 0 && sm == null ) {
+           sm = System.getSecurityManager();
+       }
 
         // Store the class repository for use
         this.repository = classRepository;
@@ -294,9 +306,8 @@ public class AdaptiveClassLoader extends ClassLoader {
             // System classes cannot be reloaded
             return false;
         } else {
-            boolean reload =
-                (entry.origin.lastModified() != entry.lastModified);
-            return reload;
+            return (entry.origin.lastModified() != entry.lastModified);
+        
         }
     }
 
@@ -392,19 +403,28 @@ public class AdaptiveClassLoader extends ClassLoader {
             return c;
         }
 
-        if (!securityAllowsClass(name)) {
-            return loadSystemClass(name, resolve);
+        // Make sure we can access this class when using a SecurityManager
+        if (sm != null) {
+            int i = name.lastIndexOf('.');
+            if (i >= 0)
+                sm.checkPackageAccess(name.substring(0,i));
         }
 
         // Attempt to load the class from the system
         try {
             c = loadSystemClass(name, resolve);
             if (c != null) {
-                if (resolve) resolveClass(c);
                 return c;
             }
         } catch (Exception e) {
             c = null;
+        }
+
+        // Make sure we can define this class when using a SecurityManager
+        if (sm != null) {
+            int i = name.lastIndexOf('.');
+            if (i >= 0)
+                sm.checkPackageDefinition(name.substring(0,i));
         }
 
         // Try to load it from each repository
@@ -415,7 +435,8 @@ public class AdaptiveClassLoader extends ClassLoader {
         while (repEnum.hasMoreElements()) {
             byte[] classData=null;
 
-            File file = (File) repEnum.nextElement();
+            ClassRepository cp = (ClassRepository) repEnum.nextElement();
+            File file = cp.getFile();
             try {
                 if (file.isDirectory()) {
                     classData =
@@ -424,6 +445,13 @@ public class AdaptiveClassLoader extends ClassLoader {
 		    classData =
                         loadClassFromZipfile(file, name, classCache);
 		}
+            // Make sure we catch and rethrow SecurityManager exceptions
+            } catch(AccessControlException aex) {
+                aex.printStackTrace();
+                throw aex;
+            } catch(SecurityException sex) {
+                sex.printStackTrace();
+                throw sex;
             } catch(IOException ioe) {
                 // Error while reading in data, consider it as not found
                 classData = null;
@@ -432,8 +460,13 @@ public class AdaptiveClassLoader extends ClassLoader {
 	    }
 
             if (classData != null) {
+                // Define the class with a ProtectionDomain if using a SecurityManager
+                if( sm != null ) {
                 // Define the class
+                    c = defineClass(name, classData, 0, classData.length, cp.getProtectionDomain());
+                } else {
                 c = defineClass(name, classData, 0, classData.length);
+                }
                 // Cache the result;
                 classCache.loadedClass = c;
                 // Origin is set by the specific loader
@@ -474,35 +507,6 @@ public class AdaptiveClassLoader extends ClassLoader {
         if (resolve) resolveClass(c);
 
         return c;
-    }
-
-    /**
-     * Checks whether a classloader is allowed to define a given class,
-     * within the security manager restrictions.
-     */
-    // XXX: Should we perhaps also not allow classes to be dynamically
-    // loaded from org.apache.jserv.*?  Would it introduce security
-    // problems if people could override classes here?
-    // <mbp@humbug.org.au 1998-07-29>
-    private boolean securityAllowsClass(String className) {
-        try {
-            SecurityManager security = System.getSecurityManager();
-
-            if (security == null) {
-                // if there's no security manager then all classes
-                // are allowed to be loaded
-                return true;
-            }
-
-            int lastDot = className.lastIndexOf('.');
-            // Check if we are allowed to load the class' package
-            security.checkPackageDefinition((lastDot > -1)
-                ? className.substring(0, lastDot) : "");
-            // Throws if not allowed
-            return true;
-        } catch (SecurityException e) {
-            return false;
-        }
     }
 
     /**
@@ -615,7 +619,8 @@ public class AdaptiveClassLoader extends ClassLoader {
             // Try to find it from every repository
             Enumeration repEnum = repository.elements();
             while (repEnum.hasMoreElements()) {
-                File file = (File) repEnum.nextElement();
+                ClassRepository cp = (ClassRepository) repEnum.nextElement();
+                File file = cp.getFile();
                 if (file.isDirectory()) {
                     s = loadResourceFromDirectory(file, name);
                 }
@@ -715,7 +720,8 @@ public class AdaptiveClassLoader extends ClassLoader {
         // We got here so we have to look for the resource in our list of repository elements
         Enumeration repEnum = repository.elements();
         while (repEnum.hasMoreElements()) {
-            File file = (File) repEnum.nextElement();
+            ClassRepository cp = (ClassRepository) repEnum.nextElement();
+            File file = cp.getFile();
             // Construct a file://-URL if the repository is a directory
             if (file.isDirectory()) {
                 String fileName = name.replace('/', File.separatorChar);

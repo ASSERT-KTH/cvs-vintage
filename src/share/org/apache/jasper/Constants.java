@@ -137,6 +137,12 @@ public class Constants {
     public static final String TMP_DIR = "javax.servlet.context.tempdir";
 
     /**
+     * ProtectionDomain to use for JspLoader defineClass() for current
+     * Context when using a SecurityManager.
+     */
+    public static final String ATTRIB_JSP_ProtectionDomain = "tomcat.context.jsp.protection_domain";
+
+    /**
      * A token which is embedded in file names of the generated
      * servlet. 
      */

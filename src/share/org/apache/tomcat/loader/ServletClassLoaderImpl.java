@@ -174,5 +174,9 @@ public class ServletClassLoaderImpl extends NetworkClassLoader implements Servle
      */
     public void addRepository( URL url ) {
 	return;// no support for URLs in AdaptiveClassLoader
-    }    
+    }
+
+    public void addRepository(File f , java.security.ProtectionDomain pd) {
+
+    }
 }

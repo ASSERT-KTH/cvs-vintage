@@ -64,6 +64,11 @@ public class Tomcat {
  	xh.addRule( "ContextManager/Context", xh.objectCreate("org.apache.tomcat.core.Context"));
 	xh.addRule( "ContextManager/Context", xh.setParent( "setContextManager") );
 	xh.addRule( "ContextManager/Context", xh.setProperties() );
+        // Rules for setting Context SecurityManager Permissions
+        xh.addRule( "ContextManager/Context/Permission",xh.methodSetter("setPermission",3));
+        xh.addRule( "ContextManager/Context/Permission",xh.methodParam(0,"className"));
+        xh.addRule( "ContextManager/Context/Permission",xh.methodParam(1,"attribute"));
+        xh.addRule( "ContextManager/Context/Permission",xh.methodParam(2,"value"));
 	xh.addRule( "ContextManager/Context", xh.addChild( "addContext", null ) );
 
 	// Virtual host support.
@@ -132,6 +137,19 @@ public class Tomcat {
     }
     
 
+    /** Setup a SecurityManager, this can only be called once or a
+     *  SecurityException will be generated.
+    */
+    void setSecurityManager( XmlMapper xh ) {
+        xh.addRule("Server/SecurityManager", xh.objectCreate("org.apache.tomcat.loader.SetSecurityManager"));
+        xh.addRule("Server/SecurityManager", xh.setProperties());
+        xh.addRule("Server/SecurityManager/Permission",xh.methodSetter("setPermission",3));
+        xh.addRule("Server/SecurityManager/Permission",xh.methodParam(0,"className"));
+        xh.addRule("Server/SecurityManager/Permission",xh.methodParam(1,"attribute"));
+        xh.addRule("Server/SecurityManager/Permission",xh.methodParam(2,"value"));
+        xh.addRule("Server/SecurityManager",xh.addChild("addPermissions",null));
+    }
+
     /**
      * Return the configuration file we are processing.  If the
      * <code>-config filename</code> command line argument is not
@@ -179,6 +197,7 @@ public class Tomcat {
 	setHelper( xh );
 	setConnectorHelper( xh );
 	setLogHelper( xh );
+        setSecurityManager( xh );
 
 	File f = getConfigFile(cm);
 	try {
@@ -296,28 +315,3 @@ public class Tomcat {
     }        
 
 }
-
-
-class HostConfig {
-    ContextManager cm;
-    String hostName;
-    
-    public HostConfig(ContextManager cm) {
-	this.cm=cm;
-    }
-
-    public void setName( String name ) {
-	hostName=name;
-    }
-    
-    public void addContext( Context ctx ) {
-	try {
-	    ctx.setContextManager( cm );
-	    ctx.setHost( hostName );
-	    cm.addContext( ctx );
-	} catch(Exception ex ) {
-	    ex.printStackTrace();
-	}
-    }
-}
-    

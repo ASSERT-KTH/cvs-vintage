@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/jasper/Options.java,v 1.10 2000/02/23 02:23:44 mandar Exp $
- * $Revision: 1.10 $
- * $Date: 2000/02/23 02:23:44 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/jasper/Options.java,v 1.11 2000/05/26 18:55:10 costin Exp $
+ * $Revision: 1.11 $
+ * $Date: 2000/05/26 18:55:10 $
  *
  * ====================================================================
  * 
@@ -121,4 +121,8 @@ public interface Options {
      */
     public String getJspCompilerPath();
     
+    /**
+     * ProtectionDomain for this JSP Context when using a SecurityManager
+     */
+    public Object getProtectionDomain();
 }

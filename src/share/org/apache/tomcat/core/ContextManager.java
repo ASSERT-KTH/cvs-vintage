@@ -63,6 +63,7 @@ package org.apache.tomcat.core;
 import org.apache.tomcat.core.*;
 import org.apache.tomcat.net.*;
 import org.apache.tomcat.context.*;
+import org.apache.tomcat.loader.*;
 import org.apache.tomcat.request.*;
 import org.apache.tomcat.util.*;
 import org.apache.tomcat.logging.*;
@@ -71,6 +72,7 @@ import javax.servlet.http.*;
 import java.io.*;
 import java.net.*;
 import java.util.*;
+import java.security.*;
 
 /* XXX The main function of CM is to serve as an entry point into
    tomcat and manage a list of resources that are part of the servlet
@@ -128,7 +130,12 @@ public class ContextManager {
     // cache - faster access to interceptors, using [] instead of Vector
     ContextInterceptor cInterceptors[];
     RequestInterceptor rInterceptors[];
-    
+
+    /**
+     * The default security permissions to use
+     */
+    private Permissions permissions;
+
     /** Adapters for the incoming protocol
      */
     Vector connectors=new Vector();
@@ -245,7 +252,22 @@ public class ContextManager {
 	    workDir=getHome() + File.separator + DEFAULT_WORK_DIR;
 	return workDir;
     }
+    
+    /**
+     * Get the default Security Permissions for this server
+     */
+    public Object getPermissions() {
+	return permissions;
+    }
 
+    /**
+     * Add a Permission to the default Permissions
+     */
+    public void addPermissions(SetSecurityManager secman) {
+	permissions = secman.getPermissions();
+    }
+
+    
     // -------------------- Support functions --------------------
 
     /**
@@ -933,7 +955,7 @@ public class ContextManager {
     {
 	// find if we already have a note with this name ( this is in init(), not critical )
 	for( int i=0; i< noteId[noteType] ; i++ ) {
-	    if( noteName[noteType][i].equals( name ) )
+	    if( name.equals( noteName[noteType][i] ) )
 		return i;
 	}
 	

@@ -63,6 +63,7 @@ import org.apache.tomcat.core.*;
 import java.io.*;
 import java.net.*;
 import java.util.*;
+import java.security.*;
 
 // XXX extends ClassLoader is need only to allow access to protected loadClass
 // method in ClassLoader. The alternative is to require a public method with
@@ -148,7 +149,8 @@ public class AdaptiveServletLoader  extends AdaptiveClassLoader implements Servl
         String cpath = "";
 
         for(Enumeration e = classP.elements() ; e.hasMoreElements(); ) {
-            File f = (File) e.nextElement();
+            ClassRepository cp = (ClassRepository) e.nextElement();
+            File f = cp.getFile();
             if (cpath.length()>0) cpath += separator;
             cpath += f;
         }
@@ -158,13 +160,18 @@ public class AdaptiveServletLoader  extends AdaptiveClassLoader implements Servl
 
 
     /** Add a new directory or jar to the class loader.
+     *  Optionally, a SecurityManager ProtectionDomain can
+     *  be specified for use by the ClassLoader when defining
+     *  a class loaded from this entry in the repository.
      *  Not all loaders can add resources dynamically -
      *  that may require a reload.
      */
-    public void addRepository( File f ) {
-	//	System.out.println("Adding " + f.getName() );
+    public void addRepository( File f, ProtectionDomain pd ) {
+//      System.out.println("addRepository " + f.getAbsolutePath() );
 	try {
-	    classP.addElement(new File(FileUtil.patch(f.getCanonicalPath())));
+            classP.addElement(
+                new ClassRepository( new File(FileUtil.patch(f.getCanonicalPath())), pd )
+                );
 	} catch( IOException ex) {
             ex.printStackTrace();
 	}

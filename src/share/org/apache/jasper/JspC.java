@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/jasper/JspC.java,v 1.11 2000/05/25 15:57:42 shemnon Exp $
- * $Revision: 1.11 $
- * $Date: 2000/05/25 15:57:42 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/jasper/JspC.java,v 1.12 2000/05/26 18:55:10 costin Exp $
+ * $Revision: 1.12 $
+ * $Date: 2000/05/26 18:55:10 $
  *
  * ====================================================================
  * 
@@ -161,6 +161,11 @@ public class JspC implements Options { //, JspCompilationContext {
     public boolean getMappedFile() {
 		return mappedFile;
 	}
+
+    // Off-line compiler, no need for security manager
+    public Object getProtectionDomain() {
+	return null;
+    }
     
     public boolean getSendErrorToClient() {
         // implied send to System.err

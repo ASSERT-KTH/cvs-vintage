@@ -82,6 +82,10 @@ public class Constants {
     public static final String ATTRIB_WORKDIR1 = "sun.servlet.workdir";
     public static final String ATTRIB_WORKDIR = "javax.servlet.context.tempdir";
 
+    // ProtectionDomain defined for use by JSP's in a Context
+    // when using a SecurityManager
+    public static final String ATTRIB_JSP_ProtectionDomain = "tomcat.context.jsp.protection_domain";
+
     public static final String SESSION_COOKIE_NAME = "JSESSIONID";
     public static final String SESSION_PARAMETER_NAME = "jsessionid";
     

@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/jasper/compiler/Compiler.java,v 1.15 2000/04/25 18:28:20 mandar Exp $
- * $Revision: 1.15 $
- * $Date: 2000/04/25 18:28:20 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/jasper/compiler/Compiler.java,v 1.16 2000/05/26 18:55:12 costin Exp $
+ * $Revision: 1.16 $
+ * $Date: 2000/05/26 18:55:12 $
  *
  * ====================================================================
  * 
@@ -67,6 +67,7 @@ import java.io.PrintWriter;
 import java.io.ByteArrayOutputStream;
 import java.io.FileOutputStream;
 
+import java.security.*;
 import org.apache.jasper.JspCompilationContext;
 import org.apache.jasper.Constants;
 import org.apache.jasper.JasperException;
@@ -101,6 +102,42 @@ public abstract class Compiler {
      *         was recompiled. 
      */
     public boolean compile()
+        throws FileNotFoundException, JasperException, Exception 
+    {
+        if( System.getSecurityManager() == null )
+            return compile_context();
+        else
+            return compile_priviledged();
+    }
+
+    /**
+     * When using a SecurityManager and a JSP page itself triggers
+     * another JSP due to an errorPage or from a jsp:include,
+     * the compile must be performed with the Permissions of
+     * this class using doPriviledged because the parent JSP
+     * may not have sufficient Permissions.
+     */
+    private boolean compile_priviledged()
+    {
+
+        class doInit implements PrivilegedAction {
+            Boolean result;
+            public Object run()
+            {
+                try {
+                    result = new Boolean(compile_context());
+                } catch(Exception ex) {
+                    return new Boolean(false);
+                }
+                return result;
+            } 
+        }    
+        doInit di = new doInit();
+        Boolean res = (Boolean)AccessController.doPrivileged(di);
+        return res.booleanValue();
+    }
+
+    private boolean compile_context()
         throws FileNotFoundException, JasperException, Exception 
     {
         String pkgName = mangler.getPackageName();
