@@ -32,7 +32,7 @@ import org.gjt.sp.jedit.MiscUtilities;
 
 /**
  * @author Slava Pestov
- * @version $Id: VFSFileNameField.java,v 1.12 2003/05/23 21:19:52 spestov Exp $
+ * @version $Id: VFSFileNameField.java,v 1.13 2003/06/11 01:20:19 spestov Exp $
  * @since jEdit 4.2pre1
  */
 class VFSFileNameField extends HistoryTextField
@@ -192,7 +192,7 @@ class VFSFileNameField extends HistoryTextField
 	{
 		BrowserView view = browser.getBrowserView();
 		view.selectNone();
-		view.getTable().doTypeSelect(currentText,false);
+		view.getTable().doTypeSelect(currentText,true);
 
 		VFS.DirectoryEntry[] files = view.getSelectedFiles();
 		if(files.length == 0)
