@@ -13,6 +13,7 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
+import java.util.Vector;
 import javax.management.MBeanServer;
 import javax.management.ObjectName;
 import javax.management.ReflectionException;
@@ -27,7 +28,7 @@ import com.sun.xml.parser.Parser;
  * and then starts a list of MBeans according to the dependencies in the
  * file.
  * @author Aaron Mulder <ammulder@alumni.princeton.edu>
- * @version $Revision: 1.2 $
+ * @version $Revision: 1.3 $
  */
 public class DependencyManager {
     // Static --------------------------------------------------------
@@ -45,6 +46,7 @@ public class DependencyManager {
     private HashMap remainingBeans;
     private HashSet pendingBeans;
     private HashSet otherMBeans;
+    private Vector mbeanStartOrder;
     private MBeanServer server;
 
     // Constructors --------------------------------------------------
@@ -58,6 +60,7 @@ public class DependencyManager {
         remainingBeans = new HashMap();
         pendingBeans = new HashSet();
         otherMBeans = new HashSet();
+        mbeanStartOrder = new Vector();
     }
 
     // Public --------------------------------------------------------
@@ -89,6 +92,7 @@ public class DependencyManager {
         remainingBeans.clear();
         pendingBeans.clear();
         otherMBeans.clear();
+        mbeanStartOrder.clear();
         Iterator it = server.queryNames(null, null).iterator();
 
         // Identify all the MBeans
@@ -110,7 +114,7 @@ public class DependencyManager {
         it = ((Map)remainingBeans.clone()).keySet().iterator();
         while(it.hasNext()) {
             String next = (String)it.next();
-            if(!processService(next)) {
+            if(!processService(next, true)) {
                 System.out.println("Unable to start service '"+next+"'");
             }
         }
@@ -124,11 +128,74 @@ public class DependencyManager {
             }
         }
 
-        // Clear out remaining data structures.
+        // Clear out remaining temporary data structures.
         System.out.println(loadedBeans.size()+" services and "+otherMBeans.size()+" other MBeans started.");
         loadedBeans.clear();
-        dependencies.clear();
         otherMBeans.clear();
+        mbeanStartOrder.clear();
+    }
+
+    /**
+     * Stops all the MBeans in a server in an order consistant with the
+     * dependencies.
+     */
+    public void stopMBeans(MBeanServer server) {
+        this.server = server;
+        loadedBeans.clear();
+        remainingBeans.clear();
+        pendingBeans.clear();
+        otherMBeans.clear();
+        mbeanStartOrder.clear();
+        Iterator it = server.queryNames(null, null).iterator();
+
+        // Identify all the MBeans
+        while(it.hasNext()) {
+            ObjectName name = (ObjectName)it.next();
+            String service = getService(name);
+            if(service == null) {
+                otherMBeans.add(name);
+                continue;
+            }
+            Set set = (Set)remainingBeans.get(service);
+            if(set == null)
+                set = new HashSet();
+            set.add(name);
+            remainingBeans.put(service, set);
+        }
+
+        // Get ordering for all the MBeans that are services
+        it = ((Map)remainingBeans.clone()).keySet().iterator();
+        while(it.hasNext()) {
+            String next = (String)it.next();
+            if(!processService(next, false)) {
+                System.out.println("Unable to stop service '"+next+"'");
+            }
+        }
+
+        // Stop all the MBeans that are not services
+        it = otherMBeans.iterator();
+        while(it.hasNext()) {
+            ObjectName name = (ObjectName)it.next();
+            if(!stopMBean(name)) {
+                System.out.println("Unable to stop MBean '"+name.getCanonicalName()+"'");
+            }
+        }
+
+        // Stop all the MBeans that are services in the reverse of
+        // the valid startup order.
+        int max = mbeanStartOrder.size();
+        for(int i=max-1; i >= 0; i--) {
+            ObjectName name = (ObjectName)mbeanStartOrder.elementAt(i);
+            if(!stopMBean(name)) {
+                System.out.println("Unable to stop MBean '"+name.getCanonicalName()+"'");
+            }
+        }
+
+        // Clear out remaining temporary data structures.
+        System.out.println(loadedBeans.size()+" services and "+otherMBeans.size()+" other MBeans stopped.");
+        loadedBeans.clear();
+        otherMBeans.clear();
+        mbeanStartOrder.clear();
     }
 
     /**
@@ -152,7 +219,7 @@ public class DependencyManager {
      * Loads all the dependencies for a service, and then the service itself.
      * This is a recursive process.
      */
-    private boolean processService(String target) {
+    private boolean processService(String target, boolean executeStart) {
         if(pendingBeans.contains(target))
             throw new RuntimeException("Circular dependencies!");
         if(loadedBeans.contains(target))
@@ -161,19 +228,19 @@ public class DependencyManager {
         pendingBeans.add(target);
         Set set = (Set)dependencies.get(target);
         if(set == null) {
-            return loadService(target);
+            return loadService(target, executeStart);
         } else {
             Iterator it = set.iterator();
             while(it.hasNext()) {
                 Dependency dep = (Dependency)it.next();
                 if(DEBUG) System.out.println("  Service '"+target+"' depends on '"+dep.name+"'");
                 if(!loadedBeans.contains(dep.name)) {
-                    boolean result = processService(dep.name);
+                    boolean result = processService(dep.name, executeStart);
                     if(!result && dep.required)
                         return false;
                 }
             }
-            return loadService(target);
+            return loadService(target, executeStart);
         }
     }
 
@@ -181,19 +248,25 @@ public class DependencyManager {
      * Loads all instances of a service.  That is, all MBeans which have
      * "service=target" in the ObjectName.
      */
-    private boolean loadService(String target) {
+    private boolean loadService(String target, boolean executeStart) {
         boolean loaded = false;
         Set set = (Set)remainingBeans.get(target);
         if(set != null) {
-            if(DEBUG) System.out.println("Starting service '"+target+"'");
+            if(DEBUG) System.out.println("Checking instances for service '"+target+"'");
             Iterator it = set.iterator();
             while(it.hasNext()) {
-                loaded = startMBean((ObjectName)it.next());
-                if(!loaded)
-                    break;
+                ObjectName oName = (ObjectName)it.next();
+                mbeanStartOrder.add(oName);
+                if(executeStart) {
+                    loaded = startMBean(oName);
+                    if(!loaded)
+                        break;
+                    loaded = true;
+                } else {
+                    loaded = true;
+                }
             }
             remainingBeans.remove(target);
-            dependencies.remove(target);
         }
         loadedBeans.add(target);
         pendingBeans.remove(target);
@@ -220,6 +293,28 @@ public class DependencyManager {
             System.out.println("Error starting service '"+name.getCanonicalName()+"': "+t);
         }
         return loaded;
+    }
+
+    /**
+     * Calls the "destroy" method on an MBean.  If no such method is available,
+     * that's OK, but if the call fails for another reason, returns false.
+     */
+    private boolean stopMBean(ObjectName name) {
+        boolean stopped = false;
+        if(DEBUG) System.out.println("Stopping instance '"+name.getCanonicalName()+"'");
+        try {
+            server.invoke(name, "destroy", new Object[0], new String[0]);
+            stopped = true;
+        } catch(ReflectionException e) {
+            if(e.getTargetException() instanceof NoSuchMethodException) {
+                stopped = true;  // This bean doesn't have a destroy!
+            } else {
+                System.out.println("Error stopping service '"+name.getCanonicalName()+"': "+e.getTargetException());
+            }
+        } catch(Throwable t) {
+            System.out.println("Error stopping service '"+name.getCanonicalName()+"': "+t);
+        }
+        return stopped;
     }
 
     /**

@@ -30,7 +30,7 @@ import org.jboss.system.SecurityAssociation;
  *   @see <related>
  *   @author Rickard Öberg (rickard.oberg@telkel.com)
  *   @author <a href="mailto:docodan@nycap.rr.com">Daniel O'Connor</a>.
- *   @version $Revision: 1.14 $
+ *   @version $Revision: 1.15 $
  */
 public class Main
 {
@@ -157,9 +157,9 @@ public class Main
             byte[] depBytes = new byte[depFile.available()];
             depFile.read(depBytes);
             String depXML = new String(depBytes);
-            DependencyManager mgr = new DependencyManager();
-            mgr.loadXML(depXML);
-            mgr.startMBeans(server);
+            final DependencyManager manager = new DependencyManager();
+            manager.loadXML(depXML);
+            manager.startMBeans(server);
 
              // Add shutdown hook
              try
@@ -168,6 +168,8 @@ public class Main
                 {
                    public void run()
                    {
+                       manager.stopMBeans(server);
+/*
                       err.println("Shutdown");
                       Set mBeans = server.queryNames(null, null);
                       Iterator names = mBeans.iterator();
@@ -184,6 +186,7 @@ public class Main
                          }
                       }
                       err.println("Shutting done");
+*/
                    }
                 });
                 System.out.println ("Shutdown hook added");
