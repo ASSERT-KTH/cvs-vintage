@@ -31,6 +31,7 @@ import org.columba.core.gui.util.FontProperties;
 import org.columba.core.gui.util.StartUpFrame;
 import org.columba.core.logging.ColumbaLogger;
 import org.columba.core.plugin.ActionPluginHandler;
+import org.columba.core.plugin.ConfigPluginHandler;
 import org.columba.core.plugin.FramePluginHandler;
 import org.columba.core.plugin.InterpreterHandler;
 import org.columba.core.plugin.PluginManager;
@@ -113,6 +114,7 @@ public class Main {
     MainInterface.pluginManager.registerHandler(new ActionPluginHandler());
 
     MainInterface.pluginManager.registerHandler(new MenuPluginHandler("org.columba.core.menu"));
+	MainInterface.pluginManager.registerHandler(new ConfigPluginHandler());
 
     MainInterface.pluginManager.registerHandler(new FramePluginHandler());
     

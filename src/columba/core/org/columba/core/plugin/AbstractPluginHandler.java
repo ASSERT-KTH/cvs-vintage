@@ -23,6 +23,7 @@ import java.util.List;
 import java.util.ListIterator;
 import java.util.Vector;
 
+import org.columba.core.gui.util.NotifyDialog;
 import org.columba.core.loader.DefaultClassLoader;
 import org.columba.core.logging.ColumbaLogger;
 import org.columba.core.xml.XmlElement;
@@ -33,9 +34,37 @@ import org.columba.core.xml.XmlElement;
  *
  * Every entrypoint is represented by this abstract handler class
  * 
+ * We use the Strategy Pattern here.
+ * 
+ * The <class>AbstractPluginHandler</class> is the Context of the 
+ * Strategy pattern.
+ * 
+ * The plugins (<interface>PluginInterface</interface>) represent
+ * the used strategy.
+ * 
+ * Therefore, the context is responsible to set the appropriate 
+ * strategy we use.
+ * 
+ * In other words the plugin handler decides which plugin should be
+ * executed and returns an instance of the plugin class.
+ * 
+ * 
+ * example of loading a plugin:
+ * 
+ *   
+ * ActionPluginHandler handler = (ActionPluginHandler) 
+ *           MainInterface.pluginManager.getHandler("org.columba.core.action");
+ * 
+ * Object[] parameter = { myparam };
+ * 
+ * Action action = handler.getPlugin("MoveAction", parameter);
+ * 
+ * 
+ * Please read the documentation of the corresponding methods for more
+ * details.
  * 
  */
-public abstract class AbstractPluginHandler implements PluginHandlerInterface{
+public abstract class AbstractPluginHandler implements PluginHandlerInterface {
 	protected String id;
 
 	protected XmlElement parentNode;
@@ -48,7 +77,7 @@ public abstract class AbstractPluginHandler implements PluginHandlerInterface{
 	protected Hashtable transformationTable;
 
 	protected List externalPlugins;
-	
+
 	/**
 	 * @param id
 	 * @param config
@@ -59,11 +88,11 @@ public abstract class AbstractPluginHandler implements PluginHandlerInterface{
 		transformationTable = new Hashtable();
 		if (config != null)
 			pluginListConfig = new PluginListConfig(config);
-			
+
 		externalPlugins = new Vector();
-		
+
 		ColumbaLogger.log.debug("initialising plugin-handler: " + id);
-		
+
 	}
 
 	/**
@@ -81,15 +110,44 @@ public abstract class AbstractPluginHandler implements PluginHandlerInterface{
 	}
 
 	/**
-	 * @param name
-	 * @param args
-	 * @return
+	 * 
+	 * Returns an instance of the plugin
+	 * 
+	 * example plugin constructor:
+	 * 
+	 * public Action(JFrame frame, String text)
+	 * {
+	 *   .. do anything ..
+	 * }
+	 * 
+	 * --> arguments:
+	 * 
+	 * Object[] args = { frame, text };
+	 * 
+	 * @param name		name of plugin 
+	 * @param args		constructor arguments needed to instanciate the plugin
+	 * @return 			instance of plugin class
+	 *
 	 * @throws Exception
 	 */
 	public Object getPlugin(String name, Object[] args) throws Exception {
-		ColumbaLogger.log.debug("name="+name);
-		
+		ColumbaLogger.log.debug("name=" + name);
+		ColumbaLogger.log.debug("arguments=" + args);
+
 		String className = getPluginClassName(name, "class");
+		ColumbaLogger.log.debug("class=" + className);
+
+		if (className == null) {
+			// if className isn't specified show error dialog
+			NotifyDialog dialog = new NotifyDialog();
+			dialog.showDialog(
+				"Error while trying to instanciate plugin "
+					+ name
+					+ ".\n Classname wasn't found. This probably means that plugin.xml is broken or incomplete.");
+
+			return null;
+		}
+
 		return getPlugin(name, className, args);
 	}
 
@@ -100,14 +158,8 @@ public abstract class AbstractPluginHandler implements PluginHandlerInterface{
 	 * @return
 	 * @throws Exception
 	 */
-	public Object getPlugin(String name, String className, Object[] args)
+	protected Object getPlugin(String name, String className, Object[] args)
 		throws Exception {
-
-		/*
-		ColumbaLogger.log.debug("name="+name);
-		ColumbaLogger.log.debug("classname="+className);
-		ColumbaLogger.log.debug("args="+args);
-		*/
 
 		try {
 			return loadPlugin(className, args);
@@ -148,8 +200,8 @@ public abstract class AbstractPluginHandler implements PluginHandlerInterface{
 	}
 
 	/**
-	 * @param name
-	 * @param id
+	 * @param name      example: "org.columba.example.TextPlugin"
+	 * @param id		this is usually just "class"
 	 * @return
 	 */
 	protected String getPluginClassName(String name, String id) {
@@ -159,10 +211,21 @@ public abstract class AbstractPluginHandler implements PluginHandlerInterface{
 		for (int i = 0; i < count; i++) {
 
 			XmlElement action = parentNode.getElement(i);
-			String s = action.getAttribute("name");
 
-			if (name.equals(s))
-				return action.getAttribute(id);
+			String s = action.getAttribute("name");
+			if (s.indexOf('$') != -1) {
+				// this is an external plugin
+				// -> extract the correct id
+				s = s.substring(0, s.indexOf('$'));
+
+			}
+
+			if (name.equals(s)) {
+
+				String clazz = action.getAttribute(id);
+
+				return clazz;
+			}
 
 		}
 
@@ -187,9 +250,25 @@ public abstract class AbstractPluginHandler implements PluginHandlerInterface{
 
 		return list;
 	}
-	
-	public ListIterator getExternalPlugins()
-	{
+
+	public boolean exists(String id) {
+		ColumbaLogger.log.debug("id=" + id);
+
+		String[] list = getPluginIdList();
+
+		for (int i = 0; i < list.length; i++) {
+			String plugin = list[i];
+			String searchId = plugin.substring(0, plugin.indexOf("$"));
+			ColumbaLogger.log.debug(" - plugin id=" + plugin);
+			ColumbaLogger.log.debug(" - search id=" + searchId);
+			if (searchId.equals(id))
+				return true;
+		}
+
+		return false;
+	}
+
+	public ListIterator getExternalPlugins() {
 		return externalPlugins.listIterator();
 	}
 
@@ -213,7 +292,7 @@ public abstract class AbstractPluginHandler implements PluginHandlerInterface{
 	 * @return
 	 * @throws Exception
 	 */
-	public Object loadPlugin(String className, Object[] args)
+	protected Object loadPlugin(String className, Object[] args)
 		throws Exception {
 
 		return new DefaultClassLoader().instanciate(className, args);
@@ -255,7 +334,7 @@ public abstract class AbstractPluginHandler implements PluginHandlerInterface{
 		// add external plugin to list
 		// --> this is used to distinguish internal/external plugins
 		externalPlugins.add(id);
-		
+
 		ListIterator iterator = extension.getElements().listIterator();
 		XmlElement action;
 		while (iterator.hasNext()) {

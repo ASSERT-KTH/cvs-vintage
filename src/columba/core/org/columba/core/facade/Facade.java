@@ -18,8 +18,11 @@ package org.columba.core.facade;
 import java.io.File;
 
 import org.columba.core.config.Config;
+import org.columba.core.main.MainInterface;
+import org.columba.core.plugin.PluginResourceLoader;
 import org.columba.core.util.TempFileStore;
 import org.columba.core.xml.XmlElement;
+import org.columba.core.xml.XmlIO;
 
 /**
  * @author fdietz
@@ -57,4 +60,21 @@ public class Facade {
 		return TempFileStore.createTempFile();
 	}
 
+	/**
+	 * 
+	 * Returns the top xml node of config.xml found in 
+	 * the plugin folder.
+	 * 
+	 * @param pluginId	id of your plugin
+	 * 
+	 * @return XmlIO
+	 */
+	public static XmlIO getPluginConfiguration(String pluginId) {
+		return MainInterface.pluginManager.getConfiguration(pluginId);
+	}
+	
+	public static PluginResourceLoader createPluginResourceLoader(String pluginId)
+	{
+		return new PluginResourceLoader(pluginId);
+	}
 }

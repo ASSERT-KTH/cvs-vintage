@@ -53,16 +53,8 @@ import org.columba.core.xml.XmlIO;
  * HashMap to save all plugin folders.
  */
 public class PluginManager {
+	Map elements;
 
-	
-	/**
-	 * 
-	 * Save all plugin handlers in this <interface>Map</interface>.
-	 * Use plugin handler id as key, <interface>PluginHandlerInterface</interface> as value
-	 * 
-	 */
-	Hashtable pluginHandlers;
-	
 	/**
 	 * 
 	 * Save all plugin directories in this <interface>Map</interface>.
@@ -70,8 +62,6 @@ public class PluginManager {
 	 * 
 	 */
 	Map folders;
-	Map elements;
-	Map jarFiles;
 
 	/**
 	 * 
@@ -79,24 +69,33 @@ public class PluginManager {
 	 * 
 	 */
 	List ids;
+	Map jarFiles;
+
+	/**
+	 * 
+	 * Save all plugin handlers in this <interface>Map</interface>.
+	 * Use plugin handler id as key, <interface>PluginHandlerInterface</interface> as value
+	 * 
+	 */
+	Hashtable pluginHandlers;
 
 	/**
 	 * Constructor for PluginManager.
 	 */
 	public PluginManager() {
 		super();
-		
+
 		// init map
 		pluginHandlers = new Hashtable(10);
 
 	}
 
-	public void addPlugin(File folder) {
-		
+	public String addPlugin(File folder) {
+
 		if ((!folder.isDirectory()) || (folder.getName().equals("CVS"))) {
 			// this file isn't a directory
 			// -> skip it
-			return;
+			return null;
 		}
 
 		ColumbaLogger.log.info("registering plugin: " + folder);
@@ -105,9 +104,9 @@ public class PluginManager {
 		// skip if it doesn't exist
 		File xmlFile = new File(folder, "plugin.xml");
 		if (xmlFile == null)
-			return;
+			return null;
 		if (xmlFile.exists() == false)
-			return;
+			return null;
 
 		XmlIO config = new XmlIO();
 		try {
@@ -122,7 +121,8 @@ public class PluginManager {
 		ids.add(id);
 		elements.put(id, element);
 		folders.put(id, folder);
-	
+		jarFiles.put(id, folder);
+
 		XmlElement runtime = element.getElement("runtime");
 		//String type = runtime.getAttribute("type");
 		String jar = runtime.getAttribute("jar");
@@ -150,7 +150,8 @@ public class PluginManager {
 
 					try {
 						AbstractPluginHandler handler =
-							(AbstractPluginHandler) pluginHandlers.get(extensionPoint);
+							(AbstractPluginHandler) pluginHandlers.get(
+								extensionPoint);
 
 						File file = null;
 						file = folder;
@@ -158,6 +159,8 @@ public class PluginManager {
 						ColumbaLogger.log.info("debug: " + file.toString());
 
 						handler.addExtension(id, extension);
+
+						return id;
 					} catch (Exception ex) {
 						ColumbaLogger.log.error(ex.getMessage());
 					}
@@ -165,35 +168,36 @@ public class PluginManager {
 			}
 		}
 
-	}
-
-	public void initPlugins() {
-		// find all possible plugin directories
-		File[] pluginFolders = PluginFinder.searchPlugins();
-		if (pluginFolders == null)
-			return;
-
-		folders = new HashMap();
-		elements = new HashMap();
-		jarFiles = new HashMap();
-		ids = new Vector();
-
-		// try to load all plugins
-		for (int i = 0; i < pluginFolders.length; i++) {
-			File folder = pluginFolders[i];
-			addPlugin(folder);
-
-		}
+		return null;
 	}
 
 	/**
-	 * register plugin handler at plugin manager
+	 * return top level tree xml node of config.xml
 	 * 
-	 * @param handler
+	 * 
+	 * @param id	id of plugin
+	 * @return		
 	 */
-	public void registerHandler(AbstractPluginHandler handler) {
-		pluginHandlers.put(handler.getId(), handler);
-		handler.setPluginManager(this);
+	public XmlIO getConfiguration(String id) {
+		try {
+
+			File configFile = new File(getFolder(id), "config.xml");
+			XmlIO io = new XmlIO(configFile.toURL());
+			return io;
+		} catch (Exception ex) {
+			ex.printStackTrace();
+		}
+
+		return null;
+	}
+
+	/**
+		 * @param id
+		 * 
+		 * @return directory of this plugin
+		 */
+	public File getFolder(String id) {
+		return (File) folders.get(id);
 	}
 
 	/**
@@ -216,40 +220,6 @@ public class PluginManager {
 
 	public Enumeration getHandlers() {
 		return pluginHandlers.elements();
-	}
-
-	
-	/**
-	 * @param id
-	 * 
-	 * @return 
-	 */
-	public File getJarFile(String id) {
-		return (File) jarFiles.get(id);
-	}
-
-	/**
-		 * @param id
-		 * 
-		 * @return directory of this plugin
-		 */
-	public File getFolder(String id) {
-		return (File) folders.get(id);
-	}
-
-	/**
-	 * @param id
-	 * 
-	 * @return	parent xml treenode of "plugin.xml"
-	 */
-	public XmlElement getPluginElement(String id) {
-		return (XmlElement) elements.get(id);
-	}
-
-	public String getPluginType(String id) {
-		XmlElement e = getPluginElement(id);
-		XmlElement runtime = e.getElement("runtime");
-		return runtime.getAttribute("type");
 	}
 
 	public List getIds() {
@@ -285,13 +255,66 @@ public class PluginManager {
 	}
 
 	/**
+	 * @param id
+	 * 
+	 * @return 
+	 */
+	public File getJarFile(String id) {
+		return (File) jarFiles.get(id);
+	}
+
+	/**
+	 * @param id
+	 * 
+	 * @return	parent xml treenode of "plugin.xml"
+	 */
+	public XmlElement getPluginElement(String id) {
+		return (XmlElement) elements.get(id);
+	}
+
+	public String getPluginType(String id) {
+		XmlElement e = getPluginElement(id);
+		XmlElement runtime = e.getElement("runtime");
+		return runtime.getAttribute("type");
+	}
+
+	public void initPlugins() {
+		// find all possible plugin directories
+		File[] pluginFolders = PluginFinder.searchPlugins();
+		if (pluginFolders == null)
+			return;
+
+		folders = new HashMap();
+		elements = new HashMap();
+		jarFiles = new HashMap();
+		ids = new Vector();
+
+		// try to load all plugins
+		for (int i = 0; i < pluginFolders.length; i++) {
+			File folder = pluginFolders[i];
+			addPlugin(folder);
+
+		}
+	}
+
+	/**
+	 * register plugin handler at plugin manager
+	 * 
+	 * @param handler
+	 */
+	public void registerHandler(AbstractPluginHandler handler) {
+		pluginHandlers.put(handler.getId(), handler);
+		handler.setPluginManager(this);
+	}
+
+	/**
 	 * enable/disable plugin
 	 * -> save changes in plugin.xml
 	 * 
 	 * @param b
 	 */
 	public void setEnabled(String id, boolean b) {
-		
+
 		//	get directory of plugin
 		File folder = getFolder(id);
 
@@ -309,7 +332,7 @@ public class PluginManager {
 
 			// update XmlElement reference in HashMap cache
 			elements.put(id, e);
-			
+
 			// set enabled attribute
 			e.addAttribute("enabled", new Boolean(b).toString());
 

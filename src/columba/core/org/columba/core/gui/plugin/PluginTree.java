@@ -78,7 +78,41 @@ public class PluginTree extends TreeTable {
 
 	}
 
-	protected void initTree() {
+	public void addPlugin(XmlElement pluginElement) {
+		//		plugin wasn't correctly loaded
+		if (pluginElement == null)
+			return;
+
+		String category = pluginElement.getAttribute("category");
+		if (category == null) {
+			// this plugin doesn't define a category to which it belongs
+			category = "Uncategorized";
+		}
+
+		PluginNode childNode = new PluginNode();
+		childNode.setId(pluginElement.getAttribute("id"));
+		childNode.setTooltip(pluginElement.getAttribute("description"));
+		childNode.setVersion(pluginElement.getAttribute("version"));
+		String enabled = pluginElement.getAttribute("enabled");
+		if (enabled == null)
+			enabled = "true";
+		childNode.setEnabled(Boolean.getBoolean(enabled));
+
+		PluginNode node = (PluginNode) map.get(category);
+		if (node == null) {
+			// unknown category found 
+			// -> just add this plugin to "Uncategorized"
+			category = "Uncategorized";
+			node = (PluginNode) map.get(category);
+		}
+
+		node.add(childNode);
+		
+		// notify table
+		model.fireTableDataChanged();
+	}
+
+	public void initTree() {
 		PluginNode root = new PluginNode();
 		root.setId("root");
 
@@ -92,35 +126,8 @@ public class PluginTree extends TreeTable {
 
 			XmlElement pluginElement =
 				MainInterface.pluginManager.getPluginElement(id);
-
-			// plugin wasn't correctly loaded
-			if (pluginElement == null)
-				continue;
-
-			String category = pluginElement.getAttribute("category");
-			if (category == null) {
-				// this plugin doesn't define a category to which it belongs
-				category = "Uncategorized";
-			}
-
-			PluginNode childNode = new PluginNode();
-			childNode.setId(pluginElement.getAttribute("id"));
-			childNode.setTooltip(pluginElement.getAttribute("description"));
-			childNode.setVersion(pluginElement.getAttribute("version"));
-			String enabled = pluginElement.getAttribute("enabled");
-			if (enabled == null)
-				enabled = "true";
-			childNode.setEnabled(Boolean.getBoolean(enabled));
-
-			PluginNode node = (PluginNode) map.get(category);
-			if (node == null) {
-				// unknown category found 
-				// -> just add this plugin to "Uncategorized"
-				category = "Uncategorized";
-				node = (PluginNode) map.get(category);
-			}
-
-			node.add(childNode);
+	
+			addPlugin(pluginElement);		
 		}
 
 		model.set(root);
@@ -139,12 +146,11 @@ public class PluginTree extends TreeTable {
 			map.put(c, node);
 		}
 	}
-	
-	public void removePluginNode(PluginNode node)
-	{
+
+	public void removePluginNode(PluginNode node) {
 		// notify tree
 		node.removeFromParent();
-		
+
 		// notify table
 		model.fireTableDataChanged();
 	}

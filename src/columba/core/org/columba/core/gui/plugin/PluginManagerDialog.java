@@ -1,9 +1,18 @@
-/*
- * Created on 06.08.2003
- *
- * To change the template for this generated file go to
- * Window>Preferences>Java>Code Generation>Code and Comments
- */
+//The contents of this file are subject to the Mozilla Public License Version 1.1
+//(the "License"); you may not use this file except in compliance with the 
+//License. You may obtain a copy of the License at http://www.mozilla.org/MPL/
+//
+//Software distributed under the License is distributed on an "AS IS" basis,
+//WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License 
+//for the specific language governing rights and
+//limitations under the License.
+//
+//The Original Code is "The Columba Project"
+//
+//The Initial Developers of the Original Code are Frederik Dietz and Timo Stich.
+//Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
+//
+//All Rights Reserved.
 package org.columba.core.gui.plugin;
 
 import java.awt.BorderLayout;
@@ -43,7 +52,9 @@ import org.columba.core.gui.util.NotifyDialog;
 import org.columba.core.io.DirectoryIO;
 import org.columba.core.io.ZipFileIO;
 import org.columba.core.main.MainInterface;
+import org.columba.core.plugin.ConfigPluginHandler;
 import org.columba.core.util.GlobalResourceLoader;
+import org.columba.core.xml.XmlElement;
 import org.columba.mail.gui.util.URLController;
 import org.columba.mail.util.MailResourceLoader;
 
@@ -82,6 +93,7 @@ public class PluginManagerDialog
 	JButton closeButton;
 
 	PluginTree table;
+	ConfigPluginHandler configHandler;
 
 	protected PluginNode selectedNode;
 
@@ -89,12 +101,22 @@ public class PluginManagerDialog
 		// modal JDialog
 		super(new JFrame(), true);
 
+		try {
+
+			configHandler =
+				(ConfigPluginHandler) MainInterface.pluginManager.getHandler(
+					"org.columba.core.config");
+		} catch (Exception ex) {
+			ex.printStackTrace();
+		}
+
 		initComponents();
 
 		pack();
 		setLocationRelativeTo(null);
 
 		setVisible(true);
+
 	}
 
 	protected void initComponents() {
@@ -307,18 +329,21 @@ public class PluginManagerDialog
 				new InfoViewerDialog(url);
 
 		} else if (action.equals("OPTIONS")) {
+			String id = selectedNode.getId();
+
+			new ConfigurationDialog(id);
 
 		} else if (action.equals("REMOVE")) {
 			// get plugin directory
 			File directory =
 				MainInterface.pluginManager.getFolder(selectedNode.getId());
-				
+
 			// delete plugin from disk
 			DirectoryIO.delete(directory);
-			
+
 			// remove plugin from view
 			table.removePluginNode(selectedNode);
-			
+
 		} else if (action.equals("INSTALL")) {
 			JFileChooser chooser = new JFileChooser();
 
@@ -348,12 +373,21 @@ public class PluginManagerDialog
 			// ->disable all actions
 
 			removeButton.setEnabled(false);
-			optionsButton.setEnabled(false);
 			infoButton.setEnabled(false);
+
+			optionsButton.setEnabled(false);
 		} else {
 			removeButton.setEnabled(true);
-			optionsButton.setEnabled(true);
 			infoButton.setEnabled(true);
+
+			if (selectedNode == null)
+				return;
+
+			// if plugin has config extension point
+			if (configHandler.exists(selectedNode.getId()))
+				optionsButton.setEnabled(true);
+			else
+				optionsButton.setEnabled(false);
 		}
 	}
 
@@ -374,7 +408,9 @@ public class PluginManagerDialog
 
 		File pluginDirectory = ZipFileIO.getFirstFile(file);
 		if (pluginDirectory.isDirectory()) {
-			MainInterface.pluginManager.addPlugin(pluginDirectory);
+			String id = MainInterface.pluginManager.addPlugin(pluginDirectory);
+			XmlElement e = MainInterface.pluginManager.getPluginElement(id);
+			table.addPlugin(e);
 		} else {
 			NotifyDialog d = new NotifyDialog();
 			d.showDialog("Failure while trying to install plugin.\n");
