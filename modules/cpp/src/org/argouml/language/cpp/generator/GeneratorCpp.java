@@ -1,4 +1,4 @@
-// $Id: GeneratorCpp.java,v 1.16 2004/08/24 17:37:03 mvw Exp $
+// $Id: GeneratorCpp.java,v 1.17 2004/08/27 15:42:16 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -157,6 +157,10 @@ public class GeneratorCpp extends Generator2
 				      Argo.lookupIconResource ("CppNotation")));
     }
 
+    /**
+     * @param o the object to be generated
+     * @return the generated string 
+     */
     public static String Generate(Object o) {
 	return SINGLETON.generate(o);
     }
@@ -235,6 +239,8 @@ public class GeneratorCpp extends Generator2
      * call it through the Generatorinterface.<p>
      *
      * @return the full path name of the the generated file.
+     *
+     * @see org.argouml.uml.generator.FileGenerator#GenerateFile(java.lang.Object, java.lang.String)
      */
     public String GenerateFile(Object o, String path) {
 	String packagePath = ModelFacade.getName(ModelFacade.getNamespace(o));
