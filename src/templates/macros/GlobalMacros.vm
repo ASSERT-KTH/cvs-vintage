@@ -3,31 +3,36 @@
   #set ($attrInput = $intake.AttributeValue.mapTo($attrValue))
   #set ($attr = $attrValue.Attribute)
   #set ($module = $attrValue.Issue.Module)
+  #set ($issueType = $scarabR.CurrentIssueType)
   #set ($values = $attrInput.get($optionFieldName).Value)
 
 <select name="$attrInput.get($optionFieldName).Key"
-   #if($size.length())size="$size"#end #if($multiple)multiple="multiple"#end>
+   #if($size.length())size="$size"#end #if($multiple.equals("true"))multiple="multiple"#end>
   #if ($size.length() == 0)
    <option value="">Choose...</option>
   #end
-  #if ($module.getLeafRModuleOptions($attr, $scarabR.CurrentIssueType))
-  #foreach ($option in $module.getLeafRModuleOptions($attr, $scarabR.CurrentIssueType))
+  #if ($module.getLeafRModuleOptions($attr, $issueType))
+  #foreach ($option in $module.getLeafRModuleOptions($attr, $issueType))
     #set ($selected = false)
+    #set ($canMakeTransition = "true")
     #if ($values)   
-       #if ($multiple.toString().equals("true"))
+       #if ($multiple.equals("true"))
          #foreach ($value in $values)
             #if ($value.equals($option.OptionId))
                #set ($selected=true)
             #end
          #end
        #else
+         #set ($canMakeTransition = $data.User.canMakeTransition($values, $option.OptionId, $scarabR.Issue, $module, $issueType))
          #if ($values.equals($option.OptionId))
            #set ($selected=true)
           #end
        #end
     #end
-    <option value="$option.OptionId"#selected($selected)>
-        $option.DisplayValue</option>
+    #if ($canMakeTransition.toString().equals("true"))
+      <option value="$option.OptionId"#selected($selected)>
+        $option.DisplayValue </option>
+    #end
   #end
   #end
 </select>
