@@ -2,7 +2,7 @@
 <!DOCTYPE database SYSTEM
           "http://jakarta.apache.org/turbine/dtd/database.dtd">
 
-<!-- $Id: scarab-schema.xml,v 1.66 2001/10/28 19:55:01 jmcnally Exp $ -->
+<!-- $Id: scarab-schema.xml,v 1.67 2001/11/08 02:07:05 elicia Exp $ -->
 
 <database>
 <!--
@@ -833,6 +833,10 @@
         Module.
     -->
     <column name="MODULE_ID" primaryKey="true" required="true" type="INTEGER"/>
+    <!--
+        Issue Type.
+    -->
+    <column name="ISSUE_TYPE_ID" primaryKey="true" required="true" type="INTEGER"/>
     <!--
         Option.
     -->
