@@ -1,4 +1,4 @@
-// $Id: FigClass.java,v 1.137 2005/03/07 19:09:51 mvw Exp $
+// $Id: FigClass.java,v 1.138 2005/03/10 19:20:01 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -1334,6 +1334,7 @@ public class FigClass extends FigNodeModelElement
             Iterator it = Model.getFacade().getFeatures(cl).iterator();
             while (it.hasNext()) {
                 Object feat = /*(MFeature)*/ it.next();
+                Model.getPump().removeModelEventListener(this, feat); //MVW
                 if (Model.getFacade().isAOperation(feat)) {
                     Object oper = /*(MOperation)*/ feat;
                     Iterator it2 = 
@@ -1351,6 +1352,7 @@ public class FigClass extends FigNodeModelElement
             Iterator it = Model.getFacade().getFeatures(cl).iterator();
             while (it.hasNext()) {
                 Object feat = /*(MFeature)*/ it.next();
+                Model.getPump().addModelEventListener(this, feat); //MVW
                 if (Model.getFacade().isAOperation(feat)) {
                     Object oper = /*(MOperation)*/ feat;
                     Iterator it2 = 
