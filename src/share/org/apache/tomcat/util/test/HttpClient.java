@@ -128,6 +128,12 @@ public class HttpClient {
 	this.host=h;
     }
 
+    /** 
+     */
+    public void setMethod(String h) {
+	this.method=h;
+    }
+
     /** The port used to send the request
      */
     public void setPort(String portS) {

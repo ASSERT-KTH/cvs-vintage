@@ -86,8 +86,10 @@ public class GTest  {
     // Instance variables
     
     HttpClient httpClient=new HttpClient();
-    DefaultMatcher matcher=new DefaultMatcher();
+    Vector matchers=new Vector();
+    //DefaultMatcher matcher=new DefaultMatcher();
     Body comment=null;
+    String failMessage="";
     
     String description="No description";
 
@@ -98,7 +100,7 @@ public class GTest  {
     boolean result=false;
     
     public GTest() {
-	matcher.setDebug( debug );
+	//matcher.setDebug( debug );
 	httpClient.setDebug( debug );
     }
 
@@ -183,7 +185,8 @@ public class GTest  {
     }
 
     public void addDefaultMatcher( DefaultMatcher m ) {
-	matcher=m;
+	matchers.addElement( m );
+	//	matcher=m;
     }
 
     public Body createComment() {
@@ -196,9 +199,9 @@ public class GTest  {
 	return httpClient;
     }
     
-    public DefaultMatcher getMatcher() {
-	return matcher;
-    }
+//     public DefaultMatcher getMatcher() {
+// 	return matcher;
+//     }
 
     public String getComment() {
 	if(comment==null) return "";
@@ -209,18 +212,33 @@ public class GTest  {
     /** Description should be in <test description=""/>
      */
     public String getDescription() {
+	if( comment!=null) return comment.getText();
 	return description;
     }
 
     public void setDescription(String description) {
 	this.description=description;
     }
+
+    public String getMatchDescription() {
+	StringBuffer sb=new StringBuffer();
+	for( int i=0; i<matchers.size(); i++ ) {
+	    DefaultMatcher m=(DefaultMatcher)matchers.elementAt( i );
+	    if( i!=0 ) sb.append( " && " );
+	    sb.append( m.getTestDescription());
+	}
+	return sb.toString();
+    }
+
+    public String getFailureMessage() {
+	return failMessage;
+    }
     
     /** Display debug info
      */
     public void setDebug( String debugS ) {
 	debug=Integer.valueOf( debugS).intValue();
-	matcher.setDebug( debug );
+	//matcher.setDebug( debug );
 	httpClient.setDebug( debug );
     }
 
@@ -259,46 +277,56 @@ public class GTest  {
     }
 
     // -------------------- Matcher properties --------------------
+
+    // @deprecated Use defaultMatcher childs, this allow only one test !!!
+
     
     public void setExactMatch(String exact) {
-	matcher.setExactMatch(exact);
+	if( matchers.size() > 0 )
+	    ((DefaultMatcher)matchers.elementAt(0)).setExactMatch(exact);
     }
 
     /** True if this is a positive test, false for negative
      */
     public void setMagnitude( String magnitudeS ) {
-        matcher.setMagnitude( magnitudeS );
+	if( matchers.size() > 0 )
+	    ((DefaultMatcher)matchers.elementAt(0)).setMagnitude( magnitudeS );
     }
 
     /** Compare with the golden file
      */
     public void setGoldenFile( String s ) {
-	matcher.setGoldenFile(s);
+	if( matchers.size() > 0 )
+	    ((DefaultMatcher)matchers.elementAt(0)).setGoldenFile(s);
     }
 
     /** Verify that response includes the expected headers
      *  The value is a "|" separated list of headers to expect.
      */
     public void setExpectHeaders( String s ) {
-	matcher.setExpectHeaders( s );
+	if( matchers.size() > 0 )
+	    ((DefaultMatcher)matchers.elementAt(0)).setExpectHeaders( s );
     }
 
     /** Verify that response match the string
      */
     public void setResponseMatch( String s ) {
-	matcher.setResponseMatch( s );
+	if( matchers.size() > 0 )
+	    ((DefaultMatcher)matchers.elementAt(0)).setResponseMatch( s );
     }
 
     /** Verify that response matches a list of strings in a file
      */
     public void setResponseMatchFile( String s ) {
-	matcher.setResponseMatchFile( s );
+	if( matchers.size() > 0 )
+	    ((DefaultMatcher)matchers.elementAt(0)).setResponseMatchFile( s );
     }
 
     /** Verify the response code
      */
     public void setReturnCode( String s ) {
-	matcher.setReturnCode( s );
+	if( matchers.size() > 0 )
+	    ((DefaultMatcher)matchers.elementAt(0)).setReturnCode( s );
     }
 
     // -------------------- Execute the request --------------------
@@ -313,10 +341,19 @@ public class GTest  {
 	    httpClient.execute();
 	    Response resp=httpClient.getResponse();
 
-	    matcher.setResponse( resp );
-	    matcher.execute();
-	    result=matcher.getResult();
-
+	    result=true;
+	    for( int i=0; i< matchers.size(); i++ ) {
+		DefaultMatcher matcher=(DefaultMatcher)matchers.elementAt(i);
+		matcher.setResponse( resp );
+		matcher.execute();
+		boolean testResult=matcher.getResult();
+		if( ! testResult ) {
+		    result=false;
+		    failMessage=matcher.getMessage();
+		    break;
+		}
+	    }
+	    
 	    // don't print OKs
 	    if( result && failureOnly ) return;
 
@@ -349,17 +386,16 @@ public class GTest  {
 	else
 	    msg=description + " (" + httpClient.getRequestLine() + ")";
 
-	if(matcher.getResult()) 
+	if( result ) 
 	    out.println("OK " +  msg );
 	else {
 	    out.println("FAIL " + msg );
-	    out.println("Message: " + matcher.getMessage());
+	    out.println("Message: " + failMessage);
 	}
 	out.flush();
     }
 
     private void htmlReport() {
-	boolean result=matcher.getResult();
 	String uri=httpClient.getURI();
 	if( uri!=null )
 	    out.println("<a href='" + uri + "'>");
@@ -385,7 +421,7 @@ public class GTest  {
 
 	if( ! result ) {
 	    out.println("<b>Message:</b><pre>");
-	    out.println( matcher.getMessage());
+	    out.println( failMessage);
 	    out.println("</pre>");
 	}
 
@@ -416,7 +452,6 @@ public class GTest  {
     }
 
     private void xmlReport() {
-	boolean result=matcher.getResult();
 	String msg=null;
 	if(  "No description".equals( description )) 
 	    msg=" (" + httpClient.getRequestLine() + ")";
