@@ -241,8 +241,8 @@ public abstract class PoolTcpConnector extends BaseInterceptor
 	"javax.net.ssl.SSLServerSocketFactory";
     public static final String SSL_FACT=
 	"org.apache.tomcat.util.net.SSLSocketFactory";
-    
-    
+
+
     public void setSecure( boolean b ) {
 	enabled=false;
 	secure=false;
@@ -266,6 +266,9 @@ public abstract class PoolTcpConnector extends BaseInterceptor
 		log( "Error loading SSL socket factory ", ex);
 		return;
 	    }
+
+            System.getProperties().put("java.protocol.handler.pkgs",
+                        "com.sun.net.ssl.internal.www.protocol");
 	}
     	secure=b;
 	enabled=true;
