@@ -210,7 +210,7 @@ from:&#160;<input type="text" size="20"
 <tr>
 <th width="120">Issues per page</th>
 <td>
-<input type="radio" name="resultsPerPage" value="2" checked="checked" /> 25
+<input type="radio" name="resultsPerPage" value="25" checked="checked" /> 25
 <input type="radio" name="resultsPerPage" value="50" /> 50
 <input type="radio" name="resultsPerPage" value="75" /> 75
 <input type="radio" name="resultsPerPage" value="100" /> 100
