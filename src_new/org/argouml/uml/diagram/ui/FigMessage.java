@@ -1,4 +1,4 @@
-// $Id: FigMessage.java,v 1.24 2004/07/26 22:43:05 mvw Exp $
+// $Id: FigMessage.java,v 1.25 2004/12/19 11:03:52 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -335,16 +335,11 @@ public class FigMessage extends FigNodeModelElement {
 		(FigAssociationRole) lay.presentationFor(associationRole);
 	    if (figAssocRole != null) {
 		figAssocRole.addMessage(this);
-		figAssocRole.updatePathItemLocations();
 		lay.bringToFront(this);
 	    }
 	}
     }
 
- 
-	
-
-	
 
     /**
      * @see org.tigris.gef.presentation.Fig#paint(Graphics)
