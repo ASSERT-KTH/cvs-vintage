@@ -63,6 +63,7 @@ package org.apache.tomcat.service;
 import org.apache.tomcat.util.*;
 import org.apache.tomcat.core.*;
 import org.apache.tomcat.net.*;
+import org.apache.tomcat.logging.*;
 import java.io.*;
 import java.net.*;
 import java.util.*;
@@ -116,6 +117,8 @@ public final class PoolTcpConnector implements ServerConnector {
     
     Hashtable attributes = new Hashtable();
     Object cm;
+
+    private LogHelper loghelper = new LogHelper("tc_log", "PoolTcpConnector");
 
     private String vhost;
     private InetAddress address;
@@ -185,7 +188,8 @@ public final class PoolTcpConnector implements ServerConnector {
 	String classN=con.getClass().getName();
 	int lidot=classN.lastIndexOf( "." );
 	if( lidot >0 ) classN=classN.substring( lidot + 1 );
-	System.out.println("Starting " + classN + " on " + port);
+
+	loghelper.log("Starting " + classN + " on " + port);
     }
 
     public void stop() throws Exception {
@@ -244,8 +248,10 @@ public final class PoolTcpConnector implements ServerConnector {
      *  Note that the attributes are passed to the Endpoint.
      */
     public void setAttribute( String prop, Object value) {
-	if( debug > 0 ) log( "setAttribute( " + prop + " , " + value + ")");
+	if( debug > 0 ) 
+	    loghelper.log( "setAttribute( " + prop + " , " + value + ")");
 
+	try {
 	if( value instanceof String ) {
 	    String valueS=(String)value;
 	    
@@ -290,51 +296,47 @@ public final class PoolTcpConnector implements ServerConnector {
 		    attributes.put( prop, value );
 	    }
 	}
+	}
+	catch (Exception e) {
+	    loghelper.log("setAttribute: " +prop + "=" + value, e, Logger.ERROR);
+	}
     }
 
     public void setProperty( String prop, String value) {
 	setAttribute( prop, value );
     }
 
+    /**
+     * Set a logger explicitly. Note that setLogger(null) will not
+     * necessarily redirect log output to System.out; if there is a
+     * "tc_log" logger it will default back to using it. 
+     **/
+    public void setLogger( Logger logger ) {
+	loghelper.setLogger(logger);
+    }
+
     // -------------------- Implementation methods --------------------
 
-    private static TcpConnectionHandler string2ConnectionHandler( String val) {
-	try {
-	    Class chC=Class.forName( val );
-	    return (TcpConnectionHandler)chC.newInstance();
-	} catch( Exception ex) {
-	    ex.printStackTrace();
-	}
-	return null;
+
+    // now they just throw exceptions, which are caught and logged by
+    // the caller
+
+    private static TcpConnectionHandler string2ConnectionHandler( String val) throws ClassNotFoundException, IllegalAccessException, InstantiationException {
+	Class chC=Class.forName( val );
+	return (TcpConnectionHandler)chC.newInstance();
     }
 
-    private static ServerSocketFactory string2SocketFactory( String val) {
-	try {
-	    Class chC=Class.forName( val );
-	    return (ServerSocketFactory)chC.newInstance();
-	} catch( Exception ex) {
-	    ex.printStackTrace();
-	}
-	return null;
+    private static ServerSocketFactory string2SocketFactory( String val) throws ClassNotFoundException, IllegalAccessException, InstantiationException {
+	Class chC=Class.forName( val );
+	return (ServerSocketFactory)chC.newInstance();
     }
 
-    private static InetAddress string2Inet( String val) {
-	try {
-	    return InetAddress.getByName( val );
-	} catch( Exception ex) {
-	}
-	return null;
+    private static InetAddress string2Inet( String val) throws UnknownHostException {
+	return InetAddress.getByName( val );
     }
     
     private static int string2Int( String val) {
-    	try {
-	        return Integer.parseInt(val);
-    	} catch (NumberFormatException nfe) {
-	        return 0;
-    	}
+	return Integer.parseInt(val);
     }
 
-    void log( String s ) {
-	System.out.println("PoolTcpConnector: " + s );
-    }
 }
