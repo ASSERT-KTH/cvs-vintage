@@ -51,7 +51,7 @@ import org.jnp.interfaces.java.javaURLContextFactory;
 import org.jnp.server.NamingServer;
 
 /**
- *   This is the base class for all EJB-containers in jBoss. A Container
+ *    This is the base class for all EJB-containers in jBoss. A Container
  *    functions as the central hub of all metadata and plugins. Through this
  *    the container plugins can get hold of the other plugins and any metadata they need.
  *
@@ -64,7 +64,7 @@ import org.jnp.server.NamingServer;
  *   @see ContainerFactory
  *   @author Rickard Öberg (rickard.oberg@telkel.com)
  *   @author <a href="marc.fleury@telkel.com">Marc Fleury</a>
- *   @version $Revision: 1.18 $
+ *   @version $Revision: 1.19 $
  */
 public abstract class Container
 {
@@ -99,49 +99,97 @@ public abstract class Container
 
    // Public --------------------------------------------------------
 
+   /**
+    * Sets a transaction manager for this container.
+    *
+    * @see javax.transaction.TransactionManager
+    *
+    * @param    tm
+    */
     public void setTransactionManager(TransactionManager tm)
     {
         this.tm = tm;
     }
 
+    /**
+     * Returns this container's transaction manager.
+     *
+     * @return  a concrete instance of javax.transaction.TransactionManager
+     */
     public TransactionManager getTransactionManager()
     {
         return tm;
     }
 
-   public void setApplication(Application app)
-   {
+    /**
+     * Sets the application deployment unit for this container. All the bean
+     * containers within the same application unit share the same instance.
+     *
+     * @param   app     application for this container
+     */
+    public void setApplication(Application app)
+    {
         if (app == null)
             throw new IllegalArgumentException("Null application");
 
-      application = app;
-   }
+        application = app;
+    }
 
-   public Application getApplication()
-   {
-      return application;
-   }
+    /**
+     * Returns the application for this container.
+     *
+     * @return
+     */
+    public Application getApplication()
+    {
+        return application;
+    }
 
-   public void setClassLoader(ClassLoader cl)
-   {
-      this.classLoader = cl;
-   }
+    /**
+     * Sets the class loader for this container. All the classes and resources
+     * used by the bean in this container will use this classloader.
+     *
+     * @param   cl
+     */
+    public void setClassLoader(ClassLoader cl)
+    {
+       this.classLoader = cl;
+    }
 
-   public ClassLoader getClassLoader()
+    /**
+     * Returns the classloader for this container.
+     *
+     * @return
+     */
+    public ClassLoader getClassLoader()
     {
         return classLoader;
     }
 
-   public void setMetaData(jBossEnterpriseBean metaData)
-   {
-      this.metaData = metaData;
-   }
+    /**
+     * Sets the meta data for this container. The meta data consists of the
+     * properties found in the XML descriptors.
+     *
+     * @param   metaData
+     */
+    public void setMetaData(jBossEnterpriseBean metaData)
+    {
+        this.metaData = metaData;
+    }
 
-   public jBossEnterpriseBean getMetaData()
+    /**
+     * Returns the metadata of this container.
+     *
+     * @return metaData;
+     */
+    public jBossEnterpriseBean getMetaData()
     {
         return metaData;
     }
 
+    
+    // the following two methods use the new metadata structures from
+    // package org.jboss.metadata
     public void setBeanMetaData(BeanMetaData metaData) {
         newMetaData = metaData;
     }
@@ -149,37 +197,62 @@ public abstract class Container
         return newMetaData;
     }
 
+    /**
+     * Returns the bean class instance of this container.
+     *
+     * @return  instance of the Enterprise bean class
+     */
     public Class getBeanClass()
     {
        return beanClass;
     }
+
     /**
      * The ContainerFactory calls this method.  The ContainerFactory has set all the
      * plugins and interceptors that this bean requires and now proceeds to initialize
      * the chain.  The method looks for the standard classes in the URL, sets up
-     * the naming environment of the bean.
+     * the naming environment of the bean. The concrete container classes should
+     * override this method to introduce implementation specific initialization behaviour.
      *
-     * @exception   Exception
+     * @exception   Exception   if loading the bean class failed (ClassNotFoundException)
+     *                          or setting up "java:" naming environment failed (DeploymentException)
      */
    public void init()
       throws Exception
    {
         // Acquire classes from CL
-      beanClass = classLoader.loadClass(metaData.getEjbClass());
+        beanClass = classLoader.loadClass(metaData.getEjbClass());
 
         // Setup "java:" namespace
-      setupEnvironment();
+        setupEnvironment();
    }
 
+   /**
+    * A default implementation of starting the container service (no-op). The concrete
+    * container classes should override this method to introduce implementation specific
+    * start behaviour.
+    *
+    * @exception    Exception   an exception that occured during start
+    */
    public void start()
       throws Exception
    {
    }
 
+   /**
+    * A default implementation of stopping the container service (no-op). The concrete
+    * container classes should override this method to introduce implementation specific
+    * stop behaviour.
+    */
    public void stop()
    {
    }
 
+   /**
+    * A default implementation of destroying the container service (no-op). The concrete
+    * container classes should override this method to introduce implementation specific
+    * destroy behaviour.
+    */
    public void destroy()
    {
    }
@@ -189,8 +262,8 @@ public abstract class Container
      *
      *  The Container forwards this call to the interceptor chain for further processing.
      *
-     * @param   mi  the object holding all info about this invocation
-     * @return     the result of the home invocation
+     * @param       mi  the object holding all info about this invocation
+     * @return      the result of the home invocation
      * @exception   Exception
      */
    public abstract Object invokeHome(MethodInvocation mi)
@@ -201,10 +274,10 @@ public abstract class Container
      *
      *  The Container forwards this call to the interceptor chain for further processing.
      *
-     * @param   id  the id of the object being invoked. May be null if stateless
-     * @param   method  the method being invoked
-     * @param   args  the parameters
-     * @return     the result of the invocation
+     * @param       id      the id of the object being invoked. May be null if stateless
+     * @param       method  the method being invoked
+     * @param       args    the parameters
+     * @return      the     result of the invocation
      * @exception   Exception
      */
    public abstract Object invoke(MethodInvocation mi)
@@ -272,7 +345,7 @@ public abstract class Container
                    bind(ctx, entry.getName(), new Boolean(entry.getValue()));
                 } else
                 {
-                        // Unknown type
+                   // Unknown type
                    // Default is string
                    bind(ctx, entry.getName(), entry.getValue());
                 }
@@ -323,6 +396,8 @@ public abstract class Container
           // Bind resource references
           {
              Iterator enum = getMetaData().getResourceReferences();
+             
+             // let's play guess the cast game ;)  New metadata should fix this.
              ResourceManagers rms = ((jBossEjbJar)getMetaData().getBeanContext().getBeanContext()).getResourceManagers();
              while(enum.hasNext())
              {

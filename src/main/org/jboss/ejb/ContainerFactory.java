@@ -58,15 +58,15 @@ import org.jboss.verifier.event.VerificationListener;
 
 /**
 *   A ContainerFactory is used to deploy EJB applications. It can be given a URL to
-*	  an EJB-jar or EJB-JAR XML file, which will be used to instantiate containers and make
-*	  them available for invocation.
+*  an EJB-jar or EJB-JAR XML file, which will be used to instantiate containers and make
+*  them available for invocation.
 *
 *   @see Container
 *   @author Rickard Öberg (rickard.oberg@telkel.com)
 *   @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
 *   @author <a href="mailto:jplindfo@helsinki.fi">Juha Lindfors</a>
 *
-*   @version $Revision: 1.23 $
+*   @version $Revision: 1.24 $
 */
 public class ContainerFactory
 	extends org.jboss.util.ServiceMBeanSupport
@@ -90,17 +90,38 @@ public class ContainerFactory
 	boolean verifyDeployments = false;
 
 	// Public --------------------------------------------------------
+    
+    /**
+     * Implements the abstract <code>getObjectName()</code> method in superclass
+     * to return this service's name.
+     *
+     * @param   server
+     * @param   name
+     *
+     * @exception MalformedObjectNameException
+     * @return
+     */
 	public ObjectName getObjectName(MBeanServer server, ObjectName name)
 	   throws javax.management.MalformedObjectNameException
 	{
 	   return new ObjectName(OBJECT_NAME);
 	}
 
+    /**
+     * Implements the abstract <code>getName()</code> method in superclass to
+     * return the name of this object.
+     *
+     * @return <tt>'Container factory'</code>
+     */
 	public String getName()
 	{
 	   return "Container factory";
 	}
 
+    /**
+     * Implements the template method in superclass. This method stops all the
+     * applications in this server.
+     */
 	public void stopService()
 	{
 		Iterator apps = deployments.values().iterator();
@@ -111,6 +132,10 @@ public class ContainerFactory
 		}
 	}
 
+    /**
+     * Implements the template method in superclass. This method destroys all
+     * the applications in this server and clears the deployments list.
+     */
 	public void destroyService()
 	{
 		Iterator apps = deployments.values().iterator();
@@ -123,11 +148,21 @@ public class ContainerFactory
 		deployments.clear();
 	}
 
+    /**
+     * Enables/disables the application bean verification upon deployment.
+     *
+     * @param   verify  true to enable; false to disable
+     */
 	public void setVerifyDeployments(boolean verify)
 	{
 		verifyDeployments = verify;
 	}
 
+    /**
+     * Returns the state of bean verifier (on/off)
+     *
+     * @param   true if enabled; false otherwise
+     */
 	public boolean getVerifyDeployments()
 	{
 		return verifyDeployments;
@@ -167,12 +202,12 @@ public class ContainerFactory
 	/**
 	*   Deploy EJBs pointed to by an URL.
 	*   The URL may point to an EJB-JAR, an EAR-JAR, or an codebase
-	*   whose structure resembles that of an EJB-JAR.
+	*   whose structure resembles that of an EJB-JAR. <p>
 	*
-	*   The latter is useful for development since no packaging is required
+	*   The latter is useful for development since no packaging is required.
 	*
-	* @param   url  URL where EJB deployment information is contained
-	* @return     The created containers
+	* @param       url  URL where EJB deployment information is contained
+    *
 	* @exception   DeploymentException
 	*/
 	public synchronized void deploy(URL url)
@@ -189,22 +224,30 @@ public class ContainerFactory
 			if (deployments.containsKey(url))
 				undeploy(url);
 
-			// Check validity
-         if (verifyDeployments)
-			{
-             BeanVerifier verifier = new BeanVerifier();
-
-             verifier.addVerificationListener(new VerificationListener()
-				 {
-                 public void beanChecked(VerificationEvent event)
-					  {
-                     System.out.println(event.getMessage());
-                 }
-             });
-
-             verifier.verify(url);
-         }
-
+            // Check validity
+            try {
+                // wrapping this into a try - catch block to prevent errors in
+                // verifier from stopping the deployment
+                
+                if (verifyDeployments)
+                {
+                    BeanVerifier verifier = new BeanVerifier();
+    
+                    verifier.addVerificationListener(new VerificationListener()
+                    {
+                       public void beanChecked(VerificationEvent event)
+                       {
+                            System.out.println("Got event: " + event.getMessage());
+                       }
+                    });
+    
+                    verifier.verify(url);
+                }
+            }
+            catch (Throwable t) {
+                System.out.println(t);
+            }
+    
 			app.setURL(url);
 
 			log.log("Deploying:"+url);
@@ -259,6 +302,7 @@ public class ContainerFactory
 						// Set metadata
 						container.setMetaData(bean);
 
+                        // use the new metadata classes in org.jboss.metadata
                         container.setBeanMetaData(efm.getMetaData().getBean(bean.getEjbName()));
 
 						// Set transaction manager

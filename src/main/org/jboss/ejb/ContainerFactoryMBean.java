@@ -13,7 +13,7 @@ import java.net.MalformedURLException;
  *      
  *   @see ContainerFactory
  *   @author Rickard Öberg (rickard.oberg@telkel.com)
- *   @version $Revision: 1.3 $
+ *   @version $Revision: 1.4 $
  */
 public interface ContainerFactoryMBean
 	extends org.jboss.util.ServiceMBean
@@ -44,8 +44,18 @@ public interface ContainerFactoryMBean
    public void undeploy(String url)
       throws MalformedURLException, DeploymentException;
 		
+   /**
+    * Enable/disable bean verification upon deployment.
+    *
+    * @param    verify  true to enable the verifier; false to disable
+    */     
    public void setVerifyDeployments(boolean verify);
 		
+   /**
+    * Returns the state of the verifier (enabled/disabled)
+    *
+    * @return   true if verifier is enabled; false otherwise
+    */
    public boolean getVerifyDeployments();
 }
 

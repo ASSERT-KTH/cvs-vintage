@@ -20,7 +20,7 @@ import org.jboss.util.Service;
  *   @see Container
  *   @see ContainerFactory
  *   @author Rickard Öberg (rickard.oberg@telkel.com)
- *   @version $Revision: 1.4 $
+ *   @version $Revision: 1.5 $
  */
 public class Application
 	implements Service
@@ -28,8 +28,14 @@ public class Application
    // Constants -----------------------------------------------------
     
    // Attributes ----------------------------------------------------
+   
+   // stores the containers for this application unit
    HashMap containers = new HashMap();
+   
+   // name of this application
    String name = "";
+   
+   // url where this application was deployed from
    URL url;
    
    // Static --------------------------------------------------------
@@ -38,19 +44,19 @@ public class Application
 
 
 	/**
-	 *	Add a container to this application. This is called by the ContainerFactory
+	 * Add a container to this application. This is called by the ContainerFactory.
 	 *
 	 * @param   con  
 	 */
    public void addContainer(Container con)
    {
-      containers.put(con.getMetaData().getEjbName(), con);
+       containers.put(con.getMetaData().getEjbName(), con);
 	   con.setApplication(this);
    }
    
 
 	/**
-	 *	Remove a container from this application
+	 * Remove a container from this application.
 	 *
 	 * @param   con  
 	 */
@@ -61,10 +67,11 @@ public class Application
    
 
 	/**
-	 *	Get a container from this Application that corresponds to a given name
+	 * Get a container from this Application that corresponds to a given name
 	 *
-	 * @param   name  
-	 * @return     
+	 * @param   name  ejb-name name defined in ejb-jar.xml
+     *
+	 * @return  container for the named bean, or null if the container was not found   
 	 */
    public Container getContainer(String name)
    {
@@ -73,9 +80,10 @@ public class Application
    
 
 	/**
-	 *	Get all containers in this Application
+	 * Get all containers in this Application.
 	 *
-	 * @return     
+	 * @return  a collection of containers for each enterprise bean in this application
+     *          unit.
 	 */
    public Collection getContainers()
    {
@@ -127,11 +135,19 @@ public class Application
 			throw new IllegalArgumentException("Null URL");
 	
       this.url = url;
+      
+      // if name hasn't been set yet, use the url
       if (name.equals(""))
          name = url.toString();
    }
 	
 	// Service implementation ----------------------------------------
+    
+    /**
+     * Initializes all the containers of this application.
+     *
+     * @exception Exception
+     */
 	public void init()
 	   throws Exception
 	{
@@ -143,6 +159,11 @@ public class Application
 		}
 	}
 	
+    /**
+     * Starts all the containers of this application.
+     *
+     * @exception Exception
+     */
 	public void start()
 	   throws Exception
 	{
@@ -150,20 +171,26 @@ public class Application
 		while (enum.hasNext())
 		{
 			Container con = (Container)enum.next();
-			con.start();
+            con.start();        
 		}
 	}
 	
+    /**
+     * Stops all the containers of this application.
+     */
 	public void stop()
 	{
 		Iterator enum = containers.values().iterator();
 		while (enum.hasNext())
 		{
 			Container con = (Container)enum.next();
-			con.stop();
+            con.stop();
 		}
 	}
 	
+    /**
+     * Destroys all the containers of this application.
+     */
 	public void destroy()
 	{
 		Iterator enum = containers.values().iterator();
