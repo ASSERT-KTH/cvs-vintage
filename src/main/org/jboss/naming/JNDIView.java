@@ -7,34 +7,24 @@
 
 package org.jboss.naming;
 
-import java.io.IOException;
-import java.io.InputStream;
 import java.io.PrintWriter;
 import java.io.StringWriter;
-
 import java.lang.reflect.Proxy;
-
-import java.net.URL;
 import java.util.Collection;
 import java.util.Iterator;
-import java.util.Properties;
 import java.util.Set;
 
 import javax.management.MBeanServer;
 import javax.management.ObjectName;
-
 import javax.naming.Context;
 import javax.naming.InitialContext;
 import javax.naming.LinkRef;
-import javax.naming.Reference;
 import javax.naming.NameClassPair;
 import javax.naming.NamingEnumeration;
 import javax.naming.NamingException;
 
 import org.jboss.ejb.Container;
-import org.jboss.ejb.EJBDeployerMBean;
 import org.jboss.ejb.EjbModule;
-
 import org.jboss.system.ServiceMBeanSupport;
 
 /**
@@ -44,19 +34,21 @@ import org.jboss.system.ServiceMBeanSupport;
  * @jmx:mbean name="jboss:type=JNDIView"
  *            extends="org.jboss.system.ServiceMBean"
  *            
- * @version <tt>$Revision: 1.19 $</tt>
+ * @version <tt>$Revision: 1.20 $</tt>
  * @author  <a href="mailto:Scott.Stark@jboss.org">Scott Stark</a>.
  * @author  Vladimir Blagojevic <vladimir@xisnext.2y.net>
  * @author  <a href="mailto:d_jencks@users.sourceforge.net">David Jencks</a>
  */
-public class JNDIView 
-   extends ServiceMBeanSupport 
-   implements JNDIViewMBean
+public class JNDIView
+      extends ServiceMBeanSupport
+      implements JNDIViewMBean
 {
    /**
     * Provided for JMX compliance.
     */
-   public JNDIView() {}
+   public JNDIView()
+   {
+   }
 
    /**
     * List deployed application java:comp namespaces, the java:
@@ -68,7 +60,7 @@ public class JNDIView
     */
    public String list(boolean verbose)
    {
-      StringBuffer buffer = new StringBuffer();
+      StringBuffer buffer = new StringBuffer(4096);
       Set ejbModules = null;
       Context context = null;
       ClassLoader currentLoader = Thread.currentThread().getContextClassLoader();
@@ -80,7 +72,7 @@ public class JNDIView
       {
          ejbModules = server.queryNames(EjbModule.EJB_MODULE_QUERY_NAME, null);
       }
-      catch(Throwable e)
+      catch (Throwable e)
       {
          log.error("getDeployedApplications failed", e);
          buffer.append("Failed to getDeployedApplications\n");
@@ -91,16 +83,19 @@ public class JNDIView
       }
 
       // List each application JNDI namespace
-      for (Iterator i = ejbModules.iterator(); i.hasNext(); )
+      for (Iterator i = ejbModules.iterator(); i.hasNext();)
       {
          ObjectName app = (ObjectName) i.next();
-         buffer.append("<h1>Ejb Module: " + app.getKeyProperty("url") + "</h1>\n");
-         try 
+         String module = app.getKeyProperty("module");
+         if( module == null )
+            module = app.toString();
+         buffer.append("<h1>Ejb Module: " + module + "</h1>\n");
+         try
          {
-            Collection containers = (Collection)server.getAttribute(app, "Containers");
+            Collection containers = (Collection) server.getAttribute(app, "Containers");
             for (Iterator iter = containers.iterator(); iter.hasNext();)
             {
-               Container con = (Container)iter.next();
+               Container con = (Container) iter.next();
                /* Set the thread class loader to that of the container as
                   the class loader is used by the java: context object
                   factory to partition the container namespaces.
@@ -108,15 +103,15 @@ public class JNDIView
                Thread.currentThread().setContextClassLoader(con.getClassLoader());
                String bean = con.getBeanMetaData().getEjbName();
                buffer.append("<h2>java:comp namespace of the " + bean + " bean:</h2>\n");
-               
+
                try
                {
                   context = new InitialContext();
-                  context = (Context)context.lookup("java:comp");
+                  context = (Context) context.lookup("java:comp");
                }
-               catch(NamingException e)
+               catch (NamingException e)
                {
-                  buffer.append("Failed on lookup, "+e.toString(true));
+                  buffer.append("Failed on lookup, " + e.toString(true));
                   formatException(buffer, e);
                   continue;
                }
@@ -125,7 +120,7 @@ public class JNDIView
                buffer.append("</pre>\n");
             }
          }
-         catch(Throwable e)
+         catch (Throwable e)
          {
             log.error("getConainers failed", e);
             buffer.append("<pre>");
@@ -146,10 +141,10 @@ public class JNDIView
          list(context, " ", buffer, verbose);
          buffer.append("</pre>\n");
       }
-      catch(NamingException e)
+      catch (NamingException e)
       {
          log.error("lookup for java: failed", e);
-         buffer.append("Failed to get InitialContext, "+e.toString(true));
+         buffer.append("Failed to get InitialContext, " + e.toString(true));
          formatException(buffer, e);
       }
 
@@ -162,10 +157,10 @@ public class JNDIView
          list(context, " ", buffer, verbose);
          buffer.append("</pre>\n");
       }
-      catch(NamingException e)
+      catch (NamingException e)
       {
          log.error("Failed to get InitialContext", e);
-         buffer.append("Failed to get InitialContext, "+e.toString(true));
+         buffer.append("Failed to get InitialContext, " + e.toString(true));
          formatException(buffer, e);
       }
       return buffer.toString();
@@ -180,8 +175,9 @@ public class JNDIView
     *
     * @param verbose, if true, list the class of each object in addition to its name
     **/
-   public String listXML() {
-      StringBuffer buffer = new StringBuffer();
+   public String listXML()
+   {
+      StringBuffer buffer = new StringBuffer(4096);
       Set ejbModules = null;
       Context context = null;
       ClassLoader currentLoader = Thread.currentThread().getContextClassLoader();
@@ -193,79 +189,26 @@ public class JNDIView
       {
          ejbModules = server.queryNames(EjbModule.EJB_MODULE_QUERY_NAME, null);
       }
-      catch(Exception e)
+      catch (Exception e)
       {
          log.error("getDeployedApplications failed", e);
-         buffer.append( "<jndi>" );
-         buffer.append( "<error>" );
-         buffer.append( '\n' );
-         buffer.append( "<message>" + "Failed to getDeployedApplications " + e.toString() + "</message>" );
-         buffer.append( '\n' );
-         buffer.append( "</error>" );
-         buffer.append( '\n' );
-         buffer.append( "</jndi>" );
-         buffer.append( '\n' );
+         openJndiTag(buffer);
+         appendErrorTag(buffer,
+               "Failed to getDeployedApplications " + e.toString());
+         closeJndiTag(buffer);
          return buffer.toString();
       }
 
-      buffer.append( "<jndi>" );
-      buffer.append( '\n' );
+      openJndiTag(buffer);
       // List each application JNDI namespace
-      for (Iterator i = ejbModules.iterator(); i.hasNext(); )
+      for (Iterator i = ejbModules.iterator(); i.hasNext();)
       {
          ObjectName app = (ObjectName) i.next();
-         buffer.append( "<ejbmodule>" );
-         buffer.append( '\n' );
-         buffer.append( "<file>" + app.getKeyProperty("url") + "</file>" );
-         buffer.append( '\n' );
-         try 
-         {
-            Collection containers = (Collection)server.getAttribute(app, "Containers");
-            for (Iterator iter = containers.iterator(); iter.hasNext();)
-            {
-               Container con = (Container)iter.next();
-               /* Set the thread class loader to that of the container as
-                  the class loader is used by the java: context object
-                  factory to partition the container namespaces.
-               */
-               Thread.currentThread().setContextClassLoader(con.getClassLoader());
-               String bean = con.getBeanMetaData().getEjbName();
-               buffer.append( "<context>" );
-               buffer.append( '\n' );
-               buffer.append( "<name>java:comp</name>" );
-               buffer.append( '\n' );
-               buffer.append( "<attribute name=\"bean\">" + bean + "</attribute>" );
-               buffer.append( '\n' );
-               try
-               {
-                  context = new InitialContext();
-                  context = (Context)context.lookup("java:comp");
-               }
-               catch(NamingException e)
-               {
-                  buffer.append( "<error>" );
-                  buffer.append( '\n' );
-                  buffer.append( "<message>" + "Failed on lookup, " + e.toString( true ) + "</message>" );
-                  buffer.append( '\n' );
-                  buffer.append( "</error>" );
-                  buffer.append( '\n' );
-                  continue;
-               }
-               listXML( context, buffer );
-               buffer.append( "</context>" );
-               buffer.append( '\n' );
-            }
-         }
-         catch(Throwable e)
-         {
-            log.error("getConainers failed", e);
-            buffer.append("<pre>");
-            buffer.append("Failed to get ejbs in module\n");
-            formatException(buffer, e);
-            buffer.append("</pre>");
-         }
-         buffer.append( "</ejbmodule>" );
-         buffer.append( '\n' );
+         openEjbModuleTag(buffer, app.getKeyProperty("url"));
+
+         listModuleContainers(buffer, app);
+
+         closeEjbModuleTag(buffer);
       }
 
       // List the java: namespace
@@ -274,54 +217,70 @@ public class JNDIView
       {
          context = new InitialContext();
          context = (Context) context.lookup("java:");
-         buffer.append( "<context>" );
-         buffer.append( '\n' );
-         buffer.append( "<name>java:</name>" );
-         buffer.append( '\n' );
-         listXML( context, buffer );
-         buffer.append( "</context>" );
-         buffer.append( '\n' );
       }
-      catch(NamingException e)
+      catch (NamingException e)
       {
-         log.error("Failed to get InitialContext", e);
-         buffer.append( "<error>" );
-         buffer.append( '\n' );
-         buffer.append( "<message>" + "Failed to get InitialContext, " + e.toString( true ) + "</message>" );
-         buffer.append( '\n' );
-         buffer.append( "</error>" );
-         buffer.append( '\n' );
+         log.error("Failed to get InitialContext for (java:)", e);
+         appendErrorTag(buffer,
+               "Failed to get InitialContext for (java:), " +
+               e.toString(true));
       }
+
+      if (context != null)
+      {
+         openContextTag(buffer);
+         appendJavaNameTag(buffer);
+         try
+         {
+            listXML(context, buffer);
+         }
+         catch (Throwable t)
+         {
+            log.error("Failed to list contents of (java:)", t);
+            appendErrorTag(buffer,
+                  "Failed to list contents of (java:), " +
+                  t.toString());
+         }
+         closeContextTag(buffer);
+
+      }   //   if ( context != null )
 
       // List the global JNDI namespace
       try
       {
          context = new InitialContext();
-         buffer.append( "<context>" );
-         buffer.append( '\n' );
-         buffer.append( "<name>Global</name>" );
-         buffer.append( '\n' );
-         listXML( context, buffer );
-         buffer.append( "</context>" );
-         buffer.append( '\n' );
       }
-      catch(NamingException e)
+      catch (NamingException e)
       {
          log.error("Failed to get InitialContext", e);
-         buffer.append( "<error>" );
-         buffer.append( '\n' );
-         buffer.append( "<message>" + "Failed to get InitialContext, " + e.toString( true ) + "</message>" );
-         buffer.append( '\n' );
-         buffer.append( "</error>" );
-         buffer.append( '\n' );
+         appendErrorTag(buffer,
+               "Failed to get InitialContext, " + e.toString(true));
       }
-      buffer.append( "</jndi>" );
-      buffer.append( '\n' );
+
+      if (context != null)
+      {
+         openContextTag(buffer);
+         appendGlobalNameTag(buffer);
+         try
+         {
+            listXML(context, buffer);
+         }
+         catch (Throwable t)
+         {
+            log.error("Failed to list global contents ", t);
+            appendErrorTag(buffer,
+                  "Failed to list global contents, " + t.toString());
+         }
+         closeContextTag(buffer);
+
+      }   //   if ( context != null )
+
+      closeJndiTag(buffer);
       return buffer.toString();
    }
 
    protected ObjectName getObjectName(MBeanServer server, ObjectName name)
-      throws javax.management.MalformedObjectNameException
+         throws javax.management.MalformedObjectNameException
    {
       return name == null ? OBJECT_NAME : name;
    }
@@ -332,11 +291,11 @@ public class JNDIView
       try
       {
          NamingEnumeration ne = ctx.list("");
-         while( ne.hasMore() )
+         while (ne.hasMore())
          {
             NameClassPair pair = (NameClassPair) ne.next();
             log.trace("pair: " + pair);
-            
+
             String name = pair.getName();
             String className = pair.getClassName();
             boolean recursive = false;
@@ -347,18 +306,18 @@ public class JNDIView
             {
                c = loader.loadClass(className);
                log.trace("type: " + c);
-               
-               if( Context.class.isAssignableFrom(c) )
+
+               if (Context.class.isAssignableFrom(c))
                   recursive = true;
-               if( LinkRef.class.isAssignableFrom(c) )
+               if (LinkRef.class.isAssignableFrom(c))
                   isLinkRef = true;
-               
+
                isProxy = Proxy.isProxyClass(c);
             }
-            catch(ClassNotFoundException cnfe)
+            catch (ClassNotFoundException cnfe)
             {
                // If this is a $Proxy* class its a proxy
-               if( className.startsWith("$Proxy") )
+               if (className.startsWith("$Proxy"))
                {
                   isProxy = true;
                   // We have to get the class from the binding
@@ -367,14 +326,14 @@ public class JNDIView
                      Object p = ctx.lookup(name);
                      c = p.getClass();
                   }
-                  catch(NamingException e)
+                  catch (NamingException e)
                   {
                      Throwable t = e.getRootCause();
-                     if( t instanceof ClassNotFoundException )
+                     if (t instanceof ClassNotFoundException)
                      {
                         // Get the class name from the exception msg
                         String msg = t.getMessage();
-                        if( msg != null )
+                        if (msg != null)
                         {
                            // Reset the class name to the CNFE class
                            className = msg;
@@ -384,10 +343,10 @@ public class JNDIView
                }
             }
 
-            buffer.append(indent +  " +- " + name);
+            buffer.append(indent + " +- " + name);
 
             // Display reference targets
-            if( isLinkRef )
+            if (isLinkRef)
             {
                // Get the 
                try
@@ -395,84 +354,84 @@ public class JNDIView
                   log.trace("looking up LinkRef; name=" + name);
                   Object obj = ctx.lookupLink(name);
                   log.trace("Object type: " + obj.getClass());
-                  
-                  LinkRef link = (LinkRef)obj;
+
+                  LinkRef link = (LinkRef) obj;
                   buffer.append("[link -> ");
                   buffer.append(link.getLinkName());
                   buffer.append(']');
                }
-               catch(Throwable t)
+               catch (Throwable t)
                {
-                  log.error("Invalid LinkRef for: " + name, t);
-                  buffer.append("[invalid]");
+                  log.debug("Invalid LinkRef for: " + name, t);
+                  buffer.append("invalid]");
                }
             }
 
             // Display proxy interfaces
-            if( isProxy )
+            if (isProxy)
             {
-               buffer.append(" (proxy: "+pair.getClassName());
-               if( c != null )
+               buffer.append(" (proxy: " + pair.getClassName());
+               if (c != null)
                {
                   Class[] ifaces = c.getInterfaces();
                   buffer.append(" implements ");
-                  for(int i = 0; i < ifaces.length; i ++)
+                  for (int i = 0; i < ifaces.length; i++)
                   {
                      buffer.append(ifaces[i]);
                      buffer.append(',');
                   }
-                  buffer.setCharAt(buffer.length()-1, ')');
+                  buffer.setCharAt(buffer.length() - 1, ')');
                }
                else
                {
-                  buffer.append(" implements "+className+")");
+                  buffer.append(" implements " + className + ")");
                }
             }
-            else if( verbose )
+            else if (verbose)
             {
-               buffer.append(" (class: "+pair.getClassName()+")");
+               buffer.append(" (class: " + pair.getClassName() + ")");
             }
 
             buffer.append('\n');
-            if( recursive )
+            if (recursive)
             {
                try
                {
                   Object value = ctx.lookup(name);
-                  if( value instanceof Context )
+                  if (value instanceof Context)
                   {
                      Context subctx = (Context) value;
                      list(subctx, indent + " |  ", buffer, verbose);
                   }
                   else
                   {
-                     buffer.append(indent + " |   NonContext: "+value);
+                     buffer.append(indent + " |   NonContext: " + value);
                      buffer.append('\n');
                   }
                }
-               catch(Throwable t)
+               catch (Throwable t)
                {
-                  buffer.append("Failed to lookup: "+name+", errmsg="+t.getMessage());
+                  buffer.append("Failed to lookup: " + name + ", errmsg=" + t.getMessage());
                   buffer.append('\n');
                }
             }
          }
          ne.close();
       }
-      catch(NamingException ne)
+      catch (NamingException ne)
       {
-         buffer.append("error while listing context "+ctx.toString () + ": " + ne.toString(true));
+         buffer.append("error while listing context " + ctx.toString() + ": " + ne.toString(true));
          formatException(buffer, ne);
       }
    }
 
-   private void listXML( Context ctx, StringBuffer buffer )
+   private void listXML(Context ctx, StringBuffer buffer)
    {
       ClassLoader loader = Thread.currentThread().getContextClassLoader();
       try
       {
          NamingEnumeration ne = ctx.list("");
-         while( ne.hasMore() )
+         while (ne.hasMore())
          {
             NameClassPair pair = (NameClassPair) ne.next();
             boolean recursive = false;
@@ -480,103 +439,262 @@ public class JNDIView
             try
             {
                Class c = loader.loadClass(pair.getClassName());
-               if( Context.class.isAssignableFrom(c) )
+               if (Context.class.isAssignableFrom(c))
                   recursive = true;
-               if( LinkRef.class.isAssignableFrom(c) )
+               if (LinkRef.class.isAssignableFrom(c))
                   isLinkRef = true;
             }
-            catch(ClassNotFoundException cnfe)
+            catch (ClassNotFoundException cnfe)
             {
             }
 
             String name = pair.getName();
-            if( isLinkRef ) {
-               // Get the 
+            if (isLinkRef)
+            {
+               Object obj = null;
+               LinkRef link = null;
                try
                {
-                  LinkRef link = (LinkRef) ctx.lookupLink(name);
-                  buffer.append( "<link-ref>" );
-                  buffer.append( '\n' );
-                  buffer.append( "<name>" + pair.getName() + "</name>" );
-                  buffer.append( '\n' );
-                  buffer.append( "<link>" + link.getLinkName() + "</link>" );
-                  buffer.append( '\n' );
-                  buffer.append( "<attribute name=\"class\">" + pair.getClassName() + "</attribute>" );
-                  buffer.append( '\n' );
-                  buffer.append( "</link-ref>" );
-                  buffer.append( '\n' );
+                  obj = ctx.lookupLink(name);
+                  link = (LinkRef) obj;
                }
-               catch(Throwable t)
+               catch (Throwable t)
                {
-                  log.error("Invalid LinkRef", t);
-                  
-                  buffer.append( "<link-ref>" );
-                  buffer.append( '\n' );
-                  buffer.append( "<name>Invalid</name>" );
-                  buffer.append( '\n' );
-                  buffer.append( "</link-ref>" );
-                  buffer.append( '\n' );
+                  log.error("Invalid LinkRef for: " + name, t);
+
+                  appendLinkRefErrorTag(buffer);
                }
+
+               appendLinkRefTag(buffer, link, pair);
             }
-            else {
-               if( recursive ) {
-                  try {
-                     Object value = ctx.lookup(name);
-                     if( value instanceof Context ) {
-                        Context subctx = (Context) value;
-                        buffer.append( "<context>" );
-                        buffer.append( '\n' );
-                        buffer.append( "<name>" + pair.getName() + "</name>" );
-                        buffer.append( '\n' );
-                        buffer.append( "<attribute name=\"class\">" + pair.getClassName() + "</attribute>" );
-                        buffer.append( '\n' );
-                        listXML( subctx, buffer );
-                        buffer.append( "</context>" );
-                        buffer.append( '\n' );
-                     }
-                     else {
-                        buffer.append( "<non-context>" );
-                        buffer.append( '\n' );
-                        buffer.append( "<name>" + pair.getName() + "</name>" );
-                        buffer.append( '\n' );
-                        buffer.append( "<attribute name=\"value\">" + value + "</attribute>" );
-                        buffer.append( '\n' );
-                        buffer.append( "</non-context>" );
-                        buffer.append( '\n' );
-                     }
+            else
+            {
+               if (recursive)
+               {
+                  Object value = null;
+
+                  try
+                  {
+                     value = ctx.lookup(name);
                   }
-                  catch(Throwable t) {
-                     buffer.append( "<error>" );
-                     buffer.append( '\n' );
-                     buffer.append( "<message>" + "Failed to lookup: "+name+", errmsg="+t.getMessage() + "</message>" );
-                     buffer.append( '\n' );
-                     buffer.append( "</error>" );
-                     buffer.append( '\n' );
+                  catch (Throwable t)
+                  {
+                     appendErrorTag(buffer,
+                           "Failed to lookup: " + name +
+                           ", errmsg=" + t.getMessage());
+                  }
+
+                  if (value instanceof Context)
+                  {
+                     Context subctx = (Context) value;
+                     openContextTag(buffer);
+                     appendNCPTag(buffer, pair);
+
+                     try
+                     {
+                        listXML(subctx, buffer);
+                     }
+                     catch (Throwable t)
+                     {
+                        appendErrorTag(buffer,
+                              "Failed to list contents of: " + name +
+                              ", errmsg=" + t.getMessage());
+                     }
+
+                     closeContextTag(buffer);
+                  }
+                  else
+                  {
+                     appendNonContextTag(buffer, pair);
                   }
                }
-               else {
-                  buffer.append( "<leaf>" );
-                  buffer.append( '\n' );
-                  buffer.append( "<name>" + pair.getName() + "</name>" );
-                  buffer.append( '\n' );
-                  buffer.append( "<attribute name=\"class\">" + pair.getClassName() + "</attribute>" );
-                  buffer.append( '\n' );
-                  buffer.append( "</leaf>" );
-                  buffer.append( '\n' );
+               else
+               {
+                  appendLeafTag(buffer, pair);
                }
             }
          }
          ne.close();
       }
-      catch(NamingException ne)
+      catch (NamingException ne)
       {
-         buffer.append( "<error>" );
-         buffer.append( '\n' );
-         buffer.append( "<message>" + "error while listing context "+ctx.toString () + ": " + ne.toString(true) + "</message>" );
-         buffer.append( '\n' );
-         buffer.append( "</error>" );
-         buffer.append( '\n' );
+         appendErrorTag(buffer,
+               "error while listing context " +
+               ctx.toString() + ": " + ne.toString(true));
       }
+   }
+
+   private void listModuleContainers(StringBuffer buffer, ObjectName app)
+   {
+      Collection containers = null;
+
+      try
+      {
+         containers = (Collection) server.getAttribute(app, "Containers");
+      }
+      catch (Throwable t)
+      {
+         log.error("getContainers failed", t);
+         appendPreExceptionTag(buffer, "Failed to get ejbs in module", t);
+      }
+
+      for (Iterator iter = containers.iterator(); iter.hasNext();)
+      {
+         listContainerContext(buffer, (Container) iter.next());
+      }
+
+   }   //   listModuleContainers()
+
+   private void listContainerContext(StringBuffer buffer, Container con)
+   {
+      /* Set the thread class loader to that of the container as
+         the class loader is used by the java: context object
+         factory to partition the container namespaces.
+      */
+      Thread.currentThread().setContextClassLoader(con.getClassLoader());
+      String bean = con.getBeanMetaData().getEjbName();
+      openContextTag(buffer);
+      appendBeanTag(buffer, bean);
+      Context context = null;
+      try
+      {
+         context = new InitialContext();
+         context = (Context) context.lookup("java:comp");
+      }
+      catch (NamingException e)
+      {
+         appendErrorTag(buffer,
+               "Failed on lookup " + e.toString(true));
+         context = null;
+      }
+
+      if (context != null)
+      {
+         try
+         {
+            listXML(context, buffer);
+         }
+         catch (Throwable t)
+         {
+            appendErrorTag(buffer,
+                  "Failed on list contents, " + t.toString());
+         }
+      }   //   if ( context != null )
+
+      closeContextTag(buffer);
+
+   }   //   listContainerContext()
+
+   private void openJndiTag(StringBuffer buffer)
+   {
+      buffer.append("<jndi>\n");
+   }
+
+   private void closeJndiTag(StringBuffer buffer)
+   {
+      buffer.append("</jndi>\n");
+   }
+
+   private void openEjbModuleTag(StringBuffer buffer, String file)
+   {
+      buffer.append("<ejbmodule>\n");
+      buffer.append("<file>" + file + "</file>\n");
+   }
+
+   private void closeEjbModuleTag(StringBuffer buffer)
+   {
+      buffer.append("</ejbmodule>\n");
+   }
+
+   private void appendPreExceptionTag(StringBuffer buffer,
+                                      String msg,
+                                      Throwable t)
+   {
+      buffer.append("<pre>\n" + msg+"\n");
+      formatException(buffer, t);
+      buffer.append("</pre>\n");
+   }
+
+   private void appendBeanTag(StringBuffer buffer, String bean)
+   {
+      buffer.append("<name>java:comp</name>\n");
+      buffer.append("<attribute name='bean'>" + bean + "</attribute>\n");
+   }
+
+   private void appendJavaNameTag(StringBuffer buffer)
+   {
+      buffer.append("<name>java:</name>\n");
+   }
+
+   private void appendGlobalNameTag(StringBuffer buffer)
+   {
+      buffer.append("<name>Global</name>\n");
+   }
+
+   private void appendLinkRefTag(StringBuffer buffer,
+                                 LinkRef link,
+                                 NameClassPair ncp)
+   {
+      buffer.append("<link-ref>\n");
+      buffer.append("<name>" + ncp.getName() + "</name>\n");
+      try
+      {
+         String lName = link.getLinkName();
+         buffer.append("<link>" + lName + "</link>\n");
+      }
+      catch (NamingException e)
+      {
+         appendErrorTag(buffer,
+               "Failed to getLinkName, " + e.toString(true));
+      }
+      buffer.append("<attribute name='class'>" + ncp.getClassName() +
+            "</attribute>\n");
+      buffer.append("</link-ref>\n");
+   }
+
+   private void appendLinkRefErrorTag(StringBuffer buffer)
+   {
+      buffer.append("<link-ref>\n");
+      buffer.append("<name>Invalid</name>\n");
+      buffer.append("</link-ref>\n");
+   }
+
+   private void openContextTag(StringBuffer buffer)
+   {
+      buffer.append("<context>\n");
+   }
+
+   private void closeContextTag(StringBuffer buffer)
+   {
+      buffer.append("</context>\n");
+   }
+
+   private void appendNonContextTag(StringBuffer buffer, NameClassPair ncp)
+   {
+      buffer.append("<non-context>\n");
+      appendNCPTag(buffer, ncp);
+      buffer.append("</non-context>\n");
+   }
+
+   private void appendLeafTag(StringBuffer buffer, NameClassPair ncp)
+   {
+      buffer.append("<leaf>\n");
+      appendNCPTag(buffer, ncp);
+      buffer.append("</leaf>\n");
+   }
+
+   private void appendNCPTag(StringBuffer buffer, NameClassPair ncp)
+   {
+      buffer.append("<name>" + ncp.getName() + "</name>\n");
+      buffer.append("<attribute name='class'>" + ncp.getClassName() +
+            "</attribute>\n");
+   }
+
+   private void appendErrorTag(StringBuffer buffer, String msg)
+   {
+      buffer.append("<error>\n");
+      buffer.append("<message>" + msg + "</message>\n");
+      buffer.append("</error>\n");
    }
 
    private void formatException(StringBuffer buffer, Throwable t)
