@@ -5,8 +5,9 @@ import java.io.*;
 
 import org.apache.tomcat.core.*;
 import org.apache.tomcat.request.*;
-import org.apache.tomcat.service.*;
-import org.apache.tomcat.service.http.*;
+import org.apache.tomcat.modules.server.*;
+//import org.apache.tomcat.service.*;
+//import org.apache.tomcat.service.http.*;
 import org.apache.tomcat.session.StandardSessionInterceptor;
 import org.apache.tomcat.context.*;
 import org.apache.tomcat.logging.*;
@@ -103,16 +104,16 @@ public class EmbededTomcat { // extends WebService
 	if(debug>0) log( "addConnector " + port + " " + addr +
 			 " " + hostname );
 
-	PoolTcpConnector sc=new PoolTcpConnector();
+	HttpInterceptor sc=new HttpInterceptor();
 	sc.setServer( contextM );
 	sc.setDebug( debug );
-	sc.setAttribute( "vhost_port" , new Integer( port ) );
-	if( addr != null ) sc.setAttribute( "vhost_address", addr );
-	if( hostname != null ) sc.setAttribute( "vhost_name", hostname );
+	sc.setPort( port ) ;
+	if( addr != null ) sc.setAddress( addr );
+	if( hostname != null ) sc.setHostName( hostname );
 	
-	sc.setTcpConnectionHandler( new HttpConnectionHandler());
+	//	sc.setTcpConnectionHandler( new HttpConnectionHandler());
 	
-	contextM.addServerConnector(  sc );
+	contextM.addRequestInterceptor(  sc );
     }
 
     /** Add a secure web service.
@@ -122,22 +123,21 @@ public class EmbededTomcat { // extends WebService
     {
 	if(debug>0) log( "addSecureConnector " + port + " " + addr + " " +
 			 hostname );
-
-	PoolTcpConnector sc=new PoolTcpConnector();
+	
+	HttpInterceptor sc=new HttpInterceptor();
 	sc.setServer( contextM );
-	sc.setAttribute( "vhost_port" , new Integer( port ) );
-	if( addr != null ) sc.setAttribute( "vhost_address", addr );
-	if( hostname != null ) sc.setAttribute( "vhost_name", hostname );
-
-	sc.setAttribute( "socketFactory",
-			 "org.apache.tomcat.net.SSLSocketFactory");
+	sc.setPort( port ) ;
+	if( addr != null ) sc.setAddress(  addr );
+	if( hostname != null ) sc.setHostName( hostname );
+	
+	sc.setSocketFactory("org.apache.tomcat.net.SSLSocketFactory");
 	//	log("XXX " + keyFile + " " + keyPass);
-	HttpConnectionHandler hc=new HttpConnectionHandler();
-	hc.setSecure(true);
-	sc.setTcpConnectionHandler( hc );
+	//	HttpConnectionHandler hc=new HttpConnectionHandler();
+	sc.setSecure(true);
+	// sc.setTcpConnectionHandler( hc );
 	// XXX add the secure socket
 	
-	contextM.addServerConnector(  sc );
+	contextM.addRequestInterceptor(  sc );
     }
 
     // -------------------- Context add/remove --------------------

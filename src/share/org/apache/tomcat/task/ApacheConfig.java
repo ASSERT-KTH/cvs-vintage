@@ -133,20 +133,17 @@ public class ApacheConfig  { // implements XXX
 	    pw.println("ApJServLogLevel notice");
 	    pw.println();
 
-		// Find Ajp12 connector
-		int portInt=8007;
-		Enumeration enum=cm.getConnectors();
-		while( enum.hasMoreElements() ) {
-			Object con=enum.nextElement();
-			if( con instanceof  PoolTcpConnector ) {
-				PoolTcpConnector tcpCon=(PoolTcpConnector) con;
-				if( tcpCon.getTcpConnectionHandler()
-						instanceof Ajp12ConnectionHandler ) {
-					portInt=tcpCon.getPort();
-				}
-			}
+	    // Find Ajp12 connector
+	    int portInt=8007;
+	    ContextInterceptor ci[]=cm.getContextInterceptors();
+	    for( int i=0; i<ci.length; i++ ) {
+		Object con=ci[i];
+		if( con instanceof  Ajp12ConnectionHandler ) {
+		    PoolTcpConnector tcpCon=(PoolTcpConnector) con;
+		    portInt=tcpCon.getPort();
 		}
-		pw.println("ApJServDefaultPort " + portInt);
+	    }
+	    pw.println("ApJServDefaultPort " + portInt);
 	    pw.println();
 
 	    pw.println("AddType text/jsp .jsp");
@@ -200,7 +197,7 @@ public class ApacheConfig  { // implements XXX
 
 	    // Set up contexts
 	    // XXX deal with Virtual host configuration !!!!
-	    enum = cm.getContexts();
+	Enumeration  enum = cm.getContexts();
 	    while (enum.hasMoreElements()) {
 		Context context = (Context)enum.nextElement();
 		String path  = context.getPath();

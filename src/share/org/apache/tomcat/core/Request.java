@@ -477,10 +477,9 @@ public class Request {
 
 	if( ! create ) return null;
 
-	//	context.log("Request:  created new session!");
 	contextM.doNewSessionRequest( this, response );
+
 	if ( serverSession == null ) {
-	    //	    context.log("Request: no session created!");
 	    return null;
 	}
 
@@ -797,12 +796,18 @@ public class Request {
     }
 
 
-    // XXX I hate this - but the only way to remove this method from the
-    // inteface is to implement it on top of doRead(b[]).
-    // Don't use this method if you can ( it is bad for performance !!)
-    // you need to override this method if you want non-empty InputStream
+    // This method must be removed and replaced with a real buffer !!!
     public int doRead() throws IOException {
-	return -1;
+        byte []b = new byte[1];
+        int rc = doRead(b, 0, 1);
+
+        if(rc <= 0) {
+            return -1;
+        }
+
+	return b[0];
+	// ??
+	//return ((int)b[0]) & 0x000000FF;
     }
 
     // -------------------- "cooked" info --------------------

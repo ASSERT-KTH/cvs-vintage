@@ -172,16 +172,13 @@ public class StopTomcat {
 	// Find Ajp12 connector
 	int portInt=8007;
 	InetAddress address=null;
-	Enumeration enum=cm.getConnectors();
-	while( enum.hasMoreElements() ) {
-	    Object con=enum.nextElement();
-	    if( con instanceof  PoolTcpConnector ) {
+	ContextInterceptor ci[]=cm.getContextInterceptors();
+	for( int i=0; i<ci.length; i++ ) {
+	    Object con=ci[i];
+	    if( con instanceof  Ajp12ConnectionHandler ) {
 		PoolTcpConnector tcpCon=(PoolTcpConnector) con;
-		if( tcpCon.getTcpConnectionHandler()
-		    instanceof Ajp12ConnectionHandler ) {
-		    portInt=tcpCon.getPort();
-		    address=tcpCon.getAddress();
-		}
+		portInt=tcpCon.getPort();
+		address=tcpCon.getAddress();
 	    }
 	}
 
