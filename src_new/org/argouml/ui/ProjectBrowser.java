@@ -1,4 +1,4 @@
-// $Id: ProjectBrowser.java,v 1.115 2003/09/15 06:54:39 linus Exp $
+// $Id: ProjectBrowser.java,v 1.116 2003/09/19 21:28:42 d00mst Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -965,9 +965,8 @@ public class ProjectBrowser
     }
 
     public void targetSet(TargetEvent e) {
-        Object[] targets = e.getNewTargets();
-        if (targets != null && targets.length >= 1 && targets[0] instanceof UMLDiagram)
-        {
+        Object target = e.getNewTarget();
+        if (target instanceof UMLDiagram) {
             updateTitle();
         }
     }    

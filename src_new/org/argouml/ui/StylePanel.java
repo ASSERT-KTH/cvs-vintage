@@ -1,4 +1,4 @@
-// $Id: StylePanel.java,v 1.11 2003/09/04 20:11:45 thierrylach Exp $
+// $Id: StylePanel.java,v 1.12 2003/09/19 21:28:42 d00mst Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -178,7 +178,7 @@ public class StylePanel
      * org.argouml.ui.targetmanager.TargetListener#targetRemoved(org.argouml.ui.targetmanager.TargetEvent)
      */
     public void targetRemoved(TargetEvent e) {
-        setTarget(e.getNewTargets()[0]);
+        setTarget(e.getNewTarget());
 
     }
 
@@ -187,7 +187,7 @@ public class StylePanel
      * org.argouml.ui.targetmanager.TargetListener#targetSet(org.argouml.ui.targetmanager.TargetEvent)
      */
     public void targetSet(TargetEvent e) {
-        setTarget(e.getNewTargets()[0]);
+        setTarget(e.getNewTarget());
 
     }
 

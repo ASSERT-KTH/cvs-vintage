@@ -1,5 +1,5 @@
 
-// $Id: UMLPlainTextDocument.java,v 1.18 2003/09/04 20:11:44 thierrylach Exp $
+// $Id: UMLPlainTextDocument.java,v 1.19 2003/09/19 21:28:41 d00mst Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -23,7 +23,7 @@
 // CALIFORNIA HAS NO OBLIGATIONS TO PROVIDE MAINTENANCE, SUPPORT,
 // UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 
-// $Id: UMLPlainTextDocument.java,v 1.18 2003/09/04 20:11:44 thierrylach Exp $
+// $Id: UMLPlainTextDocument.java,v 1.19 2003/09/19 21:28:41 d00mst Exp $
 package org.argouml.uml.ui;
 
 import javax.swing.text.AttributeSet;
@@ -256,14 +256,14 @@ public abstract class UMLPlainTextDocument
      * @see org.argouml.ui.targetmanager.TargetListener#targetRemoved(org.argouml.ui.targetmanager.TargetEvent)
      */
     public void targetRemoved(TargetEvent e) {
-        setTarget(e.getNewTargets()[0]);
+        setTarget(e.getNewTarget());
     }
 
     /**
      * @see org.argouml.ui.targetmanager.TargetListener#targetSet(org.argouml.ui.targetmanager.TargetEvent)
      */
     public void targetSet(TargetEvent e) {
-        setTarget(e.getNewTargets()[0]);
+        setTarget(e.getNewTarget());
     }
 
 }

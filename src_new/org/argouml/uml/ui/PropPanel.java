@@ -1,4 +1,4 @@
-// $Id: PropPanel.java,v 1.71 2003/09/18 23:35:13 bobtarling Exp $
+// $Id: PropPanel.java,v 1.72 2003/09/19 21:28:41 d00mst Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,7 +25,7 @@
 // File: PropPanel.java
 // Classes: PropPanel
 // Original Author:
-// $Id: PropPanel.java,v 1.71 2003/09/18 23:35:13 bobtarling Exp $
+// $Id: PropPanel.java,v 1.72 2003/09/19 21:28:41 d00mst Exp $
 
 // 23 Apr 2002: Jeremy Bennett (mail@jeremybennett.com). Added the third party
 // event listener.
@@ -108,7 +108,7 @@ abstract public class PropPanel
     ////////////////////////////////////////////////////////////////
     // instance vars
     private Object _target;
-    private Object/*MModelElement*/ _modelElement;
+    private MModelElement _modelElement;
     private static Profile _profile;
 
     private ResourceBundle _bundle = null;
@@ -387,7 +387,7 @@ abstract public class PropPanel
     }
 
     public final MModelElement getModelElement() {
-        return (MModelElement)_modelElement;
+        return _modelElement;
     }
 
     public void refresh() {
@@ -626,7 +626,7 @@ abstract public class PropPanel
     public void targetRemoved(TargetEvent e) {
         // how to handle empty target lists?
         // probably the TabProps should only show an empty pane in that case
-        setTarget(e.getNewTargets()[0]);
+        setTarget(e.getNewTarget());
         fireTargetRemoved(e);
 
     }
@@ -635,7 +635,7 @@ abstract public class PropPanel
      * @see org.argouml.ui.targetmanager.TargetListener#targetSet(org.argouml.ui.targetmanager.TargetEvent)
      */
     public void targetSet(TargetEvent e) {
-        setTarget(e.getNewTargets()[0]);
+        setTarget(e.getNewTarget());
         fireTargetSet(e);
 
     }

@@ -1,5 +1,5 @@
 
-// $Id: UMLModelElementListModel2.java,v 1.17 2003/08/25 19:15:51 bobtarling Exp $
+// $Id: UMLModelElementListModel2.java,v 1.18 2003/09/19 21:28:41 d00mst Exp $
 // Copyright (c) 2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -360,14 +360,14 @@ public abstract class UMLModelElementListModel2
      * @see org.argouml.ui.targetmanager.TargetListener#targetRemoved(org.argouml.ui.targetmanager.TargetEvent)
      */
     public void targetRemoved(TargetEvent e) {
-        setTarget(e.getNewTargets()[0]);
+        setTarget(e.getNewTarget());
     }
 
     /**
      * @see org.argouml.ui.targetmanager.TargetListener#targetSet(org.argouml.ui.targetmanager.TargetEvent)
      */
     public void targetSet(TargetEvent e) {
-        setTarget(e.getNewTargets()[0]);
+        setTarget(e.getNewTarget());
     }
 
     /**

@@ -1,4 +1,4 @@
-// $Id: Actions.java,v 1.60 2003/09/15 17:28:40 d00mst Exp $
+// $Id: Actions.java,v 1.61 2003/09/19 21:28:42 d00mst Exp $
 // Copyright (c) 1996-2001 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -123,7 +123,7 @@ public class Actions implements TargetListener {
 	Iterator actions = _allActions.iterator();
 	while (actions.hasNext()) {
 	    UMLAction a = (UMLAction) actions.next();
-	    a.updateEnabled(e.getNewTargets()[0]);
+	    a.updateEnabled(e.getNewTarget());
 	}
     }
 

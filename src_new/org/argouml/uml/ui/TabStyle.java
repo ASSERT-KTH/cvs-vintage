@@ -1,4 +1,4 @@
-// $Id: TabStyle.java,v 1.17 2003/06/29 23:50:03 linus Exp $
+// $Id: TabStyle.java,v 1.18 2003/09/19 21:28:41 d00mst Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,7 +25,7 @@
 // File: TabStyle.java
 // Classes: TabStyle
 // Original Author:
-// $Id: TabStyle.java,v 1.17 2003/06/29 23:50:03 linus Exp $
+// $Id: TabStyle.java,v 1.18 2003/09/19 21:28:41 d00mst Exp $
 
 // 12 Apr 2002: Jeremy Bennett (mail@jeremybennett.com). Extended to support
 // use case style panel that handles optional display of extension points.
@@ -331,9 +331,7 @@ public class TabStyle
      * @see org.argouml.ui.targetmanager.TargetListener#targetAdded(org.argouml.ui.targetmanager.TargetEvent)
      */
     public void targetAdded(TargetEvent e) {
-        // we can neglect this, the TabProps allways selects the first target
-        // in a set of targets. The first target can only be 
-        // changed in a targetRemoved or a TargetSet event
+        setTarget(e.getNewTarget());
         fireTargetAdded(e);
 
     }
@@ -344,7 +342,7 @@ public class TabStyle
     public void targetRemoved(TargetEvent e) {
         // how to handle empty target lists?
         // probably the TabProps should only show an empty pane in that case
-        setTarget(e.getNewTargets()[0]);
+        setTarget(e.getNewTarget());
         fireTargetRemoved(e);
 
     }
@@ -353,7 +351,7 @@ public class TabStyle
      * @see org.argouml.ui.targetmanager.TargetListener#targetSet(org.argouml.ui.targetmanager.TargetEvent)
      */
     public void targetSet(TargetEvent e) {
-        setTarget(e.getNewTargets()[0]);
+        setTarget(e.getNewTarget());
         fireTargetSet(e);
 
     }

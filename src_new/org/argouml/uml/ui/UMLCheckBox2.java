@@ -1,5 +1,5 @@
 
-// $Id: UMLCheckBox2.java,v 1.12 2003/08/25 19:15:51 bobtarling Exp $
+// $Id: UMLCheckBox2.java,v 1.13 2003/09/19 21:28:41 d00mst Exp $
 // Copyright (c) 2002-2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -172,14 +172,14 @@ public abstract class UMLCheckBox2
      * @see org.argouml.ui.targetmanager.TargetListener#targetRemoved(org.argouml.ui.targetmanager.TargetEvent)
      */
     public void targetRemoved(TargetEvent e) {
-        setTarget(e.getNewTargets()[0]);
+        setTarget(e.getNewTarget());
     }
 
     /* (non-Javadoc)
      * @see org.argouml.ui.targetmanager.TargetListener#targetSet(org.argouml.ui.targetmanager.TargetEvent)
      */
     public void targetSet(TargetEvent e) {
-        setTarget(e.getNewTargets()[0]);
+        setTarget(e.getNewTarget());
     }
 
 }

@@ -1,5 +1,5 @@
 
-// $Id: UMLComboBoxModel2.java,v 1.32 2003/09/11 17:50:44 jjones Exp $
+// $Id: UMLComboBoxModel2.java,v 1.33 2003/09/19 21:28:41 d00mst Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -512,7 +512,7 @@ public abstract class UMLComboBoxModel2
      * @see org.argouml.ui.targetmanager.TargetListener#targetRemoved(org.argouml.ui.targetmanager.TargetEvent)
      */
     public void targetRemoved(TargetEvent e) {
-        setTarget(e.getNewTargets()[0]);
+        setTarget(e.getNewTarget());
 
     }
 
@@ -520,7 +520,7 @@ public abstract class UMLComboBoxModel2
      * @see org.argouml.ui.targetmanager.TargetListener#targetSet(org.argouml.ui.targetmanager.TargetEvent)
      */
     public void targetSet(TargetEvent e) {
-        setTarget(e.getNewTargets()[0]);
+        setTarget(e.getNewTarget());
 
     }
 

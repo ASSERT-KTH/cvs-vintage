@@ -1,5 +1,5 @@
 
-// $Id: TabDiagram.java,v 1.28 2003/09/04 20:11:47 thierrylach Exp $
+// $Id: TabDiagram.java,v 1.29 2003/09/19 21:28:42 d00mst Exp $
 // Copyright (c) 1996-2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -23,7 +23,7 @@
 // CALIFORNIA HAS NO OBLIGATIONS TO PROVIDE MAINTENANCE, SUPPORT,
 // UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 
-// $Id: TabDiagram.java,v 1.28 2003/09/04 20:11:47 thierrylach Exp $
+// $Id: TabDiagram.java,v 1.29 2003/09/19 21:28:42 d00mst Exp $
 
 package org.argouml.uml.diagram.ui;
 
@@ -278,9 +278,8 @@ public class TabDiagram
      * org.argouml.ui.targetmanager.TargetListener#targetAdded(org.argouml.ui.targetmanager.TargetEvent)
      */
     public void targetAdded(TargetEvent e) {
-        // we can neglect this, the TabDiagram allways selects the first target
-        // in a set of targets. The first target can only be 
-        // changed in a targetRemoved or a TargetSet event
+        setTarget(e.getNewTarget());
+        select(e.getNewTargets());
     }
 
     /**
@@ -290,9 +289,8 @@ public class TabDiagram
     public void targetRemoved(TargetEvent e) {
         // how to handle empty target lists?
         // probably the TabDiagram should only show an empty pane in that case
-        setTarget(e.getNewTargets()[0]);
+        setTarget(e.getNewTarget());
         select(e.getNewTargets());
-
     }
 
     /**
@@ -300,7 +298,7 @@ public class TabDiagram
      * org.argouml.ui.targetmanager.TargetListener#targetSet(org.argouml.ui.targetmanager.TargetEvent)
      */
     public void targetSet(TargetEvent e) {
-        setTarget(e.getNewTargets()[0]);
+        setTarget(e.getNewTarget());
         select(e.getNewTargets());
     }
 

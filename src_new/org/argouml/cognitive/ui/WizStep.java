@@ -1,4 +1,4 @@
-// $Id: WizStep.java,v 1.18 2003/09/04 20:11:48 thierrylach Exp $
+// $Id: WizStep.java,v 1.19 2003/09/19 21:28:41 d00mst Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -246,9 +246,7 @@ public class WizStep extends JPanel
      * @see org.argouml.ui.targetmanager.TargetListener#targetAdded(org.argouml.ui.targetmanager.TargetEvent)
      */
     public void targetAdded(TargetEvent e) {
-	// we can neglect this, the wizstep allways selects the first target
-	// in a set of targets. The first target can only be 
-	// changed in a targetRemoved or a TargetSet event
+	setTarget(e.getNewTarget());
 
     }
 
@@ -258,7 +256,7 @@ public class WizStep extends JPanel
     public void targetRemoved(TargetEvent e) {
 	// how to handle empty target lists?
 	// probably the wizstep should only show an empty pane in that case
-	setTarget(e.getNewTargets()[0]);
+	setTarget(e.getNewTarget());
 
     }
 
@@ -266,7 +264,7 @@ public class WizStep extends JPanel
      * @see org.argouml.ui.targetmanager.TargetListener#targetSet(org.argouml.ui.targetmanager.TargetEvent)
      */
     public void targetSet(TargetEvent e) {
-	setTarget(e.getNewTargets()[0]);
+	setTarget(e.getNewTarget());
     }
 
 } /* end class WizStep */
