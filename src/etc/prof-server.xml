@@ -59,20 +59,18 @@ maximum configuration for each group of applications.
 			   minSpareThreads="10" />
 
         <!--
-            Uncomment this for SSL support. 
-            You _need_ to set up a server certificate if you want this
-            to work, and you need JSSE.
-            1. Add JSSE jars to CLASSPATH 
-            2. Edit java.home/jre/lib/security/java.security
-               Add:
-               security.provider.2=com.sun.net.ssl.internal.ssl.Provider
-            3. Do: keytool -genkey -alias tomcat -keyalg RSA
+            Uncomment this for SSL support. You _need_ to set up a
+            server certificate if you want this to work, and you
+            need JSSE. See tomcat-ssl-howto.html for more detailed
+            instructions.
+
+            1. Make the JSSE jars available to Tomcat, either by making
+               them an installed extension or by adding them to the
+               Tomcat CLASSPATH.
+            2. Do: keytool -genkey -alias tomcat -keyalg RSA
                RSA is essential to work with Netscape and IIS.
                Use "changeit" as password. ( or add keypass attribute )
                You don't need to sign the certificate.
- 
-            You can set parameter keystore and keypass if you want 
-            to change the default ( user.home/.keystore with changeit )
          -->
         <!--
         <RequestInterceptor 

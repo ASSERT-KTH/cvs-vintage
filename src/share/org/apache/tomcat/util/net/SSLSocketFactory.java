@@ -72,10 +72,10 @@ import javax.net.ssl.HandshakeCompletedListener;
 import javax.net.ssl.HandshakeCompletedEvent;
 
 /*
-  1. Add Jsse's jars into jre/lib/ext
-  2. Edit java.security, add
-       security.provider.2=com.sun.net.ssl.internal.ssl.Provider
-  3. keytool -genkey -alias tomcat -keyalg RSA
+  1. Make the JSSE's jars available, either as an installed
+     extension (copy them into jre/lib/ext) or by adding
+     them to the Tomcat classpath.
+  2. keytool -genkey -alias tomcat -keyalg RSA
      Use "changeit" as password ( this is the default we use )
  */
 
@@ -146,9 +146,6 @@ public class SSLSocketFactory
      */
     private void initProxy() throws IOException {
 	try {
-	    /** You should have this in java.security, but
-		can't hurt to double check
-	    */
 	    Security.addProvider (new sun.security.provider.Sun());
 	    Security.addProvider (new com.sun.net.ssl.internal.ssl.Provider());
 
