@@ -35,7 +35,7 @@ into the JBoss server JNDI namespace:
 - ejb-ref
 - security-domain
 
-Subclasses need to implement the {@link #performDeploy(String, String) performDeploy()}
+Subclasses need to implement the {@link #performDeploy(String, String, WebDescriptorParser) performDeploy()}
 and {@link #performUndeploy(String) performUndeploy()} methods to perform the
 container specific steps and return the web application info required by the
 AbstractWebContainer class.
@@ -113,10 +113,36 @@ in the contrib/tomcat module.
 @see org.jboss.security.SecurityAssociation;
 
 @author  Scott_Stark@displayscape.com
-@version $Revision: 1.3 $
+@version $Revision: 1.4 $
 */
 public abstract class AbstractWebContainer extends ServiceMBeanSupport implements AbstractWebContainerMBean
 {
+    public static interface WebDescriptorParser
+    {
+        /** This method is called as part of subclass performDeploy() method implementations
+            to parse the web-app.xml and jboss-web.xml deployment descriptors from a
+            war deployment. The method creates the ENC(java:comp/env) env-entry,
+            resource-ref, & ejb-ref element values. The creation of the env-entry
+            values does not require a jboss-web.xml descriptor. The creation of the
+            resource-ref and ejb-ref elements does require a jboss-web.xml descriptor
+            for the JNDI name of the deployed resources/EJBs.
+
+            Because the ENC context is private to the web application, the web
+            application class loader is used to identify the ENC. The class loader
+            is used because each war typically requires a unique class loader to
+            isolate the web application classes/resources. This means that the
+            ClassLoader passed to this method must be the thread context ClassLoader
+            seen by the server/jsp pages during init/destroy/service/etc. method
+            invocations if these methods interace with the JNDI ENC context.
+
+        @param loader, the ClassLoader for the web application. May not be null.
+        @param webApp, the root element of thw web-app.xml descriptor. May not be null.
+        @param jbossWeb, the root element of thw jboss-web.xml descriptor. May be null
+            to indicate that no jboss-web.xml descriptor exists.
+        */
+        public void parseWebAppDescriptors(ClassLoader loader, Element webApp, Element jbossWeb) throws Exception;
+    }
+
     /** The "WebContainer" log4j category instance available for logging related
         to WebContainer events.
      */
@@ -134,12 +160,17 @@ public abstract class AbstractWebContainer extends ServiceMBeanSupport implement
      perform the container specific deployment steps and registers the
      returned WebApplication in the deployment map. The steps performed are:
 
-        WebApplication warInfo = performDeploy(ctxPath, warUrl);
+        WebDescriptorParser webAppParser = ...;
+        WebApplication warInfo = performDeploy(ctxPath, warUrl, webAppParser);
         ClassLoader loader = warInfo.getClassLoader();
         Element webApp = warInfo.getWebApp();
         Element jbossWeb = warInfo.getJbossWeb();
-        parseWebAppDescriptors(loader, webApp, jbossWeb);
         deploymentMap.put(warUrl, warInfo);
+
+     The subclass performDeploy() implementation needs to invoke
+     webAppParser.parseWebAppDescriptors(loader, webApp, jbossWeb) to have the
+     JNDI java:comp/env namespace setup before any web app component can access
+     this namespace.
 
      @param ctxPath, The context-root element value from the J2EE
         application/module/web application.xml descriptor. This may be null
@@ -150,11 +181,12 @@ public abstract class AbstractWebContainer extends ServiceMBeanSupport implement
     {
         try
         {
-            WebApplication warInfo = performDeploy(ctxPath, warUrl);
+            WebDescriptorParser webAppParser = new DescriptorParser();
+            WebApplication warInfo = performDeploy(ctxPath, warUrl, webAppParser);
             ClassLoader loader = warInfo.getClassLoader();
             Element webApp = warInfo.getWebApp();
             Element jbossWeb = warInfo.getJbossWeb();
-            parseWebAppDescriptors(loader, webApp, jbossWeb);
+            //parseWebAppDescriptors(loader, webApp, jbossWeb);
             deploymentMap.put(warUrl, warInfo);
         }
         catch(DeploymentException e)
@@ -163,21 +195,26 @@ public abstract class AbstractWebContainer extends ServiceMBeanSupport implement
         }
         catch(Exception e)
         {
+            e.printStackTrace();
             throw new DeploymentException("Error during deploy", e);
         }
     }
 
-    /** The method called by the deploy() method that must be overriden by
-        subclasses to perform the web container specific deployment steps.
+    /** This method is called by the deploy() method template and must be overriden by
+        subclasses to perform the web container specific deployment steps. 
      @param ctxPath, The context-root element value from the J2EE
         application/module/web application.xml descriptor. This may be null
         if war was is not being deployed as part of an enterprise application.
      @param warUrl, The string for the URL of the web application war.
+     @param webAppParser, The callback interface the web container should use to
+     setup the web app JNDI environment for use by the web app components. This
+     needs to be invoked after the web app class loader is known, but before
+     and web app components attempt to access the java:comp/env JNDI namespace.
      @return WebApplication, the web application information required by the
-        AbstractWebContainer class to setup the JNDI ENC and track the war
-        deployment status.
+        AbstractWebContainer class to track the war deployment status.
     */
-    protected abstract WebApplication performDeploy(String ctxPath, String warUrl) throws Exception;
+    protected abstract WebApplication performDeploy(String ctxPath, String warUrl,
+        WebDescriptorParser webAppParser) throws Exception;
 
     /** A template pattern implementation of the undeploy() method. This method
      calls the {@link #performUndeploy(String) performUndeploy()} method to
@@ -228,28 +265,15 @@ public abstract class AbstractWebContainer extends ServiceMBeanSupport implement
         return deploymentMap.values().iterator();
     }
 
-    /** This method is called as part of the deploy() method template to
-        parse the web-app.xml and jboss-web.xml deployment descriptors from a
-        war deployment. The method creates the ENC(java:comp/env) env-entry,
-        resource-ref, & ejb-ref element values. The creation of the env-entry
-        values does not require a jboss-web.xml descriptor. The creation of the
-        resource-ref and ejb-ref elements does require a jboss-web.xml descriptor
-        for the JNDI name of the deployed resources/EJBs.
-
-        Because the ENC context is private to the web application, the web
-        application class loader is used to identify the ENC. The class loader
-        is used because each war typically requires a unique class loader to
-        isolate the web application classes/resources. This means that the
-        ClassLoader passed to this method must be the thread context ClassLoader
-        seen by the server/jsp pages during init/destroy/service/etc. method
-        invocations if these methods interace with the JNDI ENC context.
+    /** This method is invoked from within subclass performDeploy() method
+     implementations when they invoke WebDescriptorParser.parseWebAppDescriptors().
 
     @param loader, the ClassLoader for the web application. May not be null.
     @param webApp, the root element of thw web-app.xml descriptor. May not be null.
     @param jbossWeb, the root element of thw jboss-web.xml descriptor. May be null
         to indicate that no jboss-web.xml descriptor exists.
     */
-    private void parseWebAppDescriptors(ClassLoader loader, Element webApp, Element jbossWeb) throws Exception
+    protected void parseWebAppDescriptors(ClassLoader loader, Element webApp, Element jbossWeb) throws Exception
     {
         category.debug("AbstractWebContainer.parseWebAppDescriptors, Begin");
         WebMetaData metaData = new WebMetaData();
@@ -371,4 +395,16 @@ public abstract class AbstractWebContainer extends ServiceMBeanSupport implement
             Util.bind(envCtx, "security/realmMapping", new LinkRef(securityDomain));
         }
     }
+
+    /** An inner class that maps the WebDescriptorParser.parseWebAppDescriptors()
+     onto the protected parseWebAppDescriptors() AbstractWebContainer method.
+    */
+    private class DescriptorParser implements WebDescriptorParser
+    {
+        public void parseWebAppDescriptors(ClassLoader loader, Element webApp, Element jbossWeb) throws Exception
+        {
+            AbstractWebContainer.this.parseWebAppDescriptors(loader, webApp, jbossWeb);
+        }
+    }
+
 }
