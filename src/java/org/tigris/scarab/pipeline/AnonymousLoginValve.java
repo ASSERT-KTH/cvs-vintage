@@ -72,7 +72,7 @@ public class AnonymousLoginValve extends AbstractValve
     {
         try
         {
-            ScarabUser user = (ScarabUser)TurbineSecurity.getAuthenticatedUser(username, password);
+            ScarabUser user = (ScarabUser)TurbineSecurity.getUser(username);
             data.setUser(user);
             user.setHasLoggedIn(Boolean.TRUE);
             user.updateLastLogin();
