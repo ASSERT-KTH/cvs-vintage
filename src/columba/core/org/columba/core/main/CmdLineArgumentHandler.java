@@ -1,154 +1,67 @@
-//The contents of this file are subject to the Mozilla Public License Version 1.1
-//(the "License"); you may not use this file except in compliance with the 
-//License. You may obtain a copy of the License at http://www.mozilla.org/MPL/
-//
-//Software distributed under the License is distributed on an "AS IS" basis,
-//WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License 
-//for the specific language governing rights and
-//limitations under the License.
-//
-//The Original Code is "The Columba Project"
-//
-//The Initial Developers of the Original Code are Frederik Dietz and Timo Stich.
-//Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
-//
-//All Rights Reserved.
+/*
+ * Created on Apr 28, 2003
+ * File CmdLineArgumentHandler.java
+ * 
+ */
 package org.columba.core.main;
 
-import org.columba.core.util.CmdLineArgumentParser;
+import org.columba.core.logging.ColumbaLogger;
 import org.columba.mail.gui.composer.ComposerController;
 import org.columba.mail.parser.MailUrlParser;
 
+/**
+ * This class handles given arguments (in style of commandline arguments. If for example the 
+ * argument --composer is given, on startup the composer window is viewed. All other arguments like
+ * subject ect. also given to the composer, so any values to write a mail can given here as 
+ * arguments and then a composer window with all values are opened.
+ * TODO: test, why any commandline options are not seen in the composer window (eg. subject).
+ * @author waffel
+ */
 public class CmdLineArgumentHandler {
-	//private MainInterface mainInterface;
-
-	public CmdLineArgumentHandler(String[] args) {
-		//this.mainInterface = mainInterface;
-
-		ColumbaCmdLineArgumentParser cmdLineParser =
-			new ColumbaCmdLineArgumentParser();
-
-		try {
-			cmdLineParser.parse(args);
-		} catch (CmdLineArgumentParser.UnknownOptionException e) {
-			System.err.println(e.getMessage());
-			ColumbaCmdLineArgumentParser.printUsage();
-
-		} catch (CmdLineArgumentParser.IllegalOptionValueException e) {
-			System.err.println(e.getMessage());
-			ColumbaCmdLineArgumentParser.printUsage();
-
-		}
-
-		CmdLineArgumentParser.Option[] allOptions =
-			new CmdLineArgumentParser.Option[] {
-				ColumbaCmdLineArgumentParser.DEBUG,
-				ColumbaCmdLineArgumentParser.COMPOSER,
-				ColumbaCmdLineArgumentParser.RCPT,
-				ColumbaCmdLineArgumentParser.MESSAGE,
-				ColumbaCmdLineArgumentParser.PATH,
-				ColumbaCmdLineArgumentParser.MAILURL,
-				ColumbaCmdLineArgumentParser.SUBJECT,
-				ColumbaCmdLineArgumentParser.CC,
-				ColumbaCmdLineArgumentParser.BCC };
-
-		/*
-		for (int j = 0; j < allOptions.length; ++j)
-		{
-			System.out.println(
-				allOptions[j].longForm() + ": " + cmdLineParser.getOptionValue(allOptions[j]));
-		}
-		*/
-
-		Object path =
-			cmdLineParser.getOptionValue(ColumbaCmdLineArgumentParser.PATH);
-		Object composer =
-			cmdLineParser.getOptionValue(ColumbaCmdLineArgumentParser.COMPOSER);
-		Object rcpt =
-			cmdLineParser.getOptionValue(ColumbaCmdLineArgumentParser.RCPT);
-		Object message =
-			cmdLineParser.getOptionValue(ColumbaCmdLineArgumentParser.MESSAGE);
-		Object debug =
-			cmdLineParser.getOptionValue(ColumbaCmdLineArgumentParser.DEBUG);
-		Object mailurl =
-			cmdLineParser.getOptionValue(ColumbaCmdLineArgumentParser.MAILURL);
-		Object subject =
-			cmdLineParser.getOptionValue(ColumbaCmdLineArgumentParser.SUBJECT);
-		Object cc =
-			cmdLineParser.getOptionValue(ColumbaCmdLineArgumentParser.CC);
-		Object bcc =
-			cmdLineParser.getOptionValue(ColumbaCmdLineArgumentParser.BCC);
-
-		if (mailurl != null) {
-			String mailto = (String) mailurl;
-
-			if (MailUrlParser.isMailUrl(mailto)) {
-
-				MailUrlParser mailtoParser = new MailUrlParser(mailto);
-
-				composer = new Boolean(true);
-
-				rcpt = mailtoParser.get("mailto:");
-
-				subject = mailtoParser.get("subject=");
-
-				cc = mailtoParser.get("cc=");
-
-				bcc = mailtoParser.get("bcc=");
-
-				message = mailtoParser.get("body=");
-			}
-		}
-
-		if (composer != null) {
-			Boolean bool = (Boolean) composer;
-
-			if (bool.equals(Boolean.TRUE)) {
-				// open composer window
-
-				//ComposerFrame frame = new ComposerFrame();
-				ComposerController controller = new ComposerController();
-
-				if (rcpt != null) {
-					String rcptString = (String) rcpt;
-
-					controller.getModel().setTo(rcptString);
-				}
-
-				if (subject != null) {
-					String subjectString = (String) rcpt;
-
-					controller.getModel().setSubject(subjectString);
-				}
-
-				if (cc != null) {
-					String ccString = (String) cc;
-
-					controller.getModel().setHeaderField("Cc", ccString);
-				}
-
-				if (bcc != null) {
-					String bccString = (String) bcc;
-
-					controller.getModel().setHeaderField("Bcc", bccString);
-				}
-
-				if (message != null) {
-					String messageString = (String) message;
-
-					controller.getModel().setBodyText(messageString);
-				}
-				
-				controller.openView();
-			}
-		}
-
-    // more understandable coding format
-    if (debug != null) {
-      MainInterface.DEBUG = ((Boolean)debug).booleanValue();
-    } else {
-      MainInterface.DEBUG = false;
+  
+  /**
+   * Constructs a new CommandLineArgumentHandler. This Handler parsed the given commandline 
+   * Options an if needed starts a composer window. If any commandlineargument unknown a message
+   * is printed out to the error console and the system will exit.
+   * @param args Commandline Arguments to be parsed.
+   */
+  public CmdLineArgumentHandler(String[] args) {
+    ColumbaCmdLineParser cmdLineParser = new ColumbaCmdLineParser();
+    cmdLineParser.initCmdLine(args);
+    ColumbaLogger.log.debug("cmdLineArgumentHandler");
+    
+    String mailURL = cmdLineParser.getMailurlOption();
+    if ( mailURL != null) {
+      if (MailUrlParser.isMailUrl(mailURL)) {
+        MailUrlParser mailToParser = new MailUrlParser(mailURL);
+        cmdLineParser.setComposerOption(true);
+        cmdLineParser.setRcptOption((String)mailToParser.get("mailto:"));
+        cmdLineParser.setSubjectOption((String)mailToParser.get("subject="));
+        cmdLineParser.setCcOption((String)mailToParser.get("cc="));
+        cmdLineParser.setBccOption((String)mailToParser.get("bcc="));
+        cmdLineParser.setBodyOption((String)mailToParser.get("body="));
+      }
     }
-   		//MainInterface.DEBUG = debug != null ? (Boolean) debug : Boolean.FALSE;
-	}
+    ColumbaLogger.log.debug("Option Debug: "+cmdLineParser.getComposerOption());
+    ColumbaLogger.log.debug("Option subject: "+cmdLineParser.getSubjectOption());
+    if (cmdLineParser.getComposerOption()) {
+      ComposerController controller = new ComposerController();
+      if (cmdLineParser.getRcptOption() != null) {
+        controller.getModel().setTo(cmdLineParser.getRcptOption());
+      }
+      if (cmdLineParser.getSubjectOption() != null) {
+        controller.getModel().setSubject(cmdLineParser.getSubjectOption());
+      }
+      if (cmdLineParser.getCcOption() != null) {
+        controller.getModel().setHeaderField("Cc", cmdLineParser.getCcOption());
+      }
+      if (cmdLineParser.getBccOption() != null) {
+        controller.getModel().setHeaderField("Bcc", cmdLineParser.getBccOption());
+      }
+      if (cmdLineParser.getBodyOption() != null) {
+        controller.getModel().setBodyText(cmdLineParser.getBodyOption());
+      }
+      controller.openView();
+    }
+  }
 }

@@ -15,6 +15,8 @@
 //All Rights Reserved.
 package org.columba.core.main;
 
+import jargs.gnu.CmdLineParser;
+
 import java.awt.Event;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
@@ -52,202 +54,161 @@ import org.columba.mail.gui.config.accountwizard.AccountWizard;
 import org.columba.mail.main.MailMain;
 
 public class Main {
-	private static ColumbaLoader columbaLoader;
+  private static ColumbaLoader columbaLoader;
 
-	public static void loadInVMInstance(String[] arguments) {
-		try {
-			Socket clientSocket =
-				new Socket("127.0.0.1", ColumbaLoader.COLUMBA_PORT);
+  public static void loadInVMInstance(String[] arguments) {
+    try {
+      Socket clientSocket = new Socket("127.0.0.1", ColumbaLoader.COLUMBA_PORT);
 
-			PrintWriter writer =
-				new PrintWriter(clientSocket.getOutputStream());
+      PrintWriter writer = new PrintWriter(clientSocket.getOutputStream());
 
-			StringBuffer buf = new StringBuffer();
-			buf.append("columba:");
-			for (int i = 0; i < arguments.length; i++) {
-				buf.append(arguments[i]);
-				buf.append("%");
-			}
+      StringBuffer buf = new StringBuffer();
+      buf.append("columba:");
+      for (int i = 0; i < arguments.length; i++) {
+        buf.append(arguments[i]);
+        buf.append("%");
+      }
 
-			writer.write(buf.toString());
-			writer.flush();
-			writer.close();
+      writer.write(buf.toString());
+      writer.flush();
+      writer.close();
 
-			clientSocket.close();
+      clientSocket.close();
 
-			System.exit(5);
+      System.exit(5);
 
-		} catch (Exception ex) { // we get a java.net.ConnectException: Connection refused
-			//  -> this means that no server is running
-			//      -> lets start one
-			columbaLoader = new ColumbaLoader();
-		}
+    } catch (Exception ex) { // we get a java.net.ConnectException: Connection refused
+      //  -> this means that no server is running
+      //      -> lets start one
+      columbaLoader = new ColumbaLoader();
+    }
 
-	}
+  }
 
-	public static void main(String[] arg) {
-		final String[] args = arg;
+  public static void main(String[] arg) {
+    final String[] args = arg;
 
-		ColumbaCmdLineArgumentParser cmdLineParser =
-			new ColumbaCmdLineArgumentParser();
+    ColumbaCmdLineParser cmdLineParser = new ColumbaCmdLineParser();
+    cmdLineParser.initCmdLine(args);
 
-		try {
-			cmdLineParser.parse(args);
-		} catch (CmdLineArgumentParser.UnknownOptionException e) {
-			System.err.println(e.getMessage());
-			ColumbaCmdLineArgumentParser.printUsage();
-			System.exit(2);
-		} catch (CmdLineArgumentParser.IllegalOptionValueException e) {
-			System.err.println(e.getMessage());
-			ColumbaCmdLineArgumentParser.printUsage();
-			System.exit(2);
-		}
+    MainInterface.DEBUG = cmdLineParser.isDebugOption();
+    // the configPath settings are made in the commandlineParser @see ColumbaCmdLineParser  
 
-		CmdLineArgumentParser.Option[] allOptions =
-			new CmdLineArgumentParser.Option[] {
-				ColumbaCmdLineArgumentParser.DEBUG,
-				ColumbaCmdLineArgumentParser.COMPOSER,
-				ColumbaCmdLineArgumentParser.RCPT,
-				ColumbaCmdLineArgumentParser.MESSAGE,
-				ColumbaCmdLineArgumentParser.PATH,
-				};
+    loadInVMInstance(arg);
 
-		Object path =
-			cmdLineParser.getOptionValue(ColumbaCmdLineArgumentParser.PATH);
-		Object d =
-			cmdLineParser.getOptionValue(ColumbaCmdLineArgumentParser.DEBUG);
+    final StartUpFrame frame = new StartUpFrame();
+    frame.setVisible(true);
 
-		if (d != null)
-			MainInterface.DEBUG = true;
+    // enable logging 
+    new ColumbaLogger();
 
-		if (path != null) {
-			new ConfigPath((String) path);
+    new Config();
 
-		} else {
-			new ConfigPath();
+    AddressbookMain addressbook = new AddressbookMain();
+    addressbook.initConfiguration();
 
-		}
+    MailMain mail = new MailMain();
+    mail.initConfiguration();
 
-		loadInVMInstance(arg);
-		
-		final StartUpFrame frame = new StartUpFrame();
-		frame.setVisible(true);
+    Config.init();
 
-		// enable logging 
-		new ColumbaLogger();
+    new TempFileStore();
 
-		new Config();
+    ThemeSwitcher.setTheme();
 
-		AddressbookMain addressbook = new AddressbookMain();
-		addressbook.initConfiguration();
+    doGuiInits();
 
-		MailMain mail = new MailMain();
-		mail.initConfiguration();
+    MainInterface.clipboardManager = new ClipboardManager();
 
-		Config.init();
+    new ImageLoader();
 
-		new TempFileStore();
+    MainInterface.charsetManager = new CharsetManager();
 
-		ThemeSwitcher.setTheme();
+    MainInterface.processor = new DefaultProcessor();
+    MainInterface.processor.start();
 
-		doGuiInits();
+    MainInterface.pluginManager = new PluginManager();
+    MainInterface.pluginManager.registerHandler(new InterpreterHandler());
 
-		MainInterface.clipboardManager = new ClipboardManager();
+    MainInterface.pluginManager.registerHandler(new ActionPluginHandler());
 
-		new ImageLoader();
+    MainInterface.pluginManager.registerHandler(new MenuPluginHandler("org.columba.core.menu"));
 
-		MainInterface.charsetManager = new CharsetManager();
+    MainInterface.pluginManager.registerHandler(new FramePluginHandler());
 
-		MainInterface.processor = new DefaultProcessor();
-		MainInterface.processor.start();
+    MainInterface.shutdownManager = new ShutdownManager();
 
-		MainInterface.pluginManager = new PluginManager();
-		MainInterface.pluginManager.registerHandler(new InterpreterHandler());
+    MainInterface.shutdownManager.register(new SaveConfigPlugin());
 
-		MainInterface.pluginManager.registerHandler(new ActionPluginHandler());
+    addressbook.initPlugins();
+    mail.initPlugins();
 
-		MainInterface.pluginManager.registerHandler(
-			new MenuPluginHandler("org.columba.core.menu"));
+    MainInterface.pluginManager.initPlugins();
 
-		MainInterface.pluginManager.registerHandler(new FramePluginHandler());
+    frame.advance();
 
-		MainInterface.shutdownManager = new ShutdownManager();
+    //MainInterface.frameModelManager = new FrameModelManager();
 
-		MainInterface.shutdownManager.register(new SaveConfigPlugin());
+    addressbook.initGui();
 
-		addressbook.initPlugins();
-		mail.initPlugins();
+    frame.advance();
 
-		MainInterface.pluginManager.initPlugins();
+    mail.initGui();
 
-		frame.advance();
+    new FrameModel();
 
-		//MainInterface.frameModelManager = new FrameModelManager();
+    if (MailConfig.getAccountList().count() == 0) {
+      try {
 
-		addressbook.initGui();
+        new AccountWizard(false);
 
-		frame.advance();
+      } catch (Exception ex) {
+        ex.printStackTrace();
+      }
 
-		mail.initGui();
+    }
+    
+    new CmdLineArgumentHandler(args);
 
-		new FrameModel();
+    frame.setVisible(false);
 
-		if (MailConfig.getAccountList().count() == 0) {
-			try {
+  } // main
 
-				new AccountWizard(false);
+  private static void doGuiInits() {
+    Keymap keymap;
+    Action action;
+    KeyStroke keystroke;
 
-			} catch (Exception ex) {
-				ex.printStackTrace();
-			}
+    /// CHANGES TO GLOBAL JTextComponent
+    keymap = JTextComponent.getKeymap(JTextComponent.DEFAULT_KEYMAP);
 
-		}
+    // add "CTRL-INS" to "clipboard copy" functionality
+    action = new AbstractAction() {
+      public void actionPerformed(ActionEvent e) {
+        ((JTextComponent) e.getSource()).copy();
+      }
+    };
+    keystroke = KeyStroke.getKeyStroke(KeyEvent.VK_INSERT, Event.CTRL_MASK);
+    keymap.addActionForKeyStroke(keystroke, action);
 
-		new CmdLineArgumentHandler(args);
-		
-		frame.setVisible(false);
+    // add "SHIFT-DEL" to "clipboard cut" functionality
+    action = new AbstractAction() {
+      public void actionPerformed(ActionEvent e) {
+        ((JTextComponent) e.getSource()).cut();
+      }
+    };
+    keystroke = KeyStroke.getKeyStroke(KeyEvent.VK_DELETE, Event.SHIFT_MASK);
+    keymap.addActionForKeyStroke(keystroke, action);
 
-	
+    // add "SHIFT-INS" to "clipboard paste" functionality
+    action = new AbstractAction() {
+      public void actionPerformed(ActionEvent e) {
+        ((JTextComponent) e.getSource()).paste();
+      }
+    };
+    keystroke = KeyStroke.getKeyStroke(KeyEvent.VK_INSERT, Event.SHIFT_MASK);
+    keymap.addActionForKeyStroke(keystroke, action);
 
-	} // main
-
-	private static void doGuiInits() {
-		Keymap keymap;
-		Action action;
-		KeyStroke keystroke;
-
-		/// CHANGES TO GLOBAL JTextComponent
-		keymap = JTextComponent.getKeymap(JTextComponent.DEFAULT_KEYMAP);
-
-		// add "CTRL-INS" to "clipboard copy" functionality
-		action = new AbstractAction() {
-			public void actionPerformed(ActionEvent e) {
-				((JTextComponent) e.getSource()).copy();
-			}
-		};
-		keystroke = KeyStroke.getKeyStroke(KeyEvent.VK_INSERT, Event.CTRL_MASK);
-		keymap.addActionForKeyStroke(keystroke, action);
-
-		// add "SHIFT-DEL" to "clipboard cut" functionality
-		action = new AbstractAction() {
-			public void actionPerformed(ActionEvent e) {
-				((JTextComponent) e.getSource()).cut();
-			}
-		};
-		keystroke =
-			KeyStroke.getKeyStroke(KeyEvent.VK_DELETE, Event.SHIFT_MASK);
-		keymap.addActionForKeyStroke(keystroke, action);
-
-		// add "SHIFT-INS" to "clipboard paste" functionality
-		action = new AbstractAction() {
-			public void actionPerformed(ActionEvent e) {
-				((JTextComponent) e.getSource()).paste();
-			}
-		};
-		keystroke =
-			KeyStroke.getKeyStroke(KeyEvent.VK_INSERT, Event.SHIFT_MASK);
-		keymap.addActionForKeyStroke(keystroke, action);
-
-	} // doGuiInits
+  } // doGuiInits
 
 }
