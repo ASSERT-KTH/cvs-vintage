@@ -6,6 +6,7 @@
 
     <!-- reset the cache in the event an exception prevented it at the end -->
     <valve className="org.tigris.scarab.pipeline.ResetCacheValve"/>
+    <valve className="org.tigris.scarab.pipeline.SetInfoMessageValve"/>
 
     <!-- the following is a copy of conf/turbine-classic-pipeline -->
     <valve className="org.apache.turbine.pipeline.DetermineActionValve"/>
