@@ -1,4 +1,4 @@
-// $Id: GeneratorDisplay.java,v 1.71 2004/10/01 18:00:29 mvw Exp $
+// $Id: GeneratorDisplay.java,v 1.72 2004/10/10 20:44:40 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -63,6 +63,9 @@ public class GeneratorDisplay extends Generator2 {
         return singleton;
     }
 
+    /**
+     * The constructor.
+     */
     private GeneratorDisplay() {
         super(
             Notation.makeNotation(
@@ -75,9 +78,9 @@ public class GeneratorDisplay extends Generator2 {
      * @param o the object to be generated
      * @return the generated string
      */
-    public static String Generate(Object o) {
+    /*public static String Generate(Object o) {
         return singleton.generate(o);
-    }
+    }*/
 
     /**
      * <p>Generate the display for an extension point.</p>
@@ -982,18 +985,18 @@ public class GeneratorDisplay extends Generator2 {
         Object exitAction = ModelFacade.getExit(m);
         Object doAction = ModelFacade.getDoActivity(m);
         if (entryAction != null) {
-            String entryStr = Generate(entryAction);
+            String entryStr = generate(entryAction);
             s.append("entry /").append(entryStr);
         }
         if (doAction != null) {
-            String doStr = Generate(doAction);
+            String doStr = generate(doAction);
             if (s.length() > 0)
                 s.append("\n");
             s.append("do /").append(doStr);
 
         }
         if (exitAction != null) {
-            String exitStr = Generate(exitAction);
+            String exitStr = generate(exitAction);
             if (s.length() > 0)
                 s.append("\n");
             s.append("exit /").append(exitStr);
