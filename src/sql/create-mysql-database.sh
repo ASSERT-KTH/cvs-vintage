@@ -2,8 +2,7 @@
 
 # testing if the base already exists and removing it if needed.
 base_exists=1
-mysqlshow scarab &> /dev/null || base_exists=0
-
+mysqlshow scarab > /dev/null 2>&1 || base_exists=0
 if [ $base_exists -eq 1 ] ; then
 	echo "Removing existing database. All data will be lost."
         echo y | mysqladmin drop scarab > /dev/null
@@ -12,7 +11,7 @@ fi
 # Creating new base and inputting default data
 
 echo "Creating Database..."        
-/usr/bin/mysqladmin create scarab
+mysqladmin create scarab
 
 echo "Importing mysql-turbine.sql..."
 mysql scarab < mysql-turbine.sql
