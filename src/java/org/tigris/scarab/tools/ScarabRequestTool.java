@@ -645,7 +645,7 @@ try{
     {
         List issueList = new ArrayList();
         ScarabUser user = (ScarabUser)data.getUser();
-        List issueIdList = (List)(user.getTemp("issueIdList"));
+        List issueIdList = (List)(user.getTemp(ScarabConstants.ISSUE_ID_LIST));
         for (int i = 0;i<issueIdList.size();i++)
         {
            Issue issue = (Issue)IssuePeer

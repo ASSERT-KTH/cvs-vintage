@@ -68,13 +68,14 @@ import org.tigris.scarab.om.Issue;
 import org.tigris.scarab.om.Query;
 import org.tigris.scarab.util.ScarabConstants;
 import org.tigris.scarab.tools.ScarabRequestTool;
+import org.tigris.scarab.util.ScarabConstants;
 import org.tigris.scarab.util.word.IssueSearch;
 
 /**
     This class is responsible for report issue forms.
     ScarabIssueAttributeValue
     @author <a href="mailto:jmcnally@collab.net">John D. McNally</a>
-    @version $Id: Search.java,v 1.24 2001/08/23 21:18:53 elicia Exp $
+    @version $Id: Search.java,v 1.25 2001/08/27 23:45:12 elicia Exp $
 */
 public class Search extends TemplateAction
 {
@@ -124,8 +125,7 @@ public class Search extends TemplateAction
                 {
                     issueIdList.add(((Issue)matchingIssues.get(j)).getIssueId());
                 }
-                user.setTemp("issueIdList", issueIdList);
-                context.put("issueList", matchingIssues);
+                user.setTemp(ScarabConstants.ISSUE_ID_LIST, issueIdList);
                 
                 String template = data.getParameters()
                     .getString(ScarabConstants.NEXT_TEMPLATE, 
