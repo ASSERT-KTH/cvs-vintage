@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/jasper/compiler/Mangler.java,v 1.1 1999/10/09 00:20:37 duncan Exp $
- * $Revision: 1.1 $
- * $Date: 1999/10/09 00:20:37 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/jasper/compiler/Mangler.java,v 1.2 2000/06/26 21:22:28 costin Exp $
+ * $Revision: 1.2 $
+ * $Date: 2000/06/26 21:22:28 $
  *
  * ====================================================================
  * 
@@ -67,8 +67,22 @@ package org.apache.jasper.compiler;
  * @author Anil K. Vijendran
  */
 public interface Mangler {
+    /** The class name ( without package ) of the
+     *  generated servlet, including the version number
+     */
     String getClassName();
+
+    /** The package name. It is based on the .jsp path, with
+     *  all unsafe components escaped.
+     */
     String getPackageName();
+
+    /** The full name of the .java file, including
+     *  version number ( based on className and outputDir )
+     */
     String getJavaFileName();
+
+    /** The full name of the .class file ( without version number)
+     */
     String getClassFileName();
 }

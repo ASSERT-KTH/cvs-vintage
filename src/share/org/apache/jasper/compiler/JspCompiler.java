@@ -77,13 +77,14 @@ import org.apache.jasper.JasperException;
 public class JspCompiler extends Compiler implements Mangler {
     
     String pkgName, javaFileName, classFileName;
+    String realClassName;
 
     File jsp;
     String outputDir;
 
-    ClassFileData cfd;
+    //    ClassFileData cfd;
     boolean outDated;
-
+    static final int JSP_TOKEN_LEN= Constants.JSP_TOKEN.length();
 
     public JspCompiler(JspCompilationContext ctxt) throws JasperException {
         super(ctxt);
@@ -92,23 +93,63 @@ public class JspCompiler extends Compiler implements Mangler {
         this.outputDir = ctxt.getOutputDir();
         this.outDated = false;
         setMangler(this);
-        computePackageName();
-        computeClassFileName();
-        computeClassFileData();
-        computeJavaFileName();
+
+	// If the .class file exists and is outdated, compute a new
+	// class name
+	if( isOutDated() ) {
+	    generateNewClassName();
+	}
     }
 
-    public final String getPackageName() {
-        return pkgName;
+    private void generateNewClassName() {
+	File classFile = new File(getClassFileName());
+	if (! classFile.exists()) {
+	     String prefix = getPrefix(jsp.getPath());
+	     realClassName= prefix + getBaseClassName() +
+		 Constants.JSP_TOKEN + "0";
+	    return;
+	} 
+
+	String cn=getRealClassName();
+	String baseClassName = cn.
+	    substring(0, cn.lastIndexOf(Constants.JSP_TOKEN));
+	int jspTokenIdx=cn.lastIndexOf(Constants.JSP_TOKEN);
+	String versionS=cn.substring(jspTokenIdx + JSP_TOKEN_LEN,
+				     cn.length());
+	int number= Integer.valueOf(versionS).intValue();
+	number++;
+	realClassName = baseClassName + Constants.JSP_TOKEN + number;
+    }
+    
+    /** Return the real class name for the JSP, including package and
+     *   version.
+     *
+     *  This method is called when the server is started and a .class file
+     *  is found from a previous compile or when the .class file is older,
+     *  to find next version.
+     */
+    public final String getRealClassName() {
+	if( realClassName!=null ) return realClassName;
+
+	System.out.println("JspCompiler: extract class name and version ");
+        try {
+            realClassName = ClassName.getClassName( getClassFileName() );
+        } catch( JasperException ex) {
+            // ops, getClassName should throw something
+            ex.printStackTrace();
+	    return null;
+        }
+	return realClassName;
+
     }
     
     public final String getClassName() {
         // CFD gives you the whole class name
         // This method returns just the class name sans the package
-        String cn = cfd.getClassName();
-        int lastDot = cn.lastIndexOf('.');
-        String className;
 
+	String cn=getRealClassName();
+        int lastDot = cn.lastIndexOf('.');
+	String className=null;
         if (lastDot != -1) 
             className = cn.substring(lastDot+1,
                                      cn.length());
@@ -127,7 +168,14 @@ public class JspCompiler extends Compiler implements Mangler {
     }
     
     public final String getClassFileName() {
-        return classFileName;
+        if( classFileName!=null) return classFileName;
+
+	//        computeClassFileName();
+        String prefix = getPrefix(jsp.getPath());
+        classFileName = prefix + getBaseClassName() + ".class";
+	if (outputDir != null && !outputDir.equals(""))
+	    classFileName = outputDir + File.separatorChar + classFileName;
+	return classFileName;
     }
 
     
@@ -147,7 +195,10 @@ public class JspCompiler extends Compiler implements Mangler {
         "try", "void", "volatile", "while" 
     };
 
-    void computePackageName() {
+    public final String getPackageName() {
+        if( pkgName!=null) return pkgName;
+
+	// compute package name 
 	String pathName = jsp.getPath();
 	StringBuffer modifiedpkgName = new StringBuffer ();
         int indexOfSepChar = pathName.lastIndexOf(File.separatorChar);
@@ -184,34 +235,16 @@ public class JspCompiler extends Compiler implements Mangler {
 
 	    if (modifiedpkgName.charAt(0) == '.') {
                 String modifiedpkgNameString = modifiedpkgName.toString();
-                pkgName = modifiedpkgNameString.substring(1, 
-                                                         modifiedpkgName.length ());
+                pkgName = modifiedpkgNameString.
+		    substring(1, 
+			      modifiedpkgName.length ());
             }
 	    else 
 	        pkgName = modifiedpkgName.toString();
 	}
-
+	return pkgName;
     }
 
-    public final void computeJavaFileName() {
-// 	javaFileName = getClassName() + ".java";
-// 	if (outputDir != null && !outputDir.equals(""))
-// 	    javaFileName = outputDir + File.separatorChar + javaFileName;
-    }
-
-    void computeClassFileName() {
-        String prefix = getPrefix(jsp.getPath());
-        classFileName = prefix + getBaseClassName() + ".class";
-	if (outputDir != null && !outputDir.equals(""))
-	    classFileName = outputDir + File.separatorChar + classFileName;
-    }
-					 
-    private final String getInitialClassName() {
-        String prefix = getPrefix(jsp.getPath());
-        
-        return prefix + getBaseClassName() + Constants.JSP_TOKEN + "0";
-    }
-    
     private final String getBaseClassName() {
 	String className;
         
@@ -273,7 +306,7 @@ public class JspCompiler extends Compiler implements Mangler {
 
         jspReal = new File(ctxt.getRealPath(jsp.getPath()));
 
-        File classFile = new File(classFileName);
+        File classFile = new File(getClassFileName());
         if (classFile.exists()) {
             outDated = classFile.lastModified() < jspReal.lastModified();
         } else {
@@ -282,103 +315,5 @@ public class JspCompiler extends Compiler implements Mangler {
 
         return outDated;
     }
-
-    private final void computeClassFileData() {
-	File jspReal = null;
-
-        String initPath = jsp.getPath();
-        String convPath = ctxt.getRealPath(initPath);
-        if (convPath.equals(initPath))
-            jspReal = jsp;
-        else
-            jspReal = new File(ctxt.getRealPath(jsp.getPath()));
-
-        File classFile = new File(classFileName);
-        
-        if (!classFile.exists()) {
-            cfd = new ClassFileData(true, classFileName, getInitialClassName());
-            outDated = true;
-        } else  {
-            outDated = classFile.lastModified() < jspReal.lastModified();
-            cfd = new ClassFileData(outDated, classFileName, null);
-	    if (outDated)
-                cfd.incrementNumber();
-        }
-    }
 }
 
-class ClassFileData {
-    boolean outDated;
-    String className;
-    String classFile;
-    String baseClassName;
-    int number;
-
-    /** 
-     * Lazy - find the class name ( by reading the .class file and extracting the
-     * information ) only if some method need this info.
-     *
-     *  In "normal" usage, this method is not called - if the .class is not outdated,
-     *  nobody needs the real class name or other info.
-     *  If this will change - this method needs to be revisited.
-     */
-    private void findClassName() {
-        try {
-	    //System.out.println("XXX Extracting class name from class");
-	    //	    /*DEBUG*/ try {throw new Exception(); } catch(Exception ex) {ex.printStackTrace();}
-            className = ClassName.getClassName(classFile);
-        } catch( JasperException ex) {
-            // ops, getClassName should throw something
-            ex.printStackTrace();
-        }
-        baseClassName = className.substring(0, className.lastIndexOf(Constants.JSP_TOKEN));
-        this.number
-            = Integer.valueOf(className.substring(className.lastIndexOf(Constants.JSP_TOKEN)+
-                                                  Constants.JSP_TOKEN.length(), 
-                                                  className.length())).intValue();
-    }
-	
-    public String getClassName() {
-        if(className==null)
-            findClassName();
-        return className;
-    }
-
-    public String getClassNameSansNumber() {
-        if(className==null)
-            findClassName();
-        return baseClassName;
-    }
-	
-    public String getClassFileName() {
-        return classFile;
-    }
-	
-    public void incrementNumber() {
-        if(className == null)
-            findClassName();
-        number++;
-        className = baseClassName + Constants.JSP_TOKEN + number;
-    }
-
-    public int getNumber() {
-        if(className==null)
-            findClassName();
-        return number;
-    }
-
-    public ClassFileData(boolean outDated, String cf, String cn) {
-        this.outDated = outDated;
-        this.className = cn;
-        this.classFile = cf;
-        if (cn != null) {
-            this.baseClassName = cn.substring(0, cn.lastIndexOf(Constants.JSP_TOKEN));
-            this.number = Integer.valueOf(cn.substring(cn.lastIndexOf(Constants.JSP_TOKEN)+
-                                                       Constants.JSP_TOKEN.length(), 
-                                                       cn.length())).intValue();
-        } else {
-            baseClassName = null;
-            number = -1;
-        }
-    }
-}
