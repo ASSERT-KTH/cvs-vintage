@@ -36,12 +36,7 @@ import org.jboss.logging.Logger;
  * @author <a href="mailto:justin@j-m-f.demon.co.uk">Justin Forder</a>
  * @author <a href="mailto:loubyansky@hotmail.com">Alex Loubyansky</a>
  *
- * <p><b>2002/08/27: loubyansky</b>
- * <ol>
- *   <li>modified execute() to set unknown pk if it exists</li>
- * </ol>
- *
- * @version $Revision: 1.17 $
+ * @version $Revision: 1.18 $
  */
 public class JDBCCreateEntityCommand {
    private JDBCStoreManager manager;
@@ -133,9 +128,8 @@ public class JDBCCreateEntityCommand {
       for( Iterator iter = entity.getPrimaryKeyFields().iterator(); iter.hasNext(); )
       {
          JDBCCMPFieldBridge cmpField = (JDBCCMPFieldBridge) iter.next();
-         Class primaryKeyClass = cmpField.getPrimaryKeyClass();
-         if( (primaryKeyClass != null)
-            && (primaryKeyClass.getName().equals("java.lang.Object")) )
+         Class primaryKeyClass = entity.getPrimaryKeyClass();
+         if( primaryKeyClass == java.lang.Object.class )
          {
             // AS UGLY AS POSSIBLE
             // here the primary key factory should be asked for
