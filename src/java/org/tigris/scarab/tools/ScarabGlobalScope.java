@@ -64,7 +64,7 @@ import org.apache.velocity.app.FieldMethodizer;
  * methodology</a> to be implemented.
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: ScarabGlobalScope.java,v 1.3 2001/09/11 03:41:46 jon Exp $
+ * @version $Id: ScarabGlobalScope.java,v 1.4 2001/11/17 00:21:52 jon Exp $
  */
 public interface ScarabGlobalScope extends ApplicationTool
 {
@@ -88,4 +88,17 @@ public interface ScarabGlobalScope extends ApplicationTool
     public List getAllAttributes() 
         throws Exception;
 
+    /**
+     * Gets a List of users based on the specified search criteria.
+     */
+    public List getSearchUsers(String searchField, String searchCriteria)
+        throws Exception;
+    
+    /**
+     * Gets a List of users based on the specified search criteria and
+     * orders the list on the specified field.
+     */
+    public List getSearchUsers(String searchField, String searchCriteria, 
+                            String orderByField, String ascOrDesc)
+        throws Exception;
 }

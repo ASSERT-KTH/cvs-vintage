@@ -1,0 +1,146 @@
+#**
+@author <a href="mailto:dr@bitonic.com">Douglas B. Robertson</a>
+@author <a href="mailto:jon@collab.net">Jon Stevens</a>
+@version $Id: ManageUserSearch.vm,v 1.1 2001/11/17 00:21:52 jon Exp $
+*#
+
+$page.setTitle("User Search")
+
+#set ($formSearchCriteria = "")
+#set ($user = $data.User)
+#set ($resultsPerPage = $data.Parameters.getInt("resultsPerPage"))
+#set ($pageNum = $data.Parameters.getInt("pageNum"))
+#set ($formSearchCriteria = $data.Parameters.getString("searchCriteria"))
+#set ($formOrderBy = $data.Parameters.getString("orderbyField"))
+
+#if ($resultsPerPage == 0)
+  #set ($resultsPerPage = 25)
+#end
+
+#if ($pageNum == 0)
+  #set ($pageNum = 1)
+#end
+
+<div id="adminIndex" class="app">
+
+<h2>$page.Title</h2>
+
+<h3>Search</h3>
+
+<p>
+Enter search criteria.
+</p>
+
+<form action="$link.setPage("admin,ManageUserSearch.vm")" method="post">
+  <input type="hidden" name="searchCommand" value="search">
+
+<table cellspacing="0" cellpadding="2">
+<tr>
+<td>
+<select name="searchField">
+ <option value="FIRST_NAME" #if ($data.Parameters.getString("searchField").equals("FIRST_NAME")) selected #end>First Name
+ <option value="LAST_NAME" #if ($data.Parameters.getString("searchField").equals("LAST_NAME")) selected #end>Last Name
+ <option value="EMAIL" #if ($data.Parameters.getString("searchField").equals("EMAIL")) selected #end>E-mail Address
+ <option value="LOGIN_NAME" #if ($data.Parameters.getString("searchField").equals("LOGIN_NAME")) selected #end>Login Name
+</select>
+<input type="text" name="searchCriteria" value="$formSearchCriteria">
+</td>
+</tr>
+<tr>
+<td>
+Order by: <select name="orderbyField">
+ <option value="FIRST_NAME" #if ($data.Parameters.getString("orderbyField").equals("FIRST_NAME")) selected #end>First Name
+ <option value="LAST_NAME" #if ($data.Parameters.getString("orderbyField").equals("LAST_NAME")) selected #end>Last Name
+ <option value="EMAIL" #if ($data.Parameters.getString("orderbyField").equals("EMAIL")) selected #end>E-mail Address
+ <option value="LOGIN_NAME" #if ($data.Parameters.getString("orderbyField").equals("LOGIN_NAME")) selected #end>Login Name
+</select>
+<select name="ascOrDesc">
+  <option value="ASC">Ascending
+  <option value="DESC">Descending
+</select>  
+</td>
+</tr>
+</table>
+
+<p>
+Max results per page: 
+<input type="text" name="resultsPerPage" value="$resultsPerPage" size="4" maxlength="2">
+</p>
+
+<div class="functnbar2">
+<table cellpadding="4" cellspacing="0" border="1">
+ <tr>
+  <td class="firstchild">
+   <input type="submit" value="Search" />
+  </td>
+ </tr>
+</table>
+</div>
+
+#set ($userList = $scarabG.getSearchUsers($data.Parameters.searchField,$data.Parameters.searchCriteria,$data.Parameters.orderbyField,$data.Parameters.ascOrDesc))
+
+<h3>Search results</h3>
+
+ #if ($userList.size() == 0)
+<p class="warn">There are no users matching the specified criteria.</p>
+ #else
+
+<table cellspacing="0" cellpadding="2" width="100%">
+ <tr>
+   <th>Select</th>
+   <th>Username</th>
+   <th>Name</th>
+   <th>Email</th>
+ </tr>
+
+## this is the results list stuff
+#if ($userList.size() > $resultsPerPage)
+ #set ($paginated = "true")
+ #set ($userList = $scarabR.getPaginatedList($userList, $pageNum, $resultsPerPage))
+ #set ($totalPages = $scarabR.NbrPages)
+#end
+
+## PAGINATION
+#if ($paginated)
+ <p class="paginate">
+ #if($scarabR.PrevPage != 0)
+  #set ($prevLink = $link.setPathInfo("resultsperpage", "$resultsPerPage").setPathInfo("pageNum", "$scarabR.PrevPage").setPage("admin,ManageUserSearch.vm").toString())
+  <a href="$prevLink">&laquo;</a> previous |
+ #end
+
+ $pageNum of $totalPages
+
+ #if ($scarabR.NextPage != 0)
+  #set ($nextLink = $link.setPathInfo("resultsperpage", "$resultsPerPage").setPathInfo("pageNum", "$scarabR.NextPage").setPage("admin,ManageUserSearch.vm").toString())
+  | next <a href="$nextLink">&raquo;</a>
+ #end
+ </p>
+#end
+
+ #foreach ($user in $userList)
+  #indexedRows ($velocityCount)
+   <td width="10"><input type="radio" name="username" value="$!user.UserName"></td>
+   <td>$!user.UserName</td>
+   <td>$!user.FirstName $!user.LastName</td>
+   <td><a href=mailto:$!user.Email>$!user.Email</a>
+ </tr>
+ #end
+
+</table>
+
+#if ($userCount > 0)
+<div class="functnbar2">
+<table cellpadding="4" cellspacing="0" border="1">
+ <tr>
+  <td class="firstchild">
+ <input type="submit" name="eventSubmit_doEdituser" value="Edit User" />&#160;
+ <input type="submit" name="eventSubmit_doEditroles" value="Edit Roles" />&#160;
+ <input type="submit" name="eventSubmit_doDeleteuser" value="Delete" />
+  </td>
+ </tr>
+</table>
+</div>
+#end
+
+#end
+</form>

@@ -1,0 +1,25 @@
+#**
+@author <a href="mailto:dr@bitonic.com">Douglas B. Robertson</a>
+@author <a href="mailto:jon@collab.net">Jon Stevens</a>
+@version $Id: AdminIndex.vm,v 1.1 2001/11/17 00:21:52 jon Exp $
+*#
+
+$page.setTitle("Scarab Administration")
+
+<div id="adminIndex" class="app">
+
+<h2>$page.Title</h2>
+
+<p>
+This is the new administrative piece of Scarab (to replace Flux).
+</p>
+
+<h3>User Administration</h3>
+
+<p>
+  <a href="$link.setPage("admin,ManageUserSearch.vm")">User Management</a><br>
+</p>
+
+<!--  <a href="$link.setPage("admin,user,EditUser.vm").addQueryData("state","showadduser")">Add New User</a><br> -->
+
+</div>

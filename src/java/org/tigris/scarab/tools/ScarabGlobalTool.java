@@ -47,14 +47,21 @@ package org.tigris.scarab.tools;
  */ 
 
 import java.util.List;
+import java.util.ArrayList;
+ 
+import org.apache.fulcrum.security.TurbineSecurity;
+import org.apache.fulcrum.security.entity.User;
 
 import org.apache.velocity.app.FieldMethodizer;
 
 import org.tigris.scarab.om.AttributePeer;
 import org.tigris.scarab.om.IssueTypePeer;
 
-import org.apache.torque.util.Criteria;
+import org.tigris.scarab.om.ScarabUser;
+import org.tigris.scarab.om.ScarabUserImplPeer;
 
+import org.apache.torque.util.Criteria;
+ 
 /**
  * This scope is an object that is made available as a global
  * object within the system.
@@ -67,7 +74,7 @@ import org.apache.torque.util.Criteria;
  * methodology</a> to be implemented.
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: ScarabGlobalTool.java,v 1.7 2001/10/26 23:09:25 jmcnally Exp $
+ * @version $Id: ScarabGlobalTool.java,v 1.8 2001/11/17 00:21:52 jon Exp $
  */
 public class ScarabGlobalTool implements ScarabGlobalScope
 {
@@ -152,4 +159,112 @@ public class ScarabGlobalTool implements ScarabGlobalScope
         return IssueTypePeer.getAllIssueTypes(true);
     }
 
+    /** 
+     * Returns a List of users based on the given search criteria. This method
+     * is an overloaded function which returns an unsorted list of users.
+     *
+     * @param searchField the name of the database attribute to search on
+     * @param searchCriteria the search criteria to use within the LIKE command
+     * @returns a List of users matching the specifed criteria
+     * @author <a href="mailto:dr@bitonic.com">Douglas B. Robertson</a>
+     */
+    public List getSearchUsers(String searchField, String searchCriteria)
+        throws Exception
+    {
+        return (getSearchUsers(searchField, searchCriteria, null, null));
+    }
+    
+    /** 
+     * Returns a List of users based on the given search criteria and orders
+     * the list by the specified field.  The method will use the LIKE
+     * SQL command and perform a search as such (assuming 'doug' is
+     * specified as the search criteria:
+     * <code>WHERE some_field LIKE '%doug%'</code>
+     *
+     * @param searchField the name of the database attribute to search on
+     * @param searchCriteria the search criteria to use within the LIKE command
+     * @param orderByField the name of the database attribute to order the list by
+     * @param ascOrDesc either "ASC" of "DESC" specifying the order to sort in
+     * @returns a List of users matching the specifed criteria
+     * @author <a href="mailto:dr@bitonic.com">Douglas B. Robertson</a>
+     */
+    public List getSearchUsers(String searchField, String searchCriteria, 
+                            String orderByField, String ascOrDesc)
+        throws Exception
+    {
+        ArrayList userSearchList = new ArrayList();
+        String lSearchField = "";
+        String lOrderByField = "";
+                
+        Criteria criteria = new Criteria();
+                
+        // add the input from the user
+        if (searchCriteria != null && searchCriteria.length() > 0)
+        {
+            if (searchField.equals("FIRST_NAME"))
+            {
+                lSearchField = ScarabUser.FIRST_NAME;
+            }
+            else if (searchField.equals("LAST_NAME"))
+            {
+                lSearchField = ScarabUser.LAST_NAME;
+            }
+            else if (searchField.equals("LOGIN_NAME"))
+            {
+                lSearchField = ScarabUser.USERNAME;
+            }
+            else
+            {
+                lSearchField = ScarabUser.EMAIL;
+            }
+
+            // FIXME: Probably shouldn't be using ScarabUserPeerImpl here
+            // What should we do to get the right table name?
+            lSearchField = ScarabUserImplPeer.getTableName() + '.' + lSearchField;
+
+            criteria = criteria.add(lSearchField,
+                (Object)("%" + searchCriteria.trim() + "%"),Criteria.LIKE);
+        }
+        
+        // sort the results
+        if (orderByField != null && orderByField.length() > 0)
+        {
+            if (orderByField.equals("FIRST_NAME"))
+            {
+                lOrderByField = ScarabUser.FIRST_NAME;
+            }
+            else if (orderByField.equals("LAST_NAME"))
+            {
+                lOrderByField = ScarabUser.LAST_NAME;
+            }
+            else if (orderByField.equals("LOGIN_NAME"))
+            {
+                lOrderByField = ScarabUser.USERNAME;
+            }
+            else
+            {
+                lOrderByField = ScarabUser.EMAIL;
+            }
+            
+            // FIXME: Probably shouldn't be using ScarabUserPeerImpl here
+            // What should we do to get the right table name?
+            lOrderByField = ScarabUserImplPeer.getTableName() + '.' + lOrderByField;
+            
+            if (ascOrDesc != null && ascOrDesc.equalsIgnoreCase("DESC"))
+            {
+                criteria = criteria.addDescendingOrderByColumn(lOrderByField);
+            } 
+            else
+            {
+                criteria = criteria.addAscendingOrderByColumn(lOrderByField);
+            }
+        }
+        
+        User[] tempUsers = TurbineSecurity.getUsers(criteria);  
+        for (int i=0; i < tempUsers.length; i++)
+        {
+            userSearchList.add(i, tempUsers[i]);
+        }
+        return (userSearchList);
+    }
 }
