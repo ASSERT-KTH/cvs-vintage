@@ -28,7 +28,6 @@ import net.javaprog.ui.wizard.WizardModel;
 
 import org.columba.core.gui.frame.FrameMediator;
 import org.columba.core.gui.util.ImageLoader;
-import org.columba.core.gui.util.NotifyDialog;
 import org.columba.core.help.HelpManager;
 import org.columba.core.main.MainInterface;
 import org.columba.core.plugin.PluginHandlerNotFoundException;
@@ -52,11 +51,7 @@ public class ImportWizardLauncher {
             pluginHandler = (ImportPluginHandler) MainInterface.pluginManager.getHandler(
                     "org.columba.mail.import");
         } catch (PluginHandlerNotFoundException ex) {
-            NotifyDialog d = new NotifyDialog();
-
-            //show neat error message here
-            d.showDialog(ex);
-            return;
+            throw new RuntimeException(ex);
         }
 
         DataModel data = new DataModel();

@@ -27,7 +27,6 @@ import org.columba.addressbook.plugin.ImportPluginHandler;
 import org.columba.addressbook.util.AddressbookResourceLoader;
 
 import org.columba.core.gui.util.ImageLoader;
-import org.columba.core.gui.util.NotifyDialog;
 import org.columba.core.main.MainInterface;
 import org.columba.core.plugin.PluginHandlerNotFoundException;
 
@@ -44,12 +43,7 @@ public class ImportWizardLauncher {
             pluginHandler = (ImportPluginHandler) MainInterface.pluginManager.getHandler(
                     "org.columba.addressbook.import");
         } catch (PluginHandlerNotFoundException ex) {
-            NotifyDialog d = new NotifyDialog();
-
-            //show neat error message here
-            d.showDialog(ex);
-
-            return;
+            throw new RuntimeException(ex);
         }
 
         DataModel data = new DataModel();
@@ -58,11 +52,12 @@ public class ImportWizardLauncher {
                 public Object lookupData() {
                     return pluginHandler;
                 }
-            });
+            }
+        );
 
         WizardModel model = new DefaultWizardModel(new Step[] {
-                    new PluginStep(data), new LocationStep(data)
-                });
+            new PluginStep(data), new LocationStep(data)
+        });
         model.addWizardModelListener(new AddressbookImporter(data));
 
         Wizard wizard = new Wizard(model,
