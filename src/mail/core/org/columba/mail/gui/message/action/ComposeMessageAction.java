@@ -18,7 +18,7 @@ package org.columba.mail.gui.message.action;
 import org.columba.core.action.AbstractColumbaAction;
 import org.columba.core.gui.frame.FrameMediator;
 
-import org.columba.mail.gui.frame.AbstractMailFrameController;
+import org.columba.mail.gui.frame.MessageViewOwner;
 import org.columba.mail.gui.message.URLObservable;
 import org.columba.mail.gui.util.URLController;
 import org.columba.mail.util.MailResourceLoader;
@@ -50,7 +50,7 @@ public class ComposeMessageAction extends AbstractColumbaAction
         setEnabled(false);
 
         //		listen for URL changes
-        ((AbstractMailFrameController) controller).messageController.getUrlObservable()
+        ((MessageViewOwner) controller).getMessageController().getUrlObservable()
                                                                     .addObserver(this);
     }
 

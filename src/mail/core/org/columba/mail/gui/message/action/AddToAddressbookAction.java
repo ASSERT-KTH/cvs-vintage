@@ -23,7 +23,7 @@ import org.columba.core.action.AbstractColumbaAction;
 import org.columba.core.gui.frame.FrameMediator;
 import org.columba.core.gui.util.ImageLoader;
 
-import org.columba.mail.gui.frame.AbstractMailFrameController;
+import org.columba.mail.gui.frame.MessageViewOwner;
 import org.columba.mail.gui.message.URLObservable;
 import org.columba.mail.util.MailResourceLoader;
 
@@ -57,7 +57,7 @@ public class AddToAddressbookAction extends AbstractColumbaAction
         putValue(SMALL_ICON, ImageLoader.getSmallImageIcon("contact_small.png"));
 
         //		listen for URL changes
-        ((AbstractMailFrameController) controller).messageController.getUrlObservable()
+        ((MessageViewOwner) controller).getMessageController().getUrlObservable()
                                                                     .addObserver(this);
     }
 
