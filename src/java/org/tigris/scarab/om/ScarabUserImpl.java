@@ -88,7 +88,7 @@ import org.apache.turbine.Log;
  * implementation needs.
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: ScarabUserImpl.java,v 1.39 2001/12/07 23:26:00 dr Exp $
+ * @version $Id: ScarabUserImpl.java,v 1.40 2001/12/27 22:38:17 dr Exp $
  */
 public class ScarabUserImpl 
     extends BaseScarabUserImpl 
@@ -260,8 +260,11 @@ public class ScarabUserImpl
             AccessControlList acl = TurbineSecurity.getACL(this);
             if ( acl != null ) 
             {
-                // first check for the permission in the specified module
-                hasPermission = acl.hasPermission(perm, (Group)module);
+                if (module != null)
+                {
+                    // first check for the permission in the specified module
+                    hasPermission = acl.hasPermission(perm, (Group)module);
+                }
                 
                 // if necessary, check for the permission within the 'Global' module
                 if (!hasPermission)
