@@ -13,7 +13,9 @@
 
 #if ($queryString)
 
-<p class="functnbar"><input type="submit" value="save" name="eventSubmit_doSavequery" />&#160;<input type="submit" value="cancel" name="eventSubmit_doCancel"  /></p>
+<p class="functnbar"><input type="submit" value="save/submit" name="eventSubmit_doSavequery" />&#160;<input type="submit" value="cancel" name="eventSubmit_doCancel"  /></p>
+
+<h3>Save Your Query</h3>
 
       <div class="axial">
        <table width="100%" cellpadding="3" cellspacing="2" border="1">
@@ -30,37 +32,30 @@
         </tr>
 
         <tr>
+         <th width="120">Availability:</th>
+
+         <td><select name="$queryGroup.TypeId.Key">
+          <option value = "1">
+           personal profile
+          </option>
+
+          <option value = "2">
+           project X users
+          </option>
+
+         </select></td>
+        
+        </tr>
+
+        <tr>
          <th width="120">location:</th>
-         <td>#fieldErrorMsg($queryGroup.ModuleId "")
-         <input type="radio" name="$queryGroup.TypeId.Key" value="1"
-                   #if(  (!$queryGroup.TypeId.Value) || ($queryGroup.TypeId.toString().equals("1")) )
-                      checked="checked"
-                   #end   /> global&#160;&#160; 
-             <input type="radio" name="$queryGroup.TypeId.Key" value="2" 
-                   #if( $queryGroup.TypeId.toString().equals("2") )
-                      checked="checked"
-                   #end   /> project level &#160;&#160
-    #set ( $group = $intake.Query.mapTo($object) ) 
-    <select name="$queryGroup.ModuleId.Key" >
-    	<option value="">Choose...</option>
-    	#foreach ($module in $user.getModules())
-			#set ( $selected = "" )
-			#if ( $group.get($optionFieldName).Value && $module.ModuleId == $group.get($field).Value )
-					#set ( $selected = ' selected="selected"' )
-			#end
-		<option$selected value="$module.ModuleId">$module.Name</option>
-	    #end
-      </select>&#160;&#160; 
-           <input type="radio" name="$queryGroup.TypeId.Key" value="3" 
-                   #if( $queryGroup.TypeId.toString().equals("3") )
-                      checked="checked"
-                   #end  /> personal account level
-          </td>
+         <td>current project '$user.CurrentModule.Name'</td>
+         <input type = "hidden" name="$queryGroup.ModuleId.Key" value = "$user.CurrentModule.ModuleId">
         </tr>
        </table>
       </div>
 
-<p class="functnbar"><input type="submit" value="save" name="eventSubmit_doSavequery"/>&#160;<input type="submit" value="cancel" name="eventSubmit_doCancel" /></p>
+<p class="functnbar"><input type="submit" value="save/submit" name="eventSubmit_doSavequery"/>&#160;<input type="submit" value="cancel" name="eventSubmit_doCancel" /></p>
      </div></td>
     </tr>
    </table>
