@@ -15,6 +15,9 @@
 //All Rights Reserved.
 package org.columba.mail.gui.message.util;
 
+import java.io.BufferedReader;
+import java.io.StringReader;
+
 import org.apache.oro.text.regex.Pattern;
 import org.apache.oro.text.regex.PatternCompiler;
 import org.apache.oro.text.regex.PatternMatcher;
@@ -41,14 +44,18 @@ public class DocumentParser {
 	Pattern addressPattern;
 	PatternMatcher addressMatcher;
 
+	PatternCompiler characterCompiler;
+	Pattern characterPattern;
+	PatternMatcher characterMatcher;
+
 	public String substituteEmailAddress(String s) throws Exception {
 		//String pattern = "\\b(([\\w|.|\\-|_]*)@([\\w|.|\\-|_]*)(.)([a-zA-Z]{2,}))";
-		
+
 		// contributed by Paul Nicholls
 		//  -> corrects inclusion of trailing full-stops
 		//  -> works for numerical ip addresses, too
 		String pattern = "([\\w.\\-]*\\@([\\w\\-]+\\.*)+[a-zA-Z0-9]{2,})";
-		
+
 		addressCompiler = new Perl5Compiler();
 		addressPattern =
 			addressCompiler.compile(
@@ -105,9 +112,7 @@ public class DocumentParser {
 
 		urlCompiler = new Perl5Compiler();
 		urlPattern =
-			urlCompiler.compile(
-				pattern,
-				Perl5Compiler.CASE_INSENSITIVE_MASK);
+			urlCompiler.compile(pattern, Perl5Compiler.CASE_INSENSITIVE_MASK);
 
 		urlMatcher = new Perl5Matcher();
 
@@ -121,8 +126,95 @@ public class DocumentParser {
 
 		return result;
 	}
+
+	public String substituteSpecialCharacters(String s) throws Exception {
+
+		StringBuffer sb = new StringBuffer(s.length());
+		StringReader sr = new StringReader(s);
+		BufferedReader br = new BufferedReader(sr);
+		String ss = null;
+
+		try {
+
+			while ((ss = br.readLine()) != null) {
+				for (int i = 0; i < ss.length(); i++) {
+					switch (ss.charAt(i)) {
+						case '<' :
+							sb.append("&lt;");
+							break;
+						case '>' :
+							sb.append("&gt;");
+							break;
+						case '&' :
+							sb.append("&amp;");
+							break;
+						case '\t' :
+							sb.append("&nbsp;&nbsp;&nbsp;&nbsp;");
+							break;
+						case '\n' :
+							sb.append("<br>");
+							break;
+						default :
+							sb.append(ss.charAt(i));
+							break;
+					}
+				}
+				sb.append("<br>\n");
+			}
+
+		} catch (Exception e) {
+			System.out.print("Parsing Exception: " + e.getMessage());
+		}
+
+		return sb.toString();
+
+	}
+	
+	public String substituteSpecialCharactersInHeaderfields(String s) throws Exception {
+
+			StringBuffer sb = new StringBuffer(s.length());
+			StringReader sr = new StringReader(s);
+			BufferedReader br = new BufferedReader(sr);
+			String ss = null;
+
+			try {
+
+				while ((ss = br.readLine()) != null) {
+					for (int i = 0; i < ss.length(); i++) {
+						switch (ss.charAt(i)) {
+							case '<' :
+								sb.append("&lt;");
+								break;
+							case '>' :
+								sb.append("&gt;");
+								break;
+							case '&' :
+								sb.append("&amp;");
+								break;
+							case '\t' :
+								sb.append("&nbsp;&nbsp;&nbsp;&nbsp;");
+								break;
+							case '\n' :
+								sb.append("<br>");
+								break;
+							default :
+								sb.append(ss.charAt(i));
+								break;
+						}
+					}
+					
+				}
+
+			} catch (Exception e) {
+				System.out.print("Parsing Exception: " + e.getMessage());
+			}
+
+			return sb.toString();
+
+		}
 	
 	
+
 	public String validateHTMLString(String input) {
 		StringBuffer output = new StringBuffer(input);
 		int index = 0;
@@ -147,11 +239,11 @@ public class DocumentParser {
 
 		// remove characters after </html> tag
 		index = lowerCaseInput.indexOf("</html>");
-		if ( lowerCaseInput.length()>=index+7)
-		{
-			lowerCaseInput = lowerCaseInput.substring(0,index+7);
+		if (lowerCaseInput.length() >= index + 7) {
+			lowerCaseInput = lowerCaseInput.substring(0, index + 7);
 		}
-		
+
 		return output.toString();
 	}
+
 }
