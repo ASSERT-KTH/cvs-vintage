@@ -64,7 +64,7 @@ import org.apache.torque.util.Criteria;
  * This class describes a Module within the Scarab system
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: ModuleEntity.java,v 1.28 2001/10/19 01:20:42 jmcnally Exp $
+ * @version $Id: ModuleEntity.java,v 1.29 2001/10/19 20:43:48 jon Exp $
  */
 public interface ModuleEntity
 {
@@ -108,7 +108,6 @@ public interface ModuleEntity
     public String getUrl();
     public void setUrl(String url);
 
-    public void setPrimaryKey(String key) throws Exception;
     public void setPrimaryKey(ObjectKey key) throws Exception;
     public NumberKey getModuleId();
     
@@ -147,8 +146,7 @@ public interface ModuleEntity
     public void setDeleted(boolean b);
 
     public NumberKey getParentId();
-    public void setParentId(String v ) throws Exception;
-    public void setParentId(NumberKey v ) throws Exception;
+    public void setParentId(NumberKey v) throws Exception;
 
     public void setModuleRelatedByParentId(ModuleEntity module) 
         throws Exception;
@@ -292,4 +290,6 @@ public interface ModuleEntity
      */
     public List getOptionTree(Attribute attribute, boolean activeOnly)
         throws Exception;
+
+    public String toString();
 }
