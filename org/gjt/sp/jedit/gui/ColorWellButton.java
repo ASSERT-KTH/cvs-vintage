@@ -37,7 +37,7 @@ import org.gjt.sp.jedit.OperatingSystem;
  * You can get and set the currently selected color using
  * <code>getSelectedColor()</code> and <code>setSelectedColor().
  * @author Slava Pestov
- * @version $Id: ColorWellButton.java,v 1.4 2002/12/15 00:23:53 spestov Exp $
+ * @version $Id: ColorWellButton.java,v 1.5 2002/12/31 19:42:04 spestov Exp $
  */
 public class ColorWellButton extends JButton
 {
@@ -176,7 +176,12 @@ public class ColorWellButton extends JButton
 
 		private void init()
 		{
-			chooser = new JColorChooser(getSelectedColor());
+			Color c = getSelectedColor();
+			if(c == null)
+				chooser = new JColorChooser();
+			else
+				chooser = new JColorChooser(c);
+
 			getContentPane().add(BorderLayout.CENTER, chooser);
 
 			Box buttons = new Box(BoxLayout.X_AXIS);
