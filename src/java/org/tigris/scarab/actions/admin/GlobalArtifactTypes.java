@@ -64,7 +64,7 @@ import org.tigris.scarab.util.ScarabConstants;
  * This class deals with modifying Global Artifact Types.
  *
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
- * @version $Id: GlobalArtifactTypes.java,v 1.3 2001/10/18 23:19:41 elicia Exp $
+ * @version $Id: GlobalArtifactTypes.java,v 1.4 2001/10/19 01:46:27 jon Exp $
  */
 public class GlobalArtifactTypes extends RequireLoginFirstAction
 {
@@ -127,17 +127,27 @@ public class GlobalArtifactTypes extends RequireLoginFirstAction
     }
 
     /**
-        This manages clicking the cancel button
-    */
+     * This manages clicking the cancel button
+     */
     public void doCancel( RunData data, TemplateContext context )
         throws Exception
     {
         data.setMessage("Changes were not saved!");
     }
+
+    /**
+     * This manages clicking the back button
+     */
+    public void doBack( RunData data, TemplateContext context )
+        throws Exception
+    {
+        setTarget(data, getBackTemplate(data, 
+            "admin,GlobalArtifactTypeShow.vm"));            
+    }
     
     /**
-        does nothing.
-    */
+     * does nothing.
+     */
     public void doPerform( RunData data, TemplateContext context )
         throws Exception
     {

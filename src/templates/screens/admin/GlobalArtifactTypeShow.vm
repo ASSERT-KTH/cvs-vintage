@@ -1,33 +1,37 @@
-$page.setTitle("Artifact Type Edit")
+$page.setTitle("Global Artifact Type Edit")
+
+#macro (GlobalArtifactTypeShowBar $var)
+<div class="functnbar$var">
+<table cellpadding="4" cellspacing="0" border="1">
+<tr>
+<td class="firstchild">
+<input type="submit" value="Save" name="eventSubmit_doSubmit" />
+<input type="submit" value="Create New" name="eventSubmit_doGotocreatepage" />
+<input type="submit" value="Delete Selected" name="eventSubmit_doSubmit" />
+</td>
+</tr>
+</table>
+</div>
+#end
 
 <div id="globalartifactshow" class="app">
 <h2>$page.Title</h2>
 <p>
-This page is for selecting an Artifact Type to edit which is defined in a global scale.
+This page is for selecting an Artifact Type to edit which is defined in a global scope.
 </p>
 
 <form action="$link.setPage("admin,GlobalArtifactTypeShow.vm")" method="get">
 <input type="hidden" name="action" value="admin.GlobalArtifactTypes" />
 <input type="hidden" name="$scarabG.Constant.NEXT_TEMPLATE" value="admin,GlobalArtifactTypeShow.vm" />
 
-<div class="functnbar">
-<table cellpadding="4" cellspacing="0" border="1">
-<tr>
-<td class="firstchild">
-<input type="submit" value="Submit" name="eventSubmit_doSubmit" />
-<input type="submit" value="Create New Artifact Type" name="eventSubmit_doGotocreatepage" />
-<input type="submit" value="Delete Selected Artifact Types" name="eventSubmit_doSubmit" />
-</td>
-</tr>
-</table>
-</div>
+#GlobalArtifactTypeShowBar("")
 
-<h3>Attributes</h3>
+<h3>Artifacts</h3>
 
 <table width="100%" border="1" cellspacing="2" cellpadding="3">
 <tr>
 <th>Deleted</th>
-<th>Attribute Name</th>
+<th>Artifact Name</th>
 <th>Description</th>
 </tr>
 #set ($allIssueTypes = $scarabG.AllIssueTypes)
@@ -41,18 +45,9 @@ This page is for selecting an Artifact Type to edit which is defined in a global
 #end
 </table>
 
-$intake.declareGroups()
+#GlobalArtifactTypeShowBar("2")
 
-<div class="functnbar2">
-<table cellpadding="4" cellspacing="0" border="1">
-<tr>
-<td class="firstchild">
-<input type="submit" value="Submit" name="eventSubmit_doSubmit" />
-<input type="submit" value="Create New Artifact Type" name="eventSubmit_doGotocreatepage" />
-<input type="submit" value="Delete Selected Artifact Type" name="eventSubmit_doSubmit" />
-</td>
-</tr>
-</table>
+$intake.declareGroups()
 
 </form>
 </div>
