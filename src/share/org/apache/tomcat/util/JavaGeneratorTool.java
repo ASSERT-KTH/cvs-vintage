@@ -65,19 +65,64 @@ public class JavaGeneratorTool {
     /** Mangle Package names to avoid reserver words
      **/
     public static final String manglePackage( String s ) {
-	    for (int i = 0; i < keywords.length; i++) {
+	for (int i = 0; i < keywords.length; i++) {
             char fs = File.separatorChar;
             int index = s.indexOf(keywords[i]);
             if(index == -1 ) continue;
             while (index != -1) {
-                String tmpathName = s.substring (0,index) + "__";
+		int endIdx=index+keywords[i].length();
+		//		System.out.println("XXX " + s + " " + index + " " + endIdx );
+		// Is it a full word ?
+		if( index>0 && s.charAt( index-1 ) != '/' ) {
+		    index = s.indexOf(keywords[i],index+3);
+		    continue;
+		}
+		    
+		if( (s.length()>endIdx+1) && s.charAt( endIdx+1 ) != '/' ) {
+		    index = s.indexOf(keywords[i],index+3);
+		    continue;
+		}
+                String tmpathName = s.substring (0,index) + "_";
                 s = tmpathName + s.substring (index);
-                index = s.indexOf(keywords[i],index+3);
-            }
+                index = s.indexOf(keywords[i],index+2);
+	    }
         }
+	s=fixDigits( s );
+	//	System.out.println("XXX " + s );
         return(s);
     }
 
+    public static boolean isKeyword( String s ) {
+	for (int i = 0; i < keywords.length; i++) {
+	    if( s.equals( keywords[i] ) )
+		return true;
+	}
+	return false;
+    }
+
+    /** Make sure package components or class name doesn't start with a digit
+     */
+    public static  String fixDigits( String s ) {
+	int i=0;
+	if(s.length() == 0 ) return s;
+	if( Character.isDigit( s.charAt( 0 )  )) {
+	    s="_" +s;
+	}
+	do {
+	    i= s.indexOf( "/", i+1 );
+	    if( i<0 || i==s.length() )
+		break;
+	    if( Character.isDigit( s.charAt( i + 1 )  ) ) {
+		s=s.substring( 0, i+1 ) + "_" + s.substring( i+1 );
+		i++;
+	    }
+	} while( i> 0 );
+	
+	return s;
+    }
+
+
+    
     /** 
      * 	Generated java files may be versioned, to avoid full reloading
      *  when the source changes.
