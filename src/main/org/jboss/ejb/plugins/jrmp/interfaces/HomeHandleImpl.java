@@ -17,9 +17,9 @@ import java.lang.reflect.Method;
 /**
  * An EJB home handle implementation.
  *      
- * @author  Rickard Öberg (rickard.oberg@telkel.com)
- * @author  Jason Dillon <a href="mailto:jason@planet57.com">&lt;jason@planet57.com&gt;</a>
- * @version $Revision: 1.6 $
+ * @author  <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>.
+ * @author  <a href="mailto:jason@planet57.com">Jason Dillon</a>
+ * @version $Revision: 1.7 $
  */
 public class HomeHandleImpl
     extends AbstractHandle

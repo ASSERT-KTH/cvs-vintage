@@ -46,8 +46,8 @@ that can only be used from within this VM.
 
 @see org.jboss.naming.NonSerializableFactory
 
-@author Scott_Stark@displayscape.com
-@version $Revision: 1.5 $
+@author <a href="mailto:Scott_Stark@displayscape.com">Scott Stark</a>.
+@version $Revision: 1.6 $
 */
 public class ExternalContext extends ServiceMBeanSupport implements ExternalContextMBean
 {

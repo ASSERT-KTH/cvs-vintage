@@ -22,8 +22,8 @@ import org.jboss.util.Service;
  *      
  *   @see Container
  *   @see ContainerFactory
- *   @author Rickard Öberg (rickard.oberg@telkel.com)
- *   @version $Revision: 1.11 $
+ *   @author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
+ *   @version $Revision: 1.12 $
  */
 public class Application
 	implements Service

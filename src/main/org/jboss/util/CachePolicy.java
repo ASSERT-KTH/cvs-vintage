@@ -11,8 +11,8 @@ package org.jboss.util;
  * Implementation classes can implement a LRU policy, a random one, 
  * a MRU one, or any other suitable policy.
  * 
- * @author Simone Bordet (simone.bordet@compaq.com)
- * @version $Revision: 1.2 $
+ * @author <a href="mailto:simone.bordet@compaq.com">Simone Bordet</a>
+ * @version $Revision: 1.3 $
  */
 public interface CachePolicy extends Service
 {

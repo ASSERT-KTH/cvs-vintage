@@ -20,9 +20,9 @@ import javax.naming.Name;
  *	ContainerInvokers may communicate with the Container through this interface
  *
  *	@see ContainerInvoker
- *	@author Rickard Öberg (rickard.oberg@telkel.com)
- *      @author Daniel OConnor (docodan@mvcsoft.com)
- *	@version $Revision: 1.4 $
+ *	@author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
+ *  @author <a href="mailto:docodan@mvcsoft.com">Daniel OConnor</a>
+ *	@version $Revision: 1.5 $
  */
 public interface ContainerInvokerContainer
 {

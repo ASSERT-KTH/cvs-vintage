@@ -22,8 +22,8 @@ refresh after getDefaultLifetime() seconds.
 This is a lazy cache policy in that objects are not checked for expiration
 until they are accessed.
 
-@author Scott_Stark@displayscape.com
-@version $Revision: 1.1 $
+@author <a href="mailto:Scott_Stark@displayscape.com">Scott Stark</a>.
+@version $Revision: 1.2 $
 */
 public class TimedCachePolicy extends TimerTask implements CachePolicy
 {

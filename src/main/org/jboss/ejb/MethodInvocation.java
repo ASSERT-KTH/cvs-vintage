@@ -30,9 +30,9 @@ import org.jboss.logging.Logger;
  *  This object carries the method to invoke and an identifier for the target ojbect
  *
  *  @see <related>
- *  @author Rickard Öberg (rickard.oberg@telkel.com)
+ *  @author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
  *  @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>.
- *  @version $Revision: 1.10 $
+ *  @version $Revision: 1.11 $
  */
 public class MethodInvocation
 {

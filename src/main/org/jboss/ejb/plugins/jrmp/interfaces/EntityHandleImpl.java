@@ -14,9 +14,9 @@ import javax.ejb.EJBObject;
 /**
  * An EJB entity bean handle implementation.
  *      
- * @author  Rickard Öberg (rickard.oberg@telkel.com)
- * @author  Jason Dillon <a href="mailto:jason@planet57.com">&lt;jason@planet57.com&gt;</a>
- * @version $Revision: 1.7 $
+ * @author  <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>.
+ * @author  <a href="mailto:jason@planet57.com">Jason Dillon</a>
+ * @version $Revision: 1.8 $
  */
 public class EntityHandleImpl
     extends AbstractHandle

@@ -26,9 +26,9 @@ import com.dreambean.ejx.Util;
  *   <description> 
  *      
  *   @see <related>
- *   @author Rickard Öberg (rickard.oberg@telkel.com)
- *   @author <a href="marc.fleury@telkel.com">Marc Fleury</a>
- *   @version $Revision: 1.5 $
+ *   @author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
+ *   @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
+ *   @version $Revision: 1.6 $
  */
 public class JawsEnterpriseBeans
    extends com.dreambean.ejx.ejb.EnterpriseBeans

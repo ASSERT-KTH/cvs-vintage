@@ -12,8 +12,8 @@ import org.jboss.ejb.DeploymentException;
 
 /** The configuration information for an EJB container.
  *   @author <a href="mailto:sebastien.alborini@m4x.org">Sebastien Alborini</a>
- *   @author Scott.Stark@jboss.org
- *   @version $Revision: 1.14 $
+ *   @author <a href="mailto:scott.stark@jboss.org">Scott Stark</a>
+ *   @version $Revision: 1.15 $
  */
 public class ConfigurationMetaData extends MetaData {
 

@@ -14,9 +14,9 @@ import javax.ejb.EJBObject;
 /**
  * An EJB stateless session bean handle.
  *
- * @author  Rickard Öberg (rickard.oberg@telkel.com)
- * @author  Jason Dillon <a href="mailto:jason@planet57.com">&lt;jason@planet57.com&gt;</a>
- * @version $Revision: 1.5 $
+ * @author  <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>.
+ * @author  <a href="mailto:jason@planet57.com">Jason Dillon</a>
+ * @version $Revision: 1.6 $
  */
 public class StatelessHandleImpl
     extends AbstractHandle

@@ -13,8 +13,8 @@ import java.util.Map;
  * Database connection for unit tests.  Currently nothing is implemented except
  * close, isClosed, isAutoCommit, setAutoCommit(true), and rollback.  Everything
  * else throws a SQLException.
- * @version $Revision: 1.2 $
- * @author Aaron Mulder (ammulder@alumni.princeton.edu)
+ * @version $Revision: 1.3 $
+ * @author <a href="mailto:ammulder@alumni.princeton.edu">Aaron Mulder</a>
  */
 public class TestConnection implements Connection {
     private final static String TEST_DB = "Not implemented in test database.";

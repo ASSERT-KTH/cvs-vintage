@@ -101,8 +101,8 @@ ExceptionListener and mark al handles as errounous? And then let them send the e
  *
  * Created: Tue Apr 10 13:09:45 2001
  *
- * @author Peter Antman (peter.antman@tim.se)
- * @version $Revision: 1.1 $
+ * @author <a href="mailto:peter.antman@tim.se">Peter Antman</a>.
+ * @version $Revision: 1.2 $
  */
 
 public class JmsManagedConnection  implements ManagedConnection{

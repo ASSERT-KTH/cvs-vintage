@@ -21,9 +21,9 @@ import javax.ejb.SessionContext;
  *	<description> 
  *      
  *	@see <related>
- *	@author Rickard Öberg (rickard.oberg@telkel.com)
- *      @author Daniel OConnor (docodan@mvcsoft.com)
- *	@version $Revision: 1.10 $
+ *	@author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
+ *  @author <a href="mailto:docodan@mvcsoft.com">Daniel OConnor</a>
+ *	@version $Revision: 1.11 $
  */
 public class StatefulSessionEnterpriseContext
    extends EnterpriseContext

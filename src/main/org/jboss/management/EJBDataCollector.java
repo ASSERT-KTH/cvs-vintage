@@ -32,7 +32,9 @@ import management.J2EEModule;
 /**
  * JDBC Data Collector
  *
- * @author Marc Fleury
+ * @author <a href="mailto:marc.fleury@jboss.org">Marc Fleury</a>
+ * @author <a href="mailto:andreas.schaefer@madplanet.com">Andreas Schaefer</a>
+ * @version $Revision: 1.2 $
  **/
 public class EJBDataCollector
    implements DataCollector

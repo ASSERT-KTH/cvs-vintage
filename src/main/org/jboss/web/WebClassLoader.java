@@ -12,10 +12,10 @@ ejb jars and wars.
 @see #getUrls()
 @see #setWebURLs(URL[])
 
-@author Scott_Stark@displayscape.com
+@author <a href="mailto:Scott_Stark@displayscape.com">Scott Stark</a>.
 @author Sacha Labourey <sacha.labourey@cogito-info.ch>
 @author Vladimir Blagojevic <vladimir@xisnext.2y.net>
-@version $Revision: 1.1 $
+@version $Revision: 1.2 $
 */
 public class WebClassLoader extends URLClassLoader
 {

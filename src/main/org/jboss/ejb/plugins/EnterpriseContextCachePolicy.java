@@ -18,8 +18,8 @@ import org.jboss.util.CachePolicy;
  * a MRU one, or any other suitable policy.
  * 
  * @see AbstractInstanceCache
- * @author Simone Bordet (simone.bordet@compaq.com)
- * @version $Revision: 1.4 $
+ * @author <a href="mailto:simone.bordet@compaq.com">Simone Bordet</a>
+ * @version $Revision: 1.5 $
  */
 public interface EnterpriseContextCachePolicy extends CachePolicy
 {

@@ -11,8 +11,8 @@ package org.jboss.ejb;
  *	could not be deployed
  *
  *   @see ContainerFactory
- *   @author Rickard Öberg (rickard.oberg@telkel.com)
- *   @version $Revision: 1.4 $
+ *   @author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
+ *   @version $Revision: 1.5 $
  */
 public class DeploymentException
    extends Exception

@@ -21,8 +21,8 @@ connections obtained from the resource (Shareable or Unshareable).
 Used in: entity, message-driven, and session
 
  *   @author <a href="mailto:sebastien.alborini@m4x.org">Sebastien Alborini</a>
- *   @author Scott_Stark@displayscape.com
- *   @version $Revision: 1.5 $
+ *   @author <a href="mailto:Scott_Stark@displayscape.com">Scott Stark</a>.
+ *   @version $Revision: 1.6 $
  */
 public class ResourceRefMetaData extends MetaData {
     // Constants -----------------------------------------------------

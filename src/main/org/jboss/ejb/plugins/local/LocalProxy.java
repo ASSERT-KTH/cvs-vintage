@@ -29,7 +29,7 @@ import org.jboss.ejb.CacheKey;
 /**
  * Abstract superclass of local client-side proxies.
  * 
- * @author  Daniel OConnor (docodan@mvcsoft.com)
+ * @author  <a href="mailto:docodan@mvcsoft.com">Daniel OConnor</a>
  */
 public abstract class LocalProxy
 {

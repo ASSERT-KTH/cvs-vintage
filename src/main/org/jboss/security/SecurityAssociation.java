@@ -31,8 +31,8 @@ class variables which makes the information available to all threads within
 the current VM.
 
 @author Daniel O'Connor (docodan@nycap.rr.com)
-@author Scott_Stark@displayscape.com
-@version $Revision: 1.4 $
+@author <a href="mailto:Scott_Stark@displayscape.com">Scott Stark</a>.
+@version $Revision: 1.5 $
 */
 public final class SecurityAssociation
 {

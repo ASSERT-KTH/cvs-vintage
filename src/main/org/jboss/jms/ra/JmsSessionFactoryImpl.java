@@ -46,8 +46,8 @@ import org.jboss.jms.ra.client.JmsSessionFactory;
  *
  * Created: Thu Mar 29 15:36:51 2001
  *
- * @author Peter Antman (peter.antman@tim.se)
- * @version $Revision: 1.1 $
+ * @author <a href="mailto:peter.antman@tim.se">Peter Antman</a>.
+ * @version $Revision: 1.2 $
  */
 
 public class JmsSessionFactoryImpl implements JmsSessionFactory,Serializable, Referenceable {

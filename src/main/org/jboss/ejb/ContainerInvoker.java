@@ -27,9 +27,9 @@ import javax.naming.Name;
  *	and security contexts properly. It may acquire the TransactionManager from JNDI.
  *
  *	@see Container
- *	@author Rickard Öberg (rickard.oberg@telkel.com)
- *  @author <a href="marc.fleury@telkel.com">Marc Fleury</a>
- *	@version $Revision: 1.6 $
+ *	@author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
+ *  @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
+ *	@version $Revision: 1.7 $
  */
 public interface ContainerInvoker
    extends ContainerPlugin

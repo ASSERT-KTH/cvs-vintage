@@ -9,8 +9,8 @@ package org.jboss.logging;
 /** Management interface for log4j
 
 @author <a href="mailto:phox@galactica.it">Fulco Muriglio</a>
-@author Scott_Stark@displayscape.com
-@version $Revision: 1.1 $
+@author <a href="mailto:Scott_Stark@displayscape.com">Scott Stark</a>.
+@version $Revision: 1.2 $
 */
 public interface Log4jServiceMBean
 {

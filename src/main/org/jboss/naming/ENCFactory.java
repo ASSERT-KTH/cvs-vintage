@@ -21,8 +21,8 @@ import org.jnp.interfaces.NamingContext;
  *   be threadlocal
  *     
  *   @see <related>
- *   @author Rickard Oberg (rickard.oberg@telkel.com)
- *   @version $Revision: 1.3 $
+ *   @author <a href="mailto:rickard.oberg@telkel.com">Rickard Oberg</a>
+ *   @version $Revision: 1.4 $
  */
 public class ENCFactory
    implements ObjectFactory

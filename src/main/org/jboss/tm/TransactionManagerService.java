@@ -35,10 +35,10 @@ import org.jboss.util.ServiceMBeanSupport;
  *  The service creates it and binds a Reference to it into JNDI.
  *      
  *  @see TxManager
- *  @author Rickard Öberg (rickard.oberg@telkel.com)
+ *  @author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
  *  @author <a href="mailto:osh@sparre.dk">Ole Husgaard</a>
- *  @author Toby Allsopp (toby.allsopp@peace.com)
- *  @version $Revision: 1.11 $
+ *  @author <a href="mailto:toby.allsopp@peace.com">Toby Allsopp</a>
+ *  @version $Revision: 1.12 $
  */
 public class TransactionManagerService
    extends ServiceMBeanSupport

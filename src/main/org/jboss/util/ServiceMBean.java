@@ -11,9 +11,9 @@ package org.jboss.util;
 @see org.jboss.util.Service
 @see org.jboss.util.ServiceMBeanSupport
 
- *   @author Rickard Öberg (rickard.oberg@telkel.com)
- *   @author Scott_Stark@displayscape.com
- *   @version $Revision: 1.4 $
+ *   @author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>.
+ *   @author <a href="mailto:Scott_Stark@displayscape.com">Scott Stark</a>.
+ *   @version $Revision: 1.5 $
  */
 public interface ServiceMBean
 	extends Service

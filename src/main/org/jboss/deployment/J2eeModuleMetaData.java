@@ -15,8 +15,8 @@ import org.w3c.dom.Element;
  *	<description> 
  *      
  *	@see <related>
- *	@author Daniel Schulze daniel.schulze@telkel.com
- *	@version $Revision: 1.2 $
+ *	@author <a href="mailto:daniel.schulze@telkel.com">Daniel Schulze</a>
+ *	@version $Revision: 1.3 $
  */
 public class J2eeModuleMetaData
    extends MetaData

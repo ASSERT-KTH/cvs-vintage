@@ -19,8 +19,8 @@ import com.dreambean.ejx.xml.*;
  *   <description> 
  *      
  *   @see <related>
- *   @author Rickard Öberg (rickard.oberg@telkel.com)
- *   @version $Revision: 1.1 $
+ *   @author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
+ *   @version $Revision: 1.2 $
  */
 public class jBossResourceReference
    extends com.dreambean.ejx.ejb.ResourceReference

@@ -44,7 +44,7 @@ import javax.management.ReflectionException;
 * is nearly the same as the MBeanServer Interface but
 * has an additional RemoteException.
 *
-* @author Rickard Öberg (rickard.oberg@telkel.com)
+* @author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
 * @author <A href="mailto:andreas.schaefer@madplanet.com">Andreas &quot;Mad&quot; Schaefer</A>
 **/
 public interface RMIConnector 

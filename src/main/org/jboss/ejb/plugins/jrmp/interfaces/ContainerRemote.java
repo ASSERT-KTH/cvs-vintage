@@ -16,8 +16,8 @@ import javax.transaction.Transaction;
 /**
  * The remote interface of a container.
  *      
- * @author Rickard Öberg (rickard.oberg@telkel.com)
- * @version $Revision: 1.8 $
+ * @author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
+ * @version $Revision: 1.9 $
  */
 public interface ContainerRemote
    extends Remote

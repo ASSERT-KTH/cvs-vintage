@@ -50,9 +50,9 @@ import org.jboss.metadata.MethodMetaData;
 *   @see <related>
 *   @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
 *   @author <a href="mailto:sebastien.alborini@m4x.org">Sebastien Alborini</a>
-*   @author Peter Antman (peter.antman@tim.se)
+*   @author <a href="mailto:peter.antman@tim.se">Peter Antman</a>.
 *   @author <a href="mailto:akkerman@cs.nyu.edu">Anatoly Akkerman</a>
-*   @version $Revision: 1.16 $
+*   @version $Revision: 1.17 $
 */
 public class TxInterceptorBMT
 extends AbstractInterceptor

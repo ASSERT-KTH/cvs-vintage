@@ -12,9 +12,9 @@ import java.rmi.NoSuchObjectException;
 /**
  *	The plugin that gives a container a cache for bean instances.
  *      
- *	@author Rickard Öberg (rickard.oberg@telkel.com)
- *  @author Simone Bordet (simone.bordet@compaq.com)
- *	@version $Revision: 1.6 $
+ *	@author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
+ *  @author <a href="mailto:simone.bordet@compaq.com">Simone Bordet</a>
+ *	@version $Revision: 1.7 $
  */
 public interface InstanceCache
    extends ContainerPlugin

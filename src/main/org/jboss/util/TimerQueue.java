@@ -13,8 +13,8 @@ package org.jboss.util;
  * for compatibility with jdk 1.2 it is reimplemented here.
  *
  * @see TimerTask
- * @author Simone Bordet (simone.bordet@compaq.com)
- * @version $Revision: 1.2 $
+ * @author <a href="mailto:simone.bordet@compaq.com">Simone Bordet</a>
+ * @version $Revision: 1.3 $
  */
 public class TimerQueue 
 	extends WorkerQueue

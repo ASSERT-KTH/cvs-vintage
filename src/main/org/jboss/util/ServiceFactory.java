@@ -12,8 +12,8 @@ import javax.management.ObjectName;
 /** The ServiceFactory interface is used to obtain a Service
 proxy instance for a named MBean.
 
-@author Scott_Stark@displayscape.com
-@version $Revision: 1.1 $
+@author <a href="mailto:Scott_Stark@displayscape.com">Scott Stark</a>.
+@version $Revision: 1.2 $
 */
 public interface ServiceFactory
 {

@@ -33,9 +33,9 @@ import org.jboss.logging.Logger;
  *   <description> 
  *      
  *   @see <related>
- *   @author Rickard Öberg (rickard.oberg@telkel.com)
- *   @author Daniel OConnor (docodan@mvcsoft.com)
- *   @version $Revision: 1.27 $
+ *   @author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
+ *   @author <a href="mailto:docodan@mvcsoft.com">Daniel OConnor</a>
+ *   @version $Revision: 1.28 $
  */
 public class StatefulSessionContainer
    extends Container

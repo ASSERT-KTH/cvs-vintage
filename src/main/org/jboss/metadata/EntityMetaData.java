@@ -16,8 +16,8 @@ import org.jboss.ejb.DeploymentException;
  *      
  *   @see <related>
  *   @author <a href="mailto:sebastien.alborini@m4x.org">Sebastien Alborini</a>
- *   @author Scott_Stark@displayscape.com
- *   @version $Revision: 1.7 $
+ *   @author <a href="mailto:Scott_Stark@displayscape.com">Scott Stark</a>.
+ *   @version $Revision: 1.8 $
  */
 public class EntityMetaData extends BeanMetaData {
     // Constants -----------------------------------------------------

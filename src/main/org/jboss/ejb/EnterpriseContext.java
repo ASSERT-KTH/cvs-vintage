@@ -38,11 +38,11 @@ import org.jboss.security.SimplePrincipal;
  *  @see StatefulSessionEnterpriseContext
  *  @see StatelessSessionEnterpriseContext
  *  @see EntityEnterpriseContext
- *  @author Rickard Öberg (rickard.oberg@telkel.com)
+ *  @author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
  *  @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
  *  @author <a href="mailto:sebastien.alborini@m4x.org">Sebastien Alborini</a>
  *  @author <a href="mailto:juha@jboss.org">Juha Lindfors</a>
- *  @version $Revision: 1.31 $
+ *  @version $Revision: 1.32 $
  */
 public abstract class EnterpriseContext
 {

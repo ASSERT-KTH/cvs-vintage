@@ -56,11 +56,11 @@ import javax.management.ObjectName;
  *      <description>
  *   
  *      @see <related>
- *      @author Peter Antman (peter.antman@tim.se)
- *      @author Rickard Öberg (rickard.oberg@telkel.com)
+ *      @author <a href="mailto:peter.antman@tim.se">Peter Antman</a>.
+ *      @author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
  *      @author <a href="mailto:sebastien.alborini@m4x.org">Sebastien Alborini</a>
  *      @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
- *      @version $Revision: 1.12 $
+ *      @version $Revision: 1.13 $
  */
 public class JMSContainerInvoker implements
 ContainerInvoker, XmlLoadable

@@ -18,8 +18,8 @@ import org.jboss.util.ServiceMBeanSupport;
 /**
  * <description> 
  *
- * @author Toby Allsopp (toby.allsopp@peace.com)
- * @version $Revision: 1.1 $
+ * @author <a href="mailto:toby.allsopp@peace.com">Toby Allsopp</a>
+ * @version $Revision: 1.2 $
  */
 public abstract class DeployerMBeanSupport
    extends ServiceMBeanSupport

@@ -35,10 +35,10 @@ import org.jboss.metadata.MessageDrivenMetaData;
  *	<description> 
  *      
  *	@see <related>
- *   @author Peter Antman (peter.antman@tim.se)
- *	@author Rickard Öberg (rickard.oberg@telkel.com)
+ *   @author <a href="mailto:peter.antman@tim.se">Peter Antman</a>.
+ *	@author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
  *  @author <a href="sebastien.alborini@m4x.org">Sebastien Alborini</a>
- *	@version $Revision: 1.3 $
+ *	@version $Revision: 1.4 $
  */
 public class MessageDrivenEnterpriseContext
    extends EnterpriseContext

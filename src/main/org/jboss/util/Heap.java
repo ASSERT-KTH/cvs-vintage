@@ -14,8 +14,8 @@ import java.util.Comparator;
  * Elements of this data structure should either implement Comparable, or a 
  * Comparator should be given as argument to the constructor.
  *
- * @author Simone Bordet (simone.bordet@compaq.com)
- * @version $Revision: 1.2 $
+ * @author <a href="mailto:simone.bordet@compaq.com">Simone Bordet</a>
+ * @version $Revision: 1.3 $
  */
 public class Heap
 {

@@ -70,10 +70,10 @@ import org.jboss.ejb.plugins.local.BaseLocalContainerInvoker;
  *    all kinds of algorithmic functionality.
  *
  *   @see ContainerFactory
- *   @author Rickard Öberg (rickard.oberg@telkel.com)
- *   @author <a href="marc.fleury@telkel.com">Marc Fleury</a>
- *   @author Scott_Stark@displayscape.com
- *   @version $Revision: 1.44 $
+ *   @author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
+ *   @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
+ *   @author <a href="mailto:Scott_Stark@displayscape.com">Scott Stark</a>.
+ *   @version $Revision: 1.45 $
  */
 public abstract class Container
 {

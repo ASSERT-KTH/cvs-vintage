@@ -19,7 +19,7 @@ package org.jboss.verifier.strategy;
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  *
  * This package and its source code is available at www.jboss.org
- * $Id: AbstractVerifier.java,v 1.18 2001/06/07 21:27:06 kvvinaymenon Exp $
+ * $Id: AbstractVerifier.java,v 1.19 2001/06/18 20:01:29 mnf999 Exp $
  */
 
 // standard imports
@@ -58,11 +58,11 @@ import org.gjt.lindfors.pattern.StrategyContext;
  *
  * @see     org.jboss.verifier.strategy.VerificationStrategy
  *
- * @author 	Juha Lindfors (jplindfo@helsinki.fi)
+ * @author 	<a href="mailto:juha.lindfors@jboss.org">Juha Lindfors</a>
  * @author  Aaron Mulder  (ammulder@alumni.princeton.edu)
  * @author  Vinay Menon   (menonv@cpw.co.uk)
  *
- * @version $Revision: 1.18 $
+ * @version $Revision: 1.19 $
  * @since  	JDK 1.3
  */
 public abstract class AbstractVerifier implements VerificationStrategy {

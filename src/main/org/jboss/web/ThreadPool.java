@@ -13,8 +13,8 @@ import org.jboss.logging.Logger;
 /**
  *  A simple thread pool.
  *      
- *  @author Rickard Öberg (rickard.oberg@telkel.com)
- *  @version $Revision: 1.4 $
+ *  <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
+ *  @version $Revision: 1.5 $
  */
 public class ThreadPool
 {

@@ -20,8 +20,8 @@ import javax.ejb.EJBException;
  *      
  * @author  Rickard Öberg (rickard.oberg@telkel.com)
  * @author  <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
- * @author  Jason Dillon <a href="mailto:jason@planet57.com">&lt;jason@planet57.com&gt;</a>
- * @version $Revision: 1.8 $
+ * @author  <a href="mailto:jason@planet57.com">Jason Dillon</a>
+ * @version $Revision: 1.9 $
  */
 public class EJBMetaDataImpl
     implements EJBMetaData, Serializable

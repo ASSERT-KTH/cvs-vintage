@@ -41,9 +41,9 @@ import org.jboss.util.FinderResults;
  *	<description> 
  *      
  *	@see <related>
- *	@author Rickard Öberg (rickard.oberg@telkel.com)
+ *	@author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
  *  @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
- *	@version $Revision: 1.9 $
+ *	@version $Revision: 1.10 $
  */
 public class CMPFilePersistenceManager
    implements EntityPersistenceStore

@@ -72,11 +72,11 @@ import org.w3c.dom.Element;
  *      <description>
  *
  *      @see <related>
- *      @author Rickard Öberg (rickard.oberg@telkel.com)
+ *      @author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
  *		@author <a href="mailto:sebastien.alborini@m4x.org">Sebastien Alborini</a>
  *      @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
  *		@author <a href="mailto:jplindfo@cc.helsinki.fi">Juha Lindfors</a>
- *      @version $Revision: 1.37 $
+ *      @version $Revision: 1.38 $
  */
 public class JRMPContainerInvoker
    extends RemoteServer

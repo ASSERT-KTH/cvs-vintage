@@ -44,9 +44,9 @@ import org.jboss.util.ServiceMBeanSupport;
  *   configured deployer to deploy it.
  *
  *   @see org.jboss.deployment.J2eeDeployer
- *   @author Rickard Öberg (rickard.oberg@telkel.com)
- *   @author Toby Allsopp (toby.allsopp@peace.com)
- *   @version $Revision: 1.17 $
+ *   @author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
+ *   @author <a href="mailto:toby.allsopp@peace.com">Toby Allsopp</a>
+ *   @version $Revision: 1.18 $
  */
 public class AutoDeployer
 	extends ServiceMBeanSupport

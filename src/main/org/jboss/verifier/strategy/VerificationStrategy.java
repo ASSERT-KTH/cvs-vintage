@@ -19,7 +19,7 @@ package org.jboss.verifier.strategy;
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  *
  * This package and its source code is available at www.jboss.org
- * $Id: VerificationStrategy.java,v 1.6 2001/01/03 08:28:48 tobias Exp $
+ * $Id: VerificationStrategy.java,v 1.7 2001/06/18 20:01:29 mnf999 Exp $
  */
 
 
@@ -43,8 +43,8 @@ import org.jboss.metadata.SessionMetaData;
  *
  * @see     << OTHER RELATED CLASSES >>
  *
- * @author 	Juha Lindfors (jplindfo@helsinki.fi)
- * @version $Revision: 1.6 $
+ * @author 	<a href="mailto:juha.lindfors@jboss.org">Juha Lindfors</a>
+ * @version $Revision: 1.7 $
  * @since  	JDK 1.3
  */
 public interface VerificationStrategy extends Strategy {

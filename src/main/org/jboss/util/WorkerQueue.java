@@ -11,8 +11,8 @@ package org.jboss.util;
  * by a single thread.
  *
  * @see Executable
- * @author Simone Bordet (simone.bordet@compaq.com)
- * @version $Revision: 1.5 $
+ * @author <a href="mailto:simone.bordet@compaq.com">Simone Bordet</a>
+ * @version $Revision: 1.6 $
  */
 public class WorkerQueue
 {

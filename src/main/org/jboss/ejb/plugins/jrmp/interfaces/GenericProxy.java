@@ -33,9 +33,9 @@ import org.jboss.security.SecurityAssociation;
  *      
  * @see ContainerRemote
  * 
- * @author  Rickard Öberg (rickard.oberg@telkel.com)
- * @author  Jason Dillon <a href="mailto:jason@planet57.com">&lt;jason@planet57.com&gt;</a> *  
- * @version $Revision: 1.11 $
+ * @author  <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>.
+ * @author  <a href="mailto:jason@planet57.com">Jason Dillon</a> *  
+ * @version $Revision: 1.12 $
  */
 public abstract class GenericProxy
    implements Externalizable

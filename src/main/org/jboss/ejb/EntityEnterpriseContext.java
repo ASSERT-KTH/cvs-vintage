@@ -23,10 +23,10 @@ import javax.transaction.Transaction;
 *	The EntityEnterpriseContext is used to associate EntityBean instances with metadata about it.
 *
 *	@see EnterpriseContext
-*	@author Rickard Öberg (rickard.oberg@telkel.com)
+*	@author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
 *       @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
-*       @author Daniel OConnor (docodan@mvcsoft.com)
-*	@version $Revision: 1.18 $
+*       @author <a href="mailto:docodan@mvcsoft.com">Daniel OConnor</a>
+*	@version $Revision: 1.19 $
 */
 public class EntityEnterpriseContext
 extends EnterpriseContext

@@ -18,8 +18,8 @@ System.err console streams. It also installs PrintStreams for System.out
 and System.err to route logging through those objects to the log4j
 system via a category named Default.
 
-@author Scott_Stark@displayscape.com
-@version $Revision: 1.2 $
+@author <a href="mailto:Scott_Stark@displayscape.com">Scott Stark</a>.
+@version $Revision: 1.3 $
 */
 public class ConsoleAppender extends AppenderSkeleton
 {

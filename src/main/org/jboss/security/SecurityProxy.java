@@ -15,8 +15,8 @@ on a per-method basis for both the EJB home and remote interface methods.
 Custom security checks are those that cannot be described using the
 standard EJB deployment time declarative role based security.
 
-@author Scott_Stark@displayscape.com
-@version $Revision: 1.1 $
+@author <a href="mailto:Scott_Stark@displayscape.com">Scott Stark</a>.
+@version $Revision: 1.2 $
  * @stereotype plug-in point
 */
 public interface SecurityProxy

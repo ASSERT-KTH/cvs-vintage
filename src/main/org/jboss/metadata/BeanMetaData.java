@@ -25,10 +25,10 @@ import org.jboss.security.SimplePrincipal;
 /** A common meta data class for the entity, message-driven and session beans.
  *
  *   @author <a href="mailto:sebastien.alborini@m4x.org">Sebastien Alborini</a>
- *   @author Peter Antman (peter.antman@tim.se)
- *   @author Daniel OConnor (docodan@mvcsoft.com)
- *   @author Scott_Stark@displayscape.com
- *   @version $Revision: 1.23 $
+ *   @author <a href="mailto:peter.antman@tim.se">Peter Antman</a>.
+ *   @author <a href="mailto:docodan@mvcsoft.com">Daniel OConnor</a>
+ *   @author <a href="mailto:Scott_Stark@displayscape.com">Scott Stark</a>.
+ *   @version $Revision: 1.24 $
  */
 public abstract class BeanMetaData extends MetaData {
     // Constants -----------------------------------------------------

@@ -38,9 +38,9 @@ import org.jboss.util.ServiceMBeanSupport;
  * Service that loads a JDBC 2 std. extension-compliant
  * <code>XADataSource</code> and makes it available through JNDI.
  *
- * @version $Revision: 1.2 $
- * @author Aaron Mulder (ammulder@alumni.princeton.edu)
- * @author Toby Allsopp (toby.allsopp@peace.com)
+ * @version $Revision: 1.3 $
+ * @author <a href="mailto:ammulder@alumni.princeton.edu">Aaron Mulder</a>
+ *   @author <a href="mailto:toby.allsopp@peace.com">Toby Allsopp</a>
  */
 public class RawXADataSourceLoader 
    extends ServiceMBeanSupport

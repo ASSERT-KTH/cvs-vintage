@@ -13,8 +13,8 @@ import org.w3c.dom.Document;
  * The <em>JMX</em> admin interface for the {@link ConfigurationService}
  * MBean.
  *      
- * @author Rickard Öberg (rickard.oberg@telkel.com)
- * @version $Revision: 1.6 $
+ * @author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
+ * @version $Revision: 1.7 $
  */
 public interface ConfigurationServiceMBean
 {

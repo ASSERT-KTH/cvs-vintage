@@ -23,8 +23,8 @@ security roles defined in the security-role elements.
 Used in: entity and session
 
  *   @author <a href="mailto:sebastien.alborini@m4x.org">Sebastien Alborini</a>
- *   @author Scott_Stark@displayscape.com
- *   @version $Revision: 1.3 $
+ *   @author <a href="mailto:Scott_Stark@displayscape.com">Scott Stark</a>.
+ *   @version $Revision: 1.4 $
  */
 public class SecurityRoleRefMetaData extends MetaData {
     // Constants -----------------------------------------------------

@@ -28,10 +28,10 @@ import javax.transaction.xa.XAException;
  *  A light weight transaction frontend to a TxCapsule.
  *
  *  @see TxCapsule
- *  @author Rickard Öberg (rickard.oberg@telkel.com)
+ *  @author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
  *  @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
  *  @author <a href="mailto:osh@sparre.dk">Ole Husgaard</a>
- *  @version $Revision: 1.14 $
+ *  @version $Revision: 1.15 $
  */
 class TransactionImpl
    implements Transaction

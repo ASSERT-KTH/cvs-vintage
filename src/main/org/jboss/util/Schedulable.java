@@ -13,7 +13,7 @@ import java.util.Date;
  * allowing the client to create a Schedulable instance which is then run
  * by this service at given times.
  *
- * @author Andreas Schaefer (andreas.schaefer@madplanet.com)
+ * @author <a href="mailto:andreas.schaefer@madplanet.com">Andreas Schaefer</a>
  **/
 public interface Schedulable
 {

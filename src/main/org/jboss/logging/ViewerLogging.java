@@ -17,8 +17,8 @@ import javax.swing.table.*;
 /**
  *
  *   @see <related>
- *   @author Rickard Öberg (rickard.oberg@telkel.com)
- *   @version $Revision: 1.5 $
+ *   @author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
+ *   @version $Revision: 1.6 $
  */
 public class ViewerLogging
    implements ViewerLoggingMBean, MBeanRegistration, NotificationListener

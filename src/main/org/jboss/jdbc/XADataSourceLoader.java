@@ -30,8 +30,8 @@ import org.jboss.logging.Log;
  * pool generates connections that are registered with the current Transaction
  * and support two-phase commit.  The constructors are called by the JMX engine
  * based on your MLET tags.
- * @version $Revision: 1.16 $
- * @author Aaron Mulder (ammulder@alumni.princeton.edu)
+ * @version $Revision: 1.17 $
+ * @author <a href="mailto:ammulder@alumni.princeton.edu">Aaron Mulder</a>
  */
 public class XADataSourceLoader
    extends ServiceMBeanSupport

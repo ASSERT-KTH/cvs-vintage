@@ -29,8 +29,8 @@ where tmp.fs is a Properties file containing:
 java.naming.factory.initial=com.sun.jndi.fscontext.RefFSContextFactory
 java.naming.provider.url=file:/tmp
 
-@author Scott_Stark@displayscape.com
-@version $Revision: 1.1 $
+@author <a href="mailto:Scott_Stark@displayscape.com">Scott Stark</a>.
+@version $Revision: 1.2 $
 */
 public class TestExternalContext extends ServiceMBeanSupport implements TestExternalContextMBean
 {

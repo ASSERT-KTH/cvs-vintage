@@ -47,9 +47,9 @@ import org.jboss.util.timeout.TimeoutFactory;
  *
  *  @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
  *  @author <a href="mailto:osh@sparre.dk">Ole Husgaard</a>
- *  @author Toby Allsopp (toby.allsopp@peace.com)
+ *  @author <a href="mailto:toby.allsopp@peace.com">Toby Allsopp</a>
  *
- *  @version $Revision: 1.27 $
+ *  @version $Revision: 1.28 $
  */
 class TxCapsule implements TimeoutTarget
 {

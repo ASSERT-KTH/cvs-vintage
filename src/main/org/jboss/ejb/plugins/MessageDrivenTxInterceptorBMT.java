@@ -27,8 +27,8 @@ import org.jboss.logging.Logger;
 *   @see <related>
 *   @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
 *   @author <a href="mailto:sebastien.alborini@m4x.org">Sebastien Alborini</a>
-*   @author Peter Antman (peter.antman@tim.se)
-*   @version $Revision: 1.4 $
+*   @author <a href="mailto:peter.antman@tim.se">Peter Antman</a>.
+*   @version $Revision: 1.5 $
 */
 public class MessageDrivenTxInterceptorBMT
 extends TxInterceptorBMT

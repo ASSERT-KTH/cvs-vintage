@@ -17,8 +17,8 @@ import org.w3c.dom.Element;
 /**
  * Least Recently Used cache policy for StatefulSessionEnterpriseContexts.
  *
- * @author Simone Bordet (simone.bordet@compaq.com)
- * @version $Revision: 1.1 $
+ * @author <a href="mailto:simone.bordet@compaq.com">Simone Bordet</a>
+ * @version $Revision: 1.2 $
  */
 public class LRUStatefulContextCachePolicy extends LRUEnterpriseContextCachePolicy
 {

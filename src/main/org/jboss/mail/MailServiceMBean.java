@@ -11,8 +11,8 @@ package org.jboss.mail;
  * MBean interface for the mail service.
  * 
  * @see
- * @author Simone Bordet (simone.bordet@compaq.com)
- * @version $Revision: 1.1 $
+ * @author <a href="mailto:simone.bordet@compaq.com">Simone Bordet</a>
+ * @version $Revision: 1.2 $
  */
 public interface MailServiceMBean
 	extends org.jboss.util.ServiceMBean

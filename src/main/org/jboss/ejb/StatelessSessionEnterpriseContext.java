@@ -23,9 +23,9 @@ import javax.ejb.EJBException;
  *	<description> 
  *      
  *	@see <related>
- *	@author Rickard Öberg (rickard.oberg@telkel.com)
+ *	@author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
  *  @author <a href="sebastien.alborini@m4x.org">Sebastien Alborini</a>
- *	@version $Revision: 1.8 $
+ *	@version $Revision: 1.9 $
  */
 public class StatelessSessionEnterpriseContext
    extends EnterpriseContext

@@ -15,8 +15,8 @@ import javax.naming.NamingException;
  * Provides the interface for creating new handles instances and
  * for getting a reference to the initial context.
  *      
- * @author  Jason Dillon <a href="mailto:jason@planet57.com">&lt;jason@planet57.com&gt;</a>
- * @version $Revision: 1.2 $
+ * @author  <a href="mailto:jason@planet57.com">Jason Dillon</a>
+ * @version $Revision: 1.3 $
  */
 public abstract class InitialContextHandle
     implements Serializable

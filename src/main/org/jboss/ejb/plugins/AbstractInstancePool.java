@@ -30,8 +30,8 @@ import org.jboss.logging.Logger;
  *	<description>
  *
  *	@see <related>
- *	@author Rickard Öberg (rickard.oberg@telkel.com)
- *	@version $Revision: 1.9 $
+ *	@author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
+ *	@version $Revision: 1.10 $
  */
 public abstract class AbstractInstancePool
    implements InstancePool, XmlLoadable

@@ -13,8 +13,8 @@ import javax.security.auth.Subject;
 /** An extension of the EJBSecurityManager that adds the notion of the active
 Subject and security domain.
 
-@author Scott_Stark@displayscape.com
-@version $Revision: 1.3 $
+@author <a href="mailto:Scott_Stark@displayscape.com">Scott Stark</a>.
+@version $Revision: 1.4 $
 */
 public interface SubjectSecurityManager extends EJBSecurityManager
 {

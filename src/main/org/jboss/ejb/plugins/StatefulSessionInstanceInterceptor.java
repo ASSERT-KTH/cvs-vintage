@@ -32,9 +32,9 @@ import javax.ejb.EJBObject;
 *   This container acquires the given instance. 
 *
 *   @see <related>
-*   @author Rickard Öberg (rickard.oberg@telkel.com)
+*   @author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
 *   @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
-*   @version $Revision: 1.15 $
+*   @version $Revision: 1.16 $
 */
 public class StatefulSessionInstanceInterceptor
 extends AbstractInterceptor

@@ -13,9 +13,9 @@ import org.jboss.util.ServiceMBean;
 
 /**
  *   @see 
- *   @author Daniel Schulze (daniel.schulze@telkel.com)
- *   @author Toby Allsopp (toby.allsopp@peace.com)
- *   @version $Revision: 1.4 $
+ *   @author <a href="mailto:daniel.schulze@telkel.com">Daniel Schulze</a>
+ *   @author <a href="mailto:toby.allsopp@peace.com">Toby Allsopp</a>
+ *   @version $Revision: 1.5 $
  */
 public interface J2eeDeployerMBean
    extends DeployerMBean

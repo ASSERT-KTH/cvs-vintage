@@ -19,7 +19,7 @@ import javax.ejb.EJBLocalObject;
  *      this interface.
  *
  *	@see ContainerInvoker
- *	@author Daniel OConnor (docodan@mvcsoft.com)
+ *	@author <a href="mailto:docodan@mvcsoft.com">Daniel OConnor</a>
  */
 public interface LocalContainerInvoker
    extends ContainerPlugin

@@ -20,8 +20,8 @@ import org.jboss.util.ServiceMBeanSupport;
 /**
  *      
  *   @see <related>
- *   @author Rickard Öberg (rickard.oberg@telkel.com)
- *   @version $Revision: 1.7 $
+ *   @author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
+ *   @version $Revision: 1.8 $
  */
 public class ConsoleLogging
    implements ConsoleLoggingMBean, NotificationListener, MBeanRegistration

@@ -21,8 +21,8 @@ import com.dreambean.ejx.xml.*;
  *   <description> 
  *      
  *   @see <related>
- *   @author Rickard Öberg (rickard.oberg@telkel.com)
- *   @version $Revision: 1.2 $
+ *   @author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
+ *   @version $Revision: 1.3 $
  */
 public class JawsEjbReference
    extends com.dreambean.ejx.ejb.EjbReference

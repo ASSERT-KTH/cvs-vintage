@@ -26,9 +26,9 @@ import org.jboss.ejb.DeploymentException;
  *   MessageDriven Bean added 
  *   @see <related>
  *   @author <a href="mailto:sebastien.alborini@m4x.org">Sebastien Alborini</a>
- *   @author Peter Antman (peter.antman@tim.se)
- *   @author Scott_Stark@displayscape.com
- *   @version $Revision: 1.16 $
+ *   @author <a href="mailto:peter.antman@tim.se">Peter Antman</a>.
+ *   @author <a href="mailto:Scott_Stark@displayscape.com">Scott Stark</a>.
+ *   @version $Revision: 1.17 $
  */
 public class ApplicationMetaData extends MetaData {
     // Constants -----------------------------------------------------

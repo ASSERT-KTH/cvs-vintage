@@ -14,7 +14,7 @@ import org.jboss.ejb.DeploymentException;
  *   <description> 
  *      
  *   @see <related>
- *   @author Daniel OConnor (docodan@mvcsoft.com)
+ *   @author <a href="mailto:docodan@mvcsoft.com">Daniel OConnor</a>
  */
 public class EjbLocalRefMetaData extends MetaData {
     // Constants -----------------------------------------------------

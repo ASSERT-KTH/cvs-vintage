@@ -12,8 +12,8 @@ import java.util.Properties;
 /**
  * Database driver for unit tests.  Creates connections that implement virtually
  * nothing - enough to test with, in other words.
- * @version $Revision: 1.4 $
- * @author Aaron Mulder (ammulder@alumni.princeton.edu)
+ * @version $Revision: 1.5 $
+ * @author <a href="mailto:ammulder@alumni.princeton.edu">Aaron Mulder</a>
  */
 public class TestDBDriver implements Driver {
     private final static String URL_START = "jdbc:testdb:";

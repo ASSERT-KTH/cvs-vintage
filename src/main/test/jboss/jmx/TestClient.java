@@ -46,7 +46,7 @@ import org.jboss.jmx.interfaces.JMXConnector;
 * and this will remove all the registered listeners.
 *
 *   @see <related>
-*   @author Andreas "Mad" Schaefer (andreas.schaefer@madplanet.com)
+*   @author Andreas Schaefer (andreas.schaefer@madplanet.com)
 **/
 public class TestClient {
 	// Constants -----------------------------------------------------> 

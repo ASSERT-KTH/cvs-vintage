@@ -32,12 +32,12 @@ import org.jboss.util.FinderResults;
  *   Just Another Web Store - an O/R mapper
  *
  * @see org.jboss.ejb.EntityPersistenceStore
- * @author <a href="mailto:danch@nvisia.com">danch (Dan Christopherson)</a>
+ * @author <a href="mailto:danch@nvisia.com">Dan Christopherson</a>
  * @author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
  * @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
  * @author <a href="mailto:shevlandj@kpi.com.au">Joe Shevland</a>
  * @author <a href="mailto:justin@j-m-f.demon.co.uk">Justin Forder</a>
- * @version $Revision: 1.27 $
+ * @version $Revision: 1.28 $
  */
 public class JAWSPersistenceManager
    implements EntityPersistenceStore

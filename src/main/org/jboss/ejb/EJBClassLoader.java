@@ -16,8 +16,8 @@ import java.security.Permissions;
  *   URLClassLoader that sets the specified permissions for the loaded classes
  *      
  *   @see <related>
- *   @author Rickard Öberg (rickard.oberg@telkel.com)
- *   @version $Revision: 1.4 $
+ *   @author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
+ *   @version $Revision: 1.5 $
  */
 public class EJBClassLoader
    extends URLClassLoader

@@ -74,14 +74,14 @@ import org.jboss.web.WebServiceMBean;
 *
 *   Now also works with message driven beans
 *   @see Container
-*   @author Rickard Öberg (rickard.oberg@telkel.com)
+*   @author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
 *   @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
 *   @author <a href="mailto:jplindfo@helsinki.fi">Juha Lindfors</a>
 *   @author <a href="mailto:sebastien.alborini@m4x.org">Sebastien Alborini</a>
-*   @author Peter Antman (peter.antman@tim.se)
-*   @author Scott Stark(Scott.Stark@jboss.org)
+*   @author <a href="mailto:peter.antman@tim.se">Peter Antman</a>.
+*   @author <a href="mailto:scott.stark@jboss.org">Scott Stark</a>
 *
-*   @version $Revision: 1.77 $
+*   @version $Revision: 1.78 $
 */
 public class ContainerFactory
   extends org.jboss.util.ServiceMBeanSupport

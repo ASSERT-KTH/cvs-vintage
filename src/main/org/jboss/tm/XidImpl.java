@@ -17,9 +17,9 @@ import javax.transaction.xa.Xid;
  *  This implementation is immutable and always serializable at runtime.
  *
  *  @see TransactionImpl
- *  @author Rickard Öberg (rickard.oberg@telkel.com)
+ *  @author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
  *  @author <a href="mailto:osh@sparre.dk">Ole Husgaard</a>
- *  @version $Revision: 1.10 $
+ *  @version $Revision: 1.11 $
  */
 class XidImpl
    implements Xid, java.io.Serializable

@@ -27,10 +27,10 @@ import org.jboss.util.FinderResults;
  *  They act as delegatees for the CMPEntityPersistenceManager class.
  * 
  *	@see EntityPersistenceManager
- *	@author Rickard Öberg (rickard.oberg@telkel.com)
+ *	@author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
  * @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
- * @author <a href="mailto:danch@nvisia.com">danch (Dan Christopherson)</a>
- *	@version $Revision: 1.4 $
+ * @author <a href="mailto:simone.bordet@compaq.com">Simone Bordet</a>
+ *	@version $Revision: 1.5 $
  */
 public interface EntityPersistenceStore
 extends ContainerPlugin

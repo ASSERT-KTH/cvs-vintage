@@ -11,8 +11,8 @@ import java.util.HashMap;
 /**
  * Implementation of a Least Recently Used cache policy.
  *
- * @author Simone Bordet (simone.bordet@compaq.com)
- * @version $Revision: 1.8 $
+ * @author <a href="mailto:simone.bordet@compaq.com">Simone Bordet</a>
+ * @version $Revision: 1.9 $
  */
 public class LRUCachePolicy
 	implements CachePolicy

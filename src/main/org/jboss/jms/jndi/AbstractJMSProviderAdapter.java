@@ -25,8 +25,8 @@ import javax.naming.NamingException;
  * provide connection names via instance initialzation and provide an 
  * implementaion of {@link #getInitialContext}.
  *
- * @version <pre>$Revision: 1.2 $</pre>
- * @author  Jason Dillon <a href="mailto:jason@planet57.com">&lt;jason@planet57.com&gt;</a>
+ * @version <pre>$Revision: 1.3 $</pre>
+ * @author  <a href="mailto:jason@planet57.com">Jason Dillon</a>
  */
 public abstract class AbstractJMSProviderAdapter
    implements JMSProviderAdapter, java.io.Serializable

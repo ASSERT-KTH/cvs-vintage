@@ -18,8 +18,8 @@ import javax.naming.NamingException;
 /**
  * An abstract base proxy class from which all bean proxys extend from.
  *
- * @author  Jason Dillon <a href="mailto:jason@planet57.com">&lt;jason@planet57.com&gt;</a>
- * @version $Revision: 1.1 $
+ * @author  <a href="mailto:jason@planet57.com">Jason Dillon</a>
+ * @version $Revision: 1.2 $
  */
 public abstract class BeanProxy
    extends GenericProxy

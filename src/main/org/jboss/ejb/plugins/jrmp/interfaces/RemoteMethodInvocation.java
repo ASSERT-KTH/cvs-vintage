@@ -28,11 +28,11 @@ import javax.transaction.Transaction;
  *  This Serializable object carries the method to invoke and an
  *  identifier for the target ojbect
  *
- *  @author Rickard Öberg (rickard.oberg@telkel.com)
+ *  @author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
  *  @author <a href="mailto:Richard.Monson-Haefel@jGuru.com">Richard Monson-Haefel</a>.
  *  @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>.
  *  @author <a href="mailto:docodan@nycap.rr.com">Daniel O'Connor</a>.
- *  @version $Revision: 1.13 $
+ *  @version $Revision: 1.14 $
  */
 public final class RemoteMethodInvocation
    implements java.io.Externalizable

@@ -25,8 +25,8 @@ import com.dreambean.ejx.Util;
  *   <description> 
  *      
  *   @see <related>
- *   @author Rickard Öberg (rickard.oberg@telkel.com)
- *   @version $Revision: 1.9 $
+ *   @author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
+ *   @version $Revision: 1.10 $
  */
 public abstract class ContainerConfiguration
    extends BeanContextServicesSupport

@@ -28,8 +28,8 @@ import org.jboss.naming.NamingServiceMBean;
  *    the current system.  This implementation is currently specific to
  *    the <tt>org.jnp.*</tt> naming classes.
  *      
- * @author  Jason Dillon <a href="mailto:jason@planet57.com">&lt;jason@planet57.com&gt;</a>
- * @version $Revision: 1.1 $
+ * @author  <a href="mailto:jason@planet57.com">Jason Dillon</a>
+ * @version $Revision: 1.2 $
  */
 public final class DefaultInitialContextHandle
     extends InitialContextHandle

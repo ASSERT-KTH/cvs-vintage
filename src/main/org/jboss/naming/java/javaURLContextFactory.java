@@ -17,8 +17,8 @@ import org.jnp.server.NamingServer;
  *   Implementation of "java:" namespace factory. java: is a VM-local namespace.
  *     
  *   @see <related>
- *   @author Rickard Öberg (rickard.oberg@telkel.com)
- *   @version $Revision: 1.6 $
+ *   @author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
+ *   @version $Revision: 1.7 $
  */
 public class javaURLContextFactory
    implements ObjectFactory

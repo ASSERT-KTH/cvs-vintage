@@ -2,8 +2,8 @@ package test.jboss.naming;
 
 /** 
 
-@author Scott_Stark@displayscape.com
-@version $Revision: 1.1 $
+@author <a href="mailto:Scott_Stark@displayscape.com">Scott Stark</a>.
+@version $Revision: 1.2 $
 */
 public interface TestExternalContextMBean extends org.jboss.util.ServiceMBean
 {

@@ -21,8 +21,8 @@ import org.jboss.ejb.DeploymentException;
  * @see XmlLoadable
  * @see org.jboss.web.AbstractWebContainer
 
- * @author Scott_Stark@displayscape.com
- * @version $Revision: 1.2 $
+ * @author <a href="mailto:Scott_Stark@displayscape.com">Scott Stark</a>.
+ * @version $Revision: 1.3 $
  */
 public class WebMetaData implements XmlLoadable
 {

@@ -19,9 +19,9 @@ import org.jboss.logging.Logger;
  *   Java Thread Programming (SAMS)
  *      
  *   @see <related>
- *   @author Rickard Öberg (rickard.oberg@telkel.com)
- *   @author Peter Antman (peter.antman@tim.se)
- *   @version $Revision: 1.3 $
+ *   @author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
+ *   @author <a href="mailto:peter.antman@tim.se">Peter Antman</a>.
+ *   @version $Revision: 1.4 $
  */
 public class ThreadPool
 {

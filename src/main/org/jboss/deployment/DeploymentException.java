@@ -11,8 +11,8 @@ package org.jboss.deployment;
  *   deployed.
  *
  *   @see DeployerMBean
- *   @author Toby Allsopp (toby.allsopp@peace.com)
- *   @version $Revision: 1.2 $
+ *   @author <a href="mailto:toby.allsopp@peace.com">Toby Allsopp</a>
+ *   @version $Revision: 1.3 $
  */
 public class DeploymentException
    extends Exception

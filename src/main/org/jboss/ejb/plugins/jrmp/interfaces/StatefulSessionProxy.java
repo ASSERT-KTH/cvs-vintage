@@ -24,10 +24,10 @@ import org.jboss.ejb.plugins.jrmp.server.JRMPContainerInvoker;
 /**
  * An EJB stateful session bean proxy class.
  *      
- * @author  Rickard Öberg (rickard.oberg@telkel.com)
+ * @author  <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>.
  * @author  <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
- * @author  Jason Dillon <a href="mailto:jason@planet57.com">&lt;jason@planet57.com&gt;</a>
- * @version $Revision: 1.20 $
+ * @author  <a href="mailto:jason@planet57.com">Jason Dillon</a>
+ * @version $Revision: 1.21 $
  */
 public class StatefulSessionProxy
    extends BeanProxy

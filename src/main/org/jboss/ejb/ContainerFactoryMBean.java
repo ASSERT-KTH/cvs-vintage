@@ -12,10 +12,10 @@ import java.net.MalformedURLException;
  *   This is the interface of the ContainerFactory that is exposed for administration
  *
  *   @see ContainerFactory
- *   @author Rickard Öberg (rickard.oberg@telkel.com)
- *   @author Juha Lindfors (jplindfo@helsinki.fi)
+ *   @author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
+ *   @author <a href="mailto:juha.lindfors@jboss.org">Juha Lindfors</a>
  *
- *   @version $Revision: 1.12 $
+ *   @version $Revision: 1.13 $
  */
 public interface ContainerFactoryMBean
 	extends org.jboss.util.ServiceMBean

@@ -48,10 +48,10 @@ import org.jboss.util.Sync;
 *   On tx commit
 *
 *   @see <related>
-*   @author Rickard Öberg (rickard.oberg@telkel.com)
+*   @author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
 *   @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
 *   @author <a href="mailto:bill@burkecentral.com">Bill Burke</a>
-*   @version $Revision: 1.37 $
+*   @version $Revision: 1.38 $
 */
 public class EntitySynchronizationInterceptor
 extends AbstractInterceptor

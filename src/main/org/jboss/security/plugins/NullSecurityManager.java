@@ -23,8 +23,8 @@ as a pass-through security manager when you want noop security.
 @see #Principal getPrincipal(Principal)
 @see #doesUserHaveRole(Principal, Set)
 
-@author Scott_Stark@displayscape.com
-@version $Revision: 1.1 $
+@author <a href="mailto:Scott_Stark@displayscape.com">Scott Stark</a>.
+@version $Revision: 1.2 $
 */
 public class NullSecurityManager
     implements SubjectSecurityManager, RealmMapping, Serializable

@@ -15,8 +15,8 @@ import org.w3c.dom.Element;
  *   It is an empty class at this point.
  *      
  *   @see ContainerConfiguration
- *   @author <a href="marc.fleury@telkel.com">Marc Fleury</a>
- *   @version $Revision: 1.3 $
+ *   @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
+ *   @version $Revision: 1.4 $
  */
 public class StatefulSessionContainerConfiguration
    extends ContainerConfiguration

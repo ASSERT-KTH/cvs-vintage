@@ -55,14 +55,15 @@ import org.jboss.metadata.ConfigurationMetaData;
 import org.jboss.metadata.XmlLoadable;
 import org.jboss.metadata.XmlFileLoader;
 import org.jboss.logging.Logger;
-
+                                                        
 /**
 *   A ContainerMgt is used as the long arm of a deployed EJB's container.
 *
 *   @see Container
-*   @author Andreas Schaefer (andreas.schaefer@madplanet.com)
+*   @author <a href="mailto:marc.fleury@jboss.org">Marc Fleury</a>
+*   @author <a href="mailto:andreas.schaefer@madplanet.com">Andreas Schaefer</a>
 *
-*   @version $Revision: 1.1 $
+*   @version $Revision: 1.2 $
 */
 public class ContainerManagement
   extends org.jboss.util.ServiceMBeanSupport

@@ -13,8 +13,8 @@ import test.jboss.testdb.*;
  * Tests for JDBCConnectionFactory.  Currently a work in progress.  Uses the
  * test database driver so it doesn't rely on any particular real database
  * being present.
- * @version $Revision: 1.2 $
- * @author Aaron Mulder (ammulder@alumni.princeton.edu)
+ * @version $Revision: 1.3 $
+ * @author <a href="mailto:ammulder@alumni.princeton.edu">Aaron Mulder</a>
  */
 public class JDBCFactoryTest extends TestCase {
     private final static int MAX_ITERATIONS = 10000;

@@ -23,7 +23,7 @@ import org.jboss.ejb.CacheKey;
 /**
  * The client-side proxy for an EJB Home object.
  *      
- * @author  Daniel OConnor (docodan@mvcsoft.com)
+ * @author  <a href="mailto:docodan@mvcsoft.com">Daniel OConnor</a>
  */
 public abstract class LocalHomeProxy
     extends LocalProxy

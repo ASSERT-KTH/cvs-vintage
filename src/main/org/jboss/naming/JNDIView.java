@@ -35,9 +35,9 @@ Deploy by adding:
 <mbean code="org.jboss.naming.JNDIView" name="DefaultDomain:service=JNDIView" />
 to the jboss.jcml file.
 
-@author Scott_Stark@displayscape.com
+@author <a href="mailto:Scott_Stark@displayscape.com">Scott Stark</a>.
 @author Vladimir Blagojevic <vladimir@xisnext.2y.net>
-@version $Revision: 1.4 $
+@version $Revision: 1.5 $
 */
 public class JNDIView extends ServiceMBeanSupport implements JNDIViewMBean
 {

@@ -19,7 +19,7 @@ package org.jboss.verifier.factory;
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  *
  * This package and its source code is available at www.jboss.org
- * $Id: VerificationEventFactory.java,v 1.2 2001/01/03 08:28:46 tobias Exp $
+ * $Id: VerificationEventFactory.java,v 1.3 2001/06/18 20:01:29 mnf999 Exp $
  */
 
 // standard imports
@@ -41,8 +41,8 @@ import org.jboss.verifier.event.VerificationEvent;
  *
  * @see     << OTHER RELATED CLASSES >>
  *
- * @author 	Juha Lindfors (jplindfo@helsinki.fi)
- * @version $Revision: 1.2 $
+ * @author 	<a href="mailto:juha.lindfors@jboss.org">Juha Lindfors</a>
+ * @version $Revision: 1.3 $
  * @since  	JDK 1.3
  */
 public interface VerificationEventFactory extends AbstractFactory {

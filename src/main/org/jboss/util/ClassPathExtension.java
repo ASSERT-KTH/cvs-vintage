@@ -19,8 +19,8 @@ import org.jboss.util.ServiceMBeanSupport;
  *   Add URL's to the MLet classloader
  *      
  *   @see <related>
- *   @author Rickard Öberg (rickard.oberg@telkel.com)
- *   @version $Revision: 1.10 $
+ *   @author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>.
+ *   @version $Revision: 1.11 $
  */
 public class ClassPathExtension
    implements ClassPathExtensionMBean, MBeanRegistration

@@ -32,9 +32,9 @@ import java.util.Properties;
  *
  *   @see WebClassLoader
  *
- *   @author $Author: starksm $
- *   @author Scott_Stark@displayscape.com
- *   @version $Revision: 1.5 $
+ *   @author $Author: mnf999 $
+ *   @author <a href="mailto:Scott_Stark@displayscape.com">Scott Stark</a>.
+ *   @version $Revision: 1.6 $
  */
 public class WebServer
 	implements Runnable

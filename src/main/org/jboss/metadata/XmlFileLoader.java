@@ -34,8 +34,8 @@ import org.jboss.ejb.DeploymentException;
  *   @author <a href="mailto:sebastien.alborini@m4x.org">Sebastien Alborini</a>
  *   @author <a href="mailto:WolfgangWerner@gmx.net">Wolfgang Werner</a>
  *   @author <a href="mailto:Darius.D@jbees.com">Darius Davidavicius</a>
- *   @author <a href="mailto:Scott.Stark@jboss.org">Scott Stark</a>
- *   @version $Revision: 1.15 $
+ *   @author <a href="mailto:scott.stark@jboss.org">Scott Stark</a>
+ *   @version $Revision: 1.16 $
  */
 public class XmlFileLoader {
    	// Constants -----------------------------------------------------

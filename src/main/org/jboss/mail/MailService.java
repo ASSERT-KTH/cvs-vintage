@@ -27,8 +27,8 @@ import org.jboss.naming.NonSerializableFactory;
  * MBean that gives support for JavaMail. Object of class javax.mail.Session will be bound
  * in JNDI under java:/ namespace with the name provided with method {@link #setJNDIName}.
  *
- * @author Simone Bordet (simone.bordet@compaq.com)
- * @version $Revision: 1.2 $
+ * @author <a href="mailto:simone.bordet@compaq.com">Simone Bordet</a>
+ * @version $Revision: 1.3 $
  */
 public class MailService
 	extends ServiceMBeanSupport

@@ -11,8 +11,8 @@ import javax.naming.NamingException;
 /** A simple utility mbean that allows one to create an alias in
 the form of a LinkRef from one JNDI name to another.
 
-@author Scott_Stark@displayscape.com
-@version $Revision: 1.1 $
+@author <a href="mailto:Scott_Stark@displayscape.com">Scott Stark</a>.
+@version $Revision: 1.2 $
 */
 public interface NamingAliasMBean extends org.jboss.util.ServiceMBean
 {

@@ -34,9 +34,9 @@ import org.jboss.logging.Logger;
 *   <description>
 *
 *   @see <related>
-*   @author Rickard Öberg (rickard.oberg@telkel.com)
+*   @author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
 *  @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
-*   @version $Revision: 1.22 $
+*   @version $Revision: 1.23 $
 */
 public class BMPPersistenceManager
 implements EntityPersistenceManager

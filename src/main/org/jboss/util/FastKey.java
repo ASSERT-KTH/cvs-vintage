@@ -17,8 +17,8 @@ import org.jboss.ejb.CacheKey;
 *   is over-written so that we never miss a hit in cache and have constant speed.
 *   
 *   @see org.jboss.ejb.plugins.NoPassivationInstanceCache.java
-*   @author <a href="marc.fleury@telkel.com">Marc Fleury</a>
-*   @version $Revision: 1.8 $
+*   @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
+*   @version $Revision: 1.9 $
 */
 public class FastKey
 	extends CacheKey

@@ -27,8 +27,8 @@ import org.jboss.security.SimplePrincipal;
 is enforced. This is where the caller identity propagation is controlled as well.
 
 @author <a href="on@ibis.odessa.ua">Oleg Nitz</a>
-@author Scott_Stark@displayscape.com
-@version $Revision: 1.17 $
+@author <a href="mailto:Scott_Stark@displayscape.com">Scott Stark</a>.
+@version $Revision: 1.18 $
 */
 public class SecurityInterceptor extends AbstractInterceptor
 {

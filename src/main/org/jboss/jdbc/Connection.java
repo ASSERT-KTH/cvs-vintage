@@ -11,8 +11,8 @@ package org.jboss.jdbc;
  *   Just a fix for proxies not being created in java.* packages for security reasons...
  *      
  *   @see <related>
- *   @author Rickard Öberg (rickard.oberg@telkel.com)
- *   @version $Revision: 1.2 $
+ *   @author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
+ *   @version $Revision: 1.3 $
  */
 public interface Connection
    extends java.sql.Connection

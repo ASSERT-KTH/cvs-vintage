@@ -9,8 +9,8 @@ package org.jboss.util;
 /**
  * Wait exclusive semaphore with wait - notify primitives
  *
- * @author Simone Bordet (simone.bordet@compaq.com)
- * @version $Revision: 1.1 $
+ * @author <a href="mailto:simone.bordet@compaq.com">Simone Bordet</a>
+ * @version $Revision: 1.2 $
  */
 public class WaitSemaphore
 	extends Semaphore

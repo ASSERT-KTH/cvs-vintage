@@ -29,8 +29,8 @@ import javax.resource.spi.EISSystemException;
  *
  * Created: Tue Apr 17 23:44:05 2001
  *
- * @author Peter Antman (peter.antman@tim.se)
- * @version $Revision: 1.1 $
+ * @author <a href="mailto:peter.antman@tim.se">Peter Antman</a>.
+ * @version $Revision: 1.2 $
  */
 
 public class JmsLocalTransaction implements LocalTransaction {

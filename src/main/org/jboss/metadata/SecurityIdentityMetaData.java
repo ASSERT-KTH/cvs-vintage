@@ -19,8 +19,8 @@ identity to be used.
 
 Used in: session, entity, message-driven
 
-@author Scott_Stark@displayscape.com
-@version $Revision: 1.3 $
+@author <a href="mailto:Scott_Stark@displayscape.com">Scott Stark</a>.
+@version $Revision: 1.4 $
 */
 public class SecurityIdentityMetaData extends MetaData
 {

@@ -22,9 +22,9 @@ import java.rmi.MarshalledObject;
 *   @see org.jboss.ejb.plugins.NoPassivationInstanceCache.java
 *   @see org.jboss.ejb.plugins.EntityInstanceCache
 *   @see org.jboss.ejb.plugins.EntityProxy
-*   @author <a href="marc.fleury@telkel.com">Marc Fleury</a>
+*   @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
 *   @author <a href="bill@burkecentral.com">Bill Burke</a>
-*   @version $Revision: 1.12 $
+*   @version $Revision: 1.13 $
 */
 public class CacheKey
     implements java.io.Externalizable

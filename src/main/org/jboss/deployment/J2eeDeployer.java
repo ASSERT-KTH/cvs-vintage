@@ -66,9 +66,9 @@ import org.w3c.dom.Element;
 *  (ContainerFactory for JBoss and EmbededTomcatService for Tomcat).
 *
 *   @author <a href="mailto:daniel.schulze@telkel.com">Daniel Schulze</a>
-*   @author Toby Allsopp (toby.allsopp@peace.com)
-*   @author Scott_Stark@displayscape.com
-*   @version $Revision: 1.31 $
+*   @author <a href="mailto:toby.allsopp@peace.com">Toby Allsopp</a>
+*   @author <a href="mailto:Scott_Stark@displayscape.com">Scott Stark</a>.
+*   @version $Revision: 1.32 $
 */
 public class J2eeDeployer 
 extends ServiceMBeanSupport

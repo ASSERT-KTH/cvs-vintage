@@ -11,8 +11,8 @@ package org.jboss.configuration;
  *
  * @see ConfigurationService
  *
- * @author  Jason Dillon <a href="mailto:jason@planet57.com">&lt;jason@planet57.com&gt;</a>
- * @version <pre>$Revision: 1.1 $</pre>
+ * @author  <a href="mailto:jason@planet57.com">Jason Dillon</a>
+ * @version <pre>$Revision: 1.2 $</pre>
  */
 public class ConfigurationException
    extends Exception

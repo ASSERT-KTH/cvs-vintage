@@ -10,9 +10,9 @@ package org.jboss.deployment;
  * Exception thrown by {@link org.jboss.deployment.J2eeDeployer} on
  * deployment problems.
  *      
- * @author Daniel Schulze daniel.schulze@telekel.com
- * @author Toby Allsopp (toby.allsopp@peace.com)
- * @version $Revision: 1.4 $
+ * @author <a href="mailto:daniel.schulze@telkel.com">Daniel Schulze</a>
+ * @author <a href="mailto:toby.allsopp@peace.com">Toby Allsopp</a>
+ * @version $Revision: 1.5 $
  */
 public class J2eeDeploymentException 
    extends DeploymentException

@@ -38,7 +38,7 @@ import org.jboss.util.ServiceMBeanSupport;
  * Scheduler Instance to allow clients to run this as a
  * scheduling service for any Schedulable instances.
  *
- * @author Andreas Schaefer (andreas.schaefer@madplanet.com)
+ * @author <a href="mailto:andreas.schaefer@madplanet.com">Andreas Schaefer</a>
  **/
 public class Scheduler
    extends ServiceMBeanSupport

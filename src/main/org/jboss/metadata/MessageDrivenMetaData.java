@@ -20,9 +20,9 @@ import org.jboss.ejb.DeploymentException;
  * Have to add changes ApplicationMetaData and ConfigurationMetaData
  *   @see <related>
 ' *   @author <a href="mailto:sebastien.alborini@m4x.org">Sebastien Alborini</a>
- *   @author Peter Antman (peter.antman@tim.se)
+ *   @author <a href="mailto:peter.antman@tim.se">Peter Antman</a>.
 
- *   @version $Revision: 1.7 $
+ *   @version $Revision: 1.8 $
  */
 public class MessageDrivenMetaData extends BeanMetaData {
     // Constants -----------------------------------------------------

@@ -28,7 +28,7 @@ import javax.naming.InitialContext;
 * connection.
 *
 *   @see <related>
-*   @author Andreas "Mad" Schaefer (andreas.schaefer@madplanet.com)
+*   @author Andreas Schaefer (andreas.schaefer@madplanet.com)
 **/
 public class TestServer {
 	// Constants -----------------------------------------------------> 

@@ -11,9 +11,9 @@ package org.jboss.tm;
  *   <description> 
  *      
  *   @see <related>
- *   @author Rickard Öberg (rickard.oberg@telkel.com)
- *   @author Toby Allsopp (toby.allsopp@peace.com)
- *   @version $Revision: 1.5 $
+ *   @author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
+ *   @author <a href="mailto:toby.allsopp@peace.com">Toby Allsopp</a>
+ *   @version $Revision: 1.6 $
  */
 public interface TransactionManagerServiceMBean
    extends org.jboss.util.ServiceMBean

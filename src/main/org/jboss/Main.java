@@ -25,10 +25,10 @@ import javax.management.loading.*;
 /**
  *
  *   @see <related>
- *   @author Rickard Öberg (rickard.oberg@telkel.com)
+ *   @author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>.
  *   @author <a href="mailto:docodan@nycap.rr.com">Daniel O'Connor</a>.
- *   @author Scott_Stark@displayscape.com
- *   @version $Revision: 1.35 $
+ *   @author <a href="mailto:Scott_Stark@displayscape.com">Scott Stark</a>.
+ *   @version $Revision: 1.36 $
  */
 public class Main
 {

@@ -46,10 +46,10 @@ import org.jboss.ejb.StatefulSessionEnterpriseContext;
  * The SessionObjectInputStream is used to deserialize stateful session beans when they are activated
  *      
  *	@see org.jboss.ejb.plugins.SessionObjectOutputStream
- *	@author Rickard Öberg (rickard.oberg@telkel.com)
+ *	@author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
  *	@author <a href="mailto:sebastien.alborini@m4x.org">Sebastien Alborini</a>
- *	@author Scott.Stark@jboss.org
- *	@version $Revision: 1.4 $
+ *	@author <a href="mailto:scott.stark@jboss.org">Scott Stark</a>
+ *	@version $Revision: 1.5 $
  */
 class SessionObjectInputStream
 	extends ObjectInputStream

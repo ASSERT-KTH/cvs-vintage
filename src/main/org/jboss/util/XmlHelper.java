@@ -16,8 +16,8 @@ import org.jboss.logging.Log;
 /**
  *   A utility class to cover up the rough bits of xml parsing
  *      
- *   @author Chris Kimpton ( chris@kimptoc.net )
- *   @version $Revision: 1.1 $
+ *   @author <a href="mailto:chris@kimptoc.net">Chris Kimpton</a>
+ *   @version $Revision: 1.2 $
  */
 public class XmlHelper
 {

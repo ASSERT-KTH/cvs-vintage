@@ -43,10 +43,10 @@ import org.jboss.util.XmlHelper;
  * @see org.jboss.util.Service
  * @see org.jboss.util.ServiceControl
  *
- * @author  Rickard Öberg (rickard.oberg@telkel.com)
- * @author  Scott_Stark@displayscape.com
- * @author  Jason Dillon <a href="mailto:jason@planet57.com">&lt;jason@planet57.com&gt;</a>
- * @version $Revision: 1.30 $
+ * @author  <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>.
+ * @author  <a href="mailto:Scott_Stark@displayscape.com">Scott Stark</a>.
+ * @author  <a href="mailto:jason@planet57.com">Jason Dillon</a>
+ * @version $Revision: 1.31 $
  */
 public class ConfigurationService
     extends ServiceMBeanSupport

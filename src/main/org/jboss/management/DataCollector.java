@@ -16,7 +16,9 @@ import management.J2EEManagedObject;
  * Collector Interface which must be implemented by
  * any collector to lookup the management data
  *
- * @author Marc Fleury
+ * @author <a href="mailto:marc.fleury@jboss.org">Marc Fleury</a>
+ * @author <a href="mailto:andreas.schaefer@madplanet.com">Andreas Schaefer</a>
+ * @version $Revision: 1.2 $
  **/
 public interface DataCollector {
 

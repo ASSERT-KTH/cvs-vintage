@@ -42,10 +42,10 @@ import org.jboss.util.Sync;
 *   This container acquires the given instance.
 *
 *   @see <related>
-*   @author Rickard Öberg (rickard.oberg@telkel.com)
+*   @author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
 *   @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
 *   @author <a href="mailto:sebastien.alborini@m4x.org">Sebastien Alborini</a>
-*   @version $Revision: 1.30 $
+*   @version $Revision: 1.31 $
 */
 public class EntityInstanceInterceptor
 extends AbstractInterceptor

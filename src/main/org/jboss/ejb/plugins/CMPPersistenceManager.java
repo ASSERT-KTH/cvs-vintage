@@ -46,8 +46,8 @@ import org.jboss.util.Sync;
 *
 *   @see <related>
 *   @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
-*   @author <a href="mailto:danch@nvisia.com">danch (Dan Christopherson</a>
-*   @version $Revision: 1.21 $
+*   @author <a href="mailto:danch@nvisia.com">Dan Christopherson</a>
+*   @version $Revision: 1.22 $
 */
 public class CMPPersistenceManager
 implements EntityPersistenceManager {

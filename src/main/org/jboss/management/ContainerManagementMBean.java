@@ -12,9 +12,10 @@ import org.jboss.ejb.Container;
  *   This is the interface of the ContainerMgt that is exposed for administration
  *
  *   @see ContainerMgt
- *   @author Andreas Schaefer (andreas.schaefer@madplanet.com)
+ *   @author <a href="mailto:marc.fleury@jboss.org">Marc Fleury</a>
+ *   @author <a href="mailto:andreas.schaefer@madplanet.com">Andreas Schaefer</a>
  *
- *   @version $Revision: 1.1 $
+ *   @version $Revision: 1.2 $
  */
 public interface ContainerManagementMBean
 	extends org.jboss.util.ServiceMBean

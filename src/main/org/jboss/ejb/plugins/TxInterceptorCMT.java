@@ -36,11 +36,11 @@ import org.jboss.metadata.MethodMetaData;
 *   <description>
 *
 *   @see <related>
-*   @author Rickard Öberg (rickard.oberg@telkel.com)
+*   @author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
 *   @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
 *   @author <a href="mailto:sebastien.alborini@m4x.org">Sebastien Alborini</a>
 *   @author <a href="mailto:akkerman@cs.nyu.edu">Anatoly Akkerman</a>
-*   @version $Revision: 1.10 $
+*   @version $Revision: 1.11 $
 */
 public class TxInterceptorCMT
 extends AbstractInterceptor

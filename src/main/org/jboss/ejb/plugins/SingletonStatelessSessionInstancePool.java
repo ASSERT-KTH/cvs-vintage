@@ -28,8 +28,8 @@ import org.jboss.logging.Logger;
  * singletons in EJB!
  *      
  *	@see <related>
- *	@author Rickard Öberg (rickard.oberg@telkel.com)
- *	@version $Revision: 1.6 $
+ *	@author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
+ *	@version $Revision: 1.7 $
  */
 public class SingletonStatelessSessionInstancePool
    implements InstancePool, XmlLoadable

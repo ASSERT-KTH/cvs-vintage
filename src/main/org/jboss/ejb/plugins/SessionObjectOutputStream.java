@@ -44,9 +44,9 @@ import org.jboss.ejb.EntityEnterpriseContext;
  * The SessionObjectOutputStream is used to serialize stateful session beans when they are passivated
  *      
  *	@see org.jboss.ejb.plugins.SessionObjectInputStream
- *	@author Rickard Öberg (rickard.oberg@telkel.com)
+ *	@author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
  *	@author <a href="mailto:sebastien.alborini@m4x.org">Sebastien Alborini</a>
- *	@version $Revision: 1.3 $
+ *	@version $Revision: 1.4 $
  */
 class SessionObjectOutputStream
 	extends ObjectOutputStream

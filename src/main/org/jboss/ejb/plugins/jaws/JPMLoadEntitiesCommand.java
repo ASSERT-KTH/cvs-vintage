@@ -19,8 +19,8 @@ import org.jboss.ejb.plugins.jaws.metadata.PkFieldMetaData;
  * can later get it. This somewhat circuitous route is needed so that we don't
  * violate the container contract by loading data before ejbActivate is called.
  *      
- * @author <a href="mailto:danch@nvisia.com">danch (Dan Christopherson)</a>
- * @version $Revision: 1.2 $
+ * @author <a href="mailto:danch@nvisia.com">Dan Christopherson</a>
+ * @version $Revision: 1.3 $
  */
 public interface JPMLoadEntitiesCommand
 {

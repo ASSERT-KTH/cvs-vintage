@@ -30,8 +30,8 @@ import javax.naming.NamingException;
  *
  * Created: Fri Dec 22 09:34:04 2000
  *
- * @author Peter Antman  (peter.antman@tim.se)
- * @version $Revision: 1.1 $
+ * @author <a href="mailto:peter.antman@tim.se">Peter Antman</a>
+ * @version $Revision: 1.2 $
  */
 public class JBossLocalTXProvider 
    extends JBossMQProvider

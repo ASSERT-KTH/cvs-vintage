@@ -22,9 +22,9 @@ import org.jboss.util.ServiceMBeanSupport;
 /** The WebService implementation. It configures a WebServer instance to
  perform dynamic class and resource loading.
 
- *   @author Rickard Öberg (rickard.oberg@telkel.com)
- *   @author Scott_Stark@displayscape.com
- *   @version $Revision: 1.4 $
+ *   @author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>.
+ *   @author <a href="mailto:Scott_Stark@displayscape.com">Scott Stark</a>.
+ *   @version $Revision: 1.5 $
  */
 public class WebService
    extends ServiceMBeanSupport

@@ -28,10 +28,10 @@ import org.jboss.ejb.plugins.jrmp.server.JRMPContainerInvoker;
 /**
  * The client-side proxy for an EJB Home object.
  *      
- * @author  Rickard Öberg (rickard.oberg@telkel.com)
+ * @author  <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>.
  * @author  <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
- * @author  Jason Dillon <a href="mailto:jason@planet57.com">&lt;jason@planet57.com&gt;</a>
- * @version $Revision: 1.23 $
+ * @author  <a href="mailto:jason@planet57.com">Jason Dillon</a>
+ * @version $Revision: 1.24 $
  */
 public class HomeProxy
     extends GenericProxy

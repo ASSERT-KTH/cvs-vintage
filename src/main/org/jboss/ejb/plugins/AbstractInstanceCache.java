@@ -56,9 +56,9 @@ import org.jboss.monitor.MetricsConstants;
  * AbstractInstanceCache.class or a subclass
  * </ul>
  *
- * @author Simone Bordet (simone.bordet@compaq.com)
+ * @author <a href="mailto:simone.bordet@compaq.com">Simone Bordet</a>
  * @author <a href="bill@burkecentral.com">Bill Burke</a>
- * @version $Revision: 1.10 $
+ * @version $Revision: 1.11 $
  */
 public abstract class AbstractInstanceCache
 	implements InstanceCache, XmlLoadable, Monitorable, MetricsConstants

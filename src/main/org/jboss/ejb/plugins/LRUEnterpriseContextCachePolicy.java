@@ -25,8 +25,8 @@ import org.jboss.monitor.client.BeanCacheSnapshot;
  * Least Recently Used cache policy for EnterpriseContexts.
  *
  * @see AbstractInstanceCache
- * @author Simone Bordet (simone.bordet@compaq.com)
- * @version $Revision: 1.7 $
+ * @author <a href="mailto:simone.bordet@compaq.com">Simone Bordet</a>
+ * @version $Revision: 1.8 $
  */
 public class LRUEnterpriseContextCachePolicy extends LRUCachePolicy
 	implements EnterpriseContextCachePolicy, XmlLoadable, Monitorable

@@ -37,9 +37,9 @@ import org.apache.log4j.xml.DOMConfigurator;
     (automatically reloaded frequently).
 
 @author <a href="mailto:phox@galactica.it">Fulco Muriglio</a>
-@author Scott_Stark@displayscape.com
+@author <a href="mailto:Scott_Stark@displayscape.com">Scott Stark</a>.
 @author <a href="mailto:davidjencks@earthlink.net">David Jencks</a>
-@version $Revision: 1.7 $
+@version $Revision: 1.8 $
 */
 public class Log4jService implements Log4jServiceMBean, NotificationListener,
     MBeanRegistration

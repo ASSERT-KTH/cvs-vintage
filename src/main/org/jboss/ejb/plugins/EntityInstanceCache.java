@@ -19,9 +19,9 @@ import org.jboss.util.Sync;
 /**
  * Cache subclass for entity beans.
  * 
- * @author Simone Bordet (simone.bordet@compaq.com)
+ * @author <a href="mailto:simone.bordet@compaq.com">Simone Bordet</a>
  * @author <a href="bill@burkecentral.com">Bill Burke</a>
- * @version $Revision: 1.7 $
+ * @version $Revision: 1.8 $
  */
 public class EntityInstanceCache
 	extends AbstractInstanceCache 

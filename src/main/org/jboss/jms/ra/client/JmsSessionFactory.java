@@ -29,8 +29,8 @@ import javax.jms.QueueConnection;
  *
  * Created: Thu Mar 29 15:37:21 2001
  *
- * @author Peter Antman (peter.antman@tim.se)
- * @version $Revision: 1.1 $
+ * @author <a href="mailto:peter.antman@tim.se">Peter Antman</a>.
+ * @version $Revision: 1.2 $
  */
 
 public interface JmsSessionFactory  extends TopicConnection,QueueConnection {

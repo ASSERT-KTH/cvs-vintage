@@ -17,8 +17,8 @@ import javax.ejb.NoSuchEntityException;
  *  keys or a proprietary key
  *
  *	@see EntityInstanceCache
- *	@author <a href="marc.fleury@telkel.com">Marc Fleury</a>
- *	@version $Revision: 1.1 $
+ *	@author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
+ *	@version $Revision: 1.2 $
  */
 public interface EntityCache
    extends InstanceCache

@@ -18,8 +18,8 @@ import java.io.PrintWriter;
  * others. If the specified number of threads is 1, it acts as an exclusive semaphore
  * and can be used instead of synchronized blocks
  *
- * @author Simone Bordet (simone.bordet@compaq.com)
- * @version $Revision: 1.2 $
+ * @author <a href="mailto:simone.bordet@compaq.com">Simone Bordet</a>
+ * @version $Revision: 1.3 $
  */
 public class Semaphore 
 	implements Sync

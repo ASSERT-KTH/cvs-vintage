@@ -8,7 +8,7 @@ import java.rmi.RemoteException;
 
 /**
  *
- * @author  Scott_Stark@displayscape.com
+ * @author  <a href="mailto:Scott_Stark@displayscape.com">Scott Stark</a>.
  * @version 
  */
 public class Handler implements InvocationHandler, Serializable

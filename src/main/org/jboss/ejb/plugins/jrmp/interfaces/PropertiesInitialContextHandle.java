@@ -19,8 +19,8 @@ import javax.naming.NamingException;
  * An implementation of {@link InitialContextHandle} that reads a properties
  * file from a configured URL for the environment.
  *      
- * @author  Jason Dillon <a href="mailto:jason@planet57.com">&lt;jason@planet57.com&gt;</a>
- * @version $Revision: 1.1 $
+ * @author  <a href="mailto:jason@planet57.com">Jason Dillon</a>
+ * @version $Revision: 1.2 $
  */
 public final class PropertiesInitialContextHandle
     extends InitialContextHandle

@@ -12,9 +12,9 @@ import java.net.URL;
  *   <description> 
  *      
  *   @see <related>
- *   @author Rickard Öberg (rickard.oberg@telkel.com)
- *   @author Scott_Stark@displayscape.com
- *   @version $Revision: 1.3 $
+ *   @author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>.
+ *   @author <a href="mailto:Scott_Stark@displayscape.com">Scott Stark</a>.
+ *   @version $Revision: 1.4 $
  */
 public interface WebServiceMBean
    extends org.jboss.util.ServiceMBean

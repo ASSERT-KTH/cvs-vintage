@@ -14,7 +14,7 @@ a SimplePrincipal is created given a userID which is used
 as the Principal name.
 
 @author <a href="on@ibis.odessa.ua">Oleg Nitz</a>
-@author Scott_Stark@displayscape.com
+@author <a href="mailto:Scott_Stark@displayscape.com">Scott Stark</a>.
 */
 public class SimplePrincipal implements Principal, java.io.Serializable
 {

@@ -16,8 +16,8 @@ import org.apache.log4j.Priority;
 This class is used to map PrintStream/PrintWriter oriented logging onto
 the log4j Categories. Examples include capturing System.out/System.err writes.
 
-@author Scott_Stark@displayscape.com
-@version $Revision: 1.3 $
+@author <a href="mailto:Scott_Stark@displayscape.com">Scott Stark</a>.
+@version $Revision: 1.4 $
 */
 public class CategoryStream extends PrintStream
 {

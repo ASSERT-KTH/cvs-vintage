@@ -153,7 +153,7 @@ public class ConnectorFactoryImpl {
     * Interface defined a Connector Tester to verify JMX Connectors
     * based on the information delivered by a JNDI server
     *
-    * @author Andreas "Mad" Schaefer (andreas.schaefer@madplanet.com)
+    * @author Andreas Schaefer (andreas.schaefer@madplanet.com)
     **/
    public static interface IConnectorTester {
       
@@ -172,7 +172,7 @@ public class ConnectorFactoryImpl {
    /**
     * Default implementation of the jBoss JMX Connector tester
     *
-    * @author Andreas "Mad" Schaefer (andreas.schaefer@madplanet.com)
+    * @author Andreas Schaefer (andreas.schaefer@madplanet.com)
     **/
    public static class JBossConnectorTester
       implements IConnectorTester
@@ -199,7 +199,7 @@ public class ConnectorFactoryImpl {
    /**
     * Container for a JMX Connector representation
     *
-    * @author Andreas "Mad" Schaefer (andreas.schaefer@madplanet.com)
+    * @author Andreas Schaefer (andreas.schaefer@madplanet.com)
     **/
    public static class ConnectorName {
       

@@ -17,8 +17,8 @@ import javax.naming.*;
 /**
  * An abstract base handle class from which all handles extend from.
  *      
- * @author  Jason Dillon <a href="mailto:jason@planet57.com">&lt;jason@planet57.com&gt;</a>
- * @version $Revision: 1.1 $
+ * @author  <a href="mailto:jason@planet57.com">Jason Dillon</a>
+ * @version $Revision: 1.2 $
  */
 public abstract class AbstractHandle
    implements Serializable

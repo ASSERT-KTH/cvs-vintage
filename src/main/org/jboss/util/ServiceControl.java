@@ -18,10 +18,10 @@ import org.jboss.logging.Log;
 /** ServiceControl manages the JBoss services lifecycle.
  * 
  *   @see org.jboss.util.Service
- *   @author Rickard Öberg (rickard.oberg@telkel.com)
- *   @author Hugo Pinto (mailto:hugo@hugopinto.com)
- *   @author Scott_Stark@displayscape.com
- *   @version $Revision: 1.9 $
+ *   @author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>.
+ *   @author <a href="mailto:hugo@hugopinto.com">Hugo Pinto</a>
+ *   @author <a href="mailto:Scott_Stark@displayscape.com">Scott Stark</a>.
+ *   @version $Revision: 1.10 $
  */
 public class ServiceControl
    implements ServiceControlMBean, MBeanRegistration

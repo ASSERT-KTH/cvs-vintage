@@ -16,8 +16,8 @@ import org.jboss.util.ServiceMBean;
  *   The common interface for services that deploy application
  *   components.
  *
- *   @author Toby Allsopp (toby.allsopp@peace.com)
- *   @version $Revision: 1.2 $
+ *   @author <a href="mailto:toby.allsopp@peace.com">Toby Allsopp</a>
+ *   @version $Revision: 1.3 $
  */
 public interface DeployerMBean
    extends ServiceMBean

@@ -32,9 +32,9 @@ import org.jboss.logging.Logger;
  *	<description> 
  *      
  *	@see <related>
- *	@author Rickard Öberg (rickard.oberg@telkel.com)
+ *	@author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
  *  @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
- *	@version $Revision: 1.10 $
+ *	@version $Revision: 1.11 $
  */
 public final class JRMPContainerInvoker
    implements ContainerInvoker
@@ -146,9 +146,9 @@ public final class JRMPContainerInvoker
  *	<description> 
  *      
  *	@see <related>
- *	@author Rickard Öberg (rickard.oberg@telkel.com)
+ *	@author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
  *  @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
- *	@version $Revision: 1.10 $
+ *	@version $Revision: 1.11 $
  */
  
  /*

@@ -60,10 +60,10 @@ import org.jboss.logging.Logger;
  *  It is fairly simple and can work from the file system from wich JBoss is operating
  *      
  *  @see <related>
- *  @author Rickard Öberg (rickard.oberg@telkel.com)
- *  @author <a href="marc.fleury@telkel.com">Marc Fleury</a>
+ *  @author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
+ *  @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
  *  @author <a href="mailto:sebastien.alborini@m4x.org">Sebastien Alborini</a>
- *  @version $Revision: 1.18 $
+ *  @version $Revision: 1.19 $
  */
 public class StatefulSessionFilePersistenceManager
    implements StatefulSessionPersistenceManager

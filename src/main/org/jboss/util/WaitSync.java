@@ -10,8 +10,8 @@ package org.jboss.util;
  * Interface that gives wait - notify primitives to implementors.
  *
  * @see Semaphore
- * @author Simone Bordet (simone.bordet@compaq.com)
- * @version $Revision: 1.1 $
+ * @author <a href="mailto:simone.bordet@compaq.com">Simone Bordet</a>
+ * @version $Revision: 1.2 $
  */
 public interface WaitSync extends Sync
 {

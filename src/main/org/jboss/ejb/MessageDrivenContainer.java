@@ -27,11 +27,11 @@ import org.jboss.logging.Logger;
 *   MessageDrivenContainer, based on the StatelessSessionContainer
 *
 *   @see <related>
-*   @author Peter Antman (peter.antman@tim.se)
-*   @author Rickard Öberg (rickard.oberg@telkel.com)
-*   @author <a href="marc.fleury@telkel.com">Marc Fleury</a>
-*   @author Daniel OConnor (docodan@mvcsoft.com)
-*   @version $Revision: 1.6 $
+*   @author <a href="mailto:peter.antman@tim.se">Peter Antman</a>.
+*   @author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
+*   @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
+*   @author <a href="mailto:docodan@mvcsoft.com">Daniel OConnor</a>
+*   @version $Revision: 1.7 $
 *    extends StatelessSessionContainer
 */
 public class MessageDrivenContainer

@@ -15,7 +15,7 @@ import java.rmi.registry.Registry;
 
 /**
  *
- * @author  Scott_Stark@displayscape.com
+ * @author  <a href="mailto:Scott_Stark@displayscape.com">Scott Stark</a>.
  * @version 
  */
 public class Client

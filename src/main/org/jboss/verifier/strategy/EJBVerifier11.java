@@ -19,7 +19,7 @@ package org.jboss.verifier.strategy;
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  *
  * This package and its source code is available at www.jboss.org
- * $Id: EJBVerifier11.java,v 1.27 2001/06/07 21:32:25 kvvinaymenon Exp $
+ * $Id: EJBVerifier11.java,v 1.28 2001/06/18 20:01:29 mnf999 Exp $
  */
 
 
@@ -51,11 +51,11 @@ import org.jboss.metadata.EntityMetaData;
  *
  * @see     org.jboss.verifier.strategy.AbstractVerifier
  *
- * @author  Juha Lindfors (jplindfo@helsinki.fi)
+ * @author  <a href="mailto:juha.lindfors@jboss.org">Juha Lindfors</a>
  * @author  Aaron Mulder  (ammulder@alumni.princeton.edu)
  * @author  Vinay Menon   (menonv@cpw.co.uk)
  *
- * @version $Revision: 1.27 $
+ * @version $Revision: 1.28 $
  * @since   JDK 1.3
  */
 public class EJBVerifier11 extends AbstractVerifier {

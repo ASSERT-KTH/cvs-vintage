@@ -16,9 +16,9 @@ import org.jboss.util.ServiceMBeanSupport;
 
 /** A JBoss service that starts the jnp JNDI server.
  *      
- *   @author Rickard Öberg (rickard.oberg@telkel.com)
- *   @author Scott_Stark@displayscape.com
- *   @version $Revision: 1.11 $
+ *   @author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
+ *   @author <a href="mailto:Scott_Stark@displayscape.com">Scott Stark</a>.
+ *   @version $Revision: 1.12 $
  */
 public class NamingService
    extends ServiceMBeanSupport

@@ -6,8 +6,8 @@ import org.jboss.ejb.DeploymentException;
 
 /** A template pattern for web container integration into JBoss.
 
-@author  Scott_Stark@displayscape.com
-@version $Revision: 1.1 $
+@author  <a href="mailto:Scott_Stark@displayscape.com">Scott Stark</a>.
+@version $Revision: 1.2 $
 */
 public interface AbstractWebContainerMBean extends org.jboss.util.ServiceMBean
 {

@@ -10,8 +10,8 @@ package org.jboss.util;
  * Interface that gives synchronization semantic to implementors
  *
  * @see Semaphore
- * @author Simone Bordet (simone.bordet@compaq.com)
- * @version $Revision: 1.2 $
+ * @author <a href="mailto:simone.bordet@compaq.com">Simone Bordet</a>
+ * @version $Revision: 1.3 $
  */
 public interface Sync 
 {

@@ -30,9 +30,9 @@ import org.jboss.logging.Logger;
 /**
  * Cache for stateful session beans. 
  *      
- * @author Simone Bordet (simone.bordet@compaq.com)
+ * @author <a href="mailto:simone.bordet@compaq.com">Simone Bordet</a>
  * @author <a href="mailto:sebastien.alborini@m4x.org">Sebastien Alborini</a>
- * @version $Revision: 1.7 $
+ * @version $Revision: 1.8 $
  */
 public class StatefulSessionInstanceCache 
 	extends AbstractInstanceCache

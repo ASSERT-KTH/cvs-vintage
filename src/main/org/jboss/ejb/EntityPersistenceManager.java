@@ -25,8 +25,8 @@ import org.jboss.util.FinderResults;
  *	to the EntityEnterpriseContext that is passed in method calls.
  *
  *	@see EntityContainer
- *	@author Rickard Öberg (rickard.oberg@telkel.com)
- *	@version $Revision: 1.5 $
+ *	@author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
+ *	@version $Revision: 1.6 $
  */
 public interface EntityPersistenceManager
    extends ContainerPlugin

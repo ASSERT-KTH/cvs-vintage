@@ -20,9 +20,9 @@ import org.jboss.logging.Logger;
  * since message driven beans is much like them
  *
  *   @see <related>
- *   @author Peter Antman (peter.antman@tim.se)
- *   @author Rickard Öberg (rickard.oberg@telkel.com)
- *   @version $Revision: 1.3 $
+ *   @author <a href="mailto:peter.antman@tim.se">Peter Antman</a>.
+ *   @author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
+ *   @version $Revision: 1.4 $
  */
 public class MessageDrivenInstanceInterceptor
    extends StatelessSessionInstanceInterceptor

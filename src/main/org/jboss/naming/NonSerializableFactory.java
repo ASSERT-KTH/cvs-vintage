@@ -64,8 +64,8 @@ To unbind the object, use the following code snippet:
 @see javax.naming.spi.ObjectFactory
 @see #rebind(Context, String, Object)
 
-@author Scott_Stark@displayscape.com
-@version $Revision: 1.5 $
+@author <a href="mailto:Scott_Stark@displayscape.com">Scott Stark</a>.
+@version $Revision: 1.6 $
 */
 public class NonSerializableFactory implements ObjectFactory
 {

@@ -112,8 +112,8 @@ in the contrib/tomcat module.
 @see org.jboss.security.SimplePrincipal;
 @see org.jboss.security.SecurityAssociation;
 
-@author  Scott_Stark@displayscape.com
-@version $Revision: 1.4 $
+@author  <a href="mailto:Scott_Stark@displayscape.com">Scott Stark</a>.
+@version $Revision: 1.5 $
 */
 public abstract class AbstractWebContainer extends ServiceMBeanSupport implements AbstractWebContainerMBean
 {

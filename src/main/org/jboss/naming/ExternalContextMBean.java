@@ -11,8 +11,8 @@ import javax.naming.NamingException;
 
 /** The ExternalContext mbean interface.
 
-@author Scott_Stark@displayscape.com
-@version $Revision: 1.4 $
+@author <a href="mailto:Scott_Stark@displayscape.com">Scott Stark</a>.
+@version $Revision: 1.5 $
 */
 public interface ExternalContextMBean extends org.jboss.util.ServiceMBean
 {

@@ -66,7 +66,7 @@ import org.jboss.metadata.SessionMetaData;
 /**
  *      <description>
  *
- *      @author Daniel OConnor (docodan@mvcsoft.com)
+ *      @author <a href="mailto:docodan@mvcsoft.com">Daniel OConnor</a>
  */
 public class BaseLocalContainerInvoker implements LocalContainerInvoker
 {
