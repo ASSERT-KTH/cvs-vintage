@@ -54,7 +54,7 @@ import org.gjt.sp.jedit.textarea.*;
  * @see View#getEditPanes()
  *
  * @author Slava Pestov
- * @version $Id: EditPane.java,v 1.43 2003/04/26 20:05:12 spestov Exp $
+ * @version $Id: EditPane.java,v 1.44 2003/06/05 00:44:53 spestov Exp $
  */
 public class EditPane extends JPanel implements EBComponent
 {
@@ -125,7 +125,7 @@ public class EditPane extends JPanel implements EBComponent
 					&& (bufferSwitcher == null
 					|| !bufferSwitcher.isPopupVisible()))
 				{
-					textArea.grabFocus();
+					textArea.requestFocus();
 				}
 			}
 		});
@@ -197,7 +197,7 @@ public class EditPane extends JPanel implements EBComponent
 		{
 			public void run()
 			{
-				textArea.grabFocus();
+				textArea.requestFocus();
 			}
 		});
 	} //}}}

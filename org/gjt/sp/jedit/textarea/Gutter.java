@@ -45,7 +45,7 @@ import org.gjt.sp.jedit.*;
  * @see JEditTextArea
  *
  * @author Mike Dillon and Slava Pestov
- * @version $Id: Gutter.java,v 1.40 2003/05/27 21:15:34 spestov Exp $
+ * @version $Id: Gutter.java,v 1.41 2003/06/05 00:44:54 spestov Exp $
  */
 public class Gutter extends JComponent implements SwingConstants
 {
@@ -738,7 +738,7 @@ public class Gutter extends JComponent implements SwingConstants
 		//{{{ mousePressed() method
 		public void mousePressed(MouseEvent e)
 		{
-			textArea.grabFocus();
+			textArea.requestFocus();
 
 			if(GUIUtilities.isPopupTrigger(e)
 				|| e.getX() >= getWidth() - borderWidth * 2)

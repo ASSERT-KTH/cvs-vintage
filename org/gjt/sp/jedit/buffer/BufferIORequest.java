@@ -35,7 +35,7 @@ import org.gjt.sp.util.*;
 /**
  * A buffer I/O request.
  * @author Slava Pestov
- * @version $Id: BufferIORequest.java,v 1.14 2003/05/31 20:08:28 spestov Exp $
+ * @version $Id: BufferIORequest.java,v 1.15 2003/06/05 00:44:54 spestov Exp $
  */
 public class BufferIORequest extends WorkRequest
 {
@@ -319,7 +319,8 @@ public class BufferIORequest extends WorkRequest
 		throws IOException
 	{
 		/* we guess an initial size for the array */
-		IntegerArray endOffsets = new IntegerArray((int)(length / 50));
+		IntegerArray endOffsets = new IntegerArray(
+			Math.max(1,(int)(length / 50)));
 
 		// only true if the file size is known
 		boolean trackProgress = (!buffer.isTemporary() && length != 0);

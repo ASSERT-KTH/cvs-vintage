@@ -40,7 +40,7 @@ import org.gjt.sp.jedit.*;
 /**
  * HyperSearch results window.
  * @author Slava Pestov
- * @version $Id: HyperSearchResults.java,v 1.26 2003/05/14 02:25:10 spestov Exp $
+ * @version $Id: HyperSearchResults.java,v 1.27 2003/06/05 00:44:54 spestov Exp $
  */
 public class HyperSearchResults extends JPanel implements EBComponent,
 	DefaultFocusComponent
@@ -107,7 +107,7 @@ public class HyperSearchResults extends JPanel implements EBComponent,
 	//{{{ focusOnDefaultComponent() method
 	public void focusOnDefaultComponent()
 	{
-		resultTree.grabFocus();
+		resultTree.requestFocus();
 	} //}}}
 
 	//{{{ addNotify() method
