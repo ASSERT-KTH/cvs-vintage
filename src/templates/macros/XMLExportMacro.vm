@@ -1,0 +1,109 @@
+#macro ( xmlExportCheckNotExists $fids )
+#foreach ($fid in $fids)
+  #if (!$scarabR.getIssue("${fid.Prefix}${fid.Count}"))
+    Issue ${fid.Prefix}${fid.Count} does not exist<br>
+  #end
+#end
+#end
+
+#*
+ * xmlExport is the controller, and all formatting is done within macros
+ * takes in a list of federated ids and loops thru them building the scarab xml
+ *#
+
+#macro ( xmlExport $fids )
+#xmlScarabHeader()
+#foreach ($fid in $fids)
+  #set ($issue = $scarabR.getIssue("${fid.Prefix}${fid.Count}"))
+  #if ($issue)
+    #set ($module = $scarabR.getModule("${issue.ModuleId}"))
+    #if ($currentModule)
+      #if ($currentModule.ModuleId != $module.ModuleId)
+        #xmlModuleFooter()
+        #xmlModuleHeader($module)
+        #set ($currentModule = $module)
+      #end
+    #else
+      #xmlModuleHeader($module)
+      #set ($currentModule = $module)
+    #end
+    #xmlIssue($issue)
+  #end
+#end
+#if ($currentModule)
+    #xmlModuleFooter()
+#end
+#xmlScarabFooter()
+#end
+
+#macro ( xmlScarabHeader )
+<?xml version=\"1.0\" standalone=\"no\"?>
+<!DOCTYPE scarab SYSTEM \"scarab.dtd\">
+<scarab>
+#end
+
+#macro ( xmlModuleHeader $module )
+
+  <module id="$module.ModuleId" parent="$module.ParentId">
+    <name>$module.RealName</name>
+    <code>$module.Code</code>
+#end
+
+#macro ( xmlIssue $issue )
+
+    <issue id="$issue.IdCount">
+      <artifact-type>$issue.IssueType.Name</artifact-type>
+      <committed-by>$issue.CreatedBy.UserName</committed-by>
+      #foreach ($attributeValue in $issue.AttributeValues)
+            
+      <issue-attribute>
+        <name>$attributeValue.Attribute.Name</name>
+        <value>$attributeValue.Value</value>
+        <type>$attributeValue.Attribute.AttributeType.Name</type>
+      </issue-attribute>
+      #end
+      #foreach ($depend in $issue.DependsRelatedByObserverId)
+            
+      <dependency>
+        <type>$depend.DependType.Name</type>
+        <parent>$depend.IssueRelatedByObservedId.FederatedId</parent>
+      </dependency>
+      #end
+      #foreach ($depend in $issue.DependsRelatedByObservedId)
+            
+      <dependency>
+        <type>$depend.DependType.Name</type>
+        <child>$depend.IssueRelatedByObserverId.FederatedId</child>
+      </dependency>
+      #end
+      #foreach ($attachment in $issue.Attachments)
+            
+      <attachment>
+        <name>$attachment.Name</name>
+        <type>$attachment.AttachmentType.Name</type>
+        <path>$attachment.FilePath</path>
+        <data>$attachment.DataAsString</data>
+        <mimetype>$attachment.MimeType</mimetype>
+        <created-date format="$sdf.toPattern()">$sdf.format($attachment.CreatedDate)</created-date>
+        <modified-date format="$sdf.toPattern()">$sdf.format($attachment.ModifiedDate)</modified-date>
+        <created-by>$attachment.CreatedBy</created-by>
+        <modified-by>$attachment.ModifiedBy</modified-by>
+      </attachment>
+      #end
+      
+      ##
+      ## FIXME need to add in the transaction stuff here.
+      ##
+      
+    </issue>
+#end
+
+#macro ( xmlModuleFooter )
+
+  </module>
+#end
+
+#macro ( xmlScarabFooter )
+
+</scarab>
+#end
