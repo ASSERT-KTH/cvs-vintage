@@ -1,4 +1,4 @@
-// $Id: UmlFactory.java,v 1.31 2003/09/08 19:54:00 thierrylach Exp $
+// $Id: UmlFactory.java,v 1.32 2003/09/08 20:58:13 thierrylach Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -160,6 +160,8 @@ public class UmlFactory extends AbstractUmlModelFactory {
      * The constructor builds this from the data in the VALID_CONNECTIONS array
      */
     private Map validConnectionMap = new HashMap();
+
+    private boolean jmiProxyCreated = false;
 
     /*
      * An array of valid connections, the combination of connecting class
@@ -461,6 +463,20 @@ public class UmlFactory extends AbstractUmlModelFactory {
 
 		// NSUML cannot instantiate a State Vertex object
 		// elements.put(Uml.STATE_VERTEX, new NsumlObjectInfo(factory,MStateVertex.class, "createStateVertex"));
+	}
+
+	/**
+	 * @return boolean to indicate if the JMI Reflective Proxy over NSUML is created.
+	 */
+	public boolean isJmiProxyCreated() {
+		return jmiProxyCreated;
+	}
+
+	/**
+	 * @param jmiProxyCreated true to cause the JMI Reflective proxy over NSUML to be used.
+	 */
+	public void setJmiProxyCreated(boolean arg) {
+		this.jmiProxyCreated = arg;
 	}
     
     /** Create a new connection model element (a relationship or link)
@@ -1111,18 +1127,18 @@ public class UmlFactory extends AbstractUmlModelFactory {
 			obj = method.invoke(oi.getFactory(), new Object[] {} );
 		}
 		catch (Exception e) {
-			return null;
 			// TODO decide if we want to throw an exception instead
 			// throw new InvalidObjectRequestException("Cannot execute creator method", entity, e);
+			return null;
 		}
-		// TODO Figure out how to put in a generic callback to initialize
-		// AbstractUmlModelFactory.initialize(expression);
+		UmlFactory.getFactory().initialize(obj);
+		
+		// Allow for testing of the proxy capability
+		if (this.jmiProxyCreated) {
+			return RefBaseObjectProxy.newInstance(obj);
+		}
 		return obj;
-		// return RefBaseObjectProxy.newInstance(obj);
 	}
-
-
-
 
 }
 
