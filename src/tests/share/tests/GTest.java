@@ -17,19 +17,29 @@ public class GTest  extends Task {
     String host="localhost";
     int port=8080;
     int debug=0;
+
     String description="No description";
 
+    String request;
+    Hashtable requestHeaders;
+    String content;
+    
+    // Expected response
     boolean magnitude=true;
     boolean exactMatch=false;
-    String request;
-
+    // Match the body against a golden file
     String goldenFile;
+    // Match the body against a string
+    String responseMatch;
+    // the response should include the following headers
+    Hashtable expectHeaders;
+    // Match request line
     String returnCode="";
 
+    // Actual response
     String responseLine;
     String responseBody;
     Hashtable headers;
-
 
     public GTest() {
     }
@@ -67,9 +77,44 @@ public class GTest  extends Task {
 	this.description=description;
     }
 
+    public void setContent(String s) {
+	this.content=s;
+    }
+
     public void setDebug( String debugS ) {
 	debug=Integer.valueOf( debugS).intValue();
     }
+
+    public void setMagnitude( String magnitudeS ) {
+        magnitude = Boolean.valueOf(magnitudeS).booleanValue();   
+    }
+
+    public void setGoldenFile( String s ) {
+	this.goldenFile=s;
+    }
+
+    public void setExpectHeaders( String s ) {
+	this.expectHeaders=new Hashtable();
+	parseHeader( s, expectHeaders );
+    }
+
+    public void setResponseMatch( String s ) {
+	this.responseMatch=s;
+    }
+
+    public void setRequest( String s ) {
+	this.request=s;
+    }
+    
+   public void setReturnCode( String s ) {
+	this.returnCode=s;
+    }
+
+   public void setHeaders( String s ) {
+       requestHeaders=new Hashtable();
+       parseHeader( s, requestHeaders );
+    }
+
     
     public void execute() throws BuildException {
 	
@@ -92,22 +137,6 @@ public class GTest  extends Task {
 	}
     }
 
-    public void setMagnitude( String magnitudeS ) {
-        magnitude = Boolean.valueOf(magnitudeS).booleanValue();   
-    }
-
-    public void setGoldenFile( String s ) {
-	this.goldenFile=s;
-    }
-
-    public void setRequest( String s ) {
-	this.request=s;
-    }
-    
-   public void setReturnCode( String s ) {
-	this.returnCode=s;
-    }
-
     // XXX move to exec, get rid of TestResult
     public boolean runTest()
 	throws Exception
@@ -123,14 +152,50 @@ public class GTest  extends Task {
         boolean responseStatus = true;
 	
 	// If returnCode doesn't match
-	boolean match= ( responseLine!=null && responseLine.indexOf(returnCode) > -1);
-	if( match != testCondition ) {
-	    responseStatus = false;
-	    System.out.println("ERROR in: " + request);
-	    System.out.println("    Expecting: " + returnCode );
-	    System.out.println("    Got      : " + responseLine);
+	if( request.indexOf( "HTTP/1." ) > -1) {
+	    boolean match= ( responseLine!=null && responseLine.indexOf(returnCode) > -1);
+	    if( match != testCondition ) {
+		responseStatus = false;
+		System.out.println("ERROR in: " + request);
+		System.out.println("    Expecting: " + returnCode );
+		System.out.println("    Got      : " + responseLine);
+	    }
 	}
 
+	if( expectHeaders != null ) {
+	    // Check if we got the expected headers
+	    if(headers==null) {
+		System.out.println("ERROR no response header, expecting header");
+	    }
+	    Enumeration e=expectHeaders.keys();
+	    while( e.hasMoreElements()) {
+		String key=(String)e.nextElement();
+		String value=(String)expectHeaders.get(key);
+		String respValue=(String)headers.get(key);
+		if( respValue==null || respValue.indexOf( value ) <0 ) {
+		    System.out.println("ERROR expecting header " + key + ":" +
+				       value + " GOT: " + respValue+ " HEADERS(" + headers + ")");
+		    
+		    return false;
+		}
+	    }
+
+	}
+	
+	if( responseMatch != null ) {
+	    // check if we got the string we wanted
+	    if( responseBody == null ) {
+		System.out.println("ERROR: got no response, expecting " + responseMatch);
+		return false;
+	    }
+	    if( responseBody.indexOf( responseMatch ) < 0) {
+		System.out.println("ERROR: expecting match on " + responseMatch);
+		System.out.println("GOT: " );
+		System.out.println(responseBody );
+	    }
+	}
+
+	// compare the body
 	if( goldenFile==null) return responseStatus;
 	// Get the expected result from the "golden" file.
 	StringBuffer expResult = getExpectedResult();
@@ -171,16 +236,32 @@ public class GTest  extends Task {
 	OutputStreamWriter out=new OutputStreamWriter(s.getOutputStream());
 	PrintWriter pw = new PrintWriter(out);
 	pw.println(request);
-	pw.println("");
+
+	if( content != null) {
+	    pw.println("Content-Length: " + content.length());
+	}
+	
+	if( request.indexOf( "HTTP/1." ) > -1) 
+	    pw.println("");
+
+	if( content != null) {
+	    pw.println(content);
+	    // XXX no /n at the end -see HTTP specs!
+	}
+	
 	pw.flush();
 	
-	responseLine = read( is );
 	try {
-	    headers=parseHeaders( is );
+	    // http 0.9
+	    if( request.indexOf( "HTTP/1." ) > -1) {
+		responseLine = read( is );
+		headers=parseHeaders( is );
+	    }
 
 	    // else do content matching as well
 	    StringBuffer result =  readBody( is );
-	    responseBody=result.toString();
+	    if(result!=null)
+		responseBody=result.toString();
     
 	} catch( SocketException ex ) {
 	    s.close();
@@ -286,20 +367,24 @@ public class GTest  extends Task {
 		break;
 	    }
 
-	    // Parse the header name and value
-	    int colon = line.indexOf(":");
-	    if (colon < 0) {
-		System.out.println("ERROR: Wrong Header Line: " +  line );
-		return headers;
-	    }
-	    
-	    String name = line.substring(0, colon).trim();
-	    String value = line.substring(colon + 1).trim();
-
-	    headers.put(name, value);
+	    parseHeader( line, headers);
 	}
 
 	return headers;
+    }
+
+    private void parseHeader(String line, Hashtable headers) {
+	// Parse the header name and value
+	int colon = line.indexOf(":");
+	if (colon < 0) {
+	    System.out.println("ERROR: Wrong Header Line: " +  line );
+	    return;
+	}
+	String name = line.substring(0, colon).trim();
+	String value = line.substring(colon + 1).trim();
+
+	//	System.out.println("HEADER: " +name + " " + value);
+	headers.put(name, value);
     }
 
     /**

@@ -1,18 +1,123 @@
 <project name="TestRun" default="main" basedir="." init="init">
 
    <target name="init">
-     <property name="test.hostname" value="localhost" />
-     <property name="test.port"     value="8080" />
+     <property name="host" value="localhost" />
+     <property name="port"     value="8080" />
      <property name="gdir" value="jsp/Golden" />
 
      <taskdef name="test" class="tests.Test" />
      <taskdef name="gtest" class="tests.GTest" />
    </target>
 
-   <target name="startup">
-     <java class="org.apache.tomcat.shell.Startup" args="" />
+  <!-- ==================== File tests ==================== -->
+  <target name="file">
+    <gtest description="Content Type Test"
+           request="GET /test/binaries/image1.gif HTTP/1.0"
+           expectHeaders="Content-Type:image/gif" />
+
+    <gtest description="File Integrity and Length Test"
+           request="GET /test/binaries/image1.gif HTTP/1.0"
+           goldenFile="${gdir}/image1.gif"
+           exactMatch="true"  />
+
+    <gtest description="Welcome File Test1"
+           request="GET /test/welcome HTTP/1.0"
+           expectHeaders="Location:/welcome/" 
+           returnCode="HTTP/1.0 302" />
+
+    <gtest description="Welcome File Test2"
+           request="GET /test/binaries HTTP/1.0"
+           returnCode="HTTP/1.0 200" />
+ 
+    <gtest description="Welcome File Test3"
+           request="GET /test/welcome/ HTTP/1.0"
+           returnCode="HTTP/1.0 200" 
+           goldenFile="${gdir}/welcome.txt" />
+ 
    </target>
 
+  <!-- ==================== Dispatch tests ==================== -->
+    <target name="dispatch">
+      <gtest description="SimpleRedirect"
+             request="GET /test/servlet/dispatch.SimpleRedirectServlet?/index.html HTTP/1.0"
+             expectHeaders="Location:http://${host}:${port}/index.html" 
+             returnCode="HTTP/1.0 302" 
+       />
+      <gtest description="SimpleRedirect2"
+             request="GET /test/servlet/dispatch.SimpleRedirectServlet?index.html HTTP/1.0"
+             expectHeaders="Location:http://${host}:${port}/test/servlet/index.html" 
+             returnCode="HTTP/1.0 302" 
+       />
+      <gtest description="SimpleInclude"
+             request="GET /test/servlet/dispatch.SimpleIncludeServlet HTTP/1.0"
+             expectHeaders="Content-Type:text/foobar" 
+             returnCode="HTTP/1.0 200"
+             goldenFile="${gdir}/SimpleInclude.txt" 
+       />
+      <gtest description="SimpleForward"
+             request="GET /test/servlet/dispatch.SimpleForwardServlet HTTP/1.0"
+             expectHeaders="Content-Type:text/funky" 
+             returnCode="HTTP/1.0 200"
+             goldenFile="${gdir}/SimpleForward.txt" 
+       />
+      <gtest description="PrintWriterTest"
+             request="GET /test/servlet/dispatch.PrintWriterTest1Servlet HTTP/1.0"
+             returnCode="HTTP/1.0 200"
+             responseMatch="PreInclude" 
+       />
+      <gtest description="PrintWriterTest"
+             request="GET /test/servlet/dispatch.PrintWriterTest1Servlet HTTP/1.0"
+             returnCode="HTTP/1.0 200"
+             responseMatch="PostInclude" 
+       />
+      <gtest description="PrintWriterTest"
+             request="GET /test/servlet/dispatch.PrintWriterTest1Servlet HTTP/1.0"
+             returnCode="HTTP/1.0 200"
+             responseMatch="Included servlet error: 500:" 
+       />
+      <gtest description="Mismatch2"
+             request="GET /test/servlet/dispatch.Mismatch2 HTTP/1.0"
+             returnCode="HTTP/1.0 200"
+             goldenFile="${gdir}/Mismatch2.txt" 
+       />
+
+      <gtest description="IncludeMismatch1-1"
+             request="GET /test/servlet/dispatch.IncludeMismatch1 HTTP/1.0"
+             returnCode="HTTP/1.0 200"
+             responseMatch="LINE1" 
+       />
+
+      <gtest description="IncludeMismatch1-2"
+             request="GET /test/servlet/dispatch.IncludeMismatch1 HTTP/1.0"
+             returnCode="HTTP/1.0 200"
+             responseMatch="error: 500" 
+       />
+
+      <gtest description="IncludeMismatch1-3"
+             request="GET /test/servlet/dispatch.IncludeMismatch1 HTTP/1.0"
+             returnCode="HTTP/1.0 200"
+             responseMatch="LINE1" 
+       />
+
+      <gtest description="IncludeFile"
+             request="GET /test/servlet/dispatch.IncludeFileServlet HTTP/1.0"
+             returnCode="HTTP/1.0 200"
+             expectHeaders="Content-Type:text/foobar" 
+             goldenFile="${gdir}/IncludeFile.txt" 
+       />
+
+      <gtest description="ForwardWithQuery"
+             request="GET /test/servlet/dispatch.ForwardWithQueryServlet?name=Sun%20Microsystems&amp;age=100000&amp;city=Cupertino HTTP/1.0"
+             returnCode="HTTP/1.0 200"
+             expectHeaders="Content-Type:text/funky" 
+             goldenFile="${gdir}/ForwardWithQuery.txt" 
+       />
+
+    
+
+    </target>
+
+  <!-- ==================== Jsp tests ==================== -->
   <target name="jsp">
     <gtest request="GET /test/jsp/HelloWorld.jsp HTTP/1.0"
            goldenFile="${gdir}/HelloWorld.txt"
@@ -280,13 +385,216 @@
 
 
 
+   <target name="get">
+      <gtest request="GET /test/request/uri/does/not/exist"
+             responseMatch="Error: 404"
+      />
+
+      <gtest request="GET /test/request/uri/does/not/exist HTTP/1.0"
+             returnCode="HTTP/1.0 404 Not Found"
+      />
+
+      <gtest request="GET /test/"
+             returnCode="Error: "
+             magnitude="false" />
+
+      <gtest request="   GET   /   "
+             returnCode="Error: "
+             magnitude="false" />
+
+      <gtest request="GET /test/ HTTP/1.0"
+             returnCode="HTTP/1.0 200 OK"
+      />
+
+      <gtest request="   GET   /   HTTP/1.0"
+             returnCode="HTTP/1.0 200 OK"
+      />
+
+      <gtest request="GET /test/index.ht ml HTTP/1.0"
+             returnCode="HTTP/1.0 400 Bad Request"
+      />
+
+      <gtest request="   GET   /index.ht ml HTTP/1.0 "  
+             returnCode="HTTP/1.0 400 Bad Request"
+      />
+
+
+      <gtest request="GET /test/servlet HTTP/1.0"
+             returnCode="HTTP/1.0 404 Not Found"
+      />
+
+      <gtest request="GET /test/servlet/ HTTP/1.0"
+             returnCode="HTTP/1.0 404"
+      />
+
+      <gtest request="GET /test/servlet/foo HTTP/1.0"
+             returnCode="HTTP/1.0 404 Not Found"
+      />
+
+      <gtest request="GET /test/welcome HTTP/1.0"
+             returnCode="HTTP/1.0 302"
+      />
+
+
+   </target>
+
+
+   <target name="requestMap">
+      <gtest description="/foo/bar/index.html : 1.0 : 200"
+             request="GET /test/foo/bar/index.html HTTP/1.0"
+             responseMatch="Servlet: Servlet1"
+            />
+
+      <gtest description="/foo/bar/index.bop : 1.0 : 200"
+             request="GET /test/foo/bar/index.bop HTTP/1.0"
+             responseMatch="Servlet: Servlet1"
+            />
+
+      <gtest description="/baz : 1.0 : 200"
+             request="GET /test/baz HTTP/1.0"
+             responseMatch="Servlet: Servlet2"
+            />
+
+      <gtest description="/baz/index.html : 1.0 : 200"
+             request="GET /test/baz/index.html HTTP/1.0"
+             responseMatch="Servlet: Servlet2"
+            />
+
+      <gtest description="/catalog : 1.0 : 200"
+             request="GET /test/catalog HTTP/1.0"
+             responseMatch="Servlet: Servlet3"
+            />
+
+      <gtest description="/catalog/index.html : 1.0 : 200"
+             request="GET /test/catalog/index.html HTTP/1.0"
+             returnCode="HTTP/1.0 404 Not Found"
+             />
+
+      <gtest description="/catalog/racecar.bop : 1.0 : 200"
+             request="GET /test/catalog/racecar.bop HTTP/1.0"
+             responseMatch="Servlet: Servlet4"
+            />
+
+      <gtest description="/index.bop : 1.0 : 200"
+             request="GET /test/index.bop HTTP/1.0"
+             responseMatch="Servlet: Servlet4"
+            />
+   </target>
+
+   <target name="post">
+      <gtest request="POST /test/servlet/request.NotThere HTTP/1.0"
+             content="name=lightness of being"
+             returnCode="HTTP/1.0 404 Not Found"
+            />
+
+      <gtest request="POST /test/servlet/request.EchoServlet HTTP/1.0"
+             content="name=lightness of being"
+             returnCode="HTTP/1.0 200 OK"
+            />
+
+      <gtest request="GHOST /test/servlet/request.EchoServlet HTTP/1.0"
+             content="name=lightness of being"
+             returnCode="HTTP/1.0 501 Not Implemented"
+            />
+
+      <gtest request="POST /test/servlet/request.EchoServlet HT TP/1.0"
+             content="name=lightness of being"
+             returnCode="Error: 400"
+            />
+
+      <gtest request="POST "
+             content="name=lightness of being"
+             returnCode="Error: 400"
+            />
+
+      <gtest request="POST /test/servlet/request.EchoServlet HTTP/1.0"
+             content=""
+             returnCode="HTTP/1.0 200 OK"
+            />
+
+      <gtest request="POST /test/servlet HTTP/1.0"
+             content=""
+             returnCode="HTTP/1.0 404 Not Found"
+            />
+
+      <gtest request="POST /test/servlet/ HTTP/1.0"
+             content=""
+             returnCode="HTTP/1.0 404"
+            />
+
+      <gtest request="POST /test/ HTTP/0.9"
+             content=""
+             returnCode="HTTP/1.0 400 Bad Request"
+            />
+
+      <gtest request="POST /test/servlet/request.EchoServlet HTTP/0.9"
+             content="name=lightness of being"
+             returnCode="HTTP/1.0 200 OK"
+            />
+
+      <gtest request="POST /test/servlet/request.EchoServlet HTTP/0.9"
+             content="name=lightness of being,,,,,,,....###///&amp;&amp;@@@@@***"
+             returnCode="HTTP/1.0 200 OK"
+            />
+
+      <gtest request="POST /test/servlet/request.EchoServlet HTTP/0.9"
+             content="name=lightness of being,,,,,,,....###///&amp;&amp;&amp;&amp;@@@@@***"
+             returnCode="HTTP/1.0 200 OK"
+            />
+
+      <gtest request="POST \/test/servlet/request.EchoServlet?name=sun&amp;age=2000 HTTP/0.9"
+             content="name=lightness of being,,,,,,,....###///&amp;@@@@@***"
+             returnCode="HTTP/1.0 200 OK"
+            />
+
+      <gtest request="POST \ HTTP/0.9"
+             content="name=lightness of being"
+             returnCode="Error: 400"
+            />
+
+      <gtest request="POST /test/servlet/request.EchoServlet HTTP/1.0"
+             content="name=lightness of being"
+             returnCode="HTTP/1.0 200 OK"
+            />
+
+      <gtest request="post /test/servlet/request.EchoServlet HTTP/1.0"
+             content="name=lightness of being"
+             returnCode="HTTP/1.0 501 Not Implemented"
+            />
+
+      <gtest request="GET http://www.javasoft.com/index.html HTTP/1.0   "
+             returnCode="HTTP/1.0 400 Bad Request"
+            />
+
+      <gtest request="POST /test/servlet/request.EchoServlet HTTP/1.0"
+             headers="Content-Encoding: x-gzip"
+             content="name=lightness of being"
+             returnCode="HTTP/1.0 200 OK"
+            />
+
+      <gtest request="POST /test/servlet/request.EchoServlet    HTTP/4.4"
+             content="name=lightness of being"
+             returnCode="HTTP/1.0 200 OK"
+            />
+   </target>
+
+
+   <target name="startup">
+     <java class="org.apache.tomcat.shell.Startup" args="" />
+   </target>
+
+
    <target name="client" depends="jsp,wrong_request">
    </target>
+
 
    <target name="shutdown">
      <java class="org.apache.tomcat.shell.Startup" args="" />
    </target>
 
+
    <target name="main" depends="startup,client,shutdown" />
+
+
 </project>
 

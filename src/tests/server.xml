@@ -28,6 +28,11 @@ file for complete configuration information:
             defaultSessionTimeOut="30" isWARExpanded="true"
             isWARValidated="false" isInvokerEnabled="true"
             isWorkDirPersistent="false"/>
+        
+        <Context path="/test" docBase="webpages"
+            defaultSessionTimeOut="30" isWARExpanded="true"
+            isWARValidated="false" isInvokerEnabled="true"
+            isWorkDirPersistent="false"/>
         <!-- Old TcpEndpoint-based HttpServer. Will be deprecated soon! 
         <Connector className="org.apache.tomcat.server.HttpServerConnector">
         </Connector>
