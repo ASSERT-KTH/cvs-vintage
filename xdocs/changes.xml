@@ -7,6 +7,9 @@
 
   <body>
     <release version="b20" date="in dev">
+      <action dev="epugh" type="fix">
+        Maven can now be used to perform ALL build steps.
+      </action>         
       <action dev="jorgeuriarte" type="add">
         Added basic workflow functionalities, allowing restriction of transitions
         between different values of dropdown-list fields depending on the user's

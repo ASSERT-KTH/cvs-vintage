@@ -588,6 +588,13 @@
       <url>http://statcvs-xml.berlios.de/</url> 
       <type>plugin</type>
     </dependency>    
+
+	<!-- Needed for Install Script -->
+    <dependency>
+      <groupId>commons-jelly</groupId>
+      <artifactId>commons-jelly-tags-interaction</artifactId>
+      <version>1.0</version>
+    </dependency>  	    
   </dependencies>
 
   <build>

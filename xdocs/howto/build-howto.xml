@@ -18,8 +18,8 @@
     <source>
     maven scarab:database
     </source>
-    This will create in <code>/src/sql</code> the various SQL files that you need.  It will also
-    install the database for certain types of databases.  
+    This will create in <code>/target/sql</code> the various SQL files that you need.  It will also
+    install the database for certain types of databases.  You will be prompted for some information.  
 </p>
 </subsection>
 <subsection name="Generating Torque Objects">
@@ -154,7 +154,7 @@ Once you are done doing "in place" development, you can just run the goal to cle
 This will delete everything that was moved around by the inplace setup goal, as well as fix up your Scarab context
 entries as well.  Now, when you run:    
     <source>
-    maven war:webapp
+    maven scarab:inplace
     </source>
 Everything will be put back!    
 </p>
