@@ -412,7 +412,9 @@ public class TableController implements FocusOwner, ListSelectionListener {
 
 		boolean ascending = getTableModelSorter().getSortingOrder();
 		int row = getView().getTree().getRowCount();
-
+		// row count == 0 --> empty table
+		if ( row == 0 ) return;
+		
 		getView().clearSelection();
 		// if the last selection for the current folder is null, then we show the
 		// first/last message in the table and scroll to it.
@@ -425,6 +427,9 @@ public class TableController implements FocusOwner, ListSelectionListener {
 			else 
 				uid = view.selectLastRow();
 				
+			// no messages in this folder
+			if ( uid == null ) return;
+			
 			Object[] uids = new Object[1];
 			uids[0] = uid;
 
@@ -442,6 +447,9 @@ public class TableController implements FocusOwner, ListSelectionListener {
 			Object[] lastSelUids = new Object[1];
 			lastSelUids[0] = folder.getLastSelection();
 			
+			// no messages in this folder
+			if ( lastSelUids[0] == null ) return;
+					 
 			// selecting the message
 			setSelected(lastSelUids);
 			int selRow = getView().getSelectedRow();
