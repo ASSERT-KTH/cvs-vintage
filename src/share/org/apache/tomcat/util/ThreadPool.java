@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/util/Attic/ThreadPool.java,v 1.9 2000/06/07 12:11:05 shachor Exp $
- * $Revision: 1.9 $
- * $Date: 2000/06/07 12:11:05 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/util/Attic/ThreadPool.java,v 1.10 2000/07/05 20:05:23 alex Exp $
+ * $Revision: 1.10 $
+ * $Date: 2000/07/05 20:05:23 $
  *
  * ====================================================================
  *
@@ -68,6 +68,8 @@ import java.net.*;
 import java.util.*;
 import java.io.*;
 
+import org.apache.tomcat.logging.*; 
+
 /**
  * A thread pool that is trying to copy the apache process management.
  *
@@ -125,6 +127,11 @@ public class ThreadPool  {
     protected boolean stopThePool;
 
     static int debug=0;
+
+    /**
+     * Helper object for logging
+     **/
+    LogHelper loghelper = new LogHelper("tc_log", "ThreadPool");
     
     public ThreadPool() {
         maxThreads      = MAX_THREADS;
@@ -202,8 +209,14 @@ public class ThreadPool  {
                     while(currentThreadsBusy == currentThreadCount) {
                         try {
                             this.wait();
-                        } catch(Throwable t) {
-                            t.printStackTrace();
+                        }
+			// was just catch Throwable -- but no other
+			// exceptions can be thrown by wait, right?
+			// So we catch and ignore this one, since
+			// it'll never actually happen, since nowhere
+			// do we say pool.interrupt().
+			catch(InterruptedException e) {
+			    loghelper.log("Unexpected exception", e);
                         }
 
                         // Pool was stopped. Get away of the pool.
@@ -238,6 +251,7 @@ public class ThreadPool  {
 					 * Do nothing... The show must go on, we are shutting 
 					 * down the pool and nothing should stop that.
 					 */
+		    loghelper.log("Ignored exception while shutting down thread pool", t, Logger.ERROR);
                 }
             }
             currentThreadsBusy = currentThreadCount = 0;
@@ -350,7 +364,7 @@ public class ThreadPool  {
     }
 
     void log( String s ) {
-	System.out.println("ThreadPool: " + s );
+	loghelper.log(s);
     }
     
     /** 
@@ -382,11 +396,11 @@ public class ThreadPool  {
                         break;
                     }
 
-                    // Harvest idel threads.
+                    // Harvest idle threads.
                     p.checkSpareControllers();
 
                 } catch(Throwable t) {
-                    t.printStackTrace();
+		    loghelper.log("Unexpected exception", t, Logger.ERROR);
                 }
             }
         }
@@ -484,7 +498,7 @@ public class ThreadPool  {
                             toRun.runIt(thData);
                         }
                     } catch(Throwable t) {
-                        t.printStackTrace();
+			loghelper.log("Caught exception executing " + toRun.toString() + ", terminating thread", t);
                         /*
                         * The runnable throw an exception (can be even a ThreadDeath),
                         * signalling that the thread die.
@@ -513,7 +527,8 @@ public class ThreadPool  {
                         break;
                     }
                 } catch(InterruptedException ie) { /* for the wait operation */
-                    ie.printStackTrace();
+		    // can never happen, since we don't call interrupt
+		    loghelper.log("Unexpected exception", ie);
                 }
             }
         }
