@@ -25,7 +25,7 @@
 // File: GeneratorDisplay.java
 // Classes: GeneratorDisplay
 // Original Author: jrobbins@ics.uci.edu
-// $Id: GeneratorDisplay.java,v 1.24 2002/08/19 08:41:39 kataka Exp $
+// $Id: GeneratorDisplay.java,v 1.25 2002/08/19 09:02:12 kataka Exp $
 
 // 5 Mar 2002: Jeremy Bennett (mail@jeremybennett.com). Return text for
 // operations that have no return parameter made "" rather than ": void??"
@@ -559,7 +559,7 @@ public String generateConcurrency(MCallConcurrencyKind concurrency) {
     if (classifiers == null) return "";
     Iterator clsEnum = classifiers.iterator();
     while (clsEnum.hasNext()) {
-      s += generateClassifierRef((MClassImpl)clsEnum.next());
+      s += generateClassifierRef((MClass)clsEnum.next());
       if (clsEnum.hasNext()) s += ", ";
     }
     return s;
