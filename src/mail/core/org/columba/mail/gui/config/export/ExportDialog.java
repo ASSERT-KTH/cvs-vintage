@@ -69,6 +69,13 @@ import org.columba.mail.util.MailResourceLoader;
  * ExportDialog lets you select a number of folders for exporting
  * messages.
  *
+ * I'm using here a rather ugly way of storing the selected state
+ * of a checkbox in the tree:
+ * First I just re-use the treemodel to be able to easily create 
+ * a new JTree instance. Then have a HashMap which associates
+ * FolderTreeNode as key with Boolean as value. This Boolean value
+ * represents the selection state of the checkbox of this folder.
+ * 
  * @author fdietz
  * 
  */

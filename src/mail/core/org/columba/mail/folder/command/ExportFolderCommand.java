@@ -20,6 +20,8 @@ import org.columba.mail.folder.Folder;
 /**
  * Export all selected folders to a single MBOX mailbox file.
  * 
+ * MBOX mailbox format:
+ *  http://www.qmail.org/qmail-manual-html/man5/mbox.html
  *
  * @author fdietz
  */
@@ -64,6 +66,7 @@ public class ExportFolderCommand extends FolderCommand {
 
 		int counter = 0;
 		
+		// for every source folder
 		for (int i = 0; i < r.length; i++) {
 			
 			Folder srcFolder = (Folder) r[i].getFolder();
@@ -73,10 +76,24 @@ public class ExportFolderCommand extends FolderCommand {
 			
 			worker.setProgressBarMaximum(uids.length);
 			worker.setProgressBarValue(0);
+			
+			// for every message in folder i
 			for (int j = 0; j < uids.length; j++) {
+				// get message source from folder
 				String source = srcFolder.getMessageSource(uids[j]);
+				
+				// prepend From line
+				// 
+				os.write(new String("From \r\n").getBytes());
+				
+				// write message source to file
 				os.write(source.getBytes());
+				
+				// append newline
+				os.write(new String("\r\n").getBytes());
+				
 				os.flush();
+				
 				worker.setProgressBarValue(j);
 				counter++;
 				
