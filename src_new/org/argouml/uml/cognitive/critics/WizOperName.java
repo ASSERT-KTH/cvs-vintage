@@ -1,4 +1,4 @@
-// $Id: WizOperName.java,v 1.13 2004/02/29 12:35:42 linus Exp $
+// $Id: WizOperName.java,v 1.14 2004/08/03 00:56:16 bobtarling Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -27,7 +27,7 @@
 // File: WizOperName.java
 // Classes: WizOperName
 // Original Author: Linus Tolke <linus@epact.se>
-// $Id: WizOperName.java,v 1.13 2004/02/29 12:35:42 linus Exp $
+// $Id: WizOperName.java,v 1.14 2004/08/03 00:56:16 bobtarling Exp $
 
 package org.argouml.uml.cognitive.critics;
 
@@ -62,7 +62,7 @@ public class WizOperName extends WizMEName {
      * @deprecated by Linus Tolke as of 0.15.4. Use your own logger in your
      * class. This will be removed.
      */
-    protected static Logger cat = Logger.getLogger(WizOperName.class);
+    private static final Logger LOG = Logger.getLogger(WizOperName.class);
 
     boolean _possibleConstructor = false;
     boolean _stereotypePathChosen;

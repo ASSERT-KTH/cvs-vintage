@@ -1,4 +1,4 @@
-// $Id: CrConsiderFacade.java,v 1.7 2003/09/04 20:11:42 thierrylach Exp $
+// $Id: CrConsiderFacade.java,v 1.8 2004/08/03 00:56:16 bobtarling Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -32,7 +32,7 @@ import org.argouml.cognitive.Designer;
  * TODO: at the moment only a dummy implementation
 */
 public class CrConsiderFacade extends CrUML {
-    protected static Logger cat =
+    private static final Logger LOG =
 	Logger.getLogger(CrConsiderFacade.class);
 
     public CrConsiderFacade() {

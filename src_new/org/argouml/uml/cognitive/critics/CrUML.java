@@ -1,4 +1,4 @@
-// $Id: CrUML.java,v 1.28 2004/07/17 16:39:48 mvw Exp $
+// $Id: CrUML.java,v 1.29 2004/08/03 00:56:16 bobtarling Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,7 +25,7 @@
 // File: CrUML.java
 // Classes: CrUML
 // Original Author: jrobbins@ics.uci.edu
-// $Id: CrUML.java,v 1.28 2004/07/17 16:39:48 mvw Exp $
+// $Id: CrUML.java,v 1.29 2004/08/03 00:56:16 bobtarling Exp $
 
 package org.argouml.uml.cognitive.critics;
 
@@ -51,7 +51,7 @@ import org.tigris.gef.util.VectorSet;
  */
 
 public class CrUML extends Critic {
-    protected static Logger cat = Logger.getLogger(CrUML.class);
+    private static final Logger LOG = Logger.getLogger(CrUML.class);
     
     public static final Decision decINHERITANCE = new
 	Decision("misc.decision.inheritance", 1);
