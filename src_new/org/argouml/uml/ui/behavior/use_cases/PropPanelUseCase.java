@@ -24,7 +24,7 @@
 // File: PropPanelUseCase.java
 // Classes: PropPanelUseCase
 // Original Author: your email address here
-// $Id: PropPanelUseCase.java,v 1.27 2003/01/26 16:51:11 kataka Exp $
+// $Id: PropPanelUseCase.java,v 1.28 2003/01/27 20:06:59 kataka Exp $
 
 // 21 Mar 2002: Jeremy Bennett (mail@jeremybennett.com). Changed to use the
 // labels "Generalizes:" for inheritance (needs Specializes some time).
@@ -101,8 +101,8 @@ public class PropPanelUseCase extends PropPanelClassifier {
 		
     add(LabelledLayout.getSeperator());
 		
-    addField(Argo.localize("UMLMenu", "label.generalizations"), extendsScroll);
-    addField(Argo.localize("UMLMenu", "label.specializations"), derivedScroll);
+    addField(Argo.localize("UMLMenu", "label.generalizations"), getGeneralizationScroll());
+    addField(Argo.localize("UMLMenu", "label.specializations"), getSpecializationScroll());
     	
     JList extendsList = new UMLLinkedList(new UMLUseCaseExtendListModel());
     addField(Argo.localize("UMLMenu", "label.extends"), 

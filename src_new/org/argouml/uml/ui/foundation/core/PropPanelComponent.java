@@ -25,7 +25,7 @@
 // File: PropPanelComponent.java
 // Classes: PropPanelComponent
 // Original Author: 5eichler@informatik.uni-hamburg.de
-// $Id: PropPanelComponent.java,v 1.18 2003/01/26 16:51:11 kataka Exp $
+// $Id: PropPanelComponent.java,v 1.19 2003/01/27 20:06:59 kataka Exp $
 
 // 21 Mar 2002: Jeremy Bennett (mail@jeremybennett.com). Changed to use the
 // labels "Generalizes:" and "Specializes:" for inheritance.
@@ -75,10 +75,10 @@ public class PropPanelComponent extends PropPanelClassifier {
     addField(modifiersPanel,4,0,0);
 
     addCaption("Generalizations:",0,1,1);
-    addField(extendsScroll,0,1,1);
+    addField(getGeneralizationScroll(),0,1,1);
 
     addCaption("Specializations:",1,1,1);
-    addField(derivedScroll,1,1,1);
+    addField(getSpecializationScroll(),1,1,1);
 
     new PropPanelButton(this,buttonPanel,_navUpIcon, Argo.localize("UMLMenu", "button.go-up"),"navigateUp",null);
     new PropPanelButton(this,buttonPanel,_navBackIcon, Argo.localize("UMLMenu", "button.go-back"),"navigateBackAction","isNavigateBackEnabled");

@@ -1,4 +1,4 @@
-// $Id: PropPanelDataType.java,v 1.21 2003/01/26 16:51:11 kataka Exp $
+// $Id: PropPanelDataType.java,v 1.22 2003/01/27 20:06:59 kataka Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -69,16 +69,16 @@ public class PropPanelDataType extends PropPanelClassifier {
     addField(_modifiersPanel,4,0,0);
 
     addCaption("Generalizations:",0,1,1);
-    addField(extendsScroll,0,1,1);
+    addField(getGeneralizationScroll(),0,1,1);
 
     addCaption("Specializations:",1,1,1);
-    addField(derivedScroll,1,1,1);
+    addField(getSpecializationScroll(),1,1,1);
 
-    addCaption(Argo.localize("UMLMenu", "label.implements"),2,1,1);
-    addField(implementsScroll,2,1,1);
+    addCaption(Argo.localize("UMLMenu", "label.dependency"),2,1,1);
+    addField(getSupplierDependencyScroll(),2,1,1);
 
     addCaption(Argo.localize("UMLMenu", "label.operations"),0,2,1);
-    addField(opsScroll,0,2,1);
+    addField(getFeatureScroll(),0,2,1);
 
     addCaption(Argo.localize("UMLMenu", "label.literals"),1,2,1);
     JList attrList = new UMLList(new UMLAttributesListModel(this,"feature",true),true);
