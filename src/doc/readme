@@ -1,4 +1,4 @@
-$Id: readme,v 1.12 2001/05/15 13:06:18 larryi Exp $
+$Id: readme,v 1.13 2001/05/15 18:52:32 clucas Exp $
         
                            Release Notes for:
                            ====================
@@ -178,6 +178,18 @@ most important are:
 
 - The code has undergone a refactoring effort resulting in (we hope) improved
   readability, ease of use, and performance.
+
+- Tag handler pooling has been added (but disabled by default).  If your JSPs
+  use a lot of custom tags then you might want to enable tag pooling to
+  increase performance.  To enable, add the TagPoolManagerInterceptor module
+  inside an application's Context section such as:
+
+    <Context path=...>
+        <!-- other modules etc... -->
+        <TagPoolManagerInterceptor/>
+    </Context>
+
+  See conf/server.xml for more information.
 
 - (more to be added)
 
