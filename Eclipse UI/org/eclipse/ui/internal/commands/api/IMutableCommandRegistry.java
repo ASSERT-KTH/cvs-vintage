@@ -11,32 +11,21 @@
 
 package org.eclipse.ui.internal.commands.api;
 
-/**
- * <p>
- * JAVADOC
- * </p>
- * <p>
- * This interface is not intended to be extended or implemented by clients.
- * </p>
- * <p>
- * <em>EXPERIMENTAL</em>
- * </p>
- * 
- * @since 3.0
- */
-public interface IActiveKeyConfigurationDefinition extends Comparable {
+import java.util.List;
 
-	/**
-	 * JAVADOC
-	 * 
-	 * @return
-	 */	
-	String getKeyConfigurationId();
+public interface IMutableCommandRegistry extends ICommandRegistry {
+
+	void setActiveKeyConfigurationDefinitions(List activeKeyConfigurationDefinitions);
 	
-	/**
-	 * JAVADOC
-	 * 
-	 * @return
-	 */	
-	String getPluginId();
+	void setCategoryDefinitions(List categoryDefinitions);
+	
+	void setCommandDefinitions(List commandDefinitions);
+	
+	void setContextBindingDefinitions(List contextBindingDefinitions);
+
+	void setImageBindingDefinitions(List imageBindingDefinitions);
+
+	void setKeyBindingDefinitions(List keyBindingDefinitions);
+	
+	void setKeyConfigurationDefinitions(List keyConfigurationDefinitions);
 }
