@@ -37,6 +37,7 @@ import java.rmi.server.RemoteCall;
 import java.rmi.server.RemoteRef;
 
 import org.objectweb.carol.rmi.jrmp.interceptor.JClientRequestInterceptor;
+import org.objectweb.carol.rmi.jrmp.interceptor.JInterceptorStore;
 import org.objectweb.carol.rmi.jrmp.interceptor.JRMPServerRequestInfoImpl;
 import org.objectweb.carol.rmi.jrmp.interceptor.JServerInterceptorHelper;
 import org.objectweb.carol.rmi.jrmp.interceptor.JServerRequestInfo;
@@ -109,7 +110,7 @@ public class JUnicastServerRef extends UnicastServerRef {
      * @return remoet Ref the remote reference
      */
     protected RemoteRef getClientRef() {
-        return new JUnicastRef(ref, cis);
+        return new JUnicastRef(ref, cis, JInterceptorStore.getJRMPInitializers());
     }
 
     /**

@@ -34,6 +34,7 @@ import java.rmi.server.RMIServerSocketFactory;
 import java.rmi.server.RemoteRef;
 
 import org.objectweb.carol.rmi.jrmp.interceptor.JClientRequestInterceptor;
+import org.objectweb.carol.rmi.jrmp.interceptor.JInterceptorStore;
 import org.objectweb.carol.rmi.jrmp.interceptor.JServerRequestInterceptor;
 
 import sun.rmi.transport.LiveRef;
@@ -93,6 +94,6 @@ public class JUnicastServerRefSf extends JUnicastServerRef {
      * @return remoet Ref the remote reference
      */
     protected RemoteRef getClientRef() {
-        return new JUnicastRefSf(ref, cis);
+        return new JUnicastRefSf(ref, cis, JInterceptorStore.getJRMPInitializers());
     }
 }

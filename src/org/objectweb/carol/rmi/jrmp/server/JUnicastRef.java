@@ -81,10 +81,15 @@ public class JUnicastRef extends UnicastRef {
 	 */
 	private transient UID ruid = null;
 	
-    /**
-     * Client Interceptor for context propagation
-     */
-    protected transient JClientRequestInterceptor [] cis = null;
+	/**
+	 * Client Interceptor for context propagation
+	 */
+	protected transient JClientRequestInterceptor [] cis = null;    
+	
+  /**
+	* Interceptors initialisers for this References
+	*/
+   protected transient String [] initializers = null;
     
     /**
      * empty constructor
@@ -105,8 +110,9 @@ public class JUnicastRef extends UnicastRef {
      * @param liveRef the live reference
      * @param cis the client interceptor array     
      */
-    public JUnicastRef(LiveRef liveRef, JClientRequestInterceptor [] cis) {
+    public JUnicastRef(LiveRef liveRef, JClientRequestInterceptor [] cis, String [] initial) {
         super(liveRef);
+	this.initializers=initial;
 	this.cis=cis;
 	this.raddr=JInterceptorHelper.getInetAddress();
 	this.ruid=JInterceptorHelper.getSpaceID();
@@ -289,6 +295,7 @@ public class JUnicastRef extends UnicastRef {
 	for (int i=0; i< ia.length; i++) {
 	    ia[i] = in.readUTF();
 	}
+		this.initializers=ia;
         cis = JInterceptorStore.setRemoteInterceptors(raddr, ruid,ia);
         ref = LiveRef.read(in, newFormat);
     }
@@ -304,7 +311,7 @@ public class JUnicastRef extends UnicastRef {
         out.write(raddr);
         ruid.write(out);
 	// write initializers array in UTF
-	String [] ia = JInterceptorStore.getJRMPInitializers();
+	String [] ia = this.initializers;
 	out.writeInt(ia.length);
 	for (int i=0; i< ia.length; i++) {
 	    out.writeUTF(ia[i]);
