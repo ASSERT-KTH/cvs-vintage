@@ -16,30 +16,38 @@ import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.io.FileWriter;
 import java.net.URL;
+
+import java.util.ArrayList;
+import java.util.Set;
+import java.util.Iterator;
+import java.util.Date;
+import java.util.Calendar;
+
 import java.security.*;
-import java.util.*;
 
 import javax.management.*;
 import javax.management.loading.*;
 
 /**
- *
- *   @see <related>
- *   @author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>.
- *   @author <a href="mailto:docodan@nycap.rr.com">Daniel O'Connor</a>.
- *   @author <a href="mailto:Scott_Stark@displayscape.com">Scott Stark</a>.
- *   @version $Revision: 1.42 $
+ * The main entry point for the JBoss server.
+ * 
+ * @author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>.
+ * @author <a href="mailto:docodan@nycap.rr.com">Daniel O'Connor</a>.
+ * @author <a href="mailto:Scott_Stark@displayscape.com">Scott Stark</a>.
+ * @author <a href="mailto:jason@planet57.com">Jason Dillon</a>
+ * @version $Revision: 1.43 $
  */
 public class Main
 {
    // Constants -----------------------------------------------------
 
-   String versionIdentifier = "pre-3.0 [RABBIT-HOLE]";
+   private Version version = Version.getInstance();
+
    // Attributes ----------------------------------------------------
 
    // Static --------------------------------------------------------
    public static void main(final String[] args)
-   throws Exception
+      throws Exception
    {
       String cn = "default"; // Default configuration name is "default", i.e. all conf files are in "/conf/default"
       String patchDir = null;
@@ -48,8 +56,8 @@ public class Main
          cn = args[0];
       for(int a = 0; a < args.length; a ++)
       {
-          if( args[a].startsWith("-p") )
-              patchDir = args[a+1];
+         if( args[a].startsWith("-p") )
+            patchDir = args[a+1];
       }
       final String confName = cn;
       final String patchDirName = patchDir;
@@ -69,27 +77,27 @@ public class Main
       */
       if( System.getProperty("jboss.home") == null )
       {
-          String path = Main.class.getProtectionDomain().getCodeSource().getLocation().getFile();
-          File runJar = new File(path);
-          // Home dir should be the parent of the dir containing run.jar
-          File homeDir = new File(runJar.getParent(), "..");
-          System.setProperty("jboss.home", homeDir.getCanonicalPath());
+         String path = Main.class.getProtectionDomain().getCodeSource().getLocation().getFile();
+         File runJar = new File(path);
+         // Home dir should be the parent of the dir containing run.jar
+         File homeDir = new File(runJar.getParent(), "..");
+         System.setProperty("jboss.home", homeDir.getCanonicalPath());
       }
       System.out.println("jboss.home = "+System.getProperty("jboss.home"));
 
       // Set the JAAS login config file if not already set
       if( System.getProperty("java.security.auth.login.config") == null )
       {
-          URL loginConfig = Main.class.getClassLoader().getResource(confName+"/auth.conf");
-          if( loginConfig != null )
-          {
-              System.setProperty("java.security.auth.login.config", loginConfig.toExternalForm());
-              System.out.println("Using JAAS LoginConfig: "+loginConfig.toExternalForm());
-          }
-          else
-          {
-              System.out.println("Warning: no auth.conf found in config="+confName);
-          }
+         URL loginConfig = Main.class.getClassLoader().getResource(confName+"/auth.conf");
+         if( loginConfig != null )
+         {
+            System.setProperty("java.security.auth.login.config", loginConfig.toExternalForm());
+            System.out.println("Using JAAS LoginConfig: "+loginConfig.toExternalForm());
+         }
+         else
+         {
+            System.out.println("Warning: no auth.conf found in config="+confName);
+         }
       }
 
       // Set security
@@ -109,33 +117,33 @@ public class Main
 
       // Start server - Main does not have the proper permissions
       AccessController.doPrivileged(new PrivilegedAction()
-      {
-         public Object run()
          {
-            new Main(confName, patchDirName);
-            return null;
-         }
-      });
+            public Object run()
+            {
+               new Main(confName, patchDirName);
+               return null;
+            }
+         });
    }
 
    // Constructors --------------------------------------------------
    public Main(String confName, String patchDir)
    {
-   	  Date startTime = new Date();
+      Date startTime = new Date();
 
       try
       {
          System.out.println("Using configuration \""+confName+"\"");
 
-            final PrintStream err = System.err;
+         final PrintStream err = System.err;
 
          com.sun.management.jmx.Trace.parseTraceProperties();
 
 	 // Give feedback about from where jndi.properties is read
 	 URL jndiLocation = this.getClass().getResource("/jndi.properties");
 	 if (jndiLocation instanceof URL) {
-	     System.out.println("Please make sure the following is intended (check your CLASSPATH):");
-	     System.out.println(" jndi.properties is read from "+jndiLocation);
+            System.out.println("Please make sure the following is intended (check your CLASSPATH):");
+            System.out.println(" jndi.properties is read from "+jndiLocation);
 	 }
 
          // Create MBeanServer
@@ -147,26 +155,25 @@ public class Main
          // Add any patch jars to the MLet so they are seen ahead of the JBoss jars
          if( patchDir != null )
          {
-             File dir = new File(patchDir);
-             ArrayList tmp = new ArrayList();
-             File[] jars = dir.listFiles(new java.io.FileFilter()
-                 {
-                     public boolean accept(File pathname)
-                     {
-                         String name = pathname.getName();
-                         return name.endsWith(".jar") || name.endsWith(".zip");
-                     }
-                 }
-             );
-             tmp.add(confDirectory);
-             for(int j = 0; jars != null && j < jars.length; j ++)
-             {
-                 File jar = jars[j];
-                 URL u = jar.getCanonicalFile().toURL();
-                 tmp.add(u);
-             }
-             urls = new URL[tmp.size()];
-             tmp.toArray(urls);
+            File dir = new File(patchDir);
+            ArrayList tmp = new ArrayList();
+            File[] jars = dir.listFiles(new java.io.FileFilter()
+               {
+                  public boolean accept(File pathname)
+                  {
+                     String name = pathname.getName();
+                     return name.endsWith(".jar") || name.endsWith(".zip");
+                  }
+               });
+            tmp.add(confDirectory);
+            for(int j = 0; jars != null && j < jars.length; j ++)
+            {
+               File jar = jars[j];
+               URL u = jar.getCanonicalFile().toURL();
+               tmp.add(u);
+            }
+            urls = new URL[tmp.size()];
+            tmp.toArray(urls);
          }
 
          // Create MLet
@@ -234,8 +241,13 @@ public class Main
 
       // Done
       Date stopTime = new Date();
-      Date lapsedTime = new Date(stopTime.getTime()-startTime.getTime());
-      System.out.println("JBoss "+versionIdentifier+" Started in "+lapsedTime.getMinutes()+"m:"+lapsedTime.getSeconds()+"s");
+      Date lapsedTime = new Date(stopTime.getTime() - startTime.getTime());
+      Calendar cal = Calendar.getInstance();
+      cal.setTime(lapsedTime);
+      System.out.println("JBoss " + version +
+                         " [" + version.getName() + "] Started in " +
+                         cal.get(Calendar.MINUTE) + "m:" + 
+                         cal.get(Calendar.SECOND) + "s");
    }
 }
 

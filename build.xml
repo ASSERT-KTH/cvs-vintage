@@ -10,7 +10,7 @@
 <!--                                                                        -->
 <!-- ====================================================================== -->
 
-<!-- $Id: build.xml,v 1.14 2001/08/27 09:01:37 user57 Exp $ -->
+<!-- $Id: build.xml,v 1.15 2001/08/28 02:08:18 user57 Exp $ -->
 
 <project default="main">
 
@@ -489,6 +489,10 @@
          manifest="${build.etc}/run.mf">
       <fileset dir="${build.classes}">
         <include name="org/jboss/Main*"/>
+        <include name="org/jboss/Version*"/>
+      </fileset>
+      <fileset dir="${build.resources}">
+        <include name="org/jboss/version.properties"/>
       </fileset>
     </jar>
 
