@@ -25,7 +25,7 @@ import javax.ejb.EJBException;
  *	@see <related>
  *	@author Rickard Öberg (rickard.oberg@telkel.com)
  *  @author <a href="sebastien.alborini@m4x.org">Sebastien Alborini</a>
- *	@version $Revision: 1.7 $
+ *	@version $Revision: 1.8 $
  */
 public class StatelessSessionEnterpriseContext
    extends EnterpriseContext
@@ -34,6 +34,7 @@ public class StatelessSessionEnterpriseContext
     
    // Attributes ----------------------------------------------------
    EJBObject ejbObject;
+   EJBLocalObject ejbLocalObject;
    SessionContext ctx;
    
    // Static --------------------------------------------------------
@@ -68,6 +69,8 @@ public class StatelessSessionEnterpriseContext
    // Public --------------------------------------------------------
    public void setEJBObject(EJBObject eo) { ejbObject = eo; }
    public EJBObject getEJBObject() { return ejbObject; }
+   public void setEJBLocalObject(EJBLocalObject eo) { ejbLocalObject = eo; }
+   public EJBLocalObject getEJBLocalObject() { return ejbLocalObject; }
    
    public SessionContext getSessionContext() {
 	   return ctx;
@@ -96,6 +99,9 @@ public class StatelessSessionEnterpriseContext
    {
       public EJBObject getEJBObject()
       {
+               if (((StatelessSessionContainer)con).getContainerInvoker()==null)
+                  throw new IllegalStateException( "No remote interface defined." );
+         
 		  if (ejbObject == null) {
 			  
 			  	try {
@@ -113,7 +119,13 @@ public class StatelessSessionEnterpriseContext
 
      public EJBLocalObject getEJBLocalObject()
      {
-       throw new IllegalStateException();
+         if (con.getLocalHomeClass()==null)
+            throw new IllegalStateException( "No local interface for bean." );
+         if (ejbLocalObject == null)
+         {
+            ejbLocalObject = ((StatelessSessionContainer)con).getLocalContainerInvoker().getStatelessSessionEJBLocalObject(); 
+         }
+         return ejbLocalObject;
      }
    }
 }

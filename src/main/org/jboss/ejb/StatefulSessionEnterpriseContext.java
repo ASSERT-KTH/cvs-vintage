@@ -23,7 +23,7 @@ import javax.ejb.SessionContext;
  *	@see <related>
  *	@author Rickard Öberg (rickard.oberg@telkel.com)
  *      @author Daniel OConnor (docodan@mvcsoft.com)
- *	@version $Revision: 1.9 $
+ *	@version $Revision: 1.10 $
  */
 public class StatefulSessionEnterpriseContext
    extends EnterpriseContext
@@ -107,6 +107,9 @@ public class StatefulSessionEnterpriseContext
    {
 		public EJBObject getEJBObject()
 		{
+                            if (((StatefulSessionContainer)con).getContainerInvoker()==null)
+                              throw new IllegalStateException( "No remote interface defined." );
+
 			if (ejbObject == null) {
 				
 				try {
@@ -124,7 +127,13 @@ public class StatefulSessionEnterpriseContext
       
         public EJBLocalObject getEJBLocalObject()
         {
-          throw new IllegalStateException();
+         if (con.getLocalHomeClass()==null)
+            throw new IllegalStateException( "No local interface for bean." );
+         if (ejbLocalObject == null)
+         {
+            ejbLocalObject = ((StatefulSessionContainer)con).getLocalContainerInvoker().getStatefulSessionEJBLocalObject(id); 
+         }
+         return ejbLocalObject;
         }
 
       	public Object getPrimaryKey()

@@ -26,7 +26,7 @@ import javax.transaction.Transaction;
 *	@author Rickard Öberg (rickard.oberg@telkel.com)
 *       @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
 *       @author Daniel OConnor (docodan@mvcsoft.com)
-*	@version $Revision: 1.17 $
+*	@version $Revision: 1.18 $
 */
 public class EntityEnterpriseContext
 extends EnterpriseContext
@@ -163,6 +163,9 @@ extends EnterpriseContext
     {
        public EJBObject getEJBObject()
        {
+          
+         if (((EntityContainer)con).getContainerInvoker()==null)
+            throw new IllegalStateException( "No remote interface defined." );
          if (ejbObject == null) {
 
           try {
@@ -183,6 +186,8 @@ extends EnterpriseContext
 
       public EJBLocalObject getEJBLocalObject()
       {
+         if (con.getLocalHomeClass()==null)
+            throw new IllegalStateException( "No local interface for bean." );
          if (ejbLocalObject == null)
          {
             Object cacheKey = ((EntityCache) ((EntityContainer) con).getInstanceCache())
@@ -190,7 +195,6 @@ extends EnterpriseContext
             ejbLocalObject = ((EntityContainer)con).getLocalContainerInvoker()
                .getEntityEJBLocalObject(cacheKey);
          }
-         
          return ejbLocalObject;
       }
 
