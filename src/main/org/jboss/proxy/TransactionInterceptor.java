@@ -46,7 +46,7 @@ import org.jboss.util.jmx.ObjectNameFactory;
  *
  * @author <a href="mailto:marc.fleury@jboss.org">Marc Fleury</a>
  * @author <a href="mailto:d_jencks@users.sourceforge.net">David Jencks</a>
- * @version $Revision: 1.10 $
+ * @version $Revision: 1.11 $
  *
  */
 public class TransactionInterceptor
@@ -56,14 +56,13 @@ public class TransactionInterceptor
 
    public final static String DEFAULT_TM_NAME = "jboss.tm:service=TransactionManagerService";
 
-   public final static String DEFAULT_CLIENT_TM_NAME_STUB = "jboss.client:service=TransactionManagerService,";
 
    final static private Logger log = Logger.getLogger(TransactionInterceptor.class);
 
    /** Serial Version Identifier. */
    //   private static final long serialVersionUID = 432426690456622923L;
 
-   //We assume that this interceptor can be used with only one tm for one client.
+
    private TransactionManager tm;
 
    //only look once for the tx manager.  It should always be there, but if not, don't waste time.

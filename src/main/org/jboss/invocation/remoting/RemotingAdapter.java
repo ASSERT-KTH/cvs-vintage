@@ -27,6 +27,7 @@ import org.jboss.invocation.ServerID;
 import org.jboss.invocation.ServerID;
 import org.jboss.remoting.Client;
 import org.jboss.remoting.ClientInterceptor;
+import org.jboss.remoting.InvocationRequest;
 import org.jboss.remoting.InvokerLocator;
 import org.jboss.remoting.ident.Identity;
 import org.jboss.remoting.ident.Identity;
@@ -121,9 +122,9 @@ public class RemotingAdapter
    {
       InvokerLocator locator = (InvokerLocator)invocation.getInvocationContext().getValue(InvocationKey.LOCATOR);
       Map sendParams = (Map)invocation.getValue(REMOTING_CONTEXT);
-      Object result = next.invoke(locator, "EJB", "",
-                                  new MarshalledInvocation(invocation),
-                                  sendParams);
+      Object result = next.invoke(
+         new InvocationRequest("", "EJB", new MarshalledInvocation(invocation),
+                               sendParams, null, locator));
       return (InvocationResponse)result;
    }
 
