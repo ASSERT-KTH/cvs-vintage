@@ -13,7 +13,6 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
 //
 //All Rights Reserved.
-
 package org.columba.core.io;
 
 import java.io.BufferedReader;
@@ -21,11 +20,10 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
-import java.io.FileReader;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
 import java.net.URL;
 
 import org.columba.core.config.ConfigPath;
@@ -87,11 +85,55 @@ public class DiskIO {
 		int lineNumber = 0;
 		BufferedWriter out;
 
-		out = new BufferedWriter(new FileWriter(toFile));
+		out =
+			new BufferedWriter(
+				new OutputStreamWriter(
+					new FileOutputStream(toFile),
+					"ISO-8859-1"));
 		out.write(insertString);
 		out.flush();
 		out.close();
 
+	} // saveStringInFile
+
+	public static String readFileInString(File fromFile) throws IOException {
+
+		StringBuffer strbuf = new StringBuffer((int) fromFile.length());
+
+		BufferedReader in =
+			new BufferedReader(
+				new InputStreamReader(
+					new FileInputStream(fromFile),
+					"ISO-8859-1"));
+		String str;
+		strbuf = new StringBuffer();
+
+		while ((str = in.readLine()) != null) {
+			strbuf.append(str + "\n");
+		}
+
+		in.close();
+
+		return strbuf.toString();
+
+		/*
+		int lineNumber = 0;
+		byte[] buffer = new byte[1024];
+		int read;
+		StringBuffer out = new StringBuffer((int)fromFile.length());
+		FileInputStream in = new FileInputStream( fromFile );
+		
+		read = in.read(buffer);
+		while ( read == 1024 ) {
+			out.append(new String(buffer,"ISO-8859-1"));    		
+			read = in.read(buffer);    		
+		}
+		
+		out.append(new String(buffer,0,read,"ISO-8859-1"));
+		in.close();
+		
+		return out.toString();
+		*/
 	} // saveStringInFile
 
 	/** Deletes the directory specified by the parameter and all of its contents.
@@ -356,19 +398,4 @@ public class DiskIO {
 		return copyResource(resource, new File(outputFile));
 	}
 
-	public static String readFileInString(File input) throws IOException {
-		StringBuffer result = new StringBuffer();
-
-		BufferedReader reader = new BufferedReader(new FileReader(input));
-
-		String nextLine = reader.readLine();
-
-		while (nextLine != null) {
-			result.append(nextLine);
-			result.append("\n");
-			nextLine = reader.readLine();
-		}
-
-		return result.toString();
-	}
 }

@@ -15,9 +15,7 @@
 //All Rights Reserved.
 package org.columba.mail.folder.mh;
 
-import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileReader;
 import java.lang.reflect.Array;
 import java.util.Vector;
 
@@ -63,20 +61,8 @@ public class MHDataStorage implements DataStorageInterface {
 				folder.getDirectoryFile()
 					+ File.separator
 					+ ((Integer) uid).toString());
-
-		StringBuffer strbuf = new StringBuffer();
-
-		BufferedReader in = new BufferedReader(new FileReader(file));
-		String str;
-		strbuf = new StringBuffer();
-
-		while ((str = in.readLine()) != null) {
-			strbuf.append(str + "\n");
-		}
-
-		in.close();
-
-		return strbuf.toString();
+		
+		return DiskIO.readFileInString(file);
 	}
 	
 	public boolean exists( Object uid  ) throws Exception 
@@ -105,12 +91,12 @@ public class MHDataStorage implements DataStorageInterface {
 
 		HeaderList headerList = new HeaderList();
 
-		if ( worker != null )
-		worker.setDisplayText("Recreating Header-Cache");
-
-		if (folder == null)
+		if (folder == null) {
 			return null;
-
+        }
+        if ( worker != null ) {
+            worker.setDisplayText("Recreating Header-Cache");
+        }
 		if (folder.getDirectoryFile() == null) {
 			System.out.println("directory-file == null");
 			return null;
@@ -124,6 +110,9 @@ public class MHDataStorage implements DataStorageInterface {
 		Vector v = new Vector();
 		//System.out.println("message-count=" + list.length);
 
+        // This "rename all mh files in folder" operation amounts to a disk-based mutex
+        //   and could obviously leave the disk in a bad state.
+
 		for (int i = 0; i < Array.getLength(list); i++) {
 			File file = list[i];
 			File renamedFile;
@@ -135,6 +124,10 @@ public class MHDataStorage implements DataStorageInterface {
 			
 
 			if ((file.exists()) && (file.length() > 0)) {
+                if (file.getName().indexOf('~') >= 0) {
+                    // "rename all mh files in folder" either recursing or previously corrupted
+                    throw new RuntimeException("\"rename all mh files in folder\" either recursing or separate process or previously corrupted, thread =" + Thread.currentThread().getName());
+                }
 				renamedFile =
 					new File(file.getParentFile(), file.getName() + '~');
 				file.renameTo(renamedFile);
@@ -152,11 +145,13 @@ public class MHDataStorage implements DataStorageInterface {
 		
 		for (int i = 0; i < v.size(); i++) {
 			File file = (File) v.get(i);
+            // rename to sequence number (so all mewssages in this folder are renumbered)
+            Integer iFileName = new Integer(i);
 			file.renameTo(
-				new File(file.getParentFile(), (new Integer(i)).toString()));
+				new File(file.getParentFile(), iFileName.toString()));
 
 			try {
-				String source = loadMessage(new Integer(i));
+				String source = loadMessage(iFileName);
 				
 				//System.out.println("--------------->\nsource-message=" + source);
 
@@ -171,7 +166,7 @@ public class MHDataStorage implements DataStorageInterface {
 				int size = Math.round(sizeInt.intValue() / 1024);
 				h.set("columba.size", new Integer(size));
 				
-				h.set("columba.uid", new Integer(i) );
+				h.set("columba.uid", iFileName);
 				
 				if ( h.get("columba.flags.recent").equals(Boolean.TRUE) ) folder.getMessageFolderInfo().incRecent();
 				if ( h.get("columba.flags.seen").equals(Boolean.FALSE)  ) folder.getMessageFolderInfo().incUnseen();
@@ -180,17 +175,17 @@ public class MHDataStorage implements DataStorageInterface {
 				
 				folder.getMessageFolderInfo().incExists();
 			
-				headerList.add(header, new Integer(i));
+				headerList.add(header, iFileName);
 				folder.getSearchEngineInstance().messageAdded(m);
 				
 				m.freeMemory();
 				
-				if ( worker != null )
+				if ( worker != null ) {
 				worker.incProgressBarValue();
-
+                }
 			} catch (Exception ex) {
 				System.out.println(
-					"recreateIndex exception: " + ex.getMessage());
+					"recreateIndex, working on item " + iFileName + " in " + file.getParentFile() + "  exception: " + ex.getMessage());
 				ex.printStackTrace();
 			}
 
