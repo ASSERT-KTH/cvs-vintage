@@ -7,7 +7,7 @@
 <!--                                                                       -->
 <!-- ===================================================================== -->
 
-<!-- $Id: standardjbosscmp-jdbc.xml,v 1.20 2002/03/24 21:44:33 d_jencks Exp $ -->
+<!-- $Id: standardjbosscmp-jdbc.xml,v 1.21 2002/04/09 15:43:21 dsundstrom Exp $ -->
 
 <jbosscmp-jdbc>
    
@@ -510,7 +510,7 @@
          </function-mapping>    
          <function-mapping>
             <function-name>locate</function-name>
-            <function-sql>(position(?2 in substring(?1 from ?3))+?3)</function-sql>
+            <function-sql>(coalesce(nullif(position(?1 in substring(?2 from ?3)), 0) + ?3 -1, 0))  </function-sql>
          </function-mapping>    
          <function-mapping>
             <function-name>abs</function-name>
