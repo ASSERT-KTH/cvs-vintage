@@ -13,6 +13,7 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
 //
 //All Rights Reserved.
+
 package org.columba.mail.gui.frame;
 
 import org.columba.core.charset.CharsetManager;
@@ -25,7 +26,6 @@ import org.columba.core.gui.toolbar.ToolBar;
 import org.columba.core.xml.XmlElement;
 import org.columba.mail.command.FolderCommandReference;
 import org.columba.mail.gui.attachment.AttachmentController;
-import org.columba.mail.gui.frame.action.FrameActionListener;
 import org.columba.mail.gui.message.MessageController;
 
 /**
@@ -57,7 +57,6 @@ public abstract class AbstractMailFrameController
 
 	//public SelectionManager selectionManager;
 
-	private FrameActionListener actionListener;
 	private ToolBar toolBar;
 	
 
@@ -105,10 +104,6 @@ public abstract class AbstractMailFrameController
 
 	public AbstractFrameView getView() {
 		return view;
-	}
-
-	public FrameActionListener getActionListener() {
-		return actionListener;
 	}
 
 	/*
@@ -204,5 +199,4 @@ public abstract class AbstractMailFrameController
 	public void setCharsetManager(CharsetManager manager) {
 		charsetManager = manager;
 	}
-
 }
