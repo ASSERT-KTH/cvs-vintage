@@ -97,7 +97,7 @@ import java.util.Enumeration;
  * @author costin@dnt.ro
  * @author Gal Shachor shachor@il.ibm.com
  */
-public final class Context {
+public class Context {
     // -------------------- Constants --------------------
     
     // Proprietary attribute names for contexts - defined
@@ -147,6 +147,8 @@ public final class Context {
     public static final int STATE_READY=3;
     
     // -------------------- internal properties
+    private String name;
+    
     // context "id"
     private String path = "";
 
@@ -278,7 +280,7 @@ public final class Context {
     /** Add a new container. Container define special properties for
 	a set of urls.
     */
-    public final void addContainer( Container ct )
+    public void addContainer( Container ct )
 	throws TomcatException
     {
 	// Notify interceptors that a new container is added
@@ -300,7 +302,7 @@ public final class Context {
      * mapping.
      * @deprecated Use addContainer
      */
-    public final  void addServletMapping(String path, String servletName)
+    public void addServletMapping(String path, String servletName)
 	throws TomcatException
     {
 	if( mappings.get( path )!= null) {
@@ -314,7 +316,7 @@ public final class Context {
 	// set it 
         Handler sw = getServletByName(servletName);
 	
-	Container map=new Container();
+	Container map=contextM.createContainer();
 	map.setContext( this );
 	map.setHandlerName( servletName );
 	map.setHandler( sw );
@@ -352,12 +354,12 @@ public final class Context {
 	the request will have to pass the security constraints.
 	@deprecated Use addContainer
     */
-    public final  void addSecurityConstraint( String path[], String methods[],
+    public void addSecurityConstraint( String path[], String methods[],
 				       String roles[], String transport)
 	throws TomcatException
     {
 	for( int i=0; i< path.length; i++ ) {
-	    Container ct=new Container();
+	    Container ct=contextM.createContainer();
 	    ct.setContext( this );
 	    ct.setTransport( transport );
 	    ct.setRoles( roles );
@@ -380,7 +382,7 @@ public final class Context {
      *   user application. Only trusted apps can get 
      *   access to the implementation object.
      */
-    public final  boolean allowAttribute( String name ) {
+    public boolean allowAttribute( String name ) {
 	// check if we can access this attribute.
 	if( isTrusted() ) return true;
 	log( "Attempt to access internal attribute in untrusted app",
@@ -399,11 +401,11 @@ public final class Context {
 	type of the facade, as a Context can be associated with a 2.2 ...
 	ServletContext.
      */
-    public final  Object getFacade() {
+    public Object getFacade() {
 	return contextFacade;
     }
 
-    public final  void setFacade(Object obj) {
+    public void setFacade(Object obj) {
         if(contextFacade!=null ) {
 	    log( "Changing facade " + contextFacade + " " +obj);
 	}
@@ -424,21 +426,30 @@ public final class Context {
 	depend on the ContextManager, and will be adjusted
 	by interceptors ( DefaultCMSetter )
     */
-    public final  void setContextManager(ContextManager cm) {
+    public void setContextManager(ContextManager cm) {
 	if( contextM != null ) return;
 	contextM=cm;
+	if( defaultContainer==null ) {
+	    defaultContainer=contextM.createContainer();
+	    defaultContainer.setContext( this );
+	    defaultContainer.setPath( null ); // default container
+	}
 	try {
 	    attributeInfo=cm.getNoteId(ContextManager.REQUEST_NOTE,
 				       "req.attribute");
 	} catch( TomcatException ex ) {
 	    ex.printStackTrace();
 	}
-
     }
 
+    protected void setContextManager1(ContextManager cm) {
+	contextM=cm;
+    }
+	    
+    
     /** Default container for this context.
      */
-    public final  Container getContainer() {
+    public Container getContainer() {
 	return defaultContainer;
     }
 
@@ -450,7 +461,7 @@ public final class Context {
 	Can be called only from tomcat.core.ContextManager.
 	( package access )
     */
-    void setState( int state )
+    public void setState( int state )
 	throws TomcatException
     {
 	// call state callback
@@ -489,6 +500,10 @@ public final class Context {
 	this.state=state;
     }
 
+    protected void setState1( int state ) {
+	this.state=state;
+    }
+
     /**
      * Initializes this context to be able to accept requests. This action
      * will cause the context to load it's configuration information
@@ -505,7 +520,7 @@ public final class Context {
      * @exception if any interceptor throws an exception the error
      *   will prevent the context from becoming READY
      */
-    public final void init() throws TomcatException {
+    public void init() throws TomcatException {
 	if( state==STATE_READY ) {
 	    log( "Already initialized " );
 	    return;
@@ -557,8 +572,6 @@ public final class Context {
 
     
     // -------------------- Basic properties --------------------
-    String name;
-    
     /** Return a name ( id ) for this context. Currently it's composed
 	from the virtual host and path, or set explicitely by the app.
     */
@@ -575,13 +588,13 @@ public final class Context {
     
     /** Base URL for this context
      */
-    public final  String getPath() {
+    public String getPath() {
 	return path;
     }
 
     /** Base URL for this context
      */
-    public final  void setPath(String path) {
+    public void setPath(String path) {
 	// config believes that the root path is called "/",
 	//
 	if( "/".equals(path) )
@@ -596,7 +609,7 @@ public final class Context {
      *  Make this context visible as part of a virtual host.
      *  The host is the "default" name, it may also have aliases.
      */
-    public final  void setHost( String h ) {
+    public void setHost( String h ) {
 	vhost=h;
 	name=null;
     }
@@ -605,7 +618,7 @@ public final class Context {
      * Return the virtual host name, or null if we are in the
      * default context
      */
-    public final  String getHost() {
+    public String getHost() {
 	return vhost;
     }
 
@@ -633,18 +646,18 @@ public final class Context {
      *  "Basic" tomcat treats it as a file ( either absolute or relative to
      *  the CM home ).
      */
-    public final  void setDocBase( String docB ) {
+    public void setDocBase( String docB ) {
 	this.docBase=docB;
     }
 
-    public final  String getDocBase() {
+    public String getDocBase() {
 	return docBase;
     }
 
     /** Return the absolute path for the docBase, if we are file-system
      *  based, null otherwise.
     */
-    public final  String getAbsolutePath() {
+    public String getAbsolutePath() {
 	return absPath;
     }
 
@@ -653,7 +666,7 @@ public final class Context {
      *  or relative to "home" ( cm.getHome() ).
      *  DefaultCMSetter will "fix" the path.
      */
-    public final  void setAbsolutePath(String s) {
+    public void setAbsolutePath(String s) {
 	absPath=s;
     }
 
@@ -667,13 +680,13 @@ public final class Context {
     
     // -------------------- Tomcat specific properties --------------------
     
-    public final  void setReloadable( boolean b ) {
+    public void setReloadable( boolean b ) {
 	reloadable=b;
     }
 
     /** Should we reload servlets ?
      */
-    public final  boolean getReloadable() {
+    public boolean getReloadable() {
 	return reloadable;
     }
 
@@ -682,7 +695,7 @@ public final class Context {
     /** The servlet API variant that will be used for requests in this
      *  context
      */ 
-    public final  void setServletAPI( String s ) {
+    public void setServletAPI( String s ) {
 	if( s==null ) return;
 	if( s.endsWith("23") || s.endsWith("2.3")) {
 	    apiLevel="2.3";
@@ -693,7 +706,7 @@ public final class Context {
 	}
     }
 
-    public final  String getServletAPI() {
+    public String getServletAPI() {
 	return apiLevel;
     }
     
@@ -702,7 +715,7 @@ public final class Context {
     /** Return welcome files defined in web.xml or the
      *  defaults, if user doesn't define any
      */
-    public final  String[] getWelcomeFiles() {
+    public String[] getWelcomeFiles() {
 	if( welcomeFiles==null ) {
 	    welcomeFiles=new String[ welcomeFilesV.size() ];
 	    for( int i=0; i< welcomeFiles.length; i++ ) {
@@ -714,7 +727,7 @@ public final class Context {
 
     /** Add an welcome file. 
      */
-    public final  void addWelcomeFile( String s) {
+    public void addWelcomeFile( String s) {
 	if (s == null ) return;
 	s=s.trim();
 	if(s.length() == 0)
@@ -725,15 +738,15 @@ public final class Context {
 
     // -------------------- Init parameters --------------------
     
-    public final  String getInitParameter(String name) {
+    public String getInitParameter(String name) {
         return (String)initializationParameters.get(name);
     }
 
-    public final  void addInitParameter( String name, String value ) {
+    public void addInitParameter( String name, String value ) {
 	initializationParameters.put(name, value );
     }
 
-    public final  Enumeration getInitParameterNames() {
+    public Enumeration getInitParameterNames() {
         return initializationParameters.keys();
     }
 
@@ -745,7 +758,7 @@ public final class Context {
      *  are computed
      * 
      */
-    public final  Object getAttribute(String name) {
+    public Object getAttribute(String name) {
 	Object o=attributes.get( name );
 	if( o!=null ) return o;
 	if(name.equals(ATTRIB_REAL_CONTEXT)) {
@@ -767,18 +780,18 @@ public final class Context {
 	return o;    
     }
 
-    public final  Enumeration getAttributeNames() {
+    public Enumeration getAttributeNames() {
         return attributes.keys();
     }
 
     /**
      *  XXX Use callbacks !!
      */
-    public final  void setAttribute(String name, Object object) {
+    public void setAttribute(String name, Object object) {
         attributes.put(name, object);
     }
 
-    public final  void removeAttribute(String name) {
+    public void removeAttribute(String name) {
         attributes.remove(name);
     }
 
@@ -787,21 +800,21 @@ public final class Context {
 
     /** Add a taglib declaration for this context
      */
-    public final  void addTaglib( String uri, String location ) {
+    public void addTaglib( String uri, String location ) {
 	tagLibs.put( uri, location );
     }
 
-    public final  String getTaglibLocation( String uri ) {
+    public String getTaglibLocation( String uri ) {
 	return (String)tagLibs.get(uri );
     }
 
-    public final  Enumeration getTaglibs() {
+    public Enumeration getTaglibs() {
 	return tagLibs.keys();
     }
 
     /** Add Env-entry to this context
      */
-    public final  void addEnvEntry( String name,String type, String value, String description ) {
+    public void addEnvEntry( String name,String type, String value, String description ) {
 	log("Add env-entry " + name + "  " + type + " " + value + " " +description );
 	if( name==null || type==null) throw new IllegalArgumentException();
 	envEntryTypes.put( name, type );
@@ -809,68 +822,68 @@ public final class Context {
 	    envEntryValues.put( name, value );
     }
 
-    public final  String getEnvEntryType(String name) {
+    public String getEnvEntryType(String name) {
 	return (String)envEntryTypes.get(name);
     }
 
-    public final  String getEnvEntryValue(String name) {
+    public String getEnvEntryValue(String name) {
 	return (String)envEntryValues.get(name);
     }
 
-    public final  Enumeration getEnvEntries() {
+    public Enumeration getEnvEntries() {
 	return envEntryTypes.keys();
     }
 
     
-    public final  String getDescription() {
+    public String getDescription() {
         return this.description;
     }
 
-    public final  void setDescription(String description) {
+    public void setDescription(String description) {
         this.description = description;
     }
 
-    public final  void setIcon( String icon ) {
+    public void setIcon( String icon ) {
 	this.icon=icon;
     }
 
-    public final  boolean isDistributable() {
+    public boolean isDistributable() {
         return this.isDistributable;
     }
 
-    public final  void setDistributable(boolean isDistributable) {
+    public void setDistributable(boolean isDistributable) {
         this.isDistributable = isDistributable;
     }
 
-    public final  int getSessionTimeOut() {
+    public int getSessionTimeOut() {
         return this.sessionTimeOut;
     }
 
-    public final  void setSessionTimeOut(int sessionTimeOut) {
+    public void setSessionTimeOut(int sessionTimeOut) {
         this.sessionTimeOut = sessionTimeOut;
     }
 
     // -------------------- Mime types --------------------
 
-    public final  FileNameMap getMimeMap() {
+    public FileNameMap getMimeMap() {
         return mimeTypes;
     }
 
-    public final  void addContentType( String ext, String type) {
+    public void addContentType( String ext, String type) {
 	mimeTypes.addContentType( ext, type );
     }
     
     // -------------------- Error pages --------------------
 
-    public final  String getErrorPage(int errorCode) {
+    public String getErrorPage(int errorCode) {
         return getErrorPage(String.valueOf(errorCode));
     }
 
-    public final  void addErrorPage( String errorType, String value ) {
+    public void addErrorPage( String errorType, String value ) {
 	this.errorPages.put( errorType, value );
     }
 
-    public final  String getErrorPage(String errorCode) {
+    public String getErrorPage(String errorCode) {
         return (String)errorPages.get(errorCode);
     }
 
@@ -879,33 +892,33 @@ public final class Context {
     
     /** Authentication method, if any specified
      */
-    public final  String getAuthMethod() {
+    public String getAuthMethod() {
 	return authMethod;
     }
 
     /** Realm to be used
      */
-    public final  String getRealmName() {
+    public String getRealmName() {
 	return realmName;
     }
 
-    public final  String getFormLoginPage() {
+    public String getFormLoginPage() {
 	return formLoginPage;
     }
 
-    public final  String getFormErrorPage() {
+    public String getFormErrorPage() {
 	return formErrorPage;
     }
 
-    public final  void setFormLoginPage( String page ) {
+    public void setFormLoginPage( String page ) {
 	formLoginPage=page;
     }
     
-    public final  void setFormErrorPage( String page ) {
+    public void setFormErrorPage( String page ) {
 	formErrorPage=page;
     }
 
-    public final  void setLoginConfig( String authMethod, String realmName,
+    public void setLoginConfig( String authMethod, String realmName,
 				String formLoginPage, String formErrorPage)
     {
 	this.authMethod=authMethod;
@@ -916,7 +929,7 @@ public final class Context {
 
     // -------------------- Mappings --------------------
 
-    public final  Enumeration getContainers() {
+    public Enumeration getContainers() {
 	return containers.elements();
     }
 
@@ -924,20 +937,20 @@ public final class Context {
      *  all URLs ( relative to this context ) having
      *	associated properties ( handlers, security, etc)
      */
-    public final  Enumeration getContainerLocations() {
+    public Enumeration getContainerLocations() {
 	return containers.keys();
     }
 
     /** Return the container ( properties ) associated
      *  with a path ( relative to this context )
      */
-    public final  Container getContainer( String path ) {
+    public Container getContainer( String path ) {
 	return (Container)containers.get(path);
     }
 
     /** Remove a container
      */
-    public final  void removeContainer( Container ct )
+    public void removeContainer( Container ct )
 	throws TomcatException
     {
 	containers.remove(ct.getPath());
@@ -956,7 +969,7 @@ public final class Context {
      * servlets, that can be used for mappings.
      * @deprecated. Use addHandler() 
      */
-    public final  void addServlet(Handler wrapper)
+    public void addServlet(Handler wrapper)
     	throws TomcatException
     {
 	addHandler( wrapper );
@@ -968,7 +981,7 @@ public final class Context {
      * servlets, that can be used for mappings.
      * @deprecated. Use addHandler() 
      */
-    public final  void addHandler(Handler wrapper)
+    public void addHandler(Handler wrapper)
     	throws TomcatException
     {
 	//	wrapper.setContext( this );
@@ -1006,7 +1019,7 @@ public final class Context {
 
     /** Remove the servlet with a specific name
      */
-    public final  void removeServletByName(String servletName)
+    public void removeServletByName(String servletName)
 	throws TomcatException
     {
 	Handler h=getServletByName( servletName );
@@ -1016,7 +1029,7 @@ public final class Context {
     /**
      *  
      */
-    public final  Handler getServletByName(String servletName) {
+    public Handler getServletByName(String servletName) {
 	return (Handler)servlets.get(servletName);
     }
 
@@ -1025,7 +1038,7 @@ public final class Context {
     /** Return all servlets registered with this Context
      *  The elements will be of type Handler ( or sub-types ) 
      */
-    public final  Enumeration getServletNames() {
+    public Enumeration getServletNames() {
 	return servlets.keys();
     }
 
@@ -1034,17 +1047,17 @@ public final class Context {
     /** The current class loader. This value may change if reload
      *  is used, you shouldn't cache the result
      */
-    public final ClassLoader getClassLoader() {
+    public ClassLoader getClassLoader() {
 	return classLoader;
     }
 
-    public final void setClassLoader(ClassLoader cl ) {
+    public void setClassLoader(ClassLoader cl ) {
 	classLoader=cl;
     }
 
     // -------------------- ClassPath --------------------
     
-    public final  void addClassPath( URL url ) {
+    public void addClassPath( URL url ) {
 	classPath.addElement( url);
     }
 
@@ -1052,7 +1065,7 @@ public final class Context {
 	of ContextManager classpath and locally specified
 	class path
     */
-    public final  URL[] getClassPath() {
+    public URL[] getClassPath() {
 	if( classPath==null ) return new URL[0];
 	URL serverCP[]=new URL[0]; //contextM.getServerClassPath();
 	URL urls[]=new URL[classPath.size() + serverCP.length];
@@ -1067,41 +1080,41 @@ public final class Context {
     }
 
     /* -------------------- Utils  -------------------- */
-    public final  void setDebug( int level ) {
+    public void setDebug( int level ) {
 	if (level!=debug)
 	    log( "Setting debug to " + level );
 	debug=level;
     }
 
-    public final  int getDebug( ) {
+    public int getDebug( ) {
 	return debug;
     }
 
-    public final  String toString() {
+    public String toString() {
 	return getName();
     }
 
     // ------------------- Logging ---------------
 
-    public final  String getId() {
+    public String getId() {
 	return ((vhost==null) ? "" : vhost + ":" )  +  path;
     }
     
     /** Internal log method
      */
-    public final void log(String msg) {
+    public void log(String msg) {
 	loghelper.log(msg);
     }
 
     /** Internal log method
      */
-    public final  void log(String msg, Throwable t) {
+    public void log(String msg, Throwable t) {
 	loghelper.log(msg, t);
     }
 
     /** Internal log method
      */
-    public final  void log(String msg, Throwable t, int level) {
+    public void log(String msg, Throwable t, int level) {
 	loghelper.log(msg, t, level);
     }
 
@@ -1110,7 +1123,7 @@ public final class Context {
      *  tomcat core ( internals ) and one is used by 
      *  servlets
      */
-    public final  void logServlet( String msg , Throwable t ) {
+    public void logServlet( String msg , Throwable t ) {
 	if (loghelperServlet == null) {
 	    loghelperServlet = loghelper;
 	}
@@ -1120,19 +1133,19 @@ public final class Context {
 	    loghelperServlet.log(msg, t); // uses level ERROR
     }
 
-    public final  void setLog(Log logger) {
+    public void setLog(Log logger) {
 	loghelper=logger;
     }
 
-    public final  void setServletLog(Log logger) {
+    public void setServletLog(Log logger) {
 	loghelperServlet=logger;
     }
 
-    public final  Log getLog() {
+    public Log getLog() {
 	return loghelper;
     }
 
-    public final  Log getServletLog() {
+    public Log getServletLog() {
 	return loghelperServlet;
     }
 
@@ -1143,13 +1156,13 @@ public final class Context {
      *   a facade interceptor.
      *   XXX Do we want to allow user to customize it ?
      */
-    public final  void setEngineHeader(String s) {
+    public void setEngineHeader(String s) {
         engineHeader=s;
     }
 
     /**  
      */
-    public final  String getEngineHeader() {
+    public String getEngineHeader() {
 	return engineHeader;
     }
 
@@ -1159,19 +1172,19 @@ public final class Context {
      *  Work dir is a place where servlets are allowed
      *  to write
      */
-    public final  void setWorkDir(String workDir) {
+    public void setWorkDir(String workDir) {
 	this.workDir = new File(workDir);
     }
 
     /**  
      */
-    public final  File getWorkDir() {
+    public File getWorkDir() {
 	return workDir;
     }
 
     /**  
      */
-    public final  void setWorkDir(File workDir) {
+    public void setWorkDir(File workDir) {
 	this.workDir = workDir;
     }
 
@@ -1181,11 +1194,11 @@ public final class Context {
      *  a virtual host with the specified name. You should
      *  set all the aliases. XXX Not implemented
      */
-    public final  void addHostAlias( String alias ) {
+    public void addHostAlias( String alias ) {
 	vhostAliases.addElement( alias );
     }
 
-    public final  Enumeration getHostAliases() {
+    public Enumeration getHostAliases() {
 	return vhostAliases.elements();
     }
     // -------------------- Security - trusted code -------------------- 
@@ -1193,11 +1206,11 @@ public final class Context {
     /** Mark the webapplication as trusted, i.e. it can
      *  access internal objects and manipulate tomcat core
      */
-    public final  void setTrusted( boolean t ) {
+    public void setTrusted( boolean t ) {
 	trusted=t;
     }
 
-    public final  boolean isTrusted() {
+    public boolean isTrusted() {
 	return trusted;
     }
 
@@ -1212,7 +1225,7 @@ public final class Context {
      *  takes place before the context is added ( since contextM
      *  may be unknown ).
      */
-    public final  void addInterceptor( BaseInterceptor ri )
+    public void addInterceptor( BaseInterceptor ri )
 	throws TomcatException
     {
 	ri.setContext( this );

@@ -145,7 +145,7 @@ import java.util.Enumeration;
   @author Costin Manolache
   @author Hans Bergsten [hans@gefionsoftware.com]
  */
-public final class ContextManager {
+public class ContextManager {
     /** Official name and version
      */
     public static final String TOMCAT_VERSION = "3.3 Beta 1";
@@ -229,7 +229,7 @@ public final class ContextManager {
      * Construct a new ContextManager instance with default values.
      */
     public ContextManager() {
-        defaultContainer=new Container();
+        defaultContainer=createContainer();
         defaultContainer.setContext( null );
 	defaultContainer.setContextManager( this );
         defaultContainer.setPath( null ); // default container
@@ -248,11 +248,11 @@ public final class ContextManager {
      *  The "tomcat.home" system property is used if no explicit
      *  value is set. XXX
      */
-    public final void setHome(String home) {
+    public void setHome(String home) {
 	this.home=home;
     }
 
-    public final String getHome() {
+    public String getHome() {
 	return home;
     }
 
@@ -264,30 +264,30 @@ public final class ContextManager {
      *  is used as default.
      * 
      */
-    public final String getInstallDir() {
+    public String getInstallDir() {
 	return installDir;
     }
 
-    public final void setInstallDir( String tH ) {
+    public void setInstallDir( String tH ) {
 	installDir=tH;
     }
 
     /**
      * WorkDir property - where all working files will be created
      */
-    public final void setWorkDir( String wd ) {
+    public void setWorkDir( String wd ) {
 	if(debug>0) log("set work dir " + wd);
 	this.workDir=wd;
     }
 
-    public final String getWorkDir() {
+    public String getWorkDir() {
 	return workDir;
     }
 
 
     /** Debug level
      */
-    public final void setDebug( int level ) {
+    public void setDebug( int level ) {
 	if( level != debug )
 	    log( "Setting debug level to " + level);
 	debug=level;
@@ -329,13 +329,17 @@ public final class ContextManager {
      *  Any error will be propagated - the server will not change the
      *  state and should fail if any module can't handle that.
      */
-    public final void setState( int state )
+    public void setState( int state )
 	throws TomcatException
     {
 	BaseInterceptor existingI[]=defaultContainer.getInterceptors();
 	for( int i=0; i<existingI.length; i++ ) {
 	    existingI[i].engineState( this, state );
 	}
+	this.state=state;
+    }
+
+    protected void setState1( int state ) {
 	this.state=state;
     }
     
@@ -364,35 +368,35 @@ public final class ContextManager {
      *                -> webapp.loaders
      *  </pre>
      */
-    public final void setParentLoader( ClassLoader cl ) {
+    public void setParentLoader( ClassLoader cl ) {
 	parentLoader=cl;
     }
 
-    public final ClassLoader getParentLoader() {
+    public ClassLoader getParentLoader() {
 	return parentLoader;
     }
 
-    public final void setCommonLoader( ClassLoader cl ) {
+    public void setCommonLoader( ClassLoader cl ) {
 	commonLoader=cl;
     }
 
-    public final ClassLoader getCommonLoader() {
+    public ClassLoader getCommonLoader() {
 	return commonLoader;
     }
 
-    public final void setContainerLoader( ClassLoader cl ) {
+    public void setContainerLoader( ClassLoader cl ) {
 	containerLoader=cl;
     }
 
-    public final ClassLoader getContainerLoader() {
+    public ClassLoader getContainerLoader() {
 	return containerLoader;
     }
 
-    public final void setAppsLoader( ClassLoader cl ) {
+    public void setAppsLoader( ClassLoader cl ) {
 	appsLoader=cl;
     }
 
-    public final ClassLoader getAppsLoader() {
+    public ClassLoader getAppsLoader() {
 	return appsLoader;
     }
 
@@ -400,11 +404,11 @@ public final class ContextManager {
 	be called for all requests, and it will be associated with
 	invalid requests ( where context can't be found ).
      */
-    public final Container getContainer() {
+    public Container getContainer() {
         return defaultContainer;
     }
 
-    public final void setContainer(Container newDefaultContainer) {
+    public void setContainer(Container newDefaultContainer) {
         defaultContainer = newDefaultContainer;
     }
 
@@ -416,7 +420,7 @@ public final class ContextManager {
      *  If the module is added after STATE_START, the engineStart hooks will
      *  be called.
      */
-    public final void addInterceptor( BaseInterceptor ri )
+    public void addInterceptor( BaseInterceptor ri )
 	throws TomcatException
     {
 	ri.setContextManager( this );
@@ -476,7 +480,7 @@ public final class ContextManager {
     /** Remove a module. Hooks will be called to allow the module to
      *  free the resources. 
      */
-    public final void removeInterceptor( BaseInterceptor ri )
+    public void removeInterceptor( BaseInterceptor ri )
 	throws TomcatException
     {
 	
@@ -528,7 +532,7 @@ public final class ContextManager {
      *  move to state= INIT
      * 
      */
-    public final void init()  throws TomcatException {
+    public void init()  throws TomcatException {
 	if( state >= STATE_CONFIG  ) // already initialized
 	    return;
 	
@@ -622,7 +626,7 @@ public final class ContextManager {
     /** Will start the connectors and begin serving requests.
      *  It must be called after init.
      */
-    public final void start() throws TomcatException {
+    public void start() throws TomcatException {
 	if( state==STATE_NEW ) {
 	    init();
 	}
@@ -638,7 +642,7 @@ public final class ContextManager {
 
     /** Will stop all connectors
      */
-    public final void stop() throws TomcatException {
+    public void stop() throws TomcatException {
 	setState(STATE_INIT); // initialized, but not accepting connections
 	
 	BaseInterceptor cI[]=defaultContainer.getInterceptors();
@@ -651,7 +655,7 @@ public final class ContextManager {
      *  - call removeContext ( that will call Interceptor.removeContext hooks )
      *  - call Interceptor.engineShutdown() hooks.
      */
-    public final void shutdown() throws TomcatException {
+    public void shutdown() throws TomcatException {
         if( state==STATE_START ) stop();
 
 	Enumeration enum = getContexts();
@@ -707,11 +711,11 @@ public final class ContextManager {
      *  Modules can use the information in context ( when addContext
      *  hook is called ) and prepare mapping tables.
      */
-    public final Enumeration getContexts() {
+    public Enumeration getContexts() {
 	return contextsV.elements();
     }
 
-    public final Enumeration getContextNames() {
+    public Enumeration getContextNames() {
 	return contexts.keys();
     }
 
@@ -728,7 +732,7 @@ public final class ContextManager {
      *
      * @param ctx context to be added.
      */
-    public final void addContext( Context ctx ) throws TomcatException {
+    public void addContext( Context ctx ) throws TomcatException {
 	// Make sure context knows about its manager.
 	// this will also initialized all context-specific modules.
 	ctx.setContextManager( this );
@@ -759,7 +763,7 @@ public final class ContextManager {
 
     /** Shut down and removes a context from service.
      */
-    public final void removeContext( Context context ) throws TomcatException {
+    public void removeContext( Context context ) throws TomcatException {
 	if( context==null ) return;
 
 	log( "Removing context " + context.toString());
@@ -801,7 +805,7 @@ public final class ContextManager {
      *  ( for example in a connector, or when an internal sub-request is
      *  created )
      */
-    public final void initRequest( Request req, Response resp ) {
+    public void initRequest( Request req, Response resp ) {
 	// We may add other special calls here.
 	resp.setRequest( req );
 	req.setResponse( resp );
@@ -813,7 +817,7 @@ public final class ContextManager {
      *  component able to generate Request/Response implementations ) will
      *  call this method to get it processed.
      */
-    public final void service( Request req, Response res ) {
+    public void service( Request req, Response res ) {
 	if( state!=STATE_START ) {
 	    // A request was received before all components are
 	    // in started state. Than can happen if the adapter was
@@ -850,7 +854,7 @@ public final class ContextManager {
     }
 
     // Request processing steps and behavior
-    private final void internalService( Request req, Response res ) {
+    private void internalService( Request req, Response res ) {
 	try {
 	    /* assert req/res are set up
 	       corectly - have cm, and one-one relation
@@ -924,7 +928,7 @@ public final class ContextManager {
      *  This method will only map the request, it'll not do authorization
      *  or authentication.
      */
-    public final int processRequest( Request req ) {
+    public int processRequest( Request req ) {
 	if(debug>9) log("Before processRequest(): "+req.toString());
 
 	int status=0;
@@ -980,7 +984,7 @@ public final class ContextManager {
      *
      *  Note that session and all stuff will still be computed.
      */
-    public final Request createRequest( Context ctx, String urlPath ) {
+    public Request createRequest( Context ctx, String urlPath ) {
 	// assert urlPath!=null
 
 	// deal with paths with parameters in it
@@ -1007,7 +1011,7 @@ public final class ContextManager {
 
     /** Create a new sub-request, deal with query string
      */
-    private final Request createSubRequest( String host, String urlPath ) {
+    private Request createSubRequest( String host, String urlPath ) {
 	String queryString=null;
 	int i = urlPath.indexOf("?");
 	int len=urlPath.length();
@@ -1017,8 +1021,8 @@ public final class ContextManager {
 	    urlPath = urlPath.substring(0, i);
 	}
 
-	Request lr = new Request();
-	Response res = new Response();
+	Request lr = createRequest();
+	Response res = createResponse(lr);
 	lr.setContextManager( this );
 	lr.setResponse( res );
 	res.setRequest( lr );
@@ -1038,7 +1042,7 @@ public final class ContextManager {
      *   The new context will be in the same virtual host as base.
      *
      */
-    public final  Context getContext(Context base, String path) {
+    public  Context getContext(Context base, String path) {
 	// XXX Servlet checks should be done in facade
 	if (! path.startsWith("/")) {
 	    return null; // according to spec, null is returned
@@ -1056,7 +1060,7 @@ public final class ContextManager {
 
     /** Called for error-codes. Will call the error hook with a status code.
      */
-    public final void handleStatus( Request req, Response res, int code ) {
+    public void handleStatus( Request req, Response res, int code ) {
 	if( code!=0 )
 	    res.setStatus( code );
 	
@@ -1077,7 +1081,7 @@ public final class ContextManager {
     /**
      *  Call error hook with an exception code.
      */
-    public final void handleError( Request req, Response res , Throwable t  ) {
+    public void handleError( Request req, Response res , Throwable t  ) {
 	BaseInterceptor ri[];
 	int status;
 	if( req.getContext() == null )
@@ -1136,7 +1140,7 @@ public final class ContextManager {
      *   container or request.
      *  @param name the name of the note.
      */
-    public final synchronized int getNoteId( int noteType, String name )
+    public synchronized int getNoteId( int noteType, String name )
 	throws TomcatException
     {
 	// find if we already have a note with this name
@@ -1156,7 +1160,7 @@ public final class ContextManager {
 	return noteId[noteType]++;
     }
 
-    public final String getNoteName( int noteType, int noteId ) {
+    public String getNoteName( int noteType, int noteId ) {
 	return noteName[noteType][noteId];
     }
 
@@ -1190,27 +1194,62 @@ public final class ContextManager {
      * So other classes can piggyback on the context manager's log
      * stream.
      **/
-    public final Log getLog() {
+    public Log getLog() {
 	return loghelper;
     }
 
-    public final void setLog(Log log) {
+    public void setLog(Log log) {
 	loghelper=log;
     }
  
-    public final void log(String msg) {
+    public void log(String msg) {
 	loghelper.log(msg);
     }
 
-    public final void log(String msg, Throwable t) {
+    public void log(String msg, Throwable t) {
         loghelper.log(msg, t);
     }
 
-    public final void log(String msg, int level) {
+    public void log(String msg, int level) {
         loghelper.log(msg, level);
     }
 
-    public final void log(String msg, Throwable t, int level) {
+    public void log(String msg, Throwable t, int level) {
         loghelper.log(msg, t, level);
+    }
+
+    // -------------------- Factories --------------------
+
+    public Context createContext() {
+	return new Context();
+    }
+
+    public Request createRequest() {
+	Request req=new Request();
+	//Response res=new Response();
+	//initRequest( req, res );
+	return req;
+	
+    }
+
+    public Response createResponse(Request req) {
+	//return req.getResponse();
+	return new Response();
+    }
+
+    public Container createContainer() {
+	return new Container();
+    }
+
+    public OutputBuffer createOutputBuffer() {
+	return new OutputBuffer();
+    }
+
+    public OutputBuffer createOutputBuffer(int size) {
+	return new OutputBuffer(size);
+    }
+
+    public ServerSession createServerSession() {
+	return new ServerSession();
     }
 }
