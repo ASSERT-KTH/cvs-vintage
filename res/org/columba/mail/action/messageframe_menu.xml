@@ -3,7 +3,9 @@
 	<menubar>
 	
 	
-	
+	<menu name="menu_file" extensionpoint="top">
+		<menuitem action="SaveMessage" />
+	</menu>
 	
 	
 	<menu name="menu_view" extensionpoint="top">
