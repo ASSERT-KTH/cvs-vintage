@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- $Id: jboss-service.xml,v 1.102 2004/03/06 03:16:01 patriot1burke Exp $ -->
+<!-- $Id: jboss-service.xml,v 1.103 2004/04/05 10:22:24 tdiesler Exp $ -->
 
 <!-- ===================================================================== -->
 <!--  JBoss Server Configuration                                           -->
@@ -199,9 +199,8 @@
    <!-- JAAS security manager and realm mapping -->
    <mbean code="org.jboss.security.plugins.JaasSecurityManagerService"
       name="jboss.security:service=JaasSecurityManager">
-      <attribute name="SecurityManagerClassName">
-         org.jboss.security.plugins.JaasSecurityManager
-      </attribute>
+      <attribute name="SecurityManagerClassName">org.jboss.security.plugins.JaasSecurityManager</attribute>
+      <attribute name="DefaultUnauthenticatedPrincipal">anonymous</attribute>
    </mbean>
 
    <!-- ==================================================================== -->
