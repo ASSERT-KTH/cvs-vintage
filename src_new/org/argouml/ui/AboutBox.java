@@ -1,4 +1,4 @@
-// $Id: AboutBox.java,v 1.26 2003/11/10 12:33:14 jhraigniac Exp $
+// $Id: AboutBox.java,v 1.27 2003/11/17 17:19:14 mvw Exp $
 // Copyright (c) 1996-2001 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -52,6 +52,7 @@ public class AboutBox extends JDialog {
     // instance variables
 
     JTabbedPane _tabs = new JTabbedPane();
+    int i = 3; // insets in pixels
 
     /** Shared splash panel */
     SplashPanel _splashPanel = null;
@@ -68,7 +69,7 @@ public class AboutBox extends JDialog {
 
     public AboutBox(Frame owner, boolean modal) {
 	super(owner, modal);
-	this.setTitle("About Argo/UML");
+	this.setTitle("About ArgoUML");
 	_splashPanel = new SplashPanel("Splash");
 	int imgWidth = _splashPanel.getImage().getIconWidth();
 	int imgHeight = _splashPanel.getImage().getIconHeight();
@@ -83,7 +84,7 @@ public class AboutBox extends JDialog {
 	versionBuf.append(
 			  "\n" +
 			  "Intended for use with:\n" +
-			  "* JDK 1.2 or higher plus\n" +
+			  "* JDK 1.3 or higher\n" +
 			  "* GEF Graph Editing Framework (gef.tigris.org)\n" +
 			  "  including GIF generation code " +
 			     "from www.acme.com\n" +
@@ -99,9 +100,9 @@ public class AboutBox extends JDialog {
 
 	versionBuf.append("\n");
 	versionBuf.append("The ArgoUML developers would like to thank "
-			  + "all those broad-minded people\n");
+			  + "all those broad-minded people ");
 	versionBuf.append("who spend their valuable time in contributing "
-			  + "to the projects ArgoUML\n");
+			  + "to the projects ArgoUML ");
 	versionBuf.append("depends on! We wouldn't be here without your "
 			  + "work!\n");
 	versionBuf.append("\n");
@@ -111,6 +112,9 @@ public class AboutBox extends JDialog {
 	try {
 	    JTextArea a = new JTextArea();
 	    a.setEditable(false);
+      a.setLineWrap(true);
+      a.setWrapStyleWord(true);
+      a.setMargin(new Insets(i, i, i, i));
 	    a.read(new StringReader(versionBuf.toString()), null);
 	    _tabs.addTab("Version", new JScrollPane(a));
 	}
@@ -125,6 +129,9 @@ public class AboutBox extends JDialog {
 							  + "credits.about")),
 		   null);
 	    a.setEditable(false);
+      a.setLineWrap(true);
+      a.setWrapStyleWord(true);
+      a.setMargin(new Insets(i, i, i, i));
 	    _tabs.addTab("Credits", new JScrollPane(a));
 	}
 	catch (Exception e) {
@@ -134,6 +141,9 @@ public class AboutBox extends JDialog {
 	try {
 	    JTextArea a = new JTextArea();
 	    a.setEditable(false);
+      a.setLineWrap(true);
+      a.setWrapStyleWord(true);
+      a.setMargin(new Insets(i, i, i, i));
 	    a.read(new InputStreamReader(getClass().
 			   getResourceAsStream(Argo.RESOURCEDIR
 					       + "contacts.about")),
@@ -148,6 +158,9 @@ public class AboutBox extends JDialog {
 	try {
 	    JTextArea a = new JTextArea();
 	    a.setEditable(false);
+      a.setLineWrap(true);
+      a.setWrapStyleWord(true);
+      a.setMargin(new Insets(i, i, i, i));
 	    a.read(new InputStreamReader(getClass().
 			  getResourceAsStream(Argo.RESOURCEDIR
 					      + "bugreport.about")),
@@ -162,6 +175,9 @@ public class AboutBox extends JDialog {
 	try {
 	    JTextArea a = new JTextArea();
 	    a.setEditable(false);
+      a.setLineWrap(true);
+      a.setWrapStyleWord(true);
+      a.setMargin(new Insets(i, i, i, i));
 	    a.read(new InputStreamReader(getClass().
 					 getResourceAsStream(Argo.RESOURCEDIR
 							     + "legal.about")),
