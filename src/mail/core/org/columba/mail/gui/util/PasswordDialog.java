@@ -121,17 +121,7 @@ public class PasswordDialog implements ActionListener {
 
 		JLabel passwordLabel = new JLabel("Password:");
 
-		/*
-		buttons[0] = new JButton("Cancel");
-		buttons[0].addActionListener( this );
-		buttons[0].setActionCommand( "CANCEL" );
 		
-		buttons[1] = new JButton("Ok");
-		buttons[1].addActionListener( this );
-		buttons[1].setActionCommand( "OK" );
-			buttons[1].setDefaultCapable(true);
-		buttons[1].setSelected(true);
-		*/
 
 		passwordField = new JPasswordField(password, 40);
 
@@ -208,18 +198,7 @@ public class PasswordDialog implements ActionListener {
 		return save;
 	}
 
-	/*
-	public String getUser()
-	{
-	    return user;
-	}
 	
-	
-	public String getLoginMethod()
-	{
-		return loginMethod;
-	}
-	*/
 
 	public void actionPerformed(ActionEvent e) {
 		String action = e.getActionCommand();

@@ -108,8 +108,11 @@ public class FetchNewMessagesCommand extends Command {
 			JOptionPane.showMessageDialog(null, e.getLocalizedMessage(), "TimeoutException", JOptionPane.ERROR_MESSAGE);
 			server.forceLogout();
 		}
-		
-		r[0].getPOP3ServerController().enableActions(true);
+		finally 
+		{
+			// always enable the menuitem again 
+			r[0].getPOP3ServerController().enableActions(true);
+		}
 
 	}
 

@@ -79,12 +79,12 @@ public class POP3Server {
 	public Folder getFolder() {
 		SpecialFoldersItem foldersItem = accountItem.getSpecialFoldersItem();
 		String inboxStr = foldersItem.get("inbox");
-		System.out.println("inbox-string=" + inboxStr);
+		
 
 		int inboxInt = Integer.parseInt(inboxStr);
 
 		Folder f = (Folder) MainInterface.treeModel.getFolder(inboxInt);
-		System.out.println("f=" + f);
+		
 
 		return f;
 	}

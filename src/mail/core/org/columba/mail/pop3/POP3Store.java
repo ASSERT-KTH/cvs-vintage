@@ -18,6 +18,8 @@ package org.columba.mail.pop3;
 import java.util.Hashtable;
 import java.util.List;
 
+import javax.swing.JOptionPane;
+
 import org.columba.core.command.CommandCancelledException;
 import org.columba.core.command.WorkerStatusController;
 import org.columba.core.gui.util.NotifyDialog;
@@ -306,57 +308,43 @@ public class POP3Store {
 				if (dialog.success()) {
 					// ok pressed
 					password = new String(dialog.getPassword());
-					//user = dialog.getUser();
-					save = dialog.getSave();
-					//method = dialog.getLoginMethod();
 
-					//System.out.println("pass:<"+password+">");
-					//setCancel(false);
+					save = dialog.getSave();
+
 				} else {
 					// cancel pressed
 					worker.cancel();
 					throw new CommandCancelledException();
 				}
 			} else {
-				//user = popItem.getUser();
+
 				save = popItem.getBoolean("save_password");
-				//method = popItem.getLoginMethod();
+
 			}
-
-			/*
-			if (getCancel() == false) {
-			*/
-			//System.out.println("trying to login");
-			//setText(popServer.getFolderName() + " : Login...");
-			//stopTimer();
-
-			//startTimer();
-			// authenticate
-
-			//pop3Connection.openPort();
 
 			protocol.setLoginMethod(popItem.get("login_method"));
 			ColumbaLogger.log.debug("try to login");
 			login = protocol.login(popItem.get("user"), password);
-			//stopTimer();
-
+			ColumbaLogger.log.debug("login="+login);
+			
 			if (!login) {
-				//JOptionPane.showMessageDialog(popServer.getFrame(), "Authorization failed!");
+				String answer = protocol.answer;
+
+				JOptionPane.showMessageDialog(
+					null,
+					answer,
+					"Authorization failed!",
+					JOptionPane.ERROR_MESSAGE);
 
 				popItem.set("password", "");
 				state = STATE_NONAUTHENTICATE;
-				protocol.logout();
-				protocol.close();
+				
 			}
 
-			/*
-			}
-			*/
 		}
 
-		//popItem.setUser(user);
 		popItem.set("save_password", save);
-		//popItem.setLoginMethod( method );
+
 		state = STATE_AUTHENTICATE;
 
 		if (save) {
