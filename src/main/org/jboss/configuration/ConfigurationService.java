@@ -29,7 +29,7 @@ import org.jboss.util.ServiceMBeanSupport;
  *
  *   @see <related>
  *   @author Rickard Öberg (rickard.oberg@telkel.com)
- *   @version $Revision: 1.7 $
+ *   @version $Revision: 1.8 $
  */
 public class ConfigurationService
    extends ServiceMBeanSupport
@@ -49,8 +49,6 @@ public class ConfigurationService
 
    // Attributes ----------------------------------------------------
     Log log = new Log(getName());
-
-    String configurationUrl = "jboss.jcml";
 
     MBeanServer server;
 
