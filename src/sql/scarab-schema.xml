@@ -2,7 +2,7 @@
 <!DOCTYPE app-data SYSTEM
           "http://jakarta.apache.org/turbine/dtd/database.dtd">
 
-<!-- $Id: scarab-schema.xml,v 1.63 2001/10/20 00:22:28 elicia Exp $ -->
+<!-- $Id: scarab-schema.xml,v 1.64 2001/10/24 06:10:07 jon Exp $ -->
 
 <app-data>
 <database>
@@ -1102,6 +1102,28 @@
         Unique identifier.
     -->
     <column name="USER_ID" primaryKey="true" required="true" type="INTEGER"/>
+</table>
+
+<!--
+    This table is used to store user preferences and other information
+    relating to a specific user.
+-->
+<table name="SCARAB_USER_PREFERENCE" idMethod="none" javaName="UserPreference">
+    <!--
+        Unique identifier.
+    -->
+    <column name="USER_ID" primaryKey="true" required="true" type="INTEGER"/>
+    <!--
+        This is a column that Scarab standalone needs. Torque doesn't do anything
+        with it at this point because this is an aliased table. Leaving it in
+        here just as an FYI and in the hope that one day, Torque will generate
+        the right methods even for aliased tables.
+    -->
+    <column name="PASSWORD_EXPIRE" primaryKey="false" required="true" type="TIMESTAMP"/>
+
+    <foreign-key foreignTable="SCARAB_USER">
+        <reference local="USER_ID" foreign="USER_ID"/>
+    </foreign-key>
 </table>
 
 <!--
