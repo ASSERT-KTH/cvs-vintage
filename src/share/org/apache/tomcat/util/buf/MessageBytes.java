@@ -99,6 +99,10 @@ public final class MessageBytes implements Cloneable, Serializable {
     public MessageBytes() {
     }
 
+    public static MessageBytes newInstance() {
+	return factory.newInstance();
+    }
+    
     public void setCaseSenitive( boolean b ) {
 	caseSensitive=b;
     }
@@ -570,5 +574,20 @@ public final class MessageBytes implements Cloneable, Serializable {
 	hasIntValue=true;
 	return intValue;
     }
+
+    // -------------------- Future may be different --------------------
     
+    private static MessageBytesFactory factory=new MessageBytesFactory();
+
+    public static void setFactory( MessageBytesFactory mbf ) {
+	factory=mbf;
+    }
+    
+    public static class MessageBytesFactory {
+	protected MessageBytesFactory() {
+	}
+	public MessageBytes newInstance() {
+	    return new MessageBytes();
+	}
+    }
 }
