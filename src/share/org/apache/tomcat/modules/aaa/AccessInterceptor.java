@@ -307,7 +307,7 @@ public class AccessInterceptor extends  BaseInterceptor  {
             return DECLINED; // no user roles - can't handle
 
 	for( int i=0; i< userRoles.length; i ++ ) {
-	    for( int j=0; j< roles.length; i ++ )
+	    for( int j=0; j< roles.length; j ++ )
 		if( userRoles[i]!=null && userRoles[i].equals( roles[j] ))
 		    return OK; // found the right role
 	}
