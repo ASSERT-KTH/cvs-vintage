@@ -12,7 +12,7 @@ package org.jboss.ejb.plugins.cmp.jdbc;
  * This class provides a simple mapping of a Java type type to a single column.
  * 
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
- * @version $Revision: 1.4 $
+ * @version $Revision: 1.5 $
  */
 public class JDBCTypeSimple implements JDBCType {
    private String[] columnNames;   
@@ -20,19 +20,22 @@ public class JDBCTypeSimple implements JDBCType {
    private int[] jdbcTypes;   
    private String[] sqlTypes;
    private boolean[] notNull;
+   private boolean[] autoIncrement;
 
    public JDBCTypeSimple(
          String columnName,
          Class javaType,
          int jdbcType,
          String sqlType,
-         boolean notNull) {
+         boolean notNull,
+         boolean autoIncrement) {
       
       columnNames = new String[] { columnName };
       javaTypes = new Class[] { javaType };
       jdbcTypes = new int[] { jdbcType };
       sqlTypes = new String[] { sqlType };
       this.notNull = new boolean[] { notNull };
+      this.autoIncrement = new boolean[] { autoIncrement };
    }
 
    public String[] getColumnNames() {
@@ -53,6 +56,10 @@ public class JDBCTypeSimple implements JDBCType {
    
    public boolean[] getNotNull() {
       return notNull;
+   }
+
+   public boolean[] getAutoIncrement() {
+      return autoIncrement;
    }
 
    public Object getColumnValue(int index, Object value) {
