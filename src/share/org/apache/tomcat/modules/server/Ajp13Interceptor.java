@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/modules/server/Ajp13Interceptor.java,v 1.19 2002/02/08 12:48:04 larryi Exp $
- * $Revision: 1.19 $
- * $Date: 2002/02/08 12:48:04 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/modules/server/Ajp13Interceptor.java,v 1.20 2002/02/08 20:23:48 larryi Exp $
+ * $Revision: 1.20 $
+ * $Date: 2002/02/08 20:23:48 $
  *
  * ====================================================================
  *
@@ -88,7 +88,7 @@ public class Ajp13Interceptor extends PoolTcpConnector
     private int decodedNote;
     private String secret=null;
     private File ajpidFile=null;
-    private boolean authenticateRequests=false;
+    private boolean authenticateConnection=false;
     
     public Ajp13Interceptor()
     {
@@ -145,8 +145,8 @@ public class Ajp13Interceptor extends PoolTcpConnector
 
     /** Specify if Ajp13 requests must be authenticated
      */
-    public void setAuthenticateRequests( boolean b ) {
-        authenticateRequests=b;
+    public void setAuthenticateConnection( boolean b ) {
+        authenticateConnection=b;
     }
 
     public void setDecodedUri( boolean b ) {
@@ -276,9 +276,9 @@ public class Ajp13Interceptor extends PoolTcpConnector
             boolean moreRequests = true;
             boolean authenticated = false;
             // If we are not configured with a secret or we are
-            // not authenticating requests, assume
+            // not authenticating the connection, assume
             // we trust the remote party ( as we did before )
-            if( secret == null || !authenticateRequests )
+            if( secret == null || !authenticateConnection )
                 authenticated=true;
             
             while(moreRequests) {
