@@ -7,9 +7,9 @@
 #set ($attrValues = $currentIssue.ModuleAttributeValuesMap)
 #set ($currentIssueId = $currentIssue.UniqueId)
 
-# TODO: The getCopyToModules() can be expensive (PCN20967).  Add APIs
-# which perform the "should show" check without retrieving all the
-# associated data.
+## TODO: The getCopyToModules() can be expensive (PCN20967).  Add APIs
+## which perform the "should show" check without retrieving all the
+## associated data.
 #set ($copyToModules = $data.User.getCopyToModules($module, 'copy'))
 #set ($moveToModules = $data.User.getCopyToModules($module, 'move'))
 #set ($showCopyButton = $copyToModules && !$copyToModules.isEmpty())
