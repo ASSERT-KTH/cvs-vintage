@@ -22,7 +22,7 @@ import org.jboss.aspect.internal.AspectSupport;
  * <p>
  * 
  * Multiple instances of the same aspect will share the AspectDefinition
- * configuration object.  This class is immutable and, therefore, threadsafe.
+ * configuration object. 
  * <p>
  * 
  * AspectDefinition objects can be dynamicaly created at runtime and passed
@@ -33,14 +33,14 @@ import org.jboss.aspect.internal.AspectSupport;
  *
  * @author <a href="mailto:hchirino@jboss.org">Hiram Chirino</a>
  */
-final public class AspectDefinition implements AspectDefinitionConstants, Serializable
+final public class AspectDefinition implements AspectDefinitionConstants, Serializable, Cloneable
 {
     /** the name of the aspect definition */
-    final public String name;
+    public String name;
     /** the interceptor stack of the aspect */
-    final public AspectInterceptorHolder interceptors[];
+    public AspectInterceptorHolder interceptors[];
     /** the interfaces that the aspect exposes */
-    final public Class interfaces[];
+    public Class interfaces[];
 
     /**
      * Constructor.
@@ -52,6 +52,18 @@ final public class AspectDefinition implements AspectDefinitionConstants, Serial
         this.interfaces = interfaces;
     }
 
+	public AspectDefinition cloneAspectDefinition() {
+        try
+        {
+            return (AspectDefinition)clone();
+        }
+        catch (CloneNotSupportedException e)
+        {
+        	return new AspectDefinition(name, interceptors, interfaces);
+        }
+    }
+	
+	
     /**
      * Build the AspectDefinition from a XML Element Fragment.
      */
@@ -100,7 +112,7 @@ final public class AspectDefinition implements AspectDefinitionConstants, Serial
      * 
      * @throws IndexOutOfBoundsException - if the index is out of range.
      */
-    public AspectDefinition insertInterceptor(int index, AspectInterceptorHolder holder)
+    public void insertInterceptor(int index, AspectInterceptorHolder holder)
         throws IndexOutOfBoundsException
     {
         if (index < 0 || index > interceptors.length)
@@ -108,8 +120,7 @@ final public class AspectDefinition implements AspectDefinitionConstants, Serial
         AspectInterceptorHolder dest[] = new AspectInterceptorHolder[interceptors.length + 1];
         arrayInsetShift(interceptors, dest, index);
         dest[index] = holder;
-
-        return new AspectDefinition(name, dest, interfaces);
+		interceptors = dest;
     }
 
     /**
@@ -118,14 +129,13 @@ final public class AspectDefinition implements AspectDefinitionConstants, Serial
      * 
      * @throws IndexOutOfBoundsException - if the index is out of range.
      */
-    public AspectDefinition removeInterceptor(int index) throws IndexOutOfBoundsException
+    public void removeInterceptor(int index) throws IndexOutOfBoundsException
     {
         if (index < 0 || index >= interceptors.length)
             throw new IndexOutOfBoundsException();
         AspectInterceptorHolder dest[] = new AspectInterceptorHolder[interceptors.length - 1];
         arrayRemoveShift(interceptors, dest, index);
-
-        return new AspectDefinition(name, dest, interfaces);
+		interceptors = dest;
     }
 
     private static void arrayInsetShift(Object src[], Object dest[], int position)
@@ -139,4 +149,5 @@ final public class AspectDefinition implements AspectDefinitionConstants, Serial
         System.arraycopy(src, 0, dest, 0, position);
         System.arraycopy(src, position + 1, dest, position, (src.length - position) - 1);
     }
+
 }

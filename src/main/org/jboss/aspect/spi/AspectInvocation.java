@@ -28,7 +28,7 @@ final public class AspectInvocation
 {
 
     /** the aspect definition of the aspect */
-    final public AspectDefinition definition;
+    final public AspectInterceptorHolder[] interceptors;
     /** attachments that have been made against the aspect object */
     final public Map attachments;
     /** the target object is the original object that the aspect was applyed to, could be null */
@@ -52,7 +52,7 @@ final public class AspectInvocation
      */
     public AspectInvocation(AspectObject handler, Object aspectObject, Method method, Object[] args)
     {
-        this.definition = handler.definition;
+        this.interceptors = handler.definition.interceptors;
         this.attachments = handler.attachments;
         this.targetObject = handler.targetObject;
         this.targetObjectIH = handler.targetObjectIH;
@@ -74,7 +74,6 @@ final public class AspectInvocation
     public Object invokeNext() throws Throwable
     {
 
-        AspectInterceptorHolder holders[] = definition.interceptors;
         int storeInterceptorIndex = currentInterceptor;
         try
         {
@@ -86,7 +85,7 @@ final public class AspectInvocation
                 currentInterceptor++;
 
                 // Did we go past the last interceptor??
-                if (currentInterceptor == holders.length)
+                if (currentInterceptor == interceptors.length)
                 {
 
                     // Invoke the target object if we can.
@@ -100,14 +99,12 @@ final public class AspectInvocation
                         return method.invoke(targetObject, args);
 
                     throw new AspectRuntimeException(
-                        "Aspect '"
-                            + definition.name
-                            + "' failed to process a method call: "
+                        "Aspect failed to process a method call: "
                             + method.getName()
                             + ", check your aspect definition.");
                 }
-                if (holders[currentInterceptor].isIntrestedInMethodCall(method))
-                    return holders[currentInterceptor].interceptor.invoke(this);
+                if (interceptors[currentInterceptor].isIntrestedInMethodCall(method))
+                    return interceptors[currentInterceptor].interceptor.invoke(this);
             }
         }
         finally
@@ -122,10 +119,9 @@ final public class AspectInvocation
 	 */
     public boolean isNextIntrestedInMethodCall()
     {
-        AspectInterceptorHolder holders[] = definition.interceptors;
-        for (int i = currentInterceptor + 1; i < holders.length; i++)
+        for (int i = currentInterceptor + 1; i < interceptors.length; i++)
         {
-            if (holders[currentInterceptor].isIntrestedInMethodCall(method))
+            if (interceptors[currentInterceptor].isIntrestedInMethodCall(method))
                 return true;
         }
         return false;
