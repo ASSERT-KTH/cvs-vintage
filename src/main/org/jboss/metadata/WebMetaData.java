@@ -26,7 +26,7 @@ import java.util.Set;
  * @see org.jboss.web.AbstractWebContainer
  
  * @author Scott.Stark@jboss.org
- * @version $Revision: 1.28 $
+ * @version $Revision: 1.29 $
  */
 public class WebMetaData extends MetaData
 {
@@ -58,6 +58,8 @@ public class WebMetaData extends MetaData
    private boolean java2ClassLoadingCompliance = false;
    /** The war context root as specified at the jboss-web.xml descriptor level. */
    private String contextRoot;
+   /** The JACC context id for the container */
+   private String jaccContextID;
    /** The jboss-web.xml server container virtual hosts the war should be deployed into */
    private ArrayList virtualHosts = new ArrayList();
    /** The jboss-web.xml JNDI name of the security domain implementation */
@@ -152,6 +154,15 @@ public class WebMetaData extends MetaData
    public void setContextRoot(String contextRoot)
    {
       this.contextRoot = contextRoot;
+   }
+
+   public String getJaccContextID()
+   {
+      return jaccContextID;
+   }
+   public void setJaccContextID(String jaccContextID)
+   {
+      this.jaccContextID = jaccContextID;
    }
 
    /** Return the optional security-domain jboss-web.xml element.
