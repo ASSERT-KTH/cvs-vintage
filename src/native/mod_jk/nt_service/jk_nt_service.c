@@ -57,7 +57,7 @@
  * Description: NT System service for Jakarta/Tomcat                       *
  * Author:      Gal Shachor <shachor@il.ibm.com>                           *
  *              Dave Oxley <Dave@JungleMoss.com>                           *
- * Version:     $Revision: 1.6 $                                           *
+ * Version:     $Revision: 1.7 $                                           *
  ***************************************************************************/
 
 #include "jk_global.h"
@@ -114,7 +114,8 @@ static void WINAPI service_ctrl(DWORD dwCtrlCode);
 static void WINAPI service_main(DWORD dwArgc, 
                                 char **lpszArgv);
 static void install_service(char *name, 
-                            char *user, 
+                            char *dname, 
+                            char *user,
                             char *password, 
                             char *deps, 
                             BOOL bAutomatic, 
@@ -156,21 +157,22 @@ static void usage_message(const char *name)
     printf("%s - Usage:\n\n", name);
     printf("To install the service:\n");
     printf("%s -i <service name> {optional params} <config properties file>\n", name);
-    printf("    Optional parameters\n");
-    printf("        -u <user name> - In the form DomainName\\UserName (.\\UserName for local)\n");
-    printf("        -p <user password>\n");
-    printf("        -a - Set startup type to automatic\n");
-    printf("        -d <service dependency> - Can be entered multiple times\n\n");
+    printf("   Optional parameters\n");
+    printf("      -n <service display name> - In quotes if contains non-alphanumeric chars\n");
+    printf("      -u <user name> - In the form DomainName\\UserName (.\\UserName for local)\n");
+    printf("      -p <user password>\n");
+    printf("      -a - Set startup type to automatic\n");
+    printf("      -d <service dependency> - Can be entered multiple times\n\n");
     printf("To remove the service:\n");
     printf("%s -r <service name>\n\n", name);
     printf("To start the service:\n");
     printf("%s -s <service name> {optional params}\n", name);
-    printf("    Optional parameters\n");
-    printf("        -m <machine>\n\n");
+    printf("   Optional parameters\n");
+    printf("      -m <machine>\n\n");
     printf("To stop the service:\n");
     printf("%s -t <service name> {optional params}\n", name);
-    printf("    Optional parameters\n");
-    printf("        -m <machine>\n");
+    printf("   Optional parameters\n");
+    printf("      -m <machine>\n");
 }
 
 void main(int argc, char **argv)
@@ -182,6 +184,7 @@ void main(int argc, char **argv)
     int count;
     int iAction = acNoAction;
     char *pServiceName = NULL;
+    char *pServiceDisplayName = NULL;
     char *pUserName = NULL;
     char *pPassword = NULL;
     char *pMachine = NULL;
@@ -240,12 +243,17 @@ void main(int argc, char **argv)
                     } else if(0 == stricmp("d", cmd)) {
                         memcpy(strDependancy+count, argv[i+1], strlen(argv[i+1]));
                         count+= strlen(argv[i+1])+1;
+                    } else if(0 == stricmp("n", cmd)) {
+                        pServiceDisplayName = argv[i+1];
                     }
                 }
             }
             switch (iAction) {
             case acInstall:
-                install_service(pServiceName, pUserName, pPassword, strDependancy, bAutomatic, argv[i-1]);
+	        if (pServiceDisplayName == NULL) {
+		  pServiceDisplayName = pServiceName;
+		}
+                install_service(pServiceName, pServiceDisplayName, pUserName, pPassword, strDependancy, bAutomatic, argv[i-1]);
                 return;
             case acRemove:
                 remove_service(pServiceName);
@@ -374,7 +382,8 @@ BOOL ReportStatusToSCMgr(DWORD dwCurrentState,
     return fResult;
 }
 
-void install_service(char *name, 
+void install_service(char *name,
+                     char *dname,
                      char *user, 
                      char *password, 
                      char *deps, 
@@ -417,7 +426,7 @@ void install_service(char *name,
     if(schSCManager) {
         schService = CreateService(schSCManager, // SCManager database
                                    name,         // name of service
-                                   name,         // name to display
+                                   dname,        // name to display
                                    SERVICE_ALL_ACCESS, // desired access
                                    SERVICE_WIN32_OWN_PROCESS,  // service type
                                    bAutomatic ? SERVICE_AUTO_START : SERVICE_DEMAND_START,       // start type
