@@ -1,8 +1,6 @@
-/* SourceCast v1.2 STYLE SHEET */
-@import url(ns4_toxins.css);
 
 
-/* SourceCast - styles start here */
+
 body {
 	background: white;
 	color: black;
@@ -34,16 +32,22 @@ th, td {
 #globalnav { 
 	font-weight: bold;
 	}
-#leftcol, #bodycol	{
-	vertical-align:	top;
-	}
 #leftcol a:link, #leftcol a:visited {
 	color: blue; 
 	}
-a:active, a:hover {
-	color: #c00;
+a:active, a:hover, #leftcol a:active, #leftcol a:hover {
+	color: #f60 !important;
+	}
+#login a:link, #login a:visited {
+	color: white; 
 	text-decoration: underline;
 	}
+#login a:active, #login a:hover {
+	color: #f60 !important;
+	}
+#helptext a {
+ text-decoration: none;
+ }
 .app th {
 	background-color: #ccc;
 	}
@@ -54,9 +58,8 @@ a:active, a:hover {
 	background: #fff;
 	}
 .datatablechild th {
-	background: #c3c3c3;
+	background: #efefef;
 	color: #000;
-	font-weight: normal
 	}
 .datatablechild tr.a td {
 	background: #cf9;
@@ -67,6 +70,10 @@ a:active, a:hover {
 	color: black
 	}
 .alert {
+	background: #ffc;
+	font-weight: bold
+	}
+.selection {
 	background: #ffc;
 	font-weight: bold
 	}
@@ -91,13 +98,6 @@ dd	{
 #login .username {
 	font-weight: bold;
 	}
-#login a:link, #login a:visited {
-	color: white; 
-	text-decoration: underline;
-	}
-#login a:active, #login a:hover {
-	color: #ff0;
-	}
 #helptext {
 	margin-top: 2em
 	}
@@ -116,7 +116,7 @@ dd	{
  }
 .docs h4 { color: #000
  }
-#leftcol a, .tabs a		{
+.tabs a		{
 	text-decoration:	none;
 	}
 .courtesylinks {
@@ -127,38 +127,19 @@ dd	{
  margin-bottom: .67em
  }
 #navcolumn div div {
-    margin-top: .5em;
-    padding-left: 1em;
-    margin-bottom: 0
-    }
-#navcolumn div div div {
-    margin-top: .2em;
-    padding-left: 1.2em;
-    margin-bottom: 0
-    }
+ padding-left: 1em;
+ margin-bottom: 0
+ }
 #banner, #banner td { 
-	background: #369;
+	background: #036;
 	color: white;
+	vertical-align: middle;
 	}
 body #banner #login a { 
 	color: white;
 	}
-#banner h3 {
-	color: white;
-	padding: .25em;
-	margin: 0;
-	}
-#modulenav {
-	background-color: #fff;
-	padding: .1em;
-	margin: 0;
-	border-bottom: 2px solid #666 
-	}
-#modulenav td {
-	align: right 
-	}
 .tabs th {
-	color: black;
+	color: white;
 	background-color: #999;
 	padding-left: 7px;
 	padding-right: 7px;
@@ -168,59 +149,17 @@ body #banner #login a {
 	padding-left: 7px;
 	padding-right: 7px;
 	}
-/* SourceCast - styles end here */
 
 /* Scarab/App - styles start here */
-#topmodule {
-	}
+
 #topmodule td {
 	background: #efefef;
 	padding-left: 12px;
 	vertical-align:	middle;
 	}	
-.functnbar {
-	vertical-align: middle;
-	padding: 3px;
-	margin-top: .5em;
-	}
-.functnbar th, .functnbar td {
-	color: #fff;
-	padding-left: 2px;
-	padding-right: 2px;
-	}
-.functnbar2 {
-	vertical-align: middle;
-	padding: 3px;
-	}
-.functnbar2 th, .functnbar2 td {
-	color: white;
-	padding-left: 2px;
-	padding-right: 2px;
-	}
-.tabs th {
-	padding-left: 7px;
-	padding-right: 7px;
-	}
-.tabs td {
-	padding-left: 7px;
-	padding-right: 7px;
-	}
 .datatablechild th {
 	background: #c3c3c3;
 	color: #000;
 	font-weight: bold;
 	}
-	
-.dividers, .dividers table, .dividers td {
-	background: #99ccff;
-	vertical-align: middle;
-	}
-
-.axial th {
-	background: #efefef;
-	text-align: right;
-	color: black;
-	}
 /* Scarab/App - styles end here */
-
-	
