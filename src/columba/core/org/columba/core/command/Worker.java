@@ -106,7 +106,7 @@ public class Worker extends SwingWorker implements WorkerStatusController {
 		try {
 			op.finish();
 
-			setDisplayText("");
+			//setDisplayText("");
 		} catch (Exception e) {
 			// Must create a ExceptionProcessor
 			e.printStackTrace();

@@ -40,7 +40,8 @@ public class FolderCommandAdapter {
 	
 	public FolderCommandReference getUpdateReferences()
 	{
-		if ( c.length==2 ) return null;
+		// TODO: fix commandadapter -> update-reference
+		if ( c.length<=2 ) return null;
 		
 		return c[ c.length-1 ];
 	}

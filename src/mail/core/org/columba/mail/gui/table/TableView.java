@@ -339,7 +339,7 @@ public class TableView extends TreeTable {
 	 */
 	public Object selectFirstRow() {
 		Object uid = null;
-		
+
 		//	if there are entries in the table
 		if (getRowCount() > 0) {
 
@@ -348,17 +348,17 @@ public class TableView extends TreeTable {
 
 			// getting the node
 			MessageNode selectedNode = (MessageNode) getValueAt(0, 0);
-			
+
 			// and getting the uid for this node
 			uid = selectedNode.getUid();
 
 			// scrolling to the first row
 			scrollRectToVisible(getCellRect(0, 0, false));
 			requestFocus();
-			
+
 			return uid;
 		}
-		
+
 		return null;
 	}
 
@@ -369,29 +369,53 @@ public class TableView extends TreeTable {
 	 */
 	public Object selectLastRow() {
 		Object uid = null;
-		
+
 		//	if there are entries in the table
 		if (getRowCount() > 0) {
 
 			// changing the selection to the first row
-			changeSelection(0, getRowCount() - 1, true, false);
+			changeSelection(getRowCount() - 1, 0, true, false);
 
 			// getting the node
-			MessageNode selectedNode = (MessageNode) getValueAt(0, 0);
-			
+			MessageNode selectedNode =
+				(MessageNode) getValueAt(getRowCount() - 1, 0);
+
 			// and getting the uid for this node
 			uid = selectedNode.getUid();
 
 			// scrolling to the first row
-			scrollRectToVisible(getCellRect(0, getRowCount() - 1, false));
+			scrollRectToVisible(getCellRect(getRowCount() - 1, 0,false));
 			requestFocus();
-			
+
 			return uid;
 		}
-		
+
 		return null;
 	}
 
-	
+	/**
+	 * Change the selection to the specified row
+	 * 
+	 * 
+	 * @param row		row to selected
+	 */
+	public void selectRow(int row) {
+		if (getRowCount() > 0) {
+			// changing the selection to the specified row
+			changeSelection(row, 0, true, false);
+
+			// getting the node
+			MessageNode selectedNode =
+				(MessageNode) getValueAt(row, 0);
+
+			// and getting the uid for this node
+			Object uid = selectedNode.getUid();
+
+			// scrolling to the first row
+			scrollRectToVisible(getCellRect(row, 0, false));
+			requestFocus();
+
+		}
+	}
 
 }

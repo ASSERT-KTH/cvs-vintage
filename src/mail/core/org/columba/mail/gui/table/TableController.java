@@ -29,7 +29,6 @@ import org.columba.core.gui.focus.FocusOwner;
 import org.columba.core.gui.util.treetable.Tree;
 import org.columba.core.logging.ColumbaLogger;
 import org.columba.core.main.MainInterface;
-import org.columba.core.util.SwingWorker;
 import org.columba.mail.command.FolderCommandReference;
 import org.columba.mail.config.MailConfig;
 import org.columba.mail.folder.Folder;
@@ -63,21 +62,9 @@ import org.columba.mail.message.HeaderList;
 
 public class TableController implements FocusOwner, ListSelectionListener {
 
-	private TableView headerTable;
 	private HeaderTableModel headerTableModel;
 
-	private SwingWorker worker;
-	private Folder folder;
-	private HeaderList headerList;
-
 	private FilterToolbar filterToolbar;
-
-	private MessageNode[] messageNodes;
-
-	private MessageNode node;
-	private MessageNode oldNode;
-
-	private Object[] selection;
 
 	private HeaderTableMouseListener headerTableMouseListener;
 	private HeaderTableDnd headerTableDnd;
@@ -86,15 +73,9 @@ public class TableController implements FocusOwner, ListSelectionListener {
 
 	private TableItem headerTableItem;
 
-	private boolean folderChanged = false;
-
-	private int counter = 1;
-
 	protected TableView view;
 
 	protected AbstractMailFrameController mailFrameController;
-
-	protected Object[] newUidList;
 
 	protected MarkAsReadTimer markAsReadTimer;
 
@@ -105,6 +86,8 @@ public class TableController implements FocusOwner, ListSelectionListener {
 	protected TableModelThreadedView tableModelThreadedView;
 
 	protected TableModelUpdateManager updateManager;
+
+	protected int[] previouslySelectedRows;
 
 	public TableController(AbstractMailFrameController mailFrameController) {
 
@@ -271,28 +254,24 @@ public class TableController implements FocusOwner, ListSelectionListener {
 
 	// method is called when folder data changed
 	// the method updates the model
-
 	public void tableChanged(TableModelChangedEvent event) throws Exception {
-		if (MainInterface.DEBUG) {
-			ColumbaLogger.log.info("event=" + event);
-		}
 
+		// selected rows before updating the model
+		// -> used later to restore the selection
+		previouslySelectedRows = view.getSelectedRows();
+
+		// folder in which the update occurs
 		FolderTreeNode folder = event.getSrcFolder();
-
-		if (folder == null) {
-			if (event.getEventType() == TableModelChangedEvent.UPDATE)
-				getHeaderTableModel().update();
-
-			//fireTableChangedEvent(event);
-			return;
-		}
-
+		
+		// get current selection
 		FolderCommandReference[] r =
 			(FolderCommandReference[]) mailFrameController
 				.getSelectionManager()
 				.getSelection("mail.table");
 		Folder srcFolder = (Folder) r[0].getFolder();
 
+
+		// make tree visible
 		if (getMailFrameController() instanceof ThreePaneMailFrameController) {
 			if (srcFolder != null)
 				((ThreePaneMailFrameController) getMailFrameController())
@@ -300,9 +279,13 @@ public class TableController implements FocusOwner, ListSelectionListener {
 					.getView()
 					.makeVisible(srcFolder.getSelectionTreePath());
 		}
-
+		
+		
+		// only update table if, this folder is the same
+		// as the currently selected
 		if (!folder.equals(srcFolder))
 			return;
+			
 		//System.out.println("headertableviewer->folderChanged");
 
 		switch (event.getEventType()) {
@@ -333,31 +316,17 @@ public class TableController implements FocusOwner, ListSelectionListener {
 
 					updateManager.modify(event.getUids());
 
-					try {
 
-						ColumbaLogger.log.debug("tableChangedEvent.Mark");
-						// fixme: i don't know if this is the right point to do this
-						// here we reselect the current marked message
-
-						// getting the last selected uid
-						Object[] lastSelUids = new Object[1];
-						lastSelUids[0] = ((Folder) folder).getLastSelection();
-						// selecting the message
-						if (lastSelUids[0] == null)
-							break;
-
-						setSelected(lastSelUids);
-						int selRow = getView().getSelectedRow();
-						// scroll to the position of the selection
-						getView().scrollRectToVisible(
-							getView().getCellRect(selRow, 0, false));
-						getView().requestFocus();
-					} catch (Exception ex) {
-						ex.printStackTrace();
-					}
 
 					break;
 				}
+		}
+
+		// re-select previous selection
+		if (previouslySelectedRows != null) {
+			// only re-select if only a single row was formerly selected
+			if (previouslySelectedRows.length == 1)
+				view.selectRow(previouslySelectedRows[0]);
 		}
 
 		if (getMailFrameController() instanceof ThreePaneMailFrameController) {
@@ -367,7 +336,8 @@ public class TableController implements FocusOwner, ListSelectionListener {
 				.setFolder(srcFolder);
 		}
 
-		//fireTableChangedEvent(event);
+		
+
 	}
 
 	/**
@@ -413,23 +383,25 @@ public class TableController implements FocusOwner, ListSelectionListener {
 		boolean ascending = getTableModelSorter().getSortingOrder();
 		int row = getView().getTree().getRowCount();
 		// row count == 0 --> empty table
-		if ( row == 0 ) return;
-		
+		if (row == 0)
+			return;
+
 		getView().clearSelection();
 		// if the last selection for the current folder is null, then we show the
 		// first/last message in the table and scroll to it.
 		if (folder.getLastSelection() == null) {
 			// changing the selection to the first/last row based on ascending state
-			
+
 			Object uid = null;
-			if ( ascending == true )
+			if (ascending == true)
 				uid = view.selectFirstRow();
-			else 
+			else
 				uid = view.selectLastRow();
-				
+
 			// no messages in this folder
-			if ( uid == null ) return;
-			
+			if (uid == null)
+				return;
+
 			Object[] uids = new Object[1];
 			uids[0] = uid;
 
@@ -442,27 +414,28 @@ public class TableController implements FocusOwner, ListSelectionListener {
 
 		} else {
 			// if a lastSelection for this folder is set
-			
+
 			// getting the last selected uid
 			Object[] lastSelUids = new Object[1];
 			lastSelUids[0] = folder.getLastSelection();
-			
+
 			// no messages in this folder
-			if ( lastSelUids[0] == null ) return;
-					 
+			if (lastSelUids[0] == null)
+				return;
+
 			// selecting the message
 			setSelected(lastSelUids);
 			int selRow = getView().getSelectedRow();
-			
+
 			// scroll to the position of the selection
 			getView().scrollRectToVisible(
 				getView().getCellRect(selRow, 0, false));
 			getView().requestFocus();
-			
+
 			// create command reference
 			FolderCommandReference[] refNew = new FolderCommandReference[1];
 			refNew[0] = new FolderCommandReference(folder, lastSelUids);
-			
+
 			// view the message under the new node
 			MainInterface.processor.addOp(
 				new ViewMessageCommand(mailFrameController, refNew));
