@@ -126,7 +126,7 @@ import org.tigris.scarab.reports.ReportBridge;
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: AbstractScarabModule.java,v 1.81 2003/02/07 02:25:42 jon Exp $
+ * @version $Id: AbstractScarabModule.java,v 1.82 2003/02/07 21:27:58 jon Exp $
  */
 public abstract class AbstractScarabModule
     extends BaseObject
@@ -1006,7 +1006,7 @@ public abstract class AbstractScarabModule
     public Issue getIssueById(String id)
         throws Exception
     {
-        if (id == null)
+        if (id == null || id.length() == 0)
         {
             return null;
         }
