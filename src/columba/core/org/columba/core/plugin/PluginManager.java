@@ -66,10 +66,13 @@ public class PluginManager {
 						(AbstractPluginHandler) hashTable.get(extensionPoint);
 
 					File file = null;
+					/*
 					if (jar != null)
 						file = new File(folder, jar);
 					else
-						file = folder;
+					*/
+					
+					file = folder;
 
 					ColumbaLogger.log.info("debug: " + file.toString());
 

@@ -22,13 +22,13 @@ import javax.swing.JComboBox;
 import javax.swing.JComponent;
 import javax.swing.JPanel;
 
-import org.columba.core.plugin.DefaultPlugin;
+import org.columba.core.main.MainInterface;
+import org.columba.core.plugin.PluginInterface;
 import org.columba.mail.filter.FilterAction;
 import org.columba.mail.gui.config.filter.ActionList;
 import org.columba.mail.plugin.FilterActionPluginHandler;
-import org.columba.core.main.MainInterface;
 
-public class DefaultActionRow extends DefaultPlugin {
+public class DefaultActionRow implements PluginInterface {
 	
 	protected JPanel panel;
 	

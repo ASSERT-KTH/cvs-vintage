@@ -8,7 +8,7 @@
 	<!-- here we should use the cvs-verion info for automatic replace the version -->
 	<property name="version" value="0.9.11"/>
 	<property name="dest" value="../columba-${version}"/>
-	<property name="ownclasspath" value="${classpath}:${src}/lib/log4j.jar:${src}/lib/jython.jar:${src}/lib/junit.jar:${src}/lib/jakarta-oro-2.0.6.jar"/>
+	<property name="ownclasspath" value="${classpath}:${src}/lib/log4j.jar:${src}/lib/junit.jar:${src}/lib/jakarta-oro-2.0.6.jar"/>
 
 	<!-- definition of the task to check the style of the java-code -->
 	<taskdef name="checkstyle" classname="com.puppycrawl.tools.checkstyle.CheckStyleTask">
@@ -90,7 +90,7 @@
 			</fileset>
 			-->
 			<!-- need to uncomment this when adding resource files 
-			<fileset dir="${src}/src/addressbook/independent/"> 
+			<fileset dir="${dest}/src/addressbook/independent/"> 
 			 <include name="**"/>
 			</fileset>
 			-->

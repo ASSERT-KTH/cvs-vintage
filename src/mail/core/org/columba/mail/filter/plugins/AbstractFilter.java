@@ -1,7 +1,7 @@
 package org.columba.mail.filter.plugins;
 
 import org.columba.core.command.WorkerStatusController;
-import org.columba.core.plugin.DefaultPlugin;
+import org.columba.core.plugin.PluginInterface;
 import org.columba.mail.folder.Folder;
 
 /**
@@ -12,7 +12,7 @@ import org.columba.mail.folder.Folder;
  * To enable and disable the creation of type comments go to
  * Window>Preferences>Java>Code Generation.
  */
-public abstract class AbstractFilter extends DefaultPlugin{
+public abstract class AbstractFilter implements PluginInterface{
 
 	
 

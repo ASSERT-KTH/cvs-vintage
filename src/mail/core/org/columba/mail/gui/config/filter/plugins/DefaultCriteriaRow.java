@@ -24,11 +24,11 @@ import javax.swing.JComponent;
 import javax.swing.JPanel;
 
 import org.columba.core.plugin.AbstractPluginHandler;
-import org.columba.core.plugin.DefaultPlugin;
+import org.columba.core.plugin.PluginInterface;
 import org.columba.mail.filter.FilterCriteria;
 import org.columba.mail.gui.config.filter.CriteriaList;
 
-public class DefaultCriteriaRow extends DefaultPlugin {
+public class DefaultCriteriaRow implements PluginInterface {
 	protected FilterCriteria criteria;
 	protected CriteriaList criteriaList;
 

@@ -19,7 +19,7 @@
 package org.columba.core.scripting;
 
 import org.columba.core.io.DiskIO;
-import org.columba.core.plugin.DefaultPlugin;
+import org.columba.core.plugin.PluginInterface;
 import org.python.core.Py;
 import org.python.core.PyModule;
 import org.python.core.PyObject;
@@ -40,7 +40,7 @@ import org.python.util.PythonInterpreter;
  * To enable and disable the creation of type comments go to
  * Window>Preferences>Java>Code Generation.
  */
-public final class Python {
+public final class PythonInterpreterPlugin extends AbstractInterpreter{
 	private static PythonInterpreter parser;
 
 	/**
@@ -51,7 +51,7 @@ public final class Python {
 	public static PythonInterpreter getPythonInterpreter(Object parent) {
 		if (parser == null) {
 			//parser =  new PythonInterpreter();
-			System.setProperty("python.path", "ext/Lib");
+			System.setProperty("python.path", "./plugins/PythonInterpreter/lib/Lib");
 			/*
 			Properties props = new Properties();
 			props.setProperty("python.path", ConfigPath.getConfigDirectory()+ "/ext/Lib");
@@ -218,7 +218,7 @@ public final class Python {
 		}
 	}
 
-	public static Object instanciate(
+	public Object instanciate(
 		String fileName,
 		String className,
 		Object[] args,
@@ -256,7 +256,7 @@ public final class Python {
 			}
 			System.out.println("pyObject=" + pyObject);
 
-			Object javaObject = pyObject.__tojava__(DefaultPlugin.class);
+			Object javaObject = pyObject.__tojava__(PluginInterface.class);
 			System.out.println("javaObject=" + javaObject);
 			//( (DefaultPlugin) javaObject).run("asdfljasf");
 

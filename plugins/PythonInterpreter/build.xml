@@ -1,0 +1,33 @@
+<?xml version="1.0"?>
+<project name="columba" default="jar" basedir=".">
+
+ <property name="columba_src" value="./../../classes"/>
+ <property name="src" value="."/>
+ <property name="build" value="build"/>
+ <property name="user.name" value="The Columba Team"/>
+ <property name="version" value="1.0"/>
+ <property name="dest" value="PythonInterpreter"/>
+ <property name="ownclasspath" value="${classpath}:${columba_src}:${columba_src}/lib/log4j.jar:./lib/jython.jar:${columba_src}/lib/junit.jar:${columba_src}/lib/jakarta-oro-2.0.6.jar"/>
+
+ <!-- compile the classes -->
+ <target name="compile">
+  <echo message="the classes are going to ${dest} "/> 
+  <echo message="columba-source is ${columba_src}"/>
+  <javac srcdir="${src}" destdir="${src}" classpath="${ownclasspath}" encoding="ISO-8859-1" debug="yes"/>
+ </target>
+
+ <target name="jar" depends="compile">
+  <echo message="plug-in is going to be ${dest}.jar"/>
+  <jar basedir="${src}" jarfile="${dest}.jar">
+   <include name="**/*.class"/>
+   <exclude name="${dest}.jar"/>
+   <exclude name="build.xml"/>   
+   <exclude name="plugin.xml"/>
+   <manifest>
+    <attribute name="Class-Path" value="lib/jython.jar"/>
+    <attribute name="Sealed" value="true"/>
+   </manifest>
+  </jar>
+ </target>
+
+</project>

@@ -13,7 +13,7 @@ import org.columba.mail.message.HeaderInterface;
  * To enable and disable the creation of type comments go to
  * Window>Preferences>Java>Code Generation.
  */
-public class HeaderfieldFilter extends AbstractFilter {
+public class HeaderfieldFilter extends AbstractFilter{
 
 	/**
 	 * Constructor for SubjectFilter.

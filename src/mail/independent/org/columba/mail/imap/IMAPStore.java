@@ -245,9 +245,9 @@ public class IMAPStore {
 
 	public boolean select(WorkerStatusController worker, String path)
 		throws Exception {
-		//System.out.println("select");
+		System.out.println("select");
 
-		//System.out.println("path=" + path);
+		System.out.println("path=" + path);
 
 		try {
 

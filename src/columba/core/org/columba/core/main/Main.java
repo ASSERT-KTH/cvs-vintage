@@ -38,6 +38,7 @@ import org.columba.core.gui.util.ImageLoader;
 import org.columba.core.gui.util.StartUpFrame;
 import org.columba.core.gui.util.ThemeSwitcher;
 import org.columba.core.logging.ColumbaLogger;
+import org.columba.core.plugin.InterpreterHandler;
 import org.columba.core.plugin.PluginManager;
 import org.columba.core.shutdown.SaveConfigPlugin;
 import org.columba.core.shutdown.ShutdownManager;
@@ -205,6 +206,8 @@ public class Main {
 				MainInterface.processor.start();
 
 				MainInterface.pluginManager = new PluginManager();
+				MainInterface.pluginManager.registerHandler( new InterpreterHandler() );
+				
 				MainInterface.pluginManager.registerHandler(
 					new FilterActionPluginHandler());
 				MainInterface.pluginManager.registerHandler(
