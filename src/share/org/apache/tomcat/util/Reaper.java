@@ -69,47 +69,67 @@ import org.apache.tomcat.util.*;
  * data.
  * 
  * @author James Duncan Davidson [duncan@eng.sun.com]
+ * @author Costin Manolache
  */
-
 public class Reaper extends Thread {
 
-    private static Reaper reaper;
-    
-    static {
-	reaper = new Reaper();
-    }
-    
-    static Reaper getReaper() {
-	return reaper;
+    public Reaper() {
+	this.setDaemon(true);
+	this.setName("TomcatReaper");
     }
 
-    private int interval = 1000 * 60; //ms    
-    //XXX    private ServerSessionManager serverSessionMgr;
+    private int interval = 1000 * 60; //ms
     
-    private Reaper() {
-	this.setDaemon(true);
+    // XXX TODO Allow per/callback interval, find next, etc
+    // Right now the "interval" is used for all callbacks
+    // and it represent a sleep between runs.
+    
+    ThreadPoolRunnable cbacks[]=new ThreadPoolRunnable[30]; // XXX max
+    Object tdata[]=new Object[30]; // XXX max
+    int count=0;
+
+    /** Adding and removing callbacks is synchronized
+     */
+    Object lock=new Object();
+    static boolean running=true;
+    
+    public int addCallback( ThreadPoolRunnable c, int interval ) {
+	synchronized( lock ) {
+	    cbacks[count]=c;
+	    count++;
+	    return count-1;
+	}
     }
-    
-//XXX     void setServerSessionManager(ServerSessionManager serverSessionMgr) {
-// 	this.serverSessionMgr = serverSessionMgr;
-//     }
+
+    public void removeCallback( int idx ) {
+	synchronized( lock ) {
+	    count--;
+	    cbacks[idx]=cbacks[count];
+	    cbacks[count]=null;
+	}
+    }
+
+    public void stopReaper() {
+	running=false;
+	this.notify();
+    }
     
     public void run() {
-
-	// XXX
-	// eventually, to be nice, this should know when everything
-	// goes down so that it's not continuing to tick in the background
-
-	while (true) {
+	while (running) {
 	    try {
 		this.sleep(interval);
 	    } catch (InterruptedException ie) {
 		// sometimes will happen
 	    }
-
-	    //XXX     if (serverSessionMgr != null) {
-	    // 		serverSessionMgr.reap();
-	    //     }
+	    
+	    for( int i=0; i< count; i++ ) {
+		ThreadPoolRunnable callB=cbacks[i];
+		// it may be null if a callback is removed.
+		//  I think the code is correct
+		if( callB!= null ) {
+		    callB.runIt( cbacks[i] );
+		}
+	    }
 	}
     }
 }
