@@ -68,7 +68,7 @@ import org.tigris.scarab.om.Module;
  * @author <a href="mailto:jon@collab.net">Jon Scott Stevens</a>
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: Email.java,v 1.7 2002/09/30 15:57:49 jmcnally Exp $
+ * @version $Id: Email.java,v 1.8 2002/10/02 20:30:12 jmcnally Exp $
  */
 public class Email
 {
@@ -138,7 +138,7 @@ public class Email
                 {
                     te = getTemplateEmail(context,  module, fromUser, 
                                           replyToUser, subject, template);
-                    te.setTo(null, archiveEmail);
+                    te.setTo(archiveEmail, archiveEmail);
                     te.send();
                 }
             }
