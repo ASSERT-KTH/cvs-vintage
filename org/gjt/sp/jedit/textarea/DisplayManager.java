@@ -36,7 +36,7 @@ import org.gjt.sp.util.Log;
  * Manages low-level text display tasks.
  * @since jEdit 4.2pre1
  * @author Slava Pestov
- * @version $Id: DisplayManager.java,v 1.57 2003/06/04 04:31:04 spestov Exp $
+ * @version $Id: DisplayManager.java,v 1.58 2003/06/05 04:44:40 spestov Exp $
  */
 public class DisplayManager
 {
@@ -621,6 +621,31 @@ public class DisplayManager
 		}
 	} //}}}
 
+		//{{{ _notifyScreenLineChanges() method
+	void _notifyScreenLineChanges()
+	{
+		if(Debug.SCROLL_DEBUG)
+			Log.log(Log.DEBUG,this,"_notifyScreenLineChanges()");
+
+		// when the text area switches to us, it will do
+		// a reset anyway
+		if(textArea.getDisplayManager() == this)
+		{
+			if(firstLine.callReset)
+				firstLine.reset();
+			else if(firstLine.callChanged)
+				firstLine.changed();
+
+			if(scrollLineCount.callReset)
+				scrollLineCount.reset();
+			else if(scrollLineCount.callChanged)
+				scrollLineCount.changed();
+
+			firstLine.callReset = firstLine.callChanged = false;
+			scrollLineCount.callReset = scrollLineCount.callChanged = false;
+		}
+	} //}}}
+
 	//}}}
 
 	//{{{ Private members
@@ -1015,31 +1040,6 @@ loop:		for(;;)
 		scrollLineCount.callChanged = true;
 	} //}}}
 
-	//{{{ _notifyScreenLineChanges() method
-	private void _notifyScreenLineChanges()
-	{
-		if(Debug.SCROLL_DEBUG)
-			Log.log(Log.DEBUG,this,"_notifyScreenLineChanges()");
-
-		// when the text area switches to us, it will do
-		// a reset anyway
-		if(textArea.getDisplayManager() == this)
-		{
-			if(firstLine.callReset)
-				firstLine.reset();
-			else if(firstLine.callChanged)
-				firstLine.changed();
-
-			if(scrollLineCount.callReset)
-				scrollLineCount.reset();
-			else if(scrollLineCount.callChanged)
-				scrollLineCount.changed();
-
-			firstLine.callReset = firstLine.callChanged = false;
-			scrollLineCount.callReset = scrollLineCount.callChanged = false;
-		}
-	} //}}}
-
 	//}}}
 
 	//{{{ Anchor class
@@ -1251,13 +1251,10 @@ loop:		for(;;)
 
 			// JEditTextArea.scrollTo() needs this to simplify
 			// its code
-			if(screenAmount != 0)
-			{
-				if(screenAmount < 0)
-					scrollUp(-screenAmount);
-				else
-					scrollDown(screenAmount);
-			}
+			if(screenAmount < 0)
+				scrollUp(-screenAmount);
+			else if(screenAmount > 0)
+				scrollDown(screenAmount);
 		} //}}}
 
 		//{{{ physUp() method
@@ -1309,13 +1306,10 @@ loop:		for(;;)
 
 			// JEditTextArea.scrollTo() needs this to simplify
 			// its code
-			if(screenAmount != 0)
-			{
-				if(screenAmount < 0)
-					scrollUp(-screenAmount);
-				else
-					scrollDown(screenAmount);
-			}
+			if(screenAmount < 0)
+				scrollUp(-screenAmount);
+			else if(screenAmount > 0)
+				scrollDown(screenAmount);
 		} //}}}
 
 		//{{{ scrollDown() method

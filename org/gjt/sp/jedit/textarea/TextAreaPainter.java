@@ -50,7 +50,7 @@ import org.gjt.sp.util.Log;
  * @see JEditTextArea
  *
  * @author Slava Pestov
- * @version $Id: TextAreaPainter.java,v 1.85 2003/06/04 04:31:04 spestov Exp $
+ * @version $Id: TextAreaPainter.java,v 1.86 2003/06/05 04:44:41 spestov Exp $
  */
 public class TextAreaPainter extends JComponent implements TabExpander
 {
@@ -699,6 +699,8 @@ public class TextAreaPainter extends JComponent implements TabExpander
 			textArea.chunkCache.invalidateChunksFrom(lastInvalid + 1);
 			repaint(0,h,getWidth(),getHeight() - h);
 		}
+
+		textArea.displayManager._notifyScreenLineChanges();
 	} //}}}
 
 	//{{{ nextTabStop() method
