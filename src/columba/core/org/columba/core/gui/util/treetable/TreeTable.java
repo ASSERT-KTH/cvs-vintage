@@ -34,7 +34,7 @@ public class TreeTable extends JTable {
 			// Extend the implementation of the 
 			// DefaultTreeSelectionModel's constructor: 
 			{
-				// setSelectionModel() of JarTreeTable
+				// setSelectionModel() of TreeTable
 				// listSelectionModel of DefaultTreeSelectionModel
 				setSelectionModel(listSelectionModel);
 			}
@@ -50,7 +50,7 @@ public class TreeTable extends JTable {
 		return tree;
 	}
 
-	/* We overide setBounds() of the JarTreeTableCellRenderer 
+	/* We overide setBounds() of the TreeTableCellRenderer 
 	 * to move and resize our tree to the right position 
 	 * in our table row. This method is also used by the UI to
 	 * paint the editor. To ensure the editor is never painted by the UI, 
