@@ -14,7 +14,7 @@
 <!--                                                                        -->
 <!-- ====================================================================== -->
 
-<!-- $Id: build.xml,v 1.167 2004/07/26 16:53:43 loubyansky Exp $ -->
+<!-- $Id: build.xml,v 1.168 2004/07/28 05:41:20 loubyansky Exp $ -->
 
 <project default="main" name="JBoss/Server">
 
@@ -274,6 +274,7 @@
         <include name="org/jboss/ejb/plugins/keygenerator/hilo/HiLoKeyGeneratorFactory.java"/>
         <include name="org/jboss/ejb/plugins/cmp/jdbc/SQLExceptionProcessor.java"/>
         <include name="org/jboss/ejb/plugins/cmp/jdbc2/schema/TableCache.java"/>
+        <include name="org/jboss/ejb/plugins/cmp/jdbc2/schema/PartitionedTableCache.java"/>
         <include name="org/jboss/ejb/plugins/inflow/JBossMessageEndpointFactory.java"/>
         <include name="org/jboss/ejb/plugins/jms/JMSContainerInvoker.java"/>
         <include name="org/jboss/ejb/timer/AbstractTimerSource.java"/>
