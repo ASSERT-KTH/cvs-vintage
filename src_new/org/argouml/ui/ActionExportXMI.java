@@ -1,4 +1,4 @@
-// $Id: ActionExportXMI.java,v 1.19 2005/02/23 00:06:26 bobtarling Exp $
+// $Id: ActionExportXMI.java,v 1.20 2005/02/24 17:19:17 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -42,7 +42,8 @@ import org.argouml.uml.ui.ActionFileOperations;
  * @author jaap.branderhorst@xs4all.nl
  * Jun 7, 2003
  */
-public final class ActionExportXMI extends ActionFileOperations implements PluggableMenu {
+public final class ActionExportXMI extends ActionFileOperations 
+    implements PluggableMenu {
 
     /** logger */
     private static final Logger LOG = Logger.getLogger(ActionExportXMI.class);
@@ -53,7 +54,7 @@ public final class ActionExportXMI extends ActionFileOperations implements Plugg
      * Constructor.
      */
     private ActionExportXMI() {
-        super("action.export-project-as-xmi");
+        super(Translator.localize("action.export-project-as-xmi"));
     }
 
     /**
