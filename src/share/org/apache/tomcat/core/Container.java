@@ -454,8 +454,9 @@ public class Container implements Cloneable{
      *   XXX incomplete implementation
      */
     public void addContextInterceptor( ContextInterceptor ci) {
-	contextInterceptors.addElement( ci );
 	addInterceptor( (BaseInterceptor) ci );
+        // XXX will be deprecated when hooks end testing
+	contextInterceptors.addElement( ci );
     }
 
     /** Add a per/container request interceptor. It will be called back for
@@ -464,10 +465,11 @@ public class Container implements Cloneable{
      *   XXX incomplete implementation.
      */
     public void addRequestInterceptor( RequestInterceptor ri) {
-	requestInterceptors.addElement( ri );
 	addInterceptor( (BaseInterceptor) ri );
+        // XXX will be deprecated when hooks end testing
+	requestInterceptors.addElement( ri );
 	if( ri instanceof ContextInterceptor )
-	    addContextInterceptor( (ContextInterceptor)ri );
+	        contextInterceptors.addElement( ri );
     }
 
     // -------------------- Getting the active interceptors 

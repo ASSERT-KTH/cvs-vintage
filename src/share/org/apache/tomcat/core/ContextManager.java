@@ -513,6 +513,17 @@ public final class ContextManager implements LogAware{
 	return ari;
     }
 
+    public RequestInterceptor[] getRequestInterceptorszz( Request req , int hook_id) {
+        Context ctx=req.getContext();
+        // if Bad request (ctx == null) only global interceptors are called
+        if( ctx == null )
+           return defaultContainer.getInterceptors(hook_id);
+        Container ct=ctx.getContainer();
+        RequestInterceptor[] ari=ct.getInterceptors(hook_id);
+
+	return ari;
+    }
+
     public RequestInterceptor[] getRequestInterceptors() {
 	return defaultContainer.getRequestInterceptors();
     }
@@ -621,6 +632,8 @@ public final class ContextManager implements LogAware{
 
     static int contextMap_ID=Container.getHookId( "contextMap");
     static int requestMap_ID=Container.getHookId( "requestMap");
+    static int authorize_ID=Container.getHookId( "authorize");
+    static int authenticate_ID=Container.getHookId( "authenticate");
 
 
     /** Will find the Handler for a servlet, assuming we already have
@@ -655,8 +668,8 @@ public final class ContextManager implements LogAware{
      */
     public int doAuthenticate( Request req, Response res ) {
 	int status=0;
-	RequestInterceptor reqI[]= getRequestInterceptors(req);
-
+//	RequestInterceptor reqI[]= getRequestInterceptors(req);
+	BaseInterceptor reqI[]= req.getContext().getContainer().getInterceptors(authenticate_ID);
 	for( int i=0; i< reqI.length; i++ ) {
 	    status=reqI[i].authenticate( req, res );
 	    if ( status != 0 ) {
@@ -673,7 +686,8 @@ public final class ContextManager implements LogAware{
      */
     public int doAuthorize( Request req, Response res, String roles[] ) {
 	int status=0;
-	RequestInterceptor reqI[]= getRequestInterceptors(req);
+//	RequestInterceptor reqI[]= getRequestInterceptors(req);
+	BaseInterceptor reqI[]= req.getContext().getContainer().getInterceptors(authorize_ID);
 
 	for( int i=0; i< reqI.length; i++ ) {
 	    status = reqI[i].authorize( req, res, roles );
