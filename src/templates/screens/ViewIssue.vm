@@ -1,37 +1,56 @@
-#set ($action = $link.setPage("ViewIssue.vm").setAction("ModifyIssue").addPathInfo("nextTemplate", "ViewIssue.vm"))
+$page.setTitle("View Issue")
+
+<div class="app" id="viewissue">
+
+#set ($action = $link.setPage("ViewIssue.vm").setAction("ModifyIssue").addPathInfo("nextTemplate", "ViewIssue.vm").toString())
+
 #if ($data.Parameters.getString("issue_id"))
-    #set ($currentIssueId = $data.Parameters.getString("issue_id"))
+  #set ($currentIssueId = $data.Parameters.getString("issue_id"))
 #else
-    #set ($currentIssueId = $data.Parameters.getString("id"))
+  #set ($currentIssueId = $data.Parameters.getString("id"))
 #end
+
 #set ($currentIssue = $scarabR.getIssue($currentIssueId))
 #set ($fullHistory = $data.Parameters.getString("fullhistory",""))
 #set ($currentIssueModuleId = $currentIssue.ModuleId)
 #set ($currentModule = $scarabR.CurrentModule)
 #set ($currentModuleId = $currentModule.ModuleId)
 #set ($currentModuleName = $currentModule.Name)
+
 #if ($currentIssueModuleId != $currentModuleId)
+
 <p><strong class="alert">
 You are viewing an issue in a different Module than is currently selected.
 </strong></p>
+
 #end
+
 #if ($currentIssue)
-    #set ($attrValues = $currentIssue.ModuleAttributeValuesMap)
-#set ($module = $scarabR.CurrentModule)
-<form name="IssueForm" method="post" action="$action" >
-#if ($fullHistory) <input type="hidden" name="fullHistory" value="$fullHistory" /> #end
-<input type="hidden" name="id" value="$currentIssue.IssueId" />
- #viewIssue( $currentIssue )
-$intake.declareGroups()
-</form>
-#else     ## issue id was not valid
-    #if ($currentIssueId)
-        <p><strong class="alert">
-        The issue id, $currentIssueId, is not valid.
-        </strong></p>
-    #else
-        <p><strong class="alert">
-        You need to enter an issue id.
-        </strong></p>
-    #end
+
+ #set ($attrValues = $currentIssue.ModuleAttributeValuesMap)
+ <form method="post" action="$action" >
+ #if ($fullHistory)
+   <input type="hidden" name="fullHistory" value="$fullHistory" />
+ #end
+ <input type="hidden" name="id" value="$currentIssue.IssueId" />
+
+ #viewIssue($currentIssue $currentModule)
+
+ $intake.declareGroups()
+ </form>
+
+#else
+
+  #if ($currentIssueId)
+    <p><strong class="alert">
+    The issue id, $currentIssueId, is not valid.
+    </strong></p>
+  #else
+    <p><strong class="alert">
+    You need to enter an issue id.
+    </strong></p>
+  #end
+
 #end
+
+</div>
