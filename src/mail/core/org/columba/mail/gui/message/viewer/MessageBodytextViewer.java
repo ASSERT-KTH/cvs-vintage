@@ -21,6 +21,7 @@ import java.awt.Font;
 import java.awt.Insets;
 import java.awt.datatransfer.Clipboard;
 import java.awt.datatransfer.StringSelection;
+import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
@@ -52,11 +53,10 @@ import org.columba.mail.parser.text.HtmlParser;
 import org.columba.ristretto.coder.Base64DecoderInputStream;
 import org.columba.ristretto.coder.CharsetDecoderInputStream;
 import org.columba.ristretto.coder.QuotedPrintableDecoderInputStream;
-import org.columba.ristretto.message.LocalMimePart;
 import org.columba.ristretto.message.MimeHeader;
+import org.columba.ristretto.message.MimePart;
 import org.columba.ristretto.message.MimeTree;
 import org.columba.ristretto.message.StreamableMimePart;
-import org.columba.ristretto.message.io.CharSequenceSource;
 
 /**
  * Viewer displays message body text.
@@ -171,26 +171,26 @@ public class MessageBodytextViewer extends JTextPane implements Viewer,
      */
     public void view(MessageFolder folder, Object uid,
             MailFrameMediator mediator) throws Exception {
-        StreamableMimePart bodyPart = null;
-
+        MimePart bodyPart = null;
+        InputStream bodyStream;
+        
         MimeTree mimePartTree = folder.getMimePartTree(uid);
 
         XmlElement html = MailInterface.config.getMainFrameOptionsConfig()
                 .getRoot().getElement("/options/html");
         // Which Bodypart shall be shown? (html/plain)
-        if (Boolean.valueOf(html.getAttribute("prefer")).booleanValue())
-            bodyPart = (StreamableMimePart) mimePartTree
+        if (Boolean.valueOf(html.getAttribute("prefer")).booleanValue()) {
+            bodyPart = mimePartTree
                     .getFirstTextPart("html");
-        else
-            bodyPart = (StreamableMimePart) mimePartTree
-                    .getFirstTextPart("plain");
-        if (bodyPart == null) {
-            bodyPart = new LocalMimePart(new MimeHeader());
-            ((LocalMimePart) bodyPart).setBody(new CharSequenceSource(
-                    "<No Message-Text>"));
         } else {
-
-            bodyPart = (StreamableMimePart) folder.getMimePart(uid, bodyPart
+            bodyPart = mimePartTree
+                    .getFirstTextPart("plain");
+        }
+        
+        if (bodyPart == null) {
+            bodyStream = new ByteArrayInputStream( "<No Message-Text>".getBytes() );
+        } else {
+            bodyStream = folder.getMimePartBodyStream(uid, bodyPart
                     .getAddress());
         }
 
@@ -225,8 +225,6 @@ public class MessageBodytextViewer extends JTextPane implements Viewer,
         boolean htmlViewer = bodyPart.getHeader().getMimeType().getSubtype()
                 .equals("html");
 
-        InputStream bodyStream = ((StreamableMimePart) bodyPart)
-                .getInputStream();
 
         int encoding = bodyPart.getHeader().getContentTransferEncoding();
 
@@ -248,6 +246,10 @@ public class MessageBodytextViewer extends JTextPane implements Viewer,
 
         bodyStream = new CharsetDecoderInputStream(bodyStream, charset);
 
+        
+        // Read Stream in String
+        long startTime = System.currentTimeMillis();
+        
         StringBuffer text = new StringBuffer();
         int next = bodyStream.read();
 
@@ -256,9 +258,12 @@ public class MessageBodytextViewer extends JTextPane implements Viewer,
             next = bodyStream.read();
         }
 
+        
         setBodyText(text.toString(), htmlViewer);
 
         bodyStream.close();
+
+        LOG.finer("Needed " + (System.currentTimeMillis() - startTime) + " ms ");
     }
 
     /**

@@ -24,6 +24,7 @@ import junit.framework.Test;
 import junit.framework.TestCase;
 import junit.framework.TestSuite;
 
+import org.columba.mail.folder.IMAPTstFactory;
 import org.columba.mail.folder.MHFolderFactory;
 import org.columba.mail.folder.MailboxTstFactory;
 import org.columba.mail.folder.TempFolderFactory;
@@ -93,6 +94,7 @@ public class AllTests {
 
         setup(suite, new MHFolderFactory());
         setup(suite, new TempFolderFactory());
+        setup(suite, new IMAPTstFactory());
 
         return suite;
     }

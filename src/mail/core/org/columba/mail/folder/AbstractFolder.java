@@ -50,6 +50,9 @@ public abstract class AbstractFolder extends DefaultMutableTreeNode {
     // locking mechanism
     protected Lock myLock = new Lock();
 
+    // Root folder cache
+    private AbstractFolder rootFolder;
+    
     protected EventListenerList listenerList = new EventListenerList();
     
     public AbstractFolder(String name, String type) {
@@ -380,4 +383,30 @@ public abstract class AbstractFolder extends DefaultMutableTreeNode {
     public boolean supportsMove() {
         return false;
     }
+
+	/**
+	 * Return the root folder of this folder.
+	 * <p>
+	 * This is especially useful when using IMAP. IMAP has a root folder which
+	 * is labelled with the account name.
+	 * 
+	 * @return root parent folder of this folder
+	 */
+	public AbstractFolder getRootFolder() {
+		// If rootFolder is not cached traverse the tree
+		if( rootFolder == null ) {
+			AbstractFolder parent = (AbstractFolder) getParent();
+	
+			// There is no parent
+			if (parent == null) { return this; }
+	
+			if (parent instanceof RootFolder) {
+				rootFolder = parent;
+			} else {
+				rootFolder = parent.getRootFolder();
+			}
+		}
+		
+		return rootFolder;
+	}
 }

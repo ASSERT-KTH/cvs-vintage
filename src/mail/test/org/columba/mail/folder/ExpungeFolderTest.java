@@ -20,7 +20,7 @@ package org.columba.mail.folder;
 import java.io.ByteArrayInputStream;
 
 import org.columba.ristretto.message.Flags;
-import org.columba.ristretto.message.MessageFolderInfo;
+import org.columba.ristretto.message.MailboxInfo;
 
 /**
  * @author fdietz
@@ -66,7 +66,7 @@ public class ExpungeFolderTest extends AbstractFolderTest {
 
         Object[] uids = getSourceFolder().getUids();
         assertEquals("one message should be in source folder", 1, uids.length);
-        MessageFolderInfo info = getSourceFolder().getMessageFolderInfo();
+        MailboxInfo info = getSourceFolder().getMessageFolderInfo();
         assertEquals("one message should be in source folder", 1, info
                 .getExists());
         // close streams
@@ -99,7 +99,7 @@ public class ExpungeFolderTest extends AbstractFolderTest {
 
         Object[] uids = getSourceFolder().getUids();
         assertEquals("null message should be in source folder", 0, uids.length);
-        MessageFolderInfo info = getSourceFolder().getMessageFolderInfo();
+        MailboxInfo info = getSourceFolder().getMessageFolderInfo();
         assertEquals("null message should be in source folder", 0, info
                 .getExists());
         // close streams

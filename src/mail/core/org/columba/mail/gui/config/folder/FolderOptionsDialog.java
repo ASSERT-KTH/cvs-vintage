@@ -16,38 +16,6 @@
 
 package org.columba.mail.gui.config.folder;
 
-import com.jgoodies.forms.builder.ButtonStackBuilder;
-import com.jgoodies.forms.builder.PanelBuilder;
-import com.jgoodies.forms.layout.CellConstraints;
-import com.jgoodies.forms.layout.FormLayout;
-
-import org.columba.core.gui.util.ButtonWithMnemonic;
-import org.columba.core.gui.util.CTabbedPane;
-import org.columba.core.gui.util.LabelWithMnemonic;
-import org.columba.core.gui.util.MultiLineLabel;
-import org.columba.core.help.HelpManager;
-import org.columba.core.main.MainInterface;
-import org.columba.core.xml.XmlElement;
-
-import org.columba.mail.command.FolderCommandReference;
-import org.columba.mail.config.FolderItem;
-import org.columba.mail.folder.MessageFolder;
-import org.columba.mail.folder.LocalFolder;
-import org.columba.mail.folder.command.ExportFolderCommand;
-import org.columba.mail.folder.command.RenameFolderCommand;
-import org.columba.mail.folder.command.SyncSearchEngineCommand;
-import org.columba.mail.folder.search.DefaultSearchEngine;
-import org.columba.mail.folderoptions.FolderOptionsController;
-import org.columba.mail.gui.frame.MailFrameMediator;
-import org.columba.mail.gui.table.command.ViewHeaderListCommand;
-import org.columba.mail.util.MailResourceLoader;
-
-import org.columba.ristretto.message.MessageFolderInfo;
-
-import org.frapuccino.checkablelist.CheckableItem;
-import org.frapuccino.checkablelist.CheckableItemListTableModel;
-import org.frapuccino.checkablelist.CheckableList;
-
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
@@ -58,12 +26,52 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
-
 import java.io.File;
 
-import javax.swing.*;
+import javax.swing.BorderFactory;
+import javax.swing.DefaultListSelectionModel;
+import javax.swing.JButton;
+import javax.swing.JCheckBox;
+import javax.swing.JComponent;
+import javax.swing.JDialog;
+import javax.swing.JFileChooser;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTextField;
+import javax.swing.KeyStroke;
+import javax.swing.UIManager;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
+
+import org.columba.core.gui.util.ButtonWithMnemonic;
+import org.columba.core.gui.util.CTabbedPane;
+import org.columba.core.gui.util.LabelWithMnemonic;
+import org.columba.core.gui.util.MultiLineLabel;
+import org.columba.core.help.HelpManager;
+import org.columba.core.main.MainInterface;
+import org.columba.core.xml.XmlElement;
+import org.columba.mail.command.FolderCommandReference;
+import org.columba.mail.config.FolderItem;
+import org.columba.mail.folder.LocalFolder;
+import org.columba.mail.folder.MessageFolder;
+import org.columba.mail.folder.command.ExportFolderCommand;
+import org.columba.mail.folder.command.RenameFolderCommand;
+import org.columba.mail.folder.command.SyncSearchEngineCommand;
+import org.columba.mail.folder.search.DefaultSearchEngine;
+import org.columba.mail.folderoptions.FolderOptionsController;
+import org.columba.mail.gui.frame.MailFrameMediator;
+import org.columba.mail.gui.table.command.ViewHeaderListCommand;
+import org.columba.mail.util.MailResourceLoader;
+import org.columba.ristretto.message.MailboxInfo;
+import org.frapuccino.checkablelist.CheckableItem;
+import org.frapuccino.checkablelist.CheckableItemListTableModel;
+import org.frapuccino.checkablelist.CheckableList;
+
+import com.jgoodies.forms.builder.ButtonStackBuilder;
+import com.jgoodies.forms.builder.PanelBuilder;
+import com.jgoodies.forms.layout.CellConstraints;
+import com.jgoodies.forms.layout.FormLayout;
 
 
 /**
@@ -398,7 +406,7 @@ overwriteOptionsCheckBox.setActionCommand("OVERWRITE");
 
     public void updateComponents(boolean b) {
         if (b) {
-            MessageFolderInfo info = folder.getMessageFolderInfo();
+            MailboxInfo info = folder.getMessageFolderInfo();
 
             nameTextField.setText(folder.getName());
 

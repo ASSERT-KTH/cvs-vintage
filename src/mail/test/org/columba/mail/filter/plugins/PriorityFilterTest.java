@@ -19,6 +19,7 @@ package org.columba.mail.filter.plugins;
 
 import org.columba.core.xml.XmlElement;
 import org.columba.mail.filter.FilterCriteria;
+import org.columba.mail.folder.MailboxTstFactory;
 
 /**
  * @author fdietz
@@ -29,9 +30,9 @@ public class PriorityFilterTest extends AbstractFilterTestCase {
     /**
      *  
      */
-    public PriorityFilterTest(String arg0) {
-        super(arg0);
-
+    public PriorityFilterTest(MailboxTstFactory factory, String arg0) {
+        super(factory, arg0);
+        
     }
 
     public void testHighest() throws Exception {

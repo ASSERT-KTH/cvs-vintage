@@ -19,6 +19,7 @@ package org.columba.mail.filter.plugins;
 
 import org.columba.core.xml.XmlElement;
 import org.columba.mail.filter.FilterCriteria;
+import org.columba.mail.folder.MailboxTstFactory;
 import org.columba.ristretto.message.Flags;
 
 
@@ -31,9 +32,9 @@ public class FlagsFilterTest extends AbstractFilterTestCase {
     /**
      * @param arg0
      */
-    public FlagsFilterTest(String arg0) {
-        super(arg0);
-      
+    public FlagsFilterTest(MailboxTstFactory factory, String arg0) {
+        super(factory, arg0);
+        
     }
 
     public void testIsSeen() throws Exception {

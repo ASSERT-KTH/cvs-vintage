@@ -32,7 +32,7 @@ import org.columba.mail.folder.LocalRootFolder;
 import org.columba.mail.folder.MessageFolder;
 import org.columba.mail.folder.imap.IMAPRootFolder;
 import org.columba.mail.folder.virtual.VirtualFolder;
-import org.columba.ristretto.message.MessageFolderInfo;
+import org.columba.ristretto.message.MailboxInfo;
 
 /**
  * This class is used for the mail folder tree.
@@ -106,7 +106,7 @@ public class FolderTreeCellRenderer extends DefaultTreeCellRenderer {
             MessageFolder folder = (MessageFolder) value;
 
             // getting folder info
-            MessageFolderInfo info = folder.getMessageFolderInfo();
+            MailboxInfo info = folder.getMessageFolderInfo();
 
             // getting unseen value
             int unseen = info.getUnseen();

@@ -20,6 +20,7 @@ package org.columba.mail.filter.plugins;
 import org.columba.core.xml.XmlElement;
 
 import org.columba.mail.filter.FilterCriteria;
+import org.columba.mail.folder.MailboxTstFactory;
 
 
 /**
@@ -32,8 +33,9 @@ public class HeaderfieldFilterTest extends AbstractFilterTestCase {
  * 
  * @param arg0
  */
-    public HeaderfieldFilterTest(String arg0) {
-        super(arg0);
+    public HeaderfieldFilterTest(MailboxTstFactory factory, String arg0) {
+        super(factory, arg0);
+        
     }
 
     /**

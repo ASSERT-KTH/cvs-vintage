@@ -66,7 +66,7 @@ public class CopyMessageFolderTest extends AbstractFolderTest {
         Flags oldFlags = getSourceFolder().getFlags(uid);
         // set flags
         oldFlags.setSeen(false);
-        oldFlags.setRecent(true);
+        oldFlags.setRecent(false);
         oldFlags.setFlagged(true);        
         oldFlags.setExpunged(false);
 

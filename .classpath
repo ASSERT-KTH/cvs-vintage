@@ -12,7 +12,6 @@
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry kind="lib" path="lib/jhall.jar"/>
 	<classpathentry kind="lib" path="lib/usermanual.jar"/>
-	<classpathentry kind="lib" path="lib/ristretto-1.0pre1.jar"/>
 	<classpathentry kind="lib" path="lib/macchiato-1.0pre1.jar"/>
 	<classpathentry kind="lib" path="lib/frappucino-1.0pre1.jar"/>
 	<classpathentry kind="lib" path="lib/forms-1.0.3.jar"/>
@@ -21,5 +20,6 @@
 	<classpathentry kind="lib" path="lib/jscf-0.1.jar"/>
 	<classpathentry kind="lib" path="lib/jniwrap-2.4.jar"/>
 	<classpathentry kind="lib" path="lib/winpack.jar"/>
+	<classpathentry kind="lib" path="lib/ristretto-1.0_RC1.jar"/>
 	<classpathentry kind="output" path="classes"/>
 </classpath>

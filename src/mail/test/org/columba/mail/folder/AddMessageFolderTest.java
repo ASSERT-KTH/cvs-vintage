@@ -19,7 +19,7 @@ import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 
 import org.columba.ristretto.message.Flags;
-import org.columba.ristretto.message.MessageFolderInfo;
+import org.columba.ristretto.message.MailboxInfo;
 
 /**
  * Add message to folder testcase.
@@ -55,7 +55,7 @@ public class AddMessageFolderTest extends AbstractFolderTest {
         Object[] uids1 = getSourceFolder().getUids();
         assertEquals("starting with empty folder", 0, uids1.length);
 
-        MessageFolderInfo info1 = getSourceFolder().getMessageFolderInfo();
+        MailboxInfo info1 = getSourceFolder().getMessageFolderInfo();
         assertEquals("starting with empty folder", 0, info1.getExists());
 
         // add message "0.eml" as inputstream to folder
@@ -81,7 +81,7 @@ public class AddMessageFolderTest extends AbstractFolderTest {
         Object[] uids = getSourceFolder().getUids();
         assertEquals("one message should be in this folder", 1, uids.length);
 
-        MessageFolderInfo info = getSourceFolder().getMessageFolderInfo();
+        MailboxInfo info = getSourceFolder().getMessageFolderInfo();
         assertEquals("message-folderinfo exists", 1, info.getExists());
 
         // close streams
@@ -98,7 +98,7 @@ public class AddMessageFolderTest extends AbstractFolderTest {
         Object[] uids1 = getSourceFolder().getUids();
         assertEquals("starting with empty folder", 0, uids1.length);
 
-        MessageFolderInfo info1 = getSourceFolder().getMessageFolderInfo();
+        MailboxInfo info1 = getSourceFolder().getMessageFolderInfo();
         assertEquals("starting with empty folder", 0, info1.getExists());
 
         //		 add message "0.eml" as inputstream to folder
@@ -114,7 +114,7 @@ public class AddMessageFolderTest extends AbstractFolderTest {
         Flags flags = getSourceFolder().getFlags(uid);
         flags.setSeen(true);
 
-        MessageFolderInfo info = getSourceFolder().getMessageFolderInfo();
+        MailboxInfo info = getSourceFolder().getMessageFolderInfo();
 
         assertEquals("message-folderinfo exists", 1, info.getExists());
         assertEquals("Number of unseen messages in folder", 1, info.getUnseen());

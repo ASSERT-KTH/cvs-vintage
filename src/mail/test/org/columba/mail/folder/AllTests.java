@@ -90,6 +90,7 @@ public class AllTests {
 
         setup(suite, new MHFolderFactory());
         setup(suite, new TempFolderFactory());
+        setup(suite, new IMAPTstFactory());
 
         return suite;
     }

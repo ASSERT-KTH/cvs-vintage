@@ -48,7 +48,7 @@ public final class FolderTstHelper {
      */
     public static String getString(int number) throws Exception {
         return DiskIO.readFileInString(new File(new String(
-                "src/mail/test/org/columba/mail/folder/" + number + ".eml")));
+                "src/mail/test/org/columba/mail/folder/" + number + ".eml"))).replaceAll("\n", "\r\n");
     }
     
     /**
@@ -60,7 +60,7 @@ public final class FolderTstHelper {
      */
     public static String getString(String filename) throws Exception {
         return DiskIO.readFileInString(new File(new String(
-                "src/mail/test/org/columba/mail/folder/" + filename)));
+                "src/mail/test/org/columba/mail/folder/" + filename))).replaceAll("\n", "\r\n");
     }
 
     /**
@@ -90,7 +90,7 @@ public final class FolderTstHelper {
 
         while (nextLine != null) {
             result.append(nextLine);
-            result.append("\n");
+            result.append("\r\n");
             nextLine = reader.readLine();
         }
 

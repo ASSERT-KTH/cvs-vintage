@@ -21,6 +21,7 @@ import java.awt.Color;
 
 import org.columba.core.xml.XmlElement;
 import org.columba.mail.filter.FilterCriteria;
+import org.columba.mail.folder.MailboxTstFactory;
 
 
 /**
@@ -32,8 +33,8 @@ public class ColorFilterTest extends AbstractFilterTestCase {
     /**
      * @param arg0
      */
-    public ColorFilterTest(String arg0) {
-        super(arg0);
+    public ColorFilterTest(MailboxTstFactory factory, String arg0) {
+        super(factory, arg0);
         
     }
 

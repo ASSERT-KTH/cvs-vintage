@@ -15,10 +15,13 @@
 //All Rights Reserved.
 package org.columba.mail.folder.command;
 
+import org.columba.core.util.NullWorkerStatusController;
 import org.columba.mail.command.FolderCommandReference;
 import org.columba.mail.folder.AbstractFolderTest;
-import org.columba.mail.folder.MessageFolder;
 import org.columba.mail.folder.MailboxTstFactory;
+import org.columba.mail.folder.MessageFolder;
+import org.columba.mail.folder.imap.IMAPFolder;
+import org.columba.mail.folder.temp.TempFolder;
 
 /**
  * Test cases for the MoveFolder command.
@@ -38,8 +41,13 @@ public class MoveFolderCommandTest extends AbstractFolderTest {
      * Tests the execute() method.
      * @throws Exception thrown for any bad reason if the command goes wrong.
      */
-    public void testExecute() throws Exception {
+    public void testMoveFolder() throws Exception {
         MessageFolder rootFolder = createFolder();
+        
+        // Is not supported by IMAP and TempFolder
+        if( rootFolder instanceof IMAPFolder || rootFolder instanceof TempFolder ) {
+        	return;
+        }
 
         MessageFolder folderToBeMoved = createFolder();
         rootFolder.append(folderToBeMoved);
@@ -51,7 +59,7 @@ public class MoveFolderCommandTest extends AbstractFolderTest {
         references[0] = new FolderCommandReference(folderToBeMoved);
         references[1] = new FolderCommandReference(destinationFolder);
         MoveFolderCommand command = new MoveFolderCommand(references);
-        command.execute(null);
+        command.execute(NullWorkerStatusController.getInstance());
 
         assertEquals("The destination folders child size is incorrect.", 1, destinationFolder.getChildCount());
         assertEquals("The root folder has more than one child", 1, destinationFolder.getChildCount());

@@ -22,7 +22,7 @@ import org.columba.core.command.DefaultCommandReference;
 import org.columba.core.command.WorkerStatusController;
 import org.columba.core.io.TempFileStore;
 import org.columba.core.util.Semaphore;
-import org.columba.ristretto.message.LocalMimePart;
+import org.columba.ristretto.message.MimeHeader;
 
 
 /**
@@ -48,10 +48,10 @@ public class SaveAttachmentTemporaryCommand extends SaveAttachmentCommand {
     }
 
     /** {@inheritDoc} */
-    protected File getDestinationFile(LocalMimePart mimepart) {
+    protected File getDestinationFile(MimeHeader header) {
 
         tempAttachmentFile = null;
-        String filename = getFilename(mimepart);
+        String filename = getFilename(header);
         if (filename != null) {
             tempAttachmentFile = TempFileStore.createTempFile(filename);
         }

@@ -160,7 +160,7 @@ public class VirtualFolder extends MessageFolder {
 
     public HeaderList getHeaderList() throws Exception {
         headerList.clear();
-        getMessageFolderInfo().clear();
+        getMessageFolderInfo().reset();
 
         applySearch();
 

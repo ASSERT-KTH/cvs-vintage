@@ -31,9 +31,9 @@ import java.io.File;
  * @author redsolo
  */
 public class OpenWithAttachmentCommand extends SaveAttachmentCommand {
-    private LocalMimePart part;
     private File tempFile;
-
+    private MimeHeader header;
+    
     /**
      * Creates an Open with attachment command.
      * @param references command parameters.
@@ -49,16 +49,14 @@ public class OpenWithAttachmentCommand extends SaveAttachmentCommand {
      * @see org.columba.core.command.Command#updateGUI()
      */
     public void updateGUI() throws Exception {
-        MimeHeader header = part.getHeader();
-
         MimeTypeViewer viewer = new MimeTypeViewer();
         viewer.openWith(header, tempFile);
     }
 
     /** {@inheritDoc} */
-    protected File getDestinationFile(LocalMimePart mimepart) {
-        String filename = mimepart.getHeader().getFileName();
-        part = mimepart;
+    protected File getDestinationFile(MimeHeader header) {
+    	this.header = header; 
+        String filename = header.getFileName();
 
         if (filename != null) {
             tempFile = TempFileStore.createTempFile(filename);

@@ -17,7 +17,16 @@
 //All Rights Reserved.
 package org.columba.mail.filter.plugins;
 
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+
+import org.columba.mail.folder.IMAPTstFactory;
+import org.columba.mail.folder.MHFolderFactory;
+import org.columba.mail.folder.MailboxTstFactory;
+import org.columba.mail.folder.TempFolderFactory;
+
 import junit.framework.Test;
+import junit.framework.TestCase;
 import junit.framework.TestSuite;
 
 /**
@@ -26,7 +35,72 @@ import junit.framework.TestSuite;
  */
 public class AllTests {
 
+    private static String[] list = { "DateFilterTest",
+            "ColorFilterTest", "HeaderfieldFilterTest",
+            "FlagsFilterTest", "BodyFilterTest",
+            "PriorityFilterTest","AccountFilterTest",
+			"SizeFilterTest"};
+
+    /**
+     * Add all testcases to the passed testsuite, using a the folder type as
+     * created in the factory.
+     * 
+     * @param suite
+     *            test suite
+     * @param factory
+     *            factory which creates the folder instances
+     */
+    private static void setup(TestSuite suite, MailboxTstFactory factory) {
+        try {
+            for (int j = 0; j < list.length; j++) {
+                Class clazz = Class.forName("org.columba.mail.filter.plugins."
+                        + list[j]);
+
+                Method[] methods = clazz.getDeclaredMethods();
+                for (int i = 0; i < methods.length; i++) {
+                    if (methods[i].getName().startsWith("test")) {
+
+                        suite.addTest((TestCase) clazz.getConstructor(
+                                new Class[] { MailboxTstFactory.class,
+                                        String.class}).newInstance(
+                                new Object[] { factory, methods[i].getName()}));
+                    }
+                }
+            }
+        } catch (SecurityException e) {
+
+            e.printStackTrace();
+        } catch (IllegalArgumentException e) {
+
+            e.printStackTrace();
+        } catch (ClassNotFoundException e) {
+
+            e.printStackTrace();
+        } catch (InstantiationException e) {
+
+            e.printStackTrace();
+        } catch (IllegalAccessException e) {
+
+            e.printStackTrace();
+        } catch (InvocationTargetException e) {
+
+            e.printStackTrace();
+        } catch (NoSuchMethodException e) {
+
+            e.printStackTrace();
+        }
+    }
+
     public static Test suite() {
+        TestSuite suite = new TestSuite("Test for org.columba.mail.folder");
+
+        setup(suite, new MHFolderFactory());
+        setup(suite, new IMAPTstFactory());
+
+        return suite;
+    }
+/*
+public static Test suite() {
         TestSuite suite = new TestSuite(
             "Test for org.columba.mail.filter.plugins");
         //$JUnit-BEGIN$
@@ -41,4 +115,5 @@ public class AllTests {
         //$JUnit-END$
         return suite;
     }
+    */
 }

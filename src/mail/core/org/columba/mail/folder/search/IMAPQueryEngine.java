@@ -16,10 +16,10 @@
 
 package org.columba.mail.folder.search;
 
+import java.util.List;
+
 import org.columba.mail.filter.FilterRule;
 import org.columba.mail.folder.imap.IMAPFolder;
-
-import java.util.List;
 
 /**
  * Performes search requests on the IMAP server-side.
@@ -41,7 +41,7 @@ public class IMAPQueryEngine implements QueryEngine {
     // answered anyway, using locally cached headerfields
     private static final String[] CAPABILITY_LIST = {
         "Body", "Subject", "From", "To", "Cc", "Bcc", "Custom Headerfield",
-        "Date", "Priority"
+        "Date", "Size"
     };
     private IMAPFolder folder;
 
@@ -64,13 +64,13 @@ public class IMAPQueryEngine implements QueryEngine {
 
     public List queryEngine(FilterRule filter) throws Exception {
         // pass the work to IMAPStore
-        return folder.getStore().search(filter, folder.getImapPath());
+        return folder.getServer().search(filter, folder.getImapPath());
     }
 
     public List queryEngine(FilterRule filter, Object[] uids)
         throws Exception {
         // pass the work to IMAPStore
-        return folder.getStore().search(uids, filter, folder.getImapPath());
+        return folder.getServer().search(uids, filter, folder.getImapPath());
     }
 
     public void messageAdded(Object uid) throws Exception {

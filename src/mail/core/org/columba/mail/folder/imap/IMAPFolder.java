@@ -16,30 +16,52 @@
 
 package org.columba.mail.folder.imap;
 
+import java.io.IOException;
 import java.io.InputStream;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Enumeration;
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.logging.Logger;
 
+import org.columba.core.command.Command;
+import org.columba.core.command.CommandCancelledException;
 import org.columba.core.command.StatusObservable;
-import org.columba.core.io.StreamUtils;
+import org.columba.core.io.CloneStreamMaster;
+import org.columba.core.main.MainInterface;
 import org.columba.core.util.ListTools;
 import org.columba.core.xml.XmlElement;
+import org.columba.mail.command.FolderCommandReference;
 import org.columba.mail.config.FolderItem;
 import org.columba.mail.config.ImapItem;
-import org.columba.mail.folder.*;
+import org.columba.mail.folder.AbstractFolder;
+import org.columba.mail.folder.HeaderListStorage;
+import org.columba.mail.folder.MailboxInterface;
+import org.columba.mail.folder.RemoteFolder;
+import org.columba.mail.folder.RootFolder;
 import org.columba.mail.folder.headercache.CachedHeaderfields;
 import org.columba.mail.folder.headercache.RemoteHeaderListStorage;
 import org.columba.mail.folder.search.DefaultSearchEngine;
 import org.columba.mail.folder.search.IMAPQueryEngine;
-import org.columba.mail.imap.IMAPStore;
+import org.columba.mail.gui.tree.command.FetchSubFolderListCommand;
+import org.columba.mail.imap.IMAPServer;
 import org.columba.mail.message.ColumbaHeader;
 import org.columba.mail.message.ColumbaMessage;
 import org.columba.mail.message.HeaderList;
 import org.columba.mail.util.MailResourceLoader;
 import org.columba.ristretto.imap.IMAPFlags;
-import org.columba.ristretto.message.*;
-import org.columba.ristretto.message.io.Source;
-import org.columba.ristretto.message.io.SourceInputStream;
+import org.columba.ristretto.imap.protocol.IMAPException;
+import org.columba.ristretto.message.Attributes;
+import org.columba.ristretto.message.Flags;
+import org.columba.ristretto.message.Header;
+import org.columba.ristretto.message.MailboxInfo;
+import org.columba.ristretto.message.MimePart;
+import org.columba.ristretto.message.MimeTree;
+import org.columba.ristretto.message.io.CharSequenceSource;
+import org.columba.ristretto.parser.HeaderParser;
+import org.columba.ristretto.parser.ParserException;
 
 public class IMAPFolder extends RemoteFolder {
 
@@ -69,7 +91,7 @@ public class IMAPFolder extends RemoteFolder {
     /**
      *
      */
-    private IMAPStore store;
+    private IMAPServer store;
 
     /**
      *
@@ -114,15 +136,17 @@ public class IMAPFolder extends RemoteFolder {
      * @see org.columba.mail.folder.FolderTreeNode#removeFolder()
      */
     public void removeFolder() throws Exception {
-        if (existsOnServer) {
-            String path = getImapPath();
+        try {
+			if (existsOnServer) {
+			    String path = getImapPath();
 
-            boolean result = getStore().deleteFolder(path);
+			    getServer().deleteFolder(path);
+			}
 
-            if (!result) { return; }
-        }
-
-        super.removeFolder();
+			super.removeFolder();
+		} catch (Exception e) {
+			throw e;
+		}
     }
 
     public void setName(String name) {
@@ -141,12 +165,12 @@ public class IMAPFolder extends RemoteFolder {
                 newPath = ((IMAPFolder) getParent()).getImapPath();
             }
 
-            newPath += (getStore().getDelimiter() + name);
+            newPath += (getServer().getDelimiter() + name);
             LOG.info("new path=" + newPath);
 
-            if (getStore().renameFolder(oldPath, newPath)) {
-                super.setName(name);
-            }
+            getServer().renameFolder(oldPath, newPath);
+            super.setName(name);
+            
         } catch (Exception e) {
             LOG.severe(e.getMessage());
         }
@@ -157,9 +181,9 @@ public class IMAPFolder extends RemoteFolder {
      *
      * @return IMAPStore
      */
-    public IMAPStore getStore() {
+    public IMAPServer getServer() {
         if (store == null) {
-            store = ((IMAPRootFolder) getRootFolder()).getStore();
+            store = ((IMAPRootFolder) getRootFolder()).getServer();
         }
 
         return store;
@@ -169,50 +193,62 @@ public class IMAPFolder extends RemoteFolder {
      * @see org.columba.mail.folder.Folder#getHeaderList(org.columba.core.command.WorkerStatusController)
      */
     public HeaderList getHeaderList() throws Exception {
-        //if (headerList == null) {
+        if (headerList == null || !getServer().isSelected(getImapPath())) {
         headerList = super.getHeaderList();
-
-        // if this is the first time we download
-        // a headerlist -> we need to save headercache
-        if (headerList.count() == 0) {
-            changed = true;
-        }
-
+        
+        /*
         getObservable().setMessage(
                 MailResourceLoader.getString("statusbar", "message",
                         "fetch_uid_list"));
 
-        List newList = getStore().fetchUIDList(getImapPath());
+        List newList = getServer().fetchUIDList(getImapPath());
 
         if (newList == null) {
             return new HeaderList();
         }
-
-        List result = synchronize(headerList, newList);
+        */
 
         getObservable().setMessage(
                 MailResourceLoader.getString("statusbar", "message",
                         "fetch_flags_list"));
 
-        Flags[] flags = getStore().fetchFlagsList(getImapPath());
-
-        getObservable().setMessage(
-                MailResourceLoader.getString("statusbar", "message",
-                        "fetch_header_list"));
-
+        IMAPFlags[] flags;
+		try {
+			flags = getServer().fetchFlagsList(getImapPath());
+		} catch (IMAPException e) {
+			//Check for Exception when mailbox does not exist anymore
+			if( e.getResponse().isNO()) {
+				// Trigger sync folder command
+		        Command c = new FetchSubFolderListCommand(new FolderCommandReference[] {
+	                    new FolderCommandReference(getRootFolder()) });
+		        MainInterface.processor.addOp(c);
+				throw new CommandCancelledException(e);
+			} else {
+				throw e;
+			}
+		}
+		
+		List result = synchronize(headerList, flags);
+        
         // if available -> fetch new headers
         if (result.size() > 0) {
-            getStore().fetchHeaderList(headerList, result, getImapPath());
+            getObservable().setMessage(
+                    MailResourceLoader.getString("statusbar", "message",
+                            "fetch_header_list"));
+        	
+        	getServer().fetchHeaderList(headerList, result, getImapPath());
+        	
+        	changed = true;
         }
 
-        messageFolderInfo = getStore().getSelectedFolderMessageFolderInfo();
+        messageFolderInfo = getServer().getSelectedFolderMessageFolderInfo();
 
         updateFlags(flags);
 
         // clear statusbar message
         getObservable().clearMessage();
-
-        //}
+        }
+        
         return headerList;
     }
 
@@ -225,7 +261,7 @@ public class IMAPFolder extends RemoteFolder {
         // ALP 04/29/03
         // Reset the number of seen/resent/existing messages. Otherwise you
         // just keep adding to the number.
-        MessageFolderInfo info = getMessageFolderInfo();
+        MailboxInfo info = getMessageFolderInfo();
         info.setExists(0);
         info.setRecent(0);
         info.setUnseen(0);
@@ -288,20 +324,26 @@ public class IMAPFolder extends RemoteFolder {
      * @return Vector
      * @throws Exception
      */
-    public List synchronize(HeaderList headerList, List newList)
+    public List synchronize(HeaderList headerList, IMAPFlags[] newList)
             throws Exception {
         LinkedList headerUids = new LinkedList();
         Enumeration keys = headerList.keys();
-
+        
         while (keys.hasMoreElements()) {
             headerUids.add(keys.nextElement());
         }
 
-        LinkedList newUids = new LinkedList(newList);
-
+        // Extract UIDs from IMAPFlags
+        List newUids = new ArrayList(newList.length);
+        List subList = new ArrayList(newList.length);
+        for( int i=0; i<newList.length; i++) {
+        	newUids.add(newList[i].getUid());
+        	subList.add(newList[i].getUid());
+        }
+        
         ListTools.substract(newUids, headerUids);
 
-        ListTools.substract(headerUids, new ArrayList(newList));
+        ListTools.substract(headerUids, subList);
 
         Iterator it = headerUids.iterator();
 
@@ -383,7 +425,7 @@ public class IMAPFolder extends RemoteFolder {
      *      org.columba.core.command.WorkerStatusController)
      */
     public MimeTree getMimePartTree(Object uid) throws Exception {
-        return getStore().getMimePartTree(uid, getImapPath());
+        return getServer().getMimePartTree(uid, getImapPath());
     }
 
     /**
@@ -391,7 +433,7 @@ public class IMAPFolder extends RemoteFolder {
      *      java.lang.Integer, org.columba.core.command.WorkerStatusController)
      */
     public MimePart getMimePart(Object uid, Integer[] address) throws Exception {
-        return getStore().getMimePart(uid, address, getImapPath());
+        return null;
     }
 
     /**
@@ -403,39 +445,21 @@ public class IMAPFolder extends RemoteFolder {
      * @see org.columba.mail.folder.Folder#innerCopy(org.columba.mail.folder.MailboxInterface,
      *      java.lang.Object, org.columba.core.command.WorkerStatusController)
      */
-    public void innerCopy(MailboxInterface destFolder, Object[] uids)
+    public void innerCopy(MailboxInterface destiny, Object[] uids)
             throws Exception {
-        getStore().copy(((IMAPFolder) destFolder).getImapPath(), uids,
+    	IMAPFolder destFolder = (IMAPFolder) destiny;
+    	
+        Object[] destUids = getServer().copy(destFolder.getImapPath(), uids,
                 getImapPath());
 
-        //FIXME: Use method addMessage(Object) from destination folder
-        //to notify it of message additions -> remove code below
-        
-        // update messagefolderinfo of destination-folder
+        // update headerlist of destination-folder
         // -> this is necessary to reflect the changes visually
-        for (int i = 0; i < uids.length; i++) {
-            Flags flag = (Flags) getFlags(uids[i]);
-
-            // skip non existing messages
-            // -> this can happen when we have multiple filteraction
-            // -> on the same set of messages
-            if (flag == null) {
-                continue;
-            }
-
-            // increment recent count of messages if appropriate
-            if (flag.getRecent()) {
-                destFolder.getMessageFolderInfo().incRecent();
-            }
-
-            // increment unseen count of messages if appropriate
-            if (!flag.getSeen()) {
-                destFolder.getMessageFolderInfo().incUnseen();
-            }
+        for( int i=0; i<uids.length; i++ ) {
+        	ColumbaHeader header = (ColumbaHeader) getHeaderList().get(uids[i]); 
+        	destFolder.getHeaderListStorage().addMessage(destUids[i], header.getHeader(), header.getAttributes(), header.getFlags());
+            destFolder.fireMessageAdded(destUids[i]);
         }
-
-        // mailbox was modified
-        changed = true;
+        
     }
 
     /**
@@ -443,7 +467,7 @@ public class IMAPFolder extends RemoteFolder {
      *      org.columba.core.command.WorkerStatusController)
      */
     public void markMessage(Object[] uids, int variant) throws Exception {
-        getStore().markMessage(uids, variant, getImapPath());
+        getServer().markMessage(uids, variant, getImapPath());
 
         super.markMessage(uids, variant);
     }
@@ -466,11 +490,12 @@ public class IMAPFolder extends RemoteFolder {
      *      org.columba.core.command.WorkerStatusController)
      */
     public void expungeFolder() throws Exception {
-        boolean result = getStore().expunge(getImapPath());
-
-        if (!result) { return; }
-
-        super.expungeFolder();
+    	try {
+			getServer().expunge(getImapPath());
+	        super.expungeFolder();
+		} catch (Exception e) {
+			throw e;
+		}
     }
 
     /**
@@ -502,7 +527,7 @@ public class IMAPFolder extends RemoteFolder {
      *
      * @return String
      */
-    public String getImapPath() throws Exception {
+    public String getImapPath() throws IOException, IMAPException, CommandCancelledException {
         StringBuffer path = new StringBuffer();
         path.append(getName());
 
@@ -517,7 +542,7 @@ public class IMAPFolder extends RemoteFolder {
 
             String n = ((IMAPFolder) child).getName();
 
-            path.insert(0, n + getStore().getDelimiter());
+            path.insert(0, n + getServer().getDelimiter());
         }
 
         return path.toString();
@@ -568,10 +593,8 @@ public class IMAPFolder extends RemoteFolder {
      */
     public void addSubfolder(AbstractFolder child) throws Exception {
         if (child instanceof IMAPFolder) {
-            String path = getImapPath() + getStore().getDelimiter()
-                    + child.getName();
 
-            getStore().createFolder(path);
+            getServer().createMailbox(getImapPath(), child.getName());
         }
 
         super.addSubfolder(child);
@@ -593,15 +616,56 @@ public class IMAPFolder extends RemoteFolder {
      */
     public Object addMessage(InputStream in, Attributes attributes, Flags flags)
             throws Exception {
-        StringBuffer stringSource = StreamUtils.readInString(in);
-
-        getStore().append(getImapPath(), stringSource.toString());
-
-        fireMessageAdded(null);
-        return null;
+    	CloneStreamMaster master = new CloneStreamMaster(in);
+    	
+    	IMAPFlags imapFlags = new IMAPFlags(flags.getFlags());
+    	
+        Integer uid = getServer().append(getImapPath(), master.getClone(), imapFlags);
+        
+        // Since JUNK is a non-system Flag we have to set it with
+        // an addtitional STORE command
+        if( ((Boolean)attributes.get("columba.spam")).booleanValue() ) {
+        	imapFlags.set(IMAPFlags.JUNK, true);
+        	
+        	getServer().setFlags(new Object[] {uid}, imapFlags, getImapPath());
+        }
+        
+        // Parser the header
+        Header header = readAndParseHeader(master.getClone());
+        
+        fireMessageAdded(uid);
+        
+        // update the HeaderList
+        getHeaderListStorage().addMessage(uid, header, attributes, imapFlags);
+        
+        return uid;
     }
 
-    /*
+    /**
+	 * @param master
+	 * @return
+	 * @throws IOException
+	 * @throws ParserException
+	 */
+	private Header readAndParseHeader(InputStream headerStream) throws IOException, ParserException {
+        StringBuffer store = new StringBuffer();
+        int linebreaks = 0;
+        
+        int read = headerStream.read();
+        while( linebreaks != 2 && read != -1) {
+        	if( read == '\n') linebreaks++;
+        	else if( read != '\r' ) linebreaks = 0;
+        	
+        	store.append((char) read);
+        	read = headerStream.read();
+        }
+        headerStream.close();
+        
+        Header header = HeaderParser.parse( new CharSequenceSource( store  ));
+		return header;
+	}
+
+	/*
      * (non-Javadoc)
      *
      * @see org.columba.mail.folder.MailboxInterface#getHeaderFields(java.lang.Object,
@@ -635,7 +699,7 @@ public class IMAPFolder extends RemoteFolder {
         }
 
         if (parsingNeeded) {
-            return getStore().getHeaders(uid, keys, getImapPath());
+            return getServer().getHeaders(uid, keys, getImapPath());
         } else {
             return result;
         }
@@ -647,9 +711,7 @@ public class IMAPFolder extends RemoteFolder {
      * @see org.columba.mail.folder.MailboxInterface#getMessageSourceStream(java.lang.Object)
      */
     public InputStream getMessageSourceStream(Object uid) throws Exception {
-        Source source = getStore().getMessageSource(uid, getImapPath());
-
-        return new SourceInputStream(source);
+        return getServer().getMessageSourceStream(uid, getImapPath());
     }
 
     /*
@@ -660,8 +722,8 @@ public class IMAPFolder extends RemoteFolder {
      */
     public InputStream getMimePartSourceStream(Object uid, Integer[] address)
             throws Exception {
-        return ((StreamableMimePart) getStore().getMimePartSource(uid, address,
-                getImapPath())).getInputStream();
+        return getServer().getMimePartSourceStream(uid, address,
+                getImapPath());
     }
 
 
@@ -673,10 +735,7 @@ public class IMAPFolder extends RemoteFolder {
      */
     public InputStream getMimePartBodyStream(Object uid, Integer[] address)
             throws Exception {
-        StreamableMimePart mimePart = (StreamableMimePart) getStore()
-                .getMimePart(uid, address, getImapPath());
-
-        return decodeStream(mimePart.getHeader(), mimePart.getInputStream());
+		return getServer().getMimePartBodyStream(uid, address, getImapPath());
     }
 
     /*
@@ -716,7 +775,18 @@ public class IMAPFolder extends RemoteFolder {
      *      org.columba.ristretto.message.Attributes)
      */
     public Object addMessage(InputStream in) throws Exception {
-        return addMessage(in, null, null);
+    	CloneStreamMaster master = new CloneStreamMaster(in);
+    	
+    	Integer uid = getServer().append(getImapPath(), master.getClone());
+        
+        fireMessageAdded(uid);
+
+        // update the HeaderList
+        Header header = readAndParseHeader(master.getClone());
+        ColumbaHeader h = new ColumbaHeader(header);
+        getHeaderListStorage().addMessage(uid, header, h.getAttributes(), h.getFlags());
+        
+        return uid;
     }
 
     /**

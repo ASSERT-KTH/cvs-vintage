@@ -15,24 +15,29 @@
 //All Rights Reserved.
 package org.columba.mail.gui.attachment.command;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.InputStream;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 import org.columba.core.command.Command;
 import org.columba.core.command.DefaultCommandReference;
+import org.columba.core.command.Worker;
+import org.columba.core.command.WorkerStatusController;
+import org.columba.core.io.StreamUtils;
 import org.columba.core.io.TempFileStore;
 import org.columba.core.main.MainInterface;
-
 import org.columba.mail.command.FolderCommandReference;
+import org.columba.mail.folder.MessageFolder;
 import org.columba.mail.folder.temp.TempFolder;
 import org.columba.mail.gui.message.command.ViewMessageCommand;
 import org.columba.mail.gui.messageframe.MessageFrameController;
 import org.columba.mail.gui.mimetype.MimeTypeViewer;
 import org.columba.mail.main.MailInterface;
-
-import org.columba.ristretto.message.LocalMimePart;
+import org.columba.ristretto.coder.Base64DecoderInputStream;
+import org.columba.ristretto.coder.QuotedPrintableDecoderInputStream;
 import org.columba.ristretto.message.MimeHeader;
-
-import java.io.File;
-import java.io.InputStream;
-import java.util.logging.Logger;
 
 
 /**
@@ -40,8 +45,6 @@ import java.util.logging.Logger;
  */
 public class OpenAttachmentCommand extends SaveAttachmentCommand {
     private static final Logger LOG = Logger.getLogger("org.columba.mail.gui.attachment.command");
-    //private StreamableMimePart part;
-    private LocalMimePart part;
     private File tempFile;
 
     // true, if showing a message as attachment
@@ -49,6 +52,7 @@ public class OpenAttachmentCommand extends SaveAttachmentCommand {
     private TempFolder tempFolder;
     private Object tempMessageUid;
 
+    private MimeHeader header;
     /**
      * Constructor for OpenAttachmentCommand.
      * @param references command parameters
@@ -64,7 +68,6 @@ public class OpenAttachmentCommand extends SaveAttachmentCommand {
      * @see org.columba.core.command.Command#updateGUI()
      */
     public void updateGUI() throws Exception {
-        MimeHeader header = part.getHeader();
 
         if (header.getMimeType().getType().toLowerCase().indexOf("message") != -1) {
             MessageFrameController c = new MessageFrameController();
@@ -89,19 +92,26 @@ public class OpenAttachmentCommand extends SaveAttachmentCommand {
         }
     }
 
-    /** {@inheritDoc} */
-    protected File getDestinationFile(LocalMimePart mimepart) {
-        part = mimepart;
-        tempFile = null;
+    /**
+     * @see org.columba.core.command.Command#execute(Worker)
+     */
+    public void execute(WorkerStatusController worker) throws Exception {
+        FolderCommandReference[] r = (FolderCommandReference[]) getReferences();
+        MessageFolder folder = (MessageFolder) r[0].getFolder();
+        Object[] uids = r[0].getUids();
 
-        if (part.getHeader().getMimeType().getType().equals("message")) {
+        Integer[] address = r[0].getAddress();
+
+        header = folder.getMimePartTree(uids[0]).getFromAddress(address).getHeader();
+        
+        InputStream bodyStream = folder.getMimePartBodyStream(uids[0], address);
+
+        
+        if (header.getMimeType().getType().equals("message")) {
 
             tempFolder = MailInterface.treeModel.getTempFolder();
             try {
-
-                InputStream inputStream = part.getInputStream();
-                tempMessageUid = tempFolder.addMessage(inputStream);
-                inputStream.close();
+                tempMessageUid = tempFolder.addMessage(bodyStream);
             } catch (Exception e) {
                 LOG.warning("Could not create temporary email from the attachment.");
             }
@@ -109,15 +119,41 @@ public class OpenAttachmentCommand extends SaveAttachmentCommand {
 
         } else {
 
-            String filename = mimepart.getHeader().getFileName();
+            String filename = header.getFileName();
             if (filename != null) {
                 tempFile = TempFileStore.createTempFile(filename);
             } else {
                 tempFile = TempFileStore.createTempFile();
             }
             inline = false;
-        }
 
-        return tempFile;
+        	int encoding = header.getContentTransferEncoding();
+
+            switch (encoding) {
+                case MimeHeader.QUOTED_PRINTABLE:
+                    bodyStream = new QuotedPrintableDecoderInputStream(bodyStream);
+                    break;
+
+                case MimeHeader.BASE64:
+                    bodyStream = new Base64DecoderInputStream(bodyStream);
+                    break;
+                default:
+            }
+
+            if (LOG.isLoggable(Level.FINE)) {
+                LOG.fine("Storing the attachment to :" + tempFile);
+            }
+
+            FileOutputStream fileStream = new FileOutputStream(tempFile);
+            StreamUtils.streamCopy(bodyStream, fileStream);
+            fileStream.close();
+            bodyStream.close();
+        }
+    }
+    
+    
+    /** {@inheritDoc} */
+    protected File getDestinationFile(MimeHeader header) {
+        return null;
     }
 }

@@ -17,13 +17,15 @@
 //All Rights Reserved.
 package org.columba.mail.filter.plugins;
 
+import java.io.ByteArrayInputStream;
+import java.io.File;
+
 import junit.framework.TestCase;
 
 import org.columba.mail.folder.FolderTstHelper;
+import org.columba.mail.folder.MailboxTstFactory;
+import org.columba.mail.folder.MessageFolder;
 import org.columba.mail.folder.mh.CachedMHFolder;
-
-import java.io.ByteArrayInputStream;
-import java.io.File;
 
 /**
  * Base class for all filter tests.
@@ -35,21 +37,23 @@ import java.io.File;
  */
 public class AbstractFilterTestCase extends TestCase {
 
-    protected CachedMHFolder sourceFolder;
+    protected MessageFolder sourceFolder;
+    protected MailboxTstFactory factory;
 
     /**
      * Constructor for AbstractFilterTest.
-     * 
      * @param arg0
+     * @param factory TODO
      */
-    public AbstractFilterTestCase(String arg0) {
+    public AbstractFilterTestCase(MailboxTstFactory factory, String arg0 ) {
         super(arg0);
+        this.factory = factory;
     }
 
     /**
      * @return Returns the folder.
      */
-    public CachedMHFolder getSourceFolder() {
+    public MessageFolder getSourceFolder() {
         return sourceFolder;
     }
 
@@ -57,11 +61,14 @@ public class AbstractFilterTestCase extends TestCase {
      * @see TestCase#setUp()
      */
     protected void setUp() throws Exception {
+    	
+    	sourceFolder = factory.createFolder(1);
+    	
         //		 create MH folder
         // -> use homeDirectory as top-level folder
         // -> this has to be an absolute path
-        sourceFolder = new CachedMHFolder("test", "CachedMHFolder",
-                FolderTstHelper.homeDirectory + "/folders/");
+/*        sourceFolder = new CachedMHFolder("test", "CachedMHFolder",
+                FolderTstHelper.homeDirectory + "/folders/");*/
     }
 
     /**
@@ -79,6 +86,8 @@ public class AbstractFilterTestCase extends TestCase {
 
         // delete folder
         f.delete();
+        
+        sourceFolder.removeFolder();
     }
 
     /**

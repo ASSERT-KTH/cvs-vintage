@@ -26,7 +26,7 @@ import org.columba.mail.message.HeaderList;
 import org.columba.ristretto.message.Attributes;
 import org.columba.ristretto.message.Flags;
 import org.columba.ristretto.message.Header;
-import org.columba.ristretto.message.MessageFolderInfo;
+import org.columba.ristretto.message.MailboxInfo;
 import org.columba.ristretto.message.MimePart;
 import org.columba.ristretto.message.MimeTree;
 
@@ -41,12 +41,12 @@ import org.columba.ristretto.message.MimeTree;
 public interface MailboxInterface {
 
     /**
-     * Get the {@link MessageFolderInfo} of this mailbox
+     * Get the {@link MailboxInfo} of this mailbox
      * 
      * @return @throws
      *         IOException
      */
-    public MessageFolderInfo getMessageFolderInfo() throws Exception;
+    public MailboxInfo getMessageFolderInfo() throws Exception;
 
     /**
      * Removes all messages which are marked as expunged

@@ -15,11 +15,18 @@
 //All Rights Reserved.
 package org.columba.mail.folder.command;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.text.MessageFormat;
+import java.util.logging.Logger;
+
+import javax.swing.JOptionPane;
+
 import org.columba.core.command.Command;
 import org.columba.core.command.DefaultCommandReference;
 import org.columba.core.command.StatusObservableImpl;
+import org.columba.core.command.Worker;
 import org.columba.core.command.WorkerStatusController;
-
 import org.columba.mail.command.FolderCommand;
 import org.columba.mail.command.FolderCommandAdapter;
 import org.columba.mail.command.FolderCommandReference;
@@ -28,14 +35,8 @@ import org.columba.mail.gui.frame.TableUpdater;
 import org.columba.mail.gui.table.model.TableModelChangedEvent;
 import org.columba.mail.main.MailInterface;
 import org.columba.mail.util.MailResourceLoader;
-
-import java.io.IOException;
-import java.io.InputStream;
-
-import java.text.MessageFormat;
-import java.util.logging.Logger;
-
-import javax.swing.JOptionPane;
+import org.columba.ristretto.message.Attributes;
+import org.columba.ristretto.message.Flags;
 
 
 /**
@@ -137,9 +138,10 @@ public class CopyMessageCommand extends FolderCommand {
 
                     try {
                         // add source to destination folder
-
+                    	Attributes attributes = srcFolder.getAttributes(uids[j]);
+                    	Flags flags = srcFolder.getFlags(uids[j]);
                         InputStream messageSourceStream = srcFolder.getMessageSourceStream(uids[j]);
-                        destFolder.addMessage(messageSourceStream);
+                        destFolder.addMessage(messageSourceStream, attributes, flags);
                         messageSourceStream.close();
                     } catch (IOException ioe) {
                         String[] options = new String[] {

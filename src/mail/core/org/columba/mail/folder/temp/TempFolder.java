@@ -349,4 +349,11 @@ public class TempFolder extends MessageFolder {
         
         return null;
     }
+	/**
+	 * @see org.columba.mail.folder.AbstractFolder#removeFolder()
+	 */
+	public void removeFolder() throws Exception {
+		//super.removeFolder();
+		// do nothing
+	}
 }

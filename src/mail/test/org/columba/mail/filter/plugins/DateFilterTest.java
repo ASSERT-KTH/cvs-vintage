@@ -22,6 +22,7 @@ import java.util.GregorianCalendar;
 
 import org.columba.core.xml.XmlElement;
 import org.columba.mail.filter.FilterCriteria;
+import org.columba.mail.folder.MailboxTstFactory;
 
 
 /**
@@ -33,9 +34,9 @@ public class DateFilterTest extends AbstractFilterTestCase {
     /**
      * @param arg0
      */
-    public DateFilterTest(String arg0) {
-        super(arg0);
-       
+    public DateFilterTest(MailboxTstFactory factory, String arg0) {
+        super(factory, arg0);
+        
     }
 
     /**

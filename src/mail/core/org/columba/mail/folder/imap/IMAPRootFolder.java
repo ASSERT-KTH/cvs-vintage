@@ -16,29 +16,27 @@
 
 package org.columba.mail.folder.imap;
 
+import java.util.List;
+import java.util.logging.Logger;
+
 import org.columba.core.command.StatusObservable;
 import org.columba.core.command.StatusObservableImpl;
-
 import org.columba.mail.config.AccountItem;
 import org.columba.mail.config.FolderItem;
 import org.columba.mail.config.SpecialFoldersItem;
 import org.columba.mail.filter.Filter;
 import org.columba.mail.folder.AbstractFolder;
 import org.columba.mail.folder.RootFolder;
-import org.columba.mail.imap.IMAPStore;
+import org.columba.mail.imap.IMAPServer;
 import org.columba.mail.main.MailInterface;
 import org.columba.mail.util.MailResourceLoader;
-
 import org.columba.ristretto.imap.ListInfo;
 import org.columba.ristretto.imap.protocol.IMAPProtocol;
-
-import java.util.List;
-import java.util.logging.Logger;
 
 /**
  * Root folder for IMAP folders.
  */
-public class IMAPRootFolder extends AbstractFolder implements RootFolder {
+public class IMAPRootFolder extends AbstractFolder implements RootFolder, IMAPServerOwner {
 
     /** JDK 1.4+ logging framework logger, used for logging. */
     private static final Logger LOG = Logger.getLogger("org.columba.mail.folder.imap");
@@ -57,7 +55,7 @@ public class IMAPRootFolder extends AbstractFolder implements RootFolder {
 
     //    private ImapOperator operator;
     private AccountItem accountItem;
-    private IMAPStore store;
+    private IMAPServer server;
 
     /**
      * parent directory for mail folders
@@ -133,13 +131,13 @@ public class IMAPRootFolder extends AbstractFolder implements RootFolder {
         throws Exception {
         LOG.info("creating folder=" + name);
 
-        if ((name.indexOf(store.getDelimiter()) != -1)
-                && (name.indexOf(store.getDelimiter()) != (name.length() - 1))) {
+        if ((name.indexOf(server.getDelimiter()) != -1)
+                && (name.indexOf(server.getDelimiter()) != (name.length() - 1))) {
             // delimiter found
             //  -> recursively create all necessary folders to create
             //  -> the final folder
             String subchild = name.substring(0,
-                    name.indexOf(store.getDelimiter()));
+                    name.indexOf(server.getDelimiter()));
             AbstractFolder subFolder = (AbstractFolder) parent.findChildWithName(subchild,
                     false);
 
@@ -167,7 +165,7 @@ public class IMAPRootFolder extends AbstractFolder implements RootFolder {
 
             // recursively go on
             syncFolder(subFolder,
-                name.substring(name.indexOf(store.getDelimiter()) + 1), info);
+                name.substring(name.indexOf(server.getDelimiter()) + 1), info);
         } else {
             // no delimiter found
             //  -> this is already the final folder
@@ -266,12 +264,12 @@ public class IMAPRootFolder extends AbstractFolder implements RootFolder {
 
         try {
             // create and tag all subfolders on server
-            ListInfo[] listInfo = getStore().lsub("", "*");
+            ListInfo[] listInfo = getServer().fetchSubscribedFolders();
 
             if (listInfo != null) {
                 for (int i = 0; i < listInfo.length; i++) {
                     ListInfo info = listInfo[i];
-                    LOG.fine("delimiter=" + getStore().getDelimiter());
+                    LOG.fine("delimiter=" + getServer().getDelimiter());
 
                     String folderPath = info.getName();
 
@@ -292,12 +290,12 @@ public class IMAPRootFolder extends AbstractFolder implements RootFolder {
         findSpecialFolders();
     }
 
-    public IMAPStore getStore() {
-        return store;
+    public IMAPServer getServer() {
+        return server;
     }
 
     public void updateConfiguration() {
-        store = new IMAPStore(accountItem.getImapItem(), this);
+        server = new IMAPServer(accountItem.getImapItem(), this);
     }
 
     /**
@@ -331,15 +329,10 @@ public class IMAPRootFolder extends AbstractFolder implements RootFolder {
      */
     public void addSubfolder(AbstractFolder child) throws Exception {
         if (child instanceof IMAPFolder) {
-            String path = child.getName();
-            boolean result = getStore().createFolder(path);
+            getServer().createMailbox("", child.getName());
+        } 
 
-            if (result) {
-                super.addSubfolder(child);
-            }
-        } else {
-            super.addSubfolder(child);
-        }
+        super.addSubfolder(child);
     }
 
     /*
@@ -350,7 +343,7 @@ public class IMAPRootFolder extends AbstractFolder implements RootFolder {
     public void save() throws Exception {
         LOG.info("Logout from IMAPServer " + getName());
 
-        getStore().logout();
+        getServer().logout();
     }
 
     /*

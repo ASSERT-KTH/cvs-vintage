@@ -41,7 +41,7 @@ import org.columba.ristretto.coder.CharsetDecoderInputStream;
 import org.columba.ristretto.coder.QuotedPrintableDecoderInputStream;
 import org.columba.ristretto.message.Attributes;
 import org.columba.ristretto.message.Flags;
-import org.columba.ristretto.message.MessageFolderInfo;
+import org.columba.ristretto.message.MailboxInfo;
 import org.columba.ristretto.message.MimeHeader;
 
 /**
@@ -82,7 +82,7 @@ public abstract class MessageFolder extends AbstractFolder implements
     /**
      * total/unread/recent count of messages in this folder
      */
-    protected MessageFolderInfo messageFolderInfo = new MessageFolderInfo();
+    protected MailboxInfo messageFolderInfo = new MailboxInfo();
 
     /**
      * list of filters
@@ -221,27 +221,6 @@ public abstract class MessageFolder extends AbstractFolder implements
     }
 
     /**
-     * Return the root folder of this folder.
-     * <p>
-     * This is especially useful when using IMAP. IMAP has a root folder which
-     * is labelled with the account name.
-     * 
-     * @return root parent folder of this folder
-     */
-    public AbstractFolder getRootFolder() {
-        AbstractFolder parent = (AbstractFolder) getParent();
-
-        // There is no parent
-        if (parent == null) { return this; }
-
-        if (parent instanceof RootFolder) {
-            return parent;
-        } else {
-            return ((MessageFolder) parent).getRootFolder();
-        }
-    }
-
-    /**
      * Returns the directory where the messages are saved
      * 
      * @return File the file representing the mailbox directory
@@ -266,7 +245,7 @@ public abstract class MessageFolder extends AbstractFolder implements
      * @param i
      *            the new messagefolderinfo
      */
-    public void setMessageFolderInfo(MessageFolderInfo i) {
+    public void setMessageFolderInfo(MailboxInfo i) {
         messageFolderInfo = i;
     }
 
@@ -284,7 +263,7 @@ public abstract class MessageFolder extends AbstractFolder implements
      * 
      * @return MessageFolderInfo
      */
-    public MessageFolderInfo getMessageFolderInfo() {
+    public MailboxInfo getMessageFolderInfo() {
         return messageFolderInfo;
     }
 
@@ -349,7 +328,7 @@ public abstract class MessageFolder extends AbstractFolder implements
      *  
      */
     protected void saveMessageFolderInfo() {
-        MessageFolderInfo info = getMessageFolderInfo();
+        MailboxInfo info = getMessageFolderInfo();
 
         FolderItem item = getConfiguration();
 
@@ -360,7 +339,15 @@ public abstract class MessageFolder extends AbstractFolder implements
         property.addAttribute("unseen", new Integer(info.getUnseen())
                 .toString());
         property.addAttribute("recent", new Integer(info.getRecent())
-                .toString());
+                .toString());        
+        
+        if(info.getUidNext() != -1 ) {
+        	property.addAttribute("uidnext", new Integer(info.getUidNext())
+        			.toString());
+        	property.addAttribute("uidvalidity", new Integer(info.getUidValidity())
+        			.toString());
+        }
+        
     }
 
     /**
@@ -373,7 +360,7 @@ public abstract class MessageFolder extends AbstractFolder implements
 
         if (property == null) { return; }
 
-        MessageFolderInfo info = getMessageFolderInfo();
+        MailboxInfo info = getMessageFolderInfo();
 
         String exists = property.getAttribute("exists");
 
@@ -392,6 +379,19 @@ public abstract class MessageFolder extends AbstractFolder implements
         if (unseen != null) {
             info.setUnseen(Integer.parseInt(unseen));
         }
+
+        String uidnext = property.getAttribute("uidnext");
+
+        if (uidnext != null) {
+            info.setUidNext(Integer.parseInt(uidnext));
+        }
+
+        String uidvalidity = property.getAttribute("uidvalidty");
+
+        if (uidvalidity != null) {
+            info.setUidValidity(Integer.parseInt(uidvalidity));
+        }
+
     }
 
     /**

@@ -15,25 +15,23 @@
 //All Rights Reserved.
 package org.columba.mail.gui.attachment.command;
 
-import org.columba.core.command.DefaultCommandReference;
-import org.columba.core.command.WorkerStatusController;
-import org.columba.core.io.StreamUtils;
-
-import org.columba.mail.command.FolderCommand;
-import org.columba.mail.command.FolderCommandReference;
-import org.columba.mail.folder.MessageFolder;
-
-import org.columba.ristretto.coder.Base64DecoderInputStream;
-import org.columba.ristretto.coder.EncodedWord;
-import org.columba.ristretto.coder.QuotedPrintableDecoderInputStream;
-import org.columba.ristretto.message.LocalMimePart;
-import org.columba.ristretto.message.MimeHeader;
-
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
+import org.columba.core.command.DefaultCommandReference;
+import org.columba.core.command.Worker;
+import org.columba.core.command.WorkerStatusController;
+import org.columba.core.io.StreamUtils;
+import org.columba.mail.command.FolderCommand;
+import org.columba.mail.command.FolderCommandReference;
+import org.columba.mail.folder.MessageFolder;
+import org.columba.ristretto.coder.Base64DecoderInputStream;
+import org.columba.ristretto.coder.EncodedWord;
+import org.columba.ristretto.coder.QuotedPrintableDecoderInputStream;
+import org.columba.ristretto.message.MimeHeader;
 
 /**
  * @author freddy
@@ -61,16 +59,15 @@ public abstract class SaveAttachmentCommand extends FolderCommand {
 
         Integer[] address = r[0].getAddress();
 
-        LocalMimePart part = (LocalMimePart) folder.getMimePart(uids[0], address);
+        MimeHeader header = folder.getMimePartTree(uids[0]).getFromAddress(address).getHeader();
+        
+        InputStream bodyStream = folder.getMimePartBodyStream(uids[0], address);
 
-        File tempFile = getDestinationFile(part);
+        File tempFile = getDestinationFile(header);
 
         if (tempFile != null) {
-            MimeHeader header;
-            header = part.getHeader();
 
-            InputStream bodyStream = part.getInputStream();
-            int encoding = header.getContentTransferEncoding();
+        	int encoding = header.getContentTransferEncoding();
 
             switch (encoding) {
                 case MimeHeader.QUOTED_PRINTABLE:
@@ -99,11 +96,11 @@ public abstract class SaveAttachmentCommand extends FolderCommand {
      * @param mimepart the mime part containing the attachment.
      * @return the filename for the attachment.
      */
-    protected String getFilename(LocalMimePart mimepart) {
-        String fileName = mimepart.getHeader().getContentParameter("name");
+    protected String getFilename(MimeHeader header) {
+        String fileName = header.getContentParameter("name");
 
         if (fileName == null) {
-            fileName = mimepart.getHeader().getDispositionParameter("filename");
+            fileName = header.getDispositionParameter("filename");
         }
 
         // decode filename
@@ -120,5 +117,5 @@ public abstract class SaveAttachmentCommand extends FolderCommand {
      * @param mimepart the mime part containing the attachment.
      * @return a File path; null if the saving should be cancelled.
      */
-    protected abstract File getDestinationFile(LocalMimePart mimepart);
+    protected abstract File getDestinationFile(MimeHeader header);
 }

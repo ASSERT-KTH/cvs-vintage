@@ -15,16 +15,15 @@
 //All Rights Reserved.
 package org.columba.mail.gui.attachment.command;
 
-import org.columba.core.command.DefaultCommandReference;
-import org.columba.core.util.cFileChooser;
-import org.columba.core.util.cFileFilter;
-
-import org.columba.ristretto.message.LocalMimePart;
-
 import java.io.File;
 
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
+
+import org.columba.core.command.DefaultCommandReference;
+import org.columba.core.util.cFileChooser;
+import org.columba.core.util.cFileFilter;
+import org.columba.ristretto.message.MimeHeader;
 
 
 /**
@@ -44,7 +43,7 @@ public class SaveAttachmentAsCommand extends SaveAttachmentCommand {
     }
 
     /** {@inheritDoc} */
-    protected File getDestinationFile(LocalMimePart part) {
+    protected File getDestinationFile(MimeHeader header) {
         cFileChooser fileChooser;
 
         if (lastDir == null) {
@@ -58,7 +57,7 @@ public class SaveAttachmentAsCommand extends SaveAttachmentCommand {
 
         fileChooser.setDialogTitle("Save Attachment as ...");
 
-        String fileName = getFilename(part);
+        String fileName = getFilename(header);
         if (fileName != null) {
             fileChooser.forceSelectedFile(new File(fileName));
         }

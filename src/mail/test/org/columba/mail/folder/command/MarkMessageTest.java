@@ -26,7 +26,7 @@ import org.columba.mail.folder.AbstractFolderTest;
 import org.columba.mail.folder.FolderTstHelper;
 import org.columba.mail.folder.MailboxTstFactory;
 import org.columba.ristretto.message.Flags;
-import org.columba.ristretto.message.MessageFolderInfo;
+import org.columba.ristretto.message.MailboxInfo;
 
 /**
  * @author fdietz
@@ -68,7 +68,7 @@ public class MarkMessageTest extends AbstractFolderTest {
 
         assertEquals("message should be marked as read", true, flags.getSeen());
 
-        MessageFolderInfo info = getSourceFolder().getMessageFolderInfo();
+        MailboxInfo info = getSourceFolder().getMessageFolderInfo();
         assertEquals("one mark as read message should be in folder", 1, info
                 .getExists()
                 - info.getUnseen());

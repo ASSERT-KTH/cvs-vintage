@@ -17,14 +17,13 @@ package org.columba.mail.gui.config.subscribe;
 
 import org.columba.core.command.Command;
 import org.columba.core.command.WorkerStatusController;
-
 import org.columba.mail.folder.imap.IMAPRootFolder;
-import org.columba.mail.imap.IMAPStore;
+import org.columba.mail.imap.IMAPServer;
 
 
 public class UnsubscribeFolderCommand extends Command {
     private IMAPRootFolder root;
-    private IMAPStore store;
+    private IMAPServer store;
 
     /**
  * @param references
@@ -41,7 +40,7 @@ public class UnsubscribeFolderCommand extends Command {
         SubscribeCommandReference subscribeReference = (SubscribeCommandReference) getReferences()[0];
         root = (IMAPRootFolder) subscribeReference.getFolder();
 
-        store = root.getStore();
+        store = root.getServer();
 
         store.unsubscribeFolder(subscribeReference.getMailbox());
     }

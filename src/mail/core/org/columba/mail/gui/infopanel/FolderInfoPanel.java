@@ -16,17 +16,6 @@
 
 package org.columba.mail.gui.infopanel;
 
-import org.columba.core.gui.selection.SelectionChangedEvent;
-import org.columba.core.gui.selection.SelectionListener;
-import org.columba.core.gui.util.CInfoPanel;
-
-import org.columba.mail.config.FolderItem;
-import org.columba.mail.folder.MessageFolder;
-import org.columba.mail.gui.tree.selection.TreeSelectionChangedEvent;
-import org.columba.mail.gui.tree.util.FolderTreeCellRenderer;
-
-import org.columba.ristretto.message.MessageFolderInfo;
-
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.GridBagConstraints;
@@ -38,13 +27,22 @@ import javax.swing.Box;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
+import org.columba.core.gui.selection.SelectionChangedEvent;
+import org.columba.core.gui.selection.SelectionListener;
+import org.columba.core.gui.util.CInfoPanel;
+import org.columba.mail.config.FolderItem;
+import org.columba.mail.folder.MessageFolder;
+import org.columba.mail.gui.tree.selection.TreeSelectionChangedEvent;
+import org.columba.mail.gui.tree.util.FolderTreeCellRenderer;
+import org.columba.ristretto.message.MailboxInfo;
+
 public class FolderInfoPanel extends CInfoPanel implements SelectionListener {
     private JLabel leftLabel;
     private JLabel readLabel;
     private JLabel unreadLabel;
     private JLabel recentLabel;
     private JPanel rightPanel;
-    private MessageFolderInfo info;
+    private MailboxInfo info;
     private FolderItem item;
 
     public void initComponents() {

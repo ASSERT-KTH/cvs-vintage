@@ -15,17 +15,6 @@
 //All Rights Reserved.
 package org.columba.mail.gui.config.subscribe;
 
-import org.columba.core.command.Command;
-import org.columba.core.command.WorkerStatusController;
-import org.columba.core.util.ListTools;
-
-import org.columba.mail.folder.imap.IMAPRootFolder;
-import org.columba.mail.imap.IMAPStore;
-
-import org.columba.ristretto.imap.ListInfo;
-
-import org.frappucino.checkabletree.CheckableItemImpl;
-
 import java.util.Arrays;
 import java.util.Enumeration;
 import java.util.Iterator;
@@ -38,11 +27,19 @@ import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.TreeNode;
 
+import org.columba.core.command.Command;
+import org.columba.core.command.WorkerStatusController;
+import org.columba.core.util.ListTools;
+import org.columba.mail.folder.imap.IMAPRootFolder;
+import org.columba.mail.imap.IMAPServer;
+import org.columba.ristretto.imap.ListInfo;
+import org.frappucino.checkabletree.CheckableItemImpl;
+
 
 public class SynchronizeFolderListCommand extends Command {
     private Pattern delimiterPattern;
     private IMAPRootFolder root;
-    private IMAPStore store;
+    private IMAPServer store;
     private TreeNode node;
     private String delimiter;
 
@@ -60,14 +57,14 @@ public class SynchronizeFolderListCommand extends Command {
         throws Exception {
         root = (IMAPRootFolder) ((SubscribeCommandReference) getReferences()[0]).getFolder();
 
-        store = root.getStore();
+        store = root.getServer();
 
         node = createTreeStructure();
     }
 
     private TreeNode createTreeStructure() throws Exception {
         ListInfo[] list = store.list("", "*");
-        ListInfo[] lsub = store.lsub("", "*");
+        ListInfo[] lsub = store.fetchSubscribedFolders();
 
         // Create list of unsubscribed folders
         List subscribedFolders = Arrays.asList(lsub);

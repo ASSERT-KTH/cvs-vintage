@@ -24,6 +24,19 @@ import java.util.Set;
 
 import junit.framework.TestCase;
 
+import org.columba.addressbook.config.AddressbookConfig;
+import org.columba.addressbook.main.AddressbookInterface;
+import org.columba.core.backgroundtask.BackgroundTaskManager;
+import org.columba.core.command.DefaultCommandProcessor;
+import org.columba.core.config.Config;
+import org.columba.core.logging.ColumbaLogger;
+import org.columba.core.main.MainInterface;
+import org.columba.core.plugin.PluginManager;
+import org.columba.mail.config.MailConfig;
+import org.columba.mail.gui.tree.TreeModel;
+import org.columba.mail.main.MailInterface;
+import org.columba.mail.main.MailMain;
+
 /**
  * Abstract testcase creates a folder in setUp and removes it in tearDown.
  * <p>
@@ -76,11 +89,45 @@ public class AbstractFolderTest extends TestCase {
      * @see TestCase#setUp()
      */
     protected void setUp() throws Exception {
+    	
+    	MainInterface.processor = new DefaultCommandProcessor();
+    	
+    	// create config-folder
+        File file = new File("test_config");
+        file.mkdir();
+
+        // initialize configuration - core
+        MainInterface.config = new Config(file);
+
+        // initialize configuration - mail component
+        MailInterface.config = new MailConfig(MainInterface.config);
+
+        // initialize configuration - addressbook component
+        AddressbookInterface.config = new AddressbookConfig(
+                MainInterface.config);
+        
+        // init background manager (needed by ShutdownManager)
+        MainInterface.backgroundTaskManager = new BackgroundTaskManager();
+        
+        // create default config-files
+        MainInterface.config.init();
+        
+        MainInterface.pluginManager = new PluginManager();
+        
+        new MailMain().initPlugins();
+        
+    	 MailInterface.treeModel = new TreeModel(MailInterface.config.getFolderConfig());
+    	
+    	 MainInterface.DEBUG = true;
+    	 ColumbaLogger.createDefaultHandler();
+    	 
         folders = new HashSet();
         sourceFolder = factory.createFolder(folderId++);
         folders.add(sourceFolder);
         destFolder = factory.createFolder(folderId++);
         folders.add(destFolder);
+        
+        
     }
 
     public MessageFolder createFolder() {
@@ -106,6 +153,7 @@ public class AbstractFolderTest extends TestCase {
 
             // delete folder
             f.delete();
+            folder.removeFolder();
         }
         new File(FolderTstHelper.homeDirectory + "/folders/").delete();
     }

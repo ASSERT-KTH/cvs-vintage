@@ -208,12 +208,7 @@ public abstract class LocalFolder extends MessageFolder {
         LocalMimePart mimepart = (LocalMimePart) message.getMimePartTree()
                 .getFromAddress(address);
 
-        InputStream bodyStream = mimepart.getInputStream();
-        MimeHeader header = mimepart.getHeader();
-
-        bodyStream = decodeStream(header, bodyStream);
-
-        return bodyStream;
+        return mimepart.getInputStream();
     }
 
     /** {@inheritDoc} */

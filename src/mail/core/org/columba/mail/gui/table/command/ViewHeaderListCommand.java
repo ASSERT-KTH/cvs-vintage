@@ -81,7 +81,8 @@ public class ViewHeaderListCommand extends Command {
 
         // fetch the headerlist
         headerList = (folder).getHeaderList();
-
+        //TODO: Handle CommandCancelledException
+        
         // this is a little hack !!
         // check if this is an imap folder
         FolderItem folderItem = folder.getConfiguration();

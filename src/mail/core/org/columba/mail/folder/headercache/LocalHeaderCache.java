@@ -35,7 +35,7 @@ import org.columba.mail.message.HeaderList;
 import org.columba.mail.util.MailResourceLoader;
 import org.columba.ristretto.message.Flags;
 import org.columba.ristretto.message.Header;
-import org.columba.ristretto.message.MessageFolderInfo;
+import org.columba.ristretto.message.MailboxInfo;
 import org.columba.ristretto.message.io.Source;
 import org.columba.ristretto.parser.HeaderParser;
 
@@ -153,7 +153,7 @@ public class LocalHeaderCache extends AbstractFolderHeaderCache {
         int nextUid = -1;
 
         // exists/unread/recent should be set to 0
-        folder.setMessageFolderInfo(new MessageFolderInfo());
+        folder.setMessageFolderInfo(new MailboxInfo());
 
         for (int i = 0; i < capacity; i++) {
             if ((getObservable() != null) && ((i % 100) == 0)) {
@@ -293,7 +293,7 @@ public class LocalHeaderCache extends AbstractFolderHeaderCache {
 
         // parse all message files to recreate the header cache
         ColumbaHeader header = null;
-        MessageFolderInfo messageFolderInfo = folder.getMessageFolderInfo();
+        MailboxInfo messageFolderInfo = folder.getMessageFolderInfo();
         messageFolderInfo.setExists(0);
         messageFolderInfo.setRecent(0);
         messageFolderInfo.setUnseen(0);
