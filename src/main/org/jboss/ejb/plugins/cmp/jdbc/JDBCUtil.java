@@ -13,6 +13,9 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.io.Reader;
+import java.io.StringReader;
+import java.io.Writer;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
@@ -42,9 +45,9 @@ import org.jboss.logging.Logger;
  * parameters and loading query results.
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
- * @version $Revision: 1.10 $
+ * @version $Revision: 1.11 $
  */
-public class JDBCUtil
+public final class JDBCUtil
 {
    private static Logger log = Logger.getLogger(JDBCUtil.class.getName());
 
@@ -118,7 +121,34 @@ public class JDBCUtil
       }
    }
    
+   public static void safeClose(Reader reader)
+   {
+      if(reader != null)
+      {
+         try
+         {
+            reader.close();
+         } catch(IOException e)
+         {
+            log.error("SQL error", e);
+         }
+      }
+   }
    
+   public static void safeClose(Writer writter)
+   {
+      if(writter != null)
+      {
+         try
+         {
+            writter.close();
+         } catch(IOException e)
+         {
+            log.error("SQL error", e);
+         }
+      }
+   }
+    
    /**
     * Sets a parameter in this Command's PreparedStatement.
     * Handles null values, and provides tracing.
@@ -143,53 +173,76 @@ public class JDBCUtil
                "value=" + ((value == null) ? "NULL" : value));
       }
       
+      //
+      // null
+      //  
       if (value == null)
       {
          ps.setNull(index, jdbcType);
-      } else
-      {
-         // convert to valid SQL date types (for DATE, TIME, TIMESTAMP)
-         value = convertToSQLDate(jdbcType, value);
-         
-         if(isBinaryJDBCType(jdbcType))
-         {
-            byte[] bytes = convertObjectToByteArray(value);
-            setBinaryParameter(ps, index, jdbcType, bytes);
-         } else
-         {
-            ps.setObject(index, value, jdbcType);
-         }
+         return;
       }
-   }
-   
-   private static void setBinaryParameter(
-         PreparedStatement ps, 
-         int index,
-         int jdbcType,
-         byte[] bytes) throws SQLException
-   {
-      // it's more efficient to use setBinaryStream for large
-      // streams, and causes problems if not done on some DBMS
-      // implementations
-      if(jdbcType == Types.BLOB) 
+      
+      // 
+      // coerce parameter into correct SQL type 
+      // (for DATE, TIME, TIMESTAMP, CHAR)
+      //
+      value = coerceToSQLType(jdbcType, value);
+         
+      //
+      // handle CLOBs special
+      //
+      // This won't fix the Oracle problem with CLOBs > 2000 characters,
+      // but it is a step in the right direction.
+      if(jdbcType == Types.CLOB) 
       {
-         // if the jdbc type is blob use a blob
-         ps.setBlob(index, new ByteArrayBlob(bytes));
-      } else if (bytes.length < 2000)
-      {
-         ps.setBytes(index, bytes);
-      } else
-      {
-         InputStream in = null;
-         try
-         {
-            in = new ByteArrayInputStream(bytes);
-            ps.setBinaryStream(index, in, bytes.length);
+         String string = value.toString();
+         StringReader reader = null;
+         try {
+            reader = new StringReader(string);
+            ps.setCharacterStream(index, reader, string.length());
          } finally
          {
-            safeClose(in);
+            safeClose(reader);
          }
+         return;
+      } 
+
+      //
+      // Binary types need to be converted to a byte array and set
+      //
+      if(isBinaryJDBCType(jdbcType))
+      {
+         byte[] bytes = convertObjectToByteArray(value);
+
+         if(jdbcType == Types.BLOB) 
+         {
+            // if the jdbc type is blob use a real blob
+            ps.setBlob(index, new ByteArrayBlob(bytes));
+         } else if (bytes.length < 2000)
+         {
+            // it's more efficient to use setBinaryStream for large
+            // streams, and causes problems if not done on some DBMS
+            // implementations
+            ps.setBytes(index, bytes);
+         } else
+         {
+            InputStream in = null;
+            try
+            {
+               in = new ByteArrayInputStream(bytes);
+               ps.setBinaryStream(index, in, bytes.length);
+            } finally
+            {
+               safeClose(in);
+            }
+         }
+         return;
       }
+
+      //
+      //  Standard SQL type
+      //
+      ps.setObject(index, value, jdbcType);
    }
    
    /**
@@ -207,125 +260,110 @@ public class JDBCUtil
          int index, 
          Class destination) throws SQLException
    {
-      Object[] returnValue = new Object[1];
-      if(getNonBinaryResult(rs, index, destination, returnValue))
-      {
-         if(log.isTraceEnabled()) {
-            log.trace("Get result: index=" + index + 
-                  ", javaType=" + destination.getName() + 
-                  ", Simple, value=" + returnValue[0]);
-         }
-      } else if(getBinaryResult(rs, index, destination, returnValue))
-      {
-         if(log.isTraceEnabled()) {
-            log.trace("Get result: index=" + index + 
-                  ", javaType=" + destination.getName() + 
-                  ", Binary, value=" + returnValue[0]);
-         }
-      } else {
-         throw new SQLException("Unable to load a ResultSet column into " +
-               "a variable of type '" + destination.getName() + "'");
-      }
-
-      // convert to valid from SQL date back to Java date 
-      // fixes comparisons of date types
-      returnValue[0] = convertToJavaDate(destination, returnValue[0]);
-
-      return returnValue[0];
-   }
-   
-   private static boolean getNonBinaryResult(
-         ResultSet rs, 
-         int index, 
-         Class destination, 
-         Object returnValue[]) throws SQLException
-   {
+      boolean gotResult = false;
+      Object value = null;
+      
+      //
+      // Non-binary types
+      //
       Method method = (Method)rsTypes.get(destination.getName());
       if(method != null)
       {
          try
          {
-            Object value = method.invoke(rs, new Object[]{new Integer(index)});
+            value = method.invoke(rs, new Object[]{new Integer(index)});
             if(rs.wasNull())
             {
-               returnValue[0] = null;
-            } else
-            {
-               if(value instanceof String &&
-                     (destination.isAssignableFrom(Character.class) ||
-                     destination.isAssignableFrom(Character.TYPE) ))
-               {
-                  value = new Character(((String)value).charAt(0));
-               }
-               returnValue[0] = value;
+               value = null;
             }
-            return true;
+
+            if(log.isTraceEnabled()) {
+               log.trace("Get result: index=" + index + 
+                     ", javaType=" + destination.getName() + 
+                     ", Simple, value=" + value);
+            }
+            gotResult = true;
          } catch(IllegalAccessException e)
          {
-            // What-ever, I guess non-binary will not work for this field.
+            // Whatever, I guess non-binary will not work for this field.
          } catch(InvocationTargetException e)
          {
-            // What-ever, I guess non-binary will not work for this field.
+            // Whatever, I guess non-binary will not work for this field.
          }
       }
-      return false;
-   }
    
-   private static boolean getBinaryResult(
-         ResultSet rs, 
-         int index, 
-         Class destination, 
-         Object returnValue[]) throws SQLException
-   {
-      byte[] bytes = rs.getBytes(index);
-      if( bytes == null )
-      {
-         returnValue[0] = null;
-         return true;
-      }
+      //
+      // Binary types
+      //
+      if(!gotResult) {
+         // I guess this is binary data
+         byte[] bytes = rs.getBytes(index);
+         if( bytes == null )
+         {
+            return null;
+         }
       
-      Object value = convertByteArrayToObject(bytes, destination);
-      return convertToJavaType(value, destination, returnValue);
+         // if we are not looking for a byte array convert the bytes into 
+         // a real object; otherwise we are done
+         if (destination != byte[].class)
+         {
+            value = convertByteArrayToObject(bytes);
+         } else
+         {
+            value = bytes;
+         }
+
+         if(log.isTraceEnabled()) {
+            log.trace("Get result: index=" + index + 
+                  ", javaType=" + destination.getName() + 
+                  ", Binary, value=" + value);
+         }
+         gotResult = true;
+      }
+
+      //
+      // Coerce result into correct java type
+      //
+      return coerceToJavaType(value, destination);
    }
    
-   private static boolean convertToJavaType(
+   private static Object coerceToJavaType(
          Object value, 
-         Class destination, 
-         Object returnValue[]) throws SQLException
+         Class destination)throws SQLException
    {
       try
       {
-         // Was the object double marshalled?
+         //
+         // null
+         //
+         if(value == null) {
+            return null;
+         }
+         
+         // 
+         // java.rmi.MarshalledObject
+         //
+         // get unmarshalled value
          if(value instanceof MarshalledObject && 
                !destination.equals(MarshalledObject.class))
          {
             value = ((MarshalledObject)value).get();
          }
          
-         // ejb-reference: get the object back from the handle
+         // 
+         // javax.ejb.Handle
+         //
+         // get the object back from the handle
          if(value instanceof Handle)
          {
             value = ((Handle)value).getEJBObject();
-            if(destination.isAssignableFrom(value.getClass()))
-            {
-               returnValue[0] = value;
-               return true;
-            } else
-            {
-               throw new SQLException("Got a " + value.getClass().getName() + 
-                     ": '" + value + "' while looking for a " + 
-                     destination.getName());
-            }
          }
          
-         // Are we done yet?
-         if(destination.isAssignableFrom(value.getClass()))
-         {
-            returnValue[0] = value;
-            return true;
-         }
-         
-         // Ok is this a primitive wrapper
+         // 
+         // Primitive wrapper classes
+         //
+         // We have a primitive wrapper and we want a real primitive
+         // just return the wrapper and the vm will convert it at the proxy
          if(destination.isPrimitive())
          {
             if((destination.equals(Byte.TYPE) && value instanceof Byte) ||
@@ -339,10 +377,87 @@ public class JDBCUtil
             (destination.equals(Double.TYPE) && value instanceof Double)
             )
             {
-               returnValue[0] = value;
-               return true;
+               return value;
             }
          }
+
+         //
+         // java.util.Date
+         //
+         // make new copy as sub types have problems in comparions
+         if(destination == java.util.Date.class && 
+               value instanceof java.util.Date) 
+         {
+            // handle timestamp special becauses it hoses the milisecond values
+            if(value instanceof java.sql.Timestamp) {
+               java.sql.Timestamp ts = (java.sql.Timestamp)value;
+               
+               // Timestamp returns whole seconds from getTime and partial 
+               // seconds are retrieved from getNanos()
+               return new java.util.Date(
+                     ts.getTime() + (ts.getNanos()/1000000) );
+            } else 
+            {
+               return new java.util.Date(((java.util.Date)value).getTime());
+            }
+         } 
+         
+         //
+         // java.sql.Time
+         //
+         // make a new copy object; you never know what a driver will return
+         if(destination == java.sql.Time.class &&
+               value instanceof java.sql.Time) {
+            return new java.sql.Time(((java.sql.Time)value).getTime());
+         } 
+         
+         //
+         // java.sql.Date
+         //
+         // make a new copy object; you never know what a driver will return
+         if(destination == java.sql.Date.class &&
+               value instanceof java.sql.Date) {
+   
+            return new java.sql.Date(((java.sql.Date)value).getTime());
+         } 
+
+         //
+         // java.sql.Timestamp
+         //
+         // make a new copy object; you never know what a driver will return
+         if(destination == java.sql.Timestamp.class &&
+               value instanceof java.sql.Timestamp) {
+   
+            // make a new Timestamp object; you never know 
+            // what a driver will return
+            java.sql.Timestamp orignal = (java.sql.Timestamp)value;
+            java.sql.Timestamp copy = new java.sql.Timestamp(orignal.getTime());
+            copy.setNanos(orignal.getNanos());
+            return copy;
+         } 
+
+         //
+         // java.lang.String --> java.lang.Character or char
+         //
+         // just grab first character
+         if(value instanceof String &&
+               (destination == Character.class || 
+                destination == Character.TYPE) )
+         {
+            return new Character(((String)value).charAt(0));
+         }
+    
+         // Did we get the desired result?
+         if(destination.isAssignableFrom(value.getClass()))
+         {
+            return value;
+         }
+         
+         // oops got the wrong type - nothing we can do
+         throw new SQLException("Got a " + value.getClass().getName() + 
+               ": '" + value + "' while looking for a " + 
+               destination.getName());
+
       } catch (RemoteException e)
       {
          throw new SQLException("Unable to load EJBObject back from Handle: "
@@ -354,7 +469,6 @@ public class JDBCUtil
       {
          throw new SQLException("Unable to load to deserialize result: "+e);
       }
-      return false;
    }
    
    /**
@@ -367,16 +481,23 @@ public class JDBCUtil
    public static boolean isBinaryJDBCType(int jdbcType)
    {
       return (Types.BINARY == jdbcType ||
-      Types.BLOB == jdbcType ||
-      Types.CLOB == jdbcType ||
-      Types.JAVA_OBJECT == jdbcType ||
-      Types.LONGVARBINARY == jdbcType ||
-      Types.OTHER == jdbcType ||
-      Types.STRUCT == jdbcType ||
-      Types.VARBINARY == jdbcType);
+            Types.BLOB == jdbcType ||
+            Types.JAVA_OBJECT == jdbcType ||
+            Types.LONGVARBINARY == jdbcType ||
+            Types.OTHER == jdbcType ||
+            Types.STRUCT == jdbcType ||
+            Types.VARBINARY == jdbcType);
    }
    
-   private static Object convertToSQLDate(int jdbcType, Object value)
+   /**
+    * Coerces the input value into the correct type for the specified
+    * jdbcType.
+    * 
+    * @param jdbcType the jdbc type to which the value will be assigned
+    * @param value the value to coerce
+    * @return the corrected object
+    */
+   private static Object coerceToSQLType(int jdbcType, Object value)
    {
       if(value.getClass() == java.util.Date.class)
       {
@@ -390,50 +511,20 @@ public class JDBCUtil
          {
             return new java.sql.Timestamp(((java.util.Date)value).getTime());
          }
-      }
-      return value;
-   }
-
-   private static Object convertToJavaDate(Class destination, Object value)
-   {
-      // make a real java.util.Date (sub types have problems with comparions)
-      if(destination == java.util.Date.class && 
-            value instanceof java.util.Date) 
+      } else if(value.getClass() == Character.class && 
+            jdbcType == Types.VARCHAR)
       {
-         // handle timestamp special becauses it hoses the milisecond values
-         if(value instanceof java.sql.Timestamp) {
-            java.sql.Timestamp ts = (java.sql.Timestamp)value;
-            
-            // Timestamp returns whole seconds from getTime and partial 
-            // seconds are retrieved from getNanos()
-            return new java.util.Date(ts.getTime() + (ts.getNanos()/1000000));
-         } else 
-         {
-            return new java.util.Date(((java.util.Date)value).getTime());
-         }
-      } else if(destination == java.sql.Time.class &&
-            value instanceof java.sql.Time) {
-
-         // make a new Time object; you never know what a driver will return
-         return new java.sql.Time(((java.sql.Time)value).getTime());
-      } else if(destination == java.sql.Date.class &&
-            value instanceof java.sql.Date) {
-
-         // make a new Date object; you never know what a driver will return
-         return new java.sql.Date(((java.sql.Date)value).getTime());
-      } else if(destination == java.sql.Timestamp.class &&
-            value instanceof java.sql.Timestamp) {
-
-         // make a new Timestamp object; you never know 
-         // what a driver will return
-         java.sql.Timestamp in = (java.sql.Timestamp)value;
-         java.sql.Timestamp out = new java.sql.Timestamp(in.getTime());
-         out.setNanos(in.getNanos());
-         return out;
+         value = value.toString();
       }
       return value;
    }
-    
+
+   /**
+    * Coverts the value into a byte array.
+    * @param value the value to convert into a byte array
+    * @return the byte representation of the value
+    * @throws SQLException if a problem occures in the conversion
+    */
    private static byte[] convertObjectToByteArray(Object value) 
          throws SQLException
    {
@@ -473,16 +564,16 @@ public class JDBCUtil
       }
    }
    
-   private static Object convertByteArrayToObject(
-         byte[] bytes, 
-         Class destination) throws SQLException
+   /**
+    * Coverts the byte array into an object.
+    * @param bytes the bytes to convert
+    * @param destination the desired resultant type
+    * @return the object repsentation of the byte array
+    * @throws SQLException if a problem occures in the conversion
+    */
+   private static Object convertByteArrayToObject(byte[] bytes) 
+         throws SQLException
    {
-      // Are we looking for a byte array
-      if (destination == byte[].class)
-      {
-         return bytes;
-      }
-
       ByteArrayInputStream bais = null;
       ObjectInputStream ois = null;
       try
