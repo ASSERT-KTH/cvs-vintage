@@ -9,12 +9,16 @@ package org.jboss.ejb.plugins.cmp.jdbc;
 
 import java.lang.reflect.Method;
 import java.util.Collection;
+import java.util.List;
+import java.util.Collections;
 import javax.ejb.FinderException;
 
 import org.jboss.deployment.DeploymentException;
 import org.jboss.ejb.EntityEnterpriseContext;
 import org.jboss.ejb.plugins.cmp.ejbql.Catalog;
+import org.jboss.ejb.plugins.cmp.ejbql.SelectFunction;
 import org.jboss.ejb.plugins.cmp.jdbc.bridge.JDBCEntityBridge;
+import org.jboss.ejb.plugins.cmp.jdbc.bridge.JDBCCMPFieldBridge;
 import org.jboss.ejb.plugins.cmp.jdbc.metadata.JDBCQueryMetaData;
 import org.jboss.ejb.plugins.cmp.jdbc.metadata.JDBCDynamicQLQueryMetaData;
 import org.jboss.ejb.plugins.cmp.jdbc.metadata.JDBCReadAheadMetaData;
@@ -24,28 +28,24 @@ import org.jboss.ejb.plugins.cmp.jdbc.metadata.JDBCReadAheadMetaData;
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
  * @author <a href="mailto:alex@jboss.org">Alex Loubyansky</a>
- * @version $Revision: 1.7 $
+ * @version $Revision: 1.8 $
  */
 public final class JDBCDynamicQLQuery extends JDBCAbstractQueryCommand
 {
    private final Catalog catalog;
    private final JDBCDynamicQLQueryMetaData metadata;
 
-   public JDBCDynamicQLQuery(
-      JDBCStoreManager manager,
-      JDBCQueryMetaData q) throws DeploymentException
+   public JDBCDynamicQLQuery(JDBCStoreManager manager, JDBCQueryMetaData q)
+      throws DeploymentException
    {
       super(manager, q);
       catalog = manager.getCatalog();
       metadata = (JDBCDynamicQLQueryMetaData)q;
    }
 
-   public Collection execute(
-      Method finderMethod,
-      Object[] args,
-      EntityEnterpriseContext ctx) throws FinderException
+   public Collection execute(Method finderMethod, Object[] args, EntityEnterpriseContext ctx)
+      throws FinderException
    {
-
       String dynamicQL = (String)args[0];
       if(getLog().isDebugEnabled())
       {
@@ -91,41 +91,56 @@ public final class JDBCDynamicQLQuery extends JDBCAbstractQueryCommand
          throw new FinderException("Error compiling ejbql: " + t);
       }
 
-      // set the sql
-      setSQL(compiler.getSQL());
-      setOffsetParam(compiler.getOffsetParam());
-      setOffsetValue(compiler.getOffsetValue());
-      setLimitParam(compiler.getLimitParam());
-      setLimitValue(compiler.getLimitValue());
+      int offset = toInt(parameters, compiler.getOffsetParam(), compiler.getOffsetValue());
+      int limit = toInt(parameters, compiler.getLimitParam(), compiler.getLimitValue());
 
-      // set select object
+      JDBCEntityBridge selectEntity = null;
+      JDBCCMPFieldBridge selectField = null;
+      SelectFunction selectFunction = null;
       if(compiler.isSelectEntity())
       {
-         JDBCEntityBridge selectEntity = compiler.getSelectEntity();
-
-         // set the select entity
-         setSelectEntity(selectEntity);
-
-         // set the preload fields
-         JDBCReadAheadMetaData readahead = metadata.getReadAhead();
-         if(readahead.isOnFind())
-         {
-            setEagerLoadGroup(readahead.getEagerLoadGroup());
-            setOnFindCMRList(compiler.getLeftJoinCMRList());
-         }
+         selectEntity = compiler.getSelectEntity();
       }
       else if(compiler.isSelectField())
       {
-         setSelectField(compiler.getSelectField());
+         selectField = compiler.getSelectField();
       }
       else
       {
-         setSelectFunction(compiler.getSelectFunction(), compiler.getStoreManager());
+         selectFunction = compiler.getSelectFunction();
+      }
+
+      boolean[] mask;
+      List leftJoinCMRList;
+      JDBCReadAheadMetaData readahead = metadata.getReadAhead();
+      if(selectEntity != null && readahead.isOnFind())
+      {
+         mask = selectEntity.getLoadGroupMask(readahead.getEagerLoadGroup());
+         leftJoinCMRList = compiler.getLeftJoinCMRList();
+      }
+      else
+      {
+         mask = null;
+         leftJoinCMRList = Collections.EMPTY_LIST;
       }
 
       // get the parameter order
       setParameterList(compiler.getInputParameters());
 
-      return super.execute(finderMethod, parameters, ctx);
+      return execute(
+         compiler.getSQL(),
+         parameters,
+         offset,
+         limit,
+         selectEntity,
+         selectField,
+         selectFunction,
+         compiler.getStoreManager(),
+         mask,
+         compiler.getInputParameters(),
+         leftJoinCMRList,
+         metadata,
+         log
+      );
    }
 }

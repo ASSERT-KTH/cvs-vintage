@@ -45,13 +45,12 @@ import org.jboss.logging.Logger;
  * @author <a href="mailto:justin@j-m-f.demon.co.uk">Justin Forder</a>
  * @author <a href="mailto:alex@jboss.org">Alex Loubyansky</a>
  *
- * @version $Revision: 1.20 $
+ * @version $Revision: 1.21 $
  */
 public abstract class JDBCAbstractQueryCommand implements JDBCQueryCommand
 {
    // todo: get rid of it
    private static final String FINDER_PREFIX = "find";
-   private JDBCStoreManager manager;
    private JDBCQueryMetaData queryMetaData;
    protected Logger log;
 
@@ -71,7 +70,6 @@ public abstract class JDBCAbstractQueryCommand implements JDBCQueryCommand
 
    public JDBCAbstractQueryCommand(JDBCStoreManager manager, JDBCQueryMetaData q)
    {
-      this.manager = manager;
       this.log = Logger.getLogger(
          this.getClass().getName() +
          "." +
@@ -115,10 +113,24 @@ public abstract class JDBCAbstractQueryCommand implements JDBCQueryCommand
    {
       int offset = toInt(args, offsetParam, offsetValue);
       int limit = toInt(args, limitParam, limitValue);
-      return execute(args, offset, limit);
+      return execute(
+         sql,
+         args,
+         offset,
+         limit,
+         selectEntity,
+         selectField,
+         selectFunction,
+         selectManager,
+         eagerLoadMask,
+         parameters,
+         onFindCMRList,
+         queryMetaData,
+         log
+      );
    }
 
-   private static int toInt(Object[] params, int paramNumber, int defaultValue)
+   protected static int toInt(Object[] params, int paramNumber, int defaultValue)
    {
       if(paramNumber == 0)
          return defaultValue;
@@ -126,7 +138,19 @@ public abstract class JDBCAbstractQueryCommand implements JDBCQueryCommand
       return arg.intValue();
    }
 
-   private Collection execute(Object[] args, int offset, int limit)
+   protected static Collection execute(String sql,
+                                     Object[] args,
+                                     int offset,
+                                     int limit,
+                                     JDBCEntityBridge selectEntity,
+                                     JDBCCMPFieldBridge selectField,
+                                     SelectFunction selectFunction,
+                                     JDBCStoreManager selectManager,
+                                     boolean[] eagerLoadMask,
+                                     List parameters,
+                                     List onFindCMRList,
+                                     JDBCQueryMetaData queryMetaData,
+                                     Logger log)
       throws FinderException
    {
       ReadAheadCache selectReadAheadCache = null;
@@ -153,13 +177,13 @@ public abstract class JDBCAbstractQueryCommand implements JDBCQueryCommand
          }
 
          // get the connection
-         con = manager.getEntityBridge().getDataSource().getConnection();
+         con = selectManager.getEntityBridge().getDataSource().getConnection();
          ps = con.prepareStatement(sql);
 
          // Set the fetch size of the statement
-         if(manager.getEntityBridge().getFetchSize() > 0)
+         if(selectManager.getEntityBridge().getFetchSize() > 0)
          {
-            ps.setFetchSize(manager.getEntityBridge().getFetchSize());
+            ps.setFetchSize(selectManager.getEntityBridge().getFetchSize());
          }
 
          // set the parameters
