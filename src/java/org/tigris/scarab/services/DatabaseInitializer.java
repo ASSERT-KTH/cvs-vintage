@@ -65,7 +65,7 @@ import org.tigris.scarab.util.Log;
 /**
  * 
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: DatabaseInitializer.java,v 1.1 2002/10/12 23:31:00 jmcnally Exp $
+ * @version $Id: DatabaseInitializer.java,v 1.2 2002/10/22 23:13:32 jon Exp $
  */
 public class DatabaseInitializer
     extends BaseService
@@ -73,6 +73,8 @@ public class DatabaseInitializer
     private static final String PRE_L10N = "pre-l10n";
     private static final String POST_L10N = "post-l10n";
     private static final String DB_L10N_STATE = "db-l10n-state";
+
+    private static final Locale defaultLocale =  Locale.getDefault();
 
     /**
      * Initializes the service by setting up Torque.
@@ -87,7 +89,7 @@ public class DatabaseInitializer
             if (dbState.getValue().equals(PRE_L10N)) 
             {
                 long start = System.currentTimeMillis();
-                System.out.println("New scarab database; localizing strings... ");
+                System.out.println("New scarab database; localizing strings for '" + defaultLocale.getDisplayName() + "'...");
                 dbState.setValue("started");
                 dbState.save();
                 initdb(); //Turbine.getConfiguration();                
@@ -160,7 +162,7 @@ public class DatabaseInitializer
                         try 
                         {
                             value = Localization.getString(row[0], 
-                                                           Locale.getDefault(),
+                                                           defaultLocale,
                                                            key);
                         }
                         catch (MissingResourceException e)
