@@ -68,10 +68,38 @@ import org.jboss.util.Classes;
  *aspect.run();
  * </pre></code>
  * 
+ * The AspectFactory's configuration XML file will look something like:
+ * 
+<pre>&lt;a:aspects 
+<em><strong>	XML namespaces are used to seperate aspect configuration data and
+	interceptor configuration data.
+</strong></em>	xmlns:a=&quot;org.jboss.aspect&quot;
+	xmlns:di=&quot;org.jboss.aspect.interceptors.DelegatingInterceptor&quot;
+	xmlns:jii=&quot;org.jboss.aspect.interceptors.JMXInvokerInterceptor&quot;&gt; 
+<em><strong>
+	define an aspect named &quot;AandB&quot;</strong></em>
+	&lt;a:aspect a:name=&quot;AandB&quot;&gt;<em><strong>
+		</strong></em><strong><em>You list the interceptors that will make up the aspect here</em></strong>
+
+<strong><em>		The followiing interceptor delegates method calls to a lazy load ObjectA object,
+		the aspect object will have all the interfaces that ObjectA exposes.
+		</em></strong>&lt;a:interceptor a:class=&quot;org.jboss.aspect.interceptors.DelegatingInterceptor&quot;
+			di:delegate=&quot;org.foo.ObjectA&quot;/&gt;
+
+<em><strong>		The following interceptor sends all method invocations it receives 
+		to a JMX MBean.  The aspect object will provide the InterfaceB interface that is listed.
+</strong></em>		&lt;a:interceptor a:class=&quot;org.jboss.aspect.interceptors.JMXInvokerInterceptor&quot;
+			jii:mbean=&quot;jboss-test:service=MockMMBean&quot;&gt;
+			&lt;jii:expose-interface jii:class=&quot;org.foo.InterfaceB&quot;/&gt;
+		&lt;/a:interceptor&gt;
+	&lt;/a:aspect&gt;
+   
+&lt;/a:aspects&gt;
+ </pre>
  * 
  * @see org.jboss.aspect.spi.AspectInterceptor
  *
- * @author < a href = "mailto:hchirino@jboss.org" > Hiram Chirino < / a >
+ * @author <a href = "mailto:hchirino@jboss.org" > Hiram Chirino </a>
  */
 public class AspectFactory
 {
