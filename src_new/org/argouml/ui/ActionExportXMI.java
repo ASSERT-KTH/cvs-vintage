@@ -1,4 +1,4 @@
-// $Id: ActionExportXMI.java,v 1.17 2005/01/21 18:20:03 bobtarling Exp $
+// $Id: ActionExportXMI.java,v 1.18 2005/02/10 21:28:40 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -42,13 +42,9 @@ import org.argouml.i18n.Translator;
 import org.argouml.kernel.Project;
 import org.argouml.kernel.ProjectManager;
 import org.argouml.kernel.ProjectMember;
-import org.argouml.persistence.DiagramMemberFilePersister;
 import org.argouml.persistence.MemberFilePersister;
 import org.argouml.persistence.ModelMemberFilePersister;
-import org.argouml.persistence.TodoListMemberFilePersister;
 import org.argouml.uml.ProjectMemberModel;
-import org.argouml.uml.cognitive.ProjectMemberTodoList;
-import org.argouml.uml.diagram.ProjectMemberDiagram;
 import org.argouml.uml.ui.UMLAction;
 
 /**
