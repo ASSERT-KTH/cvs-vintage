@@ -217,8 +217,11 @@
         <filter token="DATABASE_NAME" value="${scarab.database.name}"/>
         <filter token="DATABASE_DRIVER" value="${scarab.database.jdbc.driver}"/>
         <filter token="DATABASE_URL" value="${scarab.database.url}"/>
+        <filter token="DATABASE_HOST" value="${scarab.database.host}"/>
+        <filter token="DATABASE_PORT" value="${scarab.database.port}"/>
         <filter token="DATABASE_USERNAME" value="${scarab.database.username}"/>
         <filter token="DATABASE_PASSWORD" value="${scarab.database.password}"/>
+        <filter token="DATABASE_LOADORDER" value="${scarab.database.loadorder}"/>
         <filter token="SYSTEM_MAIL_HOST" value="${scarab.system.mail.host}"/>
         <filter token="TURBINE_MODE" value="${scarab.mode}"/>
         <filter token="SESSION_VALIDATOR" value="${scarab.sessionvalidator}"/>
@@ -285,6 +288,7 @@
             <fileset dir="${src.sql.dir}">
                 <include name="**/*.sql"/>
                 <include name="**/*.lst"/>
+                <include name="**/dbsettings.props"/>
             </fileset>
         </copy>
         <chmod perm="+x">
