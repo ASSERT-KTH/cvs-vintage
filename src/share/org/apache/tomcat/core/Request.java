@@ -249,10 +249,10 @@ public class Request {
     public void setContextManager( ContextManager cm ) {
 	contextM=cm;
 	try {
-	    encodingInfo=cm.getNoteId( ContextManager.REQUEST_NOTE,
-				       "req.encoding" );
-	    attributeInfo=cm.getNoteId( ContextManager.REQUEST_NOTE,
-					"req.attribute" );
+	    encodingInfo=cm.getNoteId(ContextManager.REQUEST_NOTE,
+				      "req.encoding" );
+	    attributeInfo=cm.getNoteId(ContextManager.REQUEST_NOTE,
+				       "req.attribute");
 	} catch( TomcatException ex ) {
 	    ex.printStackTrace();
 	}
@@ -394,17 +394,20 @@ public class Request {
 
 	Object result=null;
 	Context ctx=getContext();
-	BaseInterceptor reqI[]= ctx.getContainer().
-	    getInterceptors(Container.H_getInfo);
-	for( int i=0; i< reqI.length; i++ ) {
-	    result=reqI[i].getInfo( ctx, this, encodingInfo, null );
-	    if ( result != null ) {
-		break;
+	if( ctx!=null ) {
+	    
+	    BaseInterceptor reqI[]= ctx.getContainer().
+		getInterceptors(Container.H_getInfo);
+	    for( int i=0; i< reqI.length; i++ ) {
+		result=reqI[i].getInfo( ctx, this, encodingInfo, null );
+		if ( result != null ) {
+		    break;
+		}
 	    }
-	}
-	if( result != null ) {
-	    charEncoding=(String)result;
-	    return charEncoding;
+	    if( result != null ) {
+		charEncoding=(String)result;
+		return charEncoding;
+	    }
 	}
 	
         charEncoding = ContentType.getCharsetFromContentType(getContentType());
@@ -669,6 +672,9 @@ public class Request {
 
 	Object result=null;
 	Context ctx=getContext();
+	if( ctx== null )
+	    return null;
+	
 	BaseInterceptor reqI[]= ctx.getContainer().
 	    getInterceptors(Container.H_getInfo);
 	for( int i=0; i< reqI.length; i++ ) {
@@ -680,7 +686,7 @@ public class Request {
 	if( result != null ) {
 	    return result;
 	}
-
+    
 	// allow access to FacadeManager for servlets
 	// XXX move to module. Don't add any new special case, the hooks should
 	// be used
@@ -695,16 +701,19 @@ public class Request {
     public void setAttribute(String name, Object value) {
 	int status=BaseInterceptor.DECLINED;
 	Context ctx=getContext();
-	BaseInterceptor reqI[]= ctx.getContainer().
-	    getInterceptors(Container.H_setInfo);
-	for( int i=0; i< reqI.length; i++ ) {
-	    status=reqI[i].setInfo( ctx, this, attributeInfo, name, value );
-	    if ( status != BaseInterceptor.DECLINED ) {
-		break;
+	if( ctx!=null ) {
+	    BaseInterceptor reqI[]= ctx.getContainer().
+		getInterceptors(Container.H_setInfo);
+	    for( int i=0; i< reqI.length; i++ ) {
+		status=reqI[i].setInfo( ctx, this, attributeInfo,
+					name, value );
+		if ( status != BaseInterceptor.DECLINED ) {
+		    break;
+		}
 	    }
-	}
-	if ( status != BaseInterceptor.DECLINED ) {
-	    return; // don't set it, the module will manage it
+	    if ( status != BaseInterceptor.DECLINED ) {
+		return; // don't set it, the module will manage it
+	    }
 	}
 
 	if(name!=null && value!=null)

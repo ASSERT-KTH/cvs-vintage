@@ -241,20 +241,11 @@ public class ProfileLoader extends BaseInterceptor {
 	    Profile profile=(Profile)ctx.currentObject();
 	    Class c=null;
 	    ClassLoader cl=profile.containerLoader;	
-	    System.out.println( "CCL1 " + cl );    
-// 	    try {
-// 		c=Class.forName( className );
-// 	    } catch( ClassNotFoundException ex ) {
-// 		if( cl!=null )
 	    try {
 			c=cl.loadClass( className );
 	    } catch( ClassNotFoundException ex2 ) {
-		System.out.println( "CCL2 " + profile.commonLoader );
-		System.out.println(((java.net.URLClassLoader)cl).getParent());
 		c=profile.commonLoader.loadClass(className);
 	    }
-// 		else throw ex;
-// 	    }
 
 	    Object o=c.newInstance();
 
