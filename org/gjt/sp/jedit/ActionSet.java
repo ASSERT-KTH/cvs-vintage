@@ -96,7 +96,7 @@ import org.gjt.sp.util.Log;
  *
  * @author Slava Pestov
  * @author John Gellene (API documentation)
- * @version $Id: ActionSet.java,v 1.17 2003/04/30 21:22:34 spestov Exp $
+ * @version $Id: ActionSet.java,v 1.18 2003/04/30 22:07:06 spestov Exp $
  * @since jEdit 4.0pre1
  */
 public class ActionSet
@@ -406,6 +406,24 @@ public class ActionSet
 		Enumeration enum = actions.keys();
 		while(enum.hasMoreElements())
 			vec.add(enum.nextElement());
+	} //}}}
+
+	//{{{ cacheProperties() method
+	void cacheProperties(Map cachedProperties)
+	{
+		Enumeration enum = actions.keys();
+		while(enum.hasMoreElements())
+		{
+			String name = (String)enum.nextElement();
+			jEdit.putProperty(cachedProperties,
+				name + ".label");
+			jEdit.putProperty(cachedProperties,
+				name + ".shortcut");
+			jEdit.putProperty(cachedProperties,
+				name + ".shortcut2");
+			jEdit.putProperty(cachedProperties,
+				name + ".toggle");
+		}
 	} //}}}
 
 	//}}}
