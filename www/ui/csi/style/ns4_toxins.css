@@ -125,6 +125,12 @@ ul, ol, dd	{
 /* SoucreCast - styles end here */
 
 /* Scarab/App - styles start here */
+.functnbar {
+	background: #999;
+	}
+.functnbar th, .functnbar td {
+	background: #999;
+	}
 #topmodule {
 	border-top: 1px solid white;
 	border-bottom: 1px solid #999;

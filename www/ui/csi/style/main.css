@@ -169,22 +169,16 @@ dd	{
 	background: #efefef;
 	padding-left: 12px;
 	vertical-align:	middle;
-	}
-#functnbar {
-	background: #999;
+	}	
+.functnbar {
 	vertical-align: middle;
 	padding: 3px;
 	}
-#functnbar th {
-	background: #999;
-	padding-left: 8px;
-	padding-right: 8px;
-	}
-#functnbar td {
-	background: #999;
-	padding-left: 8px;
-	padding-right: 8px;
-	}
+.functnbar th, .functnbar td {
+	color: black;
+	padding-left: 2px;
+	padding-right: 2px;
+	}	
 #tabs th {
 	color: black;
 	background-color: #999;
