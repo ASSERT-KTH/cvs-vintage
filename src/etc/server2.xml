@@ -102,18 +102,6 @@
          ContextInterceptor className="org.apache.tomcat.context.LogEvents" 
          -->
         
-        <!-- new http adapter. Attributes:
-                secure - use SSL ( https )
-                keystore, keypass - certs for SSL
-                port
-                XXX not finished, more attributes will come to match the current 
-                functionality
-         -->
-        <ContextInterceptor className="org.apache.tomcat.service.http.HttpInterceptor"
-                            port="8081"
-                            secure="false"
-         />
-
         <ContextInterceptor className="org.apache.tomcat.context.AutoSetup" />
 
         <ContextInterceptor 
@@ -224,13 +212,14 @@
 
       <!-- ==================== Connectors ==================== -->
 
+        <!-- new http adapter. Attributes:
+                secure - use SSL ( https )
+                keystore, keypass - certs for SSL
+                port -->
         <!-- Normal HTTP -->
-        <Connector className="org.apache.tomcat.service.PoolTcpConnector">
-            <Parameter name="handler" 
-                value="org.apache.tomcat.service.http.HttpConnectionHandler"/>
-            <Parameter name="port" 
-                value="8080"/>
-        </Connector>
+        <RequestInterceptor 
+         className="org.apache.tomcat.modules.server.HttpInterceptor"
+         port="8080" />
 
         <!--
             Uncomment this for SSL support. 
@@ -249,33 +238,26 @@
             to change the default ( user.home/.keystore with changeit )
          -->
         <!--
-        <Connector className="org.apache.tomcat.service.PoolTcpConnector">
-            <Parameter name="handler" 
-                value="org.apache.tomcat.service.http.HttpConnectionHandler"/>
-            <Parameter name="port" 
-                value="8443"/>
-            <Parameter name="socketFactory" 
-                value="org.apache.tomcat.util.net.SSLSocketFactory" />
-        </Connector>
+        <RequestInterceptor 
+         className="org.apache.tomcat.modules.server.HttpInterceptor"
+         port="8443" 
+         secure="true" />
         -->
 
         <!-- Apache AJP12 support. This is also used to shut down tomcat.
           -->
-        <Connector className="org.apache.tomcat.service.PoolTcpConnector">
-            <Parameter name="handler" 
-       value="org.apache.tomcat.service.connector.Ajp12ConnectionHandler"/>
-            <Parameter name="port" value="8007"/>
-        </Connector>
+        <RequestInterceptor 
+         className="org.apache.tomcat.modules.server.Ajp12ConnectionHandler"
+         port="8007" />
 
         <!--
              JNI connector, make sure that you update the native_lib
              Parameter to point to your jni_connect.dll.
          -->
         <!-- 
-        <Connector className="org.apache.tomcat.service.JNIEndpointConnector">
-            <Parameter name="native_lib" 
-               value="D:\tomcat\bin\i386\jni_connect.dll"/>
-        </Connector>
+        <RequestInterceptor 
+         className="org.apache.tomcat.modules.server.JNIConnectionHandler"
+         nativeLibrary="D:\tomcat\bin\i386\jni_connect.dll" />
          -->
 
         <!-- ==================== Special webapps ==================== -->
