@@ -2,15 +2,15 @@
 
 <div class="tabs">
   <table cellpadding="3" cellspacing="0" border="0">
-	<tr>
-	  <th>Module query</th>
+    <tr>
+      <th>Module query</th>
    #if ($link.setPage("home,EnterNew.vm").setAction("SetHomePage").isAllowed())
       <td><a href="$link">Enter new...</a></td>
    #end
    #if ($link.setPage("home,XModuleList.vm").setAction("SetHomePage").isAllowed())
-	<td><a href="$link">Build cross module query</a></td>
+    <td><a href="$link">Build cross module query</a></td>
    #end
-	</tr>
+    </tr>
   </table>
 </div>
 
@@ -18,7 +18,7 @@
 <input type="hidden" name="action" value="ModuleQuery" />
         
 <h3>Issue types in this module</h3>
-<div class="colbar">	
+<div class="colbar">
   Click issue type <strong>Name</strong> to query a single issue type, or 
   choose one of the following three options, select multiple issue types, 
   and click "Go"
@@ -44,24 +44,25 @@
     <strong>My issues:</strong>
   </div>
 </div>
-		        
+
+#set ($rmits = $scarabR.CurrentModule.RModuleIssueTypes)
+#set ($isMoreThanOne = $rmits.size() > 1)
+#if (!$isMoreThanOne)
+<p class="alert">This module has no issue types defined.</p>
+#else
 <table width="100%" border="1" cellspacing="2" cellpadding="3">
   <tr>
     <th>Select</th>
     <th>Name</th>
     <th>Description</th>
   </tr>
-
-#set ($rmits = $scarabR.CurrentModule.RModuleIssueTypes)
-#set ($isMoreThanOne = $rmits.size() > 1)
-#if ($isMoreThanOne)
-  <tr class="a">        
+  <tr class="a">
 #set ($checked = !$data.Parameters.getString("rmit_id"))
     <td><input type="checkbox" name="allit" value="true"
         #checked($checked) /></td>
     <td>All issue types</td>
     <td>Query all issue types in this list</td>
-  </tr>        
+  </tr>
 #end
 #set ($checked = !$isMoreThanOne)
 #foreach ($rmit in $rmits)
@@ -79,12 +80,13 @@
     </td>
     <td><a href="$link.setPage("AdvancedQuery.vm").addPathInfo($scarabG.Constant.NEW_ISSUE_TYPE, $rmit.IssueType.QueryKey).addPathInfo($scarabG.Constant.NEXT_TEMPLATE, "AdvancedQuery.vm").setAction("SelectIssueType")">$rmit.DisplayName</a></td>
     <td>$rmit.IssueType.Description</td>
-  </tr>        
-#end        
+  </tr>
 </table>
-				
-<div class="functnbar3">
-     <input type="submit" value="Go" name="foo" />
-</div>
+#end
 
+#if ($isMoreThanOne)
+<div class="functnbar3">
+  <input type="submit" value="Go" name="foo" />
+</div>
+#end
 </div>
