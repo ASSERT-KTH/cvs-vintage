@@ -40,7 +40,7 @@ email cannot be sent to you.
  </tr>
  <tr>
   <th>Full name</th>
-  <td>$user.FirstName $user.LastName</td>
+  <td>$user.Name</td>
  </tr>
 </table>
 </div>
