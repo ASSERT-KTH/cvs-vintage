@@ -10,7 +10,7 @@
 <!--                                                                        -->
 <!-- ====================================================================== -->
 
-<!-- $Id: build.xml,v 1.5 2001/08/13 18:52:25 starksm Exp $ -->
+<!-- $Id: build.xml,v 1.6 2001/08/14 03:12:57 starksm Exp $ -->
 
 <project default="main">
 
@@ -316,10 +316,6 @@
 
         <!-- Exclude Main, it will go into run.jar -->
         <exclude name="org/jboss/Main*"/>
-
-        <!-- ??? -->
-        <exclude name="org/jboss/tm/GlobalId.class"/>
-
       </fileset>
 
       <fileset dir="${build.resources}">
