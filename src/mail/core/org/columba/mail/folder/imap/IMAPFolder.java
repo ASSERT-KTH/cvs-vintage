@@ -319,14 +319,13 @@ public class IMAPFolder extends RemoteFolder {
 				// Fetch the headers of the new messages ...
 				getServer().fetchHeaderList(headerList, newUids, this);
 
+				// .. and set the flags
+				setFlags(newFlags);
+
 				// fire message added updates
 				for( int i=0;i < newFlags.length; i++) {					
 					fireMessageAdded( newFlags[i].getUid() );
 				}
-				
-				// .. and set the flags
-				setFlags(newFlags);
-				
 				
 				// Apply filter on new messages if enabled
 				IMAPRootFolder rootFolder = (IMAPRootFolder) getRootFolder();
