@@ -132,9 +132,8 @@ public class LoadOnStartupInterceptor extends BaseInterceptor {
 			    ((ServletHandler)result).getServletInfo().
 			    getJspFile() != null ) {
 			    loadJsp( ctx, result );
-			} else {
-			    ((ServletHandler)result).init();
 			}
+			((ServletHandler)result).init();
 		    } catch (Throwable ee) {
 			// it can be ClassNotFound or other - servlet errors
 			// shouldn't stop initialization
@@ -155,29 +154,27 @@ public class LoadOnStartupInterceptor extends BaseInterceptor {
 	log("Initializing JSP with JspWrapper");
 	
 	// Ugly code to trick JSPServlet into loading this.
+        BaseInterceptor ri[];
 	ContextManager cm=context.getContextManager();
 	String path=((ServletHandler)result).getServletInfo().getJspFile();
-	Request request = new Request();
-	Response response = new Response();
-	request.recycle();
-	response.recycle();
-	cm.initRequest(request,response);
-	
 	String requestURI = path + "?jsp_precompile=true";
-
-	if( !path.startsWith( "/" ) ) path="/" + path;
-	request.requestURI().setString(context.getPath() + path);
-
-	// this is not used with JspInterceptor, but maybe a jsp servlet is
-	// used
-	request.queryString().setString( "jsp_precompile=true" );
-	
-	request.setContext(context);
-
-	//cm.service( request, response );
-	// If we switch to JspInterceptor, it's enough to process the
-	// request, it'll detect the page and precompile
-	cm.processRequest( request );
+	Request request = cm.createRequest(context, requestURI);
+	Response response = request.getResponse();
+	request.setHandler(result);
+	/* If we switch to JspInterceptor, it's enough to process the
+	   request, it'll detect the page and precompile.
+	   Note, we can call ContextManager.processRequest since the one
+	   thing we do know at this point is that the context isn't started.
+	   However, we should be able go jump straight to requestMap.
+	*/
+	ri=context.getContainer().
+	    getInterceptors(Container.H_requestMap);
+	for( int i=0; i< ri.length; i++ ) {
+	    if( debug > 1 )
+		log( "RequestMap " + ri[i] );
+	    int status=ri[i].requestMap( request );
+	    if( status!=0 ) return ;
+	}
     }
     // -------------------- 
     // Old logic from Context - probably something cleaner can replace it.
