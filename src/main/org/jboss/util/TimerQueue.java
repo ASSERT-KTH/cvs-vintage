@@ -14,7 +14,7 @@ package org.jboss.util;
  *
  * @see TimerTask
  * @author <a href="mailto:simone.bordet@compaq.com">Simone Bordet</a>
- * @version $Revision: 1.5 $
+ * @version $Revision: 1.6 $
  */
 public class TimerQueue 
    extends WorkerQueue
@@ -169,10 +169,9 @@ public class TimerQueue
                   // Exit the thread
                   break;
                }
-               catch (Exception x)
+               catch (Exception e)
                {
-                  x.printStackTrace();
-                  // and go on with the next job
+                  ThrowableHandler.add(ThrowableHandler.Type.ERROR, e);
                }
             }
          }
