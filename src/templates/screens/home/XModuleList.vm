@@ -33,7 +33,6 @@
 #set ($mitList = $user.CurrentMITList)
 #if (!$mitList || $mitList.isEmpty())
  <h3>$l10n.PredefinedLists</h3>
-hi
  #set($manager = $scarabG.MITListManager)
  #set($key = "pd_list_id")
  #set($checked2 = "oneitallmods" == $data.Parameters.getString($key, ""))
