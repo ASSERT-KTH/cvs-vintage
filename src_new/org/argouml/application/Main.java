@@ -1,4 +1,4 @@
-// $Id: Main.java,v 1.99 2004/08/08 08:11:27 mvw Exp $
+// $Id: Main.java,v 1.100 2004/09/24 12:38:28 linus Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -54,6 +54,7 @@ import org.argouml.cognitive.Designer;
 import org.argouml.i18n.Translator;
 import org.argouml.kernel.Project;
 import org.argouml.kernel.ProjectManager;
+import org.argouml.moduleloader.ModuleLoader2;
 import org.argouml.ui.Actions;
 import org.argouml.ui.LookAndFeelMgr;
 import org.argouml.ui.ProjectBrowser;
@@ -295,6 +296,8 @@ public class Main {
 
         // Initialize the module loader.
         st.mark("modules");
+
+        ModuleLoader2.doLoad(false);
         Argo.initializeModules();
 
         st.mark("open window");
