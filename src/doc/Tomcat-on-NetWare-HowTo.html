@@ -98,22 +98,22 @@ on NetWare</a></li>
 <h2>
 <a NAME="Document Conventions and Assumptions"></a>Document Conventions
 and Assumptions</h2>
-&lt;tomcat_home> is the root directory of Tomcat. By default this is at
+&lt;tomcat_home&gt; is the root directory of Tomcat. By default this is at
 the root of the SYS: volume (SYS:\jakarta-tomcat-3.3 by default for Tomcat 3.3) but it can be placed anywhere, on any volume.
 Your installation should have the following sub-directories:
 <ol>
 <li>
-&lt;tomcat_home>\conf - Where you can place various configuration files</li>
+&lt;tomcat_home&gt;\conf - Where you can place various configuration files</li>
 
 <li>
-&lt;tomcat_home>\webapps - Contains example applications and is the default
+&lt;tomcat_home&gt;\webapps - Contains example applications and is the default
 place for adding your applications</li>
 
 <li>
-&lt;tomcat_home>\bin - Where you place web server connectors and startup
+&lt;tomcat_home&gt;\bin - Where you place web server connectors and startup
 scripts</li>
 </ol>
-In all the examples in this document, &lt;tomcat_home> will be
+In all the examples in this document, &lt;tomcat_home&gt; will be
 SYS:\jakarta-tomcat-3.3.
 <p>A <b><tt>worker</tt></b> is the tomcat process that accepts work from
 the web server.
@@ -174,9 +174,9 @@ a base list of parameters available.
 <a NAME="Running Tomcat with the NetWare Enterprise Web Server"></a>2.
 Running Tomcat with the NetWare Enterprise Web Server</h3>
 To run Tomcat with the NetWare Enterprise Web Server, you need to download
-nsapi_rd.nlm and copy it to your NetWare server. A good location is &lt;tomcat_home>\bin\netscape\netware\i386.
+nsapi_rd.nlm and copy it to your NetWare server. A good location is &lt;tomcat_home&gt;\bin\netscape\netware\i386.
 You will then need to add the following to your obj.conf file located in
-SYS:\novonyx\suitespot\https-&lt;servername>\config. This will tell the
+SYS:\novonyx\suitespot\https-&lt;servername&gt;\config. This will tell the
 NetWare Enterprise Web Server to let Tomcat handle the /servlet/* and /examples/*
 URIs.
 <ol>
@@ -201,10 +201,10 @@ In the default object NameTrans section add the following 3 lines:</li>
 Create a new configuration object by adding the following 4 lines to the
 end of the obj.conf file:</li>
 
-<br><tt>&lt;Object name=&quot;Tomcat&quot;></tt>
+<br><tt>&lt;Object name=&quot;Tomcat&quot;&gt;</tt>
 <br><tt>ObjectType fn=&quot;force-type&quot; type=&quot;text/plain&quot;</tt>
 <br><tt>Service fn=&quot;jk_service&quot; worker=&quot;ajp13&quot;</tt>
-<br><tt>&lt;/Object></tt></ol>
+<br><tt>&lt;/Object&gt;</tt></ol>
 Now stop and restart the NetWare Enterprise Web Server, make sure that Tomcat is
 running (i.e. run the <b>tomcat.ncf</b> file mentioned in <a href="#Running Tomcat Standalone">Running
 Tomcat Standalone</a>) and you should be
@@ -223,7 +223,7 @@ map appropriate URIs from Apache to Tomcat.&nbsp; First, run
 <tt><b>tomcat jkconf</tt></b> (i.e. run the <b>tomcat.ncf</b> file mentioned 
 in <a href="#Running Tomcat Standalone">Running Tomcat Standalone</a> with a 
 <tt><b>jkconf</tt></b> parameter) to generate the file 
-&lt;tomcat_home>/conf/auto/mod_jk.conf.&nbsp; Then add the following line to 
+&lt;tomcat_home&gt;/conf/auto/mod_jk.conf.&nbsp; Then add the following line to 
 your httpd.conf file, replacing SYS:/jakarta-tomcat-3.3 with the directory 
 where Tomcat is installed:
 <p>Include &quot;SYS:/jakarta-tomcat-3.3/conf/auto/mod_jk.conf&quot;</p>

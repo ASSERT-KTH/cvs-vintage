@@ -4,7 +4,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
 <html>
 <head>
-  <!-- $Id: serverxml.html,v 1.32 2003/09/29 07:42:59 hgomez Exp $ -->
+  <!-- $Id: serverxml.html,v 1.33 2004/01/14 08:22:21 billbarker Exp $ -->
   <!-- Copyright 1999-2001 Apache Software Foundation -->
   <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" >
   <link rel="stylesheet" href="style.css">
@@ -344,8 +344,8 @@ necessary.</p>
       &quot;combined&quot; (Apache httpd combined format, default),
       &quot;common&quot; (Apache httpd common format) or a format string like
       <pre>
-        '%h %l %u %t &quot;%r&quot; %>s %b &quot;%{Referer}&quot; &quot;%{User-Agent}&quot;'
-        '%h %l %u %t &quot;%r&quot; %>s %b'
+        '%h %l %u %t &quot;%r&quot; %&gt;s %b &quot;%{Referer}&quot; &quot;%{User-Agent}&quot;'
+        '%h %l %u %t &quot;%r&quot; %&gt;s %b'
       </pre>
       (The above examples are used when &quot;combined&quot; or &quot;common&quot;
       format is requested.) Possible patterns are:
@@ -391,7 +391,7 @@ necessary.</p>
           <td>The value of <code>response.getStatus()</code>.</td>
         </tr>
         <tr>
-          <th valign="top">%>s</th>
+          <th valign="top">%&gt;s</th>
           <td>The value of <code>response.getStatus()</code>.
             Should differ between different internal requests, as
             Apache httpd does, but this is currently not supported.</td>

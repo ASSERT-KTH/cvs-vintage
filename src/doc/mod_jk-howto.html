@@ -44,7 +44,7 @@
 
 <h1>
 Working with mod_jk</h1>
-By Gal Shachor <tt>&lt;<a href="mailto:shachor@il.ibm.com">shachor@il.ibm.com</a>></tt>
+By Gal Shachor <tt>&lt;<a href="mailto:shachor@il.ibm.com">shachor@il.ibm.com</a>&gt;</tt>
 <h2>
 Table of Contents</h2>
 
@@ -522,7 +522,7 @@ JkLogStampFormat &quot;[%a %b %d %H:%M:%S %Y] &quot;</pre>
 as the workers or URL prefix.
 <p>Use mod_jk's JkMount directive to assign specific URLs to Tomcat. In
 general the structure of a JkMount directive is:
-<pre>JkMount <i>&lt;URL prefix></i> <i>&lt;Worker name></i></pre>
+<pre>JkMount <i>&lt;URL prefix&gt;</i> <i>&lt;Worker name></i></pre>
 For example the following directives will send all requests ending in
 <tt>.jsp</tt>
 or beginning with <tt>/servlet</tt> to the &quot;<tt>ajp13</tt>&quot; worker, but
@@ -532,7 +532,7 @@ jsp requests to files located in /otherworker will go to &quot;<tt>remoteworker<
 JkMount /servlet/* ajp13
 JkMount /otherworker/*.jsp remoteworker</pre>
 </blockquote>
-You can use the <tt>JkMount</tt> directive at the top level or inside <tt>&lt;VirtualHost></tt>
+You can use the <tt>JkMount</tt> directive at the top level or inside <tt>&lt;VirtualHost&gt;</tt>
 sections of your httpd.conf file.</div>
 
 <hr>
@@ -784,24 +784,24 @@ JkLogLevel&nbsp;&nbsp;&nbsp; info
 &nbsp; ServerName host1.apache.org
 &nbsp; JkMount /*.jsp ajp13
 &nbsp; JkMount /servlet/* ajp13
-&lt;/VirtualHost>
+&lt;/VirtualHost&gt;
 
 # Second Virtual Host. Also accessible via HTTPS
 #
-&lt;VirtualHost 10.0.0.2:80>
+&lt;VirtualHost 10.0.0.2:80&gt;
 &nbsp; DocumentRoot /web/host2
 &nbsp; ServerName host2.apache.org
 &nbsp; JkMount /*.jsp ajp13
 &nbsp; JkMount /servlet/* ajp13
-&lt;/VirtualHost>
+&lt;/VirtualHost&gt;
 
-&lt;VirtualHost 10.0.0.2:443>
+&lt;VirtualHost 10.0.0.2:443&gt;
 &nbsp; DocumentRoot /web/host2
 &nbsp; ServerName host2.apache.org
 &nbsp; SSLEngine On
 &nbsp; JkMount /*.jsp ajp13
 &nbsp; JkMount /servlet/* ajp13
-&lt;/VirtualHost>
+&lt;/VirtualHost&gt;
 
 </pre>
 </blockquote>
@@ -976,7 +976,7 @@ This document was originally created by
 <a href="mailto:shachor@il.ibm.com">Gal
 Shachor</a>
 <p>Revisions by (Alphabetical)
-<p>Mike Braden <tt>&lt;<a href="mailto:mikeb@mwbinc.com">mikeb@mwbinc.com</a>></tt>
+<p>Mike Braden <tt>&lt;<a href="mailto:mikeb@mwbinc.com">mikeb@mwbinc.com</a>&gt;</tt>
 <br>Mike Bremford
 <br>Chris Pepper
 <p>With help from countless others on the tomcat-dev and tomcat-user lists!

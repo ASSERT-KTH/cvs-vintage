@@ -76,7 +76,7 @@ the connection can be in one of the following states:
 request informaton (e.g. HTTP headers, etc) is sent over the connection in
 a highly condensed form (e.g. common strings are encoded as integers).
 Details of that format are below in Request Packet Structure. If there is a
-body to the request (content-length > 0), that is sent in a separate
+body to the request (content-length &gt; 0), that is sent in a separate
 packet immediately after.
 
 <P> At this point, the servlet container is presumably ready to start
@@ -164,7 +164,7 @@ maximum to be 8K.
 
 <TABLE BORDER=1 CELLPADDING=2 CELLSPACING=0 BGCOLOR="#FFFFFF">
   <TR>
-    <TD COLSPAN=6><B>Packet Format (Server->Container)</B></TD>
+    <TD COLSPAN=6><B>Packet Format (Server-&gt;Container)</B></TD>
   </TR>
 
   <TR>
@@ -189,7 +189,7 @@ maximum to be 8K.
 
 <TABLE BORDER=1 CELLPADDING=2 CELLSPACING=0 BGCOLOR="#FFFFFF">
   <TR>
-    <TD COLSPAN=6><B>Packet Format (Container->Server)</B></TD>
+    <TD COLSPAN=6><B>Packet Format (Container-&gt;Server)</B></TD>
   </TR>
 
   <TR>
@@ -582,7 +582,7 @@ WWW-Authenticate     0xA00B
 
 <H2>Questions I Have</H2>
 
-<P> What happens if the request headers > max packet size?  There is no
+<P> What happens if the request headers &gt; max packet size?  There is no
 provision to send a second packet of request headers in case there are more
 than 8K (I think this is correctly handled for response headers, though I'm
 not certain).  I don't know if there is a way to get more than 8K worth of

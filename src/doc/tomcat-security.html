@@ -50,7 +50,7 @@ libraries.&nbsp; Or even inadvertent mistakes.
 <p>Imagine if someone who is authorized to publish JSP's on your site inadvertently
 included the following in their JSP:
 <blockquote>
-<pre>&lt;% System.exit(1); %></pre>
+<pre>&lt;% System.exit(1); %&gt;</pre>
 </blockquote>
 
 <p><br>Every time that JSP was executed by Tomcat, Tomcat would exit.
@@ -114,8 +114,8 @@ that comes with Java 1.2, or later.
 format as follows:
 <table border=0><tr><td><pre>// Example policy file entry
 
-grant [signedBy &lt;signer> [,codeBase &lt;code source>] {
-&nbsp;&nbsp;&nbsp; permission &lt;class> [&lt;name> [, &lt;action list>]];
+grant [signedBy &lt;signer&gt; [,codeBase &lt;code source&gt;] {
+&nbsp;&nbsp;&nbsp; permission &lt;class&gt; [&lt;name&gt; [, &lt;action list&gt;]];
 };
 </td></tr></table></pre>
 The <b>signedBy</b> and <b>codeBase </b>entries are optional when granting permissions.

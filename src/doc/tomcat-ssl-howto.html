@@ -319,7 +319,7 @@ directives):
 <br><font face="Courier New, Courier, mono"><font size=-1>JkLogLevel warn</font></font>
 <p>The jk redirect stuff can be set in virtual hosts:&nbsp;<virtualhost _default_:443>
 <p><font face="Courier New, Courier, mono"><font size=-1>&lt;VirtualHost
-_default_:443></font></font>
+_default_:443&gt;</font></font>
 <br><font face="Courier New, Courier, mono"><font size=-1>SSLEngine on</font></font>
 <br><font face="Courier New, Courier, mono"><font size=-1>SSLCipherSuite
 ALL:!ADH:!EXP56:RC4+RSA:+HIGH:+MEDIUM:+LOW:+SSLv2:+EXP:+eNULL</font></font>
@@ -337,12 +337,12 @@ ajp13</font></font>
 ajp13&nbsp;</font></font><location "/alesia/WEB-INF/">
 <br></location>
 <br><font face="Courier New, Courier, mono"><font size=-1>&lt;Location
-"/alesia/WEB-INF/"></font></font>
+"/alesia/WEB-INF/"&gt;</font></font>
 <br><font face="Courier New, Courier, mono"><font size=-1>AllowOverride
 None</font></font>
 <br><font face="Courier New, Courier, mono"><font size=-1>Deny from all</font></font>
-<br><font face="Courier New, Courier, mono"><font size=-1>&lt;/Location></font></font>
-<p><font face="Courier New, Courier, mono"><font size=-1>&lt;/VirtualHost></font></font><virtualhost _default_:443></virtualhost>
+<br><font face="Courier New, Courier, mono"><font size=-1>&lt;/Location&gt;</font></font>
+<p><font face="Courier New, Courier, mono"><font size=-1>&lt;/VirtualHost&gt;</font></font><virtualhost _default_:443></virtualhost>
 <br>
 <hr>
 
@@ -473,7 +473,7 @@ tomcat -keyalg RSA</font></tt>
 <br><tt><font size=-1>What is the two-letter country code for this unit?</font></tt>
 <br><tt><font size=-1>&nbsp; [Unknown]:&nbsp; FR</font></tt>
 <br><tt><font size=-1>Is &lt;CN=www.vercingetorix.org, OU=Chief, O=Gaulois,
-L=Alesia, ST=50, C=FR> correct?</font></tt>
+L=Alesia, ST=50, C=FR&gt; correct?</font></tt>
 <br><tt><font size=-1>&nbsp; [no]:&nbsp; yes</font></tt>
 <br><br>
 
@@ -575,7 +575,7 @@ Sometimes when people use OpenSSL they store their keys and
 certificates in separate files, such as <code>key.pem</code>
 and <code>cert.pem</code>. PureTLS expects a single file which
 you can create by just concatenating the two files. For instance:
-<code>cat key.pem cert.pem > keyfile.pem</code>.
+<code>cat key.pem cert.pem &gt; keyfile.pem</code>.
 <p>
 PureTLS does not currently allow you to make self-signed certificates.
 However, a number of sample certificate files are included in the
@@ -603,23 +603,23 @@ the <CODE>$TOMCAT_HOME/conf/server.xml</CODE> file (the standard version of this
 as shipped with Tomcat, contains a simple example which is commented-out by default).
 <BLOCKQUOTE>
 <p>Syntax for Tomcat 3.2 :
-<p><tt><font size=-1>&lt;Connector className="org.apache.tomcat.service.PoolTcpConnector"></font></tt>
-<br><tt><font size=-1>&lt;Parameter name="handler" value="org.apache.tomcat.service.http.HttpConnectionHandler"/></font></tt>
-<br><tt><font size=-1>&lt;Parameter name="port" value="8443"/></font></tt>
+<p><tt><font size=-1>&lt;Connector className="org.apache.tomcat.service.PoolTcpConnector"&gt;</font></tt>
+<br><tt><font size=-1>&lt;Parameter name="handler" value="org.apache.tomcat.service.http.HttpConnectionHandler"/&gt;</font></tt>
+<br><tt><font size=-1>&lt;Parameter name="port" value="8443"/&gt;</font></tt>
 <br><tt><font size=-1>&lt;Parameter name="socketFactory" value="org.apache.tomcat.net.SSLSocketFactory"
-/></font></tt>
+/&gt;</font></tt>
 <br><tt><font size=-1>&lt;Parameter name="keystore" value="/var/tomcat/conf/keystore"
-/></font></tt>
-<br><tt><font size=-1>&lt;Parameter name="keypass" value="mynewpass"/></font></tt>
-<br><tt><font size=-1>&lt;Parameter name="clientAuth" value="false"/></font></tt>
-<br><tt><font size=-1>&lt;/Connector></font></tt><tt></tt>
+/&gt;</font></tt>
+<br><tt><font size=-1>&lt;Parameter name="keypass" value="mynewpass"/&gt;</font></tt>
+<br><tt><font size=-1>&lt;Parameter name="clientAuth" value="false"/&gt;</font></tt>
+<br><tt><font size=-1>&lt;/Connector&gt;</font></tt><tt></tt>
 <p>Syntax for Tomcat 3.3 :
 <p><tt><font size=-1>&lt;Http10Connector</font></tt>
 <br><tt><font size=-1>&nbsp; port="8443"</font></tt>
 <br><tt><font size=-1>&nbsp; secure="true"</font></tt>
 <br><tt><font size=-1>&nbsp; keystore="/var/tomcat/conf/keystore"</font></tt>
 <br><tt><font size=-1>&nbsp; keypass="mynewpass"</font></tt>
-<br><tt><font size=-1>&nbsp; clientauth="false" /></font></tt><font size=-1></font>
+<br><tt><font size=-1>&nbsp; clientauth="false" /&gt;</font></tt><font size=-1></font>
 </BLOCKQUOTE>
 In the above examples, we indicate that the keystore is file located at
 <code>/var/tomcat/conf/keystore</code>, and the password if "mynewpass". Again,
@@ -642,7 +642,7 @@ parameter, like so:
 <br><tt><font size=-1>&nbsp; keystore="/var/tomcat/conf/keystore"</font></tt>
 <br><tt><font size=-1>&nbsp; keypass="mynewpass"</font></tt>
 <br><tt><font size=-1>&nbsp; clientauth="false" </font></tt>
-<br><tt><font size=-1>&nbsp; SSLImplementation="org.apache.tomcat.util.net.PureTLSImplementation" </font></tt> /></font></tt>
+<br><tt><font size=-1>&nbsp; SSLImplementation="org.apache.tomcat.util.net.PureTLSImplementation" </font></tt> /&gt;</font></tt>
 <P>
 <code>SSLImplementation</code> can be the name of any class that implements
 <code>org.apache.tomcat.util.net.SSLImplementation</code>. The values built
