@@ -976,15 +976,20 @@ public class ContextManager implements LogAware{
 	if( errorPath != null ) {
 	    errorServlet=getHandlerForPath( ctx, errorPath );
 	}
-	if( debug>0 )
-	    ctx.log( "Handler " + errorServlet + " " + errorPath);
 
 	if( errorServlet==null )
 	    errorServlet=ctx.getServletByName( "tomcat.statusHandler");
 
-	req.setAttribute("javax.servlet.error.status_code",new Integer( code));
+	if (errorServlet == null) {
+	    ctx.log( "Handler errorServlet is null! errorPath:" + errorPath);
+	    return;
+	}
 
+	req.setAttribute("javax.servlet.error.status_code",new Integer( code));
 	req.setAttribute("tomcat.servlet.error.request", req);
+
+	if( debug>0 )
+	    ctx.log( "Handler " + errorServlet + " " + errorPath);
 
 	errorServlet.service( req, res );
     }
