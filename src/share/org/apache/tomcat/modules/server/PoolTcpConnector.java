@@ -141,39 +141,6 @@ public abstract class PoolTcpConnector extends BaseInterceptor
     
     protected abstract void localInit() throws Exception;
     
-// 	//    	setTcpHandler();
-
-// 	// Pass attributes to the socket factory
-// 	attE=attributes.keys();
-// 	while( attE.hasMoreElements() ) {
-// 	    String key=(String)attE.nextElement();
-// 	    Object v=attributes.get( key );
-// 	    socketFactory.setAttribute( key, v );
-// 	}
-
-// 	ep.startEndpoint();
-
-// 	loghelper.log("Starting " + getExtension(con.getClass().getName())
-// 		      + " on " + ep.getPort());
-//     }
-
-//     public void setTcpHandler() throws Exception {
-//     	if(con==null)
-//     	    throw new Exception( "Invalid ConnectionHandler");
-// 	con.setServer( cm );
-// 	con.setAttribute("context.manager",cm ); // old mechanism
-
-
-// 	// Pass properties to the handler
-// 	Enumeration attE=attributes.keys();
-// 	while( attE.hasMoreElements() ) {
-// 	    String key=(String)attE.nextElement();
-// 	    Object v=attributes.get( key );
-// 	    con.setAttribute( key, v );
-// 	}
-// 	ep.setConnectionHandler( con );
-//     }
-
     // -------------------- Pool setup --------------------
 
     public void setPools( boolean t ) {
@@ -282,36 +249,6 @@ public abstract class PoolTcpConnector extends BaseInterceptor
 	attributes.put( prop, value );
     }
 
-
-    // -------------------- Handler ( deprecated ) --------------------
-//     String handlerClassName;
-//     TcpConnectionHandler con;
-
-//     public void setTcpConnectionHandler( TcpConnectionHandler handler) {
-//     	this.con=handler;
-//     }
-
-//     public void setTcpConnectionHandler( String s) {
-//     	this.con=string2ConnectionHandler( s );
-//     }
-
-//     public TcpConnectionHandler getTcpConnectionHandler() {
-// 	    return con;
-//     }
-
-    // -------------------- Implementation methods --------------------
-
-    // now they just throw exceptions, which are caught and logged by
-    // the caller
-
-//     private static TcpConnectionHandler string2ConnectionHandler( String val)
-// 	throws ClassNotFoundException, IllegalAccessException,
-// 	InstantiationException
-//     {
-// 	Class chC=Class.forName( val );
-// 	return (TcpConnectionHandler)chC.newInstance();
-//     }
-
     private static ServerSocketFactory string2SocketFactory( String val)
 	throws ClassNotFoundException, IllegalAccessException,
 	InstantiationException
@@ -320,149 +257,10 @@ public abstract class PoolTcpConnector extends BaseInterceptor
 	return (ServerSocketFactory)chC.newInstance();
     }
 
-    private static InetAddress string2Inet( String val)
-	throws UnknownHostException
-    {
-	return InetAddress.getByName( val );
-    }
-    
-    private static int string2Int( String val) {
-	return Integer.parseInt(val);
-    }
-
-
-    public static String getExtension( String classN ) {
-	int lidot=classN.lastIndexOf( "." );
-	if( lidot >0 ) classN=classN.substring( lidot + 1 );
-	return classN;
-    }
+//     public static String getExtension( String classN ) {
+// 	int lidot=classN.lastIndexOf( "." );
+// 	if( lidot >0 ) classN=classN.substring( lidot + 1 );
+// 	return classN;
+//     }
 
 }
-
-
-
-
-
-
-
-
-
-
-// -- Removed code ( put it back if something goes wrong, remove it later)
-/*
-  // Attributes we accept ( to support the old model of
-    // configuration, will be deprecated )
-    public static final String VHOST_PORT="vhost_port";
-    public static final String VHOST_NAME="vhost_name";
-    public static final String VHOST_ADDRESS="vhost_address";
-    public static final String SOCKET_FACTORY="socketFactory";
-
-
-    public static final String INET = "inet";
-    public static final String PORT = "port";
-    public static final String HANDLER = "handler";
-
-
-    // Threading and mod_mpm style properties.
-    public static final String THREAD_POOL = "thread_pool";
-    public static final String MAX_THREADS = "max_threads";
-    public static final String MAX_SPARE_THREADS = "max_spare_threads";
-    public static final String MIN_SPARE_THREADS = "min_spare_threads";
-    public static final String BACKLOG = "backlog";
-
-    Object cm;
-
-    ** Generic configure system - this allows Connector
-     * 	configuration using name/value.
-     *
-     *  The "prefered" configuration is to call setters,
-     * 	and tomcat using server.xml will do that, but
-     *	this allows (minimal) integration with simpler
-     *	systems.
-     *
-     *  Only a minimal number of properties can be set
-     *  this way. This mechanism may be deprecated
-     *  after we improve the startup system.
-     *
-     *  Supported attributes:
-     *  "vhost_port" - port ( will act as a virtual host )
-     *  "vhost_name" - virtual host name 
-     *  "vhost_address" - virtual host binding address
-     *  "socketFactory" - socket factory - for ssl.
-     *  XXX add the others
-     * 
-     *  Note that the attributes are passed to the Endpoint.
-     *
-     public void setAttribute( String prop, Object value) {
-	if( debug > 0 ) 
-	    loghelper.log( "setAttribute( " + prop + " , " + value + ")");
-
-	try {
-	if( value instanceof String ) {
-	    String valueS=(String)value;
-	    
-	    if( PORT.equals(prop) ) {
-		setPort( valueS );
-	    } else if(HANDLER.equals(prop)) {
-		con=string2ConnectionHandler( valueS );
-	    } else if(THREAD_POOL.equals(prop)) {
-		usePools = ! valueS.equalsIgnoreCase("off");
-	    } else if(INET.equals(prop)) {
-		address=string2Inet( valueS );
-	    } else if( MAX_THREADS.equals(prop)) {
-		maxThreads = string2Int(valueS);
-	    } else if( MAX_SPARE_THREADS.equals(prop)) {
-		maxSpareThreads = string2Int(valueS);
-	    } else if( MIN_SPARE_THREADS.equals(prop)) {
-		minSpareThreads = string2Int(valueS);
-	    } else if(VHOST_NAME.equals(prop) ) {
-		vhost=valueS;
-	    } else if( BACKLOG.equals(prop)) {
-		backlog = string2Int(valueS);
-	    } else if(VHOST_PORT.equals(prop) ) {
-		port= string2Int( valueS );
-	    } else if(SOCKET_FACTORY.equals(prop)) {
-		socketFactory= string2SocketFactory( valueS );
-	    } else if(VHOST_ADDRESS.equals(prop)) {
-		address= string2Inet(valueS);
-	    } else {
-		if( valueS!=null)
-		    attributes.put( prop, valueS );
-	    }
-	} else {
-	    // Objects - avoids String-based "serialization" 
-	    if(VHOST_PORT.equals(prop) ) {
-		port=((Integer)value).intValue();
-	    } else if(VHOST_ADDRESS.equals(prop)) {
-		address=(InetAddress)value;
-	    } else if(SOCKET_FACTORY.equals(prop)) {
-		socketFactory=(ServerSocketFactory)value;
-	    } else {
-		if( value!=null)
-		    attributes.put( prop, value );
-	    }
-	}
-	}
-	catch (Exception e) {
-	    loghelper.log("setAttribute: " +prop + "=" + value, e, Logger.ERROR);
-	}
-	}
-
-	public void setProperty( String prop, String value) {
-	setAttribute( prop, value );
-	}
-
-
-	    // -------------------- Implementation methods --------------------
-
-    public void setPort(  String portS ) {
-	this.port=string2Int( portS );
-    }
-
-    public void setAddress(String addressS) {
-	address= string2Inet( addressS );	
-    }
-
-
-
-*/
