@@ -84,7 +84,7 @@ import org.tigris.scarab.services.security.ScarabSecurity;
  *
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: MoveIssue.java,v 1.44 2003/01/04 01:55:56 jon Exp $
+ * @version $Id: MoveIssue.java,v 1.45 2003/01/21 22:48:27 jon Exp $
  */
 public class MoveIssue extends RequireLoginFirstAction
 {
@@ -212,7 +212,7 @@ public class MoveIssue extends RequireLoginFirstAction
             .equals(issue.getIssueType().getIssueTypeId());
 
         // Get selected non-matching attributes to save in comment
-        ArrayList commentAttrs = new ArrayList();
+        List commentAttrs = new ArrayList();
         ParameterParser params = data.getParameters();
         Object[] keys = params.getKeys();
         for (int i=0; i<keys.length; i++)
