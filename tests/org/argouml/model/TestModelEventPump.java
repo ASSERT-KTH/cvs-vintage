@@ -1,4 +1,4 @@
-// $Id: TestModelEventPump.java,v 1.2 2004/06/28 06:23:53 linus Exp $
+// $Id: TestModelEventPump.java,v 1.3 2004/09/27 06:12:36 linus Exp $
 // Copyright (c) 2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -184,11 +184,10 @@ public class TestModelEventPump extends TestCase {
     }
 
     /**
-     * Tests if a non registred listener does not receive any events (never can
-     * be too sure :))
+     * Tests if a non registred listener does not receive any events. 
      */
     public void testFireNonRegistredListener() {
-        MClass elem2 = CoreFactory.getFactory().createClass();
+        CoreFactory.getFactory().createClass();
         elem.addParameter(new MParameterImpl());
         assertTrue(!eventcalled);
     }
