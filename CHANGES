@@ -1,3 +1,36 @@
+Version 0.11.0
+
+ - Mail-Component:
+    - IMAP BODYSTRUCTURE parser fixes
+    - IMAP LSUB command fixes (much testing with uw-imapd 
+      and cyrus imapd)
+    - theirs a new view-component which just displays the message
+          without the tree/table 
+    - IMAP folders which can't contain messages are displayed in italic
+              and lightgray foreground colour 
+    - drag'n'dropping of folders is much more failsafe and intuitiv 
+    - major speed improvements in table renderer-code
+    - folders remember if the threaded-view is enabled
+    - table gui polishing
+    - email-headers and attachments are displayed in the message-view          
+    - Lucene (http://jakarta.apache.org/lucene) support for local folders 
+      added (high-performance, full-featured text search engine)
+    - vFolders view updates correctly 
+    - added several plugin-handlers: folder, filter, filter-action
+    
+ - Core-Component:
+ 	- sax based configuration backend (results in much better speed and
+ 	  memory consumption)
+ 	- threading infrastructure was re-designed and is much faster and more
+ 	  responsive now
+ 	- every component is now model/view/controller based, so you can open
+ 	  multiple windows and Columba saves the session for you
+ 	- much dialog polishing (mnemonics, i18n, ui guidelines)
+ 	- new design for actions
+ 	- plugin-support added 
+ 	- added several plugin-handlers: interpreter, action, menu
+ 	
+
 Version 0.9.11
 
  - mail-component
@@ -66,7 +99,7 @@ Version 0.9.10
     * imap synchronize fixes
     * imap lsub fixes (there were some problems with retrieving the
       folder list and the path delimiter)
-    * local folder locking fixes (local folders are now locked from
+    *ï¿½local folder locking fixes (local folders are now locked from
       an outside controller - removed nearly all locking code
       from the folder)
     * new composer-ui:
@@ -188,7 +221,7 @@ Version 0.9.8
     * Fixed the ELHO/HELO smtp commands to use "localhost.localdomain" 
       instead of the real hostname. This should fix problems with 
       TCP-tunneling, NAT (IP Masquerading in Linux), and hosts without 
-      fully qualified domainname (Eduardo Pérez)
+      fully qualified domainname (Eduardo Pï¿½rez)
     * Fixed imap folder bug, which prevented INBOX from appearing (Frederik)
     * Changed imap folder hierarchy parser. The delimiter character isn't 
       hardcoded anymore. This fixes the folder hierarchy view for cyrus 
