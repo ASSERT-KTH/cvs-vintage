@@ -1,20 +1,18 @@
 #macro (viewIssue $currentIssue $module)
 
+<h2>Issue ID: TBNS1</h2>
+
 <div class="functnbar">
-<table cellpadding="4" cellspacing="0" border="1">
- <tr>
-  <td class="firstchild">
-     <input type="submit" value="Move Issue" name="eventSubmit_doGotoothertemplate" />
-     <input type="hidden" value="moveIssueTemplate" name="MoveIssue.vm" />
-  </td>
- </tr>
-</table>
+<input type="submit" value="Done" name="#" />&nbsp;<input type="submit" value="Move" name="name="eventSubmit_doGotoothertemplate"  />&nbsp;<input type="submit" value="Copy" name="name="eventSubmit_doGotoothertemplate"  />&nbsp;issue
+   <input type="hidden" name="$scarabG.Constant.OTHER_TEMPLATE" value="MoveIssue.vm" />
 </div>
+
 
 #set ($canEdit = $scarabR.hasPermission($scarabG.Permission.ISSUE__EDIT, $module))
 #set ($attrValues = $currentIssue.ModuleAttributeValuesMap)
+#set ($currentIssueId = $currentIssue.UniqueId)
 
-<h3>Issue ID: $currentIssue.UniqueId</h3>
+<h3>Attribute group one</h3>
 
 <div class="axial">
  <table cellpadding="3" cellspacing="2" border="0">
@@ -71,30 +69,29 @@
   #end
  #end
 #end
-
+ 
 #if ($canEdit)
- <tr>
-   <th>Comment</th>
-   <td>
+<h4>Save changes</h4>
+
+<div class="axial">
    #set ($attCommentGroup = $intake.Attachment.setKey("attCommentKey"))
+<table cellpadding="3" cellspacing="2" border="0">
+<tr>
+<th>Reason for change</th>
+<td>Please enter a reason for the changes made above before saving.
    #fieldErrorMsg($attCommentGroup.DataAsString "")
-   <textarea rows="4" cols="35" name ="$attCommentGroup.DataAsString.Key">$!attCommentGroup.DataAsString.Value</textarea>
+   
+   <p><textarea rows="4" cols="60" name ="$attCommentGroup.DataAsString.Key">$!attCommentGroup.DataAsString.Value</textarea></p>
    <input type="hidden" name="$attCommentGroup.Name.Key" value="comment" />
-   <p>Please add a comment to explain your change(s)</p>
-   </td>
- </tr>
-#end
- </table>
-</div>
-<div class="functnbar2">
-<table cellpadding="4" cellspacing="0" border="1">
- <tr>
-  <td class="firstchild">
-     <input type="submit" value="Edit attributes" name="eventSubmit_doSubmitattributes" />
-  </td>
- </tr>
+</td>
+</tr>
 </table>
 </div>
+<div class="functnbar3">
+<input type="submit" value="Save changes" name="eventSubmit_doSubmitattributes" />
+</div>
+#end
+
 
 ### ASSIGNEES
 <h3>Assignee</h3>
@@ -126,14 +123,8 @@
 </table>
 </div>
 #if ($canEdit)
-<div class="functnbar2">
-<table cellpadding="4" cellspacing="0" border="1">
- <tr>
-  <td class="firstchild">
-    <input type="submit" value="Edit assignees" name="eventSubmit_doEditassignees" />
-  </td>
- </tr>
-</table>
+<div class="functnbar3">
+<input type="submit" value="Edit assignees" name="eventSubmit_doEditassignees" />
 </div>
 #end
 
@@ -142,12 +133,9 @@
 <h3>Related links</h3>
  <table width="100%" border="1" cellspacing="2" cellpadding="3">
    <tr>
-     <th>
-     <img src="$data.Request.ContextPath/images/icon_uparrow.gif" width="13" height="8" alt="sort ascending" title="sort ascending" border="0" />
-     <img src="$data.Request.ContextPath/images/icon_downarrow.gif" width="13" height="8" alt="sort descending" title="sort descending" border="0" />
-     </th>
-     <th>URL</th>
-     <th>Description</th>
+     <th> &nbsp; </th>
+     <th>Link</th>
+     <th>Link Description</th>
    </tr>
    #foreach ($url in $currentIssue.Urls)
     #indexedRows($velocityCount)
@@ -182,8 +170,8 @@
 <table cellpadding="4" cellspacing="0" border="1">
  <tr>
   <td class="firstchild">
-     <input type="submit" value="Add url" name="eventSubmit_doSubmiturl"  />&#160;
-     <input type="submit" value="Delete url"  name="eventSubmit_doDeleteurl" />
+     <input type="submit" value="Add link" name="eventSubmit_doSubmiturl"  />&#160;
+     <input type="submit" value="Delete link"  name="eventSubmit_doDeleteurl" />
   </td>
  </tr>
 </table>
@@ -195,7 +183,7 @@
 #if ($canEdit)
  #set ($dependGroup = $intake.Depend.setKey("dependKey"))
  <input type="hidden" name="$dependGroup.ObserverId.Key" value="$currentIssue.IssueId" />
- <h3>Add dependency</h3>
+ <h3>Dependencies</h3>
  #if (!$dependGroup.ObservedId.Message.equals(""))
   <p><strong class="alert">$dependGroup.ObservedId.Message</strong></p>
  #end
@@ -205,7 +193,7 @@
 <div class="axial">
  <table cellspacing="2" cellpadding="3" border="0">
  <tr>
-  <th>Add dependency on issue #</th>
+  <th>Add dependency on issue</th>
   <td>
     <input type="text" size="10" name="$dependGroup.ObservedId.Key" value = "$!dependGroup.ObservedId" />
     <select name="$dependGroup.TypeId.Key" class="select">
@@ -348,16 +336,21 @@
 #if (!$comments || $canEdit)
 <h3>Comments</h3>
 <div class="axial">
-  <table cellpadding="3" cellspacing="2" border="0">
+  <table cellpadding="3" cellspacing="2" border="1">
+     <tr>
+      <th nowrap="nowrap"><img src="$data.Request.ContextPath/images/icon_uparrow_off.gif" width="13" height="8" alt="sort ascending" border="0" />Date </th>
+      <th><a href="#">Author</a></th>
+      <th>Comment</th>
+     </tr>
+
     #foreach ($comment in $comments)
      <tr>
-       <th>$format.getDate($scarabR.DateFormat, $comment.CreatedDate)
+       <td>$format.getDate($scarabR.DateFormat, $comment.CreatedDate)</td>
        #set ($commentUser = $scarabR.getUser($comment.CreatedBy))
-       <a href="mailto:$commentUser.Email">$commentUser.FirstName $commentUser.LastName</a>
-       </th>
+       <td><a href="mailto:$commentUser.Email">$commentUser.FirstName $commentUser.LastName</a></td>
        <td>
        #if ($scarabR.hasPermission($scarabG.Permission.MODULE__EDIT))
-         <textarea rows="2" cols="35" name="edit_comment_$comment.AttachmentId">$comment.DataAsString</textarea>
+         <textarea rows="10" cols="60" name="edit_comment_$comment.AttachmentId">$comment.DataAsString</textarea>
        #else
          $comment.DataAsString
        #end
@@ -366,10 +359,10 @@
     #end
     #if ($canEdit)
      <tr>
-       <th>Enter comment</td>
+       <td colspan="2">Enter comment</td>
        <td>
         #set ($commentGroup = $intake.Attachment.setKey("commentKey"))
-        <textarea rows="2" cols="35" name ="$commentGroup.DataAsString.Key"></textarea>
+        <textarea rows="10" cols="60" name ="$commentGroup.DataAsString.Key"></textarea>
         #fieldErrorMsg($commentGroup.DataAsString "")
         <input type="hidden" name="$commentGroup.Name.Key" value="comment" />
        </td>
@@ -404,7 +397,6 @@
 #end
 
 
-
 ## ISSUE HISTORY
 #if ($fullHistory.equals("true"))
   #set ($activity = $currentIssue.getActivity(true))
@@ -413,12 +405,12 @@
 #end
 
 #if (!$activity.isEmpty())
-<h3>Issue history (up to first ten)</h3>
+<h3>Issue change history</h3>
   <table width="100%" cellpadding="3" cellspacing="2" border="1">
   <tr>
     <th>Date stamp</th>
     <th>Action</th>
-    <th>Note</th>
+    <th>Reason</th>
     <th>By</th>
   </tr>
   #foreach ($act in $activity)
@@ -449,11 +441,10 @@
     #set ($historyLink = $link.setPage("ViewIssue.vm").addPathInfo("id", $currentIssueId).addPathInfo("fullhistory", "false"))
     <p><a href="$historyLink">Hide complete history</a></p>
   #else
-    #set ($historyLink = $link.setPage("ViewIssue.vm").addPathInfo("id", $currentIssueId).addPathInfo("fullhistory", "true"))
+    #set ($historyLink = $link.setPage("$template").addPathInfo("id", $currentIssueId).addPathInfo("resultsPerPage", $resultsPerPage).addPathInfo("fullhistory", "true"))
     <p><a href="$historyLink">Show complete history</a></p>
   #end
 #end
-
 <div class="functnbar2">
 <table cellpadding="4" cellspacing="0" border="1">
  <tr>
