@@ -114,22 +114,17 @@ $page.setTitle("Identified as duplicate")
 <div class="axial">
 <table cellpadding="3" cellspacing="2" border="0">
 <tr>
-<th width="120">Note</th>
+<th width="120">Comment</th>
 <td>
 #textAreaMedium("$intakeAttachment.DataAsString.Key" $intakeAttachment.DataAsString)
 <p>
-<input type="submit" name="eventSubmit_doAddnote" value="Submit note" />
+<input type="submit" name="eventSubmit_doAddnote" value="Add comment to selected issues" />
 </p>
 </td>
 </tr>
 </table>
 </div>
 
-<p>
-Text entered into the "Note" text area will be appended to "Comments" of
-selected Issue when either "Add vote to selected" or "Submit note" are executed.
-Click Bypass Duplicates to continue entering your Issue.
-</p>
 
 <div class="functnbar2">
 <input type="submit" name="eventSubmit_doGotowizard3" value="Bypass Duplicates" />&#160;
