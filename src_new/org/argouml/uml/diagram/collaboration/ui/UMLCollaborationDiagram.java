@@ -24,7 +24,7 @@
 // File: UMLCollaborationDiagram.java
 // Classes: UMLCollaborationDiagram
 // Original Author: agauthie@ics.uci.edu
-// $Id: UMLCollaborationDiagram.java,v 1.2 2000/09/27 16:27:16 boger Exp $
+// $Id: UMLCollaborationDiagram.java,v 1.3 2000/09/29 16:02:25 boger Exp $
 
 package org.argouml.uml.diagram.collaboration.ui;
 

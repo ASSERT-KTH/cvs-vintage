@@ -23,7 +23,7 @@
 
 // File: FigMessage.java
 // Original Author: agauthie@ics.uci.edu
-// $Id: FigMessage.java,v 1.2 2000/09/27 16:12:55 boger Exp $
+// $Id: FigMessage.java,v 1.3 2000/09/29 16:02:26 boger Exp $
 
 package org.argouml.uml.diagram.ui;
 

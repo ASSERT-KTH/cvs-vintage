@@ -24,7 +24,7 @@
 // File: FigNodeModelElement.java
 // Classes: FigNodeModelElement
 // Original Author: abonner
-// $Id: FigNodeModelElement.java,v 1.2 2000/09/27 16:27:17 boger Exp $
+// $Id: FigNodeModelElement.java,v 1.3 2000/09/29 16:02:26 boger Exp $
 
 package org.argouml.uml.diagram.ui;
 
