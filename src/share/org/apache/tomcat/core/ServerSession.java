@@ -127,7 +127,7 @@ public class ServerSession {
     Context context;
     ContextManager contextM;
     private Object notes[]=new Object[ContextManager.MAX_NOTES];
-    private int state=STATE_NEW;
+    private int state=STATE_INVALID;
     Object facade;
     
     public ServerSession() {
@@ -287,7 +287,6 @@ public class ServerSession {
 	facade=null;
 	attributes.clear();
 	ts.recycle();
-	id.recycle();
     }
 
     

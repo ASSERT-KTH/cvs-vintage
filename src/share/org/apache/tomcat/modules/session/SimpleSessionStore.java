@@ -272,13 +272,14 @@ public final class SimpleSessionStore  extends BaseInterceptor {
 		log( "Shuting down " + id );
 	    session.setState( ServerSession.STATE_SUSPEND );
 	    session.setState( ServerSession.STATE_EXPIRED );
+	    session.setState( ServerSession.STATE_INVALID );
 	}
     }
 
     public int sessionState( Request req, ServerSession session, int state ) {
 	TimeStamp ts=session.getTimeStamp();
 
-	if( state==ServerSession.STATE_EXPIRED ) {
+	if( state==ServerSession.STATE_INVALID ) {
 	    // session moved to expire state - remove all attributes from
 	    // storage
 	    SimpleSessionManager ssm=(SimpleSessionManager)session.getManager();
@@ -417,6 +418,7 @@ public final class SimpleSessionStore  extends BaseInterceptor {
 		// that's what the original code did
 		oldS.setState( ServerSession.STATE_EXPIRED );
 		oldS.recycle();
+		oldS.setState( ServerSession.STATE_INVALID );
 	    }
 	    sessions.put( newId, session );
 	    return (session);

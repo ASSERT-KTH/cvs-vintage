@@ -167,6 +167,7 @@ public final class SessionExpirer  extends BaseInterceptor {
 	    // After expiring it, we clean up.
 	    if( debug > 0 ) se.log( "Recycling " + sses);
 	    sses.recycle();
+	    sses.setState( ServerSession.STATE_INVALID );
 	}
     }
 }
