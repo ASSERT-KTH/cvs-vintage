@@ -691,7 +691,7 @@
             rdbms="oracle"
             onerror="continue"
             driver="${scarab.database.jdbc.driver}"
-            url="${scarab.database.admin.url}"
+            url="${scarab.database.url}"
             userid="${scarab.database.admin.username}"
             password="${scarab.database.admin.password}">
             <classpath refid="classpath"/>
