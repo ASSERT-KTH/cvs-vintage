@@ -94,7 +94,7 @@ import org.apache.commons.lang.StringUtils;
  * @author <a href="mailto:jmcnally@collab.new">John McNally</a>
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
- * @version $Id: Issue.java,v 1.179 2002/08/15 23:26:34 jon Exp $
+ * @version $Id: Issue.java,v 1.180 2002/08/15 23:33:58 jon Exp $
  */
 public class Issue 
     extends BaseIssue
@@ -2534,10 +2534,11 @@ public class Issue
                 }
                 if (msg != null)
                 {
-                    return msg;
+                    break;
                 }
             }
         }
+        return msg;
     }
 
     /**
@@ -2551,7 +2552,7 @@ public class Issue
                                 ScarabUser user)
         throws Exception
     {
-        String msg = doCheckAttributeValueWorkflow(newAttVals, attachment user);
+        String msg = doCheckAttributeValueWorkflow(newAttVals, attachment, user);
         if (msg != null)
         {
             throw new Exception(msg);
@@ -2571,8 +2572,6 @@ public class Issue
         AttributeValue oldAttVal = null;
         AttributeValue newAttVal = null;
         Iterator iter = avMap.iterator();
-        String msg = null;
-
         while (iter.hasNext())
         {
             oldAttVal = (AttributeValue)avMap.get(iter.next());
