@@ -1,4 +1,4 @@
-// $Id: TestActivityGraphsFactory.java,v 1.1 2004/11/02 18:35:20 mvw Exp $
+// $Id: TestActivityGraphsFactory.java,v 1.2 2004/11/19 22:46:24 linus Exp $
 // Copyright (c) 2002-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -26,7 +26,6 @@ package org.argouml.model.uml;
 
 import junit.framework.TestCase;
 
-import org.argouml.model.uml.ActivityGraphsFactory;
 import org.argouml.util.CheckUMLModelHelper;
 
 
@@ -35,7 +34,7 @@ import org.argouml.util.CheckUMLModelHelper;
  *
  */
 public class TestActivityGraphsFactory extends TestCase {
-    
+
     /**
      * All the ModelElements we are going to test.
      */
@@ -47,11 +46,11 @@ public class TestActivityGraphsFactory extends TestCase {
         "ObjectFlowState",
         "Partition",
         "SubactivityState",
-    };   
+    };
 
     /**
      * The constructor.
-     * 
+     *
      * @param n the name
      */
     public TestActivityGraphsFactory(String n) { super(n); }
@@ -77,20 +76,20 @@ public class TestActivityGraphsFactory extends TestCase {
 	    "ObjectFlowState",
 	    "Partition",
 	    "SubactivityState",
-	    null
+	    null,
 	};
 
-	CheckUMLModelHelper.createAndRelease(this, 
+	CheckUMLModelHelper.createAndRelease(this,
 					     ActivityGraphsFactory.getFactory(),
 					     objs);
     }
-    
+
     /**
      * The test for deletion.
      */
     public void testDeleteComplete() {
-        CheckUMLModelHelper.deleteComplete(this, 
-					   ActivityGraphsFactory.getFactory(), 
+        CheckUMLModelHelper.deleteComplete(this,
+					   ActivityGraphsFactory.getFactory(),
 					   allModelElements);
     }
 

@@ -1,4 +1,4 @@
-// $Id: TestCoreHelper.java,v 1.1 2004/11/02 18:35:20 mvw Exp $
+// $Id: TestCoreHelper.java,v 1.2 2004/11/19 22:46:24 linus Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -26,8 +26,6 @@ package org.argouml.model.uml;
 
 import junit.framework.TestCase;
 
-import org.argouml.model.uml.CoreFactory;
-import org.argouml.model.uml.CoreHelper;
 import org.argouml.util.CheckUMLModelHelper;
 
 import ru.novosoft.uml.foundation.core.MClassifierImpl;

@@ -1,4 +1,4 @@
-// $Id: TestDataTypesFactory.java,v 1.1 2004/11/02 18:35:20 mvw Exp $
+// $Id: TestDataTypesFactory.java,v 1.2 2004/11/19 22:46:24 linus Exp $
 // Copyright (c) 2002-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -28,7 +28,6 @@ import java.util.LinkedList;
 
 import junit.framework.TestCase;
 
-import org.argouml.model.uml.DataTypesFactory;
 import org.argouml.util.CheckUMLModelHelper;
 
 /**
@@ -39,7 +38,7 @@ public class TestDataTypesFactory extends TestCase {
 
     /**
      * The constructor.
-     * 
+     *
      * @param n the name
      */
     public TestDataTypesFactory(String n) {
@@ -65,8 +64,8 @@ public class TestDataTypesFactory extends TestCase {
     public void testCreates() {
 
 	Object[] args = {
-	    "language", 
-	    "body" 
+	    "language",
+	    "body",
 	};
 
 	String[] objs = {
@@ -80,7 +79,7 @@ public class TestDataTypesFactory extends TestCase {
 	    "ProcedureExpression",
 	    "TimeExpression",
 	    "TypeExpression",
-	    null 
+	    null,
 	};
 
 	DataTypesFactory dtf = DataTypesFactory.getFactory();
@@ -129,8 +128,8 @@ public class TestDataTypesFactory extends TestCase {
       "TimeExpression",
       "TypeExpression"
       };
-	
-      CheckUMLModelHelper.testRemove(this, 
+
+      CheckUMLModelHelper.testRemove(this,
       DataTypesFactory.getFactory(), objs);
       }
     */
