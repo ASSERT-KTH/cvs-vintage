@@ -73,15 +73,16 @@
 <td> <select name="$moveIssueGroup.Action.Key" >
 <option value="copy"
      #if ($userAction.toString().equals("copy")) selected="selected" #end >Copy</option>
+#if ($user.hasPermission($scarabG.Permission.MODULE__EDIT, $scarabR.CurrentModule))
 <option value="move" 
      #if ($userAction.toString().equals("move")) selected="selected" #end >Move</option>
+#end
 </select>
 
 </td>
 </tr>
 </table>
 </div>
-
 
 <div class="functnbar2">
  <table cellpadding="4" cellspacing="0" border="1">
