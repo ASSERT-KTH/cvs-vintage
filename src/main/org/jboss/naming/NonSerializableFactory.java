@@ -20,7 +20,7 @@ import javax.naming.spi.ObjectFactory;
 
 /** A utility class that allows one to bind a non-serializable object into a
 local JNDI context. The binding will only be valid for the lifetime of the
-VM in which the JNDI InitialContext lives. An example usage code snipet is:
+VM in which the JNDI InitialContext lives. An example usage code snippet is:
 
 <code>
     // The non-Serializable object to bind
@@ -40,17 +40,24 @@ VM in which the JNDI InitialContext lives. An example usage code snipet is:
     ctx.rebind(key, memoryRef);
 </code>
 
+To unbind the object, use the following code snippet:
+
+<code>
+	new InitialContext().unbind(key);
+	NonSerializableFactory.unbind(key);
+</code>
+
 @see javax.naming.spi.ObjectFactory
 
 @author Scott_Stark@displayscape.com
-@version $Revision: 1.1 $
+@version $Revision: 1.2 $
 */
 public class NonSerializableFactory implements ObjectFactory
 {
 	private static Map wrapperMap = Collections.synchronizedMap(new HashMap());
 
-    /** Place an object into the NonSerializableFactory namespce for subsequent
-    access by getObject. There cannot be an existing binding for key.
+    /** Place an object into the NonSerializableFactory namespace for subsequent
+    access by getObject. There cannot be an already existing binding for key.
 
     @param key, the name to bind target under. This should typically be the
     name that will be used to bind target in the JNDI namespace, but it does
