@@ -104,7 +104,7 @@ import org.apache.fulcrum.security.impl.db.entity
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: ScarabModule.java,v 1.110 2002/05/01 00:39:38 jon Exp $
+ * @version $Id: ScarabModule.java,v 1.111 2002/05/02 00:36:23 jon Exp $
  */
 public class ScarabModule
     extends BaseScarabModule
@@ -301,12 +301,13 @@ public class ScarabModule
             Module parent = ModuleManager.getInstance(id).getParent();
             if (isEndlessLoop(parent))
             {
-                throw new TorqueException("Endless parent/child relationship detected!");
+                throw new Exception("Endless parent/child relationship detected!");
             }
         }
         catch (Exception e)
         {
             log().error("Problem checking endless loop", e);
+            throw new TorqueException(e.toString());
         }
         super.setParentId(id);
         // setting the name to be null so that 
