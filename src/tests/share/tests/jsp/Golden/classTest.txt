@@ -4,8 +4,12 @@
 </head>
 
 <body>
-Base name: JSPTest
-, Inner name: Inner
+<!--
+out.println((new JSPTest()).getName()); 
+out.println(", Inner name: " + ((new JSPTest()).new Inner()).getName()); 
+-->
+ Base name: JSPTest
+ Inner name: Inner
 
 </body>
 </html>

@@ -15,6 +15,14 @@
     }
 %>
 <body>
-Base name: <% out.println((new JSPTest()).getName()); out.println(", Inner name: " + ((new JSPTest()).new Inner()).getName()); %>
+<!--
+out.println((new JSPTest()).getName()); 
+out.println(", Inner name: " + ((new JSPTest()).new Inner()).getName()); 
+-->
+<%  JSPTest jspTest = new JSPTest(); 
+    JSPTest.Inner inn = jspTest.new Inner();
+    out.println(" Base name: " + jspTest.getName()); 
+    out.println(" Inner name: " + inn.getName()); 
+%>
 </body>
 </html>

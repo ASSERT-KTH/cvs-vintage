@@ -1,10 +1,20 @@
 <html>
 <!--
 -->
-	<%@ page errorPage="errorpge.jsp" %>
+<%@ page errorPage="errorpge.jsp" %>
+<%! public class ErrTest {
+        public String getName() {
+            String a = null;
+            if (a.equals("NullPoinerException")) {
+            }
+            return null;
+        }
+    }
+%>
+<body>
+<% out.println((new ErrTest()).getName()); %>
 	<% 
-		String name = null;
-        int i = 10/0;
+        //int i = 10/0;
 	%>	
 </body>
 </html>

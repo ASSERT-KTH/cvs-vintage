@@ -1,9 +1,9 @@
 <html>
 <!--
 -->
-        
-    <h1> The exception / by zero 
-            occured. 
+    
+    <h1> 
+        An exception occured 
     </h1>
 </body>
 </html>
