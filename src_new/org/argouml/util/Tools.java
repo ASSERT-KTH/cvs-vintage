@@ -1,4 +1,4 @@
-// $Id: Tools.java,v 1.13 2003/12/25 23:18:42 linus Exp $
+// $Id: Tools.java,v 1.14 2004/01/18 15:28:13 mvw Exp $
 // Copyright (c) 1996-2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -65,7 +65,7 @@ public class Tools {
             in = pkg.getImplementationVersion();
             if (in != null) {
                 sb.append(", ").append(Translator.localize("label","label.version"))
-                  .append(": ");
+                  .append(" ");
                 sb.append(in);
                 sb.append('\n');
             }
