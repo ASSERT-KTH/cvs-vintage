@@ -153,7 +153,11 @@ public class JavaGeneratorTool {
 	int version=0;
 	try {
 	    FileInputStream fis=new FileInputStream( mapFile );
-	    version=(int)fis.read();
+            // The following helps avoid blocking on Windows DOS devices
+            // if someone tries to access something like aux.jsp.
+            if( fis.available() > 0 ) {
+               	version=(int)fis.read();
+            }
 	    fis.close();
 	} catch( Exception ex ) {
 	    System.out.println("readVersion() mapPath=" + mapFile + ex);
