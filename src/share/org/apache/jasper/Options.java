@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/jasper/Options.java,v 1.2 1999/10/11 02:42:32 costin Exp $
- * $Revision: 1.2 $
- * $Date: 1999/10/11 02:42:32 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/jasper/Options.java,v 1.3 1999/10/12 08:33:51 bergsten Exp $
+ * $Revision: 1.3 $
+ * $Date: 1999/10/12 08:33:51 $
  *
  * ====================================================================
  * 
@@ -70,6 +70,7 @@ import javax.servlet.ServletContext;
  * A class to hold all init parameters specific to the JSP engine. 
  *
  * @author Anil K. Vijendran
+ * @author Hans Bergsten
  */
 public final class Options {
     /**
@@ -159,11 +160,6 @@ public final class Options {
      * ServletConfig and ServletContext. 
      */
     public Options(ServletConfig config, ServletContext context) {
-	// XXX it will be overriden latter, and JDK1.2 specific.
-	// can we remove it?
-	String scratchDirName=System.getProperty("java.io.tmpdir");
-	if( scratchDirName != null ) 
-	    scratchDir = new File(scratchDirName );
         String keepgen = config.getInitParameter("keepgenerated");
         if (keepgen != null) {
             if (keepgen.equalsIgnoreCase("true"))
@@ -210,12 +206,17 @@ public final class Options {
 
         if (dir != null)
             scratchDir = new File(dir);
-        else
-            scratchDir = null;
-
-        if (this.scratchDir == null)
-            this.scratchDir = (File) context.getAttribute(Constants.TMP_DIR);
-
+        else {
+            // First we try the Servlet 2.2 javax.servlet.context.tempdir property
+            scratchDir = (File) context.getAttribute(Constants.TMP_DIR);
+            if (scratchDir == null) {
+                // Not running in a Servlet 2.2 container.
+                // Try to get the JDK 1.2 java.io.tmpdir property
+                dir = System.getProperty("java.io.tmpdir");
+                scratchDir = new File(dir);
+            }
+        }
+                
         if (this.scratchDir == null) {
             Constants.message("jsp.error.no.scratch.dir", Constants.FATAL_ERRORS);
             return;
