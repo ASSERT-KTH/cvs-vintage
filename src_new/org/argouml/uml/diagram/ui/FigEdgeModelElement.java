@@ -26,7 +26,7 @@
 // File: FigEdgeModelElement.java
 // Classes: FigEdgeModelElement
 // Original Author: abonner
-// $Id: FigEdgeModelElement.java,v 1.9 2002/08/08 14:21:50 kataka Exp $
+// $Id: FigEdgeModelElement.java,v 1.10 2002/09/12 15:37:06 kataka Exp $
 
 package org.argouml.uml.diagram.ui;
 
@@ -53,8 +53,8 @@ import org.argouml.cognitive.*;
 import org.argouml.uml.*;
 import org.argouml.uml.ui.*;
 import org.argouml.uml.generator.*;
-import org.argouml.uml.diagram.ui.*;
 import org.argouml.util.*;
+
 
 
 /** Abstract class to display diagram arcs for UML ModelElements that
@@ -470,6 +470,25 @@ implements VetoableChangeListener, DelayedVChangeListener, MouseListener, KeyLis
 
     public void renderingChanged() {
     }
+
+	/**
+	 * Necessary since GEF contains some errors regarding the hit subject.
+	 * TODO make the bigBounds port go off a little less
+	 * @see org.tigris.gef.presentation.Fig#hit(Rectangle)
+	 */
+	public boolean hit(Rectangle r) {
+		if (_fig.hit(r)) return true;
+		int size = _pathItems.size();
+		for (int i = 0; i < size; i++) {
+	  		Fig f = getPathItemFig((FigEdge.PathItem) _pathItems.elementAt(i));
+	  		if (f.hit(r)) return true;
+		}
+		Rectangle bigBounds = getBounds();
+		FigRect rect = new FigRect(bigBounds.x, bigBounds.y, bigBounds.width, bigBounds.height);
+		if (rect.hit(r)) return true;
+		return false;
+	}
+		
 
 } /* end class FigEdgeModelElement */
 

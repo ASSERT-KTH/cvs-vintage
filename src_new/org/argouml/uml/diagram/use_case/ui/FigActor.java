@@ -24,7 +24,7 @@
 // File: FigActor.java
 // Classes: FigActor
 // Original Author: abonner@ics.uci.edu
-// $Id: FigActor.java,v 1.2 2001/10/06 00:57:10 thierrylach Exp $
+// $Id: FigActor.java,v 1.3 2002/09/12 15:37:06 kataka Exp $
 
 package org.argouml.uml.diagram.use_case.ui;
 
@@ -186,5 +186,15 @@ public class FigActor extends FigNodeModelElement {
     // do not set height
     firePropChange("bounds", oldBounds, getBounds());
   }
+
+	/**
+	 * @see org.tigris.gef.presentation.FigNode#deepHitPort(int, int)
+	 */
+	public Object deepHitPort(int x, int y) {
+		Object o = super.deepHitPort(x, y);
+		if (o != null) return o;
+		if (hit(new Rectangle(new Dimension(x,y)))) return getOwner();
+		return null;
+	}
 
 } /* end class FigActor */
