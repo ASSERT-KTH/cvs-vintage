@@ -66,7 +66,7 @@ import org.gjt.sp.util.*;
  * </ul>
  *
  * @author Slava Pestov
- * @version $Id: Buffer.java,v 1.171 2003/05/24 01:18:27 spestov Exp $
+ * @version $Id: Buffer.java,v 1.172 2003/05/25 20:45:32 spestov Exp $
  */
 public class Buffer
 {
@@ -2342,8 +2342,7 @@ public class Buffer
 	 * @return true If indentation took place, false otherwise.
 	 * @since jEdit 4.2pre2
 	 */
-	public boolean indentLine(int lineIndex, boolean canIncreaseIndent,
-		boolean canDecreaseIndent)
+	public boolean indentLine(int lineIndex)
 	{
 		getLineText(lineIndex,seg);
 
