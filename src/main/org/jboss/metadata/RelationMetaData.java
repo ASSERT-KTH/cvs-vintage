@@ -17,7 +17,7 @@ import org.jboss.ejb.DeploymentException;
  * file's relationships elements.
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
- * @version $Revision: 1.1 $
+ * @version $Revision: 1.2 $
  */
 public class RelationMetaData extends MetaData {
 	/** Name of the relation. Loaded from the ejb-relation-name element. */
@@ -61,6 +61,15 @@ public class RelationMetaData extends MetaData {
 		return right;
 	}
 	
+	public RelationshipRoleMetaData getOtherRelationshipRole(RelationshipRoleMetaData role) {
+		if(left == role) {
+			return right;
+		} else if(right == role) {
+			return left;
+		} else {
+			throw new IllegalArgumentException("Specified role is not the left or right role. role=" + role);
+		}
+	}
    public void importEjbJarXml (Element element) throws DeploymentException {
 	   // name
 		relationName = getElementContent(getOptionalChild(element, "ejb-relation-name"));
@@ -68,7 +77,7 @@ public class RelationMetaData extends MetaData {
 		// left role
 		Iterator iter = getChildrenByTagName(element, "ejb-relationship-role");
 		if(iter.hasNext()) {
-			left = new RelationshipRoleMetaData();
+			left = new RelationshipRoleMetaData(this);
 			left.importEjbJarXml((Element) iter.next());
 		} else {
 			throw new DeploymentException("Expected 2 ejb-relationship-role roles but found none");
@@ -76,7 +85,7 @@ public class RelationMetaData extends MetaData {
 		
 		// right role
 		if(iter.hasNext()) {
-			right = new RelationshipRoleMetaData();
+			right = new RelationshipRoleMetaData(this);
 			right.importEjbJarXml((Element) iter.next());
 		} else {
 			throw new DeploymentException("Expected 2 ejb-relationship-role but only found one");
