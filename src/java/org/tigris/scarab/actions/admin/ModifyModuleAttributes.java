@@ -52,16 +52,24 @@ import java.util.List;
 // Turbine Stuff 
 import org.apache.turbine.RunData;
 import org.apache.turbine.TemplateContext;
+import org.apache.turbine.ParameterParser;
 import org.apache.torque.om.NumberKey;
 import org.apache.turbine.tool.IntakeTool;
 import org.apache.fulcrum.intake.model.Group;
+import org.apache.fulcrum.intake.model.Field;
 import org.apache.fulcrum.intake.model.BooleanField;
 
 // Scarab Stuff
 import org.tigris.scarab.actions.base.RequireLoginFirstAction;
 import org.tigris.scarab.om.ScarabUser;
 import org.tigris.scarab.om.RModuleAttribute;
+import org.tigris.scarab.om.RAttributeAttributeGroup;
 import org.tigris.scarab.om.RModuleOption;
+import org.tigris.scarab.om.AttributeGroup;
+import org.tigris.scarab.om.AttributeGroupPeer;
+import org.tigris.scarab.om.Attribute;
+import org.tigris.scarab.om.AttributePeer;
+import org.tigris.scarab.om.ScarabModule;
 import org.tigris.scarab.services.module.ModuleEntity;
 import org.tigris.scarab.util.ScarabConstants;
 import org.tigris.scarab.tools.ScarabRequestTool;
@@ -70,16 +78,90 @@ import org.tigris.scarab.tools.ScarabRequestTool;
  * action methods on RModuleAttribute table
  *      
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: ModifyModuleAttributes.java,v 1.11 2001/08/28 02:55:56 jon Exp $
+ * @version $Id: ModifyModuleAttributes.java,v 1.12 2001/10/09 03:49:11 elicia Exp $
  */
 public class ModifyModuleAttributes extends RequireLoginFirstAction
 {
+
     /**
-     * Used on ModuleAttributeEditor.vm to change the properties
-     * of existing RModuleAttributes or to add a new one
+     * Creates default attribute groups.
+     * Must create 2 groups, one for dedupe attributes, one for non-dedupe.
      */
-    public synchronized void 
-        doModifyattributes( RunData data, TemplateContext context )
+    public void doCreatedefaults ( RunData data, TemplateContext context )
+        throws Exception
+    {
+        doCreatenewgroup(data, context);
+        AttributeGroup ag = doCreatenewgroup(data, context);
+        ag.setOrder(3);
+        ag.save();
+    }
+
+    /**
+     * Creates new attribute group.
+     */
+    public AttributeGroup doCreatenewgroup ( RunData data, 
+                                             TemplateContext context )
+        throws Exception
+    {
+        AttributeGroup ag = new AttributeGroup();
+
+        ScarabRequestTool scarabR = (ScarabRequestTool)context
+            .get(ScarabConstants.SCARAB_REQUEST_TOOL);
+        ScarabModule module = (ScarabModule)scarabR.getCurrentModule();
+      
+        List groups = module.getAttributeGroups(); 
+
+        // Make default group name 'attribute group x' where x is size + 1
+        ag.setName("attribute group " + Integer.toString(groups.size()+1));
+        ag.setOrder(groups.size() +2);
+        ag.setModuleId(module.getModuleId());
+        ag.save();
+        return ag;
+    }
+
+    /**
+        This manages clicking the Add Attribute button.
+    */
+    public void doGotoselectpage( RunData data, TemplateContext context ) 
+        throws Exception
+    {
+        setTarget(data, "admin,GlobalAttributeSelect.vm");            
+    }
+
+    /**
+        Selects attribute to add to artifact type and attribute group.
+    */
+    public void doSelectattribute( RunData data, TemplateContext context )
+        throws Exception
+    {
+        ScarabRequestTool scarabR = (ScarabRequestTool)context
+            .get(ScarabConstants.SCARAB_REQUEST_TOOL);
+
+        String attributeId = data.getParameters().getString("attributeid");
+        String groupId = data.getParameters().getString("groupId");
+        AttributeGroup group = (AttributeGroup) AttributeGroupPeer
+                               .retrieveByPK(new NumberKey(groupId));
+
+        RModuleAttribute rma = new RModuleAttribute();
+        rma.setModuleId(scarabR.getCurrentModule().getModuleId());
+        rma.setAttributeId(attributeId);
+        rma.setDedupe(group.getOrder() < ((ScarabModule)scarabR.getCurrentModule()).getDedupeSequence());
+        rma.save();
+
+        RAttributeAttributeGroup raag = new RAttributeAttributeGroup();
+        raag.setGroupId(groupId);
+        raag.setAttributeId(attributeId);
+        raag.setOrder(group.getAttributes().size() +1 );
+        raag.save();
+        data.getParameters().add("groupid", groupId);
+        setTarget(data, "admin,AttributeGroup.vm");            
+    }
+
+    /**
+     * Changes the properties of existing AttributeGroups and their attributes.
+     */
+    public synchronized void doModifygroup ( RunData data, 
+                                             TemplateContext context )
         throws Exception
     {
         IntakeTool intake = (IntakeTool)context
@@ -88,150 +170,211 @@ public class ModifyModuleAttributes extends RequireLoginFirstAction
         ScarabRequestTool scarabR = (ScarabRequestTool)context
             .get(ScarabConstants.SCARAB_REQUEST_TOOL);
 
-        ModuleEntity module = scarabR.getCurrentModule();
-        List rmas = (List)((Vector)module
-            .getRModuleAttributes(false)).clone();
+        ScarabModule module = (ScarabModule)scarabR.getCurrentModule();
+        String groupId = data.getParameters().getString("groupId");
+        AttributeGroup ag = (AttributeGroup) AttributeGroupPeer
+                            .retrieveByPK(new NumberKey(groupId));
+        List attributes = ag.getAttributes();
 
-        // should set DisplayValue and Order as required. !FIXME!
-
-
-        if ( intake.isAllValid() ) 
+        if ( intake.isAllValid() )
         {
-
-            RModuleAttribute rma = null;
-            for (int i=rmas.size()-1; i>=0; i--) 
+            for (int i=attributes.size()-1; i>=0; i--) 
             {
-                rma = (RModuleAttribute)rmas.get(i);                
-                Group group = intake.get("RModuleAttribute", 
-                                         rma.getQueryKey(), false);
-                // group should never be null, might want to remove 
-                if ( group != null ) 
-                {                    
-                    if ( !rma.getModuleId().equals(module.getModuleId()) ) 
-                    {
-                        NumberKey attId = rma.getAttributeId();
-                        rma = rma.copy();
-                        rma.setAttributeId(attId);
-                        rma.setModuleId(module.getModuleId());
-                        rmas.remove(i);
-                        rmas.add(i, rma);
-                    }
-                    group.setProperties(rma);
-                    rma.save();
+                // Set properties for module-attribute mapping
+                Attribute attribute = (Attribute)attributes.get(i);
+                RModuleAttribute rma = (RModuleAttribute)module
+                                       .getRModuleAttribute(attribute);
+                Group rmaGroup = intake.get("RModuleAttribute", 
+                                 rma.getQueryKey(), false);
+                rmaGroup.setProperties(rma);
+                rma.save();
 
-                    // we need this because we are accepting duplicate
-                    // numeric values and resorting, so we do not want
-                    // to show the actual value entered by the user.
-                    intake.remove(group);
-                }                
+                // Set properties for attribute-attribute group mapping
+                RAttributeAttributeGroup raag = 
+                    ag.getRAttributeAttributeGroup(attribute);
+                Group raagGroup = intake.get("RAttributeAttributeGroup", 
+                                 raag.getQueryKey(), false);
+                raagGroup.setProperties(raag);
+                raag.save();
             }
-            //module.sortAttributes(rmas);
-        }
-    }
+
+            // Set properties for group info
+            Group agGroup = intake.get("AttributeGroup", 
+                                        ag.getQueryKey(), false);
+            agGroup.setProperties(ag);
+            ag.save();
+       } 
+   }
+
 
     /**
-     * Used on ModuleOptionEditor.vm to change the name of an existing
-     * AttributeOption or add a new one.
+     * Changes the properties of existing RModuleAttributes.
      */
-    public synchronized void 
-        doAddormodifymoduleoptions( RunData data, TemplateContext context )
+    public synchronized void doModifyattributes ( RunData data, 
+                                                  TemplateContext context )
         throws Exception
     {
         IntakeTool intake = (IntakeTool)context
            .get(ScarabConstants.INTAKE_TOOL);
+
         ScarabRequestTool scarabR = (ScarabRequestTool)context
-           .get(ScarabConstants.SCARAB_REQUEST_TOOL);
+            .get(ScarabConstants.SCARAB_REQUEST_TOOL);
 
-        if ( intake.isAllValid() ) 
+        ScarabModule module = (ScarabModule)scarabR.getCurrentModule();
+        List rmas = (List)((Vector)module
+            .getRModuleAttributes(false)).clone();
+        List attributeGroups = module.getAttributeGroups();
+
+        boolean isValid = true;
+        boolean areThereDupes = false;
+        RModuleAttribute rma = null;
+        Field order1 = null;
+        Field order2 = null;
+        int dupeOrder = Integer.parseInt(data.getParameters()
+                                             .getString("dupe_order"));
+
+        // Check for duplicate sequence numbers
+        for (int i=0; i<attributeGroups.size(); i++) 
         {
-            RModuleAttribute attribute = 
-                scarabR.getRModuleAttribute();
-            ModuleEntity module = scarabR.getCurrentModule();
-            RModuleOption option = null;
-            Vector attributeOptions = (Vector)((Vector)module
-                .getRModuleOptions(attribute.getAttribute(), false)).clone(); 
-            // go in reverse because we may be removing from the list
-            for (int i=attributeOptions.size()-1; i>=0; i--) 
+            AttributeGroup ag1 = (AttributeGroup)attributeGroups.get(i);                
+            Group agGroup1 = intake.get("AttributeGroup", 
+                             ag1.getQueryKey(), false);
+            order1 = agGroup1.get("Order");
+            if (order1.toString().equals(Integer.toString(dupeOrder)))
             {
-                option = (RModuleOption)attributeOptions.get(i);
-                Group group = intake.get("RModuleOption", 
-                                         option.getQueryKey());
-                // in case the template is not showing all the options at once
-                if ( group != null ) 
-                {
-                    group.setProperties(option);
-
-                    // check for a deleted flag.  AttributeOptions are removed
-                    // from the db when deleted.
-                    BooleanField deletedField = 
-                        (BooleanField)group.get("Active");
-                    if (deletedField != null && !deletedField.booleanValue()) 
-                    {
-                        // remove from the Attribute's list
-                        attributeOptions.remove(i);
-                    }
-                    option.save();
-
-                    // we need this because we are accepting duplicate
-                    // numeric values and resorting, so we do not want
-                    // to show the actual value entered by the user.
-                    intake.remove(group);
-                }                
+                areThereDupes = true;
+                break;
             }
-            //attribute.sortOptions(attributeOptions);
 
-            /*
-            // was a new option added?
-            option = new RModuleOption();
-            Group group = intake.get("RModuleOption", 
-                                     option.getQueryKey());
-            if ( group != null ) 
+            for (int j=i-1; j>=0; j--) 
             {
-                group.setProperties(option);
-                if ( option.getDisplayValue() != null 
-                     && option.getDisplayValue().length() != 0 ) 
-                {
-                    try
-                    {
-                        attribute.addRModuleOption(option);
-                    }
-                    catch (ScarabException se)
-                    {
-                        group.get("Name")
-                            .setMessage("Please select a unique name.");
-                    }
-                }
+                AttributeGroup ag2 = (AttributeGroup)attributeGroups.get(j);                
+                Group agGroup2 = intake.get("AttributeGroup", 
+                             ag2.getQueryKey(), false);
+                order2 = agGroup2.get("Order");
 
-                // we need this because we are accepting duplicate
-                // numeric values and resorting, so we do not want
-                // to show the actual value entered by the user.
-                intake.remove(group);
-
-                for (int i=attributeOptions.size()-1; i>=0; i--) 
+                if (order1.toString().equals(order2.toString()))
                 {
-                    option = (RModuleOption)attributeOptions.get(i);
-                    group = intake.get("RModuleOption", 
-                                             option.getQueryKey());
-                    // in case the template is not showing all the options
-                    if ( group != null ) 
-                    {
-                        intake.remove(group);
-                    }
+                    areThereDupes = true;
+                    break;
                 }
             }
-            */
         }
+        if (areThereDupes)
+        {
+           data.setMessage("Please do not enter duplicate "
+                            + " sequence numbers for attribute groups.");
+           isValid = false;
+        }
+  
+       // Check that duplicate check is not at the beginning or end.
+       if (dupeOrder == 1 || dupeOrder == attributeGroups.size() +1)
+       {
+           data.setMessage("The duplicate check cannot be at the beginning "
+                             + "or the end.");
+           isValid = false;
+       }
+
+       if ( intake.isAllValid() && isValid) 
+       {
+           for (int i=attributeGroups.size()-1; i>=0; i--) 
+           {
+               AttributeGroup ag = (AttributeGroup)attributeGroups.get(i);
+               Group agGroup = intake.get("AttributeGroup",
+                                        ag.getQueryKey(), false);
+               agGroup.setProperties(ag);
+               ag.save();
+           }
+
+       }
+
+        String nextTemplate = data.getParameters()
+            .getString(ScarabConstants.NEXT_TEMPLATE);
+        setTarget(data, nextTemplate);            
     }
 
     /**
-     * Manages clicking of the AllDone button
+     * Deletes an attribute group.
      */
-    public void doAlldone( RunData data, TemplateContext context ) throws Exception
+    public void doDeletegroup ( RunData data, TemplateContext context )
+        throws Exception
     {
-        String nextTemplate = data.getParameters().getString(
-            ScarabConstants.NEXT_TEMPLATE );
+        ScarabUser user = (ScarabUser)data.getUser();
+        ParameterParser params = data.getParameters();
+        Object[] keys = params.getKeys();
+        String key;
+        String groupId;
+        ScarabRequestTool scarabR = (ScarabRequestTool)context
+            .get(ScarabConstants.SCARAB_REQUEST_TOOL);
+        ScarabModule module = (ScarabModule)scarabR.getCurrentModule();
+        List attributeGroups = module.getAttributeGroups();
 
-        setTarget(data, nextTemplate);
+        for (int i =0; i<keys.length; i++)
+        {
+            key = keys[i].toString();
+            if (key.startsWith("delete_group_"))
+            {
+               if (attributeGroups.size() - 1 < 2)
+               {
+                   data.setMessage("You cannot have fewer than two groups.");
+                   break;
+               }
+               else
+               {
+                   try
+                   {
+                       groupId = key.substring(13);
+                       AttributeGroup ag = (AttributeGroup) AttributeGroupPeer
+                                           .retrieveByPK(new NumberKey(groupId));
+                       ag.delete(user);
+                   }
+                   catch (Exception e)
+                   {
+                       data.setMessage(ScarabConstants.NO_PERMISSION_MESSAGE);
+                   }
+               }
+            }
+         }
+    }
+
+    /**
+        Unmaps attributes to modules.
+    */
+    public void doDeleteattributes( RunData data, TemplateContext context ) 
+        throws Exception
+    {
+        ScarabRequestTool scarabR = (ScarabRequestTool)context
+            .get(ScarabConstants.SCARAB_REQUEST_TOOL);
+        ModuleEntity module = scarabR.getCurrentModule();
+        ParameterParser params = data.getParameters();
+        Object[] keys = params.getKeys();
+        String key;
+        String attributeId;
+        String groupId = data.getParameters().getString("groupId");
+        AttributeGroup ag = (AttributeGroup) AttributeGroupPeer
+                                         .retrieveByPK(new NumberKey(groupId));
+
+        for (int i =0; i<keys.length; i++)
+        {
+            key = keys[i].toString();
+            if (key.startsWith("att_delete_"))
+            {
+               attributeId = key.substring(11);
+               Attribute attribute = (Attribute)AttributePeer
+                                     .retrieveByPK(new NumberKey(attributeId));
+
+               // Remove attribute - module mapping
+               RModuleAttribute rma = module.getRModuleAttribute(attribute);
+               rma.delete();
+
+               // Remove attribute - group mapping
+               RAttributeAttributeGroup raag = 
+                   ag.getRAttributeAttributeGroup(attribute);
+               raag.delete();
+            }
+        }        
+        data.getParameters().add("groupid", groupId);
+        setTarget(data, "admin,AttributeGroup.vm");            
     }
 
     /**

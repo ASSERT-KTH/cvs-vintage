@@ -75,7 +75,10 @@ public class AttributePeer
     public static List getAllAttributes()
         throws Exception
     {
-        return (List)doSelect(new Criteria());
+        Criteria crit = new Criteria();
+        crit.add(AttributePeer.ATTRIBUTE_ID, 0, Criteria.NOT_EQUAL);
+        return (List)doSelect(crit);
     }
+
 }
 

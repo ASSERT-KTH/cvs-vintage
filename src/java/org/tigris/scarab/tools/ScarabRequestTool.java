@@ -76,6 +76,8 @@ import org.tigris.scarab.om.Depend;
 import org.tigris.scarab.om.DependPeer;
 import org.tigris.scarab.om.ScarabModulePeer;
 import org.tigris.scarab.om.Attribute;
+import org.tigris.scarab.om.AttributeGroup;
+import org.tigris.scarab.om.AttributeGroupPeer;
 import org.tigris.scarab.om.Attachment;
 import org.tigris.scarab.om.AttachmentPeer;
 import org.tigris.scarab.om.AttributeOption;
@@ -135,6 +137,11 @@ public class ScarabRequestTool
      * An IssueTemplateInfo object for use within the Scarab API.
      */
     private IssueTemplateInfo templateInfo = null;
+
+    /**
+     * An AttributeGroup object
+     */
+    private AttributeGroup group = null;
 
     /**
      * A ModuleEntity object which represents the current module
@@ -521,6 +528,32 @@ try{
     }
 
     /**
+     * Get a new AttributeGroup object.
+     */
+    public AttributeGroup getAttributeGroup()
+    {
+        return new AttributeGroup();
+    }
+
+    /**
+     * Get a AttributeGroup object.
+     */
+    public AttributeGroup getAttributeGroup(String key)
+    {
+        AttributeGroup group = null;
+        try
+        {
+            group = (AttributeGroup) 
+                AttributeGroupPeer.retrieveByPK(new NumberKey(key));
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
+        }
+        return group;
+    }
+
+    /**
      * Get an RModuleAttribute object. 
      *
      * @return a <code>Module</code> value
@@ -555,6 +588,14 @@ try{
             }
       }catch(Exception e){e.printStackTrace();}
         return rma;
+    }
+
+    /**
+     * A AttributeGroup object for use within the Scarab API.
+     */
+    public void setAttributeGroup(AttributeGroup group)
+    {
+        this.group = group;
     }
 
     /**

@@ -87,7 +87,7 @@ import org.tigris.scarab.security.SecurityFactory;
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: ScarabModule.java,v 1.33 2001/10/08 04:08:21 jon Exp $
+ * @version $Id: ScarabModule.java,v 1.34 2001/10/09 03:49:10 elicia Exp $
  */
 public class ScarabModule
     extends BaseScarabModule
@@ -316,6 +316,81 @@ public class ScarabModule
         return attributes;
     }
 
+    /**
+     * gets a list of all of the Attributes that are not associated with 
+     * this module
+     */
+    public List getAvailableAttributes()
+        throws Exception
+    {
+        List rModuleAttributes = getRModuleAttributes();
+        List moduleAttributes = new ArrayList();
+        for ( int i=0; i<rModuleAttributes.size(); i++ )
+        {
+            moduleAttributes.add(
+               ((RModuleAttribute) rModuleAttributes.get(i)).getAttribute());
+        }
+
+        List allAttributes = AttributePeer.getAllAttributes();
+        List availAttributes = new ArrayList();
+
+        for ( int i=0; i<allAttributes.size(); i++ )
+        {
+            Attribute att = (Attribute)allAttributes.get(i);
+            if (!moduleAttributes.contains(att))
+            {
+                availAttributes.add(att);
+            }
+        }
+        return availAttributes;
+    }
+
+    /**
+     * Returns default issue list attributes for this module.
+     */
+    public List getDefaultRModuleUserAttributes(ModuleEntity module)
+        throws Exception
+    {
+        Criteria crit = new Criteria(2)
+           .add(RModuleUserAttributePeer.USER_ID, 0);
+        return RModuleUserAttributePeer.doSelect(crit);
+    }
+
+    /**
+     * List of attribute groups associated with this module.
+     */
+    public Vector getAttributeGroups()
+        throws Exception
+    {
+        Vector groups = null;
+        Criteria crit = new Criteria()
+            .add(AttributeGroupPeer.MODULE_ID, getModuleId())
+            .addAscendingOrderByColumn(AttributeGroupPeer.PREFERRED_ORDER);
+        groups = AttributeGroupPeer.doSelect(crit);
+        return groups;
+    }
+
+    /**
+     * Gets the sequence where the dedupe screen fits between groups.
+     */
+    public int getDedupeSequence()
+        throws Exception
+    {
+        int sequence = 1;
+        Vector groups = getAttributeGroups();
+        for (int i=1; i<groups.size(); i++)
+        {
+           int order = ((AttributeGroup)groups.get(i)).getOrder();
+           int previousOrder = ((AttributeGroup)groups.get(i-1)).getOrder();
+           System.out.println(order + " " + previousOrder);
+           if (order != previousOrder +1)
+           {
+               sequence = order-1;
+               break;
+           }
+        }
+        return sequence;
+    }
 
     /**
      * Overridden method.  Calls the super method and if no results are

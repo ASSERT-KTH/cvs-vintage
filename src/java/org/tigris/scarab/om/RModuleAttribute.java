@@ -48,6 +48,7 @@ package org.tigris.scarab.om;
 
 // Turbine classes
 import org.apache.torque.om.Persistent;
+import org.apache.torque.util.Criteria;
 import org.apache.turbine.Log;
 
 /** 
@@ -106,5 +107,17 @@ public class RModuleAttribute
             }
         }
         return dispVal;
+    }
+
+    /**
+     * Delete the record.
+     * TODO: permission
+     */
+    public void delete() throws Exception 
+    { 
+        Criteria c = new Criteria()
+            .add(RModuleAttributePeer.MODULE_ID, getModuleId())
+            .add(RModuleAttributePeer.ATTRIBUTE_ID, getAttributeId());
+        RModuleAttributePeer.doDelete(c);
     }
 }
