@@ -268,6 +268,11 @@ $l10n.From:&#160;<input type="text" size="20"
 <div class="axial">
 <table cellpadding="3" cellspacing="2" border="0">
 <tr>
+#set ( $xMITSearch = $search.isXMITSearch() )
+#if (!$xMITSearch)
+  #set ( $module = $search.Module )
+  #set ( $issueType = $search.IssueType )
+#end
  <th width="120">$l10n.SortBy</th>
  <td>
  <select name="$searchGroup.SortAttributeId.Key">
@@ -277,7 +282,11 @@ $l10n.From:&#160;<input type="text" size="20"
    <option value="$attribute.AttributeId"
      #if ($searchGroup.SortAttributeId.Value.equals($attribute.AttributeId))
           selected="selected" #end>
-       $attribute.Name
+     #if ($xMITSearch)
+         $attribute.Name
+     #else
+         $module.getRModuleAttribute($attribute, $issueType).DisplayValue
+     #end
    </option>
 #end
 </select>&#160;

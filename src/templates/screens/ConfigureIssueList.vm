@@ -5,6 +5,12 @@
 #set ($attributes = $scarabR.ValidIssueListAttributes)
 #set ($maxNum = $attributes.size())
 #set ($usedefaults = $data.Parameters.getString("usedefaults",""))
+#set ($search = $scarabR.PopulatedSearch)
+#set ($xMITSearch = $search.isXMITSearch())
+#if (!$xMITSearch)
+  #set ($module = $search.Module)
+  #set ($issueType = $search.IssueType)
+#end
 
 <form action="$action" method="post">
 <input type="hidden" name="user_id" value="$user.UserId" />
@@ -35,7 +41,11 @@
   #end
 
   <tr class="a">
+  #if ($xMITSearch)
    <td>$attribute.Name</td>
+  #else
+   <td>$module.getRModuleAttribute($attribute, $issueType).DisplayValue</td>
+  #end
    <td>
       <input type="hidden"  name="attid" value="$attribute.AttributeId" />
       <select name="attorder" size="1">
