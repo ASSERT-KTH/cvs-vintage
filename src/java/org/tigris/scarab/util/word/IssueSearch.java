@@ -1718,7 +1718,7 @@ public class IssueSearch
                               RModuleOptionPeer.MODULE_ID);
                 crit2.addJoin(IssuePeer.TYPE_ID, 
                               RModuleOptionPeer.ISSUE_TYPE_ID);
-                sortColumn = RModuleOptionPeer.WEIGHT;
+                sortColumn = RModuleOptionPeer.PREFERRED_ORDER;
                 crit2.setDistinct();
             }
             else
