@@ -1,4 +1,4 @@
-// $Id: Import.java,v 1.74 2005/01/09 21:10:39 linus Exp $
+// $Id: Import.java,v 1.75 2005/02/25 18:36:13 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -71,7 +71,6 @@ import org.argouml.i18n.Translator;
 import org.argouml.kernel.Project;
 import org.argouml.kernel.ProjectManager;
 import org.argouml.model.uml.UmlModelEventPump;
-import org.argouml.ui.FileChooserFactory;
 import org.argouml.ui.ProjectBrowser;
 import org.argouml.ui.explorer.ExplorerEventAdaptor;
 import org.argouml.uml.diagram.static_structure.ClassDiagramGraphModel;
@@ -176,7 +175,8 @@ public class Import {
 				       + "Default import module not found");
         JComponent chooser = module.getChooser(this);
         dialog =
-            new JDialog(ProjectBrowser.getInstance(), "Import sources", true);
+            new JDialog(ProjectBrowser.getInstance(), 
+                    Translator.localize("action.import-sources"), true);
 
         dialog.getContentPane().add(chooser, BorderLayout.WEST);
         dialog.getContentPane().add(getConfigPanel(this), BorderLayout.EAST);
@@ -329,14 +329,13 @@ public class Import {
             general.add(fullImport);
 
 	    general.add(new JLabel("Input source file encoding:"));
-	    if (Configuration.getString(Argo.KEY_INPUT_SOURCE_ENCODING) == null
-		|| Configuration.getString(Argo.KEY_INPUT_SOURCE_ENCODING)
-		    .trim().equals("")) {
+	    String enc = 
+	        Configuration.getString(Argo.KEY_INPUT_SOURCE_ENCODING);
+	    if (enc == null || enc.trim().equals("")) {
 		inputSourceEncoding =
 		    new JTextField(System.getProperty("file.encoding"));
 	    } else {
-		inputSourceEncoding = new JTextField(Configuration
-		        .getString(Argo.KEY_INPUT_SOURCE_ENCODING));
+		inputSourceEncoding = new JTextField(enc);
 	    }
 	    general.add(inputSourceEncoding);
 
@@ -1001,8 +1000,8 @@ class ImportClasspathDialog extends JDialog {
         public void actionPerformed(ActionEvent e) {
 
 	    String directory = Globals.getLastDirectory();
-	    JFileChooser ch = FileChooserFactory.getFileChooser(directory);
-	    if (ch == null) ch = FileChooserFactory.getFileChooser();
+	    JFileChooser ch = new JFileChooser(directory);
+	    if (ch == null) ch = new JFileChooser();
 
 	    final JFileChooser chooser = ch;
 
