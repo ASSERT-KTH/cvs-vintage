@@ -40,7 +40,7 @@ import ru.novosoft.uml.foundation.core.MComponent;
 /**
  * PropPanel for a UML component.
  *
- * <p>$Id: PropPanelComponent.java,v 1.23 2003/05/10 15:22:40 bobtarling Exp $
+ * <p>$Id: PropPanelComponent.java,v 1.24 2003/05/21 07:21:32 mkl Exp $
  *
  * @todo this property panel needs refactoring to remove dependency on
  *       old gui components.
@@ -66,8 +66,8 @@ public class PropPanelComponent extends PropPanelClassifier {
 
     addSeperator();
 
-    addField(Argo.localize("UMLMenu", "label.clientdependency"), getClientDependencyScroll());
-    addField(Argo.localize("UMLMenu", "label.supplierdependency"), getSupplierDependencyScroll());
+    addField(Argo.localize("UMLMenu", "label.client-dependencies"), getClientDependencyScroll());
+    addField(Argo.localize("UMLMenu", "label.supplier-dependencies"), getSupplierDependencyScroll());
 
     new PropPanelButton(this,buttonPanel,_navUpIcon, Argo.localize("UMLMenu", "button.go-up"),"navigateUp",null);
     new PropPanelButton(this,buttonPanel,_deleteIcon, Argo.localize("UMLMenu", "button.delete-class"),"removeElement",null);
