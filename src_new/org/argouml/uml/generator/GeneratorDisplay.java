@@ -24,7 +24,7 @@
 // File: GeneratorDisplay.java
 // Classes: GeneratorDisplay
 // Original Author: jrobbins@ics.uci.edu
-// $Id: GeneratorDisplay.java,v 1.43 2003/05/31 13:50:36 kataka Exp $
+// $Id: GeneratorDisplay.java,v 1.44 2003/06/01 13:34:42 kataka Exp $
 
 // 5 Mar 2002: Jeremy Bennett (mail@jeremybennett.com). Return text for
 // operations that have no return parameter made "" rather than ": void??"
@@ -1004,6 +1004,9 @@ public class GeneratorDisplay extends Generator {
         return true;
     }
     
+    /**   
+     * @see org.argouml.application.api.ArgoModule#isModuleEnabled()
+     */
     public boolean isModuleEnabled() { return true; }
 
 } /* end class GeneratorDisplay */
