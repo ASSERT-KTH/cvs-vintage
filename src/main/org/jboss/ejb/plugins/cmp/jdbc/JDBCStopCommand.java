@@ -29,7 +29,7 @@ import org.jboss.logging.Logger;
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
  * @author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
  * @author <a href="mailto:justin@j-m-f.demon.co.uk">Justin Forder</a>
- * @version $Revision: 1.9 $
+ * @version $Revision: 1.10 $
  */
 public class JDBCStopCommand {
 
@@ -97,35 +97,42 @@ public class JDBCStopCommand {
          JDBCUtil.safeClose(con);
       }
 
-      Statement statement = null;
+      // since we use the pools, we have to do this within a transaction
+      try 
+      {
+         manager.getContainer().getTransactionManager().begin ();         
+      }
+      catch (Exception e)
+      {
+         log.error("Could not get transaction to drop table in", e);
+         return;
+      } // end of try-catch
       try {
-         // since we use the pools, we have to do this within a transaction
-         manager.getContainer().getTransactionManager().begin();
-
          // get the connection
          con = dataSource.getConnection();
+         Statement statement = null;
+         try {        
+            // create the statement
+            statement = con.createStatement();
          
-         // create the statement
-         statement = con.createStatement();
-         
-         // execute sql
-         statement.executeUpdate("DROP TABLE " + tableName);
-
-         // commit the transaction
-         manager.getContainer().getTransactionManager().commit();
-
-         // success
-         log.info("Dropped table '" + tableName + "' successfully.");
-      } catch (Exception e) {
-         log.debug("Could not drop table " + tableName + ": " + e.getMessage());
+            // execute sql
+            statement.executeUpdate("DROP TABLE " + tableName);
+         }
+         finally
+         {
+            JDBCUtil.safeClose(statement);
+            JDBCUtil.safeClose(con);
+         } // end of finally
+         manager.getContainer().getTransactionManager().commit ();
+      } 
+      catch(Exception e) 
+      {
+         log.debug("Could not drop table " + tableName);
          try {
             manager.getContainer().getTransactionManager().rollback ();
-         } catch (Exception _e) {
-            log.error("Could not roll back transaction: "+ _e.getMessage());
+         } catch(Exception _e) {
+            log.error("Could not roll back transaction: ", e);
          }
-      } finally {
-         JDBCUtil.safeClose(statement);
-         JDBCUtil.safeClose(con);
       }
    }
 }

@@ -40,7 +40,7 @@ import org.jboss.logging.Logger;
  * @author <a href="mailto:shevlandj@kpi.com.au">Joe Shevland</a>
  * @author <a href="mailto:justin@j-m-f.demon.co.uk">Justin Forder</a>
  * @author <a href="mailto:michel.anke@wolmail.nl">Michel de Groot</a>
- * @version $Revision: 1.18 $
+ * @version $Revision: 1.19 $
  */
 public class JDBCStartCommand {
 
@@ -136,23 +136,37 @@ public class JDBCStartCommand {
 
       Connection con = null;
       Statement statement = null;
-      try {
-         // since we use the pools, we have to do this within a transaction
-         manager.getContainer().getTransactionManager().begin ();
 
+      // since we use the pools, we have to do this within a transaction
+      try 
+      {
+         manager.getContainer().getTransactionManager().begin ();         
+      }
+      catch (Exception e)
+      {
+         log.error("Could not get transaction to create table in", e);
+         throw new DeploymentException("Could not get transaction to create table in", e);
+      } // end of try-catch
+      try {
          // get the connection
          con = dataSource.getConnection();
-         
-         // create the statement
-         statement = con.createStatement();
+         try {        
+            // create the statement
+            statement = con.createStatement();
          
          // execute sql
-         log.debug("Executing SQL: " + sql);
-         statement.executeUpdate(sql);
-
-         // commit the transaction
+            log.debug("Executing SQL: " + sql);
+            statement.executeUpdate(sql);
+         }
+         finally
+         {
+            JDBCUtil.safeClose(statement);
+            JDBCUtil.safeClose(con);
+         } // end of finally
          manager.getContainer().getTransactionManager().commit ();
-      } catch(Exception e) {
+      } 
+      catch(Exception e) 
+      {
          log.debug("Could not create table " + tableName);
          try {
             manager.getContainer().getTransactionManager().rollback ();
@@ -160,11 +174,7 @@ public class JDBCStartCommand {
             log.error("Could not roll back transaction: ", e);
          }
          throw new DeploymentException("Error while creating table", e);
-      } finally {
-         JDBCUtil.safeClose(statement);
-         JDBCUtil.safeClose(con);
       }
-
       // success
       log.info("Created table '" + tableName + "' successfully.");
       Set createdTables = (Set)manager.getApplicationData(CREATED_TABLES_KEY);
