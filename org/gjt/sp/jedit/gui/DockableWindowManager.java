@@ -39,7 +39,7 @@ import java.util.*;
 /**
  * Manages dockable windows.
  * @author Slava Pestov
- * @version $Id: DockableWindowManager.java,v 1.33 2002/06/23 04:09:32 spestov Exp $
+ * @version $Id: DockableWindowManager.java,v 1.34 2002/08/10 21:13:49 spestov Exp $
  * @since jEdit 2.6pre3
  */
 public class DockableWindowManager extends JPanel
@@ -773,8 +773,6 @@ public class DockableWindowManager extends JPanel
 					.getRootPane());
 			}
 		}
-
-		revalidate();
 	} //}}}
 
 	//{{{ Private members
@@ -851,6 +849,10 @@ public class DockableWindowManager extends JPanel
 		{
 			if(center == comp)
 				center = null;
+			if(comp == topToolbars)
+				topToolbars = null;
+			if(comp == bottomToolbars)
+				bottomToolbars = null;
 			{
 				// none of the others are ever meant to be
 				// removed. retarded, eh? this needs to be
