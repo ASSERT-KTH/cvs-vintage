@@ -109,7 +109,7 @@ public class SMTPServer {
     public boolean openConnection()
         throws IOException, SMTPException, CommandCancelledException {
         String username;
-        String password;
+        char[] password;
         boolean ssl = false;
 
         // Init Values
@@ -237,7 +237,7 @@ public class SMTPServer {
 
         if (!authenticated) {
             username = accountItem.getSmtpItem().get("user");
-            password = accountItem.getSmtpItem().get("password");
+            password = accountItem.getSmtpItem().get("password", "").toCharArray();
 
             if (username.length() == 0) {
                 // there seems to be no username set in the smtp-options
@@ -254,13 +254,13 @@ public class SMTPServer {
             PasswordDialog passDialog = new PasswordDialog();
 
             // ask password from user
-            if (password.length() == 0) {
+            if (password.length == 0) {
                 passDialog.showDialog(username,
-                    accountItem.getSmtpItem().get("host"), password,
+                    accountItem.getSmtpItem().get("host"), new String(password),
                     accountItem.getSmtpItem().getBoolean("save_password"));
 
                 if (passDialog.success()) {
-                    password = new String(passDialog.getPassword());
+                    password = passDialog.getPassword();
                 } else {
                     return false;
                 }
@@ -273,13 +273,13 @@ public class SMTPServer {
                     authenticated = true;
                 } catch (SMTPException e) {
                     passDialog.showDialog(username,
-                        accountItem.getSmtpItem().get("host"), password,
+                        accountItem.getSmtpItem().get("host"), new String(password),
                         accountItem.getSmtpItem().getBoolean("save_password"));
 
                     if (!passDialog.success()) {
                         return false;
                     } else {
-                        password = new String(passDialog.getPassword());
+                        password = passDialog.getPassword();
                     }
                 }
             }
@@ -287,7 +287,7 @@ public class SMTPServer {
             // authentication was successful
             // -> save name/password
             accountItem.getSmtpItem().set("user", username);
-            accountItem.getSmtpItem().set("password", password);
+            accountItem.getSmtpItem().set("password", new String(password));
             accountItem.getSmtpItem().set("save_password", passDialog.getSave());
         }
 

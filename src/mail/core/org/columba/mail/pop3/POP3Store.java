@@ -13,6 +13,7 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003.
 //
 //All Rights Reserved.
+
 package org.columba.mail.pop3;
 
 import org.columba.core.command.CommandCancelledException;
@@ -47,7 +48,6 @@ import java.util.List;
 import java.util.logging.Logger;
 
 import javax.swing.JOptionPane;
-
 
 /**
  * @author freddy
@@ -320,7 +320,7 @@ public class POP3Store {
         PasswordDialog dialog;
         boolean login = false;
 
-        String password = null;
+        char[] password = new char[0];
         String user = "";
         String method = "";
         boolean save = false;
@@ -416,7 +416,7 @@ public class POP3Store {
         int loginMethod = getLoginMethod();
 
         while (!login) {
-            if ((password = popItem.get("password")).length() == 0) {
+            if ((password = popItem.get("password", "").toCharArray()).length == 0) {
                 dialog = new PasswordDialog();
 
                 dialog.showDialog(popItem.get("user"), popItem.get("host"),
@@ -424,7 +424,7 @@ public class POP3Store {
 
                 if (dialog.success()) {
                     // ok pressed
-                    password = new String(dialog.getPassword());
+                    password = dialog.getPassword();
 
                     save = dialog.getSave();
                 } else {
@@ -469,7 +469,7 @@ public class POP3Store {
         if (save) {
             // save plain text password in config file
             // this is a security risk !!!
-            popItem.set("password", password);
+            popItem.set("password", new String(password));
         }
     }
 
