@@ -1115,7 +1115,7 @@ static void jk_init(server_rec *s, ap_pool *p)
             
 #if MODULE_MAGIC_NUMBER >= 19980527
             /* Tell apache we're here */
-            ap_add_version_component("mod_jk");
+            ap_add_version_component(JK_EXPOSED_VERSION);
 #endif
             
             if(wc_open(init_map, conf->log)) {

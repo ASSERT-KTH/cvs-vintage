@@ -57,11 +57,13 @@
  * Description: Global definitions and include files that should exist     *
  *              anywhere                                                   *
  * Author:      Gal Shachor <shachor@il.ibm.com>                           *
- * Version:     $Revision: 1.5 $                                               *
+ * Version:     $Revision: 1.6 $                                               *
  ***************************************************************************/
 
 #ifndef JK_GLOBAL_H
 #define JK_GLOBAL_H
+
+#include "jk_version.h"
 
 #include <stdio.h>
 #include <stdlib.h>
