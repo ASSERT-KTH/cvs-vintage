@@ -50,7 +50,7 @@ import org.gjt.sp.util.Log;
  * jEdit's text component.
  *
  * @author Slava Pestov
- * @version $Id: JEditTextArea.java,v 1.97 2002/02/25 09:12:57 spestov Exp $
+ * @version $Id: JEditTextArea.java,v 1.98 2002/02/26 06:31:42 spestov Exp $
  */
 public class JEditTextArea extends JComponent
 {
@@ -5383,14 +5383,14 @@ loop:			for(int i = lineNo + 1; i < getLineCount(); i++)
 				returnValue = true;
 			}
 			else if(logicalLength >= maxLineLen && lastWordOffset != -1)
-				insertNewLineAt = lastWordOffset + start;
+				insertNewLineAt = lastWordOffset;
 			else
 				continue;
 
 			try
 			{
 				buffer.beginCompoundEdit();
-				buffer.insert(insertNewLineAt,"\n");
+				buffer.insert(start + insertNewLineAt,"\n");
 				// caretLine would have been incremented
 				// since insertNewLineAt <= caretPos
 				buffer.indentLine(caretLine,true,true);
