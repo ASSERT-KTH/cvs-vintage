@@ -40,10 +40,12 @@ import org.jboss.deployment.DeploymentException;
 
 import org.jboss.util.jmx.JMXExceptionDecoder;
 
+import org.jboss.logging.Logger;
+
 /**
  * A JMX client to deploy an application into a running JBoss server.
  *
- * @version <tt>$Revision: 1.6 $</tt>
+ * @version <tt>$Revision: 1.7 $</tt>
  * @author  <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
  * @author  <a href="mailto:jason@planet57.com">Jason Dillon</a>
  * @author  <a href="mailto:Christoph.Jung@infor.de">Christoph G. Jung</a>
@@ -53,6 +55,9 @@ import org.jboss.util.jmx.JMXExceptionDecoder;
 public class Deployer
    implements org.jboss.deployment.Deployer, org.jboss.deployment.DeployerMBean
 {
+   /** Class logger. */
+   private static final Logger log = Logger.getLogger(Deployer.class);
+   
    /**
     * Name of the server (how it is registered on the JNDI server as second
     * part of the name (name spec is: "jmx:<server name>:rmi")).
@@ -83,10 +88,13 @@ public class Deployer
          url = new URL(urlspec);
       }
       catch (Exception e) {
-         File file = new File(urlspec);
+         // make sure we have a absolute file url
+         File file = new File(urlspec).getAbsoluteFile();
          url = file.toURL();
       }
 
+      log.debug("Using URL: " + url);
+      
       return url;
    }
    
@@ -195,12 +203,15 @@ public class Deployer
       
       try {
          Object lObject = ctx.lookup( "jmx:" + mServerName + ":rmi" );
+         log.debug("RMI Adapter: " + lObject);
+         
          if (!(lObject instanceof RMIAdaptor)) {
             throw new RuntimeException("Object not of type: RMIAdaptorImpl, but: " +
                                        (lObject == null ? "not found" : lObject.getClass().getName()));
          }
-
+         
          connector = new RMIConnectorImpl((RMIAdaptor) lObject);
+         log.debug("RMI Connector: " + connector);
       }
       finally {
          ctx.close();
