@@ -148,7 +148,7 @@ public class IssueTypePeer
             {
                 IssueType it = (IssueType)types.get(i);
                 if (id != null && !it.getIssueTypeId().equals(id)
-                    && it.getName().trim().toLowerCase().equals(name.trim().toLowerCase()))
+                    && it.getName().trim().equalsIgnoreCase(name.trim()))
                 {
                     unique = false;
                 }
