@@ -23,7 +23,7 @@ import EDU.oswego.cs.dl.util.concurrent.SynchronizedBoolean;
  * Implements the application server message endpoint requirements.
  * 
  * @author <a href="mailto:adrian@jboss.com">Adrian Brock</a>
- * @version $Revision: 1.3 $
+ * @version $Revision: 1.4 $
  */
 public class MessageEndpointInterceptor extends Interceptor
 {
@@ -234,7 +234,11 @@ public class MessageEndpointInterceptor extends Interceptor
          if (trace)
             log.trace("MessageEndpoint " + getProxyString(mi) + " delivery error", t);
          if (t instanceof Error || t instanceof RuntimeException)
+         {
+            if (transaction != null)
+               transaction.setRollbackOnly();
             commit = false;
+         }
          throw t;
       }
       finally
