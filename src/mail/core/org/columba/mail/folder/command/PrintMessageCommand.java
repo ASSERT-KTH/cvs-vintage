@@ -29,6 +29,7 @@ import java.util.List;
 
 import org.columba.core.command.DefaultCommandReference;
 import org.columba.core.command.Worker;
+import org.columba.core.config.Config;
 import org.columba.core.io.DiskIO;
 import org.columba.core.logging.ColumbaLogger;
 import org.columba.core.print.cCmUnit;
@@ -70,7 +71,7 @@ public class PrintMessageCommand extends FolderCommand {
 	private cPrintObject mailFooter;
 	private DateFormat mailDateFormat;
 	private String[] headerKeys = { "From", "To", "Date", "Subject" };
-	private String   attHeaderKey = "attachment";
+	private String attHeaderKey = "attachment";
 	private String charset;
 
 	/**
@@ -78,7 +79,9 @@ public class PrintMessageCommand extends FolderCommand {
 	 * @param frameController
 	 * @param references
 	 */
-	public PrintMessageCommand(DefaultCommandReference[] references, String charset) {
+	public PrintMessageCommand(
+		DefaultCommandReference[] references,
+		String charset) {
 		super(references);
 		this.charset = charset;
 
@@ -174,7 +177,6 @@ public class PrintMessageCommand extends FolderCommand {
 		Object[] uids = r[0].getUids(); // uid for messages to print
 
 		Folder srcFolder = (Folder) r[0].getFolder();
-		
 
 		// Print each message
 		for (int j = 0; j < uids.length; j++) {
@@ -221,7 +223,9 @@ public class PrintMessageCommand extends FolderCommand {
 				hKey = new cParagraph();
 				// *20030531, karlpeder* setting headerKeys to lowercase for lookup!
 				hKey.setText(
-					MailResourceLoader.getString("header", headerKeys[i].toLowerCase()));
+					MailResourceLoader.getString(
+						"header",
+						headerKeys[i].toLowerCase()));
 				hKey.setFontStyle(Font.BOLD);
 
 				hValue = new cParagraph();
@@ -260,17 +264,18 @@ public class PrintMessageCommand extends FolderCommand {
 					// one line is added to the header for each attachment
 					// (which has a filename defined)
 					hKey = new cParagraph();
-					hKey.setText(MailResourceLoader.getString("header", attHeaderKey));
+					hKey.setText(
+						MailResourceLoader.getString("header", attHeaderKey));
 					hKey.setFontStyle(Font.BOLD);
-	
+
 					hValue = new cParagraph();
 					hValue.setText(mp.getHeader().getFileName());
 					hValue.setLeftMargin(new cCmUnit(3.0));
-	
+
 					hLine = new cHGroup();
 					hLine.add(hKey);
 					hLine.add(hValue);
-	
+
 					messageDoc.appendPrintObject(hLine);
 				}
 			}
@@ -279,8 +284,7 @@ public class PrintMessageCommand extends FolderCommand {
 			String mimesubtype = bodyPart.getHeader().getContentSubtype();
 			if (mimesubtype.equals("html")) {
 				messageDoc.appendPrintObject(getHTMLBodyPrintObject(bodyPart));
-			}
-			else {
+			} else {
 				messageDoc.appendPrintObject(getPlainBodyPrintObject(bodyPart));
 			}
 
@@ -290,7 +294,6 @@ public class PrintMessageCommand extends FolderCommand {
 		} // end of for loop over uids to print 
 
 	}
-
 
 	/**
 	 * Private utility to create a print object representing the 
@@ -312,7 +315,30 @@ public class PrintMessageCommand extends FolderCommand {
 		printBody.setText(decodedBody);
 		return printBody;
 	}
-	
+
+	/**
+	 * retrieve printer options from configuration file
+	 * 
+	 * @return	true, if scaling is allowed
+	 * 			false, otherwise 
+	 */
+	protected boolean isScalingAllowed() {
+		XmlElement printer =
+			Config.get("options").getElement("/options/printer");
+
+		// no configuration available, create default config
+		if (printer == null) {
+			// create new locale xml treenode
+			printer = new XmlElement("printer");
+			printer.addAttribute("allow_scaling", "true");
+		}
+
+		if (printer.getAttribute("allow_scaling", "true").equals("true"))
+			return true;
+		else
+			return false;
+	}
+
 	/**
 	 * Private utility to create a print object representing the 
 	 * body of a html message.<br>
@@ -328,7 +354,7 @@ public class PrintMessageCommand extends FolderCommand {
 
 		// decode message body with respect to charset
 		String decodedBody = getDecodedMessageBody(bodyPart);
-		
+
 		// try to fix broken html-strings
 		DocumentParser parser = new DocumentParser();
 		String validated = parser.validateHTMLString(decodedBody);
@@ -339,58 +365,59 @@ public class PrintMessageCommand extends FolderCommand {
 			File tempFile = TempFileStore.createTempFileWithSuffix("html");
 			DiskIO.saveStringInFile(tempFile, validated);
 			URL url = tempFile.toURL();
-			cHTMLPart htmlBody = new cHTMLPart(true); // true ~ scaling allowed
+
+			boolean allowScaling = isScalingAllowed();
+			cHTMLPart htmlBody = new cHTMLPart(allowScaling); // true ~ scaling allowed
 			htmlBody.setTopMargin(new cCmUnit(1.0));
 			htmlBody.setHTML(url);
 			return htmlBody;
-		}
-		catch (MalformedURLException e) {
+		} catch (MalformedURLException e) {
 			ColumbaLogger.log.error("Error loading html for print", e);
 			return null;
-		}
-		catch (IOException e) {
+		} catch (IOException e) {
 			ColumbaLogger.log.error("Error loading html for print", e);
 			return null;
 		}
 	}
-	
+
 	/**
 	 * Private utility to decode the message body with the proper charset
 	 * @param	bodyPart	The body of the message
 	 * @return	Decoded message body
 	 * @author 	Karl Peder Olesen (karlpeder), 20030601
 	 */
-	private String getDecodedMessageBody(MimePart bodyPart)	{
+	private String getDecodedMessageBody(MimePart bodyPart) {
 		// First determine which charset to use
-		String charsetToUse;	
+		String charsetToUse;
 		if (charset.equals("auto")) {
 			// get charset from message
 			charsetToUse = bodyPart.getHeader().getContentParameter("charset");
-		}
-		else {
+		} else {
 			charsetToUse = charset;
 		}
-		
+
 		// Decode message according to charset
-		Decoder decoder = CoderRouter.getDecoder(
+		Decoder decoder =
+			CoderRouter.getDecoder(
 				bodyPart.getHeader().contentTransferEncoding);
 		String decodedBody = null;
 		try {
 			// decode using specified charset
 			decodedBody = decoder.decode(bodyPart.getBody(), charsetToUse);
-		}
-		catch (UnsupportedEncodingException ex) {
-			ColumbaLogger.log.info("charset " + charsetToUse + " isn't supported, falling back to default...");
+		} catch (UnsupportedEncodingException ex) {
+			ColumbaLogger.log.info(
+				"charset "
+					+ charsetToUse
+					+ " isn't supported, falling back to default...");
 			try {
 				// decode using default charset
 				decodedBody = decoder.decode(bodyPart.getBody(), null);
-			}
-			catch (UnsupportedEncodingException never) {
+			} catch (UnsupportedEncodingException never) {
 				// should never happen!?
 				never.printStackTrace();
 			}
 		}
-	
+
 		return decodedBody;
 	}
 
