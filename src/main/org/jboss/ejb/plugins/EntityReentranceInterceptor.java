@@ -33,7 +33,7 @@ import org.jboss.ejb.plugins.cmp.jdbc.bridge.CMRInvocation;
  *    before changing.
  *
  * @author <a href="mailto:bill@burkecentral.com">Bill Burke</a>
- * @version $Revision: 1.7 $
+ * @version $Revision: 1.8 $
  */
 public class EntityReentranceInterceptor
         extends AbstractInterceptor
@@ -66,10 +66,7 @@ public class EntityReentranceInterceptor
    {
       // We are going to work with the context a lot
       EntityEnterpriseContext ctx = (EntityEnterpriseContext) mi.getEnterpriseContext();
-      if (reentrant || isReentrantMethod(mi))
-      {
-         return getNext().invoke(mi);
-      }
+      boolean nonReentrant = !(reentrant || isReentrantMethod(mi));
 
       // Not a reentrant method like getPrimaryKey
       NonReentrantLock methodLock = ctx.getMethodLock();
@@ -79,7 +76,7 @@ public class EntityReentranceInterceptor
       {
          while (!locked)
          {
-            if (methodLock.attempt(5000, miTx))
+            if (methodLock.attempt(5000, miTx, nonReentrant))
             {
                locked = true;
             }
@@ -116,7 +113,7 @@ public class EntityReentranceInterceptor
       finally
       {
          ctx.unlock();
-         methodLock.release();
+         methodLock.release(nonReentrant);
       }
    }
 

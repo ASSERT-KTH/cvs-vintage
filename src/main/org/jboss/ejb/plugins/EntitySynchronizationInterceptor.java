@@ -40,7 +40,7 @@ import org.jboss.util.NestedRuntimeException;
  * @author <a href="mailto:marc.fleury@jboss.org">Marc Fleury</a>
  * @author <a href="mailto:Scott.Stark@jboss.org">Scott Stark</a>
  * @author <a href="mailto:bill@burkecentral.com">Bill Burke</a>
- * @version $Revision: 1.83 $
+ * @version $Revision: 1.84 $
  */
 public class EntitySynchronizationInterceptor
         extends AbstractInterceptor
@@ -227,38 +227,10 @@ public class EntitySynchronizationInterceptor
       if(log.isTraceEnabled())
          log.trace("invoke called for ctx " + ctx + ", tx=" + tx);
 
-      // TODO: refactor it
-      // the synchronization on persistent context is required because pessimistic locking is not working
-      // in case of NotSupported and if the container/invocation is reentrant we don't lock even for the
-      // duration of invocation.
-      Object pctx = ctx.getPersistenceContext();
-      if(pctx != null)
+      if(!ctx.isValid())
       {
-         // CMP
-         // synchronization is needed for NotSupported transactions.
-         // In this case, there is no pessimistic locking and concurrent transactions can access
-         // persistence context. But on operations like load and store synchronization is required.
-         synchronized(pctx)
-         {
-            // Is my state valid?
-            if(!ctx.isValid())
-            {
-               // If not tell the persistence manager to load the state
-               container.getPersistenceManager().loadEntity(ctx);
-
-               // Now the state is valid
-               ctx.setValid(true);
-            }
-         }
-      }
-      else
-      {
-         // BMP
-         if(!ctx.isValid())
-         {
-            container.getPersistenceManager().loadEntity(ctx);
-            ctx.setValid(true);
-         }
+         container.getPersistenceManager().loadEntity(ctx);
+         ctx.setValid(true);
       }
 
       // mark the context as read only if this is a readonly method and the context
@@ -358,21 +330,8 @@ public class EntitySynchronizationInterceptor
                // And skip reads too ("get" methods)
                if(ctx.getId() != null && !container.isReadOnly())
                {
-                  if(pctx != null)
-                  {
-                     // for CMP NotSupported
-                     synchronized(pctx)
-                     {
-                        container.invokeEjbStore(ctx);
-                        container.storeEntity(ctx);
-                     }
-                  }
-                  else
-                  {
-                     // BMP
-                     container.invokeEjbStore(ctx);
-                     //container.storeEntity(ctx);
-                  }
+                  container.invokeEjbStore(ctx);
+                  container.storeEntity(ctx);
                }
 
                return result;

@@ -4,11 +4,8 @@
  * Distributable under LGPL license.
  * See terms of license at gnu.org.
  */
-
-
 package org.jboss.ejb.plugins.lock;
 
-import org.jboss.logging.Logger;
 import org.jboss.util.deadlock.ApplicationDeadlockException;
 import org.jboss.util.deadlock.Resource;
 import org.jboss.util.deadlock.DeadlockDetector;
@@ -17,13 +14,13 @@ import javax.transaction.Transaction;
 
 /**
  * Implementents a non reentrant lock with deadlock detection
- *
+ * <p/>
  * It will throw a ReentranceException if the same thread tries to acquire twice
  * or the same transaction tries to acquire twice
  *
- *
  * @author <a href="bill@jboss.org">Bill Burke</a>
- * @version $Revision: 1.3 $
+ * @author <a href="alex@jboss.org">Alexey Loubyansky</a>
+ * @version $Revision: 1.4 $
  */
 public class NonReentrantLock implements Resource
 {
@@ -39,91 +36,157 @@ public class NonReentrantLock implements Resource
       }
    }
 
+   //private static final Logger log = Logger.getLogger(NonReentrantLock.class);
+
    protected Thread lockHolder;
    protected Object lock = new Object();
    protected volatile int held = 0;
    protected Transaction holdingTx = null;
+   private boolean inNonReentrant;
 
    public Object getResourceHolder()
    {
-      if (holdingTx != null) return holdingTx;
+      if(holdingTx != null) return holdingTx;
       return lockHolder;
    }
 
-   /** Logger instance */
-   static Logger log = Logger.getLogger(NonReentrantLock.class);
-
-   protected boolean acquire(long waitTime, Transaction miTx)
+   protected boolean acquireNonReentrant(long waitTime, Transaction miTx)
       throws ApplicationDeadlockException, InterruptedException, ReentranceException
    {
-      synchronized (lock)
+      synchronized(lock)
       {
-         Thread curThread = Thread.currentThread();
-         if (lockHolder != null)
+         final Thread curThread = Thread.currentThread();
+         if(lockHolder != null)
          {
-            if (lockHolder == curThread)
+            if(lockHolder == curThread)
             {
-               throw new ReentranceException("The same thread reentered: thread-holder=" + lockHolder +
-                  ", holding tx=" + holdingTx +
-                  ", current tx=" + miTx);
-            }
-
-            if (miTx != null && miTx.equals(holdingTx))
-            {
-               throw new ReentranceException("The same tx reentered: tx=" + miTx +
-                  ", holding thread=" + lockHolder +
-                  ", current thread=" + curThread
-               );
-            }
-
-            // Always upgrade deadlock holder to Tx so that we can detect lock properly
-            Object deadlocker = curThread;
-            if (miTx != null) deadlocker = miTx;
-            try
-            {
-               DeadlockDetector.singleton.deadlockDetection(deadlocker, this);
-               while (lockHolder != null)
+               if(inNonReentrant)
                {
-                  if (waitTime < 1)
-                     lock.wait();
-                  else
-                     lock.wait(waitTime);
-                  // If we waited and never got lock, abort
-                  if (waitTime > 0 && lockHolder != null) return false;
+                  throw new ReentranceException("The same thread reentered: thread-holder=" +
+                     lockHolder +
+                     ", holding tx=" +
+                     holdingTx +
+                     ", current tx=" + miTx);
                }
             }
-            finally
+            else if(miTx != null && miTx.equals(holdingTx))
             {
-               DeadlockDetector.singleton.removeWaiting(deadlocker);
+               if(inNonReentrant)
+               {
+                  throw new ReentranceException("The same tx reentered: tx=" +
+                     miTx +
+                     ", holding thread=" +
+                     lockHolder +
+                     ", current thread=" + curThread);
+               }
+            }
+            else
+            {
+               // Always upgrade deadlock holder to Tx so that we can detect lock properly
+               Object deadlocker = curThread;
+               if(miTx != null) deadlocker = miTx;
+               try
+               {
+                  DeadlockDetector.singleton.deadlockDetection(deadlocker, this);
+                  while(lockHolder != null)
+                  {
+                     if(waitTime < 1)
+                     {
+                        lock.wait();
+                     }
+                     else
+                     {
+                        lock.wait(waitTime);
+                     }
+                     // If we waited and never got lock, abort
+                     if(waitTime > 0 && lockHolder != null) return false;
+                  }
+               }
+               finally
+               {
+                  DeadlockDetector.singleton.removeWaiting(deadlocker);
+               }
             }
          }
-         held++;
-         if (held > 1)
+
+         ++held;
+         lockHolder = curThread;
+         holdingTx = miTx;
+         inNonReentrant = true;
+      }
+      return true;
+   }
+
+   protected boolean acquireReentrant(long waitTime, Transaction miTx)
+      throws ApplicationDeadlockException, InterruptedException, ReentranceException
+   {
+      synchronized(lock)
+      {
+         final Thread curThread = Thread.currentThread();
+         if(lockHolder != null)
          {
-            held--;
-            throw new IllegalStateException("Should only be able to acquire lock 1 time");
+            if(lockHolder != curThread && (miTx == null || miTx.equals(holdingTx)))
+            {
+               // Always upgrade deadlock holder to Tx so that we can detect lock properly
+               Object deadlocker = curThread;
+               if(miTx != null) deadlocker = miTx;
+               try
+               {
+                  DeadlockDetector.singleton.deadlockDetection(deadlocker, this);
+                  while(lockHolder != null)
+                  {
+                     if(waitTime < 1)
+                     {
+                        lock.wait();
+                     }
+                     else
+                     {
+                        lock.wait(waitTime);
+                     }
+                     // If we waited and never got lock, abort
+                     if(waitTime > 0 && lockHolder != null) return false;
+                  }
+               }
+               finally
+               {
+                  DeadlockDetector.singleton.removeWaiting(deadlocker);
+               }
+            }
          }
+
+         ++held;
          lockHolder = curThread;
          holdingTx = miTx;
       }
       return true;
    }
 
-   public boolean attempt(long waitTime, Transaction miTx)
+   public boolean attempt(long waitTime, Transaction miTx, boolean nonReentrant)
       throws ApplicationDeadlockException, InterruptedException, ReentranceException
    {
-      return acquire(waitTime, miTx);
+      return nonReentrant ? acquireNonReentrant(waitTime, miTx) : acquireReentrant(waitTime, miTx);
    }
 
-   public void release()
+   public void release(boolean nonReentrant)
    {
-      synchronized (lock)
+      synchronized(lock)
       {
          held--;
-         if (held < 0) throw new IllegalStateException("Released lock too many times");
-         lockHolder = null;
-         holdingTx = null;
-         lock.notify();
+         if(held < 0)
+         {
+            throw new IllegalStateException("Released lock too many times");
+         }
+         else if(held == 0)
+         {
+            lockHolder = null;
+            holdingTx = null;
+            lock.notify();
+         }
+
+         if(nonReentrant)
+         {
+            inNonReentrant = false;
+         }
       }
    }
 }
