@@ -110,7 +110,7 @@ public final class SimplePool  {
 	synchronized( lock ) {
 	    if( current < max - 1 )
 		idx=++current;
-	    if( idx > 0 ) 
+	    if( idx >= 0 ) 
 		pool[idx]=o;
 	}
     }
