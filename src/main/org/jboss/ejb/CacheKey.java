@@ -21,7 +21,7 @@ import java.rmi.MarshalledObject;
 *
 *   @see org.jboss.ejb.plugins.NoPassivationInstanceCache.java
 *   @author <a href="marc.fleury@telkel.com">Marc Fleury</a>
-*   @version $Revision: 1.9 $
+*   @version $Revision: 1.10 $
 */
 public class CacheKey
     implements java.io.Externalizable
@@ -31,37 +31,50 @@ public class CacheKey
     // Attributes ----------------------------------------------------
     
     // The database primaryKey
-    public Object id;
+    // This primaryKey is used by
+    //
+    // org.jboss.ejb.plugins.EntityInstanceCache.setKey() - to set the EntityEnterpriseContext id
+    // org.jboss.ejb.plugins.jrmp.interfaces.EntityProxy.invoke():
+    // - implementing Entity.toString() --> cacheKey.getId().toString()
+    // - implementing Entity.hashCode() --> cacheKey.getId().hashCode()
+    // - etc...
+    // org.jboss.ejb.plugins.local.BaseLocalContainerInvoker.EntityProxy.getId()
+    //
+    protected Object id;
+    public Object getId()
+    {
+	return id;
+    }
      
-	// The Marshalled Object representing the key
-	public MarshalledObject mo;
-	
-	// The Marshalled Object's hashcode
-    public int hashCode;
+    // The Marshalled Object representing the key
+    protected MarshalledObject mo;
+    
+    // The Marshalled Object's hashcode
+    protected int hashCode;
     
     // Static --------------------------------------------------------  
     
     // Public --------------------------------------------------------
     
     public CacheKey() {
-       // For externalization only
+	// For externalization only
     }
     public CacheKey(Object id) {
        
-       if (id == null) throw new Error("id may not be null");
+	if (id == null) throw new Error("id may not be null");
          
-       this.id = id;
+	this.id = null;
         
-		try {
-			
-			// Equals rely on the MarshalledObject itself
-			mo =  new MarshalledObject(id);
-			
-			// Precompute the hashCode (speed)
-        	hashCode = mo.hashCode();
+	try {
+	    // Equals rely on the MarshalledObject itself
+	    mo =  new MarshalledObject(id);
+	    // Make a copy just in case somebody re-uses the instance
+	    this.id = mo.get();
+	    // Precompute the hashCode (speed)
+	    hashCode = mo.hashCode();
     	}
-		catch (Exception e) {e.printStackTrace();}
-	}
+	catch (Exception e) {e.printStackTrace();}
+    }
     
     // Z implementation ----------------------------------------------
     
@@ -71,29 +84,28 @@ public class CacheKey
     
     // Private -------------------------------------------------------
     
-   public void writeExternal(java.io.ObjectOutput out)
-      throws java.io.IOException
-   {
+    public void writeExternal(java.io.ObjectOutput out)
+	throws java.io.IOException
+    {
         out.writeObject(id);
-		out.writeObject(mo);
+	out.writeObject(mo);
        	out.writeInt(hashCode);
+    }
    
-   }
-   
-   public void readExternal(java.io.ObjectInput in)
-      throws java.io.IOException, ClassNotFoundException
-   {
+    public void readExternal(java.io.ObjectInput in)
+	throws java.io.IOException, ClassNotFoundException
+    {
         id = in.readObject();
-		mo = (MarshalledObject) in.readObject();
+	mo = (MarshalledObject) in.readObject();
         hashCode = in.readInt();
-   }
+    }
 
     // HashCode and Equals over write --------------------------------
     
     /**
-    * these should be overwritten by extending Cache key
-    * since they define what the cache does in the first place
-    */
+     * these should be overwritten by extending Cache key
+     * since they define what the cache does in the first place
+     */
     public int hashCode() {
         
         // we default to the pK id
@@ -101,17 +113,17 @@ public class CacheKey
     }
     
     
-	/*
-	* equals()
-	*
-	* We base the equals on the equality of the underlying key
-	* in this fashion we make sure that we cannot have duplicate 
-	* hashes in the maps. 
-	* The fast way (and right way) to do this implementation 
-	* is with a incremented cachekey.  It is more complex but worth
-    * the effort this is a FIXME (MF)
-	* The following implementation is fool-proof
-	*/
+    /**
+     * equals()
+     *
+     * We base the equals on the equality of the underlying key
+     * in this fashion we make sure that we cannot have duplicate 
+     * hashes in the maps. 
+     * The fast way (and right way) to do this implementation 
+     * is with a incremented cachekey.  It is more complex but worth
+     * the effort this is a FIXME (MF)
+     * The following implementation is fool-proof
+     */
     public boolean equals(Object object) {
         
         if (object instanceof CacheKey) {
@@ -121,10 +133,10 @@ public class CacheKey
         return false;
     }
 	
-	public String toString()
-	{
-		return id.toString();
-	}
+    public String toString()
+    {
+	return id.toString();
+    }
     
     // Inner classes -------------------------------------------------
 }
