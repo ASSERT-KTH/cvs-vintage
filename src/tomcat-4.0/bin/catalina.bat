@@ -12,7 +12,7 @@ rem                 "stop", or "run" command is executed.
 rem
 rem   JAVA_HOME     Must point at your Java Development Kit installation.
 rem
-rem $Id: catalina.bat,v 1.8 2001/06/28 01:49:50 jon Exp $
+rem $Id: catalina.bat,v 1.9 2001/08/13 05:01:49 jon Exp $
 rem ---------------------------------------------------------------------------
 
 
@@ -68,7 +68,7 @@ if "%1" == "start" goto doStart
 if "%1" == "stop" goto doStop
 
 :doUsage
-echo Usage:  catalina ( env | run | start | stop )
+echo Usage:  catalina ( env ^| run ^| start ^| stop )
 echo Commands:
 echo   env -   Set up environment variables that Catalina would use
 echo   run -   Start Catalina in the current window
@@ -97,7 +97,7 @@ echo Using Security Manager
 goto cleanup
 
 :doStop
-%_RUNJAVA% %CATALINA_OPTS% -Dcatalina.home=%CATALINA_HOME% org.apache.catalina.startup.Bootstrap %2 %3 %4 %5 %6 %7 %8 %9 stop
+%_RUNJAVA% %CATALINA_OPTS% -Dcatalina.home="%CATALINA_HOME%" org.apache.catalina.startup.Bootstrap %2 %3 %4 %5 %6 %7 %8 %9 stop
 goto cleanup
 
 

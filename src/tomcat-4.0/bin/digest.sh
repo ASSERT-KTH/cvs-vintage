@@ -10,7 +10,7 @@
 #   This script is assumed to run from the bin directory or have the
 #   CATALINA_HOME env variable set.
 #
-# $Id: digest.sh,v 1.1 2001/06/28 01:49:51 jon Exp $
+# $Id: digest.sh,v 1.2 2001/08/13 05:01:49 jon Exp $
 # -----------------------------------------------------------------------------
 
 

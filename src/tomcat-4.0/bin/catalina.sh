@@ -12,7 +12,7 @@
 #
 #   JAVA_HOME     Must point at your Java Development Kit installation.
 #
-# $Id: catalina.sh,v 1.7 2001/06/28 01:49:50 jon Exp $
+# $Id: catalina.sh,v 1.8 2001/08/13 05:01:49 jon Exp $
 # -----------------------------------------------------------------------------
 
 
@@ -164,7 +164,7 @@ else
   echo "  run -security     Start in the current window with security manager"
   echo "  start             Start Catalina in a separate window"
   echo "  start -security   Start in a separate window with security manager"
-  echo "  stop -            Stop Catalina"
+  echo "  stop              Stop Catalina"
   exit 1
 
 fi

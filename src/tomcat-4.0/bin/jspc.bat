@@ -2,7 +2,7 @@
 rem ---
 rem jspc.bat - Script ro run the Jasper "offline JSP compiler"
 rem
-rem $Id: jspc.bat,v 1.8 2001/06/28 01:49:51 jon Exp $
+rem $Id: jspc.bat,v 1.9 2001/08/13 05:01:49 jon Exp $
 rem ---
 
 rem --- Save Env Variables
