@@ -1,4 +1,4 @@
-// $Id: ActionStateDiagram.java,v 1.27 2004/04/02 23:55:52 d00mst Exp $
+// $Id: ActionStateDiagram.java,v 1.28 2004/05/01 09:26:05 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -30,6 +30,7 @@ import org.argouml.model.uml.behavioralelements.statemachines.StateMachinesHelpe
 import org.argouml.ui.targetmanager.TargetManager;
 import org.argouml.uml.diagram.state.ui.UMLStateDiagram;
 import org.argouml.uml.diagram.ui.UMLDiagram;
+import org.apache.log4j.Logger;
 
 /** Action to create a new statechart diagram.
  * @stereotype singleton
@@ -40,6 +41,9 @@ public class ActionStateDiagram extends ActionAddDiagram {
     // static variables
 
     public static ActionStateDiagram SINGLETON = new ActionStateDiagram();
+    
+    private static final Logger LOG = 
+        Logger.getLogger(ActionStateDiagram.class);
 
     ////////////////////////////////////////////////////////////////
     // constructors
@@ -67,7 +71,6 @@ public class ActionStateDiagram extends ActionAddDiagram {
      */
     public UMLDiagram createDiagram(Object handle) {
         Object target = TargetManager.getInstance().getModelTarget();
-        // TODO: get rid of the parameter ns
         Object/*MStateMachine*/ machine =
             StateMachinesFactory.getFactory().buildStateMachine(target);
         UMLStateDiagram d =
@@ -80,8 +83,8 @@ public class ActionStateDiagram extends ActionAddDiagram {
      */
     public boolean isValidNamespace(Object handle) {
         if (!ModelFacade.isANamespace(handle)) {
-            cat.error("No namespace as argument");
-            cat.error(handle);
+            LOG.error("No namespace as argument");
+            LOG.error(handle);
             throw new IllegalArgumentException(
                 "The argument " + handle + "is not a namespace.");
         }

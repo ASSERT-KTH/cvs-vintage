@@ -1,4 +1,4 @@
-// $Id: ActionClassDiagram.java,v 1.13 2003/11/11 21:54:08 linus Exp $
+// $Id: ActionClassDiagram.java,v 1.14 2004/05/01 09:26:05 mvw Exp $
 // Copyright (c) 1996-2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -33,7 +33,7 @@ import org.argouml.uml.diagram.ui.UMLDiagram;
  *  @stereotype singleton
  */
 public class ActionClassDiagram extends ActionAddDiagram {
-    private Logger cat = Logger.getLogger(this.getClass());
+    private static final Logger LOG = Logger.getLogger(ActionClassDiagram.class);
 
     ////////////////////////////////////////////////////////////////
     // static variables
@@ -54,8 +54,8 @@ public class ActionClassDiagram extends ActionAddDiagram {
         if (ModelFacade.isANamespace(ns)) {
             return new UMLClassDiagram(ns);
         }
-        cat.error("No namespace as argument");
-        cat.error(ns);
+        LOG.error("No namespace as argument");
+        LOG.error(ns);
         throw new IllegalArgumentException(
             "The argument " + ns + "is not a namespace.");
     }
@@ -65,8 +65,8 @@ public class ActionClassDiagram extends ActionAddDiagram {
      */
     public boolean isValidNamespace(Object handle) {
         if (!ModelFacade.isANamespace(handle)) {
-            cat.error("No namespace as argument");
-            cat.error(handle);
+            LOG.error("No namespace as argument");
+            LOG.error(handle);
             throw new IllegalArgumentException(
                 "The argument " + handle + "is not a namespace.");
         }

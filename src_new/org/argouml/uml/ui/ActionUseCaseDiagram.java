@@ -1,4 +1,4 @@
-// $Id: ActionUseCaseDiagram.java,v 1.16 2003/11/11 21:54:08 linus Exp $
+// $Id: ActionUseCaseDiagram.java,v 1.17 2004/05/01 09:26:05 mvw Exp $
 // Copyright (c) 1996-2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -27,6 +27,7 @@ package org.argouml.uml.ui;
 import org.argouml.model.ModelFacade;
 import org.argouml.uml.diagram.ui.UMLDiagram;
 import org.argouml.uml.diagram.use_case.ui.UMLUseCaseDiagram;
+import org.apache.log4j.Logger;
 
 /** Action to create a new use case diagram.
  *  @stereotype singleton
@@ -34,6 +35,9 @@ import org.argouml.uml.diagram.use_case.ui.UMLUseCaseDiagram;
 public class ActionUseCaseDiagram extends ActionAddDiagram {
 
     public static ActionUseCaseDiagram SINGLETON = new ActionUseCaseDiagram();
+
+    private static final Logger LOG = 
+        Logger.getLogger(ActionUseCaseDiagram.class);
 
     private ActionUseCaseDiagram() {
         super("action.usecase-diagram");
@@ -44,8 +48,8 @@ public class ActionUseCaseDiagram extends ActionAddDiagram {
      */
     public UMLDiagram createDiagram(Object handle) {
         if (!ModelFacade.isANamespace(handle)) {
-            cat.error("No namespace as argument");
-            cat.error(handle);
+            LOG.error("No namespace as argument");
+            LOG.error(handle);
             throw new IllegalArgumentException(
                 "The argument " + handle + "is not a namespace.");
         }

@@ -1,4 +1,4 @@
-// $Id: ActionDeploymentDiagram.java,v 1.18 2003/11/11 21:54:08 linus Exp $
+// $Id: ActionDeploymentDiagram.java,v 1.19 2004/05/01 09:26:05 mvw Exp $
 // Copyright (c) 1996-2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -28,6 +28,7 @@ import org.argouml.kernel.ProjectManager;
 import org.argouml.model.ModelFacade;
 import org.argouml.uml.diagram.deployment.ui.UMLDeploymentDiagram;
 import org.argouml.uml.diagram.ui.UMLDiagram;
+import org.apache.log4j.Logger;
 
 /** Action to trigger creation of a deployment diagram.
  *  @stereotype singleton
@@ -39,6 +40,9 @@ public class ActionDeploymentDiagram extends ActionAddDiagram {
 
     public static ActionDeploymentDiagram SINGLETON =
         new ActionDeploymentDiagram();
+    
+    private static final Logger LOG = 
+        Logger.getLogger(ActionDeploymentDiagram.class);
 
     ////////////////////////////////////////////////////////////////
     // constructors
@@ -58,8 +62,8 @@ public class ActionDeploymentDiagram extends ActionAddDiagram {
         // according to the uml spec
 	handle = ProjectManager.getManager().getCurrentProject().getRoot();   
         if (!ModelFacade.isANamespace(handle)) {
-            cat.error("No namespace as argument");
-            cat.error(handle);
+            LOG.error("No namespace as argument");
+            LOG.error(handle);
             throw new IllegalArgumentException(
 					       "The argument " + handle
 					       + "is not a namespace.");
@@ -75,8 +79,8 @@ public class ActionDeploymentDiagram extends ActionAddDiagram {
         // according to the uml spec
         handle = ProjectManager.getManager().getCurrentProject().getRoot(); 
         if (!ModelFacade.isANamespace(handle)) {
-            cat.error("No namespace as argument");
-            cat.error(handle);
+            LOG.error("No namespace as argument");
+            LOG.error(handle);
             throw new IllegalArgumentException(
 					       "The argument " + handle
 					       + "is not a namespace.");
