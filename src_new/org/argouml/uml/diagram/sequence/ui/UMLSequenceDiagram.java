@@ -24,7 +24,7 @@
 // File: UMLSequenceDiagram.java
 // Classes: UMLSequenceDiagram
 // Original Author: 5eichler@informatik.uni-hamburg.de
-// $Id: UMLSequenceDiagram.java,v 1.14 2003/01/09 20:35:23 kataka Exp $
+// $Id: UMLSequenceDiagram.java,v 1.15 2003/02/02 11:34:06 kataka Exp $
 
 package org.argouml.uml.diagram.sequence.ui;
 
@@ -123,7 +123,7 @@ public class UMLSequenceDiagram extends UMLDiagram {
     }
 
     /** initialize the toolbar for this diagram type */
-    protected void initToolBar() {
+    public void initToolBar() {
         _toolBar = new ToolBar();
         _toolBar.putClientProperty("JToolBar.isRollover", Boolean.TRUE);
         //_toolBar.setLayout(new FlowLayout(FlowLayout.LEFT, 0, 0));

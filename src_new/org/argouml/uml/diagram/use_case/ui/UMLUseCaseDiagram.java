@@ -24,7 +24,7 @@
 // File: UMLUseCaseDiagram.java
 // Classes: UMLUseCaseDiagram
 // Original Author: your email here
-// $Id: UMLUseCaseDiagram.java,v 1.17 2003/01/09 20:35:23 kataka Exp $
+// $Id: UMLUseCaseDiagram.java,v 1.18 2003/02/02 11:34:07 kataka Exp $
 
 // 3 Apr 2002: Jeremy Bennett (mail@jeremybennett.com). Extended to support the
 // Extend and Include relationships. JavaDoc added for clarity. Default
@@ -225,7 +225,7 @@ public class UMLUseCaseDiagram extends UMLDiagram {
      *   diagram specific tools in the middle, grouped appropriately.</p>
      */
 
-    protected void initToolBar() {
+    public void initToolBar() {
 
         cat.debug(this.getClass().toString() + ": making usecase toolbar");
 

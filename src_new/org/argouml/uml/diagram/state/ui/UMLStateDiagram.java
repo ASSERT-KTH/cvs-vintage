@@ -24,7 +24,7 @@
 // File: UMLStateDiagram.java
 // Classes: UMLStateDiagram
 // Original Author: your email here
-// $Id: UMLStateDiagram.java,v 1.23 2003/01/09 20:35:23 kataka Exp $
+// $Id: UMLStateDiagram.java,v 1.24 2003/02/02 11:34:06 kataka Exp $
 
 package org.argouml.uml.diagram.state.ui;
 
@@ -199,7 +199,7 @@ public class UMLStateDiagram extends UMLDiagram {
     }
 
     /** initialize the toolbar for this diagram type */
-    protected void initToolBar() {
+    public void initToolBar() {
         cat.debug("making state toolbar");
         _toolBar = new ToolBar();
         _toolBar.putClientProperty("JToolBar.isRollover", Boolean.TRUE);

@@ -24,7 +24,7 @@
 // File: UMLCollaborationDiagram.java
 // Classes: UMLCollaborationDiagram
 // Original Author: agauthie@ics.uci.edu
-// $Id: UMLCollaborationDiagram.java,v 1.18 2003/01/09 20:35:23 kataka Exp $
+// $Id: UMLCollaborationDiagram.java,v 1.19 2003/02/02 11:34:06 kataka Exp $
 
 package org.argouml.uml.diagram.collaboration.ui;
 
@@ -125,7 +125,7 @@ public class UMLCollaborationDiagram extends UMLDiagram {
     }
 
     /** initialize the toolbar for this diagram type */
-    protected void initToolBar() {
+    public void initToolBar() {
         _toolBar = new ToolBar();
         _toolBar.putClientProperty("JToolBar.isRollover", Boolean.TRUE);
         //_toolBar.setLayout(new FlowLayout(FlowLayout.LEFT, 0, 0));

@@ -24,7 +24,7 @@
 // File: Critic.java
 // Classes: Critic
 // Original Author: jrobbins@ics.uci.edu
-// $Id: Critic.java,v 1.21 2002/11/24 15:21:58 kataka Exp $
+// $Id: Critic.java,v 1.22 2003/02/02 11:34:06 kataka Exp $
 
 
 package org.argouml.cognitive.critics;
@@ -211,7 +211,8 @@ public class Critic implements Poster, Serializable {
     _criticType = "correctness";
     _knowledgeTypes.addElement("Correctness");
     _decisionCategory = "Checking";
-    _emailAddr = "jrobbins@ics.uci.edu";
+    // TODO: make this configurable
+    _emailAddr = "users@argouml.tigris.org";
 
     _moreInfoURL = defaultMoreInfoURL();
 

@@ -26,7 +26,7 @@
 // File: Designer.java
 // Classes: Designer
 // Original Author: jrobbins@ics.uci.edu
-// $Id: Designer.java,v 1.7 2002/10/20 21:11:12 linus Exp $
+// $Id: Designer.java,v 1.8 2003/02/02 11:34:06 kataka Exp $
 
 package org.argouml.cognitive;
 
@@ -125,7 +125,8 @@ implements Poster, Runnable, PropertyChangeListener, MElementListener, java.io.S
     _prefs = new Properties();
     _toDoList = new ToDoList();
     _toDoList.spawnValidityChecker(this);
-    _emailAddr = "jrobbins@ics.uci.edu";
+    // TODO: make this configurable
+    _emailAddr = "users@argouml.tigris.org";
     TheDesigner = this;
   }
 

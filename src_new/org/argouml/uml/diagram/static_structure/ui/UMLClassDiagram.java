@@ -24,7 +24,7 @@
 // File: UMLClassDiagram.java
 // Classes: UMLClassDiagram
 // Original Author: jrobbins@ics.uci.edy
-// $Id: UMLClassDiagram.java,v 1.17 2003/01/27 04:51:30 thn Exp $
+// $Id: UMLClassDiagram.java,v 1.18 2003/02/02 11:34:06 kataka Exp $
 
 package org.argouml.uml.diagram.static_structure.ui;
 
@@ -127,7 +127,7 @@ public class UMLClassDiagram extends UMLDiagram {
     }
 
     /** initialize the toolbar for this diagram type */
-    protected void initToolBar() {
+    public void initToolBar() {
         _toolBar = new ToolBar();
         _toolBar.putClientProperty("JToolBar.isRollover", Boolean.TRUE);
 
