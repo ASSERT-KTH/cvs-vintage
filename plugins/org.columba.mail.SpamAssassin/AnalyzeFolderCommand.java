@@ -1,7 +1,6 @@
 import org.columba.core.command.DefaultCommandReference;
-import org.columba.core.command.Worker;
+import org.columba.core.command.WorkerStatusController;
 import org.columba.core.gui.frame.FrameMediator;
-
 import org.columba.mail.command.FolderCommand;
 import org.columba.mail.command.FolderCommandAdapter;
 import org.columba.mail.command.FolderCommandReference;
@@ -43,7 +42,7 @@ public class AnalyzeFolderCommand extends FolderCommand {
     /* (non-Javadoc)
      * @see org.columba.core.command.Command#execute(org.columba.core.command.Worker)
      */
-    public void execute(Worker worker) throws Exception {
+    public void execute(WorkerStatusController worker) throws Exception {
         FolderCommandReference[] r = (FolderCommandReference[]) getReferences();
         FolderCommandAdapter adapter = new FolderCommandAdapter(r);
 

@@ -16,13 +16,11 @@
 import java.util.logging.Logger;
 
 import org.columba.core.command.DefaultCommandReference;
-import org.columba.core.command.Worker;
+import org.columba.core.command.WorkerStatusController;
 import org.columba.core.gui.frame.FrameMediator;
-
 import org.columba.mail.command.FolderCommand;
 import org.columba.mail.command.FolderCommandReference;
 import org.columba.mail.folder.Folder;
-
 import org.columba.ristretto.message.Header;
 
 
@@ -55,7 +53,7 @@ public class AddAddressToWhiteListCommand extends FolderCommand {
     /**
      * @see org.columba.core.command.Command#execute(org.columba.core.command.Worker)
      */
-    public void execute(Worker worker) throws Exception {
+    public void execute(WorkerStatusController worker) throws Exception {
         FolderCommandReference[] r = (FolderCommandReference[]) getReferences();
 
         Object[] uids = r[0].getUids();

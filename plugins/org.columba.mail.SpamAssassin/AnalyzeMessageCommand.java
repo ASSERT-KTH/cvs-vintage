@@ -14,10 +14,12 @@
 //
 //All Rights Reserved.
 
-import org.columba.core.command.DefaultCommandReference;
-import org.columba.core.command.Worker;
-import org.columba.core.gui.frame.FrameMediator;
+import java.io.InputStream;
+import java.util.logging.Logger;
 
+import org.columba.core.command.DefaultCommandReference;
+import org.columba.core.command.WorkerStatusController;
+import org.columba.core.gui.frame.FrameMediator;
 import org.columba.mail.command.FolderCommand;
 import org.columba.mail.command.FolderCommandAdapter;
 import org.columba.mail.command.FolderCommandReference;
@@ -25,9 +27,6 @@ import org.columba.mail.folder.Folder;
 import org.columba.mail.gui.frame.TableUpdater;
 import org.columba.mail.gui.table.model.TableModelChangedEvent;
 import org.columba.mail.main.MailInterface;
-
-import java.io.InputStream;
-import java.util.logging.Logger;
 
 
 /**
@@ -100,7 +99,7 @@ public class AnalyzeMessageCommand extends FolderCommand {
      *
      * @see org.columba.core.command.Command#execute(org.columba.core.command.Worker)
      */
-    public void execute(Worker worker) throws Exception {
+    public void execute(WorkerStatusController worker) throws Exception {
         FolderCommandReference[] r = (FolderCommandReference[]) getReferences();
         adapter = new FolderCommandAdapter(r);
 
@@ -126,7 +125,7 @@ public class AnalyzeMessageCommand extends FolderCommand {
         }
     }
 
-    public static void addHeader(Folder srcFolder, Object uid, Worker worker)
+    public static void addHeader(Folder srcFolder, Object uid, WorkerStatusController worker)
         throws Exception {
         //Header header = srcFolder.getHeaderFields(uid, new String[]
         // {"X-Spam-Level"} );
