@@ -28,7 +28,7 @@ import org.gjt.sp.util.Log;
 /**
  * Recent file list.
  * @author Slava Pestov
- * @version $Id: BufferHistory.java,v 1.9 2003/05/09 23:42:23 spestov Exp $
+ * @version $Id: BufferHistory.java,v 1.10 2003/05/13 01:24:17 spestov Exp $
  */
 public class BufferHistory
 {
@@ -67,8 +67,6 @@ public class BufferHistory
 
 	public static void load(File file)
 	{
-		max = jEdit.getIntegerProperty("recentFiles",50);
-
 		Log.log(Log.MESSAGE,BufferHistory.class,"Loading " + file);
 
 		RecentHandler handler = new RecentHandler();
@@ -180,7 +178,6 @@ public class BufferHistory
 	// private members
 	private static Vector history;
 	private static boolean pathsCaseInsensitive;
-	private static int max;
 
 	static
 	{
@@ -192,6 +189,7 @@ public class BufferHistory
 	/* private */ static void addEntry(Entry entry)
 	{
 		history.addElement(entry);
+		int max = jEdit.getIntegerProperty("recentFiles",50);
 		while(history.size() > max)
 			history.removeElementAt(0);
 	}

@@ -36,7 +36,7 @@ import org.gjt.sp.util.Log;
  * Manages low-level text display tasks.
  * @since jEdit 4.2pre1
  * @author Slava Pestov
- * @version $Id: DisplayManager.java,v 1.38 2003/05/13 00:35:37 spestov Exp $
+ * @version $Id: DisplayManager.java,v 1.39 2003/05/13 01:24:17 spestov Exp $
  */
 public class DisplayManager
 {
@@ -756,7 +756,7 @@ public class DisplayManager
 		fvmcount += delta;
 	} //}}}
 
-	//{{{
+	//{{{ fvmput2() method
 	/**
 	 * Merge previous and next entry if necessary.
 	 */
