@@ -535,6 +535,9 @@ public class MessageBuilder {
 	 *
 	 * add automatically every person we'll send a message to
 	 * the "Collected Addresses" Addressbook
+	 * 
+	 * FIXME: this should be moved outside independent
+	 *        -> should be in core, or even better addressbook
 	 *
 	 */
 	public void addSenderToAddressbook(String sender) {
