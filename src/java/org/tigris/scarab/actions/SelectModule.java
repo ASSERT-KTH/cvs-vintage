@@ -54,12 +54,13 @@ import org.apache.turbine.RunData;
 // Scarab Stuff
 import org.tigris.scarab.util.ScarabConstants;
 import org.tigris.scarab.actions.base.RequireLoginFirstAction;
+import org.tigris.scarab.tools.ScarabRequestTool;
 
 /**
  *  This class will allow you to set the selected Module for a user.
  *       
  *  @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- *  @version $Id: SelectModule.java,v 1.5 2002/01/18 22:26:03 jon Exp $
+ *  @version $Id: SelectModule.java,v 1.6 2002/01/20 18:31:08 jon Exp $
  */
 public class SelectModule extends RequireLoginFirstAction
 {
@@ -76,8 +77,14 @@ public class SelectModule extends RequireLoginFirstAction
             setTarget(data, "SelectModule.vm");
             return;
         }
+
+        // set the current module to the new module
         data.getParameters().setString(ScarabConstants.CURRENT_MODULE, 
             newModule);
+        // the next request to get the current module will
+        // cause it to refresh with the newly selected module
+        ScarabRequestTool srt = getScarabRequestTool(context);
+        srt.setCurrentModule(null);
 
         // set the next template
         String nextTemplate = data.getParameters()
