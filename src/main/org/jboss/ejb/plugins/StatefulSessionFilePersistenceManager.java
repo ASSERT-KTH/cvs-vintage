@@ -9,14 +9,17 @@ package org.jboss.ejb.plugins;
 
 import java.io.IOException;
 import java.io.File;
-import java.io.InputStream;
-import java.io.OutputStream;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
+import java.io.FileNotFoundException;
 
 import java.rmi.RemoteException;
+import java.security.PrivilegedAction;
+import java.security.AccessController;
+import java.security.PrivilegedExceptionAction;
+import java.security.PrivilegedActionException;
 
 import javax.ejb.EJBException;
 import javax.ejb.SessionBean;
@@ -49,8 +52,8 @@ import org.jboss.util.id.UID;
  *
  * @jmx:mbean extends="org.jboss.system.ServiceMBean"
  * 
- * @version <tt>$Revision: 1.42 $</tt>
- * @author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
+ * @version <tt>$Revision: 1.43 $</tt>
+ * @author <a href="mailto:rickard.oberg@telkel.com">Rickard ï¿½berg</a>
  * @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
  * @author <a href="mailto:sebastien.alborini@m4x.org">Sebastien Alborini</a>
  * @author <a href="mailto:jason@planet57.com">Jason Dillon</a>
@@ -61,7 +64,7 @@ public class StatefulSessionFilePersistenceManager
 {
    /** The default store directory name ("<tt>sessions</tt>"). */
    public static final String DEFAULT_STORE_DIRECTORY_NAME = "sessions";
-   
+
    /** Our container. */
    private StatefulSessionContainer con;
 
@@ -70,10 +73,10 @@ public class StatefulSessionFilePersistenceManager
     * session data is stored.
     *
     * @see #DEFAULT_STORE_DIRECTORY_NAME
-    * @see setStoreDirectoryName
+    * @see #setStoreDirectoryName
     */
    private String storeDirName = DEFAULT_STORE_DIRECTORY_NAME;
-   
+
    /** The base directory where sessions state files are stored for our container. */
    private File storeDir;
 
@@ -82,7 +85,7 @@ public class StatefulSessionFilePersistenceManager
     * time (default is true).
     */
    private boolean purgeEnabled = true;
-   
+
    /**
     * Saves a reference to the {@link StatefulSessionContainer} for
     * its bean type.
@@ -91,7 +94,7 @@ public class StatefulSessionFilePersistenceManager
     */
    public void setContainer(final Container con)
    {
-      this.con = (StatefulSessionContainer)con;
+      this.con = (StatefulSessionContainer) con;
    }
 
    //
@@ -124,7 +127,7 @@ public class StatefulSessionFilePersistenceManager
     * Get the sub-directory name under the server data directory
     * where session data is stored.
     *
-    * @jmx:managed-attibute
+    * jmx:managed-attribute
     *
     * @see #setStoreDirectoryName
     *
@@ -138,7 +141,7 @@ public class StatefulSessionFilePersistenceManager
    /**
     * Set the stale session state purge enabled flag.
     *
-    * @jmx:managed-attibute
+    * jmx:managed-attribute
     *
     * @param flag   The toggle flag to enable or disable purging.
     */
@@ -150,7 +153,7 @@ public class StatefulSessionFilePersistenceManager
    /**
     * Get the stale session state purge enabled flag.
     *
-    * @jmx:managed-attibute
+    * jmx:managed-attribute
     *
     * @return  True if purge is enabled.
     */
@@ -162,7 +165,7 @@ public class StatefulSessionFilePersistenceManager
    /**
     * Returns the directory used to store session passivation state files.
     *
-    * @jmx:managed-attibute
+    * jmx:managed-attribute
     * 
     * @return The directory used to store session passivation state files.
     */
@@ -170,7 +173,7 @@ public class StatefulSessionFilePersistenceManager
    {
       return storeDir;
    }
-   
+
    /**
     * Setup the session data storage directory.
     *
@@ -192,25 +195,30 @@ public class StatefulSessionFilePersistenceManager
       // ejbName is not unique across all deployments, so use a unique token
       dir = new File(dir, ejbName + "-" + new UID().toString());
       storeDir = dir;
-      
-      if (debug) {
+
+      if( debug )
+      {
          log.debug("Storing sessions for '" + ejbName + "' in: " + storeDir);
       }
 
       // if the directory does not exist then try to create it
-      if (!storeDir.exists()) {
-         if (!storeDir.mkdirs()) {
+      if( !storeDir.exists() )
+      {
+         if( MkdirsFileAction.mkdirs(storeDir) == false )
+         {
             throw new IOException("Failed to create directory: " + storeDir);
          }
       }
       
       // make sure we have a directory
-      if (!storeDir.isDirectory()) {
+      if( !storeDir.isDirectory() )
+      {
          throw new IOException("File exists where directory expected: " + storeDir);
       }
 
       // make sure we can read and write to it
-      if (!storeDir.canWrite() || !storeDir.canRead()) {
+      if( !storeDir.canWrite() || !storeDir.canRead() )
+      {
          throw new IOException("Directory must be readable and writable: " + storeDir);
       }
       
@@ -223,22 +231,24 @@ public class StatefulSessionFilePersistenceManager
     */
    private void purgeAllSessionData()
    {
-      if (!purgeEnabled) return;
-      
+      if( !purgeEnabled ) return;
+
       log.debug("Purging all session data in: " + storeDir);
-      
+
       File[] sessions = storeDir.listFiles();
-      for (int i = 0; i < sessions.length; i++)
+      for(int i = 0; i < sessions.length; i++)
       {
-         if (! sessions[i].delete()) {
+         if( !sessions[i].delete() )
+         {
             log.warn("Failed to delete session state file: " + sessions[i]);
          }
-         else {
+         else
+         {
             log.debug("Removed stale session state: " + sessions[i]);
          }
       }
    }
-   
+
    /**
     * Purge any data in the store, and then the store directory too.
     */
@@ -248,11 +258,12 @@ public class StatefulSessionFilePersistenceManager
       purgeAllSessionData();
 
       // Nuke the directory too if purge is enabled
-      if (purgeEnabled && !storeDir.delete()) {
+      if( purgeEnabled && !storeDir.delete() )
+      {
          log.warn("Failed to delete session state storage directory: " + storeDir);
       }
    }
-   
+
    /**
     * Make a session state file for the given instance id.
     */
@@ -283,54 +294,61 @@ public class StatefulSessionFilePersistenceManager
    {
       // nothing
    }
-   
+
    /**
     * Restores session state from the serialized file & invokes
     * {@link SessionBean#ejbActivate} on the target bean.
     */
    public void activateSession(final StatefulSessionEnterpriseContext ctx)
-         throws RemoteException
+      throws RemoteException
    {
       boolean debug = log.isDebugEnabled();
-      if (debug) {
+      if( debug )
+      {
          log.debug("Attempting to activate; ctx=" + ctx);
       }
-      
+
       Object id = ctx.getId();
       
       // Load state
       File file = getFile(id);
-      if (debug) {
+      if( debug )
+      {
          log.debug("Reading session state from: " + file);
       }
-      
-      try {
-         SessionObjectInputStream in = new SessionObjectInputStream(
-               ctx, 
-               new BufferedInputStream(new FileInputStream(file)));
-      
-         try {
+
+      try
+      {
+         FileInputStream fis = FISAction.open(file);
+         SessionObjectInputStream in = new SessionObjectInputStream(ctx,
+            new BufferedInputStream(fis));
+
+         try
+         {
             Object obj = in.readObject();
             log.debug("Session state: " + obj);
-            
+
             ctx.setInstance(obj);
          }
-         finally {
+         finally
+         {
             in.close();
          }
       }
-      catch (Exception e)
+      catch(Exception e)
       {
          throw new EJBException("Could not activate; failed to " +
-               "restore state", e);
+            "restore state", e);
       }
 
       removePassivated(id);
             
       // Instruct the bean to perform activation logic
-      ((SessionBean)ctx.getInstance()).ejbActivate();
-      
-      if (debug) {
+      SessionBean bean = (SessionBean) ctx.getInstance();
+      bean.ejbActivate();
+
+      if( debug )
+      {
          log.debug("Activation complete; ctx=" + ctx);
       }
    }
@@ -340,64 +358,76 @@ public class StatefulSessionFilePersistenceManager
     * state of the session to a file.
     */
    public void passivateSession(final StatefulSessionEnterpriseContext ctx)
-         throws RemoteException
+      throws RemoteException
    {
       boolean debug = log.isDebugEnabled();
-      if (debug) {
+      if( debug )
+      {
          log.debug("Attempting to passivate; ctx=" + ctx);
       }
 
       // Instruct the bean to perform passivation logic
-      ((SessionBean)ctx.getInstance()).ejbPassivate();
-            
+      SessionBean bean = (SessionBean) ctx.getInstance();
+      bean.ejbPassivate();
+  
       // Store state
       
       File file = getFile(ctx.getId());
-      if (debug) {
+      if( debug )
+      {
          log.debug("Saving session state to: " + file);
       }
-         
-      try {
+
+      try
+      {
+         FileOutputStream fos = FOSAction.open(file);
          SessionObjectOutputStream out = new SessionObjectOutputStream(
-               new BufferedOutputStream(new FileOutputStream(file)));
+            new BufferedOutputStream(fos));
 
          Object obj = ctx.getInstance();
-         if (debug) {
+         if( debug )
+         {
             log.debug("Writing session state: " + obj);
          }
 
-         try {
+         try
+         {
             out.writeObject(obj);
          }
-         finally {
+         finally
+         {
             out.close();
          }
       }
-      catch (Exception e)
+      catch(Exception e)
       {
          throw new EJBException("Could not passivate; failed to save state", e);
       }
-      
-      if (debug) {
+
+      if( debug )
+      {
          log.debug("Passivation complete; ctx=" + ctx);
       }
    }
 
    /**
-    * Invokes {@link SessionBean.ejbRemove} on the target bean.
+    * Invokes {@link SessionBean#ejbRemove} on the target bean.
     */
    public void removeSession(final StatefulSessionEnterpriseContext ctx)
       throws RemoteException, RemoveException
    {
       boolean debug = log.isDebugEnabled();
-      if (debug) {
+      if( debug )
+      {
          log.debug("Attempting to remove; ctx=" + ctx);
       }
       
       // Instruct the bean to perform removal logic
-      ((SessionBean)ctx.getInstance()).ejbRemove();
+      SessionBean bean = (SessionBean) ctx.getInstance();
+      bean.ejbRemove();
 
-      if (debug) {
+      if( debug )
+      {
          log.debug("Removal complete; ctx=" + ctx);
       }
    }
@@ -408,18 +438,118 @@ public class StatefulSessionFilePersistenceManager
    public void removePassivated(final Object id)
    {
       boolean debug = log.isDebugEnabled();
-      
+
       File file = getFile(id);
 
       // only attempt to delete if the file exists
-      if (file.exists()) {
-         if (debug) {
+      if( file.exists() )
+      {
+         if( debug )
+         {
             log.debug("Removing passivated state file: " + file);
          }
-         
-         if (!file.delete()) {
+
+         if( DeleteFileAction.delete(file) == false )
+         {
             log.warn("Failed to delete passivated state file: " + file);
          }
+      }
+   }
+
+   static class DeleteFileAction implements PrivilegedAction
+   {
+      File file;
+      DeleteFileAction(File file)
+      {
+         this.file = file;
+      }
+      public Object run()
+      {
+         boolean deleted = file.delete();
+         return new Boolean(deleted);
+      }
+      static boolean delete(File file)
+      {
+         DeleteFileAction action = new DeleteFileAction(file);
+         Boolean deleted = (Boolean) AccessController.doPrivileged(action);
+         return deleted.booleanValue();
+      }
+   }
+   static class MkdirsFileAction implements PrivilegedAction
+   {
+      File file;
+      MkdirsFileAction(File file)
+      {
+         this.file = file;
+      }
+      public Object run()
+      {
+         boolean ok = file.mkdirs();
+         return new Boolean(ok);
+      }
+      static boolean mkdirs(File file)
+      {
+         MkdirsFileAction action = new MkdirsFileAction(file);
+         Boolean ok = (Boolean) AccessController.doPrivileged(action);
+         return ok.booleanValue();
+      }
+   }
+
+   static class FISAction implements PrivilegedExceptionAction
+   {
+      File file;
+      FISAction(File file)
+      {
+         this.file = file;
+      }
+      public Object run() throws Exception
+      {
+         FileInputStream fis = new FileInputStream(file);
+         return fis;
+      }
+      static FileInputStream open(File file) throws FileNotFoundException
+      {
+         FISAction action = new FISAction(file);
+         FileInputStream fis = null;
+         try
+         {
+            fis = (FileInputStream) AccessController.doPrivileged(action);
+         }
+         catch(PrivilegedActionException e)
+         {
+            throw (FileNotFoundException) e.getException();
+         }
+
+         return fis;
+      }
+   }
+
+   static class FOSAction implements PrivilegedExceptionAction
+   {
+      File file;
+      FOSAction(File file)
+      {
+         this.file = file;
+      }
+      public Object run() throws Exception
+      {
+         FileOutputStream fis = new FileOutputStream(file);
+         return fis;
+      }
+      static FileOutputStream open(File file) throws FileNotFoundException
+      {
+         FOSAction action = new FOSAction(file);
+         FileOutputStream fos = null;
+         try
+         {
+            fos = (FileOutputStream) AccessController.doPrivileged(action);
+         }
+         catch(PrivilegedActionException e)
+         {
+            throw (FileNotFoundException) e.getException();
+         }
+
+         return fos;
       }
    }
 }
