@@ -16,7 +16,7 @@ import org.jboss.metadata.QueryMetaData;
  * Immutable class which contains information about an JBossQL query.
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
- * @version $Revision: 1.1 $
+ * @version $Revision: 1.2 $
  */
 public final class JDBCJBossQLQueryMetaData implements JDBCQueryMetaData {
    /**
@@ -38,6 +38,21 @@ public final class JDBCJBossQLQueryMetaData implements JDBCQueryMetaData {
     * Read ahead meta data.
     */
    private final JDBCReadAheadMetaData readAhead;
+
+   /**
+    * Constructs a JDBCJBossQLQueryMetaData with JBossQL declared in the 
+    * jboss-ql elemnt and is invoked by the specified method.
+    * @param queryMetaData the metadata about this query
+    */
+   public JDBCJBossQLQueryMetaData(
+         JDBCJBossQLQueryMetaData defaults,
+         JDBCReadAheadMetaData readAhead) throws DeploymentException {
+      
+      this.method = defaults.getMethod();
+      this.readAhead = readAhead;
+      this.jbossQL = defaults.getJBossQL();
+      this.resultTypeMappingLocal = defaults.isResultTypeMappingLocal();
+   }
 
    /**
     * Constructs a JDBCJBossQLQueryMetaData with JBossQL declared in the 

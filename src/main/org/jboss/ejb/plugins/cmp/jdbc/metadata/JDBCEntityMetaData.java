@@ -31,7 +31,7 @@ import org.w3c.dom.Element;
  * @author <a href="mailto:dirk@jboss.de">Dirk Zimmermann</a>
  * @author <a href="mailto:loubyansky@hotmail.com">Alex Loubyansky</a>
  *
- * @version $Revision: 1.22 $
+ * @version $Revision: 1.23 $
  */
 public final class JDBCEntityMetaData {
    /**
@@ -602,8 +602,20 @@ public final class JDBCEntityMetaData {
          readAhead = defaultValues.readAhead;
       }
 
-      // query
-      queries.putAll(defaultValues.queries);
+      // queries
+      System.out.println("&&&&&&&&&&&&&Updating READAHEAD to " + readAhead);
+
+      // update all existing queries with the new read ahead value
+      for(Iterator queriesIterator = defaultValues.queries.values().iterator();
+            queriesIterator.hasNext(); ) {
+         
+         JDBCQueryMetaData query = queryFactory.createJDBCQueryMetaData(
+               (JDBCQueryMetaData)queriesIterator.next(),
+               readAhead);
+         queries.put(query.getMethod(), query);
+      }
+
+      // apply new configurations to the queries
       for(Iterator queriesIterator = 
             MetaData.getChildrenByTagName(element, "query"); 
             queriesIterator.hasNext(); ) {

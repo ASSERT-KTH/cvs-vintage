@@ -16,7 +16,7 @@ import java.lang.reflect.Method;
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
  *   @author <a href="sebastien.alborini@m4x.org">Sebastien Alborini</a>
- *   @version $Revision: 1.4 $
+ *   @version $Revision: 1.5 $
  */
 public final class JDBCAutomaticQueryMetaData implements JDBCQueryMetaData {
    /**
@@ -34,18 +34,22 @@ public final class JDBCAutomaticQueryMetaData implements JDBCQueryMetaData {
     * method.
     * @param method the method which invokes this query
     */
-   public JDBCAutomaticQueryMetaData(Method method) {
+   /*
+   public JDBCAutomaticQueryMetaData(Method method, JDBCReadAheadMetaData readAhead) {
       this.method = method;
       this.readAhead = JDBCReadAheadMetaData.DEFAULT;
    }
-
+*/
    /**
     * Constructs a JDBCAutomaticQueryMetaData which is invoked by the specified
     * method.
     * @param method the method which invokes this query
     * @readAhead Read ahead meta data.
     */
-   public JDBCAutomaticQueryMetaData(Method method, JDBCReadAheadMetaData readAhead) {
+   public JDBCAutomaticQueryMetaData(
+         Method method,
+         JDBCReadAheadMetaData readAhead) {
+
       this.method = method;
       this.readAhead = readAhead;
    }

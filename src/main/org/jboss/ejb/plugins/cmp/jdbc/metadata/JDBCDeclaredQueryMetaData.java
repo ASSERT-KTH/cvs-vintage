@@ -19,7 +19,7 @@ import org.jboss.metadata.QueryMetaData;
  * Imutable class contains information about a declated query.
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
- *   @version $Revision: 1.11 $
+ *   @version $Revision: 1.12 $
  */
 public final class JDBCDeclaredQueryMetaData implements JDBCQueryMetaData {
    /**
@@ -76,6 +76,33 @@ public final class JDBCDeclaredQueryMetaData implements JDBCQueryMetaData {
     * Should the query return Local or Remote beans.
     */
    private final boolean resultTypeMappingLocal;
+
+   /**
+    * Constructs a JDBCDeclaredQueryMetaData which is defined by the 
+    * declared-sql xml element and is invoked by the specified method.
+    * @param queryElement the xml Element which contains the metadata about 
+    *       this query
+    */
+   public JDBCDeclaredQueryMetaData(
+         JDBCDeclaredQueryMetaData defaults,
+         JDBCReadAheadMetaData readAhead) throws DeploymentException {
+
+      this.method = defaults.getMethod();
+      this.readAhead = readAhead;
+
+      this.from = defaults.getFrom();
+      this.where = defaults.getWhere();
+      this.order = defaults.getOrder();
+      this.other = defaults.getOther();
+
+      this.resultTypeMappingLocal = defaults.isResultTypeMappingLocal();
+
+      this.distinct = defaults.isSelectDistinct();
+      this.ejbName = defaults.getEJBName();
+      this.fieldName = defaults.getFieldName();
+      this.alias = defaults.getAlias();
+   }
+
 
    /**
     * Constructs a JDBCDeclaredQueryMetaData which is defined by the 

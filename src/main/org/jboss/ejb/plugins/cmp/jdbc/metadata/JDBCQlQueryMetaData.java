@@ -13,7 +13,7 @@ import org.jboss.metadata.QueryMetaData;
  * Immutable class which contains information about an EJB QL query.
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
- * @version $Revision: 1.7 $
+ * @version $Revision: 1.8 $
  */
 public final class JDBCQlQueryMetaData implements JDBCQueryMetaData {
    /**
@@ -50,6 +50,22 @@ public final class JDBCQlQueryMetaData implements JDBCQueryMetaData {
       resultTypeMappingLocal = 
             (queryMetaData.getResultTypeMapping() == QueryMetaData.LOCAL);
    }
+
+   /**
+    * Constructs a JDBCQlQueryMetaData with data from the jdbcQueryMetaData
+    * and additional data from the xml element
+    * @param queryMetaData the metadata about this query
+    */
+   public JDBCQlQueryMetaData(
+         JDBCQlQueryMetaData defaults,
+         JDBCReadAheadMetaData readAhead) {
+      
+      this.method = defaults.getMethod();
+      this.readAhead = readAhead;
+      this.ejbQl = defaults.getEjbQl();
+      this.resultTypeMappingLocal = defaults.resultTypeMappingLocal;
+   }
+
 
    /**
     * Constructs a JDBCQlQueryMetaData with data from the jdbcQueryMetaData

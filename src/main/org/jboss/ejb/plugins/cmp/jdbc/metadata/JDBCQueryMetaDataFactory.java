@@ -26,7 +26,7 @@ import org.jboss.metadata.QueryMetaData;
  * on the query specifiection type.
  *    
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
- * @version $Revision: 1.14 $
+ * @version $Revision: 1.15 $
  */
 public class JDBCQueryMetaDataFactory {
    private JDBCEntityMetaData entity;
@@ -81,6 +81,49 @@ public class JDBCQueryMetaDataFactory {
       }
       return queries;
    }
+
+   public JDBCQueryMetaData createJDBCQueryMetaData(
+         JDBCQueryMetaData jdbcQueryMetaData,
+         JDBCReadAheadMetaData readAhead) throws DeploymentException {
+
+      // RAW-SQL
+      if(jdbcQueryMetaData instanceof JDBCRawSqlQueryMetaData) {
+         return new JDBCRawSqlQueryMetaData(jdbcQueryMetaData.getMethod());
+      }
+
+      // JBOSS-QL
+      if(jdbcQueryMetaData instanceof JDBCJBossQLQueryMetaData) {
+         return new JDBCJBossQLQueryMetaData(
+               (JDBCJBossQLQueryMetaData)jdbcQueryMetaData,
+               readAhead);
+      }
+
+      // DYNAMIC-SQL
+      if(jdbcQueryMetaData instanceof JDBCDynamicQLQueryMetaData) {
+         return new JDBCDynamicQLQueryMetaData(
+               (JDBCDynamicQLQueryMetaData)jdbcQueryMetaData,
+               readAhead);
+      }
+
+      // DECLARED-SQL
+      if(jdbcQueryMetaData instanceof JDBCDeclaredQueryMetaData) {
+         return new JDBCDeclaredQueryMetaData(
+               (JDBCDeclaredQueryMetaData)jdbcQueryMetaData,
+               readAhead);
+      }
+
+      // EJB-QL: default
+      if(jdbcQueryMetaData instanceof JDBCQlQueryMetaData) {
+         return new JDBCQlQueryMetaData(
+               (JDBCQlQueryMetaData)jdbcQueryMetaData,
+               readAhead);
+      }
+
+      throw new DeploymentException(
+            "Error in query specification for method " + 
+            jdbcQueryMetaData.getMethod().getName());
+   }
+
          
    private JDBCQueryMetaData createJDBCQueryMetaData(
          JDBCQueryMetaData jdbcQueryMetaData,
