@@ -1,6 +1,7 @@
 #set ($user = $data.User)
 
-$l10n.format("IssueModified", $issue.UniqueId, $user.UserName, $issue.DefaultText)
+$l10n.format("IssueModified", $issue.UniqueId, $issue.DefaultText)
+$l10n.format("IssueModifiedBy", $user.UserName)
 
 $l10n.YouCanViewIssue
      <$link.getIssueIdAbsoluteLink($issue)>
