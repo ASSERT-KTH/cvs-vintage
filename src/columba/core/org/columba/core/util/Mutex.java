@@ -44,6 +44,7 @@ public class Mutex {
     }
 
     public synchronized void release() {
-            mutex = false;
+        mutex = false;
+        notifyAll();
     }
 }
