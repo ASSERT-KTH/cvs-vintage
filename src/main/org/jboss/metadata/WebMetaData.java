@@ -18,11 +18,11 @@ import org.jboss.ejb.DeploymentException;
  * descriptors as used by the AbstractWebContainer web container integration
  * support class.
  *      
- *   @see XmlLoadable
- *   @see org.jboss.web.AbstractWebContainer
+ * @see XmlLoadable
+ * @see org.jboss.web.AbstractWebContainer
 
- *   @author Scott_Stark@displayscape.com
- *   @version $Revision: 1.1 $
+ * @author Scott_Stark@displayscape.com
+ * @version $Revision: 1.2 $
  */
 public class WebMetaData implements XmlLoadable
 {
@@ -56,6 +56,16 @@ public class WebMetaData implements XmlLoadable
     public Iterator getResourceReferences()
     {
         return resourceReferences.values().iterator();
+    }
+    /** Return the optional security-domain jboss-web.xml element.
+    @return The jndiName of the security manager implementation that is
+        responsible for security of the web application. May be null if
+        there was no security-domain specified in the jboss-web.xml
+        descriptor.
+    */    
+    public String getSecurityDomain()
+    {
+        return securityDomain;
     }
 
     public void importXml(Element element) throws Exception
@@ -110,6 +120,11 @@ public class WebMetaData implements XmlLoadable
     */
     protected void importJBossWebXml(Element jbossWeb) throws Exception
     {
+        // Parse the jboss-web/securityDomain element
+        Element securityDomainElement = MetaData.getOptionalChild(jbossWeb, "security-domain");
+        if( securityDomainElement != null )
+            securityDomain = MetaData.getElementContent(securityDomainElement);
+
         // Parse the jboss-web/resource-ref elements
         Iterator iterator = MetaData.getChildrenByTagName(jbossWeb, "resource-ref");
         while( iterator.hasNext() )
