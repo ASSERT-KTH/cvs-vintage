@@ -1,0 +1,29 @@
+<project name="TestRun" default="main" basedir=".">
+
+   <target name="main">
+     <!-- Need to mark the time, compute the diff at end -->
+     <java class="org.apache.tools.moo.RunTest" args="tests.file.FileLengthTest" />
+     <java class="org.apache.tools.moo.RunTest" args="tests.file.ContentTypeTest" />
+     <java class="org.apache.tools.moo.RunTest"  args="tests.file.FileIntegrityTest" />
+     <java class="org.apache.tools.moo.RunTest"  args="tests.file.WelcomeFileTest" />
+     <java class="org.apache.tools.moo.RunTest"  args="tests.dispatch.SimpleForward" />
+     <java class="org.apache.tools.moo.RunTest"  args="tests.dispatch.ForwardWithQuery" />
+     <java class="org.apache.tools.moo.RunTest"  args="tests.dispatch.SimpleInclude" />
+     <java class="org.apache.tools.moo.RunTest"  args="tests.dispatch.IncludeFile" />
+     <java class="org.apache.tools.moo.RunTest"  args="tests.dispatch.Mismatch1" />
+     <java class="org.apache.tools.moo.RunTest"  args="tests.dispatch.Mismatch2" />
+     <java class="org.apache.tools.moo.RunTest"  args="tests.dispatch.IncludeMismatch1" />
+     <java class="org.apache.tools.moo.RunTest"  args="tests.dispatch.IncludeMismatch2" />
+     <java class="org.apache.tools.moo.RunTest"  args="tests.dispatch.SimpleRedirect" />
+     <java class="org.apache.tools.moo.RunTest"  args="tests.dispatch.PrintWriterTest" />
+     <java class="org.apache.tools.moo.RunTest"  args="tests.request.Get" />
+     <java class="org.apache.tools.moo.RunTest"  args="tests.request.Post" />
+     <java class="org.apache.tools.moo.RunTest"  args="tests.request.RequestMap" />
+     <java class="org.apache.tools.moo.RunTest"  args="tests.jsp.Jsp" />
+   </target>
+</project>
+
+<!-- 
+## tests.y2k.HttpDateTest
+#tests.perf.CounterClient
+-->
