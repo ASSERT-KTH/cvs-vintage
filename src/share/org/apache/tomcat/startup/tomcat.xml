@@ -21,8 +21,8 @@
 
    <!-- ==================== adapter modules ==================== -->
    <adapter type="httpAdapter" port="8080" />
-   <adapter type="ajp12Adapter" port="8007" />
-
+   <adapter className="org.apache.tomcat.service.TcpEndpointConnector" port="8007" 
+   handler="org.apache.tomcat.service.connector.Ajp12ConnectionHandler"/>                                               
    <!-- ==================== Contexts ==================== -->
    <context path="/" docBase="webpages" />
    <context path="/examples" docBase="examples" />

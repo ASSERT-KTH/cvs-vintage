@@ -61,13 +61,20 @@ public class InvocationHelper {
     public static void setProperty( Object o, String name, String value ) {
 	//	System.out.println("Setting Property " + o.getClass() + " " + name + "=" + value);
 	try {
-	    Method setMethod = (Method)getPropertySetter(o, name);
+	    //	    Method setMethod = (Method)getPropertySetter(o, name);
+	    Class stringParam[]=new Class[1];
+	    stringParam[0]= name.getClass(); // can we use String.CLASS in 1.1 ?
+	    Method setMethod = (Method)getMethod(o, "set" +capitalize(name), stringParam );
 	    if( setMethod!= null ) {
-		// System.out.println("Set" + name);
+		//		System.out.println("Set" + name);
 		invokeSetProperty( setMethod, o, value );
 		return;
 	    }
-	    setMethod = getMethod( o, "setProperty" );
+
+	    Class string2Param[]=new Class[2];
+	    string2Param[0]= name.getClass(); // can we use String.CLASS in 1.1 ?
+	    string2Param[1]= name.getClass(); // can we use String.CLASS in 1.1 ?
+	    setMethod = getMethod( o, "setProperty", string2Param );
 	    if( setMethod != null ) {
 		//System.out.println("SetProperty" + name);
 		setMethod.invoke(o, new String[] {name, value});
@@ -179,10 +186,12 @@ public class InvocationHelper {
     public static void addAttribute( Object o, String name, Object v ) {
 	try {
 	    // Find addXXX method
-	    Method setMethod = getMethod(o, "add" + capitalize( name ));
-	    //	    System.out.println("ADD: " + name + " " + o.getClass() + " " + v.getClass());
+	    Class paramT[]=new Class[1];
+	    paramT[0]=v.getClass();
+	    Method setMethod = getMethod(o, "add" + capitalize( name ), paramT);
+	    //	    System.out.println("ADD: " + capitalize(name) + " " + o.getClass() + " " + v.getClass());
 	    if( setMethod!= null ) {
-		//		System.out.println("Add object using addXXX " + name);
+		//System.out.println("Add object using addXXX " + name);
 		// Avoid conflict with String (properties )
 		Class[] ma =setMethod.getParameterTypes();
 		if ( (ma.length == 1) && (! ma[0].getName().equals("java.lang.String"))) {
@@ -280,7 +289,6 @@ public class InvocationHelper {
             Method[] methods = c.getMethods();
             Method main = null;
 
-	    
             for (int i = 0; i < methods.length; i++) {
                 if (methods[i].getName().equals(mname)) {
 		    System.out.println("Found method with " + mname );
@@ -391,6 +399,7 @@ public class InvocationHelper {
      */
     public static Method getMethod( Object o, String method ) {
 	// XXX cache introspection data !!!
+	//	System.out.println("Getting " + o.getClass() + " "  + method);
 	BeanInfo beanInfo;
 	try {
 	    beanInfo = Introspector.getBeanInfo(o.getClass());
@@ -405,9 +414,25 @@ public class InvocationHelper {
 	for (int i = 0; i < mda.length; i++) {
 	    MethodDescriptor pd = mda[i];
 	    String m = pd.getName();
-
-	    if( m.equals( method ) )
+	    // Kaffe case
+	    //	    System.out.println("Method: " + pd + " " + m);
+	    if( m!=null && m.equals( method ) )
 		return pd.getMethod();
+	}
+	return null;
+    }
+
+    /** Get a method or null
+     */
+    public static Method getMethod( Object o, String method, Class paramTypes[] ) {
+	// XXX cache introspection data !!!
+	Class c=o.getClass();
+	try {
+	    Method m=c.getMethod( method, paramTypes );
+	    return m;
+	} catch( NoSuchMethodException ex ) {
+	} catch( SecurityException ex1 ) {
+	    System.out.println(ex1 );
 	}
 	return null;
     }
