@@ -45,7 +45,7 @@ import org.gjt.sp.util.Log;
 /**
  * The main class of the jEdit text editor.
  * @author Slava Pestov
- * @version $Id: jEdit.java,v 1.191 2003/08/08 02:22:17 spestov Exp $
+ * @version $Id: jEdit.java,v 1.192 2003/08/11 23:19:20 spestov Exp $
  */
 public class jEdit
 {
@@ -3097,7 +3097,7 @@ public class jEdit
 			{
 				//Log.log(Log.DEBUG,jEdit.class,fnf);
 			}
-			catch(IOException e)
+			catch(Exception e)
 			{
 				Log.log(Log.ERROR,jEdit.class,e);
 			}
