@@ -380,6 +380,7 @@
             <fileset dir="${src.conf.dir}/">
                 <include name="*.properties"/>
                 <include name="*.xml"/>
+                <include name="mime.types"/>
             </fileset>
         </copy>
 

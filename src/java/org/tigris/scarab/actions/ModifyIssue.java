@@ -60,7 +60,9 @@ import org.apache.torque.om.NumberKey;
 import org.apache.turbine.tool.IntakeTool;
 import org.apache.fulcrum.intake.model.Group;
 import org.apache.fulcrum.intake.model.Field;
+import org.apache.fulcrum.mimetype.TurbineMimeTypes;
 import org.apache.commons.collections.SequencedHashMap;
+import org.apache.commons.fileupload.FileItem;
 import org.apache.turbine.ParameterParser;
 
 // Scarab Stuff
@@ -84,12 +86,13 @@ import org.tigris.scarab.util.ScarabException;
 import org.tigris.scarab.attribute.OptionAttribute;
 
 import org.tigris.scarab.util.ScarabConstants;
+import org.tigris.scarab.util.Log;
 
 /**
  * This class is responsible for edit issue forms.
  * ScarabIssueAttributeValue
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
- * @version $Id: ModifyIssue.java,v 1.127 2002/10/24 22:59:25 jon Exp $
+ * @version $Id: ModifyIssue.java,v 1.128 2002/10/28 19:14:44 jmcnally Exp $
  */
 public class ModifyIssue extends BaseModifyIssue
 {
@@ -445,14 +448,14 @@ public class ModifyIssue extends BaseModifyIssue
                 addSuccess = true;
             }
 
-            ScarabUser user = (ScarabUser)data.getUser();
-            String nameFieldString = nameField.toString();
-            String dataFieldString = dataField.toString();
-            // register the add activity
-            ActivitySet activitySet = attachment.registerAddActivity(user, issue, typeId, 
-                                        nameFieldString, dataFieldString);
             if (addSuccess)
             {
+                ScarabUser user = (ScarabUser)data.getUser();
+                String nameFieldString = nameField.toString();
+                String dataFieldString = dataField.toString();
+                // register the add activity
+                ActivitySet activitySet = attachment.registerAddActivity(user,
+                    issue, typeId, nameFieldString, dataFieldString);
                 // remove the group
                 intake.remove(group);
                 sendEmail(activitySet, issue, l10n.get(message), context);
@@ -486,6 +489,36 @@ public class ModifyIssue extends BaseModifyIssue
             if (mimeB != null && mimeB.trim().length() > 0)
             {
                 mimeType = mimeB;
+            }
+            else if ("autodetect".equals(mimeA) && fileField.isValid())
+            {
+                try 
+                {
+                    String filename = 
+                        ((FileItem)fileField.getValue()).getFileName();
+                    String contentType = 
+                        TurbineMimeTypes.getContentType(filename, null);
+                    if (contentType == null) 
+                    {
+                        // could not match extension.
+                        mimeAField
+                            .setMessage("intake_CouldNotDetermineMimeType");
+                    }
+                    else 
+                    {
+                        mimeType = contentType;
+                    }
+                }
+                catch (Exception e)
+                {
+                    // we do not want any exception thrown here to affect
+                    // the user experience, it is just considered a 
+                    // non-detectable file type.  But still the exception is
+                    // not expected, so log it.
+                    mimeAField.setMessage("intake_CouldNotDetermineMimeType");
+                    Log.get().info(
+                        "Could not determine mimetype of uploaded file.", e);
+                }                
             }
             else
             {

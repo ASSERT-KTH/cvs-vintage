@@ -2,7 +2,7 @@
 ##        so that it is more easily customized by end users
 ##
 #macro (mimeTypeOptions $mimeA)
-<option value="" #if (!$mimeA || $mimeA.length() == 0)selected="selected"#end>Select...</option>
+<option value="autodetect" #if (!$mimeA || $mimeA.length() == 0)selected="selected"#end>$l10n.AutoDetect</option>
 <option value="text/plain" #if ($mimeA == "text/plain"))selected="selected"#end>Patch file (text/plain, diffs)</option>
 <option value="text/plain" #if ($mimeA == "text/plain")selected="selected"#end>Plain text (text/plain)</option>
 <option value="text/html" #if ($mimeA == "text/html")selected="selected"#end>HTML source (text/html)</option>
