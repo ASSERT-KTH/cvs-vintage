@@ -115,19 +115,12 @@ public class IMAPFolder extends RemoteFolder {
 		//setChanged(true);
 	}
 
-	/**
-	 * Method getSearchEngineInstance.
-	 * @return AbstractSearchEngine
-	 */
-	/*
-	public AbstractSearchEngine getSearchEngineInstance() {
-		if (searchEngine == null)
-			searchEngine = new RemoteSearchEngine(this);
 	
-		return searchEngine;
-	}
-	*/
+	
 	/**
+	 * This message is never called. Only local folders make use of this method, with
+	 * the uid array argument.
+	 * 
 	 * @see org.columba.mail.folder.Folder#searchMessages(org.columba.mail.filter.Filter, java.lang.Object, org.columba.core.command.WorkerStatusController)
 	 */
 	public Object[] searchMessages(Filter filter, Object[] uids)

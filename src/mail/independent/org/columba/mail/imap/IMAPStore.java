@@ -48,6 +48,7 @@ import org.columba.ristretto.imap.parser.MimePartParser;
 import org.columba.ristretto.imap.parser.MimeTreeParser;
 import org.columba.ristretto.imap.parser.SearchResultParser;
 import org.columba.ristretto.imap.parser.UIDParser;
+import org.columba.ristretto.imap.parser.UIDSetParser;
 import org.columba.ristretto.imap.protocol.Arguments;
 import org.columba.ristretto.imap.protocol.BadCommandException;
 import org.columba.ristretto.imap.protocol.CommandFailedException;
@@ -763,6 +764,11 @@ public class IMAPStore {
 	/**
 	 * Copy a set of messages to another mailbox on the same
 	 * IMAP server.
+	 * <p>
+	 *  <p>
+	 * We copy messages in pieces of 100 headers. This means we tokenize
+	 * the <code>list</code> in sublists of the size of 100. Then we execute
+	 * the command and process those 100 results. 
 	 * 
 	 * @param destFolder	destination mailbox
 	 * @param uids			UIDs of messages
@@ -782,10 +788,10 @@ public class IMAPStore {
 
 			while (tok.hasNext()) {
 				List list = (List) tok.next();
-				MessageSet set = new MessageSet(list.toArray());
-
+				//MessageSet set = new MessageSet(list.toArray());
+				
 				IMAPResponse[] responses =
-					imap.copy(set.getString(), destFolder);
+					imap.copy(UIDSetParser.parse(list.toArray()), destFolder);
 			}
 
 		} catch (BadCommandException ex) {
@@ -848,48 +854,11 @@ public class IMAPStore {
 	}
 
 	/**
-	 * Receive list of headers.
-	 * 
-	 * @param headerList		headerlist
-	 * @param sublist			list of UIDs to be fetched
-	 * @param headerFields		interesting headerfields as whitespace separated String
-	 * @throws Exception
-	 */
-	protected void fetchPartialHeaderlist(
-		HeaderList headerList,
-		List sublist,
-		String headerFields)
-		throws Exception {
-		//		create messageset from UID list subset
-		MessageSet set = new MessageSet(sublist.toArray());
-
-		// fetch headers from server
-		IMAPResponse[] r =
-			getProtocol().fetchHeaderList(
-				set.getString().trim(),
-				headerFields.trim());
-
-		// parse headers
-		for (int i = 0; i < r.length; i++) {
-			if (r[i].getResponseSubType().equals("FETCH")) {
-				// parse the reponse 
-				IMAPHeader imapHeader = IMAPHeaderParser.parse(r[i]);
-				// consume this line
-				r[i] = null;
-
-				// add it to the headerlist
-				ColumbaHeader header =
-					new ColumbaHeader(imapHeader.getHeader());
-				Object uid = imapHeader.getUid();
-				header.set("columba.uid", uid);
-				headerList.add(header, uid);
-			}
-
-		}
-	}
-
-	/**
 	 * Fetch list of headers and parse them.
+	 * <p>
+	 * We fetch headers in pieces of 100 headers. This means we tokenize
+	 * the <code>list</code> in sublists of the size of 100. Then we execute
+	 * the command and process those 100 results. 
 	 * 
 	 * @param headerList		headerlist to add new headers
 	 * @param list				list of UIDs to download
@@ -930,12 +899,12 @@ public class IMAPStore {
 		int counter = 0;
 		while (tok.hasNext()) {
 			List l = (List) tok.next();
-			MessageSet set = new MessageSet(l.toArray());
+			//MessageSet set = new MessageSet(l.toArray());
 
 			// fetch headers from server
 			IMAPResponse[] r =
 				getProtocol().fetchHeaderList(
-					set.getString().trim(),
+				UIDSetParser.parse(l.toArray()),
 					headerFields.toString().trim());
 
 			// parse headers
@@ -1091,6 +1060,10 @@ public class IMAPStore {
 	 * Mark message as specified by variant.
 	 * <p>
 	 * See {@link MarkMessageCommand} for a list of variants.
+	 * <p>
+	 * We mark messages in pieces of 100 headers. This means we tokenize
+	 * the <code>list</code> in sublists of the size of 100. Then we execute
+	 * the command and process those 100 results. 
 	 * 
 	 * @param uids				message UID
 	 * @param variant			variant (read/flagged/expunged/etc.)
@@ -1110,7 +1083,7 @@ public class IMAPStore {
 
 			while (tok.hasNext()) {
 				List list = (List) tok.next();
-				MessageSet set = new MessageSet(list.toArray());
+				//MessageSet set = new MessageSet(list.toArray());
 
 				String flagsString = parseVariant(variant);
 				ColumbaLogger.log.debug("flags=" + flagsString);
@@ -1119,13 +1092,13 @@ public class IMAPStore {
 				if (variant >= 4) {
 					IMAPResponse[] responses =
 						getProtocol().removeFlags(
-							set.getString(),
+						UIDSetParser.parse(list.toArray()),
 							flagsString,
 							true);
 				} else {
 					IMAPResponse[] responses =
 						getProtocol().storeFlags(
-							set.getString(),
+						UIDSetParser.parse(list.toArray()),
 							flagsString,
 							true);
 				}
