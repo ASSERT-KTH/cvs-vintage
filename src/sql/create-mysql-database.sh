@@ -38,26 +38,16 @@ fi
 echo "Creating Database..."        
 ${MYSQLADMIN} -u ${USER} ${PASSCMD} create scarab
 
-echo "Importing mysql-scarab.sql..."
-${MYSQL} -u ${USER} ${PASSCMD} scarab < mysql-scarab.sql
+FILES="mysql-scarab.sql \
+       mysql-turbine.sql \
+       mysql-id-table-schema.sql \
+       mysql-turbine-id-table-init.sql \
+       mysql-scarab-id-table-init.sql \
+       mysql-scarab-default-data.sql \
+       mysql-scarab-sample-data.sql \
+       mysql-scarab-security.sql"
 
-echo "Importing mysql-turbine.sql..."
-${MYSQL} -u ${USER} ${PASSCMD} scarab < mysql-turbine.sql
-
-echo "Importing mysql-id-table-schema.sql..."
-${MYSQL} -u ${USER} ${PASSCMD} scarab < mysql-id-table-schema.sql
-
-echo "Importing mysql-turbine-id-table-init.sql..."
-${MYSQL} -u ${USER} ${PASSCMD} scarab < mysql-turbine-id-table-init.sql
-
-echo "Importing mysql-turbine-security.sql..."
-${MYSQL} -u ${USER} ${PASSCMD} scarab < mysql-turbine-security.sql
-
-echo "Importing mysql-scarab-id-table-init.sql..."
-${MYSQL} -u ${USER} ${PASSCMD} scarab < mysql-scarab-id-table-init.sql
-
-echo "Importing mysql-scarab-default-data.sql..."
-${MYSQL} -u ${USER} ${PASSCMD} scarab < mysql-scarab-default-data.sql
-
-echo "Importing mysql-scarab-sample-data.sql..."
-${MYSQL} -u ${USER} ${PASSCMD} scarab < mysql-scarab-sample-data.sql
+for i in ${FILES} ; do
+    echo "Importing $i..."
+    ${MYSQL} -u ${USER} ${PASSCMD} scarab < $i
+done
