@@ -1,4 +1,4 @@
-// $Id: ActionSetModelElementNamespace.java,v 1.9 2004/02/08 12:45:27 mvw Exp $
+// $Id: ActionSetModelElementNamespace.java,v 1.10 2004/08/11 20:01:56 mvw Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -38,7 +38,11 @@ import org.argouml.uml.ui.UMLComboBox2;
  */
 public class ActionSetModelElementNamespace extends UMLChangeAction {
 
-    public static final ActionSetModelElementNamespace SINGLETON = new ActionSetModelElementNamespace();
+    /**
+     * <code>SINGLETON</code>
+     */
+    public static final ActionSetModelElementNamespace SINGLETON = 
+        new ActionSetModelElementNamespace();
 
     /**
      * Constructor for ActionSetModelElementNamespace.
