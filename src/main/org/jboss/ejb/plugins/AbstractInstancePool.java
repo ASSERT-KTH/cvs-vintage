@@ -4,6 +4,7 @@
  * Distributable under LGPL license.
  * See terms of license at gnu.org.
  */
+
 package org.jboss.ejb.plugins;
 
 import java.rmi.RemoteException;
@@ -22,54 +23,47 @@ import org.jboss.ejb.InstancePoolFeeder;
 import org.jboss.deployment.DeploymentException;
 import org.jboss.metadata.MetaData;
 import org.jboss.metadata.XmlLoadable;
-import org.jboss.logging.Logger;
+
 import org.jboss.management.j2ee.CountStatistic;
 
 import org.w3c.dom.Element;
 
+import org.jboss.system.ServiceMBean;
+import org.jboss.system.ServiceMBeanSupport;
+
 /**
- *  <review>
- *   Abstract Instance Pool class containing the basic logic to create
- *  an EJB Instance Pool.
- *  </review>
+ * Abstract Instance Pool class containing the basic logic to create
+ * an EJB Instance Pool.
  *
- *  @see <related>
+ * @author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
+ * @author <a href="mailto:marc.fleury@jboss.org">Marc Fleury</a>
+ * @author <a href="mailto:andreas.schaefer@madplanet.com">Andreas Schaefer</a>
+ * @author <a href="mailto:sacha.labourey@cogito-info.ch">Sacha Labourey</a>
+ * @version $Revision: 1.27 $
  *
- *  @author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
- *  @author <a href="mailto:marc.fleury@jboss.org">Marc Fleury</a>
- *  @author <a href="mailto:andreas.schaefer@madplanet.com">Andreas Schaefer</a>
- *  @author <a href="mailto:sacha.labourey@cogito-info.ch">Sacha Labourey</a>
- *
- *  @version $Revision: 1.26 $
- *
- *  <p><b>Revisions:</b>
- *  <p><b>20010704 marcf:</b>
- *  <ul>
- *  <li>- Pools if used, do not reuse but restock the pile with fresh instances
- *  </ul>
- *  <p><b>20010709 andreas schaefer:</b>
- *  <ul>
- *  <li>- Added statistics gathering
- *  </ul>
- *  <p><b>20010920 Sacha Labourey:</b>
- *  <ul>
- *  <li>- Pooling made optional and only activated in concrete subclasses for SLSB and MDB
- *  </ul>
- *  <p><b>20011208 Vincent Harcq:</b>
- *  <ul>
- *  <li>- A TimedInstancePoolFeeder thread is started at first use of the pool
+ * <p><b>Revisions:</b>
+ * <p><b>20010704 marcf:</b>
+ * <ul>
+ * <li>- Pools if used, do not reuse but restock the pile with fresh instances
+ * </ul>
+ * <p><b>20010709 andreas schaefer:</b>
+ * <ul>
+ * <li>- Added statistics gathering
+ * </ul>
+ * <p><b>20010920 Sacha Labourey:</b>
+ * <ul>
+ * <li>- Pooling made optional and only activated in concrete subclasses for SLSB and MDB
+ * </ul>
+ * <p><b>20011208 Vincent Harcq:</b>
+ * <ul>
+ * <li>- A TimedInstancePoolFeeder thread is started at first use of the pool
  *       and will populate the pool with new instances at a regular period.
- *  </ul>
+ * </ul>
  */
 public abstract class AbstractInstancePool
-implements InstancePool, XmlLoadable
+   extends ServiceMBeanSupport
+   implements InstancePool, XmlLoadable, ServiceMBean
 {
-   // Constants -----------------------------------------------------
-
-   // Attributes ----------------------------------------------------
-
-   protected Logger log = Logger.getLogger(this.getClass());
-
    protected Container container;
 
    protected LinkedList pool = new LinkedList();
@@ -82,27 +76,23 @@ implements InstancePool, XmlLoadable
 
    protected InstancePoolFeeder poolFeeder;
    protected boolean useFeeder = false;
+   
    /** Counter of all the Bean instantiated within the Pool **/
    protected CountStatistic mInstantiate = new CountStatistic( "Instantiation", "", "Beans instantiated in Pool" );
+
    /** Counter of all the Bean destroyed within the Pool **/
    protected CountStatistic mDestroy = new CountStatistic( "Destroy", "", "Beans destroyed in Pool" );
+
    /** Counter of all the ready Beans within the Pool (which are not used now) **/
    protected CountStatistic mReadyBean = new CountStatistic( "ReadyBean", "", "Numbers of ready Bean Pool" );
 
-
-   // Static --------------------------------------------------------
-
-   // Constructors --------------------------------------------------
-
-   // Public --------------------------------------------------------
-
    /**
-    *   Set the callback to the container. This is for initialization.
-    *   The IM may extract the configuration from the container.
+    * Set the callback to the container. This is for initialization.
+    * The IM may extract the configuration from the container.
     *
     * @param   c
     */
-   public void setContainer(Container c)
+   public void setContainer(final Container c)
    {
       this.container = c;
    }
@@ -114,29 +104,23 @@ implements InstancePool, XmlLoadable
    {
       return container;
    }
-    
-   public void create()
-   throws Exception
-   {
-   }
 
-   public void start()
-   throws Exception
+   protected void stopService() throws Exception
    {
+      if (useFeeder && poolFeeder.isStarted())
+      {
+         poolFeeder.stop();
+      }
    }
-
-   public void stop()
+   
+   protected void destroyService() throws Exception
    {
-     if (useFeeder && poolFeeder.isStarted())
-     {
-        poolFeeder.stop();
-     }
-   }
-
-   public void destroy()
-   {
-     freeAll();
-     this.container = null;
+      if (useFeeder && poolFeeder.isStarted()) {
+         throw new IllegalStateException("Instance pool destroyed before stopped");
+      }
+   
+      freeAll();
+      this.container = null;
    }
 
    /**
@@ -147,7 +131,7 @@ implements InstancePool, XmlLoadable
       return reclaim;
    }
 
-   public void setReclaim(boolean reclaim)
+   public void setReclaim(final boolean reclaim)
    {
       this.reclaim = reclaim;
    }
@@ -155,9 +139,12 @@ implements InstancePool, XmlLoadable
    /**
     * Add a instance in the pool
     */
-   public void add()
-   throws Exception
+   public void add() throws Exception
    {
+      if (container == null) {
+         throw new IllegalStateException("Attempt to add an instance to a destroyed pool");
+      }
+      
       EnterpriseContext ctx = create(container.createBeanClassInstance());
       if( log.isTraceEnabled() )
          log.trace("Add instance "+this+"#"+ctx);
@@ -168,14 +155,15 @@ implements InstancePool, XmlLoadable
    }
 
    /**
-    *   Get an instance without identity.
-    *   Can be used by finders,create-methods, and activation
+    * Get an instance without identity.
+    * Can be used by finders,create-methods, and activation
     *
     * @return     Context /w instance
-    * @exception   RemoteException
+    * 
+    * @throws RemoteException
     */
    public EnterpriseContext get()
-   throws Exception
+      throws Exception
    {
       if( log.isTraceEnabled() )
          log.trace("Get instance "+this+"#"+pool.isEmpty()+"#"+getContainer().getBeanClass());
@@ -189,7 +177,7 @@ implements InstancePool, XmlLoadable
             return (EnterpriseContext) pool.removeFirst();
          }
       }
-      //pool is empty
+      // pool is empty
       // The Pool feeder should avoid this
       if (useFeeder && poolFeeder.isStarted() && log.isDebugEnabled())
       {
@@ -206,21 +194,23 @@ implements InstancePool, XmlLoadable
             }
          }
          return create(container.createBeanClassInstance());
-      } catch (InstantiationException e)
+      }
+      catch (InstantiationException e)
       {
          throw new ServerException("Could not instantiate bean", e);
-      } catch (IllegalAccessException e)
+      }
+      catch (IllegalAccessException e)
       {
          throw new ServerException("Could not instantiate bean", e);
       }
    }
 
    /**
-    *   Return an instance after invocation.
+    * Return an instance after invocation.
     *
-    *   Called in 2 cases:
-    *   a) Done with finder method
-    *   b) Just removed
+    * Called in 2 cases:
+    * a) Done with finder method
+    * b) Just removed
     *
     * @param   ctx
     */
@@ -271,9 +261,10 @@ implements InstancePool, XmlLoadable
       {
          mDestroy.add();
          ctx.discard();
-      } catch (RemoteException e)
+      }
+      catch (RemoteException e)
       {
-         // DEBUG Logger.exception(e);
+         log.error("failed to discard", e);
       }
    }
 
@@ -284,8 +275,6 @@ implements InstancePool, XmlLoadable
          return this.pool.size();
       }
    }
-
-   // Z implementation ----------------------------------------------
 
    /**
     * XmlLoadable implementation
@@ -313,7 +302,8 @@ implements InstancePool, XmlLoadable
             this.poolFeeder = (InstancePoolFeeder)ctor.newInstance(new Class[] {});
             this.poolFeeder.setInstancePool(this);
             this.poolFeeder.importXml(element);
-         } catch (Exception x)
+         }
+         catch (Exception x)
          {
             throw new DeploymentException("Can't create instance pool feeder", x);
          }
@@ -340,13 +330,8 @@ implements InstancePool, XmlLoadable
       mReadyBean.reset();
    }
 
-   // Package protected ---------------------------------------------
-
-   // Protected -----------------------------------------------------
    protected abstract EnterpriseContext create(Object instance)
-   throws Exception;
-
-   // Private -------------------------------------------------------
+      throws Exception;
 
    /**
     * At undeployment we want to free completely the pool.
@@ -363,7 +348,4 @@ implements InstancePool, XmlLoadable
       }
       pool.clear();
    }
-
-   // Inner classes -------------------------------------------------
-
 }
