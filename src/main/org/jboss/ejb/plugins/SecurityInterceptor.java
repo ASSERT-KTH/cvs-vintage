@@ -24,7 +24,7 @@ import org.jboss.security.*;
  * @author <a href="on@ibis.odessa.ua">Oleg Nitz</a>
  * @author <a href="mailto:Scott.Stark@jboss.org">Scott Stark</a>.
  * @author <a href="mailto:Thomas.Diesler@jboss.org">Thomas Diesler</a>.
- * @version $Revision: 1.36 $
+ * @version $Revision: 1.37 $
  */
 public class SecurityInterceptor extends AbstractInterceptor
 {
@@ -160,33 +160,21 @@ public class SecurityInterceptor extends AbstractInterceptor
             new SecurityException("Role mapping manager has not been set"));
       }
 
-      // run-as principals don't need to be authenticated
-      RunAsIdentity threadRunAs = SecurityAssociation.peekRunAsIdentity();
-      if (threadRunAs == null)
+      // Check the security info from the method invocation
+      if (securityManager.isValid(principal, credential) == false)
       {
-         // Check the security info from the method invocation
-         if (securityManager.isValid(principal, credential) == false)
-         {
-            String msg = "Authentication exception, principal=" + principal;
-            log.error(msg);
-            SecurityException e = new SecurityException(msg);
-            throw new EJBException("checkSecurityAssociation", e);
-         }
-         else
-         {
-            SecurityAssociation.setPrincipal(principal);
-            SecurityAssociation.setCredential(credential);
-            if (trace)
-            {
-               log.trace("Authenticated  principal=" + principal);
-            }
-         }
+         String msg = "Authentication exception, principal=" + principal;
+         log.error(msg);
+         SecurityException e = new SecurityException(msg);
+         throw new EJBException("checkSecurityAssociation", e);
       }
       else
       {
+         SecurityAssociation.setPrincipal(principal);
+         SecurityAssociation.setCredential(credential);
          if (trace)
          {
-            log.trace("Skipping authentication runAs=" + threadRunAs);
+            log.trace("Authenticated  principal=" + principal);
          }
       }
 
@@ -211,6 +199,7 @@ public class SecurityInterceptor extends AbstractInterceptor
           is, this is the security role against which the assigned method
           permissions must be checked.
       */
+      RunAsIdentity threadRunAs = SecurityAssociation.peekRunAsIdentity();
       if (threadRunAs != null)
       {
          if (trace)
@@ -222,16 +211,13 @@ public class SecurityInterceptor extends AbstractInterceptor
                  methodRoles.contains(AnybodyPrincipal.ANYBODY_PRINCIPAL) == false)
          {
             String method = mi.getMethod().getName();
-            String msg = "Insufficient method permissions, runAsRole=" + threadRunAs
+            String msg = "Insufficient method permissions, runAs=" + threadRunAs
                     + ", method=" + method + ", interface=" + iface
                     + ", requiredRoles=" + methodRoles;
             log.error(msg);
             SecurityException e = new SecurityException(msg);
             throw new EJBException("checkSecurityAssociation", e);
          }
-
-         // from now on we use the run-as principal
-         mi.setPrincipal(threadRunAs);
       }
 
       /* If the method has no assigned roles or the user does not have at
