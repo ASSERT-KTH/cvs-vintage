@@ -40,13 +40,16 @@ public class FromRenderer extends DefaultLabelRenderer {
         boolean isSelected, boolean hasFocus, int row, int column) {
         if (value == null) {
             setText("");
-
             return this;
         }
 
         ColumbaHeader header = (ColumbaHeader) ((MessageNode) value).getHeader();
-
-        setText(((Address) header.get("columba.from")).getShortAddress());
+        Object from = header.get("columba.from");
+        if (from instanceof Address) {
+            setText(((Address)from).getShortAddress());
+        } else {
+            setText("");
+        }
 
         return super.getTableCellRendererComponent(table, value, isSelected,
             hasFocus, row, column);
