@@ -276,7 +276,8 @@ public class PluginManagerDialog extends JDialog implements ActionListener,
             }
         } else if (action.equals("OPTIONS")) {
             String id = selectedNode.getId();
-
+            id = id.substring(id.lastIndexOf(".")+1, id.length());
+            
             new ConfigurationDialog(id);
         } else if (action.equals("REMOVE")) {
             // get plugin directory
