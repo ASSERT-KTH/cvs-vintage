@@ -59,7 +59,7 @@ import org.apache.torque.util.Criteria;
  * This class manages RModuleAttribute objects.  
  *
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: RModuleAttributeManager.java,v 1.11 2003/07/18 23:27:06 kmaples Exp $
+ * @version $Id: RModuleAttributeManager.java,v 1.12 2003/07/19 17:45:17 jmcnally Exp $
  */
 public class RModuleAttributeManager
     extends BaseRModuleAttributeManager
@@ -118,7 +118,7 @@ public class RModuleAttributeManager
         RModuleAttributeManager thisManager = getManager();
         thisManager.removeInstanceImpl(rma.getPrimaryKey());
         List listeners = (List)thisManager.listenersMap
-            .get(OptionWorkflowPeer.WORKFLOW_ID);
+            .get(RModuleAttributePeer.MODULE_ID);
         thisManager.notifyListeners(listeners, rma, rma);
     }
 }
