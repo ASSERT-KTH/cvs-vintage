@@ -23,6 +23,8 @@ import javax.management.RuntimeErrorException;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
 
+import org.jboss.jmx.adaptor.rmi.RMIAdaptor;
+import org.jboss.jmx.connector.rmi.RMIConnectorImpl;
 import org.jboss.jmx.connector.RemoteMBeanServer;
 
 /**
@@ -32,7 +34,7 @@ import org.jboss.jmx.connector.RemoteMBeanServer;
  * @author <a href="mailto:jason@planet57.com">Jason Dillon</a>
  * @author <a href="mailto:Christoph.Jung@infor.de">Christoph G. Jung</a>
  * @author <a href="mailto:andreas@jboss.org">Andreas Schaefer</a>
- * @version $Revision: 1.4 $
+ * @version $Revision: 1.5 $
  */
 public class Deployer
 {
@@ -54,17 +56,21 @@ public class Deployer
       }
       
       for (int count=0;count<args.length;count++) {            
-         if (!args[count].equalsIgnoreCase("-undeploy")) { 
-            System.out.println("Deploying " + args[count]);
-            new Deployer( lServer ).deploy(args[count]);
-            System.out.println(args[count] +
-                               " has been deployed successfully");
-         }
-         else {
-            System.out.println("Undeploying " + args[++count]);
-            new Deployer( lServer ).undeploy(args[count]);
-            System.out.println(args[count] +
-                               " has been successfully undeployed");
+         if( !( args[ count ].equals( "-server" ) ||
+            ( count > 0 && args[ count - 1 ].equals( "-server" ) ) ) )
+         {
+            if (!args[count].equalsIgnoreCase("-undeploy")) { 
+               System.out.println("Deploying " + args[count]);
+               new Deployer( lServer ).deploy(args[count]);
+               System.out.println(args[count] +
+                                  " has been deployed successfully");
+            }
+            else {
+               System.out.println("Undeploying " + args[++count]);
+               new Deployer( lServer ).undeploy(args[count]);
+               System.out.println(args[count] +
+                                  " has been successfully undeployed");
+            }
          }
       }
    }
@@ -113,7 +119,7 @@ public class Deployer
    protected ObjectName getFactoryName()
       throws MalformedObjectNameException
    {
-      return new ObjectName("jboss.j2ee:service=J2eeDeployer");
+      return new ObjectName("jboss.system:service=MainDeployer");
    }
    
    /**
@@ -136,7 +142,14 @@ public class Deployer
       RemoteMBeanServer connector = null;
       InitialContext ctx = new InitialContext();
       try {
-         connector = (RemoteMBeanServer) ctx.lookup( "jmx:" + mServerName + ":rmi" );
+         Object lObject = ctx.lookup( "jmx:" + mServerName + ":rmi" );
+         if( !( lObject instanceof RMIAdaptor ) ) {
+            throw new RuntimeException( "Object not of type: RMIAdaptorImpl, but: " +
+               ( lObject == null ? "not found" : lObject.getClass().getName() ) );
+         }
+         connector = new RMIConnectorImpl(
+            (RMIAdaptor) lObject
+         );
       }
       finally {
          ctx.close();
