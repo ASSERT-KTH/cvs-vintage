@@ -1,41 +1,50 @@
-     <div class="app" id="divselect_module">
+<div class="app" id="divselect_module">
 
-        <h3>$l10n.Title</h3>
-        
+<h3>$l10n.Title</h3>
+
 #set ($module = $scarabR.CurrentModule)
 #set ($activeIssueTypes = $module.IssueTypes)
 #if ($activeIssueTypes && $activeIssueTypes.size() > 0)
-        <table width="100%" border="1" cellspacing="2" cellpadding="3">
-        <tr>
-          <th>Name</th>
-          <th>Description</th>
-        </tr>
+<table width="100%" border="1" cellspacing="2" cellpadding="3">
+<tr>
+  <th>Name</th>
+  <th>Description</th>
+</tr>
 
 #foreach ($issueType in $activeIssueTypes)
-   #set ($rmit = $scarabR.CurrentModule.getRModuleIssueType($issueType))
-   #if ($scarabR.CurrentModule.allowsNewIssues()) 
-      #if ($rmit.Dedupe)
-        #set ($nextTemplate = "entry,Wizard1.vm")
-      #else
-        #set ($nextTemplate = "entry,Wizard3.vm")
-      #end 
-   #else
-      ## might want a more general location, but this works ok, for
-      ## global module, which is the only one that does not have issues
-      #set ($nextTemplate = "admin,AdminIndex.vm")
-   #end   
-        #indexedRows($velocityCount)
-        <td>$link.setPage("SelectArtifactType.vm").setAction("SelectIssueType").addPathInfo($scarabG.Constant.NEXT_TEMPLATE, "$nextTemplate").addPathInfo("newissuetype", "$issueType.IssueTypeId").setLabel("$issueType.Name")</td>
-        <td>$!issueType.Description</td>
-        </tr>
-#end        
-        </table>
+  #set ($rmit = $scarabR.CurrentModule.getRModuleIssueType($issueType))
+  #if ($scarabR.CurrentModule.allowsNewIssues())
+    #if ($rmit.Dedupe)
+      #set ($nextTemplate = "entry,Wizard1.vm")
+    #else
+      #set ($nextTemplate = "entry,Wizard3.vm")
+    #end
+  #else
+    ## might want a more general location, but this works ok, for
+    ## global module, which is the only one that does not have issues
+    #set ($nextTemplate = "admin,AdminIndex.vm")
+  #end
+  #indexedRows($velocityCount)
+  <td>$link.setPage("SelectArtifactType.vm").setAction("SelectIssueType").addPathInfo($scarabG.Constant.NEXT_TEMPLATE, "$nextTemplate").addPathInfo("newissuetype", "$issueType.IssueTypeId").setLabel("$issueType.Name")</td>
+  <td>$!issueType.Description</td>
+  </tr>
+#end
+</table>
 #else
   ## If there are no active issue types 
   #if ( $scarabR.hasPermission($scarabG.Permission.MODULE__EDIT, $module))
-    <p><strong class="alert">There are no active issue types for this module. Please go to <a href="$link.setPage("admin,ManageArtifactTypes.vm")"> the admin screens</a> to create some.</strong><p>
+    #if ($module.Name.equals($scarabG.Constant.GLOBAL_MODULE_NAME))
+      <p class="alert">There are no active issue types for the global module. Please go to the
+      <a href="$link.setPage("admin,GlobalArtifactTypeShow.vm")">global issue type admin page</a>
+      to create new ones.</p>
+    #else
+      <p class="alert">There are no active issue types for this
+      module. Please go to <a href="$link.setPage("admin,ManageArtifactTypes.vm")"> the admin
+      screens</a> to create new ones.<p>
+    #end
   #else
-    <p><strong class="alert">There are no active issue types for this module. Please contact an administrator to create some.</strong></p>
+    <p><strong class="alert">There are no active issue types for this
+    module. Please contact an administrator to create some.</strong></p>
   #end
 #end
-     </div>
+</div>
