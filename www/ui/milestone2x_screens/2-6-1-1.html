@@ -2,7 +2,7 @@
     "http://collabnet.com/dtds/collabnet_transitional_10.dtd">
 <html>
  <head>
-  <title>Query results (2.6.0)</title>
+  <title>Bulk edit selected attributes (2.6.1.1)</title>
 <!--  <meta http-equiv="Content-type" content="text/html; charset=ISO-8859-1" /> -->
 <!--  <meta http-equiv="Content-type" content="text/html; charset=EUC-KR" /> -->
   <meta http-equiv="Content-type" content="text/html" />
@@ -104,83 +104,90 @@
 	
 	
 	<!-- Scarab - App -->
-	<div class="app" id="div2-6-0">
+	<div class="app" id="div2-6-0-1">
+		<h2>Bulk edit selected attributes (2.6.1.1)</h2>
 
-		<h2>Query results (2.6.0)</h2>
+		<div class="functnbar"><input type="submit" value="Done" />&nbsp;<input type="submit" value="cancel" />&nbsp;</div>
 
-
-		<div class="functnbar">
-		<input type="submit" value="Done" />&#160;<input type="submit" value="Save query" />&#160;<input type="submit" value="Refine query" />&#160;<input type="submit" value="Cancel" />
-		</div>
+		<h3>Bulk edit attributes</h3>
 		
-		<p class="paginate">&#171; previous | 1 of 1 | next &#187;</p>
-
-		<h3>Search results</h3>
-		
-		<table width="100%" border="1" cellspacing="2" cellpadding="3">
-		<tr>
-		<th nowrap="nowrap"><a href="#"><img src="../csi/images/icon_uparrow_off.gif" width="13" height="8" alt="sort ascending" border="0" /></a><img src="../csi/images/icon_downarrow_on.gif" width="13" height="8" alt="sort descending" border="0" /></th>
-		<th>issue ID #123</th>
-		<th><a href="#" title="sort">issue summary</a></th>
-		<th><a href="#" title="sort">attribute name</a></th>
-		<th><a href="#" title="sort">attribute x</a></th>
-		</tr>
-		
-		<tr class="a">
-		<td><input type="checkbox" /></td>
-		<td><a href="#"><strong>20</strong></a></td>
-		<td><a href="#">is broken</a></td>
-		<td>busted</td>
-		<td>priority 1</td>
-		</tr>
-		
-		<tr class="b">
-		<td><input type="checkbox" /></td>
-		<td><a href="#"><strong>22</strong></a></td>
-		<td><a href="#">reported fixed</a></td>
-		<td>busted</td>
-		<td>priority 1</td>
-		</tr>
-		
-		<tr class="a">
-		<td><input type="checkbox" /></td>
-		<td><a href="#"><strong>28</strong></a></td>
-		<td><a href="#">is broken</a></td>
-		<td>busted</td>
-		<td>priority 1</td>
-		</tr>
-		
-		<tr class="b">
-		<td><input type="checkbox" /></td>
-		<td><a href="#"><strong>29</strong></a></td>
-		<td><a href="#">is broken</a></td>
-		<td>busted</td>
-		<td>priority 1</td>
-		</tr>
-		</table>
-				   
-		<div class="functnbar3">
-		<input type="submit" value="Assign" />&#160;<input type="submit" value="View verbose" />&#160;<input type="submit" value="Bulk edit" />&#160;<small>selected</small>&#160;&#160;<img src="../csi/images/seperator.gif" width="2" height="15" alt="" border="0" align="middle" />&#160;&#160;<input type="submit" value="Assign" />&#160;<input type="submit" value="View verbose" />&#160;<small>all</small>&#160;
-		</div>
-		
-		<p class="paginate">&#171; previous | 1 of 1 | next &#187;</p>
- <p><small>(<a href="#">add/remove attributes from view</a>)</small></p>
 
 <div class="axial">
-  <table cellpadding="3" cellspacing="2" border="0">
-             <tr>
-       <th>Max items per page</td>
-       <td><input type="radio" name="foo" checked="checked" /> 25 <input type="radio" name="foo" /> 50 <input type="radio" name="foo" /> 75 <input type="radio" name="foo" /> 100&#160;<input type="submit" value="refresh" /></p>
-</td>
+ <table cellpadding="3" cellspacing="2" border="0">
+              <tr>
+      <th>Summary</th>
+      <td>
+                               <input name= "attv116val"
+               value="--" size="20" type="text" />
+                  </td>
      </tr>
-      </table>
-</div>
-				
-		<div class="functnbar2">
-		<input type="submit" value="Done" />&#160;<input type="submit" value="Save query" />&#160;<input type="submit" value="Refine query" />&#160;<input type="submit" value="Cancel" />
-		</div>
+                 <tr>
+      <th>Platform</th>
+      <td>
+            <select name="attv117optionid"
+   size="">
+     <option value="">Choose...</option>
+            <option value="16">all</option>
+              <option value="17">DEC</option>
+              <option value="18">HP</option>
+              <option value="19">Macintosh</option>
+              <option value="20">PC</option>
+              <option value="21">SGI</option>
+              <option value="22">sun</option>
+              <option value="23">other</option>
+      </select>
+                  </td>
+     </tr>
+                 <tr>
+      <th>Operating System</th>
+      <td>
+            <select name="attv118optionid"
+   size="">
+     <option value="">Choose...</option>
+            <option value="25">windows 3.1</option>
+              <option value="26">windows 95</option>
+              <option value="27">windows 98</option>
+              <option value="28">windows ME</option>
+              <option value="29">windows 2000</option>
+              <option value="30">windows NT</option>
+              <option value="31">mac system 7</option>
+              <option value="32">mac system 7.5</option>
+              <option value="33">mac system 7.6.1</option>
+              <option value="34">mac system 8.0</option>
+              <option value="35">mac system 8.5</option>
+              <option value="36">mac system 8.6</option>
+              <option value="37">mac system 9.0</option>
+              <option value="38">Linux</option>
+              <option value="39">BSDI</option>
+              <option value="40">FreeBSD</option>
+              <option value="41">NetBSD</option>
+              <option value="42">OpenBSD</option>
+              <option value="43">AIX</option>
+              <option value="44">BeOS</option>
+              <option value="45">HP-UX</option>
+              <option value="46">IRIX</option>
+              <option value="50">OSF/1</option>
+              <option value="51">Solaris</option>
+              <option value="52">SunOS</option>
+              <option value="53">Other</option>
+              <option value="77">OSX</option>
+              <option value="84">Realtime/Embedded</option>
+              <option value="85">Handheld/PDA</option>
+      </select>
+                  </td>
+     </tr>
+                 <tr>
+      <th>Description</th>
+      <td>
+              <textarea name="attv119val" cols="60"
+               rows="5">--</textarea>
+                  </td>
+     </tr>
+
+		</table>
+		<div class="functnbar3"><input type="submit" value="Save changes" />&nbsp;</div>
 		
-		
+		<div class="functnbar2"><input type="submit" value="Done" />&nbsp;<input type="submit" value="cancel" />&nbsp;</div>
 
 	</div>
 	<!-- Scarab - App -->
@@ -192,13 +199,18 @@
 <!-- Structural Elements -->
 
 	<!-- SourceCast -->
+	<div id="footer">
+		<p>
+		<a href="#">Domain Home</a> |
+		<a href="#">Help</a> | 
+		<a href="#">Site FAQ</a> |
+		<a href="#">Feedback</a>
+		</p>
+	</div>
 	<!-- SourceCast -->
-<div id="footer">
-<table border="0" cellspacing="0" cellpadding="4">
-<tr><td>
-&copy; 2001 <a href="http://www.collab.net/">CollabNet</a> | 
-<a href="http://scarab.tigris.org/">Scarab</a> |
-<a href="http://scarab.whichever.com:8080/scarab/servlet/scarab/curmodule/6/curissuetype/5/rissue/0/template/Links.vm">Links</a> |
 
-    <a href="http://scarab.whichever.com:8080/scarab/servlet/scarab/curmodule/6/curissuetype/5/rissue/0/template/Login.vm/action/Logout">Logout</a>
+</form>
+</body>
+</html>
+
 
