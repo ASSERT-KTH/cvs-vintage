@@ -81,7 +81,7 @@ import org.tigris.scarab.tools.ScarabRequestTool;
  * action methods on RModuleAttribute table
  *      
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
- * @version $Id: AttributeGroupEdit.java,v 1.2 2002/01/01 02:49:52 elicia Exp $
+ * @version $Id: AttributeGroupEdit.java,v 1.3 2002/01/15 21:21:22 elicia Exp $
  */
 public class AttributeGroupEdit extends RequireLoginFirstAction
 {
@@ -260,8 +260,7 @@ public class AttributeGroupEdit extends RequireLoginFirstAction
             AttributeGroup attGroup = scarabR.getAttributeGroup();
 
             // add module-attribute groupings
-            RModuleAttribute rma = module.addRModuleAttribute(issueType, 
-                                                              attGroup);
+            RModuleAttribute rma = module.addRModuleAttribute(issueType);
             Group rmaGroup = intake.get("RModuleAttribute", 
                                          IntakeTool.DEFAULT_KEY);
             rmaGroup.setProperties(rma);
@@ -284,8 +283,7 @@ public class AttributeGroupEdit extends RequireLoginFirstAction
             }
 
             // add module-attribute mappings to template type
-            RModuleAttribute rma2 = module.addRModuleAttribute(templateType,
-                                                               attGroup);
+            RModuleAttribute rma2 = module.addRModuleAttribute(templateType);
             rma2.setAttributeId(attribute.getAttributeId());
             rma2.save();
 
