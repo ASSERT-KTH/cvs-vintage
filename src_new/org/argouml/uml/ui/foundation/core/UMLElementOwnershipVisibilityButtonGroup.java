@@ -1,4 +1,4 @@
-// $Id: UMLElementOwnershipVisibilityButtonGroup.java,v 1.6 2003/06/29 23:50:17 linus Exp $
+// $Id: UMLElementOwnershipVisibilityButtonGroup.java,v 1.7 2003/08/30 10:51:52 bobtarling Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,10 +25,8 @@
 // $header$
 package org.argouml.uml.ui.foundation.core;
 
+import org.argouml.model.ModelFacade;
 import org.argouml.uml.ui.UMLUserInterfaceContainer;
-
-import ru.novosoft.uml.foundation.core.MModelElement;
-import ru.novosoft.uml.foundation.data_types.MVisibilityKind;
 
 /**
  * Model for namespace visibility.
@@ -51,16 +49,15 @@ public class UMLElementOwnershipVisibilityButtonGroup extends UMLVisibilityButto
      * @see org.argouml.uml.ui.UMLButtonGroup#buildModel()
      */
     public void buildModel() {
-        MVisibilityKind vis = ((MModelElement) getTarget()).getVisibility();
-        
-        if (vis == MVisibilityKind.PRIVATE) {
+        if (ModelFacade.isPrivate(getTarget())) {
             getPrivateButton().setSelected(true);
-        } else
-	    if (vis == MVisibilityKind.PROTECTED) {
+        } else {
+	    if (ModelFacade.isPrivate(getTarget())) {
 		getProtectedButton().setSelected(true);
-	    } else
+	    } else {
 		getPublicButton().setSelected(true);
-            
+            }
+        }
     }
 
     /**

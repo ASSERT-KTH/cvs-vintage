@@ -1,7 +1,7 @@
 
 
 
-// $Id: FigClass.java,v 1.68 2003/08/27 12:26:57 bobtarling Exp $
+// $Id: FigClass.java,v 1.69 2003/08/30 10:51:53 bobtarling Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -29,7 +29,7 @@
 // Classes: FigClass
 // Original Author: abonner
 
-// $Id: FigClass.java,v 1.68 2003/08/27 12:26:57 bobtarling Exp $
+// $Id: FigClass.java,v 1.69 2003/08/30 10:51:53 bobtarling Exp $
 
 // 21 Mar 2002: Jeremy Bennett (mail@jeremybennett.com). Fix for ever
 // increasing vertical size of classes with stereotypes (issue 745).
@@ -79,7 +79,16 @@ import org.tigris.gef.presentation.FigRect;
 import org.tigris.gef.presentation.FigText;
 
 import ru.novosoft.uml.MElementEvent;
-import ru.novosoft.uml.foundation.core.*;
+import ru.novosoft.uml.foundation.core.MAttribute;
+import ru.novosoft.uml.foundation.core.MBehavioralFeature;
+import ru.novosoft.uml.foundation.core.MClass;
+import ru.novosoft.uml.foundation.core.MClassifier;
+import ru.novosoft.uml.foundation.core.MElementResidence;
+import ru.novosoft.uml.foundation.core.MFeature;
+import ru.novosoft.uml.foundation.core.MModelElement;
+import ru.novosoft.uml.foundation.core.MOperation;
+import ru.novosoft.uml.foundation.core.MParameter;
+import ru.novosoft.uml.foundation.core.MStructuralFeature;
 import ru.novosoft.uml.foundation.data_types.MScopeKind;
 import ru.novosoft.uml.foundation.data_types.MVisibilityKind;
 import ru.novosoft.uml.foundation.extension_mechanisms.MStereotype;
@@ -352,7 +361,6 @@ public class FigClass extends FigNodeModelElement {
 
         popUpActions.insertElementAt(showMenu, popUpActions.size() - 1);
 
-        // Block added by BobTarling 7-Jan-2001
         MClass mclass = (MClass) getOwner();
         ArgoJMenu modifierMenu = new ArgoJMenu("Modifiers");
 

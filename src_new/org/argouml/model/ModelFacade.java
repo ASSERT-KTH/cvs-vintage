@@ -1,4 +1,4 @@
-// $Id: ModelFacade.java,v 1.80 2003/08/28 20:33:58 thn Exp $
+// $Id: ModelFacade.java,v 1.81 2003/08/30 10:51:52 bobtarling Exp $
 // Copyright (c) 2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -1182,9 +1182,37 @@ public class ModelFacade {
      * @returns true if handle has private
      */
     public static boolean isPrivate(Object handle) {
-        if (handle instanceof MBehavioralFeature) {
-            MBehavioralFeature bf = (MBehavioralFeature) handle;
-            return MVisibilityKind.PRIVATE.equals(bf.getVisibility());
+        if (handle instanceof MModelElement) {
+            MModelElement element = (MModelElement) handle;
+            return MVisibilityKind.PRIVATE.equals(element.getVisibility());
+        }
+        // ...
+        throw new IllegalArgumentException("Unrecognized object " + handle);
+    }
+
+    /** Recognizer for attributes with public
+     *
+     * @param handle candidate
+     * @returns true if handle has public
+     */
+    public static boolean isPublic(Object handle) {
+        if (handle instanceof MModelElement) {
+            MModelElement element = (MModelElement) handle;
+            return MVisibilityKind.PUBLIC.equals(element.getVisibility());
+        }
+        // ...
+        throw new IllegalArgumentException("Unrecognized object " + handle);
+    }
+
+    /** Recognizer for attributes with protected
+     *
+     * @param handle candidate
+     * @returns true if handle has protected
+     */
+    public static boolean isProtected(Object handle) {
+        if (handle instanceof MModelElement) {
+            MModelElement element = (MModelElement) handle;
+            return MVisibilityKind.PROTECTED.equals(element.getVisibility());
         }
         // ...
         throw new IllegalArgumentException("Unrecognized object " + handle);
@@ -2318,17 +2346,29 @@ public class ModelFacade {
 
 
     /**
-       Return the UUID of this element
-
-       @param base base element (MBase type)
-       @return UUID
-    */
+     *  Return the UUID of this element
+     *  @param base base element (MBase type)
+     *  @return UUID
+     */
     public static String getUUID(Object base) {
         if (isABase(base)) {
             return ((MBase) base).getUUID();
         }
         //
         throw new IllegalArgumentException("Unrecognized object " + base);
+    }
+
+    /**
+     *  Return the visibility of this element
+     *  @param element an nsuml model element
+     *  @return visibility
+     */
+    public static Object getVisibility(Object element) {
+        if (element instanceof MModelElement) {
+            return ((MModelElement)element).getVisibility();
+        }
+        //
+        throw new IllegalArgumentException("Unrecognized object " + element);
     }
 
     ////////////////////////////////////////////////////////////////
