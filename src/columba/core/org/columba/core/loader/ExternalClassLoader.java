@@ -20,6 +20,7 @@ import java.lang.reflect.Constructor;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.net.URLStreamHandlerFactory;
+import java.util.logging.Logger;
 
 
 /**
@@ -32,6 +33,9 @@ import java.net.URLStreamHandlerFactory;
  * @author fdietz
  */
 public class ExternalClassLoader extends URLClassLoader {
+	
+	private static final Logger LOG = Logger.getLogger("org.columba.core.loader");
+	
     /**
      * Constructor for ExternalClassLoader.
      * @param urls
@@ -141,6 +145,10 @@ public class ExternalClassLoader extends URLClassLoader {
 
         // couldn't find correct constructor
         if (constructor == null) {
+        	LOG.severe("Couldn't find constructor for "+className+" with matching argument-list: ");
+        	for ( int i=0; i<args.length; i++) {
+        		LOG.severe("argument["+i+"]="+args[i]);
+        	}
             return null;
         }
 
