@@ -1,13 +1,16 @@
 <project name="Tomcat" default="main" basedir=".">
-  <property name="ant.home" value="../jakarta-ant"/>
-  <property name="build.compiler" value="classic"/>
-  <property name="tomcat.build" value="../build/tomcat"/>
-  <property name="tomcat.home" value="../dist/tomcat"/>
+
+  <target name="init">
+    <property name="ant.home" value="../jakarta-ant"/>
+    <property name="build.compiler" value="classic"/>
+    <property name="tomcat.build" value="../build/tomcat"/>
+    <property name="tomcat.home" value="../dist/tomcat"/>
+  </target>
 
   <!-- ==================== Copy static files ==================== -->
   <!-- IF YOU CHANGE, sync dist.prepare !!! -->
 
-  <target name="prepare">
+  <target name="prepare" depends="init">
     <mkdir dir="src/doc"/> <!-- Temp change until dir is not empty -->
     <mkdir dir="${tomcat.build}"/>
     <mkdir dir="${tomcat.build}/classes"/>
@@ -158,7 +161,7 @@
   
 
   <!-- ==================== Admin ==================== -->
-  <target name="clean">
+  <target name="clean" depends="init">
     <deltree dir="${tomcat.build}"/>
     <deltree dir="${tomcat.home}"/>
   </target>
