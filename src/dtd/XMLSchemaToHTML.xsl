@@ -2,7 +2,7 @@
 <xsl:stylesheet version="1.0" 
   xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
 
-<!-- $Id: XMLSchemaToHTML.xsl,v 1.1 2002/03/25 20:02:52 jmcnally Exp $ -->
+<!-- $Id: XMLSchemaToHTML.xsl,v 1.2 2002/03/25 20:45:28 jmcnally Exp $ -->
 
 <!-- 
 
@@ -142,7 +142,6 @@
       <th>Description</th>
     </tr>
     <xsl:for-each select="column">
-      <xsl:sort select="@name"/>
       <tr>
         <td>
           <xsl:value-of select="@name"/>
