@@ -52,7 +52,7 @@
 #reportFunctionBar("functnbar" $report)
 
 ## don't show the headings section if the axis is Dates
-#set ($isNotDateAxis = $headings.get(0).calculateType() != 2)
+#set ($isNotDateAxis = $headings && $headings.get(0).calculateType() != 2)
 ##if (($singleHeading && $isNotDateAxis) || $multiHeading)
 #if ($singleHeading || $multiHeading)
   #if ($headingIndex == -1)
