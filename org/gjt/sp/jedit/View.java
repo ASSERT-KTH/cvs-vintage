@@ -77,7 +77,7 @@ import org.gjt.sp.util.Log;
  *
  * @author Slava Pestov
  * @author John Gellene (API documentation)
- * @version $Id: View.java,v 1.82 2003/05/07 22:40:00 spestov Exp $
+ * @version $Id: View.java,v 1.83 2003/05/08 01:43:02 spestov Exp $
  */
 public class View extends JFrame implements EBComponent
 {
@@ -1145,25 +1145,8 @@ public class View extends JFrame implements EBComponent
 		// depending in the 'tool bar alternate layout' setting.
 		propertiesChanged();
 
-		if(!plainView)
-		{
-			if(config.top != null && config.top.length() != 0)
-				dockableWindowManager.showDockableWindow(config.top);
-
-			if(config.left != null && config.left.length() != 0)
-				dockableWindowManager.showDockableWindow(config.left);
-
-			if(config.bottom != null && config.bottom.length() != 0)
-				dockableWindowManager.showDockableWindow(config.bottom);
-
-			if(config.right != null && config.right.length() != 0)
-				dockableWindowManager.showDockableWindow(config.right);
-		}
-
 		setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
 		addWindowListener(new WindowHandler());
-
-		pack();
 
 		EditBus.addToBus(this);
 	} //}}}
