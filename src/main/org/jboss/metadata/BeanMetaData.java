@@ -33,7 +33,7 @@ import org.jboss.util.jmx.ObjectNameFactory;
  * @author <a href="mailto:Scott_Stark@displayscape.com">Scott Stark</a>.
  * @author <a href="mailto:osh@sparre.dk">Ole Husgaard</a> 
  * @author <a href="mailto:bill@burkecentral.com">Bill Burke</a> 
- * @version $Revision: 1.38 $
+ * @version $Revision: 1.39 $
  *
  *  <p><b>Revisions:</b><br>
  *  <p><b>2001/10/16: billb</b>
@@ -319,8 +319,6 @@ public abstract class BeanMetaData
                ma = null;
          }
          if(ma == null) ma = MethodAttributes.kDefaultMethodAttributes;
-         if (ma.readOnly) System.out.println("*****" + methodName + " is readonly");
-         if (!ma.readOnly) System.out.println("!!!!!" + methodName + " is write");
          cachedMethodAttributes.put(methodName, ma);
       }
       return ma;
