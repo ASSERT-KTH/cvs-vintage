@@ -1,4 +1,4 @@
-<!-- $Id: changes.html,v 1.278 2002/10/28 18:58:22 elicia Exp $ -->
+<!-- $Id: changes.html,v 1.279 2002/10/28 22:02:49 jon Exp $ -->
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2//EN">
 <html>
 
@@ -21,11 +21,14 @@
         <td width="100%" height="100" bgcolor="#F0F0F0"> 
             <h3>Changes since 1.0b13</h3>
             <ul>
+                <li>Lots of code cleanup (removed unused imports, unnecessary casts, 
+                    strange logic, etc). Thanks to Jerome Lacoste for his 
+                    massive patches. (JSS)</li>
                 <li>Changed index names which tried to create identically-named
-                indexes on different tables, which Oracle does not allow
-                (Oracle requires indexes to be uniquely named within a
-                schema, MySQL requires indexes to be uniquely named on a table).
-                For more information see #<a href="http://issues.whichever.com/issues/id/SCB231">SCB231</a>. (TL)</li>
+                    indexes on different tables, which Oracle does not allow
+                    (Oracle requires indexes to be uniquely named within a
+                    schema, MySQL requires indexes to be uniquely named on a table).
+                    For more information see #<a href="http://issues.whichever.com/issues/id/SCB231">SCB231</a>. (TL)</li>
                 <li>A minimal distribution of Tomcat 4.1.12 is now the default 
                     servlet engine bundled and used with Scarab. We should see a bit of a 
                     performance increase over 4.0.6. Note: this version has been
