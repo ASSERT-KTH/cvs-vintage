@@ -244,7 +244,7 @@ try{
      * data.getUser() method.
      *
      * @return A user used during this request.
-     * @see org.tigris.scarab.tools.ScarabRequestTool#setUser(User user)
+     * @see org.tigris.scarab.tools.ScarabRequestTool#setUser(User)
      */
     public ScarabUser getUser()
     {
