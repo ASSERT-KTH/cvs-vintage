@@ -50,7 +50,6 @@ $page.setTitle("Enter New Issue")
         *
      #end
      $attVal.Attribute.Name:
-     #attrValueErrorMsg ( $attVal $field )
     </th>
     <td>
     #if ( $attVal.Attribute.AttributeType.Name == "string" )
@@ -58,6 +57,7 @@ $page.setTitle("Enter New Issue")
     #else
         #attrValueLeafSelect ($attVal $field "")
     #end
+     #attrValueErrorMsg ( $attVal $field )
     </td>
    </tr>
   #end
