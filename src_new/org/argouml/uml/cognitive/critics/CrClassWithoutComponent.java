@@ -1,5 +1,5 @@
 
-// $Id: CrClassWithoutComponent.java,v 1.7 2003/08/25 19:15:49 bobtarling Exp $
+// $Id: CrClassWithoutComponent.java,v 1.8 2003/08/30 21:28:52 alexb Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -26,25 +26,22 @@
 // File: CrClassWithoutComponent.java
 // Classes: CrClassWithoutComponent
 // Original Author: 5eichler@informatik.uni-hamburg.de
-// $Id: CrClassWithoutComponent.java,v 1.7 2003/08/25 19:15:49 bobtarling Exp $
+// $Id: CrClassWithoutComponent.java,v 1.8 2003/08/30 21:28:52 alexb Exp $
 
 package org.argouml.uml.cognitive.critics;
 
-import java.util.*; 
-
-import ru.novosoft.uml.foundation.core.*;
-
-import org.tigris.gef.util.*;
-
-import org.argouml.cognitive.*;
-import org.argouml.uml.diagram.deployment.ui.*;
-import org.argouml.uml.diagram.static_structure.ui.*;
+import java.util.Vector;
+import org.argouml.cognitive.Designer;
+import org.argouml.cognitive.ToDoItem;
+import org.argouml.model.ModelFacade;
+import org.argouml.uml.diagram.deployment.ui.UMLDeploymentDiagram;
+import org.argouml.uml.diagram.static_structure.ui.FigClass;
+import org.tigris.gef.util.VectorSet;
 
 /**
  * A critic to detect when a class in a deployment-diagram
  * is not inside a component
  **/
-
 public class CrClassWithoutComponent extends CrUML {
 
     public CrClassWithoutComponent() {
@@ -91,7 +88,7 @@ public class CrClassWithoutComponent extends CrUML {
 	    if (!(obj instanceof FigClass)) continue;
 	    FigClass fc = (FigClass) obj;
 	    if (fc.getEnclosingFig() == null
-		|| (!(org.argouml.model.ModelFacade.isAComponent(fc.getEnclosingFig().getOwner()))))
+		|| (!(ModelFacade.isAComponent(fc.getEnclosingFig().getOwner()))))
 	    {
 		if (offs == null) {
 		    offs = new VectorSet();

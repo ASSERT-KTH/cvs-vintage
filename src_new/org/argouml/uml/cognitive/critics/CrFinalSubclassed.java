@@ -1,4 +1,4 @@
-// $Id: CrFinalSubclassed.java,v 1.5 2003/06/30 19:23:18 linus Exp $
+// $Id: CrFinalSubclassed.java,v 1.6 2003/08/30 21:28:52 alexb Exp $
 // Copyright (c) 1996-2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -27,23 +27,23 @@
 // File: CrFinalSubclassed.java
 // Classes: CrFinalSubclassed
 // Original Author: jrobbins@ics.uci.edu
-// $Id: CrFinalSubclassed.java,v 1.5 2003/06/30 19:23:18 linus Exp $
+// $Id: CrFinalSubclassed.java,v 1.6 2003/08/30 21:28:52 alexb Exp $
 
 package org.argouml.uml.cognitive.critics;
 
-import java.util.*;
+import java.util.Iterator;
+import org.argouml.cognitive.Designer;
+import org.argouml.cognitive.critics.Critic;
+import org.argouml.model.ModelFacade;
 
-import org.argouml.cognitive.*;
 
 // Use model through ModelFacade
-import org.argouml.model.ModelFacade;
 
 /** Well-formedness rule [2] for MGeneralizableElement. See page 31 of UML 1.1
  *  Semantics. OMG document ad/97-08-04. 
  *  In UML 1.3 it is rule [2] in section 2.5.3.18 page 2-54.
  */
 
-import org.argouml.cognitive.critics.*;
 
 public class CrFinalSubclassed extends CrUML {
 

@@ -1,4 +1,4 @@
-// $Id: CrNameConflictAC.java,v 1.5 2003/06/30 19:23:18 linus Exp $
+// $Id: CrNameConflictAC.java,v 1.6 2003/08/30 21:28:52 alexb Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -27,16 +27,14 @@
 // File: CrNameConflictAC.java
 // Classes: CrNameConflictAC
 // Original Author: jrobbins@ics.uci.edu
-// $Id: CrNameConflictAC.java,v 1.5 2003/06/30 19:23:18 linus Exp $
+// $Id: CrNameConflictAC.java,v 1.6 2003/08/30 21:28:52 alexb Exp $
 
 package org.argouml.uml.cognitive.critics;
 
-import java.util.*;
+import org.argouml.cognitive.Designer;
+import org.argouml.cognitive.critics.Critic;
 
-import ru.novosoft.uml.foundation.core.*;
 
-import org.argouml.cognitive.*;
-import org.argouml.cognitive.critics.*;
 
 /** Well-formedness rule [1] for MAssociationClass. See page 28 of UML 1.1
  *  Semantics. OMG document ad/97-08-04. */

@@ -1,4 +1,4 @@
-// $Id: Init.java,v 1.5 2003/06/30 18:00:26 linus Exp $
+// $Id: Init.java,v 1.6 2003/08/30 21:28:52 alexb Exp $
 // Copyright (c) 1996-2001 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -24,14 +24,21 @@
 
 package org.argouml.uml.cognitive.checklist;
 
-import ru.novosoft.uml.foundation.core.*;
-import ru.novosoft.uml.behavior.common_behavior.*;
-import ru.novosoft.uml.behavior.state_machines.*;
-import ru.novosoft.uml.behavior.use_cases.*;
-import ru.novosoft.uml.model_management.*;
+import java.util.Locale;
+import java.util.MissingResourceException;
+import java.util.ResourceBundle;
+import org.argouml.cognitive.checklist.CheckManager;
+import ru.novosoft.uml.behavior.state_machines.MState;
+import ru.novosoft.uml.behavior.state_machines.MTransition;
+import ru.novosoft.uml.behavior.use_cases.MActor;
+import ru.novosoft.uml.behavior.use_cases.MUseCase;
+import ru.novosoft.uml.foundation.core.MAssociation;
+import ru.novosoft.uml.foundation.core.MAssociationClass;
+import ru.novosoft.uml.foundation.core.MAttribute;
+import ru.novosoft.uml.foundation.core.MClass;
+import ru.novosoft.uml.foundation.core.MInterface;
+import ru.novosoft.uml.foundation.core.MOperation;
 
-import org.argouml.cognitive.checklist.*;
-import java.util.*;
 
 /** Registers Checklists for different kinds of model elements. If you
  *  add a new checklist, a line must be added here.

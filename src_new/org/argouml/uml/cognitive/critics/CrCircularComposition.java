@@ -1,5 +1,5 @@
 
-// $Id: CrCircularComposition.java,v 1.6 2003/08/25 19:15:49 bobtarling Exp $
+// $Id: CrCircularComposition.java,v 1.7 2003/08/30 21:28:52 alexb Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -28,20 +28,22 @@
 // File: CrCircularComposition.java
 // Classes: CrCircularComposition
 // Original Author: jrobbins@ics.uci.edu
-// $Id: CrCircularComposition.java,v 1.6 2003/08/25 19:15:49 bobtarling Exp $
+// $Id: CrCircularComposition.java,v 1.7 2003/08/30 21:28:52 alexb Exp $
 
 package org.argouml.uml.cognitive.critics;
 
-import java.util.*;
-
-import ru.novosoft.uml.foundation.core.*;
-
-import org.tigris.gef.util.*;
-
+import java.util.Enumeration;
 import org.apache.log4j.Category;
-import org.argouml.cognitive.*;
-import org.argouml.cognitive.critics.*;
-import org.argouml.uml.*;
+
+
+
+import org.argouml.cognitive.Designer;
+import org.argouml.cognitive.ToDoItem;
+import org.argouml.cognitive.critics.Critic;
+import org.argouml.model.ModelFacade;
+import org.argouml.uml.GenCompositeClasses;
+import org.tigris.gef.util.VectorSet;
+import ru.novosoft.uml.foundation.core.MClassifier;
 
 /**  */
 
@@ -57,7 +59,7 @@ public class CrCircularComposition extends CrUML {
     }
 							  
     public boolean predicate2(Object dm, Designer dsgr) {
-	if (!(org.argouml.model.ModelFacade.isAClassifier(dm))) return NO_PROBLEM;
+	if (!(ModelFacade.isAClassifier(dm))) return NO_PROBLEM;
 	MClassifier cls = (MClassifier) dm;
 	VectorSet reach =
 	    (new VectorSet(cls)).reachable(GenCompositeClasses.SINGLETON);
@@ -74,7 +76,7 @@ public class CrCircularComposition extends CrUML {
     protected VectorSet computeOffenders(MClassifier dm) {
 	VectorSet offs = new VectorSet(dm);
 	VectorSet above = offs.reachable(GenCompositeClasses.SINGLETON);
-	java.util.Enumeration enum = above.elements();
+	Enumeration enum = above.elements();
 	while (enum.hasMoreElements()) {
 	    MClassifier cls2 = (MClassifier) enum.nextElement();
 	    VectorSet trans =

@@ -1,4 +1,4 @@
-// $Id: CrClassMustBeAbstract.java,v 1.9 2003/06/29 23:52:58 linus Exp $
+// $Id: CrClassMustBeAbstract.java,v 1.10 2003/08/30 21:28:52 alexb Exp $
 // Copyright (c) 1996-2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -27,16 +27,16 @@
 // File: CrClassMustBeAbstract.java
 // Classes: CrClassMustBeAbstract
 // Original Author: jrobbins@ics.uci.edu
-// $Id: CrClassMustBeAbstract.java,v 1.9 2003/06/29 23:52:58 linus Exp $
+// $Id: CrClassMustBeAbstract.java,v 1.10 2003/08/30 21:28:52 alexb Exp $
 
 package org.argouml.uml.cognitive.critics;
 
-import java.util.*;
-
-import org.argouml.cognitive.*;
-import org.argouml.cognitive.critics.*;
-
+import java.util.Iterator;
+import org.argouml.cognitive.Designer;
+import org.argouml.cognitive.critics.Critic;
 import org.argouml.model.ModelFacade;
+
+
 
 /** A critic to detect whether a non abstract class  
  *  contains abstract operations. It checks whether a non abstract class

@@ -1,6 +1,6 @@
 
 
-// $Id: CrInterfaceOperOnly.java,v 1.5 2003/08/25 19:15:49 bobtarling Exp $
+// $Id: CrInterfaceOperOnly.java,v 1.6 2003/08/30 21:28:52 alexb Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -29,16 +29,18 @@
 // File: CrInterfaceOperOnly.java
 // Classes: CrInterfaceOperOnly
 // Original Author: jrobbins@ics.uci.edu
-// $Id: CrInterfaceOperOnly.java,v 1.5 2003/08/25 19:15:49 bobtarling Exp $
+// $Id: CrInterfaceOperOnly.java,v 1.6 2003/08/30 21:28:52 alexb Exp $
 
 package org.argouml.uml.cognitive.critics;
 
-import java.util.*;
+import java.util.Collection;
+import java.util.Iterator;
+import org.argouml.cognitive.Designer;
+import org.argouml.cognitive.critics.Critic;
+import org.argouml.model.ModelFacade;
+import ru.novosoft.uml.foundation.core.MInterface;
 
-import ru.novosoft.uml.foundation.core.*;
 
-import org.argouml.cognitive.*;
-import org.argouml.cognitive.critics.*;
 
 /** Well-formedness rule [1] for MInterface. See page 32 of UML 1.1
  *  Semantics. OMG document ad/97-08-04. */
@@ -53,12 +55,12 @@ public class CrInterfaceOperOnly extends CrUML {
     }
 
     public boolean predicate2(Object dm, Designer dsgr) {
-	if (!(org.argouml.model.ModelFacade.isAInterface(dm))) return NO_PROBLEM;
+	if (!(ModelFacade.isAInterface(dm))) return NO_PROBLEM;
 	MInterface inf = (MInterface) dm;
 	Collection sf = inf.getFeatures();
 	if (sf == null) return NO_PROBLEM;
 	for (Iterator iter = sf.iterator(); iter.hasNext(); ) {
-	    if (org.argouml.model.ModelFacade.isAStructuralFeature(iter.next()))
+	    if (ModelFacade.isAStructuralFeature(iter.next()))
 		return PROBLEM_FOUND;
 	};
 	return NO_PROBLEM;

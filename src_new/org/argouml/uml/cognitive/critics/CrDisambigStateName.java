@@ -1,5 +1,5 @@
 
-// $Id: CrDisambigStateName.java,v 1.6 2003/08/25 19:15:49 bobtarling Exp $
+// $Id: CrDisambigStateName.java,v 1.7 2003/08/30 21:28:52 alexb Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -28,20 +28,22 @@
 // File: CrDisambigStateName.java
 // Classes: CrDisambigStateName
 // Original Author: jrobbins@ics.uci.edu
-// $Id: CrDisambigStateName.java,v 1.6 2003/08/25 19:15:49 bobtarling Exp $
+// $Id: CrDisambigStateName.java,v 1.7 2003/08/30 21:28:52 alexb Exp $
 
 package org.argouml.uml.cognitive.critics;
 
-import java.util.*;
-import javax.swing.*;
+import java.util.Collection;
+import java.util.Iterator;
+import javax.swing.Icon;
+import org.argouml.cognitive.Designer;
+import org.argouml.cognitive.critics.Critic;
+import org.argouml.model.ModelFacade;
+import ru.novosoft.uml.behavior.state_machines.MState;
+import ru.novosoft.uml.foundation.core.MModelElement;
+import ru.novosoft.uml.foundation.core.MNamespace;
+import ru.novosoft.uml.model_management.MElementImport;
 
-import ru.novosoft.uml.foundation.core.*;
-import ru.novosoft.uml.foundation.data_types.*;
-import ru.novosoft.uml.model_management.*;
-import ru.novosoft.uml.behavior.state_machines.*;
 
-import org.argouml.cognitive.*;
-import org.argouml.cognitive.critics.*;
 
 public class CrDisambigStateName extends CrUML {
 
@@ -54,7 +56,7 @@ public class CrDisambigStateName extends CrUML {
     }
 
     public boolean predicate2(Object dm, Designer dsgr) {
-	if (!(org.argouml.model.ModelFacade.isAState(dm))) return NO_PROBLEM;
+	if (!(ModelFacade.isAState(dm))) return NO_PROBLEM;
 	MState s = (MState) dm;
 	String myName = s.getName();
 	// TODO: should define a CompoundCritic
@@ -73,7 +75,7 @@ public class CrDisambigStateName extends CrUML {
 	    while (enum.hasNext()) {
 		MElementImport eo = (MElementImport) enum.next();
 		MModelElement me = (MModelElement) eo.getModelElement();
-		if (!(org.argouml.model.ModelFacade.isAClassifier(me))) continue;
+		if (!(ModelFacade.isAClassifier(me))) continue;
 		if (me == s) continue;
 		String meName = me.getName();
 		if (meName == null || meName.equals("")) continue;

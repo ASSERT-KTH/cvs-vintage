@@ -1,5 +1,5 @@
 
-// $Id: CrConflictingComposites.java,v 1.5 2003/08/25 19:15:49 bobtarling Exp $
+// $Id: CrConflictingComposites.java,v 1.6 2003/08/30 21:28:52 alexb Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -28,17 +28,23 @@
 // File: CrConflictingComposites.java
 // Classes: CrConflictingComposites
 // Original Author: jrobbins@ics.uci.edu
-// $Id: CrConflictingComposites.java,v 1.5 2003/08/25 19:15:49 bobtarling Exp $
+// $Id: CrConflictingComposites.java,v 1.6 2003/08/30 21:28:52 alexb Exp $
 
 package org.argouml.uml.cognitive.critics;
 
-import java.util.*;
+import java.util.Collection;
+import java.util.Iterator;
+import java.util.List;
+import org.argouml.cognitive.Designer;
+import org.argouml.cognitive.critics.Critic;
+import org.argouml.model.ModelFacade;
+import ru.novosoft.uml.foundation.core.MAssociation;
+import ru.novosoft.uml.foundation.core.MAssociationEnd;
+import ru.novosoft.uml.foundation.core.MClassifier;
+import ru.novosoft.uml.foundation.data_types.MAggregationKind;
+import ru.novosoft.uml.foundation.data_types.MMultiplicity;
 
-import ru.novosoft.uml.foundation.core.*;
-import ru.novosoft.uml.foundation.data_types.*;
 
-import org.argouml.cognitive.*;
-import org.argouml.cognitive.critics.*;
 
 /** Well-formedness rule [2] for MAssociationEnd. See page 28 of UML 1.1
  *  Semantics. OMG document ad/97-08-04. */
@@ -54,7 +60,7 @@ public class CrConflictingComposites extends CrUML {
     }
 
     public boolean predicate2(Object dm, Designer dsgr) {
-	if (!(org.argouml.model.ModelFacade.isAClassifier(dm))) return NO_PROBLEM;
+	if (!(ModelFacade.isAClassifier(dm))) return NO_PROBLEM;
 	MClassifier cls = (MClassifier) dm;
 	Collection conns = cls.getAssociationEnds();
 	if (conns == null) return NO_PROBLEM;

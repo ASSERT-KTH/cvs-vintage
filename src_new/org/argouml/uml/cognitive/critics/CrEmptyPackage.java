@@ -1,4 +1,4 @@
-// $Id: CrEmptyPackage.java,v 1.9 2003/06/29 23:52:58 linus Exp $
+// $Id: CrEmptyPackage.java,v 1.10 2003/08/30 21:28:52 alexb Exp $
 // Copyright (c) 1996-2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -22,23 +22,19 @@
 // CALIFORNIA HAS NO OBLIGATIONS TO PROVIDE MAINTENANCE, SUPPORT,
 // UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 
-
-
-
-
 // File: CrEmptyPackage.java
 // Classes: CrEmptyPackage
 // Original Author: jrobbins@ics.uci.edu
 
 package org.argouml.uml.cognitive.critics;
 
-import java.util.*;
-
+import java.util.Iterator;
 import org.apache.log4j.Category;
-import org.argouml.cognitive.*;
 
+import org.argouml.cognitive.Designer;
 // Use Model through ModelFacade
 import org.argouml.model.ModelFacade;
+
 
 /** A critic whether a package/subsystem/model is empty. */
 

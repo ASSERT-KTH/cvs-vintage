@@ -1,4 +1,4 @@
-// $Id: CrDupRoleNames.java,v 1.7 2003/06/30 19:23:18 linus Exp $
+// $Id: CrDupRoleNames.java,v 1.8 2003/08/30 21:28:52 alexb Exp $
 // Copyright (c) 1996-2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -30,12 +30,13 @@
 
 package org.argouml.uml.cognitive.critics;
 
-import java.util.*;
+import java.util.Iterator;
+import java.util.Vector;
+import org.argouml.cognitive.Designer;
+import org.argouml.model.ModelFacade;
 
-import org.argouml.cognitive.*;
 
 // Use Model through Facade
-import org.argouml.model.ModelFacade;
 
 /**
  * <p> A critic to check that the ends of an association all have distinct

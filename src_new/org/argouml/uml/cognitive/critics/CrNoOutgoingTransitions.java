@@ -1,6 +1,6 @@
 
 
-// $Id: CrNoOutgoingTransitions.java,v 1.5 2003/08/25 19:15:49 bobtarling Exp $
+// $Id: CrNoOutgoingTransitions.java,v 1.6 2003/08/30 21:28:52 alexb Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -27,17 +27,18 @@
 // File: CrNoOutgoingTransitions.java
 // Classes: CrNoOutgoingTransitions
 // Original Author: jrobbins@ics.uci.edu
-// $Id: CrNoOutgoingTransitions.java,v 1.5 2003/08/25 19:15:49 bobtarling Exp $
+// $Id: CrNoOutgoingTransitions.java,v 1.6 2003/08/30 21:28:52 alexb Exp $
 
 package org.argouml.uml.cognitive.critics;
 
-import java.util.*;
+import java.util.Collection;
+import org.argouml.cognitive.Designer;
+import org.argouml.model.ModelFacade;
+import ru.novosoft.uml.behavior.state_machines.MState;
+import ru.novosoft.uml.behavior.state_machines.MStateMachine;
+import ru.novosoft.uml.behavior.state_machines.MStateVertex;
 
-import ru.novosoft.uml.foundation.core.*;
-import ru.novosoft.uml.foundation.data_types.*;
-import ru.novosoft.uml.behavior.state_machines.*;
 
-import org.argouml.cognitive.*;
 
 /** A critic to detect when a state has no outgoing transitions. */
 
@@ -50,15 +51,15 @@ public class CrNoOutgoingTransitions extends CrUML {
     }
 
     public boolean predicate2(Object dm, Designer dsgr) {
-	if (!(org.argouml.model.ModelFacade.isAStateVertex(dm))) return NO_PROBLEM;
+	if (!(ModelFacade.isAStateVertex(dm))) return NO_PROBLEM;
 	MStateVertex sv = (MStateVertex) dm;
-	if (org.argouml.model.ModelFacade.isAState(sv)) {
+	if (ModelFacade.isAState(sv)) {
 	    MStateMachine sm = ((MState) sv).getStateMachine();
 	    if (sm != null && sm.getTop() == sv) return NO_PROBLEM;
 	}
 	Collection outgoing = sv.getOutgoings();
 	boolean needsOutgoing = outgoing == null || outgoing.size() == 0;
-	if (org.argouml.model.ModelFacade.isAFinalState(sv)) {
+	if (ModelFacade.isAFinalState(sv)) {
 	    needsOutgoing = false;
 	}
 	if (needsOutgoing) return PROBLEM_FOUND;

@@ -1,5 +1,5 @@
 
-// $Id: CrInstanceWithoutClassifier.java,v 1.5 2003/08/25 19:15:49 bobtarling Exp $
+// $Id: CrInstanceWithoutClassifier.java,v 1.6 2003/08/30 21:28:52 alexb Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -26,20 +26,22 @@
 // File: CrClassWithoutComponent.java
 // Classes: CrClassWithoutComponent
 // Original Author: 5eichler@informatik.uni-hamburg.de
-// $Id: CrInstanceWithoutClassifier.java,v 1.5 2003/08/25 19:15:49 bobtarling Exp $
+// $Id: CrInstanceWithoutClassifier.java,v 1.6 2003/08/30 21:28:52 alexb Exp $
 
 package org.argouml.uml.cognitive.critics;
 
-import java.util.*;
+import java.util.Collection;
+import java.util.Vector;
+import org.argouml.cognitive.Designer;
+import org.argouml.cognitive.ToDoItem;
+import org.argouml.model.ModelFacade;
+import org.argouml.uml.diagram.deployment.ui.UMLDeploymentDiagram;
+import org.argouml.uml.diagram.ui.FigNodeModelElement;
+import org.tigris.gef.util.VectorSet;
+import ru.novosoft.uml.behavior.common_behavior.MInstance;
 
-import ru.novosoft.uml.foundation.core.*;
-import ru.novosoft.uml.behavior.common_behavior.*;
 
-import org.tigris.gef.util.*;
 
-import org.argouml.cognitive.*;
-import org.argouml.uml.diagram.ui.*;
-import org.argouml.uml.diagram.deployment.ui.*;
 
 /**
  * A critic to detect when an object in a deployment-diagram
@@ -91,7 +93,7 @@ public class CrInstanceWithoutClassifier extends CrUML {
 	    Object obj = figs.elementAt(i);
 	    if (!(obj instanceof FigNodeModelElement)) continue;
 	    FigNodeModelElement fn = (FigNodeModelElement) obj;
-	    if (fn != null && (org.argouml.model.ModelFacade.isAInstance(fn.getOwner()))) {
+	    if (fn != null && (ModelFacade.isAInstance(fn.getOwner()))) {
 		MInstance minst = (MInstance) fn.getOwner();
 		if (minst != null) {
 		    Collection col = minst.getClassifiers();

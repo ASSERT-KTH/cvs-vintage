@@ -1,4 +1,4 @@
-// $Id: CrNoGuard.java,v 1.5 2003/06/30 19:23:18 linus Exp $
+// $Id: CrNoGuard.java,v 1.6 2003/08/30 21:28:52 alexb Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,17 +25,16 @@
 // File: CrNoGuard.java
 // Classes: CrNoGuard.java
 // Original Author: jrobbins@ics.uci.edu
-// $Id: CrNoGuard.java,v 1.5 2003/06/30 19:23:18 linus Exp $
+// $Id: CrNoGuard.java,v 1.6 2003/08/30 21:28:52 alexb Exp $
 
 package org.argouml.uml.cognitive.critics;
 
-import java.util.*;
-
-import ru.novosoft.uml.behavior.state_machines.*;
-
-import org.argouml.cognitive.*;
-import org.argouml.cognitive.critics.*;
+import org.argouml.cognitive.Designer;
+import org.argouml.cognitive.critics.Critic;
 import org.argouml.model.ModelFacade;
+
+
+import ru.novosoft.uml.behavior.state_machines.MGuard;
 
 public class CrNoGuard extends CrUML {
 

@@ -1,4 +1,4 @@
-// $Id: CrNavFromInterface.java,v 1.6 2003/06/30 18:00:28 linus Exp $
+// $Id: CrNavFromInterface.java,v 1.7 2003/08/30 21:28:52 alexb Exp $
 // Copyright (c) 1996-2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -28,13 +28,13 @@
 
 package org.argouml.uml.cognitive.critics;
 
-import java.util.*;
+import java.util.Iterator;
+import org.argouml.cognitive.Designer;
+import org.argouml.cognitive.critics.Critic;
+import org.argouml.model.ModelFacade;
 
-import org.argouml.cognitive.*;
-import org.argouml.cognitive.critics.*;
 
 // Use Model through ModelFacade
-import org.argouml.model.ModelFacade;
 
 /**
  * <p> A critic to detect navigation from an Interface to a Class in an

@@ -1,4 +1,4 @@
-// $Id: ClOperationCompartment.java,v 1.5 2003/06/30 18:00:27 linus Exp $
+// $Id: ClOperationCompartment.java,v 1.6 2003/08/30 21:28:52 alexb Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -24,14 +24,16 @@
 
 package org.argouml.uml.cognitive.critics;
 
-import java.awt.*;
-import javax.swing.*;
+import java.awt.Color;
+import java.awt.Component;
+import java.awt.Graphics;
+import org.argouml.cognitive.ToDoItem;
+import org.argouml.ui.Clarifier;
+import org.argouml.uml.diagram.static_structure.ui.FigClass;
+import org.tigris.gef.presentation.Fig;
+import org.tigris.gef.presentation.FigGroup;
 
-import org.tigris.gef.presentation.*;
 
-import org.argouml.ui.*;
-import org.argouml.cognitive.*;
-import org.argouml.uml.diagram.static_structure.ui.*;
 
 public class ClOperationCompartment implements Clarifier {
     public static ClOperationCompartment TheInstance =

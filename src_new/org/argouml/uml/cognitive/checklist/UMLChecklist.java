@@ -1,4 +1,4 @@
-// $Id: UMLChecklist.java,v 1.6 2003/08/17 22:16:59 linus Exp $
+// $Id: UMLChecklist.java,v 1.7 2003/08/30 21:28:52 alexb Exp $
 // Copyright (c) 1996-2001 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -24,7 +24,8 @@
 
 package org.argouml.uml.cognitive.checklist;
 
-import org.argouml.cognitive.checklist.*;
+import org.argouml.cognitive.checklist.CheckItem;
+import org.argouml.cognitive.checklist.Checklist;
 
 /** Exacly like Checklist, but makes UMLCheckItems by default. */
 

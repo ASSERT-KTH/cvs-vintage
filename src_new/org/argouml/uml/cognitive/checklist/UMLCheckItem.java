@@ -1,4 +1,4 @@
-// $Id: UMLCheckItem.java,v 1.8 2003/06/30 21:59:32 linus Exp $
+// $Id: UMLCheckItem.java,v 1.9 2003/08/30 21:28:52 alexb Exp $
 // Copyright (c) 1996-2001 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -24,19 +24,16 @@
 
 package org.argouml.uml.cognitive.checklist;
 
-import java.util.*;
-
-import ru.novosoft.uml.foundation.core.*;
-import ru.novosoft.uml.foundation.data_types.*;
-
-import org.tigris.gef.util.*;
-
 import org.apache.log4j.Category;
-import org.argouml.cognitive.checklist.*;
+
+
+
+import org.argouml.cognitive.checklist.CheckItem;
 //
 //  slightly different from its GEF counterpart
 //
 import org.argouml.ocl.OCLEvaluator;
+import org.tigris.gef.util.Predicate;
 
 /** A special kind of CheckItem that can replace OCL expressions with
  *  their values in the generated advice.

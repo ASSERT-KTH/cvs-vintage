@@ -1,5 +1,5 @@
 
-// $Id: CrMissingAttrName.java,v 1.5 2003/08/25 19:15:49 bobtarling Exp $
+// $Id: CrMissingAttrName.java,v 1.6 2003/08/30 21:28:52 alexb Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -28,19 +28,19 @@
 // File:CrMissingAttrName.java
 // Classes:CrMissingAttrName
 // Original Author: jrobbins@ics.uci.edu
-// $Id: CrMissingAttrName.java,v 1.5 2003/08/25 19:15:49 bobtarling Exp $
+// $Id: CrMissingAttrName.java,v 1.6 2003/08/30 21:28:52 alexb Exp $
 
 package org.argouml.uml.cognitive.critics;
 
-import java.util.*;
+import org.argouml.cognitive.Designer;
+import org.argouml.cognitive.ToDoItem;
+import org.argouml.cognitive.critics.Critic;
+import org.argouml.kernel.Wizard;
+import org.argouml.model.ModelFacade;
+import ru.novosoft.uml.foundation.core.MAttribute;
+import ru.novosoft.uml.foundation.core.MModelElement;
 
-import ru.novosoft.uml.foundation.core.*;
-import ru.novosoft.uml.foundation.data_types.*;
-import ru.novosoft.uml.model_management.*;
 
-import org.argouml.kernel.*;
-import org.argouml.cognitive.*;
-import org.argouml.cognitive.critics.*;
 
 public class CrMissingAttrName extends CrUML {
 
@@ -52,7 +52,7 @@ public class CrMissingAttrName extends CrUML {
     }
 
     public boolean predicate2(Object dm, Designer dsgr) {
-	if (!(org.argouml.model.ModelFacade.isAAttribute(dm))) return NO_PROBLEM;
+	if (!(ModelFacade.isAAttribute(dm))) return NO_PROBLEM;
 	MAttribute attr = (MAttribute) dm;
 	String myName = attr.getName();
 	if (myName == null || myName.equals("")) return PROBLEM_FOUND;
@@ -66,7 +66,7 @@ public class CrMissingAttrName extends CrUML {
 	    MModelElement me = (MModelElement) item.getOffenders().elementAt(0);
 	    String ins = "Set the name of this attribute.";
 	    String sug = "AttributeName";
-	    if (org.argouml.model.ModelFacade.isAAttribute(me)) {
+	    if (ModelFacade.isAAttribute(me)) {
 		MAttribute a = (MAttribute) me;
 		int count = 1;
 		if (a.getOwner() != null)

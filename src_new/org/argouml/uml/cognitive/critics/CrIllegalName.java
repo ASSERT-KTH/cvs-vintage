@@ -1,6 +1,6 @@
 
 
-// $Id: CrIllegalName.java,v 1.7 2003/08/25 23:57:45 bobtarling Exp $
+// $Id: CrIllegalName.java,v 1.8 2003/08/30 21:28:52 alexb Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -29,19 +29,17 @@
 // File: CrIllegalName.java
 // Classes: CrIllegalName
 // Original Author: jrobbins@ics.uci.edu
-// $Id: CrIllegalName.java,v 1.7 2003/08/25 23:57:45 bobtarling Exp $
+// $Id: CrIllegalName.java,v 1.8 2003/08/30 21:28:52 alexb Exp $
 
 package org.argouml.uml.cognitive.critics;
 
-import java.util.*;
-import javax.swing.*;
-
-import ru.novosoft.uml.foundation.core.*;
-import ru.novosoft.uml.foundation.data_types.*;
-import ru.novosoft.uml.model_management.*;
+import javax.swing.Icon;
+import org.argouml.cognitive.Designer;
+import org.argouml.model.ModelFacade;
+import ru.novosoft.uml.foundation.core.MModelElement;
 
 
-import org.argouml.cognitive.*;
+
 
 /** A critic to detect whether a model element name is legally formed.
  */
@@ -54,7 +52,7 @@ public class CrIllegalName extends CrUML {
     }
 
     public boolean predicate2(Object dm, Designer dsgr) {
-	if (!(org.argouml.model.ModelFacade.isAModelElement(dm))) return NO_PROBLEM;
+	if (!(ModelFacade.isAModelElement(dm))) return NO_PROBLEM;
 	MModelElement me = (MModelElement) dm;
 	String meName = me.getName();
 	if (meName == null || meName.equals("")) return NO_PROBLEM;
@@ -66,7 +64,7 @@ public class CrIllegalName extends CrUML {
 	for (int i = 0; i < len; i++) {
 	    char c = nameStr.charAt(i);
 	    if (!(Character.isLetterOrDigit(c) || c == '_' ||
-		  (c == ' ' && org.argouml.model.ModelFacade.isAStateVertex(me))))
+		  (c == ' ' && ModelFacade.isAStateVertex(me))))
 		return PROBLEM_FOUND;
 	}
 	return NO_PROBLEM;

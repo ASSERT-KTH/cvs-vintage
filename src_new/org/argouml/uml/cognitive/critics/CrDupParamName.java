@@ -1,5 +1,5 @@
 
-// $Id: CrDupParamName.java,v 1.9 2003/08/25 19:15:49 bobtarling Exp $
+// $Id: CrDupParamName.java,v 1.10 2003/08/30 21:28:52 alexb Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -28,19 +28,21 @@
 // File: CrDupParamName.java
 // Classes: CrDupParamName
 // Original Author: jrobbins@ics.uci.edu
-// $Id: CrDupParamName.java,v 1.9 2003/08/25 19:15:49 bobtarling Exp $
+// $Id: CrDupParamName.java,v 1.10 2003/08/30 21:28:52 alexb Exp $
 
 package org.argouml.uml.cognitive.critics;
 
-import java.util.*;
-
-import ru.novosoft.uml.foundation.core.*;
-import ru.novosoft.uml.foundation.data_types.*;
-
-import org.argouml.cognitive.*;
-import org.argouml.cognitive.critics.*;
+import java.util.Iterator;
+import java.util.Vector;
+import org.argouml.cognitive.Designer;
+import org.argouml.cognitive.critics.Critic;
+import org.argouml.model.ModelFacade;
 import org.argouml.model.uml.UmlHelper;
-import org.argouml.uml.*;
+
+
+import ru.novosoft.uml.foundation.core.MBehavioralFeature;
+import ru.novosoft.uml.foundation.core.MOperation;
+import ru.novosoft.uml.foundation.core.MParameter;
 
 /** Well-formedness rule [1] for MBehavioralFeature. See page 28 of UML 1.1
  *  Semantics. OMG document ad/97-08-04. */
@@ -55,7 +57,7 @@ public class CrDupParamName extends CrUML {
     }
 
     public boolean predicate2(Object dm, Designer dsgr) {
-	if (!(org.argouml.model.ModelFacade.isABehavioralFeature(dm))) return NO_PROBLEM;
+	if (!(ModelFacade.isABehavioralFeature(dm))) return NO_PROBLEM;
 	MBehavioralFeature bf = (MBehavioralFeature) dm;
 	Vector params = new Vector(bf.getParameters());
 	params.remove(UmlHelper.getHelper().getCore()

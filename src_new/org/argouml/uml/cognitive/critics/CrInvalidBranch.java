@@ -1,4 +1,4 @@
-// $Id: CrInvalidBranch.java,v 1.5 2003/06/30 19:23:18 linus Exp $
+// $Id: CrInvalidBranch.java,v 1.6 2003/08/30 21:28:52 alexb Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,14 +25,14 @@
 // File: CrInvalidBranch.java
 // Classes: CrInvalidBranch
 // Original Author: jrobbins@ics.uci.edu
-// $Id: CrInvalidBranch.java,v 1.5 2003/06/30 19:23:18 linus Exp $
+// $Id: CrInvalidBranch.java,v 1.6 2003/08/30 21:28:52 alexb Exp $
 
 package org.argouml.uml.cognitive.critics;
 
-import java.util.*;
-
-import org.argouml.cognitive.*;
+import java.util.Collection;
+import org.argouml.cognitive.Designer;
 import org.argouml.model.ModelFacade;
+
 
 /** A critic to detect when a Branch state has the wrong number of
  *  transitions.  Implements constraint [6] on MPseudostate in the UML
