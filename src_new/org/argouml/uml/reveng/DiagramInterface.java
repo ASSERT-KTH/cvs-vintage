@@ -1,4 +1,4 @@
-// $Id: DiagramInterface.java,v 1.15 2003/03/16 02:15:33 alexb Exp $
+// $Id: DiagramInterface.java,v 1.16 2003/03/19 23:14:28 alexb Exp $
 // Copyright (c) 1996-2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -246,6 +246,8 @@ public class DiagramInterface {
             
             newClassFig.setAttributeVisible(!minimise);
             newClassFig.setOperationVisible(!minimise);
+            
+            newClassFig.setSize(newClassFig.getMinimumSize());
         }
     }
 
@@ -265,6 +267,8 @@ public class DiagramInterface {
             currentGM.addNodeRelatedEdges( newInterface);
             
             newInterfaceFig.setOperationVisible(!minimise);
+            
+            newInterfaceFig.setSize(newInterfaceFig.getMinimumSize());
         }
     }
 
