@@ -163,7 +163,10 @@ public class JasperMangler implements Mangler{
     }
     
     public String getJspFilePath() {
-	return FileUtil.safePath( docBase, jspFile);
+        // lazy evaluation of full path
+        if( jspFilePath == null )
+            jspFilePath=FileUtil.safePath( docBase, jspFile);
+        return jspFilePath;
     }
 
     private String fixInvalidChars(String className) {
@@ -287,6 +290,7 @@ public class JasperMangler implements Mangler{
     // context-relative jsp path 
     // extracted from the <jsp-file> or the result of a *.jsp mapping
     private String jspFile; 
+    private String jspFilePath=null;
     // version of the compiled java file
     private int version;
     private String workDir;
