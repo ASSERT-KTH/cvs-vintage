@@ -20,12 +20,13 @@ import org.jboss.metadata.ResourceEnvRefMetaData;
 import org.jboss.metadata.ResourceRefMetaData;
 import org.jboss.metadata.WebMetaData;
 import org.jboss.metadata.XmlFileLoader;
+import org.jboss.metadata.WebSecurityMetaData;
+import org.jboss.metadata.WebSecurityMetaData.WebResourceCollection;
 import org.jboss.mx.loading.LoaderRepositoryFactory;
 import org.jboss.naming.NonSerializableFactory;
 import org.jboss.naming.Util;
 import org.jboss.security.plugins.NullSecurityManager;
 import org.jboss.web.AbstractWebContainer.WebDescriptorParser;
-import org.jboss.webservice.WebServiceClientDeployer;
 import org.jboss.webservice.WebServiceClientHandler;
 import org.omg.CORBA.ORB;
 import org.w3c.dom.Document;
@@ -36,6 +37,11 @@ import javax.naming.Context;
 import javax.naming.InitialContext;
 import javax.naming.LinkRef;
 import javax.naming.NamingException;
+import javax.security.jacc.PolicyConfigurationFactory;
+import javax.security.jacc.PolicyConfiguration;
+import javax.security.jacc.PolicyContextException;
+import javax.security.jacc.WebResourcePermission;
+import javax.security.jacc.WebUserDataPermission;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -48,6 +54,9 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
+import java.util.HashMap;
+import java.util.Arrays;
+import java.util.Map;
 
 /** A template pattern class for web deployer integration into JBoss. This class
 should be subclasses by war deployers providers wishing to integrate into
@@ -142,7 +151,7 @@ thread context ClassLoader as was used to dispatch the http service request.
    extends="org.jboss.deployment.SubDeployerMBean"
 
 @author  Scott.Stark@jboss.org
-@version $Revision: 1.10 $
+@version $Revision: 1.11 $
 */
 public abstract class AbstractWebDeployer
 {
@@ -325,6 +334,22 @@ public abstract class AbstractWebDeployer
 
             webMetaData.mergeSecurityRoles(appMetaData.getSecurityRoles());
          }
+
+         // Register the permissions with the JACC layer
+         String contextID = di.shortName;
+         if( contextID == null )
+            contextID = di.shortName;
+         PolicyConfigurationFactory pcFactory = PolicyConfigurationFactory.getPolicyConfigurationFactory();
+         PolicyConfiguration pc = pcFactory.getPolicyConfiguration(contextID, true);
+         createPermissions(webMetaData, pc);
+         // Link this to the parent PC
+         DeploymentInfo current = di;
+         while( current.parent != null )
+            current = current.parent;
+         PolicyConfiguration parentPC = (PolicyConfiguration)
+            current.context.get("javax.security.jacc.PolicyConfiguration");
+         if( parentPC != null && parentPC != pc )
+            parentPC.linkConfiguration(pc);
 
          warInfo = new WebApplication(webMetaData);
          warInfo.setDeploymentInfo(di);
@@ -876,6 +901,186 @@ public abstract class AbstractWebDeployer
       metaData.setContextRoot(webContext);
    }
 
+   /** Create the JACC permission based on the security constraints obtained
+    * from the web.xml metadata.
+    * 
+    * @param metaData
+    * @param pc
+    * @throws PolicyContextException
+    */ 
+   protected void createPermissions(WebMetaData metaData, PolicyConfiguration pc)
+      throws PolicyContextException
+   {
+      Iterator constraints = metaData.getSecurityContraints();
+      // The url pattern to http methods for patterns for WebResourcePermiss
+      HashMap patternsWithHttpMethodSubsetsWRP = new HashMap();
+      // The url pattern to http methods for patterns for WebUserDataPermiss
+      HashMap patternsWithHttpMethodSubsetsWUDP = new HashMap();
+      while( constraints.hasNext() )
+      {
+         WebSecurityMetaData wsmd = (WebSecurityMetaData) constraints.next();
+         String transport = wsmd.getTransportGuarantee();
+         if( transport != null && transport.equalsIgnoreCase("NONE") )
+            transport = null;
+         if( wsmd.isExcluded() || wsmd.isUnchecked() )
+         {
+            // Build the permissions for the excluded/unchecked resources
+            Iterator resources = wsmd.getWebResources().values().iterator();
+            while( resources.hasNext() )
+            {
+               WebResourceCollection wrc = (WebResourceCollection) resources.next();
+               String[] httpMethods = wrc.getHttpMethods();
+               String[] urlPatterns = wrc.getUrlPatterns();
+               for(int n = 0; n < urlPatterns.length; n ++)
+               {
+                  String url = urlPatterns[n];
+                  WebResourcePermission p = new WebResourcePermission(url, httpMethods);
+                  WebUserDataPermission p2 = new WebUserDataPermission(url,
+                     httpMethods, wsmd.getTransportGuarantee());
+                  if( wsmd.isExcluded() )
+                  {
+                     pc.addToExcludedPolicy(p);
+                     pc.addToExcludedPolicy(p2);                     
+                  }
+                  else
+                  {
+                     pc.addToUncheckedPolicy(p);
+                     pc.addToUncheckedPolicy(p2);
+                  }
+                  // Track the incomplete coverage of http methods
+                  if( urlPatterns.length > 0 )
+                  {
+                     HashSet methodsWRP = (HashSet) patternsWithHttpMethodSubsetsWRP.get(url);
+                     if( methodsWRP == null )
+                     {
+                        methodsWRP = new HashSet();
+                        patternsWithHttpMethodSubsetsWRP.put(url, methodsWRP);
+                     }
+                     /* Only add methods to excluded perms because incomplete
+                     coverage of unchecked perms http method should not exclude
+                     the explicitly stated http methods. For example, a url
+                     pattern /unchecked with explicit https method POST, GET that
+                     as no auth constraint should result in a unchecked permission
+                     that includes all http methods since the logic for incomplete
+                     coverage would add an unchecked permission with the missing
+                     methods: DELETE, PUT, HEAD, OPTIONS, TRACE. However, two
+                     unchecked permissions whose union of http methods covers
+                     all methods does not result in a permission collection
+                     that implies WebResourcePermission("/unchecked, null). So
+                     we leave off the http methods for the explicit unchecked
+                     permission so that an unchecked permission with a null
+                     http methods spec results if appropriate.
+                     */
+                     if( wsmd.isExcluded() )
+                        methodsWRP.addAll(Arrays.asList(httpMethods));
+
+                     HashSet methodsWUDP = (HashSet) patternsWithHttpMethodSubsetsWUDP.get(url);
+                     if( methodsWUDP == null )
+                     {
+                        methodsWUDP = new HashSet();
+                        patternsWithHttpMethodSubsetsWUDP.put(url, methodsWUDP);
+                     }
+                     if( wsmd.isExcluded() || transport != null )
+                        methodsWUDP.addAll(Arrays.asList(httpMethods));
+                  }
+               }
+            }
+         }
+         else
+         {
+            // Build the permission for the resources x roles
+            Iterator resources = wsmd.getWebResources().values().iterator();
+            while( resources.hasNext() )
+            {
+               WebResourceCollection wrc = (WebResourceCollection) resources.next();
+               String[] httpMethods = wrc.getHttpMethods();
+               String[] urlPatterns = wrc.getUrlPatterns();
+               for(int n = 0; n < urlPatterns.length; n ++)
+               {
+                  String url = urlPatterns[n];
+                  WebResourcePermission p = new WebResourcePermission(url, httpMethods);
+                  WebUserDataPermission p2 = new WebUserDataPermission(url,
+                     httpMethods, wsmd.getTransportGuarantee());
+                  Iterator roles = wsmd.getRoles().iterator();
+                  while( roles.hasNext() )
+                  {
+                     String role = (String) roles.next();
+                     pc.addToRole(role, p);
+                  }
+                  pc.addToUncheckedPolicy(p2);
+                  // Track the incomplete coverage of http methods
+                  if( urlPatterns.length > 0 )
+                  {
+                     HashSet methodsWRP = (HashSet) patternsWithHttpMethodSubsetsWRP.get(url);
+                     if( methodsWRP == null )
+                     {
+                        methodsWRP = new HashSet();
+                        patternsWithHttpMethodSubsetsWRP.put(url, methodsWRP);
+                     }
+                     methodsWRP.addAll(Arrays.asList(httpMethods));
+
+                     HashSet methodsWUDP = (HashSet) patternsWithHttpMethodSubsetsWUDP.get(url);
+                     if( methodsWUDP == null )
+                     {
+                        methodsWUDP = new HashSet();
+                        patternsWithHttpMethodSubsetsWUDP.put(url, methodsWUDP);
+                     }
+                     if( transport != null )
+                        methodsWUDP.addAll(Arrays.asList(httpMethods));
+                  }
+               }
+            }
+         }
+      }
+
+      /* Create unchecked permissions. We are required to create an unchecked
+      permission for every url pattern that is not covered by a every possible
+      http method.
+      */
+      Iterator iter = patternsWithHttpMethodSubsetsWRP.entrySet().iterator();
+      while( iter.hasNext() )
+      {
+         Map.Entry e = (Map.Entry) iter.next();
+         String url = (String) e.getKey();
+         HashSet methods = (HashSet) e.getValue();
+         String[] missingMethods = WebSecurityMetaData.getMissingHttpMethods(methods);
+         WebResourcePermission p = new WebResourcePermission(url, missingMethods);
+         pc.addToUncheckedPolicy(p);
+      }
+      
+      iter = patternsWithHttpMethodSubsetsWUDP.entrySet().iterator();
+      while( iter.hasNext() )
+      {
+         Map.Entry e = (Map.Entry) iter.next();
+         String url = (String) e.getKey();
+         HashSet methods = (HashSet) e.getValue();
+         String[] missingMethods = WebSecurityMetaData.getMissingHttpMethods(methods);
+         WebUserDataPermission p2 = new WebUserDataPermission(url, missingMethods, null);
+         pc.addToUncheckedPolicy(p2);
+      }
+
+      // 
+      if( patternsWithHttpMethodSubsetsWRP.containsKey("/") == false )
+         patternsWithHttpMethodSubsetsWRP.put("/", null);
+      iter = patternsWithHttpMethodSubsetsWRP.keySet().iterator();
+      StringBuffer allURLs = new StringBuffer();
+      while( iter.hasNext() )
+      {
+         String url = (String) iter.next();
+         allURLs.append(url);
+         allURLs.append(':');
+      }
+      allURLs.setLength(allURLs.length()-1);
+      String all = allURLs.toString();
+      WebResourcePermission p = new WebResourcePermission(all, (String) null);
+      pc.addToUncheckedPolicy(p);
+      WebUserDataPermission p2 = new WebUserDataPermission(all, null);
+      pc.addToUncheckedPolicy(p2);
+
+      patternsWithHttpMethodSubsetsWRP.clear();
+      patternsWithHttpMethodSubsetsWUDP.clear();
+   }
+
    /** An inner class that maps the WebDescriptorParser.parseWebAppDescriptors()
    onto the protected parseWebAppDescriptors() AbstractWebContainer method.
    */
@@ -886,7 +1091,8 @@ public abstract class AbstractWebDeployer
       {
          this.di = di;
       }
-      public void parseWebAppDescriptors(ClassLoader loader, WebMetaData metaData) throws Exception
+      public void parseWebAppDescriptors(ClassLoader loader, WebMetaData metaData)
+         throws Exception
       {
          AbstractWebDeployer.this.parseWebAppDescriptors(di, loader, metaData);
       }

@@ -75,7 +75,7 @@ import org.w3c.dom.Element;
  * @author <a href="mailto:reverbel@ime.usp.br">Francisco Reverbel</a>
  * @author <a href="mailto:Adrian.Brock@HappeningTimes.com">Adrian.Brock</a>
  * @author <a href="mailto:Scott.Stark@jboss.org">Scott Stark</a>
- * @version $Revision: 1.54 $
+ * @version $Revision: 1.55 $
  *
  * @jmx:mbean extends="org.jboss.system.ServiceMBean"
  */
@@ -289,10 +289,21 @@ public class EjbModule
             con.setDeploymentInfo(deploymentInfo);
             addContainer(con);
             // Register the permissions with the JACC layer
-            String contextID = bean.getJndiName();
+            String contextID = deploymentInfo.shortName;
+            if( contextID == null )
+               contextID = deploymentInfo.shortName;
             PolicyConfigurationFactory pcFactory = PolicyConfigurationFactory.getPolicyConfigurationFactory();
             PolicyConfiguration pc = pcFactory.getPolicyConfiguration(contextID, true);
             createPermissions(bean, pc);
+            deploymentInfo.context.put("javax.security.jacc.PolicyConfiguration", pc);
+            // Link this to the parent PC
+            DeploymentInfo current = deploymentInfo;
+            while( current.parent != null )
+               current = current.parent;
+            PolicyConfiguration parentPC = (PolicyConfiguration)
+               current.context.get("javax.security.jacc.PolicyConfiguration");
+            if( parentPC != null && parentPC != pc )
+               parentPC.linkConfiguration(pc);
          }
 
          //only one iteration should be necessary, but we won't sweat it.
@@ -873,14 +884,24 @@ public class EjbModule
       while( iter.hasNext() )
       {
          MethodMetaData mmd = (MethodMetaData) iter.next();
+         String[] params = null;
+         if( mmd.isParamGiven() )
+            params = mmd.getMethodParams();
          EJBMethodPermission p = new EJBMethodPermission(mmd.getEjbName(),
-            mmd.getMethodName(), mmd.getInterfaceType(), mmd.getMethodParams());
-         Set roles = mmd.getRoles();
-         Iterator riter = roles.iterator();
-         while( riter.hasNext() )
+            mmd.getMethodName(), mmd.getInterfaceType(), params);
+         if( mmd.isUnchecked() )
          {
-            String role = (String) riter.next();
-            pc.addToRole(role, p);
+            pc.addToUncheckedPolicy(p);
+         }
+         else
+         {
+            Set roles = mmd.getRoles();
+            Iterator riter = roles.iterator();
+            while( riter.hasNext() )
+            {
+               String role = (String) riter.next();
+               pc.addToRole(role, p);
+            }
          }
       }
       // Process the exclude-list MethodMetaData
@@ -888,14 +909,12 @@ public class EjbModule
       while( iter.hasNext() )
       {
          MethodMetaData mmd = (MethodMetaData) iter.next();
+         String[] params = null;
+         if( mmd.isParamGiven() )
+            params = mmd.getMethodParams();
          EJBMethodPermission p = new EJBMethodPermission(mmd.getEjbName(),
-            mmd.getMethodName(), mmd.getInterfaceType(), mmd.getMethodParams());
-         Set roles = mmd.getRoles();
-         Iterator riter = roles.iterator();
-         while( riter.hasNext() )
-         {
-            pc.addToExcludedPolicy(p);
-         }
+            mmd.getMethodName(), mmd.getInterfaceType(), params);
+         pc.addToExcludedPolicy(p);
       }
       // Process the security-role-ref SecurityRoleRefMetaData
       iter = bean.getSecurityRoleReferences();

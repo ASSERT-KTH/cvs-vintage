@@ -33,18 +33,20 @@ import java.util.Set;
  * @see org.jboss.web.AbstractWebContainer
  
  * @author Scott.Stark@jboss.org
- * @version $Revision: 1.26 $
+ * @version $Revision: 1.27 $
  */
 public class WebMetaData extends MetaData
 {
    private static Logger log = Logger.getLogger(WebMetaData.class);
 
-   /** The web.xml resource-refs */
+   /** The web.xml resource-refs <String, String> */
    private HashMap resourceReferences = new HashMap();
-   /** The web.xml resource-env-refs */
+   /** The web.xml resource-env-refs <String, String> */
    private HashMap resourceEnvReferences = new HashMap();
    /** web.xml env-entrys */
    private ArrayList environmentEntries = new ArrayList();
+   /** web.xml security-constraint <WebSecurityMetaData> */
+   private ArrayList securityContraints = new ArrayList();
    /** The security-roles */
    private HashMap securityRoles = new HashMap();
    /** web.xml ejb-refs */
@@ -174,6 +176,14 @@ public class WebMetaData extends MetaData
    public void setSecurityDomain(String securityDomain)
    {
       this.securityDomain = securityDomain;
+   }
+
+   /** Get the security-constraint settings
+    * @return
+    */ 
+   public Iterator getSecurityContraints()
+   {
+      return securityContraints.iterator();
    }
 
    /**
@@ -327,6 +337,67 @@ public class WebMetaData extends MetaData
          EnvEntryMetaData envEntryMetaData = new EnvEntryMetaData();
          envEntryMetaData.importEjbJarXml(envEntry);
          environmentEntries.add(envEntryMetaData);
+      }
+
+      // Get the security-constraints
+      iterator = getChildrenByTagName(webApp, "security-constraint");
+      while (iterator.hasNext())
+      {
+         Element contraints = (Element) iterator.next();
+         WebSecurityMetaData wsmd = new WebSecurityMetaData();
+         securityContraints.add(wsmd);
+         // Process the web-resource-collections
+         Iterator iter2 = getChildrenByTagName(contraints, "web-resource-collection");
+         while( iter2.hasNext() )
+         {
+            Element wrcElement = (Element) iter2.next();
+            Element wrName = getUniqueChild(wrcElement, "web-resource-name");
+            String name = getElementContent(wrName);
+            WebSecurityMetaData.WebResourceCollection wrc = wsmd.addWebResource(name);
+            Iterator iter21 = getChildrenByTagName(wrcElement, "url-pattern");
+            while( iter21.hasNext() )
+            {
+               Element urlPattern = (Element) iter21.next();
+               String pattern = getElementContent(urlPattern);
+               wrc.addPattern(pattern);
+            }
+
+            Iterator iter22 = getChildrenByTagName(wrcElement, "http-method");
+            while( iter22.hasNext() )
+            {
+               Element httpMethod = (Element) iter22.next();
+               String method = getElementContent(httpMethod);
+               wrc.addHttpMethod(method);               
+            }
+         }
+
+         // Process the auth-constraints
+         Element authContraint = getOptionalChild(contraints, "auth-constraint");
+         if( authContraint != null )
+         {
+            Iterator iter3 = getChildrenByTagName(authContraint, "role-name");
+            while( iter3.hasNext() )
+            {
+               Element roleName = (Element) iter3.next();
+               String name = getElementContent(roleName);
+               wsmd.addRole(name);
+            }
+            if( wsmd.getRoles().size() == 0 )
+               wsmd.setExcluded(true);
+         }
+         else
+         {
+            wsmd.setUnchecked(true);
+         }
+
+         // Process the user-data-constraint
+         Element userData = getOptionalChild(contraints, "user-data-constraint");
+         if( userData != null )
+         {
+            Element transport = getUniqueChild(userData, "transport-guarantee");
+            String type = getElementContent(transport);
+            wsmd.setTransportGuarantee(type);
+         }
       }
 
       // set the security roles (optional)

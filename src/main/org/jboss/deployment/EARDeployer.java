@@ -18,6 +18,9 @@ import java.util.Iterator;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 
+import javax.security.jacc.PolicyConfigurationFactory;
+import javax.security.jacc.PolicyConfiguration;
+
 import org.jboss.metadata.MetaData;
 import org.jboss.metadata.XmlFileLoader;
 import org.jboss.mx.loading.LoaderRepositoryFactory;
@@ -34,7 +37,7 @@ import org.w3c.dom.Element;
  *
  * @author <a href="mailto:marc.fleury@jboss.org">Marc Fleury</a>
  * @author Scott.Stark@jboss.org
- * @version $Revision: 1.32 $
+ * @version $Revision: 1.33 $
  */
 public class EARDeployer
    extends SubDeployerSupport
@@ -158,6 +161,12 @@ public class EARDeployer
                }
             }
          }
+
+         // Create a top level JACC policy for linking app module policies
+         String contextID = di.shortName;
+         PolicyConfigurationFactory pcFactory = PolicyConfigurationFactory.getPolicyConfigurationFactory();
+         PolicyConfiguration pc = pcFactory.getPolicyConfiguration(contextID, true);
+         di.context.put("javax.security.jacc.PolicyConfiguration", pc);
 
          // Create subdeployments for the ear modules
          for (Iterator iter = metaData.getModules(); iter.hasNext(); )
