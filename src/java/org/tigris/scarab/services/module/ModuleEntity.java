@@ -58,6 +58,7 @@ import org.tigris.scarab.om.RModuleAttribute;
 import org.tigris.scarab.om.RModuleIssueType;
 import org.tigris.scarab.om.RModuleOption;
 import org.tigris.scarab.om.AttributeOption;
+import org.tigris.scarab.om.AttributeGroup;
 
 import org.apache.torque.om.ObjectKey;
 import org.apache.torque.om.NumberKey;
@@ -67,7 +68,7 @@ import org.apache.torque.util.Criteria;
  * This class describes a Module within the Scarab system
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: ModuleEntity.java,v 1.40 2001/11/10 02:26:11 elicia Exp $
+ * @version $Id: ModuleEntity.java,v 1.41 2001/11/18 19:01:39 jon Exp $
  */
 public interface ModuleEntity
 {
@@ -291,6 +292,23 @@ public interface ModuleEntity
         throws Exception;
 
     public RModuleIssueType getRModuleIssueType(IssueType issueType)
+        throws Exception;
+
+    public void addRModuleIssueType(IssueType issueType)
+        throws Exception;
+
+    /**
+     * Adds module-attribute mapping to module.
+     */
+    public RModuleAttribute addRModuleAttribute(IssueType issueType, 
+                                                AttributeGroup attGroup)
+        throws Exception;
+
+    /**
+     * Adds module-attribute-option mapping to module.
+     */
+    public RModuleOption addRModuleOption(IssueType issueType, 
+                                          AttributeOption option)
         throws Exception;
 
     public List getTemplateTypes()
