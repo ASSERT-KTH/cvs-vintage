@@ -21,29 +21,30 @@ import javax.management.ObjectName;
 
 import org.jboss.system.URLClassLoader;
 
-/**
+/** 
  * Service Libraries. The service libraries is a central repository of all
  * classes loaded by the ClassLoaders
  *
- * @see <related>
  * @author <a href="mailto:marc@jboss.org">Marc Fleury</a>
  * @author <a href="mailto:osh@sparre.dk">Ole Husgaard</a>
- * @version $Revision: 1.11 $ <p>
+ * @version $Revision: 1.12 $ <p>
  *
- *      <b>20010830 marc fleury:</b>
- *      <ul>initial import
- *        <li>
- *      </ul>
- *      <b>20010908 david jencks:</b>
- *      <ul>Modified to make undeploy work better.
- *        <li>
- *      <b>20011003 Ole Husgaard:</b>
- *      <ul>Changed synchronization to avoid deadlock with SUNs
- *          java.lang.Classloader implementation. Kudos to Dr. Christoph Jung
- *          and Sacha Labourey for identifying this problem.
- *        <li>
- *      </ul>
+ * <b>20010830 marc fleury:</b>
+ * <ul>
+ *   <li>initial import
+ * </ul>
  *
+ * <b>20010908 david jencks:</b>
+ * <ul>
+ *   <li>Modified to make undeploy work better.
+ * </ul>
+ *
+ * <b>20011003 Ole Husgaard:</b>
+ * <ul>
+ *   <li>Changed synchronization to avoid deadlock with SUNs
+ *       java.lang.Classloader implementation. Kudos to Dr. Christoph Jung
+ *       and Sacha Labourey for identifying this problem.
+ * </ul>
  */
 public class ServiceLibraries
    implements ServiceLibrariesMBean, MBeanRegistration
@@ -391,13 +392,19 @@ public class ServiceLibraries
          return foundClass;
       }
 
-      // If we reach here, all of the classloaders currently in the VM don't know about the class
+      // If we reach here, all of the classloaders currently in the VM don't 
+      // know about the class
       throw new ClassNotFoundException(name);
    }
 
-   // The name of the system MLet
-   // ObjectName mlet = new ObjectName(server.getDefaultDomain(), "service", "MLet");
-
+   /** 
+    * Pre-register this component.
+    * 
+    * @param server        The server which the component is registering with.
+    * @param name          The configured name of the object.
+    * @throws Exception    Pre-registration failed
+    * @return              The name to register the object as.
+    */   
    public ObjectName preRegister(MBeanServer server, ObjectName name)
       throws Exception
    {
@@ -413,15 +420,27 @@ public class ServiceLibraries
       return name == null ? new ObjectName(OBJECT_NAME) : name;
    }
 
+   /** 
+    * Non-operation.
+    */   
    public void preDeregister() throws Exception
    {
+      // empty
    }
 
+   /** 
+    * Non-operation.
+    */   
    public void postRegister(Boolean b)
    {
+      // empty
    }
 
+   /** 
+    * Non-operation.
+    */   
    public void postDeregister()
    {
+      // empty
    }
 }
