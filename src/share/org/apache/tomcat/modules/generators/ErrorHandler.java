@@ -407,6 +407,7 @@ class NotFoundHandler extends Handler {
 	    .append(sm.getString("defaulterrorpage.notfound404"))
 	    .append("</h1>\r\n");
 	buf.append(sm.getString("defaulterrorpage.originalrequest"))
+	    .append(" ")
 	    .append( requestURI )
 	    .append("\r\n");
 
@@ -503,6 +504,7 @@ class ExceptionHandler extends Handler {
 	// More info - where it happended"
 	buf.append("<h2>")
 	    .append(sm.getString("defaulterrorpage.location"))
+	    .append(" ")
 	    .append(req.requestURI().toString())
 	    .append("</h2>");
 
@@ -605,6 +607,7 @@ class StatusHandler extends Handler {
 	// More info - where it happended"
 	buf.append("<h2>")
 	    .append(sm.getString("defaulterrorpage.location"))
+	    .append(" ")
 	    .append(req.requestURI().toString())
 	    .append("</h2>");
 
