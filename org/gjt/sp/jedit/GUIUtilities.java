@@ -53,7 +53,7 @@ import org.gjt.sp.util.Log;
  * </ul>
  *
  * @author Slava Pestov
- * @version $Id: GUIUtilities.java,v 1.84 2004/11/04 03:19:05 spestov Exp $
+ * @version $Id: GUIUtilities.java,v 1.85 2004/11/26 03:19:21 spestov Exp $
  */
 public class GUIUtilities
 {
@@ -119,34 +119,32 @@ public class GUIUtilities
 		if(icon != null)
 			return icon;
 
-		// get the icon
-		if(MiscUtilities.isURL(iconName))
+		URL url;
+
+		try
 		{
-			icon = new ImageIcon(iconName.substring(5));
+			// get the icon
+			if(MiscUtilities.isURL(iconName))
+				url = new URL(iconName);
+			else
+				url = new URL(iconPath + iconName);
 		}
-		else
+		catch(Exception e)
 		{
 			try
 			{
-				URL url = new URL(iconPath + iconName);
-				icon = new ImageIcon(url);
+				url = new URL(defaultIconPath + iconName);
 			}
-			catch(Exception e)
+			catch(Exception ex)
 			{
-				try
-				{
-					URL url = new URL(defaultIconPath + iconName);
-					icon = new ImageIcon(url);
-				}
-				catch(Exception ex)
-				{
-					Log.log(Log.ERROR,GUIUtilities.class,
-						"Icon not found: " + iconName);
-					Log.log(Log.ERROR,GUIUtilities.class,ex);
-					return null;
-				}
+				Log.log(Log.ERROR,GUIUtilities.class,
+					"Icon not found: " + iconName);
+				Log.log(Log.ERROR,GUIUtilities.class,ex);
+				return null;
 			}
 		}
+
+		icon = new ImageIcon(url);
 
 		icons.put(iconName,icon);
 		return icon;

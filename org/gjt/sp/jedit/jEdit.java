@@ -48,7 +48,7 @@ import org.gjt.sp.util.Log;
 /**
  * The main class of the jEdit text editor.
  * @author Slava Pestov
- * @version $Id: jEdit.java,v 1.242 2004/10/17 04:36:31 spestov Exp $
+ * @version $Id: jEdit.java,v 1.243 2004/11/26 03:19:21 spestov Exp $
  */
 public class jEdit
 {
@@ -1719,6 +1719,8 @@ public class jEdit
 
 		boolean dirty = false;
 
+		boolean saveRecent = !(isExiting && jEdit.getBooleanProperty("restore"));
+
 		Buffer buffer = buffersFirst;
 		while(buffer != null)
 		{
@@ -1754,7 +1756,7 @@ public class jEdit
 
 		while(buffer != null)
 		{
-			if(!buffer.isNewFile())
+			if(!buffer.isNewFile() && saveRecent)
 			{
 				Integer _caret = (Integer)buffer.getProperty(Buffer.CARET);
 				int caret = (_caret == null ? 0 : _caret.intValue());
