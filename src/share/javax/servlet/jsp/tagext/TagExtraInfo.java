@@ -1,10 +1,4 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/javax/servlet/jsp/tagext/Attic/TagExtraInfo.java,v 1.4 1999/10/20 21:36:17 akv Exp $
- * $Revision: 1.4 $
- * $Date: 1999/10/20 21:36:17 $
- *
- * ====================================================================
- * 
  * The Apache Software License, Version 1.1
  *
  * Copyright (c) 1999 The Apache Software Foundation.  All rights 

@@ -1,6 +1,4 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/javax/servlet/jsp/Attic/JspTagException.java,v 1.2 1999/11/08 03:13:50 akv Exp $ $Date: 1999/11/08 03:13:50 $ $Revision: 1.2 $
- * 
  * The Apache Software License, Version 1.1
  *
  * Copyright (c) 1999 The Apache Software Foundation.  All rights 

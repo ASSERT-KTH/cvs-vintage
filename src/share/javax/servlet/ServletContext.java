@@ -1,7 +1,4 @@
 /*
- * $Id: ServletContext.java,v 1.2 1999/10/15 09:27:38 duncan Exp $
- * ====================================================================
- * 
  * The Apache Software License, Version 1.1
  *
  * Copyright (c) 1999 The Apache Software Foundation.  All rights 
