@@ -33,6 +33,7 @@ elseif ($copyToModules.isEmpty())
 <input type="hidden" name="$scarabG.Constant.CANCEL_TEMPLATE" value="ViewIssue.vm" />
 #end
 
+<div class="axial">
 <table border="0" cellspacing="2" cellpadding="3">
   <tr>
    <th>$l10n.FilterThisList</th>
@@ -40,6 +41,7 @@ elseif ($copyToModules.isEmpty())
        <input type="submit" name="eventSubmit_doRefresh" value="$l10n.Filter" /></td>
   </tr>
 </table>
+</div>
 
 #set ($resultsPerPage = $data.Parameters.getInt("resultsPerPage", 25))
 #set ($pageNum = $data.Parameters.getInt("pageNum", 1))
