@@ -7,10 +7,10 @@
 package org.jboss.ejb.plugins;
 
 import java.lang.reflect.Method;
-import java.rmi.RemoteException;
 import java.security.Principal;
 import java.util.Map;
 import java.util.Set;
+import javax.ejb.EJBException;
 
 import org.jboss.ejb.Container;
 import org.jboss.invocation.Invocation;
@@ -27,7 +27,7 @@ is enforced. This is where the caller identity propagation is controlled as well
 
 @author <a href="on@ibis.odessa.ua">Oleg Nitz</a>
 @author <a href="mailto:Scott_Stark@displayscape.com">Scott Stark</a>.
-@version $Revision: 1.30 $
+@version $Revision: 1.31 $
 */
 public class SecurityInterceptor extends AbstractInterceptor
 {
@@ -166,7 +166,10 @@ public class SecurityInterceptor extends AbstractInterceptor
         }
         if (realmMapping == null)
         {
-            throw new RemoteException("checkSecurityAssociation", new SecurityException("Role mapping manager has not been set"));
+            throw new EJBException(
+                  "checkSecurityAssociation", 
+                  new SecurityException("Role mapping manager has " +
+                        "not been set"));
         }
 
         // Check the security info from the method invocation
@@ -175,7 +178,7 @@ public class SecurityInterceptor extends AbstractInterceptor
             String msg = "Authentication exception, principal="+principal;
             log.error(msg);
             SecurityException e = new SecurityException(msg);
-            throw new RemoteException("checkSecurityAssociation", e);
+            throw new EJBException("checkSecurityAssociation", e);
         }
         else
         {
@@ -190,7 +193,7 @@ public class SecurityInterceptor extends AbstractInterceptor
             String msg = "No method permissions assigned to method="+method;
             log.error(msg);
             SecurityException e = new SecurityException(msg);
-            throw new RemoteException("checkSecurityAssociation", e);
+            throw new EJBException("checkSecurityAssociation", e);
         }
 
         /* See if there is a runAs role associated with this thread. If there
@@ -210,7 +213,7 @@ public class SecurityInterceptor extends AbstractInterceptor
                     + ", method="+method+", requiredRoles="+methodRoles;
                 log.error(msg);
                 SecurityException e = new SecurityException(msg);
-                throw new RemoteException("checkSecurityAssociation", e);
+                throw new EJBException("checkSecurityAssociation", e);
             }
         }
         /* If the method has no assigned roles or the user does not have at
@@ -224,7 +227,7 @@ public class SecurityInterceptor extends AbstractInterceptor
                 + ", method="+method+", requiredRoles="+methodRoles+", principalRoles="+userRoles;
             log.error(msg);
             SecurityException e = new SecurityException(msg);
-            throw new RemoteException("checkSecurityAssociation", e);
+            throw new EJBException("checkSecurityAssociation", e);
         }
    }
 

@@ -17,8 +17,8 @@ import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 
 import java.rmi.RemoteException;
-import java.rmi.ServerException;
 
+import javax.ejb.EJBException;
 import javax.ejb.SessionBean;
 import javax.ejb.RemoveException;
 
@@ -49,7 +49,7 @@ import org.jboss.util.id.UID;
  *
  * @jmx:mbean extends="org.jboss.system.ServiceMBean"
  * 
- * @version <tt>$Revision: 1.39 $</tt>
+ * @version <tt>$Revision: 1.40 $</tt>
  * @author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
  * @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
  * @author <a href="mailto:sebastien.alborini@m4x.org">Sebastien Alborini</a>
@@ -289,7 +289,7 @@ public class StatefulSessionFilePersistenceManager
     * {@link SessionBean#ejbActivate} on the target bean.
     */
    public void activateSession(final StatefulSessionEnterpriseContext ctx)
-      throws RemoteException
+         throws RemoteException
    {
       boolean debug = log.isDebugEnabled();
       if (debug) {
@@ -305,8 +305,9 @@ public class StatefulSessionFilePersistenceManager
       }
       
       try {
-         SessionObjectInputStream in =
-            new SessionObjectInputStream(ctx, new BufferedInputStream(new FileInputStream(file)));
+         SessionObjectInputStream in = new SessionObjectInputStream(
+               ctx, 
+               new BufferedInputStream(new FileInputStream(file)));
       
          try {
             Object obj = in.readObject();
@@ -320,7 +321,8 @@ public class StatefulSessionFilePersistenceManager
       }
       catch (Exception e)
       {
-         throw new ServerException("Could not activate; failed to restore state", e);
+         throw new EJBException("Could not activate; failed to " +
+               "restore state", e);
       }
 
       removePassivated(id);
@@ -338,7 +340,7 @@ public class StatefulSessionFilePersistenceManager
     * state of the session to a file.
     */
    public void passivateSession(final StatefulSessionEnterpriseContext ctx)
-      throws RemoteException
+         throws RemoteException
    {
       boolean debug = log.isDebugEnabled();
       if (debug) {
@@ -356,8 +358,8 @@ public class StatefulSessionFilePersistenceManager
       }
          
       try {
-         SessionObjectOutputStream out =
-            new SessionObjectOutputStream(new BufferedOutputStream(new FileOutputStream(file)));
+         SessionObjectOutputStream out = new SessionObjectOutputStream(
+               new BufferedOutputStream(new FileOutputStream(file)));
 
          Object obj = ctx.getInstance();
          if (debug) {
@@ -373,7 +375,7 @@ public class StatefulSessionFilePersistenceManager
       }
       catch (Exception e)
       {
-         throw new ServerException("Could not passivate; failed to save state", e);
+         throw new EJBException("Could not passivate; failed to save state", e);
       }
       
       if (debug) {

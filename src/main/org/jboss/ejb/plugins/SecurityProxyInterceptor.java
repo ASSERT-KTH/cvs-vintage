@@ -6,9 +6,9 @@
  */
 package org.jboss.ejb.plugins;
 
-import java.rmi.RemoteException;
 import java.security.Principal;
 import javax.ejb.EJBContext;
+import javax.ejb.EJBException;
 import javax.naming.InitialContext;
 
 import org.jboss.ejb.Container;
@@ -29,7 +29,7 @@ import org.jboss.security.SecurityProxyFactory;
  * interceptor has access to the EJB instance and context.
  * 
  * @author <a href="mailto:Scott_Stark@displayscape.com">Scott Stark</a>.
- * @version $Revision: 1.13 $
+ * @version $Revision: 1.14 $
  */
 public class SecurityProxyInterceptor
    extends AbstractInterceptor
@@ -147,7 +147,7 @@ public class SecurityProxyInterceptor
             String msg = "SecurityProxy.invokeHome exception, principal=" + principal;
             log.error(msg, e);
             SecurityException se = new SecurityException(msg);
-            throw new RemoteException("SecurityProxy.invokeHome failure", se);
+            throw new EJBException("SecurityProxy.invokeHome failure", se);
          }
       }
       return getNext().invokeHome(mi);
@@ -172,7 +172,7 @@ public class SecurityProxyInterceptor
             String msg = "SecurityProxy.invoke exception, principal="+principal;
             log.error(msg, e);
             SecurityException se = new SecurityException(msg);
-            throw new RemoteException("SecurityProxy.invoke failure", se);
+            throw new EJBException("SecurityProxy.invoke failure", se);
          }
       }
       return getNext().invoke(mi);

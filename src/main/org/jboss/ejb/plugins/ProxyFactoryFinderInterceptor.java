@@ -10,9 +10,7 @@ package org.jboss.ejb.plugins;
 import java.lang.reflect.Method;
 import java.io.PrintWriter;
 import java.io.StringWriter;
-import java.rmi.RemoteException;
 import java.rmi.ServerError;
-import java.rmi.ServerException;
 import java.util.Map;
 import java.util.HashMap;
 import java.util.Enumeration;
@@ -25,7 +23,6 @@ import javax.ejb.EJBException;
 import javax.ejb.CreateException;
 import javax.ejb.FinderException;
 import javax.ejb.RemoveException;
-import javax.transaction.TransactionRolledbackException;
 
 import org.apache.log4j.NDC;
 
@@ -43,7 +40,7 @@ import org.jboss.naming.ENCThreadLocalKey;
  * 
  * @author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
  * @author <a href="mailto:Scott.Stark@jboss.org">Scott Stark</a>
- * @version $Revision: 1.4 $
+ * @version $Revision: 1.5 $
  */
 public class ProxyFactoryFinderInterceptor
    extends AbstractInterceptor
@@ -80,7 +77,8 @@ public class ProxyFactoryFinderInterceptor
          log.error("jmx name: " + container.getJmxName().toString());
          new Throwable().printStackTrace();
          log.error("*************************");
-         throw new ServerException("Couldn't insert proxy factory, invokerBinding was null");
+         throw new EJBException("Couldn't insert proxy factory, " +
+               "invokerBinding was null");
       }
       */
       Object proxyFactory = container.lookupProxyFactory(invokerBinding);
@@ -100,7 +98,7 @@ public class ProxyFactoryFinderInterceptor
          log.error("invokerBinding: " + invokerBinding);
          log.error("Stack trace", new Throwable());
          log.error("*************************");
-         throw new ServerException("Couldn't find proxy factory");
+         throw new EJBException("Couldn't find proxy factory");
       }
       container.setProxyFactory(proxyFactory);
    }

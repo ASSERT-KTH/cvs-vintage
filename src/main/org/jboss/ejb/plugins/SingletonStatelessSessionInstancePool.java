@@ -7,9 +7,10 @@
 package org.jboss.ejb.plugins;
 
 import java.rmi.RemoteException;
-import java.rmi.ServerException;
 import java.util.Map;
 import java.util.HashMap;
+
+import javax.ejb.EJBException;
 
 import org.jboss.deployment.DeploymentException;
 import org.jboss.ejb.Container;
@@ -22,14 +23,13 @@ import org.jboss.metadata.MetaData;
 import org.w3c.dom.Element;
 import org.jboss.management.j2ee.CountStatistic;
 
-
 /**
  *  Singleton pool for session beans. This lets you have
  * singletons in EJB!
  *
  *  @see <related>
  *  @author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
- *  @version $Revision: 1.19 $
+ *  @version $Revision: 1.20 $
  *
  * <p><b>Revisions:</b>
  * <p><b>20010718 andreas schaefer:</b>
@@ -100,7 +100,7 @@ public class SingletonStatelessSessionInstancePool
     *   Get the singleton instance
     *
     * @return     Context /w instance
-    * @exception   RemoteException
+    * @exception   Exception
     */
    public synchronized EnterpriseContext get()
       throws Exception
@@ -120,10 +120,10 @@ public class SingletonStatelessSessionInstancePool
             ctx = create(con.createBeanClassInstance(), con);
          } catch (InstantiationException e)
          {
-            throw new ServerException("Could not instantiate bean", e);
+            throw new EJBException("Could not instantiate bean", e);
          } catch (IllegalAccessException e)
          {
-            throw new ServerException("Could not instantiate bean", e);
+            throw new EJBException("Could not instantiate bean", e);
          }
       }
       else

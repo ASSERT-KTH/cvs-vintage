@@ -8,12 +8,13 @@
 package org.jboss.ejb.plugins;
 
 import java.rmi.RemoteException;
-import java.rmi.ServerException;
 import java.util.LinkedList;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.HashMap;
 import java.lang.reflect.Constructor;
+
+import javax.ejb.EJBException;
 
 import org.jboss.ejb.Container;
 import org.jboss.ejb.InstancePool;
@@ -39,7 +40,7 @@ import org.jboss.system.ServiceMBeanSupport;
  * @author <a href="mailto:marc.fleury@jboss.org">Marc Fleury</a>
  * @author <a href="mailto:andreas.schaefer@madplanet.com">Andreas Schaefer</a>
  * @author <a href="mailto:sacha.labourey@cogito-info.ch">Sacha Labourey</a>
- * @version $Revision: 1.27 $
+ * @version $Revision: 1.28 $
  *
  * <p><b>Revisions:</b>
  * <p><b>20010704 marcf:</b>
@@ -160,7 +161,7 @@ public abstract class AbstractInstancePool
     *
     * @return     Context /w instance
     * 
-    * @throws RemoteException
+    * @throws Exception
     */
    public EnterpriseContext get()
       throws Exception
@@ -197,11 +198,11 @@ public abstract class AbstractInstancePool
       }
       catch (InstantiationException e)
       {
-         throw new ServerException("Could not instantiate bean", e);
+         throw new EJBException("Could not instantiate bean", e);
       }
       catch (IllegalAccessException e)
       {
-         throw new ServerException("Could not instantiate bean", e);
+         throw new EJBException("Could not instantiate bean", e);
       }
    }
 

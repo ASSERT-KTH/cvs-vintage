@@ -42,7 +42,7 @@ import org.jboss.metadata.ConfigurationMetaData;
 *  @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
 *  @author <a href="mailto:andreas.schaefer@madplanet.com">Andreas Schaefer</a>
 *  @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
-*  @version $Revision: 1.42 $
+*  @version $Revision: 1.43 $
 *
 *  <p><b>Revisions:</b>
 *  <p><b>20010709 andreas schaefer:</b>
@@ -375,7 +375,8 @@ implements EntityPersistenceManager
       {
          // so we received something that's not valid
          // throw an exception reporting it
-         throw new RemoteException("result of finder method is not a valid return type: " + result.getClass());
+         throw new EJBException("result of finder method is not a valid " +
+               "return type: " + result.getClass());
       }
    }
 
@@ -625,7 +626,8 @@ implements EntityPersistenceManager
 
       if (callMethod == null)
       {
-         throw new RemoteException("couldn't find finder method in bean class. " + finderMethod.toString());
+         throw new EJBException("couldn't find finder method in bean class. " +
+               finderMethod.toString());
       }
 
       // invoke the finder method
