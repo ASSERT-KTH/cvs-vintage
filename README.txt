@@ -1,4 +1,4 @@
-$Id: README.txt,v 1.66 2004/02/11 12:06:10 dep4b Exp $
+$Id: README.txt,v 1.67 2004/02/11 14:56:32 dep4b Exp $
 
 Welcome to Scarab!
 
@@ -500,11 +500,8 @@ NOTE: If you get a 'Server configuration denies access to data source'
 | R U N N I N G  T H E  S A N D B O X                                   |
 '-----------------------------------------------------------------------'
 
-To run the preconfigured Tomcat that comes with Scarab, all you need to do 
-is verify that the file /tomcat/webapps/scarab.xml has a <Context> docBase 
-pointing to where you built Scarab (typically the value should be ../../target/scarab).
-There are two different <Context> entries depending on how you are using Scarab for inplace
-development or not.
+The Tomcat bundled with Scarab is preconfigured to run scarab out of the 
+/target/scarab directory.  
 
 cd tomcat/bin
 scarab.sh     <-- Unix

@@ -1,7 +1,7 @@
 
 <project default="war:war"
     xmlns:j="jelly:core"
-    xmlns:u="jelly:util"
+    xmlns:util="jelly:util"
     xmlns:ant="jelly:ant">
 
   <preGoal name="site">
@@ -63,7 +63,7 @@
     </ant:copy>
     <ant:copy todir="target/dist/tomcat">
       <ant:fileset dir="tomcat"
-          includes="**/*.*" excludes="**/webapps/*.*"/>
+          includes="**/*.*" excludes="**/webapps/scarab*.*"/>
     </ant:copy>
     <ant:copy todir="target/dist/hypersonic">
       <ant:fileset dir="src/sql/hypersonic"
@@ -76,7 +76,7 @@
     </ant:copy>
     
     <!-- Bring over the correct scarab.xml file with the right context settings -->
-    <ant:copy file="tomcat/webapps/scarab_all_in_one.xml" tofile="target/dist/tomcat/webapps/scarab.xml"/>
+    <ant:copy file="tomcat/webapps/scarab.allinone.xml.off" tofile="target/dist/tomcat/webapps/scarab.xml"/>
             
     <attainGoal name="nsis"/>
   </goal>
@@ -128,6 +128,20 @@
      <attainGoal name="eclipse"/>
      <attainGoal name="war:webapp"/>
      
+    <!-- Change the context file to point inplace at src/webapp -->
+    <ant:available file="tomcat/webapps/scarab.regular.xml.off" type="file"
+      property="scarab.context.regular.renamed"/>
+
+	<j:choose>
+        <j:when test="${scarab.context.regular.renamed}">
+
+        </j:when>
+        <j:otherwise>
+          <ant:move file="tomcat/webapps/scarab.xml" toFile="tomcat/webapps/scarab.regular.xml.off"/>
+          <ant:copy file="tomcat/webapps/scarab.inplace.xml.off" tofile="tomcat/webapps/scarab.xml"/>  
+        </j:otherwise>
+      </j:choose>    
+     
    </goal>
 
   <!-- 
@@ -164,6 +178,10 @@
           includes="**/*.txt" excludes="**/README.txt">
         </ant:fileset>
      </ant:delete>
+     
+     <util:available file="tomcat/webapps/scarab.regular.xml.off">
+       <ant:move file="tomcat/webapps/scarab.regular.xml.off" toFile="tomcat/webapps/scarab.xml" overwrite="true"/>
+     </util:available>
 
      <attainGoal name="clean"/>
           

@@ -92,13 +92,11 @@
 	config files and have the changes show up immediatly.  No need to do a build/deploy/run.
 </p>
 <p>
-	Inplace development relies on the embedded Tomcat distribution at /tomcat.  Make sure that
-	if you renamed the <code>/tomcat/webapps/scarab.xml</code> to .off, that you rename it back to scarab.xml!
-	The <code>/tomcat/webapps/scarab.xml</code> file tells Tomcat where to look for the root of the Scarab 
-	webapp.
+	Inplace development relies on the embedded Tomcat distribution at /tomcat.  The maven <code>scarab:inplace</code>
+	goal will automatically setup the correct scarab Context file in /tomcat/webapps/. 
 </p>
 <p>
-	If you are using an IDE like Eclipse, many changes like editing a .java file will 
+	If you are using an IDE like Eclipse, most changes like editing a .java file will 
 	automatically restart Turbine for you.	
 </p>
 </subsection>
@@ -123,7 +121,7 @@
 	First select the Tomcat 4.1.x version of Tomcat, as that is what comes with Scarab.
 </p>
 <p>
-	Set the tomcat home to: ,<code>C:\java\scarab\tomcat</code>, then the configuration file should 
+	Set the tomcat home to:<code>C:\java\scarab\tomcat</code>, then the configuration file should 
 	be set to: <code>C:\java\scarab\tomcat\conf\server.xml</code>.
 </p>
 <p>
@@ -136,7 +134,9 @@
 	maven scarab:inplace
 	</source>
 	This copies all the jars, classes, config files needed into your <code>/src/webapp/</code> directory, creating
-	the <code>/src/webapp/WEB-INF/classes</code> and <code>/src/webapp/WEB-INF/conf</code> directories.	
+	the <code>/src/webapp/WEB-INF/classes</code> and <code>/src/webapp/WEB-INF/conf</code> directories.  This
+	will also rename your  <code>/tomcat/webapps/scarab.xml</code> to  <code>scarab.regular.xml.off</code>
+	and take the special inplace file <code>scarab.inplace.xml.off</code> and rename it <code>scarab.xml</code>.	
 </p>
 <p>
 	Now, right click your project in Eclipse and choose properties and then Tomcat.  Checkbox the 
@@ -144,6 +144,20 @@
 	mark as reloadable and redirect logging to Eclipse options.  Set the web application root to
 	<code>/src/webapp</code>.  Save the changes and start up the Tomcat plugin.  Navigate in your browser to 
 	<a href="http://localhost:8080/scarab">http://localhost:8080/scarab</a> and you should see the login page!
+</p>
+</subsection>
+<subsection name="Eclipse Setup Directions">
+<p>
+Once you are done doing "in place" development, you can just run the goal to clean everything back up:
+	<source>
+	maven scarab:clean
+	</source>
+This will delete everything that was moved around by the inplace setup goal, as well as fix up your Scarab context
+entries as well.  Now, when you run:	
+	<source>
+	maven war:webapp
+	</source>
+Everything will be put back!	
 </p>
 </subsection>
 </section>

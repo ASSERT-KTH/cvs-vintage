@@ -1,0 +1,17 @@
+<!--  Scarab Context meant to be used in the all in one distribution -->
+
+<!--
+The docBase attribute defines where Tomcat looks for the Scarab webapp.  
+-->
+<Context path="/scarab" docBase="../../scarab" debug="0" reloadable="true">
+   <Logger className="org.apache.catalina.logger.FileLogger"
+             prefix="scarabsample_log." suffix=".txt"
+          timestamp="true"/>
+   <Loader checkInterval="2"
+        className="org.apache.catalina.loader.WebappLoader"/>
+   <Manager debug="99"/>
+   
+<!--  Sample of configuring a value in the <context/> entry for your server.
+   <Environment description="Mail Host to Use" name="system/mail/host" override="true" type="java.lang.String" value="127.0.0.1"/>   
+-->
+</Context>
