@@ -70,7 +70,7 @@ $page.setTitle("Stored query list")
   <td>&#160;</td>
   <td><a href="$query.getEditLink($link.setPage("EditQuery.vm").toString())">$query.Name</a></td>
   <td>#if($query.Description)  $query.Description #else &#160; #end</td>
-  <td><a href="$query.getExecuteLink($link.setPage("IssueList.vm").toString())">$query.QueryType.Name</a>
+  <td><a href="$query.getExecuteLink($link.setPage("IssueList.vm").toString())">$query.Scope.Name</a>
   #if (!$query.Approved)
    (until approved)
   #end
@@ -117,7 +117,7 @@ $page.setTitle("Stored query list")
    <td>$query.Name</td>
   #end
   <td>#if($query.Description) $query.Description #else &#160; #end</td>
-  <td><a href="$query.getExecuteLink($link.setPage("IssueList.vm").toString())">$query.QueryType.Name</a>
+  <td><a href="$query.getExecuteLink($link.setPage("IssueList.vm").toString())">$query.Scope.Name</a>
   #if (!$query.Approved)
    (until approved)
   #end
