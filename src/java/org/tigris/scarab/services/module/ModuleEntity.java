@@ -63,7 +63,7 @@ import org.apache.torque.util.Criteria;
  * This class describes a Module within the Scarab system
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: ModuleEntity.java,v 1.22 2001/10/14 01:21:29 jon Exp $
+ * @version $Id: ModuleEntity.java,v 1.23 2001/10/15 22:55:34 jon Exp $
  */
 public interface ModuleEntity
 {
@@ -72,7 +72,7 @@ public interface ModuleEntity
      * This is used to build up the getName() results.
      * FIXME: define this in a properties file
      */
-    public static String NAME_DELIMINATOR = " -> ";
+    public static String NAME_DELIMINATOR = " > ";
 
     /**
      * This method is only used by the Turbine Group interface.
