@@ -3,7 +3,7 @@
                                  Release Notes
                                  =============
 
-$Id: RELEASE-NOTES-3.3.1.txt,v 1.35 2002/02/15 02:47:14 billbarker Exp $
+$Id: RELEASE-NOTES-3.3.1.txt,v 1.36 2002/02/18 04:17:56 billbarker Exp $
 
 
 This document describes the changes that have been made since the
@@ -237,6 +237,7 @@ Bug No.  Description
 6348     Fix problem with getNamedDispatcher() when used with a JSP mapped
          in the web.xml.
 
+6515	 Block setting of Date-Headers from within an include.
 
 Configuration:
 
