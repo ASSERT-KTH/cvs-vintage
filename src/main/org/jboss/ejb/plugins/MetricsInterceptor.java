@@ -1,13 +1,15 @@
 /*
- * JBoss, the OpenSource EJB server
+ * jBoss, the OpenSource EJB server
  *
- * Distributable under LGPL license.
+ * Distributable under GPL license.
  * See terms of license at gnu.org.
  */
 package org.jboss.ejb.plugins;
 
 // standard imports
 import java.util.Properties;
+
+import java.security.Principal;
 
 import javax.naming.Context;
 import javax.naming.InitialContext;
@@ -22,7 +24,8 @@ import javax.jms.Message;
 import javax.jms.Session;
 import javax.jms.JMSException;
 
-import javax.transaction.SystemException;
+import javax.transaction.Transaction;
+import javax.transaction.Status;
 
 
 // jboss imports
@@ -34,7 +37,7 @@ import org.jboss.ejb.MethodInvocation;
  * MetricsInterceptor is used for gathering data from the container for admin
  * interface.
  *
- * @since   JBoss 2.0
+ * @since   jBoss 2.0
  *
  * @author  <a href="mailto:jplindfo@helsinki.fi">Juha Lindfors</a>
  */
@@ -124,7 +127,7 @@ public class MetricsInterceptor extends AbstractInterceptor {
     // Private --------------------------------------------------------
 
     private void sendMessage(long time, Message msg) {        
-        
+
         if ((metricsPub == null) || (msg == null))
             return;
             
@@ -132,8 +135,9 @@ public class MetricsInterceptor extends AbstractInterceptor {
             msg.setStringProperty("TIME",  String.valueOf(time));
             metricsPub.publish(metricsTopic, msg);
         }
-        catch (JMSException e) {
-            System.out.println(e);
+        catch (Exception e) {
+            // catch JMSExceptions, NPE's etc and prevent them from propagating
+            // up if the metrics fail
         }
     }
     
@@ -143,23 +147,38 @@ public class MetricsInterceptor extends AbstractInterceptor {
             return null;
 
         try {            
-            Message msg = metricsSession.createMessage();
+            Message  msg    =  metricsSession.createMessage();
+            Transaction tx  =  mi.getTransaction();
+            Principal principal = mi.getPrincipal();
             
             msg.setStringProperty("CHECKPOINT",  checkpoint);
             msg.setStringProperty("APPLICATION", applicationName);
             msg.setStringProperty("BEAN",   beanName);
-            msg.setStringProperty("METHOD", mi.getMethod().toString());    
-            msg.setStringProperty("ID",  String.valueOf(mi.getTransaction().hashCode()));
-            msg.setIntProperty("STATUS", mi.getTransaction().getStatus());
-    
+            msg.setObjectProperty("METHOD", mi.getMethod().toString());    
+            
+            if (tx == null) {
+                // This is a workaround for SpyMessage throwing NPE if
+                // getIntProperty(..) is called on a non-existant key.
+                // javax.jms.MessageFormatException would seem more
+                // appropriate (it's checked exception)
+                msg.setIntProperty("STATUS", Status.STATUS_UNKNOWN);
+            }
+            else {
+                msg.setStringProperty("ID",  String.valueOf(tx.hashCode()));
+                msg.setIntProperty("STATUS", tx.getStatus());
+            }
+                        
+            if (principal != null)
+                msg.setStringProperty("PRINCIPAL", principal.getName());
+                
             return msg;
         }
-        catch (JMSException e) {
-            return null;
-        }
-        catch (SystemException e) {
+        catch (Exception e) {
+            // catch JMSExceptions, tx.SystemExceptions, and NPE's
+            // don't want to bother the container even if the metrics fail.
             return null;
         }
     }
+    
 }
 
