@@ -46,11 +46,12 @@ package org.tigris.scarab.util;
  * individuals on behalf of Collab.Net.
  */ 
 
+
 /**
     A place to put public final static strings.
     
     @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
-    @version $Id: ScarabConstants.java,v 1.5 2001/03/27 06:22:36 jmcnally Exp $
+    @version $Id: ScarabConstants.java,v 1.6 2001/03/29 19:34:43 jmcnally Exp $
 */
 
 public interface ScarabConstants
@@ -89,6 +90,6 @@ public interface ScarabConstants
      * The name used for the Intake tool
      */
     public static final String INTAKE_TOOL = "intake";
-    
+
 }    
 

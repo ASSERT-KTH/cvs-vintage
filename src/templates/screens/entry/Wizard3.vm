@@ -1,39 +1,13 @@
-#set ( $action = $link.setPage("Wizard3.vm").setAction("ReportIssue").addPathInfo("nextTemplate", "Wizard4.vm") )
+#set ( $action = $link.setPage("entry/Wizard3.vm").setAction("ReportIssue").addPathInfo("nextTemplate", "entry/Wizard4.vm") )
 #set ($user = $scarabR.User)
 #set ($module = $user.CurrentModule)
 #set ($issue = $user.ReportingIssue)
 
 
-  <FORM METHOD="post" NAME="Report3Form" action="$action">
-  <input type="hidden" name="action" value="Report3">
+  <FORM METHOD="get" NAME="Report3Form" action="$action">
   <TABLE BORDER="0" CELLPADDING="0" CELLSPACING="0" WIDTH="100%">
     <TR>
       <TD>
-
-<!-- top nav bar -->
-        <TABLE BORDER="0" CELLPADDING="2" CELLSPACING="0">
-          <TR>
-            <TD NOWRAP CLASS="NavHeader">S C A R A B:</TD>
-            <TD NOWRAP CLASS="NavHeader"><A HREF="/">My Bugs</A>&nbsp;</TD>
-            <TD CLASS="NavHeaderOn" BGCOLOR="#cccccc">&nbsp;</TD>
-            <TD CLASS="NavHeaderOn" NOWRAP BGCOLOR="#cccccc">Report</TD>
-            <TD CLASS="NavHeaderOn" BGCOLOR="#cccccc">&nbsp;</TD>
-            <TD NOWRAP CLASS="NavHeader">&nbsp;<A HREF="/">Browse</A></TD>
-            <TD CLASS="NavHeader">|</TD>
-            <TD NOWRAP CLASS="NavHeader"><A HREF="/">Assign (8)</A></TD>
-            <TD CLASS="NavHeader">|</TD>
-            <TD NOWRAP CLASS="NavHeader"><A HREF="/">Search</A></TD>
-            <TD CLASS="NavHeader">|</TD>
-            <TD NOWRAP CLASS="NavHeader"><A HREF="/">Admin</A></TD>
-            <TD CLASS="NavHeader">|</TD>
-            <TD CLASS="NavHeader"><A HREF="/">Help</A></TD>
-            <TD CLASS="NavHeader">|</TD>
-            <TD CLASS="NavHeader"><A HREF="/">Prefs</A></TD>
-            <TD CLASS="NavHeader">|</TD>
-            <TD NOWRAP CLASS="NavHeader"><A HREF="/">Log Out</A></TD>
-          </TR>
-        </TABLE>
-<!-- end top nav bar -->
 
       </TD>
     </TR>
@@ -93,7 +67,7 @@
   <td valign="top" class="TableDataHeader">Platform:</td>
   <td valign="top" class="TableData">
 
-          #attrSelectErrorMsg ( $issue "PLATFORM" )
+          #attrValueErrorMsg ( $issue "PLATFORM" )
           #attrValueSelect ($issue "PLATFORM")
 
 
@@ -101,7 +75,7 @@
   <td valign="top">&nbsp;</td>
   <td valign="top" class="TableDataHeader">OS:</td>
   <td valign="top" class="TableData">
-          #attrSelectErrorMsg ( $issue "OPERATING SYSTEM" )
+          #attrValueErrorMsg ( $issue "OPERATING SYSTEM" )
           #attrValueSelect ($issue "OPERATING SYSTEM")
   </td>
  </tr>
@@ -118,13 +92,10 @@
   <td valign="top" class="TableDataHeader">Summary:</td>
   <td valign="top" colspan="4" class="TableData">
 
-#set ( $attributes = $issue.AllAttributeValuesMap )
-#set ( $descAttr = $attributes.get("DESCRIPTION") )
-#set ( $attrInput = $intake.AttributeValue.mapTo($descAttr) ) 
-<input type="hidden" name="$attrInput.CID" value="$attrInput.OID">
-#if ( !$attrInput.Value.isValid() )
-    $attrInput.Value.Message <br>
-#end
+    #attrValueErrorMsg( $issue "SUMMARY" )<br>
+    #set ( $attrValue = $issue.AllAttributeValuesMap.get("SUMMARY") )
+    #set ( $attrInput = $intake.AttributeValue.mapTo($attrValue) ) 
+   <input type="hidden" name="$attrInput.CID" value="$attrInput.OID">
    <input name= "$attrInput.Value.Key"
         value="$!attrInput.Value.Value" size="20" type="text">
 
@@ -152,7 +123,14 @@
         <SPAN CLASS="SectionHeader">URL:
       </TD>
       <TD COLSPAN="3">
-        <INPUT NAME="url" SIZE="30" TYPE="text">
+
+    #attrValueErrorMsg( $issue "URL" )<br>
+    #set ( $attrValue = $issue.ModuleAttributeValuesMap.get("URL") )
+    #set ( $attrInput = $intake.AttributeValue.mapTo($attrValue) ) 
+   <input type="hidden" name="$attrInput.CID" value="$attrInput.OID">
+   <input name= "$attrInput.Value.Key"
+        value="$!attrInput.Value.Value" size="30" type="text">
+
       </TD>
     </TR>
     <TR>
@@ -160,13 +138,21 @@
         <SPAN CLASS="SectionHeader">Description:
       </TD>
       <TD COLSPAN="3">
-        <TEXTAREA NAME="description" value="$description" COLS="40" ROWS="3"></TEXTAREA>
+
+    #attrValueErrorMsg( $issue "DESCRIPTION" )<br>
+    #set ( $attrValue = $issue.ModuleAttributeValuesMap.get("DESCRIPTION") )
+    #set ( $attrInput = $intake.AttributeValue.mapTo($attrValue) ) 
+   <input type="hidden" name="$attrInput.CID" value="$attrInput.OID">
+   <textarea name= "$attrInput.Value.Key" cols="40" rows="5">
+        $!attrInput.Value.Value</textarea>
+
       </TD>
     </TR>
     <TR>
       <TD>&nbsp;</TD>
       <TD>
-        <INPUT TYPE="submit" VALUE="Commit">
+            <input type="submit" 
+                name="eventSubmit_doEnterissue" value="Submit Issue">
         </FORM>
       </TD>
     </TR>

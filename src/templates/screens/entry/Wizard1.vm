@@ -1,5 +1,5 @@
 #macro ( attrValueSelect $issue $attKey )
-    #set ( $attrValue = $issue.AllAttributeValuesMap.get($attKey) )
+    #set ( $attrValue = $issue.ModuleAttributeValuesMap.get($attKey) )
     #set ( $attr = $attrValue.Attribute )
     #set ( $attrInput = $intake.AttributeValue.mapTo($attrValue) ) 
         <input type="hidden" name="$attrInput.CID" value="$attrInput.OID">
@@ -17,11 +17,13 @@
         </select>
 #end
 
-#macro ( attrSelectErrorMsg $issue $attKey )
-    #set ( $attrValue = $issue.AllAttributeValuesMap.get($attKey) )
+#macro ( attrValueErrorMsg $issue $attKey )
+    #set ( $attrValue = $issue.ModuleAttributeValuesMap.get($attKey) )
     #set ( $attrInput = $intake.AttributeValue.mapTo($attrValue) ) 
     #if ( !$attrInput.OptionId.isValid() )
         $attrInput.OptionId.Message
+    #elseif ( !$attrInput.Value.isValid() )
+        $attrInput.Value.Message
     #end
 #end
 
@@ -46,6 +48,9 @@
     <tr>
         <td valign="top">
         <font color="red">At the top of the page, we will first want to select a project and then make it obvious what project we are reporting the bug on. The project that is initially selected should be determined from the project selected on the Start page.</font>
+
+#* PROJECT IS ASSUMED ALREADY SET
+
 <p>
 #set ($mods = $user.Modules )
 #set ($moduleIntake = $intake.Module.mapTo($module) )
@@ -80,6 +85,8 @@
                   value="$component.PrimaryKey">$component.Name</option>
             #end
           </select>
+*#
+
 
 <p>        
         <font color="red">Allow the user to enter in a short description of the problem.
@@ -87,15 +94,12 @@
         on the next page for issues that are in the selected component and project 
         as well as other attributes that are part of the search on this page (to be discussed).</font>
 
-#set ( $attributes = $issue.AllAttributeValuesMap )
-#set ( $descAttr = $attributes.get("DESCRIPTION") )
 <p>
-#set ( $attrInput = $intake.AttributeValue.mapTo($descAttr) ) 
-<input type="hidden" name="$attrInput.CID" value="$attrInput.OID">
-#if ( !$attrInput.Value.isValid() )
-    $attrInput.Value.Message <br>
-#end
+    #attrValueErrorMsg( $issue "SUMMARY" )<br>
     Summary:
+    #set ( $attrValue = $issue.ModuleAttributeValuesMap.get("SUMMARY") )
+    #set ( $attrInput = $intake.AttributeValue.mapTo($attrValue) ) 
+   <input type="hidden" name="$attrInput.CID" value="$attrInput.OID">
    <input name= "$attrInput.Value.Key"
         value="$!attrInput.Value.Value" size="20" type="text">
     <br>
@@ -118,13 +122,13 @@
         </SELECT>
      </TD>
       <TD>
-          <SPAN CLASS="SectionHeader">Platform:<BR>
-          #attrSelectErrorMsg ($issue "PLATFORM") <br>
+          Platform:<BR>
+          #attrValueErrorMsg ($issue "PLATFORM") <br>
           #attrValueSelect ($issue "PLATFORM")
       </TD>
       <TD>
-          <SPAN CLASS="SectionHeader">OS:<BR>
-          #attrSelectErrorMsg ($issue "OPERATING SYSTEM") <br>
+          OS:<br>
+          #attrValueErrorMsg ($issue "OPERATING SYSTEM") <br>
           #attrValueSelect ($issue "OPERATING SYSTEM")
       </TD>
   </tr>

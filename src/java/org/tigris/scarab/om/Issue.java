@@ -30,34 +30,11 @@ public class Issue
 {
 
     /**
-     * Should contain AttValues for the Issue as well as empty AttValues
-     * that are relevant for the module, but have not been set for
-     * the issue.
+     * AttributeValues that are relevant to the issue's current module.
+     * Empty AttributeValues that are relevant for the module, but have 
+     * not been set for the issue are included.
      */
-    public HashMap getModuleAttributes() throws Exception
-    {
-        return null;
-    }
-
-
-    public HashMap getAttributeValuesMap() throws Exception
-    {
-        Criteria crit = new Criteria(2)
-            .add(AttributeValuePeer.DELETED, false);        
-        Vector siaValues = getAttributeValues(crit);
-
-        HashMap map = new HashMap( (int)(1.25*siaValues.size() + 1) );
-        for ( int i=0; i<siaValues.size(); i++ ) 
-        {
-            AttributeValue att = (AttributeValue) siaValues.get(i);
-            String name = att.getAttribute().getName();
-            map.put(name.toUpperCase(), att);
-        }
-
-        return map;
-    }
-
-    public HashMap getAllAttributeValuesMap() throws Exception
+    public HashMap getModuleAttributeValuesMap() throws Exception
     {
         Criteria crit = new Criteria(2)
             .add(RModuleAttributePeer.DELETED, false);        
@@ -79,11 +56,110 @@ public class Issue
             }
             else 
             {
-                map.put( key, AttributeValue.getNewInstance(att, this) ); 
-            }             
+                AttributeValue aval = AttributeValue.getNewInstance(att, this);
+                addAttributeValues(aval);
+                map.put( key, aval );
+            }
         }
         return map;
     }
+
+
+    /**
+     * AttributeValues that are set for this Issue
+     */
+    public HashMap getAttributeValuesMap() throws Exception
+    {
+        Criteria crit = new Criteria(2)
+            .add(AttributeValuePeer.DELETED, false);        
+        Vector siaValues = getAttributeValues(crit);
+        HashMap map = new HashMap( (int)(1.25*siaValues.size() + 1) );
+        for ( int i=0; i<siaValues.size(); i++ ) 
+        {
+            AttributeValue att = (AttributeValue) siaValues.get(i);
+            String name = att.getAttribute().getName();
+            map.put(name.toUpperCase(), att);
+        }
+
+        return map;
+    }
+
+    /**
+     * AttributeValues that are set for this issue and
+     * Empty AttributeValues that are relevant for the module, but have 
+     * not been set for the issue are included.
+     */
+    public HashMap getAllAttributeValuesMap() throws Exception
+    {
+        Map moduleAtts = getModuleAttributeValuesMap();
+        Map issueAtts = getAttributeValuesMap();
+        HashMap allValuesMap = new HashMap( (int)(1.25*(moduleAtts.size() + 
+                                            issueAtts.size())+1) );
+
+        allValuesMap.putAll(moduleAtts);
+        allValuesMap.putAll(issueAtts);
+        return allValuesMap;
+    }
+
+
+    public boolean containsMinimumAttributeValues()
+        throws Exception
+    {
+        Criteria crit = new Criteria(3)
+            .add(RModuleAttributePeer.DELETED, false)        
+            .add(RModuleAttributePeer.REQUIRED, true);        
+        Vector moduleAttributes = 
+            getModule().getRModuleAttributes(crit);
+        
+        boolean result = true;
+        Iterator i = getModuleAttributeValuesMap()
+            .values().iterator();
+        while (i.hasNext()) 
+        {
+            AttributeValue aval = (AttributeValue)i.next();
+            // RModuleAttribute rma = (RModuleAttribute)
+            //    aval.getAttribute().getRModuleAttributes().get(0);
+            if ( aval.getOptionId() == null && aval.getValue() == null ) 
+            {
+                for ( int j=moduleAttributes.size()-1; j>=0; j-- ) 
+                {
+                    if ( aval.getAttribute().getPrimaryKey().equals(
+                         ((RModuleAttribute)moduleAttributes.get(j))
+                         .getAttribute().getPrimaryKey() )) 
+                    {
+System.out.println(aval.getAttribute().getName() + " was not set. "
+                   + aval.toString() );
+                        result = false;
+                        break;
+                    }                    
+                }
+
+                break;
+            }
+        }
+
+        return result;
+    }       
+
+    public void save()
+        throws Exception
+    {
+        // remove unset AttributeValues before saving
+        Criteria crit = new Criteria(2)
+            .add(AttributeValuePeer.DELETED, false);        
+        List attValues = getAttributeValues(crit);
+        for ( int i=0; i<attValues.size(); i++ ) 
+        {
+            AttributeValue attVal = (AttributeValue) attValues.get(i);
+            if ( attVal.getOptionId() == null && attVal.getValue() == null ) 
+            {
+                attValues.remove(i);
+            }
+        }
+
+        super.save();
+    }       
+
 
     /**
         calls the doPopulate() method with validation false

@@ -46,32 +46,37 @@ package org.tigris.scarab.actions;
  * individuals on behalf of Collab.Net.
  */ 
 
+import java.util.Iterator;
+
 // Velocity Stuff 
 import org.apache.turbine.services.velocity.*; 
 import org.apache.velocity.*; 
 import org.apache.velocity.context.*; 
 // Turbine Stuff 
 import org.apache.turbine.util.*;
-import org.apache.turbine.om.security.*;
-import org.apache.turbine.om.security.peer.*;
 import org.apache.turbine.services.resources.*;
 import org.apache.turbine.services.intake.IntakeTool;
+import org.apache.turbine.services.intake.model.Group;
 import org.apache.turbine.modules.*;
 import org.apache.turbine.modules.actions.*;
 
 // Scarab Stuff
+import org.tigris.scarab.om.BaseScarabObject;
 import org.tigris.scarab.om.ScarabUser;
 import org.tigris.scarab.om.ScarabUserPeer;
+import org.tigris.scarab.om.Issue;
+import org.tigris.scarab.om.AttributeValue;
 import org.tigris.scarab.util.*;
 
 /**
     This class is responsible for report issue forms.
     ScarabIssueAttributeValue
     @author <a href="mailto:jmcnally@collab.net">John D. McNally</a>
-    @version $Id: ReportIssue.java,v 1.1 2001/03/27 06:22:35 jmcnally Exp $
+    @version $Id: ReportIssue.java,v 1.2 2001/03/29 19:34:42 jmcnally Exp $
 */
 public class ReportIssue extends VelocityAction
 {
+
 
     public void doSubmitattributes( RunData data, Context context ) 
         throws Exception
@@ -84,6 +89,58 @@ public class ReportIssue extends VelocityAction
             String template = data.getParameters()
                 .getString(ScarabConstants.NEXT_TEMPLATE, "Report2.vm");
             setTemplate(data, template);            
+        }
+    }
+
+    public void doEnterissue( RunData data, Context context ) 
+        throws Exception
+    {
+        //until we get the user and module set through normal application
+        BaseScarabObject.tempWorkAround(data,context);
+
+        IntakeTool intake = (IntakeTool)context
+            .get(ScarabConstants.INTAKE_TOOL);
+        
+        if ( intake.isAllValid() ) 
+        {
+            ScarabUser user = (ScarabUser)data.getUser();
+            Issue issue = user.getReportingIssue();
+
+            Iterator i = issue.getModuleAttributeValuesMap()
+                .values().iterator();
+            while (i.hasNext()) 
+            {
+                AttributeValue aval = (AttributeValue)i.next();
+                /*
+                System.out.println("Setting attribute: " +
+                                   aval.getAttribute().getName() + "; key: "
+                                   + aval.getQueryKey() + " using class: " +
+                                   aval.toString() );
+                */
+                Group group = intake.get("AttributeValue", aval.getQueryKey());
+                if ( group != null ) 
+                {
+                    // System.out.println("Set properties");
+                    group.setProperties(aval);
+                }                
+            }
+            
+            if ( issue.containsMinimumAttributeValues() ) 
+            {
+System.out.println("Saving issue");
+issue.save();
+System.out.println("Saved issue");
+
+                String template = data.getParameters()
+                    .getString(ScarabConstants.NEXT_TEMPLATE, "entry/Report3.vm");
+                setTemplate(data, template);            
+            }
+            else 
+            {
+                // this would be an application or hacking error
+            }
+            
+            
         }
 
     }

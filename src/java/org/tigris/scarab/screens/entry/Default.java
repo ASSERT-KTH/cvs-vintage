@@ -60,7 +60,7 @@ import org.apache.turbine.modules.screens.*;
 import org.apache.turbine.util.*; 
 
 // Scarab Stuff
-import org.tigris.scarab.om.*;
+import org.tigris.scarab.om.BaseScarabObject;
 import org.tigris.scarab.util.*;
 import org.tigris.scarab.tools.*;
 
@@ -69,7 +69,7 @@ import org.tigris.scarab.tools.*;
     for the Issue Entry templates.
 
     @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
-    @version $Id: Default.java,v 1.1 2001/03/27 06:22:35 jmcnally Exp $
+    @version $Id: Default.java,v 1.2 2001/03/29 19:34:43 jmcnally Exp $
 */
 public class Default extends VelocityScreen
 {
@@ -79,16 +79,8 @@ public class Default extends VelocityScreen
     public void doBuildTemplate( RunData data, Context context ) 
         throws Exception 
     {   
-          Module module = ModulePeer.retrieveByPK(new NumberKey("5"));
-          
-          ScarabRequestTool scarab = (ScarabRequestTool)
-              context.get(ScarabConstants.SCARAB_REQUEST_TOOL);
-          
-          ScarabUser user = new ScarabUser();
-          user.setPrimaryKey(new NumberKey("2"));
-          user.setCurrentModule(module);
-          scarab.setUser(user);
-   
+        // make sure the user has a module
+        BaseScarabObject.tempWorkAround(data, context);
     }
 }
 

@@ -52,12 +52,15 @@ import java.util.Date;
 // Turbine
 import org.apache.turbine.om.*;
 
+import org.tigris.scarab.tools.*;
+import org.tigris.scarab.util.*;
+
 /**
     This BaseScarabObject contains methods and variables that are common
     across all of the Scarab db objects.
     
     @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
-    @version $Id: BaseScarabObject.java,v 1.1 2001/01/03 07:04:47 jmcnally Exp $    
+    @version $Id: BaseScarabObject.java,v 1.2 2001/03/29 19:34:42 jmcnally Exp $    
 */
 public class BaseScarabObject extends BaseObject
 {
@@ -126,4 +129,31 @@ public class BaseScarabObject extends BaseObject
     {
         modified_date = name;
     }
+
+    /**
+     * This method gives us a user with a current module.
+     * It should be removed as soon as we have some way to set 
+     * this within the application
+     */
+    public static void tempWorkAround( org.apache.turbine.util.RunData data, 
+                                org.apache.velocity.context.Context context ) 
+        throws Exception
+    {
+          org.tigris.scarab.om.Module module = 
+             org.tigris.scarab.om.ModulePeer.retrieveByPK(
+                      new org.apache.turbine.om.NumberKey("5"));
+          
+          ScarabRequestTool scarab = (ScarabRequestTool)
+              context.get(ScarabConstants.SCARAB_REQUEST_TOOL);
+          
+          org.tigris.scarab.om.ScarabUser user = 
+              new org.tigris.scarab.om.ScarabUser();
+          user.setPrimaryKey(new NumberKey("2"));
+          user.setCurrentModule(module);
+
+          scarab.setUser(user);
+          data.setUser(user);
+
+    }
+
 }
