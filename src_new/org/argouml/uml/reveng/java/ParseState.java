@@ -1,4 +1,4 @@
-// $Id: ParseState.java,v 1.3 2002/03/12 14:43:58 linus Exp $
+// $Id: ParseState.java,v 1.4 2002/08/20 19:30:56 kataka Exp $
 
 /*
   JavaRE - Code generation and reverse engineering for UML and Java
@@ -26,6 +26,8 @@ package org.argouml.uml.reveng.java;
 import ru.novosoft.uml.foundation.core.*;
 import ru.novosoft.uml.model_management.*;
 import java.util.*;
+
+import org.argouml.model.uml.UmlFactory;
 
 /**
    The parse state keep control of data during parsing.
@@ -195,7 +197,7 @@ class ParseState
 	for(Iterator i = obsoleteInnerClasses.iterator(); i.hasNext(); ) {
 	    MModelElement element = (MModelElement)i.next();
 	    if(element instanceof MClassifier) {
-		element.remove();
+	    	UmlFactory.getFactory().getCore().removeClassifier((MClassifier)element);
 	    }
 	}	
     }

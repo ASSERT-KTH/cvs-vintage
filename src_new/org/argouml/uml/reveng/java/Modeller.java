@@ -1,4 +1,4 @@
-// $Id: Modeller.java,v 1.31 2002/08/15 21:19:40 linus Exp $
+// $Id: Modeller.java,v 1.32 2002/08/20 19:30:56 kataka Exp $
 
 /*
   JavaRE - Code generation and reverse engineering for UML and Java
@@ -887,7 +887,7 @@ public class Modeller
 	for(Iterator i = element.getTaggedValues().iterator(); i.hasNext(); ) {
 	    MTaggedValue tv = (MTaggedValue)i.next();
 	    if (tv.getTag().equals(MMUtil.GENERATED_TAG)) {
-		tv.remove();
+		UmlFactory.getFactory().remove(tv);
 	    }
 	}
     }

@@ -24,7 +24,7 @@
 // File: PropPanel.java
 // Classes: PropPanel
 // Original Author:
-// $Id: PropPanel.java,v 1.23 2002/07/15 15:12:13 kataka Exp $
+// $Id: PropPanel.java,v 1.24 2002/08/20 19:30:55 kataka Exp $
 
 // 23 Apr 2002: Jeremy Bennett (mail@jeremybennett.com). Added the third party
 // event listener.
@@ -37,6 +37,7 @@
 package org.argouml.uml.ui;
 
 import org.argouml.application.api.*;
+import org.argouml.model.uml.UmlFactory;
 import org.argouml.ui.*;
 import org.argouml.uml.*;
 import java.util.*;
@@ -576,7 +577,7 @@ implements TabModelTarget, MElementListener, UMLUserInterfaceContainer {
                     newTarget = ((MModelElement) base).getNamespace();
                 }
             }
-            base.remove();
+            UmlFactory.getFactory().remove(base);
             if(newTarget != null) {
                 navigateTo(newTarget);
             }
