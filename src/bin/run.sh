@@ -5,7 +5,7 @@
 ##                                                                          ##
 ### ====================================================================== ###
 
-### $Id: run.sh,v 1.24 2001/08/13 18:33:00 starksm Exp $ ###
+### $Id: run.sh,v 1.25 2001/08/14 02:29:24 user57 Exp $ ###
 
 DIRNAME=`dirname $0`
 PROGNAME=`basename $0`
@@ -61,9 +61,9 @@ case "$JAXP" in
 	;;
 
     *)
-	if [ "x$JAXP_DOM_FACTORY" = "x" ] && 
-	   [ "x$JAXP_SAX_FACTORY" = "x" ] then
-	    die "unsupported JAXP parser: $JAXP"
+	if [ "x$JAXP_DOM_FACTORY" = "x" ] &&
+	   [ "x$JAXP_SAX_FACTORY" = "x" ]; then
+	    die "Unsupported JAXP parser: $JAXP"
 	fi
 	;;
 esac
