@@ -100,7 +100,9 @@ public class MHDataStorage implements DataStorageInterface {
 
 		//System.out.println("dir-file=" + folder.getDirectoryFile());
 
-		File[] list = folder.getDirectoryFile().listFiles();
+		folder.getSearchEngineInstance().reset();
+
+		File[] list = folder.getDirectoryFile().listFiles(MHMessageFileFilter.getInstance());
 		Vector v = new Vector();
 		//System.out.println("message-count=" + list.length);
 
@@ -184,6 +186,8 @@ public class MHDataStorage implements DataStorageInterface {
 		
 		return list.length;
 	}
+	
+	
 	
 }
 

@@ -25,6 +25,9 @@ public class VirtualHeader extends ColumbaHeader implements HeaderInterface {
 		Folder srcFolder,
 		Object srcUid) {
 		super();
+		
+		if( header == null )
+			System.out.println("test");
 
 		for (Enumeration e = header.getHashtable().keys();
 			e.hasMoreElements();

@@ -75,6 +75,13 @@ public class ListToolsTest extends TestCase {
 
 		ListTools.substract(testList,listPart2);
 		assertTrue(testList.equals(listPart1));
+		
+		testList = new LinkedList(listFull);
+
+		ListTools.substract(testList,listPart1);
+		ListTools.substract(testList,listPart2);
+		assertTrue(testList.size() == 0);
+		
 	}
 	
 

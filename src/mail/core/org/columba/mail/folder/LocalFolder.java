@@ -123,7 +123,7 @@ public abstract class LocalFolder extends Folder {
 		getMessageFolderInfo().decExists();
 	}
 
-	protected AbstractMessage getMessage(
+	public AbstractMessage getMessage(
 		Object uid,
 		WorkerStatusController worker)
 		throws Exception {
@@ -222,6 +222,37 @@ public abstract class LocalFolder extends Folder {
 		WorkerStatusController worker)
 		throws Exception {
 		return getSearchEngineInstance().searchMessages(filter, worker);
+	}
+
+	/**
+	 * @see org.columba.mail.folder.Folder#expungeFolder(java.lang.Object, org.columba.core.command.WorkerStatusController)
+	 */
+	public void expungeFolder(Object[] uids, WorkerStatusController worker)
+		throws Exception {
+	}
+
+	/**
+	 * @see org.columba.mail.folder.Folder#markMessage(java.lang.Object, int, org.columba.core.command.WorkerStatusController)
+	 */
+	public void markMessage(
+		Object[] uids,
+		int variant,
+		WorkerStatusController worker)
+		throws Exception {
+	}
+
+	/**
+	 * @see org.columba.mail.folder.Folder#size()
+	 */
+	public int size() {		
+		return getDataStorageInstance().getMessageCount();
+	}
+
+	/**
+	 * @see org.columba.mail.folder.FolderTreeNode#getDefaultChild()
+	 */
+	public String getDefaultChild() {
+		return null;
 	}
 
 }

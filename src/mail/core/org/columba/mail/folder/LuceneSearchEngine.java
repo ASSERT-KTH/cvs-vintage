@@ -6,6 +6,7 @@ import java.io.StringReader;
 import java.util.Arrays;
 import java.util.Enumeration;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.ListIterator;
 
 import javax.swing.JOptionPane;
@@ -28,10 +29,12 @@ import org.apache.lucene.store.Directory;
 import org.apache.lucene.store.FSDirectory;
 import org.columba.core.command.WorkerStatusController;
 import org.columba.core.io.DiskIO;
+import org.columba.core.logging.ColumbaLogger;
 import org.columba.core.main.MainInterface;
 import org.columba.core.shutdown.ShutdownPluginInterface;
 import org.columba.core.util.ListTools;
 import org.columba.core.util.Lock;
+import org.columba.core.util.NullWorkerStatusController;
 import org.columba.mail.filter.FilterCriteria;
 import org.columba.mail.filter.FilterRule;
 import org.columba.mail.message.AbstractMessage;
@@ -74,7 +77,7 @@ public class LuceneSearchEngine
 	/**
 	 * Constructor for LuceneSearchEngine.
 	 */
-	public LuceneSearchEngine(Folder folder) {
+	public LuceneSearchEngine(LocalFolder folder) {
 		super(folder);
 
 		MainInterface.shutdownManager.register(this);
@@ -85,16 +88,13 @@ public class LuceneSearchEngine
 		operationCounter = 0;
 
 		File folderDir = folder.getDirectoryFile();
-
 		indexDir = new File(folderDir, ".index");
-
+		
 		try {
 			if (!indexDir.exists()) {
-				DiskIO.ensureDirectory(indexDir);
-				indexWriter = new IndexWriter(indexDir, null, true);
-				indexWriter.close();
-				indexWriter = null;
+				createIndex();
 			}
+			luceneIndexDir = FSDirectory.getDirectory(indexDir, false);
 		} catch (IOException e) {
 			JOptionPane.showMessageDialog(
 				null,
@@ -106,7 +106,6 @@ public class LuceneSearchEngine
 		try {
 			// If there is an existing lock then it must be from a
 			// previous crash -> remove it!
-			luceneIndexDir = FSDirectory.getDirectory(indexDir, false);
 			if (IndexReader.isLocked(luceneIndexDir))
 				IndexReader.unlock(luceneIndexDir);
 		} catch (IOException e) {
@@ -119,8 +118,20 @@ public class LuceneSearchEngine
 			if (writeLock.exists())
 				writeLock.delete();
 		}
+		
+		// Check if index is consitent with mailbox
+		if( getReader().numDocs() != folder.size() ) {
+			recreateIndex();
+		}
 
 		indexLock = new Lock();
+	}
+
+	protected void createIndex() throws IOException {
+		DiskIO.ensureDirectory(indexDir);
+		indexWriter = new IndexWriter(indexDir, null, true);
+		indexWriter.close();
+		indexWriter = null;
 	}
 
 	protected IndexWriter getWriter() {
@@ -131,7 +142,7 @@ public class LuceneSearchEngine
 			}
 
 			if (indexWriter == null) {
-				indexWriter = new IndexWriter(indexDir, analyzer, false);
+				indexWriter = new IndexWriter(luceneIndexDir, analyzer, false);
 			}
 
 		} catch (IOException e) {
@@ -144,30 +155,13 @@ public class LuceneSearchEngine
 	protected IndexReader getReader() {
 		try {
 			if (indexWriter != null) {
-				indexWriter.optimize();
 				indexWriter.close();
 				indexWriter = null;
 			}
 
 			if (indexReader == null) {
-				indexReader = IndexReader.open(indexDir);
+				indexReader = IndexReader.open(luceneIndexDir);
 			}
-
-/*			
-			if( indexReader==null) {
-				lastModified = IndexReader.lastModified(indexDir);
-				indexReader = IndexReader.open(indexDir);				
-			} else {
-				if(IndexReader.lastModified(indexDir)>lastModified ) {					
-					indexReader.close();
-					indexReader = IndexReader.open(indexDir);				
-					lastModified = IndexReader.lastModified(indexDir);
-				}
-			}
-*/
-			
-			
-
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -253,6 +247,7 @@ public class LuceneSearchEngine
 		FilterRule filter,
 		WorkerStatusController worker)
 		throws Exception {
+		Integer uid;			
 		Query query = getLuceneQuery(filter, analyzer);
 
 		indexLock.tryToGetLock(null);
@@ -263,10 +258,15 @@ public class LuceneSearchEngine
 
 		LinkedList result = new LinkedList();
 		for (int i = 0; i < hits.length(); i++) {
-			result.add(new Integer(hits.doc(i).getField("uid").stringValue()));
+			uid = new Integer(hits.doc(i).getField("uid").stringValue()); 
+			result.add(uid);
 		}
 
 		ListTools.substract(result, deleted);
+		
+		if( hits.length() < result.size()) throw new Exception("Assertion failed");
+		
+		checkResult( result, worker );
 
 		return result;
 	}
@@ -285,7 +285,7 @@ public class LuceneSearchEngine
 	/**
 	 * @see org.columba.mail.folder.SearchEngineInterface#messageAdded(org.columba.mail.message.AbstractMessage)
 	 */
-	public void messageAdded(AbstractMessage message) {
+	public void messageAdded(AbstractMessage message) throws Exception {
 		Document messageDoc = new Document();
 		ColumbaHeader header = (ColumbaHeader) message.getHeader();
 
@@ -314,26 +314,18 @@ public class LuceneSearchEngine
 		if (body != null)
 			messageDoc.add(Field.UnStored("body", body.getBody()));
 
-		try {
-			indexLock.tryToGetLock(null);
-			getWriter().addDocument(messageDoc);
-			incOperationCounter();
-			indexLock.release();
-		} catch (IOException e) {
-			JOptionPane.showMessageDialog(
-				null,
-				e.getMessage(),
-				"Error while adding Message to Lucene Index",
-				JOptionPane.ERROR_MESSAGE);
-		}
+		indexLock.tryToGetLock(null);
+		getWriter().addDocument(messageDoc);
+		incOperationCounter();
+		indexLock.release();
 	}
 
 	/**
 	 * @see org.columba.mail.folder.SearchEngineInterface#messageRemoved(java.lang.Object)
 	 */
-	public void messageRemoved(Object uid) {
+	public void messageRemoved(Object uid) throws Exception {
 		deleted.add(uid);
-		
+
 		/*
 		try {
 			indexLock.tryToGetLock(null);
@@ -352,32 +344,32 @@ public class LuceneSearchEngine
 	private void commitDeletion() {
 		if( deleted.size() == 0) return;
 		
-		try {
-			if( indexWriter != null) {
-				indexWriter.close();
-				indexWriter = null;
-			}
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+		indexLock.tryToGetLock(null);
 		
 		ListIterator it = deleted.listIterator();
+		int deletedDocs = 0;
 		
 		while( it.hasNext() ) {		
 			try {
-				getReader().delete(new Term("uid", it.next().toString()));
-			} catch (IOException e) {
+				deletedDocs = getReader().delete(new Term("uid", it.next().toString()));
+				if( deletedDocs != 1 ) 
+					throw new Exception( "Deletion from Index failed");
+			} catch (Exception e) {
 				JOptionPane.showMessageDialog(
 					null,
 					e.getMessage(),
 					"Error while removing Message from Lucene Index",
 					JOptionPane.ERROR_MESSAGE);
+				
+				ColumbaLogger.log.error("e.getMessage" + " - uid = " + it.previous() + " - deleted = " + deletedDocs);
 			}
 		}
 		
+		indexLock.release();
+		
 		deleted.clear();
 	}
-
+	
 	private void incOperationCounter() {
 		operationCounter++;
 		if( operationCounter > OPTIMIZE_AFTER_N_OPERATIONS ) {
@@ -403,6 +395,7 @@ public class LuceneSearchEngine
 	public void shutdown() {
 		
 		commitDeletion();
+		
 		try {
 			if (indexWriter != null) {
 				indexWriter.optimize();
@@ -425,4 +418,42 @@ public class LuceneSearchEngine
 		return caps;
 	}
 
+	private void checkResult(List result, WorkerStatusController wc) {
+		ListIterator it = result.listIterator();
+		try {
+			while( it.hasNext() ) {
+				if( !folder.exists(it.next(), wc)) throw new Exception("Assertion failed");
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			result.clear();
+			recreateIndex();
+		}
+		
+	}
+
+	/**
+	 * @see org.columba.mail.folder.AbstractSearchEngine#reset()
+	 */
+	public void reset() throws Exception {
+		createIndex();
+	}
+	
+	public void recreateIndex() {
+		ColumbaLogger.log.error("Recreating Lucene Index");
+		
+		try {
+			createIndex();
+			Object[] uids = folder.getUids(NullWorkerStatusController.getInstance());
+			
+			for( int i=0; i<uids.length; i++) {
+				messageAdded(((LocalFolder)folder).getMessage(uids[i],NullWorkerStatusController.getInstance()));
+			}
+			
+		} catch (Exception e) {
+		}
+	}
+
 }
+
+

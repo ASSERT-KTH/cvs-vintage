@@ -79,7 +79,6 @@ public class CAnalyzer extends Analyzer {
 	 */
 	public TokenStream tokenStream(String field, Reader reader) {
 		TokenStream result = new RegExpTokenizer(reader);
-
 		result = new StandardFilter(result);
 		result = new LowerCaseFilter(result);
 		result = new StopFilter(result, stopTable);

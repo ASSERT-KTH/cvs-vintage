@@ -517,6 +517,10 @@ public abstract class Folder extends FolderTreeNode {
 	public Object[] getUids(WorkerStatusController worker) throws Exception {
 		return null;
 	}
+	
+	public int size() {
+		return 0;
+	}
 
 	public abstract Object[] searchMessages(
 		Filter filter,

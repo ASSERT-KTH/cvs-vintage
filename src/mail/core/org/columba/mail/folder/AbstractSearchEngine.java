@@ -35,11 +35,13 @@ public abstract class AbstractSearchEngine {
 		filterCache = new Hashtable();
 	}
 
-	public void messageAdded(AbstractMessage message) {
+	public void messageAdded(AbstractMessage message) throws Exception {
 	};
 
-	public void messageRemoved(Object uid) {
+	public void messageRemoved(Object uid) throws Exception {
 	};
+	
+	public void reset() throws Exception {};
 
 	protected synchronized AbstractFilter getFilter(String type) {
 
