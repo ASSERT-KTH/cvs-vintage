@@ -1,4 +1,4 @@
-// $Id: ModelManagementHelper.java,v 1.32 2003/08/21 20:33:36 thn Exp $
+// $Id: ModelManagementHelper.java,v 1.33 2003/09/01 11:51:08 bobtarling Exp $
 // Copyright (c) 1996-2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -378,10 +378,10 @@ public class ModelManagementHelper {
     private List getOwnerShipPath(Object elem) {
         if (ModelFacade.isABase(elem)) {
             List ownershipPath = new ArrayList();
-            Object parent = ModelFacade.getContainer(elem);
+            Object parent = ModelFacade.getModelElementContainer(elem);
             while (parent != null) {
                 ownershipPath.add(parent);
-                parent = ModelFacade.getContainer(parent);
+                parent = ModelFacade.getModelElementContainer(parent);
             }
             return ownershipPath;
         } else {

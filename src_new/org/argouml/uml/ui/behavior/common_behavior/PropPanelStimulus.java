@@ -1,6 +1,4 @@
-
-
-// $Id: PropPanelStimulus.java,v 1.26 2003/08/25 19:15:54 bobtarling Exp $
+// $Id: PropPanelStimulus.java,v 1.27 2003/09/01 11:51:07 bobtarling Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -29,7 +27,7 @@
 // File: PropPanelStimulus.java
 // Classes: PropPanelStimulus
 // Original Author: agauthie@ics.uci.edu
-// $Id: PropPanelStimulus.java,v 1.26 2003/08/25 19:15:54 bobtarling Exp $
+// $Id: PropPanelStimulus.java,v 1.27 2003/09/01 11:51:07 bobtarling Exp $
 
 package org.argouml.uml.ui.behavior.common_behavior;
 
@@ -152,13 +150,13 @@ public class PropPanelStimulus extends PropPanelModelElement {
         return org.argouml.model.ModelFacade.isAAssociation(classifier);
     }
 
-    public MAssociation getAssociation() {
-        MAssociation association = null;
+    public Object getAssociation() {
+        Object association = null;
         Object target = getTarget();
-        if (org.argouml.model.ModelFacade.isAStimulus(target)) {
-            MLink link = ((MStimulus) target).getCommunicationLink();
+        if (ModelFacade.isAStimulus(target)) {
+            Object link = ModelFacade.getCommunicationLink(target);
             if (link != null) {
-                association = link.getAssociation();
+                association = ModelFacade.getAssociation(link);
             }
         }
         return association;
@@ -166,19 +164,19 @@ public class PropPanelStimulus extends PropPanelModelElement {
 
     public void setAssociation(MAssociation element) {
         Object target = getTarget();
-        if (org.argouml.model.ModelFacade.isAStimulus(target)) {
+        if (ModelFacade.isAStimulus(target)) {
             MStimulus stimulus = (MStimulus) target;
-            MLink link = stimulus.getCommunicationLink();
+            Object link = ModelFacade.getCommunicationLink(stimulus);
             if (link == null) {
                 link = stimulus.getFactory().createLink();
                 if (link != null) {
-                    link.addStimulus(stimulus);
-                    stimulus.setCommunicationLink(link);
+                    ((MLink)link).addStimulus(stimulus);
+                    stimulus.setCommunicationLink((MLink)link);
                 }
             }
-            MAssociation oldAssoc = link.getAssociation();
+            Object oldAssoc = ModelFacade.getAssociation(link);
             if (oldAssoc != element) {
-                link.setAssociation(element);
+                ((MLink)link).setAssociation(element);
                 //
                 //  TODO: more needs to go here
                 //

@@ -1,4 +1,4 @@
-// $Id: CollabDiagramGraphModel.java,v 1.28 2003/09/01 00:59:53 bobtarling Exp $
+// $Id: CollabDiagramGraphModel.java,v 1.29 2003/09/01 11:51:09 bobtarling Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -26,7 +26,7 @@
 // File: CollabDiagramGraphModel.java
 // Classes: CollabDiagramGraphModel
 // Original Author: agauthie@ics.uci.edu
-// $Id: CollabDiagramGraphModel.java,v 1.28 2003/09/01 00:59:53 bobtarling Exp $
+// $Id: CollabDiagramGraphModel.java,v 1.29 2003/09/01 11:51:09 bobtarling Exp $
 
 
 package org.argouml.uml.diagram.collaboration;
@@ -150,15 +150,17 @@ public class CollabDiagramGraphModel extends UMLMutableGraphSupport
     public boolean canAddEdge(Object edge)  {
 	if (edge == null) return false;
 	if (_edges.contains(edge)) return false;
-	Object end0 = null, end1 = null;
+	Object end0 = null;
+        Object end1 = null;
 	if (ModelFacade.isAAssociationRole(edge)) {
-	    List conns = ((MAssociationRole) edge).getConnections();
+	    Collection conns = ModelFacade.getConnections(edge);
+            Iterator iter = conns.iterator();
 	    if (conns.size() < 2) return false;
-	    MAssociationEndRole ae0 = (MAssociationEndRole) conns.get(0);
-	    MAssociationEndRole ae1 = (MAssociationEndRole) conns.get(1);
-	    if (ae0 == null || ae1 == null) return false;
-	    end0 = ae0.getType();
-	    end1 = ae1.getType();
+	    Object associationEndRole0 = iter.next();
+	    Object associationEndRole1 = iter.next();
+	    if (associationEndRole0 == null || associationEndRole1 == null) return false;
+	    end0 = ModelFacade.getType(associationEndRole0);
+	    end1 = ModelFacade.getType(associationEndRole1);
 	}
 	if (ModelFacade.isAGeneralization(edge)) {
 	    MGeneralization gen = (MGeneralization) edge;

@@ -1,5 +1,4 @@
-
-// $Id: PropPanelInstance.java,v 1.21 2003/08/25 19:15:54 bobtarling Exp $
+// $Id: PropPanelInstance.java,v 1.22 2003/09/01 11:51:08 bobtarling Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -28,7 +27,7 @@
 // File: PropPanelInstance.java
 // Classes: PropPanelInstance
 // Original Author: jrobbins@ics.uci.edu
-// $Id: PropPanelInstance.java,v 1.21 2003/08/25 19:15:54 bobtarling Exp $
+// $Id: PropPanelInstance.java,v 1.22 2003/09/01 11:51:08 bobtarling Exp $
 
 package org.argouml.uml.ui.behavior.common_behavior;
 
@@ -38,6 +37,7 @@ import java.util.Iterator;
 import javax.swing.JTree;
 
 import org.argouml.application.api.Argo;
+import org.argouml.model.ModelFacade;
 
 import org.argouml.uml.ui.PropPanelButton;
 import org.argouml.uml.ui.UMLClassifierComboBoxModel;
@@ -89,23 +89,22 @@ public class PropPanelInstance extends PropPanelModelElement {
         return org.argouml.model.ModelFacade.isAClassifier(classifier);
     }
 
-    public MClassifier getClassifier() {
-        MClassifier classifier = null;
+    public Object getClassifier() {
+        Object classifier = null;
         Object target = getTarget();
-        if (org.argouml.model.ModelFacade.isAInstance(target)) {
+        if (ModelFacade.isAInstance(target)) {
         //    UML 1.3 apparently has this a 0..n multiplicity
         //    I'll have to figure out what that means
         //            classifier = ((MInstance) target).getClassifier();
 
 	    // at the moment , we only deal with one classifier
-	    Collection col = ((MInstance) target).getClassifiers();
+	    Collection col = ModelFacade.getClassifiers(target);
 	    if (col != null) {
 		Iterator iter = col.iterator();
 		if (iter != null && iter.hasNext()) {
-		    classifier = (MClassifier) iter.next();
+		    classifier = iter.next();
 		}
 	    }
-
         }
         return classifier;
     }
@@ -131,5 +130,4 @@ public class PropPanelInstance extends PropPanelModelElement {
         }
     }
 } /* end class PropPanelInstance */
-
 

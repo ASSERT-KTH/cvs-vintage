@@ -1,7 +1,4 @@
-
-
-
-// $Id: ActionSequenceDiagram.java,v 1.18 2003/08/25 23:57:43 bobtarling Exp $
+// $Id: ActionSequenceDiagram.java,v 1.19 2003/09/01 11:51:09 bobtarling Exp $
 // Copyright (c) 1996-2001 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -35,7 +32,6 @@ import org.argouml.uml.diagram.sequence.ui.UMLSequenceDiagram;
 import org.argouml.uml.diagram.ui.UMLDiagram;
 
 import ru.novosoft.uml.behavior.collaborations.MCollaboration;
-import ru.novosoft.uml.behavior.collaborations.MInteraction;
 import ru.novosoft.uml.foundation.core.MClassifier;
 import ru.novosoft.uml.foundation.core.MNamespace;
 import ru.novosoft.uml.foundation.core.MOperation;
@@ -72,38 +68,38 @@ public class ActionSequenceDiagram extends ActionAddDiagram {
                 "The argument " + handle + "is not a namespace.");
         }
         MNamespace ns = (MNamespace) handle;
-        MCollaboration c = null;
+        Object collaboration = null;
         Object target = TargetManager.getInstance().getModelTarget();
-        if (org.argouml.model.ModelFacade.isAOperation(target)) {
-            c =
+        if (ModelFacade.isAOperation(target)) {
+            collaboration =
                 UmlFactory.getFactory().getCollaborations().buildCollaboration(
                     ns);
-            c.setRepresentedOperation((MOperation) target);
-        } else if (org.argouml.model.ModelFacade.isAClassifier(target)) {
-            c =
+            ((MCollaboration)collaboration).setRepresentedOperation((MOperation) target);
+        } else if (ModelFacade.isAClassifier(target)) {
+            collaboration =
                 UmlFactory.getFactory().getCollaborations().buildCollaboration(
                     ns);
-            c.setRepresentedClassifier((MClassifier) target);
-        } else if (org.argouml.model.ModelFacade.isAModel(target)) {
-            c =
+            ((MCollaboration)collaboration).setRepresentedClassifier((MClassifier) target);
+        } else if (ModelFacade.isAModel(target)) {
+            collaboration =
                 UmlFactory.getFactory().getCollaborations().buildCollaboration(
                     (MModel) target);
         } else if (org.argouml.model.ModelFacade.isAInteraction(target)) {
-            c = ((MInteraction) target).getContext();
+            collaboration = ModelFacade.getContext(target);
         } else if (target instanceof UMLSequenceDiagram) {
-            Object o = ((UMLSequenceDiagram) target).getOwner();
-            if (org.argouml.model.ModelFacade.isACollaboration(o)) {
+            Object owner = ((UMLSequenceDiagram) target).getOwner();
+            if (ModelFacade.isACollaboration(owner)) {
                 //preventing backward compat problems
-                c = (MCollaboration) o;
+                collaboration = (MCollaboration) owner;
             }
-        } else if (org.argouml.model.ModelFacade.isACollaboration(target)) {
-            c = (MCollaboration) target;
+        } else if (ModelFacade.isACollaboration(target)) {
+            collaboration = target;
         } else {
-            c =
+            collaboration =
                 UmlFactory.getFactory().getCollaborations().buildCollaboration(
                     ns);
         }
-        UMLSequenceDiagram d = new UMLSequenceDiagram(c);
+        UMLSequenceDiagram d = new UMLSequenceDiagram((MCollaboration)collaboration);
         return d;
     }
 

@@ -1,4 +1,4 @@
-// $Id: FigAssociation.java,v 1.49 2003/09/01 00:59:52 bobtarling Exp $
+// $Id: FigAssociation.java,v 1.50 2003/09/01 11:51:08 bobtarling Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -377,13 +377,13 @@ public class FigAssociation extends FigEdgeModelElement {
 	    // allow navigability from atart to end, from end to start
 	    // or bidirectional
 
-	    java.util.List ascEnds = ((MAssociation) asc).getConnections();
-	    MAssociationEnd ascStart = (MAssociationEnd) (ascEnds.get(0));
-	    MAssociationEnd ascEnd = (MAssociationEnd) (ascEnds.get(1));
+	    Collection ascEnds = ModelFacade.getConnections(asc);
+            Iterator iter = ascEnds.iterator();
+	    Object ascStart = iter.next();
+	    Object ascEnd = iter.next();
 
-	    if (org.argouml.model.ModelFacade.isAClassifier(ascStart.getType())
-		&& org.argouml.model.ModelFacade.isAClassifier(ascEnd.getType()))
-	    {
+	    if (ModelFacade.isAClassifier(ModelFacade.getType(ascStart))
+                    && ModelFacade.isAClassifier(ModelFacade.getType(ascEnd))) {
 		JMenu navMenu = new JMenu("Navigability");
 		navMenu.add(ActionNavigability.newActionNavigability(ascStart,
 								     ascEnd,

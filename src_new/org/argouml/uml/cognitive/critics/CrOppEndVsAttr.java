@@ -1,6 +1,4 @@
-
-
-// $Id: CrOppEndVsAttr.java,v 1.7 2003/08/30 22:04:20 alexb Exp $
+// $Id: CrOppEndVsAttr.java,v 1.8 2003/09/01 11:51:09 bobtarling Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -27,7 +25,7 @@
 // File: CrOppEndVsAttr.java
 // Classes: CrOppEndVsAttr
 // Original Author: jrobbins@ics.uci.edu
-// $Id: CrOppEndVsAttr.java,v 1.7 2003/08/30 22:04:20 alexb Exp $
+// $Id: CrOppEndVsAttr.java,v 1.8 2003/09/01 11:51:09 bobtarling Exp $
 
 package org.argouml.uml.cognitive.critics;
 
@@ -37,7 +35,6 @@ import java.util.Vector;
 import org.argouml.cognitive.Designer;
 import org.argouml.cognitive.critics.Critic;
 import org.argouml.model.ModelFacade;
-import ru.novosoft.uml.behavior.collaborations.MAssociationRole;
 import ru.novosoft.uml.foundation.core.MAssociation;
 import ru.novosoft.uml.foundation.core.MAssociationEnd;
 import ru.novosoft.uml.foundation.core.MClassifier;
@@ -100,7 +97,7 @@ public class CrOppEndVsAttr extends CrUML {
             Collection conn = asc.getConnections();
 
             if (ModelFacade.isAAssociationRole(asc))
-                conn = ((MAssociationRole) asc).getConnections();
+                conn = ModelFacade.getConnections(asc);
             if (conn == null)
                 continue;
 

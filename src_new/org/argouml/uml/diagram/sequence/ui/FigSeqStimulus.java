@@ -1,5 +1,4 @@
-
-// $Id: FigSeqStimulus.java,v 1.12 2003/08/27 12:26:57 bobtarling Exp $
+// $Id: FigSeqStimulus.java,v 1.13 2003/09/01 11:51:09 bobtarling Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,7 +24,7 @@
 
 // File: FigSeqStimulus.java
 // Original Author: agauthie@ics.uci.edu
-// $Id: FigSeqStimulus.java,v 1.12 2003/08/27 12:26:57 bobtarling Exp $
+// $Id: FigSeqStimulus.java,v 1.13 2003/09/01 11:51:09 bobtarling Exp $
 
 
 package org.argouml.uml.diagram.sequence.ui;
@@ -253,14 +252,14 @@ public class FigSeqStimulus extends FigNodeModelElement {
 	// 15/09/00 AK
 	// the new stimulus becomes a pathItem of its link
    
-	MLink mlink = ((MStimulus) getOwner()).getCommunicationLink();
+	Object mlink = ModelFacade.getCommunicationLink(getOwner());
 
 	if (mlink != null && lay != null) {
       
 	    FigSeqLink figSeqLink = (FigSeqLink) lay.presentationFor(mlink);
 	    if (figSeqLink != null) {
         
-		Collection stimuli = mlink.getStimuli();
+		Collection stimuli = ModelFacade.getStimuli(mlink);
 		int size = 0;
 		if (stimuli != null) {
 		    size = stimuli.size();

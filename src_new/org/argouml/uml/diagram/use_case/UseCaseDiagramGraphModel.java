@@ -1,4 +1,4 @@
-// $Id: UseCaseDiagramGraphModel.java,v 1.28 2003/09/01 00:59:51 bobtarling Exp $
+// $Id: UseCaseDiagramGraphModel.java,v 1.29 2003/09/01 11:51:06 bobtarling Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -26,7 +26,7 @@
 // File: UseCaseDiagramGraphModel.java
 // Classes: UseCaseDiagramGraphModel
 // Original Author: your email address here
-// $Id: UseCaseDiagramGraphModel.java,v 1.28 2003/09/01 00:59:51 bobtarling Exp $
+// $Id: UseCaseDiagramGraphModel.java,v 1.29 2003/09/01 11:51:06 bobtarling Exp $
 
 // 3 Apr 2002: Jeremy Bennett (mail@jeremybennett.com). Extended to support
 // the Extend and Include relationships. JavaDoc added for clarity. Adding edge
@@ -40,7 +40,6 @@ import java.beans.PropertyChangeEvent;
 import java.beans.VetoableChangeListener;
 import java.util.Collection;
 import java.util.Iterator;
-import java.util.List;
 import java.util.Vector;
 
 import org.apache.log4j.Category;
@@ -378,26 +377,27 @@ public class UseCaseDiagramGraphModel
 
             // Only allow binary associations
 
-            List conns = ((MAssociation) edge).getConnections();
-
+            Collection conns = ModelFacade.getConnections(edge);
+            Iterator iter = conns.iterator();
+            
             if (conns.size() < 2) {
                 return false;
             }
 
-            MAssociationEnd ae0 = (MAssociationEnd) conns.get(0);
-            MAssociationEnd ae1 = (MAssociationEnd) conns.get(1);
+            Object associationEnd0 = iter.next();
+            Object associationEnd1 = iter.next();
 
             // Give up if the assocation ends don't have a type defined
 
-            if ((ae0 == null) || (ae1 == null)) {
+            if ((associationEnd0 == null) || (associationEnd1 == null)) {
                 return false;
             }
 
-            end0 = ae0.getType();
-            end1 = ae1.getType();
+            end0 = ModelFacade.getType(associationEnd0);
+            end1 = ModelFacade.getType(associationEnd1);
         }
         else if (org.argouml.model.ModelFacade.isAGeneralization(edge)) {
-            end0 = ((MGeneralization) edge).getChild();
+            end0 = ModelFacade.getChild(edge);
             end1 = ((MGeneralization) edge).getParent();
         }
         else if (org.argouml.model.ModelFacade.isAExtend(edge)) {

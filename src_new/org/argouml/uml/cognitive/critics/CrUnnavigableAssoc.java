@@ -1,5 +1,4 @@
-
-// $Id: CrUnnavigableAssoc.java,v 1.6 2003/08/30 22:04:20 alexb Exp $
+// $Id: CrUnnavigableAssoc.java,v 1.7 2003/09/01 11:51:09 bobtarling Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -26,7 +25,7 @@
 // File: CrEmptyPackage.java
 // Classes: CrEmptyPackage
 // Original Author: jrobbins@ics.uci.edu
-// $Id: CrUnnavigableAssoc.java,v 1.6 2003/08/30 22:04:20 alexb Exp $
+// $Id: CrUnnavigableAssoc.java,v 1.7 2003/09/01 11:51:09 bobtarling Exp $
 
 package org.argouml.uml.cognitive.critics;
 
@@ -35,7 +34,6 @@ import java.util.Iterator;
 import org.argouml.cognitive.Designer;
 import org.argouml.cognitive.ToDoItem;
 import org.argouml.model.ModelFacade;
-import ru.novosoft.uml.behavior.collaborations.MAssociationRole;
 import ru.novosoft.uml.foundation.core.MAssociation;
 import ru.novosoft.uml.foundation.core.MAssociationEnd;
 
@@ -56,7 +54,7 @@ public class CrUnnavigableAssoc extends CrUML {
 	MAssociation asc = (MAssociation) dm;
 	Collection conn = asc.getConnections();
 	if (ModelFacade.isAAssociationRole(asc))
-	    conn = ((MAssociationRole) asc).getConnections();
+	    conn = ModelFacade.getConnections(asc);
 	for (Iterator iter = conn.iterator(); iter.hasNext();) {
 	    MAssociationEnd ae = (MAssociationEnd) iter.next();
 	    if (ae.isNavigable()) return NO_PROBLEM;

@@ -1,5 +1,4 @@
-
-// $Id: UMLCollaborationInteractionListModel.java,v 1.7 2003/08/25 19:15:54 bobtarling Exp $
+// $Id: UMLCollaborationInteractionListModel.java,v 1.8 2003/09/01 11:51:07 bobtarling Exp $
 // Copyright (c) 2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,12 +24,11 @@
 
 package org.argouml.uml.ui.behavior.collaborations;
 
+import org.argouml.model.ModelFacade;
 import org.argouml.uml.ui.UMLModelElementListModel2;
 
 import ru.novosoft.uml.MBase;
 import ru.novosoft.uml.behavior.collaborations.MCollaboration;
-import ru.novosoft.uml.behavior.collaborations.MInteraction;
-
 /**
  * @since Oct 3, 2002
  * @author jaap.branderhorst@xs4all.nl
@@ -57,7 +55,7 @@ public class UMLCollaborationInteractionListModel
      * @see org.argouml.uml.ui.UMLModelElementListModel2#isValidElement(MBase)
      */
     protected boolean isValidElement(MBase elem) {
-        return org.argouml.model.ModelFacade.isAInteraction(elem) && ((MInteraction) elem).getContext() == getTarget();
+        return ModelFacade.isAInteraction(elem) && ModelFacade.getContext(elem) == getTarget();
     }
 
 }

@@ -1,5 +1,4 @@
-
-// $Id: GoModelElementToComment.java,v 1.4 2003/08/25 19:15:52 bobtarling Exp $
+// $Id: GoModelElementToComment.java,v 1.5 2003/09/01 11:51:07 bobtarling Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -23,14 +22,13 @@
 // CALIFORNIA HAS NO OBLIGATIONS TO PROVIDE MAINTENANCE, SUPPORT,
 // UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 
-// $Id: GoModelElementToComment.java,v 1.4 2003/08/25 19:15:52 bobtarling Exp $
+// $Id: GoModelElementToComment.java,v 1.5 2003/09/01 11:51:07 bobtarling Exp $
 package org.argouml.uml.ui.foundation.core;
 
 import java.util.Collection;
+import org.argouml.model.ModelFacade;
 
 import org.argouml.ui.AbstractGoRule;
-
-import ru.novosoft.uml.foundation.core.MModelElement;
 
 /**
  * Go rule for the package perspective to show the comments belonging to some
@@ -44,8 +42,8 @@ public class GoModelElementToComment extends AbstractGoRule {
      * @see org.argouml.ui.AbstractGoRule#getChildren(java.lang.Object)
      */
     public Collection getChildren(Object parent) {
-        if (org.argouml.model.ModelFacade.isAModelElement(parent)) {
-            return ((MModelElement) parent).getComments();
+        if (ModelFacade.isAModelElement(parent)) {
+            return ModelFacade.getComments(parent);
         }
         return null;
     }

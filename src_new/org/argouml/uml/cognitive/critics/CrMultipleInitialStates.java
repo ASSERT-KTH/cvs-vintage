@@ -1,4 +1,4 @@
-// $Id: CrMultipleInitialStates.java,v 1.6 2003/08/30 21:28:52 alexb Exp $
+// $Id: CrMultipleInitialStates.java,v 1.7 2003/09/01 11:51:09 bobtarling Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,7 +25,7 @@
 // File: CrMultipleInitialStates.java
 // Classes: CrMultipleInitialStates
 // Original Author: jrobbins@ics.uci.edu
-// $Id: CrMultipleInitialStates.java,v 1.6 2003/08/30 21:28:52 alexb Exp $
+// $Id: CrMultipleInitialStates.java,v 1.7 2003/09/01 11:51:09 bobtarling Exp $
 
 package org.argouml.uml.cognitive.critics;
 
@@ -62,7 +62,7 @@ public class CrMultipleInitialStates extends CrUML {
 	    return NO_PROBLEM;
 
         // container state / composite state
-        Object cs = ModelFacade.getContainer(dm);
+        Object cs = ModelFacade.getModelElementContainer(dm);
         if (cs == null) { 
             cat.debug("null parent state"); 
             return NO_PROBLEM; 
@@ -89,7 +89,7 @@ public class CrMultipleInitialStates extends CrUML {
 
     protected VectorSet computeOffenders(Object ps) {
         VectorSet offs = new VectorSet(ps);
-        Object cs = ModelFacade.getContainer(ps);
+        Object cs = ModelFacade.getModelElementContainer(ps);
         if (cs == null) { 
             cat.debug("null parent in still valid"); 
             return offs; 

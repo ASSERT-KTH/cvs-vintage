@@ -1,5 +1,4 @@
-
-// $Id: PropPanelExtend.java,v 1.22 2003/08/25 19:15:50 bobtarling Exp $
+// $Id: PropPanelExtend.java,v 1.23 2003/09/01 11:51:08 bobtarling Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -34,6 +33,7 @@ import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 
 import org.argouml.application.api.Argo;
+import org.argouml.model.ModelFacade;
 import org.argouml.model.uml.UmlFactory;
 import org.argouml.model.uml.behavioralelements.usecases.UseCasesFactory;
 
@@ -139,11 +139,11 @@ public class PropPanelExtend extends PropPanelModelElement {
         String condBody = null;
         Object target   = getTarget();
 
-        if (org.argouml.model.ModelFacade.isAExtend(target)) {
-            MBooleanExpression condition = ((MExtend) target).getCondition();
+        if (ModelFacade.isAExtend(target)) {
+            Object condition = ModelFacade.getCondition(target);
 
             if (condition != null) {
-                condBody = condition.getBody();
+                condBody = (String)ModelFacade.getBody(condition);
             }
         }
 

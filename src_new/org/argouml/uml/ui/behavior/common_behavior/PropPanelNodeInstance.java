@@ -1,5 +1,4 @@
-
-// $Id: PropPanelNodeInstance.java,v 1.18 2003/08/25 19:15:54 bobtarling Exp $
+// $Id: PropPanelNodeInstance.java,v 1.19 2003/09/01 11:51:07 bobtarling Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -26,7 +25,7 @@
 // File: PropPanelNodeInstance.java
 // Classes: PropPanelNodeInstance
 // Original Author: 5eichler@informatik.uni-hamburg.de
-// $Id: PropPanelNodeInstance.java,v 1.18 2003/08/25 19:15:54 bobtarling Exp $
+// $Id: PropPanelNodeInstance.java,v 1.19 2003/09/01 11:51:07 bobtarling Exp $
 
 package org.argouml.uml.ui.behavior.common_behavior;
 
@@ -100,7 +99,7 @@ public class PropPanelNodeInstance extends PropPanelModelElement {
         Object target = getTarget();
         if (org.argouml.model.ModelFacade.isAInstance(target)) {
             // at the moment , we only deal with one classifier
-            Collection col = ((MInstance) target).getClassifiers();
+            Collection col = ModelFacade.getClassifiers(target);
             if (col != null) {
                 Iterator iter = col.iterator();
                 if (iter != null && iter.hasNext()) {

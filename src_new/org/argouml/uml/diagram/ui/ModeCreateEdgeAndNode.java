@@ -1,5 +1,4 @@
-
-// $Id: ModeCreateEdgeAndNode.java,v 1.16 2003/08/25 19:15:55 bobtarling Exp $
+// $Id: ModeCreateEdgeAndNode.java,v 1.17 2003/09/01 11:51:08 bobtarling Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -26,7 +25,7 @@
 // File: ModeCreateEdgeAndNode.java
 // Classes: ModeCreateEdgeAndNode
 // Original Author: jrobbins
-// $Id: ModeCreateEdgeAndNode.java,v 1.16 2003/08/25 19:15:55 bobtarling Exp $
+// $Id: ModeCreateEdgeAndNode.java,v 1.17 2003/09/01 11:51:08 bobtarling Exp $
 
 package org.argouml.uml.diagram.ui;
 
@@ -37,9 +36,12 @@ import java.awt.Rectangle;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.util.Collection;
+import java.util.Iterator;
 import java.util.Vector;
 
 import org.apache.log4j.Category;
+import org.argouml.model.ModelFacade;
 import org.argouml.model.uml.UmlFactory;
 import org.tigris.gef.base.Editor;
 import org.tigris.gef.base.Globals;
@@ -56,8 +58,6 @@ import org.tigris.gef.presentation.FigNode;
 import org.tigris.gef.presentation.FigPoly;
 import org.tigris.gef.presentation.Handle;
 
-import ru.novosoft.uml.foundation.core.MAssociation;
-import ru.novosoft.uml.foundation.core.MAssociationEnd;
 import ru.novosoft.uml.foundation.data_types.MAggregationKind;
 
 /** A Mode to interpret user input while creating an edge.  Basically
@@ -383,10 +383,11 @@ public class ModeCreateEdgeAndNode extends ModeCreate {
     // internal methods
 
     public void postProcessEdge() {
-        if (org.argouml.model.ModelFacade.isAAssociation(_newEdge)) {
-            java.util.List conn = ((MAssociation) _newEdge).getConnections();
-            MAssociationEnd ae0 = (MAssociationEnd) conn.get(0);
-            ae0.setAggregation(MAggregationKind.COMPOSITE);
+        if (ModelFacade.isAAssociation(_newEdge)) {
+            Collection conns = ModelFacade.getConnections(_newEdge);
+            Iterator iter = conns.iterator();
+            Object associationEnd0 = iter.next();
+            ModelFacade.setAggregation(associationEnd0, MAggregationKind.COMPOSITE);
         }
     }
 

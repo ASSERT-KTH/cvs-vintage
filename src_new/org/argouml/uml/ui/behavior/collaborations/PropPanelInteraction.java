@@ -1,4 +1,4 @@
-// $Id: PropPanelInteraction.java,v 1.19 2003/06/30 21:59:35 linus Exp $
+// $Id: PropPanelInteraction.java,v 1.20 2003/09/01 11:51:07 bobtarling Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -28,14 +28,13 @@ import javax.swing.JList;
 import javax.swing.JScrollPane;
 
 import org.argouml.application.api.Argo;
+import org.argouml.model.ModelFacade;
 
 import org.argouml.ui.targetmanager.TargetManager;
 import org.argouml.uml.ui.PropPanelButton;
 import org.argouml.uml.ui.UMLLinkedList;
 import org.argouml.uml.ui.foundation.core.PropPanelModelElement;
 import org.argouml.util.ConfigLoader;
-
-import ru.novosoft.uml.behavior.collaborations.MInteraction;
 
 /**
  * Proppanel for interactions.
@@ -81,8 +80,7 @@ public class PropPanelInteraction extends PropPanelModelElement {
      * @see org.argouml.uml.ui.foundation.core.PropPanelModelElement#navigateUp()
      */
     public void navigateUp() {
-        TargetManager.getInstance().setTarget(((MInteraction) getTarget()).getContext());
+        TargetManager.getInstance().setTarget(ModelFacade.getContext(getTarget()));
     }
 
 }
-

@@ -1,4 +1,4 @@
-// $Id: PropPanelGeneralization.java,v 1.28 2003/08/30 18:59:42 bobtarling Exp $
+// $Id: PropPanelGeneralization.java,v 1.29 2003/09/01 11:51:07 bobtarling Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -163,11 +163,11 @@ public class PropPanelGeneralization extends PropPanelModelElement {
         }
     }
 
-    public MGeneralizableElement getChild() {
-        MGeneralizableElement child = null;
+    public Object getChild() {
+        Object child = null;
         Object target = getTarget();
         if (ModelFacade.isAGeneralization(target)) {
-            child = ((MGeneralization) target).getChild();
+            child = ModelFacade.getChild(target);
         }
         return child;
     }

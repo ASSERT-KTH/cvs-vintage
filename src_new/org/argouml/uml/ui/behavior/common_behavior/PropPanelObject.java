@@ -1,5 +1,4 @@
-
-// $Id: PropPanelObject.java,v 1.23 2003/08/25 19:15:54 bobtarling Exp $
+// $Id: PropPanelObject.java,v 1.24 2003/09/01 11:51:07 bobtarling Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -26,7 +25,7 @@
 // File: PropPanelObject.java
 // Classes: PropPanelObject
 // Original Author: 5eichler@informatik.uni-hamburg.de
-// $Id: PropPanelObject.java,v 1.23 2003/08/25 19:15:54 bobtarling Exp $
+// $Id: PropPanelObject.java,v 1.24 2003/09/01 11:51:07 bobtarling Exp $
 
 package org.argouml.uml.ui.behavior.common_behavior;
 
@@ -122,7 +121,7 @@ public class PropPanelObject extends PropPanelModelElement {
 	    //            classifier = ((MInstance) target).getClassifier();
 
 	    // at the moment , we only deal with one classifier
-	    Collection col = ((MInstance) target).getClassifiers();
+	    Collection col = ModelFacade.getClassifiers(target);
             Iterator iter = col.iterator();
             if (iter.hasNext()) {
                 classifier = (MClassifier) iter.next();

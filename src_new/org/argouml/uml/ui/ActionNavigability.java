@@ -1,4 +1,4 @@
-// $Id: ActionNavigability.java,v 1.5 2003/06/30 21:59:34 linus Exp $
+// $Id: ActionNavigability.java,v 1.6 2003/09/01 11:51:09 bobtarling Exp $
 // Copyright (c) 1996-2001 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -31,6 +31,7 @@ import ru.novosoft.uml.foundation.core.*;
 import ru.novosoft.uml.foundation.data_types.*;
 import java.awt.event.*;
 import java.util.*;
+import org.argouml.model.ModelFacade;
 
 /**
  * A class to perform the action of changing the unidirectional or
@@ -44,8 +45,8 @@ public class ActionNavigability extends UMLAction {
     final public static int ENDTOSTART = 2;
 
     int nav = BIDIRECTIONAL;
-    MAssociationEnd start = null;
-    MAssociationEnd end = null;
+    Object assocStart = null;
+    Object assocEnd = null;
 
     /**
      * The <code>ActionNavigability</code> constructor.
@@ -59,20 +60,20 @@ public class ActionNavigability extends UMLAction {
      * <li>ENDTOSTART </ul>
      */
 
-    public static ActionNavigability newActionNavigability(MAssociationEnd start,
-							   MAssociationEnd end,
+    public static ActionNavigability newActionNavigability(Object assocStart,
+							   Object assocEnd,
 							   int nav) {
-        return new ActionNavigability(getDescription(start, end, nav),
-				      start,
-				      end,
+        return new ActionNavigability(getDescription(assocStart, assocEnd, nav),
+				      assocStart,
+				      assocEnd,
 				      nav);
     }
 
-    static private String getDescription(MAssociationEnd start,
-					 MAssociationEnd end,
+    static private String getDescription(Object assocStart,
+					 Object assocEnd,
 					 int nav) {
-        String startName = start.getType().getName();
-        String endName = end.getType().getName();
+        String startName = ModelFacade.getName(ModelFacade.getType(assocStart));
+        String endName = ModelFacade.getName(ModelFacade.getType(assocEnd));
 
         if (startName == null || startName.length() == 0) startName = "anon";
         if (endName == null || endName.length() == 0) endName = "anon";
@@ -89,22 +90,22 @@ public class ActionNavigability extends UMLAction {
     }
 
     protected ActionNavigability(String label,
-				 MAssociationEnd start,
-				 MAssociationEnd end,
+				 Object assocStart,
+				 Object assocEnd,
 				 int nav) {
         super(label, NO_ICON);
 
         this.nav = nav;
-        this.start = start;
-        this.end = end;
+        this.assocStart = assocStart;
+        this.assocEnd = assocEnd;
     }
 
     /**
      * To perform the action of changing navigability
      */
     public void actionPerformed(ActionEvent ae) {
-	start.setNavigable(nav == BIDIRECTIONAL || nav == ENDTOSTART);
-        end.setNavigable(nav == BIDIRECTIONAL || nav == STARTTOEND);
+	ModelFacade.setNavigable(assocStart, (nav == BIDIRECTIONAL || nav == ENDTOSTART));
+        ModelFacade.setNavigable(assocEnd,   (nav == BIDIRECTIONAL || nav == STARTTOEND));
     }
 
     /**

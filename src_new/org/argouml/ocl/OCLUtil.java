@@ -1,4 +1,4 @@
-// $Id: OCLUtil.java,v 1.9 2003/08/30 18:16:29 alexb Exp $
+// $Id: OCLUtil.java,v 1.10 2003/09/01 11:51:08 bobtarling Exp $
 // Copyright (c) 1996-2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -49,7 +49,7 @@ public final class OCLUtil{
         
 	while ((me != null) &&
 	       (!(ModelFacade.isANamespace(me)))) {
-	    me = ModelFacade.getContainer(me);
+	    me = ModelFacade.getModelElementContainer(me);
 	}
 
 	return me;
