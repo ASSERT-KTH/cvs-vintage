@@ -36,7 +36,7 @@ insert into SCARAB_ATTRIBUTE(ATTRIBUTE_ID, ATTRIBUTE_NAME, ATTRIBUTE_TYPE_ID, DE
 /* cc attribute */
 insert into SCARAB_ATTRIBUTE(ATTRIBUTE_ID, ATTRIBUTE_NAME, 
        ATTRIBUTE_TYPE_ID, PERMISSION, ACTION, DESCRIPTION, CREATED_DATE)
-       values(13, 'AssignedCC', 8, 'Issue | View', 'cc', 'cc attribute', '2002-01-01 00:30:00');
+       values(13, 'AssignedCC', 8, 'Issue | View', 'cc', 'CcAttribute', '2002-01-01 00:30:00');
 /* Tracking */
 /* 
  * removing until further discussion
@@ -139,17 +139,17 @@ insert into SCARAB_ATTRIBUTE_OPTION(OPTION_ID, ATTRIBUTE_ID, OPTION_NAME)
 insert into SCARAB_ATTRIBUTE_OPTION(OPTION_ID, ATTRIBUTE_ID, OPTION_NAME) 
         values(75, 6, 'Windows');
 insert into SCARAB_ATTRIBUTE_OPTION(OPTION_ID, ATTRIBUTE_ID, OPTION_NAME) 
-        values(25, 6, 'windows3.1');
+        values(25, 6, 'Windows3.1');
 insert into SCARAB_ATTRIBUTE_OPTION(OPTION_ID, ATTRIBUTE_ID, OPTION_NAME) 
-        values(26, 6, 'windows95');
+        values(26, 6, 'Windows95');
 insert into SCARAB_ATTRIBUTE_OPTION(OPTION_ID, ATTRIBUTE_ID, OPTION_NAME) 
-        values(27, 6, 'windows98');
+        values(27, 6, 'Windows98');
 insert into SCARAB_ATTRIBUTE_OPTION(OPTION_ID, ATTRIBUTE_ID, OPTION_NAME) 
-        values(28, 6, 'windowsME');
+        values(28, 6, 'WindowsME');
 insert into SCARAB_ATTRIBUTE_OPTION(OPTION_ID, ATTRIBUTE_ID, OPTION_NAME) 
-        values(29, 6, 'windows2000');
+        values(29, 6, 'Windows2000');
 insert into SCARAB_ATTRIBUTE_OPTION(OPTION_ID, ATTRIBUTE_ID, OPTION_NAME) 
-        values(30, 6, 'windowsNT');
+        values(30, 6, 'WindowsNT');
 insert into SCARAB_ATTRIBUTE_OPTION(OPTION_ID, ATTRIBUTE_ID, OPTION_NAME) 
         values(76, 6, 'MacOS');
 insert into SCARAB_ATTRIBUTE_OPTION(OPTION_ID, ATTRIBUTE_ID, OPTION_NAME) 

@@ -32,7 +32,7 @@ insert into SCARAB_ATTRIBUTE_TYPE(ATTRIBUTE_TYPE_ID, ATTRIBUTE_CLASS_ID, ATTRIBU
 
 /* Null Attribute */
 insert into SCARAB_ATTRIBUTE(ATTRIBUTE_ID, ATTRIBUTE_NAME, ATTRIBUTE_TYPE_ID, DESCRIPTION, CREATED_DATE)
-        values(0, 'Null Attribute', 1, 'Null Attribute', '2002-01-01 00:30:00');
+        values(0, 'NullAttribute', 1, 'NullAttribute', '2002-01-01 00:30:00');
 update SCARAB_ATTRIBUTE set CREATED_BY='0';
 
 /* null option */
@@ -43,7 +43,7 @@ insert into SCARAB_ATTRIBUTE_OPTION(OPTION_ID, ATTRIBUTE_ID, OPTION_NAME)
  * Types of issues (artifact/issue types).
  */
 insert into SCARAB_ISSUE_TYPE(ISSUE_TYPE_ID, NAME, DESCRIPTION, PARENT_ID)
-        values(0, 'Parent', 'Top level issue type. Do not modify.', 0);
+        values(0, 'Parent', 'TopLevelIssueType', 0);
 
 
 /*
