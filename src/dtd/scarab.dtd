@@ -1,6 +1,6 @@
 <!ELEMENT scarab (module+)>
 
-<!ELEMENT module (fullname, code, issue+)>
+<!ELEMENT module (parent-module, fullname, code, issue+)>
 <!ATTLIST module id CDATA #REQUIRED>
 
 <!ELEMENT issue (artifact-type, attribute+, dependency*, attachment*, transaction?)>
@@ -17,6 +17,7 @@
 
 <!ELEMENT activity (attribute, description)>
 
+<!ELEMENT parent-module (#PCDATA)>
 <!ELEMENT fullname (#PCDATA)>
 <!ELEMENT code (#PCDATA)>
 <!ELEMENT artifact-type (#PCDATA)>

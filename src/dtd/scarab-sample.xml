@@ -4,24 +4,29 @@ look like. Of course it is far from 100% complete, but it does show a
 few certain things that I would like to achieve. Namely:
 
 #1. Database independence
-#2. XML attributes are only used for ID values for certain key fields
-that are required to already exist in the database before being created.
-For example, I give id's for the module as well as the users. In the
-case of the module information, I actually also include it.
-#3. I put things within tags instead of as XML attributes because they
+#2. I put things within tags instead of as XML attributes because they
 could contain CDATA. This will allow those tags to contain that type of
 information.
-#4. The idea is that someone should be able to also (optionally) create
+#3. The idea is that someone should be able to also (optionally) create
 a new scarab database with only user and module information
 pre-populated and be able to import an XML file and have it fill in the
-rest of the information as necessary.
-#5. The XML format should be able to be parsed by a human. In the
+rest of the information as necessary. If you think about this further,
+one could define things like artifact types and doing a create, 
+just by listing the information here instead of having to use the web
+interface. That makes things really powerful!
+#4. The XML format should be able to be parsed by a human. In the
 future, we may support XML submissions via email. This would make it
 easier to work with.
+#5. In the case of transactions, the id number shows the ordering of the 
+transaction within the issue, not necessarily the id number of the primary
+key column. This can also be said of the module id, but is less important. 
+That is there more for future potential benefit. The issue id is the 
+ID_CODE, not the primary key column.
 -->
 
 <scarab>
     <module id="5">
+        <parent-module>Global</parent-module>
         <fullname>Turbine &gt; Source</fullname>
         <code>TBNS</code>
         <issue id="101">
@@ -48,8 +53,8 @@ easier to work with.
                 <path>file://server/path/to/file.txt</path>
                 <mimetype>text/plain</mimetype>
                 <modified-date>2001-01-01</modified-date>
-                <created-by>2</created-by>
-                <modified-by>5</modified-by>
+                <created-by>jon@latchkey.com</created-by>
+                <modified-by>jon@latchkey.com</modified-by>
             </attachment>
 
             <transaction id="7">
@@ -91,7 +96,7 @@ easier to work with.
             </attribute>
             <dependency>
                 <type>blocking</type>
-                <parent>101</parent>
+                <parent>TBNS101</parent>
             </dependency>
         </issue>
     </module>
