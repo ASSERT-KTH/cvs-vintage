@@ -1,4 +1,4 @@
-// $Id: FigAssociationEnd.java,v 1.7 2005/02/09 21:40:27 mvw Exp $
+// $Id: FigAssociationEnd.java,v 1.8 2005/03/29 21:50:45 mvw Exp $
 // Copyright (c) 2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -198,7 +198,7 @@ public class FigAssociationEnd extends FigEdgeModelElement {
      */
     protected void modelChanged(PropertyChangeEvent e) {
         super.modelChanged(e);
-        updateEnd(srcMult, srcRole, srcOrdering);
+        if (e != null) updateEnd(srcMult, srcRole, srcOrdering);
         srcMult.calcBounds();
         computeRoute();
     }
