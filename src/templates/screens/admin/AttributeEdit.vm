@@ -19,14 +19,15 @@ $comma$option.DisplayValue
 #end
 
   <p>
-  <form action="$link.setPage("admin,AttributeEdit.vm")" method="POST">
-    #set ( $attgroup = $intake.Attribute.Default )
-    <input type="hidden" name="$attgroup.CID" value="$attgroup.OID">
-    <input type="hidden" name="$attgroup.Id.Key" value="$attribute.AttributeId">
-
+  <form action="$link.setPage("admin,AttributeEdit.vm")" method="GET">
     <input type="hidden" name="action" value="admin.ModifyAttributes">
-    <input type="hidden" name="nextTemplate" value="admin,AttributeEditOptions.vm">
-    <input type="submit" name="eventSubmit_doModifyattributeoptions" value="Modify Attribute Options">
+    <input type="hidden" name="nextTemplate" 
+            value="admin,AttributeEditOptions.vm">
+    <input type="hidden" name="$intake.Attribute.Default.Id.Key" 
+            value="$intake.Attribute.Default.Id">
+
+    <input type="submit" name="eventSubmit_doModifyattributeoptions" 
+            value="Modify Attribute Options">
   </form>
   </p>
 
@@ -35,14 +36,14 @@ In order to modify this attribute, please choose from the options below:
 </p>
 
   <p>
-    <form action="$link.setPage("admin,AttributeEdit.vm")" method="POST">
+    <form action="$link.setPage("admin,AttributeEdit.vm")" method="GET">
         <input type="hidden" name="action" value="admin.ModifyAttributes">
 
         #set ( $attgroup = $intake.Attribute.Default )
         <input type="hidden" name="$attgroup.CID" value="$attgroup.OID">
         <input type="hidden" name="$attgroup.Id.Key" value="$attribute.AttributeId">
 
-        <input type="text" name="$attgroup.get("Name").Key" value="$attribute.Name">
+        <input type="text" name="$attgroup.Name.Key" value="$attribute.Name">
         <input type="submit" name="eventSubmit_doModifyattributename" value="Modify Name">
         <!-- <input type="submit" name="eventSubmit_doDeleteattribute" value="Delete Attribute"> -->
     </form>

@@ -20,23 +20,25 @@
         <field name="TypeId" key="typeid" type="NumberKey">
             <rule mask="[0-9]+">badIdMessage</rule>
         </field>
-        <field name="Name" key="name" type="String" />
-<!--        <field name="AttributeName" key="name" type="String" /> -->
+        <field name="Name" key="name" type="String"/> 
         <field name="Deleted" key="del" type="boolean" />
 </group>
 <group class="AttributeOption" key="atto" mapToObject="om.AttributeOption">
-        <field name="OptionId" key="attoid" type="NumberKey">
-           <rule mask="^$|[0-9]+">Please select a valid choice</rule>
-        </field>
         <field name="AttributeId" key="attid" type="NumberKey">
-           <rule mask="^$|[0-9]+">Please select a valid choice</rule>
+           <rule mask="[0-9]+">Please select a valid choice</rule>
         </field>
         <field name="DisplayValue" key="dispval" type="String">
+            <rule minLength="1">Option name is not allowed to be empty</rule>
             <rule maxLength="255"/>
         </field>
         <field name="NumericValue" key="numval" type="int">
-           <rule mask="^$|[0-9]+">Please select a valid choice</rule>
+           <rule mask="[0-9]+">Please select a valid choice</rule>
         </field>
+        <field name="NewDisplayValue" key="newdispval" type="String"
+               mapToProperty="DisplayValue">
+            <rule maxLength="255"/>
+        </field>
+        <field name="Deleted" key="del" type="boolean" mapToObject=""/>
 </group>
 <group class="AttributeType" key="attt" mapToObject="om.AttributeType">
         <field name="AttributeTypeId" key="atttid" type="NumberKey">

@@ -24,3 +24,14 @@
         <font color="red">$attrInput.get($fieldName).Message</font>
     #end
 #end
+
+
+#macro ( numericSelect $name $first $last $selected $size )
+
+    <select name="$name" size="$size">
+    #foreach ( $i in [$first..$last] )
+        <option value="$i" #if ($i==$selected)selected #end>$i</option>
+    #end          
+    </select>
+
+#end      

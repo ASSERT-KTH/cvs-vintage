@@ -46,6 +46,8 @@ package org.tigris.scarab.actions.admin;
  * individuals on behalf of Collab.Net.
  */ 
 
+import java.util.Iterator;
+
 // Velocity Stuff 
 import org.apache.turbine.services.velocity.*; 
 import org.apache.velocity.*; 
@@ -71,7 +73,7 @@ import org.tigris.scarab.tools.ScarabRequestTool;
     This class will store the form data for a project modification
         
     @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
-    @version $Id: ModifyAttributes.java,v 1.3 2001/04/09 02:46:42 jon Exp $
+    @version $Id: ModifyAttributes.java,v 1.4 2001/04/10 06:23:48 jmcnally Exp $
 */
 public class ModifyAttributes extends VelocityAction
 {
@@ -130,6 +132,7 @@ public class ModifyAttributes extends VelocityAction
         String nextTemplate = data.getParameters().getString(
             ScarabConstants.NEXT_TEMPLATE, template );
 
+        /*
         IntakeTool intake = (IntakeTool)context
            .get(ScarabConstants.INTAKE_TOOL);
 
@@ -148,6 +151,7 @@ public class ModifyAttributes extends VelocityAction
 	            ((ScarabRequestTool)srt).setAttribute(attr);
 	        }
         }
+        */
         setTemplate(data, nextTemplate);
     }
 
@@ -200,54 +204,46 @@ public class ModifyAttributes extends VelocityAction
      * Used on AttributeEditOptions.vm to change the name of an existing
      * AttributeOption or add a new one if the name doesn't already exist.
      */
-    public void doAddmodifyattributeoption( RunData data, Context context )
+    public void doAddormodifyattributeoptions( RunData data, Context context )
         throws Exception
     {
         String template = data.getParameters()
             .getString(ScarabConstants.TEMPLATE, null);
-        String nextTemplate = data.getParameters().getString(
-            ScarabConstants.NEXT_TEMPLATE, template );
 
         IntakeTool intake = (IntakeTool)context
            .get(ScarabConstants.INTAKE_TOOL);
 
-        setTemplate(data, nextTemplate);
-    }
-
-    /**
-     * Used on AttributeEditOptions.vm to change the name of an existing
-     * AttributeOption or add a new one if the name doesn't already exist.
-     */
-    public void doDeleteattributeoption( RunData data, Context context )
-        throws Exception
-    {
-        String template = data.getParameters()
-            .getString(ScarabConstants.TEMPLATE, null);
-        String nextTemplate = data.getParameters().getString(
-            ScarabConstants.NEXT_TEMPLATE, template );
-
-        IntakeTool intake = (IntakeTool)context
-           .get(ScarabConstants.INTAKE_TOOL);
-
-        setTemplate(data, nextTemplate);
-    }
-
-    /**
-     * Used on AttributeEditOptions.vm to select an attribute option
-     * to work on.
-     */
-    public void doSelectattributeoption( RunData data, Context context )
-        throws Exception
-    {
-        IntakeTool intake = (IntakeTool)context
-           .get(ScarabConstants.INTAKE_TOOL);
-
-        if ( intake.isAllValid() )
+        if ( intake.isAllValid() ) 
         {
+            Attribute attribute = ((ScarabRequestTool)context
+                .get(ScarabConstants.SCARAB_REQUEST_TOOL)).getAttribute();
+
+            AttributeOption option = null;
+            Iterator i = attribute.getAttributeOptions().iterator();
+            while (i.hasNext()) 
+            {
+                option = (AttributeOption)i.next();
+                Group group = intake.get("AttributeOption", 
+                                         option.getQueryKey());
+                if ( group != null ) 
+                {
+                    group.setProperties(option);
+                }                
+            }
             
+            // was a new option added?
+            option = new AttributeOption();
+            Group group = intake.get("AttributeOption", 
+                                     option.getQueryKey());
+            if ( group != null ) 
+            {
+                group.setProperties(option);
+                attribute.addAttributeOptions(option);
+            }                
+
+            // attribute.save();            
         }
     }
-
 
     /**
      * Manages clicking of the AllDone button

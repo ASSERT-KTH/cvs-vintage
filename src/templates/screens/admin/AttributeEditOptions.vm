@@ -5,51 +5,118 @@ $page.setTitle("Attribute Editor")
 <p><b>Editing Attribute</b>: <i>$attribute.Name</i></p>
 <p>Modify Attribute Options<br>
 </p>
-<form action="$link.setPage("admin,AttributeEditOptions.vm")" method="POST">
+<form action="$link.setPage("admin,AttributeEditOptions.vm")" method="GET">
     <input type="hidden" name="action" value="admin.ModifyAttributes">
 
-<table border="0">
-  <tr>
-    <td rowspan="2">
+  <table width="35%" border="1">
+    <tr>
+      <td width="25%">
+        <div align="center"><strong>Delete</strong>
+      </div>
+      </td>
+      <td width="25%">
+        <div align="center"><strong>Attribute Option</strong>
+      </div>
+      </td>
+      <td width="75%">
+        <div align="center"><strong>Attribute Option Order</strong>
+      </div>
+      </td>
+    </tr>
 
-#set ( $attogroup = $intake.AttributeOption.Default )
-<input type="hidden" name="$attogroup.CID" value="$attogroup.OID">
-#set ( $attOptions = $attribute.AttributeOptions)
-<select name="$attogroup.OptionId.Key" size="10">
-    #if ( $attOptions.size() > 0 )
-    #foreach ($option in $attOptions)
-    <option value="$option.OptionId">$option.DisplayValue</option>
-    #end
-    #end
-</select>
 
-    </td>
-    <td align="center">Sort Order<br>
-        <input type="submit" name="Submit4" value="^"><br>
-      <input type="submit" name="Submit42" value="v">
-    </td>
-  </tr>
-  <tr>
-    <td align="center">
-      <input type="submit" name="eventSubmit_doSelectattributeoption" value="Select To Modify">
-    </td>
-  </tr>
-  
-</table>
+#set ( $maxNum = $attribute.AttributeOptions.size() + 1 )
+#foreach ( $option in $attribute.AttributeOptions )
+    #set ( $intakeOption = $intake.AttributeOption.mapTo($option) )
 
-<input type="submit" name="eventSubmit_doDeleteattributeoption" value="Delete Attribute Option">  
+    <tr>
+      <input type="hidden" name="$intakeOption.CID" value="$intakeOption.OID">
 
-<p>
-    <input type="text" name="textfield" value="$!attoInput.Value.Value">
-    <input type="submit" name="eventSubmit_doAddmodifyattributeoption" value="Add New / Modify Existing">
-</p>
+      <td width="25%">
+        <div align="center">
 
-</form>
+          <input type="checkbox" name="$intakeOption.Deleted.Key" value="true"
+              #if ($intakeOption.Deleted.Value.Value) checked #end>
+          <input type="hidden" name="$intakeOption.Deleted.ValueIfAbsent"
+                 value="false">
+      
+      </div>
+      </td>
 
-<p>
-  <form action="$link.setPage("admin,AttributeEditOptions.vm")" method="POST">
-    <input type="hidden" name="action" value="admin.ModifyAttributes">
-    <input type="hidden" name="nextTemplate" value="admin,AttributeEdit.vm">
+      <td width="25%">          
+        <div align="center">
+#if (!$intakeOption.DisplayValue.isValid())
+    $intakeOption.DisplayValue.Message<br>
+#end
+          <input type="text" name="$intakeOption.DisplayValue.Key" 
+                  value="$intakeOption.DisplayValue">
+    
+      </div>
+      </td>
+
+      <td width="75%">          
+        <div align="center">
+
+    #numericSelect( $intakeOption.NumericValue.Key 1 $maxNum $intakeOption.NumericValue.Value.Value 1 )
+
+      </div>
+      </td>
+    </tr>
+#end
+
+    #set ( $newOption = $scarabR.AttributeOption )
+    #set ( $intakeOption = $intake.AttributeOption.mapTo($newOption) )
+
+    <tr>
+      <input type="hidden" name="$intakeOption.CID" value="$intakeOption.OID">
+
+      <td width="25%">
+        <div align="center">
+
+            <b>New</b>
+      
+      </div>
+      </td>
+
+      <td width="25%">          
+        <div align="center">
+
+          <input type="text" name="$intakeOption.NewDisplayValue.Key" 
+                  value="$!intakeOption.NewDisplayValue">
+    
+      </div>
+      </td>
+
+      <td width="75%">          
+        <div align="center">
+
+#if ($intakeOption.NumericValue.Value.Value != 0)
+    #set ( $selected = $intakeOption.NumericValue.Value.Value )
+#else
+    #set ( $selected = $maxNum )
+#end
+#numericSelect( $intakeOption.NumericValue.Key 1 $maxNum $selected 1 )
+
+      </div>
+      </td>
+    </tr>
+
+    <tr>
+      <td width="25%">
+        
+        <div align="center">&nbsp;</div>
+      </td>
+      <td width="25%">
+        <div align="center">&nbsp;</div>
+      </td>
+      <td width="75%">          
+        <div align="center">
+          <input type="submit" name="eventSubmit_doModifyattributeoptions" 
+                value="Save">
+      </div>
+      </td>
+    </tr>
+  </table> 
+
     <input type="submit" name="eventSubmit_doAlldone" value="All Done">
-  </form>
-</p>
+</form>

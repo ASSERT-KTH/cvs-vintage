@@ -8,18 +8,16 @@ Please select an attribute from the list below, then click the "Modify
 Attribute" button:
 </p>
 
-<form action="$link.setPage("admin,AttributeShow.vm")" method="POST">
-    <input type="hidden" name="action" value="admin.ModifyAttributes">
-    <input type="hidden" name="nextTemplate" value="admin,AttributeEdit.vm">
+<form action="$link.setPage("admin,AttributeEdit.vm")" method="GET">
 
 #set ( $attgroup = $intake.Attribute.Default )
-<input type="hidden" name="$attgroup.CID" value="$attgroup.OID">
+    <input type="hidden" name="$attgroup.CID" value="$attgroup.OID">
 
-<select name="$attgroup.Id.Key" size="5">
+    <select name="$attgroup.Id.Key" size="5">
 #foreach( $attribute in $module.AllAttributes )
-<option value="$attribute.AttributeId">$attribute.Name</option>
+    <option value="$attribute.AttributeId">$attribute.Name</option>
 #end
-</select>
+    </select>
 
 <p>
 <input type="submit" name="eventSubmit_doSelectattribute" value="Modify Attribute">

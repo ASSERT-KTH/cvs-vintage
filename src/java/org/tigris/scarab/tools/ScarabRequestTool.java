@@ -49,14 +49,23 @@ package org.tigris.scarab.tools;
 // Turbine
 import org.apache.turbine.om.security.User;
 import org.apache.turbine.om.*;
+import org.apache.turbine.util.RunData;
+import org.apache.turbine.services.intake.IntakeTool;
+import org.apache.turbine.services.velocity.TurbineVelocity;
+
+
 // Scarab
 import org.tigris.scarab.om.*;
+import org.tigris.scarab.util.*;
 
 /**
  * This class is used by the Scarab API
  */
 public class ScarabRequestTool implements ScarabRequestScope
 {
+    /** the object containing request specific data */
+    private RunData data;
+
     /**
      * A User object for use within the Scarab API.
      */
@@ -71,9 +80,15 @@ public class ScarabRequestTool implements ScarabRequestScope
      * A Attribute object for use within the Scarab API.
      */
     private Attribute attribute = null;
+
+    /**
+     * A AttributeOption object for use within the Scarab API.
+     */
+    private AttributeOption attributeOption = null;
     
     public void init(Object data)
     {
+        this.data = (RunData)data;
     }
 
     /**
@@ -101,14 +116,68 @@ public class ScarabRequestTool implements ScarabRequestScope
         this.attribute = attribute;
     }
 
+    private IntakeTool getIntakeTool()
+    {
+        return (IntakeTool)TurbineVelocity.getContext(data)
+            .get(ScarabConstants.INTAKE_TOOL);
+    }
+
     /**
      * A Attribute object for use within the Scarab API.
      */
     public Attribute getAttribute()
+     throws Exception
     {
+try{
         if (attribute == null)
-            this.attribute = new Attribute();
-        return this.attribute;
+        {
+            String attId = getIntakeTool()
+                .get("Attribute", IntakeTool.DEFAULT_KEY).get("Id").toString();
+            if ( attId == null || attId.length() == 0 )
+            {
+                attribute = new Attribute();                
+            }
+            else 
+            {
+                attribute = Attribute.getInstance(new NumberKey(attId));
+            }
+        }        
+}catch(Exception e){e.printStackTrace();}
+        return attribute;
+ 
+   }
+
+    /**
+     * A Attribute object for use within the Scarab API.
+     */
+    public void setAttributeOption (AttributeOption option)
+    {
+        this.attributeOption = option;
+    }
+
+    /**
+     * A Attribute object for use within the Scarab API.
+     */
+    public AttributeOption getAttributeOption()
+        throws Exception
+    {
+try{
+        if (attributeOption == null)
+        {
+            String optId = data.getParameters()
+                .getString("currentAttributeOption"); 
+            if ( optId == null )
+            {
+                attributeOption = new AttributeOption();                
+            }
+            else 
+            {
+                attributeOption = AttributeOptionPeer
+                    .retrieveByPK(new NumberKey(optId));
+            }
+        }
+}catch(Exception e){e.printStackTrace();}
+        return attributeOption;
     }
 
     /**
