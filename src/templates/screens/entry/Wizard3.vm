@@ -107,36 +107,45 @@ $page.setTitle("Enter issue")
 </div>
 
 ## ATTACHMENT
+#set ($atch = $scarabR.Attachment)
+#set ($intakeAttachment = $intake.Attachment.mapTo($atch))
+#set ($reportingIssue = $scarabR.ReportingIssue)
+#set ($attachments = $reportingIssue.Attachments)
+#if ($attachments.size() > 0)
+<h3>Attachments</h3>
+ <table width="100%" border="1" cellspacing="2" cellpadding="3">
+   <tr>
+     <th>&#160;</th>
+     <th>Attachment name</th>
+     <th>Attachment description</th>
+##     <th>Type</th>
+   </tr>
+   #foreach ($file in $reportingIssue.Attachments)
+     #indexedRows($velocityCount)
+     #if ($file.TypeId.toString().equals("1"))
+     <tr>
+       <td>
+         <input type="checkbox" name="file_delete_$velocityCount" />
+       </td>
+       <td><a href="$file.File.FileName" 
+              onClick="fileWindow=window.open('','filewindow',
+                      'resizable=yes, menubar=yes,scrollbars=yes,height=450,width=700')" 
+              target="filewindow">$file.File.FileName</a> 
+       </td>
+       <td>$file.Name</td>
+     </tr>
+     #end
+   #end
+ </table>
+
+<div class="functnbar3">
+  <input type="submit" value="Delete attachment"  name="eventSubmit_doDeleteattachment" />
+</div>
+#end
+
 <h4>Add Attachment</h4>
-<div>
+<div class="axial">
   <table cellpadding="3" cellspacing="2" border="0">
-    #set ($atch = $scarabR.Attachment)
-    #set ($intakeAttachment = $intake.Attachment.mapTo($atch))
-    #set ($reportingIssue = $scarabR.ReportingIssue)
-    #set ($attachments = $reportingIssue.Attachments)
-    #if ($attachments.size()>0)
-       <tr>
-        <th> &nbsp; </th>
-        <th>File Name</th>
-        <th>File Description</th>
-       </tr>
-       #foreach ($file in $reportingIssue.Attachments)
-           #indexedRows($velocityCount)
-           #if ($file.TypeId.toString().equals("1"))
-             <tr>
-             <td>
-                <input type="checkbox" name="file_delete_$velocityCount" />
-             </td>
-             <td><a href="$file.File.FileName" 
-                onClick="fileWindow=window.open('','filewindow',
-                'resizable=yes, menubar=yes,scrollbars=yes,height=450,width=700')" 
-                target="filewindow">$file.File.FileName</a> 
-             </td>
-             <td>$file.Name</td>
-            </tr>
-           #end
-       #end
-    #end
     <tr>
       <th>Attachment path</th>
       <td>
@@ -158,16 +167,18 @@ $page.setTitle("Enter issue")
     </tr>    
   </table>
 </div>
+
 <div class="functnbar3">
     <input type="submit" value="Add file" name="eventSubmit_doAddfile"  />&#160;
     <input type="submit" value="Delete file" name="eventSubmit_doRemovefile"  />&#160;
 </div>
 
+<h4>Submit new issue</h4>
 
 <div class="axial">
 <table width="100%" cellpadding="3" cellspacing="2" border="1">
  <tr>
-   <th>Comment</th>
+   <th>* Reason</th>
    <td>
    <p>
 #if ($issue.DefaultTextAttributeValue)
