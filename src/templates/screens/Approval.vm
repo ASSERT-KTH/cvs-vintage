@@ -54,13 +54,6 @@ $page.setTitle("Approve/reject user submitted items")
   #set ($createdUser = $scarabR.getUser($query.UserId))
   <input type = "hidden" name="query_user_$query.QueryId" value = "$createdUser.UserId" />
   <td><a href="mailTo:$createdUser.Email">$createdUser.FirstName $createdUser.LastName</a></td>
-  <td>$module.Name</td>
-  <td>#set ($comma = "")
-   #foreach ($role in $createdUser.getRoles($module))
-    $role.Name$comma
-    #set ($comma = ",")
-   #end
-  </td>
   <td><a href="$query.getEditLink($link.toString())">$query.Name</a></td>
   <td>#if ($query.Description) $query.Description #else &#160; #end</td>
   <td> <textarea rows="2" cols="20" name="query_comment_$query.QueryId"></textarea></td>
@@ -86,7 +79,7 @@ $page.setTitle("Approve/reject user submitted items")
   <td><a href="mailTo:$createdUser.Email">$createdUser.FirstName $createdUser.LastName</a></td>
    ##<td>$template.Module.Name</td>
    ##<td>role X</td>
-   #set ($editLink = $link.setPathInfo("issue_id", $template.IssueId.toString()).setPage("SaveTemplate.vm").toString())
+   #set ($editLink = $link.setPathInfo("id", $template.UniqueId.toString()).setPage("SaveTemplate.vm").toString())
    <td><a href="$editLink">$template.TemplateInfo.Name</a></td>
    <td>#if ($template.TemplateInfo.Description) $template.TemplateInfo.Description #else &#160; #end</td>
    <td><textarea rows="2" cols="20" name="template_comment_$template.IssueId"></textarea></td>
