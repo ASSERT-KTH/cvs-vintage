@@ -1,4 +1,4 @@
-// $Id: TestCommonBehaviorFactory.java,v 1.5 2005/01/05 13:36:53 linus Exp $
+// $Id: TestCommonBehaviorFactory.java,v 1.1 2005/01/05 13:36:55 linus Exp $
 // Copyright (c) 2002-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -22,16 +22,14 @@
 // CALIFORNIA HAS NO OBLIGATIONS TO PROVIDE MAINTENANCE, SUPPORT,
 // UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 
-package org.argouml.model.uml;
+package org.argouml.model;
 
 import junit.framework.TestCase;
 
 import org.argouml.util.CheckUMLModelHelper;
 
 /**
- * Test the NSUML-implementation of the CommonBehaviorFactory.<p>
- *
- * No imports from org.argouml.model package!
+ * Test the CommonBehaviorFactory.
  */
 public class TestCommonBehaviorFactory extends TestCase {
 
@@ -65,8 +63,6 @@ public class TestCommonBehaviorFactory extends TestCase {
 	"UninterpretedAction",
     };
 
-    private NSUMLModelImplementation nsumlmodel;
-
     /**
      * The constructor.
      *
@@ -74,13 +70,6 @@ public class TestCommonBehaviorFactory extends TestCase {
      */
     public TestCommonBehaviorFactory(String n) {
 	super(n);
-    }
-
-    /**
-     * @see junit.framework.TestCase#setUp()
-     */
-    public void setUp() {
-        nsumlmodel = new NSUMLModelImplementation();
     }
 
     /**
@@ -115,9 +104,9 @@ public class TestCommonBehaviorFactory extends TestCase {
 	};
 
 	CheckUMLModelHelper.createAndRelease(
-	        this,
-	        nsumlmodel.getCommonBehaviorFactory(),
-	        objs);
+					     this,
+					     Model.getCommonBehaviorFactory(),
+					     objs);
 
     }
 
@@ -126,9 +115,9 @@ public class TestCommonBehaviorFactory extends TestCase {
      */
     public void testDeleteComplete() {
 	CheckUMLModelHelper.deleteComplete(
-	        this,
-		nsumlmodel.getCommonBehaviorFactory(),
-		allModelElements);
+					   this,
+					   Model.getCommonBehaviorFactory(),
+					   allModelElements);
     }
 
     /**

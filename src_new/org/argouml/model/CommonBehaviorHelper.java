@@ -1,4 +1,4 @@
-// $Id: CommonBehaviorHelper.java,v 1.1 2005/01/02 10:08:16 linus Exp $
+// $Id: CommonBehaviorHelper.java,v 1.2 2005/01/05 13:36:55 linus Exp $
 // Copyright (c) 2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -24,7 +24,6 @@
 
 package org.argouml.model;
 
-import ru.novosoft.uml.behavior.common_behavior.MInstance;
 
 /**
  * The interface to the helper of the CommonBehavior.<p>
@@ -40,7 +39,7 @@ public interface CommonBehaviorHelper {
      * @param link the given link
      * @return MInstance the source of the given link
      */
-    MInstance getSource(Object link);
+    Object getSource(Object link);
 
     /**
      * Returns the destination of a link. The destination of a binary link is
@@ -49,5 +48,5 @@ public interface CommonBehaviorHelper {
      * @param link the given link
      * @return MInstance the destination of the given link
      */
-    MInstance getDestination(Object link);
+    Object getDestination(Object link);
 }

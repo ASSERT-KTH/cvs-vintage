@@ -1,4 +1,4 @@
-// $Id: CommonBehaviorHelperImpl.java,v 1.1 2005/01/02 10:08:12 linus Exp $
+// $Id: CommonBehaviorHelperImpl.java,v 1.2 2005/01/05 13:36:56 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -29,7 +29,6 @@ import java.util.Collection;
 import org.argouml.model.CommonBehaviorHelper;
 import org.argouml.model.ModelFacade;
 
-import ru.novosoft.uml.behavior.common_behavior.MInstance;
 import ru.novosoft.uml.behavior.common_behavior.MLinkEnd;
 
 /**
@@ -54,7 +53,7 @@ class CommonBehaviorHelperImpl implements CommonBehaviorHelper {
      * @param link the given link
      * @return MInstance the source of the given link
      */
-    public MInstance getSource(Object link) {
+    public Object getSource(Object link) {
         Collection con = ModelFacade.getConnections(link);
         if (con.isEmpty()) {
             return null;
@@ -70,7 +69,7 @@ class CommonBehaviorHelperImpl implements CommonBehaviorHelper {
      * @param link the given link
      * @return MInstance the destination of the given link
      */
-    public MInstance getDestination(Object link) {
+    public Object getDestination(Object link) {
         Collection con = ModelFacade.getConnections(link);
         if (con.size() <= 1) {
             return null;

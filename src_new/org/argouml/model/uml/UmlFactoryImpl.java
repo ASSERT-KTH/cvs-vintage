@@ -1,4 +1,4 @@
-// $Id: UmlFactoryImpl.java,v 1.3 2005/01/04 21:41:07 linus Exp $
+// $Id: UmlFactoryImpl.java,v 1.4 2005/01/05 13:36:56 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -750,8 +750,7 @@ class UmlFactoryImpl extends AbstractUmlModelFactory implements UmlFactory {
                 } else if (ModelFacade.isAAction(elem)) {
                     deleteAction(elem);
                 } else if (elem instanceof MAttributeLink) {
-                    getCommonBehavior()
-                        .deleteAttributeLink((MAttributeLink) elem);
+                    getCommonBehavior().deleteAttributeLink(elem);
                 } else if (elem instanceof MInstance) {
                     deleteInstance((MInstance) elem);
                 } // no else to handle multiple inheritance of linkobject

@@ -1,4 +1,4 @@
-// $Id: TestModel.java,v 1.4 2005/01/04 16:54:39 linus Exp $
+// $Id: TestModel.java,v 1.5 2005/01/05 13:36:55 linus Exp $
 // Copyright (c) 2004-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -130,10 +130,19 @@ public class TestModel extends TestCase {
     /**
      * Test if the CollaborationsFactory is really a singleton.
      */
-    public void testSingleton() {
+    public void testCollaborationsFactoryInstance() {
         Object o1 = Model.getCollaborationsFactory();
         Object o2 = Model.getCollaborationsFactory();
 
         assertTrue("Different singletons", o1 == o2);
+    }
+    
+    /**
+     * Test if the factory is really a singleton.
+     */
+    public void testCommonBehaviorFactoryInstance() {
+	Object o1 = Model.getCommonBehaviorFactory();
+	Object o2 = Model.getCommonBehaviorFactory();
+	assertTrue("Different singletons", o1 == o2);
     }
 }
