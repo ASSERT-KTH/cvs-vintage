@@ -58,9 +58,9 @@ This page is for editing the Attributes which are defined globally.
       #end
     #end
 </td>
-<td>descr. X</td>
+<td>#if ($attribute.Description) $attribute.Description #else &nbsp; #end</td>
 <td>x (x@xxx.com)</td>
-<td>xx/xx/2001</td>
+<td>$attribute.CreatedDate</td>
 <td><a href="#">copy</a></td>
 </tr>
 #end

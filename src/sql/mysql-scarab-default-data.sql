@@ -46,36 +46,37 @@ insert into SCARAB_ATTRIBUTE_TYPE(ATTRIBUTE_TYPE_ID, ATTRIBUTE_CLASS_ID, ATTRIBU
  *  Attributes
  */
 
-insert into SCARAB_ATTRIBUTE(ATTRIBUTE_ID, ATTRIBUTE_NAME, ATTRIBUTE_TYPE_ID) /* Description */
-        values(1, 'Description', 12);
+insert into SCARAB_ATTRIBUTE(ATTRIBUTE_ID, ATTRIBUTE_NAME, ATTRIBUTE_TYPE_ID, DESCRIPTION) /* Description */
+        values(1, 'Description', 12, 'Description');
 insert into SCARAB_ATTRIBUTE(ATTRIBUTE_ID, ATTRIBUTE_NAME, 
-       ATTRIBUTE_TYPE_ID, PERMISSION) /* Assigned to */
-       values(2, 'Assigned To', 8, 'edit_issues');
-insert into SCARAB_ATTRIBUTE(ATTRIBUTE_ID, ATTRIBUTE_NAME, ATTRIBUTE_TYPE_ID) /* Status */
-        values(3, 'Status', 5);
+       ATTRIBUTE_TYPE_ID, PERMISSION, DESCRIPTION) /* Assigned to */
+       values(2, 'Assigned To', 8, 'edit_issues', 'Assigned To');
+insert into SCARAB_ATTRIBUTE(ATTRIBUTE_ID, ATTRIBUTE_NAME, ATTRIBUTE_TYPE_ID, DESCRIPTION) /* Status */
+        values(3, 'Status', 5, 'Status');
 insert into SCARAB_ATTRIBUTE(ATTRIBUTE_ID, ATTRIBUTE_NAME, 
-       ATTRIBUTE_TYPE_ID, REQUIRED_OPTION_ID) /* resolution */
-        values(4, 'Resolution', 5, 5);
+       ATTRIBUTE_TYPE_ID, REQUIRED_OPTION_ID, DESCRIPTION) /* resolution */
+        values(4, 'Resolution', 5, 5, 'Resolution');
 insert into SCARAB_ATTRIBUTE(ATTRIBUTE_ID, ATTRIBUTE_NAME, 
-       ATTRIBUTE_TYPE_ID) /* Platform */
-       values(5, 'Platform', 5);
-insert into SCARAB_ATTRIBUTE(ATTRIBUTE_ID, ATTRIBUTE_NAME, ATTRIBUTE_TYPE_ID) /* Operating System */
-        values(6, 'Operating System', 5);
-insert into SCARAB_ATTRIBUTE(ATTRIBUTE_ID, ATTRIBUTE_NAME, ATTRIBUTE_TYPE_ID) /* Priority select-one*/
-        values(7, 'Priority', 5);
-insert into SCARAB_ATTRIBUTE(ATTRIBUTE_ID, ATTRIBUTE_NAME, ATTRIBUTE_TYPE_ID) /* Priority voted*/
-        values(8, 'Vote', 5);
-insert into SCARAB_ATTRIBUTE(ATTRIBUTE_ID, ATTRIBUTE_NAME, ATTRIBUTE_TYPE_ID) /* Severity */
-        values(9, 'Severity', 5);
-insert into SCARAB_ATTRIBUTE(ATTRIBUTE_ID, ATTRIBUTE_NAME, ATTRIBUTE_TYPE_ID) /* Tracking */
-        values(10, 'Tracking', 10);
-insert into SCARAB_ATTRIBUTE(ATTRIBUTE_ID, ATTRIBUTE_NAME, ATTRIBUTE_TYPE_ID) /* Brief (one-line) Description */
-        values(11, 'Summary', 1);
-insert into SCARAB_ATTRIBUTE(ATTRIBUTE_ID, ATTRIBUTE_NAME, ATTRIBUTE_TYPE_ID) /* A relevant pointer */
-        values(13, 'Url', 1);
-insert into SCARAB_ATTRIBUTE(ATTRIBUTE_ID, ATTRIBUTE_NAME, ATTRIBUTE_TYPE_ID) /* Functional Area */
-        values(14, 'Functional Area', 5);
+       ATTRIBUTE_TYPE_ID, DESCRIPTION) /* Platform */
+       values(5, 'Platform', 5, 'Platform');
+insert into SCARAB_ATTRIBUTE(ATTRIBUTE_ID, ATTRIBUTE_NAME, ATTRIBUTE_TYPE_ID, DESCRIPTION) /* Operating System */
+        values(6, 'Operating System', 5, 'Operating System');
+insert into SCARAB_ATTRIBUTE(ATTRIBUTE_ID, ATTRIBUTE_NAME, ATTRIBUTE_TYPE_ID, DESCRIPTION) /* Priority select-one*/
+        values(7, 'Priority', 5, 'Priority');
+insert into SCARAB_ATTRIBUTE(ATTRIBUTE_ID, ATTRIBUTE_NAME, ATTRIBUTE_TYPE_ID, DESCRIPTION) /* Priority voted*/
+        values(8, 'Vote', 5, 'Vote');
+insert into SCARAB_ATTRIBUTE(ATTRIBUTE_ID, ATTRIBUTE_NAME, ATTRIBUTE_TYPE_ID, DESCRIPTION) /* Severity */
+        values(9, 'Severity', 5, 'Severity');
+insert into SCARAB_ATTRIBUTE(ATTRIBUTE_ID, ATTRIBUTE_NAME, ATTRIBUTE_TYPE_ID, DESCRIPTION) /* Tracking */
+        values(10, 'Tracking', 10, 'Tracking');
+insert into SCARAB_ATTRIBUTE(ATTRIBUTE_ID, ATTRIBUTE_NAME, ATTRIBUTE_TYPE_ID, DESCRIPTION) /* Brief (one-line) Description */
+        values(11, 'Summary', 1, 'Summary');
+insert into SCARAB_ATTRIBUTE(ATTRIBUTE_ID, ATTRIBUTE_NAME, ATTRIBUTE_TYPE_ID, DESCRIPTION) /* A relevant pointer */
+        values(13, 'Url', 1, 'Url');
+insert into SCARAB_ATTRIBUTE(ATTRIBUTE_ID, ATTRIBUTE_NAME, ATTRIBUTE_TYPE_ID, DESCRIPTION) /* Functional Area */
+        values(14, 'Functional Area', 5, 'Functional Area');
 
+update SCARAB_ATTRIBUTE set CREATED_BY='1';
 
 /*
  *

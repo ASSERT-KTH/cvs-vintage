@@ -2,7 +2,7 @@
 <!DOCTYPE app-data SYSTEM
           "http://jakarta.apache.org/turbine/dtd/database.dtd">
 
-<!-- $Id: scarab-schema.xml,v 1.20 2001/05/31 01:30:36 jmcnally Exp $ -->
+<!-- $Id: scarab-schema.xml,v 1.21 2001/06/11 01:29:52 jon Exp $ -->
 
 <app-data>
 <database>
@@ -151,6 +151,18 @@
         A required option for this attribute to be active.
     -->
     <column name="REQUIRED_OPTION_ID" type="INTEGER"></column>
+    <!--
+        Description.
+    -->
+    <column name="DESCRIPTION" javaName="Description" required="true" type="VARCHAR" size="255"></column>
+    <!--
+        Person that set value to the column of the table initially.
+    -->
+    <column name="CREATED_BY" javaName="CreatedBy" required="false" type="INTEGER"></column>
+    <!--
+        Date of the initial set of the column of the table.
+    -->
+    <column name="CREATED_DATE" javaName="CreatedDate" required="false" type="TIMESTAMP"></column>
     <!--
         Flag, which marks that attribute has been deleted.
     -->
