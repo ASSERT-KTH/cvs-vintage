@@ -68,7 +68,7 @@ import org.apache.torque.util.Criteria;
  * This class describes a Module within the Scarab system
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: ModuleEntity.java,v 1.59 2002/02/19 21:28:34 elicia Exp $
+ * @version $Id: ModuleEntity.java,v 1.60 2002/02/24 05:36:46 jmcnally Exp $
  */
 public interface ModuleEntity
 {
@@ -364,6 +364,16 @@ public interface ModuleEntity
         throws Exception;
 
     public void addRModuleIssueType(IssueType issueType)
+        throws Exception;
+
+    /**
+     * if an RMA is the chosen attribute for email subjects then return it.
+     * if not explicitly chosen, choose the highest ordered text attribute.
+     *
+     * @return the Attribute to use as the email subject,
+     * or null if no suitable Attribute could be found. 
+     */
+    public Attribute getDefaultTextAttribute(IssueType issueType)
         throws Exception;
 
     /**

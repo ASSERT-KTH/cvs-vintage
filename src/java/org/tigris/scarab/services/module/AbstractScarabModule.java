@@ -50,6 +50,7 @@ package org.tigris.scarab.services.module;
 import java.util.List;
 import java.util.Vector;
 import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.ArrayList;
 import java.util.Map;
 import java.util.HashMap;
@@ -57,6 +58,7 @@ import java.util.HashMap;
 import org.apache.log4j.Category;
 
 // Turbine classes
+import org.apache.torque.om.ObjectKey;
 import org.apache.torque.om.NumberKey;
 import org.apache.torque.om.BaseObject;
 import org.apache.torque.om.Persistent;
@@ -92,6 +94,7 @@ import org.tigris.scarab.om.AttributeOption;
 import org.tigris.scarab.om.RModuleIssueType;
 import org.tigris.scarab.om.AttributeTypePeer;
 import org.tigris.scarab.om.RModuleAttribute;
+import org.tigris.scarab.om.RModuleUserAttribute;
 import org.tigris.scarab.om.TransactionPeer;
 import org.tigris.scarab.om.ActivityPeer;
 import org.tigris.scarab.om.AttributeGroup;
@@ -123,7 +126,7 @@ import org.apache.turbine.Log;
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: AbstractScarabModule.java,v 1.37 2002/02/21 00:07:48 jon Exp $
+ * @version $Id: AbstractScarabModule.java,v 1.38 2002/02/24 05:36:46 jmcnally Exp $
  */
 public abstract class AbstractScarabModule
     extends BaseObject
@@ -172,6 +175,8 @@ public abstract class AbstractScarabModule
         "getUnapprovedQueries";
     private static final String GET_UNAPPROVED_TEMPLATES = 
         "getUnapprovedTemplates";
+    private static final String GET_DEFAULT_TEXT_ATTRIBUTE = 
+        "getDefaultTextAttribute";
 
     /* removing the internal cache until it can be fixed using artifact_types
     private List allRModuleAttributes;
@@ -877,26 +882,137 @@ public abstract class AbstractScarabModule
     public List getDefaultRModuleUserAttributes(IssueType issueType)
         throws Exception
     {
-        List uatts = null;
+        List result = null;
         Object obj = ScarabCache.get(this, GET_DEFAULT_RMODULE_USERATTRIBUTES, 
                                      issueType); 
         if ( obj == null ) 
         {        
-            Criteria crit = new Criteria(2)
-                .add(RModuleUserAttributePeer.USER_ID, 0)
-                .add(RModuleUserAttributePeer.ISSUE_TYPE_ID, 
-                issueType.getIssueTypeId());
-            crit.setDistinct();
-            uatts = RModuleUserAttributePeer.doSelect(crit);
-            ScarabCache.put(uatts, this, GET_DEFAULT_RMODULE_USERATTRIBUTES, 
+            result = new LinkedList();
+            Attribute[] attributes = new Attribute[3];
+            int count = 0;
+            attributes[count++] = getDefaultTextAttribute(issueType);
+            if (attributes[0] == null) 
+            {
+                count = 0;
+            }
+            
+            List rma1s = getRModuleAttributes(issueType, true, NON_USER);
+            Iterator i = rma1s.iterator();
+            while (i.hasNext())
+            {
+                Attribute a = ((RModuleAttribute)i.next()).getAttribute();
+                if (!a.isTextAttribute() || attributes[0] == null) 
+                {
+                    attributes[count++] = a;
+                    break;
+                }
+            }
+
+            List rma2s = getRModuleAttributes(issueType, true, USER);
+            i = rma2s.iterator();
+            while (i.hasNext() && count < 3)            
+            {
+                Attribute a = ((RModuleAttribute)i.next()).getAttribute();
+                attributes[count++] = a;
+            }
+
+            // if we still have less than 3 attributes, give the non user
+            // attributes another try
+            i = rma1s.iterator();
+            while (i.hasNext() && count < 3)            
+            {
+                Attribute a = ((RModuleAttribute)i.next()).getAttribute();
+                if ( !a.equals(attributes[0]) && !a.equals(attributes[1]) ) 
+                {
+                    attributes[count++] = a;
+                }                
+            }
+
+            for (int j=0; j<attributes.length; j++) 
+            {
+                if (attributes[j] != null) 
+                {
+                    RModuleUserAttribute rmua = new RModuleUserAttribute();
+                    rmua.setAttribute(attributes[j]);
+                    rmua.setIssueType(issueType);
+                    result.add(rmua);
+                }
+            }
+            ScarabCache.put(result, this, GET_DEFAULT_RMODULE_USERATTRIBUTES, 
                             issueType);
         }
         else 
         {
-            uatts = (List)obj;
+            result = (List)obj;
         }
-        return uatts;
+        return result;
     }
+
+
+    /**
+     * if an RMA is the chosen attribute for email subjects then return it.
+     * if not explicitly chosen, choose the highest ordered text attribute.
+     *
+     * @return the Attribute to use as the email subject,
+     * or null if no suitable Attribute could be found. 
+     */
+    public Attribute getDefaultTextAttribute(IssueType issueType)
+        throws Exception
+    {
+        Attribute result = null;
+        Object obj = ScarabCache.get(this, GET_DEFAULT_TEXT_ATTRIBUTE); 
+        if ( obj == null ) 
+        {        
+            ObjectKey attributeId = null;
+            // get related RMAs
+            Criteria crit = new Criteria()
+                .add(RModuleAttributePeer.MODULE_ID, getModuleId())
+                .add(RModuleAttributePeer.ISSUE_TYPE_ID, 
+                     issueType.getIssueTypeId());
+            crit.addAscendingOrderByColumn(
+                RModuleAttributePeer.PREFERRED_ORDER);
+            List rmas = RModuleAttributePeer.doSelect(crit);
+            
+            // the code to find the correct attribute could be quite simple by
+            // looping and calling RMA.isDefaultText().  The code from
+            // that method can be restructured here to more efficiently
+            // answer this question.
+            Iterator i = rmas.iterator();
+            while (i.hasNext()) 
+            {
+                RModuleAttribute rma = (RModuleAttribute)i.next();
+                if ( rma.getDefaultTextFlag() ) 
+                {
+                    result = rma.getAttribute();
+                    break;
+                }
+            }
+            
+            if ( result == null ) 
+            {
+                // locate the highest ranked text attribute
+                i = rmas.iterator();
+                while (i.hasNext()) 
+                {
+                    RModuleAttribute rma = (RModuleAttribute)i.next();
+                    Attribute testAttr = rma.getAttribute();
+                    if ( testAttr.isTextAttribute() && 
+                         getAttributeGroup(issueType, testAttr).getActive()) 
+                    {
+                        result = testAttr;
+                        break;
+                    }
+                }
+            }
+            ScarabCache.put(result, this, GET_DEFAULT_TEXT_ATTRIBUTE);
+        }
+        else 
+        {
+            result = (Attribute)obj;
+        }
+        return result;
+    }
+
 
     /**
      * gets a list of the Issue Types for this module. only shows
@@ -1255,12 +1371,12 @@ public abstract class AbstractScarabModule
                 crit.add(RModuleAttributePeer.ACTIVE, true);
             }
             
-            if (attributeType.equals(USER))
+            if (USER.equals(attributeType))
             {
                 crit.add(AttributePeer.ATTRIBUTE_TYPE_ID, 
                          AttributeTypePeer.USER_TYPE_KEY);
             }
-            else if (attributeType.equals(NON_USER))
+            else if (NON_USER.equals(attributeType))
             {
                 crit.add(AttributePeer.ATTRIBUTE_TYPE_ID, 
                          AttributeTypePeer.USER_TYPE_KEY,

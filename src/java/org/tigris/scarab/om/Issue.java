@@ -1910,45 +1910,12 @@ public class Issue
         Object obj = ScarabCache.get(this, GET_DEFAULT_TEXT_ATTRIBUTEVALUE); 
         if ( obj == null ) 
         {        
-            ObjectKey attributeId = null;
-            // get related RMAs
-            Criteria crit = new Criteria()
-                .add(RModuleAttributePeer.MODULE_ID, getModuleId())
-                .add(RModuleAttributePeer.ISSUE_TYPE_ID, getTypeId());
-            crit.addAscendingOrderByColumn(RModuleAttributePeer.PREFERRED_ORDER);
-            List rmas = RModuleAttributePeer.doSelect(crit);
+            Attribute defaultTextAttribute = 
+                getModule().getDefaultTextAttribute(getIssueType());
             
-            // the code to find the correct attribute could be quite simple by
-            // looping and calling RMA.isDefaultText().  The code from
-            // that method can be restructured here to more efficiently
-            // answer this question.
-
-            for ( int i=0; i<rmas.size(); i++ ) 
+            if ( defaultTextAttribute != null ) 
             {
-                RModuleAttribute rma = (RModuleAttribute)rmas.get(i);
-                if ( rma.getDefaultTextFlag() ) 
-                {
-                    attributeId = rma.getAttributeId();
-                    break;
-                }
-            }
-            
-            if ( attributeId == null ) 
-            {
-                // locate the default text attribute
-                for ( int i=0; i<rmas.size(); i++ ) 
-                {
-                    RModuleAttribute rma = (RModuleAttribute)rmas.get(i);
-                    if ( rma.getAttribute().isTextAttribute() ) 
-                    {
-                        attributeId = rma.getAttributeId();
-                        break;
-                    }
-                }
-            }
-            
-            if ( attributeId != null ) 
-            {
+                ObjectKey attributeId = defaultTextAttribute.getAttributeId();
                 List avs = getAttributeValues();
                 for ( int i=0; i<avs.size(); i++ ) 
                 {
@@ -1956,12 +1923,6 @@ public class Issue
                     if ( attributeId.equals(testAV.getAttributeId()) ) 
                     {
                         result = testAV;
-                        if (!getModule().getAttributeGroup(getIssueType(), 
-                                 result.getAttribute()).getActive())
-                        {
-                            result = null;
-                        }
-                        break;
                     }
                 }
             }
