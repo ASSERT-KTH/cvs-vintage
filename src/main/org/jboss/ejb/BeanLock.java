@@ -18,7 +18,7 @@ import org.jboss.invocation.Invocation;
  * @author <a href="bill@burkecentral.com">Bill Burke</a>
  * @author <a href="marc.fleury@jboss.org">Marc Fleury</a>
  *
- * @version $Revision: 1.13 $
+ * @version $Revision: 1.14 $
  *
  * <p><b>Revisions:</b><br>
 *  <p><b>2001/07/29: marcf</b>
@@ -58,6 +58,10 @@ public interface BeanLock
     */
    public void setTimeout(int timeout);
 
+   /**
+    *  set the ejb container of this lock.
+    */
+   public void setContainer(Container container);
    /**
     *  Obtain exclusive access to this lock instance.
     */
@@ -140,14 +144,10 @@ public interface BeanLock
    public void addMethodLock(); 
 
    /**
-    *  Release the lock. A thread that got the lock through a successful
-    *  call to {@link #schedule} should call this method to release the
-    *  lock again.
-    *  <p>
-    *  If we reach the count of zero it means the instance is free from
-    *  threads (and reentrency) we wake up the next thread in the currentLock.
+    *  Callback to the BeanLock to inform it that a method invocation has ended.
+    *  A common use of this method is to release a method lock.
     */
-   public void releaseMethodLock();
+   public void endInvocation(Invocation mi);
  
    /**
     *  Increment the reference count of this lock.
