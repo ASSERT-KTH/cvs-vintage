@@ -1,4 +1,4 @@
-// $Id: Main.java,v 1.114 2005/01/30 09:29:34 mvw Exp $
+// $Id: Main.java,v 1.115 2005/02/06 19:36:32 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -57,6 +57,7 @@ import org.argouml.cognitive.Designer;
 import org.argouml.i18n.Translator;
 import org.argouml.kernel.Project;
 import org.argouml.kernel.ProjectManager;
+import org.argouml.model.Model;
 import org.argouml.moduleloader.ModuleLoader2;
 import org.argouml.persistence.PersistenceManager;
 import org.argouml.ui.Actions;
@@ -208,6 +209,13 @@ public class Main {
             }
         }
 
+        // Initialize the Model subsystem
+        if (!Model.isInitiated()) {
+            System.err.println("Model not initated correctly. See log.");
+            System.exit(1);
+            return;
+        }
+
 	// Register the default notation.
 	org.argouml.uml.generator.GeneratorDisplay.getInstance();
 
@@ -289,7 +297,7 @@ public class Main {
             System.err.println("The filename is " + filename);
             System.err.println("The file is " + file);
             System.err.println("File.exists = " + file.exists());
-            
+
             new ActionOpenProject().loadProject(file, true);
         }
         p = ProjectManager.getManager().getCurrentProject();

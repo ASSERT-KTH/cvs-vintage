@@ -1,4 +1,4 @@
-// $Id: TestModel.java,v 1.7 2005/01/07 18:39:21 linus Exp $
+// $Id: TestModel.java,v 1.8 2005/02/06 19:36:32 linus Exp $
 // Copyright (c) 2004-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -102,6 +102,11 @@ public class TestModel extends TestCase {
 
         // Handling methods that doesn't return
         if (factoryIF.isPrimitive() && factoryIF.getName().equals("void")) {
+            return;
+        }
+
+        // Handling the isInitiated method
+        if (factoryIF.isPrimitive() && factoryIF.getName().equals("boolean")) {
             return;
         }
 
