@@ -30,7 +30,7 @@ import org.jnp.interfaces.NamingContext;
 /**
  * A JMX client that uses an RMIAdaptor to shutdown a remote JBoss server.
  *
- * @version <tt>$Revision: 1.15 $</tt>
+ * @version <tt>$Revision: 1.16 $</tt>
  * @author  <a href="mailto:jason@planet57.com">Jason Dillon</a>
  * @author  Scott.Stark@jboss.org
  */
@@ -175,7 +175,7 @@ public class Shutdown
       {
          Hashtable env = new Hashtable();
          env.put(Context.PROVIDER_URL, serverURL);
-         env.put(NamingContext.JNP_DISABLE_DISCOVERY, Boolean.TRUE);
+         env.put(NamingContext.JNP_DISABLE_DISCOVERY, "true");
          ctx  = new InitialContext(env);
       }
       
