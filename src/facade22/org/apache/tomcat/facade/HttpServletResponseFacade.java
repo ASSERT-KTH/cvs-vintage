@@ -88,20 +88,20 @@ final class HttpServletResponseFacade  implements HttpServletResponse
     private boolean usingStream = false;
     private boolean usingWriter = false;
     ServletOutputStreamFacade osFacade=null;
-    PrintWriter writer = null; // XXX will go away when we add the convertor
+    ServletWriterFacade writer;
 
-    // Logger.Helper loghelper = new Logger.Helper("tc_log", "HttpServletResponseFacade");    
-    
     /** Package
      */
     HttpServletResponseFacade(Response response) {
         this.response = response;
+	OutputBuffer oBuffer= response.getBuffer();
+	writer = new ServletWriterFacade( oBuffer, response);
     }
 
     void recycle() {
 	usingStream = false;
 	usingWriter= false;
-	writer=null; // no need - the OutputBuffer will deal with enc
+	//	writer=null; // fixed ( ? )
 	if( osFacade != null ) osFacade.recycle();
     }
 
@@ -193,23 +193,6 @@ final class HttpServletResponseFacade  implements HttpServletResponse
 	    throw new IllegalStateException(msg);
 	}
 	usingWriter= true ;
-	// 	response.setUsingWriter( true );
-
-	// old mechanism
-	// if( osFacade==null && response.getOutputBuffer() == null )
-	// 	    return response.getWriter();
-
-	if( writer != null ) return writer;
-	if(  osFacade == null ) {
-	    osFacade=new ServletOutputStreamFacade(response);
-	}
-
-	OutputBuffer oBuffer= response.getBuffer();
-	writer = new ServletWriterFacade( oBuffer, response);
-	
-	// writer=((ResponseImpl)response).getWriter( osFacade );
-	// 	response.setServletOutputStream( osFacade );
-	// 	response.setWriter(  writer );
 
 	return writer;
     }

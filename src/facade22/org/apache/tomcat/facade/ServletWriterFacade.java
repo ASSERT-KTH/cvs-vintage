@@ -110,6 +110,16 @@ final class ServletWriterFacade extends PrintWriter {
 	super.write( str );
     }
 
+    public void close() {
+	// We don't close the PrintWriter - super() is not called,
+	// so the stream can be reused. We close ob.
+	try {
+	    ob.close();
+	} catch (IOException ex ) {
+	    ex.printStackTrace();
+	}
+    }
+    
     /** Reuse the object instance, avoid GC
      *  Called from BSOS
      */
