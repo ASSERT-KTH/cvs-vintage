@@ -69,7 +69,7 @@ import org.tigris.scarab.util.Log;
  *
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
  * @author <a href="mailto:jon@collab.net">Jon Scott Stevens</a>
- * @version $Id: UpdateSearchIndex.java,v 1.10 2003/01/01 01:13:43 jmcnally Exp $
+ * @version $Id: UpdateSearchIndex.java,v 1.11 2003/01/02 02:35:14 jmcnally Exp $
  */
 public class UpdateSearchIndex extends RequireLoginFirstAction
 {
@@ -155,7 +155,7 @@ public class UpdateSearchIndex extends RequireLoginFirstAction
             }
             catch (Exception e)
             {
-                Log.get().info("Update index failed:", e);
+                Log.get().error("Update index failed:", e);
             }
         }
     }
