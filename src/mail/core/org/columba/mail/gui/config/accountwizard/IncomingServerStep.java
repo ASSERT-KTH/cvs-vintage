@@ -131,7 +131,7 @@ class IncomingServerStep extends AbstractStep {
                 typeComboBox = new JComboBox();
                 typeLabel.setLabelFor(typeComboBox);
                 typeComboBox.addItem("POP3");
-                typeComboBox.addItem("IMAP4");
+                typeComboBox.addItem("IMAP");
                 try {
                         method = typeComboBox.getClass().getMethod("getSelectedItem", null);
                 } catch (NoSuchMethodException nsme) {}
