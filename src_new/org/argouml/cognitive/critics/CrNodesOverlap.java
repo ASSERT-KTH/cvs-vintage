@@ -24,7 +24,7 @@
 // File: CrNodesOverlap.java
 // Classes: CrNodesOverlap
 // Original Author: jrobbins@ics.uci.edu
-// $Id: CrNodesOverlap.java,v 1.3 2002/03/01 11:16:56 mkl Exp $
+// $Id: CrNodesOverlap.java,v 1.4 2002/07/03 05:29:43 mkl Exp $
 
 package org.argouml.cognitive.critics;
 
@@ -59,7 +59,6 @@ public class CrNodesOverlap extends CrUML {
 
   ////////////////////////////////////////////////////////////////
   // critiquing API
-  Rectangle nodeRects[] = new Rectangle[100];
 
   public boolean predicate2(Object dm, Designer dsgr) {
     if (!(dm instanceof Diagram)) return NO_PROBLEM;
@@ -139,4 +138,6 @@ public class CrNodesOverlap extends CrUML {
   }
 
 } /* end class CrNodesOverlap */
+
+
 
