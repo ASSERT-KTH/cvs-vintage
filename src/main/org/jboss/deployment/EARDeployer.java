@@ -9,8 +9,25 @@ package org.jboss.deployment;
 
 import java.io.File;
 import java.io.InputStream;
-import java.net.URL;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.io.FileInputStream;
+import java.io.FilenameFilter;
+import java.io.OutputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
 
+import java.net.URL;
+import java.net.MalformedURLException;
+import java.net.URLClassLoader;
+
+import java.util.Iterator;
+import java.util.Hashtable;
+import java.util.Vector;
+import java.util.jar.JarFile;
+import java.util.zip.ZipInputStream;
+
+import javax.management.MBeanException;
 import javax.management.ObjectName;
 import javax.management.MBeanServer;
 
@@ -20,47 +37,23 @@ import org.jboss.logging.Logger;
 
 import org.w3c.dom.Element;
 
-import java.net.MalformedURLException;
-import java.net.URLClassLoader;
-import java.io.File;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
-import java.io.FileInputStream;
-import java.io.FilenameFilter;
-import java.io.OutputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.util.Iterator;
-import java.util.Hashtable;
-import java.util.Vector;
-import java.util.jar.JarFile;
-import java.util.zip.ZipInputStream;
-
-import javax.management.MBeanException;
-import javax.management.JMException;
-import javax.management.RuntimeMBeanException;
-import javax.management.RuntimeErrorException;
-
 import org.jboss.management.j2ee.J2EEApplication;
 
 /**
  * Enterprise Archive Deployer.
  *
+ * @jmx:mbean name="jboss.j2ee:service=EARDeployer"
+ *            extends="org.jboss.deployment.SubDeployerMBean"
+ *
  * @author <a href="mailto:marc.fleury@jboss.org">Marc Fleury</a>
- * @version $Revision: 1.13 $
+ * @version $Revision: 1.14 $
  */
 public class EARDeployer
    extends SubDeployerSupport
    implements EARDeployerMBean
 {
-   // Constants -----------------------------------------------------
-   
-   // Attributes ----------------------------------------------------
-   
-   // <comment author="cgjung">better be protected for subclassing </comment>
+   /** The name of this deployer? */
    protected String name;
-   
-   // Constructors --------------------------------------------------
    
    public EARDeployer()
    {
@@ -69,17 +62,14 @@ public class EARDeployer
    
    public void setDeployerName(final String name)
    {
-      this.log = Logger.getLogger(getClass().getName() + "." + name);
-      this.name = name;
+      log.info("Using deployer name: " + name);
+      this.name = name.trim();
    }
    
    public String getDeployerName()
    {
-      return name.trim();
+      return name;
    }
-   
-   
-   // Public --------------------------------------------------------
    
    public boolean accepts(DeploymentInfo di) 
    {
@@ -87,14 +77,12 @@ public class EARDeployer
       return urlStr.endsWith("ear") || urlStr.endsWith("ear/");
    }
    
-   
    public void init(DeploymentInfo di)
       throws DeploymentException
    {
       try
       {
-         if (log.isInfoEnabled())
-           log.info("Init J2EE application: " + di.url);
+         log.info("Init J2EE application: " + di.url);
          
          InputStream in = di.localCl.getResourceAsStream("META-INF/application.xml");
          if( in == null )
@@ -107,22 +95,23 @@ public class EARDeployer
          in.close();
          
          // resolve the watch
-         if (di.url.getProtocol().startsWith("http"))
+         if (di.url.getProtocol().equals("file"))
+         {
+            File file = new File(di.url.getFile());
+            
+            // If not directory we watch the package
+            if (!file.isDirectory()) {
+               di.watch = di.url;
+            }
+            // If directory we watch the xml files
+            else {
+               di.watch = new URL(di.url, "META-INF/application.xml");
+            }
+         }
+         else
          {
             // We watch the top only, no directory support
             di.watch = di.url;
-         }
-         
-         else if(di.url.getProtocol().startsWith("file"))
-         {
-            
-            File file = new File (di.url.getFile());
-            
-            // If not directory we watch the package
-            if (!file.isDirectory()) di.watch = di.url;
-               
-            // If directory we watch the xml files
-            else di.watch = new URL(di.url, "META-INF/application.xml"); 
          }
          
          // Obtain the sub-deployment list
@@ -158,9 +147,9 @@ public class EARDeployer
       }
       catch (Exception e)
       {
-         log.error("Error in init step of ear deployment", e);
          throw new DeploymentException("Error in accessing application metadata: ", e);
       }
+      
       // Create the appropriate JSR-77 instance, this has to be done in init
       // EAR create is called after sub-component creates that need this MBean
       ObjectName lApplication = J2EEApplication.create(
@@ -193,8 +182,6 @@ public class EARDeployer
    protected ObjectName getObjectName(MBeanServer server, ObjectName name)
       throws javax.management.MalformedObjectNameException
    {
-      return name == null ? new ObjectName(OBJECT_NAME + this.name) : name;
+      return name == null ? OBJECT_NAME: name;
    }
-
-   // Private -------------------------------------------------------
 }
