@@ -102,13 +102,13 @@
    #if ( $currentIssue.AssigneeAttributeValues.isEmpty() )
          None assigned.
    #else
-        #foreach ($ass in $currentIssue.AssigneeAttributeValues)
+        #foreach ($assignee in $currentIssue.AssigneeAttributeValues)
           #if( $velocityCount == $currentIssue.AssigneeAttributeValues.size() )
               #set( $comma = "")
           #else 
               #set( $comma = ",")
           #end
-          #set ($assignedUser = $scarabR.getUser($ass.UserId) )
+          #set ($assignedUser = $scarabR.getUser($assignee.UserId) )
           #<a href="mailto:$assignedUser.Email">$assignedUser.UserName</a>$comma
         #end
     #end
@@ -128,7 +128,7 @@
 #if (!$currentIssue.Urls.isEmpty() || $canEdit)
       <div class="grouper">
        #datatitle ("Related Links")
-
+      </div>
        <div class="datatable">
         <table width="100%" border="1" cellspacing="2" cellpadding="3">
          <tr>
@@ -145,11 +145,17 @@
          #else 
             <tr class="b">
          #end
-          <td><input type="checkbox" name="url_delete_$url.AttachmentId"/></td>
+          <td>
+          #if ($canEdit)
+            <input type="checkbox" name="url_delete_$url.AttachmentId"/>
+          #else
+            &nbsp;
+          #end
+          </td>
 
-          <td><input type="text" size="25" class="text" value="$url.DataAsString" /> </td>
+          <td><input type="text" size="25" class="text" value="$url.Name" /> </td>
 
-          <td><input type="text" size="25" class="text" value="$url.Name" /></td>
+          <td><input type="text" size="25" class="text" value="$url.DataAsString" /></td>
          </tr>
     #end
    
@@ -160,20 +166,22 @@
 #set( $urlGroup = $intake.Attachment.setKey("urlKey") )
           <td>
          #fieldErrorMsg($urlGroup.Name "<br>")
-         <input type="text" size="25" class="text" name="$urlGroup.DataAsString.Key" value="$!urlGroup.DataAsString" />
+         <input type="text" size="25" class="text" name="$urlGroup.Name.Key" value="$!urlGroup.Name" />
          </td>
 
           <td>
          #fieldErrorMsg($urlGroup.DataAsString "<br>")
-         <input type="text" size="25" class="text" name="$urlGroup.Name.Key" value="$!urlGroup.Name"/>
+         <input type="text" size="25" class="text" name="$urlGroup.DataAsString.Key" value="$!urlGroup.DataAsString"/>
           </td>
 
          </tr>
-        </table>
-       </div>
-           <p><input type="submit" value="add url" name="eventSubmit_doSubmiturl"  />&#160;<input type="submit" value="delete url"  name="eventSubmit_doDeleteurl" /></p>
 
     #end
+        </table>
+    #if ($canEdit)
+           <p><input type="submit" value="add url" name="eventSubmit_doSubmiturl"  />&#160;<input type="submit" value="delete url"  name="eventSubmit_doDeleteurl" /></p>
+    #end
+       </div>
 #end
 
 
@@ -187,6 +195,7 @@
 <input type="hidden" name="$dependGroup.ObserverId.Key" value="$currentIssue.IssueId">
 
 #datatitle ("Add Dependency")
+</div>
 
 <div class="datatable">
 <table width="100%" border="1" cellspacing="2" cellpadding="3">
@@ -218,13 +227,13 @@
 
 #end
 
+</div>
 
 ## PARENT ISSUES
 #if (!$currentIssue.Parents.isEmpty() )
-
       <div class="grouper">
-       #datatitle ("Parent Issues")
-
+      #datatitle ("Parent Issues")
+      </div>
        <div class="datatable">
         <table width="100%" border="1" cellspacing="2" cellpadding="3">
          <tr>
@@ -242,9 +251,9 @@
          #else 
             <tr class="b">
          #end
-          <td><a href="IssueView.vm?id=$parent.IssueId">$parent.IssueId</a></td>
+          <td><a href="ViewIssue.vm?id=$parent.IssueId">$parent.IssueId</a></td>
 
-          <td><a href="IssueView.vm?id=$parent.IssueId">
+          <td><a href="ViewIssue.vm?id=$parent.IssueId">
              #set ($parentAttrValues = $parent.AllAttributeValuesMap)
              #set($attVal =  $parentAttrValues.get("SUMMARY"))
              #set ( $attrInput = $intake.AttributeValue.mapTo($attVal) )
@@ -302,9 +311,9 @@
             <tr class="b">
          #end
 
-          <td><a href="IssueView.vm?id=$child.IssueId">$child.IssueId</a></td>
+          <td><a href="ViewIssue.vm?id=$child.IssueId">$child.IssueId</a></td>
 
-          <td><a href="IssueView.vm?id=$child.IssueId">
+          <td><a href="ViewIssue.vm?id=$child.IssueId">
              #set ($childAttrValues = $child.AllAttributeValuesMap)
              #set($attVal =  $childAttrValues.get("SUMMARY"))
              #set ( $attrInput = $intake.AttributeValue.mapTo($attVal) )
@@ -424,10 +433,10 @@
              #end
 *#
           </td>
-          <td> &nbsp;
-             #if ($act.Attachment) 
-               $act.Attachment.DataAsString
-             #end
+          <td>
+             #if ($act.Transaction.Attachment) 
+             $act.Transaction.Attachment.DataAsString
+             #else &nbsp; #end
           </td>
          </tr>
        #end
@@ -439,10 +448,10 @@
 
 #if ($currentIssue.isHistoryLong())
    #if ($fullHistory.equals("true"))
-        #set ( $historyLink = $link.addPathInfo($data.Parameters).setPathInfo("id", $currentIssue.IssueId).setPathInfo("fullhistory", "false").setPage("ViewIssue.vm") )
+        #set ( $historyLink = $link.addPathInfo($data.Parameters).setPathInfo("id", $currentIssueId).setPathInfo("fullhistory", "false").setPage("ViewIssue.vm") ) 
         <p><a href="$historyLink">hide complete history</p></a>
    #else
-        #set ( $historyLink = $link.addPathInfo($data.Parameters).setPathInfo("id", $currentIssue.IssueId).setPathInfo("fullhistory", "true").setPage("ViewIssue.vm")) )
+        #set ( $historyLink = $link.addPathInfo($data.Parameters).setPage("ViewIssue.vm").setPathInfo("id", $currentIssueId).setPathInfo("fullhistory", "true") )
         <p><a href="$historyLink">show complete history</p></a>
    #end
 #end
