@@ -1,4 +1,4 @@
-$Id: README.txt,v 1.72 2004/04/13 21:13:44 pledbrook Exp $
+$Id: README.txt,v 1.73 2004/11/04 22:20:59 dep4b Exp $
 
 Welcome to Scarab!
 
@@ -89,7 +89,7 @@ system running.
 
         !!! Please read the docs BEFORE building Scarab !!!
 
-        http://scarab.tigris.org/project_docs.html
+        http://scarab-gen.tigris.org/nonav/HEAD/index.html
 
   - There are also several other databases with partial support:
     MS SQL Server, Oracle and DB2. At least oracle and
