@@ -49,13 +49,12 @@ INSERT INTO TURBINE_USER (USER_ID, LOGIN_NAME, PASSWORD_VALUE, FIRST_NAME, LAST_
 
 
 /* create a temporary table. */
-
-drop table xxxx_populate_RolePermission;
 create table xxxx_populate_RolePermission  (
     ROLE_ID		integer NOT NULL,
     PERMISSION_ID	        integer NOT NULL
 );
 
+delete from xxxx_populate_RolePermission;
 
 /*
  *  PARTNER ROLE

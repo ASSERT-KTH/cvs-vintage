@@ -80,6 +80,11 @@ ${MYSQLADMIN} -u ${USER} ${PASSCMD} create ${DB_NAME}
 FILES=`cat ${LOAD_ORDER}`
 
 for i in ${FILES} ; do
-    echo "Importing ${i}..."
-    ${MYSQL} -u ${USER} ${PASSCMD} ${DB_NAME} < ${POPULATION_SCRIPT_DIR}/${i}
+    if [ -e ${POPULATION_SCRIPT_DIR}/mysql-${i} ] ; then
+        echo "Importing mysql-${i}..."
+        ${MYSQL} -u ${USER} ${PASSCMD} ${DB_NAME} < ${POPULATION_SCRIPT_DIR}/mysql-${i}
+    else
+        echo "Importing ${i}..."
+        ${MYSQL} -u ${USER} ${PASSCMD} ${DB_NAME} < ${POPULATION_SCRIPT_DIR}/${i}
+    fi
 done
