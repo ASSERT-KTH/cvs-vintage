@@ -84,7 +84,7 @@ import org.jboss.ejb.plugins.cmp.jdbc.metadata.JDBCTypeMappingMetaData;
  * Compiles EJB-QL and JBossQL into SQL.
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
- * @version $Revision: 1.1 $
+ * @version $Revision: 1.2 $
  */
 public class JDBCEJBQLCompiler extends BasicVisitor {
 
@@ -345,8 +345,9 @@ public class JDBCEJBQLCompiler extends BasicVisitor {
          // can only compare like kind entities
          verrifyParameterEntityType(toParam.number, fromEntity);
 
-         inputParameters.addAll(
-               QueryParameter.createParameters(toParam.number - 1, fromEntity));
+         inputParameters.addAll(QueryParameter.createParameters(
+                  toParam.number - 1,
+                  fromEntity));
 
          buf.append(SQLUtil.getWhereClause(
                   fromEntity.getPrimaryKeyFields(), fromAlias));   
@@ -953,7 +954,7 @@ public class JDBCEJBQLCompiler extends BasicVisitor {
       } else {
          // add the parameters
          inputParameters.addAll(QueryParameter.createParameters(
-               fromParamNumber,
+               fromParamNumber - 1,
                toChildEntity));
       
           // compare pk to parameter
