@@ -84,7 +84,7 @@ public class GeneralOptionsDialog extends JDialog implements ActionListener
 		okButton.setActionCommand("OK");
 		okButton.addActionListener(this);
 		buttonPanel.add(okButton);
-		JButton cancelButton = new JButton(MailResourceLoader.getString("global", "ok"));
+		JButton cancelButton = new JButton(MailResourceLoader.getString("global", "cancel"));
 		//mnemonic
 		cancelButton.setActionCommand("CANCEL");
 		cancelButton.addActionListener(this);
