@@ -177,6 +177,8 @@
           <option value="image/gif" #if ($mimeA == "image/gif")selected="selected"#end>GIF Image (image/gif)</option> 
           <option value="image/jpeg" #if ($mimeA == "image/jpeg")selected="selected"#end>JPEG Image (image/jpeg)</option> 
           <option value="image/png" #if ($mimeA == "image/png")selected="selected"#end>PNG Image (image/png)</option> 
+          <option value="application/pdf" #if ($mimeA == "application/pdf")selected="selected"#end>PDF Portable Document Format (application/pdf)</option> 
+          <option value="application/x-zip-compressed" #if ($mimeA == "application/x-zip-compressed")selected="selected"#end>Zip: Compressed data (application/x-zip-compressed)</option> 
           <option value="application/octet-stream" #if ($mimeA == "application/octet-stream")selected="selected"#end>Binary file (application/octet-stream)</option>        
         </select>
         <p><small>Other (enter mime type:&#160;
