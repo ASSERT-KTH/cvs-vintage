@@ -1704,16 +1704,21 @@ try{
             }
             searchGroup.setProperties(search);
         }
+
         if (searchSuccess) 
         {        
             Integer oldOptionId = search.getStateChangeFromOptionId();
-            if (oldOptionId != null && !oldOptionId.equals(new Integer("0"))
+            // FIXME: no need to create a new ZERO here each time...
+            // there is a couple other cases where this should just be
+            // ScarabConstants.ZERO so just adding a fix me for now.
+            if (oldOptionId != null && !oldOptionId.equals(new Integer(0))
                  && oldOptionId.equals(search.getStateChangeToOptionId())) 
             {
                 searchSuccess = false;
                 setAlertMessage(l10n.get("StateChangeOldEqualNew"));
             }
         }
+
         if (searchSuccess) 
         {        
             // Set attribute values to search on
