@@ -6,7 +6,7 @@
  */
 package org.jboss.webservice.metadata.jaxrpcmapping;
 
-// $Id: JavaXmlTypeMapping.java,v 1.1 2004/05/14 18:34:23 tdiesler Exp $
+// $Id: JavaXmlTypeMapping.java,v 1.2 2004/06/09 13:41:40 tdiesler Exp $
 
 import javax.xml.namespace.QName;
 import java.util.ArrayList;
@@ -23,7 +23,7 @@ public class JavaXmlTypeMapping
    private JavaWsdlMapping javaWsdlMapping;
 
    // The required <class-type> element
-   private String classType;
+   private String javaType;
    // The required <root-type-qname> element
    private QName rootTypeQName;
    // The required <qname-scope> element
@@ -41,14 +41,14 @@ public class JavaXmlTypeMapping
       return javaWsdlMapping;
    }
 
-   public String getClassType()
+   public String getJavaType()
    {
-      return classType;
+      return javaType;
    }
 
-   public void setClassType(String classType)
+   public void setJavaType(String javaType)
    {
-      this.classType = classType;
+      this.javaType = javaType;
    }
 
    public String getQnameScope()

@@ -6,7 +6,7 @@
  */
 package org.jboss.webservice;
 
-// $Id: WSDLDefinitionFactory.java,v 1.6 2004/06/09 00:25:16 tdiesler Exp $
+// $Id: WSDLDefinitionFactory.java,v 1.7 2004/06/09 13:41:40 tdiesler Exp $
 
 import org.jboss.logging.Logger;
 import org.xml.sax.InputSource;
@@ -43,7 +43,7 @@ public final class WSDLDefinitionFactory
    /**
     * Read the wsdl document from the given URL
     */
-   public static Definition readWSDL(URL wsdlLocation) throws WSDLException
+   public static Definition parse(URL wsdlLocation) throws WSDLException
    {
       // wsdl4j is quite noisy on system out, we swallow the output
       PrintStream out = System.out;

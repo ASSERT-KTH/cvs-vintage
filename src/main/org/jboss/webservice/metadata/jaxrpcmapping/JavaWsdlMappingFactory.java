@@ -6,12 +6,19 @@
  */
 package org.jboss.webservice.metadata.jaxrpcmapping;
 
-// $Id: JavaWsdlMappingFactory.java,v 1.2 2004/06/08 07:44:29 telrod Exp $
+// $Id: JavaWsdlMappingFactory.java,v 1.3 2004/06/09 13:41:40 tdiesler Exp $
 
 import org.jboss.logging.Logger;
 import org.jboss.xml.binding.ContentNavigator;
 import org.jboss.xml.binding.ObjectModelFactory;
+import org.jboss.xml.binding.Unmarshaller;
 import org.xml.sax.Attributes;
+import org.xml.sax.SAXException;
+
+import javax.xml.parsers.ParserConfigurationException;
+import java.net.URL;
+import java.io.InputStream;
+import java.io.IOException;
 
 /**
  * A JBossXB factory for {@link org.jboss.webservice.metadata.jaxrpcmapping.JavaWsdlMapping}
@@ -23,6 +30,25 @@ public class JavaWsdlMappingFactory implements ObjectModelFactory
 {
    // provide logging
    private static final Logger log = Logger.getLogger(JavaWsdlMappingFactory.class);
+
+   /** Factory method for JavaWsdlMapping
+    */
+   public static JavaWsdlMapping parse(URL jaxrpcMappingFile) throws Exception
+   {
+      // setup the XML binding Unmarshaller
+      Unmarshaller unmarshaller = new Unmarshaller();
+      JavaWsdlMappingFactory factory = new JavaWsdlMappingFactory();
+      InputStream is = jaxrpcMappingFile.openStream();
+      try
+      {
+         JavaWsdlMapping javaWsdlMapping = (JavaWsdlMapping)unmarshaller.unmarshal(is, factory, null);
+         return javaWsdlMapping;
+      }
+      finally
+      {
+         is.close();
+      }
+   }
 
    /**
     * This method is called on the factory by the object model builder when the parsing starts.
@@ -141,8 +167,8 @@ public class JavaWsdlMappingFactory implements ObjectModelFactory
    public void setValue(JavaXmlTypeMapping typeMapping, ContentNavigator navigator, String namespaceURI, String localName, String value)
    {
       log.trace("setValue: [obj=" + typeMapping + ",value=" + value + "]");
-      if ("class-type".equals(localName) || "java-type".equals(localName))
-         typeMapping.setClassType(value);
+      if ("java-type".equals(localName))
+         typeMapping.setJavaType(value);
       else if ("root-type-qname".equals(localName))
          typeMapping.setRootTypeQName(navigator.resolveQName(value));
       else if ("qname-scope".equals(localName))
