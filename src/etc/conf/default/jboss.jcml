@@ -40,7 +40,7 @@
   <mbean name="DefaultDomain:service=Hypersonic">
     <attribute name="Port">1476</attribute>
     <attribute name="Silent">true</attribute>
-    <attribute name="Database">jboss</attribute>
+    <attribute name="Database">default</attribute>
     <attribute name="Trace">false</attribute>
   </mbean>
   <mbean name="DefaultDomain:service=XADataSource,name=DefaultDS">
