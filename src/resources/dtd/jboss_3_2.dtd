@@ -7,8 +7,8 @@ The DOCTYPE is:
       "-//JBoss//DTD JBOSS 3.2//EN"
       "http://www.jboss.org/j2ee/dtd/jboss_3_2.dtd">
 
-$Id: jboss_3_2.dtd,v 1.7 2004/08/22 08:08:27 pilhuhn Exp $
-$Revision: 1.7 $
+$Id: jboss_3_2.dtd,v 1.8 2004/09/10 13:01:45 loubyansky Exp $
+$Revision: 1.8 $
 
 Overview of the architecture of jboss.xml
 
@@ -1013,7 +1013,7 @@ elements corresponds to the order of the interceptor chain.
 
   Used in: container-configuration
 -->
-<!ELEMENT container-cache-conf (cache-policy? , cache-policy-conf?)>
+<!ELEMENT container-cache-conf (cache-policy? , cache-policy-conf?, cache-policy-conf-other?)>
 
 <!--
   The implementation class for the cache policy, which controls
@@ -1091,6 +1091,11 @@ elements corresponds to the order of the interceptor chain.
   the cache is this member's value loaded of cached objects
 -->
 <!ELEMENT cache-load-factor (#PCDATA)>
+
+<!--
+  Arbitrary XML configuration
+-->
+<!ELEMENT cache-policy-conf-other (ANY)>
 
 <!--
   The container-pool-conf element holds configuration data for the

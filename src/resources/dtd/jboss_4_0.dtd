@@ -4,7 +4,7 @@
 This is the XML DTD for the JBoss 4.0 EJB deployment descriptor.
 The DOCTYPE is:
 
-$Id: jboss_4_0.dtd,v 1.18 2004/09/10 08:13:30 starksm Exp $
+$Id: jboss_4_0.dtd,v 1.19 2004/09/10 13:01:45 loubyansky Exp $
 
   <!DOCTYPE jboss PUBLIC
       "-//JBoss//DTD JBOSS 4.0//EN"
@@ -1210,7 +1210,7 @@ elements corresponds to the order of the interceptor chain.
 
   Used in: container-configuration
 -->
-<!ELEMENT container-cache-conf (cache-policy? , cache-policy-conf?)>
+<!ELEMENT container-cache-conf (cache-policy? , cache-policy-conf?, cache-policy-conf-other?)>
 
 <!--
   The implementation class for the cache policy, which controls
@@ -1288,6 +1288,11 @@ elements corresponds to the order of the interceptor chain.
   the cache is this member's value loaded of cached objects
 -->
 <!ELEMENT cache-load-factor (#PCDATA)>
+
+<!--
+  Arbitrary XML configuration
+-->
+<!ELEMENT cache-policy-conf-other (ANY)>
 
 <!--
   The container-pool-conf element holds configuration data for the
