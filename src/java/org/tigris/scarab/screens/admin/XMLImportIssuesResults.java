@@ -74,14 +74,14 @@ import org.tigris.scarab.tools.ScarabLocalizationTool;
  *
  * @author     <a href="mailto:mmurphy@collab.net">Mark L. Murphy</a>
  * @created    December 4, 2002
- * @version    $Id: XMLImportIssuesResults.java,v 1.3 2003/03/22 18:35:50 jon Exp $
+ * @version    $Id: XMLImportIssuesResults.java,v 1.4 2003/03/25 20:15:21 jon Exp $
  */
 public class XMLImportIssuesResults extends Default
 {
     /**
      * Logging instance.
      */
-    private final static Log log 
+    private static final Log log 
         = LogFactory.getLog(XMLImportIssuesResults.class);
 
     private static final int MIN_XML_SIZE = 1;
