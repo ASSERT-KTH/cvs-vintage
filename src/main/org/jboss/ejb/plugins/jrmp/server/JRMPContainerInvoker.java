@@ -33,6 +33,7 @@ import javax.naming.Context;
 import javax.naming.NamingException;
 import javax.naming.NameNotFoundException;
 import javax.transaction.Transaction;
+import javax.transaction.TransactionManager;
 
 import org.jboss.ejb.MethodInvocation;
 
@@ -52,6 +53,8 @@ import org.jboss.ejb.plugins.jrmp.interfaces.IteratorImpl;
 import org.jboss.ejb.plugins.jrmp.interfaces.EJBMetaDataImpl;
 import org.jboss.ejb.plugins.jrmp.interfaces.SecureSocketFactory;
 
+import org.jboss.system.SecurityAssociation;
+
 import org.jboss.logging.Logger;
 
 import org.jboss.ejb.DeploymentException;
@@ -62,8 +65,6 @@ import org.jboss.metadata.SessionMetaData;
 
 import org.w3c.dom.Element;
 
-
-
 /**
  *      <description>
  *
@@ -71,7 +72,7 @@ import org.w3c.dom.Element;
  *      @author Rickard Öberg (rickard.oberg@telkel.com)
  *		@author <a href="mailto:sebastien.alborini@m4x.org">Sebastien Alborini</a>
  *      @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
- *      @version $Revision: 1.26 $
+ *      @version $Revision: 1.27 $
  */
 public abstract class JRMPContainerInvoker
    extends RemoteServer
@@ -130,34 +131,17 @@ public abstract class JRMPContainerInvoker
    public MarshalledObject invokeHome(MarshalledObject mimo)
       throws Exception
    {
-
-
       ClassLoader oldCl = Thread.currentThread().getContextClassLoader();
       Thread.currentThread().setContextClassLoader(container.getClassLoader());
 
       try
       {
-          RemoteMethodInvocation rmi = (RemoteMethodInvocation)mimo.get();
-          rmi.setMethodMap(homeMethodInvokerMap);
-
+         RemoteMethodInvocation rmi = (RemoteMethodInvocation)mimo.get();
+         rmi.setMethodMap(homeMethodInvokerMap);
          Transaction tx = rmi.getTransaction();
-//DEBUG	        Logger.debug("The home transaction is "+tx);
-
-         //Logger.debug(container.getTransactionManager().toString());
-         // MF FIXME: the following don't belong here, the transaction is
-        // passed by the call, not implicitely...
-        //if (tx == null)
-         // tx = container.getTransactionManager().getTransaction();
-
-
-//DEBUG	 Logger.debug("JRMPCI:invokeHome "+rmi.getMethod().getName());
-
-         return new MarshalledObject(invokeHome(rmi.getMethod(), rmi.getArguments(), tx,
-        rmi.getPrincipal(), rmi.getCredential() ));
-      } catch (Exception e)
-      {
-        // DEBUG Logger.exception(e);
-         throw e;
+	 
+         return new MarshalledObject(container.invokeHome(new MethodInvocation(null, rmi.getMethod(), rmi.getArguments(), tx,
+                                                             rmi.getPrincipal(), rmi.getCredential() )));
       } finally
       {
          Thread.currentThread().setContextClassLoader(oldCl);
@@ -175,19 +159,9 @@ public abstract class JRMPContainerInvoker
          RemoteMethodInvocation rmi = (RemoteMethodInvocation)mimo.get();
          rmi.setMethodMap(beanMethodInvokerMap);
          Transaction tx = rmi.getTransaction();
-        // MF FIXME: there should be no implicit thread passing of the transaction
-         //if (tx == null)
-         //   tx = container.getTransactionManager().getTransaction();
-
-         Object id = rmi.getId();
-         Method m = rmi.getMethod();
-         Object[] args = rmi.getArguments();
-
-
-	   //DEBUG Logger.debug("JRMPCI:invoke "+m.getName());
-
-         return new MarshalledObject(invoke(id, m, args, tx,
-          rmi.getPrincipal(), rmi.getCredential()));
+	 
+         return new MarshalledObject(container.invoke(new MethodInvocation(rmi.getId(), rmi.getMethod(), rmi.getArguments(), tx,
+                                                             rmi.getPrincipal(), rmi.getCredential() )));
       } finally
       {
          Thread.currentThread().setContextClassLoader(oldCl);
@@ -198,14 +172,24 @@ public abstract class JRMPContainerInvoker
     Principal identity, Object credential)
       throws Exception
    {
-	   //DEBUG
-//DEBUG       Logger.debug("JRMPCI (local) :invokeHome "+m.getName());
-//DEBUG       if (tx != null)
-//DEBUG		 	Logger.debug("Tx is "+tx.toString());
-//DEBUG       else
-//DEBUG		 	Logger.debug("Tx is null");
-
-	   //DEBUG
+      // Check if this call really can be optimized
+      // If parent of callers classloader is != parent of our classloader -> not optimizable!
+      if (Thread.currentThread().getContextClassLoader().getParent() != container.getClassLoader().getParent())
+      {
+         RemoteMethodInvocation rmi = new RemoteMethodInvocation(null, m, args);
+      
+         // Set the transaction context
+         TransactionManager tm = container.getTransactionManager();
+         rmi.setTransaction(tm != null? tm.getTransaction() : null);
+      
+         // Set the security stuff
+         rmi.setPrincipal( SecurityAssociation.getPrincipal() );
+         rmi.setCredential( SecurityAssociation.getCredential() );
+      
+         // Invoke on the container, enforce marshalling
+         return invokeHome(new MarshalledObject(rmi)).get();
+      }
+	 
        return container.invokeHome(new MethodInvocation(null , m, args, tx,
         identity, credential));
    }
@@ -214,6 +198,24 @@ public abstract class JRMPContainerInvoker
     Principal identity, Object credential )
       throws Exception
    {
+	   // Check if this call really can be optimized
+	   // If parent of callers classloader is != parent of our classloader -> not optimizable!
+	   if (Thread.currentThread().getContextClassLoader().getParent() != container.getClassLoader().getParent())
+	   {
+	      RemoteMethodInvocation rmi = new RemoteMethodInvocation(id, m, args);
+	   
+	      // Set the transaction context
+	      TransactionManager tm = container.getTransactionManager();
+	      rmi.setTransaction(tm != null? tm.getTransaction() : null);
+	   
+	      // Set the security stuff
+	      rmi.setPrincipal( SecurityAssociation.getPrincipal() );
+	      rmi.setCredential( SecurityAssociation.getCredential() );
+	   
+	      // Invoke on the container, enforce marshalling
+	      return invoke(new MarshalledObject(rmi)).get();
+	   }
+      
 	   // DEBUG
 //DEBUG	     Logger.debug("JRMPCI (local) :invoke "+m.getName());
 //DEBUG       if (tx != null)
@@ -254,9 +256,6 @@ public abstract class JRMPContainerInvoker
          homeMethodInvokerMap.put(new Integer(RemoteMethodInvocation.calculateHash(methods[i])), methods[i]);
       }
 
-      // MF FIXME: I suspect this is boloney... why do we need ALL these maps
-      // There is one in the container and one in here...
-      // Can't we unify ... these guys????
       try {
 
         // Get the getEJBObjectMethod
