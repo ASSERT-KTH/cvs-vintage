@@ -67,7 +67,7 @@ import org.apache.torque.util.Criteria;
  * This class describes a Module within the Scarab system
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: ModuleEntity.java,v 1.39 2001/11/09 19:16:46 elicia Exp $
+ * @version $Id: ModuleEntity.java,v 1.40 2001/11/10 02:26:11 elicia Exp $
  */
 public interface ModuleEntity
 {
@@ -156,7 +156,11 @@ public interface ModuleEntity
                                                 IssueType issueType)
         throws Exception;
 
-    public int getHighestSequence(IssueType issueType)
+    public int getLastAttribute(IssueType issueType)
+        throws Exception;
+
+    public int getLastAttributeOption(Attribute attribute, 
+                                      IssueType issueType)
         throws Exception;
 
     public String getQueryKey();
