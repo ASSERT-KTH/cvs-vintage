@@ -1,3 +1,25 @@
+Columba v1.0 M2 
+
+- enabled state of newly created vFolders was disabled (fdietz)
+- creating vFolders on IMAP account, accidently created a new IMAP folders on the server (tstich)
+- multiple build-file fixes (mlivingstone)
+- updated lucene, forms, looks libraries (fdietz)
+- To, Cc, headerfields parsing added (tstich)
+- added Folder->Move up/down menuitem (fdietz)
+- added sortable treemodel, this will be activated in M3 (redsolo) 
+- better logging for ristretto (tstich)
+- fixed authentication fall-back mechanism (tstich)
+- added message quoting for html messages when replying/forwarding (karlpeder)
+- removing html comments when opening messages in composer (karlpeder)
+- fixed bug when drag'n'dropping folder (redsolor)
+- address wasn't shown correctly in composer (tstich)
+- cleanup of checkable/radiobutton menuitem (javaprog)
+- cleanup of charset menu (javaprog)
+- cleanup of composer commands (javaprog)
+- fixed plugin configuration in plugin manager (fdietz)
+- cleanup of configuration (javaprog)
+- fixed tooltip in attachment panel (tstich)
+
 Columba v1.0 M2 Release Candidate
 
 New features:
