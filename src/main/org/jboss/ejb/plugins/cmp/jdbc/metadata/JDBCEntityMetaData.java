@@ -31,7 +31,7 @@ import org.w3c.dom.Element;
  * @author <a href="mailto:dirk@jboss.de">Dirk Zimmermann</a>
  * @author <a href="mailto:loubyansky@hotmail.com">Alex Loubyansky</a>
  *
- * @version $Revision: 1.24 $
+ * @version $Revision: 1.25 $
  */
 public final class JDBCEntityMetaData {
    /**
@@ -499,9 +499,22 @@ public final class JDBCEntityMetaData {
          fetchSize = defaultValues.getFetchSize();
       }
 
+      // 
       // cmp fields
-      cmpFields.addAll(defaultValues.cmpFields);
-      cmpFieldsByName.putAll(defaultValues.cmpFieldsByName);
+      // 
+
+      // update all existing queries with the new read ahead value
+      for(Iterator cmpFieldIterator = defaultValues.cmpFields.iterator();
+            cmpFieldIterator.hasNext(); ) {
+         
+         JDBCCMPFieldMetaData cmpField = new JDBCCMPFieldMetaData(
+               this,
+               (JDBCCMPFieldMetaData)cmpFieldIterator.next());
+         cmpFields.add(cmpField);
+         cmpFieldsByName.put(cmpField.getFieldName(), cmpField);
+      }
+
+      // apply new configurations to the cmpfields
       for(Iterator i = MetaData.getChildrenByTagName(element, "cmp-field"); 
             i.hasNext(); ) {
 

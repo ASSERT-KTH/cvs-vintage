@@ -30,7 +30,7 @@ import org.w3c.dom.Element;
  * @author <a href="mailto:vincent.harcq@hubmethods.com">Vincent Harcq</a>
  * @author <a href="mailto:loubyansky@hotmail.com">Alex Loubyansky</a>
  *
- * @version $Revision: 1.16 $
+ * @version $Revision: 1.17 $
  */
 public final class JDBCCMPFieldMetaData {
    /**
@@ -198,6 +198,59 @@ public final class JDBCCMPFieldMetaData {
       // Unknown primary key attributes setup
       unknownPkField = false;
       autoIncrement = false;
+   }
+
+   /**
+    * Constructs cmp field meta data with the data contained in the cmp-field 
+    * xml element from a jbosscmp-jdbc xml file. Optional values of the xml 
+    * element that are not present are instead loaded from the defalutValues 
+    * parameter.
+    *
+    * @param element the xml Element which contains the metadata about 
+    * this field
+    * @param defaultValues the JDBCCMPFieldMetaData which contains the values
+    * for optional elements of the element
+    * @throws DeploymentException if the xml element is not semantically correct
+    */
+   public JDBCCMPFieldMetaData(
+         JDBCEntityMetaData entity,
+         JDBCCMPFieldMetaData defaultValues) throws DeploymentException {
+
+      this.entity = entity;
+
+      // Field name
+      fieldName = defaultValues.getFieldName();
+
+      // Field type
+      fieldType = defaultValues.getFieldType();
+
+      // Column name
+      columnName = defaultValues.getColumnName();
+
+      // JDBC Type
+      jdbcType = defaultValues.getJDBCType();
+      sqlType = defaultValues.getSQLType();
+
+      // read-only
+      readOnly = entity.isReadOnly();
+
+      // read-time-out
+      readTimeOut = entity.getReadTimeOut();
+
+      // primary key member?
+      primaryKeyMember = defaultValues.isPrimaryKeyMember();
+      
+      // field object of the primary key
+      primaryKeyField = defaultValues.getPrimaryKeyField();
+
+      // not-null
+      notNull = defaultValues.isNotNull();
+
+      // unknown primary key
+      unknownPkField = defaultValues.isUnknownPkField();
+
+      // is the field auto-increment?
+      autoIncrement = defaultValues.isAutoIncrement();
    }
 
    /**
