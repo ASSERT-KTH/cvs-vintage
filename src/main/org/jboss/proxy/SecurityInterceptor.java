@@ -22,7 +22,6 @@ import javax.ejb.EJBHome;
 import javax.ejb.EJBObject;
 import javax.ejb.HomeHandle;
 
-import org.jboss.ejb.CacheKey;
 import org.jboss.invocation.Invoker;
 import org.jboss.proxy.ejb.handle.HomeHandleImpl;
 import org.jboss.invocation.Invocation;
@@ -37,7 +36,7 @@ import org.jboss.ejb.plugins.jrmp.server.JRMPContainerInvoker;
 * The client-side proxy for an EJB Home object.
 *      
 * @author <a href="mailto:marc.fleury@jboss.org">Marc Fleury</a>
-* @version $Revision: 1.1 $
+* @version $Revision: 1.2 $
 *
 * <p><b>2001/11/21: marcf</b>
 * <ol>

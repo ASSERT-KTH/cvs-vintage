@@ -13,7 +13,6 @@ import java.util.HashMap;
 import javax.transaction.TransactionManager;
 
 import org.jboss.invocation.Invoker;
-import org.jboss.ejb.CacheKey;
 
 /*
 import java.lang.reflect.Method;
@@ -35,7 +34,7 @@ import javax.transaction.Transaction;
  *    a repository of objects. 
  *
  * @author  <a href="mailto:marc@jboss.org">Marc Fleury</a>
- * @version $Revision: 1.1 $
+ * @version $Revision: 1.2 $
  * 
  * Revisions:
  *

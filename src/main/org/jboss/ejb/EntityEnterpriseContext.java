@@ -26,7 +26,7 @@ import javax.ejb.EntityContext;
  * @author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
  * @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
  * @author <a href="mailto:docodan@mvcsoft.com">Daniel OConnor</a>
- * @version $Revision: 1.25 $
+ * @version $Revision: 1.26 $
  *
  * <p><b>Revisions</b>
  * <p>20010703 marcf
@@ -64,7 +64,7 @@ public class EntityEnterpriseContext
    private Object persistenceCtx;
 	
    /** The cacheKey for this context */
-   CacheKey key;
+   Object key;
 	
    // Constructors --------------------------------------------------
    
@@ -122,10 +122,11 @@ public class EntityEnterpriseContext
 	
    public void setCacheKey(Object key)
    {
-      this.key = (CacheKey) key;
+      this.key = key;
    }
 	
-   public CacheKey getCacheKey() {
+   public Object getCacheKey()
+   {
       return key;
    }
 	
@@ -182,14 +183,13 @@ public class EntityEnterpriseContext
          if (((EntityContainer)con).getContainerInvoker()==null)
             throw new IllegalStateException( "No remote interface defined." );
          
-         if (ejbObject == null) {
-            
+         if (ejbObject == null)
+         {   
                // Create a new CacheKey
                Object cacheKey = ((EntityCache)((EntityContainer)con).getInstanceCache()).createCacheKey(id);
-               ejbObject = (EJBObject) ((EntityContainer)con).getContainerInvoker().getEntityEJBObject(cacheKey);
-            
+               ejbObject = (EJBObject) ((EntityContainer)con).getContainerInvoker().getEntityEJBObject(cacheKey);  
          }
-			
+
          return ejbObject;
       }
 		

@@ -14,7 +14,6 @@ import javax.ejb.EJBObject;
 import javax.ejb.EJBHome;
 import javax.naming.InitialContext;
 
-import org.jboss.ejb.CacheKey;
 import org.jboss.invocation.Invocation;
 import org.jboss.invocation.InvocationContext;
 import org.jboss.invocation.Invoker;
@@ -23,7 +22,7 @@ import org.jboss.proxy.ejb.handle.EntityHandleImpl;
 /**
  * An EJB entity bean proxy class.
  * @author <a href="mailto:marc.fleury@jboss.org">Marc Fleury</a>
- * @version $Revision: 1.2 $
+ * @version $Revision: 1.3 $
  *
  * <p><b>2001/11/19: marcf</b>
  * <ol>
@@ -88,12 +87,12 @@ extends GenericEJBInterceptor
       else if (m.equals(GET_HANDLE))
       {
          String jndiName = (String) ctx.getValue(JNDI_NAME);
-         Object id = ((CacheKey)ctx.getCacheId()).getId();
+         Object id = ctx.getCacheId();
          return new EntityHandleImpl(jndiName, id);
       }
       else if (m.equals(GET_PRIMARY_KEY))
       {
-         return ((CacheKey)ctx.getCacheId()).getId();
+         return ctx.getCacheId();
       }
       else if (m.equals(GET_EJB_HOME))
       {

@@ -48,7 +48,6 @@ import org.jboss.ejb.Container;
 import org.jboss.ejb.ContainerInvokerContainer;
 import org.jboss.ejb.Interceptor;
 import org.jboss.ejb.LocalContainerInvoker;
-import org.jboss.ejb.CacheKey;
 import org.jboss.ejb.LocalHomeObjectFactory;
 import org.jboss.deployment.DeploymentException;
 import org.jboss.invocation.Invocation;
@@ -359,15 +358,13 @@ public class BaseLocalContainerInvoker implements LocalContainerInvoker
          {
             // The trick is simple we trick the container in believe it
             // is a remove() on the instance
-            Object id = new CacheKey(args[0]);
-            return BaseLocalContainerInvoker.this.invoke(
-            id, REMOVE_OBJECT, EMPTY_ARGS);
+            Object id = args[0];
+            return BaseLocalContainerInvoker.this.invoke(id, REMOVE_OBJECT, EMPTY_ARGS);
          }
          // If not taken care of, go on and call the container
          else
          {
-            return BaseLocalContainerInvoker.this.invokeHome(
-            m, args);
+            return BaseLocalContainerInvoker.this.invokeHome(m, args);
          }
       }
    }
@@ -375,13 +372,11 @@ public class BaseLocalContainerInvoker implements LocalContainerInvoker
    class EntityProxy extends LocalProxy
       implements InvocationHandler
    {
-      CacheKey cacheKey;
+      Object cacheKey;
       
       EntityProxy( Object id )
       {
-         if (!(id instanceof CacheKey))
-            id = new CacheKey( id );
-         cacheKey = (CacheKey) id;
+         cacheKey = id;
       }
 
       protected String getJndiName()
@@ -391,7 +386,7 @@ public class BaseLocalContainerInvoker implements LocalContainerInvoker
       
       protected Object getId()
       {
-         return cacheKey.getId();
+         return cacheKey;
       }
       
       

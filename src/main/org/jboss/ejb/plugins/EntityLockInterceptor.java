@@ -13,7 +13,6 @@ import org.jboss.ejb.BeanLock;
 import org.jboss.ejb.BeanLockManager;
 import org.jboss.ejb.EntityContainer;
 import org.jboss.invocation.Invocation;
-import org.jboss.ejb.CacheKey;
 
 /**
  * The lock interceptors role is to schedule thread wanting to invoke method on a target bean
@@ -31,7 +30,7 @@ import org.jboss.ejb.CacheKey;
 *    
 * @author <a href="mailto:marc.fleury@jboss.org">Marc Fleury</a>
 * @author <a href="mailto:bill@burkecentral.com">Bill Burke</a>
-* @version $Revision: 1.8 $
+* @version $Revision: 1.9 $
 *
 * <p><b>Revisions:</b><br>
 * <p><b>2001/07/30: marcf</b>
@@ -86,8 +85,8 @@ public class EntityLockInterceptor
    {
   
       // The key.
-      Object key = (CacheKey) mi.getId();
-  
+      Object key = mi.getId();
+
       // The lock.
       BeanLock lock ;
   
@@ -128,7 +127,4 @@ public class EntityLockInterceptor
       }
    }
 }
-
-
-
 

@@ -21,7 +21,6 @@ import javax.ejb.HomeHandle;
 import org.jboss.proxy.ejb.handle.HomeHandleImpl;
 import org.jboss.invocation.Invocation;
 import org.jboss.invocation.InvocationContext;
-import org.jboss.ejb.CacheKey;
 
 /*
 import java.io.IOException;
@@ -44,7 +43,7 @@ import org.jboss.ejb.plugins.jrmp.server.JRMPContainerInvoker;
 * The client-side proxy for an EJB Home object.
 *      
 * @author <a href="mailto:marc.fleury@jboss.org">Marc Fleury</a>
-* @version $Revision: 1.1 $
+* @version $Revision: 1.2 $
 *
 * <p><b>2001/11/21: marcf</b>
 * <ol>
@@ -167,7 +166,7 @@ public class HomeInterceptor
 
          // The trick is simple we trick the container in believe it
          // is a remove() on the instance
-         Object id = new CacheKey(invocation.getArguments()[0]);
+         Object id = invocation.getArguments()[0];
 
          // Just override the Invocation going out
          invocation.setId(id);

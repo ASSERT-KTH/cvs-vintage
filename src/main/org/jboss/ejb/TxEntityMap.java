@@ -20,7 +20,7 @@ import javax.transaction.Synchronization;
  * Used in EntitySynchronizationInterceptor.
  * 
  * @author <a href="bill@burkecentral.com">Bill Burke</a>
- * @version $Revision: 1.8 $
+ * @version $Revision: 1.9 $
  *
  * Revisions:
  *
@@ -53,7 +53,7 @@ public class TxEntityMap
    }
 
    public synchronized EntityEnterpriseContext getCtx(Transaction tx,
-                                                      CacheKey key)
+                                                      Object key)
    {
       HashMap entityMap = (HashMap)m_map.get(tx);
       if (entityMap == null) return null;

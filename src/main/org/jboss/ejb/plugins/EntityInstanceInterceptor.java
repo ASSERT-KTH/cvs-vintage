@@ -17,9 +17,7 @@ import org.jboss.ejb.EnterpriseContext;
 import org.jboss.ejb.InstanceCache;
 import org.jboss.ejb.InstancePool;
 import org.jboss.invocation.Invocation;
-import org.jboss.ejb.CacheKey;
 
-import org.jboss.security.SecurityAssociation;
 
 /**
 * The instance interceptors role is to acquire a context representing
@@ -42,7 +40,7 @@ import org.jboss.security.SecurityAssociation;
 * @author <a href="mailto:marc.fleury@jboss.org">Marc Fleury</a>
 * @author <a href="mailto:Scott.Stark@jboss.org">Scott Stark</a>
 * @author <a href="mailto:bill@burkecentral.com">Bill Burke</a>
-* @version $Revision: 1.50 $
+* @version $Revision: 1.51 $
 *
 * <p><b>Revisions:</b><br>
 * <p><b>2001/06/28: marcf</b>
@@ -130,7 +128,7 @@ public class EntityInstanceInterceptor
       ctx.setTransaction(mi.getTransaction());
 
       // Set the current security information
-      ctx.setPrincipal(SecurityAssociation.getPrincipal());
+      ctx.setPrincipal(mi.getPrincipal());
 
          // Invoke through interceptors
       Object rtn = getNext().invokeHome(mi);
@@ -164,7 +162,7 @@ public class EntityInstanceInterceptor
    {
 
       // The key
-      CacheKey key = (CacheKey) mi.getId();
+      Object key = mi.getId();
 
       // The context
       EntityEnterpriseContext ctx = (EntityEnterpriseContext) container.getInstanceCache().get(key);
@@ -177,7 +175,7 @@ public class EntityInstanceInterceptor
       ctx.setTransaction(mi.getTransaction());
 
       // Set the current security information
-      ctx.setPrincipal(SecurityAssociation.getPrincipal());
+      ctx.setPrincipal(mi.getPrincipal());
 
       // Set context on the method invocation
       mi.setEnterpriseContext(ctx);

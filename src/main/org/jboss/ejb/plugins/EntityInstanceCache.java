@@ -11,7 +11,6 @@ import java.rmi.RemoteException;
 import java.rmi.NoSuchObjectException;
 import org.jboss.ejb.Container;
 import org.jboss.ejb.EntityContainer;
-import org.jboss.ejb.CacheKey;
 import org.jboss.ejb.EnterpriseContext;
 import org.jboss.ejb.EntityEnterpriseContext;
 import org.jboss.util.Sync;
@@ -21,7 +20,7 @@ import org.jboss.util.Sync;
  * 
  * @author <a href="mailto:simone.bordet@compaq.com">Simone Bordet</a>
  * @author <a href="bill@burkecentral.com">Bill Burke</a>
- * @version $Revision: 1.13 $
+ * @version $Revision: 1.14 $
  *
  * <p><b>Revisions:</b>
  * <p><b>2001/01/29: billb</b>
@@ -60,48 +59,24 @@ public class EntityInstanceCache
 	}
 
 	// Z implementation ----------------------------------------------
-	public Object createCacheKey(Object id) {return new CacheKey(id);}
-	
+	public Object createCacheKey(Object id)
+   {
+      return id;
+   }
 
 	// Y overrides ---------------------------------------------------
 	public EnterpriseContext get(Object id) 
 		throws RemoteException, NoSuchObjectException 
 	{
-	    if (!(id instanceof CacheKey)) 
-	    {
-		throw new IllegalArgumentException("cache.get for entity beans must have a CacheKey object as argument instead of " + id);
-	    }
 	    EnterpriseContext rtn = null;
 	    rtn = super.get(id);
 	    return rtn;
 	}
 	public void remove(Object id)
 	{
-		if (!(id instanceof CacheKey)) 
-		{
-			throw new IllegalArgumentException("cache.remove for entity beans must have a CacheKey object as argument instead of " + id);
-		}
 		super.remove(id);
 	}
 
-	/*
-	public synchronized Sync getLock(Object id) 
-	{
-		if (!(id instanceof CacheKey)) 
-		{
-			throw new IllegalArgumentException("cache.getLock for entity beans must have a CacheKey object as argument instead of " + id);
-		}
-		return super.getLock(id);
-	}
-	protected synchronized void removeLock(Object id) 
-	{
-		if (!(id instanceof CacheKey)) 
-		{
-			throw new IllegalArgumentException("cache.removeLock for entity beans must have a CacheKey object as argument instead of " + id);
-		}
-		super.removeLock(id);
-	}
-	*/
 	protected Object getKey(EnterpriseContext ctx) 
 	{
 		return ((EntityEnterpriseContext)ctx).getCacheKey();
@@ -109,7 +84,7 @@ public class EntityInstanceCache
 	protected void setKey(Object id, EnterpriseContext ctx) 
 	{
 		((EntityEnterpriseContext)ctx).setCacheKey(id);
-		ctx.setId(((CacheKey)id).getId());
+		ctx.setId(id);
 	}
 
 	protected Container getContainer() {return m_container;}
