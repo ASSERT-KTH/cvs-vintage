@@ -7,7 +7,7 @@
 <!--                                                                       -->
 <!-- ===================================================================== -->
 
-<!-- $Id: standardjbosscmp-jdbc.xml,v 1.46 2002/09/19 16:36:25 loubyansky Exp $ -->
+<!-- $Id: standardjbosscmp-jdbc.xml,v 1.47 2002/09/21 18:12:20 dsundstrom Exp $ -->
 
 <jbosscmp-jdbc>
    
@@ -876,7 +876,7 @@
          </function-mapping>    
          <function-mapping>
             <function-name>sqrt</function-name>
-            <function-sql>sqrt(?1)</function-sql>
+            <function-sql>sqrt(CAST(?1 AS double precision))</function-sql>
          </function-mapping>    
          <function-mapping>
             <function-name>ucase</function-name>
@@ -998,7 +998,7 @@
          </function-mapping>    
          <function-mapping>
             <function-name>sqrt</function-name>
-            <function-sql>sqrt(?1)</function-sql>
+            <function-sql>sqrt(CAST(?1 AS double precision))</function-sql>
          </function-mapping>    
          <function-mapping>
             <function-name>ucase</function-name>
