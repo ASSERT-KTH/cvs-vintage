@@ -5,16 +5,18 @@
  * See terms of license at gnu.org.
  */
 
-// $Id: JaxRpcClientProxy.java,v 1.1 2004/05/04 08:48:43 tdiesler Exp $
+// $Id: JaxRpcClientProxy.java,v 1.2 2004/05/05 06:53:20 tdiesler Exp $
 package org.jboss.webservice;
 
-// $Id: JaxRpcClientProxy.java,v 1.1 2004/05/04 08:48:43 tdiesler Exp $
+// $Id: JaxRpcClientProxy.java,v 1.2 2004/05/05 06:53:20 tdiesler Exp $
 
 import org.jboss.logging.Logger;
 
 import javax.xml.rpc.Service;
+import javax.xml.rpc.ServiceException;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
+import java.lang.reflect.InvocationTargetException;
 
 /**
  *
@@ -44,21 +46,28 @@ public class JaxRpcClientProxy implements InvocationHandler
     */
    public Object invoke(Object proxy, Method method, Object[] args) throws Throwable
    {
-      // client invokes a method on the Service interface
       try
       {
-         Method serviceMethod = javax.xml.rpc.Service.class.getMethod(method.getName(), method.getParameterTypes());
-         log.debug("Invoke on jaxrpcService: " + method);
-         return serviceMethod.invoke(jaxrpcService, args);
-      }
-      catch (NoSuchMethodException ignore)
-      {
-      }
+         // client invokes a method on the Service interface
+         try
+         {
+            Method serviceMethod = Service.class.getMethod(method.getName(), method.getParameterTypes());
+            log.debug("Invoke on jaxrpcService: " + method);
+            return serviceMethod.invoke(jaxrpcService, args);
+         }
+         catch (NoSuchMethodException ignore)
+         {
+         }
 
-      // client invokes a method on the service endpoint interface
-      Object port = jaxrpcService.getPort(seiClass);
-      log.debug("Invoke on port: " + method);
-      Method portMethod = port.getClass().getMethod(method.getName(), method.getParameterTypes());
-      return portMethod.invoke(port, args);
+         // client invokes a method on the service endpoint interface
+         Object port = jaxrpcService.getPort(seiClass);
+         log.debug("Invoke on port: " + method);
+         Method portMethod = port.getClass().getMethod(method.getName(), method.getParameterTypes());
+         return portMethod.invoke(port, args);
+      }
+      catch (InvocationTargetException e)
+      {
+         throw e.getTargetException();
+      }
    }
 }
