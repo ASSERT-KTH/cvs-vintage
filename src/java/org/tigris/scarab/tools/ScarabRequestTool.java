@@ -1334,29 +1334,37 @@ try{
         throws Exception
     {
         List issues = null;
-        if (issueIds.get(0) instanceof String) 
+        if (issueIds == null || issueIds.isEmpty()) 
         {
-            issues = new ArrayList(issueIds.size());
-            Iterator i = issueIds.iterator();
-            while (i.hasNext()) 
-            {
-                issues.add(getIssue((String)i.next()));
-            }            
-        }
-        else if (issueIds.get(0) instanceof NumberKey)
-        {
-            issues = new ArrayList(issueIds.size());
-            Iterator i = issueIds.iterator();
-            while (i.hasNext()) 
-            {
-                issues.add(IssueManager.getInstance((NumberKey)i.next()));
-            }
+            issues = Collections.EMPTY_LIST;
         }
         else 
         {
-            throw new IllegalArgumentException(
-                "issue ids must be Strings or NumberKeys, not " + issueIds.get(0).getClass().getName());
-        }
+            if (issueIds.get(0) instanceof String) 
+            {
+                issues = new ArrayList(issueIds.size());
+                Iterator i = issueIds.iterator();
+                while (i.hasNext()) 
+                {
+                    issues.add(getIssue((String)i.next()));
+                }            
+            }
+            else if (issueIds.get(0) instanceof NumberKey)
+            {
+                issues = new ArrayList(issueIds.size());
+                Iterator i = issueIds.iterator();
+                while (i.hasNext()) 
+                {
+                    issues.add(IssueManager.getInstance((NumberKey)i.next()));
+                }
+            }
+            else 
+            {
+                throw new IllegalArgumentException(
+                    "issue ids must be Strings or NumberKeys, not " + 
+                    issueIds.get(0).getClass().getName());
+            }
+        }        
         return issues;
     }
         
@@ -1409,10 +1417,10 @@ try{
     {
         IssueSearch is = null;
         MITList mitList = ((ScarabUser)data.getUser()).getCurrentMITList();
-        IssueType it = getCurrentIssueType();
-        Module cum = getCurrentModule();
-        if (mitList == null && (it != null || cum != null))
+        if (mitList == null)
         {
+            IssueType it = getCurrentIssueType();
+            Module cum = getCurrentModule();
             is = new IssueSearch(cum, it);
         }
         else 
