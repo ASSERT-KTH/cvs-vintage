@@ -73,21 +73,22 @@ import org.apache.fulcrum.upload.UploadService;
 
 // Scarab Stuff
 import org.tigris.scarab.actions.base.RequireLoginFirstAction;
+import org.tigris.scarab.attribute.OptionAttribute;
+import org.tigris.scarab.attribute.UserAttribute;
 import org.tigris.scarab.om.ScarabUser;
 import org.tigris.scarab.om.Issue;
 import org.tigris.scarab.om.IssueType;
 import org.tigris.scarab.om.IssuePeer;
 import org.tigris.scarab.om.AttributeValue;
 import org.tigris.scarab.om.Transaction;
-import org.tigris.scarab.attribute.OptionAttribute;
-import org.tigris.scarab.attribute.UserAttribute;
+import org.tigris.scarab.om.TransactionManager;
+import org.tigris.scarab.om.TransactionTypePeer;
 import org.tigris.scarab.om.Attribute;
 import org.tigris.scarab.om.Attachment;
 import org.tigris.scarab.om.AttachmentType;
 import org.tigris.scarab.om.AttachmentTypePeer;
 import org.tigris.scarab.om.Module;
 import org.tigris.scarab.om.RModuleAttributePeer;
-import org.tigris.scarab.om.TransactionTypePeer;
 import org.tigris.scarab.util.ScarabConstants;
 import org.tigris.scarab.util.ScarabException;
 import org.tigris.scarab.util.word.IssueSearch;
@@ -98,7 +99,7 @@ import org.tigris.scarab.services.security.ScarabSecurity;
  * This class is responsible for report issue forms.
  *
  * @author <a href="mailto:jmcnally@collab.net">John D. McNally</a>
- * @version $Id: ReportIssue.java,v 1.133 2002/07/15 18:36:39 jmcnally Exp $
+ * @version $Id: ReportIssue.java,v 1.134 2002/07/17 22:06:51 jon Exp $
  */
 public class ReportIssue extends RequireLoginFirstAction
 {
@@ -373,12 +374,11 @@ public class ReportIssue extends RequireLoginFirstAction
                 // If there is a default text attribute,or if a comment has 
                 // Been provided, proceed.
                 if (commentField.isValid() || saveIssue)
-                {                
+                {
                     // Save transaction record
-                    Transaction transaction = new Transaction();
-                    transaction
-                        .create(TransactionTypePeer.CREATE_ISSUE__PK, 
-                                user, null);
+                    Transaction transaction = TransactionManager
+                        .getInstance(TransactionTypePeer.CREATE_ISSUE__PK, user);
+                    transaction.save();
                     
                     // enter the values into the transaction
                     SequencedHashMap avMap = 

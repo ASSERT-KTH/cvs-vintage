@@ -92,7 +92,7 @@ import org.apache.commons.lang.Strings;
  * @author <a href="mailto:jmcnally@collab.new">John McNally</a>
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
- * @version $Id: Issue.java,v 1.165 2002/07/09 21:58:29 jmcnally Exp $
+ * @version $Id: Issue.java,v 1.166 2002/07/17 22:06:28 jon Exp $
  */
 public class Issue 
     extends BaseIssue
@@ -1728,7 +1728,6 @@ public class Issue
         StringBuffer descBuf2 = null;
         Attachment attachment = new Attachment();
 
-        Transaction transaction = new Transaction();
         Module oldModule = getModule();
         newIssue = newModule.getNewIssue(getIssueType());
         newIssue.save();
@@ -1738,8 +1737,9 @@ public class Issue
             .getInstance(new NumberKey("0"));
 
         // Save transaction record
-        transaction.create(TransactionTypePeer.CREATE_ISSUE__PK,
-                           getCreatedBy(), null);
+        Transaction transaction = TransactionManager
+            .getInstance(TransactionTypePeer.CREATE_ISSUE__PK, getCreatedBy());
+        transaction.save();
         
         // Copy over attributes
         for (int i=0;i<matchingAttributes.size();i++)
@@ -1787,10 +1787,8 @@ public class Issue
         attachment.save();
 
         // Create transaction for the MoveIssue activity
-        Transaction transaction2 = new Transaction();
-        transaction2.create(TransactionTypePeer.MOVE_ISSUE__PK,
-                           user);
-        transaction2.setAttachment(attachment);
+        Transaction transaction2 = TransactionManager
+            .getInstance(TransactionTypePeer.MOVE_ISSUE__PK, user, attachment);
         transaction2.save();
 
         // Generate comment
@@ -1943,9 +1941,9 @@ public class Issue
             voteValue = (TotalVotesAttribute)voteValues.get(0);
         }
         // Updating attribute values requires a transaction
-        Transaction transaction = new Transaction();
-        transaction
-            .create(TransactionTypePeer.RETOTAL_ISSUE_VOTE__PK, user, null);
+        Transaction transaction = TransactionManager
+            .getInstance(TransactionTypePeer.RETOTAL_ISSUE_VOTE__PK, user);
+        transaction.save();
         voteValue.startTransaction(transaction);
         voteValue.addVote();
         voteValue.save();
@@ -2306,9 +2304,9 @@ public class Issue
         }
 
         // Save transaction record
-        Transaction transaction = new Transaction();
-        transaction.create(TransactionTypePeer.EDIT_ISSUE__PK, 
-                       assigner, attachment);
+        Transaction transaction = TransactionManager
+            .getInstance(TransactionTypePeer.EDIT_ISSUE__PK, assigner, attachment);
+        transaction.save();
         attVal.startTransaction(transaction);
 
         // Save user attribute values
@@ -2371,9 +2369,9 @@ public class Issue
         }
 
         // Save transaction record
-        Transaction transaction = new Transaction();
-        transaction.create(TransactionTypePeer.EDIT_ISSUE__PK, 
-                           assigner, attachment);
+        Transaction transaction = TransactionManager
+            .getInstance(TransactionTypePeer.EDIT_ISSUE__PK, assigner, attachment);
+        transaction.save();
         oldAttVal.startTransaction(transaction);
 
         // Save assignee value
@@ -2426,9 +2424,9 @@ public class Issue
         }
 
         // Save transaction record
-        Transaction transaction = new Transaction();
-        transaction.create(TransactionTypePeer.EDIT_ISSUE__PK, 
-                           assigner, attachment);
+        Transaction transaction = TransactionManager
+            .getInstance(TransactionTypePeer.EDIT_ISSUE__PK, assigner, attachment);
+        transaction.save();
         attVal.startTransaction(transaction);
 
         // Save activity record

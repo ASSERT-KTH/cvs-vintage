@@ -83,6 +83,7 @@ import org.tigris.scarab.om.RModuleAttributePeer;
 import org.tigris.scarab.om.Attribute;
 import org.tigris.scarab.om.AttributeValue;
 import org.tigris.scarab.om.Transaction;
+import org.tigris.scarab.om.TransactionManager;
 import org.tigris.scarab.om.TransactionTypePeer;
 import org.tigris.scarab.om.Activity;
 import org.tigris.scarab.om.AttributeOption;
@@ -108,7 +109,7 @@ import org.tigris.scarab.util.ScarabConstants;
     This class is responsible for edit issue forms.
     ScarabIssueAttributeValue
     @author <a href="mailto:elicia@collab.net">Elicia David</a>
-    @version $Id: ModifyIssue.java,v 1.105 2002/07/15 19:22:33 jmcnally Exp $
+    @version $Id: ModifyIssue.java,v 1.106 2002/07/17 22:06:51 jon Exp $
 */
 public class ModifyIssue extends BaseModifyIssue
 {
@@ -197,9 +198,9 @@ public class ModifyIssue extends BaseModifyIssue
             attachment.save();
 
             // Save transaction record
-            Transaction transaction = new Transaction();
-            transaction.create(TransactionTypePeer.EDIT_ISSUE__PK, 
-                               user, attachment);
+            Transaction transaction = TransactionManager
+                .getInstance(TransactionTypePeer.EDIT_ISSUE__PK, user, attachment);
+            transaction.save();
 
             // Set the attribute values entered 
             SequencedHashMap avMap = issue.getModuleAttributeValuesMap(); 
@@ -714,9 +715,9 @@ public class ModifyIssue extends BaseModifyIssue
         throws Exception
     {
         // Save transaction record
-        Transaction transaction = new Transaction();
-        transaction
-            .create(TransactionTypePeer.EDIT_ISSUE__PK, user);
+        Transaction transaction = TransactionManager
+            .getInstance(TransactionTypePeer.EDIT_ISSUE__PK, user);
+        transaction.save();
 
         // Save activity record
         Activity activity = new Activity();
@@ -910,12 +911,12 @@ public class ModifyIssue extends BaseModifyIssue
             depend.save();
 
             // Save transaction record
-            Transaction transaction = new Transaction();
-            transaction
-                .create(TransactionTypePeer.EDIT_ISSUE__PK, user);
-    
+            Transaction transaction = TransactionManager
+                .getInstance(TransactionTypePeer.EDIT_ISSUE__PK, user);
+            transaction.save();
+
             // Save transaction record for parent
-            String desc = new StringBuffer("added '")
+            String desc = new StringBuffer("Added '")
                 .append(depend.getDependType().getName())
                 .append("' child dependency on issue ")
                 .append(childIssue.getUniqueId())
@@ -928,7 +929,7 @@ public class ModifyIssue extends BaseModifyIssue
             sendEmail(transaction, childIssue, desc, context, data);
 
             // Save transaction record for child
-            desc = new StringBuffer("added '")
+            desc = new StringBuffer("Added '")
                 .append(depend.getDependType().getName())
                 .append("' parent dependency on issue ")
                 .append(issue.getUniqueId())
