@@ -49,15 +49,7 @@
   <td>#booleanCheckbox($rmitGroup.Active)</td>
   <td>#booleanCheckbox($rmitGroup.Display)</td>
   <td>
-  
-### FIXME: can't use the macro below because of a bug in Velocity 1.4-dev
-<select name="$rmitGroup.Order.Key" size="1">
-#foreach ($i in [1..$rmits.size()])
-<option value="$i" #if ($i==$rmit.Order)selected="selected" #end>$i</option>
-#end
-</select>
-
-##  #numericSelect($rmitGroup.Order.Key 1 $rmits.size() $rmit.Order 1)
+    #numericSelect($rmitGroup.Order.Key 1 $rmits.size() $rmit.Order 1)
   </td>
   </tr>
 #end
