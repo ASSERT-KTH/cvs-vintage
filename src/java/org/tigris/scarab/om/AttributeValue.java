@@ -76,7 +76,7 @@ import org.tigris.scarab.om.Module;
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
- * @version $Id: AttributeValue.java,v 1.83 2002/12/29 01:12:05 jon Exp $
+ * @version $Id: AttributeValue.java,v 1.84 2002/12/29 03:05:21 jon Exp $
  */
 public abstract class AttributeValue 
     extends BaseAttributeValue
@@ -231,7 +231,7 @@ public abstract class AttributeValue
     {
         if (activitySet == null) 
         {
-            String mesg = "Cannot start a ActivitySet using null ActivitySet"; 
+            String mesg = "Cannot start an ActivitySet using a null ActivitySet"; 
             throw new ScarabException(mesg);
         }
         
@@ -777,7 +777,7 @@ Leaving here so that John can remove or fix.
         {
             try
             {
-                checkActivitySet("Cannot save a value outside a ActivitySet");
+                checkActivitySet("Cannot save an AttributeValue outside of an ActivitySet");
             }
             catch (Exception e)
             {
