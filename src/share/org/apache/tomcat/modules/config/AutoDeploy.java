@@ -84,6 +84,10 @@ public class AutoDeploy extends BaseInterceptor {
     String dest="webapps";
     boolean redeploy=false;
 
+    File webappS;
+    File webappD;
+	
+
     // map destination dir ( used in Ctx docBase ) -> File ( war source)
     Hashtable expanded=new Hashtable();
     
@@ -146,9 +150,6 @@ public class AutoDeploy extends BaseInterceptor {
 	// expand all the wars from srcDir ( webapps/*.war ).
 	String home=cm.getHome();
 
-	File webappS;
-	File webappD;
-	
 	if( src.startsWith( "/" ) ) 
 	    webappS=new File(src);
 	else
@@ -183,17 +184,26 @@ public class AutoDeploy extends BaseInterceptor {
 
 	File appDir=new File( destD, fname);
 	File srcF=new File( srcD, name );
-	File destF=new File( destD, fname );
-	expanded.put( destF.getAbsolutePath(),  srcF );
-
+	expanded.put( appDir.getAbsolutePath(),
+		      new DeployInfo( srcD, destD, srcF, appDir, name ) );
+	if( redeploy ) {
+	    // if appDir is older than the war, and re-deploy enabled -
+	    if( appDir.exists() &&
+		appDir.lastModified() < srcF.lastModified() ) {
+		log( "WAR file is newer, removing old dir " + srcF + " " +name );
+		FileUtil.clearDir( appDir );
+	    }
+	}
+	
 	if( ! appDir.exists() ) {
 	    // no check if war file is "newer" than directory 
 	    // To update you need to "remove" the context first!!!
 	    appDir.mkdirs();
 	    // Expand war file
+	    log( "Expanding " + srcF );
 	    try {
 		FileUtil.expand(srcF.getAbsolutePath(), 
-				destF.getAbsolutePath() );
+				appDir.getAbsolutePath() );
 
 	    } catch( IOException ex) {
 		log("expanding webapp " + name, ex);
@@ -202,15 +212,47 @@ public class AutoDeploy extends BaseInterceptor {
 	}
     }
 
+    public void addContext( ContextManager cm, Context ctx )
+	throws TomcatException 
+    {
+	// this may be called on a "full" reload ( stop/start ctx )
+	if( redeploy ) {
+	    String ctxBase=ctx.getAbsolutePath();
+	    DeployInfo dInfo=(DeployInfo)expanded.get( ctxBase );
+	    if( dInfo == null || ! dInfo.srcF.exists() )
+		return;
+	    if( dInfo.appDir.exists() &&
+		dInfo.appDir.lastModified() < dInfo.srcF.lastModified() ) {
+		log( "WAR file is newer, removing old dir " + dInfo.srcF
+		     + " " + dInfo.name );
+		FileUtil.clearDir( dInfo.appDir );
+		
+		dInfo.appDir.mkdirs();
+		// Expand war file
+		log( "Expanding " + dInfo.srcF );
+		try {
+		    FileUtil.expand(dInfo.srcF.getAbsolutePath(), 
+				    dInfo.appDir.getAbsolutePath() );
+		    
+		} catch( IOException ex) {
+		    log("expanding webapp " + dInfo.name, ex);
+		    // do what ?
+		}
+	    }
+	    
+	}
+    }
+
     public void contextInit( Context context)
 	throws TomcatException
     {
 	if( redeploy ) {
 	    String ctxBase=context.getAbsolutePath();
-	    File warFile=(File)expanded.get( ctxBase );
-	    if( warFile == null || ! warFile.exists() )
+	    DeployInfo dInfo=(DeployInfo)expanded.get( ctxBase );
+	    if( dInfo == null || ! dInfo.srcF.exists() )
 		return;
-	    
+
+	    File warFile=dInfo.srcF;
 	    DependManager dm=(DependManager)context.getContainer().
 		getNote("DependManager");
 	    if( dm!=null ) {
@@ -220,15 +262,44 @@ public class AutoDeploy extends BaseInterceptor {
 		dep.setOrigin( warFile );
 		dep.setLastModified( warFile.lastModified() );
 		dm.addDependency( dep );
-		context.getContainer().setNote( "autoDeploy.war", warFile );
+		context.getContainer().setNote( "autoDeploy.war", dInfo);
+
+	    } else {
+		log( "No reloading for " + context + " -> " +  warFile );
 	    }
 	}
     }
     
     public void reload( Request req, Context context) throws TomcatException {
-	File war=(File)context.getContainer().getNote( "autoDeploy.war" );
-	if( war==null ) return;
-	log( "XXX not implemented - need to re-expand " + war ); 
+	log("Reloading " + redeploy );
+	if( redeploy ) {
+	    DeployInfo dI=(DeployInfo)context.getContainer().getNote( "autoDeploy.war" );
+	    if( dI==null ) return;
+	    log( "Re-deploying " + dI.srcF );
+	    
+	    // First remove the old directory
+	    log( "Removing " + dI.appDir );
+	    FileUtil.clearDir( dI.appDir );
+	
+	// now expand again.
+	    expandWar( dI.srcD, dI.destD, dI.name );
+	}
+    }
+
+    static class DeployInfo {
+	File srcD, destD, srcF, appDir;
+	String name;
+	
+	DeployInfo(File srcD, File destD, File srcF, File appDir, String name)
+	{
+	    this.srcD=srcD;
+	    this.srcF=srcF;
+	    this.destD=destD;
+	    this.appDir=appDir;
+	    this.name=name;
+	    
+	}
+
     }
 }
 
