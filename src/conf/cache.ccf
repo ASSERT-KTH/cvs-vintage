@@ -16,15 +16,15 @@ jcs.system.groupIdCache.cacheattributes.MemoryCacheName=org.apache.stratum.jcs.e
 # CACHE REGIONS AVAILABLE 
 # Regions preconfigured for caching
 
-jcs.region.org_tigris_scarab_services_module_ModuleEntity=
-jcs.region.org_tigris_scarab_services_module_ModuleEntity.cacheattributes=org.apache.stratum.jcs.engine.CompositeCacheAttributes
-jcs.region.org_tigris_scarab_services_module_ModuleEntity.cacheattributes.MaxObjects=1200
-jcs.region.org_tigris_scarab_services_module_ModuleEntity.cacheattributes.MemoryCacheName=org.apache.stratum.jcs.engine.memory.lru.LRUMemoryCache
-
 jcs.region.org_tigris_scarab_om_ScarabUser=
 jcs.region.org_tigris_scarab_om_ScarabUser.cacheattributes=org.apache.stratum.jcs.engine.CompositeCacheAttributes
 jcs.region.org_tigris_scarab_om_ScarabUser.cacheattributes.MaxObjects=1200
 jcs.region.org_tigris_scarab_om_ScarabUser.cacheattributes.MemoryCacheName=org.apache.stratum.jcs.engine.memory.lru.LRUMemoryCache
+
+jcs.region.org_tigris_scarab_om_Module=
+jcs.region.org_tigris_scarab_om_Module.cacheattributes=org.apache.stratum.jcs.engine.CompositeCacheAttributes
+jcs.region.org_tigris_scarab_om_Module.cacheattributes.MaxObjects=1200
+jcs.region.org_tigris_scarab_om_Module.cacheattributes.MemoryCacheName=org.apache.stratum.jcs.engine.memory.lru.LRUMemoryCache
 
 jcs.region.org_tigris_scarab_om_Attribute=
 jcs.region.org_tigris_scarab_om_Attribute.cacheattributes=org.apache.stratum.jcs.engine.CompositeCacheAttributes
