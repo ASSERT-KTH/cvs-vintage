@@ -53,7 +53,7 @@ import org.apache.torque.om.NumberKey;
  * A place to put public final static strings and other constants.
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: ScarabConstants.java,v 1.37 2002/04/30 05:35:16 jmcnally Exp $
+ * @version $Id: ScarabConstants.java,v 1.38 2002/05/07 17:30:10 jmcnally Exp $
  */
 public interface ScarabConstants
 {
@@ -62,85 +62,85 @@ public interface ScarabConstants
      * into the data.getUser().getTemp() hashtable. this is the key 
      * value and is used across several classes.
      */
-    public static final String SESSION_REGISTER = "scarab.newUser";
+    String SESSION_REGISTER = "scarab.newUser";
 
     /**
      * This is the key value that stores the name of the template to 
      * execute next.
      */
-    public static final String NEXT_TEMPLATE = "nextTemplate";
+    String NEXT_TEMPLATE = "nextTemplate";
 
     /**
      * This is the key value that stores the name of the template to 
      * cancel to.
      */
-    public static final String CANCEL_TEMPLATE = "cancelTemplate";
+    String CANCEL_TEMPLATE = "cancelTemplate";
 
     /**
      * This is the key value that stores the name of the template to 
      * go back to to (used in wizards)
      */
-    public static final String BACK_TEMPLATE = "backTemplate";
+    String BACK_TEMPLATE = "backTemplate";
 
     /**
      * This is the key value that stores the name of the template to 
      * go back to to (used in wizards)
      */
-    public static final String LAST_TEMPLATE = "lastTemplate";
+    String LAST_TEMPLATE = "lastTemplate";
 
     /**
      * This is the key value that stores the name of the template
      * that is currently being executed.
      */
-    public static final String TEMPLATE = "template";
+    String TEMPLATE = "template";
 
     /**
      * This is the key value that stores the name of the template
      * other than the next, or cancel, where a user can go
      * depending on an action.
      */
-    public static final String OTHER_TEMPLATE = "otherTemplate";
+    String OTHER_TEMPLATE = "otherTemplate";
     
     
     /**
      * Primary System Object
      */
-    public static final String SCARAB_REQUEST_TOOL = "scarabR";
+    String SCARAB_REQUEST_TOOL = "scarabR";
 
     /**
      * The name used for the Intake tool
      */
-    public static final String INTAKE_TOOL = "intake";
+    String INTAKE_TOOL = "intake";
 
     /**
      * The name used for the Security tool
      */
-    public static final String SECURITY_TOOL = "security";
+    String SECURITY_TOOL = "security";
 
     /**
      * The name used for the Security Admin tool
      */
-    public static final String SECURITY_ADMIN_TOOL = "securityAdmin";
+    String SECURITY_ADMIN_TOOL = "securityAdmin";
 
 
     /**
      * Key passed around in the query string which tracks the
      * current module.
      */
-    public static final String DEBUG = "debug";
-    public static final String CURRENT_MODULE = "curmodule";
-    public static final String CURRENT_ISSUE_TYPE = "curissuetype";
-    public static final String CURRENT_ADMIN_MENU = "curadminmenu";
-    public static final String REPORTING_ISSUE = "rissue";
-    public static final String CURRENT_REPORT = "curreport";
-    public static final String REMOVE_CURRENT_REPORT = "remcurreport";
-    public static final String HISTORY_SCREEN = "oldscreen";
-    public static final String NEW_MODULE = "newmodule";
-    public static final String NEW_ISSUE_TYPE = "newissuetype";
-    public static final String CURRENT_QUERY = "queryString";
-    public static final String USER_SELECTED_MODULE = "scarab.user.selected.module";
+    String DEBUG = "debug";
+    String CURRENT_MODULE = "curmodule";
+    String CURRENT_ISSUE_TYPE = "curissuetype";
+    String CURRENT_ADMIN_MENU = "curadminmenu";
+    String REPORTING_ISSUE = "rissue";
+    String CURRENT_REPORT = "curreport";
+    String REMOVE_CURRENT_REPORT = "remcurreport";
+    String HISTORY_SCREEN = "oldscreen";
+    String NEW_MODULE = "newmodule";
+    String NEW_ISSUE_TYPE = "newissuetype";
+    String CURRENT_QUERY = "queryString";
+    String USER_SELECTED_MODULE = "scarab.user.selected.module";
     /** @deprecated No longer used */
-    public static final String PROJECT_CHANGE_BOX = "project_change_box";
+    String PROJECT_CHANGE_BOX = "project_change_box";
 
     /**
      * This name will be used to distinguish specific scarab application
@@ -148,32 +148,32 @@ public interface ScarabConstants
      * It is the prefix to all issue id's created in response to an issue
      * entered against a module in this instance's database.
      */
-    public static final String DOMAIN_NAME = "scarab.domain.name";
+    String DOMAIN_NAME = "scarab.domain.name";
 
     /**
      *  This is maximum rating for a word.
      *
      */
-    public static final int MAX_WORD_RATING = 100000;
+    int MAX_WORD_RATING = 100000;
 
     /**
      *  The list of issue id's resulting from a search.
      *
      */
-    public static final String ISSUE_ID_LIST = "scarab.issueIdList";
+    String ISSUE_ID_LIST = "scarab.issueIdList";
 
     /**
      *  The message the user sees if they try to perform an action
      *  For which they have no permissions.
      *
      */
-    public static final String NO_PERMISSION_MESSAGE = "You do not have " +
+    String NO_PERMISSION_MESSAGE = "You do not have " +
                                "permissions to perform this action.";
 
     /**
      * Name of the global module.
      */
-    public static final String GLOBAL_MODULE_NAME = "Global";
+    String GLOBAL_MODULE_NAME = "Global";
 
     /**
      * The primary key of the assigned_to attribute.  We need this because
@@ -188,7 +188,7 @@ public interface ScarabConstants
     /**
      * An attribute type
      */
-    public static final String DROPDOWN_LIST = "Dropdown list";
+    String DROPDOWN_LIST = "Dropdown list";
 
     /**
      * Scarab.properties key for roles to be automatically approved.
