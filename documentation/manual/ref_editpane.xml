@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<!-- $Id: ref_editpane.xml,v 1.20 2004/01/18 14:42:59 mvw Exp $ -->
+<!-- $Id: ref_editpane.xml,v 1.21 2004/02/03 21:02:12 mvw Exp $ -->
 
 <!--
 
@@ -209,6 +209,17 @@ outside of the menu area.
         then the artifact's
         movement is constrained to one orthogonal direction, i.e. either
         vertical or horizontal, depending on the first movement made.
+      </para>
+    </sect2>
+
+    <!-- Alt key -->
+
+    <sect2>
+      <title>Alt with &Button1; motion</title>
+
+      <para>&Button1; down anywhere in the diagram 
+        while the ALT key is pressed, 
+        allows to scroll the canvas in all directions with &button1; motion.
       </para>
     </sect2>
 
