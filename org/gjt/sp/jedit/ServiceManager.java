@@ -32,7 +32,7 @@ import org.gjt.sp.util.Log;
 /**
  * @since jEdit 4.2pre1
  * @author Slava Pestov
- * @version $Id: ServiceManager.java,v 1.1 2003/04/24 01:32:28 spestov Exp $
+ * @version $Id: ServiceManager.java,v 1.2 2003/04/25 06:09:47 spestov Exp $
  */
 public class ServiceManager
 {
@@ -191,24 +191,30 @@ public class ServiceManager
 		}
 		else
 		{
-			if(value.instanceIsNull)
-				return null;
-			else if(value.instance == null)
+			if(value.code == null)
 			{
-				// lazy instantiation
-				value.instance = BeanShell.eval(null,
-					BeanShell.getNameSpace(),
-					value.code);
-				if(value.instance == null)
-				{
-					// avoid re-running script if it gives
-					// us null
-					value.instanceIsNull = true;
-				}
+				loadServices(value.plugin,
+					value.plugin.getServicesURI());
+				value = (Descriptor)serviceMap.get(key);
 			}
+			return value.getInstance();
 		}
-		return value.instance;
 	} //}}}
+
+	//{{{ Package-private members
+
+	//{{{ registerService() method
+	/**
+	 * Registers a service.
+	 *
+	 * @since jEdit 4.2pre1
+	 */
+	static void registerService(Descriptor d)
+	{
+		serviceMap.put(d,d);
+	} //}}}
+
+	//}}}
 
 	//{{{ Private members
 	private static Map serviceMap = new HashMap();
@@ -241,6 +247,26 @@ public class ServiceManager
 			this.plugin = plugin;
 		}
 
+		Object getInstance()
+		{
+			if(instanceIsNull)
+				return null;
+			else if(instance == null)
+			{
+				// lazy instantiation
+				instance = BeanShell.eval(null,
+					BeanShell.getNameSpace(),
+					code);
+				if(instance == null)
+				{
+					// avoid re-running script if it gives
+					// us null
+					instanceIsNull = true;
+				}
+			}
+
+			return instance;
+		}
 		public int hashCode()
 		{
 			return name.hashCode();

@@ -45,7 +45,7 @@ import org.gjt.sp.util.Log;
 /**
  * The main class of the jEdit text editor.
  * @author Slava Pestov
- * @version $Id: jEdit.java,v 1.136 2003/04/24 01:39:10 spestov Exp $
+ * @version $Id: jEdit.java,v 1.137 2003/04/25 06:09:47 spestov Exp $
  */
 public class jEdit
 {
@@ -380,15 +380,17 @@ public class jEdit
 
 		VFSManager.init();
 
-		if(generateCache)
-			ResourceCache.generateCache();
-		else if(!ResourceCache.loadCache())
-			ResourceCache.generateCache();
+		initResources();
 
 		GUIUtilities.advanceSplashProgress();
 
 		if(loadPlugins)
 			initPlugins();
+
+		if(generateCache)
+			ResourceCache.generateCache();
+		else if(!ResourceCache.loadCache())
+			ResourceCache.generateCache();
 
 		if(jEditHome != null)
 			initSiteProperties();
@@ -2458,12 +2460,6 @@ public class jEdit
 		jEdit.activeView = view;
 	} //}}}
 
-	//{{{ setBuiltInActionSet() method
-	static void setBuiltInActionSet(ActionSet actionSet)
-	{
-		builtInActionSet = actionSet;
-	} //}}}
-
 	//}}}
 
 	//{{{ Private members
@@ -2784,6 +2780,22 @@ public class jEdit
 				Log.log(Log.ERROR,jEdit.class,e);
 			}
 		}
+	} //}}}
+
+	//{{{ initResources() method
+	private static void initResources()
+	{
+		builtInActionSet = new ActionSet(null,null);
+		builtInActionSet.setLabel(getProperty("action-set.jEdit"));
+		builtInActionSet.load(jEdit.class.getResource("actions.xml"));
+
+		addActionSet(builtInActionSet);
+
+		DockableWindowManager.loadDockableWindows(null,
+			jEdit.class.getResource("dockables.xml"));
+
+		ServiceManager.loadServices(null,
+			jEdit.class.getResource("services.xml"));
 	} //}}}
 
 	//{{{ initPlugins() method

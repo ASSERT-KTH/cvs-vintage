@@ -37,7 +37,7 @@ import org.gjt.sp.jedit.*;
 /**
  * VFS browser tree view.
  * @author Slava Pestov
- * @version $Id: BrowserView.java,v 1.64 2003/04/23 01:59:44 spestov Exp $
+ * @version $Id: BrowserView.java,v 1.65 2003/04/25 06:09:47 spestov Exp $
  */
 class BrowserView extends JPanel
 {
@@ -45,6 +45,8 @@ class BrowserView extends JPanel
 	public BrowserView(final VFSBrowser browser)
 	{
 		this.browser = browser;
+
+		tmpExpanded = new HashSet();
 
 		parentDirectories = new JList();
 
@@ -129,7 +131,7 @@ class BrowserView extends JPanel
 	//{{{ loadDirectory() method
 	public void loadDirectory(Object node, String path)
 	{
-		tmpExpanded = table.getExpandedDirectories();
+		table.getExpandedDirectories(tmpExpanded);
 
 		path = MiscUtilities.constructPath(browser.getDirectory(),path);
 		VFS vfs = VFSManager.getVFSForPath(path);
@@ -193,21 +195,7 @@ class BrowserView extends JPanel
 			parentDirectories.ensureIndexIsVisible(index);
 		} //}}}
 
-		LinkedList toExpand = new LinkedList();
-
-		table.setDirectory(node,directory);
-
-		if(directory != null)
-		{
-			for(int i = 0; i < directory.size(); i++)
-			{
-				VFS.DirectoryEntry file = (VFS.DirectoryEntry)
-					directory.get(i);
-				boolean allowsChildren = (file.type != VFS.DirectoryEntry.FILE);
-				if(tmpExpanded != null && tmpExpanded.contains(file.path))
-					loadDirectory(null,file.path);
-			}
-		}
+		table.setDirectory(node,directory,tmpExpanded);
 	} //}}}
 
 	//{{{ updateFileView() method
@@ -483,10 +471,7 @@ class BrowserView extends JPanel
 					return;
 				}
 
-				if(evt.isShiftDown())
-					table.getSelectionModel().addSelectionInterval(row,row);
-				else
-					table.getSelectionModel().setSelectionInterval(row,row);
+				table.getSelectionModel().addSelectionInterval(row,row);
 
 				if(table.getSelectedRow() == -1)
 					showFilePopup(null,table,evt.getPoint());

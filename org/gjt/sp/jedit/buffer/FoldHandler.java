@@ -41,7 +41,7 @@ import org.gjt.sp.util.Log;
  * See {@link org.gjt.sp.jedit.ServiceManager} for details.
  *
  * @author Slava Pestov
- * @version $Id: FoldHandler.java,v 1.10 2003/04/24 02:36:38 spestov Exp $
+ * @version $Id: FoldHandler.java,v 1.11 2003/04/25 06:09:47 spestov Exp $
  * @since jEdit 4.0pre1
  */
 public abstract class FoldHandler
@@ -173,7 +173,7 @@ public abstract class FoldHandler
 			+ newApi.length];
 		System.arraycopy(newApi,0,foldModes,0,newApi.length);
 
-		for (int i = 0; i < foldModes.length; i++)
+		for (int i = 0; i < handlers.length; i++)
 		{
 			foldModes[i + newApi.length] = handlers[i].getName();
 		}
