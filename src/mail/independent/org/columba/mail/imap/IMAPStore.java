@@ -540,9 +540,10 @@ public class IMAPStore {
 					continue;
 				}
 
-				ListInfo listInfo = new ListInfo();
-				listInfo.parse(responses[i]);
-				v.add(listInfo);
+				if( responses[i].getResponseSubType().equals("LSUB") ) {
+					ListInfo listInfo = ListInfoParser.parse(responses[i]);
+					v.add(listInfo);
+				}
 			}
 
 			if (v.size() > 0) {
