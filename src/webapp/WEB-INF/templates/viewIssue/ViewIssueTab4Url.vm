@@ -1,19 +1,17 @@
 <h3>$l10n.RelatedLinks</h3>
 #if ($currentIssue.Urls.isEmpty() && !$canEdit)
     $l10n.NoLinks
-#else
+#elseif(!$currentIssue.Urls.isEmpty())
  <table width="100%" border="1" cellspacing="2" cellpadding="3">
    <tr>
-     #if (!$currentIssue.Urls.isEmpty())
-         #if ($canEdit)
-             <th>$l10n.Select</th>
-         #end
-     <th>$l10n.Link</th>
-     #end
-     #if ($canEdit)
-     <th>$l10n.URL</th>
-     <th>$l10n.Description</th>
-     #end
+      #if ($canEdit)
+        <th>$l10n.Select</th>
+      #end
+      <th>$l10n.Link</th>
+      #if ($canEdit)
+  	 <th>$l10n.URL</th>
+     	 <th>$l10n.Description</th>
+      #end
    </tr>
    #foreach ($url in $currentIssue.Urls)
     #indexedRows($velocityCount)
@@ -41,27 +39,16 @@
      #end
     </tr>
    #end
-   #if ($canEdit)
-    #set ($counter = $counter+1)
-    #indexedRows($counter)
-     #if (!$currentIssue.Urls.isEmpty())
-     <td>&#160;</td>
-     <td>New</td>
-     #end
-     #set ($urlGroup = $intake.Attachment.setKey("urlKey"))
-     <td>
-     <input type="text" size="25" name="$urlGroup.Data.Key" 
-         value="$!urlGroup.Data" />
-     #fieldErrorMsg($urlGroup.Data "")
-     </td>
-     <td>
-     <input type="text" size="25" name="$urlGroup.Name.Key" 
-         value="$!urlGroup.Name" />
-     #fieldErrorMsg($urlGroup.Name "")
-     </td>
-   </tr>
-   #end
  </table>
+  #if ($canEdit)
+   <div class="functnbar3">
+    <input type="submit" value="$l10n.SaveModifiedUrl" name="eventSubmit_doSaveurl" />&#160;
+     #if (!$currentIssue.Urls.isEmpty())
+       <input type="submit" value="$l10n.DeleteUrls"  name="eventSubmit_doDeleteurl" />
+     #end
+   </div>
+  #end
+#end
 
 #* FIXME: in the future we might want to implement this.
 #if ($canEdit)
@@ -80,13 +67,30 @@
 #end
 *#
 
-  #if ($canEdit)
-<div class="functnbar3">
-  <input type="submit" value="$l10n.Save" name="eventSubmit_doSaveurl" />&#160;
-  #if (!$currentIssue.Urls.isEmpty())
-  <input type="submit" value="$l10n.DeleteSelected"  name="eventSubmit_doDeleteurl" />
-  #end
-</div>
-  #end
+#if($canEdit)
+ <h4>$l10n.AddRelatedLinkTitle</h4>
+ <div class="axial">
+ <table width="100%" border="1" cellspacing="2" cellpadding="3">
+   <tr>
+     #set ($urlGroup = $intake.Attachment.setKey("urlKey"))
+     <th>$l10n.URL</th>
+     <td>
+     <input type="text" class="fullWidth" name="$urlGroup.Data.Key" 
+         value="$!urlGroup.Data" />
+     #fieldErrorMsg($urlGroup.Data "")
+     </td>
+     <th>$l10n.Description</th>
+     <td>
+     <input type="text" class="fullWidth" name="$urlGroup.Name.Key" 
+         value="$!urlGroup.Name" />
+     #fieldErrorMsg($urlGroup.Name "")
+     </td>
+   </tr>
+ </table>
+ </div>
+ <div class="functnbar3">
+  <input type="submit" value="$l10n.AddUrlButton" name="eventSubmit_doSaveurl" />&#160;
+ </div>
 #end
+
 

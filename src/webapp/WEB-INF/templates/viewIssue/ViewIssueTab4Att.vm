@@ -53,10 +53,7 @@ $l10n.NoAttachments
 #end
 
 #if ($canEdit)
-<h4>$l10n.AddAttachment</h4>
-<div class="colbar">
-*&nbsp;$l10n.format('AttachmentFieldRequired', $l10n.Path)
-</div>
+<h4>$l10n.AddAttachmentTitle <small>(</small><b class="asterisk">*</b> <small>$l10n.format('AttachmentFieldRequired', $l10n.Path))</small></h4>
 <div class="axial">
   <table cellpadding="3" cellspacing="2" border="0" width="100%">
     <tr>
@@ -65,17 +62,7 @@ $l10n.NoAttachments
        <input type="file" name="$intakeAttachment.File.Key" size="45"
             value="$!intakeAttachment.File.Value.FileName" />
        #fieldErrorMsg($intakeAttachment.File "")
-       <p><small>$l10n.SelectFile</small></p>
       </td>
-    </tr>
-    <tr>
-       <th>* $l10n.Description</th>
-       <td>
-        #textAreaMedium("$intakeAttachment.Name.Key" "$intakeAttachment.Name")
-        #fieldErrorMsg($intakeAttachment.Name "")
-       </td>
-    </tr>
-    <tr>
       <th>* $l10n.Type</th>
       <td>
         <select name="$intakeAttachment.MimeTypeA.Key" class="select">
@@ -84,11 +71,18 @@ $l10n.NoAttachments
         #end
          #mimeTypeOptions($mimeA)
         </select>
-        <p><small>Other (enter mime type:&#160;
+        <br><small>$l10n.CustomMimeType:
         <input type="text" name="$intakeAttachment.MimeTypeB.Key" 
-                          value="$intakeAttachment.MimeTypeB" />)</small></p>
+                          value="$intakeAttachment.MimeTypeB" /></p>
         #fieldErrorMsg($intakeAttachment.MimeTypeA "")
       </td>
+    </tr>
+    <tr>
+       <th>* $l10n.Description</th>
+       <td colspan="3">
+        #textAreaMedium("$intakeAttachment.Name.Key" "$intakeAttachment.Name")
+        #fieldErrorMsg($intakeAttachment.Name "")
+       </td>
     </tr>
 </table>
 </div>

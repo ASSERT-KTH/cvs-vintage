@@ -4,7 +4,7 @@
 
 #if ($issueChildren.isEmpty() && $issueParents.isEmpty() && !$canEdit)
 $l10n.NoDependencies
-#else
+#elseif(!$issueParents.isEmpty() || !$issueChildren.isEmpty())
 <table width="100%" border="1" cellspacing="2" cellpadding="3">
 <tr>
 #if ($canEdit && (!$issueParents.isEmpty() || !$issueChildren.isEmpty()))
@@ -14,6 +14,7 @@ $l10n.NoDependencies
  ##<th>$l10n.Relationship</th>
  <th>$l10n.Type</th>
 </tr>
+
 
 #set ($counter = 0)
 #foreach ($depend in $issueParents)
@@ -104,63 +105,65 @@ $l10n.depend_nonblockingReverse this issue
 </td>
 </tr>
 #end
-
-#if ($canEdit)
-#set ($newDependGroup = $intake.Depend.setKey("newDep$currentIssue.QueryKey"))
-#indexedRows($counter)
-#if (!$issueParents.isEmpty() || !$issueChildren.isEmpty())
-<td>&nbsp;</td>
-#end
-<td> 
- <input type="hidden" name="$newDependGroup.ObservedId.Key" value="$currentIssue.IssueId" />
-    <input type="text" size="5" name="$newDependGroup.ObserverUniqueId.Key" value = "$!newDependGroup.ObserverUniqueId" />
- #set ($idMessage = $newDependGroup.ObserverUniqueId.Message.toString())
- #if ($idMessage.length() > 0)
-  <p><em>$idMessage</em></p>
- #end
-</td>
-##<td>$l10n.Child</td>
-<td> 
- <select name="$newDependGroup.TypeId.Key" class="select">
-   <option value="">$l10n.ChooseDependencyType</option>
- #foreach ($dependType in $currentIssue.AllDependencyTypes)
-   #set ($selected = false)
-   #if ($dependType.DependTypeId.toString().equals($newDependGroup.TypeId.toString()))
-      #set ($selected = true)
-   #end
-   <option#selected($selected) value="$dependType.DependTypeId">$dependType.Name</option>
- #end
- </select>
- #set ($typeMessage = $newDependGroup.TypeId.Message.toString())
- #if ($typeMessage.length() > 0)
-  <p><em>$typeMessage</em></p>
- #end
-</td>
-</tr>
-#end
 </table>
+#if ($canEdit)
+<div class="functnbar3">
+#if (!$issueParents.isEmpty() || !$issueChildren.isEmpty())
+  <input type="submit" value="$l10n.DeleteDependency"  name="eventSubmit_doDeletedependencies" />
+#end
+</div>
+#end
+#end
+
 
 #if ($canEdit)
-<div class="axial">
-  <table cellpadding="3" cellspacing="2" border="0" width="100%">
+ <h4>$l10n.AddDependencyTitle</h4>
+ <div class="axial">
+  <table width="100%" border="1" cellspacing="2" cellpadding="3">
+   <tr>
+    <th>$l10n.Issue $l10n.ID #</th>
+     #set ($newDependGroup = $intake.Depend.setKey("newDep$currentIssue.QueryKey"))
+     <td> 
+       <input type="hidden" name="$newDependGroup.ObservedId.Key" value="$currentIssue.IssueId" />
+       <input type="text" class="fullWidth" name="$newDependGroup.ObserverUniqueId.Key" value = "$!newDependGroup.ObserverUniqueId" />
+       #set ($idMessage = $newDependGroup.ObserverUniqueId.Message.toString())
+       #if ($idMessage.length() > 0)
+        <p><em>$idMessage</em></p>
+       #end
+     </td>
+     ##<td>$l10n.Child</td>
+     <th>$l10n.Type</th>
+     <td> 
+      <select name="$newDependGroup.TypeId.Key" class="select">
+      <option value="">$l10n.ChooseDependencyType</option>
+      #foreach ($dependType in $currentIssue.AllDependencyTypes)
+       #set ($selected = false)
+       #if ($dependType.DependTypeId.toString().equals($newDependGroup.TypeId.toString()))
+        #set ($selected = true)
+       #end
+       <option#selected($selected) value="$dependType.DependTypeId">$dependType.Name</option>
+      #end
+      </select>
+      #set ($typeMessage = $newDependGroup.TypeId.Message.toString())
+      #if ($typeMessage.length() > 0)
+       <p><em>$typeMessage</em></p>
+      #end
+     </td>
+    </tr>
     <tr>
       <th>$l10n.Reason</th>
-      <td>
+      <td colspan="3">
         #textAreaMedium("$newDependGroup.Description.Key" "$newDependGroup.Description")
         #fieldErrorMsg($newDependGroup.Description "")
       </td>
     </tr>
   </table>
-</div>
+ </div>
 #end
 
 #if ($canEdit)
 <div class="functnbar3">
-   <input type="submit" value="$l10n.Save"  name="eventSubmit_doSavedependencychanges" />&nbsp;
-#if (!$issueParents.isEmpty() || !$issueChildren.isEmpty())
-  <input type="submit" value="$l10n.DeleteSelected"  name="eventSubmit_doDeletedependencies" />
-#end
+   <input type="submit" value="$l10n.AddDependencyButton"  name="eventSubmit_doSavedependencychanges" />&nbsp;
 </div>
 #end
 
-#end
