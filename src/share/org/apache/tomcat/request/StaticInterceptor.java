@@ -355,7 +355,7 @@ final class DirHandler extends Handler  {
     {
 	// this is how get locale is implemented. Ugly, but it's in
 	// the next round of optimizations
-	Locale locale=RequestUtil.getLocale(req);
+	Locale locale=RequestUtil.getLocale(req.getMimeHeaders());
 	StringManager sm=StringManager.
 	    getManager("org.apache.tomcat.resources",locale);
 	DateFormat dateFormat =

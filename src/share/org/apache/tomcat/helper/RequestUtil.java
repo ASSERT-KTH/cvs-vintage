@@ -59,8 +59,9 @@
 
 package org.apache.tomcat.helper;
 
-import org.apache.tomcat.core.*;
+import org.apache.tomcat.core.Request;
 import org.apache.tomcat.util.*;
+
 import java.io.*;
 import java.net.*;
 import java.util.*;
@@ -272,8 +273,8 @@ public class RequestUtil {
 
 
     
-    public static Locale getLocale(Request req) {
-    	String acceptLanguage = req.getHeader("Accept-Language");
+    public static Locale getLocale(MimeHeaders headers) {
+    	String acceptLanguage = headers.getHeader("Accept-Language");
 	    if( acceptLanguage == null ) return Locale.getDefault();
 
         Hashtable languages = new Hashtable();
@@ -288,8 +289,8 @@ public class RequestUtil {
         return (Locale)l.elementAt(0);
     }
 
-    public static Enumeration getLocales(Request req) {
-	String acceptLanguage = req.getHeader("Accept-Language");
+    public static Enumeration getLocales(MimeHeaders headers) {
+	String acceptLanguage = headers.getHeader("Accept-Language");
     	// Short circuit with an empty enumeration if null header
         if (acceptLanguage == null) {
             Vector v = new Vector();
@@ -551,7 +552,7 @@ public class RequestUtil {
     }
 
 
-    public static int readBody(Request req, byte body[], int len)
+    private static int readBody(Request req, byte body[], int len)
 	throws IOException
     {
 	int offset = 0;
@@ -566,7 +567,7 @@ public class RequestUtil {
 	return len;
     }
     
-    public static int readData(InputStream in, byte buf[], int length) {
+    private static int readData(InputStream in, byte buf[], int length) {
         int read = 0;
         try {
             do {

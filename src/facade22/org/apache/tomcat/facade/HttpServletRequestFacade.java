@@ -360,7 +360,7 @@ final class HttpServletRequestFacade implements HttpServletRequest {
     /** Delegate to RequestUtil
      */
     public Enumeration getLocales() {
-        return RequestUtil.getLocales(request);
+        return RequestUtil.getLocales(request.getMimeHeaders());
     }
 
     /** Delegate to Context

@@ -161,9 +161,9 @@ public class WebAppsConfig extends BaseInterceptor {
 	host=unEscapeHost( host );
 	if( host!=null) 
 	    xh.setVariable( "current_host", host );
-	    
-	ServerXmlHelper.setContextRules( xh );
-	ServerXmlHelper.setLogRules( xh );
+ 	    
+	ServerXmlInterceptor.ServerXmlHelper.setContextRules( xh );
+	ServerXmlInterceptor.ServerXmlHelper.setLogRules( xh );
 
 	File f=new File( dir, name );
 	try {

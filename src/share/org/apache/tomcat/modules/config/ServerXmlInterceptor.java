@@ -152,15 +152,15 @@ public class ServerXmlInterceptor extends BaseInterceptor {
     public void setHome( String h ) {
 	System.getProperties().put("tomcat.home", h);
     }
-}
 /**
  *  Helper for reading server.xml
  *
  * @author Costin
  */
-class ServerXmlHelper {
-    private static StringManager sm =
-	StringManager.getManager("org.apache.tomcat.resources");
+    static class ServerXmlHelper {
+
+	private static StringManager sm =
+	    StringManager.getManager("org.apache.tomcat.resources");
 
     public static final String[] MODULE_PKGS={
 	"org.apache.tomcat.modules.session.",
@@ -363,4 +363,5 @@ class ServerXmlHelper {
 	    return false;
 	}
     }
+}
 }
