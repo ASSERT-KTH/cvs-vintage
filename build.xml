@@ -23,6 +23,8 @@
 
   <property name="optimize" value="false"/>
   <property name="debug" value="on"/>
+  <property name="compile.target" value="1.2" />
+  <property name="compile.source" value="${compile.target}" />
 
   <!-- Version properties -->
   <property name="version" value="3.3.3" />
@@ -117,9 +119,6 @@
   <property name="commons-logging.lib" location="${commons-logging.home}" />
   <property name="commons-logging.jar" location="${commons-logging.lib}/commons-logging-api.jar" />
   
-  <property name="regexp.home" location="${ws}/jakarta-regexp" />
-  <property name="regexp.jar" location="${regexp.home}/jakarta-regexp.jar" />
-
   <property name="commons-collections.home" location="${jakarta-commons}/collections"/>
   <property name="commons-collections.lib" location="${commons-collections.home}/dist"/>
   <property name="commons-collections.jar" location="${commons-collections.lib}/commons-collections.jar"/>
@@ -433,7 +432,6 @@
             <property name="commons-logging.jar" value="${commons-logging.jar}"/>
             <property name="commons-modeler.jar" value="${commons-modeler.jar}"/>
             <property name="jmx.jar" value="${jmx.jar}"/>
-            <property name="regexp.jar" value="${regexp.jar}" />
         </ant>
             
         <ant dir="${jtc.jk.home}" target="build-jk">
@@ -448,7 +446,8 @@
 
   <target name="tomcat_util" depends="prepare">
     <javac destdir="${tomcat.build}/classes"
-	   target="1.1"
+	   target="${compile.target}"
+           source="${compile.source}"
            debug="${debug}"
            optimize="${optimize}"
            deprecation="off"
@@ -494,8 +493,6 @@
     <!-- Copy commons-logging-api.jar since tomcat-util depends on it -->
     <copy todir="${tomcat.build}/lib/common"
           file="${commons-logging.jar}"/>
-    <copy todir="${tomcat.build}/lib/container"
-          file="${regexp.jar}" />
 
     <!-- All tomcat3 specific utils -->
     <jar jarfile="${tomcat.build}/lib/container/container_util.jar" >
@@ -513,7 +510,12 @@
            debug="${debug}"
            optimize="${optimize}"
            deprecation="off"
+           source="${compile.source}"
+           target="${compile.target}"
            srcdir="src/share">
+      <classpath>
+        <path refid="tomcat_util.class.path"/>
+      </classpath>
       <!-- no dependencies -->
       <include name="org/apache/tomcat/startup/Main.java"/>
       <include name="org/apache/tomcat/util/compat/**"/>
@@ -543,6 +545,8 @@
            debug="${debug}"
            optimize="${optimize}"
            deprecation="off"
+           source="${compile.source}"
+           target="${compile.target}"
            srcdir="src/share">
       <classpath>
         <pathelement location="${jtc.util.build}/classes"/>
@@ -575,6 +579,8 @@
            debug="${debug}"
            optimize="${optimize}"
            deprecation="off"
+           source="${compile.source}"
+           target="${compile.target}"
            srcdir="src/share">
       <classpath>
         <path refid="tomcat_util.class.path"/>
@@ -602,6 +608,8 @@
            debug="${debug}"
            optimize="${optimize}"
            deprecation="off"
+           source="${compile.source}"
+           target="${compile.target}"
            srcdir="src/share">
       <classpath>
         <path refid="xml-apis.class.path"/>
@@ -626,6 +634,8 @@
            debug="${debug}"
            optimize="${optimize}"
            deprecation="off"
+           source="${compile.source}"
+           target="${compile.target}"
            srcdir="src/facade22">
       <classpath>
         <path refid="tomcat_util.class.path"/>
@@ -676,6 +686,8 @@
            srcdir="src/share"
            debug="${debug}"
            optimize="${optimize}"
+           source="${compile.source}"
+           target="${compile.target}"
            deprecation="off">
       <classpath>
         <path refid="tomcat_util.class.path"/>
@@ -744,6 +756,8 @@
            srcdir="src/share"
            debug="${debug}"
            optimize="${optimize}"
+           source="${compile.source}"
+           target="${compile.target}"
            deprecation="off">
       <classpath>
         <path refid="xml-apis.class.path"/>
@@ -794,6 +808,8 @@
   <target name="tomcat-ant" depends="detect" if="ant15-present" >
     <delete dir="${tomcat.build}/ant" />
     <javac srcdir="src/share"
+	   target="${compile.target}"
+           source="${compile.source}"
            destdir="${tomcat.build}/classes" >
        <include name="org/apache/tomcat/ant/*.java" />
        <classpath>
@@ -821,10 +837,14 @@
       <fileset dir="src/examples"/>
     </copy>
     <javac srcdir="src/examples/WEB-INF/classes"
+	   target="${compile.target}"
+           source="${compile.source}"
            optimize="${optimize}"
            destdir="${tomcat.build}/webapps/examples/WEB-INF/classes"
            classpath="${tomcat.build}/classes;${servlet22.jar}"/>
     <javac srcdir="src/examples/jsp/plugin/applet"
+	   target="${compile.target}"
+           source="${compile.source}"
            optimize="${optimize}"
            destdir="${tomcat.build}/webapps/examples/jsp/plugin/applet"/>
 
@@ -868,6 +888,8 @@
       <include name="org/apache/tomcat/util/**"/>
     </jar>
     <javac srcdir="src/admin/WEB-INF/classes"
+	   target="${compile.target}"
+           source="${compile.source}"
            debug="${debug}"
            optimize="${optimize}"
            destdir="${tomcat.build}/webapps/admin/WEB-INF/classes">
@@ -942,6 +964,8 @@
   <target name="etomcat" depends="init">
     <mkdir dir="${tomcat.build}/classes"/>
     <javac destdir="${tomcat.build}/classes"
+	   target="${compile.target}"
+           source="${compile.source}"
            debug="${debug}"
            optimize="${optimize}"
            deprecation="off"
@@ -954,6 +978,8 @@
     </javac>
 
     <javac destdir="${tomcat.build}/classes"
+	   target="${compile.target}"
+           source="${compile.source}"
            debug="${debug}"
            optimize="${optimize}"
            deprecation="off"
@@ -968,6 +994,8 @@
     </javac>
 
     <javac
+	   target="${compile.target}"
+           source="${compile.source}"
            destdir="${tomcat.build}/classes"
            debug="${debug}"
            optimize="${optimize}"
