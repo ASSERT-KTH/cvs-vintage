@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2002,2004 - INRIA (www.inria.fr)
+ * Copyright (C) 2002,2005 - INRIA (www.inria.fr)
  *
  * CAROL: Common Architecture for RMI ObjectWeb Layer
  *
@@ -22,16 +22,16 @@
  * USA
  *
  * --------------------------------------------------------------------------
- * $Id: JrmpPRODelegate.java,v 1.11 2004/09/01 11:02:41 benoitf Exp $
+ * $Id: JrmpPRODelegate.java,v 1.12 2005/03/03 16:11:03 benoitf Exp $
  * --------------------------------------------------------------------------
  */
 package org.objectweb.carol.rmi.multi;
 
-// rmi import
 import java.rmi.NoSuchObjectException;
 import java.rmi.Remote;
 import java.rmi.RemoteException;
 import java.rmi.server.RemoteObject;
+import java.util.Properties;
 
 import javax.rmi.CORBA.PortableRemoteObjectDelegate;
 
@@ -39,7 +39,12 @@ import org.objectweb.carol.rmi.jrmp.interceptor.JClientRequestInterceptor;
 import org.objectweb.carol.rmi.jrmp.interceptor.JInterceptorStore;
 import org.objectweb.carol.rmi.jrmp.interceptor.JServerRequestInterceptor;
 import org.objectweb.carol.rmi.jrmp.server.JUnicastRemoteObject;
+import org.objectweb.carol.rmi.util.PortNumber;
+import org.objectweb.carol.util.configuration.CarolConfiguration;
 import org.objectweb.carol.util.configuration.CarolDefaultValues;
+import org.objectweb.carol.util.configuration.RMIConfiguration;
+import org.objectweb.carol.util.configuration.RMIConfigurationException;
+import org.objectweb.carol.util.configuration.TraceCarol;
 
 /**
  * Class <code>JrmpPRODelegate</code> for the mapping between Rmi jrmp
@@ -73,7 +78,17 @@ public class JrmpPRODelegate implements PortableRemoteObjectDelegate {
     public JrmpPRODelegate() {
         sis = JInterceptorStore.getLocalServerInterceptors();
         cis = JInterceptorStore.getLocalClientInterceptors();
-        this.port = new Integer(System.getProperty(CarolDefaultValues.PORT_NUMBER_PROPERTY, "0")).intValue();
+        try {
+            RMIConfiguration rmiConfig = CarolConfiguration.getDefaultProtocol();
+            String propertyName = CarolDefaultValues.SERVER_JRMP_PORT;
+            Properties p = rmiConfig.getConfigProperties();
+            if (p != null) {
+                this.port = PortNumber.strToint(p.getProperty(propertyName, "0"), propertyName);
+            }
+        } catch (RMIConfigurationException rmice) {
+            TraceCarol.error("Could not get current carol configuration, rmi port will use random port.");
+            this.port = 0;
+        }
     }
 
     /**

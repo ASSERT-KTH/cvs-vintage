@@ -1,4 +1,6 @@
 /**
+ * Copyright (C) 2004,2005 - INRIA (www.inria.fr)
+ *
  * CAROL: Common Architecture for RMI ObjectWeb Layer
  *
  * This library is developed inside the ObjectWeb Consortium,
@@ -20,7 +22,7 @@
  * USA
  *
  * --------------------------------------------------------------------------
- * $Id: ManageableRegistry.java,v 1.2 2004/09/01 11:02:41 benoitf Exp $
+ * $Id: ManageableRegistry.java,v 1.3 2005/03/03 16:11:03 benoitf Exp $
  * --------------------------------------------------------------------------
  */
 package org.objectweb.carol.jndi.registry;
@@ -35,6 +37,7 @@ import java.rmi.registry.Registry;
 import java.rmi.server.ObjID;
 import java.rmi.server.RMIClientSocketFactory;
 import java.rmi.server.RMIServerSocketFactory;
+import java.rmi.server.RMISocketFactory;
 import java.rmi.server.ServerNotActiveException;
 import java.util.Enumeration;
 import java.util.Hashtable;
@@ -77,27 +80,29 @@ public class ManageableRegistry extends RegistryImpl {
         } catch (Exception e) {
             //there is no registry propertie use defaults
         }
-        setManager();
+        setManager(port);
     }
 
     /**
+     * @param objectPort
      *
      */
-    public ManageableRegistry(int port) throws RemoteException {
-        super(port);
+    public ManageableRegistry(int port, int objectPort) throws RemoteException {
+        super(port, RMISocketFactory.getSocketFactory(), RMISocketFactory.getSocketFactory());
         try {
             regProps.load(Thread.currentThread().getContextClassLoader().getResourceAsStream("registry.properties"));
         } catch (Exception e) {
             //there is no registry propertie use defaults
         }
-        setManager();
+        setManager(objectPort);
+
     }
 
     /**
      * Create a Remote Manager Object and bind it
      */
-    private void setManager() throws RemoteException {
-        manager = new RegistryManagerImpl(this);
+    private void setManager(int port) throws RemoteException {
+        manager = new RegistryManagerImpl(this, port);
         try {
             bind(REGISTRY_MANAGER_NAME, manager);
         } catch (Exception e) {
@@ -216,8 +221,12 @@ public class ManageableRegistry extends RegistryImpl {
         return id;
     }
 
-    public static Registry createManagableRegistry(int port) throws RemoteException {
-        return new ManageableRegistry(port);
+    public static Registry createManagableRegistry(int port, int objectPort) throws RemoteException {
+        // used fixed port factory only if user want set the port
+        if (objectPort > 0) {
+            RMIFixedPortFirewallSocketFactory.register(objectPort);
+        }
+        return new ManageableRegistry(port, objectPort);
     }
 
     /**
@@ -238,7 +247,7 @@ public class ManageableRegistry extends RegistryImpl {
             if (args.length >= 1) {
                 regPort = Integer.parseInt(args[0]);
             }
-            manageableRegistry = new ManageableRegistry(regPort);
+            manageableRegistry = new ManageableRegistry(regPort, 0);
             System.out.println("ManageableRegistry started on port " + regPort);
             // The registry should not exiting because of the Manager binded
 

@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2002,2004 - INRIA (www.inria.fr)
+ * Copyright (C) 2002,2005 - INRIA (www.inria.fr)
  *
  * CAROL: Common Architecture for RMI ObjectWeb Layer
  *
@@ -22,7 +22,7 @@
  * USA
  *
  * --------------------------------------------------------------------------
- * $Id: JRMPRegistry.java,v 1.8 2005/02/17 16:48:44 benoitf Exp $
+ * $Id: JRMPRegistry.java,v 1.9 2005/03/03 16:11:03 benoitf Exp $
  * --------------------------------------------------------------------------
  */
 package org.objectweb.carol.jndi.ns;
@@ -34,6 +34,8 @@ import java.rmi.server.UnicastRemoteObject;
 import java.util.Properties;
 
 import org.objectweb.carol.jndi.registry.ManageableRegistry;
+import org.objectweb.carol.rmi.util.PortNumber;
+import org.objectweb.carol.util.configuration.CarolDefaultValues;
 import org.objectweb.carol.util.configuration.TraceCarol;
 
 /**
@@ -54,6 +56,16 @@ public class JRMPRegistry implements NameService {
     public static int port = 1099;
 
     /**
+     * Instance port number (firewall)
+     */
+    private static int objectPort = 0;
+
+    /**
+     * Configuration properties (of carol.properties)
+     */
+    private Properties configurationProperties = null;
+
+    /**
      * registry
      */
     public static Registry registry = null;
@@ -70,8 +82,24 @@ public class JRMPRegistry implements NameService {
         }
         try {
             if (!isStarted()) {
+
+                // Fix jrmp port if running inside a server
+                if (System.getProperty(CarolDefaultValues.SERVER_MODE, "false").equalsIgnoreCase("true")) {
+                    if (configurationProperties != null) {
+                        String propertyName = CarolDefaultValues.SERVER_JRMP_PORT;
+                        int jrmpPort = PortNumber.strToint(configurationProperties.getProperty(propertyName, "0"), propertyName);
+                        if (jrmpPort > 0) {
+                            TraceCarol.infoCarol("Using JRMP fixed server port number '" + jrmpPort + "'.");
+                            objectPort = jrmpPort;
+                        }
+                    } else {
+                        TraceCarol.debugCarol("No properties '" + CarolDefaultValues.SERVER_IIOP_PORT + "' defined in carol.properties file.");
+                    }
+                }
+
+
                 if (port >= 0) {
-                    registry = ManageableRegistry.createManagableRegistry(port);
+                    registry = ManageableRegistry.createManagableRegistry(port, objectPort);
                     // add a shudown hook for this process
                     Runtime.getRuntime().addShutdownHook(new Thread() {
 
@@ -184,6 +212,6 @@ public class JRMPRegistry implements NameService {
       * @param p configuration properties
       */
      public void setConfigProperties(Properties p) {
-
+         this.configurationProperties = p;
      }
 }

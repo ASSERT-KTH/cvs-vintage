@@ -20,7 +20,7 @@
  * USA
  *
  * --------------------------------------------------------------------------
- * $Id: RegistryManagerImpl.java,v 1.2 2004/09/01 11:02:41 benoitf Exp $
+ * $Id: RegistryManagerImpl.java,v 1.3 2005/03/03 16:11:03 benoitf Exp $
  * --------------------------------------------------------------------------
  */
 package org.objectweb.carol.jndi.registry;
@@ -47,8 +47,8 @@ public class RegistryManagerImpl extends UnicastRemoteObject implements Registry
     /**
      * @throws RemoteException
      */
-    protected RegistryManagerImpl(ManageableRegistry reg) throws RemoteException {
-        super();
+    protected RegistryManagerImpl(ManageableRegistry reg, int port) throws RemoteException {
+        super(port);
         registry = reg;
     }
 
