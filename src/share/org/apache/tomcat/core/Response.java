@@ -270,7 +270,7 @@ public class Response {
     }
 
     public void finish() throws IOException {
-        oBuffer.close();
+	oBuffer.close();
 	ContextManager cm=request.getContextManager();
 	BaseInterceptor reqI[]= request.getContainer().
 	    getInterceptors(Container.H_afterBody);

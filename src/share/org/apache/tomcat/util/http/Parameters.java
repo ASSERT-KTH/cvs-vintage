@@ -203,8 +203,9 @@ public final class Parameters extends MultiMap {
      */
     private void merge() {
 	// recursive
-	//System.out.println("Merging " + this + " with " +
-	//   parent + " " + didMerge);
+	//	System.out.println("Merging " + this + " with " +
+	// parent + " " + didMerge);
+	//System.out.println( "Before " + paramsAsString());
 	// Local parameters first - they take precedence as in spec.
 	handleQueryParameters();
 
@@ -215,9 +216,11 @@ public final class Parameters extends MultiMap {
 	if( parent==null ) return;
 
 	// Add the parent props to the child ( lower precedence )
+	parent.merge();
 	Hashtable parentProps=parent.paramHashStringArray;
 	merge2( paramHashStringArray , parentProps);
 	didMerge=true;
+	//System.out.println( "After " + paramsAsString());
     }
 
 
@@ -425,4 +428,17 @@ public final class Parameters extends MultiMap {
 	}
     }
 
+    public String paramsAsString() {
+	StringBuffer sb=new StringBuffer();
+	Enumeration en= paramHashStringArray.keys();
+	while( en.hasMoreElements() ) {
+	    String k=(String)en.nextElement();
+	    sb.append( k ).append("=");
+	    String v[]=(String[])paramHashStringArray.get( k );
+	    for( int i=0; i<v.length; i++ )
+		sb.append( v[i] ).append(",");
+	    sb.append("\n");
+	}
+	return sb.toString();
+    }
 }

@@ -107,9 +107,18 @@ public final class OutputBuffer extends Writer {
     Request req;
     ContextManager cm;
     
+    public OutputBuffer() {
+	buf=new byte[defaultBufferSize];
+ 	cbuf=new char[defaultCharBufferSize];
+    }
+
     public OutputBuffer(Response resp) {
 	buf=new byte[defaultBufferSize];
  	cbuf=new char[defaultCharBufferSize];
+	setResponse( resp );
+    }
+
+    public void setResponse( Response resp ) {
 	this.resp=resp;
 	req=resp.getRequest();
 	cm=req.getContextManager();
