@@ -1,4 +1,4 @@
-// $Id: PropPanel.java,v 1.83 2004/07/20 22:07:44 kataka Exp $
+// $Id: PropPanel.java,v 1.84 2004/07/24 15:49:35 mkl Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -34,7 +34,6 @@ import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
-import java.util.EventListener;
 import java.util.Iterator;
 import java.util.MissingResourceException;
 import java.util.ResourceBundle;
@@ -65,7 +64,6 @@ import org.argouml.ui.targetmanager.TargetManager;
 import org.argouml.ui.targetmanager.TargettableModelView;
 import org.argouml.uml.Profile;
 import org.argouml.uml.ProfileJava;
-
 import org.tigris.gef.presentation.Fig;
 import org.tigris.toolbar.ToolBar;
 
@@ -181,6 +179,8 @@ public abstract class PropPanel
      */
     public JLabel addField(String label, Component component) {
         JLabel jlabel = new JLabel(localize(label));
+        jlabel.setFont(LookAndFeelMgr.getInstance().getSmallFont());
+        component.setFont(LookAndFeelMgr.getInstance().getSmallFont());
         jlabel.setLabelFor(component);
         add(jlabel);
         add(component);
@@ -200,6 +200,8 @@ public abstract class PropPanel
         for (int i = 0; i < nComponent; ++i) {
             if (getComponent(i) == afterComponent) {
                 JLabel jlabel = new JLabel(localize(label));
+                jlabel.setFont(LookAndFeelMgr.getInstance().getSmallFont());
+                component.setFont(LookAndFeelMgr.getInstance().getSmallFont());
                 jlabel.setLabelFor(component);
                 add(jlabel, ++i);
                 add(component, ++i);
@@ -223,6 +225,8 @@ public abstract class PropPanel
         for (int i = 0; i < nComponent; ++i) {
             if (getComponent(i) == beforeComponent) {
                 JLabel jlabel = new JLabel(localize(label));
+                jlabel.setFont(LookAndFeelMgr.getInstance().getSmallFont());
+                component.setFont(LookAndFeelMgr.getInstance().getSmallFont());
                 jlabel.setLabelFor(component);
                 add(jlabel, i);
                 add(component, ++i);
