@@ -24,6 +24,7 @@ $page.setTitle("Enter New: $scarabR.CurrentIssueType.Name")
 </table>
 </div>
 
+<p></p>
 <form method="get" action="$link.setPage("entry,Wizard1.vm").setAction("ReportIssue")">
 <input type="hidden" name="$scarabG.Constant.NEXT_TEMPLATE" value="entry,Wizard3.vm" />
 
