@@ -1,4 +1,4 @@
-// $Id: PropPanelObject.java,v 1.20 2003/05/10 15:03:51 alexb Exp $
+// $Id: PropPanelObject.java,v 1.21 2003/05/10 15:22:40 bobtarling Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,7 +25,7 @@
 // File: PropPanelObject.java
 // Classes: PropPanelObject
 // Original Author: 5eichler@informatik.uni-hamburg.de
-// $Id: PropPanelObject.java,v 1.20 2003/05/10 15:03:51 alexb Exp $
+// $Id: PropPanelObject.java,v 1.21 2003/05/10 15:22:40 bobtarling Exp $
 
 package org.argouml.uml.ui.behavior.common_behavior;
 
@@ -40,7 +40,7 @@ import javax.swing.JScrollPane;
 import org.argouml.application.api.Argo;
 import org.argouml.model.ModelFacade;
 import org.argouml.model.uml.UmlFactory;
-import org.argouml.swingext.LabelledLayout;
+
 import org.argouml.ui.targetmanager.TargetManager;
 import org.argouml.uml.ui.PropPanelButton;
 import org.argouml.uml.ui.UMLClassifierComboBoxModel;
@@ -69,17 +69,17 @@ public class PropPanelObject extends PropPanelModelElement {
 	Class mclass = (Class)ModelFacade.OBJECT;
 
 	addField(Argo.localize("UMLMenu", "label.name"), getNameTextField());
-	
+
 	UMLClassifierComboBoxModel classifierModel = new UMLClassifierComboBoxModel(this,"isAcceptibleClassifier","classifier","getClassifier","setClassifier",true,MClassifier.class,true);
 	UMLComboBox clsComboBox = new UMLComboBox(classifierModel);
 	addField("Classifier:", new UMLComboBoxNavigator(this, Argo.localize("UMLMenu", "tooltip.nav-class"),clsComboBox));
-	
+
 	addField(Argo.localize("UMLMenu", "label.stereotype"), new UMLComboBoxNavigator(this, Argo.localize("UMLMenu", "tooltip.nav-stereo"),getStereotypeBox()));
-   
+
 	addLinkField(Argo.localize("UMLMenu", "label.namespace"), getNamespaceComboBox());
 
-        add(LabelledLayout.getSeperator());
-        
+        addSeperator();
+
 	JList sentList = new UMLList(new UMLStimulusListModel(this,null,true,"sent"),true);
 	sentList.setForeground(Color.blue);
 	JScrollPane sentScroll = new JScrollPane(sentList);
@@ -89,11 +89,11 @@ public class PropPanelObject extends PropPanelModelElement {
 	receivedList.setForeground(Color.blue);
 	JScrollPane receivedScroll= new JScrollPane(receivedList);
 	addField("Stimuli received:", receivedScroll);
-	
+
 	new PropPanelButton(this,buttonPanel,_navUpIcon, Argo.localize("UMLMenu", "button.go-up"),"navigateNamespace",null);
 	new PropPanelButton(this,buttonPanel,_deleteIcon,localize("Delete object"),"removeElement",null);
     }
-    
+
 
     public void navigateNamespace() {
         Object target = getTarget();
@@ -107,7 +107,7 @@ public class PropPanelObject extends PropPanelModelElement {
     }
 
 
-    
+
     public boolean isAcceptibleClassifier(MModelElement classifier) {
         return classifier instanceof MClassifier;
     }
@@ -132,7 +132,7 @@ public class PropPanelObject extends PropPanelModelElement {
 
     public void setClassifier(MClassifier element) {
         Object target = getTarget();
-	
+
         if(target instanceof MInstance) {
 	    MInstance inst = (MInstance)target;
 	    Vector classifiers = new Vector();
@@ -153,7 +153,7 @@ public class PropPanelObject extends PropPanelModelElement {
 		    inst.removeClassifier(classifier);
 		}
 	    }
-	    
+
 	    Iterator it = inst.getClassifiers().iterator();
 	    while (it.hasNext()) {
 	    	inst.removeClassifier((MClassifier)it.next());
@@ -166,13 +166,13 @@ public class PropPanelObject extends PropPanelModelElement {
         }
         */
     }
-    
-     
+
+
     public void removeElement() {
 
-        MObject target = (MObject) getTarget();        
+        MObject target = (MObject) getTarget();
 	MModelElement newTarget = (MModelElement) target.getNamespace();
-                
+
         UmlFactory.getFactory().delete(target);
 	if(newTarget != null) TargetManager.getInstance().setTarget(newTarget);
     }

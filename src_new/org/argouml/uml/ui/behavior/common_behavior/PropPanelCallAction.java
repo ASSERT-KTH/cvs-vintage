@@ -1,4 +1,4 @@
-// $Id: PropPanelCallAction.java,v 1.11 2003/05/10 15:03:51 alexb Exp $
+// $Id: PropPanelCallAction.java,v 1.12 2003/05/10 15:22:40 bobtarling Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -28,7 +28,7 @@ import javax.swing.JScrollPane;
 
 import org.argouml.application.api.Argo;
 import org.argouml.model.ModelFacade;
-import org.argouml.swingext.LabelledLayout;
+
 import org.argouml.uml.ui.PropPanelButton;
 import org.argouml.uml.ui.UMLExpressionBodyField;
 import org.argouml.uml.ui.UMLExpressionLanguageField;

@@ -1,4 +1,4 @@
-// $Id: PropPanelAssociationEndRole.java,v 1.11 2003/03/12 10:48:11 bobtarling Exp $
+// $Id: PropPanelAssociationEndRole.java,v 1.12 2003/05/10 15:22:41 bobtarling Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -28,7 +28,7 @@ import javax.swing.JList;
 import javax.swing.JScrollPane;
 
 import org.argouml.application.api.Argo;
-import org.argouml.swingext.LabelledLayout;
+
 import org.argouml.uml.ui.UMLComboBoxNavigator;
 import org.argouml.uml.ui.UMLLinkedList;
 import org.argouml.uml.ui.foundation.core.PropPanelAssociationEnd;
@@ -52,13 +52,13 @@ public class PropPanelAssociationEndRole extends PropPanelAssociationEnd {
     }
 
     protected void positionControls() {
-        
+
         JList baseList = new UMLLinkedList(new UMLAssociationEndRoleBaseListModel());
         baseList.setVisibleRowCount(1);
         addField(Argo.localize("UMLMenu", "label.base"), new JScrollPane(baseList));
-        
+
         super.positionControls();
     }
-    
+
 } /* end class PropPanelAssociationEndRole */
 

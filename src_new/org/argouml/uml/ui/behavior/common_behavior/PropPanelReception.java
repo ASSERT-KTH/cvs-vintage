@@ -1,4 +1,4 @@
-// $Id: PropPanelReception.java,v 1.13 2003/05/10 15:03:51 alexb Exp $
+// $Id: PropPanelReception.java,v 1.14 2003/05/10 15:22:40 bobtarling Exp $
 // Copyright (c) 2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -31,7 +31,7 @@ import org.argouml.application.api.Argo;
 import org.argouml.model.ModelFacade;
 
 import org.argouml.swingext.GridLayout2;
-import org.argouml.swingext.LabelledLayout;
+
 import org.argouml.uml.ui.PropPanelButton;
 import org.argouml.uml.ui.UMLCheckBox;
 import org.argouml.uml.ui.UMLReflectionBooleanProperty;
@@ -51,16 +51,16 @@ import ru.novosoft.uml.foundation.core.MModelElement;
  *       old gui components.
  */
 public class PropPanelReception extends PropPanelModelElement {
-	
+
     public PropPanelReception() {
         super("Reception", _receptionIcon, ConfigLoader.getTabPropsOrientation());
-		
+
         Class mclass = (Class)ModelFacade.RECEPTION;
 
         addField(Argo.localize("UMLMenu", "label.name"), getNameTextField());
         addField(Argo.localize("UMLMenu", "label.stereotype"), getStereotypeBox());
         addField(Argo.localize("UMLMenu", "label.namespace"), getNamespaceComboBox());
-        
+
         JPanel modPanel = new JPanel(new GridLayout2(0,3, GridLayout2.ROWCOLPREFERRED));
         // next line does not contain typing errors, NSUML is not correct (isabstarct instead of isabstract)
         modPanel.add(new UMLCheckBox(Argo.localize("UMLMenu", "checkbox.abstract-lc"),this,new UMLReflectionBooleanProperty("isAbstarct",mclass,"isAbstarct","setAbstarct")));
@@ -68,18 +68,18 @@ public class PropPanelReception extends PropPanelModelElement {
         modPanel.add(new UMLCheckBox(localize("root"),this,new UMLReflectionBooleanProperty("isRoot",mclass,"isRoot","setRoot")));
         addField(Argo.localize("UMLMenu", "label.modifiers"), modPanel);
 
-        add(LabelledLayout.getSeperator());
-        
+        addSeperator();
+
         addField(Argo.localize("UMLMenu", "label.signal"), new UMLReceptionSignalComboBox(this, new UMLReceptionSignalComboBoxModel()));
-        
+
         JScrollPane specificationScroll = new JScrollPane(new UMLTextArea(this, new UMLTextProperty(mclass, "specification", "getSpecification" , "setSpecification")),JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
         addField(Argo.localize("UMLMenu", "label.specification"), specificationScroll);
-        
-        new PropPanelButton(this,buttonPanel,_navUpIcon, Argo.localize("UMLMenu", "button.go-up"),"navigateUp",null);	
-	new PropPanelButton(this,buttonPanel,_deleteIcon, Argo.localize("UMLMenu", "button.delete-operation"),"removeElement",null);		
+
+        new PropPanelButton(this,buttonPanel,_navUpIcon, Argo.localize("UMLMenu", "button.go-up"),"navigateUp",null);
+	new PropPanelButton(this,buttonPanel,_deleteIcon, Argo.localize("UMLMenu", "button.delete-operation"),"removeElement",null);
     }
 
-	
+
     /**
      * Returns true if a given modelelement is an acceptable owner of this reception.
      * Only classifiers that are no datatype are acceptable.

@@ -1,4 +1,4 @@
-// $Id: PropPanelStereotype.java,v 1.21 2003/05/10 15:03:52 alexb Exp $
+// $Id: PropPanelStereotype.java,v 1.22 2003/05/10 15:22:40 bobtarling Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -35,7 +35,7 @@ import javax.swing.JScrollPane;
 import org.argouml.application.api.Argo;
 import org.argouml.model.ModelFacade;
 import org.argouml.model.uml.foundation.extensionmechanisms.ExtensionMechanismsFactory;
-import org.argouml.swingext.LabelledLayout;
+
 import org.argouml.ui.targetmanager.TargetManager;
 import org.argouml.uml.ui.PropPanelButton;
 import org.argouml.uml.ui.UMLCheckBox;
@@ -58,10 +58,9 @@ public class PropPanelStereotype extends PropPanelModelElement {
 
     /**
      * Construct new stereotype properties tab
-     * @todo convert to use LabelledLayout(Bob Tarling)
      */
     public PropPanelStereotype() {
-        super("Stereotype", _stereotypeIcon, ConfigLoader.getTabPropsOrientation());  // Change this to call labelled layout constructor
+        super("Stereotype", _stereotypeIcon, ConfigLoader.getTabPropsOrientation());
 
         Class mclass = MStereotype.class;
 
@@ -78,8 +77,8 @@ public class PropPanelStereotype extends PropPanelModelElement {
         modifiersPanel.add(new UMLCheckBox(localize("root"),this,new UMLReflectionBooleanProperty("isRoot",mclass,"isRoot","setRoot")));
         addField(Argo.localize("UMLMenu", "label.modifiers"), modifiersPanel);
 
-        add(LabelledLayout.getSeperator());
-        
+        addSeperator();
+
         JList extendsList = new UMLList(new UMLGeneralizationListModel(this,"generalization",true),true);
         extendsList.setBackground(getBackground());
         extendsList.setForeground(Color.blue);
@@ -90,7 +89,7 @@ public class PropPanelStereotype extends PropPanelModelElement {
         derivedList.setVisibleRowCount(1);
         addField("Specializations:", new JScrollPane(derivedList));
 
-        new PropPanelButton(this,buttonPanel,_navUpIcon, Argo.localize("UMLMenu", "button.go-up"),"navigateNamespace",null);      
+        new PropPanelButton(this,buttonPanel,_navUpIcon, Argo.localize("UMLMenu", "button.go-up"),"navigateNamespace",null);
         new PropPanelButton(this,buttonPanel,_stereotypeIcon, Argo.localize("UMLMenu", "button.add-new-stereotype"),"newStereotype",null);
         new PropPanelButton(this,buttonPanel,_deleteIcon, Argo.localize("UMLMenu", "button.delete-package"),"removeElement",null);
     }

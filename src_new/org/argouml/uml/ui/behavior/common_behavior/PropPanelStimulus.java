@@ -1,4 +1,4 @@
-// $Id: PropPanelStimulus.java,v 1.22 2003/05/10 15:03:52 alexb Exp $
+// $Id: PropPanelStimulus.java,v 1.23 2003/05/10 15:22:40 bobtarling Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -27,7 +27,7 @@
 // File: PropPanelStimulus.java
 // Classes: PropPanelStimulus
 // Original Author: agauthie@ics.uci.edu
-// $Id: PropPanelStimulus.java,v 1.22 2003/05/10 15:03:52 alexb Exp $
+// $Id: PropPanelStimulus.java,v 1.23 2003/05/10 15:22:40 bobtarling Exp $
 
 package org.argouml.uml.ui.behavior.common_behavior;
 
@@ -40,7 +40,7 @@ import org.argouml.application.api.Argo;
 import org.argouml.application.helpers.ResourceLoaderWrapper;
 import org.argouml.model.ModelFacade;
 import org.argouml.model.uml.UmlFactory;
-import org.argouml.swingext.LabelledLayout;
+
 import org.argouml.ui.targetmanager.TargetManager;
 import org.argouml.uml.ui.PropPanelButton;
 import org.argouml.uml.ui.UMLList;
@@ -95,7 +95,7 @@ public class PropPanelStimulus extends PropPanelModelElement {
 
         addLinkField(Argo.localize("UMLMenu", "label.namespace"), getNamespaceComboBox());
 
-        new PropPanelButton(this,buttonPanel,_navUpIcon, Argo.localize("UMLMenu", "button.go-up"),"navigateNamespace",null);    
+        new PropPanelButton(this,buttonPanel,_navUpIcon, Argo.localize("UMLMenu", "button.go-up"),"navigateNamespace",null);
         new PropPanelButton(this,buttonPanel,_deleteIcon,localize("Delete object"),"removeElement",null);
     }
 
@@ -185,14 +185,14 @@ public class PropPanelStimulus extends PropPanelModelElement {
     }
 
     public void removeElement() {
-        MStimulus target = (MStimulus) getTarget();        
+        MStimulus target = (MStimulus) getTarget();
 	MModelElement newTarget = (MModelElement) target.getNamespace();
-                
+
        UmlFactory.getFactory().delete(target);
-		if(newTarget != null) { 
+		if(newTarget != null) {
             TargetManager.getInstance().setTarget(newTarget);
 		}
-            
+
     }
 
 }

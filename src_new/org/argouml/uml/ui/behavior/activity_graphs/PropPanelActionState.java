@@ -24,12 +24,12 @@
 // File: PropPanelState.java
 // Classes: PropPanelState
 // Original Author: your email address here
-// $Id: PropPanelActionState.java,v 1.9 2003/01/26 16:51:10 kataka Exp $
+// $Id: PropPanelActionState.java,v 1.10 2003/05/10 15:22:41 bobtarling Exp $
 
 package org.argouml.uml.ui.behavior.activity_graphs;
 
 import org.argouml.application.api.Argo;
-import org.argouml.swingext.LabelledLayout;
+
 import org.argouml.uml.ui.UMLComboBoxNavigator;
 import org.argouml.uml.ui.UMLTextField2;
 import org.argouml.uml.ui.behavior.state_machines.PropPanelState;
@@ -56,7 +56,7 @@ public class PropPanelActionState extends PropPanelState {
         addField(Argo.localize("UMLMenu", "label.exit"), exitScroll);
         addField(Argo.localize("UMLMenu", "label.do-activity"), doScroll);
 
-        add(LabelledLayout.getSeperator());
+        addSeperator();
 
         addField(Argo.localize("UMLMenu", "label.incoming"), incomingScroll);
         addField(Argo.localize("UMLMenu", "label.outgoing"), outgoingScroll);

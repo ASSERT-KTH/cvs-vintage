@@ -1,4 +1,4 @@
-// $Id: PropPanelPackage.java,v 1.33 2003/05/04 08:44:30 kataka Exp $
+// $Id: PropPanelPackage.java,v 1.34 2003/05/10 15:22:41 bobtarling Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -27,7 +27,7 @@ package org.argouml.uml.ui.model_management;
 import org.argouml.application.ArgoVersion;
 import org.argouml.application.api.Argo;
 import org.argouml.application.api.PluggablePropertyPanel;
-import org.argouml.swingext.LabelledLayout;
+
 import org.argouml.swingext.Orientation;
 import org.argouml.uml.ui.PropPanelButton;
 import org.argouml.uml.ui.UMLComboBoxNavigator;
@@ -92,11 +92,11 @@ public class PropPanelPackage extends PropPanelNamespace implements PluggablePro
 
         // TODO: facilitate importedElements.
         // TODO: facilitate the fact that Package is a generalizable element.
-        add(LabelledLayout.getSeperator());
+        addSeperator();
 
         addField(Argo.localize("UMLMenu", "label.owned-elements"), getOwnedElementsScroll());
 
-        new PropPanelButton(this, buttonPanel, _navUpIcon, Argo.localize("UMLMenu", "button.go-up"), "navigateNamespace", null);       
+        new PropPanelButton(this, buttonPanel, _navUpIcon, Argo.localize("UMLMenu", "button.go-up"), "navigateNamespace", null);
         new PropPanelButton(this, buttonPanel, _deleteIcon, Argo.localize("UMLMenu", "button.delete-package"), "removeElement", "isRemovableElement");
     }
 

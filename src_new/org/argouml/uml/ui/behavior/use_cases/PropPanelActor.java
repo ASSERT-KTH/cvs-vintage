@@ -24,7 +24,7 @@
 // File: PropPanelActor.java
 // Classes: PropPanelActor
 // Original Author: jrobbins@ics.uci.edu
-// $Id: PropPanelActor.java,v 1.29 2003/05/05 11:25:39 kataka Exp $
+// $Id: PropPanelActor.java,v 1.30 2003/05/10 15:22:40 bobtarling Exp $
 
 // 21 Mar 2002: Jeremy Bennett (mail@jeremybennett.com). Changed to use the
 // labels "Generalizes:" and "Specializes:" for inheritance.
@@ -39,7 +39,7 @@ package org.argouml.uml.ui.behavior.use_cases;
 
 import org.argouml.application.api.Argo;
 import org.argouml.model.uml.behavioralelements.usecases.UseCasesFactory;
-import org.argouml.swingext.LabelledLayout;
+
 import org.argouml.ui.targetmanager.TargetManager;
 import org.argouml.uml.ui.PropPanelButton;
 import org.argouml.uml.ui.UMLComboBoxNavigator;
@@ -72,16 +72,16 @@ public class PropPanelActor extends PropPanelClassifier {
     	super("Actor", ConfigLoader.getTabPropsOrientation());
     	addField(Argo.localize("UMLMenu", "label.name"), getNameTextField());
     	addField(Argo.localize("UMLMenu", "label.stereotype"), new UMLComboBoxNavigator(this, Argo.localize("UMLMenu", "tooltip.nav-stereo"),getStereotypeBox()));
-    	addField(Argo.localize("UMLMenu", "label.namespace"),getNamespaceComboBox());        
-    	
-    	add(LabelledLayout.getSeperator());
-    	
+    	addField(Argo.localize("UMLMenu", "label.namespace"),getNamespaceComboBox());
+
+    	addSeperator();
+
     	addField(Argo.localize("UMLMenu", "label.generalizations"), getGeneralizationScroll());
     	addField(Argo.localize("UMLMenu", "label.specializations"), getSpecializationScroll());
-    	
-    	add(LabelledLayout.getSeperator());
-    	    	 	
-    	addField(Argo.localize("UMLMenu", "label.association-ends"), 
+
+    	addSeperator();
+
+    	addField(Argo.localize("UMLMenu", "label.association-ends"),
             getAssociationEndScroll());
         // The toolbar buttons that go at the top.
 
@@ -109,6 +109,6 @@ public class PropPanelActor extends PropPanelClassifier {
         TargetManager.getInstance().setTarget(UseCasesFactory.getFactory().buildActor(getTarget()));
     }
 
-   
+
 
 } /* end class PropActor */
