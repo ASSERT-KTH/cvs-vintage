@@ -21,7 +21,7 @@
 // CALIFORNIA HAS NO OBLIGATIONS TO PROVIDE MAINTENANCE, SUPPORT,
 // UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 
-// $Id: TabDiagram.java,v 1.9 2003/01/31 20:32:25 kataka Exp $
+// $Id: TabDiagram.java,v 1.10 2003/02/02 11:50:52 kataka Exp $
 
 package org.argouml.uml.diagram.ui;
 
@@ -218,14 +218,14 @@ implements TabModelTarget, GraphSelectionListener, ModeChangeListener {
      */
     public void setToolBar(ToolBar toolbar) {
         if (!Arrays.asList(getComponents()).contains(toolbar) ) {
-            /*
             if (_target != null) {
-                remove(((TabDiagram)getTarget())._target.getToolBar());
-            }   
-            */       
+                remove(((UMLDiagram)getTarget()).getToolBar());
+            }    
             add(toolbar, BorderLayout.NORTH);
+            
             invalidate();
             validate();
+            repaint();
         }
     }
 
