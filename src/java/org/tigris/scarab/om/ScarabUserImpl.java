@@ -47,6 +47,7 @@ package org.tigris.scarab.om;
  */ 
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Calendar;
@@ -88,7 +89,7 @@ import org.apache.turbine.Log;
  * implementation needs.
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: ScarabUserImpl.java,v 1.40 2001/12/27 22:38:17 dr Exp $
+ * @version $Id: ScarabUserImpl.java,v 1.41 2002/01/11 21:56:51 jmcnally Exp $
  */
 public class ScarabUserImpl 
     extends BaseScarabUserImpl 
@@ -140,26 +141,17 @@ public class ScarabUserImpl
             public List getModules() 
                 throws Exception
             {
-                Criteria crit = new Criteria();
-                crit.addJoin(TurbineUserGroupRolePeer.USER_ID, 
-                             ScarabUserImplPeer.USER_ID);
-                crit.addJoin(TurbineUserGroupRolePeer.GROUP_ID, 
-                             ScarabModulePeer.MODULE_ID);
-                crit.add(TurbineUserGroupRolePeer.USER_ID, getUserId());
-                GroupSet groups = TurbineSecurity.getGroups(crit);
-                Iterator itr = groups.elements();
-                List modules = new ArrayList(groups.size());
-                while (itr.hasNext())
-                {
-                    Group group = (Group) itr.next();
-                    modules.add((ModuleEntity)group);
-                }
-                return modules;
+                List permList = ScarabSecurity.getAllPermissions();
+                String[] perms = new String[permList.size()];
+                perms = (String[])permList.toArray(perms);
+                
+                ModuleEntity[] modules = getPrivateModules(perms);
+                return Arrays.asList(modules);
             }
         };
     }
     
-    // the following four methods are to avoid naming conflicts when
+    // the following five methods are to avoid naming conflicts when
     // supplying implementations of the methods needed by AbstractScarabUser
     // when instantiated in the constructor
     private NumberKey getPrivateUserId()
@@ -179,7 +171,11 @@ public class ScarabUserImpl
     {
         return hasPermission(perm, module);
     }
-    
+    private ModuleEntity[] getPrivateModules(String[] permissions)
+    {        
+        return getModules(permissions);
+    }
+
     /**
      *   Utility method that takes a username and a confirmation code
      *   and will return true if there is a match and false if no match.
@@ -266,11 +262,13 @@ public class ScarabUserImpl
                     hasPermission = acl.hasPermission(perm, (Group)module);
                 }
                 
-                // if necessary, check for the permission within the 'Global' module
                 if (!hasPermission)
                 {
-                    ModuleEntity globalModule = ModuleManager.getInstance(new NumberKey(ModuleEntity.ROOT_ID));
-                    hasPermission = acl.hasPermission(perm, (Group)globalModule);
+                    // check for the permission within the 'Global' module
+                    ModuleEntity globalModule = ModuleManager
+                        .getInstance(new NumberKey(ModuleEntity.ROOT_ID));
+                    hasPermission = acl.hasPermission(perm, 
+                                                      (Group)globalModule);
                 }
             }
         }
@@ -313,6 +311,17 @@ public class ScarabUserImpl
         try
         {
             List scarabModules = ScarabModulePeer.doSelect(crit);
+            // check for permissions in global, if so get all modules
+            for ( int i=scarabModules.size()-1; i>=0; i--) 
+            {
+                if ( ModuleEntity.ROOT_ID.equals( 
+                     ((ModuleEntity)scarabModules.get(i)).getModuleId()) ) 
+                {
+                    crit = new Criteria();
+                    scarabModules = ScarabModulePeer.doSelect(crit);
+                    break;
+                }
+            }
             modules = new ModuleEntity[scarabModules.size()];
             for ( int i=scarabModules.size()-1; i>=0; i--) 
             {
