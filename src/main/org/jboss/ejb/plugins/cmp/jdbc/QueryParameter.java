@@ -3,6 +3,7 @@ package org.jboss.ejb.plugins.cmp.jdbc;
 import java.lang.reflect.Method;
 import java.sql.PreparedStatement;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.StringTokenizer;
 import javax.ejb.EJBException;
@@ -62,9 +63,11 @@ public class QueryParameter {
 
       List parameters = new ArrayList();
 
-      JDBCCMPFieldBridge[] pkFields = entity.getJDBCPrimaryKeyFields();
-      for(int i=0; i<pkFields.length; i++) {
-         JDBCType type = pkFields[i].getJDBCType();
+      List pkFields = entity.getPrimaryKeyFields();
+      for(Iterator iter = pkFields.iterator(); iter.hasNext();) {
+         JDBCCMPFieldBridge pkField = (JDBCCMPFieldBridge)iter.next();
+
+         JDBCType type = pkField.getJDBCType();
          if(type instanceof JDBCTypeComplex) {
             JDBCTypeComplexProperty[] props = 
                   ((JDBCTypeComplex)type).getProperties();
@@ -72,7 +75,7 @@ public class QueryParameter {
                QueryParameter param = new QueryParameter(
                         argNum,
                         false,
-                        pkFields[i],
+                        pkField,
                         props[j],
                         props[j].getJDBCType());
                parameters.add(param);
@@ -81,7 +84,7 @@ public class QueryParameter {
             QueryParameter param = new QueryParameter(
                      argNum,
                      false,
-                     pkFields[i],
+                     pkField,
                      null,
                      type.getJDBCTypes()[0]);
             parameters.add(param);
@@ -96,9 +99,11 @@ public class QueryParameter {
 
       List parameters = new ArrayList();
 
-      JDBCCMPFieldBridge[] pkFields = entity.getJDBCPrimaryKeyFields();
-      for(int i=0; i<pkFields.length; i++) {
-         JDBCType type = pkFields[i].getJDBCType();
+      List pkFields = entity.getPrimaryKeyFields();
+      for(Iterator iter = pkFields.iterator(); iter.hasNext();) {
+         JDBCCMPFieldBridge pkField = (JDBCCMPFieldBridge)iter.next();
+
+         JDBCType type = pkField.getJDBCType();
          if(type instanceof JDBCTypeComplex) {
             JDBCTypeComplexProperty[] props = 
                   ((JDBCTypeComplex)type).getProperties();
@@ -106,7 +111,7 @@ public class QueryParameter {
                QueryParameter param = new QueryParameter(
                         argNum,
                         true,
-                        pkFields[i],
+                        pkField,
                         props[j],
                         props[j].getJDBCType());
                parameters.add(param);
@@ -115,7 +120,7 @@ public class QueryParameter {
             QueryParameter param = new QueryParameter(
                      argNum,
                      true,
-                     pkFields[i],
+                     pkField,
                      null,
                      type.getJDBCTypes()[0]);
             parameters.add(param);
