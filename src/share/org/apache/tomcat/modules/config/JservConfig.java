@@ -122,7 +122,7 @@ import org.apache.tomcat.modules.server.Ajp12Interceptor;
     @author Costin Manolache
     @author Larry Isaacs
     @author Mel Martinez
-        @version $Revision: 1.3 $ $Date: 2001/08/16 05:24:14 $
+        @version $Revision: 1.4 $ $Date: 2001/08/19 22:47:04 $
  */
 public class JservConfig  extends BaseInterceptor { 
     
@@ -339,21 +339,48 @@ public class JservConfig  extends BaseInterceptor {
             // generate header
             generateJservHead(pw,cm);
 
-            // Set up contexts
-            // XXX deal with Virtual host configuration !!!!
-            Enumeration  enum = cm.getContexts();
-            while (enum.hasMoreElements()) {
+            Hashtable vhosts = new Hashtable();
+
+    	    // Set up contexts
+    	    // XXX deal with Virtual host configuration !!!!
+    	    Enumeration  enum = cm.getContexts();
+    	    while (enum.hasMoreElements()) {
                 Context context = (Context)enum.nextElement();
-                if( forwardAll )
-                    generateStupidMappings( context, pw );
-                else
-                    generateContextMappings( context, pw );
+                String host = context.getHost();
+                if( host == null ) {
+                    if( forwardAll )
+                        generateStupidMappings( context, pw );
+                    else
+                        generateContextMappings( context, pw );
+                } else {
+                    Vector vhostContexts = (Vector)vhosts.get(host);
+                    if ( vhostContexts == null ) {
+                        vhostContexts = new Vector();
+                        vhosts.put(host,vhostContexts);
+                    }
+                    vhostContexts.addElement(context);
+                }
+    	    }
+
+            enum = vhosts.elements();
+            while( enum.hasMoreElements() ) {
+                Vector vhostContexts = (Vector)enum.nextElement();
+                for( int i = 0; i < vhostContexts.size(); i++ ) {
+                    Context context = (Context)vhostContexts.elementAt(i);
+                    if( i == 0 )
+                        generateVhostHead( context, pw );
+                    if( forwardAll )
+                        generateStupidMappings( context, pw );
+                    else
+                        generateContextMappings( context, pw );
+                }
+                generateVhostTail( pw );
             }
 
             pw.close();
         } catch( Exception ex ) {
             Log loghelper = Log.getLog("tc_log", this);
-            loghelper.log("Error generating automatic apache configuration", ex);
+            loghelper.log("Error generating automatic apache mod_jserv configuration", ex);
         }
     }//end execute()
 
@@ -392,6 +419,32 @@ public class JservConfig  extends BaseInterceptor {
         return true;
     }
 
+    private void generateVhostHead(Context context, PrintWriter pw) {
+	String ctxPath  = context.getPath();
+	String vhost = context.getHost();
+
+        pw.println();
+        String vhostip = getVirtualHostAddress(vhost,
+                                            context.getHostAddress());
+        generateNameVirtualHost(pw, vhostip);
+        pw.println("<VirtualHost "+ vhostip + ">");
+        pw.println("    ServerName " + vhost );
+        Enumeration aliases=context.getHostAliases();
+        if( aliases.hasMoreElements() ) {
+            pw.print("    ServerAlias " );
+            while( aliases.hasMoreElements() ) {
+                pw.print( (String)aliases.nextElement() + " " );
+            }
+            pw.println();
+        }
+        indent="    ";
+    }
+
+    private void generateVhostTail(PrintWriter pw) {
+        pw.println("</VirtualHost>");
+        indent="";
+    }
+
     // -------------------- Forward all mode --------------------
     String indent="";
     
@@ -409,33 +462,23 @@ public class JservConfig  extends BaseInterceptor {
             log("Ignoring root context in forward-all mode  ");
             return;
         } 
-        if( vhost != null ) {
-            String vhostip = getVirtualHostAddress(vhost,
-                                            context.getHostAddress());
-            generateNameVirtualHost(pw, vhostip);
-            pw.println("<VirtualHost " + vhostip + ">");
-            pw.println("    ServerName " + vhost );
-            Enumeration aliases=context.getHostAliases();
-            if( aliases.hasMoreElements() ) {
-                pw.print("    ServerAlias " );
-                while( aliases.hasMoreElements() ) {
-                    pw.print( (String)aliases.nextElement() + " " );
-                }
-                pw.println();
-            }
-            indent="    ";
-        }
 
+        pw.println();
         pw.println(indent + "ApJServMount " +  nPath + " " + nPath );
-        if( "".equals(ctxPath) )
+        if( "".equals(ctxPath) ) {
             pw.println(indent + "ApJServMount " +  nPath + "* " + nPath );
-        else
+            if ( vhost != null ) {
+                pw.println(indent + "DocumentRoot \"" +
+                            getApacheDocBase(context) + "\"");
+            } else {
+                pw.println(indent +
+                        "# To avoid Apache serving root welcome files from htdocs, update DocumentRoot");
+                pw.println(indent +
+                        "# to point to: \"" + getApacheDocBase(context) + "\"");
+            }
+
+        } else
             pw.println(indent + "ApJServMount " +  nPath + "/* " + nPath );
-        if( vhost != null ) {
-            pw.println("</VirtualHost>");
-            pw.println();
-            indent="";
-        }
     }    
 
     private void generateNameVirtualHost( PrintWriter pw, String ip ) {
@@ -464,22 +507,6 @@ public class JservConfig  extends BaseInterceptor {
                        (("".equals(ctxPath)) ? "/" : ctxPath ) +
                        " ####################" );
         pw.println();
-        if( vhost != null ) {
-            String vhostip = getVirtualHostAddress(vhost,
-                                            context.getHostAddress());
-            generateNameVirtualHost(pw, vhostip);
-            pw.println("<VirtualHost " + vhostip + ">");
-            pw.println("    ServerName " + vhost );
-            Enumeration aliases=context.getHostAliases();
-            if( aliases.hasMoreElements() ) {
-                pw.print("    ServerAlias " );
-                while( aliases.hasMoreElements() ) {
-                    pw.print( (String)aliases.nextElement() + " " );
-                }
-                pw.println();
-            }
-            indent="    ";
-        }
         // Dynamic /servet pages go to Tomcat
         
         generateStaticMappings( context, pw );
@@ -508,10 +535,6 @@ public class JservConfig  extends BaseInterceptor {
         // XXX ErrorDocument
         // Security and filter mappings
             
-        if( vhost != null ) {
-            pw.println("</VirtualHost>");
-            indent="";
-        }
     }
 
     // -------------------- Config Utils  --------------------
@@ -590,12 +613,17 @@ public class JservConfig  extends BaseInterceptor {
             pw.println(indent + "Alias " + ctxPath + " \"" + docBase + "\"");
             pw.println();
         } else {
-            // For root context, ask user to update DocumentRoot setting.
-            // Using "Alias / " interferes with the Alias for other contexts.
-            pw.println(indent +
-                    "# To correctly serve the Tomcat's root context, DocumentRoot must");
-            pw.println(indent +
-                    "# must be set to: \"" + docBase + "\"");
+            if ( context.getHost() != null ) {
+                pw.println(indent + "DocumentRoot \"" +
+                            getApacheDocBase(context) + "\"");
+            } else {
+                // For root context, ask user to update DocumentRoot setting.
+                // Using "Alias / " interferes with the Alias for other contexts.
+                pw.println(indent +
+                        "# Be sure to update DocumentRoot");
+                pw.println(indent +
+                        "# to point to: \"" + docBase + "\"");
+            }
         }
         pw.println(indent + "<Directory \"" + docBase + "\">");
         pw.println(indent + "    Options Indexes FollowSymLinks");
