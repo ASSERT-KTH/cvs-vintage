@@ -16,17 +16,19 @@ import javax.naming.InitialContext;
 import org.jboss.ejb.Container;
 import org.jboss.ejb.MethodInvocation;
 import org.jboss.logging.Logger;
-
+import org.jboss.metadata.BeanMetaData;
+import org.jboss.metadata.SecurityIdentityMetaData;
 import org.jboss.security.EJBSecurityManager;
 import org.jboss.security.RealmMapping;
 import org.jboss.security.SecurityAssociation;
+import org.jboss.security.SimplePrincipal;
 
 /** The SecurityInterceptor is where the EJB 2.0 declarative security model
-is enforced.
+is enforced. This is where the caller identity propagation is controlled as well.
 
 @author <a href="on@ibis.odessa.ua">Oleg Nitz</a>
 @author Scott_Stark@displayscape.com
-@version $Revision: 1.16 $
+@version $Revision: 1.17 $
 */
 public class SecurityInterceptor extends AbstractInterceptor
 {
@@ -49,14 +51,25 @@ public class SecurityInterceptor extends AbstractInterceptor
      * @supplierQualifier identity mapping 
      */
     protected RealmMapping realmMapping;
+    protected Principal runAsRole;
 
     public SecurityInterceptor()
     {
     }
 
+    /** Called by the super class to set the container to which this interceptor
+     belongs. We obtain the security manager and runAs identity to use here.
+     */
     public void setContainer(Container container)
     {
         this.container = container;
+        BeanMetaData beanMetaData = container.getBeanMetaData();
+        SecurityIdentityMetaData secMetaData = beanMetaData.getSecurityIdentityMetaData();
+        if( secMetaData != null && secMetaData.getUseCallerIdentity() == false )
+        {
+            String roleName = secMetaData.getRunAsRoleName();
+            runAsRole = new SimplePrincipal(roleName);
+        }
         securityManager = container.getSecurityManager();
         realmMapping = container.getRealmMapping();
     }
@@ -76,13 +89,51 @@ public class SecurityInterceptor extends AbstractInterceptor
     {
         // Authenticate the subject and apply any declarative security checks
         checkSecurityAssociation(mi, true);
-        return getNext().invokeHome(mi);
+        /* If a run-as role was specified, push it so that any calls made
+         by this bean will have the runAsRole available for declarative
+         security checks.
+        */
+        if( runAsRole != null )
+        {
+            SecurityAssociation.pushRunAsRole(runAsRole);
+        }
+        try
+        {
+            Object returnValue = getNext().invokeHome(mi);
+            return returnValue;
+        }
+        finally
+        {
+            if( runAsRole != null )
+            {
+                SecurityAssociation.popRunAsRole();
+            }
+        }
     }
     public Object invoke(MethodInvocation mi) throws Exception
     {
         // Authenticate the subject and apply any declarative security checks
         checkSecurityAssociation(mi, false);
-        return getNext().invoke(mi);
+        /* If a run-as role was specified, push it so that any calls made
+         by this bean will have the runAsRole available for declarative
+         security checks.
+        */
+        if( runAsRole != null )
+        {
+            SecurityAssociation.pushRunAsRole(runAsRole);
+        }
+        try
+        {
+            Object returnValue = getNext().invoke(mi);
+            return returnValue;
+        }
+        finally
+        {
+            if( runAsRole != null )
+            {
+                SecurityAssociation.popRunAsRole();
+            }
+        }
     }
 
     /** The EJB 2.0 declarative security algorithm:
@@ -93,9 +144,14 @@ public class SecurityInterceptor extends AbstractInterceptor
     private void checkSecurityAssociation(MethodInvocation mi, boolean home)
         throws Exception
     {
-        // if this isn't ok, bean shouldn't deploy
+        Principal principal = mi.getPrincipal();
+        Object credential = mi.getCredential();
+        // If there is not a security manager then there is no authentication required
         if (securityManager == null)
         {
+            // Allow for the progatation of caller info to other beans
+            SecurityAssociation.setPrincipal( principal );
+            SecurityAssociation.setCredential( credential );
             return;
         }
         if (realmMapping == null)
@@ -104,8 +160,6 @@ public class SecurityInterceptor extends AbstractInterceptor
         }
 
         // Check the security info from the method invocation
-        Principal principal = mi.getPrincipal();
-        Object credential = mi.getCredential();
         if( securityManager.isValid(principal, credential) == false )
         {
             String msg = "Authentication exception, principal="+principal;
@@ -120,10 +174,37 @@ public class SecurityInterceptor extends AbstractInterceptor
         }
 
         Set methodRoles = container.getMethodPermissions(mi.getMethod(), home);
+        if( methodRoles == null )
+        {
+            String method = mi.getMethod().getName();
+            String msg = "No method permissions assigned to method="+method;
+            Logger.error(msg);
+            SecurityException e = new SecurityException(msg);
+            throw new RemoteException("checkSecurityAssociation", e);
+        }
+ 
+        /* See if there is a runAs role associated with this thread. If there
+            is, this is the security role against which the assigned method
+            permissions must be checked.
+        */
+        Principal threadRunAsRole = SecurityAssociation.peekRunAsRole();
+        if( threadRunAsRole != null )
+        {
+            // Check the runAs role
+            if( methodRoles.contains(threadRunAsRole) == false )
+            {
+                String method = mi.getMethod().getName();
+                String msg = "Insufficient method permissions, runAsRole="+threadRunAsRole
+                    + ", method="+method+", requiredRoles="+methodRoles;
+                Logger.error(msg);
+                SecurityException e = new SecurityException(msg);
+                throw new RemoteException("checkSecurityAssociation", e);
+            }
+        }
         /* If the method has no assigned roles or the user does not have at
            least one of the roles then access is denied.
         */
-        if( methodRoles == null || realmMapping.doesUserHaveRole(principal, methodRoles) == false )
+        else if( realmMapping.doesUserHaveRole(principal, methodRoles) == false )
         {
             String method = mi.getMethod().getName();
             String msg = "Insufficient method permissions, principal="+principal
