@@ -7,7 +7,12 @@
 
   <body>
     <release version="b19" date="in cvs">
-      <action dev="epugh" type="add">
+      <action dev="vprus" type="add">
+        <a href="http://scarab.collab.net/scarab/issues/id/SCB132">SCB132</a>, 
+        <a href="http://scarab.collab.net/scarab/issues/id/SCB613">SCB613</a>
+        Email notification on Role Requests
+      </action>           
+      <action dev="hdabbous" type="add">
         <a href="http://scarab.collab.net/scarab/issues/id/SCB1026">SCB1026</a> 
         i10n fixes, and patches to German language bundle.
       </action>       
@@ -16,8 +21,8 @@
       </action>             
     </release>
     <release version="b18-1" date="27-Jan-2004">
-      <action dev="pledbrook" type="fix">
-        Refactoring of Email.java submitted by Vladimir Prus.
+      <action dev="vprus" type="fix">
+        Refactoring of Email.java.
       </action>             
     </release>
   </body>
