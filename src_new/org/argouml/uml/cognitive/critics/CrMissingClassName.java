@@ -1,4 +1,4 @@
-// $Id: CrMissingClassName.java,v 1.7 2003/09/11 00:07:16 bobtarling Exp $
+// $Id: CrMissingClassName.java,v 1.8 2003/12/04 09:00:25 mkl Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -27,7 +27,7 @@
 // File: CrMissingClassName.java
 // Classes: CrMissingClassName
 // Original Author: jrobbins@ics.uci.edu
-// $Id: CrMissingClassName.java,v 1.7 2003/09/11 00:07:16 bobtarling Exp $
+// $Id: CrMissingClassName.java,v 1.8 2003/12/04 09:00:25 mkl Exp $
 
 package org.argouml.uml.cognitive.critics;
 
@@ -53,8 +53,7 @@ public class CrMissingClassName extends CrUML {
 	if (!(ModelFacade.isAModelElement(dm))) return NO_PROBLEM;
 	Object e = /*(MModelElement)*/ dm;
 	String myName = ModelFacade.getName(e);
-	if (myName == null || myName.equals("") ||
-	    myName == null || myName.length() == 0)
+	if (myName == null || myName.equals("") || myName.length() == 0)
 	    return PROBLEM_FOUND;
 	return NO_PROBLEM;
     }

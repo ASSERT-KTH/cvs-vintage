@@ -1,4 +1,4 @@
-// $Id: CrUnconventionalOperName.java,v 1.11 2003/09/11 00:07:16 bobtarling Exp $
+// $Id: CrUnconventionalOperName.java,v 1.12 2003/12/04 09:00:25 mkl Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -27,7 +27,7 @@
 // File: CrUnconventionalOperName.java
 // Classes: CrUnconventionalOperName
 // Original Author: jrobbins@ics.uci.edu
-// $Id: CrUnconventionalOperName.java,v 1.11 2003/09/11 00:07:16 bobtarling Exp $
+// $Id: CrUnconventionalOperName.java,v 1.12 2003/12/04 09:00:25 mkl Exp $
 
 package org.argouml.uml.cognitive.critics;
 
@@ -37,6 +37,9 @@ import org.argouml.cognitive.critics.Critic;
 import org.argouml.kernel.Wizard;
 import org.argouml.model.ModelFacade;
 import org.tigris.gef.util.VectorSet;
+
+/** Critic to detect whether an operation name obeys to certain rules.
+ */
 public class CrUnconventionalOperName extends CrUML {
 
     public CrUnconventionalOperName() {

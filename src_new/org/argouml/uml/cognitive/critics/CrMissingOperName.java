@@ -1,4 +1,4 @@
-// $Id: CrMissingOperName.java,v 1.7 2003/09/11 00:07:16 bobtarling Exp $
+// $Id: CrMissingOperName.java,v 1.8 2003/12/04 09:00:25 mkl Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -27,7 +27,7 @@
 // File:CrMissingOperName.java
 // Classes:CrMissingOperName
 // Original Author: jrobbins@ics.uci.edu
-// $Id: CrMissingOperName.java,v 1.7 2003/09/11 00:07:16 bobtarling Exp $
+// $Id: CrMissingOperName.java,v 1.8 2003/12/04 09:00:25 mkl Exp $
 
 package org.argouml.uml.cognitive.critics;
 
@@ -36,6 +36,9 @@ import org.argouml.cognitive.ToDoItem;
 import org.argouml.cognitive.critics.Critic;
 import org.argouml.kernel.Wizard;
 import org.argouml.model.ModelFacade;
+
+/** A critic to detect whether an operation has a name.
+ **/
 public class CrMissingOperName extends CrUML {
 
     public CrMissingOperName() {

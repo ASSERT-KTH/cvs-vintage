@@ -1,4 +1,4 @@
-// $Id: CrMissingStateName.java,v 1.7 2003/09/11 00:07:16 bobtarling Exp $
+// $Id: CrMissingStateName.java,v 1.8 2003/12/04 09:00:25 mkl Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -27,7 +27,7 @@
 // File: CrMissingStateName.java
 // Classes: CrMissingStateName
 // Original Author: jrobbins@ics.uci.edu
-// $Id: CrMissingStateName.java,v 1.7 2003/09/11 00:07:16 bobtarling Exp $
+// $Id: CrMissingStateName.java,v 1.8 2003/12/04 09:00:25 mkl Exp $
 
 package org.argouml.uml.cognitive.critics;
 
@@ -39,6 +39,9 @@ import org.argouml.cognitive.critics.Critic;
 import org.argouml.kernel.Wizard;
 import org.argouml.model.ModelFacade;
 
+
+/** A critic to detect whether an state has a name.
+ **/
 public class CrMissingStateName extends CrUML {
     
     public CrMissingStateName() {
@@ -49,10 +52,13 @@ public class CrMissingStateName extends CrUML {
     }
 						   
     public boolean predicate2(Object dm, Designer dsgr) {
-	if (!ModelFacade.isAStateVertex(dm) || ModelFacade.isTop(dm))
+	if (!ModelFacade.isAStateVertex(dm))
 	    return NO_PROBLEM;   
+        if (ModelFacade.isACompositeState(dm) && ModelFacade.isTop(dm))
+            return NO_PROBLEM;
+        
 	String myName = ModelFacade.getName(dm);
-	if (myName == null || myName.equals(""))
+	if (myName == null || myName.equals("") || myName.length()==0)
 	    return PROBLEM_FOUND;
 	return NO_PROBLEM;
     }

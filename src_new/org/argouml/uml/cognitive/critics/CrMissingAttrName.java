@@ -1,4 +1,4 @@
-// $Id: CrMissingAttrName.java,v 1.7 2003/09/11 00:07:16 bobtarling Exp $
+// $Id: CrMissingAttrName.java,v 1.8 2003/12/04 09:00:25 mkl Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -27,15 +27,21 @@
 // File:CrMissingAttrName.java
 // Classes:CrMissingAttrName
 // Original Author: jrobbins@ics.uci.edu
-// $Id: CrMissingAttrName.java,v 1.7 2003/09/11 00:07:16 bobtarling Exp $
+// $Id: CrMissingAttrName.java,v 1.8 2003/12/04 09:00:25 mkl Exp $
 
 package org.argouml.uml.cognitive.critics;
+
+
+import javax.swing.Icon;
 
 import org.argouml.cognitive.Designer;
 import org.argouml.cognitive.ToDoItem;
 import org.argouml.cognitive.critics.Critic;
 import org.argouml.kernel.Wizard;
 import org.argouml.model.ModelFacade;
+
+/** A critic to detect whether an attribute has a name
+ **/
 public class CrMissingAttrName extends CrUML {
 
     public CrMissingAttrName() {
@@ -49,9 +55,14 @@ public class CrMissingAttrName extends CrUML {
 	if (!(ModelFacade.isAAttribute(dm))) return NO_PROBLEM;
 	Object attr = /*(MAttribute)*/ dm;
 	String myName = ModelFacade.getName(attr);
-	if (myName == null || myName.equals("")) return PROBLEM_FOUND;
+	if (myName == null || 
+            "".equals(myName)) return PROBLEM_FOUND;
 	if (myName.length() == 0) return PROBLEM_FOUND;
 	return NO_PROBLEM;
+    }
+    
+    public Icon getClarifier() {
+	return ClAttributeCompartment.TheInstance;
     }
 
     public void initWizard(Wizard w) {
