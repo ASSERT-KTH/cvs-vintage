@@ -26,7 +26,8 @@
 	 Threshold for which types of messages are displayed in the
 	 log.  Levels are inclusive; that is, "WARNING" level displays
 	 any log message marked as warning, error, or fatal.  Default
-	 level is WARNING.
+	 level is WARNING.  Note: servlet_log must be level
+	 INFORMATION in order to see normal servlet log messages.
 
 	 verbosityLevel values can be: 
 	    FATAL
@@ -71,11 +72,13 @@
 
     <Logger name="servlet_log" 
             path="logs/servlet.log"
+            verbosityLevel = "INFORMATION" 
     />
 
     <Logger name="JASPER_LOG" 
 	    path="logs/jasper.log"
-            verbosityLevel = "INFORMATION" />
+            verbosityLevel = "INFORMATION" 
+    />
 
     <!-- You can add a "home" attribute to represent the "base" for 
          all relative paths. If none is set, the TOMCAT_HOME property
