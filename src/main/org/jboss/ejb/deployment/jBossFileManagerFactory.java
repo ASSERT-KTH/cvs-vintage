@@ -17,11 +17,11 @@ import com.dreambean.ejx.FileManagerFactory;
  *      
  *   @see <related>
  *   @author Rickard Öberg (rickard.oberg@telkel.com)
- *   @version $Revision: 1.1 $
+ *   @version $Revision: 1.2 $
  */
 public class jBossFileManagerFactory
-	extends FileFilter
-	implements FileManagerFactory
+    extends FileFilter
+    implements FileManagerFactory
 {
    // Constants -----------------------------------------------------
     
@@ -30,27 +30,27 @@ public class jBossFileManagerFactory
    // Public --------------------------------------------------------
 
    // FileFilter implementation -------------------------------------
-	public boolean accept(File f)
-	{
-		return (f.getName().equals("ejb-jar.xml") || f.getName().endsWith(".jar"))
-					|| f.isDirectory();
-	}
-	
-	public String getDescription() { return toString(); }
+    public boolean accept(File f)
+    {
+        return (f.getName().equals("ejb-jar.xml") || f.getName().endsWith(".jar"))
+                    || f.isDirectory();
+    }
+    
+    public String getDescription() { return toString(); }
 
    // FileManagerFactory implementation -----------------------------
    public FileManager createFileManager()
-	{
-		return new jBossFileManager(this);
-	}
+    {
+        return new jBossFileManager(this);
+    }
    
    public FileFilter getFileFilter()
-	{
-		return this;
-	}
-	
-	public String toString()
-	{
-		return "jBoss XML";
-	}
+    {
+        return this;
+    }
+    
+    public String toString()
+    {
+        return "EJB 1.1 XML with jBoss XML";
+    }
 }
