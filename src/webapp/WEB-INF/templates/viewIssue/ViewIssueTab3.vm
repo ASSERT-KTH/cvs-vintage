@@ -9,7 +9,7 @@ $l10n.NoComments
 #else
   #if ($canAddComment && !$isEditComments)
    <h4>$l10n.EnterComment</h4>
-   <table cellspacing="2" cellpadding="3" border="0">
+   <table cellspacing="2" cellpadding="3" border="0" width="100%">
      <tr>
        <td>
           #set ($commentGroup = $intake.Attachment.setKey("commentKey"))

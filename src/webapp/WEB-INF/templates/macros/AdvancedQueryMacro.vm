@@ -330,7 +330,7 @@ $l10n.TimeFrom:&#160;<input type="text" size="20"
 <div class="axial">
 #if ( $search.isXMITSearch() )
  <h$headerLevel>$l10n.CommonAttributes</h$headerLevel>
- <table cellpadding="3" cellspacing="2" border="0">
+ <table cellpadding="3" cellspacing="2" border="0" width="100%">
  #set ($firstTextWidget = true)
  #foreach ( $attKey in $attrValues.sequence() )
      #set ( $attVal = $attrValues.get($attKey) )
@@ -347,7 +347,7 @@ $l10n.TimeFrom:&#160;<input type="text" size="20"
  #foreach ($group in $issueType.getAttributeGroups($module,false))
   #if (($optionsOnly && $group.hasAnyOptionAttributes()) || (!$optionsOnly && !$group.Attributes.isEmpty()))
     <h$headerLevel>$group.Name</h$headerLevel>
-    <table cellpadding="3" cellspacing="2" border="0">
+    <table cellpadding="3" cellspacing="2" border="0" width="100%">
    #foreach ($att in $group.Attributes)
     #set ($rma = $module.getRModuleAttribute($att, $issueType))
     #set ($attVal = $attrValues.get($att.Name.toUpperCase()))
@@ -391,8 +391,8 @@ $l10n.TimeFrom:&#160;<input type="text" size="20"
         #if ($attVal.Attribute.AttributeType.Name == "long-string" )
              #textAreaMedium("$attrInput.Value.Key" $attrInput.Value)
         #else
-           <input name= "$attrInput.Value.Key"
-                value="$!attrInput.Value" size="25" type="text" />
+           <input class="fullWidth" name= "$attrInput.Value.Key"
+                value="$!attrInput.Value" type="text" />
         #end
         #if ($firstTextWidget)
         <small>#enterHelp($link.setPage("help,UserQueryText.vm") "" " $l10n.TextQueries?")</small>

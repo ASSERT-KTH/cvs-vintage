@@ -33,7 +33,7 @@
 
 #set ($agGroup = $intake.AttributeGroup.mapTo($group))
 <div class="axial">
- <table border="0" cellspacing="2" cellpadding="3">
+ <table border="0" cellspacing="2" cellpadding="3" width="100%">
  <tr>
  <th>* $l10n.Name</th>
  <td>

@@ -52,7 +52,7 @@
 <h3>$l10n.TemplateInfo</h3>
 
 <div class="axial">
-<table border="0" cellspacing="2" cellpadding="3">
+<table border="0" cellspacing="2" cellpadding="3" width="100%">
 <tr>
   <th>* $l10n.Name</th>
   <td>
@@ -100,7 +100,7 @@
   #if (!$attrgroup.Attributes.isEmpty())
     <h4>$attrgroup.Name</h4>
     <div class="axial">
-    <table cellpadding="3" cellspacing="2" border="0">
+    <table cellpadding="3" cellspacing="2" border="0" width="100%">
     #foreach ($att in $attrgroup.Attributes)
       #set ($rma = $module.getRModuleAttribute($att, $issueType))
       #if ($rma.Active)
@@ -124,8 +124,8 @@
           #if ($attVal.Attribute.AttributeType.Name == "long-string")
             #textAreaMedium("$attrInput.Value.Key" $attrInput.Value)
           #else
-            <input name= "$attrInput.Value.Key"
-              value="$!attrInput.Value" size="45" type="text" />
+            <input class="fullWidth" name= "$attrInput.Value.Key"
+              value="$!attrInput.Value" type="text" />
           #end
         #end
         </td>

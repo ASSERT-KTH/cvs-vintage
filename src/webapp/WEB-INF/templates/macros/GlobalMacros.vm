@@ -116,7 +116,7 @@
         #if ($attVal.Attribute.AttributeType.Name == "long-string")
            #textAreaMedium("$attrInput.Value.Key" $attrInput.Value)
         #else
-           <input type="text" name="$attrInput.Value.Key" value="$!attrInput.Value"#if($size.length()) size="$size"#end />
+           <input class="fullWidth" type="text" name="$attrInput.Value.Key" value="$!attrInput.Value" />
         #end
 #end
 
@@ -132,7 +132,7 @@
 #if ($attVal.Attribute.AttributeType.Name == "long-string")
    #textAreaMedium("$attrInput.Value.Key" $currentValue)
 #else
-   <input type="text" name="$attrInput.Value.Key" value="$!currentValue"#if($size.length()) size="$size"#end />
+   <input class="fullWidth" type="text" name="$attrInput.Value.Key" value="$!currentValue" />
 #end
 #end
 
@@ -569,15 +569,15 @@ selected the radio button.
 
 
 #macro (textAreaSmall $key $value)
- <textarea cols="30" rows="2" wrap="virtual" name="$key">#if ($value)$value#end</textarea>
+ <textarea class="fullWidth" rows="2" wrap="virtual" name="$key">#if ($value)$value#end</textarea>
 #end
 
 #macro (textAreaMedium $key $value)
- <textarea cols="50" rows="10" wrap="virtual" name="$key">#if ($value)$value#end</textarea>
+ <textarea class="fullWidth" rows="10" wrap="virtual" name="$key">#if ($value)$value#end</textarea>
 #end
 
 #macro (textAreaLarge $key $value)
- <textarea cols="70" rows="10" wrap="virtual" name="$key">#if ($value)$value#end</textarea>
+ <textarea class="fullWidth" rows="10" wrap="virtual" name="$key">#if ($value)$value#end</textarea>
 #end
 
 #macro (attributeCreatedBy $attribute)
@@ -936,7 +936,7 @@ $link.setPage("TemplateList.vm").setLabel($l10n.format("ViewAllTemplates", $modu
 #foreach ($group in $moduleAttributeGroups)
  #if (!$group.Attributes.isEmpty())
   <h3>$group.Name</h3>
-  <table cellpadding="3" cellspacing="2" border="0">
+  <table cellpadding="3" cellspacing="2" border="0" width="100%">
   #foreach ($att in $group.Attributes)
     #set ($rma = $module.getRModuleAttribute($att, $issueType))
       #if ($rma.Active)

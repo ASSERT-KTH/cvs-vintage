@@ -33,7 +33,7 @@ $user.setHomePage("query")
 <h3>$l10n.TextSearch</h3>
 
 <div class="axial">
-  <table border="0" cellspacing="2" cellpadding="3">
+  <table border="0" cellspacing="2" cellpadding="3" width="100%">
   <tr>
    <th width="120">$l10n.SelectTextAttributes</th>
    <td>

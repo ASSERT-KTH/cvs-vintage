@@ -142,7 +142,7 @@ $l10n.depend_nonblockingReverse this issue
 
 #if ($canEdit)
 <div class="axial">
-  <table cellpadding="3" cellspacing="2" border="0">
+  <table cellpadding="3" cellspacing="2" border="0" width="100%">
     <tr>
       <th>$l10n.Reason</th>
       <td>

@@ -86,7 +86,7 @@
 </table>
 
 <div class="axial">
- <table border="0" cellspacing="2" cellpadding="3">
+ <table border="0" cellspacing="2" cellpadding="3" width="100%">
   <tr>
    <th width="120">$l10n.Comments ($l10n.SentToSelected)</th>
    <td>#textAreaMedium("global_comment" "")</td>

@@ -62,7 +62,7 @@
 #end
 
 <div class="axial">
- <table cellpadding="3" cellspacing="2" border="1">
+ <table cellpadding="3" cellspacing="2" border="1" width="100%">
   <tr>
    <th>* $l10n.ModuleName</th>
    <td>

@@ -125,7 +125,7 @@
 #set ($intakeAttachment = $intake.Attachment.mapTo($atch))
 
 <div class="axial">
-<table cellpadding="3" cellspacing="2" border="0">
+<table cellpadding="3" cellspacing="2" border="0" width="100%">
 <tr>
 <th width="120">$l10n.Comment</th>
 <td>

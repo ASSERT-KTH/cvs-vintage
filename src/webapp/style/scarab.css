@@ -11,3 +11,11 @@
  margin-left: 7px;
  margin-top: 1em;
  }
+
+input.fullWidth {
+  width: 100%;
+}
+
+textarea.fullWidth {
+  width: 100%;
+}

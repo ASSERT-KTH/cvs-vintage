@@ -20,7 +20,7 @@
   #if (!$data.User.hasPermission($scarabG.Permission.ITEM__APPROVE, $module))
     <p class="warningmark"><strong>$l10n.QueryWarning</strong></p>
   #end
- <table cellpadding="3" cellspacing="2" border="0">
+ <table cellpadding="3" cellspacing="2" border="0" width="100%">
   <tr>
    <th width="120">* $l10n.Name</th>
    <td>#fieldErrorMsg($queryGroup.Name "")

@@ -73,20 +73,29 @@
       <id>hdabbous</id>
       <email>dabbous@saxess.com</email>
       <organization>www.saxess.com</organization>
-    </developer>  
+    </developer>
+    <developer>
+      <name>Peter Ledbrook</name>
+      <id>pledbrook</id>
+      <email>p.ledbrook@cacoethes.co.uk</email>
+    </developer>
   </developers>
-  
+
   <contributors>
     <contributor>
       <name>Vladimir Prus</name>
       <id>vprus</id>
       <email>ghost@cs.msu.su</email>
-    </contributor>    
+    </contributor>
     <contributor>
       <name>Richard Dean</name>
       <id>rdean</id>
       <email>rdean@rapsg.com</email>
-    </contributor>    
+    </contributor>
+    <contributor>
+      <name>Arnaud Legout</name>
+      <id>legout</id>
+    </contributor>
   </contributors>
 
   <dependencies>

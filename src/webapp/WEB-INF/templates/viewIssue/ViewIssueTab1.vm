@@ -19,7 +19,7 @@
 #foreach ($group in $issueType.getAttributeGroups($module, true))
   #if (!$group.Attributes.isEmpty())
     <h3>$group.Name</h3>
-    <table cellpadding="3" cellspacing="2" border="0">
+    <table cellpadding="3" cellspacing="2" border="0" width="100%">
       #foreach ($att in $group.Attributes)
         #set ($rma = $module.getRModuleAttribute($att, $issueType))
         #if ($rma.Active)
@@ -45,8 +45,8 @@
                   #if ($att.AttributeType.Name == "long-string")
                      #textAreaMedium("$attrInput.Value.Key" $attrInput.Value)
                   #else
-                    <input name= "$attrInput.Value.Key"
-                      value="$!attrInput.Value" size="70" type="text" />
+                    <input class="fullWidth" name= "$attrInput.Value.Key"
+                      value="$!attrInput.Value" type="text" />
                   #end
                 #end
                   </td>
@@ -119,7 +119,7 @@
 <div class="axial">
    #set ($attCommentGroup = $intake.Attachment.setKey("attCommentKey$currentIssue.QueryKey"))
 
-<table cellpadding="3" cellspacing="2" border="0">
+<table cellpadding="3" cellspacing="2" border="0" width="100%">
 <tr>
 <th>* $l10n.ReasonForChange</th>
 <td>$l10n.EnterReason

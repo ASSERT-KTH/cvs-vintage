@@ -26,7 +26,7 @@ $data.User.setCurrentMITList($report.getMITList())
 <p><strong>$l10n.Saving</strong> $l10n.EditInfo</p>
 
 <div class="axial">
- <table cellpadding="3" cellspacing="2" border="0">
+ <table cellpadding="3" cellspacing="2" border="0" width="100%">
   <tr>
    <th width="120">$l10n.ReportName</th>
    <td>
