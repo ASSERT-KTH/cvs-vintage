@@ -298,6 +298,10 @@ public final class ContextManager {
     public void setProperty( String name, String value ) {
 	properties.put( name, value );
     }
+
+    public Hashtable getProperties() {
+	return properties;
+    }
     
     // -------------------- Other properties --------------------
 
@@ -929,8 +933,11 @@ public final class ContextManager {
     public final void handleError( Request req, Response res , Throwable t  ) {
 	BaseInterceptor ri[];
 	int status;
-	ri=req.getContext().getContainer().
-	    getInterceptors( Container.H_handleError );
+	if( req.getContext() == null )
+	    ri=getContainer().getInterceptors( Container.H_handleError );
+	else
+	    ri=req.getContext().getContainer().
+		getInterceptors( Container.H_handleError );
 	for( int i=0; i< ri.length; i++ ) {
 	    status=ri[i].handleError( req, res, t );
 	    if( status!=0 ) return;
