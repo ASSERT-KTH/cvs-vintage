@@ -78,7 +78,7 @@ import org.tigris.scarab.tools.ScarabRequestTool;
     This class is responsible for edit issue forms.
     ScarabIssueAttributeValue
     @author <a href="mailto:elicia@collab.net">Elicia David</a>
-    @version $Id: Approval.java,v 1.8 2001/10/18 02:00:02 elicia Exp $
+    @version $Id: Approval.java,v 1.9 2001/12/19 21:16:03 jon Exp $
 */
 public class Approval extends TemplateAction
 {
@@ -177,7 +177,6 @@ public class Approval extends TemplateAction
                } 
                else if (action.equals("Approve"))
                {
-System.out.println("approve");
                    try
                    {
                        info.approve(user, true);
