@@ -1,6 +1,6 @@
+#set ( $action = $link.setPage("IssueView.vm").setAction("ModifyIssue").addPathInfo("nextTemplate", "Links.vm") )
 #set ( $currentIssueId = $data.Parameters.getString("id") )
 #set ( $currentIssue = $scarabR.getIssue($currentIssueId) )
-
 #if ($currentIssue)
     #set ($attrValues = $currentIssue.AllAttributeValuesMap)
 
@@ -8,7 +8,7 @@
 
 #set($attVal =  $attrValues.get("DESCRIPTION"))
 #set ( $attrInput = $intake.AttributeValue.mapTo($attVal) ) 
-
+ 
       <p> $attrInput.Value </p>
 
       <div class="functnbar">
@@ -56,7 +56,7 @@
           <td class="b">
 
     #if ($attVal.Attribute.AttributeType.AttributeClass.Name == "user")
-          #userSelectBox ($attVal "")
+       #userSelectBox ($attVal "")
     #elseif ($attVal.Attribute.AttributeType.Name == "combo-box" )
           #attrValueLeafSelect ($attVal $field "")
     #else
@@ -82,9 +82,8 @@
           <td>
            #foreach( $user in $currentIssue.AssignedTo)
             #set ( $comma = "" )
-            #set ( $email = $currentIssue.AssignedTo.Email )
             <td class="b">
-            $comma<a href="mailTo:$email">$email</a> 
+            ${comma}${user}
             #set ( $comma = "," )
            #end
            </td>
@@ -98,6 +97,8 @@
        </div>
       </div>
 
+
+## URLS
       <div class="grouper">
        <div class="datatitle">
         <table width="100%" cellpadding="3" cellspacing="2" border="1">
@@ -117,57 +118,91 @@
           <th><a href="#">description:</a></th>
          </tr>
 
-#set($attVal =  $attrValues.get("URL"))
-#set ( $attrInput = $intake.AttributeValue.mapTo($attVal) )
-         <tr class="a">
+    #foreach($url in $currentIssue.Url)
+         #if( $velocityCount % 2 > 0 )
+            <tr class="a">
+         #else 
+            <tr class="b">
+         #end
           <td><input type="checkbox" /></td>
 
-          <td><input type="text" size="25" class="text" value="$attrInput.Value" /></td>
+          <td><input type="text" size="25" class="text" value="$url.DataAsString" /></td>
 
-          <td><input type="text" size="25" class="text" value="url description x" /></td>
+          <td><input type="text" size="25" class="text" value="$url.Name" /></td>
          </tr>
+    #end
 
-         <tr class="b">
-          <td><input type="checkbox" /></td>
-
-          <td><input type="text" size="25" class="text" value="http://" /></td>
-
-          <td><input type="text" size="25" class="text" value="url description y" /></td>
-         </tr>
-
-         <tr class="a">
-          <td><input type="checkbox" /></td>
-
-          <td><input type="text" size="25" class="text" value="http://" /></td>
-
-          <td><input type="text" size="25" class="text" value="url description z" /></td>
-         </tr>
         </table>
        </div>
 
        <p><input type="submit" value="add url" class="button" />&#160;<input type="submit" value="delete url" class="button" /></p>
       </div>
 
+## PARENT ISSUES
+#if (!$currentIssue.Parents.isEmpty() )
+
       <div class="grouper">
        <div class="datatitle">
         <table width="100%" cellpadding="3" cellspacing="2" border="1">
          <tr>
-          <td>Parent Issue</td>
+          <td>Parent Issues</td>
          </tr>
         </table>
        </div>
 
-       <div class="listtable">
-        <table width="100%" cellpadding="3" cellspacing="2" border="1">
+       <div class="datatable">
+        <table width="100%" border="1" cellspacing="2" cellpadding="3">
          <tr>
-          <td width="120" class="a"><strong>parent issue</strong></td>
+          <th><a href="#"><img src="./images/icon_uparrow.gif" width="13" height="8" alt="sort" border="0" /></a><a href="#"><img src="./images/icon_downarrow.gif" width="13" height="8" alt="sort" border="0" /></a></th>
 
-          <td class="b"><a href="#">parent issue x: non-blocking</a></td>
+          <th><a href="#">issue id#:</a></th>
+
+          <th><a href="#">issue summary:</a></th>
+
+          <th><a href="#">dependency type:</a></th>
          </tr>
+
+       #foreach( $parent in $currentIssue.Parents )
+         #if( $velocityCount % 2 > 0 )
+            <tr class="a">
+         #else 
+            <tr class="b">
+         #end
+          <td><input type="checkbox" /></td>
+
+          <td><a href="IssueView.vm?id=$parent.IssueId">$parent.IssueId</a></td>
+
+          <td><a href="IssueView.vm?id=$parent.IssueId">
+             #set ($parentAttrValues = $parent.AllAttributeValuesMap)
+             #set($attVal =  $parentAttrValues.get("SUMMARY"))
+             #set ( $attrInput = $intake.AttributeValue.mapTo($attVal) )
+           $attVal.Value</a></td>
+
+          <td>
+        <select name="parent_depend_type_id" class="select">
+            #foreach ($dependType in $currentIssue.getAllDependencyTypes())
+              #set ( $selected = "" )
+              #if ( $parent.getDependencyType($currentIssue).equals($dependType.DependTypeId.toString()))
+                #set ( $selected = " selected" )
+              #end
+              <option$selected value="$dependType.DependTypeId">
+                  $dependType.Name</option>
+            #end
+        </select>
+          </td>
+         </tr>
+       #end
+
         </table>
+
+       <p><input type="submit" value="edit child issue" class="button" />&#160;<input type="submit" value="add child issue" class="button" /></p>
        </div>
       </div>
+#end
 
+
+## CHILD ISSUES
+#if (!$currentIssue.Children.isEmpty() )
       <div class="grouper">
        <div class="datatitle">
         <table width="100%" cellpadding="3" cellspacing="2" border="1">
@@ -189,47 +224,45 @@
           <th><a href="#">dependency type:</a></th>
          </tr>
 
-         <tr class="a">
+       #foreach( $child in $currentIssue.Children )
+         #if( $velocityCount % 2 > 0 )
+            <tr class="a">
+         #else 
+            <tr class="b">
+         #end
           <td><input type="checkbox" /></td>
 
-          <td><a href="#">xxx</a></td>
+          <td><a href="IssueView.vm?id=$child.IssueId">$child.IssueId</a></td>
 
-          <td><a href="#">child issue x</a></td>
+          <td><a href="IssueView.vm?id=$child.IssueId">
+             #set ($childAttrValues = $child.AllAttributeValuesMap)
+             #set($attVal =  $childAttrValues.get("SUMMARY"))
+             #set ( $attrInput = $intake.AttributeValue.mapTo($attVal) )
+           $attVal.Value</a></td>
 
-          <td><select class="select">
-           <option>
-            blocking
-           </option>
-
-           <option>
-            non-blocking
-           </option>
-          </select></td>
+          <td>
+        <select name="child_depend_type_id" class="select">
+            #foreach ($dependType in $currentIssue.getAllDependencyTypes())
+              #set ( $selected = "" )
+              #if ( $currentIssue.getDependencyType($child).equals($dependType.DependTypeId.toString()))
+                #set ( $selected = " selected" )
+              #end
+              <option$selected value="$dependType.DependTypeId">
+                  $dependType.Name</option>
+            #end
+        </select>
+          </td>
          </tr>
+       #end
 
-         <tr class="b">
-          <td><input type="checkbox" /></td>
-
-          <td><a href="#">xxx</a></td>
-
-          <td><a href="#">child issue x</a></td>
-
-          <td><select class="select">
-           <option>
-            blocking
-           </option>
-
-           <option>
-            non-blocking
-           </option>
-          </select></td>
-         </tr>
         </table>
 
-       <p><input type="submit" value="add child issue" class="button" /></p>
+       <p><input type="submit" value="edit child issue" class="button" />&#160;<input type="submit" value="add child issue" class="button" /></p>
        </div>
       </div>
+#end
 
+## COMMENTS
       <div class="grouper">
        <div class="datatitle">
         <table width="100%" cellpadding="3" cellspacing="2" border="1">
@@ -262,13 +295,15 @@
            <textarea rows="2" cols="35" class="text">
            </textarea>
 
-           <p><input type="submit" value="submit comment" class="button" /></p>
+           <p><input type="submit" value="submit comment" name="eventSubmit_doAddcomment" class="button" /></p>
           </td>
          </tr>
         </table>
        </div>
       </div>
 
+
+## ISSUE HISTORY
       <div class="grouper">
        <div class="datatitle">
         <table width="100%" cellpadding="3" cellspacing="2" border="1">
@@ -289,7 +324,11 @@
          </tr>
 
        #foreach( $activity in $currentIssue.Activity )
-         <tr class="a">
+         #if( $velocityCount % 2 > 0 )
+            <tr class="a">
+         #else 
+            <tr class="b">
+         #end
           <td width="120">
             #if( $activity.Transaction)
               $activity.Transaction.CreatedDate
@@ -302,29 +341,6 @@
          </tr>
        #end
 
-         <tr class="b">
-          <td width="120">xx/xx/2001</td>
-
-          <td>action descr. X</td>
-
-          <td>note content X</td>
-         </tr>
-
-         <tr class="a">
-          <td width="120">xx/xx/2001</td>
-
-          <td>action descr. X</td>
-
-          <td>note content X</td>
-         </tr>
-
-         <tr class="b">
-          <td width="120">xx/xx/2001</td>
-
-          <td>action descr. X</td>
-
-          <td>note content X</td>
-         </tr>
         </table>
        </div>
       </div>
