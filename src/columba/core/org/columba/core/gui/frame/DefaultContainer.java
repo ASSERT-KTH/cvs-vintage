@@ -34,9 +34,9 @@ import javax.swing.text.View;
 
 import org.columba.core.config.ViewItem;
 import org.columba.core.config.WindowItem;
-import org.columba.core.gui.menu.Menu;
+import org.columba.core.gui.menu.ColumbaMenu;
 import org.columba.core.gui.statusbar.StatusBar;
-import org.columba.core.gui.toolbar.ToolBar;
+import org.columba.core.gui.toolbar.ColumbaToolBar;
 import org.columba.core.gui.util.ImageLoader;
 import org.columba.core.main.MainInterface;
 import org.columba.core.xml.XmlElement;
@@ -61,9 +61,9 @@ public class DefaultContainer extends JFrame implements Container,
 
 	private String id = "core";
 
-	protected Menu menu;
+	protected ColumbaMenu menu;
 
-	protected ToolBar toolbar;
+	protected ColumbaToolBar toolbar;
 
 	/**
 	 * in order to support multiple toolbars we use a panel as parent container
@@ -121,14 +121,14 @@ public class DefaultContainer extends JFrame implements Container,
 		panel.add(contentPane, BorderLayout.CENTER);
 
 		// create menu
-		menu = new Menu("org/columba/core/action/menu.xml", mediator);
+		menu = new ColumbaMenu("org/columba/core/action/menu.xml", mediator);
 
 		if (menu != null) {
 			setJMenuBar(menu);
 		}
 
 		// create toolbar
-		toolbar = new ToolBar(mediator);
+		toolbar = new ColumbaToolBar(mediator);
 		setToolBar(toolbar);
 
 		setInfoPanel(new ContainerInfoPanel());
@@ -229,7 +229,7 @@ public class DefaultContainer extends JFrame implements Container,
 	 * @param enable
 	 *            true/false
 	 */
-	public void enableToolbar(String id, boolean enable) {
+	public void enableToolBar(String id, boolean enable) {
 		getViewItem().set("toolbars", id, enable);
 
 		toolbarPane.removeAll();
@@ -253,7 +253,7 @@ public class DefaultContainer extends JFrame implements Container,
 	 *            ID of controller
 	 * @return true, if toolbar is enabled, false otherwise
 	 */
-	public boolean isToolbarEnabled(String id) {
+	public boolean isToolBarEnabled(String id) {
 		return getViewItem().getBoolean("toolbars", id, true);
 	}
 
@@ -360,7 +360,7 @@ public class DefaultContainer extends JFrame implements Container,
 	/**
 	 * @see org.columba.core.gui.frame.View#getToolBar()
 	 */
-	public ToolBar getToolBar() {
+	public ColumbaToolBar getToolBar() {
 
 		return toolbar;
 	}
@@ -381,8 +381,8 @@ public class DefaultContainer extends JFrame implements Container,
 
 		contentPane.add(view.getComponent(), BorderLayout.CENTER);
 
-		enableToolbar(Container.MAIN_TOOLBAR,
-				isToolbarEnabled(Container.MAIN_TOOLBAR));
+		enableToolBar(Container.MAIN_TOOLBAR,
+				isToolBarEnabled(Container.MAIN_TOOLBAR));
 
 		loadPositions(getViewItem());
 
@@ -411,7 +411,7 @@ public class DefaultContainer extends JFrame implements Container,
 	/**
 	 * @see org.columba.core.gui.frame.View#getMenu()
 	 */
-	public Menu getMenu() {
+	public ColumbaMenu getMenu() {
 		return menu;
 	}
 
@@ -469,7 +469,7 @@ public class DefaultContainer extends JFrame implements Container,
 	/**
 	 * @see org.columba.core.gui.frame.Container#setToolBar(org.columba.core.gui.toolbar.ToolBar)
 	 */
-	public void setToolBar(ToolBar toolbar) {
+	public void setToolBar(ColumbaToolBar toolbar) {
 		this.toolbar = toolbar;
 
 		toolbarPane.removeAll();
@@ -488,12 +488,12 @@ public class DefaultContainer extends JFrame implements Container,
 		toolbarPane.removeAll();
 
 		if (enable) {
-			if (isToolbarEnabled(Container.MAIN_TOOLBAR)) {
+			if (isToolBarEnabled(Container.MAIN_TOOLBAR)) {
 				toolbarPane.add(getToolBar());
 			}
 			toolbarPane.add(getInfoPanel());
 		} else {
-			if (isToolbarEnabled(Container.MAIN_TOOLBAR)) {
+			if (isToolBarEnabled(Container.MAIN_TOOLBAR)) {
 				toolbarPane.add(getToolBar());
 			}
 		}

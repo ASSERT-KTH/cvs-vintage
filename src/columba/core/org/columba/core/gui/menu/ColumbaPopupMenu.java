@@ -27,13 +27,13 @@ import javax.swing.JPopupMenu;
  * To change this generated comment go to
  * Window>Preferences>Java>Code Generation>Code and Comments
  */
-public class ContextMenu extends JPopupMenu {
+public class ColumbaPopupMenu extends JPopupMenu {
     protected PopupMenuGenerator menuGenerator;
 
     /**
  *
  */
-    public ContextMenu(FrameMediator frameController, String path) {
+    public ColumbaPopupMenu(FrameMediator frameController, String path) {
         super();
 
         menuGenerator = createPopupMenuGeneratorInstance(path, frameController);

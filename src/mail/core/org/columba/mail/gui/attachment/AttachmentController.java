@@ -26,6 +26,7 @@ import javax.swing.JComponent;
 import javax.swing.JPopupMenu;
 
 import org.columba.core.gui.frame.FrameMediator;
+import org.columba.core.gui.menu.ColumbaPopupMenu;
 import org.columba.core.main.MainInterface;
 import org.columba.mail.gui.attachment.action.OpenAction;
 import org.columba.mail.gui.attachment.command.SaveAttachmentTemporaryCommand;
@@ -48,7 +49,7 @@ public class AttachmentController {
     //private Object actUid;
     //private TempFolder subMessageFolder;
     //private boolean inline;
-    private AttachmentMenu menu;
+    private ColumbaPopupMenu menu;
 
     //private AttachmentActionListener actionListener;
     private AttachmentView view;
@@ -92,7 +93,8 @@ public class AttachmentController {
     }
 
     public void createPopupMenu() {
-        menu = new AttachmentMenu(getFrameController());
+        //menu = new AttachmentMenu(getFrameController());
+    	menu = new ColumbaPopupMenu(getFrameController(), "org/columba/mail/action/attachment_contextmenu.xml");
     }
 
     private JPopupMenu getPopupMenu() {

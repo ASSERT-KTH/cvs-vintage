@@ -42,6 +42,7 @@ import org.columba.core.charset.CharsetListener;
 import org.columba.core.charset.CharsetOwnerInterface;
 import org.columba.core.gui.focus.FocusOwner;
 import org.columba.core.gui.frame.FrameMediator;
+import org.columba.core.gui.menu.ColumbaPopupMenu;
 import org.columba.core.main.MainInterface;
 import org.columba.mail.folder.MessageFolder;
 import org.columba.mail.gui.attachment.AttachmentController;
@@ -66,7 +67,7 @@ public class MessageController implements HyperlinkListener, MouseListener,
 
     private Object uid;
 
-    private MessageMenu menu;
+    private ColumbaPopupMenu menu;
 
     private JButton button;
 
@@ -131,7 +132,7 @@ public class MessageController implements HyperlinkListener, MouseListener,
     }
 
     public void createPopupMenu() {
-        menu = new MessageMenu(frameController);
+        menu = new ColumbaPopupMenu(frameController, "org/columba/mail/action/message_contextmenu.xml");
     }
 
     /**

@@ -17,12 +17,10 @@
 //All Rights Reserved.
 package org.columba.core.gui.frame;
 
-import java.awt.event.MouseAdapter;
 import java.util.logging.Logger;
 
 import org.columba.core.config.ViewItem;
 import org.columba.core.gui.selection.SelectionManager;
-import org.columba.core.gui.statusbar.StatusBar;
 import org.columba.core.util.GlobalResourceLoader;
 
 /**
@@ -113,13 +111,6 @@ public class DefaultFrameController implements FrameMediator {
 	}
 
 	/**
-	 * @see org.columba.core.gui.frame.FrameMediator#getId()
-	 */
-	public String getId() {
-		return id;
-	}
-
-	/**
 	 * @see org.columba.core.gui.frame.FrameMediator#loadPositions(org.columba.core.config.ViewItem)
 	 */
 	public void loadPositions(ViewItem viewItem) {
@@ -131,22 +122,6 @@ public class DefaultFrameController implements FrameMediator {
 	 */
 	public void savePositions(ViewItem viewItem) {
 
-	}
-
-	/**
-	 * TODO: remove this method - only added as adapter for the refactoring
-	 * 
-	 * @see org.columba.core.gui.frame.FrameMediator#getStatusBar()
-	 */
-	public StatusBar getStatusBar() {
-		return getContainer().getStatusBar();
-	}
-
-	/**
-	 * @see org.columba.core.gui.frame.FrameMediator#getMouseTooltipHandler()
-	 */
-	public MouseAdapter getMouseTooltipHandler() {
-		return getContainer().getMouseTooltipHandler();
 	}
 
 	/**

@@ -30,28 +30,8 @@ import java.awt.event.MouseAdapter;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 
-public class Menu extends JMenuBar {
+public class ColumbaMenu extends JMenuBar {
 	private MouseAdapter handler;
-
-	private CMenu fetchMessageSubmenu;
-
-	private CMenu manageSubmenu;
-
-	private CMenu sortSubMenu;
-
-	private JMenu fileMenu;
-
-	private JMenu editMenu;
-
-	private JMenu viewMenu;
-
-	private JMenu folderMenu;
-
-	private JMenu messageMenu;
-
-	private JMenu utilitiesMenu;
-
-	private JMenu helpMenu;
 
 	String menuRoot;
 
@@ -59,7 +39,7 @@ public class Menu extends JMenuBar {
 
 	protected MenuBarGenerator menuGenerator;
 
-	public Menu(String xmlRoot, FrameMediator frameController) {
+	public ColumbaMenu(String xmlRoot, FrameMediator frameController) {
 		super();
 
 		this.menuRoot = xmlRoot;
@@ -85,10 +65,6 @@ public class Menu extends JMenuBar {
 		return menuGenerator;
 	}
 
-	public void extendMenuFromFile(String path) {
-		menuGenerator.extendMenuFromFile(path);
-		menuGenerator.createMenuBar(this);
-	}
 
 	public void extendMenuFromFile(FrameMediator mediator, String path) {
 		menuGenerator = createMenuBarGeneratorInstance(menuRoot, mediator);

@@ -49,7 +49,7 @@ public class CancelAction extends AbstractColumbaAction
         // set JavaHelp topic ID
         //setTopicID("cancel");
         
-        taskManager = getFrameMediator().getStatusBar().getTaskManager();
+        taskManager = getFrameMediator().getContainer().getStatusBar().getTaskManager();
         setEnabled(taskManager.count() > 0);
         taskManager.addTaskManagerListener(this);
     }
@@ -58,7 +58,7 @@ public class CancelAction extends AbstractColumbaAction
      * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
      */
     public void actionPerformed(ActionEvent evt) {
-        getFrameMediator().getStatusBar().getDisplayedWorker().cancel();
+        getFrameMediator().getContainer().getStatusBar().getDisplayedWorker().cancel();
     }
 
     public void workerAdded(TaskManagerEvent e) {

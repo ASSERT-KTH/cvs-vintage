@@ -42,7 +42,7 @@ import javax.swing.JToolBar;
  *
  * @author fdietz
  */
-public class ToolBar extends JToolBar {
+public class ColumbaToolBar extends JToolBar {
 
     private static final Logger LOG = Logger.getLogger("org.columba.core.gui.toolbar");
 
@@ -55,7 +55,7 @@ public class ToolBar extends JToolBar {
     //XmlIO xmlFile;
     FrameMediator frameController;
 
-    public ToolBar(FrameMediator controller) {
+    public ColumbaToolBar(FrameMediator controller) {
         super();
      
         this.frameController = controller;
@@ -67,7 +67,7 @@ public class ToolBar extends JToolBar {
         setFloatable(false);
     }
     
-    public ToolBar(XmlElement rootElement, FrameMediator controller) {
+    public ColumbaToolBar(XmlElement rootElement, FrameMediator controller) {
         super();
         this.frameController = controller;
 
@@ -137,7 +137,7 @@ public class ToolBar extends JToolBar {
 
         add(Box.createHorizontalGlue());
         
-        ImageSequenceTimer image = frameController.getStatusBar()
+        ImageSequenceTimer image = frameController.getContainer().getStatusBar()
                                                   .getImageSequenceTimer();
         add(image);
     }

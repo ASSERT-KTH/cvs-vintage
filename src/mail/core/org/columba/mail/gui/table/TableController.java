@@ -29,6 +29,7 @@ import javax.swing.tree.TreePath;
 
 import org.columba.core.gui.focus.FocusOwner;
 import org.columba.core.gui.frame.FrameMediator;
+import org.columba.core.gui.menu.ColumbaPopupMenu;
 import org.columba.core.main.MainInterface;
 import org.columba.mail.command.FolderCommandReference;
 import org.columba.mail.folder.AbstractFolder;
@@ -113,7 +114,7 @@ public class TableController implements FocusOwner, ListSelectionListener,
 	/**
 	 * table view context menu
 	 */
-	protected TableMenu menu;
+	protected ColumbaPopupMenu menu;
 
 	/**
 	 * filter model
@@ -298,7 +299,7 @@ public class TableController implements FocusOwner, ListSelectionListener,
 	 * create the PopupMenu
 	 */
 	public void createPopupMenu() {
-		menu = new TableMenu(frameController);
+		menu = new ColumbaPopupMenu(frameController, "org/columba/mail/action/table_contextmenu.xml");
 	}
 
 	/**

@@ -26,7 +26,6 @@ import javax.swing.JRadioButtonMenuItem;
 import org.columba.core.action.IMenu;
 import org.columba.core.gui.frame.Container;
 import org.columba.core.gui.frame.FrameMediator;
-import org.columba.core.gui.util.ImageLoader;
 import org.columba.core.main.MainInterface;
 import org.columba.core.plugin.PluginLoadingFailedException;
 

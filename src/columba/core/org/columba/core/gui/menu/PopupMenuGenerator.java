@@ -93,7 +93,7 @@ public class PopupMenuGenerator extends AbstractMenuGenerator {
                             CMenuItem tmp = new CMenuItem(action);
 
                             // display tooltip in statusbar
-                            tmp.addMouseListener(frameMediator.getMouseTooltipHandler());
+                            tmp.addMouseListener(frameMediator.getContainer().getMouseTooltipHandler());
                             menu.add(tmp);
                             menu.add(tmp);
                         }
@@ -111,7 +111,7 @@ public class PopupMenuGenerator extends AbstractMenuGenerator {
                         JCheckBoxMenuItem menuitem = new JCheckBoxMenuItem(action);
 
                         // display tooltip in statusbar
-                        menuitem.addMouseListener(frameMediator.getMouseTooltipHandler());
+                        menuitem.addMouseListener(frameMediator.getContainer().getMouseTooltipHandler());
                         menu.add(menuitem);
                     } catch (Exception e) {
                         e.printStackTrace();

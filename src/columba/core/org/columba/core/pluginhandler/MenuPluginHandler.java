@@ -17,8 +17,8 @@
 //All Rights Reserved.
 package org.columba.core.pluginhandler;
 
-import org.columba.core.gui.menu.ContextMenu;
-import org.columba.core.gui.menu.Menu;
+import org.columba.core.gui.menu.ColumbaPopupMenu;
+import org.columba.core.gui.menu.ColumbaMenu;
 import org.columba.core.plugin.AbstractPluginHandler;
 import org.columba.core.xml.XmlElement;
 
@@ -39,14 +39,14 @@ public class MenuPluginHandler extends AbstractPluginHandler {
         parentNode = new XmlElement("menus");
     }
 
-    public void insertPlugins(Menu menu) {
+    public void insertPlugins(ColumbaMenu menu) {
         for (Iterator it = parentNode.getElements().listIterator();
                 it.hasNext();) {
             menu.extendMenu((XmlElement) it.next());
         }
     }
 
-    public void insertPlugins(ContextMenu menu) {
+    public void insertPlugins(ColumbaPopupMenu menu) {
         for (Iterator it = parentNode.getElements().listIterator();
                 it.hasNext();) {
             menu.extendMenu((XmlElement) it.next());

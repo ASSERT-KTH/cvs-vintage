@@ -17,11 +17,8 @@
 //All Rights Reserved.
 package org.columba.core.gui.frame;
 
-import java.awt.event.MouseAdapter;
-
 import org.columba.core.config.ViewItem;
 import org.columba.core.gui.selection.SelectionManager;
-import org.columba.core.gui.statusbar.StatusBar;
 
 /**
  * Mediator is reponsible for managing all the interaction between the
@@ -47,10 +44,6 @@ import org.columba.core.gui.statusbar.StatusBar;
  */
 public interface FrameMediator {
 
-	public StatusBar getStatusBar();
-
-	public MouseAdapter getMouseTooltipHandler();
-
 	/**
 	 * forwarded from Container.getViewItem()
 	 * 
@@ -72,16 +65,17 @@ public interface FrameMediator {
 	void savePositions(ViewItem viewItem);
 
 	public Container getContainer();
-	
+
 	/**
 	 * TODO adapter only --> will be removed!
+	 * 
+	 * @deprecated
+	 * 
 	 * @return
 	 */
 	public Container getView();
-	
+
 	public void setContainer(Container c);
-	
-	String getId();
 
 	String getString(String sPath, String sName, String sID);
 }

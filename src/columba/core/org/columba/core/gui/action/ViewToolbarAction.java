@@ -40,7 +40,7 @@ public class ViewToolbarAction extends AbstractSelectableAction {
 		putValue(SHORT_DESCRIPTION, GlobalResourceLoader.getString(null, null,
 				"menu_view_showtoolbar").replaceAll("&", ""));
 
-		setState(frameMediator.getContainer().isToolbarEnabled(
+		setState(frameMediator.getContainer().isToolBarEnabled(
 				Container.MAIN_TOOLBAR));
 	}
 
@@ -52,6 +52,6 @@ public class ViewToolbarAction extends AbstractSelectableAction {
 	 */
 	public void actionPerformed(ActionEvent evt) {
 		frameMediator.getContainer()
-				.enableToolbar(Container.MAIN_TOOLBAR, getState());
+				.enableToolBar(Container.MAIN_TOOLBAR, getState());
 	}
 }

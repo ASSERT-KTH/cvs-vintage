@@ -134,7 +134,7 @@ public class CharacterEncodingSubMenu extends IMenu implements ActionListener,
     protected CharsetMenuItem createMenuItem(Charset charset) {
         CharsetMenuItem menuItem = new CharsetMenuItem(charset);
         group.add(menuItem);
-        menuItem.addMouseListener(controller.getMouseTooltipHandler());
+        menuItem.addMouseListener(controller.getContainer().getMouseTooltipHandler());
         menuItem.addActionListener(this);
         if (charset != null) hashtable.put(charset, menuItem);
 
