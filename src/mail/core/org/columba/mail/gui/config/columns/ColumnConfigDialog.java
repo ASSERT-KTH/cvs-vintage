@@ -59,7 +59,11 @@ import javax.swing.event.ListSelectionListener;
 
 /**
  * Configurabe visible columns of the table.
- *
+ * <p>
+ * TODO: following ui guidelines we should add a show and a hide button
+ *       right beside the list, for better accessibility
+ * 
+ * TODO: adding of columns is not working currently
  * @author fdietz
  */
 public class ColumnConfigDialog implements ActionListener,

@@ -191,6 +191,14 @@ public class FolderOptionsDialog extends JDialog implements ActionListener {
         return builder.getPanel();
     }
 
+    /**
+     * Create advanced panel.
+     * <p>
+     * TODO: following ui guidelines we should add an enable and a disable button
+     *       right beside the checklist, for a better accessibility
+     * 
+     * @return      panel
+     */
     protected JPanel createAdvancedPanel() {
         // Create a FormLayout instance. 
         FormLayout layout =
