@@ -1880,12 +1880,17 @@ public class IssueSearch
                 sortAttrPos = count;
             }
             String id = attrPK.toString();
+            String alias = "av" + id;
             selectColumns.append(",av").append(id).append(".VALUE");
-            outerJoin.append(" LEFT OUTER JOIN SCARAB_ISSUE_ATTRIBUTE_VALUE av")
-                .append(id).append(" ON (SCARAB_ISSUE.ISSUE_ID=av").append(id)
-                .append(".ISSUE_ID AND av").append(id)
-                .append(".DELETED=0 AND av").append(id)
-                .append(".ATTRIBUTE_ID=").append(id).append(')');
+            if (crit.getTableForAlias(alias) == null) 
+            {
+                outerJoin.append(
+                    " LEFT OUTER JOIN SCARAB_ISSUE_ATTRIBUTE_VALUE ")
+                    .append(alias).append(" ON (SCARAB_ISSUE.ISSUE_ID=")
+                    .append(alias).append(".ISSUE_ID AND ").append(alias)
+                    .append(".DELETED=0 AND ").append(alias)
+                    .append(".ATTRIBUTE_ID=").append(id).append(')');
+            }
         }
 
         // a VALUE sort column will be handled by the above 
@@ -1995,32 +2000,39 @@ public class IssueSearch
         // add pk sort so that rows can be combined easily
         crit.addAscendingOrderByColumn(IssuePeer.ISSUE_ID);
         
-        String baseSql = BasePeer.createQueryString(crit);
-        StringBuffer sb = new StringBuffer(baseSql.length() + 150);
-        sb.append(baseSql);
-
+        String sql = BasePeer.createQueryString(crit);
+        int valueListSize = -1;
         List rmuas = getIssueListAttributeColumns();
-        int valueListSize = rmuas.size();
-        StringBuffer outerJoin = new StringBuffer(10 * valueListSize + 20);
-        StringBuffer selectColumns = new StringBuffer(20 * valueListSize);
-        
-        for (Iterator i = rmuas.iterator(); i.hasNext();) 
+        if (rmuas != null) 
         {
-            RModuleUserAttribute rmua = (RModuleUserAttribute)i.next();
-            String id = rmua.getAttributeId().toString();
-            selectColumns.append(",av").append(id).append(".VALUE");
-            outerJoin.append(" LEFT OUTER JOIN SCARAB_ISSUE_ATTRIBUTE_VALUE av")
-                .append(id).append(" ON (SCARAB_ISSUE.ISSUE_ID=av").append(id)
-                .append(".ISSUE_ID AND av").append(id)
-                .append(".DELETED=0 AND av").append(id)
-                .append(".ATTRIBUTE_ID=").append(id).append(')');
-        }
+            StringBuffer sb = new StringBuffer(sql.length() + 500);
+            sb.append(sql);
+            valueListSize = rmuas.size();
+            StringBuffer outerJoin = new StringBuffer(10 * valueListSize + 20);
+            StringBuffer selectColumns = new StringBuffer(20 * valueListSize);
+            
+            for (Iterator i = rmuas.iterator(); i.hasNext();) 
+            {
+                RModuleUserAttribute rmua = (RModuleUserAttribute)i.next();
+                String id = rmua.getAttributeId().toString();
+                String alias = "av" + id;
+                selectColumns.append(',').append(alias).append(".VALUE");
+                if (crit.getTableForAlias(alias) == null) 
+                {
+                    outerJoin.append(
+                        " LEFT OUTER JOIN SCARAB_ISSUE_ATTRIBUTE_VALUE ")
+                        .append(alias).append(" ON (SCARAB_ISSUE.ISSUE_ID=")
+                        .append(alias).append(".ISSUE_ID AND ").append(alias)
+                        .append(".DELETED=0 AND ").append(alias)
+                        .append(".ATTRIBUTE_ID=").append(id).append(')');
+                }
+            }
         
-        // add left outer join
-        sb.insert(baseSql.indexOf(WHERE), outerJoin.toString());
-        // add attribute columns for the table
-        sb.insert(baseSql.indexOf(FROM), selectColumns.toString());
-        String sql = sb.toString();
+            // add left outer join
+            sb.insert(sql.indexOf(WHERE), outerJoin.toString());
+            // add attribute columns for the table
+            sb.insert(sql.indexOf(FROM), selectColumns.toString());
+            sql = sb.toString();        }
 
         long start = System.currentTimeMillis();
         System.out.println("Executing query: " + sql);
@@ -2050,23 +2062,26 @@ public class IssueSearch
             String pk = rec.getValue(1).asString();
             if (pk.equals(prevPk)) 
             {
-                List values = qr.getAttributeValues();
-                for (int j=0; j < valueListSize; j++) 
+                if (valueListSize > 0) 
                 {
-                    String s = rec.getValue(j+6).asString();
-                    List prevValues = (List)values.get(j);
-                    boolean newValue = true;
-                    for (int k=0; k<prevValues.size(); k++) 
+                    List values = qr.getAttributeValues();
+                    for (int j=0; j < valueListSize; j++) 
                     {
-                        if (ObjectUtils.equals(prevValues.get(k), s)) 
+                        String s = rec.getValue(j+6).asString();
+                        List prevValues = (List)values.get(j);
+                        boolean newValue = true;
+                        for (int k=0; k<prevValues.size(); k++) 
                         {
-                            newValue = false;
-                            break;
+                            if (ObjectUtils.equals(prevValues.get(k), s)) 
+                            {
+                                newValue = false;
+                                break;
+                            }
+                        }                    
+                        if (newValue) 
+                        {
+                            prevValues.add(s);
                         }
-                    }                    
-                    if (newValue) 
-                    {
-                        prevValues.add(s);
                     }
                 }
             }
@@ -2078,21 +2093,24 @@ public class IssueSearch
                 qr.setIssueTypeId(rec.getValue(3).asIntegerObj());
                 qr.setIdPrefix(rec.getValue(4).asString());
                 qr.setIdCount(rec.getValue(5).asString());
-                List values = new ArrayList(valueListSize);
                 boolean holdRow = false;
-                for (int j = 0; j < valueListSize; j++) 
+                if (valueListSize > 0) 
                 {
-                    String s = rec.getValue(j+6).asString();
-                    if (j == sortAttrPos && s == null) 
+                    List values = new ArrayList(valueListSize);
+                    for (int j = 0; j < valueListSize; j++) 
                     {
-                        holdRow = true;
+                        String s = rec.getValue(j+6).asString();
+                        if (j == sortAttrPos && s == null) 
+                        {
+                            holdRow = true;
+                        }
+                        
+                        ArrayList multiVal = new ArrayList(2);
+                        multiVal.add(s);
+                        values.add(multiVal);
                     }
-                    
-                    ArrayList multiVal = new ArrayList(2);
-                    multiVal.add(s);
-                    values.add(multiVal);
+                    qr.setAttributeValues(values);
                 }
-                qr.setAttributeValues(values);
                 if (holdRow) 
                 {
                     heldRows.add(qr);
@@ -2103,6 +2121,7 @@ public class IssueSearch
                 }
             }
         }
+            
         if (heldRows != null) 
         {
             queryResults.addAll(heldRows);
