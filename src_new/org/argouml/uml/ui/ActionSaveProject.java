@@ -1,4 +1,4 @@
-// $Id: ActionSaveProject.java,v 1.22 2003/06/30 21:59:35 linus Exp $
+// $Id: ActionSaveProject.java,v 1.23 2003/09/04 15:06:33 jjones Exp $
 // Copyright (c) 1996-2001 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -176,7 +176,9 @@ public class ActionSaveProject extends UMLAction {
     }
 
     public boolean shouldBeEnabled() {
-    
-	return super.shouldBeEnabled();
+        super.shouldBeEnabled();
+        ProjectBrowser pb = ProjectBrowser.getInstance();
+        Project p = ProjectManager.getManager().getCurrentProject();
+        return (p != null && p.needsSave());
     }
 } /* end class ActionSaveProject */
