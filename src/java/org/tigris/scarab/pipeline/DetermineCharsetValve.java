@@ -61,7 +61,7 @@ import org.apache.log4j.Category;
  * This valve determines the charset to use when parsing request parameters.
  *
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: DetermineCharsetValve.java,v 1.4 2002/10/29 19:53:46 jmcnally Exp $
+ * @version $Id: DetermineCharsetValve.java,v 1.5 2003/01/10 04:54:03 jmcnally Exp $
  */
 public class DetermineCharsetValve 
     extends AbstractValve
@@ -98,6 +98,7 @@ public class DetermineCharsetValve
         if (encoding != null) 
         {
             data.getRequest().setCharacterEncoding(encoding);
+            data.setCharSet(encoding);
         }
         
         // Pass control to the next Valve in the Pipeline
