@@ -2,7 +2,7 @@
 <!DOCTYPE database SYSTEM
           "http://jakarta.apache.org/turbine/dtd/database.dtd">
 
-<!-- $Id: scarab-schema.xml,v 1.84 2002/02/23 22:03:20 jmcnally Exp $ -->
+<!-- $Id: scarab-schema.xml,v 1.85 2002/02/26 04:20:26 jon Exp $ -->
 
 <database name="@DATABASE_PROP_NAME@">
 <!--
@@ -223,7 +223,7 @@
     <!--
         A required option for this attribute to be active.
     -->
-    <column name="REQUIRED_OPTION_ID" type="INTEGER"></column>
+    <column name="REQUIRED_OPTION_ID" required="false" type="INTEGER"></column>
     <!--
         Description.
     -->
