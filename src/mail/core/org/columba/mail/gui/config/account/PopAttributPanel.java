@@ -17,19 +17,13 @@
 package org.columba.mail.gui.config.account;
 
 import java.awt.Dimension;
+import java.awt.FlowLayout;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-import javax.swing.Box;
-import javax.swing.BoxLayout;
-import javax.swing.JButton;
-import javax.swing.JCheckBox;
-import javax.swing.JDialog;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.JTextField;
+import javax.swing.*;
 
 import org.columba.core.xml.XmlElement;
 import org.columba.mail.config.PopItem;
@@ -141,9 +135,7 @@ public class PopAttributPanel extends JPanel implements ActionListener {
 		layout.setConstraints(panel, c);
 		add(panel);
 
-		leaveOnServerCheckBox = new JCheckBox();
-		leaveOnServerCheckBox.setText(
-			MailResourceLoader.getString(
+		leaveOnServerCheckBox = new JCheckBox(MailResourceLoader.getString(
 				"dialog",
 				"account",
 				"leave_messages_on_server"));
@@ -162,8 +154,8 @@ public class PopAttributPanel extends JPanel implements ActionListener {
 		add(leaveOnServerCheckBox);
 
 		JPanel limitMessageDownloadPanel = new JPanel();
-		limitMessageDownloadPanel.setLayout(
-			new BoxLayout(limitMessageDownloadPanel, BoxLayout.X_AXIS));
+                limitMessageDownloadPanel.setLayout(
+                        new BoxLayout(limitMessageDownloadPanel, BoxLayout.X_AXIS));
 		c.gridx = 0;
 		c.weightx = 1.0;
 		c.anchor = GridBagConstraints.NORTHWEST;
@@ -171,10 +163,7 @@ public class PopAttributPanel extends JPanel implements ActionListener {
 		layout.setConstraints(limitMessageDownloadPanel, c);
 		add(limitMessageDownloadPanel);
 
-		limitMessageDownloadCheckBox = new JCheckBox();
-		limitMessageDownloadCheckBox.setEnabled(true);
-		limitMessageDownloadCheckBox.setText(
-			MailResourceLoader.getString(
+		limitMessageDownloadCheckBox = new JCheckBox(MailResourceLoader.getString(
 				"dialog",
 				"account",
 				"limit_message_download_to"));
@@ -183,31 +172,25 @@ public class PopAttributPanel extends JPanel implements ActionListener {
 				"dialog",
 				"account",
 				"limit_message_download_to"));
-		//$NON-NLS-1$
+                limitMessageDownloadCheckBox.setActionCommand("LIMIT_MESSAGE_DOWNLOAD");
+                limitMessageDownloadCheckBox.addActionListener(this);
 		limitMessageDownloadPanel.add(limitMessageDownloadCheckBox);
 		limitMessageDownloadPanel.add(
 			Box.createRigidArea(new Dimension(5, 0)));
 
 		limitMessageDownloadTextField = new JTextField(5);
-		limitMessageDownloadTextField.setEnabled(true);
-		limitMessageDownloadTextField.setText("18");
 		limitMessageDownloadPanel.add(limitMessageDownloadTextField);
 		limitMessageDownloadPanel.add(
 			Box.createRigidArea(new Dimension(5, 0)));
 
-		limitMessageDownloadLabel2 = new JLabel();
-		limitMessageDownloadLabel2.setEnabled(true);
-		limitMessageDownloadLabel2.setText(
-			MailResourceLoader.getString(
+		limitMessageDownloadLabel2 = new JLabel(MailResourceLoader.getString(
 				"dialog",
 				"account",
 				"KB_per_message"));
 		//$NON-NLS-1$
 		limitMessageDownloadPanel.add(limitMessageDownloadLabel2);
 
-		excludeCheckBox = new JCheckBox();
-		excludeCheckBox.setText(
-			MailResourceLoader.getString(
+		excludeCheckBox = new JCheckBox(MailResourceLoader.getString(
 				"dialog",
 				"account",
 				"exclude_from_fetch_all"));
@@ -267,6 +250,9 @@ public class PopAttributPanel extends JPanel implements ActionListener {
 			}
 
 			new org.columba.mail.gui.config.pop3preprocessor.ConfigFrame(dialog, list);
-		}
+		} else if(action.equals("LIMIT_MESSAGE_DOWNLOAD")) {
+                        limitMessageDownloadTextField.setEnabled(
+                                limitMessageDownloadCheckBox.isSelected());
+                }
 	}
 }
