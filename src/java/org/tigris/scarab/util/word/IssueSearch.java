@@ -65,6 +65,7 @@ import org.apache.commons.util.StringUtils;
 import org.tigris.scarab.om.Attribute;
 import org.tigris.scarab.om.AttributeOption;
 import org.tigris.scarab.om.Issue;
+import org.tigris.scarab.om.IssueType;
 import org.tigris.scarab.om.IssuePeer;
 import org.tigris.scarab.om.ROptionOptionPeer;
 import org.tigris.scarab.om.AttributeValuePeer;
@@ -184,12 +185,12 @@ public class IssueSearch
      * attributes null will be returned.
      * @return value of textScope.
      */
-    public NumberKey[] getTextScope()
+    public NumberKey[] getTextScope(IssueType issueType)
         throws Exception
     {
         if ( textScope == null ) 
         {
-            setTextScopeToAll();
+            setTextScopeToAll(issueType);
         }
         else
         {
@@ -197,7 +198,7 @@ public class IssueSearch
             {
                 if ( textScope[i].equals(ALL_TEXT) ) 
                 {
-                    setTextScopeToAll();
+                    setTextScopeToAll(issueType);
                     break;
                 }       
             }
@@ -209,10 +210,10 @@ public class IssueSearch
     /**
      * Sets the text search scope to all quick search text attributes.
      */
-    private void setTextScopeToAll()
+    private void setTextScopeToAll(IssueType issueType)
         throws Exception
     {
-        List textAttributes = getQuickSearchTextAttributeValues();
+        List textAttributes = getQuickSearchTextAttributeValues(issueType);
         if ( textAttributes != null ) 
         {
             textScope = new NumberKey[textAttributes.size()];
@@ -568,29 +569,29 @@ public class IssueSearch
         return ALL_TEXT;
     }
 
-    public List getQuickSearchTextAttributeValues()
+    public List getQuickSearchTextAttributeValues(IssueType issueType)
         throws Exception
     {
-        return getTextAttributeValues(true);
+        return getTextAttributeValues(true, issueType);
     }
 
-    public List getTextAttributeValues()
+    public List getTextAttributeValues(IssueType issueType)
         throws Exception
     {
-        return getTextAttributeValues(false);
+        return getTextAttributeValues(false, issueType);
     }
 
-    private List getTextAttributeValues(boolean quickSearchOnly)
+    private List getTextAttributeValues(boolean quickSearchOnly, IssueType issueType)
         throws Exception
     {
-        SequencedHashtable searchValues = getModuleAttributeValuesMap();
+        SequencedHashtable searchValues = getModuleAttributeValuesMap(issueType);
         List searchAttributes = new ArrayList(searchValues.size());
 
         for ( int i=0; i<searchValues.size(); i++ ) 
         {
             AttributeValue searchValue = 
                 (AttributeValue)searchValues.getValue(i);
-            if ( (!quickSearchOnly || searchValue.isQuickSearchAttribute())
+            if ( (!quickSearchOnly || searchValue.isQuickSearchAttribute(issueType))
                  && searchValue instanceof StringAttribute ) 
             {
                 searchAttributes.add(searchValue.getAttribute());
@@ -606,10 +607,10 @@ public class IssueSearch
      * @return a <code>List</code> value
      * @exception Exception if an error occurs
      */
-    public List getQuickSearchOptionAttributeValues()
+    public List getQuickSearchOptionAttributeValues(IssueType issueType)
         throws Exception
     {
-        return getOptionAttributeValues(true);
+        return getOptionAttributeValues(true, issueType);
     }
 
     /**
@@ -618,10 +619,10 @@ public class IssueSearch
      * @return a <code>List</code> value
      * @exception Exception if an error occurs
      */
-    public List getOptionAttributeValues()
+    public List getOptionAttributeValues(IssueType issueType)
         throws Exception
     {
-        return getOptionAttributeValues(false);
+        return getOptionAttributeValues(false, issueType);
     }
 
 
@@ -631,17 +632,18 @@ public class IssueSearch
      * @return a <code>List</code> value
      * @exception Exception if an error occurs
      */
-    private List getOptionAttributeValues(boolean quickSearchOnly)
+    private List getOptionAttributeValues(boolean quickSearchOnly, 
+                                          IssueType issueType)
         throws Exception
     {
-        SequencedHashtable searchValues = getModuleAttributeValuesMap();
+        SequencedHashtable searchValues = getModuleAttributeValuesMap(issueType);
         List searchAttributeValues = new ArrayList(searchValues.size());
 
         for ( int i=0; i<searchValues.size(); i++ ) 
         {
             AttributeValue searchValue = 
                 (AttributeValue)searchValues.getValue(i);
-            if ( (!quickSearchOnly || searchValue.isQuickSearchAttribute())
+            if ( (!quickSearchOnly || searchValue.isQuickSearchAttribute(issueType))
                  && searchValue instanceof OptionAttribute ) 
             {
                 searchAttributeValues.add(searchValue);
@@ -1021,14 +1023,15 @@ public class IssueSearch
         }
     }
 
-    private NumberKey[] addTextMatches(Criteria crit, List attValues)
+    private NumberKey[] addTextMatches(Criteria crit, List attValues,
+                                       IssueType issueType)
         throws Exception
     {
         NumberKey[] matchingIssueIds = null;
         SearchIndex searchIndex = SearchFactory.getInstance(); 
         if ( getSearchWords() != null && getSearchWords().length() != 0 ) 
         {
-            searchIndex.addQuery(getTextScope(), getSearchWords());
+            searchIndex.addQuery(getTextScope(issueType), getSearchWords());
             matchingIssueIds = searchIndex.getRelatedIssues();    
             if ( matchingIssueIds.length != 0 )
             { 
@@ -1168,10 +1171,10 @@ public class IssueSearch
      * @return a <code>List</code> value
      * @exception Exception if an error occurs
      */
-    public List getMatchingIssues()
+    public List getMatchingIssues(IssueType issueType)
         throws Exception
     {
-        return getMatchingIssues(-1);
+        return getMatchingIssues(-1, issueType);
     }
 
     /**
@@ -1182,7 +1185,7 @@ public class IssueSearch
      * @return a <code>List</code> value
      * @exception Exception if an error occurs
      */
-    public List getMatchingIssues(int limitResults)
+    public List getMatchingIssues(int limitResults, IssueType issueType)
         throws Exception
     {
         // List matchingIssues = null;
@@ -1197,7 +1200,8 @@ public class IssueSearch
         addSelectedAttributes(crit, attValues);
 
         // search for issues based on text
-        NumberKey[] matchingIssueIds = addTextMatches(crit, attValues);
+        NumberKey[] matchingIssueIds = addTextMatches(crit, attValues, 
+                                                      issueType);
 
         List matchingIssues = null;
         if ( matchingIssueIds == null || matchingIssueIds.length > 0 ) 

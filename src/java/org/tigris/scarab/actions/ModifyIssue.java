@@ -71,6 +71,7 @@ import org.apache.turbine.ParameterParser;
 import org.tigris.scarab.actions.base.RequireLoginFirstAction;
 import org.tigris.scarab.om.Issue;
 import org.tigris.scarab.om.IssuePeer;
+import org.tigris.scarab.om.IssueType;
 import org.tigris.scarab.om.Attachment;
 import org.tigris.scarab.om.AttachmentPeer;
 import org.tigris.scarab.om.RModuleAttributePeer;
@@ -95,7 +96,7 @@ import org.tigris.scarab.util.ScarabConstants;
     This class is responsible for edit issue forms.
     ScarabIssueAttributeValue
     @author <a href="mailto:elicia@collab.net">Elicia David</a>
-    @version $Id: ModifyIssue.java,v 1.41 2001/10/16 21:42:22 jmcnally Exp $
+    @version $Id: ModifyIssue.java,v 1.42 2001/10/18 00:34:40 elicia Exp $
 */
 public class ModifyIssue extends RequireLoginFirstAction
 {
@@ -109,6 +110,7 @@ public class ModifyIssue extends RequireLoginFirstAction
     {
         String id = data.getParameters().getString("id");
         Issue issue = (Issue) IssuePeer.retrieveByPK(new NumberKey(id));
+        IssueType issueType = getScarabRequestTool(context).getCurrentIssueType();
         ScarabUser user = (ScarabUser)data.getUser();
 
         IntakeTool intake = getIntakeTool(context);
@@ -127,11 +129,11 @@ public class ModifyIssue extends RequireLoginFirstAction
 
         // Set any other required flags
         Attribute[] requiredAttributes = issue.getModule()
-                                              .getRequiredAttributes();
+                                              .getRequiredAttributes(issueType);
         AttributeValue aval = null;
         Group group = null;
 
-        SequencedHashtable modMap = issue.getModuleAttributeValuesMap(); 
+        SequencedHashtable modMap = issue.getModuleAttributeValuesMap(issueType);
         Iterator iter = modMap.iterator();
         while ( iter.hasNext() ) 
         {
@@ -173,7 +175,7 @@ public class ModifyIssue extends RequireLoginFirstAction
             attachment.save();
 
             // Set the attribute values entered 
-            HashMap avMap = issue.getAllAttributeValuesMap();
+            HashMap avMap = issue.getAllAttributeValuesMap(issueType);
             Iterator iter2 = avMap.keySet().iterator();
 
             // Save transaction record

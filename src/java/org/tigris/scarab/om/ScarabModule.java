@@ -88,7 +88,7 @@ import org.tigris.scarab.security.SecurityFactory;
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: ScarabModule.java,v 1.45 2001/10/17 20:03:59 elicia Exp $
+ * @version $Id: ScarabModule.java,v 1.46 2001/10/18 00:34:41 elicia Exp $
  */
 public class ScarabModule
     extends BaseScarabModule
@@ -484,6 +484,7 @@ public class ScarabModule
     public Vector getRModuleAttributes(Criteria crit)
         throws Exception
     {
+System.out.println(crit);
         Vector rModAtts = super.getRModuleAttributes(crit);
 
         if ( rModAtts == null || rModAtts.size() == 0 ) 
@@ -516,14 +517,14 @@ public class ScarabModule
      *
      * @return an <code>Attribute[]</code> value
      */
-    public Attribute[] getDedupeAttributes()
+    public Attribute[] getDedupeAttributes(IssueType issueType)
         throws Exception
     {
         if ( dedupeAttributes == null )
         {
             Criteria crit = new Criteria(3)
                 .add(RModuleAttributePeer.DEDUPE, true);
-            addActiveAndOrderByClause(crit);
+            addActiveAndOrderByClause(crit, issueType);
             dedupeAttributes = getAttributes(crit);
         }
 
@@ -536,14 +537,14 @@ public class ScarabModule
      *
      * @return an <code>Attribute[]</code> value
      */
-    public Attribute[] getQuickSearchAttributes()
+    public Attribute[] getQuickSearchAttributes(IssueType issueType)
         throws Exception
     {
         if ( quicksearchAttributes == null )
         {
             Criteria crit = new Criteria(3)
                 .add(RModuleAttributePeer.QUICK_SEARCH, true);
-            addActiveAndOrderByClause(crit);
+            addActiveAndOrderByClause(crit, issueType);
             quicksearchAttributes = getAttributes(crit);
         }
         return quicksearchAttributes;
@@ -556,41 +557,42 @@ public class ScarabModule
      * @param inOrder flag determines whether the attribute order is important
      * @return an <code>Attribute[]</code> value
      */
-    public Attribute[] getRequiredAttributes()
+    public Attribute[] getRequiredAttributes(IssueType issueType)
         throws Exception
     {
         if ( requiredAttributes == null )
         {
             Criteria crit = new Criteria(3)
                 .add(RModuleAttributePeer.REQUIRED, true);
-            addActiveAndOrderByClause(crit);
+            addActiveAndOrderByClause(crit, issueType);
             requiredAttributes = getAttributes(crit);
         }
         return requiredAttributes;
     }
 
     /**
-     * Array of active Attributes.
+     * Array of active Attributes for an issue type.
      *
      * @return an <code>Attribute[]</code> value
      */
-    public Attribute[] getActiveAttributes()
+    public Attribute[] getActiveAttributes(IssueType issueType)
         throws Exception
     {
         if ( activeAttributes == null )
         {
             Criteria crit = new Criteria(2);
-            addActiveAndOrderByClause(crit);
+            addActiveAndOrderByClause(crit, issueType);
             activeAttributes = getAttributes(crit);
         }
         return activeAttributes;
     }
 
-    private void addActiveAndOrderByClause(Criteria crit)
+    private void addActiveAndOrderByClause(Criteria crit, IssueType issueType)
     {
         crit.add(RModuleAttributePeer.ACTIVE, true);
         crit.addAscendingOrderByColumn(RModuleAttributePeer.PREFERRED_ORDER);
         crit.addAscendingOrderByColumn(RModuleAttributePeer.DISPLAY_VALUE);
+        crit.add(RModuleAttributePeer.ISSUE_TYPE_ID, issueType.getIssueTypeId());
     }
 
     public RModuleAttribute getRModuleAttribute(Attribute attribute)

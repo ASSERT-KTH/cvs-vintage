@@ -81,7 +81,7 @@ import org.tigris.scarab.tools.ScarabRequestTool;
     This class is responsible for report managing enter issue templates.
     ScarabIssueAttributeValue
     @author <a href="mailto:elicia@collab.net">Elicia David</a>
-    @version $Id: TemplateList.java,v 1.9 2001/10/16 18:50:47 elicia Exp $
+    @version $Id: TemplateList.java,v 1.10 2001/10/18 00:34:40 elicia Exp $
 */
 public class TemplateList extends RequireLoginFirstAction
 {
@@ -112,7 +112,7 @@ public class TemplateList extends RequireLoginFirstAction
             issue = (Issue) IssuePeer.retrieveByPK(new NumberKey(id));
         }
 
-        SequencedHashtable avMap = issue.getModuleAttributeValuesMap(); 
+        SequencedHashtable avMap = issue.getModuleAttributeValuesMap(scarabR.getCurrentIssueType());
         AttributeValue aval = null;
         Group group = null;
         

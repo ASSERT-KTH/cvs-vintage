@@ -306,13 +306,15 @@ public class Issue
      * not been set for the issue are included.  The values are ordered
      * according to the module's preference
      */
-    public SequencedHashtable getModuleAttributeValuesMap() throws Exception
+    public SequencedHashtable getModuleAttributeValuesMap(IssueType issueType) throws Exception
     {
+System.out.println("HELLOP");
         SequencedHashtable map = null; 
         Attribute[] attributes = null;
         HashMap siaValuesMap = null;
 
-        attributes = getModule().getActiveAttributes();
+        attributes = getModule().getActiveAttributes(issueType);
+System.out.println(attributes);
         siaValuesMap = getAttributeValuesMap();
 
         map = new SequencedHashtable( (int)(1.25*attributes.length + 1) );
@@ -372,10 +374,11 @@ public class Issue
      * AttributeValues that are set for this Issue in the order
      * that is preferred for this module
      */
-    public AttributeValue[] getOrderedAttributeValues() throws Exception
+    public AttributeValue[] getOrderedAttributeValues(IssueType issueType)
+        throws Exception
     {        
         Map values = getAttributeValuesMap();
-        Attribute[] attributes = getModule().getActiveAttributes();
+        Attribute[] attributes = getModule().getActiveAttributes(issueType);
 
         return orderAttributeValues(values, attributes);
     }
@@ -436,9 +439,9 @@ public class Issue
      * Empty AttributeValues that are relevant for the module, but have 
      * not been set for the issue are included.
      */
-    public HashMap getAllAttributeValuesMap() throws Exception
+    public HashMap getAllAttributeValuesMap(IssueType issueType) throws Exception
     {
-        Map moduleAtts = getModuleAttributeValuesMap();
+        Map moduleAtts = getModuleAttributeValuesMap(issueType);
         Map issueAtts = getAttributeValuesMap();
         HashMap allValuesMap = new HashMap( (int)(1.25*(moduleAtts.size() + 
                                             issueAtts.size())+1) );
@@ -455,13 +458,13 @@ public class Issue
      * @return a <code>boolean</code> value
      * @exception Exception if an error occurs
      */
-    public boolean containsMinimumAttributeValues()
+    public boolean containsMinimumAttributeValues(IssueType issueType)
         throws Exception
     {
-        Attribute[] attributes = getModule().getRequiredAttributes();
+        Attribute[] attributes = getModule().getRequiredAttributes(issueType);
 
         boolean result = true;
-        SequencedHashtable avMap = getModuleAttributeValuesMap(); 
+        SequencedHashtable avMap = getModuleAttributeValuesMap(issueType);
         Iterator i = avMap.iterator();
         while (i.hasNext()) 
         {

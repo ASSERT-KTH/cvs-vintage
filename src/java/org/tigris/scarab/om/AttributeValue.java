@@ -518,12 +518,12 @@ public abstract class AttributeValue
      *
      * @return a <code>boolean</code> value
      */
-    public boolean isDedupeAttribute()
+    public boolean isDedupeAttribute(IssueType issueType)
         throws Exception
     {
         boolean result = false;
         Attribute[] dedupeAttributes = getIssue().getModule()
-            .getDedupeAttributes();
+            .getDedupeAttributes(issueType);
         for ( int i=dedupeAttributes.length-1; i>=0; i--) 
         {
             if ( dedupeAttributes[i].equals(getAttribute()) ) 
@@ -543,12 +543,12 @@ public abstract class AttributeValue
      *
      * @return a <code>boolean</code> value
      */
-    public boolean isQuickSearchAttribute()
+    public boolean isQuickSearchAttribute(IssueType issueType)
         throws Exception
     {
         boolean result = false;
         Attribute[] qsAttributes = getIssue().getModule()
-            .getQuickSearchAttributes();
+            .getQuickSearchAttributes(issueType);
         for ( int i=qsAttributes.length-1; i>=0; i--) 
         {
             if ( qsAttributes[i].equals(getAttribute()) ) 

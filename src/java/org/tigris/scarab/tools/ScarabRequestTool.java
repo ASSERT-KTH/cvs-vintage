@@ -758,7 +758,7 @@ try{
                 .getString(ScarabConstants.CURRENT_ISSUE_TYPE));
         }
         // temp work around
-        currentIssueType = (IssueType)IssueTypePeer.retrieveByPK(new NumberKey("1"));
+        currentIssueType = (IssueType)IssueTypePeer.retrieveByPK(new NumberKey("5"));
         return currentIssueType;
     }
 
@@ -984,7 +984,7 @@ try{
         return intake;
     }
 
-    public List getCurrentSearchResults()
+    public List getCurrentSearchResults(IssueType issueType)
         throws Exception
     {
         Intake intake = getConditionalIntake(ScarabConstants.CURRENT_QUERY);
@@ -993,9 +993,8 @@ try{
         Group searchGroup = intake.get("SearchIssue", 
                                        getSearch().getQueryKey() );
         searchGroup.setProperties(search);
-        
         search.setModule(getCurrentModule());
-        SequencedHashtable avMap = search.getModuleAttributeValuesMap();
+        SequencedHashtable avMap = search.getModuleAttributeValuesMap(issueType);
         Iterator i = avMap.iterator();
         while (i.hasNext()) 
         {
@@ -1007,7 +1006,7 @@ try{
             }                
         }
         
-        return search.getMatchingIssues();
+        return search.getMatchingIssues(issueType);
     }
 
     /**
@@ -1081,7 +1080,7 @@ try{
     {
         if ( issueList == null ) 
         {
-            issueList = getCurrentSearchResults();
+            issueList = getCurrentSearchResults(getCurrentIssueType());
         }
         return issueList;
     }
