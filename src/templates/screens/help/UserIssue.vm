@@ -1,0 +1,144 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/2000/REC-xhtml1-20000126/DTD/xhtml1-strict.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+ <head>
+<title>UserIssue</title>
+</head>
+<div class="docs" id="userissue"> 
+  <h2>Managing Issues: overview</h2>
+  <div id="toc"> 
+    <ul>
+      <li>Scarab Help 
+        <ul>
+          <li><a href="Introduction.vm">Introduction to Scarab</a> </li>
+          <li>Managing Issues 
+            <ul>
+              <li><strong>Overview</strong> 
+                <ul>
+                  <li><a href="#types">Issue types</a></li>
+                  <li><a href="#attributes">Issue attributes</a></li>
+                  <li><a href="#entry">The Issue Entry screen</a></li>
+                </ul>
+              </li>
+              <li><a href="UserIssueEnter.vm">Entering Issues </a> </li>
+              <li><a href="UserIssueAssign.vm">Assigning issues</a></li>
+              <li><a href="UserTemplates.vm">Using templates</a></li>
+              <li><a href="UserIssueView.vm">Viewing issues</a></li>
+              <li><a href="UserIssueModify.vm">Modifying issues</a></li>
+            </ul>
+          <li><a href="UserQuery.vm">Searching the database </a></li>
+          <li><a href="UserReports.vm">Reports</a> </li>
+          <li><a href="ScarabBestPractices.vm">Best Practices</a></li>
+          <li><a href="ScarabFaq.vm">FAQ</a></li>
+          <li><a href="ScarabGlossary.vm">Glossary</a></li>
+        </ul>
+      </li>
+    </ul>
+  </div>
+  <h3>Managing issues: overview</h3>
+  <p>Scarab has a very dynamic issue management strategy. Committing, tracking 
+    and modifying issues is a simple process. Scarab has the following issue management 
+    features:</p>
+
+<ul>
+  <li> 
+  <strong>Relationships</strong>: Scarab can track relationships 
+      between issues. Dependencies between issues can be flagged and tracked through 
+      either the issue entry process or while reviewing one or multiple issues. 
+   
+  </li>
+  <li> 
+ <strong>Voting</strong>: if you find an issue that 
+      is similar to one you are tracking or have encountered, you can add a vote 
+      to the issue.
+  </li>
+  <li> 
+    <strong>Change tracking</strong>: All changes made 
+      along with information about the user who made the change, when the change 
+      was made and any comments committed along with the change are tracked with 
+      the issue. 
+  </li>
+  <li> 
+  <strong>Comment viewing and editing</strong>: All comments 
+      made to the issue are tracked. Comments allow support or other type conversations 
+      to be viewable and editable by any parties interested in the progress of 
+      an issue.
+  </li>
+  <li><strong>Save frequently entered information</strong>: The issue entry template feature 
+    allows you to create a frequently used set of data points for attributes in 
+    a template. When a template is used, the issue entry form is pre-populated 
+    and the user can alter information as needed.</li>
+</ul>
+
+  <h3><a name="types"></a>Issue types </h3>
+  <p> Issue types provide a unique set of attributes and options used to describe 
+    issues in a meaningful manner. Attributes within an issue type are defined 
+    by the project administrator and affect only issues within that issue type. 
+    Each project has a unique set of issue types. You may have a different set 
+    of permissions for each issue type in your project. Issues remain within the 
+    issue type in which they are entered until a user moves or copies them to 
+    another issue type.</p>
+  <p> The default issue types are:</p>
+  <ul>
+    <li><strong>Defects</strong> are issues identified within existing feature/functionality.</li>
+    <li><strong>Patches</strong> are edits submitted as fixes to defects.</li>
+    <li><strong>Tasks</strong> describe undertakings required for the support of a Feature 
+      or enhancement. Tasks can be upgrading software to support new functionality, 
+      reviewing similar projects to discover how similar problems were solved, 
+      or reading up on a new technology.</li>
+    <li><strong>Features</strong> are new functionality to be incorporated into the project</li>
+    <li><strong>Enhancements</strong> are improvements to existing features.</li>
+  </ul>
+  <p>Before you enter issues for your project, you should familiarize yourself 
+    with the available set of issue types. Where you enter an issue will be determined 
+    by how your project is organized. Once you have selected the issue type that 
+    best describes your issue, click on the name of the artifact. The <strong>Enter 
+    issue</strong> screen will appear.</p>
+  <h3><a name="attributes"></a>Issue Attributes</h3>
+  <p> Attributes are the common descriptors for issues. Attributes are used to 
+    categorize issues for tracking, comparative and rate of change analysis. Each 
+    issue type has a unique set of attributes like <strong>Summary, Description, Milestone</strong>, 
+    <strong>Priority</strong>, <strong>Status</strong>, <strong>Resolution</strong> and <strong>Severity</strong>. There 
+    is a default set of values for the attributes but your project administrator 
+    may have altered the set available for your issue type.</p>
+  <p>Attributes can be organized in groups. If duplication checking is active, 
+    you enter a subset of attributes for the issue. This subset is used to check 
+    for duplicates in the database. After the duplication checking process is 
+    complete, you can enter values for the remaining attributes. </p>
+  <p>An issue type may have a set of required attributes. Values for the required 
+    attributes must be entered before committing the issue. Required attributes 
+    are identified by an asterisks (*) beside the name of the attribute.</p>
+  <p>On many results pages you can change which attributes appear on your screen. 
+    For information on customizing your interface see <a href="Navigating.vm#customizing">Customizing 
+    the interface</a>.</p>
+  <h3><a name="entry"></a>The Issue Entry screen</h3>
+  <p>After selecting your issue type and the Enter new link from the left navigation, 
+    The <strong>Enter New</strong> screen will appear. At this point you can enter 
+    values for the available attributes. Each attribute will have either a drop 
+    down box with options to select from or a text entry form for you to enter 
+    text. All attributes with an asterisks (*) beside the title must have values 
+    before saving the issue.</p>
+  <p>If duplication tracking is active, entering an issue becomes a three step 
+    process. The first step is to define a subset of attributes that will be used 
+    to check for duplicates in the database once you have used the <strong>Next 
+    </strong>button. The second step is to review all possible duplicates and 
+    determine what action to perform (see Duplicates for more information on duplicate 
+    management). The third step is to enter values for the remaining attributes.</p>
+  <p>While you are entering the issue you can attach a relevant file using the 
+    same form. Attaching a file helps you and others to easily share relevant 
+    information or patches. For more information on adding attachments see <a href="UserIssueEntry.vm#attachments">Attachments</a>.</p>
+  <p>Before submitting your issue you can select where in the application you 
+    would like to go next. Each option submits the issue and takes you to one 
+    of the following functional areas:</p>
+  <ul>
+    <li>Enter new issue</li>
+    <li>Assign issue</li>
+    <li>View this issue</li>
+    <li>Start page</li>
+  </ul>
+   <div class="courtesylinks"><a href="#Top">Top</a>
+   </div>
+  </div>
+ </body>
+</html>
