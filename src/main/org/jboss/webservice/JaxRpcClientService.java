@@ -5,10 +5,10 @@
  * See terms of license at gnu.org.
  */
 
-// $Id: JaxRpcClientService.java,v 1.2 2004/04/27 18:44:51 tdiesler Exp $
+// $Id: JaxRpcClientService.java,v 1.3 2004/04/28 14:34:52 tdiesler Exp $
 package org.jboss.webservice;
 
-// $Id: JaxRpcClientService.java,v 1.2 2004/04/27 18:44:51 tdiesler Exp $
+// $Id: JaxRpcClientService.java,v 1.3 2004/04/28 14:34:52 tdiesler Exp $
 
 import org.apache.axis.client.AxisClient;
 import org.apache.axis.client.Service;
@@ -31,7 +31,6 @@ public class JaxRpcClientService extends Service
 {
    // provide logging
    private static final Logger log = Logger.getLogger(JaxRpcClientService.class);
-   public static final String AXIS_CLIENT_CONFIG = "META-INF/axis-client-config.xml";
 
    /**
     * Constructs a new Service object - this assumes the caller will set
@@ -68,12 +67,12 @@ public class JaxRpcClientService extends Service
    {
       // load axis client config from resource
       ClassLoader cl = getClass().getClassLoader();
-      InputStream configStream = cl.getResourceAsStream(AXIS_CLIENT_CONFIG);
+      InputStream configStream = cl.getResourceAsStream(Constants.AXIS_CLIENT_CONFIG);
       if (configStream != null)
          return new AxisClient(new FileProvider(configStream));
 
       // fall back to Axis discovery of the client config
-      log.warn("Cannot load '" + AXIS_CLIENT_CONFIG + "', using default");
+      log.warn("Cannot load '" + Constants.AXIS_CLIENT_CONFIG + "', using default");
       return super.getAxisClient();
    }
 }

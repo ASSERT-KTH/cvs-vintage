@@ -5,10 +5,10 @@
  * See terms of license at gnu.org.
  */
 
-// $Id: ServiceRefEnvBuilder.java,v 1.1 2004/04/27 18:44:51 tdiesler Exp $
+// $Id: ServiceRefEnvBuilder.java,v 1.2 2004/04/28 14:34:52 tdiesler Exp $
 package org.jboss.webservice;
 
-// $Id: ServiceRefEnvBuilder.java,v 1.1 2004/04/27 18:44:51 tdiesler Exp $
+// $Id: ServiceRefEnvBuilder.java,v 1.2 2004/04/28 14:34:52 tdiesler Exp $
 
 import org.jboss.deployment.DeploymentException;
 import org.jboss.deployment.DeploymentInfo;
@@ -54,14 +54,19 @@ public final class ServiceRefEnvBuilder
 
             Referenceable serviceReferenceable = null;
             String serviceRefName = serviceRef.getServiceRefName();
-            String serviceInterface = serviceRef.getServiceInterface();
             if (serviceRef.getWsdlOverride() != null)
+            {
+               log.debug("Using wsdl override: " + serviceRef.getWsdlOverride());
                serviceReferenceable = new ServiceReferenceable(serviceName, serviceRef.getWsdlOverride());
+            }
             else
+            {
+               log.debug("Using wsdl file: " + serviceRef.getWsdlFile());
                serviceReferenceable = new ServiceReferenceable(serviceName, di.url, serviceRef.getWsdlFile());
+            }
 
             Util.bind(envCtx, serviceRefName, serviceReferenceable);
-            log.info("Webservice binding: java:comp/env/" + serviceRefName);
+            log.debug("Webservice binding: java:comp/env/" + serviceRefName);
          }
       }
       catch (Exception e)

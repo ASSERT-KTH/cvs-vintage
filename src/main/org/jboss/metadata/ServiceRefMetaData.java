@@ -6,12 +6,13 @@
  */
 package org.jboss.metadata;
 
-// $Id: ServiceRefMetaData.java,v 1.4 2004/04/27 15:55:40 tdiesler Exp $
+// $Id: ServiceRefMetaData.java,v 1.5 2004/04/28 14:34:54 tdiesler Exp $
 
 import org.jboss.deployment.DeploymentException;
 import org.jboss.logging.Logger;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
+import org.xml.sax.SAXException;
 
 import javax.wsdl.Definition;
 import javax.wsdl.WSDLException;
@@ -20,15 +21,18 @@ import javax.wsdl.xml.WSDLReader;
 import javax.xml.namespace.QName;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.net.URL;
 import java.net.MalformedURLException;
+import java.io.InputStream;
+import java.io.IOException;
 
 /** The metdata data from service-ref in application-client.xml descriptor
  * 
  * @author Thomas.Diesler@jboss.org
- * @version $Revision: 1.4 $
+ * @version $Revision: 1.5 $
  */
 public class ServiceRefMetaData
 {
@@ -127,32 +131,45 @@ public class ServiceRefMetaData
       return wsdlOverride;
    }
 
-   public Document getWsdlDocument()
+   public Document getWsdlDocument() throws DeploymentException
    {
       if (wsdlDocument != null)
          return wsdlDocument;
 
-      DocumentBuilder builder = null;
       try
       {
          DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
          factory.setNamespaceAware(true);
-         builder = factory.newDocumentBuilder();
+         DocumentBuilder builder = factory.newDocumentBuilder();
+
+         InputStream wsdlInputStream = null;
          if (wsdlOverride != null)
-            wsdlDocument = builder.parse(wsdlOverride.openStream());
+         {
+            wsdlInputStream = wsdlOverride.openStream();
+            if (wsdlInputStream == null)
+               throw new DeploymentException("Cannot open WSDL at: " + wsdlOverride);
+         }
          else
-            wsdlDocument = builder.parse(localCl.getResourceAsStream(wsdlFile));
+         {
+            wsdlInputStream = localCl.getResourceAsStream(wsdlFile);
+            if (wsdlInputStream == null)
+               throw new DeploymentException("Cannot open WSDL at: " + wsdlFile);
+         }
+         wsdlDocument = builder.parse(wsdlInputStream);
+      }
+      catch (DeploymentException e)
+      {
+         throw e;
       }
       catch (Exception e)
       {
-         log.error("Cannot obtain WSDL document", e);
-         return null;
+         throw new DeploymentException(e);
       }
 
       return wsdlDocument;
    }
 
-   public Definition getWsdlDefinition()
+   public Definition getWsdlDefinition() throws DeploymentException
    {
       if (wsdlDefinition != null)
          return wsdlDefinition;
@@ -165,8 +182,7 @@ public class ServiceRefMetaData
       }
       catch (WSDLException e)
       {
-         log.error("Cannot obtain WSDL definition", e);
-         return null;
+         throw new DeploymentException(e);
       }
 
       return wsdlDefinition;
