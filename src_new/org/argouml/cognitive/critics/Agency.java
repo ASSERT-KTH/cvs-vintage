@@ -26,7 +26,7 @@
 // File: Agency.java
 // Classes: Agency, Trigger
 // Original Author: jrobbins@ics.uci.edu
-// $Id: Agency.java,v 1.5 2002/10/20 21:11:13 linus Exp $
+// $Id: Agency.java,v 1.6 2003/01/21 20:02:43 linus Exp $
 
 package org.argouml.cognitive.critics;
 
@@ -34,7 +34,8 @@ import java.util.*;
 
 import org.tigris.gef.util.*;
 
-import org.apache.log4j.Category;import org.argouml.cognitive.*;
+import org.apache.log4j.Category;
+import org.argouml.cognitive.*;
 
 /** Agency manages Critics.  Since classes are not really first class
  *  objects in java, a singleton instance of Agency is made and passed
@@ -54,7 +55,9 @@ import org.apache.log4j.Category;import org.argouml.cognitive.*;
  *  still half done.  Trigger's are the critiquing requests.  The code
  *  for triggers is currently dormant (latent?). */
 
-public class Agency extends Observable { //implements java.io.Serialization     protected static Category cat = Category.getInstance(Agency.class);
+public class Agency extends Observable { //implements java.io.Serialization
+     protected static Category cat = Category.getInstance(Agency.class);
+
 
   ////////////////////////////////////////////////////////////////
   // instance variables
@@ -129,21 +132,25 @@ public class Agency extends Observable { //implements java.io.Serialization    
   public static void register(String crClassName, String dmClassName) {
     Class dmClass;
     try { dmClass = Class.forName(dmClassName); }
-    catch (java.lang.ClassNotFoundException e) {        cat.error("Error loading dm " + dmClassName, e);
+    catch (java.lang.ClassNotFoundException e) {
+        cat.error("Error loading dm " + dmClassName, e);
 	return;
     }
     Critic cr = (Critic) _singletonCritics.get(crClassName);
     if (cr == null) {
       Class crClass;
       try { crClass = Class.forName(crClassName); }
-      catch (java.lang.ClassNotFoundException e) {        cat.error("Error loading cr " + crClassName, e);
+      catch (java.lang.ClassNotFoundException e) {
+        cat.error("Error loading cr " + crClassName, e);
 	return;
       }
       try { cr = (Critic) crClass.newInstance(); }
-      catch (java.lang.IllegalAccessException e) {        cat.error("Error instancating cr " + crClassName, e);
+      catch (java.lang.IllegalAccessException e) {
+        cat.error("Error instancating cr " + crClassName, e);
 	return;
       }
-      catch (java.lang.InstantiationException e) {        cat.error("Error instancating cr " + crClassName, e);
+      catch (java.lang.InstantiationException e) {
+        cat.error("Error instancating cr " + crClassName, e);
 	return;
       }
       _singletonCritics.put(crClassName, cr);
@@ -237,7 +244,8 @@ public class Agency extends Observable { //implements java.io.Serialization    
 	try {
 	  c.critique(dm, d);
 	}
-	catch (Exception ex) {            cat.error("Disabling critique due to exception\n" + c + "\n" + dm, ex);
+	catch (Exception ex) {
+            cat.error("Disabling critique due to exception\n" + c + "\n" + dm, ex);
           c.setEnabled(false);
 	}
       }
