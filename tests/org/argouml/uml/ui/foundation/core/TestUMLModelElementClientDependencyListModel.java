@@ -1,4 +1,4 @@
-// $Id: TestUMLModelElementClientDependencyListModel.java,v 1.10 2004/08/26 23:03:17 bobtarling Exp $
+// $Id: TestUMLModelElementClientDependencyListModel.java,v 1.11 2004/08/27 13:13:28 bobtarling Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -85,7 +85,7 @@ public class TestUMLModelElementClientDependencyListModel extends TestCase {
      */
     public void testAddMultiple() {      
         MModelElement[] suppliers = new MModelElement[10];
-        MDependency[] dependencies = new MDependency[10];
+        Object[] dependencies = new MDependency[10];
         for (int i = 0; i < 10; i++) {
             suppliers[i] = (MModelElement)CoreFactory.getFactory().buildClass(ns);
             dependencies[i] = 
@@ -102,14 +102,14 @@ public class TestUMLModelElementClientDependencyListModel extends TestCase {
      */
     public void testRemoveMultiple() {
         MModelElement[] suppliers = new MModelElement[10];
-        MDependency[] dependencies = new MDependency[10];
+        Object[] dependencies = new MDependency[10];
         for (int i = 0; i < 10; i++) {
             suppliers[i] = (MModelElement)CoreFactory.getFactory().buildClass(ns);
             dependencies[i] = 
                 CoreFactory.getFactory().buildDependency(elem, suppliers[i]);
         }
         for (int i = 0; i < 5; i++) {
-            elem.removeClientDependency(dependencies[i]);
+            ModelFacade.removeClientDependency(elem, dependencies[i]);
         }
         assertEquals(5, model.getSize());
         assertEquals(dependencies[5], model.getElementAt(0));

@@ -1,4 +1,4 @@
-// $Id: GUITestParserDisplay.java,v 1.7 2004/08/26 23:03:18 bobtarling Exp $
+// $Id: GUITestParserDisplay.java,v 1.8 2004/08/27 13:13:28 bobtarling Exp $
 // Copyright (c) 2003-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -782,11 +782,11 @@ public class GUITestParserDisplay extends TestCase {
             if (props[i + 1] == null)
         	assertTrue(
         		   "TaggedValue " + props[i] + " exists!",
-        		   ModelFacade.getTaggedValue(attr, props[i]) == null);
+			   ((MAttribute)attr).getTaggedValue(props[i]) == null);
             else
         	assertTrue(
         		   "TaggedValue " + props[i] + " wrong!",
-        		   props[i + 1].equals(ModelFacade.getTaggedValue(attr, props[i])));
+			   props[i + 1].equals(((MAttribute)attr).getTaggedValue(props[i])));
         }
     }
 

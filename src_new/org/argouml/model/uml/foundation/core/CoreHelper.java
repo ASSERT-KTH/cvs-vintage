@@ -1,4 +1,4 @@
-// $Id: CoreHelper.java,v 1.83 2004/08/18 19:23:28 mvw Exp $
+// $Id: CoreHelper.java,v 1.84 2004/08/27 13:13:27 bobtarling Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -492,9 +492,9 @@ public class CoreHelper {
      * @param to is the model element where dependency ends
      * @return a newly created dependency.
      */
-    public MDependency buildSupportDependency(MModelElement from,
+    public Object buildSupportDependency(MModelElement from,
 					      MModelElement to) {
-        MDependency dep = CoreFactory.getFactory().buildDependency(from, to);
+        Object dep = CoreFactory.getFactory().buildDependency(from, to);
         ExtensionMechanismsFactory.getFactory()
 	    .buildStereotype(dep, "support", getCurrentModel());
         return dep;
