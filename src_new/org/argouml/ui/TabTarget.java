@@ -23,11 +23,34 @@
 
 package org.argouml.ui;
 
-import org.tigris.gef.presentation.Fig;
-
 /**
- * Empty interface used to tag Tabbed panels that accept a Fig Target.
+ * An interface for JPanels that are in the DetailsPane, and that
+ * change target based on the selections made in the gui/views.
+ *
+ * $Id: TabTarget.java,v 1.1 2003/03/28 20:31:07 alexb Exp $
+ *
+ * @since 0.13.4
+ * @author $Author: alexb $
  */
-public interface TabFigTarget extends TabTarget{
-
+public interface TabTarget {
+    
+  /**
+   *
+   */  
+  public void setTarget(Object target);
+  
+  /**
+   *
+   */
+  public Object getTarget();
+  
+  /**
+   *
+   */
+  public void refresh();
+  
+  /**
+   *
+   */
+  public boolean shouldBeEnabled(Object target);
 }
