@@ -300,6 +300,7 @@ public class ScarabRequestTool
         this.roo = roo;
     }
 
+
     /**
      * A IssueTemplateInfo object for use within the Scarab API.
      */
@@ -725,6 +726,16 @@ try{
         return issueType;
     }
 
+
+    /**
+     * Gets a new instance of AttributeValue
+     */
+    public AttributeValue getNewAttributeValue(Attribute attribute, Issue issue)
+        throws Exception
+    {
+        
+        return AttributeValue.getNewInstance(attribute.getAttributeId(),issue);
+    }
 
     /**
      * Get an RModuleAttribute object. 
