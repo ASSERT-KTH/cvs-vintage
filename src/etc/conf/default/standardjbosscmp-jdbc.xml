@@ -7,7 +7,7 @@
 <!--                                                                       -->
 <!-- ===================================================================== -->
 
-<!-- $Id: standardjbosscmp-jdbc.xml,v 1.21 2002/04/09 15:43:21 dsundstrom Exp $ -->
+<!-- $Id: standardjbosscmp-jdbc.xml,v 1.22 2002/04/14 15:53:02 dsundstrom Exp $ -->
 
 <jbosscmp-jdbc>
    
@@ -188,6 +188,125 @@
       </type-mapping>
 
       <type-mapping>
+         <name>Oracle9i</name>
+         <!--
+         | Make sure that you have the Oracle 9i version of classes12.jar
+         | or you will suffer 
+         -->
+         <row-locking-template>SELECT ?1 FROM ?2 WHERE ?3 FOR UPDATE</row-locking-template>
+         <pk-constraint-template>CONSTRAINT ?1 PRIMARY KEY (?2)</pk-constraint-template>
+         <fk-constraint-template>ALTER TABLE ?1 ADD CONSTRAINT ?2 FOREIGN KEY (?3) REFERENCES ?4 (?5)</fk-constraint-template>
+         <alias-header-prefix>t</alias-header-prefix>
+         <alias-header-suffix>_</alias-header-suffix>
+         <alias-max-length>32</alias-max-length>
+         <subquery-supported>true</subquery-supported>
+         <function-mapping>
+            <function-name>concat</function-name>
+            <function-sql>(?1 || ?2)</function-sql>
+         </function-mapping>    
+         <function-mapping>
+            <function-name>substring</function-name>
+            <function-sql>substr(?1, ?2, ?3)</function-sql>
+         </function-mapping>    
+         <function-mapping>
+            <function-name>length</function-name>
+            <function-sql>len(?1)</function-sql>
+         </function-mapping>    
+         <function-mapping>
+            <function-name>locate</function-name>
+            <function-sql>instr(?1, ?2, ?3)</function-sql>
+         </function-mapping>    
+         <function-mapping>
+            <function-name>abs</function-name>
+            <function-sql>abs(?1)</function-sql>
+         </function-mapping>    
+         <function-mapping>
+            <function-name>sqrt</function-name>
+            <function-sql>sqrt(?1)</function-sql>
+         </function-mapping>    
+
+         <mapping>
+            <java-type>java.lang.Boolean</java-type>
+            <jdbc-type>BIT</jdbc-type>
+            <sql-type>NUMBER(1)</sql-type>
+         </mapping>
+         <mapping>
+            <java-type>java.lang.Byte</java-type>
+            <jdbc-type>SMALLINT</jdbc-type>
+            <sql-type>NUMBER(3)</sql-type>
+         </mapping>
+         <mapping>
+            <java-type>java.lang.Short</java-type>
+            <jdbc-type>NUMERIC</jdbc-type>
+            <sql-type>NUMBER(5)</sql-type>
+         </mapping>
+         <mapping>
+            <java-type>java.lang.Integer</java-type>
+            <jdbc-type>INTEGER</jdbc-type>
+            <sql-type>NUMBER(10)</sql-type>
+         </mapping>
+         <mapping>
+            <java-type>java.lang.Long</java-type>
+            <jdbc-type>BIGINT</jdbc-type>
+            <sql-type>NUMBER(19)</sql-type>
+         </mapping>
+         <mapping>
+            <java-type>java.lang.Float</java-type>
+            <jdbc-type>REAL</jdbc-type>
+            <sql-type>NUMBER(38,7)</sql-type>
+         </mapping>
+         <mapping>
+            <java-type>java.math.BigDecimal</java-type>
+            <jdbc-type>DECIMAL</jdbc-type>
+            <sql-type>NUMBER(38,15)</sql-type>
+         </mapping>
+         <mapping>
+            <java-type>java.lang.Double</java-type>
+            <jdbc-type>DOUBLE</jdbc-type>
+            <sql-type>NUMBER(38,15)</sql-type>
+         </mapping>
+         <mapping>
+            <java-type>java.lang.Character</java-type>
+            <jdbc-type>CHAR</jdbc-type>
+            <sql-type>CHAR</sql-type>
+         </mapping>
+         <mapping>
+            <java-type>java.lang.String</java-type>
+            <jdbc-type>VARCHAR</jdbc-type>
+            <sql-type>VARCHAR2(255)</sql-type>
+         </mapping>
+         <mapping>
+            <java-type>java.util.Date</java-type>
+            <jdbc-type>TIMESTAMP</jdbc-type>
+            <sql-type>TIMESTAMP(3)</sql-type>
+         </mapping>
+         <mapping>
+            <java-type>java.sql.Date</java-type>
+            <jdbc-type>DATE</jdbc-type>
+            <sql-type>DATE</sql-type>
+         </mapping>
+         <mapping>
+            <java-type>java.sql.Time</java-type>
+            <jdbc-type>TIME</jdbc-type>
+            <sql-type>DATE</sql-type>
+         </mapping>
+         <mapping>
+            <java-type>java.sql.Timestamp</java-type>
+            <jdbc-type>TIMESTAMP</jdbc-type>
+            <sql-type>TIMESTAMP(9)</sql-type>
+         </mapping>
+         <mapping>
+            <java-type>java.lang.Object</java-type>
+            <jdbc-type>JAVA_OBJECT</jdbc-type>
+            <sql-type>BLOB</sql-type>
+            <!--
+            | Change this from BLOB to RAW(255) if you know your
+            | serialized object will be <= 255 bytes
+            -->
+         </mapping>
+      </type-mapping>
+
+      <type-mapping>
          <name>Oracle8</name>
          <row-locking-template>SELECT ?1 FROM ?2 WHERE ?3 FOR UPDATE</row-locking-template>
          <pk-constraint-template>CONSTRAINT ?1 PRIMARY KEY (?2)</pk-constraint-template>
@@ -272,9 +391,13 @@
             <sql-type>VARCHAR2(255)</sql-type>
          </mapping>
          <mapping>
+            <!--
+            | Note that you lose granularity here
+            | Use a numeric type and store milliseconds if you really need it
+            -->
             <java-type>java.util.Date</java-type>
             <jdbc-type>TIMESTAMP</jdbc-type>
-            <sql-type>TIMESTAMP</sql-type>
+            <sql-type>DATE</sql-type>
          </mapping>
          <mapping>
             <java-type>java.sql.Date</java-type>
@@ -295,8 +418,10 @@
             <java-type>java.lang.Object</java-type>
             <jdbc-type>JAVA_OBJECT</jdbc-type>
             <sql-type>BLOB</sql-type>
-       <!-- Change this from BLOB to RAW(255) if you know your
-       serialized object will be <= 255 bytes -->
+            <!--
+            | Change this from BLOB to RAW(255) if you know your
+            | serialized object will be <= 255 bytes
+            -->
          </mapping>
       </type-mapping>
 
@@ -380,9 +505,13 @@
             <sql-type>VARCHAR2(255)</sql-type>
          </mapping>
          <mapping>
+            <!--
+            | Note that you lose granularity here
+            | Use a numeric type and store milliseconds if you really need it
+            -->
             <java-type>java.util.Date</java-type>
             <jdbc-type>TIMESTAMP</jdbc-type>
-            <sql-type>TIMESTAMP</sql-type>
+            <sql-type>DATE</sql-type>
          </mapping>
          <mapping>
             <java-type>java.sql.Date</java-type>
@@ -403,8 +532,10 @@
             <java-type>java.lang.Object</java-type>
             <jdbc-type>JAVA_OBJECT</jdbc-type>
             <sql-type>LONG RAW</sql-type>
-       <!-- Change this from LONG RAW to RAW(255) if you know your
-       serialized object will be <= 255 bytes -->
+            <!--
+            | Change this from LONG RAW to RAW(255) if you know your
+            | serialized object will be <= 255 bytes
+            -->
          </mapping>
       </type-mapping>
 
