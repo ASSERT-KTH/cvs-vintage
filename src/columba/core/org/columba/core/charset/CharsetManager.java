@@ -17,6 +17,7 @@ package org.columba.core.charset;
 
 import org.columba.core.gui.menu.CMenu;
 import org.columba.core.gui.menu.CMenuItem;
+import org.columba.core.logging.ColumbaLogger;
 import org.columba.core.xml.XmlElement;
 
 import org.columba.mail.util.MailResourceLoader;
@@ -28,6 +29,7 @@ import java.awt.event.MouseListener;
 import java.lang.reflect.Array;
 
 import java.nio.charset.Charset;
+import java.nio.charset.UnsupportedCharsetException;
 
 import java.util.Iterator;
 import java.util.List;
@@ -92,6 +94,7 @@ public class CharsetManager implements ActionListener {
         this.config = config;
 
         // Grab default Charset of the System
+        defaultId = 0;	// initialisation (0 ~ auto)
         defaultId = getCharsetId(System.getProperty("file.encoding"));
 
         int charsetId;
@@ -160,17 +163,25 @@ public class CharsetManager implements ActionListener {
             return defaultId;
         }
 
-        int charsetId = 0;
-        String charsetCanonicalName = Charset.forName(name).name();
-
-        //System.out.println( name + " -> " + charsetCanonicalName);
-        for (int i = 0; i < charsets.length; i++) {
-            if (charsets[i].equals(charsetCanonicalName)) {
-                charsetId = i;
-            }
+        try {
+	        //int charsetId = 0;
+	        int charsetId = defaultId; // default if name is not found
+	        String charsetCanonicalName = Charset.forName(name).name();
+	
+	        //System.out.println( name + " -> " + charsetCanonicalName);
+	        for (int i = 0; i < charsets.length; i++) {
+	            if (charsets[i].equals(charsetCanonicalName)) {
+	                charsetId = i;
+	            }
+	        }
+	
+	        return charsetId;
+	        
+        } catch (UnsupportedCharsetException e) {
+        	ColumbaLogger.log.severe("The charset " + name + 
+        			" is not supported. Using system default instead");
+        	return defaultId;
         }
-
-        return charsetId;
     }
 
     /**
