@@ -800,10 +800,6 @@
     <copy todir="${tomcat.build}/webapps/ROOT/doc">
       <fileset dir="src/doc"/>
     </copy>
-    <javac srcdir="src/webpages/WEB-INF/classes"
-           optimize="${optimize}"
-           destdir="${tomcat.build}/webapps/ROOT/WEB-INF/classes"
-           classpath="${tomcat.build}/classes;${servlet22.jar}"/>
 
       <!-- admin context -->
     <mkdir dir="${tomcat.build}/webapps/admin"/>
