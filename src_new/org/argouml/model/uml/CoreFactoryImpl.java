@@ -1,4 +1,4 @@
-// $Id: CoreFactoryImpl.java,v 1.16 2005/01/23 02:10:04 bobtarling Exp $
+// $Id: CoreFactoryImpl.java,v 1.17 2005/01/23 18:18:07 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -1515,6 +1515,9 @@ public class CoreFactoryImpl
      * @return MComment
      */
     public Object buildComment(Object element, Object model) {
+        if (model == null) {
+            throw new IllegalArgumentException("A namespace must be supplied.");
+        }
         MModelElement elementToAnnotate = (MModelElement) element;
         MComment comment = (MComment) createComment();
         
@@ -1525,6 +1528,7 @@ public class CoreFactoryImpl
         } else {
             commentsModel = (MNamespace) model;
         }
+        
         comment.setNamespace(commentsModel);
         
         return comment;
