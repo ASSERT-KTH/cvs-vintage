@@ -7,8 +7,8 @@ The DOCTYPE is:
       "-//JBoss//DTD JBOSS 3.2//EN"
       "http://www.jboss.org/j2ee/dtd/jboss_3_2.dtd">
 
-$Id: jboss_3_2.dtd,v 1.7 2003/05/02 19:20:26 d_jencks Exp $
-$Revision: 1.7 $
+$Id: jboss_3_2.dtd,v 1.8 2003/05/27 14:44:02 ejort Exp $
+$Revision: 1.8 $
 
 Overview of the architecture of jboss.xml
 
@@ -118,7 +118,7 @@ Overview of the architecture of jboss.xml
   3- the deployer can specify runtime jndi names for resource managers.
 
 -->
-<!ELEMENT jboss (loader-repository?, enforce-ejb-restrictions?, security-domain?,
+<!ELEMENT jboss (loader-repository?, jmx-name?, enforce-ejb-restrictions?, security-domain?,
  unauthenticated-principal? , enterprise-beans?, resource-managers? ,
  invoker-proxy-bindings?, container-configurations?)>
 
@@ -154,6 +154,14 @@ org.jboss.mx.loading.LoaderRepositoryFactory.LoaderRepositoryConfigParser
 implementation to use to parse the loader-repository-config content.
 -->
 <!ATTLIST loader-repository-config configParserClass CDATA #IMPLIED>
+
+<!-- The jmx-name element allows one to specify the JMX ObjectName to use
+for the MBean associated with the ejb-jar module. This must be a unique
+name and valid JMX ObjectName string.
+
+   Used in: jboss
+-->
+<!ELEMENT jmx-name (#PCDATA)>
 
 <!--
   The enforce-ejb-restrictions element tells the container to enforce ejb1.1 restrictions

@@ -42,7 +42,7 @@ import org.jboss.metadata.XmlFileLoader;
  *
  * @see Container
  *
- * @version <tt>$Revision: 1.33 $</tt>
+ * @version <tt>$Revision: 1.34 $</tt>
  * @author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
  * @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
  * @author <a href="mailto:jplindfo@helsinki.fi">Juha Lindfors</a>
@@ -420,18 +420,31 @@ public class EJBDeployer
 
       try
       {
-         // remove reserved object name letters.
-         ObjectName ejbModule = ObjectNameConverter.convert(
-            EjbModule.BASE_EJB_MODULE_NAME + ",url=" + di.url);
+         ApplicationMetaData metadata = (ApplicationMetaData) di.metaData;
+         EjbModule ejbModule = new EjbModule(di);
+         String name = metadata.getJmxName();
+         if( name == null )
+         {
+            name = EjbModule.BASE_EJB_MODULE_NAME + ",module=" + di.shortName; 
+         }
+         // Build an escaped JMX name including deployment shortname
+         ObjectName ejbModuleName = ObjectNameConverter.convert(name);
+         // Check that the name is not registered
+         if( server.isRegistered(ejbModuleName) == true )
+         {
+            log.debug("The EJBModule name: "+ejbModuleName
+               +"is already registered, adding uid="+System.identityHashCode(ejbModule));
+            name = name + ",uid="+System.identityHashCode(ejbModule);
+            ejbModuleName = ObjectNameConverter.convert(name);
+         }
 
-         server.createMBean( EjbModule.class.getName(), ejbModule,
-            new Object[] {di}, new String[] {di.getClass().getName()});
-         di.deployedObject = ejbModule;
+         server.registerMBean(ejbModule, ejbModuleName);
+         di.deployedObject = ejbModuleName;
 
          log.debug( "Deploying: " + di.url );
 
          // Init application
-         serviceController.create(ejbModule);
+         serviceController.create(ejbModuleName);
          super.create(di);
       }
       catch (Exception e)

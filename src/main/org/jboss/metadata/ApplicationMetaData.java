@@ -31,7 +31,7 @@ import org.jboss.ejb.plugins.TxSupport;
  * @author <a href="mailto:criege@riege.com">Christian Riege</a>
  * @author <a href="mailto:Christoph.Jung@infor.de">Christoph Jung</a>
  *
- * @version $Revision: 1.34 $
+ * @version $Revision: 1.35 $
  */
 public class ApplicationMetaData
    extends MetaData
@@ -57,6 +57,8 @@ public class ApplicationMetaData
    private HashMap invokerBindings = new HashMap();
    private HashMap resources = new HashMap();
    private HashMap plugins = new HashMap();
+   /** The user defined JMX name for the EJBModule */
+   private String jmxName;
    /** The security-domain value assigned to the application */
    private String securityDomain;
    /** The  unauthenticated-principal value assigned to the application */
@@ -167,6 +169,11 @@ public class ApplicationMetaData
    public Object getPluginData(String pluginName)
    {
       return plugins.get(pluginName);
+   }
+
+   public String getJmxName()
+   {
+      return jmxName;
    }
 
    public String getSecurityDomain()
@@ -514,6 +521,14 @@ public class ApplicationMetaData
       {
          String tmp = getElementContent(enforce);
          enforceEjbRestrictions = Boolean.valueOf(tmp).booleanValue();
+      }
+
+      // Get any user defined JMX name
+      Element jmxNameElement = getOptionalChild(element,
+         "jmx-name");
+      if( jmxNameElement != null )
+      {
+         jmxName = getElementContent(jmxNameElement);
       }
 
       // Get the security domain name
