@@ -21,6 +21,7 @@ import org.columba.core.command.DefaultCommandReference;
 import org.columba.core.command.StatusObservableImpl;
 import org.columba.core.command.Worker;
 import org.columba.core.command.WorkerStatusController;
+import org.columba.mail.command.FolderCommandReference;
 import org.columba.mail.folder.MessageFolder;
 
 /**
@@ -50,6 +51,19 @@ public class MoveMessageCommand extends CopyMessageCommand {
 	 * @see org.columba.core.command.Command#execute(Worker)
 	 */
 	public void execute(WorkerStatusController worker) throws Exception {
+
+		// get references
+		r = (FolderCommandReference) getReference();
+
+		// get source folder
+		MessageFolder srcFolder = (MessageFolder) r.getFolder();
+
+		// get destination foldedr
+		destFolder = (MessageFolder) r.getDestinationFolder();
+
+		// cancel, if source equals destination folder
+		if ( srcFolder.getUid() == destFolder.getUid() ) return;
+		
 		// calling CopyMessageCommand.execute() here!
 		//super.execute(worker);
 		doExecute(worker, "move_messages", "err_copy_messages_retry",
@@ -58,9 +72,6 @@ public class MoveMessageCommand extends CopyMessageCommand {
 
 		// get messgae UIDs
 		Object[] uids = r.getUids();
-
-		// get source folder
-		MessageFolder srcFolder = (MessageFolder) r.getFolder();
 
 		// register for status events
 		((StatusObservableImpl) srcFolder.getObservable()).setWorker(worker);
