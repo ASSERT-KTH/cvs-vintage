@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/jasper/compiler/PluginGenerator.java,v 1.4 2000/04/03 10:40:21 mode Exp $
- * $Revision: 1.4 $
- * $Date: 2000/04/03 10:40:21 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/jasper/compiler/PluginGenerator.java,v 1.5 2000/04/03 11:12:10 mode Exp $
+ * $Revision: 1.5 $
+ * $Date: 2000/04/03 11:12:10 $
  *
  * ====================================================================
  * 
@@ -239,7 +239,6 @@ public class PluginGenerator
 	    while (e.hasMoreElements ()) {
 	        key = (String) e.nextElement ();
 	        value = (String[]) param.get (key);
-		System.out.println ("Value is " + value[0]);
 	        writer.print ("_jspxNSString [i][0] = \"");
 		if (key.equalsIgnoreCase ("object"))
 		    key = "java_object";
