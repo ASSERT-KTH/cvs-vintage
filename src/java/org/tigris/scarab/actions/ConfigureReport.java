@@ -86,7 +86,7 @@ import org.apache.commons.betwixt.io.BeanWriter;
 /**
     This class is responsible for report generation forms
     @author <a href="mailto:jmcnally@collab.net">John D. McNally</a>
-    @version $Id: ConfigureReport.java,v 1.2 2003/01/24 19:52:59 jmcnally Exp $
+    @version $Id: ConfigureReport.java,v 1.3 2003/02/01 21:37:50 jon Exp $
 */
 public class ConfigureReport 
     extends RequireLoginFirstAction
@@ -154,26 +154,24 @@ public class ConfigureReport
         // remove any old data
         if (level != -1) 
         {
-        ScarabRequestTool scarabR = getScarabRequestTool(context);
-        ReportBridge report = scarabR.getReport();
-        ReportHeading heading = report.getReportDefinition()
-            .getAxis(axis).getHeading(level);
-        if (type != heading.calculateType()) 
-        {
-            ScarabLocalizationTool l10n = getLocalizationTool(context);
-            if (heading.size() > 0) 
+            ScarabRequestTool scarabR = getScarabRequestTool(context);
+            ReportBridge report = scarabR.getReport();
+            ReportHeading heading = report.getReportDefinition()
+                .getAxis(axis).getHeading(level);
+            if (type != heading.calculateType()) 
             {
-                heading.reset();
-                scarabR.setConfirmMessage("Heading type was changed. Old data was discarded.");
-            }
-            else
-            {
-                scarabR.setConfirmMessage("Heading type was changed.");
+                ScarabLocalizationTool l10n = getLocalizationTool(context);
+                if (heading.size() > 0) 
+                {
+                    heading.reset();
+                    scarabR.setConfirmMessage(l10n.get("HeadingTypeChangedOldDataDiscarded"));
+                }
+                else
+                {
+                    scarabR.setConfirmMessage(l10n.get("HeadingTypeChanged"));
+                }
             }
         }
-            
-        }
-        
     }
 
     public void doAddoptions( RunData data, TemplateContext context )
@@ -285,9 +283,7 @@ public class ConfigureReport
             {
                 params.setString("heading", "0");
             }
-            
-
-
+/*
             //testing
             java.io.FileWriter fw = new java.io.FileWriter("/tmp/Report.xml");
             BeanWriter bw = new BeanWriter(fw);
@@ -295,6 +291,7 @@ public class ConfigureReport
             bw.write(report.getReportDefinition());
             bw.flush();
             bw.close();
+*/
         }
     }
 
@@ -319,7 +316,6 @@ public class ConfigureReport
         }
         return setAVs;
     }
-
         
     /**
      * Adds users to the current header.
@@ -353,7 +349,7 @@ public class ConfigureReport
         {
             if ( heading.getReportGroups() != null ) 
             {
-            scarabR.setAlertMessage("Sorry I wasn't smart enough yet to handle that kind of change, so you can start over.");                
+               scarabR.setAlertMessage(l10n.get("CouldNotMakeRequestedChange"));                
             }
             heading.reset();
         }
@@ -413,7 +409,7 @@ public class ConfigureReport
             || heading.getReportGroups() != null) 
         {
             heading.reset();
-            scarabR.setAlertMessage("Sorry I wasn't smart enough yet to handle that kind of change, so you can start over.");
+            scarabR.setAlertMessage(l10n.get("CouldNotMakeRequestedChange"));                
         }
         else 
         {
@@ -474,7 +470,7 @@ public class ConfigureReport
             || heading.getReportGroups() != null) 
         {
             heading.reset();
-            scarabR.setAlertMessage("Sorry I wasn't smart enough yet to handle that kind of change, so you can start over.");
+            scarabR.setAlertMessage(l10n.get("CouldNotMakeRequestedChange"));                
         }
         else 
         {
@@ -520,7 +516,6 @@ public class ConfigureReport
         }
     }
 
-
     /**
      * Changes the user attribute a user is associated with.
      */
@@ -548,11 +543,11 @@ public class ConfigureReport
             List headings = report.getReportDefinition()
                 .getAxis(axis).getReportHeadings();
             headings.remove(level);
-            scarabR.setConfirmMessage("HeadingRemoved"); 
+            scarabR.setConfirmMessage(l10n.get("HeadingRemoved")); 
         }
         else 
         {
-            scarabR.setAlertMessage("NoHeadingSelected");            
+            scarabR.setAlertMessage(l10n.get("NoHeadingSelected"));     
         }
     }
 
@@ -572,7 +567,7 @@ public class ConfigureReport
         }
         else 
         {
-            getScarabRequestTool(context).setAlertMessage("NoHeadingSelected");
+            getScarabRequestTool(context).setAlertMessage(l10n.get("NoHeadingSelected"));
         }
     }
 
@@ -1046,7 +1041,6 @@ public class ConfigureReport
         setTarget(data, "reports,Report_1.vm");
     }
     
-
     private void setNoPermissionMessage(TemplateContext context)
     {
         ScarabRequestTool scarabR = getScarabRequestTool(context);
