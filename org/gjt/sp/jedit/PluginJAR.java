@@ -98,7 +98,7 @@ import org.gjt.sp.util.Log;
  * @see org.gjt.sp.jedit.ServiceManager
  *
  * @author Slava Pestov
- * @version $Id: PluginJAR.java,v 1.35 2003/10/10 23:46:24 spestov Exp $
+ * @version $Id: PluginJAR.java,v 1.36 2003/10/11 02:28:38 spestov Exp $
  * @since jEdit 4.2pre1
  */
 public class PluginJAR
@@ -700,7 +700,10 @@ public class PluginJAR
 	{
 		PluginCacheEntry cache = getPluginCache(this);
 		if(cache != null)
+		{
 			loadCache(cache);
+			classLoader.activate();
+		}
 		else
 		{
 			try
@@ -848,7 +851,6 @@ public class PluginJAR
 		{
 			// Check if a plugin with the same name
 			// is already loaded
-			System.err.println("Check " + cache.pluginClass);
 			if(jEdit.getPlugin(cache.pluginClass) != null)
 			{
 				jEdit.pluginError(path,
