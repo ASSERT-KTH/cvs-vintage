@@ -122,6 +122,13 @@ public class FrameModel {
             }
         });
     }
+    
+    /**
+     * Returns an array of all open frames.
+     */
+    public FrameMediator[] getOpenFrames() {
+        return (FrameMediator[])activeFrameCtrls.toArray(new FrameMediator[0]);
+    }
 
     /**
      * Create new frame controller.
@@ -249,8 +256,7 @@ public class FrameModel {
      * Called when a frame is closed. The reference is removed from the
      * list of active (shown) frames.
      * If it's the last open view, the view settings are stored in the
-     * view list, and Columba is shut down (no more views open => no more
-     * to do actually...)
+     * view list.
      * @param c                Reference to frame controller for the view which is closed
      */
     public void close(FrameMediator c) {
@@ -263,7 +269,6 @@ public class FrameModel {
                 //this is the last frame so store its data in the viewList
                 viewList.removeAllElements();
                 viewList.addElement(v.getRoot());
-                System.exit(0);
             }
         }
     }

@@ -13,10 +13,12 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
 //
 //All Rights Reserved.
+
 package org.columba.core.gui.frame;
 
 import org.columba.core.config.ViewItem;
 import org.columba.core.config.WindowItem;
+import org.columba.core.main.MainInterface;
 import org.columba.core.gui.menu.Menu;
 import org.columba.core.gui.toolbar.ToolBar;
 import org.columba.core.gui.util.ImageLoader;
@@ -30,7 +32,6 @@ import java.awt.event.WindowListener;
 import javax.swing.BoxLayout;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
-
 
 /**
  *
@@ -202,6 +203,9 @@ public abstract class AbstractFrameView extends JFrame implements WindowListener
      */
     public void windowClosing(WindowEvent arg0) {
         frameController.close();
+        if (MainInterface.frameModel.getOpenFrames().length == 0) {
+            System.exit(0);
+        }
     }
 
     /**
