@@ -1,42 +1,32 @@
 <div class="docs" id="userquerycustom"> 
   <div id="toc"> 
  <ul> 
-<li>Scarab Help 
+<li>$l10n.ScarabHelp 
   <ul>
-    <li><a href="$link.setPage("help,Introduction.vm")">Introduction to Scarab</a></li>
-    <li><a href="$link.setPage("help,UserIssues.vm")">Managing Issues</a> </li>
-    <li>Searching the database 
+    <li><a href="$link.setPage("help,Introduction.vm")">$l10n.IntroToScarab</a></li>
+    <li><a href="$link.setPage("help,UserIssues.vm")">$l10n.ManagingIssues</a> </li>
+    <li>$l10n.SearchingDatabase  
             <ul>
-              <li><a href="$link.setPage("help,UserQuery.vm")">Overview</a></li>
-              <li><a href="$link.setPage("help,UserQueryAdvanced.vm")">Advanced queries</a></li>
-              <li><strong>Custom queries</strong></li>
-              <li><a href="$link.setPage("help,UserQuerySaved.vm")">Saved queries</a></li>
+              <li><a href="$link.setPage("help,UserQuery.vm")">$l10n.SearchingOverview</a></li>
+              <li><a href="$link.setPage("help,UserQueryAdvanced.vm")">$l10n.AdvancedQueries</a></li>
+              <li><strong>$l10n.CustomQueries</strong></li>
+              <li><a href="$link.setPage("help,UserQuerySaved.vm")">$l10n.SavedQueries</a></li>
             </ul>
     </li>
-    <li><a href="$link.setPage("help,UserReports.vm")">Reports</a></li>
+    <li><a href="$link.setPage("help,UserReports.vm")">$l10n.HelpReports</a></li>
    
-      <li><a href="$link.setPage("help,ScarabBestPractices.vm")">Best Practices</a></li>
-      <li><a href="$link.setPage("help,ScarabFaq.vm")">FAQ</a></li>
-      <li><a href="$link.setPage("help,ScarabGlossary.vm")">Glossary</a></li>
+      <li><a href="$link.setPage("help,ScarabBestPractices.vm")">$l10n.ScarabGuidelines</a></li>
+      <li><a href="$link.setPage("help,ScarabFaq.vm")">$l10n.HelpFAQ</a></li>
+      <li><a href="$link.setPage("help,ScarabGlossary.vm")">$l10n.HelpGlossary</a></li>
     </ul></li>
   </ul>
   </div>
 
-  <h3><a name="top" id="top">Custom queries</a></h3>
-  <p>Custom queries allow you to search the database based on a refined set of 
-    parameters. You can search on any of the text attributes as well as any other 
-    attribute your project owner has included as a quick search parameter.</p>
-  <p>For this section, select the attributes you would like to search against. 
-    The n enter a search string. Each attribute will be searched for every term 
-    that appears in your search string. For instance, the Game project has the 
-    <em>Summary, Description, Story-line</em> and <em>Error message</em> string 
-    attributes. You are interested in any issue that involves the usage of a joystick. 
-    You can select one, some or all of the text attributes and then enter &quot;joystick&quot; 
-    in the search string. Once the search is initiated, all entries in the attributes 
-    you have chosen will be searched for the term &quot;joystick&quot;.</p>
-  <p>You can use this form to determine how you would like the search results 
-    displayed. You can select what attribute you would like the results ordered 
-    by as well as the number of issues you would like to see per page.</p>
-<div class="courtesylinks"><p><a href="#toc">Top</a></div>
+  <h3><a name="top" id="top">$l10n.CustomQueries</a></h3>
+  <p>$l10n.UQCP1</p>
+  <p>$l10n.UQCP2S1
+    <em>$l10n.SummaryDescr</em> $l10n.and <em>$l10n.ErrorMessage</em> $l10n.UQCP3</p>
+  <p>$l10n.UQCP4</p>
+<div class="courtesylinks"><p><a href="#toc">$l10n.Top</a></div>
 
 </div>

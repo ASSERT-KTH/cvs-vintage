@@ -1,75 +1,47 @@
 <div class="docs" id="userissuetemplates"> 
   <div id="toc"> 
     <ul>
-      <li>Scarab Help 
+      <li>$l10n.ScarabHelp 
         <ul>
-          <li><a href="$link.setPage("help,Introduction.vm")">Introduction to Scarab</a> </li>
-          <li>Managing Issues 
+          <li><a href="$link.setPage("help,Introduction.vm")">$l10n.IntroToScarab</a> </li>
+          <li>$l10n.ManagingIssues
             <ul>
-              <li><a href="$link.setPage("help,UserIssues.vm")">Overview</a> 
-              <li><a href="$link.setPage("help,UserIssueEntry.vm")">Entering Issues </a> </li>
-              <li><strong>Using templates</strong> 
+              <li><a href="$link.setPage("help,UserIssues.vm")">$l10n.Overview</a> 
+              <li><a href="$link.setPage("help,UserIssueEntry.vm")">$l10n.EnteringIssues</a> </li>
+              <li><strong>$l10n.UsingTemplates</strong> 
                 <ul>
-                  <li><a href="#creating">Creating templates</a></li>
-                  <li><a href="#using">Using templates</a></li>
+                  <li><a href="#creating">$l10n.CreatingTemplates</a></li>
+                  <li><a href="#using">$l10n.UsingTemplates</a></li>
                 </ul>
               </li>
-              <li><a href="$link.setPage("help,UserIssueModify.vm")">Modifying issues</a></li>
+              <li><a href="$link.setPage("help,UserIssueModify.vm")">$l10n.ModifyingIssues=Modifying issues</a></li>
             </ul>
-          <li><a href="$link.setPage("help,UserQuery.vm")">Searching the database </a></li>
-          <li><a href="$link.setPage("help,UserReports.vm")">Reports</a> </li>
-          <li><a href="$link.setPage("help,ScarabBestPractices.vm")">Best Practices</a></li>
-          <li><a href="$link.setPage("help,ScarabFaq.vm")">FAQ</a></li>
-          <li><a href="$link.setPage("help,ScarabGlossary.vm")">Glossary</a></li>
+          <li><a href="$link.setPage("help,UserQuery.vm")">$l10n.SearchingDatabase </a></li>
+          <li><a href="$link.setPage("help,UserReports.vm")">$l10n.HelpReports</a> </li>
+          <li><a href="$link.setPage("help,ScarabBestPractices.vm")">$l10n.ScarabGuidelines</a></li>
+          <li><a href="$link.setPage("help,ScarabFaq.vm")">$l10n.HelpFAQ</a></li>
+          <li><a href="$link.setPage("help,ScarabGlossary.vm")">$l10n.HelpGlossary</a></li>
         </ul>
       </li>
     </ul>
   </div>
-  <h3><a name="top" id="top">Issue entry templates</a></h3>
-  <p>You may find you often enter the same values for attributes for similar issues. 
-    Templates allow you to save a set of values for quick access and use while 
-    creating issues. Templates store descriptive dataset that can be used to populate 
-    values in future issues. Templates use the same attributes as are available 
-    for entering an issue. </p>
-  <p>For instance, a user, jdoe, is responsible for creating and implementing 
-    test plans for all functionality on the UNIX operating system. Since jdoe 
-    will be entering the same values for each issue relating to test plans, jdoe 
-    can define a template with those common values. When creating issues, jdoe 
-    can use the template to populate the common data points. Fields populated 
-    using a template can be edited in the Enter New form.</p>
-  <p>Templates can be available on a global or individual basis. Personal templates 
-    can be made by any user and are available only to the creator. Global templates 
-    require permission to create. Users with the create permission can suggest 
-    new templates to the domain administrator. The administrator is responsible 
-    for reviewing all suggested templates and approving those that have global 
-    use.</p>
-  <p>To access your templates from the left naviagtion bar click on the <em>Template 
-    list</em> link under your issue type. On the <strong> Template list</strong> screen you 
-    will find a list of any templates currently available.You can either manage 
-    the templates there or create a new template.</p>
-  <h3><strong><a name="creating" id="creating">Creating a template</a></strong></h3>
+  <h3><a name="top" id="top">$l10n.IssueEntryTemplate</a></h3>
+  <p>$l10n.UITP1 </p>
+  <p>$l10n.UITP2</p>
+  <p>$l10n.UITP3</p>
+  <p>$l10n.UITP4S1 <em>$l10n.TemplateList</em> $l10n.UITP4S2 <strong> $l10n.TemplateList</strong> $l10n.UITP4S3</p>
+  <h3><strong><a name="creating" id="creating">$l10n.CreatingTemplates</a></strong></h3>
   <ol>
-    <li>From the <em>Template list</em> screen click the <strong>Create new</strong> button.</li>
-    <li>Enter values into the Template details section. The name of your template 
-      should be short and descriptive. For instance, to create a template to enter 
-      defects affecting performance, you could name it &quot;Performance&quot; 
-      and use the description field to detail the types of performance issues 
-      this template covers. </li>
-    <li>Select the level of availability for the the template. Selecting personal 
-      will render the template available to the creator only. To make the template 
-      available globally you must have the permission to do so and/or go through 
-      an approval process (see Approvals).</li>
-    <li>Enter appropriate values in the Template Attributes section. Attributes 
-      appearing in this section are the same as appear in the<strong> Enter New</strong> 
-      screen. </li>
-    <li>Click the <strong>Done</strong> button to save your template.</li>
+    <li>$l10n.FromThe <em>$l10n.TemplateList</em> $l10n.ScreenClickThe <strong>$l10n.CreateNew</strong> $l10n.button.</li>
+    <li>$l10n.UITP6 </li>
+    <li>$l10n.UITP7</li>
+    <li>$l10n.UITP8<strong> $l10n.EnterNew</strong> 
+      $l10n.screen. </li>
+    <li>$l10n.ClickThe <strong>$l10n.Done</strong> $l10n.UITP9</li>
   </ol>
-  <h3><strong><a name="using" id="using">Using templates</a></strong></h3>
-  <p>To use the template, on the <strong>Enter New</strong> screen click on the name of 
-    the template and click the <strong>Select</strong> button. If you're not sure which 
-    template to select use the <em>View all templates</em> link. Make sure to use 
-    the <strong>Done</strong> button to return to the Enter new screen.</p>
+  <h3><strong><a name="using" id="using">$l10n.UsingTemplates</a></strong></h3>
+  <p>$l10n.UITP10S1<strong>$l10n.EnterNew</strong> $l10n.UITP10S2<strong>$l10n.Select</strong> $l10n.UITP10S2<em>$l10n.ViewAllTemplates</em> $l10n.UITP10S3<strong>$l10n.Done</strong> $l10n.UITP10S4</p>
  
-<div class="courtesylinks"><p><a href="#toc">Top</a></div> 
+<div class="courtesylinks"><p><a href="#toc">$l10n.Top</a></div> 
   
 </div>

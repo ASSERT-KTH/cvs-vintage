@@ -2,57 +2,41 @@
   <div id="toc"> 
 
   <ul>
-      <li>Scarab Help 
+      <li>$l10n.ScarabHelp 
         <ul>
-          <li><a href="$link.setPage("help,Introduction.vm")">Introduction to 
-            Scarab</a></li>
-          <li><a href="$link.setPage("help,UserIssues.vm")">Managing Issues</a></li>
-          <li><a href="$link.setPage("help,UserQuery.vm")">Searching the database</a></li>
-          <li><strong>Reports</strong></li>
-          <li><a href="$link.setPage("help,ScarabBestPractices.vm")">Scarab guidelines</a></li>
-          <li><a href="$link.setPage("help,ScarabFaq.vm")">FAQ</a></li>
-          <li><a href="$link.setPage("help,ScarabGlossary.vm")">Glossary</a></li>
+          <li><a href="$link.setPage("help,Introduction.vm")">$l10n.IntroToScarab</a></li>
+          <li><a href="$link.setPage("help,UserIssues.vm")">$l10n.ManagingIssues</a></li>
+          <li><a href="$link.setPage("help,UserQuery.vm")">$l10n.SearchingDatabase</a></li>
+          <li><strong>$l10n.HelpReports</strong></li>
+          <li><a href="$link.setPage("help,ScarabBestPractices.vm")">$l10n.ScarabGuidelines</a></li>
+          <li><a href="$link.setPage("help,ScarabFaq.vm")">$l10n.HelpFAQ</a></li>
+          <li><a href="$link.setPage("help,ScarabGlossary.vm")">$l10n.HelpGlossary</a></li>
         </ul>
       </li>
     </ul>
   </div>
-  <h3>Reports: overview</h3>
-  <p>Reports allow you to track the progress of your project. Scarab allows you 
-    to easily define, save and run reports in an issue type. Defining and using 
-    reports is a simple process:</p>
+  <h3>$l10n.ReportsOverview</h3>
+  <p>$l10n.ReportsP1</p>
 
 <ul>
-  <li> 
-Define your type of report
-  </li>
-    <li>Determine your attribute filters</li>
-  <li>Select the row and column content</li>
+  <li>$l10n.ReportsP2</li>
+    <li>$l10n.ReportsP3</li>
+  <li>$l10n.ReportsP4</li>
 </ul>
- <strong>Types of Reports</strong> 
-  <p>There are two types of reports available within Scarab: comparative analysis 
-    and rate of change.</p>
+ <strong>$l10n.ReportsP5Head</strong> 
+  <p>$l10n.ReportsP5</p>
 
 <ul>
-  <li>
- The comparative analysis report type is 
-      a snap shot of a single point in time. Use this report type to compare attributes, 
-      options and/or users at a single point in time.
-  </li>
-  <li>
-  The rate of change report allows you to 
-      track changes in your project over a period of time.
-  </li>
+  <li>$l10n.ReportsP5S2</li>
+  <li>$l10n.ReportsP5S3</li>
 </ul>
-<strong>Attribute filters</strong> 
-  <p>The primary filter attribute (PFA) defines the subset of issues from which 
-    the report is drawn. </p>
-  <p>If you have a several similar attributes defined in your PFA you may wish 
-    to display an average of the options.</p>
-  <p><strong>Display criteria</strong></p>
-  <p>The final step in defining a report is to set the display options. Use this 
-    area to define the row and column content.</p>
+<strong>$l10n.ReportsP6Head</strong> 
+  <p>$l10n.ReportsP6S1</p>
+  <p>$l10n.ReportsP6S2</p>
+  <p><strong>$l10n.ReportsP7Head</strong></p>
+  <p>$l10n.ReportsP7</p>
  
   <div class="courtesylinks"> 
-    <p><a href="#toc">Top</a> 
+    <p><a href="#toc">$l10n.Top</a> 
   </div>
 </div>

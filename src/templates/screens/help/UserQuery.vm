@@ -1,71 +1,58 @@
 <div class="docs" id="userquery"> 
   <div id="toc"> 
        <ul>
-      <li>Scarab Help 
+      <li>$l10n.ScarabHelp 
         <ul>
-          <li><a href="$link.setPage("help,Introduction.vm")">Introduction to Scarab</a></li>
-          <li><a href="$link.setPage("help,UserIssues.vm")">Managing Issues</a></li>
-          <li>Searching the database 
+          <li><a href="$link.setPage("help,Introduction.vm")">$l10n.IntroToScarab</a></li>
+          <li><a href="$link.setPage("help,UserIssues.vm")">$l10n.ManagingIssues</a></li>
+          <li>$l10n.SearchingDatabase
             <ul>
-             <li><strong>Overview</strong>
+             <li><strong>$l10n.SearchingOverview</strong>
               <ul>
-               <li><a href="#bar">The query bar</a></li>
-               <li><a href="#issueid">Searching by issue id</a></li>
+               <li><a href="#bar">$l10n.QueryBar</a></li>
+               <li><a href="#issueid">$l10n.SearchIssue</a></li>
               </ul>
              </li>
-            <li><a href="$link.setPage("help,UserQueryAdvanced.vm")">Advanced queries</a></li>
-            <li><a href="$link.setPage("help,UserQueryCustom.vm")">Custom queries</a></li>
-            <li><a href="$link.setPage("help,UserQuerySaved.vm")">Saved queries</a></li>
+            <li><a href="$link.setPage("help,UserQueryAdvanced.vm")">$l10n.AdvancedQueries</a></li>
+            <li><a href="$link.setPage("help,UserQueryCustom.vm")">$l10n.CustomQueries</a></li>
+            <li><a href="$link.setPage("help,UserQuerySaved.vm")">$l10n.SavedQueries</a></li>
            </ul>
            </li>
-          <li><a href="$link.setPage("help,UserReports.vm")">Reports</a></li>
-          <li><a href="$link.setPage("help,ScarabBestPractices.vm")">Best Practices</a></li>
-          <li><a href="$link.setPage("help,ScarabFaq.vm")">FAQ</a></li>
-          <li><a href="$link.setPage("help,ScarabGlossary.vm")">Glossary</a></li>
+          <li><a href="$link.setPage("help,UserReports.vm")">$l10n.HelpReports</a></li>
+          <li><a href="$link.setPage("help,ScarabBestPractices.vm")">$l10n.ScarabGuidelines</a></li>
+          <li><a href="$link.setPage("help,ScarabFaq.vm")">$l10n.HelpFAQ</a></li>
+          <li><a href="$link.setPage("help,ScarabGlossary.vm")">$l10n.HelpGlossary</a></li>
         </ul>
       </li>
     </ul>  
   </div>
-  <h3><strong><a name="top" id="top">Searching the database: overview</a></strong></h3>
-  <p>Query functionality includes defining a very specific query, using a customized 
-    query, using saved queries and accessing specific issue ids. You can also 
-    use the <em>Issue List </em> to access the last query.</p>
+  <h3><strong><a name="top" id="top">$l10n.SearchingDatabase</a></strong></h3>
+  <p>$l10n.UQP1S1 <em>$l10n.IssueList</em> $l10n.UQP1S2</p>
   <ul>
-    <li>Know issue number: Enter it in &quot;Issue ID&quot; field.</li>
-    <li>Know attribute values for issue: use advanced query</li>
-    <li>Know approximate information about issue: use custom query</li>
-    <li>Already defined search parameters: use saved queries</li>
+    <li>$l10n.UQP2</li>
+    <li>$l10n.UQP3</li>
+    <li>$l10n.UQP4</li>
+    <li>$l10n.UQP5</li>
   </ul>
-  <p>For ease of use, frequently used queries can be saved. Use the left navigation 
-    link or the query bar to access saved queries. </p>
-  <h4><a name="bar" id="bar">The Query bar</a></h4>
-  <p>The query bar contains links to frequently used search functionality.</p>
+  <p>$l10n.UQP6 </p>
+  <h4><a name="bar" id="bar">$l10n.QueryBar</a></h4>
+  <p>$l10n.UQP7</p>
   <ul>
-    <li>If you have any saved queries, a drop down box will appear first on this 
-      bar. Each of your saved queries appears in this box. You can select the 
-      saved query you need and click the <strong>Go</strong> button.</li>
-    <li>The <strong>Issue Id</strong> form allows you to search the database for a specific 
-      issue id.</li>
-    <li>The <em>Advanced Query</em> link allows you to specify detailed search criteria.</li>
-    <li>The <em>Custom Query</em> link is a text string search feature</li>
-    <li>The <em>Issue List</em> link will run the last query or any saved query 
-      you've set as a default</li>
+    <li>$l10n.UQP8S1<strong>$l10n.Go</strong> $l10n.button.</li>
+    <li>$l10n.The <strong>$l10n.IssueId</strong> $l10n.UQP9</li>
+    <li>$l10n.The <em>$l10n.AdvancedQueries</em> $l10n.UQP10</li>
+    <li>$l10n.The<em>$l10n.CustomQueries</em> $l10n.UQP11</li>
+    <li>$l10n.The <em>$l10n.IssueList</em> $l10n.UQP12</li>
   </ul>
-  <h4><a name="issueid" id="issueid">Searching by Issue ID</a></h4>
-  <p>To access a specific issue enter the issue number <bo>in</bo> the search 
-    form and click the <strong>Issue Id</strong> button. If the id you requested is not 
-    found an error message will appear and you can enter a different id.</p>
-  <p>Accessing issues across projects requires the following information:</p>
+  <h4><a name="issueid" id="issueid">$l10n.SearchIssue</a></h4>
+  <p>$l10n.UQP13S1 <strong>$l10n.IssueId</strong> $l10n.UQP13S2</p>
+  <p>$l10n.UQP14</p>
   <ul>
-    <li> permission to view issues in the target project</li>
-    <li> short name of the target project</li>
-    <li> issue number</li>
+    <li> $l10n.UQP15</li>
+    <li> $l10n.UQP16</li>
+    <li> $l10n.UQP17</li>
   </ul>
-  <p> For instance, jdoe is in the games (gam) project and wants to view an issue 
-    from the interface (int) project. Jdoe can enter INT1 and click the <strong>Issue 
-    Id</strong> button to view the first issue in the Interface project.</p>
-  <p>If you do not have permission to view issues in the target project you will 
-    receive an error message. Likewise, if you enter an invalid project id or 
-    issue number an error message will be generated.</p>
-<div class="courtesylinks"><p><a href="#toc">Top</a></div>
+  <p> $l10n.UQP18S1 <strong>$l10n.IssueId</strong> $l10n.UQP18S2</p>
+  <p>$l10n.UQP19</p>
+<div class="courtesylinks"><p><a href="#toc">$l10n.Top</a></div>
 </div>
