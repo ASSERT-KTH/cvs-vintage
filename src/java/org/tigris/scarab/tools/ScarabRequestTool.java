@@ -51,6 +51,7 @@ import org.apache.turbine.om.security.User;
 import org.apache.turbine.om.*;
 import org.apache.turbine.util.RunData;
 import org.apache.turbine.services.intake.IntakeTool;
+import org.apache.turbine.services.intake.model.Group;
 import org.apache.turbine.services.velocity.TurbineVelocity;
 import org.apache.turbine.util.pool.Recyclable;
 
@@ -85,6 +86,11 @@ public class ScarabRequestTool implements ScarabRequestScope,
      * A Attribute object for use within the Scarab API.
      */
     private Attribute attribute = null;
+
+    /**
+     * A Attachment object for use within the Scarab API.
+     */
+    private Attachment attachment = null;
 
     /**
      * A ModuleEntity object for use within the Scarab API.
@@ -208,6 +214,41 @@ try{
         return attribute;
  
    }
+
+    /**
+     * A Attachment object for use within the Scarab API.
+     */
+    public Attachment getAttachment()
+     throws Exception
+    {
+try{
+        if (attachment == null)
+        {
+            Group att = getIntakeTool()
+                .get("Attachment", IntakeTool.DEFAULT_KEY, false);
+            if ( att != null ) 
+            {            
+                String attId =  att.get("Id").toString();
+                if ( attId == null || attId.length() == 0 )
+                {
+                    attachment = new Attachment();
+                }
+                else 
+                {
+                    attachment = AttachmentPeer
+                        .retrieveByPK(new NumberKey(attId));
+                }
+            }
+            else 
+            {
+                attachment = new Attachment();
+            }
+        }        
+}catch(Exception e){e.printStackTrace();}
+        return attachment;
+ 
+   }
+
     /**
      * A Module object for use within the Scarab API.
      */
