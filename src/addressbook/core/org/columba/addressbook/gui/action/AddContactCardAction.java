@@ -52,6 +52,7 @@ public class AddContactCardAction extends AbstractColumbaAction {
         // icons
         putValue(SMALL_ICON, ImageLoader.getSmallImageIcon("contact_small.png"));
         putValue(LARGE_ICON, ImageLoader.getImageIcon("contact.png"));
+        
     }
 
     /* (non-Javadoc)
