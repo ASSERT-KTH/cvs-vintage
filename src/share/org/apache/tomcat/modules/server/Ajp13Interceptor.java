@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/modules/server/Ajp13Interceptor.java,v 1.17 2001/10/04 20:27:47 costin Exp $
- * $Revision: 1.17 $
- * $Date: 2001/10/04 20:27:47 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/modules/server/Ajp13Interceptor.java,v 1.18 2002/02/07 05:07:36 costin Exp $
+ * $Revision: 1.18 $
+ * $Date: 2002/02/07 05:07:36 $
  *
  * ====================================================================
  *
@@ -70,6 +70,7 @@ import org.apache.tomcat.core.*;
 import org.apache.tomcat.util.net.*;
 import org.apache.tomcat.util.*;
 import org.apache.tomcat.util.log.*;
+import org.apache.tomcat.util.io.FileUtil;
 
 /* Frozen, bug fixes only: all active development goes in
      jakarta-tomcat-connectors/jk/org/apache/ajp/Ajp14*
@@ -85,6 +86,8 @@ public class Ajp13Interceptor extends PoolTcpConnector
     private boolean decoded=true;
 
     private int decodedNote;
+    private String secret;
+    private File ajpidFile;
     
     public Ajp13Interceptor()
     {
@@ -109,6 +112,36 @@ public class Ajp13Interceptor extends PoolTcpConnector
 	shutDownEnable=b;
     }
 
+    /** Enable the use of a secret. The secret will be
+     *  randomly generated. mod_jk must read the secret to
+     *  communicate with tomcat. 
+     *
+     *  Note that we don't use the secret only for shutdown, but
+     *  for normal request processing. A 'bad' request may forge
+     *  auth, etc.
+     */
+    public void setUseSecret(boolean b ) {
+	secret=Double.toString(Math.random());
+    }
+
+    /** Set the 'secret'. If this is set, all sensitive operations
+     *   will be disabled unless the request includes a password.
+     *
+     *  This requires a recent version of mod_jk and the
+     *    worker.NAME.secret property in workers.properties.
+     */
+    public void setSecret( String s ) {
+        secret=s;
+        shutDownEnable=true;
+    }
+
+    /** Specify ajpid file used when shutting down tomcat
+     */
+    public void setAjpidFile( String path ) {
+        ajpidFile=( path==null?null:new File(path));
+    }
+    
+    
     public void setDecodedUri( boolean b ) {
 	decoded=b;
     }
@@ -123,6 +156,50 @@ public class Ajp13Interceptor extends PoolTcpConnector
 	super.engineInit( cm );
 	decodedNote=cm.getNoteId(ContextManager.REQUEST_NOTE,
 				  "req.decoded" );
+    }
+
+    public void engineState(ContextManager cm, int state )
+	throws TomcatException
+    {
+
+        if( state==ContextManager.STATE_START ) {
+            // the engine is now started, create the ajp12.id
+            // file that will allow us to stop the server and
+            // know that the server is started ok.
+            Ajp13Interceptor tcpCon=this;
+            int portInt=tcpCon.getPort();
+            InetAddress address=tcpCon.getAddress();
+            File sf=FileUtil.getConfigFile(ajpidFile, new File(cm.getHome()),
+                                           "conf/ajp13.id");
+            Properties props=new Properties();
+            
+            if( ajpidFile != null || debug > 0)
+                log( "Using stop file: "+sf);
+            try {
+                //  PrintWriter stopF=new PrintWriter
+                //                     (new FileWriter(sf));
+                FileOutputStream stopF=new FileOutputStream( sf );
+                props.put( "port", Integer.toString( portInt ));
+                // stopF.println( portInt );
+                if( address==null ) {
+                    // stopF.println( "" );
+                } else {
+                    //stopF.println( address.getHostAddress() );
+                    props.put( "address", address.getHostAddress() );
+                }
+                if( secret !=null ) {
+                    //stopF.println( secret );
+                    props.put( "secret", secret );
+                } else {
+                    // stopF.println();
+                }
+                //            stopF.close();
+                props.save( stopF, "Automatically generated, don't edit" );
+            } catch( IOException ex ) {
+                log( "Can't create stop file: "+sf, ex );
+            }
+        }
+
     }
 
     
@@ -188,13 +265,36 @@ public class Ajp13Interceptor extends PoolTcpConnector
             con.setSocket(socket);
 
             boolean moreRequests = true;
+            boolean authenticated = false;
+            // If we are not configured with a secret, assume
+            // we trust the remote party ( as we did before )
+            if( secret == null )
+                authenticated=true;
+            
             while(moreRequests) {
 		int status=req.receiveNextRequest();
 
+                if( !authenticated ) {
+                    // we need to authenticate - the user set a
+                    // secret and expects the web server to send it
+                    String conSecret=con.getSecret();
+                    if(  conSecret == null ) {
+                        log("Unauthenticated server");
+                        break;
+                    }
+                    if( ! secret.equals( conSecret )) {
+                        log("Bad server secret");
+                        break;
+                    }
+                    // allow further requests without checking
+                    authenticated=true;
+                }
+                
 		if( status==-2) {
 		    // special case - shutdown
 		    // XXX need better communication, refactor it
-		    if( !doShutdown(socket.getLocalAddress(),
+		    if( !doShutdown(con,
+                                    socket.getLocalAddress(),
 				    socket.getInetAddress())) {
 			moreRequests = false;
 			continue;
@@ -228,14 +328,18 @@ public class Ajp13Interceptor extends PoolTcpConnector
         this.cm=(ContextManager)contextM;
     }
 
-    protected boolean doShutdown(InetAddress serverAddr,
+    protected boolean doShutdown(Ajp13 con,
+                                 InetAddress serverAddr,
                                  InetAddress clientAddr)
     {
         try {
+            // continue with the other checks. XXX We may allow shutdown
+            // with the right secret from a different address.
 	    // close the socket connection before handling any signal
 	    // but get the addresses first so they are not corrupted
             if(shutDownEnable && Ajp12.isSameAddress(serverAddr, clientAddr)) {
-		cm.stop();
+		cm.shutdown();
+                log( "Exiting" );
 		// same behavior as in past, because it seems that
 		// stopping everything doesn't work - need to figure
 		// out what happens with the threads ( XXX )
