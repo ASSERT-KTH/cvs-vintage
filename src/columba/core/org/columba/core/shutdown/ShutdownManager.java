@@ -44,9 +44,12 @@ import org.columba.core.main.MainInterface;
  */
 public class ShutdownManager {
 
-	private static int ONE_SECOND = 1000;
-	private static int DELAY = ONE_SECOND * 4;
-	private static int INITIAL_DELAY = ONE_SECOND * 10;
+	private static final int ONE_SECOND = 1000;
+	private static final int DELAY = ONE_SECOND * 4;
+	private static final int INITIAL_DELAY = ONE_SECOND * 10;
+
+	public static final int MAINTAINANCE = 0;
+	public static final int SHUTDOWN = 1;
 
 	private static int currentDelay;
 
@@ -54,6 +57,8 @@ public class ShutdownManager {
 
 	private static Timer delayedTimer;
 	private static Timer timer;
+	
+	private static int mode = MAINTAINANCE;
 
 	public ShutdownManager() {
 		list = new Vector();
@@ -84,6 +89,7 @@ public class ShutdownManager {
 	}
 
 	public void shutdown() {
+		mode = SHUTDOWN;
 
 		// stop background-manager so it doesn't interfere with
 		// shutdown manager
@@ -187,4 +193,11 @@ public class ShutdownManager {
 			}
 		}
 	}
+	/**
+	 * @return
+	 */
+	public static int getMode() {
+		return mode;
+	}
+
 }

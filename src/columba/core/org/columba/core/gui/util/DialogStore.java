@@ -49,4 +49,8 @@ public class DialogStore
 		dialog.setLocationRelativeTo(frame);
 		return dialog;
 	}
+	
+	public static JFrame getOwner() {
+		return mainFrame;
+	}
 }
