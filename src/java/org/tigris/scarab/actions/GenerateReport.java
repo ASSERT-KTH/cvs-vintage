@@ -61,11 +61,13 @@ import org.apache.commons.util.SequencedHashtable;
 
 import org.apache.torque.util.Criteria;
 import org.apache.torque.om.NumberKey;
+import org.apache.torque.om.Retrievable;
 import org.apache.turbine.tool.IntakeTool;
 import org.apache.fulcrum.intake.Intake;
 import org.apache.fulcrum.intake.model.Group;
 import org.apache.fulcrum.intake.model.Field;
 import org.apache.fulcrum.util.parser.ValueParser;
+import org.apache.fulcrum.util.parser.BaseValueParser;
 
 // Scarab Stuff
 import org.tigris.scarab.om.ScarabUser;
@@ -92,7 +94,7 @@ import org.tigris.scarab.actions.base.RequireLoginFirstAction;
 /**
     This class is responsible for report generation forms
     @author <a href="mailto:jmcnally@collab.net">John D. McNally</a>
-    @version $Id: GenerateReport.java,v 1.7 2001/10/16 00:47:31 jmcnally Exp $
+    @version $Id: GenerateReport.java,v 1.8 2001/10/18 21:37:20 jmcnally Exp $
 */
 public class GenerateReport 
     extends RequireLoginFirstAction
@@ -100,7 +102,7 @@ public class GenerateReport
     public void doStep1( RunData data, TemplateContext context )
         throws Exception
     {
-        Report report = populateReport(data, context);
+        Report report = populateReport("reports,Step1.vm", data, context);
         Intake intake = getIntakeTool(context);
         if ( !intake.isAllValid() ) 
         {
@@ -127,7 +129,7 @@ public class GenerateReport
     public void doStep2agoto2b( RunData data, TemplateContext context )
         throws Exception
     {
-        Report report = populateReport(data, context);
+        Report report = populateReport("reports,Step2.vm", data, context);
         Intake intake = getIntakeTool(context);
         if ( intake.isAllValid() ) 
         {
@@ -142,7 +144,7 @@ public class GenerateReport
     public void doStep2agoto3( RunData data, TemplateContext context )
         throws Exception
     {
-        Report report = populateReport(data, context);
+        Report report = populateReport("reports,Step2.vm", data, context);
         Intake intake = getIntakeTool(context);
         if ( intake.isAllValid() ) 
         {
@@ -157,7 +159,7 @@ public class GenerateReport
     public void doStep2baddgroup( RunData data, TemplateContext context )
         throws Exception
     {
-        Report report = populateReport(data, context);
+        Report report = populateReport("reports,Step2b.vm", data, context);
         Intake intake = getIntakeTool(context);
         if ( intake.isAllValid() ) 
         {
@@ -183,7 +185,7 @@ public class GenerateReport
     public void doStep2bdeletegroup( RunData data, TemplateContext context )
         throws Exception
     {
-        Report report = populateReport(data, context);
+        Report report = populateReport("reports,Step2b.vm", data, context);
         Intake intake = getIntakeTool(context);
         if ( intake.isAllValid() ) 
         {
@@ -203,7 +205,7 @@ public class GenerateReport
     public void doStep2b( RunData data, TemplateContext context )
         throws Exception
     {
-        Report report = populateReport(data, context);
+        Report report = populateReport("reports,Step2b.vm", data, context);
         Intake intake = getIntakeTool(context);
         if ( intake.isAllValid() ) 
         {
@@ -218,7 +220,7 @@ public class GenerateReport
     public void doStep3_1a( RunData data, TemplateContext context )
         throws Exception
     {
-        Report report = populateReport(data, context);
+        Report report = populateReport("reports,Step3_1a.vm", data, context);
         Intake intake = getIntakeTool(context);
         if ( intake.isAllValid() ) 
         {
@@ -233,7 +235,7 @@ public class GenerateReport
     public void doStep3_1b( RunData data, TemplateContext context )
         throws Exception
     {
-        Report report = populateReport(data, context);
+        Report report = populateReport("reports,Step3_1b.vm", data, context);
         Intake intake = getIntakeTool(context);
         if ( intake.isAllValid() ) 
         {
@@ -248,7 +250,7 @@ public class GenerateReport
     public void doStep3_2a( RunData data, TemplateContext context )
         throws Exception
     {
-        Report report = populateReport(data, context);
+        Report report = populateReport("reports,Step3_2a.vm", data, context);
         Intake intake = getIntakeTool(context);
         if ( intake.isAllValid() ) 
         {
@@ -264,7 +266,7 @@ public class GenerateReport
     public void doStep3_2badddate( RunData data, TemplateContext context )
         throws Exception
     {
-        Report report = populateReport(data, context);
+        Report report = populateReport("reports,Step3_2b.vm", data, context);
         Intake intake = getIntakeTool(context);
         if ( intake.isAllValid() ) 
         {
@@ -286,7 +288,7 @@ public class GenerateReport
     public void doStep3_2bdeletedate( RunData data, TemplateContext context )
         throws Exception
     {
-        Report report = populateReport(data, context);
+        Report report = populateReport("reports,Step3_2b.vm", data, context);
         Intake intake = getIntakeTool(context);
         if ( intake.isAllValid() ) 
         {
@@ -307,7 +309,7 @@ public class GenerateReport
     public void doStep3_2b( RunData data, TemplateContext context )
         throws Exception
     {
-        Report report = populateReport(data, context);
+        Report report = populateReport("reports,Step3_2b.vm", data, context);
         Intake intake = getIntakeTool(context);
         if ( intake.isAllValid() ) 
         {
@@ -323,7 +325,7 @@ public class GenerateReport
     public void doSavereport( RunData data, TemplateContext context )
         throws Exception
     {
-        Report report = populateReport(data, context);
+        Report report = populateReport("reports,SaveReport.vm", data, context);
         Intake intake = getIntakeTool(context);
         if ( intake.isAllValid() ) 
         {
@@ -360,26 +362,16 @@ public class GenerateReport
     }
 
 
-
-
     /**
         Edits the stored story.
     */
     public void doEditstoredreport( RunData data, TemplateContext context )
          throws Exception
-    {        /*
-        IntakeTool intake = getIntakeTool(context);
-        ScarabRequestTool scarabR = getScarabRequestTool(context);
-        Report report = populateReport();
-        Group queryGroup = intake.get("Query", 
-                                      query.getQueryKey() );
-        String newValue = getQueryString(data);
-        queryGroup.setProperties(query);
-        query.setValue(newValue);
-        query.saveAndSendEmail((ScarabUser)data.getUser(), 
-                        scarabR.getCurrentModule(), 
-                        new ContextAdapter(context));
-             */
+    {
+        Intake intake = getIntakeTool(context);
+        intake.removeAll();
+        populateReport("", data, context);
+        setTarget(data, "reports,Step1.vm");
     }
 
     /**
@@ -388,23 +380,15 @@ public class GenerateReport
     public void doRunstoredreport( RunData data, TemplateContext context )
          throws Exception
     {        
-        populateReport(data, context);
+        populateReport("", data, context);
         setTarget(data, "reports,Report_1.vm");
-        
-        /*
-        ScarabRequestTool scarabR = getScarabRequestTool(context);
-        Query query = scarabR.getQuery();
-        data.getParameters().add("queryString", query.getValue());
-        context.put("queryString", query.getValue());
-        setTarget(data, "IssueList.vm");
-        */
     }
 
 
     public void doPrint( RunData data, TemplateContext context )
         throws Exception
     {
-        Report report = populateReport(data, context);
+        Report report = populateReport("reports,Report_1.vm", data, context);
         setTarget(data, "reports,Report_1.vm");
         data.setMessage("Use your browser to print the report.");
     }
@@ -429,7 +413,8 @@ public class GenerateReport
         doCancel(data, context);
     }
 
-    private Report populateReport( RunData data, TemplateContext context)
+    private Report populateReport( String template, 
+                                   RunData data, TemplateContext context)
        throws Exception
     {
         Report report = null;
@@ -439,8 +424,150 @@ public class GenerateReport
         {
             data.setMessage("Please check data");
         }
+
         ScarabRequestTool scarabR = getScarabRequestTool(context); 
         report = scarabR.getReport();
+
+        // add a value parser to the context that can be used to build
+        // links for forwarding report data
+        ValueParser vp = getReportParameters(report, template, data, context);
+        intake.addGroupsToParameters(vp);
+        context.put("reportParameters", vp);
         return report;
+    }
+
+    private ValueParser getReportParameters(Report report, String template, 
+                                            RunData data, 
+                                            TemplateContext context)
+        throws Exception
+    {
+        ValueParser params = new BaseValueParser();
+        IntakeTool intake = getIntakeTool(context);
+        Group ir = intake.get("Report").mapTo(report);
+        String id = data.getParameters().getString("report_id"); 
+        if (id != null && id.length() > 0)
+        {
+            params.add("report_id", id);
+        }
+        if (!template.equals("reports,Step1.vm"))
+        {
+            if (report.getName() != null)
+            {
+                Field field = ir.get("Name"); 
+                params.add(field.getKey(), field.toString()); 
+            }
+            if (report.getDescription() != null)
+            {
+                Field field = ir.get("Description"); 
+                params.add(field.getKey(), field.toString()); 
+            }
+            if (report.getType() != 0)
+            {
+                Field field = ir.get("Type"); 
+                params.add(field.getKey(), field.toString()); 
+            }
+        }
+
+        if (!template.equals("reports,Step2.vm"))
+        {
+            String[] aogs = report.getAttributesAndOptionsForGrouping();
+            if (aogs != null)
+            {
+                Field field = ir.get("AttributesAndOptionsForGrouping"); 
+                for ( int i=0; i<aogs.length; i++ ) 
+                {
+                    params.add(field.getKey(), aogs[i]);
+                }
+                
+            }
+        }
+
+        if (!template.equals("reports,Step2b.vm"))
+        {
+            List ogs = report.getOptionGroups();
+            if (ogs != null)
+            {
+                Iterator og = ogs.iterator();
+                while (og.hasNext()) 
+                {   
+                    Report.OptionGroup group = (Report.OptionGroup)og.next();
+                    Group intakeOptionGroup = 
+                        intake.get("OptionGroup").mapTo(group);
+                    Field field = intakeOptionGroup.get("DisplayValue");
+                    params.add(field.getKey(), field.toString());
+
+                    List options = group.getOptions();
+                    if (options != null) 
+                    {
+                        Iterator opti = options.iterator();
+                        while (opti.hasNext()) 
+                        {
+                            Retrievable option = (Retrievable)opti.next();
+                            params.add("ofg" + option.getQueryKey(), 
+                                       group.getQueryKey());
+                        }
+                    }
+                }
+            }
+        }
+
+        if (!template.equals("reports,Step3_1a.vm")  
+            && !template.equals("reports,Step3_2a.vm"))
+        {
+            if (report.getAxis1Category() >= 0)
+            {
+                Field field = ir.get("Axis1Category"); 
+                params.add(field.getKey(), field.toString()); 
+            }
+            if (report.getAxis2Category() >= 0)
+            {
+                Field field = ir.get("Axis2Category"); 
+                params.add(field.getKey(), field.toString()); 
+            }
+        }
+
+        if (!template.equals("reports,Step3_1b.vm")  
+            && !template.equals("reports,Step3_2b.vm"))
+        {
+            String[] keys = report.getAxis1Keys();
+            if (keys != null)
+            {
+                Field field = ir.get("Axis1Keys"); 
+                for ( int i=0; i<keys.length; i++ ) 
+                {
+                    params.add(field.getKey(), keys[i]);
+                }
+            }
+
+            keys = report.getAxis2Keys();
+            if (keys != null)
+            {
+                Field field = ir.get("Axis2Keys"); 
+                for ( int i=0; i<keys.length; i++ ) 
+                {
+                    params.add(field.getKey(), keys[i]);
+                }
+            }
+        }
+
+
+        if (!template.equals("reports,Step3_1a.vm")  
+            && !template.equals("reports,Step3_2b.vm"))
+        {
+            List dates = report.getReportDates();
+            if (dates != null)
+            {
+                Iterator datesi = dates.iterator();
+                while (datesi.hasNext()) 
+                {   
+                    Report.ReportDate date = (Report.ReportDate)datesi.next();
+                    Group intakeOptionGroup = 
+                        intake.get("ReportDate").mapTo(date);
+                    Field field = intakeOptionGroup.get("Date");
+                    params.add(field.getKey(), date.getDate().getTime());
+                }
+            }
+        }
+        return params;
     }
 }

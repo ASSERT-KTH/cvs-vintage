@@ -90,9 +90,25 @@
 #end
 
 
+#*
+#macro ( addReportHiddenInputs $reportParameters)
+foo $reportParameters
+
+#foreach ($param in $reportParameters.keySet())
+    <input type="hidden" name="$param" 
+        value="$reportParameters.getString($param)" />
+#end    
+bar
+#end
+*#
+
 #macro ( addReportHiddenInputs $report $template)
 
 #set ( $ir = $intake.Report.mapTo($report) )
+#if ($data.Parameters.getString("report_id") && $data.Parameters.getString("report_id").length() > 0)
+    <input type="hidden" name="report_id" 
+        value="$data.Parameters.getString("report_id")" />
+#end
 #if ($template != "reports,Step1.vm")
 #if ($report.Name)
     <input type="hidden" name="$ir.Name.Key" value="$ir.Name" />
@@ -128,18 +144,20 @@
 #end
 #end
 
+Cat1=$report.Axis1Category Cat2=$report.Axis2Category
 #if ($template != "reports,Step3_1a.vm"  && $template != "reports,Step3_2a")
-#if ($report.Axis1Category != 0)
+#if ($report.Axis1Category >= 0)
     <input type="hidden" name="$ir.Axis1Category.Key"
         value="$ir.Axis1Category" />
 #end
-#if ($report.Axis2Category != 0)
+#if ($report.Axis2Category >= 0)
     <input type="hidden" name="$ir.Axis2Category.Key"
         value="$ir.Axis2Category" />
 #end
 #end
 
 #if ($template != "reports,Step3_1b.vm"  && $template != "reports,Step3_2b")
+template = $template
 #if ($report.Axis1Keys)
     #foreach ($ao in $report.Axis1Keys)
     <input type="hidden" name="$ir.Axis1Keys.Key"
@@ -154,7 +172,7 @@
 #end
 #end
 
-#if ($template != "reports,Step3_1a.vm"  && $template != "reports,Step3_2b")
+#if ($template != "reports,Step3_1a.vm" && $template != "reports,Step3_2b")
 #if ($report.ReportDates)
     #foreach ($date in $report.ReportDates)
         #set ($intakeDate = $intake.ReportDate.mapTo($date))
@@ -163,5 +181,80 @@
     #end
 #end
 #end
+
+#end
+
+
+#macro (wizardLinks $template $reportParameters $link)
+
+<div class="tabs">
+   <table cellpadding="3" cellspacing="0" border="0">
+   <tr>
+
+#if ($template == "reports,Step1.vm")
+   <th><strong>1: Summary info</strong></th>
+#else
+    #set ($wizardLink = $link.setPage("reports,Step1.vm"))
+    #if ($reportParameters)
+        #set ($wizardLink = $wizardLink.addPathInfo($reportParameters))
+    #end
+   <td><a href="$wizardLink">1: Summary info</a></td>
+#end
+
+#if ($template == "reports,Step2.vm" || $template == "reports,Step2b.vm")
+   <th><strong>2:Primary filter attribute (PFA)</strong></th>
+#else
+    #set ($wizardLink = $link.setPage("reports,Step2.vm"))
+    #if ($reportParameters)
+        #set ($wizardLink = $wizardLink.addPathInfo($reportParameters))
+    #end
+   <td><a href="$wizardLink">2:Primary filter attribute (PFA)</a></td>
+#end
+
+#if ($template == "reports,Step3_1a.vm" || $template == "reports,Step3_1b.vm" || $template == "reports,Step3_2a.vm" || $template == "reports,Step3_2b.vm" )
+   <th><strong>3:Select row/column heading(s)</strong></th>
+#else
+    #if ($report.Type == 1)
+        #set ($wizardLink = $link.setPage("reports,Step3_2a.vm"))
+    #else
+        #set ($wizardLink = $link.setPage("reports,Step3_1a.vm"))
+    #end
+    #if ($reportParameters)
+        #set ($wizardLink = $wizardLink.addPathInfo($reportParameters))
+    #end
+   <td><a href="$wizardLink">3:Select row/column heading(s)</a></td>
+</div>
+#end
+   </tr>
+   </table>
+
+#end
+
+
+#macro (subWizardLinks $template $params $link $option1 $template1 $option2 $template2)
+
+<div class="functnbar">
+<table cellpadding="4" cellspacing="0" border="1">
+ <tr>
+  <td class="firstchild">
+    #if ($template == $template1 && $params.containsKey("report_id"))
+        #set ($wizardLink = $link.setPage($template2))
+        #if ($params)
+            #set ($wizardLink = $wizardLink.addPathInfo($params))
+        #end
+         <strong>$option1</strong> | <a href="$wizardLink">$option2</a>
+    #elseif ($template == $template2)
+        #set ($wizardLink = $link.setPage($template1))
+        #if ($params)
+            #set ($wizardLink = $wizardLink.addPathInfo($params))
+        #end
+         <a href="$wizardLink">$option1</a> | <strong>$option2</strong>
+    #else
+         <strong>$option1</strong> | $option2
+    #end
+  </td>
+ </tr>
+</table>
+</div>
 
 #end

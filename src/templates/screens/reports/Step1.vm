@@ -4,23 +4,16 @@ $report.Name:$report.QueryKey:
 $intakeReport.Name
 #set ($action = $link.setPage("reports,Step1.vm").setAction("GenerateReport").addPathInfo("$scarabG.Constant.NEXT_TEMPLATE", "reports,Step2.vm").toString())
 <div class="app" id="div2-4-1-step1">
-<h2>Define report (2.4.1)</h2>
-  <div class="tabs">
-   <table cellpadding="3" cellspacing="0" border="0">
-   <tr>
-   <th>1: Summary info</th>
-   <td>2:Primary filter attribute (PFA)</td>
-   <td>3:Select row/column heading(s)</td>
-   </tr>
-   </table>
-  </div>
 
+<h2>Define report (2.4.1)</h2>
+#wizardLinks("Step1.vm" $reportParameters $link)
 <form method="get" action="$action">
 
 #set ($reports = $scarabR.CurrentModule.getSavedReports($data.User))
-#if ($reports.size() > 0)
+#if ($reports.size() > 0 && !$data.Parameters.getString("report_id"))
 <h3>Saved reports</h3>
 <select name="report_id">
+        <option value="">Choose...</option>
     #foreach ( $report in $reports )
         <option value="$report.ReportId">$report.Name</option>
     #end
@@ -64,16 +57,11 @@ $intakeReport.Name
 #if ($data.Parameters.getString($intakeReport.Type.Key))
     #set ( $reporttype = $data.Parameters.getInt($intakeReport.Type.Key) )
 #end
-#set ($options = $scarabR.Report.ReportTypes)
-#if ($reporttype)
-    $options.get($reporttype);
-#else
        <select name="$intakeReport.Type.Key">
-    #foreach ( $option in $options )
-             <option value="$option.Value">$option.Name</option>
+    #foreach ( $option in $scarabR.Report.ReportTypes )
+        #option($option)
     #end
         </select>
-#end
    </td>
   </tr>
  </table>
@@ -87,6 +75,7 @@ $intakeReport.Name
 </table>
 </div>
 #addReportHiddenInputs($report "reports,Step1.vm")
+##addReportHiddenInputs($reportParameters)
 $intake.declareGroups()
 </form>
 </div>

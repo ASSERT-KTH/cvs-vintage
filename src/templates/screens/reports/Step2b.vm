@@ -1,24 +1,11 @@
 #set ($report = $scarabR.Report)
 #set ($action = $link.setPage("reports,Step2b.vm").setAction("GenerateReport").toString())
+
 <div class="app" id="div2-4-1-step3">
 <h2>Define report (2.4.1)</h2>
-  <div class="tabs">
-   <table cellpadding="3" cellspacing="0" border="0">
-   <tr>
-   <td>1: <a href="#" title="summary info">Summary info</a></td>
-   <th>2: Primary filter attribute (PFA)</th>
-   <td>3: Select row/column heading(s)</td>
-   </tr>
-   </table>
-  </div>
-<div class="functnbar">
-<table cellpadding="4" cellspacing="0" border="1">
- <tr>
-  <td class="firstchild"><a href="#" title="select pfa(s)">2a: Select PFA(s)</a> | <strong>
-    2b: PFA display options</strong></td>
- </tr>
-</table>
-</div>
+#wizardLinks("reports,Step2b.vm" $reportParameters $link)
+#subWizardLinks("reports,Step2b.vm" $reportParameters $link "2a: Select PFA(s)" "reports,Step2.vm" "2b: PFA display options" "reports,Step2b.vm")
+
 <h3>Define PFA Groups</h3>
 <h4>Grouping PFA options</h4>
 <p>In cases where primary filter attribute options represent similar traits
@@ -123,6 +110,7 @@ column.</p>
 </table>
 </div>
 #addReportHiddenInputs($report "reports,Step2b.vm")
+##addReportHiddenInputs($reportParameters)
 $intake.declareGroups()
 </form>
 </div>

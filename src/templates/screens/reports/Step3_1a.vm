@@ -1,27 +1,12 @@
 #set ($report = $scarabR.Report)
 #set ($intakeReport = $intake.Report.mapTo($report))
 #set ($action = $link.setPage("reports,Step3_1a.vm").setAction("GenerateReport").addPathInfo("$scarabG.Constant.NEXT_TEMPLATE", "reports,Step3_1b.vm").toString())
+
 <div class="app" id="div2-4-1-step4">
 <h2>Define report (2.4.1)</h2>
-  <div class="tabs">
-   <table cellpadding="3" cellspacing="0" border="0">
-   <tr>
-   <td>1: <a href="#" title="summary info">Summary info</a></td>
-   <td>2: Primary filter attribute (PFA)</td>
-   <th>3: Select row/column heading(s)</th>
-   </tr>
-   </table>
-  </div>
-<div class="functnbar">
-<table cellpadding="4" cellspacing="0" border="1">
- <tr>
-  <td class="firstchild">3a: Define row/column criteria
-             |
-            3b: Select row/column content
-        </td>
- </tr>
-</table>
-</div>
+#wizardLinks("reports,Step3_1a.vm" $reportParameters $link)
+#subWizardLinks("reports,Step3_1a.vm" $reportParameters $link "3a: Define row/column criteria" "reports,Step3_1a.vm" "3b: Select row/column content" "reports,Step3_1b.vm")
+
 <h3>Report content: Comparative analysis</h3>
 <form method="get" action="$action">
 <div class="axial">
@@ -39,7 +24,7 @@
 <td>
   <select name="$intakeReport.Axis1Category.Key">
       <option value="">select criteria</option>
-#set ($options = $scarabR.Report.AxisCategories)
+#set ($options = $scarabR.Report.Axis1Categories)
 #foreach ( $option in $options )
     #option($option)
 #end
@@ -51,7 +36,7 @@
 <td>
   <select name="$intakeReport.Axis2Category.Key">
       <option value="">select criteria</option>
-#set ($options = $scarabR.Report.AxisCategories)
+#set ($options = $scarabR.Report.Axis2Categories)
 #foreach ( $option in $options )
     #option($option)
 #end
@@ -71,6 +56,7 @@
 </table>
 </div>
 #addReportHiddenInputs($report "reports,Step3_1a.vm")
+##addReportHiddenInputs($reportParameters)
 $intake.declareGroups()
 </form>
 </div>

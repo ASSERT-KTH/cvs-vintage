@@ -63,8 +63,8 @@ public  class Report
     private static final String[] AXIS_CATEGORIES = 
         {"attributes/options", "attributes/users", "committed by/author"};
 
-    private static List reportTypes;
-    private static List axisCategories;
+    //private static List reportTypes;
+    //private static List axisCategories;
 
     private static final String ACT_ATTRIBUTE_ID;
     private static final String ACT_NEW_USER_ID;
@@ -80,13 +80,13 @@ public  class Report
     //private ModuleEntity module;
     //private String name;    
     //private String description;
-    private int type;
+    private int type=0;
     private ScarabUser generatedBy;
     private Date generatedDate;
     private String[] toBeGrouped;
     private List dates;
-    private int axis1Category;
-    private int axis2Category;
+    private int axis1Category=-1;
+    private int axis2Category=-1;
     private String[] axis1Keys;
     private String[] axis2Keys;
     private List optionGroups;
@@ -96,18 +96,6 @@ public  class Report
 
     static
     {
-        reportTypes = new ArrayList();
-        for ( int i=0; i<REPORT_TYPES.length; i++ ) 
-        {
-            reportTypes.add( new OptionModel(i, REPORT_TYPES[i]) );
-        }
-
-        axisCategories = new ArrayList();
-        for ( int i=0; i<AXIS_CATEGORIES.length; i++ ) 
-        {
-            axisCategories.add(new OptionModel(i, AXIS_CATEGORIES[i]));
-        }
-
         // column names only
         ACT_ATTRIBUTE_ID = ActivityPeer.ATTRIBUTE_ID.substring(
             ActivityPeer.ATTRIBUTE_ID.indexOf('.')+1);
@@ -133,11 +121,34 @@ public  class Report
 
     public List getReportTypes()
     {
+        List reportTypes = new ArrayList();
+        for ( int i=0; i<REPORT_TYPES.length; i++ ) 
+        {
+            reportTypes.add( 
+                new OptionModel(i, REPORT_TYPES[i], i==getType()) );
+        }
         return reportTypes;
     }
 
-    public List getAxisCategories()
+    public List getAxis1Categories()
     {
+        List axisCategories = new ArrayList();
+        for ( int i=0; i<AXIS_CATEGORIES.length; i++ ) 
+        {
+            axisCategories.add(
+               new OptionModel(i, AXIS_CATEGORIES[i], i==getAxis1Category()));
+        }        
+        return axisCategories;
+    }
+
+    public List getAxis2Categories()
+    {
+        List axisCategories = new ArrayList();
+        for ( int i=0; i<AXIS_CATEGORIES.length; i++ ) 
+        {
+            axisCategories.add(
+               new OptionModel(i, AXIS_CATEGORIES[i], i==getAxis2Category()));
+        }        
         return axisCategories;
     }
     
@@ -1346,11 +1357,7 @@ public  class Report
     {
         if ( queryKey == null ) 
         {
-            queryKey = super.getQueryKey();
-            if ( queryKey == null ) 
-            {
-                queryKey = "";
-            }
+            queryKey = "";
         }
         return queryKey;
     }

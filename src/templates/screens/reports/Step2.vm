@@ -1,25 +1,12 @@
 #set ($report = $scarabR.Report)
 #set ($intakeReport = $intake.Report.mapTo($report))
 #set ($action = $link.setPage("reports,Step2.vm").setAction("GenerateReport").toString())
+
 <div class="app" id="div2-4-1-step2">
 <h2>Define report (2.4.1)</h2>
-  <div class="tabs">
-   <table cellpadding="3" cellspacing="0" border="0">
-   <tr>
-   <td>1: <a href="#" title="summary info">Summary info</a></td>
-   <th>2: Primary filter attribute (PFA)</th>
-   <td>3:Select row/column heading(s)</td>
-   </tr>
-   </table>
-  </div>
-<div class="functnbar">
-<table cellpadding="4" cellspacing="0" border="1">
- <tr>
-  <td class="firstchild">2a: Select PFA(s) |
-    2b: PFA display options</td>
- </tr>
-</table>
-</div>
+#wizardLinks("reports,Step2.vm" $reportParameters $link)
+#subWizardLinks("reports,Step2.vm" $reportParameters $link "2a: Select PFA(s)" "reports,Step2.vm" "2b: PFA display options" "reports,Step2b.vm")
+
 <h3>Select primary filter attribute(s)</h3>
 <h4>Primary filter attribute</h4>
 <p>This selection defines the subset of issues that this report will be drawn
@@ -57,6 +44,7 @@ seperate column (i.e. side-by-side comparison).</p>
 </table>
 </div>
 #addReportHiddenInputs($report "reports,Step2.vm")
+##addReportHiddenInputs($reportParameters)
 $intake.declareGroups()
 </form>
 </div>

@@ -1019,7 +1019,7 @@ try{
         {
             ValueParser parameters = data.getParameters();
             String id = parameters.getString("report_id");
-            if ( id == null ) 
+            if ( id == null || id.length() == 0 ) 
             {
                 reportGenerator = new Report();
                 reportGenerator.setModule(getCurrentModule());
@@ -1030,6 +1030,8 @@ try{
             else 
             {
                 reportGenerator = ReportPeer.retrieveByPK(new NumberKey(id));
+                reportGenerator
+                    .setQueryString(getReportQueryString(parameters));
             }
         }
         

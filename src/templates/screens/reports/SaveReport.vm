@@ -71,6 +71,7 @@ Go to your <a href="$link.setPage("ReportList.vm")">Stored Reports List</a>.
 </table>
 </div>
 
+<input type="hidden" name="overwrite" value="true" />
 #addReportHiddenInputs($report "reports,SaveReport.vm")
 $intake.declareGroups()
 </form>

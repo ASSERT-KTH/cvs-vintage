@@ -1,29 +1,12 @@
 #set ($report = $scarabR.Report)
 #set ($intakeReport = $intake.Report.mapTo($report))
 #set ($action = $link.setPage("reports,Step3_2b.vm").setAction("GenerateReport").toString())
+
 <div class="app" id="div2-4-1-step5b">
 <h2>Define report (2.4.1)</h2>
-  <div class="tabs">
-   <table cellpadding="3" cellspacing="0" border="0">
-   <tr>
-   <td>1: <a href="#" title="summary info">Summary info</a></td>
-   <td>2: <a href="#" title="primary filter attribute">
-                Primary filter attribute (PFA)</a></td>
-   <th>3: Select row/column heading(s)</th>
-   </tr>
-   </table>
-  </div>
-<div class="functnbar">
-<table cellpadding="4" cellspacing="0" border="1">
- <tr>
-  <td class="firstchild">
-  <a href="#" title="define row/column criteria">
-                3a: Define row/column criteria</a> | 
-            3b: Select row/column content
-        </td>
-  </tr>
- </table>
-</div>
+#wizardLinks("reports,Step3_2b.vm" $reportParameters $link)
+#subWizardLinks("reports,Step3_2b.vm" $reportParameters $link "3a: Define row/column criteria" "reports,Step3_2a.vm" "3b: Select row/column content" "reports,Step3_2b.vm")
+
 <h3>Select row/column content</h3>
 <form method="get" action="$action">
 <div class="axial">
@@ -114,6 +97,7 @@
  </table>
 </div>
 #addReportHiddenInputs($report "reports,Step3_2b")
+##addReportHiddenInputs($reportParameters)
 $intake.declareGroups()
 </form>
 </div>

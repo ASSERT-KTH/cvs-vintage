@@ -5,12 +5,15 @@
 
 <form method="get" action="$action">
 
-#set ($reports = $scarabR.CurrentModule.getSavedReports($data.User))
 #if ($reports.size() > 0)
+#set ($reports = $scarabR.CurrentModule.getSavedReports($data.User))
 <h3>Saved reports</h3>
 <select name="report_id">
+    <option value="">Choose...</option>
     #foreach ( $report in $reports )
-        <option value="$report.ReportId">$report.Name</option>
+        #set ($isSelected = $data.Parameters.getString("report_id") && $report.ReportId.equals($data.Parameters.getString("report_id"))) 
+        <option value="$report.ReportId"
+            #selected($isSelected)>$report.Name</option>
     #end
 </select>
 <input type="submit" value="Run" name="eventSubmit_doRunstoredreport"/>
