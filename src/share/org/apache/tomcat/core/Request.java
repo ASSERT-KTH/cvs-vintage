@@ -783,7 +783,7 @@ public class Request {
 
     // -------------------- Attributes
     
-    public Object getAttribute(String name) {
+    public final Object getAttribute(String name) {
         Object value=attributes.get(name);
 	if( value != null )
 	    return value;
@@ -816,7 +816,7 @@ public class Request {
 	return null;
     }
 
-    public void setAttribute(String name, Object value) {
+    public final void setAttribute(String name, Object value) {
 	int status=BaseInterceptor.DECLINED;
 	Context ctx=getContext();
 	if( ctx!=null ) {
