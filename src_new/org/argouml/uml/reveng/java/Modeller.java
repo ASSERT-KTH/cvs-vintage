@@ -1,4 +1,4 @@
-// $Id: Modeller.java,v 1.61 2003/03/04 13:01:09 lepekhine Exp $
+// $Id: Modeller.java,v 1.62 2003/03/04 13:14:44 lepekhine Exp $
 
 /*
   JavaRE - Code generation and reverse engineering for UML and Java
@@ -120,7 +120,7 @@ public class Modeller
 	}
 	// Save src_path in the upper package
 	Object mPackage = getPackage(currentName);
-	if (Import.getSrcPath() != null & ModelFacade.getTaggedValue(mPackage, "src_path") == null)
+	if (Import.getSrcPath() != null && ModelFacade.getTaggedValue(mPackage, "src_path") == null)
 		ModelFacade.setTaggedValue(mPackage, "src_path", Import.getSrcPath());
 		
 	// Find or create a MPackage NSUML object for this package.
