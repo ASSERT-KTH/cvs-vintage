@@ -135,16 +135,17 @@ public class WorkDirSetup extends BaseInterceptor {
 	if( ctx.getWorkDir() == null)
 	    initWorkDir(ctx);
 
+	// #3581 - remove old dir _before_ creating the new one 
+	if ( cleanWorkDir ) {
+	    FileUtil.clearDir(ctx.getWorkDir() );
+	}
+
 	// Make sure the workdir exists 
 	if (! ctx.getWorkDir().exists()) {
 	    log("Creating work dir " + ctx.getWorkDir());
 	    ctx.getWorkDir().mkdirs();
 	}
 
-	// 
-	if ( cleanWorkDir ) {
-	    FileUtil.clearDir(ctx.getWorkDir() );
-	}
     }
 
     public void contextShutdown( Context ctx ) {
