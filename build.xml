@@ -58,8 +58,18 @@
   <target name="tomcat" depends="prepare">
     <javac srcdir="src/share" destdir="${tomcat.build}/classes"
            classpath="${tomcat.build}/lib/xml.jar" debug="on"/>
+
+    <copydir src="src/share" dest="${tomcat.build}/classes">
+      <include name="**/*.properties" />
+    </copydir>
+
     <javac srcdir="src/j2ee" destdir="${tomcat.build}/classes"
            classpath="${tomcat.build}/lib/xml.jar" debug="on"/>
+
+    <copydir src="src/j2ee" dest="${tomcat.build}/classes">
+      <include name="**/*.properties" />
+    </copydir>
+
     <rmic base="${tomcat.build}/classes"
           classname="org.apache.tomcat.shell.AdminImpl"/>
   </target>
