@@ -65,7 +65,7 @@ import org.gjt.sp.util.*;
  * </ul>
  *
  * @author Slava Pestov
- * @version $Id: Buffer.java,v 1.147 2003/04/09 02:33:39 spestov Exp $
+ * @version $Id: Buffer.java,v 1.148 2003/04/10 21:11:56 spestov Exp $
  */
 public class Buffer
 {
@@ -3738,7 +3738,9 @@ loop:		for(int i = 0; i < seg.count; i++)
 				{
 					// if user adds mode buffer-local property
 					String newMode = getStringProperty("mode");
-					if(!newMode.equals(getMode().getName()))
+					if(newMode != null &&
+						!newMode.equals(getMode()
+						.getName()))
 						setMode();
 					else
 						propertiesChanged();
