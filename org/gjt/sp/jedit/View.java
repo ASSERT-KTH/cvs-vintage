@@ -79,7 +79,7 @@ import org.gjt.sp.util.Log;
  *
  * @author Slava Pestov
  * @author John Gellene (API documentation)
- * @version $Id: View.java,v 1.110 2004/03/28 00:07:26 spestov Exp $
+ * @version $Id: View.java,v 1.111 2004/05/06 22:35:11 spestov Exp $
  */
 public class View extends JFrame implements EBComponent
 {
@@ -741,6 +741,8 @@ public class View extends JFrame implements EBComponent
 	 */
 	public EditPane split(int orientation)
 	{
+		PerspectiveManager.setPerspectiveDirty(true);
+
 		editPane.saveCaretInfo();
 		EditPane oldEditPane = editPane;
 		setEditPane(createEditPane(oldEditPane.getBuffer()));
@@ -809,6 +811,8 @@ public class View extends JFrame implements EBComponent
 	{
 		if(splitPane != null)
 		{
+			PerspectiveManager.setPerspectiveDirty(true);
+
 			EditPane[] editPanes = getEditPanes();
 			for(int i = 0; i < editPanes.length; i++)
 			{
@@ -841,6 +845,8 @@ public class View extends JFrame implements EBComponent
 	{
 		if(splitPane != null)
 		{
+			PerspectiveManager.setPerspectiveDirty(true);
+
 			// find first split pane parenting current edit pane
 			Component comp = editPane;
 			while(!(comp instanceof JSplitPane))

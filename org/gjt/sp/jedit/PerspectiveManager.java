@@ -30,10 +30,32 @@ import org.gjt.sp.util.Log;
  * Manages persistence of open buffers and views across jEdit sessions.
  * @since jEdit 4.2pre1
  * @author Slava Pestov
- * @version $Id: PerspectiveManager.java,v 1.8 2004/01/25 01:38:30 spestov Exp $
+ * @version $Id: PerspectiveManager.java,v 1.9 2004/05/06 22:35:11 spestov Exp $
  */
 public class PerspectiveManager
 {
+	//{{{ isPerspectiveDirty() method
+	/**
+	 * We only autosave the perspective if it has changed, to avoid spinning
+	 * up the disk on laptops.
+	 * @since jEdit 4.2pre13
+	 */
+	public static boolean isPerspectiveDirty()
+	{
+		return dirty;
+	} //}}}
+
+	//{{{ setPerspectiveDirty() method
+	/**
+	 * We only autosave the perspective if it has changed, to avoid spinning
+	 * up the disk on laptops.
+	 * @since jEdit 4.2pre13
+	 */
+	public static void setPerspectiveDirty(boolean dirty)
+	{
+		PerspectiveManager.dirty = dirty;
+	} //}}}
+
 	//{{{ loadPerspective() method
 	public static View loadPerspective(boolean restoreFiles)
 	{
@@ -209,6 +231,8 @@ public class PerspectiveManager
 			Log.log(Log.ERROR,PerspectiveManager.class,io);
 		}
 	} //}}}
+
+	private static boolean dirty;
 
 	//{{{ PerspectiveHandler class
 	static class PerspectiveHandler extends HandlerBase
