@@ -63,7 +63,7 @@ import org.tigris.scarab.util.ScarabConstants;
     This class will store the form data for a project modification
         
     @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
-    @version $Id: ModifyModule.java,v 1.7 2001/08/28 00:51:55 jon Exp $
+    @version $Id: ModifyModule.java,v 1.8 2001/08/28 01:00:33 jon Exp $
 */
 public class ModifyModule extends RequireLoginFirstAction
 {
@@ -75,11 +75,11 @@ public class ModifyModule extends RequireLoginFirstAction
         try
         {
             // get a populated ScarabModule and do validation
-            ModuleEntity module = ModuleManager.getModule(data, true);
+//            ModuleEntity module = ModuleManager.getModule(data, true);
             
             // check to see if we have a duplicate name!
-            ModuleManager.checkForDuplicateProject(module);
-            module.save();
+ //           ModuleManager.checkForDuplicateProject(module);
+//            module.save();
             data.setMessage("Modification Successful!");
         }
         catch (Exception e)
