@@ -32,11 +32,11 @@ import org.jboss.util.ServiceMBeanSupport;
 
 /**
  *   This is a JMX service which manages the TransactionManager.
- *	  The service creates it and binds a Reference to it into JNDI.
+ *    The service creates it and binds a Reference to it into JNDI.
  *      
  *   @see TxManager
  *   @author Rickard Öberg (rickard.oberg@telkel.com)
- *   @version $Revision: 1.2 $
+ *   @version $Revision: 1.3 $
  */
 public class TransactionManagerService
    extends ServiceMBeanSupport
@@ -46,36 +46,36 @@ public class TransactionManagerService
    public static String JNDI_NAME = "TransactionManager";
     
    // Attributes ----------------------------------------------------
-	MBeanServer server;
+    MBeanServer server;
    
    // Static --------------------------------------------------------
-   static TransactionManager tm;
+   static TxManager tm;
 
    // ServiceMBeanSupport overrides ---------------------------------
    public String getName()
    {
       return "Transaction manager";
-	}
+    }
    
    protected ObjectName getObjectName(MBeanServer server, ObjectName name)
       throws javax.management.MalformedObjectNameException
    {
-   	this.server = server;
+    this.server = server;
       return new ObjectName(OBJECT_NAME);
    }
-	
+    
    protected void initService()
       throws Exception
    {
-	   // Create a new TM
-	   tm = new TxManager();
-		
-	   // Bind reference to TM in JNDI
-		// TODO: Move this to start when relationships are in place
-	   Reference ref = new Reference(tm.getClass().toString(), getClass().getName(), null);
-	   new InitialContext().bind(JNDI_NAME, ref);
+       // Create a new TM
+       tm = new TxManager();
+        
+       // Bind reference to TM in JNDI
+        // TODO: Move this to start when relationships are in place
+       Reference ref = new Reference(tm.getClass().toString(), getClass().getName(), null);
+       new InitialContext().bind(JNDI_NAME, ref);
    }
-	
+    
    protected void startService()
       throws Exception
    {
@@ -83,25 +83,36 @@ public class TransactionManagerService
    
    protected void stopService()
    {
-		try
-		{
-			// Remove TM from JNDI
-			new InitialContext().unbind(JNDI_NAME);
-		} catch (Exception e)
-		{
-			log.exception(e);
-		}
+        try
+        {
+            // Remove TM from JNDI
+            new InitialContext().unbind(JNDI_NAME);
+        } catch (Exception e)
+        {
+            log.exception(e);
+        }
    }
-	
-	// ObjectFactory implementation ----------------------------------
-	public Object getObjectInstance(Object obj,
+    
+   public int getTransactionTimeout() {
+      return tm.getTransactionTimeout();
+   }
+
+   public void setTransactionTimeout(int timeout) {
+      try {
+         tm.setTransactionTimeout(timeout);
+      } catch (Exception ex) {
+      }
+   }
+
+    // ObjectFactory implementation ----------------------------------
+    public Object getObjectInstance(Object obj,
                                 Name name,
                                 Context nameCtx,
                                 Hashtable environment)
                          throws Exception
-	{
-		// Return the transaction manager
-		return tm;
-	}
+    {
+        // Return the transaction manager
+        return tm;
+    }
 }
 

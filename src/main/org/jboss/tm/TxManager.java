@@ -38,7 +38,7 @@ import org.jboss.logging.Logger;
  *  @author Rickard Öberg (rickard.oberg@telkel.com)
  *  @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
  *  @author <a href="mailto:osh@sparre.dk">Ole Husgaard</a>
- *  @version $Revision: 1.21 $
+ *  @version $Revision: 1.22 $
  */
 public class TxManager
 implements TransactionManager
@@ -49,8 +49,9 @@ implements TransactionManager
 
    /**
     *  Default timeout in milliseconds.
+    *  Must be >= 1000!
     */
-   int timeOut = 60*1000; // Default timeout in milliseconds
+   int timeOut = 60*1000; 
     
    // Static --------------------------------------------------------
     
@@ -204,6 +205,11 @@ implements TransactionManager
       timeOut = 1000 * seconds;
    }
     
+   public int getTransactionTimeout()
+   {
+      return timeOut / 1000;
+   }
+
    /*
     *  The following 2 methods are here to provide association and
     *  disassociation of the thread.

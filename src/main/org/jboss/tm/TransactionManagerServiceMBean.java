@@ -12,7 +12,7 @@ package org.jboss.tm;
  *      
  *   @see <related>
  *   @author Rickard Öberg (rickard.oberg@telkel.com)
- *   @version $Revision: 1.1 $
+ *   @version $Revision: 1.2 $
  */
 public interface TransactionManagerServiceMBean
    extends org.jboss.util.ServiceMBean
@@ -21,4 +21,8 @@ public interface TransactionManagerServiceMBean
    public static final String OBJECT_NAME = ":service=TransactionManager";
     
    // Public --------------------------------------------------------
+   public int getTransactionTimeout();
+
+   public void setTransactionTimeout(int timeout);
 }
+
