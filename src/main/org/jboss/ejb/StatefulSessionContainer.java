@@ -31,7 +31,7 @@ import org.jboss.logging.Logger;
  *      
  *   @see <related>
  *   @author Rickard Öberg (rickard.oberg@telkel.com)
- *   @version $Revision: 1.13 $
+ *   @version $Revision: 1.14 $
  */
 public class StatefulSessionContainer
    extends Container
@@ -323,10 +323,17 @@ public class StatefulSessionContainer
    public void remove(MethodInvocation mi)
       throws java.rmi.RemoteException, RemoveException
    {
+      // Remove from storage 
       getPersistenceManager().removeSession((StatefulSessionEnterpriseContext)mi.getEnterpriseContext());
+      
+      // We signify "removed" with a null id
       mi.getEnterpriseContext().setId(null);
    }
    
+   /**
+   *  MF FIXME these are implemented on the client
+   */
+  
    public Handle getHandle(MethodInvocation mi)
       throws java.rmi.RemoteException
    {
@@ -361,47 +368,89 @@ public class StatefulSessionContainer
       getPersistenceManager().createSession(mi.getMethod(), mi.getArguments(), (StatefulSessionEnterpriseContext)mi.getEnterpriseContext());
      return ((StatefulSessionEnterpriseContext)mi.getEnterpriseContext()).getEJBObject();
    }
+   
+     /**
+    * A method for the getEJBObject from the handle
+    * 
+    */
+    public EJBObject getEJBObject(MethodInvocation mi) 
+        throws java.rmi.RemoteException  {
+            
+       try {
+           
+        // All we need is an EJBObject for this Id, the first argument is the Id
+        return containerInvoker.getStatefulSessionEJBObject(mi.getArguments()[0]);        
+    
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+     }
+        
 
    // EJBHome implementation ----------------------------------------
+   /**
+   *  These are implemented in the local proxy
+   */
+   
    public void removeHome(MethodInvocation mi)
     throws java.rmi.RemoteException, RemoveException
    {
-		throw new Error("Not Yet Implemented");
-	}
+       throw new Error("Not Yet Implemented");
+    }
    
    public EJBMetaData getEJBMetaDataHome(MethodInvocation mi)
     throws java.rmi.RemoteException
    {
-	   return getContainerInvoker().getEJBMetaData();
+       return getContainerInvoker().getEJBMetaData();
    }
    
    public HomeHandle getHomeHandleHome(MethodInvocation mi)
-	   throws java.rmi.RemoteException   
+       throws java.rmi.RemoteException   
    {
-	   throw new Error("Not Yet Implemented");
+       throw new Error("Not Yet Implemented");
    }
+   
       
    // Private -------------------------------------------------------
-   protected void setupHomeMapping()
-      throws NoSuchMethodException
-   {
-      Map map = new HashMap();
-      
-      Method[] m = homeInterface.getMethods();
-      for (int i = 0; i < m.length; i++)
-      {
-         try
-         {
-            // Implemented by container
-            map.put(m[i], getClass().getMethod(m[i].getName()+"Home", new Class[] { MethodInvocation.class }));
-         } catch (NoSuchMethodException e)
-         {
-            System.out.println(m[i].getName() + " in bean has not been mapped");
-         }
-      }
-      
-      homeMapping = map;
-   }
+    protected void setupHomeMapping()
+    throws NoSuchMethodException
+    {
+        Map map = new HashMap();
+        
+        Method[] m = homeInterface.getMethods();
+        for (int i = 0; i < m.length; i++)
+        {
+            try
+            {
+                // Implemented by container
+                map.put(m[i], getClass().getMethod(m[i].getName()+"Home", new Class[] { MethodInvocation.class }));
+            } catch (NoSuchMethodException e)
+            {
+                System.out.println(m[i].getName() + " in bean has not been mapped");
+            }
+        }
+        
+        try {
+            
+            // Get getEJBObject from on Handle, first get the class
+            Class handleClass = Class.forName("javax.ejb.Handle");
+            
+            //Get only the one called handle.getEJBObject 
+            Method getEJBObjectMethod = handleClass.getMethod("getEJBObject", new Class[0]);
+                        
+            //Map it in the home stuff
+            map.put(getEJBObjectMethod, getClass().getMethod("getEJBObject", new Class[] {MethodInvocation.class}));
+        }
+        catch (NoSuchMethodException e) {
+                    
+            System.out.println("Couldn't find getEJBObject method on container");
+        }
+        catch (Exception e) { e.printStackTrace();}
+        
+        homeMapping = map;
+    }
 
    protected void setupBeanMapping()
       throws NoSuchMethodException
@@ -460,11 +509,16 @@ public class StatefulSessionContainer
          Method m = (Method)homeMapping.get(mi.getMethod());
          // Invoke and handle exceptions
          
+         System.out.println("SSC:invokeHome:mi is "+mi.getMethod().getName()+" map is "+m.getName());
          try
          {
+             //Exception e = new Exception();
+             //e.printStackTrace();
+             
             return m.invoke(StatefulSessionContainer.this, new Object[] { mi });
          } catch (InvocationTargetException e)
          {
+             e.printStackTrace();
             Throwable ex = e.getTargetException();
             if (ex instanceof Exception)
                throw (Exception)ex;
@@ -479,6 +533,7 @@ public class StatefulSessionContainer
          // Get method
          Method m = (Method)beanMapping.get(mi.getMethod());
          
+         System.out.println("SSC:invoke:mi is "+mi.getMethod().getName()+" map is "+m.getName());
          // Select instance to invoke (container or bean)
          if (m.getDeclaringClass().equals(StatefulSessionContainer.this.getClass()))
          {
