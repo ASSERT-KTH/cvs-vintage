@@ -1,4 +1,4 @@
-// $Id: GeneratorCpp.java,v 1.10 2004/04/26 19:49:49 thn Exp $
+// $Id: GeneratorCpp.java,v 1.11 2004/06/20 14:20:28 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -2621,6 +2621,22 @@ public class GeneratorCpp extends Generator2
 	    if (clsEnum.hasNext()) sb.append(", ");
 	}
 	return sb.toString();
+    }
+
+    /**
+     * Generates the String representation for an Event.
+     *
+     * @param modelElement Model element to generate notation for.
+     *
+     * @return Generated notation for model element.
+     */
+    public String generateEvent(Object modelElement) {
+        if (!ModelFacade.isAEvent(modelElement)) {
+            throw new ClassCastException(modelElement.getClass()
+                    + " has wrong object type, Event required");
+        }
+
+        return "";
     }
 
     public String generateVisibility(Object handle) {
