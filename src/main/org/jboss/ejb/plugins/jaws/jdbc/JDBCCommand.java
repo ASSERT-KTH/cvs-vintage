@@ -52,7 +52,7 @@ import org.jboss.logging.Logger;
  * utility methods that database commands may need to call.
  *
  * @author <a href="mailto:justin@j-m-f.demon.co.uk">Justin Forder</a>
- * @version $Revision: 1.14 $
+ * @version $Revision: 1.15 $
  */
 public abstract class JDBCCommand
 {
@@ -402,8 +402,9 @@ public abstract class JDBCCommand
            // Use the class loader to deserialize
 
             try {
-                WorkaroundInputStream ois = new WorkaroundInputStream(bais);
-                result = ois.readObject();
+				ObjectInputStream ois = new ObjectInputStream(bais);
+				
+				result = ((MarshalledObject) ois.readObject()).get();
 				
 				// ejb-reference: get the object back from the handle
 				if (result instanceof Handle) result = ((Handle)result).getEJBObject();
