@@ -25,7 +25,7 @@ import org.jboss.ejb.DeploymentException;
  *      
  *   @see <related>
  *   @author <a href="mailto:sebastien.alborini@m4x.org">Sebastien Alborini</a>
- *   @version $Revision: 1.3 $
+ *   @version $Revision: 1.4 $
  */
 public class ApplicationMetaData extends MetaData {
 	// Constants -----------------------------------------------------
@@ -37,8 +37,7 @@ public class ApplicationMetaData extends MetaData {
 	private ArrayList securityRoles = new ArrayList();
 	private ArrayList configurations = new ArrayList();
 	private HashMap resources = new HashMap();
-	private HashMap homeJndiMap = null;
-	
+
 	
 	// Static --------------------------------------------------------
 	
@@ -87,14 +86,6 @@ public class ApplicationMetaData extends MetaData {
 		// if not found, the container will use default
 		return (String)resources.get(name);
 	}
-	
-	public String getJndiFromHome(String homeClass) {
-		// homeJndiName must be initialized once jboss.xml has been processed
-		
-		if (homeJndiMap == null) makeHomeJndiMap();
-		return (String)homeJndiMap.get(homeClass);
-	}
-	
 	
 	
 	public void importEjbJarXml (Element element) throws DeploymentException {
@@ -273,17 +264,6 @@ public class ApplicationMetaData extends MetaData {
 	// Protected -----------------------------------------------------
 	
 	// Private -------------------------------------------------------
-	private void makeHomeJndiMap() {
-		homeJndiMap = new HashMap();
-		
-		Iterator iterator = getEnterpriseBeans();
-		while (iterator.hasNext()) {
-			BeanMetaData bean = (BeanMetaData)iterator.next();
-			homeJndiMap.put(bean.getHome(), bean.getJndiName());
-		}
-	}
-		
-	
 	
 	// Inner classes -------------------------------------------------
 }

@@ -21,7 +21,7 @@ import org.jboss.ejb.DeploymentException;
  *      
  *   @see <related>
  *   @author <a href="mailto:sebastien.alborini@m4x.org">Sebastien Alborini</a>
- *   @version $Revision: 1.5 $
+ *   @version $Revision: 1.6 $
  */
 public abstract class BeanMetaData extends MetaData {
     // Constants -----------------------------------------------------
@@ -36,7 +36,7 @@ public abstract class BeanMetaData extends MetaData {
     private String ejbClass;
     protected boolean session;
 	
-	private ArrayList ejbReferences = new ArrayList();
+	private HashMap ejbReferences = new HashMap();
 	private ArrayList environmentEntries = new ArrayList();
     private ArrayList securityRoleReferences = new ArrayList();
 	private HashMap resourceReferences = new HashMap();
@@ -70,7 +70,7 @@ public abstract class BeanMetaData extends MetaData {
 	
 	public String getEjbName() { return ejbName; }
 	
-	public Iterator getEjbReferences() { return ejbReferences.iterator(); }
+	public Iterator getEjbReferences() { return ejbReferences.values().iterator(); }
 	
 	public Iterator getEnvironmentEntries() { return environmentEntries.iterator(); }
 	
@@ -169,7 +169,7 @@ public abstract class BeanMetaData extends MetaData {
 			EjbRefMetaData ejbRefMetaData = new EjbRefMetaData();
 			ejbRefMetaData.importEjbJarXml(ejbRef);
 			
-			ejbReferences.add(ejbRefMetaData);
+			ejbReferences.put(ejbRefMetaData.getName(), ejbRefMetaData);
 		}
 		
 		// set the security roles references
@@ -214,7 +214,19 @@ public abstract class BeanMetaData extends MetaData {
 			String resourceName = getElementContent(getUniqueChild(resourceRef, "resource-name"));
 			ResourceRefMetaData resourceRefMetaData = (ResourceRefMetaData)resourceReferences.get(resRefName);
 		    resourceRefMetaData.setResourceName(resourceName);
-		}	
+		}
+		
+		// set the external ejb-references (optional)
+		iterator = getChildrenByTagName(element, "ejb-ref");
+		while (iterator.hasNext()) {
+			Element ejbRef = (Element)iterator.next();
+			String ejbRefName = getElementContent(getUniqueChild(ejbRef, "ejb-ref-name"));
+			EjbRefMetaData ejbRefMetaData = (EjbRefMetaData)ejbReferences.get(ejbRefName);
+			if (ejbRefMetaData == null) {
+				throw new DeploymentException("ejb-ref " + ejbRefName + " found in jboss.xml but not in ejb-jar.xml");
+			}
+			ejbRefMetaData.importJbossXml(ejbRef);
+		}
 	}
 	
 	

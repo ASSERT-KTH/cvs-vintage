@@ -15,7 +15,7 @@ import org.jboss.ejb.DeploymentException;
  *      
  *   @see <related>
  *   @author <a href="mailto:sebastien.alborini@m4x.org">Sebastien Alborini</a>
- *   @version $Revision: 1.1 $
+ *   @version $Revision: 1.2 $
  */
 public class EjbRefMetaData extends MetaData {
     // Constants -----------------------------------------------------
@@ -32,8 +32,11 @@ public class EjbRefMetaData extends MetaData {
     private String home;
     private String remote;
 	
-	// the jndi name: we must map "name" to "link"
+	// internal link: map name to link
     private String link;
+	
+	// external link: map name to jndiName
+	private String jndiName;
 	
     // Static --------------------------------------------------------
     
@@ -53,6 +56,8 @@ public class EjbRefMetaData extends MetaData {
 	
 	public String getLink() { return link; }
 
+    public String getJndiName() { return jndiName; }
+
     public void importEjbJarXml(Element element) throws DeploymentException {
 		name = getElementContent(getUniqueChild(element, "ejb-ref-name"));
 		type = getElementContent(getUniqueChild(element, "ejb-ref-type"));
@@ -61,6 +66,10 @@ public class EjbRefMetaData extends MetaData {
 		link = getElementContent(getOptionalChild(element, "ejb-link"));
 	}		
     
+	public void importJbossXml(Element element) throws DeploymentException {
+		jndiName = getElementContent(getOptionalChild(element, "jndi-name"));
+	}
+	
 	// Package protected ---------------------------------------------
     
     // Protected -----------------------------------------------------
