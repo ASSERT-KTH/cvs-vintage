@@ -25,7 +25,7 @@
 // File: UMLChangeDispatch.java
 // Classes: UMLChangeDispatch
 // Original Author:
-// $Id: UMLChangeDispatch.java,v 1.14 2003/05/02 20:51:18 kataka Exp $
+// $Id: UMLChangeDispatch.java,v 1.15 2003/05/03 12:52:40 kataka Exp $
 
 // 23 Apr 2002: Jeremy Bennett (mail@jeremybennett.com). Added named constants
 
@@ -305,22 +305,7 @@ public class UMLChangeDispatch implements Runnable, UMLUserInterfaceComponent {
                         uiComp.targetReasserted();
                         break;
                 }
-            } else {
-                if (component instanceof TargetChangedListener && _target != null) {
-                   TargetChangedListener listener = (TargetChangedListener) component;        
-                   switch(_eventType) {
-                        case -1:
-                        case 0:
-                            listener.targetChanged(_target);
-                            break;
-                         
-                        case 7:
-                            listener.targetReasserted(_target);
-                            break;
-                            
-                   }
-                }
-            }
+            } 
         }
        
     }
