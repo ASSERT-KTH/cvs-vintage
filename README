@@ -42,7 +42,7 @@ The CVS repository has the following directory structure:
 /          Development directory that contains project, build and source files
 /src       Source Root
 /res       Resource files like images and translations
-/lib       Libraries which are used by Columba
+/lib       Libraries used by Columba
 /native    native code for a better integration of Columba
 /plugins   a collection of plugins to extend Columba's functionality
 /classes   compiled classes will be put here
@@ -79,7 +79,7 @@ http://columba.sourceforge.net/phpwiki/index.php/FAQ%20%28Frequently%20Asked%20Q
 The user manual is available at
 http://columba.sourceforge.net/phpwiki/index.php/User%20manual
 
-For the latest information on new releases, website or ressource changes, 
+For the latest information on new releases, website or resource changes, 
 please visit http://columba.sourceforge.net
 
 
@@ -99,7 +99,5 @@ Frederik Dietz  (developer)     fdietz@users.sourceforge.net
 Timo Stich      (developer)     tstich@users.sourceforge.net
 
 For more information please visit
-http://columba.sourceforge.net/contact.html
-
-
+http://columba.sourceforge.net/index.php?page=contact
 
