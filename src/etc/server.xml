@@ -212,8 +212,18 @@
              address="127.0.0.1"
           -->
         <RequestInterceptor 
-         className="org.apache.ajp.tomcat33.Ajp13Interceptor"
-         port="8009" />
+           className="org.apache.tomcat.modules.server.Ajp13Interceptor"
+           port="8009" />
+
+        <!-- Apache AJP14 support ( experimental, jakarta-tomcat-connectors)
+            This will eventually replace Ajp12 and Ajp13
+          -->
+        <RequestInterceptor 
+           className="org.apache.ajp.tomcat33.Ajp14Interceptor"
+           tomcatAuthentication="false"
+           password="changeme"
+           debug="10"			    
+           port="8010" />
 
       <!-- 
            Context definitions can be placed here ( not recommended ) or 
