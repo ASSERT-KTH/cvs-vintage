@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/jasper/runtime/PageContextImpl.java,v 1.6 2000/02/04 01:22:12 mandar Exp $
- * $Revision: 1.6 $
- * $Date: 2000/02/04 01:22:12 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/jasper/runtime/PageContextImpl.java,v 1.7 2000/04/05 18:42:03 akv Exp $
+ * $Revision: 1.7 $
+ * $Date: 2000/04/05 18:42:03 $
  *
  * ====================================================================
  *
@@ -333,7 +333,9 @@ public class PageContextImpl extends PageContext {
         String path = relativeUrlPath;
 
         if (!path.startsWith("/")) {
-            String uri = ((HttpServletRequest) request).getServletPath();
+	    String uri = (String) request.getAttribute("javax.servlet.include.servlet_path");
+	    if (uri == null)
+		uri = ((HttpServletRequest) request).getServletPath();
             String baseURI = uri.substring(0, uri.lastIndexOf('/'));
             path = baseURI+'/'+path;
         }
