@@ -129,7 +129,7 @@ public class ServerXmlReader extends BaseInterceptor {
 	setPropertiesRules( cm, xh );
 	setTagRules( xh );
 	addDefaultTags(cm, xh);
-	//addTagRules( cm, xh );
+	addTagRules( cm, xh );
 	setBackward( xh );
 
 	// load the config file(s)
