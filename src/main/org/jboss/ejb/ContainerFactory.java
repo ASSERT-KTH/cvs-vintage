@@ -76,7 +76,7 @@ import org.jboss.logging.Logger;
 *   @author <a href="mailto:jplindfo@helsinki.fi">Juha Lindfors</a>
 *   @author <a href="mailto:sebastien.alborini@m4x.org">Sebastien Alborini</a>
 *
-*   @version $Revision: 1.54 $
+*   @version $Revision: 1.55 $
 */
 public class ContainerFactory
     extends org.jboss.util.ServiceMBeanSupport
@@ -393,7 +393,7 @@ public class ContainerFactory
                   ConfigurationMetaData conf = bean.getContainerConfiguration();
 
                   // Set transaction manager
-                  container.setTransactionManager((TransactionManager)new InitialContext().lookup("TransactionManager"));
+                  container.setTransactionManager((TransactionManager)new InitialContext().lookup("java:/TransactionManager"));
 
                   // Set security manager & role mapping manager
                   String securityManagerJNDIName = conf.getAuthenticationModule();
@@ -485,7 +485,7 @@ public class ContainerFactory
                   container.setBeanMetaData(bean);
 
                   // Set transaction manager
-                  container.setTransactionManager((TransactionManager)new InitialContext().lookup("TransactionManager"));
+                  container.setTransactionManager((TransactionManager)new InitialContext().lookup("java:/TransactionManager"));
 
                   // Get container configuration
                   ConfigurationMetaData conf = bean.getContainerConfiguration();
@@ -586,7 +586,7 @@ public class ContainerFactory
                container.setBeanMetaData(bean);
 
                // Set transaction manager
-               container.setTransactionManager((TransactionManager)new InitialContext().lookup("TransactionManager"));
+               container.setTransactionManager((TransactionManager)new InitialContext().lookup("java:/TransactionManager"));
 
                // Get container configuration
                ConfigurationMetaData conf = bean.getContainerConfiguration();
