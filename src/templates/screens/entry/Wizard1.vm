@@ -95,7 +95,11 @@ $page.setTitle("Enter issue")
           #attrValueLeafSelect ($attVal $field "")
         #end
     #elseif ($attVal.Attribute.isUserAttribute())
-       #userSelectBox ($attVal "5" "multiple")
+        #if ($templateId)
+          #templateUserSelectBox ($attVal $templAttVal "5" "multiple")
+        #else
+          #userSelectBox ($attVal "5" "multiple")
+        #end
     #else
         #if ($templateId)
           #templateAttrValueText ( $attVal "50" $templAttrInput.Value)

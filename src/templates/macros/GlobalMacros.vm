@@ -174,9 +174,41 @@
  #if ($size.length() == 0)
  <option value="">Choose...</option>
  #end
- #foreach ($user in $module.getUsers($attr.Permission))
-   #set ($selected = "")
+   #foreach ($user in $module.getUsers($attr.Permission))
+   #set ($selected = "") $user.PrimaryKey
    #if ($attrInput.UserId.Value && $user.PrimaryKey == $attrInput.UserId.Value)
+   <option selected="selected" value="$user.PrimaryKey">$user.UserName</option>
+   #else
+   <option value="$user.PrimaryKey">$user.UserName</option>
+   #end
+ #end
+</select>
+#end
+
+#macro (templateUserSelectBox $attrValue $templAttrValue $size $multiple)
+#set ($attrInput = $intake.AttributeValue.mapTo($attrValue))
+#set ($templAttrInput = $intake.AttributeValue.mapTo($templAttrValue))
+#set ($attr = $attrValue.Attribute)
+#set ($module = $attrValue.Issue.Module)
+  #set( $currentValue = "")
+  #if ($attrInput.UserId.toString().length() > 0 )
+    #set( $currentValue = $attrInput.UserId)
+  #elseif ( $templAttrInput.UserId.toString().length() > 0 )
+    #set( $currentValue = $templAttrInput.UserId)
+  #end
+#if ($multiple == "true" || $multiple == "multiple")
+<select name="$attrInput.UserId.Key"
+     #if($size.length())size="$size"#end multiple="multiple">
+#else
+<select name="$attrInput.UserId.Key"
+     #if($size.length())size="$size"#end>
+#end
+ #if ($size.length() == 0)
+ <option value="">Choose...</option>
+ #end
+   #foreach ($user in $module.getUsers($attr.Permission))
+   #set ($selected = "") $user.PrimaryKey
+   #if ($user.PrimaryKey.toString().equals($currentValue.toString()))
    <option selected="selected" value="$user.PrimaryKey">$user.UserName</option>
    #else
    <option value="$user.PrimaryKey">$user.UserName</option>
