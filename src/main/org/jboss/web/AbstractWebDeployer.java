@@ -27,6 +27,7 @@ import javax.security.jacc.PolicyConfigurationFactory;
 import javax.security.jacc.PolicyContextException;
 import javax.security.jacc.WebResourcePermission;
 import javax.security.jacc.WebUserDataPermission;
+import javax.security.jacc.WebRoleRefPermission;
 
 import org.jboss.deployment.DeploymentException;
 import org.jboss.deployment.DeploymentInfo;
@@ -34,7 +35,6 @@ import org.jboss.deployment.J2eeApplicationMetaData;
 import org.jboss.ejb.Container;
 import org.jboss.ejb.EjbUtil;
 import org.jboss.logging.Logger;
-import org.jboss.metadata.ApplicationMetaData;
 import org.jboss.metadata.EjbLocalRefMetaData;
 import org.jboss.metadata.EjbRefMetaData;
 import org.jboss.metadata.EnvEntryMetaData;
@@ -44,6 +44,7 @@ import org.jboss.metadata.ResourceEnvRefMetaData;
 import org.jboss.metadata.ResourceRefMetaData;
 import org.jboss.metadata.WebMetaData;
 import org.jboss.metadata.WebSecurityMetaData;
+import org.jboss.metadata.SecurityRoleRefMetaData;
 import org.jboss.metadata.WebSecurityMetaData.WebResourceCollection;
 import org.jboss.mx.loading.LoaderRepositoryFactory;
 import org.jboss.naming.NonSerializableFactory;
@@ -145,7 +146,7 @@ thread context ClassLoader as was used to dispatch the http service request.
    extends="org.jboss.deployment.SubDeployerMBean"
 
 @author  Scott.Stark@jboss.org
-@version $Revision: 1.22 $
+@version $Revision: 1.23 $
 */
 public abstract class AbstractWebDeployer
 {
@@ -625,7 +626,6 @@ public abstract class AbstractWebDeployer
          MessageDestinationRefMetaData ref = (MessageDestinationRefMetaData) enum.next();
 
          String refName = ref.getRefName();
-         String resType = ref.getType();
          String jndiName = ref.getJNDIName();
          String link = ref.getLink();
          if (link != null)
@@ -1017,6 +1017,50 @@ public abstract class AbstractWebDeployer
 
       patternsWithHttpMethodSubsetsWRP.clear();
       patternsWithHttpMethodSubsetsWUDP.clear();
+
+      /* Create WebRoleRefPermissions for all servlet/security-role-refs along
+      with all the cross product of servlets and security-role elements that
+      are not referenced via a security-role-ref as described in JACC section
+      3.1.3.2
+      */
+      Set unreferencedRoles = metaData.getSecurityRoleNames();
+      Map servletRoleRefs = metaData.getSecurityRoleRefs();
+      Iterator roleRefsIter = servletRoleRefs.keySet().iterator();
+      while( roleRefsIter.hasNext() )
+      {
+         String servletName = (String) roleRefsIter.next();
+         ArrayList roleRefs = (ArrayList) servletRoleRefs.get(servletName);
+         for(int n = 0; n < roleRefs.size(); n ++)
+         {
+            SecurityRoleRefMetaData roleRef = (SecurityRoleRefMetaData) roleRefs.get(n);
+            String roleName = roleRef.getLink();
+            WebRoleRefPermission wrrp = new WebRoleRefPermission(servletName, roleRef.getName());
+            pc.addToRole(roleName, wrrp);
+            /* A bit of a hack due to how tomcat calls out to its Realm.hasRole()
+            with a role name that has been mapped to the role-link value. We
+            may need to handle this with a custom request wrapper.
+            */
+            wrrp = new WebRoleRefPermission(servletName, roleName);
+            pc.addToRole(roleRef.getName(), wrrp);
+            // Remove the role from the unreferencedRoles
+            unreferencedRoles.remove(roleName);
+         }
+      }
+      
+      // Now build the cross product of the unreferencedRoles and servlets
+      Set servletNames = metaData.getServletNames();
+      Iterator names = servletNames.iterator();
+      while( names.hasNext() )
+      {
+         String servletName = (String) names.next();
+         Iterator roles = unreferencedRoles.iterator();
+         while( roles.hasNext() )
+         {
+            String role = (String) roles.next();
+            WebRoleRefPermission wrrp = new WebRoleRefPermission(servletName, role);
+            pc.addToRole(role, wrrp);            
+         }
+      }
    }
 
    /** An inner class that maps the WebDescriptorParser.parseWebAppDescriptors()
