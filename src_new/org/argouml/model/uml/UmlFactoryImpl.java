@@ -1,4 +1,4 @@
-// $Id: UmlFactoryImpl.java,v 1.16 2005/01/11 21:03:31 mvw Exp $
+// $Id: UmlFactoryImpl.java,v 1.17 2005/01/13 17:02:53 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -634,6 +634,8 @@ public class UmlFactoryImpl
             return getCommonBehavior().createNodeInstance();
         } else if (elementType == ModelFacade.OBJECT) {
             return getCommonBehavior().createObject();
+        } else if (elementType == ModelFacade.COMMENT) {
+            return getCore().createComment();
         }
         return modelElement;
     }
