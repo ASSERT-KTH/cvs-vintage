@@ -138,9 +138,9 @@ public class DependencyTree
         while (xmlIdList.hasMoreElements())
         {
             String xmlId = (String)xmlIdList.nextElement();
-            if (xmlId.equals(node.getParentOrChildId()))
+            if (xmlId.equals(node.getDependIssueId()))
             {
-                return(isDependTypesMatch(xmlId,node.getIssueId(), node.getDependType()));
+                return(isDependTypesMatch(xmlId,node.getXmlIssueId(), node.getDependType()));
             }
         }
         return false;
@@ -153,7 +153,7 @@ public class DependencyTree
         {
             DependencyNode node = (DependencyNode)dependencies.get(i);
             
-            if (node != null && node.getParentOrChildId().equals(xmlId2))
+            if (node != null && node.getDependIssueId().equals(xmlId2))
             {
                 return node.getDependType().getName().equals(dependType.getName());
             }
@@ -206,7 +206,7 @@ public class DependencyTree
                 DependencyNode node = (DependencyNode)dependencyList.get(i);
                 if (node != null)
                 {
-                    String dependencyXmlId = node.getParentOrChildId();
+                    String dependencyXmlId = node.getDependIssueId();
                     if (!isIssueDependencyValid(node))
                     {
                         invalidList.add(node);
@@ -257,7 +257,7 @@ public class DependencyTree
                     if (node.getNodeType().equals(DependencyNode.NODE_TYPE_PARENT))
                     {
                         depend.setObserverId(getIssueId(unresolvedIssueId));
-                        depend.setObservedId(getIssueId(node.getParentOrChildId()));
+                        depend.setObservedId(getIssueId(node.getDependIssueId()));
                         depend.save();
                     }
                 }
@@ -289,9 +289,12 @@ public class DependencyTree
         {
             int errorNo = i + 1;
             DependencyNode node = (DependencyNode) dependencies.get(i);
-            info.append("<validation error " + errorNo + "> issue: " + node.getIssueId() + " has either an unknown depend issue: " 
-                            + node.getParentOrChildId() + " or their depend types don't match" 
-                       + " Or their parent/child doesn't match\n");
+            info.append("<validation error " + errorNo + "> issue: " + 
+                            node.getXmlIssueId() + 
+                            " has either an unknown depend issue: " +
+                            node.getDependIssueId() + 
+                            " or their depend types don't match" +
+                            " Or their parent/child doesn't match");
         }
         return info.toString();
     }
@@ -303,7 +306,9 @@ public class DependencyTree
         for (int i = 0; i < dependencies.size(); i++)
         {
             NumberKey childModuleId = (NumberKey) dependencies.get(i);
-            info.append("<validation error> module: " + childModuleId + " has an unresolved parent module: " + getModuleDependency(childModuleId) + "\n");
+            info.append("<validation error> module: " + childModuleId + 
+                " has an unresolved parent module: " + 
+                getModuleDependency(childModuleId));
         }
         
         return info.toString();

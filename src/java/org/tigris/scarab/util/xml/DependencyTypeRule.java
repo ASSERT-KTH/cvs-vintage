@@ -72,8 +72,8 @@ public class DependencyTypeRule extends BaseRule
     public void body(String text)
         throws Exception
     {
-        log().debug("(" + getImportBean().getState() + ") dependency type body: " + text);
+        log().debug("(" + getImportBean().getState() + ") dependency type: " + text);
         DependType dependType = DependTypeManager.getInstance(text);
-        getImportBean().setDependType(dependType);
+        getImportBean().getDependencyNode().setDependType(dependType);
     }
 }

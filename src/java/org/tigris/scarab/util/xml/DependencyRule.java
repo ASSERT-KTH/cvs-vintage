@@ -63,6 +63,16 @@ public class DependencyRule extends BaseRule
         super(ib);
     }
     
+    public void begin() throws Exception
+    {
+        log().debug("(" + getImportBean().getState() + 
+            ") dependency begin");
+        DependencyNode dn = new DependencyNode();
+        dn.setXmlIssueId(getImportBean().getIssueId());
+        dn.setResolved(false);
+        getImportBean().setDependencyNode(dn);
+    }
+
     /**
      * This method is called when the end of a matching XML element
      * is encountered.
@@ -76,41 +86,30 @@ public class DependencyRule extends BaseRule
     
     protected void doValidationAtEnd()
     {
-        String nodeType = (String)getDigester().pop();
-        String parentOrChildIssueXmlId = (String)getDigester().pop();
-        DependType dependType = (DependType)getDigester().pop();
-        String issueXmlId = (String)getDigester().pop();
-
         DependencyTree dt = getImportBean().getDependencyTree();
-        DependencyNode dn = new DependencyNode(nodeType, issueXmlId, 
-                                               parentOrChildIssueXmlId, 
-                                               dependType, false);
+        DependencyNode dn = getImportBean().getDependencyNode();
 
         if(!dt.isIssueDependencyValid(dn))
         {
             //if we can't resolve the dependency yet, it may still 
             // resolve it at the end when we have seen all ids
-            dt.addIssueDependency(issueXmlId, dn);
+            dt.addIssueDependency(dn.getXmlIssueId(), dn);
         }
         else
         {
-            dn = new DependencyNode(nodeType, issueXmlId, 
-                                    parentOrChildIssueXmlId, 
-                                    dependType, true);
-            dt.addIssueDependency(issueXmlId, dn);
+            dn.setResolved(true);
+            dt.addIssueDependency(dn.getXmlIssueId(), dn);
         }
-
-        getDigester().push(issueXmlId);
     }
     
     protected void doInsertionAtEnd()
         throws Exception
     {
-        String nodeType = (String)getDigester().pop();
-        String parentOrChildIssueXmlId = (String)getDigester().pop();
-        DependType dependType = (DependType)getDigester().pop();
-        Issue issue = (Issue)getDigester().pop();
-        
+        String nodeType = getImportBean().getDependencyNode().getNodeType();
+        String dependIssueId = getImportBean().getDependencyNode().getDependIssueId();
+        DependType dependType = getImportBean().getDependencyNode().getDependType();
+        Issue issue = getImportBean().getIssue();
+
         DependencyTree dt = getImportBean().getDependencyTree();
 
         String issueXmlId = dt.getIssueXmlId(issue.getIssueId());
@@ -119,27 +118,24 @@ public class DependencyRule extends BaseRule
 
         if (nodeType.equals(DependencyNode.NODE_TYPE_PARENT)) 
         {
-            if (dt.isIssueResolvedYet(parentOrChildIssueXmlId)) 
+            if (dt.isIssueResolvedYet(dependIssueId)) 
             {
-                log().debug("parent dependency of " + parentOrChildIssueXmlId + 
+                log().debug("parent dependency of " + dependIssueId + 
                                 " has been resolved");
                 depend.setObserverId(issue.getIssueId());
-                depend.setObservedId(dt.getIssueId(parentOrChildIssueXmlId));
+                depend.setObservedId(dt.getIssueId(dependIssueId));
                 depend.save();
             }
             else
             {
                 log().debug("can't resolve the parent dependency of " + 
-                                parentOrChildIssueXmlId);
+                                dependIssueId);
                 //resolve at the end 
-                DependencyNode dn = new DependencyNode(nodeType, issueXmlId, 
-                                                       parentOrChildIssueXmlId, 
-                                                       dependType, false);
-                
+                DependencyNode dn = getImportBean().getDependencyNode();
+                dn.setResolved(false);
                 dt.addIssueDependency(issueXmlId, dn);
             }
             
         } 
-        getDigester().push(issue);
     }
 }

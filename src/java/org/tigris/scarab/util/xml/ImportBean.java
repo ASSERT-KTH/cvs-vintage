@@ -61,14 +61,14 @@ import org.apache.commons.digester.Digester;
 /**
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: ImportBean.java,v 1.5 2002/05/06 22:12:09 jon Exp $
+ * @version $Id: ImportBean.java,v 1.6 2002/05/06 22:56:26 jon Exp $
  */
 public class ImportBean
 {
     private String state = null;
     private Digester digester = null;
     private DependencyTree dependencyTree = null;
-    private DependType dependType = null;
+    private DependencyNode dependencyNode = null;
     private List roleList = null;
     private List userList = null;
     private Module module = null;
@@ -112,14 +112,14 @@ public class ImportBean
         this.dependencyTree = value;
     }
 
-    public DependType getDependType()
+    public DependencyNode getDependencyNode()
     {
-        return this.dependType;
+        return this.dependencyNode;
     }
     
-    public void setDependType(DependType value)
+    public void setDependencyNode(DependencyNode value)
     {
-        this.dependType = value;
+        this.dependencyNode = value;
     }
 
     public ActivityInfo getActivityInfo()

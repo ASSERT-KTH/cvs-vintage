@@ -70,7 +70,8 @@ public class DependencyParentRule extends BaseRule
     {
         log().debug("(" + getImportBean().getState() + 
             ") dependency parent body: " + text);
-        getDigester().push(text);
-        getDigester().push(DependencyNode.NODE_TYPE_PARENT);
+        getImportBean().getDependencyNode()
+            .setNodeType(DependencyNode.NODE_TYPE_PARENT);
+        getImportBean().getDependencyNode().setDependIssueId(text);
     }
 }

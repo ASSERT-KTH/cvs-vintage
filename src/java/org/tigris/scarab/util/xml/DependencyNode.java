@@ -57,21 +57,14 @@ public class DependencyNode
     public static final String NODE_TYPE_CHILD = "CHILD";
     public static final String NODE_TYPE_PARENT = "PARENT";
     
-    private String nodeType;
-    private String parentOrChildId;
-    private String issueId;
-    private DependType dependType;
-    private boolean resolved;
-    
-    public DependencyNode (String nodeType, String issueId, 
-                           String parentOrChildId, DependType dependType, 
-                           boolean resolved) 
+    private String nodeType = null;
+    private String dependIssueId = null;
+    private String xmlIssueId = null;
+    private DependType dependType = null;
+    private boolean resolved = false;
+
+    public DependencyNode()
     {
-        this.nodeType = nodeType;
-        this.issueId = issueId;
-        this.parentOrChildId = parentOrChildId;
-        this.dependType = dependType;
-        this.resolved = resolved;
     }
     
     public String getNodeType()
@@ -79,14 +72,29 @@ public class DependencyNode
         return nodeType;
     }
     
-    public String getIssueId()
+    public void setNodeType(String value)
     {
-        return issueId;
+        nodeType = value;
     }
     
-    public String getParentOrChildId() 
+    public String getDependIssueId() 
     {
-        return parentOrChildId;
+        return dependIssueId;
+    }
+
+    public void setDependIssueId(String value)
+    {
+        dependIssueId = value;
+    }
+    
+    public String getXmlIssueId() 
+    {
+        return xmlIssueId;
+    }
+
+    public void setXmlIssueId(String value)
+    {
+        xmlIssueId = value;
     }
     
     public DependType getDependType() 
@@ -94,8 +102,18 @@ public class DependencyNode
         return dependType;
     }
     
+    public void setDependType(DependType value)
+    {
+        dependType = value;
+    }
+    
     public boolean isResolved()
     {
         return resolved;
+    }
+
+    public void setResolved(boolean value)
+    {
+        resolved = value;
     }
 }
