@@ -1,0 +1,21 @@
+
+<td id="rightcol" width="20%">
+	<div class="www">
+		
+		<p><img src="$data.Request.ContextPath/images/module2.gif"  width="113" height="51" alt="" border="0" /></p>
+		
+		<small>A module is the unit of work space representing a unique set of "artifact types" (e.g., issues). Each new module also has the following unique attributes:
+		
+		<ul>
+		<li><small>a set of users</small></li>
+		<li><small>a set of roles</small></li>
+		<li><small>a set of permissions per role, per artifact type</small></li>
+		</ul>
+		
+		<p>Scarab uses the generic term "module" instead of the more common term, "project", in order to avoid defining the application as simply a "per project-issue management tool". Scarab can be configured to manage cross-project data such as milestones, technical requirements, marketing data, or human resources information.
+		</p>
+		
+		<p>If you are a registered user, but do not have access to any modules, contact the <a href="#">administrator</a>.
+		</p></small>
+	</div>    
+</td>

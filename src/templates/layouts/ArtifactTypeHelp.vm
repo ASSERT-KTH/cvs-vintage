@@ -1,0 +1,25 @@
+<td id="rightcol" width="20%">
+	<div class="www">
+		
+		<p><img src="$data.Request.ContextPath/images/artifact.gif" width="113" height="72" alt="" border="0" /></p>
+		
+		<small> an artifact type is a unique instance of a Scarab database, including the following attributes:
+		
+		<ul>
+		<li><small>a customizable set of attributes</small></li>
+		<li><small>a customizable set of options (per attribute)</small></li>
+		<li><small>a unique set of permissions per role</small></li>
+		</ul>
+		
+		<p>Once a user selects an artifact type, Scarab's navigation will indicate their selection state by dropping down a list of functions within that artifact type, giving authorized user's access to functionality such as:</p>
+		
+		<ul>
+		<li><small>enter a new issue</small></li>
+		<li><small>query the database</small></li>
+		<li><small>run reports on database activity</small></li>
+		</ul>
+		
+		<p>The user's input remains confined to the selected artifact type until they select another artifact type from the left side-bar navigation, or from the artifact type index.</p>
+		</small>
+	</div>    
+</td>

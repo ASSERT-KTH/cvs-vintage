@@ -30,26 +30,27 @@
    </div>
             #end
    <div>
-#if ($scarabR.CurrentModule)
-   Current Module:
-   <a href="$link.setPage("SelectModule.vm")"><strong>$scarabR.CurrentModule.Name</strong></a>
-#else
-   <a href="$link.setPage("SelectModule.vm")"><strong>Select Module</strong></a>
-#end
-   </div>
-   <div>
     #if ($data.User.hasLoggedIn())
     <a href="$link.setPage("Login.vm").setAction("Logout")">Logout</a>
     #else
     <a href="$link.setPage("Login.vm")">Login</a>
     #end
-  | <a href="$link.setPage("entry,Wizard1.vm")">Enter Artifact</a>
    </div>
   </div>
   </td>
   </tr>
   </table>
  </div>
+
+
+<div class="modbar">
+   <small><strong>Current Module:&nbsp;
+  #if ($scarabR.CurrentModule)
+   <a href="$link.setPage("SelectModule.vm")"><strong>$scarabR.CurrentModule.Name</strong></a>
+  #else
+   --
+  #end
+</div>
 
  <table border="0" cellspacing="0" cellpadding="8" width="98%" id="main">
  <tr valign="top">
@@ -76,6 +77,11 @@ $renderer.render("navigations", $data, $template, "Default.vm")
 $renderer.render("layouts", $data, "MainContent.vm")
 <!-- Structural Elements -->
  </td>
+#if ($template.equals("SelectModule.vm"))
+  $renderer.render("layouts", $data, "/ModuleHelp.vm")
+#elseif ($template.equals("SelectArtifactType.vm"))
+  $renderer.render("layouts", $data, "/ArtifactTypeHelp.vm")
+#end
  </tr>
  </table>
 <!-- Structural Elements -->
