@@ -88,6 +88,13 @@ public abstract class cPrintObject {
 		page = p;
 	}
 
+	/** 
+	 * Returns the page, that this print object belongs to.
+	 * *20030604, karlpeder* Added
+	 */
+	public cPage getPage() {
+		return page;
+	}
 
 	public abstract void print(Graphics2D g);
 

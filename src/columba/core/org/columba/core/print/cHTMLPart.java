@@ -23,7 +23,8 @@ import java.awt.geom.Point2D;
 import java.io.IOException;
 import java.net.URL;
 
-import javax.swing.JEditorPane;
+import javax.swing.JTextPane;
+import javax.swing.text.Document;
 import javax.swing.text.View;
 import javax.swing.text.html.HTMLDocument;
 import javax.swing.text.html.HTMLEditorKit;
@@ -39,7 +40,7 @@ import javax.swing.text.html.HTMLEditorKit;
  */
 public class cHTMLPart extends cPrintObject {
 	/** Container holding the HTML to be printed (used to control layout etc. */
-	private JEditorPane mPane = null;
+	private JTextPane mPane = null;
 	/** Y-coordinate in mPane to start printing at */
 	private cUnit mStartY = new cCmUnit(0.0);
 
@@ -55,9 +56,10 @@ public class cHTMLPart extends cPrintObject {
 	 * @param	html	HTML document to be printed
 	 */
 	public void setHTML(HTMLDocument html) {
-		mPane = new JEditorPane();
+		mPane = new JTextPane();
+		mPane.setDoubleBuffered(false);
 		mPane.setContentType("text/html");
-		mPane.setDocument(html);	// "store" html in JEditorPane container
+		mPane.setDocument(html);	// "store" html in jTextPane container
 		mStartY = new cCmUnit(0.0);	// reset starting position in y-direction
 	}
 	
@@ -69,14 +71,17 @@ public class cHTMLPart extends cPrintObject {
 	 */
 	public void setHTML(URL url) throws IOException
 	{
-		mPane = new JEditorPane();
-		mPane.setEditorKit(new HTMLEditorKit());
-		mPane.setPage(url);
-		
 		/*
-		 * TODO: karlpeder: setPage(url) load async. => document not completely loaded before printing!!!
-		 * Needs to find a way to discover when the document has been loaded completely
+		 * By using an instance of SyncHTMLEditorKit, the html should load
+		 * synchroniously - so everything is loaded before printing starts
 		 */
+
+		mPane = new JTextPane();
+		mPane.setDoubleBuffered(false);
+		mPane.setEditorKit(new SyncHTMLEditorKit());
+		mPane.setContentType("text/html");
+		mPane.setPage(url);
+		mStartY = new cCmUnit(0.0);	// reset starting position in y-direction
 	}
 	
 	/** 
@@ -99,26 +104,42 @@ public class cHTMLPart extends cPrintObject {
     public void print(Graphics2D g) {
 		computePositionAndSize();
 		
-		// get origin / size information and set size of mPane accordingly
+		// get origin / size information (height as "total" height minus current pos.)
 		cPoint origin = getDrawingOrigin();
 		double width  = getDrawingSize().getWidth().getPoints();
+		double height = 
+				getPage().getPrintableAreaSize().getHeight().sub(
+						getLocation().getY()).getPoints();
+
+		/*
+		 * TODO: Guess that right thing to do is to get height as getDrawingSize().getHeight(),
+		 * since this should take top- and bottom margin of this print
+		 * object into account. But the height seems not to be set 
+		 * correctly in computePositionAndSize() (*20030604, karlpeder*)
+		 */
+		
+		// set size of mPane according to the available width
+		
 		mPane.setSize((int) width, Integer.MAX_VALUE);
 		mPane.validate();
 
-		/*
-		 * TODO: karlpeder: Guess I have to set clipping to get printing right!!!
-		 */
+		// set clipping for the graphics object
+		Shape oldClip = g.getClip();
+		g.setClip((int) origin.getX().getPoints(), 
+				  (int) origin.getY().getPoints(),
+				  (int) width, (int) height);
 
 		// translate g to line up with origin of print area (trans 1)
 		Point2D.Double trans = new Point2D.Double(origin.getX().getPoints(),
 				origin.getY().getPoints() - mStartY.getPoints());
 		g.translate(trans.getX(), trans.getY());
 				
-		// paint the JEditorPane container, i.e. print the contents
+		// paint the jTextPane container, i.e. print the contents
 		mPane.paint(g);
 		
-		// translate graphics object back to original position
+		// translate graphics object back to original position and reset clip
 		g.translate(-trans.getX(), -trans.getY());
+		g.setClip(oldClip);
 	}
 
 
@@ -135,7 +156,7 @@ public class cHTMLPart extends cPrintObject {
      * @see org.columba.core.print.cPrintObject#getSize(org.columba.core.print.cUnit)
      */
     public cSize getSize(cUnit maxWidth) {
-		// resize JEditorPane component to calculate height and get it
+		// resize jTextPane component to calculate height and get it
 		double width = maxWidth.sub(leftMargin).sub(rightMargin).getPoints();
 		mPane.setSize((int) width, Integer.MAX_VALUE);
 		mPane.validate();
@@ -272,4 +293,27 @@ public class cHTMLPart extends cPrintObject {
 		}
 	}
 	
+}
+
+/**
+ * Utility class used for loading html synchroniously into a jTextPane
+ * @author	Karl Peder Olesen (karlpeder), 20030604 
+ */
+class SyncHTMLEditorKit extends HTMLEditorKit
+{
+
+    /**
+     * Create an uninitialized text storage model that is appropriate for
+     * this type of editor.<br>
+     * The document returned will load synchroniously.
+     * 
+     * @see javax.swing.text.EditorKit#createDefaultDocument()
+     */
+    public Document createDefaultDocument()
+    {
+		Document doc = super.createDefaultDocument();
+		((HTMLDocument)doc).setAsynchronousLoadPriority(-1);
+		return doc;
+    }
+
 }

@@ -25,6 +25,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.text.DateFormat;
 import java.util.Date;
+import java.util.List;
 
 import org.columba.core.command.DefaultCommandReference;
 import org.columba.core.command.Worker;
@@ -47,13 +48,13 @@ import org.columba.mail.command.FolderCommand;
 import org.columba.mail.command.FolderCommandReference;
 import org.columba.mail.config.MailConfig;
 import org.columba.mail.folder.Folder;
+import org.columba.mail.gui.attachment.AttachmentModel;
 import org.columba.mail.gui.message.util.DocumentParser;
 import org.columba.mail.message.ColumbaHeader;
 import org.columba.mail.message.Message;
 import org.columba.mail.message.MimePart;
 import org.columba.mail.message.MimePartTree;
 import org.columba.mail.util.MailResourceLoader;
-
 
 /**
  * @author freddy
@@ -69,6 +70,7 @@ public class PrintMessageCommand extends FolderCommand {
 	private cPrintObject mailFooter;
 	private DateFormat mailDateFormat;
 	private String[] headerKeys = { "From", "To", "Date", "Subject" };
+	private String   attHeaderKey = "attachment";
 	private String charset;
 
 	/**
@@ -163,8 +165,10 @@ public class PrintMessageCommand extends FolderCommand {
 	public void execute(Worker worker) throws Exception {
 
 		/*
-		 * *20030531, karlpeder* Fixed minor flaws to be able to print at least
-		 * text messages.
+		 * *20030604, karlpeder* Fixed minor flaws to be able to print
+		 * text messages. Further more added support for html messages.
+		 * Though the support for html printing is somewhat experimental:
+		 * TODO: For many html messages, the content is not printed correctly!!!
 		 */
 
 		FolderCommandReference[] r = (FolderCommandReference[]) getReferences();
@@ -244,6 +248,39 @@ public class PrintMessageCommand extends FolderCommand {
 				messageDoc.appendPrintObject(hLine);
 			}
 
+			// Add list of attachments if applicable
+			AttachmentModel attMod = new AttachmentModel();
+			attMod.setCollection(mimePartTree);
+			List attachments = attMod.getDisplayedMimeParts();
+
+			for (int i = 0; i < attachments.size(); i++) {
+				MimePart mp = (MimePart) attachments.get(i);
+				String contentType = mp.getHeader().contentType;
+				String contentSubtype = mp.getHeader().contentSubtype;
+				String displayName;
+				if (mp.getHeader().getFileName() != null) {
+					displayName = mp.getHeader().getFileName();
+				} else {
+					displayName = "Unnamed (" + contentType + "/" + contentSubtype + ")";
+				}
+
+				// one line is added to the header for each attachment
+				hKey = new cParagraph();
+				hKey.setText(MailResourceLoader.getString("header", attHeaderKey));
+				hKey.setFontStyle(Font.BOLD);
+
+				hValue = new cParagraph();
+				hValue.setText(displayName);
+				hValue.setLeftMargin(new cCmUnit(3.0));
+
+				hLine = new cHGroup();
+				hLine.add(hKey);
+				hLine.add(hValue);
+
+				messageDoc.appendPrintObject(hLine);
+
+			}
+
 			// Add body of message to print
 			String mimesubtype = bodyPart.getHeader().getContentSubtype();
 			if (mimesubtype.equals("html")) {
@@ -305,8 +342,6 @@ public class PrintMessageCommand extends FolderCommand {
 		String validated = parser.validateHTMLString(decodedBody);
 		ColumbaLogger.log.debug("validated bodytext:\n" + validated);
 
-		// TODO: karlpeder: Find the right way to load html body!!!
-
 		try {
 			// create temporary file and save validated body
 			File tempFile = TempFileStore.createTempFileWithSuffix("html");
@@ -324,29 +359,6 @@ public class PrintMessageCommand extends FolderCommand {
 			ColumbaLogger.log.error("Error loading html for print", e);
 			return null;
 		}
-/*
-		// create a HTMLDocument from the validated message body
-		HTMLDocument doc;
-		try {
-			HTMLEditorKit kit = new HTMLEditorKit();
-			Reader in = new BufferedReader(new StringReader(validated));
-			doc = (HTMLDocument) kit.createDefaultDocument();
-			kit.read(in, doc, 0);
-		}
-		catch (BadLocationException e) {
-			ColumbaLogger.log.error("Error loading html from message body", e);
-			return null;
-		}
-		catch (IOException e) {
-			ColumbaLogger.log.error("Error loading html from message body", e);
-			return null;
-		}
-	
-		// create a print object and return it
-		cHTMLPart htmlBody = new cHTMLPart();
-		htmlBody.setHTML(doc);
-		return htmlBody;
-*/
 	}
 	
 	/**
