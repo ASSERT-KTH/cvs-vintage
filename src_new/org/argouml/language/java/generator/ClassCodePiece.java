@@ -1,4 +1,4 @@
-// $Id: ClassCodePiece.java,v 1.11 2003/09/08 13:39:19 bobtarling Exp $
+// $Id: ClassCodePiece.java,v 1.12 2004/04/25 13:04:00 thn Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -33,8 +33,6 @@ package org.argouml.language.java.generator;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.util.Stack;
-import ru.novosoft.uml.foundation.core.MClass;
-
 
 /**
    This code piece represents a class declaration.
@@ -114,7 +112,7 @@ public class ClassCodePiece extends NamedCodePiece
 	if (mClass != null) {
 	    parseStateStack.push(new ParseState(mClass));
 	    StringBuffer sbText =
-		GeneratorJava.getInstance().generateClassifierStart((MClass)mClass);
+		GeneratorJava.getInstance().generateClassifierStart(mClass);
 	    if (sbText != null) {
 		writer.write (sbText.toString());
 	    }

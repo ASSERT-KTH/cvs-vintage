@@ -1,4 +1,4 @@
-// $Id: AttributeCodePiece.java,v 1.15 2003/09/17 21:29:02 thierrylach Exp $
+// $Id: AttributeCodePiece.java,v 1.16 2004/04/25 13:04:00 thn Exp $
 // Copyright (c) 1996-2001 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -22,7 +22,7 @@
 // CALIFORNIA HAS NO OBLIGATIONS TO PROVIDE MAINTENANCE, SUPPORT,
 // UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 
-// $Id: AttributeCodePiece.java,v 1.15 2003/09/17 21:29:02 thierrylach Exp $
+// $Id: AttributeCodePiece.java,v 1.16 2004/04/25 13:04:00 thn Exp $
 
 /*
   JavaRE - Code generation and reverse engineering for UML and Java
@@ -39,8 +39,6 @@ import java.util.Vector;
 import java.util.Iterator;
 import org.argouml.model.ModelFacade;
 
-import ru.novosoft.uml.foundation.core.MAttribute;
-import ru.novosoft.uml.foundation.core.MAssociationEnd;
 /**
    This code piece represents an attribute. Even though the code can
    handle several attributes in the same statement, the code generated
@@ -76,7 +74,7 @@ public class AttributeCodePiece extends NamedCodePiece
 	for (Iterator i = names.iterator(); i.hasNext(); ) {
 	    CodePiece cp = (CodePiece) i.next();
 	    String cpText = cp.getText().toString().trim();
-            if (cpText.indexOf('\n') > 0) 
+            if (cpText.indexOf('\n') > 0)
                 cpText = cpText.substring(0, cpText.indexOf('\n')).trim();
 	    attributeDef.add(cp);
 	    int pos = 0;
@@ -160,7 +158,7 @@ public class AttributeCodePiece extends NamedCodePiece
 		    parseState.newFeature(mFeature);
 
 		    Object attr = /*(MAttribute)*/ mFeature;
-		    writer.write(generator().generateCoreAttribute((MAttribute)attr));
+		    writer.write(generator().generateCoreAttribute(attr));
 
 		    if ( k < count ) {
 			writer.write("; "); // fixed comma separated attributes
@@ -185,11 +183,11 @@ public class AttributeCodePiece extends NamedCodePiece
 			    if (associationEnd2 != associationEnd
 				&& ModelFacade.isNavigable(associationEnd2)
 				&& !ModelFacade.isAbstract(ModelFacade.getAssociation(associationEnd2))
-				&& generator().generateAscEndName((MAssociationEnd)associationEnd2).equals(name))
+				&& generator().generateAscEndName(associationEnd2).equals(name))
 			    {
 				// association end found
 				found = true;
-				writer.write(generator().generateCoreAssociationEnd((MAssociationEnd)associationEnd2));
+				writer.write(generator().generateCoreAssociationEnd(associationEnd2));
 				break;
 			    }
 			}

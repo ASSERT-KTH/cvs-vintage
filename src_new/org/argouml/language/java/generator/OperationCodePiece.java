@@ -1,4 +1,4 @@
-// $Id: OperationCodePiece.java,v 1.11 2003/09/08 13:39:19 bobtarling Exp $
+// $Id: OperationCodePiece.java,v 1.12 2004/04/25 13:04:00 thn Exp $
 // Copyright (c) 1996-2001 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -36,8 +36,6 @@ import java.util.Stack;
 import java.util.Vector;
 import java.util.Iterator;
 import org.argouml.model.ModelFacade;
-
-import ru.novosoft.uml.foundation.core.MOperation;
 
 /**
    This code piece represents an operation declaration.
@@ -137,7 +135,7 @@ public class OperationCodePiece extends NamedCodePiece
                 parseState.newFeature(feature);
                 Object mOperation = /*(MOperation)*/ feature;
                 writer.write(GeneratorJava.getInstance()
-			     .generateOperation((MOperation)mOperation, true));
+			     .generateOperation(mOperation, true));
             }
         }
         if (found) {
