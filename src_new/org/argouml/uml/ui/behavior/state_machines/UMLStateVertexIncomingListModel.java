@@ -1,4 +1,4 @@
-// $Id: UMLStateVertexIncomingListModel.java,v 1.9 2004/05/30 12:41:42 mkl Exp $
+// $Id: UMLStateVertexIncomingListModel.java,v 1.10 2004/05/31 13:55:34 mvw Exp $
 // Copyright (c) 1996-2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -49,9 +49,11 @@ public class UMLStateVertexIncomingListModel extends UMLModelElementListModel2 {
      */
     protected void buildModelList() {
         ArrayList c = new ArrayList(ModelFacade.getIncomings(getTarget()));
-        ArrayList i = new ArrayList(ModelFacade
+        if (ModelFacade.isAState(getTarget())){
+            ArrayList i = new ArrayList(ModelFacade
                 .getInternalTransitions(getTarget()));
-        c.removeAll(i);
+            c.removeAll(i);
+        }
         setAllElements(c);
     }
 
@@ -60,9 +62,11 @@ public class UMLStateVertexIncomingListModel extends UMLModelElementListModel2 {
      */
     protected boolean isValidElement(Object/* MBase */element) {
         ArrayList c = new ArrayList(ModelFacade.getIncomings(getTarget()));
-        ArrayList i = new ArrayList(ModelFacade
+        if (ModelFacade.isAState(getTarget())){
+            ArrayList i = new ArrayList(ModelFacade
                 .getInternalTransitions(getTarget()));
-        c.removeAll(i);
+            c.removeAll(i);
+        }
         return c.contains(element);
     }
 }
