@@ -441,9 +441,8 @@ public class Container implements Cloneable{
     public void addInterceptor( BaseInterceptor bi ) {
 	bi.setContext( getContext() );
 
-	if( Hooks.hasHook( bi, "registerHooks" ) ) {
-	    bi.registerHooks( hooks, contextM, context );
-	} else {
+	int status=bi.registerHooks( hooks, contextM, context );
+	if( status!=BaseInterceptor.OK ) {
 	    hooks.addModule( bi );
 	}
 	hooksCache=null;

@@ -195,7 +195,7 @@ public final class ContextManager {
 
     /** Private workspace for this server
      */
-    private String workDir;
+    private String workDir="work";
 
     /** The base directory where this instance runs.
      *  It can be different from the install directory to

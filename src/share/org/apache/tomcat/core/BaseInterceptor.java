@@ -619,9 +619,10 @@ public class BaseInterceptor
      *
      *  Most modules are added to the Hooks automatically. A module
      *  overriding this method has full control over this process.
+     *  If OK is returned, no other processing is done ( i.e. no introspection,
+     *  we assume the module set up the right hooks )
      */
     public int registerHooks(Hooks h, ContextManager cm, Context ctx) {
 	return DECLINED;
     }
-
 }
