@@ -30,7 +30,7 @@ import org.jboss.metadata.XmlLoadable;
  *      
  *	@see <related>
  *	@author <a href="sebastien.alborini@m4x.org">Sebastien Alborini</a>
- *	@version $Revision: 1.2 $
+ *	@version $Revision: 1.3 $
  */
 public class JawsEntityMetaData extends MetaData implements XmlLoadable {
 	// Constants -----------------------------------------------------
@@ -117,6 +117,8 @@ public class JawsEntityMetaData extends MetaData implements XmlLoadable {
 			for (int i = 0; i < pkClassFields.length; i++) {
 				Field pkField = pkClassFields[i];
 				CMPFieldMetaData cmpField = (CMPFieldMetaData)cmpFields.get(pkField.getName());
+
+				if (cmpField == null) throw new DeploymentException("Bean " + ejbName + " has PK of type " + primaryKeyClass.getName() + ", so it should have a cmp-field named " + pkField.getName());
 
 				pkFields.add(new PkFieldMetaData(pkField, cmpField, this));
 			}
