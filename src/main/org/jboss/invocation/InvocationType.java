@@ -17,7 +17,7 @@ import java.util.ArrayList;
 public final class InvocationType implements Serializable {
    // these fields are used for serialization
    private static int nextOrdinal = 0;
-   private static final ArrayList values = new ArrayList(8);
+   private static final ArrayList values = new ArrayList(4);
 
    public static final InvocationType REMOTE = 
          new InvocationType("REMOTE");
@@ -27,14 +27,6 @@ public final class InvocationType implements Serializable {
          new InvocationType("HOME");
    public static final InvocationType LOCALHOME = 
          new InvocationType("LOCALHOME");
-   public static final InvocationType GETHOME = 
-         new InvocationType("GETHOME");
-   public static final InvocationType GETREMOTE = 
-         new InvocationType("GETREMOTE");
-   public static final InvocationType GETLOCALHOME = 
-         new InvocationType("GETLOCALHOME");
-   public static final InvocationType GETLOCAL = 
-         new InvocationType("GETLOCAL");
 
    private final transient String name;
 
