@@ -45,6 +45,7 @@ import org.columba.ristretto.message.io.CharSequenceSource;
 import org.columba.ristretto.message.io.Source;
 import org.columba.ristretto.message.io.SourceInputStream;
 import org.columba.ristretto.parser.MessageParser;
+import org.columba.ristretto.parser.ParserException;
 
 
 /**
@@ -286,8 +287,14 @@ public abstract class LocalFolder extends Folder implements MailboxInterface {
             
             throw new FolderInconsistentException(e);
         }
-        ColumbaMessage message = new ColumbaMessage(MessageParser.parse(source));
-
+        ColumbaMessage message;
+        try {
+            message = new ColumbaMessage(MessageParser.parse(source));
+        } catch (ParserException e1) {
+            ColumbaLogger.log.fine(e1.getSource().toString());
+            throw e1;
+        }
+        
         message.setUID(uid);
         
         aktMessage = message;
