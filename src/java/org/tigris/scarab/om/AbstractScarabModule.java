@@ -110,9 +110,6 @@ import org.tigris.scarab.util.ScarabException;
 import org.tigris.scarab.services.security.ScarabSecurity;
 import org.tigris.scarab.services.cache.ScarabCache;
 
-
-import org.apache.turbine.Log;
-
 /**
  * <p>
  * The ScarabModule class is the focal point for dealing with
@@ -131,7 +128,7 @@ import org.apache.turbine.Log;
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: AbstractScarabModule.java,v 1.20 2002/04/25 01:39:46 elicia Exp $
+ * @version $Id: AbstractScarabModule.java,v 1.21 2002/04/26 20:24:46 jmcnally Exp $
  */
 public abstract class AbstractScarabModule
     extends BaseObject

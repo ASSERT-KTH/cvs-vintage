@@ -49,8 +49,8 @@ package org.tigris.scarab.tools;
 import java.util.Map;
 import java.util.Properties;
 
-import org.apache.stratum.configuration.Configuration;
-import org.apache.turbine.Log;
+import org.apache.log4j.Category;
+import org.apache.commons.configuration.Configuration;
 import org.apache.turbine.RunData;
 import org.apache.turbine.Turbine;
 import org.apache.turbine.tool.LocalizationTool;
@@ -158,17 +158,22 @@ public class ScarabLocalizationTool
 
             String propName = "template." + getPrefix(null) + property;
             String l10nKey = (String) properties.getString(propName);
-            Log.debug("ScarabLocalizationTool: Property name '" + propName +
-                      "' -> localization key '" + l10nKey + '\'');
+            log().debug("ScarabLocalizationTool: Property name '" + propName +
+                        "' -> localization key '" + l10nKey + '\'');
 
             if (l10nKey != null)
             {
                 value = get(l10nKey);
-                Log.debug("ScarabLocalizationTool: Localized value is '" +
-                          value + '\'');
+                log().debug("ScarabLocalizationTool: Localized value is '" +
+                            value + '\'');
             }
         }
         return value;
+    }
+
+    private Category log()
+    {
+        return Category.getInstance(getClass().getName());
     }
 
     // ---- ApplicationTool implementation  ----------------------------------

@@ -54,7 +54,6 @@ import org.apache.torque.om.ObjectKey;
 import org.apache.torque.om.NumberKey;
 import org.apache.torque.om.Persistent;
 import org.apache.torque.util.Criteria;
-import org.apache.turbine.Log;
 
 import org.tigris.scarab.services.security.ScarabSecurity;
 import org.tigris.scarab.services.cache.ScarabCache;
@@ -154,7 +153,7 @@ public class RModuleAttribute
             }
             catch (Exception e)
             {
-                Log.error(e);
+                log().error(e);
                 dispVal = "!Error-Check Logs!";
             }
         }

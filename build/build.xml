@@ -240,6 +240,9 @@
         <filter token="LOG_LEVEL_STRATUM" value="${scarab.log.level.stratum}"/>
         <filter token="LOG_FILE_STRATUM" value="${scarab.log.file.stratum}"/>
         <filter token="LOG_APPEND_STRATUM" value="${scarab.log.append.stratum}"/>
+        <filter token="LOG_LEVEL_JCS" value="${scarab.log.level.jcs}"/>
+        <filter token="LOG_FILE_JCS" value="${scarab.log.file.jcs}"/>
+        <filter token="LOG_APPEND_JCS" value="${scarab.log.append.jcs}"/>
         <filter token="LOG_FILE_VELOCITY" value="${scarab.log.file.velocity}"/>
         <filter token="TEMPLATE_CACHE" value="${scarab.template.cache}"/>
         <copy todir="${build.project.webinf}/conf" filtering="yes">
@@ -734,10 +737,10 @@
     <!-- ================================================================== -->
     <target name="build-turbine">
         <exec executable="ant" dir="${turbine.dir}">
-            <arg line="clean"/>
+            <arg line="-f build-maven.xml maven:clean"/>
         </exec>
         <exec executable="ant" dir="${turbine.dir}">
-            <arg line="install-jar"/>
+            <arg line="-f build-maven.xml maven:install-jar"/>
         </exec>
     </target>
 
@@ -760,11 +763,46 @@
     <!-- Build our version of Fulcrum easily                                -->
     <!-- ================================================================== -->
     <target name="build-fulcrum">
+
+<echo>
+<![CDATA[
+!!!!!!!!!!!!!!!!!!!!!!!! Important !!!!!!!!!!!!!!!!!!!!!!!! 
+You must make sure to patch the fulcrum project.xml file as 
+shown to work with xerces-1.4.4, if the fulcrum jar is to be
+used with scarab
+
+Index: project.xml
+===================================================================
+RCS file: /home/cvs/jakarta-turbine-fulcrum/project.xml,v
+retrieving revision 1.26
+diff -u -r1.26 project.xml
+--- project.xml	18 Apr 2002 17:17:17 -0000	1.26
++++ project.xml	26 Apr 2002 19:23:56 -0000
+@@ -210,14 +210,8 @@
+     <dependency>
+       <name>xml-xerces</name>
+       <type>required</type>
+-      <version>2.0.0</version>
+-      <jar>xercesImpl-2.0.0.jar</jar>
+-    </dependency>
+-    <dependency>
+-      <name>xml-apis</name>
+-      <type>required</type>
+-      <version>2.0.0</version>
+-      <jar>xmlParserAPIs-2.0.0.jar</jar>
++      <version>1.4.4</version>
++      <jar>xerces-1.4.4.jar</jar>
+     </dependency>
+     <dependency>
+       <name>xml-rpc</name>
+]]>
+</echo>
+
         <exec executable="ant" dir="${fulcrum.dir}">
-            <arg line="clean"/>
+            <arg line="maven:clean"/>
         </exec>
         <exec executable="ant" dir="${fulcrum.dir}">
-            <arg line="-Dsecurity.database.name=${scarab.database.prop.name} -Dscheduler.database.name=${scarab.database.prop.name} install-jar"/>
+            <arg line="-Dsecurity.database.name=${scarab.database.prop.name} -Dscheduler.database.name=${scarab.database.prop.name} maven:install-jar"/>
         </exec>
     </target>
 
@@ -773,10 +811,79 @@
     <!-- ================================================================== -->
     <target name="build-stratum">
         <exec executable="ant" dir="${stratum.dir}">
-            <arg line="clean"/>
+            <arg line="maven:clean"/>
         </exec>
         <exec executable="ant" dir="${stratum.dir}">
-            <arg line="install-jar"/>
+            <arg line="maven:install-jar"/>
+        </exec>
+    </target>
+
+    <!-- ================================================================== -->
+    <!-- Build our version of JCS easily                                    -->
+    <!-- ================================================================== -->
+    <target name="build-jcs">
+
+<echo>
+<![CDATA[
+!!!!!!!!!!!!!!!!!!!!!!!!!! Important !!!!!!!!!!!!!!!!!!!!!!!!!! 
+You must make sure to patch the JCS project.xml and build.xml 
+files as shown to remove test configuration which causes logging
+errors in jcs when used in an application, if the jcs jar is 
+to be used with scarab
+
+
+Index: build.xml
+===================================================================
+RCS file: /home/cvs/jakarta-turbine-jcs/build.xml,v
+retrieving revision 1.5
+diff -u -r1.5 build.xml
+--- build.xml	19 Apr 2002 08:27:09 -0000	1.5
++++ build.xml	26 Apr 2002 19:37:26 -0000
+@@ -46,12 +46,12 @@
+   </target>
+ 
+   <target
+-    name="maven:jar" depends="jcs:test-prepare">
++    name="maven:jar">
+     <ant antfile="${maven.home}/build-maven.xml" target="jar"/>
+   </target>
+ 
+   <target
+-    name="maven:install-jar" depends="jcs:test-prepare">
++    name="maven:install-jar">
+     <ant antfile="${maven.home}/build-maven.xml" target="install-jar"/>
+   </target>
+ 
+Index: project.xml
+===================================================================
+RCS file: /home/cvs/jakarta-turbine-jcs/project.xml,v
+retrieving revision 1.5
+diff -u -r1.5 project.xml
+--- project.xml	19 Apr 2002 08:26:27 -0000	1.5
++++ project.xml	26 Apr 2002 19:37:27 -0000
+@@ -139,14 +139,6 @@
+     <sourceDirectories>
+       <sourceDirectory>src/java</sourceDirectory>
+     </sourceDirectories>
+-    <unitTestSourceDirectory>src/test</unitTestSourceDirectory>
+-    <aspectSourceDirectories></aspectSourceDirectories>
+-    <unitTestPatterns>
+-      <unitTestPattern>include = **/TestJCS.java</unitTestPattern>
+-      <unitTestPattern>include = **/TestSimpleLoad.java</unitTestPattern>
+-      <unitTestPattern>include = **/TestDiskCache.java</unitTestPattern>
+-      <unitTestPattern>include = **/TestDiskCacheConcurrent.java</unitTestPattern>
+-    </unitTestPatterns>
+     <jarResources></jarResources>
+     <jars></jars>
+   </build>
+]]>
+</echo>
+
+        <exec executable="ant" dir="${jcs.dir}">
+            <arg line="maven:clean"/>
+        </exec>
+        <exec executable="ant" dir="${jcs.dir}">
+            <arg line="maven:install-jar"/>
         </exec>
     </target>
 
@@ -796,6 +903,32 @@
                 <include name="**/commons-collections*.jar"/>
             </fileset>
         </copy>
+    </target>
+
+    <!-- ================================================================== -->
+    <!-- Build our version of Commons-Sandbox-Configuration easily          -->
+    <!-- There is a dependency on stuff in here in fulcrum                  -->
+    <!-- ================================================================== -->
+    <target name="build-commons-sandbox-configuration">
+        <exec executable="ant" dir="${commons-sandbox-configuration.dir}">
+            <arg line="maven:clean"/>
+        </exec>
+        <exec executable="ant" dir="${commons-sandbox-configuration.dir}">
+            <arg line="maven:install-jar"/>
+        </exec>
+    </target>
+
+    <!-- ================================================================== -->
+    <!-- Build our version of Commons-Sandbox-Xo easily          -->
+    <!-- There is a dependency on stuff in here in fulcrum                  -->
+    <!-- ================================================================== -->
+    <target name="build-commons-sandbox-xo">
+        <exec executable="ant" dir="${commons-sandbox-xo.dir}">
+            <arg line="maven:clean"/>
+        </exec>
+        <exec executable="ant" dir="${commons-sandbox-xo.dir}">
+            <arg line="maven:install-jar"/>
+        </exec>
     </target>
 
     <!-- ================================================================== -->
@@ -885,7 +1018,7 @@
             </fileset>
         </delete>
         <copy todir="${lib.dir}" filtering="no">
-            <fileset dir="${torque.dir}/bin">
+            <fileset dir="${torque.dir}/target">
                 <include name="**/${torque.zip}"/>
             </fileset>
         </copy>
@@ -895,13 +1028,14 @@
     <!-- Upgrade our version of Fulcrum easily                              -->
     <!-- ================================================================== -->
     <target name="upgrade-fulcrum" depends="build-fulcrum">
+
         <delete>
             <fileset dir="${lib.dir}">
                 <include name="**/fulcrum*.jar"/>
             </fileset>
         </delete>
         <copy todir="${lib.dir}" filtering="no">
-            <fileset dir="${fulcrum.dir}/bin">
+            <fileset dir="${fulcrum.dir}/target">
                 <include name="**/fulcrum*.jar"/>
             </fileset>
         </copy>
@@ -917,8 +1051,24 @@
             </fileset>
         </delete>
         <copy todir="${lib.dir}" filtering="no">
-            <fileset dir="${stratum.dir}/bin">
+            <fileset dir="${stratum.dir}/target">
                 <include name="**/stratum*.jar"/>
+            </fileset>
+        </copy>
+    </target>
+
+    <!-- ================================================================== -->
+    <!-- Upgrade our version of JCS easily                              -->
+    <!-- ================================================================== -->
+    <target name="upgrade-jcs" depends="build-jcs">
+        <delete>
+            <fileset dir="${lib.dir}">
+                <include name="**/jcs*.jar"/>
+            </fileset>
+        </delete>
+        <copy todir="${lib.dir}" filtering="no">
+            <fileset dir="${jcs.dir}/target">
+                <include name="**/jcs*.jar"/>
             </fileset>
         </copy>
     </target>
@@ -938,6 +1088,39 @@
             </fileset>
         </copy>
     </target>
+
+    <!-- ================================================================== -->
+    <!-- Upgrade our version of Commons-Sandbox-Configuration easily        -->
+    <!-- ================================================================== -->
+    <target name="upgrade-commons-sandbox-configuration" depends="build-commons-sandbox-configuration">
+        <delete>
+            <fileset dir="${lib.dir}">
+                <include name="**/commons-configuration*.jar"/>
+            </fileset>
+        </delete>
+        <copy todir="${lib.dir}" filtering="no">
+            <fileset dir="${commons-sandbox-configuration.dir}/target">
+                <include name="**/commons-configuration*.jar"/>
+            </fileset>
+        </copy>
+    </target>
+
+    <!-- ================================================================== -->
+    <!-- Upgrade our version of Commons-Sandbox-Xo easily        -->
+    <!-- ================================================================== -->
+    <target name="upgrade-commons-sandbox-xo" depends="build-commons-sandbox-xo">
+        <delete>
+            <fileset dir="${lib.dir}">
+                <include name="**/commons-xo*.jar"/>
+            </fileset>
+        </delete>
+        <copy todir="${lib.dir}" filtering="no">
+            <fileset dir="${commons-sandbox-xo.dir}/target">
+                <include name="**/commons-xo*.jar"/>
+            </fileset>
+        </copy>
+    </target>
+
 
     <!-- ================================================================== -->
     <!-- Upgrade our version of Commons-Sandbox-Util easily                 -->
@@ -1026,12 +1209,14 @@
     <target name="upgrade-jakarta" 
             depends="upgrade-commons-collections,
                      upgrade-commons-sandbox-util,
+                     upgrade-commons-sandbox-configuration,
+                     upgrade-commons-sandbox-xo,
                      upgrade-commons-sandbox-email,
                      upgrade-commons-sandbox-codec,
                      upgrade-commons-sandbox-lang,
                      upgrade-commons-beanutils,
                      upgrade-torque,upgrade-fulcrum,upgrade-stratum,
-                     upgrade-turbine
+                     upgrade-turbine,upgrade-jcs
                      ">
     </target>
 
@@ -1043,6 +1228,8 @@
         <cvs dest="${fulcrum.dir}" command="update"/>
         <echo>${stratum.dir}</echo>
         <cvs dest="${stratum.dir}" command="update"/>
+        <echo>${jcs.dir}</echo>
+        <cvs dest="${jcs.dir}" command="update"/>
         <echo>${torque.dir}</echo>
         <cvs dest="${torque.dir}" command="update"/>
         <echo>${turbine.dir}</echo>
@@ -1051,6 +1238,10 @@
         <cvs dest="${commons-beantuils.dir}" command="update"/>
         <echo>${commons-sandbox-util.dir}</echo>
         <cvs dest="${commons-sandbox-util.dir}" command="update"/>
+        <echo>${commons-sandbox-configuration.dir}</echo>
+        <cvs dest="${commons-sandbox-configuration.dir}" command="update"/>
+        <echo>${commons-sandbox-xo.dir}</echo>
+        <cvs dest="${commons-sandbox-xo.dir}" command="update"/>
         <echo>${commons-sandbox-email.dir}</echo>
         <cvs dest="${commons-sandbox-email.dir}" command="update"/>
         <echo>${commons-sandbox-codec.dir}</echo>

@@ -54,7 +54,6 @@ import org.apache.torque.om.Persistent;
 import org.apache.torque.om.NumberKey;
 import org.apache.torque.pool.DBConnection;
 
-import org.apache.turbine.Log;
 import org.apache.turbine.Turbine;
 
 import org.apache.commons.fileupload.FileItem;

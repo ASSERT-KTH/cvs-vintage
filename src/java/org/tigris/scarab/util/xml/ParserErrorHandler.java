@@ -33,8 +33,7 @@ package org.tigris.scarab.util.xml;
  * MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
  * IN NO EVENT SHALL COLLAB.NET OR ITS CONTRIBUTORS BE LIABLE FOR ANY
  * DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
- * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE
- * GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+ * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE * GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
  * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER
  * IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR
  * OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
@@ -49,8 +48,7 @@ package org.tigris.scarab.util.xml;
 import org.xml.sax.ErrorHandler;
 import org.xml.sax.SAXException;
 import org.xml.sax.SAXParseException;
-
-import org.apache.turbine.Log;
+import org.apache.log4j.Category;
 
 /**
  * This class takes care of handling the errors returned from the parse
@@ -68,7 +66,7 @@ public class ParserErrorHandler
     public void warning (SAXParseException e)
         throws SAXException
     {
-        Log.info("Warning Line: " +
+        log().info("Warning Line: " +
                      e.getLineNumber() +
                      ", Column: " +
                      e.getColumnNumber() +
@@ -83,7 +81,7 @@ public class ParserErrorHandler
     public void error (SAXParseException e)
         throws SAXException
     {
-        Log.warn("Error Line: " +
+        log().warn("Error Line: " +
                      e.getLineNumber() +
                      ", Column: " +
                      e.getColumnNumber() +
@@ -98,12 +96,17 @@ public class ParserErrorHandler
     public void fatalError (SAXParseException e)
         throws SAXException
     {
-        Log.error("Fatal Error Line: " +
+        log().error("Fatal Error Line: " +
                       e.getLineNumber() +
                       ", Column: " +
                       e.getColumnNumber() +
                       ", Message: " +
                       e.getMessage()
                  );
+    }
+
+    private Category log()
+    {
+        return Category.getInstance(getClass().getName());
     }
 }

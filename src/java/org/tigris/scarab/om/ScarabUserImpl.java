@@ -81,7 +81,6 @@ import org.tigris.scarab.services.cache.ScarabCache;
 import org.tigris.scarab.util.ScarabException;
 
 import org.apache.turbine.Turbine;
-import org.apache.turbine.Log;
 import org.apache.log4j.Category;
 
 
@@ -92,7 +91,7 @@ import org.apache.log4j.Category;
  * implementation needs.
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: ScarabUserImpl.java,v 1.58 2002/04/05 01:14:57 jon Exp $
+ * @version $Id: ScarabUserImpl.java,v 1.59 2002/04/26 20:24:46 jmcnally Exp $
  */
 public class ScarabUserImpl 
     extends BaseScarabUserImpl 
@@ -340,7 +339,7 @@ public class ScarabUserImpl
         catch (Exception e)
         {
             hasPermission = false;
-            Log.error("Permission check failed on:" + perm, e);
+            log().error("Permission check failed on:" + perm, e);
         }
         
         Boolean b = hasPermission ? Boolean.TRUE : Boolean.FALSE;
@@ -447,7 +446,7 @@ public class ScarabUserImpl
             }
             catch (Exception e)
             {
-                Log.error("An exception prevented retrieving any modules", e);
+                log().error("An exception prevented retrieving any modules", e);
             }
             ScarabCache.put(result, this, GET_MODULES, permissions);
         }

@@ -61,7 +61,6 @@ import org.apache.torque.om.Persistent;
 import org.apache.torque.om.ObjectKey;
 import org.apache.torque.om.NumberKey;
 import org.apache.torque.util.Criteria;
-import org.apache.turbine.Log;
 
 import org.apache.fulcrum.cache.TurbineGlobalCacheService;
 import org.apache.fulcrum.cache.ObjectExpiredException;
@@ -86,7 +85,7 @@ import org.tigris.scarab.util.ScarabException;
   * TurbineGlobalCache service.
   *
   * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
-  * @version $Id: AttributeOption.java,v 1.24 2002/03/14 01:13:10 jmcnally Exp $
+  * @version $Id: AttributeOption.java,v 1.25 2002/04/26 20:24:46 jmcnally Exp $
   */
 public class AttributeOption 
     extends BaseAttributeOption

@@ -50,7 +50,6 @@ import java.util.List;
 import java.util.Iterator;
 
 // Turbine Stuff 
-import org.apache.turbine.Log;
 import org.apache.turbine.RunData;
 import org.apache.turbine.TemplateContext;
 import org.apache.turbine.Turbine;
@@ -83,7 +82,7 @@ import org.tigris.scarab.om.Module;
  * Action.
  *   
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: Register.java,v 1.20 2002/04/13 02:39:32 jmcnally Exp $
+ * @version $Id: Register.java,v 1.21 2002/04/26 20:24:45 jmcnally Exp $
  */
 public class Register extends ScarabTemplateAction
 {
@@ -242,7 +241,7 @@ public class Register extends ScarabTemplateAction
         {
             setTarget(data, template);
             getScarabRequestTool(context).setAlertMessage (e.getMessage());
-            Log.error(e);
+            log().error(e);
             return;
         }
     }
@@ -443,7 +442,7 @@ public class Register extends ScarabTemplateAction
             catch (TurbineSecurityException e)
             {
                 scarabR.setAlertMessage("Invalid username.");
-                Log.error ("RegisterConfirm: ", e);
+                log().error ("RegisterConfirm: ", e);
                 return;
             }
         
@@ -461,7 +460,7 @@ public class Register extends ScarabTemplateAction
         {
             setTarget(data, template);
             getScarabRequestTool(context).setAlertMessage (e.getMessage());
-            Log.error(e);
+            log().error(e);
             return;
         }
     }

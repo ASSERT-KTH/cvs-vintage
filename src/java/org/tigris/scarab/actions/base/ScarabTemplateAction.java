@@ -52,6 +52,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 
  // Turbine Stuff
+import org.apache.log4j.Category;
 import org.apache.turbine.RunData;
 import org.apache.turbine.TemplateAction;
 import org.apache.turbine.TemplateContext;
@@ -68,7 +69,7 @@ import org.tigris.scarab.om.ScarabUser;
  *  a couple methods useful for Scarab.
  *   
  *  @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- *  @version $Id: ScarabTemplateAction.java,v 1.20 2002/03/08 06:40:51 elicia Exp $
+ *  @version $Id: ScarabTemplateAction.java,v 1.21 2002/04/26 20:24:45 jmcnally Exp $
  */
 public abstract class ScarabTemplateAction extends TemplateAction
 {
@@ -293,4 +294,8 @@ public abstract class ScarabTemplateAction extends TemplateAction
         }
     }
         
+    protected Category log()
+    {
+        return Category.getInstance(getClass().getName());
+    }
 }

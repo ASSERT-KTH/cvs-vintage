@@ -60,7 +60,6 @@ import org.apache.turbine.RunData;
 import org.apache.commons.lang.Strings;
 
 import org.apache.turbine.tool.IntakeTool;
-import org.apache.turbine.Log;
 import org.apache.torque.om.NumberKey; 
 import org.apache.torque.util.Criteria;
 import org.apache.fulcrum.intake.model.Group;
@@ -90,7 +89,7 @@ import org.tigris.scarab.util.word.IssueSearch;
     This class is responsible for report issue forms.
 
     @author <a href="mailto:jmcnally@collab.net">John D. McNally</a>
-    @version $Id: Search.java,v 1.71 2002/04/13 02:39:32 jmcnally Exp $
+    @version $Id: Search.java,v 1.72 2002/04/26 20:24:45 jmcnally Exp $
 */
 public class Search extends RequireLoginFirstAction
 {

@@ -51,6 +51,7 @@ import java.util.Stack;
 import java.util.HashMap;
 import java.util.Enumeration;
 
+import org.apache.log4j.Category;
 // Turbine Stuff 
 import org.apache.turbine.RunData;
 import org.apache.turbine.TemplateContext;
@@ -74,7 +75,7 @@ import org.tigris.scarab.om.IssueType;
  * duplication of code.
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: Default.java,v 1.44 2002/04/13 02:39:34 jmcnally Exp $
+ * @version $Id: Default.java,v 1.45 2002/04/26 20:24:47 jmcnally Exp $
  */
 public class Default extends TemplateSecureScreen
 {
@@ -244,5 +245,10 @@ public class Default extends TemplateSecureScreen
         getTemplateContext(data).put( ScarabConstants.NEXT_TEMPLATE, 
             data.getParameters().getString("template") );
         setTarget(data, "Login.vm");        
+    }
+
+    protected Category log()
+    {
+        return Category.getInstance(getClass().getName());
     }
 }

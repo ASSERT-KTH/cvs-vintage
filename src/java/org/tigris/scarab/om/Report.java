@@ -59,7 +59,6 @@ import java.text.SimpleDateFormat;
 import com.workingdogs.village.Record;
 
 // Turbine classes
-import org.apache.turbine.Log;
 import org.apache.fulcrum.intake.Retrievable;
 import org.apache.torque.om.Persistent;
 import org.apache.torque.om.ObjectKey;
@@ -168,7 +167,7 @@ public  class Report
         }
         catch (Exception e)
         {
-            org.apache.turbine.Log.error(e);
+            log().error(e);
          }
     }
 
@@ -1109,7 +1108,7 @@ public  class Report
         {
             String mesg = "Could not populate the report using parameters: " + 
                 parser;
-            Log.error(mesg, e);
+            log().error(mesg, e);
             throw new RuntimeException("Check logs for error message. "+mesg);
         }
     }

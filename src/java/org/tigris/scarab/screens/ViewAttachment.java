@@ -50,7 +50,6 @@ package org.tigris.scarab.screens;
 // Turbine Stuff 
 import java.io.*;
 import javax.servlet.ServletOutputStream;
-import org.apache.turbine.Log;
 import org.apache.turbine.RunData;
 import org.apache.turbine.TemplateContext;
 import org.apache.turbine.tool.TemplateLink;
@@ -65,7 +64,7 @@ import org.tigris.scarab.om.AttachmentManager;
  * Sends file contents directly to the output stream.
  *
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: ViewAttachment.java,v 1.5 2002/03/14 01:13:12 jmcnally Exp $
+ * @version $Id: ViewAttachment.java,v 1.6 2002/04/26 20:24:47 jmcnally Exp $
  */
 public class ViewAttachment extends Default
 {
@@ -100,7 +99,7 @@ public class ViewAttachment extends Default
                 }
                 catch (java.io.IOException ioe)
                 {
-                    Log.debug("File download was aborted: " + 
+                    log().debug("File download was aborted: " + 
                               attachment.getFullPath());
                     break;
                 }

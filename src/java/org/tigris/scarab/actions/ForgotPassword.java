@@ -52,7 +52,6 @@ import java.util.Calendar;
 import org.apache.turbine.Turbine;
 import org.apache.turbine.TemplateContext;
 import org.apache.turbine.RunData;
-import org.apache.turbine.Log;
 import org.apache.turbine.modules.ContextAdapter;
 
 import org.apache.fulcrum.security.TurbineSecurity;
@@ -157,7 +156,7 @@ public class ForgotPassword extends ScarabTemplateAction
         catch (TurbineSecurityException e)
         {
             getScarabRequestTool(context).setAlertMessage("Invalid username.");
-            Log.error("ForgotPassword: ", e);
+            log().error("ForgotPassword: ", e);
             setTarget(data, "ForgotPassword.vm");
             return false;
         }

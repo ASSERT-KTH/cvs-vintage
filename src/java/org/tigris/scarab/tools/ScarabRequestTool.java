@@ -55,10 +55,10 @@ import java.util.Comparator;
 import java.util.Iterator;
 import java.util.Locale;
 import java.util.Hashtable;
+import org.apache.log4j.Category;
 
 // Turbine
 import org.apache.commons.lang.Strings;
-import org.apache.turbine.Log;
 import org.apache.torque.om.NumberKey;
 import org.apache.torque.om.ObjectKey;
 import org.apache.torque.om.ComboKey;
@@ -940,7 +940,7 @@ try{
             }
             catch (Exception e)
             {
-                Log.info("[ScarabRequestTool] Unable to retrieve Module: " +
+                log().info("[ScarabRequestTool] Unable to retrieve Module: " +
                          key, e);
             }
         }
@@ -1442,7 +1442,7 @@ try{
                 String queryError = e.getMessage();
                 if (queryError.startsWith(SearchIndex.PARSE_ERROR)) 
                 {
-                    Log.info(queryError);
+                    log().info(queryError);
                     setAlertMessage(queryError);
                 }
                 else 
@@ -1902,7 +1902,7 @@ try{
         catch (Exception e)
         {
             hasPermission = false;
-            Log.error("Permission check failed on:" + permission, e);
+            log().error("Permission check failed on:" + permission, e);
         }
         return hasPermission;
     }
@@ -1928,7 +1928,7 @@ try{
         catch (Exception e)
         {
             hasPermission = false;
-            Log.error("Permission check failed on:" + permission, e);
+            log().error("Permission check failed on:" + permission, e);
         }
         return hasPermission;
     }
@@ -2111,6 +2111,11 @@ try{
         this.alertMessage = v;
     }
     
+
+    private Category log()
+    {
+        return Category.getInstance(getClass().getName());
+    }
 
     // ****************** Recyclable implementation ************************
 
