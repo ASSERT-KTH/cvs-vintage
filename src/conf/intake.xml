@@ -308,9 +308,9 @@
 </group>
 
 <group name="SearchIssue" key="search" mapToObject="util.word.IssueSearch">
-        <field name="SearchWords" key="sw" type="String"/>
-        <field name="TextScope" key="ts" type="int" multiValued="true"/>
-        <field name="CommentQuery" key="cq" type="String"/>
+        <field name="SearchWords" key="sw" type="String"></field>
+        <field name="TextScope" key="ts" type="int" multiValued="true"></field>
+        <field name="CommentQuery" key="cq" type="String"></field>
         <field name="MinId" key="lid" type="String">
            <rule name="mask" value="^[0-9]{1,9}$|^[A-Za-z]{0,4}[0-9]{1,9}$">intake_InvalidIssueId</rule>
         </field>

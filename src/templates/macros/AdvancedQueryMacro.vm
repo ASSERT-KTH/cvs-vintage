@@ -17,6 +17,10 @@
 #else
   #set ($search = $scarabR.NewSearch)
 #end
+#if (!$search)
+  #set ($search = $scarabR.NewSearch)
+#end
+
 #set ($intake = $scarabR.getConditionalIntake($scarabG.Constant.CURRENT_QUERY))
 #set ($searchGroup = $intake.SearchIssue.mapTo($search))
 #set ($attrValues = $search.CommonAttributeValuesMap)
@@ -52,9 +56,9 @@ from:&#160;<input type="text" size="20"
     #fieldErrorMsg($searchGroup.MinDate "")
     #fieldErrorMsg($searchGroup.MaxDate "")
 from:&#160;<input type="text" size="20"
-    name="$searchGroup.MinDate.Key" value="$searchGroup.MinDate.toString()" />
+    name="$searchGroup.MinDate.Key" value="$!searchGroup.MinDate.toString()" />
 &#160;&#160;to:&#160;<input type="text" size="20"
-    name="$searchGroup.MaxDate.Key" value="$searchGroup.MaxDate.toString()" />
+    name="$searchGroup.MaxDate.Key" value="$!searchGroup.MaxDate.toString()" />
 <p><small>$l10n.DateEg</small></p>
 </td>
 </tr>

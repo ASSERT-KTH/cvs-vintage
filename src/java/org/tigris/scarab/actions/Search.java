@@ -77,6 +77,7 @@ import org.tigris.scarab.om.MITList;
 import org.tigris.scarab.services.security.ScarabSecurity;
 import org.tigris.scarab.tools.ScarabRequestTool;
 import org.tigris.scarab.tools.ScarabLocalizationTool;
+import org.tigris.scarab.util.word.IssueSearch;
 import org.tigris.scarab.util.Log;
 import org.tigris.scarab.util.ScarabConstants;
 import org.tigris.scarab.util.ScarabUtil;
@@ -88,7 +89,7 @@ import org.tigris.scarab.util.Log;
  * @author <a href="mailto:jmcnally@collab.net">John D. McNally</a>
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: Search.java,v 1.123 2003/04/07 19:46:51 elicia Exp $
+ * @version $Id: Search.java,v 1.124 2003/04/09 18:02:04 elicia Exp $
  */
 public class Search extends RequireLoginFirstAction
 {
@@ -104,7 +105,6 @@ public class Search extends RequireLoginFirstAction
     {
         String queryString = getQueryString(data);
         ((ScarabUser)data.getUser()).setMostRecentQuery(queryString);
-        data.getParameters().setString("queryString", queryString);
 
         ScarabRequestTool scarabR = getScarabRequestTool(context);
         List queryResults = scarabR.getCurrentSearchResults();
@@ -269,7 +269,6 @@ public class Search extends RequireLoginFirstAction
     {        
         String queryString = getQueryString(data);
         ((ScarabUser)data.getUser()).setMostRecentQuery(queryString);
-        data.getParameters().setString("queryString", queryString);
         getScarabRequestTool(context).resetSelectedUsers();
     }
 
@@ -608,7 +607,11 @@ public class Search extends RequireLoginFirstAction
         data.getParameters().setString(ScarabConstants.CANCEL_TEMPLATE,
                                        getCurrentTemplate(data));
         ((ScarabUser)data.getUser()).setMostRecentQuery(getQueryString(data));
-        setTarget(data, "UserList.vm");            
+        IssueSearch search = getScarabRequestTool(context).getPopulatedSearch();
+        if (search != null)
+        {
+            setTarget(data, "UserList.vm");            
+        }
     } 
 
     /**

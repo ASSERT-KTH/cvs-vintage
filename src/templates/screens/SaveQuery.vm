@@ -8,7 +8,7 @@
 #set ($queryGroup = $intake.Query.mapTo($query))
 #set ($user = $data.User)
 #set ($module = $scarabR.CurrentModule)
-#set ($queryString = $data.Parameters.getString("queryString"))
+#set ($queryString = $data.User.MostRecentQuery)
 
 #if ($queryString)
 <form method="post" action="$link.setPage("SaveQuery.vm")">

@@ -46,10 +46,7 @@ function submitFormTo(form, name) {
 <input type="hidden" name="pageNum" value="$pageNum" />
 <input type="hidden" name="$scarabG.Constant.CANCEL_TEMPLATE" value="IssueList.vm" />
 
-#set ($queryString = $data.Parameters.getString("queryString"))
-#if ($queryString)
-  <input type="hidden" name="queryString" value="$queryString" />
-#end
+#set ($queryString = $data.User.MostRecentQuery)
 
 #if ($queryString && $searchType.equals("advanced"))
 <div class="functnbar">
