@@ -1,4 +1,4 @@
-<!-- $Id: changes.html,v 1.325 2002/12/20 21:38:42 elicia Exp $ -->
+<!-- $Id: changes.html,v 1.326 2002/12/21 00:21:23 jon Exp $ -->
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2//EN">
 <html>
 
@@ -13,7 +13,7 @@
 </p>
 
 <p>
-Last updated: $Id: changes.html,v 1.325 2002/12/20 21:38:42 elicia Exp $
+Last updated: $Id: changes.html,v 1.326 2002/12/21 00:21:23 jon Exp $
 </p>
 
 <table border="0" cellpadding="2" width="98%" bgcolor="white">
@@ -25,6 +25,9 @@ Last updated: $Id: changes.html,v 1.325 2002/12/20 21:38:42 elicia Exp $
         <td width="100%" height="100" bgcolor="#F0F0F0"> 
             <h3>Changes since 1.0b13</h3>
             <ul>
+                <li>The update search index screen now uses a background
+                    thread and a page refresh to do its work so that 
+                    browser/server timeouts don't affect the process. (JSS)</li>
                 <li>Upgraded to Postgres 7.3 JDBC driver. (JSS)</li>
                 <li>If there are two modules a user could have and one
                     of them is global and the other isn't, then always
