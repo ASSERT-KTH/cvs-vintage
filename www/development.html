@@ -1,47 +1,70 @@
-------------------------------------------------------------------------------
-| D E V E L O P E M E N T  N O T E S                                         |
-------------------------------------------------------------------------------
-$Id: DEVELOPMENT.txt,v 1.10 2001/08/28 00:56:37 dlr Exp $
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+        "http://www.w3.org/TR/1999/REC-html401-19991224/loose.dtd">
+<html>
+<head>
+	<title>Development Notes</title>
+</head>
+<body bgcolor="#FFFFFF">
 
-            Below are some notes for doing development with Scarab.
+<h3>Below are some notes for doing development with Scarab.</h3>
+<p>$Id: development.html,v 1.1 2001/10/06 01:11:46 jon Exp $</p>
 
-------------------------------------------------------------------------------
+<hr noshade="true" size="1"/>
 
+<p>
 We use the coding standards that the Turbine project uses. They are 
 documented here:
+</p>
 
-    <http://jakarta.apache.org/turbine/code-standards.html>
+<p>
+    <a href="http://jakarta.apache.org/turbine/code-standards.html">
+    http://jakarta.apache.org/turbine/code-standards.html</a>
+</p>
 
-------------------------------------------------------------------------------
+<hr noshade="true" size="1"/>
 
+<p>
 The general project guidelines that we follow are documented here:
+</p>
 
-    <http://jakarta.apache.org/site/guidelines.html>
+<p>
+    <a href="http://jakarta.apache.org/site/guidelines.html">
+    http://jakarta.apache.org/site/guidelines.html</a>
+</p>
 
-------------------------------------------------------------------------------
-
+<p>
 Because Scarab uses a build->compile->run development framework, you should 
 remember to always edit only the files in the src directory and not the 
 target build directory.
+</p>
 
+<p>
 Once you have edited a file in the src directory, you need to make sure to 
 execute the ant script again. If you edit a .java source file, then you 
 should execute [./ant compile]. If you edit any other file, then you 
 only need to execute [./ant].
+</p>
 
+<p>
 If, you make a change to a source file and you don't see that change 
 reflected in what you are doing, make sure to read the note above. :-)
+</p>
 
+<p>
 If you delete a src/java or src/template file you will need to delete the 
 corresponding src files as well as any .class files from within the target tree 
 and then re-compile. For example:
+</p>
 
-Delete:
-scarab/src/java/org/tigris/scarab/screens/Foo.java
-Also Delete:
-scarab/target/webapps/scarab/WEB-INF/src/java/org/tigris/scarab/screens/Foo.java
+<p>
+Delete:<br/>
+scarab/src/java/org/tigris/scarab/screens/Foo.java<br/>
+Also Delete:<br/>
+scarab/target/webapps/scarab/WEB-INF/src/java/org/tigris/scarab/screens/Foo.java<br/>
 scarab/target/webapps/scarab/WEB-INF/classes/org/tigris/scarab/screens/Foo.class
+</p>
 
+<p>
 You can make the above procedure easier by simply removing the entire target 
 tree and re-creating it. Next, you are going to ask why the source file is 
 stored in the WEB-INF directory. The reason is because Ant allows us to do 
@@ -50,45 +73,63 @@ will probably use this functionality to include a version number into one
 of the source files so that it is possible to see what version of Scarab 
 is running. There are other reasons for doing this as well, but this is 
 an easy example to explain. :-)
+</p>
 
+<p>
 At any point, you should be able to build a fresh target tree. This means 
 that you should be able to kill Tomcat, remove the target directory and 
 re-execute the build.sh script.
+</p>
 
+<p>
 If you make a change to a .java file and then recompile, you need to wait at 
 least 3 seconds (this is configurable in Tomcat's server.xml file near the 
 bottom) for the classloader to notice that the class has changed and
 reload it. Currently, if you are logged in, it will probably log you back out
 when this happens. We are working to resolve the issue.
+</p>
 
-------------------------------------------------------------------------------
+<hr noshade="true" size="1"/>
 
+<p>
 To use Jikes as your compiler, add the following to your ~/build.properties 
 file: build.compiler=jikes
+</p>
 
-------------------------------------------------------------------------------
+<hr noshade="true" size="1"/>
 
+<p>
 "business logic should not be coded into actions".  In the best
 circumstance, actions would do nothing more than assemble objects based
 on the available input data and pass them to the appropriate business
 classes to carry out the requested action.
+</p>
 
-------------------------------------------------------------------------------
+<hr noshade="true" size="1"/>
 
+<p>
 Data which resides in the logged-in user's temp Hashtable should be
 keyed by a constant of the ScarabConstants interface, and have its
 name prefixed with "scarab.".
+</p>
 
+<p>
 For example:
+</p>
 
-YourAction:
+<pre>
+YourAction.java:
 List issueIdList = (List) user.getTemp("issueIdList");
 
                         |
                         v
 
-ScarabConstants:
+ScarabConstants.java:
 public static final String ISSUE_ID_LIST = "scarab.issueIdList";
 
-YourAction:
+YourAction.java:
 List issueIdList = (List) user.getTemp(ScarabConstants.ISSUE_ID_LIST);
+</pre>
+
+</body>
+</html>
