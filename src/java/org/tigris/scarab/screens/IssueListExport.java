@@ -70,11 +70,11 @@ import org.tigris.scarab.tools.ScarabLocalizationTool;
 
 /**
  * <p>Sends file contents directly to the output stream, setting the
- * <code>Content-Type</code> to excel and writing back to the browser
- * a tab-delimited file: Excel seem to digest this fine.  We used to
- * use <a href="http://jakarta.apache.org/poi/">POI</a> to compose an
- * Excel binary data file, but its outrageous memory consumption
- * didn't scale for large result sets. POI assembles the its output in
+ * <code>Content-Type</code> and writing back to the browser a
+ * tab-delimited file (Excel digests this fine).  We used to use <a
+ * href="http://jakarta.apache.org/poi/">POI</a> to compose an Excel
+ * binary data file, but its outrageous memory consumption didn't
+ * scale for large result sets. POI assembles the its output in
  * memory.  After study of the native OLE2 excel file format, it
  * appears very difficult to generate the file in another fashion.</p>
  *
@@ -82,13 +82,14 @@ import org.tigris.scarab.tools.ScarabLocalizationTool;
  * stream is appropriately set upon fetching. Also, we're assuming
  * that Excel will do the right thing on receipt of our TSV file with
  * Japanese or other multibyte characters (we're not setting an
- * encoding on the content-type we return).  Both of the above to be
- * verified.</p>
+ * encoding on the <code>Content-Type</code> we return).  Both of the
+ * above to be verified.</p>
  *
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
  * @author <a href="mailto:stack@collab.net">St.Ack</a>
+ * @author <a href="mailto:dlr@collab.net">Daniel Rall</a>
  */
-public class IssueListToExcel extends Default
+public class IssueListExport extends Default
 {
     /**
      * What to show if cell is empty.
@@ -108,7 +109,15 @@ public class IssueListToExcel extends Default
         ScarabUser user = (ScarabUser)data.getUser();
         MITList mitlist = user.getCurrentMITList();
 
-        data.getResponse().setContentType("application/vnd.ms-excel");
+        String format = data.getParameters().getString("format");
+        if ("tsv".equalsIgnoreCase(format))
+        {
+            data.getResponse().setContentType("text/plain");
+        }
+        else
+        {
+            data.getResponse().setContentType("application/vnd.ms-excel");
+        }
         // Since we're streaming the TSV content directly from our
         // data source, we don't know its length ahead of time.
         //data.getResponse().setContentLength(?);
