@@ -7,7 +7,7 @@
 <!--                                                                       -->
 <!-- ===================================================================== -->
 
-<!-- $Id: standardjboss.xml,v 1.26 2001/12/11 09:47:44 pra Exp $ -->
+<!-- $Id: standardjboss.xml,v 1.27 2001/12/14 02:21:44 starksm Exp $ -->
 
 <jboss>
    <enforce-ejb-restrictions>false</enforce-ejb-restrictions>
@@ -595,7 +595,7 @@
                 <DLQConfig>
                   <DestinationQueue>queue/DLQ</DestinationQueue>
                   <MaxTimesRedelivered>10</MaxTimesRedelivered>
-                  <TimeToLive>-1</TimeToLive>
+                  <TimeToLive>0</TimeToLive>
                 </DLQConfig>
             </MDBConfig>
 	 </container-invoker-conf>
