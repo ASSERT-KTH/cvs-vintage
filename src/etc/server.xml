@@ -187,6 +187,12 @@
             className="org.apache.tomcat.request.AccessInterceptor" 
             debug="0" />
 
+        <!-- Implements BASIC and FORM autorization
+          -->
+        <RequestInterceptor 
+            className="org.apache.tomcat.request.CredentialsInterceptor" 
+            debug="0" />
+
         <!-- Check permissions using the simple xml file. You can 
              plug more advanced authentication modules.
              uncomment below to have a global tomcat Realm.

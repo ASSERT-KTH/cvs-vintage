@@ -176,11 +176,6 @@ public class StopTomcat {
 	BaseInterceptor ci[]=cm.getContainer().getInterceptors();
 	for( int i=0; i<ci.length; i++ ) {
 	    Object con=ci[i];
-/*	    if( con instanceof  Ajp12ConnectionHandler ) {
-		PoolTcpConnector tcpCon=(PoolTcpConnector) con;
-		portInt=tcpCon.getPort();
-		address=tcpCon.getAddress();
-	    }*/
 	    if( con instanceof  Ajp12Interceptor ) {
 		Ajp12Interceptor tcpCon=(Ajp12Interceptor) con;
 		portInt=tcpCon.getPort();
@@ -200,7 +195,8 @@ public class StopTomcat {
 	    os.write( stopMessage );
 	    socket.close();
 	} catch(Exception ex ) {
-	    throw new TomcatException("Error stopping Tomcat with Ajp12 on " + address + ":" + portInt, ex);
+	    throw new TomcatException("Error stopping Tomcat with Ajp12 on " +
+				      address + ":" + portInt, ex);
 	}
     }
     

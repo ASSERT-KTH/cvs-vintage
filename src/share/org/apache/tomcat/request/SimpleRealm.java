@@ -72,98 +72,35 @@ import java.util.*;
 import org.xml.sax.*;
 
 /**
- *  Memory based realm - will authenticate and check the permissions
- *  for a request using a simple, in-memory list of users.
- *  This is for "demo" purpose only, to allow auth in standalone tomcat
- *  for developers.
+ *  Memory based realm - will authenticate an user and password against
+ *  an xml file. The file is fully read in memory when the context is
+ *  initialized.
  *
- *  There are no restrictions or rules on how to authenticate - you have
- *  full control over the process.
+ *  The default file is TOMCAT_HOME/conf/tomcat-users.xml. You can
+ *  change it, and you can also set this module as a per context
+ *  interceptor, so that each module have it's own realm.
+ *
+ *  The module will use "credentials.user" and "credentials.password"
+ *  request notes. It's role is to verify those notes, other module is
+ *  specialized in extracting the information from the request.
  *
  */
 public class SimpleRealm extends  BaseInterceptor {
 
     MemoryRealm memoryRealm;
+    
     int reqRolesNote=-1;
     int reqRealmSignNote=-1;
-    String filename;
+    int userNote=-1;
+    int passwordNote=-1;
+
+    String filename="/conf/tomcat-users.xml";
+
+    
     public SimpleRealm() {
     }
 
-    public void contextInit(Context ctx)
-	throws TomcatException
-    {
-        setContextManager(ctx.getContextManager());
-        init(cm,ctx);
-        try {
-            // XXX make the name a "global" static -
-            reqRolesNote = cm.getNoteId( ContextManager.REQUEST_NOTE,
-                         "required.roles");
-                reqRealmSignNote = cm.getNoteId( ContextManager.REQUEST_NOTE
-                                       , "realm.sign");
-        } catch( TomcatException ex ) {
-            log("getting note for " + cm, ex);
-            throw new RuntimeException( "Invalid state ");
-        }
-    }
-
-    public int authenticate( Request req, Response response )
-    {
-	// Extract the credentials
-	Hashtable cred=new Hashtable();
-	SecurityTools.credentials( req, cred );
-
-	// This realm will use only username and password callbacks
-	String user=(String)cred.get("username");
-	String password=(String)cred.get("password");
-
-	if( debug > 0 ) log( "Verify user=" + user + " pass=" + password );
-	if( memoryRealm.checkPassword( user, password ) ) {
-	    if( debug > 0 ) log( "Auth ok, user=" + user );
-            Context ctx = req.getContext();
-            if (ctx != null)
-                req.setAuthType(ctx.getAuthMethod());
-	    req.setRemoteUser( user );
-            req.setNote(reqRealmSignNote,this);
-	}
-	return 0;
-    }
-
-    public int authorize( Request req, Response response, String roles[] )
-    {
-        if( roles==null || roles.length==0 ) {
-            // request doesn't need authentication
-            return 0;
-        }
-
-        Context ctx=req.getContext();
-
-        String userRoles[]=null;
-        String user=req.getRemoteUser();
-        if( user==null )
-	    return 401;
-
-        if( ! this.equals(req.getNote(reqRealmSignNote)) ){
-                return 0;
-        }
-
-
-
-        if( debug > 0 ) log( "Controled access for " + user + " " +
-                     req + " " + req.getContainer() );
-
-        userRoles = memoryRealm.getUserRoles( user );
-        if ( userRoles == null )
-            return 0;
-        req.setUserRoles( userRoles );
-
-        if( SecurityTools.haveRole( userRoles, roles ))
-            return 0;
-
-        if( debug > 0 ) log( "UnAuthorized " + roles[0] );
-        return 401;
-    }
-
+    // -------------------- Properties --------------------
     public String getFilename() {
         return filename;
     }
@@ -172,22 +109,57 @@ public class SimpleRealm extends  BaseInterceptor {
         filename = newFilename;
     }
 
-    /** Called when the ContextManger is started
-     */
-    public void engineInit(ContextManager cm) throws TomcatException {
-        init(cm,null);
+    // -------------------- Hooks --------------------
+    public void engineInit( ContextManager cm )
+	throws TomcatException
+    {
+	reqRolesNote = cm.getNoteId( ContextManager.REQUEST_NOTE,
+				     "required.roles");
+	reqRealmSignNote = cm.getNoteId( ContextManager.REQUEST_NOTE,
+					 "realm.sign");
+	userNote=cm.getNoteId( ContextManager.REQUEST_NOTE,
+			       "credentials.user");
+	passwordNote=cm.getNoteId( ContextManager.REQUEST_NOTE,
+				   "credentials.password");
     }
-
-    void init(ContextManager cm,Context ctx) {
+    
+    public void contextInit(Context ctx)
+	throws TomcatException
+    {
+	ContextManager cm=ctx.getContextManager();
 	if( memoryRealm==null) {
-	    memoryRealm = new MemoryRealm(filename,cm.getHome());
+	    memoryRealm = new MemoryRealm(filename,
+					  cm.getHome());
 	    try {
 		memoryRealm.readMemoryRealm();
 	    } catch(Exception ex ) {
-		log("initting " + cm, ex);
+		log("Error loading realm file " + cm.getHome() + "/"  +
+		    filename, ex);
 		memoryRealm=null;
 	    }
 	}
+    }
+
+    public int authenticate( Request req, Response response )
+    {
+	// This realm will use only username and password callbacks
+	String user=(String)req.getNote( userNote );
+	String password=(String)req.getNote( passwordNote );
+	if( user==null) return 0;
+	
+	if( debug > 0 ) log( "Verify user=" + user + " pass=" + password );
+	if( memoryRealm.checkPassword( user, password ) ) {
+	    if( debug > 0 ) log( "Auth ok, user=" + user );
+            Context ctx = req.getContext();
+	    req.setAuthType(ctx.getAuthMethod());
+	    req.setRemoteUser( user );
+            req.setNote(reqRealmSignNote,this);
+	    if( user!=null ) {
+		String userRoles[] = memoryRealm.getUserRoles( user );
+		req.setUserRoles( userRoles );
+	    }
+	}
+	return 0;
     }
 
     class MemoryRealm {
@@ -210,7 +182,8 @@ public class SimpleRealm extends  BaseInterceptor {
         }
 
         public void addUser(String name, String pass, String groups ) {
-            if( getDebug() > 0 )  log( "Add user " + name + " " + pass + " " + groups );
+            if( getDebug() > 0 )  log( "Add user " + name + " " +
+				       pass + " " + groups );
             passwords.put( name, pass );
             groups += ",";
             while (true) {
@@ -240,7 +213,8 @@ public class SimpleRealm extends  BaseInterceptor {
 
         public boolean checkPassword( String user, String pass ) {
             if( user==null ) return false;
-            if( getDebug() > 0 ) log( "check " + user+ " " + pass + " " + passwords.get( user ));
+            if( getDebug() > 0 ) log( "check " + user+ " " +
+				      pass + " " + passwords.get( user ));
             return pass.equals( (String)passwords.get( user ) );
         }
 
@@ -256,7 +230,8 @@ public class SimpleRealm extends  BaseInterceptor {
 
         public boolean userInRole( String user, String role ) {
             Vector users=(Vector)roles.get(role);
-            if( getDebug() > 0 ) log( "check role " + user+ " " + role + " "  );
+            if( getDebug() > 0 ) log( "check role " + user+ " " +
+				      role + " "  );
             if(users==null) return false;
             return users.indexOf( user ) >=0 ;
         }

@@ -225,25 +225,15 @@ public class EmbededTomcat {
     }
     
     private void initDefaultInterceptors() {
-	// Explicitely set up all the interceptors we need.
-	// The order is important ( like in apache hooks, it's a chain !)
-	
 	// no AutoSetup !
-	
 	// set workdir, engine header, auth Servlet, error servlet, loader
-
-	// XXX So far Embeded tomcat is specific to Servlet 2.2.
-	// It need a major refactoring to support multiple
-	// interfaces ( I'm not sure it'll be possible to support
-	// multiple APIs at the same time in embeded mode )
-
 	//	addInterceptor( new LogEvents() );
 	
 	DefaultCMSetter defaultCMI=new DefaultCMSetter();
 	addInterceptor( defaultCMI );
 
 	BaseInterceptor webXmlI=
-	    (BaseInterceptor)newObject("org.apache.tomcat.facade.WebXmlReader");
+	    createModule("org.apache.tomcat.facade.WebXmlReader");
 	addInterceptor( webXmlI );
 
 	PolicyInterceptor polI=new PolicyInterceptor();
@@ -259,10 +249,6 @@ public class EmbededTomcat {
 	WorkDirInterceptor wdI=new WorkDirInterceptor();
 	addInterceptor( wdI );
 
-	// Debug
-	// 	LogEvents logEventsI=new LogEvents();
-	// 	addRequestInterceptor( logEventsI );
-
 	SessionId sessI=new SessionId();
 	addInterceptor( sessI );
 
@@ -272,7 +258,7 @@ public class EmbededTomcat {
 	InvokerInterceptor invI=new InvokerInterceptor();
 	addInterceptor( invI );
 	
-	BaseInterceptor jspI=(BaseInterceptor)newObject("org.apache.tomcat.facade.JspInterceptor");
+	BaseInterceptor jspI=createModule("org.apache.tomcat.facade.JspInterceptor");
 	addInterceptor( jspI );
 
 	StaticInterceptor staticI=new StaticInterceptor();
@@ -280,16 +266,15 @@ public class EmbededTomcat {
 
 	addInterceptor( new SimpleSessionStore());
 	
-	BaseInterceptor loadOnSI= (BaseInterceptor)newObject("org.apache.tomcat.facade.LoadOnStartupInterceptor");
+	BaseInterceptor loadOnSI= createModule("org.apache.tomcat.facade.LoadOnStartupInterceptor");
 	addInterceptor( loadOnSI );
 
-	BaseInterceptor s22=(BaseInterceptor)newObject("org.apache.tomcat.facade.Servlet22Interceptor");
+	BaseInterceptor s22=createModule("org.apache.tomcat.facade.Servlet22Interceptor");
 	addInterceptor( s22 );
 
-	// access control ( find if a resource have constraints )
-	AccessInterceptor accessI=new AccessInterceptor();
-	addInterceptor( accessI );
-	accessI.setDebug(0);
+	addInterceptor( new AccessInterceptor() );
+
+	addInterceptor( new CredentialsInterceptor() );
 
 	// set context class loader
 	Jdk12Interceptor jdk12I=new Jdk12Interceptor();
@@ -339,10 +324,10 @@ public class EmbededTomcat {
 	}
     }
 
-    private Object newObject( String classN ) {
+    private BaseInterceptor createModule( String classN ) {
 	try {
 	    Class c=Class.forName( classN );
-	    return c.newInstance();
+	    return (BaseInterceptor)c.newInstance();
 	} catch( Exception ex ) {
 	    ex.printStackTrace();
 	    return null;

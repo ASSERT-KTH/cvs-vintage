@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/request/Attic/JDBCRealm.java,v 1.25 2000/12/03 22:29:39 nacho Exp $
- * $Revision: 1.25 $
- * $Date: 2000/12/03 22:29:39 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/request/Attic/JDBCRealm.java,v 1.26 2000/12/27 19:52:52 costin Exp $
+ * $Revision: 1.26 $
+ * $Date: 2000/12/27 19:52:52 $
  *
  * The Apache Software License, Version 1.1
  *
@@ -102,6 +102,8 @@ public final class JDBCRealm extends BaseInterceptor {
     ContextManager cm;
     int reqRolesNote;
     int reqRealmSignNote;
+    int userNote;
+    int passwordNote;
     // ----------------------------------------------------- Instance Variables
 
     /**
@@ -467,6 +469,7 @@ public final class JDBCRealm extends BaseInterceptor {
         return null;
     }
 
+    // -------------------- Tomcat hooks --------------------
 
     public void contextInit(Context ctx)
             throws org.apache.tomcat.core.TomcatException {
@@ -495,63 +498,28 @@ public final class JDBCRealm extends BaseInterceptor {
 
 
     public int authenticate( Request req, Response response ) {
-        // Extract the credentials
-        Hashtable cred=new Hashtable();
-        SecurityTools.credentials( req, cred );
-        // This realm will use only username and password callbacks
-        String user=(String)cred.get("username");
-        String password=(String)cred.get("password");
-
+        String user=(String)req.getNote( userNote );
+        String password=(String)req.getNote( passwordNote );
+	if( user==null) return 0;
+	
 	if( checkPassword( user, password ) ) {
      	    if( debug > 0 ) log( "Auth ok, user=" + user );
             Context ctx = req.getContext();
             if (ctx != null)
                 req.setAuthType(ctx.getAuthMethod());
-            req.setRemoteUser( user );
-            req.setNote(reqRealmSignNote,this);
+	    if( user!=null) {
+		req.setRemoteUser( user );
+		req.setNote(reqRealmSignNote,this);
+		String userRoles[] = getUserRoles( user );
+		req.setUserRoles( userRoles );
+	    }
 	}
 	return 0;
     }
 
-    public int authorize( Request req, Response response, String roles[] )
-    {
-        if( roles==null ) {
-            // request doesn't need authentication
-            return 0;
-        }
-
-        Context ctx=req.getContext();
-
-        String userRoles[]=null;
-
-	String user=req.getRemoteUser();
-
-	if( user==null )
-            return 401; //HttpServletResponse.SC_UNAUTHORIZED
-
-        if( this.equals(req.getNote(reqRealmSignNote)) ){
-                return 0;
-        }
-
-	if( debug > 0 )
-            log( "Controled access for " + user + " " + req + " "
-                 + req.getContainer() );
-
-	userRoles = getUserRoles( user );
-        if( userRoles == null )
-              return 0;
-	req.setUserRoles( userRoles );
-
-        if( debug > 0 ) log( "Auth ok, first role=" + userRoles[0] );
-
-        if( SecurityTools.haveRole( userRoles, roles ))
-            return 0;
-
-        if( debug > 0 ) log( "UnAuthorized " + roles[0] );
-	return 401; //HttpServletResponse.SC_UNAUTHORIZED
-        // XXX check transport
-    }
-
+    // XXX XXX XXX Nacho, I think Digest should be part of the Credential
+    // module, so it's used by all Realms.
+    
     /**
      * Digest password using the algorithm especificied and
      * convert the result to a corresponding hex string.
@@ -611,6 +579,10 @@ public final class JDBCRealm extends BaseInterceptor {
                 , "required.roles");
             reqRealmSignNote = cm.getNoteId( ContextManager.REQUEST_NOTE
                 , "realm.sign");
+	    userNote=cm.getNoteId( ContextManager.REQUEST_NOTE,
+				   "credentials.user");
+	    passwordNote=cm.getNoteId( ContextManager.REQUEST_NOTE,
+				       "credentials.password");
           }
           catch( TomcatException ex ) {
             log("setting up note for " + cm, ex);

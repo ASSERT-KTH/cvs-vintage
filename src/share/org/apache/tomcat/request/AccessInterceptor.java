@@ -107,18 +107,13 @@ public class AccessInterceptor extends  BaseInterceptor  {
 	
 	this.cm=cm;
 	// set-up a per/container note for maps
-	try {
-	    secMapNote = cm.getNoteId( ContextManager.CONTAINER_NOTE,
-				       "map.security");
-	    // Used for inter-module communication - required role, tr
-	    reqRolesNote = cm.getNoteId( ContextManager.REQUEST_NOTE,
-					 "required.roles");
-	    reqTransportNote = cm.getNoteId( ContextManager.REQUEST_NOTE,
+	secMapNote = cm.getNoteId( ContextManager.CONTAINER_NOTE,
+				   "map.security");
+	// Used for inter-module communication - required role, tr
+	reqRolesNote = cm.getNoteId( ContextManager.REQUEST_NOTE,
+				     "required.roles");
+	reqTransportNote = cm.getNoteId( ContextManager.REQUEST_NOTE,
 					 "required.transport");
-	} catch( TomcatException ex ) {
-	    log("engineInit(" + cm + ")", ex);  // necessary?
-	    throw new RuntimeException( "Invalid state");
-	}
     }
 
     public void contextInit( Context ctx)
@@ -284,6 +279,35 @@ public class AccessInterceptor extends  BaseInterceptor  {
 	    }
 	}
  	return 0;
+    }
+
+    public int authorize( Request req, Response response, String roles[] )
+    {
+        if( roles==null || roles.length==0 ) {
+            // request doesn't need authentication
+            return 0;
+        }
+
+	// will call authenticate() hooks to get the user
+        String user=req.getRemoteUser();
+        if( user==null )
+	    return 401;
+
+        if( debug > 0 ) log( "Controled access for " + user + " " +
+                     req + " " + req.getContainer() );
+
+        String userRoles[]= req.getUserRoles();
+        if ( userRoles == null )
+            return 401;
+
+	for( int i=0; i< userRoles.length; i ++ ) {
+	    for( int j=0; j< roles.length; i ++ )
+		if( userRoles[i]!=null && userRoles[i].equals( roles[j] ))
+		    return 0;
+	}
+
+        if( debug > 0 ) log( "UnAuthorized " + roles[0] );
+        return 401;
     }
 
     /** Find if a pattern is matched by a container

@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/util/Attic/Base64.java,v 1.1 2000/11/06 15:13:49 nacho Exp $
- * $Revision: 1.1 $
- * $Date: 2000/11/06 15:13:49 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/util/Attic/Base64.java,v 1.2 2000/12/27 19:52:56 costin Exp $
+ * $Revision: 1.2 $
+ * $Date: 2000/12/27 19:52:56 $
  *
  * ====================================================================
  *
@@ -74,7 +74,7 @@ package org.apache.tomcat.util;
  * This class is used by XML Schema binary format validation
  *
  * @author Jeffrey Rodriguez
- * @version $Revision: 1.1 $ $Date: 2000/11/06 15:13:49 $
+ * @version $Revision: 1.2 $ $Date: 2000/12/27 19:52:56 $
  */
 
 public final class Base64 {
@@ -260,5 +260,52 @@ public final class Base64 {
         return decodedData;
 
     }
+
+    static int base64[]= {
+	64, 64, 64, 64, 64, 64, 64, 64, 64, 64, 64, 64, 64, 64, 64, 64,
+	    64, 64, 64, 64, 64, 64, 64, 64, 64, 64, 64, 64, 64, 64, 64, 64,
+	    64, 64, 64, 64, 64, 64, 64, 64, 64, 64, 64, 62, 64, 64, 64, 63,
+	    52, 53, 54, 55, 56, 57, 58, 59, 60, 61, 64, 64, 64, 64, 64, 64,
+	    64,  0,  1,  2,  3,  4,  5,  6,  7,  8,  9, 10, 11, 12, 13, 14,
+	    15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 64, 64, 64, 64, 64,
+	    64, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40,
+	    41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 64, 64, 64, 64, 64,
+	    64, 64, 64, 64, 64, 64, 64, 64, 64, 64, 64, 64, 64, 64, 64, 64,
+	    64, 64, 64, 64, 64, 64, 64, 64, 64, 64, 64, 64, 64, 64, 64, 64,
+	    64, 64, 64, 64, 64, 64, 64, 64, 64, 64, 64, 64, 64, 64, 64, 64,
+	    64, 64, 64, 64, 64, 64, 64, 64, 64, 64, 64, 64, 64, 64, 64, 64,
+	    64, 64, 64, 64, 64, 64, 64, 64, 64, 64, 64, 64, 64, 64, 64, 64,
+	    64, 64, 64, 64, 64, 64, 64, 64, 64, 64, 64, 64, 64, 64, 64, 64,
+	    64, 64, 64, 64, 64, 64, 64, 64, 64, 64, 64, 64, 64, 64, 64, 64,
+	    64, 64, 64, 64, 64, 64, 64, 64, 64, 64, 64, 64, 64, 64, 64, 64
+    };
+
+    public static String base64Decode( String orig ) {
+	char chars[]=orig.toCharArray();
+	StringBuffer sb=new StringBuffer();
+	int i=0;
+
+	int shift = 0;   // # of excess bits stored in accum
+	int acc = 0;
+	
+	for (i=0; i<chars.length; i++) {
+	    int v = base64[ chars[i] & 0xFF ];
+	    
+	    if ( v >= 64 ) {
+		if( chars[i] != '=' )
+		    System.out.println("Wrong char in base64: " + chars[i]);
+	    } else {
+		acc= ( acc << 6 ) | v;
+		shift += 6;
+		if ( shift >= 8 ) {
+		    shift -= 8;
+		    sb.append( (char) ((acc >> shift) & 0xff));
+		}
+	    }
+	}
+	return sb.toString();
+    }
+
+
 }
 
