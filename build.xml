@@ -11,6 +11,7 @@
     <property name="tomcat.home" value="../dist/tomcat"/>
     <property name="j2ee.home" value="../../j2ee/build/unix"/>
     <property name="optimize" value="true" />
+    <property name="jaxp" value="../jaxp1.0.1" />
   </target>
 
   <!-- ==================== Copy static files ==================== -->
@@ -65,7 +66,7 @@
                classname="java.security.PrivilegedAction" />
 
     <javac srcdir="src/share" destdir="${tomcat.build}/classes"
-           classpath="${servlet.jar}" 
+           classpath="${servlet.jar};${jaxp}/jaxp.jar" 
            debug="on" 
            optimize="${optimize}"
            deprecation="off" >
@@ -163,6 +164,8 @@
          basedir="${tomcat.home}/classes"
          includes="org/apache/jasper/**"/>
     <copyfile src="${servlet.jar}" dest="${tomcat.home}/lib/servlet.jar"/>
+    <copyfile src="${jaxp}/jaxp.jar" dest="${tomcat.home}/lib/jaxp.jar"/>
+    <copyfile src="${jaxp}/parser.jar" dest="${tomcat.home}/lib/parser.jar"/>
 
     <!-- Add Tomcat internal javadoc -->
     <mkdir dir="${tomcat.home}/webapps/ROOT/javadoc" />
