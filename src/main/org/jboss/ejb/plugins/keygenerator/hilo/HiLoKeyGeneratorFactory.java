@@ -28,7 +28,7 @@ import java.sql.ResultSet;
 
 /**
  * @author <a href="mailto:alex@jboss.org">Alexey Loubyansky</a>
- * @version <tt>$Revision: 1.5 $</tt>
+ * @version <tt>$Revision: 1.6 $</tt>
  * @jmx.mbean name="jboss.system:service=KeyGeneratorFactory,type=HiLo"
  * extends="org.jboss.system.ServiceMBean"
  */
@@ -37,7 +37,8 @@ public class HiLoKeyGeneratorFactory
    implements KeyGeneratorFactory, HiLoKeyGeneratorFactoryMBean, Serializable
 {
    private ObjectName dataSource;
-   private DataSource ds;
+   private transient DataSource ds;
+   private transient TransactionManager tm;
 
    private String jndiName;
    private String tableName;
@@ -46,8 +47,6 @@ public class HiLoKeyGeneratorFactory
    private String idColumnName;
    private String createTableDdl;
    private long blockSize;
-
-   private TransactionManager tm;
 
    /**
     * @jmx.managed-attribute
@@ -214,6 +213,9 @@ public class HiLoKeyGeneratorFactory
    public void stopService()
       throws Exception
    {
+      ds = null;
+      tm = null;
+
       // unbind the factory
       Context ctx = new InitialContext();
       Util.unbind(ctx, getFactoryName());
