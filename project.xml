@@ -340,7 +340,7 @@
     <dependency>
       <groupId>postgresql</groupId>
       <artifactId>postgresql</artifactId>
-      <version>7.3-jdbc2</version>
+      <version>7.4-jdbc3</version>
       <type>jar</type>
       <properties>
         <war.bundle>true</war.bundle>
