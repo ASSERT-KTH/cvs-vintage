@@ -15,8 +15,12 @@
 //All Rights Reserved.
 package org.columba.mail.gui.tree;
 
+import java.awt.event.ActionEvent;
+import java.awt.event.KeyEvent;
+
 import javax.swing.JPopupMenu;
 import javax.swing.JScrollPane;
+import javax.swing.KeyStroke;
 import javax.swing.event.TreeExpansionEvent;
 import javax.swing.event.TreeSelectionEvent;
 import javax.swing.event.TreeSelectionListener;
@@ -30,10 +34,9 @@ import org.columba.mail.folder.Folder;
 import org.columba.mail.folder.FolderTreeNode;
 import org.columba.mail.gui.frame.AbstractMailFrameController;
 import org.columba.mail.gui.infopanel.FolderInfoPanel;
+import org.columba.mail.gui.table.action.PasteAction;
 import org.columba.mail.gui.table.command.ViewHeaderListCommand;
-import org.columba.mail.gui.tree.action.FolderTreeActionListener;
 import org.columba.mail.gui.tree.command.FetchSubFolderListCommand;
-import org.columba.mail.gui.tree.selection.TreeSelectionHandler;
 import org.columba.mail.gui.tree.selection.TreeSelectionManager;
 import org.columba.mail.gui.tree.util.FolderTreeCellRenderer;
 
@@ -41,8 +44,8 @@ import org.columba.mail.gui.tree.util.FolderTreeCellRenderer;
  * this class shows the the folder hierarchy
  */
 
-public class TreeController implements TreeSelectionListener,
-TreeWillExpandListener //, TreeNodeChangeListener
+public class TreeController
+	implements TreeSelectionListener, TreeWillExpandListener //, TreeNodeChangeListener
 {
 	private TreeView folderTree;
 	private boolean b = false;
@@ -97,20 +100,18 @@ TreeWillExpandListener //, TreeNodeChangeListener
 		view.addMouseListener(mouseListener);
 
 		// FIXME
-		
+
 		//FolderTreeDnd dnd = new FolderTreeDnd(this);
 
 		//scrollPane = new JScrollPane(getFolderTree().getTree());
 
 		//menu = new FolderTreeMenu(this);
-		
 
 		FolderTreeCellRenderer renderer = new FolderTreeCellRenderer(true);
 		view.setCellRenderer(renderer);
-		
+
 		getView().addTreeSelectionListener(this);
 
-		//MainInterface.focusManager.registerComponent( new TreeFocusOwner(this) );
 	}
 
 	public void treeWillExpand(TreeExpansionEvent e)
@@ -191,15 +192,13 @@ TreeWillExpandListener //, TreeNodeChangeListener
 		//if (selectedFolder == null) return;
 	}
 	*/
-	
-	public void createPopupMenu()
-	{
+
+	public void createPopupMenu() {
 		menu = new TreeMenu(mailFrameController);
 	}
-	
+
 	public JPopupMenu getPopupMenu() {
-		
-		
+
 		return menu;
 	}
 
@@ -223,7 +222,7 @@ TreeWillExpandListener //, TreeNodeChangeListener
 		
 	}
 	*/
-	
+
 	/**
 	 * Returns the treeSelectionManager.
 	 * @return TreeSelectionManager
@@ -245,15 +244,13 @@ TreeWillExpandListener //, TreeNodeChangeListener
 	 */
 	public void valueChanged(TreeSelectionEvent ev) {
 		TreePath path = ev.getPath();
-		
-		if ( path != null )
-		{
+
+		if (path != null) {
 			FolderTreeNode node = (FolderTreeNode) path.getLastPathComponent();
-			
-			getTreeSelectionManager().fireFolderSelectionEvent(null, node);	
+
+			getTreeSelectionManager().fireFolderSelectionEvent(null, node);
 		}
-	
+
 	}
-	
 
 }

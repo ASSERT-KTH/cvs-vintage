@@ -7,28 +7,27 @@
 package org.columba.mail.gui.frame;
 
 import java.awt.Rectangle;
+import java.awt.event.ActionEvent;
+import java.awt.event.KeyEvent;
+
+import javax.swing.KeyStroke;
 
 import org.columba.core.config.ViewItem;
-import org.columba.core.gui.ClipboardManager;
 import org.columba.core.gui.frame.AbstractFrameView;
 import org.columba.core.gui.util.DialogStore;
-import org.columba.core.logging.ColumbaLogger;
 import org.columba.core.main.MainInterface;
-import org.columba.mail.command.FolderCommand;
-import org.columba.mail.command.FolderCommandReference;
 import org.columba.mail.folder.Folder;
-import org.columba.mail.folder.command.CopyMessageCommand;
-import org.columba.mail.folder.command.MoveMessageCommand;
 import org.columba.mail.gui.attachment.AttachmentSelectionHandler;
 import org.columba.mail.gui.composer.HeaderController;
 import org.columba.mail.gui.infopanel.FolderInfoPanel;
 import org.columba.mail.gui.table.FilterToolbar;
 import org.columba.mail.gui.table.TableChangedEvent;
 import org.columba.mail.gui.table.TableController;
-import org.columba.mail.gui.table.TableView;
+import org.columba.mail.gui.table.action.CopyAction;
+import org.columba.mail.gui.table.action.CutAction;
+import org.columba.mail.gui.table.action.PasteAction;
 import org.columba.mail.gui.table.selection.TableSelectionHandler;
 import org.columba.mail.gui.tree.TreeController;
-import org.columba.mail.gui.tree.TreeView;
 import org.columba.mail.gui.tree.selection.TreeSelectionHandler;
 import org.columba.mail.message.HeaderList;
 
@@ -57,6 +56,37 @@ public class ThreePaneMailFrameController
 		super("ThreePaneMail", viewItem);
 
 		TableUpdater.add(this);
+
+	}
+
+	protected void initActions() {
+		tableController.getView().getInputMap().put(
+			KeyStroke.getKeyStroke(KeyEvent.VK_C, ActionEvent.CTRL_MASK),
+			"COPY");
+		tableController.getView().getActionMap().put(
+			"COPY",
+			new CopyAction(this));
+
+		tableController.getView().getInputMap().put(
+			KeyStroke.getKeyStroke(KeyEvent.VK_X, ActionEvent.CTRL_MASK),
+			"CUT");
+		tableController.getView().getActionMap().put(
+			"CUT",
+			new CutAction(this));
+
+		tableController.getView().getInputMap().put(
+			KeyStroke.getKeyStroke(KeyEvent.VK_V, ActionEvent.CTRL_MASK),
+			"PASTE");
+		tableController.getView().getActionMap().put(
+			"PASTE",
+			new PasteAction(this));
+
+		treeController.getView().getInputMap().put(
+			KeyStroke.getKeyStroke(KeyEvent.VK_V, ActionEvent.CTRL_MASK),
+			"PASTE");
+		treeController.getView().getActionMap().put(
+			"PASTE",
+			new PasteAction(this));
 
 	}
 
@@ -102,93 +132,24 @@ public class ThreePaneMailFrameController
 
 		getSelectionManager().addSelectionHandler(
 			new TableSelectionHandler(tableController.getView()));
-			
+
 		getSelectionManager().addSelectionHandler(
 			new TreeSelectionHandler(treeController.getView()));
 		getSelectionManager().addSelectionHandler(
 			new AttachmentSelectionHandler(attachmentController.getView()));
-			
+
 		tableController.createPopupMenu();
 		treeController.createPopupMenu();
 		attachmentController.createPopupMenu();
-		
+
+		initActions();
+
 	}
 
 	public void saveAndClose() {
 
 		tableController.saveColumnConfig();
 		super.saveAndClose();
-	}
-
-	public void executeCopyAction() {
-		ColumbaLogger.log.debug("copy action");
-
-		TableView table = tableController.getView();
-
-		// add current selection to clipboard
-
-		// copy action
-		MainInterface.clipboardManager.setOperation(
-			ClipboardManager.COPY_ACTION);
-
-		MainInterface.clipboardManager.setMessageSelection(getTableSelection());
-
-	}
-
-	/* (non-Javadoc)
-	 * @see org.columba.core.gui.frame.AbstractFrameController#executeCutAction()
-	 */
-	public void executeCutAction() {
-		ColumbaLogger.log.debug("cut action");
-
-		TableView table = tableController.getView();
-
-		// add current selection to clipboard
-
-		// cut action
-		MainInterface.clipboardManager.setOperation(
-			ClipboardManager.CUT_ACTION);
-
-		MainInterface.clipboardManager.setMessageSelection(getTableSelection());
-
-	}
-
-	/* (non-Javadoc)
-	 * @see org.columba.core.gui.frame.AbstractFrameController#executePasteAction()
-	 */
-	public void executePasteAction() {
-		ColumbaLogger.log.debug("paste action");
-
-		TableView table = tableController.getView();
-		TreeView tree = treeController.getView();
-
-		//if ( (table.hasFocus()) || (tree.hasFocus()) ) {
-
-		FolderCommandReference[] ref = new FolderCommandReference[2];
-
-		FolderCommandReference[] source =
-			MainInterface.clipboardManager.getMessageSelection();
-		if (source == null)
-			return;
-
-		ref[0] = source[0];
-
-		FolderCommandReference[] dest = getTableSelection();
-		ref[1] = dest[0];
-
-		FolderCommand c = null;
-
-		if (MainInterface.clipboardManager.isCutAction())
-			c = new MoveMessageCommand(ref);
-		else
-			c = new CopyMessageCommand(ref);
-
-		MainInterface.clipboardManager.clearMessageSelection();
-
-		MainInterface.processor.addOp(c);
-
-		//}
-
 	}
 
 	/* (non-Javadoc)

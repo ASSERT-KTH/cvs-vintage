@@ -16,9 +16,12 @@
 
 package org.columba.mail.gui.table;
 
+import java.awt.event.ActionEvent;
+import java.awt.event.KeyEvent;
 import java.util.Vector;
 
 import javax.swing.JPopupMenu;
+import javax.swing.KeyStroke;
 import javax.swing.event.TreeSelectionEvent;
 import javax.swing.event.TreeSelectionListener;
 import javax.swing.table.TableColumn;
@@ -37,7 +40,10 @@ import org.columba.mail.folder.Folder;
 import org.columba.mail.folder.FolderTreeNode;
 import org.columba.mail.gui.frame.AbstractMailFrameController;
 import org.columba.mail.gui.frame.ThreePaneMailFrameController;
+import org.columba.mail.gui.table.action.CopyAction;
+import org.columba.mail.gui.table.action.CutAction;
 import org.columba.mail.gui.table.action.HeaderTableActionListener;
+import org.columba.mail.gui.table.action.PasteAction;
 import org.columba.mail.gui.table.selection.TableSelectionManager;
 import org.columba.mail.gui.table.util.MarkAsReadTimer;
 import org.columba.mail.gui.table.util.MessageNode;
@@ -153,7 +159,10 @@ public class TableController implements TreeSelectionListener {
 		getHeaderTableModel().getTableModelSorter().setSortingOrder(
 			headerTableItem.getBoolean("ascending"));
 
+		
 	}
+
+	
 
 	public boolean isAscending() {
 		return getHeaderTableModel().getTableModelSorter().getSortingOrder();
@@ -474,9 +483,8 @@ public class TableController implements TreeSelectionListener {
 			new ViewMessageCommand(mailFrameController, reference));
 			*/
 	}
-	
-	public void createPopupMenu()
-	{
+
+	public void createPopupMenu() {
 		menu = new TableMenu(mailFrameController);
 	}
 
@@ -484,8 +492,7 @@ public class TableController implements TreeSelectionListener {
 	 * return the PopupMenu for the table
 	 */
 	public JPopupMenu getPopupMenu() {
-		
-			
+
 		return menu;
 	}
 
