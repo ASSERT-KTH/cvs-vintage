@@ -1,9 +1,0 @@
-Steps to update the schema
-
-#1. Edit in ERStudio. Output as an Oracle 8 schema.
-#2. Convert the Oracle 8 schema to a MySQL schema
-    cd scarab/build
-    build-scarab.bat mysqlschema
-#3. Import the MySQL schema into the database
-    mysql scarab < scarab-mysql.sql
-#4. Build the OR mappings using Torque
