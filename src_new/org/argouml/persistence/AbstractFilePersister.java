@@ -1,4 +1,4 @@
-// $Id: AbstractFilePersister.java,v 1.9 2005/01/17 16:52:05 bobtarling Exp $
+// $Id: AbstractFilePersister.java,v 1.10 2005/01/20 17:27:50 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -49,14 +49,6 @@ public abstract class AbstractFilePersister extends FileFilter
     
     private EventListenerList listenerList = new EventListenerList();
 
-    /**
-     * The PERSISTENCE_VERSION is increased every time the persistence format
-     * changes.
-     * This controls conversion of old persistence version files to be
-     * converted to the current one, keeping ArgoUML backwards compatible.
-     */
-    protected static final int PERSISTENCE_VERSION = 3;
-    
     /**
      * Supply the encoding to be used throughout the persistence
      * mechanism.
