@@ -86,8 +86,8 @@ public class ViewHeaderListCommand extends Command {
 			boolean applyFilter = item.getBoolean("automatically_apply_filter",
 					false);
 
-			// if "automatically apply filter" is selected
-			if (applyFilter == true) {
+			// if "automatically apply filter" is selected & there are new messages
+			if (applyFilter == true && folder.getMessageFolderInfo().getRecent() > 0) {
 				MainInterface.processor.addOp(new ApplyFilterCommand(r));
 			}
 		}
