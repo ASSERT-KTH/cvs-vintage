@@ -1,4 +1,4 @@
-// $Id: CrNoInstanceVariables.java,v 1.15 2003/09/17 21:29:02 thierrylach Exp $
+// $Id: CrNoInstanceVariables.java,v 1.16 2004/02/06 23:05:35 d00mst Exp $
 // Copyright (c) 1996-2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -31,7 +31,9 @@ package org.argouml.uml.cognitive.critics;
 import java.util.Iterator;
 import javax.swing.Icon;
 import org.argouml.cognitive.Designer;
+import org.argouml.cognitive.ToDoItem;
 import org.argouml.cognitive.critics.Critic;
+import org.argouml.kernel.Wizard;
 import org.argouml.model.ModelFacade;
 
 
@@ -126,5 +128,17 @@ public class CrNoInstanceVariables extends CrUML {
 	return false;
     }
 
+    public void initWizard(Wizard w) {
+	if (w instanceof WizAddInstanceVariable) {
+	    ToDoItem item = w.getToDoItem();
+	    Object me = /*(MModelElement)*/ item.getOffenders().elementAt(0);
+	    String ins = "Set the name of the new variable.";
+	    String sug = "newAttr";
+	    ((WizAddInstanceVariable) w).setInstructions(ins);
+	    ((WizAddInstanceVariable) w).setSuggestion(sug);
+	}
+    }
+    
+    public Class getWizardClass(ToDoItem item) { return WizAddInstanceVariable.class; }
 } /* end class CrNoInstanceVariables */
 
