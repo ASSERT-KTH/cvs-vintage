@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/service/connector/Attic/JNIConnectionHandler.java,v 1.4 2000/05/01 12:29:26 shachor Exp $
- * $Revision: 1.4 $
- * $Date: 2000/05/01 12:29:26 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/service/connector/Attic/JNIConnectionHandler.java,v 1.5 2000/05/05 17:25:56 costin Exp $
+ * $Revision: 1.5 $
+ * $Date: 2000/05/05 17:25:56 $
  *
  * ====================================================================
  *
@@ -68,6 +68,7 @@ import org.apache.tomcat.core.*;
 import org.apache.tomcat.util.*;
 import javax.servlet.*;
 import javax.servlet.http.*;
+import java.util.*;
 
 public class JNIConnectionHandler {
 
@@ -96,12 +97,35 @@ public class JNIConnectionHandler {
         System.out.println("Library " + lib + " loaded");
     }
 
+    static Vector pool=new Vector();
+    static boolean reuse=true;
+    
     public void processConnection(long s, long l) {
 
         try {
-    	    JNIRequestAdapter reqA = new JNIRequestAdapter(contextM, this);
-    	    JNIResponseAdapter resA =new JNIResponseAdapter(this);
-	    contextM.initRequest( reqA , resA );
+	    JNIRequestAdapter reqA=null;
+	    JNIResponseAdapter resA=null;
+	    
+	    if( reuse ) {
+		synchronized( this ) {
+		    if( pool.size()==0 ) {
+			reqA=new JNIRequestAdapter( contextM, this);
+			resA=new JNIResponseAdapter( this );
+			contextM.initRequest( reqA, resA );
+			pool.addElement( reqA );
+		    } else {
+			reqA = (JNIRequestAdapter)pool.lastElement();
+			resA=(JNIResponseAdapter)reqA.getResponse();
+			pool.removeElement( reqA );
+		    }
+		}
+		reqA.recycle();
+		resA.recycle();
+	    } else  {
+		reqA = new JNIRequestAdapter(contextM, this);
+		resA =new JNIResponseAdapter(this);
+		contextM.initRequest( reqA , resA );
+	    }
 	    
             resA.setRequestAttr(s, l);
     	    reqA.readNextRequest(s, l);
