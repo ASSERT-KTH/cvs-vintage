@@ -112,7 +112,7 @@ public class MessageBodytextViewer extends JTextPane implements Viewer,
 		htmlEditorKit = new HTMLEditorKit();
 		setEditorKit(htmlEditorKit);
 
-		setContentType("text/html");
+		setContentType("text/html");	
 
 		XmlElement gui = MailInterface.config.get("options").getElement(
 				"/options/gui");
@@ -186,12 +186,21 @@ public class MessageBodytextViewer extends JTextPane implements Viewer,
 		XmlElement html = MailInterface.config.getMainFrameOptionsConfig()
 				.getRoot().getElement("/options/html");
 		// Which Bodypart shall be shown? (html/plain)
-		if (Boolean.valueOf(html.getAttribute("prefer")).booleanValue()) {
+
+		String htmlStyle = html.getAttribute("style", "html");
+		boolean htmlViewer = false;
+		boolean stripHtml = false;
+
+		if (htmlStyle.equals("html")) {
 			bodyPart = mimePartTree.getFirstTextPart("html");
+			htmlViewer = true;
 		} else {
 			bodyPart = mimePartTree.getFirstTextPart("plain");
+			if (htmlStyle.equals("strip")) {
+				stripHtml = true;
+			}		
 		}
-
+		
 		if (bodyPart == null) {
 			bodyStream = new ByteArrayInputStream("<No Message-Text>"
 					.getBytes());
@@ -227,12 +236,6 @@ public class MessageBodytextViewer extends JTextPane implements Viewer,
 
 		}
 
-		// Shall we use the HTML-Viewer?
-		boolean htmlViewer = bodyPart.getHeader().getMimeType().getSubtype()
-				.equals("html");
-
-		
-
 		int encoding = bodyPart.getHeader().getContentTransferEncoding();
 
 		switch (encoding) {
@@ -261,14 +264,8 @@ public class MessageBodytextViewer extends JTextPane implements Viewer,
 			text.append((char) next);
 			next = bodyStream.read();
 		}
-		
-		// if HTML stripping is enabled
-		if (Boolean.valueOf(html.getAttribute("disable")).booleanValue()) {
-			// strip HTML message -> remove all HTML tags
-			setBodyText(HtmlParser.htmlToText(text.toString()), false);
-		} else {
-			setBodyText(text.toString(), htmlViewer);
-		}
+
+		setBodyText(text.toString(), htmlViewer, stripHtml);
 
 		bodyStream.close();
 
@@ -292,10 +289,12 @@ public class MessageBodytextViewer extends JTextPane implements Viewer,
 				+ ".quoting {color:#949494;}; --></style>";
 	}
 
-	protected void setBodyText(String bodyText, boolean html) {
-		htmlMessage = html;
-
-		if (html) {
+	protected void setBodyText(String bodyText, boolean viewHtml, boolean stripHtml) {
+		if (stripHtml) {
+			bodyText = HtmlParser.stripHtmlTags(bodyText, true);
+		}
+		
+		if (viewHtml) {
 			try {
 				// this is a HTML message
 
