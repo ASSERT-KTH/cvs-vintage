@@ -1,0 +1,17 @@
+#*
+
+@author <a href="mailto:jvanzyl@periapt.com">Jason van Zyl</a>
+@version $Id: FluxMissingRequiredInputs.vm,v 1.1 2001/05/24 02:36:19 jmcnally Exp $
+
+*#
+
+<font face="$ui.sansSerifFonts">
+The following fields are required and must be entered before
+this request can be processed:
+<p>
+#foreach ($missingRequiredInput in $missingRequiredInputs)
+<b>$missingRequiredInput</b>
+<br>
+#end
+</font>
+

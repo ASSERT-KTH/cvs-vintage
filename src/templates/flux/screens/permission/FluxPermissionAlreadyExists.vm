@@ -1,0 +1,12 @@
+#**
+
+@author <a href="mailto:jvanzyl@periapt.com">Jason van Zyl</a>
+@version $Id: FluxPermissionAlreadyExists.vm,v 1.1 2001/05/24 02:36:19 jmcnally Exp $
+
+*#
+
+<font face="verdana,geneva,helvetica">
+The permission name <b>$name</b> is currently is use. Permission
+names must be unique, please choose another name.
+</font>
+

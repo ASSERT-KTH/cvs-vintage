@@ -1,0 +1,12 @@
+#*
+
+@author <a href="mailto:jvanzyl@periapt.com">Jason van Zyl</a>
+@version $Id: FluxUserAlreadyExists.vm,v 1.1 2001/05/24 02:36:19 jmcnally Exp $
+
+*#
+
+<font face="$ui.sansSerifFonts">
+The username <b>$username</b> is currently is use. Usernames
+must be unique for all users, please choose another username.
+</font>
+
