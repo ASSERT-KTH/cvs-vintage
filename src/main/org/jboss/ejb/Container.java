@@ -60,6 +60,8 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
+import java.security.PrivilegedAction;
+import java.security.AccessController;
 
 /**
  * This is the base class for all EJB-containers in JBoss. A Container
@@ -81,7 +83,7 @@ import java.util.Set;
  * @author <a href="bill@burkecentral.com">Bill Burke</a>
  * @author <a href="mailto:d_jencks@users.sourceforge.net">David Jencks</a>
  * @author <a href="mailto:christoph.jung@infor.de">Christoph G. Jung</a>
- * @version $Revision: 1.156 $
+ * @version $Revision: 1.157 $
  *
  * @jmx.mbean extends="org.jboss.system.ServiceMBean"
  */
@@ -491,16 +493,16 @@ public abstract class Container
     */
    public Context getEnvContext() throws NamingException
    {
-      ClassLoader ccl = Thread.currentThread().getContextClassLoader();
+      ClassLoader ccl = SecurityActions.getContextClassLoader();
       try
       {
          // The ENC is a map keyed on the class loader
-         Thread.currentThread().setContextClassLoader(classLoader);
+         SecurityActions.setContextClassLoader(classLoader);
          return (Context)new InitialContext().lookup("java:comp/env");
       }
       finally
       {
-         Thread.currentThread().setContextClassLoader(ccl);
+         SecurityActions.setContextClassLoader(ccl);
       }
    }
 
@@ -915,7 +917,8 @@ public abstract class Container
       if (debug)
       {
          log.debug("Begin java:comp/env for EJB: " + beanMetaData.getEjbName());
-         log.debug("TCL: " + Thread.currentThread().getContextClassLoader());
+         ClassLoader tcl = SecurityActions.getContextClassLoader();
+         log.debug("TCL: " + tcl);
       }
 
       ORB orb = null;
@@ -1350,4 +1353,5 @@ public abstract class Container
       {
       }
    }
+
 }
