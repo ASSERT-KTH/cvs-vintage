@@ -44,14 +44,15 @@ import org.jboss.jms.jndi.JMSProviderAdapter;
  * Created: Sat Mar 31 03:08:35 2001
  *
  * @author <a href="mailto:peter.antman@tim.se">Peter Antman</a>.
- * @version $Revision: 1.3 $
+ * @version $Revision: 1.4 $
  */
 public class JmsManagedConnectionFactory
    implements ManagedConnectionFactory
 {
    private PrintWriter logWriter = null;
-   private String providerJNDI;
    private JmsLogger logger = new JmsLogger();
+   /** Settable attributes in ra.xml */
+   private JmsMCFProperties mcfProperties = new JmsMCFProperties();
 
    //For local access
    private JMSProviderAdapter adapter;
@@ -83,6 +84,7 @@ public class JmsManagedConnectionFactory
                                                     ConnectionRequestInfo info) 
       throws ResourceException 
    {
+      info = getInfo(info);
       JmsCred cred = JmsCred.getJmsCred(this,subject, info);
       // OK we got autentication stuff
       JmsManagedConnection mc = new JmsManagedConnection
@@ -102,6 +104,7 @@ public class JmsManagedConnectionFactory
       throws ResourceException
    {
       // Get cred
+      info = getInfo(info);
       JmsCred cred = JmsCred.getJmsCred(this,subject, info);
 
       // Traverse the pooled connections and look for a match, return
@@ -157,36 +160,74 @@ public class JmsManagedConnectionFactory
       return logWriter;    
    }
 
-   // FIXME, what should be the unique identity of a ConnectionFactory for
-   // JMS, hard do say actually
 
+
+   /**
+    * Checks for equality ower the configured properties.
+    */
    public boolean equals(Object obj) {
       if (obj == null) return false;
       if (obj instanceof JmsManagedConnectionFactory) {
-         String you = ((JmsManagedConnectionFactory) obj).
-            getJmsProviderAdapterJNDI();
-         String me = this.providerJNDI;
-         return (you == null) ? (me == null) : (you.equals(me));
+	 return mcfProperties.equals( ((JmsManagedConnectionFactory)obj).getProperties());
       } else {
          return false;
       }
    }
 
    public int hashCode() {
-      if (providerJNDI == null) {
-         return (new String("")).hashCode();
-      } else {
-         return providerJNDI.hashCode();
-      }
+      return mcfProperties.hashCode();
    }
 
    // --- Connfiguration API ---
    public void setJmsProviderAdapterJNDI(String jndi) {
-      providerJNDI = jndi;
+      mcfProperties.setProviderJNDI(jndi);
    }
     
    public String getJmsProviderAdapterJNDI() {
-      return providerJNDI;
+      return mcfProperties.getProviderJNDI();
+   }
+
+   /**
+    * Set userName, null by default.
+    */
+   public void setUserName(String userName) {
+      mcfProperties.setUserName(userName);
+   }
+
+   /**
+    * Get userName, may be null.
+    */ 
+   public String getUserName() {
+      return mcfProperties.getUserName();
+   }
+   
+   /**
+    * Set password, null by default.
+    */
+   public void setPassword(String password) {
+      mcfProperties.setPassword(password);
+   }
+   /**
+    * Get password, may be null.
+    */
+   public String getPassword() {
+      return  mcfProperties.getPassword();
+   }
+
+
+
+   /**
+    * Set the default session typ
+    *
+    * @param type either javax.jms.Topic or javax.jms.Queue
+    * @exception ResourceException if type was not a valid type.
+    */
+   public void setSessionDefaultType(String type) throws ResourceException {
+      mcfProperties.setSessionDefaultType(type);
+   }
+
+   public String getSessionDefaultType() {
+      return mcfProperties.getSessionDefaultType();
    }
 
    /**
@@ -199,5 +240,21 @@ public class JmsManagedConnectionFactory
    public JMSProviderAdapter getJmsProviderAdapter() {
       return adapter;
    }
+
+   //---- Private helper methods
+   private ConnectionRequestInfo getInfo(ConnectionRequestInfo info) {   
+      if (info == null) {
+	 // Create a default one
+	 return new JmsConnectionRequestInfo(mcfProperties);
+      } else {
+	 // Fill the one with any defaults
+	 ((JmsConnectionRequestInfo)info).setDefaults(mcfProperties);
+	 return info;
+      }
+   }
    
+   //---- MCF to MCF API
+   protected JmsMCFProperties getProperties() {
+      return mcfProperties;
+   }
 } // JmsManagedConnectionFactory
