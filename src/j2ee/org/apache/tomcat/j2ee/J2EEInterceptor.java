@@ -55,12 +55,13 @@ public class J2EEInterceptor extends BaseInterceptor {
 	this.invM= (InvocationManagerImpl) Switch.getSwitch().
 	    getInvocationManager();
 	config= ServerConfiguration.getConfiguration();
-	localStrings = new LocalStringManagerImpl(WebServer.class);
+	localStrings = new
+	    LocalStringManagerImpl(com.sun.web.security.Constants.class);
     }
 
     public void engineInit( ContextManager cm ) throws TomcatException {
 	super.engineInit(cm);
-	debug=1;
+	debug=0;
     }
     
     public void contextInit( Context ctx)
@@ -299,12 +300,12 @@ public class J2EEInterceptor extends BaseInterceptor {
     public boolean isUserInRole(String appName, String rname) {
 	RoleMapper rmap = RoleMapper.getRoleMapper( appName );
 
-	log("Mapping role " + rname + " " + rmap);
+	if(debug>0) log("Mapping role " + rname + " " + rmap);
 	if(rmap != null) {
 	    for(Enumeration e =
 		    rmap.getCurrentRoles(); e.hasMoreElements();) {
 		Role r = (Role) e.nextElement();
-		log("Try " + r.getName());
+		if( debug>0) log("Try " + r.getName());
 		if(r.getName().equals(rname))
 		    return true;
 	    }
