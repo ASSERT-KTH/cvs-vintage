@@ -39,24 +39,36 @@
     <!--antcall target="compile.david"/-->
   </target>
 
-
-  <!-- Compile Remote Interface Stub/Skel target for Jeremie-->
+<!-- Compile Remote Interface Stub/Skel target for OpenORB-->
   <target name="compile.openorb">
     <mkdir dir="${test.build.stub}/openorb"/>
     <java classname="${compiler.openorb}" fork="true" failonerror="true">
-
-
       <arg value="-tie"/>
       <arg value="-stub"/>
       <arg value="-noidl"/>
       <arg value="-d"/>
       <arg path="${test.build.stub}/openorb"/>
       <arg value="org.objectweb.carol.jtests.conform.basic.server.BasicObject"/>
-      <!--<arg value="org.objectweb.carol.jtests.conform.basic.server.BasicMultiObject"/>-->
+      <arg value="org.objectweb.carol.jtests.conform.basic.server.BasicMultiObject"/>
       <classpath refid="openorb.classpath"/>
     </java>
+    <javac
+    	srcdir="${test.build.stub}/openorb"
+      	destdir="${test.build.stub}/openorb"
+      	deprecation="${deprecation}"
+      	debug="${compile.debug}"
+      	nowarn="${compile.nowarn}"
+      	optimize="${compile.optimize}">
+      		<classpath refid="openorb.classpath"/>
+      		<include name="**/conform/**/*.java"/>  
+      </javac>
+    <delete>
+    	<fileset dir="${test.build.stub}/openorb" includes="**/*.java"/>
+  	</delete>
     <jar destfile="${test.dist.lib}/openorb.jar" basedir="${test.build.stub}/openorb" />
   </target>   
+
+
 
   
 </project>
