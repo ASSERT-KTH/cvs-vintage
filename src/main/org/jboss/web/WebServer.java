@@ -38,7 +38,7 @@ import org.jboss.logging.Logger;
  *
  *   @author <a href="mailto:marc@jboss.org">Marc Fleury</a>
  *   @author <a href="mailto:Scott.Stark@org.jboss">Scott Stark</a>.
- *   @version $Revision: 1.17 $
+ *   @version $Revision: 1.18 $
  *
  *   Revisions:
  *   
@@ -49,7 +49,7 @@ import org.jboss.logging.Logger;
       amd downloadServerClasses is true
  */
 public class WebServer
-	implements Runnable
+        implements Runnable
 {
    // Constants -----------------------------------------------------
 
@@ -196,7 +196,9 @@ public class WebServer
     */
     public URL addClassLoader(ClassLoader cl)
     {
-        String key = getClassLoaderKey(cl);
+        String key = (cl instanceof WebClassLoader) ?
+                                     ((WebClassLoader)cl).getKey() : 
+                                     getClassLoaderKey(cl);
         loaderMap.put(key, cl);
         URL loaderURL = null;
         String codebase = System.getProperty("java.rmi.server.codebase");
@@ -293,15 +295,24 @@ public class WebServer
                     Class clazz = loader.loadClass(className);
                     URL clazzUrl = clazz.getProtectionDomain().getCodeSource().getLocation();
                     log.trace("clazzUrl = "+clazzUrl);
-                    if (clazzUrl.getFile().endsWith(".jar"))
-                       clazzUrl = new URL("jar:"+clazzUrl+"!/"+filePath);
-                    else
-                       clazzUrl = new URL(clazzUrl, filePath);
-                    if (clazzUrl == null)
-                     throw new Exception("Class not found:"+className);
-              
-                    // Retrieve bytecodes
-                    bytes = getBytes(clazzUrl);
+                    if (clazzUrl == null) 
+                    {
+                        // Does the WebClassLoader of clazz 
+                        // have the ability to obtain the bytecodes of clazz?
+                        bytes = ((WebClassLoader)clazz.getClassLoader()).getBytes(clazz);
+                        if (bytes == null)
+                            throw new Exception("Class not found: " + className);
+                    }
+                    else 
+                    {
+                        if (clazzUrl.getFile().endsWith(".jar"))
+                            clazzUrl = new URL("jar:"+clazzUrl+"!/"+filePath);
+                        else
+                            clazzUrl = new URL(clazzUrl, filePath);
+                        
+                        // Retrieve bytecodes
+                        bytes = getBytes(clazzUrl);
+                    }
                 }
                 else if( loader != null && filePath.length() > 0 && downloadServerClasses )
                 {
