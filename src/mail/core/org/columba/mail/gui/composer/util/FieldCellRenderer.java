@@ -43,6 +43,9 @@ public class FieldCellRenderer extends JComboBox implements TableCellRenderer {
 
     public Component getTableCellRendererComponent(JTable table, Object object,
         boolean isSelected, boolean hasFocus, int row, int column) {
+        
+        System.out.println("object="+object.toString());
+        	
         setSelectedItem((String) object);
 
         return this;

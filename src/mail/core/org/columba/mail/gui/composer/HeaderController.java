@@ -374,11 +374,11 @@ public class HeaderController implements TableModelListener, DropTargetListener,
     }
 
     public void cut() {
-        view.removeSelected();
+        //view.removeSelected();
     }
 
     public void delete() {
-        view.removeSelected();
+        //view.removeSelected();
     }
 
     public JComponent getComponent() {

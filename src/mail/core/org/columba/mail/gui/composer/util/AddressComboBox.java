@@ -15,73 +15,71 @@
 //All Rights Reserved.
 package org.columba.mail.gui.composer.util;
 
-import org.columba.mail.util.AddressCollector;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 
-import java.util.List;
-import java.util.Vector;
-
-import javax.swing.ComboBoxModel;
 import javax.swing.JComboBox;
 import javax.swing.JTextField;
 
+import org.columba.mail.util.AddressCollector;
 
 /**
- * Title:
- * Description:
- * Copyright:    Copyright (c) 2001
- * Company:
- * @author
- * @version 1.0
+ * Combox for entering email address. This widget is aware of 
+ * it being an underlying component of JTable.
+ * 
+ * @author fdietz
  */
-public class AddressComboBox extends JComboBox {
-    public AddressComboBox() {
-        super();
-        addCompleter();
-    }
+public class AddressComboBox extends JComboBox implements KeyListener {
 
-    public AddressComboBox(AddressbookTableView table) {
-        super();
-        addCompleter(table);
-    }
+	private AddressbookTableView table;
 
-    public AddressComboBox(ComboBoxModel cm) {
-        super(cm);
-        addCompleter();
-    }
+	public AddressComboBox(AddressbookTableView table) {
+		super();
 
-    public AddressComboBox(Object[] items) {
-        super(items);
-        addCompleter();
-    }
+		this.table= table;
 
-    public AddressComboBox(List v) {
-        super((Vector) v);
-        addCompleter();
-    }
+		setEditable(true);
 
-    private void addCompleter() {
-        setEditable(true);
+		Object[] completions= AddressCollector.getAddresses();
 
-        Object[] completions = getAddresses();
-        new AutoCompleter(this, completions);
-    }
+		new AutoCompleter(this, table, completions);
 
-    private void addCompleter(AddressbookTableView table) {
-        setEditable(true);
+		//getTextField().addKeyListener(this);
+	}
 
-        Object[] completions = getAddresses();
-        new AutoCompleter(this, table, completions);
-    }
+	private JTextField getTextField() {
+		return ((JTextField) getEditor().getEditorComponent());
+	}
 
-    private Object[] getAddresses() {
-        return AddressCollector.getAddresses();
-    }
+	/******************* Key Listener **************************/
 
-    public String getText() {
-        return ((JTextField) getEditor().getEditorComponent()).getText();
-    }
+	public void keyTyped(KeyEvent e) {
+		System.out.println("typed..");
+		char ch= e.getKeyChar();
 
-    public void setText(String text) {
-        ((JTextField) getEditor().getEditorComponent()).setText(text);
-    }
+		if (ch == KeyEvent.VK_BACK_SPACE) {
+			int length= getTextField().getText().length();
+
+			if (length == 0) {
+
+				table.removeEditingRow();
+
+				int row= this.table.getSelectedRow();
+				if (table.editCellAt(row, 1)) {
+					table.focusToTextField();
+				}
+
+			}
+		}
+	}
+
+	public void keyPressed(KeyEvent e) {
+		System.out.println("pressed..");
+		
+	}
+
+	public void keyReleased(KeyEvent e) {
+		System.out.println("released..");
+		
+	}
 }

@@ -172,7 +172,7 @@ public class AddressbookTableModel extends AbstractTableModel {
     public void setHeaderItem(int row, HeaderItem item) {
         rows.replace(row, item);
 
-        //fireTableDataChanged();
+        fireTableDataChanged();
     }
 
     public int getColumnCount() {
