@@ -218,9 +218,12 @@ public class JspInterceptor extends BaseInterceptor {
 	if( debug > 0 ) log( "Compiling " + jspInfo.realClassPath);
 	try {
 	    // make sure we have the directories
-	    File dir=new File( jspInfo.outputDir + "/" + jspInfo.pkgDir);
+        File dir;
+        if (jspInfo.pkgDir!=null)
+    	    dir=new File( jspInfo.outputDir + "/" + jspInfo.pkgDir);
+        else
+    	    dir=new File( jspInfo.outputDir);
 	    dir.mkdirs();
-	    
 	    JspMangler mangler= new JspMangler(jspInfo);
 	    TomcatOptions options=new TomcatOptions();
 	    JspEngineContext1 ctxt = new JspEngineContext1(req, mangler);
@@ -346,7 +349,7 @@ public class JspInterceptor extends BaseInterceptor {
 class JspInfo {
     Request request;
     
-    String uri; // path 
+    String uri; // path
 
     int version; // version
 
@@ -371,7 +374,7 @@ class JspInfo {
 
     public String toString() {
 	return uri +" " + version;
-    }  
+    }
 
     /** Update compile time
      */
@@ -389,26 +392,62 @@ class JspInfo {
     /** Update all paths that contain version number
      */
     void updateVersionedPaths() {
-	classN = baseClassN + "_" + version;
-	realClassPath = outputDir + "/" + pkgDir + "/" +
-	    classN + ".class";
-	javaFilePath = outputDir + "/" + pkgDir + "/" +
-	    classN + ".java";
-	fullClassN = pkg +"." + classN;
-	
+    if( pkgDir!=null ) {
+        classN = baseClassN + "_" + version;
+        realClassPath = outputDir + "/" + pkgDir + "/" + classN + ".class";
+        javaFilePath = outputDir + "/" + pkgDir + "/" + classN + ".java";
+        fullClassN = pkg  + "." + classN;
+    } else {
+        classN = baseClassN + "_" + version;
+        realClassPath = outputDir + "/" +  classN + ".class";
+        javaFilePath = outputDir + "/" + classN + ".java";
+        fullClassN = classN;
+    }
+
 // 	log("ClassN=" + classN +
 // 			   " realClassPath=" + realClassPath +
 // 			   " javaFilePath=" + javaFilePath +
 // 			   " fullClassN =" + fullClassN);
 	writeVersion();
-	// save to mapFile 
+	// save to mapFile
+    }
+
+    private static String [] keywords = {
+        "abstract", "boolean", "break", "byte",
+        "case", "catch", "char", "class",
+        "const", "continue", "default", "do",
+        "double", "else", "extends", "final",
+        "finally", "float", "for", "goto",
+        "if", "implements", "import",
+        "instanceof", "int", "interface",
+        "long", "native", "new", "package",
+        "private", "protected", "public",
+        "return", "short", "static", "super",
+        "switch", "synchronized", "this",
+        "throw", "throws", "transient",
+        "try", "void", "volatile", "while"
+    };
+
+    /** Mangle Package names to avoid reserver words **/
+    private String manglePackage(String s){
+	    for (int i = 0; i < keywords.length; i++) {
+            char fs = File.separatorChar;
+            int index = s.indexOf(keywords[i]);
+            if(index == -1 ) continue;
+            while (index != -1) {
+                String tmpathName = s.substring (0,index) + "__";
+                s = tmpathName + s.substring (index);
+                index = s.indexOf(keywords[i],index+3);
+            }
+        }
+        return(s);
     }
 
     /** Compute various names used
      */
     void init(Request req ) {
 	this.request = req;
-	// 	String includeUri 
+	// 	String includeUri
 	// 	    = (String) req.getAttribute(Constants.INC_SERVLET_PATH);
 	uri=req.getServletPath();
 	Context ctx=req.getContext();
@@ -429,11 +468,13 @@ class JspInfo {
 	}
 
 	if( pkgDir!=null ) {
+        pkgDir=manglePackage(pkgDir);
 	    pkgDir=pkgDir.replace('.', '_');
 	    pkg=pkgDir.replace('/', '.');
 	    //	    pkgDir=pkgDir.replace('/', File.separator );
+
 	}
-	
+
 	int extIdx=endUnproc.lastIndexOf( "." );
 
 	if( extIdx>=0 ) {
@@ -443,8 +484,11 @@ class JspInfo {
 	    baseClassN=endUnproc;
 	}
 	// XXX insert "mangle" to make names safer
+    if (pkgDir!=null)
+    	mapPath = outputDir + "/" + pkgDir + "/" + baseClassN + ".ver";
+    else
+    	mapPath = outputDir + "/" + baseClassN + ".ver";
 
-	mapPath = outputDir + "/" + pkgDir + "/" + baseClassN + ".ver";
 	File mapFile=new File(mapPath);
 	if( mapFile.exists() ) {
 	    // read version from file
@@ -456,7 +500,7 @@ class JspInfo {
 	    updateVersionedPaths();
 	}
 
-	if( false )
+	if( true  )
 	    log("uri=" + uri +
 		//" outputDir=" + outputDir +
 		//" jspSource=" + jspSource +
@@ -465,10 +509,10 @@ class JspInfo {
 		" ext=" + ext +
 		" mapPath=" + mapPath +
 		" version=" + version);
-	
-	
+
+
     }
-    
+
     /** After startup we try to find if the file was precompiled
 	before
     */
@@ -870,7 +914,7 @@ class JspEngineContext1 implements JspCompilationContext {
 
 class JspMangler implements Mangler{
     JspInfo jspInfo;
-    
+
     public JspMangler(JspInfo info)  {
 	this.jspInfo=info;
     }
