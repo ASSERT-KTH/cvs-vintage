@@ -1,4 +1,4 @@
-<<<<<<< EnterpriseContext.java
+
 /*
  * jBoss, the OpenSource EJB server
  *
@@ -36,7 +36,7 @@ import org.jboss.logging.Logger;
  *	@author Rickard Öberg (rickard.oberg@telkel.com)
  *  @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
  *  @author <a href="mailto:sebastien.alborini@m4x.org">Sebastien Alborini</a>
- *	@version $Revision: 1.8 $
+ *	@version $Revision: 1.9 $
  */
 public abstract class EnterpriseContext
 {
