@@ -74,7 +74,7 @@ import org.tigris.scarab.tools.ScarabRequestTool;
  * This class deals with modifying Global Attributes.
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: GlobalAttributeEdit.java,v 1.11 2002/02/27 22:01:52 elicia Exp $
+ * @version $Id: GlobalAttributeEdit.java,v 1.12 2002/03/08 22:08:16 elicia Exp $
  */
 public class GlobalAttributeEdit extends RequireLoginFirstAction
 {
@@ -210,7 +210,7 @@ public class GlobalAttributeEdit extends RequireLoginFirstAction
             
                 // handle adding the new line.
                 ParentChildAttributeOption newPCAO = 
-                ParentChildAttributeOption.getInstance();
+                    ParentChildAttributeOption.getInstance();
                 Group newPCAOGroup = intake.get("ParentChildAttributeOption", 
                                                 newPCAO.getQueryKey());
                 if ( newPCAOGroup != null ) 
@@ -235,6 +235,7 @@ public class GlobalAttributeEdit extends RequireLoginFirstAction
                         try
                         {
                             newPCAO.save();
+                            pcaoList.add(newPCAO);
                         }
                         catch (Exception e)
                         {
