@@ -1,5 +1,5 @@
 import org.columba.core.main.MainInterface;
-import org.columba.core.plugin.ExternalToolsPluginHandler;
+import org.columba.core.pluginhandler.ExternalToolsPluginHandler;
 
 
 /**
