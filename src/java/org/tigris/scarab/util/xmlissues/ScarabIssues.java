@@ -116,7 +116,7 @@ import org.tigris.scarab.util.ScarabConstants;
  *
  * @author <a href="mailto:jon@latchkey.com">Jon S. Stevens</a>
  * @author <a href="mailto:dlr@collab.net">Daniel Rall</a>
- * @version $Id: ScarabIssues.java,v 1.50 2003/08/13 15:44:57 dlr Exp $
+ * @version $Id: ScarabIssues.java,v 1.51 2003/08/14 20:42:06 elicia Exp $
  */
 public class ScarabIssues implements java.io.Serializable
 {
@@ -799,15 +799,17 @@ public class ScarabIssues implements java.io.Serializable
         }
         catch (ParseException e)
         {
-            String[] args = { xmlDate.getTimestamp(), xmlDate.getFormat() };
+            String errorMsg = "";
+            if (e.getErrorOffset() != -1)
+            {
+                errorMsg = ": " + e.getMessage();
+            }
+            String[] args = { xmlDate.getTimestamp(), xmlDate.getFormat(),
+                              errorMsg };
             String error = Localization.format
                 (ScarabConstants.DEFAULT_BUNDLE_NAME, getLocale(),
                  "InvalidDate", args);
-            if (e.getErrorOffset() != -1)
-            {
-                error += ": " + e.getMessage();
-            }
-            importErrors.add(error);
+            addImportError(error);
         }
     }
 
