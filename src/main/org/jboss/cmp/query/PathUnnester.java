@@ -10,6 +10,8 @@
 package org.jboss.cmp.query;
 
 import java.util.Iterator;
+import java.util.Map;
+import java.util.HashMap;
 
 import org.jboss.cmp.schema.AbstractAssociationEnd;
 import org.jboss.cmp.schema.AbstractClass;
@@ -19,6 +21,8 @@ import org.jboss.cmp.schema.AbstractClass;
  */
 public class PathUnnester extends QueryCloner
 {
+   private Map knownRelations = new HashMap();
+
    /**
     * Convert all paths in the specified query to attibute references by
     * unnesting multi-step paths and by convering CollectionRelations to
@@ -28,7 +32,9 @@ public class PathUnnester extends QueryCloner
     */
    public Query unnest(Query nested)
    {
-      return (Query) nested.accept(this, null);
+      Query query = (Query) nested.accept(this, null);
+      knownRelations.clear();
+      return query;
    }
 
    public Object visit(CrossJoin join, Object param)
@@ -55,8 +61,14 @@ public class PathUnnester extends QueryCloner
          step = (AbstractAssociationEnd) i.next();
          if (i.hasNext()) {
             newAlias.append('_').append(step.getName());
-            right = new RangeRelation(newAlias.toString(), step.getPeer().getType());
-            joinTree = new InnerJoin(joinTree, left, right, step);
+            String alias = newAlias.toString();
+            right = (RangeRelation) knownRelations.get(alias);
+            if (right == null)
+            {
+               right = new RangeRelation(alias, step.getPeer().getType());
+               joinTree = new InnerJoin(joinTree, left, right, step);
+               knownRelations.put(alias, right);
+            }
             left = right;
          }
       }
