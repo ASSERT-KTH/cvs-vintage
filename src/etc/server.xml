@@ -10,6 +10,9 @@
     <ContextManager debug="0" workDir="work" >
 
       <!-- ==================== Global modules ==================== -->
+        <LoaderInterceptor11  useApplicationLoader="true" />
+
+        <TrustedLoader />
 
         <LogSetter name="tc_log" timestamps="true"
 		   verbosityLevel="INFORMATION"  />
@@ -22,10 +25,10 @@
         <!-- Separated Context -->
         <ContextXmlReader config="conf/apps.xml" />
 
-        <AutoDeploy source="internal" target="internal" 
+        <AutoDeploy source="modules" target="modules" 
 		    redeploy="true" />
 
-        <AutoWebApp dir="internal" host="DEFAULT" trusted="true"/>
+        <AutoWebApp dir="modules" host="DEFAULT" trusted="true"/>
 
         <AutoDeploy source="webapps" target="webapps" />
 
@@ -57,10 +60,6 @@
 		   timestamps="true" 
 		   path="logs/jasper-${yyyyMMdd}.log" 
 		   verbosityLevel = "INFORMATION"  />
-
-        <LoaderInterceptor11  useApplicationLoader="true" />
-
-        <TrustedLoader />
 
         <WebXmlReader validate="true" />
 
@@ -160,6 +159,10 @@
 		      noRoot="false" />
           -->
 
+         <!-- Uncoment for apache-style logs 
+              Attributes: logFile, flush, format
+        <AccessLogInterceptor/>
+          -->
       <!-- ==================== Connectors ==================== -->
 
        <!-- new http adapter. Attributes:
