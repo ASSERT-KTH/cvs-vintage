@@ -61,7 +61,7 @@ import org.tigris.scarab.util.ScarabException;
  *
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: IssueType.java,v 1.7 2001/10/28 19:57:27 jmcnally Exp $
+ * @version $Id: IssueType.java,v 1.8 2001/11/17 01:13:31 elicia Exp $
  */
 public  class IssueType 
     extends org.tigris.scarab.om.BaseIssueType
@@ -83,6 +83,24 @@ public  class IssueType
             .add(AttributeGroupPeer.ISSUE_TYPE_ID, getIssueTypeId())
             .addAscendingOrderByColumn(AttributeGroupPeer.PREFERRED_ORDER);
         return AttributeGroupPeer.doSelect(crit);
+    }
+
+    /**
+     * Creates new attribute group.
+     */
+    public AttributeGroup createNewGroup (ModuleEntity module)
+        throws Exception
+    {
+        List groups = getAttributeGroups(module);
+        AttributeGroup ag = new AttributeGroup();
+
+        // Make default group name 'attribute group x' where x is size + 1
+        ag.setName("attribute group " + Integer.toString(groups.size()+1));
+        ag.setOrder(groups.size() +2);
+        ag.setModuleId(module.getModuleId());
+        ag.setIssueTypeId(getIssueTypeId());
+        ag.save();
+        return ag;
     }
 
     /**
