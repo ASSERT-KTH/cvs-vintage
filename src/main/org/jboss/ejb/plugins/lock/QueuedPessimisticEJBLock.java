@@ -45,7 +45,7 @@ import org.jboss.monitor.LockMonitor;
  * @author <a href="bill@burkecentral.com">Bill Burke</a>
  * @author <a href="pete@subx.com">Peter Murray</a>
  *
- * @version $Revision: 1.20 $
+ * @version $Revision: 1.19 $
  */
 public class QueuedPessimisticEJBLock extends BeanLockSupport
 {
