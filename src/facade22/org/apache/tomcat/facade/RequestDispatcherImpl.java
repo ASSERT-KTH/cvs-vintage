@@ -63,6 +63,7 @@ package org.apache.tomcat.facade;
 import org.apache.tomcat.core.*;
 import org.apache.tomcat.util.StringManager;
 import org.apache.tomcat.util.compat.*;
+import org.apache.tomcat.util.http.*;
 import java.io.*;
 import java.util.*;
 import java.security.*;
@@ -100,11 +101,26 @@ import javax.servlet.http.*;
  * @author costin@dnt.ro
  */
 final class RequestDispatcherImpl implements RequestDispatcher {
+    static final boolean debug=true;
     // Use the strings from core
     private static StringManager sm = StringManager.
 	getManager("org.apache.tomcat.resources");
+
+    // Attributes that will be replaced during include
+    private static final String A_REQUEST_URI=
+	"javax.servlet.include.request_uri";
+    private static final String A_CONTEXT_PATH=
+    	"javax.servlet.include.context_path";
+    private static final String A_SERVLET_PATH=
+	"javax.servlet.include.servlet_path";
+    private static final String A_PATH_INFO=
+	"javax.servlet.include.path_info";
+    private static final String A_QUERY_STRING=
+	"javax.servlet.include.query_string";
+    
     
     Context context;
+
     // path dispatchers
     String path;
     String queryString;
@@ -136,6 +152,8 @@ final class RequestDispatcherImpl implements RequestDispatcher {
     }
 
     // -------------------- Public methods --------------------
+
+    // Wrappers for jdk1.2 priviledged actions
     Jdk11Compat jdk11Compat=Jdk11Compat.getJdkCompat();
     RDIAction forwardAction=new RDIAction( this,false);
     RDIAction includeAction=new RDIAction( this,true);
@@ -144,36 +162,34 @@ final class RequestDispatcherImpl implements RequestDispatcher {
 	throws ServletException, IOException
     {
 	if( System.getSecurityManager() != null ) {
-// 	    final ServletRequest req = request;
-// 	    final ServletResponse res = response;
 	    try {
 		forwardAction.prepare( request, response );
 		jdk11Compat.doPrivileged( forwardAction );
-
-// 		java.security.AccessController.doPrivileged(
-// 		    new java.security.PrivilegedExceptionAction()
-// 		    {
-// 			public Object run() throws ServletException, IOException {
-// 			    doForward(req,res);
-// 			    return null;
-// 			}
-// 		    }               
-// 		);
-// 	    } catch( PrivilegedActionException pe) {
-// 		Exception e = pe.getException();
 	    } catch( Exception e) {
-		if( e instanceof ServletException )
-		    throw (ServletException)e;
-		if( e instanceof RuntimeException )
-		    throw (RuntimeException)e;
-		// can only be IOException
-		throw (IOException)e;
+		wrapException( e, null );
 	    }
 	} else {
 	    doForward(request,response);
 	}
     }
 
+    public void include(ServletRequest request, ServletResponse response)
+	throws ServletException, IOException
+    {
+	if( System.getSecurityManager() != null ) {
+	    try {
+		includeAction.prepare( request, response );
+		jdk11Compat.doPrivileged( includeAction );
+	    } catch( Exception e) {
+		wrapException( e, null );
+	    }
+	} else {
+	    doInclude(request,response);
+	}
+    }
+
+    // -------------------- Actual forward/include impl --------------------
+    
     private void doForward(ServletRequest request, ServletResponse response)
 	throws ServletException, IOException
     {
@@ -211,8 +227,12 @@ final class RequestDispatcherImpl implements RequestDispatcher {
 
 	// merge query string as specified in specs - before, it may affect
 	// the way the request is handled by special interceptors
-	if( queryString != null )
-	    addQueryString( realRequest, queryString );
+	if( queryString != null ) {
+	    // Append queryString to the request parameters -
+	    // the original request is changed.
+	    realRequest.parameters().processParameters( queryString ); 
+	    //	    addQueryString( realRequest, queryString );
+	}
 	
 	// run the new request through the context manager
 	// not that this is a very particular case of forwarding
@@ -221,57 +241,38 @@ final class RequestDispatcherImpl implements RequestDispatcher {
 	// unset "included" attribute if any - we may be in a servlet
 	// included from another servlet,
 	// in which case the attribute will create problems
-	realRequest.removeAttribute( "javax.servlet.include.request_uri");
-	realRequest.removeAttribute( "javax.servlet.include.servlet_path");
+	realRequest.removeAttribute( A_REQUEST_URI);
+	realRequest.removeAttribute( A_SERVLET_PATH);
 
 
 	// CM should have set the wrapper - call it
 	Handler wr=realRequest.getHandler();
-	if( wr!=null ) 
-	    invoke( wr, realRequest, realResponse);
-	// Clean up the request and response as needed
-	;       // No action required
+	if( wr!=null ) {
+	    try {
+		wr.service(realRequest, realResponse);
+	    } catch( Exception ex ) {
+		realResponse.setErrorException(ex);
+	    }
+	}
 
-	// Rethrow original error if present
+	// Clean up the request and response as needed
+	// No action required
+
 	if ( realResponse.isExceptionPresent() ) {
 	    // if error URI not set, set our URI
 	    if ( null == realResponse.getErrorURI() )
 		realResponse.setErrorURI( context.getPath() + path );
 	    Exception ex = realResponse.getErrorException();
-	    if ( ex instanceof IOException )
-		throw (IOException) ex;
-	    if ( ex instanceof RuntimeException )
-		throw (RuntimeException) ex;
-	    else if ( ex instanceof ServletException )
-		throw (ServletException) ex;
-	    else
-		throw new ServletException
-		    (sm.getString("dispatcher.forwardException"), ex );
+	    wrapException( ex,
+			   sm.getString("dispatcher.forwardException"));
 	}
-
+	
 	// close the response - output after this point will be discarded.
+	// XXX XXX Maybe this is Henri's bug !!!
 	realResponse.finish();
     }
 
-    public void include(ServletRequest request, ServletResponse response)
-	throws ServletException, IOException
-    {
-	if( System.getSecurityManager() != null ) {
-	    try {
-		includeAction.prepare( request, response );
-		jdk11Compat.doPrivileged( includeAction );
-	    } catch( Exception e) {
-		if( e instanceof ServletException )
-		    throw (ServletException)e;
-		if( e instanceof RuntimeException )
-		    throw (RuntimeException)e;
-		// can only be IOException
-		throw (IOException)e;
-	    }
-	} else {
-	    doInclude(request,response);
-	}
-    }
+    // -------------------- Include --------------------
 
     private void doInclude(ServletRequest request, ServletResponse response)
 	throws ServletException, IOException
@@ -279,7 +280,13 @@ final class RequestDispatcherImpl implements RequestDispatcher {
         Request realRequest = ((HttpServletRequestFacade)request).
 	    getRealRequest();
 	Response realResponse = realRequest.getResponse();
+	
 
+	if( debug ) {
+	    System.out.println("RDI: doInclude: " + path + " " + name +
+			       " " + queryString );
+	}
+	
 	// the strange case in a separate method
 	if( name!=null) {
 	    includeNamed( request, response );
@@ -293,8 +300,6 @@ final class RequestDispatcherImpl implements RequestDispatcher {
 	if( ! old_included ) {
 	    realResponse.setIncluded( true );
 	}
-
-	// Here the spec is very special, pay attention
 
 	// We need to pass the original request, with all the paths -
 	// and the new paths in special attributes.
@@ -311,7 +316,7 @@ final class RequestDispatcherImpl implements RequestDispatcher {
 	    createRequest( context, path );
 	subRequest.setParent( realRequest );
 	subRequest.getTop(); // control inclusion depth
-	
+
 	// I hope no interceptor (or code) in processRequest use any
 	// of the original request info ( like Auth headers )
 	//
@@ -326,64 +331,42 @@ final class RequestDispatcherImpl implements RequestDispatcher {
 	subRequest.setResponse( realResponse );
 	
 	context.getContextManager().processRequest(subRequest);
+	
 	// Now subRequest containse the processed and aliased paths, plus
 	// the wrapper that will handle the request.
 
 	// We will use the stack a bit - save all path attributes, set the
 	// new values, and after return from wrapper revert to the original
-	Object old_request_uri=realRequest.
-	    getAttribute("javax.servlet.include.request_uri");
-	realRequest.setAttribute("javax.servlet.include.request_uri",
-				 //				 path);
-				 context.getPath() + path );
+	Object old_request_uri=replaceAttribute(realRequest, A_REQUEST_URI,
+						context.getPath() + path );
+	Object old_context_path=replaceAttribute(realRequest, A_CONTEXT_PATH,
+						 context.getPath());
+	Object old_servlet_path=replaceAttribute(realRequest, A_SERVLET_PATH,
+					 subRequest.servletPath().toString());
+	Object old_path_info=replaceAttribute(realRequest, A_PATH_INFO,
+					  subRequest.pathInfo().toString());
+	Object old_query_string=replaceAttribute(realRequest, A_QUERY_STRING,
+						 queryString);
 
-	Object old_context_path=realRequest.
-	    getAttribute("javax.servlet.include.context_path");
-	realRequest.setAttribute("javax.servlet.include.context_path",
-				 context.getPath());
-	// never change anyway - RD can't get out
-
-	Object old_servlet_path=realRequest.
-	    getAttribute("javax.servlet.include.servlet_path");
-	realRequest.setAttribute("javax.servlet.include.servlet_path",
-				 subRequest.servletPath().toString());
-	
-	Object old_path_info=realRequest.
-	    getAttribute("javax.servlet.include.path_info");
-	realRequest.setAttribute("javax.servlet.include.path_info",
-				 subRequest.pathInfo().toString());
-
-	Object old_query_string=realRequest.
-	    getAttribute("javax.servlet.include.query_string");
-	realRequest.setAttribute("javax.servlet.include.query_string",
-				 queryString);
-	
-	if( false ) {
-	    System.out.println("RD: " + old_request_uri + " " +
+	if( debug ) {
+	    System.out.println("RDI: old " + old_request_uri + " " +
 			       old_context_path + " " + old_servlet_path +
 			       " " + old_path_info + " " + old_query_string);
-	    System.out.println("NEW: " + context.getPath() + " " + path + " "
+	    System.out.println("RDI: new "+context.getPath() + " " + path + " "
 			       + subRequest.servletPath().toString() + " " +
 			       subRequest.pathInfo().toString() + " " +
 			       queryString);
 	}
-	
-	// Not explicitely stated, but we need to save the old parameters
-	// before adding the new ones
-	realRequest.getParameterNames();
-	// force reading of parameters from POST
-	Hashtable old_parameters=(Hashtable)realRequest.getParameters().clone();
 
-	// NOTE: it has a side effect of _reading_ the form data - which
-	// is against the specs ( you can't read the post until asked for
-	// parameters). I see no way of dealing with that -
-	// if we don't do it and the included request need a parameter,
-	// the form will be read and we'll have no way to know that.
+	if( queryString != null ) {
+	    // the original parameters will be preserved, and a new
+	    // child Parameters will be used for the included request.
+	    realRequest.parameters().push();
+	    Parameters child=realRequest.parameters().getCurrentSet();
 
-	// IMHO the spec should do something about that - or smarter
-	// people should implement the spec. ( costin )
-
-	addQueryString( realRequest, queryString );
+	    child.processParameters( queryString );
+	    
+	}
 
 	Request old_child = realRequest.getChild();
 	realRequest.setChild( subRequest );
@@ -391,26 +374,34 @@ final class RequestDispatcherImpl implements RequestDispatcher {
  	// now it's really strange: we call the wrapper on the subrequest
 	// for the realRequest ( since the real request will still have the
 	// original handler/wrapper )
+
 	Handler wr=subRequest.getHandler();
-	if( wr!=null ) 
-	    invoke( wr, realRequest, realResponse);
+	if( wr!=null ) {
+	    try {
+		wr.service(realRequest, realResponse);
+	    } catch( Exception ex ) {
+		realResponse.setErrorException(ex);
+	    }
+	}
+
 	
 	// After request, we want to restore the include attributes - for
 	// chained includes.
+
 	realRequest.setChild( old_child );
 
-	realRequest.setParameters( old_parameters);
+	if( queryString != null ) {
+	    // restore the parameters
+	    realRequest.parameters().pop();
+	}
+	//realRequest.setParameters( old_parameters);
 
-	replaceAttribute( realRequest, "javax.servlet.include.request_uri",
-				 old_request_uri);
-	replaceAttribute( realRequest, "javax.servlet.include.context_path",
-				 old_context_path); 
-	replaceAttribute( realRequest, "javax.servlet.include.servlet_path",
-				 old_servlet_path);
-	replaceAttribute( realRequest, "javax.servlet.include.path_info",
-				 old_path_info);
-	replaceAttribute( realRequest, "javax.servlet.include.query_string",
-				 old_query_string);
+	replaceAttribute( realRequest, A_REQUEST_URI, old_request_uri);
+	replaceAttribute( realRequest, A_CONTEXT_PATH,old_context_path); 
+	replaceAttribute( realRequest, A_SERVLET_PATH, old_servlet_path);
+	replaceAttribute( realRequest, A_PATH_INFO, old_path_info);
+	replaceAttribute( realRequest, A_QUERY_STRING, old_query_string);
+	
 	// revert to the response behavior
 	if( ! old_included ) {
 	    realResponse.setIncluded( false );
@@ -422,24 +413,16 @@ final class RequestDispatcherImpl implements RequestDispatcher {
 	    if ( null == realResponse.getErrorURI() )
 		realResponse.setErrorURI( context.getPath() + path );
 	    Exception ex = realResponse.getErrorException();
-	    if ( ex instanceof IOException )
-		throw (IOException) ex;
-	    if ( ex instanceof RuntimeException )
-		throw (RuntimeException) ex;	
-	    else if ( ex instanceof ServletException )
-		throw (ServletException) ex;
-	    else
-		throw new ServletException
-		    (sm.getString("dispatcher.includeException"), ex);
+	    wrapException( ex, sm.getString("dispatcher.includeException"));
 	}
     }
 
-	
+    // -------------------- Special case of "named" dispatcher -------------
 
     /** Named dispatcher include
      *  Separate from normal include - which is still too messy
      */
-    public void includeNamed(ServletRequest request, ServletResponse response)
+    private void includeNamed(ServletRequest request, ServletResponse response)
 	throws ServletException, IOException
     {
 	// We got here if name!=null, so assert it
@@ -453,8 +436,13 @@ final class RequestDispatcherImpl implements RequestDispatcher {
 	boolean old_included=realResponse.isIncluded();
 	if( ! old_included ) realResponse.setIncluded( true );
 
-	if( wr!=null)
-	    invoke( wr, realRequest, realResponse);
+	if( wr!=null) {
+	    try {
+		wr.service(realRequest, realResponse);
+	    } catch( Exception ex ) {
+		realResponse.setErrorException( ex );
+	    }
+	}
 
         // Clean up the request and response as needed
 	if( ! old_included ) {
@@ -466,27 +454,22 @@ final class RequestDispatcherImpl implements RequestDispatcher {
 	    // if error URI not set, set our URI
 	    if ( null == realResponse.getErrorURI() )
 		realResponse.setErrorURI( "named servlet: " + name );
-	    Exception ex = realResponse.getErrorException();
-	    if ( ex instanceof IOException )
-		throw (IOException) ex;
-	    else if ( ex instanceof ServletException )
-		throw (ServletException) ex;
-	    else
-		throw new ServletException
-		    (sm.getString("dispatcher.includeException", ex));
+	    wrapException( realResponse.getErrorException(),
+			   sm.getString("dispatcher.includeException"));
 	}
     }
 
     /** Named forward
      */
-    public void forwardNamed(ServletRequest request, ServletResponse response)
+    private void forwardNamed(ServletRequest request, ServletResponse response)
 	throws ServletException, IOException
     {
 	// We got here if name!=null, so assert it
 	Handler wr = context.getServletByName( name );
 
 	// Use the original request - as in specification !
-	Request realRequest=((HttpServletRequestFacade)request).getRealRequest();
+	Request realRequest=((HttpServletRequestFacade)request).
+	    getRealRequest();
 	Response realResponse = realRequest.getResponse();
 
 	// Set the "included" flag so that things like header setting in the
@@ -494,118 +477,62 @@ final class RequestDispatcherImpl implements RequestDispatcher {
 	boolean old_included=realResponse.isIncluded();
 	if( ! old_included ) realResponse.setIncluded( true );
 
-	if( wr!=null)
-	    invoke( wr, realRequest, realResponse);
+	if( wr!=null) {
+	    try {
+		wr.service(realRequest, realResponse);
+	    } catch( Exception ex ) {
+		wrapException( ex, null );
+	    }
+	}
 
 	// Clean up the request and response as needed
-	;       // No action required
+	// No action required
 
 	// Rethrow original error if present
 	if ( realResponse.isExceptionPresent() ) {
 	    // if error URI not set, set our URI
 	    if ( null == realResponse.getErrorURI() )
 		realResponse.setErrorURI( "named servlet: " + name );
-	    Exception ex = realResponse.getErrorException();
-	    if ( ex instanceof IOException )
-		throw (IOException) ex;
-	    else if ( ex instanceof ServletException )
-		throw (ServletException) ex;
-	    else
-		throw new ServletException
-		    (sm.getString("dispatcher.forwardException", ex));
+	    wrapException( realResponse.getErrorException(),
+			   sm.getString("dispatcher.forwardException"));
 	}
     }    
 
-    /**
-     * Adds a query string to the existing set of parameters.
-     * The additional parameters represented by the query string will be
-     * merged with the existing parameters.
-     * Used by the RequestDispatcherImpl to add query string parameters
-     * to the request.
-     *
-     * @param inQueryString URLEncoded parameters to add
-     */
-    void addQueryString(Request req, String inQueryString) {
-        // if query string is null, do nothing
-        if ((inQueryString == null) || (inQueryString.trim().length() <= 0))
-            return;
-
-	Hashtable newParams = HttpUtils.parseQueryString(queryString);
-	Hashtable parameters= req.getParameters();
-
-	// add new to old ( it alters the original hashtable in request)
-	Enumeration e=newParams.keys();
-	while(e.hasMoreElements() ) {
-	    String key=(String)e.nextElement();
-	    Object oldValue = parameters.get(key);
-	    Object newValue = newParams.get(key);
-	    // The simple case -- no existing parameters with this name
-	    if (oldValue == null) {
-		parameters.put( key, newValue);
-		continue;
-	    }
-	    // Construct arrays of the old and new values
-	    String oldValues[] = null;
-	    if (oldValue instanceof String[]) {
-		oldValues = (String[]) oldValue;
-	    } else if (oldValue instanceof String) {
-		oldValues = new String[1];
-		oldValues[0] = (String) oldValue;
-	    } else {
-		// Can not happen?
-		oldValues = new String[1];
-		oldValues[0] = oldValue.toString();
-	    }
-	    String newValues[] = null;
-	    if (newValue instanceof String[]) {
-		newValues = (String[]) newValue;
-	    } else if (newValue instanceof String) {
-		newValues = new String[1];
-		newValues[0] = (String) newValue;
-	    } else {
-		// Can not happen?
-		newValues = new String[1];
-		newValues[0] = newValue.toString();
-	    }
-	    // Merge the two sets of values into a new array
-	    String mergedValues[] =
-		new String[newValues.length + oldValues.length];
-	    for (int i = 0; i < newValues.length; i++)
-		mergedValues[i] = newValues[i];	// New values first per spec
-	    for (int i = newValues.length; i < mergedValues.length; i++)
-		mergedValues[i] = oldValues[i - newValues.length];
-	    // Save the merged values list in the original request
-	    parameters.put(key, mergedValues);
-	}
-    }
+    // -------------------- Special methods --------------------
 
     /** Restore attribute - if value is null, remove the attribute.
-     *  X Maybe it should be the befavior of setAttribute() - it is not
-     *  specified what to do with null.
      *  ( or it is - null means no value in getAttribute, so setting to
      *    null should mean setting to no value. ?)
      */
-    private void replaceAttribute( Request realRequest, String name, Object value) {
+    private Object replaceAttribute( Request realRequest, String name,
+				     Object value)
+    {
+	Object oldAttribute=realRequest.getAttribute(name);
 	if( value == null )
 	    realRequest.removeAttribute( name );
 	else
 	    realRequest.setAttribute( name, value );
+	return oldAttribute;
     }
 
-    private void invoke( Handler wr, Request req, Response resp )
-	throws IOException, ServletException
+    // Rethrow original error if present 
+    private void wrapException(Exception ex, String msg)
+	throws IOException, ServletException, RuntimeException
     {
-	try {
-	    wr.service(req, resp);
-	} catch( Exception ex ) {
-	    if( ex instanceof ServletException )
-		throw (ServletException)ex;
-	    if( ex instanceof IOException )
-		throw (IOException)ex;
-	    throw new ServletException( ex );
-	}
+	if ( ex instanceof IOException )
+	    throw (IOException) ex;
+	if ( ex instanceof RuntimeException )
+	    throw (RuntimeException) ex;
+	else if ( ex instanceof ServletException )
+	    throw (ServletException) ex;
+	else
+	    if( msg==null )
+		throw new ServletException(ex );
+	    else
+		throw new ServletException(msg, ex );
     }
 
+    // -------------------- Used for doPriviledged in JDK1.2 ----------
     static class RDIAction extends Action {
 	ServletRequest req;
 	ServletResponse res;
