@@ -1,9 +1,25 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <!-- The JBoss service configuration file for the EJB deployer service.
-$Id: ejb-deployer.xml,v 1.1 2004/09/05 15:50:06 starksm Exp $
+$Id: ejb-deployer.xml,v 1.2 2004/09/08 18:59:49 starksm Exp $
 -->
 <server>
+
+   <!-- ==================================================================== -->
+   <!-- J2EE Timer Service                                                   -->
+   <!-- ==================================================================== -->
+
+   <!-- An EJB Timer Service that is Tx aware -->
+   <mbean code="org.jboss.ejb.txtimer.EJBTimerServiceImpl"
+      name="jboss:service=EJBTimerService">
+      <attribute name="RetryPolicy">jboss:service=EJBTimerServiceRetryPolicy</attribute>
+      <attribute name="TimedObjectInvokerClassName">org.jboss.ejb.txtimer.TimedObjectInvokerImpl</attribute>
+   </mbean>
+   <mbean code="org.jboss.ejb.txtimer.FixedDelayRetryPolicy"
+      name="jboss:service=EJBTimerServiceRetryPolicy">
+      <attribute name="Delay">100</attribute>
+   </mbean>
+
    <!-- EJB deployer, remove to disable EJB behavior-->
    <mbean code="org.jboss.ejb.EJBDeployer" name="jboss.ejb:service=EJBDeployer">
       <!-- A flag indicating if the deployer should validate the
