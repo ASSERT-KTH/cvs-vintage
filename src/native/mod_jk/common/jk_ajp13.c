@@ -56,7 +56,7 @@
 /***************************************************************************
  * Description: Experimental bi-directionl protocol handler.               *
  * Author:      Gal Shachor <shachor@il.ibm.com>                           *
- * Version:     $Revision: 1.2 $                                           *
+ * Version:     $Revision: 1.3 $                                           *
  ***************************************************************************/
 
 
@@ -83,6 +83,7 @@
 /*
  * Request methods, coded as numbers instead of strings.
  * The list of methods was taken from Section 5.1.1 of RFC 2616
+ * and RFC 2518
  *          Method        = "OPTIONS"
  *                        | "GET"    
  *                        | "HEAD"   
@@ -90,6 +91,13 @@
  *                        | "PUT"    
  *                        | "DELETE" 
  *                        | "TRACE"  
+ *                        | "PROPFIND"
+ *                        | "PROPPATCH"
+ *                        | "MKCOL"
+ *                        | "COPY"
+ *                        | "MOVE"
+ *                        | "LOCK"
+ *                        | "UNLOCK"
  * 
  */
 #define SC_M_OPTIONS            (unsigned char)1
@@ -99,6 +107,13 @@
 #define SC_M_PUT                (unsigned char)5
 #define SC_M_DELETE             (unsigned char)6
 #define SC_M_TRACE              (unsigned char)7
+#define SC_M_PROPFIND           (unsigned char)8
+#define SC_M_PROPPATCH          (unsigned char)9
+#define SC_M_MKCOL              (unsigned char)10
+#define SC_M_COPY               (unsigned char)11
+#define SC_M_MOVE               (unsigned char)12
+#define SC_M_LOCK               (unsigned char)13
+#define SC_M_UNLOCK             (unsigned char)14
 
 
 /*
@@ -210,6 +225,20 @@ int sc_for_req_method(const char *method,
         *sc = SC_M_OPTIONS;
     } else if(0 == strcmp(method, "TRACE")) {
         *sc = SC_M_TRACE;
+    } else if(0 == strcmp(method, "PROPFIND")) {
+	*sc = SC_M_PROPFIND;
+    } else if(0 == strcmp(method, "PROPPATCH")) {
+	*sc = SC_M_PROPPATCH;
+    } else if(0 == strcmp(method, "MKCOL")) {
+	*sc = SC_M_MKCOL;
+    } else if(0 == strcmp(method, "COPY")) {
+	*sc = SC_M_COPY;
+    } else if(0 == strcmp(method, "MOVE")) {
+	*sc = SC_M_MOVE;
+    } else if(0 == strcmp(method, "LOCK")) {
+	*sc = SC_M_LOCK;
+    } else if(0 == strcmp(method, "UNLOCK")) {
+	*sc = SC_M_UNLOCK;
     } else {
         rc = JK_FALSE;
     }

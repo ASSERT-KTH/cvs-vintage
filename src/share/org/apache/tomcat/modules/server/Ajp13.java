@@ -141,7 +141,14 @@ public class Ajp13
         "POST",
         "PUT",
         "DELETE",
-        "TRACE"
+        "TRACE",
+        "PROPFIND",
+        "PROPPATCH",
+        "MKCOL",
+        "COPY",
+        "MOVE",
+        "LOCK",
+        "UNLOCK"
     };
     
     // Translates integer codes to request header names
