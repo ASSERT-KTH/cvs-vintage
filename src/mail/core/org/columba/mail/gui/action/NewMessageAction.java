@@ -31,6 +31,9 @@ import java.awt.event.KeyEvent;
 
 import javax.swing.KeyStroke;
 
+/**
+ * Opens the composer window for creating a new message.
+ */
 public class NewMessageAction extends AbstractColumbaAction {
     public NewMessageAction(FrameMediator controller) {
         super(controller,
@@ -47,11 +50,6 @@ public class NewMessageAction extends AbstractColumbaAction {
             KeyStroke.getKeyStroke(KeyEvent.VK_M, ActionEvent.CTRL_MASK));
     }
 
-    /*
-     * (non-Javadoc)
-     *
-     * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
-     */
     public void actionPerformed(ActionEvent evt) {
         // Open a new composer. Choice btw. text and html will be based on
         // stored option
