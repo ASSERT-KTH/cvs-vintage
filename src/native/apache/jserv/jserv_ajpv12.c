@@ -57,7 +57,7 @@
  * Description: ajpv1.2 protocol, used to call local or remote jserv hosts   *
  * Author:      Pierpaolo Fumagalli <ianosh@iname.com>                       *
  * Author:      Michal Mosiewicz <mimo@interdata.pl>                         *
- * Version:     $Revision: 1.6 $                                             *
+ * Version:     $Revision: 1.7 $                                             *
  *****************************************************************************/
 #include "jserv.h"
 
@@ -195,19 +195,37 @@ static int ajpv12_auth(jserv_config *cfg, pool *p, int sock, char *secret,
 static int ajpv12_sendnbytes(BUFF * bsock, const void *buffer, int bufferlen ) {
     unsigned char bytes[2];
     static char null_b[2];
+    int ret;
+#ifdef CHARSET_EBCDIC
+    int flags;
+#endif
+
     null_b[0] = 0xff;
     null_b[1] = 0xff;
+#ifdef CHARSET_EBCDIC
+    flags = bsock->flags;
+    bsock->flags = bsock->flags & ~B_EBCDIC2ASCII; /* binary */
+#endif
+
     if( buffer != NULL ) {
 	bytes[0] = (unsigned char) ( (bufferlen >> 8) & 0xff );
 	bytes[1] = (unsigned char) ( bufferlen & 0xff );
 
-	if (ap_bwrite(bsock, bytes, 2) == 2) {
+	ret = ap_bwrite(bsock, bytes, 2);
+#ifdef CHARSET_EBCDIC
+	bsock->flags = flags;
+#endif
+	if (ret == 2) {
 	    return ap_bwrite(bsock,buffer,bufferlen);
 	} else {
 	    return 0;
 	}
     } else {
-	return ap_bwrite(bsock,null_b,2) == 2 ? 0 : -1;
+	ret = ap_bwrite(bsock,null_b,2);
+#ifdef CHARSET_EBCDIC
+	bsock->flags = flags;
+#endif
+	return ret == 2 ? 0 : -1;
     }
 }
 
@@ -224,9 +242,20 @@ static int ajpv12_sendstring(BUFF * bsock, const char * buffer) {
 }
 
 static int ajpv12_mark(BUFF * bsock, unsigned char type) {
+#ifdef CHARSET_EBCDIC
+    int flags;
+    flags = bsock->flags;
+    bsock->flags = bsock->flags & ~B_EBCDIC2ASCII; /* binary */
+#endif
     if( ap_bwrite(bsock, &type, 1) == 1) {
+#ifdef CHARSET_EBCDIC
+        bsock->flags = flags;
+#endif
 	return 0;
     } else {
+#ifdef CHARSET_EBCDIC
+        bsock->flags = flags;
+#endif
 	return -1;
     }
 }
@@ -505,9 +534,6 @@ static int ajpv12_handler(jserv_config *cfg, jserv_request *req,
 	 * Need to re-escape it for this, since the entire URI was
 	 * un-escaped before we determined where the PATH_INFO began.
 	 */
-        /* XXX In 2.2 we need to add "contextPath" or zone to the path_info !!!!!
-         */
-
 	request_rec *pa_req;
 
 	pa_req = ap_sub_req_lookup_uri(ap_escape_uri(r->pool, r->path_info), r);

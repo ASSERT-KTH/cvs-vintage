@@ -56,9 +56,12 @@
 /*****************************************************************************
  * Description: ajpv1.1 protocol, used to call local or remote jserv hosts   *
  * Author:      Pierpaolo Fumagalli <ianosh@iname.com>                       *
- * Version:     $Revision: 1.1 $                                            *
+ * Version:     $Revision: 1.2 $                                             *
  *****************************************************************************/
 #include "jserv.h"
+#ifdef CHARSET_EBCDIC
+#include "ebcdic.h"
+#endif
 
 /*****************************************************************************
  * Code for ajpv11 protocol                                                   *
@@ -130,7 +133,11 @@ static int ajpv11_sendpacket(jserv_config *cfg, pool *p, int sock,
 
     /* Handle our end properly */
     if (type=='\0') {
+#ifndef CHARSET_EBCDIC
         i=send(sock,"0000",4,0);
+#else
+	i=send(sock,"\x30\x30\x30\x30",4,0);
+#endif
         if (i==4) return 0;
         else return 0;
     }
@@ -149,6 +156,10 @@ static int ajpv11_sendpacket(jserv_config *cfg, pool *p, int sock,
 
     /* Send data to peer */
     bufferlen=strlen(buffer);
+#ifdef CHARSET_EBCDIC
+    ebcdic2ascii(buffer,buffer,bufferlen);
+#endif
+
     i=send(sock,buffer,bufferlen,0);
     if (i!=bufferlen) return -1;
     return 0;

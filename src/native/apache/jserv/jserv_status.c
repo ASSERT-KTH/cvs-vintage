@@ -58,7 +58,7 @@
  * Based on:    mod_jserv.c by Alexei Kosut <akosut@apache.org>              *
  *              mod_example.c by Apache Group <apache@apache.org>            *
  * Modified by: Pierpaolo Fumagalli <ianosh@iname.com> June, 12 1998         *
- * Version:     $Revision: 1.2 $                                             *
+ * Version:     $Revision: 1.3 $                                             *
  *****************************************************************************/
 #include "jserv.h"
 
@@ -724,6 +724,10 @@ static int jserv_status_out_server(jserv_config *cfg, jserv_request *req,
 static int jserv_status_out_image(jserv_config *cfg, jserv_request *req,
                                    request_rec *r) {
     r->content_type = "image/gif";
+#ifdef CHARSET_EBCDIC
+    /* For EBCDIC, set the auto-conversion flag now that the MIME type is set */
+    ap_checkconv(r);
+#endif /*CHARSET_EBCDIC*/
     ap_set_content_length(r,jserv_image_size);
     ap_send_http_header(r);
     if (r->header_only) return OK;
