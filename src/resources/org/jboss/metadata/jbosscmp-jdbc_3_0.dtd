@@ -275,7 +275,8 @@ Descriptive text.
 <!--
 The query element contains the configuration of a query.
 -->
-<!ELEMENT query (description, query-method, declared-sql?, read-ahead?)>
+<!ELEMENT query (description?, query-method, 
+      (jboss-ql | dynamic-ql | declared-sql)?, read-ahead?)>
 
 
 <!--
@@ -309,9 +310,23 @@ An example follows:
 
 
 <!--
+JBossQL query.  JBossQL is a superset of EJB-QL.
+-->
+<!ELEMENT jboss-ql (#PCDATA)>
+
+
+<!--
+Dynamic JBossQL query.  The JBossQL is passed to the query and compiled
+on the fly.
+-->
+<!ELEMENT dynamic-ql EMPTY>
+
+
+<!--
 Explicitly declared sql fragments.
 -->
 <!ELEMENT declared-sql (select?, from?, where?, order?)>
+
 
 <!--
 Delcares what is to be selected.  A finder may only have the distinct element.
@@ -449,7 +464,8 @@ The type-mapping element contains a named java to sql mapping.
 This includes both type mapping and function mapping.
 -->
 <!ELEMENT type-mapping (name, row-locking-template, pk-constraint-template, 
-      fk-constraint-template, function-mapping*, mapping+)>
+      fk-constraint-template, alias-header-prefix, alias-header-suffix,
+      alias-max-length, subquery-supported, function-mapping*, mapping+)>
 
 <!--
 Name of the type-mapping.
@@ -503,6 +519,27 @@ be empty. The most common form of a foreign key constraint follows:
 ALTER TABLE ?1 ADD CONSTRAINT ?2 FOREIGN KEY (?3) REFERENCES ?4 (?5)
 -->
 <!ELEMENT fk-constraint-template (#PCDATA)>
+
+<!--
+An alias header is prepended to a generated table alias by the EJB-QL compiler
+to prevent name collisions. An alias header is constructed as folows:
+
+alias-header-prefix + int_counter + alias-header-suffix
+-->
+<!ELEMENT alias-header-prefix (#PCDATA)>
+<!ELEMENT alias-header-suffix (#PCDATA)>
+<!ELEMENT alias-max-length (#PCDATA)>
+
+<!--
+Does this type-mapping support subqueries. Some EJB-QL opperators are mapped 
+to exists subqueries.  If subquery is false the EJB-QL compiler will use a
+left join and is null.
+
+The subquery-supported element must be one of the two following:
+         <create-table>true</create-table>
+         <create-table>false</create-table>
+-->
+<!ELEMENT subquery-supported (#PCDATA)>
 
 <!--
 Specifies the mapping from a java type to a jdbc and a sql type.
