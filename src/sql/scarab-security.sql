@@ -3,7 +3,7 @@
 -- Remember to set a good password for this user in a production system!
 
 INSERT INTO TURBINE_USER (USER_ID, LOGIN_NAME, PASSWORD_VALUE, FIRST_NAME, LAST_NAME, EMAIL, CONFIRM_VALUE) 
-    VALUES (1, 'Administrator', 'NWoZK3kTsExUV00Ywo1G5jlUKKs=', 'Scarab', 'Administrator', 'Administrator@scarab.example.org', 'CONFIRMED');
+    VALUES (1, '@ADMIN_USERNAME@', 'NWoZK3kTsExUV00Ywo1G5jlUKKs=', 'Scarab', 'Administrator', 'Administrator@scarab.example.org', 'CONFIRMED');
 
 
 -- Script to fill the tables with default roles and permissions
