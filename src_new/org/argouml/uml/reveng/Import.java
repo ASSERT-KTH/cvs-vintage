@@ -1,4 +1,4 @@
-// $Id: Import.java,v 1.58 2004/08/23 22:49:13 bobtarling Exp $
+// $Id: Import.java,v 1.59 2004/08/23 23:53:06 bobtarling Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -672,7 +672,6 @@ public class Import {
 
             // if errors occured, display the collected messages here
             if (problems != null && problems.length() > 0) {
-                System.out.println("THERE ARE PROBLEMS");
                 ProblemsDialog pd = new ProblemsDialog();
                 pd.setVisible(true);
             }
