@@ -224,6 +224,13 @@
       basedir="${tomcat.build}/classes" > 
       <include name="org/apache/tomcat/facade/**" /> 
     </jar>
+    <!-- Copy the file in lib/ too, for tomcat.sh use ( until this is 
+         fixed for multiple facades 
+      -->
+    <jar jarfile="${tomcat.build}/lib/facade22.jar"
+      basedir="${tomcat.build}/classes" > 
+      <include name="org/apache/tomcat/facade/**" /> 
+    </jar>
   </target>
 
   <!-- ==================== Servlet 23 (default) implementation ========== -->
@@ -488,10 +495,10 @@
 
   <!-- ==================== Admin & agreagate ==================== -->
    
-  <target name="tomcat" depends="prepare,tomcat-compile,tomcat-jars">
+  <target name="tomcat-old" depends="prepare,tomcat-compile,tomcat-jars">
   </target>
 
-  <target name="tomcat-new" depends="prepare,tomcat-jars-new">
+  <target name="tomcat" depends="prepare,tomcat-jars-new">
   </target>
 
   <target name="clean-classes" depends="init">
