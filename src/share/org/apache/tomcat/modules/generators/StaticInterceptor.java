@@ -191,6 +191,9 @@ public class StaticInterceptor extends BaseInterceptor {
 	if( welcomeFile==null && ! requestURI.endsWith("/") ) {
 	    String redirectURI= requestURI + "/";
 	    redirectURI=fixURLRewriting( req, redirectURI );
+	    String query = req.query().toString();
+	    if( query != null && !query.equals("") )
+		redirectURI += "?" + query;
 	    req.setAttribute("javax.servlet.error.message",
 			     redirectURI);
 	    if( debug > 0) log( "Redirect " + redirectURI );
@@ -216,6 +219,9 @@ public class StaticInterceptor extends BaseInterceptor {
 	String redirectURI=null;
 	redirectURI=concatPath( requestURI, welcomeFile);
 	redirectURI=fixURLRewriting( req, redirectURI );
+	String query = req.query().toString();
+	if( query != null && !query.equals("") )
+	    redirectURI += "?" + query;
 
 	req.setAttribute("javax.servlet.error.message",
 			 redirectURI);
