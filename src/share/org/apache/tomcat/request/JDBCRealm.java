@@ -296,13 +296,12 @@ public final class JDBCRealm extends BaseInterceptor {
                                                                 connectionPassword);
                 }
 
-                //dbConnection = DriverManager.getConnection(connectionURL);
 
                 if( (dbConnection == null) || dbConnection.isClosed() ) {
                     log(sm.getString("jdbcRealm.authDBReOpenFail"));
                     return false;
                 }
-                dbConnection.setReadOnly(true);
+                //dbConnection.setReadOnly(true);
             }
 
             // Create the authentication search prepared statement if necessary
@@ -374,8 +373,6 @@ public final class JDBCRealm extends BaseInterceptor {
                                                            connectionName,
                                                            connectionPassword);
             }
-
-            //dbConnection = DriverManager.getConnection(connectionURL);
 
             if( dbConnection == null || dbConnection.isClosed() ) {
               log(sm.getString("jdbcRealm.getUserRolesDBReOpenFail"));

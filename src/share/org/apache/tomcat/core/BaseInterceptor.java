@@ -71,30 +71,37 @@ import java.util.*;
 /**
  */
 public class BaseInterceptor implements RequestInterceptor, ContextInterceptor {
-    protected ContextManager cm; 
+    protected ContextManager cm;
+    protected Container ct;
     protected String methods[]=new String[0];
     protected int debug=0;
     protected String name=null;
 
     //  loghelper will use name of actual impl subclass
     protected Logger.Helper loghelper = new Logger.Helper("tc_log", this);
-    
+
     public BaseInterceptor() {
     }
-    
+
     public void setDebug( int d ) {
 	debug=d;
     }
 
     public void setContextManager( ContextManager cm ) {
 	this.cm=cm;
+	this.ct=cm.getContainer();
 	loghelper.setLogger(cm.getLogger());
+    }
+
+    public void setContext( Context ctx ) {
+	this.ct=ctx.getContainer();
+	loghelper.setLogger(ctx.getLoggerHelper().getLogger());
     }
 
     protected void log( String s ) {
 	loghelper.log(s);
     }
-    
+
     protected void log( String s, Throwable t ) {
 	loghelper.log(s, t);
     }

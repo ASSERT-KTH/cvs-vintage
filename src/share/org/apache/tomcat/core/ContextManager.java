@@ -117,17 +117,7 @@ import org.apache.tomcat.service.PoolTcpConnector;
  * @author costin@eng.sun.com
  * @author Hans Bergsten [hans@gefionsoftware.com]
  */
-public class ContextManager implements LogAware {
-    /** Global interceptors - all requests that will be served by this
-	engine will pass those filters
-    */
-    private Vector requestInterceptors = new Vector();
-    private Vector contextInterceptors = new Vector();
-
-    // cache - faster access to interceptors, using [] instead of Vector
-    ContextInterceptor cInterceptors[];
-    RequestInterceptor rInterceptors[];
-
+public class ContextManager implements LogAware{
     /**
      * The default security permissions to use
      */
@@ -163,10 +153,15 @@ public class ContextManager implements LogAware {
      */
     public static final String DEFAULT_WORK_DIR="work";
 
+    Container defaultContainer;
+
     /**
      * Construct a new ContextManager instance with default values.
      */
     public ContextManager() {
+        defaultContainer=new Container();
+        defaultContainer.setContext( null );
+        defaultContainer.setPath( null ); // default container
     }
 
     // -------------------- setable properties: tomcat directories  ---
@@ -391,10 +386,10 @@ public class ContextManager implements LogAware {
     public void start() throws Exception {// XXX TomcatException {
 	// XXX we may need a special callback to disable/enable the
 	// server from accepting connections ( to allow for startup ).
-	// 	Enumeration connE=getConnectors();
-	// 	while( connE.hasMoreElements() ) {
-	// 	    ((ServerConnector)connE.nextElement()).start();
-	// 	}
+        // 	Enumeration connE=getConnectors();
+        // 	while( connE.hasMoreElements() ) {
+        // 	    ((ServerConnector)connE.nextElement()).start();
+        // 	}
     }
 
     /** Will stop all connectors
@@ -517,11 +512,12 @@ public class ContextManager implements LogAware {
     }
 
     public void addRequestInterceptor( RequestInterceptor ri ) {
-	if(debug>0) log("Add requestInterceptor javaClass=\"" +
-			   ri.getClass().getName() + "\" ");
-	requestInterceptors.addElement( ri );
-	if( ri instanceof ContextInterceptor )
-	    contextInterceptors.addElement( ri );
+//	if(debug>0) log("Add requestInterceptor javaClass=\"" +
+//			   ri.getClass().getName() + "\" ");
+//	requestInterceptors.addElement( ri );
+//	if( ri instanceof ContextInterceptor )
+//	    contextInterceptors.addElement( ri );
+        defaultContainer.addRequestInterceptor(ri);
     }
 
     /** Return all the interceptors associated with a request.
@@ -536,11 +532,28 @@ public class ContextManager implements LogAware {
 	Dynamic add of interceptors is not supported.
     */
     public RequestInterceptor[] getRequestInterceptors( Request req ) {
-	// 	Container ct=req.getContext().getContainer();
-	// 	return ct.getRequestInterceptors();
+        Container ct=req.getContext().getContainer();
+        RequestInterceptor[] cri=ct.getRequestInterceptors();
+        RequestInterceptor[] ari=ct.getCachedInterceptors();
+        if (ari.length == 0){
+            RequestInterceptor[] gri=getRequestInterceptors();
+            if  (cri!=null && cri.length > 0) {
+                int al=cri.length+gri.length;
+                ari=new RequestInterceptor[al];
+                int i;
+                for ( i = 0 ; i < gri.length ; i++ ){
+                    ari[i]=gri[i];
+                }
+                for (int j = 0 ; j < cri.length ; j++ ){
+                    ari[i+j]=cri[j];
+                }
+            } else {
+                ari=gri;
+            }
+            ct.setCachedInterceptors(ari);
+        }
 
-	// just global interceptors
-	return getRequestInterceptors();
+	return ari;
     }
 
     /** Return the context interceptors as an array.
@@ -550,22 +563,24 @@ public class ContextManager implements LogAware {
 	access
     */
     public RequestInterceptor[] getRequestInterceptors() {
-	if( rInterceptors == null ||
-	    rInterceptors.length != requestInterceptors.size())
-	{
-	    rInterceptors=new RequestInterceptor[requestInterceptors.size()];
-	    for( int i=0; i<rInterceptors.length; i++ ) {
-		rInterceptors[i]=(RequestInterceptor)
-		    requestInterceptors.elementAt(i);
-	    }
-	}
-	return rInterceptors;
+//	if( rInterceptors == null ||
+//	    rInterceptors.length != requestInterceptors.size())
+//	{
+//	    rInterceptors=new RequestInterceptor[requestInterceptors.size()];
+//	    for( int i=0; i<rInterceptors.length; i++ ) {
+//		rInterceptors[i]=(RequestInterceptor)
+//		    requestInterceptors.elementAt(i);
+//	    }
+//	}
+	return defaultContainer.getRequestInterceptors();
     }
 
     public void addContextInterceptor( ContextInterceptor ci) {
-	if(debug>0) log("Add contextInterceptor javaClass=\"" +
-			   ci.getClass().getName() + "\" ");
-	contextInterceptors.addElement( ci );
+//	if(debug>0) log("Add contextInterceptor javaClass=\"" +
+//			   ci.getClass().getName() + "\" ");
+
+//	contextInterceptors.addElement( ci );
+        defaultContainer.addContextInterceptor(ci);
     }
 
 
@@ -576,16 +591,16 @@ public class ContextManager implements LogAware {
 	access
     */
     public ContextInterceptor[] getContextInterceptors() {
-	if( cInterceptors == null ||
-	    cInterceptors.length != contextInterceptors.size())
-	{
-	    cInterceptors=new ContextInterceptor[contextInterceptors.size()];
-	    for( int i=0; i<cInterceptors.length; i++ ) {
-		cInterceptors[i]=(ContextInterceptor)contextInterceptors.
-		    elementAt(i);
-	    }
-	}
-	return cInterceptors;
+//	if( cInterceptors == null ||
+//	    cInterceptors.length != contextInterceptors.size())
+//	{
+//	    cInterceptors=new ContextInterceptor[contextInterceptors.size()];
+//	    for( int i=0; i<cInterceptors.length; i++ ) {
+//		cInterceptors[i]=(ContextInterceptor)contextInterceptors.
+//		    elementAt(i);
+//	    }
+//	}
+	return defaultContainer.getContextInterceptors();
     }
     // -------------------- Request processing / subRequest ------------------
     // -------------------- Main request processing methods ------------------
@@ -680,15 +695,15 @@ public class ContextManager implements LogAware {
     public int processRequest( Request req ) {
 	if(debug>9) log("ProcessRequest: "+req.toString());
 	int status=0;
-
-	for( int i=0; i< requestInterceptors.size(); i++ ) {
-	    status=((RequestInterceptor)requestInterceptors.elementAt(i)).
+        RequestInterceptor ri[]=getRequestInterceptors();
+	for( int i=0; i< ri.length; i++ ) {
+	    status=((RequestInterceptor)ri[i]).
 		contextMap( req );
 	    if( status!=0 ) return status;
 	}
 
-	for( int i=0; i< requestInterceptors.size(); i++ ) {
-	    status=((RequestInterceptor)requestInterceptors.elementAt(i)).
+	for( int i=0; i< ri.length; i++ ) {
+	    status=((RequestInterceptor)ri[i]).
 		requestMap( req );
 	    if( status!=0 ) return status;
 	}
@@ -1366,6 +1381,14 @@ public class ContextManager implements LogAware {
 	    return new File(getHome(), f.getPath());
         }
         return f;
+    }
+
+    public Container getContainer() {
+        return defaultContainer;
+    }
+
+    public void setContainer(Container newDefaultContainer) {
+        defaultContainer = newDefaultContainer;
     }
 
 }

@@ -62,6 +62,15 @@ public class Tomcat extends Logger.Helper {
 		    xh.setProperties() );
 	xh.addRule( "ContextManager/Context",
 		    xh.addChild( "addContext", null ) );
+	xh.addRule( "ContextManager/Context/RequestInterceptor",
+		    xh.objectCreate(null, "className"));
+	xh.addRule( "ContextManager/Context/RequestInterceptor",
+		    xh.setProperties() );
+	xh.addRule( "ContextManager/Context/RequestInterceptor",
+		    xh.setParent("setContext") );
+	xh.addRule( "ContextManager/Context/RequestInterceptor",
+		    xh.addChild( "addRequestInterceptor",
+				 "org.apache.tomcat.core.RequestInterceptor"));
 
 	// Virtual host support.
 	// Push a host object on the stack
@@ -212,16 +221,18 @@ public class Tomcat extends Logger.Helper {
 	setConnectorHelper( xh );
 	setLogHelper( xh );
 
+	// load server.xml
 	File f = getConfigFile(cm);
-	log(sm.getString("tomcat.loading") + " " + f);
-	try {
-	    xh.readXml(f,cm);
-	} catch( Exception ex ) {
-	    log( sm.getString("tomcat.fatalconfigerror"), ex );
-	    throw ex;
-	}
-	log(sm.getString("tomcat.loaded") + " " + f);
+	loadConfigFile(xh,f,cm);
 
+	// load server-*.xml
+	Vector v = getUserConfigFiles(f);
+	for (Enumeration e = v.elements();
+	     e.hasMoreElements() ; ) {
+	    f = (File)e.nextElement();
+	    loadConfigFile(xh,f,cm);
+	}
+	
 	// by now, we should know where the log file is
 	String path = cm.getLogger().getPath();
 	if (path == null)
@@ -252,6 +263,50 @@ public class Tomcat extends Logger.Helper {
 	}
     }
 
+    void loadConfigFile(XmlMapper xh, File f, ContextManager cm) throws Exception {
+	log(sm.getString("tomcat.loading") + " " + f);
+	try {
+	    xh.readXml(f,cm);
+	} catch( Exception ex ) {
+	    log( sm.getString("tomcat.fatalconfigerror"), ex );
+	    throw ex;
+	}
+	log(sm.getString("tomcat.loaded") + " " + f);
+    }
+
+    Vector getUserConfigFiles(File master) {
+	File dir = new File(master.getParent());
+	String[] names = dir.list( new ConfigFilter(master) );
+	Vector v = new Vector(names.length);
+	for (int i=0; i<names.length; ++i) {
+	    File found = new File(dir, names[i]);
+	    v.addElement(found);
+	}
+	return v;
+    }
+
+    class ConfigFilter implements FilenameFilter {
+	String start;
+	String end;
+	public ConfigFilter(File master) {
+	    String name = master.getName();
+	    int dot = name.indexOf(".");
+	    if (dot==-1) return;
+	    start = name.substring(0,dot) + "-";
+	    end = name.substring(dot);
+	}
+	public boolean accept(File dir, String name) {
+	    if (start == null || end == null) return false;
+	    if (name.startsWith(start) &&
+		name.endsWith(end))
+	    {
+		return true;
+	    }
+	    return false;
+	}
+    }
+
+    
     /** This method will generate Server config files that
 	reflect the existing cm settings. It is called
 	at startup, and may be called when a new context is

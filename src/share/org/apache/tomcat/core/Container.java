@@ -65,6 +65,7 @@ import org.apache.tomcat.util.*;
 import java.io.*;
 import java.net.*;
 import java.util.*;
+import org.apache.tomcat.core.*;
 
 /**
  * A group of resources, with some common properties.
@@ -87,7 +88,7 @@ import java.util.*;
  * servlet call overhead ). To make this possible for Jsps we
  * also need to factor out the dependency check and reloading.
  */
-public class Container implements Cloneable {
+public class Container implements Cloneable{
     /* It is not yet finalized - it is possible to use more
      * "rules" for matching ( if future APIs will define that ).
      * You can use notes or attributes to extend the model -
@@ -115,7 +116,7 @@ public class Container implements Cloneable {
     String path;
     String proto;
     String vhosts[];
-    
+
     // Container attributes - it's better to use
     // notes, as the access time is much smaller
     private Hashtable attributes = new Hashtable();
@@ -128,7 +129,7 @@ public class Container implements Cloneable {
     // interceptor cache - avoid Vector enumeration
     ContextInterceptor cInterceptors[];
     RequestInterceptor rInterceptors[];
-
+    RequestInterceptor rCachedInterceptors[]={};
     /** The handler associated with this container.
      */
     Handler handler;
@@ -327,8 +328,10 @@ public class Container implements Cloneable {
      *  Note that all global interceptors will be called first.
      *   XXX incomplete implementation.
      */
-    public void addRequestInterceptor( RequestInterceptor ci) {
-	requestInterceptors.addElement( ci );
+    public void addRequestInterceptor( RequestInterceptor ri) {
+	requestInterceptors.addElement( ri );
+	if( ri instanceof ContextInterceptor )
+	    addContextInterceptor( (ContextInterceptor)ri );
     }
 
     /** Return the context interceptors as an array.
@@ -349,6 +352,7 @@ public class Container implements Cloneable {
 	}
 	return rInterceptors;
     }
+
 
     /** Per container attributes. Not used - can be removed
      *  ( it's here for analogy with the other components )
@@ -414,4 +418,14 @@ public class Container implements Cloneable {
     public Object getNote( int pos ) {
 	return notes[pos];
     }
+
+    public RequestInterceptor[] getCachedInterceptors() {
+        return rCachedInterceptors;
+    }
+
+    public void setCachedInterceptors(RequestInterceptor[] newRCachedInterceptors) {
+        rCachedInterceptors = newRCachedInterceptors;
+    }
+
+
 }
