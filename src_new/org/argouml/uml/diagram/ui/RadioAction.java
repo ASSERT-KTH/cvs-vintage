@@ -1,4 +1,4 @@
-// $Id: RadioAction.java,v 1.9 2004/08/06 17:12:40 mvw Exp $
+// $Id: RadioAction.java,v 1.10 2004/08/07 06:28:21 mvw Exp $
 // Copyright (c) 2003-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -38,7 +38,9 @@ import org.tigris.toolbar.toolbutton.AbstractButtonAction;
 
 /**
  * A wrapper around a standard action to indicate that any buttons created
- * from this actions should act like radio buttons.
+ * from this actions should act like radio buttons, i.e. that when the 
+ * toolbar buttons are double-clicked, they remain active, and every click 
+ * on the diagram will place a new modelelement.
  *
  * @author Bob Tarling
  */
