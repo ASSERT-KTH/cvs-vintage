@@ -12,7 +12,7 @@ import org.jboss.security.SecurityAssociation;
  * @author Scott.Stark@jboss.org
  * @version $Revison:$
  */
-public class SecurityActions
+class SecurityActions
 {
    private static class SetContextID implements PrivilegedAction
    {
