@@ -3,8 +3,8 @@
 <!--
 This is the XML DTD for the jbosscmp-jdbc deployment descriptor.
   <!DOCTYPE jbosscmp-jdbc PUBLIC
-      "-//JBoss//DTD jbosscmp-jdbc//EN"
-      "http://www.jboss.org/j2ee/dtd/jbosscmp-jdbc.dtd">
+      "-//JBoss//DTD JBOSSCMP-JDBC 3.0//EN"
+      "http://www.jboss.org/j2ee/dtd/jbosscmp-jdbc_3_0.dtd">
 -->
 
 <!--
