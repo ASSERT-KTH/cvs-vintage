@@ -351,7 +351,7 @@
 
     #foreach($comment in $currentIssue.Comments)
         <tr>
-         <th width="60">$comment.FormattedCreatedDate 
+         <th width="60">$format.getDate($scarabG.Constant.MDYY_DATE, $comment.CreatedDate)
        #set ( $commentUser = $scarabR.getUser($comment.CreatedBy) )
          <a href="mailto:$commentUser.Email">$commentUser.UserName</a>
          </th>
@@ -411,7 +411,7 @@
          #end
           <td width="120">
             #if( $act.Transaction)
-              $act.Transaction.FormattedCreatedDate
+              $format.getDate($scarabG.Constant.MDYY_DATE, $act.Transaction.CreatedDate)
             #end
           </td>
           <td width="120">$act.Description 

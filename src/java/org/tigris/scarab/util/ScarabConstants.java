@@ -51,7 +51,7 @@ package org.tigris.scarab.util;
     A place to put public final static strings.
     
     @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
-    @version $Id: ScarabConstants.java,v 1.12 2001/07/17 21:40:31 jon Exp $
+    @version $Id: ScarabConstants.java,v 1.13 2001/08/16 00:18:42 jon Exp $
 */
 
 public interface ScarabConstants
@@ -116,5 +116,9 @@ public interface ScarabConstants
      *
      */
     public static final int MAX_WORD_RATING = 100000;
+    
+    /**
+     * Used for formatting dates in the format: M/d/yy
+     */
+    public static final String MDYY_DATE = "M/d/yy";
 }    
-

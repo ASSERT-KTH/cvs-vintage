@@ -1,3 +1,5 @@
+package org.tigris.scarab.tools;
+
 /* ================================================================
  * Copyright (c) 2000 CollabNet.  All rights reserved.
  * 
@@ -44,26 +46,23 @@
  * individuals on behalf of CollabNet.
  */
 
-package org.tigris.scarab.tool;
-
 import java.util.Date;
-import java.text.*;
+import java.text.SimpleDateFormat;
+import java.text.ParseException;
 
 /**
  * Takes a date in any format and converts it to the desired format
  */
-public class FormatDate 
+public class Format
 {
     /**
-     * Formats the date
+     * Formats the date according to the passed in format
+     * Uses SimpleDateFormat to do its magic.
      */
-    public static String format (String original, String desired, Date date)
+    public static String getDate(String format, Date date)
          throws ParseException
     {
-        SimpleDateFormat origFormat = new SimpleDateFormat(original);
-        Date eventDateOriginal = origFormat.parse(date.toString());
-        SimpleDateFormat newFormat = new SimpleDateFormat(desired);
-        return newFormat.format(eventDateOriginal);
+        SimpleDateFormat newFormat = new SimpleDateFormat(format);
+        return newFormat.format(date);
     }
-
 }
