@@ -292,6 +292,11 @@ public final class OutputBuffer extends Writer
     public void flushChars() throws IOException {
      	if( debug > 0 ) log("flushChars() " + cb.getPos());
 	cb.flushBuffer();
+	state=BYTE_STATE;
+    }
+
+    public boolean flushCharsNeeded() {
+	return state == CHAR_STATE;
     }
 
     public void close() throws IOException {
@@ -306,6 +311,7 @@ public final class OutputBuffer extends Writer
         if( state==CHAR_STATE ){
             cb.flushBuffer();
             bb.flushBuffer();
+	    state=BYTE_STATE;
         }else if (state==BYTE_STATE)
             bb.flushBuffer();
         else if (state==INITIAL_STATE)
