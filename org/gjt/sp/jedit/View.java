@@ -77,7 +77,7 @@ import org.gjt.sp.util.Log;
  *
  * @author Slava Pestov
  * @author John Gellene (API documentation)
- * @version $Id: View.java,v 1.80 2003/04/28 21:17:39 spestov Exp $
+ * @version $Id: View.java,v 1.81 2003/04/29 22:31:14 spestov Exp $
  */
 public class View extends JFrame implements EBComponent
 {
@@ -1124,6 +1124,8 @@ public class View extends JFrame implements EBComponent
 		bottomToolBars = new JPanel(new VariableGridLayout(
 			VariableGridLayout.FIXED_NUM_COLUMNS,
 			1));
+		/* bottomToolBars.setLayout(new BoxLayout(bottomToolBars,
+			BoxLayout.X_AXIS)); */
 
 		toolBarManager = new ToolBarManager(topToolBars, bottomToolBars);
 
@@ -1434,18 +1436,15 @@ public class View extends JFrame implements EBComponent
 			toolBar = null;
 		}
 
+		if(searchBar != null)
+			removeToolBar(searchBar);
+
 		if(jEdit.getBooleanProperty("view.showSearchbar") && !plainView)
 		{
-			if(searchBar != null)
-				removeToolBar(searchBar);
-
-			addToolBar(TOP_GROUP,SEARCH_BAR_LAYER,
-				searchBar = new SearchBar(this,false));
-		}
-		else if(searchBar != null)
-		{
-			removeToolBar(searchBar);
-			searchBar = null;
+			if(searchBar == null)
+				searchBar = new SearchBar(this,false);
+			searchBar.propertiesChanged();
+			addToolBar(TOP_GROUP,SEARCH_BAR_LAYER,searchBar);
 		}
 	} //}}}
 

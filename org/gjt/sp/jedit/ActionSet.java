@@ -96,7 +96,7 @@ import org.gjt.sp.util.Log;
  *
  * @author Slava Pestov
  * @author John Gellene (API documentation)
- * @version $Id: ActionSet.java,v 1.15 2003/04/29 03:21:49 spestov Exp $
+ * @version $Id: ActionSet.java,v 1.16 2003/04/29 22:31:14 spestov Exp $
  * @since jEdit 4.0pre1
  */
 public class ActionSet
@@ -375,7 +375,7 @@ public class ActionSet
 
 		try
 		{
-			Log.log(Log.DEBUG,jEdit.class,"Loading actions from " + uri);
+			Log.log(Log.DEBUG,this,"Loading actions from " + uri);
 
 			ActionListHandler ah = new ActionListHandler(uri.toString(),this);
 			XmlParser parser = new XmlParser();

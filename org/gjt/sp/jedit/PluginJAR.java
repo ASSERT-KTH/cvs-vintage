@@ -36,7 +36,7 @@ import org.gjt.sp.util.Log;
  * A JAR file.
  *
  * @author Slava Pestov
- * @version $Id: PluginJAR.java,v 1.7 2003/04/29 03:44:37 spestov Exp $
+ * @version $Id: PluginJAR.java,v 1.8 2003/04/29 22:31:14 spestov Exp $
  * @since jEdit 4.2pre1
  */
 public class PluginJAR
@@ -238,6 +238,34 @@ public class PluginJAR
 		}
 
 		EditBus.send(new PluginUpdate(this,PluginUpdate.LOADED));
+	} //}}}
+
+	//{{{ uninit() method
+	void uninit()
+	{
+		if(plugin != null)
+		{
+			try
+			{
+				plugin.stop();
+			}
+			catch(Throwable t)
+			{
+				Log.log(Log.ERROR,this,"Error while "
+					+ "stopping plugin:");
+				Log.log(Log.ERROR,this,t);
+			}
+		}
+
+		if(actions != null)
+			jEdit.getActionContext().removeActionSet(actions);
+		if(browserActions != null)
+			VFSBrowser.getActionContext().removeActionSet(browserActions);
+
+		DockableWindowManager.unloadDockableWindows(this);
+		ServiceManager.unloadServices(this);
+
+		EditBus.send(new PluginUpdate(this,PluginUpdate.UNLOADED));
 	} //}}}
 
 	//{{{ activateIfNecessary() method
