@@ -19,7 +19,7 @@ package org.jboss.verifier.event;
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  *
  * This package and its source code is available at www.jboss.org
- * $Id: VerificationEventFactory.java,v 1.4 2000/06/03 21:43:56 juha Exp $
+ * $Id: VerificationEventFactory.java,v 1.5 2000/06/11 18:14:41 juha Exp $
  */
 
  
@@ -49,7 +49,7 @@ import org.jboss.verifier.strategy.EJBVerifier11;
  * @see     << OTHER RELATED CLASSES >>
  *
  * @author 	Juha Lindfors   (jplindfo@helsinki.fi)
- * @version $Revision: 1.4 $
+ * @version $Revision: 1.5 $
  * @since  	JDK 1.3
  */
 public class VerificationEventFactory {
@@ -68,6 +68,7 @@ public class VerificationEventFactory {
                                                       )  {
                      
         VerificationEvent event = new VerificationEvent(source);
+        event.setState(VerificationEvent.WARNING);
 
         
         if (EJBVerifier11.SECTION_6_5_1.equals(section))
@@ -153,7 +154,7 @@ public class VerificationEventFactory {
     
     private void buildBeanManagedTxSessionCannotSynchEvent(VerificationEvent event, String name) {
         
-    //    event.setMessage();
+        event.setMessage("[TODO] bmt cannot use synch interface");
     //    event.setVerbose();
     }
     
@@ -165,7 +166,7 @@ public class VerificationEventFactory {
     
     private void buildBeanManagedTxBeanCannotSynchEvent(VerificationEvent event, String name) {
         
-    //    event.setMessage();
+        event.setMessage("[TODO] bmt cannot use synch interface...");
     //    event.setVerbose();
     }
     
@@ -195,7 +196,7 @@ public class VerificationEventFactory {
 
     private void buildSessionBeanDefinesFinalizerEvent(VerificationEvent event, String name) {
         
-    //    event.setMessage();
+        event.setMessage("[TODO] no finalizers allowed");
     //    event.setVerbose();
     }
 
