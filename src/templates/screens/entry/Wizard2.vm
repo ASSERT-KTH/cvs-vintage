@@ -1,5 +1,3 @@
-$page.setTitle("Identified as duplicate")
-
 <div id="wizard2" class="app">
 
 #set ($currentIssue = $scarabR.ReportingIssue)
