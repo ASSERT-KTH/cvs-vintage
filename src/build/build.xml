@@ -190,7 +190,7 @@
          basedir="${build.classes.dir}"
          manifest="${etc.dir}/jboss.mf"
          includes="org/jboss/**"
-         excludes="org/jboss/Main*,org/jboss/ejb/deployment/**,org/jboss/security/SecurityAssociation.class,org/jboss/security/SimplePrincipal.class,org/jboss/security/SimpleGroup.class,org/jboss/ejb/plugins/jaws/deployment/**,org/jboss/dependencies/**,org/jboss/security/**/*LoginModule.class,org/jboss/tm/GlobalId.class"
+         excludes="org/jboss/Main*,org/jboss/ejb/deployment/**,org/jboss/security/SecurityAssociation.class,org/jboss/security/SimplePrincipal.class,org/jboss/security/SimpleGroup.class,org/jboss/ejb/plugins/jaws/deployment/**,org/jboss/dependencies/**,org/jboss/security/**/*LoginModule.class,org/jboss/tm/GlobalId.class,org/jboss/jms/ra/META-INF*"
     />
 
 
@@ -230,6 +230,18 @@
          manifest="${etc.dir}/connector.mf"
          includes="org/jboss/jmx/interfaces/JMXConnector.class,org/jboss/jmx/interfaces/JMXConnectorMBean.class,org/jboss/jmx/interfaces/RMIConnector.class,org/jboss/jmx/interfaces/RMINotificationListener.class,org/jboss/jmx/client/RMIClientConnectorImpl*.class,org/jboss/jmx/server/RMIConnectorImpl_Stub.class,org/jboss/jmx/server/ObjectHandler.class,org/jboss/jmx/client/ConnectorFactory*.class,org/jboss/util/Service.class,org/jboss/util/ServiceMBean*.class,org/jboss/logging/Log.class,org/jboss/logging/Log$$*.class,test/jboss/jmx/TestClient*.class"
     />
+
+    <mkdir dir="${build.dir}/deploy/lib"/>
+    <jar jarfile="${build.dir}/deploy/lib/jms-ra.rar">
+       <fileset dir="${build.classes.dir}"
+             includes="org/jboss/jms/ra/**"
+	     excludes="org/jboss/jms/ra/META_INF*"
+
+       />
+       <fileset dir="${build.classes.dir}/org/jboss/jms/ra/"
+             includes="META-INF/*"
+       />
+    </jar>	 
   </target>
 
   <!-- =================================================================== -->
@@ -326,6 +338,9 @@
      <copy todir="${dist.dir}/deploy/lib">
         <fileset dir="${etc.dir}/deploy"/>
      </copy>
+
+      <copy todir="${dist.dir}/deploy/lib"
+           file="${build.dir}/deploy/lib/jms-ra.rar"/>
   </target>
 
   <!-- =================================================================== -->
