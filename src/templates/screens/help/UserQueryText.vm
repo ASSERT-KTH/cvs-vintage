@@ -31,12 +31,13 @@
   <p> 
   <h3><a name="top" id="top"></a>$l10n.TextQueries</h3>
 
-<div>$l10n.UQT1</div>
+<div>$l10n.UQT1S1</div>
+<div>$l10n.UQT1S2</div>
 <div>$l10n.UQT2</div>
 <div>$l10n.UQT3</div>
 <div>$l10n.UQT4</div>
 <div>$l10n.UQT5</div>
-<div>$l10n.UQT6</div>
+<div><strong>$l10n.UQT6</strong></div>
 <div>$l10n.UQT7</div>
 <div>$l10n.UQT8</div>
 <div>$l10n.UQT9S1<pre>$l10n.UQT9S2</pre></div>
@@ -53,7 +54,7 @@
 <div><strong>NOT</strong> $l10n.UQT19S1<pre>$l10n.UQT19S2</pre></div>
 <div>$l10n.UQT20S1<pre>$l10n.UQT20S2</pre></div>
 
-<div><strong>-</strong>  $l10n.UQTS21S1<pre>$l10n.UQT21S2</pre></div>
+<div><strong>-</strong>  $l10n.UQT21S1<pre>$l10n.UQT21S2</pre></div>
 <div><strong>$l10n.UQT22S1</strong>$l10n.UQT22S2<pre>$l10n.UQT22S3</pre></div>
 <div>$l10n.UQT23</div>
 
