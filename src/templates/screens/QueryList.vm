@@ -69,6 +69,7 @@
         #set ($createdUser = $scarabR.getUser($query.UserId.toString()) )
          <td><a href="mailTo:$createdUser.Email">$createdUser.UserName</a></td>
         </tr>
+#end
 
 #foreach ( $query in $module.GlobalQueries )
 
@@ -123,6 +124,5 @@
      </td>
     </tr>
    </table>
-#end
 #end
   </form>
