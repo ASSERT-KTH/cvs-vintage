@@ -254,8 +254,8 @@ from:&#160;<input type="text" size="20"
  <td>
  <select name="$searchGroup.SortAttributeId.Key">
     <option value="">$l10n.Choose</option>
-#foreach ( $attKey in $attrValues.sequence() )
-  #set ( $attribute = $attrValues.get($attKey).Attribute )
+#foreach ($rmua in $scarabR.RModuleUserAttributes)
+#set ($attribute = $rmua.Attribute)
    <option value="$attribute.AttributeId"
      #if ($searchGroup.SortAttributeId.Value.equals($attribute.AttributeId))
           selected="selected" #end>
