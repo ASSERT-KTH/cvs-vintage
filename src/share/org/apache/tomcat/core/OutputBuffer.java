@@ -66,6 +66,8 @@ import java.io.UnsupportedEncodingException;
 
 import java.util.Hashtable;
 
+import org.apache.tomcat.util.buf.*;
+
 /**
  * The buffer used by tomcat response. It allows writting chars and
  * bytes. It does the mixing in order to implement ServletOutputStream
@@ -75,10 +77,14 @@ import java.util.Hashtable;
  *
  * @author Costin Manolache
  */
-public final class OutputBuffer extends Writer {
+public final class OutputBuffer extends Writer
+    implements ByteBuffer.ByteOutputChannel, CharBuffer.CharOutputChannel 
+        // sink for conversion bytes[]
+{
+    public static final String DEFAULT_ENCODING="8859_1";
     public static final int DEFAULT_BUFFER_SIZE = 8*1024;
-    int defaultBufferSize = DEFAULT_BUFFER_SIZE;
-    int defaultCharBufferSize = DEFAULT_BUFFER_SIZE / 2 ;
+    private int defaultBufferSize = DEFAULT_BUFFER_SIZE;
+    private int defaultCharBufferSize = DEFAULT_BUFFER_SIZE / 2 ;
 
     // The buffer can be used for byte[] and char[] writing
     // ( this is needed to support ServletOutputStream and for
@@ -86,40 +92,44 @@ public final class OutputBuffer extends Writer {
     public final int INITIAL_STATE=0;
     public final int CHAR_STATE=1;
     public final int BYTE_STATE=2;
-    int state=0;
+    private int state=0;
 
     static final int debug=0;
-    int bytesWritten = 0;
-    boolean closed=false;
+
+    // statistics
+    private int bytesWritten = 0;
+    private int charsWritten;
+    
+    private boolean closed=false;
 
     /** The buffer
      */
-    public byte buf[];
+    private ByteBuffer bb;
+    private CharBuffer cb;
     
-    /**
-     * The index one greater than the index of the last valid byte in 
-     * the buffer. count==-1 for end of stream
-     */
-    public int count;
+    String enc;
+    boolean gotEnc=false;
 
-
-    Response resp;
-    Request req;
-    ContextManager cm;
+    private Response resp;
+    private Request req;
+    private ContextManager cm;
     
     public OutputBuffer() {
-	buf=new byte[defaultBufferSize];
- 	cbuf=new char[defaultCharBufferSize];
+	this( DEFAULT_BUFFER_SIZE );
     }
 
     public OutputBuffer(int size) {
-	buf=new byte[size];
- 	cbuf=new char[size];
+	//	buf=new byte[size];
+	bb=new ByteBuffer( size );
+	bb.setLimit( size );
+	bb.setByteOutputChannel( this );
+ 	cb=new CharBuffer( size );
+	cb.setCharOutputChannel( this );
+	cb.setLimit( size );
     }
 
     public OutputBuffer(Response resp) {
-	buf=new byte[defaultBufferSize];
- 	cbuf=new char[defaultCharBufferSize];
+	this( DEFAULT_BUFFER_SIZE );
 	setResponse( resp );
     }
 
@@ -130,20 +140,22 @@ public final class OutputBuffer extends Writer {
     }
 
     public byte[] getBuffer() {
-	return buf;
+	return bb.getBuffer();
     }
 
     /** Return the first available position in the byte buffer
-	( or the number of bytes written ).
-    */
+     *( or the number of bytes written ).
+     *  @deprecated Used only in Ajp13Packet for a hack
+     */
     public int getByteOff() {
-	return count;
+	return bb.getPos();
     }
 
     /** Set the write position in the byte buffer
+     *  @deprecated Used only in Ajp13Packet for a hack
      */
     public void setByteOff(int c) {
-	count=c;
+	bb.setPos(c);
     }
 
     void log( String s ) {
@@ -153,13 +165,14 @@ public final class OutputBuffer extends Writer {
     /** Sends the buffer data to the client output, checking the
 	state of Response and calling the right interceptors.
     */
-    private void realWrite(Request req, Response res, byte buf[], int off, int cnt )
+    public void realWriteBytes(byte buf[], int off, int cnt )
 	throws IOException
     {
-	if( res==null ) return;
+	if( debug > 2 ) log( "realWrite(b, " + off + ", " + cnt + ") " + resp);
+	if( resp==null ) return;
 	// If this is the first write ( or flush )
-	if (!res.isBufferCommitted()) {
-	    res.endHeaders();
+	if (!resp.isBufferCommitted()) {
+	    resp.endHeaders();
 	}
 	// If we really have something to write
 	if( cnt>0 ) {
@@ -167,11 +180,11 @@ public final class OutputBuffer extends Writer {
 	    BaseInterceptor reqI[]= req.getContainer().
 		getInterceptors(Container.H_beforeCommit);
 	    for( int i=0; i< reqI.length; i++ ) {
-		reqI[i].beforeCommit( req, res );
+		reqI[i].beforeCommit( req, resp );
 	    }
 
 	    // real write to the adapter
-	    res.doWrite( buf, off, cnt );
+	    resp.doWrite( buf, off, cnt );
 	}
     }
     
@@ -180,13 +193,12 @@ public final class OutputBuffer extends Writer {
 	state=INITIAL_STATE;
 	bytesWritten=0;
 	charsWritten=0;
-	ccount=0;
-	count=0;
+	
+	cb.recycle();
+	bb.recycle(); 
         closed=false;
 	if( conv!= null ) {
-	    conv.reset(); // reset ?
-	} else {
-	    //	    log( "Recycle without conv ??");
+	    conv.recycle();
 	}
     }
 
@@ -195,58 +207,22 @@ public final class OutputBuffer extends Writer {
 
     public void write(byte b[], int off, int len) throws IOException {
 	if( state==CHAR_STATE )
-	    flushChars();
+	    cb.flushBuffer();
 	state=BYTE_STATE;
 	writeBytes( b, off, len );
     }
 
-    public void writeBytes(byte b[], int off, int len) throws IOException {
+    private void writeBytes(byte b[], int off, int len) throws IOException {
         if( closed  ) return;
 	if( debug > 0 ) log("write(b,off,len)");
-	int avail=buf.length - count;
 
-
-	// fit in buffer, great.
-	if( len <= avail ) {
-	  // ??? should be < since if it's just barely full, we still
-	  // want to flush now
-	    System.arraycopy(b, off, buf, count, len);
-	    count += len;
-	    bytesWritten += len;
-	}
-
-	// Optimization:
-	// If len-avail < length ( i.e. after we fill the buffer with
-	// what we can, the remaining will fit in the buffer ) we'll just
-	// copy the first part, flush, then copy the second part - 1 write
-	// and still have some space for more. We'll still have 2 writes, but
-	// we write more on the first.
-
-	else if (len - avail < buf.length) {
-	    /* If the request length exceeds the size of the output buffer,
-    	       flush the output buffer and then write the data directly.
-	       We can't avoid 2 writes, but we can write more on the second
-	    */
-	    System.arraycopy(b, off, buf, count, avail);
-	    count += avail;
-	    flushBytes();
-
-	    System.arraycopy(b, off+avail, buf, count, len - avail);
-	    count+= len - avail;
-	    bytesWritten += len - avail;
-	
-	} else {	// len > buf.length + avail
-	    // long write - flush the buffer and write the rest
-	    // directly from source
-	    flushBytes();
-	    bytesWritten += len;
-	    realWrite( req, resp, b, off, len );
-	}
+	bb.append( b, off, len );
+	bytesWritten +=len;
 
 	// if called from within flush(), then immediately flush
 	// remaining bytes
 	if (doFlush) {
-	  flushBytes();
+	    bb.flushBuffer();
 	}
 
 	return;
@@ -255,33 +231,21 @@ public final class OutputBuffer extends Writer {
     // XXX Char or byte ?
     public void writeByte(int b) throws IOException {
 	if( state==CHAR_STATE )
-	    flushChars();
+	    cb.flushBuffer();
 	state=BYTE_STATE;
 	if( debug > 0 ) log("write(b)");
-	if (count >= buf.length) {
-	    flushBytes();
-	}
-	buf[count++] = (byte)b;
+
+	bb.append( (byte)b );
 	bytesWritten++;
     }
 
 
     // -------------------- Adding chars to the buffer
-    String enc;
-    boolean gotEnc=false;
-    public char cbuf[];
-    /** character count - first free possition */
-    public int ccount;
-    int charsWritten;
-
 
     public void write( int c ) throws IOException {
 	state=CHAR_STATE;
 	if( debug > 0 ) log("writeChar(b)");
-	if (ccount >= cbuf.length) {
-	    flushChars();
-	}
-	cbuf[ccount++] = (char)c;
+	cb.append( (char )c );
 	charsWritten++;
     }
 
@@ -291,45 +255,11 @@ public final class OutputBuffer extends Writer {
 
     public void write(char c[], int off, int len) throws IOException {
 	state=CHAR_STATE;
-	if( debug > 0 ) log("write(c,off,len)" + ccount + " " + len);
-	int avail=cbuf.length - ccount;
+	if( debug > 0 ) log("write(c,off,len)" + cb.getPos() + " " +
+			    cb.getLimit());
 
+	cb.append( c, off, len );
 	charsWritten += len;
-
-	// fit in buffer, great.
-	if( len <= avail ) {
-	  // ??? should be < since if it's just barely full, we still
-	  // want to flush now
-	    System.arraycopy(c, off, cbuf, ccount, len);
-	    ccount += len;
-	    return;
-	}
-
-	if (len - avail < cbuf.length) {
-	    /* If the request length exceeds the size of the output buffer,
-    	       flush the output buffer and then write the data directly.
-	       We can't avoid 2 writes, but we can write more on the second
-	    */
-	    System.arraycopy(c, off, cbuf, ccount, avail);
-	    ccount += avail;
-	    flushChars();
-	    
-	    System.arraycopy(c, off+avail, cbuf, ccount, len - avail);
-	    ccount+= len - avail;
-	    charsWritten += len - avail;
-	    return;
-	}
-
-	// len > buf.length + avail
-	flushChars();
-	cWrite(  c, off, len );
-
-	return;
-    }
-
-    private int min(int a, int b) {
-	if (a < b) return a;
-	return b;
     }
 
     public void write( StringBuffer sb ) throws IOException {
@@ -338,41 +268,20 @@ public final class OutputBuffer extends Writer {
 	int len=sb.length();
 	charsWritten += len;
 
-	int off=0;
-	int b = off;
-	int t = off + len;
-	while (b < t) {
-	    int d = min(cbuf.length - ccount, t - b);
-	    sb.getChars( b, b+d, cbuf, ccount);
-	    b += d;
-	    ccount += d;
-	    if (ccount >= cbuf.length)
-		flushChars();
-	}
-	return;
+	cb.append( sb );
     }
 
+    /** Append a string to the buffer
+     */
     public void write(String s, int off, int len) throws IOException {
 	state=CHAR_STATE;
 	if( debug > 1 ) log("write(s,off,len)");
 	charsWritten += len;
 	if (s==null) s="null";
-	
-	// different strategy: we can't write more then cbuf[]
-	// because of conversions. Writing in 8k chunks is not bad.
-	int b = off;
-	int t = off + len;
-	while (b < t) {
-	    int d = min(cbuf.length - ccount, t - b);
-	    s.getChars( b, b+d, cbuf, ccount);
-	    b += d;
-	    ccount += d;
-	    if (ccount >= cbuf.length)
-		flushChars();
-	}
-	return;
+
+	cb.append( s, off, len );
     }
-    
+
     public void write(String s) throws IOException {
 	state=CHAR_STATE;
 	if (s==null) s="null";
@@ -380,11 +289,8 @@ public final class OutputBuffer extends Writer {
     } 
 
     public void flushChars() throws IOException {
-	if( debug > 0 ) log("flushChars() " + ccount);
-	if( ccount > 0) {
-	    cWrite(  cbuf, 0, ccount );
-	    ccount=0;
-	}
+     	if( debug > 0 ) log("flushChars() " + cb.getPos());
+	cb.flushBuffer();
     }
 
     public void close() throws IOException {
@@ -392,54 +298,53 @@ public final class OutputBuffer extends Writer {
       closed =true;
     }
 
-  private boolean doFlush = false;
+    private boolean doFlush = false;
 
     synchronized public void flush() throws IOException {
         doFlush = true;
         if( state==CHAR_STATE ){
-            flushChars();
-            flushBytes();
+            cb.flushBuffer();
+            bb.flushBuffer();
         }else if (state==BYTE_STATE)
-            flushBytes();
+            bb.flushBuffer();
         else if (state==INITIAL_STATE)
-            realWrite( req, resp, null, 0, 0 );       // nothing written yet
+            realWriteBytes( null, 0, 0 );       // nothing written yet
         doFlush = false;
     }
 
     Hashtable encoders=new Hashtable();
-    WriteConvertor conv;
+    C2BConverter conv;
 
     public void setEncoding(String s) {
 	enc=s;
     }
 
-    void cWrite( char c[], int off, int len ) throws IOException {
-	if( debug > 0 ) log("cWrite(c,o,l) " + ccount + " " + len);
+    public void realWriteChars( char c[], int off, int len ) throws IOException {
+	if( debug > 0 ) log("realWrite(c,o,l) " + cb.getPos() + " " + len);
 	if( !gotEnc ) setConverter();
 	
 	if( debug > 0 ) log("encoder:  " + conv + " " + gotEnc);
-	conv.write(c, off, len);
-	conv.flush();	// ???
+	conv.convert(c, off, len);
+	conv.flushBuffer();	// ???
     }
 
     private void setConverter() {
 	if( resp!=null ) 
 	    enc = resp.getCharacterEncoding();
 	gotEnc=true;
-	if(enc==null) enc="8859_1";
-	conv=(WriteConvertor)encoders.get(enc);
+	if(enc==null) enc=DEFAULT_ENCODING;
+	conv=(C2BConverter)encoders.get(enc);
 	if(conv==null) {
-	    IntermediateOutputStream ios=new IntermediateOutputStream(this);
 	    try {
-		conv=new WriteConvertor(ios,enc);
+		conv=new C2BConverter(bb,enc);
 		encoders.put(enc, conv);
-	    } catch(UnsupportedEncodingException ex ) {
-		conv=(WriteConvertor)encoders.get("8859_1");
+	    } catch(IOException ex ) {
+		conv=(C2BConverter)encoders.get(DEFAULT_ENCODING);
 		if(conv==null) {
 		    try {
-			conv=new WriteConvertor(ios, "8859_1");
-			encoders.put("8859_1", conv);
-		    } catch( UnsupportedEncodingException e ) {}
+			conv=new C2BConverter(bb, DEFAULT_ENCODING);
+			encoders.put(DEFAULT_ENCODING, conv);
+		    } catch( IOException e ) {}
 		}
 	    }
 	}
@@ -450,11 +355,8 @@ public final class OutputBuffer extends Writer {
     /** Real write - this buffer will be sent to the client
      */
     public void flushBytes() throws IOException {
-	if( debug > 0 ) log("flushBytes() " + count);
-	if( count > 0) {
-	    realWrite( req, resp, buf, 0, count );
-	    count=0;
-	}
+	if( debug > 0 ) log("flushBytes() " + bb.getLen());
+	bb.flushBuffer();
     }
     
     public int getBytesWritten() {
@@ -473,103 +375,22 @@ public final class OutputBuffer extends Writer {
     }
     
     public void setBufferSize(int size) {
-	if( size > buf.length ) {
-	    buf=new byte[size];
+	if( size > bb.getLimit() ) {// ??????
+	    bb.setLimit( size );
 	}
     }
 
     public void reset() {
-	count=0;
+	//count=0;
+	bb.recycle();
 	bytesWritten=0;
-        ccount=0;
+        cb.recycle();
         charsWritten=0;
 	gotEnc=false;
 	enc=null;
     }
 
     public int getBufferSize() {
-	return buf.length;
-    }
-
-
-    // -------------------- Utils
-
-}
-
-class WriteConvertor extends OutputStreamWriter {
-    IntermediateOutputStream ios;
-    
-    /* Has a private, internal byte[8192]
-     */
-    public WriteConvertor( IntermediateOutputStream out, String enc )
-	throws UnsupportedEncodingException
-    {
-	super( out, enc );
-	ios=out;
-    }
-
-    public void close() throws IOException {
-	// NOTHING
-	// Calling super.close() would reset out and cb.
-    }
-
-    public void flush() throws IOException {
-	// Will flushBuffer and out()
-	// flushBuffer put any remaining chars in the byte[] 
-	super.flush();
-    }
-
-    public void write(char cbuf[], int off, int len) throws IOException {
-	// will do the conversion and call write on the output stream
-	super.write( cbuf, off, len );
-    }
-
-    void reset() {
-	ios.resetFlag=true;
-	try {
-	    //	    System.out.println("Reseting writer");
-	    flush();
-	} catch( Exception ex ) {
-	    ex.printStackTrace();
-	}
-	ios.resetFlag=false;
-    }
-	
-}
-
-
-class IntermediateOutputStream extends OutputStream {
-    OutputBuffer tbuff;
-    boolean resetFlag=false;
-    
-    public IntermediateOutputStream(OutputBuffer tbuff) {
-	this.tbuff=tbuff;
-    }
-
-    public void close() throws IOException {
-	// shouldn't be called - we filter it out in writer
-	System.out.println("close() called - shouldn't happen ");
-	throw new IOException("close() called - shouldn't happen ");
-    }
-
-    public void flush() throws IOException {
-	// nothing - write will go directly to the buffer,
-	// we don't keep any state
-    }
-
-    public void write(byte cbuf[], int off, int len) throws IOException {
-	//	System.out.println("IOS: " + len );
-	// will do the conversion and call write on the output stream
-	if( resetFlag ) {
-	    //	    System.out.println("Reseting buffer ");
-	} else {
-	    tbuff.writeBytes( cbuf, off, len );
-	}
-    }
-
-    public void write( int i ) throws IOException {
-	System.out.println("write(int ) called - shouldn't happen ");
-	throw new IOException("write(int ) called - shouldn't happen ");
+	return bb.getLimit();
     }
 }
-
