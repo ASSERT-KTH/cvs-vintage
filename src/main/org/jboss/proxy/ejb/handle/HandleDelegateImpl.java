@@ -16,8 +16,16 @@ import java.io.ObjectOutputStream;
 import javax.ejb.EJBHome;
 import javax.ejb.EJBObject;
 import javax.ejb.spi.HandleDelegate;
+import javax.naming.InitialContext;
+import javax.naming.NamingException;
+import javax.rmi.PortableRemoteObject;
+import javax.rmi.CORBA.Stub;
 
-import org.jboss.logging.Logger;
+import org.jboss.naming.client.java.ORBFactory;
+import org.omg.CORBA.BAD_OPERATION;
+import org.omg.CORBA.ORB;
+import org.omg.CORBA.portable.Delegate;
+import org.omg.CORBA.portable.ObjectImpl;
 
 /**
  * <P>Implementation of the javax.ejb.spi.HandleDelegate interface</P>
@@ -32,143 +40,68 @@ import org.jboss.logging.Logger;
  * "java:comp/HandleDelegate".</P> 
  *
  * @author  Dimitris.Andreadis@jboss.org
- * @version $Revision: 1.1 $
+ * @author  adrian@jboss.com
+ * @version $Revision: 1.2 $
  */
 public class HandleDelegateImpl
     implements HandleDelegate
 {
-   private static Logger log = Logger.getLogger(HandleDelegateImpl.class);
-   /**
-    * CTOR
-    */
-   public HandleDelegateImpl()
-   {
-      if (log.isTraceEnabled())
-         log.trace("CTOR");
-   }
-   
    // HandleDelegate implementation ---------------------------------
-  /**
-   * <P>Serialize the EJBObject reference corresponding to a Handle.</P>
-   *
-   * <P>This method is called from the writeObject method of portable
-   * Handle implementation classes. The ostream object is the same
-   * object that was passed in to the Handle class's writeObject.</P>
-   *
-   * @param ejbObject - The EJBObject reference to be serialized.
-   * @param oostream - The output stream.
-   * @exception java.io.IOException - The EJBObject could not be serialized
-   *                                  because of a system-level failure.
-   */
+
    public void writeEJBObject(EJBObject ejbObject, ObjectOutputStream oostream)
       throws IOException
    {
-      if (log.isTraceEnabled())
-         log.trace("writeEJBObject"); 
-      
-      // upcast
-      java.io.OutputStream ostream = oostream;
-      
-      // downcast
-      org.omg.CORBA_2_3.portable.OutputStream ostream23 =
-        (org.omg.CORBA_2_3.portable.OutputStream) ostream;
-        
-      ostream23.write_abstract_interface(ejbObject);
+      oostream.writeObject(ejbObject);
    }
    
-   /**
-    * <P>Deserialize the EJBObject reference corresponding to a Handle.</P>
-    *
-    * <P>readEJBObject is called from the readObject method of portable
-    * Handle implementation classes. The istream object is the same object
-    * that was passed in to the Handle class's readObject. When readEJBObject
-    * is called, istream must point to the location in the stream at which
-    * the EJBObject reference can be read. The container must ensure that
-    * the EJBObject reference is capable of performing invocations immediately
-    * after deserialization.</P>
-    * 
-    * @param oistream - The input stream.
-    * @return The deserialized EJBObject reference.
-    * @exception java.io.IOException - The EJBObject could not be deserialized
-    *                                  because of a system-level failure.
-    * @exception java.lang.ClassNotFoundException - The EJBObject could not be
-    *                                               deserialized because some
-    *                                               class could not be found.
-    */
    public EJBObject readEJBObject(ObjectInputStream oistream)
       throws IOException, ClassNotFoundException
    {
-      if (log.isTraceEnabled())
-         log.trace("readEJBObject"); 
-      
-      // upcast
-      java.io.InputStream istream = oistream;
-      
-      // downcast
-      org.omg.CORBA_2_3.portable.InputStream istream23 =
-        (org.omg.CORBA_2_3.portable.InputStream) istream;
-        
-      return (EJBObject) istream23.read_abstract_interface();
+      Object ejbObject = oistream.readObject();
+      reconnect(ejbObject);
+      return (EJBObject) PortableRemoteObject.narrow(ejbObject, EJBObject.class);
    }
 
-   /**
-    * <P>Serialize the EJBHome reference corresponding to a HomeHandle.</P>
-    *
-    * <P>This method is called from the writeObject method of portable HomeHandle
-    * implementation classes. The ostream object is the same object that was
-    * passed in to the Handle class's writeObject.</P>
-    *
-    * @param ejbHome - The EJBHome reference to be serialized.
-    * @param oostream - The output stream.
-    * @exception java.io.IOException - The EJBObject could not be serialized
-    *                                  because of a system-level failure.
-    */
    public void writeEJBHome(EJBHome ejbHome, ObjectOutputStream oostream)
       throws IOException
    {
-      if (log.isTraceEnabled())
-         log.trace("writeEJBHome"); 
-      
-      // upcast
-      java.io.OutputStream ostream = oostream;
-      
-      // downcast
-      org.omg.CORBA_2_3.portable.OutputStream ostream23 =
-        (org.omg.CORBA_2_3.portable.OutputStream) ostream;
-        
-      ostream23.write_abstract_interface(ejbHome);      
+      oostream.writeObject(ejbHome);
    }
 
-   /**
-    * <P>Deserialize the EJBHome reference corresponding to a HomeHandle.</P>
-    *
-    * <P>readEJBHome is called from the readObject method of portable HomeHandle
-    * implementation classes. The istream object is the same object that was
-    * passed in to the HomeHandle class's readObject. When readEJBHome is called,
-    * istream must point to the location in the stream at which the EJBHome reference
-    * can be read. The container must ensure that the EJBHome reference is capable
-    * of performing invocations immediately after deserialization.</P>
-    *
-    * @param oistream - The input stream.
-    * @return The deserialized EJBHome reference.
-    * @exception java.io.IOException - The EJBHome could not be deserialized because
-    *                                  of a system-level failure.
-    * @exception java.lang.ClassNotFoundException - The EJBHome could not be deserialized
-    *                                               because some class could not be found.
-    */
    public EJBHome readEJBHome(ObjectInputStream oistream)
      throws IOException, ClassNotFoundException
    {
-      if (log.isTraceEnabled())
-         log.trace("readEJBHome"); 
-      
-      // upcast
-      java.io.InputStream istream = oistream;
-      
-      // downcast
-      org.omg.CORBA_2_3.portable.InputStream istream23 =
-        (org.omg.CORBA_2_3.portable.InputStream) istream;
-        
-      return (EJBHome) istream23.read_abstract_interface();
+      Object ejbHome = oistream.readObject();
+      reconnect(ejbHome);
+      return (EJBHome) PortableRemoteObject.narrow(ejbHome, EJBHome.class);
+   }
+   
+   protected void reconnect(Object object) throws IOException
+   {
+      if (object instanceof ObjectImpl)
+      {
+         try
+         {
+            // Check we are still connected
+            ObjectImpl objectImpl = (ObjectImpl) object;
+            objectImpl._get_delegate();
+         }
+         catch (BAD_OPERATION e)
+         {
+            try
+            {
+               // Reconnect
+               Stub stub = (Stub) object;
+               ORB orb = (ORB) new InitialContext().lookup("java:comp/ORB");
+               stub.connect(orb);
+            }
+            catch (NamingException ne)
+            {
+               throw new IOException("Unable to lookup java:comp/ORB");
+            }
+         }
+      }
+      else
+         throw new IOException("Not an ObjectImpl " + object.getClass().getName());
    }
 }
