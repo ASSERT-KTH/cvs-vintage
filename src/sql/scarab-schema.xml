@@ -2,7 +2,7 @@
 <!DOCTYPE app-data SYSTEM
           "http://jakarta.apache.org/turbine/dtd/database.dtd">
 
-<!-- $Id: scarab-schema.xml,v 1.11 2001/04/30 03:55:30 jmcnally Exp $ -->
+<!-- $Id: scarab-schema.xml,v 1.12 2001/04/30 23:47:26 jon Exp $ -->
 
 <app-data>
 <database>
@@ -418,7 +418,7 @@
     <!--
         Display value of the attribute.
         This column should always contain a value which serves as a "summary value"
-        of the attribute, you MAY nee to look elsewhere to get real value.
+        of the attribute, you MAY need to look elsewhere to get real value.
         Purpose of this "duplication" is to be able to get overview of the attribute
         independently of what kind of attribute this is. This also improves performance
         so you do not need to perform (sometimes complex) processing each time you view the issue.
@@ -426,10 +426,10 @@
         Examples of what would go into this fields for different kinds of attributes:
          - For "free-form" attributes this would be the actual value (it's String
             representation to be exact)
-         - For "select-one" this would be a copy of value in SCARAB_ATTRIBUTE_OPTION.DISPLAY_VALUEE.
+         - For "select-one" this would be a copy of value in SCARAB_ATTRIBUTE_OPTION.DISPLAY_VALUE.
             There will also be an apropriate value in OPTION_ID column which you should use to
             join with SCARAB_ATTRIBUTE_OPTION
-         - For "voted" attributes this would be the vote result. For bugzill-style vote it is sum
+         - For "voted" attributes this would be the vote result. For bugzilla-style votes it is sum
             of all votes casted. For average vote this result is DISPLAY_VALUE of OPTION which has
             NUMERIC_VALUE computed as: round(sum(votes.numeric_value)/count(votes)). For "Tracking"
             attribute which is also considered a voted attribute this value is a list of login_IDs
