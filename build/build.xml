@@ -16,9 +16,9 @@
     <property file="${user.home}/scarab.build.properties" /> 
     <property file="${user.home}/build.properties" />
 
-    <!-- Allow a build.properties in the project root in the
-         same place it would be used by Maven. -->
-    <property file="${basedir}/../${configuration.file}" />    
+    <!--  Allow a build.properties in the project root in the
+          same place it would be used by Maven. -->
+    <property file="${basedir}/../build.properties"/>    
 
     <property file="${basedir}/default.properties" />
     <property file="${basedir}/default.${scarab.database.type}.properties" />
