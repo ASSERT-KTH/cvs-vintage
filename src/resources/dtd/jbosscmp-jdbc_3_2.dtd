@@ -21,7 +21,7 @@ entities, and relationships.
 <!ELEMENT defaults ((datasource, datasource-mapping)?, create-table?,
          alter-table?, remove-table?, post-table-create?, read-only?, read-time-out?,
          row-locking?, pk-constraint?, fk-constraint?,
-         preferred-relation-mapping?, read-ahead?, list-cache-max?,
+         preferred-relation-mapping?, read-ahead?, list-cache-max?, clean-read-ahead-on-load?,
          fetch-size?, unknown-pk?, entity-command?, ql-compiler?)>
 
 <!--
@@ -192,6 +192,14 @@ The eager load group of the related entity.
 
 
 <!--
+Specifies whether the read-ahead cache should be cleaned after the instance was loaded.
+Allowed values are true and false.
+Since 3.2.5RC1. Previously, read-ahead cache was cleaned after loading.
+-->
+<!ELEMENT clean-read-ahead-on-load (#PCDATA)>
+
+
+<!--
 Specifies the number of simultaneous queries that can be tracked by
 the cache for an entity.
 -->
@@ -217,8 +225,8 @@ The entity element contains the configuration of an entity
 -->
 <!ELEMENT entity (ejb-name, (datasource, datasource-mapping)?, create-table?,
          remove-table?, post-table-create?, read-only?, read-time-out?,
-         row-locking?, pk-constraint?, read-ahead?, list-cache-max?, fetch-size?,
-         table-name?, cmp-field*, load-groups?, eager-load-group?,
+         row-locking?, pk-constraint?, read-ahead?, list-cache-max?, clean-read-ahead-on-load?,
+         fetch-size?, table-name?, cmp-field*, load-groups?, eager-load-group?,
          lazy-load-groups?, query*, unknown-pk?, entity-command?,
          optimistic-locking?, audit?)>
 

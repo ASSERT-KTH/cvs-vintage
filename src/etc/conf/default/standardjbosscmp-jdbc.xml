@@ -9,7 +9,7 @@
 <!--                                                                       -->
 <!-- ===================================================================== -->
 
-<!-- $Id: standardjbosscmp-jdbc.xml,v 1.79 2004/06/12 07:58:40 pilhuhn Exp $ -->
+<!-- $Id: standardjbosscmp-jdbc.xml,v 1.80 2004/06/24 12:57:22 loubyansky Exp $ -->
 
 <jbosscmp-jdbc>
 
@@ -31,6 +31,7 @@
          <eager-load-group>*</eager-load-group>
       </read-ahead>
       <list-cache-max>1000</list-cache-max>
+      <clean-read-ahead-on-load>false</clean-read-ahead-on-load>
 
       <unknown-pk>
          <key-generator-factory>UUIDKeyGeneratorFactory</key-generator-factory>
