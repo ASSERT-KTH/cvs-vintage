@@ -570,20 +570,29 @@ try{
      */
     public List getRModuleUserAttributes()
     {
+        ScarabUser user = (ScarabUser)data.getUser();
         List result = null;
         try
         {
-            Module module = getCurrentModule();
-            IssueType issueType = getCurrentIssueType();
-            result = ((ScarabUser)data.getUser())
-                .getRModuleUserAttributes(module, issueType);
-            if (result.isEmpty())
+            if (user.getCurrentMITList() != null)
             {
-                result = module.getDefaultRModuleUserAttributes(issueType);
+                result = user.getCurrentMITList()
+                    .getCommonRModuleUserAttributes();
+            }
+            else 
+            {
+                Module module = getCurrentModule();
+                IssueType issueType = getCurrentIssueType();
+                result = user.getRModuleUserAttributes(module, issueType);
+                if (result.isEmpty())
+                {
+                    result = module.getDefaultRModuleUserAttributes(issueType);
+                }
             }
         }
         catch (Exception e)
         {
+            Log.get().error("Could not get list attributes", e);
         }
         if (result == null)
         {

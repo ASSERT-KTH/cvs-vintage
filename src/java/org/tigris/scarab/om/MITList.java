@@ -392,6 +392,31 @@ public  class MITList
         return matchingAttributes;
     }
 
+    public List getCommonRModuleUserAttributes()
+        throws Exception
+    {
+        List matchingRMUAs = new ArrayList();
+        MITListItem item = getFirstItem();
+        Module module = getModule(item);
+        IssueType issueType = getIssueType(item);
+        List rmuas = getScarabUser()
+            .getRModuleUserAttributes(module, issueType);
+        if (rmuas.isEmpty())
+        {
+            rmuas = module.getDefaultRModuleUserAttributes(issueType);
+        }
+        Iterator i = rmuas.iterator();
+        while (i.hasNext()) 
+        {
+            RModuleUserAttribute rmua = (RModuleUserAttribute)i.next();
+            Attribute att = rmua.getAttribute();
+            if ( isCommon(att)) 
+            {
+                matchingRMUAs.add(rmua);   
+            }            
+        }
+        return matchingRMUAs;
+    }
 
     public List getCommonLeafRModuleOptions(Attribute attribute)
         throws Exception
