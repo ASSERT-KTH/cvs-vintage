@@ -73,7 +73,7 @@
    #set ($editLink = $link.setPathInfo("id", $template.UniqueId.toString()).setPage("SaveTemplate.vm").toString())
    <td><a href="$editLink">$template.TemplateInfo.Name</a></td>
    <td>#if ($template.TemplateInfo.Description) $template.TemplateInfo.Description #else &#160; #end</td>
-   <td><#textAreaSmall() name="template_comment_$template.IssueId"></textarea></td>
+   <td><#textAreaSmall("template_comment_$template.IssueId" "")></textarea></td>
    <td>
     <select name="template_action_$template.IssueId">
     <option>No action</option>
@@ -90,7 +90,7 @@
  <table border="0" cellspacing="2" cellpadding="3">
   <tr>
    <th width="120">Comments (sent to selected submittees)</th>
-   <td><#textAreaMedium() name="global_comment"></textarea></td>
+   <td><#textAreaMedium("global_comment" "")></textarea></td>
   </tr>
  </table>
 </div>
