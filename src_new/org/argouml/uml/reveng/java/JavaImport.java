@@ -29,6 +29,7 @@ import antlr.collections.impl.*;
 import antlr.*;
 import org.argouml.kernel.*;
 import org.argouml.uml.reveng.*;
+import org.argouml.application.api.*;
 import ru.novosoft.uml.model_management.*;
 import org.tigris.gef.base.*;
 
@@ -39,8 +40,8 @@ import java.awt.*;
  * This is the main class for Java reverse engineering. It's based
  * on the Antlr Java example.
  *
- * $Revision: 1.9 $
- * $Date: 2001/06/26 05:45:38 $
+ * $Revision: 1.10 $
+ * $Date: 2001/11/11 04:48:10 $
  *
  * @author Andreas Rueckert <a_rueckert@gmx.net>
  */
@@ -160,7 +161,7 @@ public class JavaImport {
 	
 	// Print the name of the current file, so we can associate
 	// exceptions to the file.
-	System.out.println("Parsing " + f.getAbsolutePath());
+	Argo.log.info("Parsing " + f.getAbsolutePath());
 	
 	// start parsing at the compilationUnit rule
 	parser.compilationUnit(modeller, lexer);
