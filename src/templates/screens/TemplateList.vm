@@ -94,7 +94,7 @@ $l10n.NoTemplates
 #end
   <td>
     #if ($canDelete)
-      <a href="$link.setPathInfo("templateId", "$template.IssueId").setPage("SaveTemplate.vm")">
+      <a href="$link.setPathInfo('templateId', $template.IssueId.toString()).setPathInfo("$scarabG.Constant.CANCEL_TEMPLATE", 'TemplateList.vm').setPage('SaveTemplate.vm')">
       $template.Name</a>
     #else
       $template.Name

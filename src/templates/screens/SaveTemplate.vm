@@ -5,6 +5,11 @@
 #set ($templateInfo = $scarabR.IssueTemplateInfo)
 #set ($templateGroup = $intake.IssueTemplateInfo.mapTo($templateInfo))
 #set ($issueGroup = $intake.Issue.mapTo($currentTemplate))
+#set ($cancelTemplate = $data.Parameters.getString("$scarabG.Constant.CANCEL_TEMPLATE"))
+
+#if (!$cancelTemplate)
+ #set ($cancelTemplate = "TemplateList.vm")
+#end
 
 #if ($issueType)
 
@@ -12,7 +17,7 @@
 
 <form method="post" action="$link.setPage("SaveTemplate.vm").setAction("TemplateList")">
 <input type="hidden" name="$scarabG.Constant.NEXT_TEMPLATE" value="TemplateList.vm" />
-<input type="hidden" name="$scarabG.Constant.CANCEL_TEMPLATE" value="TemplateList.vm" />
+<input type="hidden" name="$scarabG.Constant.CANCEL_TEMPLATE" value="$cancelTemplate" />
 <input type="hidden" name="$scarabG.Constant.CURRENT_ISSUE_TYPE" value="$issueType.QueryKey" />
 
 #if ($templateId && $templateInfo && !$templateInfo.canEdit($data.User))
@@ -24,10 +29,12 @@
   #end
 #macro (saveTemplateBar $id)
 <div class="functnbar$id">
-#if ($currentTemplate.IssueId)
+
+#set ($allowEditOrUse = ($currentTemplate.IssueId  && $templateInfo.Approved))
+#if ($allowEditOrUse)
   <input type="submit" value="$l10n.UseTemplate" name="eventSubmit_doUsetemplate" />&#160;
   <input type="submit" value="$l10n.Done" name="eventSubmit_doDone" />&#160; 
-#else
+#elseif (!$currentTemplate.IssueId)
   <input type="submit" value="$l10n.Save" name="eventSubmit_doCreatenew" />&#160;
 #end
 <input type="submit" value="$l10n.Cancel" name="eventSubmit_doCancel" />
@@ -84,7 +91,7 @@
 </table>
 </div>
 
-#if ($currentTemplate.IssueId)
+#if ($allowEditOrUse)
     <div class="functnbar3">
     <input type="submit" value="$l10n.Save" name="eventSubmit_doEdittemplateinfo" />&#160;
     </div>
@@ -134,7 +141,7 @@
   #end
 #end
 
-#if ($currentTemplate.IssueId)
+#if ($allowEditOrUse)
   <div class="functnbar3">
   <input type="submit" value="$l10n.Save" name="eventSubmit_doEditvalues" />&#160;
   </div>

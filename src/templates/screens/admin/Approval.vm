@@ -69,7 +69,7 @@
   <td><a href="mailTo:$createdUser.Email">$!createdUser.Name</a></td>
    ##<td>$template.Module.Name</td>
    ##<td>$l10n.RoleX</td>
-   #set ($editLink = $link.setPathInfo("id", $template.UniqueId.toString()).setPage("SaveTemplate.vm").toString())
+   #set ($editLink = $link.setPathInfo('templateId', $template.IssueId.toString()).setPathInfo("$scarabG.Constant.CANCEL_TEMPLATE", 'admin,Approval.vm').setPage('SaveTemplate.vm').toString())
    <td><a href="$editLink">$template.TemplateInfo.Name</a></td>
    <td>#if ($template.TemplateInfo.Description) $template.TemplateInfo.Description #else &#160; #end</td>
    <td>#textAreaSmall("template_comment_$template.IssueId" "")</textarea></td>
