@@ -80,6 +80,10 @@ public abstract class AbstractPluginHandler {
 	public Object getPlugin(String name, String className, Object[] args)
 		throws Exception {
 
+		ColumbaLogger.log.debug("name="+name);
+		ColumbaLogger.log.debug("classname="+className);
+		ColumbaLogger.log.debug("args="+args);
+		
 		try {
 			return loadPlugin(className, args);
 		} catch (ClassNotFoundException ex) {

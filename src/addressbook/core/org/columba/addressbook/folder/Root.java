@@ -44,5 +44,14 @@ public class Root extends AddressbookTreeNode {
 
 	public void createChildren(WorkerStatusController c) {
 	}
+	
+	
+
+	/* (non-Javadoc)
+	 * @see org.columba.addressbook.gui.tree.AddressbookTreeNode#getName()
+	 */
+	public String getName() {
+		return "Root";
+	}
 
 }

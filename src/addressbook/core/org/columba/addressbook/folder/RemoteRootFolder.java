@@ -41,13 +41,7 @@ public class RemoteRootFolder extends AddressbookTreeNode {
 		super(item);
 	}
 
-	/**
-	 * Constructor for RemoteRootFolder.
-	 * @param name
-	 */
-	public RemoteRootFolder(String name) {
-		super(name);
-	}
+	
 
 	/**
 	 * @see org.columba.addressbook.gui.tree.AddressbookTreeNode#createChildren(org.columba.core.command.WorkerStatusController)

@@ -81,6 +81,7 @@ public class FolderPluginHandler extends AbstractPluginHandler {
 	}
 
 	public Object getPlugin(String name, Object[] args) throws Exception {
+	
 		String className = getPluginClassName(name, "class");
 		return getPlugin(name, className, args);
 	}

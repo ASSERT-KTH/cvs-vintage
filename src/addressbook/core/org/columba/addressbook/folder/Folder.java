@@ -86,6 +86,7 @@ public abstract class Folder extends AddressbookTreeNode {
 			directoryFile = new File(dir);
 	}
 
+	/*
 	public Folder(String name) {
 		super(name);
 
@@ -98,7 +99,7 @@ public abstract class Folder extends AddressbookTreeNode {
 			directoryFile = new File(dir);
 
 	}
-
+	*/
 	/**
 		 * Do some initialization work both constructors share
 		 *
@@ -269,29 +270,10 @@ public abstract class Folder extends AddressbookTreeNode {
 
 		return false;
 	}
-	
-	
 
-	public String getName() {
-		String name = null;
-
-		FolderItem item = getFolderItem();
-		name = item.get("property", "name");
-
-		return name;
-	}
-
-	/**
-	 * @see org.columba.modules.mail.folder.FolderTreeNode#setName(String)
-	 */
-	public void setName(String newName) {
-
-		FolderItem item = getFolderItem();
-		item.set("property", "name", newName);
-
-	}
-
+	/*
 	public String toString() {
 		return getName();
 	}
+	*/
 }

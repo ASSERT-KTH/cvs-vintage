@@ -57,11 +57,13 @@ public abstract class AddressbookTreeNode extends DefaultMutableTreeNode {
 		setNode(item);
 	}
 
+	/*
 	public AddressbookTreeNode(String name) {
 		super(name);
 
 		this.name = name;
 	}
+	*/
 	
 	public FolderItem getFolderItem()
 	{
@@ -121,6 +123,7 @@ public abstract class AddressbookTreeNode extends DefaultMutableTreeNode {
 		return collapsedIcon;
 	}
 
+	/*
 	public void setName(String s) {
 		name = s;
 	}
@@ -128,7 +131,7 @@ public abstract class AddressbookTreeNode extends DefaultMutableTreeNode {
 	public String getName() {
 		return name;
 	}
-
+	*/
 	public int getUid() {
 		return node.getInteger("uid");
 	}
@@ -193,6 +196,25 @@ public abstract class AddressbookTreeNode extends DefaultMutableTreeNode {
 	public void addWithXml(AddressbookTreeNode folder) {
 		add(folder);
 		this.getNode().addElement(folder.getNode());
+	}
+
+	public String getName() {
+		String name = null;
+	
+		FolderItem item = getFolderItem();
+		name = item.get("property", "name");
+	
+		return name;
+	}
+
+	/**
+		 * @see org.columba.modules.mail.folder.FolderTreeNode#setName(String)
+		 */
+	public void setName(String newName) {
+	
+		FolderItem item = getFolderItem();
+		item.set("property", "name", newName);
+	
 	}
 
 }

@@ -65,46 +65,7 @@ public class MarkAsReadAction
 
 	}
 
-	/**
-	 * @param frameController
-	 * @param name
-	 * @param longDescription
-	 * @param tooltip
-	 * @param actionCommand
-	 * @param small_icon
-	 * @param big_icon
-	 * @param mnemonic
-	 * @param keyStroke
-	 */
-	public MarkAsReadAction(
-		AbstractFrameController frameController,
-		String name,
-		String longDescription,
-		String tooltip,
-		String actionCommand,
-		ImageIcon small_icon,
-		ImageIcon big_icon,
-		int mnemonic,
-		KeyStroke keyStroke) {
-		super(
-			frameController,
-			MailResourceLoader.getString(
-				"menu",
-				"mainframe",
-				"menu_message_markasread"),
-			MailResourceLoader.getString(
-				"menu",
-				"mainframe",
-				"menu_message_markasread_tooltip"),
-			"MARK_AS_READ",
-			ImageLoader.getSmallImageIcon("mail-read.png"),
-			ImageLoader.getImageIcon("mail-read.png"),
-			'R',
-			KeyStroke.getKeyStroke("M"));
-		setEnabled(false);
-		((MailFrameController) frameController).registerTableSelectionListener(
-			this);
-	}
+	
 
 	/* (non-Javadoc)
 	 * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
