@@ -17,11 +17,14 @@
 //All Rights Reserved.
 package org.columba.mail.folder;
 
-import java.io.File;
-
 import junit.framework.TestCase;
 
 import org.columba.mail.folder.mh.CachedMHFolder;
+
+import java.io.File;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.Set;
 
 
 /**
@@ -29,75 +32,87 @@ import org.columba.mail.folder.mh.CachedMHFolder;
  * <p>
  * Create new testcases by subclassing this classes and using getFolder()
  * directly.
- * 
+ *
  * @author fdietz
+ * @author redsolo
  */
 public abstract class AbstractFolderTest extends TestCase {
+    /** A source folder. */
     protected Folder sourceFolder;
+    /** A destination folder. */
     protected Folder destFolder;
 
+    /** A set with all created folders. */
+    private Set folders;
+
+    private static int folderId = 0;
+
+
     /**
- * Constructor for CachedMHFolderTest.
- * 
- * @param arg0
- */
+     * Constructor for test.
+     */
+    public AbstractFolderTest() {
+        super();
+    }
+    /**
+     * Constructor for CachedMHFolderTest.
+     *
+     * @param arg0 name of test.
+     */
     public AbstractFolderTest(String arg0) {
         super(arg0);
     }
 
     /**
- * @see TestCase#setUp()
- */
+     * @see TestCase#setUp()
+     */
     protected void setUp() throws Exception {
-        // create MH folder
-        // -> use homeDirectory as top-level folder
-        // -> this has to be an absolute path
-        sourceFolder = new CachedMHFolder("test", "CachedMHFolder",
-                FolderTestHelper.homeDirectory + "/folders/");
-
-        destFolder = new CachedMHFolder("test2", "CachedMHFolder",
-                FolderTestHelper.homeDirectory + "/folders/");
+        folders = new HashSet();
+        sourceFolder = createFolder();
+        destFolder = createFolder();
     }
 
     /**
- * @return Returns the folder.
- */
+     * @see junit.framework.TestCase#tearDown()
+     */
+    protected void tearDown() throws Exception {
+        for (Iterator iterator = folders.iterator(); iterator.hasNext();) {
+            Folder folder = (Folder) iterator.next();
+            File f = folder.getDirectoryFile();
+
+            // delete all mails in folder
+            File[] list = f.listFiles();
+
+            for (int i = 0; i < list.length; i++) {
+                list[i].delete();
+            }
+
+            // delete folder
+            f.delete();
+        }
+    }
+
+    /**
+     * Creates a folder and returns it.
+     * @return a folder.
+     */
+    protected Folder createFolder() {
+        Folder folder = new CachedMHFolder("test" + folderId++, "CachedMHFolder",
+                            FolderTestHelper.homeDirectory + "/folders/");
+        folders.add(folder);
+        return folder;
+    }
+
+    /**
+     * @return Returns the folder.
+     */
     public Folder getSourceFolder() {
         return sourceFolder;
     }
 
     /**
- * @see junit.framework.TestCase#tearDown()
- */
-    protected void tearDown() throws Exception {
-        File f = sourceFolder.getDirectoryFile();
-
-        // delete all mails in folder
-        File[] list = f.listFiles();
-
-        for (int i = 0; i < list.length; i++) {
-            list[i].delete();
-        }
-
-        // delete folder
-        f.delete();
-
-        f = destFolder.getDirectoryFile();
-
-        // delete all mails in folder
-        list = f.listFiles();
-
-        for (int i = 0; i < list.length; i++) {
-            list[i].delete();
-        }
-
-        // delete folder
-        f.delete();
-    }
-
-    /**
- * @return Returns the destFolder.
- */
+     * @return Returns the destFolder.
+     */
     public Folder getDestFolder() {
         return destFolder;
     }
