@@ -13,6 +13,7 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
 //
 //All Rights Reserved.
+
 package org.columba.core.gui.action;
 
 import org.columba.core.action.AbstractColumbaAction;
@@ -26,30 +27,23 @@ import java.awt.event.ActionListener;
 
 import javax.help.CSH;
 
-
 /**
- * @author frd
+ * Brings up helpful information for a specific item.
  *
- * To change this generated comment go to
- * Window>Preferences>Java>Code Generation>Code and Comments
+ * @author frd
  */
 public class ShowContextSpecificHelpAction extends AbstractColumbaAction {
     protected ActionListener target;
 
-    /**
-     * @param frameMediator
-     * @param name
-     */
     public ShowContextSpecificHelpAction(FrameMediator frameMediator) {
-        super(frameMediator,
-            GlobalResourceLoader.getString(null, null, "menu_help_context"));
+        super(frameMediator, GlobalResourceLoader.getString(null, null,
+            "menu_help_context"));
 
         putValue(SMALL_ICON,
             ImageLoader.getSmallImageIcon("stock_extended-help-16.png"));
         putValue(LARGE_ICON, ImageLoader.getImageIcon("stock_extended-help.png"));
-
-        //TODO: i18n
-        putValue(SHORT_DESCRIPTION, "Context-specific help".replaceAll("&", ""));
+        putValue(SHORT_DESCRIPTION, GlobalResourceLoader.getString(null, null,
+            "menu_help_context_tooltip"));
 
         setShowToolBarText(false);
 
