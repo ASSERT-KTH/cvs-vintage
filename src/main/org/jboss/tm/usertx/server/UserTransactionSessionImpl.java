@@ -163,7 +163,11 @@ public class UserTransactionSessionImpl
       
       if (tx == null)
          throw new IllegalStateException("No transaction.");
-      
+
+      // Resume thread association
+      TransactionManager tm = getTransactionManager();
+      tm.resume(tx);
+
       boolean finished = true;
       
       try
@@ -202,6 +206,10 @@ public class UserTransactionSessionImpl
       if (tx == null)
          throw new IllegalStateException("No transaction.");
       
+      // Resume thread association
+      TransactionManager tm = getTransactionManager();
+      tm.resume(tx);
+
       tx.rollback();
       activeTx.remove(tpc);
    }
