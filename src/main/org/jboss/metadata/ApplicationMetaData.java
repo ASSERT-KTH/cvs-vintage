@@ -28,7 +28,7 @@ import org.jboss.ejb.DeploymentException;
  *   @author <a href="mailto:sebastien.alborini@m4x.org">Sebastien Alborini</a>
  *   @author <a href="mailto:peter.antman@tim.se">Peter Antman</a>.
  *   @author <a href="mailto:Scott_Stark@displayscape.com">Scott Stark</a>.
- *   @version $Revision: 1.20 $
+ *   @version $Revision: 1.21 $
  */
 public class ApplicationMetaData extends MetaData
 {
@@ -43,6 +43,13 @@ public class ApplicationMetaData extends MetaData
 	 private int ejbVersion;
 
     private ArrayList beans = new ArrayList();
+	 
+	 /**
+	  * List of relations in this application.
+	  * Items are instance of RelationMetaData.
+	  */
+	 private ArrayList relationships = new ArrayList();
+	 
     private ArrayList securityRoles = new ArrayList();
     private HashMap configurations = new HashMap();
     private HashMap resources = new HashMap();
@@ -89,6 +96,14 @@ public class ApplicationMetaData extends MetaData
        // not found
        return null;
     }
+
+	 /**
+	  * Get the container managed relations in this application.
+	  * Items are instance of RelationMetaData.
+	  */
+	 public Iterator getRelationships() {
+		 return relationships.iterator();
+	 }
     
     public Iterator getConfigurations() {
        return configurations.values().iterator();
@@ -159,7 +174,7 @@ public class ApplicationMetaData extends MetaData
          }
          beans.add(entityMetaData);
        }
-       
+ 
        // sessions
        iterator = getChildrenByTagName(enterpriseBeans, "session");
        while (iterator.hasNext()) {
@@ -185,6 +200,22 @@ public class ApplicationMetaData extends MetaData
          }
          beans.add(messageDrivenMetaData);
        }
+
+      // Relationships
+		Element relationshipsElement = getOptionalChild(element, "relationships");
+		if(relationshipsElement != null) {
+			iterator = getChildrenByTagName(relationshipsElement, "ejb-relation");
+			while(iterator.hasNext()) {
+				Element relationElement = (Element)iterator.next();
+				RelationMetaData relationMetaData = new RelationMetaData();
+				try {
+					relationMetaData.importEjbJarXml(relationElement);
+				} catch (DeploymentException e) {
+					throw new DeploymentException("Error in ejb-jar.xml for relation " + relationMetaData.getRelationName() + ": " + e.getMessage());
+				}
+				relationships.add(relationMetaData);
+			}
+		}	
 
        // read the assembly descriptor (optional)
        Element assemblyDescriptor = getOptionalChild(element, "assembly-descriptor");
