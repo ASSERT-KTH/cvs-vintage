@@ -83,14 +83,20 @@ public class AttachmentModifiedByRule extends BaseRule
     
     protected void doInsertionAtBody(String text) throws Exception
     {
-        Attachment attachment = (Attachment)digester.pop();
-        ScarabUser user = (ScarabUser)TurbineSecurity.getUser(text);
-        attachment.setModifiedBy(user.getUserId());
-        digester.push(attachment);
+        if (text != null && !text.trim().equals(""))
+        {
+            Attachment attachment = (Attachment)digester.pop();
+            ScarabUser user = (ScarabUser)TurbineSecurity.getUser(text);
+            attachment.setModifiedBy(user.getUserId());
+            digester.push(attachment);
+        }
     }
     
     protected void doValidationAtBody(String text) throws Exception
     {
-        validateUser(text);
+        if (text != null && !text.trim().equals(""))
+        {
+            validateUser(text);
+        }
     }
 }
