@@ -113,7 +113,12 @@ public class Transaction
 
     /**
      * Gets the Attachment associated with this Transaction record
-     * FIXME! why is this needed?
+     *
+     * This is necessary because a Transaction may have an attachment
+     * associated to it, which is the result of an issue modification.
+     * For example, when an issue has attributes modified, one can enter
+     * a comment. the comment is stored as an attachment and as part of
+     * the transaction for the changes.
      */
     public Attachment getAttachment() throws TorqueException
     {
@@ -125,7 +130,7 @@ public class Transaction
                     .getInstance(new NumberKey(getAttachmentId()), false);
                 
                 // make sure the parent attribute is in synch.
-                super.setAttachment(aAttachment);            
+                setAttachment(aAttachment);            
             }
         }
         catch (Exception e)
@@ -137,7 +142,12 @@ public class Transaction
 
     /**
      * Sets the Attachment associated with this Transaction record
-     * FIXME! why is this needed?
+     *
+     * This is necessary because a Transaction may have an attachment
+     * associated to it, which is the result of an issue modification.
+     * For example, when an issue has attributes modified, one can enter
+     * a comment. the comment is stored as an attachment and as part of
+     * the transaction for the changes.
      */
     public void setAttachment(Attachment v) throws TorqueException
     {
