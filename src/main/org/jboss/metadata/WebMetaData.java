@@ -6,23 +6,21 @@
  */
 package org.jboss.metadata;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.net.URL;
-import java.io.InputStream;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.ByteArrayInputStream;
-
-import org.w3c.dom.Element;
-import org.w3c.dom.Document;
-
 import org.jboss.deployment.DeploymentException;
 import org.jboss.logging.Logger;
 import org.jboss.mx.util.ObjectNameFactory;
-import org.jboss.net.ws4ee.client.WebserviceClientDeployer;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.InputStream;
+import java.net.URL;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
 
 /** A representation of the web.xml and jboss-web.xml deployment
  * descriptors as used by the AbstractWebContainer web container integration
@@ -32,7 +30,7 @@ import org.jboss.net.ws4ee.client.WebserviceClientDeployer;
  * @see org.jboss.web.AbstractWebContainer
  
  * @author Scott.Stark@jboss.org
- * @version $Revision: 1.15 $
+ * @version $Revision: 1.16 $
  */
 public class WebMetaData implements XmlLoadable
 {
@@ -60,8 +58,8 @@ public class WebMetaData implements XmlLoadable
    private String virtualHost;
    /** The jboss-web.xml JNDI name of the security domain implementation */
    private String securityDomain;
-   /** The webservices client model deployment helper */
-   private WebserviceClientDeployer webserviceClientDeployer;
+   /** The webservicesclient.xml metadata */
+   private Object webservicesClient;
 
    /** The web context class loader used to create the java:comp context */
    private ClassLoader encLoader;
@@ -163,14 +161,14 @@ public class WebMetaData implements XmlLoadable
       return depends.iterator();
    }
 
-   /** Get the webservice client deployment helper, null if there is no webservices-client.xml */
-   public WebserviceClientDeployer getWebserviceClientDeployer()
+   /** Get the webservicesclient.xml metadata, null if there is none */
+   public Object getWebservicesClient()
    {
-      return webserviceClientDeployer;
+      return webservicesClient;
    }
-   public void setWebserviceClientDeployer(WebserviceClientDeployer webserviceClientDeployer)
+   public void setWebservicesClient(Object webservicesClient)
    {
-      this.webserviceClientDeployer = webserviceClientDeployer;
+      this.webservicesClient = webservicesClient;
    }
 
    /** A flag indicating if the normal Java2 parent first class loading model

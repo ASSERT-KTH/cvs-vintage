@@ -23,6 +23,7 @@ import javax.naming.*;
 import javax.transaction.TransactionManager;
 import org.jboss.deployment.DeploymentException;
 import org.jboss.deployment.DeploymentInfo;
+import org.jboss.deployment.WebserviceClientDeployer;
 import org.jboss.ejb.BeanLockManager;
 import org.jboss.ejb.plugins.local.BaseLocalProxyFactory;
 import org.jboss.invocation.Invocation;
@@ -66,7 +67,7 @@ import org.jboss.mx.util.ObjectNameConverter;
  * @author <a href="bill@burkecentral.com">Bill Burke</a>
  * @author <a href="mailto:d_jencks@users.sourceforge.net">David Jencks</a>
  * @author <a href="mailto:christoph.jung@infor.de">Christoph G. Jung</a>
- * @version $Revision: 1.126 $
+ * @version $Revision: 1.127 $
  *
  * @jmx:mbean extends="org.jboss.system.ServiceMBean"
  */
@@ -1052,9 +1053,10 @@ public abstract class Container
       // Bind the webservices clients to the ENC. It does this if the deployment contains
       // a META-INF/webservicesclient.xml, see the JSR109 spec for details.
       ApplicationMetaData application = beanMetaData.getApplicationMetaData();
-      if (application.getWebserviceClientDeployer() != null)
+      if (application.getWebservicesClient() != null)
       {
-         application.getWebserviceClientDeployer().setupEnvironment(envCtx, di);
+         WebserviceClientDeployer wscDeployer = new WebserviceClientDeployer();
+         wscDeployer.setupEnvironment(envCtx, di, application.getWebservicesClient());
       }
 
       if (debug)

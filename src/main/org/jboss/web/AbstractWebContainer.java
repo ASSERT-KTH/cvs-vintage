@@ -43,7 +43,7 @@ import org.jboss.mx.loading.LoaderRepositoryFactory.LoaderRepositoryConfig;
 import org.jboss.naming.Util;
 import org.jboss.security.plugins.NullSecurityManager;
 import org.jboss.util.file.JarUtils;
-import org.jboss.net.ws4ee.client.WebserviceClientDeployer;
+import org.jboss.deployment.WebserviceClientDeployer;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -149,7 +149,7 @@ in the catalina module.
 @author  Scott.Stark@jboss.org
 @author  Christoph.Jung@infor.de
 @author  Thomas.Diesler@arcor.de
-@version $Revision: 1.75 $
+@version $Revision: 1.76 $
 */
 
 public abstract class AbstractWebContainer
@@ -352,8 +352,8 @@ public abstract class AbstractWebContainer
          URL webservicesclient = di.localCl.getResource("WEB-INF/webservicesclient.xml");
          if (webservicesclient != null)
          {
-            metaData.setWebserviceClientDeployer(new WebserviceClientDeployer());
-            metaData.getWebserviceClientDeployer().create(di);
+            WebserviceClientDeployer wscDeployer = new WebserviceClientDeployer();
+            metaData.setWebservicesClient(wscDeployer.create(di));
          }
 
          // Generate an event for the initialization
@@ -825,9 +825,10 @@ public abstract class AbstractWebContainer
    {
       // Bind webservice clients
       WebMetaData metaData = (WebMetaData)di.metaData;
-      if (metaData.getWebserviceClientDeployer() != null)
+      if (metaData.getWebservicesClient() != null)
       {
-         metaData.getWebserviceClientDeployer().setupEnvironment(envCtx, di);
+         WebserviceClientDeployer wscDeployer = new WebserviceClientDeployer();
+         wscDeployer.setupEnvironment(envCtx, di, metaData.getWebservicesClient());
       }
    }
 

@@ -1,18 +1,17 @@
 package org.jboss.metadata;
 
+import org.jboss.deployment.DeploymentException;
+import org.jboss.logging.Logger;
+import org.w3c.dom.Element;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 
-import org.jboss.deployment.DeploymentException;
-import org.jboss.logging.Logger;
-import org.jboss.net.ws4ee.client.WebserviceClientDeployer;
-import org.w3c.dom.Element;
-
 /** The metdata data from a j2ee application-client.xml descriptor
  * 
  * @author Scott.Stark@jboss.org
- * @version $Revision: 1.3 $
+ * @version $Revision: 1.4 $
  */
 public class ClientMetaData
 {
@@ -32,8 +31,8 @@ public class ClientMetaData
    private HashMap resourceEnvReferences = new HashMap();
    /** The JAAS callback handler */
    private String callbackHandler;
-   /** The webservices client model deployment helper */
-   private WebserviceClientDeployer webserviceClientDeployer;
+   /** The webservicesclient.xml metadata */
+   private Object webservicesClient;
 
    /** The application-client/display-name
     * @return application-client/display-name value
@@ -92,14 +91,14 @@ public class ClientMetaData
       return callbackHandler;
    }
 
-   /** Get the webservice client deployment helper, null if there is no webservices-client.xml */
-   public WebserviceClientDeployer getWebserviceClientDeployer()
+   /** Get the webservicesclient.xml metadata, null if there is none */
+   public Object getWebservicesClient()
    {
-      return webserviceClientDeployer;
+      return webservicesClient;
    }
-   public void setWebserviceClientDeployer(WebserviceClientDeployer webserviceClientDeployer)
+   public void setWebservicesClient(Object webservicesClient)
    {
-      this.webserviceClientDeployer = webserviceClientDeployer;
+      this.webservicesClient = webservicesClient;
    }
 
    public void importClientXml(Element element)

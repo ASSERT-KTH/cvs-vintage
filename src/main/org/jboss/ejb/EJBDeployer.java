@@ -32,7 +32,7 @@ import org.jboss.mx.util.ObjectNameConverter;
 import org.jboss.verifier.BeanVerifier;
 import org.jboss.verifier.event.VerificationEvent;
 import org.jboss.verifier.event.VerificationListener;
-import org.jboss.net.ws4ee.client.WebserviceClientDeployer;
+import org.jboss.deployment.WebserviceClientDeployer;
 import org.w3c.dom.Element;
 
 /**
@@ -46,7 +46,7 @@ import org.w3c.dom.Element;
  *
  * @see Container
  *
- * @version <tt>$Revision: 1.45 $</tt>
+ * @version <tt>$Revision: 1.46 $</tt>
  * @author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
  * @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
  * @author <a href="mailto:jplindfo@helsinki.fi">Juha Lindfors</a>
@@ -56,6 +56,7 @@ import org.w3c.dom.Element;
  * @author <a href="mailto:sacha.labourey@cogito-info.ch">Sacha Labourey</a>
  * @author <a href="mailto:jason@planet57.com">Jason Dillon</a>
  * @author <a href="mailto:christoph.jung@infor.de">Christoph G. Jung</a>
+ * @author <a href="mailto:thomas.diesler@arcor.de">Thomas Diesler</a>.
  */
 public class EJBDeployer
    extends SubDeployerSupport
@@ -512,8 +513,8 @@ public class EJBDeployer
       URL webservicesclient = di.localCl.getResource("META-INF/webservicesclient.xml");
       if (webservicesclient != null)
       {
-         metaData.setWebserviceClientDeployer(new WebserviceClientDeployer());
-         metaData.getWebserviceClientDeployer().create(di);
+         WebserviceClientDeployer wscDeployer = new WebserviceClientDeployer();
+         metaData.setWebservicesClient(wscDeployer.create(di));
       }
 
       // Create an MBean for the EJB module

@@ -7,18 +7,16 @@
 
 package org.jboss.metadata;
 
-import java.net.URL;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.HashMap;
-import java.util.Set;
-import java.util.HashSet;
-
+import org.jboss.deployment.DeploymentException;
 import org.w3c.dom.DocumentType;
 import org.w3c.dom.Element;
 
-import org.jboss.deployment.DeploymentException;
-import org.jboss.net.ws4ee.client.WebserviceClientDeployer;
+import java.net.URL;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.Set;
 
 /**
  * The top level meta data from the jboss.xml and ejb-jar.xml descriptor.
@@ -30,7 +28,7 @@ import org.jboss.net.ws4ee.client.WebserviceClientDeployer;
  * @author <a href="mailto:Christoph.Jung@infor.de">Christoph G. Jung</a>.
  * @author <a href="mailto:Thomas.Diesler@arcor.de">Thomas Diesler</a>.
  *
- * @version $Revision: 1.38 $
+ * @version $Revision: 1.39 $
  */
 public class ApplicationMetaData
    extends MetaData
@@ -63,8 +61,8 @@ public class ApplicationMetaData
    /** The  unauthenticated-principal value assigned to the application */
    private String  unauthenticatedPrincipal;
    private boolean enforceEjbRestrictions;
-   /** The webservices client model deployment helper */
-   private WebserviceClientDeployer webserviceClientDeployer;
+   /** The webservicesclient.xml metadata */
+   private Object webservicesClient;
 
    public ApplicationMetaData(URL u)
    {
@@ -192,14 +190,14 @@ public class ApplicationMetaData
       return enforceEjbRestrictions;
    }
 
-   /** Get the webservice client deployment helper, null if there is no webservices-client.xml */
-   public WebserviceClientDeployer getWebserviceClientDeployer()
+   /** Get the webservicesclient.xml metadata, null if there is none */
+   public Object getWebservicesClient()
    {
-      return webserviceClientDeployer;
+      return webservicesClient;
    }
-   public void setWebserviceClientDeployer(WebserviceClientDeployer webserviceClientDeployer)
+   public void setWebservicesClient(Object webservicesClient)
    {
-      this.webserviceClientDeployer = webserviceClientDeployer;
+      this.webservicesClient = webservicesClient;
    }
 
    /**

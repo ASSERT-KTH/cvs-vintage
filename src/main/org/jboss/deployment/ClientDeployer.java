@@ -5,7 +5,7 @@
  * See terms of license at gnu.org.
  */
 
-// $Id: ClientDeployer.java,v 1.4 2003/11/23 14:17:14 tdiesler Exp $
+// $Id: ClientDeployer.java,v 1.5 2003/11/23 18:11:47 tdiesler Exp $
 
 package org.jboss.deployment;
 
@@ -27,7 +27,6 @@ import org.jboss.metadata.ResourceEnvRefMetaData;
 import org.jboss.metadata.ResourceRefMetaData;
 import org.jboss.metadata.XmlFileLoader;
 import org.jboss.naming.Util;
-import org.jboss.net.ws4ee.client.WebserviceClientDeployer;
 
 import org.w3c.dom.Element;
 
@@ -36,7 +35,7 @@ import org.w3c.dom.Element;
  *
  * @author Scott.Stark@jboss.org
  * @author Thomas.Diesler@arcor.de
- * @version $Revision: 1.4 $
+ * @version $Revision: 1.5 $
  */
 public class ClientDeployer extends SubDeployerSupport
 {
@@ -127,8 +126,8 @@ public class ClientDeployer extends SubDeployerSupport
          URL webservicesclient = di.localCl.getResource("META-INF/webservicesclient.xml");
          if (webservicesclient != null)
          {
-            metaData.setWebserviceClientDeployer(new WebserviceClientDeployer());
-            metaData.getWebserviceClientDeployer().create(di);
+            WebserviceClientDeployer wscDeployer = new WebserviceClientDeployer();
+            metaData.setWebservicesClient(wscDeployer.create(di));
          }
       }
       catch (IOException e)
@@ -286,9 +285,10 @@ public class ClientDeployer extends SubDeployerSupport
 
       // Bind the webservices clients to the ENC. It does this if the deployment contains
       // a META-INF/webservicesclient.xml, see the JSR109 spec for details.
-      if (metaData.getWebserviceClientDeployer() != null)
+      if (metaData.getWebservicesClient() != null)
       {
-         metaData.getWebserviceClientDeployer().setupEnvironment(envCtx, di);
+         WebserviceClientDeployer wscDeployer = new WebserviceClientDeployer();
+         wscDeployer.setupEnvironment(envCtx, di, metaData.getWebservicesClient());
       }
    }
 }
