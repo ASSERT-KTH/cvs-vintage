@@ -182,4 +182,8 @@ public class Filter extends DefaultItem {
 		return c;
 	}
 
+	/** {@inheritDoc} */
+	public Object clone() {
+		return super.clone();
+	}
 }
