@@ -4,61 +4,25 @@
 #set ($issue = $user.ReportingIssue)
 #set ($attrValues = $issue.ModuleAttributeValuesMap)
 
-<FORM METHOD="get" NAME="Report3Form" action="$action">
+<div id="entrywizard3">
+<form method="get" name="entryWizard3form" enctype="multipart/form-data" action="$action">
 
-<p>Please review the attributes you have set so far and fill out the remaining
-attributes to submit the issue.</p>
+      <h1>Enter Issue Verbose (2.1.2)</h1>
 
-#foreach ( $attKey in $attrValues.sequence() )
-  #set ( $attVal = $attrValues.get($attKey) )
-  #set ( $attrInput = $intake.AttributeValue.mapTo($attVal) ) 
+      <p>Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat. Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper suscipit lobortis nisl ut aliquip</p>
 
-  #if ( $attVal.Attribute.AttributeType.ValidationKey )
-        #set ( $field = $attVal.Attribute.AttributeType.ValidationKey )
-  #elseif ($attVal.Attribute.AttributeType.Name == "combo-box" )
-        #set ( $field = "OptionId" )
-  #else
-        #set ( $field = "Value" )  
-  #end
+      <div class="grouper">
+       <div class="datatitle">
+        <table width="100%" cellpadding="3" cellspacing="2" border="1">
+         <tr>
+          <td>Input Your Issue:</td>
+         </tr>
+        </table>
+       </div>
 
+       <div class="listtable">
+        <table width="100%" cellpadding="3" cellspacing="2" border="1">
 
-  #if ( $attrInput.get($field).isSet() )
-
-
-    #if ( $attVal.isRequired() )
-        $attrInput.get($field).setRequired(true)
-        <b>*</b>
-    #end
-
-    $attVal.Attribute.Name:
-    #attrValueErrorMsg ( $attVal $field )<br>
-
-    #if ($attVal.Attribute.AttributeType.AttributeClass.Name == "user")
-
-          #userSelectBox ($attVal "")
-
-    #elseif ($attVal.Attribute.AttributeType.Name == "combo-box" )
-
-          #attrValueLeafSelect ($attVal $field "")
-
-    #else
-
-        #if ($attVal.Attribute.AttributeType.Name == "long-string" )        
-
-            <textarea name="$attrInput.Value.Key" cols="40" 
-               rows="5">$!attrInput.Value</textarea>
-        #else
-
-           <input name= "$attrInput.Value.Key"
-                value="$!attrInput.Value" size="20" type="text">
-
-        #end
-    #end
-<br><br>
-  #end
-#end
-
-<hr><br>Please fill in the following:<br><br>
 
 #foreach ( $attKey in $attrValues.sequence() )
   #set ( $attVal = $attrValues.get($attKey) )
@@ -74,13 +38,18 @@ attributes to submit the issue.</p>
 
   #if ( !$attrInput.get($field).isSet() )
 
-    #if ( $attVal.isRequired() )
-        $attrInput.get($field).setRequired(true)
-        <b>*</b>
-    #end
+        <tr>
+            <td width="120" class="a">
+            <strong>
+
+    #if ( $attVal.isRequired() )*#end
 
     $attVal.Attribute.Name:
-    #attrValueErrorMsg ( $attVal $field )<br>
+    #attrValueErrorMsg ( $attVal $field )<br />
+
+            </strong>
+            </td>
+            <td class="b">
 
     #if ($attVal.Attribute.AttributeType.AttributeClass.Name == "user")
 
@@ -94,22 +63,78 @@ attributes to submit the issue.</p>
 
         #if ($attVal.Attribute.AttributeType.Name == "long-string" )        
 
-            <textarea name= "$attrInput.Value.Key" cols="40" 
-               rows="5">$!attrInput.Value</textarea>
+            <textarea name= "$attrInput.Value.Key" class="text" cols="40"
+               rows="4">$!attrInput.Value</textarea>
         #else
 
            <input name= "$attrInput.Value.Key"
-                value="$!attrInput.Value" size="20" type="text">
+                value="$!attrInput.Value" size="45" type="text" class="text" />
         #end
 
     #end
-<br><br>
+            </td>
+        </tr>
   #end
 #end
 
-<p>
-            <input type="submit" 
-                name="eventSubmit_doEnterissue" value="Submit Issue">
+        </table>
+       </div>
+      </div>
+
+
+
+      <div class="grouper">
+       <div class="datatitle">
+        <table width="100%" cellpadding="3" cellspacing="2" border="1">
+         <tr>
+          <td>Add Attachment:</td>
+         </tr>
+        </table>
+       </div>
+
+       <div class="listtable">
+        <table width="100%" cellpadding="3" cellspacing="2" border="1">
+         <tr>
+          <td width="120" class="a"><strong>Attachment Description:</strong></td>
+#set ( $atch = $scarabR.Attachment )
+$atch
+#set( $intakeAttachment = $intake.Attachment.mapTo($atch) )
+
+
+          <td class="b">
+           <textarea name="$intakeAttachment.Name.Key" column="45" row="2" 
+                class="text">$!intakeAttachment.Name</textarea>
+            <p>
+              Please provide a short (less than 250 characters) description 
+              of the attachment
+            </p>
+          </td>
+         </tr>
+
+         <tr>
+          <td width="120" class="a"><strong>file path:</strong></td>
+
+          <td class="b">
+           <input type="file" name="$intakeAttachment.File.Key" size="45" 
+                class="text" value="$intakeAttachment.File.FileName"/>
+
+           <p>Click Browse and select a file. If you do not see a Browse button, your browser does not support file uploads. (Windows users, set Files of Type: to be All Files (*.*) to get a complete file listing.) The File field cannot be used to rename files.</p>
+
+<!-- why is this here? it should do the exact same thing as the submit button.
+           <p><input type="submit" value="add attachment" class="button" /></p>
+-->
+          </td>
+         </tr>
+        </table>
+       </div>
+      </div>
+
+      <p>workflow options:&#160; <input type="radio" name="foo" /> return to 2.1.0 <input type="radio" name="foo" /> return to 2.0.0 <input type="radio" name="foo" /> return to 2.1.3</p>
+
+      <div class="grouper">
+       <p><input type="submit" name="eventSubmit_doEnterissue" value="Submit Issue" class="button" />&#160;<input type="reset" value="reset" class="button" /></p>
+      </div>
 
 $intake.declareGroups()
-</FORM>
+</form>
+</div>

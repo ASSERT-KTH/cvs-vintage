@@ -10,6 +10,138 @@
 
 
 
+
+
+
+      <h1>Identified as Duplicate (2.1.1)</h1>
+
+      <p>Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat. Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper suscipit lobortis nisl ut aliquip</p>
+
+      <div class="grouper">
+       <div class="datatitle">
+        <table width="100%" cellpadding="3" cellspacing="2" border="1">
+         <tr>
+          <td>New Issue</td>
+         </tr>
+        </table>
+       </div>
+
+       <div class="datatable">
+        <table width="100%" border="1" cellspacing="2" cellpadding="3">
+         <tr class="a">
+          <td>Issue summary x</td>
+
+          <td>*platform x</td>
+
+          <td>*OS x</td>
+
+          <td>*issue type x</td>
+
+          <td>*severity x</td>
+
+          <td>xx/xx/2001</td>
+
+          <td>unassigned</td>
+         </tr>
+        </table>
+       </div>
+      </div>
+
+      <div class="grouper">
+       <div class="datatitle">
+        <table width="100%" cellpadding="3" cellspacing="2" border="1">
+         <tr>
+          <td>Possible Duplicates</td>
+         </tr>
+        </table>
+       </div>
+
+       <div class="datatable">
+        <table width="100%" border="1" cellspacing="2" cellpadding="3">
+
+         <tr>
+          <th><a href="#"><img src="./images/icon_uparrow.gif" width="13" height="8" alt="sort" border="0" /></a><a href="#"><img src="./images/icon_downarrow.gif" width="13" height="8" alt="sort" border="0" /></a></th>
+
+          <th><a href="#">issue ID #:</a></th>
+
+          <th><a href="#">issue summary:</a></th>
+
+          <th><a href="#">platform:</a></th>
+
+          <th><a href="#">os:</a></th>
+
+          <th><a href="#">issue type:</a></th>
+
+          <th><a href="#">severity:</a></th>
+
+          <th><a href="#">creation date:</a></th>
+
+          <th><a href="#">date closed:</a></th>
+         </tr>
+
+#foreach ($issue in $issueList)
+
+    #set ( $issueLink = $link.addPathInfo($data.Parameters).setPathInfo("currentIssueId", $issue.UniqueId).setPage($link.CurrentView).addPathInfo("action", "ReportIssue").toString() )
+
+         <tr class="a">
+          <td><input type="checkbox" /></td>
+
+          <td><strong>$issue.UniqueId</strong></td>
+         
+          <td>$issue.ModuleAttributeValuesMap.get("SUMMARY").Value</td>
+
+    #foreach ( $attKey in $attrValues.sequence() )
+        #set ( $attVal = $attrValues.get($attKey) )
+        #if ($attVal.isDedupeAttribute())
+
+          <td>$!attVal.Value</td>
+
+        #end
+    #end
+
+          <td>$issue.CreatedDate</td>
+
+          <td>xx/xx/2001</td>
+         </tr>
+
+#end
+
+        </table>
+       </div>
+      </div>
+
+      <p><input type="submit" value="add vote to selected" class="button" /></p>
+
+      <div class="listtable">
+       <table width="100%" cellpadding="3" cellspacing="2" border="1">
+        <tr>
+         <td width="120" class="a"><strong>append with note:</strong></td>
+
+         <td class="b">
+          <textarea rows="4" cols="40" class="text"></textarea>
+
+          <p><input type="submit" value="submit note" class="button" /></p>
+         </td>
+        </tr>
+       </table>
+      </div>
+
+      <div class="grouper">
+       <p>
+        The issues above do not match my issue:<br />
+        <input type="submit" value="continue issue entry" class="button" />
+        &#160;<input type="submit" value="cancel" class="button" />
+       </p>
+      </div>
+
+
+
+
+
+
+#*
+
+
 <TABLE BORDER="0" CELLPADDING="0" CELLSPACING="0" WIDTH="100%">
   <TR>
     <TD WIDTH="50%" VALIGN="top">
@@ -26,9 +158,6 @@
 
 #set ( $currentIssueId = $data.Parameters.getString("currentIssueId", $issueList.get(0).UniqueId))
 
-#foreach ($issue in $issueList)
-
-    #set ( $issueLink = $link.addPathInfo($data.Parameters).setPathInfo("currentIssueId", $issue.UniqueId).setPage($link.CurrentView).addPathInfo("action", "ReportIssue").toString() )
 
     #if ( $currentIssueId == $issue.UniqueId )
         #set ( $currentIssue = $issue )        
@@ -42,69 +171,26 @@
 
 
 
-        <TR>
-          <TD bgcolor="#CCDDFF">
-
-        $issue.UniqueId 
-
-          </TD>
-          <TD bgcolor="#CCDDFF">
-
-        $issue.ModuleAttributeValuesMap.get("SUMMARY").Value 
-
-          </TD>
-        </TR>
-
     #else
 
-        <TR>
-          <TD>
             <a href="$issueLink">$issue.UniqueId</a>
 
-          </TD>
-          <TD>
-
         $issue.ModuleAttributeValuesMap.get("SUMMARY").Value 
-
-          </TD>
-        </TR>
 
     #end
 
-        <TR>
-          <TD HEIGHT="1" COLSPAN="2" BGCOLOR="#cccccc">
-                <SPACER TYPE="block" HEIGHT="1"></TD>
-        </TR>			
-
 #end
 
-      </TABLE>
-
-    </TD>
-
-    <TD>&nbsp;&nbsp;</TD>
-
-    <TD WIDTH="50%" VALIGN="top">
 
 
 ## The issue details
 
 
-      <TABLE BORDER="0" CELLPADDING="2" CELLSPACING="0" WIDTH="100%">
-        <TR>
-          <TD BGCOLOR="#999999">ISSUE DETAILS</TD>
-        </TR>
-        <TR>
-          <TD>
 
             Issue ID#: $currentIssue.UniqueId
 
-          </TD>
-        </tr>
 
 #foreach ( $attVal in $currentIssue.OrderedModuleAttributeValues )
-
-        <tr><td>
 
     <b>$attVal.Attribute.Name:</b>
     #if ($attVal.Attribute.AttributeType.Name == "email" && $attVal.Value && $attVal.Value.toString().length() != 0 )
@@ -118,43 +204,23 @@
 
 #end
 
-        <TR>
-          <TD>
 
 Reported by:<br>
 #set ( $email = $currentIssue.UserRelatedByCreatedBy.Email )
           <A HREF="mailto:$email">$email</A>
 
-          </TD>
-        </tr>
-
-        <tr>
-          <TD>
 
 Date Entered:<br>
 $currentIssue.CreatedDate
 
-          </TD>
-        </TR>
-
-        <tr>
-          <TD>
 
 Last Modified:<br>
 $currentIssue.ModifiedDate
 
-          </TD>
-        </TR>
 
 
-        <TR>
-          <TD>Votes:</TD>
-          <TD>12</TD>
-        </TR>
 
 
-        <TR>
-          <TD>Depends On:<br>
 
 #set ( $comma = "" )
 #foreach ($issue in $currentIssue.BlockerIssues)
@@ -204,7 +270,7 @@ Does this issue match yours?<a href="$link.setPage("Links.vm")">Yes</a>(Vote)
 
 </td></tr>
 
-
+*#
 #*  Comments are not ready, not really sure they belong here.
 <a href="#Comments">Add Comment</a>
 
