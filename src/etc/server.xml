@@ -7,7 +7,7 @@
          webapps/, work/ and log/ will be relative to this ( unless 
          set explicitely to absolute paths ).
       -->
-    <ContextManager debug="0" workDir="work" >
+    <ContextManager workDir="work" >
 
       <!-- ==================== Global modules ==================== -->
         <LoaderInterceptor11  useApplicationLoader="true" />
@@ -37,7 +37,7 @@
         <PolicyLoader securityManagerClass="java.lang.SecurityManager"
 		      policyFile="conf/tomcat.policy" />
 
-        <SimpleMapper1 debug="0" />
+        <SimpleMapper1 />
 
         <SessionExpirer checkInterval="60" />
         <!-- For development you can use randomClass="java.util.Random" -->
@@ -79,7 +79,7 @@
 			useJspServlet="false"
 			/>
         
-        <StaticInterceptor  debug="0" listings="true" />
+        <StaticInterceptor listings="true" />
         
         <ReloadInterceptor fullReload="true" />
 
@@ -145,12 +145,12 @@
             path="logs/tagpool-${yyyyMMdd}.log" 
             verbosityLevel="INFORMATION" />
 
-        <TagPoolManagerInterceptor debug="0"/>
+        <TagPoolManagerInterceptor />
         -->
 
         <!-- Request processing -->
 
-        <DecodeInterceptor debug="0" /> 
+        <DecodeInterceptor /> 
 
         <SessionId cookiesFirst="true" noCookies="false" /> 
 
