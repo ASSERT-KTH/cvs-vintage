@@ -82,6 +82,8 @@ public class WarInterceptor implements ContextInterceptor {
 	
     public int handleContextInit(Context ctx) {
 	if (ctx.getDocumentBase().getProtocol().equalsIgnoreCase("war")) {
+	    // 	    System.out.println("CTX: " + ctx.getDocumentBase() + " " +
+	    // 			       ctx.isWARExpanded());
 	    if (ctx.isWARExpanded()) {
 	        File warDir = new File(ctx.getWorkDir(),
 				       Constants.Context.WARExpandDir);

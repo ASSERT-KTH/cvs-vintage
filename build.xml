@@ -2,171 +2,129 @@
   <property name="build.compiler" value="classic"/>
   <property name="tomcat.build" value="../build/tomcat"/>
   <property name="tomcat.home" value="../dist/tomcat"/>
-  <property name="test.classpath" value="${tomcat.build}/classes:../jakarta-tools/moo.jar" />
 
-  <!-- Create directories, copy static files -->
+  <!-- ==================== Copy static files ==================== -->
+  <!-- IF YOU CHANGE, sync dist.prepare !!! -->
   <target name="prepare">
     <mkdir dir="${tomcat.build}"/>
     <mkdir dir="${tomcat.build}/classes"/>
-    <mkdir dir="${tomcat.build}/etc"/>
+    <mkdir dir="${tomcat.build}/conf"/>
     <mkdir dir="${tomcat.build}/src"/>
     <mkdir dir="${tomcat.build}/lib"/>
+    <mkdir dir="${tomcat.build}/bin"/>
+    <mkdir dir="${tomcat.build}/webapps"/>
 
-    <copydir src="src/webpages" dest="${tomcat.build}/webpages"/>
-    <copydir src="src/examples" dest="${tomcat.build}/examples"/>
-    <copydir src="src/share/javax" dest="${tomcat.build}/src/javax"/>
-    <copyfile src="../jakarta-ant/lib/xml.jar" dest="${tomcat.build}/lib/xml.jar"/>
-
-    <copydir src="src/shell" dest="${tomcat.build}" />
-
-    <!-- XXX clean this up ! -->
-    <copyfile src="src/share/org/apache/tomcat/shell/deployment/server.xml"
-           dest="${tomcat.build}/server.xml"/>
-    <!-- XXX Where should it be ? -->
-    <copyfile src="src/share/org/apache/tomcat/shell/deployment/server.xml"
-            dest="${tomcat.build}/etc/server.xml"/>
-    <copyfile src="src/share/org/apache/tomcat/shell/deployment/server.dtd"
-     dest="${tomcat.build}/etc/server.dtd"/>
-    <copyfile src="src/share/org/apache/tomcat/deployment/web.xml"
-     dest="${tomcat.build}/etc/web.xml"/>
-    <copyfile src="src/share/org/apache/tomcat/deployment/web.dtd"
-     dest="${tomcat.build}/etc/web.dtd"/>
-
-    <copyfile src="LICENSE" dest="${tomcat.build}/LICENSE"/>
-    <copyfile src="src/etc/readme" dest="${tomcat.build}/README"/>
-    <copyfile src="src/etc/Tomcat+Apache-HOWTO" dest="${tomcat.build}/Tomcat+Apache-HOWTO"/>
-    <copyfile src="src/etc/faq" dest="${tomcat.build}/FAQ"/>
-    <copyfile src="src/etc/tomcat.conf" dest="${tomcat.build}/etc/tomcat.conf"/>
-
-    <copyfile src="src/etc/SimpleStartup.java"
-              dest="${tomcat.build}/etc/SimpleStartup.java"/>
-  </target>
-
-  <target name="main" depends="prepare">
-    <javac srcdir="src/share" destdir="${tomcat.build}/classes"
-     classpath="${tomcat.build}/lib/xml.jar" debug="on"/>
-    <javac srcdir="src/examples/WEB-INF/classes"
-     destdir="${tomcat.build}/examples/WEB-INF/classes"
-     classpath="${tomcat.build}/classes"/>
-    <javac srcdir="src/webpages/WEB-INF/classes"
-     destdir="${tomcat.build}/webpages/WEB-INF/classes"
-     classpath="${tomcat.build}/classes"/>
-
-    <javac srcdir="src/examples/jsp/plugin/applet"
-     destdir="${tomcat.build}/examples/jsp/plugin/applet"/>
-
-    <rmic base="${tomcat.build}/classes"
-     class="org.apache.tomcat.shell.AdminImpl"/>
-
-<!--
-
-    <javac srcdir="${tomcat.build}/examples/WEB-INF/classes/jsp/tags"
-            destdir="${tomcat.build}/examples/WEB-INF/classes/jsp/tags"
-            classpath="${tomcat.build}/classes"/>
-     <mkdir dir="${tomcat.build}/examples/jsp/libs"/>
-     <jar jarfile="${tomcat.build}/examples/jsp/libs/taglib.jar" 
-          basedir="${tomcat.build}/examples/WEB-INF/classes/jsp/tags"
-          items="examples,META-INF/taglib.tld"/>
--->
-     <chmod perm="+x" src="${tomcat.build}/tomcat.sh"/>
-  </target>
-
-  <target name="dist" depends="main">
-    <!-- cut & paste of "prepare", with tomcat.home instead of tomcat_build 
-         XXX create "parametrized" targets
-         XXX do we need all the files in tomcat_build ??
-      -->
-    <mkdir dir="${tomcat.home}" />
-    <mkdir dir="${tomcat.home}/lib" />
-    <mkdir dir="${tomcat.home}/etc" />
-    <mkdir dir="${tomcat.home}/src" />
-    <mkdir dir="${tomcat.home}/examples" />
-    <mkdir dir="${tomcat.home}/webpages" />
-
+    <copydir src="src/shell" dest="${tomcat.build}/bin" />
+    <copydir src="src/etc" dest="${tomcat.build}/conf"/>
+    <copydir src="src/doc" dest="${tomcat.build}/doc"/>
     <copydir src="src/share/javax" dest="${tomcat.home}/src/javax"/>
-    <copyfile src="../jakarta-ant/lib/ant.jar" dest="${tomcat.home}/lib/ant.jar"/>
-    <copyfile src="../jakarta-ant/lib/xml.jar" dest="${tomcat.home}/lib/xml.jar"/>
 
-    <copydir src="src/shell" dest="${tomcat.home}" />
+    <!-- include ant, it is used for testing and will be used for
+         configuration and few other tasks -->
+    <copydir src="${ant.home}/bin" dest="${tomcat.build}/bin"/>
+    <copyfile src="${ant.home}/lib/xml.jar" dest="${tomcat.build}/lib/xml.jar"/>
+    <copyfile src="${ant.home}/lib/ant.jar" dest="${tomcat.build}/lib/ant.jar"/>
 
-    <!-- XXX clean this up ! -->
-    <copyfile src="src/share/org/apache/tomcat/shell/deployment/server.xml"
-           dest="${tomcat.home}/server.xml"/>
-    <!-- XXX Where should it be ? -->
-    <copyfile src="src/share/org/apache/tomcat/shell/deployment/server.xml"
-            dest="${tomcat.home}/etc/server.xml"/>
-    <copyfile src="src/share/org/apache/tomcat/shell/deployment/server.dtd"
-     dest="${tomcat.home}/etc/server.dtd"/>
     <copyfile src="src/share/org/apache/tomcat/deployment/web.xml"
-     dest="${tomcat.home}/etc/web.xml"/>
+              dest="${tomcat.build}/conf/web.xml"/>
     <copyfile src="src/share/org/apache/tomcat/deployment/web.dtd"
-     dest="${tomcat.home}/etc/web.dtd"/>
+              dest="${tomcat.build}/conf/web.dtd"/>
+    <copyfile src="LICENSE" dest="${tomcat.build}/LICENSE"/>
 
-    <copyfile src="src/etc/tomcat.conf" dest="${tomcat.home}/etc/tomcat.conf"/>
-    <copyfile src="src/etc/license.txt" dest="${tomcat.home}/LICENSE"/>
-    <copyfile src="src/etc/readme" dest="${tomcat.home}/README"/>
-    <copyfile src="src/etc/faq" dest="${tomcat.home}/FAQ"/>
-    <copyfile src="src/etc/SimpleStartup.java"
-              dest="${tomcat.home}/etc/SimpleStartup.java"/>
-
-    <copydir src="${tomcat.build}/webpages" dest="${tomcat.home}/webpages"/>
-    <copydir src="${tomcat.build}/examples" dest="${tomcat.home}/examples"/>
-    <chmod perm="+x" src="${tomcat.home}/tomcat.sh"/>
-
-    <!-- XXX add manifest for autorun! -->
-    <jar jarfile="${tomcat.home}/webserver.jar"
-        basedir="${tomcat.build}/classes"
-        items="org/apache/tomcat"/> 
-    <jar jarfile="${tomcat.home}/lib/servlet.jar"
-        basedir="${tomcat.build}/classes"
-        items="javax/servlet"/>
-    <jar jarfile="${tomcat.home}/lib/jasper.jar"
-        basedir="${tomcat.build}/classes"
-        items="org/apache/jasper"/>
+    <chmod perm="+x" src="${tomcat.build}/bin/tomcat.sh"/>
+    <chmod perm="+x" src="${tomcat.build}/bin/ant"/>
+    <chmod perm="+x" src="${tomcat.build}/bin/startup.sh"/>
+    <chmod perm="+x" src="${tomcat.build}/bin/shutdown.sh"/>
   </target>
 
-  <target name="test" depends="main">
-    <mkdir dir="${tomcat.build}/test"/>
-    <mkdir dir="${tomcat.build}/test/classes"/>
-    <mkdir dir="${tomcat.build}/test/lib"/>
-    <mkdir dir="${tomcat.build}/test/webpages"/>
+  <!-- ==================== Build tomcat ==================== -->
+  <target name="tomcat" depends="prepare">
+    <javac srcdir="src/share" destdir="${tomcat.build}/classes"
+           classpath="${tomcat.build}/lib/xml.jar" debug="on"/>
+    <rmic base="${tomcat.build}/classes"
+          class="org.apache.tomcat.shell.AdminImpl"/>
+  </target>
 
-    <copydir src="src/tests/webpages"
-        dest="${tomcat.build}/test/webpages"/>
+  <!-- ==================== Build all web applications ==================== -->
+  <target name="webapps" depends="prepare">
+    <!-- Examples -->
+    <mkdir dir="${tomcat.build}/webapps/examples"/>
+    <copydir src="src/examples" dest="${tomcat.build}/webapps/examples"/>
+    <javac srcdir="src/examples/WEB-INF/classes"
+           destdir="${tomcat.build}/webapps/examples/WEB-INF/classes"
+           classpath="${tomcat.build}/classes"/>
+    <javac srcdir="src/examples/jsp/plugin/applet"
+           destdir="${tomcat.build}/webapps/examples/jsp/plugin/applet"/>
+    <jar   jarfile="${tomcat.build}/webapps/examples.war"
+           basedir="${tomcat.build}/webapps/examples"
+           items="." /> 
 
-    <copydir src="src/tests/bin" dest="${tomcat.build}/test"/>
-    <copyfile src="src/tests/server.xml"
-        dest="${tomcat.build}/test/server.xml"/>
-    <copyfile src="src/tests/testlist.txt"
-        dest="${tomcat.build}/test/testlist.txt"/>
-    <copyfile src="../jakarta-tools/moo.jar"
-        dest="${tomcat.build}/test/lib/moo.jar"/>
-    <copyfile src="../jakarta-ant/lib/ant.jar"
-        dest="${tomcat.build}/test/lib/ant.jar"/>
-    <copyfile src="../jakarta-tools/moo.jar"
-        dest="${tomcat.build}/test/webpages/WEB-INF/lib/moo.jar"/>
+    <!-- Root context -->
+    <mkdir dir="${tomcat.build}/webapps/ROOT"/>
+    <copydir src="src/webpages" dest="${tomcat.build}/webapps/ROOT"/>
+    <javac srcdir="src/webpages/WEB-INF/classes"
+           destdir="${tomcat.build}/webapps/ROOT/WEB-INF/classes"
+           classpath="${tomcat.build}/classes"/>
+    <jar   jarfile="${tomcat.build}/webapps/ROOT.war"
+           basedir="${tomcat.build}/webapps/ROOT"
+           items="." /> 
 
-    <javac srcdir="src/tests/share"
-        destdir="${tomcat.build}/test/classes"
-        classpath="${test.classpath}"/>
+    <!-- Test application -->
+    <mkdir dir="${tomcat.build}/webapps/test"/>
+    <copydir src="src/tests/webpages" dest="${tomcat.build}/webapps/test"/>
     <javac srcdir="src/tests/webpages/WEB-INF/classes"
-        destdir="${tomcat.build}/test/webpages/WEB-INF/classes"
-        classpath="${test.classpath}"/>
+           destdir="${tomcat.build}/webapps/test/WEB-INF/classes"
+           classpath="${tomcat.build}/classes"/>
+    <jar   jarfile="${tomcat.build}/webapps/test.war"
+           basedir="${tomcat.build}/webapps/test"
+           items="." /> 
 
   </target>
 
-  <target name="servlet">
+  <!-- ==================== Copy the files to distribution format ==================== -->
+  <target name="dist" depends="main,webapps">
+    <mkdir dir="${tomcat.home}"/>
+    <mkdir dir="${tomcat.home}/classes"/>
+    <mkdir dir="${tomcat.home}/conf"/>
+    <mkdir dir="${tomcat.home}/src"/>
+    <mkdir dir="${tomcat.home}/lib"/>
+    <mkdir dir="${tomcat.home}/bin"/>
+    <mkdir dir="${tomcat.home}/webapps"/>
+    <mkdir dir="${tomcat.home}/webapps/ROOT"/>
 
-    <mkdir dir="${tomcat.build}"/>
-    <mkdir dir="${tomcat.build}/classes"/>
+    <copydir src="${tomcat.build}/webapps/ROOT" dest="${tomcat.home}/webapps/ROOT"/>
+    <copydir src="${tomcat.build}/bin" dest="${tomcat.home}/bin" />
+    <copydir src="${tomcat.build}/conf" dest="${tomcat.home}/conf"/>
+    <copydir src="${tomcat.build}/doc" dest="${tomcat.home}/doc"/>
+    <copydir src="${tomcat.build}/src" dest="${tomcat.home}/src"/>
+    <copydir src="${tomcat.build}/lib" dest="${tomcat.home}/lib"/>
+    <copyfile src="${tomcat.build}/LICENSE" dest="${tomcat.home}/LICENSE"/>
 
-    <javac srcdir="src/share/javax" destdir="${tomcat.build}/classes"/>
+    <!-- Copy only war format for examples and test -->
+    <copyfile src="${tomcat.build}/webapps/examples.war" 
+              dest="${tomcat.home}/webapps/examples.war"/>
+    <copyfile src="${tomcat.build}/webapps/test.war" 
+              dest="${tomcat.home}/webapps/test.war"/>
 
-    <jar jarfile="../jakarta-tools/servlet-2.2.0.jar"
-        basedir="${tomcat.build}/classes"
-        items="javax"/>
+    <!-- create tomcat jar files -->
+    <jar jarfile="${tomcat.home}/lib/webserver.jar"
+         basedir="${tomcat.build}/classes"
+         items="org/apache/tomcat"/> 
+    <jar jarfile="${tomcat.home}/lib/servlet.jar"
+         basedir="${tomcat.build}/classes"
+         items="javax/servlet"/>
+    <jar jarfile="${tomcat.home}/lib/jasper.jar"
+         basedir="${tomcat.build}/classes"
+         items="org/apache/jasper"/>
+
+    <!-- Change permissions for unix -->
+    <chmod perm="+x" src="${tomcat.home}/bin/tomcat.sh"/>
+    <chmod perm="+x" src="${tomcat.build}/bin/ant"/>
+    <chmod perm="+x" src="${tomcat.build}/bin/startup.sh"/>
+    <chmod perm="+x" src="${tomcat.build}/bin/shutdown.sh"/>
   </target>
-
+  
+  <!-- ==================== Admin ==================== -->
   <target name="clean">
     <deltree dir="${tomcat.build}"/>
   </target>
@@ -175,6 +133,7 @@
     <deltree dir="${tomcat.home}"/>
   </target>
 
-  <target name="all" depends="clean,main,dist,test"/>
+  <target name="all" depends="clean,main,dist"/>
+  <target name="main" depends="tomcat,webapps"/>
   
 </project>

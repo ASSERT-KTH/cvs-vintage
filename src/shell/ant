@@ -1,9 +1,0 @@
-#! /bin/sh
-
-## Set to the absolute path to TOOLS if
-# not used to build tomcat and default directories
-TOOLS_HOME=${PWD}/../jakarta-tools
-
-CLASSPATH=$CLASSPATH:${TOOLS_HOME}/ant.jar:${TOOLS_HOME}/projectx-tr2.jar
-
-java org.apache.tools.ant.Main "$@"

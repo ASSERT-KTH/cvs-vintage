@@ -1,11 +1,11 @@
 @echo off
-rem $Id: tomcat.bat,v 1.7 2000/01/13 17:01:44 rubys Exp $
+rem $Id: tomcat.bat,v 1.8 2000/01/26 20:12:31 costin Exp $
 rem A batch file to start/stop tomcat server.
 
 rem This batch file written and tested under Windows NT
 rem Improvements to this file are welcome
 
-set jsdkJars=.\webserver.jar;.\lib\servlet.jar
+set jsdkJars=.\lib\webserver.jar;.\lib\servlet.jar
 set jspJars=.\lib\jasper.jar
 set beanJars=.\webpages\WEB-INF\classes\jsp\beans
 set miscJars=.\lib\xml.jar

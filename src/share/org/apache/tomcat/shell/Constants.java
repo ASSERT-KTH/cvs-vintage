@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/shell/Attic/Constants.java,v 1.2 1999/12/31 01:18:36 craigmcc Exp $
- * $Revision: 1.2 $
- * $Date: 1999/12/31 01:18:36 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/shell/Attic/Constants.java,v 1.3 2000/01/26 20:12:29 costin Exp $
+ * $Revision: 1.3 $
+ * $Date: 2000/01/26 20:12:29 $
  *
  * ====================================================================
  *
@@ -74,7 +74,7 @@ public class Constants {
     public static final String Package = "org.apache.tomcat.shell";
 
     public static class Server {
-        public static final String ConfigFile = "server.xml";
+        public static final String ConfigFile = "conf/server.xml";
         public static final String LogFile = "serverlog.txt";
     }
 
@@ -143,7 +143,7 @@ public class Constants {
     public static class Default {
         public static final int ADMIN_PORT = -1;
         public static final String WORK_DIR = "work";
-        public static final boolean IS_WORK_DIR_PERSISTENT = false;
+        public static final boolean IS_WORK_DIR_PERSISTENT = true;
         public static final int SessionTimeOut = 30;
         public static final boolean IS_WAR_EXPANDED = true;
         public static final boolean IS_WAR_VALIDATED = false;

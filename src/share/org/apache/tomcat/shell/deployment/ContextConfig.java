@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/shell/deployment/Attic/ContextConfig.java,v 1.3 2000/01/10 19:23:57 costin Exp $
- * $Revision: 1.3 $
- * $Date: 2000/01/10 19:23:57 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/shell/deployment/Attic/ContextConfig.java,v 1.4 2000/01/26 20:12:30 costin Exp $
+ * $Revision: 1.4 $
+ * $Date: 2000/01/26 20:12:30 $
  *
  * ====================================================================
  *
@@ -114,6 +114,7 @@ public class ContextConfig {
 
         try {
             db = URLUtil.resolve(documentBase);
+	    System.out.println("Resolved " + documentBase + " to " + db);
         } catch (MalformedURLException mue) {
         }
 
