@@ -164,7 +164,7 @@ public class LogSetter extends  BaseInterceptor {
     {
 	if( module!=this ) return;
 
-	if( ! FileUtil.isAbsolute( path ) ) {
+	if( path!=null && ! FileUtil.isAbsolute( path ) ) {
 	    File wd= new File(cm.getHome(), path);
 	    path= wd.getAbsolutePath();
 	}
@@ -181,6 +181,7 @@ public class LogSetter extends  BaseInterceptor {
 
 	ql.open();
 
+	//	if( debug>-1) log("Adding logger " + name + " " + servletLogger + " " + ctx );
 	cm.addLogger( ql );
 
 	if( ctx!=null ) {
