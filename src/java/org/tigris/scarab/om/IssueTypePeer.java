@@ -59,7 +59,7 @@ import org.tigris.scarab.services.cache.ScarabCache;
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: IssueTypePeer.java,v 1.28 2003/04/07 19:50:00 elicia Exp $
+ * @version $Id: IssueTypePeer.java,v 1.29 2003/04/22 17:32:08 jmcnally Exp $
  */
 public class IssueTypePeer 
     extends org.tigris.scarab.om.BaseIssueTypePeer
@@ -191,7 +191,8 @@ public class IssueTypePeer
         throws Exception
     {
         boolean unique = true;
-        Criteria crit = new Criteria().add(IssueTypePeer.NAME, name.trim());
+        name = name.trim();
+        Criteria crit = new Criteria().add(IssueTypePeer.NAME, name);
         crit.setIgnoreCase(true);
         List types = IssueTypePeer.doSelect(crit);
         if (types.size() > 0) 
@@ -199,8 +200,9 @@ public class IssueTypePeer
             for (int i =0; i<types.size();i++)
             {
                 IssueType it = (IssueType)types.get(i);
-                if ((id == null ||  (id != null && !it.getPrimaryKey().equals(id)))
-                    && it.getName().trim().toLowerCase().equals(name.trim().toLowerCase()))
+                if ((id == null ||  
+                     (id != null && !it.getIssueTypeId().equals(id)))
+                    && it.getName().trim().toLowerCase().equals(name.toLowerCase()))
                 {
                     unique = false;
                 }
