@@ -3,7 +3,7 @@
                                  Release Notes
                                  =============
 
-$Id: RELEASE-NOTES-3.3.1.txt,v 1.37 2002/02/21 03:06:51 billbarker Exp $
+$Id: RELEASE-NOTES-3.3.1.txt,v 1.38 2002/02/22 03:19:32 billbarker Exp $
 
 
 This document describes the changes that have been made since the
@@ -238,6 +238,9 @@ Bug No.  Description
          in the web.xml.
 
 6515	 Block setting of Date-Headers from within an include.
+
+6518	 Fix an edge condition where in some cases a JSP file beginning with
+	 a number wouldn't get mangled correctly.
 
 Configuration:
 
