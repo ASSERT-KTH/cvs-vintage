@@ -75,7 +75,7 @@ import org.tigris.scarab.services.cache.ScarabCache;
  * This class deals with modifying Global Attributes.
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: GlobalAttributeEdit.java,v 1.45 2003/05/02 00:16:16 elicia Exp $
+ * @version $Id: GlobalAttributeEdit.java,v 1.46 2003/05/02 23:32:25 jon Exp $
  */
 public class GlobalAttributeEdit extends RequireLoginFirstAction
 {
@@ -99,7 +99,7 @@ public class GlobalAttributeEdit extends RequireLoginFirstAction
             boolean isDupe = false;
             Field attributeName = null;
             Field description = null;
-            if (attr.getAttributeId() == null)
+            if (attr == null || attr.getAttributeId() == null)
             {
                 // new attribute
                 attrGroup = intake.get("Attribute", IntakeTool.DEFAULT_KEY);
