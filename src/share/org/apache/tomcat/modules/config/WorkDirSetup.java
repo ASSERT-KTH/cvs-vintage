@@ -80,6 +80,12 @@ public class WorkDirSetup extends BaseInterceptor {
     String workdirBase=null;
     boolean useWebInf=false;
     boolean oldStyle=false;
+    private int attributeInfo;
+
+    /** Workdir - a place where the servlets are allowed to write
+     */
+    public static final String ATTRIB_WORKDIR="javax.servlet.context.tempdir";
+    // old: org.apache.tomcat.workdir
     
     public WorkDirSetup() {
     }
@@ -115,6 +121,14 @@ public class WorkDirSetup extends BaseInterceptor {
     }
     
     // -------------------- Callbacks --------------------
+
+    public void engineInit( ContextManager cm )
+	throws TomcatException
+    {
+	attributeInfo=cm.getNoteId(ContextManager.REQUEST_NOTE,
+				   "req.attribute");
+    }
+
     
     public void addContext(ContextManager cm, Context ctx) {
 	// not explicitely configured
@@ -139,6 +153,20 @@ public class WorkDirSetup extends BaseInterceptor {
 	}
     }
 
+    public final Object getInfo( Context ctx, Request req,
+				 int info, String k )
+    {
+	if( req!=null )
+	    return null;
+	if( info== attributeInfo ) {
+	    // request for a context attribute, handled by tomcat
+	    if (k.equals(ATTRIB_WORKDIR)) {
+		return ctx.getWorkDir();
+	    }
+	}
+	return null;
+    }
+    
     // -------------------- Implementation --------------------
 
     /** Encoded ContextManager.getWorkDir() + host + port + path
