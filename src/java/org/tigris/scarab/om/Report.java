@@ -1206,7 +1206,8 @@ public  class Report
             date.setQueryKey(String.valueOf(i++));
             intakeDate = intake.get("ReportDate", 
                                     date.getQueryKey(), false);
-            if (intakeDate != null && intakeDate.get("Date").isSet()) 
+            if (intakeDate != null && intakeDate.get("Date").isSet() 
+                && intakeDate.get("Date").toString().length() > 0) 
             {
                 intakeDate.setValidProperties(date);
                 dates.add(date);                
