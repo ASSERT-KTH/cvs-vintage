@@ -19,7 +19,7 @@ import org.jboss.logging.Log;
  *      
  *   @see <related>
  *   @author Rickard Öberg (rickard.oberg@telkel.com)
- *   @version $Revision: 1.1 $
+ *   @version $Revision: 1.2 $
  */
 public class Info
    implements InfoMBean, MBeanRegistration
@@ -43,6 +43,7 @@ public class Info
       log.log("Java VM: "+System.getProperty("java.vm.name")+" "+System.getProperty("java.vm.version")+","+System.getProperty("java.vm.vendor"));
       log.log("System: "+System.getProperty("os.name")+" "+System.getProperty("os.version")+","+System.getProperty("os.arch"));
          
+	  // MF TODO: say everything that needs to be said here: copyright, included libs and TM, contributor and (C) jboss org 2000
       return new ObjectName(OBJECT_NAME);
    }
    

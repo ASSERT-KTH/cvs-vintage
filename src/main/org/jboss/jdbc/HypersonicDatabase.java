@@ -25,7 +25,7 @@ import org.jboss.util.ServiceMBeanSupport;
  *      
  *   @see <related>
  *   @author Rickard Öberg (rickard.oberg@telkel.com)
- *   @version $Revision: 1.2 $
+ *   @version $Revision: 1.3 $
  */
 public class HypersonicDatabase
    extends ServiceMBeanSupport
@@ -79,7 +79,7 @@ public class HypersonicDatabase
                   }
                   
                   if (!line.equals("Press [Ctrl]+[C] to abort"))
-                     log.log(line);
+                     log.debug(line);
                }
                   
                runner = null;

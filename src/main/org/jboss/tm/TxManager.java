@@ -31,7 +31,7 @@ import org.jboss.logging.Logger;
 *	@see <related>
 *	@author Rickard Öberg (rickard.oberg@telkel.com)
 *  @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
-*	@version $Revision: 1.16 $
+*	@version $Revision: 1.17 $
 */
 public class TxManager
 implements TransactionManager
@@ -56,7 +56,7 @@ implements TransactionManager
     SystemException
     {
         try {
-            Logger.log("begin tx");
+            Logger.debug("begin tx");
             
             // create tx capsule
             TxCapsule txCap = new TxCapsule(this, timeOut);
@@ -121,7 +121,7 @@ implements TransactionManager
     public Transaction suspend()
     throws SystemException
     {
-        //      Logger.log("suspend tx");
+        //      Logger.debug("suspend tx");
         
         // Useless
         
@@ -142,7 +142,7 @@ implements TransactionManager
     throws java.lang.IllegalStateException,
     SystemException
     {
-        //      Logger.log("set rollback only tx");
+        //      Logger.debug("set rollback only tx");
         getTransaction().setRollbackOnly();
     }
     
@@ -188,9 +188,9 @@ implements TransactionManager
             javax.naming.InitialContext context = new javax.naming.InitialContext();
             
             //One tx in naming
-            Logger.log("Calling get manager from JNDI");
+            Logger.debug("Calling get manager from JNDI");
             TxManager manager = (TxManager) context.lookup("TransactionManager");
-            Logger.log("Returning TM "+manager.hashCode());
+            Logger.debug("Returning TM "+manager.hashCode());
             
             return manager;
         
@@ -213,7 +213,7 @@ implements TransactionManager
     java.lang.IllegalStateException,
     SystemException
     {
-         Logger.log("txManager commit tx "+tx.hashCode());
+         Logger.debug("txManager commit tx "+tx.hashCode());
         try {
             // Look up the txCapsule and delegate
             ((TxCapsule) txCapsules.get(tx)).commit();
@@ -266,7 +266,7 @@ implements TransactionManager
     java.lang.SecurityException,
     SystemException
     {
-          Logger.log("rollback tx "+tx.hashCode());
+          Logger.debug("rollback tx "+tx.hashCode());
      
         try {
             // Look up the txCapsule and delegate

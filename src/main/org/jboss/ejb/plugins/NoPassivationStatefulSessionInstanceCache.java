@@ -32,7 +32,7 @@ import org.jboss.logging.Logger;
 *	@see <related>
 *	@author Rickard Öberg (rickard.oberg@telkel.com)
 *   @author <a href="marc.fleury@telkel.com">Marc Fleury</a>
-*	@version $Revision: 1.10 $
+*	@version $Revision: 1.11 $
 */
 public class NoPassivationStatefulSessionInstanceCache
 implements InstanceCache
@@ -83,8 +83,8 @@ implements InstanceCache
     throws RemoteException
     {
        
-        //DEBUG Logger.log("Stateful cache looking for ID "+id);
-        Logger.log("Stateful cache looking for ID "+id);
+        //DEBUG Logger.debug("Stateful cache looking for ID "+id);
+        Logger.debug("Stateful cache looking for ID "+id);
      
        // Do we have the context in cache?
        StatefulSessionEnterpriseContext ctx = 

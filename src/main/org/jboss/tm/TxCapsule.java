@@ -46,7 +46,7 @@ import org.jboss.util.timeout.TimeoutFactory;
  *  @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
  *  @author <a href="mailto:osh@sparre.dk">Ole Husgaard</a>
  *
- *  @version $Revision: 1.7 $
+ *  @version $Revision: 1.8 $
  */
 class TxCapsule implements TimeoutTarget
 {
@@ -186,9 +186,9 @@ class TxCapsule implements TimeoutTarget
              SystemException
    {
       try {
-         //DEBUG Logger.log("TxCapsule before lock");
+         //DEBUG Logger.debug("TxCapsule before lock");
 		 lock();
-         //DEBUG Logger.log("TxCapsule after lock status is "+getStringStatus(status));
+         //DEBUG Logger.debug("TxCapsule after lock status is "+getStringStatus(status));
 		 
          switch (status) {
          case Status.STATUS_PREPARING:
@@ -215,7 +215,7 @@ class TxCapsule implements TimeoutTarget
             doAfterCompletion();
             throw new RollbackException("Already marked for rollback");
          case Status.STATUS_ACTIVE:
-			 //DEBUG Logger.log("Commiting tx with status Active");
+			 //DEBUG Logger.debug("Commiting tx with status Active");
             break;
          default:
             throw new IllegalStateException("Illegal status: " + status);
@@ -225,21 +225,21 @@ class TxCapsule implements TimeoutTarget
 
          doBeforeCompletion();
 
-		 Logger.log("Before completion is done status is "+getStringStatus(status));
+		 Logger.debug("Before completion is done status is "+getStringStatus(status));
 		 
          if (status == Status.STATUS_ACTIVE) {
             if (resources.size() == 0) {
-				//DEBUG Logger.log("no resources 0 phi commit");
+				//DEBUG Logger.debug("no resources 0 phi commit");
                // Zero phase commit is really fast ;-)
                status = Status.STATUS_COMMITTED;
             } else if (resources.size() == 1) {
-               // DEBUG Logger.log("1 resource 1 phi commit");
+               // DEBUG Logger.debug("1 resource 1 phi commit");
 			   // One phase commit
 			   
                commitResources(true);
             } else {
 				
-				// DEBUG Logger.log("many resources 2 phi commit");
+				// DEBUG Logger.debug("many resources 2 phi commit");
                // Two phase commit
 
                if (!prepareResources()) {
@@ -735,9 +735,9 @@ class TxCapsule implements TimeoutTarget
       unlock();
       try {
          for (int i = 0; i < sync.size(); i++) {
-			//DEBUG Logger.log("calling beforeCompletion on synch status is "+getStringStatus(status));
+			//DEBUG Logger.debug("calling beforeCompletion on synch status is "+getStringStatus(status));
             ((Synchronization)sync.get(i)).beforeCompletion();
-			//DEBUG Logger.log("Done calling beforeCompletion on synch status is "+getStringStatus(status));
+			//DEBUG Logger.debug("Done calling beforeCompletion on synch status is "+getStringStatus(status));
             
 		}
       } finally {
@@ -851,7 +851,7 @@ class TxCapsule implements TimeoutTarget
       boolean readOnly = true;
 
       status = Status.STATUS_PREPARING;
-      Logger.log("Status Preparing: "+status);
+      Logger.debug("Status Preparing: "+status);
 
       for (int i = 0; i < resources.size(); i++) {
          // Abort prepare on state change.
@@ -867,7 +867,7 @@ class TxCapsule implements TimeoutTarget
             try {
 			   vote = resource.prepare(xid);
 			   
-               Logger.log("resource vote is "+vote);
+               Logger.debug("resource vote is "+vote);
 			   
             } finally {
                lock();

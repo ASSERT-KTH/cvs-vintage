@@ -35,7 +35,7 @@ import org.jboss.ejb.EntityPersistenceStore;
 *      
 *   @see <related>
 *   @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
-*   @version $Revision: 1.8 $
+*   @version $Revision: 1.9 $
 */
 public class CMPPersistenceManager
 implements EntityPersistenceManager {
@@ -122,9 +122,8 @@ implements EntityPersistenceManager {
             // Give it to the context
             ctx.setCacheKey(cacheKey);
          
-         
-            // insert instance in cache, it is safe
-            ((EntityInstanceCache) con.getInstanceCache()).insert(ctx);
+         	// insert instance in cache, it is safe
+         	((EntityInstanceCache) con.getInstanceCache()).insert(ctx);
          
             // Create EJBObject
             ctx.setEJBObject(con.getContainerInvoker().getEntityEJBObject(cacheKey));
@@ -215,7 +214,7 @@ implements EntityPersistenceManager {
     
     public void storeEntity(EntityEnterpriseContext ctx)
     throws RemoteException {
-        //      Logger.log("Store entity");
+        //      Logger.debug("Store entity");
         try {
             
             // Prepare the instance for storage

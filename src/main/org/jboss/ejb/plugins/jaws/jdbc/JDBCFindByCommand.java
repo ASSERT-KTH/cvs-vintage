@@ -25,7 +25,7 @@ import org.jboss.ejb.plugins.jaws.metadata.CMPFieldMetaData;
  * @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
  * @author <a href="mailto:shevlandj@kpi.com.au">Joe Shevland</a>
  * @author <a href="mailto:justin@j-m-f.demon.co.uk">Justin Forder</a>
- * @version $Revision: 1.5 $
+ * @version $Revision: 1.6 $
  */
 public class JDBCFindByCommand extends JDBCFinderCommand
 {
@@ -42,7 +42,7 @@ public class JDBCFindByCommand extends JDBCFinderCommand
       super(factory, finderMethod.getName());
       
       String cmpFieldName = finderMethod.getName().substring(6).toLowerCase();
-      Logger.log("Finder:"+cmpFieldName);
+      Logger.debug("Finder:"+cmpFieldName);
       
       // Find the meta-info for the field we want to find by
       

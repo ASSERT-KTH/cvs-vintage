@@ -19,7 +19,7 @@ import org.jboss.logging.Log;
  *      
  *   @see <related>
  *   @author Rickard Öberg (rickard.oberg@telkel.com)
- *   @version $Revision: 1.3 $
+ *   @version $Revision: 1.4 $
  */
 public class ClassPathExtension
    implements ClassPathExtensionMBean, MBeanRegistration
@@ -68,7 +68,7 @@ public class ClassPathExtension
                if (files[i].endsWith(".jar") || files[i].endsWith(".zip"))
                {
                   URL file = new File(dir, files[i]).getCanonicalFile().toURL();
-                  log.log("Added library:"+file);
+                  log.debug("Added library:"+file);
                   mlet.addURL(file);
                   
                   found++;
@@ -82,11 +82,11 @@ public class ClassPathExtension
                {
                   URL u = new URL(getClass().getProtectionDomain().getCodeSource().getLocation(),url);
                   mlet.addURL(u);
-                  log.log("Added directory:"+u);
+                  log.debug("Added directory:"+u);
                } catch (MalformedURLException e)
                {
                   mlet.addURL(new File(url).toURL());
-                  log.log("Added directory:"+url);
+                  log.debug("Added directory:"+url);
                }
             }
          } catch (Throwable ex)
@@ -99,11 +99,11 @@ public class ClassPathExtension
          {
             URL u = new URL(getClass().getProtectionDomain().getCodeSource().getLocation(),url);
             mlet.addURL(u);
-            log.log("Added library:"+u);
+            log.debug("Added library:"+u);
          } catch (MalformedURLException e)
          {
             mlet.addURL(new File(url).toURL());
-            log.log("Added library:"+url);
+            log.debug("Added library:"+url);
          }
       }
       

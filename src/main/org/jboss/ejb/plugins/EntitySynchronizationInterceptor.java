@@ -48,7 +48,7 @@ import org.jboss.logging.Logger;
 *   @see <related>
 *   @author Rickard Öberg (rickard.oberg@telkel.com)
 *   @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
-*   @version $Revision: 1.17 $
+*   @version $Revision: 1.18 $
 */
 public class EntitySynchronizationInterceptor
 extends AbstractInterceptor
@@ -207,7 +207,7 @@ extends AbstractInterceptor
 		}
 		
 		// So we can go on with the invocation
-		Logger.log("Tx is "+ ((tx == null)? "null" : tx.toString()));
+		Logger.debug("Tx is "+ ((tx == null)? "null" : tx.toString()));
 		
 		// Invocation with a running Transaction
 		
@@ -304,7 +304,7 @@ extends AbstractInterceptor
 		
 		public void beforeCompletion()
 		{
-			// DEBUG Logger.log("beforeCompletion called for ctx "+ctx.hashCode());
+			// DEBUG Logger.debug("beforeCompletion called for ctx "+ctx.hashCode());
 			
 			if (ctx.getId() != null) {
 				try {
@@ -316,9 +316,9 @@ extends AbstractInterceptor
 						// Store instance if business method was invoked
 						if (ctx.isInvoked())  {
 							
-							//DEBUG Logger.log("EntitySynchronization sync calling store on ctx "+ctx.hashCode());
+							//DEBUG Logger.debug("EntitySynchronization sync calling store on ctx "+ctx.hashCode());
 							
-							Logger.log("EntitySynchronization sync calling store on ctx "+ctx.hashCode());
+							Logger.debug("EntitySynchronization sync calling store on ctx "+ctx.hashCode());
 							
 							container.getPersistenceManager().storeEntity(ctx);
 						}
@@ -342,7 +342,7 @@ extends AbstractInterceptor
 		{
 			if (ctx.getId() != null) {
 				
-				//DEBUG Logger.log("afterCompletion called for ctx "+ctx.hashCode());
+				//DEBUG Logger.debug("afterCompletion called for ctx "+ctx.hashCode());
 				
 				// If rolled back -> invalidate instance
 				if (status == Status.STATUS_ROLLEDBACK) {

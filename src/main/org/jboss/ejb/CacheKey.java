@@ -19,7 +19,7 @@ package org.jboss.ejb;
 *
 *   @see org.jboss.ejb.plugins.NoPassivationInstanceCache.java
 *   @author <a href="marc.fleury@telkel.com">Marc Fleury</a>
-*   @version $Revision: 1.5 $
+*   @version $Revision: 1.6 $
 */
 public class CacheKey
     implements java.io.Externalizable
@@ -48,7 +48,6 @@ public class CacheKey
         
 		try {
         	hashCode = (new java.rmi.MarshalledObject(id)).hashCode();
-			System.out.println("CacheKeyHash:" +hashCode);
     	}
 		catch (Exception e) {e.printStackTrace();}
 	}

@@ -39,7 +39,7 @@ import org.jboss.metadata.MethodMetaData;
 *   @author Rickard Öberg (rickard.oberg@telkel.com)
 *   @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
 *   @author <a href="mailto:sebastien.alborini@m4x.org">Sebastien Alborini</a>
-*   @version $Revision: 1.2 $
+*   @version $Revision: 1.3 $
 */
 public class TxInterceptorCMT
 extends AbstractInterceptor
@@ -149,8 +149,8 @@ extends AbstractInterceptor
         // New transaction is the new transaction this might start
         Transaction newTransaction = null;
         
-        //DEBUG       Logger.log("Current transaction in MI is "+mi.getTransaction()); 
-        //DEBUG       Logger.log("Current method "+mi.getMethod().getName());           
+        //DEBUG       Logger.debug("Current transaction in MI is "+mi.getTransaction()); 
+        //DEBUG       Logger.debug("Current method "+mi.getMethod().getName());           
         byte transType = getTransactionMethod(mi.getMethod(), remoteInvocation);
         
         printMethod(mi.getMethod(), transType);
@@ -239,8 +239,8 @@ extends AbstractInterceptor
                     
                     finally {
                         
-                        //DEBUG Logger.log("TxInterceptorCMT: in finally");
-                        Logger.log("TxInterceptorCMT: In finally");
+                        //DEBUG Logger.debug("TxInterceptorCMT: in finally");
+                        Logger.debug("TxInterceptorCMT: In finally");
                         
                         // Only do something if we started the transaction
                         if (newTransaction != null) {
@@ -259,9 +259,9 @@ extends AbstractInterceptor
                                 // This will happen if
                                 // a) everything goes well
                                 // b) app. exception was thrown
-                                Logger.log("TxInterceptorCMT:before commit");
+                                Logger.debug("TxInterceptorCMT:before commit");
                                 newTransaction.commit();
-                                Logger.log("TxInterceptorCMT:after commit");
+                                Logger.debug("TxInterceptorCMT:after commit");
                             
                             }
                             
@@ -413,7 +413,7 @@ extends AbstractInterceptor
         if(b != null) return b.byteValue();
             
         BeanMetaData bmd = container.getBeanMetaData();
-        //DEBUG Logger.log("Found metadata for bean '"+bmd.getEjbName()+"'"+" method is "+m.getName());
+        //DEBUG Logger.debug("Found metadata for bean '"+bmd.getEjbName()+"'"+" method is "+m.getName());
         byte result = bmd.getMethodTransactionType(m.getName(), m.getParameterTypes(), remoteInvocation);
         
         // provide default if method is not found in descriptor 

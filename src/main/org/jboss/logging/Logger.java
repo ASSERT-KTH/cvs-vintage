@@ -17,7 +17,7 @@ import javax.management.*;
  *      
  *   @see <related>
  *   @author Rickard Öberg (rickard.oberg@telkel.com)
- *   @version $Revision: 1.4 $
+ *   @version $Revision: 1.5 $
  */
 public class Logger
    extends NotificationBroadcasterSupport
@@ -73,6 +73,19 @@ public class Logger
       Log l = (Log)Log.getLog();
       l.debug(exception.toString());
    }
+   
+   public static void error(String message) 
+   {
+	  Log l = (Log) Log.getLog();
+	  l.error(message);
+  }
+  
+  
+   public static void error(Throwable exception) 
+   {
+	  Log l = (Log) Log.getLog();
+	  l.error(exception.toString());
+  }
    
    // Constructors --------------------------------------------------
    public Logger()

@@ -31,7 +31,7 @@ import org.jboss.logging.Logger;
  *      
  *   @see <related>
  *   @author Rickard Öberg (rickard.oberg@telkel.com)
- *   @version $Revision: 1.16 $
+ *   @version $Revision: 1.17 $
  */
 public class StatefulSessionContainer
    extends Container
@@ -438,7 +438,7 @@ public class StatefulSessionContainer
         }
         catch (NoSuchMethodException e) {
                     
-            Logger.log("Couldn't find getEJBObject method on container");
+            Logger.debug("Couldn't find getEJBObject method on container");
         }
         catch (Exception e) { Logger.exception(e);}
         
@@ -468,7 +468,7 @@ public class StatefulSessionContainer
             }
          } catch (NoSuchMethodException e)
          {
-            Logger.log(m[i].getName() + " in bean has not been mapped");
+            Logger.error(m[i].getName() + " in bean has not been mapped");
          }
       }
       
@@ -502,13 +502,13 @@ public class StatefulSessionContainer
          Method m = (Method)homeMapping.get(mi.getMethod());
          // Invoke and handle exceptions
          
-         Logger.log("SSC:invokeHome:mi is "+mi.getMethod().getName()+" map is "+m.getName());
+         Logger.debug("SSC:invokeHome:mi is "+mi.getMethod().getName()+" map is "+m.getName());
          try
          {          
             return m.invoke(StatefulSessionContainer.this, new Object[] { mi });
          } catch (InvocationTargetException e)
          {
-             Logger.log(e.getMessage());
+             Logger.debug(e.getMessage());
             Throwable ex = e.getTargetException();
             if (ex instanceof Exception)
                throw (Exception)ex;
@@ -523,7 +523,7 @@ public class StatefulSessionContainer
          // Get method
          Method m = (Method)beanMapping.get(mi.getMethod());
          
-         Logger.log("SSC:invoke:mi is "+mi.getMethod().getName()+" map is "+m.getName());
+         Logger.debug("SSC:invoke:mi is "+mi.getMethod().getName()+" map is "+m.getName());
          // Select instance to invoke (container or bean)
          if (m.getDeclaringClass().equals(StatefulSessionContainer.this.getClass()))
          {

@@ -42,7 +42,7 @@ import org.jboss.proxy.InvocationHandler;
  *      
  *   @see <related>
  *   @author Rickard Öberg (rickard.oberg@telkel.com)
- *   @version $Revision: 1.7 $
+ *   @version $Revision: 1.8 $
  */
 public class DataSourceImpl
    extends ServiceMBeanSupport
@@ -99,7 +99,7 @@ public class DataSourceImpl
       // Bind in JNDI
       bind(new InitialContext(), jndiName, this);
       
- 		log.log("Connection pool for "+url+" bound to "+jndiName);
+ 		log.debug("Connection pool for "+url+" bound to "+jndiName);
       
       // Test database
       getConnection().close();
@@ -111,7 +111,7 @@ public class DataSourceImpl
       try
       {
          new InitialContext().unbind(jndiName);
-//DEBUG         log.log("Connection pool for "+url+" removed from JNDI");
+//DEBUG         log.debug("Connection pool for "+url+" removed from JNDI");
       } catch (NamingException e)
       {
 			// Ignore

@@ -71,7 +71,7 @@ import org.w3c.dom.Element;
  *      @author Rickard Öberg (rickard.oberg@telkel.com)
  *		@author <a href="mailto:sebastien.alborini@m4x.org">Sebastien Alborini</a>
  *      @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
- *      @version $Revision: 1.23 $
+ *      @version $Revision: 1.24 $
  */
 public abstract class JRMPContainerInvoker
    extends RemoteServer
@@ -100,12 +100,12 @@ public abstract class JRMPContainerInvoker
    public void setOptimized(boolean optimize)
    {
       this.optimize = optimize;
-System.out.println("Container Invoker optimize set to '"+optimize+"'");
+		Logger.debug("Container Invoker optimize set to '"+optimize+"'");
    }
 
    public boolean isOptimized()
    {
-System.out.println("Optimize in action: '"+optimize+"'");
+Logger.debug("Optimize in action: '"+optimize+"'");
       return optimize;
    }
 
@@ -139,17 +139,17 @@ System.out.println("Optimize in action: '"+optimize+"'");
           rmi.setMethodMap(homeMethodInvokerMap);
 
          Transaction tx = rmi.getTransaction();
-//DEBUG	        Logger.log("The home transaction is "+tx);
+//DEBUG	        Logger.debug("The home transaction is "+tx);
 
-         //Logger.log(container.getTransactionManager().toString());
+         //Logger.debug(container.getTransactionManager().toString());
          // MF FIXME: the following don't belong here, the transaction is
         // passed by the call, not implicitely...
         //if (tx == null)
          // tx = container.getTransactionManager().getTransaction();
 
                                 
-     //DEBUG Logger.log("JRMPCI:invokeHome "+m.getName());
-	 Logger.log("JRMPCI:invokeHome "+rmi.getMethod().getName());
+     //DEBUG Logger.debug("JRMPCI:invokeHome "+m.getName());
+	 Logger.debug("JRMPCI:invokeHome "+rmi.getMethod().getName());
 	 
          return new MarshalledObject(invokeHome(rmi.getMethod(), rmi.getArguments(), tx,
         rmi.getPrincipal(), rmi.getCredential() ));
@@ -183,8 +183,8 @@ System.out.println("Optimize in action: '"+optimize+"'");
          Object[] args = rmi.getArguments();
 
 
-	   //DEBUG Logger.log("JRMPCI:invoke "+m.getName());
-	 	Logger.log("JRMPCI:invoke "+m.getName());
+	   //DEBUG Logger.debug("JRMPCI:invoke "+m.getName());
+	 	Logger.debug("JRMPCI:invoke "+m.getName());
 	 
          return new MarshalledObject(invoke(id, m, args, tx,
           rmi.getPrincipal(), rmi.getCredential()));
@@ -199,9 +199,9 @@ System.out.println("Optimize in action: '"+optimize+"'");
       throws Exception
    {
 	   //DEBUG
-       Logger.log("JRMPCI (local) :invokeHome "+m.getName());
-       if (tx != null) Logger.log("Tx is "+tx.toString());
-          else Logger.log("Tx is null");
+       Logger.debug("JRMPCI (local) :invokeHome "+m.getName());
+       if (tx != null) Logger.debug("Tx is "+tx.toString());
+          else Logger.debug("Tx is null");
 		  
 	   //DEBUG
        return container.invokeHome(new MethodInvocation(null , m, args, tx,
@@ -213,9 +213,9 @@ System.out.println("Optimize in action: '"+optimize+"'");
       throws Exception
    {
 	   // DEBUG
-	     Logger.log("JRMPCI (local) :invoke "+m.getName());
-       if (tx != null) Logger.log("Tx is "+tx.toString());
-          else Logger.log("Tx is null");
+	     Logger.debug("JRMPCI (local) :invoke "+m.getName());
+       if (tx != null) Logger.debug("Tx is "+tx.toString());
+          else Logger.debug("Tx is null");
 		//DEBUG
        return container.invoke(new MethodInvocation(id, m, args, tx, identity, credential));
    }
@@ -288,10 +288,10 @@ System.out.println("Optimize in action: '"+optimize+"'");
          else
             pkClass = container.getClassLoader().loadClass(metaData.getEjbClass()).getField(metaData.getPrimKeyField()).getClass();
          } catch(NoSuchFieldException e) {
-            System.out.println("Unable to identify Bean's Primary Key class!  Did you specify a primary key class and/or field?  Does that field exist?");
+            Logger.error("Unable to identify Bean's Primary Key class!  Did you specify a primary key class and/or field?  Does that field exist?");
             throw new RuntimeException("Primary Key Problem");
          } catch(NullPointerException e) {
-            System.out.println("Unable to identify Bean's Primary Key class!  Did you specify a primary key class and/or field?  Does that field exist?");
+            Logger.error("Unable to identify Bean's Primary Key class!  Did you specify a primary key class and/or field?  Does that field exist?");
             throw new RuntimeException("Primary Key Problem");
          }
          ejbMetaData = new EJBMetaDataImpl(
@@ -364,7 +364,7 @@ System.out.println("Optimize in action: '"+optimize+"'");
                 ((ContainerInvokerContainer)container).getContainerInvoker());
 
 
-            Logger.log("Bound "+container.getBeanMetaData().getEjbName() + " to " + container.getBeanMetaData().getJndiName());
+            Logger.debug("Bound "+container.getBeanMetaData().getEjbName() + " to " + container.getBeanMetaData().getJndiName());
         } catch (IOException e)
         {
             throw new ServerException("Could not bind either home or invoker", e);
@@ -395,7 +395,7 @@ System.out.println("Optimize in action: '"+optimize+"'");
    public void importXml(Element element) throws DeploymentException {
        String opt = MetaData.getElementContent(MetaData.getUniqueChild(element, "Optimized"));
        optimize = Boolean.valueOf(opt).booleanValue();
-System.out.println("Container Invoker Optimize='"+optimize+"'");
+       Logger.debug("Container Invoker Optimize='"+optimize+"'");
    }
 
 

@@ -12,7 +12,7 @@ import java.util.Properties;
 /**
  * Database driver for unit tests.  Creates connections that implement virtually
  * nothing - enough to test with, in other words.
- * @version $Revision: 1.2 $
+ * @version $Revision: 1.3 $
  * @author Aaron Mulder (ammulder@alumni.princeton.edu)
  */
 public class TestDBDriver implements Driver {
@@ -23,7 +23,7 @@ public class TestDBDriver implements Driver {
         try {
             DriverManager.registerDriver(TestDBDriver.instance());
         } catch(SQLException e) {
-            Logger.log("Unable to register Test DB pool driver!");
+            Logger.error("Unable to register Test DB pool driver!");
             Logger.exception(e);
         }
     }

@@ -29,6 +29,7 @@ import org.jboss.ejb.EntityEnterpriseContext;
 import org.jboss.ejb.CacheKey;
 
 import org.jboss.metadata.EntityMetaData;
+import org.jboss.logging.Logger;
 
 /**
 *	<description> 
@@ -37,7 +38,7 @@ import org.jboss.metadata.EntityMetaData;
 *	@author Rickard Öberg (rickard.oberg@telkel.com)
 *   @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
 *   @author <a href="mailto:andreas.schaefer@madplanet.com">Andy Schaefer</a>
-*	@version $Revision: 1.12 $
+*	@version $Revision: 1.13 $
 */
 public class NoPassivationEntityInstanceCache
 implements EntityInstanceCache
@@ -102,7 +103,7 @@ implements EntityInstanceCache
         // Use the CacheKey for the rest of the method
         CacheKey cacheKey = (CacheKey) id;
 		
-		System.out.println("Get "+cacheKey+" from cache");
+		Logger.debug("Get "+cacheKey+" from cache");
         
         EntityEnterpriseContext ctx;
       
@@ -131,7 +132,7 @@ implements EntityInstanceCache
        // Tell the context the key 
        ctx.setCacheKey(cacheKey);
        
-        // DEBUG Logger.log("Got entity:"+ctx.getId());
+        // DEBUG Logger.debug("Got entity:"+ctx.getId());
        
         return ctx;
     }

@@ -27,7 +27,7 @@ import org.jboss.util.ServiceMBeanSupport;
  *
  *   @see <related>
  *   @author Rickard Öberg (rickard.oberg@telkel.com)
- *   @version $Revision: 1.3 $
+ *   @version $Revision: 1.4 $
  */
 public class ConfigurationService
    extends ServiceMBeanSupport
@@ -127,7 +127,7 @@ public class ConfigurationService
 								editor.setAsText(attributeValue);
 								Object value = editor.getValue();
 
-								log.log(attributeName +" set to "+attributeValue+" in "+name);
+								log.debug(attributeName +" set to "+attributeValue+" in "+name);
 								server.setAttribute(objectName, new Attribute(attributeName, value));
 
 								break;

@@ -29,7 +29,7 @@ import org.jboss.logging.Logger;
 *	@see <related>
 *	@author Rickard Öberg (rickard.oberg@telkel.com)
 *  @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
-*	@version $Revision: 1.9 $
+*	@version $Revision: 1.10 $
 */
 public class RandomEntityInstanceCache
 extends NoPassivationEntityInstanceCache
@@ -81,7 +81,7 @@ extends NoPassivationEntityInstanceCache
          // Passivation loop
          while(running)
          {
-          //            Logger.log("Clearing cache");
+          //            Logger.debug("Clearing cache");
           // Passivate old. Lock cache first
           //synchronized(RandomEntityInstanceCache.this)
           synchronized(cache)
@@ -127,7 +127,7 @@ extends NoPassivationEntityInstanceCache
                                 currentActive--;
                    }
                     
-                   catch (Exception e) { Logger.log("Could not passivate instance");}
+                   catch (Exception e) { Logger.warning("Could not passivate instance");}
                  
                    // Are we done?
                    if (currentActive == minActive) break;
@@ -135,8 +135,8 @@ extends NoPassivationEntityInstanceCache
               
               }    
           }	
-          // DEBUG Logger.log("Passivation done");
-                Logger.log("Passivation done");
+          // DEBUG Logger.debug("Passivation done");
+                Logger.debug("Passivation done");
           
           // Sleep
           try

@@ -67,7 +67,7 @@ import org.jnp.server.NamingServer;
  *   @see ContainerFactory
  *   @author Rickard Öberg (rickard.oberg@telkel.com)
  *   @author <a href="marc.fleury@telkel.com">Marc Fleury</a>
- *   @version $Revision: 1.26 $
+ *   @version $Revision: 1.27 $
  */
 public abstract class Container
 {
@@ -396,7 +396,7 @@ public abstract class Container
              {
 
                 EjbRefMetaData ref = (EjbRefMetaData)enum.next();
-                Logger.log("Binding an EJBReference "+ref.getName());
+                Logger.debug("Binding an EJBReference "+ref.getName());
 
                 if (ref.getLink() != null)
                 {
@@ -450,7 +450,7 @@ public abstract class Container
                                     if (DataSource.class.isAssignableFrom(cl))
                                     {
                                         // Found it!!
-                                        Logger.log("Using default DataSource:"+pair.getName());
+                                        Logger.debug("Using default DataSource:"+pair.getName());
                                         finalName = pair.getName();
                                         list.close();
                                         break;
@@ -488,7 +488,7 @@ public abstract class Container
                    }
                 } else {
                    // Resource Manager bindings
-                   Logger.log("Binding resource manager "+finalName+ " with JDNI ENC " +ref.getRefName());
+                   Logger.debug("Binding resource manager "+finalName+ " with JDNI ENC " +ref.getRefName());
                    bind(ctx, ref.getRefName(), new LinkRef(finalName));
                 }
              }

@@ -76,7 +76,7 @@ import org.jboss.logging.Logger;
 *   @author <a href="mailto:jplindfo@helsinki.fi">Juha Lindfors</a>
 *   @author <a href="mailto:sebastien.alborini@m4x.org">Sebastien Alborini</a>
 *
-*   @version $Revision: 1.42 $
+*   @version $Revision: 1.43 $
 */
 public class ContainerFactory
     extends org.jboss.util.ServiceMBeanSupport
@@ -142,7 +142,7 @@ public class ContainerFactory
          tmpDir = new File(new File(tmpFile.getFile()).getParent(),"deploy/");    
          tmpDir.mkdirs();
          
-         log.log("Temporary directory set to:"+tmpDir);
+         log.debug("Temporary directory set to:"+tmpDir);
          
          // Clear tmp directory of previously deployed files
          // This is to clear up if jBoss previously crashed, hence not removing files properly
@@ -154,11 +154,11 @@ public class ContainerFactory
          
          if (files.length > 0)
          {
-            log.log("Previous deployments removed");
+            log.debug("Previous deployments removed");
          }
       } else
       {
-         log.log("Using the systems temporary directory");
+         log.debug("Using the systems temporary directory");
       }
    }
  
@@ -282,8 +282,7 @@ public class ContainerFactory
          // copy the jar file to prevent locking - redeploy failure
          if (url.getProtocol().startsWith("file") && !url.getFile().endsWith("/")) 
          {
-            System.out.println(tmpDir);
-         
+           
           File jarFile = new File(url.getFile());
             File tmp;
             if (tmpDir == null)
@@ -319,7 +318,8 @@ public class ContainerFactory
                      String classPathEntry = classPathTokens.nextToken();
                      try
                      {
-                        URL u;
+
+                     URL u;
                         File dir;
 
                         // Extension to "Class-Path:" format: dir/*
@@ -391,7 +391,7 @@ public class ContainerFactory
                     {
                        public void beanChecked(VerificationEvent event)
                        {
-                           Logger.log(event.getName() + ": " + event.getMessage());
+                           Logger.debug(event.getName() + ": " + event.getMessage());
                        }
                        
                        public void specViolation(VerificationEvent event)

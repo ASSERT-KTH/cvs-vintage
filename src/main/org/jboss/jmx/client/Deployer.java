@@ -14,14 +14,13 @@ import javax.management.ObjectName;
 import javax.naming.InitialContext;
 
 import org.jboss.jmx.interfaces.JMXAdaptor;
-import org.jboss.logging.Logger;
 
 /**
  *   <description> 
  *      
  *   @see <related>
  *   @author Rickard Öberg (rickard.oberg@telkel.com)
- *   @version $Revision: 1.2 $
+ *   @version $Revision: 1.3 $
  */
 public class Deployer
 {
@@ -33,9 +32,9 @@ public class Deployer
 	public static void main(String[] args)
 		throws Exception
 	{
-		Logger.log("Deploying " + args[0]);		
+		System.out.println("Deploying " + args[0]);		
 		new Deployer().deploy(args[0]);
-		Logger.log(args[0] + " has been deployed successfully");		
+		System.out.println(args[0] + " has been deployed successfully");		
 	}
 
    // Constructors --------------------------------------------------

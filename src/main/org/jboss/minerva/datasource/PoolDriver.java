@@ -26,7 +26,7 @@ import org.jboss.logging.Logger;
  * call to load it.</P>
  * @see org.jboss.minerva.datasource.JDBCPoolDataSource
  * @see org.jboss.minerva.datasource.XAPoolDataSource
- * @version $Revision: 1.5 $
+ * @version $Revision: 1.6 $
  * @author Aaron Mulder (ammulder@alumni.princeton.edu)
  */
 public class PoolDriver implements Driver {
@@ -37,7 +37,7 @@ public class PoolDriver implements Driver {
         try {
             DriverManager.registerDriver(PoolDriver.instance());
         } catch(SQLException e) {
-            Logger.log("Unable to register Minerva DB pool driver!");
+            Logger.error("Unable to register Minerva DB pool driver!");
             Logger.exception(e);
         }
     }

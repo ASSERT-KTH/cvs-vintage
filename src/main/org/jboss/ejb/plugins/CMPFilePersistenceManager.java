@@ -42,7 +42,7 @@ import org.jboss.ejb.EntityEnterpriseContext;
  *	@see <related>
  *	@author Rickard Öberg (rickard.oberg@telkel.com)
  *  @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
- *	@version $Revision: 1.4 $
+ *	@version $Revision: 1.5 $
  */
 public class CMPFilePersistenceManager
    implements EntityPersistenceStore
@@ -142,18 +142,18 @@ public class CMPFilePersistenceManager
    {
       if (finderMethod.getName().equals("findAll"))
       {
-      //         Logger.log("Find all entities");
+      //         Logger.debug("Find all entities");
          
          String[] files = dir.list();
          ArrayList result = new ArrayList();
          for (int i = 0; i < files.length; i++)
             if (files[i].endsWith(".ser"))
             {
-//               Logger.log("Found entity");
+//               Logger.debug("Found entity");
                result.add(files[i].substring(0,files[i].length()-4));
             }
             
-//         Logger.log("Find all entities done");
+//         Logger.debug("Find all entities done");
          return result;
       } else
       {
@@ -215,7 +215,7 @@ public class CMPFilePersistenceManager
    public void storeEntity(EntityEnterpriseContext ctx)
       throws RemoteException
    {
-//      Logger.log("Store entity");
+//      Logger.debug("Store entity");
      
 	   storeEntity(ctx.getId(), ctx.getInstance());
    }
@@ -233,7 +233,7 @@ public class CMPFilePersistenceManager
       // Remove file
       if (!getFile(ctx.getId()).delete())
          throw new RemoveException("Could not remove file:"+getFile(ctx.getId()));
-//      Logger.log("Removed file for"+ctx.getId());
+//      Logger.debug("Removed file for"+ctx.getId());
    }
    
    // Z implementation ----------------------------------------------

@@ -26,7 +26,7 @@ import org.jboss.ejb.plugins.jaws.metadata.CMPFieldMetaData;
  * @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
  * @author <a href="mailto:shevlandj@kpi.com.au">Joe Shevland</a>
  * @author <a href="mailto:justin@j-m-f.demon.co.uk">Justin Forder</a>
- * @version $Revision: 1.5 $
+ * @version $Revision: 1.6 $
  */
 public class JDBCInitCommand
    extends JDBCUpdateCommand
@@ -91,7 +91,7 @@ public class JDBCInitCommand
 
          // Try to create it
          if(created) {
-             System.out.println("Table '"+jawsEntity.getTableName()+"' already exists!");
+             log.log("Table '"+jawsEntity.getTableName()+"' already exists");
          } else {
              try
              {

@@ -42,7 +42,7 @@ import org.jboss.metadata.EntityMetaData;
 *   @see <related>
 *   @author Rickard Öberg (rickard.oberg@telkel.com)
 *   @author <a href="marc.fleury@telkel.com">Marc Fleury</a>
-*   @version $Revision: 1.11 $
+*   @version $Revision: 1.12 $
 */
 public class EntityInstanceInterceptor
 extends AbstractInterceptor
@@ -94,7 +94,7 @@ extends AbstractInterceptor
 			} 
 			else
 			{
-				// DEBUG           Logger.log("Entity was created; not returned to pool");
+				// DEBUG           Logger.debug("Entity was created; not returned to pool");
 				synchronized (ctx) {
 					
 					//Let the waiters know
@@ -201,7 +201,7 @@ extends AbstractInterceptor
 			throw e;
 		} finally
 		{
-			//         Logger.log("Release instance for "+id);
+			//         Logger.debug("Release instance for "+id);
 			if (ctx != null)
 			{
 				

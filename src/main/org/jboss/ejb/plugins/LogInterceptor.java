@@ -33,7 +33,7 @@ import org.jboss.logging.Logger;
  *      
  *   @see <related>
  *   @author Rickard Öberg (rickard.oberg@telkel.com)
- *   @version $Revision: 1.7 $
+ *   @version $Revision: 1.8 $
  */
 public class LogInterceptor
    extends AbstractInterceptor
@@ -156,7 +156,8 @@ public class LogInterceptor
          return getNext().invoke(mi);
       } catch (Exception e)
       {
-         //DEBUG log.exception(e);
+         // RO TODO: make a finer grained exception logging, the app stuff needs to go through and the server stuff needs to be logged
+		 log.exception(e);
          if (e.getMessage() != null)
          log.log(e.getMessage());
          throw e;

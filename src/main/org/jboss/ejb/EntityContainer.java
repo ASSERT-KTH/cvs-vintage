@@ -35,7 +35,7 @@ import org.jboss.util.SerializableEnumeration;
 *   @author Rickard Öberg (rickard.oberg@telkel.com)
 *   @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
 *   @author <a href="mailto:sebastien.alborini@m4x.org">Sebastien Alborini</a>
-*   @version $Revision: 1.26 $
+*   @version $Revision: 1.27 $
 */
 public class EntityContainer
 extends Container
@@ -306,7 +306,7 @@ implements ContainerInvokerContainer, InstancePoolContainer
     throws Exception
     {
         
-       Logger.log("invokeHome");
+       Logger.debug("invokeHome");
        try { return getInterceptor().invokeHome(mi); }
        catch (Exception e) {e.printStackTrace(); throw e;}
        

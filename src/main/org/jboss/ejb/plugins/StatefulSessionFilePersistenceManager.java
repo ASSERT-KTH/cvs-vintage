@@ -60,7 +60,7 @@ import org.jboss.logging.Logger;
  *  @see <related>
  *  @author Rickard Öberg (rickard.oberg@telkel.com)
  *  @author <a href="marc.fleury@telkel.com">Marc Fleury</a>
- *  @version $Revision: 1.9 $
+ *  @version $Revision: 1.10 $
  */
 public class StatefulSessionFilePersistenceManager
    implements StatefulSessionPersistenceManager
@@ -106,7 +106,7 @@ public class StatefulSessionFilePersistenceManager
          
        dir.mkdirs();
        
-       Logger.log("Storing sessions for "+ejbName+" in:"+dir);
+       Logger.debug("Storing sessions for "+ejbName+" in:"+dir);
       
        // Clear dir of old files
        File[] sessions = dir.listFiles();
@@ -114,7 +114,7 @@ public class StatefulSessionFilePersistenceManager
        {
          sessions[i].delete();
        }
-       Logger.log(sessions.length + " old sessions removed");
+       Logger.debug(sessions.length + " old sessions removed");
    }
    
    public void start()

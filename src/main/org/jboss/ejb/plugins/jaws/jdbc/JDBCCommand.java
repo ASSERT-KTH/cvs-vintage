@@ -52,7 +52,7 @@ import org.jboss.logging.Logger;
  * utility methods that database commands may need to call.
  *
  * @author <a href="mailto:justin@j-m-f.demon.co.uk">Justin Forder</a>
- * @version $Revision: 1.15 $
+ * @version $Revision: 1.16 $
  */
 public abstract class JDBCCommand
 {
@@ -371,9 +371,9 @@ public abstract class JDBCCommand
                 if(rs.wasNull()) return null;
                 return result;
             } catch(IllegalAccessException e) {
-                System.out.println("Unable to read from ResultSet: "+e);
+                log.debug("Unable to read from ResultSet: "+e);
             } catch(InvocationTargetException e) {
-                System.out.println("Unable to read from ResultSet: "+e);
+                log.debug("Unable to read from ResultSet: "+e);
             }
         }
 
@@ -410,7 +410,7 @@ public abstract class JDBCCommand
 				if (result instanceof Handle) result = ((Handle)result).getEJBObject();
 			
                 if(!destination.isAssignableFrom(result.getClass())) {
-                    System.out.println("Unable to load a ResultSet column into a variable of type '"+destination.getName()+"' (got a "+result.getClass().getName()+")");
+                    log.debug("Unable to load a ResultSet column into a variable of type '"+destination.getName()+"' (got a "+result.getClass().getName()+")");
                     result = null;
                 }
 

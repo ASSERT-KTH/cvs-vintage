@@ -28,7 +28,7 @@ import org.jboss.logging.Logger;
 *   @see <related>
 *   @author Rickard Öberg (rickard.oberg@telkel.com)
 *   @author <a href="marc.fleury@telkel.com">Marc Fleury</a>
-*   @version $Revision: 1.11 $
+*   @version $Revision: 1.12 $
 */
 public class StatelessSessionContainer
     extends Container
@@ -341,7 +341,7 @@ public class StatelessSessionContainer
         for (int i = 0; i < m.length; i++)
         {
             // Implemented by container
-//          Logger.log("Mapping "+m[i].getName());
+            Logger.debug("Mapping "+m[i].getName());
             map.put(m[i], getClass().getMethod(m[i].getName()+"Home", m[i].getParameterTypes()));
         }
         
@@ -359,21 +359,21 @@ public class StatelessSessionContainer
             {
                 // Implemented by bean
                 map.put(m[i], beanClass.getMethod(m[i].getName(), m[i].getParameterTypes()));
-                //Logger.log("Mapped "+m[i].getName()+" "+m[i].hashCode()+"to "+map.get(m[i]));
+                Logger.debug("Mapped "+m[i].getName()+" "+m[i].hashCode()+"to "+map.get(m[i]));
             }
             else
             {
                 try
                 {
                     // Implemented by container
-                    //Logger.log("Mapped Container method "+m[i].getName() +" HASH "+m[i].hashCode());
+                    Logger.debug("Mapped Container method "+m[i].getName() +" HASH "+m[i].hashCode());
                     map.put(m[i], getClass().getMethod(m[i].getName(), new Class[] { MethodInvocation.class }));
                     
                     
                 } catch (NoSuchMethodException e)
                 {
                     // DEBUG Logger.exception(e);
-                    Logger.log(m[i].getName() + " in bean has not been mapped");
+                    Logger.error(m[i].getName() + " in bean has not been mapped");
                     
                 }
             }

@@ -23,7 +23,7 @@ import java.util.HashMap;
  *	@author Rickard Öberg (rickard.oberg@telkel.com)
  *  @author <a href="mailto:Richard.Monson-Haefel@jGuru.com">Richard Monson-Haefel</a>.
  *  @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>.
- *	@version $Revision: 1.7 $
+ *	@version $Revision: 1.8 $
  */
 public class MethodInvocation
    implements java.io.Serializable
@@ -95,9 +95,7 @@ public class MethodInvocation
             methodMap = new HashMap();
             for (int i = 0; i < methods.length; i++)
             {
-				System.out.println("Storing "+methods[i].getDeclaringClass()+methods[i].getName()+methods[i].getParameterTypes().length+ " Hash "+calculateHash(methods[i]));
-
-               methodMap.put(new Integer(calculateHash(methods[i])), methods[i]);
+			    methodMap.put(new Integer(calculateHash(methods[i])), methods[i]);
             }
             clazzMap.put(clazz, methodMap);
          }

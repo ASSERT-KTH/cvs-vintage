@@ -15,8 +15,9 @@ import java.lang.reflect.Method;
 import java.util.Map;
 
 import java.security.Principal;
-
 import javax.transaction.Transaction;
+
+import org.jboss.logging.Logger;
 
 /**
  *	MethodInvocation
@@ -26,7 +27,7 @@ import javax.transaction.Transaction;
  *	@see <related>
  *	@author Rickard Öberg (rickard.oberg@telkel.com)
  *  @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>.
- *	@version $Revision: 1.5 $
+ *	@version $Revision: 1.6 $
  */
 public class MethodInvocation
 {
@@ -81,7 +82,8 @@ public class MethodInvocation
 	public void setTransaction(Transaction tx)
 	{
 		
-		//Logger.log("Setting a transaction on Method invocation"+hashCode()+" "+m.getName()+" with "+tx);
+		Logger.debug("Setting a transaction on Method invocation"+hashCode()+" "+m.getName()+" with "+tx);
+		
 		this.tx = tx;
 		
 	}

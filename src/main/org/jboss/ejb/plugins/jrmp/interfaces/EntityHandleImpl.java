@@ -19,7 +19,7 @@ import java.lang.reflect.Method;
  *      
  *	@see <related>
  *	@author Rickard Öberg (rickard.oberg@telkel.com)
- *	@version $Revision: 1.4 $
+ *	@version $Revision: 1.5 $
  */
 public class EntityHandleImpl
    implements Handle
@@ -47,7 +47,6 @@ public class EntityHandleImpl
    {
       try
       {
-         System.out.println("Resolve handle:"+name+"#"+id);
          Object home = new InitialContext().lookup(name);
          
          Method finder = home.getClass().getMethod("findByPrimaryKey", new Class[] { id.getClass() });

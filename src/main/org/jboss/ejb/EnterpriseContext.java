@@ -36,7 +36,7 @@ import org.jboss.logging.Logger;
  *	@author Rickard Öberg (rickard.oberg@telkel.com)
  *  @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
  *  @author <a href="mailto:sebastien.alborini@m4x.org">Sebastien Alborini</a>
- *	@version $Revision: 1.12 $
+ *	@version $Revision: 1.13 $
  */
 public abstract class EnterpriseContext
 {
@@ -92,7 +92,7 @@ public abstract class EnterpriseContext
 
    public void setTransaction(Transaction transaction) {
        
-       Logger.log("EnterpriseContext.setTransaction "+((transaction == null) ? "null" : Integer.toString(transaction.hashCode()))); 
+       Logger.debug("EnterpriseContext.setTransaction "+((transaction == null) ? "null" : Integer.toString(transaction.hashCode()))); 
        this.transaction = transaction; 
     }
     
@@ -111,7 +111,7 @@ public abstract class EnterpriseContext
 		
 		//new Exception().printStackTrace();
 		
-		Logger.log("EnterpriseContext.lock() "+hashCode()+" "+locked);
+		Logger.debug("EnterpriseContext.lock() "+hashCode()+" "+locked);
     }
     
     public void unlock() {
@@ -119,15 +119,16 @@ public abstract class EnterpriseContext
         // release a lock
         locked --;
 		
+		//new Exception().printStackTrace();
 		if (locked <0) new Exception().printStackTrace();
 		
-		Logger.log("EnterpriseContext.unlock() "+hashCode()+" "+locked);
+		Logger.debug("EnterpriseContext.unlock() "+hashCode()+" "+locked);
     }
     
     public boolean isLocked() {
             
-       //DEBUG Logger.log("EnterpriseContext.isLocked() at "+locked);
-       Logger.log("EnterpriseContext.isLocked() "+hashCode()+" at "+locked);
+       //DEBUG Logger.debug("EnterpriseContext.isLocked() at "+locked);
+       Logger.debug("EnterpriseContext.isLocked() "+hashCode()+" at "+locked);
        
        return locked != 0;
    }

@@ -28,7 +28,7 @@ import org.jboss.logging.Logger;
  *   <LI>Shut it down</LI>
  * </OL>
  * @see org.jboss.minerva.pools.PooledObject
- * @version $Revision: 1.6 $
+ * @version $Revision: 1.7 $
  * @author Aaron Mulder (ammulder@alumni.princeton.edu)
  */
 public class ObjectPool implements PoolEventListener {
@@ -796,7 +796,7 @@ class BeanFactory extends PoolObjectFactory {
         try {
             return beanClass.newInstance();
         } catch(Exception e) {
-            Logger.log("Unable to create instance of "+beanClass.getName()+": "+e);
+            Logger.error("Unable to create instance of "+beanClass.getName()+": "+e);
         }
         return null;
     }

@@ -26,7 +26,7 @@ import org.jboss.metadata.XmlFileLoader;
  *      
  *	@see <related>
  *	@author <a href="sebastien.alborini@m4x.org">Sebastien Alborini</a>
- *	@version $Revision: 1.1 $
+ *	@version $Revision: 1.2 $
  */
 public class JawsXmlFileLoader {
 	
@@ -56,7 +56,7 @@ public class JawsXmlFileLoader {
 		
 		if (stdJawsUrl == null) throw new DeploymentException("No standardjaws.xml found");
 				
-		log.log("Loading standardjaws.xml : " + stdJawsUrl.toString());
+		log.debug("Loading standardjaws.xml : " + stdJawsUrl.toString());
 		Document stdJawsDocument = XmlFileLoader.getDocument(stdJawsUrl);
 		jamd.importXml(stdJawsDocument.getDocumentElement());
 		
@@ -64,7 +64,7 @@ public class JawsXmlFileLoader {
 		URL jawsUrl = classLoader.getResource("META-INF/jaws.xml");
 		
 		if (jawsUrl != null) {
-			log.log(jawsUrl.toString() + " found. Overriding defaults");
+			log.debug(jawsUrl.toString() + " found. Overriding defaults");
 			Document jawsDocument = XmlFileLoader.getDocument(jawsUrl);
 			jamd.importXml(jawsDocument.getDocumentElement());
 		}	
