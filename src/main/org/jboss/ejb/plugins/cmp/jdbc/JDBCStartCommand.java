@@ -24,6 +24,7 @@ import org.jboss.ejb.plugins.cmp.jdbc.bridge.JDBCCMRFieldBridge;
 import org.jboss.ejb.plugins.cmp.jdbc.bridge.JDBCEntityBridge;
 import org.jboss.ejb.plugins.cmp.jdbc.metadata.JDBCEntityMetaData;
 import org.jboss.ejb.plugins.cmp.jdbc.metadata.JDBCRelationMetaData;
+import org.jboss.ejb.plugins.cmp.jdbc.metadata.JDBCFunctionMappingMetaData;
 import org.jboss.logging.Logger;
 
 /**
@@ -35,7 +36,7 @@ import org.jboss.logging.Logger;
  * @author <a href="mailto:shevlandj@kpi.com.au">Joe Shevland</a>
  * @author <a href="mailto:justin@j-m-f.demon.co.uk">Justin Forder</a>
  * @author <a href="mailto:michel.anke@wolmail.nl">Michel de Groot</a>
- * @version $Revision: 1.12 $
+ * @version $Revision: 1.13 $
  */
 public class JDBCStartCommand {
 
@@ -210,12 +211,24 @@ public class JDBCStartCommand {
 
          // add a pk constraint
          if(entityMetaData.hasPrimaryKeyConstraint())  {
+/*
             sql.append(", CONSTRAINT pk").append(entityMetaData.getTableName());
             
             sql.append(" PRIMARY KEY (");
                sql.append(SQLUtil.getColumnNamesClause(
                         entity.getJDBCPrimaryKeyFields()));
             sql.append(")");
+*/
+            JDBCFunctionMappingMetaData pkConstraint = 
+               manager.getMetaData().getTypeMapping().getPkConstraintTemplate();
+            if(pkConstraint == null) {
+               throw new IllegalStateException("Primary key constriant is " +
+                     "not allowed for this type of datastore");
+            }
+            String[] args = new String[] {
+               "pk_"+entityMetaData.getTableName(),
+               SQLUtil.getColumnNamesClause(entity.getJDBCPrimaryKeyFields())};
+            sql.append(", ").append(pkConstraint.getFunctionSql(args));
          }
 
       sql.append(")");
@@ -241,6 +254,7 @@ public class JDBCStartCommand {
 
          // add a pk constraint
          if(cmrField.getRelationMetaData().hasPrimaryKeyConstraint())  {
+/*
             sql.append(", CONSTRAINT pk").append(
                   cmrField.getRelationMetaData().getTableName());
             
@@ -251,6 +265,21 @@ public class JDBCStartCommand {
                sql.append(SQLUtil.getColumnNamesClause(
                      cmrField.getRelatedCMRField().getTableKeyFields()));
             sql.append(")");
+*/
+            JDBCFunctionMappingMetaData pkConstraint = 
+               manager.getMetaData().getTypeMapping().getPkConstraintTemplate();
+            if(pkConstraint == null) {
+               throw new IllegalStateException("Primary key constriant is " +
+                     "not allowed for this type of datastore");
+            }
+            String[] args = new String[] {
+               "pk_"+cmrField.getRelationMetaData().getTableName(),
+               SQLUtil.getColumnNamesClause(cmrField.getTableKeyFields()) +
+                     ", " +
+                     SQLUtil.getColumnNamesClause(
+                           cmrField.getRelatedCMRField().getTableKeyFields())};
+
+            sql.append(", ").append(pkConstraint.getFunctionSql(args));
          }   
       sql.append(")");
       
@@ -264,6 +293,7 @@ public class JDBCStartCommand {
             addForeignKeyConstraint(
                   cmrField.getRelationMetaData().getDataSource(),
                   cmrField.getRelationMetaData().getTableName(),
+                  cmrField.getFieldName(),
                   cmrField.getTableKeyFields(),
                   cmrField.getEntity().getTableName(),
                   cmrField.getEntity().getJDBCPrimaryKeyFields());
@@ -272,6 +302,7 @@ public class JDBCStartCommand {
             addForeignKeyConstraint(
                   cmrField.getEntity().getDataSource(),
                   cmrField.getEntity().getTableName(),
+                  cmrField.getFieldName(),
                   cmrField.getForeignKeyFields(),
                   cmrField.getRelatedEntity().getTableName(),
                   cmrField.getRelatedEntity().getJDBCPrimaryKeyFields());
@@ -287,6 +318,7 @@ public class JDBCStartCommand {
    private void addForeignKeyConstraint(
          DataSource dataSource,
          String tableName,
+         String cmrFieldName,
          JDBCCMPFieldBridge[] fields,
          String referencesTableName,
          JDBCCMPFieldBridge[] referencesFields) {
@@ -297,6 +329,21 @@ public class JDBCStartCommand {
          return;
       }
 
+      JDBCFunctionMappingMetaData fkConstraint = 
+            manager.getMetaData().getTypeMapping().getFkConstraintTemplate();
+      if(fkConstraint == null) {
+         throw new IllegalStateException("Foreign key constriant is not " +
+               "allowed for this type of datastore");
+      }
+      String[] args = new String[] {
+         tableName, 
+         "fk_"+tableName+"_"+cmrFieldName,
+         SQLUtil.getColumnNamesClause(fields),
+         referencesTableName,
+         SQLUtil.getColumnNamesClause(referencesFields)};
+      String sql = fkConstraint.getFunctionSql(args);
+
+/*
       StringBuffer sql = new StringBuffer(100);
 
       sql.append("ALTER TABLE ").append(tableName);
@@ -311,7 +358,7 @@ public class JDBCStartCommand {
       sql.append("(");
          sql.append(SQLUtil.getColumnNamesClause(referencesFields));
       sql.append(")");
-
+*/
       Connection con = null;
       Statement statement = null;
       try {
@@ -326,7 +373,7 @@ public class JDBCStartCommand {
          
          // execute sql
          log.debug("Executing SQL: " + sql);
-         statement.executeUpdate(sql.toString());
+         statement.executeUpdate(sql);
 
          // commit the transaction
          manager.getContainer().getTransactionManager().commit();

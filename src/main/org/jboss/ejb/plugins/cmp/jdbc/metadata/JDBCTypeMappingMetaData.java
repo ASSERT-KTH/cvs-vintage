@@ -17,13 +17,17 @@ import org.w3c.dom.Element;
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
  *   @author <a href="sebastien.alborini@m4x.org">Sebastien Alborini</a>
- *   @version $Revision: 1.9 $
+ *   @version $Revision: 1.10 $
  */
 public final class JDBCTypeMappingMetaData {
    
-   private static final String[] PRIMITIVES = {"boolean","byte","char","short","int","long","float","double"};
+   private static final String[] PRIMITIVES = {
+      "boolean","byte","char","short","int","long","float","double"};
    
-   private static final String[] PRIMITIVE_CLASSES = {"java.lang.Boolean","java.lang.Byte","java.lang.Character","java.lang.Short","java.lang.Integer","java.lang.Long","java.lang.Float","java.lang.Double"};   
+   private static final String[] PRIMITIVE_CLASSES = {
+      "java.lang.Boolean","java.lang.Byte","java.lang.Character",
+      "java.lang.Short","java.lang.Integer","java.lang.Long",
+      "java.lang.Float","java.lang.Double"};   
    
    private final String name;
    
@@ -35,10 +39,12 @@ public final class JDBCTypeMappingMetaData {
    private final String aliasHeaderSuffix;
    private final int aliasMaxLength;
    private JDBCFunctionMappingMetaData rowLocking = null;
+   private JDBCFunctionMappingMetaData fkConstraint = null;
+   private JDBCFunctionMappingMetaData pkConstraint = null;
 
    /**
-    * Constructs a mapping with the data contained in the type-mapping xml element
-    * from a jbosscmp-jdbc xml file.
+    * Constructs a mapping with the data contained in the type-mapping xml
+    * element from a jbosscmp-jdbc xml file.
     *
     * @param element the xml Element which contains the metadata about
     *       this type mapping
@@ -49,12 +55,36 @@ public final class JDBCTypeMappingMetaData {
       // get the name of this type-mapping
       name = MetaData.getUniqueChildContent(element, "name");
 
-      String rowLockingSQL = MetaData.getUniqueChildContent(element, "row-locking-template");
-      if (rowLockingSQL != null && !rowLockingSQL.trim().equals(""))
+      // row-locking (i.e., select for update)
+      String rowLockingSQL = 
+            MetaData.getUniqueChildContent(element, "row-locking-template");
+      if(rowLockingSQL != null && !rowLockingSQL.trim().equals(""))
       {
-         rowLocking = new JDBCFunctionMappingMetaData("row-locking", rowLockingSQL);
+         rowLocking = new JDBCFunctionMappingMetaData(
+               "row-locking",
+               rowLockingSQL);
       }
       
+      // pk constraint
+      String pkConstraintSQL = 
+            MetaData.getUniqueChildContent(element, "pk-constraint-template");
+      if(pkConstraintSQL != null && !pkConstraintSQL.trim().equals(""))
+      {
+         pkConstraint = new JDBCFunctionMappingMetaData(
+               "pk-constraint",
+               pkConstraintSQL);
+      }
+
+      // fk constraint
+      String fkConstraintSQL = 
+            MetaData.getUniqueChildContent(element, "fk-constraint-template");
+      if(fkConstraintSQL != null && !fkConstraintSQL.trim().equals(""))
+      {
+         fkConstraint = new JDBCFunctionMappingMetaData(
+               "fk-constraint",
+               fkConstraintSQL);
+      }
+
       // get the mappings
       Iterator iterator = MetaData.getChildrenByTagName(element, "mapping");
       
@@ -67,26 +97,33 @@ public final class JDBCTypeMappingMetaData {
       addDefaultFunctionMapping();
       
       // get the mappings
-      Iterator functions = MetaData.getChildrenByTagName(element, "function-mapping");
+      Iterator functions = 
+            MetaData.getChildrenByTagName(element, "function-mapping");
       while(functions.hasNext()) {
          Element mappingElement = (Element)functions.next();
-         JDBCFunctionMappingMetaData functionMapping = new JDBCFunctionMappingMetaData(mappingElement);
-         functionMappings.put(functionMapping.getFunctionName().toLowerCase(), functionMapping);
+         JDBCFunctionMappingMetaData functionMapping = 
+               new JDBCFunctionMappingMetaData(mappingElement);
+         functionMappings.put(
+               functionMapping.getFunctionName().toLowerCase(),
+               functionMapping);
       }
       
-      String prefix = MetaData.getOptionalChildContent(element, "alias-header-prefix");
+      String prefix = 
+            MetaData.getOptionalChildContent(element, "alias-header-prefix");
       if(prefix == null) {
          prefix = "t";
       }
       aliasHeaderPrefix = prefix;
       
-      String suffix = MetaData.getOptionalChildContent(element, "alias-header-suffix");
+      String suffix = 
+            MetaData.getOptionalChildContent(element, "alias-header-suffix");
       if(suffix == null) {
          suffix = "_";
       }
       aliasHeaderSuffix = suffix;
       
-      String max = MetaData.getOptionalChildContent(element, "alias-max-length");
+      String max = 
+            MetaData.getOptionalChildContent(element, "alias-max-length");
       if(max == null) {
          max = "32";
       }
@@ -95,8 +132,8 @@ public final class JDBCTypeMappingMetaData {
        
    /**
     * Gets the name of this mapping. The mapping name used to differentiate this
-    * mapping from other mappings and the mapping the application used is retrieved
-    * by name.
+    * mapping from other mappings and the mapping the application used is 
+    * retrieved by name.
     * @return the name of this mapping.
     */
    public String getName() {
@@ -104,9 +141,11 @@ public final class JDBCTypeMappingMetaData {
    }
    
    /**
-    * Gets the prefix for that is used when generating an alias header.  An alias header
-    * is prepended to a generated table alias to prevent name collisions. An alias header
-    * is constructed as folows: aliasHeaderPrefix + int_counter + aliasHeaderSuffix
+    * Gets the prefix for that is used when generating an alias header.  An 
+    * alias header is prepended to a generated table alias to prevent name 
+    * collisions. An alias header is constructed as folows: 
+    * aliasHeaderPrefix + int_counter + aliasHeaderSuffix
+    *
     * @return the prefix for alias headers
     */
    public String getAliasHeaderPrefix() {
@@ -114,9 +153,11 @@ public final class JDBCTypeMappingMetaData {
    }
    
    /**
-    * Gets the suffix for that is used when generating an alias header.  An alias header
-    * is prepended to a generated table alias to prevent name collisions. An alias header
-    * is constructed as folows: aliasHeaderPrefix + int_counter + aliasHeaderSuffix
+    * Gets the suffix for that is used when generating an alias header.  An 
+    * alias header is prepended to a generated table alias to prevent name 
+    * collisions. An alias header is constructed as folows: 
+    * aliasHeaderPrefix + int_counter + aliasHeaderSuffix
+    *
     * @return the suffix for alias headers
     */
    public String getAliasHeaderSuffix() {
@@ -133,9 +174,9 @@ public final class JDBCTypeMappingMetaData {
    }
       
    /**
-    * Gets the jdbc type which this class has mapped to the specified java class. 
-    * The jdbc type is used to retrieve data from a result set and to set 
-    * parameters in a prepared statement.
+    * Gets the jdbc type which this class has mapped to the specified java 
+    * class. The jdbc type is used to retrieve data from a result set and to 
+    * set parameters in a prepared statement.
     *
     * @param type the Class for which the jdbc type will be returned
     * @return the jdbc type which is mapped to the type
@@ -194,7 +235,8 @@ public final class JDBCTypeMappingMetaData {
    }
    
    public JDBCFunctionMappingMetaData getFunctionMapping(String name) {
-      return (JDBCFunctionMappingMetaData)functionMappings.get(name.toLowerCase());
+      return (JDBCFunctionMappingMetaData)functionMappings.get(
+            name.toLowerCase());
    }
    
 
@@ -206,6 +248,22 @@ public final class JDBCTypeMappingMetaData {
       return rowLocking;
    }
    
+   /**
+    * Returns pk constraint SQL template.
+    */
+   public JDBCFunctionMappingMetaData getPkConstraintTemplate() 
+   {
+      return pkConstraint;
+   }
+
+   /**
+    * Returns fk constraint SQL template.
+    */
+   public JDBCFunctionMappingMetaData getFkConstraintTemplate() 
+   {
+      return fkConstraint;
+   }
+
    private void addDefaultFunctionMapping() {
       JDBCFunctionMappingMetaData function;
       
