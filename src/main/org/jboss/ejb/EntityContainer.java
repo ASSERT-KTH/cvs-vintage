@@ -46,7 +46,7 @@ import javax.management.j2ee.CountStatistic;
  * @author <a href="mailto:docodan@mvcsoft.com">Daniel OConnor</a>
  * @author <a href="bill@burkecentral.com">Bill Burke</a>
  * @author <a href="mailto:andreas.schaefer@madplanet.com">Andreas Schaefer</a>
- * @version $Revision: 1.48 $
+ * @version $Revision: 1.49 $
  *
  * <p><b>Revisions:</b>
  *
@@ -96,13 +96,6 @@ public class EntityContainer
 
    /** This is the instancepool that is to be used */
    protected InstancePool instancePool;
-
-   /**
-    * This provides a way to find the entities that are part of a given
-    * transaction EntitySynchronizationInterceptor and InstanceSynchronization
-    * manage this instance.
-    */
-   protected TxEntityMap txEntityMap = new TxEntityMap();
 
    /**
     * This is the first interceptor in the chain. The last interceptor must
@@ -166,11 +159,6 @@ public class EntityContainer
    public EntityPersistenceManager getPersistenceManager()
    {
       return persistenceManager;
-   }
-
-   public TxEntityMap getTxEntityMap()
-   {
-      return txEntityMap;
    }
 
    public void setPersistenceManager(EntityPersistenceManager pm)
@@ -397,6 +385,10 @@ public class EntityContainer
    public void remove(MethodInvocation mi)
       throws RemoteException, RemoveException
    {
+		// synchronize entities with the datastore before the bean is removed
+		// this will write queued updates so datastore will be consistent before removal
+		getApplication().synchronizeEntitiesWithinTransaction(mi.getTransaction());
+		
       // Get the persistence manager to do the dirty work
       getPersistenceManager().removeEntity((EntityEnterpriseContext)mi.getEnterpriseContext());
 
@@ -482,6 +474,12 @@ public class EntityContainer
    public Object findLocal(MethodInvocation mi)
       throws Exception
    {
+		/**
+		 * As per the spec 9.6.4, entities must be synchronized with the datastore
+		 * when an ejbFind<METHOD> is called.
+		 */
+		getApplication().synchronizeEntitiesWithinTransaction(mi.getTransaction());
+		
       // Multi-finder?
       if (!mi.getMethod().getReturnType().equals(getLocalClass()))
       {
@@ -527,7 +525,13 @@ public class EntityContainer
     * found.
     */
    public Object find(MethodInvocation mi) throws Exception
-   {
+   {		
+		/**
+		 * As per the spec 9.6.4, entities must be synchronized with the datastore
+		 * when an ejbFind<METHOD> is called.
+		 */
+		getApplication().synchronizeEntitiesWithinTransaction(mi.getTransaction());
+		
       // Multi-finder?
       if (!mi.getMethod().getReturnType().equals(getRemoteClass()))
       {

@@ -57,7 +57,7 @@ import org.jboss.util.Sync;
  * @author <a href="mailto:marc.fleury@jboss.org">Marc Fleury</a>
  * @author <a href="mailto:Scott.Stark@jboss.org">Scott Stark</a>
  * @author <a href="mailto:bill@burkecentral.com">Bill Burke</a>
- * @version $Revision: 1.47 $
+ * @version $Revision: 1.48 $
  *
  * <p><b>Revisions:</b><br>
  * <p><b>2001/06/28: marcf</b>
@@ -188,7 +188,7 @@ public class EntitySynchronizationInterceptor
          ctxContainer = (EntityContainer) ctx.getContainer();
          // associate the entity bean with the transaction so that
          // we can do things like synchronizeEntitiesWithinTransaction
-         ctxContainer.getTxEntityMap().associate(tx, ctx);
+         ctxContainer.getApplication().getTxEntityMap().associate(tx, ctx);
    
          // We want to be notified when the transaction commits
          tx.registerSynchronization(synch);
@@ -198,7 +198,7 @@ public class EntitySynchronizationInterceptor
       catch (RollbackException e)
       {
          //Indicates that the transaction is already marked for rollback
-         ctxContainer.getTxEntityMap().disassociate(tx, ctx);
+         ctxContainer.getApplication().getTxEntityMap().disassociate(tx, ctx);
    
          // The state in the instance is to be discarded, we force a reload of state
          synchronized (ctx)
@@ -211,27 +211,13 @@ public class EntitySynchronizationInterceptor
       catch (Exception e)
       {
          if( ctxContainer != null )
-            ctxContainer.getTxEntityMap().disassociate(tx, ctx);
+            ctxContainer.getApplication().getTxEntityMap().disassociate(tx, ctx);
          // If anything goes wrong with the association remove the ctx-tx association
          clearContextTx("Exception", ctx, tx, trace);
          throw new EJBException(e);
       }
    }
- 
-   /**
-    * As per the spec 9.6.4, entities must be synchronized with the datastore
-    * when an ejbFind<METHOD> is called.
-    */
-   private void synchronizeEntitiesWithinTransaction(Transaction tx) throws Exception
-   {
-      Object[] entities = container.getTxEntityMap().getEntities(tx);
-      for (int i = 0; i < entities.length; i++)
-      {
-         EntityEnterpriseContext ctx = (EntityEnterpriseContext)entities[i];
-         storeEntity(ctx);
-      }
-   }
- 
+  
    private void storeEntity(EntityEnterpriseContext ctx) throws Exception
    {
       if (ctx.getId() != null)
@@ -264,15 +250,7 @@ public class EntitySynchronizationInterceptor
   
       try
       {
-         if (tx != null && mi.getMethod().getName().startsWith("find"))
-         {
-            // As per the spec EJB2.0 9.6.4, entities must be synchronized with the datastore
-            // when an ejbFind<METHOD> is called.
-            synchronizeEntitiesWithinTransaction(tx);
-         }
-   
-         return getNext().invokeHome(mi);
-  
+         return getNext().invokeHome(mi);  
       } finally
       {
    
@@ -539,7 +517,7 @@ public class EntitySynchronizationInterceptor
             finally
             {
                // finish the transaction association
-               container.getTxEntityMap().disassociate(tx, ctx);
+               container.getApplication().getTxEntityMap().disassociate(tx, ctx);
                if( trace )
                   log.trace("afterCompletion, clear tx for ctx="+ctx+", tx="+tx);
                // The context is no longer synchronized on the TX
