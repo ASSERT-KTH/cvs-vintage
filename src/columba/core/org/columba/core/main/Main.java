@@ -48,39 +48,7 @@ import java.io.PrintWriter;
 import java.net.Socket;
 
 public class Main {
-    private static ColumbaLoader columbaLoader;
-
-    public static void loadInVMInstance(String[] arguments) {
-        try {
-            Socket clientSocket = new Socket("127.0.0.1",
-                    ColumbaLoader.COLUMBA_PORT);
-
-            PrintWriter writer = new PrintWriter(clientSocket.getOutputStream());
-
-            StringBuffer buf = new StringBuffer();
-            buf.append("columba:");
-
-            for (int i = 0; i < arguments.length; i++) {
-                buf.append(arguments[i]);
-                buf.append("%");
-            }
-
-            ColumbaLogger.log.info(
-                "Trying to pass command line arguments to a running Columba session:\n" +
-                buf.toString());
-
-            writer.write(buf.toString());
-            writer.flush();
-            writer.close();
-
-            clientSocket.close();
-
-            System.exit(5);
-        } catch (Exception ex) { // we get a java.net.ConnectException: Connection refused
-            columbaLoader = new ColumbaLoader();
-        }
-    }
-
+    
     public static void main(String[] args) {
         ColumbaLogger.log.info("Starting up Columba...");
         ColumbaCmdLineParser cmdLineParser = new ColumbaCmdLineParser();
@@ -89,7 +57,7 @@ public class Main {
         MainInterface.DEBUG = cmdLineParser.isDebugOption();
 
         // the configPath settings are made in the commandlineParser @see ColumbaCmdLineParser
-        loadInVMInstance(args);
+        ColumbaClient.loadInVMInstance(args);
 
         StartUpFrame frame = new StartUpFrame();
         frame.setVisible(true);

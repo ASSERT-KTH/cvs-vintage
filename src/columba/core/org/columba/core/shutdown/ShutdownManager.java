@@ -15,16 +15,11 @@
 //All Rights Reserved.
 package org.columba.core.shutdown;
 
-import org.columba.core.backgroundtask.TaskInterface;
-import org.columba.core.logging.ColumbaLogger;
-import org.columba.core.main.MainInterface;
-
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-
 import java.util.List;
 import java.util.Vector;
 
@@ -32,6 +27,11 @@ import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.Timer;
+
+import org.columba.core.backgroundtask.TaskInterface;
+import org.columba.core.logging.ColumbaLogger;
+import org.columba.core.main.ColumbaClient;
+import org.columba.core.main.MainInterface;
 
 
 /**
@@ -86,6 +86,9 @@ public class ShutdownManager {
 
     public void shutdown() {
         mode = SHUTDOWN;
+        
+        // stop columba server
+        ColumbaClient.getColumbaServer().stop();
 
         // stop background-manager so it doesn't interfere with
         // shutdown manager
