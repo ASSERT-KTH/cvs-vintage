@@ -35,7 +35,6 @@
     <property name="src.templates.dir" value="${src.dir}/templates"/>
     <property name="tomcat.dist.dir" value="${src.dir}/tomcat-4.0"/>
 
-    <property name="javadoc.destdir" value="${build.project}/docs"/>
 
     <!-- Build classpath -->
     <path id="classpath">
@@ -58,6 +57,7 @@
         <property name="build.src" value="${build.project.webinf}/src"/>
         <property name="build.dest"
                  value="${build.project.webinf}/classes"/>
+        <property name="javadoc.destdir" value="${build.project}/docs"/>
     </target>
 
     <!-- ================================================================== -->
@@ -254,3 +254,6 @@
     </target>
 
 </project>
+
+
+
