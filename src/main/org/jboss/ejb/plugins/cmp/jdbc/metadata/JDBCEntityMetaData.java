@@ -34,7 +34,7 @@ import javax.management.MalformedObjectNameException;
  * @author <a href="mailto:dirk@jboss.de">Dirk Zimmermann</a>
  * @author <a href="mailto:loubyansky@hotmail.com">Alex Loubyansky</a>
  * @author <a href="mailto:heiko.rupp@cellent.de">Heiko W. Rupp</a>
- * @version $Revision: 1.42 $
+ * @version $Revision: 1.43 $
  */
 public final class JDBCEntityMetaData
 {
@@ -47,6 +47,11 @@ public final class JDBCEntityMetaData
     * data source name in jndi
     */
    private final String dataSourceName;
+
+   /**
+    * type mapping name as specified in the deployment descriptor
+    */
+   private final String datasourceMappingName;
 
    /**
     * type mapping used for this entity
@@ -359,6 +364,7 @@ public final class JDBCEntityMetaData
       // Warn: readTimeOut should be setup before cmp fields are created
       // otherwise readTimeOut in cmp fields will be set to 0 by default
       dataSourceName = null;
+      datasourceMappingName = null;
       datasourceMapping = null;
       createTable = false;
       removeTable = false;
@@ -481,6 +487,7 @@ public final class JDBCEntityMetaData
       String datasourceMappingString = MetaData.getOptionalChildContent(element, "datasource-mapping");
       if(datasourceMappingString != null)
       {
+         datasourceMappingName = datasourceMappingString;
          datasourceMapping = jdbcApplication.getTypeMappingByName(datasourceMappingString);
          if(datasourceMapping == null)
          {
@@ -493,12 +500,14 @@ public final class JDBCEntityMetaData
             );
          }
       }
-      else if(defaultValues.getTypeMapping() != null)
+      else if(defaultValues.datasourceMappingName != null && defaultValues.getTypeMapping() != null)
       {
+         datasourceMappingName = null;
          datasourceMapping = defaultValues.getTypeMapping();
       }
       else
       {
+         datasourceMappingName = null;
          datasourceMapping = obtainTypeMappingFromLibrary(dataSourceName);
       }
 

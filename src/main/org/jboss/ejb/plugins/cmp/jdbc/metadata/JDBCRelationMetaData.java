@@ -25,7 +25,7 @@ import org.w3c.dom.Element;
  * 
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom </a>
  * @author <a href="mailto:heiko.rupp@cellent.de">Heiko W. Rupp </a>
- * @version $Revision: 1.25 $
+ * @version $Revision: 1.26 $
  */
 public final class JDBCRelationMetaData
 {
@@ -55,6 +55,9 @@ public final class JDBCRelationMetaData
 
 	/** data source name in jndi */
 	private final String dataSourceName;
+
+   /** datasource type mapping name is defined in the deployment descriptor */
+   private final String datasourceMappingName;
 
 	/** This is a cache of the datasource object. */
 	private transient DataSource dataSource;
@@ -125,6 +128,7 @@ public final class JDBCRelationMetaData
 		}
 
 		dataSourceName = null;
+      datasourceMappingName = null;
 		datasourceMapping = null;
 		createTable = false;
 		removeTable = false;
@@ -240,6 +244,7 @@ public final class JDBCRelationMetaData
 		String datasourceMappingString = MetaData.getOptionalChildContent(mappingElement, "datasource-mapping");
 		if (datasourceMappingString != null)
 		{
+         datasourceMappingName = datasourceMappingString;
 			datasourceMapping = jdbcApplication.getTypeMappingByName(datasourceMappingString);
 			if (datasourceMapping == null)
 			{
@@ -247,12 +252,14 @@ public final class JDBCRelationMetaData
 						+ datasourceMappingString + " not found");
 			}
 		}
-		else if(defaultValues.getTypeMapping() != null)
+		else if(defaultValues.datasourceMappingName != null && defaultValues.getTypeMapping() != null)
 		{
+         datasourceMappingName = null;
 			datasourceMapping = defaultValues.getTypeMapping();
 		}
       else
       {
+         datasourceMappingName = null;
          datasourceMapping = JDBCEntityMetaData.obtainTypeMappingFromLibrary(dataSourceName);
       }
 
