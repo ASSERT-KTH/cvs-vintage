@@ -21,7 +21,7 @@
 // CALIFORNIA HAS NO OBLIGATIONS TO PROVIDE MAINTENANCE, SUPPORT,
 // UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 
-//$Id: GenericArgoMenuBar.java,v 1.28 2003/06/14 20:25:17 bobtarling Exp $
+//$Id: GenericArgoMenuBar.java,v 1.29 2003/06/17 20:19:31 kataka Exp $
 
 package org.argouml.ui.menubar;
 
@@ -388,7 +388,7 @@ public class GenericArgoMenuBar extends JMenuBar
         _view.addSeparator();
 
         JMenu editTabs = (JMenu) _view.add(new JMenu(menuLocalize("Editor Tabs")));
-        JMenu detailsTabs = (JMenu) _view.add(new JMenu(menuLocalize("Details Tabs")));
+        // JMenu detailsTabs = (JMenu) _view.add(new JMenu(menuLocalize("Details Tabs")));
 
         _view.addSeparator();
         _view.add(new CmdAdjustGrid());
@@ -468,7 +468,7 @@ public class GenericArgoMenuBar extends JMenuBar
         Runnable initLater = new InitMenusLater(align, distribute,
                                                 reorder, nudge,
                                                 layout,
-                                                editTabs, detailsTabs);
+                                                editTabs);
 
         org.argouml.application.Main.addPostLoadAction(initLater);
 
