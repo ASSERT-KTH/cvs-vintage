@@ -21,7 +21,6 @@ import javax.naming.NamingException;
 import javax.rmi.PortableRemoteObject;
 import javax.rmi.CORBA.Stub;
 
-import org.jboss.naming.client.java.ORBFactory;
 import org.jboss.util.NestedRuntimeException;
 import org.omg.CORBA.BAD_OPERATION;
 import org.omg.CORBA.ORB;
@@ -42,7 +41,7 @@ import org.omg.CORBA.portable.ObjectImpl;
  *
  * @author  Dimitris.Andreadis@jboss.org
  * @author  adrian@jboss.com
- * @version $Revision: 1.3 $
+ * @version $Revision: 1.4 $
  */
 public class HandleDelegateImpl
     implements HandleDelegate

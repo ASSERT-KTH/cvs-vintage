@@ -4,7 +4,7 @@
  * Distributable under LGPL license.
  * See terms of license at gnu.org.
  */
-package org.jboss.naming.client.java;
+package org.jboss.corba;
 
 import java.security.AccessController;
 import java.security.PrivilegedAction;
@@ -13,12 +13,13 @@ import java.util.Properties;
 
 import org.jboss.logging.Logger;
 import org.omg.CORBA.ORB;
+import org.omg.PortableServer.POA;
 
 /** 
  * An object factory that creates an ORB on the client
  *  
  * @author Adrian Brock (adrian@jboss.com)
- * @version $Revision: 1.4 $
+ * @version $Revision: 1.1 $
  */
 public class ORBFactory
 {
@@ -34,7 +35,7 @@ public class ORBFactory
 
    // Static --------------------------------------------------------
    
-   public static ORB getORBSingleton()
+   public static ORB getORB()
    {
       synchronized (ORBFactory.class)
       {
@@ -53,15 +54,33 @@ public class ORBFactory
             }
             catch (SecurityException ignored)
             {
+               log.trace("Unable to retrieve system properties", ignored);
                properties = null;
             }
 
             // Create the singleton ORB
             orb = ORB.init(new String[0], properties);
-            
+
+            // Activate the root POA
+            try 
+            {
+                POA rootPOA = (POA) orb.resolve_initial_references("RootPOA");
+                rootPOA.the_POAManager().activate();
+            }
+            catch (Throwable t)
+            {
+                log.warn("Unable to activate POA", t);
+            }
          }
          return orb;
       }
+   }
+   
+   public static void setORB(ORB orb)
+   {
+      if (ORBFactory.orb != null)
+         throw new IllegalStateException("ORB has already been set");
+      ORBFactory.orb = orb;
    }
    
    // Constructors --------------------------------------------------

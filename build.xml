@@ -14,7 +14,7 @@
 <!--                                                                        -->
 <!-- ====================================================================== -->
 
-<!-- $Id: build.xml,v 1.171 2004/08/11 11:41:36 starksm Exp $ -->
+<!-- $Id: build.xml,v 1.172 2004/09/03 01:36:05 ejort Exp $ -->
 
 <project default="main" name="JBoss/Server">
 
@@ -449,7 +449,13 @@
     <jar jarfile="${build.lib}/jboss-client.jar"
          manifest="${build.etc}/default.mf">
       <fileset dir="${build.classes}">
-        <include name="org/jboss/proxy/**"/>
+        <include name="org/jboss/corba/**"/>
+        <include name="org/jboss/ejb/CacheKey.class"/>
+        <include name="org/jboss/ejb/ListCacheKey.class"/>
+        <include name="org/jboss/ejb/plugins/cmp/jdbc/Mapper.class"/>
+        <include name="org/jboss/ejb/plugins/keygenerator/KeyGenerator.class"/>
+        <include name="org/jboss/ejb/plugins/keygenerator/KeyGeneratorFactory.class"/>
+        <include name="org/jboss/ejb/plugins/lock/ApplicationDeadlockException.class"/>
         <include name="org/jboss/invocation/ByValueInvokerInterceptor.class"/>
         <include name="org/jboss/invocation/Invocation.class"/>
         <include name="org/jboss/invocation/InvocationContext.class"/>
@@ -468,18 +474,13 @@
         <include name="org/jboss/invocation/jrmp/interfaces/*"/>
         <include name="org/jboss/invocation/jrmp/server/*Stub.class"/>
         <include name="org/jboss/invocation/pooled/interfaces/*.class"/>
-        <include name="org/jboss/ejb/CacheKey.class"/>
-        <include name="org/jboss/ejb/ListCacheKey.class"/>
-        <include name="org/jboss/ejb/plugins/cmp/jdbc/Mapper.class"/>
-        <include name="org/jboss/ejb/plugins/keygenerator/KeyGenerator.class"/>
-        <include name="org/jboss/ejb/plugins/keygenerator/KeyGeneratorFactory.class"/>
-        <include name="org/jboss/ejb/plugins/lock/ApplicationDeadlockException.class"/>
         <include name="org/jboss/monitor/client/*.class"/>
         <include name="org/jboss/naming/LinkRefPair.class"/>
         <include name="org/jboss/naming/LinkRefPairObjectFactory.class"/>
         <include name="org/jboss/naming/*NamingContextFactory*.class"/>
         <include name="org/jboss/naming/client/**"/>
         <include name="org/jboss/naming/interceptors/*"/>
+        <include name="org/jboss/proxy/**"/>
         <include name="org/jboss/tm/JBossTransactionRolledbackException.class"/>
         <include name="org/jboss/tm/JBossTransactionRolledbackLocalException.class"/>
         <include name="org/jboss/tm/usertx/client/*.class"/>

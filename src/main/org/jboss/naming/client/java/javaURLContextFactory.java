@@ -20,6 +20,8 @@ import javax.naming.OperationNotSupportedException;
 import javax.naming.NameParser;
 import javax.naming.spi.ObjectFactory;
 
+import org.jboss.corba.ORBFactory;
+
 /** The external client java URL context factory. This is used in conjunction
  * with j2ee application clients to implement the java:comp/env
  * enterprise naming context (ENC).
@@ -27,7 +29,7 @@ import javax.naming.spi.ObjectFactory;
  * @see javax.naming.spi.ObjectFactory
  * 
  * @author Scott.Stark@jboss.org
- * @version $Revision: 1.5 $
+ * @version $Revision: 1.6 $
  */
 public class javaURLContextFactory
    implements ObjectFactory
@@ -124,7 +126,7 @@ public class javaURLContextFactory
          if (name.size() > 0 && "java:comp".equals(name.get(0)))
          {
             if (name.size() == 2 && "ORB".equals(name.get(1)))
-               return ORBFactory.getORBSingleton();
+               return ORBFactory.getORB();
             else if (name.size() == 2 && "HandleDelegate".equals(name.get(1)))
                return HandleDelegateFactory.getHandleDelegateSingleton();
          }
