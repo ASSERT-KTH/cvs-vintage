@@ -3,10 +3,10 @@
 #macro (AttributeSelectBar $val)
 <div class="functnbar$val">
 #if ($attributes.size() > 0)
-   <input type="submit" value="Add selected to module" name="eventSubmit_doSelectuserattribute" />
+   <input type="submit" value="$l10n.AddSelectedToModule" name="eventSubmit_doSelectuserattribute" />
 #end
 #if ($canEditDomain)
-    <input type="submit" value="Create new" name="eventSubmit_doCreatenewuserattribute"/>&#160;
+    <input type="submit" value="$l10n.CreateNew" name="eventSubmit_doCreatenewuserattribute"/>&#160;
 #end
 </div>
 #end
@@ -25,22 +25,22 @@
 <input type="hidden" name="$scarabG.Constant.CANCEL_TEMPLATE" value="admin,ArtifactTypeEdit.vm" />
 #AttributeSelectBar("")
 
-<h3>Global user attributes</h3>
+<h3>$l10n.GlobalUserAttributes</h3>
 
 #if ($attributes.size() == 0)
 
-<p class="alert">There are no available user attributes for this module.</p>
+<p class="alert">$l10n.NoUserAttibutesForModule</p>
 
 #else
 
 <table width="100%" border="1" cellspacing="2" cellpadding="3">
 <tr>
-<th nowrap="nowrap">Select</th>
-<th>Attribute name</th>
-<th>Description</th>
-<th>Input type</th>
-<th>Author</th>
-<th>Creation date</th>
+<th nowrap="nowrap">$l10n.Select</th>
+<th>$l10n.AttributeName</th>
+<th>$l10n.Description</th>
+<th>$l10n.InputType</th>
+<th>$l10n.Author</th>
+<th>$l10n.CreationDate</th>
 </tr>
 
 #foreach ($attribute in $attributes)

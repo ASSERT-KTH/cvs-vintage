@@ -8,17 +8,17 @@
 #macro (ModuleAttributeEditBar $val)
 <div class="functnbar$val">
 #if ($attTypeName.equals("select-one"))
-<input type="submit" value="Done"  name="eventSubmit_doDone" />
+<input type="submit" value="$l10n.Done"  name="eventSubmit_doDone" />
 #end
-<input type="submit" value="Cancel"  name="eventSubmit_doCancel" />
+<input type="submit" value="$l10n.Cancel"  name="eventSubmit_doCancel" />
 </div>
 #end
 
 <div class="app" id="div3-0-2-0">
 
 #if (!$attType)
-<p class="alert">Attribute not found. Please click 
-$link.setPage("admin,ManageArtifactTypes.vm").setLabel("here") to proceed.</p>
+<p class="alert">$l10n.AttributeNotFound
+$link.setPage("admin,ManageArtifactTypes.vm").setLabel("$l10n.here").</p>
 #else
 
 <form action="$link.setPage("admin,ModuleAttributeEdit.vm")" method="post">
@@ -32,30 +32,30 @@ $link.setPage("admin,ManageArtifactTypes.vm").setLabel("here") to proceed.</p>
 
 #ModuleAttributeEditBar("")
 
-<h3>Attribute information</h3>
+<h3>$l10n.AttributeInfo</h3>
 
 <div class="axial">
 <table cellpadding="3" cellspacing="2" border="0">
  <tr>
-  <th>Input type</th>
+  <th>$l10n.InputType</th>
   <td>$attType.Name</td>
  <tr>
-  <th>Name</th>
+  <th>$l10n.Name</th>
   <td>$attribute.Name</td>
  </tr>
  <tr>
-  <th>Description</th>
+  <th>$l10n.Description</th>
   <td>$attribute.Description</td>
  </tr>
   #if ($attribute.CreatedDate)
  <tr>
-  <th>Created by</th>
+  <th>$l10n.CreatedBy</th>
   <td>
   #attributeCreatedBy($attribute)
   </td>
  </tr>
  <tr>
-  <th>Creation date</th>
+  <th>$l10n.CreationDate</th>
   <td>
     $format.getDate($scarabR.DateFormat, $attribute.CreatedDate)
   </td>
@@ -73,18 +73,18 @@ $link.setPage("admin,ManageArtifactTypes.vm").setLabel("here") to proceed.</p>
 #if (!$rmos || $rmos.isEmpty())
   There are no attribute options.
   <div class="functnbar3">
-  <input type="submit" value="add new" name="eventSubmit_doGotoothertemplate" />&#160;
+  <input type="submit" value="$l10n.AddNew" name="eventSubmit_doGotoothertemplate" />&#160;
   </div>
 #else
 
 <table width="100%" border="1" cellspacing="2" cellpadding="2">
 <tr>
- <th>Select</th>
- <th>Parent attribute option(s)</th>
- <th>Display Name</th>
- <th>Active</th>
- <th>Preferred order</th>
- <th>Weight</th>
+ <th>$l10n.Select</th>
+ <th>$l10n.ParentAttributeOptions</th>
+ <th>$l10n.DisplayName</th>
+ <th>$l10n.Active</th>
+ <th>$l10n.PreferredOrder</th>
+ <th>$l10n.Weight</th>
 </tr>
 #foreach ($rmo in $rmos)
     #set ($rmoGroup = $intake.RModuleOption.mapTo($rmo))
@@ -119,11 +119,11 @@ $link.setPage("admin,ManageArtifactTypes.vm").setLabel("here") to proceed.</p>
 </table>
 
 <div class="functnbar3">
-<input type="submit" value="Save" name="eventSubmit_doSave" />&#160;
-<input type="submit" value="Add new" name="eventSubmit_doGotoothertemplate" />&#160;
-## commenting out till we decide how to do <input type="submit" value="Copy" />&#160;
-<input type="submit" value="Delete selected" name="eventSubmit_doDeleteattributeoptions" />&#160;
-<input type="submit" value="Resort" name="eventSubmit_doSave" />
+<input type="submit" value="$l10n.Save" name="eventSubmit_doSave" />&#160;
+<input type="submit" value="$l10n.AddNew" name="eventSubmit_doGotoothertemplate" />&#160;
+## commenting out till we decide how to do <input type="submit" value="$l10n.Copy" />&#160;
+<input type="submit" value="$l10n.DeleteSelected" name="eventSubmit_doDeleteattributeoptions" />&#160;
+<input type="submit" value="$l10n.Resort" name="eventSubmit_doSave" />
 </div>
 #end
 
