@@ -91,7 +91,7 @@ import org.tigris.scarab.actions.base.RequireLoginFirstAction;
 /**
     This class is responsible for report generation forms
     @author <a href="mailto:jmcnally@collab.net">John D. McNally</a>
-    @version $Id: GenerateReport.java,v 1.5 2001/10/04 01:21:07 jmcnally Exp $
+    @version $Id: GenerateReport.java,v 1.6 2001/10/12 21:32:01 jmcnally Exp $
 */
 public class GenerateReport 
     extends RequireLoginFirstAction
@@ -285,7 +285,6 @@ public class GenerateReport
     public void doStep3_2bdeletedate( RunData data, TemplateContext context )
         throws Exception
     {
-                    System.out.println("Entered delete date");
         ReportGenerator report = populateReportGenerator(data, context);
         Intake intake = getIntakeTool(context);
         if ( intake.isAllValid() ) 
@@ -297,7 +296,6 @@ public class GenerateReport
                 if (((ReportGenerator.ReportDate)dates.get(i)).isSelected())
                 {
                     dates.remove(i);
-                    System.out.println("Removing date, size now = " + dates.size());
                 }
             }
         }
@@ -312,7 +310,7 @@ public class GenerateReport
         Intake intake = getIntakeTool(context);
         if ( intake.isAllValid() ) 
         {
-            setTarget(data, "reports,Report_2.vm");
+            setTarget(data, "reports,Report_1.vm");
         }
         else 
         {
