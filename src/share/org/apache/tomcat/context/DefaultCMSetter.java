@@ -145,7 +145,7 @@ public class DefaultCMSetter extends BaseContextInterceptor {
 
 	// XXX Loader properties - need to be set on loader!!
 	if(ctx.getLoader() == null) {
-	    ctx.setLoader( new org.apache.tomcat.loader.ServletClassLoaderImpl());
+	    ctx.setLoader( new org.apache.tomcat.loader.ServletClassLoaderImpl(ctx));
 	    // ctx.setLoader( new org.apache.tomcat.loader.AdaptiveServletLoader());
 	}
 
