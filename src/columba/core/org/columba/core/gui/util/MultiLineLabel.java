@@ -123,4 +123,12 @@ public class MultiLineLabel extends JTextArea {
 	public boolean isFocusTraversable() {
 		return false;
 	}
+
+	public boolean isRequestFocusEnabled() {
+		return false;
+	}
+
+	public boolean isFocusable() {
+		return false;
+	}
 }
