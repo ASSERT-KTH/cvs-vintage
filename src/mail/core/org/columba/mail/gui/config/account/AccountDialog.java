@@ -144,7 +144,11 @@ public class AccountDialog implements ActionListener, ListSelectionListener {
 			//$NON-NLS-1$
 		}
 
-		tp.add("Receive Options", receiveOptionsPanel);
+		tp.add(MailResourceLoader.getString(
+                                        "dialog",
+                                        "account",
+                                        "receiveoptions"),
+                        receiveOptionsPanel);
 
 		SmtpItem smtpItem = accountItem.getSmtpItem();
 		/*
