@@ -75,15 +75,16 @@ import org.tigris.scarab.security.SecurityFactory;
     implementation needs.
 
     @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
-    @version $Id: ScarabUserImpl.java,v 1.25 2001/10/22 23:56:38 elicia Exp $
+    @version $Id: ScarabUserImpl.java,v 1.26 2001/10/24 00:01:45 jmcnally Exp $
 */
 public class ScarabUserImpl 
     extends BaseScarabUserImpl 
     implements ScarabUser
 {
-    private static final String CURRENT_MODULE = "CURRENT_MODULE";
+    //private static final String CURRENT_MODULE = "CURRENT_MODULE";
     private static final String REPORTING_ISSUE = "REPORTING_ISSUE";
-    private static final String REPORTING_ISSUE_START_POINT = "RISP";
+
+    private int issueCount = 0;
 
     /**
         The maximum length for the unique identifier used at user
@@ -98,36 +99,15 @@ public class ScarabUserImpl
     {
         super();
     }
-    
-    /**
-        This method is responsible for creating a new user. It will throw an 
-        exception if there is any sort of error (such as a duplicate login id) 
-        and place the error message into e.getMessage(). This also creates a 
-        uniqueid and places it into this object in the perm table under the
-        Visitor.CONFIRM_VALUE key. It will use the current instance of this
-        object as the basis to create the new User.
-    */
-    public void createNewUser()
-        throws Exception
-    {
-        // get a unique id for validating the user
-        String uniqueId = GenerateUniqueId.getIdentifier();
-        if (uniqueId.length() > UNIQUE_ID_MAX_LEN)
-        {
-            uniqueId = uniqueId.substring(0, UNIQUE_ID_MAX_LEN);
-        }
-        // add it to the perm table
-        setConfirmed(uniqueId);
-        TurbineSecurity.addUser (this, getPassword());
-    }
-    
+
     /**
         Utility method that takes a username and a confirmation code
         and will return true if there is a match and false if no match.
         <p>
         If there is an Exception, it will also return false.
     */
-    public static boolean checkConfirmationCode (String username, String confirm)
+    public static boolean checkConfirmationCode (String username, 
+                                                 String confirm)
     {
         // security check. :-)
         if (confirm.equalsIgnoreCase(User.CONFIRM_DATA))
@@ -138,8 +118,10 @@ public class ScarabUserImpl
         try
         {
             Criteria criteria = new Criteria();
-            criteria.add (ScarabUserImplPeer.getColumnName(User.USERNAME), username);
-            criteria.add (ScarabUserImplPeer.getColumnName(User.CONFIRM_VALUE), confirm);
+            criteria.add (ScarabUserImplPeer.getColumnName(User.USERNAME), 
+                          username);
+            criteria.add (ScarabUserImplPeer.getColumnName(User.CONFIRM_VALUE),
+                          confirm);
             criteria.setSingleRecord(true);
             List result = (List) ScarabUserImplPeer.doSelect(criteria);
             if (result.size() > 0)
@@ -147,12 +129,15 @@ public class ScarabUserImpl
                 return true;
             }
             
-            // FIXME: once i figure out how to build an OR in a Criteria i won't need this.
-            // We check to see if the user is already confirmed because that should
-            // result in a True as well.
+            // FIXME: once i figure out how to build an OR in a Criteria i 
+            // won't need this.
+            // We check to see if the user is already confirmed because that
+            // should result in a True as well.
             criteria = new Criteria();
-            criteria.add (ScarabUserImplPeer.getColumnName(User.USERNAME), username);
-            criteria.add (ScarabUserImplPeer.getColumnName(User.CONFIRM_VALUE), User.CONFIRM_DATA);
+            criteria.add (ScarabUserImplPeer.getColumnName(User.USERNAME), 
+                          username);
+            criteria.add (ScarabUserImplPeer.getColumnName(User.CONFIRM_VALUE),
+                          User.CONFIRM_DATA);
             criteria.setSingleRecord(true);
             result = ScarabUserImplPeer.doSelect(criteria);
             return (result.size() > 0);
@@ -162,6 +147,9 @@ public class ScarabUserImpl
             return false;
         }
     }
+    
+    
+
     /**
         This method will mark username as confirmed.
         returns true on success and false on any error
@@ -191,7 +179,7 @@ public class ScarabUserImpl
         {
             Criteria criteria = new Criteria();
             criteria.add (ScarabUserImplPeer.USER_ID, userid);
-            User user = (User)ScarabUserImplPeer.doSelect(criteria).elementAt(0);
+            User user = (User)ScarabUserImplPeer.doSelect(criteria).get(0);
             return user.getUserName();
         }
         catch (Exception e)
@@ -208,27 +196,26 @@ public class ScarabUserImpl
         return getUserName((ObjectKey)new NumberKey(userId));
     }
 
+
     /**
-        This method will build up a criteria object out of the information 
-        currently stored in this object and then return it.
-    */
-    private Criteria getCriteria()
+     * @see org.tigris.scarab.om.ScarabUser#createNewUser()
+     */
+    public void createNewUser()
+        throws Exception
     {
-        // FIXME: clean up ugly code duplication below. this will be done
-        //        by taking advantage of an autogenerated UserPeer instead
-        //        of this ugly hack!!
-        Criteria criteria = new Criteria();
-        criteria.add (ScarabUserImplPeer.getColumnName(User.USERNAME), this.getUserName());
-        criteria.add (ScarabUserImplPeer.getColumnName(User.PASSWORD), getPerm(User.PASSWORD));
-        criteria.add (ScarabUserImplPeer.getColumnName(User.FIRST_NAME), getPerm(User.FIRST_NAME));
-        criteria.add (ScarabUserImplPeer.getColumnName(User.LAST_NAME), getPerm(User.LAST_NAME));
-        criteria.add (ScarabUserImplPeer.getColumnName(User.EMAIL), this.getUserName());
-        return criteria;
+        // get a unique id for validating the user
+        String uniqueId = GenerateUniqueId.getIdentifier();
+        if (uniqueId.length() > UNIQUE_ID_MAX_LEN)
+        {
+            uniqueId = uniqueId.substring(0, UNIQUE_ID_MAX_LEN);
+        }
+        // add it to the perm table
+        setConfirmed(uniqueId);
+        TurbineSecurity.addUser (this, getPassword());
     }
 
     /**
-     * Gets all modules which are currently associated with this user 
-     * (relationship has not been deleted.)
+     * @see org.tigris.scarab.om.ScarabUser#getModules()
      */
     public List getModules() throws Exception
     {
@@ -248,7 +235,7 @@ public class ScarabUserImpl
     }
 
     /**
-     * Gets all modules the user has permissions to edit.
+     * @see org.tigris.scarab.om.ScarabUser#getEditableModules()
      */
     public List getEditableModules() throws Exception
     {
@@ -271,9 +258,7 @@ public class ScarabUserImpl
      }
 
     /**
-     * Returns list of RModuleUserAttribute objects for this
-     * User and Module -- the attributes the user has selected
-     * To appear on the IssueList for this module.
+     * @see org.tigris.scarab.om.ScarabUser#getRModuleUserAttributes(ModuleEntity, IssueType)
      */
     public List getRModuleUserAttributes(ModuleEntity module,
                                          IssueType issueType)
@@ -291,7 +276,7 @@ public class ScarabUserImpl
 
             
     /**
-     * Returns an RModuleUserAttribute object.
+     * @see org.tigris.scarab.om.ScarabUser#getRModuleUserAttributes(ModuleEntity, Attribute, IssueType)
      */
     public RModuleUserAttribute getRModuleUserAttribute(ScarabModule module, 
                                                        Attribute attribute,
@@ -324,9 +309,7 @@ public class ScarabUserImpl
 
 
     /**
-     * Gets modules which are currently associated (relationship has not 
-     * been deleted) with this user through the specified Role. 
-     * 
+     * @see org.tigris.scarab.om.ScarabUser#getModules(Role)
      */
     public List getModules(Role role) 
         throws Exception
@@ -355,14 +338,9 @@ public class ScarabUserImpl
         return null;
     }
 
-    private int issueCount = 0;
 
     /**
-     * Gets an issue stored in the temp hash under key.
-     *
-     * @param key a <code>String</code> used as the key to retrieve the issue
-     * @return an <code>Issue</code> value
-     * @exception Exception if an error occurs
+     * @see org.tigris.scarab.om.ScarabUser#getReportingIssue(String)
      */
     public Issue getReportingIssue(String key)
         throws Exception
@@ -370,15 +348,9 @@ public class ScarabUserImpl
         return (Issue) getTemp(REPORTING_ISSUE+key);
     }
 
+
     /**
-     * Places an issue into the session that can be retrieved using the key
-     * that is returned from the method.
-     *
-     * @param issue an <code>Issue</code> to store in the session under a 
-     * new key
-     * @return a <code>String</code> value that can be used to retrieve 
-     * the issue
-     * @exception ScarabException if issue is null.
+     * @see org.tigris.scarab.om.ScarabUser#setReportingIssue(Issue)
      */
     public String setReportingIssue(Issue issue)
         throws ScarabException
@@ -396,16 +368,9 @@ public class ScarabUserImpl
         return key;
     }
 
+
     /**
-     * Places an issue into the session under the given key.  If another issue
-     * was already using that key, it will be overwritten.  Giving a null issue
-     * removes any issue stored using key.  This method is primarily used to
-     * remove the issue from storage.  Inserting a new issue would be most 
-     * likely done with setReportingIssue(Issue issue).
-     *
-     * @param key a <code>String</code> value under which to store the issue
-     * @param issue an <code>Issue</code> value to store, null removes any 
-     * issue already stored under key.
+     * @see org.tigris.scarab.om.ScarabUser#setReportingIssue(String, Issue)
      */
     public void setReportingIssue(String key, Issue issue)
     {

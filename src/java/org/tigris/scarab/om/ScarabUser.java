@@ -59,13 +59,37 @@ import org.tigris.scarab.util.ScarabException;
  * This is an interface which describes what a ScarabUser is...
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: ScarabUser.java,v 1.40 2001/10/20 00:10:44 elicia Exp $
+ * @version $Id: ScarabUser.java,v 1.41 2001/10/24 00:01:45 jmcnally Exp $
  */
 public interface ScarabUser extends User
 {
+    /**
+        This method is responsible for creating a new user. It will throw an 
+        exception if there is any sort of error (such as a duplicate login id) 
+        and place the error message into e.getMessage(). This also creates a 
+        uniqueid and places it into this object in the perm table under the
+        Visitor.CONFIRM_VALUE key. It will use the current instance of this
+        object as the basis to create the new User.
+    */
     public void createNewUser() throws Exception;
+
+    /**
+     * Gets all modules which are currently associated with this user 
+     * (relationship has not been deleted.)
+     */
     public List getModules() throws Exception;
+
+    /**
+     * Gets modules which are currently associated (relationship has not 
+     * been deleted) with this user through the specified Role. 
+     * 
+     */
     public List getModules(Role role) throws Exception;
+
+    /**
+     * Gets all modules the user has permissions to edit.
+     */
+    public List getEditableModules() throws Exception;
 
     /**
      * Gets an issue stored in the temp hash under key.
@@ -104,9 +128,19 @@ public interface ScarabUser extends User
     public void setReportingIssue(String key, Issue issue);
 
     public NumberKey getUserId();
+
+    /**
+     * Returns list of RModuleUserAttribute objects for this
+     * User and Module -- the attributes the user has selected
+     * To appear on the IssueList for this module.
+     */
     public List getRModuleUserAttributes(ModuleEntity module, 
                                          IssueType issueType)
             throws Exception;
+
+    /**
+     * Returns an RModuleUserAttribute object.
+     */
     public RModuleUserAttribute getRModuleUserAttribute(ScarabModule module, 
                                                         Attribute attribute,
                                                         IssueType issueType)
