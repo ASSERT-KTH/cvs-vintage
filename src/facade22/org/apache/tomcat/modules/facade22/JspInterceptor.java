@@ -852,7 +852,11 @@ final class JspMangler implements Mangler{
      *  java file
      */
     public String getPackageName() {
-	return pkgDir.replace('/', '.');
+	if( pkgDir!=null ) {
+	    return pkgDir.replace('/', '.');
+	} else {
+	    return null;
+	}
     }
 
     // -------------------- JspInterceptor fields --------------------
