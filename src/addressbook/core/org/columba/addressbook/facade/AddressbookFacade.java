@@ -13,45 +13,22 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
 //
 //All Rights Reserved.
-package org.columba.mail.plugin;
+package org.columba.addressbook.facade;
 
-import org.columba.core.main.MainInterface;
+import org.columba.addressbook.config.AddressbookConfig;
 import org.columba.core.xml.XmlElement;
-import org.columba.mail.config.MailConfig;
-import org.columba.mail.gui.composer.ComposerController;
-import org.columba.mail.gui.tree.util.SelectFolderDialog;
 
 /**
- * @author freddy
+ * @author fdietz
  *
- * To change this generated comment edit the template variable "typecomment":
- * Window>Preferences>Java>Templates.
- * To enable and disable the creation of type comments go to
- * Window>Preferences>Java>Code Generation.
+ 
  */
-public class MailFacade {
-
-	/**
-	 * Constructor for MailDecorator.
-	 */
-	public MailFacade() {
-		super();
-	}
+public class AddressbookFacade {
 
 	public static XmlElement getConfigElement(String configName) {
-		XmlElement root = MailConfig.get(configName);
+		XmlElement root = AddressbookConfig.get(configName);
 
 		return root;
 	}
-	
-	public static void openComposer()
-	{
-		new ComposerController();
-	}
-	
-	public SelectFolderDialog getSelectFolderDialog()
-	{
-		return MainInterface.treeModel.getSelectFolderDialog();
-	}
-	
+
 }

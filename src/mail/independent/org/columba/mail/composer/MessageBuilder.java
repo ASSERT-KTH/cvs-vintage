@@ -23,7 +23,6 @@ import java.util.StringTokenizer;
 
 import org.columba.addressbook.folder.ContactCard;
 import org.columba.addressbook.parser.AddressParser;
-import org.columba.addressbook.plugin.AddressbookFacade;
 import org.columba.mail.coder.CoderRouter;
 import org.columba.mail.coder.Decoder;
 import org.columba.mail.config.AccountItem;
@@ -629,7 +628,7 @@ public class MessageBuilder {
 			if (sender.length() > 0) {
 
 				org.columba.addressbook.folder.Folder selectedFolder =
-					AddressbookFacade.getCollectedAddresses();
+				org.columba.addressbook.facade.FolderFacade.getCollectedAddresses();
 
 				String address = AddressParser.getAddress(sender);
 				System.out.println("address:" + address);
