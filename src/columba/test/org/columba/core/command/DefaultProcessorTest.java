@@ -27,7 +27,7 @@ import java.util.List;
  *
  */
 public class DefaultProcessorTest extends TestCase {
-    private DefaultProcessor processor;
+    private DefaultCommandProcessor processor;
 
     /**
  * Constructor for DefaultProcessorTest.
@@ -43,7 +43,7 @@ public class DefaultProcessorTest extends TestCase {
     protected void setUp() throws Exception {
         super.setUp();
 
-        processor = new DefaultProcessor();
+        processor = new DefaultCommandProcessor();
     }
 
     /**

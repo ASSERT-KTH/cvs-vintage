@@ -28,7 +28,7 @@ import java.util.List;
  *
  */
 public class UndoManagerTest extends TestCase {
-    private DefaultProcessor processor;
+    private DefaultCommandProcessor processor;
     private UndoManager undoManager;
     private DefaultCommandReference[] nullReferences;
 
@@ -46,7 +46,7 @@ public class UndoManagerTest extends TestCase {
     protected void setUp() throws Exception {
         super.setUp();
 
-        processor = new DefaultProcessor();
+        processor = new DefaultCommandProcessor();
         undoManager = processor.getUndoManager();
 
         nullReferences = new DefaultCommandReference[1];
