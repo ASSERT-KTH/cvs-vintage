@@ -58,7 +58,7 @@ import org.jboss.util.Sync;
  *    
  * @author <a href="mailto:marc.fleury@jboss.org">Marc Fleury</a>
  * @author <a href="mailto:Scott.Stark@jboss.org">Scott Stark</a>
- * @version $Revision: 1.34 $
+ * @version $Revision: 1.35 $
  *
  * <p><b>Revisions:</b><br>
  * <p><b>2001/06/28: marcf</b>
@@ -204,8 +204,10 @@ public class EntityInstanceInterceptor
 				
             // Maybe my transaction already expired?
             if (mi.getTransaction() != null && mi.getTransaction().getStatus() == Status.STATUS_MARKED_ROLLBACK)
+            {
+               log.error("Saw rolled back tx="+mi.getTransaction());
                throw new RuntimeException("Transaction marked for rollback, possibly a timeout");
-				
+            }
             // We do not use pools any longer so the only thing that can happen is that 
             // a ctx has a null id (instance removed) (no more "wrong id" problem)
             if (ctx.getId() == null) 
