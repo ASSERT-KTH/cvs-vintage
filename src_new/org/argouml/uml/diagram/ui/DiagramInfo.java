@@ -1,4 +1,4 @@
-// $Id: DiagramInfo.java,v 1.6 2003/09/14 18:51:33 alexb Exp $
+// $Id: DiagramInfo.java,v 1.7 2003/10/22 12:52:14 bobtarling Exp $
 // Copyright (c) 1996-2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -32,6 +32,8 @@ import java.awt.BorderLayout;
 import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.plaf.metal.MetalLookAndFeel;
+
+import org.argouml.ui.LookAndFeelMgr;
 import org.argouml.uml.diagram.activity.ui.UMLActivityDiagram;
 import org.argouml.uml.diagram.collaboration.ui.UMLCollaborationDiagram;
 import org.argouml.uml.diagram.deployment.ui.UMLDeploymentDiagram;
@@ -60,7 +62,7 @@ public class DiagramInfo extends JComponent {
     public JComponent getJComponent() {
 	_name = new JLabel("");
 	setLayout(new BorderLayout());
-	_name.setFont(MetalLookAndFeel.getSubTextFont());
+	_name.setFont(LookAndFeelMgr.getInstance().getSmallFont());
 	add(_name, BorderLayout.CENTER);
 	updateName();
 	return this;
@@ -87,7 +89,7 @@ public class DiagramInfo extends JComponent {
 	    type = "Sequence Diagram";
 	if (_diagram instanceof UMLDeploymentDiagram)
 	    type = "Deployment Diagram";
-    
+
 	_name.setText(type + ": " + _diagram.getName());
     }
 

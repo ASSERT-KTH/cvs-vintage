@@ -1,4 +1,4 @@
-// $Id: Splitter.java,v 1.6 2003/06/30 18:00:23 linus Exp $
+// $Id: Splitter.java,v 1.7 2003/10/22 12:52:13 bobtarling Exp $
 // Copyright (c) 2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -233,12 +233,12 @@ public class Splitter extends JComponent {
     private void showButtons() {
         if (buttonNorth != null) {
             if (panelHidden) {
-                buttonNorth.setVisible(quickHide == this.SOUTH);
-                buttonSouth.setVisible(quickHide == this.NORTH);
+                buttonNorth.setVisible(quickHide == SOUTH);
+                buttonSouth.setVisible(quickHide == NORTH);
             }
             else {
-                buttonNorth.setVisible(quickHide == this.NORTH);
-                buttonSouth.setVisible(quickHide == this.SOUTH);
+                buttonNorth.setVisible(quickHide == NORTH);
+                buttonSouth.setVisible(quickHide == SOUTH);
             }
         }
     }

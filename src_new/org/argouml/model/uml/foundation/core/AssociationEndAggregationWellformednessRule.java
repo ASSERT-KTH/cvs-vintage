@@ -1,4 +1,4 @@
-// $Id: AssociationEndAggregationWellformednessRule.java,v 1.4 2003/09/28 19:10:55 bobtarling Exp $
+// $Id: AssociationEndAggregationWellformednessRule.java,v 1.5 2003/10/22 12:52:14 bobtarling Exp $
 // Copyright (c) 2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -28,7 +28,6 @@ import java.util.Collection;
 import java.util.Iterator;
 
 import org.argouml.model.uml.AbstractWellformednessRule;
-import ru.novosoft.uml.MBase;
 import ru.novosoft.uml.foundation.core.MAssociationEnd;
 import ru.novosoft.uml.foundation.data_types.MAggregationKind;
 

@@ -1,4 +1,4 @@
-// $Id: AboutBox.java,v 1.24 2003/08/30 18:47:05 alexb Exp $
+// $Id: AboutBox.java,v 1.25 2003/10/22 12:52:14 bobtarling Exp $
 // Copyright (c) 1996-2001 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,7 +25,6 @@
 package org.argouml.ui;
 
 import java.awt.*;
-import java.awt.event.*;
 import java.io.InputStreamReader;
 import java.io.StringReader;
 import java.util.ArrayList;
@@ -34,9 +33,7 @@ import javax.swing.JDialog;
 import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
 import javax.swing.JTextArea;
-import javax.swing.event.*;
 import javax.swing.plaf.metal.MetalLookAndFeel;
-import javax.swing.tree.*;
 import org.argouml.application.api.AboutTabPanel;
 import org.argouml.application.api.Argo;
 import org.argouml.application.api.PluggableAboutTab;

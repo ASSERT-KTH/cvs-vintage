@@ -1,4 +1,4 @@
-// $Id: LineLayout.java,v 1.6 2003/06/30 18:00:23 linus Exp $
+// $Id: LineLayout.java,v 1.7 2003/10/22 12:52:13 bobtarling Exp $
 // Copyright (c) 2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -28,7 +28,6 @@
 package org.argouml.swingext;
 
 import java.awt.*;
-import java.util.*;
 
 /**
  * Abstract class for a layout manager that sets all child components

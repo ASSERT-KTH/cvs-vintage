@@ -1,5 +1,5 @@
 
-// $Id: TabTaggedValues.java,v 1.23 2003/09/19 21:28:41 d00mst Exp $
+// $Id: TabTaggedValues.java,v 1.24 2003/10/22 12:52:13 bobtarling Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -47,6 +47,7 @@ import org.argouml.kernel.DelayedChangeNotify;
 import org.argouml.kernel.DelayedVChangeListener;
 import org.argouml.model.uml.UmlFactory;
 import org.argouml.model.uml.UmlModelEventPump;
+import org.argouml.ui.LookAndFeelMgr;
 import org.argouml.ui.TabSpawnable;
 import org.argouml.ui.targetmanager.TargetEvent;
 import org.tigris.gef.presentation.Fig;
@@ -84,7 +85,7 @@ public class TabTaggedValues extends TabSpawnable
         _table.setRowSelectionAllowed(false);
         // _table.getSelectionModel().addListSelectionListener(this);
         JScrollPane sp = new JScrollPane(_table);
-        Font labelFont = MetalLookAndFeel.getSubTextFont();
+        Font labelFont = LookAndFeelMgr.getInstance().getSmallFont();
         _table.setFont(labelFont);
         _titleLabel = new JLabel("none");
         resizeColumns();
@@ -192,9 +193,9 @@ public class TabTaggedValues extends TabSpawnable
 
 
 class TableModelTaggedValues extends AbstractTableModel
-    implements VetoableChangeListener, 
+    implements VetoableChangeListener,
 	       DelayedVChangeListener,
-	       MElementListener 
+	       MElementListener
 {
     private static final String BUNDLE = "Cognitive";
 

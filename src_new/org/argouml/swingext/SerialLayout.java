@@ -1,4 +1,4 @@
-// $Id: SerialLayout.java,v 1.11 2003/09/04 20:18:12 thierrylach Exp $
+// $Id: SerialLayout.java,v 1.12 2003/10/22 12:52:13 bobtarling Exp $
 // Copyright (c) 2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -28,7 +28,6 @@
 package org.argouml.swingext;
 
 import java.awt.*;
-import java.util.*;
 
 import org.apache.log4j.Logger;
 

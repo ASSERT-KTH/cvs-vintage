@@ -1,4 +1,4 @@
-// $Id: DisplayTextTree.java,v 1.39 2003/10/18 21:29:14 alexb Exp $
+// $Id: DisplayTextTree.java,v 1.40 2003/10/22 12:52:14 bobtarling Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -32,24 +32,13 @@ import java.util.Hashtable;
 import java.util.Vector;
 
 import javax.swing.JTree;
-import javax.swing.SwingUtilities;
-import javax.swing.event.TreeModelEvent;
 import javax.swing.tree.TreeModel;
 import javax.swing.tree.TreePath;
 
 import org.apache.log4j.Logger;
-import org.argouml.application.api.Configuration;
-import org.argouml.application.api.Notation;
 import org.argouml.cognitive.ToDoItem;
 import org.argouml.cognitive.ToDoList;
-import org.argouml.model.ModelFacade;
-import org.argouml.model.uml.UmlHelper;
-import org.argouml.ui.targetmanager.TargetEvent;
-import org.argouml.ui.targetmanager.TargetListener;
-import org.argouml.uml.generator.GeneratorDisplay;
 import org.argouml.uml.ui.UMLTreeCellRenderer;
-import org.tigris.gef.base.Diagram;
-import org.tigris.gef.presentation.Fig;
 
 /**
  * This is the JTree that is the gui component view of the model navigation and

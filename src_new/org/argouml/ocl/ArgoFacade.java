@@ -1,4 +1,4 @@
-// $Id: ArgoFacade.java,v 1.22 2003/09/05 22:35:22 bobtarling Exp $
+// $Id: ArgoFacade.java,v 1.23 2003/10/22 12:52:13 bobtarling Exp $
 // Copyright (c) 1996-2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -36,7 +36,6 @@ import org.apache.log4j.Logger;
 import org.argouml.kernel.*;
 import org.argouml.model.ModelFacade;
 import org.argouml.model.uml.UmlHelper;
-import org.argouml.ui.*;
 
 /**
  * Provides a facade of the argoUml uml model for the OCL compiler.

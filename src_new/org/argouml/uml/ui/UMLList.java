@@ -1,4 +1,4 @@
-// $Id: UMLList.java,v 1.9 2003/09/21 15:23:22 bobtarling Exp $
+// $Id: UMLList.java,v 1.10 2003/10/22 12:52:13 bobtarling Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -29,6 +29,9 @@ import java.lang.reflect.*;
 import java.awt.event.*;
 import java.awt.*;
 import javax.swing.plaf.metal.MetalLookAndFeel;
+
+import org.argouml.ui.LookAndFeelMgr;
+
 import ru.novosoft.uml.MElementEvent;
 
 /**
@@ -46,7 +49,7 @@ public class UMLList extends JList implements UMLUserInterfaceComponent, MouseLi
         super(listModel);
         _umlListModel = listModel;
         _navigate = navigate;
-        setFont(MetalLookAndFeel.getSubTextFont());
+        setFont(LookAndFeelMgr.getInstance().getSmallFont());
 
         if (navigate) {
             addMouseListener(this);
@@ -136,8 +139,8 @@ public class UMLList extends JList implements UMLUserInterfaceComponent, MouseLi
         Point point = event.getPoint();
         int index = locationToIndex(point);
 
-       // JList returns -1 if list is empty or user right clicks on an area 
-       // that has no list item, such as when the JList is not full. This code 
+       // JList returns -1 if list is empty or user right clicks on an area
+       // that has no list item, such as when the JList is not full. This code
        // compensates for the user not clicking over a list item. pjs.
         if (index == -1) {
             index = _umlListModel.getModelElementSize();
