@@ -1,4 +1,4 @@
-/* $Id: ApacheConfig.java,v 1.22 2001/08/10 20:55:38 larryi Exp $
+/* $Id: ApacheConfig.java,v 1.23 2001/08/11 03:37:28 larryi Exp $
  * ====================================================================
  *
  * The Apache Software License, Version 1.1
@@ -146,7 +146,7 @@ import java.util.*;
     @author Costin Manolache
     @author Larry Isaacs
     @author Mel Martinez
-	@version $Revision: 1.22 $ $Date: 2001/08/10 20:55:38 $
+	@version $Revision: 1.23 $ $Date: 2001/08/11 03:37:28 $
  */
 public class ApacheConfig  extends BaseJkConfig { 
     
@@ -184,33 +184,6 @@ public class ApacheConfig  extends BaseJkConfig {
     private String sslCertsIndicator="SSL_CLIENT_CERT";
     
     public ApacheConfig() {
-    }
-
-    // -------------------- Tomcat callbacks --------------------
-    // ApacheConfig should be able to react to dynamic config changes,
-    // and regenerate the config.
-    
-    /** Generate the apache configuration - only when the server is
-     *  completely initialized ( before starting )
-     */
-    public void engineState( ContextManager cm, int state )
-    	throws TomcatException
-    {
-	if( state != ContextManager.STATE_INIT )
-	    return;
-	execute( cm );
-    }
-
-    public void contextInit(Context ctx)
-	throws TomcatException
-    {
-	ContextManager cm=ctx.getContextManager();
-    	if( cm.getState() >= ContextManager.STATE_INIT ) {
-    	    // a context has been added after the server was started.
-    	    // regenerate the config ( XXX send a restart signal to
-    	    // the server )
-    	    execute( cm );
-    	}
     }
 
     //-------------------- Properties --------------------
@@ -282,14 +255,14 @@ public class ApacheConfig  extends BaseJkConfig {
     protected void initProperties(ContextManager cm) {
         super.initProperties(cm);
 	
-	jkConfig=getConfigFile( jkConfig, configHome, MOD_JK_CONFIG);
-	workersConfig=getConfigFile( workersConfig, configHome,
+	jkConfig=FileUtil.getConfigFile( jkConfig, configHome, MOD_JK_CONFIG);
+	workersConfig=FileUtil.getConfigFile( workersConfig, configHome,
 				     WORKERS_CONFIG);
 	if( modJk == null )
 	    modJk=new File(MOD_JK);
 	else
-	    modJk=getConfigFile( modJk, configHome, MOD_JK );
-	jkLog=getConfigFile( jkLog, configHome, JK_LOG_LOCATION);
+	    modJk=FileUtil.getConfigFile( modJk, configHome, MOD_JK );
+	jkLog=FileUtil.getConfigFile( jkLog, configHome, JK_LOG_LOCATION);
     }
 
     // -------------------- Generate config --------------------
@@ -634,11 +607,7 @@ public class ApacheConfig  extends BaseJkConfig {
     private String getApacheDocBase(Context context)
     {
 	// Calculate the absolute path of the document base
-	String docBase = context.getDocBase();
-	if (!FileUtil.isAbsolute(docBase)){
-	    docBase = tomcatHome + "/" + docBase;
-	}
-	docBase = FileUtil.patch(docBase);
+	String docBase = getAbsoluteDocBase(context);
 	if (File.separatorChar == '\\') {
 	    // use separator preferred by Apache
 	    docBase = docBase.replace('\\','/');

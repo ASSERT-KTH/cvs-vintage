@@ -1,4 +1,4 @@
-/* $Id: BaseJkConfig.java,v 1.2 2001/08/10 20:55:38 larryi Exp $
+/* $Id: BaseJkConfig.java,v 1.3 2001/08/11 03:37:28 larryi Exp $
  * ====================================================================
  *
  * The Apache Software License, Version 1.1
@@ -59,6 +59,7 @@
 package org.apache.tomcat.modules.config;
 
 import org.apache.tomcat.core.*;
+import org.apache.tomcat.util.io.FileUtil;
 import java.io.*;
 
 import org.apache.tomcat.modules.server.Ajp13Interceptor;
@@ -117,7 +118,7 @@ import org.apache.tomcat.modules.server.Ajp13Interceptor;
     <p>
     @author Costin Manolache
     @author Larry Isaacs
-	@version $Revision: 1.2 $
+	@version $Revision: 1.3 $
  */
 public class BaseJkConfig  extends BaseInterceptor { 
     protected File configHome = null;
@@ -131,6 +132,41 @@ public class BaseJkConfig  extends BaseInterceptor {
     protected boolean forwardAll=true;
 
     protected String tomcatHome;
+
+    // -------------------- Tomcat callbacks --------------------
+    // Auto-config should be able to react to dynamic config changes,
+    // and regenerate the config.
+
+    /** Generate the configuration - only when the server is
+     *  completely initialized ( before starting )
+     */
+    public void engineState( ContextManager cm, int state )
+         throws TomcatException
+    {
+        if( state != ContextManager.STATE_INIT )
+            return;
+        execute( cm );
+    }
+
+    public void contextInit(Context ctx)
+        throws TomcatException
+    {
+        ContextManager cm=ctx.getContextManager();
+        if( cm.getState() >= ContextManager.STATE_INIT ) {
+            // a context has been added after the server was started.
+            // regenerate the config ( XXX send a restart signal to
+            // the server )
+            execute( cm );
+        }
+    }
+
+    /** Generate configuration files.  Override with method to generate
+        web server specific configuration.
+     */
+    public void execute(ContextManager cm) throws TomcatException 
+    {
+    }
+
 
     //-------------------- Properties --------------------
 
@@ -284,25 +320,15 @@ public class BaseJkConfig  extends BaseInterceptor {
 
     // -------------------- General Utils --------------------
 
-    protected File getConfigFile( File base, File configDir, String defaultF )
+    protected String getAbsoluteDocBase(Context context)
     {
-        if( base==null )
-            base=new File( defaultF );
-        if( ! base.isAbsolute() ) {
-            if( configDir != null )
-                base=new File( configDir, base.getPath());
-            else
-                base=new File( base.getAbsolutePath()); //??
-        }
-        File parent=new File(base.getParent());
-        if(!parent.exists()){
-            if(!parent.mkdirs()){
-                throw new RuntimeException(
-                    "Unable to create path to config file :"+
-                    base.getAbsolutePath());
-            }
-        }
-        return base;
+	// Calculate the absolute path of the document base
+	String docBase = context.getDocBase();
+	if (!FileUtil.isAbsolute(docBase)){
+	    docBase = tomcatHome + "/" + docBase;
+	}
+	docBase = FileUtil.patch(docBase);
+        return docBase;
     }
 
 }

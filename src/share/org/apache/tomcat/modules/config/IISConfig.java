@@ -128,7 +128,7 @@ import java.util.*;
     @author Costin Manolache
     @author Larry Isaacs
     @author Gal Shachor
-	@version $Revision: 1.6 $
+	@version $Revision: 1.7 $
  */
 public class IISConfig extends BaseJkConfig  { 
 
@@ -142,11 +142,6 @@ public class IISConfig extends BaseJkConfig  {
 
     public IISConfig() 
     {
-    }
-
-    public void engineInit(ContextManager cm) throws TomcatException
-    {
-	execute( cm );
     }
 
     //-------------------- Properties --------------------
@@ -179,10 +174,10 @@ public class IISConfig extends BaseJkConfig  {
     protected void initProperties(ContextManager cm) {
         super.initProperties(cm);
 
-	regConfig=getConfigFile( regConfig, configHome, ISAPI_REG_FILE);
-	workersConfig=getConfigFile( workersConfig, configHome, WORKERS_CONFIG);
-	uriConfig=getConfigFile( uriConfig, configHome, URI_WORKERS_MAP_CONFIG);
-	jkLog=getConfigFile( jkLog, configHome, ISAPI_LOG_LOCATION);
+	regConfig=FileUtil.getConfigFile( regConfig, configHome, ISAPI_REG_FILE);
+	workersConfig=FileUtil.getConfigFile( workersConfig, configHome, WORKERS_CONFIG);
+	uriConfig=FileUtil.getConfigFile( uriConfig, configHome, URI_WORKERS_MAP_CONFIG);
+	jkLog=FileUtil.getConfigFile( jkLog, configHome, ISAPI_LOG_LOCATION);
     }
 
     // -------------------- Generate config --------------------
@@ -203,6 +198,8 @@ public class IISConfig extends BaseJkConfig  {
 
             PrintWriter regfile = new PrintWriter(new FileWriter(regConfig));
             PrintWriter uri_worker = new PrintWriter(new FileWriter(uriConfig));        
+    	    log("Generating IIS registry file = "+regConfig );
+    	    log("Generating IIS URI worker map file = "+uriConfig );
 
             generateRegistrySettings(regfile);
 
@@ -365,17 +362,6 @@ public class IISConfig extends BaseJkConfig  {
         }
         
         return sb.toString();
-    }
-
-    private String getAbsoluteDocBase(Context context)
-    {
-	// Calculate the absolute path of the document base
-	String docBase = context.getDocBase();
-	if (!FileUtil.isAbsolute(docBase)){
-	    docBase = tomcatHome + "/" + docBase;
-	}
-	docBase = FileUtil.patch(docBase);
-        return docBase;
     }
 
 }

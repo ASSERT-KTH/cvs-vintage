@@ -124,7 +124,7 @@ import java.util.*;
     @author Costin Manolache
     @author Larry Isaacs
     @author Gal Shachor
-	@version $Revision: 1.4 $
+	@version $Revision: 1.5 $
  */
 public class NSConfig  extends BaseJkConfig { 
 
@@ -140,11 +140,6 @@ public class NSConfig  extends BaseJkConfig {
     {
     }
 
-    public void engineInit(ContextManager cm) throws TomcatException
-    {
-	execute( cm );
-    }
-    
     //-------------------- Properties --------------------
     
     /**
@@ -167,9 +162,9 @@ public class NSConfig  extends BaseJkConfig {
     protected void initProperties(ContextManager cm) {
         super.initProperties(cm);
 
-	objConfig=getConfigFile( objConfig, configHome, NS_CONFIG);
-	workersConfig=getConfigFile( workersConfig, configHome, WORKERS_CONFIG);
-	jkLog=getConfigFile( jkLog, configHome, NSAPI_LOG_LOCATION);
+	objConfig=FileUtil.getConfigFile( objConfig, configHome, NS_CONFIG);
+	workersConfig=FileUtil.getConfigFile( workersConfig, configHome, WORKERS_CONFIG);
+	jkLog=FileUtil.getConfigFile( jkLog, configHome, NSAPI_LOG_LOCATION);
     }
 
     // -------------------- Generate config --------------------
