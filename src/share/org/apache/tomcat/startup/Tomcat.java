@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.lang.reflect.*;
 import java.util.Hashtable;
 import java.util.*;
+import java.net.*;
 import org.apache.tomcat.util.*;
 import org.apache.tomcat.core.*;
 
@@ -88,10 +89,17 @@ public class Tomcat {
 		return;
 	    }
 
+	    if( tomcat.stopPort != null ) {
+		tomcat.stopTomcat();
+		return;
+	    }
+	    
 	    if( ! "server.xml".equals(tomcat.configFile) )
 		tomcat.startTomcat();
 	    else
 		tomcat.startTomcatOld();
+
+	    
 
 	} catch(Exception ex ) {
 	    ex.printStackTrace();
@@ -99,8 +107,29 @@ public class Tomcat {
 
     }
 
+    void stopTomcat( ) {
+	// use Ajp12 to stop the server...
+	int portInt=8007;
+	try {
+	    portInt = Integer.valueOf(stopPort).intValue();
+	} catch (NumberFormatException nfe) {
+	}
+	try {
+	    Socket socket = new Socket("localhost", portInt);
+	    OutputStream os=socket.getOutputStream();
+	    byte stopMessage[]=new byte[2];
+	    stopMessage[0]=(byte)254;
+	    stopMessage[1]=(byte)15;
+	    os.write( stopMessage );
+	    socket.close();
+	} catch(Exception ex ) {
+	    ex.printStackTrace();
+	}
+    }
+    
     // -------------------- Command-line args processing --------------------
     String configFile="server.xml";
+    String stopPort=null;
     
     public static void printUsage() {
 	System.out.println("usage: ");
@@ -116,6 +145,10 @@ public class Tomcat {
 		printUsage();
 		return false;
 		
+	    } else if (arg.equals("-stop")) {
+		i++;
+		if( i < args.length )
+		    stopPort = args[i]; 
 	    } else if (arg.equals("-f")) {
 		i++;
 		if( i < args.length )

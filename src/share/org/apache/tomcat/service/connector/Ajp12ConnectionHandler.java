@@ -107,9 +107,10 @@ public class Ajp12ConnectionHandler implements  TcpConnectionHandler {
         try {
 	    Socket socket=connection.getSocket();
 	    socket.setSoLinger( true, 100);
+	    socket.setSoTimeout( 1000); // or what ? 
 
 	    RequestImpl request = new RequestImpl();
-	    AJP12RequestAdapter reqA = new AJP12RequestAdapter(socket);
+	    AJP12RequestAdapter reqA = new AJP12RequestAdapter(contextM, socket);
 	    ResponseImpl response=new ResponseImpl();
 	    AJP12ResponseAdapter resA=new AJP12ResponseAdapter();
 
@@ -124,7 +125,8 @@ public class Ajp12ConnectionHandler implements  TcpConnectionHandler {
 	    response.setRequest(request);
 
 	    reqA.readNextRequest();
-
+	    if( reqA.shutdown )
+		return;
 	    if (response.getStatus() >= 400) {
 		response.finish();
 		
@@ -159,7 +161,9 @@ class AJP12RequestAdapter extends RequestAdapterImpl {
     Socket socket;
     InputStream sin;
     Ajpv12InputStream ajpin;
-
+    ContextManager contextM;
+    boolean shutdown=false;
+    
     public int doRead() throws IOException {
 	return ajpin.read();
     }
@@ -168,8 +172,9 @@ class AJP12RequestAdapter extends RequestAdapterImpl {
 	return ajpin.read(b,off,len);
     }
 
-    public AJP12RequestAdapter(Socket s) throws IOException {
+    public AJP12RequestAdapter(ContextManager cm, Socket s) throws IOException {
 	this.socket = s;
+	this.contextM=cm;
 	sin = s.getInputStream();
 	in = new BufferedServletInputStream( this );
 	ajpin = new Ajpv12InputStream(sin);
@@ -248,7 +253,13 @@ class AJP12RequestAdapter extends RequestAdapterImpl {
 		    try {
 			// close the socket connection before handling any signal
 			sin.close();
-		    } catch (IOException ignored) {
+			if ( signal== 15 ) {
+			    // Shutdown - probably apache was stoped with apachectl stop
+			    contextM.stop();
+			    shutdown=true;
+			    return;
+			}
+		    } catch (Exception ignored) {
 			System.err.println(ignored);
 		    }
 		    System.err.println("Signal ignored: " + signal);

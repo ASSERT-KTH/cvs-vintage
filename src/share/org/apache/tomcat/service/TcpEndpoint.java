@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/service/Attic/TcpEndpoint.java,v 1.4 1999/12/03 17:01:19 harishp Exp $
- * $Revision: 1.4 $
- * $Date: 1999/12/03 17:01:19 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/service/Attic/TcpEndpoint.java,v 1.5 2000/01/15 07:18:32 costin Exp $
+ * $Revision: 1.5 $
+ * $Date: 2000/01/15 07:18:32 $
  *
  * ====================================================================
  *
@@ -231,6 +231,7 @@ public class TcpEndpoint  { // implements Endpoint {
 
 	// XXX set socket options
 	// 	s.setSoLinger( true, 100);
+	s.setSoTimeout( 1000 );
 	
 	TcpConnection con=new TcpConnection();
 	con.setEndpoint(this);

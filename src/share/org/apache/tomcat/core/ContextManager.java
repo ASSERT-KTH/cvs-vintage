@@ -173,6 +173,7 @@ public class ContextManager {
     }
 
     public void stop() throws Exception {
+	System.out.println("Stopping context manager ");
 	for (int i=0; i<connectors.size(); i++) {
 	    ((ServerConnector)connectors.elementAt(i)).stop();
 	}
@@ -187,6 +188,10 @@ public class ContextManager {
 	    
 	    context.shutdown();
 	}
+	// same behavior as in past, because it seems that
+	// stopping everything doesn't work - need to figure
+	// out what happens with the threads ( XXX )
+	System.exit(0);
     }
 
     /**
