@@ -74,9 +74,10 @@
 /* This is where we turn on all load-balancing code */
 #define LOAD_BALANCE
 
-
-#define JSERV_NAME "@PACKAGE@"
-#define JSERV_VERSION "@VERSION@"
+/* XXX used only by jserv_status - need a bit of discussion as
+   probably status will be a bit different in tomcat anyway */
+#define JSERV_NAME "tomcat"
+#define JSERV_VERSION "1.0"
 
 /*****************************************************************************
  * Name of the servlet to call for JServ status                              *
