@@ -4,11 +4,14 @@
  * Distributable under LGPL license.
  * See terms of license at gnu.org.
  */
-
 package org.jboss.naming;
 
 import java.io.InputStream;
+import java.lang.reflect.Method;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.UndeclaredThrowableException;
 import java.net.UnknownHostException;
+import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.Enumeration;
 import java.util.Properties;
@@ -21,10 +24,12 @@ import javax.naming.RefAddr;
 import javax.naming.Reference;
 import javax.naming.StringRefAddr;
 
-import org.jnp.server.Main;
-
+import org.jboss.invocation.Invocation;
+import org.jboss.invocation.MarshalledInvocation;
 import org.jboss.management.j2ee.JNDIResource;
 import org.jboss.system.ServiceMBeanSupport;
+import org.jnp.interfaces.Naming;
+import org.jnp.server.Main;
 
 /**
  * A JBoss service that starts the jnp JNDI server.
@@ -32,29 +37,18 @@ import org.jboss.system.ServiceMBeanSupport;
  * @author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
  * @author <a href="mailto:Scott.Stark@jboss.org">Scott Stark</a>.
  * @author <a href="mailto:andreas@jboss.org">Andreas Schaefer</a>.
- * @version $Revision: 1.34 $
+ * @version $Revision: 1.35 $
  *
  * @jmx:mbean name="jboss:service=Naming"
  *            extends="org.jboss.system.ServiceMBean, org.jnp.server.MainMBean"
- *            
- * <p><b>Revisions:</b>
- *
- * <p><b>20010622 scott.stark:</b>
- * <ul>
- * <li> Report IntialContext env for problem tracing
- * </ul>
- * <p><b>20011202 Andreas Schaefer:</b>
- * <ul>
- * <li> Added JSR-77 representation, see {@link #postRegister postRegister()}
- *      and {@link #postDeregister postDeregister()}.
- * </ul>
  **/
 public class NamingService
    extends ServiceMBeanSupport
    implements NamingServiceMBean
 {
-   Main naming;
-   
+   private Main naming;
+   private HashMap marshalledInvocationMapping = new HashMap();
+
    /** Object Name of the JSR-77 representant of this servie **/
    ObjectName mJNDI;
    
@@ -136,7 +130,7 @@ public class NamingService
    {
       return name == null ? OBJECT_NAME : name;
    }
-   
+
    protected void startService()
       throws Exception
    {
@@ -196,6 +190,16 @@ public class NamingService
       ctx.rebind("comp", envRef);
       if (log.isInfoEnabled())
          log.info("Listening on port "+naming.getPort());
+
+      // Build the Naming interface method map
+      Method[] methods = Naming.class.getMethods();
+      for(int m = 0; m < methods.length; m ++)
+      {
+         Method method = methods[m];
+         Long hash = new Long(MarshalledInvocation.calculateHash(method));
+         marshalledInvocationMapping.put(hash, method);
+      }
+
    }
 
    protected void stopService()
@@ -204,22 +208,62 @@ public class NamingService
       naming.stop();
       log.debug("JNP server stopped");
    }
-   
+
    public void postRegister( Boolean pRegistrationDone )
    {
       super.postRegister( pRegistrationDone );
-      if( pRegistrationDone.booleanValue() ) {
+      if( pRegistrationDone.booleanValue() )
+      {
          // Create the JSR-77 management representation
          mJNDI = JNDIResource.create( server, "LocalJNDI", getServiceName() );
       }
    }
-   
+
    public void postDeregister() 
    {
-      if( mJNDI != null ) {
+      if( mJNDI != null )
+      {
          // Destroy the JSR-77 management representation
          JNDIResource.destroy( server, "LocalJNDI" );
       }
       super.postDeregister();
+   }
+
+   /** Expose the Naming service via JMX to invokers.
+    *
+    * @jmx:managed-operation
+    *
+    * @param invocation    A pointer to the invocation object
+    * @return              Return value of method invocation.
+    * 
+    * @throws Exception    Failed to invoke method.
+    */
+   public Object invoke(Invocation invocation) throws Exception
+   {
+      Naming theServer = naming.getServer();
+      // Set the method hash to Method mapping
+      if (invocation instanceof MarshalledInvocation)
+      {
+         MarshalledInvocation mi = (MarshalledInvocation) invocation;
+         mi.setMethodMap(marshalledInvocationMapping);
+      }
+      // Invoke the Naming method via reflection
+      Method method = invocation.getMethod();
+      Object[] args = invocation.getArguments();
+      Object value = null;
+      try
+      {
+         value = method.invoke(theServer, args);
+      }
+      catch(InvocationTargetException e)
+      {
+         Throwable t = e.getTargetException();
+         if( t instanceof Exception )
+            throw (Exception) e;
+         else
+            throw new UndeclaredThrowableException(t, method.toString());
+      }
+
+      return value;
    }
 }
