@@ -31,7 +31,8 @@ import org.jboss.security.SecurityAssociation;
  *   @see <related>
  *   @author Rickard Öberg (rickard.oberg@telkel.com)
  *   @author <a href="mailto:docodan@nycap.rr.com">Daniel O'Connor</a>.
- *   @version $Revision: 1.32 $
+ *   @author Scott_Stark@displayscape.com
+ *   @version $Revision: 1.33 $
  */
 public class Main
 {
@@ -79,6 +80,21 @@ public class Main
           System.setProperty("jboss.home", homeDir.getCanonicalPath());
       }
       System.out.println("jboss.home = "+System.getProperty("jboss.home"));
+
+      // Set the JAAS login config file if not already set
+      if( System.getProperty("java.security.auth.login.config") == null )
+      {
+          URL loginConfig = Main.class.getClassLoader().getResource(confName+"/auth.conf");
+          if( loginConfig != null )
+          {
+              System.getProperty("java.security.auth.login.config", loginConfig.toExternalForm());
+              System.out.println("Using JAAS LoginConfig: "+loginConfig.toExternalForm());
+          }
+          else
+          {
+              System.out.println("Warning: no auth.conf found in config="+confName);
+          }
+      }
 
       // Set security
       URL serverPolicy = Main.class.getClassLoader().getResource(confName+"/server.policy");
