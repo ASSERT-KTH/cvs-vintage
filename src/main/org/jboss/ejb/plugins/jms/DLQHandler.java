@@ -60,7 +60,7 @@ import org.jboss.system.ServiceMBeanSupport;
  *
  * Created: Thu Aug 23 21:17:26 2001
  *
- * @version <tt>$Revision: 1.13 $</tt>
+ * @version <tt>$Revision: 1.14 $</tt>
  * @author ???
  * @author <a href="mailto:jason@planet57.com">Jason Dillon</a>
  */
@@ -141,6 +141,17 @@ public class DLQHandler
 
          dlq = (Queue)ctx.lookup(destinationJNDI);
          log.debug("Using destination queue: " + dlq);
+      }
+      catch (Exception e)
+      {
+         if (e instanceof JMSException)
+            throw e;
+         else
+         {
+            JMSException x = new JMSException("Error creating the dlq connection: " + e.getMessage());
+            x.setLinkedException(e);
+            throw x;
+         }
       }
       finally {
          ctx.close();
