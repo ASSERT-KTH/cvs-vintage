@@ -17,6 +17,7 @@
     #end
 </select>
 #end
+
 #macro ( templateAttrValueLeafSelect $attrValue $templAttrValue $optionFieldName $size )
     #set ( $attrInput = $intake.AttributeValue.mapTo($attrValue) )
     #set ( $templAttrInput = $intake.AttributeValue.mapTo($templAttrValue) )
@@ -40,6 +41,7 @@
                   <option$selected value="$option.OptionId">$option.DisplayValue</option>
             #end
 #end
+
 #macro ( dependTypeLeafSelect $childIssue $type)
 <select name="$type_depend_type_id_$childIssue.IssueId">
     <option>Choose dependency type</option>
@@ -54,10 +56,12 @@
     <option value="none">remove dependency </option>
 </select>
 #end
+
 #macro ( attrValueText $attrValue $size )
 #set ( $attrInput = $intake.AttributeValue.mapTo($attrValue) )
 <input type="text" name="$attrInput.Value.Key" value="$!attrInput.Value"#if($size.length()) size="$size"#end />
 #end
+
 #macro ( attrValueHierarchySelect $attrValue $optionFieldName $size )
 #set ( $attrInput = $intake.AttributeValue.mapTo($attrValue) )
 #set ( $attr = $attrValue.Attribute )
@@ -78,27 +82,32 @@
     #end
 </select>
 #end
+
 #macro ( attrValueErrorMsg $attrValue $fieldName )
 #set ( $attrInput = $intake.AttributeValue.mapTo($attrValue) )
 #if ( !$attrInput.get($fieldName).isValid() )
 <p><strong class="alert">$attrInput.get($fieldName).Message</strong></p>
 #end
 #end
+
 #macro ( fieldErrorMsg $field $br)
 #if ( !$field.isValid() )
 <p><strong class="alert">$field.Message</strong></p>$br
 #end
 #end
+
 #macro ( actionErrorMsg )
 #if ($data.Message)
 <p><strong class="alert">$data.Message</strong></p>
 #end
 #end
+
 #macro ( stdIntakeMsg )
 #if ( !$intake.isAllValid() )
 <p><strong class="alert">Please check your form fields for errors and resubmit.</strong></p>
 #end
 #end
+
 #macro ( numericSelect $name $first $last $selected $size )
 <select name="$name" size="$size">
 #foreach ( $i in [$first..$last] )
@@ -106,18 +115,21 @@
 #end
 </select>
 #end
+
 #macro ( booleanCheckbox $booleanField )
 <input type="checkbox" name="$booleanField.Key" value="true"
 #if ($booleanField.Value) checked="checked" #end />
 <input type="hidden" name="$booleanField.ValueIfAbsent"
 value="false" />
 #end
+
 #macro ( textField $field $size )
 #if ( $field.Validator.MaxLength && $field.Validator.MaxLength > 0 )
 #set ( $maxLength = $field.Validator.MaxLength )
 #end
 <input type="text" name="$field.Key" value="$!field.Value"#if($maxLength) maxlength="$maxLength"#end#if($size.length()) size="$size"#end />
 #end
+
 #macro (userSelectBox $attrValue $size $multiple)
 #set ( $attrInput = $intake.AttributeValue.mapTo($attrValue) )
 #set ( $attr = $attrValue.Attribute )
@@ -144,6 +156,7 @@ value="false" />
  #end
 </select>
 #end
+
 #macro (queryTypeSelectBox $query)
     #set ( $queryGroup = $intake.Query.mapTo($query) )
          <select name="$queryGroup.TypeId.Key">
@@ -154,6 +167,7 @@ value="false" />
            #end
          </select>
 #end
+
 #macro (templateTypeSelectBox $issue)
     #set ( $group = $intake.Issue.mapTo($issue) )
          <select name="$group.TypeId.Key">
@@ -164,6 +178,7 @@ value="false" />
            #end
          </select>
 #end
+
 #macro (frequencySelectBox $query $id)
           #foreach ($frequency in $query.Frequencies )
           <option value = "$frequency.FrequencyId" #if( $frequency.FrequencyId.equals($id)) selected="selected" #end >
@@ -171,6 +186,7 @@ value="false" />
           </option>
            #end
 #end
+
 #macro (indexedRows $count)
  #if( $count % 2 > 0 )
     <tr class="a">
@@ -178,9 +194,11 @@ value="false" />
     <tr class="b">
  #end
 #end
+
 #macro (rows)
  #indexedRows($velocityCount)
 #end
+
 #macro ( datatitle $title )
 <h3>$title</h3>
 #end
