@@ -17,7 +17,7 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  *
  * This package and its source code is available at www.jboss.org
- * $Id: AbstractVerifier.java,v 1.37 2003/03/28 18:33:33 lqd Exp $
+ * $Id: AbstractVerifier.java,v 1.38 2003/03/29 11:44:28 ejort Exp $
  */
 package org.jboss.verifier.strategy;
 
@@ -83,7 +83,7 @@ import org.gjt.lindfors.pattern.StrategyContext;
  * </ul>
  * </p>
  *
- * @version $Revision: 1.37 $
+ * @version $Revision: 1.38 $
  * @since   JDK 1.3
  */
 public abstract class AbstractVerifier
@@ -862,11 +862,13 @@ public abstract class AbstractVerifier
       Class[] b = target.getExceptionTypes();
       Class rteClass = null;
       Class errorClass = null;
+      Class iteClass = null;
 
       try
       {
          rteClass = classloader.loadClass( "java.lang.RuntimeException" );
          errorClass = classloader.loadClass( "java.lang.Error" );
+         iteClass = classloader.loadClass( "java.lang.reflect.InvocationTargetException" );
       }
       catch( ClassNotFoundException cnfe )
       {
@@ -876,10 +878,11 @@ public abstract class AbstractVerifier
       for( int i = 0; i < a.length; ++i )
       {
          if( rteClass.isAssignableFrom(a[i])
-            || errorClass.isAssignableFrom(a[i]) )
+            || errorClass.isAssignableFrom(a[i])
+            || iteClass.isAssignableFrom(a[i]) )
          {
-            // Skip over subclasses of java.lang.RuntimeException and
-            // java.lang.Error
+            // Skip over subclasses of java.lang.RuntimeException,
+            // java.lang.Error and InvocationTargetException
             continue;
          }
 
