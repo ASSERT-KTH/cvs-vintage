@@ -35,7 +35,7 @@ import org.jboss.logging.Logger;
  * the current VM.
  * @author Daniel O'Connor (docodan@nycap.rr.com)
  * @author Scott.Stark@jboss.org
- * @version $Revision: 1.21 $
+ * @version $Revision: 1.22 $
  */
 public final class SecurityAssociation
 {
@@ -504,7 +504,7 @@ public final class SecurityAssociation
                runAs = (RunAsIdentity) stack.get(index);
             depth ++;
          }
-         while (runAs == null && depth < stackSize - 1);
+         while (runAs == null && depth <= stackSize - 1);
          return runAs;
       }
    }
