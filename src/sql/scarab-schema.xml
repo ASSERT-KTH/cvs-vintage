@@ -2,7 +2,7 @@
 <!DOCTYPE app-data SYSTEM
           "http://jakarta.apache.org/turbine/dtd/database.dtd">
 
-<!-- $Id: scarab-schema.xml,v 1.59 2001/10/16 05:02:24 elicia Exp $ -->
+<!-- $Id: scarab-schema.xml,v 1.60 2001/10/17 20:01:30 elicia Exp $ -->
 
 <app-data>
 <database>
@@ -522,6 +522,8 @@
         Corresponds to. If is not, parent id is 0.
     -->
     <column name="PARENT_ID" required="true" type="INTEGER"></column>
+    <column name="DELETED" required="false" type="BOOLEANINT" 
+        default="0" size="1"></column>
     <foreign-key foreignTable="SCARAB_ISSUE_TYPE">
         <reference local="PARENT_ID" foreign="ISSUE_TYPE_ID"/>
     </foreign-key>
@@ -554,6 +556,22 @@
         Order the the issue types appear in the left nav.
     -->
     <column name="PREFERRED_ORDER" javaName="Order" required="false" default="0" type="INTEGER"/>
+    <!--
+        Default number of history entries.
+    -->
+    <column name="HISTORY" required="false" default="5" type="INTEGER"/>
+    <!--
+        Default number of comments.
+    -->
+    <column name="COMMENTS" required="false" default="5" type="INTEGER"/>
+    <!--
+        Value that represents the name of the issue type in the UI.
+    -->
+    <column name="DISPLAY_NAME" required="false" type="VARCHAR" size="255"/>
+    <!--
+        Value that represents the description of the issue type in the UI.
+    -->
+    <column name="DISPLAY_DESCRIPTION" required="false" type="VARCHAR" size="255"/>
     <foreign-key foreignTable="SCARAB_MODULE">
         <reference local="MODULE_ID" foreign="MODULE_ID"/>
     </foreign-key>
