@@ -47,17 +47,19 @@ The CVS repository has the following directory structure:
 /plugins   a collection of plugins to extend Columba's functionality
 /classes   compiled classes will be put here
 
-The scripts are used to build the binary and source distributions. See next 
-chapter on how to compile from a source distribution. 
+The scripts are used to build the binary and source distributions. 
 
-o Unix/Linux type operating systems:
+o Building Columba on Unix/Linux type operating systems:
   bash# ant
   
   Running Columba using JDK1.4:
   bash# chmod 0775 run_source.sh
   bash# run_source.sh
 
-o Windows type operating systems:
+  (The "chmod" command is used to make the run_source.sh script executable.
+   Alternatively, you can also start the script using "sh run_source.sh".)
+  
+o Building Columba on Windows type operating systems:
   shell# ant
   
   Running Columba using JDK1.4:
@@ -65,7 +67,7 @@ o Windows type operating systems:
   
 
 
-3. Getting Help
+4. Getting Help
 ---------------
 
 The user manual is available at
@@ -78,17 +80,17 @@ For the latest information on new releases, website or resource changes,
 please visit http://columba.sourceforge.net
 
 
-4. Obtaining Columba
+5. Obtaining Columba
 --------------------
 The website of Columba can be found at http://columba.sourceforge.net.
 
 
-5. License
+6. License
 ----------
 For legal and licensing issues, please read the LICENSE file.
 
 
-6. Contact Email
+7. Contact Email
 ----------------
 Frederik Dietz  (developer)     fdietz@users.sourceforge.net
 Timo Stich      (developer)     tstich@users.sourceforge.net

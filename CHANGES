@@ -1,4 +1,55 @@
+Columba v1.0 RC1-test1
+
+New features:
+- changed usage of String to char[] for passwords (javaprog/dietz)
+- added adaptive spam filter, using Macchiato library (fdietz)
+- added drag'n'drop support for composer and attachment panel (redsolo)
+- added sortable tree component, supports sorting by name or unread message
+  count (redsolo)
+- added HTTP proxy support (javaprog)
+- added preliminary offline/online support (javaprog)
+- added Folder->Mark Folder as Read action(redsolo)
+- changed Message->Mark Message to toggle state model(fdietz)
+- changed View->Charset menu to radiobuttons, improved usability (fdietz)
+- added testsuite for folder package, folder commands and composer commands,
+  filters (fdietz)
+- added readme.txt to all plugins (fdietz)
+- FrameView is loaded dynamically, added new plugin handler (diginetdev)
+- added security warning if user stores passwords in unsafe location (javaprog)
+- added match all filter (fdietz)
+- added "is sender in addressbook" filter (fdietz)
+- added license tab to About Dialog (javaprog)
+- moved code into separate package Frappucino, including TreeTable, editable List,
+  Checkable List, Checkable Tree, Dnd code (redsolo/fdietz)
+- moved PGP security code in JSCF package (waffel)
+- added location of configuration folder to Windows Installer (karlpeder)
+
+
+Code cleanups:
+- refactored selection handling (fdietz)
+- cleanup of mailbox folders using composition instead of inheritance (fdietz)
+- added improved listener model to mailbox folders (javaprog)
+- cleanup of TreeTableModel updating code, depends on frappucino (fdietz)
+- refactored message viewer component, improved header viewer, 
+  added status panel (fdietz)
+- added plugin-handler registry, using xml files (fdietz)
+- added testcases for plugin manager (fdietz)
+- refactored logging  (redsolo)
+- refactored Frame view/controller classes (diginetdev)
+- improved session management (javaprog)
+- cleanup of addressbook tablemodel (fdietz)
+
+Bugs:
+- fixed URL parsing bugs, which caused StackOverflow exceptions when
+  viewing messages (tstich)
+- fixed bugs caused by unclosed streams (tstich/redsolo)
+- fixed missing path separator for mailbox (fdietz)
+- fixed SMTP openConnection bug (tstich)
+- fixed inputstream bug when forwarding (tstich)
+- fixed windows focusing problems (fdietz)
 - fixed account selection when replying (karlpeder)
+- vFolder didn't allow dnd operations (fdietz)
+- fixed IMAP filtering bugs (fdietz)
 
 Columba v1.0 M2
 

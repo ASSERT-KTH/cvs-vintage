@@ -1,5 +1,17 @@
-You need ant to compile Columba (http://www.apache.org):
+You need Ant to compile Columba (http://ant.apache.org).
 
-   #bash ant
+o Building Columba on Unix/Linux type operating systems:
+  bash# ant
+  
+  Running Columba using JDK1.4:
+  bash# chmod 0775 run_source.sh
+  bash# run_source.sh
 
-will compile the sources to /classes.
+  (The "chmod" command is used to make the run_source.sh script executable.
+   Alternatively, you can also start the script using "sh run_source.sh".)
+  
+o Building Columba on Windows type operating systems:
+  shell# ant
+  
+  Running Columba using JDK1.4:
+  shell# run_source.bat
