@@ -83,7 +83,7 @@ public class IssueListExport extends DataExport
         ScarabLocalizationTool l10n = getLocalizationTool(context);
         ScarabUser user = (ScarabUser)data.getUser();
         MITList mitlist = user.getCurrentMITList();
-        TSVPrinter printer = new TSVPrinter(data.getResponse().getWriter());
+        TSVPrinter printer = new TSVPrinter(getWriter(data));
         List rmuas = scarabR.getRModuleUserAttributes();
         writeHeading(printer, mitlist, l10n, rmuas);
         writeRows(printer, mitlist, l10n, scarabR, rmuas);
@@ -156,6 +156,9 @@ public class IssueListExport extends DataExport
                 QueryResult queryResult = (QueryResult)i.next();
                 writeRow(printer, mitlist, l10n, rmuas, queryResult);
             }
+            // print a newline when we're done, as this ensures that the
+            // output is flushed
+            printer.println();
         }
     }
 

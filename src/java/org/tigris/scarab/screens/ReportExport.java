@@ -74,7 +74,7 @@ import org.tigris.scarab.util.Log;
  * Handles export of a report to non-web formats.
  *
  * @author <a href="mailto:dlr@collab.net">Daniel Rall</a>
- * @version $Id: ReportExport.java,v 1.3 2003/06/26 17:43:30 jmcnally Exp $
+ * @version $Id: ReportExport.java,v 1.4 2003/06/26 20:04:46 ed Exp $
  * @see org.tigris.scarab.screens.DataExport
  * @since Scarab 1.0
  */
@@ -97,7 +97,7 @@ public class ReportExport extends DataExport
 
         ScarabLocalizationTool l10n = getLocalizationTool(context);
         ScarabUser user = (ScarabUser)data.getUser();
-        TSVPrinter printer = new TSVPrinter(data.getResponse().getWriter());
+        TSVPrinter printer = new TSVPrinter(getWriter(data));
 
         ScarabRequestTool scarabR = getScarabRequestTool(context);
         ReportBridge report = scarabR.getReport();

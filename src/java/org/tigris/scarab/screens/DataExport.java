@@ -47,7 +47,9 @@ package org.tigris.scarab.screens;
  */ 
 
 import java.io.Writer;
+import java.io.IOException;
 import java.io.PrintWriter;
+import java.io.OutputStreamWriter;
 import java.util.List;
 
 import org.apache.commons.lang.StringUtils;
@@ -105,23 +107,21 @@ class DataExport extends Default
         // export.  TODO : make this per request configurable (with a per-
         // language default) to allow use of scarab ina multilingual 
         // environment.
-        String encoding = Turbine.getConfiguration()
-            .getString("scarab.dataexport.encoding");
-        String encodingSpecifier = "";
-        if (encoding != null && !encoding.equals(""))
-        {
-            encodingSpecifier = "; charset=" + encoding;
-        }
-
         if (ExportFormat.EXCEL_FORMAT.equalsIgnoreCase(format))
         {
-            data.getResponse().setContentType("application/vnd.ms-excel" +
-                                              encodingSpecifier);
+            data.getResponse().setContentType("application/vnd.ms-excel");
         }
         else
         {
-            data.getResponse().setContentType("text/plain" + 
-                                              encodingSpecifier);
+            // we want to set a charset on the response -- so clients
+            // can detect it properly -- if we have a known encoding
+            String encoding = getEncodingForExport(data);
+            String contentType = "text/plain";
+            if (encoding != null && !encoding.equals(""))
+            {
+                contentType = contentType + "; charset=" + encoding;
+            }
+            data.getResponse().setContentType(contentType);
         }
         // Since we're streaming the TSV content directly from our
         // data source, we don't know its length ahead of time.
@@ -134,6 +134,41 @@ class DataExport extends Default
 
         // Above we sent the response, so no target to render
         data.setTarget(null);
+    }
+
+    /**
+     * This funciton encapsulates the logic of determining which encoding 
+     * to use.  Right now, the encoding isn't per-request, but that should
+     * be changed.
+     */
+    protected String getEncodingForExport(RunData data)
+    {
+        String encoding = Turbine.getConfiguration()
+            .getString("scarab.dataexport.encoding");
+        return encoding;
+    }
+
+    /**
+     * This function is available to subclasses -- it is used to provide
+     * a Writer based on the current request and the site configuration,
+     * taking encoding issues into consideration.
+     */
+    protected Writer getWriter(RunData data)
+        throws IOException
+    {
+        Writer writer = null;
+        String encoding = getEncodingForExport(data);
+        if (encoding != null && !encoding.equals(""))
+        {
+            writer =
+                new OutputStreamWriter(data.getResponse().getOutputStream(),
+                                       encoding);
+        }
+        else
+        {
+            writer = data.getResponse().getWriter();
+        }
+        return writer;
     }
 
     /**
