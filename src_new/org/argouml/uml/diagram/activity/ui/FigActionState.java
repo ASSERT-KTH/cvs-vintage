@@ -1,4 +1,4 @@
-// $Id: FigActionState.java,v 1.18 2004/07/26 10:48:21 mvw Exp $
+// $Id: FigActionState.java,v 1.19 2004/08/01 08:01:13 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -45,7 +45,7 @@ import org.tigris.gef.presentation.FigText;
 
 import ru.novosoft.uml.MElementEvent;
 
-/** Class to display graphics for a UML MState in a diagram. */
+/** Class to display graphics for a UML ActionState in a diagram. */
 
 public class FigActionState extends FigStateVertex {
 
