@@ -1,4 +1,4 @@
-// $Id: Translator.java,v 1.14 2003/09/04 20:11:46 thierrylach Exp $
+// $Id: Translator.java,v 1.15 2003/09/07 07:36:57 linus Exp $
 // Copyright (c) 1996-2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -148,7 +148,11 @@ public class Translator {
      * @return the translation
      */
     public static String localize(String bundle, String key) {
-        return org.argouml.application.api.Argo.localize(bundle, key);
+        if (org.workingfrog.i18n.util.Translator.isValidBundle(key)) {
+            return org.workingfrog.i18n.util.Translator.localize(key, bundle);
+        } else {
+            return org.tigris.gef.util.Localizer.localize(bundle, key);
+        }
     }
 
     /**

@@ -1,4 +1,4 @@
-// $Id: Argo.java,v 1.20 2003/09/04 20:14:35 thierrylach Exp $
+// $Id: Argo.java,v 1.21 2003/09/07 07:36:57 linus Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -242,11 +242,7 @@ public class Argo
      *  the gef util library.
      */
     public static String localize(String bundle, String key) {
-        if (Translator.isValidBundle(key)) {
-            return Translator.localize(key, bundle);
-        } else {
-            return org.tigris.gef.util.Localizer.localize(bundle, key);
-        }
+        return org.argouml.i18n.Translator.localize(bundle, key);
     }
 
     /** Returns a vector of plugins of the class type passed
