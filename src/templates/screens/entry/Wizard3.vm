@@ -131,11 +131,13 @@ $page.setTitle("Enter issue")
        <td>
          <input type="checkbox" name="file_delete_$velocityCount" />
        </td>
-       <td><a href="$file.File.FileName" 
+       <td>$file.File.FileName</td>
+#* 
+   <a href="$file.File.FileName" 
               onClick="fileWindow=window.open('','filewindow',
                       'resizable=yes, menubar=yes,scrollbars=yes,height=450,width=700')" 
-              target="filewindow">$file.File.FileName</a> 
-       </td>
+              target="filewindow"></a>
+*#
        <td>$file.Name</td>
      </tr>
      #end
