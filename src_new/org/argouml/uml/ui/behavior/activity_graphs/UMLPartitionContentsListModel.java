@@ -1,4 +1,4 @@
-// $Id: UMLPartitionContentsListModel.java,v 1.1 2004/07/18 09:27:25 mkl Exp $
+// $Id: UMLPartitionContentsListModel.java,v 1.2 2004/09/10 20:05:31 mvw Exp $
 // Copyright (c) 2003-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -42,7 +42,7 @@ public class UMLPartitionContentsListModel extends UMLModelElementListModel2 {
      */
     public UMLPartitionContentsListModel() {
         super("contents");
-        // TODO Auto-generated constructor stub
+        // TODO: Auto-generated constructor stub
     }
 
     /**
@@ -51,7 +51,7 @@ public class UMLPartitionContentsListModel extends UMLModelElementListModel2 {
     protected void buildModelList() {
         removeAllElements();
         addElement(ModelFacade.getContents(getTarget()));
-        // TODO Auto-generated method stub
+        // TODO: Auto-generated method stub
 
     }
 
@@ -59,7 +59,7 @@ public class UMLPartitionContentsListModel extends UMLModelElementListModel2 {
      * @see org.argouml.uml.ui.UMLModelElementListModel2#isValidElement(java.lang.Object)
      */
     protected boolean isValidElement(Object element) {
-        // TODO Auto-generated method stub
+        // TODO: Auto-generated method stub
         return false;
     }
 

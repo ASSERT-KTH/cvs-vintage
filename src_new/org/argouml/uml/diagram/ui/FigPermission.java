@@ -1,4 +1,4 @@
-// $Id: FigPermission.java,v 1.5 2004/08/03 01:52:27 bobtarling Exp $
+// $Id: FigPermission.java,v 1.6 2004/09/10 20:05:30 mvw Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -31,14 +31,30 @@ package org.argouml.uml.diagram.ui;
 import org.tigris.gef.base.Layer;
 
 public class FigPermission extends FigDependency {
+    
+    /**
+     * The constructor.
+     * 
+     */
     public FigPermission() {
         super();
     }
 
+    /**
+     * The constructor.
+     * 
+     * @param edge the edge
+     */
     public FigPermission(Object edge) {
         super(edge);
     }
 
+    /**
+     * The constructor.
+     * 
+     * @param edg the edgee
+     * @param lay the layer
+     */
     public FigPermission(Object edge, Layer lay) {
         super(edge, lay);
     }

@@ -1,4 +1,4 @@
-// $Id: FigUsage.java,v 1.9 2004/08/03 01:52:27 bobtarling Exp $
+// $Id: FigUsage.java,v 1.10 2004/09/10 20:05:30 mvw Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -33,28 +33,50 @@ import org.tigris.gef.base.Layer;
 
 import ru.novosoft.uml.MElementEvent;
 
+/**
+ * This class represents a Fig for a Usage.
+ *
+ */
 public class FigUsage extends FigDependency {
 
+    /**
+     * The constructor.
+     * 
+     */
     public FigUsage() {
         super();
     }
 
+    /**
+     * The constructor.
+     * 
+     * @param edge the owning UML element
+     */
     public FigUsage(Object edge) {
         super(edge);
     }
 
+    /**
+     * The constructor.
+     * 
+     * @param edge the owning UML element
+     * @param lay the layer
+     */
     public FigUsage(Object edge, Layer lay) {
         super(edge, lay);
     }
         
+    /**
+     * @see org.argouml.uml.diagram.ui.FigEdgeModelElement#modelChanged(ru.novosoft.uml.MElementEvent)
+     */
     protected void modelChanged(MElementEvent e) {
         super.modelChanged(e);
         String stereoTypeStr = getStereotypeFig().getText();
         
         if (stereoTypeStr == null || "".equals(stereoTypeStr)) {
             getStereotypeFig().setText(
-                NotationHelper.getLeftGuillemot() + "use" +
-                NotationHelper.getRightGuillemot());
+                NotationHelper.getLeftGuillemot() + "use" 
+                + NotationHelper.getRightGuillemot());
         }
     } 
 

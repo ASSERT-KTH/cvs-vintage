@@ -1,4 +1,4 @@
-// $Id: UMLActivityDiagram.java,v 1.55 2004/09/08 19:31:39 mvw Exp $
+// $Id: UMLActivityDiagram.java,v 1.56 2004/09/10 20:05:31 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -124,7 +124,7 @@ public class UMLActivityDiagram extends UMLDiagram {
                     "Transition"));
 
 
-	//_actionNewSwimlane = new CmdCreateNode(ModelFacade.PARTITION, 
+	// actionNewSwimlane = new CmdCreateNode(ModelFacade.PARTITION, 
 	// "Create a new swimlane");
 
         actionCallState = new RadioAction(
@@ -285,13 +285,13 @@ public class UMLActivityDiagram extends UMLDiagram {
 	    actionJunctionPseudoState,
 	    actionForkPseudoState,
 	    actionJoinPseudoState,
-	    //_actionNewSwimlane,
+	    //actionNewSwimlane,
 	    null,
 	    /*actionCallState,*/ // uncomment these ...
             actionObjectFlowState,
             /*actionSubactivityState,*/
-	    /*getExtendedActions(),
-            null, */
+	    /*getExtendedActions(),*/
+            null,
 	    _actionComment,
             _actionCommentLink
 	};

@@ -1,4 +1,4 @@
-// $Id: CompartmentFigText.java,v 1.18 2004/07/22 20:17:26 linus Exp $
+// $Id: CompartmentFigText.java,v 1.19 2004/09/10 20:05:30 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -53,19 +53,19 @@ public class CompartmentFigText extends FigText {
     /**
      * The bounding figure of the compartment containing this fig text.<p>
      */
-    protected Fig           _refFig;
+    private Fig           refFig;
 
 
     /**
      * Record whether we are currently highlighted.<p>
      */
-    protected boolean       _isHighlighted;
+    private boolean       isHighlighted;
 
 
     /**
      * The model element with which we are associated.<p>
      */
-    protected Object _modelElement;
+    private Object modelElement;
 
 
     ///////////////////////////////////////////////////////////////////////////
@@ -101,9 +101,9 @@ public class CompartmentFigText extends FigText {
         // Set the enclosing compartment fig. Warn if its null (which will
         // break).
 
-        _refFig = aFig;
+        refFig = aFig;
 
-        if (_refFig == null) {
+        if (refFig == null) {
             LOG.warn(this.getClass().toString()
 		     + ": Cannot create with null compartment fig");
         }
@@ -157,7 +157,7 @@ public class CompartmentFigText extends FigText {
      *          associated compartment fig.
      */
     public Color getFillColor() {
-        return _refFig.getFillColor();
+        return refFig.getFillColor();
     }
 
 
@@ -168,7 +168,7 @@ public class CompartmentFigText extends FigText {
      *          associated compartment fig.
      */
     public Color getLineColor() {
-        return _refFig.getLineColor();
+        return refFig.getLineColor();
     }
 
 
@@ -183,11 +183,11 @@ public class CompartmentFigText extends FigText {
      *              <code>false</code> otherwise.
      */
     public void setHighlighted(boolean flag) {
-        _isHighlighted = flag;
-        super.setLineWidth(_isHighlighted ? 1 : 0);
+        isHighlighted = flag;
+        super.setLineWidth(isHighlighted ? 1 : 0);
 
-        if (flag && (_modelElement != null)) {
-            TargetManager.getInstance().setTarget(_modelElement);
+        if (flag && (modelElement != null)) {
+            TargetManager.getInstance().setTarget(modelElement);
         }
     }
 
@@ -199,7 +199,7 @@ public class CompartmentFigText extends FigText {
      *          <code>false</code> otherwise.
      */
     public boolean isHighlighted() {
-        return _isHighlighted;
+        return isHighlighted;
     }
 
 

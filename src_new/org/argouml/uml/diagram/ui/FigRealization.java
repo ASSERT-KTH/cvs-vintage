@@ -1,4 +1,4 @@
-// $Id: FigRealization.java,v 1.6 2004/07/26 13:33:08 bobtarling Exp $
+// $Id: FigRealization.java,v 1.7 2004/09/10 20:05:30 mvw Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,7 +25,7 @@
 // File: FigRealization.java
 // Classes: FigRealization
 // Original Author: agauthie@ics.uci.edu
-// $Id: FigRealization.java,v 1.6 2004/07/26 13:33:08 bobtarling Exp $
+// $Id: FigRealization.java,v 1.7 2004/09/10 20:05:30 mvw Exp $
 
 package org.argouml.uml.diagram.ui;
 
@@ -38,13 +38,21 @@ import org.tigris.gef.presentation.Fig;
 
 import ru.novosoft.uml.MElementEvent;
 
+/**
+ * This class represents a Fig for a Realization.
+ *
+ */
 public class FigRealization extends FigEdgeModelElement {
 
     ////////////////////////////////////////////////////////////////
     // constructors
 
-    ArrowHeadTriangle endArrow;
+    private ArrowHeadTriangle endArrow;
 
+    /**
+     * The constructor.
+     * 
+     */
     public FigRealization() {
         addPathItem(getStereotypeFig(), new PathConvPercent(this, 50, 10));
         endArrow = new ArrowHeadTriangle();
@@ -55,6 +63,11 @@ public class FigRealization extends FigEdgeModelElement {
         getFig().setDashed(true);
     }
 
+    /**
+     * The constructor.
+     * 
+     * @param edge the owning UML element
+     */
     public FigRealization(Object edge) {
         this();
         setOwner(edge);
@@ -63,11 +76,17 @@ public class FigRealization extends FigEdgeModelElement {
     ////////////////////////////////////////////////////////////////
     // accessors
 
+    /**
+     * @see org.tigris.gef.presentation.FigEdge#setFig(org.tigris.gef.presentation.Fig)
+     */
     public void setFig(Fig f) {
         super.setFig(f);
         _fig.setDashed(true);
     }
 
+    /**
+     * @see org.argouml.uml.diagram.ui.FigEdgeModelElement#canEdit(org.tigris.gef.presentation.Fig)
+     */
     protected boolean canEdit(Fig f) {
         return false;
     }
@@ -76,12 +95,17 @@ public class FigRealization extends FigEdgeModelElement {
      * This is called after any part of the UML MModelElement has changed. This
      * method automatically updates the name FigText. Subclasses should override
      * and update other parts.
+     *
+     * @see org.argouml.uml.diagram.ui.FigEdgeModelElement#modelChanged(ru.novosoft.uml.MElementEvent)
      */
     protected void modelChanged(MElementEvent e) {
         // do not set _name
         //updateStereotypeText();
     }
 
+    /**
+     * @see org.tigris.gef.presentation.Fig#paint(java.awt.Graphics)
+     */
     public void paint(Graphics g) {
         endArrow.setLineColor(getLineColor());
         super.paint(g);

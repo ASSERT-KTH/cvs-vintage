@@ -1,4 +1,4 @@
-// $Id: PropPanelDiagram.java,v 1.18 2003/11/25 10:58:15 jhraigniac Exp $
+// $Id: PropPanelDiagram.java,v 1.19 2004/09/10 20:05:30 mvw Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -36,6 +36,10 @@ import org.argouml.uml.ui.UMLTextField;
 import org.argouml.uml.ui.UMLTextProperty;
 import org.argouml.util.ConfigLoader;
 
+/**
+ * This class represents the properties panel for a Diagram.
+ *
+ */
 public class PropPanelDiagram extends PropPanel {
 
     /**
@@ -62,6 +66,9 @@ public class PropPanelDiagram extends PropPanel {
         this("Diagram");
     }
 
+    /**
+     * @see org.argouml.uml.ui.PropPanel#removeElement()
+     */
     public void removeElement() {
         Object target = getTarget();
         if (target instanceof ArgoDiagram) {
