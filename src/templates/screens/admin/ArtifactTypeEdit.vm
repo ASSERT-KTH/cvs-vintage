@@ -7,25 +7,25 @@ $page.setTitle("Attribute Editor")
  <h2>Customize/create artifact type (2.1.4.0)</h2>
 
 <form method="get" action="$link.setPage("admin,artifacttypeedit.vm")">
-      <input type="hidden" name="action" value="admin.ModifyModuleAttributes">
+      <input type="hidden" name="action" value="admin.ModifyModuleAttributes" />
       <input type="hidden" name="nextTemplate" value="admin,ArtifactTypeEdit.vm"/>
-        <div class="functnbar">
-            <table cellpadding="0" cellspacing="0" border="0">
 
-            <tr>
-            <td><strong>Screen options:</strong></td>
-            <td rowspan="2"><img src="../csi/images/seperator.gif" width="2" height="35" alt="" border="0" /></td>
-            <td><strong>attribute group options:</strong></td>
-            <td rowspan="2"><img src="../csi/images/seperator.gif" width="2" height="35" alt="" border="0" /></td>
-            </tr>
 
-            <tr>
-            <td><input type="submit" value="submit changes" name="eventSubmit_doModifyattributes" />&#160;<input type="submit" value="cancel" /></td>
-            <td><input type="submit" value="add new" name="eventSubmit_doCreatenewgroup" />&#160;<input type="submit" value="copy" />&#160;<input type="submit" value="delete" name="eventSubmit_doDeletegroup" />&#160;<input type="submit" value="resort" /></td>
-
-            </tr>
-            </table>
-        </div>
+<div class="functnbar">
+<table cellpadding="4" cellspacing="0" border="1">
+<tr>
+<td class="firstchild"><div>
+Screen options
+</div>
+<input type="submit" value="Submit changes" name="eventSubmit_doModifyattributes" />&#160;<input type="submit" value="Cancel" />
+</td>
+<td><div>
+Attribute group options
+</div>
+<input type="submit" value="Add new" name="eventSubmit_doCreatenewgroup" />&#160;<input type="submit" value="Copy" />&#160;<input type="submit" value="Delete" name="eventSubmit_doDeletegroup" />&#160;<input type="submit" value="Resort" />
+</td>
+</tr></table>
+</div>
 
         
         <h3>Artifact type details</h3>
@@ -81,26 +81,24 @@ $page.setTitle("Attribute Editor")
 #if ($groups.isEmpty())
 
 ## NO GROUPS YET - user must push button to create default groups
-<p class="alert">This module has no groups. Please click to create default groups.
-      <p><input type="submit" value="create default attribute groups" name="eventSubmit_doCreatedefaults" />
+<p><strong class="alert">This module has no groups. Please click to create default groups.</strong></p>
+      <p><input type="submit" value="create default attribute groups" name="eventSubmit_doCreatedefaults" /></p>
 </form>
         
 #else
         #set ( $maxNum = $module.AttributeGroups.size()+1 )
 
-        <table width="100%" border="1" cellspacing="2" cellpadding="3">
+<table width="100%" border="1" cellspacing="2" cellpadding="3">
         <tr>
-        <th nowrap="nowrap">select</th>
-        <th>attribute group name</th>
-        <th>active/inactive</th>
-        <th>sequence #</th>
+        <th nowrap="nowrap">Select</th>
+        <th>Attribute group name</th>
+        <th>Active/inactive</th>
+        <th>Sequence #</th>
         </tr>
 
   #foreach ( $group in $groups )
 ## DEDUPE
      #if ($velocityCount == ($module.DedupeSequence))
-
-         <p>
          <tr>
              <td>&nbsp;</td>
              <td>Duplicate check</td>
@@ -109,12 +107,12 @@ $page.setTitle("Attribute Editor")
          </tr>
        #end
 <form method="get" action="$link.setPage("admin,artifacttypeedit.vm")">
-      <input type="hidden" name="action" value="admin.ModifyModuleAttributes">
-      <input type="hidden" name="nextTemplate" value="admin,ArtifactTypeEdit.vm"/>
+      <input type="hidden" name="action" value="admin.ModifyModuleAttributes" />
+      <input type="hidden" name="nextTemplate" value="admin,ArtifactTypeEdit.vm" />
     #set ( $agGroup = $intake.AttributeGroup.mapTo($group) )
 
         #rows()
-        <td><input type="checkbox" name="delete_group_$group.AttributeGroupId"/></td>
+        <td><input type="checkbox" name="delete_group_$group.AttributeGroupId" /></td>
         <td><a href="$link.setPage("admin,attributegroup.vm").addpathinfo("groupid", $group.attributegroupid)">$group.Name</a></td>
         <td>#booleanCheckbox ($agGroup.Active)</td>
         <td>
@@ -127,21 +125,20 @@ $page.setTitle("Attribute Editor")
 
  
         <div class="functnbar2">
-            <table cellpadding="0" cellspacing="0" border="0">
-
-            <tr>
-            <td><strong>Screen options:</strong></td>
-            <td rowspan="2"><img src="../csi/images/seperator.gif" width="2" height="35" alt="" border="0" /></td>
-            <td><strong>attribute group options:</strong></td>
-            <td rowspan="2"><img src="../csi/images/seperator.gif" width="2" height="35" alt="" border="0" /></td>
-            </tr>
-
-            <tr>
-            <td><input type="submit" value="submit changes" name="eventSubmit_doModifyattributes" />&#160;<input type="submit" value="cancel" /></td>
-            <td><input type="submit" value="add new" name="eventSubmit_doCreatenewgroup" />&#160;<input type="submit" value="copy" />&#160;<input type="submit" value="delete" name="eventSubmit_doDeletegroup" />&#160;<input type="submit" value="resort" /></td>
-
-            </tr>
-            </table>
-        </div>      
+            <table cellpadding="4" cellspacing="0" border="1">
+	<tr>
+		<td class="firstchild"><div>
+Screen options
+</div><input type="submit" value="Submit changes" name="eventSubmit_doModifyattributes" />&#160;<input type="submit" value="Cancel" /></td>
+            
+<td><div>
+Attribute group options
+</div>
+<input type="submit" value="add new" name="eventSubmit_doCreatenewgroup" />&#160;<input type="submit" value="copy" />&#160;<input type="submit" value="delete" name="eventSubmit_doDeletegroup" />&#160;<input type="submit" value="resort" />
+</td>
+</tr>
+</table>
+</div>      
 $intake.declareGroups()
 </form>
+</div>
