@@ -649,7 +649,7 @@ public class IssueSearch
             matchingIssueIds = searchIndex.getRelatedIssues();    
             if ( matchingIssueIds.length != 0 )
             { 
-                crit.addIn(AttributeValuePeer.ISSUE_ID, matchingIssueIds);
+                crit.addIn(IssuePeer.ISSUE_ID, matchingIssueIds);
             }
         }
         else 
@@ -708,7 +708,6 @@ public class IssueSearch
         // search for issues based on text
         NumberKey[] matchingIssueIds = addTextMatches(crit, attValues);
 
-        System.out.println("Search criteria = " + crit);
         // get matching issues
         List matchingIssues = IssuePeer.doSelect(crit);
         
