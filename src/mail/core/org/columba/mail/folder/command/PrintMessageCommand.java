@@ -323,14 +323,23 @@ public class PrintMessageCommand extends FolderCommand {
 	 * 			false, otherwise 
 	 */
 	protected boolean isScalingAllowed() {
-		XmlElement printer =
-			Config.get("options").getElement("/options/printer");
-
+		XmlElement options = Config.get("options").getElement("/options");
+		XmlElement printer = null;
+		if (options != null)
+			printer = options.getElement("/printer");
+			
 		// no configuration available, create default config
 		if (printer == null) {
-			// create new locale xml treenode
+			// create new local xml treenode
+			ColumbaLogger.log.debug("printer config node not found - creating new");
 			printer = new XmlElement("printer");
 			printer.addAttribute("allow_scaling", "true");
+
+			// add to options if possible (so it will be saved)
+			if (options != null) {
+				ColumbaLogger.log.debug("storing new printer config node");
+				options.addElement(printer);
+			}
 		}
 
 		if (printer.getAttribute("allow_scaling", "true").equals("true"))
