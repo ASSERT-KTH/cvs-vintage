@@ -81,12 +81,10 @@ import org.tigris.scarab.tools.ScarabRequestTool;
  * action methods on RModuleAttribute table
  *      
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: ModifyModuleAttributes.java,v 1.26 2001/10/17 00:02:16 elicia Exp $
+ * @version $Id: ModifyModuleAttributes.java,v 1.27 2001/10/17 20:00:19 elicia Exp $
  */
 public class ModifyModuleAttributes extends RequireLoginFirstAction
 {
-
-
     /**
      * Changes the properties of existing IssueTypes.
      */
@@ -101,28 +99,27 @@ public class ModifyModuleAttributes extends RequireLoginFirstAction
         List rmits = module.getRModuleIssueTypes();
         int navCount = 0;
         Group rmitGroup = null;
-        for (int i=rmits.size()-1; i>=0; i--) 
-        {
-            RModuleIssueType rmit = (RModuleIssueType)rmits.get(i);
-            rmitGroup = intake.get("RModuleIssueType", 
-                             rmit.getQueryKey(), false);
-            Field display = rmitGroup.get("Display");
 
-            if (display.toString().equals("true"))
-            {
-                navCount++;
-            }
-            if (navCount > 5)
-            {
-               data.setMessage("You cannot select more than 5 to appear in the left"    
-                               + " hand navigation.");
-            }
-                
-        }
-
-        if ( intake.isAllValid() && navCount <=5 )
+        if ( intake.isAllValid() )
         {
-            for (int i=rmits.size()-1; i>=0; i--) 
+            for (int i=0;i < rmits.size(); i++)
+            {
+                RModuleIssueType rmit = (RModuleIssueType)rmits.get(i);
+                rmitGroup = intake.get("RModuleIssueType", 
+                                 rmit.getQueryKey(), false);
+                Field display = rmitGroup.get("Display");
+
+                if (display.toString().equals("true"))
+                {
+                    navCount++;
+                }
+                if (navCount > 5)
+                {
+                   data.setMessage("You cannot select more than 5 to appear "
+                                   +"in the left hand navigation.");
+                }
+            }
+            for (int i=0;i < rmits.size(); i++)
             {
                 RModuleIssueType rmit = (RModuleIssueType)rmits.get(i);
                 rmitGroup = intake.get("RModuleIssueType", 
@@ -166,6 +163,7 @@ public class ModifyModuleAttributes extends RequireLoginFirstAction
     {
         setTarget(data, "admin,AttributeSelect.vm");            
     }
+
     /**
      * Creates default attribute groups.
      * Must create 2 groups, one for dedupe attributes, one for non-dedupe.
@@ -331,11 +329,10 @@ public class ModifyModuleAttributes extends RequireLoginFirstAction
 
         ScarabModule module = (ScarabModule)scarabR.getCurrentModule();
         IssueType issueType = scarabR.getIssueType();
-        boolean isNew = false;
-        if (issueType.getIssueTypeId() == null)
-        {
-            isNew = true;
-        }
+        RModuleIssueType rmit = module.getRModuleIssueType(issueType);
+System.out.println(rmit);
+System.out.println(rmit.getIssueTypeId());
+System.out.println(rmit.getDisplayName());
         List attGroups = issueType.getAttributeGroups(module);
         List attributeGroups = issueType.getAttributeGroups(module);
 
@@ -385,36 +382,19 @@ public class ModifyModuleAttributes extends RequireLoginFirstAction
             // Check that duplicate check is not at the beginning or end.
             if (dupeOrder == 1 || dupeOrder == attributeGroups.size() +1)
             {
-                data.setMessage("The duplicate check cannot be at the beginning "
-                                  + "or the end.");
+                data.setMessage("The duplicate check cannot be at the "
+                                + "beginning or the end.");
                 isValid = false;
             }
         }
         if (intake.isAllValid() && isValid) 
         {
-            // Set properties for issue type info
-            Group issueTypeGroup = intake.get("IssueType", 
-                                        issueType.getQueryKey(), false);
-            issueTypeGroup.setProperties(issueType);
-            issueType.setParentId(new NumberKey("0"));
-            issueType.save();
-
-            // If this is a new issue type, set mappings with module
-            if (isNew)
-            { 
-                RModuleIssueType rmit = new RModuleIssueType();
-                rmit.setModuleId(module.getModuleId());
-                rmit.setIssueTypeId(issueType.getIssueTypeId());
-                rmit.setActive(false);
-                rmit.setDisplay(false);
-                rmit.save();
-
-                // Create template type.
-                IssueType template = new IssueType();
-                template.setName(issueType.getName() + " Template");
-                template.setParentId(issueType.getIssueTypeId());
-                template.save();
-            }
+            // Set properties for module-issue type info
+            Group rmitGroup = intake.get("RModuleIssueType", 
+                                        rmit.getQueryKey(), false);
+System.out.println(rmit);
+            rmitGroup.setProperties(rmit);
+            rmit.save();
            
             // Set properties for attribute groups
             for (int i=attributeGroups.size()-1; i>=0; i--) 
@@ -429,13 +409,6 @@ public class ModifyModuleAttributes extends RequireLoginFirstAction
         data.getParameters().add("issueTypeId", 
                                  issueType.getIssueTypeId().toString());
 
-        // this is a new artifact type, so create the default groups for
-        // it so that someone doesn't have to click a button to make it 
-        // happen.
-        if (attributeGroups.size() == 0)
-        {
-            doCreatedefaults(data, context);
-        }
         String nextTemplate = data.getParameters()
             .getString(ScarabConstants.NEXT_TEMPLATE);
         setTarget(data, nextTemplate);            
