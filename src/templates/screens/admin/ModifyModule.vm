@@ -1,6 +1,7 @@
 #set ($createNew = $data.Parameters.New)
 #set ($canEdit = "false")
 
+
 #set ($moduleId = $data.Parameters.getString("moduleid"))
 #if (!$moduleId || $moduleId.length() == 0)
    #set ($createNew = "true")
@@ -12,6 +13,12 @@
   #set ($title = "Modify module")
   #set ($editModule = $scarabR.getModule($moduleId))
   #set ($canEdit = $scarabR.hasPermission($scarabG.Permission.MODULE__EDIT, $editModule))
+#end
+
+#if ($editModule)
+  #set ($userModules = $data.User.getEditableModules($editModule))
+#else
+  #set ($userModules = $data.User.getEditableModules())
 #end
 
 #macro (ModifyModuleBar $var)
@@ -29,6 +36,16 @@
 <h2>$page.Title</h2>
 
 <h3>$title</h3>
+
+#if ($userModules.size() == 0)
+
+<p class="alert">
+You do not have module edit permission in any other modules, therefore
+you cannot create a new module because all modules require a parent
+module that you can edit.
+</p>
+
+#else
 
 <form action="$link.setPage("admin,ModifyModule.vm")" method="post">
 <input type="hidden" name="action" value="ModifyModule" /> 
@@ -84,11 +101,6 @@
   <tr>
    <th>* Parent module</th>
    <td> 
-   #if ($editModule)
-     #set ($userModules = $data.User.getEditableModules($editModule))
-   #else
-     #set ($userModules = $data.User.getEditableModules())
-   #end
     <select name="$moduleGroup.ParentId.Key">
     #if ($editModule)
       #foreach ($userModule in $userModules)
@@ -121,5 +133,7 @@
 
 $intake.declareGroups()
 </form>
+
+#end
 
 </div>
