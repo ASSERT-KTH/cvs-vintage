@@ -32,6 +32,7 @@ import org.columba.mail.message.ColumbaHeader;
 import org.columba.mail.message.ColumbaMessage;
 import org.columba.mail.plugin.POP3PreProcessingFilterPluginHandler;
 import org.columba.mail.pop3.plugins.AbstractPOP3PreProcessingFilter;
+import org.columba.mail.util.MailResourceLoader;
 
 import org.columba.ristretto.message.Header;
 import org.columba.ristretto.message.io.Source;
@@ -60,6 +61,9 @@ import javax.swing.JOptionPane;
 public class POP3Store {
     public static final int STATE_NONAUTHENTICATE = 0;
     public static final int STATE_AUTHENTICATE = 1;
+    private static final int USER = 0;
+    private static final int APOP = 1;
+    private static final int AUTH = 2;
     private int state = STATE_NONAUTHENTICATE;
     private POP3Protocol protocol;
     private PopItem popItem;
@@ -68,6 +72,8 @@ public class POP3Store {
     private StatusObservableImpl observable;
     private UidListEntry[] uidMap;
     private ScanListEntry[] sizes;
+    private String[] capas;
+    private boolean usingSSL;
 
     /**
      * Constructor for POP3Store.
@@ -92,6 +98,8 @@ public class POP3Store {
         }
 
         filterCache = new Hashtable();
+
+        usingSSL = false;
     }
 
     /**
@@ -277,6 +285,25 @@ public class POP3Store {
         state = STATE_NONAUTHENTICATE;
     }
 
+    protected void fetchCapas() throws IOException {
+        try {
+            capas = protocol.capa();
+        } catch (POP3Exception e) {
+            // CAPA not supported
+            capas = new String[] {};
+        }
+    }
+
+    protected boolean isSupported(String command) {
+        for (int i = 0; i < capas.length; i++) {
+            if (capas[i].startsWith(command)) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
     /**
      * Try to login a user to a given pop3 server. While the login is not
      * succeed, the connection to the server is opened, then a dialog box is
@@ -302,12 +329,91 @@ public class POP3Store {
         String method = new String("");
         boolean save = false;
 
+        // open a port to the server
+        protocol.openPort();
+
+        // fetch the capabilities of this server
+        fetchCapas();
+
+        // shall we switch to SSL?
+        if (popItem.getBoolean("enable_ssl")) {
+        	// if CAPA was not support just give it a try...
+            if (isSupported("STLS") || capas.length == 0) {
+                try {
+                    protocol.switchToSSL();
+
+                    usingSSL = true;
+                    ColumbaLogger.log.debug("Switched to SSL");
+                } catch (IOException e) {
+                    Object[] options = new String[] {
+                            MailResourceLoader.getString("", "global", "ok").replaceAll("&",""),
+                            MailResourceLoader.getString("", "global", "cancel").replaceAll("&","")
+                        };
+
+                    int result = JOptionPane.showOptionDialog(null,
+                            MailResourceLoader.getString("dialog", "error",
+                                "ssl_handshake_error") + ": " +
+                            e.getLocalizedMessage() + "\n" +
+                            MailResourceLoader.getString("dialog", "error",
+                                "ssl_turn_off"), "Warning",
+                            JOptionPane.DEFAULT_OPTION,
+                            JOptionPane.WARNING_MESSAGE, null, options,
+                            options[0]);
+
+                    if (result == 1) {
+                        throw new CommandCancelledException();
+                    }
+
+                    // turn off SSL for the future
+                    popItem.set("enable_ssl", false);
+
+                    // reopen the port
+                    protocol.openPort();
+                } catch (POP3Exception e ) {
+					Object[] options = new String[] {
+							MailResourceLoader.getString("", "global", "ok").replaceAll("&",""),
+							MailResourceLoader.getString("", "global", "cancel").replaceAll("&","")
+						};
+					int result = JOptionPane.showOptionDialog(null,
+							MailResourceLoader.getString("dialog", "error",
+								"ssl_not_supported") + "\n" +
+								MailResourceLoader.getString("dialog", "error",
+									"ssl_turn_off"), "Warning",
+							JOptionPane.DEFAULT_OPTION,
+							JOptionPane.WARNING_MESSAGE, null, options, options[0]);
+
+					if (result == 1) {
+						throw new CommandCancelledException();
+					}
+
+					// turn off SSL for the future
+					popItem.set("enable_ssl", false);                	
+                }
+            } else {
+				Object[] options = new String[] {
+						MailResourceLoader.getString("", "global", "ok").replaceAll("&",""),
+						MailResourceLoader.getString("", "global", "cancel").replaceAll("&","")
+					};
+                int result = JOptionPane.showOptionDialog(null,
+                        MailResourceLoader.getString("dialog", "error",
+                            "ssl_not_supported") + "\n" +
+                            MailResourceLoader.getString("dialog", "error",
+                                "ssl_turn_off"), "Warning",
+                        JOptionPane.DEFAULT_OPTION,
+                        JOptionPane.WARNING_MESSAGE, null, options, options[0]);
+
+                if (result == 1) {
+                    throw new CommandCancelledException();
+                }
+
+                // turn off SSL for the future
+                popItem.set("enable_ssl", false);
+            }
+        }
+
+        int loginMethod = getLoginMethod();
+
         while (!login) {
-            boolean b = protocol.openPort();
-            ColumbaLogger.log.debug("open port: " + b);
-
-            ColumbaLogger.log.debug("login==false");
-
             if ((password = popItem.get("password")).length() == 0) {
                 dialog = new PasswordDialog();
 
@@ -329,11 +435,20 @@ public class POP3Store {
                 save = popItem.getBoolean("save_password");
             }
 
-            method = popItem.get("login_method");
-            ColumbaLogger.log.debug("try to login with " + method);
-
             try {
-                login = protocol.userPass(popItem.get("user"), password);
+                switch (loginMethod) {
+                case USER: {
+                    login = protocol.userPass(popItem.get("user"), password);
+
+                    break;
+                }
+
+                case APOP: {
+                    login = protocol.apop(popItem.get("user"), password);
+
+                    break;
+                }
+                }
             } catch (POP3Exception e) {
                 JOptionPane.showMessageDialog(null, e.getMessage(),
                     "Authorization failed!", JOptionPane.ERROR_MESSAGE);
@@ -354,6 +469,35 @@ public class POP3Store {
             // this is a security risk !!!
             popItem.set("password", password);
         }
+    }
+
+    /**
+     * Gets the selected Authentication method or else the most secure.
+     * @return the authentication method
+     */
+    private int getLoginMethod() {
+        String loginMethod = popItem.get("login_method");
+
+        if (loginMethod.equals("USER")) {
+            return USER;
+        }
+
+        if (loginMethod.equals("APOP")) {
+            return APOP;
+        }
+
+        // else find the most secure method
+		// NOTE if SSL is possible we just need the plain login
+		// since SSL does the encryption for us.        
+        if (!usingSSL) {
+        	//TODO add AUTH support
+        	
+            if (isSupported("APOP")) {
+                return APOP;
+            }
+        }
+
+        return USER;
     }
 
     public boolean isLogin()

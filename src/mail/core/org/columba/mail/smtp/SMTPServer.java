@@ -17,13 +17,13 @@
 //All Rights Reserved.
 package org.columba.mail.smtp;
 
-import org.columba.addressbook.parser.AddressParser;
+import java.net.UnknownHostException;
 
+import org.columba.addressbook.parser.AddressParser;
 import org.columba.core.command.StatusObservable;
 import org.columba.core.command.StatusObservableImpl;
 import org.columba.core.command.WorkerStatusController;
 import org.columba.core.gui.util.NotifyDialog;
-
 import org.columba.mail.composer.SendableMessage;
 import org.columba.mail.config.AccountItem;
 import org.columba.mail.config.IdentityItem;
@@ -32,12 +32,9 @@ import org.columba.mail.config.PopItem;
 import org.columba.mail.config.SmtpItem;
 import org.columba.mail.config.SpecialFoldersItem;
 import org.columba.mail.gui.util.PasswordDialog;
-
-import org.columba.ristretto.pop3.protocol.POP3Protocol;
+import org.columba.mail.pop3.POP3Store;
 import org.columba.ristretto.progress.ProgressObserver;
 import org.columba.ristretto.smtp.SMTPProtocol;
-
-import java.net.UnknownHostException;
 
 
 /**
@@ -242,81 +239,11 @@ public class SMTPServer {
      *
      * @throws Exception
      */
-    protected void pop3Authentification() throws Exception {
-        String password = new String("");
-
-        //String user = "";
-        String method = new String("");
-        boolean save = false;
-        boolean login = false;
-        boolean cancel = false;
-        PopItem item = accountItem.getPopItem();
-        PasswordDialog dialog = null;
-
-        // try to login until success or user cancels authentication
-        while (!login && !cancel) {
-            if (item.get("password").length() == 0) {
-                // open password dialog
-                dialog = new PasswordDialog();
-
-                dialog.showDialog(accountItem.getPopItem().get("user"),
-                    accountItem.getPopItem().get("host"), password,
-                    accountItem.getPopItem().getBoolean("save_password"));
-
-                char[] name;
-
-                if (dialog.success()) {
-                    // ok pressed
-                    name = dialog.getPassword();
-                    password = new String(name);
-
-                    save = dialog.getSave();
-
-                    cancel = false;
-                } else {
-                    // cancel pressed
-                    cancel = true;
-                }
-            } else {
-                password = item.get("password");
-
-                save = item.getBoolean("save_password");
-            }
-
-            if (!cancel) {
-                // authenticate
-                POP3Protocol pop3Connection = new POP3Protocol(accountItem.getPopItem()
-                                                                          .get("host"),
-                        accountItem.getPopItem().getInteger("port"));
-
-                // open socket, query for host
-                pop3Connection.openPort();
-
-                pop3Connection.setLoginMethod(method);
-                login = pop3Connection.login(item.get("user"), password);
-
-                if (!login) {
-                    NotifyDialog d = new NotifyDialog();
-                    d.showDialog("Authentification failed");
-
-                    item.set("password", "");
-                }
-            }
-        }
-
-        // logged in successfully
-        // -> save password in config file
-        if (login) {
-            item.set("save_password", save);
-            item.set("login_method", method);
-
-            if (save) {
-                // save plain text password in config file
-                // this is a security risk !!!
-                item.set("password", password);
-            }
-        }
-    }
+	protected void pop3Authentification() throws Exception {
+		POP3Store pop3Store = new POP3Store(accountItem.getPopItem());		
+		pop3Store.login();		
+		pop3Store.logout();
+	}
 
     /**
      * Send a message

@@ -18,6 +18,7 @@ package org.columba.mail.gui.config.account;
 import com.jgoodies.forms.layout.FormLayout;
 
 import org.columba.core.config.DefaultItem;
+import org.columba.core.gui.util.ButtonWithMnemonic;
 import org.columba.core.gui.util.CheckBoxWithMnemonic;
 import org.columba.core.gui.util.DefaultFormBuilder;
 import org.columba.core.gui.util.LabelWithMnemonic;
@@ -26,6 +27,9 @@ import org.columba.mail.config.AccountItem;
 import org.columba.mail.config.MailConfig;
 import org.columba.mail.util.MailResourceLoader;
 
+import org.columba.ristretto.pop3.protocol.POP3Exception;
+import org.columba.ristretto.pop3.protocol.POP3Protocol;
+
 import java.awt.Font;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
@@ -33,7 +37,15 @@ import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
+import java.io.IOException;
+
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 import javax.swing.BorderFactory;
+import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
 import javax.swing.JDialog;
@@ -49,6 +61,8 @@ import javax.swing.JTextField;
  * @version
  */
 public class IncomingServerPanel extends DefaultPanel implements ActionListener {
+    private static final Pattern authModeTokenizePattern = Pattern.compile(
+            "([^;]+);?");
     private JLabel loginLabel;
     private JTextField loginTextField;
     private JLabel passwordLabel;
@@ -70,6 +84,7 @@ public class IncomingServerPanel extends DefaultPanel implements ActionListener 
     private AccountItem accountItem;
     private JCheckBox defaultAccountCheckBox;
     private ReceiveOptionsPanel receiveOptionsPanel;
+    private JButton checkAuthMethods;
 
     //private ConfigFrame frame;
     private JDialog dialog;
@@ -153,8 +168,13 @@ public class IncomingServerPanel extends DefaultPanel implements ActionListener 
             serverItem.set("enable_ssl", secureCheckBox.isSelected());
 
             if (isPopAccount()) {
-                serverItem.set("login_method",
-                    (String) authenticationComboBox.getSelectedItem());
+                // if securest write DEFAULT
+                if (authenticationComboBox.getSelectedIndex() != 0) {
+                    serverItem.set("login_method",
+                        (String) authenticationComboBox.getSelectedItem());
+                } else {
+                    serverItem.set("login_method", "DEFAULT");
+                }
             }
 
             serverItem.set("use_default_account",
@@ -239,14 +259,14 @@ public class IncomingServerPanel extends DefaultPanel implements ActionListener 
         builder.nextLine();
 
         JPanel panel = new JPanel();
-        FormLayout l = new FormLayout("max(100;default), 3dlu, left:max(50dlu;default)",
+        FormLayout l = new FormLayout("max(100;default), 3dlu, left:max(50dlu;default), 2dlu, left:max(50dlu;default)",
                 
             // 2 columns
             ""); // rows are added dynamically (no need to define them here)
 
         // create a form builder
         DefaultFormBuilder b = new DefaultFormBuilder(panel, l);
-        b.append(authenticationLabel, authenticationComboBox);
+        b.append(authenticationLabel, authenticationComboBox, checkAuthMethods);
         builder.append(panel, 3);
         builder.nextLine();
 
@@ -484,7 +504,6 @@ public class IncomingServerPanel extends DefaultPanel implements ActionListener 
         hostLabel.setDisplayedMnemonic(
                 MailResourceLoader.getMnemonic("dialog", "account", "host"));
         */
-
         //$NON-NLS-1$
         hostTextField = new JTextField();
         hostLabel.setLabelFor(hostTextField);
@@ -496,7 +515,6 @@ public class IncomingServerPanel extends DefaultPanel implements ActionListener 
         portLabel.setDisplayedMnemonic(
                 MailResourceLoader.getMnemonic("dialog", "account", "port"));
                 */
-
         //$NON-NLS-1$
         portTextField = new JTextField();
         portLabel.setLabelFor(portTextField);
@@ -524,20 +542,30 @@ public class IncomingServerPanel extends DefaultPanel implements ActionListener 
         authenticationLabel = new LabelWithMnemonic(MailResourceLoader.getString(
                     "dialog", "account", "authentication_type"));
 
-        /*authenticationLabel.setDisplayedMnemonic(
-                MailResourceLoader.getMnemonic(
-                        "dialog",
-                        "account",
-                        "authentication_type"));
-        */
+        createAuthenticationComboBox();
+
+        checkAuthMethods = new ButtonWithMnemonic(MailResourceLoader.getString(
+                    "dialog", "account", "authentication_checkout_methods"));
+        checkAuthMethods.setActionCommand("CHECK_AUTHMETHODS");
+        checkAuthMethods.addActionListener(this);
+    }
+
+    private void createAuthenticationComboBox() {
         authenticationComboBox = new JComboBox();
         authenticationLabel.setLabelFor(authenticationComboBox);
 
-        if (accountItem.isPopAccount()) {
-            authenticationComboBox.addItem("USER");
-            authenticationComboBox.addItem("APOP");
-        } else {
-            authenticationComboBox.addItem("LOGIN");
+        authenticationComboBox.addItem(MailResourceLoader.getString("dialog",
+                "account", "authentication_securest"));
+
+        String authMethods = accountItem.get("popserver", "authentication_methods");
+
+        // Add previously fetch authentication modes
+        if (authMethods != null) {
+            Matcher matcher = authModeTokenizePattern.matcher(authMethods);
+
+            while (matcher.find()) {
+                authenticationComboBox.addItem(matcher.group(1));
+            }
         }
     }
 
@@ -561,6 +589,54 @@ public class IncomingServerPanel extends DefaultPanel implements ActionListener 
 
             revalidate();
             receiveOptionsPanel.revalidate();
+        } else if (action.equals("CHECK_AUTHMETHODS")) {
+            if (isPopAccount()) {
+                try {
+                    POP3Protocol protocol = new POP3Protocol(accountItem.get(
+                                "popserver", "host"), accountItem.getInteger("popserver", "port"));
+                    protocol.openPort();
+
+                    String[] capas = protocol.capa();
+                    
+                    protocol.quit();
+                    
+                    LinkedList list = new LinkedList();
+
+                    // Search for authenticatio modes in the Capabilities
+                    for (int i = 0; i < capas.length; i++) {
+                        if (capas[i].equals("APOP")) {
+                            list.add(capas[i]);
+                        } else if (capas[i].equals("USER")) {
+                            list.add(capas[i]);
+                        } else if (capas[i].startsWith("AUTH")) {
+                            // TODO Check if Columba supports this auth algorithm
+                        }
+                    }
+					
+                    // Save the authentication modes
+                    if (list.size() > 0) {
+                        StringBuffer authMethods = new StringBuffer();
+                        Iterator it = list.iterator();
+						authMethods.append(it.next());
+
+                        while (it.hasNext()) {
+							authMethods.append(';');
+                            authMethods.append(it.next());                            
+                        }
+
+                        accountItem.set("popserver", "authentication_methods",
+                            authMethods.toString());
+                    }
+
+					createAuthenticationComboBox();
+                } catch (IOException e1) {
+					String name = e1.getClass().getName();
+					JOptionPane.showMessageDialog(null, e1.getLocalizedMessage(),
+						name.substring(name.lastIndexOf(".")), JOptionPane.ERROR_MESSAGE);
+                } catch (POP3Exception e1) {
+                	//TODO Server does not support CAPA
+                }
+            }
         }
     }
 
