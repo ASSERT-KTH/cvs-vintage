@@ -60,6 +60,8 @@ package org.apache.tomcat.task;
 
 import org.apache.tomcat.core.*;
 import org.apache.tomcat.util.*;
+import org.apache.tomcat.helper.*;
+import org.apache.tomcat.util.xml.*;
 import org.apache.tomcat.logging.*;
 import java.io.*;
 import java.net.*;
@@ -75,13 +77,92 @@ import org.apache.tomcat.service.connector.Ajp12ConnectionHandler;
  * @author Costin Manolache
  */
 public class StopTomcat { 
+    static final String DEFAULT_CONFIG="conf/server.xml";
+    private static StringManager sm =
+	StringManager.getManager("org.apache.tomcat.resources");
 
+    String configFile;
+    String tomcatHome;
     Logger.Helper loghelper = new Logger.Helper("tc_log", "StopTomcat");
     
     public StopTomcat() 
     {
     }
 
+    // -------------------- Parameters --------------------
+
+    public void setConfig( String s ) {
+	configFile=s;
+    }
+
+    /** -f option
+     */
+    public void setF( String s ) {
+	configFile=s;
+    }
+
+    public void setH( String s ) {
+	tomcatHome=s;
+	System.getProperties().put("tomcat.home", s);
+    }
+
+    public void setHome( String s ) {
+	tomcatHome=s;
+	System.getProperties().put("tomcat.home", s);
+    }
+
+    // -------------------- Ant execute --------------------
+    public void execute() throws Exception {
+	System.out.println(sm.getString("tomcat.stop"));
+	try {
+	    stopTomcat(); // stop serving
+	}
+	catch (TomcatException te) {
+	    if (te.getRootCause() instanceof java.net.ConnectException)
+		System.out.println(sm.getString("tomcat.connectexception"));
+	    else
+		throw te;
+	}
+	return;
+    }
+
+    // -------------------- Implementation --------------------
+    
+    /** Stop tomcat using the configured cm
+     *  The manager is set up using the same configuration file, so
+     *  it will have the same port as the original instance ( no need
+     *  for a "log" file).
+     *  It uses the Ajp12 connector, which has a built-in "stop" method,
+     *  that will change when we add real callbacks ( it's equivalent
+     *  with the previous RMI method from almost all points of view )
+     */
+    void stopTomcat() throws TomcatException {
+	XmlMapper xh=new XmlMapper();
+	xh.setDebug( 0 );
+	ContextManager cm=new ContextManager();
+	
+	ServerXmlHelper sxml=new ServerXmlHelper();
+
+	sxml.setConnectorHelper( xh );
+	// load server.xml
+	File f = null;
+	if (configFile != null)
+	    f=new File(configFile);
+
+	String tchome=sxml.getTomcatInstall();
+	f=new File(tchome, DEFAULT_CONFIG);
+	cm.setInstallDir( tchome);
+
+	try {
+	    xh.readXml(f,cm);
+	} catch( Exception ex ) {
+	    throw new TomcatException("Fatal exception reading " + f, ex);
+	}
+	
+	execute( cm );     
+    }
+    
+    
     /** This particular implementation will search for an AJP12
 	connector ( that have a special stop command ).
     */

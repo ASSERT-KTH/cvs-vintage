@@ -140,7 +140,7 @@ public class SimpleClassLoader extends ClassLoader {
 
     // debug only 
     void log( String s ) {
-	System.out.println("AdaptiveClassLoader1: " + s );
+	System.out.println("SimpleClassLoader: " + s );
     }
 
     //------------------------------------ Implementation of Classloader
@@ -364,19 +364,26 @@ public class SimpleClassLoader extends ClassLoader {
 	// Get this resource from system class loader 
 	s = getSystemResourceAsStream(name);
 
-        if (s != null) {
+        if( debug>0 ) log( "System resource " + s );
+	if (s != null) {
 	    return s;
 	}
 		
 	Resource r=doFindResource( name );
 
+	if( r==null ) return null;
+	
 	if( r.file!=null ) {
+	    if( debug > 0 ) log( "Found "  + r.file);
 	    try {
-                return new FileInputStream(r.file);
-            } catch (FileNotFoundException shouldnothappen) {
-                return null;
+                InputStream res=new FileInputStream(r.file);
+		return res;
+            } catch (IOException shouldnothappen) {
+		shouldnothappen.printStackTrace();
+		return null;
             }
 	} else if( r.zipEntry != null ) {
+	    if( debug > 0 ) log( "Found "  + r.zipEntry);
 	    // workaround - the better solution is to not close the
 	    // zipfile !!!!
 	    try {
@@ -399,7 +406,6 @@ public class SimpleClassLoader extends ClassLoader {
 		}
 	    }
 	}
-	
         return s;
     }
 
@@ -438,7 +444,8 @@ public class SimpleClassLoader extends ClassLoader {
                 try {
                     ZipFile zf = new ZipFile(file.getAbsolutePath());
                     ZipEntry ze = zf.getEntry(name);
-
+		    //if( debug > 0 ) log( "Searching " + file + " " + name );
+					
                     if (ze != null) {
 			r.zipEntry=ze;
 			r.zipFile=zf;

@@ -401,12 +401,8 @@ public class Request {
 	return userRoles;
     }
 
+    String checkRoles[]=new String[1];
     public boolean isUserInRole(String role) {
-	// 	if (userRoles != null) {
-	// 	    if( SecurityTools.haveRole( role, userRoles ))
-	// 		return true;
-	// 	}
-	String checkRoles[]=new String[1];
 	checkRoles[0]=role;
 	int status=contextM.doAuthorize(this, response, checkRoles);
 	return status==0;

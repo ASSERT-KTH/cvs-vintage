@@ -154,6 +154,8 @@ public class ContextManager implements LogAware{
 
     Container defaultContainer;
 
+    ClassLoader parentLoader;
+    
     /**
      * Construct a new ContextManager instance with default values.
      */
@@ -283,7 +285,24 @@ public class ContextManager implements LogAware{
 	this.permissions = permissions;
     }
 
+    /** Parent loader is the "base" class loader of the
+     *	application that starts tomcat, and includes no
+     *	tomcat classes. All servlet loaders will have it as
+     *  a parent loader, as if the webapps would be loaded
+     *  by the embeding app ( using parentLoader ).
+     *
+     *  Tomcat will add servlet.jar and any other extension
+     *  it is configured to - for example trusted webapps
+     *  may have tomcat internal classes in classpath. 
+     */
+    public void setParentLoader( ClassLoader cl ) {
+	parentLoader=cl;
+    }
 
+    public ClassLoader getParentLoader() {
+	return parentLoader;
+    }
+    
     // -------------------- Support functions --------------------
     /** Init() is called after the context manager is set up
      *  and configured. It will init all internal components

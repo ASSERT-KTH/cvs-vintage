@@ -94,7 +94,7 @@
     </copydir>
   </target>
 
-  <target name="tomcat" depends="prepare,tomcat-compile">
+  <target name="tomcat-jars" >
     <!-- create tomcat jar files -->
     <jar jarfile="${tomcat.build}/lib/webserver.jar"
          basedir="${tomcat.build}/classes" > 
@@ -104,9 +104,23 @@
          <exclude name="org/apache/tomcat/util/XMLParser.class" /> 
          <exclude name="org/apache/tomcat/util/XMLTree.class" />
     </jar>
+    <!-- minimal set of classes needed to start up tomcat 
+         XXX add manifest !!-->
+    <jar jarfile="${tomcat.build}/lib/tomcat.jar"
+         basedir="${tomcat.build}/classes" > 
+         <include name="org/apache/tomcat/startup/Tomcat.class" /> 
+         <include name="org/apache/tomcat/util/SimpleClassLoader**" /> 
+    </jar>
+    <jar jarfile="${tomcat.build}/lib/facade22.jar"
+         basedir="${tomcat.build}/classes" > 
+         <include name="org/apache/tomcat/facade/**" /> 
+    </jar>
     <jar jarfile="${tomcat.build}/lib/jasper.jar"
          basedir="${tomcat.build}/classes"
          includes="org/apache/jasper/**"/>
+  </target>
+
+  <target name="tomcat" depends="prepare,tomcat-compile,tomcat-jars">
   </target>
 
 
