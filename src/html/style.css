@@ -4,7 +4,7 @@
   font-size:11px;
   color:#FFFFFF;
   text-transform:uppercase;
-  font-family:verdana,arial,lucida console,sans-serif,monospace; 
+  font-family:verdana,arial,sans-serif,monospace; 
   background-color:#525D76;
 }
 
@@ -12,7 +12,7 @@
   font-weight:bold; 
   font-size:10px;
   color:#000000;
-  font-family:verdana,arial,lucida console,sans-serif,monospace; 
+  font-family:verdana,arial,sans-serif,monospace; 
   background-color:#CCCCCC;
 }
 
@@ -20,7 +20,7 @@
   font-weight:bold;
   font-size:10px;
   color:#000000;
-  font-family:verdana,arial,lucida console,sans-serif,monospace;
+  font-family:verdana,arial,sans-serif,monospace;
   background-color:#999999;
 }
   
@@ -28,7 +28,7 @@
   font-weight:bold; 
   font-size:10px;
   color:#000000;
-  font-family:verdana,arial,lucida console,sans-serif,monospace; 
+  font-family:verdana,arial,sans-serif,monospace; 
   background-color:#CCCCCC;
 }
 
@@ -36,14 +36,14 @@
   font-weight:bold; 
   font-size:10px;
   color:#000000;
-  font-family:verdana,arial,lucida console,sans-serif,monospace; 
+  font-family:verdana,arial,sans-serif,monospace; 
 }
 
 .NavHeader {
   font-weight:bold; 
   font-size:11px;
   color:#000000;
-  font-family:verdana,arial,lucida console,sans-serif,monospace; 
+  font-family:verdana,arial,sans-serif,monospace; 
 }
 
 .NavHeaderOn {
@@ -51,7 +51,7 @@
   font-size:11px;
   color:#000000;
   text-transform:uppercase;
-  font-family:verdana,arial,lucida console,sans-serif,monospace; 
+  font-family:verdana,arial,sans-serif,monospace; 
   background-color:#CCCCCC;
 }
 
@@ -62,7 +62,7 @@
   font-weight:bold; 
   font-size:11px;
   color:#FFFFFF;
-  font-family:verdana,arial,lucida console,sans-serif,monospace; 
+  font-family:verdana,arial,sans-serif,monospace; 
   background-color:#003399;
 }
 
@@ -70,14 +70,14 @@
   font-weight:bold; 
   font-size:11px;
   color:#000000;
-  font-family:verdana,arial,lucida console,sans-serif,monospace; 
+  font-family:verdana,arial,sans-serif,monospace; 
 }
 
 .TableDataOn {
   font-weight:normal;
   font-size:10px;
   color:#000000;
-  font-family:verdana,arial,lucida console,sans-serif,monospace;
+  font-family:verdana,arial,sans-serif,monospace;
   background-color:#FFFFCC;
 }
  
@@ -85,56 +85,56 @@
   font-weight:bold; 
   font-size:10px; 
   color:#000000;
-  font-family:verdana,arial,lucida console,sans-serif,monospace; 
+  font-family:verdana,arial,sans-serif,monospace; 
 }
 
 .TableData {
   font-weight:normal; 
   font-size:10px; 
   color:#000000;
-  font-family:verdana,arial,lucida console,sans-serif,monospace; 
+  font-family:verdana,arial,sans-serif,monospace; 
 }
 
 .StressedText {
   font-weight:bold;
   font-size:10px;
   color:#BB0000;  
-  font-family:verdana,arial,lucida console,sans-serif,monospace;
+  font-family:verdana,arial,sans-serif,monospace;
 }
 
 .MessageText {
   font-weight:normal; 
   font-size:10px; 
   color:#BB0000;
-  font-family:verdana,arial,lucida console,sans-serif,monospace; 
+  font-family:verdana,arial,sans-serif,monospace; 
 }
 
 .StatisticText {  
   font-weight:normal;
   font-size:10px;
   color:#BB0000;
-  font-family:verdana,arial,lucida console,sans-serif,monospace;
+  font-family:verdana,arial,sans-serif,monospace;
 }
   
 .PlainText {
   font-weight:normal; 
   font-size:10px; 
   color:#000000;
-  font-family:verdana,arial,lucida console,sans-serif,monospace; 
+  font-family:verdana,arial,sans-serif,monospace; 
 }
 
 .PlainTextHeader {
   font-weight:bold; 
   font-size:10px; 
   color:#000000;
-  font-family:verdana,arial,lucida console,sans-serif,monospace; 
+  font-family:verdana,arial,sans-serif,monospace; 
 }
 
 .InputHeader {
   font-weight:bold; 
   font-size:10px; 
   color:#000000;
-  font-family:verdana,arial,lucida console,sans-serif,monospace; 
+  font-family:verdana,arial,sans-serif,monospace; 
 }
 
 
