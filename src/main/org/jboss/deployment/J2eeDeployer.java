@@ -72,7 +72,7 @@ import org.w3c.dom.Element;
  * @author <a href="mailto:toby.allsopp@peace.com">Toby Allsopp</a>
  * @author <a href="mailto:Scott_Stark@displayscape.com">Scott Stark</a>.
  * @author <a href="mailto:Christoph.Jung@infor.de">Christoph G. Jung</a>.
- * @version $Revision: 1.42 $
+ * @version $Revision: 1.43 $
  */
 
 public class J2eeDeployer
@@ -610,7 +610,7 @@ implements J2eeDeployerMBean {
                 stopModule( rarDeployer, m.name, m.localUrls.firstElement().toString(), error );
             }
         }
-        else if (!_d.rarModules.isEmpty()){
+        else if (!_d.connectorModules.isEmpty()){
             // in case we are not running with tomcat
             // should only happen for tomcat (i=1)
             log.warn("Cannot find rar deployer anymore!");
