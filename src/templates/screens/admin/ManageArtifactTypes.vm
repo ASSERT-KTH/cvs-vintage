@@ -19,9 +19,9 @@ $page.setTitle("Manage artifact types")
 
 <table width="100%" border="1" cellspacing="2" cellpadding="3">
 <tr>
-<th>select</th>
+<th>Select</th>
 <th>Artifact type name</th>
-<th>(in)active</th>
+<th>(In)active</th>
 <th>Show in left hand nav*</th>
 <th>Sequence #</th>
 </tr>
@@ -42,7 +42,13 @@ $page.setTitle("Manage artifact types")
 </table>
 
 <div class="functnbar3">
-<input type="submit" value="save"  name="eventSubmit_doSave"/>&#160;<input type="submit" value="add new"  name="eventSubmit_doGotoothertemplate"/>&#160;<input type="submit" value="copy" />&#160;<input type="submit" value="delete selected" name="eventSubmit_doDeletemoduleissuetype"  />&#160;<input type="submit" value="resort" name="eventSubmit_doSave" />&#160;<small>artifact type(s)</small>		</div>
+<input type="submit" value="Save"  name="eventSubmit_doSave"/>&#160;
+<input type="submit" value="Add new"  name="eventSubmit_doGotoothertemplate"/>&#160;
+<input type="submit" value="Copy" />&#160;
+<input type="submit" value="Delete selected" name="eventSubmit_doDeletemoduleissuetype"  />&#160;
+<input type="submit" value="Resort" name="eventSubmit_doSave" />&#160;
+<small>artifact type(s)</small>
+</div>
 
 
 <p>* Maximum of five Artifact types in left hand navigation (first four selected will appear).</p>
