@@ -57,7 +57,7 @@ import org.jboss.logging.Logger;
  *
  * @author <a href="mailto:justin@j-m-f.demon.co.uk">Justin Forder</a>
  * @author <a href="mailto:dirk@jboss.de">Dirk Zimmermann</a>
- * @version $Revision: 1.22 $
+ * @version $Revision: 1.23 $
  */
 public abstract class JDBCCommand
 {
@@ -154,9 +154,9 @@ public abstract class JDBCCommand
          {
             log.debug(name + " command executing: " + theSQL);
          }
-         stmt = con.prepareStatement(theSQL);
-         setParameters(stmt, argOrArgs);
-         result = executeStatementAndHandleResult(stmt, argOrArgs);
+				 stmt = con.prepareStatement(theSQL);
+				 setParameters(stmt, argOrArgs);
+				 result = executeStatementAndHandleResult(stmt, argOrArgs);
       } catch(SQLException e) {
           log.debug(e);
           throw e;
@@ -479,9 +479,6 @@ public abstract class JDBCCommand
 			// do it as before
 			return getResultObject(rs, idx, cmpField.getField().getType());
 		}
-		
-		// deal with composite object
-		log.warning("Using Inprise feature.");
 		
 		// Assuming no one will ever use BLOPS in composite objects.
 		// TODO Should be tested for BLOPability
