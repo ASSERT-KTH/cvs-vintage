@@ -35,7 +35,7 @@ import org.gjt.sp.util.*;
 /**
  * A buffer I/O request.
  * @author Slava Pestov
- * @version $Id: BufferIORequest.java,v 1.27 2004/05/29 01:55:24 spestov Exp $
+ * @version $Id: BufferIORequest.java,v 1.28 2004/08/29 02:58:43 spestov Exp $
  */
 public class BufferIORequest extends WorkRequest
 {
@@ -348,6 +348,8 @@ public class BufferIORequest extends WorkRequest
 				in.reset();
 				in = new GZIPInputStream(in);
 				buffer.setBooleanProperty(Buffer.GZIPPED,true);
+				// auto-detect encoding within the gzip stream.
+				return autodetect(in);
 			}
 			else if((b1 == UNICODE_MAGIC_1
 				&& b2 == UNICODE_MAGIC_2)
