@@ -11,8 +11,9 @@
 <input type="hidden" name="action" value="GenerateReport"/>
 <input type="hidden" name="$scarabG.Constant.NEXT_TEMPLATE" value="reports,Step2.vm"/>
 
-#set ($reports = $scarabR.CurrentModule.getSavedReports($data.User))
-#if ($reports.size() > 0 && !$data.Parameters.getString("report_id"))
+#if (!$data.Parameters.getString("report_id"))
+    #set ($reports = $scarabR.CurrentModule.getSavedReports($data.User))
+    #if ($reports.size() > 0)
 <h3>Saved reports</h3>
 <select name="report_id">
         <option value="">Choose...</option>
@@ -23,6 +24,7 @@
 <input type="submit" value="Run" name="eventSubmit_doRunstoredreport"/>
 <input type="submit" value="Edit" name="eventSubmit_doEditstoredreport"/>
 <input type="submit" value="Delete" name="eventSubmit_doDeletestoredreport"/>
+#end
 #end
 
 <h3>Summary information</h3>

@@ -20,11 +20,9 @@
  </table>
 </div>
 
-#*
 <p>
-Go to your $link.setPage("ReportList.vm").setLabel("Stored Reports List").
+Go to your $link.setPage("ReportList.vm").setLabel("Saved Reports List").
 </p>
-*#
 
 <h3>Save Your Report</h3>
 <div class="axial">
