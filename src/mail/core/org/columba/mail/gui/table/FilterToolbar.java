@@ -13,6 +13,7 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
 //
 //All Rights Reserved.
+
 package org.columba.mail.gui.table;
 
 import java.awt.GridBagConstraints;
@@ -330,7 +331,6 @@ public class FilterToolbar extends JPanel implements ActionListener {
 
 				//Folder folder = MainInterface.tableController.getFolder();
 				Folder folder = (Folder) r[0].getFolder();
-				System.out.println("folder:" + folder.getName());
 
 				if (folder == null)
 					return;
