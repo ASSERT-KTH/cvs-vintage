@@ -671,8 +671,9 @@ public class Context {
 		// in order to support non-file based repositories.
 		return null;
 	    }
-	    url=new URL(documentBase.getProtocol(), documentBase.getHost(),
-			documentBase.getPort(), realPath );
+            url=new URL(documentBase.getProtocol(), documentBase.getHost(),
+                        documentBase.getPort(), 
+                        documentBase.getFile() + mappedPath);
 	    if( debug>9) log( "getResourceURL=" + url + " request=" + lr );
 	    return url;
 	} catch( IOException ex ) {
