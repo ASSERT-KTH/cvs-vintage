@@ -14,8 +14,10 @@ import javax.naming.Context;
 import javax.naming.Name;
 import javax.naming.NameAlreadyBoundException;
 import javax.naming.NameNotFoundException;
+import javax.naming.NamingException;
 import javax.naming.Reference;
 import javax.naming.RefAddr;
+import javax.naming.StringRefAddr;
 import javax.naming.spi.ObjectFactory;
 
 /** A utility class that allows one to bind a non-serializable object into a
@@ -40,6 +42,19 @@ VM in which the JNDI InitialContext lives. An example usage code snippet is:
     ctx.rebind(key, memoryRef);
 </code>
 
+Or you can use the rebind(Context, String, Object) convience method to simplify
+the number of steps to:
+<code>
+    Context ctx = new InitialContext();
+    // The non-Serializable object to bind
+    Object nonserializable = ...;
+    // An arbitrary key to use in the StringRefAddr. The best key is the jndi
+    // name that the object will be bound under.
+    String key = ...;
+    // This places nonserializable into the NonSerializableFactory hashmap under key
+    NonSerializableFactory.rebind(ctx, key, nonserializable);
+</code>
+
 To unbind the object, use the following code snippet:
 
 <code>
@@ -48,9 +63,10 @@ To unbind the object, use the following code snippet:
 </code>
 
 @see javax.naming.spi.ObjectFactory
+@see #rebind(Context, String, Object)
 
 @author Scott_Stark@displayscape.com
-@version $Revision: 1.2 $
+@version $Revision: 1.3 $
 */
 public class NonSerializableFactory implements ObjectFactory
 {
@@ -97,6 +113,25 @@ public class NonSerializableFactory implements ObjectFactory
     {
         if( wrapperMap.remove(key) == null )
             throw new NameNotFoundException(key+" was not found in the NonSerializableFactory map");
+    }
+
+    /** A convience method that simplifies the process of rebinding a
+        non-zerializable object into a JNDI context.
+
+    @param ctx, the JNDI context to rebind to.
+    @param key, the key to use in both the NonSerializableFactory map and JNDI.
+    @param target, the non-Serializable object to bind.
+    @throws NamingException, thrown on failure to rebind key into ctx.
+    */
+    public static synchronized void rebind(Context ctx, String key, Object target) throws NamingException
+    {
+        NonSerializableFactory.rebind(key, target);
+        // Bind a reference to target using NonSerializableFactory as the ObjectFactory
+        String className = target.getClass().getName();
+        String factory = NonSerializableFactory.class.getName();
+        StringRefAddr addr = new StringRefAddr("nns", key);
+        Reference memoryRef = new Reference(className, addr, factory, null);
+        ctx.rebind(key, memoryRef);
     }
 
 // --- Begin ObjectFactory interface methods
