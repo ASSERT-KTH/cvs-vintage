@@ -100,7 +100,7 @@ import org.apache.fulcrum.security.impl.db.entity
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: ScarabModule.java,v 1.144 2003/10/14 04:59:23 jmcnally Exp $
+ * @version $Id: ScarabModule.java,v 1.145 2003/11/14 22:12:00 dep4b Exp $
  */
 public class ScarabModule
     extends BaseScarabModule
@@ -121,7 +121,7 @@ public class ScarabModule
      */
     public String getDomain()
     {
-        if (domain == null)
+        if (domain == null || domain.length() == 0)
         {
             try
             {
