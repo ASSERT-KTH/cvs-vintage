@@ -1,5 +1,7 @@
 
 #macro (viewIssue $currentIssue )
+    #set ($module = $user.CurrentModule)
+    #set ( $canEdit = $security.hasPermission("Issue | Edit", $module) )
     #set ($attrValues = $currentIssue.ModuleAttributeValuesMap)
 
       <div class="grouper">

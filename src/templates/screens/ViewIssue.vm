@@ -9,7 +9,6 @@
 #set ($user = $data.User)
 #set ($module = $user.CurrentModule)
 
-#set ( $canEdit = $security.hasPermission("Issue | Edit", $module) )
 
 <form name="IssueForm" method="post" action="$action" >
 #if ($fullHistory) <input type="hidden" name="fullHistory" value="$fullHistory"> #end

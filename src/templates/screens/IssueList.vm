@@ -21,6 +21,7 @@
 <input type="hidden" name="queryString" value="$queryString">
 <input type="hidden" name="pageNum" value="$pageNum" /> 
 
+## PAGINATION
 #if( $paginated)
 	<div class="misc">
   #if( $scarabR.PrevPage != 0 )
@@ -44,6 +45,7 @@
 &#160;<sup>|</sup>
 &#160;<input type="submit" value="save query" name="eventSubmit_doSavequery" />#end</p>
 	
+
 	<h3>Search Results</h3>
 
 	<div class="datatable">
