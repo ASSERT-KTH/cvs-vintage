@@ -40,6 +40,22 @@ import java.util.Map;
  */
 public class FolderOptionsController {
     /**
+     * Plugins executed before updating the table model
+     * <p>
+     * example:<b>
+     * Sorting/Filtering state
+     */
+    public final static int STATE_BEFORE = 0;
+
+    /**
+     * Plugins executed after updating the table model
+     * <p>
+     * example:<br>
+     * Selection of messages
+     */
+    public final static int STATE_AFTER = 1;
+
+    /**
      * mail frame mediator
      */
     private MailFrameMediator mediator;
@@ -109,9 +125,9 @@ public class FolderOptionsController {
      *
      * @param folder        selected folder
      */
-    public void load(Folder folder) {
+    public void load(Folder folder, int state) {
         // get list of plugins
-        String[] ids = handler.getPluginIdList();
+        String[] ids = handler.getPluginIdList(state);
 
         for (int i = 0; i < ids.length; i++) {
             AbstractFolderOptionsPlugin plugin = getPlugin(ids[i]);
@@ -138,9 +154,9 @@ public class FolderOptionsController {
      * Load all folder options globally.
      *
      */
-    public void load() {
+    public void load(int state) {
         // get list of plugins
-        String[] ids = handler.getPluginIdList();
+        String[] ids = handler.getPluginIdList(state);
 
         for (int i = 0; i < ids.length; i++) {
             AbstractFolderOptionsPlugin plugin = getPlugin(ids[i]);

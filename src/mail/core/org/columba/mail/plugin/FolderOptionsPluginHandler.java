@@ -15,24 +15,93 @@
 //All Rights Reserved.
 package org.columba.mail.plugin;
 
+import org.columba.core.main.MainInterface;
 import org.columba.core.plugin.AbstractPluginHandler;
+import org.columba.core.xml.XmlElement;
+
+import java.util.List;
+import java.util.Vector;
+
 
 /**
  * Folder specific options.
- * 
+ *
  * @author fdietz
  */
 public class FolderOptionsPluginHandler extends AbstractPluginHandler {
-
     /**
      * @param id
      * @param config
      */
     public FolderOptionsPluginHandler() {
-       super("org.columba.mail.folderoptions", "org/columba/mail/plugin/folderoptions.xml");
+        super("org.columba.mail.folderoptions",
+            "org/columba/mail/plugin/folderoptions.xml");
 
-       parentNode = getConfig().getRoot().getElement("folderoptions");
-  
+        parentNode = getConfig().getRoot().getElement("folderoptions");
     }
 
+    /**
+     * Adds a state check to <code>getPluginIdList()</code>.
+     *
+     * @param state      0, if state is "before". Otherwise, is "after"
+     *
+     * @return           array of plugin ids
+     */
+    public String[] getPluginIdList(int state) {
+        int count = parentNode.count();
+
+        //String[] list = new String[count];
+        List list = new Vector();
+
+        for (int i = 0; i < count; i++) {
+            XmlElement action = parentNode.getElement(i);
+            String s = action.getAttribute("name");
+            String stateString = action.getAttribute("state");
+
+            if (state == 0) {
+                // before
+                if (!stateString.equals("before")) {
+                    continue;
+                }
+            } else {
+                // after
+                if (!stateString.equals("after")) {
+                    continue;
+                }
+            }
+
+            XmlElement element = MainInterface.pluginManager.getPluginElement(s);
+
+            if (element == null) {
+                // this is no external plugin
+                // -> just add it to the list
+                list.add(s);
+
+                continue;
+            }
+
+            String enabled = element.getAttribute("enabled");
+
+            if (enabled == null) {
+                enabled = "true";
+            }
+
+            boolean e = Boolean.valueOf(enabled).booleanValue();
+
+            if (e) {
+                list.add(s);
+            }
+
+            //list[i] = s;
+        }
+
+        String[] strs = new String[list.size()];
+
+        for (int i = 0; i < list.size(); i++) {
+            strs[i] = (String) list.get(i);
+        }
+
+        //return list;
+        return strs;
+    }
 }

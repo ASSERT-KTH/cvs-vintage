@@ -125,7 +125,7 @@ public class TableView extends TreeTable implements OptionsSerializer {
         // set name of column
         c.setHeaderValue(name);
         c.setIdentifier(name);
-
+      
         DefaultLabelRenderer r = null;
 
         if (handler.exists(name)) {

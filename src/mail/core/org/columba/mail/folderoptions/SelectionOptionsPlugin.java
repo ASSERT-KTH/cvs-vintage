@@ -113,8 +113,7 @@ public class SelectionOptionsPlugin extends AbstractFolderOptionsPlugin {
         } else {
             // if a lastSelection for this folder is set
             // getting the last selected uid
-            Object[] lastSelUids = new Object[1];
-            lastSelUids[0] = folder.getLastSelection();
+            Object[] lastSelUids = {folder.getLastSelection()};
 
             // no messages in this folder
             if (lastSelUids[0] == null) {

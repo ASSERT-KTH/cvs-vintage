@@ -90,12 +90,15 @@ public class ColumnOptionsPlugin extends AbstractFolderOptionsPlugin {
             // save width
             int size = tc.getWidth();
             column.addAttribute("width", Integer.toString(size));
-
-            /*
+          
             // save position
-            int position = tc.getModelIndex();
-            column.addAttribute("position", Integer.toString(position));
-            */
+            int position = view.getColumnModel().getColumnIndex(name);
+            System.out.println("column name="+name);
+            System.out.println("model index="+tc.getModelIndex());
+            System.out.println("convertToView="+view.convertColumnIndexToView(tc.getModelIndex()));
+            
+            column.addAttribute("position", Integer.toString(view.convertColumnIndexToView(tc.getModelIndex())));
+            
         }
     }
 
@@ -114,6 +117,7 @@ public class ColumnOptionsPlugin extends AbstractFolderOptionsPlugin {
         // remove all columns for column model
         view.setColumnModel(new DefaultTableColumnModel());
 
+        int index = 0;
         // add columns
         for (int i = 0; i < columns.count(); i++) {
             XmlElement column = columns.getElement(i);
@@ -122,18 +126,25 @@ public class ColumnOptionsPlugin extends AbstractFolderOptionsPlugin {
             if (columnItem.getBoolean("enabled")) {
                 String name = columnItem.get("name");
                 int size = columnItem.getInteger("width");
-
+                int position = columnItem.getInteger("position");
+                
                 // add column to table model
                 tableController.getHeaderTableModel().addColumn(name);
 
                 // add column to JTable column model
-                view.addColumn(view.createTableColumn(name, size));
+                TableColumn tc = view.createTableColumn(name, size);
+                tc.setModelIndex(index);
+                //tc.setModelIndex(position);
+                view.addColumn(tc);
+                
+                index++;
             }
         }
 
         // resize/move columns
         // -> this has to happen, after all columns are added
         // -> in the JTable, otherwise it doesn't have any effect
+        index=0;
         for (int i = 0; i < columns.count(); i++) {
             XmlElement column = columns.getElement(i);
             DefaultItem columnItem = new DefaultItem(column);
@@ -149,11 +160,12 @@ public class ColumnOptionsPlugin extends AbstractFolderOptionsPlugin {
                 tc.setPreferredWidth(size);
 
                 // TODO: fix position handling
-
-                /*
+                System.out.println("position="+position);
                 // move column to new position
                 view.moveColumn(tc.getModelIndex(), position);
-                */
+                
+                index++;
+                
             }
         }
 
