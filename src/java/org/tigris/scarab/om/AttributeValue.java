@@ -76,7 +76,7 @@ import org.tigris.scarab.om.ModuleManager;
  * @author <a href="mailto:jmcnally@collab.new">John McNally</a>
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
- * @version $Id: AttributeValue.java,v 1.67 2002/07/24 23:53:40 jmcnally Exp $
+ * @version $Id: AttributeValue.java,v 1.68 2002/07/25 18:15:06 jmcnally Exp $
  */
 public abstract class AttributeValue 
     extends BaseAttributeValue
@@ -343,9 +343,9 @@ public abstract class AttributeValue
     {
         if ( optionId != null && optionId.getValue() != null ) 
         {
-            List options = null;
-
-            if (getIssue().getModule() == null)
+            Module module = getIssue().getModule();
+            IssueType issueType = getIssue().getIssueType();
+            if (module == null || issueType == null)
             {
                 AttributeOption option = AttributeOptionManager
                     .getInstance(optionId);
@@ -353,33 +353,34 @@ public abstract class AttributeValue
             }
             else 
             {
-            // FIXME! create a key and get the instance directly from
-            // the manager.
-            try
-            {
-                options = getIssue().getModule().getRModuleOptions(
-                    getAttribute(), getIssue().getIssueType());
-            }
-            catch (Exception e)
-            {
-                if (e instanceof TorqueException) 
+                // FIXME! create a key and get the instance directly from
+                // the manager.
+                List options = null;
+                try
                 {
-                    throw (TorqueException)e;
+                    options = module
+                        .getRModuleOptions(getAttribute(), issueType);
                 }
-                else 
+                catch (Exception e)
                 {
-                    throw new TorqueException(e);
+                    if (e instanceof TorqueException) 
+                    {
+                        throw (TorqueException)e;
+                    }
+                    else 
+                    {
+                        throw new TorqueException(e);
+                    }
                 }
-            }
-            for ( int i=options.size()-1; i>=0; i-- ) 
-            {
-                RModuleOption option = (RModuleOption)options.get(i);
-                if ( option.getOptionId().equals(optionId) ) 
+                for ( int i=options.size()-1; i>=0; i-- ) 
                 {
-                    setValueOnly(option.getDisplayValue());
-                    break;
-                }
-            }   
+                    RModuleOption option = (RModuleOption)options.get(i);
+                    if ( option.getOptionId().equals(optionId) ) 
+                    {
+                        setValueOnly(option.getDisplayValue());
+                        break;
+                    }
+                }   
             }            
         }
         else
