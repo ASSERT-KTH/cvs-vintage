@@ -15,20 +15,22 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003.
 //
 //All Rights Reserved.
+
 package org.columba.addressbook.folder.importfilter;
 
 import org.columba.addressbook.folder.ContactCard;
 import org.columba.addressbook.folder.Folder;
 import org.columba.addressbook.util.AddressbookResourceLoader;
 
+import org.columba.ristretto.coder.Base64;
+
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
-
+import java.nio.ByteBuffer;
 
 /**
- * @version 1.0
- * @author
+ * Import addressbook data in LDIF format.
  */
 public class NetscapeLDIFAddressbookImporter extends DefaultAddressbookImporter {
     public NetscapeLDIFAddressbookImporter() {
@@ -41,8 +43,6 @@ public class NetscapeLDIFAddressbookImporter extends DefaultAddressbookImporter 
     }
 
     public void importAddressbook(File file) throws Exception {
-        System.out.println("importing addressbook::::");
-
         BufferedReader in = new BufferedReader(new FileReader(file));
         String str;
         ContactCard card = new ContactCard();
@@ -56,11 +56,17 @@ public class NetscapeLDIFAddressbookImporter extends DefaultAddressbookImporter 
                 card = new ContactCard();
             } else {
                 // parse key:value lines
-                int index = str.indexOf(":");
+                int index = str.indexOf(':');
 
-                if (index != -1) {
+                if (index > 0 && index < str.length() - 1) {
                     String key = str.substring(0, index);
-                    String value = str.substring(index + 1, str.length());
+                    String value;
+                    if (str.charAt(index + 1) == ':') {
+                        ByteBuffer bytes = Base64.decode(str.substring(index + 2).trim());
+                        value = new String(bytes.array(), "UTF-8");
+                    } else {
+                        value = str.substring(index + 1);
+                    }
                     value = value.trim();
 
                     if (key.equalsIgnoreCase("cn")) {
