@@ -1,4 +1,5 @@
 #set ($groupId = $data.Parameters.getString("groupId"))
+#set ($group = $scarabR.getAttributeGroup($groupId))
 #set ($issueTypeId = $data.Parameters.getString("issueTypeId"))
 $page.setTitle("Add/Edit attribute group to Issue Type '$scarabR.getIssueType($issueTypeId).Name'")
 
@@ -30,17 +31,13 @@ $page.setTitle("Add/Edit attribute group to Issue Type '$scarabR.getIssueType($i
 <input type="hidden" name="$scarabG.Constant.NEXT_TEMPLATE" value="admin,AttributeGroup.vm"/>
 <input type="hidden" name="$scarabG.Constant.CANCEL_TEMPLATE" value="admin,AttributeGroup.vm"/>
 <input type="hidden" name="$scarabG.Constant.BACK_TEMPLATE" value="admin,ArtifactTypeEdit.vm" />
-
 <input type="hidden" name="groupId" value="$groupId">
-#if ($issueTypeId && $issueTypeId.length() > 0)
-<input type="hidden" name="issueTypeId" value="$issueTypeId" />
-#end
+<input type="hidden" name="issueTypeId" value="$group.IssueTypeId" />
 
 #AttributeGroupBar("")
 
 <h3>Attribute group details</h3>
 
-#set ($group = $scarabR.getAttributeGroup($groupId))
 #set ($agGroup = $intake.AttributeGroup.mapTo($group))
 <div class="axial">
  <table border="0" cellspacing="2" cellpadding="3">
@@ -76,7 +73,7 @@ $page.setTitle("Add/Edit attribute group to Issue Type '$scarabR.getIssueType($i
  #indexedRows($velocityCount)
  <td><input type="checkbox" name="att_delete_$attribute.AttributeId" /></td>
  #if ($scarabR.hasPermission($scarabG.Permission.DOMAIN__EDIT))
- <td><a href="$link.setPage("admin,ModuleAttributeEdit.vm").addPathInfo("att_0id", "$attribute.AttributeId")">$attribute.Name</a></td>
+ <td><a href="$link.setPage("admin,ModuleAttributeEdit.vm").addPathInfo("att_0id", "$attribute.AttributeId").addPathInfo("issueTypeId", $group.IssueTypeId)">$attribute.Name</a></td>
  #else
  <td>$attribute.Name</td>
  #end

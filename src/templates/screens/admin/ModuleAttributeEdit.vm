@@ -4,6 +4,7 @@ $page.setTitle("Module Attribute/options editor")
 #set ($attribute = $scarabR.Attribute)
 #set ($attType = $attribute.AttributeType)
 
+
 <div class="app" id="div3-0-2-0">
 <h2>$page.Title</h2>
 
@@ -15,7 +16,9 @@ On this screen, one can modify a module's Attribute information.
 <form action="$link.setPage("admin,ModuleAttributeEdit.vm")" method="get">
 <input type="hidden" name="action" value="admin.ModifyModuleAttributes" />
 <input type="hidden" name="$scarabG.Constant.NEXT_TEMPLATE" value="admin,ModuleAttributeEdit.vm" />
+<input type="hidden" name="$scarabG.Constant.OTHER_TEMPLATE" value="admin,AttributeOptionSelect.vm" />
 <input type="hidden" name="attributeid" value="$attribute.AttributeId" />
+<input type="hidden" name="issueTypeId" value="$data.Parameters.getString("issueTypeId")">
 <input type="hidden" name="att_0id" value="$attribute.AttributeId" />
 
 <h3>Attribute Info</h3>
@@ -93,7 +96,7 @@ On this screen, one can modify a module's Attribute information.
 <table cellpadding="4" cellspacing="0" border="1">
   <tr>
     <td class="firstchild">
-    <input type="submit" name="eventSubmit_doModifyattributeoptions" value="Save" />&nbsp; <input type="submit" name="eventSubmit_doDeleteattributeoptions" value="Delete" />&nbsp; <input type="submit" name="eventSubmit_doAddnewattributeoption" value="Add new" />
+    <input type="submit" name="eventSubmit_doModifyattributeoptions" value="Save" />&nbsp; <input type="submit" name="eventSubmit_doDeleteattributeoptions" value="Delete" />&nbsp; <input type="submit" name="eventSubmit_doGotoothertemplate" value="Add new" />
     </td>
   </tr>
 </table>

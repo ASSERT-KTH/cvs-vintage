@@ -1,0 +1,116 @@
+#set ($attribute = $scarabR.Attribute)
+$page.setTitle("Add global attribute option to attribute '$attribute.Name'")
+
+#set ($canEditDomain=$scarabR.hasPermission($scarabG.Permission.DOMAIN__EDIT))
+
+<div class="functnbar$val">
+<table cellpadding="4" cellspacing="0" border="1">
+#if ($availAttributes.size() == 0)
+<tr>
+<td class="firstchild" nowrap="nowrap">
+<div>General functions</div>
+#if ($canEditDomain)
+<input type="submit" value="Create new" name="eventSubmit_doGotogothertemplate"/>
+ &#160;
+#end
+<input type="submit" value="Cancel" name="eventSubmit_doCancel" />
+</td>
+</tr>
+#else
+<tr>
+<td class="firstchild">
+<div>Select items to</div>
+<input type="submit" value="Add to attribute" name="eventSubmit_doSelectattributeoption" />
+</td>
+<td nowrap="nowrap">
+<div>General functions</div>
+#if ($canEditDomain)
+<input type="submit" value="Create new" name="eventSubmit_doGotoothertemplate"/>
+ &#160;
+#end
+<input type="submit" value="Cancel" name="eventSubmit_doCancel" />
+</td>
+</tr>
+#end
+</table>
+</div>
+
+<div class="app" id="AttributeOptionSelect">
+
+<h2>$page.Title</h2>
+
+<form action="$link.setPage("admin,AttributeOptionSelect.vm")" method="get">
+<input type="hidden" name="action" value="admin.ModifyModuleAttributes" />
+<input type="hidden" name="attributeId" value="$data.Parameters.getString("attributeId","").trim()" />
+<input type="hidden" name="att_0id" value="$data.Parameters.getString("attributeId","").trim()" />
+<input type="hidden" name="issueTypeId" value="$data.Parameters.getString("issueTypeId","").trim()" />
+<input type="hidden" name="$scarabG.Constant.NEXT_TEMPLATE" value="admin,ModuleAttributeEdit.vm" />
+<input type="hidden" name="$scarabG.Constant.CANCEL_TEMPLATE" value="admin,ModuleAttributeEdit.vm" />
+<input type="hidden" name="$scarabG.Constant.OTHER_TEMPLATE" value="admin,GlobalAttributeEdit.vm" />
+
+#set ($availOptions = $scarabR.CurrentModule.getAvailableAttributeOptions($attribute, $scarabR.CurrentIssueType))
+
+#if ($availOptions.size() == 0)
+
+<p><strong class="alert">There are no more global attribute options that are not already
+associated with this attribute in this module.</strong></p>
+
+#else
+
+<h3>Global attributes</h3>
+
+<table border="1" cellspacing="2" cellpadding="3">
+<tr>
+<th nowrap="nowrap">
+<img src="$data.Request.ContextPath/images/icon_uparrow_off.gif" width="13" height="8" alt="sort ascending" title="sort ascending" border="0" />
+<img src="$data.Request.ContextPath/images/icon_downarrow_on.gif" width="13" height="8" alt="sort descending" title="sort descending" border="0" />
+</th>
+<th>Option name</th>
+</tr>
+
+#foreach ($option in $availOptions)
+##set ($optionGroup = $intake.AttributeOption.mapTo($option))
+ #indexedRows($velocityCount)
+  <td><input type="radio" name="optionId" value="$option.OptionId" /></td>
+  <td>$option.Name</td>
+#end
+</table>
+
+#end
+
+<div class="functnbar$val">
+<table cellpadding="4" cellspacing="0" border="1">
+#if ($allAttributes.size() == 0)
+<tr>
+<td class="firstchild" nowrap="nowrap">
+<div>General functions</div>
+#if ($canEditDomain)
+<input type="submit" value="Create new" name="eventSubmit_doGotoothertemplate"/>
+ &#160;
+#end
+<input type="submit" value="Cancel" name="eventSubmit_doCancel" />
+</td>
+</tr>
+#else
+<tr>
+<td class="firstchild">
+<div>Select items to</div>
+<input type="submit" value="Add to attribute" name="eventSubmit_doSelectattributeoption" />
+</td>
+<td nowrap="nowrap">
+<div>General functions</div>
+#if ($canEditDomain)
+<input type="submit" value="Create new" name="eventSubmit_doGotoothertemplate"/>
+ &#160;
+#end
+<input type="submit" value="Cancel" name="eventSubmit_doCancel" />
+</td>
+</tr>
+#end
+</table>
+</div>
+
+
+</form>
+
+</div>
