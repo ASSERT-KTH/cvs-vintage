@@ -6,9 +6,9 @@ which accompanies this distribution, and is available at
 http://www.eclipse.org/legal/cpl-v05.html
  
 Contributors:
-     IBM Corporation - initial API
-     IBM Corporation, 2002/03/01- added notion of shared working copy
-     IBM Corporation, 2002/26/01- added notion of IProblemRequestor
+	Object Technology International Inc. - initial API
+	Jerome_Lanneluc@oti.com, 2002/03/01 - added notion of shared working copy
+    Philippe_Mulet@oti.com, - added notion of IProblemRequestor
 **********************************************************************/
 
 package org.eclipse.jdt.core;
