@@ -1,9 +1,9 @@
 /*
-* JBoss, the OpenSource J2EE webOS
-*
-* Distributable under LGPL license.
-* See terms of license at gnu.org.
-*/
+ * JBoss, the OpenSource J2EE webOS
+ *
+ * Distributable under LGPL license.
+ * See terms of license at gnu.org.
+ */
 
 package org.jboss.ejb.plugins.lock;
 
@@ -29,33 +29,41 @@ import org.jboss.logging.log4j.JBossCategory;
  *
  * @author <a href="bill@burkecentral.com">Bill Burke</a>
  * @author <a href="marc.fleury@jboss.org">Marc Fleury</a>
- *
- * @version $Revision: 1.1 $
+ * @version $Revision: 1.2 $
  *
  * <p><b>Revisions:</b><br>
-*  <p><b>2001/07/29: marcf</b>
-*  <ol>
-*   <li>Initial revision
-* </ol>
+ *  <p><b>2001/07/29: marcf</b>
+ *  <ol>
+ *   <li>Initial revision
+ * </ol>
  */
-public abstract class BeanLockSupport implements BeanLock
+public abstract class BeanLockSupport
+   implements BeanLock
 {
    /** The actual lock object **/
    public Object lock = new Object();
  
-   /** number of threads invoking methods on this bean (1 normally >1 if reentrant) **/
+   /**
+    * Number of threads invoking methods on this bean
+    * (1 normally >1 if reentrant)
+    */
    protected int numMethodLocks = 0;
-   /** number of threads that retrieved this lock from the manager (0 means removing) **/ 
+   
+   /**
+    * Number of threads that retrieved this lock from the manager
+    * (0 means removing)
+    */ 
    protected int refs = 0;
  
-   /**The Cachekey corresponding to this Bean */
+   /** The Cachekey corresponding to this Bean */
    protected Object id = null;
  
-   /**Are reentrant calls allowed? */
+   /** Are reentrant calls allowed? */
    protected boolean reentrant;
  
    /** Use a JBoss custom log4j category for trace level logging */
-   static JBossCategory log = (JBossCategory) JBossCategory.getInstance(BeanLock.class);
+   static JBossCategory log =
+      (JBossCategory) JBossCategory.getInstance(BeanLock.class);
  
    protected Transaction tx = null;
  
@@ -64,12 +72,12 @@ public abstract class BeanLockSupport implements BeanLock
    protected int txTimeout;
 
 	
-	public void setId(Object id) { this.id = id;}
+   public void setId(Object id) { this.id = id;}
    public Object getId() { return id;}
-	public void setReentrant(boolean reentrant) {this.reentrant = reentrant;}
-	public void setTimeout(int timeout) {txTimeout = timeout;}
+   public void setReentrant(boolean reentrant) {this.reentrant = reentrant;}
+   public void setTimeout(int timeout) {txTimeout = timeout;}
 	
-	public Object getLock() {return lock;}
+   public Object getLock() {return lock;}
 	
    public void sync()
    {
@@ -79,7 +87,7 @@ public abstract class BeanLockSupport implements BeanLock
          {
             try
             {
-					this.wait();
+               this.wait();
             }
             catch (InterruptedException ex) { /* ignore */ }
          }
@@ -99,39 +107,39 @@ public abstract class BeanLockSupport implements BeanLock
    public abstract boolean schedule(MethodInvocation mi) throws Exception;
 	
    /**
-    * setTransaction(Transaction tx)
-    * 
-    * The setTransaction associates a transaction with the lock.  The current transaction is associated
-    * by the schedule call.  
+    * The setTransaction associates a transaction with the lock.
+    * The current transaction is associated by the schedule call.
     */
    public void setTransaction(Transaction tx){this.tx = tx;}
    public Transaction getTransaction(){return tx;}
    
-	public abstract void endTransaction(Transaction tx);
-	public abstract void wontSynchronize(Transaction tx);
+   public abstract void endTransaction(Transaction tx);
+   public abstract void wontSynchronize(Transaction tx);
 	
-	/* you can overwrite these in the extensions */
-	public void notifyOne() 
-	{
-		synchronized(lock) {
+   /**
+    * Notify one.
+    * 
+    * <p>You can overwrite these in the extensions
+    */
+   public void notifyOne() {
+      synchronized(lock) {
 	
-			lock.notify();
-		}
-	};
+         lock.notify();
+      }
+   }
 	
-	public void notifyEveryone() {
-		
-		synchronized(lock) {
+   public void notifyEveryone() {
+      synchronized(lock) {
 			
-			lock.notifyAll();
-		}
-	};
+         lock.notifyAll();
+      }
+   }
    
    public boolean isMethodLocked() { return numMethodLocks > 0;}
    public int getNumMethodLocks() { return numMethodLocks;}
    public void addMethodLock() { numMethodLocks++; }
 	
-	public abstract void releaseMethodLock() ;
+   public abstract void releaseMethodLock();
    
    public void addRef() { refs++;}
    public void removeRef() { refs--;}
@@ -181,4 +189,3 @@ public abstract class BeanLockSupport implements BeanLock
       return false;
    }
 }
-
