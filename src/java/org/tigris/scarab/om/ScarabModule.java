@@ -96,7 +96,7 @@ import org.apache.fulcrum.security.impl.db.entity
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: ScarabModule.java,v 1.64 2001/11/01 22:09:48 elicia Exp $
+ * @version $Id: ScarabModule.java,v 1.65 2001/11/02 19:44:41 elicia Exp $
  */
 public class ScarabModule
     extends BaseScarabModule
@@ -459,8 +459,8 @@ public class ScarabModule
     }
 
 
-    // FIXME: can this be done more efficently?
     /**
+     * FIXME: can this be done more efficently?
      * gets highest sequence number for module-attribute map
      * so that a new RModuleAttribute can be added at the end.
      */
