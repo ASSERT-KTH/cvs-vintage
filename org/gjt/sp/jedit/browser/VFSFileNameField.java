@@ -32,7 +32,7 @@ import org.gjt.sp.jedit.MiscUtilities;
 
 /**
  * @author Slava Pestov
- * @version $Id: VFSFileNameField.java,v 1.8 2003/04/23 01:59:44 spestov Exp $
+ * @version $Id: VFSFileNameField.java,v 1.9 2003/04/26 20:51:48 spestov Exp $
  * @since jEdit 4.2pre1
  */
 class VFSFileNameField extends HistoryTextField
@@ -160,7 +160,14 @@ class VFSFileNameField extends HistoryTextField
 					return;
 				}
 				else
+				{
 					super.processKeyEvent(evt);
+					String path = getText();
+
+					BrowserView view = browser.getBrowserView();
+					view.selectNone();
+					view.getTable().doTypeSelect(path,true);
+				}
 			}
 			else if(ch > 0x20 && ch != 0x7f && ch != 0xff)
 			{

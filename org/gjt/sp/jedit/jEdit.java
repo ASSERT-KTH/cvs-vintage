@@ -45,7 +45,7 @@ import org.gjt.sp.util.Log;
 /**
  * The main class of the jEdit text editor.
  * @author Slava Pestov
- * @version $Id: jEdit.java,v 1.138 2003/04/26 20:05:13 spestov Exp $
+ * @version $Id: jEdit.java,v 1.139 2003/04/26 20:51:48 spestov Exp $
  */
 public class jEdit
 {
@@ -412,7 +412,7 @@ public class jEdit
 		//{{{ Start plugins
 		for(int i = 0; i < jars.size(); i++)
 		{
-			((PluginJAR)jars.elementAt(i)).activatePlugin();
+			((PluginJAR)jars.elementAt(i)).activatePluginIfNecessary();
 		} //}}}
 
 		//{{{ Load macros and run startup scripts, after plugins and settings are loaded

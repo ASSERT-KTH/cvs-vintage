@@ -37,7 +37,7 @@ import org.gjt.sp.util.Log;
 /**
  * A class loader implementation that loads classes from JAR files.
  * @author Slava Pestov
- * @version $Id: JARClassLoader.java,v 1.27 2003/04/26 20:05:12 spestov Exp $
+ * @version $Id: JARClassLoader.java,v 1.28 2003/04/26 20:51:48 spestov Exp $
  */
 public class JARClassLoader extends ClassLoader
 {
@@ -225,6 +225,8 @@ public class JARClassLoader extends ClassLoader
 	private Class _loadClass(String clazz, boolean resolveIt)
 		throws ClassNotFoundException
 	{
+		jar.activatePlugin();
+
 		Class cls = findLoadedClass(clazz);
 		if(cls != null)
 		{
