@@ -7,7 +7,7 @@
 <!--                                                                       -->
 <!-- ===================================================================== -->
 
-<!-- $Id: jboss-service.xml,v 1.7 2001/09/08 17:08:32 d_jencks Exp $ -->
+<!-- $Id: jboss-service.xml,v 1.8 2001/09/08 17:16:00 d_jencks Exp $ -->
 
 <!-- 
    |  This is where you can add and configure your MBeans.
@@ -51,6 +51,7 @@
 	 javax.servlet.jar,
 	 javax-sasl.jar,
 	 jaxp.jar,
+	 jbosscx.jar,
 	 jbossha.jar,
 	 jboss-j2ee.jar,
 	 jboss.jar,
@@ -169,6 +170,13 @@
   <!-- to ConnectionFactoryLoader                                           -->
   <!-- ==================================================================== -->
 
+  <mbean code="org.jboss.jdbc.JdbcProvider" 
+	 name="JBOSS-SYSTEM:service=JdbcProvider">
+     <attribute name="Drivers">
+	  org.hsql.jdbcDriver
+	  </attribute>
+  </mbean>
+
   <mbean code="org.jboss.jdbc.HypersonicDatabase" 
 	 name="JBOSS-SYSTEM:service=Hypersonic">
     <attribute name="Port">1476</attribute>
@@ -183,6 +191,52 @@
   <!-- The RARDeployer and three Connection Manager Factories are parts of  -->
   <!-- JBoss and do not need further configuration.                         -->
   <!-- ==================================================================== -->
+
+  <mbean code="org.jboss.resource.RARDeployer" 
+	 name="JCA:service=RARDeployer">
+  </mbean>
+
+  <!-- 
+     | Minerva no transaction connection manager factory.
+     |
+     | Use this for resource adapters that don't support transactions.
+   -->
+  <mbean code="org.jboss.resource.ConnectionManagerFactoryLoader"
+         name="JCA:service=ConnectionManagerFactoryLoader,name=MinervaNoTransCMFactory">
+    <attribute name="FactoryName">MinervaNoTransCMFactory</attribute>
+    <attribute name="FactoryClass">
+      org.jboss.pool.connector.jboss.MinervaNoTransCMFactory
+    </attribute>
+    <attribute name="Properties"></attribute>
+  </mbean>
+
+  <!-- 
+     | Minerva local transaction connection manager factory.
+     |
+     | Use this for resource adapters that support "local" transactions.
+   -->
+  <mbean code="org.jboss.resource.ConnectionManagerFactoryLoader"
+         name="JCA:service=ConnectionManagerFactoryLoader,name=MinervaSharedLocalCMFactory">
+    <attribute name="FactoryName">MinervaSharedLocalCMFactory</attribute>
+    <attribute name="FactoryClass">
+      org.jboss.pool.connector.jboss.MinervaSharedLocalCMFactory
+    </attribute>
+    <attribute name="Properties"></attribute>
+  </mbean>
+
+  <!-- 
+     | Minerva XA transaction connection manager factory
+     |
+     | Use this for resource adapters that support "xa" transactions.
+   -->
+  <mbean code="org.jboss.resource.ConnectionManagerFactoryLoader"
+         name="JCA:service=ConnectionManagerFactoryLoader,name=MinervaXACMFactory">
+    <attribute name="FactoryName">MinervaXACMFactory</attribute>
+    <attribute name="FactoryClass">
+      org.jboss.pool.connector.jboss.MinervaXACMFactory
+    </attribute>
+    <attribute name="Properties"></attribute>
+  </mbean>
 
   <!-- 
      | Example database connections using resource adapters.  
@@ -199,12 +253,12 @@
      |
   <mbean code="org.jboss.resource.ConnectionFactoryLoader"
          name="JCA:service=ConnectionFactoryLoader,name=XAMinervaDS">
-    <attribute name="JndiName">XAMinervaDS</attribute>
+    <attribute name="FactoryName">XAMinervaDS</attribute>
     <attribute name="RARDeployerName">JCA:service=RARDeployer</attribute>
     <attribute name="ResourceAdapterName">
       Minerva JDBC XA Resource Adapter
     </attribute>
-    <attribute name="ManagedConnectionFactoryProperties">
+    <attribute name="Properties">
       XADataSourceClass=YourXADataSourceClassNameHere
       SomeOtherPropertySuchAsURL=url=urltomydatabase
     </attribute>
@@ -217,15 +271,15 @@
       #PoolConfiguration=per-factory
 
       # Connection pooling properties - see
-      # org.jboss.resource.connectionmanager.PoolParameters
+      # org.jboss.pool.PoolParameters
       MinSize=0
       MaxSize=10
-      BlockingTimeoutMillis=10000
+      Blocking=true
       GCEnabled=false
       IdleTimeoutEnabled=false
       InvalidateOnError=false
       TrackLastUsed=false
-      CleanupIntervalMillis=120000
+      GCIntervalMillis=120000
       GCMinIdleMillis=1200000
       IdleTimeoutMillis=1800000
       MaxIdleTimeoutPercent=1.0
@@ -235,8 +289,8 @@
       org.jboss.resource.security.ManyToOnePrincipalMapping
     </attribute>
     <attribute name="PrincipalMappingProperties">
-      UserName=sa
-      Password=
+      userName=sa
+      password=
     </attribute>
   </mbean>
   -->
@@ -301,13 +355,11 @@
      |
      | You can keep running with your XADataSourceLoader mbeans... 
      | but they will go away in a future jboss release.  Why not convert now?
-   - ->
+   -->
 	 <mbean code="org.jboss.resource.ConnectionFactoryLoader" 
 	 name="JBOSS-SYSTEM:service=ConnectionFactoryLoader,name=DefaultDS">
-    <attribute name="ManagedConnectionFactoryProperties">ConnectionURL=jdbc:HypersonicSQL:hsql://localhost:1476
-  DriverClass=org.hsql.jdbcDriver
-  UserName=sa</attribute>
-    <attribute name="JndiName">DefaultDS</attribute>
+    <attribute name="Properties">ConnectionURL=jdbc:HypersonicSQL:hsql://localhost:1476</attribute>
+    <attribute name="FactoryName">DefaultDS</attribute>
     <attribute name="TransactionManagerName">java:/TransactionManager</attribute>
     <attribute name="ResourceAdapterName">Minerva JDBC LocalTransaction ResourceAdapter</attribute>
     <attribute name="RARDeployerName">JCA:service=RARDeployer</attribute>
@@ -315,12 +367,12 @@
     <attribute name="ConnectionManagerProperties">#
       #Wed Aug 15 16:17:29 EDT 2001
       InvalidateOnError=false
-      BlockingTimeoutMillis=500000
+      Blocking=true
       IdleTimeoutMillis=1800000
       MaxSize=10
       TimestampUsed=false
       IdleTimeoutEnabled=false
-      CleanupIntervalMillis=120000
+      GCIntervalMillis=120000
       MinSize=0
       GCMinIdleMillis=1200000
       GCEnabled=false
@@ -329,9 +381,9 @@
     <attribute name="PrincipalMappingClass">
       org.jboss.resource.security.ManyToOnePrincipalMapping
    </attribute>
-    <attribute name="PrincipalMappingProperties">UserName=sa</attribute>
+    <attribute name="PrincipalMappingProperties">userName=sa</attribute>
   </mbean>
--->  
+  
 
   <!-- ==================================================================== -->
   <!-- JBoss Server Management                                              -->
@@ -479,23 +531,25 @@
     </attribute>
   </mbean>
 
-  <!-- JMS XA Resource adapter, use this to get transacted JMS in beans - ->
+  <!-- JMS XA Resource adapter, use this to get transacted JMS in beans -->
   <mbean code="org.jboss.resource.ConnectionFactoryLoader"
          name="JCA:service=ConnectionFactoryLoader,name=JmsXA">
-    <attribute name="JndiName">JmsXA</attribute>
+    <attribute name="FactoryName">JmsXA</attribute>
     <attribute name="RARDeployerName">JCA:service=RARDeployer</attribute>
     <attribute name="ResourceAdapterName">JMS Adapter</attribute>
     <attribute name="ConnectionManagerFactoryName">MinervaXACMFactory</attribute>
+    <!-- See the documentation for the specific connection manager
+         implementation you are using for the properties you can set -->
     <attribute name="ConnectionManagerProperties">
       # Pool type - uncomment to force, otherwise it is the default
       #PoolConfiguration=per-factory
 
       # Connection pooling properties - see
-      # org.jboss.resource.connectionmanager.PoolParameters
+      # org.jboss.pool.PoolParameters
       MinSize=0
       MaxSize=10
-      BlockingTimeoutMillis=5000
-      CleanupEnabled=false
+      Blocking=true
+      GCEnabled=false
       IdleTimeoutEnabled=false
       InvalidateOnError=false
       TrackLastUsed=false
@@ -505,12 +559,13 @@
       MaxIdleTimeoutPercent=1.0
     </attribute>
 
+    <!-- Principal mapping configuration -->
     <attribute name="PrincipalMappingClass">
       org.jboss.resource.security.ManyToOnePrincipalMapping
     </attribute>
     <attribute name="PrincipalMappingProperties">
     </attribute>
-  </mbean>-->
+  </mbean>
 
 
   <!-- ==================================================================== -->
@@ -551,8 +606,9 @@
 
   <mbean code="org.jboss.deployment.AutoDeployer" name="JBOSS-SYSTEM:service=AutoDeployer">
     <attribute name="Deployers">
-      JBOSS-SYSTEM:service=ServiceDeployer;
-      J2EE:service=J2eeDeployer
+      JCA:service=RARDeployer;
+		JBOSS-SYSTEM:service=ServiceDeployer;
+	   J2EE:service=J2eeDeployer
     </attribute>
     <attribute name="URLs">
       ../deploy/lib,
