@@ -1,7 +1,7 @@
 
 <html>
   <head>
-    <!-- $Id: index.html,v 1.5 2000/09/01 22:44:45 nacho Exp $ -->
+    <!-- $Id: index.html,v 1.6 2000/10/07 20:29:51 larryi Exp $ -->
     <!-- Copyright 1999, Apache Software Foundation -->
     <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
     <link rel="stylesheet" href="style.css">
@@ -29,30 +29,75 @@
 <h1>Tomcat Documentation</h1>
 <ul>
 
-<li> <A HREF="tomcat-ug.html">Tomcat User's Guide</A>
-</li>
-<li> <A HREF="appdev/contents.html">Application Development manual</A> -
- an alternative to the User's Guide, by Craig McClanahan, somewhat
- out of date
+<li> <a href="readme">Tomcat 3.3 Release Notes</a><br>
+  &nbsp;
 </li>
 
-<li> <A HREF="faq">faq</A> [obsolete?]
+<li> Using Tomcat
+  <ul>
+    <li> <A HREF="tomcat-ug.html">Tomcat User's Guide</A> - How to install,
+      configure, and deploy Tomcat.</li>
+    <li><a href="JDBCRealm-howto.html">JDBC Realms</a> - Use a set of
+      configurable tables inside an RDBMS to store validation data.</li>
+    <li><a href="tomcat-security.html">Using the Java SecurityManager with Tomcat</a>
+      - Use of a SecurityManager while running Tomcat can protect your server
+      from Trojan servlets, JSPs, JSP beans, and tag libraries.</li>
+    <li><a href="Tomcat-Workers-HowTo.html">Tomcat Workers</a> - How to work
+      with &quot;Tomcat workers,&quot; and the worker.properties file.<br>
+      &nbsp;&nbsp;</li>
+  </ul>
 </li>
-<li> <A HREF="readme">Tomcat 3.1 readme</A> [obsolete?]
+<li>Using Tomcat in Windows - documentation specific to running Tomcat in a
+  Win32 environment
+  <ul>
+    <li><a href="NT-Service-howto.html">The Jakarta NT Service</a> - Wrapping an
+      NT Service around Tomcat.</li>
+    <li><a href="in-process-howto.html">In-process HOWTO</a> - How to set up
+      Netscape/IIS web servers so that Tomcat will run inside the web server
+      process.<br>
+      &nbsp;</li>
+  </ul>
 </li>
-
-<li><a href="tomcat-apache-howto.html">Tomcat-Apache HOWTO</a></li>
-<li><a href="mod_jk-howto.html">mod_jk HOWTO</a> [??? should be rolled into tomcat-apache howto]</li>
-<li><a href="tomcat-iis-howto.html">Tomcat-IIS HOWTO</a></li>
-<li><a href="tomcat-netscape-howto.html">Tomcat-Netscape HOWTO</a></li>
-<li><a href="tomcat-security.html">Using the Java SecurityManager with Tomcat</a></li>
-<li><a href="JDBCRealm-howto.html">JDBC Realm HOWTO</a></li>
-<li><a href="NT-Service-howto.html">NT Service HOWTO</a></li>
-<li><a href="Tomcat-Workers-HowTo.html">Tomcat Workers HOWTO</a></li>
-<li><a href="in-process-howto.html">In-process HOWTO</a></li>
-<li><a href="internal.html">Tomcat Internals documentation</a></li>
+<li>Integrating Tomcat with a Web Server
+  <ul>
+    <li><a href="tomcat-apache-howto.html">Apache</a>
+      <ul>
+        <li><a href="mod_jk-howto.html">mod_jk</a>  - Installation and
+          configuration</li>
+      </ul>
+    </li>
+    <li><a href="tomcat-iis-howto.html">Internet Information Server</a></li>
+    <li><a href="tomcat-netscape-howto.html">Netscape<br>
+      </a>&nbsp;</li>
+  </ul>
+</li>
+<li> <A HREF="appdev/contents.html">Application Development manual</A> - The
+  steps required to build and deploy web applications within Tomcat ( somewhat
+ out of date).<br>
+</li>
+<li><a href="internal.html">Tomcat Internals</a> - The design of Tomcat 3.x and
+  the reasons behind it.<br>
+  &nbsp;</li>
+<li>Other Resources
+  <ul>
+    <li><a href="faq">Frequently Asked Questions</a></li>
+    <li><a href="http://jakarta.apache.org/getinvolved/mail.html">Mailing lists<br>
+      </a>&nbsp;</li>
+  </ul>
+</li>
 
 </ul>
+
+    <table width="100%" border="0" cellpadding="10" cellspacing="0">
+      <tr>
+        <td>
+          <p class="fineprint">
+            Copyright &copy;1999-2000 The Apache Software Foundation<br>
+            <a href="http://jakarta.apache.org/legal.html">Legal Stuff They Make Us Say</a><br>
+            <a href="http://jakarta.apache.org/contact.html">Contact Information</a> </p>
+        </td>
+      </tr>
+    </table>
 
   </body>
 </html>
