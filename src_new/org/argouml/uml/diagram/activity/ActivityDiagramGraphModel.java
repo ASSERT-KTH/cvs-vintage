@@ -1,4 +1,4 @@
-//$Id: ActivityDiagramGraphModel.java,v 1.1 2004/07/17 13:10:43 kataka Exp $
+//$Id: ActivityDiagramGraphModel.java,v 1.2 2004/07/18 12:17:12 mkl Exp $
 //Copyright (c) 1996-2004 The Regents of the University of California. All
 //Rights Reserved. Permission to use, copy, modify, and distribute this
 //software and its documentation without fee, and without a written
@@ -34,6 +34,12 @@ import org.argouml.uml.diagram.state.StateDiagramGraphModel;
  * @author jaap.branderhorst@xs4all.nl
  */
 public class ActivityDiagramGraphModel extends StateDiagramGraphModel {
+
+    public boolean canAddNode(Object node) {
+        if (_nodes.contains(node)) return false;
+        if (ModelFacade.isAPartition(node)) return true;
+        else return super.canAddNode(node);
+    }
 
     /**
      * @see org.tigris.gef.graph.MutableGraphModel#canAddEdge(java.lang.Object)
