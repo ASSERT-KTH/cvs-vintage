@@ -85,6 +85,7 @@
             <fileset dir="${tomcat.dist.dir}/common"/>
         </copy>
         <filter token="SCARAB_CONTEXT" value="${scarab.context}"/>
+        <filter token="DATABASE_NAME" value="${scarab.database.name}"/>
         <copy todir="${build.dir}/conf" filtering="yes">
             <fileset dir="${tomcat.dist.dir}/conf"/>
         </copy>
@@ -228,7 +229,17 @@
                 <include name="torque*.jar"/>
             </fileset>
         </copy>
+        <!-- removing sample schema that comes packaged with torque -->
+        <delete file="${torque.dir.scarab}/schema/project-schema.xml"/>
+        <filter token="DATABASE_NAME" value="${scarab.database.name}"/>
+        <copy file="${src.sql.dir}/${project}-schema.xml" 
+              todir="${torque.dir.scarab}/schema"
+              filtering="true" overwrite="true"/>
+        <copy file="${src.conf.dir}/torque.props" 
+              tofile="${torque.dir.scarab}/build.properties"
+              filtering="true" overwrite="true"/>
     </target>
+ 
 
     <!-- ================================================================== -->
     <!-- Generate SQL from Torque                                           -->
@@ -238,15 +249,13 @@
         <uptodate property="schema.uptodate"
             targetfile="${src.sql.dir}/mysql-${project}.sql">
             <srcfiles dir="${src.sql.dir}" includes="scarab-schema.xml"/>
+            <srcfiles dir="${user.home}" includes="build.properties"/>
+            <srcfiles dir="${basedir}" includes="build.properties"/>
         </uptodate>
     </target>
 
     <target name="sql" depends="prepare-build-dir,schema-check,torque-init" 
             unless="schema.uptodate">
-        <copy file="${src.sql.dir}/${project}-schema.xml" 
-              todir="${torque.dir.scarab}/schema"/>
-        <copy file="${src.conf.dir}/torque.props" 
-              overwrite="true" tofile="${torque.dir.scarab}/build.properties"/>
         <ant antfile="build.xml"
                 dir="${torque.dir.scarab}" target="project-sql" inheritAll="false">
             <property name="torque.home" value="${torque.dir.scarab}"/>
@@ -256,6 +265,38 @@
 
         <move file="${src.sql.dir}/${project}-schema.sql"
             tofile="${src.sql.dir}/mysql-${project}.sql"/>
+    </target>
+
+
+    <!-- ================================================================== -->
+    <!-- Create DB from Torque                                              -->
+    <!-- ================================================================== -->
+    <target name="create-db" depends="sql">
+        <ant antfile="build.xml"
+                dir="${torque.dir.scarab}" target="project-create-db" 
+                inheritAll="false">
+            <property name="torque.home" value="${torque.dir.scarab}"/>
+            <property name="lib.dir" value="${lib.dir}"/>
+            <property name="build.properties" 
+                value="${torque.dir.scarab}/build.properties"/>
+        </ant>
+
+        <sql
+            driver="org.gjt.mm.mysql.Driver"
+            url="jdbc:mysql://localhost/${scarab.database.name}"
+            userid=""
+            password="">
+            <classpath refid="classpath"/>
+            <transaction src="${src.sql.dir}/mysql-scarab.sql"/>
+            <transaction src="${src.sql.dir}/mysql-turbine.sql"/>
+            <transaction src="${src.sql.dir}/mysql-turbine-scheduler.sql"/>
+            <transaction src="${src.sql.dir}/mysql-id-table-schema.sql"/>
+            <transaction src="${src.sql.dir}/mysql-turbine-id-table-init.sql"/>
+            <transaction src="${src.sql.dir}/mysql-scarab-id-table-init.sql"/>
+            <transaction src="${src.sql.dir}/mysql-scarab-default-data.sql"/>
+            <transaction src="${src.sql.dir}/mysql-scarab-sample-data.sql"/>
+            <transaction src="${src.sql.dir}/mysql-scarab-security.sql"/>
+        </sql>
     </target>
 
     <!-- ================================================================== -->
@@ -329,11 +370,6 @@
         <echo message="|        Building OM/Peer classes          |"/>
         <echo message="|                                          |"/>
         <echo message="+------------------------------------------+"/>
-        <copy file="${src.sql.dir}/${project}-schema.xml" 
-              todir="${torque.dir.scarab}/schema"/>
-        <copy file="${src.conf.dir}/torque.props" 
-              overwrite="true" tofile="${torque.dir.scarab}/build.properties"/>
-
         <ant antfile="build.xml" dir="${torque.dir.scarab}" 
                 target="project-om" inheritAll="false">
             <property name="torque.home" value="${torque.dir.scarab}"/>
@@ -481,7 +517,7 @@
             <arg line="clean"/>
         </exec>
         <exec executable="ant" dir="${fulcrum.dir}">
-            <arg line="install-jar"/>
+            <arg line="-Dsecurity.database.name=${scarab.database.name} -Dscheduler.database.name=${scarab.database.name} install-jar"/>
         </exec>
     </target>
 

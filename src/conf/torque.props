@@ -86,10 +86,12 @@ suffix=MapBuilder
 # Turbine system with the generated SQL.
 # -------------------------------------------------------------------
 
-databaseUrl = jdbc:mysql://localhost/turbine
+databaseUrl = jdbc:mysql://localhost/@DATABASE@
 databaseDriver = org.gjt.mm.mysql.Driver
-databaseUser = user
-databasePassword = password
+databaseUser =
+databasePassword =
+createDatabaseUrl = jdbc:mysql://localhost/mysql
+
 
 # Tells JDBC task that javaName attribute for the tables and columns
 # should be made same as SQL name.
