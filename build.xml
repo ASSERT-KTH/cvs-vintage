@@ -513,11 +513,15 @@
   <target name="coyote" depends="prepare,tomcat_core,tomcat_modules"  >
     <echo message="Building Coyote"/>
     <!-- By now we have built the modules coyote needs -->
-    <ant dir="${jakarta-tomcat-connectors}/coyote" />
+    <ant dir="${jakarta-tomcat-connectors}/coyote">
+        <property name="tomcat33.home" value="${basedir}/build/tomcat"/>
+    </ant>
 
     <ant dir="${jakarta-tomcat-connectors}/http11" />
 
-    <ant dir="${jakarta-tomcat-connectors}/jk" />
+    <ant dir="${jakarta-tomcat-connectors}/jk" target="build-jk">
+        <property name="tomcat33.home" value="${basedir}/build/tomcat"/>
+    </ant>
 
     <copy tofile="${tomcat.build}/lib/common/tomcat33-resource.jar"
           file="${jtc.http11.lib}/tomcat33-resource.jar"/>
