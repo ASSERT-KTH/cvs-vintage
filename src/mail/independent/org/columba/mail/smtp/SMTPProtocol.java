@@ -25,9 +25,9 @@ import java.util.Hashtable;
 import java.util.Vector;
 
 import org.columba.core.command.WorkerStatusController;
+import org.columba.core.main.MainInterface;
 import org.columba.mail.coder.Base64Decoder;
 import org.columba.mail.coder.Base64Encoder;
-import org.columba.core.main.MainInterface;
 
 public class SMTPProtocol {
 	public final static int SMTP = 0;
@@ -72,7 +72,7 @@ public class SMTPProtocol {
 
 	private void checkAnswer(String answer, String start)
 		throws SMTPException {
-		if (MainInterface.DEBUG.equals(Boolean.TRUE))
+		if (MainInterface.DEBUG)
 			System.out.println("SERVER:" + answer);
 
 		if (!answer.startsWith(start)) {
@@ -81,7 +81,7 @@ public class SMTPProtocol {
 	}
 
 	private void sendString(String str) throws Exception {
-		if (MainInterface.DEBUG.equals(Boolean.TRUE))
+		if (MainInterface.DEBUG)
 			System.out.println("CLIENT:" + str);
 
 		out.writeBytes(str + "\r\n");

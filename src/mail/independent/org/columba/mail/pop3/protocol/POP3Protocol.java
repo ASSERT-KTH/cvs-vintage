@@ -75,7 +75,7 @@ public class POP3Protocol {
 	}
 
 	public void sendString(String s) throws IOException {
-		if (MainInterface.DEBUG.equals(Boolean.TRUE))
+		if (MainInterface.DEBUG)
 			System.out.println("CLIENT:" + s);
 
 		out.print(s + "\r\n");
@@ -90,7 +90,7 @@ public class POP3Protocol {
 
 		answer = in.readLine();
 
-		if (MainInterface.DEBUG.equals(Boolean.TRUE))
+		if (MainInterface.DEBUG)
 			System.out.println("SERVER:" + answer);
 
 		return (answer.startsWith("+OK"));
@@ -99,7 +99,7 @@ public class POP3Protocol {
 	public void getNextLine() throws IOException {
 		answer = in.readLine();
 
-		if (MainInterface.DEBUG.equals(Boolean.TRUE))
+		if (MainInterface.DEBUG)
 			System.out.println("SERVER:" + answer);
 	}
 
