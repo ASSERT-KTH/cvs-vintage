@@ -9,6 +9,7 @@ package org.jboss.metadata;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.Set;
+import java.util.HashSet;
 
 import org.w3c.dom.Element;
 
@@ -38,7 +39,7 @@ import org.jboss.invocation.InvocationType;
  *
  *   @author <a href="mailto:sebastien.alborini@m4x.org">Sebastien Alborini</a>
  *   @author <a href="mailto:Scott.Stark@jboss.org">Scott Stark</a>.
- *   @version $Revision: 1.18 $
+ *   @version $Revision: 1.19 $
  */
 public class MethodMetaData extends MetaData
 {
@@ -108,8 +109,8 @@ public class MethodMetaData extends MetaData
     * <trans-attribute>Never</trans-attribute>
     */
    private byte transactionType;
-
-   private Set permissions;
+   /** Set<String> of the allowed role names */
+   private Set roles = new HashSet();
    
    // Static --------------------------------------------------------
    
@@ -196,9 +197,22 @@ public class MethodMetaData extends MetaData
       return param;
    }
 
+   /** The method param type names.
+    * @return
+    */ 
    public Iterator getParams()
    {
       return paramList.iterator();
+   }
+   /** The 
+    * 
+    * @return An array of the method parameter type names
+    */ 
+   public String[] getMethodParams()
+   {
+      String[] params = new String[paramList.size()];
+      paramList.toArray(params);
+      return params;
    }
 
    public byte getTransactionType()
@@ -213,12 +227,12 @@ public class MethodMetaData extends MetaData
 
    public Set getRoles()
    {
-      return permissions;
+      return roles;
    }
 
    public void setRoles(Set perm)
    {
-      permissions = perm;
+      roles = perm;
    }
 
    public void setUnchecked()
