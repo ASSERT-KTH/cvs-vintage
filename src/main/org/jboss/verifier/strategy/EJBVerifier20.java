@@ -19,7 +19,7 @@ package org.jboss.verifier.strategy;
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  *
  * This package and its source code is available at www.jboss.org
- * $Id: EJBVerifier20.java,v 1.14 2002/04/11 10:17:42 jwalters Exp $
+ * $Id: EJBVerifier20.java,v 1.15 2002/04/12 03:38:32 jwalters Exp $
  */
 
 
@@ -49,7 +49,7 @@ import org.jboss.metadata.EntityMetaData;
  *
  * @author 	Juha Lindfors   (jplindfo@helsinki.fi)
  * @author  Jay Walters     (jwalters@computer.org)
- * @version $Revision: 1.14 $
+ * @version $Revision: 1.15 $
  * @since  	JDK 1.3
  */
 public class EJBVerifier20 extends AbstractVerifier {
@@ -110,8 +110,6 @@ public class EJBVerifier20 extends AbstractVerifier {
     public void checkEntity(EntityMetaData entity)
     {
         boolean pkVerified     = false;
-        System.out.println("WARNING: EJBVerifier2.0 Entity Bean verification not implemented");
-        if (!pkVerified) return;
         boolean beanVerified   = false; 
         boolean remoteHomeVerified = false;
         boolean remoteVerified = false;
@@ -119,13 +117,16 @@ public class EJBVerifier20 extends AbstractVerifier {
         boolean localVerified = false;
         boolean localOrHomeExists = true;
 
+        remoteHomeVerified   = verifyEntityHome(entity);
+        localHomeVerified   = verifyEntityLocalHome(entity);
+        System.out.println("WARNING: EJBVerifier2.0 Entity Bean verification not complete");
+        if (entity != null) return;
+
         if (entity.isCMP())
           beanVerified   = verifyCMPEntityBean(entity);
         else if (entity.isBMP())
           beanVerified   = verifyBMPEntityBean(entity);
-        remoteHomeVerified   = verifyEntityHome(entity);
         remoteVerified = verifyEntityRemote(entity);
-        localHomeVerified   = verifyEntityLocalHome(entity);
         localVerified = verifyEntityLocal(entity);
         pkVerified     = verifyPrimaryKey(entity);
 
@@ -1090,6 +1091,10 @@ public class EJBVerifier20 extends AbstractVerifier {
              *
              * Spec 12.2.9
              */
+
+            String beanClass   = entity.getEjbClass();
+            Class  bean        = classloader.loadClass(beanClass);
+
             methods = Arrays.asList(home.getMethods()).iterator();
 
             while (methods.hasNext()) {
@@ -1100,164 +1105,125 @@ public class EJBVerifier20 extends AbstractVerifier {
                 if (method.getDeclaringClass().getName().equals(EJB_HOME_INTERFACE))
                     continue;
 
-				// No way to figure out if it's a home method at the moment...
-                //if (! (isCreateMethod(method) || isFinderMethod(method) ||
-                //       isHomeMethod(method)) ) {
-                //    fireSpecViolationEvent(entity, method, new Section("12.2.9.c"));
-                //    status = false;
-                //}
-            }
+                if (isCreateMethod(method)) {
+                    /*
+                     * Each create(...) method in the entity bean's home interface MUST
+                     * have a matching ejbCreate(...) method in the entity bean's class.
+                     *
+                     * Each create(...) method in the entity bean's home interface MUST
+                     * have the same number and types of arguments to its matching
+                     * ejbCreate(...) method.
+                     *
+                     * The return type for a create(...) method MUST be the entity
+                     * bean's remote interface type.
+                     *
+                     * All the exceptions defined in the throws clause of the matching
+                     * ejbCreate(...) and ejbPostCreate(...) methods of the enterprise
+                     * bean class MUST be included in the throws clause of a matching
+                     * create(...) method.
+                     *
+                     * The throws clause of a create(...) method MUST include the
+                     * javax.ejb.CreateException.
+                     *
+                     * Spec 12.2.9
+                     */
 
-            /*
-             * Each create(...) method in the entity bean's home interface MUST
-             * have a matching ejbCreate(...) method in the entity bean's class.
-             *
-             * Each create(...) method in the entity bean's home interface MUST
-             * have the same number and types of arguments to its matching
-             * ejbCreate(...) method.
-             *
-             * The return type for a create(...) method MUST be the entity
-             * bean's remote interface type.
-             *
-             * All the exceptions defined in the throws clause of the matching
-             * ejbCreate(...) and ejbPostCreate(...) methods of the enterprise
-             * bean class MUST be included in the throws clause of a matching
-             * create(...) method.
-             *
-             * The throws clause of a create(...) method MUST include the
-             * javax.ejb.CreateException.
-             *
-             * Spec 12.2.9
-             */
-            Iterator createMethods = getCreateMethods(home);
-
-            try {
-                String beanClass   = entity.getEjbClass();
-                Class  bean        = classloader.loadClass(beanClass);
-
-                while (createMethods.hasNext()) {
-
-                    Method create = (Method)createMethods.next();
-
-                    if (!hasMatchingEJBCreate(bean, create)) {
-                        fireSpecViolationEvent(entity, create, new Section("12.2.9.d"));
+                    if (!hasMatchingEJBCreate(bean, method)) {
+                        fireSpecViolationEvent(entity, method, new Section("12.2.9.d"));
                         status = false;
                     }
 
-                    if (!hasRemoteReturnType(entity, create)) {
-                        fireSpecViolationEvent(entity, create, new Section("12.2.9.e"));
+                    if (!hasRemoteReturnType(entity, method)) {
+                        fireSpecViolationEvent(entity, method, new Section("12.2.9.e"));
                         status = false;
                     }
 
-                    if (hasMatchingEJBCreate(bean, create)     &&
-                        hasMatchingEJBPostCreate(bean, create)) {
+                    if (hasMatchingEJBCreate(bean, method)     &&
+                        hasMatchingEJBPostCreate(bean, method)) {
 
-                        Method ejbCreate     = getMatchingEJBCreate(bean, create);
-                        Method ejbPostCreate = getMatchingEJBPostCreate(bean, create);
+                        Method ejbCreate     = getMatchingEJBCreate(bean, method);
+                        Method ejbPostCreate = getMatchingEJBPostCreate(bean, method);
 
-                        if ( !(hasMatchingExceptions(ejbCreate, create)     &&
-                               hasMatchingExceptions(ejbPostCreate, create)) ) {
-                            fireSpecViolationEvent(entity, create, new Section("12.2.9.f"));
+                        if ( !(hasMatchingExceptions(ejbCreate, method)     &&
+                               hasMatchingExceptions(ejbPostCreate, method)) ) {
+                            fireSpecViolationEvent(entity, method, new Section("12.2.9.f"));
                         }
                     }
 
-                    if (!throwsCreateException(create)) {
-                        fireSpecViolationEvent(entity, create, new Section("12.2.9.g"));
+                    if (!throwsCreateException(method)) {
+                        fireSpecViolationEvent(entity, method, new Section("12.2.9.g"));
                         status = false;
                     }
-                }
-            }
-            catch (ClassNotFoundException ignored) {}
+				} else if (isFinderMethod(method)) {
+                    /*
+                     * Each finder method MUST match one of the ejbFind<METHOD> methods
+                     * defined in the entity bean class.
+                     *
+                     * The matching ejbFind<METHOD> method MUST have the same number and
+                     * types of arguments.
+                     *
+                     * The return type for a find<METHOD> method MUST be the entity
+                     * bean's remote interface type (single-object finder) or a
+                     * collection thereof (for a multi-object finder).
+                     *
+                     * All the exceptions defined in the throws clause of an ejbFind
+                     * method of the entity bean class MUST be included in the throws
+                     * clause of the matching find method of the home interface.
+                     *
+                     * The throws clause of a finder method MUST include the
+                     * javax.ejb.FinderException.
+                     *
+                     * Spec 12.2.9
+                     */
 
-
-            /*
-             * Each finder method MUST match one of the ejbFind<METHOD> methods
-             * defined in the entity bean class.
-             *
-             * The matching ejbFind<METHOD> method MUST have the same number and
-             * types of arguments.
-             *
-             * The return type for a find<METHOD> method MUST be the entity
-             * bean's remote interface type (single-object finder) or a
-             * collection thereof (for a multi-object finder).
-             *
-             * All the exceptions defined in the throws clause of an ejbFind
-             * method of the entity bean class MUST be included in the throws
-             * clause of the matching find method of the home interface.
-             *
-             * The throws clause of a finder method MUST include the
-             * javax.ejb.FinderException.
-             *
-             * Spec 12.2.9
-             */
-            Iterator finderMethods = getFinderMethods(home);
-
-            try {
-                String beanClass   = entity.getEjbClass();
-                Class  bean        = classloader.loadClass(beanClass);
-
-                while (finderMethods.hasNext()) {
-
-                    Method finder = (Method)finderMethods.next();
-
-                    if ((entity.isBMP()) && (!hasMatchingEJBFind(bean, finder))) {
-                        fireSpecViolationEvent(entity, finder, new Section("12.2.9.h"));
+                    if ((entity.isBMP()) && (!hasMatchingEJBFind(bean, method))) {
+                        fireSpecViolationEvent(entity, method, new Section("12.2.9.h"));
                         status = false;
                     }
 
-                    if (!(hasRemoteReturnType(entity, finder) || isMultiObjectFinder(finder))) {
-                        fireSpecViolationEvent(entity, finder, new Section("12.2.9.j"));
+                    if (entity.isBMP() &&
+                        !(hasRemoteReturnType(entity, method) || isMultiObjectFinder(method))) {
+                        fireSpecViolationEvent(entity, method, new Section("12.2.9.j"));
                         status = false;
                     }
 
-                    if ((entity.isBMP()) && (hasMatchingEJBFind(bean, finder))) {
-                        Method ejbFind  = getMatchingEJBFind(bean, finder);
-                        if ( !(hasMatchingExceptions(ejbFind, finder))) {
-                            fireSpecViolationEvent(entity, finder, new Section("12.2.9.k"));
+                    if ((entity.isBMP()) && (hasMatchingEJBFind(bean, method))) {
+                        Method ejbFind  = getMatchingEJBFind(bean, method);
+                        if ( !(hasMatchingExceptions(ejbFind, method))) {
+                            fireSpecViolationEvent(entity, method, new Section("12.2.9.k"));
                             status = false;
                         }
                     }
 
-                    if (!throwsFinderException(finder)) {
-                        fireSpecViolationEvent(entity, finder, new Section("12.2.9.l"));
+                    if (!throwsFinderException(method)) {
+                        fireSpecViolationEvent(entity, method, new Section("12.2.9.l"));
                         status = false;
                     }
+				} else {
+                    /*
+                     * Each home method MUST match a method defined in the entity bean
+                     * class.
+                     *
+                     * The matching ejbHome<METHOD> method MUST have the same number and
+                     * types of arguments, and a matching return type.
+                     *
+                     * Spec 12.2.9
+                     */
+
+                    if (!hasMatchingEJBHome(bean, method)) {
+                        fireSpecViolationEvent(entity, method, new Section("12.2.9.m"));
+                        status = false;
+                    }
+
+                    /**
+					 * Not sure if this should be here or not.
+					 if (!hasRemoteReturnType(entity, method)) {
+                        fireSpecViolationEvent(entity, method, new Section("12.2.9.n"));
+                        status = false;
+                    }
+					*/
                 }
             }
-            catch (ClassNotFoundException ignored) {}
-
-            /*
-             * Each home method MUST match a method defined in the entity bean
-             * class.
-             *
-             * The matching ejbHome<METHOD> method MUST have the same number and
-             * types of arguments, and a matching return type.
-             *
-             * Spec 12.2.9
-             */
-            Iterator homeMethods = getHomeMethods(home);
-
-            try {
-                String beanClass   = entity.getEjbClass();
-                Class  bean        = classloader.loadClass(beanClass);
-
-                while (homeMethods.hasNext()) {
-
-                    Method homeMethod = (Method)homeMethods.next();
-
-                    if (!hasMatchingEJBHome(bean, homeMethod)) {
-                        fireSpecViolationEvent(entity, homeMethod, new Section("12.2.9.m"));
-                        status = false;
-                    }
-
-                    if (!hasRemoteReturnType(entity, homeMethod)) {
-                        fireSpecViolationEvent(entity, homeMethod, new Section("12.2.9.n"));
-                        status = false;
-                    }
-                }
-            }
-            catch (ClassNotFoundException ignored) {}
-
         }
         catch (ClassNotFoundException e) {
 
@@ -1297,6 +1263,8 @@ public class EJBVerifier20 extends AbstractVerifier {
 
         try {
             Class home = classloader.loadClass(name);
+            String beanClass   = entity.getEjbClass();
+            Class  bean        = classloader.loadClass(beanClass);
 
             /*
              * Entity bean's local home interface MUST extend the
@@ -1348,136 +1316,131 @@ public class EJBVerifier20 extends AbstractVerifier {
                 if (method.getDeclaringClass().getName().equals(EJB_LOCAL_HOME_INTERFACE))
                     continue;
 
-				// No way to figure out if it's a home method right now
-                //if (! (isCreateMethod(method) || isFinderMethod(method) ||
-                //       isHomeMethod(method)) ) {
-                //    fireSpecViolationEvent(entity, method, new Section("12.2.11.d"));
-                //    status = false;
-                //}
-            }
+				if (isCreateMethod(method)) {
+                    /*
+                     * Each create(...) method in the entity bean's local home interface
+                     * MUST have a matching ejbCreate(...) method in the entity bean's class.
+                     *
+                     * Each create(...) method in the entity bean's local home interface
+                     * MUST have the same number and types of arguments to its matching
+                     * ejbCreate(...) method.
+                     *
+                     * The return type for a create(...) method MUST be the entity
+                     * bean's local interface type.
+                     *
+                     * All the exceptions defined in the throws clause of the matching
+                     * ejbCreate(...) and ejbPostCreate(...) methods of the enterprise
+                     * bean class MUST be included in the throws clause of a matching
+                     * create(...) method.
+                     *
+                     * The throws clause of a create(...) method MUST include the
+                     * javax.ejb.CreateException.
+                     *
+                     * Spec 12.2.11
+                     */
 
-            /*
-             * Each create(...) method in the entity bean's local home interface
-             * MUST have a matching ejbCreate(...) method in the entity bean's class.
-             *
-             * Each create(...) method in the entity bean's local home interface
-             * MUST have the same number and types of arguments to its matching
-             * ejbCreate(...) method.
-             *
-             * The return type for a create(...) method MUST be the entity
-             * bean's local interface type.
-             *
-             * All the exceptions defined in the throws clause of the matching
-             * ejbCreate(...) and ejbPostCreate(...) methods of the enterprise
-             * bean class MUST be included in the throws clause of a matching
-             * create(...) method.
-             *
-             * The throws clause of a create(...) method MUST include the
-             * javax.ejb.CreateException.
-             *
-             * Spec 12.2.11
-             */
-            Iterator createMethods = getCreateMethods(home);
-
-            try {
-                String beanClass   = entity.getEjbClass();
-                Class  bean        = classloader.loadClass(beanClass);
-
-                while (createMethods.hasNext()) {
-
-                    Method create = (Method)createMethods.next();
-
-                    if (!hasMatchingEJBCreate(bean, create)) {
-                        fireSpecViolationEvent(entity, create, new Section("12.2.11.e"));
+                    if (!hasMatchingEJBCreate(bean, method)) {
+                        fireSpecViolationEvent(entity, method, new Section("12.2.11.e"));
                         status = false;
                     }
 
-                    if (!hasLocalReturnType(entity, create)) {
-                        fireSpecViolationEvent(entity, create, new Section("12.2.11.f"));
+                    if (!hasLocalReturnType(entity, method)) {
+                        fireSpecViolationEvent(entity, method, new Section("12.2.11.f"));
                         status = false;
                     }
 
-                    if (hasMatchingEJBCreate(bean, create)     &&
-                        hasMatchingEJBPostCreate(bean, create)) {
+                    if (hasMatchingEJBCreate(bean, method)     &&
+                        hasMatchingEJBPostCreate(bean, method)) {
 
-                        Method ejbCreate     = getMatchingEJBCreate(bean, create);
-                        Method ejbPostCreate = getMatchingEJBPostCreate(bean, create);
+                        Method ejbCreate     = getMatchingEJBCreate(bean, method);
+                        Method ejbPostCreate = getMatchingEJBPostCreate(bean, method);
 
-                        if ( !(hasMatchingExceptions(ejbCreate, create)     &&
-                               hasMatchingExceptions(ejbPostCreate, create)) ) {
+                        if ( !(hasMatchingExceptions(ejbCreate, method)     &&
+                               hasMatchingExceptions(ejbPostCreate, method)) ) {
 
-                            fireSpecViolationEvent(entity, create, new Section("12.2.11.g"));
+                            fireSpecViolationEvent(entity, method, new Section("12.2.11.g"));
                         }
                     }
 
-                    if (!throwsCreateException(create)) {
-                        fireSpecViolationEvent(entity, create, new Section("12.2.11.h"));
+                    if (!throwsCreateException(method)) {
+                        fireSpecViolationEvent(entity, method, new Section("12.2.11.h"));
                         status = false;
                     }
-                }
-            }
-            catch (ClassNotFoundException ignored) {}
+				} else if (isFinderMethod(method)) {
+                    /*
+                     * Each finder method MUST match one of the ejbFind<METHOD> methods
+                     * defined in the entity bean class.
+                     *
+                     * The matching ejbFind<METHOD> method MUST have the same number and
+                     * types of arguments.
+                     *
+                     * The return type for a find<METHOD> method MUST be the entity
+                     * bean's local interface type (single-object finder) or a
+                     * collection thereof (for a multi-object finder).
+                     *
+                     * All the exceptions defined in the throws clause of an ejbFind
+                     * method of the entity bean class MUST be included in the throws
+                     * clause of the matching find method of the home interface.
+                     *
+                     * The throws clause of a finder method MUST include the
+                     * javax.ejb.FinderException.
+                     *
+                     * Spec 12.2.11
+                     */
 
-
-            /*
-             * Each finder method MUST match one of the ejbFind<METHOD> methods
-             * defined in the entity bean class.
-             *
-             * The matching ejbFind<METHOD> method MUST have the same number and
-             * types of arguments.
-             *
-             * The return type for a find<METHOD> method MUST be the entity
-             * bean's local interface type (single-object finder) or a
-             * collection thereof (for a multi-object finder).
-             *
-             * All the exceptions defined in the throws clause of an ejbFind
-             * method of the entity bean class MUST be included in the throws
-             * clause of the matching find method of the home interface.
-             *
-             * The throws clause of a finder method MUST include the
-             * javax.ejb.FinderException.
-             *
-             * Spec 12.2.11
-             */
-            Iterator finderMethods = getFinderMethods(home);
-
-            try {
-                String beanClass   = entity.getEjbClass();
-                Class  bean        = classloader.loadClass(beanClass);
-
-                while (finderMethods.hasNext()) {
-
-                    Method finder = (Method)finderMethods.next();
-
-                    if ((entity.isBMP()) && (!hasMatchingEJBFind(bean, finder))) {
-                        fireSpecViolationEvent(entity, finder, new Section("12.2.11.i"));
+                    if (!(hasLocalReturnType(entity, method) ||
+                        isMultiObjectFinder(method))) {
+                        fireSpecViolationEvent(entity, method, new Section("12.2.11.j"));
                         status = false;
                     }
 
-                    if (!(hasLocalReturnType(entity, finder) || isMultiObjectFinder(finder))) {
-                        fireSpecViolationEvent(entity, finder, new Section("12.2.11.j"));
+                    if (!throwsFinderException(method)) {
+                        fireSpecViolationEvent(entity, method, new Section("12.2.11.m"));
                         status = false;
                     }
 
-                    if ((entity.isBMP()) && (hasMatchingEJBFind(bean, finder))) {
+                    if (entity.isCMP() && hasMatchingEJBFind(bean, method)) {
+                        fireSpecViolationEvent(entity, method, new Section("10.6.2.h"));
+                        status = false;
+                    } else if (entity.isBMP()) {
+                        if (!hasMatchingEJBFind(bean, method)) {
+                            fireSpecViolationEvent(entity, method, new Section("12.2.11.i"));
+                            status = false;
+                        } else {
+                            Method ejbFind  = getMatchingEJBFind(bean, method);
 
-                        Method ejbFind  = getMatchingEJBFind(bean, finder);
-
-                        if ( !(hasMatchingExceptions(ejbFind, finder)))
-                            fireSpecViolationEvent(entity, finder, new Section("12.2.11.l"));
-
+                            if ( !(hasMatchingExceptions(ejbFind, method)))
+                                fireSpecViolationEvent(entity, method, new Section("12.2.11.l"));
+                        }
                     }
+				} else {
+                    /*
+                     * Each home method MUST match a method defined in the entity bean
+                     * class.
+                     *
+                     * The matching ejbHome<METHOD> method MUST have the same number and
+                     * types of arguments, and a matching return type.
+                     *
+                     * Spec 12.2.9
+                     */
 
-                    if (!throwsFinderException(finder)) {
-                        fireSpecViolationEvent(entity, finder, new Section("12.2.11.m"));
+                    if (!hasMatchingEJBHome(bean, method)) {
+                        fireSpecViolationEvent(entity, method, new Section("12.2.11.m"));
                         status = false;
                     }
-                }
-            }
-            catch (ClassNotFoundException ignored) {}
 
-
-        }
+                    /**
+                     * Only check for remote return type if the bean actually has a
+                     * remote interface.
+                     */
+                    if (entity.getRemote() != null &&
+                        hasRemoteReturnType(entity, method)) {
+                        fireSpecViolationEvent(entity, method, new Section("12.2.11.n"));
+                        status = false;
+                    }
+				}
+			}
+		}
         catch (ClassNotFoundException e) {
 
             /*
