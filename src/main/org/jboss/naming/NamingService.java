@@ -22,14 +22,13 @@ import javax.naming.StringRefAddr;
 
 import org.jnp.server.Main;
 
-import org.jboss.logging.Log;
 import org.jboss.system.ServiceMBeanSupport;
 
 /** A JBoss service that starts the jnp JNDI server.
  *      
  *   @author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
  *   @author <a href="mailto:Scott_Stark@displayscape.com">Scott Stark</a>.
- *   @version $Revision: 1.16 $
+ *   @version $Revision: 1.17 $
  *
  * Revisions:
  * 20010622 scott.stark: Report IntialContext env for problem tracing
@@ -48,7 +47,7 @@ public class NamingService
    // Constructors --------------------------------------------------
    public NamingService()
    {
-      String categoryName = category.getName();
+      String categoryName = log.getName();
       naming = new Main(categoryName);
    }
    
@@ -138,7 +137,7 @@ public class NamingService
       {
          String key = (String) keys.nextElement();
          String value = props.getProperty(key);
-         category.debug("System.setProperty, key="+key+", value="+value);
+         log.debug("System.setProperty, key="+key+", value="+value);
          System.setProperty(key, value);
       }
    }
@@ -154,32 +153,32 @@ public class NamingService
       InitialContext iniCtx = new InitialContext();
       Hashtable env = iniCtx.getEnvironment();
       Enumeration keys = env.keys();
-      category.info("InitialContext Environment:");
+      log.info("InitialContext Environment:");
       String providerURL = null;
       while( keys.hasMoreElements() )
       {
          String key = (String) keys.nextElement();
          String value = (String) env.get(key);
-         category.info("key="+key+", value="+value);
+         log.info("key="+key+", value="+value);
          if( key.equals(Context.PROVIDER_URL) )
             providerURL = value;
       }
       // Warn if there was a Context.PROVIDER_URL
       if( providerURL != null )
-         category.warn("Saw Context.PROVIDER_URL in server jndi.properties, url="+providerURL);
+         log.warn("Saw Context.PROVIDER_URL in server jndi.properties, url="+providerURL);
 
       // Create "java:comp/env"
       RefAddr refAddr = new StringRefAddr("nns", "ENC");
       Reference envRef = new Reference("javax.naming.Context", refAddr, ENCFactory.class.getName(), null);
       Context ctx = (Context)iniCtx.lookup("java:");
       ctx.rebind("comp", envRef);
-      category.info("Naming started on port "+naming.getPort());
+      log.info("Naming started on port "+naming.getPort());
    }
 
    public void stopService()
    {
       naming.stop();
-      category.info("JNP server stopped");
+      log.info("JNP server stopped");
    }
 
    // Protected -----------------------------------------------------

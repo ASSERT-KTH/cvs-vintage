@@ -38,7 +38,6 @@ import org.jboss.ejb.InstanceCache;
 import org.jboss.ejb.InstancePool;
 import org.jboss.ejb.MethodInvocation;
 import org.jboss.metadata.ConfigurationMetaData;
-import org.jboss.logging.log4j.JBossCategory;
 import org.jboss.util.Sync;
 
 /**
@@ -57,7 +56,7 @@ import org.jboss.util.Sync;
  * @author <a href="mailto:marc.fleury@jboss.org">Marc Fleury</a>
  * @author <a href="mailto:Scott.Stark@jboss.org">Scott Stark</a>
  * @author <a href="mailto:bill@burkecentral.com">Bill Burke</a>
- * @version $Revision: 1.52 $
+ * @version $Revision: 1.53 $
  *
  * <p><b>Revisions:</b><br>
  * <p><b>2001/06/28: marcf</b>
@@ -106,8 +105,6 @@ public class EntitySynchronizationInterceptor
    // Constants -----------------------------------------------------
  
    // Attributes ----------------------------------------------------
-   /** Use a JBoss custom log4j category for trace level logging */
-   static JBossCategory log = (JBossCategory) JBossCategory.getInstance(EntitySynchronizationInterceptor.class);
  
    /**
     *  The current commit option.

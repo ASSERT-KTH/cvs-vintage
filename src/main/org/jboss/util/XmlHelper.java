@@ -11,13 +11,12 @@ import java.net.*;
 
 import org.w3c.dom.*;
 
-import org.jboss.logging.Log;
 
 /**
  *   A utility class to cover up the rough bits of xml parsing
  *      
  *   @author <a href="mailto:chris@kimptoc.net">Chris Kimpton</a>
- *   @version $Revision: 1.3 $
+ *   @version $Revision: 1.4 $
  */
 public class XmlHelper
 {

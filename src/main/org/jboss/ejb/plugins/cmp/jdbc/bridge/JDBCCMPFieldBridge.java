@@ -25,7 +25,7 @@ import org.jboss.ejb.plugins.cmp.jdbc.JDBCStoreManager;
 import org.jboss.ejb.plugins.cmp.jdbc.JDBCType;
 import org.jboss.ejb.plugins.cmp.jdbc.JDBCUtil;
 
-import org.jboss.logging.Log;
+import org.jboss.logging.Logger;
 
 /**
  * JDBCCMPFieldBridge represents one CMP field. This implementations of 
@@ -40,7 +40,7 @@ import org.jboss.logging.Log;
  *      One for each entity bean cmp field.       
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
- * @version $Revision: 1.5 $
+ * @version $Revision: 1.6 $
  */                            
 public interface JDBCCMPFieldBridge extends CMPFieldBridge {
    /**

@@ -43,7 +43,6 @@ import javax.management.ReflectionException;
 
 import javax.naming.InitialContext;
 
-import org.jboss.logging.Log;
 import org.jboss.system.ServiceMBeanSupport;
 
 import org.jboss.jmx.interfaces.RMIConnector;

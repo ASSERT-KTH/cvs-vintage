@@ -29,7 +29,6 @@ import javax.management.ObjectName;
 
 import javax.transaction.TransactionManager;
 
-import org.jboss.logging.Log;
 import org.jboss.system.ServiceMBeanSupport;
 
 import org.jboss.security.EJBSecurityManager;

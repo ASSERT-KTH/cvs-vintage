@@ -35,7 +35,6 @@ import javax.transaction.TransactionManager;
 import javax.sql.DataSource;
 
 
-import org.jboss.logging.Log;
 import org.jboss.system.ServiceMBeanSupport;
 
 import org.jboss.security.EJBSecurityManager;

@@ -23,7 +23,7 @@ import java.net.URL;
 import java.util.HashMap;
 import java.util.Properties;
 
-import org.jboss.logging.log4j.JBossCategory;
+import org.jboss.logging.Logger;
 
 /**
  *   A mini webserver that should be embedded in another application. It can server any file that is available from
@@ -38,7 +38,7 @@ import org.jboss.logging.log4j.JBossCategory;
  *
  *   @author <a href="mailto:marc@jboss.org">Marc Fleury</a>
  *   @author <a href="mailto:Scott.Stark@org.jboss">Scott Stark</a>.
- *   @version $Revision: 1.12 $
+ *   @version $Revision: 1.13 $
  *
  *   Revisions:
  *   
@@ -54,7 +54,7 @@ public class WebServer
    // Constants -----------------------------------------------------
 
    // Attributes ----------------------------------------------------
-   private static JBossCategory category = (JBossCategory)JBossCategory.getInstance(WebServer.class);
+   private static Logger log = Logger.create(WebServer.class);
    /** The port the web server listens on */
    private int port = 8083;
 
@@ -112,7 +112,7 @@ public class WebServer
         catch(UnknownHostException e)
         {
             String msg = "Invalid host address specified: " + host;
-            category.error(msg, e);
+            log.error(msg, e);
         }
     }
 
@@ -158,7 +158,7 @@ public class WebServer
         try
         {
             server = new ServerSocket(port, backlog, bindAddress);
-            category.debug("Started server: "+server);
+            log.debug("Started server: "+server);
             listen();
         }
         catch (IOException e)
@@ -213,7 +213,7 @@ public class WebServer
                 e.printStackTrace();
             }
         }
-        category.trace("Added ClassLoader: "+cl+" URL: "+loaderURL);
+        log.trace("Added ClassLoader: "+cl+" URL: "+loaderURL);
         return loaderURL;
     }
 
@@ -247,7 +247,7 @@ public class WebServer
         {
             // If the server is not null meaning we were not stopped report the err
             if( server != null )
-               category.error("Failed to accept connection", e);
+               log.error("Failed to accept connection", e);
             return;
         }
 
@@ -267,8 +267,8 @@ public class WebServer
                 int separator = rawPath.indexOf('/');
                 String filePath = rawPath.substring(separator+1);
                 String loaderKey = rawPath.substring(0, separator+1);
-                category.trace("loaderKey = "+loaderKey);
-                category.trace("filePath = "+filePath);
+                log.trace("loaderKey = "+loaderKey);
+                log.trace("filePath = "+filePath);
                 ClassLoader loader = (ClassLoader) loaderMap.get(loaderKey);
                 /* If we did not find a class loader check to see if the raw path
                  begins with className + '@' + cl.hashCode() + '/' by looking for
@@ -278,19 +278,19 @@ public class WebServer
                 if( loader == null && rawPath.indexOf('@') < 0 )
                 {
                    filePath = rawPath;
-                   category.trace("No loader, reset filePath = "+filePath);
+                   log.trace("No loader, reset filePath = "+filePath);
                    loader = Thread.currentThread().getContextClassLoader();
                 }
-                category.trace("loader = "+loader);
+                log.trace("loader = "+loader);
                 byte[] bytes;
                 if( filePath.endsWith(".class") )
                 {
                     // A request for a class file
                     String className = filePath.substring(0, filePath.length()-6).replace('/','.');
-                    category.trace("loading className = "+className);
+                    log.trace("loading className = "+className);
                     Class clazz = loader.loadClass(className);
                     URL clazzUrl = clazz.getProtectionDomain().getCodeSource().getLocation();
-                    category.trace("clazzUrl = "+clazzUrl);
+                    log.trace("clazzUrl = "+clazzUrl);
                     if (clazzUrl.getFile().endsWith(".jar"))
                        clazzUrl = new URL("jar:"+clazzUrl+"!/"+filePath);
                     else
@@ -304,7 +304,7 @@ public class WebServer
                 else // Resource
                 {
                     // Try getting resource
-                    category.trace("loading resource = "+filePath);
+                    log.trace("loading resource = "+filePath);
                     URL resourceUrl = loader.getResource(filePath);             
                     if (resourceUrl == null)
                         throw new FileNotFoundException("Resource not found:"+filePath);
@@ -348,7 +348,7 @@ public class WebServer
         {
             // eat exception (could log error to log file, but
             // write out to stdout for now).
-            category.debug("error writing response: " + ex.getMessage());
+            log.debug("error writing response: " + ex.getMessage());
             ex.printStackTrace();
         }
         finally 
@@ -388,7 +388,7 @@ public class WebServer
     protected String getPath(BufferedReader in) throws IOException
     {
         String line = in.readLine();
-        category.trace("raw request="+line);
+        log.trace("raw request="+line);
         // Find the request path by parsing the 'REQUEST_TYPE filePath HTTP_VERSION' string
         int start = line.indexOf(' ')+1;
         int end = line.indexOf(' ', start+1);
@@ -402,7 +402,7 @@ public class WebServer
     protected byte[] getBytes(URL url) throws IOException
     {
         InputStream in = new BufferedInputStream(url.openStream());
-        category.debug("Retrieving "+url.toString());
+        log.debug("Retrieving "+url.toString());
         ByteArrayOutputStream out = new ByteArrayOutputStream();
         byte[] tmp = new byte[1024];
         int bytes;

@@ -26,7 +26,7 @@ import org.jboss.ejb.EntityEnterpriseContext;
 
 import org.jboss.ejb.plugins.cmp.jdbc.JDBCCommandFactory;
 
-import org.jboss.logging.Log;
+import org.jboss.logging.Logger;
 import org.jboss.util.FinderResults;
 
 /**
@@ -61,7 +61,7 @@ import org.jboss.util.FinderResults;
  * @author <a href="mailto:shevlandj@kpi.com.au">Joe Shevland</a>
  * @author <a href="mailto:justin@j-m-f.demon.co.uk">Justin Forder</a>
  * @see org.jboss.ejb.EntityPersistenceStore
- * @version $Revision: 1.5 $
+ * @version $Revision: 1.6 $
  */                            
 public abstract class CMPStoreManager 
    implements EntityPersistenceStore2
@@ -69,7 +69,7 @@ public abstract class CMPStoreManager
    // Attributes ----------------------------------------------------
 
    protected EntityContainer container;
-   protected Log log = Log.createLog("CMP");
+   protected Logger log = Logger.create("CMP");
 
    protected CommandFactory commandFactory;
 
@@ -100,7 +100,7 @@ public abstract class CMPStoreManager
       this.container = (EntityContainer)container;
    }
    
-   public Log getLog() {
+   public Logger getLog() {
       return log;
    }
 

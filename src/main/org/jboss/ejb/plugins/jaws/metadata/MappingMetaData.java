@@ -10,11 +10,8 @@ import java.sql.Types;
 
 import org.w3c.dom.Element;
 
-// TODO this needs to be replaced with the log4j logging
-import org.jboss.logging.Logger;
-
 import org.jboss.ejb.DeploymentException;
-
+import org.jboss.logging.Logger;
 import org.jboss.metadata.MetaData;
 import org.jboss.metadata.XmlLoadable;
 
@@ -23,13 +20,13 @@ import org.jboss.metadata.XmlLoadable;
  *
  *  @see <related>
  *  @author <a href="sebastien.alborini@m4x.org">Sebastien Alborini</a>
- *  @version $Revision: 1.4 $
+ *  @version $Revision: 1.5 $
  */
 public class MappingMetaData extends MetaData implements XmlLoadable {
     // Constants -----------------------------------------------------
 
     // Attributes ----------------------------------------------------
-
+    protected static Logger log = Logger.create(MappingMetaData.class);
     private String javaType;
     
     private int jdbcType;
@@ -49,7 +46,7 @@ public class MappingMetaData extends MetaData implements XmlLoadable {
             return constant.intValue();
         
         } catch (Exception e) {
-            Logger.warning("Unrecognized jdbc-type: " + name + ", using Types.OTHER");
+            log.warn("Unrecognized jdbc-type: " + name + ", using Types.OTHER", e);
             return Types.OTHER;
         }
     }

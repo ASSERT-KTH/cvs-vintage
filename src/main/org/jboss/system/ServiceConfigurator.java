@@ -32,7 +32,7 @@ import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 import org.w3c.dom.Document;
 
-import org.jboss.logging.Log;
+import org.jboss.logging.Logger;
 import org.jboss.util.DOMWriter;
 
 /**
@@ -40,7 +40,7 @@ import org.jboss.util.DOMWriter;
  * 
  * @author <a href="mailto:marc@jboss.org">Marc Fleury</a>
  * @author <a href="mailto:hiram@jboss.org">Hiram Chirino</a>
- * @version $Revision: 1.3 $
+ * @version $Revision: 1.4 $
  *
  * <p><b>20010830 marc fleury:</b>
  * <ul>
@@ -71,7 +71,7 @@ public class ServiceConfigurator
    private MBeanServer server;
 
    /** The instance logger. */
-   private Log log = Log.createLog("Configurator");
+   private static Logger log = Logger.create("Configurator");
 	
    // Constructors --------------------------------------------------
 	

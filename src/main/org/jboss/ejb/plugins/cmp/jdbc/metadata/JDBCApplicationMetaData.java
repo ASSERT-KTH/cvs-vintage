@@ -16,8 +16,6 @@ import javax.naming.InitialContext;
 import javax.naming.NamingException;
 import javax.sql.DataSource;
 import org.jboss.ejb.DeploymentException;
-
-// TODO this needs to be replaced with the log4j logging
 import org.jboss.logging.Logger;
 
 import org.jboss.metadata.ApplicationMetaData;
@@ -33,11 +31,12 @@ import org.w3c.dom.Element;
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
  * @author <a href="sebastien.alborini@m4x.org">Sebastien Alborini</a>
- * @version $Revision: 1.10 $
+ * @version $Revision: 1.11 $
  */
-public final class JDBCApplicationMetaData {
+public final class JDBCApplicationMetaData
+{
    public final static String JDBC_PM = "org.jboss.ejb.plugins.cmp.jdbc.JDBCStoreManager";
-
+   static Logger log = Logger.create(JDBCApplicationMetaData.class);
    /**
     * The class loader for this application.  The class loader is used to load all classes
     * used by this application.
@@ -189,7 +188,7 @@ public final class JDBCApplicationMetaData {
                entities.put(entityMetaData.getName(), entityMetaData);
                entitiesByAbstractSchemaName.put(entityMetaData.getAbstractSchemaName(), entityMetaData);
             } else {
-               Logger.warning("Warning: data found in jbosscmp-jdbc.xml for entity " + ejbName + " but bean is not a jbosscmp-jdbc-managed cmp entity in ejb-jar.xml");
+               log.warn("Warning: data found in jbosscmp-jdbc.xml for entity " + ejbName + " but bean is not a jbosscmp-jdbc-managed cmp entity in ejb-jar.xml");
             }
          }
       }
@@ -236,7 +235,7 @@ public final class JDBCApplicationMetaData {
                Map rightEntityRoles = (Map)entityRoles.get(right.getEntity().getName());
                rightEntityRoles.put(right.getRelationshipRoleName(), right);
             } else {
-               Logger.warning("Warning: data found in jbosscmp-jdbc.xml for relation " + relationName + " but relation is not a jbosscmp-jdbc-managed relation in ejb-jar.xml");
+               log.warn("Warning: data found in jbosscmp-jdbc.xml for relation " + relationName + " but relation is not a jbosscmp-jdbc-managed relation in ejb-jar.xml");
             }
          }
       }

@@ -24,7 +24,7 @@ import org.w3c.dom.Document;
 *
 * @author Andreas Schaefer (andreas.schaefer@madplanet.com)
 * @created June 22, 2001
-* @version $Revision: 1.5 $
+* @version $Revision: 1.6 $
 */
 public class XMLTestService
   extends ServiceMBeanSupport
@@ -113,7 +113,7 @@ public class XMLTestService
     }
     catch( Exception e )
     {
-      log.exception( e );
+       log.error("unbind failed", e );
     }
   }
 }

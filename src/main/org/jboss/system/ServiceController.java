@@ -31,8 +31,6 @@ import javax.management.RuntimeErrorException;
 import javax.management.RuntimeMBeanException;
 import javax.management.RuntimeOperationsException;
 
-import org.jboss.logging.log4j.JBossCategory;
-
 import org.w3c.dom.Element;
 
 /**
@@ -42,7 +40,7 @@ import org.w3c.dom.Element;
  * @see org.jboss.system.Service
  * @author <a href="mailto:marc.fleury@jboss.org">Marc Fleury</a>
  * @author <a href="mailtod_jencks@users.sourceforge.net">David Jencks</a>
- * @version $Revision: 1.5 $ <p>
+ * @version $Revision: 1.6 $ <p>
  *
  * <b>Revisions:</b> <p>
  *
@@ -86,9 +84,6 @@ public class ServiceController
    
    /** The map keeps the list of objectNames to services. */
    Map nameToServiceMap = new HashMap();
-
-   JBossCategory category = (JBossCategory)
-      JBossCategory.getInstance(getClass().getName());
 
    // Static --------------------------------------------------------
 
@@ -175,7 +170,7 @@ public class ServiceController
       //
       catch (Throwable e)
       {
-         category.error("Could not create MBean: " + objectName, e);
+         log.error("Could not create MBean: " + objectName, e);
          if (e instanceof Exception)
             throw (Exception)e;
          if (e instanceof Error)
@@ -190,7 +185,7 @@ public class ServiceController
       }
       catch (ConfigurationException e)
       {
-         category.error("Could not configure MBean: " + objectName, e);
+         log.error("Could not configure MBean: " + objectName, e);
          throw e;
       }
 
@@ -234,15 +229,15 @@ public class ServiceController
     */
    public void undeploy(ObjectName objectName) throws Exception
    {
-      if (category.isDebugEnabled()) {
-         category.debug("undeploying " + objectName + "from server");
+      if (log.isDebugEnabled()) {
+         log.debug("undeploying " + objectName + "from server");
       }
       
       // Do we have a deployed MBean?
       if (server.isRegistered(objectName))
       {
-         if (category.isDebugEnabled()) {
-            category.debug("undeploying " + objectName + "from server");
+         if (log.isDebugEnabled()) {
+            log.debug("undeploying " + objectName + "from server");
          }
          
          //Remove from local maps
@@ -277,7 +272,7 @@ public class ServiceController
       creator = new ServiceCreator(server);
       configurator = new ServiceConfigurator(server);
 
-      category.info("Controller MBean online");
+      log.info("Controller MBean online");
       return name == null ? new ObjectName(OBJECT_NAME) : name;
    }
 
@@ -292,7 +287,7 @@ public class ServiceController
           throws Exception
    {
 
-      category.info("Initializing " + services.size() + " services");
+      log.info("Initializing " + services.size() + " services");
 
       List servicesCopy = new ArrayList(services);
       Iterator enum = servicesCopy.iterator();
@@ -309,11 +304,11 @@ public class ServiceController
          }
          catch (Throwable e)
          {
-            category.error("Could not initialize " + name, e);
+            log.error("Could not initialize " + name, e);
          }
       }
       
-      category.info("Initialized " + serviceCounter + " services");
+      log.info("Initialized " + serviceCounter + " services");
    }
 
    /**
@@ -324,7 +319,7 @@ public class ServiceController
    public void start()
           throws Exception
    {
-      category.info("Starting " + services.size() + " services");
+      log.info("Starting " + services.size() + " services");
 
       List servicesCopy = new ArrayList(services);
       Iterator enum = servicesCopy.iterator();
@@ -342,10 +337,10 @@ public class ServiceController
          }
          catch (Throwable e)
          {
-            category.error("Could not start " + name, e);
+            log.error("Could not start " + name, e);
          }
       }
-      category.info("Started " + serviceCounter + " services");
+      log.info("Started " + serviceCounter + " services");
    }
 
    /**
@@ -353,7 +348,7 @@ public class ServiceController
     */
    public void stop()
    {
-      category.info("Stopping " + services.size() + " services");
+      log.info("Stopping " + services.size() + " services");
 
       List servicesCopy = new ArrayList(services);
       ListIterator enum = servicesCopy.listIterator();
@@ -376,10 +371,10 @@ public class ServiceController
          }
          catch (Throwable e)
          {
-            category.error("Could not stop " + name, e);
+            log.error("Could not stop " + name, e);
          }
       }
-      category.info("Stopped " + serviceCounter + " services");
+      log.info("Stopped " + serviceCounter + " services");
    }
 
    /**
@@ -387,7 +382,7 @@ public class ServiceController
     */
    public void destroy()
    {
-      category.info("Destroying " + services.size() + " services");
+      log.info("Destroying " + services.size() + " services");
 
       List servicesCopy = new ArrayList(services);
       ListIterator enum = servicesCopy.listIterator();
@@ -410,11 +405,11 @@ public class ServiceController
          }
          catch (Throwable e)
          {
-            category.error("Could not destroy" + name, e);
+            log.error("Could not destroy" + name, e);
          }
       }
       
-      category.info("Destroyed " + serviceCounter + " services");
+      log.info("Destroyed " + serviceCounter + " services");
    }
 
    /**
@@ -587,7 +582,7 @@ public class ServiceController
          e = ((ReflectionException)e).getTargetException();
       }
 
-      category.error(e);
+      log.error(e);
    }
 
    // Inner classes -------------------------------------------------
@@ -648,7 +643,7 @@ public class ServiceController
          // any Service methods
          if (opCount == 0)
          {
-            category.warn(objectName +
+            log.warn(objectName +
                   " does not implement any Service methods");
          }
       }

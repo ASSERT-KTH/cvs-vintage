@@ -23,7 +23,7 @@ import org.jboss.ejb.plugins.cmp.jdbc.bridge.JDBCCMRFieldBridge;
  * @author <a href="mailto:shevlandj@kpi.com.au">Joe Shevland</a>
  * @author <a href="mailto:justin@j-m-f.demon.co.uk">Justin Forder</a>
  * @author <a href="mailto:michel.anke@wolmail.nl">Michel de Groot</a>
- * @version $Revision: 1.5 $
+ * @version $Revision: 1.6 $
  */
 public class JDBCStartCommand extends JDBCUpdateCommand implements StartCommand {
    // Constructors --------------------------------------------------
@@ -63,7 +63,7 @@ public class JDBCStartCommand extends JDBCUpdateCommand implements StartCommand 
          DatabaseMetaData dmd = con.getMetaData();
          rs = dmd.getTables(con.getCatalog(), null, tableName, null);
          if (rs.next ()) {
-            log.log("Table '" + tableName + "' already exists");
+            log.info("Table '" + tableName + "' already exists");
             return;
          }
       } finally {
@@ -78,13 +78,13 @@ public class JDBCStartCommand extends JDBCUpdateCommand implements StartCommand 
          manager.getContainer().getTransactionManager().commit ();
          
          // Create successful, log this
-         log.log("Created table '" + tableName + "' successfully.");
+         log.info("Created table '" + tableName + "' successfully.");
        } catch (Exception e) {
-         log.debug("Could not create table " + tableName + ": " + e.getMessage());
+         log.debug("Could not create table " + tableName, e);
          try {
             manager.getContainer().getTransactionManager().rollback ();
          } catch (Exception _e) {
-            log.error("Could not roll back transaction: "+ _e.getMessage());
+            log.error("Could not roll back transaction: ", e);
          }
       }
    }

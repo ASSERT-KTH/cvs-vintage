@@ -25,7 +25,7 @@ import org.jboss.ejb.plugins.cmp.jdbc.JDBCStoreManager;
 import org.jboss.ejb.plugins.cmp.jdbc.JDBCType;
 import org.jboss.ejb.plugins.cmp.jdbc.JDBCUtil;
 
-import org.jboss.logging.Log;
+import org.jboss.logging.Logger;
 
 /**
  * JDBCAbstractCMPFieldBridge is the default implementation of 
@@ -41,13 +41,13 @@ import org.jboss.logging.Log;
  *      One for each entity bean cmp field.       
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
- * @version $Revision: 1.5 $
+ * @version $Revision: 1.6 $
  */                            
 public abstract class JDBCAbstractCMPFieldBridge implements JDBCCMPFieldBridge {
    protected JDBCStoreManager manager;
    protected JDBCCMPFieldMetaData metadata;
    protected JDBCType jdbcType;
-   protected Log log;
+   protected Logger log;
    
    public JDBCAbstractCMPFieldBridge(JDBCStoreManager manager, JDBCCMPFieldMetaData metadata) throws DeploymentException {      
       this(manager, metadata, manager.getJDBCTypeFactory().getFieldJDBCType(metadata));

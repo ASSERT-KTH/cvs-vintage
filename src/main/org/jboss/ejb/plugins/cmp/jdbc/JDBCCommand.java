@@ -11,7 +11,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
-import org.jboss.logging.Log;
+import org.jboss.logging.Logger;
 
 import org.jboss.ejb.plugins.cmp.jdbc.bridge.JDBCEntityBridge;
 import org.jboss.ejb.plugins.cmp.jdbc.metadata.JDBCEntityMetaData;
@@ -24,7 +24,7 @@ import org.jboss.ejb.plugins.cmp.jdbc.metadata.JDBCEntityMetaData;
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
  * @author <a href="mailto:justin@j-m-f.demon.co.uk">Justin Forder</a>
  * @author <a href="mailto:dirk@jboss.de">Dirk Zimmermann</a>
- * @version $Revision: 1.3 $
+ * @version $Revision: 1.4 $
  */
 public abstract class JDBCCommand {
    // Attributes ----------------------------------------------------
@@ -32,7 +32,7 @@ public abstract class JDBCCommand {
    protected JDBCStoreManager manager;
    protected JDBCEntityBridge entity;
    protected JDBCEntityMetaData entityMetaData;
-   protected Log log;
+   protected Logger log;
     
    // Command name, used for debug trace
    protected String name;

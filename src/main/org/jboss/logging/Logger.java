@@ -6,142 +6,92 @@
  */
 package org.jboss.logging;
 
-import java.io.*;
-import java.net.*;
-import java.rmi.*;
-import java.rmi.server.*;
-import java.util.*;
-import javax.management.*;
+import org.apache.log4j.Category;
+import org.apache.log4j.spi.CategoryFactory;
 
-/**
- * @deprecated, As of JBoss 2.3, replaced by the org.apache.log4j framework. TODO Example of how to use log4j
- * @author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
- * @author <a href="mailto:Scott_Stark@displayscape.com">Scott Stark</a>.
- * @version $Revision: 1.12 $
+/** A custom log4j Category subclass that add a trace level priority.
+ * @see #isTraceEnabled
+ * @see #trace(Object message)
+ * @see #trace(Object, Throwable)
+
+ * @author Scott.Stark@jboss.org
+ * @version $Revision: 1.13 $
  */
-public class Logger
-   extends NotificationBroadcasterSupport
-   implements LoggerMBean, MBeanRegistration, NotificationBroadcaster, Runnable
+public class Logger extends Category
 {
    // Constants -----------------------------------------------------
 
    // Attributes ----------------------------------------------------
-   long sequence = 0;
-   Date now = new Date();
-    
-    boolean running = true;
-
-   ArrayList notificationListeners = new ArrayList();
+   private static CategoryFactory factory = new LoggerFactory();
 
    // Static --------------------------------------------------------
-   static Logger logger;
-
-   public static Logger getLogger() { return logger; }
-
-   public static void log(String type, String message)
+   /** This method overrides {@link Category#getInstance} by supplying
+   its own factory type as a parameter.
+    @param name, the category name
+   */
+   public static Category getInstance(String name)
    {
-      Log l = (Log)Log.getLog();
-      l.log(type, message);
+      return Category.getInstance(name, factory); 
+   }
+   /** This method overrides {@link Category#getInstance} by supplying
+   its own factory type as a parameter.
+    @param clazz, the Class whose name will be used as the category name
+   */
+   public static Category getInstance(Class clazz)
+   {
+      return Category.getInstance(clazz.getName(), factory); 
    }
 
-   public static void log(String message)
+   /** Create a Logger instance given the category name.
+    @param name, the category name
+    */
+   public static Logger create(String name)
    {
-      Log l = (Log)Log.getLog();
-      l.log(message);
+      Logger logger = (Logger) Category.getInstance(name, factory);
+      return logger;
+   }
+   /** Create a Logger instance given the category class. This simply
+    calls create(clazz.getName()).
+    @param clazz, the Class whose name will be used as the category name
+    */
+   public static Logger create(Class clazz)
+   {
+      Logger logger = (Logger) Category.getInstance(clazz.getName(), factory);
+      return logger;
    }
 
-   public static void exception(Throwable exception)
+  // Constructors --------------------------------------------------
+   /** Creates new JBossCategory with the given category name.
+    @param name, the category name.
+   */
+   public Logger(String name)
    {
-      Log l = (Log)Log.getLog();
-      l.exception(exception);
+      super(name);
    }
 
-   public static void warning(String message)
+   /** Check to see if the TRACE priority is enabled for this category.
+   @return true if a {@link #trace(String)} method invocation would pass
+   the msg to the configured appenders, false otherwise.
+   */
+   public boolean isTraceEnabled()
    {
-      Log l = (Log)Log.getLog();
-      l.warning(message);
-   }
-    
-   public static void debug(String message)
-   {
-      Log l = (Log)Log.getLog();
-      l.debug(message);
-   }
-
-   public static void debug(Throwable exception)
-   {
-      Log l = (Log)Log.getLog();
-      l.debug(exception);
+      if( hierarchy.isDisabled(TracePriority.TRACE_INT) )
+         return false;
+      return TracePriority.TRACE.isGreaterOrEqual(this.getChainedPriority());
    }
 
-   public static void error(String message)
+   /** Issue a log msg with a priority of TRACE.
+   Invokes super.log(TracePriority.TRACE, message);
+   */
+   public void trace(Object message)
    {
-      Log l = (Log) Log.getLog();
-      l.error(message);
-  }
-
-
-   public static void error(Throwable exception)
-   {
-      Log l = (Log) Log.getLog();
-      l.error(exception.toString());
-  }
-
-   // Constructors --------------------------------------------------
-   public Logger()
-   {
-      logger = this;
-        
-        Thread runner = new Thread(this, "Log time updater");
-        runner.setDaemon(true);
-        runner.start();
+      super.log(TracePriority.TRACE, message);
    }
-
-   // Public --------------------------------------------------------
-   public synchronized void fireNotification(String type, Object source, String message)
+   /** Issue a log msg and throwable with a priority of TRACE.
+   Invokes super.log(TracePriority.TRACE, message, t);
+   */
+   public void trace(Object message, Throwable t)
    {
-       //AS FIXME Just a hack (now.getTime())
-       Notification n = new Notification(type, this, sequence++, now.getTime(), message);
-      n.setUserData(source);
-
-      sendNotification(n);
+      super.log(TracePriority.TRACE, message, t);
    }
-
-   // MBeanRegistration implementation ------------------------------
-   public ObjectName preRegister(MBeanServer server, ObjectName name)
-      throws java.lang.Exception
-   {
-      return name == null ? new ObjectName("JBOSS-SYSTEM:spine=Log") : name;
-   }
-
-   public void postRegister(java.lang.Boolean registrationDone)
-   {
-   }
-
-   public void preDeregister()
-      throws java.lang.Exception
-   {}
-
-   public void postDeregister()
-    {
-        running = false;
-    }
-
-   // Runnable implementation ---------------------------------------
-    public void run()
-    {
-        while (running)
-        {
-            now.setTime(System.currentTimeMillis());
-        
-            try
-            {
-                Thread.sleep(5*1000);
-            } catch (InterruptedException e)
-            {
-                // Ignore
-            }
-        }
-    }
 }
-

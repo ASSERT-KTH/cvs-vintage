@@ -29,7 +29,7 @@ import org.jboss.tm.usertx.interfaces.UserTransactionSessionFactory;
  *  usage for standalone clients.
  *      
  *  @author <a href="mailto:osh@sparre.dk">Ole Husgaard</a>
- *  @version $Revision: 1.3 $
+ *  @version $Revision: 1.4 $
  */
 public class ClientUserTransactionService
    extends ServiceMBeanSupport
@@ -85,11 +85,11 @@ public class ClientUserTransactionService
          try {
             UnicastRemoteObject.unexportObject(factory, true);
          } catch (Exception ex) {
-            log.exception(ex);
+            log.error("Failed to unexportObject", ex);
          }
          factory = null;
       } catch (Exception e) {
-         log.exception(e);
+          log.error("Failed to unbind", e);
       }
    }
     

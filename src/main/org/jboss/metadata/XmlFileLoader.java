@@ -25,8 +25,6 @@ import org.xml.sax.SAXException;
 import org.xml.sax.SAXParseException;
 
 import org.jboss.ejb.DeploymentException;
-
-// TODO this needs to be replaced with the log4j logging
 import org.jboss.logging.Logger;
 
 /**
@@ -39,18 +37,20 @@ import org.jboss.logging.Logger;
  *   @author <a href="mailto:WolfgangWerner@gmx.net">Wolfgang Werner</a>
  *   @author <a href="mailto:Darius.D@jbees.com">Darius Davidavicius</a>
  *   @author <a href="mailto:scott.stark@jboss.org">Scott Stark</a>
- *   @version $Revision: 1.20 $
+ *   @version $Revision: 1.21 $
  *
  *   Revisions:
  *   20010620 Bill Burke: Print an error message when failing to load standardjboss.xml
  *                        or jboss.xml.  It was a pain to debug a standardjboss.xml
  *                        syntax error.
  */
-public class XmlFileLoader {
+public class XmlFileLoader
+{
     // Constants -----------------------------------------------------
 
     // Attributes ----------------------------------------------------
     private static boolean defaultValidateDTDs = false;
+    private static Logger log = Logger.create(XmlFileLoader.class);
     private ClassLoader classLoader;
     private ApplicationMetaData metaData;
     private boolean validateDTDs;
@@ -162,7 +162,7 @@ public class XmlFileLoader {
         }
         catch (Exception ex)
         {
-            Logger.error("failed to load standardjboss.xml.  There could be a syntax error.");
+            log.error("failed to load standardjboss.xml.  There could be a syntax error.", ex);
             throw ex;
         }
         // Load jboss.xml
@@ -181,7 +181,7 @@ public class XmlFileLoader {
         }
         catch (Exception ex)
         {
-            Logger.error("failed to load jboss.xml.  There could be a syntax error.");
+            log.error("failed to load jboss.xml.  There could be a syntax error.", ex);
             throw ex;
         }
 

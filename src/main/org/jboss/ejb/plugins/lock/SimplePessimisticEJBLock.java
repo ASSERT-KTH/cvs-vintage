@@ -20,7 +20,6 @@ import javax.transaction.RollbackException;
 import javax.ejb.EJBObject;
 
 import org.jboss.ejb.MethodInvocation;
-import org.jboss.logging.log4j.JBossCategory;
 
 /**
  * Holds all locks for entity beans, not used for stateful.
@@ -31,7 +30,7 @@ import org.jboss.logging.log4j.JBossCategory;
  *
  * @author <a href="bill@burkecentral.com">Bill Burke</a>
  * @author <a href="marc.fleury@jboss.org">Marc Fleury</a>
- * @version $Revision: 1.5 $
+ * @version $Revision: 1.6 $
  *
  * <p><b>Revisions:</b><br>
  *  <p><b>2001/07/29: billb</b>

@@ -28,7 +28,6 @@ import javax.management.InstanceNotFoundException;
 import javax.management.NotificationListener;
 import javax.management.Notification;
 import javax.management.MBeanServerNotification;
-import org.jboss.logging.log4j.JBossCategory;
 
 import org.jboss.system.ServiceMBeanSupport;
 
@@ -54,7 +53,7 @@ import org.jboss.system.ServiceMBeanSupport;
  * @author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
  * @author <a href="mailto:toby.allsopp@peace.com">Toby Allsopp</a>
  * @author <a href="mailto:David.Maplesden@orion.co.nz">David Maplesden</a>
- * @version $Revision: 1.3 $
+ * @version $Revision: 1.4 $
  */
 public class AutoDeployer
        extends ServiceMBeanSupport
@@ -62,10 +61,6 @@ public class AutoDeployer
 {
    // Constants -----------------------------------------------------
    // Attributes ----------------------------------------------------
-
-   /** Instance logger. */
-   private JBossCategory log = (JBossCategory)
-      JBossCategory.getInstance(this.getClass());
    
    /**
     * Callback to the JMX agent.

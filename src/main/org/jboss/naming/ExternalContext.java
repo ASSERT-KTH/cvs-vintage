@@ -33,9 +33,6 @@ import javax.naming.StringRefAddr;
 import javax.naming.ldap.Control;
 import javax.naming.spi.ObjectFactory;
 
-import org.jnp.server.Main;
-
-import org.jboss.logging.Log;
 import org.jboss.system.ServiceMBeanSupport;
 
 /** A MBean that binds an arbitrary InitialContext into the JBoss default
@@ -46,8 +43,8 @@ that can only be used from within this VM.
 
 @see org.jboss.naming.NonSerializableFactory
 
-@author <a href="mailto:Scott_Stark@displayscape.com">Scott Stark</a>.
-@version $Revision: 1.9 $
+@author Scott.Stark@jboss.org
+@version $Revision: 1.10 $
 */
 public class ExternalContext extends ServiceMBeanSupport implements ExternalContextMBean
 {
@@ -259,7 +256,7 @@ public class ExternalContext extends ServiceMBeanSupport implements ExternalCont
         }
         catch(NamingException e)
         {
-            log.exception(e);
+            log.error("unbind failed", e);
         }
     }
 

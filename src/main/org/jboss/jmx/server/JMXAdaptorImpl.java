@@ -25,7 +25,6 @@ import javax.management.ReflectionException;
 import javax.management.MBeanServer;
 import javax.naming.InitialContext;
 
-import org.jboss.logging.Log;
 import org.jboss.system.ServiceMBeanSupport;
 
 import org.jboss.jmx.interfaces.JMXAdaptor;
@@ -35,7 +34,7 @@ import org.jboss.jmx.interfaces.JMXAdaptor;
 *      
 *   @see <related>
 *   @author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
-*   @version $Revision: 1.6 $
+*   @version $Revision: 1.7 $
 */
 public class JMXAdaptorImpl
    extends UnicastRemoteObject

@@ -34,7 +34,7 @@ import org.jboss.system.ServiceMBeanSupport;
  *
  *   @see <related>
  *   @author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
- *   @version $Revision: 1.6 $
+ *   @version $Revision: 1.7 $
  */
 public class JMXAdaptorService
    extends ServiceMBeanSupport
@@ -84,7 +84,7 @@ public class JMXAdaptorService
             new InitialContext().unbind(JNDI_NAME);
         } catch (Exception e)
         {
-            log.exception(e);
+            log.error("unbind failed", e);
         }
    }
 }

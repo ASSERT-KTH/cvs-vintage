@@ -30,11 +30,8 @@ import javax.transaction.RollbackException;
 import javax.transaction.HeuristicMixedException;
 import javax.transaction.HeuristicRollbackException;
 
-import org.jboss.tm.TransactionPropagationContextFactory;
-
-//this needs to be replaced with the log4j logging TODO
 import org.jboss.logging.Logger;
-
+import org.jboss.tm.TransactionPropagationContextFactory;
 import org.jboss.tm.usertx.interfaces.UserTransactionSession;
 
 
@@ -48,6 +45,7 @@ public class UserTransactionSessionImpl
 {
    /** Cache a reference to the TM. */
    private static TransactionManager tm = null;
+   private static Logger log = Logger.create(UserTransactionSessionImpl.class);
 
    /**
     *  Get a reference to the transaction manager.
@@ -59,7 +57,7 @@ public class UserTransactionSessionImpl
             Context ctx = new InitialContext();
             tm = (TransactionManager)ctx.lookup("java:/TransactionManager");
          } catch (NamingException ex) {
-            Logger.exception(ex);
+            log.error("java:/TransactionManager lookup failed", ex);
          }
       }
       return tm;
@@ -78,7 +76,7 @@ public class UserTransactionSessionImpl
             Context ctx = new InitialContext();
             tpcFactory = (TransactionPropagationContextFactory)ctx.lookup("java:/TransactionPropagationContextExporter");
          } catch (NamingException ex) {
-            Logger.exception(ex);
+            log.error("java:/TransactionPropagationContextExporter lookup failed", ex);
          }
       }
       return tpcFactory;
@@ -239,10 +237,11 @@ public class UserTransactionSessionImpl
     */
    public void unreferenced()
    {
-      Logger.debug("Lost connection to UserTransaction client.");
+      log.debug("Lost connection to UserTransaction client.");
 
-      if (!activeTx.isEmpty()) {
-         Logger.error("Lost connection to UserTransaction clients: " +
+      if (!activeTx.isEmpty())
+      {
+         log.error("Lost connection to UserTransaction clients: " +
                       "Rolling back " + activeTx.size() +
                       " active transaction(s).");
          Collection txs = activeTx.values();
@@ -252,7 +251,7 @@ public class UserTransactionSessionImpl
             try {
               tx.rollback();
             } catch (Exception ex) {
-               Logger.exception(ex);
+               log.error("rollback failed", ex);
             }
          }
       }

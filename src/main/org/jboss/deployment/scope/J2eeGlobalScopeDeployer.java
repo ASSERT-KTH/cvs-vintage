@@ -288,7 +288,7 @@ public class J2eeGlobalScopeDeployer extends org.jboss.deployment.J2eeDeployer i
             // then it would be non-null
             if(d==null) {
                 // else we install it
-                log.log("(Re-)Deploy J2EE application: " + nextUrl);
+                log.info("(Re-)Deploy J2EE application: " + nextUrl);
                 try{
                     d=installApplication(nextUrl);
                     // and start it (and the depending stuff, before)
@@ -390,7 +390,7 @@ public class J2eeGlobalScopeDeployer extends org.jboss.deployment.J2eeDeployer i
                     findDeployment(absoluteUrl.toString());
                 
                 if(newD==null) {
-                    log.log("Deploying dependent application "+absoluteUrl);
+                    log.info("Deploying dependent application "+absoluteUrl);
                     try{
                         newD = installApplication(absoluteUrl);
                     startApplication(newD,alreadyMarked,scope,lCollector);
@@ -440,7 +440,7 @@ public class J2eeGlobalScopeDeployer extends org.jboss.deployment.J2eeDeployer i
             if(source!=null) {
                 
                 try{
-                    log.log("About to stop application "+_d.getName());
+                    log.info("About to stop application "+_d.getName());
                     
                     // add it to the stopped list
                     redeployUrls.add(newUrl);

@@ -25,17 +25,14 @@ import javax.management.RuntimeMBeanException;
 import javax.management.MalformedObjectNameException;
 import javax.transaction.TransactionManager;
 
+import org.apache.log4j.NDC;
 import org.w3c.dom.Element;
 
 import org.jboss.ejb.plugins.AbstractInstanceCache;
 import org.jboss.ejb.plugins.SecurityProxyInterceptor;
 import org.jboss.ejb.plugins.StatefulSessionInstancePool;
 import org.jboss.ejb.BeanLockManager;
-
-// TODO this needs to be replaced with the log4j logging
-import org.jboss.logging.Log;
 import org.jboss.logging.Logger;
-
 import org.jboss.metadata.ApplicationMetaData;
 import org.jboss.metadata.BeanMetaData;
 import org.jboss.metadata.SessionMetaData;
@@ -71,7 +68,7 @@ import org.jboss.web.WebServiceMBean;
 * @author <a href="mailto:peter.antman@tim.se">Peter Antman</a>.
 * @author <a href="mailto:scott.stark@jboss.org">Scott Stark</a>
 * @author <a href="mailto:sacha.labourey@cogito-info.ch">Sacha Labourey</a>
-* @version $Revision: 1.92 $
+* @version $Revision: 1.93 $
 */
 public class ContainerFactory
    extends ServiceMBeanSupport
@@ -95,9 +92,6 @@ public class ContainerFactory
    static final String ANY_VALUE = "Both";
 
    // Attributes ----------------------------------------------------
-
-   /** The logger of this service */
-   Log log = Log.createLog(this.getClass().getName());
 
    /**
     * A map of current deployments. If a deployment is made and it is
@@ -356,14 +350,12 @@ public class ContainerFactory
 
       try
       {
-         Log.setLog( log );
-
          // Check if already deployed -> undeploy first, this is re-deploy
          if( deployments.containsKey( appUrl ) )
             undeploy( appUrl );
 
          app.setURL( appUrl );
-         log.log( "Deploying:" + appUrl );
+         log.info( "Deploying:" + appUrl );
 
          /* Create a subclass of URLClassLoader that allows for dynamic class
             loading via the WebServiceMBean
@@ -392,30 +384,17 @@ public class ContainerFactory
          }
 
          // Done
-         log.log( "Deployed application: " + app.getName() );
+         log.info( "Deployed application: " + app.getName() );
          // Register deployment. Use the application name in the hashtable
          deployments.put( appUrl, app );
       }
       catch( Exception e )
       {
-         if( e instanceof NullPointerException )
-         {
-            // Avoids useless 'null' messages on a server trace.
-            // Let's be honest and spam them with a stack trace.
-            // NPE should be considered an internal server error anyways.
-            Logger.exception( e );
-         }
-
-         Logger.exception( e );
-         //Logger.debug(e.getMessage());
+         log.error("Could not deploy " + appUrl.toString(), e);
          app.stop();
          app.destroy();
 
          throw new DeploymentException( "Could not deploy " + appUrl.toString(), e );
-      }
-      finally
-      {
-         Log.unsetLog();
       }
       // Inform the Data Collector that new/old EJBs were deployed
 /* AS Temporary not available
@@ -452,8 +431,7 @@ public class ContainerFactory
       ApplicationMetaData metaData = efm.load();
 
       // Check validity
-      Log.setLog( Log.createLog( "Verifier" ) );
-
+      NDC.push("Verifier" );
       // wrapping this into a try - catch block to prevent errors in
       // verifier from stopping the deployment
       try
@@ -466,28 +444,28 @@ public class ContainerFactory
                {
                   public void beanChecked( VerificationEvent event )
                   {
-                     Logger.debug( event.getMessage() );
+                     log.debug( event.getMessage() );
                   }
 
                   public void specViolation( VerificationEvent event )
                   {
                      if( verifierVerbose )
-                        Logger.log( event.getVerbose() );
+                        log.info( event.getVerbose() );
                      else
-                        Logger.log( event.getMessage() );
+                        log.info( event.getMessage() );
                   }
                } );
-            Logger.log( "Verifying " + url );
+            log.info( "Verifying " + url );
             verifier.verify( url, metaData, cl );
          }
       }
       catch( Throwable t )
       {
-         Logger.exception( t );
+         log.error("Verfiy failed", t );
       }
 
       // unset verifier log
-      Log.unsetLog();
+      NDC.pop();
 
       // Get list of beans for which we will create containers
       Iterator beans = metaData.getEnterpriseBeans();
@@ -498,7 +476,7 @@ public class ContainerFactory
       {
          BeanMetaData bean = (BeanMetaData) beans.next();
 
-         log.log( "Deploying " + bean.getEjbName() );
+         log.info( "Deploying " + bean.getEjbName() );
          app.addContainer( createContainer( bean, cl, localCl ) );
       }
    }
@@ -523,8 +501,7 @@ public class ContainerFactory
       }
 
       // Undeploy application
-      Log.setLog( log );
-      log.log( "Undeploying:" + url );
+      log.info( "Undeploying:" + url );
       // Shutdown the Management MBean Wrapper for the containers
       Iterator i = app.containers.values().iterator();
       while( i.hasNext() ) {
@@ -544,8 +521,7 @@ public class ContainerFactory
          // Remove deployment
          deployments.remove( url );
          // Done
-         log.log( "Undeployed application: " + app.getName() );
-         Log.unsetLog();
+         log.info( "Undeployed application: " + app.getName() );
       }
    }
 
@@ -749,13 +725,9 @@ public class ContainerFactory
       {
          if( e instanceof RuntimeMBeanException )
          {
-            RuntimeMBeanException rme = (RuntimeMBeanException) e;
-            Logger.exception(rme.getTargetException());
+            e = ((RuntimeMBeanException) e).getTargetException();
          }
-         else
-         {
-            Logger.exception(e);
-         }
+         log.error("handleContainerManagement", e);
       }
    }
 
@@ -879,14 +851,13 @@ public class ContainerFactory
             }
             catch(Exception e)
             {
-               Logger.warning("Could not load the "+className+" interceptor for this container");
-               Logger.exception(e);
+               log.warn("Could not load the "+className+" interceptor for this container", e);
             }
          }
       }
 
       if( istack.size() == 0 )
-         Logger.warning("There are no interceptors configured. Check the standardjboss.xml file");
+         log.warn("There are no interceptors configured. Check the standardjboss.xml file");
 
       // Now add the interceptors to the container
       for(int i = 0; i < istack.size(); i ++)

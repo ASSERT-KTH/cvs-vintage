@@ -8,8 +8,6 @@ package org.jboss.ejb.plugins.cmp.jdbc.metadata;
 
 import java.sql.Types;
 import org.jboss.ejb.DeploymentException;
-
-// TODO this needs to be replaced with the log4j logging
 import org.jboss.logging.Logger;
 
 import org.jboss.metadata.MetaData;
@@ -21,9 +19,11 @@ import org.w3c.dom.Element;
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
  * @author <a href="sebastien.alborini@m4x.org">Sebastien Alborini</a>
- * @version $Revision: 1.5 $
+ * @version $Revision: 1.6 $
  */
-public final class JDBCMappingMetaData {
+public final class JDBCMappingMetaData
+{
+   static Logger log = Logger.create(JDBCMappingMetaData.class);
    /**
     * Gets the JDBC type constant int for the name. The mapping from name to jdbc
     * type is contained in java.sql.Types.
@@ -42,7 +42,7 @@ public final class JDBCMappingMetaData {
          return constant.intValue();
 
       } catch (Exception e) {
-         Logger.warning("Unrecognized jdbc-type: " + name + ", using Types.OTHER");
+         log.warn("Unrecognized jdbc-type: " + name + ", using Types.OTHER", e);
          return Types.OTHER;
       }
    }

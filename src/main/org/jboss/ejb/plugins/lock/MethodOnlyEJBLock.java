@@ -20,8 +20,6 @@ import javax.transaction.RollbackException;
 import javax.ejb.EJBObject;
 
 import org.jboss.ejb.MethodInvocation;
-import org.jboss.logging.log4j.JBossCategory;
-
 import java.io.FileOutputStream;
 import java.io.PrintStream;
 
@@ -37,7 +35,7 @@ import java.io.PrintStream;
  *
  * @author <a href="bill@burkecentral.com">Bill Burke</a>
  *
- * @version $Revision: 1.1 $
+ * @version $Revision: 1.2 $
  *
  * <p><b>Revisions:</b><br>
  * <p><b>2001/08/08: billb</b>

@@ -21,9 +21,6 @@ import javax.ejb.CreateException;
 import javax.ejb.RemoveException;
 import javax.ejb.EJBException;
 
-// TODO this needs to be replaced with the log4j logging
-import org.jboss.logging.Logger;
-
 /**
  * MessageDrivenContainer, based on the StatelessSessionContainer.
  *
@@ -35,7 +32,7 @@ import org.jboss.logging.Logger;
  * @author <a href="mailto:docodan@mvcsoft.com">Daniel OConnor</a>
  * @author <a href="mailto:jason@planet57.com">Jason Dillon</a>
  * @author <a href="mailto:Scott.Stark@jboss.org">Scott Stark</a>
- * @version $Revision: 1.12 $
+ * @version $Revision: 1.13 $
  */
 public class MessageDrivenContainer
     extends Container
@@ -179,8 +176,7 @@ public class MessageDrivenContainer
             Thread.currentThread().setContextClassLoader(oldCl);
         }
         catch (Exception e) {
-            Logger.error("Serious error in init: " + e);
-            Logger.exception(e);
+            log.error("Serious error in init: ", e);
             throw e;
         }
     }
@@ -349,7 +345,7 @@ public class MessageDrivenContainer
             msgInterfaceClass = Class.forName(msgInterface);
             argumentClass = Class.forName(msgArgument);
         } catch (ClassNotFoundException ex) {
-            Logger.error("Could not get the classes for message interface" + msgInterface);
+            log.error("Could not get the classes for message interface" + msgInterface, ex);
             // Hackish
             throw new NoSuchMethodException("Could not get the classes for message interface" + msgInterface + ": " + ex);
         }

@@ -32,7 +32,6 @@ import org.jboss.ejb.Container;
 import org.jboss.ejb.EnterpriseContext;
 import org.jboss.ejb.Interceptor;
 import org.jboss.ejb.MethodInvocation;
-import org.jboss.logging.log4j.JBossCategory;
 import org.jboss.metadata.BeanMetaData;
 
 /** An interceptor used to log call invocations. It also handles any
@@ -40,13 +39,12 @@ import org.jboss.metadata.BeanMetaData;
  *
  *   @author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
  *   @author <a href="mailto:Scott.Stark@jboss.org">Scott Stark</a>
- *   @version $Revision: 1.19 $
+ *   @version $Revision: 1.20 $
  */
 public class LogInterceptor
    extends AbstractInterceptor
 {
    // Static --------------------------------------------------------
-   private static JBossCategory log = (JBossCategory) JBossCategory.getInstance(LogInterceptor.class);
    
    // Attributes ----------------------------------------------------
    protected String ejbName;

@@ -20,8 +20,6 @@ import javax.ejb.EJBObject;
 import javax.ejb.EJBLocalObject;
 import javax.ejb.SessionBean;
 import javax.ejb.SessionContext;
-
-// TODO this needs to be replaced with the log4j logging
 import org.jboss.logging.Logger;
 
 import org.jboss.metadata.SessionMetaData;
@@ -31,7 +29,7 @@ import org.jboss.metadata.SessionMetaData;
  *
  * @author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
  * @author <a href="mailto:docodan@mvcsoft.com">Daniel OConnor</a>
- * @version $Revision: 1.16 $
+ * @version $Revision: 1.17 $
  */
 public class StatefulSessionEnterpriseContext
    extends EnterpriseContext
@@ -40,7 +38,7 @@ public class StatefulSessionEnterpriseContext
    // Constants -----------------------------------------------------
 
    // Attributes ----------------------------------------------------
-
+   protected static Logger log = Logger.create(StatefulSessionEnterpriseContext.class);
    private EJBObject ejbObject;
    private EJBLocalObject ejbLocalObject;
    private SessionContext ctx;
@@ -82,7 +80,7 @@ public class StatefulSessionEnterpriseContext
       }
       catch (Exception x)
       {
-         Logger.exception(x);
+         log.error("Failed to setSessionContext", x);
       }
    }
 

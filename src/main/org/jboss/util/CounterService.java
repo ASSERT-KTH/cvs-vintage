@@ -9,28 +9,29 @@ import javax.naming.NamingException;
 import javax.naming.Reference;
 import javax.naming.StringRefAddr;
 import org.jboss.system.ServiceMBeanSupport;
-import org.jboss.logging.Log;
 import org.jboss.naming.NonSerializableFactory;
 
 /** A service offering accumulator style counters to help in diagnosing
- *  performance issues. 
- *  @author <a href="mailto:danch@nvisia.com">Dan Christopherson</href> 
+ *  performance issues.
+ *  @author <a href="mailto:danch@nvisia.com">Dan Christopherson</href>
  *  */
-public class CounterService 
+public class CounterService
    extends ServiceMBeanSupport
    implements CounterServiceMBean
 {
    private HashMap counterMap = new HashMap();
    
-
    
    /** accumulate a count into a named counter. will initialize the named
     *  counter if neccessary. */
-   public void accumulate(String counterName, long add) {
+   public void accumulate(String counterName, long add)
+   {
       Counter counter = null;
-      synchronized (counterMap) {
+      synchronized (counterMap)
+      {
          counter = (Counter)counterMap.get(counterName);
-         if (counter == null) {
+         if (counter == null)
+         {
             counter = new Counter(counterName);
             counterMap.put(counterName, counter);
          }
@@ -38,75 +39,90 @@ public class CounterService
       counter.addToCount(add);
    }
    
-   protected void startService() throws java.lang.Exception {
+   protected void startService() throws java.lang.Exception
+   {
       super.startService();
       
       InitialContext ctx = new InitialContext();
       
       //bind myself into JNDI, at java:/CounterService
-		NonSerializableFactory.bind("java:/CounterService", this);
-		StringRefAddr addr = new StringRefAddr("nns", "java:/CounterService");
-		Reference ref = new Reference(this.getClass().getName(), addr, NonSerializableFactory.class.getName(), null);
-		ctx.bind("java:/CounterService", ref);
+      NonSerializableFactory.bind("java:/CounterService", this);
+      StringRefAddr addr = new StringRefAddr("nns", "java:/CounterService");
+      Reference ref = new Reference(this.getClass().getName(), addr, NonSerializableFactory.class.getName(), null);
+      ctx.bind("java:/CounterService", ref);
    }
-   protected void stopService() {
+   protected void stopService()
+   {
       super.stopService();
-      try {
+      try
+      {
          InitialContext ctx = new InitialContext();
          ctx.unbind("java:/CounterService");
-			NonSerializableFactory.unbind("java:/CounterService");
-      } catch (NamingException ne) {
-         log.error("Coulnd't unbind CounterService: "+ne.getMessage());
+         NonSerializableFactory.unbind("java:/CounterService");
+      }
+      catch (NamingException ne)
+      {
+         log.error("Coulnd't unbind CounterService", ne);
       }
    }
    
-   public String getName() {
+   public String getName()
+   {
       return "Counter Service";
    }
    
-   public String list() {
+   public String list()
+   {
       DecimalFormat format = new DecimalFormat("####0.0000");
       String retVal = "";
       Iterator keys = counterMap.keySet().iterator();
-      while (keys.hasNext()) {
+      while (keys.hasNext())
+      {
          String key = (String)keys.next();
          Counter counter = (Counter)counterMap.get(key);
          long total = 0;
          int entries = 0;
-         synchronized (counter) {//so we dont catch half of it.
+         synchronized (counter)
+         {//so we dont catch half of it.
             total = counter.getCount();
             entries = counter.getEntries();
          }
          double avg = ((double)total)/((double)entries);
          String descrip = key+": total="+total+" on "+entries+"entries for "+
-                          "an average of "+format.format(avg)+"<br>\n";
+         "an average of "+format.format(avg)+"<br>\n";
          retVal += descrip;
       }
       return retVal;
    }
    
-   private static class Counter {
+   private static class Counter
+   {
       private String name;
       private long count=0;
       private int entries=0;
       
-      public Counter(String n) {
+      public Counter(String n)
+      {
          name = n;
       }
       
-      public String getName() {
+      public String getName()
+      {
          return name;
       }
       
-      public synchronized long getCount() {
+      public synchronized long getCount()
+      {
          return count;
       }
       
-      public synchronized int getEntries() {
+      public synchronized int getEntries()
+      {
          return entries;
       }
       
-      public synchronized void addToCount(long add) {
+      public synchronized void addToCount(long add)
+      {
          count += add;
          entries++;
       }

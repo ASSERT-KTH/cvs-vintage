@@ -50,8 +50,6 @@ import org.jboss.ejb.Container;
 import org.jboss.ejb.StatefulSessionContainer;
 import org.jboss.ejb.StatefulSessionPersistenceManager;
 import org.jboss.ejb.StatefulSessionEnterpriseContext;
-
-// TODO this needs to be replaced with the log4j logging
 import org.jboss.logging.Logger;
 
 
@@ -65,7 +63,7 @@ import org.jboss.logging.Logger;
 *  @author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
 *  @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
 *  @author <a href="mailto:sebastien.alborini@m4x.org">Sebastien Alborini</a>
-*  @version $Revision: 1.23 $
+*  @version $Revision: 1.24 $
 */
 public class StatefulSessionFilePersistenceManager
 implements StatefulSessionPersistenceManager
@@ -73,6 +71,7 @@ implements StatefulSessionPersistenceManager
     // Constants -----------------------------------------------------
     
     // Attributes ----------------------------------------------------
+   private static Logger log = Logger.create(StatefulSessionFilePersistenceManager.class);
     private StatefulSessionContainer con;
     
     private Method ejbActivate;
@@ -117,7 +116,7 @@ implements StatefulSessionPersistenceManager
         
         dir.mkdirs();
         
-        Logger.debug("Storing sessions for "+ejbName+" in:"+dir);
+        log.debug("Storing sessions for "+ejbName+" in:"+dir);
         
         // Clear dir of old files
         File[] sessions = dir.listFiles();
@@ -125,7 +124,7 @@ implements StatefulSessionPersistenceManager
         {
             sessions[i].delete();
         }
-        Logger.debug(sessions.length + " old sessions removed");
+        log.debug(sessions.length + " old sessions removed");
         
         // Get fields of class
         Class beanClass = con.getBeanClass();

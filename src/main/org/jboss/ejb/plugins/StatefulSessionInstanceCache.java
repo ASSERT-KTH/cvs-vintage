@@ -25,8 +25,6 @@ import org.jboss.ejb.StatefulSessionContainer;
 import org.jboss.ejb.EnterpriseContext;
 import org.jboss.ejb.StatefulSessionEnterpriseContext;
 import org.jboss.ejb.StatefulSessionPersistenceManager;
-
-// TODO this needs to be replaced with the log4j logging
 import org.jboss.logging.Logger;
 
 /**
@@ -34,7 +32,7 @@ import org.jboss.logging.Logger;
  *
  * @author <a href="mailto:simone.bordet@compaq.com">Simone Bordet</a>
  * @author <a href="mailto:sebastien.alborini@m4x.org">Sebastien Alborini</a>
- * @version $Revision: 1.11 $
+ * @version $Revision: 1.12 $
  */
 public class StatefulSessionInstanceCache
     extends AbstractInstanceCache
@@ -42,6 +40,7 @@ public class StatefulSessionInstanceCache
     // Constants -----------------------------------------------------
 
     // Attributes ----------------------------------------------------
+   protected Logger log = Logger.create(StatefulSessionInstanceCache.class);
     /* The container */
     private StatefulSessionContainer m_container;
     /* The map that holds passivated beans that will be removed */
@@ -148,7 +147,7 @@ public class StatefulSessionInstanceCache
         m_buffer.append(m_container.getBeanMetaData().getEjbName());
         m_buffer.append("' with id = ");
         m_buffer.append(key);
-        Logger.debug(m_buffer.toString());
+        log.debug(m_buffer.toString());
 
         if (isJMSMonitoringEnabled())
         {
@@ -160,7 +159,7 @@ public class StatefulSessionInstanceCache
             }
             catch (JMSException x)
             {
-                Logger.exception(x);
+                log.error("createMessage failed", x);
             }
 
             // Send JMS Message

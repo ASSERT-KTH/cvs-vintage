@@ -38,7 +38,6 @@ import org.jboss.ejb.InstanceCache;
 import org.jboss.ejb.InstancePool;
 import org.jboss.ejb.MethodInvocation;
 import org.jboss.metadata.ConfigurationMetaData;
-import org.jboss.logging.log4j.JBossCategory;
 import org.jboss.util.Sync;
 
 /**
@@ -55,7 +54,7 @@ import org.jboss.util.Sync;
  *    before changing.
  *
  * @author <a href="mailto:bill@burkecentral.com">Bill Burke</a>
- * @version $Revision: 1.1 $
+ * @version $Revision: 1.2 $
  *
  * <p><b>Revisions:</b><br>
  * <p><b>2001/08/08: billb</b>

@@ -36,7 +36,6 @@ import org.jboss.ejb.InstanceCache;
 import org.jboss.ejb.InstancePool;
 import org.jboss.ejb.MethodInvocation;
 import org.jboss.ejb.CacheKey;
-import org.jboss.logging.log4j.JBossCategory;
 import org.jboss.metadata.EntityMetaData;
 import org.jboss.tm.TxManager;
 
@@ -46,7 +45,7 @@ import org.jboss.tm.TxManager;
  *
  *    
  * @author <a href="mailto:bill@burkecentral.com">Bill Burke</a>
- * @version $Revision: 1.1 $
+ * @version $Revision: 1.2 $
  *
  * <p><b>Revisions:</b><br>
  * <p><b>2001/08/08: billb</b>
@@ -64,10 +63,7 @@ public class EntityMultiInstanceInterceptor
    protected EntityContainer container;
 	
    // Static --------------------------------------------------------
-	
-	/** Use a JBoss custom log4j category for trace level logging */
-   static JBossCategory log = (JBossCategory) JBossCategory.getInstance(EntityMultiInstanceInterceptor.class);
-	
+
    // Constructors --------------------------------------------------
 	
 	// Public --------------------------------------------------------

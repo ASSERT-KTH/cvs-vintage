@@ -20,8 +20,6 @@ import javax.ejb.MessageDrivenContext;
 import javax.ejb.MessageDrivenBean;
 import javax.ejb.SessionContext;
 import javax.ejb.EJBException;
-
-// TODO this needs to be replaced with the log4j logging
 import org.jboss.logging.Logger;
 
 import org.jboss.metadata.MetaData;
@@ -34,7 +32,7 @@ import org.jboss.metadata.MessageDrivenMetaData;
  * @author <a href="mailto:peter.antman@tim.se">Peter Antman</a>.
  * @author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
  * @author <a href="sebastien.alborini@m4x.org">Sebastien Alborini</a>
- * @version $Revision: 1.10 $
+ * @version $Revision: 1.11 $
  */
 public class MessageDrivenEnterpriseContext
    extends EnterpriseContext
@@ -42,7 +40,7 @@ public class MessageDrivenEnterpriseContext
    // Constants -----------------------------------------------------
 
    // Attributes ----------------------------------------------------
-
+   protected static Logger log = Logger.create(MessageDrivenEnterpriseContext.class);
    //EJBObject ejbObject;
    MessageDrivenContext ctx;
 
@@ -133,20 +131,20 @@ public class MessageDrivenEnterpriseContext
    {
       public EJBHome getEJBHome()
       {
-         Logger.log("MessageDriven bean is not allowed to call getEJBHome");
+         log.info("MessageDriven bean is not allowed to call getEJBHome");
          throw new IllegalStateException("Not valid for MessageDriven beans");
       }
 
       public boolean isCallerInRole(String id)
       {
-         Logger.log("MessageDriven bean is not allowed to call isCallerInRole");
+         log.info("MessageDriven bean is not allowed to call isCallerInRole");
          throw new IllegalStateException("Not valid for MessageDriven beans");
       }
 
 
       public Principal getCallerPrincipal()
       {
-         Logger.log("MessageDriven bean is not allowed to call getCallerPrincipal()");
+         log.info("MessageDriven bean is not allowed to call getCallerPrincipal()");
          throw new IllegalStateException("Not valid for MessageDriven beans");
       }
 
@@ -154,7 +152,7 @@ public class MessageDrivenEnterpriseContext
       {
          if (((MessageDrivenMetaData)con.getBeanMetaData()).getMethodTransactionType() != MetaData.TX_REQUIRED) {
             // NO transaction
-            Logger.log("MessageDriven bean is not allowed to call getRollbackOnly with this transaction settings");
+            log.info("MessageDriven bean is not allowed to call getRollbackOnly with this transaction settings");
             throw new IllegalStateException("MessageDriven bean is not allowed to call getRollbackOnly with this transaction settings");
          } else {
             return super.getRollbackOnly();
@@ -165,7 +163,7 @@ public class MessageDrivenEnterpriseContext
       {
          if (((MessageDrivenMetaData)con.getBeanMetaData()).getMethodTransactionType() != MetaData.TX_REQUIRED) {
             // NO transaction
-            Logger.log("MessageDriven bean is not allowed to call setRollbackOnly with this transaction settings");
+            log.info("MessageDriven bean is not allowed to call setRollbackOnly with this transaction settings");
             throw new IllegalStateException("MessageDriven bean is not allowed to call setRollbackOnly with this transaction settings");
          } else {
             super.setRollbackOnly();

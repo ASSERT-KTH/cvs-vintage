@@ -41,7 +41,6 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 
-import org.jboss.logging.log4j.JBossCategory;
 import org.jboss.system.MBeanClassLoader;
 
 import org.jboss.system.Service;
@@ -62,7 +61,7 @@ import org.xml.sax.SAXException;
  * @author    <a href="mailto:marc.fleury@jboss.org">Marc Fleury</a>
  * @author <a href="mailto:David.Maplesden@orion.co.nz">David Maplesden</a>
  * @author    <a href="mailtod_jencks@users.sourceforge.net">David Jencks</a>
- * @version   $Revision: 1.6 $ <p>
+ * @version   $Revision: 1.7 $ <p>
  *
  *      <b>20010830 marc fleury:</b>
  *      <ul>initial import
@@ -96,11 +95,6 @@ public class ServiceDeployer
 {
 
    // Attributes --------------------------------------------------------
-   /**
-    * Instance logger.
-    */
-   private JBossCategory log = (JBossCategory)
-         JBossCategory.getInstance(this.getClass());
 
    // each url can spawn a series of MLet classloaders that are specific to it and cycled
    private Map urlToClassLoadersSetMap;

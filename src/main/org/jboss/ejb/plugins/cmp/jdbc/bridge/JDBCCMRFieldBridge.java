@@ -30,7 +30,7 @@ import org.jboss.ejb.plugins.cmp.bridge.CMRFieldBridge;
 import org.jboss.ejb.plugins.cmp.jdbc.JDBCStoreManager;
 import org.jboss.ejb.plugins.cmp.jdbc.metadata.JDBCCMPFieldMetaData;
 import org.jboss.ejb.plugins.cmp.jdbc.metadata.JDBCRelationshipRoleMetaData;
-import org.jboss.logging.Log;
+import org.jboss.logging.Logger;
 import org.jboss.security.SecurityAssociation;
 
 /**
@@ -44,7 +44,7 @@ import org.jboss.security.SecurityAssociation;
  *      One for each role that entity has.       
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
- * @version $Revision: 1.6 $
+ * @version $Revision: 1.7 $
  */                            
 public class JDBCCMRFieldBridge implements CMRFieldBridge {
    // ------ Invocation messages ------
@@ -151,7 +151,7 @@ public class JDBCCMRFieldBridge implements CMRFieldBridge {
    /**
     * da log.
     */
-   protected Log log;
+   protected Logger log;
    
    /**
     * Creates a cmr field for the entity based on the metadata.

@@ -33,7 +33,6 @@ import org.jboss.ejb.plugins.cmp.PassivateEntityCommand;
 
 import org.jboss.ejb.plugins.cmp.jdbc.metadata.JDBCQueryMetaData;
 
-import org.jboss.logging.Log;
 
 /**
  * JDBCCommandFactory creates all required CMP command and some JDBC 
@@ -43,7 +42,7 @@ import org.jboss.logging.Log;
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
  * @author <a href="mailto:justin@j-m-f.demon.co.uk">Justin Forder</a>
  * @author <a href="danch@nvisia.com">danch (Dan Christopherson</a>
- * @version $Revision: 1.5 $
+ * @version $Revision: 1.6 $
  */
 public class JDBCCommandFactory implements CommandFactory
 {

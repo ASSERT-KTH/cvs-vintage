@@ -20,7 +20,7 @@ import org.jboss.ejb.plugins.cmp.CMPStoreManager;
 import org.jboss.ejb.plugins.cmp.jdbc.JDBCStoreManager;
 import org.jboss.ejb.plugins.cmp.jdbc.metadata.JDBCCMPFieldMetaData;
 
-import org.jboss.logging.Log;
+import org.jboss.logging.Logger;
 
 /**
  * JDBCCMP1xFieldBridge is a concrete implementation of JDBCCMPFieldBridge for 
@@ -36,7 +36,7 @@ import org.jboss.logging.Log;
  *      One for each entity bean cmp field.       
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
- * @version $Revision: 1.5 $
+ * @version $Revision: 1.6 $
  */                            
 public class JDBCCMP1xFieldBridge extends JDBCAbstractCMPFieldBridge {
    protected Field field;

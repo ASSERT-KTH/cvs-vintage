@@ -19,7 +19,7 @@ import org.jboss.system.ServiceMBeanSupport;
  * An abstract base class for deployer service implementations.
  *
  * @author <a href="mailto:toby.allsopp@peace.com">Toby Allsopp</a>
- * @version $Revision: 1.5 $
+ * @version $Revision: 1.6 $
  *
  * <p><b>Revisions:</b>
  *
@@ -60,7 +60,7 @@ public abstract class DeployerMBeanSupport
             }
             catch (Throwable t)
             {
-               log.exception(t);
+               log.error("undeploy failed", t);
                if (t instanceof Exception)
                {
                   if (t instanceof IOException) throw (IOException) t;
@@ -78,7 +78,7 @@ public abstract class DeployerMBeanSupport
          }
          catch (Throwable t)
          {
-            log.exception(t);
+            log.error("deploy failed", t);
             if (t instanceof Exception)
             {
                if (t instanceof IOException) throw (IOException) t;

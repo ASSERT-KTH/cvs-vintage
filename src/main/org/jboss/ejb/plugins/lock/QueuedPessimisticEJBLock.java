@@ -7,6 +7,8 @@
 
 package org.jboss.ejb.plugins.lock;
 
+import java.io.FileOutputStream;
+import java.io.PrintStream;
 import java.util.LinkedList;
 import java.util.HashMap;
 import java.util.Collections;
@@ -20,10 +22,7 @@ import javax.transaction.RollbackException;
 import javax.ejb.EJBObject;
 
 import org.jboss.ejb.MethodInvocation;
-import org.jboss.logging.log4j.JBossCategory;
 
-import java.io.FileOutputStream;
-import java.io.PrintStream;
 
 /**
  * This class is holds threads awaiting the transactional lock to be free
@@ -42,7 +41,7 @@ import java.io.PrintStream;
  * @author <a href="marc.fleury@jboss.org">Marc Fleury</a>
  * @author <a href="bill@burkecentral.com">Bill Burke</a>
  *
- * @version $Revision: 1.3 $
+ * @version $Revision: 1.4 $
  *
  * <p><b>Revisions:</b><br>
  * <p><b>2001/08/03: billb</b>

@@ -16,8 +16,6 @@ import java.util.ArrayList;
 import javax.ejb.FinderException;
 
 import org.jboss.ejb.EntityEnterpriseContext;
-
-// TODO this needs to be replaced with the log4j logging
 import org.jboss.logging.Logger;
 
 import org.jboss.ejb.plugins.jaws.JPMFindEntitiesCommand;
@@ -33,12 +31,13 @@ import org.jboss.util.FinderResults;
  *
  * @see org.jboss.ejb.plugins.jaws.jdbc.JDBCFindEntitiesCommand
  * @author <a href="mailto:michel.anke@wolmail.nl">Michel de Groot</a>
- * @version $Revision: 1.7 $
+ * @version $Revision: 1.8 $
  */
 public class CustomFindByEntitiesCommand
    implements JPMFindEntitiesCommand
 {
    // Attributes ----------------------------------------------------
+   static Logger log = Logger.create(CustomFindByEntitiesCommand.class);
 
    /** The method implementing the finder. */
    protected Method finderImplMethod;
@@ -60,8 +59,7 @@ public class CustomFindByEntitiesCommand
       finderImplMethod = finderMethod;
       // set name for debugging purposes
       name = "Custom finder "+finderMethod.getName();
-
-      Logger.debug("Finder:"+name);
+      log.debug("Finder:"+name);
    }
 
    // JPMFindEntitiesCommand implementation -------------------------

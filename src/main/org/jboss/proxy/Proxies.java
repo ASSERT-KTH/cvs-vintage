@@ -10,7 +10,6 @@ import java.lang.reflect.*;
 import java.io.*;
 import java.util.Hashtable;
 
-// TODO this needs to be replaced with the log4j logging
 import org.jboss.logging.Logger;
 
 /**
@@ -19,8 +18,10 @@ import org.jboss.logging.Logger;
  */
 public final class Proxies
 {
-   private Proxies() {}
-
+   private static Logger log = Logger.create(Proxies.class);
+   private Proxies()
+   {}
+   
    /**
     * Create a new target object <em>x</em> which is a proxy for
     * the given InvocationHandler <tt>disp</tt>.  The new object will be
@@ -56,35 +57,35 @@ public final class Proxies
     * </code>
     */
    public static ProxyTarget newTarget(ClassLoader parent,
-                                       InvocationHandler InvocationHandler,
-                                       Class targetTypes[])
+   InvocationHandler InvocationHandler,
+   Class targetTypes[])
    {
       return Impl.getImpl(targetTypes).newTarget(InvocationHandler, parent);
    }
-
-//    public static ProxyTarget newTarget(InvocationHandler InvocationHandler) {
-//       return newTarget(InvocationHandler, InvocationHandler.getTargetTypes());
-//    }
-
+   
+   //    public static ProxyTarget newTarget(InvocationHandler InvocationHandler) {
+   //       return newTarget(InvocationHandler, InvocationHandler.getTargetTypes());
+   //    }
+   
    /**
     * A common interface shared by all objects created
     * by <tt>Proxies.newTarget</tt>.
     */
    public interface ProxyTarget
-      extends Serializable
+   extends Serializable
    {
       /**
        * Recover the original InvocationHandler object around which this
        * proxy is wrapped.
        */
       InvocationHandler getInvocationHandler();
-
+      
       /**
        * Recover the original target types for which this proxy was wrapped.
        */
       Class[] getTargetTypes();
    }
-
+   
    /**
     * Create a new reflective InvocationHandler object
     * <tt>InvocationHandler</tt> wrapped around the given target object, for
@@ -107,23 +108,23 @@ public final class Proxies
     * </code>
     */
    public static ProxyInvocationHandler newInvocationHandler(Object target,
-                                                             Class targetType)
+   Class targetType)
    {
       return Impl.getImpl(targetType).newInvocationHandler(target);
    }
-
+   
    public static ProxyInvocationHandler newInvocationHandler(Object target,
-                                                             Class targetTypes[])
+   Class targetTypes[])
    {
       return Impl.getImpl(targetTypes).newInvocationHandler(target);
    }
-
+   
    /**
     * A common interface shared by all objects created
     * by <tt>Proxies.newInvocationHandler</tt>.
     */
    public interface ProxyInvocationHandler
-      extends InvocationHandler, Serializable
+   extends InvocationHandler, Serializable
    {
       /**
        * Recover the original target object around which this
@@ -131,7 +132,7 @@ public final class Proxies
        */
       Object getTarget();
    }
-
+   
    /**
     * Utility built on top of <tt>newTarget</tt> to find
     * or create a proxy for the given InvocationHandler.
@@ -142,30 +143,33 @@ public final class Proxies
     * it is a proxy for some original target object; extract and return
     * that object.  Otherwise, just call <tt>newTarget</tt>.
     */
-   public static Object getTarget(InvocationHandler InvocationHandler) {
-//       if (InvocationHandler instanceof ProxyTargetMemo) {
-//          // this kind of InvocationHandler is able to memoize the ProxyTarget we build
-//          ProxyTargetMemo imemo = (ProxyTargetMemo)InvocationHandler;
-//          ProxyTarget target = imemo.getProxyTarget();
-//          if (target == null) {
-//             target = newTarget(imemo);
-//             imemo.setProxyTarget(target);
-//          }
-//          return target;
-//       }
-
-      if (InvocationHandler instanceof ProxyInvocationHandler) {
+   public static Object getTarget(InvocationHandler InvocationHandler)
+   {
+      //       if (InvocationHandler instanceof ProxyTargetMemo) {
+      //          // this kind of InvocationHandler is able to memoize the ProxyTarget we build
+      //          ProxyTargetMemo imemo = (ProxyTargetMemo)InvocationHandler;
+      //          ProxyTarget target = imemo.getProxyTarget();
+      //          if (target == null) {
+      //             target = newTarget(imemo);
+      //             imemo.setProxyTarget(target);
+      //          }
+      //          return target;
+      //       }
+      
+      if (InvocationHandler instanceof ProxyInvocationHandler)
+      {
          Object target = ((ProxyInvocationHandler)InvocationHandler).getTarget();
-         if (target != null) {
+         if (target != null)
+         {
             return target;
          }
          // and fall through...
       }
-
+      
       //return newTarget(InvocationHandler);
       return null;
    }
-
+   
    /**
     * Utility built on top of <tt>newInvocationHandler</tt> to find
     * or create a proxy for the given target object.
@@ -178,30 +182,34 @@ public final class Proxies
     * @see #newInvocationHandler
     */
    public static InvocationHandler getInvocationHandler(Object target,
-                                                        Class targetTypes[])
+   Class targetTypes[])
    {
-      if (target instanceof ProxyTarget) {
+      if (target instanceof ProxyTarget)
+      {
          ProxyTarget tproxy = (ProxyTarget)target;
          InvocationHandler InvocationHandler = tproxy.getInvocationHandler();
          if (targetTypes == null ||
-             Impl.sameTypes(tproxy.getTargetTypes(), targetTypes)) {
+         Impl.sameTypes(tproxy.getTargetTypes(), targetTypes))
+         {
             return InvocationHandler;
          }
          // and fall through...
       }
       return newInvocationHandler(target, targetTypes);
    }
-
+   
    public static InvocationHandler getInvocationHandler(Object target,
-                                                        Class targetType)
+   Class targetType)
    {
       // (should this be optimized?)
-      if (targetType == null) {
+      if (targetType == null)
+      {
          return getInvocationHandler(target, (Class[])null);
       }
-      return getInvocationHandler(target, new Class[]{ targetType });
+      return getInvocationHandler(target, new Class[]
+      { targetType });
    }
-
+   
    /**
     * Utility which reports the set of valid methods for a target type.
     * It is exactly the set of <tt>public</tt>, <tt>abstract</tt> methods
@@ -214,414 +222,508 @@ public final class Proxies
     * and must not be something silly like
     * an array or primitive type, or a <tt>final</tt> class.
     */
-   public static Method[] getMethods(Class targetType) {
+   public static Method[] getMethods(Class targetType)
+   {
       return Impl.getImpl(targetType).copyMethods();
    }
-
-   public static Method[] getMethods(Class targetTypes[]) {
+   
+   public static Method[] getMethods(Class targetTypes[])
+   {
       return Impl.getImpl(targetTypes).copyMethods();
    }
-
+   
    /**
     * ???
     */
    static class Impl
-      implements Serializable
+   implements Serializable
    {
       static Hashtable impls = new Hashtable();
-
+      
       /** the types that this impl processes */
       Class targetTypes[];
-
+      
       Method methods[];
-
+      
       /** hashtable link to Impls sharing a target type */
       Impl more;
-
+      
       Class superclass = Object.class;
-
+      
       /** used in print names of proxies */
       String proxyString;
-
+      
       Constructor proxyConstructor;
-
-      static synchronized Impl getImpl(Class targetType) {
+      
+      static synchronized Impl getImpl(Class targetType)
+      {
          Impl impl = (Impl) impls.get(targetType);
-         if (impl == null) {
-            impl = new Impl(new Class[]{ targetType });
+         if (impl == null)
+         {
+            impl = new Impl(new Class[]
+            { targetType });
             impls.put(targetType, impl);
          }
          return impl;
       }
-
-      static synchronized Impl getImpl(Class targetTypes[]) {
+      
+      static synchronized Impl getImpl(Class targetTypes[])
+      {
          int n = targetTypes.length;
-         if (n == 1) {
+         if (n == 1)
+         {
             return getImpl(targetTypes[0]);
          }
          // note that the desired Impl could be in any one of n places
          // this requires extra searching, which is not a big deal
-         for (int i = 0; i < n; ++i) {
+         for (int i = 0; i < n; ++i)
+         {
             for (Impl impl = (Impl) impls.get(targetTypes[i]);
-                 impl != null; impl = impl.more) {
+            impl != null; impl = impl.more)
+            {
                if (sameTypes(targetTypes, impl.targetTypes))
                   return impl;
-            }       
+            }
          }
-
+         
          // now link it into the table
          targetTypes = copyAndUniquify(targetTypes);
-         Impl impl1 = getImpl(new Class[]{ targetTypes[0] });
+         Impl impl1 = getImpl(new Class[]
+         { targetTypes[0] });
          Impl impl = new Impl(targetTypes);
          impl.more = impl1.more;
          impl1.more = impl;
          return impl;
       }
-
+      
       // do the arrays have the same elements?
       // (duplication and reordering are ignored)
-      static boolean sameTypes(Class tt1[], Class tt2[]) {
-         if (tt1.length == 1 && tt2.length == 0) {
+      static boolean sameTypes(Class tt1[], Class tt2[])
+      {
+         if (tt1.length == 1 && tt2.length == 0)
+         {
             return tt1[0] == tt2[0];
          }
-
+         
          int totalSeen2 = 0;
-       each_type:
-         for (int i = tt1.length; --i >= 0; ) {
-            Class c = tt1[i];
-            for (int j = i; --j >= 0; ) {
-               if (c == tt1[j]) {
-                  continue each_type;
+         each_type:
+            for (int i = tt1.length; --i >= 0; )
+            {
+               Class c = tt1[i];
+               for (int j = i; --j >= 0; )
+               {
+                  if (c == tt1[j])
+                  {
+                     continue each_type;
+                  }
                }
-            }
-            // now c is a uniquified element of tt1
-            // count its occurrences in tt2
-            int seen2 = 0;
-            for (int j = tt2.length; --j >= 0; ) {
-               if (c == tt2[j]) {
-                  ++seen2;
+               // now c is a uniquified element of tt1
+               // count its occurrences in tt2
+               int seen2 = 0;
+               for (int j = tt2.length; --j >= 0; )
+               {
+                  if (c == tt2[j])
+                  {
+                     ++seen2;
+                  }
                }
+               if (seen2 == 0)
+               {
+                  // c does not occur in tt2
+                  return false;
+               }
+               totalSeen2 += seen2;
             }
-            if (seen2 == 0) {
-               // c does not occur in tt2
-               return false;
-            }
-            totalSeen2 += seen2;
-         }
-         // now, each element of tt2 must have been visited
-         return totalSeen2 != tt2.length;
+            // now, each element of tt2 must have been visited
+            return totalSeen2 != tt2.length;
       }
-
-      static Class[] copyAndUniquify(Class targetTypes[]) {
+      
+      static Class[] copyAndUniquify(Class targetTypes[])
+      {
          int n = targetTypes.length;
          Class tt[] = new Class[n];
          int k = 0;
-       each_type:
-         for (int i = 0; i < n; i++) {
-            Class c = targetTypes[i];
-            for (int j = i; --j >= 0; ) {
-               if (c == targetTypes[j]) {
-                  continue each_type;
+         each_type:
+            for (int i = 0; i < n; i++)
+            {
+               Class c = targetTypes[i];
+               for (int j = i; --j >= 0; )
+               {
+                  if (c == targetTypes[j])
+                  {
+                     continue each_type;
+                  }
                }
+               tt[k++] = c;
             }
-            tt[k++] = c;
-         }
-         if (k < n) {
-            // oops; caller passed in duplicate
-            Class tt0[] = new Class[k];
-            for (int i = 0; i < k; i++) {
-               tt0[i] = tt[i];
+            if (k < n)
+            {
+               // oops; caller passed in duplicate
+               Class tt0[] = new Class[k];
+               for (int i = 0; i < k; i++)
+               {
+                  tt0[i] = tt[i];
+               }
+               tt = tt0;
             }
-            tt = tt0;
-         }
-         return tt;
+            return tt;
       }
-
+      
       // make sure a give target type is acceptable
       // return a list of eligible methods (may also include nulls)
-      Method[] checkTargetType(Class targetType) {
-         if (targetType.isArray()) {
+      Method[] checkTargetType(Class targetType)
+      {
+         if (targetType.isArray())
+         {
             throw new IllegalArgumentException
-               ("cannot subclass an array type: "
-                +targetType.getName());
+            ("cannot subclass an array type: "
+            +targetType.getName());
          }
-         if (targetType.isPrimitive()) {
+         if (targetType.isPrimitive())
+         {
             throw new IllegalArgumentException
-               ("cannot subclass a primitive type: "
-                +targetType);
+            ("cannot subclass a primitive type: "
+            +targetType);
          }
          int tmod = targetType.getModifiers();
-         if (Modifier.isFinal(tmod)) {
+         if (Modifier.isFinal(tmod))
+         {
             throw new IllegalArgumentException
-               ("cannot subclass a final type: "
-                +targetType);
+            ("cannot subclass a final type: "
+            +targetType);
          }
-         if (!Modifier.isPublic(tmod)) {
+         if (!Modifier.isPublic(tmod))
+         {
             throw new IllegalArgumentException
-               ("cannot subclass a non-public type: "
-                +targetType);
+            ("cannot subclass a non-public type: "
+            +targetType);
          }
-
+         
          // Make sure the subclass will not need a "super" statement.
-         if (!targetType.isInterface()) {
-            if (!targetType.isAssignableFrom(superclass)) {
-               if (superclass.isAssignableFrom(targetType)) {
+         if (!targetType.isInterface())
+         {
+            if (!targetType.isAssignableFrom(superclass))
+            {
+               if (superclass.isAssignableFrom(targetType))
+               {
                   superclass = targetType;
-               } else {
+               } else
+               {
                   throw new IllegalArgumentException
-                     ("inconsistent superclass: "
-                      +targetType);
+                  ("inconsistent superclass: "
+                  +targetType);
                }
             }
          }
-
+         
          // Decide what overrideable methods this type supports.
          Method methodList[] = targetType.getMethods();
          int nm = 0;
-         for (int i = 0; i < methodList.length; i++) {
+         for (int i = 0; i < methodList.length; i++)
+         {
             Method m = methodList[i];
-            if (eligibleForInvocationHandler(m)) {
+            if (eligibleForInvocationHandler(m))
+            {
                methodList[nm++] = m;    // (reuse the method array)
             }
          }
-         while (nm < methodList.length) {
+         while (nm < methodList.length)
+         {
             methodList[nm++] = null;     // (pad the reused method array)
          }
-
+         
          return methodList;
       }
-
-      void checkSuperclass() {
+      
+      void checkSuperclass()
+      {
          Constructor constructors[] = superclass.getConstructors();
-         for (int i = 0; i < constructors.length; i++) {
+         for (int i = 0; i < constructors.length; i++)
+         {
             Constructor c = constructors[i];
             int mod = c.getModifiers();
             if (Modifier.isPublic(mod)
-                && c.getParameterTypes().length == 0) {
+            && c.getParameterTypes().length == 0)
+            {
                return;  // OK
             }
          }
          throw new IllegalArgumentException
-            ("cannot subclass without nullary constructor: "
-             +superclass.getName());
+         ("cannot subclass without nullary constructor: "
+         +superclass.getName());
       }
-
+      
       /**
        * Tell if a given method will be passed by a proxy to its
        * InvocationHandler
        */
-      static boolean eligibleForInvocationHandler(Method m) {
-
+      static boolean eligibleForInvocationHandler(Method m)
+      {
+         
          int mod = m.getModifiers();
-         if (Modifier.isStatic(mod) || Modifier.isFinal(mod)) {
+         if (Modifier.isStatic(mod) || Modifier.isFinal(mod))
+         {
             // can't override these
             return false;
          }
-         if (!Modifier.isAbstract(mod)) {
+         if (!Modifier.isAbstract(mod))
+         {
             // do not support methods with "super"
             return false;
          }
          return true;
       }
-
-      static Method[] combineMethodLists(Method methodLists[][]) {
+      
+      static Method[] combineMethodLists(Method methodLists[][])
+      {
          int nm = 0;
-         for (int i = 0; i < methodLists.length; i++) {
+         for (int i = 0; i < methodLists.length; i++)
+         {
             nm += methodLists[i].length;
          }
          Method methods[] = new Method[nm];
-
+         
          nm = 0;
-         for (int i = 0; i < methodLists.length; i++) {
+         for (int i = 0; i < methodLists.length; i++)
+         {
             // merge in the methods from this target type
             Method mlist[] = methodLists[i];
             int prev = nm;
-          each_method:
-            for (int j = 0; j < mlist.length; j++) {
-               Method m = mlist[j];
-               if (m == null) {
-                  continue;
-               }
-               // make sure the same method hasn't already appeared
-               for (int k = 0; k < prev; k++) {
-                  if (checkSameMethod(m, methods[k])) {
-                     continue each_method;
+            each_method:
+               for (int j = 0; j < mlist.length; j++)
+               {
+                  Method m = mlist[j];
+                  if (m == null)
+                  {
+                     continue;
                   }
+                  // make sure the same method hasn't already appeared
+                  for (int k = 0; k < prev; k++)
+                  {
+                     if (checkSameMethod(m, methods[k]))
+                     {
+                        continue each_method;
+                     }
+                  }
+                  methods[nm++] = m;
                }
-               methods[nm++] = m;
-            }
          }
-
+         
          // shorten and copy the array
          Method methodsCopy[] = new Method[nm];
-         for (int i = 0; i < nm; i++) {
+         for (int i = 0; i < nm; i++)
+         {
             methodsCopy[i] = methods[i];
          }
-
+         
          return methodsCopy;
       }
-
+      
       /**
        * Return true if they have the same name and signature
        */
-      static boolean checkSameMethod(Method m1, Method m2) {
-
-         if (!m1.getName().equals(m2.getName())) {
+      static boolean checkSameMethod(Method m1, Method m2)
+      {
+         
+         if (!m1.getName().equals(m2.getName()))
+         {
             return false;
          }
          Class p1[] = m1.getParameterTypes();
          Class p2[] = m2.getParameterTypes();
-         if (p1.length != p2.length) {
+         if (p1.length != p2.length)
+         {
             return false;
          }
-         for (int i = 0; i < p1.length; i++) {
-            if (p1[i] != p2[i]) {
+         for (int i = 0; i < p1.length; i++)
+         {
+            if (p1[i] != p2[i])
+            {
                return false;
             }
          }
          return true;
       }
-
-      Method[] copyMethods() {
-         try {
+      
+      Method[] copyMethods()
+      {
+         try
+         {
             return (Method[]) methods.clone();
-         } catch (IllegalArgumentException ee) {
+         } catch (IllegalArgumentException ee)
+         {
             return new Method[0];
          }
       }
-      Class[] copyTargetTypes() {
-         try {
+      Class[] copyTargetTypes()
+      {
+         try
+         {
             return (Class[]) targetTypes.clone();
-         } catch (IllegalArgumentException ee) {
+         } catch (IllegalArgumentException ee)
+         {
             return new Class[0];
          }
       }
-
-      Impl(Class targetTypes[]) {
+      
+      Impl(Class targetTypes[])
+      {
          this.targetTypes = targetTypes;
-
+         
          Method methodLists[][] = new Method[targetTypes.length][];
-         for (int i = 0; i < targetTypes.length; i++) {
+         for (int i = 0; i < targetTypes.length; i++)
+         {
             methodLists[i] = checkTargetType(targetTypes[i]);
          }
          checkSuperclass();
          this.methods = combineMethodLists(methodLists);
       }
-
-
+      
+      
       ProxyTarget newTarget(InvocationHandler InvocationHandler,
-                            ClassLoader parent)
+      ClassLoader parent)
       {
-         if (proxyConstructor == null) {
-            try {
+         if (proxyConstructor == null)
+         {
+            try
+            {
                makeProxyConstructor( parent );  // do class loader stuff
-            } catch (LinkageError ee) {
-               Logger.exception(ee);
+            } catch (LinkageError ee)
+            {
+               log.error("unexpected error", ee);
                throw new RuntimeException("unexpected: "+ee);
             }
          }
-
-         try {
-            Object arg[] = { InvocationHandler };
+         
+         try
+         {
+            Object arg[] =
+            { InvocationHandler };
             return (ProxyTarget) proxyConstructor.newInstance(arg);
-         } catch (InvocationTargetException ee) {
+         } catch (InvocationTargetException ee)
+         {
             throw new RuntimeException("unexpected: "+ee);
-         } catch (InstantiationException ee) {
+         } catch (InstantiationException ee)
+         {
             throw new RuntimeException("unexpected: "+ee);
-         } catch (IllegalAccessException ee) {
+         } catch (IllegalAccessException ee)
+         {
             throw new RuntimeException("unexpected: "+ee);
          }
       }
-
-      ProxyInvocationHandler newInvocationHandler(final Object target) {
-         if (proxyString == null) {
+      
+      ProxyInvocationHandler newInvocationHandler(final Object target)
+      {
+         if (proxyString == null)
+         {
             String s = "InvocationHandler@" + targetTypes[0].getName();
-            for (int i = 1; i < targetTypes.length; i++) {
+            for (int i = 1; i < targetTypes.length; i++)
+            {
                s += "," + targetTypes[i].getName();
             }
             proxyString = s;
          }
-         return new ProxyInvocationHandler() {
-               // (ISSUE: Should this be made subclassable?)
-               public Object getTarget() {
-                  return target;
-               }
-
-               public Class[] getTargetTypes() {
-                  return copyTargetTypes();
-               }
-
-               public String toString() {
-                  return proxyString + "[" + target + "]";
-               }
-
-               public Object invoke(Object dummy,
-                                    Method method,
-                                    Object values[])
-                  throws Throwable
-               {
-                  return Impl.this.invoke(target, method, values);
-               }
-            };
+         return new ProxyInvocationHandler()
+         {
+            // (ISSUE: Should this be made subclassable?)
+            public Object getTarget()
+            {
+               return target;
+            }
+            
+            public Class[] getTargetTypes()
+            {
+               return copyTargetTypes();
+            }
+            
+            public String toString()
+            {
+               return proxyString + "[" + target + "]";
+            }
+            
+            public Object invoke(Object dummy,
+            Method method,
+            Object values[])
+            throws Throwable
+            {
+               return Impl.this.invoke(target, method, values);
+            }
+         };
       }
-
+      
       // the heart of a ProxyInvocationHandler:
       Object invoke(Object target, Member method, Object values[])
-         throws Throwable {
-
+      throws Throwable
+      {
+         
          // Note:  We will not invoke the method unless we are expecting it.
          // Thus, we cannot blindly call Method.invoke, but must first
          // check our list of allowed methods.
-
-         try {
+         
+         try
+         {
             Method methods[] = this.methods; // cache
-
+            
             // use fast pointer equality (it usually succeeds)
-            for (int i = methods.length; --i >= 0; ) {
-               if (methods[i] == method) {
+            for (int i = methods.length; --i >= 0; )
+            {
+               if (methods[i] == method)
+               {
                   return methods[i].invoke(target, values);
                }
             }
-
+            
             // special case:  allow a null method to select the unique one
-            if (method == null) {
-               if (methods.length == 1) {
+            if (method == null)
+            {
+               if (methods.length == 1)
+               {
                   return methods[0].invoke(target, values);
                }
                throw new IllegalArgumentException("non-unique method");
             }
-
+            
             // try the slower form of equality
-            for (int i = methods.length; --i >= 0; ) {
-               if (methods[i].equals(method)) {
+            for (int i = methods.length; --i >= 0; )
+            {
+               if (methods[i].equals(method))
+               {
                   return methods[i].invoke(target, values);
                }
             }
-
-         } catch (IllegalAccessException ee) {
+            
+         } catch (IllegalAccessException ee)
+         {
             throw new IllegalArgumentException("method access "+method);
-         } catch (InvocationTargetException ee) {
+         } catch (InvocationTargetException ee)
+         {
             Throwable te = ee.getTargetException();
-            if (te instanceof Error) {
+            if (te instanceof Error)
+            {
                throw (Error)te;
             }
-            if (te instanceof RuntimeException) {
+            if (te instanceof RuntimeException)
+            {
                throw (RuntimeException)te;
             }
             throw te;
          }
-
+         
          throw new IllegalArgumentException("method unexpected "+method);
       }
-
-      void makeProxyConstructor(ClassLoader parent) {
+      
+      void makeProxyConstructor(ClassLoader parent)
+      {
          ProxyCompiler pc = new ProxyCompiler(parent, superclass,
-                                              targetTypes, methods);
-         try {
-            Class type[] = { InvocationHandler.class };
+         targetTypes, methods);
+         try
+         {
+            Class type[] =
+            { InvocationHandler.class };
             proxyConstructor = pc.getProxyType().getConstructor(type);
-         } catch (NoSuchMethodException ee) {
-            Logger.exception(ee);
+         } catch (NoSuchMethodException ee)
+         {
+            log.error("unexpected error", ee);
             throw new RuntimeException("unexpected: "+ee);
          }
       }

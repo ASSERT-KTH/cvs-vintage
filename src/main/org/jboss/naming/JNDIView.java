@@ -25,7 +25,6 @@ import javax.naming.NamingException;
 import org.jboss.ejb.Application;
 import org.jboss.ejb.Container;
 import org.jboss.ejb.ContainerFactoryMBean;
-import org.jboss.logging.Log;
 import org.jboss.system.ServiceMBeanSupport;
 
 /** A simple utlity mbean that allows one to recursively list the default
@@ -37,7 +36,7 @@ to the jboss.jcml file.
 
 @author <a href="mailto:Scott_Stark@displayscape.com">Scott Stark</a>.
 @author Vladimir Blagojevic <vladimir@xisnext.2y.net>
-@version $Revision: 1.9 $
+@version $Revision: 1.10 $
 */
 public class JNDIView extends ServiceMBeanSupport implements JNDIViewMBean
 {
@@ -78,7 +77,7 @@ public class JNDIView extends ServiceMBeanSupport implements JNDIViewMBean
         }
         catch(Exception e)
         {
-            log.exception(e);
+            log.error("getDeployedApplications failed", e);
             buffer.append("Failed to getDeployedApplications\n");
             formatException(buffer, e);
             buffer.insert(0, "<pre>");
@@ -133,7 +132,7 @@ public class JNDIView extends ServiceMBeanSupport implements JNDIViewMBean
         }
         catch(NamingException e)
         {
-            log.exception(e);
+            log.error("lookup for java: failed", e);
             buffer.append("Failed to get InitialContext, "+e.toString(true));
             formatException(buffer, e);
         }
@@ -149,7 +148,7 @@ public class JNDIView extends ServiceMBeanSupport implements JNDIViewMBean
         }
         catch(NamingException e)
         {
-            log.exception(e);
+            log.error("Failed to get InitialContext", e);
             buffer.append("Failed to get InitialContext, "+e.toString(true));
             formatException(buffer, e);
         }
@@ -182,7 +181,7 @@ public class JNDIView extends ServiceMBeanSupport implements JNDIViewMBean
         }
         catch(Exception e)
         {
-            log.exception(e);
+            log.error("getDeployedApplications failed", e);
             buffer.append( "<jndi>" );
             buffer.append( "<error>" );
             buffer.append( '\n' );
@@ -260,7 +259,7 @@ public class JNDIView extends ServiceMBeanSupport implements JNDIViewMBean
         }
         catch(NamingException e)
         {
-            log.exception(e);
+            log.error("Failed to get InitialContext", e);
             buffer.append( "<error>" );
             buffer.append( '\n' );
             buffer.append( "<message>" + "Failed to get InitialContext, " + e.toString( true ) + "</message>" );
@@ -283,7 +282,7 @@ public class JNDIView extends ServiceMBeanSupport implements JNDIViewMBean
         }
         catch(NamingException e)
         {
-            log.exception(e);
+            log.error("Failed to get InitialContext", e);
             buffer.append( "<error>" );
             buffer.append( '\n' );
             buffer.append( "<message>" + "Failed to get InitialContext, " + e.toString( true ) + "</message>" );

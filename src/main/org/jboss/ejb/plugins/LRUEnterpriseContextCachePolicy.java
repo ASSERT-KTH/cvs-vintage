@@ -27,7 +27,7 @@ import org.jboss.monitor.client.BeanCacheSnapshot;
  *
  * @see AbstractInstanceCache
  * @author <a href="mailto:simone.bordet@compaq.com">Simone Bordet</a>
- * @version $Revision: 1.12 $
+ * @version $Revision: 1.13 $
  */
 public class LRUEnterpriseContextCachePolicy
    extends LRUCachePolicy
@@ -258,7 +258,7 @@ public class LRUEnterpriseContextCachePolicy
          }
          catch (JMSException x) 
          {
-            log.exception(x);
+            log.error("createMessage failed", x);
          }
 			
          // Send JMS Message
@@ -289,7 +289,7 @@ public class LRUEnterpriseContextCachePolicy
          }
          catch (JMSException x) 
          {
-            log.exception(x);
+            log.error("createMessage failed", x);
          }
 			
          // Send JMS Message
@@ -384,7 +384,7 @@ public class LRUEnterpriseContextCachePolicy
             }
             catch (JMSException x) 
             {
-               log.exception(x);
+               log.error("createMessage failed", x);
             }
 			
             // Send JMS Message
@@ -463,7 +463,7 @@ public class LRUEnterpriseContextCachePolicy
             }
             catch (JMSException x) 
             {
-               log.exception(x);
+               log.error("createMessage failed", x);
             }
 			
             // Send JMS Message
@@ -508,7 +508,7 @@ public class LRUEnterpriseContextCachePolicy
             }
             catch (JMSException x) 
             {
-               log.exception(x);
+               log.error("createMessage failed", x);
             }
 			
             // Send JMS Message
@@ -531,7 +531,7 @@ public class LRUEnterpriseContextCachePolicy
             }
             catch (JMSException x) 
             {
-               log.exception(x);
+               log.error("createMessage failed", x);
             }
 			
             // Send JMS Message
@@ -555,7 +555,7 @@ public class LRUEnterpriseContextCachePolicy
             }
             catch (JMSException x) 
             {
-               log.exception(x);
+               log.error("createMessage failed", x);
             }
 			
             // Send JMS Message

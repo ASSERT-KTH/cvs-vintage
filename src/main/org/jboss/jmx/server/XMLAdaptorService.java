@@ -1,9 +1,9 @@
 /*
-* JBoss, the OpenSource J2EE webOS
-*
-* Distributable under LGPL license.
-* See terms of license at gnu.org.
-*/
+ * JBoss, the OpenSource J2EE webOS
+ *
+ * Distributable under LGPL license.
+ * See terms of license at gnu.org.
+ */
 package org.jboss.jmx.server;
 
 import javax.management.MBeanServer;
@@ -25,115 +25,119 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
 /**
-* MBean Wrapper for the XML Adaptor.
-*
-* @author Andreas Schaefer (andreas.schaefer@madplanet.com)
-* @created June 22, 2001
-* @version $Revision: 1.3 $
-*/
+ * MBean Wrapper for the XML Adaptor.
+ *
+ * @author Andreas Schaefer (andreas.schaefer@madplanet.com)
+ * @created June 22, 2001
+ * @version $Revision: 1.4 $
+ */
 public class XMLAdaptorService
-  extends ServiceMBeanSupport
-  implements XMLAdaptorServiceMBean
+extends ServiceMBeanSupport
+implements XMLAdaptorServiceMBean
 {
-  // Attributes ----------------------------------------------------
-  XMLAdaptorImpl mAdaptor;
-
-  // Constants -----------------------------------------------------
-  public static String JNDI_NAME = "jmx:xml";
-
-
-  // Static --------------------------------------------------------
-
-  // Constructors --------------------------------------------------
-
-  // Public --------------------------------------------------------
-
-  public Object[] invokeXML( Document pJmxOperations ) {
-    return mAdaptor.invokeXML( pJmxOperations );
-  }
-
-  public Object invokeXML( Element pJmxOperation ) {
-    return mAdaptor.invokeXML( pJmxOperation );
-  }
-
-  public ObjectName getObjectName( MBeanServer pServer, ObjectName pName )
-    throws
-      javax.management.MalformedObjectNameException
-  {
-    return pName;
-  }
-
-  public String getName() {
-    return "JMX XML-Adaptor";
-  }
-
-  // Protected -----------------------------------------------------
-  protected void initService()
-    throws
-      Exception
-  {
-    mAdaptor = new XMLAdaptorImpl( getServer() );
-  }
-
-  protected void startService()
-    throws
-      Exception
-  {
-    bind( mAdaptor );
-  }
-
-  protected void stopService() {
-    try
-    {
-      unbind();
-    }
-    catch( Exception e )
-    {
-      log.exception( e );
-    }
-  }
-	private void bind( XMLAdaptorImpl pImplementation )
-      throws
-         NamingException
+   // Attributes ----------------------------------------------------
+   XMLAdaptorImpl mAdaptor;
+   
+   // Constants -----------------------------------------------------
+   public static String JNDI_NAME = "jmx:xml";
+   
+   
+   // Static --------------------------------------------------------
+   
+   // Constructors --------------------------------------------------
+   
+   // Public --------------------------------------------------------
+   
+   public Object[] invokeXML( Document pJmxOperations )
    {
-		Context lContext = new InitialContext();
-
-		// Ah ! JBoss Server isn't serializable, so we use a helper class
-		NonSerializableFactory.bind( JNDI_NAME, pImplementation );
-
+      return mAdaptor.invokeXML( pJmxOperations );
+   }
+   
+   public Object invokeXML( Element pJmxOperation )
+   {
+      return mAdaptor.invokeXML( pJmxOperation );
+   }
+   
+   public ObjectName getObjectName( MBeanServer pServer, ObjectName pName )
+   throws
+   javax.management.MalformedObjectNameException
+   {
+      return pName;
+   }
+   
+   public String getName()
+   {
+      return "JMX XML-Adaptor";
+   }
+   
+   // Protected -----------------------------------------------------
+   protected void initService()
+      throws Exception
+   {
+      mAdaptor = new XMLAdaptorImpl( getServer() );
+   }
+   
+   protected void startService()
+      throws Exception
+   {
+      bind( mAdaptor );
+   }
+   
+   protected void stopService()
+   {
+      try
+      {
+         unbind();
+      }
+      catch( Exception e )
+      {
+         log.error("unbind failed", e );
+      }
+   }
+   private void bind( XMLAdaptorImpl pImplementation )
+      throws NamingException
+   {
+      Context lContext = new InitialContext();
+      
+      // Ah ! JBoss Server isn't serializable, so we use a helper class
+      NonSerializableFactory.bind( JNDI_NAME, pImplementation );
+      
       //AS Don't ask me what I am doing here
-		Name lName = lContext.getNameParser("").parse( JNDI_NAME );
-		while( lName.size() > 1 ) {
-			String lContextName = lName.get( 0 );
-			try {
-				lContext = (Context) lContext.lookup(lContextName);
-			}
-			catch( NameNotFoundException e )	{
-				lContext = lContext.createSubcontext(lContextName);
-			}
-			lName = lName.getSuffix( 1 );
-		}
-
-		// The helper class NonSerializableFactory uses address type nns, we go on to
-		// use the helper class to bind the javax.mail.Session object in JNDI
-		StringRefAddr lAddress = new StringRefAddr( "nns", JNDI_NAME );
-		Reference lReference = new Reference(
-         XMLAdaptorImpl.class.getName(),
-         lAddress,
-         NonSerializableFactory.class.getName(),
-         null
+      Name lName = lContext.getNameParser("").parse( JNDI_NAME );
+      while( lName.size() > 1 )
+      {
+         String lContextName = lName.get( 0 );
+         try
+         {
+            lContext = (Context) lContext.lookup(lContextName);
+         }
+         catch( NameNotFoundException e )
+         {
+            lContext = lContext.createSubcontext(lContextName);
+         }
+         lName = lName.getSuffix( 1 );
+      }
+      
+      // The helper class NonSerializableFactory uses address type nns, we go on to
+      // use the helper class to bind the javax.mail.Session object in JNDI
+      StringRefAddr lAddress = new StringRefAddr( "nns", JNDI_NAME );
+      Reference lReference = new Reference(
+      XMLAdaptorImpl.class.getName(),
+      lAddress,
+      NonSerializableFactory.class.getName(),
+      null
       );
-		lContext.bind( lName.get( 0 ), lReference );
-
-		log.log( "JBoss XML Adaptor Service '" + JNDI_NAME + "' bound to " + JNDI_NAME );
-	}
-
-	private void unbind() throws NamingException
-	{
+      lContext.bind( lName.get( 0 ), lReference );
+      
+      log.info( "JBoss XML Adaptor Service '" + JNDI_NAME + "' bound to " + JNDI_NAME );
+   }
+   
+   private void unbind() throws NamingException
+   {
       new InitialContext().unbind( JNDI_NAME );
       NonSerializableFactory.unbind( JNDI_NAME );
-      log.log("JBoss XML Adaptor service '" + JNDI_NAME + "' removed from JNDI" );
-	}
-
+      log.info("JBoss XML Adaptor service '" + JNDI_NAME + "' removed from JNDI" );
+   }
+   
 }
 

@@ -42,8 +42,6 @@ import javax.transaction.TransactionManager;
 
 import org.jboss.ejb.Container;
 
-import org.jboss.logging.Log;
-
 import org.jboss.metadata.ApplicationMetaData;
 import org.jboss.metadata.BeanMetaData;
 import org.jboss.metadata.SessionMetaData;
@@ -60,7 +58,7 @@ import org.jboss.metadata.XmlFileLoader;
 *   @author <a href="mailto:marc.fleury@jboss.org">Marc Fleury</a>
 *   @author <a href="mailto:andreas.schaefer@madplanet.com">Andreas Schaefer</a>
 *
-*   @version $Revision: 1.6 $
+*   @version $Revision: 1.7 $
 */
 public class ContainerManagement
   extends org.jboss.system.ServiceMBeanSupport
@@ -69,8 +67,6 @@ public class ContainerManagement
    // Attributes ----------------------------------------------------
    // Container this is the management proxy for
    Container mContainer = null;
-   // The logger of this service
-   Log mLog = Log.createLog( getName() );
    ObjectName mName = null;
 
    // Constructor ---------------------------------------------------

@@ -24,16 +24,13 @@ import javax.ejb.CreateException;
 import javax.ejb.RemoveException;
 import javax.ejb.EJBException;
 
-// TODO this needs to be replaced with the log4j logging
-import org.jboss.logging.Logger;
-
 /**
  * The container for <em>stateless</em> session beans.
  *
  * @author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
  * @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
  * @author <a href="mailto:docodan@mvcsoft.com">Daniel OConnor</a>
- * @version $Revision: 1.25 $
+ * @version $Revision: 1.26 $
  */
 public class StatelessSessionContainer
    extends Container
@@ -420,7 +417,7 @@ public class StatelessSessionContainer
          for (int i = 0; i < m.length; i++)
          {
             // Implemented by container
-            Logger.debug("Mapping "+m[i].getName());
+            log.debug("Mapping "+m[i].getName());
             map.put(m[i], getClass().getMethod(m[i].getName()+"Home", m[i].getParameterTypes()));
          }
       }
@@ -430,7 +427,7 @@ public class StatelessSessionContainer
          for (int i = 0; i < m.length; i++)
          {
             // Implemented by container
-            Logger.debug("Mapping "+m[i].getName());
+            log.debug("Mapping "+m[i].getName());
             map.put(m[i], getClass().getMethod(m[i].getName()+"LocalHome", m[i].getParameterTypes()));
          }
       }
@@ -447,19 +444,18 @@ public class StatelessSessionContainer
          {
             // Implemented by bean
             map.put(m[i], beanClass.getMethod(m[i].getName(), m[i].getParameterTypes()));
-            Logger.debug("Mapped "+m[i].getName()+" "+m[i].hashCode()+"to "+map.get(m[i]));
+            log.debug("Mapped "+m[i].getName()+" "+m[i].hashCode()+"to "+map.get(m[i]));
          }
          else
          {
             try
             {
                // Implemented by container
-               Logger.debug("Mapped Container method "+m[i].getName() +" HASH "+m[i].hashCode());
+               log.debug("Mapped Container method "+m[i].getName() +" HASH "+m[i].hashCode());
                map.put(m[i], getClass().getMethod(m[i].getName(), new Class[] { MethodInvocation.class }));
             } catch (NoSuchMethodException e)
             {
-               // DEBUG Logger.exception(e);
-               Logger.error(m[i].getName() + " in bean has not been mapped");
+               log.error(m[i].getName() + " in bean has not been mapped", e);
             }
          }
       }

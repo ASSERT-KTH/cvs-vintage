@@ -10,19 +10,20 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.util.Iterator;
 import javax.ejb.EJBException;
+
 import org.jboss.ejb.plugins.cmp.jdbc.bridge.JDBCCMPFieldBridge;
 import org.jboss.ejb.plugins.cmp.jdbc.bridge.JDBCEntityBridge;
-import org.jboss.logging.Log;
+import org.jboss.logging.Logger;
 
 /**
  * Inserts relations into a relation table.
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
- * @version $Revision: 1.4 $
+ * @version $Revision: 1.5 $
  */
 public class JDBCInsertRelationsCommand {
    protected JDBCStoreManager manager;
-   protected Log log;
+   protected Logger log;
     
    // Command name, used for debug trace
    protected String name;

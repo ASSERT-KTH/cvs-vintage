@@ -16,10 +16,7 @@ import javax.naming.InitialContext;
 
 import org.jboss.ejb.Container;
 import org.jboss.ejb.MethodInvocation;
-
-// TODO this needs to be replaced with the log4j logging
 import org.jboss.logging.Logger;
-
 import org.jboss.metadata.BeanMetaData;
 import org.jboss.metadata.SecurityIdentityMetaData;
 import org.jboss.security.AnybodyPrincipal;
@@ -33,10 +30,11 @@ is enforced. This is where the caller identity propagation is controlled as well
 
 @author <a href="on@ibis.odessa.ua">Oleg Nitz</a>
 @author <a href="mailto:Scott_Stark@displayscape.com">Scott Stark</a>.
-@version $Revision: 1.22 $
+@version $Revision: 1.23 $
 */
 public class SecurityInterceptor extends AbstractInterceptor
 {
+    protected static Logger log = Logger.create(SecurityInterceptor.class);
     /**
      * @clientCardinality 0..1
      * @supplierCardinality 1
@@ -77,6 +75,7 @@ public class SecurityInterceptor extends AbstractInterceptor
         }
         securityManager = container.getSecurityManager();
         realmMapping = container.getRealmMapping();
+        
     }
 
     public Container getContainer()
@@ -168,7 +167,7 @@ public class SecurityInterceptor extends AbstractInterceptor
         if( securityManager.isValid(principal, credential) == false )
         {
             String msg = "Authentication exception, principal="+principal;
-            Logger.error(msg);
+            log.error(msg);
             SecurityException e = new SecurityException(msg);
             throw new RemoteException("checkSecurityAssociation", e);
         }
@@ -183,7 +182,7 @@ public class SecurityInterceptor extends AbstractInterceptor
         {
             String method = mi.getMethod().getName();
             String msg = "No method permissions assigned to method="+method;
-            Logger.error(msg);
+            log.error(msg);
             SecurityException e = new SecurityException(msg);
             throw new RemoteException("checkSecurityAssociation", e);
         }
@@ -203,7 +202,7 @@ public class SecurityInterceptor extends AbstractInterceptor
                 String method = mi.getMethod().getName();
                 String msg = "Insufficient method permissions, runAsRole="+threadRunAsRole
                     + ", method="+method+", requiredRoles="+methodRoles;
-                Logger.error(msg);
+                log.error(msg);
                 SecurityException e = new SecurityException(msg);
                 throw new RemoteException("checkSecurityAssociation", e);
             }
@@ -216,7 +215,7 @@ public class SecurityInterceptor extends AbstractInterceptor
             String method = mi.getMethod().getName();
             String msg = "Insufficient method permissions, principal="+principal
                 + ", method="+method+", requiredRoles="+methodRoles;
-            Logger.error(msg);
+            log.error(msg);
             SecurityException e = new SecurityException(msg);
             throw new RemoteException("checkSecurityAssociation", e);
         }

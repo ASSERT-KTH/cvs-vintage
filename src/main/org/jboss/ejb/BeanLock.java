@@ -20,7 +20,6 @@ import javax.transaction.RollbackException;
 import javax.ejb.EJBObject;
 
 import org.jboss.ejb.MethodInvocation;
-import org.jboss.logging.log4j.JBossCategory;
 
 /**
  * BeanLock interface
@@ -28,7 +27,7 @@ import org.jboss.logging.log4j.JBossCategory;
  * @author <a href="bill@burkecentral.com">Bill Burke</a>
  * @author <a href="marc.fleury@jboss.org">Marc Fleury</a>
  *
- * @version $Revision: 1.9 $
+ * @version $Revision: 1.10 $
  *
  * <p><b>Revisions:</b><br>
 *  <p><b>2001/07/29: marcf</b>

@@ -27,7 +27,6 @@ import javax.management.MBeanServer;
 import javax.management.ObjectName;
 
 
-import org.jboss.logging.Log;
 import org.jboss.system.ServiceMBeanSupport;
 
 import org.jboss.security.EJBSecurityManager;
@@ -95,7 +94,7 @@ public class EJBSecurityManagerService
         
        catch (Exception e)
        {
-         log.exception(e);
+         log.error("unbind failed", e);
        }
    }
     

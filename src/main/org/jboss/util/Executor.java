@@ -12,26 +12,24 @@ import java.net.*;
 import javax.management.*;
 import javax.management.loading.MLet;
 
-import org.jboss.logging.Log;
-import org.jboss.logging.DefaultLog;
+import org.jboss.logging.Logger;
 
 /**
  *   <description> 
  *      
  *   @see <related>
  *   @author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>.
- *   @version $Revision: 1.5 $
+ *   @version $Revision: 1.6 $
  */
 public class Executor
    implements ExecutorMBean, MBeanRegistration
 {
    // Constants -----------------------------------------------------
    public static final String OBJECT_NAME = ":service=Executor";
+   private static Logger log = Logger.create("Executor");
     
    // Attributes ----------------------------------------------------
    String exec;
-   
-    Log log = Log.createLog("Executor");
    
    // Static --------------------------------------------------------
 
@@ -45,17 +43,17 @@ public class Executor
    public ObjectName preRegister(MBeanServer server, ObjectName name)
       throws java.lang.Exception
    {
-      log.log("Execute:"+exec);
+      log.info("Execute:"+exec);
       Process p = Runtime.getRuntime().exec(exec);
       
       p.getErrorStream().close();
       DataInputStream in = new DataInputStream(p.getInputStream());
       String line;
       while ((line = in.readLine()) != null)
-         log.log(line);
+         log.info(line);
       
       p.waitFor();
-      log.log("Done");
+      log.info("Done");
          
       return new ObjectName(OBJECT_NAME);
    }

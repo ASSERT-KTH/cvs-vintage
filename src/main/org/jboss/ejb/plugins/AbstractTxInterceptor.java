@@ -19,21 +19,20 @@ import javax.ejb.NoSuchEntityException;
 
 import org.jboss.ejb.Container;
 import org.jboss.ejb.MethodInvocation;
-
-// TODO this needs to be replaced with the log4j logging
 import org.jboss.logging.Logger;
 
 /**
  *  A common superclass for the transaction interceptors.
  *
  *  @author <a href="mailto:osh@sparre.dk">Ole Husgaard</a>
- *  @version $Revision: 1.5 $
+ *  @version $Revision: 1.6 $
  */
 abstract class AbstractTxInterceptor
    extends AbstractInterceptor
 {
 
     // Attributes ----------------------------------------------------
+   protected Logger log = Logger.create(this.getClass());
 
     /** Local reference to the container's TransactionManager. */
     protected TransactionManager tm;
@@ -105,9 +104,9 @@ abstract class AbstractTxInterceptor
                     mi.getTransaction().setRollbackOnly();
                 }
             } catch (SystemException ex) {
-                Logger.exception(ex);
+                log.error("invokeNext", ex);
             } catch (IllegalStateException ex) {
-                Logger.exception(ex);
+                log.error("invokeNext", ex);
             }
             RemoteException ex;
             if (newTx) {
@@ -131,9 +130,9 @@ abstract class AbstractTxInterceptor
               try {
                  mi.getTransaction().setRollbackOnly();
               } catch (SystemException ex) {
-                 Logger.exception(ex);
+                log.error("invokeNext", ex);
               } catch (IllegalStateException ex) {
-                 Logger.exception(ex);
+                log.error("invokeNext", ex);
               }
               RemoteException ex;
               if (newTx) {

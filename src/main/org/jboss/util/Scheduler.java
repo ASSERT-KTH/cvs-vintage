@@ -556,7 +556,7 @@ public class Scheduler
          unbind();
       }
       catch( Exception e ) {
-         log.exception( e );
+         log.error("Failed to unbind", e );
       }
    }
 
@@ -598,7 +598,7 @@ public class Scheduler
       );
         lContext.bind( lName.get( 0 ), lReference );
 
-        log.log( "JBoss Scheduler Service '" + getJNDIName() + "' bound to " + lJNDIName );
+        log.info( "JBoss Scheduler Service '" + getJNDIName() + "' bound to " + lJNDIName );
     }
 
     private void unbind() throws NamingException {
@@ -606,7 +606,7 @@ public class Scheduler
 
       new InitialContext().unbind( lJNDIName );
       NonSerializableFactory.unbind( lJNDIName );
-      log.log("JBoss Scheduler service '" + lJNDIName + "' removed from JNDI" );
+      log.info("JBoss Scheduler service '" + lJNDIName + "' removed from JNDI" );
     }
 
    // -------------------------------------------------------------------------

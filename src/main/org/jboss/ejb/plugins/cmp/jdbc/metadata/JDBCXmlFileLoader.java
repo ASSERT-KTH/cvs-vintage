@@ -9,7 +9,7 @@ package org.jboss.ejb.plugins.cmp.jdbc.metadata;
 
 import java.net.URL;
 import org.jboss.ejb.DeploymentException;
-import org.jboss.logging.Log;
+import org.jboss.logging.Logger;
 import org.jboss.metadata.ApplicationMetaData;
 import org.jboss.metadata.XmlFileLoader;
 import org.w3c.dom.Element;
@@ -19,13 +19,13 @@ import org.w3c.dom.Element;
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
  *   @author <a href="sebastien.alborini@m4x.org">Sebastien Alborini</a>
- *   @version $Revision: 1.4 $
+ *   @version $Revision: 1.5 $
  */
 public final class JDBCXmlFileLoader {
    private final ApplicationMetaData application;
    private final ClassLoader classLoader;
    private final ClassLoader localClassLoader;
-   private final Log log;
+   private final Logger log;
    
    /**
     * Constructs a JDBC XML file loader, which loads the JDBC application meta data from
@@ -36,7 +36,7 @@ public final class JDBCXmlFileLoader {
     * @param localClassLoader the classLoader used to load the jbosscmp-jdbc.xml file from the jar
     * @param log the log for this application
     */
-   public JDBCXmlFileLoader(ApplicationMetaData application, ClassLoader classLoader, ClassLoader localClassLoader, Log log) {
+   public JDBCXmlFileLoader(ApplicationMetaData application, ClassLoader classLoader, ClassLoader localClassLoader, Logger log) {
       this.application = application;
       this.classLoader = classLoader;
       this.localClassLoader = localClassLoader;

@@ -26,7 +26,6 @@ import javax.management.MBeanServer;
 import javax.management.ObjectName;
 
 
-import org.jboss.logging.Log;
 import org.jboss.system.ServiceMBeanSupport;
 
 /**
@@ -85,7 +84,7 @@ public class SimpleRealmMappingService
 			new InitialContext().unbind(JNDI_NAME);
 		} catch (Exception e)
 		{
-			log.exception(e);
+			log.error("unbind failed", e);
 		}
    }
 	

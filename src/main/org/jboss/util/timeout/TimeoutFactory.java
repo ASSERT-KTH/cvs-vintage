@@ -6,7 +6,6 @@
 */
 package org.jboss.util.timeout;
 
-// TODO this needs to be replaced with the log4j logging
 import org.jboss.logging.Logger;
 
 
@@ -23,9 +22,11 @@ import org.jboss.logging.Logger;
  *  allocating anything on the heap.
  *
  *  @author <a href="osh@sparre.dk">Ole Husgaard</a>
- *  @version $Revision: 1.7 $
+ *  @version $Revision: 1.8 $
  */
 public class TimeoutFactory {
+
+   private static Logger log = Logger.create(TimeoutFactory.class);
 
   //  Code commented out with the mark "INV:" are runtime checks
   //  of invariants that are not needed for a production system.
@@ -99,8 +100,7 @@ public class TimeoutFactory {
       try {
         work.target.timedOut(work);
       } catch (Throwable t) {
-        Logger.exception(t);
-        //t.printStackTrace();
+        log.error(t);
       }
       synchronized (work) {
         if (work.index == TimeoutImpl.CWAIT) {
@@ -245,19 +245,15 @@ public class TimeoutFactory {
   /**
    *  Debugging helper.
    */
-  private void assert(boolean expr) {
-    if (!expr) {
-      Logger.error("***** assert failed *****");
-      //System.err.println("***** assert failed *****");
-      try {
-        throw new RuntimeException("***** assert failed *****");
-      } catch (RuntimeException ex) {
-        Logger.exception(ex);
-        //ex.printStackTrace();
-      }
+  private void assert(boolean expr)
+  {
+    if (!expr)
+    {
+      RuntimeException ex = new RuntimeException("***** assert failed *****");
+      log.error("***** assert failed *****", ex);
       try {
         Thread.sleep(30000);
-      } catch (Exception ex) {}
+      } catch (Exception e) {}
     }
   }
 

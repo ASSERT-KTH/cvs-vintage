@@ -19,8 +19,6 @@ import org.jboss.ejb.plugins.cmp.jdbc.JDBCStoreManager;
 import org.jboss.ejb.plugins.cmp.jdbc.JDBCType;
 import org.jboss.ejb.plugins.cmp.jdbc.metadata.JDBCCMPFieldMetaData;
 
-import org.jboss.logging.Log;
-
 /**
  * JDBCCMP2xFieldBridge is a concrete implementation of JDBCCMPFieldBridge for 
  * CMP version 2.x. Instance data is stored in the entity persistence context.
@@ -34,7 +32,7 @@ import org.jboss.logging.Log;
  *      One for each entity bean cmp field.       
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
- * @version $Revision: 1.5 $
+ * @version $Revision: 1.6 $
  */                            
 public class JDBCCMP2xFieldBridge extends JDBCAbstractCMPFieldBridge {
    public JDBCCMP2xFieldBridge(JDBCStoreManager manager, JDBCCMPFieldMetaData metadata) throws DeploymentException {

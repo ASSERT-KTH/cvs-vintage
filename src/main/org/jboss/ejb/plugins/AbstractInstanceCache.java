@@ -43,8 +43,6 @@ import org.jboss.ejb.BeanLock;
 import org.jboss.ejb.BeanLockManager;
 import org.jboss.metadata.MetaData;
 import org.jboss.metadata.XmlLoadable;
-
-// TODO this needs to be replaced with the log4j logging
 import org.jboss.logging.Logger;
 
 import org.jboss.monitor.Monitorable;
@@ -66,7 +64,7 @@ import org.jboss.monitor.MetricsConstants;
  * @author <a href="bill@burkecentral.com">Bill Burke</a>
  * @author <a href="marc.fleury@jboss.org">Marc Fleury</a>
  *
- * @version $Revision: 1.20 $
+ * @version $Revision: 1.21 $
  *
  *   <p><b>Revisions:</b>
  *
@@ -96,6 +94,7 @@ public abstract class AbstractInstanceCache
    // Constants -----------------------------------------------------
 
    // Attributes ----------------------------------------------------
+   protected static Logger log = Logger.create(AbstractInstanceCache.class);
    /* The object that is delegated to implement the desired caching policy */
    private CachePolicy m_cache;
    /* The worker queue that passivates beans in another thread */
@@ -155,7 +154,7 @@ public abstract class AbstractInstanceCache
       }
       catch (JMSException x)
       {
-         Logger.exception(x);
+         log.error("sendMessage failed", x);
       }
    }
    public Message createMessage(Object id)
@@ -173,7 +172,7 @@ public abstract class AbstractInstanceCache
       }
       catch (JMSException x)
       {
-         Logger.exception(x);
+         log.error("createMessage failed", x);
       }
       return message;
    }
@@ -433,7 +432,7 @@ public abstract class AbstractInstanceCache
       m_buffer.append(getContainer().getBeanMetaData().getEjbName());
       m_buffer.append(" with id = ");
       m_buffer.append(id);
-      Logger.debug(m_buffer.toString());
+      log.debug(m_buffer.toString());
 
       if (isJMSMonitoringEnabled())
       {
@@ -445,7 +444,7 @@ public abstract class AbstractInstanceCache
          }
          catch (JMSException x)
          {
-            Logger.exception(x);
+            log.error("createMessage failed", x);
          }
 
          // Send JMS Message
@@ -460,7 +459,7 @@ public abstract class AbstractInstanceCache
       m_buffer.append(getContainer().getBeanMetaData().getEjbName());
       m_buffer.append(" with id = ");
       m_buffer.append(id);
-      Logger.debug(m_buffer.toString());
+      log.debug(m_buffer.toString());
 
       if (isJMSMonitoringEnabled())
       {
@@ -473,7 +472,7 @@ public abstract class AbstractInstanceCache
          }
          catch (JMSException x)
          {
-            Logger.exception(x);
+            log.error("createMessage failed", x);
          }
 
          // Send JMS Message
@@ -488,7 +487,7 @@ public abstract class AbstractInstanceCache
       m_buffer.append(getContainer().getBeanMetaData().getEjbName());
       m_buffer.append(" with id = ");
       m_buffer.append(id);
-      Logger.debug(m_buffer.toString());
+      log.debug(m_buffer.toString());
 
       if (isJMSMonitoringEnabled())
       {
@@ -501,7 +500,7 @@ public abstract class AbstractInstanceCache
          }
          catch (JMSException x)
          {
-            Logger.exception(x);
+            log.error("createMessage failed", x);
          }
 
          // Send JMS Message
@@ -516,7 +515,7 @@ public abstract class AbstractInstanceCache
       m_buffer.append(getContainer().getBeanMetaData().getEjbName());
       m_buffer.append(" with id = ");
       m_buffer.append(id);
-      Logger.debug(m_buffer.toString());
+      log.debug(m_buffer.toString());
 
       if (isJMSMonitoringEnabled())
       {
@@ -529,7 +528,7 @@ public abstract class AbstractInstanceCache
          }
          catch (JMSException x)
          {
-            Logger.exception(x);
+            log.error("createMessage failed", x);
          }
 
          // Send JMS Message
@@ -869,6 +868,7 @@ abstract class PassivationJob implements Executable
 
 class PassivatorQueue extends WorkerQueue
 {
+   protected static Logger log = Logger.create(PassivatorQueue.class);
    /**
     * Used for debug purposes, holds the scheduled passivation jobs
     */
@@ -939,14 +939,13 @@ class PassivatorQueue extends WorkerQueue
       // Log system exceptions
       if (x instanceof EJBException)
       {
-         Logger.error("BEAN EXCEPTION:"+x.getMessage());
          Exception nestedX = ((EJBException)x).getCausedByException();
          if (nestedX != null)
          {
-            Logger.exception(nestedX);
+            log.error("BEAN EXCEPTION", x);
          }
       } else {
-         Logger.exception(x);
+         log.error("EXCEPTION", x);
       }
    }
 }

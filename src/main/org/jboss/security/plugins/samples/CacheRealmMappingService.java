@@ -26,7 +26,6 @@ import javax.management.MBeanServer;
 import javax.management.ObjectName;
 
 
-import org.jboss.logging.Log;
 import org.jboss.system.ServiceMBeanSupport;
 
 /**
@@ -37,17 +36,17 @@ import org.jboss.system.ServiceMBeanSupport;
  *   @author Daniel O'Connor docodan@nycap.rr.com
  */
 public class CacheRealmMappingService
-   extends ServiceMBeanSupport
-   implements CacheRealmMappingServiceMBean, ObjectFactory
+extends ServiceMBeanSupport
+implements CacheRealmMappingServiceMBean, ObjectFactory
 {
    // Constants -----------------------------------------------------
    public static String JNDI_NAME = "java:/CacheRealmMapping";
-    
+   
    // Attributes ----------------------------------------------------
-	MBeanServer server;
+   MBeanServer server;
    
    // Static --------------------------------------------------------
-
+   
    // ServiceMBeanSupport overrides ---------------------------------
    public String getName()
    {
@@ -55,47 +54,47 @@ public class CacheRealmMappingService
    }
    
    protected ObjectName getObjectName(MBeanServer server, ObjectName name)
-      throws javax.management.MalformedObjectNameException
+   throws javax.management.MalformedObjectNameException
    {
-   	this.server = server;
+      this.server = server;
       return new ObjectName(OBJECT_NAME);
    }
-	
+   
    protected void initService()
-      throws Exception
+   throws Exception
    {
    }
-	
+   
    protected void startService()
-      throws Exception
+   throws Exception
    {
-		
-	   // Bind reference to JNDI
-	   Reference ref = new Reference(CacheRealmMapping.class.toString(), getClass().getName(), null);
-	   new InitialContext().bind(JNDI_NAME, ref);
+      
+      // Bind reference to JNDI
+      Reference ref = new Reference(CacheRealmMapping.class.toString(), getClass().getName(), null);
+      new InitialContext().bind(JNDI_NAME, ref);
    }
    
    protected void stopService()
    {
-		try
-		{
-			// Remove mapping from JNDI
-			new InitialContext().unbind(JNDI_NAME);
-		} catch (Exception e)
-		{
-			log.exception(e);
-		}
+      try
+      {
+         // Remove mapping from JNDI
+         new InitialContext().unbind(JNDI_NAME);
+      } catch (Exception e)
+      {
+         log.error("unbind failed", e);
+      }
    }
-	
-	// ObjectFactory implementation ----------------------------------
-	public Object getObjectInstance(Object obj,
-                                Name name,
-                                Context nameCtx,
-                                Hashtable environment)
-                         throws Exception
-	{
-		// Return the cache realm mapping manager
-		return new CacheRealmMapping();
-	}
+   
+   // ObjectFactory implementation ----------------------------------
+   public Object getObjectInstance(Object obj,
+      Name name,
+      Context nameCtx,
+      Hashtable environment)
+      throws Exception
+   {
+      // Return the cache realm mapping manager
+      return new CacheRealmMapping();
+   }
 }
 

@@ -22,7 +22,7 @@ import org.jboss.ejb.plugins.cmp.jdbc.bridge.JDBCCMRFieldBridge;
  * @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
  * @author <a href="mailto:shevlandj@kpi.com.au">Joe Shevland</a>
  * @author <a href="mailto:justin@j-m-f.demon.co.uk">Justin Forder</a>
- * @version $Revision: 1.5 $
+ * @version $Revision: 1.6 $
  */
 public class JDBCDestroyCommand extends JDBCUpdateCommand implements DestroyCommand {
    // Constructors --------------------------------------------------
@@ -73,7 +73,7 @@ public class JDBCDestroyCommand extends JDBCUpdateCommand implements DestroyComm
          manager.getContainer().getTransactionManager().begin ();
          jdbcExecute("DROP TABLE " + tableName);
          manager.getContainer().getTransactionManager().commit ();
-         log.log("Dropped table '" + tableName + "' successfully.");
+         log.info("Dropped table '" + tableName + "' successfully.");
       } catch (Exception e) {
          log.debug("Could not drop table " + tableName + ": " + e.getMessage());
          try {

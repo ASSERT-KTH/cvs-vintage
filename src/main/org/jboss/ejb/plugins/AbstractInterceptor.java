@@ -11,13 +11,14 @@ import java.lang.reflect.Method;
 import org.jboss.ejb.Container;
 import org.jboss.ejb.Interceptor;
 import org.jboss.ejb.MethodInvocation;
+import org.jboss.logging.Logger;
 
 /**
  * An abstract base class for container interceptors.
  *      
  * @author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
  * @author <a href="mailto:jason@planet57.com">Jason Dillon</a>
- * @version $Revision: 1.7 $
+ * @version $Revision: 1.8 $
  */
 public abstract class AbstractInterceptor
    implements Interceptor
@@ -28,6 +29,8 @@ public abstract class AbstractInterceptor
 
    /** The next interceptor in the chain. */
    protected Interceptor nextInterceptor;
+   /** Use a JBoss custom log4j category for trace level logging */
+   protected Logger log = Logger.create(this.getClass());
 
    // Static --------------------------------------------------------
 

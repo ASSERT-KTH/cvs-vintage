@@ -27,8 +27,6 @@ import org.jboss.ejb.plugins.jrmp12.interfaces.HomeProxy;
 import org.jboss.ejb.plugins.jrmp12.interfaces.StatelessSessionProxy;
 import org.jboss.ejb.plugins.jrmp12.interfaces.StatefulSessionProxy;
 import org.jboss.ejb.plugins.jrmp12.interfaces.EntityProxy;
-
-// TODO this needs to be replaced with the log4j logging
 import org.jboss.logging.Logger;
 
 
@@ -38,11 +36,12 @@ import org.jboss.logging.Logger;
  *  @see <related>
  *  @author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
  *  @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
- *  @version $Revision: 1.15 $
+ *  @version $Revision: 1.16 $
  */
 public final class JRMPContainerInvoker
    implements ContainerInvoker
 {
+   static Logger log = Logger.create(JRMPContainerInvoker.class);
    EJBHome home;
    EJBObject statelessObject;
 
@@ -69,7 +68,8 @@ public final class JRMPContainerInvoker
          handleClass = Class.forName("javax.ejb.Handle");
       } catch (Exception e)
       {
-         Logger.exception(e);handleClass = null;
+         log.error("", e);
+         handleClass = null;
       }
 
       this.home = (EJBHome)Proxy.newProxyInstance(((ContainerInvokerContainer)container).getHomeClass().getClassLoader(),
@@ -86,7 +86,7 @@ public final class JRMPContainerInvoker
             new StatelessSessionProxy(ci.getJndiName(), ci, ci.isOptimized()));
       }
 
-      Logger.debug("JRMP 1.2.2 CI initialized");
+      log.debug("JRMP 1.2.2 CI initialized");
    }
 
    public void start()

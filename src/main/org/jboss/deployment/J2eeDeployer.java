@@ -41,9 +41,10 @@ import javax.management.ObjectName;
 import javax.management.RuntimeMBeanException;
 import javax.management.RuntimeErrorException;
 
-import org.jboss.logging.Log;
-import org.jboss.util.MBeanProxy;
+
+import org.jboss.logging.Logger;
 import org.jboss.system.ServiceMBeanSupport;
+import org.jboss.util.MBeanProxy;
 
 import org.jboss.ejb.DeploymentException;
 import org.jboss.ejb.ContainerFactoryMBean;
@@ -66,11 +67,11 @@ import org.w3c.dom.Element;
 *   @author <a href="mailto:daniel.schulze@telkel.com">Daniel Schulze</a>
 *   @author <a href="mailto:toby.allsopp@peace.com">Toby Allsopp</a>
 *   @author <a href="mailto:Scott_Stark@displayscape.com">Scott Stark</a>.
-*   @version $Revision: 1.40 $
+*   @version $Revision: 1.41 $
 */
 public class J2eeDeployer 
-extends ServiceMBeanSupport
-implements J2eeDeployerMBean
+   extends ServiceMBeanSupport
+   implements J2eeDeployerMBean
 {
 	// Constants -----------------------------------------------------
 	public File DEPLOYMENT_DIR = null;//"/home/deployment"; // default? MUST BE ABSOLUTE PATH!!!
@@ -122,8 +123,7 @@ implements J2eeDeployerMBean
 	
 	public void setDeployerName(String name)
 	{
-		this.log = Log.createLog(this.getClass().getName() + "#" + name);
-		
+		this.log = Logger.create(this.getClass().getName() + "#" + name);
 		// what is this for?
 		name = name.equals("") ? "" : " "+name;
 		this.name = name;
@@ -199,7 +199,7 @@ implements J2eeDeployerMBean
 		{}
 		
 		// now try to deploy
-		log.log ("Deploy J2EE application: " + _url);
+		log.info ("Deploy J2EE application: " + _url);
 		
 		Deployment d = installApplication (url);
 		
@@ -207,7 +207,7 @@ implements J2eeDeployerMBean
 		{
 			// <comment author="cgjung"> factored out for subclass access
 			startApplication (d);
-			log.log ("J2EE application: " + _url + " is deployed.");
+			log.info ("J2EE application: " + _url + " is deployed.");
 		} 
 		catch (Exception _e)
 		{
@@ -237,7 +237,7 @@ implements J2eeDeployerMBean
 			}
 			else
 			{
-				log.exception(_e);
+				log.error("fatal error:", _e);
 				throw new J2eeDeploymentException ("fatal error: "+_e);
 			}
 		}
@@ -270,7 +270,7 @@ implements J2eeDeployerMBean
 				new String[] { "java.lang.String" }
 			);
 		} catch(Exception e) {
-			log.log("Report of undeployment of J2EE application: " + _url + " could not be reported.");
+			log.info("Report of undeployment of J2EE application: " + _url + " could not be reported.");
 		}       
 	}
 	
@@ -356,7 +356,7 @@ implements J2eeDeployerMBean
 			!dir.mkdirs ())
 		throw new IOException ("Temporary directory \""+dir.getCanonicalPath ()+"\" does not exist!");
 		
-		installer = new InstallerFactory(dir, category);
+		installer = new InstallerFactory(dir, log);
 		
 		// Save JMX name of the deployers
 		jarDeployer = new ObjectName(jarDeployerName);
@@ -368,11 +368,11 @@ implements J2eeDeployerMBean
 	throws Exception
 	{
 		if (!warDeployerAvailable ())
-			log.log ("No web container found - only EJB deployment available...");
+			log.info ("No web container found - only EJB deployment available...");
 		
 		// clean up the deployment directory since on some Windowz the file removement
 		// during runtime doesnt work...
-		log.log("Cleaning up deployment directory");
+		log.info("Cleaning up deployment directory");
 		installer.unclutter();
 	}
 	
@@ -380,7 +380,7 @@ implements J2eeDeployerMBean
 	/** undeploys all deployments */
 	protected void stopService()
 	{
-		log.log ("Undeploying all applications.");
+		log.info ("Undeploying all applications.");
 		
 		Deployment[] deps = installer.getDeployments();
 		int count = 0;
@@ -393,18 +393,21 @@ implements J2eeDeployerMBean
 			catch (J2eeDeploymentException _e)
 			{
 				//throw _e;               
-				log.exception(_e);
+				log.error("Failed to stop app", _e);
 			}
 			finally 
 			{
 				try {
 					uninstallApplication (deps[i]);
-				} catch (IOException _ioe)
-				{log.exception(_ioe);}
+				}
+                                catch (IOException _ioe)
+				{
+                                    log.error("Failed to unistall app", _ioe);
+                                }
 			}
 			++count;
 		}
-		log.log ("Undeployed "+count+" applications.");
+		log.info ("Undeployed "+count+" applications.");
 	}
 	
 	// Private -------------------------------------------------------
@@ -439,9 +442,9 @@ implements J2eeDeployerMBean
 	
 	protected void uninstallApplication (Deployment _d) throws IOException
 	{
-		log.log ("Destroying application " + _d.name);
+		log.info ("Destroying application " + _d.name);
 		installer.uninstall(_d);
-		log.log ("Destroyed");
+		log.info ("Destroyed");
 	}
 	
 	
@@ -501,7 +504,7 @@ implements J2eeDeployerMBean
 			while( it.hasNext() ) {
 				m = (Deployment.Module)it.next();
 				moduleName = m.name;
-				log.log("Starting module " + moduleName);
+				log.info("Starting module " + moduleName);
 				
 				// Call the TomcatDeployer that is loaded in the JMX server
 				server.invoke(warDeployer, "deploy",
@@ -512,23 +515,19 @@ implements J2eeDeployerMBean
 			}
 		}
 		catch (MBeanException e) {
-			log.error("Starting "+moduleName+" failed!");
-			log.exception(e.getTargetException());
+			log.error("Starting "+moduleName+" failed!", e);
 			throw new J2eeDeploymentException("Error while starting "+moduleName+": " + e.getTargetException().getMessage(), e.getTargetException());
 		}
 		catch (RuntimeErrorException e) {
-			log.error("Starting "+moduleName+" failed!");
-			log.exception(e.getTargetError());
+			log.error("Starting "+moduleName+" failed!", e);
 			throw new J2eeDeploymentException("Error while starting "+moduleName+": " + e.getTargetError().getMessage(), e.getTargetError());
 		}
 		catch (RuntimeMBeanException e) {
-			log.error("Starting "+moduleName+" failed!");
-			log.exception(e.getTargetException());
+			log.error("Starting "+moduleName+" failed!", e);
 			throw new J2eeDeploymentException("Error while starting "+moduleName+": " + e.getTargetException().getMessage(), e.getTargetException());
 		}
 		catch (JMException e) {
-			log.error("Starting failed!");
-			log.exception(e);
+			log.error("Starting failed!", e);
 			throw new J2eeDeploymentException("Fatal error while interacting with deployer MBeans... " + e.getMessage());
 		}
 		finally {
@@ -563,7 +562,7 @@ implements J2eeDeployerMBean
 		{
 			// in case we are not running with tomcat
 			// should only happen for tomcat (i=1)
-			log.warning("Cannot find web container");
+			log.warn("Cannot find web container");
 		}
 		
 		// stop the jar modules (the ContainerFactory is responsible for undeploying
@@ -586,12 +585,12 @@ implements J2eeDeployerMBean
 				new Object[] { moduleUrl }, new String[] { "java.lang.String" });
 			if (((Boolean)result).booleanValue ())
 			{
-				log.log ("Stopping module " + moduleName);
+				log.info ("Stopping module " + moduleName);
 				server.invoke(container, "undeploy",
 					new Object[] { moduleUrl }, new String[] { "java.lang.String" });
 			}
 			else
-				log.log ("Module " + moduleName + " is not running");
+				log.info ("Module " + moduleName + " is not running");
 		}
 		catch (MBeanException _mbe)
 		{
@@ -645,7 +644,7 @@ implements J2eeDeployerMBean
 		else
 		{
 			// in case we are not running with tomcat
-			log.warning("Cannot find web container");
+			log.warn("Cannot find web container");
 		}
 		
 		if (others > 0)
@@ -662,7 +661,7 @@ implements J2eeDeployerMBean
 	{
 		try
 		{
-			log.log ("Checking module " + moduleName);
+			log.info ("Checking module " + moduleName);
 			// Call the ContainerFactory/EmbededTomcat that is loaded in the JMX server
 			return server.invoke(container, "isDeployed",
 				new Object[] { moduleUrl }, new String[] { "java.lang.String" });

@@ -23,8 +23,6 @@ import javax.naming.spi.ObjectFactory;
 
 import org.jboss.ejb.EnterpriseContext;
 import org.jboss.ejb.MethodInvocation;
-
-// TODO this needs to be replaced with the log4j logging
 import org.jboss.logging.Logger;
 
 
@@ -32,12 +30,11 @@ import org.jboss.logging.Logger;
  *  A common superclass for the BMT transaction interceptors.
  *
  *  @author <a href="mailto:osh@sparre.dk">Ole Husgaard</a>
- *  @version $Revision: 1.3 $
+ *  @version $Revision: 1.4 $
  */
 abstract class AbstractTxInterceptorBMT
    extends AbstractTxInterceptor
 {
-
    // Attributes ----------------------------------------------------
 
    /**
@@ -175,7 +172,7 @@ abstract class AbstractTxInterceptorBMT
       try {
          status = tm.getStatus();
       } catch (SystemException ex) {
-         Logger.exception(ex);
+         log.error("Failed to get status", ex);
       }
 
       switch (status) {
@@ -187,7 +184,7 @@ abstract class AbstractTxInterceptorBMT
             try {
                tm.rollback();
             } catch (Exception ex) {
-               Logger.exception(ex);
+               log.error("Failed to rollback", ex);
             }
             // fall through...
          case Status.STATUS_PREPARED:
@@ -195,7 +192,7 @@ abstract class AbstractTxInterceptorBMT
                          container.getBeanMetaData().getEjbName() +
                          " should complete transactions before" +
                          " returning (ejb1.1 spec, 11.6.1)";
-            Logger.error(msg);
+            log.error(msg);
 
             // the instance interceptor will discard the instance
             throw new RemoteException(msg);

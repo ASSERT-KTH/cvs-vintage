@@ -39,12 +39,9 @@ import javax.naming.RefAddr;
 import javax.naming.NameNotFoundException;
 import javax.transaction.TransactionManager;
 
-import org.apache.log4j.Category;
 
 import org.jboss.ejb.BeanLockManager;
-import org.jboss.security.EJBSecurityManager;
-import org.jboss.security.RealmMapping;
-
+import org.jboss.logging.Logger;
 import org.jboss.metadata.BeanMetaData;
 import org.jboss.metadata.EnvEntryMetaData;
 import org.jboss.metadata.EjbRefMetaData;
@@ -52,6 +49,8 @@ import org.jboss.metadata.EjbLocalRefMetaData;
 import org.jboss.metadata.ResourceRefMetaData;
 import org.jboss.metadata.ResourceEnvRefMetaData;
 import org.jboss.metadata.ApplicationMetaData;
+import org.jboss.security.EJBSecurityManager;
+import org.jboss.security.RealmMapping;
 
 import org.jboss.ejb.plugins.local.BaseLocalContainerInvoker;
 
@@ -73,7 +72,7 @@ import org.jboss.ejb.plugins.local.BaseLocalContainerInvoker;
  * @author <a href="mailto:marc.fleury@jboss.org">Marc Fleury</a>
  * @author <a href="mailto:Scott.Stark@jboss.org">Scott Stark</a>.
  * @author <a href="bill@burkecentral.com">Bill Burke</a>
- * @version $Revision: 1.56 $
+ * @version $Revision: 1.57 $
  *
  * <p><b>Revisions:</b>
  *
@@ -93,8 +92,8 @@ public abstract class Container implements DynamicMBean
    // Attributes ----------------------------------------------------
 
    /** Instance logger. */
-   protected Category log = Category.getInstance(this.getClass());
-   
+   protected Logger log = Logger.create(this.getClass());
+
    /** This is the application that this container is a part of */
    protected Application application;
 

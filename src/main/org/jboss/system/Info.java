@@ -12,8 +12,7 @@ import javax.management.ObjectName;
 import javax.management.MBeanServer;
 import javax.management.MBeanRegistration;
 
-// Part of the boot, don't use log4j
-import org.jboss.logging.Log;
+import org.jboss.logging.Logger;
 
 /**
  * A simple mbean that dumps out info like the system properties, etc.
@@ -23,14 +22,16 @@ import org.jboss.logging.Log;
  * @author <a href="mailto:hiram.chirino@jboss.org">Hiram Chirino</a>.
  * @author <a href="mailto:jason@planet57.com">Jason Dillon</a>
  * @author <a href="mailto:marc.fleury@jboss.org">Marc Fleury</a>
- * @version $Revision: 1.2 $
+ * @version $Revision: 1.3 $
  */
 public class Info
    implements InfoMBean, MBeanRegistration
 {
    // Constants -----------------------------------------------------
-	
+
    // Attributes ----------------------------------------------------
+   /** Instance logger. */
+   private static Logger log = Logger.create("GPA");
 
    //
    // System information
@@ -50,12 +51,8 @@ public class Info
    protected String configurationDirectory;
    protected String patchDirectory;
    protected String jbossVersion;
-	
-   /** Instance logger. */
-   private Log log = Log.createLog("GPA");
-	
    // Static --------------------------------------------------------
-	
+
    // Constructors --------------------------------------------------
 	
    // Public --------------------------------------------------------
@@ -83,32 +80,33 @@ public class Info
       libraryDirectory = System.getProperty("jboss.system.libraryDirectory");
       patchDirectory = System.getProperty("jboss.system.patchDirectory");
 		
-      log.log("General Purpose Architecture [GPA]");
+      log.info("General Purpose Architecture [GPA]");
 		
       // Dump out basic info as INFO priority msgs
-      log.log("Java version: " +
+      log.info("Java version: " +
               javaVersion + "," +
               javaVendor);
-      log.log("Java VM: " +
+      log.info("Java VM: " +
               javaVMName + " " +
               javaVMVersion + "," +
               javaVMVendor);
-      log.log("OS-System: " +
+      log.info("OS-System: " +
               osName + " " +
               osVersion + "," +
               osArch);
-      log.log("JBoss Version : " + jbossVersion);
-      log.log("localDir : " + jbossLocalHomeDirectory);
-      log.log("installationURL : "+ installationURL);
-      log.log("configuration : " + configurationDirectory);
-      log.log("libraries : "+libraryDirectory);
+      log.info("JBoss Version : " + jbossVersion);
+      log.info("localDir : " + jbossLocalHomeDirectory);
+      log.info("installationURL : "+ installationURL);
+      log.info("configuration : " + configurationDirectory);
+      log.info("libraries : "+libraryDirectory);
       //	   log.info("local patch directory " + patchDirectory);
-      log.log("Oh, and remember we love you");
+      log.info("Oh, and remember we love you");
 		
       // dump out the entire system properties if debug is enabled
       log.debug("+++ Full System Properties Dump");
       Enumeration names= System.getProperties().propertyNames();
-      while (names.hasMoreElements()) {
+      while (names.hasMoreElements())
+      {
          String pname= (String) names.nextElement();
          log.debug(pname + ": " + System.getProperty(pname));
       }

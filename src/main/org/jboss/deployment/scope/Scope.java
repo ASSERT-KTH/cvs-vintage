@@ -7,13 +7,12 @@
 
 package org.jboss.deployment.scope;
 
-import org.jboss.logging.Log;
-
 import java.util.Set;
 import java.util.Map;
 import java.util.Iterator;
-
 import java.net.URL;
+
+import org.jboss.logging.Logger;
 
 /**
  * Scope is a manager/mediator that connects several ScopedURLClassLoaders
@@ -41,10 +40,10 @@ public class Scope {
     final protected Map resourceLocations=new java.util.HashMap();
     
     /** keeps a reference to a logger which which to interact */
-    final protected Log log;
+    final protected Logger log;
     
     /** Creates new Scope */
-    public Scope(Log log) {
+    public Scope(Logger log) {
         this.log=log;
     }
     

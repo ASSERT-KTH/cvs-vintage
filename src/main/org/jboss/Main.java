@@ -43,7 +43,7 @@ import org.jboss.system.URLClassLoader;
  *
  * @author <a href="mailto:marc.fleury@jboss.org">Marc Fleury</a>
  * @author <a href="mailto:jason@planet57.com">Jason Dillon</a>
- * @version $Revision: 1.47 $
+ * @version $Revision: 1.48 $
  *
  * <b>Revisions:</b>
  * <p>
@@ -157,7 +157,6 @@ public class Main
             }
 
             // Create the Loggers
-            server.createMBean("org.jboss.logging.Logger", null, loader);
             server.createMBean("org.jboss.logging.Log4jService", null, loader);
 
             // General Purpose Architecture information
@@ -187,6 +186,10 @@ public class Main
             // Deployer
             server.createMBean("org.jboss.deployment.ServiceDeployer",
                                null, loader);
+         }
+         catch(RuntimeMBeanException e)
+         {
+            e.getTargetException().printStackTrace();
          }
          catch (RuntimeOperationsException roe)
          {

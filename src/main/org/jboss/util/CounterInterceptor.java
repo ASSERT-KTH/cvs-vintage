@@ -8,9 +8,8 @@ import org.jboss.ejb.MethodInvocation;
 import org.jboss.ejb.Container;
 import org.jboss.ejb.plugins.*;
 
-// TODO this needs to be replaced with the log4j logging
-import org.jboss.logging.Logger;
 
+import org.jboss.logging.Logger;
 import org.jboss.util.CounterService;
 
 /**
@@ -38,8 +37,9 @@ import org.jboss.util.CounterService;
  * statistics.
  * @author <a href="mailto:danch@nvisia.com">Dan Christopherson</href>
  */
-public class CounterInterceptor extends AbstractInterceptor {
-
+public class CounterInterceptor extends AbstractInterceptor
+{
+   static protected Logger log = Logger.create(CounterInterceptor.class);
    Container container = null;
    CounterService counter = null;
    boolean loggedNoCounter = false;
@@ -89,7 +89,7 @@ public class CounterInterceptor extends AbstractInterceptor {
 
    public void init() throws java.lang.Exception {
       //get a reference to the CounterService from JNDI
-      Logger.debug("CounterInterceptor initializing");
+      log.debug("CounterInterceptor initializing");
    }
 
    private CounterService getCounter() {
@@ -99,7 +99,7 @@ public class CounterInterceptor extends AbstractInterceptor {
             counter = (CounterService)ctx.lookup("java:/CounterService");
          } catch (NamingException ne) {
             if (!loggedNoCounter) {
-               Logger.warning("CounterInterceptor can't get counter service "+ne);
+               log.warn("CounterInterceptor can't get counter service ", ne);
                loggedNoCounter = true;
             }
          }

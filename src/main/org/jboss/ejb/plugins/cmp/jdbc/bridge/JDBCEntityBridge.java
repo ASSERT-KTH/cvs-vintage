@@ -36,11 +36,10 @@ import org.jboss.ejb.plugins.cmp.jdbc.metadata.JDBCCMPFieldMetaData;
 import org.jboss.ejb.plugins.cmp.jdbc.metadata.JDBCQlQueryMetaData;
 import org.jboss.ejb.plugins.cmp.jdbc.metadata.JDBCQueryMetaData;
 import org.jboss.ejb.plugins.cmp.jdbc.metadata.JDBCRelationshipRoleMetaData;
-
+import org.jboss.logging.Logger;
 import org.jboss.proxy.Proxies;
 import org.jboss.proxy.InvocationHandler;
 
-import org.jboss.logging.Log;
 
 /**
  * JDBCEntityBridge follows the Bridge pattern [Gamma et. al, 1995].
@@ -53,7 +52,7 @@ import org.jboss.logging.Log;
  *      One per cmp entity bean type.       
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
- * @version $Revision: 1.8 $
+ * @version $Revision: 1.9 $
  */                            
 public class JDBCEntityBridge implements EntityBridge {
    protected JDBCEntityMetaData metadata;
@@ -72,9 +71,9 @@ public class JDBCEntityBridge implements EntityBridge {
    protected JDBCCMPFieldBridge[] eagerLoadFields;
    protected ArrayList lazyLoadGroups;
    
-   protected Log log;
+   protected Logger log;
 
-   public JDBCEntityBridge(JDBCEntityMetaData metadata, Log log, JDBCStoreManager manager) throws DeploymentException {
+   public JDBCEntityBridge(JDBCEntityMetaData metadata, Logger log, JDBCStoreManager manager) throws DeploymentException {
       this.metadata = metadata;                  
       this.log = log;
       this.manager = manager;

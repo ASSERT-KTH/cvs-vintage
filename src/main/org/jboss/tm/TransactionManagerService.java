@@ -27,7 +27,7 @@ import javax.management.ObjectName;
 
 import javax.transaction.TransactionManager;
 
-import org.jboss.logging.Log;
+import org.jboss.logging.Logger;
 import org.jboss.system.ServiceMBeanSupport;
 
 /**
@@ -38,7 +38,7 @@ import org.jboss.system.ServiceMBeanSupport;
  *  @author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
  *  @author <a href="mailto:osh@sparre.dk">Ole Husgaard</a>
  *  @author <a href="mailto:toby.allsopp@peace.com">Toby Allsopp</a>
- *  @version $Revision: 1.14 $
+ *  @version $Revision: 1.15 $
  */
 public class TransactionManagerService
    extends ServiceMBeanSupport
@@ -55,7 +55,7 @@ public class TransactionManagerService
 
    private int timeout = 300; // default tx timeout, dupl. in TM when it exists.
    private String xidClassName = null;
-    
+
    // Static --------------------------------------------------------
 
    static TxManager tm;
@@ -79,7 +79,7 @@ public class TransactionManagerService
    {
       // Initialize the Xid constructor.
       if (xidClassName != null) {
-         log.log("Using Xid class '" + xidClassName + "'");
+         log.info("Using Xid class '" + xidClassName + "'");
          Class cls = Class.forName(xidClassName);
 
          TxCapsule.xidConstructor = cls.getConstructor(
@@ -111,7 +111,7 @@ public class TransactionManagerService
          ctx.unbind(JNDI_IMPORTER);
          ctx.unbind(JNDI_EXPORTER);
       } catch (Exception e) {
-         log.exception(e);
+         log.error("Failed to clear JNDI bindings", e);
       }
    }
     
