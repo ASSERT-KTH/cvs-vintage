@@ -741,8 +741,6 @@ public class Parser {
             String shortTagName = null;
             if (++i < tag.length()-1) 
                 shortTagName = tag.substring(i);
-            if (shortTagName == null)
-                throw new ParseException(start, "Nothing after the :");
 
             
             /*
@@ -755,6 +753,10 @@ public class Parser {
                 reader.reset(start);
                 return false;
             }
+
+            if (shortTagName == null)
+                throw new ParseException(start, "Nothing after the :");
+
             
             TagLibraryInfoImpl tli = libraries.getTagLibInfo(prefix);
             TagInfo ti = tli.getTag(shortTagName);
