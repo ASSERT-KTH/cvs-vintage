@@ -113,8 +113,6 @@ public class Main {
 
     MainInterface.clipboardManager = new ClipboardManager();
 
-    //new ImageLoader();
-
     MainInterface.processor = new DefaultProcessor();
     MainInterface.processor.start();
 
@@ -148,6 +146,8 @@ public class Main {
 
     new FrameModel();
 
+    frame.setVisible(false);
+
     if (MailConfig.getAccountList().count() == 0) {
       try {
 
@@ -160,8 +160,6 @@ public class Main {
     }
     
     new CmdLineArgumentHandler(args);
-
-    frame.setVisible(false);
 
   } // main
 
