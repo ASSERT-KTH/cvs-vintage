@@ -3,10 +3,8 @@
 	<classpathentry kind="src" path="src/columba/core"/>
 	<classpathentry kind="src" path="src/columba/test"/>
 	<classpathentry kind="src" path="src/mail/core"/>
-	<classpathentry kind="src" path="src/mail/independent"/>
 	<classpathentry kind="src" path="src/mail/test"/>
 	<classpathentry kind="src" path="src/addressbook/core"/>
-	<classpathentry kind="src" path="src/addressbook/independent"/>
 	<classpathentry kind="src" path="res"/>
 	<classpathentry kind="lib" path="lib/junit.jar"/>
 	<classpathentry kind="lib" path="lib/jargs.jar"/>

@@ -16,11 +16,6 @@
 			<property name="ownclasspath" value="${ownclasspath}"/>
 			<property name="src" value="${currsrc}"/>
 		</ant>
-		<ant dir="./independent" target="compile" inheritall="false">
-			<property name="dest" value="${dest}"/>
-			<property name="ownclasspath" value="${ownclasspath}"/>
-			<property name="src" value="${currsrc}"/>
-		</ant>
 	</target>
 
 	<target name="compile-tests">
