@@ -38,9 +38,9 @@ import org.gjt.sp.util.Log;
 //}}}
 
 /**
- * HyperSearch results window.
+ * HyperSearch results window.<b> hello </b>
  * @author Slava Pestov
- * @version $Id: HyperSearchResults.java,v 1.15 2002/10/21 20:08:18 spestov Exp $
+ * @version $Id: HyperSearchResults.java,v 1.16 2002/10/21 21:25:25 spestov Exp $
  */
 public class HyperSearchResults extends JPanel implements EBComponent
 {
