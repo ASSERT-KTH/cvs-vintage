@@ -82,12 +82,13 @@ import org.tigris.scarab.reports.ReportUserAttribute;
 import org.tigris.scarab.reports.ReportGroup;
 import org.tigris.scarab.reports.ReportDate;
 import org.tigris.scarab.util.ScarabConstants;
+import org.tigris.scarab.util.ScarabUtil;
 import org.tigris.scarab.util.export.ExportFormat;
 
 /**
  * This class is responsible for report generation forms
  * @author <a href="mailto:jmcnally@collab.net">John D. McNally</a>
- * @version $Id: ConfigureReport.java,v 1.17 2003/05/06 17:11:25 elicia Exp $
+ * @version $Id: ConfigureReport.java,v 1.18 2003/05/23 09:39:20 dlr Exp $
  */
 public class ConfigureReport 
     extends RequireLoginFirstAction
@@ -1091,7 +1092,7 @@ public class ConfigureReport
     public void doGeneratereport(RunData data, TemplateContext context)
          throws Exception
     {
-        String format = ExportFormat.determine(data);
+        String format = ScarabUtil.findValue(data, ExportFormat.KEY_NAME);
         if (ExportFormat.EXCEL_FORMAT.equalsIgnoreCase(format)
             || ExportFormat.TSV_FORMAT.equalsIgnoreCase(format))
         {

@@ -49,7 +49,9 @@ package org.tigris.scarab.util;
 import java.util.List;
 import java.util.Iterator;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.oro.text.perl.Perl5Util;
+import org.apache.turbine.RunData;
 
 import org.tigris.scarab.om.Module;
 import org.tigris.scarab.util.IssueIdParser;
@@ -58,7 +60,7 @@ import org.tigris.scarab.util.IssueIdParser;
  * A Utility class for code that doesn't really go other places.
  *   
  * @author <a href="mailto:jon@collab.net">Jon Scott Stevens</a>
- * @version $Id: ScarabUtil.java,v 1.4 2003/04/14 21:57:14 dlr Exp $
+ * @version $Id: ScarabUtil.java,v 1.5 2003/05/23 09:39:21 dlr Exp $
  */
 public class ScarabUtil
 {
@@ -70,6 +72,33 @@ public class ScarabUtil
         "s%\\n%<br />%g";
 
     private static Perl5Util perlUtil = new Perl5Util();
+
+
+    /**
+     * Finds the first value for the named request parameter.  This is
+     * useful to handle the case when there are more than one of the
+     * named key fields present on a screen.
+     *
+     * @param runData Source of the export format information.
+     * @param name The name of the request parameter to get a value
+     * for.
+     * @return The format type, or <code>null</code> if indeterminate.
+     */
+    public static String findValue(RunData runData, String name)
+    {
+        String[] possibilities = runData.getParameters().getStrings(name);
+        if (possibilities != null)
+        {
+            for (int i = 0; i < possibilities.length; i++)
+            {
+                if (StringUtils.isNotEmpty(possibilities[i]))
+                {
+                    return possibilities[i];
+                }
+            }
+        }
+        return null;
+    }
 
     /**
      * First, it converts all HTML markup into entities.

@@ -18,16 +18,16 @@
 #end
 
 ## The functions used to control the current query.
-#macro (queryFunctionBar $var)
+#macro (queryFunctionBar $id)
 #if ($queryString)
-<div class="functnbar$var">
+<div class="functnbar$id">
 #if ($searchType == 'advanced' && $scarabR.hasPermission($scarabG.Permission.USER__EDIT_PREFERENCES))
 <input type="submit" value="$l10n.SaveQuery" name="eventSubmit_doRedirecttosavequery" />&#160;
 <input type="submit" value="$l10n.RefineQuery" name="eventSubmit_doRefinequery" />&#160;
 #end
-#exportFormats('eventSubmit_doSearch')
+#exportFormats('')
 #if ($issueListSize <= 10 && (!$mitlist || $mitlist.isSingleModuleIssueType()))
-    #processQueryResults('eventSubmit_doSearch')
+  #processQueryResults('')
 #end
 </div>
 #end

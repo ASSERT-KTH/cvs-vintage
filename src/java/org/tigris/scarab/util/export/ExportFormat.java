@@ -46,9 +46,6 @@ package org.tigris.scarab.util.export;
  * individuals on behalf of CollabNet.
  */ 
 
-import org.apache.commons.lang.StringUtils;
-
-import org.apache.turbine.RunData;
 
 
 /**
@@ -68,27 +65,8 @@ public class ExportFormat
     public static final String TSV_FORMAT = "tsv";
 
     /**
-     * Determines which export format to use.  This encapsulates the
-     * <code>format</code> field, and is useful to handle the case
-     * when there are more than one <code>format</code> fields on a
-     * screen.
-     *
-     * @param runData Source of the export format information.
-     * @return The format type, or <code>null</code> if indeterminate.
+     * The name of the parameter which indicates which format to use
+     * (e.g. {@link #EXCEL_FORMAT}, {@link #TSV_FORMAT}, etc.).
      */
-    public static String determine(RunData runData)
-    {
-        String[] possibilities = runData.getParameters().getStrings("format");
-        if (possibilities != null)
-        {
-            for (int i = 0; i < possibilities.length; i++)
-            {
-                if (StringUtils.isNotEmpty(possibilities[i]))
-                {
-                    return possibilities[i];
-                }
-            }
-        }
-        return null;
-    }
+    public static final String KEY_NAME = "format";
 }

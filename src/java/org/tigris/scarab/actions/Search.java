@@ -89,7 +89,7 @@ import org.tigris.scarab.util.export.ExportFormat;
  * @author <a href="mailto:jmcnally@collab.net">John D. McNally</a>
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: Search.java,v 1.133 2003/05/14 21:13:09 elicia Exp $
+ * @version $Id: Search.java,v 1.134 2003/05/23 09:39:20 dlr Exp $
  */
 public class Search extends RequireLoginFirstAction
 {
@@ -100,22 +100,20 @@ public class Search extends RequireLoginFirstAction
     private static final String ANY = "any";
     private static final String CREATED_BY = "created_by";
     
-    public void doSearch(RunData data, TemplateContext context)
+    /**
+     *
+     */
+    public void doPerform(RunData data, TemplateContext context)
         throws Exception
     {
-        String queryString = getQueryString(data);
-        ScarabUser user =(ScarabUser)data.getUser();
-        user.setMostRecentQuery(queryString);
-
-        ScarabLocalizationTool l10n = getLocalizationTool(context);
         ScarabRequestTool scarabR = getScarabRequestTool(context);
         List queryResults = scarabR.getCurrentSearchResults();
-        if (queryResults != null && queryResults.size() > 0)
+        if (queryResults != null && !queryResults.isEmpty())
         {
             context.put("queryResults", queryResults);
-            String format = ExportFormat.determine(data);
-            String next = data.getParameters().getString("next");
-            if (StringUtils.isNotEmpty(format))
+            String next = ScarabUtil.findValue(data, "next");
+            if (StringUtils.isNotEmpty
+                (ScarabUtil.findValue(data, ExportFormat.KEY_NAME)))
             {
                 // Send to the IssueListExport screen (which actually
                 // has no corresponding Velocity template).
@@ -125,6 +123,7 @@ public class Search extends RequireLoginFirstAction
             {
                 // Redirect to View, Assign, or Move/Copy
                 List issueIds = null; 
+                ScarabUser user = (ScarabUser) data.getUser();
                 if (next.indexOf("All") > -1)
                 {
                     // all issues are selected
@@ -135,6 +134,8 @@ public class Search extends RequireLoginFirstAction
                     // get issues select by user
                     issueIds = getSelected(data);
                 }
+
+                ScarabLocalizationTool l10n = getLocalizationTool(context);
                 if (issueIds.size() < 1)
                 {
                     scarabR.setAlertMessage(l10n.get("SelectIssues"));
@@ -201,6 +202,20 @@ public class Search extends RequireLoginFirstAction
                 setTarget(data, template);
             }
         }
+    }
+
+    /**
+     * Saves the query string for the logged-in user, and performs the
+     * default action of {@link #doPerform}.
+     */
+    public void doSearch(RunData data, TemplateContext context)
+        throws Exception
+    {
+        String queryString = getQueryString(data);
+        ScarabUser user = (ScarabUser) data.getUser();
+        user.setMostRecentQuery(queryString);
+
+        doPerform(data, context);
     }
 
     /**

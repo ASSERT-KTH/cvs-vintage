@@ -55,6 +55,7 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.turbine.RunData;
 import org.apache.turbine.TemplateContext;
 
+import org.tigris.scarab.util.ScarabUtil;
 import org.tigris.scarab.util.export.ExportFormat;
 
 
@@ -97,7 +98,7 @@ class DataExport extends Default
         throws Exception 
     {
         super.doBuildTemplate(data, context);
-        String format = ExportFormat.determine(data);
+        String format = ScarabUtil.findValue(data, ExportFormat.KEY_NAME);
 
         if (ExportFormat.EXCEL_FORMAT.equalsIgnoreCase(format))
         {
