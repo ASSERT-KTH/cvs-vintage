@@ -31,7 +31,6 @@ import org.jboss.ejb.EjbModule;
 import org.jboss.ejb.EntityContainer;
 import org.jboss.ejb.EntityPersistenceStore;
 import org.jboss.ejb.EntityEnterpriseContext;
-import org.jboss.ejb.ListCacheKey;
 import org.jboss.ejb.plugins.cmp.ejbql.Catalog;
 import org.jboss.ejb.plugins.cmp.jdbc.bridge.JDBCCMPFieldBridge;
 import org.jboss.ejb.plugins.cmp.jdbc.bridge.JDBCCMRFieldBridge;
@@ -59,7 +58,7 @@ import org.jboss.util.LRUCachePolicy;
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
  * @see org.jboss.ejb.EntityPersistenceStore
- * @version $Revision: 1.45 $
+ * @version $Revision: 1.46 $
  */
 public class JDBCStoreManager implements EntityPersistenceStore
 {
