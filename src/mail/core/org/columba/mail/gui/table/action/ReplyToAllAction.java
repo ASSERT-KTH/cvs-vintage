@@ -54,6 +54,11 @@ public class ReplyToAllAction extends AbstractColumbaAction
             ImageLoader.getSmallImageIcon("replytoall_small.png"));
         putValue(LARGE_ICON, ImageLoader.getImageIcon("reply-to-all.png"));
 
+        // set toolbar text
+        putValue(TOOLBAR_NAME,
+            MailResourceLoader.getString("menu", "mainframe",
+                "menu_message_replytoall"));
+
         setEnabled(false);
 
         ((MailFrameMediator) frameMediator).registerTableSelectionListener(this);
