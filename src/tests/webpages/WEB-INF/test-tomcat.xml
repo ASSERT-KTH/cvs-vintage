@@ -16,7 +16,7 @@
         early tests.
     -->
 
-     <property name="revision" value="$Revision: 1.25 $" />  
+     <property name="revision" value="$Revision: 1.26 $" />  
      <property name="host" value="127.0.0.1" />
      <property name="port"     value="8080" />
      <property name="outputType"     value="text" />
@@ -1102,6 +1102,12 @@ mod_webapp into mod_jk )
 
       <gtest request="GET /test/meta-inf/Manifest.mf HTTP/1.0"
              returnCode="${http.protocol} 4" />
+
+      <gtest description="This URL should return 404 Not Found"
+           request="GET /test/jsp/HelloWorld.jsp%20 HTTP/1.0"
+           returnCode="${http.protocol} 404" 
+      />
+
    </target>
 
    <!-- ==================== All targets ====================  -->
