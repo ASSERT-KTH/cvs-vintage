@@ -54,6 +54,12 @@ a:active, a:hover, #leftcol a:active, #leftcol a:hover {
 .b td { 
 	background: #fff;
 	}
+.directory .a td { 
+	background: #FFFF99;
+	}
+.directory .b td { 
+	background: #FFFFCC;
+	}
 .datatablechild th {
 	background: #efefef;
 	color: #000;
