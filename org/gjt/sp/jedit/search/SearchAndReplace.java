@@ -39,7 +39,7 @@ import org.gjt.sp.util.Log;
  * Class that implements regular expression and literal search within
  * jEdit buffers.
  * @author Slava Pestov
- * @version $Id: SearchAndReplace.java,v 1.29 2002/06/02 05:40:43 spestov Exp $
+ * @version $Id: SearchAndReplace.java,v 1.30 2002/06/05 02:13:56 spestov Exp $
  */
 public class SearchAndReplace
 {
@@ -776,8 +776,6 @@ loop:			for(;;)
 	 */
 	public static boolean replaceAll(View view)
 	{
-		long start = System.currentTimeMillis();
-
 		int fileCount = 0;
 		int occurCount = 0;
 
@@ -858,13 +856,11 @@ loop:			while(path != null)
 			view.hideWaitCursor();
 		}
 
-		long time = (System.currentTimeMillis() - start);
 		/* Don't do this when playing a macro, cos it's annoying */
 		if(!BeanShell.isScriptRunning())
 		{
 			Object[] args = { new Integer(occurCount),
-				new Integer(fileCount),
-				new Long(time) };
+				new Integer(fileCount) };
 			view.getStatus().setMessageAndClear(jEdit.getProperty(
 				"view.status.replace-all",args));
 			if(occurCount == 0)

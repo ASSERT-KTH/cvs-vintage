@@ -38,7 +38,7 @@ import org.gjt.sp.util.Log;
  * or font style for painting that token.
  *
  * @author Slava Pestov, mike dillon
- * @version $Id: TokenMarker.java,v 1.35 2002/06/04 08:48:13 spestov Exp $
+ * @version $Id: TokenMarker.java,v 1.36 2002/06/05 02:13:56 spestov Exp $
  *
  * @see org.gjt.sp.jedit.syntax.Token
  * @see org.gjt.sp.jedit.syntax.TokenHandler
@@ -140,8 +140,7 @@ public class TokenMarker
 	 * Do not call this method directly; call Buffer.markTokens() instead.
 	 */
 	public LineContext markTokens(LineContext prevContext,
-		TokenHandler tokenHandler, Segment line,
-		String noWordSep)
+		TokenHandler tokenHandler, Segment line)
 	{
 		//{{{ Set up some instance variables
 		// this is to avoid having to pass around lots and lots of
@@ -239,12 +238,10 @@ main_loop:	for(pos = line.offset; pos < lineLength; pos++)
 			}
 			else if(keywords != null || context.rules.getRuleCount() != 0)
 			{
-				String noWordSep2 = (keywords == null
-					? "" : keywords.getNonAlphaNumericChars());
+				String noWordSep = context.rules.getNoWordSep();
 
 				if(!Character.isLetterOrDigit(ch)
-					&& noWordSep.indexOf(ch) == -1
-					&& noWordSep2.indexOf(ch) == -1)
+					&& noWordSep.indexOf(ch) == -1)
 				{
 					if(context.inRule != null)
 						handleRule(context.inRule,true);

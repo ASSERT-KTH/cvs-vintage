@@ -55,7 +55,7 @@ import org.gjt.sp.util.*;
  * <li>
  *
  * @author Slava Pestov
- * @version $Id: Buffer.java,v 1.91 2002/06/04 08:48:12 spestov Exp $
+ * @version $Id: Buffer.java,v 1.92 2002/06/05 02:13:55 spestov Exp $
  */
 public class Buffer implements EBComponent
 {
@@ -1414,10 +1414,6 @@ public class Buffer implements EBComponent
 			setFoldHandler(new DummyFoldHandler());
 		}
 
-		noWordSep = getStringProperty("noWordSep");
-		if(noWordSep == null)
-			noWordSep = "";
-
 		if(!isTemporary() && firstTimeDone)
 			EditBus.send(new BufferUpdate(this,null,BufferUpdate.PROPERTIES_CHANGED));
 
@@ -1832,8 +1828,7 @@ public class Buffer implements EBComponent
 
 				context = tokenMarker.markTokens(prevContext,
 					(i == lineIndex ? tokenHandler
-					: DummyTokenHandler.INSTANCE),seg,
-					noWordSep);
+					: DummyTokenHandler.INSTANCE),seg);
 				offsetMgr.setLineContext(i,context);
 
 				// Could incorrectly be set to 'false' with
@@ -3183,7 +3178,6 @@ loop:		for(int i = 0; i < seg.count; i++)
 	private Vector markers;
 
 	// Syntax highlighting
-	private String noWordSep;
 	private boolean parseFully;
 	private TokenMarker tokenMarker;
 	private Segment seg;

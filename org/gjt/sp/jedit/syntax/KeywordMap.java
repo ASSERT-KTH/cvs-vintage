@@ -32,7 +32,7 @@ import org.gjt.sp.jedit.TextUtilities;
  * text substrings without the overhead of creating a new string object.
  *
  * @author Slava Pestov, Mike Dillon
- * @version $Id: KeywordMap.java,v 1.4 2002/05/21 09:52:27 spestov Exp $
+ * @version $Id: KeywordMap.java,v 1.5 2002/06/05 02:13:56 spestov Exp $
  */
 public class KeywordMap
 {
@@ -130,10 +130,7 @@ loop:		for(int i = 0; i < chars.length; i++)
 	 */
 	public String getNonAlphaNumericChars()
 	{
-		if(noWordSepStr == null)
-			noWordSepStr = noWordSep.toString();
-
-		return noWordSepStr;
+		return noWordSep.toString();
 	} //}}}
 
 	//{{{ getKeywords() method

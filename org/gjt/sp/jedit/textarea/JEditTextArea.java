@@ -50,7 +50,7 @@ import org.gjt.sp.util.Log;
  * jEdit's text component.
  *
  * @author Slava Pestov
- * @version $Id: JEditTextArea.java,v 1.130 2002/06/04 08:48:13 spestov Exp $
+ * @version $Id: JEditTextArea.java,v 1.131 2002/06/05 02:13:56 spestov Exp $
  */
 public class JEditTextArea extends JComponent
 {
@@ -6329,7 +6329,6 @@ loop:			for(int i = lineNo + 1; i < getLineCount(); i++)
 						return;
 					}
 				}
-
 
 				if(!multi)
 					selectNone();
