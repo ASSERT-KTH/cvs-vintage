@@ -327,6 +327,12 @@
     </field>
 </group>
 
+<group name="EditRole" key="editrole">
+    <field name="RoleName" key="r" type="String">
+        <rule name="required" value="true">Please enter a name for the role</rule>
+    </field>
+</group>
+
 <group name="Register" key="register" mapToObject="om.ScarabUserImpl">
     <field name="FirstName" key="fn" type="String">
         <rule name="required" value="true">Please enter a first name</rule>
@@ -485,10 +491,10 @@
 
 <group name="MoveIssue" key="mv">
     <field name="Action" key="rb" type="String">
-    	<rule name="validValues" value="copy|move">Action must be move or copy</rule>
+        <rule name="validValues" value="copy|move">Action must be move or copy</rule>
     </field>
     <field name="ModuleId" key="modId" type="NumberKey">
-    	<rule name="mask" value="[0-9]+">Select a module from the List</rule>
+        <rule name="mask" value="[0-9]+">Select a module from the List</rule>
     </field>
     <field name="IssueId" key="issId" type="String">
     </field>
