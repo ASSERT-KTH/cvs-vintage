@@ -9,6 +9,7 @@ package org.jboss;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.PrintStream;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
@@ -23,7 +24,7 @@ import javax.management.loading.*;
  *      
  *   @see <related>
  *   @author Rickard Öberg (rickard.oberg@telkel.com)
- *   @version $Revision: 1.1 $
+ *   @version $Revision: 1.2 $
  */
 public class Main
    implements Runnable
@@ -42,7 +43,14 @@ public class Main
       final java.io.PrintStream out = System.err;
       
       // Load system properties
-      System.getProperties().load(Main.class.getClassLoader().getResourceAsStream("jboss.properties"));
+      InputStream propertiesIn = Main.class.getClassLoader().getResourceAsStream("jboss.properties");
+      
+      if ( propertiesIn == null ) {
+      
+          throw new IOException("jboss.properties missing");
+      }
+      
+      System.getProperties().load(propertiesIn);
       
       // Set security
       System.setProperty("java.security.policy",Main.class.getClassLoader().getResource("server.policy").getFile());
