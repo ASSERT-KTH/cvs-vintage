@@ -207,7 +207,7 @@
 
         <!--
              JNI connector. It assumes the library is located in 
-             TOMCAT_HOME/bin/i386/jni_connect.[dll, so]. or in LD_LIBRARY_PATH.
+             TOMCAT_HOME/bin/native/jni_connect.[dll, nlm, so]. or in LD_LIBRARY_PATH.
              For different paths set "nativeLibrary" parameter.
 
              The JniConnector will be self-enable only if JNI mode is detected.
