@@ -1,4 +1,4 @@
-// $Id: GenericArgoMenuBar.java,v 1.57 2004/09/16 20:51:40 mvw Exp $
+// $Id: GenericArgoMenuBar.java,v 1.58 2004/09/18 09:34:45 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -674,10 +674,10 @@ public class GenericArgoMenuBar extends JMenuBar
             help.insertSeparator(0);
         }
 
-        JMenuItem systemInfo = help.add(Actions.SystemInfo);
+        JMenuItem systemInfo = help.add(Actions.systemInfo);
         setMnemonic(systemInfo, "System Information");
         help.addSeparator();
-        JMenuItem aboutArgoUML = help.add(Actions.AboutArgoUML);
+        JMenuItem aboutArgoUML = help.add(Actions.aboutArgoUML);
         setMnemonic(aboutArgoUML, "About ArgoUML");
 
         //setHelpMenu(help);

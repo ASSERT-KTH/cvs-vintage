@@ -1,4 +1,4 @@
-// $Id: UMLChangeAction.java,v 1.7 2004/09/15 19:17:04 mvw Exp $
+// $Id: UMLChangeAction.java,v 1.8 2004/09/18 09:34:45 mvw Exp $
 // Copyright (c) 1996-2001 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -29,6 +29,11 @@ import org.argouml.kernel.ProjectManager;
 import java.awt.event.*;
 
 
+/**
+ * This action marks the current project as changed (dirty), which e.g. means 
+ * that the user is asked if he wants to save, before quitting the program.
+ *
+ */
 public class UMLChangeAction extends UMLAction {
 
     /**
