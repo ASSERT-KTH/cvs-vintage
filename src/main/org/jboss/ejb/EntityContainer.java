@@ -60,7 +60,7 @@ import org.jboss.metadata.EntityMetaData;
 * @author <a href="mailto:docodan@mvcsoft.com">Daniel OConnor</a>
 * @author <a href="bill@burkecentral.com">Bill Burke</a>
 * @author <a href="mailto:andreas.schaefer@madplanet.com">Andreas Schaefer</a>
-* @version $Revision: 1.63 $
+* @version $Revision: 1.64 $
 *
 * <p><b>Revisions:</b>
 *
@@ -129,11 +129,11 @@ implements ContainerInvokerContainer, InstancePoolContainer, StatisticsProvider
    protected long removeCount = 0;
    
    /**
-    * <code>readOnly</code> determines if state can be written to resource manager.
-    *
-    */
+   * <code>readOnly</code> determines if state can be written to resource manager.
+   *
+   */
    protected boolean readOnly = false;
- 
+   
    /**
    * This provides a way to find the entities that are part of a given
    * transaction EntitySynchronizationInterceptor and InstanceSynchronization
@@ -164,7 +164,7 @@ implements ContainerInvokerContainer, InstancePoolContainer, StatisticsProvider
             for (int i = 0; i < entities.length; i++)
             {
                EntityEnterpriseContext ctx = entities[i];
-	       doStore(ctx);
+               doStore(ctx);
             }
          }
       }
@@ -179,10 +179,10 @@ implements ContainerInvokerContainer, InstancePoolContainer, StatisticsProvider
       EntityContainer container = (EntityContainer)ctx.getContainer();
       if (!((EntityMetaData)container.getBeanMetaData()).isReadOnly())
       {
-	 container.storeEntity(ctx);
+         container.storeEntity(ctx);
       }
    }
-
+   
    // Public --------------------------------------------------------
    
    public void setContainerInvoker(ContainerInvoker ci)
@@ -312,7 +312,7 @@ implements ContainerInvokerContainer, InstancePoolContainer, StatisticsProvider
          homeInterface = classLoader.loadClass(metaData.getHome());
       if (metaData.getRemote() != null)
          remoteInterface = classLoader.loadClass(metaData.getRemote());
-
+      
       // Call default init
       super.create();
       
@@ -913,226 +913,82 @@ implements ContainerInvokerContainer, InstancePoolContainer, StatisticsProvider
    }
    
    /**
-    * Build the container MBean information on attributes, contstructors,
-    * operations, and notifications. Currently there are no attributes, no
-    * constructors, no notifications, and the following ops:
-    * <ul>
-    * <li>'home' -> invokeHome(Invocation);</li>
-    * <li>'remote' -> invoke(Invocation);</li>
-    * <li>'localHome' -> not implemented;</li>
-    * <li>'local' -> not implemented;</li>
-    * <li>'getHome' -> return EBJHome interface;</li>
-    * <li>'getRemote' -> return EJBObject interface</li>
-    * <li>'getCacheSize' -> return the entity's cache size</li>
-    * <li>'flushCache' -> flush the entity's cache</li>
-    * </ul>
-    */
+   * Build the container MBean information on attributes, contstructors,
+   * operations, and notifications. Currently there are no attributes, no
+   * constructors, no notifications, and the following ops:
+   * <ul>
+   * <li>'home' -> invokeHome(Invocation);</li>
+   * <li>'remote' -> invoke(Invocation);</li>
+   * <li>'localHome' -> not implemented;</li>
+   * <li>'local' -> not implemented;</li>
+   * <li>'getHome' -> return EBJHome interface;</li>
+   * <li>'getRemote' -> return EJBObject interface</li>
+   * <li>'getCacheSize' -> return the entity's cache size</li>
+   * <li>'flushCache' -> flush the entity's cache</li>
+   * </ul>
+   */
    public MBeanInfo getMBeanInfo()
    {
       MBeanParameterInfo miInfo = new MBeanParameterInfo("method", Invocation.class.getName(), "Invocation data");
       MBeanConstructorInfo[] ctorInfo = null;
       MBeanOperationInfo[] opInfo = {
          new MBeanOperationInfo("home", "Invoke an EJBHome interface method",
-				new MBeanParameterInfo[] {miInfo},
-				"java.lang.Object", MBeanOperationInfo.ACTION_INFO),
+            new MBeanParameterInfo[] {miInfo},
+            "java.lang.Object", MBeanOperationInfo.ACTION_INFO),
          new MBeanOperationInfo("remote", "Invoke an EJBObject interface method",
-				new MBeanParameterInfo[] {miInfo},
-				"java.lang.Object", MBeanOperationInfo.ACTION_INFO),
+            new MBeanParameterInfo[] {miInfo},
+            "java.lang.Object", MBeanOperationInfo.ACTION_INFO),
          new MBeanOperationInfo("getHome", "Get the EJBHome interface class",
-				null,
-				"java.lang.Class", MBeanOperationInfo.INFO),
+            null,
+            "java.lang.Class", MBeanOperationInfo.INFO),
          new MBeanOperationInfo("getRemote", "Get the EJBObject interface class",
-				null,
-				"java.lang.Class", MBeanOperationInfo.INFO),
+            null,
+            "java.lang.Class", MBeanOperationInfo.INFO),
          new MBeanOperationInfo("getCacheSize", "Get the Container cache size.",
-				null,
-				"java.lang.Integer", MBeanOperationInfo.INFO),
+            null,
+            "java.lang.Integer", MBeanOperationInfo.INFO),
          new MBeanOperationInfo("flushCache", "Flush the Container cache.",
-				null,
-				"", MBeanOperationInfo.ACTION_INFO)
+            null,
+            "", MBeanOperationInfo.ACTION_INFO)
       };
       MBeanNotificationInfo[] notifyInfo = null;
       return new MBeanInfo(getClass().getName(), "EJB Container MBean",
          null, ctorInfo, opInfo, notifyInfo);
    }
-
+   
    /**
-    * Handle a operation invocation.
-    */
+   * Handle a operation invocation.
+   */
    public Object invoke(String actionName, Object[] params, String[] signature)
-       throws MBeanException, ReflectionException
+   throws MBeanException, ReflectionException
    {
-
-
+      
+      
       if( params != null && params.length == 1 && (params[0] instanceof Invocation) == false )
          throw new MBeanException(new IllegalArgumentException("Expected zero or single Invocation argument"));
-
+      
       Object value = null;
       Invocation mi = null;
       if( params != null && params.length == 1 )
          mi = (Invocation) params[0];
-
-      ClassLoader callerClassLoader = Thread.currentThread().getContextClassLoader();
-      try
-      {
-         Thread.currentThread().setContextClassLoader(this.classLoader);
-         // Check against home, remote, localHome, local, getHome, getRemote, getLocalHome, getLocal
-	 if (actionName.equals("getCacheSize")) {
-	     return new Integer(((EntityCache)instanceCache).getCacheSize());
-	 }
-	 if (actionName.equals("flushCache")) {
-	     System.out.println("flushing cache");
-	     ((EntityCache)instanceCache).flush();
-	     return null;
-	 }
-         else if( actionName.equals("remote") )
-         {
-
-            if (mi instanceof MarshalledInvocation)
-
-            {
-               ((MarshalledInvocation) mi).setMethodMap(marshalledInvocationMapping);
-
-               if (log.isDebugEnabled())
-               // FIXME FIXME FIXME FIXME REMOVE WHEN CL ARE INTEGRATED
-               log.debug("METHOD REMOTE INVOKE "+mi.getContainer()+"||"+mi.getMethod().getName()+"||");
-            
-            }
-            // FIXME FIXME FIXME FIXME REMOVE WHEN CL ARE INTEGRATED
-            else if (!mi.getMethod().getDeclaringClass().isAssignableFrom(remoteInterface))
-            {
-               
-               if (log.isDebugEnabled())
-               {
-                  // FIXME FIXME FIXME FIXME REMOVE WHEN CL ARE INTEGRATED
-                  log.debug("METHOD REMOTE INVOKE "+mi.getContainer()+"||"+mi.getMethod().getName()+"||");
-                  
-                  // FIXME FIXME FIXME FIXME REMOVE WHEN CL ARE INTEGRATED
-                  log.debug("WARNING: YOU ARE RUNNING NON-OPTIMIZED");
-               }
-
-               // TEMP FIXME HACK This makes user transactions on the server work until
-               // local invocations stop going through Marshalled Invocation
-               Transaction hack = mi.getTransaction();
-
-               // FIXME FIXME FIXME FIXME REMOVE WHEN CL ARE INTEGRATED
-               //Serialize deserialize
-               mi = (Invocation) new MarshalledObject(new MarshalledInvocation(mi.payload)).get();
-
-               // TEMP FIXME HACK This makes user transactions on the server work until
-               // local invocations stop going through Marshalled Invocation
-               mi.setTransaction(hack);
-
-               // FIXME FIXME FIXME FIXME REMOVE WHEN CL ARE INTEGRATED
-               ((MarshalledInvocation) mi).setMethodMap(marshalledInvocationMapping);
-
-               // FIXME FIXME FIXME FIXME REMOVE WHEN CL ARE INTEGRATED
-               return new MarshalledObject(invoke(mi));
-            }
-
-            value = invoke(mi);
-         }
-
-         else if( actionName.equals("local") )
-         {
-            throw new MBeanException(new UnsupportedOperationException("local is not supported yet"));
-         }
-         else if( actionName.equals("home") )
-         {
-
-            if (mi instanceof MarshalledInvocation)
-            {
-
-               ((MarshalledInvocation) mi).setMethodMap(marshalledInvocationMapping);
-
-               if (log.isDebugEnabled())
-                  // FIXME FIXME FIXME FIXME REMOVE WHEN CL ARE INTEGRATED
-               log.debug("METHOD HOME INVOKE "+mi.getContainer()+"||"+mi.getMethod().getName()+"||"+mi.getArguments().toString());
-
-            }
-            // FIXME FIXME FIXME FIXME REMOVE WHEN CL ARE INTEGRATED
-            else if (!mi.getMethod().getDeclaringClass().isAssignableFrom(remoteInterface))
-            {
-
-               if (log.isDebugEnabled())
-               {
-                  // FIXME FIXME FIXME FIXME REMOVE WHEN CL ARE INTEGRATED
-                  log.debug("METHOD HOME INVOKE "+mi.getContainer()+"||"+mi.getMethod().getName()+"||"+mi.getArguments().toString());
-
-                  // FIXME FIXME FIXME FIXME REMOVE WHEN CL ARE INTEGRATED
-                  log.debug("WARNING: YOU ARE RUNNING NON-OPTIMIZED");
-               }
-
-               // TEMP FIXME HACK This makes user transactions on the server work until
-               // local invocations stop going through Marshalled Invocation
-               Transaction hack = mi.getTransaction();
-
-               // FIXME FIXME FIXME FIXME REMOVE WHEN CL ARE INTEGRATED
-               //Serialize deserialize
-               mi = (MarshalledInvocation) new MarshalledObject(new MarshalledInvocation(mi.payload)).get();
-
-               // TEMP FIXME HACK This makes user transactions on the server work until
-               // local invocations stop going through Marshalled Invocation
-               mi.setTransaction(hack);
-
-               // FIXME FIXME FIXME FIXME REMOVE WHEN CL ARE INTEGRATED
-               ((MarshalledInvocation) mi).setMethodMap(marshalledInvocationMapping);
-
-               // FIXME FIXME FIXME FIXME REMOVE WHEN CL ARE INTEGRATED
-               return new MarshalledObject(invokeHome(mi));
-
-            }
-
-            value = invokeHome(mi);
-         }
-         else if( actionName.equals("localHome") )
-         {
-            throw new MBeanException(new UnsupportedOperationException("localHome is not supported yet"));
-         }
-         else if( actionName.equals("getHome") )
-         {
-            String className = this.getBeanMetaData().getHome();
-            if( className != null )
-            {
-               Class clazz = this.classLoader.loadClass(className);
-               value = clazz;
-            }
-         }
-         else if( actionName.equals("getRemote") )
-         {
-            String className = this.getBeanMetaData().getRemote();
-            if( className != null )
-            {
-               Class clazz = this.classLoader.loadClass(className);
-               value = clazz;
-            }
-         }
-         else if( actionName.equals("getLocalHome") )
-         {
-            value = this.localHomeInterface;
-         }
-         else if( actionName.equals("getLocal") )
-         {
-            value = this.localInterface;
-         }
-         else
-         {
-            throw new MBeanException(new IllegalArgumentException("Unknown action: "+actionName));
-         }
+    
+      // marcf: FIXME: these should be exposed on the cache
+      
+      // Check against home, remote, localHome, local, getHome, getRemote, getLocalHome, getLocal
+      if (actionName.equals("getCacheSize")) {
+         return new Integer(((EntityCache)instanceCache).getCacheSize());
       }
-      catch (Exception e)
-      {
-         log.error("invoke returned an exception", e);
-         throw new MBeanException(e, "invoke returned an exception");
+      else if (actionName.equals("flushCache")) {
+         System.out.println("flushing cache");
+         ((EntityCache)instanceCache).flush();
+         return null;
       }
-      finally
-      {
-         Thread.currentThread().setContextClassLoader(callerClassLoader);
-      }
-
-      return value;
+      
+      else return super.invoke("", params, signature);
    }
-
+   
+   
+   
    Interceptor createContainerInterceptor()
    {
       return new ContainerInterceptor();

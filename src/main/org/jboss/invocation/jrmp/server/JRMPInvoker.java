@@ -54,7 +54,7 @@ import org.jboss.system.Registry;
 *
 *  @author <a href="mailto:marc.fleury@jboss.org>Marc Fleury</a>
 *
-*  @version $Revision: 1.9 $
+*  @version $Revision: 1.10 $
 *
 *  <p><b>Revisions:</b><br>
 *  <p><b>2002/01/13: Sacha Labourey</b>
@@ -319,7 +319,7 @@ implements Invoker, JRMPInvokerMBean,  MBeanRegistration
          ObjectName mbean = (ObjectName) Registry.lookup((Integer) invocation.getContainer());
          
          // The cl on the thread should be set in another interceptor
-         return new MarshalledObject(server.invoke(mbean, null,  new Object[] {invocation}, new String[] {"java.lang.Object"})); 
+         return new MarshalledObject(server.invoke(mbean, "",  new Object[] {invocation}, new String[] {"java.lang.Object"})); 
       }
       
       catch (MBeanException mbe) { throw mbe.getTargetException(); }
