@@ -71,6 +71,7 @@
             location="${jtc.util.build}/lib/tomcat-util.jar"/>
 
   <property name="jtc.coyote.home" location="${jakarta-tomcat-connectors}/coyote"/>
+  <property name="jtc.coyote.lib" location="${jtc.coyote.home}/build/lib"/>
 
   <property name="jtc.http11.home" location="${jakarta-tomcat-connectors}/http11"/>
   <property name="jtc.http11.lib" location="${jtc.http11.home}/build/lib"/>
@@ -259,7 +260,7 @@
     <echo message="tomcat-util.jar is up to date"/>
   </target>
 
-  <target name="msg.log4j" if="log4j.present">
+  <target name="msg.log4j" if="log4j-present">
     <echo message="Detected Log4j" />
   </target>
 
@@ -405,7 +406,9 @@
         
         <ant dir="${jtc.http11.home}" inheritAll="false">
             <property name="util.home" value="${jtc.util.home}"/>
+            <property name="commons-logging.jar" value="${commons-logging.jar}"/>
             <property name="commons-modeler.jar" value="${commons-modeler.jar}"/>
+            <property name="jmx.jar" value="${jmx.jar}"/>
         </ant>
             
         <ant dir="${jtc.jk.home}" target="build-jk">
@@ -689,11 +692,14 @@
     <copy tofile="${tomcat.build}/lib/common/tomcat33-resource.jar"
           file="${jtc.http11.lib}/tomcat33-resource.jar"/>
 
-    <copy tofile="${tomcat.build}/lib/container/tomcat-http11.jar"
-          file="${jtc.http11.lib}/tomcat-http11.jar"/>
+    <copy tofile="${tomcat.build}/lib/container/tomcat-coyote.jar"
+          file="${jtc.coyote.lib}/tomcat-coyote.jar"/>
 
     <copy tofile="${tomcat.build}/lib/container/tomcat33-coyote.jar"
-          file="${jtc.http11.lib}/tomcat33-coyote.jar"/>
+          file="${jtc.coyote.lib}/tomcat33-coyote.jar"/>
+
+    <copy tofile="${tomcat.build}/lib/container/tomcat-http11.jar"
+          file="${jtc.http11.lib}/tomcat-http11.jar"/>
 
     <copy todir="${tomcat.build}/lib/container"
           file="${jtc.jk.home}/build/lib/tomcat-jk2.jar"/>
