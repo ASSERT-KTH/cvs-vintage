@@ -33,7 +33,7 @@ import org.jnp.interfaces.NamingContext;
  @see javax.naming.spi.InitialContextFactory
 
  @author Scott.Stark@jboss.org
- @version $Revision: 1.5 $
+ @version $Revision: 1.6 $
  */
 public class HttpNamingContextFactory
    implements InitialContextFactory, ObjectFactory
@@ -87,6 +87,16 @@ public class HttpNamingContextFactory
       return ctx.lookup(path);
    }
 
+   /** Obtain the JNDI Naming stub by reading its marshalled object from the
+    * servlet specified by the providerURL
+    * 
+    * @param providerURL the naming factory servlet URL
+    * @return
+    * @throws ClassNotFoundException throw during unmarshalling
+    * @throws IOException thrown on any trasport failure
+    * @throws InvocationTargetException throw on failure to install a JSSE host verifier
+    * @throws IllegalAccessException throw on failure to install a JSSE host verifier
+    */ 
    private Naming getNamingServer(URL providerURL)
       throws ClassNotFoundException, IOException, InvocationTargetException,
          IllegalAccessException
@@ -108,7 +118,25 @@ public class HttpNamingContextFactory
       MarshalledValue mv = (MarshalledValue) ois.readObject();
       ois.close();
 
-      Naming namingServer = (Naming) mv.get();
+      Object obj = mv.get();
+      if( (obj instanceof Naming) == false )
+      {
+         String msg = "Invalid reply content seen: "+obj.getClass();
+         Throwable t = null;
+         if( obj instanceof Throwable )
+         {
+            t = (Throwable) obj;
+            if( t instanceof InvocationException )
+               t = ((InvocationException)t).getTargetException();
+         }
+         if( t != null )
+            log.warn(msg, t);
+         else
+            log.warn(msg);
+         IOException e = new IOException(msg);
+         throw e;
+      }
+      Naming namingServer = (Naming) obj;
       return namingServer;
    }
 }
