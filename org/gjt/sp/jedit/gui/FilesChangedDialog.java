@@ -37,7 +37,7 @@ import org.gjt.sp.jedit.*;
  * Files changed on disk dialog.
  *
  * @author Slava Pestov
- * @version $Id: FilesChangedDialog.java,v 1.3 2003/04/14 23:15:28 spestov Exp $
+ * @version $Id: FilesChangedDialog.java,v 1.4 2003/06/03 22:02:40 spestov Exp $
  */
 public class FilesChangedDialog extends EnhancedDialog
 {
@@ -114,6 +114,7 @@ public class FilesChangedDialog extends EnhancedDialog
 		Box buttons = new Box(BoxLayout.X_AXIS);
 		buttons.add(Box.createGlue());
 		JButton close = new JButton(jEdit.getProperty("common.close"));
+		getRootPane().setDefaultButton(close);
 		buttons.add(close);
 		close.addActionListener(new ActionHandler());
 		buttons.add(Box.createGlue());

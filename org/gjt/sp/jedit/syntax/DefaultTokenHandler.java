@@ -22,11 +22,13 @@
 
 package org.gjt.sp.jedit.syntax;
 
+import javax.swing.text.Segment;
+
 /**
  * Builds a linked list of tokens without any additional processing.
  *
  * @author Slava Pestov
- * @version $Id: DefaultTokenHandler.java,v 1.15 2003/04/28 01:35:27 spestov Exp $
+ * @version $Id: DefaultTokenHandler.java,v 1.16 2003/06/03 22:02:40 spestov Exp $
  * @since jEdit 4.1pre1
  */
 public class DefaultTokenHandler implements TokenHandler
@@ -53,14 +55,15 @@ public class DefaultTokenHandler implements TokenHandler
 	//{{{ handleToken() method
 	/**
 	 * Called by the token marker when a syntax token has been parsed.
+	 * @param seg The segment containing the text
 	 * @param id The token type (one of the constants in the
 	 * {@link Token} class).
 	 * @param offset The start offset of the token
 	 * @param length The number of characters in the token
 	 * @param context The line context
-	 * @since jEdit 4.1pre1
+	 * @since jEdit 4.2pre3
 	 */
-	public void handleToken(byte id, int offset, int length,
+	public void handleToken(Segment seg, byte id, int offset, int length,
 		TokenMarker.LineContext context)
 	{
 		Token token = createToken(id,offset,length,context);
