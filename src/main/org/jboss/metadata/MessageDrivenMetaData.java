@@ -30,7 +30,7 @@ import org.jboss.deployment.DeploymentException;
  * </ul>
  * </p>
  *
- * @version $Revision: 1.16 $
+ * @version $Revision: 1.17 $
  */
 public class MessageDrivenMetaData
    extends BeanMetaData
@@ -55,6 +55,7 @@ public class MessageDrivenMetaData
    private String user;
    private String passwd;
    private String clientId;
+   private String subscriptionId;
    
    // Static --------------------------------------------------------
     
@@ -124,6 +125,10 @@ public class MessageDrivenMetaData
    
    public String getClientId() {
       return clientId;
+   }
+
+   public String getSubscriptionId() {
+      return subscriptionId;
    }
    
    /**
@@ -279,6 +284,7 @@ public class MessageDrivenMetaData
       user = getOptionalChildContent(element, "mdb-user");
       passwd = getOptionalChildContent(element,"mdb-passwd");
       clientId = getOptionalChildContent(element,"mdb-client-id");
+      subscriptionId = getOptionalChildContent(element,"mdb-subscription-id");
    }	
 
    // Package protected ---------------------------------------------

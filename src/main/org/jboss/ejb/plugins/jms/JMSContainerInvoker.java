@@ -56,7 +56,7 @@ import org.w3c.dom.Node;
  *      </a>
  * @author    <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
  * @author    <a href="mailto:jason@planet57.com">Jason Dillon</a>
- * @version   $Revision: 1.40 $
+ * @version   $Revision: 1.41 $
  */
 public class JMSContainerInvoker
    implements ContainerInvoker, XmlLoadable
@@ -529,8 +529,7 @@ public class JMSContainerInvoker
          else
          {
             //Durable subscription
-            String durableName =
-            clientId != null ? clientId : config.getEjbName();
+            String durableName = config.getSubscriptionId();
             
             connectionConsumer =
                tConnection.createDurableConnectionConsumer(topic,
