@@ -47,7 +47,7 @@ import org.gjt.sp.util.WorkThreadPool;
  * site. See the {@link VFS} class for implementation details.
  *
  * @author Slava Pestov
- * @version $Id: VFSManager.java,v 1.13 2003/10/15 01:08:52 spestov Exp $
+ * @version $Id: VFSManager.java,v 1.14 2004/03/28 00:07:26 spestov Exp $
  */
 public class VFSManager
 {
@@ -308,7 +308,7 @@ public class VFSManager
 	 *
 	 * @param comp The component
 	 * @param path The path name that caused the error
-	 * @param message The error message property name
+	 * @param messageProp The error message property name
 	 * @param args Positional parameters
 	 * @since jEdit 4.0pre3
 	 */

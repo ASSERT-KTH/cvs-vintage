@@ -55,7 +55,7 @@ import java.awt.*;
  *
  * @author Slava Pestov
  * @author John Gellene (API documentation)
- * @version $Id: AbstractOptionPane.java,v 1.17 2003/05/22 23:43:16 spestov Exp $
+ * @version $Id: AbstractOptionPane.java,v 1.18 2004/03/28 00:07:26 spestov Exp $
  */
 // even though this class is called AbstractOptionPane, it is not really
 // abstract, since BufferOptions uses an instance of it to lay out its
@@ -246,7 +246,6 @@ public class AbstractOptionPane extends JPanel implements OptionPane
 	//{{{ addSeparator() method
 	/**
 	 * Adds a separator component.
-	 * @param label The separator label property
 	 * @since jEdit 4.1pre7
 	 */
 	public void addSeparator()

@@ -29,7 +29,7 @@ import org.gjt.sp.jedit.*;
  * Sending this message will cause the specified dynamic menu to be recreated.
  *
  * @author Slava Pestov
- * @version $Id: DynamicMenuChanged.java,v 1.2 2003/05/02 23:36:00 spestov Exp $
+ * @version $Id: DynamicMenuChanged.java,v 1.3 2004/03/28 00:07:26 spestov Exp $
  *
  * @since jEdit 4.2pre2
  */
@@ -38,7 +38,7 @@ public class DynamicMenuChanged extends EBMessage
 	//{{{ DynamicMenuChanged constructor
 	/**
 	 * Creates a new dynamic menu changed message.
-	 * @param menu The menu name. All dynamic menus with this name will be
+	 * @param name The menu name. All dynamic menus with this name will be
 	 * recreated next time they are displayed.
 	 */
 	public DynamicMenuChanged(String name)

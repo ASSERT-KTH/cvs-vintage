@@ -60,7 +60,7 @@ import org.gjt.sp.util.Log;
  *
  * @author Slava Pestov
  * @author John Gellene (API documentation)
- * @version $Id: SearchAndReplace.java,v 1.59 2004/03/06 21:33:53 spestov Exp $
+ * @version $Id: SearchAndReplace.java,v 1.60 2004/03/28 00:07:27 spestov Exp $
  */
 public class SearchAndReplace
 {
@@ -94,7 +94,7 @@ public class SearchAndReplace
 	//{{{ setReplaceString() method
 	/**
 	 * Sets the current replacement string.
-	 * @param search The new replacement string
+	 * @param replace The new replacement string
 	 */
 	public static void setReplaceString(String replace)
 	{
@@ -206,7 +206,7 @@ public class SearchAndReplace
 	//{{{ setBeanShellReplace() method
 	/**
 	 * Sets the state of the BeanShell replace flag.
-	 * @param regexp True if the replace string is a BeanShell expression
+	 * @param beanshell True if the replace string is a BeanShell expression
 	 * @since jEdit 3.2pre2
 	 */
 	public static void setBeanShellReplace(boolean beanshell)
@@ -250,8 +250,6 @@ public class SearchAndReplace
 	//{{{ getAutoWrap() method
 	/**
 	 * Returns the state of the auto wrap around flag.
-	 * @param wrap If true, the 'continue search from start' dialog
-	 * will not be displayed
 	 * @since jEdit 3.2pre2
 	 */
 	public static boolean getAutoWrapAround()
@@ -276,8 +274,6 @@ public class SearchAndReplace
 	//{{{ getSearchMatcher() method
 	/**
 	 * Returns the current search string matcher.
-	 * @param reverseOK Replacement commands need a non-reversed matcher,
-	 * so they set this to false
 	 * @exception IllegalArgumentException if regular expression search
 	 * is enabled, the search string or replacement string is invalid
 	 * @since jEdit 4.1pre7

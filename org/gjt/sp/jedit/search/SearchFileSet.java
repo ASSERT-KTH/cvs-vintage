@@ -24,7 +24,7 @@ import org.gjt.sp.jedit.*;
 /**
  * An abstract interface representing a set of files.
  * @author Slava Pestov
- * @version $Id: SearchFileSet.java,v 1.4 2003/01/31 04:49:31 spestov Exp $
+ * @version $Id: SearchFileSet.java,v 1.5 2004/03/28 00:07:27 spestov Exp $
  */
 public interface SearchFileSet
 {
@@ -37,7 +37,7 @@ public interface SearchFileSet
 	/**
 	 * Returns the next file to search.
 	 * @param view The view performing the search
-	 * @param buffer The last file searched
+	 * @param path The last file searched
 	 */
 	String getNextFile(View view, String path);
 

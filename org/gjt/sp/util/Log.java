@@ -41,7 +41,7 @@ import javax.swing.event.*;
  * This class can also optionally redirect standard output and error to the log.
  *
  * @author Slava Pestov
- * @version $Id: Log.java,v 1.13 2003/06/11 23:55:39 spestov Exp $
+ * @version $Id: Log.java,v 1.14 2004/03/28 00:07:27 spestov Exp $
  */
 public class Log
 {
@@ -95,7 +95,6 @@ public class Log
 	 * sent to the log
 	 * @param level Messages with this log level or higher will
 	 * be printed to the system console
-	 * @param stream The stream to save log data to
 	 * @since jEdit 3.2pre4
 	 */
 	public static void init(boolean stdio, int level)

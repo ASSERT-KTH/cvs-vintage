@@ -98,7 +98,7 @@ import org.gjt.sp.util.Log;
  * @see org.gjt.sp.jedit.ServiceManager
  *
  * @author Slava Pestov
- * @version $Id: PluginJAR.java,v 1.45 2004/03/25 23:13:24 spestov Exp $
+ * @version $Id: PluginJAR.java,v 1.46 2004/03/28 00:07:26 spestov Exp $
  * @since jEdit 4.2pre1
  */
 public class PluginJAR
@@ -718,7 +718,8 @@ public class PluginJAR
 			Log.log(Log.ERROR,PluginJAR.class,io);
 			try
 			{
-				dout.close();
+				if(dout != null)
+					dout.close();
 			}
 			catch(IOException io2)
 			{

@@ -66,7 +66,7 @@ import org.gjt.sp.util.*;
  * </ul>
  *
  * @author Slava Pestov
- * @version $Id: Buffer.java,v 1.213 2004/02/27 23:59:09 spestov Exp $
+ * @version $Id: Buffer.java,v 1.214 2004/03/28 00:07:26 spestov Exp $
  */
 public class Buffer
 {
@@ -1486,7 +1486,6 @@ public class Buffer
 	//{{{ getBufferChangeListeners() method
 	/**
 	 * Returns an array of registered buffer change listeners.
-	 * @param listener The listener
 	 * @since jEdit 4.1pre3
 	 */
 	public BufferChangeListener[] getBufferChangeListeners()
@@ -2317,7 +2316,7 @@ public class Buffer
 	//{{{ indentLine() method
 	/**
 	 * Indents the specified line.
-	 * @param line The line number to indent
+	 * @param lineIndex The line number to indent
 	 * @param canDecreaseIndent If true, the indent can be decreased as a
 	 * result of this. Set this to false for Tab key.
 	 * @return true If indentation took place, false otherwise.

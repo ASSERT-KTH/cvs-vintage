@@ -45,7 +45,7 @@ import org.gjt.sp.jedit.*;
  * @see JEditTextArea
  *
  * @author Mike Dillon and Slava Pestov
- * @version $Id: Gutter.java,v 1.46 2003/12/23 02:15:05 spestov Exp $
+ * @version $Id: Gutter.java,v 1.47 2004/03/28 00:07:27 spestov Exp $
  */
 public class Gutter extends JComponent implements SwingConstants
 {
@@ -378,7 +378,7 @@ public class Gutter extends JComponent implements SwingConstants
 	/**
 	 * Sets whether the gutter is collapsed or expanded and force the text
 	 * area to update its layout if there is a change.
-	 * @param collapsed true if the gutter is expanded,
+	 * @param expanded true if the gutter is expanded,
 	 *                   false if it is collapsed
 	 */
 	public void setExpanded(boolean expanded)

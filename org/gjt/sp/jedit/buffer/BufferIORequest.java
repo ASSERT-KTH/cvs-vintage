@@ -35,7 +35,7 @@ import org.gjt.sp.util.*;
 /**
  * A buffer I/O request.
  * @author Slava Pestov
- * @version $Id: BufferIORequest.java,v 1.24 2003/12/27 05:13:54 spestov Exp $
+ * @version $Id: BufferIORequest.java,v 1.25 2004/03/28 00:07:26 spestov Exp $
  */
 public class BufferIORequest extends WorkRequest
 {
@@ -91,8 +91,8 @@ public class BufferIORequest extends WorkRequest
 	public static final int UTF8_MAGIC_3 = 0xbf;
 
 	/**
-	 * Length of longest XML PI used for encoding detection.
-	 * <?xml version="1.0" encoding="................"?>
+	 * Length of longest XML PI used for encoding detection.<p>
+	 * &lt;?xml version="1.0" encoding="................"?&gt;
 	 */
 	public static final int XML_PI_LENGTH = 50;
 	//}}}

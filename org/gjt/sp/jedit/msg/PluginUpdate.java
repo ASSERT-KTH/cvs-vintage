@@ -27,7 +27,7 @@ import org.gjt.sp.jedit.*;
 /**
  * Message sent when plugins are loaded and unloaded.
  * @author Slava Pestov
- * @version $Id: PluginUpdate.java,v 1.3 2003/06/03 20:35:53 spestov Exp $
+ * @version $Id: PluginUpdate.java,v 1.4 2004/03/28 00:07:26 spestov Exp $
  *
  * @since jEdit 4.2pre1
  */
@@ -65,7 +65,7 @@ public class PluginUpdate extends EBMessage
 	//{{{ PluginUpdate constructor
 	/**
 	 * Creates a new plugin update message.
-	 * @param buffer The buffer
+	 * @param jar The plugin
 	 * @param what What happened
 	 * @param exit Is the editor exiting?
 	 * @since jEdit 4.2pre3

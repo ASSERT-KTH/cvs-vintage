@@ -36,14 +36,15 @@ import java.awt.Graphics2D;
  * @since jEdit 4.0pre4
  *
  * @author Slava Pestov
- * @version $Id: TextAreaExtension.java,v 1.4 2003/05/14 03:27:29 spestov Exp $
+ * @version $Id: TextAreaExtension.java,v 1.5 2004/03/28 00:07:27 spestov Exp $
  */
 public abstract class TextAreaExtension
 {
 	//{{{ paintScreenLineRange() method
 	/**
 	 * Paints a range of screen lines. The default implementation calls
-	 * {@link #paintValidLine()} and {@link paintInvalidLine()}.
+	 * {@link #paintValidLine(Graphics2D,int,int,int,int,int)} and
+	 * {@link #paintInvalidLine(Graphics2D,int,int)}.
 	 * @param gfx A graphics context
 	 * @param firstLine The first screen line
 	 * @param lastLine The last screen line

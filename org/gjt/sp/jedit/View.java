@@ -79,7 +79,7 @@ import org.gjt.sp.util.Log;
  *
  * @author Slava Pestov
  * @author John Gellene (API documentation)
- * @version $Id: View.java,v 1.109 2004/03/20 06:08:49 spestov Exp $
+ * @version $Id: View.java,v 1.110 2004/03/28 00:07:26 spestov Exp $
  */
 public class View extends JFrame implements EBComponent
 {
@@ -470,7 +470,7 @@ public class View extends JFrame implements EBComponent
 	 * view. For example, the complete word command uses this so
 	 * that all key events are passed to the word list popup while
 	 * it is visible.
-	 * @param comp The component
+	 * @param listener The key event interceptor.
 	 */
 	public void setKeyEventInterceptor(KeyListener listener)
 	{

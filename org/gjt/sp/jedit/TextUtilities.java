@@ -40,7 +40,7 @@ import org.gjt.sp.jedit.syntax.*;
  * </ul>
  *
  * @author Slava Pestov
- * @version $Id: TextUtilities.java,v 1.46 2003/08/25 20:59:10 spestov Exp $
+ * @version $Id: TextUtilities.java,v 1.47 2004/03/28 00:07:26 spestov Exp $
  */
 public class TextUtilities
 {
@@ -564,7 +564,8 @@ loop:		for(int i = pos; i < line.length(); i++)
 	 * Formats the specified text by merging and breaking lines to the
 	 * specified width.
 	 * @param text The text
-	 * @param maxLineLen The maximum line length
+	 * @param maxLineLength The maximum line length
+	 * @param tabSize The tab size
 	 */
 	public static String format(String text, int maxLineLength, int tabSize)
 	{

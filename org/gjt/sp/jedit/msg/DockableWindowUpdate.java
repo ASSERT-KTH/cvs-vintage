@@ -28,7 +28,7 @@ import org.gjt.sp.jedit.*;
 /**
  * Message sent when dockable window state changes.
  * @author Slava Pestov
- * @version $Id: DockableWindowUpdate.java,v 1.1 2003/04/28 21:51:09 spestov Exp $
+ * @version $Id: DockableWindowUpdate.java,v 1.2 2004/03/28 00:07:26 spestov Exp $
  *
  * @since jEdit 4.2pre1
  */
@@ -58,8 +58,9 @@ public class DockableWindowUpdate extends EBMessage
 	//{{{ DockableWindowUpdate constructor
 	/**
 	 * Creates a new dockable window update message.
-	 * @param buffer The buffer
+	 * @param wm The dockable window manager
 	 * @param what What happened
+	 * @param dockable The dockable window in question
 	 */
 	public DockableWindowUpdate(DockableWindowManager wm, Object what,
 		String dockable)

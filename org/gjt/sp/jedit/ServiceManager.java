@@ -80,7 +80,7 @@ import org.gjt.sp.util.Log;
  *
  * @since jEdit 4.2pre1
  * @author Slava Pestov
- * @version $Id: ServiceManager.java,v 1.7 2003/05/10 00:43:19 spestov Exp $
+ * @version $Id: ServiceManager.java,v 1.8 2004/03/28 00:07:26 spestov Exp $
  */
 public class ServiceManager
 {
@@ -175,7 +175,6 @@ public class ServiceManager
 	 *
 	 * @param clazz The service class
 	 * @param name The service name
-	 * @param code BeanShell code to create an instance of this
 	 *
 	 * @since jEdit 4.2pre1
 	 */

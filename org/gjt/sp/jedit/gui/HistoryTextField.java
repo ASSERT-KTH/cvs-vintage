@@ -36,7 +36,7 @@ import org.gjt.sp.jedit.*;
 /**
  * Text field with an arrow-key accessable history.
  * @author Slava Pestov
- * @version $Id: HistoryTextField.java,v 1.11 2003/11/12 00:24:11 spestov Exp $
+ * @version $Id: HistoryTextField.java,v 1.12 2004/03/28 00:07:26 spestov Exp $
  */
 public class HistoryTextField extends JTextField
 {
@@ -64,7 +64,7 @@ public class HistoryTextField extends JTextField
 	/**
 	 * Creates a new history text field.
 	 * @param name The history model name
-	 * @param instantPopup If true, selecting a value from the history
+	 * @param instantPopups If true, selecting a value from the history
 	 * popup will immediately fire an ActionEvent. If false, the user
 	 * will have to press 'Enter' first
 	 *
