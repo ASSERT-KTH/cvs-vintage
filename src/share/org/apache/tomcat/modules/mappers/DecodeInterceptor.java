@@ -589,7 +589,7 @@ public class DecodeInterceptor extends  BaseInterceptor  {
 		ServerSession sess=req.getSession( false );
 		if( sess!=null ) {
 		    charset=(String)sess.getNote( sessionEncodingNote );
-		    if( debug>-1 && charset!=null )
+		    if( debug > 0 && charset!=null )
 			log("Charset from session " + charset );
 		}
 	    }
@@ -599,7 +599,7 @@ public class DecodeInterceptor extends  BaseInterceptor  {
 	    if( charset != null ) return charset;
 	    
 	    charset=ctx.getProperty("charset");
-	    if( charset!=null )
+	    if( debug > 0 && charset!=null )
 		log( "Default per context " + charset );
 	    // Use per context default
 	    return charset;
