@@ -93,7 +93,7 @@ import org.tigris.scarab.util.ScarabLink;
  * This class is responsible for report issue forms.
  *
  * @author <a href="mailto:jmcnally@collab.net">John D. McNally</a>
- * @version $Id: AssignIssue.java,v 1.21 2001/12/28 06:42:41 elicia Exp $
+ * @version $Id: AssignIssue.java,v 1.22 2002/01/10 16:51:07 jmcnally Exp $
  */
 public class AssignIssue extends RequireLoginFirstAction
 {
@@ -273,7 +273,8 @@ public class AssignIssue extends RequireLoginFirstAction
                 Issue issue = scarabR.getIssue();
                 List users = UserManager
                     .getUsers(newUsernames, issue.getIdDomain());
-                issue.assignUsers(users, comment, modifyingUser, attribute);
+                // missing method
+                // issue.assignUsers(users, comment, modifyingUser, attribute);
                 emailAssignIssueToUsers(scarabR.getIssue(), users, 
                     comment, context);
 
@@ -287,7 +288,8 @@ public class AssignIssue extends RequireLoginFirstAction
                     Issue issue = (Issue)issues.get(i);
                     List users = UserManager
                         .getUsers(newUsernames, issue.getIdDomain());
-                    issue.assignUsers(users, comment, modifyingUser, attribute);
+                    // missing method
+                    // issue.assignUsers(users, comment, modifyingUser, attribute);
                     emailAssignIssueToUsers((Issue)issues.get(i), users, 
                         comment, context);
                 }
