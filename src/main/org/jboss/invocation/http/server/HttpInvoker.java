@@ -6,43 +6,30 @@
  */
 package org.jboss.invocation.http.server;
 
-import java.io.IOException;
-import java.lang.reflect.Method;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
-import java.net.URL;
-
-import javax.naming.Name;
-import javax.naming.InitialContext;
-import javax.naming.Context;
-import javax.naming.NamingException;
-import javax.naming.NameNotFoundException;
-
-import javax.transaction.Transaction;
-import javax.transaction.TransactionManager;
-import javax.management.ObjectName;
 import javax.management.MBeanException;
+import javax.management.ObjectName;
 import javax.management.RuntimeMBeanException;
 import javax.management.RuntimeOperationsException;
-import javax.management.MalformedObjectNameException;
+import javax.naming.InitialContext;
+import javax.naming.NamingException;
+import javax.transaction.Transaction;
 
-import org.jboss.invocation.http.interfaces.HttpInvokerProxy;
 import org.jboss.invocation.Invocation;
-import org.jboss.invocation.InvocationContext;
 import org.jboss.invocation.Invoker;
 import org.jboss.invocation.MarshalledInvocation;
-import org.jboss.invocation.MarshalledValue;
-import org.jboss.logging.Logger;
-import org.jboss.naming.Util;
+import org.jboss.invocation.http.interfaces.HttpInvokerProxy;
 import org.jboss.system.Registry;
 import org.jboss.system.ServiceMBeanSupport;
+import org.jboss.system.server.ServerConfigUtil;
 import org.jboss.util.StringPropertyReplacer;
 
 /**
  * The HttpInvoker ... into the JMX base.
  *
  * @author <a href="mailto:scott.stark@jboss.org>Scott Stark</a>
- * @version $Revision: 1.6 $
+ * @version $Revision: 1.7 $
  */
 public class HttpInvoker extends ServiceMBeanSupport
    implements HttpInvokerMBean
@@ -97,22 +84,11 @@ public class HttpInvoker extends ServiceMBeanSupport
       throws Exception
    {
       checkInvokerURL();
-      InitialContext context = new InitialContext();
       Invoker delegateInvoker = new HttpInvokerProxy(invokerURL);
 
       // Export the Invoker interface
       ObjectName name = super.getServiceName();
       Registry.bind(name, delegateInvoker);
-
-      // Bind the invoker in the JNDI invoker naming space
-      Util.rebind(
-         // The context
-         context,
-         // It should look like so "invokers/<name>/jrmp"
-         "invokers/"+InetAddress.getLocalHost().getHostName()+"/http",
-         // The bare invoker
-         delegateInvoker);
-
       log.debug("Bound Http invoker for JMX node");         
    }
 
@@ -202,16 +178,24 @@ public class HttpInvoker extends ServiceMBeanSupport
    }
 
    /** Validate that the invokerURL is set, and if not build it from
-    * the invokerURLPrefix + host + invokerURLSuffix.
+    * the invokerURLPrefix + host + invokerURLSuffix. The host value will be
+    * taken from the jboss.bind.address system property if its a valid
+    * address, InetAddress.getLocalHost otherwise.
     */
    protected void checkInvokerURL() throws UnknownHostException
    {
       if( invokerURL == null )
       {
          InetAddress addr = InetAddress.getLocalHost();
-         String host = useHostName ? addr.getHostName() : addr.getHostAddress();
+         // First check for a global bind address
+         String host = ServerConfigUtil.getSpecificBindAddress();
+         if( host == null )
+         {
+            host = useHostName ? addr.getHostName() : addr.getHostAddress();
+         }
          String url = invokerURLPrefix + host + invokerURLSuffix;
          setInvokerURL(url);
       }
    }
 }
+
