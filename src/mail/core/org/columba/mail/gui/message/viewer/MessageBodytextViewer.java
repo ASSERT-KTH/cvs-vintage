@@ -112,7 +112,7 @@ public class MessageBodytextViewer extends JTextPane implements Viewer,
 		htmlEditorKit = new HTMLEditorKit();
 		setEditorKit(htmlEditorKit);
 
-		setContentType("text/html");	
+		setContentType("text/html");
 
 		XmlElement gui = MailInterface.config.get("options").getElement(
 				"/options/gui");
@@ -231,6 +231,8 @@ public class MessageBodytextViewer extends JTextPane implements Viewer,
 		boolean htmlViewer = bodyPart.getHeader().getMimeType().getSubtype()
 				.equals("html");
 
+		
+
 		int encoding = bodyPart.getHeader().getContentTransferEncoding();
 
 		switch (encoding) {
@@ -259,8 +261,14 @@ public class MessageBodytextViewer extends JTextPane implements Viewer,
 			text.append((char) next);
 			next = bodyStream.read();
 		}
-
-		setBodyText(text.toString(), htmlViewer);
+		
+		// if HTML stripping is enabled
+		if (Boolean.valueOf(html.getAttribute("disable")).booleanValue()) {
+			// strip HTML message -> remove all HTML tags
+			setBodyText(HtmlParser.htmlToText(text.toString()), false);
+		} else {
+			setBodyText(text.toString(), htmlViewer);
+		}
 
 		bodyStream.close();
 
