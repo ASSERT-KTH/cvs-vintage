@@ -63,7 +63,7 @@ import org.tigris.scarab.util.TurbineInitialization;
  * an Ant xml file.
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: XMLImport.java,v 1.2 2001/12/14 00:06:04 jon Exp $
+ * @version $Id: XMLImport.java,v 1.3 2001/12/14 14:42:52 kminshull Exp $
  */
 public class XMLImport extends MatchingTask
 {
@@ -82,9 +82,9 @@ public class XMLImport extends MatchingTask
     private boolean dbValidation = false;
     private boolean dbInsertion = false;
 
-    private static final String STATE_XML_VALIDATION = "XMLVALIDATION";
-    private static final String STATE_DB_VALIDATION = "DBVALIDATION";
-    private static final String STATE_DB_INSERTION = "DBINSERTION";
+    protected static final String STATE_XML_VALIDATION = "XMLVALIDATION";
+    protected static final String STATE_DB_VALIDATION = "DBVALIDATION";
+    protected static final String STATE_DB_INSERTION = "DBINSERTION";
 
     private File xmlFile = null;
 
