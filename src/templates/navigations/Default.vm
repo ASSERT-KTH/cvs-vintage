@@ -1,6 +1,6 @@
 <div><strong>
 #if ($data.User.hasLoggedIn())
-    $link.setPage("SelectModule.vm").setLabel("Select Module")
+    $link.setPage("SelectModule.vm").setLabel("Select module")
 #else
     $link.setPage("Login.vm").setLabel("Login")
 #end
