@@ -43,7 +43,7 @@ import org.jboss.logging.Logger;
 *   @see <related>
 *   @author Rickard Öberg (rickard.oberg@telkel.com)
 *   @author <a href="marc.fleury@telkel.com">Marc Fleury</a>
-*   @version $Revision: 1.19 $
+*   @version $Revision: 1.20 $
 */
 public class EntityInstanceInterceptor
 extends AbstractInterceptor
@@ -118,9 +118,9 @@ extends AbstractInterceptor
        EnterpriseContext ctx = null;
        
        // We synchronize the locking logic (so that the invoke is unsynchronized and can be reentrant)
-       synchronized (mutex)
-       {
-         do
+       do 
+	    {
+		 	synchronized (mutex)
          {
           // Get context
           ctx = cache.get(key);
@@ -137,7 +137,7 @@ extends AbstractInterceptor
                  Transaction tx = ctx.getTransaction();
                  Logger.log("LOCKING-WAITING (TRANSACTION) for id "+ctx.getId()+" ctx.hash "+ctx.hashCode()+" tx:"+((tx == null) ? "null" : tx.toString()));
                  
-                 try{ctx.wait(5000);}
+                 try{ctx.wait(100);}
                    catch (InterruptedException ie) {}
               }
               
@@ -163,7 +163,7 @@ extends AbstractInterceptor
                             // Possible deadlock
                             Logger.log("LOCKING-WAITING (CTX) for id "+ctx.getId()+" ctx.hash "+ctx.hashCode());
                             
-                            try{ctx.wait(5000);}
+                            try{ctx.wait(100);}
                                 catch (InterruptedException ie) {}
                         }
                         
@@ -180,8 +180,8 @@ extends AbstractInterceptor
               }
           }
                                                                      
-         } while (ctx == null);
-       }
+         }
+       } while (ctx == null);
          
        // Set context on the method invocation
        mi.setEnterpriseContext(ctx);
