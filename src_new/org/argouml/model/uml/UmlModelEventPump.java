@@ -1,4 +1,4 @@
-// $Id: UmlModelEventPump.java,v 1.49 2005/01/02 16:43:45 linus Exp $
+// $Id: UmlModelEventPump.java,v 1.50 2005/01/03 23:29:10 bobtarling Exp $
 // Copyright (c) 2002-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -917,6 +917,7 @@ class EventKey {
  * @author jaap.branderhorst@xs4all.nl
  */
 class EventListenerList {
+    private static final Logger LOG = Logger.getLogger(EventListenerList.class);
     /**
      * A null array to be shared by all empty listener lists.
      */
@@ -1013,7 +1014,7 @@ class EventListenerList {
 
     public boolean contains(EventKey key, MElementListener listener) {
         if (key == null) {
-            System.out.println(" KEy null");
+            LOG.info(" KEy null");
         }
         for (int i = listenerList.length - 1; i > 0; i -= 3) {
             if (listenerList[i] == listener

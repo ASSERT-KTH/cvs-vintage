@@ -1,4 +1,4 @@
-// $Id: ProjectMember.java,v 1.28 2005/01/03 21:37:30 bobtarling Exp $
+// $Id: ProjectMember.java,v 1.29 2005/01/03 23:29:11 bobtarling Exp $
 // Copyright (c) 2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -33,6 +33,17 @@ package org.argouml.kernel;
 public interface ProjectMember {
     
     /**
+     * In contrast to {@link #getZipName} returns the member's
+     * name without the prepended name of the project. This is
+     * the name that {@link Project#findMemberByName} goes by.
+     *
+     * @author Steffen Zschaler
+     *
+     * @return the member's name without any prefix or suffix
+     */
+    public String getUniqueDiagramName();
+    
+    /**
      * Returns a unique member's name for storage in a zipfile.
      * The project's base name is prepended followed by an
      * underscore '_'.
@@ -50,5 +61,5 @@ public interface ProjectMember {
     /**
      * @return the file extension string
      */
-    public abstract String getFileExtension();
+    public abstract String getZipFileExtension();
 }

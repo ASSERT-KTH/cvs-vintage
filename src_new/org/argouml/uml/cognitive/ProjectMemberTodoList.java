@@ -1,4 +1,4 @@
-// $Id: ProjectMemberTodoList.java,v 1.11 2005/01/03 17:14:07 bobtarling Exp $
+// $Id: ProjectMemberTodoList.java,v 1.12 2005/01/03 23:29:10 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -63,9 +63,9 @@ public class ProjectMemberTodoList extends AbstractProjectMember {
     }
 
     /**
-     * @see org.argouml.kernel.AbstractProjectMember#getFileExtension()
+     * @see org.argouml.kernel.AbstractProjectMember#getZipFileExtension()
      */
-    public String getFileExtension() {
+    public String getZipFileExtension() {
         return TO_DO_EXT;
     }
 

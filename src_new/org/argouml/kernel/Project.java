@@ -1,4 +1,4 @@
-// $Id: Project.java,v 1.139 2005/01/03 18:15:55 mvw Exp $
+// $Id: Project.java,v 1.140 2005/01/03 23:29:11 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -434,17 +434,7 @@ public class Project implements java.io.Serializable, TargetListener {
         }
     }
 
-    /**
-     * @param name the name of the member to be found
-     * @return the member
-     */
-    public ProjectMember findMemberByName(String name) {
-        if (LOG.isDebugEnabled()) {
-            LOG.debug("findMemberByName called for \"" + name + "\".");
-        }
-        return members.findDiagramMemberByName(name);
-    }
-
+    
     /**
      * Get the author name.
      * 

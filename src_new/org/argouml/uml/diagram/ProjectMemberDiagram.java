@@ -1,4 +1,4 @@
-// $Id: ProjectMemberDiagram.java,v 1.31 2005/01/03 17:14:07 bobtarling Exp $
+// $Id: ProjectMemberDiagram.java,v 1.32 2005/01/03 23:29:11 bobtarling Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -49,23 +49,13 @@ public class ProjectMemberDiagram extends AbstractProjectMember {
     /**
      * The constructor.
      * 
-     * @param name the name
-     * @param p the project
-     */
-    public ProjectMemberDiagram(String name, Project p) {
-        super(name, p);
-    }
-
-    /**
-     * The constructor.
-     * 
      * @param d the diagram
      * @param p the project
      */
     public ProjectMemberDiagram(ArgoDiagram d, Project p) {
         super(null, p);
         String s = Util.stripJunk(d.getName());
-        setName(s);
+        makeUniqueName(s);
         setDiagram(d);
     }
 
@@ -85,9 +75,9 @@ public class ProjectMemberDiagram extends AbstractProjectMember {
         return MEMBER_TYPE;
     }
     /**
-     * @see org.argouml.kernel.AbstractProjectMember#getFileExtension()
+     * @see org.argouml.kernel.AbstractProjectMember#getZipFileExtension()
      */
-    public String getFileExtension() {
+    public String getZipFileExtension() {
         return FILE_EXT;
     }
 
