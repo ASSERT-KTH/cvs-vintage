@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/jasper/runtime/PageContextImpl.java,v 1.16 2000/09/29 07:00:40 costin Exp $
- * $Revision: 1.16 $
- * $Date: 2000/09/29 07:00:40 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/jasper/runtime/PageContextImpl.java,v 1.17 2000/11/21 03:09:55 larryi Exp $
+ * $Revision: 1.17 $
+ * $Date: 2000/11/21 03:09:55 $
  *
  * ====================================================================
  *
@@ -91,8 +91,6 @@ import org.apache.tomcat.util.log.*;
 
 /**
  * Implementation of the PageContext class from the JSP spec.
- *
- * The removeAttribute method does not work for request scope. Needs fixing.
  *
  * @author Anil K. Vijendran
  * @author Larry Cable
@@ -289,7 +287,7 @@ public class PageContextImpl extends PageContext {
 	    break;
 
 	    case REQUEST_SCOPE:
-		throw new IllegalArgumentException("cant remove Attributes from request scope");
+		request.removeAttribute(name);
 
 	    case SESSION_SCOPE:
 		if (session == null)
@@ -370,7 +368,15 @@ public class PageContextImpl extends PageContext {
     }
 
     public void removeAttribute(String name) {
-	attributes.remove(name);
+	try {
+	    removeAttribute(name, PAGE_SCOPE);
+	    removeAttribute(name, REQUEST_SCOPE);
+	    removeAttribute(name, SESSION_SCOPE);
+	    removeAttribute(name, APPLICATION_SCOPE);
+	} catch (Exception ex) {
+	    // we remove as much as we can, and
+	    // simply ignore possible exceptions
+	}
     }
 
     public JspWriter getOut() {
@@ -439,7 +445,11 @@ public class PageContextImpl extends PageContext {
 	request.setAttribute("javax.servlet.jsp.jspException", e);
 
 	if (errorPageURL != null && !errorPageURL.equals("")) {
-	    forward(errorPageURL);
+	    try {
+		forward(errorPageURL);
+	    } catch (IllegalStateException ise) {
+		include(errorPageURL);
+	    }
 	} // Otherwise throw the exception wrapped inside a ServletException.
 	else {
 	    // Set the exception as the root cause in the ServletException
