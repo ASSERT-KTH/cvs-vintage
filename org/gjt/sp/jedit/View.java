@@ -44,7 +44,7 @@ import org.gjt.sp.util.*;
  * class.
  *
  * @author Slava Pestov
- * @version $Id: View.java,v 1.20 2002/05/14 11:30:08 spestov Exp $
+ * @version $Id: View.java,v 1.21 2002/05/17 04:54:29 spestov Exp $
  */
 public class View extends JFrame implements EBComponent
 {
@@ -890,8 +890,6 @@ public class View extends JFrame implements EBComponent
 			handleBufferUpdate((BufferUpdate)msg);
 		else if(msg instanceof EditPaneUpdate)
 			handleEditPaneUpdate((EditPaneUpdate)msg);
-		else if(msg instanceof MultiSelectStatusChanged)
-			status.updateMiscStatus();
 	} //}}}
 
 	//{{{ Package-private members
