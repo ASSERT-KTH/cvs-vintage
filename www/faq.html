@@ -6,7 +6,7 @@
 <body bgcolor="#ffffff">
 
 <h2>Scarab - Frequently Asked Questions</h2>
-<h4>$Id: faq.html,v 1.12 2002/10/08 18:29:09 jon Exp $</h4>
+<h4>$Id: faq.html,v 1.13 2002/10/17 22:39:32 jon Exp $</h4>
 
 <hr noshade="noshade" size="1" />
 
@@ -477,4 +477,29 @@ Eventually, we will have the ability to export/import the Scarab
 'settings'.
 </p>
 
+<hr noshade="noshade" size="1" />
+<p><strong>
+I see a lot of little temp files created on disk.
+</strong></p>
+
+<p>
+The reason for this is because when you upload a file attachment, the
+upload system also sends the form data. Because of this, each little bit
+of data will get a file created for it. You can adjust the size of the
+memory cache so that more of this data is held in temp memory (and not
+created as files) with this property:
+</p>
+
+<pre>
+# The maximum size of a request that will have it's elements cached in
+# memory by TurbineUploadService class.
+#
+services.UploadService.size.threshold=8192
+</pre>
+
+<p>
+These files should get cleaned up as the object is garbage collected, or
+the Java Virtual Machine is shutdown. If they persist after a shutdown,
+you can most likely safely remove them.
+</p>
 <hr noshade="noshade" size="1" />
