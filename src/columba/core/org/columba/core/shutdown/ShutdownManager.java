@@ -16,11 +16,9 @@
 
 package org.columba.core.shutdown;
 
-import java.awt.BorderLayout;
+import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Toolkit;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -28,10 +26,12 @@ import java.util.List;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
+import javax.swing.JOptionPane;
 import javax.swing.Timer;
 
 import org.columba.core.logging.ColumbaLogger;
 import org.columba.core.main.MainInterface;
+import org.columba.core.util.GlobalResourceLoader;
 
 /**
  * Manages all tasks which are responsible for doing clean-up work
@@ -86,46 +86,80 @@ public class ShutdownManager {
 
     /**
      * This constructor is only to be accessed by getShutdownManager() and
-     * by subclasses. It registers the instance as a system shutdown hook.
+     * by subclasses.
      */
-    protected ShutdownManager() {
-        Runtime.getRuntime().addShutdownHook(new Thread(new Runnable() {
-            public void run() {
-                // stop background-manager so it doesn't interfere with
-                // shutdown manager
-                MainInterface.backgroundTaskManager.stop();
-                
-                // wait as long as there are background tasks executing
-                // but not longer than 5 seconds
-                for (int i = 0;
-                     MainInterface.processor.getTaskManager().count() > 0 && i < 5;
-                     i++) {
-                    try {
-                        Thread.currentThread().sleep(1000);
-                    } catch(InterruptedException ie) {
-                        break;
-                    }
-                }
-
-                Iterator iterator = list.iterator();
-                Runnable plugin;
-                while (iterator.hasNext()) {
-                    plugin = (Runnable) iterator.next();
-                    try {
-                        plugin.run();
-                    } catch(Exception e) {
-                        ColumbaLogger.log.severe(e.getMessage());
-                    }
-                }
-            }
-        }, "ShutdownManager"));
-    }
+    protected ShutdownManager() {}
 
     /**
      * Registers a runnable plugin that should be executed on shutdown.
      */
     public void register(Runnable plugin) {
         list.add(0, plugin);
+    }
+    
+    /**
+     * Starts the shutdown procedure.
+     */
+    public void shutdown(int status) {
+        // stop background-manager so it doesn't interfere with
+        // shutdown manager
+        MainInterface.backgroundTaskManager.stop();
+
+        while (MainInterface.processor.getTaskManager().count() > 0) {
+            // ask user to kill pending running commands or wait
+            //TODO: i18n
+            Object[] options = { "Wait", "Exit" };
+            int n = JOptionPane.showOptionDialog(null,
+                    "Some tasks seem to be running. \nWould you like to wait for these to finish or just exit Columba?",
+                    "Wait or exit Columba", JOptionPane.YES_NO_OPTION,
+                    JOptionPane.QUESTION_MESSAGE, null, options, options[0]);
+            if (n == 0) {
+                //wait 10 seconds and check for pending commands again
+                //this is useful if a command causes a deadlock
+                for (int i = 0; i < 10; i++) {
+                    try {
+                        Thread.currentThread().sleep(1000);
+                    } catch (InterruptedException ie) {}
+                }
+            } else {
+                //don't wait, just continue shutdown procedure, commands will
+                //be killed
+                break;
+            }
+        }
+            
+        Component dialog = createShutdownDialog();
+        dialog.setVisible(true);
+
+        Iterator iterator = list.iterator();
+        Runnable plugin;
+        while (iterator.hasNext()) {
+            plugin = (Runnable) iterator.next();
+            try {
+                plugin.run();
+            } catch(Exception e) {
+                ColumbaLogger.log.severe(e.getMessage());
+                //TODO: better exception handling
+            }
+        }
+        
+        //we don't need to check for running commands here because there aren't
+        //any, shutdown plugins only use this thread
+        
+        dialog.setVisible(false);
+        System.exit(status);
+    }
+    
+    /**
+     * Returns a component notifying the user of the shutdown procedure.
+     */
+    protected Component createShutdownDialog() {
+        //TODO: i18n
+        JFrame dialog = new JFrame("Exiting Columba...");
+        dialog.getContentPane().add(new JButton("Saving Folders..."));
+        dialog.setSize(new Dimension(300, 50));
+        dialog.setLocationRelativeTo(null);
+        return dialog;
     }
 
     /**

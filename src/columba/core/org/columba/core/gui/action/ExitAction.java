@@ -19,6 +19,7 @@ package org.columba.core.gui.action;
 import org.columba.core.action.AbstractColumbaAction;
 import org.columba.core.gui.frame.FrameMediator;
 import org.columba.core.gui.util.ImageLoader;
+import org.columba.core.shutdown.ShutdownManager;
 import org.columba.core.util.GlobalResourceLoader;
 
 import java.awt.event.ActionEvent;
@@ -48,9 +49,10 @@ public class ExitAction extends AbstractColumbaAction {
     }
 
     /*
-     * Calls System.exit(int) to start the shutdown procedure.
+     * Calls ShutdownManager.getShutdownManager().shutdown(int) to start the
+     * shutdown procedure.
      */
     public void actionPerformed(ActionEvent evt) {
-        System.exit(0);
+        ShutdownManager.getShutdownManager().shutdown(0);
     }
 }

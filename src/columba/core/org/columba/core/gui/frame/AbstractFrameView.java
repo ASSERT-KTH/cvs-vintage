@@ -22,6 +22,7 @@ import org.columba.core.main.MainInterface;
 import org.columba.core.gui.menu.Menu;
 import org.columba.core.gui.toolbar.ToolBar;
 import org.columba.core.gui.util.ImageLoader;
+import org.columba.core.shutdown.ShutdownManager;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
@@ -204,7 +205,7 @@ public abstract class AbstractFrameView extends JFrame implements WindowListener
     public void windowClosing(WindowEvent arg0) {
         frameController.close();
         if (MainInterface.frameModel.getOpenFrames().length == 0) {
-            System.exit(0);
+            ShutdownManager.getShutdownManager().shutdown(0);
         }
     }
 
