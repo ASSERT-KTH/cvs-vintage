@@ -1,4 +1,4 @@
-// $Id: Modeller.java,v 1.51 2003/02/21 06:08:36 thn Exp $
+// $Id: Modeller.java,v 1.52 2003/02/21 09:28:08 lepekhine Exp $
 
 /*
   JavaRE - Code generation and reverse engineering for UML and Java
@@ -752,7 +752,8 @@ public class Modeller
     {
         Object tv = ModelFacade.getTaggedValue(element,name);
         if (tv == null) {
-            tv = UmlFactory.getFactory().getExtensionMechanisms().buildTaggedValue(name,"");
+            ModelFacade.setTaggedValue(element,name,"");
+            tv = ModelFacade.getTaggedValue(element,name);
         }
         return tv;
     }
