@@ -1,7 +1,8 @@
+#macro (XMLExportSettingsRender $foo)$foo#end
+#if($renderedFromScreen)#XMLExportSettings()#end
 #macro (XMLExportSettings)
-
 <?xml version="1.0" standalone="no"?>
-<!DOCTYPE scarab SYSTEM "scarab.dtd">
+<!DOCTYPE scarab SYSTEM "$staticLink.setPath("/dtd/scarab-settings.dtd")">
 <scarab>
 #set ($allAttributes = $scarabG.AllAttributes)
 #foreach ($attribute in $allAttributes)
@@ -44,6 +45,20 @@
     <url>$module.Url</url>
     <domain>$!module.Domain</domain>
     <code>$module.Code</code>
+
+    #if ($includeUsers)
+    #foreach ($user in $module.getUsers($securityAdmin.getPermissionsAsStrings()))
+    #set ($roles = $securityAdmin.getACL($user).getRoles($module).getRolesArray())
+    <user>
+      <firstname>$user.FirstName</firstname>
+      <lastname>$user.LastName</lastname>
+      <email>$user.Email</email>
+      <username>$user.UserName</username>
+      #foreach ($role in $roles)
+<role>$role.Name</role>
+      #end</user>
+    #end
+    #end
 
     #set ($allModuleIssueTypes = $module.RModuleIssueTypes)
     #foreach ($moduleIssueType in $allModuleIssueTypes)
@@ -94,14 +109,8 @@
         #end
       </attribute-group>
       #end
-
     </module-issue-type>
     #end
-
-
-
   </module>
-
-
 </scarab>
 #end
