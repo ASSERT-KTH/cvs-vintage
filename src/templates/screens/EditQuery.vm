@@ -11,12 +11,20 @@
 Go to your $link.setPage("QueryList.vm").setLabel("Stored Query List").
 </p>
 
-<h3>Query: $currentQuery.Name</h3>
 
-#set ($action = $link.setPage("EditQuery.vm").setAction("Search").addPathInfo("$scarabG.Constant.NEXT_TEMPLATE", "EditQuery.vm").toString())
+#set ($action = $link.setPage("EditQuery.vm").setAction("Search"))
 <form action="$action" method="post">
 <input type="hidden" name="queryId" value="$queryId" />
 <input type="hidden" name="$queryGroup.Value.Key" value="$currentQuery.Value" />
+<input type="hidden" name="$scarabG.Constant.OTHER_TEMPLATE" value="UserList.vm" />   
+
+<div class="functnbar">
+  <input type="submit" name="eventSubmit_doEditstoredquery" value="Save" />&#160; 
+  <input type="submit" name="eventSubmit_doRunstoredquery" value="Execute query" />&#160; 
+  <input type="submit" name="eventSubmit_doCancel" value="Cancel" />
+</div>
+
+<h3>Query: $currentQuery.Name</h3>
 
 <div class="axial">
  <table cellpadding="3" cellspacing="2" border="0">
@@ -42,14 +50,6 @@ Go to your $link.setPage("QueryList.vm").setLabel("Stored Query List").
   </tr>
  </table>
 </div>
-
-<div class="functnbar">
-  <input type="submit" name="eventSubmit_doSavequery" value="Save" />&#160; 
-  <input type="submit" name="eventSubmit_doCancel" value="Cancel" />
-</div>
-</form>
-
-<h3>Attributes</h3>
 
 #set ($action = $link.setPage("EditQuery.vm").setAction("Search").addPathInfo("$scarabG.Constant.NEXT_TEMPLATE", "IssueList.vm").toString())
 <form action="$action" method="get">
@@ -107,6 +107,7 @@ Go to your $link.setPage("QueryList.vm").setLabel("Stored Query List").
 
 <div class="functnbar2">
   <input type="submit" name="eventSubmit_doEditstoredquery" value="Save" />&#160; 
+  <input type="submit" name="eventSubmit_doRunstoredquery" value="Execute query" />&#160; 
   <input type="submit" name="eventSubmit_doCancel" value="Cancel" /></td>
 </div>
 
