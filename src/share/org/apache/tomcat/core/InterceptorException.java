@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/core/Attic/InterceptorException.java,v 1.1 1999/10/09 00:30:10 duncan Exp $
- * $Revision: 1.1 $
- * $Date: 1999/10/09 00:30:10 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/core/Attic/InterceptorException.java,v 1.2 1999/10/15 03:20:25 harishp Exp $
+ * $Revision: 1.2 $
+ * $Date: 1999/10/15 03:20:25 $
  *
  * ====================================================================
  *
@@ -70,6 +70,11 @@ package org.apache.tomcat.core;
  *
  * @author Harish Prabandham
  */
+
+//
+// WARNING: Some of the APIs in this class are used by J2EE. 
+// Please talk to harishp@eng.sun.com before making any changes.
+//
 
 public final class InterceptorException
 extends java.lang.Exception {

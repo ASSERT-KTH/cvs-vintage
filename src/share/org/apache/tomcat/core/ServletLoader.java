@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/core/Attic/ServletLoader.java,v 1.1 1999/10/09 00:30:20 duncan Exp $
- * $Revision: 1.1 $
- * $Date: 1999/10/09 00:30:20 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/core/Attic/ServletLoader.java,v 1.2 1999/10/15 03:20:26 harishp Exp $
+ * $Revision: 1.2 $
+ * $Date: 1999/10/15 03:20:26 $
  *
  * ====================================================================
  *
@@ -73,10 +73,14 @@ import java.util.*;
  * 
  * @author James Duncan Davidson [duncan@eng.sun.com]
  * @author James Todd [gonzo@eng.sun.com]
+ * @author Harish Prabandham
  */
 
-class ServletLoader
-extends ClassLoader {
+//
+// WARNING: Some of the APIs in this class are used by J2EE. 
+// Please talk to harishp@eng.sun.com before making any changes.
+//
+class ServletLoader extends ClassLoader {
     private StringManager sm =
         StringManager.getManager(Constants.Package);
     private Container container;

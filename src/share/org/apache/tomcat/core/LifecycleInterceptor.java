@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/core/Attic/LifecycleInterceptor.java,v 1.1 1999/10/09 00:30:12 duncan Exp $
- * $Revision: 1.1 $
- * $Date: 1999/10/09 00:30:12 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/core/Attic/LifecycleInterceptor.java,v 1.2 1999/10/15 03:20:25 harishp Exp $
+ * $Revision: 1.2 $
+ * $Date: 1999/10/15 03:20:25 $
  *
  * ====================================================================
  *
@@ -63,6 +63,7 @@
 
 
 package org.apache.tomcat.core;
+import javax.servlet.Servlet;
 
 /**
  * For intercepting calls before & after the init() destroy()
@@ -71,8 +72,10 @@ package org.apache.tomcat.core;
  * @author Harish Prabandham
  */
 
-import javax.servlet.Servlet;
-
+//
+// WARNING: Some of the APIs in this class are used by J2EE. 
+// Please talk to harishp@eng.sun.com before making any changes.
+//
 public interface LifecycleInterceptor {
     // called immediately before calling init() or destroy() method
 

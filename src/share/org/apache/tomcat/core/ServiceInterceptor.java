@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/core/Attic/ServiceInterceptor.java,v 1.1 1999/10/09 00:30:19 duncan Exp $
- * $Revision: 1.1 $
- * $Date: 1999/10/09 00:30:19 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/core/Attic/ServiceInterceptor.java,v 1.2 1999/10/15 03:20:26 harishp Exp $
+ * $Revision: 1.2 $
+ * $Date: 1999/10/15 03:20:26 $
  *
  * ====================================================================
  *
@@ -74,6 +74,10 @@ import javax.servlet.http.HttpServletResponse;
  * @author Harish Prabandham
  */
 
+//
+// WARNING: Some of the APIs in this class are used by J2EE. 
+// Please talk to harishp@eng.sun.com before making any changes.
+//
 public interface ServiceInterceptor {
     // called immediately before calling the service() method
 

@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/core/Attic/RequestSecurityProvider.java,v 1.1 1999/10/09 00:30:16 duncan Exp $
- * $Revision: 1.1 $
- * $Date: 1999/10/09 00:30:16 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/core/Attic/RequestSecurityProvider.java,v 1.2 1999/10/15 03:20:26 harishp Exp $
+ * $Revision: 1.2 $
+ * $Date: 1999/10/15 03:20:26 $
  *
  * ====================================================================
  *
@@ -71,6 +71,10 @@ import javax.servlet.http.HttpServletRequest;
  * @author Harish Prabandham
  */
 
+//
+// WARNING: Some of the APIs in this class are used by J2EE. 
+// Please talk to harishp@eng.sun.com before making any changes.
+//
 public interface RequestSecurityProvider {
     public boolean isUserInRole(Context context,
         HttpServletRequest req, String role);

@@ -1,6 +1,6 @@
 #! /bin/sh
 #
-# $Id: runtest.sh,v 1.1 1999/10/09 00:20:56 duncan Exp $
+# $Id: runtest.sh,v 1.2 1999/10/15 03:20:35 harishp Exp $
 
 # Shell script to run test harness
  
@@ -8,13 +8,15 @@ host=localhost
 port=8080
 test=testlist.txt
 
-baseDir=../../dist/tomcat
+baseDir=../../..
+tomcatBuildDir=$baseDir/build/tomcat
+toolsDir=$baseDir/jakarta-tools
 
-jsdkJars=${baseDir}/webserver.jar:${baseDir}/lib/servlet.jar
-jspJars=${baseDir}/lib/jasper.jar
+jsdkJars=${tomcatBuildDir}/webserver.jar:${tomcatBuildDir}/lib/servlet.jar
+jspJars=${tomcatBuildDir}/lib/jasper.jar
 beanJars=
-miscJars=${baseDir}/lib/xml.jar:./lib/moo.jar
-appJars=${jsdkJars}:${jspJars}:${miscJars}
+miscJars=${toolsDir}/projectx-tr2.jar:${toolsDir}/moo.jar
+appJars=${jsdkJars}:${jspJars}:${miscJars}:${tomcatBuildDir}/classes
 sysJars=${JAVA_HOME}/lib/tools.jar
 
 appClassPath=./classes:${appJars}
@@ -31,11 +33,11 @@ fi
 echo Using classpath: ${CLASSPATH}
 echo
 
-java org.apache.tomcat.shell.Startup $* &
+java org.apache.tomcat.shell.Startup "$@" &
 sleep 5
-java -Dtest.hostname=$host -Dtest.port=$port com.sun.moo.Main \
+java -Dtest.hostname=$host -Dtest.port=$port org.apache.tools.moo.Main \
     -testfile $test -debug
-java org.apache.tomcat.shell.Shutdown $*
+java org.apache.tomcat.shell.Shutdown "$@"
 
 if [ "$cp" != "" ]; then
     CLASSPATH=${cp}

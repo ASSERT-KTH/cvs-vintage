@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/net/Attic/DefaultServerSocketFactory.java,v 1.1 1999/10/09 00:20:47 duncan Exp $
- * $Revision: 1.1 $
- * $Date: 1999/10/09 00:20:47 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/net/Attic/DefaultServerSocketFactory.java,v 1.2 1999/10/15 03:20:28 harishp Exp $
+ * $Revision: 1.2 $
+ * $Date: 1999/10/15 03:20:28 $
  *
  * ====================================================================
  *
@@ -76,6 +76,11 @@ import java.net.*;
  */
 
 // Default implementation of server sockets.
+
+//
+// WARNING: Some of the APIs in this class are used by J2EE. 
+// Please talk to harishp@eng.sun.com before making any changes.
+//
 class DefaultServerSocketFactory extends ServerSocketFactory {
 
     DefaultServerSocketFactory () {

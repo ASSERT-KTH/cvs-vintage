@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/core/Context.java,v 1.3 1999/10/14 23:57:33 akv Exp $
- * $Revision: 1.3 $
- * $Date: 1999/10/14 23:57:33 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/core/Context.java,v 1.4 1999/10/15 03:20:25 harishp Exp $
+ * $Revision: 1.4 $
+ * $Date: 1999/10/15 03:20:25 $
  *
  * ====================================================================
  *
@@ -79,6 +79,11 @@ import javax.servlet.http.*;
  * @author Jason Hunter [jch@eng.sun.com]
  * @author Harish Prabandham
  */
+
+//
+// WARNING: Some of the APIs in this class are used by J2EE. 
+// Please talk to harishp@eng.sun.com before making any changes.
+//
 
 public class Context {
     
@@ -921,7 +926,16 @@ public class Context {
 	    }
 	}
 
-	for (int i = loadServlets.size() - 1; i >= 0; i--) {
+        // Changed because this is exactly opposite of what we want....
+        // Servlets were being loaded in the exact opposite order.
+        // Priorities IMO, should start with 0.
+        // Only System Servlets should be at 0 and rest of the servlets
+        // should be +ve integers.
+        // WARNING: Please do not change this without talking to:
+        // harishp@eng.sun.com (J2EE impact)
+	// for (int i = loadServlets.size() - 1; i >= 0; i--) {
+
+	for(int i = 0; i < loadServlets.size(); ++i) {
             String servletName = (String)loadServlets.elementAt(i);
 	    LookupResult result =
 	        container.lookupServletByName(servletName);

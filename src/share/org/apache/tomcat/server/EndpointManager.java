@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/server/Attic/EndpointManager.java,v 1.1 1999/10/09 00:20:48 duncan Exp $
- * $Revision: 1.1 $
- * $Date: 1999/10/09 00:20:48 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/server/Attic/EndpointManager.java,v 1.2 1999/10/15 03:20:31 harishp Exp $
+ * $Revision: 1.2 $
+ * $Date: 1999/10/15 03:20:31 $
  *
  * ====================================================================
  *
@@ -80,6 +80,10 @@ import java.util.*;
  * @author Harish Prabandham
  */
 
+//
+// WARNING: Some of the APIs in this class are used by J2EE. 
+// Please talk to harishp@eng.sun.com before making any changes.
+//
 public class EndpointManager {
 
     private StringManager sm =
