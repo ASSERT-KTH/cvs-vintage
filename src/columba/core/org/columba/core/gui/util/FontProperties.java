@@ -74,7 +74,10 @@ public class FontProperties {
 		UIManager.put("Textfield.font", mainFont);
 		UIManager.put("TextArea.font", mainFont);
 		UIManager.put("MenuItem.font", mainFont);
+		UIManager.put("MenuItem.acceleratorFont", mainFont);
 		UIManager.put("Menu.font", mainFont);
+		UIManager.put("Menu.acceleratorFont", mainFont);
+		UIManager.put("MenuBar.font", mainFont);
 		UIManager.put("Tree.font", mainFont);
 		UIManager.put("Table.font", mainFont);
 		UIManager.put("Button.font", mainFont);
