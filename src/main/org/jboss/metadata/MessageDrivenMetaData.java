@@ -19,8 +19,8 @@ import org.jboss.ejb.DeploymentException;
  * <p>Have to add changes ApplicationMetaData and ConfigurationMetaData.
  * 
  * @author <a href="mailto:sebastien.alborini@m4x.org">Sebastien Alborini</a>
- * @author <a href="mailto:peter.antman@tim.se">Peter Antman</a>.
- * @version $Revision: 1.13 $
+ * @author <a href="mailto:peter.antman@tim.se">Peter Antman</a>
+ * @version $Revision: 1.14 $
  */
 public class MessageDrivenMetaData
    extends BeanMetaData
@@ -37,14 +37,15 @@ public class MessageDrivenMetaData
    // Attributes ----------------------------------------------------
    
    private int acknowledgeMode = AUTO_ACKNOWLEDGE_MODE;
-   private String destinationType = null;
    private byte subscriptionDurability = NON_DURABLE_SUBSCRIPTION;
-   private String messageSelector; // = null;
+   private byte methodTransactionType = TX_UNSET;
+   private String destinationType;
+   private String messageSelector;
    private String destinationJndiName;
-   private String user; // = null;
-   private String passwd; // = null;
-   private String clientId; // = null;
-   private byte methodTransactionType= TX_UNSET;
+   private String user;
+   private String passwd;
+   private String clientId;
+   
    // Static --------------------------------------------------------
     
    // Constructors --------------------------------------------------
@@ -57,9 +58,11 @@ public class MessageDrivenMetaData
    // Public --------------------------------------------------------
 
    /**
-    * returns MessageDrivenMetaData.AUTO_ACKNOWLADGE_MODE or
-    * MessageDrivenMetaData.DUPS_OK_AKNOWLEDGE_MODE, or MessageDrivenMetaData.CLIENT_ACKNOWLEDGE_MODE
+    * Get the message acknowledgement mode.
     *
+    * @return    MessageDrivenMetaData.AUTO_ACKNOWLADGE_MODE or
+    *            MessageDrivenMetaData.DUPS_OK_AKNOWLEDGE_MODE or
+    *            MessageDrivenMetaData.CLIENT_ACKNOWLEDGE_MODE
     */
    public int getAcknowledgeMode() {
       // My interpretation of the EJB and JMS spec leads
@@ -80,10 +83,13 @@ public class MessageDrivenMetaData
       // ackmode is actually not relevant. We keep it here
       // anyway, if we find that this is needed for other
       // JMS provider, or is not good.
-      if ( getMethodTransactionType() == TX_REQUIRED)
-	 return  CLIENT_ACKNOWLEDGE_MODE;
-      else 
+      
+      if (getMethodTransactionType() == TX_REQUIRED) {
+	 return CLIENT_ACKNOWLEDGE_MODE;
+      }
+      else {
 	 return acknowledgeMode;
+      }
    }
    
    public String getDestinationType() {
@@ -122,7 +128,7 @@ public class MessageDrivenMetaData
 	    // be able to use other MOM systems, aka XmlBlaser. TODO!
 	    // The MessageDrivenContainer needs this too!!
 	    //
-	    if(super.getMethodTransactionType("onMessage", new Class[] {}, true) == MetaData.TX_REQUIRED) {
+	    if (super.getMethodTransactionType("onMessage", new Class[] {}, true) == MetaData.TX_REQUIRED) {
 	       methodTransactionType = TX_REQUIRED;
 	    } else {
 	       methodTransactionType = TX_NOT_SUPPORTED;
@@ -135,17 +141,22 @@ public class MessageDrivenMetaData
    }
    
    /**
-    * Overide here, since a message driven bean only ever have one method, wich
-    * we might cache.
+    * Overide here, since a message driven bean only ever have one method,
+    * which we might cache.
     */
-   public byte getMethodTransactionType(String methodName, Class[] params, boolean remote) {
+   public byte getMethodTransactionType(String methodName,
+                                        Class[] params,
+                                        boolean remote)
+   {
       // An MDB may only ever have on method
       return getMethodTransactionType();
    }
    
    /**
-    * returns MessageDrivenMetaData.DURABLE_SUBSCRIPTION or 
-    * MessageDrivenMetaData.NON_DURABLE_SUBSCRIPTION
+    * Get the subscription durability mode.
+    * 
+    * @return    MessageDrivenMetaData.DURABLE_SUBSCRIPTION or 
+    *            MessageDrivenMetaData.NON_DURABLE_SUBSCRIPTION
     */
    public byte getSubscriptionDurability() {
       return subscriptionDurability;
@@ -184,6 +195,7 @@ public class MessageDrivenMetaData
 	    }
 	 }
       }
+      
       // set the transaction type
       String transactionType =
          getUniqueChildContent(element, "transaction-type");
@@ -192,16 +204,24 @@ public class MessageDrivenMetaData
          containerManagedTx = false;
          String ack = getUniqueChildContent(element, "acknowledge-mode");
          
-         if (ack.equals("Auto-acknowledge") || ack.equals("AUTO_ACKNOWLEDGE")) {
+         if (ack.equalsIgnoreCase("Auto-acknowledge") ||
+             ack.equalsIgnoreCase("AUTO_ACKNOWLEDGE"))
+         {
             acknowledgeMode = AUTO_ACKNOWLEDGE_MODE;
          }
-         else {
+         else if (ack.equalsIgnoreCase("Dups-ok-acknowledge") ||
+                  ack.equalsIgnoreCase("DUPS_OK_ACKNOWLEDGE"))
+         {
             acknowledgeMode = DUPS_OK_ACKNOWLEDGE_MODE;
          }
-         // else defaults to AUTO
-      } else if (transactionType.equals("Container")) {
+         else {
+            throw new DeploymentException("invalid acknowledge-mode: " + ack);
+         }
+      }
+      else if (transactionType.equals("Container")) {
          containerManagedTx = true;
-      } else {
+      }
+      else {
          throw new DeploymentException
             ("transaction type should be 'Bean' or 'Container'");
       }
@@ -210,9 +230,11 @@ public class MessageDrivenMetaData
    public void importJbossXml(Element element) throws DeploymentException
    {
       super.importJbossXml(element);
+      
       // set the jndi name, (optional)		
       destinationJndiName =
          getUniqueChildContent(element, "destination-jndi-name");
+      
       user = getOptionalChildContent(element, "mdb-user");
       passwd = getOptionalChildContent(element,"mdb-passwd");
       clientId = getOptionalChildContent(element,"mdb-client-id");
