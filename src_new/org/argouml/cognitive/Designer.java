@@ -26,7 +26,7 @@
 // File: Designer.java
 // Classes: Designer
 // Original Author: jrobbins@ics.uci.edu
-// $Id: Designer.java,v 1.3 2001/12/05 16:06:20 thierrylach Exp $
+// $Id: Designer.java,v 1.4 2001/12/14 13:32:52 dennyd Exp $
 
 package org.argouml.cognitive;
 
@@ -43,8 +43,10 @@ import org.argouml.kernel.*;
 import org.argouml.cognitive.critics.*;
 
 /** This class models the designer who is building a complex design in
- *  some application domain and needs continuous feedback to aid in the
- *  making of good design decisions. */
+ * some application domain and needs continuous feedback to aid in the
+ * making of good design decisions.
+ * This area needs work. Currently everything is hardcoded.
+ */
 
 public class Designer
 implements Poster, Runnable, PropertyChangeListener, MElementListener, java.io.Serializable {
