@@ -217,8 +217,11 @@
     <jar jarfile="${build.bin.dir}/run.jar"
          basedir="${build.classes.dir}"
          manifest="${etc.dir}/run.mf"
-         includes="org/jboss/Main*.*,org/jboss/security/SecurityAssociation.class,org/jboss/dependencies/**"
-    />
+    >
+        <include name="org/jboss/Main*.*" />
+        <include name="org/jboss/security/SecurityAssociation.class" />
+        <include name="org/jboss/dependencies/**" />
+    </jar>
 
     <mkdir dir="${build.lib.dir}/ext"/>
     <jar jarfile="${build.lib.dir}/ext/jboss.jar"
