@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 
 <!-- Scarab XML Import -->
-<project name="main" default="xml-validate" basedir=".">
+<project name="import" default="xml-validate" basedir=".">
 
   <!-- Give user a chance to override without editing this file
       (and without typing -D each time it compiles it -->
@@ -11,12 +11,14 @@
   <property file="${basedir}/default.properties" />
 
   <property name="XMLImport.class" value="org.tigris.scarab.util.xml.XMLImport"/>
-  <property name="import.xml" value="../src/dtd/scarab-sample.xml"/>
+  <property name="scarab.import.xml" value="../src/dtd/scarab-sample.xml"/>
+  <property name="scarab.import.config.file" value="/WEB-INF/conf/xmlimport.properties"/>
+  <property name="scarab.import.trprops.file" value="/WEB-INF/conf/TurbineResources.properties"/>
 
   <!-- Build classpath -->
   <path id="classpath">
     <pathelement location="${build.dest.scarab}"/>
-    <fileset dir="${build.dir}/common/lib">
+    <fileset dir="${basedir}/../lib">
       <include name="*.jar"/>
     </fileset>
     <fileset dir="${build.project.webinf.lib}">
@@ -24,7 +26,12 @@
     </fileset>
   </path>
 
-  <target name="prepare">    
+  <target name="prepare">
+  
+    <echo>
+    Import file: ${scarab.import.xml}
+    </echo>
+
     <available classname="${XMLImport.class}" 
                property="XMLImport.present">
       <classpath refid="classpath"/>
@@ -52,10 +59,10 @@
         xmlValidation="true"
         dbValidation="false"
         dbInsertion="false"
-        xmlFile="${import.xml}"
+        xmlFile="${scarab.import.xml}"
         configDir="${build.project}"
-        configFile="/WEB-INF/conf/xmlimport.properties"
-        turbineResources="/WEB-INF/conf/TurbineResources.properties"
+        configFile="${scarab.import.config.file}"
+        turbineResources="${scarab.import.trprops.file}"
         />
   </target>
 
@@ -66,33 +73,25 @@
         xmlValidation="true"
         dbValidation="true"
         dbInsertion="false"
-        xmlFile="${import.xml}"
+        xmlFile="${scarab.import.xml}"
         configDir="${build.project}"
-        configFile="/WEB-INF/conf/xmlimport.properties"
-        turbineResources="/WEB-INF/conf/TurbineResources.properties"
+        configFile="${scarab.import.config.file}"
+        turbineResources="${scarab.import.trprops.file}"
         />
   </target>
 
-  <target name="db-insertion" depends="taskdef"
-          description="Insert the XML into the database">
+  <target name="db-import" depends="taskdef"
+          description="Import the XML into the database">
 
     <XMLImport
         xmlValidation="false"
         dbValidation="true"
         dbInsertion="true"
-        xmlFile="${import.xml}"
+        xmlFile="${scarab.import.xml}"
         configDir="${build.project}"
-        configFile="/WEB-INF/conf/xmlimport.properties"
-        turbineResources="/WEB-INF/conf/TurbineResources.properties"
+        configFile="${scarab.import.config.file}"
+        turbineResources="${scarab.import.trprops.file}"
         />
-  </target>
-
-  <target name="import">
-    <java classname="org.tigris.scarab.util.xml.DBImport" fork="yes">
-      <arg value="DBINSERTION"/>
-      <arg value="../src/dtd/scarab-sample.xml"/>
-      <classpath refid="classpath"/>
-    </java>
   </target>
 
 </project>
