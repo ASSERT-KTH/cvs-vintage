@@ -71,7 +71,7 @@ import org.tigris.scarab.util.Log;
  * 
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: AbstractScarabUser.java,v 1.72 2003/04/04 02:48:03 jon Exp $
+ * @version $Id: AbstractScarabUser.java,v 1.73 2003/04/04 18:28:52 jon Exp $
  */
 public abstract class AbstractScarabUser 
     extends BaseObject 
@@ -677,7 +677,7 @@ public abstract class AbstractScarabUser
     {
         if (enterIssueRedirect == 0)
         {
-            UserPreference up = getUserPreference();
+            UserPreference up = UserPreferenceManager.getUserPreference(getUserId());
             if (up != null && up.getEnterIssueRedirect() != 0)
             {
                 enterIssueRedirect = up.getEnterIssueRedirect();
@@ -696,7 +696,7 @@ public abstract class AbstractScarabUser
     public void setEnterIssueRedirect(int templateCode)
         throws Exception
     {
-        UserPreference up = getUserPreference();
+        UserPreference up = UserPreferenceManager.getUserPreference(getUserId());
         up.setEnterIssueRedirect(templateCode);
         up.save();
         enterIssueRedirect = templateCode;
@@ -718,7 +718,7 @@ public abstract class AbstractScarabUser
         throws Exception
     {
         String homePage = null;
-        UserPreference up = getUserPreference();
+        UserPreference up = UserPreferenceManager.getUserPreference(getUserId());
         homePage = up.getHomePage();
         int i=0;
         while (homePage == null || !isHomePageValid(homePage, module)) 
@@ -759,22 +759,9 @@ public abstract class AbstractScarabUser
     public void setHomePage(String homePage)
         throws Exception
     {
-        UserPreference up = getUserPreference();
+        UserPreference up = UserPreferenceManager.getUserPreference(getUserId());
         up.setHomePage(homePage);
         up.save();
-    }
-
-    private UserPreference getUserPreference()
-        throws Exception
-    {
-        UserPreference up = UserPreferenceManager.getInstance(getUserId());
-        if (up == null)
-        {
-            up = UserPreferenceManager.getInstance();
-            up.setUserId(getUserId());
-            up.setPasswordExpire(null);
-        }
-        return up;
     }
 
     /**

@@ -52,7 +52,7 @@ import org.apache.torque.TorqueException;
  * This is the manager for the UserPreferences
  *
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: UserPreferenceManager.java,v 1.4 2003/04/04 02:52:23 jon Exp $
+ * @version $Id: UserPreferenceManager.java,v 1.5 2003/04/04 18:28:52 jon Exp $
  */
 public class UserPreferenceManager
     extends BaseUserPreferenceManager
@@ -67,5 +67,29 @@ public class UserPreferenceManager
     {
         super();
         setRegion(getClassName().replace('.', '_'));
+    }
+
+    public static UserPreference getUserPreference(Integer userid)
+        throws Exception
+    {
+        if (userid == null)
+        {
+            throw new Exception("Userid cannot be null");
+        }
+        UserPreference up = null;
+        try
+        {
+            up = UserPreferenceManager.getInstance(userid);
+        }
+        catch (TorqueException te)
+        {
+            // Empty result...Failed to select one and only one row.
+        }
+        if (up == null)
+        {
+            up = UserPreferenceManager.getInstance();
+            up.setUserId(userid);
+        }
+        return up;
     }
 }

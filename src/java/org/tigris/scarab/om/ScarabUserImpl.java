@@ -82,7 +82,7 @@ import org.apache.log4j.Logger;
  * implementation needs.
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: ScarabUserImpl.java,v 1.96 2003/04/04 02:50:09 jon Exp $
+ * @version $Id: ScarabUserImpl.java,v 1.97 2003/04/04 18:28:52 jon Exp $
  */
 public class ScarabUserImpl 
     extends BaseScarabUserImpl 
@@ -708,7 +708,7 @@ public class ScarabUserImpl
         {
             throw new Exception("Userid cannot be null");
         }
-        UserPreference up = getUserPreference();
+        UserPreference up = UserPreferenceManager.getUserPreference(getUserId());
         if (expire == null)
         {
             Calendar cal = Calendar.getInstance();
@@ -720,23 +720,6 @@ public class ScarabUserImpl
             up.setPasswordExpire(expire.getTime());
         }
         up.save();
-    }
-
-    private UserPreference getUserPreference()
-        throws Exception
-    {
-        Integer userid = getUserId();
-        if (userid == null)
-        {
-            throw new Exception("Userid cannot be null");
-        }
-        UserPreference up = UserPreferenceManager.getInstance(userid);
-        if (up == null)
-        {
-            up = UserPreferenceManager.getInstance();
-            up.setUserId(userid);
-        }
-        return up;
     }
 
     /**
@@ -1009,7 +992,7 @@ public class ScarabUserImpl
     public void setLocale(String acceptLanguage)
         throws Exception
     {
-        UserPreference up = getUserPreference();
+        UserPreference up = UserPreferenceManager.getUserPreference(getUserId());
         up.setAcceptLanguage(acceptLanguage);
         up.save();
         locale = Localization.getLocale(acceptLanguage);
@@ -1023,7 +1006,7 @@ public class ScarabUserImpl
     {
         if (locale == null)
         {
-            UserPreference up = getUserPreference();
+            UserPreference up = UserPreferenceManager.getUserPreference(getUserId());
             String header = up.getAcceptLanguage();
             locale = Localization.getLocale(header);
         }
