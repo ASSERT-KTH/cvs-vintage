@@ -24,7 +24,7 @@
 // File: DisplayTextTree.java
 // Classes: DisplayTextTree
 // Original Author:
-// $Id: DisplayTextTree.java,v 1.11 2002/11/16 20:08:24 linus Exp $
+// $Id: DisplayTextTree.java,v 1.12 2002/11/18 18:45:39 linus Exp $
 
 package org.argouml.ui;
 
@@ -60,7 +60,6 @@ implements MElementListener, VetoableChangeListener {
 
   Hashtable _expandedPathsInModel = new Hashtable();
   boolean _reexpanding = false;
-  UpdateTreeHack _myUpdateTreeHack = new UpdateTreeHack(this);
 
   public DisplayTextTree() {
     setCellRenderer(new UMLTreeCellRenderer());
@@ -211,11 +210,7 @@ implements MElementListener, VetoableChangeListener {
 
 	public void vetoableChange(PropertyChangeEvent e) {
 		cat.debug("DisplayTextTree vetoableChange: " + e.getPropertyName());
-		if (!_myUpdateTreeHack.pending) {
-			SwingUtilities.invokeLater(_myUpdateTreeHack);
-			_myUpdateTreeHack.pending = true;
-		}
-		else cat.debug("update already pending");
+		_doit.onceMore();
 	}
 
 
