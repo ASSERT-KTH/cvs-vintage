@@ -1,5 +1,4 @@
-// The contents of this file are subject to the Mozilla Public License Version
-// 1.1
+//The contents of this file are subject to the Mozilla Public License Version 1.1
 //(the "License"); you may not use this file except in compliance with the
 //License. You may obtain a copy of the License at http://www.mozilla.org/MPL/
 //
@@ -10,8 +9,7 @@
 //
 //The Original Code is "The Columba Project"
 //
-//The Initial Developers of the Original Code are Frederik Dietz and Timo
-// Stich.
+//The Initial Developers of the Original Code are Frederik Dietz and Timo Stich.
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003.
 //
 //All Rights Reserved.
@@ -29,6 +27,7 @@ import java.net.URL;
 import java.nio.charset.Charset;
 import java.util.Observable;
 import java.util.Observer;
+import java.util.logging.Logger;
 
 import javax.swing.JComponent;
 import javax.swing.JTextPane;
@@ -40,7 +39,6 @@ import org.columba.core.charset.CharsetOwnerInterface;
 import org.columba.core.gui.util.FontProperties;
 import org.columba.core.io.DiskIO;
 import org.columba.core.io.TempFileStore;
-import org.columba.core.logging.ColumbaLogger;
 import org.columba.core.main.MainInterface;
 import org.columba.core.xml.XmlElement;
 import org.columba.mail.folder.Folder;
@@ -65,6 +63,10 @@ import org.columba.ristretto.message.io.CharSequenceSource;
  *  
  */
 public class MessageBodytextViewer extends JTextPane implements Viewer, Observer {
+
+    /** JDK 1.4+ logging framework logger, used for logging. */
+    private static final Logger LOG = Logger.getLogger("org.columba.mail.gui.message.viewer");
+
 
 //  parser to transform text to html
     private DocumentParser parser;
@@ -261,7 +263,7 @@ public class MessageBodytextViewer extends JTextPane implements Viewer, Observer
                // this is a HTML message
                // try to fix broken html-strings
                String validated = HtmlParser.validateHTMLString(bodyText);
-               ColumbaLogger.log.info("validated bodytext:\n" + validated);
+               LOG.info("validated bodytext:\n" + validated);
 
                // create temporary file
                File tempFile = TempFileStore.createTempFileWithSuffix("html");
@@ -316,7 +318,7 @@ public class MessageBodytextViewer extends JTextPane implements Viewer, Observer
                // encapsulate bodytext in html-code
                r = transformToHTML(new StringBuffer(r));
 
-               ColumbaLogger.log.info("validated bodytext:\n" + r);
+               LOG.info("validated bodytext:\n" + r);
 
                // display bodytext
                setText(r);
@@ -324,7 +326,7 @@ public class MessageBodytextViewer extends JTextPane implements Viewer, Observer
                //		setup base url in order to be able to display images
                // in html-component
                URL baseUrl = DiskIO.getResourceURL("org/columba/core/images/");
-               ColumbaLogger.log.info(baseUrl.toString());
+               LOG.info(baseUrl.toString());
                ((HTMLDocument) getDocument()).setBase(baseUrl);
            } catch (Exception ex) {
                ex.printStackTrace();

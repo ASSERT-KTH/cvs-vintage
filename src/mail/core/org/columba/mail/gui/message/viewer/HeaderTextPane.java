@@ -9,8 +9,7 @@
 //
 //The Original Code is "The Columba Project"
 //
-//The Initial Developers of the Original Code are Frederik Dietz and Timo
-// Stich.
+//The Initial Developers of the Original Code are Frederik Dietz and Timo Stich.
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003.
 //
 //All Rights Reserved.
@@ -22,6 +21,7 @@ import java.awt.Insets;
 import java.net.URL;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.logging.Logger;
 
 import javax.swing.JTextPane;
 import javax.swing.UIManager;
@@ -29,14 +29,16 @@ import javax.swing.text.html.HTMLDocument;
 import javax.swing.text.html.HTMLEditorKit;
 
 import org.columba.core.io.DiskIO;
-import org.columba.core.logging.ColumbaLogger;
 
 /**
  * Viewer displays the message headers, including From:, To:, Subject:, etc.
- * 
+ *
  * @author fdietz
  */
 public class HeaderTextPane extends JTextPane{
+
+    /** JDK 1.4+ logging framework logger, used for logging. */
+    private static final Logger LOG = Logger.getLogger("org.columba.mail.gui.message.viewer");
 
     /*
      * *20030720, karlpeder* Adjusted layout of header table to avoid lines
@@ -79,7 +81,7 @@ public class HeaderTextPane extends JTextPane{
         // setup base url in order to be able to display images
         // in html-component
         URL baseUrl = DiskIO.getResourceURL("org/columba/core/images/");
-        ColumbaLogger.log.info(baseUrl.toString());
+        LOG.info(baseUrl.toString());
         ((HTMLDocument) getDocument()).setBase(baseUrl);
 
         
