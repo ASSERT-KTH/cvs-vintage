@@ -304,6 +304,8 @@ public class AccessInterceptor extends  BaseInterceptor  {
 	    // changed to eliminate the allocation ( will be changed again
 	    // when MessageBytes will be used in intercepotrs, now they are
 	    // in core
+	    if( path.length() < ctPathL - 2  )
+		return false;
 	    for( int i=0; i< ctPathL - 2 ; i++ ) {
 		if( path.charAt( i ) != ctPath.charAt( i ))
 		    return false;

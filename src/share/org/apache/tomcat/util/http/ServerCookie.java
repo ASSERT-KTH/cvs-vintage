@@ -150,6 +150,11 @@ public class ServerCookie implements Serializable {
 
 
     // -------------------- utils --------------------
+
+    public String toString() {
+	return "Cookie " + getName() + "=" + getValue() + " ; "
+	    + getVersion() + " " + getPath() + " " + getDomain();
+    }
     
     // Note -- disabled for now to allow full Netscape compatibility
     // from RFC 2068, token special case characters

@@ -223,7 +223,13 @@ public class SessionId extends  BaseInterceptor
 	    return 0;
         if (noCookies)
             return 0;
-
+	if( reqSessionId.equals( rrequest.getRequestedSessionId() )) {
+	    // we are already in a session - no need to
+	    // send the Set-Cookie again ( plus it's annoying if
+	    // the user doesn't want sessions but rewriting )
+	    //	    log( "We are in a session already ");
+	    return 0;
+	}
 	
         // GS, set the path attribute to the cookie. This way
         // multiple session cookies can be used, one for each
@@ -242,19 +248,21 @@ public class SessionId extends  BaseInterceptor
 //  //     }
 
 	// we know reqSessionId doesn't need quoting ( we generate it )
-	StringBuffer buf = new StringBuffer();
-	buf.append( "JSESSIONID=" ).append( reqSessionId );
-	buf.append( ";Version=1" );
-	buf.append( ";Path=" );
-	ServerCookie.maybeQuote( 1 , buf, sessionPath ); // XXX ugly 
-	buf.append( ";Discard" );
-	// discard results from:    	cookie.setMaxAge(-1);
+// 	StringBuffer buf = new StringBuffer();
+// 	buf.append( "JSESSIONID=" ).append( reqSessionId );
+// 	buf.append( ";Version=1" );
+// 	buf.append( ";Path=" );
+// 	ServerCookie.maybeQuote( 1 , buf, sessionPath ); // XXX ugly 
+// 	buf.append( ";Discard" );
+// 	// discard results from:    	cookie.setMaxAge(-1);
 	
 	
-	response.addHeader( "Set-Cookie2",
-			    buf.toString() ); // XXX XXX garbage generator
+// 	response.addHeader( "Set-Cookie2",
+// 			    buf.toString() ); // XXX XXX garbage generator
 
-	buf = new StringBuffer();
+	// We'll use a Netscape cookie for sessions - it's
+	// the only one supported by all browsers
+	StringBuffer buf = new StringBuffer();
 	buf.append( "JSESSIONID=" ).append( reqSessionId );
 	buf.append( ";Path=" ).append(  sessionPath  );
 	response.addHeader( "Set-Cookie",

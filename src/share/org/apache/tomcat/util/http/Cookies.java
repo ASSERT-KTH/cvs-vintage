@@ -79,7 +79,8 @@ public final class Cookies { // extends MultiMap {
     // expected average number of cookies per request
     public static final int INITIAL_SIZE=4; 
     ServerCookie scookies[]=new ServerCookie[INITIAL_SIZE];
-    int cookieCount=-1; // -1 = cookies not processed yet
+    int cookieCount=0;
+    boolean unprocessed=true;
 
     MimeHeaders headers;
     
@@ -97,20 +98,20 @@ public final class Cookies { // extends MultiMap {
 	    if( scookies[i]!=null )
 		scookies[i].recycle();
 	}
-	cookieCount=-1;
+	cookieCount=0;
+	unprocessed=true;
     }
 
     public ServerCookie getCookie( int idx ) {
-	if( cookieCount == -1 ) {
+	if( unprocessed ) {
 	    getCookieCount(); // will also update the cookies
 	}
 	return scookies[idx];
     }
 
     public int getCookieCount() {
-	if( cookieCount == -1 ) {
-	    cookieCount=0;
-	    // compute cookies
+	if( unprocessed ) {
+	    unprocessed=false;
 	    processCookies(headers);
 	}
 	return cookieCount;
@@ -139,6 +140,8 @@ public final class Cookies { // extends MultiMap {
      *  in a cookie vector
      */
     public  void processCookies( MimeHeaders headers ) {
+	if( headers==null )
+	    return;// nothing to process
 	// process each "cookie" header
 	int pos=0;
 	while( pos>=0 ) {
@@ -151,82 +154,126 @@ public final class Cookies { // extends MultiMap {
 	    if( cookieValue==null || cookieValue.isNull() ) continue;
 
 	    // Uncomment to test the new parsing code
-	    // 	    if( cookieValue.getType() == MessageBytes.T_BYTES ) {
-	    // 		processCookieHeader( cookieValue.getBytes(),
-	    // 				     cookieValue.getOffset(),
-	    // 				     cookieValue.getLength());
-	    // 	    } else {
-	    processCookieHeader( cookieValue.toString() );
-	    // 	    }
+	    if( cookieValue.getType() == MessageBytes.T_BYTES ) {
+		if( dbg>-1 ) log( "Parsing b[]: " + cookieValue.toString());
+		processCookieHeader( cookieValue.getBytes(),
+				     cookieValue.getOffset(),
+				     cookieValue.getLength());
+	    } else {
+		if( dbg>-1 ) log( "Parsing S: " + cookieValue.toString());
+		processCookieHeader( cookieValue.toString() );
+	    }
 	    pos++;// search from the next position
 	}
     }
 
-    private  void processCookieHeader(  byte bytes[], int off, int len )
+    void processCookieHeader(  byte bytes[], int off, int len )
     {
 	if( len<=0 || bytes==null ) return;
 	int end=off+len;
 	int pos=off;
-
-	while( true ) {
+	
+	int version=0; //sticky
+	ServerCookie sc=null;
+	
+	while( pos<end ) {
+	    byte cc;
 	    // [ skip_spaces name skip_spaces "=" skip_spaces value EXTRA ; ] *
+	    if( dbg>0 ) log( "Start: " + pos + " " + end );
 	    
-	    int startName=skipSpaces(bytes, pos, end);
+	    pos=skipSpaces(bytes, pos, end);
 	    if( pos>=end )
 		return; // only spaces
-
+	    int startName=pos;
+	    if( dbg>0 ) log( "SN: " + pos );
+	    
 	    // Version should be the first token
 	    boolean isSpecial=false;
 	    if(bytes[pos]=='$') { pos++; isSpecial=true; }
 
-	    int endName= findDelim1( bytes, startName, end); // " =;,"
-	    if(endName >= end ) {
+	    pos= findDelim1( bytes, startName, end); // " =;,"
+	    int endName=pos;
+	    // current = "=" or " " or DELIM
+	    pos= skipSpaces( bytes, endName, end ); 
+	    if( dbg>0 ) log( "DELIM: " + endName + " " + (char)bytes[pos]);
+
+	    if(pos >= end ) {
 		// it's a name-only cookie ( valid in RFC2109 )
-		// XXX todo
-		return; 
-	    }
-	    // XXX it's a , or a ; ?
-	    
-	    // current = "=" or " " 
-	    pos= skipSpaces( bytes, endName, end );
-	    if(endName >= end )
-		return; // invalid
-
-	    // cookie without value
-	    if( bytes[pos] == ';' || bytes[pos]==',' ) {
-		// add cookie
-
-		// we may have more cookies
-		continue;
-	    }
-
-	    if( bytes[pos] != '=' ) {
-		// syntax error - ignore the rest
-		// ( we could also skip to the next ';' )
+		if( ! isSpecial ) {
+		    sc=addCookie();
+		    sc.getName().setBytes( bytes, startName,
+					   endName-startName );
+		    sc.getValue().setString("");
+		    sc.setVersion( version );
+		    if( dbg>0 ) log( "Name only, end: " + startName + " " +
+				     endName);
+		}
 		return;
 	    }
-	
-	    // we must have "="
-	    pos++;
-	    int startValue=skipSpaces( bytes, pos, end);
-	    int endValue=startValue;
-	    // XXX quote is valid only in version=1 cookies
-	    if( bytes[pos]== '\'' || bytes[pos]=='"' ) {
-		startValue++;
-		endValue=indexOf( bytes, startValue, end, bytes[startValue] );
- 	    } else {
-		endValue=findDelim2( bytes, startValue, end );
-	    }
 
-	    // process $Version, etc
-	    if( ! isSpecial ) {
-		ServerCookie sc=addCookie();
-		sc.getName().setBytes( bytes, startName, endName );
-		sc.getValue().setBytes( bytes, startValue, endValue );
+	    cc=bytes[pos];
+	    pos++;
+	    if( cc==';' || cc==',' ) {
+		if( ! isSpecial && startName!= endName ) {
+		    sc=addCookie();
+		    sc.getName().setBytes( bytes, startName,
+					   endName-startName );
+		    sc.getValue().setString("");
+		    sc.setVersion( version );
+		    if( dbg>0 ) log( "Name only: " + startName + " " + endName);
+		}
 		continue;
 	    }
+	    
+	    // we should have "=" ( tested all other alternatives )
+	    int startValue=skipSpaces( bytes, pos, end);
+	    int endValue=startValue;
+	    
+	    // quote is valid only in version=1 cookies
+	    cc=bytes[pos];
+	    if( version==1 && ( cc== '\'' || cc=='"' ) ) {
+		startValue++;
+		endValue=indexOf( bytes, startValue, end, cc );
+		pos=endValue+1; // to skip to next cookie
+ 	    } else {
+		endValue=findDelim2( bytes, startValue, end );
+		pos=endValue+1;
+	    }
+	    
+	    // if not $Version, etc
+	    if( ! isSpecial ) {
+		sc=addCookie();
+		sc.getName().setBytes( bytes, startName, endName-startName );
+		sc.getValue().setBytes( bytes, startValue, endValue-startValue);
+		sc.setVersion( version );
+		if( dbg>0 ) log( "New: " + sc.getName() + "X=X" + sc.getValue());
+		continue;
+	    }
+	    
 	    // special - Path, Version, Domain, Port
+	    if( dbg>0 ) log( "Special: " + startName + " " + endName);
 	    // XXX TODO
+	    if( equals( "$Version", bytes, startName, endName ) ) {
+		if(dbg>0 ) log( "Found version " );
+		if( bytes[startValue]=='1' && endValue==startValue+1 ) {
+		    version=1;
+		    if(dbg>0 ) log( "Found version=1" );
+		}
+		continue;
+	    }
+	    if( sc==null ) {
+		// Path, etc without a previous cookie
+		continue;
+	    }
+	    if( equals( "$Path", bytes, startName, endName ) ) {
+		sc.getPath().setBytes( bytes, startName, endName-startName );
+	    }
+	    if( equals( "$Domain", bytes, startName, endName ) ) {
+		sc.getDomain().setBytes( bytes, startName, endName-startName );
+	    }
+	    if( equals( "$Port", bytes, startName, endName ) ) {
+		// sc.getPort().setBytes( bytes, startName, endName-startName );
+	    }
 	}
     }
 
@@ -282,6 +329,21 @@ public final class Cookies { // extends MultiMap {
 	    off++;
 	}
 	return off;
+    }
+    
+    // XXX will be refactored soon!
+    public static boolean equals( String s, byte b[], int start, int end) {
+	int blen = end-start;
+	if (b == null || blen != s.length()) {
+	    return false;
+	}
+	int boff = start;
+	for (int i = 0; i < blen; i++) {
+	    if (b[boff++] != s.charAt(i)) {
+		return false;
+	    }
+	}
+	return true;
     }
     
 
@@ -347,9 +409,43 @@ public final class Cookies { // extends MultiMap {
 
 
     // log
-    static final int dbg=1;
+    static final int dbg=0;
     public void log(String s ) {
 	System.out.println("Cookies: " + s);
     }
 
+    public static void main( String args[] ) {
+	test("foo=bar; a=b");
+	test("foo=bar;a=b");
+	test("foo=bar;a=b;");
+	test("foo=bar;a=b; ");
+	test("foo=bar;a=b; ;");
+	test("foo=;a=b; ;");
+	test("foo;a=b; ;");
+	// v1 
+	test("$Version=1; foo=bar;a=b");
+	test("$Version=1;foo=bar;a=b; ; ");
+	test("$Version=1;foo=;a=b; ; ");
+	test("$Version=1;foo= ;a=b; ; ");
+	test("$Version=1;foo;a=b; ; ");
+	test("$Version=1;foo=\"bar\";a=b; ; ");
+	test("$Version=1;foo=\"bar\";$Path=/examples;a=b; ; ");
+	test("$Version=1;foo=\"bar\";$Domain=apache.org;a=b");
+	test("$Version=1;foo=\"bar\";$Domain=apache.org;a=b;$Domain=yahoo.com");
+	// rfc2965
+	test("$Version=1;foo=\"bar\";$Domain=apache.org;$Port=8080;a=b");
+
+	// wrong
+	test("$Version=1;foo=\"bar\";$Domain=apache.org;$Port=8080;a=b");
+    }
+
+    public static void test( String s ) {
+	System.out.println("Processing " + s );
+	Cookies cs=new Cookies(null);
+	cs.processCookieHeader( s.getBytes(), 0, s.length());
+	for( int i=0; i< cs.getCookieCount() ; i++ ) {
+	    System.out.println("Cookie: " + cs.getCookie( i ));
+	}
+	    
+    }
 }
