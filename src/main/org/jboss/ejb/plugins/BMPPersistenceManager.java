@@ -36,16 +36,20 @@ import org.jboss.management.JBossTimeStatistic;
 /**
 *   <description>
 *
-*   @see <related>
-*   @author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
+*  @see <related>
+*  @author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
 *  @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
 *  @author <a href="mailto:andreas.schaefer@madplanet.com">Andreas Schaefer</a>
-*   @version $Revision: 1.26 $
+*  @version $Revision: 1.27 $
 *
 *  <p><b>Revisions:</b>
 *  <p><b>20010709 andreas schaefer:</b>
 *  <ul>
 *  <li>- Added statistics gathering
+*  </ul>
+*  <p><b>20010801 marc fleury:</b>
+*  <ul>
+*  <li>- insertion in cache upon create in now done in the instance interceptor
 *  </ul>
 */
 public class BMPPersistenceManager
@@ -207,9 +211,6 @@ implements EntityPersistenceManager
    
          // Give it to the context
          ctx.setCacheKey(cacheKey);
-   
-         // Insert in cache, it is now safe
-         con.getInstanceCache().insert(ctx);
    
          // Create EJBObject
            // Create EJBObject

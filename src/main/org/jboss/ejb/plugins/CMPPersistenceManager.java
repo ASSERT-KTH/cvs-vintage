@@ -53,7 +53,7 @@ import org.jboss.management.JBossTimeStatistic;
 *   @author <a href="mailto:danch@nvisia.com">Dan Christopherson</a>
 *   @author <a href="mailto:bill@burkecentral.com">Bill Burke</a>
 *   @author <a href="mailto:andreas.schaefer@madplanet.com">Andreas Schaefer</a>
-*   @version $Revision: 1.27 $
+*   @version $Revision: 1.28 $
 *
 *   Revisions:
 *   20010621 Bill Burke: removed loadEntities call because CMP read-ahead is now
@@ -225,10 +225,7 @@ public class CMPPersistenceManager
 		Object cacheKey = ((EntityCache) con.getInstanceCache()).createCacheKey( id );
 		
 		// Give it to the context
-		ctx.setCacheKey(cacheKey);
-		
-		// insert instance in cache, it is safe
-		con.getInstanceCache().insert(ctx);
+		ctx.setCacheKey(cacheKey);		
 		
 		// Create EJBObject
 		if (con.getContainerInvoker() != null) {
