@@ -55,11 +55,11 @@
 <tr>
   <th width="120">Creation date</th> <td class="b">$format.getDate($scarabR.DateFormat, $attribute.CreatedDate)</th>
 </tr>
-#end
  <tr>
   <th>Deleted</th>
   <td>#booleanCheckbox ($attgroup.Deleted)
  </tr>
+#end
 </table>
 </div>
 
