@@ -57,10 +57,82 @@ public  class MITList
         }
         else 
         {
-            i = items.iterator();
+            i = new ItemsIterator(items.iterator());
         }
         return i;
     }
+
+    public class ItemsIterator
+        implements Iterator
+    {
+        Iterator i;
+        Object currentObject;
+        private ItemsIterator(Iterator i)
+        {
+            this.i = i;
+        }
+
+        public boolean hasNext()
+        {
+            return i.hasNext();
+        }
+
+        public Object next()
+        {
+            currentObject = i.next();
+            return  currentObject;
+        }
+        
+        public void remove()
+        {
+            List rawList = null;
+            try
+            {
+                rawList = getMITListItems();
+            }
+            catch (TorqueException e)
+            {
+                throw new TorqueRuntimeException(e);
+            }
+
+            if (rawList.contains(currentObject)) 
+            {
+                rawList.remove(currentObject);
+                i.remove();
+            }
+            else 
+            {
+                throw new UnsupportedOperationException("Removing items " +
+                    "from a list containing wildcards is not supported.");
+            }
+        }
+    }
+
+
+    /**
+     * Makes a copy of this object.  
+     * It creates a new object filling in the simple attributes.
+     * It then fills all the association collections and sets the
+     * related objects to isNew=true.
+     */
+    public MITList copy() throws TorqueException
+    {
+        MITList copyObj = new MITList();
+        copyObj.setName(getName());
+        copyObj.setActive(getActive());
+        copyObj.setModifiable(getModifiable());
+        copyObj.setUserId(getUserId());
+
+        List v = getMITListItems();
+        for (int i=0; i<v.size(); i++)
+        {
+            MITListItem obj = (MITListItem) v.get(i);
+            copyObj.addMITListItem(obj.copy());
+        }
+
+        return copyObj;
+    }
+
 
     public MITListItem getFirstItem()
     {
@@ -86,6 +158,13 @@ public  class MITList
         return ids.size() == 1;
     }
 
+    public boolean isSingleIssueType()
+        throws TorqueException
+    {
+        List ids = getIssueTypeIds();
+        return ids.size() == 1;
+    }
+
     public Module getModule()
         throws Exception
     {
@@ -95,6 +174,17 @@ public  class MITList
                 " a list including more than one module.");
         }
         return getModule(getFirstItem());
+    }
+
+    public IssueType getIssueType()
+        throws Exception
+    {
+        if (!isSingleIssueType()) 
+        {
+            throw new IllegalStateException("method should not be called on" +
+                " a list including more than one issue type.");
+        }
+        return getIssueType(getFirstItem());
     }
 
     IssueType getIssueType(MITListItem item)
@@ -438,7 +528,7 @@ public  class MITList
     }
 
     public List getIssueTypeIds()
-        throws Exception
+        throws TorqueException
     {
         if (size() < 1) 
         {
