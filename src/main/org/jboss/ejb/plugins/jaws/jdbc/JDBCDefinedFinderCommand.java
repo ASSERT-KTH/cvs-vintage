@@ -27,8 +27,12 @@ import org.jboss.ejb.plugins.jaws.metadata.TypeMappingMetaData;
  * @author <a href="mailto:justin@j-m-f.demon.co.uk">Justin Forder</a>
  * @author <a href="mailto:michel.anke@wolmail.nl">Michel de Groot</a>
  * @author Vinay Menon
- * @author <a href="mailto:danch@nvisia.com">danch (Dan Christopherson</a>
- * @version $Revision: 1.14 $
+ * @author <a href="mailto:danch@nvisia.com">danch (Dan Christopherson)</a>
+ * @author <a href="mailto:bill@burkecentral.com">Bill Burke</a>
+ * @version $Revision: 1.15 $
+ *
+ * Revisions:
+ * 20010621 Bill Burke: exposed parameterArray through get method.
  */
 public class JDBCDefinedFinderCommand extends JDBCFinderCommand
 {
@@ -152,6 +156,11 @@ public class JDBCDefinedFinderCommand extends JDBCFinderCommand
    }
    public String getOrderByClause() {
       return orderClause;
+   }
+
+   public int[] getParameterArray()
+   {
+      return parameterArray;
    }
 
    /** helper method to clean the order clause into a list of table.field 
