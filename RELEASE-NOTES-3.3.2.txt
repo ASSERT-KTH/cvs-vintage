@@ -3,7 +3,7 @@
                                  Release Notes
                                  =============
 
-$Id: RELEASE-NOTES-3.3.2.txt,v 1.21 2003/10/26 01:43:59 billbarker Exp $
+$Id: RELEASE-NOTES-3.3.2.txt,v 1.22 2004/03/01 01:52:59 billbarker Exp $
 
 
 This document describes the changes that have been made since the
@@ -78,6 +78,8 @@ Bug No.  Description
 24123    Fix problem where the AccessLog wasn't logging request that produce
          no output.  Also log the Request's content length for PUT requests.
 
+         Partially update to use commons-logging.
+
 Jasper:
 
 Bug No.  Description
@@ -89,10 +91,14 @@ Bug No.  Description
 
 23101    Fix case dependency problem on Windows platforms.
 
+         Fix high byte chars (xlate to unicode)
+
+         Fix a problem when a jsp include another jsp with relative path.
+
 Configuration:
 
 Bug No.  Description
-
+8634     Allow alternative location for modules.xml
 
 
 Connectors:
