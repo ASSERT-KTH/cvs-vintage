@@ -49,7 +49,8 @@ package org.tigris.scarab.tools;
 import java.text.DateFormat;
 import java.util.List;
 import java.util.ArrayList;
-import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Iterator;
 import java.util.Locale;
 
@@ -1560,6 +1561,25 @@ try{
     }
     */
 
+    /**
+     * Return all users for current module and issuetype.
+     */
+    public List getUsers( ) throws Exception
+    {
+        List users = new ArrayList();
+        ModuleEntity module = getCurrentModule();  
+        ScarabUser[] userArray = module
+            .getUsers(module.getUserPermissions(getCurrentIssueType()));
+        for (int i=0;i<userArray.length;i++)
+        {
+            users.add(userArray[i]);
+        }
+        return sortUsers(users);
+    }
+        
+    /**
+     * Return results of user search.
+     */
     public List getUserSearchResults()  throws Exception
     {
         String searchString = data.getParameters()
@@ -1589,10 +1609,40 @@ try{
             email = searchString;
         }
 
-        return module.getUsers(firstName, lastName, null, email, 
-                               getCurrentIssueType());
+        return sortUsers(module.getUsers(firstName, lastName, null, email, 
+                               getCurrentIssueType()));
     }
 
+
+    /**
+     * Sort users on name or email.
+     */
+    public List sortUsers(List userList)  throws Exception
+    {
+        final String sortColumn = data.getParameters().getString("sortColumn");
+        final String sortPolarity = data.getParameters().getString("sortPolarity");
+        final int polarity = ("desc".equals(sortPolarity)) ? -1 : 1;   
+        Comparator c = new Comparator() 
+        {
+            public int compare(Object o1, Object o2) 
+            {
+                int i = 0;
+                if (sortColumn != null && sortColumn.equals("email"))
+                {
+                    i =  polarity * ((ScarabUser)o1).getEmail()
+                         .compareTo(((ScarabUser)o2).getEmail());
+                }
+                else
+                {
+                    i =  polarity * ((ScarabUser)o1).getFirstName()
+                         .compareTo(((ScarabUser)o2).getFirstName());
+                }
+                return i;
+             }
+        };
+        Collections.sort(userList, c);
+        return userList;
+    }
 
     /**
      * Return a subset of the passed-in list.
