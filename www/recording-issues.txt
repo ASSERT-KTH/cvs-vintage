@@ -1,4 +1,4 @@
-$Id: recording-issues.txt,v 1.7 2002/12/08 21:18:36 jon Exp $
+$Id: recording-issues.txt,v 1.8 2002/12/09 05:59:31 jon Exp $
 
 This document details all of the database modifications for each
 'action'. In other words, if you want to create a dependency (the
@@ -143,8 +143,8 @@ Dependencies:
         One ActivitySet
             TYPE_ID = 2
             AttachmentId = (Can be null if there is no reason)
-                ATTACHMENT_TYPE_ID = 2 (comment)
-                ATTACHMENT_NAME = 'comment'
+                ATTACHMENT_TYPE_ID = 4 (modification)
+                ATTACHMENT_NAME = 'modification'
                 ATTACHMENT_DATA =  user-provided reason
                 ATTACHMENT_FILE_PATH = null
                 ATTACHMENT_MIME_TYPE = text/plain
@@ -186,8 +186,8 @@ Dependencies:
         One ActivitySet
             TYPE_ID = 2
             AttachmentId = (Can be null if there is no reason)
-                ATTACHMENT_TYPE_ID = 2 (comment)
-                ATTACHMENT_NAME = 'comment'
+                ATTACHMENT_TYPE_ID = 4 (modification)
+                ATTACHMENT_NAME = 'modification'
                 ATTACHMENT_DATA =  user-provided reason
                 ATTACHMENT_FILE_PATH = null
                 ATTACHMENT_MIME_TYPE = text/plain
@@ -229,8 +229,8 @@ Dependencies:
         One ActivitySet
             TYPE_ID = 2
             AttachmentId = (Can be null if there is no reason)
-                ATTACHMENT_TYPE_ID = 2 (comment)
-                ATTACHMENT_NAME = 'comment'
+                ATTACHMENT_TYPE_ID = 4 (modification)
+                ATTACHMENT_NAME = 'modification'
                 ATTACHMENT_DATA =  user-provided reason
                 ATTACHMENT_FILE_PATH = null
                 ATTACHMENT_MIME_TYPE = text/plain
