@@ -36,7 +36,6 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 
 import org.columba.core.config.Config;
-import org.columba.core.config.TableItem;
 import org.columba.core.gui.util.ImageLoader;
 import org.columba.core.gui.util.NotifyDialog;
 import org.columba.core.main.MainInterface;
@@ -53,7 +52,6 @@ public class CriteriaList extends JPanel implements ActionListener {
 	private Config config;
 	private Filter filter;
 
-	private TableItem v;
 	private List list;
 	private JPanel panel;
 	private AbstractPluginHandler pluginHandler;
@@ -230,7 +228,7 @@ public class CriteriaList extends JPanel implements ActionListener {
 				new JButton(
 					ImageLoader.getSmallImageIcon("stock_remove_16.png"));
 			removeButton.setMargin(new Insets(0, 0, 0, 0));
-			removeButton.setActionCommand(new Integer(i).toString());
+			removeButton.setActionCommand( Integer.toString(i) );
 			final int index = i;
 			removeButton.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
