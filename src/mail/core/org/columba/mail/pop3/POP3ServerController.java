@@ -87,7 +87,8 @@ public class POP3ServerController implements ActionListener {
 				0,
 				null);
 		manageAction.addActionListener(this);
-
+		manageAction.setEnabled(false);
+		
 		restartTimer();
 
 	}
