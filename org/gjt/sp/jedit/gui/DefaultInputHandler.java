@@ -36,7 +36,7 @@ import org.gjt.sp.util.Log;
  * The default input handler. It maps sequences of keystrokes into actions
  * and inserts key typed events into the text area.
  * @author Slava Pestov
- * @version $Id: DefaultInputHandler.java,v 1.29 2003/06/19 01:28:07 spestov Exp $
+ * @version $Id: DefaultInputHandler.java,v 1.30 2003/06/19 19:37:39 spestov Exp $
  */
 public class DefaultInputHandler extends InputHandler
 {
@@ -333,15 +333,26 @@ public class DefaultInputHandler extends InputHandler
 	//{{{ handleKey() method
 	private void handleKey(KeyEventTranslator.Key keyStroke)
 	{
-		boolean input = (keyStroke.modifiers == null
-			&& keyStroke.input != '\0');
+		char input = '\0';
+		if(keyStroke.modifiers == null)
+		{
+			switch(keyStroke.key)
+			{
+			case '\n':
+			case '\t':
+			case ' ':
+				input = (char)keyStroke.key;
+			default:
+				input = keyStroke.input;
+			}
+		}
 
 		if(readNextChar != null)
 		{
-			if(input)
+			if(input != '\0')
 			{
 				setCurrentBindings(bindings);
-				invokeReadNextChar(keyStroke.input);
+				invokeReadNextChar(input);
 				repeatCount = 1;
 				return;
 			}
@@ -368,8 +379,8 @@ public class DefaultInputHandler extends InputHandler
 				setCurrentBindings(bindings);
 			}
 
-			if(input)
-				userInput(keyStroke.input);
+			if(input != '\0')
+				userInput(input);
 		}
 		else if(o instanceof Hashtable)
 		{
