@@ -1,384 +1,199 @@
 <!DOCTYPE html PUBLIC "-//CollabNet//DTD XHTML 1.0 Transitional//EN"
-"http://collabnet.com/dtds/collabnet_transitional_10.dtd">
+    "http://collabnet.com/dtds/collabnet_transitional_10.dtd">
 <html>
+ <head>
+  <title>Define report (2.4.1)</title>
+<!--  <meta http-equiv="Content-type" content="text/html; charset=ISO-8859-1" /> -->
+<!--  <meta http-equiv="Content-type" content="text/html; charset=EUC-KR" /> -->
+  <meta http-equiv="Content-type" content="text/html" />
 
-<head>
-	<title>Define report (2.4.1)</title>
-	<link rel="stylesheet" type="text/css" href="../csi/style/main.css" media="screen" />
-	<link rel="stylesheet" type="text/css" href="../csi/style/print.css" media="print" />
-	<link rel="alternate stylesheet" title="compact" type="text/css" href="../csi/style/compact.css" />
-</head>
+  <style type="text/css">
+  @import url(../csi/style/ns4_toxins.css);
+  </style>
 
-<body>
-<form action="#" method="get">
-
-	<!-- SourceCast -->
-	<div id="banner">
-		<table border="0" cellspacing="12" cellpadding="0" width="100%">
-		<tr>
-		
-		<td>
-		<div align="right" id="loginstatus">
-			<div>
-				Logged in as: <strong class="username">User XX</strong>
-			</div>
-			<div>
-				<a href="#">Edit Profile</a> | <a href="#">Logout</a>
-			</div>
-		</div>
-		</td>
-		</tr>
-		</table>
-	</div>
-	<!-- SourceCast -->
-	
-	<!-- Structural Elements -->
+  <link rel="stylesheet" type="text/css" href="../csi/style/main.css" />
+  <link rel="stylesheet" type="text/css" href="../csi/style/print.css" media="print" />
+  <link rel="alternate stylesheet" title="compact" type="text/css" href="../csi/style/compact.css" />
+ </head>
+<body marginwidth="0" marginheight="0">
+ <div id="banner">
+  <table border="0" cellspacing="0" cellpadding="8" width="100%">
+  <tr>
+  <td>
+  <a href="http://scarab.whichever.com:8080/scarab/servlet/scarab/curmodule/6/curissuetype/5/template/Index.vm"><img src="../csi/images/logo.gif" alt="Scarab" width="118" height="23" border="0" /></a>
+  </td>
+  <td>
+  <div align="right" id="login">
+         <div>
+    Logged in: <strong class="username">Elicia David</strong>
+   </div>
+            <div>
+   Current Module:
+   <a href="http://scarab.whichever.com:8080/scarab/servlet/scarab/curmodule/6/curissuetype/5/template/SelectModule.vm"><strong>Turbine > Source</strong></a>
+</div>
+   <div>
+        <a href="http://scarab.whichever.com:8080/scarab/servlet/scarab/curmodule/6/curissuetype/5/template/Login.vm/action/Logout">Logout</a>
+      | <a href="http://scarab.whichever.com:8080/scarab/servlet/scarab/curmodule/6/curissuetype/5/template/Links.vm">Links</a>
+  | <a href="http://scarab.whichever.com:8080/scarab/servlet/scarab/curmodule/6/curissuetype/5/template/entry%2CWizard1.vm">Enter Issue</a>
+  | <a href="http://scarab.tigris.org/nonav/ui/">UI Templates</a>
+   </div>
+  </div>
+  </td>
+  </tr>
+  </table>
+ </div>
 <table border="0" cellspacing="0" cellpadding="8" width="98%" id="main">
  <tr valign="top">
-<td id="leftcol" width="20%">
-<!-- Structural Elements -->
-	
-	<!-- SourceCast -->
-	<div id="navcolumn">
-		<table border="0" cellspacing="0" cellpadding="0" width="100%">
-			<tr>
-			<th>
-			<a href="#">My start page</a>
-			</th>
-			</tr>
-			<tr>
-			<th>
-			<a href="#">Projects &amp; categories</a>
-			</th>
-			</tr>
-			<tr>
-			<td>&nbsp;</td>
-			</tr>
-			<tr>
-			<th>
-			Project tools
-			</th>
-			</tr>
-			<tr>
-			<td>
-			<div>&nbsp;&nbsp;+ <a href="#">Documents</a></div>
-			<div>&nbsp;&nbsp;- <strong>Issue tracking</strong></div>
-			<div>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;- <a href="#" title="enter issue, verbose and advanced">Enter issue</a></div>
-			<div>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;- <a href="#" title="queries, saved and custom">Queries</a></div>
-			<div>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;- Reports</div>
-			<div>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;- <a href="#" title="vote management panel">Vote mgmt.</a></div>
-			<div>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;- <a href="#" title="adjust your workflow options">Workflow optns.</a></div>
-			<div>&nbsp;&nbsp;+ <a href="#">Mailing lists</a></div> 
-			<div>&nbsp;&nbsp;+ <a href="#">Members</a></div>  
-			<div>&nbsp;&nbsp;+ <a href="#">News</a></div>
-			<div>&nbsp;&nbsp;+ <a href="#">Source code</a></div>
-			</td>
-			</tr>
-			<tr>
-			<td>&nbsp;</td>
-			</tr>
-			<tr>
-			<th>
-			&nbsp;<a href="#">Admin functions</a>
-			</th>
-			</tr>
-		</table>
-	</div>
-	<!-- SourceCast -->
-	
-	<!-- SourceCast -->
-	<div id="helptext">
-		<table border="0" cellspacing="0" cellpadding="3" width="100%">
-		<tr>
-		<th>How do I...?</th>
-		</tr>
-		<tr>
-		<td>
-			<div> 
-				<a href="#">[Go to help index]</a>
-			</div>
-			<div> 
-				<a href="#">Use this page</a>...
-			</div>
-			<div>
-				<a href="#">Learn about a project</a>...
-			</div>
-			<div>
-				<a href="#">Join a project</a>...
-			</div>
-		</td>
-		</tr>
-		</table>
-	</div>
-	<!-- SourceCast -->
-	
-<!-- Structural Elements -->
+  <td id="leftcol" width="20%">
+ <div id="navcolumn">
+
+<div><strong><a href="http://scarab.whichever.com:8080/scarab/servlet/scarab/curmodule/6/curissuetype/3/template/Index.vm">Index</a></strong></div>
+<div><strong><a href="http://scarab.whichever.com:8080/scarab/servlet/scarab/curmodule/6/curissuetype/3/template/SelectArtifactType.vm">Artifact types</a></strong>
+      <div><small><a href="http://scarab.whichever.com:8080/scarab/servlet/scarab/curmodule/6/curissuetype/3/template/ViewIssue.vm/action/SelectIssueType/nexttemplate/ViewIssue.vm/newissuetype/1">Defect</a></small></div>
+        <div><small><strong>Patch</strong></small>
+    <div><small><a href="http://scarab.whichever.com:8080/scarab/servlet/scarab/curmodule/6/curissuetype/3/template/entry%2CWizard1.vm">Enter new</a></small></div>
+    <div><small><a href="#">Advanced Query</a></small></div>
+    <div><small><a href="#">Custom Query</a></small></div>
+    <div><small><a href="http://scarab.whichever.com:8080/scarab/servlet/scarab/curmodule/6/curissuetype/3/template/QueryList.vm">Saved queries</a></small></div>
+    <div><small><a href="http://scarab.whichever.com:8080/scarab/servlet/scarab/curmodule/6/curissuetype/3/template/TemplateList.vm">Template list</a></small></div>
+    <div><small>New report</small></div>
+    <div><small><a href="#">Saved reports</a></small></div></div>
+        <div><small><a href="http://scarab.whichever.com:8080/scarab/servlet/scarab/curmodule/6/curissuetype/3/template/ViewIssue.vm/action/SelectIssueType/nexttemplate/ViewIssue.vm/newissuetype/5">Task</a></small></div>
+        <div><small><a href="http://scarab.whichever.com:8080/scarab/servlet/scarab/curmodule/6/curissuetype/3/template/ViewIssue.vm/action/SelectIssueType/nexttemplate/ViewIssue.vm/newissuetype/7">Feature</a></small></div>
+        <div><small><a href="http://scarab.whichever.com:8080/scarab/servlet/scarab/curmodule/6/curissuetype/3/template/ViewIssue.vm/action/SelectIssueType/nexttemplate/ViewIssue.vm/newissuetype/9">Enhancement</a></small></div>
+  </div>
+
+
+</div>
+  <div id="helptext">
+ <table border="0" cellspacing="0" cellpadding="3" width="100%">
+ <tr>
+ <th>How do I...?</th>
+ </tr>
+ <tr>
+ <td>
+  <div>Learn
+ more about this project? </div> <div>Print this page...</div>
+<div>Troubleshoot...
+</div>
+</td>
+</tr>
+</table>
+</div>
 </td>
 <td width="100%" id="bodycol">
-<!-- Structural Elements -->
-
-	<!-- Scarab - App -->
-	<div id="topmodule">
-		<table border="0" cellspacing="0" cellpadding="3" width="100%">
-		<tr>
-			<td nowrap="nowrap">
-			<select>
-			<option>saved queries</option>
-			<option>query one</option>
-			<option>query two</option>
-			</select> 
-			<input type="submit" name="query" value="Go" />
-			&nbsp;<img src="../csi/images/seperator2.gif" width="2" height="15" alt="" border="0" />&nbsp;
-			<input type="text" size="15" name="" />
-			<input type="submit" name="query" value="Query" />
-			&nbsp;<img src="../csi/images/seperator2.gif" width="2" height="15" alt="" border="0" />&nbsp;
-			<a href="#">Advanced</a>&nbsp;|&nbsp;<a href="#">Custom</a>
-			</td>			
-		</tr>
-		</table>
-	</div>
-	<!-- Scarab - App -->
+ <!-- Scarab - App -->
+ <div id="topmodule">
+  <table border="0" cellspacing="0" cellpadding="3" width="100%">
+  <tr>
+   <td nowrap="nowrap">
+    <form action="http://scarab.whichever.com:8080/scarab/servlet/scarab/curmodule/6/curissuetype/3/template/IssueList.vm/action/Search" method="post">
+                  <input type="text" name="id" size="15" maxlength="255" />&#160;
+        <input type="hidden" name="nextTemplate" value="ViewIssue.vm" />
+        <input type="submit" value="Artifact Id" name="eventSubmit_doGonext" />&#160;
+        <img src="/scarab/images/seperator2.gif" width="2" height="15" alt="" border="0" />&#160;
+     <small>
+      <a href="http://scarab.whichever.com:8080/scarab/servlet/scarab/curmodule/6/curissuetype/3/template/AdvancedQuery.vm">Advanced</a>&#160;|&#160;
+      <a href="http://scarab.whichever.com:8080/scarab/servlet/scarab/curmodule/6/curissuetype/3/template/Search.vm">Custom</a>
+     </small>
+   </form>
+   </td>
+  </tr>
+  </table>
+ </div>
 	
 	<!-- Scarab - App -->
-	<div class="app" id="div2-4-1-step5b">
-		<h2>Define report (2.4.1)</h2>
+	<div class="app" id="div2-4-1-step4b">
+		<h2>Define report (2.4.1): Rate of change analysis</h2>
 		
 		<div class="tabs">
 			<table cellpadding="3" cellspacing="0" border="0">
 			<tr>
-			<td>1: <a href="#" title="summary info">Summary info</a></td>
-			<td>2: <a href="#" title="primary filter attribute">Primary filter attribute (PFA)</a></td>
-			<th>3: Select row/column heading(s)</th>
+			<td><a href="2-4-1_1.html">Report info / type</a></td>
+			<td><a href="2-4-1_2.html">1</a></td>
+			<td><a href="2-4-1_3.html">2</a></td>
+			<td><a href="2-4-1_4b.html">3</a></td>
+			<th>4</th>
+			<td>5</td>
 			</tr>
 			</table>
 		</div>
+				
+		<h3>Select row content</h3>	  
 		
-		<p class="functnbar"><a href="#" title="define row/column criteria">3a: Define row/column criteria</a> | <strong>3b: Select row/column content</strong></p>
+		<h3>Selected users</h3>
 		
-		<h3>Select row/column content</h3>	  
-		
-		<div class="axial">
-			<table border="1" cellspacing="2" cellpadding="3">
-			<tr>
-			<th>Row content</th>
-			<td><select multiple="multiple" size="15">
-			<option>Attribute X</option>
-			<option>&nbsp;&nbsp;option X.1</option>
-			<option>&nbsp;&nbsp;option X.2</option>
-			<option>&nbsp;&nbsp;option X.3</option>
-			<option>&nbsp;&nbsp;option X.4</option>
-			<option>&nbsp;&nbsp;option X.5</option>
-			<option>&nbsp;&nbsp;option X.6</option>
-			<option>----------------------------------</option>
-			<option>Attribute Y</option>
-			<option>&nbsp;&nbsp;option Y.1</option>
-			<option>&nbsp;&nbsp;option Y.2</option>
-			<option>&nbsp;&nbsp;option Y.3</option>
-			<option>&nbsp;&nbsp;option Y.4</option>
-			<option>&nbsp;&nbsp;option Y.5</option>
-			<option>&nbsp;&nbsp;option Y.6</option>
-			<option>&nbsp;&nbsp;option Y.7</option>
-			<option>&nbsp;&nbsp;option Y.8</option>	
-			<option>&nbsp;&nbsp;option Y.9</option>
-			<option>&nbsp;&nbsp;option Y.10</option>
-			<option>----------------------------------</option>
-			<option>Attribute Z</option>
-			<option>&nbsp;&nbsp;option Z.1</option>
-			<option>&nbsp;&nbsp;option Z.2</option>
-			<option>&nbsp;&nbsp;option Z.3</option>
-			<option>&nbsp;&nbsp;option Z.4</option>
-			<option>&nbsp;&nbsp;option Z.5</option>
-			<option>&nbsp;&nbsp;option Z.6</option>
-			<option>&nbsp;&nbsp;option Z.7</option>
-			<option>&nbsp;&nbsp;option Z.8</option>	
-			<option>&nbsp;&nbsp;option Z.9</option>
-			<option>&nbsp;&nbsp;option Z.10</option>
-			<option>----------------------------------</option>
-			</select>			
-			</td>
-			</tr>
-			
-			<tr>
-			<th>column: date(s)</th>
-			<td>
-		
-<table border="1" cellspacing="2" cellpadding="3">
-<tr>
-<th nowrap="nowrap">date #</th>
-<th>date setting</th>
-</tr>
+		<table width="100%" border="1" cellspacing="2" cellpadding="3">
+		<tr>
+		<th nowrap="nowrap">&nbsp;</th>
+		<th>Name</th>
+		<th>Email</th>
+		</tr>
 
-<tr class="b">
-<td width="120"><input type="checkbox" />&nbsp;date 1:</td>
-<td><select>
-<option>Jan</option>
-<option>Feb</option>
-<option>Mar</option>
-<option>Apr</option>
-<option>May</option>
-<option>Jun</option>
-<option>Jul</option>
-<option>Aug</option>
-<option>Sep</option>
-<option>Oct</option>
-<option>Nov</option>
-<option>Dec</option>
-</select>&#160;<select>
-<option>01</option>
-<option>02</option>
-<option>03</option>
-<option>04</option>
-<option>05</option>
-<option>06</option>
-<option>07</option>
-<option>08</option>
-<option>09</option>
-<option>10</option>
-<option>11</option>
-<option>12</option>
-<option>13</option>
-<option>14</option>
-<option>15</option>
-<option>16</option>
-<option>17</option>
-<option>18</option>
-<option>19</option>
-<option>20</option>
-<option>21</option>
-<option>22</option>
-<option>23</option>
-<option>24</option>
-<option>25</option>
-<option>26</option>
-<option>27</option>
-<option>28</option>
-<option>29</option>
-<option>30</option>
-<option>31</option>
-</select>&#160;<select>
-<option>1999</option>
-<option>2000</option>
-<option>2001</option>
-<option>2002</option>
-<option>2003</option>
-</select> - <select>
-<option>01:00</option>
-<option>02:00</option>
-<option>03:00</option>
-<option>04:00</option>
-<option>05:00</option>
-<option>06:00</option>
-<option>07:00</option>
-<option>08:00</option>
-<option>09:00</option>
-<option>10:00</option>
-<option>11:00</option>
-<option>12:00</option>
-<option>13:00</option>
-<option>14:00</option>
-<option>15:00</option>
-<option>16:00</option>
-<option>17:00</option>
-<option>18:00</option>
-<option>19:00</option>
-<option>20:00</option>
-<option>21:00</option>
-<option>22:00</option>
-<option>23:00</option>
-<option>24:00</option>
-</select></td>
-</tr>
-					
-<tr class="b">
-<td width="120"><input type="checkbox" />&nbsp;date 2:</td>
-<td><select>
-<option>Jan</option>
-<option>Feb</option>
-<option>Mar</option>
-<option>Apr</option>
-<option>May</option>
-<option>Jun</option>
-<option>Jul</option>
-<option>Aug</option>
-<option>Sep</option>
-<option>Oct</option>
-<option>Nov</option>
-<option>Dec</option>
-</select>&#160;<select>
-<option>01</option>
-<option>02</option>
-<option>03</option>
-<option>04</option>
-<option>05</option>
-<option>06</option>
-<option>07</option>
-<option>08</option>
-<option>09</option>
-<option>10</option>
-<option>11</option>
-<option>12</option>
-<option>13</option>
-<option>14</option>
-<option>15</option>
-<option>16</option>
-<option>17</option>
-<option>18</option>
-<option>19</option>
-<option>20</option>
-<option>21</option>
-<option>22</option>
-<option>23</option>
-<option>24</option>
-<option>25</option>
-<option>26</option>
-<option>27</option>
-<option>28</option>
-<option>29</option>
-<option>30</option>
-<option>31</option>
-</select>&#160;<select>
-<option>1999</option>
-<option>2000</option>
-<option>2001</option>
-<option>2002</option>
-<option>2003</option>
-</select> - <select>
-<option>01:00</option>
-<option>02:00</option>
-<option>03:00</option>
-<option>04:00</option>
-<option>05:00</option>
-<option>06:00</option>
-<option>07:00</option>
-<option>08:00</option>
-<option>09:00</option>
-<option>10:00</option>
-<option>11:00</option>
-<option>12:00</option>
-<option>13:00</option>
-<option>14:00</option>
-<option>15:00</option>
-<option>16:00</option>
-<option>17:00</option>
-<option>18:00</option>
-<option>19:00</option>
-<option>20:00</option>
-<option>21:00</option>
-<option>22:00</option>
-<option>23:00</option>
-<option>24:00</option>
-</select></td>
-</tr>
+		<tr class="a">
+		<td><input type="checkbox" /></td>
+		<td><strong>Alan Smith</strong></td>
+		<td><a href="#">asmith@test.net</a></td>
+		</tr>
+		
+		<tr class="b">
+		<td><input type="checkbox" /></td>
+		<td><strong>Barbara Skoppke</strong></td>
+		<td><a href="#">bs@test.net</a></td>
+		</tr>
+	     
+   </table>  
+
+<div class="functnbar3">
+ <input type="submit" value="Remove selected user from list" />
+</div>
+
+		<div class="functnbar2"><input type="submit" value="Next" />&nbsp;<input type="submit" value="Cancel" /></div>
+
+<p class="paginate">&#171; previous | 1 of 1 | next &#187;</p>
+
+		<h3>User</h3>
+<div class="axial">
+<table border="0" cellspacing="2" cellpadding="3">
+  <tr>
+   <th>Filter string</th>
+   <td><input type="text" value="j" />&nbsp;<select name="#"
+   size=""><option value="">Name</option>
+            <option value="18">Email</option>
+            </select>&nbsp;<input type="submit" value="filter" /></td>
+  </tr>
+ <tr>
 </table>
+</div>
 
-<p><input type="submit" value="add date fields" />&nbsp;<input type="submit" value="remove date fields" /></p>
 
-			</td>
-			</tr>
-			</table>
-		</div>
 
-		<p class="functnbar"><input type="submit" value="Generate report" />&nbsp;<input type="submit" value="cancel" /></p>
+
+		
+		<table width="100%" border="1" cellspacing="2" cellpadding="3">
+		<tr>
+		<th>&nbsp;</th>
+		<th nowrap="nowrap"><a href="#"><img src="../csi/images/icon_downarrow_on.gif" width="13" height="8" alt="sort descending" border="0" /></a>&nbsp;Name</th>
+		<th><a href="#" title="sort">email</a></th>
+		</tr>
+		
+		<tr class="a">
+		<td><input type="checkbox" /></td>
+		<td><strong>Jane Smith</strong></td>
+		<td><a href="#">janes@test.net</a></td>
+		</tr>
+		
+		<tr class="b">
+		<td><input type="checkbox" /></td>
+		<td><strong>Jon Dowe</strong></td>
+		<td><a href="#">jondowe@test.net</a></td>
+		</tr>
+      
+   </table>  
+<div class="functnbar3">
+ <input type="submit" value="Add selected user to list" />
+</div>
+
 	</div>
 	<!-- Scarab - App -->
 
@@ -389,17 +204,17 @@
 <!-- Structural Elements -->
 
 	<!-- SourceCast -->
-	<div id="footer">
-		<p>
-		<a href="#">Domain Home</a> |
-		<a href="#">Help</a> | 
-		<a href="#">Site FAQ</a> |
-		<a href="#">Feedback</a>
-		</p>
-	</div>
-	<!-- SourceCast -->
+<div id="footer">
+<table border="0" cellspacing="0" cellpadding="4">
+<tr><td>
+&copy; 2001 <a href="http://www.collab.net/">CollabNet</a> | 
+<a href="http://scarab.tigris.org/">Scarab</a> |
+<a href="http://scarab.whichever.com:8080/scarab/servlet/scarab/curmodule/6/curissuetype/5/rissue/0/template/Links.vm">Links</a> |
 
-</form>
-</body>
+    <a href="http://scarab.whichever.com:8080/scarab/servlet/scarab/curmodule/6/curissuetype/5/rissue/0/template/Login.vm/action/Logout">Logout</a>
+</td></tr>
+</table>
+</div>
+
+ </body>
 </html>
-
