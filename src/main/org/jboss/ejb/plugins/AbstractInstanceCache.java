@@ -56,7 +56,7 @@ import org.jboss.monitor.MetricsConstants;
  * </ul>
  *
  * @author Simone Bordet (simone.bordet@compaq.com)
- * @version $Revision: 1.4 $
+ * @version $Revision: 1.5 $
  */
 public abstract class AbstractInstanceCache
 	implements InstanceCache, XmlLoadable, Monitorable, MetricsConstants
@@ -323,17 +323,20 @@ public abstract class AbstractInstanceCache
 		ClassLoader cl = getContainer().getClassLoader();
 		m_passivator = new PassivatorQueue(threadName, cl);
 
-		// Setup JMS for cache monitoring
-		Context namingContext = new InitialContext();
-		Object factoryRef = namingContext.lookup("TopicConnectionFactory");
-		TopicConnectionFactory factory = (TopicConnectionFactory)PortableRemoteObject.narrow(factoryRef, TopicConnectionFactory.class);
+		if (isJMSMonitoringEnabled())
+		{
+			// Setup JMS for cache monitoring
+			Context namingContext = new InitialContext();
+			Object factoryRef = namingContext.lookup("TopicConnectionFactory");
+			TopicConnectionFactory factory = (TopicConnectionFactory)PortableRemoteObject.narrow(factoryRef, TopicConnectionFactory.class);
 
-		m_jmsConnection = factory.createTopicConnection();
+			m_jmsConnection = factory.createTopicConnection();
 
-		Object topicRef = namingContext.lookup("topic/metrics");
-		m_jmsTopic = (Topic)PortableRemoteObject.narrow(topicRef, Topic.class);
-		m_jmsSession = m_jmsConnection.createTopicSession(false, Session.DUPS_OK_ACKNOWLEDGE);
-		m_jmsPublisher = m_jmsSession.createPublisher(m_jmsTopic);
+			Object topicRef = namingContext.lookup("topic/metrics");
+			m_jmsTopic = (Topic)PortableRemoteObject.narrow(topicRef, Topic.class);
+			m_jmsSession = m_jmsConnection.createTopicSession(false, Session.DUPS_OK_ACKNOWLEDGE);
+			m_jmsPublisher = m_jmsSession.createPublisher(m_jmsTopic);
+		}
 	}
 	/* From Service interface*/
 	public void start() throws Exception
@@ -341,7 +344,10 @@ public abstract class AbstractInstanceCache
 		getCache().start();
 		m_passivator.start();
 
-		m_jmsConnection.start();
+		if (isJMSMonitoringEnabled())
+		{
+			m_jmsConnection.start();
+		}
 	}
 	/* From Service interface*/
 	public void stop()
@@ -353,22 +359,27 @@ public abstract class AbstractInstanceCache
 		}
 		m_passivator.stop();
 
-		try
+		if (isJMSMonitoringEnabled())
 		{
-			m_jmsConnection.stop();
+			try
+			{
+				m_jmsConnection.stop();
+			}
+			catch (JMSException ignored) {}
 		}
-		catch (JMSException ignored) {}
 	}
 	/* From Service interface*/
 	public void destroy()
 	{
 		getCache().destroy();
-
-		try
+		if (isJMSMonitoringEnabled())
 		{
-			m_jmsConnection.close();
+			try
+			{
+				m_jmsConnection.close();
+			}
+			catch (JMSException ignored) {}
 		}
-		catch (JMSException ignored) {}
 	}
 
 	// Y overrides ---------------------------------------------------
