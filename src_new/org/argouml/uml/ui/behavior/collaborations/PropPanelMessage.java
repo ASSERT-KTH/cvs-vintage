@@ -1,4 +1,4 @@
-// $Id: PropPanelMessage.java,v 1.41 2003/11/25 10:58:13 jhraigniac Exp $
+// $Id: PropPanelMessage.java,v 1.42 2003/11/28 15:55:06 jhraigniac Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -27,7 +27,7 @@
 // File: PropPanelMessage.java
 // Classes: PropPanelMessage
 // Original Author: agauthie@ics.uci.edu
-// $Id: PropPanelMessage.java,v 1.41 2003/11/25 10:58:13 jhraigniac Exp $
+// $Id: PropPanelMessage.java,v 1.42 2003/11/28 15:55:06 jhraigniac Exp $
 
 package org.argouml.uml.ui.behavior.collaborations;
 
@@ -72,7 +72,7 @@ public class PropPanelMessage extends PropPanelModelElement {
 	addField(Translator.localize("UMLMenu", "label.stereotype"),
 		 getStereotypeBox());
 	// a message does not have a namespace. removed therefore
-	// addField(Argo.localize("UMLMenu", "label.namespace"),
+	// addField(Translator.localize("UMLMenu", "label.namespace"),
 	// getNamespaceScroll());
 	JList interactionList =
 	    new UMLLinkedList(new UMLMessageInteractionListModel());

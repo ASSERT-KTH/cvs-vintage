@@ -1,4 +1,4 @@
-// $Id: NavigatorPane.java,v 1.59 2003/10/29 22:41:25 kataka Exp $
+// $Id: NavigatorPane.java,v 1.60 2003/11/28 15:55:06 jhraigniac Exp $
 // Copyright (c) 1996-2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -32,8 +32,8 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 
 import org.apache.log4j.Logger;
-import org.argouml.application.api.Argo;
 import org.argouml.application.api.QuadrantPanel;
+import org.argouml.i18n.Translator;
 import org.argouml.ui.explorer.ExplorerTree;
 import org.argouml.ui.explorer.ExplorerTreeModel;
 import org.argouml.ui.explorer.ExportExplorer;
@@ -51,7 +51,7 @@ import org.tigris.toolbar.ToolBar;
  *
  * <p>Perspectives are now built in the Perspective Manager.
  *
- * $Id: NavigatorPane.java,v 1.59 2003/10/29 22:41:25 kataka Exp $
+ * $Id: NavigatorPane.java,v 1.60 2003/11/28 15:55:06 jhraigniac Exp $
  */
 public class NavigatorPane
     extends JPanel
@@ -155,7 +155,7 @@ public class NavigatorPane
 
         if (doSplash) {
             SplashScreen splash = SplashScreen.getInstance();
-	    splash.getStatusBar().showStatus(Argo.localize(
+	    splash.getStatusBar().showStatus(Translator.localize(
                     BUNDLE, 
 		    "statusmsg.bar.making-navigator-pane-perspectives"));
             splash.getStatusBar().showProgress(25);

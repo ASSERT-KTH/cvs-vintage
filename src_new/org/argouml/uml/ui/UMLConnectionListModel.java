@@ -1,4 +1,4 @@
-// $Id: UMLConnectionListModel.java,v 1.18 2003/11/11 21:54:08 linus Exp $
+// $Id: UMLConnectionListModel.java,v 1.19 2003/11/28 15:55:06 jhraigniac Exp $
 // Copyright (c) 1996-2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -29,7 +29,7 @@ import java.util.*;
 import org.argouml.model.uml.foundation.core.CoreFactory;
 import org.argouml.model.uml.foundation.core.CoreHelper;
 import org.argouml.model.uml.modelmanagement.ModelManagementHelper;
-import org.argouml.application.api.Argo;
+import org.argouml.i18n.Translator;
 import org.argouml.model.ModelFacade;
 import org.tigris.gef.graph.MutableGraphModel;
 
@@ -74,7 +74,7 @@ public class UMLConnectionListModel extends UMLBinaryRelationListModel  {
      * @see org.argouml.uml.ui.UMLBinaryRelationListModel#getAddDialogTitle()
      */
     protected String getAddDialogTitle() {
-	return Argo.localize("UMLMenu", "dialog.add-associations");
+	return Translator.localize("UMLMenu", "dialog.add-associations");
     }
 
     /**

@@ -1,4 +1,4 @@
-// $Id: PropPanelUMLStateDiagram.java,v 1.6 2003/10/04 08:53:27 alexb Exp $
+// $Id: PropPanelUMLStateDiagram.java,v 1.7 2003/11/28 15:55:06 jhraigniac Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -24,7 +24,7 @@
 
 package org.argouml.uml.diagram.state.ui;
 
-import org.argouml.application.api.Argo;
+import org.argouml.i18n.Translator;
 import org.argouml.uml.diagram.ui.PropPanelDiagram;
 
 /**
@@ -38,7 +38,7 @@ public class PropPanelUMLStateDiagram extends PropPanelDiagram {
     // constructors
 
     public PropPanelUMLStateDiagram() {
-	super(Argo.localize("UMLMenu", "label.state-chart-diagram"));
+	super(Translator.localize("UMLMenu", "label.state-chart-diagram"));
 
     }
 

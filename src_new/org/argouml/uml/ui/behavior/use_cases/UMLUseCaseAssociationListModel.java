@@ -1,4 +1,4 @@
-// $Id: UMLUseCaseAssociationListModel.java,v 1.7 2003/09/14 18:10:43 bobtarling Exp $
+// $Id: UMLUseCaseAssociationListModel.java,v 1.8 2003/11/28 15:55:06 jhraigniac Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -28,7 +28,7 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.Vector;
 
-import org.argouml.application.api.Argo;
+import org.argouml.i18n.Translator;
 import org.argouml.model.uml.behavioralelements.usecases.UseCasesHelper;
 import org.argouml.uml.ui.UMLConnectionListModel;
 import org.argouml.uml.ui.UMLUserInterfaceContainer;
@@ -86,7 +86,7 @@ public class UMLUseCaseAssociationListModel
      * @see org.argouml.uml.ui.UMLBinaryRelationListModel#getAddDialogTitle()
      */
     protected String getAddDialogTitle() {
-	return Argo.localize("UMLMenu", "dialog.title.add-associated-usecases");
+	return Translator.localize("UMLMenu", "dialog.title.add-associated-usecases");
     }
 
 }

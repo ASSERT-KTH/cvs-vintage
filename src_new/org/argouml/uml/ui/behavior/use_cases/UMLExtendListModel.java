@@ -1,4 +1,4 @@
-// $Id: UMLExtendListModel.java,v 1.13 2003/11/11 21:54:10 linus Exp $
+// $Id: UMLExtendListModel.java,v 1.14 2003/11/28 15:55:06 jhraigniac Exp $
 // Copyright (c) 1996-2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -33,7 +33,7 @@ import org.argouml.uml.ui.UMLBinaryRelationListModel;
 import org.argouml.uml.ui.UMLUserInterfaceContainer;
 import org.tigris.gef.graph.MutableGraphModel;
 import org.apache.log4j.Logger;
-import org.argouml.application.api.Argo;
+import org.argouml.i18n.Translator;
 import org.argouml.model.ModelFacade;
 import org.argouml.model.uml.behavioralelements.usecases.UseCasesFactory;
 import org.argouml.model.uml.behavioralelements.usecases.UseCasesHelper;
@@ -107,7 +107,7 @@ public class UMLExtendListModel extends UMLBinaryRelationListModel  {
      * @see org.argouml.uml.ui.UMLBinaryRelationListModel#getAddDialogTitle()
      */
     protected String getAddDialogTitle() {
-        return Argo.localize("UMLMenu", "dialog.title.add-extended-usecases");
+        return Translator.localize("UMLMenu", "dialog.title.add-extended-usecases");
     }
 
     /**

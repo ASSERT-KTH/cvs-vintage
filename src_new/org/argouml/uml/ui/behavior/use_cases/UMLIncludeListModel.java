@@ -1,4 +1,4 @@
-// $Id: UMLIncludeListModel.java,v 1.15 2003/10/26 16:40:02 alexb Exp $
+// $Id: UMLIncludeListModel.java,v 1.16 2003/11/28 15:55:06 jhraigniac Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -55,7 +55,7 @@ import javax.swing.JOptionPane;
 import javax.swing.JPopupMenu;
 
 import org.apache.log4j.Logger;
-import org.argouml.application.api.Argo;
+import org.argouml.i18n.Translator;
 import org.argouml.kernel.Project;
 import org.argouml.kernel.ProjectManager;
 import org.argouml.model.ModelFacade;
@@ -272,7 +272,7 @@ public class UMLIncludeListModel extends UMLModelElementListModel  {
 	    choices.addAll(UseCasesHelper.getHelper().getAllUseCases());
 	    choices.remove(usecase);
 	    selected.addAll(UseCasesHelper.getHelper().getIncludedUseCases(usecase));
-	    UMLAddDialog dialog = new UMLAddDialog(choices, selected, Argo.localize("UMLMenu", "dialog.title.add-included-usecases"), true, true);
+	    UMLAddDialog dialog = new UMLAddDialog(choices, selected, Translator.localize("UMLMenu", "dialog.title.add-included-usecases"), true, true);
 	    int returnValue = dialog.showDialog(ProjectBrowser.getInstance());
 	    if (returnValue == JOptionPane.OK_OPTION) {
 		Iterator it = dialog.getSelected().iterator();

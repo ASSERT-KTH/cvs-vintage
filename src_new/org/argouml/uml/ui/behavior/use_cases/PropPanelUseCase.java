@@ -1,4 +1,4 @@
-// $Id: PropPanelUseCase.java,v 1.38 2003/11/25 10:58:17 jhraigniac Exp $
+// $Id: PropPanelUseCase.java,v 1.39 2003/11/28 15:55:05 jhraigniac Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,7 +25,7 @@
 // File: PropPanelUseCase.java
 // Classes: PropPanelUseCase
 // Original Author: your email address here
-// $Id: PropPanelUseCase.java,v 1.38 2003/11/25 10:58:17 jhraigniac Exp $
+// $Id: PropPanelUseCase.java,v 1.39 2003/11/28 15:55:05 jhraigniac Exp $
 
 // 21 Mar 2002: Jeremy Bennett (mail@jeremybennett.com). Changed to use the
 // labels "Generalizes:" for inheritance (needs Specializes some time).
@@ -82,7 +82,7 @@ public class PropPanelUseCase extends PropPanelClassifier {
 
 	// since when do we know abstract usecases?
 	//    mPanel.add("isAbstract", mclass, "isAbstract", "setAbstract",
-	//               Argo.localize("UMLMenu", "checkbox.abstract-lc"), this);
+	//               Translator.localize("UMLMenu", "checkbox.abstract-lc"), this);
         mPanel.add("isLeaf", mclass, "isLeaf", "setLeaf",
                 Translator.localize("UMLMenu", "checkbox.final-lc"), this);
         mPanel.add("isRoot", mclass, "isRoot", "setRoot",

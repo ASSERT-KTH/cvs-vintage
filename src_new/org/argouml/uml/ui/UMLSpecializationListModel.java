@@ -1,4 +1,4 @@
-// $Id: UMLSpecializationListModel.java,v 1.15 2003/11/11 21:54:08 linus Exp $
+// $Id: UMLSpecializationListModel.java,v 1.16 2003/11/28 15:55:06 jhraigniac Exp $
 // Copyright (c) 1996-2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -37,7 +37,7 @@ package org.argouml.uml.ui;
 import java.util.*;
 
 import org.tigris.gef.graph.MutableGraphModel;
-import org.argouml.application.api.Argo;
+import org.argouml.i18n.Translator;
 import org.argouml.model.ModelFacade;
 import org.argouml.model.uml.foundation.core.CoreFactory;
 import org.argouml.model.uml.foundation.core.CoreHelper;
@@ -95,7 +95,7 @@ public class UMLSpecializationListModel extends UMLBinaryRelationListModel {
      * @see org.argouml.uml.ui.UMLBinaryRelationListModel#getAddDialogTitle()
      */
     protected String getAddDialogTitle() {
-	return Argo.localize("UMLMenu", "dialog.title.add-specializations");
+	return Translator.localize("UMLMenu", "dialog.title.add-specializations");
     }
 
     /**
