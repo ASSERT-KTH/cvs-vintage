@@ -45,7 +45,7 @@ import org.gjt.sp.util.Log;
 /**
  * The main class of the jEdit text editor.
  * @author Slava Pestov
- * @version $Id: jEdit.java,v 1.192 2003/08/11 23:19:20 spestov Exp $
+ * @version $Id: jEdit.java,v 1.193 2003/08/12 20:36:34 spestov Exp $
  */
 public class jEdit
 {
@@ -370,6 +370,7 @@ public class jEdit
 
 		GUIUtilities.advanceSplashProgress();
 
+		GUIUtilities.init();
 		BeanShell.init();
 		initUserProperties();
 		initPLAF();

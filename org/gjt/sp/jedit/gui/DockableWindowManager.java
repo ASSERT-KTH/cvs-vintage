@@ -103,7 +103,7 @@ package org.gjt.sp.jedit.gui;
  *
  * @author Slava Pestov
  * @author John Gellene (API documentation)
- * @version $Id: DockableWindowManager.java,v 1.84 2003/07/17 23:49:44 spestov Exp $
+ * @version $Id: DockableWindowManager.java,v 1.85 2003/08/12 20:36:34 spestov Exp $
  * @since jEdit 2.6pre3
  */
 public class DockableWindowManager extends JPanel implements EBComponent
@@ -481,6 +481,7 @@ public class DockableWindowManager extends JPanel implements EBComponent
 					+ ".label");
 				if(label == null)
 					label = "NO LABEL PROPERTY: " + name;
+				System.err.println("label is " + label);
 
 				String[] args = { label };
 				jEdit.setTemporaryProperty(name + ".label",

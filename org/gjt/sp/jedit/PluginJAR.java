@@ -98,7 +98,7 @@ import org.gjt.sp.util.Log;
  * @see org.gjt.sp.jedit.ServiceManager
  *
  * @author Slava Pestov
- * @version $Id: PluginJAR.java,v 1.33 2003/07/25 20:13:09 spestov Exp $
+ * @version $Id: PluginJAR.java,v 1.34 2003/08/12 20:36:34 spestov Exp $
  * @since jEdit 4.2pre1
  */
 public class PluginJAR
@@ -791,6 +791,10 @@ public class PluginJAR
 	{
 		classes = cache.classes;
 
+		/* this should be before dockables are initialized */
+		if(cache.cachedProperties != null)
+			jEdit.addProperties(cache.cachedProperties);
+
 		if(cache.actionsURI != null
 			&& cache.cachedActionNames != null)
 		{
@@ -835,9 +839,6 @@ public class PluginJAR
 				ServiceManager.registerService(d);
 			}
 		}
-
-		if(cache.cachedProperties != null)
-			jEdit.addProperties(cache.cachedProperties);
 
 		if(cache.pluginClass != null)
 		{
