@@ -1,41 +1,9 @@
-// Copyright (c) 1996-99 The Regents of the University of California. All
-// Rights Reserved. Permission to use, copy, modify, and distribute this
-// software and its documentation without fee, and without a written
-// agreement is hereby granted, provided that the above copyright notice
-// and this paragraph appear in all copies.  This software program and
-// documentation are copyrighted by The Regents of the University of
-// California. The software program and documentation are supplied "AS
-// IS", without any accompanying services from The Regents. The Regents
-// does not warrant that the operation of the program will be
-// uninterrupted or error-free. The end-user understands that the program
-// was developed for research purposes and is advised not to rely
-// exclusively on the program for any reason.  IN NO EVENT SHALL THE
-// UNIVERSITY OF CALIFORNIA BE LIABLE TO ANY PARTY FOR DIRECT, INDIRECT,
-// SPECIAL, INCIDENTAL, OR CONSEQUENTIAL DAMAGES, INCLUDING LOST PROFITS,
-// ARISING OUT OF THE USE OF THIS SOFTWARE AND ITS DOCUMENTATION, EVEN IF
-// THE UNIVERSITY OF CALIFORNIA HAS BEEN ADVISED OF THE POSSIBILITY OF
-// SUCH DAMAGE. THE UNIVERSITY OF CALIFORNIA SPECIFICALLY DISCLAIMS ANY
-// WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
-// MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE. THE SOFTWARE
-// PROVIDED HEREUNDER IS ON AN "AS IS" BASIS, AND THE UNIVERSITY OF
-// CALIFORNIA HAS NO OBLIGATIONS TO PROVIDE MAINTENANCE, SUPPORT,
-// UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
+// Copyright (c) 1996-99 The Regents of the University of California. All// Rights Reserved. Permission to use, copy, modify, and distribute this// software and its documentation without fee, and without a written// agreement is hereby granted, provided that the above copyright notice// and this paragraph appear in all copies.  This software program and// documentation are copyrighted by The Regents of the University of// California. The software program and documentation are supplied "AS// IS", without any accompanying services from The Regents. The Regents// does not warrant that the operation of the program will be// uninterrupted or error-free. The end-user understands that the program// was developed for research purposes and is advised not to rely// exclusively on the program for any reason.  IN NO EVENT SHALL THE// UNIVERSITY OF CALIFORNIA BE LIABLE TO ANY PARTY FOR DIRECT, INDIRECT,// SPECIAL, INCIDENTAL, OR CONSEQUENTIAL DAMAGES, INCLUDING LOST PROFITS,// ARISING OUT OF THE USE OF THIS SOFTWARE AND ITS DOCUMENTATION, EVEN IF// THE UNIVERSITY OF CALIFORNIA HAS BEEN ADVISED OF THE POSSIBILITY OF// SUCH DAMAGE. THE UNIVERSITY OF CALIFORNIA SPECIFICALLY DISCLAIMS ANY// WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF// MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE. THE SOFTWARE// PROVIDED HEREUNDER IS ON AN "AS IS" BASIS, AND THE UNIVERSITY OF// CALIFORNIA HAS NO OBLIGATIONS TO PROVIDE MAINTENANCE, SUPPORT,// UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 
 
 package org.argouml.uml.ui;
 
-import ru.novosoft.uml.*;
-
-import javax.swing.*;
-
-import java.util.*;
-import java.awt.*;
-import java.lang.reflect.*;
-
-import ru.novosoft.uml.foundation.core.*;
-
-import org.argouml.uml.MMUtil;
-
+import java.util.Collection;import org.argouml.model.uml.UmlFactory;import ru.novosoft.uml.foundation.core.MAttribute;import ru.novosoft.uml.foundation.core.MClassifier;
 /**
  *   This class implements a list model for the attributes of a classifier.
  *   Used with a UMLList to display a list of attributes.  Since attributes
@@ -64,14 +32,12 @@ public class UMLAttributesListModel extends UMLModelElementCachedListModel  {
     public UMLAttributesListModel(UMLUserInterfaceContainer container,String property,boolean showNone) {
         super(container,property,showNone);
     }
-
     /**
      *   Called to indicate that the cache of attributes may have become invalid.
      */
     protected void resetCache() {
         _attributes = null;
     }
-
     /**
      *   Called to determine if a particular feauture of the underlying collection
      *   should be in the cached list of model elements.
@@ -81,7 +47,6 @@ public class UMLAttributesListModel extends UMLModelElementCachedListModel  {
     public boolean isProperClass(Object obj) {
         return obj instanceof MAttribute;
     }
-
     /**
      *   returns the raw underlying collection from the current target
      *   of the container.
@@ -96,7 +61,6 @@ public class UMLAttributesListModel extends UMLModelElementCachedListModel  {
         }
         return raw;
     }
-
     /**
      *    returns the cache of model elements, rebuilding the cache if invalidated.
      *    @return cache of model elements
@@ -118,19 +82,16 @@ public class UMLAttributesListModel extends UMLModelElementCachedListModel  {
   */
     public void add(int index){
         Object target = getTarget();
-
         if(target instanceof MClassifier) {
             MClassifier classifier = (MClassifier) target;
             Collection oldFeatures = classifier.getFeatures();
-            MAttribute newAttr = MMUtil.SINGLETON.buildAttribute(classifier);
-
+            MAttribute newAttr = UmlFactory.getFactory().getCore().buildAttribute(classifier);
             classifier.setFeatures(addElement(oldFeatures, index, newAttr,
                                    _attributes.isEmpty()?null:_attributes.get(index)));
             fireContentsChanged(this,index-1,index);
             navigateTo(newAttr);
         }
     }  // ...end of add()...
-
 
     /**
      *   Deletes a specific attribute from both the cache and underlying
@@ -152,6 +113,7 @@ public class UMLAttributesListModel extends UMLModelElementCachedListModel  {
             }
         }
     }
+
 
     /**
      *   Moves attribute up in the underlying collection.

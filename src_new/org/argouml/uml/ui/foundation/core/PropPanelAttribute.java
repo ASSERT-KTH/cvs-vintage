@@ -26,7 +26,7 @@
 // File: PropPanelAttribute.java
 // Classes: PropPanelAttribute
 // Original Author: jrobbins@ics.uci.edu
-// $Id: PropPanelAttribute.java,v 1.13 2002/07/16 09:02:51 jhraigniac Exp $
+// $Id: PropPanelAttribute.java,v 1.14 2002/08/08 14:21:49 kataka Exp $
 
 package org.argouml.uml.ui.foundation.core;
 
@@ -39,6 +39,7 @@ import ru.novosoft.uml.foundation.extension_mechanisms.*;
 
 import org.argouml.application.api.*;
 import org.argouml.kernel.Project;
+import org.argouml.model.uml.UmlFactory;
 import org.argouml.ui.ProjectBrowser;
 import org.argouml.uml.MMUtil;
 import org.argouml.uml.ui.*;
@@ -141,7 +142,7 @@ public class PropPanelAttribute extends PropPanelModelElement {
         if(target instanceof MAttribute) {
             MClassifier owner = ((MAttribute) target).getOwner();
             if(owner != null) {
-		MAttribute attr = MMUtil.SINGLETON.buildAttribute(owner);
+		MAttribute attr = UmlFactory.getFactory().getCore().buildAttribute(owner);
                 navigateTo(attr);
             }
             // 2002-07-15

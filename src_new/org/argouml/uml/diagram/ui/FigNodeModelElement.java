@@ -24,7 +24,7 @@
 // File: FigNodeModelElement.java
 // Classes: FigNodeModelElement
 // Original Author: abonner
-// $Id: FigNodeModelElement.java,v 1.20 2002/07/29 14:25:17 kataka Exp $
+// $Id: FigNodeModelElement.java,v 1.21 2002/08/08 14:21:50 kataka Exp $
 
 package org.argouml.uml.diagram.ui;
 
@@ -536,6 +536,7 @@ implements VetoableChangeListener, DelayedVChangeListener, MouseListener, KeyLis
       ((MModelElement)oldOwner).removeMElementListener(this);
     if (own instanceof MModelElement) {
 	MModelElement me = (MModelElement)own;
+    me.removeMElementListener(this);
 	me.addMElementListener(this);
 	if ( me.getUUID() == null)
 	    me.setUUID(UUIDManager.SINGLETON.getNewUUID());

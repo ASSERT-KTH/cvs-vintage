@@ -24,7 +24,7 @@
 // File: FigNote.java
 // Classes: FigNote
 // Original Author: a_rueckert@gmx.net
-// $Id: FigNote.java,v 1.3 2002/08/04 17:44:20 thierrylach Exp $
+// $Id: FigNote.java,v 1.4 2002/08/08 14:21:50 kataka Exp $
 
 package org.argouml.uml.diagram.static_structure.ui;
 
@@ -471,6 +471,7 @@ public class FigNote extends FigNode implements VetoableChangeListener, DelayedV
 	    ((MModelElement)oldOwner).removeMElementListener(this);
 	if (own instanceof MModelElement) {
 	    MModelElement me = (MModelElement)own;
+        me.removeMElementListener(this);
 	    me.addMElementListener(this);
 	    if ( me.getUUID() == null)  // Mark the owner with a unique ID, so we can reference it in a
 		me.setUUID(UUIDManager.SINGLETON.getNewUUID());  // stored file.
