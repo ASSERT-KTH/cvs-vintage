@@ -19,7 +19,7 @@ import org.jboss.naming.Util;
  *      
  *   @see <related>
  *   @author <a href="mailto:sebastien.alborini@m4x.org">Sebastien Alborini</a>
- *   @version $Revision: 1.3 $
+ *   @version $Revision: 1.4 $
  */
 public class EnvEntryMetaData extends MetaData {
     // Constants -----------------------------------------------------
@@ -45,6 +45,8 @@ public class EnvEntryMetaData extends MetaData {
     public void importEjbJarXml(Element element) throws DeploymentException {
         name = getElementContent(getUniqueChild(element, "env-entry-name"));
         type = getElementContent(getUniqueChild(element, "env-entry-type"));
+        // Strip any surrounding spaces
+        type = type.trim();
         value = getElementContent(getUniqueChild(element, "env-entry-value"));
     }
     
