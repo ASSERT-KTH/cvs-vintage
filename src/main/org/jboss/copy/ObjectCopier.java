@@ -34,55 +34,55 @@ implements ObjectCopierMBean, Copier
       PropertyCopier propertyCopier;
 
       // java.awt.*
-      addCopier(java.awt.Color.class, ImmutableCopier.COPIER);
-      addCopier(java.awt.Dimension.class, 
-            new CopyConstructorCopier(java.awt.Dimension.class));
-      addCopier(java.awt.Point.class, 
-            new CopyConstructorCopier(java.awt.Point.class));
-
-      propertyCopier = new PropertyCopier(this, java.awt.Polygon.class);
-      propertyCopier.addFieldToConstructorArgProperty("xpoints", 0);
-      propertyCopier.addFieldToConstructorArgProperty("ypoints", 1);
-      propertyCopier.addFieldToConstructorArgProperty("npoints", 2);
-      addCopier(java.awt.Polygon.class, propertyCopier);
+      // addCopier(java.awt.Color.class, ImmutableCopier.COPIER);
+      // addCopier(java.awt.Dimension.class, 
+      //       new CopyConstructorCopier(java.awt.Dimension.class));
+      // addCopier(java.awt.Point.class, 
+      //       new CopyConstructorCopier(java.awt.Point.class));
+      // 
+      // propertyCopier = new PropertyCopier(this, java.awt.Polygon.class);
+      // propertyCopier.addFieldToConstructorArgProperty("xpoints", 0);
+      // propertyCopier.addFieldToConstructorArgProperty("ypoints", 1);
+      // propertyCopier.addFieldToConstructorArgProperty("npoints", 2);
+      // addCopier(java.awt.Polygon.class, propertyCopier);
 
       // java.awt.geom.*
-      addCopier(java.awt.geom.AffineTransform.class,
-            new DeepCloneCopier(java.awt.geom.AffineTransform.class));
-      addCopier(java.awt.geom.Arc2D.Double.class,
-            new DeepCloneCopier(java.awt.geom.Arc2D.Double.class));
-      addCopier(java.awt.geom.Arc2D.Float.class,
-            new DeepCloneCopier(java.awt.geom.Arc2D.Float.class));
-      addCopier(java.awt.geom.Area.class,
-            new DeepCloneCopier(java.awt.geom.Area.class));
-      addCopier(java.awt.geom.CubicCurve2D.Double.class,
-            new DeepCloneCopier(java.awt.geom.CubicCurve2D.Double.class));
-      addCopier(java.awt.geom.CubicCurve2D.Float.class,
-            new DeepCloneCopier(java.awt.geom.CubicCurve2D.Float.class));
-      addCopier(java.awt.geom.Ellipse2D.Double.class,
-            new DeepCloneCopier(java.awt.geom.Ellipse2D.Double.class));
-      addCopier(java.awt.geom.Ellipse2D.Float.class,
-            new DeepCloneCopier(java.awt.geom.Ellipse2D.Float.class));
-      addCopier(java.awt.geom.Line2D.Double.class,
-            new DeepCloneCopier(java.awt.geom.Line2D.Double.class));
-      addCopier(java.awt.geom.Line2D.Float.class,
-            new DeepCloneCopier(java.awt.geom.Line2D.Float.class));
-      addCopier(java.awt.geom.Point2D.Double.class,
-            new DeepCloneCopier(java.awt.geom.Point2D.Double.class));
-      addCopier(java.awt.geom.Point2D.Float.class,
-            new DeepCloneCopier(java.awt.geom.Point2D.Float.class));
-      addCopier(java.awt.geom.QuadCurve2D.Double.class,
-            new DeepCloneCopier(java.awt.geom.QuadCurve2D.Double.class));
-      addCopier(java.awt.geom.QuadCurve2D.Float.class,
-            new DeepCloneCopier(java.awt.geom.QuadCurve2D.Float.class));
-      addCopier(java.awt.geom.Rectangle2D.Double.class,
-            new DeepCloneCopier(java.awt.geom.Rectangle2D.Double.class));
-      addCopier(java.awt.geom.Rectangle2D.Float.class,
-            new DeepCloneCopier(java.awt.geom.Rectangle2D.Float.class));
-      addCopier(java.awt.geom.RoundRectangle2D.Double.class,
-            new DeepCloneCopier(java.awt.geom.RoundRectangle2D.Double.class));
-      addCopier(java.awt.geom.RoundRectangle2D.Float.class,
-            new DeepCloneCopier(java.awt.geom.RoundRectangle2D.Float.class));
+      // addCopier(java.awt.geom.AffineTransform.class,
+      //       new DeepCloneCopier(java.awt.geom.AffineTransform.class));
+      // addCopier(java.awt.geom.Arc2D.Double.class,
+      //       new DeepCloneCopier(java.awt.geom.Arc2D.Double.class));
+      // addCopier(java.awt.geom.Arc2D.Float.class,
+      //       new DeepCloneCopier(java.awt.geom.Arc2D.Float.class));
+      // addCopier(java.awt.geom.Area.class,
+      //       new DeepCloneCopier(java.awt.geom.Area.class));
+      // addCopier(java.awt.geom.CubicCurve2D.Double.class,
+      //       new DeepCloneCopier(java.awt.geom.CubicCurve2D.Double.class));
+      // addCopier(java.awt.geom.CubicCurve2D.Float.class,
+      //       new DeepCloneCopier(java.awt.geom.CubicCurve2D.Float.class));
+      // addCopier(java.awt.geom.Ellipse2D.Double.class,
+      //       new DeepCloneCopier(java.awt.geom.Ellipse2D.Double.class));
+      // addCopier(java.awt.geom.Ellipse2D.Float.class,
+      //       new DeepCloneCopier(java.awt.geom.Ellipse2D.Float.class));
+      // addCopier(java.awt.geom.Line2D.Double.class,
+      //       new DeepCloneCopier(java.awt.geom.Line2D.Double.class));
+      // addCopier(java.awt.geom.Line2D.Float.class,
+      //       new DeepCloneCopier(java.awt.geom.Line2D.Float.class));
+      // addCopier(java.awt.geom.Point2D.Double.class,
+      //       new DeepCloneCopier(java.awt.geom.Point2D.Double.class));
+      // addCopier(java.awt.geom.Point2D.Float.class,
+      //       new DeepCloneCopier(java.awt.geom.Point2D.Float.class));
+      // addCopier(java.awt.geom.QuadCurve2D.Double.class,
+      //       new DeepCloneCopier(java.awt.geom.QuadCurve2D.Double.class));
+      // addCopier(java.awt.geom.QuadCurve2D.Float.class,
+      //       new DeepCloneCopier(java.awt.geom.QuadCurve2D.Float.class));
+      // addCopier(java.awt.geom.Rectangle2D.Double.class,
+      //       new DeepCloneCopier(java.awt.geom.Rectangle2D.Double.class));
+      // addCopier(java.awt.geom.Rectangle2D.Float.class,
+      //       new DeepCloneCopier(java.awt.geom.Rectangle2D.Float.class));
+      // addCopier(java.awt.geom.RoundRectangle2D.Double.class,
+      //       new DeepCloneCopier(java.awt.geom.RoundRectangle2D.Double.class));
+      // addCopier(java.awt.geom.RoundRectangle2D.Float.class,
+      //       new DeepCloneCopier(java.awt.geom.RoundRectangle2D.Float.class));
 
       // java.io.*
       addCopier(java.io.Serializable.class, new SerializeCopier());
