@@ -1,4 +1,4 @@
-// $Id: TestModelManagementFactory.java,v 1.7 2004/09/08 19:31:38 mvw Exp $
+// $Id: TestModelManagementFactory.java,v 1.8 2004/09/08 20:24:17 mvw Exp $
 // Copyright (c) 2002-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -34,7 +34,12 @@ public class TestModelManagementFactory extends TestCase {
 	"ElementImport", "Model", "Package", "Subsystem" 
     };
 
-    private TestModelManagementFactory(String n) {
+    /**
+     * The constructor.
+     * 
+     * @param n the name
+     */
+    public TestModelManagementFactory(String n) {
 	super(n);
     }
 
