@@ -62,7 +62,7 @@ Table of Contents</h2>
 <a href="#s5">Definitions and Terminology</a></li>
 
 <li>
-<a href="#s6">Obtaining mod_jk</a></li>
+<a href="#s6">Obtaining mod_jk</a>
 
 <ul>
 <li>
@@ -76,10 +76,10 @@ Table of Contents</h2>
 
 <li>
 <a href="#s64">Building mod_jk for Unix</a></li>
-</ul>
+</ul></li>
 
 <li>
-<a href="#s7">Configuring Apache</a></li>
+<a href="#s7">Configuring Apache</a>
 
 <ul>
 <li>
@@ -90,10 +90,10 @@ Table of Contents</h2>
 
 <li>
 <a href="#s73">Assigning URLs to be redirected to Tomcat</a></li>
-</ul>
+</ul></li>
 
 <li>
-<a href="#s8">Configuring Tomcat</a></li>
+<a href="#s8">Configuring Tomcat</a>
 
 <ul>
 <li>
@@ -104,7 +104,7 @@ Table of Contents</h2>
 
 <li>
 <a href="#s83">Defining Workers</a></li>
-</ul>
+</ul></li>
 
 <li>
 <a href="#s9">Example Configuration</a></li>
@@ -193,7 +193,7 @@ in this document is not going to get into this special worker.</td>
 <td class="inlinetd">Web Server Plug-in/Tomcat Redirector</td>
 
 <td class="inlinetd">For Tomcat to cooperate with any web server it needs
-an "agent" to reside in the web server and send him servlet requests. This
+an &quot;agent&quot; to reside in the web server and send him servlet requests. This
 is the web server plug-in, and in our case the web server plug-in is mod_jk.
 The redirector usually comes in the shape of a DLL or shared object module
 that you plug into the web server.</td>
@@ -234,25 +234,27 @@ as the Tomcat Binary Release.&nbsp; The binaries are located in subdirectories
 by platform.&nbsp; For some platforms, such as Windows, this is the typical
 way of obtaining mod_jk since most Windows systems do not have C compilers.&nbsp;
 For others, the binary distribution of mod_jk offers simpler installation.
-<p>For example, the Tomcat 3.3 M1 Release at <a href="http://jakarta.apache.org/builds/jakarta-tomcat/release/v3.3-m1/bin/">http://jakarta.apache.org/builds/jakarta-tomcat/release/v3.3-m1/bin/</a>
+<p>For example, the Tomcat 3.3 Release at
+ <a href="http://jakarta.apache.org/builds/jakarta-tomcat/release/v3.3/bin/">
+ http://jakarta.apache.org/builds/jakarta-tomcat/release/v3.3/bin/</a>
 contains the following:
-<br>&nbsp;
+<br>&nbsp;</p>
 <table BORDER CELLSPACING=0 CELLPADDING=2 WIDTH="600" bordercolor="#000000" >
 <tr>
-<td WIDTH="15%">linux/i386/</td>
+<td WIDTH="15%">linux/i386</td>
 
 <td WIDTH="85%">Contains mod_jk.so for Apache 1.3 for the standard API
 as well as EAPI and mod_jk.so for Apache 2.0</td>
 </tr>
 
 <tr>
-<td WIDTH="15%">netware/</td>
+<td WIDTH="15%">netware/i386</td>
 
 <td WIDTH="85%">Contains the mod_jk.nlm and nsapi.nlm</td>
 </tr>
 
 <tr>
-<td WIDTH="15%">win32/</td>
+<td WIDTH="15%">win32/i386</td>
 
 <td WIDTH="85%">Contains the mod_jk.dll for Windows as well as other useful
 binaries.</td>
@@ -310,7 +312,7 @@ Apache</h4>
 <ol>
 <li>
 Make sure your Apache has DSO support. You can check this with <tt>$APACHE_HOME/bin/httpd
--l</tt>. If you see "mod_so.c" in the output, DSO support is available.
+-l</tt>. If you see &quot;mod_so.c&quot; in the output, DSO support is available.
 If it's missing, you may have to recompile or reinstall Apache.</li>
 
 <li>
@@ -339,24 +341,24 @@ the following manually:</li>
 
 <ul>
 <li>
-set JAVA_HOME in your shell, e.g. "<tt>set JAVA_HOME=/usr/local/jdk1.2.2;
-export JAVA_HOME</tt>"</li>
+set JAVA_HOME in your shell, e.g. &quot;<tt>set JAVA_HOME=/usr/local/jdk1.3.1;
+export JAVA_HOME</tt>&quot;</li>
 
 <li>
-set APACHE_HOME in your shell, e.g. "<tt>set APACHE_HOME=/usr/local/apache;
-export APACHE_HOME</tt>"</li>
+set APACHE_HOME in your shell, e.g. &quot;<tt>set APACHE_HOME=/usr/local/apache;
+export APACHE_HOME</tt>&quot;</li>
 
 <li>
 uncomment the following line in the <tt>build-unix.sh</tt> file, replacing
-"linux" with the name of your platform as specified in the Java include
+&quot;linux&quot; with the name of your platform as specified in the Java include
 directory for your installation</li>
 
-<blockquote><tt># JAVA_INCLUDE="-I ${JAVA_HOME}/include -I ${JAVA_HOME}/include/linux"</tt></blockquote>
+<blockquote><tt># JAVA_INCLUDE=&quot;-I ${JAVA_HOME}/include -I ${JAVA_HOME}/include/linux&quot;</tt></blockquote>
 </ul>
 
 <li>
 If build-unix.sh fails, you may have better luck with the Makefiles in
-the same directory, e.g. "<tt>make -f Makefile.linux mod_jk.so</tt>"</li>
+the same directory, e.g. &quot;<tt>make -f Makefile.linux mod_jk.so</tt>&quot;</li>
 
 <p><br>Finally, you can try to build it manually. Run the <tt>apxs</tt>
 command that came with your apache distribution (hint: look in /usr/local/apache/bin,
@@ -459,17 +461,20 @@ configuration directives are not compatible with mod_jk!</div>
 <a NAME="s72"></a>Configure Apache to use mod_jk</h3>
 
 <div class=subsection>The simplest way to configure Apache to use mod_jk
-is to turn on the Apache auto-configure setting in Tomcat and put the following
+is to use Tomcat to generate the mod_jk configuration file and put the following
 include directive at the end of your Apache httpd.conf file (make sure
 you replace TOMCAT_HOME with the correct path for your Tomcat installation:
 <p><tt>Include TOMCAT_HOME/conf/auto/mod_jk.conf</tt>
 <p>Example:
 <p><tt>Include /usr/local/jakarta-tomcat/conf/auto/mod_jk.conf</tt>
 <p>This will tell Apache to use directives in the mod_jk.conf file
-in the Apache configuration.&nbsp; This file is created by enabling the
-Apache auto-configuration as described in the configuring Tomcat section
+in the Apache configuration.&nbsp; This file is created by starting Tomcat
+with the &quot;jkconf&quot; option.  Tomcat will initialize, write the 
+configuration file and then exit. This may be done while an instance of Tomcat
+is running.  Options for controlling how the mod_jk configuration file is
+generated are described in the configuring Tomcat section
 below [<a href="#s8">Configuring Tomcat</a>].
-<p><b>NOTE:&nbsp; If you plan to use the Tomcat-Apache auto-configuration,
+<p><b>NOTE:&nbsp; If you plan to use the Tomcat generated configuration,
 skip the rest of this section and continue with the <a href="#s8">Configuring
 Tomcat</a> section.</b>
 <p>Custom configurations can be created by enabling the auto-configuration
@@ -495,7 +500,7 @@ no log is generated.</li>
 <li>
 The directive <tt>JkLogStampFormat</tt> will configure the date/time format
 found on mod_jk logfile. Using <tt>strftime()</tt> format string it's set
-by default to "[%a %b %d %H:%M:%S %Y] "</li>
+by default to &quot;[%a %b %d %H:%M:%S %Y] &quot;</li>
 </ul>
 A simple example would be to include the following lines in your <tt>httpd.conf</tt>
 file:
@@ -505,7 +510,7 @@ AddModule&nbsp;&nbsp;&nbsp;&nbsp; mod_jk.c
 JkWorkersFile /usr/local/jakarta-tomcat/conf/workers.properties
 JkLogFile&nbsp;&nbsp;&nbsp;&nbsp; /usr/local/apache/logs/mod_jk.log
 JkLogLevel&nbsp;&nbsp;&nbsp; info
-JkLogStampFormat "[%a %b %d %H:%M:%S %Y] "</pre>
+JkLogStampFormat &quot;[%a %b %d %H:%M:%S %Y] &quot;</pre>
 </blockquote>
 </div>
 
@@ -520,8 +525,8 @@ general the structure of a JkMount directive is:
 <pre>JkMount <i>&lt;URL prefix></i> <i>&lt;Worker name></i></pre>
 For example the following directives will send all requests ending in
 <tt>.jsp</tt>
-or beginning with <tt>/servlet</tt> to the "<tt>ajp13</tt>" worker, but
-jsp requests to files located in /otherworker will go to "<tt>remoteworker</tt>".
+or beginning with <tt>/servlet</tt> to the &quot;<tt>ajp13</tt>&quot; worker, but
+jsp requests to files located in /otherworker will go to &quot;<tt>remoteworker</tt>&quot;.
 <blockquote>
 <pre>JkMount /*.jsp ajp13
 JkMount /servlet/* ajp13
@@ -538,22 +543,25 @@ sections of your httpd.conf file.</div>
 <a NAME="s81"></a>Enabling Tomcat's Apache Auto-Config</h3>
 
 <div class=subsection>In most simple cases Tomcat can generate the needed
-Apache configuration. You can configure Tomcat so that when it starts up
-it will automatically generate a configuration file for Apache to use mod_jk.
+Apache configuration. The default installation of Tomcat comes configured to
+generate a configuration file on demand for Apache to use mod_jk.
 Most of the time you don't need to do anything but include this file (appending
-<tt>"Include TOMCAT_HOME/conf/auto/mod_jk.conf"</tt>) in your httpd.conf,
+<tt>&quot;Include TOMCAT_HOME/conf/auto/mod_jk.conf&quot;</tt>) in your httpd.conf,
 as shown in the previous section (<a href="#s7">Configuring Apache</a>).
-<p>To configure Tomcat to generate the Apache auto-configuration add the
-following block to your <tt>TOMCAT_HOME/conf/server.xml</tt> file after
-<tt>&lt;AutoWebApp ... /></tt>.
-<blockquote>
-<pre>&lt;ApacheConfig /></pre>
-</blockquote>
-That's it, you can now start Tomcat and Apache and access Tomcat from the
-Apache server.
-<p><b>Note:</b> Settings for mod_jk auto-configuration is new in Tomcat 3.3.&nbsp;
+
+<p>To have Tomcat generate the configuration file, start Tomcat with the
+&quot;jkconf&quot; option. Tomcat will initialize, write the configuration
+file, and then exit. This may be done while an instance of Tomcat is running.</p>
+
+<p>The generation of the mod_jk configuration file is controlled by the
+<a href="serverxml.html#ApacheConfig">ApacheConfig</a> module. The default
+installation of Tomcat 3.3 comes with the ApacheConfig directive already
+present in the <tt>TOMCAT_HOME/conf/server.xml</tt>.</p>
+
+<p><b>Note:</b> Generating the mod_jk configuration file on demand is new in Tomcat 3.3.&nbsp;
 Older versions of Tomcat create the auto-config file without a directive
-in server.xml.&nbsp; The new directive in Tomcat 3.3 allows for additional
+in server.xml and generate it each time Tomcat is started.&nbsp;
+The new ApacheConfig directive in Tomcat 3.3 allows for additional
 configuration options as detailed later in this section.&nbsp; For older
 versions of Tomcat, refer to the documentation that came with that version.
 <p>If you have special needs, for example mounting URL prefixes that are
@@ -569,10 +577,10 @@ configuration should be kept elsewhere.&nbsp; For example, copy
 <tt>TOMCAT_HOME/conf/auto/mod_jk.conf</tt>
 to <tt>TOMCAT_HOME/conf/jk/mod_jk.conf
 </tt>before making changes.&nbsp;
-You'll need to startup Tomcat once to generate this file with your configuration
-for the first time.
+You'll need to start Tomcat with the &quot;jkconf&quot; option once to generate
+this file with your configuration for the first time.
 <p>It is also possible to specify the location of the auto generated files
-by setting options in the &lt;ApacheConfig /> block.&nbsp; The following
+by setting options in the &lt;ApacheConfig /&gt; block.&nbsp; The following
 details the syntax:
 <blockquote>
 <pre>&lt; ContextManager ... &gt;
@@ -587,21 +595,23 @@ details the syntax:
     If not set, this defaults to TOMCAT_HOME. Ignored
     whenever any of the following paths is absolute.</li>
 <li><b>jkConfig</b> - path to use for writing Apache mod_jk conf file. If
-    not set, defaults to "conf/auto/mod_jk.conf".</li>
+    not set, defaults to &quot;conf/auto/mod_jk.conf&quot;.</li>
 <li><b>workersConfig</b> - path to workers.properties file used by 
-    mod_jk. If not set, defaults to "conf/jk/workers.properties".</li>
-<li><b>modJk</b> - path to Apache mod_jk plugin file.  If not set,
-    defaults to "modules/mod_jk.dll" on windows,
-    "modules/mod_jk.nlm" on netware, and
-    "libexec/mod_jk.so" everywhere else.</li>
+    mod_jk. If not set, defaults to &quot;conf/jk/workers.properties&quot;.</li>
+<li><b>modJk</b> - path to Apache mod_jk plug-in file.  If not set,
+    defaults to &quot;modules/mod_jk.dll&quot; on windows,
+    &quot;modules/mod_jk.nlm&quot; on netware, and
+    &quot;libexec/mod_jk.so&quot; everywhere else.</li>
 <li><b>jkLog</b> - path to log file to be used by mod_jk.</li>
 <li><b>jkDebug</b> - JK Loglevel setting.  May be debug, info, error, or emerg.
     If not set, defaults to no log.</li>
-<li><b>jkProtocol</b> The desired protocal, "ajp12" or "ajp13". If not
-    specified, defaults to "ajp13" if an Ajp13Interceptor
-    is in use, otherwise it defaults to "ajp12".</li>
+<li><b>jkWorker</b> The desired worker.  Must be set to one of the workers
+    defined in the workers.properties file. &quot;ajp12&quot;, &quot;ajp13&quot;
+    or &quot;inprocess&quot; are the workers found in the default
+    workers.properties file. If not specified, defaults to &quot;ajp13&quot;
+    if an Ajp13Connector is in use, otherwise it defaults to &quot;ajp12&quot;.</li>
 <li><b>forwardAll</b> - If true, forward all requests to Tomcat.
-    This helps insure that all the behavior configured in the web.xml
+    This helps ensure that all the behavior configured in the web.xml
     file functions correctly. If false, let Apache serve static resources.
     The default is true. Warning: When false, some configuration in
     the web.xml may not be duplicated in Apache.
@@ -624,31 +634,29 @@ details the syntax:
 <blockquote>
 <pre>...
 
-&lt;AutoWebApp dir="webapps" host="DEFAULT" /&gt;
-
-&lt;ApacheConfig configHome="/home/mydir" /&gt;
+&lt;ApacheConfig configHome=&quot;/home/mydir&quot; /&gt;
 
 ...</pre>
 </blockquote>
 
-<p><b>Note:</b> The default Apache auto-configuration file generated by:
+<p><b>Note:</b> The default mod_jk configuration file generated by:
 <blockquote>
 <pre>&lt;ApacheConfig /&gt;</pre>
 </blockquote>
 differs from the file generated by Tomcat 3.2.x.  In Tomcat 3.3, the default
 is to forward all requests to Tomcat for Tomcat's contexts (i.e.
-forwardAll="true"), excluding the root context.  This helps insure
+forwardAll=&quot;true&quot;), excluding the root context.  This helps ensure
 that behavior configured in web.xml files will function properly.
 The configuration that best matches Tomcat 3.2.x behavior is:
 <blockquote>
-<pre>&lt;ApacheConfig forwardAll="false" noRoot="false"
-        jkConfig="conf/mod_jk.conf-auto" jkDebug="error" /&gt;</pre>
+<pre>&lt;ApacheConfig forwardAll=&quot;false&quot; noRoot=&quot;false&quot;
+        jkConfig=&quot;conf/mod_jk.conf-auto&quot; jkDebug=&quot;error&quot; /&gt;</pre>
 </blockquote>
 With this configuration, JSP and servlet requests to the root context
 will be served from Tomcat's ROOT webapp.  Other requests, such as for static
 files, will be served from Apache's DocumentRoot directory.  If Apache's
 DocumentRoot isn't updated to point to Tomcat's ROOT webapp, then the
-root context will malfunction.  For example, JSP's that reference ".gif"
+root context will malfunction.  For example, JSP's that reference &quot;.gif&quot;
 files in Tomcat's ROOT webapp will not be able to display them since
 they won't be found under Apache's DocumentRoot directory.</p>
 </div>
@@ -658,22 +666,17 @@ they won't be found under Apache's DocumentRoot directory.</p>
 
 <div class=subsection>mod_jk can use either the original Ajpv12 protocol
 or the newer Ajpv13 protocol. Both protocols are enabled by default. The
-"Ajp13" Connection Handler in Tomcat will give you the benefit of a faster
+&quot;Ajp13&quot; Connection Handler in Tomcat will give you the benefit of a faster
 protocol and the ability to identify requests made via HTTPS.
-<p>The following block enables Ajpv13 in your <tt>TOMCAT_HOME/conf/server.xml</tt>
-file.
-<blockquote>
-<pre>&lt;RequestInterceptor
-&nbsp; className="org.apache.tomcat.modules.server.Ajp13Interceptor"
-&nbsp; port="8009"/></pre>
-</blockquote>
-The <tt>server.xml</tt> file already has a block similar to this for Ajp12
-connections on port 8007 (as delivered by mod_jserv). Even if you think
-you're only using Ajp13, you probably don't want to delete this connector
--- it's required to shut down Tomcat.</div>
+<p>The default installation of Tomcat 3.3 comes with connectors for both
+protocols in the <tt>TOMCAT_HOME/conf/server.xml</tt>.  The default choice by
+the ApacheConfig directive will be to using the &quot;ajp13&quot; worker which
+uses the Ajpv13 protocol. Even though mod_jk uses the Ajpv13 by default, you
+shouldn't remove the Ajpv12 connector present in the <tt>server.xml</tt> file.
+The Ajpv12 connector is also used for shutting down Tomcat.</div>
 
 <h3>
-<a NAME="s83"></a>(Optional) Defining "workers"</h3>
+<a NAME="s83"></a>(Optional) Defining &quot;workers&quot;</h3>
 
 <h4>
 Configuring workers manually.</h4>
@@ -696,8 +699,8 @@ them using HTTPS as well, which we're assuming is being handled by mod_ssl).
 the rest are handled by Apache. The files for each Host are server out
 of /web/host1 and /web/host2 respectively.
 <p>The example are over-simplified and incomplete but should get you started.
-Also note the virtual host setup is new in Tomcat 3.2 - <i>this example
-won't work with Tomcat 3.1</i>.
+Also note, this form virtual host setup is new in Tomcat 3.3 and later - <i>this example
+won't work with Tomcat 3.2 and earlier.</i>.
 <br>&nbsp;
 <table class="inlinetable" >
 <tr>
@@ -705,30 +708,37 @@ won't work with Tomcat 3.1</i>.
 <blockquote>
 <pre>.
 .
-&lt;Connector className="org.apache.tomcat.service.PoolTcpConnector">
-&nbsp; &lt;Parameter name="handler" value="org.apache.tomcat.modules.server.Ajp12Interceptor"/>
-&nbsp; &lt;Parameter name="port" value="8007"/>
-&lt;/Connector>
+&lt;Ajp12Connector port=&quot;8007&quot; /&gt;
 
-&lt;Connector className="org.apache.tomcat.service.PoolTcpConnector">
-&nbsp; &lt;Parameter name="handler"&nbsp; value="org.apache.tomcat.modules.server.Ajp13Interceptor"/>
-&nbsp; &lt;Parameter name="port" value="8009"/>
-&lt;/Connector>
-
-&lt;Host name="host1.apache.org">
-&nbsp; &lt;Context path="" docBase="/web/host1" debug="0"/>
-&lt;/Host>
-&lt;Host name="host2.apache.org">
-&nbsp; &lt;Context path="" docBase="/web/host2" debug="0"/>
-&lt;/Host>
-.
+&lt;Ajp13Connector port=&quot;8009&quot; /&gt;
 .</pre>
 </blockquote>
 </td>
 </tr>
 </table>
-<i>Table 1 - Excerpt from server.xml showing the Ajp13 Connector and two
-virtual hosts.</i>
+<i>Table 1 - Excerpt from server.xml showing the Ajp12 and Ajp13 Connectors.</i>
+<br>&nbsp;
+<table class="inlinetable" >
+<tr>
+<td class="inlinetd">
+<blockquote>
+<pre>
+&lt;?xml version=&quot;1.0&quot; encoding=&quot;ISO-8859-1&quot;?&gt;
+&lt;Server&gt;
+    &lt;Host name=&quot;host1.apache.org&quot;&gt;
+    &nbsp; &lt;Context path=&quot;&quot; docBase=&quot;/web/host1&quot; debug=&quot;0&quot;/&gt;
+    &lt;/Host&gt;
+    &lt;Host name=&quot;host2.apache.org&quot;&gt;
+    &nbsp; &lt;Context path=&quot;&quot; docBase=&quot;/web/host2&quot; debug=&quot;0&quot;/&gt;
+    &lt;/Host&gt;
+&lt;/Server&gt;
+</pre>
+</blockquote>
+</td>
+</tr>
+</table>
+<i>Table 2 - Apps-vhosts.xml file showing two virtual hosts, each with a default
+context defined.</i>
 <br>&nbsp;
 <table class="inlinetable" >
 <tr>
@@ -750,7 +760,7 @@ worker.ajp13.type=ajp13</pre>
 </td>
 </tr>
 </table>
-<i>Table 2 - Excerpt from workers.properties showing the Ajp13 worker</i>
+<i>Table 3 - Excerpt from workers.properties showing the Ajp13 worker</i>
 <br>&nbsp;
 <table class="inlinetable" >
 <tr>
@@ -798,7 +808,7 @@ JkLogLevel&nbsp;&nbsp;&nbsp; info
 </td>
 </tr>
 </table>
-<i>Table 3 - Excerpt from Apaches httpd.conf showing JK directives.</i>
+<i>Table 4 - Excerpt from Apaches httpd.conf showing JK directives.</i>
 <hr>
 <h2>
 <a NAME="s10"></a>Troubleshooting and F.A.Q.s</h2>
@@ -809,18 +819,20 @@ A. The primary mechanism for support is through the Tomcat Documentation
 included in the TOMCAT_HOME/doc directory.&nbsp; These documents are viewable
 via browser through Tomcat <a href="http://localhost:8080/doc/index.html">http://localhost:8080/doc/index.html</a>.&nbsp;
 Documentation is also available on the Apache Jakarta web site for Tomcat
-at <a href="http://jakarta.apache.org/tomcat/jakarta-tomcat/src/doc/index.html">http://jakarta.apache.org/tomcat/jakarta-tomcat/src/doc/index.html</a>.
+at <a href="http://jakarta.apache.org/tomcat/tomcat-3.3-doc/index.html">http://jakarta.apache.org/tomcat/tomcat-3.3-doc/index.html</a>.
 <p>For additional help, the best resource is the Tomcat Users Discussion
 list.&nbsp; You should start by searching the mail list archives located
-at <a href="http://">http://mikal.org/interests/java/tomcat/index.html</a>
+at <a href="http://www.mail-archive.com/tomcat-user@jakarta.apache.org/">http://www.mail-archive.com/tomcat-user@jakarta.apache.org/</a>
+or <a href="http://mikal.org/interests/java/tomcat/index.jsp">http://mikal.org/interests/java/tomcat/index.jsp</a>
 before you post questions to the list.&nbsp; If you are unable to locate
 the answer to your question in the archive, you can post questions about
 Tomcat or mod_jk to the user list for assistance.&nbsp; Make sure that
 you include the version of Apache and Tomcat that you are using as well
-as the platform you are running on. <a href="http://">http://jakarta.apache.org/site/mail.html</a>
+as the platform you are running on. <a href="http://jakarta.apache.org/site/mail.html">http://jakarta.apache.org/site/mail.html</a>
 <h3>
 Q. I can't find mod_jk anywhere. Where is it?</h3>
-A. Starting with Tomcat 3.3, the source for mod_jk is included in the native/mod_jk
+A. Starting with Tomcat 3.3, the source for mod_jk is included with the
+binary distribution, in the native/mod_jk
 directory.&nbsp; You can also download the Source Distribution of Tomcat
 to obtain the source for mod_jk, which is how it was obtained in versions
 prior to Tomcat 3.3. The Binary Distributions of mod_jk are available at
@@ -841,35 +853,35 @@ latest release of mod_jk (the one found since Tomcat 3.3-m2 and J-T-C)
 handle the network failure. But with previous release of mod_jk, you may
 have to restart Apache as well.
 <h3>
-Q. Why did exist two files mod_jk.so (-eapi ad -noeapi) in download dir
+Q. Why do two mod_jk.so files exist (-eapi ad -noeapi) in download dir
 for Linux ?</h3>
-A. Many versions of Apache use of modified API, known at Extended API.
-For example, Apache using mod_ssl or Apache present in certains recent
-Linux distributions. So if you got such 'Extended Apache', you need to
-use mod_jk.so-eapi, or use mod_jk.so-noeapi for standard Apache. It's wise
-to avoid using EAPI modules on STD API Apache or to use standard API modules
-on EAPI Apache. Allways be sure to have the mod_jk.so for your version
-of Apache
+A. Many versions of Apache use a modified API, known at Extended API.
+For example, Apache using mod_ssl and the Apache present in certain recent
+Linux distributions. So if you have an 'Extended Apache', you need to
+use mod_jk.so-eapi, and use mod_jk.so-noeapi for standard Apache. It's wise
+to avoid using EAPI modules on standard API Apache and standard API modules
+on EAPI Apache. Always be sure to have the mod_jk.so for your version
+of Apache.
 <h3>
 Q. What's that message about 'garbled DSO ?'</h3>
-A. It's related to Apache EAPI, the message 'mod_jk.so is garbled - perhaps
+A. It's related to Apache EAPI. The message 'mod_jk.so is garbled - perhaps
 this is not an Apache module DSO ?' just told you are trying to install
-a mod_jk.so DSO module that was compiled on an Apache using EAPI, like
-apache-mod_ssl or apache from Redhat distro 6.2/7.0 but your system use
-the standard apache with normal API.
+a mod_jk.so DSO module that was compiled on an Apache using EAPI, such as
+Apache-mod_ssl or Apache from Redhat distro 6.2/7.0. However, your system is using
+the standard Apache with the normal API.
 <h3>
 Q. And the message about 'module might crash under EAPI! '</h3>
 A. Also related to EAPI, the message '[warn] Loaded DSO /usr/lib/apache/mod_jk.so
 uses plain Apache 1.3 API, this module might crash under EAPI! (please
 recompile it with -DEAPI)', the mod_jk.so was compiled under normal Apache
-with standard API and you try to install the module on an Apache using
+with standard API and you are trying to install the module on an Apache using
 EAPI.
 <h3>
 Q. Where can I get more information?</h3>
 A. The <a href="Tomcat-Workers-HowTo.html">workers.properties howto</a>
 document has considerably more in-depth information than this one, and
 is worth a look. You could also try searching the mailing list archives
-for "mod_jk" or look at the source.
+for &quot;mod_jk&quot; or look at the source.
 <h3>
 Q. APXS is getting an error during the build of mod_jk, like rc=0 or rc=255.&nbsp;
 I tried all of the steps in the build section, what do I do now?</h3>
