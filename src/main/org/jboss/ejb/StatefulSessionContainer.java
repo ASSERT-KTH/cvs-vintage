@@ -31,7 +31,7 @@ import org.jboss.logging.Logger;
  *      
  *   @see <related>
  *   @author Rickard Öberg (rickard.oberg@telkel.com)
- *   @version $Revision: 1.7 $
+ *   @version $Revision: 1.8 $
  */
 public class StatefulSessionContainer
    extends Container
@@ -41,8 +41,7 @@ public class StatefulSessionContainer
    // Attributes ----------------------------------------------------
    Map createMapping;
    Map postCreateMapping;
-   Map homeMapping;
-   Map beanMapping;
+  
    
    // This is the persistence manager for this container
    protected StatefulSessionPersistenceManager persistenceManager;
