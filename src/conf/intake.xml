@@ -540,4 +540,10 @@
     </field>
 </group>
 
+<group name="MITList" key="mitl" mapToObject="om.MITList">
+        <field name="Name" key="name" type="String" >
+           <rule name="required" value="true">Name must have a value.</rule>
+        </field>
+</group>
+
 </input-data>

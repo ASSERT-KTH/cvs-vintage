@@ -186,23 +186,6 @@ public class ScarabRequestTool
     private AttributeGroup group = null;
 
     /**
-     * A Module object which represents the current module
-     * selected by the user within a request.
-     */
-    private Module currentModule = null;
-
-    /**
-     * A IssueType object which represents the current issue type
-     * selected by the user within a request.
-     */
-    private IssueType currentIssueType = null;
-
-    /**
-     * A IssueType object which represents the navigation's open issue type
-     */
-    private IssueType navIssueType = null;
-
-    /**
      * The issue that is currently being entered.
      */
     private Issue reportingIssue = null;
@@ -284,8 +267,6 @@ public class ScarabRequestTool
         templateInfo = null;
         issueType = null;
         group = null;
-        currentModule = null;
-        currentIssueType = null;
         reportingIssue = null;
         module = null;
         attributeOption = null;
@@ -973,11 +954,19 @@ try{
      */
     public Module getCurrentModule()
     {
+        ScarabUser user = (ScarabUser)data.getUser();
+        Module currentModule = null;
+        if (user != null) 
+        {
+            currentModule = user.getCurrentModule();            
+        }
+
         if (currentModule == null)
         {
             currentModule = getModule(
                 data.getParameters()
                 .getString(ScarabConstants.CURRENT_MODULE));
+            setCurrentModule(currentModule);
         }
         return currentModule;
     }
@@ -988,6 +977,12 @@ try{
      */
     public IssueType getCurrentIssueType() throws Exception
     {
+        ScarabUser user = (ScarabUser)data.getUser();
+        IssueType currentIssueType = null;
+        if (user != null) 
+        {
+             currentIssueType = user.getCurrentIssueType();            
+        }
         if (currentIssueType == null)
         {
             // if the current issue_type_id is present in the parameter list
@@ -1015,13 +1010,18 @@ try{
                     }
                 }
             }
+            setCurrentIssueType(currentIssueType);
         }
         return currentIssueType;
     }
 
     public void setCurrentIssueType(IssueType type)
     {
-        currentIssueType = type;
+        ScarabUser user = (ScarabUser)data.getUser();
+        if (user != null) 
+        {
+            user.setCurrentIssueType(type);
+        }        
     }
 
     /**
@@ -1083,7 +1083,11 @@ try{
      */
     public void setCurrentModule(Module me)
     {
-        currentModule = me;
+        ScarabUser user = (ScarabUser)data.getUser();
+        if (user != null) 
+        {
+            user.setCurrentModule(me);
+        }        
     }
 
     /**

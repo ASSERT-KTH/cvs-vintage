@@ -62,7 +62,7 @@ import org.tigris.scarab.util.ScarabException;
  * This is an interface which describes what a ScarabUser is...
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: ScarabUser.java,v 1.63 2002/06/26 01:43:52 jmcnally Exp $
+ * @version $Id: ScarabUser.java,v 1.64 2002/06/27 04:50:21 jmcnally Exp $
  */
 public interface ScarabUser extends User
 {
@@ -346,4 +346,28 @@ public interface ScarabUser extends User
 
     public void removeItemsFromCurrentMITList(String[] ids);
 
+    /**
+     * The current module which represents the module
+     * selected by the user within a request.
+     */
+    public Module getCurrentModule();
+    
+    /**
+     * The current module which represents the module
+     * selected by the user within a request.
+     */
+    public void setCurrentModule(Module  v);
+     
+    /**
+     * The current issue type which represents the issue type
+     * selected by the user within a request.
+     */
+    public IssueType getCurrentIssueType();
+
+    /**
+     * The current issue type which represents the issue type
+     * selected by the user within a request.
+     */
+    public void setCurrentIssueType(IssueType  v);
 }
+

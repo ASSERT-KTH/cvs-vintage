@@ -20,10 +20,15 @@ public  class MITList
     extends org.tigris.scarab.om.BaseMITList
     implements Persistent
 {
+    /**
+     * a local reference to the user.
+     */
+    private ScarabUser aScarabUser;
+
     public int size()
     {
         int size = 0;
-        List items = wrappedGetMITListItems();
+        List items = getExpandedMITListItems();
         if (items != null) 
         {
             size = items.size();
@@ -34,7 +39,7 @@ public  class MITList
     public boolean isEmpty()
     {
         boolean empty = true;
-        List items = wrappedGetMITListItems();
+        List items = getExpandedMITListItems();
         if (items != null) 
         {
             empty = items.isEmpty();
@@ -45,7 +50,7 @@ public  class MITList
     public Iterator iterator()
     {
         Iterator i = null;
-        List items = wrappedGetMITListItems();
+        List items = getExpandedMITListItems();
         if (items == null)
         {
             Collections.EMPTY_LIST.iterator();
@@ -60,7 +65,7 @@ public  class MITList
     public MITListItem getFirstItem()
     {
         MITListItem i = null;
-        List items = wrappedGetMITListItems();
+        List items = getExpandedMITListItems();
         if (items != null)
         {
             i = (MITListItem)items.get(0);
@@ -92,13 +97,13 @@ public  class MITList
         return getModule(getFirstItem());
     }
 
-    private IssueType getIssueType(MITListItem item)
+    IssueType getIssueType(MITListItem item)
         throws Exception
     {
         IssueType it = null;
         if (item.getIssueTypeId() == null) 
         {
-            //it = getScarabUser().getCurrentIssueType();
+            it = getScarabUser().getCurrentIssueType();
         }
         else 
         {
@@ -107,13 +112,13 @@ public  class MITList
         return it;
     }
 
-    private Module getModule(MITListItem item)
+    Module getModule(MITListItem item)
         throws Exception
     {
         Module module = null;
         if (item.getModuleId() == null) 
         {
-            //module = getScarabUser().getCurrentModule();
+            module = getScarabUser().getCurrentModule();
         }
         else 
         {
@@ -121,6 +126,35 @@ public  class MITList
         }
         return module;
     }
+
+    /**
+     * Declares an association between this object and a ScarabUser object
+     *
+     * @param ScarabUser v
+     */
+    public void setScarabUser(ScarabUser v) 
+        throws TorqueException
+    {
+        super.setScarabUser(v);
+        aScarabUser = v;
+    }
+
+                 
+    public ScarabUser getScarabUser()
+        throws TorqueException
+    {
+        ScarabUser user = null;
+        if (aScarabUser == null) 
+        {
+            user = super.getScarabUser();
+        }
+        else
+        {
+            user = aScarabUser;
+        }
+        return user;
+    }
+
 
     public List getCommonAttributes()
         throws Exception
@@ -389,7 +423,7 @@ public  class MITList
                 " an empty list.");
         }
 
-        List items = wrappedGetMITListItems();
+        List items = getExpandedMITListItems();
         ArrayList ids = new ArrayList(items.size());
         Iterator i = items.iterator();
         while (i.hasNext()) 
@@ -412,7 +446,7 @@ public  class MITList
                 " an empty list.");
         }
 
-        List items = wrappedGetMITListItems();
+        List items = getExpandedMITListItems();
         ArrayList ids = new ArrayList(items.size());
         Iterator i = items.iterator();
         while (i.hasNext()) 
@@ -433,9 +467,9 @@ public  class MITList
         super.addMITListItem(item);
     }
 
-    private List wrappedGetMITListItems()
+    public List getExpandedMITListItems()
     {
-        List items = null;
+        List items = new ArrayList();
         try
         {
             Iterator rawItems = getMITListItems().iterator();
@@ -453,8 +487,8 @@ public  class MITList
                         {
                             MITListItem newItem = 
                                 MITListItemManager.getInstance();
-                            newItem.setModuleId(module.getModuleId());
-                            newItem.setIssueTypeId(item.getIssueTypeId());
+                            newItem.setModule(module);
+                            newItem.setIssueType(getIssueType(item));
                             newItem.setListId(getListId());
                             items.add(newItem);
                         }
@@ -466,7 +500,7 @@ public  class MITList
                 }
                 else if (!item.isSingleIssueType()) 
                 {
-                    addIssueTypes(item.getModule(), items);
+                    addIssueTypes(getModule(item), items);
                 }
                 else 
                 {

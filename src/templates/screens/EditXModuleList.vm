@@ -1,0 +1,45 @@
+#set ($user = $data.User)
+
+<div class="app" id="editxmodulelist">
+
+<form method="post" action="$link.setPage("EditXModuleList.vm")">
+<input type="hidden" name="action" value="DefineXModuleList" />
+        
+#if ($user.CurrentMITList)
+
+<h3>Save cross module/issue type list</h3>
+
+<table width="100%" border="1" cellspacing="2" cellpadding="3">
+  <tr>
+    <th>Module</th>
+    <th>Issue type</th>
+    <th>Description</th>
+  </tr>
+ #foreach ($item in $user.CurrentMITList.MITListItems)
+  #indexedRows($velocityCount)
+    <td>$item.Module.RealName</td>
+    <td>$item.IssueType.Name</td>
+    <td>$item.IssueType.Description</td>
+  </tr>        
+ #end
+</table>
+<h4>Save new list</h4>
+#set ($intakeList = $intake.MITList.mapTo($user.CurrentMITList))
+<p>
+Name: 
+<input type=text" name="$intakeList.Name.Key" value="$!intakeList.Name" />
+</p>
+
+<div class="functnbar3">
+ <input type="submit" name="eventSubmit_doSavelist" value="Save" />
+</div>
+
+#else
+
+Editing a previously saved list is not implemented.
+
+#end
+
+$intake.declareGroups()
+</form>
+</div>

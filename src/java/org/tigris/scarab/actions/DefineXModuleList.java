@@ -95,7 +95,7 @@ import org.tigris.scarab.tools.ScarabRequestTool;
  * This class is responsible for building a list of Module/IssueTypes.
  *
  * @author <a href="mailto:jmcnally@collab.net">John D. McNally</a>
- * @version $Id: DefineXModuleList.java,v 1.1 2002/06/19 03:44:25 jmcnally Exp $
+ * @version $Id: DefineXModuleList.java,v 1.2 2002/06/27 04:50:21 jmcnally Exp $
  */
 public class DefineXModuleList extends RequireLoginFirstAction
 {
@@ -114,11 +114,17 @@ public class DefineXModuleList extends RequireLoginFirstAction
         String listId = data.getParameters().getString("list_id");
         MITList list = MITListManager.getInstance(new NumberKey(listId));
         ScarabUser user = (ScarabUser)data.getUser();
-        user.setCurrentMITList(list);
-        if (!list.getModifiable()) 
+        if (list.getModifiable())
+        {
+            list = list.copy();
+        }
+        else
         {
             setTarget(data, "AdvancedQuery.vm");
         }
+
+        user.setCurrentMITList(list);
+        list.setScarabUser(user);
     }
 
     public void doRemoveitemsfromlist(RunData data, TemplateContext context)
@@ -139,12 +145,41 @@ public class DefineXModuleList extends RequireLoginFirstAction
         }
     }
 
+    public void doGotosavelist(RunData data, TemplateContext context)
+        throws Exception
+    {
+        setTarget(data, "EditXModuleList.vm");
+        //IntakeTool intake = getIntakeTool(context);
+        //ScarabRequestTool scarabR = getScarabRequestTool(context);
+    }
+
+
     public void doSavelist(RunData data, TemplateContext context)
         throws Exception
     {
         IntakeTool intake = getIntakeTool(context);
         ScarabRequestTool scarabR = getScarabRequestTool(context);
+       
+        if (intake.isAllValid()) 
+        {
+            ScarabUser user = (ScarabUser)data.getUser();
+            MITList list = user.getCurrentMITList();
+            Group group = 
+                intake.get("MITList", list.getQueryKey(), false);
+            group.setProperties(list);
+            list.save();
 
+            // if the list is modifiable, we do not keep the saved list
+            // as the current list.  Copy it, so that changes do not
+            // affect the saved version.
+            if (list.getModifiable()) 
+            {
+                user.setCurrentMITList(list.copy());
+            }
+            
+            scarabR.setConfirmMessage("Module/issue type list was saved.");
+            setTarget(data, "home,XModuleList.vm");
+        }
     }
 
     public void doAddselectedrmits(RunData data, TemplateContext context)
@@ -160,8 +195,18 @@ public class DefineXModuleList extends RequireLoginFirstAction
                 selectedrmits
                     .add(RModuleIssueTypeManager.getInstance(rmitids[i]));
             }
-            ScarabUser user = (ScarabUser)data.getUser();
+            ScarabUser user = (ScarabUser)data.getUser();            
             user.addRMITsToCurrentMITList(selectedrmits);
+
+            // it would be better to move this logic to AbstractScarabUser
+            // (ASM) but because ScarabUserImpl does not extend ASM, it
+            // lives here :-(
+            MITList mitList = user.getCurrentMITList();
+            if (mitList.getScarabUser() == null  ) 
+            {
+                mitList.setScarabUser(user);
+            }
+
         }
     }
 }

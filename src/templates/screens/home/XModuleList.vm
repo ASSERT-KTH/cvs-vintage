@@ -23,17 +23,15 @@
 		
 <h3>Issue types selected for this query</h3>
 
-<!-- not implemented yet
 <div class="colbar">
   <select name="list_id">
     <option value="">Select a saved x-module query...</option>
   #foreach ($list in $user.MITLists)
-    <option value="$list.QueryKey">$list.Name</option>
+    <option value="$list.QueryKey"#if($list.QueryKey == $data.Parameters.getString("list_id", "")) selected="selected"#end>$list.Name</option>
   #end
   </select>&nbsp;
   <input type="submit" name="eventSubmit_doChooselist" value="Go" />
 </div>
--->
 		
 <table width="100%" border="1" cellspacing="2" cellpadding="3">
   <tr>
@@ -55,7 +53,7 @@
     <td>
     <input type="checkbox" name="mitlistitem" value="$item.QueryKey" />
     </td>
-    <td>$item.Module.RealName</td>
+    <td>$item.Module.Name</td>
     <td><a href="#">$item.IssueType.Name</a></td>
     <td>$item.IssueCount</td>
     <td>$item.IssueType.Description</td>
@@ -68,9 +66,7 @@
  <div class="functnbar3">
   <input type="submit" name="eventSubmit_doRemoveitemsfromlist" 
      value="Remove from list" />&nbsp;
-<!-- not implemented
-  <input type="submit" name="eventSubmit_doSavelist" value="Save this list" />
--->
+  <input type="submit" name="eventSubmit_doGotosavelist" value="Save this list" />
  </div>
 
  <div class="functnbar2">
