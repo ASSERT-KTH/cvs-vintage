@@ -15,7 +15,7 @@ import org.jboss.deployment.DeploymentException;
  * Describes the security configuration information for the IOR.
  *
  * @author <a href="mailto:alex@jboss.org">Alexey Loubyansky</a>
- * @version <tt>$Revision: 1.3 $</tt>
+ * @version <tt>$Revision: 1.4 $</tt>
  */
 public class IorSecurityConfigMetaData
    implements Serializable
@@ -38,6 +38,19 @@ public class IorSecurityConfigMetaData
     * sas-context (related to CSIv2 security attribute service) element describes the sas-context fields.
     */
    private SasContext sasContext;
+
+   /** Create a default security configuration.
+    * TransportConfig[integrity=supported, confidentiality=supported,
+    * establish-trust-in-target=supported,establish-trust-in-client=supported]
+    * AsContext[auth-method=USERNAME_PASSWORD, realm=default, required=false]
+    * SasContext[caller-propagation=NONE]
+    */
+   public IorSecurityConfigMetaData()
+   {
+      transportConfig = new TransportConfig();
+      asContext = new AsContext();
+      sasContext = new SasContext();
+   }
 
    /**
     * @param element ior-security-config element.
@@ -67,15 +80,27 @@ public class IorSecurityConfigMetaData
    {
       return transportConfig;
    }
+   public void setTransportConfig(TransportConfig config)
+   {
+      this.transportConfig = config;
+   }
 
    public AsContext getAsContext()
    {
       return asContext;
    }
+   public void setAsContext(AsContext context)
+   {
+      this.asContext = context;
+   }
 
    public SasContext getSasContext()
    {
       return sasContext;
+   }
+   public void setSasContext(SasContext context)
+   {
+      this.sasContext = context;
    }
 
    public String toString()
@@ -135,6 +160,14 @@ public class IorSecurityConfigMetaData
        * Required element.
        */
       private final String establishTrustInClient;
+
+      private TransportConfig()
+      {
+         integrity = INTEGRITY_SUPPORTED;
+         confidentiality = CONFIDENTIALITY_SUPPORTED;
+         establishTrustInTarget = ESTABLISH_TRUST_IN_TARGET_SUPPORTED;
+         establishTrustInClient = ESTABLISH_TRUST_IN_CLIENT_SUPPORTED;         
+      }
 
       /**
        * @param element  transport-config element.
@@ -286,6 +319,13 @@ public class IorSecurityConfigMetaData
        */
       private final boolean required;
 
+      private AsContext()
+      {
+         authMethod = AUTH_METHOD_USERNAME_PASSWORD;
+         realm = "default";
+         required = false;
+      }
+
       private AsContext(Element element) throws DeploymentException
       {
          String value = MetaData.getUniqueChildContent(element, "auth-method");
@@ -366,6 +406,10 @@ public class IorSecurityConfigMetaData
        */
       private final String callerPropagation;
 
+      private SasContext()
+      {
+         callerPropagation = CALLER_PROPAGATION_NONE;
+      }
       private SasContext(Element element) throws DeploymentException
       {
          String value = MetaData.getUniqueChildContent(element, "caller-propagation");
