@@ -1,7 +1,6 @@
 ## USER SEARCH
 <form action="$link.setPage("UserList.vm")" method="post">
 <input type="hidden" name="action" value="AssignIssue" />
-<input type="hidden" name="$scarabG.Constant.OTHER_TEMPLATE" value="AdvancedQuery.vm" />
 
 #set ($module = $scarabR.CurrentModule)
 #set ($issueType = $scarabR.CurrentIssueType)
@@ -59,7 +58,7 @@
 </div>
 
 <div class="functnbar3">
- <input type="submit" name="eventSubmit_doGotoothertemplate" value="Add selected to assignee list" />
+ <input type="submit" name="eventSubmit_doCancel" value="Add selected to assignee list" />
 </div>
 
 <div class="functnbar2">
