@@ -200,7 +200,7 @@ public abstract class DefaultUtil {
 			System.getProperty("line.separator").getBytes());
 		// send return after passphrase
 		//write the pgpMessage out
-		StreamTools.streamCopy(pgpMessage, p.getOutputStream(), 8000);
+		StreamUtils.streamCopy(pgpMessage, p.getOutputStream(), 8000);
 		p.getOutputStream().close();
 
 		errorStream.start();
@@ -283,7 +283,7 @@ public abstract class DefaultUtil {
 		errorStream = new StreamThread(p.getErrorStream(), "ERROR");
 		outputStream = new StreamThread(p.getInputStream(), "OUTPUT");
 
-		StreamTools.streamCopy(message, p.getOutputStream(), 8000);
+		StreamUtils.streamCopy(message, p.getOutputStream(), 8000);
 		p.getOutputStream().write(
 			System.getProperty("line.separator").getBytes());
 		p.getOutputStream().close();
