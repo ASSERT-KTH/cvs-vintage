@@ -25,9 +25,6 @@
 #set ($cancelTemplate = $data.Parameters.getString("$scarabG.Constant.CANCEL_TEMPLATE", "admin,GlobalUserAttributes.vm"))
   <input type="hidden" name="$scarabG.Constant.CANCEL_TEMPLATE" value="$cancelTemplate" />
 
-<p>$l10n.ModifyUserAttributes
-On this screen, one can modify system wide Attribute information.
-</p>
 
 <div class="functnbar">
 #if (!$createNew)
@@ -55,7 +52,7 @@ On this screen, one can modify system wide Attribute information.
   </td>
 </tr>
 <tr>
-  <th width="120">Creation date</th> <td class="b">3 may 2001</td>
+  <th width="120">Creation date</th> <td class="b">$format.getDate($scarabR.DateFormat, $attribute.CreatedDate)</th>
 </tr>
 </table>
 </div>
