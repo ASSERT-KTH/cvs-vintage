@@ -48,7 +48,7 @@ import org.jboss.logging.Logger;
 *   @see <related>
 *   @author Rickard Öberg (rickard.oberg@telkel.com)
 *   @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
-*   @version $Revision: 1.16 $
+*   @version $Revision: 1.17 $
 */
 public class EntitySynchronizationInterceptor
 extends AbstractInterceptor
@@ -304,7 +304,7 @@ extends AbstractInterceptor
 		
 		public void beforeCompletion()
 		{
-			Logger.log("beforeCompletion called for ctx "+ctx.hashCode());
+			// DEBUG Logger.log("beforeCompletion called for ctx "+ctx.hashCode());
 			
 			if (ctx.getId() != null) {
 				try {
@@ -341,7 +341,9 @@ extends AbstractInterceptor
 		public void afterCompletion(int status)
 		{
 			if (ctx.getId() != null) {
-				Logger.log("afterCompletion called for ctx "+ctx.hashCode());
+				
+				//DEBUG Logger.log("afterCompletion called for ctx "+ctx.hashCode());
+				
 				// If rolled back -> invalidate instance
 				if (status == Status.STATUS_ROLLEDBACK) {
 					try {
