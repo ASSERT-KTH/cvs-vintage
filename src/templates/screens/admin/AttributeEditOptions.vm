@@ -26,7 +26,7 @@ $page.setTitle("Attribute Editor")
     </tr>
 
 
-#set ( $maxNum = $attribute.AttributeOptions.size() + 1 )
+#set ( $maxNum = $attribute.AttributeOptions.size() )
 #foreach ( $option in $attribute.AttributeOptions )
     #set ( $intakeOption = $intake.AttributeOption.mapTo($option) )
 
@@ -91,6 +91,7 @@ $page.setTitle("Attribute Editor")
       <td width="75%">          
         <div align="center">
 
+#set ( $maxNum = $maxNum + 1 )
 #if ($intakeOption.NumericValue.Value.Value != 0)
     #set ( $selected = $intakeOption.NumericValue.Value.Value )
 #else
