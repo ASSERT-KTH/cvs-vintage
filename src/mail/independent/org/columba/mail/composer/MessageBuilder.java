@@ -596,7 +596,7 @@ public class MessageBuilder {
 		if (sender != null) {
 			if (sender.length() > 0) {
 				org.columba.addressbook.folder.Folder selectedFolder =
-					MainInterface.addressbookInterface.tree.getFolder(102);
+					(org.columba.addressbook.folder.Folder) MainInterface.addressbookInterface.treeModel.getFolder(102);
 
 				String address = AddressParser.getAddress(sender);
 				System.out.println("address:" + address);
