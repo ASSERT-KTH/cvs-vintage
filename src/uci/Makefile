@@ -19,7 +19,7 @@
 # File: uci/Makefile
 # makefile for the uci shared code directory
 # original author: jrobbins@ics.uci.edu
-# $Id: Makefile,v 1.9 1998/06/24 14:38:10 jrobbins Exp $
+# $Id: Makefile,v 1.10 1998/06/24 15:00:57 jrobbins Exp $
 
 include Makefile.config
 
@@ -63,6 +63,10 @@ umlClasses:
 argoumlClasses:
 	@if [ -d uml/ui ] ; \
 	then echo "\n\nCOMPILING ARGO/UML ================" ; \
+	cd argo ; \
+	cd kernel; make classes; cd .. ; \
+	cd checklist; make classes; cd .. ; \
+	cd .. ; \
 	cd uml ; \
 	cd ui; make classes; cd .. ; \
 	cd visual; make classes; cd .. ; \
@@ -118,6 +122,10 @@ umlFresh:
 argoumlFresh:
 	@if [ -d uml/ui ] ; \
 	then echo "\n\nJAVAC *.java ARGO/UML ================" ; \
+	cd argo ; \
+	cd kernel; $(JAVAC) $(JFLAGS) *.java; cd .. ; \
+	cd checklist; $(JAVAC) $(JFLAGS) *.java; cd .. ; \
+	cd .. ; \
 	cd uml ; \
 	cd ui; $(JAVAC) $(JFLAGS) *.java; cd .. ; \
 	cd visual; $(JAVAC) $(JFLAGS) *.java; cd .. ; \
@@ -170,6 +178,10 @@ umlClean:
 argoumlClean:
 	@if [ -d uml/ui ] ; \
 	then echo "\n\nCLEANING ARGO/UML ================" ; \
+	cd argo ; \
+	cd kernel; make clean; cd .. ; \
+	cd checklist; make clean; cd .. ; \
+	cd .. ; \
 	cd uml ; \
 	cd ui; make clean; cd .. ; \
 	cd visual; make clean; cd .. ; \
