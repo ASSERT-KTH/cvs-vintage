@@ -51,12 +51,14 @@ public class PluginFinder {
 			ColumbaLogger.log.info("Folder \"plugins\" doesn't exist.");
 
 		File configFolder = new File(ConfigPath.configDirectory, "plugins");
+		ColumbaLogger.log.debug("config-folder path="+configFolder.getPath());
+		
 		if (configFolder.exists()) {
 			configList = configFolder.listFiles();
 		} else
 			ColumbaLogger.log.info("Folder \"plugins\" doesn't exist.");
 
-		if (programList != null && configList != null) {
+		if ((programList != null) && (configList != null)) {
 
 			File[] result = new File[programList.length + configList.length];
 			System.arraycopy(programList, 0, result, 0, programList.length);
