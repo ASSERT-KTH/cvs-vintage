@@ -12,7 +12,7 @@ import java.util.HashMap;
  * Implementation of a Least Recently Used cache policy.
  *
  * @author Simone Bordet (simone.bordet@compaq.com)
- * @version $Revision: 1.1 $
+ * @version $Revision: 1.2 $
  */
 public class LRUCachePolicy 
 	implements CachePolicy
@@ -198,6 +198,7 @@ public class LRUCachePolicy
 	 */
 	protected void ageOut(LRUCacheEntry entry) 
 	{
+        remove(entry);
 	}
 	/**
 	 * Callback method called when a cache miss happens.
@@ -318,7 +319,8 @@ public class LRUCachePolicy
 			if (m_count == m_capacity) 
 			{
 				LRUCacheEntry entry = m_tail;
-				remove(entry);
+				
+				// the entry will be removed by ageOut
 				ageOut(entry);				
 			}
 			else {} // cache is not full, do nothing
