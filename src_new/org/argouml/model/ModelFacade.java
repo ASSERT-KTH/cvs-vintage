@@ -1,4 +1,4 @@
-// $Id: ModelFacade.java,v 1.143 2003/09/21 15:23:25 bobtarling Exp $
+// $Id: ModelFacade.java,v 1.144 2003/09/21 22:16:33 bobtarling Exp $
 // Copyright (c) 2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -268,6 +268,15 @@ public class ModelFacade {
     public static final Object BOOLEAN_EXPRESSION = MBooleanExpression.class;
     public static final Object GUARD = MGuard.class;
 
+    public static final Object CONCURRENT_CONCURRENCYKIND = 
+        MCallConcurrencyKind.CONCURRENT;
+    
+    public static final Object GUARDED_CONCURRENCYKIND = 
+        MCallConcurrencyKind.GUARDED;
+    
+    public static final Object SEQUENTIAL_CONCURRENCYKIND = 
+        MCallConcurrencyKind.SEQUENTIAL;
+    
     public static final Object INITIAL_PSEUDOSTATEKIND =
         MPseudostateKind.INITIAL;
     public static final Object DEEPHISTORY_PSEUDOSTATEKIND =

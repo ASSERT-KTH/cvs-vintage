@@ -1,4 +1,4 @@
-// $Id: GeneratorDisplay.java,v 1.54 2003/09/18 23:35:14 bobtarling Exp $
+// $Id: GeneratorDisplay.java,v 1.55 2003/09/21 22:16:32 bobtarling Exp $
 // Copyright (c) 1996-2001 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,7 +25,7 @@
 // File: GeneratorDisplay.java
 // Classes: GeneratorDisplay
 // Original Author: jrobbins@ics.uci.edu
-// $Id: GeneratorDisplay.java,v 1.54 2003/09/18 23:35:14 bobtarling Exp $
+// $Id: GeneratorDisplay.java,v 1.55 2003/09/21 22:16:32 bobtarling Exp $
 
 // 5 Mar 2002: Jeremy Bennett (mail@jeremybennett.com). Return text for
 // operations that have no return parameter made "" rather than ": void??"
@@ -471,7 +471,8 @@ public class GeneratorDisplay extends Generator {
      * @param m A MMessage to generate the number for.
      * @return A String with the message number of m.
      */
-    public String generateMessageNumber(MMessage m) {
+    public String generateMessageNumber(Object/*MMessage*/ message) {
+        MMessage m = (MMessage)message;
         MsgPtr ptr = new MsgPtr();
         int pos = recCountPredecessors(m, ptr) + 1;
         return generateMessageNumber(m, (MMessage)ptr.message, pos);

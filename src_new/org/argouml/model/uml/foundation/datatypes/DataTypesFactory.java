@@ -1,4 +1,4 @@
-// $Id: DataTypesFactory.java,v 1.8 2003/09/14 15:04:27 bobtarling Exp $
+// $Id: DataTypesFactory.java,v 1.9 2003/09/21 22:16:33 bobtarling Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -116,9 +116,8 @@ public class DataTypesFactory extends AbstractUmlModelFactory {
      *  
      *  @return an initialized UML IterationExpression instance.
      */
-    public MIterationExpression createIterationExpression(String language,
-							  String body)
-    {
+    public Object/*MIterationExpression*/ createIterationExpression(String language,
+							  String body) {
         MIterationExpression expression =
 	    new MIterationExpression(language, body);
 	super.initialize(expression);
