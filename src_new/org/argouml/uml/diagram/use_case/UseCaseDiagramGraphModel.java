@@ -25,7 +25,7 @@
 // File: UseCaseDiagramGraphModel.java
 // Classes: UseCaseDiagramGraphModel
 // Original Author: your email address here
-// $Id: UseCaseDiagramGraphModel.java,v 1.2 2000/09/25 15:09:23 toby Exp $
+// $Id: UseCaseDiagramGraphModel.java,v 1.3 2001/02/26 12:54:20 toby Exp $
 
 package org.argouml.uml.diagram.use_case;
 
@@ -199,6 +199,7 @@ implements MutableGraphModel, VetoableChangeListener, MElementListener {
     _nodes.addElement(node);
     // needs-more-work: assumes public, user pref for default visibility?
       if (node instanceof MClassifier) {
+	System.out.println("setting namespace "+_model +" to element "+node);
 	_model.addOwnedElement((MClassifier) node);
       }
     fireNodeAdded(node);
