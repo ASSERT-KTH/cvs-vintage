@@ -56,7 +56,7 @@
 /***************************************************************************
  * Description: JNI callbacks implementation for the JNI in process adapter*
  * Author:      Gal Shachor <shachor@il.ibm.com>                           *
- * Version:     $Revision: 1.1 $                                           *
+ * Version:     $Revision: 1.2 $                                           *
  ***************************************************************************/
 
 #include "jk_jnicb.h"
@@ -65,12 +65,12 @@
 #include "jk_pool.h"
 
 /*
- * Class:     org_apache_tomcat_service_connector_JNIConnectionHandler
+ * Class:     org_apache_tomcat_modules_server_JNIConnectionHandler
  * Method:    getNumberOfHeaders
  * Signature: (JJ)I
  */
 JNIEXPORT jint JNICALL 
-Java_org_apache_tomcat_service_connector_JNIConnectionHandler_getNumberOfHeaders
+Java_org_apache_tomcat_modules_server_JNIConnectionHandler_getNumberOfHeaders
   (JNIEnv *env, jobject o, jlong s, jlong l)
 {
     /* [V] Convert indirectly from jlong -> int -> pointer to shut up gcc */
@@ -94,12 +94,12 @@ Java_org_apache_tomcat_service_connector_JNIConnectionHandler_getNumberOfHeaders
 }
 
 /*
- * Class:     org_apache_tomcat_service_connector_JNIConnectionHandler
+ * Class:     org_apache_tomcat_modules_server_JNIConnectionHandler
  * Method:    read
  * Signature: (JJ[BII)I
  */
 JNIEXPORT jint JNICALL 
-Java_org_apache_tomcat_service_connector_JNIConnectionHandler_read
+Java_org_apache_tomcat_modules_server_JNIConnectionHandler_read
   (JNIEnv *env, jobject o, jlong s, jlong l, jbyteArray buf, jint from, jint cnt)
 {
     jk_ws_service_t *ps = (jk_ws_service_t *)(int)s;
@@ -141,12 +141,12 @@ Java_org_apache_tomcat_service_connector_JNIConnectionHandler_read
 }
 
 /*
- * Class:     org_apache_tomcat_service_connector_JNIConnectionHandler
+ * Class:     org_apache_tomcat_modules_server_JNIConnectionHandler
  * Method:    readEnvironment
  * Signature: (JJ[Ljava/lang/String;)I
  */
 JNIEXPORT jint JNICALL 
-Java_org_apache_tomcat_service_connector_JNIConnectionHandler_readEnvironment
+Java_org_apache_tomcat_modules_server_JNIConnectionHandler_readEnvironment
   (JNIEnv *env, jobject o, jlong s, jlong l, jobjectArray envbuf)
 {
     jk_ws_service_t *ps = (jk_ws_service_t *)(int)s;
@@ -288,12 +288,12 @@ Java_org_apache_tomcat_service_connector_JNIConnectionHandler_readEnvironment
 }
 
 /*
- * Class:     org_apache_tomcat_service_connector_JNIConnectionHandler
+ * Class:     org_apache_tomcat_modules_server_JNIConnectionHandler
  * Method:    readHeaders
  * Signature: (JJ[Ljava/lang/String;[Ljava/lang/String;)I
  */
 JNIEXPORT jint JNICALL 
-Java_org_apache_tomcat_service_connector_JNIConnectionHandler_readHeaders
+Java_org_apache_tomcat_modules_server_JNIConnectionHandler_readHeaders
   (JNIEnv *env, jobject o, jlong s, jlong l, jobjectArray hnames, jobjectArray hvalues)
 {
     jk_ws_service_t *ps = (jk_ws_service_t *)(int)s;
@@ -330,12 +330,12 @@ Java_org_apache_tomcat_service_connector_JNIConnectionHandler_readHeaders
 }
 
 /*
- * Class:     org_apache_tomcat_service_connector_JNIConnectionHandler
+ * Class:     org_apache_tomcat_modules_server_JNIConnectionHandler
  * Method:    startReasponse
  * Signature: (JJILjava/lang/String;[Ljava/lang/String;[Ljava/lang/String;I)I
  */
 JNIEXPORT jint JNICALL 
-Java_org_apache_tomcat_service_connector_JNIConnectionHandler_startReasponse
+Java_org_apache_tomcat_modules_server_JNIConnectionHandler_startReasponse
   (JNIEnv *env, jobject o, jlong s, jlong l, 
    jint sc, jstring msg, jobjectArray hnames, jobjectArray hvalues, jint hcnt)
 {
@@ -455,12 +455,12 @@ Java_org_apache_tomcat_service_connector_JNIConnectionHandler_startReasponse
 }
 
 /*
- * Class:     org_apache_tomcat_service_connector_JNIConnectionHandler
+ * Class:     org_apache_tomcat_modules_server_JNIConnectionHandler
  * Method:    write
  * Signature: (JJ[BII)I
  */
 JNIEXPORT jint JNICALL 
-Java_org_apache_tomcat_service_connector_JNIConnectionHandler_write
+Java_org_apache_tomcat_modules_server_JNIConnectionHandler_write
   (JNIEnv *env, jobject o, jlong s, jlong l, jbyteArray buf, jint from, jint cnt)
 {
     jk_ws_service_t *ps = (jk_ws_service_t *)(int)s;
