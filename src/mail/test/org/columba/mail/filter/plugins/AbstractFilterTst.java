@@ -22,11 +22,16 @@ import java.io.File;
 
 import junit.framework.TestCase;
 
+import org.columba.addressbook.main.AddressbookMain;
 import org.columba.core.config.Config;
+import org.columba.core.logging.ColumbaLogger;
+import org.columba.core.main.Main;
+import org.columba.core.plugin.PluginManager;
 import org.columba.mail.folder.FolderTstHelper;
 import org.columba.mail.folder.MHFolderFactory;
 import org.columba.mail.folder.MailboxTstFactory;
 import org.columba.mail.folder.MessageFolder;
+import org.columba.mail.main.MailMain;
 
 /**
  * Base class for all filter tests.
@@ -77,11 +82,22 @@ public class AbstractFilterTst extends TestCase {
 	 */
 	protected void setUp() throws Exception {
 
-		//    	 create config-folder
+		// create config-folder
 		File file = new File("test_config");
 		file.mkdir();
 
 		new Config(file);
+
+		Main.DEBUG = true;
+		ColumbaLogger.createDefaultHandler();
+
+		//		 init mail component
+		MailMain.getInstance();
+
+		AddressbookMain.getInstance();
+
+		// now load all available plugins
+		PluginManager.getInstance().initPlugins();
 
 		sourceFolder = factory.createFolder(1);
 
