@@ -1,4 +1,4 @@
-// $Id: TabConstraints.java,v 1.34 2003/09/22 22:34:13 bobtarling Exp $
+// $Id: TabConstraints.java,v 1.35 2004/01/22 17:47:42 sz9 Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -61,7 +61,7 @@ import tudresden.ocl.parser.node.TName;
 /**
   * Tab for OCL constraint editing.
   *
-  * <p>$Id: TabConstraints.java,v 1.34 2003/09/22 22:34:13 bobtarling Exp $
+  * <p>$Id: TabConstraints.java,v 1.35 2004/01/22 17:47:42 sz9 Exp $
   *
   * @author v1.0: Falk Finger
   * @author v2.0: Steffen Zschaler
@@ -247,7 +247,10 @@ public class TabConstraints extends TabSpawnable implements TabModelTarget {
         public void addConstraint() {
 
             // check ocl parsing constraints
-            // sz9: I think this should read mmeContext = OclUtil.getInnerMostEnclosingNamespace (m_mmeiTarget);
+            /*
+             * TODO: sz9: I think this should read 
+             * mmeContext = OclUtil.getInnerMostEnclosingNamespace (m_mmeiTarget);
+             */
             Object/*MModelElement*/ mmeContext = m_mmeiTarget;
 
             while (!(ModelFacade.isAClassifier(mmeContext)) && mmeContext != null) {
@@ -256,11 +259,13 @@ public class TabConstraints extends TabSpawnable implements TabModelTarget {
 
             String contextName = ModelFacade.getName(mmeContext);
             String targetName = ModelFacade.getName(m_mmeiTarget);
-            if (contextName == null ||
-                    targetName == null ||
-                    !Character.isUpperCase(contextName.charAt(0)) ||
-                    (ModelFacade.isAClass (m_mmeiTarget) && !Character.isUpperCase(targetName.charAt(0))) ||
-                    (ModelFacade.isAFeature(m_mmeiTarget) && !Character.isLowerCase(targetName.charAt(0)))) {
+            if ((contextName == null ||
+                 contextName.equals ("")) ||  // this is to fix issue #2056
+                (targetName == null ||
+                 targetName.equals ("")) ||   // this is to fix issue #2056
+                !Character.isUpperCase(contextName.charAt(0)) ||
+                (ModelFacade.isAClass (m_mmeiTarget) && !Character.isUpperCase(targetName.charAt(0))) ||
+                (ModelFacade.isAFeature(m_mmeiTarget) && !Character.isLowerCase(targetName.charAt(0)))) {
                 // TODO I18n
                 JOptionPane.showMessageDialog(null,
                     "The OCL Toolkit requires that:\n\n" +
