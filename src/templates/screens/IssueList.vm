@@ -51,7 +51,7 @@
 #if ($searchType.equals("advanced") && !$queryString.equals(""))
 <div class="functnbar">
 <input type="submit" value="Save query" name="eventSubmit_doRedirecttosavequery" />&#160;
-<input type="submit" value="Refine query" name="eventSubmit_doRefinequery" />&#160;
+<input type="submit" value="Refine query" name="eventSubmit_doRefinequery" />
 </div>
 #end
 
@@ -188,7 +188,7 @@ $link.setPage("ConfigureIssueList.vm").setLabel("Add/remove attributes from view
   <input type="submit" value="Assign" name="eventSubmit_doReassignall" />&#160;
 #end
 <input type="submit" value="View verbose" name="eventSubmit_doViewall" />&#160;
-<small>all</small>&#160;
+<small>all</small>
 </div>
         
 #if ($paginated)
@@ -200,7 +200,7 @@ $link.setPage("ConfigureIssueList.vm").setLabel("Add/remove attributes from view
 #if ($searchType.equals("advanced") && $queryString)
 <div class="functnbar2">
 <input type="submit" value="Save query" name="eventSubmit_doRedirecttosavequery" />&#160;
-<input type="submit" value="Refine query" name="eventSubmit_doRefinequery" />&#160;
+<input type="submit" value="Refine query" name="eventSubmit_doRefinequery" />
 </div>
 #end
 
