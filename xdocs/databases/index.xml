@@ -9,7 +9,8 @@
 
   <body>
 
-  <section name="Database Details">
+  <section name="Database Information">
+  	<subsection name="Details">
     <p>
       <ul>
         <li><a href="database_independence.html">Database Independence</a></li>
@@ -18,11 +19,21 @@
         <li><a href="mysql-internationalization.html">MySQL Internationalization</a></li>
         <li><a href="postgresql.html">Postgre SQL</a></li>
         <li><a href="mssql.html">MSSQL</a></li>  
-        <li><a href="schema.html">Scarab Schema</a></li>  
-        <li><a href="generated-scarab-schema.html">Scarab Schema Details</a></li>  
+
         
       </ul>
     </p>
+    </subsection>
+  	<subsection name="Schema Docs">
+    <p>
+      <ul>
+        <li><a href="schema.html">Scarab Schema Picture</a></li>  
+        <li><a href="scarab-schema.html">Scarab Tables Schema Detail</a></li>  
+        <li><a href="turbine-schema.html">Turbine Tables Schema Detail</a></li>          
+        <li><a href="id-table-schema.html">ID Table Schema Detail</a></li>          
+      </ul>
+    </p>
+    </subsection>
   </section>
 
   </body>
