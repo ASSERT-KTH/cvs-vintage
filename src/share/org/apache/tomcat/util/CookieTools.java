@@ -1,13 +1,13 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/util/Attic/CookieTools.java,v 1.7 2000/05/24 17:19:53 costin Exp $
- * $Revision: 1.7 $
- * $Date: 2000/05/24 17:19:53 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/util/Attic/CookieTools.java,v 1.8 2000/07/03 08:42:49 bergsten Exp $
+ * $Revision: 1.8 $
+ * $Date: 2000/07/03 08:42:49 $
  *
  * ====================================================================
  *
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 1999 The Apache Software Foundation.  All rights 
+ * Copyright (c) 1999 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -15,7 +15,7 @@
  * are met:
  *
  * 1. Redistributions of source code must retain the above copyright
- *    notice, this list of conditions and the following disclaimer. 
+ *    notice, this list of conditions and the following disclaimer.
  *
  * 2. Redistributions in binary form must reproduce the above copyright
  *    notice, this list of conditions and the following disclaimer in
@@ -23,15 +23,15 @@
  *    distribution.
  *
  * 3. The end-user documentation included with the redistribution, if
- *    any, must include the following acknowlegement:  
- *       "This product includes software developed by the 
+ *    any, must include the following acknowlegement:
+ *       "This product includes software developed by the
  *        Apache Software Foundation (http://www.apache.org/)."
  *    Alternately, this acknowlegement may appear in the software itself,
  *    if and wherever such third-party acknowlegements normally appear.
  *
  * 4. The names "The Jakarta Project", "Tomcat", and "Apache Software
  *    Foundation" must not be used to endorse or promote products derived
- *    from this software without prior written permission. For written 
+ *    from this software without prior written permission. For written
  *    permission, please contact apache@apache.org.
  *
  * 5. Products derived from this software may not be called "Apache"
@@ -59,7 +59,7 @@
  *
  * [Additional notices, if required by prior licensing conditions]
  *
- */ 
+ */
 
 
 package org.apache.tomcat.util;
@@ -83,7 +83,7 @@ public class CookieTools {
      */
     public static String getCookieHeaderName(Cookie cookie) {
         int version = cookie.getVersion();
-	
+
         if (version == 1) {
 	    return "Set-Cookie2";
         } else {
@@ -99,21 +99,21 @@ public class CookieTools {
 	getCookieHeaderValue( cookie, buf );
 	return buf.toString();
     }
-    
+
     /** Return the header value used to set this cookie
      */
     public static void getCookieHeaderValue(Cookie cookie, StringBuffer buf) {
         int version = cookie.getVersion();
 
         // this part is the same for all cookies
-        
+
         buf.append(cookie.getName());
         buf.append("=");
         maybeQuote(version, buf, cookie.getValue());
 
- 	// add version 1 specific information 
+ 	// add version 1 specific information
 	if (version == 1) {
-	    // Version=1 ... required 
+	    // Version=1 ... required
 	    buf.append (";Version=1");
 
 	    // Comment=comment
@@ -134,7 +134,7 @@ public class CookieTools {
 	if (cookie.getMaxAge() >= 0) {
 	    if (version == 0) {
 		buf.append (";Expires=");
-		DateTool.oldCookieFormat.format(new Date( System.currentTimeMillis() + cookie.getMaxAge() *1000) ,buf,
+		DateTool.oldCookieFormat.format(new Date( System.currentTimeMillis() + cookie.getMaxAge() *1000L) ,buf,
 						new FieldPosition(0));
 
 	    } else {
@@ -186,7 +186,7 @@ public class CookieTools {
 	      return false;
 	}
 	return true;
-    }    
+    }
 
 
 }
