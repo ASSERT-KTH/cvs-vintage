@@ -1,4 +1,4 @@
-// $Id: ActionNewSignalEvent.java,v 1.8 2004/11/01 19:55:04 mvw Exp $
+// $Id: ActionNewSignalEvent.java,v 1.9 2004/12/27 19:56:39 bobtarling Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,6 +25,7 @@
 package org.argouml.uml.ui.behavior.state_machines;
 
 import org.argouml.i18n.Translator;
+import org.argouml.kernel.ProjectManager;
 import org.argouml.model.uml.StateMachinesFactory;
 
 /**
@@ -47,7 +48,9 @@ public class ActionNewSignalEvent extends ActionNewEvent {
      * @see org.argouml.uml.ui.behavior.state_machines.ActionNewEvent#createEvent()
      */
     protected Object createEvent() {
-        return StateMachinesFactory.getFactory().buildSignalEvent();
+        Object model = ProjectManager.getManager()
+            .getCurrentProject().getModel();
+        return StateMachinesFactory.getFactory().buildSignalEvent(model);
     }
 
     /**

@@ -1,4 +1,4 @@
-// $Id: ParserDisplay.java,v 1.133 2004/11/27 08:47:39 mvw Exp $
+// $Id: ParserDisplay.java,v 1.134 2004/12/27 19:56:39 bobtarling Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -50,6 +50,8 @@ import org.argouml.model.uml.StateMachinesHelper;
 import org.argouml.model.uml.UmlFactory;
 import org.argouml.uml.ProfileJava;
 import org.argouml.util.MyTokenizer;
+
+import ru.novosoft.uml.model_management.MModel;
 
 
 /**
@@ -1986,25 +1988,33 @@ public class ParserDisplay extends Parser {
             if (evt == null) {
                 // case 1
                 if (timeEvent) { // after(...)
+                    Object model = ProjectManager.getManager()
+                        .getCurrentProject().getModel();
                     evt = UmlFactory.getFactory().getStateMachines()
-                        .buildTimeEvent(s);
+                        .buildTimeEvent(s, model);
                 }
                 if (changeEvent) { // when(...)
+                    Object model = ProjectManager.getManager()
+                        .getCurrentProject().getModel();
                     evt = UmlFactory.getFactory().getStateMachines()
-                        .buildChangeEvent(s);
+                        .buildChangeEvent(s, model);
                 }
                 if (callEvent) { // operation(paramlist)
                     String triggerName = trigger.indexOf("(") > 0 
                         ? trigger.substring(0, trigger.indexOf("(")).trim()
                         : trigger;
+                    Object model = ProjectManager.getManager()
+                             .getCurrentProject().getModel();
                     evt = UmlFactory.getFactory().getStateMachines()
-                        .buildCallEvent(trans, triggerName);
+                        .buildCallEvent(trans, triggerName, model);
                     // and parse the parameter list
                     parseParamList(evt, s, 0);
                 }
                 if (signalEvent) { // signalname
+                    Object model = ProjectManager.getManager()
+                        .getCurrentProject().getModel();
                     evt = UmlFactory.getFactory().getStateMachines()
-                        .buildSignalEvent(trigger);
+                        .buildSignalEvent(trigger, model);
                 }
                 createdEvent = true;
             } else {
@@ -2012,31 +2022,38 @@ public class ParserDisplay extends Parser {
                 if (!ModelFacade.getName(evt).equals(trigger)) {
                     ModelFacade.setName(evt, trigger);
                     if (timeEvent && !ModelFacade.isATimeEvent(evt)) {
+                        Object model = ProjectManager.getManager()
+                            .getCurrentProject().getModel();
                         UmlFactory.getFactory().delete(evt);
                         evt = UmlFactory.getFactory().getStateMachines()
-                            .buildTimeEvent(s);
+                            .buildTimeEvent(s, model);
                         createdEvent = true;
                     }
-                    if (changeEvent && !ModelFacade
-                            .isAChangeEvent(evt)) {
+                    if (changeEvent && !ModelFacade.isAChangeEvent(evt)) {
+                        Object model = ProjectManager.getManager()
+                            .getCurrentProject().getModel();
                         UmlFactory.getFactory().delete(evt);
                         evt = UmlFactory.getFactory().getStateMachines()
-                            .buildChangeEvent(s);
+                            .buildChangeEvent(s, model);
                         createdEvent = true;
                     }
                     if (callEvent && !ModelFacade.isACallEvent(evt)) {
                         UmlFactory.getFactory().delete(evt);
+                        Object model = ProjectManager.getManager()
+                            .getCurrentProject().getModel();
                         evt = UmlFactory.getFactory().getStateMachines()
-                            .buildCallEvent(trans, trigger);
+                            .buildCallEvent(trans, trigger, model);
                         // and parse the parameter list
                         parseParamList(evt, s, 0);
                         createdEvent = true;
                     }
                     if (signalEvent && !ModelFacade
                             .isASignalEvent(evt)) {
+                        Object model = ProjectManager.getManager()
+                            .getCurrentProject().getModel();
                         UmlFactory.getFactory().delete(evt);
                         evt = UmlFactory.getFactory().getStateMachines()
-                            .buildSignalEvent(trigger);
+                            .buildSignalEvent(trigger, model);
                         createdEvent = true;
                     }
                 }
