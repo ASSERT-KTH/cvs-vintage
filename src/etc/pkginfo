@@ -1,6 +1,6 @@
 PKG=ASFtomcat
 NAME=Tomcat - Apache Servlet Engine
-VERSION=1.0
+VERSION=3.0
 ARCH=sparc i386
 CLASSES=none
 CATEGORY=utility

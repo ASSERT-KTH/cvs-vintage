@@ -70,7 +70,7 @@
           basedir="${tomcat.build}/examples/WEB-INF/classes/jsp/tags"
           items="examples,META-INF/taglib.tld"/>
 -->
-
+     <chmod perm="+x" src="${tomcat.build}/tomcat.sh"/>
   </target>
 
   <target name="dist" depends="main">
@@ -113,6 +113,7 @@
 
     <copydir src="${tomcat.build}/webpages" dest="${tomcat.home}/webpages"/>
     <copydir src="${tomcat.build}/examples" dest="${tomcat.home}/examples"/>
+    <chmod perm="+x" src="${tomcat.home}/tomcat.sh"/>
 
     <!-- XXX add manifest for autorun! -->
     <jar jarfile="${tomcat.home}/webserver.jar"
@@ -174,7 +175,7 @@
     <deltree dir="${tomcat.home}"/>
   </target>
 
-  <target name="package" depends="clean,dist.clean,dist" >
+  <target name="package" depends="dist" >
      <mkdir dir="${package.dir}/tomcat" />
      <zip zipfile="${package.dir}/tomcat/tomcat.zip" basedir="${tomcat.home}" 
           items="FAQ,etc,shutdown.bat,startup.sh,webpages,README,examples,shutdown.sh,tomcat.bat,webserver.jar,ant,lib,src,tomcat.sh,env.tomcat,server.xml,startup.bat,tomcatEnv.bat" />
