@@ -15,7 +15,6 @@
 #end
 </table>
 </div>
-
 <div class="axial">
 #foreach ($group in $module.getAttributeGroups($issueType))
   #if (!$group.Attributes.isEmpty())
@@ -75,7 +74,8 @@
 #if ($canEdit)
 <h3>$l10n.SaveChanges</h3>
 <div class="axial">
-   #set ($attCommentGroup = $intake.Attachment.setKey("attCommentKey"))
+   #set ($attCommentGroup = $intake.Attachment.setKey("attCommentKey$currentIssue.QueryKey"))
+
 <table cellpadding="3" cellspacing="2" border="0">
 <tr>
 <th>* $l10n.ReasonForChange</th>
