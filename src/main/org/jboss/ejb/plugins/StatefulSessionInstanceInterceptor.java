@@ -34,9 +34,10 @@ import org.jboss.security.SecurityAssociation;
  * This container acquires the given instance. 
  *
  * @author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
- * @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
+ * @author <a href="mailto:marc.fleury@jboss.org">Marc Fleury</a>
  * @author <a href="mailto:bill@burkecentral.com">Bill Burke</a>
- * @version $Revision: 1.26 $
+ * @author <a href="mailto:scott.stark@jboss.org">Scott Stark</a>
+ * @version $Revision: 1.27 $
  *
  * <p><b>Revisions:</b>
  * <p><b>20010704 marcf</b>
@@ -181,19 +182,28 @@ public class StatefulSessionInstanceInterceptor
    public Object invoke(Invocation mi)
       throws Exception
    {
-      AbstractInstanceCache cache =
-         (AbstractInstanceCache)container.getInstanceCache();
-      Object id = mi.getId();
+      InstanceCache cache = container.getInstanceCache();
+      InstancePool pool = container.getInstancePool();
+      Object methodID = mi.getId();
       EnterpriseContext ctx = null;
 
-      BeanLock lock = (BeanLock)container.getLockManager().getLock(id);
+      BeanLock lock = (BeanLock)container.getLockManager().getLock(methodID);
       try
       {
          lock.sync(); // synchronized(ctx)
          try // lock.sync
          {
+            /* The security context must be established before the cache
+            lookup because the SecurityInterceptor is after the instance
+            interceptor and handles of passivated sessions expect that they are
+            restored with the correct security context since the handles
+            not serialize the principal and credential information.
+            */
+            SecurityAssociation.setPrincipal(mi.getPrincipal());
+            SecurityAssociation.setCredential(mi.getCredential());
+
             // Get context
-            ctx = container.getInstanceCache().get(mi.getId());
+            ctx = cache.get(methodID);
             // Associate it with the method invocation
             mi.setEnterpriseContext(ctx);
 
@@ -240,7 +250,7 @@ public class StatefulSessionInstanceInterceptor
          }
 
          // Set the current security information
-         ctx.setPrincipal(SecurityAssociation.getPrincipal());
+         ctx.setPrincipal(mi.getPrincipal());
 
          try
          {
@@ -249,21 +259,21 @@ public class StatefulSessionInstanceInterceptor
          } catch (RemoteException e)
          {
             // Discard instance
-            container.getInstanceCache().remove(mi.getId());
+            cache.remove(methodID);
             ctx = null;
 
             throw e;
          } catch (RuntimeException e)
          {
             // Discard instance
-            container.getInstanceCache().remove(mi.getId());
+            cache.remove(methodID);
             ctx = null;
 
             throw e;
          } catch (Error e)
          {
             // Discard instance
-            container.getInstanceCache().remove(mi.getId());
+            cache.remove(methodID);
             ctx = null;
 
             throw e;
@@ -283,7 +293,7 @@ public class StatefulSessionInstanceInterceptor
                   if (ctx.getId() == null)
                   {
                      // Remove from cache
-                     container.getInstanceCache().remove(mi.getId());
+                     cache.remove(methodID);
                   }
                }
                finally
