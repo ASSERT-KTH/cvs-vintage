@@ -207,7 +207,23 @@ public class Constants {
             String msg = resources.getString(key);
             if (args == null)
                 return msg;
+	    if( msg==null ) {
+		//System.out.println("Can't find resource for " + key );
+		return key;
+	    }
             MessageFormat form = new MessageFormat(msg);
+	    // JDK1.1 will throw NullPointer if args[0] == null
+	    // JDK1.2+ will work fine.
+	    
+	    //System.out.println(" XXX " + msg + " "+key + " " +args.length );
+	    if( args.length >0 ) {
+		for( int i=0; i< args.length; i++ ) {
+		    if( args[i]==null ) {
+			//System.out.println("Null argument " +msg + " " + key);
+			return msg;
+		    }
+		}
+	    }
             return form.format(args);
         } catch (MissingResourceException ignore) {
             throw new Error("Fatal Error: missing resource: "+ignore.getClassName());
