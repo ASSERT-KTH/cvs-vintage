@@ -49,7 +49,7 @@ import org.gjt.sp.util.Log;
  * jEdit's text component.
  *
  * @author Slava Pestov
- * @version $Id: JEditTextArea.java,v 1.15 2001/10/14 09:06:27 spestov Exp $
+ * @version $Id: JEditTextArea.java,v 1.16 2001/10/16 07:04:21 spestov Exp $
  */
 public class JEditTextArea extends JComponent
 {
@@ -4430,7 +4430,6 @@ loop:			for(int i = lineNo + 1; i < getLineCount(); i++)
 	void foldStructureChanged()
 	{
 		// recalculate first line
-		System.err.println(physFirstLine + ":" + physicalToVirtual(physFirstLine));
 		setFirstLine(physicalToVirtual(physFirstLine));
 
 		// update scroll bars because the number of
