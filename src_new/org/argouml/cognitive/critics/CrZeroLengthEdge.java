@@ -24,17 +24,13 @@
 // File: CrZeroLengthEdge.java
 // Classes: CrZeroLengthEdge
 // Original Author: jrobbins@ics.uci.edu
-// $Id: CrZeroLengthEdge.java,v 1.4 2002/10/20 21:11:13 linus Exp $
+// $Id: CrZeroLengthEdge.java,v 1.5 2003/05/31 03:52:01 mkl Exp $
 
 package org.argouml.cognitive.critics;
 
-import java.util.*;
-import java.awt.*;
-
-import org.tigris.gef.presentation.*;
-
-import org.argouml.cognitive.*;
-import org.argouml.uml.cognitive.critics.*;
+import org.argouml.cognitive.Designer;
+import org.argouml.uml.cognitive.critics.CrUML;
+import org.tigris.gef.presentation.FigEdge;
 
 /** A critic to detect when an edge is very short in order to suggest to
  *  improve the layout of the diagram.

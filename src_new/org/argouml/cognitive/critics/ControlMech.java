@@ -26,13 +26,11 @@
 // File: ControlMech.java
 // Classes: ControlMech EnabledCM NotHushedCM CompositeCM
 // Original Author: jrobbins@ics.uci.edu
-// $Id: ControlMech.java,v 1.1 2000/09/04 12:50:28 1sturm Exp $
+// $Id: ControlMech.java,v 1.2 2003/05/31 03:52:01 mkl Exp $
 
 // TO DO: Do all these classes need to be in their own files? public?
 
 package org.argouml.cognitive.critics;
-
-import java.util.*;
 
 import org.argouml.cognitive.*;
 
