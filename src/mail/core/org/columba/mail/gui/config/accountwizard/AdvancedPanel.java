@@ -68,7 +68,7 @@ public class AdvancedPanel extends DefaultWizardPanel {
 				"account_name"));
 		middlePanel.addLabel(nameLabel);
 		nameTextField = new JTextField("");
-		nameTextField.requestFocusInWindow();
+		nameTextField.requestFocus();
 		nameLabel.setLabelFor(nameTextField);
 		//register(nameTextField);
 		middlePanel.addTextField(nameTextField);

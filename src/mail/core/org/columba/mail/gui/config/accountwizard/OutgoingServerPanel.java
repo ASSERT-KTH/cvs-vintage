@@ -74,7 +74,7 @@ public class OutgoingServerPanel extends DefaultWizardPanel {
 					"host_smtp_server"));
 			middlePanel.addLabel(addressLabel);
 			hostTextField = new JTextField("");
-			hostTextField.requestFocusInWindow();
+			hostTextField.requestFocus();
 			addressLabel.setLabelFor(hostTextField);
 			//register(hostTextField);
 			middlePanel.addTextField(hostTextField);

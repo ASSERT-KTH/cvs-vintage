@@ -340,17 +340,17 @@ public class ConfigFrame
 		} else if (action.equals("ADD")) //$NON-NLS-1$
 			{
 			System.out.println(MailResourceLoader.getString("dialog", "account", "add")); //$NON-NLS-1$
+			try
+			{
+			
 			AccountWizard wizard = new AccountWizard(true);
 			listView.update();
+			}
+			catch ( Exception ex)
+			{
+				ex.printStackTrace();
+			}
 
-			//AccountItem item = accountList.a
-			/*
-			Filter filter = filterList.addEmtpyFilter();
-			listView.update();
-			setSelected( filter );
-			showFilterDialog();
-			listView.update();
-			*/
 
 		} else if (action.equals("REMOVE")) //$NON-NLS-1$
 			{

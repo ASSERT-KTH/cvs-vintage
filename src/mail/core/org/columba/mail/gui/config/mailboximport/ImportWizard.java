@@ -55,7 +55,7 @@ public class ImportWizard
 
 	ImportPluginHandler pluginHandler;
 
-	public ImportWizard() {
+	public ImportWizard() throws Exception{
 		destFolder = (Folder) MainInterface.treeModel.getFolder(101);
 
 		DefaultWizardPanel p = getSequence().getFirstPanel();

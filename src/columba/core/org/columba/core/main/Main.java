@@ -159,10 +159,8 @@ public class Main {
 				ThemeSwitcher.setTheme();
 
 				doGuiInits();
-				
-				new ImageLoader();
 
-				
+				new ImageLoader();
 
 				MainInterface.charsetManager = new CharsetManager();
 
@@ -178,11 +176,9 @@ public class Main {
 
 				MainInterface.pluginManager.registerHandler(
 					new MenuPluginHandler("org.columba.core.menu"));
-					
-				
-				MainInterface.pluginManager.registerHandler(
-									new FramePluginHandler());
 
+				MainInterface.pluginManager.registerHandler(
+					new FramePluginHandler());
 
 				MainInterface.shutdownManager = new ShutdownManager();
 
@@ -190,26 +186,31 @@ public class Main {
 
 				addressbook.initPlugins();
 				mail.initPlugins();
-								
+
 				MainInterface.pluginManager.initPlugins();
 
-				
+				frame.advance();
 
-							
-				frame.advance();
-				
 				MainInterface.frameModelManager = new FrameModelManager();
-				
+
 				addressbook.initGui();
-				
+
 				frame.advance();
-				
+
 				mail.initGui();
-				
+
 				new FrameModel();
-				
-				if (MailConfig.getAccountList().count() == 0)
-							new AccountWizard(false);
+
+				if (MailConfig.getAccountList().count() == 0) {
+					try {
+
+						new AccountWizard(false);
+
+					} catch (Exception ex) {
+						ex.printStackTrace();
+					}
+
+				}
 				return null;
 			}
 

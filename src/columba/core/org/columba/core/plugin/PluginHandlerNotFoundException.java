@@ -30,21 +30,23 @@ public class PluginHandlerNotFoundException extends Exception {
 		
 	}
 
-	/**
-	 * @param arg0
-	 * @param arg1
-	 */
+	
+	// FIXME
+	// 
+	// this doesn't work with jdk1.3
+	// getCause() was introduced since jdk1.4 !!!
+	//
+	/*
 	public PluginHandlerNotFoundException(String arg0, Throwable arg1) {
 		super(arg0, arg1);
 		
 	}
 
-	/**
-	 * @param arg0
-	 */
+	
 	public PluginHandlerNotFoundException(Throwable arg0) {
 		super(arg0);
 		
 	}
-
+	*/
+	
 }

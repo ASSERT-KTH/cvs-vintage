@@ -51,7 +51,7 @@ public class AccountWizard
 
 	protected WizardPanelSequence sequence;
 
-	public AccountWizard(boolean b) {
+	public AccountWizard(boolean b) throws Exception{
 		super();
 		add = b;
 

@@ -14,6 +14,9 @@
 //
 //All Rights Reserved.
 //$Log: DefaultWizardDialog.java,v $
+//Revision 1.6  2003/04/07 15:55:30  fdietz
+//[bug]jdk1.3 compatibility fixes
+//
 //Revision 1.5  2003/02/13 18:00:44  fdietz
 //[bug]dialog was creating two accounts instead of one
 //
@@ -38,7 +41,6 @@ import java.awt.Font;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.GridLayout;
-import java.awt.HeadlessException;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -87,7 +89,7 @@ public abstract class DefaultWizardDialog {
 	 * Constructor for DefaultWizardDialog.
 	 * @throws HeadlessException
 	 */
-	public DefaultWizardDialog() throws HeadlessException {
+	public DefaultWizardDialog() throws Exception {
 		dialog = DialogStore.getDialog();
 
 		//DefaultWizardPanel p = getSequence().getFirstPanel();
@@ -302,13 +304,13 @@ public abstract class DefaultWizardDialog {
 		JComponent c = p.getFocusComponent();
 		if (c != null) {
 
-			boolean b = c.requestFocusInWindow();
-			ColumbaLogger.log.debug("focus=" + b);
+			c.requestFocus();
+
 		} else {
 			if (getSequence().isLast(p))
-				finishButton.requestFocusInWindow();
+				finishButton.requestFocus();
 			else
-				nextButton.requestFocusInWindow();
+				nextButton.requestFocus();
 		}
 
 		dialog.setVisible(true);

@@ -101,7 +101,9 @@ public abstract class AbstractPluginHandler {
 				args);
 		} catch ( InvocationTargetException ex )
 		{
+			// TODO fix jdk1.3 compatibility issues with getCause()
 			ex.getCause().printStackTrace();
+			
 			
 			throw ex;
 		}

@@ -20,7 +20,7 @@ import org.columba.mail.gui.config.mailboximport.ImportWizard;
  * To change this generated comment go to 
  * Window>Preferences>Java>Code Generation>Code and Comments
  */
-public class ImportAction extends FrameAction implements ActionListener{
+public class ImportAction extends FrameAction implements ActionListener {
 
 	/**
 	 * @param frameController
@@ -32,8 +32,7 @@ public class ImportAction extends FrameAction implements ActionListener{
 	 * @param mnemonic
 	 * @param keyStroke
 	 */
-	public ImportAction(
-		AbstractFrameController frameController) {
+	public ImportAction(AbstractFrameController frameController) {
 		super(
 			frameController,
 			"Import Mailbox...",
@@ -44,17 +43,21 @@ public class ImportAction extends FrameAction implements ActionListener{
 			null,
 			0,
 			null);
-		
-	}
 
-	
+	}
 
 	/* (non-Javadoc)
 	 * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
 	 */
 	public void actionPerformed(ActionEvent evt) {
-		new ImportWizard();
-		
+		try {
+
+			new ImportWizard();
+			
+		} catch (Exception ex) {
+			ex.printStackTrace();
+		}
+
 	}
 
 }
