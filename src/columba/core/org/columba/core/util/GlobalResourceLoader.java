@@ -102,13 +102,15 @@ public class GlobalResourceLoader {
                         try {
                                 bundle = ResourceBundle.getBundle(sBundlePath);
                                 htBundles.put(sBundlePath, bundle);
+                        } catch (MissingResourceException mre) {}
+                }
+                if (bundle != null) {
+                        try {
                                 return bundle.getString(sID);
-                        } catch (MissingResourceException mre) {
-                                bundle = globalBundle;
-                        }
+                        } catch (MissingResourceException mre) {}
                 }
                 try {
-                        return bundle.getString(sID);
+                        return globalBundle.getString(sID);
                 } catch (MissingResourceException mre) {
                         if (MainInterface.DEBUG) {
                                 ColumbaLogger.log.error("'"+sID+"' in '"+sBundlePath+"' could not be found.");
