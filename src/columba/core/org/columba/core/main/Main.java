@@ -17,6 +17,7 @@
 package org.columba.core.main;
 
 import java.io.File;
+import java.io.IOException;
 
 import org.columba.addressbook.main.AddressbookMain;
 
@@ -55,13 +56,32 @@ public class Main {
             ColumbaCmdLineParser.printUsage();
             System.exit(2);
         }
+        
+        //create new client and try to connect to server
+        ColumbaClient client = new ColumbaClient();
+        if (client.connect()) {
+            try {
+                client.sendCommandLine(args);
+            } catch (IOException ioe) {
+                ioe.printStackTrace();
+                //display error message
+            } finally {
+                client.close();
+            }
+            System.exit(5);
+        }
+        //no server running, start our own
+        try {
+            ColumbaServer.getColumbaServer().start();
+        } catch (IOException ioe) {
+            ioe.printStackTrace();
+            //display error message
+            System.exit(1);
+        }
 
         // initialize configuration backend
         String path = cmdLineParser.getPathOption();
         MainInterface.config = new Config(path == null ? null : new File(path));
-
-        // the configPath settings are made in the commandlineParser @see ColumbaCmdLineParser
-        ColumbaClient.loadInVMInstance(args);
 
         StartUpFrame frame = new StartUpFrame();
         frame.setVisible(true);

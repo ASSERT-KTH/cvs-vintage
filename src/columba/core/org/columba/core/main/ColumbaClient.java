@@ -16,12 +16,8 @@
 
 package org.columba.core.main;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.IOException;
-import java.io.PrintWriter;
+import java.io.*;
+
 import java.net.Socket;
 
 import org.columba.core.logging.ColumbaLogger;
@@ -32,97 +28,61 @@ import org.columba.core.main.MainInterface;
  * a session of Columba is already running.
  * <p>
  * If a session is running the client is able to pass requests
- * to the server. Otherwise it starts the {@link ColumbaServer}.
+ * to the server.
  *
  * @author fdietz
  */
 public class ColumbaClient {
+    protected static final String NEWLINE = "\r\n";
+    
+    protected Socket socket;
+    protected Writer writer;
+    
+    public ColumbaClient() {}
+    
     /**
-     * server instance
+     * Tries to connect to a running server.
      */
-    private static ColumbaServer columbaServer;
-
-    /**
-     * file in the users-home directory containing the
-     * port number, which is used by the server
-     */
-    private static File keyFile;
-
-    /**
-     * Load Columba only once.
-     *
-     * @param arguments     commandline arguments
-     */
-    public static void loadInVMInstance(String[] arguments) {
+    public boolean connect() {
         try {
-
-            // read port from file
-            int port = readPortFromFile();
-            
-            // init socket          
-            Socket clientSocket =
-                new Socket("127.0.0.1", port);
-
-            PrintWriter writer =
-                new PrintWriter(clientSocket.getOutputStream());
-
-            StringBuffer buf = new StringBuffer();
-            buf.append("columba:");
-
-            for (int i = 0; i < arguments.length; i++) {
-                buf.append(arguments[i]);
-                buf.append("%");
-            }
-
-            ColumbaLogger.log.info(
-                "Trying to pass command line arguments to a running Columba session:\n"
-                    + buf.toString());
-
-            writer.write(buf.toString());
+            socket = new Socket("127.0.0.1", ColumbaServer.PORT);
+            writer = new PrintWriter(socket.getOutputStream());
+            writer.write("Columba " + MainInterface.version);
+            writer.write(NEWLINE);
             writer.flush();
-            writer.close();
-
-            clientSocket.close();
-
-            System.exit(5);
-        } catch (Exception ex) { // we get a java.net.ConnectException: Connection refused
-            columbaServer = new ColumbaServer();
+            
+            writer.write("User " + System.getProperty("user.name",
+                    ColumbaServer.ANONYMOUS_USER));
+            writer.write(NEWLINE);
+            writer.flush();
+            return true;
+        } catch (IOException ex) {
         }
-    }
-
-    /**
-     * Open <b>.auth</b> file and read the port number
-     * used by the server from it.
-     * 
-     * @return      port number
-     */
-    public static int readPortFromFile() throws FileNotFoundException{
-        keyFile = new File(MainInterface.config.getConfigDirectory(), ".auth");
-        if ( !keyFile.exists() ) return -1;
-        
-        String s;
-        try {
-            BufferedReader reader = new BufferedReader(new FileReader(keyFile));
-
-            s = reader.readLine();
-
-            reader.close();
-
-            return Integer.parseInt(s);
-        }  catch (IOException e) {
-            // TODO: add better error handling
-            e.printStackTrace();
-        }
-
-        return -1;
+        return false;
     }
     
     /**
-     * Get columba server.
-     * 
-     * @return  columba server
+     * Submits the given command line options to the server.
      */
-    public static ColumbaServer getColumbaServer() {
-        return columbaServer;
+    public void sendCommandLine(String[] args) throws IOException {
+        StringBuffer buf = new StringBuffer();
+        for (int i = 0; i < args.length; i++) {
+            buf.append(args[i]);
+            buf.append('%');
+        }
+
+        writer.write(buf.toString());
+        writer.write(NEWLINE);
+        writer.flush();
+    }
+    
+    /**
+     * Closes this client.
+     */
+    public void close() {
+        try {
+            writer.close();
+            socket.close();
+        } catch (IOException ioe) {}
     }
 }

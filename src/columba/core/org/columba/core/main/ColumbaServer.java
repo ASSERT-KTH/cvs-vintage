@@ -29,6 +29,7 @@ import java.io.InputStreamReader;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.SocketException;
+import java.net.SocketTimeoutException;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -38,136 +39,80 @@ import java.util.StringTokenizer;
  * Opens a server socket to manage multiple sessions of Columba
  * capable of  passing commands to the main session.
  * <p>
- * It tries to find an unused socket using a random number
- * generator. The port number is saved in the file <b>.auth</b>
- * in the users home directory.
- * <p>
- * Clients should use this file to determine the port number.
- *
+ * This class is a singleton because there can only be one server
+ * per Columba session.
  * <p>
  * Basic idea taken from www.jext.org (author Roman Guy)
  *
  * @author fdietz
  */
-public class ColumbaServer implements Runnable {
+public class ColumbaServer {
+    
     /**
-     * default server port
-     * <p>
-     * TODO: better port determination
-     *       we should add a random number and test if
-     *       the server socket is already in use from
-     *       someone else
+     * The port the Columba server runs on.
      */
-    public final static int COLUMBA_PORT = 50000;
+    public final static int PORT = 50000;
+    
+    /**
+     * The anonymous user for single-user systems without user name.
+     */
+    public final static String ANONYMOUS_USER = "anonymous";
+    
+    /**
+     * The singleton instance of this class.
+     */
+    private static ColumbaServer instance;
 
     /**
-     * server port
+     * Server runs in its own thread.
      */
-    private static int port = COLUMBA_PORT;
+    protected Thread thread;
 
     /**
-     * file in the users-home directory containing the
-     * port number, which is used by the server
+     * The ServerSocket used by the server.
      */
-    private static File keyFile;
-
-    /**
-     * Server runs in its own thread
-     */
-    private Thread thread;
-
-    /**
-     * server socket
-     */
-    private ServerSocket serverSocket;
+    protected ServerSocket serverSocket;
 
     /**
      * Constructor
-     *
      */
-    public ColumbaServer() {
-        // open server socket
-        openSocket();
-
-        // start thread
-        thread = new Thread(this);
-        thread.setDaemon(false);
-        thread.start();
+    protected ColumbaServer() {
+        thread = new Thread(new Runnable() {
+            public void run() {
+                while (!Thread.currentThread().isInterrupted()) {
+                    try {
+                        handleClient(serverSocket.accept());
+                    } catch (SocketTimeoutException ste) {
+                        //do nothing here, just continue
+                    } catch (IOException ioe) {
+                        ioe.printStackTrace();
+                        //what to do here? we could start a new server...
+                    }
+                }
+                try {
+                    serverSocket.close();
+                } catch (IOException ioe) {}
+            }
+        }, "ColumbaServer");
+        thread.setDaemon(true);
     }
 
     /**
-     * Open server socket.
-     * <p>
-     * Use a random number generator to find an unused port.
-     *
+     * Starts the server.
      */
-    private void openSocket() {
-        try {
-            // just increment the server port
-            port += 1;
-
-            // init server socket
-            serverSocket = new ServerSocket(port);
-
-            // create port number file
-            createPortNumberFile(port);
-        } catch (Exception ex) {
-            // this port is probably blocked
-            // TODO: what if a firewall blocks this port?
-            //       are we able to distinguish that?
-            ex.printStackTrace();
-
-            // try again, using a different port
-            openSocket();
+    public synchronized void start() throws IOException {
+        if (!isRunning()) {
+            serverSocket = new ServerSocket(PORT);
+            serverSocket.setSoTimeout(2000);
+            thread.start();
         }
     }
 
     /**
-     * Write port number of server to a file.
-     * <p>
-     * This is used by the client to find out on which
-     * port its server is running.
-     *
-     * @param portNumber    port number of server
-     */
-    private void createPortNumberFile(int portNumber) {
-        keyFile = new File(MainInterface.config.getConfigDirectory(), ".auth");
-
-        try {
-            BufferedWriter writer = new BufferedWriter(new FileWriter(keyFile));
-
-            String portStr = Integer.toString(portNumber);
-            writer.write(portStr);
-
-            writer.flush();
-            writer.close();
-        } catch (IOException e) {
-            // TODO: add error dialog here
-            e.printStackTrace();
-        }
-    }
-
-    /**
-     * Stop server
-     *
+     * Stops the server.
      */
     public synchronized void stop() {
-        ColumbaLogger.log.info("Stopping Columba server...");
-        // stop thread
         thread.interrupt();
-        thread = null;
-
-        try {
-            // close socket
-            if (serverSocket != null) {
-                serverSocket.close();
-            }
-
-            // delete auth file
-            keyFile.delete();
-        } catch (Exception ex) {
-            ex.printStackTrace();
-        }
     }
 
     /**
@@ -175,59 +120,43 @@ public class ColumbaServer implements Runnable {
      * @return      true, if server is running. False, otherwise
      */
     public synchronized boolean isRunning() {
-        return thread != null;
+        return thread.isAlive();
     }
-
-    /**
-     * run method of thread
-     */
-    public void run() {
-        while (isRunning()) {
-            try {
-                // does a client trying to connect to server ?
-                Socket client = serverSocket.accept();
-
-                if (client == null) {
-                    continue;
-                }
-
-                // only accept client from local machine
-                String host = client.getLocalAddress().getHostAddress();
-
-                if (!(host.equals("127.0.0.1"))) {
-                    // client isn't from local machine
-                    client.close();
-                }
-
-                // try to read possible arguments
-                BufferedReader reader = new BufferedReader(new InputStreamReader(
-                            client.getInputStream()));
-
-                StringBuffer arguments = new StringBuffer();
-                arguments.append(reader.readLine());
-
-                if (!(arguments.toString().startsWith("columba:"))) {
-                    // client isn't a Columba client
-                    client.close();
-                }
-
-                if (MainInterface.DEBUG) {
-                    ColumbaLogger.log.info(
-                        "passing to running Columba session:\n" +
-                        arguments.toString());
-                }
-
-                // do something with the arguments..
-                handleArgs(arguments.toString());
-
+    
+    protected void handleClient(Socket client) {
+        try {
+            // only accept client from local machine
+            String host = client.getLocalAddress().getHostAddress();
+            if (!(host.equals("127.0.0.1"))) {
+                // client isn't from local machine
                 client.close();
-            } catch (Exception ex) {
-                if (ex instanceof SocketException) {
-                    // socket closed by Columba
-                } else {
-                    ex.printStackTrace();
-                }
             }
+
+            BufferedReader reader = new BufferedReader(new InputStreamReader(
+                        client.getInputStream()));
+            String line = reader.readLine();
+            if (!line.startsWith("Columba ")) {
+                client.close();
+            }
+            
+            line = reader.readLine();
+            if (!line.startsWith("User ")) {
+                client.close();
+            }
+            if (!line.substring(5).equals(System.getProperty("user.name", ANONYMOUS_USER))) {
+                client.close();
+            }
+            
+            line = reader.readLine();
+
+            ColumbaLogger.log.info("Passing to running Columba session: " + line);
+
+            // do something with the arguments..
+            handleCommandLine(line);
+
+            client.close();
+        } catch (IOException ioe) {
+            ioe.printStackTrace();
         }
     }
 
@@ -239,9 +168,7 @@ public class ColumbaServer implements Runnable {
      * @see CmdLineArgumentHandler
      * @param argumentString String which holds any arguments seperated by <br>%</br> character
      */
-    protected void handleArgs(String argumentString) {
-        // remove trailing "columba:"
-        argumentString = argumentString.substring(8, argumentString.length());
+    protected void handleCommandLine(String argumentString) {
         List list = new LinkedList();
 
         StringTokenizer st = new StringTokenizer(argumentString, "%");
@@ -255,5 +182,15 @@ public class ColumbaServer implements Runnable {
             cmdLineParser.parseCmdLine((String[])list.toArray(new String[0]));
             new CmdLineArgumentHandler(cmdLineParser);
         } catch (IllegalArgumentException e) {}
+    }
+    
+    /**
+     * Returns the singleton instance of this class.
+     */
+    public synchronized static ColumbaServer getColumbaServer() {
+        if (instance == null) {
+            instance = new ColumbaServer();
+        }
+        return instance;
     }
 }
