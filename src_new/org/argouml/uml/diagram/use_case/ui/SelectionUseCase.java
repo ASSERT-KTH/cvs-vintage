@@ -1,4 +1,4 @@
-// $Id: SelectionUseCase.java,v 1.22 2005/01/08 23:27:29 linus Exp $
+// $Id: SelectionUseCase.java,v 1.23 2005/01/09 14:58:58 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -83,7 +83,7 @@ public class SelectionUseCase extends SelectionWButtons {
      *   5-------6-------7
      * </pre>
      *
-     * @see org.tigris.gef.base.Selection#hitHandle(java.awt.Rectangle, 
+     * @see org.tigris.gef.base.Selection#hitHandle(java.awt.Rectangle,
      * org.tigris.gef.presentation.Handle)
      */
     public void hitHandle(Rectangle r, Handle h) {
@@ -140,7 +140,7 @@ public class SelectionUseCase extends SelectionWButtons {
     }
 
     /**
-     * @see org.tigris.gef.base.Selection#dragHandle(int, int, int, int, 
+     * @see org.tigris.gef.base.Selection#dragHandle(int, int, int, int,
      * org.tigris.gef.presentation.Handle)
      */
     public void dragHandle(int mX, int mY, int anX, int anY, Handle hand) {
@@ -200,8 +200,8 @@ public class SelectionUseCase extends SelectionWButtons {
 
     }
 
-    
-    
+
+
 
     /**
      * @see SelectionWButtons#createEdgeAbove(

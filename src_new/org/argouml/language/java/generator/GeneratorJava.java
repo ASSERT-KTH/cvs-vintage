@@ -1,4 +1,4 @@
-// $Id: GeneratorJava.java,v 1.106 2005/01/02 16:43:57 linus Exp $
+// $Id: GeneratorJava.java,v 1.107 2005/01/09 14:58:06 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -64,7 +64,7 @@ import antlr.ANTLRException;
  * placeholder for future development, I expect it to be totally
  * replaced.
  *
- * @stereotype singleton 
+ * @stereotype singleton
  */
 public class GeneratorJava
     extends Generator2 implements FileGenerator {
@@ -114,7 +114,7 @@ public class GeneratorJava
 				    Argo.lookupIconResource("JavaNotation")));
     }
 
-    /** 
+    /**
      * Generates a file for the classifier.
      * This method could have been static if it where not for the need to
      * call it through the Generatorinterface.
@@ -400,11 +400,11 @@ public class GeneratorJava
     }
 
     /**
-     * <p>Generate code for an extension point.</p>
+     * Generate code for an extension point.<p>
      *
-     * <p>Provided to comply with the interface, but returns null
-     *   since no code will be generated. This should prevent a source tab
-     *   being shown.</p>
+     * Provided to comply with the interface, but returns null
+     * since no code will be generated. This should prevent a source tab
+     * being shown.<p>
      *
      * @param ep  The extension point to generate for
      *
@@ -831,7 +831,7 @@ public class GeneratorJava
 
             // Inner classes
             Collection elements = ModelFacade.getOwnedElements(cls);
-            for (Iterator i = elements.iterator(); i.hasNext(); ) {
+            for (Iterator i = elements.iterator(); i.hasNext();) {
                 Object element = /*(MModelElement)*/ i.next();
                 if (ModelFacade.isAClass(element)
 		    || ModelFacade.isAInterface(element)) {
@@ -1149,8 +1149,7 @@ public class GeneratorJava
     public static String generateConstraintEnrichedDocComment(
             Object/*MModelElement*/ me,
 	    boolean documented,
-	    String indent)
-    {
+	    String indent) {
         if (isFileGeneration)
             documented = true; // always "documented" if we generate file
         // Retrieve any existing doccomment
@@ -1194,7 +1193,7 @@ public class GeneratorJava
 
             /**
              * Constructor.
-             * 
+             *
              * @param sConstraintName The constraint name.
              */
             public TagExtractor(String sConstraintName) {
@@ -1344,7 +1343,7 @@ public class GeneratorJava
         //     if (ae.isNavigable()) s += "navigable ";
         //     if (ae.getIsOrdered()) s += "ordered ";
         Object/*MMultiplicity*/ m = ModelFacade.getMultiplicity(ae);
-        if (ModelFacade.M1_1_MULTIPLICITY.equals(m) 
+        if (ModelFacade.M1_1_MULTIPLICITY.equals(m)
                 || ModelFacade.M0_1_MULTIPLICITY.equals(m)) {
             sb.append(generateClassifierRef(ModelFacade.getType(ae)));
         } else {

@@ -1,4 +1,4 @@
-// $Id: ActionNewSynchState.java,v 1.8 2005/01/02 16:43:40 linus Exp $
+// $Id: ActionNewSynchState.java,v 1.9 2005/01/09 14:59:07 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -38,9 +38,9 @@ import org.argouml.uml.ui.AbstractActionNewModelElement;
  */
 public class ActionNewSynchState extends AbstractActionNewModelElement {
 
-    private static final ActionNewSynchState SINGLETON = 
+    private static final ActionNewSynchState SINGLETON =
         new ActionNewSynchState();
-    
+
     /**
      * Constructor for ActionNewPseudoState.
      */
@@ -48,7 +48,7 @@ public class ActionNewSynchState extends AbstractActionNewModelElement {
         super();
         putValue(Action.NAME, Translator.localize("button.new-synchstate"));
     }
-    
+
     /**
      * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
      */

@@ -1,4 +1,4 @@
-// $Id: UMLGeneralizationPowertypeComboBoxModel.java,v 1.16 2005/01/02 16:43:46 linus Exp $
+// $Id: UMLGeneralizationPowertypeComboBoxModel.java,v 1.17 2005/01/09 14:59:09 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -48,7 +48,7 @@ public class UMLGeneralizationPowertypeComboBoxModel
      */
     public UMLGeneralizationPowertypeComboBoxModel() {
         super("powertype", true);
-        UmlModelEventPump.getPump().addClassModelEventListener(this, 
+        UmlModelEventPump.getPump().addClassModelEventListener(this,
                 ModelFacade.NAMESPACE, "ownedElement");
     }
 
@@ -72,11 +72,11 @@ public class UMLGeneralizationPowertypeComboBoxModel
         while (it.hasNext()) {
 	    Object model = /*(MModel)*/ it.next();
 	    elements.addAll(Model.getModelManagementHelper()
-                .getAllModelElementsOfKind(model, 
+                .getAllModelElementsOfKind(model,
                         ModelFacade.CLASSIFIER));
         }
         elements.addAll(Model.getModelManagementHelper()
-                .getAllModelElementsOfKind(p.getDefaultModel(), 
+                .getAllModelElementsOfKind(p.getDefaultModel(),
                         ModelFacade.CLASSIFIER));
         setElements(elements);
     }

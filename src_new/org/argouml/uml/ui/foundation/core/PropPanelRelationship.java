@@ -1,5 +1,5 @@
-// $Id: PropPanelRelationship.java,v 1.6 2004/11/04 17:23:18 bobtarling Exp $
-// Copyright (c) 1996-99 The Regents of the University of California. All
+// $Id: PropPanelRelationship.java,v 1.7 2005/01/09 14:59:09 linus Exp $
+// Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
 // agreement is hereby granted, provided that the above copyright notice
@@ -42,10 +42,10 @@ public class PropPanelRelationship extends PropPanelModelElement {
     public PropPanelRelationship() {
         super("Relationship", ConfigLoader.getTabPropsOrientation());
     }
-    
+
     /**
      * The constructor.
-     * 
+     *
      * @param name the name of the panel to be shown at the top
      * @param orientation the orientation of the panel
      */

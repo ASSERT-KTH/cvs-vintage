@@ -1,5 +1,5 @@
-// $Id: SimpleByteLexer.java,v 1.2 2004/08/26 18:48:43 mvw Exp $
-// Copyright (c) 1996-2002 The Regents of the University of California. All
+// $Id: SimpleByteLexer.java,v 1.3 2005/01/09 14:57:57 linus Exp $
+// Copyright (c) 1996-2002, 2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
 // agreement is hereby granted, provided that the above copyright notice
@@ -38,7 +38,7 @@ import java.io.*;
 public class SimpleByteLexer implements ClassfileTokenTypes, TokenStream {
 
     //////////////////////
-    // Instance variables. 
+    // Instance variables.
 
     private InputStream input = null;
 
@@ -49,13 +49,13 @@ public class SimpleByteLexer implements ClassfileTokenTypes, TokenStream {
     /**
      * Create a new bytestream scanner.
      * The constructor.
-     * 
+     *
      * @param in the given inputstream
      */
     public SimpleByteLexer(InputStream in) {
         input = in;
-    }  
-    
+    }
+
 
     //////////
     // Methods
@@ -73,13 +73,13 @@ public class SimpleByteLexer implements ClassfileTokenTypes, TokenStream {
 	try {
 	    nextByte = input.read();
 	} catch (IOException ie) {
-	    throw new TokenStreamIOException(ie);  
+	    throw new TokenStreamIOException(ie);
 	}
 
 	// System.out.println("Generating token for: " + nextByte);
 
-	return (nextByte == -1) 
-	    ? new ByteToken( Token.EOF_TYPE) 
+	return (nextByte == -1)
+	    ? new ByteToken( Token.EOF_TYPE)
                 : new ByteToken( BYTE, (byte) nextByte);
     }
 }

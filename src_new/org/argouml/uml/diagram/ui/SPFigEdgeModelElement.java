@@ -1,5 +1,5 @@
-// $Id: SPFigEdgeModelElement.java,v 1.13 2004/11/01 10:55:23 mkl Exp $
-// Copyright (c) 1996-99 The Regents of the University of California. All
+// $Id: SPFigEdgeModelElement.java,v 1.14 2005/01/09 14:58:56 linus Exp $
+// Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
 // agreement is hereby granted, provided that the above copyright notice
@@ -42,7 +42,7 @@ import org.tigris.gef.ui.ColorRenderer;
 public class SPFigEdgeModelElement extends StylePanelFig implements
         ItemListener {
 
-    private static final Logger LOG = 
+    private static final Logger LOG =
         Logger.getLogger(SPFigEdgeModelElement.class);
 
     private SpacerPanel spacer = new SpacerPanel();
@@ -53,7 +53,7 @@ public class SPFigEdgeModelElement extends StylePanelFig implements
 
     /**
      * The constructor.
-     * 
+     *
      */
     public SPFigEdgeModelElement() {
         super("Edge Appearance");

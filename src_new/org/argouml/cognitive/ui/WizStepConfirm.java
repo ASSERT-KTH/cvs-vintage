@@ -1,5 +1,5 @@
-// $Id: WizStepConfirm.java,v 1.6 2004/11/01 10:55:20 mkl Exp $
-// Copyright (c) 1996-99 The Regents of the University of California. All
+// $Id: WizStepConfirm.java,v 1.7 2005/01/09 14:58:05 linus Exp $
+// Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
 // agreement is hereby granted, provided that the above copyright notice
@@ -45,7 +45,7 @@ public class WizStepConfirm extends WizStep {
 
     /**
      * The constructor.
-     * 
+     *
      */
     public WizStepConfirm() {
 	instructions.setEditable(false);
@@ -95,7 +95,7 @@ public class WizStepConfirm extends WizStep {
 
     /**
      * The constructor.
-     * 
+     *
      * @param w the wizard
      * @param instr the instructions
      */

@@ -1,5 +1,5 @@
-// $Id: FigMNodeInstance.java,v 1.24 2004/10/12 07:31:47 mkl Exp $
-// Copyright (c) 1996-2004 The Regents of the University of California. All
+// $Id: FigMNodeInstance.java,v 1.25 2005/01/09 14:58:38 linus Exp $
+// Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
 // agreement is hereby granted, provided that the above copyright notice
@@ -49,7 +49,7 @@ import org.tigris.gef.presentation.FigText;
 /**
  * Class to display graphics for a UML NodeInstance in a diagram.<p>
  *
- * @author 5eichler@informatik.uni-hamburg.de 
+ * @author 5eichler@informatik.uni-hamburg.de
  */
 public class FigMNodeInstance extends FigNodeModelElement {
 
@@ -224,12 +224,12 @@ public class FigMNodeInstance extends FigNodeModelElement {
                 Object o = it.next();
                 if (o instanceof FigEdgeModelElement) {
                     bringToFrontList.add(o);
-                    
+
                 }
             }
             Iterator bringToFrontIter = bringToFrontList.iterator();
             while (bringToFrontIter.hasNext()) {
-                FigEdgeModelElement figEdge = 
+                FigEdgeModelElement figEdge =
                     (FigEdgeModelElement) bringToFrontIter.next();
                 figEdge.getLayer().bringToFront(figEdge);
             }

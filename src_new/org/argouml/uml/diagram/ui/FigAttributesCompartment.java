@@ -1,5 +1,5 @@
-// $Id: FigAttributesCompartment.java,v 1.2 2004/09/10 20:05:31 mvw Exp $
-// Copyright (c) 1996-2004 The Regents of the University of California. All
+// $Id: FigAttributesCompartment.java,v 1.3 2005/01/09 14:58:56 linus Exp $
+// Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
 // agreement is hereby granted, provided that the above copyright notice
@@ -30,7 +30,7 @@ package org.argouml.uml.diagram.ui;
 public class FigAttributesCompartment extends FigFeaturesCompartment {
     /**
      * The constructor.
-     * 
+     *
      * @param x x
      * @param y y
      * @param w width
@@ -38,5 +38,5 @@ public class FigAttributesCompartment extends FigFeaturesCompartment {
      */
     public FigAttributesCompartment(int x, int y, int w, int h) {
         super(x, y, w, h);
-    }   
+    }
 }

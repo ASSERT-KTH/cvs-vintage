@@ -1,5 +1,5 @@
-// $Id: UMLLinkedList.java,v 1.19 2004/12/20 10:43:15 mvw Exp $
-// Copyright (c) 1996-2004 The Regents of the University of California. All
+// $Id: UMLLinkedList.java,v 1.20 2005/01/09 14:59:03 linus Exp $
+// Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
 // agreement is hereby granted, provided that the above copyright notice
@@ -33,23 +33,23 @@ import javax.swing.ListSelectionModel;
  * An UMLList2 that implements 'jump' behaviour. As soon as the user
  * doubleclicks on an element in the list, that element is selected in
  * argouml. <p>
- * 
+ *
  * Also, it allows showing an icon with the text items in the list.<p>
- * 
- * And, in case the listed item has no name, a default name is generated. 
+ *
+ * And, in case the listed item has no name, a default name is generated.
  *
  * @since Oct 2, 2002
  * @author jaap.branderhorst@xs4all.nl
  */
 public class UMLLinkedList extends UMLList2 {
-    
+
     /**
      * Constructor for UMLLinkedList.
-     * 
+     *
      * @param dataModel the data model
      * @param showIcon true if an icon should be shown
      */
-    public UMLLinkedList(UMLModelElementListModel2 dataModel, 
+    public UMLLinkedList(UMLModelElementListModel2 dataModel,
             boolean showIcon) {
         super(dataModel, new UMLLinkedListCellRenderer(showIcon));
         setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
@@ -58,10 +58,10 @@ public class UMLLinkedList extends UMLList2 {
         UMLLinkMouseListener mouseListener = new UMLLinkMouseListener(this);
         addMouseListener(mouseListener);
     }
-    
+
     /**
      * The constructor.
-     * 
+     *
      * @param dataModel the data model
      */
     public UMLLinkedList(UMLModelElementListModel2 dataModel) {

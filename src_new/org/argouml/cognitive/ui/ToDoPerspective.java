@@ -1,5 +1,5 @@
-// $Id: ToDoPerspective.java,v 1.9 2004/09/01 16:18:39 mvw Exp $
-// Copyright (c) 1996-99 The Regents of the University of California. All
+// $Id: ToDoPerspective.java,v 1.10 2005/01/09 14:58:05 linus Exp $
+// Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
 // agreement is hereby granted, provided that the above copyright notice
@@ -39,37 +39,36 @@ import org.argouml.ui.TreeModelComposite;
  *   - a todo tree model / perspective (which is a collection of GoRules)
  *</pre>
  *
- * $Id: ToDoPerspective.java,v 1.9 2004/09/01 16:18:39 mvw Exp $
+ * $Id: ToDoPerspective.java,v 1.10 2005/01/09 14:58:05 linus Exp $
  */
 public abstract class ToDoPerspective extends TreeModelComposite
-    implements Serializable 
-{
-    
+    implements Serializable {
+
     private static final Logger LOG = Logger.getLogger(ToDoPerspective.class);
-    
+
     ////////////////////////////////////////////////////////////////
     // instance variables
-    
+
     /** todoList specific */
     private boolean flat;
-    
+
     /** todoList specific */
     private Vector flatChildren;
-    
+
     /**
      * The constructor.
-     * 
+     *
      * @param name the name that will be localized
      */
     public ToDoPerspective(String name) {
-        
+
         super(name);
         flatChildren = new Vector();
     }
-    
+
     ////////////////////////////////////////////////////////////////
     // TreeModel implementation - todo specific stuff
-    
+
     /**
      * Finds the each of the children of a parent in the tree.
      *
@@ -81,9 +80,9 @@ public abstract class ToDoPerspective extends TreeModelComposite
         if (flat && parent == getRoot()) {
             return flatChildren.elementAt(index);
         }
-        return super.getChild( parent,  index);
+        return super.getChild(parent,  index);
     }
-    
+
     /**
      * @see javax.swing.tree.TreeModel#getChildCount(java.lang.Object)
      */
@@ -91,11 +90,11 @@ public abstract class ToDoPerspective extends TreeModelComposite
         if (flat && parent == getRoot()) {
             return flatChildren.size();
         }
-        return super.getChildCount( parent);
+        return super.getChildCount(parent);
     }
-    
+
     /**
-     * @see javax.swing.tree.TreeModel#getIndexOfChild(java.lang.Object, 
+     * @see javax.swing.tree.TreeModel#getIndexOfChild(java.lang.Object,
      * java.lang.Object)
      */
     public int getIndexOfChild(Object parent, Object child) {
@@ -104,10 +103,10 @@ public abstract class ToDoPerspective extends TreeModelComposite
         }
         return super.getIndexOfChild(parent, child);
     }
-    
+
     // ------------ other methods ------------
-    
-    /** 
+
+    /**
      * todoList specific
      * @param b true if flat
      */
@@ -116,23 +115,25 @@ public abstract class ToDoPerspective extends TreeModelComposite
         if (b) calcFlatChildren();
         flat = b;
     }
-    
-    /** 
+
+    /**
      * todoList specific
-     * 
+     *
      * @return the flatness: true if flat
      */
     public boolean getFlat() { return flat; }
-    
-    /** todoList specific */
+
+    /**
+     * TodoList specific.
+     */
     public void calcFlatChildren() {
         flatChildren.removeAllElements();
         addFlatChildren(getRoot());
     }
-    
-    /** 
-     * todoList specific
-     * 
+
+    /**
+     * TodoList specific.
+     *
      * @param node the object to be added
      */
     public void addFlatChildren(Object node) {
@@ -142,11 +143,11 @@ public abstract class ToDoPerspective extends TreeModelComposite
         // includes empty folders. Really I need alwaysLeaf(node).
         if ((node instanceof ToDoItem) && !flatChildren.contains(node))
             flatChildren.addElement(node);
-        
+
         int nKids = getChildCount(node);
         for (int i = 0; i < nKids; i++) {
             addFlatChildren(getChild(node, i));
         }
     }
-    
+
 } /* end class ToDoPerspective */

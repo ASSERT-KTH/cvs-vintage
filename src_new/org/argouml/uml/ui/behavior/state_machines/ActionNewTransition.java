@@ -1,4 +1,4 @@
-// $Id: ActionNewTransition.java,v 1.6 2005/01/02 16:43:40 linus Exp $
+// $Id: ActionNewTransition.java,v 1.7 2005/01/09 14:59:07 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -31,38 +31,38 @@ import org.argouml.model.Model;
 import org.argouml.uml.ui.AbstractActionNewModelElement;
 
 /**
- * Action to create a new transition, either 
+ * Action to create a new transition, either
  * an internal transition or a transition
  * between two states.
  * @since Dec 15, 2002
  * @author jaap.branderhorst@xs4all.nl
  */
 public class ActionNewTransition extends AbstractActionNewModelElement {
-    
+
     /**
-     * Key used for storing the source of the transition. 
+     * Key used for storing the source of the transition.
      * If this value is not set,
      * the action assumes that an internal transition should be constructed.
      */
     public static final String SOURCE = "source";
-    
+
      /**
-     * Key used for storing the destination of the transition. 
+     * Key used for storing the destination of the transition.
      * If this value is not set,
      * the action assumes that an internal transition should be constructed.
      */
     public static final String DESTINATION = "destination";
-    
 
-    private static final ActionNewTransition SINGLETON = 
+
+    private static final ActionNewTransition SINGLETON =
         new ActionNewTransition();
-    
+
     /**
      * Constructor for ActionNewTransition.
      */
     protected ActionNewTransition() {
         super();
-    }        
+    }
 
     /**
      * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
@@ -75,7 +75,7 @@ public class ActionNewTransition extends AbstractActionNewModelElement {
         } else {
             Model.getStateMachinesFactory()
                 .buildTransition(getValue(SOURCE), getValue(DESTINATION));
-        }            
+        }
     }
 
     /**

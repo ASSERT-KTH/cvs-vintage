@@ -1,4 +1,4 @@
-// $Id: ActionNewUseCaseExtensionPoint.java,v 1.11 2005/01/03 09:30:47 mvw Exp $
+// $Id: ActionNewUseCaseExtensionPoint.java,v 1.12 2005/01/09 14:59:08 linus Exp $
 // Copyright (c) 2002-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -41,16 +41,16 @@ public class ActionNewUseCaseExtensionPoint
     /**
      * The singleton.
      */
-    public static final ActionNewUseCaseExtensionPoint SINGLETON = 
+    public static final ActionNewUseCaseExtensionPoint SINGLETON =
         new ActionNewUseCaseExtensionPoint();
-    
+
     /**
      * Constructor for ActionNewUseCaseExtensionPoint.
      */
     protected ActionNewUseCaseExtensionPoint() {
         super();
     }
-    
+
     /**
      * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
      */

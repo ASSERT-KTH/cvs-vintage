@@ -1,4 +1,4 @@
-// $Id: ActionNewSignalEvent.java,v 1.11 2005/01/02 16:43:40 linus Exp $
+// $Id: ActionNewSignalEvent.java,v 1.12 2005/01/09 14:59:07 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -30,7 +30,7 @@ import org.argouml.model.Model;
 
 /**
  * @since Dec 15, 2002
- * @author jaap.branderhorst@xs4all.nl 
+ * @author jaap.branderhorst@xs4all.nl
  */
 public class ActionNewSignalEvent extends ActionNewEvent {
 

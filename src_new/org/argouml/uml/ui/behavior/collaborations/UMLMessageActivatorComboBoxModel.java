@@ -1,4 +1,4 @@
-// $Id: UMLMessageActivatorComboBoxModel.java,v 1.23 2005/01/03 09:30:44 mvw Exp $
+// $Id: UMLMessageActivatorComboBoxModel.java,v 1.24 2005/01/09 14:59:05 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -30,14 +30,14 @@ import org.argouml.model.uml.UmlModelEventPump;
 import org.argouml.uml.ui.UMLComboBoxModel2;
 
 /**
- * The model behind the UMLMessageActivatorComboBox. 
+ * The model behind the UMLMessageActivatorComboBox.
  * I don't use the UMLComboBoxModel
- * since this mixes the GUI and the model 
- * too much and is much more maintainance 
+ * since this mixes the GUI and the model
+ * too much and is much more maintainance
  * intensive then this implementation.
  */
 public class UMLMessageActivatorComboBoxModel extends UMLComboBoxModel2 {
-		
+
 
 
     /**
@@ -61,15 +61,15 @@ public class UMLMessageActivatorComboBoxModel extends UMLComboBoxModel2 {
         }
     }
 
-    
+
     /**
      * @see org.argouml.uml.ui.UMLComboBoxModel2#isValidElement(Object)
      */
     protected boolean isValidElement(Object m) {
-        return ((org.argouml.model.ModelFacade.isAMessage(m))  
-                && m != getTarget() 
-                && !ModelFacade.getPredecessors((getTarget())).contains(m) 
-                && ModelFacade.getInteraction(m) 
+        return ((org.argouml.model.ModelFacade.isAMessage(m))
+                && m != getTarget()
+                && !ModelFacade.getPredecessors((getTarget())).contains(m)
+                && ModelFacade.getInteraction(m)
                     == ModelFacade.getInteraction((getTarget())));
     }
 
@@ -90,14 +90,14 @@ public class UMLMessageActivatorComboBoxModel extends UMLComboBoxModel2 {
         if (ModelFacade.isAMessage(getTarget())) {
             Object inter = ModelFacade.getInteraction(getTarget());
             if (inter != null)
-                UmlModelEventPump.getPump().removeModelEventListener(this, 
+                UmlModelEventPump.getPump().removeModelEventListener(this,
                         inter, "message");
         }
         super.setTarget(target);
         if (ModelFacade.isAMessage(target)) {
             Object inter = ModelFacade.getInteraction(target);
             if (inter != null)
-                UmlModelEventPump.getPump().addModelEventListener(this, 
+                UmlModelEventPump.getPump().addModelEventListener(this,
                         inter, "message");
         }
     }

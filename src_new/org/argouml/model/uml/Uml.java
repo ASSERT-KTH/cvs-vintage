@@ -1,5 +1,5 @@
-// $Id: Uml.java,v 1.8 2004/08/03 12:18:24 mvw Exp $
-// Copyright (c) 2003 The Regents of the University of California. All
+// $Id: Uml.java,v 1.9 2005/01/09 14:58:07 linus Exp $
+// Copyright (c) 2003-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
 // agreement is hereby granted, provided that the above copyright notice
@@ -35,7 +35,7 @@ import org.argouml.model.UmlModelEntity;
 /**
  * This class contains identifiers for all of the different
  * UML elements identified by ArgoUML.
- * 
+ *
  * @author Thierry Lach
  */
 public final class Uml {
@@ -46,9 +46,9 @@ public final class Uml {
 
     /** Get a map containing entries for all the name/identifier pairs
      * identified by Argo
-     * TODO: MVW: This function is not used withing ArgoUML, 
+     * TODO: MVW: This function is not used withing ArgoUML,
      * except in the junit tests. So, what is it doing here?
-     * 
+     *
      * @return a collection of all recognized Uml class types
      */
     public static Collection getUmlClassList() {

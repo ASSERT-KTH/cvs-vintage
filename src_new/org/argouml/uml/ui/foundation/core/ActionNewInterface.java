@@ -1,4 +1,4 @@
-// $Id: ActionNewInterface.java,v 1.4 2005/01/02 16:43:46 linus Exp $
+// $Id: ActionNewInterface.java,v 1.5 2005/01/09 14:59:08 linus Exp $
 // Copyright (c) 2004-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -37,7 +37,7 @@ import org.argouml.uml.ui.AbstractActionNewModelElement;
 
 /**
  * This action will create a new interface "next to" an existing interface.
- * 
+ *
  * @author mvw@tigris.org
  *
  */
@@ -60,7 +60,7 @@ class ActionNewInterface extends AbstractActionNewModelElement {
             Object iface = /*(MInterface)*/ target;
             Object newInterface = Model.getCoreFactory()
                 .createInterface();
-            ModelFacade.addOwnedElement(ModelFacade.getNamespace(iface), 
+            ModelFacade.addOwnedElement(ModelFacade.getNamespace(iface),
                     newInterface);
             TargetManager.getInstance().setTarget(newInterface);
             super.actionPerformed(e);

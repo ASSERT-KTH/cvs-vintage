@@ -1,5 +1,5 @@
-// $Id: Generator2.java,v 1.6 2004/08/24 17:37:06 mvw Exp $
-// Copyright (c) 2004 The Regents of the University of California. All
+// $Id: Generator2.java,v 1.7 2005/01/09 14:58:58 linus Exp $
+// Copyright (c) 2004-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
 // agreement is hereby granted, provided that the above copyright notice
@@ -93,7 +93,7 @@ public abstract class Generator2
      * @param o the element to be generated
      * @return String the generated code
      */
-    public String generate(Object o) {        
+    public String generate(Object o) {
         if (o == null) {
             return "";
 	}
@@ -232,7 +232,7 @@ public abstract class Generator2
      * @see NotationProvider2#generateObjectFlowState(Object)
      */
     public abstract String generateObjectFlowState(Object m);
-    
+
     /**
      * @see NotationProvider2#generateState(Object)
      */
@@ -246,7 +246,7 @@ public abstract class Generator2
     /**
      * @see NotationProvider2#generateAction(Object)
      */
-    public abstract String generateAction(Object m);     
+    public abstract String generateAction(Object m);
 
     /**
      * @see NotationProvider2#generateGuard(Object)
@@ -375,7 +375,7 @@ public abstract class Generator2
     public void setModuleEnabled(boolean enabled) {
     }
 
-    
+
     /**
      * @see org.argouml.application.api.Pluggable#inContext(Object[])
      */

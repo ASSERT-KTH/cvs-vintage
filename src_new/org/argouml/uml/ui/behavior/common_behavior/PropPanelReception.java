@@ -1,5 +1,5 @@
-// $Id: PropPanelReception.java,v 1.29 2004/12/20 23:15:07 mvw Exp $
-// Copyright (c) 2002-2004 The Regents of the University of California. All
+// $Id: PropPanelReception.java,v 1.30 2005/01/09 14:59:07 linus Exp $
+// Copyright (c) 2002-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
 // agreement is hereby granted, provided that the above copyright notice
@@ -47,7 +47,7 @@ public class PropPanelReception extends PropPanelModelElement {
 
     /**
      * The constructor.
-     * 
+     *
      */
     public PropPanelReception() {
         super("Reception", lookupIcon("Reception"), ConfigLoader
@@ -89,9 +89,9 @@ public class PropPanelReception extends PropPanelModelElement {
                 specificationScroll);
 
         addButton(new PropPanelButton2(new ActionNavigateContainerElement()));
-        addButton(new PropPanelButton2(new ActionNewStereotype(), 
+        addButton(new PropPanelButton2(new ActionNewStereotype(),
                 lookupIcon("Stereotype")));
-        addButton(new PropPanelButton2(new ActionRemoveFromModel(), 
+        addButton(new PropPanelButton2(new ActionRemoveFromModel(),
                 lookupIcon("Delete")));;
     }
 }

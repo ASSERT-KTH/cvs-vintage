@@ -1,5 +1,5 @@
-// $Id: ActionAddDiagram.java,v 1.30 2005/01/03 13:00:10 mvw Exp $
-// Copyright (c) 1996-99 The Regents of the University of California. All
+// $Id: ActionAddDiagram.java,v 1.31 2005/01/09 14:59:01 linus Exp $
+// Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
 // agreement is hereby granted, provided that the above copyright notice
@@ -22,7 +22,7 @@
 // CALIFORNIA HAS NO OBLIGATIONS TO PROVIDE MAINTENANCE, SUPPORT,
 // UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 
-// $Id: ActionAddDiagram.java,v 1.30 2005/01/03 13:00:10 mvw Exp $
+// $Id: ActionAddDiagram.java,v 1.31 2005/01/09 14:59:01 linus Exp $
 
 package org.argouml.uml.ui;
 
@@ -39,17 +39,17 @@ import org.argouml.uml.diagram.ui.UMLDiagram;
 /**
  * Abstract class that is the parent of all actions adding diagrams to ArgoUML.
  * The children of this class should implement createDiagram to do any specific
- * actions for creating a diagram and isValidNamespace that checks if some 
+ * actions for creating a diagram and isValidNamespace that checks if some
  * namespace is valid to add the diagram to.
  * @author jaap.branderhorst@xs4all.nl
  */
 public abstract class ActionAddDiagram extends UMLAction {
-    private static final Logger LOG = 
+    private static final Logger LOG =
         Logger.getLogger(ActionAddDiagram.class);
 
     /**
      * Constructor for ActionAddDiagram.
-     * 
+     *
      * @param s the name for this action
      */
     public ActionAddDiagram(String s) {
@@ -59,10 +59,10 @@ public abstract class ActionAddDiagram extends UMLAction {
     /**
      * @see java.awt.event.ActionListener#actionPerformed(ActionEvent)
      */
-    public void actionPerformed(ActionEvent e) {       
+    public void actionPerformed(ActionEvent e) {
         Project p = ProjectManager.getManager().getCurrentProject();
         Object ns = findNamespace();
-        
+
         if (ns != null && isValidNamespace(ns)) {
             UMLDiagram diagram = createDiagram(ns);
             p.addMember(diagram);
@@ -86,7 +86,7 @@ public abstract class ActionAddDiagram extends UMLAction {
         Object target = TargetManager.getInstance().getModelTarget();
         Object ns = null;
         if (target == null || !ModelFacade.isABase(target)) {
-            target = p.getRoot();        
+            target = p.getRoot();
         }
         if (ModelFacade.isANamespace(target)) {
             ns = target;
@@ -106,7 +106,7 @@ public abstract class ActionAddDiagram extends UMLAction {
     }
 
     /**
-     * Returns true as the given namespace a valid namespace is to add the 
+     * Returns true as the given namespace a valid namespace is to add the
      * diagram to.
      * @param ns the namespace to check
      * @return boolean

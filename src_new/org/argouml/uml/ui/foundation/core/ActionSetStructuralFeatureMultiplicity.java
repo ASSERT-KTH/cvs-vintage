@@ -1,5 +1,5 @@
-// $Id: ActionSetStructuralFeatureMultiplicity.java,v 1.6 2004/09/19 21:06:25 mvw Exp $
-// Copyright (c) 1996-2002 The Regents of the University of California. All
+// $Id: ActionSetStructuralFeatureMultiplicity.java,v 1.7 2005/01/09 14:59:08 linus Exp $
+// Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
 // agreement is hereby granted, provided that the above copyright notice
@@ -22,7 +22,7 @@
 // CALIFORNIA HAS NO OBLIGATIONS TO PROVIDE MAINTENANCE, SUPPORT,
 // UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 
-// $Id: ActionSetStructuralFeatureMultiplicity.java,v 1.6 2004/09/19 21:06:25 mvw Exp $
+// $Id: ActionSetStructuralFeatureMultiplicity.java,v 1.7 2005/01/09 14:59:08 linus Exp $
 package org.argouml.uml.ui.foundation.core;
 
 import org.argouml.model.ModelFacade;
@@ -30,7 +30,7 @@ import org.argouml.uml.ui.ActionSetMultiplicity;
 
 /**
  * Action to set the multiplicity of a structural feature.
- * @author jaap.branderhorst@xs4all.nl	
+ * @author jaap.branderhorst@xs4all.nl
  * @since Jan 6, 2003
  */
 public class ActionSetStructuralFeatureMultiplicity
@@ -51,7 +51,7 @@ public class ActionSetStructuralFeatureMultiplicity
      * java.lang.Object, java.lang.Object)
      */
     public void setSelectedItem(Object item, Object target) {
-        if (target != null 
+        if (target != null
                 && org.argouml.model.ModelFacade.isAStructuralFeature(target)) {
             if (org.argouml.model.ModelFacade.isAMultiplicity(item)) {
                 ModelFacade.setMultiplicity(target, item);

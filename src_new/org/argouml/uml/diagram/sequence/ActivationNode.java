@@ -1,5 +1,5 @@
-// $Id: ActivationNode.java,v 1.4 2004/11/21 20:20:09 mvw Exp $
-// Copyright (c) 2003-2004 The Regents of the University of California. All
+// $Id: ActivationNode.java,v 1.5 2005/01/09 14:58:38 linus Exp $
+// Copyright (c) 2003-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
 // agreement is hereby granted, provided that the above copyright notice
@@ -39,7 +39,7 @@ public class ActivationNode extends Node {
 
     /**
      * The constructor.
-     * 
+     *
      */
     public ActivationNode() { }
 
@@ -98,7 +98,7 @@ public class ActivationNode extends Node {
     }
 
     /**
-     * @param b true if the top is cut off 
+     * @param b true if the top is cut off
      */
     public void setCutOffTop(boolean b) {
         if (b && !(start)) {

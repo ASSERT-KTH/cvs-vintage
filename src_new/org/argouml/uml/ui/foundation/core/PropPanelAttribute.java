@@ -1,4 +1,4 @@
-// $Id: PropPanelAttribute.java,v 1.54 2005/01/02 17:05:05 mvw Exp $
+// $Id: PropPanelAttribute.java,v 1.55 2005/01/09 14:59:08 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -48,7 +48,7 @@ public class PropPanelAttribute extends PropPanelStructuralFeature {
 
     /**
      * The constructor.
-     * 
+     *
      */
     public PropPanelAttribute() {
         super("Attribute", ConfigLoader.getTabPropsOrientation());
@@ -66,8 +66,8 @@ public class PropPanelAttribute extends PropPanelStructuralFeature {
 
         addField(Translator.localize("label.type"),
                 new UMLComboBoxNavigator(
-                        this, 
-                        Translator.localize("label.class.navigate.tooltip"), 
+                        this,
+                        Translator.localize("label.class.navigate.tooltip"),
                         getTypeComboBox()));
 
         // addField(Translator.localize("label.initial-value"), new
@@ -83,7 +83,7 @@ public class PropPanelAttribute extends PropPanelStructuralFeature {
         add(getVisibilityPanel());
         add(getChangeabilityRadioButtonPanel());
 
-        JPanel modifiersPanel = new JPanel(new FlexiGridLayout(0, 3, 
+        JPanel modifiersPanel = new JPanel(new FlexiGridLayout(0, 3,
                 FlexiGridLayout.ROWCOLPREFERRED));
         modifiersPanel.setBorder(new TitledBorder(
                 Translator.localize("label.modifiers")));
@@ -93,11 +93,11 @@ public class PropPanelAttribute extends PropPanelStructuralFeature {
 
         addButton(new PropPanelButton2(new ActionNavigateContainerElement()));
         addButton(new PropPanelButton2(new ActionAddAttribute()));
-        addButton(new PropPanelButton2(new ActionAddDataType(), 
+        addButton(new PropPanelButton2(new ActionAddDataType(),
                 lookupIcon("DataType")));
-        addButton(new PropPanelButton2(new ActionNewStereotype(), 
+        addButton(new PropPanelButton2(new ActionNewStereotype(),
                 lookupIcon("Stereotype")));
-        addButton(new PropPanelButton2(new ActionRemoveFromModel(), 
+        addButton(new PropPanelButton2(new ActionRemoveFromModel(),
                 lookupIcon("Delete")));;
     }
 

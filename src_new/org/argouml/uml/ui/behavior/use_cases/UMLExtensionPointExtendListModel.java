@@ -1,5 +1,5 @@
-// $Id: UMLExtensionPointExtendListModel.java,v 1.13 2004/09/22 17:55:58 mvw Exp $
-// Copyright (c) 2002-2003 The Regents of the University of California. All
+// $Id: UMLExtensionPointExtendListModel.java,v 1.14 2005/01/09 14:59:08 linus Exp $
+// Copyright (c) 2002-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
 // agreement is hereby granted, provided that the above copyright notice
@@ -52,7 +52,7 @@ public class UMLExtensionPointExtendListModel
      * @see org.argouml.uml.ui.UMLModelElementListModel2#isValidElement(Object)
      */
     protected boolean isValidElement(Object/*MBase*/ o) {
-        return org.argouml.model.ModelFacade.isAExtend(o) 
+        return org.argouml.model.ModelFacade.isAExtend(o)
             && ModelFacade.getExtends(getTarget()).contains(o);
     }
 

@@ -1,5 +1,5 @@
-// $Id: ActionSetIncludeAddition.java,v 1.12 2004/12/30 12:34:06 mvw Exp $
-// Copyright (c) 1996-99 The Regents of the University of California. All
+// $Id: ActionSetIncludeAddition.java,v 1.13 2005/01/09 14:59:08 linus Exp $
+// Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
 // agreement is hereby granted, provided that the above copyright notice
@@ -39,7 +39,7 @@ import org.argouml.uml.ui.UMLComboBox2;
  */
 public class ActionSetIncludeAddition extends UMLAction {
 
-    private static final ActionSetIncludeAddition SINGLETON = 
+    private static final ActionSetIncludeAddition SINGLETON =
         new ActionSetIncludeAddition();
 
     /**

@@ -1,5 +1,5 @@
-// $Id: FigDeepHistoryState.java,v 1.15 2004/09/02 20:55:32 mvw Exp $
-// Copyright (c) 1996-99 The Regents of the University of California. All
+// $Id: FigDeepHistoryState.java,v 1.16 2005/01/09 14:58:39 linus Exp $
+// Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
 // agreement is hereby granted, provided that the above copyright notice
@@ -22,19 +22,17 @@
 // CALIFORNIA HAS NO OBLIGATIONS TO PROVIDE MAINTENANCE, SUPPORT,
 // UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 
-// File: FigHistoryState.java
-// Classes: FigHistoryState
-// Original Author: jrobbins@ics.uci.edu
-
 package org.argouml.uml.diagram.state.ui;
 
 import org.tigris.gef.graph.GraphModel;
 
-/** Class to display graphics for a UML DeepHistoryState in a diagram. 
+/** Class to display graphics for a UML DeepHistoryState in a diagram.
+ *
+ * @author jrobbins
  */
 public class FigDeepHistoryState extends FigHistoryState {
     /**
-     * The main constructor 
+     * The main constructor
      */
     public FigDeepHistoryState() {
         super();
@@ -48,7 +46,7 @@ public class FigDeepHistoryState extends FigHistoryState {
     }
 
     /**
-     * The constructor which links the Fig into the existing UML element 
+     * The constructor which links the Fig into the existing UML element
      * @param gm ignored
      * @param node the UML element
      */

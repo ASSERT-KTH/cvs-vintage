@@ -1,4 +1,4 @@
-// $Id: DefaultModelImplementation.java,v 1.1 2005/01/02 18:15:26 linus Exp $
+// $Id: DefaultModelImplementation.java,v 1.2 2005/01/09 14:58:07 linus Exp $
 // Copyright (c) 2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -29,7 +29,7 @@ import org.argouml.model.ModelImplementation;
 /**
  * This is the default model implementation used for JUnit tests.<p>
  *
- * TODO: Once it is solve how the Model subsystem is initiated for 
+ * TODO: Once it is solve how the Model subsystem is initiated for
  * testing this can be removed.
  */
 public class DefaultModelImplementation extends NSUMLModelImplementation

@@ -1,4 +1,4 @@
-// $Id: ActionSetModelElementStereotype.java,v 1.15 2005/01/02 16:43:46 linus Exp $
+// $Id: ActionSetModelElementStereotype.java,v 1.16 2005/01/09 14:59:08 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -39,7 +39,7 @@ import org.argouml.uml.ui.UMLComboBox2;
  */
 public class ActionSetModelElementStereotype extends UMLAction {
 
-    private static final ActionSetModelElementStereotype SINGLETON = 
+    private static final ActionSetModelElementStereotype SINGLETON =
         new ActionSetModelElementStereotype();
 
     /**
@@ -48,7 +48,7 @@ public class ActionSetModelElementStereotype extends UMLAction {
     protected ActionSetModelElementStereotype() {
         super(Translator.localize("Set"), true, NO_ICON);
     }
-   
+
     /**
      * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
      */
@@ -59,7 +59,7 @@ public class ActionSetModelElementStereotype extends UMLAction {
         Object target = null;
         if (source instanceof UMLComboBox2) {
             UMLComboBox2 combo = (UMLComboBox2) source;
-            if (ModelFacade.isAStereotype(combo.getSelectedItem())) 
+            if (ModelFacade.isAStereotype(combo.getSelectedItem()))
                 newStereo = /*(MStereotype)*/ combo.getSelectedItem();
             if (ModelFacade.isAModelElement(combo.getTarget())) {
                 target = /*(MModelElement)*/ combo.getTarget();
@@ -91,7 +91,7 @@ public class ActionSetModelElementStereotype extends UMLAction {
     public static ActionSetModelElementStereotype getInstance() {
         return SINGLETON;
     }
-            
-    
+
+
 
 }

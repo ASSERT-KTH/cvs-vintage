@@ -1,4 +1,4 @@
-// $Id: UMLExpressionExpressionModel.java,v 1.3 2005/01/02 16:43:46 linus Exp $
+// $Id: UMLExpressionExpressionModel.java,v 1.4 2005/01/09 14:59:03 linus Exp $
 // Copyright (c) 2004-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -29,19 +29,19 @@ import org.argouml.model.ModelFacade;
 
 /**
  * The model for a UML Expression that is obtained from its "parent"
- * by getExpression - hence: Guard, ChangeEvent, TimeEvent. 
- * 
+ * by getExpression - hence: Guard, ChangeEvent, TimeEvent.
+ *
  * @author Michiel
  */
 public class UMLExpressionExpressionModel extends UMLExpressionModel2 {
 
     /**
      * The constructor.
-     * 
+     *
      * @param c the container of UML user interface components
      * @param name the name of the property
      */
-    public UMLExpressionExpressionModel(UMLUserInterfaceContainer c, 
+    public UMLExpressionExpressionModel(UMLUserInterfaceContainer c,
             String name) {
         super(c, name);
     }

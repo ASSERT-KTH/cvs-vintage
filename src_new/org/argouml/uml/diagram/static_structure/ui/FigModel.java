@@ -1,5 +1,5 @@
-// $Id: FigModel.java,v 1.12 2004/08/12 20:16:33 mvw Exp $
-// Copyright (c) 1996-2004 The Regents of the University of California. All
+// $Id: FigModel.java,v 1.13 2005/01/09 14:58:44 linus Exp $
+// Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
 // agreement is hereby granted, provided that the above copyright notice
@@ -22,7 +22,7 @@
 // CALIFORNIA HAS NO OBLIGATIONS TO PROVIDE MAINTENANCE, SUPPORT,
 // UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 
-// $Id: FigModel.java,v 1.12 2004/08/12 20:16:33 mvw Exp $
+// $Id: FigModel.java,v 1.13 2005/01/09 14:58:44 linus Exp $
 
 package org.argouml.uml.diagram.static_structure.ui;
 
@@ -58,7 +58,7 @@ public class FigModel extends FigPackage {
 
     }
 
-    /** 
+    /**
      * The constructor that hooks the Fig into the UML modelelement
      * @param gm ignored
      * @param node the UMl element
@@ -73,7 +73,7 @@ public class FigModel extends FigPackage {
     }
 
     /**
-     * 
+     *
      * @see org.tigris.gef.presentation.Fig#setBounds(int, int, int, int)
      */
     public void setBounds(int x, int y, int w, int h) {

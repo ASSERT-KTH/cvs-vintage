@@ -1,4 +1,4 @@
-// $Id: TestStylePanel.java,v 1.8 2005/01/02 16:43:51 linus Exp $
+// $Id: TestStylePanel.java,v 1.9 2005/01/09 14:59:16 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -66,7 +66,7 @@ public class TestStylePanel extends TestCase {
      * @param arg0 is the name of the test case.
      */
     public TestStylePanel(String arg0) {
-        super(arg0);       
+        super(arg0);
     }
 
     /**

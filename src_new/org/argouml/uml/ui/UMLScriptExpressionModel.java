@@ -1,4 +1,4 @@
-// $Id: UMLScriptExpressionModel.java,v 1.5 2005/01/02 16:43:46 linus Exp $
+// $Id: UMLScriptExpressionModel.java,v 1.6 2005/01/09 14:59:03 linus Exp $
 // Copyright (c) 2003-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -28,15 +28,15 @@ import org.argouml.model.Model;
 import org.argouml.model.ModelFacade;
 
 /**
- * 
+ *
  * @author mkl
- *  
+ *
  */
 public class UMLScriptExpressionModel extends UMLExpressionModel2 {
 
     /**
      * The constructor.
-     * 
+     *
      * @param container the container of UML user interface components
      * @param propertyName the name of the property
      */

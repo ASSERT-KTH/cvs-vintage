@@ -1,5 +1,5 @@
-// $Id: StandardCM.java,v 1.4 2004/09/05 06:10:21 mvw Exp $
-// Copyright (c) 1996-99 The Regents of the University of California. All
+// $Id: StandardCM.java,v 1.5 2005/01/09 14:58:05 linus Exp $
+// Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
 // agreement is hereby granted, provided that the above copyright notice
@@ -34,10 +34,10 @@ import org.argouml.cognitive.Designer;
  *
  */
 public class StandardCM extends AndCM {
-    
+
     /**
      * The constructor.
-     * 
+     *
      */
     public StandardCM() {
 	addMech(new EnabledCM());
@@ -78,14 +78,14 @@ class CurDecisionCM extends ControlMech {
 
 class CompositeCM extends ControlMech {
     private Vector mechs = new Vector();
-    
+
     /**
      * @return Returns the _mechs.
      */
     protected Vector getMechs() {
         return mechs;
     }
-    
+
     /**
      * @param cm the ControlMech
      */

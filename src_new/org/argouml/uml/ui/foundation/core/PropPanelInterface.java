@@ -1,5 +1,5 @@
-// $Id: PropPanelInterface.java,v 1.54 2004/12/20 23:15:10 mvw Exp $
-// Copyright (c) 1996-2004 The Regents of the University of California. All
+// $Id: PropPanelInterface.java,v 1.55 2005/01/09 14:59:08 linus Exp $
+// Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
 // agreement is hereby granted, provided that the above copyright notice
@@ -45,39 +45,39 @@ public class PropPanelInterface extends PropPanelClassifier {
 	super("Interface", ConfigLoader.getTabPropsOrientation());
 
 	addField(Translator.localize("label.name"), getNameTextField());
-	addField(Translator.localize("label.stereotype"), 
+	addField(Translator.localize("label.stereotype"),
             getStereotypeBox());
-	addField(Translator.localize("label.namespace"), 
+	addField(Translator.localize("label.namespace"),
             getNamespaceComboBox());
 
-	add( getModifiersPanel());
+	add(getModifiersPanel());
 	add(getNamespaceVisibilityPanel());
 
 	addSeperator();
 
-	addField(Translator.localize("label.generalizations"), 
+	addField(Translator.localize("label.generalizations"),
             getGeneralizationScroll());
-	addField(Translator.localize("label.specializations"), 
+	addField(Translator.localize("label.specializations"),
             getSpecializationScroll());
 
 	addSeperator();
 
-	addField(Translator.localize("label.association-ends"), 
+	addField(Translator.localize("label.association-ends"),
             getAssociationEndScroll());
-	addField(Translator.localize("label.operations"), 
+	addField(Translator.localize("label.operations"),
             getFeatureScroll());
 
 	addButton(new PropPanelButton2(new ActionNavigateNamespace()));
-	addButton(new PropPanelButton2(new ActionAddOperation(), 
+	addButton(new PropPanelButton2(new ActionAddOperation(),
 	        lookupIcon("NewOperation")));
-	addButton(new PropPanelButton2(getActionNewReception(), 
-	        lookupIcon("Reception")));	
-	addButton(new PropPanelButton2(new ActionNewInterface(), 
+	addButton(new PropPanelButton2(getActionNewReception(),
+	        lookupIcon("Reception")));
+	addButton(new PropPanelButton2(new ActionNewInterface(),
                 lookupIcon("Interface")));
-	addButton(new PropPanelButton2(new ActionNewStereotype(), 
+	addButton(new PropPanelButton2(new ActionNewStereotype(),
 	        lookupIcon("Stereotype")));
-	addButton(new PropPanelButton2(new ActionRemoveFromModel(), 
+	addButton(new PropPanelButton2(new ActionRemoveFromModel(),
                 lookupIcon("Delete")));
     }
-    
+
 } /* end class PropPanelInterface */

@@ -1,5 +1,5 @@
-// $Id: TestActionUseCaseDiagram.java,v 1.2 2003/05/11 14:13:51 linus Exp $
-// Copyright (c) 1996-2002 The Regents of the University of California. All
+// $Id: TestActionUseCaseDiagram.java,v 1.3 2005/01/09 14:59:17 linus Exp $
+// Copyright (c) 1996-2002, 2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
 // agreement is hereby granted, provided that the above copyright notice
@@ -26,7 +26,7 @@ package org.argouml.uml.ui;
 
 /**
  * Test for actionusecasediagram.
- * @author jaap.branderhorst@xs4all.nl	
+ * @author jaap.branderhorst@xs4all.nl
  * @since Jan 9, 2003
  */
 public class TestActionUseCaseDiagram

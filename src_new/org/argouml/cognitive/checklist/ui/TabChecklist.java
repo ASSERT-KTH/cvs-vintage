@@ -1,5 +1,5 @@
-// $Id: TabChecklist.java,v 1.25 2004/12/10 18:22:04 mvw Exp $
-// Copyright (c) 1996-2004 The Regents of the University of California. All
+// $Id: TabChecklist.java,v 1.26 2005/01/09 14:58:05 linus Exp $
+// Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
 // agreement is hereby granted, provided that the above copyright notice
@@ -275,12 +275,12 @@ class TableModelChecklist extends AbstractTableModel
     // accessors
 
     /**
-     * This function is called when the target is changed (by the user). 
-     * It updates the items, and causes events to arrive when the UML model 
+     * This function is called when the target is changed (by the user).
+     * It updates the items, and causes events to arrive when the UML model
      * of the new target gets updated.<p>
-     * 
+     *
      * Limited to the target name changes, to reduce the number of events fired.
-     * 
+     *
      * @param t the new target
      */
     public void setTarget(Object t) {
@@ -396,7 +396,7 @@ class TableModelChecklist extends AbstractTableModel
 
     ////////////////
     // event handlers
-    
+
     /**
      * @see java.beans.VetoableChangeListener#vetoableChange(java.beans.PropertyChangeEvent)
      */
@@ -408,7 +408,7 @@ class TableModelChecklist extends AbstractTableModel
             }
         });
     }
-    
+
     /**
      * @see java.beans.PropertyChangeListener#propertyChange(java.beans.PropertyChangeEvent)
      */

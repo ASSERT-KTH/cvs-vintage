@@ -1,4 +1,4 @@
-// $Id: ActionNewSendAction.java,v 1.8 2005/01/02 16:43:50 linus Exp $
+// $Id: ActionNewSendAction.java,v 1.9 2005/01/09 14:59:07 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -36,9 +36,9 @@ import org.argouml.model.Model;
  */
 public class ActionNewSendAction extends ActionNewAction {
 
-    private static final ActionNewSendAction SINGLETON = 
+    private static final ActionNewSendAction SINGLETON =
         new ActionNewSendAction();
-    
+
     /**
      * Constructor for ActionNewSendAction.
      */
@@ -47,8 +47,8 @@ public class ActionNewSendAction extends ActionNewAction {
         putValue(Action.NAME, Translator.localize(
                 "button.new-sendaction"));
     }
-    
-    
+
+
     /**
      * @see org.argouml.uml.ui.behavior.common_behavior.ActionNewAction#createAction()
      */

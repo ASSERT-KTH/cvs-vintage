@@ -1,4 +1,4 @@
-// $Id: ModelTableModel.java,v 1.10 2005/01/02 10:08:35 linus Exp $
+// $Id: ModelTableModel.java,v 1.11 2005/01/09 14:58:00 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -71,7 +71,7 @@ public class ModelTableModel extends DefaultTableModel implements Runnable {
      * @see java.lang.Runnable#run()
      */
     public void run() {
-	// The following lines should be substituted 
+	// The following lines should be substituted
         // by the following 2 commented lines.
 	// (This is because getting the project still does not seem to work...)
 	ArgoDiagram activeDiagram = ProjectManager.getManager()
@@ -88,7 +88,7 @@ public class ModelTableModel extends DefaultTableModel implements Runnable {
 	    }
 	    Collection elems =
 		Model.getModelManagementHelper()
-		    .getAllModelElementsOfKind(ns, 
+		    .getAllModelElementsOfKind(ns,
                                                ModelFacade.CLASSIFIER);
 	    //Project p = ProjectManager.getManager().getCurrentProject();
 	    //Collection elems = ModelManagementHelper.getHelper()
@@ -96,7 +96,7 @@ public class ModelTableModel extends DefaultTableModel implements Runnable {
 	    Iterator iter = elems.iterator();
 	    while (iter.hasNext()) {
 		Object c = iter.next();
-		Object[] rowdata = 
+		Object[] rowdata =
 		    getCodeRelevantClassifierData(c);
 		if (rowdata != null) {
 		    addRow(rowdata);
@@ -127,13 +127,13 @@ public class ModelTableModel extends DefaultTableModel implements Runnable {
             }
             // ommit root package name; it's the model's root
             if (ModelFacade.getNamespace(parentNamespace) != null) {
-        	packagePath = ModelFacade.getName(parentNamespace) + "." 
+        	packagePath = ModelFacade.getName(parentNamespace) + "."
         	    + packagePath;
             }
             parentNamespace = ModelFacade.getNamespace(parentNamespace);
         }
         if (codePath != null && codePath.length() > 0) {
-            return new Object [] {ModelFacade.getName(cls), type, packagePath, 
+            return new Object [] {ModelFacade.getName(cls), type, packagePath,
                 codePath };
         } else {
             return null;

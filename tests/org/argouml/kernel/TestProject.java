@@ -1,5 +1,5 @@
-// $Id: TestProject.java,v 1.9 2004/09/24 20:17:25 mvw Exp $
-// Copyright (c) 1996-2004 The Regents of the University of California. All
+// $Id: TestProject.java,v 1.10 2005/01/09 14:59:14 linus Exp $
+// Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
 // agreement is hereby granted, provided that the above copyright notice
@@ -41,7 +41,7 @@ public class TestProject extends TestCase {
     public TestProject(String arg0) {
         super(arg0);
     }
-    
+
     /**
      * Test the makeUntitledProject() function.
      */

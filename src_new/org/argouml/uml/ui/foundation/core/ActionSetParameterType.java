@@ -1,4 +1,4 @@
-// $Id: ActionSetParameterType.java,v 1.17 2005/01/02 16:43:46 linus Exp $
+// $Id: ActionSetParameterType.java,v 1.18 2005/01/09 14:59:08 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -38,9 +38,9 @@ import org.argouml.uml.ui.UMLComboBox2;
  */
 public class ActionSetParameterType extends UMLAction {
 
-    private static final ActionSetParameterType SINGLETON = 
+    private static final ActionSetParameterType SINGLETON =
         new ActionSetParameterType();
-    
+
     /**
      * Constructor for ActionSetStructuralFeatureType.
      */
@@ -48,7 +48,7 @@ public class ActionSetParameterType extends UMLAction {
         super(Translator.localize("Set"), true, NO_ICON);
     }
 
-    
+
 
     /**
      * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
@@ -70,8 +70,8 @@ public class ActionSetParameterType extends UMLAction {
                 newClassifier = /*(MClassifier)*/ o;
             }
         }
-        if (newClassifier != null 
-                && newClassifier != oldClassifier 
+        if (newClassifier != null
+                && newClassifier != oldClassifier
                 && para != null) {
             newClassifier = /*(MClassifier)*/ Model.getModelManagementHelper()
                 .getCorrespondingElement(
@@ -80,7 +80,7 @@ public class ActionSetParameterType extends UMLAction {
             ModelFacade.setType(para, newClassifier);
             super.actionPerformed(e);
         }
-        
+
     }
 
 

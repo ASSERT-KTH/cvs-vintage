@@ -1,5 +1,5 @@
-// $Id: ActionResolve.java,v 1.4 2004/12/27 20:16:51 mvw Exp $
-// Copyright (c) 2004 The Regents of the University of California. All
+// $Id: ActionResolve.java,v 1.5 2005/01/09 14:58:13 linus Exp $
+// Copyright (c) 2004-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
 // agreement is hereby granted, provided that the above copyright notice
@@ -38,8 +38,8 @@ public class ActionResolve extends ToDoItemAction {
     /**
      * The constructor.
      */
-    public ActionResolve() { 
-        super("action.resolve-item", HAS_ICON); 
+    public ActionResolve() {
+        super("action.resolve-item", HAS_ICON);
     }
 
     /**

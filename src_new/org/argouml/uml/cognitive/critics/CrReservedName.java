@@ -1,5 +1,5 @@
-// $Id: CrReservedName.java,v 1.22 2004/11/14 08:14:37 linus Exp $
-// Copyright (c) 1996-2004 The Regents of the University of California. All
+// $Id: CrReservedName.java,v 1.23 2005/01/09 14:58:36 linus Exp $
+// Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
 // agreement is hereby granted, provided that the above copyright notice
@@ -46,7 +46,7 @@ public class CrReservedName extends CrUML {
 
     private static Vector umlReserved = new Vector();
     private static Vector javaReserved = new Vector();
-  
+
 
     static {
 	umlReserved.addElement("none");
@@ -192,7 +192,7 @@ public class CrReservedName extends CrUML {
 
     ////////////////////////////////////////////////////////////////
     // Critic implementation
-    
+
     /**
      * @see org.argouml.uml.cognitive.critics.CrUML#predicate2(
      * java.lang.Object, org.argouml.cognitive.Designer)
@@ -250,7 +250,7 @@ public class CrReservedName extends CrUML {
 	    ((WizMEName) w).setMustEdit(true);
 	}
     }
-    
+
     /**
      * @see org.argouml.cognitive.critics.Critic#getWizardClass(org.argouml.cognitive.ToDoItem)
      */

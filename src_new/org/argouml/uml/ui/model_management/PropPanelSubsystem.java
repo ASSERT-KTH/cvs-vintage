@@ -1,4 +1,4 @@
-// $Id: PropPanelSubsystem.java,v 1.25 2005/01/08 23:27:26 linus Exp $
+// $Id: PropPanelSubsystem.java,v 1.26 2005/01/09 14:59:12 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -50,27 +50,27 @@ public class PropPanelSubsystem extends PropPanelPackage {
 
     private JScrollPane featureScroll;
 
-    private static UMLClassifierFeatureListModel featureListModel = 
+    private static UMLClassifierFeatureListModel featureListModel =
         new UMLClassifierFeatureListModel();
 
     /**
      * The constructor.
-     * 
+     *
      */
     public PropPanelSubsystem() {
-        super("Subsystem", lookupIcon("Subsystem"), 
+        super("Subsystem", lookupIcon("Subsystem"),
                 ConfigLoader.getTabPropsOrientation());
 
         addField(Translator.localize("label.available-features"),
                 getFeatureScroll());
 
-        addButton(new PropPanelButton2(new ActionNewOperation(), 
+        addButton(new PropPanelButton2(new ActionNewOperation(),
                 lookupIcon("NewOperation")));
     }
 
     /**
      * Add a new operation to this classifier.
-     * 
+     *
      * @author mvw@tigris.org
      */
     private class ActionNewOperation extends AbstractActionNewModelElement {
@@ -103,7 +103,7 @@ public class PropPanelSubsystem extends PropPanelPackage {
 
     /**
      * Returns the featureScroll.
-     * 
+     *
      * @return JScrollPane
      */
     public JScrollPane getFeatureScroll() {

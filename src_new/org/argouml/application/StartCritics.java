@@ -1,5 +1,5 @@
-// $Id: StartCritics.java,v 1.18 2004/11/30 16:14:55 mvw Exp $
-// Copyright (c) 1996-2004 The Regents of the University of California. All
+// $Id: StartCritics.java,v 1.19 2005/01/09 14:58:02 linus Exp $
+// Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
 // agreement is hereby granted, provided that the above copyright notice
@@ -35,11 +35,13 @@ import org.argouml.model.Model;
 import org.argouml.uml.cognitive.critics.ChildGenUML;
 import org.argouml.uml.cognitive.critics.CrUML;
 
-/** 
+/**
  * StartCritics is a thread which helps to start the critiquing thread.
  */
 public class StartCritics implements Runnable {
-    /** logger */
+    /**
+     * Logger.
+     */
     private static final Logger LOG = Logger.getLogger(StartCritics.class);
 
     /**
@@ -60,7 +62,7 @@ public class StartCritics implements Runnable {
         dsgr.setChildGenerator(new ChildGenUML());
         java.util.Enumeration models = (p.getUserDefinedModels()).elements();
         while (models.hasMoreElements()) {
-            Object o = models.nextElement();    
+            Object o = models.nextElement();
             Model.getPump().addModelEventListener(dsgr, o);
         }
         LOG.info("spawned critiquing thread");

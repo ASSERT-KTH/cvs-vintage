@@ -1,5 +1,5 @@
-// $Id: SelectionEdgeClarifiers.java,v 1.5 2004/10/20 11:46:50 mkl Exp $
-// Copyright (c) 1996-99 The Regents of the University of California. All
+// $Id: SelectionEdgeClarifiers.java,v 1.6 2005/01/09 14:58:56 linus Exp $
+// Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
 // agreement is hereby granted, provided that the above copyright notice
@@ -22,11 +22,7 @@
 // CALIFORNIA HAS NO OBLIGATIONS TO PROVIDE MAINTENANCE, SUPPORT,
 // UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 
-// File: SelectionEdgeClarifiers.java
-// Classes: SelectionEdgeClarifiers
-// Original Author: jrobbins@ics.uci.edu
-// $Id: SelectionEdgeClarifiers.java,v 1.5 2004/10/20 11:46:50 mkl Exp $
-
+// $Id: SelectionEdgeClarifiers.java,v 1.6 2005/01/09 14:58:56 linus Exp $
 package org.argouml.uml.diagram.ui;
 
 import java.awt.Graphics;
@@ -35,15 +31,17 @@ import org.tigris.gef.base.SelectionReshape;
 import org.tigris.gef.presentation.Fig;
 
 /**
- * 
  *
+ *
+ *
+ * @author jrobbins
  */
 public class SelectionEdgeClarifiers extends SelectionReshape {
 
     ////////////////////////////////////////////////////////////////
     // constructors
 
-    /** Construct a new SelectionEdgeClarifiers for the given Fig 
+    /** Construct a new SelectionEdgeClarifiers for the given Fig
      *
      * @param f the given fig
      */
@@ -51,13 +49,13 @@ public class SelectionEdgeClarifiers extends SelectionReshape {
 
     /** Paint the handles at the four corners and midway along each edge
      * of the bounding box.
-     * 
+     *
      * @see org.tigris.gef.base.Selection#paint(java.awt.Graphics)
      */
     public void paint(Graphics g) {
 	((FigEdgeModelElement) _content).paintClarifiers(g);
 	super.paint(g);
-    }  
-  
+    }
+
 } /* end class SelectionEdgeClarifiers */
 

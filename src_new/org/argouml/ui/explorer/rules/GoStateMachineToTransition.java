@@ -1,5 +1,5 @@
-// $Id: GoStateMachineToTransition.java,v 1.11 2004/11/14 14:04:40 mvw Exp $
-// Copyright (c) 2003-2004 The Regents of the University of California. All
+// $Id: GoStateMachineToTransition.java,v 1.12 2005/01/09 14:58:32 linus Exp $
+// Copyright (c) 2003-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
 // agreement is hereby granted, provided that the above copyright notice
@@ -33,7 +33,7 @@ import org.argouml.model.ModelFacade;
 
 /**
  * Rule for Statemachine->Transition.
- * 
+ *
  * @author Jaap
  *
  */

@@ -1,5 +1,5 @@
-// $Id: GoDiagramToNode.java,v 1.9 2004/09/04 06:59:49 mvw Exp $
-// Copyright (c) 1996-2004 The Regents of the University of California. All
+// $Id: GoDiagramToNode.java,v 1.10 2005/01/09 14:58:32 linus Exp $
+// Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
 // agreement is hereby granted, provided that the above copyright notice
@@ -39,14 +39,14 @@ public class GoDiagramToNode extends AbstractPerspectiveRule {
     /**
      * @see org.argouml.ui.explorer.rules.PerspectiveRule#getRuleName()
      */
-    public String getRuleName() { 
+    public String getRuleName() {
         return Translator.localize ("misc.diagram.node");
     }
 
     /**
      * @see org.argouml.ui.explorer.rules.PerspectiveRule#getChildren(java.lang.Object)
      */
-    public Collection getChildren(Object parent) { 
+    public Collection getChildren(Object parent) {
 	if (parent instanceof Diagram) {
 	    return ((Diagram) parent).getNodes(null);
 	}

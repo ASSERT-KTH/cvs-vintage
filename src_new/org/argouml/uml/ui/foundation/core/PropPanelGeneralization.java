@@ -1,5 +1,5 @@
-// $Id: PropPanelGeneralization.java,v 1.50 2004/12/21 16:21:41 bobtarling Exp $
-// Copyright (c) 1996-2004 The Regents of the University of California. All
+// $Id: PropPanelGeneralization.java,v 1.51 2005/01/09 14:59:08 linus Exp $
+// Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
 // agreement is hereby granted, provided that the above copyright notice
@@ -51,25 +51,25 @@ public class PropPanelGeneralization extends PropPanelModelElement {
 
     private JScrollPane childScroll;
 
-    private static UMLDiscriminatorNameDocument discriminatorDocument = 
+    private static UMLDiscriminatorNameDocument discriminatorDocument =
         new UMLDiscriminatorNameDocument();
 
-    private static UMLGeneralizationChildListModel childListModel = 
+    private static UMLGeneralizationChildListModel childListModel =
         new UMLGeneralizationChildListModel();
 
-    private static UMLGeneralizationParentListModel parentListModel = 
+    private static UMLGeneralizationParentListModel parentListModel =
         new UMLGeneralizationParentListModel();
 
     /**
      * The constructor.
-     * 
+     *
      */
     public PropPanelGeneralization() {
         super("Generalization", ConfigLoader.getTabPropsOrientation());
         Object[] namesToWatch = {
             ModelFacade.STEREOTYPE,
             ModelFacade.NAMESPACE,
-            ModelFacade.CLASSIFIER
+            ModelFacade.CLASSIFIER,
         };
         setNameEventListening(namesToWatch);
 
@@ -98,9 +98,9 @@ public class PropPanelGeneralization extends PropPanelModelElement {
                         ActionSetGeneralizationPowertype.getInstance()));
 
         addButton(new PropPanelButton2(new ActionNavigateContainerElement()));
-        addButton(new PropPanelButton2(new ActionNewStereotype(), 
+        addButton(new PropPanelButton2(new ActionNewStereotype(),
                 lookupIcon("Stereotype")));
-        addButton(new PropPanelButton2(new ActionRemoveFromModel(), 
+        addButton(new PropPanelButton2(new ActionRemoveFromModel(),
                 lookupIcon("Delete")));
     }
 

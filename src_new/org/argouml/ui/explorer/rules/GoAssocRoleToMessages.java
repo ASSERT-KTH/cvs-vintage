@@ -1,5 +1,5 @@
-// $Id: GoAssocRoleToMessages.java,v 1.1 2004/11/14 14:04:40 mvw Exp $
-// Copyright (c) 1996-2004 The Regents of the University of California. All
+// $Id: GoAssocRoleToMessages.java,v 1.2 2005/01/09 14:58:32 linus Exp $
+// Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
 // agreement is hereby granted, provided that the above copyright notice
@@ -40,7 +40,7 @@ public class GoAssocRoleToMessages extends AbstractPerspectiveRule {
     /**
      * @see org.argouml.ui.explorer.rules.PerspectiveRule#getRuleName()
      */
-    public String getRuleName() { 
+    public String getRuleName() {
         return Translator.localize ("misc.association-role.messages");
     }
 

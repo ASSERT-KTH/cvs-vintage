@@ -1,5 +1,5 @@
-// $Id: KnowledgeTypeNode.java,v 1.4 2004/09/03 19:55:28 mvw Exp $
-// Copyright (c) 1996-99 The Regents of the University of California. All
+// $Id: KnowledgeTypeNode.java,v 1.5 2005/01/09 14:58:05 linus Exp $
+// Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
 // agreement is hereby granted, provided that the above copyright notice
@@ -45,7 +45,7 @@ public class KnowledgeTypeNode {
 
     /**
      * The constructor.
-     * 
+     *
      * @param n the name for the knowledgetype
      */
     public KnowledgeTypeNode(String n) {
@@ -72,7 +72,7 @@ public class KnowledgeTypeNode {
         }
     return types;
     }
-    
+
     ////////////////////////////////////////////////////////////////
     // accessors
 
@@ -85,5 +85,5 @@ public class KnowledgeTypeNode {
      * @see java.lang.Object#toString()
      */
     public String toString() { return getName(); }
-  
+
 } /* end class KnowledgeTypeNode */

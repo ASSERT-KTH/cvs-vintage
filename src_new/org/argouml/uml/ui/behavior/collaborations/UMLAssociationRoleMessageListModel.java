@@ -1,5 +1,5 @@
-// $Id: UMLAssociationRoleMessageListModel.java,v 1.15 2004/10/23 11:05:48 mvw Exp $
-// Copyright (c) 2002-2003 The Regents of the University of California. All
+// $Id: UMLAssociationRoleMessageListModel.java,v 1.16 2005/01/09 14:59:05 linus Exp $
+// Copyright (c) 2002-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
 // agreement is hereby granted, provided that the above copyright notice
@@ -28,13 +28,12 @@ import org.argouml.model.ModelFacade;
 import org.argouml.uml.ui.UMLModelElementListModel2;
 
 /**
- * List model that shows the Messages belonging to some 
+ * List model that shows the Messages belonging to some
  * AssociationRole.
  *
  */
 public class UMLAssociationRoleMessageListModel
-    extends UMLModelElementListModel2
-{
+    extends UMLModelElementListModel2 {
 
     /**
      * Constructor for UMLAssociationRoleMessageListModel.
@@ -54,7 +53,7 @@ public class UMLAssociationRoleMessageListModel
      * @see org.argouml.uml.ui.UMLModelElementListModel2#isValidElement(Object)
      */
     protected boolean isValidElement(Object/*MBase*/ o) {
-        return org.argouml.model.ModelFacade.isAMessage(o) 
+        return org.argouml.model.ModelFacade.isAMessage(o)
             && ModelFacade.getMessages(getTarget()).contains(o);
     }
 

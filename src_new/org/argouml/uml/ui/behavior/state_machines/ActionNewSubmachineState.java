@@ -1,4 +1,4 @@
-// $Id: ActionNewSubmachineState.java,v 1.8 2005/01/02 16:43:40 linus Exp $
+// $Id: ActionNewSubmachineState.java,v 1.9 2005/01/09 14:59:07 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -38,18 +38,18 @@ import org.argouml.uml.ui.AbstractActionNewModelElement;
  */
 public class ActionNewSubmachineState extends AbstractActionNewModelElement {
 
-    private static final ActionNewSubmachineState SINGLETON = 
+    private static final ActionNewSubmachineState SINGLETON =
         new ActionNewSubmachineState();
-    
+
     /**
      * Constructor for ActionNewFinalState.
      */
     protected ActionNewSubmachineState() {
         super();
-        putValue(Action.NAME, Translator.localize( 
+        putValue(Action.NAME, Translator.localize(
                 "button.new-submachinestate"));
     }
-    
+
     /**
      * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
      */

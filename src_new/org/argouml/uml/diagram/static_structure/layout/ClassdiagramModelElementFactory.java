@@ -1,5 +1,5 @@
-// $Id: ClassdiagramModelElementFactory.java,v 1.9 2004/09/29 18:46:28 mvw Exp $
-// Copyright (c) 1996-2002 The Regents of the University of California. All
+// $Id: ClassdiagramModelElementFactory.java,v 1.10 2005/01/09 14:58:41 linus Exp $
+// Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
 // agreement is hereby granted, provided that the above copyright notice
@@ -34,8 +34,7 @@ import org.argouml.uml.diagram.ui.*;
  * @author Markus Klink
  * @stereotype singleton
 */
-public class ClassdiagramModelElementFactory 
-{
+public class ClassdiagramModelElementFactory {
     private static final Logger LOG =
 	Logger.getLogger(ClassdiagramModelElementFactory.class);
 
@@ -44,9 +43,9 @@ public class ClassdiagramModelElementFactory
      */
     public static final ClassdiagramModelElementFactory SINGLETON =
 	new ClassdiagramModelElementFactory();
-    
+
     private ClassdiagramModelElementFactory() { }
-    
+
     /** create layouter object from a Fig.*
      *
      * @param f Object which contains the Fig
@@ -61,8 +60,8 @@ public class ClassdiagramModelElementFactory
 		return (new ClassdiagramRealizationEdge((FigRealization) f));
 	    if (f instanceof FigAssociation)
 		return (new ClassdiagramAssociationEdge((FigAssociation) f));
-	    LOG.debug("Do not know how to deal with: " 
-		      + f.getClass().getName() 
+	    LOG.debug("Do not know how to deal with: "
+		      + f.getClass().getName()
 		      + "\nUsing standard layout");
         }
         return null;

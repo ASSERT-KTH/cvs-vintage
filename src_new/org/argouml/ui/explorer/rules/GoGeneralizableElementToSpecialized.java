@@ -1,5 +1,5 @@
-// $Id: GoGeneralizableElementToSpecialized.java,v 1.1 2004/11/14 14:04:40 mvw Exp $
-// Copyright (c) 1996-2004 The Regents of the University of California. All
+// $Id: GoGeneralizableElementToSpecialized.java,v 1.2 2005/01/09 14:58:32 linus Exp $
+// Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
 // agreement is hereby granted, provided that the above copyright notice
@@ -36,7 +36,7 @@ import org.argouml.model.ModelFacade;
  * Classifier -> Specialized Classifier
  *
  */
-public class GoGeneralizableElementToSpecialized 
+public class GoGeneralizableElementToSpecialized
     extends AbstractPerspectiveRule {
 
     /**
@@ -49,7 +49,7 @@ public class GoGeneralizableElementToSpecialized
     /**
      * @see org.argouml.ui.explorer.rules.PerspectiveRule#getChildren(java.lang.Object)
      */
-    public Collection getChildren(Object parent) { 
+    public Collection getChildren(Object parent) {
 	if (ModelFacade.isAGeneralizableElement(parent)) {
 	    return ModelFacade.getChildren(parent);
 	}

@@ -1,4 +1,4 @@
-// $Id: UMLIncludeBaseComboBoxModel.java,v 1.21 2005/01/02 16:43:42 linus Exp $
+// $Id: UMLIncludeBaseComboBoxModel.java,v 1.22 2005/01/09 14:59:08 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -42,10 +42,10 @@ public class UMLIncludeBaseComboBoxModel extends UMLComboBoxModel2 {
      * Constructor for UMLIncludeBaseComboBoxModel.
      */
     public UMLIncludeBaseComboBoxModel() {
-        // there is a bug in NSUML so this model 
+        // there is a bug in NSUML so this model
         // listens for addition modelevents
         super("addition", false);
-        UmlModelEventPump.getPump().addClassModelEventListener(this, 
+        UmlModelEventPump.getPump().addClassModelEventListener(this,
                 ModelFacade.NAMESPACE, "ownedElement");
     }
 
@@ -77,8 +77,8 @@ public class UMLIncludeBaseComboBoxModel extends UMLComboBoxModel2 {
      * @see org.argouml.uml.ui.UMLComboBoxModel2#isValidElement(Object)
      */
     protected boolean isValidElement(Object element) {
-        return ModelFacade.isAUseCase(element) 
-            && ModelFacade.getNamespace(element) 
+        return ModelFacade.isAUseCase(element)
+            && ModelFacade.getNamespace(element)
                 == ModelFacade.getNamespace(getTarget());
     }
 

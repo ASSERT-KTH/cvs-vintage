@@ -1,5 +1,5 @@
-// $Id: UMLDependencySupplierListModel.java,v 1.10 2004/09/14 17:35:11 mvw Exp $
-// Copyright (c) 1996-2003 The Regents of the University of California. All
+// $Id: UMLDependencySupplierListModel.java,v 1.11 2005/01/09 14:59:09 linus Exp $
+// Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
 // agreement is hereby granted, provided that the above copyright notice
@@ -22,15 +22,15 @@
 // CALIFORNIA HAS NO OBLIGATIONS TO PROVIDE MAINTENANCE, SUPPORT,
 // UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 
-// $Id: UMLDependencySupplierListModel.java,v 1.10 2004/09/14 17:35:11 mvw Exp $
+// $Id: UMLDependencySupplierListModel.java,v 1.11 2005/01/09 14:59:09 linus Exp $
 package org.argouml.uml.ui.foundation.core;
 
 import org.argouml.model.ModelFacade;
 import org.argouml.uml.ui.UMLModelElementListModel2;
 
 /**
- * 
- * @author jaap.branderhorst@xs4all.nl	
+ *
+ * @author jaap.branderhorst@xs4all.nl
  * @since Jan 3, 2003
  */
 public class UMLDependencySupplierListModel extends UMLModelElementListModel2 {
@@ -46,15 +46,15 @@ public class UMLDependencySupplierListModel extends UMLModelElementListModel2 {
      * @see org.argouml.uml.ui.UMLModelElementListModel2#buildModelList()
      */
     protected void buildModelList() {
-        if (getTarget() != null) 
+        if (getTarget() != null)
             setAllElements(ModelFacade.getSuppliers(getTarget()));
     }
 
     /**
      * @see org.argouml.uml.ui.UMLModelElementListModel2#isValidElement(Object)
      */
-    protected boolean isValidElement(Object/*MBase*/ o) {  
-        return org.argouml.model.ModelFacade.isAModelElement(o) 
+    protected boolean isValidElement(Object/*MBase*/ o) {
+        return org.argouml.model.ModelFacade.isAModelElement(o)
             && ModelFacade.getSuppliers(getTarget()).contains(o);
     }
 

@@ -1,5 +1,5 @@
-// $Id: UMLClassifierAssociationEndListModel.java,v 1.5 2003/11/11 21:54:10 linus Exp $
-// Copyright (c) 1996-2003 The Regents of the University of California. All
+// $Id: UMLClassifierAssociationEndListModel.java,v 1.6 2005/01/09 14:59:09 linus Exp $
+// Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
 // agreement is hereby granted, provided that the above copyright notice
@@ -28,8 +28,8 @@ import org.argouml.model.ModelFacade;
 import org.argouml.uml.ui.UMLModelElementListModel2;
 
 /**
- * 
- * @author jaap.branderhorst@xs4all.nl	
+ *
+ * @author jaap.branderhorst@xs4all.nl
  * @since Jan 26, 2003
  */
 public class UMLClassifierAssociationEndListModel

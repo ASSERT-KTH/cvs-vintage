@@ -1,5 +1,5 @@
-// $Id: PluggableResourceBundle.java,v 1.4 2003/09/16 20:07:59 thierrylach Exp $
-// Copyright (c) 1996-2001 The Regents of the University of California. All
+// $Id: PluggableResourceBundle.java,v 1.5 2005/01/09 14:58:03 linus Exp $
+// Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
 // agreement is hereby granted, provided that the above copyright notice
@@ -24,11 +24,12 @@
 
 package org.argouml.application.api;
 
-/**  An interface which identifies an ArgoUML plug-in as a resource bundle.
- *   Plug-ins are replacements or additions to standard Argo classes.
- *   
- *   @author Thierry Lach
- *   @since 0.9.4
+/**
+ * An interface which identifies an ArgoUML plug-in as a resource bundle.
+ * Plug-ins are replacements or additions to standard Argo classes.
+ *
+ * @author Thierry Lach
+ * @since 0.9.4
  */
 public interface PluggableResourceBundle extends Pluggable {
 } /* End interface PluggableResourceBundle */

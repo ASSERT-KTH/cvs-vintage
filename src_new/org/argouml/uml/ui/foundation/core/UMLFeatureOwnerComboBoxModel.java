@@ -1,4 +1,4 @@
-// $Id: UMLFeatureOwnerComboBoxModel.java,v 1.15 2005/01/02 16:43:46 linus Exp $
+// $Id: UMLFeatureOwnerComboBoxModel.java,v 1.16 2005/01/09 14:59:09 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -40,7 +40,7 @@ public class UMLFeatureOwnerComboBoxModel extends UMLComboBoxModel2 {
      */
     public UMLFeatureOwnerComboBoxModel() {
         super("owner", false);
-        UmlModelEventPump.getPump().addClassModelEventListener(this, 
+        UmlModelEventPump.getPump().addClassModelEventListener(this,
                 ModelFacade.NAMESPACE, "ownedElement");
     }
 

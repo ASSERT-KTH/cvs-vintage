@@ -1,5 +1,5 @@
-// $Id: PropPanelPartition.java,v 1.5 2004/09/22 17:27:46 mvw Exp $
-// Copyright (c) 2004 The Regents of the University of California. All
+// $Id: PropPanelPartition.java,v 1.6 2005/01/09 14:59:04 linus Exp $
+// Copyright (c) 2004-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
 // agreement is hereby granted, provided that the above copyright notice
@@ -32,14 +32,14 @@ import org.argouml.util.ConfigLoader;
 
 /**
  * The properties panel for a Partition (Swimlane).
- * 
+ *
  * @author mkl
  *
  */
 public class PropPanelPartition extends PropPanelModelElement {
 
-    
-   
+
+
     /**
      * constructor.
      */

@@ -1,5 +1,5 @@
-// $Id: ActionSystemInfo.java,v 1.3 2004/12/26 11:14:44 mvw Exp $
-// Copyright (c) 2004 The Regents of the University of California. All
+// $Id: ActionSystemInfo.java,v 1.4 2005/01/09 14:58:13 linus Exp $
+// Copyright (c) 2004-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
 // agreement is hereby granted, provided that the above copyright notice
@@ -34,12 +34,12 @@ import org.argouml.ui.SystemInfoDialog;
 import org.argouml.uml.ui.UMLAction;
 
 /**
- * System information dialog. 
+ * System information dialog.
  */
 class ActionSystemInfo extends UMLAction {
 
-    public ActionSystemInfo() { 
-        super("action.system-information", HAS_ICON); 
+    public ActionSystemInfo() {
+        super("action.system-information", HAS_ICON);
     }
 
     /**
@@ -51,7 +51,7 @@ class ActionSystemInfo extends UMLAction {
 	Dimension siDim = sysInfoDialog.getSize();
 	Dimension pbDim = jFrame.getSize();
 
-	if ( siDim.width > pbDim.width / 2 ) {
+	if (siDim.width > pbDim.width / 2) {
 	    sysInfoDialog.setSize(pbDim.width / 2, siDim.height + 45);
 	} else {
 	    sysInfoDialog.setSize(siDim.width, siDim.height + 45);

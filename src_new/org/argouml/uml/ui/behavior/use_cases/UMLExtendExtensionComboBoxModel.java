@@ -1,4 +1,4 @@
-// $Id: UMLExtendExtensionComboBoxModel.java,v 1.21 2005/01/02 16:43:42 linus Exp $
+// $Id: UMLExtendExtensionComboBoxModel.java,v 1.22 2005/01/09 14:59:08 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -41,7 +41,7 @@ public class UMLExtendExtensionComboBoxModel extends UMLComboBoxModel2 {
      */
     public UMLExtendExtensionComboBoxModel() {
         super("extension", false);
-        
+
     }
 
     /**
@@ -74,15 +74,15 @@ public class UMLExtendExtensionComboBoxModel extends UMLComboBoxModel2 {
     protected boolean isValidElement(Object element) {
         return org.argouml.model.ModelFacade.isAUseCase(element);
     }
-    
-    
+
+
 
     /**
      * @see org.argouml.ui.targetmanager.TargetListener#targetRemoved(org.argouml.ui.targetmanager.TargetEvent)
      */
     public void targetRemoved(TargetEvent e) {
         // if (e.getNewTarget() != getTarget())
-        UmlModelEventPump.getPump().removeClassModelEventListener(this, 
+        UmlModelEventPump.getPump().removeClassModelEventListener(this,
                     ModelFacade.NAMESPACE, "ownedElement");
         super.targetRemoved(e);
     }
@@ -90,7 +90,7 @@ public class UMLExtendExtensionComboBoxModel extends UMLComboBoxModel2 {
      * @see org.argouml.ui.targetmanager.TargetListener#targetSet(org.argouml.ui.targetmanager.TargetEvent)
      */
     public void targetSet(TargetEvent e) {
-        UmlModelEventPump.getPump().addClassModelEventListener(this, 
+        UmlModelEventPump.getPump().addClassModelEventListener(this,
                 ModelFacade.NAMESPACE, "ownedElement");
         super.targetSet(e);
     }

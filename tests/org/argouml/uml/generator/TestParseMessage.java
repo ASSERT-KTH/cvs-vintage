@@ -1,5 +1,5 @@
-// $Id: TestParseMessage.java,v 1.3 2003/05/11 12:28:49 linus Exp $
-// Copyright (c) 1996-2002 The Regents of the University of California. All
+// $Id: TestParseMessage.java,v 1.4 2005/01/09 14:59:17 linus Exp $
+// Copyright (c) 1996-2002, 2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
 // agreement is hereby granted, provided that the above copyright notice
@@ -45,11 +45,11 @@ public class TestParseMessage extends TestCase {
      *
      * @throws ParseException if the parsing fails.
      */
-    public void compileTestParseMessage() 
+    public void compileTestParseMessage()
 	throws ParseException
     {
 	ParserDisplay.SINGLETON.parseMessage(new MMessageImpl(), "hej");
-    }	
+    }
 
     /**
      * Dummy test.

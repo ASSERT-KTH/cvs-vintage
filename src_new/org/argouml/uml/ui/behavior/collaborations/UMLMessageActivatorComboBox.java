@@ -1,4 +1,4 @@
-// $Id: UMLMessageActivatorComboBox.java,v 1.10 2005/01/03 09:30:44 mvw Exp $
+// $Id: UMLMessageActivatorComboBox.java,v 1.11 2005/01/09 14:59:05 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -32,9 +32,9 @@ import org.argouml.uml.ui.UMLComboBox2;
 import org.argouml.uml.ui.UMLComboBoxModel2;
 import org.argouml.uml.ui.UMLUserInterfaceContainer;
 /**
- * The combobox for activators on the message proppanel. The only reason this 
- * combobox implements melementlistener is to conform to UMLChangeDispatch. The 
- * combobox serves as a proxy for the 
+ * The combobox for activators on the message proppanel. The only reason this
+ * combobox implements melementlistener is to conform to UMLChangeDispatch. The
+ * combobox serves as a proxy for the
  * model (UMLMessageActivatorComboBoxModel). Kind of strange...
  */
 public class UMLMessageActivatorComboBox extends UMLComboBox2 {

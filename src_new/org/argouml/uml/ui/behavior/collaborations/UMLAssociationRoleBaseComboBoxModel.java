@@ -1,4 +1,4 @@
-// $Id: UMLAssociationRoleBaseComboBoxModel.java,v 1.20 2005/01/03 09:30:44 mvw Exp $
+// $Id: UMLAssociationRoleBaseComboBoxModel.java,v 1.21 2005/01/09 14:59:05 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -40,7 +40,7 @@ public class UMLAssociationRoleBaseComboBoxModel extends UMLComboBoxModel2 {
      */
     public UMLAssociationRoleBaseComboBoxModel() {
         super("base", true);
-        UmlModelEventPump.getPump().addClassModelEventListener(this, 
+        UmlModelEventPump.getPump().addClassModelEventListener(this,
                 ModelFacade.NAMESPACE, "ownedElement");
     }
 
@@ -49,7 +49,7 @@ public class UMLAssociationRoleBaseComboBoxModel extends UMLComboBoxModel2 {
      */
     protected void buildModelList() {
         setElements(Model.getCollaborationsHelper().getAllPossibleBases(
-                /*(MAssociationRole)*/ getTarget())); 
+                /*(MAssociationRole)*/ getTarget()));
     }
 
     /**

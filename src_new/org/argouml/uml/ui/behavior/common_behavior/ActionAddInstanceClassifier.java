@@ -1,4 +1,4 @@
-// $Id: ActionAddInstanceClassifier.java,v 1.8 2005/01/02 16:43:49 linus Exp $
+// $Id: ActionAddInstanceClassifier.java,v 1.9 2005/01/09 14:59:07 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -33,35 +33,35 @@ import org.argouml.uml.ui.AbstractActionAddModelElement;
 
 
 /**
- * This action binds Instances to one or more Classifiers, 
- * which declare its structure and behaviour. 
- * An Object is defined as an instance of a Class, which explains why 
+ * This action binds Instances to one or more Classifiers,
+ * which declare its structure and behaviour.
+ * An Object is defined as an instance of a Class, which explains why
  * the type of Classifier is parameter to one of this action's constructors.
  *
  */
 public class ActionAddInstanceClassifier extends AbstractActionAddModelElement {
 
     private Object choiceClass = ModelFacade.CLASSIFIER;
-    
+
     /**
      * The constructor for ActionAddExtendExtensionPoint.
      */
     public ActionAddInstanceClassifier() {
         super();
     }
-    
+
     /**
      * The constructor for ActionAddExtendExtensionPoint.
      * For an Object, the <code>choice</code> will be "Class", for any other
      * Instance, it will be "Classifier".
-     * 
+     *
      * @param choice the classifier type we are adding
      */
     public ActionAddInstanceClassifier(Object choice) {
         super();
         choiceClass = choice;
     }
-    
+
     /**
      * @see org.argouml.uml.ui.AbstractActionAddModelElement#doIt(java.util.Vector)
      */

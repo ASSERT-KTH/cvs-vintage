@@ -1,5 +1,5 @@
-// $Id: CrInvalidFork.java,v 1.8 2004/09/21 19:03:25 mvw Exp $
-// Copyright (c) 1996-99 The Regents of the University of California. All
+// $Id: CrInvalidFork.java,v 1.9 2005/01/09 14:58:36 linus Exp $
+// Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
 // agreement is hereby granted, provided that the above copyright notice
@@ -22,11 +22,6 @@
 // CALIFORNIA HAS NO OBLIGATIONS TO PROVIDE MAINTENANCE, SUPPORT,
 // UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 
-// File: CrInvalidFork.java
-// Classes: CrInvalidFork
-// Original Author: jrobbins@ics.uci.edu
-// $Id: CrInvalidFork.java,v 1.8 2004/09/21 19:03:25 mvw Exp $
-
 package org.argouml.uml.cognitive.critics;
 
 import java.util.Collection;
@@ -35,13 +30,15 @@ import org.argouml.model.ModelFacade;
 
 /** A critic to detect when a fork state has the wrong number of
  *  transitions.  Implements constraint [5] on MPseudostate in the UML
- *  Semantics v1.1, pp. 104. */
-
+ *  Semantics v1.1, pp. 104.
+ *
+ * @author jrobbins
+ */
 public class CrInvalidFork extends CrUML {
 
     /**
      * The constructor.
-     * 
+     *
      */
     public CrInvalidFork() {
 	setHeadline("Change Fork Transitions");

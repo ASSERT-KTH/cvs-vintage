@@ -1,5 +1,5 @@
-// $Id: UMLExpressionModel2.java,v 1.2 2004/09/14 20:12:16 mvw Exp $
-// Copyright (c) 1996-99 The Regents of the University of California. All
+// $Id: UMLExpressionModel2.java,v 1.3 2005/01/09 14:59:03 linus Exp $
+// Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
 // agreement is hereby granted, provided that the above copyright notice
@@ -29,8 +29,8 @@ import org.argouml.model.ModelFacade;
 import ru.novosoft.uml.MElementEvent;
 
 /**
- * 
- * 
+ *
+ *
  * @author mkl
  *
  */
@@ -46,14 +46,14 @@ public abstract class UMLExpressionModel2  {
 
     /**
      * The constructor.
-     * 
+     *
      * @param c the container of UML user interface components
      * @param name the name of the property
      */
     public UMLExpressionModel2(UMLUserInterfaceContainer c, String name) {
         container = c;
         propertyName = name;
-        mustRefresh = true;   
+        mustRefresh = true;
     }
 
     /**
@@ -81,17 +81,17 @@ public abstract class UMLExpressionModel2  {
      * @return the expression
      */
     public abstract Object getExpression();
-    
+
     /**
      * @param expr the expression
      */
     public abstract void setExpression(Object expr);
-    
+
     /**
      * @return a new expression
      */
     public abstract Object newExpression();
-    
+
 
     /**
      * @return the language of the expression
@@ -123,7 +123,7 @@ public abstract class UMLExpressionModel2  {
      * @param lang the language of the expression
      */
     public void setLanguage(String lang) {
-      
+
         boolean mustChange = true;
         if (expression != null) {
             String oldValue = ModelFacade.getLanguage(expression);

@@ -1,4 +1,4 @@
-// $Id: ChildGenUML.java,v 1.18 2005/01/02 16:43:51 linus Exp $
+// $Id: ChildGenUML.java,v 1.19 2005/01/09 14:58:35 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -45,25 +45,25 @@ import org.tigris.gef.util.EnumerationSingle;
  * Project, to Models, to ModelElements.  Argo's critic Agency uses
  * this to apply critics where appropriate.
  *
- * @see org.argouml.cognitive.critics.Agency 
+ * @see org.argouml.cognitive.critics.Agency
  * @see org.argouml.cognitive.Designer
  * @author jrobbins
  */
 public class ChildGenUML implements ChildGenerator {
 
     private static final Logger LOG = Logger.getLogger(ChildGenUML.class);
-    
-    /** Reply a java.util.Enumeration of the children of the given Object 
+
+    /** Reply a java.util.Enumeration of the children of the given Object
      * TODO: GEF has moved away from vectors to collections
      * returning an iterator would now seem better.
      *
      * @see org.tigris.gef.util.ChildGenerator#gen(java.lang.Object)
      */
     public Enumeration gen(Object o) {
-        
+
         if (o == null) LOG.debug("Object is null");
         else LOG.debug("Findin g children for " + o.getClass());
-        
+
 	if (o instanceof Project) {
 	    Project p = (Project) o;
 	    return new EnumerationComposite(p.getUserDefinedModels().elements(),
@@ -86,13 +86,13 @@ public class ChildGenUML implements ChildGenerator {
 	    return new EnumerationSingle(me);  //wasteful!
 	}
 
-	
+
 	// TODO: associationclasses fit both of the next 2 cases
 
 	if (ModelFacade.isAClassifier(o)) {
 	    EnumerationComposite res = new EnumerationComposite();
 	    res.addSub(new Vector(ModelFacade.getFeatures(o)));
-            
+
 	    Vector sms = new Vector(ModelFacade.getBehaviors(o));
 	    //Object sm = null;
 	    //if (sms != null && sms.size() > 0)
@@ -128,7 +128,7 @@ public class ChildGenUML implements ChildGenerator {
             Vector params = new Vector(ModelFacade.getParameters(o));
             if (params != null) return params.elements();
         }
-        
+
         if (ModelFacade.isAModelElement(o)) {
 	    Vector behavior = new Vector(ModelFacade.getBehaviors(o));
 	    if (behavior != null) return behavior.elements();

@@ -1,5 +1,5 @@
-// $Id: PropPanelStateVertex.java,v 1.25 2004/12/20 23:15:09 mvw Exp $
-// Copyright (c) 1996-99 The Regents of the University of California. All
+// $Id: PropPanelStateVertex.java,v 1.26 2005/01/09 14:59:07 linus Exp $
+// Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
 // agreement is hereby granted, provided that the above copyright notice
@@ -22,11 +22,6 @@
 // CALIFORNIA HAS NO OBLIGATIONS TO PROVIDE MAINTENANCE, SUPPORT,
 // UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 
-// File: PropPanelStateVertex.java
-// Classes: PropPanelStateVertex
-// Original Author: oliver.heyden@gentleware.de
-// $Id:
-
 package org.argouml.uml.ui.behavior.state_machines;
 
 import javax.swing.ImageIcon;
@@ -44,6 +39,7 @@ import org.tigris.swidgets.Orientation;
 /**
  * The properties tab panel for StateVertex and family.
  *
+ * @author oliver.heyden
  */
 public abstract class PropPanelStateVertex extends PropPanelModelElement {
 
@@ -55,7 +51,7 @@ public abstract class PropPanelStateVertex extends PropPanelModelElement {
 
     /**
      * Constructor for PropPanelStateVertex.
-     * 
+     *
      * @param name the name of the tabpanel shown at the top
      * @param icon the icon of the tabpanel shown at the top
      * @param orientation the orientation
@@ -76,9 +72,9 @@ public abstract class PropPanelStateVertex extends PropPanelModelElement {
         containerScroll = new JScrollPane(compositeList);
 
         addButton(new PropPanelButton2(new ActionNavigateNamespace()));
-        addButton(new PropPanelButton2(new ActionNewStereotype(), 
+        addButton(new PropPanelButton2(new ActionNewStereotype(),
                 lookupIcon("Stereotype")));
-        addButton(new PropPanelButton2(new ActionRemoveFromModel(), 
+        addButton(new PropPanelButton2(new ActionRemoveFromModel(),
                 lookupIcon("Delete")));;
     }
 

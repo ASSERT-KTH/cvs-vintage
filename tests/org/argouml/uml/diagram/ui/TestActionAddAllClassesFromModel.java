@@ -1,5 +1,5 @@
-// $Id: TestActionAddAllClassesFromModel.java,v 1.4 2004/11/14 08:34:28 linus Exp $
-// Copyright (c) 2003-2004 The Regents of the University of California. All
+// $Id: TestActionAddAllClassesFromModel.java,v 1.5 2005/01/09 14:59:17 linus Exp $
+// Copyright (c) 2003-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
 // agreement is hereby granted, provided that the above copyright notice
@@ -54,7 +54,7 @@ public class TestActionAddAllClassesFromModel extends TestCase {
 	action = new ActionAddAllClassesFromModel("Add all classes from model",
 						  diagram);
     }
-    
+
     /**
      * @author Timothy M. Lebo
      * @since November 3, 2003
@@ -63,10 +63,10 @@ public class TestActionAddAllClassesFromModel extends TestCase {
 	new ActionAddAllClassesFromModel("Add all classes from model",
 					 diagram);
     }
-    
+
     /**
      * Makes sure the option is enabled.
-     * 
+     *
      * ActionAddAllClassesFromModel expects to receive a
      * UMLClassDiagram in its constructor. If the Class of the class
      * diagrams in argoUML changes, this needs to change also.

@@ -1,4 +1,4 @@
-// $Id: UMLExtendBaseComboBoxModel.java,v 1.19 2005/01/02 16:43:42 linus Exp $
+// $Id: UMLExtendBaseComboBoxModel.java,v 1.20 2005/01/09 14:59:08 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -35,16 +35,16 @@ import org.argouml.uml.ui.UMLComboBoxModel2;
  */
 public class UMLExtendBaseComboBoxModel extends UMLComboBoxModel2 {
 
-    
 
-    
+
+
 
     /**
      * Constructor for UMLExtendBaseComboBoxModel.
      */
     public UMLExtendBaseComboBoxModel() {
         super("base", false);
-        UmlModelEventPump.getPump().addClassModelEventListener(this, 
+        UmlModelEventPump.getPump().addClassModelEventListener(this,
                 (Class) ModelFacade.NAMESPACE, "ownedElement");
     }
 

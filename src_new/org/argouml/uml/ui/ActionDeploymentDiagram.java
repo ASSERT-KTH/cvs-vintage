@@ -1,5 +1,5 @@
-// $Id: ActionDeploymentDiagram.java,v 1.21 2004/08/24 06:33:45 linus Exp $
-// Copyright (c) 1996-2004 The Regents of the University of California. All
+// $Id: ActionDeploymentDiagram.java,v 1.22 2005/01/09 14:59:01 linus Exp $
+// Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
 // agreement is hereby granted, provided that the above copyright notice
@@ -43,8 +43,8 @@ public class ActionDeploymentDiagram extends ActionAddDiagram {
      */
     public static final ActionDeploymentDiagram SINGLETON =
         new ActionDeploymentDiagram();
-    
-    private static final Logger LOG = 
+
+    private static final Logger LOG =
         Logger.getLogger(ActionDeploymentDiagram.class);
 
     ////////////////////////////////////////////////////////////////
@@ -66,7 +66,7 @@ public class ActionDeploymentDiagram extends ActionAddDiagram {
     public UMLDiagram createDiagram(Object handle) {
         // a deployment diagram shows something about the whole model
         // according to the uml spec
-	handle = ProjectManager.getManager().getCurrentProject().getRoot();   
+	handle = ProjectManager.getManager().getCurrentProject().getRoot();
         if (!ModelFacade.isANamespace(handle)) {
             LOG.error("No namespace as argument");
             LOG.error(handle);
@@ -83,7 +83,7 @@ public class ActionDeploymentDiagram extends ActionAddDiagram {
     public boolean isValidNamespace(Object handle) {
         // a deployment diagram shows something about the whole model
         // according to the uml spec
-        handle = ProjectManager.getManager().getCurrentProject().getRoot(); 
+        handle = ProjectManager.getManager().getCurrentProject().getRoot();
         if (!ModelFacade.isANamespace(handle)) {
             LOG.error("No namespace as argument");
             LOG.error(handle);

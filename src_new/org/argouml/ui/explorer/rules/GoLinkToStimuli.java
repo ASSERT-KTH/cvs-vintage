@@ -1,5 +1,5 @@
-// $Id: GoLinkToStimuli.java,v 1.1 2004/11/14 14:04:40 mvw Exp $
-// Copyright (c) 1996-2004 The Regents of the University of California. All
+// $Id: GoLinkToStimuli.java,v 1.2 2005/01/09 14:58:32 linus Exp $
+// Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
 // agreement is hereby granted, provided that the above copyright notice
@@ -21,7 +21,7 @@
 // PROVIDED HEREUNDER IS ON AN "AS IS" BASIS, AND THE UNIVERSITY OF
 // CALIFORNIA HAS NO OBLIGATIONS TO PROVIDE MAINTENANCE, SUPPORT,
 // UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
-// $Id: GoLinkToStimuli.java,v 1.1 2004/11/14 14:04:40 mvw Exp $
+// $Id: GoLinkToStimuli.java,v 1.2 2005/01/09 14:58:32 linus Exp $
 package org.argouml.ui.explorer.rules;
 
 import java.util.Collection;
@@ -36,7 +36,7 @@ import org.argouml.model.ModelFacade;
  *
  */
 public class GoLinkToStimuli extends AbstractPerspectiveRule {
-    
+
     /**
      * @see org.argouml.ui.explorer.rules.PerspectiveRule#getChildren(java.lang.Object)
      */

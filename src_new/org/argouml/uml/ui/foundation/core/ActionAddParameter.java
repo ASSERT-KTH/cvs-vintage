@@ -1,4 +1,4 @@
-// $Id: ActionAddParameter.java,v 1.4 2005/01/02 16:43:46 linus Exp $
+// $Id: ActionAddParameter.java,v 1.5 2005/01/09 14:59:08 linus Exp $
 // Copyright (c) 2004-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -38,9 +38,9 @@ import org.argouml.uml.ui.AbstractActionNewModelElement;
 
 
 /**
- * Action to create a new parameter "next to" the existing parameter 
+ * Action to create a new parameter "next to" the existing parameter
  * (that is actually selected by the user).
- * 
+ *
  * @author Michiel
  */
 class ActionAddParameter extends AbstractActionNewModelElement {

@@ -1,4 +1,4 @@
-// $Id: ActionNewStereotype.java,v 1.6 2005/01/03 09:30:50 mvw Exp $
+// $Id: ActionNewStereotype.java,v 1.7 2005/01/09 14:59:10 linus Exp $
 // Copyright (c) 2004-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -41,7 +41,7 @@ import org.tigris.gef.presentation.Fig;
 
 /**
  * This action creates a new Stereotype in the current Model.
- * 
+ *
  * @author mvw@tigris.org
  */
 public class ActionNewStereotype extends AbstractActionNewModelElement {
@@ -70,9 +70,9 @@ public class ActionNewStereotype extends AbstractActionNewModelElement {
                     model,
                     models
             );
-        if (ModelFacade.isAModelElement(t)) { 
+        if (ModelFacade.isAModelElement(t)) {
             Object ns = ModelFacade.getNamespace(t);
-            if (ModelFacade.isANamespace(ns)) 
+            if (ModelFacade.isANamespace(ns))
                 ModelFacade.setNamespace(newStereo, ns);
         }
         TargetManager.getInstance().setTarget(newStereo);

@@ -1,5 +1,5 @@
-// $Id: UMLGeneralizationParentListModel.java,v 1.2 2004/09/14 17:35:11 mvw Exp $
-// Copyright (c) 1996-2003 The Regents of the University of California. All
+// $Id: UMLGeneralizationParentListModel.java,v 1.3 2005/01/09 14:59:09 linus Exp $
+// Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
 // agreement is hereby granted, provided that the above copyright notice
@@ -29,7 +29,7 @@ import org.argouml.uml.ui.UMLModelElementListModel2;
 
 /**
  */
-public class UMLGeneralizationParentListModel 
+public class UMLGeneralizationParentListModel
     extends UMLModelElementListModel2 {
 
     /**
@@ -51,7 +51,7 @@ public class UMLGeneralizationParentListModel
     /**
      * @see org.argouml.uml.ui.UMLModelElementListModel2#isValidElement(Object)
      */
-    protected boolean isValidElement(Object/*MBase*/ o) {  
+    protected boolean isValidElement(Object/*MBase*/ o) {
         return (ModelFacade.getParent(getTarget()) == o);
     }
 

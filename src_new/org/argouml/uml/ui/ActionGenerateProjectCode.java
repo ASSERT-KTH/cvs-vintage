@@ -1,4 +1,4 @@
-// $Id: ActionGenerateProjectCode.java,v 1.22 2005/01/02 16:43:46 linus Exp $
+// $Id: ActionGenerateProjectCode.java,v 1.23 2005/01/09 14:59:01 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -81,10 +81,10 @@ public class ActionGenerateProjectCode extends UMLAction {
 	    ProjectManager.getManager().getCurrentProject().getActiveDiagram();
 	if (!(activeDiagram instanceof org.argouml.uml.diagram.ui.UMLDiagram))
 	    return;
-	Object/*MNamespace*/ ns = ((org.argouml.uml.diagram.ui.UMLDiagram) 
+	Object/*MNamespace*/ ns = ((org.argouml.uml.diagram.ui.UMLDiagram)
             activeDiagram).getNamespace();
 	if (ns == null) return;
-	while (ModelFacade.getNamespace(ns) != null) 
+	while (ModelFacade.getNamespace(ns) != null)
 	    ns = ModelFacade.getNamespace(ns);
 	Collection elems = Model.getModelManagementHelper()
 	    .getAllModelElementsOfKind(ns, ModelFacade.CLASSIFIER);
@@ -116,8 +116,8 @@ public class ActionGenerateProjectCode extends UMLAction {
     private boolean isCodeRelevantClassifier(Object/*MClassifier*/ cls) {
 	String path = Generator2.getCodePath(cls);
 	String name = ModelFacade.getName(cls);
-	if (name == null 
-            || name.length() == 0 
+	if (name == null
+            || name.length() == 0
             || Character.isDigit(name.charAt(0))) {
 	    return false;
 	}

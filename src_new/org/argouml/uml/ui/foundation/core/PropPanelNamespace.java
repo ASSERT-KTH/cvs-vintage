@@ -1,4 +1,4 @@
-// $Id: PropPanelNamespace.java,v 1.23 2005/01/02 16:43:46 linus Exp $
+// $Id: PropPanelNamespace.java,v 1.24 2005/01/09 14:59:09 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -41,25 +41,25 @@ import org.tigris.swidgets.Orientation;
 public abstract class PropPanelNamespace extends PropPanelModelElement {
 
     private JScrollPane ownedElementsScroll;
-    
-    private static UMLNamespaceOwnedElementListModel ownedElementListModel = 
+
+    private static UMLNamespaceOwnedElementListModel ownedElementListModel =
         new UMLNamespaceOwnedElementListModel();
 
     /**
      * The constructor.
-     * 
+     *
      * @param panelName the name of the panel to be shown at the top
      * @param icon the icon to be shown next to the name
      * @param orientation the orientation of the panel
      */
-    public PropPanelNamespace(String panelName, ImageIcon icon, 
+    public PropPanelNamespace(String panelName, ImageIcon icon,
             Orientation orientation) {
         super(panelName, icon, orientation);
     }
-    
+
     /**
      * The constructor.
-     * 
+     *
      * @param title the name of the panel to be shown at the top
      * @param orientation the orientation of the panel
      */
@@ -107,8 +107,8 @@ public abstract class PropPanelNamespace extends PropPanelModelElement {
             TargetManager.getInstance().setTarget(ownedElem);
         }
     }
-    
-    
+
+
 
     /**
      * Returns the ownedElementsScroll.
@@ -117,10 +117,10 @@ public abstract class PropPanelNamespace extends PropPanelModelElement {
     public JScrollPane getOwnedElementsScroll() {
         if (ownedElementsScroll == null) {
 	    JList ownedElementsList  = new UMLLinkedList(ownedElementListModel);
-            ownedElementsScroll = new JScrollPane(ownedElementsList); 
+            ownedElementsScroll = new JScrollPane(ownedElementsList);
         }
         return ownedElementsScroll;
-        
+
     }
 
 } /* end class PropPanelClass */

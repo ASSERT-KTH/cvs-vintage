@@ -1,5 +1,5 @@
-// $Id: GoStateToDoActivity.java,v 1.10 2004/11/14 14:04:40 mvw Exp $
-// Copyright (c) 1996-2004 The Regents of the University of California. All
+// $Id: GoStateToDoActivity.java,v 1.11 2005/01/09 14:58:32 linus Exp $
+// Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
 // agreement is hereby granted, provided that the above copyright notice
@@ -22,7 +22,7 @@
 // CALIFORNIA HAS NO OBLIGATIONS TO PROVIDE MAINTENANCE, SUPPORT,
 // UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 
-// $Id: GoStateToDoActivity.java,v 1.10 2004/11/14 14:04:40 mvw Exp $
+// $Id: GoStateToDoActivity.java,v 1.11 2005/01/09 14:58:32 linus Exp $
 
 package org.argouml.ui.explorer.rules;
 
@@ -37,8 +37,8 @@ import org.argouml.model.ModelFacade;
 /**
  * Go rule to navigate from a state to it's do-activity. Used in the package
  * perspective.
- * 
- * @author jaap.branderhorst@xs4all.nl	
+ *
+ * @author jaap.branderhorst@xs4all.nl
  * @since Dec 25, 2002
  */
 public class GoStateToDoActivity extends AbstractPerspectiveRule {
@@ -48,10 +48,9 @@ public class GoStateToDoActivity extends AbstractPerspectiveRule {
      */
     public Collection getChildren(Object parent) {
         if (ModelFacade.isAState(parent)
-	    && ModelFacade.getDoActivity(parent) != null)
-	{
+	    && ModelFacade.getDoActivity(parent) != null) {
             Vector children = new Vector();
-            
+
             children.add(ModelFacade.getDoActivity(parent));
             return children;
         }

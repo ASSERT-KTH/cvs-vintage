@@ -1,5 +1,5 @@
-// $Id: FigDestroyActionLink.java,v 1.3 2004/09/09 18:07:17 mvw Exp $
-// Copyright (c) 1996-2003 The Regents of the University of California. All
+// $Id: FigDestroyActionLink.java,v 1.4 2005/01/09 14:58:38 linus Exp $
+// Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
 // agreement is hereby granted, provided that the above copyright notice
@@ -22,8 +22,6 @@
 // CALIFORNIA HAS NO OBLIGATIONS TO PROVIDE MAINTENANCE, SUPPORT,
 // UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 
-// Original author: jaap.branderhorst@xs4all.nl
-
 package org.argouml.uml.diagram.sequence.ui;
 
 /**
@@ -31,6 +29,8 @@ package org.argouml.uml.diagram.sequence.ui;
  *
  * To change the template for this generated type comment go to
  * Window&gt;Preferences&gt;Java&gt;Code Generation&gt;Code and Comments
+ *
+ * @author jaap.branderhorst
  */
 public class FigDestroyActionLink extends FigLink {
 
@@ -44,7 +44,7 @@ public class FigDestroyActionLink extends FigLink {
 
     /**
      * The constructor.
-     * 
+     *
      */
     public FigDestroyActionLink() {
         super();

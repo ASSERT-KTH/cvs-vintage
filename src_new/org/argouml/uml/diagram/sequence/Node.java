@@ -1,5 +1,5 @@
-// $Id: Node.java,v 1.3 2004/11/21 20:20:09 mvw Exp $
-// Copyright (c) 1996-99 The Regents of the University of California. All
+// $Id: Node.java,v 1.4 2005/01/09 14:58:38 linus Exp $
+// Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
 // agreement is hereby granted, provided that the above copyright notice
@@ -34,9 +34,9 @@ public abstract class Node {
 
     /**
      * The constructor.
-     * 
+     *
      */
-    public Node() {      
+    public Node() {
     }
 
 }

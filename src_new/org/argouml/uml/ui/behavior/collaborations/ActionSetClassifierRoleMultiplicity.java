@@ -1,5 +1,5 @@
-// $Id: ActionSetClassifierRoleMultiplicity.java,v 1.2 2004/09/19 19:29:58 mvw Exp $
-// Copyright (c) 2003-2004 The Regents of the University of California. All
+// $Id: ActionSetClassifierRoleMultiplicity.java,v 1.3 2005/01/09 14:59:05 linus Exp $
+// Copyright (c) 2003-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
 // agreement is hereby granted, provided that the above copyright notice
@@ -30,17 +30,17 @@ import org.argouml.uml.ui.ActionSetMultiplicity;
 
 
 /**
- * 
+ *
  * @author mkl
  *
  */
 public class ActionSetClassifierRoleMultiplicity extends ActionSetMultiplicity {
 
-    private static final ActionSetClassifierRoleMultiplicity SINGLETON = 
+    private static final ActionSetClassifierRoleMultiplicity SINGLETON =
         new ActionSetClassifierRoleMultiplicity();
 
     /**
-     * 
+     *
      */
     public ActionSetClassifierRoleMultiplicity() {
         super();

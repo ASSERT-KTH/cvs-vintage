@@ -1,5 +1,5 @@
-// $Id: AbstractActionAddModelElement.java,v 1.13 2004/12/30 12:34:00 mvw Exp $
-// Copyright (c) 1996-99 The Regents of the University of California. All
+// $Id: AbstractActionAddModelElement.java,v 1.14 2005/01/09 14:59:00 linus Exp $
+// Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
 // agreement is hereby granted, provided that the above copyright notice
@@ -22,7 +22,7 @@
 // CALIFORNIA HAS NO OBLIGATIONS TO PROVIDE MAINTENANCE, SUPPORT,
 // UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 
-// $Id: AbstractActionAddModelElement.java,v 1.13 2004/12/30 12:34:00 mvw Exp $
+// $Id: AbstractActionAddModelElement.java,v 1.14 2005/01/09 14:59:00 linus Exp $
 package org.argouml.uml.ui;
 
 import java.awt.event.ActionEvent;
@@ -44,15 +44,15 @@ public abstract class AbstractActionAddModelElement extends UMLAction {
     private Object/*MModelElement*/ target;
     private boolean multiSelect = true;
     private boolean exclusive = true;
-    
+
     /**
      * The constructor.
      */
     protected AbstractActionAddModelElement() {
-        super(Translator.localize("menu.popup.add-modelelement"), false, 
+        super(Translator.localize("menu.popup.add-modelelement"), false,
                 NO_ICON);
     }
-        
+
 
     /**
      * Returns the target.
@@ -85,31 +85,31 @@ public abstract class AbstractActionAddModelElement extends UMLAction {
             doIt(dialog.getSelected());
         }
     }
-    
+
     /**
-     * Returns the choices the user has in the UMLAddDialog. The choices are 
-     * depicted on the left side of the UMLAddDialog (sorry Arabic users) and 
+     * Returns the choices the user has in the UMLAddDialog. The choices are
+     * depicted on the left side of the UMLAddDialog (sorry Arabic users) and
      * can be moved via the buttons on the dialog to the right side. On the
      * right side are the selected modelelements.
      * @return Vector
      */
     protected abstract Vector getChoices();
-    
+
     /**
      * The modelelements allready selected BEFORE the dialog is shown.
      * @return Vector
      */
     protected abstract Vector getSelected();
-    
+
     /**
      * Returns the title of the dialog.
      * @return String
      */
     protected abstract String getDialogTitle();
-    
+
     /**
      * The action that has to be done by Argouml after the user clicks ok in the
-     * UMLAddDialog. 
+     * UMLAddDialog.
      * @param selected The choices the user has selected in the UMLAddDialog
      */
     protected abstract void doIt(Vector selected);

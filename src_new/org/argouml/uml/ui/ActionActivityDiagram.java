@@ -1,4 +1,4 @@
-// $Id: ActionActivityDiagram.java,v 1.38 2005/01/03 13:00:11 mvw Exp $
+// $Id: ActionActivityDiagram.java,v 1.39 2005/01/09 14:59:01 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -31,23 +31,23 @@ import org.argouml.ui.targetmanager.TargetManager;
 import org.argouml.uml.diagram.activity.ui.UMLActivityDiagram;
 import org.argouml.uml.diagram.ui.UMLDiagram;
 
-/** 
+/**
  * Action to trigger creation of a new activity diagram.<p>
- * 
- * This used to extend the ActionStateDiagram, but lead to problems 
+ *
+ * This used to extend the ActionStateDiagram, but lead to problems
  * implementing shouldBeEnabled() and isValidNamespace().
- * 
+ *
  * @stereotype singleton
  */
 public class ActionActivityDiagram extends ActionAddDiagram {
 
-    private static final Logger LOG = 
+    private static final Logger LOG =
         Logger.getLogger(ActionStateDiagram.class);
-    
+
     /**
      * The singleton.
      */
-    public static final ActionActivityDiagram SINGLETON = 
+    public static final ActionActivityDiagram SINGLETON =
         new ActionActivityDiagram();
 
     /**
@@ -65,7 +65,7 @@ public class ActionActivityDiagram extends ActionAddDiagram {
         Object/*MActivityGraph*/ graph =
 	    Model.getActivityGraphsFactory().buildActivityGraph(target);
         /*if (ModelFacade.isABehavioralFeature(target)) {
-            ns = ModelFacade.getNamespace(target); 
+            ns = ModelFacade.getNamespace(target);
             // this fails always, see issue 1817
         }*/
         UMLActivityDiagram d = new UMLActivityDiagram(ns, graph);
@@ -77,12 +77,12 @@ public class ActionActivityDiagram extends ActionAddDiagram {
      *       (i) a Package, or<br>
      *      (ii) a Classifier (including UseCase), or<br>
      *     (iii) a BehavioralFeature.<p>
-     * 
+     *
      * @see org.argouml.uml.ui.UMLAction#shouldBeEnabled()
      */
     public boolean shouldBeEnabled() {
         Object obj = TargetManager.getInstance().getModelTarget();
-        return super.shouldBeEnabled() 
+        return super.shouldBeEnabled()
             && Model.getActivityGraphsHelper()
                 .isAddingActivityGraphAllowed(obj);
     }

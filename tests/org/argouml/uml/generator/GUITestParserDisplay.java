@@ -1,4 +1,4 @@
-// $Id: GUITestParserDisplay.java,v 1.22 2005/01/08 23:27:27 linus Exp $
+// $Id: GUITestParserDisplay.java,v 1.23 2005/01/09 14:59:17 linus Exp $
 // Copyright (c) 2003-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -168,7 +168,7 @@ public class GUITestParserDisplay extends TestCase {
         Project project = ProjectManager.getManager().getCurrentProject();
         Object ns = project.getModel();
         Object intType = project.findType("int");
-        
+
         attr = Model.getCoreFactory().buildAttribute(ns, intType);
         ModelFacade.setNamespace(attr, ns);
 
@@ -813,7 +813,7 @@ public class GUITestParserDisplay extends TestCase {
             assertTrue(text + "gave wrong default value in parameter "
         	       + (i / 4),
         	       (params[i + 3] == null && p.getDefaultValue() == null)
-        	       || ((params[i + 3] != null 
+        	       || ((params[i + 3] != null
         	           && p.getDefaultValue() != null)
         	           && params[i + 3].equals(
         	                   p.getDefaultValue().getBody())));
@@ -999,7 +999,7 @@ public class GUITestParserDisplay extends TestCase {
             	      ? ModelFacade.getName(ModelFacade.getStereotypes(feature)
                               .get(0))
             	      : "(null)"),
-            	   (val == null 
+            	   (val == null
                            && ModelFacade.getStereotypes(feature).size() == 0)
             	   || (val != null
             	       && ModelFacade.getStereotypes(feature).size() > 0
@@ -1014,7 +1014,7 @@ public class GUITestParserDisplay extends TestCase {
                       ? ModelFacade.getName(
                               ModelFacade.getStereotypes(feature).get(0))
                       : "(null)"),
-                   (val == null 
+                   (val == null
                            && ModelFacade.getStereotypes(feature).size() == 0)
                    || (val != null
                        && ModelFacade.getStereotypes(feature).size() > 0

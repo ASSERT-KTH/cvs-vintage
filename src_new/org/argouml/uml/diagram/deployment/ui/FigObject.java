@@ -1,4 +1,4 @@
-// $Id: FigObject.java,v 1.28 2005/01/08 23:27:28 linus Exp $
+// $Id: FigObject.java,v 1.29 2005/01/09 14:58:38 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -126,7 +126,7 @@ public class FigObject extends FigNodeModelElement {
      * @see org.tigris.gef.presentation.Fig#setFillColor(java.awt.Color)
      */
     public void setFillColor(Color col) { cover.setFillColor(col); }
-    
+
     /**
      * @see org.tigris.gef.presentation.Fig#getFillColor()
      */
@@ -136,7 +136,7 @@ public class FigObject extends FigNodeModelElement {
      * @see org.tigris.gef.presentation.Fig#setFilled(boolean)
      */
     public void setFilled(boolean f) { cover.setFilled(f); }
-    
+
     /**
      * @see org.tigris.gef.presentation.Fig#getFilled()
      */

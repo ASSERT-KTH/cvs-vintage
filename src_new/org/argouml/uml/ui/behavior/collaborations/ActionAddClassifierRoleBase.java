@@ -1,4 +1,4 @@
-// $Id: ActionAddClassifierRoleBase.java,v 1.15 2005/01/03 09:30:44 mvw Exp $
+// $Id: ActionAddClassifierRoleBase.java,v 1.16 2005/01/09 14:59:05 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -84,6 +84,6 @@ public class ActionAddClassifierRoleBase extends AbstractActionAddModelElement {
         Object role = /*(MClassifierRole)*/ getTarget();
         Model.getCollaborationsHelper().setBases(role, selected);
     }
-        
+
 
 }

@@ -1,5 +1,5 @@
-// $Id: UMLOperationRaisedSignalsListModel.java,v 1.1 2004/12/12 22:06:01 mvw Exp $
-// Copyright (c) 2004 The Regents of the University of California. All
+// $Id: UMLOperationRaisedSignalsListModel.java,v 1.2 2005/01/09 14:59:09 linus Exp $
+// Copyright (c) 2004-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
 // agreement is hereby granted, provided that the above copyright notice
@@ -32,19 +32,19 @@ import org.argouml.uml.ui.UMLModelElementListModel2;
 
 /**
  * The model for the list of raised signals of an operation.
- * 
+ *
  * @author Michiel
  */
-public class UMLOperationRaisedSignalsListModel 
+public class UMLOperationRaisedSignalsListModel
     extends UMLModelElementListModel2 {
-    
+
     /**
      * The constructor.
      */
     public UMLOperationRaisedSignalsListModel() {
         super("signal");
     }
-    
+
     /**
      * @see org.argouml.uml.ui.UMLModelElementListModel2#buildModelList()
      */
@@ -58,7 +58,7 @@ public class UMLOperationRaisedSignalsListModel
             setAllElements(signals);
         }
     }
-    
+
     /**
      * @see org.argouml.uml.ui.UMLModelElementListModel2#isValidElement(java.lang.Object)
      */

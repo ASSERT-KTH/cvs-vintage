@@ -1,5 +1,5 @@
-// $Id: ActionEmailExpert.java,v 1.5 2005/01/05 15:39:17 bobtarling Exp $
-// Copyright (c) 2004 The Regents of the University of California. All
+// $Id: ActionEmailExpert.java,v 1.6 2005/01/09 14:58:13 linus Exp $
+// Copyright (c) 2004-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
 // agreement is hereby granted, provided that the above copyright notice
@@ -43,8 +43,8 @@ public class ActionEmailExpert extends ToDoItemAction {
     /**
      * The constructor.
      */
-    public ActionEmailExpert() { 
-        super("action.send-email-to-expert", HAS_ICON); 
+    public ActionEmailExpert() {
+        super("action.send-email-to-expert", HAS_ICON);
     }
 
     /**
@@ -57,23 +57,23 @@ public class ActionEmailExpert extends ToDoItemAction {
             String to = p.getExpertEmail();
             String subject = target.getHeadline().trim();
             /* The replaceAll function is only supported in Java 1.4 and up.
-             * Once we stop supporting Java 1.3, 
+             * Once we stop supporting Java 1.3,
              * we can reintroduce this clean solution!
-             * subject = subject.replaceAll("\\s", "%20"); 
+             * subject = subject.replaceAll("\\s", "%20");
              */
             int i;
             while ((i = subject.indexOf(" ")) >= 0) {
                 StringBuffer s = new StringBuffer(subject);
                 subject = s.replace(i, i + 1, "%20").toString();
             }
-            
+
             Designer dsgr = Designer.theDesigner();
-            try {                
+            try {
                 //MVW: This works under MSWindows only, I guess.
                 Runtime.getRuntime().exec(
-                    "cmd /c start mailto:" + to 
-                    + "?subject=" + subject 
-                    + "&body=" + dsgr); 
+                    "cmd /c start mailto:" + to
+                    + "?subject=" + subject
+                    + "&body=" + dsgr);
             } catch (Exception ex) {
                 /*ignore for now*/
             }
@@ -88,7 +88,7 @@ public class ActionEmailExpert extends ToDoItemAction {
      * @see org.argouml.ui.cmd.ToDoItemAction#shouldBeEnabled(java.lang.Object)
      */
     public boolean shouldBeEnabled(Object target) {
-        return getRememberedTarget() != null 
+        return getRememberedTarget() != null
             && getRememberedTarget() instanceof ToDoItem;
     }
 

@@ -1,4 +1,4 @@
-// $Id: ActionCollaborationDiagram.java,v 1.41 2005/01/08 23:27:29 linus Exp $
+// $Id: ActionCollaborationDiagram.java,v 1.42 2005/01/09 14:59:01 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -34,8 +34,8 @@ import org.argouml.uml.diagram.ui.UMLDiagram;
  *  @stereotype singleton
  */
 public class ActionCollaborationDiagram extends ActionAddDiagram {
-    
-    private static final Logger LOG = 
+
+    private static final Logger LOG =
         Logger.getLogger(ActionCollaborationDiagram.class);
 
     /**
@@ -87,7 +87,7 @@ public class ActionCollaborationDiagram extends ActionAddDiagram {
 //                Model.getCollaborationsFactory().buildCollaboration(
 //                    namespace);
         }
-        UMLCollaborationDiagram d = 
+        UMLCollaborationDiagram d =
             new UMLCollaborationDiagram(namespace, collaboration);
         return d;
     }
@@ -113,7 +113,7 @@ public class ActionCollaborationDiagram extends ActionAddDiagram {
     public boolean shouldBeEnabled() {
         Object target = TargetManager.getInstance().getModelTarget();
         if (ModelFacade.isAOperation(target))
-            return super.shouldBeEnabled() 
+            return super.shouldBeEnabled()
                 && Model.getCollaborationsHelper()
                     .isAddingCollaborationAllowed(target);
         else if (ModelFacade.isANamespace(target))

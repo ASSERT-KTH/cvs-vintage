@@ -1,5 +1,5 @@
-// $Id: UMLMultiplicityComboBoxModel.java,v 1.10 2004/09/14 17:35:12 mvw Exp $
-// Copyright (c) 1996-2004 The Regents of the University of California. All
+// $Id: UMLMultiplicityComboBoxModel.java,v 1.11 2005/01/09 14:59:03 linus Exp $
+// Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
 // agreement is hereby granted, provided that the above copyright notice
@@ -22,7 +22,7 @@
 // CALIFORNIA HAS NO OBLIGATIONS TO PROVIDE MAINTENANCE, SUPPORT,
 // UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 
-// $Id: UMLMultiplicityComboBoxModel.java,v 1.10 2004/09/14 17:35:12 mvw Exp $
+// $Id: UMLMultiplicityComboBoxModel.java,v 1.11 2005/01/09 14:59:03 linus Exp $
 package org.argouml.uml.ui;
 
 import java.util.ArrayList;
@@ -31,14 +31,14 @@ import org.argouml.model.ModelFacade;
 
 /**
  * A model for multiplicities. This model is instantiated with a few default
- * values. 
- * @author jaap.branderhorst@xs4all.nl	
+ * values.
+ * @author jaap.branderhorst@xs4all.nl
  * @since Jan 5, 2003
  */
 public abstract class UMLMultiplicityComboBoxModel extends UMLComboBoxModel2 {
-    
+
     private static List multiplicityList = new ArrayList();
-    
+
     static {
         multiplicityList.add(ModelFacade.M0_N_MULTIPLICITY);
         multiplicityList.add(ModelFacade.M0_1_MULTIPLICITY);
@@ -70,7 +70,7 @@ public abstract class UMLMultiplicityComboBoxModel extends UMLComboBoxModel2 {
 	Object t = getTarget();
 	if (ModelFacade.isAModelElement(t))
 	    addElement(ModelFacade.getMultiplicity(t));
-    }    
+    }
 
     /**
      * @see org.argouml.uml.ui.UMLComboBoxModel2#addElement(java.lang.Object)
@@ -80,22 +80,22 @@ public abstract class UMLMultiplicityComboBoxModel extends UMLComboBoxModel2 {
         if (!multiplicityList.contains(o) && isValidElement(o)) {
             multiplicityList.add(o);
         }
-        super.addElement(o);        
-    }    
+        super.addElement(o);
+    }
 
-    
+
 
     /**
      * @see javax.swing.ComboBoxModel#setSelectedItem(java.lang.Object)
      */
-    public void setSelectedItem(Object anItem) {        
+    public void setSelectedItem(Object anItem) {
         if (!contains(anItem)
 	    && org.argouml.model.ModelFacade.isAMultiplicity(anItem)) {
 
             addElement(anItem);
 
-        }        
-        super.setSelectedItem(anItem);        
+        }
+        super.setSelectedItem(anItem);
     }
 
 }

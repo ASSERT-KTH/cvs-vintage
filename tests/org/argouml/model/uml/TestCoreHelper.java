@@ -1,4 +1,4 @@
-// $Id: TestCoreHelper.java,v 1.5 2005/01/02 16:43:41 linus Exp $
+// $Id: TestCoreHelper.java,v 1.6 2005/01/09 14:59:14 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -74,15 +74,15 @@ public class TestCoreHelper extends TestCase {
      * Test subtype check.
      */
     public void testIsSubType() {
-    	assertTrue("Is not a subtype", 
+    	assertTrue("Is not a subtype",
                        Model.getCoreHelper().
                        isSubType(ModelFacade.CLASSIFIER, ModelFacade.CLASS));
-        assertTrue("Is not a parent type", 
+        assertTrue("Is not a parent type",
                         !Model.getCoreHelper().
                         isSubType(ModelFacade.CLASS, ModelFacade.CLASSIFIER));
-        assertTrue("Is not a parent type", 
+        assertTrue("Is not a parent type",
                         !Model.getCoreHelper().
-                        isSubType(ModelFacade.CLASS, 
+                        isSubType(ModelFacade.CLASS,
                                   ModelFacade.AGGREGATIONKIND));
     }
 

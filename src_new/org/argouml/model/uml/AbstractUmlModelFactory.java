@@ -1,5 +1,5 @@
-// $Id: AbstractUmlModelFactory.java,v 1.27 2004/12/28 13:59:31 bobtarling Exp $
-// Copyright (c) 1996-2004 The Regents of the University of California. All
+// $Id: AbstractUmlModelFactory.java,v 1.28 2005/01/09 14:58:07 linus Exp $
+// Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
 // agreement is hereby granted, provided that the above copyright notice
@@ -52,7 +52,7 @@ public abstract class AbstractUmlModelFactory {
         if (o instanceof MBase) {
             if (((MBase) o).getUUID() == null) {
                 ((MBase) o).setUUID(UUIDManager.getInstance().getNewUUID());
-            }            
+            }
             addListenersToModelElement(o);
             UmlModelEventPump pump = UmlModelEventPump.getPump();
             EventListenerList[] lists =
@@ -79,11 +79,11 @@ public abstract class AbstractUmlModelFactory {
     public void addListenersToModelElement(Object handle) {
         if (ModelFacade.isABase(handle)) {
             UmlModelEventPump pump = UmlModelEventPump.getPump();
-            
+
             ((MBase) handle).addMElementListener(pump);
             pump.addModelEventListener(ExplorerNSUMLEventAdaptor.getInstance(),
                     handle);
-            
+
             UmlModelListener.getInstance().newElement(handle);
         }
     }

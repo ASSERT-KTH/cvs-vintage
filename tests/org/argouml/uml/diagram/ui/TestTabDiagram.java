@@ -1,4 +1,4 @@
-// $Id: TestTabDiagram.java,v 1.13 2005/01/08 23:27:28 linus Exp $
+// $Id: TestTabDiagram.java,v 1.14 2005/01/09 14:59:17 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -89,7 +89,7 @@ public class TestTabDiagram extends TestCase {
     }
 
     /**
-     * Tests the setTarget method when a diagram is the target.  
+     * Tests the setTarget method when a diagram is the target.
      */
     public void testSetTargetWithDiagram() {
         try {
@@ -145,11 +145,11 @@ public class TestTabDiagram extends TestCase {
                     MFactoryImpl.EVENT_POLICY_IMMEDIATE);
                 // real test
                 long currentTime = (new Date()).getTime();
-                Collection propertyChangeListeners = 
+                Collection propertyChangeListeners =
                     project.findFigsForMember(clazz);
                 Object model = project.getModel();
                 Object voidType = project.findType("void");
-                Model.getCoreFactory().buildOperation(clazz, model, 
+                Model.getCoreFactory().buildOperation(clazz, model,
                         voidType, propertyChangeListeners);
                 System.out.println(
                     "Time needed for adding operation: "

@@ -1,5 +1,5 @@
-// $Id: CognitiveTestSuite.java,v 1.3 2004/09/28 06:22:49 linus Exp $
-// Copyright (c) 2002-2004 The Regents of the University of California. All
+// $Id: CognitiveTestSuite.java,v 1.4 2005/01/09 14:59:13 linus Exp $
+// Copyright (c) 2002-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
 // agreement is hereby granted, provided that the above copyright notice
@@ -33,7 +33,7 @@ import junit.framework.TestSuite;
 public class CognitiveTestSuite {
 
     /** Test suite for this package
-     * 
+     *
      * @return the junit test suite
      */
     public static Test suite() {

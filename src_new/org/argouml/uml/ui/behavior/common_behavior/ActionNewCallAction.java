@@ -1,4 +1,4 @@
-// $Id: ActionNewCallAction.java,v 1.8 2005/01/02 16:43:50 linus Exp $
+// $Id: ActionNewCallAction.java,v 1.9 2005/01/09 14:59:07 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -36,9 +36,9 @@ import org.argouml.model.Model;
  */
 public class ActionNewCallAction extends ActionNewAction {
 
-    private static final ActionNewCallAction SINGLETON = 
+    private static final ActionNewCallAction SINGLETON =
         new ActionNewCallAction();
-    
+
     /**
      * Constructor for ActionNewCallAction.
      */
@@ -47,8 +47,8 @@ public class ActionNewCallAction extends ActionNewAction {
         putValue(Action.NAME, Translator.localize(
                 "button.new-callaction"));
     }
-    
-    
+
+
     /**
      * @see org.argouml.uml.ui.behavior.common_behavior.ActionNewAction#createAction()
      */

@@ -1,5 +1,5 @@
-// $Id: UMLDeprecatedCheckBox.java,v 1.2 2004/09/14 20:12:16 mvw Exp $
-// Copyright (c) 2003-2004 The Regents of the University of California. All
+// $Id: UMLDeprecatedCheckBox.java,v 1.3 2005/01/09 14:59:03 linus Exp $
+// Copyright (c) 2003-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
 // agreement is hereby granted, provided that the above copyright notice
@@ -29,15 +29,15 @@ import org.argouml.model.ModelFacade;
 /**
  * Class to represent a checkbox for the deprecated checkbox in the
  * documentation tab.
- * 
+ *
  * @author mkl
- *  
+ *
  */
 public class UMLDeprecatedCheckBox extends UMLCheckBox2 {
 
     /**
      * The constructor.
-     * 
+     *
      */
     public UMLDeprecatedCheckBox() {
         super(null, new ActionBooleanTaggedValue("deprecated"), "deprecated");
@@ -45,7 +45,7 @@ public class UMLDeprecatedCheckBox extends UMLCheckBox2 {
 
     /**
      * Set the checkbox according to the tagged values of the target.
-     * 
+     *
      * @see org.argouml.uml.ui.UMLCheckBox2#buildModel()
      */
     public void buildModel() {

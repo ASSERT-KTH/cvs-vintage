@@ -1,4 +1,4 @@
-// $Id: PropPanelMessage.java,v 1.58 2005/01/02 16:43:43 linus Exp $
+// $Id: PropPanelMessage.java,v 1.59 2005/01/09 14:59:05 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -52,7 +52,7 @@ public class PropPanelMessage extends PropPanelModelElement {
 
     /**
      * The constructor.
-     * 
+     *
      */
     public PropPanelMessage() {
 	super("Message", ConfigLoader.getTabPropsOrientation());
@@ -60,11 +60,11 @@ public class PropPanelMessage extends PropPanelModelElement {
 	Object[] namesToWatch = {
 	    ModelFacade.STEREOTYPE,
 	    ModelFacade.CLASSIFIER_ROLE,
-	    ModelFacade.ACTION 
+	    ModelFacade.ACTION,
 	};
 	setNameEventListening(namesToWatch);
 
-	addField(Translator.localize("label.name"), 
+	addField(Translator.localize("label.name"),
             getNameTextField());
 	addField(Translator.localize("label.stereotype"),
             getStereotypeBox());
@@ -86,7 +86,7 @@ public class PropPanelMessage extends PropPanelModelElement {
 	    new UMLLinkedList(new UMLMessageReceiverListModel());
 	receiverList.setVisibleRowCount(1);
 	JScrollPane receiverScroll = new JScrollPane(receiverList);
-	addField(Translator.localize("label.receiver"), 
+	addField(Translator.localize("label.receiver"),
             receiverScroll);
 
 	addSeperator();
@@ -110,12 +110,12 @@ public class PropPanelMessage extends PropPanelModelElement {
 		 predecessorScroll);
 
         addButton(new PropPanelButton2(new ActionNavigateContainerElement()));
-        addButton(new PropPanelButton2(new ActionToolNewAction(), 
+        addButton(new PropPanelButton2(new ActionToolNewAction(),
                 lookupIcon("CallAction")));
-        addButton(new PropPanelButton2(new ActionNewStereotype(), 
+        addButton(new PropPanelButton2(new ActionNewStereotype(),
                 lookupIcon("Stereotype")));
-        addButton(new PropPanelButton2(new ActionRemoveFromModel(), 
-                lookupIcon("Delete")));    
+        addButton(new PropPanelButton2(new ActionRemoveFromModel(),
+                lookupIcon("Delete")));
     }
 
     private class ActionToolNewAction extends AbstractActionNewModelElement {

@@ -1,5 +1,5 @@
-// $Id: UMLUserInterfaceContainer.java,v 1.11 2004/12/20 09:28:34 mvw Exp $
-// Copyright (c) 1996-2004 The Regents of the University of California. All
+// $Id: UMLUserInterfaceContainer.java,v 1.12 2005/01/09 14:59:04 linus Exp $
+// Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
 // agreement is hereby granted, provided that the above copyright notice
@@ -53,7 +53,7 @@ public interface UMLUserInterfaceContainer {
      * @return the current profile, may not be null
      */
     public Profile getProfile();
-    
+
     /**
      * Formats the specified model element.  Typically, deferred to the
      * profile.
@@ -62,7 +62,7 @@ public interface UMLUserInterfaceContainer {
      * @return the formatted string
      */
     public String formatElement(/*MModelElement*/Object element);
-    
+
     /**
      * Formats a collection of model elements.  Typically, deferred to the
      * profile.
@@ -71,7 +71,7 @@ public interface UMLUserInterfaceContainer {
      * @return the formatted string
      */
     public String formatCollection(Iterator iter);
-    
+
     /**
      * Formats the model element as a namespace.
      *

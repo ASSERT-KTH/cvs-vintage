@@ -1,5 +1,5 @@
-// $Id: SaveException.java,v 1.1 2004/12/23 18:27:53 bobtarling Exp $
-// Copyright (c) 1996-2003 The Regents of the University of California. All
+// $Id: SaveException.java,v 1.2 2005/01/09 14:58:08 linus Exp $
+// Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
 // agreement is hereby granted, provided that the above copyright notice
@@ -38,21 +38,21 @@ package org.argouml.persistence;
 public class SaveException extends PersistenceException {
     /**
      * The constructor.
-     * 
+     *
      * @param message the message to be shown
      * @param cause the cause of the exception
      */
     public SaveException(String message, Throwable cause) {
         super(message, cause);
     }
-    
+
     /**
      * @param message the message to be shown
      */
     public SaveException(String message) {
         super(message);
     }
-    
+
     /**
      * @param cause the cause of the exception
      */

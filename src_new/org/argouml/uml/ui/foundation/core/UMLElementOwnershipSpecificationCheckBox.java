@@ -1,5 +1,5 @@
-// $Id: UMLElementOwnershipSpecificationCheckBox.java,v 1.11 2004/10/13 05:52:15 linus Exp $
-// Copyright (c) 1996-2004 The Regents of the University of California. All
+// $Id: UMLElementOwnershipSpecificationCheckBox.java,v 1.12 2005/01/09 14:59:09 linus Exp $
+// Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
 // agreement is hereby granted, provided that the above copyright notice
@@ -38,8 +38,8 @@ public class UMLElementOwnershipSpecificationCheckBox extends UMLCheckBox2 {
      * Constructor for UMLElementOwnershipSpecificationCheckBox.
      */
     public UMLElementOwnershipSpecificationCheckBox() {
-        super(Translator.localize("label.specialization"), 
-            ActionSetElementOwnershipSpecification.getInstance(), 
+        super(Translator.localize("label.specialization"),
+            ActionSetElementOwnershipSpecification.getInstance(),
             "isSpecification");
     }
 

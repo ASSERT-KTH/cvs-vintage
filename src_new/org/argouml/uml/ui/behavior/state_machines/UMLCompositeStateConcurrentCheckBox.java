@@ -1,5 +1,5 @@
-// $Id: UMLCompositeStateConcurrentCheckBox.java,v 1.1 2004/12/03 18:55:08 mvw Exp $
-// Copyright (c) 1996-2004 The Regents of the University of California. All
+// $Id: UMLCompositeStateConcurrentCheckBox.java,v 1.2 2005/01/09 14:59:07 linus Exp $
+// Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
 // agreement is hereby granted, provided that the above copyright notice
@@ -38,8 +38,8 @@ public class UMLCompositeStateConcurrentCheckBox extends UMLCheckBox2 {
      * Constructor for UMLCompositeStateConcurrentCheckBox.
      */
     public UMLCompositeStateConcurrentCheckBox() {
-         super(Translator.localize("label.concurrent"), 
-            ActionSetCompositeStateConcurrent.getInstance(), 
+         super(Translator.localize("label.concurrent"),
+            ActionSetCompositeStateConcurrent.getInstance(),
             "isConcurent");
     }
 

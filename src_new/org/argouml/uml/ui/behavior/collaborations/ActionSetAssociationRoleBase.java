@@ -1,4 +1,4 @@
-// $Id: ActionSetAssociationRoleBase.java,v 1.17 2005/01/03 09:30:44 mvw Exp $
+// $Id: ActionSetAssociationRoleBase.java,v 1.18 2005/01/09 14:59:05 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -42,13 +42,13 @@ public class ActionSetAssociationRoleBase extends UMLAction {
 
     private static final ActionSetAssociationRoleBase SINGLETON =
 	new ActionSetAssociationRoleBase();
-    
+
     /**
      * Constructor for ActionSetAssociationRoleBase.
      */
     protected ActionSetAssociationRoleBase() {
         super(Translator.localize("Set"), false, NO_ICON);
-    }   
+    }
 
     /**
      * @see
@@ -60,7 +60,7 @@ public class ActionSetAssociationRoleBase extends UMLAction {
         if (e.getSource() instanceof UMLComboBox2) {
             UMLComboBox2 source = (UMLComboBox2) e.getSource();
             selected = source.getSelectedItem();
-            if (ModelFacade.isAAssociation(selected) 
+            if (ModelFacade.isAAssociation(selected)
                     && ModelFacade.isAAssociationRole(source.getTarget())) {
                 Model.getCollaborationsHelper()
                     .setBase(source.getTarget(), selected);

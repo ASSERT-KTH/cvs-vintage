@@ -1,5 +1,5 @@
-// $Id: TestUml.java,v 1.6 2004/09/24 20:17:24 mvw Exp $
-// Copyright (c) 2003-2004 The Regents of the University of California. All
+// $Id: TestUml.java,v 1.7 2005/01/09 14:59:14 linus Exp $
+// Copyright (c) 2003-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
 // agreement is hereby granted, provided that the above copyright notice
@@ -44,7 +44,7 @@ public class TestUml extends TestCase
 
 
     /**
-     * TODO: Rewrite this test using reflection against Uml class. 
+     * TODO: Rewrite this test using reflection against Uml class.
      */
     public void testUmlClassList() {
 //        for (Iterator i = Uml.getUmlClassList().iterator(); i.hasNext();) {
@@ -52,7 +52,7 @@ public class TestUml extends TestCase
 //            String typeName = type.getClass().getName().toUpperCase();
 //            String expected = type.getName().toUpperCase();
 //            // System.out.println(type.getClass().getName().toUpperCase());
-//            // System.out.println("ORG.ARGOUML.MODEL.UML.UML$TYPE" 
+//            // System.out.println("ORG.ARGOUML.MODEL.UML.UML$TYPE"
 //            // + key.toString().toUpperCase());
 //            assertEquals(
 //                "Not the correct class",

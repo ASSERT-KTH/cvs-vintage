@@ -1,5 +1,5 @@
-// $Id: ActionUseCaseDiagram.java,v 1.19 2004/09/16 20:50:04 mvw Exp $
-// Copyright (c) 1996-2003 The Regents of the University of California. All
+// $Id: ActionUseCaseDiagram.java,v 1.20 2005/01/09 14:59:02 linus Exp $
+// Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
 // agreement is hereby granted, provided that the above copyright notice
@@ -37,10 +37,10 @@ public class ActionUseCaseDiagram extends ActionAddDiagram {
     /**
      * The singleton.
      */
-    public static final ActionUseCaseDiagram SINGLETON = 
+    public static final ActionUseCaseDiagram SINGLETON =
         new ActionUseCaseDiagram();
 
-    private static final Logger LOG = 
+    private static final Logger LOG =
         Logger.getLogger(ActionUseCaseDiagram.class);
 
     private ActionUseCaseDiagram() {

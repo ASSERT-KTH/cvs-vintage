@@ -1,4 +1,4 @@
-// $Id: ProjectMemberTodoList.java,v 1.12 2005/01/03 23:29:10 bobtarling Exp $
+// $Id: ProjectMemberTodoList.java,v 1.13 2005/01/09 14:58:34 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -42,12 +42,12 @@ import org.argouml.persistence.ToDoItemXMLHelper;
  * @author	Michael Stockman
  */
 public class ProjectMemberTodoList extends AbstractProjectMember {
-    
+
     private static final String TO_DO_EXT = ".todo";
 
     /**
-     * The constructor. 
-     * 
+     * The constructor.
+     *
      * @param name the name
      * @param p the project
      */
@@ -77,7 +77,7 @@ public class ProjectMemberTodoList extends AbstractProjectMember {
         ToDoItem tdi;
         Designer dsgr;
         int i;
-        
+
         dsgr = Designer.theDesigner();
         in = dsgr.getToDoList().getToDoItems();
         out = new Vector();
@@ -90,7 +90,7 @@ public class ProjectMemberTodoList extends AbstractProjectMember {
             } catch (ClassCastException e) {
                 continue;
             }
-        
+
             if (tdi.getPoster() instanceof Designer) {
                 out.addElement(new ToDoItemXMLHelper(tdi));
             }
@@ -106,7 +106,7 @@ public class ProjectMemberTodoList extends AbstractProjectMember {
     	ResolvedCritic rci;
     	Designer dsgr;
     	int i;
-    
+
     	dsgr = Designer.theDesigner();
     	in = dsgr.getToDoList().getResolvedItems();
     	out = new Vector();

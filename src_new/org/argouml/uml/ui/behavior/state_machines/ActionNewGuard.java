@@ -1,4 +1,4 @@
-// $Id: ActionNewGuard.java,v 1.7 2005/01/02 16:43:40 linus Exp $
+// $Id: ActionNewGuard.java,v 1.8 2005/01/09 14:59:07 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -37,7 +37,7 @@ import org.argouml.uml.ui.AbstractActionNewModelElement;
 public class ActionNewGuard extends AbstractActionNewModelElement {
 
     private static ActionNewGuard singleton = new ActionNewGuard();
-    
+
     /**
      * Constructor for ActionNewCallAction.
      */
@@ -50,7 +50,7 @@ public class ActionNewGuard extends AbstractActionNewModelElement {
      */
     public void actionPerformed(ActionEvent e) {
         super.actionPerformed(e);
-        Model.getStateMachinesFactory().buildGuard(getTarget());        
+        Model.getStateMachinesFactory().buildGuard(getTarget());
     }
 
     /**

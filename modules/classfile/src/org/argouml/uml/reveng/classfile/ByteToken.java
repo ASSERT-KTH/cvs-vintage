@@ -1,5 +1,5 @@
-// $Id: ByteToken.java,v 1.3 2004/08/26 18:48:43 mvw Exp $
-// Copyright (c) 1996-2002 The Regents of the University of California. All
+// $Id: ByteToken.java,v 1.4 2005/01/09 14:57:56 linus Exp $
+// Copyright (c) 1996-2002, 2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
 // agreement is hereby granted, provided that the above copyright notice
@@ -33,11 +33,11 @@ import antlr.*;
 public class ByteToken extends Token {
 
     //////////////////////
-    // Instance variables. 
+    // Instance variables.
 
-    private byte val = 0; 
+    private byte val = 0;
 
-    
+
     ///////////////
     // Constructors
 
@@ -51,7 +51,7 @@ public class ByteToken extends Token {
     }
 
     /**
-     * Create a new ByteToken instance with a given type and 
+     * Create a new ByteToken instance with a given type and
      * byte value.
      *
      * @param type The type of the token.

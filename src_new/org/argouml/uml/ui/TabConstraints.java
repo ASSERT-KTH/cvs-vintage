@@ -1,4 +1,4 @@
-// $Id: TabConstraints.java,v 1.44 2005/01/08 23:27:29 linus Exp $
+// $Id: TabConstraints.java,v 1.45 2005/01/09 14:59:02 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -405,7 +405,7 @@ public class TabConstraints extends TabSpawnable implements TabModelTarget {
                             removeConstraintAt(theMNIdx);
 
                             for (Iterator i = lConstraints.iterator();
-				 i.hasNext(); ) {
+				 i.hasNext();) {
                                 OclTree ocltCurrent = (OclTree) i.next();
 
                                 Object/*MConstraint*/ mc =
@@ -485,7 +485,7 @@ public class TabConstraints extends TabSpawnable implements TabModelTarget {
                                 	.createBooleanExpression("OCL", sData));
                     }
 
-                    fireConstraintDataChanged(theMNIdx, mcOld, 
+                    fireConstraintDataChanged(theMNIdx, mcOld,
                             theMMcConstraint);
 
                 } catch (OclTypeException pe) {

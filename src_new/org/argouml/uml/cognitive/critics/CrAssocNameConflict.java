@@ -1,5 +1,5 @@
-// $Id: CrAssocNameConflict.java,v 1.11 2004/09/21 19:03:26 mvw Exp $
-// Copyright (c) 1996-2004 The Regents of the University of California. All
+// $Id: CrAssocNameConflict.java,v 1.12 2005/01/09 14:58:36 linus Exp $
+// Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
 // agreement is hereby granted, provided that the above copyright notice
@@ -22,11 +22,7 @@
 // CALIFORNIA HAS NO OBLIGATIONS TO PROVIDE MAINTENANCE, SUPPORT,
 // UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 
-// File: CrAssocNameConflict.java
-// Classes: CrAssocNameConflict
-// Original Author: jrobbins@ics.uci.edu
-// $Id: CrAssocNameConflict.java,v 1.11 2004/09/21 19:03:26 mvw Exp $
-
+// $Id: CrAssocNameConflict.java,v 1.12 2005/01/09 14:58:36 linus Exp $
 package org.argouml.uml.cognitive.critics;
 
 import java.util.Collection;
@@ -36,14 +32,17 @@ import org.argouml.cognitive.Designer;
 import org.argouml.cognitive.critics.Critic;
 import org.argouml.model.ModelFacade;
 
-/** Well-formedness rule [2] for MNamespace. See page 33 of UML 1.1
- *  Semantics. OMG document ad/97-08-04. */
-
+/**
+ * Well-formedness rule [2] for MNamespace. See page 33 of UML 1.1
+ * Semantics. OMG document ad/97-08-04.
+ *
+ * @author jrobbins
+ */
 public class CrAssocNameConflict extends CrUML {
 
     /**
      * The constructor.
-     * 
+     *
      */
     public CrAssocNameConflict() {
 	setHeadline("Resolve Association Name Conflict");

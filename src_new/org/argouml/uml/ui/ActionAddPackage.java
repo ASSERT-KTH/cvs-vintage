@@ -1,4 +1,4 @@
-// $Id: ActionAddPackage.java,v 1.12 2005/01/08 23:27:29 linus Exp $
+// $Id: ActionAddPackage.java,v 1.13 2005/01/09 14:59:01 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -30,7 +30,7 @@ import org.argouml.model.Model;
 import org.argouml.model.ModelFacade;
 import org.argouml.ui.targetmanager.TargetManager;
 
-/** 
+/**
  * Action to add a package to the selected model element in the
  * nav pane. This is a shortcut that helps build model
  * structures quickly.
@@ -39,24 +39,24 @@ import org.argouml.ui.targetmanager.TargetManager;
  * @stereotype singleton
  */
 public class ActionAddPackage  extends UMLAction {
-    
+
     ////////////////////////////////////////////////////////////////
     // static variables
-    
+
     /**
      * The singleton.
      */
     public static final ActionAddPackage SINGLETON = new ActionAddPackage();
-    
+
     ////////////////////////////////////////////////////////////////
     // constructors
-    
+
     /** Creates a new instance of ActionAddPackage */
     public ActionAddPackage() {
-        
+
         super("Add package", NO_ICON);
     }
-    
+
     /**
      * adds a package to the selected object in the nav pane.
      *
@@ -68,5 +68,5 @@ public class ActionAddPackage  extends UMLAction {
         ModelFacade.addOwnedElement(namespace,
             Model.getModelManagementFactory().createPackage());
     }
-    
+
 }

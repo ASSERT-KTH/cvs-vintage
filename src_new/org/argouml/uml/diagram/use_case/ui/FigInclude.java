@@ -1,5 +1,5 @@
-// $Id: FigInclude.java,v 1.11 2004/08/12 19:50:11 mvw Exp $
-// Copyright (c) 1996-2002 The Regents of the University of California. All
+// $Id: FigInclude.java,v 1.12 2005/01/09 14:58:58 linus Exp $
+// Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
 // agreement is hereby granted, provided that the above copyright notice
@@ -22,15 +22,6 @@
 // CALIFORNIA HAS NO OBLIGATIONS TO PROVIDE MAINTENANCE, SUPPORT,
 // UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 
-// File: FigInclude.java
-// Classes: FigInclude
-// Original Author: mail@jeremybennett.com
-// $Id: FigInclude.java,v 1.11 2004/08/12 19:50:11 mvw Exp $
-
-// 3 Apr 2002: Jeremy Bennett (mail@jeremybennett.com). Written to support
-// Include relationships.
-
-
 package org.argouml.uml.diagram.use_case.ui;
 
 import java.awt.Color;
@@ -44,19 +35,20 @@ import org.tigris.gef.presentation.FigText;
 
 
 /**
- * <p>A fig for use with include relationships on use case diagrams.</p>
+ * A fig for use with include relationships on use case diagrams.<p>
  *
- * <p>Realised as a dotted line with an open arrow head and the label
- *   <<include>> alongside a la stereotype.</p>
+ * Realised as a dotted line with an open arrow head and the label
+ * <<include>> alongside a la stereotype.<p>
+ *
+ * @author Jeremy Bennett
  */
-
 public class FigInclude extends FigEdgeModelElement {
 
 
     private FigText label = null; // the label for the stereotype
 
     private ArrowHeadGreater endArrow = new ArrowHeadGreater();
-    
+
     /**
      * <p>The default constructor, but should never be called directly (use
      *   {@link #FigInclude(Object)}, since that sets the owner. However we

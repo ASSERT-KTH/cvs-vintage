@@ -1,4 +1,4 @@
-// $Id: TestAgainstUmlModel.java,v 1.11 2005/01/02 16:43:41 linus Exp $
+// $Id: TestAgainstUmlModel.java,v 1.12 2005/01/09 14:59:14 linus Exp $
 // Copyright (c) 2003-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -57,10 +57,10 @@ public class TestAgainstUmlModel extends TestCase {
      *  in the model.
      */
     private static Hashtable refs = null;
- 
+
     /**
      * The constructor.
-     * 
+     *
      * @param n the name
      */
     public TestAgainstUmlModel(String n) { super(n); }
@@ -107,7 +107,7 @@ public class TestAgainstUmlModel extends TestCase {
      *
      * @return the document or null if not available.
      */
-    private static Document prepareDocument() 
+    private static Document prepareDocument()
 	throws ParserConfigurationException, SAXException, IOException {
 	DocumentBuilder builder =
 	    DocumentBuilderFactory.newInstance().newDocumentBuilder();
@@ -121,7 +121,7 @@ public class TestAgainstUmlModel extends TestCase {
 	File file = new File(fileName);
 	if (!file.exists())
 	{
-	    printInconclusiveMessage("The file " + fileName 
+	    printInconclusiveMessage("The file " + fileName
 				     + " cannot be found.");
 	    return null;
 	}
@@ -328,8 +328,8 @@ public class TestAgainstUmlModel extends TestCase {
 	throws SAXException,
 	       IOException,
 	       ParserConfigurationException {
-        TestSuite suite = 
-	    new TestSuite("Tests for " 
+        TestSuite suite =
+	    new TestSuite("Tests for "
 			  + TestAgainstUmlModel.class.getPackage().getName());
 
 	Document doc = prepareDocument();

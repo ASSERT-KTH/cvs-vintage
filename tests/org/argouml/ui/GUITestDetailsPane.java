@@ -1,4 +1,4 @@
-// $Id: GUITestDetailsPane.java,v 1.8 2005/01/02 16:43:51 linus Exp $
+// $Id: GUITestDetailsPane.java,v 1.9 2005/01/09 14:59:15 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -39,7 +39,7 @@ import org.tigris.swidgets.Horizontal;
  * Jul 21, 2003
  */
 public class GUITestDetailsPane extends TestCase {
-    
+
     private DetailsPane pane;
     private JPanel todoPane;
     private JPanel propertyPane;
@@ -69,7 +69,7 @@ public class GUITestDetailsPane extends TestCase {
 		});
         pane.targetSet(e);
         assertEquals(todoPane, pane.getTabs().getSelectedComponent());
-        UMLDiagram diagram = new UMLClassDiagram();        
+        UMLDiagram diagram = new UMLClassDiagram();
         e = new TargetEvent(
 			    this,
 			    TargetEvent.TARGET_SET,
@@ -102,29 +102,29 @@ public class GUITestDetailsPane extends TestCase {
         /*
          * commented out next piece to remove failure of testcase. The testcase
          * is probably correct but the implementation of DetailsPane is not
-         
+
         _pane.getTabs().setSelectedComponent(_docPane);
         _pane.targetSet(e);
         assertEquals(_docPane, _pane.getTabs().getSelectedComponent());
-        */       
+        */
     }
-    
+
 
     /**
      * @see junit.framework.TestCase#setUp()
      */
-    protected void setUp() throws Exception {    
+    protected void setUp() throws Exception {
         super.setUp();
         pane = new DetailsPane("detail", Horizontal.getInstance());
-        todoPane = pane.getNamedTab("tab.todo-item"); 
-        propertyPane = pane.getNamedTab("tab.properties"); 
+        todoPane = pane.getNamedTab("tab.todo-item");
+        propertyPane = pane.getNamedTab("tab.properties");
         docPane = pane.getNamedTab("docpane.label.documentation");
     }
 
     /**
      * @see junit.framework.TestCase#tearDown()
      */
-    protected void tearDown() throws Exception {     
+    protected void tearDown() throws Exception {
         super.tearDown();
         pane = null;
     }

@@ -1,4 +1,4 @@
-// $Id: PropPanelModelElement.java,v 1.91 2005/01/02 16:43:46 linus Exp $
+// $Id: PropPanelModelElement.java,v 1.92 2005/01/09 14:59:09 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -89,21 +89,21 @@ public abstract class PropPanelModelElement extends PropPanel {
     private UMLModelElementNamespaceComboBoxModel namespaceComboBoxModel =
 	new UMLModelElementNamespaceComboBoxModel();
 
-    private static UMLModelElementStereotypeComboBoxModel 
+    private static UMLModelElementStereotypeComboBoxModel
         stereotypeComboBoxModel =
 	new UMLModelElementStereotypeComboBoxModel();
 
     private static UMLModelElementNamespaceListModel namespaceListModel =
 	new UMLModelElementNamespaceListModel();
 
-    private static UMLModelElementClientDependencyListModel 
+    private static UMLModelElementClientDependencyListModel
         clientDependencyListModel =
 	new UMLModelElementClientDependencyListModel();
 
     private static UMLModelElementConstraintListModel constraintListModel =
 	new UMLModelElementConstraintListModel();
 
-    private static UMLModelElementElementResidenceListModel 
+    private static UMLModelElementElementResidenceListModel
         elementResidenceListModel =
 	new UMLModelElementElementResidenceListModel();
 
@@ -113,7 +113,7 @@ public abstract class PropPanelModelElement extends PropPanel {
     private static UMLModelElementSourceFlowListModel sourceFlowListModel =
 	new UMLModelElementSourceFlowListModel();
 
-    // private static UMLModelElementSupplierDependencyListModel 
+    // private static UMLModelElementSupplierDependencyListModel
     //    supplierDependencyListModel =
     //        new UMLModelElementSupplierDependencyListModel();
 
@@ -122,7 +122,7 @@ public abstract class PropPanelModelElement extends PropPanel {
 
     /**
      * The constructor.
-     * 
+     *
      * @param name the name of the properties panel
      * @param icon the icon to be shown next to the name
      * @param orientation the orientation
@@ -134,7 +134,7 @@ public abstract class PropPanelModelElement extends PropPanel {
 
     /**
      * The constructor.
-     * 
+     *
      * @param name the name of the properties panel
      * @param orientation the orientation
      */
@@ -281,7 +281,7 @@ public abstract class PropPanelModelElement extends PropPanel {
     /**
      * Returns the stereotype box. This is a box with a combobox to select the
      * stereotype and a button to create a new one
-     * 
+     *
      * @return the stereotype box
      */
     protected Box getStereotypeBox() {
@@ -401,7 +401,7 @@ public abstract class PropPanelModelElement extends PropPanel {
     /**
      * Returns the document (model) for the name. Only used for the
      * PropPanelComment.
-     * 
+     *
      * @return Document
      */
     protected UMLPlainTextDocument getNameDocument() {

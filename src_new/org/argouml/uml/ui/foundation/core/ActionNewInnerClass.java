@@ -1,4 +1,4 @@
-// $Id: ActionNewInnerClass.java,v 1.3 2005/01/02 16:43:46 linus Exp $
+// $Id: ActionNewInnerClass.java,v 1.4 2005/01/09 14:59:08 linus Exp $
 // Copyright (c) 2004-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -35,7 +35,7 @@ import org.argouml.uml.ui.AbstractActionNewModelElement;
 
 /**
  * Action to create a new inner Class.
- * 
+ *
  * @author Michiel
  */
 public class ActionNewInnerClass extends AbstractActionNewModelElement {
@@ -47,7 +47,7 @@ public class ActionNewInnerClass extends AbstractActionNewModelElement {
         super("button.new-inner-class");
         putValue(Action.NAME, Translator.localize("button.new-inner-class"));
     }
-    
+
     /**
      * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
      */

@@ -1,5 +1,5 @@
-// $Id: UMLSignalContextListModel.java,v 1.1 2004/12/17 22:56:20 mvw Exp $
-// Copyright (c) 2004 The Regents of the University of California. All
+// $Id: UMLSignalContextListModel.java,v 1.2 2005/01/09 14:59:07 linus Exp $
+// Copyright (c) 2004-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
 // agreement is hereby granted, provided that the above copyright notice
@@ -29,7 +29,7 @@ import org.argouml.uml.ui.UMLModelElementListModel2;
 
 /**
  * The model for the listbox showing the contexts of a signal.
- * 
+ *
  * @author mvw@tigris.org
  */
 public class UMLSignalContextListModel extends UMLModelElementListModel2 {
@@ -38,17 +38,17 @@ public class UMLSignalContextListModel extends UMLModelElementListModel2 {
      * The constructor.
      */
     public UMLSignalContextListModel() {
-        /* The event to listen to is "context", so that model updates 
-         * get shown in the list. Reproduce this by adding a new operation, 
+        /* The event to listen to is "context", so that model updates
+         * get shown in the list. Reproduce this by adding a new operation,
          * and see the result displayed in the list. */
-        super("context"); 
+        super("context");
     }
 
     /**
      * @see org.argouml.uml.ui.UMLModelElementListModel2#buildModelList()
      */
     protected void buildModelList() {
-        if (getTarget() != null) 
+        if (getTarget() != null)
             setAllElements(ModelFacade.getContexts(getTarget()));
     }
 
@@ -56,7 +56,7 @@ public class UMLSignalContextListModel extends UMLModelElementListModel2 {
      * @see org.argouml.uml.ui.UMLModelElementListModel2#isValidElement(java.lang.Object)
      */
     protected boolean isValidElement(Object element) {
-        return ModelFacade.isABehavioralFeature(element) 
+        return ModelFacade.isABehavioralFeature(element)
         && ModelFacade.getContexts(getTarget()).contains(element);
     }
 

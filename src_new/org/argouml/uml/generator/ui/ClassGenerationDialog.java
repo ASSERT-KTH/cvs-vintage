@@ -1,4 +1,4 @@
-// $Id: ClassGenerationDialog.java,v 1.40 2005/01/05 15:39:17 bobtarling Exp $
+// $Id: ClassGenerationDialog.java,v 1.41 2005/01/09 14:58:59 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -89,7 +89,7 @@ public class ClassGenerationDialog
     private JTable classTable;
     private JComboBox outputDirectoryComboBox;
 
-    /** 
+    /**
      * Used to select the next language column in case
      * the "Select All" button is pressed.
      */

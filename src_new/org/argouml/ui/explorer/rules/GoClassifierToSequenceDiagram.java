@@ -1,5 +1,5 @@
-// $Id: GoClassifierToSequenceDiagram.java,v 1.8 2004/09/04 06:59:49 mvw Exp $
-// Copyright (c) 1996-2004 The Regents of the University of California. All
+// $Id: GoClassifierToSequenceDiagram.java,v 1.9 2005/01/09 14:58:32 linus Exp $
+// Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
 // agreement is hereby granted, provided that the above copyright notice
@@ -22,8 +22,6 @@
 // CALIFORNIA HAS NO OBLIGATIONS TO PROVIDE MAINTENANCE, SUPPORT,
 // UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 
-// Original author: jaap.branderhorst@xs4all.nl
-
 package org.argouml.ui.explorer.rules;
 
 import java.util.ArrayList;
@@ -43,6 +41,8 @@ import org.argouml.uml.diagram.sequence.ui.UMLSequenceDiagram;
 /**
  * Go rule from represented operation to sequence diagram representing it
  * @author : jaap.branderhorst@xs4all.nl
+ *
+ * @author jaap.branderhorst
  */
 public class GoClassifierToSequenceDiagram extends AbstractPerspectiveRule {
 
@@ -65,7 +65,7 @@ public class GoClassifierToSequenceDiagram extends AbstractPerspectiveRule {
 
 	    while (it.hasNext()) {
 		ArgoDiagram diagram = (ArgoDiagram) it.next();
-		if (diagram instanceof UMLSequenceDiagram 
+		if (diagram instanceof UMLSequenceDiagram
 		    && col.contains(((SequenceDiagramGraphModel)
 		            ((UMLSequenceDiagram) diagram).getGraphModel())
 		                            .getCollaboration())) {

@@ -1,4 +1,4 @@
-// $Id: ActionNewDestroyAction.java,v 1.8 2005/01/02 16:43:50 linus Exp $
+// $Id: ActionNewDestroyAction.java,v 1.9 2005/01/09 14:59:07 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -36,9 +36,9 @@ import org.argouml.model.Model;
  */
 public class ActionNewDestroyAction extends ActionNewAction {
 
-    private static final ActionNewDestroyAction SINGLETON = 
+    private static final ActionNewDestroyAction SINGLETON =
         new ActionNewDestroyAction();
-    
+
     /**
      * Constructor for ActionNewDestroyAction.
      */
@@ -46,8 +46,8 @@ public class ActionNewDestroyAction extends ActionNewAction {
         super();
         putValue(Action.NAME, Translator.localize("button.new-destroyaction"));
     }
-    
-    
+
+
     /**
      * @see org.argouml.uml.ui.behavior.common_behavior.ActionNewAction#createAction()
      */

@@ -1,4 +1,4 @@
-// $Id: StylePanelFigUseCase.java,v 1.9 2005/01/02 16:43:51 linus Exp $
+// $Id: StylePanelFigUseCase.java,v 1.10 2005/01/09 14:58:58 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -38,7 +38,7 @@ import org.argouml.ui.StylePanelFigNodeModelElement;
 
 /**
  * A class to provide a style panel for use cases.<p>
- * 
+ *
  * This adds a check box to control the display of he extension point
  * compartment.
  *
@@ -133,7 +133,7 @@ public class StylePanelFigUseCase extends StylePanelFigNodeModelElement {
 
     /**
      * Something has changed, check if its the check box.<p>
-     * 
+     *
      * @param e
      *            The event that triggeed us.
      */

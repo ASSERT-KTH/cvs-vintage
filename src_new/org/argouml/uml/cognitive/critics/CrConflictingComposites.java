@@ -1,4 +1,4 @@
-// $Id: CrConflictingComposites.java,v 1.14 2005/01/02 16:43:51 linus Exp $
+// $Id: CrConflictingComposites.java,v 1.15 2005/01/09 14:58:36 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -42,7 +42,7 @@ public class CrConflictingComposites extends CrUML {
 
     /**
      * The constructor.
-     * 
+     *
      */
     public CrConflictingComposites() {
 	setHeadline("Remove Conflicting Composite Associations");

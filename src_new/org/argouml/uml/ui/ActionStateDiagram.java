@@ -1,4 +1,4 @@
-// $Id: ActionStateDiagram.java,v 1.36 2005/01/03 13:00:11 mvw Exp $
+// $Id: ActionStateDiagram.java,v 1.37 2005/01/09 14:59:02 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -43,8 +43,8 @@ public class ActionStateDiagram extends ActionAddDiagram {
      * The singleton.
      */
     public static final ActionStateDiagram SINGLETON = new ActionStateDiagram();
-    
-    private static final Logger LOG = 
+
+    private static final Logger LOG =
         Logger.getLogger(ActionStateDiagram.class);
 
     ////////////////////////////////////////////////////////////////
@@ -65,7 +65,7 @@ public class ActionStateDiagram extends ActionAddDiagram {
             new UMLStateDiagram(ModelFacade.getNamespace(machine), machine);
         return d;
     }
-    
+
     /**
      * Overriden since it should only be possible to add statediagrams and
      * activitydiagrams to classifiers and behavioral features.
@@ -76,7 +76,7 @@ public class ActionStateDiagram extends ActionAddDiagram {
             && Model.getStateMachinesHelper().isAddingStatemachineAllowed(
                     TargetManager.getInstance().getModelTarget());
     }
-    
+
     /**
      * @see org.argouml.uml.ui.ActionAddDiagram#isValidNamespace(Object)
      */

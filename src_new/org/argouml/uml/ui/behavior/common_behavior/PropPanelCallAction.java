@@ -1,5 +1,5 @@
-// $Id: PropPanelCallAction.java,v 1.17 2004/09/22 17:27:45 mvw Exp $
-// Copyright (c) 1996-2002 The Regents of the University of California. All
+// $Id: PropPanelCallAction.java,v 1.18 2005/01/09 14:59:07 linus Exp $
+// Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
 // agreement is hereby granted, provided that the above copyright notice
@@ -26,7 +26,7 @@ package org.argouml.uml.ui.behavior.common_behavior;
 
 /**
  * The properties panel for a CallAction.
- * 
+ *
  * TODO: this property panel needs refactoring to remove dependency on
  *       old gui components.
  */
@@ -34,7 +34,7 @@ public class PropPanelCallAction extends PropPanelAction {
 
     /**
      * The constructor.
-     * 
+     *
      */
     public PropPanelCallAction() {
         super("CallAction", lookupIcon("CallAction"));

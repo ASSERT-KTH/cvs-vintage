@@ -1,4 +1,4 @@
-// $Id: UmlFactoryImpl.java,v 1.10 2005/01/08 21:39:40 bobtarling Exp $
+// $Id: UmlFactoryImpl.java,v 1.11 2005/01/09 14:58:07 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -556,7 +556,7 @@ class UmlFactoryImpl extends AbstractUmlModelFactory implements UmlFactory {
         } else if (connectionType == ModelFacade.INCLUDE) {
             connection = getUseCases().buildInclude(fromElement, toElement);
         }
-        
+
         if (connection == null) {
             throw new IllegalModelElementConnectionException(
             "Cannot make a "

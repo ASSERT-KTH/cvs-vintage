@@ -1,5 +1,5 @@
-// $Id: UMLOperationConcurrencyRadioButtonPanel.java,v 1.2 2004/09/19 21:06:25 mvw Exp $
-// Copyright (c) 1996-2002 The Regents of the University of California. All
+// $Id: UMLOperationConcurrencyRadioButtonPanel.java,v 1.3 2005/01/09 14:59:09 linus Exp $
+// Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
 // agreement is hereby granted, provided that the above copyright notice
@@ -22,7 +22,7 @@
 // CALIFORNIA HAS NO OBLIGATIONS TO PROVIDE MAINTENANCE, SUPPORT,
 // UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 
-// $Id: UMLOperationConcurrencyRadioButtonPanel.java,v 1.2 2004/09/19 21:06:25 mvw Exp $
+// $Id: UMLOperationConcurrencyRadioButtonPanel.java,v 1.3 2005/01/09 14:59:09 linus Exp $
 package org.argouml.uml.ui.foundation.core;
 
 import java.util.HashMap;
@@ -33,7 +33,7 @@ import org.argouml.uml.ui.UMLRadioButtonPanel;
 
 /**
  * A panel for the concurrency settings of an operation.
- * 
+ *
  * @author mkl
  */
 public class UMLOperationConcurrencyRadioButtonPanel extends
@@ -53,7 +53,7 @@ public class UMLOperationConcurrencyRadioButtonPanel extends
 
     /**
      * Constructor.
-     * 
+     *
      * @param title the title of the panel
      * @param horizontal determines the orientation
      */

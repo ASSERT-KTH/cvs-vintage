@@ -1,4 +1,4 @@
-// $Id: TestUmlObjectCreation.java,v 1.12 2005/01/02 16:43:47 linus Exp $
+// $Id: TestUmlObjectCreation.java,v 1.13 2005/01/09 14:59:14 linus Exp $
 // Copyright (c) 2003-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -81,7 +81,7 @@ public class TestUmlObjectCreation extends TestCase {
 
     /**
      * The constructor.
-     * 
+     *
      * @param n the name of this test.
      */
     public TestUmlObjectCreation(String n) { super(n); }
@@ -96,11 +96,11 @@ public class TestUmlObjectCreation extends TestCase {
 
 	assertTrue("Not a valid entity: " + c.getClass(),
 		   c instanceof UmlModelEntity);
-		
+
 	Object o = null;
 	o = ModelFacade.create(c);
 	assertNotNull("Could not create " + c.getClass().getName(), o);
-		
+
 	// Make sure that the new create() mechanism gives the same
 	// class as the legacy create
 	if (legacy != null) {
@@ -128,7 +128,7 @@ public class TestUmlObjectCreation extends TestCase {
 	    }
 	}
     }
-	
+
     private void testObjectFactoryType(UmlModelEntity c,
 				       Class expected,
 				       Object legacy,
@@ -265,7 +265,7 @@ public class TestUmlObjectCreation extends TestCase {
 			      true);
 	testObjectFactoryType(Uml.ACTION_EXPRESSION, MActionExpression.class,
 			      null, true);
-	testObjectFactoryType(Uml.COMPONENT_INSTANCE, 
+	testObjectFactoryType(Uml.COMPONENT_INSTANCE,
 	                      MComponentInstanceImpl.class,
 			      Model.getCommonBehaviorFactory()
 			          .createComponentInstance(),

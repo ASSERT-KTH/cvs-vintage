@@ -1,4 +1,4 @@
-// $Id: UMLModelElementNamespaceComboBoxModel.java,v 1.22 2005/01/03 09:30:50 mvw Exp $
+// $Id: UMLModelElementNamespaceComboBoxModel.java,v 1.23 2005/01/09 14:59:09 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -37,29 +37,29 @@ import org.argouml.uml.ui.UMLComboBoxModel2;
  * @author jaap.branderhorst@xs4all.nl, alexb
  */
 public class UMLModelElementNamespaceComboBoxModel extends UMLComboBoxModel2 {
-    
+
     private static UMLModelElementNamespaceComboBoxModel theInstance;
-    
-    
+
+
     /**
      * Constructor for UMLModelElementNamespaceComboBoxModel.
      */
     public UMLModelElementNamespaceComboBoxModel() {
         super("namespace", false);
-        UmlModelEventPump.getPump().addClassModelEventListener(this, 
+        UmlModelEventPump.getPump().addClassModelEventListener(this,
                 ModelFacade.NAMESPACE, "ownedElement");
     }
-    
+
     /**
      * @see org.argouml.uml.ui.UMLComboBoxModel2#isValidElement(Object)
      */
     protected boolean isValidElement(Object o) {
-        return org.argouml.model.ModelFacade.isANamespace(o) 
+        return org.argouml.model.ModelFacade.isANamespace(o)
         && Model.getCoreHelper().isValidNamespace(
                 /*(MModelElement)*/ getTarget(), /*(MNamespace)*/ o);
     }
-    
-    /**  
+
+    /**
      * @see org.argouml.uml.ui.UMLComboBoxModel2#buildModelList()
      */
     protected void buildModelList() {
@@ -68,7 +68,7 @@ public class UMLModelElementNamespaceComboBoxModel extends UMLComboBoxModel2 {
         setElements(Model.getCoreHelper().getAllPossibleNamespaces(
                 /*(MModelElement)*/ getTarget(), model));
     }
-    
+
     /**
      * @see org.argouml.uml.ui.UMLComboBoxModel2#getSelectedModelElement()
      */
@@ -78,5 +78,5 @@ public class UMLModelElementNamespaceComboBoxModel extends UMLComboBoxModel2 {
         }
         return null;
     }
-       
+
 }

@@ -1,5 +1,5 @@
-// $Id: CrClassMustBeAbstract.java,v 1.13 2004/09/21 19:03:27 mvw Exp $
-// Copyright (c) 1996-2004 The Regents of the University of California. All
+// $Id: CrClassMustBeAbstract.java,v 1.14 2005/01/09 14:58:36 linus Exp $
+// Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
 // agreement is hereby granted, provided that the above copyright notice
@@ -22,13 +22,6 @@
 // CALIFORNIA HAS NO OBLIGATIONS TO PROVIDE MAINTENANCE, SUPPORT,
 // UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 
-
-
-// File: CrClassMustBeAbstract.java
-// Classes: CrClassMustBeAbstract
-// Original Author: jrobbins@ics.uci.edu
-// $Id: CrClassMustBeAbstract.java,v 1.13 2004/09/21 19:03:27 mvw Exp $
-
 package org.argouml.uml.cognitive.critics;
 
 import java.util.Iterator;
@@ -36,18 +29,18 @@ import org.argouml.cognitive.Designer;
 import org.argouml.cognitive.critics.Critic;
 import org.argouml.model.ModelFacade;
 
-
-
-/** A critic to detect whether a non abstract class  
- *  contains abstract operations. It checks whether a non abstract class
- *  has any abstract operations.
+/**
+ * A critic to detect whether a non abstract class
+ * contains abstract operations. It checks whether a non abstract class
+ * has any abstract operations.
+ *
+ * @author jrobbins
  */
-
 public class CrClassMustBeAbstract extends CrUML {
 
     /**
      * The constructor.
-     * 
+     *
      */
     public CrClassMustBeAbstract() {
 	setHeadline("Class Must be Abstract");
@@ -64,7 +57,7 @@ public class CrClassMustBeAbstract extends CrUML {
     public boolean predicate2(Object dm, Designer dsgr) {
 	if (!(ModelFacade.isAClass(dm))) return NO_PROBLEM;
 	if (ModelFacade.isAbstract(dm)) return NO_PROBLEM;
-	
+
 	Iterator ops = ModelFacade.getOperations(dm).iterator();
 	while (ops.hasNext()) {
 	    if (ModelFacade.isAbstract(ops.next())) return PROBLEM_FOUND;

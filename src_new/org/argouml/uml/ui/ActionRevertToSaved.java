@@ -1,4 +1,4 @@
-// $Id: ActionRevertToSaved.java,v 1.11 2005/01/02 16:43:46 linus Exp $
+// $Id: ActionRevertToSaved.java,v 1.12 2005/01/09 14:59:01 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -36,7 +36,7 @@ import org.argouml.ui.ProjectBrowser;
 
 /**
  * Action that reverts to the previously saved version of the project.
- * 
+ *
  * @see ActionOpenProject
  */
 public class ActionRevertToSaved extends ActionFileOperations {
@@ -54,7 +54,7 @@ public class ActionRevertToSaved extends ActionFileOperations {
     ////////////////////////////////////////////////////////////////
     // main methods
 
-    /** 
+    /**
      * Performs the action.
      *
      * @param e an event
@@ -62,17 +62,17 @@ public class ActionRevertToSaved extends ActionFileOperations {
     public void actionPerformed(ActionEvent e) {
         ProjectBrowser pb = ProjectBrowser.getInstance();
         Project p = ProjectManager.getManager().getCurrentProject();
-        
+
         if (p == null || !ProjectManager.getManager().needsSave()) {
             return;
         }
-        
+
         String message =
             MessageFormat.format(
                     Translator.localize(
                        "optionpane.revert-to-saved-confirm"),
 		    new Object[] {
-			p.getName()
+			p.getName(),
 		    });
 
         int response =
@@ -83,7 +83,7 @@ public class ActionRevertToSaved extends ActionFileOperations {
                       "optionpane.revert-to-saved-confirm-title"),
                   JOptionPane.YES_NO_OPTION);
 
-        if (response == JOptionPane.YES_OPTION) {        
+        if (response == JOptionPane.YES_OPTION) {
             loadProject(p.getURL());
         }
     }

@@ -1,5 +1,5 @@
-// $Id: Model.java,v 1.6 2005/01/02 22:19:36 mvw Exp $
-// Copyright (c) 2004 The Regents of the University of California. All
+// $Id: Model.java,v 1.7 2005/01/09 14:58:07 linus Exp $
+// Copyright (c) 2004-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
 // agreement is hereby granted, provided that the above copyright notice
@@ -56,13 +56,13 @@ public final class Model {
     /**
      * Selects the implementation.
      *
-     * @param newImpl The ModelImplementation object of the selected 
+     * @param newImpl The ModelImplementation object of the selected
      * 		      implementation.
      */
     public static void setImplementation(ModelImplementation newImpl) {
         impl = newImpl;
     }
-    
+
     /**
      * Get the event pump.
      *

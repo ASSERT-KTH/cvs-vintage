@@ -1,5 +1,5 @@
-// $Id: PropPanelCollaboration.java,v 1.22 2004/10/14 05:48:22 linus Exp $
-// Copyright (c) 1996-2001 The Regents of the University of California. All
+// $Id: PropPanelCollaboration.java,v 1.23 2005/01/09 14:59:05 linus Exp $
+// Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
 // agreement is hereby granted, provided that the above copyright notice
@@ -48,11 +48,11 @@ public class PropPanelCollaboration extends PropPanelNamespace {
     public PropPanelCollaboration() {
         super("Collaboration", ConfigLoader.getTabPropsOrientation());
 
-        addField(Translator.localize("label.name"), 
+        addField(Translator.localize("label.name"),
                 getNameTextField());
-        addField(Translator.localize("label.stereotype"), 
+        addField(Translator.localize("label.stereotype"),
                 getStereotypeBox());
-        addField(Translator.localize("label.namespace"), 
+        addField(Translator.localize("label.namespace"),
                getNamespaceScroll());
 
         UMLLinkedList classifierList =

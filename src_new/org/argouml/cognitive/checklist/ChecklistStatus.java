@@ -1,5 +1,5 @@
-// $Id: ChecklistStatus.java,v 1.5 2004/09/05 06:46:44 mvw Exp $
-// Copyright (c) 1996-99 The Regents of the University of California. All
+// $Id: ChecklistStatus.java,v 1.6 2005/01/09 14:58:05 linus Exp $
+// Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
 // agreement is hereby granted, provided that the above copyright notice
@@ -22,24 +22,19 @@
 // CALIFORNIA HAS NO OBLIGATIONS TO PROVIDE MAINTENANCE, SUPPORT,
 // UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 
-
-
-// File: ChecklistStatus.java
-// Class: ChecklistStatus
-// Original Author: jrobbins@ics.uci.edu
-// $Id: ChecklistStatus.java,v 1.5 2004/09/05 06:46:44 mvw Exp $
-
 package org.argouml.cognitive.checklist;
 
 import java.io.Serializable;
 import java.util.Enumeration;
 import java.util.Vector;
 
-/** A list of CheckItems that the designer has marked off as already
- *  considered.  In the ArgoUML system, this determines which items
- *  in the TabChecklist have checkmarks.
+/**
+ * A list of CheckItems that the designer has marked off as already
+ * considered.  In the ArgoUML system, this determines which items
+ * in the TabChecklist have checkmarks.
  *
  * @see org.argouml.cognitive.checklist.ui.TabChecklist
+ * @author Jason Robbins
  */
 public class ChecklistStatus implements Serializable {
     private static int numChecks = 0;
@@ -51,7 +46,7 @@ public class ChecklistStatus implements Serializable {
 
     /**
      * The constructor.
-     * 
+     *
      */
     public ChecklistStatus() { }
 
@@ -59,7 +54,7 @@ public class ChecklistStatus implements Serializable {
     // accessors
 
     /**
-     * @return the checked items 
+     * @return the checked items
      */
     public Vector getCheckItems() { return items; }
 

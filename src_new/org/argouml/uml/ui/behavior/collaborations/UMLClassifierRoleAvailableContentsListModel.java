@@ -1,4 +1,4 @@
-// $Id: UMLClassifierRoleAvailableContentsListModel.java,v 1.22 2005/01/03 09:30:44 mvw Exp $
+// $Id: UMLClassifierRoleAvailableContentsListModel.java,v 1.23 2005/01/09 14:59:05 linus Exp $
 // Copyright (c) 2002-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -36,7 +36,7 @@ import org.tigris.gef.presentation.Fig;
 import ru.novosoft.uml.MElementEvent;
 /**
  * Binary relation list model for available con between classifierroles
- * 
+ *
  * @author jaap.branderhorst@xs4all.nl
  */
 public class UMLClassifierRoleAvailableContentsListModel
@@ -60,7 +60,7 @@ public class UMLClassifierRoleAvailableContentsListModel
 
     /**
      * TODO: Why this function that the other models do not need?
-     * 
+     *
      * @see
      * ru.novosoft.uml.MElementListener#roleAdded(ru.novosoft.uml.MElementEvent)
      */
@@ -84,14 +84,14 @@ public class UMLClassifierRoleAvailableContentsListModel
 
     /**
      * TODO: Why this function that the other models do not need?
-     * 
+     *
      * @see
      * org.argouml.uml.ui.UMLModelElementListModel2#setTarget(java.lang.Object)
      */
     public void setTarget(Object theNewTarget) {
-        theNewTarget = theNewTarget instanceof Fig 
+        theNewTarget = theNewTarget instanceof Fig
             ? ((Fig) theNewTarget).getOwner() : theNewTarget;
-        if (ModelFacade.isABase(theNewTarget) 
+        if (ModelFacade.isABase(theNewTarget)
                 || ModelFacade.isADiagram(theNewTarget)) {
             if (getTarget() != null) {
                 Collection bases = ModelFacade.getBases(getTarget());
@@ -146,7 +146,7 @@ public class UMLClassifierRoleAvailableContentsListModel
 
     /**
      * TODO: Why this function that the other models do not need?
-     * 
+     *
      * @see ru.novosoft.uml.MElementListener#roleRemoved(ru.novosoft.uml.MElementEvent)
      */
     public void roleRemoved(MElementEvent e) {

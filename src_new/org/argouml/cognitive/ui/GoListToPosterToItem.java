@@ -1,5 +1,5 @@
-// $Id: GoListToPosterToItem.java,v 1.13 2004/11/01 10:55:20 mkl Exp $
-// Copyright (c) 1996-99 The Regents of the University of California. All
+// $Id: GoListToPosterToItem.java,v 1.14 2005/01/09 14:58:05 linus Exp $
+// Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
 // agreement is hereby granted, provided that the above copyright notice
@@ -43,7 +43,7 @@ import org.tigris.gef.util.VectorSet;
  *
  */
 public class GoListToPosterToItem extends AbstractGoList {
-  
+
     ////////////////////////////////////////////////////////////////
     // TreeModel implementation
 
@@ -54,7 +54,7 @@ public class GoListToPosterToItem extends AbstractGoList {
 	Vector children = getChildren(parent);
 	return (children == null) ? null : children.elementAt(index);
     }
-  
+
     /**
      * @see javax.swing.tree.TreeModel#getChildCount(java.lang.Object)
      */
@@ -62,7 +62,7 @@ public class GoListToPosterToItem extends AbstractGoList {
 	Vector children = getChildren(parent);
 	return (children == null) ? 0 : children.size();
     }
-  
+
     /**
      * @see javax.swing.tree.TreeModel#getIndexOfChild(
      * java.lang.Object, java.lang.Object)
@@ -87,7 +87,7 @@ public class GoListToPosterToItem extends AbstractGoList {
      * @return the children
      */
     public Vector getChildren(Object parent) {
-	VectorSet allPosters = 
+	VectorSet allPosters =
 	    Designer.theDesigner().getToDoList().getPosters();
 	if (parent instanceof ToDoList) {
 	    return allPosters.asVector();
@@ -106,18 +106,18 @@ public class GoListToPosterToItem extends AbstractGoList {
 	}
 	return null;
     }
-  
+
     /**
      * @see javax.swing.tree.TreeModel#valueForPathChanged(
      * javax.swing.tree.TreePath, java.lang.Object)
      */
     public void valueForPathChanged(TreePath path, Object newValue) { }
-    
+
     /**
      * @see javax.swing.tree.TreeModel#addTreeModelListener(javax.swing.event.TreeModelListener)
      */
     public void addTreeModelListener(TreeModelListener l) { }
-    
+
     /**
      * @see javax.swing.tree.TreeModel#removeTreeModelListener(javax.swing.event.TreeModelListener)
      */

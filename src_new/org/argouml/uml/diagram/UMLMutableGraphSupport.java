@@ -1,4 +1,4 @@
-// $Id: UMLMutableGraphSupport.java,v 1.19 2005/01/09 00:56:36 bobtarling Exp $
+// $Id: UMLMutableGraphSupport.java,v 1.20 2005/01/09 14:58:37 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -193,9 +193,9 @@ public abstract class UMLMutableGraphSupport extends MutableGraphSupport {
         Dictionary args = mode.getArgs();
         Object style = args.get("aggregation"); //MAggregationKind
         Boolean unidirectional = (Boolean) args.get("unidirectional");
-        Object model = 
+        Object model =
             ProjectManager.getManager().getCurrentProject().getModel();
-        
+
         // Create the UML connection of the given type between the
         // given model elements.
         // default aggregation (none)
@@ -238,7 +238,7 @@ public abstract class UMLMutableGraphSupport extends MutableGraphSupport {
      */
     public boolean canAddEdge(Object edge) {
         if (edge instanceof CommentEdge) {
-            CommentEdge ce = (CommentEdge)edge;
+            CommentEdge ce = (CommentEdge) edge;
             return isConnectionValid(CommentEdge.class,
                     ce.getSource(),
                     ce.getDestination());
@@ -249,11 +249,11 @@ public abstract class UMLMutableGraphSupport extends MutableGraphSupport {
         }
         return false;
     }
-    
+
     /**
      * Create an edge of the given type and connect it to the
      * given nodes.
-     * 
+     *
      * @param edgeType       the UML object type of the connection
      * @param fromElement    the UML object for the "from" element
      * @param fromStyle      the aggregationkind for the connection
@@ -273,7 +273,7 @@ public abstract class UMLMutableGraphSupport extends MutableGraphSupport {
             Object toStyle,
             Object unidirectional,
             Object namespace) {
-        
+
         Object connection = null;
         if (edgeType == CommentEdge.class) {
             connection =
@@ -325,7 +325,7 @@ public abstract class UMLMutableGraphSupport extends MutableGraphSupport {
         return connection;
 
     }
-    
+
     /**
      * Checks if some type of edge is valid to connect two
      * types of node.
@@ -339,7 +339,7 @@ public abstract class UMLMutableGraphSupport extends MutableGraphSupport {
             Object edgeType,
             Object fromElement,
             Object toElement) {
-        if (edgeType.equals(CommentEdge.class) ) {
+        if (edgeType.equals(CommentEdge.class)) {
             return ((ModelFacade.isAComment(fromElement)
                    && ModelFacade.isAModelElement(toElement))
                  || (ModelFacade.isAComment(toElement)

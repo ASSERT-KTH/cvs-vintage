@@ -1,5 +1,5 @@
-// $Id: SequenceDiagramLayout.java,v 1.20 2004/09/09 18:07:17 mvw Exp $
-// Copyright (c) 2003-2004 The Regents of the University of California. All
+// $Id: SequenceDiagramLayout.java,v 1.21 2005/01/09 14:58:38 linus Exp $
+// Copyright (c) 2003-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
 // agreement is hereby granted, provided that the above copyright notice
@@ -66,7 +66,7 @@ public class SequenceDiagramLayout extends LayerPerspectiveMutable {
     public static final int DIAGRAM_TOP_MARGE = 50;
 
     /**
-     * The vertical distance between two links 
+     * The vertical distance between two links
      */
     public static final int LINK_DISTANCE = 60;
 
@@ -82,7 +82,7 @@ public class SequenceDiagramLayout extends LayerPerspectiveMutable {
 
     /**
      * The constructor.
-     * 
+     *
      * @param name the name
      * @param gm the graph model
      */
@@ -91,7 +91,7 @@ public class SequenceDiagramLayout extends LayerPerspectiveMutable {
 
     }
 
-    /** 
+    /**
      * @see org.tigris.gef.base.LayerPerspective#putInPosition(Fig)
      */
     public void putInPosition(Fig f) {

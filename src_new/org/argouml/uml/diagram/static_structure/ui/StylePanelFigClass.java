@@ -1,4 +1,4 @@
-// $Id: StylePanelFigClass.java,v 1.12 2005/01/02 16:43:47 linus Exp $
+// $Id: StylePanelFigClass.java,v 1.13 2005/01/09 14:58:55 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -41,9 +41,9 @@ import org.argouml.ui.StylePanelFigNodeModelElement;
 /**
  * Stylepanel which adds an attributes and operations checkbox and depends on
  * FigClass.
- * 
+ *
  * @see FigClass
- *  
+ *
  */
 public class StylePanelFigClass extends StylePanelFigNodeModelElement {
 
@@ -63,7 +63,7 @@ public class StylePanelFigClass extends StylePanelFigNodeModelElement {
 
     /**
      * The constructor.
-     * 
+     *
      */
     public StylePanelFigClass() {
         super();
@@ -99,7 +99,7 @@ public class StylePanelFigClass extends StylePanelFigNodeModelElement {
 
     /**
      * Only refresh the tab if the bounds propertyChange event arrives.
-     * 
+     *
      * @see org.argouml.ui.StylePanel#refresh(java.beans.PropertyChangeEvent)
      */
     public void refresh(PropertyChangeEvent e) {
@@ -147,7 +147,7 @@ public class StylePanelFigClass extends StylePanelFigNodeModelElement {
     public void itemStateChanged(ItemEvent e) {
         if (!refreshTransaction) {
             Object src = e.getSource();
-            
+
             if (src == attrCheckBox) {
                 ((FigClass) getPanelTarget()).setAttributesVisible(attrCheckBox
                         .isSelected());

@@ -1,5 +1,5 @@
-// $Id: ClassdiagramRealizationEdge.java,v 1.6 2004/09/29 18:46:28 mvw Exp $
-// Copyright (c) 1996-2001 The Regents of the University of California. All
+// $Id: ClassdiagramRealizationEdge.java,v 1.7 2005/01/09 14:58:41 linus Exp $
+// Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
 // agreement is hereby granted, provided that the above copyright notice
@@ -31,36 +31,36 @@ import org.tigris.gef.presentation.*;
  * @author  mkl
  */
 public class ClassdiagramRealizationEdge extends ClassdiagramInheritanceEdge {
-    
-    
+
+
     /**
      * The constructor.
-     * 
+     *
      * @param edge the fig edge
      */
     public ClassdiagramRealizationEdge(FigEdge edge) {
         super(edge);
     }
-    
+
     /**
      * @see org.argouml.uml.diagram.static_structure.layout.ClassdiagramInheritanceEdge#getVerticalOffset()
      */
     public int getVerticalOffset() {
         return (int) (getVGap() * 0.6);
-    }  
-    
+    }
+
     /**
      * @see org.argouml.uml.diagram.static_structure.layout.ClassdiagramInheritanceEdge#getCenterHigh()
      */
     public int getCenterHigh() {
         return super.getCenterHigh() + 10;
     }
-    
+
     /**
      * @see org.argouml.uml.diagram.static_structure.layout.ClassdiagramInheritanceEdge#getCenterLow()
      */
     public int getCenterLow() {
         return super.getCenterLow() + 10;
-    }    
+    }
 }
 

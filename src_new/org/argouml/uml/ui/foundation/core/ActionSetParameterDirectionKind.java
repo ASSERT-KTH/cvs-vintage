@@ -1,5 +1,5 @@
-// $Id: ActionSetParameterDirectionKind.java,v 1.3 2004/12/30 12:34:01 mvw Exp $
-// Copyright (c) 1996-2002 The Regents of the University of California. All
+// $Id: ActionSetParameterDirectionKind.java,v 1.4 2005/01/09 14:59:08 linus Exp $
+// Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
 // agreement is hereby granted, provided that the above copyright notice
@@ -35,13 +35,13 @@ import org.argouml.uml.ui.UMLRadioButtonPanel;
 
 /**
  * An action to set the concurrency of an operation.
- * 
+ *
  * @author mkl
- *  
+ *
  */
 public class ActionSetParameterDirectionKind extends UMLAction {
 
-    private static final ActionSetParameterDirectionKind SINGLETON = 
+    private static final ActionSetParameterDirectionKind SINGLETON =
         new ActionSetParameterDirectionKind();
 
     /**

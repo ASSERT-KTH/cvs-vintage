@@ -1,4 +1,4 @@
-// $Id: UMLObjectFlowStateClassifierComboBoxModel.java,v 1.7 2005/01/02 10:08:27 linus Exp $
+// $Id: UMLObjectFlowStateClassifierComboBoxModel.java,v 1.8 2005/01/09 14:59:04 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -36,40 +36,40 @@ import org.argouml.uml.ui.UMLComboBoxModel2;
  * @since Oct 10, 2002
  * @author jaap.branderhorst@xs4all.nl, alexb
  */
-public class UMLObjectFlowStateClassifierComboBoxModel 
+public class UMLObjectFlowStateClassifierComboBoxModel
     extends UMLComboBoxModel2 {
-    
+
     private static UMLObjectFlowStateClassifierComboBoxModel theInstance;
-    
-    
+
+
     /**
      * Constructor.
      * TODO: MVW: I do not understand this! Is it correct?
      */
     public UMLObjectFlowStateClassifierComboBoxModel() {
         super("classifier", false);
-        UmlModelEventPump.getPump().addClassModelEventListener(this, 
+        UmlModelEventPump.getPump().addClassModelEventListener(this,
                 ModelFacade.CLASSIFIER, "type");
     }
-    
+
     /**
      * @see org.argouml.uml.ui.UMLComboBoxModel2#isValidElement(Object)
      */
     protected boolean isValidElement(Object o) {
-        return ModelFacade.isAClassifier(o); 
+        return ModelFacade.isAClassifier(o);
         // && CoreHelper.getHelper().isValidNamespace(
         //      /*(MModelElement)*/ getTarget(), /*(MNamespace)*/ o)
     }
-    
-    /**  
+
+    /**
      * @see org.argouml.uml.ui.UMLComboBoxModel2#buildModelList()
      */
     protected void buildModelList() {
-        Object model = 
+        Object model =
             ProjectManager.getManager().getCurrentProject().getModel();
         setElements(Model.getCoreHelper().getAllClassifiers(model));
     }
-    
+
     /**
      * @see org.argouml.uml.ui.UMLComboBoxModel2#getSelectedModelElement()
      */
@@ -79,5 +79,5 @@ public class UMLObjectFlowStateClassifierComboBoxModel
         }
         return null;
     }
-    
+
 }

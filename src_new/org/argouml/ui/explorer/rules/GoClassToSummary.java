@@ -1,5 +1,5 @@
-// $Id: GoClassToSummary.java,v 1.12 2004/09/04 06:59:49 mvw Exp $
-// Copyright (c) 1996-2004 The Regents of the University of California. All
+// $Id: GoClassToSummary.java,v 1.13 2005/01/09 14:58:32 linus Exp $
+// Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
 // agreement is hereby granted, provided that the above copyright notice
@@ -37,9 +37,9 @@ import org.argouml.model.ModelFacade;
  * This class is a Go Rule for the "Class - centric" Navigation perspective.
  * Rule for Class->Summary.
  *
- * $Revision: 1.12 $
+ * $Revision: 1.13 $
  *
- * @author  alexb, $Author: mvw $
+ * @author  alexb, $Author: linus $
  * @since argo 0.13.4, Created on 21 March 2003, 23:18
  */
 public class GoClassToSummary extends AbstractPerspectiveRule {
@@ -67,13 +67,13 @@ public class GoClassToSummary extends AbstractPerspectiveRule {
 	    if (ModelFacade.getOperations(parent).size() > 0)
                 list.add(new OperationsNode(parent));
 
-	    if (hasIncomingDependencies( parent))
+	    if (hasIncomingDependencies(parent))
 		list.add(new IncomingDependencyNode(parent));
 
-	    if (hasOutGoingDependencies( parent))
+	    if (hasOutGoingDependencies(parent))
                 list.add(new OutgoingDependencyNode(parent));
 
-	    if (hasInheritance( parent))
+	    if (hasInheritance(parent))
                 list.add(new InheritanceNode(parent));
 
 	    return list;
@@ -114,7 +114,7 @@ public class GoClassToSummary extends AbstractPerspectiveRule {
 
 	return false;
     }
-  
+
     private boolean hasOutGoingDependencies(Object parent) {
 	Iterator incomingIt =
 	    ModelFacade.getClientDependencies(parent).iterator();
@@ -127,15 +127,15 @@ public class GoClassToSummary extends AbstractPerspectiveRule {
 
 	return false;
     }
- 
+
     private boolean hasInheritance(Object parent) {
         Iterator incomingIt =
             ModelFacade.getSupplierDependencies(parent).iterator();
         Iterator outgoingIt =
             ModelFacade.getClientDependencies(parent).iterator();
-        Iterator generalizationsIt = 
+        Iterator generalizationsIt =
             ModelFacade.getGeneralizations(parent).iterator();
-        Iterator specializationsIt = 
+        Iterator specializationsIt =
             ModelFacade.getSpecializations(parent).iterator();
 
 	if (generalizationsIt.hasNext())

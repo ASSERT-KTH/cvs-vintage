@@ -1,5 +1,5 @@
-// $Id: ActionClassDiagram.java,v 1.18 2004/10/06 19:18:22 mvw Exp $
-// Copyright (c) 1996-2003 The Regents of the University of California. All
+// $Id: ActionClassDiagram.java,v 1.19 2005/01/09 14:59:01 linus Exp $
+// Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
 // agreement is hereby granted, provided that the above copyright notice
@@ -33,7 +33,7 @@ import org.argouml.uml.diagram.ui.UMLDiagram;
  *  @stereotype singleton
  */
 public class ActionClassDiagram extends ActionAddDiagram {
-    private static final Logger LOG = 
+    private static final Logger LOG =
         Logger.getLogger(ActionClassDiagram.class);
 
     ////////////////////////////////////////////////////////////////
@@ -74,6 +74,6 @@ public class ActionClassDiagram extends ActionAddDiagram {
             throw new IllegalArgumentException(
                 "The argument " + handle + " is not a namespace.");
         }
-        return true;       
+        return true;
     }
 } /* end class ActionClassDiagram */

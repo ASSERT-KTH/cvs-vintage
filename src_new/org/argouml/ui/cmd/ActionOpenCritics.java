@@ -1,5 +1,5 @@
-// $Id: ActionOpenCritics.java,v 1.2 2004/12/26 11:14:44 mvw Exp $
-// Copyright (c) 2004 The Regents of the University of California. All
+// $Id: ActionOpenCritics.java,v 1.3 2005/01/09 14:58:13 linus Exp $
+// Copyright (c) 2004-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
 // agreement is hereby granted, provided that the above copyright notice
@@ -32,8 +32,8 @@ import org.argouml.uml.ui.UMLAction;
 
 class ActionOpenCritics extends UMLAction {
 
-    public ActionOpenCritics() { 
-        super("action.browse-critics", NO_ICON); 
+    public ActionOpenCritics() {
+        super("action.browse-critics", NO_ICON);
     }
 
     /**
