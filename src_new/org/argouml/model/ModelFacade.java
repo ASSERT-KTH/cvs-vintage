@@ -1,4 +1,4 @@
-// $Id: ModelFacade.java,v 1.84 2003/08/30 18:16:29 alexb Exp $
+// $Id: ModelFacade.java,v 1.85 2003/08/30 20:43:52 bobtarling Exp $
 // Copyright (c) 2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -1411,6 +1411,25 @@ public class ModelFacade {
         throw new IllegalArgumentException("Unrecognized object " + handle);
     }
 
+    /**
+     * The base of some model element
+     * @param handle the model element
+     * @return the base
+     */
+    public static Object getBase(Object handle) {
+        if (handle instanceof MAssociationEndRole) {
+            return ((MAssociationEndRole) handle).getBase();
+        } else if (handle instanceof MAssociationRole) {
+            return ((MAssociationEndRole) handle).getBase();
+        } else if (handle instanceof MExtend) {
+            return ((MAssociationEndRole) handle).getBase();
+        } else if (handle instanceof MInclude) {
+            return ((MAssociationEndRole) handle).getBase();
+        }
+        throw new IllegalArgumentException("Unrecognized object " + handle);
+    }
+    
+    
     /** Get the bases of a classifier role.
      *
      *
