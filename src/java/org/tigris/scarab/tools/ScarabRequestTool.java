@@ -673,12 +673,19 @@ System.out.println(parameter + "was NOT null: " + parser);
         catch (Exception e)
         {
             // was not a primary key, try fid
-            Issue.FederatedId fid = new Issue.FederatedId(key);
-            if ( fid.getDomain() == null ) 
+            try
             {
-                // handle null (always null right now)
+                Issue.FederatedId fid = new Issue.FederatedId(key);
+                if ( fid.getDomain() == null ) 
+                {
+                    // handle null (always null right now)
+                }
+                issue = Issue.getIssueById(fid);
             }
-            issue = Issue.getIssueById(fid);
+            catch (NumberFormatException nfe)
+            {
+                // invalid id, just return null
+            }
         }
         return issue;
     }
