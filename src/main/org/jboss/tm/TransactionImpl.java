@@ -33,7 +33,7 @@ import javax.transaction.xa.XAException;
  *	@see <related>
  *	@author Rickard Öberg (rickard.oberg@telkel.com)
  *  @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
- *	@version $Revision: 1.6 $
+ *	@version $Revision: 1.7 $
  */
 public class TransactionImpl
    implements Transaction, Serializable
@@ -54,8 +54,8 @@ public class TransactionImpl
    public TransactionImpl(TxManager tm,int hash, Xid xid)
    {
       this.tm = tm;
-	  this.hash = hash;
-	  this.xid = xid; 
+      this.hash = hash;
+      this.xid = xid; 
    }
    
    /*
@@ -64,8 +64,8 @@ public class TransactionImpl
    * used for propagated Tx
    */
    public void setTxManager(TxManager tm) {
-	   
-	   this.tm= tm;
+       
+       this.tm= tm;
    }
    
    
@@ -84,14 +84,18 @@ public class TransactionImpl
    }
 
    public boolean delistResource(XAResource xaRes, int flag)
+      throws java.lang.IllegalStateException,
+             SystemException
    {
        return tm.delistResource(this, xaRes, flag);
    }
 
    public boolean enlistResource(XAResource xaRes)
-      throws RollbackException
+      throws RollbackException,
+             java.lang.IllegalStateException,
+             SystemException
    {
-	   return tm.enlistResource(this, xaRes);
+       return tm.enlistResource(this, xaRes);
    }
 
    public int getStatus()
@@ -101,8 +105,11 @@ public class TransactionImpl
    }
 
    public void registerSynchronization(Synchronization s)
+    throws RollbackException,
+           java.lang.IllegalStateException,
+           SystemException
    {
-	   tm.registerSynchronization(this, s);
+       tm.registerSynchronization(this, s);
    }
 
    public void rollback()
@@ -110,7 +117,7 @@ public class TransactionImpl
                      java.lang.SecurityException,
                      SystemException
    {
-	   tm.rollback(this);
+       tm.rollback(this);
    }
 
    public void setRollbackOnly()
@@ -118,12 +125,12 @@ public class TransactionImpl
                             SystemException
    {
      
-		tm.setRollbackOnly(this); 
-	}
+       tm.setRollbackOnly(this); 
+    }
 
    public boolean equals(Object obj)
    {
-	  return ((TransactionImpl)obj).hash == hash;
+      return ((TransactionImpl)obj).hash == hash;
    }
 
    public int hashCode()
