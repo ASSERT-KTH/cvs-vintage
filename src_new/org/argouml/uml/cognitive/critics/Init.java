@@ -24,7 +24,7 @@
 // File: Init.java
 // Classes: Init
 // Original Author: jrobbins@ics.uci.edu
-// $Id: Init.java,v 1.14 2003/02/01 09:31:08 mkl Exp $
+// $Id: Init.java,v 1.15 2003/02/01 15:05:28 kataka Exp $
 
 // 8 Mar 2002: Jeremy Bennett (mail@jeremybennett.com). CrCrossNamespaceAssoc
 // registration corrected to Association, rather than AssociationClass
@@ -92,7 +92,6 @@ public class Init {
   public static Critic crNoAssociations = new CrNoAssociations();
   public static Critic crNonAggDataType = new CrNonAggDataType();
   public static Critic crOppEndConflict = new CrOppEndConflict();
-  public static Critic crParamTypeNotImported = new CrParamTypeNotImported();
   public static Critic crUselessAbstract = new CrUselessAbstract();
   public static Critic crUselessInterface = new CrUselessInterface();
   public static Critic crDisambigClassName = new CrDisambigClassName();
@@ -278,7 +277,6 @@ public class Init {
       Agency.register(crEmptyPackage, packageCls);
       Agency.register(crNonAggDataType, datatypeCls);
 //      Agency.register(crOppEndConflict, classifierCls);
-      Agency.register(crParamTypeNotImported, operCls);
       Agency.register(crUselessAbstract, classCls);
       Agency.register(crUselessInterface, interfaceCls);
       Agency.register(crDisambigStateName, stateCls);
