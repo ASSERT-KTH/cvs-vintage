@@ -25,10 +25,9 @@ import org.columba.mail.gui.tree.selection.TreeSelectionChangedEvent;
 import org.columba.mail.util.MailResourceLoader;
 
 /**
- * @author frd
- *
- * To change this generated comment go to 
- * Window>Preferences>Java>Code Generation>Code and Comments
+ * Action used to popup a folder renaming dialog to the user.
+ *  
+ * @author Frederik
  */
 public class RenameFolderAction
 	extends FrameAction
@@ -36,83 +35,56 @@ public class RenameFolderAction
 
 	public RenameFolderAction(AbstractFrameController frameController) {
 		super(
-				frameController,
-				MailResourceLoader.getString(
-					"menu", "mainframe", "menu_folder_renamefolder"));
-		
+			frameController,
+			MailResourceLoader.getString(
+				"menu",
+				"mainframe",
+				"menu_folder_renamefolder"));
+
 		// tooltip text
 		setTooltipText(
-				MailResourceLoader.getString(
-					"menu", "mainframe", "menu_folder_renamefolder"));
-		
+			MailResourceLoader.getString(
+				"menu",
+				"mainframe",
+				"menu_folder_renamefolder"));
+
 		// action command
 		setActionCommand("RENAME_FOLDER");
 
 		// shortcut key
 		setAcceleratorKey(KeyStroke.getKeyStroke(KeyEvent.VK_F2, 0));
-		
+
 		setEnabled(false);
 		(
 			(
-				AbstractMailFrameController) frameController)
+				AbstractMailFrameController)frameController)
 					.registerTreeSelectionListener(
 			this);
 	}
 
-	/* (non-Javadoc)
-	 * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
-	 */
 	public void actionPerformed(ActionEvent evt) {
 		FolderCommandReference[] r =
 			(FolderCommandReference[])
-				((AbstractMailFrameController) frameController)
+				((AbstractMailFrameController)frameController)
 				.getTreeSelection();
 
-		new FolderOptionsDialog((Folder) r[0].getFolder(), true);
-
-		/*
-		EditFolderDialog dialog = new EditFolderDialog("New Folder");
-		dialog.showDialog();
-		
-		String name;
-		
-		if (dialog.success()) {
-			// ok pressed
-			name = dialog.getName();
-		} else {
-			// cancel pressed
-			return;
-		}
-		
-		FolderCommandReference[] r =
-			(FolderCommandReference[]) frameController
-				.getSelectionManager()
-				.getSelection(
-				"mail.tree");
-		r[0].setFolderName(name);
-		
-		MainInterface.processor.addOp(new RenameFolderCommand(r));
-		*/
+		new FolderOptionsDialog((Folder)r[0].getFolder(), true);
 	}
-	/* (non-Javadoc)
-					 * @see org.columba.core.gui.util.SelectionListener#selectionChanged(org.columba.core.gui.util.SelectionChangedEvent)
-					 */
-	public void selectionChanged(SelectionChangedEvent e) {
 
-		if (((TreeSelectionChangedEvent) e).getSelected().length > 0) {
-
-			FolderTreeNode folder = ((TreeSelectionChangedEvent) e).getSelected()[0];
+	public void selectionChanged(SelectionChangedEvent evt) {
+		if (((TreeSelectionChangedEvent)evt).getSelected().length > 0) {
+			FolderTreeNode folder =
+				((TreeSelectionChangedEvent)evt).getSelected()[0];
 
 			if (folder != null) {
-
 				FolderItem item = folder.getFolderItem();
 				if (item.get("property", "accessrights").equals("user"))
 					setEnabled(true);
 				else
 					setEnabled(false);
 			}
-		} else
+		}
+		else
 			setEnabled(false);
-
 	}
 }
