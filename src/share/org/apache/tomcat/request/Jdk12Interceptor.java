@@ -127,6 +127,13 @@ public final class Jdk12Interceptor extends  BaseInterceptor implements RequestI
     // XXX move it to interceptor !!!
     final private void fixJDKContextClassLoader( ClassLoader cl ) {
 	if( cl==null ) return;
+
+// 	java.security.AccessController.doPrivileged(new java.security.PrivilegedAction() {
+// 	    public Object run()  {
+// 		Thread.currentThread().setContextClassLoader(cl);
+// 		return null;
+// 	    }
+// 	});
 	Thread t=Thread.currentThread();
 	t.setContextClassLoader( cl );
     }

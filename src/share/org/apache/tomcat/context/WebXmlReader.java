@@ -19,10 +19,17 @@ import org.w3c.dom.*;
  * @author costin@dnt.ro
  */
 public class WebXmlReader extends BaseInterceptor {
+    public static final String defaultWelcomeList[]={"index.jsp", "index.html", "index.htm"};
+    public static final int DEFAULT_SESSION_TIMEOUT=30;
 
     private static StringManager sm =StringManager.getManager("org.apache.tomcat.core");
+    boolean validate=true;
 
     public WebXmlReader() {
+    }
+
+    public void setValidate( boolean b ) {
+	validate=b;
     }
 
     public void contextInit(Context ctx) throws TomcatException {
@@ -53,9 +60,11 @@ public class WebXmlReader extends BaseInterceptor {
 	    if( ! default_xml.exists() )
 		throw new TomcatException("Can't find default web.xml configuration");
 
-	    String dtdURL = "file:" + default_dtd.toString();
+	    if( validate && ! default_dtd.exists() )
+		throw new TomcatException("Can't find default web.dtd configuration");
 
-	    processFile(ctx, default_xml.toString(), dtdURL);
+
+	    processFile(ctx, default_xml.toString(), default_dtd.toString() );
 	    ctx.expectUserWelcomeFiles();
 
 	    File inf_xml = new File(ctx.getDocBase() + "/WEB-INF/web.xml");
@@ -63,7 +72,7 @@ public class WebXmlReader extends BaseInterceptor {
 	    if (!inf_xml.isAbsolute())
 		inf_xml = new File(home, inf_xml.toString());
 
-	    processFile(ctx, inf_xml.toString(), dtdURL);
+	    processFile(ctx, inf_xml.toString(), default_dtd.toString() );
 	    XmlMapper xh=new XmlMapper();
 	} catch (Exception e) {
 	    String msg = sm.getString("context.getConfig.e",ctx.getPath() + " " + ctx.getDocBase());
@@ -72,8 +81,10 @@ public class WebXmlReader extends BaseInterceptor {
 
     }
 
-    void processFile( Context ctx, String file, String dtdURL) {
+    void processFile( Context ctx, String file, String default_dtd) {
 	try {
+	    String dtdURL = "file:" + default_dtd.toString();
+	    
 	    File f=new File(FileUtil.patch(file));
 	    if( ! f.exists() ) {
 		ctx.log( "File not found " + f + ", using only defaults" );
@@ -81,11 +92,14 @@ public class WebXmlReader extends BaseInterceptor {
 	    }
 	    if( ctx.getDebug() > 0 ) ctx.log("Reading " + file );
 	    XmlMapper xh=new XmlMapper();
-	    xh.setValidating(true);
-	    xh.register("-//Sun Microsystems, Inc.//DTD Web Application 2.2//EN",
-			dtdURL);
-	    //	    if( ctx.getDebug() > 5 ) xh.setDebug( 3 );
+	    if( validate ) {
+		xh.setValidating(true);
+		//	    if( ctx.getDebug() > 5 ) xh.setDebug( 3 );
+	    }
 
+	    // By using dtdURL you brake most parsers ( at least xerces )
+	    xh.register("-//Sun Microsystems, Inc.//DTD Web Application 2.2//EN",
+			dtdURL );
 	    xh.addRule("web-app/context-param", xh.methodSetter("addInitParameter", 2) );
 	    xh.addRule("web-app/context-param/param-name", xh.methodParam(0) );
 	    xh.addRule("web-app/context-param/param-value", xh.methodParam(1) );
@@ -332,3 +346,4 @@ class ResourceCollection {
 
 
 }
+

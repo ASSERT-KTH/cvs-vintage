@@ -11,14 +11,8 @@ import java.util.*;
 import java.util.StringTokenizer;
 import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
-import org.xml.sax.AttributeList;
-import org.xml.sax.DocumentHandler;
-import org.xml.sax.DTDHandler;
-import org.xml.sax.EntityResolver;
-import org.xml.sax.HandlerBase;
-import org.xml.sax.InputSource;
-import org.xml.sax.Locator;
-import org.xml.sax.SAXException;
+import org.xml.sax.*;
+import org.xml.sax.helpers.*;
 
 
 /**
@@ -212,15 +206,31 @@ public class XmlMapper
 	}
 	SAXParser parser=null;
 	try {
-	    SAXParserFactory factory = SAXParserFactory.newInstance();
-	    factory.setNamespaceAware(false);
-	    factory.setValidating(validating);
-	    parser = factory.newSAXParser();
-	    parser.parse(xmlFile, this);
+	    try {
+		SAXParserFactory factory = SAXParserFactory.newInstance();
+		factory.setNamespaceAware(false);
+		factory.setValidating(validating);
+		parser = factory.newSAXParser();
+		parser.parse(xmlFile, this);
+	    } catch (javax.xml.parsers.FactoryConfigurationError jaxpE ) {
+		org.xml.sax.Parser saxparser=null;
+		if(System.getProperty("org.xml.sax.parser") != null )
+		    saxparser=ParserFactory.makeParser();
+		else
+		    saxparser=ParserFactory.makeParser("org.apache.crimson.parser.Parser");
+
+		saxparser.setDocumentHandler( this );
+		saxparser.setEntityResolver( this );
+		saxparser.setDTDHandler( this );
+		if( debug > 0 ) log("No jaxp, defaulting to old xml style " + xmlFile);
+		saxparser.parse(new InputSource( new FileReader( xmlFile)));
+	    }
+
 	    return root;
 	    // assume the stack is in the right position.
 	    // or throw an exception is more than one element is on the stack
    	} catch (IOException ioe) {
+	    ioe.printStackTrace();
 	    String msg = "Can't open config file: " + xmlFile +
 		" due to: " + ioe;
 	    throw new Exception(msg);
@@ -230,7 +240,10 @@ public class XmlMapper
 	    //	    se.printStackTrace();
 	    System.out.println();
 	    Exception ex1=se.getException();
-	    throw ex1;
+	    if( ex1 != null )
+		throw ex1;// xerces bug
+	    else
+		throw se;
 	}
     }
 
@@ -394,8 +407,9 @@ public class XmlMapper
      */
     public InputSource resolveEntity(String publicId, String systemId)
 	throws SAXException {
-
 	String dtdURL = (String) dtds.get(publicId);
+	//	System.out.println("Entity: " + publicId + " --> " + systemId + " \"" + dtdURL +"\"");
+
 	if (dtdURL == null) {
 	    //	    log("Entity: " + publicId + " --> " + systemId);
 	    return (null);

@@ -196,6 +196,15 @@ public class ContextManager {
      *  just throw error instead of guessing wrong.
      */
     public String getHome() {
+	if( debug > 20 ) {
+	    // we want to know all places that need this property
+	    // and find how it's computed - for embeding tc.
+	    log( "getHome " + home + " " + installDir + " " +
+		 System.getProperty("tomcat.home") + " " +
+		 FileUtil.getCanonicalPath( "." ));
+	    /*DEBUG*/ try {throw new Exception(); } catch(Exception ex) {ex.printStackTrace();}
+	}
+	
 	if(home!=null) return home;
 
 	// If none defined, assume tomcat.home is used as base.
@@ -217,6 +226,14 @@ public class ContextManager {
      *  evaluate it relative to the current working directory.
      */
     public String getInstallDir() {
+	if( debug > 20 ) {
+	    // we want to know all places that need this property
+	    // and find how it's computed - for embeding tc.
+	    log( "getInstallDir " + installDir + " " +
+		 System.getProperty("tomcat.home"));
+	    /*DEBUG*/ try {throw new Exception(); } catch(Exception ex) {ex.printStackTrace();}
+	}
+
 	if(installDir!= null) return installDir;
 	
 	installDir=System.getProperty("tomcat.home");
@@ -515,6 +532,8 @@ public class ContextManager {
     
     public void addRequestInterceptor( RequestInterceptor ri ) {
 	if(debug>0) log("Add requestInterceptor javaClass=\"" + ri.getClass().getName() + "\" ");
+	// XXX for programatic access, it'll go away after the interceptor is fixed.
+	if( ri instanceof BaseInterceptor ) ((BaseInterceptor)ri).setContextManager( this );
 	requestInterceptors.addElement( ri );
 	if( ri instanceof ContextInterceptor )
 	    contextInterceptors.addElement( ri );
@@ -541,6 +560,7 @@ public class ContextManager {
 
     public void addContextInterceptor( ContextInterceptor ci) {
 	if(debug>0) log("Add contextInterceptor javaClass=\"" + ci.getClass().getName() + "\" ");
+	if( ci instanceof BaseInterceptor ) ((BaseInterceptor)ci).setContextManager( this );
 	contextInterceptors.addElement( ci );
     }
 
@@ -1007,7 +1027,7 @@ public class ContextManager {
     }
     
     public final void log(String msg) {
-	doLog( msg );
+	doLog( "CM: " + msg );
     }
 
     public final void doLog(String msg) {

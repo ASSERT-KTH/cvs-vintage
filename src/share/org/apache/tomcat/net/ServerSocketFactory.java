@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/net/Attic/ServerSocketFactory.java,v 1.2 1999/10/15 03:20:29 harishp Exp $
- * $Revision: 1.2 $
- * $Date: 1999/10/15 03:20:29 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/net/Attic/ServerSocketFactory.java,v 1.3 2000/06/03 06:35:22 costin Exp $
+ * $Revision: 1.3 $
+ * $Date: 2000/06/03 06:35:22 $
  *
  * ====================================================================
  *
@@ -66,6 +66,7 @@ package org.apache.tomcat.net;
 
 import java.io.*;
 import java.net.*;
+import java.util.Hashtable;
 
 /**
  * This class creates server sockets.  It may be subclassed by other
@@ -105,6 +106,7 @@ public abstract class ServerSocketFactory implements Cloneable {
     //
 
     private static ServerSocketFactory theFactory;
+    protected Hashtable attributes=new Hashtable();
 
     /**
      * Constructor is used only by subclasses.
@@ -114,10 +116,22 @@ public abstract class ServerSocketFactory implements Cloneable {
         /* NOTHING */
     }
 
+    /** General mechanism to pass attributes from the
+     *  ServerConnector to the socket factory.
+     *
+     *  Note that the "prefered" mechanism is to
+     *  use bean setters and explicit methods, but
+     *  this allows easy configuration via server.xml
+     *  or simple Properties
+     */
+    public void setAttribute( String name, Object value ) {
+	if( name!=null && value !=null)
+	    attributes.put( name, value );
+    }
+    
     /**
      * Returns a copy of the environment's default socket factory.
      */
-
     public static ServerSocketFactory getDefault () {
         //
         // optimize typical case:  no synch needed
@@ -153,7 +167,6 @@ public abstract class ServerSocketFactory implements Cloneable {
      * @exception IOException for networking errors
      * @exception InstantiationException for construction errors
      */
-
     public abstract ServerSocket createSocket (int port)
     throws IOException, InstantiationException;
 
