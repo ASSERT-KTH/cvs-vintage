@@ -20,7 +20,7 @@ entities, and relationships.
 <!ELEMENT defaults ((datasource, datasource-mapping)?, create-table?, 
          remove-table?, read-only?, time-out?, row-locking?, pk-constraint?, 
          fk-constraint?, preferred-relation-mapping?, read-ahead?, 
-         max-list-cache?)>
+         list-cache-max?)>
 
 
 <!--
@@ -147,7 +147,7 @@ read-ahead load query.
 Specifies the number of simultaneous queries that can be tracked by 
 the cache for an entity. 
 -->
-<!ELEMENT max-list-cache (#PCDATA)>
+<!ELEMENT list-cache-max (#PCDATA)>
 
 
 <!--
