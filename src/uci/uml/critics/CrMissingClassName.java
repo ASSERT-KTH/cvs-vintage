@@ -27,7 +27,7 @@
 // File: CrMissingClassName.java.java
 // Classes: CrMissingClassName.java
 // Original Author: jrobbins@ics.uci.edu
-// $Id: CrMissingClassName.java,v 1.5 1998/07/02 02:55:54 jrobbins Exp $
+// $Id: CrMissingClassName.java,v 1.6 1998/07/15 18:16:54 jrobbins Exp $
 
 package uci.uml.critics;
 
@@ -53,8 +53,6 @@ public class CrMissingClassName extends CrUML {
     addSupportedDecision(CrUML.decNAMING);
   }
 
-  protected void sd(String s) { setDescription(s); }
-  
   public boolean predicate(Object dm, Designer dsgr) {
     if (!(dm instanceof Classifier)) return NO_PROBLEM;
     Classifier cls = (Classifier) dm;

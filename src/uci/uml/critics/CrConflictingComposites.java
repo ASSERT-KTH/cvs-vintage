@@ -27,7 +27,7 @@
 // File: CrConflictingComposites.java.java
 // Classes: CrConflictingComposites.java
 // Original Author: jrobbins@ics.uci.edu
-// $Id: CrConflictingComposites.java,v 1.4 1998/07/02 02:55:45 jrobbins Exp $
+// $Id: CrConflictingComposites.java,v 1.5 1998/07/15 18:16:39 jrobbins Exp $
 
 package uci.uml.critics;
 
@@ -44,22 +44,20 @@ public class CrConflictingComposites extends CrUML {
 
   public CrConflictingComposites() {
     setHeadline("Remove Conflicting Composite Associations");
-    sd("A composite (black diamond) role of an association indicates that \n"+
-       "instances of that class contain instances of the associated classes. \n"+
-       "Since each instance can only be contained in one other object, each \n"+
+    sd("A composite (black diamond) role of an association indicates that "+
+       "instances of that class contain instances of the associated classes. "+
+       "Since each instance can only be contained in one other object, each "+
        "object can be the 'part' in at most one is-part-of relationship.\n\n"+
        "Good OO design depends on building good is-part-of relationships.\n\n"+
-       "To fix this, use the FixIt button, or manually change one association \n"+
-       "to have multiplicity to 0..1 or 1..1, or another kind \n"+
-       "of aggregation (e.g., a white diamond is less strict), \n"+
+       "To fix this, use the FixIt button, or manually change one association "+
+       "to have multiplicity to 0..1 or 1..1, or another kind "+
+       "of aggregation (e.g., a white diamond is less strict), "+
        "or remove one of the associations");
 
     addSupportedDecision(CrUML.decCONTAINMENT);
   }
 
-  protected void sd(String s) { setDescription(s); }
-  
-  public boolean predicate(Object dm, Designer dsgr) {
+  public boolean predicate2(Object dm, Designer dsgr) {
     if (!(dm instanceof Classifier)) return NO_PROBLEM;
     Classifier cls = (Classifier) dm;
     Vector conns = cls.getAssociationEnd();

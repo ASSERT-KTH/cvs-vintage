@@ -27,7 +27,7 @@
 // File: FigPseudostate.java
 // Classes: FigPseudostate
 // Original Author: your email address here
-// $Id: FigPseudostate.java,v 1.2 1998/07/02 02:57:22 jrobbins Exp $
+// $Id: FigPseudostate.java,v 1.3 1998/07/15 18:18:06 jrobbins Exp $
 
 package uci.uml.visual;
 
@@ -141,6 +141,9 @@ implements VetoableChangeListener, DelayedVetoableChangeListener {
     Project p = ProjectBrowser.TheInstance.getProject();
     p.moveToTrash(elmt);
     super.dispose();
+    StateVertex sv = (StateVertex) getOwner();
+    try { sv.setParent(null); }
+    catch (PropertyVetoException pve) { }
   }
 
 

@@ -22,12 +22,10 @@
 // CALIFORNIA HAS NO OBLIGATIONS TO PROVIDE MAINTENANCE, SUPPORT, UPDATES,
 // ENHANCEMENTS, OR MODIFICATIONS.
 
-
-
-// File: CrInterfaceOperOnly.java.java
-// Classes: CrInterfaceOperOnly.java
+// File: CrNoOutgoingTransitions.java
+// Classes: CrNoOutgoingTransitions
 // Original Author: jrobbins@ics.uci.edu
-// $Id: CrInterfaceOperOnly.java,v 1.6 1998/07/15 18:16:51 jrobbins Exp $
+// $Id: CrNoOutgoingTransitions.java,v 1.1 1998/07/15 18:17:05 jrobbins Exp $
 
 package uci.uml.critics;
 
@@ -35,32 +33,46 @@ import java.util.*;
 import uci.argo.kernel.*;
 import uci.util.*;
 import uci.uml.Foundation.Core.*;
+import uci.uml.Foundation.Data_Types.*;
+import uci.uml.Behavioral_Elements.State_Machines.*;
 
-/** Well-formedness rule [1] for Interface. See page 32 of UML 1.1
- *  Semantics. OMG document ad/97-08-04. */
+/** A critic to detect when a state has no outgoing transitions. */
 
-public class CrInterfaceOperOnly extends CrUML {
+public class CrNoOutgoingTransitions extends CrUML {
 
-  public CrInterfaceOperOnly() {
-    setHeadline("Interfaces may only have operations");
-    sd("Interfaces are intended to specify the set of operations that \n"+
-       "other classes must implement.  They do not implement these \n"+
-       "operations themselves, and cannot have attribues. \n\n"+
-       "A well-designed set of interfaces is a good way to define the \n"+
-       "possible extensions of a class framework. \n\n"+
-       "To fix this, use the FixIt button, or manually select the  \n"+
-       "interface and use the Properties tab remove all attributes.");
-    addSupportedDecision(CrUML.decPLANNED_EXTENSIONS);
+  public CrNoOutgoingTransitions() {
+    setHeadline("Add Outgoing Transitions from {name}");
+    sd("State {name} has no Outgoing transitions. "+
+       "Normally states have both incoming and outgoing transitions. \n\n"+
+       "Defining complete state transitions is needed to complete the behavioral "+
+       "specification part of your design.  Without outgoing transitions, "+
+       "this state is a \"dead\" state that can naver be exited.\n\n"+
+       "To fix this, press the \"Next>\" button, or add transitions manually "+
+       "by clicking on transition tool in the tool bar and dragging from "+
+       "another state to {name}. ");
+
+    addSupportedDecision(CrUML.decSTATE_MACHINES);
   }
 
   public boolean predicate2(Object dm, Designer dsgr) {
-    if (!(dm instanceof Interface)) return NO_PROBLEM;
-    Interface inf = (Interface) dm;
-    Vector sf = inf.getStructuralFeature();
-    if (sf == null) return NO_PROBLEM;
-    if (sf.size() > 0) return PROBLEM_FOUND;
+    if (!(dm instanceof StateVertex)) return NO_PROBLEM;
+    StateVertex sv = (StateVertex) dm;
+    if (sv instanceof State) {
+      StateMachine sm = ((State)sv).getStateMachine();
+      if (sm != null && sm.getTop() == sv) return NO_PROBLEM;
+    }
+    Vector outgoing = sv.getOutgoing();
+    Vector incoming = sv.getIncoming();
+    boolean needsOutgoing = outgoing == null || outgoing.size() == 0;
+    boolean needsIncoming = incoming == null || incoming.size() == 0;
+    if (sv instanceof Pseudostate) {
+      PseudostateKind k = ((Pseudostate)sv).getKind();
+      if (k.equals(PseudostateKind.INITIAL)) needsIncoming = false;
+      if (k.equals(PseudostateKind.FINAL)) needsOutgoing = false;
+    }
+    if (!needsIncoming && needsOutgoing) return PROBLEM_FOUND;
     return NO_PROBLEM;
   }
 
-} /* end class CrInterfaceOperOnly.java */
+} /* end class CrNoOutgoingTransitions */
 

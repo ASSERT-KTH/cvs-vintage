@@ -27,7 +27,7 @@
 // File: CrNonAggDataType.java.java
 // Classes: CrNonAggDataType.java
 // Original Author: jrobbins@ics.uci.edu
-// $Id: CrNonAggDataType.java,v 1.8 1998/07/02 02:55:59 jrobbins Exp $
+// $Id: CrNonAggDataType.java,v 1.9 1998/07/15 18:17:07 jrobbins Exp $
 
 package uci.uml.critics;
 
@@ -57,9 +57,7 @@ public class CrNonAggDataType extends CrUML {
     addSupportedDecision(CrUML.decCLASS_SELECTION);
   }
 
-  protected void sd(String s) { setDescription(s); }
-  
-  public boolean predicate(Object dm, Designer dsgr) {
+  public boolean predicate2(Object dm, Designer dsgr) {
     // needs-more-work: not implemented
     return NO_PROBLEM;
   }

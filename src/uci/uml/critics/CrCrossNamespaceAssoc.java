@@ -27,7 +27,7 @@
 // File: CrCrossNamespaceAssoc.java.java
 // Classes: CrCrossNamespaceAssoc.java
 // Original Author: jrobbins@ics.uci.edu
-// $Id: CrCrossNamespaceAssoc.java,v 1.5 1998/07/02 02:55:47 jrobbins Exp $
+// $Id: CrCrossNamespaceAssoc.java,v 1.6 1998/07/15 18:16:41 jrobbins Exp $
 
 package uci.uml.critics;
 
@@ -43,15 +43,13 @@ public class CrCrossNamespaceAssoc extends CrUML {
 
   public CrCrossNamespaceAssoc() {
     setHeadline("Aggregate Role in N-way Association");
-    sd("Each Class or Interface involved in an Association should be in \n"+
+    sd("Each Class or Interface involved in an Association should be in "+
        "the Namespace of the Association.\n");
 
     addSupportedDecision(CrUML.decMODULARITY);
   }
 
-  protected void sd(String s) { setDescription(s); }
-  
-  public boolean predicate(Object dm, Designer dsgr) {
+  public boolean predicate2(Object dm, Designer dsgr) {
     // needs-more-work: not implemented
     return NO_PROBLEM;
   }

@@ -27,7 +27,7 @@
 // File: CrCircularAssocClass.java.java
 // Classes: CrCircularAssocClass.java
 // Original Author: jrobbins@ics.uci.edu
-// $Id: CrCircularAssocClass.java,v 1.5 1998/07/02 02:55:43 jrobbins Exp $
+// $Id: CrCircularAssocClass.java,v 1.6 1998/07/15 18:16:35 jrobbins Exp $
 
 package uci.uml.critics;
 
@@ -43,15 +43,13 @@ public class CrCircularAssocClass extends CrUML {
 
   public CrCircularAssocClass() {
     setHeadline("Circular Association");
-    sd("AssociationClasses cannot include roles that refer directly \n"+
+    sd("AssociationClasses cannot include roles that refer directly "+
        "back to the AssociationClass.");
 
     addSupportedDecision(CrUML.decRELATIONSHIPS);
   }
 
-  protected void sd(String s) { setDescription(s); }
-  
-  public boolean predicate(Object dm, Designer dsgr) {
+  public boolean predicate2(Object dm, Designer dsgr) {
     // needs-more-work: not implemented
     return NO_PROBLEM;
   }

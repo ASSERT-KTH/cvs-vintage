@@ -27,7 +27,7 @@
 // File: CrSignatureConflict.java.java
 // Classes: CrSignatureConflict.java
 // Original Author: jrobbins@ics.uci.edu
-// $Id: CrSignatureConflict.java,v 1.8 1998/07/02 02:56:02 jrobbins Exp $
+// $Id: CrSignatureConflict.java,v 1.9 1998/07/15 18:17:13 jrobbins Exp $
 
 package uci.uml.critics;
 
@@ -55,9 +55,7 @@ public class CrSignatureConflict extends CrUML {
     addSupportedDecision(CrUML.decMETHODS);
   }
 
-  protected void sd(String s) { setDescription(s); }
-  
-  public boolean predicate(Object dm, Designer dsgr) {
+  public boolean predicate2(Object dm, Designer dsgr) {
     if (!(dm instanceof uci.uml.Foundation.Core.Classifier)) return NO_PROBLEM;
     Classifier cls = (Classifier) dm;
     Vector str = cls.getBehavioralFeature();

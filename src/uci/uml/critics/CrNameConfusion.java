@@ -27,7 +27,7 @@
 // File: CrNameConfusion.java.java
 // Classes: CrNameConfusion.java
 // Original Author: jrobbins@ics.uci.edu
-// $Id: CrNameConfusion.java,v 1.4 1998/07/02 02:55:57 jrobbins Exp $
+// $Id: CrNameConfusion.java,v 1.5 1998/07/15 18:17:00 jrobbins Exp $
 
 package uci.uml.critics;
 
@@ -56,9 +56,7 @@ public class CrNameConfusion extends CrUML {
     addSupportedDecision(CrUML.decNAMING);
   }
 
-  protected void sd(String s) { setDescription(s); }
-  
-  public boolean predicate(Object dm, Designer dsgr) {
+  public boolean predicate2(Object dm, Designer dsgr) {
     if (!(dm instanceof ModelElement)) return NO_PROBLEM;
     ModelElement me = (ModelElement) dm;
     Set offs = computeOffenders(me);
@@ -73,6 +71,7 @@ public class CrNameConfusion extends CrUML {
     if (n == null || n.equals(Name.UNSPEC)) return res;
     String dmNameStr = n.getBody();
     String stripped2 = strip(dmNameStr);
+    if (ns == null) return res;
     Vector oes = ns.getOwnedElement();
     if (oes == null) return res;
     java.util.Enumeration enum = oes.elements();

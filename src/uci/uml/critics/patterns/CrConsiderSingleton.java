@@ -27,7 +27,7 @@
 // File: CrConsiderSingleton.java
 // Classes: CrConsiderSingleton
 // Original Author: jrobbins@ics.uci.edu
-// $Id: CrConsiderSingleton.java,v 1.10 1998/07/02 02:56:07 jrobbins Exp $
+// $Id: CrConsiderSingleton.java,v 1.11 1998/07/15 18:17:26 jrobbins Exp $
 
 package uci.uml.critics.patterns;
 
@@ -74,7 +74,7 @@ public class CrConsiderSingleton extends CrUML {
 
   protected void sd(String s) { setDescription(s); }
   
-  public boolean predicate(Object dm, Designer dsgr) {
+  public boolean predicate2(Object dm, Designer dsgr) {
     if (!(dm instanceof MMClass)) return NO_PROBLEM;
     MMClass cls = (MMClass) dm;
     Vector str = cls.getStructuralFeature();

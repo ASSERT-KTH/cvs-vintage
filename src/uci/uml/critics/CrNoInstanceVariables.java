@@ -29,7 +29,7 @@
 // File: CrNoInstanceVariables.java
 // Classes: CrNoInstanceVariables
 // Original Author: jrobbins@ics.uci.edu
-// $Id: CrNoInstanceVariables.java,v 1.8 1998/07/02 02:55:58 jrobbins Exp $
+// $Id: CrNoInstanceVariables.java,v 1.9 1998/07/15 18:17:02 jrobbins Exp $
 
 package uci.uml.critics;
 
@@ -60,9 +60,7 @@ public class CrNoInstanceVariables extends CrUML {
     addSupportedDecision(CrUML.decSTORAGE);
   }
 
-  protected void sd(String s) { setDescription(s); }
-  
-  public boolean predicate(Object dm, Designer dsgr) {
+  public boolean predicate2(Object dm, Designer dsgr) {
     if (!(dm instanceof MMClass)) return NO_PROBLEM;
     MMClass cls = (MMClass) dm;
     if (cls.containsStereotype(Stereotype.UTILITY)) return NO_PROBLEM;

@@ -28,7 +28,7 @@
 // File: ModeCreate.java
 // Classes: ModeCreate
 // Original Author: jrobbins@ics.uci.edu
-// $Id: ModeCreate.java,v 1.12 1998/07/02 02:52:36 jrobbins Exp $
+// $Id: ModeCreate.java,v 1.13 1998/07/15 18:21:49 jrobbins Exp $
 
 package uci.gef;
 
@@ -91,7 +91,7 @@ public abstract class ModeCreate extends Mode {
     return Cursor.getPredefinedCursor(Cursor.CROSSHAIR_CURSOR);
   }
 
-  
+
   ////////////////////////////////////////////////////////////////
   // event handlers
 

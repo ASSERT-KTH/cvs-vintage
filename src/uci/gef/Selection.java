@@ -28,7 +28,7 @@
 // File: Selection.java
 // Classes: Selection
 // Original Author: jrobbins@ics.uci.edu
-// $Id: Selection.java,v 1.8 1998/07/02 02:53:00 jrobbins Exp $
+// $Id: Selection.java,v 1.9 1998/07/15 18:21:56 jrobbins Exp $
 
 package uci.gef;
 
@@ -193,8 +193,11 @@ implements Serializable, MouseListener, MouseMotionListener, KeyListener {
     if (_content instanceof KeyListener)
       ((KeyListener)_content).keyPressed(ke);
   }
-  
-  public void keyReleased(KeyEvent ke) { }
+
+  public void keyReleased(KeyEvent ke) {
+    if (_content instanceof KeyListener)
+      ((KeyListener)_content).keyReleased(ke);
+  }
 
 
   public void mouseMoved(MouseEvent me) {

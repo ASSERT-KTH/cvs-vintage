@@ -27,7 +27,7 @@
 // File: CrNameConflictAC.java.java
 // Classes: CrNameConflictAC.java
 // Original Author: jrobbins@ics.uci.edu
-// $Id: CrNameConflictAC.java,v 1.5 1998/07/02 02:55:57 jrobbins Exp $
+// $Id: CrNameConflictAC.java,v 1.6 1998/07/15 18:16:59 jrobbins Exp $
 
 package uci.uml.critics;
 
@@ -50,9 +50,7 @@ public class CrNameConflictAC extends CrUML {
     addSupportedDecision(CrUML.decNAMING);
   }
 
-  protected void sd(String s) { setDescription(s); }
-  
-  public boolean predicate(Object dm, Designer dsgr) {
+  public boolean predicate2(Object dm, Designer dsgr) {
     // needs-more-work: not implemented
     return NO_PROBLEM;
   }

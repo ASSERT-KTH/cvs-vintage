@@ -27,7 +27,7 @@
 // File: GraphModel.java
 // Interfaces: GraphModel
 // Original Author: jrobbins@ics.uci.edu
-// $Id: GraphModel.java,v 1.4 1998/07/02 02:58:08 jrobbins Exp $
+// $Id: GraphModel.java,v 1.5 1998/07/15 18:22:26 jrobbins Exp $
 
 package uci.graph;
 
@@ -56,7 +56,7 @@ import java.util.*;
  * @see AdjacencyMatrixGraphModel
  * @see uci.graph.demo.WordTransforms */
 
-public interface GraphModel {
+public interface GraphModel extends java.io.Serializable {
   /** Return all nodes in the graph */
   Vector getNodes();
 

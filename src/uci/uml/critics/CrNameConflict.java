@@ -27,7 +27,7 @@
 // File: CrNameConflict.java.java
 // Classes: CrNameConflict.java
 // Original Author: jrobbins@ics.uci.edu
-// $Id: CrNameConflict.java,v 1.8 1998/07/02 02:55:56 jrobbins Exp $
+// $Id: CrNameConflict.java,v 1.9 1998/07/15 18:16:58 jrobbins Exp $
 
 package uci.uml.critics;
 
@@ -53,9 +53,7 @@ public class CrNameConflict extends CrUML {
     addSupportedDecision(CrUML.decNAMING);
   }
 
-  protected void sd(String s) { setDescription(s); }
-  
-  public boolean predicate(Object dm, Designer dsgr) {
+  public boolean predicate2(Object dm, Designer dsgr) {
     if (!(dm instanceof Namespace)) return NO_PROBLEM;
     Namespace ns = (Namespace) dm;
     Vector oes = ns.getOwnedElement();

@@ -29,7 +29,7 @@
 // File: CrConstructorNeeded.java
 // Classes: CrConstructorNeeded
 // Original Author: jrobbins@ics.uci.edu
-// $Id: CrConstructorNeeded.java,v 1.5 1998/07/02 02:55:46 jrobbins Exp $
+// $Id: CrConstructorNeeded.java,v 1.6 1998/07/15 18:16:40 jrobbins Exp $
 
 package uci.uml.critics;
 
@@ -60,9 +60,7 @@ public class CrConstructorNeeded extends CrUML {
     addSupportedDecision(CrUML.decSTORAGE);
   }
 
-  protected void sd(String s) { setDescription(s); }
-
-  public boolean predicate(Object dm, Designer dsgr) {
+  public boolean predicate2(Object dm, Designer dsgr) {
     if (!(dm instanceof MMClass)) return NO_PROBLEM;
     MMClass cls = (MMClass) dm;
 

@@ -29,7 +29,7 @@
 // File: CrUtilityViolated.java
 // Classes: CrUtilityViolated
 // Original Author: jrobbins@ics.uci.edu
-// $Id: CrUtilityViolated.java,v 1.4 1998/07/02 02:56:05 jrobbins Exp $
+// $Id: CrUtilityViolated.java,v 1.5 1998/07/15 18:17:21 jrobbins Exp $
 
 package uci.uml.critics;
 
@@ -61,9 +61,7 @@ public class CrUtilityViolated extends CrUML {
     addSupportedDecision(CrUML.decSTEREOTYPES);
   }
 
-  protected void sd(String s) { setDescription(s); }
-  
-  public boolean predicate(Object dm, Designer dsgr) {
+  public boolean predicate2(Object dm, Designer dsgr) {
     if (!(dm instanceof MMClass)) return NO_PROBLEM;
     MMClass cls = (MMClass) dm;
     if (!cls.containsStereotype(Stereotype.UTILITY)) return NO_PROBLEM;

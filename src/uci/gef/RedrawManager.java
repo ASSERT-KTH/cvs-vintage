@@ -27,7 +27,7 @@
 // File: RedrawManager.java
 // Classes: RedrawManager
 // Original Author: jrobbins@ics.uci.edu
-// $Id: RedrawManager.java,v 1.14 1998/07/02 02:52:59 jrobbins Exp $
+// $Id: RedrawManager.java,v 1.15 1998/07/15 18:21:55 jrobbins Exp $
 
 package uci.gef;
 
@@ -93,8 +93,8 @@ public class RedrawManager implements Runnable {
     _ed = ed;
     _repairThread = new Thread(this, "RepairThread");
     // Needs-More-Work: this causes a security violation in Netscape
-    // _repairThread.setDaemon(true);
-    // _repairThread.setPriority(Thread.MAX_PRIORITY);
+    _repairThread.setDaemon(true);
+    _repairThread.setPriority(Thread.MAX_PRIORITY);
     _repairThread.start();
   }
 
@@ -340,7 +340,7 @@ public class RedrawManager implements Runnable {
       if (image512x512 == null) image512x512 = ed.createImage(512, 512);
       return image512x512;
     }
-    else if (x > 1024 || y > 1024) {
+    else if (x > 1050 || y > 1050) {
       System.out.println("very large repaint request, probably an error: "+
 			 x + ", " + y + ".");
       return null;

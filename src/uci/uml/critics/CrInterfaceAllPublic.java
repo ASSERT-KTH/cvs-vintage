@@ -27,7 +27,7 @@
 // File: CrInterfaceAllPublic.java.java
 // Classes: CrInterfaceAllPublic.java
 // Original Author: jrobbins@ics.uci.edu
-// $Id: CrInterfaceAllPublic.java,v 1.5 1998/07/02 02:55:52 jrobbins Exp $
+// $Id: CrInterfaceAllPublic.java,v 1.6 1998/07/15 18:16:50 jrobbins Exp $
 
 package uci.uml.critics;
 
@@ -44,18 +44,16 @@ public class CrInterfaceAllPublic extends CrUML {
 
   public CrInterfaceAllPublic() {
     setHeadline("Operations in Interfaces must be public");
-    sd("Interfaces are intended to specify the set of operations that \n"+
+    sd("Interfaces are intended to specify the set of operations that "+
        "other classes must implement.  The must be public. \n\n"+
-       "A well-designed set of interfaces is a good way to define the \n"+
+       "A well-designed set of interfaces is a good way to define the "+
        "possible extensions of a class framework. \n\n"+
-       "To fix this, use the FixIt button, or manually select the operations \n"+
+       "To fix this, use the FixIt button, or manually select the operations "+
        "of the interface and use the Properties tab add them public.");
     addSupportedDecision(CrUML.decPLANNED_EXTENSIONS);
   }
 
-  protected void sd(String s) { setDescription(s); }
-  
-  public boolean predicate(Object dm, Designer dsgr) {
+  public boolean predicate2(Object dm, Designer dsgr) {
     if (!(dm instanceof Interface)) return NO_PROBLEM;
     Interface inf = (Interface) dm;
     Vector bf = inf.getBehavioralFeature();

@@ -27,7 +27,7 @@
 // File: FigDependency.java
 // Classes: FigDependency
 // Original Author: your email address here
-// $Id: FigDependency.java,v 1.3 1998/07/03 21:00:17 abonner Exp $
+// $Id: FigDependency.java,v 1.4 1998/07/15 18:18:01 jrobbins Exp $
 
 
 package uci.uml.visual;
@@ -38,14 +38,15 @@ import uci.gef.*;
 import uci.uml.ui.*;
 import uci.uml.Foundation.Core.*;
 
-public class FigDependency extends FigEdgeLineDotted {
+public class FigDependency extends FigEdgeLine {
 
   public FigDependency(Object edge) {
     super();
     setOwner(edge);
 
     // set whatever arrow heads and colors are appropriate
-    _fig.setLineColor(Color.red);
+    _fig.setLineColor(Color.black);
+    ((FigLine)_fig).setDashed(true);
 
     ArrowHeadGreater endArrow = new ArrowHeadGreater();
     endArrow.setFillColor(Color.red);
@@ -56,6 +57,7 @@ public class FigDependency extends FigEdgeLineDotted {
   public void dispose() {
     if (!(getOwner() instanceof Element)) return;
     Element elmt = (Element) getOwner();
+    if (elmt == null) return;
     Project p = ProjectBrowser.TheInstance.getProject();
     p.moveToTrash(elmt);
     super.dispose();

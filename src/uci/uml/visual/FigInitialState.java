@@ -27,7 +27,7 @@
 // File: FigActor.java
 // Classes: FigActor
 // Original Author: abonner@ics.uci.edu
-// $Id: FigInitialState.java,v 1.1 1998/07/03 22:58:38 abonner Exp $
+// $Id: FigInitialState.java,v 1.2 1998/07/15 18:18:04 jrobbins Exp $
 
 package uci.uml.visual;
 
@@ -41,6 +41,7 @@ import uci.graph.*;
 import uci.uml.ui.*;
 import uci.uml.generate.*;
 import uci.uml.Foundation.Core.*;
+import uci.uml.Behavioral_Elements.State_Machines.*;
 
 /** Class to display graphics for a UML State in a diagram. */
 
@@ -79,9 +80,8 @@ implements VetoableChangeListener, DelayedVetoableChangeListener {
     if (node instanceof ElementImpl)
       ((ElementImpl)node).addVetoableChangeListener(this);
 
-    Color handleColor = Globals.getPrefs().getHandleColor();
-    _bigPort = new FigCircle(x,y,width,height, handleColor, Color.black);
-    _head = new FigCircle(x,y,width,height, handleColor, Color.black);
+    _bigPort = new FigCircle(x,y,width,height, Color.cyan, Color.cyan);
+    _head = new FigCircle(x,y,width,height, Color.black, Color.black);
     // add Figs to the FigNode in back-to-front order
     addFig(_bigPort);
     addFig(_head);
@@ -91,6 +91,9 @@ implements VetoableChangeListener, DelayedVetoableChangeListener {
     setBlinkPorts(false); //make port invisble unless mouse enters
     Rectangle r = getBounds();
   }
+
+  /** Initial states are fixed size. */
+  public boolean isResizable() { return false; }
 
 
   /** If the UML meta-model object changes state. Update the Fig.  But
@@ -131,10 +134,14 @@ implements VetoableChangeListener, DelayedVetoableChangeListener {
   }
 
   public void dispose() {
-    if (!(getOwner() instanceof Element)) return;
+    System.out.println("disposing FigInitialState");
     Element elmt = (Element) getOwner();
+    if (elmt == null) return;
     Project p = ProjectBrowser.TheInstance.getProject();
     p.moveToTrash(elmt);
+    StateVertex sv = (StateVertex) getOwner();
+    try { sv.setParent(null); }
+    catch (PropertyVetoException pve) { }
     super.dispose();
   }
 

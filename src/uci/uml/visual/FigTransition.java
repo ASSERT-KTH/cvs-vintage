@@ -27,12 +27,13 @@
 // File: FigTransition.java
 // Classes: FigTransition
 // Original Author: your email address here
-// $Id: FigTransition.java,v 1.2 1998/07/02 02:57:24 jrobbins Exp $
+// $Id: FigTransition.java,v 1.3 1998/07/15 18:18:08 jrobbins Exp $
 
 
 package uci.uml.visual;
 
 import java.awt.*;
+import java.beans.*;
 
 import uci.gef.*;
 import uci.uml.ui.*;
@@ -46,22 +47,29 @@ public class FigTransition extends FigEdgeLine {
     setOwner(edge);
 
     // set whatever arrow heads and colors are appropriate
-    _fig.setLineColor(Color.red);
+    _fig.setLineColor(Color.black);
 
-    ArrowHeadTriangle endArrow = new ArrowHeadTriangle();
-    endArrow.setFillColor(Color.red);
-    setDestArrowHead(endArrow);
+    setDestArrowHead(new ArrowHeadGreater());
     setBetweenNearestPoints(true);
   }
 
   public void dispose() {
+    System.out.println("disposing FigTransition");
     if (!(getOwner() instanceof Element)) return;
     Element elmt = (Element) getOwner();
     Project p = ProjectBrowser.TheInstance.getProject();
     p.moveToTrash(elmt);
+    Transition tr = (Transition) getOwner();
+    if (tr == null) return;
+    try {
+      tr.setStateMachine(null);
+      tr.setSource(null);
+      tr.setTarget(null);
+    }
+    catch (PropertyVetoException pve) { }
     super.dispose();
   }
-  
+
 
 } /* end class FigTransition */
 

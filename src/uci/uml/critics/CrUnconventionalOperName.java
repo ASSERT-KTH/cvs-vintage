@@ -27,7 +27,7 @@
 // File: CrUnconventionalOperName.java.java
 // Classes: CrUnconventionalOperName.java
 // Original Author: jrobbins@ics.uci.edu
-// $Id: CrUnconventionalOperName.java,v 1.8 1998/07/02 02:56:04 jrobbins Exp $
+// $Id: CrUnconventionalOperName.java,v 1.9 1998/07/15 18:17:19 jrobbins Exp $
 
 package uci.uml.critics;
 
@@ -52,9 +52,7 @@ public class CrUnconventionalOperName extends CrUML {
     addSupportedDecision(CrUML.decNAMING);
   }
 
-  protected void sd(String s) { setDescription(s); }
-  
-  public boolean predicate(Object dm, Designer dsgr) {
+  public boolean predicate2(Object dm, Designer dsgr) {
     if (!(dm instanceof Operation)) return NO_PROBLEM;
     Operation oper = (Operation) dm;
     Name myName = oper.getName();

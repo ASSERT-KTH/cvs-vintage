@@ -27,7 +27,7 @@
 // File: PathConv.java
 // Classes: PathConv
 // Original Author: abonner@ics.uci.edu
-// $Id: PathConv.java,v 1.11 1998/07/02 02:52:54 jrobbins Exp $
+// $Id: PathConv.java,v 1.12 1998/07/15 18:21:53 jrobbins Exp $
 
 package uci.gef;
 
@@ -44,7 +44,7 @@ import java.util.*;
  *  along a FigEdge and have the label stay in the right place, even
  *  if the FigEdge moves. */
 
-public abstract class PathConv {
+public abstract class PathConv implements java.io.Serializable {
   protected Fig _pathFigure; 	// The intermediate path figure
 
   public PathConv(Fig theFig) {

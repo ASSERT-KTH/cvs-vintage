@@ -27,7 +27,7 @@
 // File: CrOppEndVsAttr.java.java
 // Classes: CrOppEndVsAttr.java
 // Original Author: jrobbins@ics.uci.edu
-// $Id: CrOppEndVsAttr.java,v 1.8 1998/07/02 02:56:00 jrobbins Exp $
+// $Id: CrOppEndVsAttr.java,v 1.9 1998/07/15 18:17:09 jrobbins Exp $
 
 package uci.uml.critics;
 
@@ -61,9 +61,7 @@ public class CrOppEndVsAttr extends CrUML {
     addSupportedDecision(CrUML.decNAMING);
   }
 
-  protected void sd(String s) { setDescription(s); }
-  
-  public boolean predicate(Object dm, Designer dsgr) {
+  public boolean predicate2(Object dm, Designer dsgr) {
     if (!(dm instanceof Classifier)) return NO_PROBLEM;
     Classifier cls = (Classifier) dm;
     Vector namesSeen = new Vector();

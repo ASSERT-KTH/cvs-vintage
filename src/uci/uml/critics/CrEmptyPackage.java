@@ -29,7 +29,7 @@
 // File: CrEmptyPackage.java
 // Classes: CrEmptyPackage
 // Original Author: jrobbins@ics.uci.edu
-// $Id: CrEmptyPackage.java,v 1.4 1998/07/02 02:55:49 jrobbins Exp $
+// $Id: CrEmptyPackage.java,v 1.5 1998/07/15 18:16:45 jrobbins Exp $
 
 package uci.uml.critics;
 
@@ -58,9 +58,7 @@ public class CrEmptyPackage extends CrUML {
     addSupportedDecision(CrUML.decMODULARITY);
   }
 
-  protected void sd(String s) { setDescription(s); }
-  
-  public boolean predicate(Object dm, Designer dsgr) {
+  public boolean predicate2(Object dm, Designer dsgr) {
     if (!(dm instanceof Model)) return NO_PROBLEM;
     Model mod = (Model) dm;
     Vector elms = mod.getOwnedElement();

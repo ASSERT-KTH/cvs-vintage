@@ -27,7 +27,7 @@
 // File: CrUnconventionalAttrName.java.java
 // Classes: CrUnconventionalAttrName.java
 // Original Author: jrobbins@ics.uci.edu
-// $Id: CrUnconventionalAttrName.java,v 1.8 1998/07/02 02:56:03 jrobbins Exp $
+// $Id: CrUnconventionalAttrName.java,v 1.9 1998/07/15 18:17:16 jrobbins Exp $
 
 package uci.uml.critics;
 
@@ -52,9 +52,7 @@ public class CrUnconventionalAttrName extends CrUML {
     addSupportedDecision(CrUML.decNAMING);
   }
 
-  protected void sd(String s) { setDescription(s); }
-  
-  public boolean predicate(Object dm, Designer dsgr) {
+  public boolean predicate2(Object dm, Designer dsgr) {
     if (!(dm instanceof Attribute)) return NO_PROBLEM;
     Attribute attr = (Attribute) dm;
     Name myName = attr.getName();

@@ -27,7 +27,7 @@
 // File: CrMultipleAgg.java.java
 // Classes: CrMultipleAgg.java
 // Original Author: jrobbins@ics.uci.edu
-// $Id: CrMultipleAgg.java,v 1.5 1998/07/02 02:55:55 jrobbins Exp $
+// $Id: CrMultipleAgg.java,v 1.6 1998/07/15 18:16:56 jrobbins Exp $
 
 package uci.uml.critics;
 
@@ -53,9 +53,7 @@ public class CrMultipleAgg extends CrUML {
     addSupportedDecision(CrUML.decCONTAINMENT);
   }
 
-  protected void sd(String s) { setDescription(s); }
-  
-  public boolean predicate(Object dm, Designer dsgr) {
+  public boolean predicate2(Object dm, Designer dsgr) {
     if (!(dm instanceof IAssociation)) return NO_PROBLEM;
     IAssociation asc = (IAssociation) dm;
     Vector conns = asc.getConnection();

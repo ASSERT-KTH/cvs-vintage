@@ -27,7 +27,7 @@
 // File: CrUselessAbstract.java
 // Classes: CrUselessAbstract
 // Original Author: jrobbins@ics.uci.edu
-// $Id: CrUselessAbstract.java,v 1.10 1998/07/02 02:56:05 jrobbins Exp $
+// $Id: CrUselessAbstract.java,v 1.11 1998/07/15 18:17:20 jrobbins Exp $
 
 package uci.uml.critics;
 
@@ -58,7 +58,7 @@ public class CrUselessAbstract extends CrUML {
     addSupportedGoal(Goal.UNSPEC);
   }
 
-  public boolean predicate(Object dm, Designer dsgr) {
+  public boolean predicate2(Object dm, Designer dsgr) {
     MMClass cls, c;
     if (!(dm instanceof MMClass)) return false;
     cls = (MMClass) dm;

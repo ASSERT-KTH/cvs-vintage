@@ -27,7 +27,7 @@
 // File: CrFinalSubclassed.java.java
 // Classes: CrFinalSubclassed.java
 // Original Author: jrobbins@ics.uci.edu
-// $Id: CrFinalSubclassed.java,v 1.9 1998/07/02 02:55:50 jrobbins Exp $
+// $Id: CrFinalSubclassed.java,v 1.10 1998/07/15 18:16:46 jrobbins Exp $
 
 package uci.uml.critics;
 
@@ -43,21 +43,19 @@ public class CrFinalSubclassed extends CrUML {
 
   public CrFinalSubclassed() {
     setHeadline("This class is subclassed from a class that is marked final");
-    sd("In Java, the keyword 'final' indicates that a class is not intended \n"+
+    sd("In Java, the keyword 'final' indicates that a class is not intended "+
        "to have subclasses. \n\n"+
-       "A well thought-out class inheritance hierarchy that conveys and \n"+
-       "supports intended extensions is an important part of achieving \n"+
+       "A well thought-out class inheritance hierarchy that conveys and "+
+       "supports intended extensions is an important part of achieving "+
        "an understandable and maintainable design.\n\n"+
-       "To fix this, use the FixIt button, or manually select the class and \n"+
-       "change its base class, or select the base class and use the properties \n"+
+       "To fix this, use the FixIt button, or manually select the class and "+
+       "change its base class, or select the base class and use the properties "+
        "tab to remove the 'final' keyword.");
 
     addSupportedDecision(CrUML.decINHERITANCE);
   }
 
-  protected void sd(String s) { setDescription(s); }
-  
-  public boolean predicate(Object dm, Designer dsgr) {
+  public boolean predicate2(Object dm, Designer dsgr) {
     if (!(dm instanceof GeneralizableElement)) return NO_PROBLEM;
     GeneralizableElement ge = (GeneralizableElement) dm;
     Vector bases = ge.getGeneralization();

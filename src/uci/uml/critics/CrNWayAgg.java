@@ -27,7 +27,7 @@
 // File: CrNWayAgg.java.java
 // Classes: CrNWayAgg.java
 // Original Author: jrobbins@ics.uci.edu
-// $Id: CrNWayAgg.java,v 1.8 1998/07/02 02:55:56 jrobbins Exp $
+// $Id: CrNWayAgg.java,v 1.9 1998/07/15 18:16:57 jrobbins Exp $
 
 package uci.uml.critics;
 
@@ -53,9 +53,7 @@ public class CrNWayAgg extends CrUML {
     addSupportedDecision(CrUML.decCONTAINMENT);
   }
 
-  protected void sd(String s) { setDescription(s); }
-  
-  public boolean predicate(Object dm, Designer dsgr) {
+  public boolean predicate2(Object dm, Designer dsgr) {
     if (!(dm instanceof IAssociation)) return NO_PROBLEM;
     IAssociation asc = (IAssociation) dm;
     Vector conns = asc.getConnection();

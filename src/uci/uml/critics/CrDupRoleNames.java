@@ -27,7 +27,7 @@
 // File: CrDupRoleNames.java
 // Classes: CrDupRoleNames
 // Original Author: jrobbins@ics.uci.edu
-// $Id: CrDupRoleNames.java,v 1.6 1998/07/02 02:55:48 jrobbins Exp $
+// $Id: CrDupRoleNames.java,v 1.7 1998/07/15 18:16:44 jrobbins Exp $
 
 package uci.uml.critics;
 
@@ -52,9 +52,7 @@ public class CrDupRoleNames extends CrUML {
     addSupportedDecision(CrUML.decNAMING);
   }
 
-  protected void sd(String s) { setDescription(s); }
-  
-  public boolean predicate(Object dm, Designer dsgr) {
+  public boolean predicate2(Object dm, Designer dsgr) {
     if (!(dm instanceof IAssociation)) return NO_PROBLEM;
     IAssociation asc = (IAssociation) dm;
     Vector conns = asc.getConnection();

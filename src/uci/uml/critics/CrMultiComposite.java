@@ -27,7 +27,7 @@
 // File: CrMultiComposite.java.java
 // Classes: CrMultiComposite.java
 // Original Author: jrobbins@ics.uci.edu
-// $Id: CrMultiComposite.java,v 1.6 1998/07/02 02:55:55 jrobbins Exp $
+// $Id: CrMultiComposite.java,v 1.7 1998/07/15 18:16:55 jrobbins Exp $
 
 package uci.uml.critics;
 
@@ -56,9 +56,7 @@ public class CrMultiComposite extends CrUML {
     addSupportedDecision(CrUML.decCONTAINMENT);
   }
 
-  protected void sd(String s) { setDescription(s); }
-
-  public boolean predicate(Object dm, Designer dsgr) {
+  public boolean predicate2(Object dm, Designer dsgr) {
     if (!(dm instanceof AssociationEnd)) return NO_PROBLEM;
     AssociationEnd ae = (AssociationEnd) dm;
     AggregationKind ak = ae.getAggregation();

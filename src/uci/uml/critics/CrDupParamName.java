@@ -27,7 +27,7 @@
 // File: CrDupParamName.java.java
 // Classes: CrDupParamName.java
 // Original Author: jrobbins@ics.uci.edu
-// $Id: CrDupParamName.java,v 1.5 1998/07/02 02:55:48 jrobbins Exp $
+// $Id: CrDupParamName.java,v 1.6 1998/07/15 18:16:43 jrobbins Exp $
 
 package uci.uml.critics;
 
@@ -45,17 +45,15 @@ public class CrDupParamName extends CrUML {
   public CrDupParamName() {
     setHeadline("Duplicate Parameter Name");
     sd("Each parameter of an operation must have a unique name. \n\n"+
-       "Clean and unambigous naming is needed for code generation and to \n"+
+       "Clean and unambigous naming is needed for code generation and to "+
        "achieve clear and maintainable designs.\n\n"+
-       "To fix this, use the FixIt button, or manually rename one of the \n"+
+       "To fix this, use the FixIt button, or manually rename one of the "+
        "parameters to this operation.");
 
     addSupportedDecision(CrUML.decCONTAINMENT);
   }
 
-  protected void sd(String s) { setDescription(s); }
-  
-  public boolean predicate(Object dm, Designer dsgr) {
+  public boolean predicate2(Object dm, Designer dsgr) {
     if (!(dm instanceof BehavioralFeature)) return NO_PROBLEM;
     BehavioralFeature bf = (BehavioralFeature) dm;
     Vector params = bf.getParameter();

@@ -27,7 +27,7 @@
 // File: CrReservedName.java.java
 // Classes: CrReservedName.java
 // Original Author: jrobbins@ics.uci.edu
-// $Id: CrReservedName.java,v 1.4 1998/07/02 02:56:01 jrobbins Exp $
+// $Id: CrReservedName.java,v 1.5 1998/07/15 18:17:12 jrobbins Exp $
 
 package uci.uml.critics;
 
@@ -185,12 +185,10 @@ public class CrReservedName extends CrUML {
     setPriority(ToDoItem.HIGH_PRIORITY);
   }
 
-  protected void sd(String s) { setDescription(s); }
-
   ////////////////////////////////////////////////////////////////
   // Critic implementation
   
-  public boolean predicate(Object dm, Designer dsgr) {
+  public boolean predicate2(Object dm, Designer dsgr) {
     if (!(dm instanceof ModelElement)) return NO_PROBLEM;
     ModelElement me = (ModelElement) dm;
     Name meName = me.getName();

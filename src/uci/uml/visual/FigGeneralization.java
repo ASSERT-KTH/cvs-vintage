@@ -27,7 +27,7 @@
 // File: FigGeneralization.java
 // Classes: FigGeneralization
 // Original Author: abonner@ics.uci.edu
-// $Id: FigGeneralization.java,v 1.6 1998/07/02 02:57:19 jrobbins Exp $
+// $Id: FigGeneralization.java,v 1.7 1998/07/15 18:18:03 jrobbins Exp $
 
 
 package uci.uml.visual;
@@ -54,11 +54,12 @@ public class FigGeneralization extends FigEdgeLine {
   public void dispose() {
     if (!(getOwner() instanceof Generalization)) return;
     Generalization gen = (Generalization) getOwner();
+    if (gen == null) return;
     Project p = ProjectBrowser.TheInstance.getProject();
     p.moveToTrash(gen);
     super.dispose();
   }
-  
+
 
 } /* end class FigGeneralization */
 
