@@ -29,6 +29,7 @@ import org.jboss.system.ServiceMBeanSupport;
 import org.jboss.util.threadpool.ThreadPool;
 import org.jboss.util.threadpool.BasicThreadPoolMBean;
 import org.jnp.interfaces.Naming;
+import org.jnp.interfaces.MarshalledValuePair;
 import org.jnp.server.Main;
 
 /**
@@ -37,7 +38,7 @@ import org.jnp.server.Main;
  * @author <a href="mailto:rickard.oberg@telkel.com">Rickard �berg</a>
  * @author <a href="mailto:Scott.Stark@jboss.org">Scott Stark</a>.
  * @author <a href="mailto:andreas@jboss.org">Andreas Schaefer</a>.
- * @version $Revision: 1.44 $
+ * @version $Revision: 1.45 $
  *
  * @jmx:mbean name="jboss:service=Naming"
  *            extends="org.jboss.system.ServiceMBean, org.jnp.server.MainMBean"
@@ -64,6 +65,28 @@ public class NamingService
    {
       ThreadPool lookupPool = poolMBean.getInstance();
       naming.setLookupPool(lookupPool);
+   }
+
+   /** Get the call by value flag for jndi lookups.
+    * 
+    * @jmx:managed-attribute
+    * @return true if all lookups are unmarshalled using the caller's TCL,
+    *    false if in VM lookups return the value by reference.
+    */ 
+   public boolean getCallByValue()
+   {
+      return MarshalledValuePair.getEnableCallByReference() == false;
+   }
+   /** Set the call by value flag for jndi lookups.
+    *
+    * @jmx:managed-attribute
+    * @param flag - true if all lookups are unmarshalled using the caller's TCL,
+    *    false if in VM lookups return the value by reference.
+    */
+   public void setCallByValue(boolean flag)
+   {
+      boolean callByValue = ! flag;
+      MarshalledValuePair.setEnableCallByReference(callByValue);
    }
 
    public void setPort(int port)
