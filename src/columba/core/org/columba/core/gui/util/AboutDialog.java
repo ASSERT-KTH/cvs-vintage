@@ -13,6 +13,7 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
 //
 //All Rights Reserved.
+
 package org.columba.core.gui.util;
 
 import org.columba.core.main.MainInterface;
@@ -21,45 +22,35 @@ import org.columba.core.util.GlobalResourceLoader;
 import org.columba.mail.gui.util.AddressLabel;
 import org.columba.mail.gui.util.URLLabel;
 
-import java.awt.BorderLayout;
-import java.awt.Component;
-import java.awt.Dimension;
-import java.awt.Font;
-import java.awt.GridBagConstraints;
-import java.awt.GridBagLayout;
-import java.awt.Insets;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
+
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
+import java.io.StringWriter;
 
 import java.net.MalformedURLException;
 import java.net.URL;
 
 import java.text.NumberFormat;
 
-import javax.swing.BorderFactory;
-import javax.swing.Box;
-import javax.swing.JButton;
-import javax.swing.JComponent;
-import javax.swing.JDialog;
-import javax.swing.JFormattedTextField;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JList;
-import javax.swing.JPanel;
-import javax.swing.JProgressBar;
-import javax.swing.JScrollPane;
-import javax.swing.JTabbedPane;
-import javax.swing.KeyStroke;
-import javax.swing.SwingUtilities;
-import javax.swing.UIManager;
+import javax.swing.*;
 
-
+/**
+ * This dialog shows information about Columba.
+ */
 public class AboutDialog extends JDialog implements ActionListener {
     public static final String CMD_CLOSE = "CLOSE";
     private static final String RESOURCE_BUNDLE_PATH = "org.columba.core.i18n.dialog";
     protected static AboutDialog instance;
 
+    /**
+     * Creates a new dialog. This constructor is protected because it should
+     * only get called from the static getInstance() method.
+     */
     protected AboutDialog() {
         super((JFrame) null,
             GlobalResourceLoader.getString(RESOURCE_BUNDLE_PATH, "about",
@@ -139,18 +130,16 @@ public class AboutDialog extends JDialog implements ActionListener {
         c.gridwidth = GridBagConstraints.REMAINDER;
         authorPanel.add(websiteUrl, c);
 
-        //TODO: i18n
         tabbedPane.addTab(GlobalResourceLoader.getString(RESOURCE_BUNDLE_PATH,
                 "about", "authorsPane"), authorPanel);
 
         JPanel contributorPanel = new JPanel(new BorderLayout(0, 5));
-        contributorPanel.setBorder(BorderFactory.createEmptyBorder(12, 12, 11,
-                11));
+        contributorPanel.setBorder(
+                BorderFactory.createEmptyBorder(12, 12, 11, 11));
 
         JLabel contributorLabel = new JLabel(GlobalResourceLoader.getString(
                     RESOURCE_BUNDLE_PATH, "about", "contributorLabel"));
         contributorPanel.add(contributorLabel, BorderLayout.NORTH);
-
         JList contributorList = new JList(new String[] {
                     "Thomas Wabner", "Karl Peder Olesen", "Eric Mattsson",
                     "Riyad Kalla", "Michael Rudolf", "Luca Santarelli",
@@ -162,21 +151,38 @@ public class AboutDialog extends JDialog implements ActionListener {
                 });
         contributorLabel.setLabelFor(contributorList);
         contributorPanel.add(new JScrollPane(contributorList));
-
         tabbedPane.addTab(GlobalResourceLoader.getString(RESOURCE_BUNDLE_PATH,
                 "about", "contributorPane"), contributorPanel);
+        
+        String licenseText = "The license text could not be found. " +
+                "Please check the Columba directory for a file called LICENSE.";
+        try {
+            StringWriter writer = new StringWriter();
+            char[] buffer = new char[1024];
+            int read;
+            BufferedReader reader = new BufferedReader(new FileReader("LICENSE"));
+            while ((read = reader.read(buffer, 0, buffer.length)) > 0) {
+                writer.write(buffer, 0, read);
+            }
+            licenseText = writer.toString();
+            reader.close();
+        } catch (NullPointerException npe) {
+        } catch (IOException ioe) {}
+        JTextArea licenseTextArea = new JTextArea(licenseText);
+        licenseTextArea.setEditable(false);
+        JPanel licensePanel = new JPanel(new BorderLayout());
+        licensePanel.setBorder(BorderFactory.createEmptyBorder(12, 12, 11, 11));
+        licensePanel.add(new JScrollPane(licenseTextArea));
+        tabbedPane.addTab(GlobalResourceLoader.getString(RESOURCE_BUNDLE_PATH,
+                "about", "license"), licensePanel);
 
         if (MainInterface.DEBUG) {
             tabbedPane.addTab("Memory", new MemoryPanel());
         }
 
-        JPanel center = new JPanel();
-        center.setLayout(new BorderLayout());
-        center.setBorder(BorderFactory.createEmptyBorder(12, 12, 12, 12));
-
-        center.add(tabbedPane, BorderLayout.CENTER);
-
-        getContentPane().add(center, BorderLayout.CENTER);
+        ((JPanel)getContentPane()).setBorder(
+                BorderFactory.createEmptyBorder(12, 12, 12, 12));
+        getContentPane().add(tabbedPane);
 
         JPanel buttonPanel = new JPanel(new BorderLayout(0, 0));
         buttonPanel.setBorder(BorderFactory.createEmptyBorder(5, 12, 11, 11));
@@ -195,6 +201,9 @@ public class AboutDialog extends JDialog implements ActionListener {
         setLocationRelativeTo(null);
     }
 
+    /**
+     * Called when the user clicks the "Close" button.
+     */
     public void actionPerformed(ActionEvent e) {
         if (CMD_CLOSE.equals(e.getActionCommand())) {
             setVisible(false);
