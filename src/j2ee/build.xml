@@ -1,0 +1,84 @@
+<?xml version="1.0"?> 
+
+<!-- Emacs indentation & editting support
+    <antstructure output="ant.dtd"/>
+<!DOCTYPE ant SYSTEM "ant.dtd" >
+-->
+
+<!-- Builds the j2ee adapter ( allowing tomcat to act as j2ee web server ) -->
+<!-- 
+Important!
+
+All paths are relative to "basedir". 
+There are 2 ways to run this:
+1. in src/j2ee. 
+   basedir== "." ==  src/j2ee 
+   All paths are relative to this value.
+
+2. included in the main build.xml. 
+   basedir=="." == jararta-tomcat/ ( i.e. the root dir of srcs)
+   The properties are already defined in the main build.xml, all 
+   values relative to src/j2ee are ignored ( properties are read-only
+   after definition, as in xsl )
+
+-->
+
+<project name="Tomcat-j2ee" default="main" basedir=".">
+
+  <!-- Compilation properties -->
+
+  <property name="build.compiler" value="classic"/>
+  <property name="optimize" value="false" />
+  <property name="debug" value="off" />
+
+  <!-- Directories -->
+
+  <property name="tomcat.build" value="../../../build/tomcat"/>
+  <property name="tomcat.home" value="../../../dist/tomcat"/>
+
+
+  <!-- External packages we depend on -->
+
+  <property name="j2ee.home" value="../../../j2ee/build/unix"/>
+
+  <!-- Other properties -->
+  <property name="tomcat.classpath"
+     value="${tomcat.build}/lib/servlet.jar;${tomcat.build}/lib/tomcat_core.jar" />
+  <property name="j2ee.classpath" 
+     value="${tomcat.classpath};${j2ee.home}/lib/classes;${j2ee.home}/lib/j2ee.jar;${tomcat.build}/lib/facade.jar" />
+  
+  <!-- ==================== J2EE integration ========== -->
+  <target name="j2ee" depends="tomcat-j2ee.jar" />
+
+  <target name="j2ee-dist" depends="tomcat-j2ee.jar" />
+
+  <target name="tomcat-j2ee.jar" >
+    <javac srcdir="." 
+      optimize="${optimize}"
+      classpath="${j2ee.classpath}"
+      destdir="${tomcat.build}/classes"
+      debug="${debug}" >
+      <include name="org/apache/**" />
+    </javac>
+    <copydir src="." 
+      dest="${tomcat.build}/classes">
+      <include name="**/*.properties" />
+    </copydir>
+    <jar jarfile="${tomcat.build}/lib/tomcat-j2ee.jar"
+      basedir="${tomcat.build}/classes" >
+      <include name="org/apache/tomcat/deployment/**" />
+      <include name="org/apache/tomcat/j2ee/**" />
+      <include name="org/apache/tomcat/util/XMLParser.class" />
+      <include name="org/apache/tomcat/util/XMLTree.class" />
+    </jar> 
+    <delete dir="${tomcat.build}/classes" >
+      <include name="org/apache/tomcat/deployment/**" />
+      <include name="org/apache/tomcat/j2ee/**" />
+      <include name="org/apache/tomcat/util/XMLParser.class" />
+      <include name="org/apache/tomcat/util/XMLTree.class" />
+    </delete>
+  </target>
+
+  <target name="main" depends="tomcat-j2ee.jar"/>
+    
+</project>

@@ -361,32 +361,8 @@
   </target>
 
   <!-- ==================== J2EE integration ========== -->
-  <target name="j2ee" depends="tomcat,tomcat-j2ee.jar" />
-  <target name="j2ee-dist" depends="tomcat,tomcat-j2ee.jar" />
-
-  <target name="tomcat-j2ee.jar" >
-    <javac srcdir="src/j2ee" 
-      optimize="${optimize}"
-      destdir="${tomcat.build}/classes"
-      classpath="${servlet22.jar};${j2ee.home}/lib/classes;${j2ee.home}/lib/j2ee.jar" 
-      debug="${debug}" />
-    <copydir src="src/j2ee" 
-      dest="${tomcat.build}/classes">
-      <include name="**/*.properties" />
-    </copydir>
-    <jar jarfile="${tomcat.build}/lib/tomcat-j2ee.jar"
-      basedir="${tomcat.build}/classes" >
-      <include name="org/apache/tomcat/deployment/**" />
-      <include name="org/apache/tomcat/j2ee/**" />
-      <include name="org/apache/tomcat/util/XMLParser.class" />
-      <include name="org/apache/tomcat/util/XMLTree.class" />
-    </jar> 
-    <delete dir="${tomcat.build}/classes" >
-      <include name="org/apache/tomcat/deployment/**" />
-      <include name="org/apache/tomcat/j2ee/**" />
-      <include name="org/apache/tomcat/util/XMLParser.class" />
-      <include name="org/apache/tomcat/util/XMLTree.class" />
-    </delete>
+  <target name="j2ee" >
+    <ant antfile="src/j2ee/build.xml" target="tomcat-j2ee.jar" />
   </target>
 
   <!-- ==================== Build all web applications ==================== -->

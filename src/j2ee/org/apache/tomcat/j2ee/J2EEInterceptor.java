@@ -6,7 +6,6 @@ import org.apache.tomcat.core.*;
 import com.sun.web.server.*;
 
 import com.sun.enterprise.util.JarClassLoader;
-import org.apache.tomcat.loader.AdaptiveClassLoader;
 
 import java.net.URL;
 import java.net.InetAddress;
@@ -29,6 +28,10 @@ import com.sun.enterprise.deployment.WebBundleDescriptor;
 
 import org.apache.tomcat.deployment.*;
 import org.apache.tomcat.util.*;
+
+// depends on servlet 2.2
+import org.apache.tomcat.facade.*;
+import org.apache.tomcat.helper.*;
 
 /**
  * Adapter for j2ee.
@@ -72,10 +75,12 @@ public class J2EEInterceptor extends BaseInterceptor {
     
     public int preService(Request request, Response response) {
 	Context ctx = request.getContext();
-	ServletWrapper sw=request.getWrapper();
+	Handler sw=request.getWrapper();
+	if( ! (sw instanceof ServletWrapper) )
+	    return 0;
 	try {
 	    invM.preServletInvoke( ctx.getFacade(),
-				   sw.getServlet(), 
+				   ((ServletWrapper)sw).getServlet(), 
 				   request.getFacade(),
 				   response.getFacade() );
 	} catch(Exception ex ) {
@@ -85,9 +90,12 @@ public class J2EEInterceptor extends BaseInterceptor {
     }
     public int postService(Request request, Response response) {
 	Context ctx = request.getContext();
-	ServletWrapper sw=request.getWrapper();
+	Handler sw=request.getWrapper();
+	if( ! (sw instanceof ServletWrapper) )
+	    return 0;
 	try {
-	    invM.postServletInvoke( ctx.getFacade(), sw.getServlet(), 
+	    invM.postServletInvoke( ctx.getFacade(),
+				    ((ServletWrapper)sw).getServlet(), 
 				    request.getFacade(),
 				    response.getFacade() );
 	    intLogRequest( request.getContext().getPath(),
@@ -235,7 +243,8 @@ public class J2EEInterceptor extends BaseInterceptor {
 
 	String realm="default";  //ctx.getRealmName();
 
-	ServletWrapper sw=req.getWrapper();
+	Handler h=req.getWrapper();
+	ServletWrapper sw=(ServletWrapper)h;
 	String mappedRole=null;
 	String role=null;
 	for( int i=0; i< roles.length ; i++ ) {
