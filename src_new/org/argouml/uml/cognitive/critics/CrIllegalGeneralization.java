@@ -26,7 +26,7 @@
 // File: CrIllegalGeneralization.java
 // Classes: CrIllegalGeneralization
 // Original Author: jrobbins@ics.uci.edu
-// $Id: CrIllegalGeneralization.java,v 1.2 2002/02/25 08:37:50 linus Exp $
+// $Id: CrIllegalGeneralization.java,v 1.3 2003/01/06 10:40:36 mkl Exp $
 
 package org.argouml.uml.cognitive.critics;
 
@@ -37,7 +37,10 @@ import ru.novosoft.uml.foundation.core.*;
 import org.argouml.cognitive.*;
 
 /** Well-formedness rule [1] for MGeneralization. See page 32 of UML 1.1
- *  Semantics. OMG document ad/97-08-04. */
+ *  Semantics. OMG document ad/97-08-04.
+ *  This critic checks that the parent and child in a generalization are
+ *  of the same metatype.
+ */
 
 public class CrIllegalGeneralization extends CrUML {
 
