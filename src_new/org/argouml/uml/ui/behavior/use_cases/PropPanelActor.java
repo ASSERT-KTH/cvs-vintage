@@ -24,7 +24,7 @@
 // File: PropPanelActor.java
 // Classes: PropPanelActor
 // Original Author: jrobbins@ics.uci.edu
-// $Id: PropPanelActor.java,v 1.14 2002/09/08 21:03:56 kataka Exp $
+// $Id: PropPanelActor.java,v 1.15 2002/09/09 21:59:23 kataka Exp $
 
 // 21 Mar 2002: Jeremy Bennett (mail@jeremybennett.com). Changed to use the
 // labels "Generalizes:" and "Specializes:" for inheritance.
@@ -91,6 +91,11 @@ public class PropPanelActor extends PropPanelClassifier {
     	addField(Argo.localize("UMLMenu", "label.specializations"), derivedScroll);
     	
     	add(LabelledLayout.getSeperator());
+    	
+    	JList connectList = new UMLList(new UMLActorAssociationListModel(this,null,true),true);
+      	connectList.setForeground(Color.blue);
+      	connectList.setVisibleRowCount(3);
+      	connectScroll= new JScrollPane(connectList,JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
     	
     	addField(Argo.localize("UMLMenu", "label.associations"), connectScroll);
     	/*
