@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/jasper/JspCompilationContext.java,v 1.1 2000/01/24 05:54:50 shemnon Exp $
- * $Revision: 1.1 $
- * $Date: 2000/01/24 05:54:50 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/jasper/JspCompilationContext.java,v 1.2 2000/01/24 19:14:06 rubys Exp $
+ * $Revision: 1.2 $
+ * $Date: 2000/01/24 19:14:06 $
  *
  * ====================================================================
  * 
@@ -71,9 +71,6 @@ import org.apache.jasper.runtime.JspLoader;
 import org.apache.jasper.compiler.TagLibraries;
 
 import org.apache.jasper.compiler.Compiler;
-import org.apache.jasper.compiler.JspCompiler;
-import org.apache.jasper.compiler.SunJavaCompiler;
-import org.apache.jasper.compiler.PluginJavaCompiler;
 
 /**
  * A place holder for various things that are used through out the JSP
