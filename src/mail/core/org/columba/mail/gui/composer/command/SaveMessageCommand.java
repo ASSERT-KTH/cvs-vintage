@@ -19,7 +19,6 @@ package org.columba.mail.gui.composer.command;
 
 import org.columba.core.command.DefaultCommandReference;
 import org.columba.core.command.Worker;
-
 import org.columba.mail.command.ComposerCommandReference;
 import org.columba.mail.command.FolderCommand;
 import org.columba.mail.composer.MessageComposer;
@@ -31,13 +30,7 @@ import org.columba.mail.gui.composer.ComposerModel;
 import org.columba.mail.gui.frame.TableUpdater;
 import org.columba.mail.gui.table.model.TableModelChangedEvent;
 import org.columba.mail.main.MailInterface;
-
-import org.columba.ristretto.imap.protocol.StreamUtils;
 import org.columba.ristretto.message.HeaderInterface;
-import org.columba.ristretto.message.io.FileSource;
-
-import java.io.File;
-import java.io.FileOutputStream;
 
 
 /**
@@ -89,27 +82,6 @@ public class SaveMessageCommand extends FolderCommand {
 
         folder = (Folder) r[0].getFolder();
 
-        if (folder.getUid() == 103) {
-            // Outbox folder hack!
-            // -> this is necessary because SendableMessage contains
-            // -> additional information (like recipients list) which
-            // -> would get lost otherwise
-            File tempFile = File.createTempFile("columba-outbox", "tmp");
-
-            //	make sure file is deleted automatically when closing VM
-            tempFile.deleteOnExit();
-
-            FileOutputStream out = new FileOutputStream(tempFile);
-            StreamUtils.streamCopy(message.getSourceStream(), out);
-            out.close();
-
-            message.setSource(new FileSource(tempFile));
-
-            Object uid = folder.addMessage(message);
-        } else {
-            // we can't use this addMessage(message) here
-            // -> IMAP only supports adding sources
-            Object uid = folder.addMessage(message.getSourceStream());
-        }
+        folder.addMessage(message.getSourceStream(), message.getHeader().getAttributes());
     }
 }

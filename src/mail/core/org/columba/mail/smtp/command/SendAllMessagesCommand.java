@@ -83,7 +83,7 @@ public class SendAllMessagesCommand extends FolderCommand {
         // save every message in a list
         for (int i = 0; i < uids.length; i++) {
             if (outboxFolder.exists(uids[i]) == true) {
-                SendableMessage message = (SendableMessage) outboxFolder.getMessage(uids[i]);
+                SendableMessage message = outboxFolder.getSendableMessage(uids[i]);
                 sendListManager.add(message);
             }
         }

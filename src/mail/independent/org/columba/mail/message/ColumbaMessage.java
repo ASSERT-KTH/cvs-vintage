@@ -74,6 +74,13 @@ public class ColumbaMessage {
         message = m;
     }
 
+    public ColumbaMessage(ColumbaMessage m) {
+        this.columbaHeader = m.columbaHeader;
+        this.flags = m.flags;
+        this.message = m.message;
+        this.bodyPart = m.bodyPart;
+    }
+    
     public String getStringSource() {
         return getSource().toString();
     }

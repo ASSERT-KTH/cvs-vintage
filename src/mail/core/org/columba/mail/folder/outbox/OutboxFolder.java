@@ -17,7 +17,8 @@
 //All Rights Reserved.
 package org.columba.mail.folder.outbox;
 
-import org.columba.core.logging.ColumbaLogger;
+import java.io.InputStream;
+import java.util.List;
 
 import org.columba.mail.composer.SendableMessage;
 import org.columba.mail.config.FolderItem;
@@ -29,12 +30,7 @@ import org.columba.mail.folder.mh.CachedMHFolder;
 import org.columba.mail.message.ColumbaHeader;
 import org.columba.mail.message.ColumbaMessage;
 import org.columba.mail.message.SendableHeader;
-
-import org.columba.ristretto.message.io.CharSequenceSource;
-import org.columba.ristretto.parser.MessageParser;
-
-import java.util.List;
-import java.util.Vector;
+import org.columba.ristretto.message.Attributes;
 
 
 /**
@@ -69,29 +65,10 @@ public class OutboxFolder extends CachedMHFolder {
         return headerCache;
     }
 
-    public ColumbaMessage getMessage(Object uid) throws Exception {
-        if (aktMessage != null) {
-            if (aktMessage.getUID().equals(uid)) {
-                // this message is already cached
-                ColumbaLogger.log.fine("using already cached message..");
-
-                return aktMessage;
-            }
-        }
-
-        String source = getMessageSource(uid);
-
-        ColumbaMessage message = new ColumbaMessage(MessageParser.parse(
-                    new CharSequenceSource(source)));
-        message.setUID(uid);
-
-        SendableHeader header = (SendableHeader) getHeaderList().get(uid);
-        SendableMessage sendableMessage = new SendableMessage();
-        sendableMessage.setHeader(header);
-        sendableMessage.setMimePartTree(message.getMimePartTree());
-        sendableMessage.setStringSource(source);
-
-        aktMessage = sendableMessage;
+    public SendableMessage getSendableMessage(Object uid) throws Exception {
+        ColumbaMessage message = getMessage(uid);
+        
+        SendableMessage sendableMessage = new SendableMessage(message);
 
         return sendableMessage;
     }
@@ -165,20 +142,31 @@ public class OutboxFolder extends CachedMHFolder {
         protected void loadHeader(ColumbaHeader h) throws Exception {
             super.loadHeader(h);
 
-            int accountUid = ((Integer) reader.readObject()).intValue();
-            ((SendableHeader) h).setAccountUid(accountUid);
+            Integer accountUid = (Integer) reader.readObject();
+            h.getAttributes().put("columba.accountuid",accountUid);
 
-            List recipients = (Vector) reader.readObject();
-            ((SendableHeader) h).setRecipients(recipients);
+            List recipients = (List) reader.readObject();
+            h.getAttributes().put("columba.recipients",recipients);;
         }
 
         protected void saveHeader(ColumbaHeader h) throws Exception {
             super.saveHeader(h);
 
-            writer.writeObject(new Integer(((SendableHeader) h).getAccountUid()));
+            writer.writeObject(h.getAttributes().get("columba.accountuid"));
 
-            writer.writeObject(((SendableHeader) h).getRecipients());
+            writer.writeObject(h.getAttributes().get("columba.recipients"));
         }
+    }
+
+    /**
+     * @see org.columba.mail.folder.MailboxInterface#addMessage(java.io.InputStream, org.columba.ristretto.message.Attributes)
+     */
+    public Object addMessage(InputStream in, Attributes attributes)
+        throws Exception {
+        Object uid = super.addMessage(in, attributes);
+        setAttribute(uid, "columba.recipients", attributes.get("columba.recipients"));
+        
+        return uid;
     }
 
 }

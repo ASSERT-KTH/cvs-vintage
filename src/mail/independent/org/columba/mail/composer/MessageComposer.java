@@ -79,6 +79,8 @@ public class MessageComposer {
             header.set("Bcc", ListParser.parse(model.getBccList()));
         }
 
+        header.set("columba.subject", model.getSubject());
+        
         header.set("Subject",
             EncodedWord.encode(model.getSubject(),
                 Charset.forName(model.getCharsetName()),
@@ -132,29 +134,7 @@ public class MessageComposer {
         header.set("X-Mailer",
             "Columba v" + org.columba.core.main.MainInterface.version);
 
-        // shortFrom
-        /*
-        String shortFrom = model.getHeaderField("From");
-        if (shortFrom != null) {
-                if (shortFrom.indexOf("<") != -1) {
-                        shortFrom = shortFrom.substring(0, shortFrom.indexOf("<"));
-                        if (shortFrom.length() > 0) {
-                                if (shortFrom.startsWith("\""))
-                                        shortFrom =
-                                                shortFrom.substring(1, shortFrom.length() - 1);
-                                if (shortFrom.endsWith("\""))
-                                        shortFrom =
-                                                shortFrom.substring(0, shortFrom.length() - 1);
-                        }
-
-                }
-
-                header.set("columba.from", shortFrom);
-        } else {
-                header.set("columba.from", new String(""));
-        }
-        */
-        header.set("columba.from", new Address(identity.get("address")));
+         header.set("columba.from", new Address(identity.get("address")));
 
         // date
         Date date = new Date();
@@ -549,16 +529,7 @@ public class MessageComposer {
         root.getHeader().getHeader().merge(header.getHeader());
 
         InputStream in = renderer.renderMimePart(root);
-
-        /*
-        int next = in.read();
-        while (next != -1) {
-                composedMessage.append((char) next);
-                next = in.read();
-        }
-        message.setStringSource(composedMessage.toString());
-        ColumbaLogger.log.info("Message:\n" + composedMessage.toString());
-        */
+        
         message.setSourceStream(in);
 
         //StreamUtils.streamCopy(message.getSourceStream(), System.out);
@@ -573,78 +544,5 @@ public class MessageComposer {
         return message;
     }
 
-    /*
-            private String createBoundary() {
-                    StringBuffer bound = new StringBuffer();
 
-                    bound.append("-----");
-                    bound.append(System.currentTimeMillis());
-                    bound.append(model.getHeaderField("From"));
-
-                    return bound.toString();
-            }
-
-            private String createMimeMultipart(Vector input) {
-                    StringBuffer output = new StringBuffer();
-                    bound = createBoundary();
-                    MimeHeader multiHeader = new MimeHeader("multipart", "mixed");
-                    multiHeader.contentParameter.put(
-                            "boundary",
-                            new String("\"" + bound + "\""));
-
-                    output.append(multiHeader.getHeader());
-                    output.append(
-                            "\n\tThis is a Mime Multipart Message sent with Columba\n");
-
-                    int count = input.size();
-
-                    for (int i = 0; i < count; i++) {
-                            output.append("\n--" + bound + "\n");
-                            //output.append(((MimePart)input.get(i)).composeToString());
-                    }
-
-                    output.append("\n--" + bound + "--");
-
-                    return output.toString();
-            }
-
-            private String createEncryptedMimePart(MimePartTree input) {
-                    if (input.count() > 1)
-                            return createEncryptedMimeMultipart(input);
-
-                    StringBuffer output = new StringBuffer();
-                    MimePart actPart = input.get(0);
-
-                    //return actPart.composeToString();
-                    return null;
-            }
-
-            private String createEncryptedMimeMultipart(MimePartTree input) {
-
-                    StringBuffer output = new StringBuffer();
-                    MimeHeader multiHeader = new MimeHeader("multipart", "encrypted");
-                    multiHeader.contentParameter.put(
-                            "protocol",
-                            "\"application/pgp-encrypted\"");
-                    bound = bound.substring(2, bound.length());
-                    multiHeader.contentParameter.put(
-                            "boundary",
-                            new String("\"" + bound + "\""));
-
-                    output.append(multiHeader.getHeader());
-                    output.append(
-                            "\n\tThis is a Mime Multipart Message sent with Columba\n");
-
-                    int count = input.count();
-
-                    for (int i = 0; i < count; i++) {
-                            output.append("\n--" + bound + "\n");
-                            //output.append(input.get(i).composeToString());
-                    }
-
-                    output.append("\n--" + bound + "--");
-
-                    return output.toString();
-            }
-    */
 }
