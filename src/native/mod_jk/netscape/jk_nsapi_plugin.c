@@ -56,7 +56,7 @@
 /***************************************************************************
  * Description: NSAPI plugin for Netscape servers                          *
  * Author:      Gal Shachor <shachor@il.ibm.com>                           *
- * Version:     $Revision: 1.1 $                                               *
+ * Version:     $Revision: 1.2 $                                               *
  ***************************************************************************/
 
 
@@ -188,7 +188,9 @@ static int JK_METHOD ws_read(jk_ws_service_t *s,
             unsigned i;
             netbuf *inbuf = p->sn->inbuf;
 
-#ifdef netbuf_getbytes
+/* Until we get a service pack for NW5.1 and earlier that has the latest */
+/* Enterprise Server, we have to go through the else version of this code*/
+#if defined(netbuf_getbytes) && !defined(NETWARE) 
             i = netbuf_getbytes(inbuf, b, l);
             if(NETBUF_EOF == i || NETBUF_ERROR == i) {
                 return JK_FALSE;
