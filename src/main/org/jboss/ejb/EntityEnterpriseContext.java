@@ -14,7 +14,6 @@ import javax.ejb.EntityBean;
 import javax.ejb.EntityContext;
 
 import javax.transaction.Transaction;
-import org.jboss.util.FastKey;
 
 /**
 *	The EntityEnterpriseContext is used to associate EntityBean instances with metadata about it.
@@ -22,7 +21,7 @@ import org.jboss.util.FastKey;
 *	@see EnterpriseContext
 *	@author Rickard Öberg (rickard.oberg@telkel.com)
 *   @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
-*	@version $Revision: 1.7 $
+*	@version $Revision: 1.8 $
 */
 public class EntityEnterpriseContext
 extends EnterpriseContext
@@ -44,12 +43,9 @@ extends EnterpriseContext
     
     // The persistence manager may attach any metadata it wishes to this context here
     Object persistenceCtx;
-    
-    // This is ONLY used at construction time.  The association from FastKey to EEC
-    // Is a many to one.  the one held here uses the EEC as a "vehicle" nothing more
-    // It usually corresponds to the FastKey of the EJBObject that build it.
-    // It is pretty and we keep the API of the cache.
-    public FastKey fastKey;
+	
+	//The cacheKey for this context
+	CacheKey key;
     
     // Constructors --------------------------------------------------
     public EntityEnterpriseContext(Object instance, Container con)
@@ -78,6 +74,13 @@ extends EnterpriseContext
        return ejbObject; 
     }
     
+	public void setCacheKey(Object key) {
+		this.key = (CacheKey) key;
+	}
+	
+	public CacheKey getCacheKey() {
+		return key;
+	}
     
     public void setPersistenceContext(Object ctx) 
     { 
@@ -121,16 +124,6 @@ extends EnterpriseContext
        return valid; 
     }
     
-    public void setFastKey(FastKey fastKey) {
-    
-        this.fastKey = fastKey;   
-    }
-    
-    public FastKey getFastKey() {
-        
-        return fastKey;   
-    }
-    
     
     // Inner classes -------------------------------------------------
     protected class EntityContextImpl
@@ -143,7 +136,10 @@ extends EnterpriseContext
          
           try {
               
-              ejbObject = ((EntityContainer)con).getContainerInvoker().getEntityEJBObject(new FastKey(id)); 
+			  // Create a new CacheKey
+			  Object cacheKey = ((EntityInstanceCache) ((EntityContainer) con).getInstanceCache()).createCacheKey( id );
+        
+			  ejbObject = ((EntityContainer)con).getContainerInvoker().getEntityEJBObject(cacheKey); 
           }
               catch (RemoteException re) {
               // ...
