@@ -89,7 +89,7 @@ import org.apache.turbine.Log;
  * implementation needs.
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: ScarabUserImpl.java,v 1.42 2002/01/11 22:33:02 jmcnally Exp $
+ * @version $Id: ScarabUserImpl.java,v 1.43 2002/01/16 01:30:24 jon Exp $
  */
 public class ScarabUserImpl 
     extends BaseScarabUserImpl 
@@ -204,7 +204,7 @@ public class ScarabUserImpl
             {
                 return true;
             }
-            
+
             // FIXME: once i figure out how to build an OR in a Criteria i 
             // won't need this.
             // We check to see if the user is already confirmed because that
@@ -223,9 +223,7 @@ public class ScarabUserImpl
             return false;
         }
     }
-    
-    
-    
+
     /**
      This method will mark username as confirmed.
      returns true on success and false on any error
