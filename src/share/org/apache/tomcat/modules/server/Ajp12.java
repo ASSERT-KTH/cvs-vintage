@@ -282,6 +282,13 @@ class Ajp12 {
 				// that stopping everything doesn't work -
 				// need to figure
 				// out what happens with the threads ( XXX )
+                                // until we remove the System.exit() call we
+                                // also need to close the socket to allow the
+                                // underlying layer to shutdown the connection
+                                // properly.  Setting soLinger small will
+                                // speed this up.
+                                socket.setSoLinger(true, 0);
+                                sin.close();
 				System.exit(0);
 				shutdown=true;
 				return;
