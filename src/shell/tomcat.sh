@@ -1,6 +1,6 @@
 #!/bin/sh
 #
-# $Id: tomcat.sh,v 1.29 2001/09/17 04:59:32 costin Exp $
+# $Id: tomcat.sh,v 1.30 2001/09/20 03:35:41 larryi Exp $
 
 # Shell script to start and stop the server
 
@@ -120,10 +120,6 @@ unset CLASSPATH
 CLASSPATH=${TOMCAT_INSTALL}/lib/tomcat.jar
 
 # Ignore previous CLASSPATH
-
-if [ -f ${JAVA_HOME}/jre/lib/rt.jar ] ; then
-    CLASSPATH=${CLASSPATH}:${JAVA_HOME}/jre/lib/rt.jar
-fi
 
 # This is consistent with "java -jar tomcat.jar "
 export CLASSPATH
