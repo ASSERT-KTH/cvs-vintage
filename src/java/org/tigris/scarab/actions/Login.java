@@ -74,7 +74,7 @@ import org.tigris.scarab.actions.base.ScarabTemplateAction;
  * Action.
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: Login.java,v 1.36 2002/07/03 17:42:26 jon Exp $
+ * @version $Id: Login.java,v 1.37 2002/08/28 00:24:01 jmcnally Exp $
  */
 public class Login extends ScarabTemplateAction
 {
@@ -100,15 +100,12 @@ public class Login extends ScarabTemplateAction
                 data.getParameters().remove(ScarabConstants.CURRENT_MODULE);
                 data.getParameters().add(ScarabConstants.CURRENT_MODULE,
                                          module.getQueryKey());
-                setTarget(data, "home,EnterNew.vm");
             }
-            else
-            {
-                String template = data.getParameters()
-                    .getString(ScarabConstants.NEXT_TEMPLATE, 
-                    "home,EnterNew.vm");
-                setTarget(data, template);
-            }
+
+            String template = data.getParameters()
+                .getString(ScarabConstants.NEXT_TEMPLATE, 
+                           "home,EnterNew.vm");
+            setTarget(data, template);
         }
     }
 
