@@ -17,11 +17,9 @@
 
        <table width="100%" border="1" cellspacing="2" cellpadding="3">
         <tr>
-         <th><a href="#" title="sort">issue summary:</a></th>
-
-         <th><a href="#" title="sort">date committed:</a></th>
-
-         <th><a href="#" title="sort">committed by:</a></th>
+         <th>issue summary:</th>
+         <th>date committed:</th>
+         <th>committed by:</th>
         </tr>
         <tr class="a">
          <td>
@@ -67,9 +65,9 @@
              #end />&nbsp;move
           </p>  
           
-          
-                        
-<p class="functnbar"><input type="submit" value="map issue attributes" name="eventSubmit_doMapattributes" /></p>
+<p class="functnbar">
+<input type="submit" value="map issue attributes" name="eventSubmit_doMapattributes"/>
+</p>
 
      </div></td>
     </tr>

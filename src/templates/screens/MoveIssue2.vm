@@ -12,11 +12,9 @@
 <input type="hidden" name="module_id" value="$moduleId">
        <table width="100%" border="1" cellspacing="2" cellpadding="3">
         <tr>
-         <th><a href="#" title="sort">issue summary:</a></th>
-
-         <th><a href="#" title="sort">date committed:</a></th>
-
-         <th><a href="#" title="sort">committed by:</a></th>
+         <th>issue summary:</th>
+         <th>date committed:</th>
+         <th>committed by:</th>
         </tr>
         <tr class="a">
          <td>
@@ -125,30 +123,26 @@
 
        <table width="100%" border="1" cellspacing="2" cellpadding="3">
         <tr>
-         <th><a href="#" title="sort">include=checked</a></th>
-
-         <th><a href="#" title="sort">attribute name</a></th>
-         
-         <th><a href="#" title="sort">option name</a></th>
+         <th>include=checked</th>
+         <th>attribute name</th>
+         <th>option name</th>
          
         </tr>
 #foreach( $attr in $orphanAttributes )
           #rows ()
          <td><input type="checkbox" name="x" value="x" checked /></td>
-
          <td><input type="text" name="x" value="$attr.Attribute.Name" /></td>
-
          <td><input type="text" name="x" value="$attr.Value" /></td>
-
         </tr>
 #end
-
         </table>
 #end                        
-<p class="functnbar"><input type="submit" value="move / copy" name="eventSubmit_doSaveissue" />&nbsp;<input type="submit" value="cancel" class="button" name="eventSubmit_doCancel" /></p>
+<p class="functnbar">
+<input type="submit" value="move / copy" name="eventSubmit_doSaveissue" />&nbsp;
+<input type="submit" value="cancel" class="button" name="eventSubmit_doCancel" />
+</p>
         
      </div></td>
     </tr>
    </table>
   </form>
-
