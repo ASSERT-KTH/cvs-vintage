@@ -321,7 +321,9 @@ public class JasperLoader extends org.apache.jasper.runtime.JspLoader {
     }
 
     public String toString() {
-	return "JspLoader( " +  options.getScratchDir()   + " ) / " + parent;
+        Object obj = (options==null)?null: options.getScratchDir();
+        String s = (obj==null)?"null":obj.toString();
+	    return "JspLoader@"+hashCode()+"( " + s  + " ) / " + parent;
     }
 
     boolean loadJSP(JspServlet jspS, String name, String classpath, 
