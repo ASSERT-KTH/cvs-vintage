@@ -1,5 +1,5 @@
-// $Id: Translator.java,v 1.19 2003/12/08 08:55:01 jhraigniac Exp $
-// Copyright (c) 1996-2003 The Regents of the University of California. All
+// $Id: Translator.java,v 1.20 2004/01/26 19:47:33 linus Exp $
+// Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
 // agreement is hereby granted, provided that the above copyright notice
@@ -60,18 +60,17 @@ public class Translator {
         /** bundle default Locale, different from user default Locale */
         org.workingfrog.i18n.util.Translator.init();
         org.workingfrog.i18n.util.Translator.setDefaultLocale(
-							      new Locale("en", ""));
+		new Locale("en", ""));
         org.workingfrog.i18n.util.Translator.setBundlesPath("org.argouml.i18n");
         org.workingfrog.i18n.util.Translator.setLogLevel("none");
   
         Localizer.addResource("GefBase",
 			      "org.tigris.gef.base.BaseResourceBundle");
-        Localizer.addResource("GefPres",
-			      "org.tigris.gef.presentation.PresentationResourceBundle");
+        Localizer.addResource(
+		"GefPres",
+		"org.tigris.gef.presentation.PresentationResourceBundle");
         Localizer.addResource("UMLMenu",
 			      "org.argouml.i18n.UMLResourceBundle");
-        Localizer.addResource("Cognitive",
-			      "org.argouml.i18n.UMLCognitiveResourceBundle");
     }
 
     /**
@@ -80,7 +79,7 @@ public class Translator {
      */
     public static Locale[] getLocales () {
         return org.workingfrog.i18n.util.Translator.getLocales(
-							       new Translator());
+		new Translator());
     }
 
     /**
