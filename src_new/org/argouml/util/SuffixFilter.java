@@ -1,4 +1,4 @@
-// $Id: SuffixFilter.java,v 1.3 2004/08/15 11:44:01 bobtarling Exp $
+// $Id: SuffixFilter.java,v 1.4 2004/08/24 17:15:59 mvw Exp $
 // Copyright (c) 2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -33,19 +33,28 @@ public class SuffixFilter extends FileFilter {
     // instance varaibles
 
     public final String _suffix;
-    public final String _desc;
+    private final String desc;
 
     ////////////////////////////////////////////////////////////////
     // constructor
 
+    /**
+     * The constructor.
+     * 
+     * @param s the suffix string
+     * @param d the file type description
+     */
     public SuffixFilter(String s, String d) {
 	_suffix = s;
-	_desc = d;
+	desc = d;
     }
 
     ////////////////////////////////////////////////////////////////
     // FileFilter API
 
+    /**
+     * @see javax.swing.filechooser.FileFilter#accept(java.io.File)
+     */
     public boolean accept(File f) {
 	if (f == null) return false;
 	if (f.isDirectory()) return true;
@@ -67,8 +76,11 @@ public class SuffixFilter extends FileFilter {
 	return null;
     }
 
+    /**
+     * @see javax.swing.filechooser.FileFilter#getDescription()
+     */
     public String getDescription() {
-	return _desc + " (*." + _suffix + ")";
+	return desc + " (*." + _suffix + ")";
     }
 
 } /* end class SuffixFilter */
