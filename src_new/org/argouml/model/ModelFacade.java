@@ -1,4 +1,4 @@
-// $Id: ModelFacade.java,v 1.14 2003/02/02 12:39:27 kataka Exp $
+// $Id: ModelFacade.java,v 1.15 2003/02/02 14:14:45 kataka Exp $
 // Copyright (c) 2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -800,6 +800,17 @@ public class ModelFacade {
         throw new IllegalArgumentException("Unrecognized object " + handle);
     }
     
+    /**
+     * Returns the stereotype belonging to some given modelelement
+     * @param handle
+     * @return Object
+     */
+    public static Object getStereoType(Object handle) {
+        if (isAModelElement(handle)) {
+            return ((MModelElement)handle).getStereotype();
+        }
+        throw new IllegalArgumentException("Unrecognized object " + handle);
+    }
     /**
      * Returns a collection with all subvertices belonging to the given
      * composite state.

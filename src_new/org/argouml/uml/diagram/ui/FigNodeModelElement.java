@@ -1,4 +1,4 @@
-// $Id: FigNodeModelElement.java,v 1.56 2003/01/30 18:06:41 kataka Exp $
+// $Id: FigNodeModelElement.java,v 1.57 2003/02/02 14:14:45 kataka Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -65,6 +65,7 @@ import org.argouml.cognitive.ToDoItem;
 import org.argouml.cognitive.ToDoList;
 import org.argouml.kernel.DelayedChangeNotify;
 import org.argouml.kernel.DelayedVChangeListener;
+import org.argouml.model.ModelFacade;
 import org.argouml.model.uml.UmlFactory;
 import org.argouml.model.uml.UmlModelEventPump;
 import org.argouml.model.uml.foundation.core.CoreHelper;
@@ -178,7 +179,7 @@ public abstract class FigNodeModelElement
         _stereo.setFont(LABEL_FONT);
         _stereo.setTextColor(Color.black);
         _stereo.setFilled(false);
-        // _stereo.setLineWidth(0);
+        _stereo.setLineWidth(0);
         //_stereo.setLineColor(Color.black);
         _stereo.setEditable(false);
 
@@ -694,6 +695,7 @@ public abstract class FigNodeModelElement
     * TODO remove all 'misuses' of the stereotype figtexts (like in FigInterface)
     */
     protected void updateStereotypeText() {
+        _stereo.setText(Notation.generate(this, ModelFacade.getStereoType(getOwner())));
     }
     
     /**
