@@ -36,7 +36,7 @@ import org.jboss.logging.Logger;
  *  @author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
  *  @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
  *  @author <a href="mailto:osh@sparre.dk">Ole Husgaard</a>
- *  @version $Revision: 1.29 $
+ *  @version $Revision: 1.30 $
  */
 public class TxManager
    implements TransactionManager,
@@ -92,9 +92,13 @@ public class TxManager
 
       TransactionImpl current = ti.tx;
 
-      if (current != null && !current.isDone())
-         throw new NotSupportedException("Transaction already active, " +
-                                         "cannot nest transactions.");
+      if (current != null) {
+         if (current.isDone())
+            ti.tx = null;
+         else
+            throw new NotSupportedException("Transaction already active, " +
+                                            "cannot nest transactions.");
+      }
 
       long timeout = (ti.timeout == 0) ? timeOut : ti.timeout;
       TxCapsule txCapsule = TxCapsule.getInstance(timeout);
@@ -132,12 +136,16 @@ public class TxManager
    public int getStatus()
       throws SystemException
    {
-      TransactionImpl current = getTxImpl();
+      ThreadInfo ti = getThreadInfo();
+      TransactionImpl current = ti.tx;
 
-      if (current != null)
-         return current.getStatus();
-      else
-         return Status.STATUS_NO_TRANSACTION;
+      if (current != null) {
+         if (current.isDone())
+            ti.tx = null;
+         else
+            return current.getStatus();
+      }
+      return Status.STATUS_NO_TRANSACTION;
    }
 
    /**
@@ -150,10 +158,9 @@ public class TxManager
       ThreadInfo ti = getThreadInfo();
       TransactionImpl current = ti.tx;
 
-      if (current != null && current.isDone()) {
-         ti.tx = null;
-         return null;
-      }
+      if (current != null && current.isDone())
+         current = ti.tx = null;
+
       return current;
    }
 
@@ -176,8 +183,12 @@ public class TxManager
       ThreadInfo ti = getThreadInfo();
       TransactionImpl current = ti.tx;
         
-      if (current != null)
-         throw new IllegalStateException("Already associated with a tx");
+      if (current != null) {
+         if (current.isDone())
+            current = ti.tx = null;
+         else
+            throw new IllegalStateException("Already associated with a tx");
+      }
 
       if (current != transaction)
          ti.tx = (TransactionImpl)transaction;
@@ -197,9 +208,12 @@ public class TxManager
       ThreadInfo ti = getThreadInfo();
       TransactionImpl current = ti.tx;
         
-      if (current != null)
+      if (current != null) {
          ti.tx = null;
-        
+         if (current.isDone())
+            current = null;
+      }
+
       return current;
    }
 
@@ -215,10 +229,13 @@ public class TxManager
       TransactionImpl current = ti.tx;
 
       if (current != null) {
-         current.rollback();
+         if (!current.isDone()) {
+            current.rollback();
+            return;
+         }
          ti.tx = null;
-      } else
-         throw new IllegalStateException("No transaction.");
+      }
+      throw new IllegalStateException("No transaction.");
    }
 
    /**
@@ -229,12 +246,17 @@ public class TxManager
       throws IllegalStateException,
              SystemException
    {
-      TransactionImpl current = getTxImpl();
+      ThreadInfo ti = getThreadInfo();
+      TransactionImpl current = ti.tx;
 
-      if (current != null)
-         current.setRollbackOnly();
-      else
-         throw new IllegalStateException("No transaction.");
+      if (current != null) {
+         if (!current.isDone()) {
+            current.setRollbackOnly();
+            return;
+         }
+         ti.tx = null;
+      }
+      throw new IllegalStateException("No transaction.");
    }
 
    /**
