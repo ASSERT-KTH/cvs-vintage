@@ -408,6 +408,13 @@
     <field name="File" key="d" type="FileItem">
         <rule name="maxLength" value="16777215">Files larger than 16MB are not allowed</rule>
     </field>
+    <!-- two different fields are used because there is an 'other' field -->
+    <field name="MimeTypeA" key="mta" type="String" mapToProperty="">
+        <rule name="maxLength" value="25">MimeType length can't be greater than 25 characters.</rule>
+    </field>
+    <field name="MimeTypeB" key="mtb" type="String" mapToProperty="">
+        <rule name="maxLength" value="25">MimeType length can't be greater than 25 characters.</rule>
+    </field>
 </group>
 
 <group name="Depend" key="dep" mapToObject="om.Depend">
