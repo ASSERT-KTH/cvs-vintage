@@ -1,4 +1,4 @@
-// $Id: FigEdgeModelElement.java,v 1.47 2003/12/07 21:31:34 mkl Exp $
+// $Id: FigEdgeModelElement.java,v 1.48 2003/12/09 14:39:15 mkl Exp $
 // Copyright (c) 1996-2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -26,7 +26,7 @@
 // Classes: FigEdgeModelElement
 // Original Author: abonner
 
-// $Id: FigEdgeModelElement.java,v 1.47 2003/12/07 21:31:34 mkl Exp $
+// $Id: FigEdgeModelElement.java,v 1.48 2003/12/09 14:39:15 mkl Exp $
 
 package org.argouml.uml.diagram.ui;
 
@@ -254,9 +254,11 @@ public abstract class FigEdgeModelElement
                 ((Clarifier) icon).setFig(this);
                 ((Clarifier) icon).setToDoItem(item);
             }
-            stuffPointAlongPerimeter(iconPos, p);
-            icon.paintIcon(null, g, p.x + xOff, p.y + yOff);
-            iconPos += icon.getIconWidth() + gap;
+            if (icon != null) {
+                stuffPointAlongPerimeter(iconPos, p);
+                icon.paintIcon(null, g, p.x + xOff, p.y + yOff);
+                iconPos += icon.getIconWidth() + gap;
+            }
         }
         items = list.elementsForOffender(this);
         size = items.size();
@@ -267,9 +269,11 @@ public abstract class FigEdgeModelElement
                 ((Clarifier) icon).setFig(this);
                 ((Clarifier) icon).setToDoItem(item);
             }
-            stuffPointAlongPerimeter(iconPos, p);
-            icon.paintIcon(null, g, p.x + xOff, p.y + yOff);
-            iconPos += icon.getIconWidth() + gap;
+            if (icon != null) {
+                stuffPointAlongPerimeter(iconPos, p);
+                icon.paintIcon(null, g, p.x + xOff, p.y + yOff);
+                iconPos += icon.getIconWidth() + gap;
+            }
         }
     }
 

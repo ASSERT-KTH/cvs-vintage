@@ -1,4 +1,4 @@
-// $Id: FigNodeModelElement.java,v 1.89 2003/12/02 20:47:40 kataka Exp $
+// $Id: FigNodeModelElement.java,v 1.90 2003/12/09 14:39:15 mkl Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -446,8 +446,10 @@ public abstract class FigNodeModelElement
                 ((Clarifier) icon).setFig(this);
                 ((Clarifier) icon).setToDoItem(item);
             }
-            icon.paintIcon(null, g, iconX, iconY);
-            iconX += icon.getIconWidth();
+            if (icon != null) {
+                icon.paintIcon(null, g, iconX, iconY);
+                iconX += icon.getIconWidth();
+            }
         }
         items = list.elementsForOffender(this);
         size = items.size();
@@ -458,8 +460,10 @@ public abstract class FigNodeModelElement
                 ((Clarifier) icon).setFig(this);
                 ((Clarifier) icon).setToDoItem(item);
             }
-            icon.paintIcon(null, g, iconX, iconY);
-            iconX += icon.getIconWidth();
+            if (icon!=null) {
+                icon.paintIcon(null, g, iconX, iconY);
+                iconX += icon.getIconWidth();
+            }
         }
     }
 
