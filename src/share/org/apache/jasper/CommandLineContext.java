@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/jasper/CommandLineContext.java,v 1.5 2000/06/27 20:59:39 costin Exp $
- * $Revision: 1.5 $
- * $Date: 2000/06/27 20:59:39 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/jasper/CommandLineContext.java,v 1.6 2000/07/11 00:15:04 shemnon Exp $
+ * $Revision: 1.6 $
+ * $Date: 2000/07/11 00:15:04 $
  *
  * ====================================================================
  * 
@@ -125,11 +125,11 @@ public class CommandLineContext implements JspCompilationContext {
             // strip the basde slash since it will be combined with the
             // uriBase to generate a file
             uriBase = "/" + uriBase;
-        };
+        }
 
         if (uriBase.charAt(uriBase.length() - 1) != '/') {
             uriBase += '/';
-        };
+        }
 
         if (tUriRoot == null) {
             uriRoot = new File("");
@@ -138,30 +138,30 @@ public class CommandLineContext implements JspCompilationContext {
             if (!uriRoot.exists() || !uriRoot.isDirectory()) {
                throw new JasperException(
                         Constants.getString("jsp.error.jspc.uriroot_not_dir"));
-            };
-        };
-    };
+            }
+        }
+    }
 
     /**
      * The classpath that is passed off to the Java compiler. 
      */
     public String getClassPath() {
         return classPath;
-    };
+    }
     
     /**
      * Get the input reader for the JSP text. 
      */
     public JspReader getReader() {
         return reader;
-    };
+    }
     
     /**
      * Where is the servlet being generated?
      */
     public ServletWriter getWriter() {
         return writer;
-    };
+    }
     
     /**
      * What class loader to use for loading classes while compiling
@@ -169,7 +169,7 @@ public class CommandLineContext implements JspCompilationContext {
      */
     public ClassLoader getClassLoader() {
         return loader;
-    };
+    }
 
     public void addJar( String jar ) throws IOException  {
 	loader.addJar( jar );
@@ -181,7 +181,7 @@ public class CommandLineContext implements JspCompilationContext {
      */
     public boolean isErrorPage() {
         return errPage;
-    };
+    }
     
     /**
      * What is the scratch directory we are generating code into?
@@ -190,7 +190,7 @@ public class CommandLineContext implements JspCompilationContext {
      */
     public String getOutputDir() {
         return options.getScratchDir().toString();
-    };
+    }
     
     /**
      * Path of the JSP URI. Note that this is not a file name. This is
@@ -198,7 +198,7 @@ public class CommandLineContext implements JspCompilationContext {
      */
     public String getJspFile() {
         return jspFile;
-    };
+    }
     
     /**
      * Just the class name (does not include package name) of the
@@ -206,14 +206,14 @@ public class CommandLineContext implements JspCompilationContext {
      */
     public String getServletClassName() {
         return servletClassName;
-    };
+    }
     
     /**
      * The package name into which the servlet class is generated. 
      */
     public String getServletPackageName() {
         return servletPackageName;
-    };
+    }
 
     /**
      * Utility method to get the full class name from the package and
@@ -225,9 +225,9 @@ public class CommandLineContext implements JspCompilationContext {
             pkg += ".";
         } else {
             pkg = "";
-        };
+        }
         return pkg + getServletClassName();
-   };
+   }
 
     /**
      * Full path name of the Java file into which the servlet is being
@@ -240,14 +240,14 @@ public class CommandLineContext implements JspCompilationContext {
         } else {
             return servletJavaFileName;
         }
-    };
+    }
 
     /**
      * Are we keeping generated code around?
      */
     public boolean keepGenerated() {
         return options.getKeepGenerated();
-    };
+    }
 
     /**
      * What's the content type of this JSP? Content type includes
@@ -255,66 +255,66 @@ public class CommandLineContext implements JspCompilationContext {
      */
     public String getContentType() {
         return contentType;
-    };
+    }
 
     /**
      * Get hold of the Options object for this context. 
      */
     public Options getOptions() {
         return options;
-    };
+    }
 
     public void setContentType(String contentType) {
         this.contentType = contentType;
-    };
+    }
 
     public void setReader(JspReader reader) {
         this.reader = reader;
-    };
+    }
     
     public void setWriter(ServletWriter writer) {
         this.writer = writer;
-    };
+    }
     
     public void setServletClassName(String servletClassName) {
         if (classNameLocked) {
             //System.out.println("Did not change clazz to " + servletClassName);
         } else {
             this.servletClassName = servletClassName;
-        };
-    };
+        }
+    }
     
     public void setServletPackageName(String servletPackageName) {
         if (packageNameLocked) {
             //System.out.println("Did not change pkg to " + servletPackageName);
         } else {
             this.servletPackageName = servletPackageName;
-        };
-    };
+        }
+    }
     
     public void setServletJavaFileName(String servletJavaFileName) {
         this.servletJavaFileName = servletJavaFileName;
-    };
+    }
     
     public void setErrorPage(boolean isErrPage) {
         errPage = isErrPage;
-    };
+    }
 
     public void lockPackageName() {
         packageNameLocked = true;
-    };
+    }
 
     public void lockClassName() {
         classNameLocked = true;
-    };
+    }
 
     public void setOutputInDirs(boolean newValue) {
         outputInDirs = true;
-    };
+    }
 
     public boolean isOutputInDirs() {
         return outputInDirs;
-    };
+    }
 
     /**
      * Create a "Compiler" object based on some init param data. This
@@ -323,7 +323,7 @@ public class CommandLineContext implements JspCompilationContext {
      */
     public Compiler createCompiler() throws JasperException {
         return new CommandLineCompiler(this);
-    };
+    }
 
 
     /** 
@@ -336,7 +336,7 @@ public class CommandLineContext implements JspCompilationContext {
         } else {
             return uriBase + uri;
         }
-    };
+    }
 
 
     /**
@@ -352,19 +352,19 @@ public class CommandLineContext implements JspCompilationContext {
             in = new FileInputStream(getRealPath(res));
         } catch (IOException ioe) {
             in = null;
-        };
+        }
         // next, try it as an absolute name
         if (in == null) try {
             in = new FileInputStream(res);
         } catch (IOException ioe) {
             in = null;
-        };
+        }
         // that dind't work, last chance is to try the classloaders
         if (in == null) {
             in = loader.getResourceAsStream(res);
-        };
+        }
         return in;
-    };
+    }
 
 
     /** 
@@ -375,10 +375,10 @@ public class CommandLineContext implements JspCompilationContext {
         path = resolveRelativeUri(path);
         if (path.startsWith("/")) {
             path = path.substring(1);
-        };
+        }
         File f = new File(uriRoot, path.replace('/', File.separatorChar));
         return f.getAbsolutePath();
-    };
+    }
 
 }
 

@@ -310,7 +310,7 @@ public class JspReader {
 	}
 
 	return new String(current.stream, cur_cursor, current.cursor-cur_cursor);
-    };
+    }
 
     char[] getChars(Mark start, Mark stop) throws ParseException {
 	Mark oldstart = mark();

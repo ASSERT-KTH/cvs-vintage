@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/jasper/JspC.java,v 1.15 2000/06/27 20:59:39 costin Exp $
- * $Revision: 1.15 $
- * $Date: 2000/06/27 20:59:39 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/jasper/JspC.java,v 1.16 2000/07/11 00:15:03 shemnon Exp $
+ * $Revision: 1.16 $
+ * $Date: 2000/07/11 00:15:03 $
  *
  * ====================================================================
  * 
@@ -138,6 +138,7 @@ public class JspC implements Options { //, JspCompilationContext {
     int webxmlLevel;
 
     int dieLevel;
+    boolean dieOnExit = false;
     static int die; // I realize it is duplication, but this is for
                     // the static main catch
 
@@ -211,8 +212,8 @@ public class JspC implements Options { //, JspCompilationContext {
     private void pushBackArg() {
         if (!fullstop) {
             argPos--;
-        };
-    };
+        }
+    }
 
     private String nextArg() {
         if ((argPos >= args.length)
@@ -221,7 +222,7 @@ public class JspC implements Options { //, JspCompilationContext {
         } else {
             return args[argPos++];
         }
-    };
+    }
         
     private String nextFile() {
         if (fullstop) argPos++;
@@ -230,7 +231,7 @@ public class JspC implements Options { //, JspCompilationContext {
         } else {
             return args[argPos++];
         }
-    };
+    }
 
     public JspC(String[] arg, PrintStream log) {
         args = arg;
@@ -290,12 +291,12 @@ public class JspC implements Options { //, JspCompilationContext {
                 webxmlFile = nextArg();
                 if (webxmlFile != null) {
                     webxmlLevel = INC_WEBXML;
-                };
+                }
             } else if (tok.equals(SWITCH_WEBAPP_XML)) {
                 webxmlFile = nextArg();
                 if (webxmlFile != null) {
                     webxmlLevel = ALL_WEBXML;
-                };
+                }
             } else if (tok.equals(SWITCH_MAPPED)) {
                 mappedFile = true;
             } else if (tok.startsWith(SWITCH_DIE)) {
@@ -304,7 +305,7 @@ public class JspC implements Options { //, JspCompilationContext {
                         tok.substring(SWITCH_DIE.length()));
                 } catch (NumberFormatException nfe) {
                     dieLevel = DEFAULT_DIE_LEVEL;
-                };
+                }
                 die = dieLevel;
             } else {
                 pushBackArg();
@@ -316,9 +317,9 @@ public class JspC implements Options { //, JspCompilationContext {
         Constants.jasperLog = new TomcatLogger();
         Constants.jasperLog.setVerbosityLevel(verbosityLevel);
 
-    };
+    }
     
-  public boolean parseFile(PrintStream log, String file, Writer mapout)
+    public boolean parseFile(PrintStream log, String file, Writer servletout, Writer mappingout)
     {
         try {
             JasperLoader loader =
@@ -338,7 +339,7 @@ public class JspC implements Options { //, JspCompilationContext {
             }
             if (dirset) {
                 clctxt.setOutputInDirs(true);
-            };
+            }
             File uriDir = new File(clctxt.getRealPath("/"));
             if (uriDir.exists()) {
                 if ((new File(uriDir, "WEB-INF/classes")).exists()) {
@@ -360,46 +361,51 @@ public class JspC implements Options { //, JspCompilationContext {
                         }
                     }
                 }
-            };
+            }
             CommandLineCompiler clc = new CommandLineCompiler(clctxt);
 
             clc.compile();
 
             targetClassName = null;
-            if (mapout != null) {
-                String thisServletName;
-		if  (clc.getPackageName() == null) {
-		    thisServletName = clc.getClassName();
-		 } else {
-		    thisServletName = clc.getPackageName()
-                        + '.' + clc.getClassName();
-		};
-                mapout.write("\n\t<servlet>\n\t\t<servlet-name>");
-                mapout.write(thisServletName);
-                mapout.write("</servlet-name>\n\t\t<servlet-class>");
-                mapout.write(thisServletName);
-                mapout.write("</servlet-class>\n\t</servlet>\n\t<servlet-mapping>\n\t\t<url-pattern>");
-                mapout.write(file);
-                mapout.write("</url-pattern>\n\t\t<servlet-name>");
-                mapout.write(thisServletName);
-                mapout.write("</servlet-name>\n\t</servlet-mapping>\n");
-            };
+            String thisServletName;
+            if  (clc.getPackageName() == null) {
+                thisServletName = clc.getClassName();
+             } else {
+                thisServletName = clc.getPackageName()
+                    + '.' + clc.getClassName();
+            }
+            if (servletout != null) {
+                servletout.write("\n\t<servlet>\n\t\t<servlet-name>");
+                servletout.write(thisServletName);
+                servletout.write("</servlet-name>\n\t\t<servlet-class>");
+                servletout.write(thisServletName);
+                servletout.write("</servlet-class>\n\t</servlet>\n");
+            }
+            if (mappingout != null) {
+                mappingout.write("\n\t<servlet-mapping>\n\t\t<url-pattern>");
+                mappingout.write(file);
+                mappingout.write("</url-pattern>\n\t\t<servlet-name>");
+                mappingout.write(thisServletName);
+                mappingout.write("</servlet-name>\n\t</servlet-mapping>\n");
+            }
             return true;
         } catch (JasperException je) {
-            je.printStackTrace(log);
-            log.print("error:");
-            log.println(je.getMessage());
+            //je.printStackTrace(log);
+            Constants.message("jspc.error.jasperException", 
+                    new Object[] {file, je}, Logger.ERROR);
             if (dieLevel != NO_DIE_LEVEL) {
-                System.exit(dieLevel);
+                dieOnExit = true;
             }
+        } catch (FileNotFoundException fne) {
+                Constants.message("jspc.error.fileDoesNotExist", 
+                        new Object[] {fne.getMessage()}, Logger.WARNING);
         } catch (Exception e) {
-            e.printStackTrace(log);
-            log.print("ERROR:");
-            log.println(e.toString());
+            Constants.message("jspc.error.generalException", 
+                    new Object[] {file, e}, Logger.ERROR);
             if (dieLevel != NO_DIE_LEVEL) {
-                System.exit(dieLevel);
+                dieOnExit = true;
             }
-        };
+        }
         return false;
     }
 
@@ -418,10 +424,45 @@ public class JspC implements Options { //, JspCompilationContext {
             scratchDir = new File(new File(temp).getAbsolutePath());
         }
 
+ 
         File f = new File(args[argPos]);
-        if (!f.exists() && f.isDirectory() && (args.length - argPos == 1)) {
-            // do web-app conversion
-        } else if (uriRoot == null) {
+        while (!f.exists()) {
+            boolean webApp = false;
+            if (SWITCH_FILE_WEBAPP.equals(args[argPos])) {
+                webApp = true;
+                if (args.length > argPos + 1) {
+                    f = new File(args[argPos + 1]);
+                } else {
+                    // end of arguments, nothing left to parse
+                    Constants.message("jspc.error.emptyWebApp", 
+                            Logger.ERROR);
+                    return;
+                }
+            }
+            if (!f.exists()) {
+                Constants.message("jspc.error.fileDoesNotExist", 
+                        new Object[] {f}, Logger.WARNING);
+                argPos++;
+                if (webApp) {
+                    argPos++;
+                }
+                if (argPos >= args.length) {
+                    // end of arguments, nothing left to parse
+                    return;
+                } else {
+                    f = new File(args[argPos]);
+                }
+            }
+        }
+        if (uriRoot == null) {
+            if (SWITCH_FILE_WEBAPP.equals(args[argPos])) {
+                if (args.length > argPos + 1) {
+                    f = new File(args[argPos + 1]);
+                } else {
+                    // end of arguments, nothing left to parse
+                    return;
+                }
+            }
             // set up the uri root if none is explicitly set
             String tUriBase = uriBase;
             if (tUriBase == null) {
@@ -442,7 +483,7 @@ public class JspC implements Options { //, JspCompilationContext {
                         }
                         if (f.exists() && f.isDirectory()) {
                             tUriBase = "/" + f.getName() + "/" + tUriBase;
-                        };
+                        }
                         
                         String fParent = f.getParent();
                         if (fParent == null) {
@@ -478,21 +519,22 @@ public class JspC implements Options { //, JspCompilationContext {
             ubase = froot.getCanonicalPath();
         } catch (IOException ioe) {
             // if we cannot get the base, leave it null
-        };
+        }
 
         while (file != null) {
             if (SWITCH_FILE_WEBAPP.equals(file)) {
                 String base = nextFile();
                 if (base == null) {
-                    // friendly but quiet failure
-                    break;
+                    Constants.message("jspc.error.emptyWebApp", 
+                            Logger.ERROR);
+                    return;
                 }// else if (".".equals(base)) {
                 //    base = "";
-                //};
+                //}
                 String oldRoot = uriRoot;
                 if (!urirootSet) {
                     uriRoot = base;
-                };
+                }
                 Vector pages = new Vector();
 
                 Stack dirs = new Stack();
@@ -500,7 +542,7 @@ public class JspC implements Options { //, JspCompilationContext {
                 if (extensions == null) {
                     extensions = new Vector();
                     extensions.addElement("jsp");
-                };
+                }
                 while (!dirs.isEmpty()) {
                     String s = dirs.pop().toString();
                     //System.out.println("--" + s);
@@ -523,11 +565,11 @@ public class JspC implements Options { //, JspCompilationContext {
                                         s + File.separatorChar + files[i]);
                                 } else {
                                     //System.out.println("not done:" + ext);
-                                };
-                            };
-                        };
-                    };
-                };
+                                }
+                            }
+                        }
+                    }
+                }
 
                 String ubaseOld = ubase;
                 File frootOld = froot;
@@ -537,25 +579,34 @@ public class JspC implements Options { //, JspCompilationContext {
                     ubase = froot.getCanonicalPath();
                 } catch (IOException ioe) {
                     // if we cannot get the base, leave it null
-                };
+                }
 
                 //System.out.println("==" + ubase);
 
 
                 Writer mapout;
+                CharArrayWriter servletout, mappingout;
                 try {
                     if (webxmlLevel >= INC_WEBXML) {
                         File fmapings = new File(webxmlFile);
                         mapout = new FileWriter(fmapings);
+                        servletout = new CharArrayWriter();
+                        mappingout = new CharArrayWriter();
                     } else {
                         mapout = null;
-                    };
+                        servletout = null;
+                        mappingout = null;
+                    }
                     if (webxmlLevel >= ALL_WEBXML) {
                         mapout.write(Constants.getString("jspc.webxml.header"));
-                    };
+                    } else if (webxmlLevel>= INC_WEBXML) {
+                        mapout.write(Constants.getString("jspc.webinc.header"));
+                    }
                 } catch (IOException ioe) {
                     mapout = null;
-                };
+                    servletout = null;
+                    mappingout = null;
+                }
 
                 Enumeration e = pages.elements();
                 while (e.hasMoreElements())
@@ -568,27 +619,31 @@ public class JspC implements Options { //, JspCompilationContext {
                             //System.out.println("**" + s);
                             if (s.startsWith(ubase)) {
                                 nextjsp = s.substring(ubase.length());
-                            };
-                        };
+                            }
+                        }
                     } catch (IOException ioe) {
                         // if we got problems dont change the file name
-                    };
+                    }
 
                     if (nextjsp.startsWith("." + File.separatorChar)) {
                         nextjsp = nextjsp.substring(2);
-                    };
+                    }
 
-                    parseFile(log, nextjsp, mapout);
-                };
+                    parseFile(log, nextjsp, servletout, mappingout);
+                }
                 uriRoot = oldRoot;
                 ubase = ubaseOld;
                 froot = frootOld;
 
                 if (mapout != null) {
                     try {
+                        servletout.writeTo(mapout);
+                        mappingout.writeTo(mapout);
                         if (webxmlLevel >= ALL_WEBXML) {
                             mapout.write(Constants.getString("jspc.webxml.footer"));
-                        };
+                        } else if (webxmlLevel >= INC_WEBXML) {
+                            mapout.write(Constants.getString("jspc.webinc.footer"));
+                        }
                         mapout.close();
                     } catch (IOException ioe) {
                         // noting to do if it fails since we are done with it
@@ -601,17 +656,20 @@ public class JspC implements Options { //, JspCompilationContext {
                         String s = fjsp.getCanonicalPath();
                         if (s.startsWith(ubase)) {
                             file = s.substring(ubase.length());
-                        };
+                        }
                     }
                 } catch (IOException ioe) {
                      // if we got problems dont change the file name
-                };
+                }
 
-                parseFile(log, file, null);
-            };
+                parseFile(log, file, null, null);
+            }
             file = nextFile();
         }
-    };
+        if (dieOnExit) {
+            System.exit(die);
+        }
+    }
 
     public static void main(String arg[]) {
         if (arg.length == 0) {
@@ -628,7 +686,7 @@ public class JspC implements Options { //, JspCompilationContext {
                 }
             }
         }
-    };
+    }
 
 }
 

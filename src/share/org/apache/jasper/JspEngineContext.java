@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/jasper/JspEngineContext.java,v 1.8 2000/06/27 20:59:39 costin Exp $
- * $Revision: 1.8 $
- * $Date: 2000/06/27 20:59:39 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/jasper/JspEngineContext.java,v 1.9 2000/07/11 00:15:04 shemnon Exp $
+ * $Revision: 1.9 $
+ * $Date: 2000/07/11 00:15:04 $
  *
  * ====================================================================
  * 
@@ -335,7 +335,7 @@ public class JspEngineContext implements JspCompilationContext {
             String baseURI = actURI.substring(0, actURI.lastIndexOf('/'));
             return baseURI + '/' + uri;
         }
-    };    
+    }    
 
     /**
      * Gets a resource as a stream, relative to the meanings of this
@@ -346,7 +346,7 @@ public class JspEngineContext implements JspCompilationContext {
     public java.io.InputStream getResourceAsStream(String res)
     {
         return context.getResourceAsStream(res);
-    };
+    }
 
     /** 
      * Gets the actual path of a URI relative to the context of
@@ -362,7 +362,7 @@ public class JspEngineContext implements JspCompilationContext {
         {
             return path;
         }
-    };
+    }
 
    
 }
