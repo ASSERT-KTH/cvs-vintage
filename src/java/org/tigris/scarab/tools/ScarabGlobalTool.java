@@ -97,7 +97,7 @@ import org.apache.turbine.Turbine;
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
  * @author <a href="mailto:dr@bitonic.com">Douglas B. Robertson</a>
- * @version $Id: ScarabGlobalTool.java,v 1.58 2003/04/11 22:59:44 dlr Exp $
+ * @version $Id: ScarabGlobalTool.java,v 1.59 2003/05/05 21:58:10 jon Exp $
  */
 public class ScarabGlobalTool implements ScarabGlobalScope
 {
@@ -143,7 +143,7 @@ public class ScarabGlobalTool implements ScarabGlobalScope
         security = new FieldMethodizer(
             "org.tigris.scarab.services.security.ScarabSecurity");
         parameterName = new FieldMethodizer(
-            "org.tigris.scarab.om.GlobalParameterManager");
+            "org.tigris.scarab.om.GlobalParameter");
     }
 
     /**
