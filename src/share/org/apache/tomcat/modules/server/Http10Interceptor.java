@@ -94,6 +94,8 @@ import org.apache.tomcat.util.log.*;
 public class Http10Interceptor extends PoolTcpConnector
     implements  TcpConnectionHandler
 {
+	private int	timeout = 300000;	// 5 minutes as in Apache HTTPD server
+
     public Http10Interceptor() {
 	super();
     }
@@ -105,6 +107,10 @@ public class Http10Interceptor extends PoolTcpConnector
     }
 
     // -------------------- Attributes --------------------
+    public void setTimeout( int timeouts ) {
+    timeout = timeouts * 1000;
+    }
+
     // -------------------- Handler implementation --------------------
     public void setServer( Object o ) {
 	this.cm=(ContextManager)o;
@@ -131,6 +137,7 @@ public class Http10Interceptor extends PoolTcpConnector
 	    resA=(HttpResponse)thData[1];
 
 	    socket=connection.getSocket();
+		socket.setSoTimeout(timeout);
 
 	    reqA.setSocket( socket );
 	    resA.setSocket( socket );
@@ -149,6 +156,13 @@ public class Http10Interceptor extends PoolTcpConnector
 	    log( "SocketException reading request, ignored", null,
 		 Log.INFORMATION);
 	    log( "SocketException reading request:", e, Log.DEBUG);
+	}
+	catch (java.io.InterruptedIOException ioe) {
+		// We have armed a timeout on read as does apache httpd server.
+		// Just to avoid staying with inactive connection
+		// BUG#1006
+		ioe.printStackTrace();
+		log( "Timeout reading request, aborting", ioe, Log.ERROR);
 	}
 	catch (java.io.IOException e) {
 	    // IOExceptions are normal 
