@@ -76,19 +76,19 @@ public class ForwardCommand extends FolderCommand {
 		// get first selected message
 		Object[] uids = ((FolderCommandReference) getReferences()[0]).getUids();
 
-		//      ->set source reference in composermodel
-		// when replying this is the original sender's message
-		// you selected and replied to
-		FolderCommandReference[] ref = new FolderCommandReference[1];
-		ref[0] = new FolderCommandReference(folder, uids);
-		model.setSourceReference(ref);
-
 		// get headerfields
 		Header header = folder.getHeaderFields(uids[0],
 				new String[] { "Subject" });
 
 		// create composer model
 		model = new ComposerModel();
+
+		//      ->set source reference in composermodel
+		// when replying this is the original sender's message
+		// you selected and replied to
+		FolderCommandReference[] ref = new FolderCommandReference[1];
+		ref[0] = new FolderCommandReference(folder, uids);
+		model.setSourceReference(ref);
 
 		// set subject
 		model.setSubject(MessageBuilderHelper
