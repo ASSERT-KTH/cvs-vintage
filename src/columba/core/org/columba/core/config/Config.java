@@ -13,6 +13,7 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
 //
 //All Rights Reserved.
+
 package org.columba.core.config;
 
 import org.columba.core.io.DiskIO;
@@ -21,12 +22,7 @@ import org.columba.core.xml.XmlElement;
 import java.io.File;
 import java.io.IOException;
 
-import java.util.Enumeration;
-import java.util.Hashtable;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Vector;
-
+import java.util.*;
 
 /**
  * Main entrypoint for configuration management.
@@ -60,10 +56,10 @@ public class Config {
     public static File headerDirectory;
     public static File pop3Directory;
     public static String userDir;
+    
     private static OptionsXmlConfig optionsConfig;
-    public static File loggerPropertyFile;
-    private static Hashtable pluginList;
-    private static Hashtable templatePluginList;
+    private static Map pluginList = new Hashtable();
+    private static Map templatePluginList = new Hashtable();
     private static File optionsFile;
     private static File toolsFile;
 
@@ -71,9 +67,6 @@ public class Config {
      * @see java.lang.Object#Object()
      */
     public Config() {
-        pluginList = new Hashtable();
-        templatePluginList = new Hashtable();
-
         optionsFile = new File(ConfigPath.getConfigDirectory(), "options.xml");
 
         DefaultConfig.registerPlugin("core", optionsFile.getName(),
@@ -125,8 +118,8 @@ public class Config {
     public static void registerPlugin(String moduleName, String id,
         DefaultXmlConfig configPlugin) {
         if (!pluginList.containsKey(moduleName)) {
-            Hashtable table = new Hashtable();
-            pluginList.put(moduleName, table);
+            Map map = new Hashtable();
+            pluginList.put(moduleName, map);
         }
 
         addPlugin(moduleName, id, configPlugin);
@@ -135,8 +128,8 @@ public class Config {
     public static void registerTemplatePlugin(String moduleName, String id,
         DefaultXmlConfig configPlugin) {
         if (!templatePluginList.containsKey(moduleName)) {
-            Hashtable table = new Hashtable();
-            templatePluginList.put(moduleName, table);
+            Map map = new Hashtable();
+            templatePluginList.put(moduleName, map);
         }
 
         addTemplatePlugin(moduleName, id, configPlugin);
@@ -150,10 +143,10 @@ public class Config {
      */
     public static DefaultXmlConfig getPlugin(String moduleName, String id) {
         if (pluginList.containsKey(moduleName)) {
-            Hashtable table = (Hashtable) pluginList.get(moduleName);
+            Map map = (Map) pluginList.get(moduleName);
 
-            if (table.containsKey(id)) {
-                DefaultXmlConfig plugin = (DefaultXmlConfig) table.get(id);
+            if (map.containsKey(id)) {
+                DefaultXmlConfig plugin = (DefaultXmlConfig) map.get(id);
 
                 return plugin;
             }
@@ -165,10 +158,10 @@ public class Config {
     public static DefaultXmlConfig getTemplatePlugin(String moduleName,
         String id) {
         if (templatePluginList.containsKey(moduleName)) {
-            Hashtable table = (Hashtable) templatePluginList.get(moduleName);
+            Map map = (Map) templatePluginList.get(moduleName);
 
-            if (table.containsKey(id)) {
-                DefaultXmlConfig plugin = (DefaultXmlConfig) table.get(id);
+            if (map.containsKey(id)) {
+                DefaultXmlConfig plugin = (DefaultXmlConfig) map.get(id);
 
                 return plugin;
             }
@@ -185,19 +178,19 @@ public class Config {
      */
     public static void addPlugin(String moduleName, String id,
         DefaultXmlConfig configPlugin) {
-        Hashtable table = (Hashtable) pluginList.get(moduleName);
+        Map map = (Map) pluginList.get(moduleName);
 
-        if (table != null) {
-            table.put(id, configPlugin);
+        if (map != null) {
+            map.put(id, configPlugin);
         }
     }
 
     public static void addTemplatePlugin(String moduleName, String id,
         DefaultXmlConfig configPlugin) {
-        Hashtable table = (Hashtable) templatePluginList.get(moduleName);
+        Map map = (Map) templatePluginList.get(moduleName);
 
-        if (table != null) {
-            table.put(id, configPlugin);
+        if (map != null) {
+            map.put(id, configPlugin);
         }
     }
 
@@ -206,53 +199,52 @@ public class Config {
      * @return List
      */
     public static List getPluginList() {
-        List v = new Vector();
+        List list = new LinkedList();
 
-        for (Enumeration keys = pluginList.keys(); keys.hasMoreElements();) {
-            String key = (String) keys.nextElement();
-            Hashtable table = (Hashtable) pluginList.get(key);
+        for (Iterator keys = pluginList.keySet().iterator(); keys.hasNext();) {
+            String key = (String) keys.next();
+            Map map = (Map) pluginList.get(key);
 
-            if (table != null) {
-                for (Enumeration keys2 = table.keys(); keys2.hasMoreElements();) {
-                    String key2 = (String) keys2.nextElement();
-                    DefaultXmlConfig plugin = (DefaultXmlConfig) table.get(key2);
+            if (map != null) {
+                for (Iterator keys2 = map.keySet().iterator(); keys2.hasNext();) {
+                    String key2 = (String) keys2.next();
+                    DefaultXmlConfig plugin = (DefaultXmlConfig) map.get(key2);
 
-                    v.add(plugin);
+                    list.add(plugin);
                 }
             }
         }
 
-        return v;
+        return list;
     }
 
     public static List getTemplatePluginList() {
-        List v = new Vector();
+        List list = new LinkedList();
 
-        for (Enumeration keys = templatePluginList.keys();
-                keys.hasMoreElements();) {
-            String key = (String) keys.nextElement();
-            Hashtable table = (Hashtable) templatePluginList.get(key);
+        for (Iterator keys = templatePluginList.keySet().iterator(); keys.hasNext();) {
+            String key = (String) keys.next();
+            Map map = (Map) templatePluginList.get(key);
 
-            if (table != null) {
-                for (Enumeration keys2 = table.keys(); keys2.hasMoreElements();) {
-                    String key2 = (String) keys2.nextElement();
-                    DefaultXmlConfig plugin = (DefaultXmlConfig) table.get(key2);
+            if (map != null) {
+                for (Iterator keys2 = map.keySet().iterator(); keys2.hasNext();) {
+                    String key2 = (String) keys2.next();
+                    DefaultXmlConfig plugin = (DefaultXmlConfig) map.get(key2);
 
-                    v.add(plugin);
+                    list.add(plugin);
                 }
             }
         }
 
-        return v;
+        return list;
     }
 
     /**
      * Method save.
      */
     public static void save() throws Exception {
-        List v = getPluginList();
+        List list = getPluginList();
 
-        for (Iterator it = v.iterator(); it.hasNext();) {
+        for (Iterator it = list.iterator(); it.hasNext();) {
             DefaultXmlConfig plugin = (DefaultXmlConfig) it.next();
 
             if (plugin == null) {
@@ -264,30 +256,15 @@ public class Config {
     }
 
     /**
-     * Method load.
+     * Loads all plugins and template plugins.
      */
     public static void load() {
-        List v = getPluginList();
+        List list = getPluginList();
+        list.addAll(getTemplatePluginList());
 
-        for (Iterator it = v.iterator(); it.hasNext();) {
+        for (Iterator it = list.iterator(); it.hasNext();) {
             DefaultXmlConfig plugin = (DefaultXmlConfig) it.next();
 
-            //		for (int i = 0; i < v.size(); i++) {
-            //			DefaultXmlConfig plugin = (DefaultXmlConfig) v.get(i);
-            if (plugin == null) {
-                continue;
-            }
-
-            plugin.load();
-        }
-
-        List v2 = getTemplatePluginList();
-
-        for (Iterator it = v2.iterator(); it.hasNext();) {
-            DefaultXmlConfig plugin = (DefaultXmlConfig) it.next();
-
-            //		for (int i = 0; i < v2.size(); i++) {
-            //			DefaultXmlConfig plugin = (DefaultXmlConfig) v2.get(i);
             if (plugin == null) {
                 continue;
             }
@@ -310,6 +287,4 @@ public class Config {
         return (OptionsXmlConfig) DefaultConfig.getPlugin("core",
             optionsFile.getName());
     }
-
-   
 }
