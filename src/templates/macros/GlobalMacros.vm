@@ -457,7 +457,7 @@ $scarabR.IssuePosInList of $scarabR.CurrentSearchResultsSize
  <textarea cols="30" rows="2" wrap="virtual" name="$key">#if ($value)$value#end</textarea>
 #end
 #macro (textAreaMedium $key $value)
- <textarea cols="55" rows="5" wrap="virtual" name="$key">#if ($value)$value#end</textarea>
+ <textarea cols="50" rows="10" wrap="virtual" name="$key">#if ($value)$value#end</textarea>
 #end
 #macro (textAreaLarge $key $value)
  <textarea cols="90" rows="10" wrap="virtual" name="$key">#if ($value)$value#end</textarea>
@@ -569,6 +569,11 @@ $scarabR.IssuePosInList of $scarabR.CurrentSearchResultsSize
 ## USER SEARCH
 <a name="add"><h3>$l10n.Users</h3></a> 
 <div class="axial">
+
+#if (!$userAttrs || $userAttrs.isEmpty())
+  <p class="alert">$l10n.NoUserAttributesInCommon</p>
+#else
+
 <table border="0" cellspacing="2" cellpadding="3">
   <tr>
    <th>$l10n.FilterThisList</th>
@@ -586,7 +591,7 @@ $scarabR.IssuePosInList of $scarabR.CurrentSearchResultsSize
     #if ( $searchResults.getList().isEmpty())
         <p class="alert">$l10n.NoUsersMatch</p>
         #set ($searchResults = $scarabR.UserSearchResults($mitList, $pageNum, $resultsPerPage, $sortColumn, $sortPolarity))
-    #end 
+    #end
 #else
     #set ($searchResults = $scarabR.UserSearchResults($mitList, $pageNum, $resultsPerPage, $sortColumn, $sortPolarity))
 #end 
@@ -598,6 +603,10 @@ $scarabR.IssuePosInList of $scarabR.CurrentSearchResultsSize
 #if ($paginated)
   #paginateWithSearch ($resultsPerPage $pageNum $sortColumn $sortPolarity $searchString $searchField $headingType)
 #end
+
+#if (!$searchResultsList || $searchResultsList.isEmpty()) 
+  <p class="alert">$l10n.NoUsersAvailable</p>
+#else
 
   <table width="100%" border="1" cellspacing="2" cellpadding="3">
 	<tr>
@@ -651,6 +660,8 @@ $scarabR.IssuePosInList of $scarabR.CurrentSearchResultsSize
 <input type="hidden" name="pageNum" value="$pageNum" />
 <input type="hidden" name="resultsPerPage" value="$resultsPerPage" />
 
+#end ## ends the if (!$searchResultsList || $searchResultsList.isEmpty()) statement
+#end ## ends the if (!$userAttrs || $userAttrs.isEmpty()) statement
 #end
 
 
