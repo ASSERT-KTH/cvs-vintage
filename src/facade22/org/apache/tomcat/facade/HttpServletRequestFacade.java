@@ -96,7 +96,6 @@ public final class HttpServletRequestFacade implements HttpServletRequest {
     ServletInputStreamFacade isFacade=new ServletInputStreamFacade();
     boolean isFacadeInitialized=false;
     BufferedReader reader=null;
-    DateFormat []dateFormats;
     UEncoder uencoder;
 
     private boolean usingStream = false;
@@ -111,13 +110,6 @@ public final class HttpServletRequestFacade implements HttpServletRequest {
 	isFacade.setRequest( request );
 	try {
 	    // we may create facades more often than requests
-	    if( dateFormats==null ) {
-		dateFormats=new DateFormat[] {
-		    new SimpleDateFormat(DateTool.RFC1123_PATTERN, Locale.US),
-		    new SimpleDateFormat(DateTool.rfc1036Pattern, Locale.US),
-		    new SimpleDateFormat(DateTool.asctimePattern, Locale.US)
-		};
-	    }
 	    if( uencoder==null ) {
 		uencoder=new UEncoder();
 		uencoder.addSafeCharacter(';');
@@ -216,15 +208,7 @@ public final class HttpServletRequestFacade implements HttpServletRequest {
      *  We delegate this to RequestUtil. ( adapter function )
      */
     public long getDateHeader(String name) {
-	String value=request.getHeader( name );
-	if( value==null) return -1;
-
-	long date=DateTool.parseDate(value,dateFormats);
-	if( date==-1) {
-	    String msg = sm.getString("httpDate.pe", value);
-	    throw new IllegalArgumentException(msg);
-	}
-	return date;
+	return request.getDateHeader( name );
     }
 
     public String getHeader(String name) {

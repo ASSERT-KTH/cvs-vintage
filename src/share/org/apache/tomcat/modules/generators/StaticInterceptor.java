@@ -335,21 +335,14 @@ final class FileHandler extends Handler  {
 	File file = new File( absPath );
 	// If we are included, the If-Modified-Since isn't for us.
 	if( ! res.isIncluded() ) {
-	    MessageBytes imsMB=req.getMimeHeaders().getValue("If-Modified-Since");
-
-	    if (imsMB != null) {
-
-		long date = imsMB.getTime();
-		
-		if ((file.lastModified() <= (date + 1000)) ) {
-		    // The entity has not been modified since the date
-		    // specified by the client. This is not an error case.
-		    context.getContextManager().handleStatus( req, res, 304);
-		    return;
-		}
-
-
+	    long date = req.getDateHeader("If-Modified-Since");
+	    if ((file.lastModified() <= (date + 1000)) ) {
+		// The entity has not been modified since the date
+		// specified by the client. This is not an error case.
+		context.getContextManager().handleStatus( req, res, 304);
+		return;
 	    }
+
 	}
 	if( debug>0) log( "After paranoic checks = " + absPath);
 

@@ -75,6 +75,9 @@ import java.io.IOException;
 import java.io.CharConversionException;
 import java.util.Enumeration;
 import java.util.Hashtable;
+import java.util.Locale;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 
 /**
  * This is a low-level, efficient representation of a server request. Most fields
@@ -219,6 +222,7 @@ public class Request {
     protected Request parent;
     protected Request child;
 
+    protected DateFormat []dateFormats = null;
     protected UDecoder urlDecoder;
     
     // Error handling support
@@ -891,6 +895,28 @@ public class Request {
     }
 
     // -------------------- Facade for MimeHeaders
+    /**
+     * Utility method to parse dates.
+     */
+    public long getDateHeader(String name) {
+	MessageBytes value=getMimeHeaders().getValue( name );
+	if( value==null || value.isNull() ) return -1;
+
+	// By delaying until here, we don't have to create them on sub-requests
+	if( dateFormats == null) {
+	    dateFormats=new DateFormat[] {
+		    new SimpleDateFormat(DateTool.RFC1123_PATTERN, Locale.US),
+		    new SimpleDateFormat(DateTool.rfc1036Pattern, Locale.US),
+		    new SimpleDateFormat(DateTool.asctimePattern, Locale.US)
+		};
+	}
+	long date=DateTool.parseDate(value.toString(),dateFormats);
+	if( date==-1) {
+	    String msg = response.sm.getString("httpDate.pe", value);
+	    throw new IllegalArgumentException(msg);
+	}
+	return date;
+    }
     /** @deprecated
      */
     public Enumeration getHeaders(String name) {
