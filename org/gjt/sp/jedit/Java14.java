@@ -42,7 +42,7 @@ import org.gjt.sp.util.Log;
  * this file out.
  * @since jEdit 4.0pre4
  * @author Slava Pestov
- * @version $Id: Java14.java,v 1.31 2003/10/26 05:50:41 spestov Exp $
+ * @version $Id: Java14.java,v 1.32 2003/11/02 21:16:37 spestov Exp $
  */
 public class Java14
 {
@@ -355,8 +355,12 @@ public class Java14
 
 			for(int i = 0; i < flavors.length; i++)
 			{
-				if(DataFlavor.stringFlavor.equals(flavors[i]) ||
-					DataFlavor.javaFileListFlavor.equals(flavors[i]))
+				if(DataFlavor.stringFlavor.equals(flavors[i]))
+				{
+					return textArea.isEditable();
+				}
+				else if(DataFlavor.javaFileListFlavor
+					.equals(flavors[i]))
 				{
 					return true;
 				}

@@ -37,7 +37,7 @@ import org.gjt.sp.util.Log;
 /**
  * A class loader implementation that loads classes from JAR files.
  * @author Slava Pestov
- * @version $Id: JARClassLoader.java,v 1.30 2003/05/01 02:21:26 spestov Exp $
+ * @version $Id: JARClassLoader.java,v 1.31 2003/11/02 21:16:37 spestov Exp $
  */
 public class JARClassLoader extends ClassLoader
 {
@@ -202,6 +202,9 @@ public class JARClassLoader extends ClassLoader
 	void deactivate()
 	{
 		String[] classes = jar.getClasses();
+		if(classes == null)
+			return;
+
 		for(int i = 0; i < classes.length; i++)
 		{
 			Object loader = classHash.get(classes[i]);

@@ -35,7 +35,7 @@ import org.gjt.sp.util.Log;
 /**
  * Local filesystem VFS.
  * @author Slava Pestov
- * @version $Id: FileVFS.java,v 1.44 2003/10/21 17:39:30 spestov Exp $
+ * @version $Id: FileVFS.java,v 1.45 2003/11/02 21:16:38 spestov Exp $
  */
 public class FileVFS extends VFS
 {
@@ -72,7 +72,8 @@ public class FileVFS extends VFS
 	//{{{ constructPath() method
 	public String constructPath(String parent, String path)
 	{
-		if(parent.endsWith(File.separator))
+		if(parent.endsWith(File.separator)
+			|| parent.endsWith("/"))
 			return parent + path;
 		else
 			return parent + File.separator + path;

@@ -54,7 +54,7 @@ import org.gjt.sp.jedit.textarea.*;
  * @see View#getEditPanes()
  *
  * @author Slava Pestov
- * @version $Id: EditPane.java,v 1.47 2003/08/10 03:21:57 spestov Exp $
+ * @version $Id: EditPane.java,v 1.48 2003/11/02 21:16:37 spestov Exp $
  */
 public class EditPane extends JPanel implements EBComponent
 {
@@ -135,7 +135,10 @@ public class EditPane extends JPanel implements EBComponent
 		{
 			public void run()
 			{
-				loadCaretInfo();
+				// avoid a race condition
+				// see bug #834338
+				if(buffer == getBuffer())
+					loadCaretInfo();
 			}
 		};
 

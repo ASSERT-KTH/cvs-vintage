@@ -39,7 +39,7 @@ import org.gjt.sp.util.Log;
 /**
  * Operating system detection routines.
  * @author Slava Pestov
- * @version $Id: OperatingSystem.java,v 1.14 2003/06/08 22:49:09 spestov Exp $
+ * @version $Id: OperatingSystem.java,v 1.15 2003/11/02 21:16:37 spestov Exp $
  * @since jEdit 4.0pre4
  */
 public class OperatingSystem
@@ -88,26 +88,24 @@ public class OperatingSystem
 	{
 		GraphicsDevice[] gd = GraphicsEnvironment.getLocalGraphicsEnvironment().getScreenDevices();
 		Vector intersects = new Vector();
-		
+
 		// Get available screens
 		// O(n^3), this is nasty, but since we aren't dealling with
 		// many items it should be fine
 		for (int i=0; i < gd.length; i++)
 		{
-			GraphicsConfiguration[] gc = gd[i].getConfigurations();
-L2:			for (int j=0; j < gc.length; j++)
+			GraphicsConfiguration gc = gd[i]
+				.getDefaultConfiguration();
+			// Don't add duplicates
+			if (window.intersects(gc.getBounds()))
 			{
-				// Don't add duplicates
-				if (window.intersects(gc[j].getBounds()))
+				for (Enumeration e = intersects.elements(); e.hasMoreElements();)
 				{
-					for (Enumeration e = intersects.elements(); e.hasMoreElements();)
-					{
-						GraphicsConfiguration gcc = (GraphicsConfiguration)e.nextElement();
-						if (gcc.getBounds().equals(gc[j].getBounds()))
-							continue L2;
-					}
-					intersects.add(gc[j]);
+					GraphicsConfiguration gcc = (GraphicsConfiguration)e.nextElement();
+					if (gcc.getBounds().equals(gc.getBounds()))
+						break;
 				}
+				intersects.add(gc);
 			}
 		}
 		

@@ -98,7 +98,7 @@ import org.gjt.sp.util.Log;
  * @see org.gjt.sp.jedit.ServiceManager
  *
  * @author Slava Pestov
- * @version $Id: PluginJAR.java,v 1.37 2003/10/26 00:34:11 spestov Exp $
+ * @version $Id: PluginJAR.java,v 1.38 2003/11/02 21:16:37 spestov Exp $
  * @since jEdit 4.2pre1
  */
 public class PluginJAR
@@ -753,7 +753,7 @@ public class PluginJAR
 			catch(IOException io)
 			{
 				Log.log(Log.ERROR,this,"Cannot load"
-					+ " plugin " + plugin);
+					+ " plugin " + path);
 				Log.log(Log.ERROR,this,io);
 
 				String[] args = { io.toString() };

@@ -38,7 +38,7 @@ import org.gjt.sp.jedit.*;
 /**
  * Abbrev editor.
  * @author Slava Pestov
- * @version $Id: AbbrevsOptionPane.java,v 1.11 2003/06/04 01:44:17 spestov Exp $
+ * @version $Id: AbbrevsOptionPane.java,v 1.12 2003/11/02 21:16:38 spestov Exp $
  */
 public class AbbrevsOptionPane extends AbstractOptionPane
 {
@@ -71,6 +71,7 @@ public class AbbrevsOptionPane extends AbstractOptionPane
 		Hashtable _modeAbbrevs = Abbrevs.getModeAbbrevs();
 		modeAbbrevs = new Hashtable();
 		Mode[] modes = jEdit.getModes();
+		Arrays.sort(modes,new MiscUtilities.StringICaseCompare());
 		String[] sets = new String[modes.length + 1];
 		sets[0] = "global";
 		for(int i = 0; i < modes.length; i++)

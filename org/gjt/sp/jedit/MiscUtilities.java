@@ -68,7 +68,7 @@ import org.gjt.sp.util.Log;
  *
  * @author Slava Pestov
  * @author John Gellene (API documentation)
- * @version $Id: MiscUtilities.java,v 1.63 2003/10/26 00:34:11 spestov Exp $
+ * @version $Id: MiscUtilities.java,v 1.64 2003/11/02 21:16:37 spestov Exp $
  */
 public class MiscUtilities
 {
@@ -215,13 +215,15 @@ public class MiscUtilities
 				parent = getParentOfPath(parent);
 				path = path.substring(3);
 			}
-			else if(path.startsWith(d))
+			else if(path.startsWith(d) || path.startsWith("./"))
 				path = path.substring(2);
 			else
 				break;
 		}
 
-		if(OperatingSystem.isDOSDerived() && path.startsWith("\\"))
+		if(OperatingSystem.isDOSDerived()
+			&& !isURL(parent)
+			&& path.startsWith("\\"))
 			parent = parent.substring(0,2);
 
 		VFS vfs = VFSManager.getVFSForPath(parent);

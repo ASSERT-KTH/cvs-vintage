@@ -53,7 +53,7 @@ import org.gjt.sp.util.Log;
  * </ul>
  *
  * @author Slava Pestov
- * @version $Id: GUIUtilities.java,v 1.76 2003/08/12 20:36:34 spestov Exp $
+ * @version $Id: GUIUtilities.java,v 1.77 2003/11/02 21:16:37 spestov Exp $
  */
 public class GUIUtilities
 {
@@ -96,7 +96,7 @@ public class GUIUtilities
 			return icon;
 
 		// get the icon
-		if(iconName.startsWith("file:"))
+		if(MiscUtilities.isURL(iconName))
 		{
 			icon = new ImageIcon(iconName.substring(5));
 		}
