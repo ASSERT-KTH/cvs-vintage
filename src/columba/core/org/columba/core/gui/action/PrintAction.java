@@ -24,13 +24,19 @@ import javax.swing.KeyStroke;
 import org.columba.core.action.FrameAction;
 import org.columba.core.charset.CharsetOwnerInterface;
 import org.columba.core.gui.frame.AbstractFrameController;
+import org.columba.core.gui.selection.SelectionChangedEvent;
+import org.columba.core.gui.selection.SelectionListener;
 import org.columba.core.gui.util.ImageLoader;
 import org.columba.core.main.MainInterface;
 import org.columba.mail.command.FolderCommandReference;
 import org.columba.mail.folder.command.PrintMessageCommand;
+import org.columba.mail.gui.frame.AbstractMailFrameController;
+import org.columba.mail.gui.table.selection.TableSelectionChangedEvent;
 import org.columba.mail.util.MailResourceLoader;
 
-public class PrintAction extends FrameAction {
+public class PrintAction 
+		extends FrameAction 
+		implements SelectionListener {
 
 	public PrintAction(AbstractFrameController controller) {
 		super(
@@ -50,8 +56,12 @@ public class PrintAction extends FrameAction {
 			'0',
 			KeyStroke.getKeyStroke(KeyEvent.VK_P, ActionEvent.CTRL_MASK));
 
-		setEnabled(true);
-		// *20030531, karlpeder* Print functionality reactivated
+			// *20030614, karlpeder* only enabled when message(s) selected
+			setEnabled(false);
+			((AbstractMailFrameController) frameController)
+					.registerTableSelectionListener(this);
+//		setEnabled(true);
+//		// *20030531, karlpeder* Print functionality reactivated
 	}
 
 	/* (non-Javadoc)
@@ -74,4 +84,17 @@ public class PrintAction extends FrameAction {
 		MainInterface.processor.addOp(c);
 	}
 
+	/**
+	 * Ensures that the action is only enabled when at least 
+	 * one message is selected in the GUI.
+	 * @see org.columba.core.gui.util.SelectionListener#selectionChanged(org.columba.core.gui.util.SelectionChangedEvent)
+	 */
+	public void selectionChanged(SelectionChangedEvent e) {
+
+		if (((TableSelectionChangedEvent) e).getUids().length > 0)
+			setEnabled(true);
+		else
+			setEnabled(false);
+
+	}
 }
