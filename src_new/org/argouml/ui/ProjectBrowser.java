@@ -1,4 +1,4 @@
-// $Id: ProjectBrowser.java,v 1.136 2004/11/04 17:23:16 bobtarling Exp $
+// $Id: ProjectBrowser.java,v 1.137 2004/11/21 08:49:06 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -622,7 +622,7 @@ public class ProjectBrowser
         }
         Vector diagrams =
             ProjectManager.getManager().getCurrentProject().getDiagrams();
-        Object target = editorPane.getTarget();
+        Object target = TargetManager.getInstance().getTarget();
         if ((target instanceof Diagram)
             && ((Diagram) target).countContained(dms) == dms.size()) {
             setTarget(first);

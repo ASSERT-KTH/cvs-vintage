@@ -1,4 +1,4 @@
-// $Id: MultiEditorPane.java,v 1.41 2004/11/04 17:23:16 bobtarling Exp $
+// $Id: MultiEditorPane.java,v 1.42 2004/11/21 08:49:07 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -160,20 +160,6 @@ public class MultiEditorPane
                 tabs.setEnabledAt(i, shouldBeEnabled);                
             }
         }
-    }
-    
-    
-    /**
-     * Returns the current target of the multieditorpane.
-     * TODO: check if the target is needed for the multieditorpane as an
-     * instance variable.
-     * @return Object
-     * @deprecated As of ArgoUml version 0.13.5, use 
-     * {@link org.argouml.ui.targetmanager.TargetManager#getTarget()}
-     * instead
-     */
-    public Object getTarget() {
-        return TargetManager.getInstance().getTarget();
     }
 
     ////////////////////////////////////////////////////////////////
