@@ -24,7 +24,7 @@
 // File: UMLStateDiagram.java
 // Classes: UMLStateDiagram
 // Original Author: your email here
-// $Id: UMLStateDiagram.java,v 1.2 2001/04/02 14:28:41 5heyden Exp $
+// $Id: UMLStateDiagram.java,v 1.3 2001/08/17 11:06:04 toby Exp $
 
 package org.argouml.uml.diagram.state.ui;
 
@@ -43,6 +43,10 @@ import org.tigris.gef.ui.*;
 import org.argouml.ui.*;
 import org.argouml.uml.diagram.ui.*;
 import org.argouml.uml.diagram.state.*;
+
+// get the note from the class diagram
+import org.argouml.uml.ui.*;
+import org.argouml.uml.diagram.static_structure.ui.FigNote;
 
 public class UMLStateDiagram extends UMLDiagram {
 
@@ -177,7 +181,9 @@ public MStateMachine getStateMachine() {
     _toolBar.add(_actionShallowHistoryPseudoState);
     _toolBar.add(_actionDeepHistoryPseudoState);
     _toolBar.addSeparator();
-
+    _toolBar.add(ActionAddNote.SINGLETON);
+    _toolBar.addSeparator();
+    
     //_toolBar.add(Actions.AddInternalTrans);
     //_toolBar.addSeparator();
 
