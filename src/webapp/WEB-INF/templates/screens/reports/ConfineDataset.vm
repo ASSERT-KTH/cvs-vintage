@@ -65,7 +65,7 @@ $l10n.RangeFrom&#160;<input type="text" size="20"
     name="$intakeSearch.MinDate.Key" value="$intakeSearch.MinDate.toString()" />
 &#160;&#160;$l10n.RangeTo:&#160;<input type="text" size="20"
     name="$intakeSearch.MaxDate.Key" value="$intakeSearch.MaxDate.toString()" />
-<p><small>$l10n.DateEg</small></p>
+<p><small>$l10n.format("DateEg", $l10n.ShortDateDisplay)</small></p>
 </td>
 </tr>
 </table>

@@ -54,7 +54,7 @@ import org.apache.turbine.Turbine;
  * A place to put public final static strings and other constants.
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: ScarabConstants.java,v 1.64 2003/10/14 04:59:23 jmcnally Exp $
+ * @version $Id: ScarabConstants.java,v 1.65 2004/03/27 00:40:05 pledbrook Exp $
  */
 public interface ScarabConstants
 {
@@ -229,6 +229,17 @@ public interface ScarabConstants
      * format for displaying dates
      */
     String DATE_FORMAT = "yyyy-MM-dd HH:mm:ss z";
+    
+    /**
+     * The ISO date format that we accept when users enter dates.
+     */
+    String ISO_DATE_PATTERN = "yyyy-MM-dd";
+    
+    /**
+     * The ISO date/time format that we accept when users enter
+     * dates and times.
+     */
+    String ISO_DATETIME_PATTERN = "yyyy-MM-dd HH:mm";
 
     /**
      * The default base for resolving ResourceBundles.

@@ -62,6 +62,7 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.turbine.tool.IntakeTool;
 import org.apache.fulcrum.intake.model.Group;
 import org.apache.fulcrum.intake.model.Field;
+import org.apache.fulcrum.util.parser.StringValueParser;
 import org.apache.fulcrum.util.parser.ValueParser;
 
 // Scarab Stuff
@@ -92,7 +93,7 @@ import org.tigris.scarab.util.export.ExportFormat;
  * @author <a href="mailto:jmcnally@collab.net">John D. McNally</a>
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: Search.java,v 1.149 2004/02/01 14:06:36 dep4b Exp $
+ * @version $Id: Search.java,v 1.150 2004/03/27 00:40:05 pledbrook Exp $
  */
 public class Search extends RequireLoginFirstAction
 {
@@ -507,6 +508,30 @@ public class Search extends RequireLoginFirstAction
             mitList.setScarabUser(user);
         }
         user.setMostRecentQuery(query.getValue());
+        
+        //
+        // Add 'sortColumn', 'sortPolarity' and 'resultsPerPage'
+        // to the RunData parameters. This ensures that when the
+        // user runs a saved query, the resulting issue list is
+        // displayed with that query's settings. 
+        //
+        StringValueParser parser = new StringValueParser();
+        parser.parse(query.getValue(), '&', '=', true);
+        
+        if (parser.containsKey("resultsperpage")) {
+            data.getParameters().add("resultsperpage",
+                                     parser.getInt("resultsperpage"));
+        }
+        
+        if (parser.containsKey("searchsai")) {
+            data.getParameters().add("sortColumn",
+                                     parser.getInt("searchsai"));
+        }
+        
+        if (parser.containsKey("searchsp")) {
+            data.getParameters().add("sortPolarity",
+                                     parser.getString("searchsp"));
+        }
 
         setTarget(data, "IssueList.vm");
     }

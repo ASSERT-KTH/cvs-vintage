@@ -407,10 +407,10 @@
   #set ($resultsPerPage = 25)
 #end
 #foreach ($num in [25, 50, 75, 100])
- <input type="radio" value="$num" name="newResultsPerPage" #if ($resultsPerPage == $num) checked="checked" #end /> $num
+ <input type="radio" value="$num" name="resultsPerPage" #if ($resultsPerPage == $num) checked="checked" #end /> $num
 #end
 #if ($showAll.toString().equals("true"))
- <input type="radio" value="-1" name="newResultsPerPage" #if ($resultsPerPage == -1) checked="checked" #end /> $l10n.All
+ <input type="radio" value="-1" name="resultsPerPage" #if ($resultsPerPage == -1) checked="checked" #end /> $l10n.All
 #end
 #end
 

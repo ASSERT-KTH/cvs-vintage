@@ -69,10 +69,8 @@ $link.setPage('ConfigureIssueList.vm').setLabel($l10n.AddRemoreAttributesFromVie
 </small>
 </div>
 		
-#set ($search = $scarabR.PopulatedSearch)
-#set ($searchGroup = $intake.SearchIssue.mapTo($search))
-#set ($sortColumn = $searchGroup.get("SortAttributeId").Value.toString())
-#set ($sortPolarity = $searchGroup.get("SortPolarity").Value)
+#set ($sortColumn = $data.Parameters.getString('sortColumn'))
+#set ($sortPolarity = $data.Parameters.getString('sortPolarity', 'asc'))
 <input type="hidden" name="sortColumn" value="$sortColumn" />
 <input type="hidden" name="sortPolarity" value="$sortPolarity" />
 

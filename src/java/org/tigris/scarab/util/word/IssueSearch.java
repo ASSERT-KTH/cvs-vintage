@@ -52,6 +52,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 import java.util.HashSet;
@@ -61,6 +62,7 @@ import java.sql.Statement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.text.DateFormat;
+import java.text.DateFormatSymbols;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 
@@ -75,6 +77,7 @@ import org.apache.commons.collections.SequencedHashMap;
 import org.apache.commons.collections.LRUMap;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.ObjectUtils;
+import org.apache.fulcrum.localization.Localization;
 import org.apache.log4j.Logger;
 
 // Scarab classes
@@ -113,7 +116,7 @@ import org.tigris.scarab.services.security.ScarabSecurity;
  * not a more specific type of Issue.
  *
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: IssueSearch.java,v 1.122 2004/02/03 11:31:48 dep4b Exp $
+ * @version $Id: IssueSearch.java,v 1.123 2004/03/27 00:40:06 pledbrook Exp $
  */
 public class IssueSearch 
     extends Issue
@@ -294,6 +297,19 @@ public class IssueSearch
 
     /** A counter of inner joins used in a query */
     private int joinCounter;
+    
+    /**
+     * This is the locale that the search is currently running
+     * under. We need it to parse the date attributes. It defaults
+     * to the US locale as that was the behaviour before.
+     * @todo Ideally, the minDate, maxDate and others should
+     * be Date objects, with the user of this class doing the
+     * parsing itself. However, the intake tool is currently
+     * configured to use this class directly. Hopefully when
+     * (if?) intake supports dates natively, we can drop the
+     * date parsing from this class and use Dates instead. 
+     */
+    private Locale locale = Locale.US;
 
     IssueSearch(Issue issue, ScarabUser searcher)
         throws Exception
@@ -363,6 +379,13 @@ public class IssueSearch
         }        
     }
 
+    public Locale getLocale() {
+        return this.locale;
+    }
+    
+    public void setLocale(Locale newLocale) {
+        this.locale = newLocale;
+    }
 
     public boolean isXMITSearch()
     {
@@ -685,23 +708,24 @@ public class IssueSearch
      */
     public String getMinDate() 
     {
-        return minDate;
+        return this.minDate;
     }
     
     /**
      * Set the value of minDate.
-     * @param v  Value to assign to minDate.
+     * @param newMinDate  Value to assign to minDate.
      */
-    public void setMinDate(String  v) 
+    public void setMinDate(String newMinDate) 
     {
-        if (v != null && v.length() == 0) 
+        if (newMinDate != null && newMinDate.length() == 0) 
         {
-            v = null;
+            newMinDate = null;
         }
-        if (!ObjectUtils.equals(v, this.minDate)) 
+        
+        if (!ObjectUtils.equals(newMinDate, this.minDate)) 
         {
-            modified = true;
-            this.minDate = v;
+            this.modified = true;
+            this.minDate = newMinDate;
         }
     }
 
@@ -712,23 +736,24 @@ public class IssueSearch
      */
     public String getMaxDate() 
     {
-        return maxDate;
+        return this.maxDate;
     }
     
     /**
      * Set the value of maxDate.
-     * @param v  Value to assign to maxDate.
+     * @param newMaxDate Value to assign to maxDate.
      */
-    public void setMaxDate(String  v) 
+    public void setMaxDate(String newMaxDate) 
     {
-        if (v != null && v.length() == 0) 
+        if (newMaxDate != null && newMaxDate.length() == 0) 
         {
-            v = null;
+            newMaxDate = null;
         }
-        if (!ObjectUtils.equals(v, this.maxDate)) 
+        
+        if (!ObjectUtils.equals(newMaxDate, this.maxDate)) 
         {
-            modified = true;
-            this.maxDate = v;
+            this.modified = true;
+            this.maxDate = newMaxDate;
         }
     }
     
@@ -828,23 +853,24 @@ public class IssueSearch
      */
     public String getStateChangeFromDate() 
     {
-        return stateChangeFromDate;
+        return this.stateChangeFromDate;
     }
     
     /**
      * Set the value of stateChangeFromDate.
-     * @param v  Value to assign to stateChangeFromDate.
+     * @param fromDate Value to assign to stateChangeFromDate.
      */
-    public void setStateChangeFromDate(String  v) 
+    public void setStateChangeFromDate(String fromDate) 
     {
-        if (v != null && v.length() == 0) 
+        if (fromDate != null && fromDate.length() == 0) 
         {
-            v = null;
+            fromDate = null;
         }
-        if (!ObjectUtils.equals(v, this.stateChangeFromDate)) 
+        
+        if (!ObjectUtils.equals(fromDate, this.stateChangeFromDate)) 
         {
-            modified = true;
-            this.stateChangeFromDate = v;
+            this.modified = true;
+            this.stateChangeFromDate = fromDate;
         }
     }
     
@@ -853,25 +879,26 @@ public class IssueSearch
      * Get the value of stateChangeToDate.
      * @return value of stateChangeToDate.
      */
-    public String getStateChangeToDate() 
+    public String getStateChangeToDate()
     {
-        return stateChangeToDate;
+        return this.stateChangeToDate;
     }
     
     /**
      * Set the value of stateChangeToDate.
-     * @param v  Value to assign to stateChangeToDate.
+     * @param toDate Value to assign to stateChangeToDate.
      */
-    public void setStateChangeToDate(String  v) 
+    public void setStateChangeToDate(String toDate) 
     {
-        if (v != null && v.length() == 0) 
+        if (toDate != null && toDate.length() == 0) 
         {
-            v = null;
+            toDate = null;
         }
-        if (!ObjectUtils.equals(v, this.stateChangeToDate)) 
+        
+        if (!ObjectUtils.equals(toDate, this.stateChangeToDate)) 
         {
-            modified = true;
-            this.stateChangeToDate = v;
+            this.modified = true;
+            this.stateChangeToDate = toDate;
         }
     }
     
@@ -1257,16 +1284,21 @@ public class IssueSearch
     }
 
     /**
-     * Attempts to parse a String as a Date given in MM/DD/YYYY form or a
-     * Date and Time given in 24 hour clock MM/DD/YYYY HH:mm.  Returns null
-     * if the String did not contain a suitable format
+     * Attempts to parse a atring as a date, first using the locale-sepcific
+     * short date format, and then the ISO standard "yyyy-mm-dd". If it sees
+     * a ':' character in the date string then the string will be interpreted
+     * as a date <b>and</b> time. Throws a ParseException if the String does
+     * not contain a suitable format.
      *
      * @param dateString a <code>String</code> value
+     * @param locale the locale to use when determining the date patterns
+     * to try.
      * @param addTwentyFourHours if no time is given in the date string and
      * this flag is true, then 24 hours - 1 msec will be added to the date.
      * @return a <code>Date</code> value
      */
-    public Date parseDate(String dateString, boolean addTwentyFourHours)
+    public Date parseDate(String dateString,
+                          boolean addTwentyFourHours)
         throws ParseException
     {
         Date date = null;
@@ -1274,12 +1306,24 @@ public class IssueSearch
         {
             if (dateString.indexOf(':') == -1)
             {
-                String[] patterns = {"MM/dd/yy", "yyyy-MM-dd"};
+                //
+                // First try to parse the date using the current
+                // locale. If that doesn't work, then try the
+                // ISO format.
+                //
+                String[] patterns = {
+                    Localization.getString(this.locale, "ShortDatePattern"),
+                    ScarabConstants.ISO_DATE_PATTERN };
                 date = parseDate(dateString, patterns);
-        
+                
                 // one last try with the default locale format
                 if (date == null) 
                 {
+                    //
+                    // If this fails, then we want the parse exception
+                    // to propogate. That's why we don't use
+                    // parseDateWithFormat() here.
+                    //
                     date = DateFormat.getDateInstance().parse(dateString);
                 }
 
@@ -1291,7 +1335,14 @@ public class IssueSearch
             }
             else
             {
-                String[] patterns = {"MM/dd/yy HH:mm", "yyyy-MM-dd HH:mm"};
+                //
+                // First try to parse the date using the current
+                // locale. If that doesn't work, then try the
+                // ISO format.
+                //
+                String[] patterns = {
+                    Localization.getString(this.locale, "ShortDateTimePattern"),
+                    ScarabConstants.ISO_DATETIME_PATTERN };
                 date = parseDate(dateString, patterns);
         
                 // one last try with the default locale format
@@ -1304,17 +1355,20 @@ public class IssueSearch
         
         return date;
     }
-
+    
     /**
-     * Attempts to parse a String as a Date given in MM/DD/YYYY form or a
-     * Date and Time given in 24 hour clock MM/DD/YYYY HH:mm.  Returns null
-     * if the String did not contain a suitable format
+     * Attempts to parse a String as a Date, trying each pattern in
+     * turn until the string is successfully parsed or all patterns
+     * have been tried.
      *
-     * @param s a <code>String</code> value
+     * @param s a <code>String</code> value that should be converted
+     * to a <code>Date</code>.
      * @param patterns if no time is given in the date string and
      * this flag is true, then 24 hours - 1 msec will be added to the date.
-     * @return a <code>Date</code> value
-     * @throws ParseException if input String is null
+     * @return the equivalent <code>Date</code> if the string could
+     * be parsed. 
+     * @throws ParseException if input String is null, or the string
+     * could not be parsed.
      */
     private Date parseDate(String s, String[] patterns)
         throws ParseException
@@ -1322,8 +1376,6 @@ public class IssueSearch
         /* FIXME: the contract for this method is strange
            it is returning a null value when encountering a ParseException,
            and throwing a ParseException when having a wrong input*/
-        Date date = null;
-
         if (s == null) 
         {
             throw new ParseException("Input string was null", -1);
@@ -1334,23 +1386,30 @@ public class IssueSearch
             formatter = new SimpleDateFormat();
         }
         
-        for (int i=0; i<patterns.length; i++) 
+        for (int i = 0; i < patterns.length; i++) 
         {
             formatter.applyPattern(patterns[i]);
-            try
-            {
-                date = formatter.parse(s);
-            }
-            catch (ParseException e)
-            {
-                // ignore
-            }
+            Date date = parseDateWithFormat(s, formatter);
+            
             if (date != null) 
             {
-                break;
+                return date;
             }
         }
-        return date;
+        
+        throw new ParseException("Date could not be parsed with any"
+                                 + " of the provided date patterns.", -1);
+    }
+    
+    private Date parseDateWithFormat(String dateString, DateFormat format) {
+        try
+        {
+            return format.parse(dateString);
+        }
+        catch (ParseException ex)
+        {
+            return null;
+        }
     }
 
 

@@ -1572,7 +1572,7 @@ e.printStackTrace();
         // query.getValue() begins with a &
         link = link 
             + "?action=Search&eventSubmit_doSearch=Search" 
-            + "&resultsperpage=25&pagenum=1" + query.getValue();
+            + "&pagenum=1" + query.getValue();
 
         Long listId = query.getListId();
         if (listId != null) 
@@ -1651,6 +1651,7 @@ e.printStackTrace();
             {
                 issueSearch = 
                     IssueSearchFactory.INSTANCE.getInstance(mitList, user);
+                issueSearch.setLocale(getLocalizationTool().getLocale());
             }
         }
         return issueSearch; 
@@ -1668,127 +1669,126 @@ e.printStackTrace();
         ScarabLocalizationTool l10n = getLocalizationTool();
         search.setIssueListAttributeColumns(getRModuleUserAttributes());
 
-        boolean searchSuccess = true;
         Intake intake = null;
 
         if (query == null)
         {
             setInfoMessage(l10n.get("EnterQuery"));
-            searchSuccess = false;
+            return null;
         }
         else
         {
            intake = parseQuery(query);
-           searchSuccess = intake.isAllValid();
+           
+           if (!intake.isAllValid())
+           {
+               return null;
+           }
         }
 
-        if (searchSuccess)
+        // If they have entered users to search on, add them to the search
+        StringValueParser parser = new StringValueParser();
+        parser.parse(query, '&', '=', true);
+        String[] userList = parser.getStrings("user_list");
+        if (userList != null && userList.length > 0)
         {
-            // If they have entered users to search on, add them to the search
-            StringValueParser parser = new StringValueParser();
-            parser.parse(query, '&', '=', true);
-            String[] userList = parser.getStrings("user_list");
-            if (userList != null && userList.length > 0)
+            for (int i = 0; i < userList.length; i++)
             {
-                for (int i =0; i<userList.length; i++)
+                String userId = userList[i];
+                String[] attrIds = parser.getStrings("user_attr_" + userId);
+                if (attrIds != null) 
                 {
-                    String userId = userList[i];
-                    String[] attrIds = parser.getStrings("user_attr_" + userId);
-                    if (attrIds != null) 
+                    for (int j = 0; j < attrIds.length; j++) 
                     {
-                        for (int j=0; j<attrIds.length; j++) 
-                        {
-                            search.addUserCriteria(userId, attrIds[j]);
-                        }
+                        search.addUserCriteria(userId, attrIds[j]);
                     }
                 }
             }
-
-            // Set intake properties
-            Group searchGroup = intake.get("SearchIssue", 
-                                           search.getQueryKey());
-
-            Field minDate = searchGroup.get("MinDate");
-            if (minDate != null && minDate.toString().length() > 0)
-            { 
-               searchSuccess =  checkDate(search, minDate.toString());
-            }
-            Field maxDate = searchGroup.get("MaxDate");
-            if (maxDate != null && minDate.toString().length() > 0)
-            { 
-                searchSuccess = checkDate(search, minDate.toString());
-            }
-            Field stateChangeFromDate = searchGroup.get("StateChangeFromDate");
-            if (stateChangeFromDate != null 
-                && stateChangeFromDate.toString().length() > 0)
-            { 
-                searchSuccess = checkDate(search, stateChangeFromDate.toString());
-            }
-            Field stateChangeToDate = searchGroup.get("StateChangeToDate");
-            if (stateChangeToDate != null 
-                && stateChangeToDate.toString().length() > 0)
-            { 
-                searchSuccess = checkDate(search, stateChangeToDate.toString());
-            }
-            if (!searchSuccess)
-            {
-                setAlertMessage(l10n.get("DateFormatPrompt"));
-            }
-            try
-            {
-                searchGroup.setProperties(search);
-            }
-            catch (Exception e)
-            {
-                searchSuccess = false;
-                setAlertMessage(e.getMessage());
-            }
         }
 
-        if (searchSuccess) 
-        {        
-            Integer oldOptionId = search.getStateChangeFromOptionId();
-            if (oldOptionId != null && oldOptionId.intValue() != 0
-                 && oldOptionId.equals(search.getStateChangeToOptionId())) 
-            {
-                searchSuccess = false;
-                setAlertMessage(l10n.get("StateChangeOldEqualNew"));
-            }
+        // Set intake properties
+        boolean searchSuccess = true;
+        Group searchGroup = intake.get("SearchIssue", 
+                                       search.getQueryKey());
+        
+        Field minDate = searchGroup.get("MinDate");
+        if (minDate != null && minDate.toString().length() > 0)
+        { 
+           searchSuccess = checkDate(search, minDate.toString());
         }
-
-        if (searchSuccess) 
-        {        
-            // Set attribute values to search on
-            SequencedHashMap avMap = search.getCommonAttributeValuesMap();
-            Iterator i = avMap.iterator();
-            while (i.hasNext()) 
-            {
-                AttributeValue aval = (AttributeValue)avMap.get(i.next());
-                Group group = intake.get("AttributeValue", aval.getQueryKey());
-                if (group != null) 
-                {
-                    group.setProperties(aval);
-                }                
-            }
-            
-            // If user is sorting on an attribute, set sort criteria
-            // Do not use intake, since intake parsed from query is not the same
-            // As intake passed from the form
-            String sortColumn = data.getParameters().getString("sortColumn");
-            if (sortColumn != null && sortColumn.length() > 0 
-                && StringUtils.isNumeric(sortColumn))
-            {
-                search.setSortAttributeId(new Integer(sortColumn));
-            }
-            String sortPolarity = data.getParameters().getString("sortPolarity");
-            if (sortPolarity != null && sortPolarity.length() > 0)
-            {
-                search.setSortPolarity(sortPolarity);
-            }
+        
+        Field maxDate = searchGroup.get("MaxDate");
+        if (maxDate != null && maxDate.toString().length() > 0)
+        { 
+            searchSuccess = checkDate(search, maxDate.toString());
         }
-        else 
+        
+        Field stateChangeFromDate = searchGroup.get("StateChangeFromDate");
+        if (stateChangeFromDate != null 
+            && stateChangeFromDate.toString().length() > 0)
+        { 
+            searchSuccess = checkDate(search, stateChangeFromDate.toString());
+        }
+        
+        Field stateChangeToDate = searchGroup.get("StateChangeToDate");
+        if (stateChangeToDate != null 
+            && stateChangeToDate.toString().length() > 0)
+        { 
+            searchSuccess = checkDate(search, stateChangeToDate.toString());
+        }
+        
+        if (!searchSuccess)
         {
-            search = null;
+            setAlertMessage(l10n.format("DateFormatPrompt",
+                                        l10n.get("ShortDateDisplay")));
+            return null;
+        }
+        
+        try
+        {
+            searchGroup.setProperties(search);
+        }
+        catch (Exception e)
+        {
+            setAlertMessage(e.getMessage());
+            return null;
+        }
+        
+        Integer oldOptionId = search.getStateChangeFromOptionId();
+        if (oldOptionId != null && oldOptionId.intValue() != 0
+             && oldOptionId.equals(search.getStateChangeToOptionId())) 
+        {
+            setAlertMessage(l10n.get("StateChangeOldEqualNew"));
+            return null;
+        }
+        
+        // Set attribute values to search on
+        SequencedHashMap avMap = search.getCommonAttributeValuesMap();
+        Iterator i = avMap.iterator();
+        while (i.hasNext()) 
+        {
+            AttributeValue aval = (AttributeValue)avMap.get(i.next());
+            Group group = intake.get("AttributeValue", aval.getQueryKey());
+            if (group != null) 
+            {
+                group.setProperties(aval);
+            }                
+        }
+        
+        // If user is sorting on an attribute, set sort criteria
+        // Do not use intake, since intake parsed from query is not the same
+        // As intake passed from the form
+        String sortColumn = data.getParameters().getString("sortColumn");
+        if (sortColumn != null && sortColumn.length() > 0 
+            && StringUtils.isNumeric(sortColumn))
+        {
+            search.setSortAttributeId(new Integer(sortColumn));
+        }
+        
+        String sortPolarity = data.getParameters().getString("sortPolarity");
+        if (sortPolarity != null && sortPolarity.length() > 0)
+        {
+            search.setSortPolarity(sortPolarity);
         }
         
         return search;
@@ -3118,7 +3118,7 @@ e.printStackTrace();
         
         return result;
     }
-    
+
     // ****************** Recyclable implementation ************************
 
     /**

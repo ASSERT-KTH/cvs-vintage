@@ -58,7 +58,7 @@ $l10n.TimeFrom:&#160;<input type="text" size="20"
     name="$searchGroup.MinDate.Key" value="$!searchGroup.MinDate.toString()" />
 &#160;&#160;$l10n.TimeTo:&#160;<input type="text" size="20"
     name="$searchGroup.MaxDate.Key" value="$!searchGroup.MaxDate.toString()" />
-<p><small>$l10n.DateEg</small></p>
+<p><small>$l10n.format("DateEg", $l10n.ShortDateTimeDisplay)</small></p>
 </td>
 </tr>
 </table>
@@ -266,7 +266,7 @@ $l10n.TimeFrom:&#160;<input type="text" size="20"
         to
         <input type="text" size="20" name="$searchGroup.StateChangeToDate.Key"
             value="$searchGroup.StateChangeToDate" />
-        <p><small>$l10n.DateEg</small></p>
+        <p><small>$l10n.format("DateEg", $l10n.ShortDateTimeDisplay)</small></p>
     </td>
  </tr>
 </table>

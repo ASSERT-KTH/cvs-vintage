@@ -72,7 +72,7 @@ import org.tigris.scarab.om.Module;
  * Default.java Screen except that it has a few helper methods.
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: RequireLoginFirstAction.java,v 1.51 2003/08/22 18:20:51 venkatesh Exp $    
+ * @version $Id: RequireLoginFirstAction.java,v 1.52 2004/03/27 00:40:05 pledbrook Exp $    
  */
 public abstract class RequireLoginFirstAction extends TemplateSecureAction
 {
@@ -273,7 +273,7 @@ public abstract class RequireLoginFirstAction extends TemplateSecureAction
     public void doGonext(RunData data, TemplateContext context)
         throws Exception
     {
-        setTarget(data, getNextTemplate(data));            
+        setTarget(data, getNextTemplate(data));
     }
 
     public void doGotoothertemplate(RunData data, 
@@ -282,29 +282,33 @@ public abstract class RequireLoginFirstAction extends TemplateSecureAction
     {
         data.getParameters().setString(ScarabConstants.CANCEL_TEMPLATE,
                                        getCurrentTemplate(data));
-        setTarget(data, getOtherTemplate(data));            
+        setTarget(data, getOtherTemplate(data));
     }
 
     public void doRefresh(RunData data, TemplateContext context)
         throws Exception
     {
-        setTarget(data, getCurrentTemplate(data));            
+        setTarget(data, getCurrentTemplate(data));
     }
 
     public void doRefreshresultsperpage(RunData data, TemplateContext context) 
         throws Exception
     {
         ValueParser params = data.getParameters();
-        int resultsPerPage = params.getInt("resultsPerPage");
-        int newResultsPerPage = params.getInt("newResultsPerPage");
-        int pageNum = params.getInt("pageNum");
-        int offset =  (pageNum-1) * resultsPerPage;
-        int newPageNum = 1+ (offset - (offset % newResultsPerPage))/newResultsPerPage;
-        params.remove("resultsPerPage");
-        params.add("resultsPerPage", newResultsPerPage);
+        int oldResultsPerPage = params.getInt("oldResultsPerPage");
+        int newResultsPerPage = params.getInt("resultsPerPage");
+        int oldPageNum = params.getInt("pageNum");
+        
+        //
+        // We want to display whichever page contains the first issue
+        // on the old page.
+        //
+        int firstItem = (oldPageNum - 1) * oldResultsPerPage + 1;
+        int newPageNum = (firstItem / newResultsPerPage) + 1;
+        params.remove("oldResultsPerPage");
         params.remove("pageNum");
         params.add("pageNum", newPageNum);
-        setTarget(data, getCurrentTemplate(data));            
+        setTarget(data, getCurrentTemplate(data));
     }
 
 
@@ -313,13 +317,13 @@ public abstract class RequireLoginFirstAction extends TemplateSecureAction
     {
         IntakeTool intake = getIntakeTool(context);
         intake.removeAll();
-        setTarget(data, getCurrentTemplate(data));            
+        setTarget(data, getCurrentTemplate(data));
     }
         
     public void doCancel(RunData data, TemplateContext context)
         throws Exception
     {
-        setTarget(data, getCancelTemplate(data));            
+        setTarget(data, getCancelTemplate(data));
     }
 
     public void doDone(RunData data, TemplateContext context)
