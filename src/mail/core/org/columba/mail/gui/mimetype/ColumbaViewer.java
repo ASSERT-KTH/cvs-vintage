@@ -17,148 +17,188 @@
 //All Rights Reserved.
 package org.columba.mail.gui.mimetype;
 
-import org.columba.core.mimetype.MimeRouter;
-
-import org.columba.ristretto.message.MimeHeader;
-
 import java.io.File;
 import java.io.IOException;
-
 import java.net.URL;
 
 import javax.swing.JOptionPane;
 
+import org.columba.core.main.MainInterface;
+import org.columba.core.mimetype.MimeRouter;
+import org.columba.ristretto.message.MimeHeader;
+
+/**
+ * Extracts mimetypes from options.xml and executes
+ * the process.
+ * 
+ * @author fdietz
+ *
+ */
 public class ColumbaViewer extends AbstractViewer {
 
-    public Process openWith(MimeHeader header, File tempFile) {
-        boolean save = false;
-        ChooseViewerDialog viewerDialog = new ChooseViewerDialog(header
-                .getMimeType().getType(), header.getMimeType().getSubtype(),
-                save);
-        String viewer = viewerDialog.getViewer();
+	public Process openWith(MimeHeader header, File tempFile) {
+		boolean save = false;
+		
+		String viewer = promptForViewer(header);
 
-        if (viewer == null) { return null; }
+		String cmd = new String(viewer + " " + tempFile.toString());
 
-        save = viewerDialog.saveViewer();
+		Process p = execProcess(tempFile, viewer);
+		if ( p == null ) {
+			viewer = promptForViewer(header);
+			if ( viewer == null ) return null;
+			
+			p = execProcess(tempFile, viewer);
+		}
+		
+		return p;
+	}
 
-        if (save) {
-            MimeRouter.getInstance().setViewer(header, viewer);
-        }
+	public Process open(MimeHeader header, File tempFile) {
+		File viewerFile = null;
+		String viewer = MimeRouter.getInstance().getViewer(header);
+		if (viewer != null) {
+			viewerFile = new File(viewer);
+		}
 
-        //System.out.println("tempfile: "+tempFile);
-        String cmd = new String(viewer + " " + tempFile.toString());
+		// if viewer is not yet specified
+		if (viewer == null) {
+			boolean save = false;
+			viewer = promptForViewer(header);
+		}
 
-        //System.out.println("cmd: "+cmd);
-        Process child = null;
+		Process p = execProcess(tempFile, viewer);
+		if ( p == null ) {
+			viewer = promptForViewer(header);
+			if ( viewer == null ) return null;
+			p = execProcess(tempFile, viewer);
+		}
+		
+		return p;
+	}
 
-        try {
-            child = Runtime.getRuntime().exec(cmd);
-        } catch (IOException e) {
-            JOptionPane.showMessageDialog(null, "Error: " + e.getMessage());
-        }
+	/**
+	 * @param tempFile
+	 * @param viewer
+	 * @return
+	 */
+	private Process execProcess(File tempFile, String viewer) {
+		Process child = null;
 
-        return child;
-    }
+		try {
+			child = Runtime.getRuntime().exec(
+					viewer + " " + tempFile.toString());
+		} catch (IOException e) {
+			JOptionPane.showMessageDialog(null, "Error: " + e.getMessage());
+			
+			return null;
+		}
 
-    public Process open(MimeHeader header, File tempFile) {
-    		File viewerFile = null;
-        String viewer = MimeRouter.getInstance().getViewer(header);
-        if (viewer != null) {
-        	viewerFile = new File(viewer);
-        }
+		return child;
+	}
 
-        // if viewer is not yet specified
-        // or if viewer app is not found
-        if ((viewer == null) || (!viewerFile.exists())) {
-            boolean save = false;
-            ChooseViewerDialog viewerDialog = new ChooseViewerDialog(header
-                    .getMimeType().getType(),
-                    header.getMimeType().getSubtype(), save);
-            viewer = viewerDialog.getViewer();
+	private String promptForViewer(MimeHeader header) {
+		String viewer = null;
+		boolean save = false;
 
-            if (viewer == null) { return null; }
+		ChooseViewerDialog viewerDialog = new ChooseViewerDialog(header
+				.getMimeType().getType(), header.getMimeType().getSubtype(),
+				save);
+		viewer = viewerDialog.getViewer();
 
-            save = viewerDialog.saveViewer();
+		if (viewer == null) {
+			return null;
+		}
 
-            if (save) {
-                MimeRouter.getInstance().setViewer(header, viewer);
-            }
-        }
+		save = viewerDialog.saveViewer();
 
-        Process child = null;
+		if (save) {
+			MimeRouter.getInstance().setViewer(header, viewer);
+		}
 
-        try {
-            child = Runtime.getRuntime().exec(
-                    viewer + " " + tempFile.toString());
-        } catch (IOException e) {
-            JOptionPane.showMessageDialog(null, "Error: " + e.getMessage());
-        }
+		return viewer;
+	}
 
-        return child;
-    }
+	private String promptForHTMLViewer() {
+		String viewer = null;
+		boolean save = false;
 
-    public Process openURL(URL url) {
-        boolean save = false;
-        File viewerFile = null;
-        String viewer = MimeRouter.getInstance().getViewer("text", "html");
-        if (viewer != null) {
-        	viewerFile = new File(viewer);
-        }
+		ChooseViewerDialog viewerDialog = new ChooseViewerDialog("text",
+				"html", save);
 
-        // if viewer is not yet specified
-        // or if viewer app is not found
-        if ((viewer == null) || (!viewerFile.exists())) {
-            ChooseViewerDialog viewerDialog = new ChooseViewerDialog("text",
-                    "html", save);
+		viewer = viewerDialog.getViewer();
 
-            viewer = viewerDialog.getViewer();
+		if (viewer == null) {
+			return null;
+		}
 
-            if (viewer == null) { return null; }
+		save = viewerDialog.saveViewer();
 
-            save = viewerDialog.saveViewer();
+		if (save) {
+			MimeRouter.getInstance().setViewer("text", "html", viewer);
+		}
 
-            if (save) {
-                MimeRouter.getInstance().setViewer("text", "html", viewer);
-            }
-        }
+		return viewer;
+	}
 
-        Process child = null;
+	public Process openURL(URL url) {
+		boolean save = false;
+		File viewerFile = null;
+		String viewer = MimeRouter.getInstance().getViewer("text", "html");
+		if (viewer != null) {
+			viewerFile = new File(viewer);
+		}
 
-        try {
-            child = Runtime.getRuntime().exec(viewer + " " + url);
-        } catch (Exception ex) {
-            ex.printStackTrace();
-            JOptionPane.showMessageDialog(null, "Error: " + ex.getMessage());
-        }
+		// if viewer is not yet specified
+		if (viewer == null) {
+			viewer = promptForHTMLViewer();
 
-        return child;
-    }
+		}
 
-    public Process openWithURL(URL url) {
-        boolean save = false;
-        String viewer;
-        ChooseViewerDialog viewerDialog = new ChooseViewerDialog("text",
-                "html", save);
+		Process p = execProcess(url, viewer);
+		if ( p == null ) {
+			viewer = promptForHTMLViewer();
+			if ( viewer == null ) return null;
+			p = execProcess(url, viewer);
+		}
+		
+		return p;
+		
+	}
 
-        viewer = viewerDialog.getViewer();
+	/**
+	 * @param url
+	 * @param viewer
+	 * @return
+	 */
+	private Process execProcess(URL url, String viewer) {
+		Process child = null;
 
-        if (viewer == null) { return null; }
+		try {
+			child = Runtime.getRuntime().exec(viewer + " " + url);
+		} catch (Exception ex) {
+			if ( MainInterface.DEBUG)
+				ex.printStackTrace();
+			
+			JOptionPane.showMessageDialog(null, "Error: " + ex.getMessage());
+			
+			return null;
+		}
 
-        save = viewerDialog.saveViewer();
+		return child;
+	}
 
-        if (save) {
-            MimeRouter.getInstance().setViewer("text", "html", viewer);
-        }
+	public Process openWithURL(URL url) {
+		boolean save = false;
+		String viewer = promptForHTMLViewer();
 
-        Process child = null;
-
-        try {
-            child = Runtime.getRuntime().exec(viewer + " " + url);
-        } catch (Exception ex) {
-            ex.printStackTrace();
-            JOptionPane.showMessageDialog(null, "Error: " + ex.getMessage());
-        }
-
-        return child;
-    }
+		Process p = execProcess(url, viewer);
+		if ( p == null ) {
+			viewer = promptForHTMLViewer();
+			if ( viewer == null ) return null;
+			p = execProcess(url, viewer);
+		}
+		
+		return p;
+	}
 }
