@@ -13,6 +13,8 @@ import javax.management.MBeanServer;
 import javax.management.ObjectInstance;
 import javax.management.MalformedObjectNameException;
 
+import org.jboss.logging.Logger;
+
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 
@@ -22,7 +24,7 @@ import org.w3c.dom.NodeList;
  * @see Service
  * 
  * @author <a href="mailto:marc.fleury@jboss.org">Marc Fleury</a>
- * @version $Revision: 1.2 $
+ * @version $Revision: 1.3 $
  * 
  * <p><b>Revisions:</b>
  * <p><b>2001/08/03 marcf </b>
@@ -33,6 +35,8 @@ import org.w3c.dom.NodeList;
 public class ServiceCreator 
 {
    // Attributes ----------------------------------------------------
+   
+   private final Logger log = Logger.create(getClass());
 	
    private MBeanServer server;
 	
@@ -75,7 +79,7 @@ public class ServiceCreator
       // get the constructor params/sig to use
       ConstructorInfo constructor =
          ConstructorInfo.create(mbeanElement);
-      System.out.println("About to create the bean"+name);
+      log.info("About to create the bean"+name);
 		
       // Create the MBean instance
       ObjectInstance instance = 
@@ -85,7 +89,7 @@ public class ServiceCreator
                             constructor.params,
                             constructor.signature);
 		
-      System.out.println("Created the bean"+name);
+      log.info("Created the bean"+name);
 		
       return instance;
 	

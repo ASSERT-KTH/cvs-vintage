@@ -58,7 +58,7 @@ import org.xml.sax.SAXException;
  * @author <a href="mailto:marc.fleury@jboss.org">Marc Fleury</a>
  * @author <a href="mailto:David.Maplesden@orion.co.nz">David Maplesden</a>
  * @author <a href="mailto:d_jencks@users.sourceforge.net">David Jencks</a>
- * @version   $Revision: 1.13 $ <p>
+ * @version   $Revision: 1.14 $ <p>
  *
  *      <b>20010830 marc fleury:</b>
  *      <ul>initial import
@@ -144,11 +144,17 @@ public class ServiceDeployer
 
 
    /**
-    * Deploys a package identified by a url string. This undeploys a previous
-    * version if necessary, checks for a classpath element with codebase and
-    * archives attributes to locate packages this package depends on, deploys
-    * them (if not suspended by an undeploy, adds this package to the
-    * ServiceLibraries classpath, and loads the mbeans specified.
+    * Deploys a package identified by a url string. This stops if a previous
+    * version exists. The package can be a *service.xml file, a sar service 
+    * archive, or a plain jar or zip file with no deployment descriptor.
+    * In any case, all classes found in the package or sar subpackages are 
+    * added to the extensible classloader.  If there are classpath elements 
+    * in the configuration file, the named packages are loaded 
+    * (in separate classloaders) unless they have been explicitly undeployed, 
+    * in which case deployment of this package is suspended until they have been
+    * redeployed.  Then the mbeans named in the configuration file are created 
+    * using the ServiceController.  Dependencies between mbeans are handled by 
+    * the ServiceController.
     *
     * @param urlString                  The location of the package to deploy
     * @exception MalformedURLException  Thrown if a malformed url string is
@@ -191,7 +197,7 @@ public class ServiceDeployer
                 File jbossHomeDir = new File(System.getProperty("jboss.system.home"));
                 File localBaseDir = new File(jbossHomeDir, "db"+File.separator);
                 //Get the url of the local copy from the classloader.
-                URL localUrl = sdi.classloader.getURLs()[0];
+                URL localUrl = (URL)sdi.getClassUrls().get(0);
                 log.debug("copying from " + localUrl.toString() + path);
                 log.debug("copying to " + localBaseDir);
 
@@ -261,45 +267,51 @@ public class ServiceDeployer
          try 
          {
             log.debug("deploying document " + url);
-            File localCopy = getLocalCopy(url, null);
+            File localCopy = getLocalCopy(url, sdi);
             URL localUrl = localCopy.toURL();
             String localName = localCopy.getName();//just the filename, no path
-            ArrayList jars = new ArrayList();
-            ArrayList xmls = new ArrayList();
-            File unpackedDir = recursiveUnpack(localUrl, jars, xmls);
+            extractPackages(localUrl, sdi);
+            log.debug("jars from deployment: " + sdi.getClassUrls());
+            log.debug("xml's from deployment: " + sdi.getXmlUrls());
 
-
-            /**
-             * First register the classloaders for this deployment If it is a jsr, the
-             * jsr points to itself If it is a something-service.xml then it looks for
-             * <classpath><codebase>http://bla.com (or file://bla.com)</codebase>
-             * default is system library dir <archives>bla.jar, bla2.jar, bla3.jar
-             * </archives>where bla is relative to codebase</classpath>
-             */
-         // Support for the new packaged format
+            //OK, what are we trying to deploy?
+            //A plain xml file with mbean classpath elements and mbean config.
             if (localName.endsWith("service.xml"))
             {
-               sdi.dd = getDocument(localUrl.toString(), null);
+               sdi.dd = getDocument(localUrl);
                sdi.state = LOCALCLASSESLOADED;
             }
+            //a service archive with classes, jars, and META-INF/jboss-service.xml 
+            //configuration file
             else if (localName.endsWith(".sar"))
             {
-               URLClassLoader cl = new URLClassLoader(new URL[] {localUrl}, url);
-               sdi.dd = getDocument("META-INF/jboss-service.xml", cl);
-               sdi.classloader = cl;
+               sdi.createClassLoader();
+            docfound:
+               {
+                  for (Iterator i = sdi.getXmlUrls().iterator(); i.hasNext();) 
+                  {
+                     URL docUrl = (URL)i.next(); 
+                     if (docUrl.getFile().endsWith("META-INF/jboss-service.xml")) 
+                     {
+                        sdi.dd = getDocument(docUrl);
+                        break docfound;
+                     } // end of if ()
+                  
+                  } // end of for ()
+                  throw new DeploymentException("No META-INF/jboss-service.xml found in alleged sar!");
+               }
                sdi.state = LOCALCLASSESLOADED;
                log.debug("got document jboss-service.xml from cl");
             }
 
-            //no mbeans to deploy for jars
+            //Or maybe its just a jar to be put in the extensible classloader.
             else if(localName.endsWith(".jar")
                    || localName.endsWith(".zip"))
             {
-               URLClassLoader cl = new URLClassLoader(new URL[] {localUrl}, url);
-               sdi.classloader = cl;
+               sdi.createClassLoader();
                sdi.state = CLASSESLOADED;
             }
-
+            //Not for us.
             else
             {
                throw new Exception("not a deployable file type");
@@ -314,7 +326,7 @@ public class ServiceDeployer
 
       } // end of if (EMPTY)
 
-      //in any case, we may need to add dependency info
+      //in any case, we may need to add class dependency info
       if ((needsme != null) && !sdi.weSupplyClassesTo.contains(needsme))
       {
          sdi.weSupplyClassesTo.add(needsme);   
@@ -493,7 +505,7 @@ public class ServiceDeployer
    public void undeploy(URL url, Object localurlObject)
           throws MalformedURLException, IOException, DeploymentException
    {
-      log.debug("undeploying document " + url, new Exception("trace"));
+      log.debug("undeploying document " + url);
 
       SarDeploymentInfo sdi = getSdi(url, false);
       
@@ -547,9 +559,11 @@ public class ServiceDeployer
       } // end of while ()
       //Ok, we're done with upwards and downwards dependencies: 
       //we can decide if we're a ghost, and remove our classloader, and maybe ourselves.
-      ServiceLibraries.getLibraries().removeClassLoader(sdi.classloader);
+      ServiceLibraries.getLibraries().removeClassLoader(sdi.removeClassLoader());
+      //delete the copied directories if possible.
+      sdi.cleanup(getLog());
 
-      sdi.classloader = null;
+      //sdi.classloader = null;
       if (sdi.weSupplyClassesTo.isEmpty()) 
       {
          //no one is using us, we can disappear without a trace
@@ -597,97 +611,47 @@ public class ServiceDeployer
       try
       {
          super.postRegister(registrationDone);
-         //super.startService();//set up the deploy temp directory
+         //Start us up, which also sets up the deploy temp directory
          getServer().invoke(getServiceControllerName(),
                             "registerAndStartService",
                             new Object[] {objectName, null},
-                            new String[] {"javax.management.ObjectName", "java.lang.String"});
-         //Initialize the libraries for the server by default we add the libraries in lib/services
-         // and client
-         String urlString = System.getProperty("jboss.system.configurationDirectory") + "jboss-service.xml";
-         Document document = null;
-
-         try
-         {
-            document = getDocument(urlString, null);
-         }
-         catch (Exception e)
-         {
-            log.error("problem getting jboss-service.xml.", e);
-            // for legacy reasons try jboss.jcml
-            urlString = System.getProperty("jboss.system.configurationDirectory") + "jboss.jcml";
-            document = getDocument(urlString, null);
-
-         }
-
-         deploy(new URL(urlString));
+                            new String[] {"javax.management.ObjectName", 
+                                          "java.lang.String"});
       }
       catch (Exception e)
       {
          log.error("Problem postregistering ServiceDeployer", e);
       }
+         
    }
 
-   private Document getDocument(String urlString, ClassLoader cl)
-          throws DeploymentException, MalformedURLException, IOException
+   protected Document getDocument(URL url)
+      throws DeploymentException
    {
-      // Define the input stream to the configuration file
-      InputStream input = null;
-
-      // Try the contextClassLoader
-      if (cl == null)
+      try 
       {
-         input = Thread.currentThread().getContextClassLoader().getResourceAsStream(urlString);
-      }
-      else
-      {
-         input = cl.getResourceAsStream(urlString);
-      }
-
-      //If still no document, try to interpret the url as an absolute URL
-      if (input == null)
-      {
-
-         // Try to understand the URL litterally
-         input = (new URL(urlString)).openStream();
-      }
-
-      //Load the configuration with a buffered reader
-      StringBuffer sbufData = new StringBuffer();
-      BufferedReader br = new BufferedReader(new InputStreamReader(input));
-
-      //String sTmp;
-      char[] buffer = new char[1024];
-      int read;
-      try
-      {
-         while ((read = br.read(buffer)) > 0)
-         {
-            sbufData.append(buffer, 0, read);
-         }
-      }
-      finally
-      {
-         br.close();
-      }
-
-      try
-      {
-         // Parse XML
          DocumentBuilder parser = DocumentBuilderFactory.newInstance().newDocumentBuilder();
-
-         return parser.parse(new InputSource(new StringReader(sbufData.toString())));
+         InputStream stream = url.openStream();
+         InputSource is = new InputSource(stream);
+         return parser.parse(is);
       }
       catch (SAXException e)
       {
+         log.warn("SaxException getting document:", e);
          throw new DeploymentException(e.getMessage());
       }
       catch (ParserConfigurationException pce)
       {
+         log.warn("ParserConfigurationException getting document:", pce);
          throw new DeploymentException(pce.getMessage());
       }
-
+      catch (Exception e) 
+      {
+         log.warn("Exception getting document:", e);
+         throw new DeploymentException(e.getMessage());
+      } // end of try-catch
    }
+
 
    // Private --------------------------------------------------------
    private void addMBeans(URL url, SarDeploymentInfo sdi) throws DeploymentException
@@ -802,7 +766,7 @@ public class ServiceDeployer
       {
          if (createIfMissing)
          {
-            sdi = new SarDeploymentInfo();
+            sdi = new SarDeploymentInfo(url);
             urlToSarDeploymentInfoMap.put(url, sdi);          
          } // end of if ()
          else 
@@ -821,16 +785,21 @@ public class ServiceDeployer
    private static final int GHOST = 5; //undeployed but packages are suspended on us.
 
 
-   private static class SarDeploymentInfo
+   protected static class SarDeploymentInfo extends DeployerMBeanSupport.DeploymentInfo
    {
-      URLClassLoader classloader;
       Collection weNeedClassesFrom = new ArrayList();
       Collection weSupplyClassesTo = new ArrayList();
       List mbeans = new ArrayList();
       Document dd;
       int state = EMPTY;
+
+      public SarDeploymentInfo(URL key)
+      {
+         super(key);
+      }
    }
 
 
 }
+
 

@@ -46,7 +46,7 @@ import gnu.getopt.LongOpt;
 *
 * @author <a href="mailto:marc.fleury@jboss.org">Marc Fleury</a>
 * @author <a href="mailto:jason@planet57.com">Jason Dillon</a>
-* @version $Revision: 1.55 $
+* @version $Revision: 1.56 $
 *
 * <b>Revisions:</b>
 * <p>
@@ -191,8 +191,15 @@ public class Main
                null, loader);
             
             // Deployer
-            server.createMBean("org.jboss.deployment.ServiceDeployer",
-               null, loader);
+            ObjectName serviceDeployer = server.createMBean(
+               "org.jboss.deployment.ServiceDeployer",
+               null, loader).getObjectName();
+
+            //Ok, now deploy jboss-service.xml
+            server.invoke(serviceDeployer, 
+                          "deploy", 
+                          new Object[] {confDir + "jboss-service.xml"},
+                          new String[] {"java.lang.String"});
          }
          catch(RuntimeMBeanException e)
          {

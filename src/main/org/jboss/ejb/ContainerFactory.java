@@ -6,51 +6,52 @@
  */
 package org.jboss.ejb;
 
+
+
+
+
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLClassLoader;
-import java.net.MalformedURLException;
 import java.rmi.RemoteException;
-
-import java.util.Iterator;
-import java.util.HashMap;
 import java.util.ArrayList;
-
+import java.util.HashMap;
+import java.util.Iterator;
+import javax.management.MBeanException;
+import javax.management.MBeanRegistration;
+import javax.management.MBeanServer;
+import javax.management.MalformedObjectNameException;
+import javax.management.ObjectName;
+import javax.management.RuntimeMBeanException;
 import javax.naming.Context;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
-import javax.management.MBeanServer;
-import javax.management.MBeanRegistration;
-import javax.management.ObjectName;
-import javax.management.RuntimeMBeanException;
-import javax.management.MalformedObjectNameException;
 import javax.transaction.TransactionManager;
-
 import org.apache.log4j.NDC;
-import org.w3c.dom.Element;
-
+import org.jboss.ejb.BeanLockManager;
 import org.jboss.ejb.plugins.AbstractInstanceCache;
 import org.jboss.ejb.plugins.SecurityProxyInterceptor;
 import org.jboss.ejb.plugins.StatefulSessionInstancePool;
-import org.jboss.ejb.BeanLockManager;
 import org.jboss.logging.Logger;
 import org.jboss.metadata.ApplicationMetaData;
 import org.jboss.metadata.BeanMetaData;
-import org.jboss.metadata.SessionMetaData;
+import org.jboss.metadata.ConfigurationMetaData;
 import org.jboss.metadata.EntityMetaData;
 import org.jboss.metadata.MessageDrivenMetaData;
 import org.jboss.metadata.MetaData;
-import org.jboss.metadata.ConfigurationMetaData;
-import org.jboss.metadata.XmlLoadable;
+import org.jboss.metadata.SessionMetaData;
 import org.jboss.metadata.XmlFileLoader;
+import org.jboss.metadata.XmlLoadable;
 import org.jboss.security.EJBSecurityManager;
 import org.jboss.security.RealmMapping;
-import org.jboss.util.MBeanProxy;
 import org.jboss.system.ServiceMBeanSupport;
+import org.jboss.util.MBeanProxy;
 import org.jboss.verifier.BeanVerifier;
 import org.jboss.verifier.event.VerificationEvent;
 import org.jboss.verifier.event.VerificationListener;
 import org.jboss.web.WebClassLoader;
 import org.jboss.web.WebServiceMBean;
+import org.w3c.dom.Element;
 
 /**
  * A ContainerFactory is used to deploy EJB applications. It can be given a
@@ -68,7 +69,7 @@ import org.jboss.web.WebServiceMBean;
 * @author <a href="mailto:peter.antman@tim.se">Peter Antman</a>.
 * @author <a href="mailto:scott.stark@jboss.org">Scott Stark</a>
 * @author <a href="mailto:sacha.labourey@cogito-info.ch">Sacha Labourey</a>
-* @version $Revision: 1.96 $
+* @version $Revision: 1.97 $
 */
 public class ContainerFactory
    extends ServiceMBeanSupport
@@ -732,6 +733,10 @@ public class ContainerFactory
          if( e instanceof RuntimeMBeanException )
          {
             e = ((RuntimeMBeanException) e).getTargetException();
+         }
+         if( e instanceof MBeanException )
+         {
+            e = ((MBeanException) e).getTargetException();
          }
          log.error("handleContainerManagement", e);
       }

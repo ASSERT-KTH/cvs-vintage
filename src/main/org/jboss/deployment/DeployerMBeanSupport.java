@@ -31,13 +31,15 @@ import javax.management.ObjectName;
 import org.jboss.deployment.DeploymentException;
 import org.jboss.logging.Logger;
 import org.jboss.system.ServiceMBeanSupport;
+import org.jboss.system.URLClassLoader;
+import java.util.List;
 
 /**
  * An abstract base class for deployer service implementations.
  *
  * @author <a href="mailto:toby.allsopp@peace.com">Toby Allsopp</a>
  * @author <a href="mailto:d_jencks@users.sourceforge.net">David Jencks</a>
- * @version $Revision: 1.9 $
+ * @version $Revision: 1.10 $
  *
  * <p><b>Revisions:</b>
  *
@@ -61,7 +63,7 @@ public abstract class DeployerMBeanSupport
    /*
     * log4j Category for logging
     */
-   protected Logger category;
+   //protected Logger category;
 
    /**
     *  The directory that will contain local copies of deployed packages
@@ -72,16 +74,16 @@ public abstract class DeployerMBeanSupport
    
    private static int nextNum = 0;
 
-   private static String generateUniqueDirName()
+   private static synchronized String generateUniqueDirName()
    {
       int thisNum = nextNum++;
-      return "deploy." + thisNum + ".";
+      return "deploy." + thisNum;
    }
 
    // Constructors --------------------------------------------------
    public DeployerMBeanSupport()
    {
-      category =  Logger.create(getClass());
+      //category =  Logger.create(getClass());
    }
 
    
@@ -99,23 +101,6 @@ public abstract class DeployerMBeanSupport
          {
             log.info("not deploying package because it is already deployed: " + u);
             return;
-            /*Object info = deployments.get(u);
-            try
-            {
-               undeploy(u, info);
-            }
-            catch (Throwable t)
-            {
-               log.error("undeploy failed", t);
-               if (t instanceof Exception)
-               {
-                  if (t instanceof IOException) throw (IOException) t;
-                  if (t instanceof DeploymentException)
-                     throw (DeploymentException) t;
-                  throw (RuntimeException) t;
-               }
-               throw (Error) t;
-               }*/
          }
          try
          {
@@ -182,12 +167,12 @@ public abstract class DeployerMBeanSupport
       deployDir = new File(deployTmpDir, getName());
       if (deployDir.exists())
       {
-         category.info("Found a temp directory left over from a previous run - " +
+         getLog().info("Found a temp directory left over from a previous run - " +
                "deleting it.");
          // What could it mean?
          if (!recursiveDelete(deployDir))
          {
-            category.warn("Unable to recursively delete temp directory '" +
+            getLog().warn("Unable to recursively delete temp directory '" +
                   deployDir + "' that appears to be left over from " +
                   "the previous run. This might cause problems.");
          }
@@ -197,7 +182,7 @@ public abstract class DeployerMBeanSupport
          throw new DeploymentException("Can't create temp directory '" +
                deployDir + "'");
       }
-      category.info("Temporary deploy directory is " + deployDir);
+      getLog().info("Temporary deploy directory is " + deployDir);
    }
 
     /**
@@ -210,7 +195,7 @@ public abstract class DeployerMBeanSupport
       // Remove our temp directory
       if (!recursiveDelete(deployDir))
       {
-         category.warn("Unable to recursively delete the temp directory '" +
+         getLog().warn("Unable to recursively delete the temp directory '" +
                deployDir + "' - it should be cleaned up when the " +
                "server is next restarted.");
       }
@@ -285,80 +270,6 @@ public abstract class DeployerMBeanSupport
     // unpacking packages recursively, finding things in packages,
     // and similar tasks needed for most deployment activities.
      //
-    
-   protected Collection recursiveFind(File dir, FileFilter filter)
-   {
-      Collection files = new ArrayList();
-      File[] candidates = dir.listFiles();
-      if (candidates == null)
-      {
-         return null;
-      }
-
-      for (int i = 0; i < candidates.length; ++i)
-      {
-         File candidate = candidates[i];
-         if (candidate.isDirectory())
-         {
-            files.addAll(recursiveFind(candidate, filter));
-         }
-         else if (filter.accept(candidate))
-         {
-            files.add(candidate);
-         }
-      }
-
-      return files;
-   }
-
-   protected void copyDirectory(File srcDir, File destDir)
-          throws DeploymentException, IOException
-   {
-      File[] files = srcDir.listFiles();
-      if (files == null)
-      {
-         throw new DeploymentException("Not a directory: '" +
-               srcDir + "'");
-      }
-
-      destDir.mkdirs();
-      for (int i = 0; i < files.length; ++i)
-      {
-         File file = files[i];
-         File dest = new File(destDir, file.getName());
-         if (file.isDirectory())
-         {
-            copyDirectory(file, dest);
-         }
-         else
-         {
-            copyFile(file, dest);
-         }
-      }
-   }
-
-   protected void copyFile(File src, File dest)
-          throws IOException
-   {
-      InputStream in = new FileInputStream(src);
-      try
-      {
-         OutputStream out = new FileOutputStream(dest);
-         try
-         {
-            copy(in, out);
-         }
-         finally
-         {
-            out.close();
-         }
-      }
-      finally
-      {
-         in.close();
-      }
-   }
-
     /**
      * The <code>inflateJar</code> copies the jar entries
      * from the jar url jarUrl to the directory destDir.
@@ -374,6 +285,8 @@ public abstract class DeployerMBeanSupport
     protected void inflateJar(URL url, File destDir, String path)
           throws DeploymentException, IOException
    {
+      /*
+      //Why doesn't this work???? Maybe in java 1.4?
       URL jarUrl;
       try
       {
@@ -387,7 +300,9 @@ public abstract class DeployerMBeanSupport
       JarURLConnection jarConnection =
             (JarURLConnection)jarUrl.openConnection();
       JarFile jarFile = jarConnection.getJarFile();
-
+      */
+      String filename = url.getFile();
+      JarFile jarFile = new JarFile(filename);
       try
       {
          for (Enumeration e = jarFile.entries(); e.hasMoreElements(); )
@@ -436,6 +351,113 @@ public abstract class DeployerMBeanSupport
       }
    }
 
+   protected void extractPackages(URL url, DeploymentInfo di)
+          throws DeploymentException, IOException
+   {
+      if (url.getFile().endsWith(".xml")) 
+      {
+         di.addXmlUrl(url);
+         return;
+      }
+      
+      //if its a jar or war, add to list and stop
+      if (url.getFile().endsWith(".jar") || url.getFile().endsWith(".war")) 
+      {
+         di.addClassUrl(url);
+         return;
+      }
+      //Sars may contain files or other packages
+      if (url.getFile().endsWith(".sar")) 
+      {
+         di.addClassUrl(url);
+      }
+      
+
+      URL jarUrl;
+      try
+      {
+         jarUrl = new URL("jar:" + url.toString() + "!/");
+      }
+      catch (MalformedURLException mfue)
+      {
+         throw new DeploymentException("Oops! Couldn't convert URL to a jar URL", mfue);
+      }
+
+      JarURLConnection jarConnection =
+            (JarURLConnection)jarUrl.openConnection();
+      JarFile jarFile = jarConnection.getJarFile();
+
+      try
+      {
+         for (Enumeration e = jarFile.entries(); e.hasMoreElements(); )
+         {
+            JarEntry entry = (JarEntry)e.nextElement();
+            String name = entry.getName();
+            /*
+//jar urls don't seem to work!
+jar:file:/usr/java/jboss/co6/jboss-all/build/output/jboss-3.0.0alpha/tmp/deploy/ServiceDeployer/copydeploy.28/jmx-ejb-connector-server.sar!/META-INF/jboss-service.xml
+cannot be opened!
+            if (name.endsWith(".xml")) 
+            {
+               di.addXmlUrl(new URL(jarUrl, name));
+            } // end of if ()
+            
+            else 
+            */
+            if (name.endsWith(".jar") 
+                || name.endsWith(".xml") 
+                || name.endsWith(".sar") 
+                || name.endsWith(".ear") 
+                || name.endsWith(".rar") 
+                || name.endsWith(".war") 
+                || name.endsWith(".zip")) 
+            {
+               File outFile = new File(getUniqueDir(di), name);
+               File outFileParent = outFile.getParentFile();
+               outFileParent.mkdirs();
+               
+               InputStream in = jarFile.getInputStream(entry);
+               try
+               {
+                  OutputStream out = new FileOutputStream(outFile);
+                  try
+                  {
+                     copy(in, out);
+                  }
+                  finally
+                  {
+                     out.close();
+                  }
+               }
+               finally
+               {
+                  in.close();
+               }
+               //stop for these,
+               URL packageURL = new URL("file:" + outFile.toString());
+               if (name.endsWith(".jar") 
+                   || name.endsWith(".zip") 
+                   || name.endsWith(".war")) 
+               {
+                  di.addClassUrl(packageURL);
+               } // end of if ()
+               //continue for others (xml, rar, ear, sar)
+               else 
+               {
+                  extractPackages(packageURL, di);    
+               } // end of else
+            }
+
+            
+         } // end of if ()
+
+      }
+      finally
+      {
+         jarFile.close();
+      }
+   }
+
    protected void copy(InputStream in, OutputStream out)
           throws IOException
    {
@@ -446,7 +468,7 @@ public abstract class DeployerMBeanSupport
          out.write(buffer, 0, read);
       }
    }
-
+   
    protected boolean recursiveDelete(File f)
    {
       if (f.isDirectory())
@@ -462,23 +484,21 @@ public abstract class DeployerMBeanSupport
       }
       return f.delete();
    }
-
+   
    protected File getDeployDir()
    {
       return deployDir;
    }
 
 
-   protected File getLocalCopy(URL url, String dirName)
+   protected File getLocalCopy(URL url, DeploymentInfo di)
        throws IOException
    {
-      if (dirName == null ) 
-      {
-         dirName = generateUniqueDirName();     
-      }
+      File localDir = getUniqueDir(di);
+      localDir.mkdirs();
       String name = new File(url.getFile()).getName();//end of file name,no path
        
-      File copyFile = new File(getDeployDir(), "copy" + dirName + name);
+      File copyFile = new File(localDir, name);
       InputStream input = url.openStream();
       try
       {
@@ -498,119 +518,6 @@ public abstract class DeployerMBeanSupport
       }
       return copyFile;
    }
-
-   protected Collection getUrlsInDir(File unpackedDir, FileFilter filter)
-       throws MalformedURLException
-   {
-      Collection jars = new ArrayList();
-
-      Collection jarFiles = recursiveFind(unpackedDir, filter);
-      category.debug("Adding the following URLs to classpath:");
-      for (Iterator i = jarFiles.iterator(); i.hasNext(); )
-      {
-         File file = (File)i.next();
-         URL jarUrl = file.toURL();
-         jars.add(jarUrl);
-         category.debug(jarUrl.toString());
-      }
-      return jars;
-   }
-
-    /**
-     * The <code>recursiveUnpack</code> method unpacks packages
-     * such as rar, ear, war and then calls itself to unpack
-     * contained packages.  It returns urls to all packages added to
-     * the urls collection parameter and urls to all xml files 
-     * added to the xmls parameter.  It returns a File representing the 
-     * jar or xml file if that is what was supplied or the directory 
-     * into which the supplied url was unpacked.
-     *
-     * @param url an <code>URL</code> value
-     * @param urls a <code>Collection</code> value
-     * @param xmls a <code>Collection</code> value
-     * @return a <code>File</code> value
-     * @exception MalformedURLException if an error occurs
-     * @exception DeploymentException if an error occurs
-     * @exception IOException if an error occurs
-     */
-    protected File recursiveUnpack(URL url, Collection urls, Collection xmls) 
-       throws MalformedURLException, DeploymentException, IOException
-  {
-      //TODO: get xml files out of jars that remain packed.
-     if (url.getFile().endsWith(".xml")) 
-     {
-        xmls.add(url);
-        return new File(url.getFile());          
-     }
-      
-     if (url.getFile().endsWith(".jar") || url.getFile().endsWith(".sar")) 
-     {
-        urls.add(url);
-        return new File(url.getFile());          
-     }
-      
-     String unpackedDirName = generateUniqueDirName();
-     File unpackedDir = new File(getDeployDir(), unpackedDirName);
-     category.debug("unpacking " + url + " into  " + unpackedDir);
-     inflateJar(url, unpackedDir, null);
-     FileFilter jarFilter = new FileFilter() 
-        {
-            /**
-             *  #Description of the Method
-             *
-             * @param  file  Description of Parameter
-             * @return       Description of the Returned Value
-             */
-           public boolean accept(File file)
-           {
-              return !(file.getName().endsWith(".sar") 
-                 || file.getName().endsWith(".war")
-                 || file.getName().endsWith(".ear")
-                 || file.getName().endsWith(".rar"));
-           }
-        };
-     //these go directly into classpath
-     urls.addAll(getUrlsInDir(unpackedDir, jarFilter));
-     FileFilter xmlFilter = new FileFilter() 
-        {
-            /**
-             *  #Description of the Method
-             *
-             * @param  file  Description of Parameter
-             * @return       Description of the Returned Value
-             */
-           public boolean accept(File file)
-           {
-              return file.getName().endsWith(".xml");
-           }
-        };
-     xmls.addAll(getUrlsInDir(unpackedDir, xmlFilter));
-     //now find what we need to recursively deploy
-     FileFilter unpackFilter = new FileFilter()
-        {
-            /**
-             *  #Description of the Method
-             *
-             * @param  file  Description of Parameter
-             * @return       Description of the Returned Value
-             */
-           public boolean accept(File file)
-           {
-              return file.getName().endsWith(".sar") 
-                 || file.getName().endsWith(".war")
-                 || file.getName().endsWith(".ear")
-                 || file.getName().endsWith(".rar");
-           }
-        };
-     Collection deployables = getUrlsInDir(unpackedDir, unpackFilter);
-     Iterator subdeploy = deployables.iterator();
-     while (subdeploy.hasNext()) 
-     {
-        recursiveUnpack((URL)subdeploy.next(), urls, xmls);         
-     }
-     return unpackedDir;
-   }
-
    protected ObjectName getServiceControllerName() throws DeploymentException
    {
       if (serviceControllerName == null)
@@ -629,6 +536,97 @@ public abstract class DeployerMBeanSupport
 
 
    // Private -------------------------------------------------------
+   private File getUniqueDir(DeploymentInfo di)
+   {
+      File dir = new File(getDeployDir(), generateUniqueDirName() + File.separator);
+      di.addDir(dir);
+      return dir;
+   }
 
    // Inner classes -------------------------------------------------
+   protected static class DeploymentInfo
+   {
+      private URL key;
+      private List dirs = new ArrayList();
+      private List classUrls = new ArrayList();
+      private List xmlUrls = new ArrayList();
+      private URLClassLoader cl;
+
+      public DeploymentInfo(URL key)
+      {
+         this.key = key;
+      }
+
+      public void addDir(File dir)
+      {
+         dirs.add(dir);
+      }
+
+      public void addClassUrl(URL url)
+      {
+         classUrls.add(url);
+      }
+
+      public void addXmlUrl(URL url)
+      {
+         xmlUrls.add(url);
+      }
+
+      public List getClassUrls()
+      {
+         return classUrls;
+      }
+
+      public List getXmlUrls()
+      {
+         return xmlUrls;
+      }
+
+      public URLClassLoader createClassLoader()
+      {
+         URL[] urlArray = (URL[])classUrls.toArray(new URL[classUrls.size()]);
+         cl = new URLClassLoader(urlArray, key);
+         return cl;
+      }
+
+      public URLClassLoader removeClassLoader()
+      {
+         URLClassLoader localcl = cl;
+         cl = null;
+         return localcl;
+      }
+
+      public void cleanup(Logger log)
+      {
+         classUrls.clear();
+         xmlUrls.clear();
+         for (Iterator i = dirs.iterator(); i.hasNext(); ) 
+         {
+            File dir = (File)i.next();
+            if (!recursiveDelete(dir)) 
+            {
+               log.info("could not delete directory " + dir + ". Will be removed on server shutdown or restart");
+            } // end of if ()
+           ;
+         } // end of for ()
+         dirs.clear();
+      }
+
+      private boolean recursiveDelete(File f)
+      {
+         if (f.isDirectory())
+         {
+            File[] files = f.listFiles();
+            for (int i = 0; i < files.length; ++i)
+            {
+               if (!recursiveDelete(files[i]))
+               {
+                  return false;
+               }
+            }
+         }
+         return f.delete();
+      }
+
+   }
 }

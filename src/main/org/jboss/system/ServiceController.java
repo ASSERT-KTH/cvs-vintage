@@ -42,7 +42,7 @@ import org.jboss.logging.Logger;
  * @see org.jboss.system.Service
  * @author <a href="mailto:marc.fleury@jboss.org">Marc Fleury</a>
  * @author <a href="mailto:d_jencks@users.sourceforge.net">David Jencks</a>
- * @version $Revision: 1.12 $ <p>
+ * @version $Revision: 1.13 $ <p>
  *
  * <b>Revisions:</b> <p>
  *
@@ -247,9 +247,10 @@ public class ServiceController
          
          } // end of if (mBeanRefs.size() > 0)
       }
-      catch (ConfigurationException e)
+      catch (Exception e)
       {
          log.error("Could not configure MBean: " + objectName, e);
+         server.unregisterMBean(objectName);
          throw e;
       }
       String serviceFactory = mbeanElement.getAttribute("serviceFactory");

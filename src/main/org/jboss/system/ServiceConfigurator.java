@@ -42,7 +42,7 @@ import org.w3c.dom.Text;
  * 
  * @author <a href="mailto:marc@jboss.org">Marc Fleury</a>
  * @author <a href="mailto:hiram@jboss.org">Hiram Chirino</a>
- * @version $Revision: 1.7 $
+ * @version $Revision: 1.8 $
  *
  * <p><b>20010830 marc fleury:</b>
  * <ul>
@@ -180,21 +180,20 @@ public class ServiceConfigurator
          // The MBean is no longer available
          // It's ok, just return It is ????? Why??  Oh yeah?
          throw new DeploymentException("trying to configure nonexistent mbean: " + objectName);
-         //log.debug("object name " + objectName + " is no longer available");
-         //return true;
       }
 		
       // Set attributes
+      MBeanAttributeInfo[] attributes = info.getAttributes();
       NodeList attrs = mbeanElement.getElementsByTagName("attribute");
       for (int j = 0; j < attrs.getLength(); j++) {
          Element attributeElement = (Element)attrs.item(j);
          String attributeName = attributeElement.getAttribute("name");
+      attrfound:
          if (attributeElement.hasChildNodes()) {
 				
             // Get the attribute value
             String attributeValue = ((Text)attributeElement.getFirstChild()).getData().trim();
 				
-            MBeanAttributeInfo[] attributes = info.getAttributes();
             for (int k = 0; k < attributes.length; k++) {
                if (attributeName.equals(attributes[k].getName())) {
                   String typeName = attributes[k].getType();
@@ -230,10 +229,11 @@ public class ServiceConfigurator
                   log.debug(attributeName + " set to " + attributeValue + " in " + objectName);
                   server.setAttribute(objectName, new Attribute(attributeName, value));
 						
-                  break;
-               }
-            }
-         }
+                  break attrfound;
+               }//if name matches
+            }//for attr names
+            throw new DeploymentException("No Attribute found with name: " +  attributeName);
+         }//if has children
       }
       // Set mbean references (object names)
       ArrayList mBeanRefs = new ArrayList();
@@ -262,7 +262,6 @@ public class ServiceConfigurator
          else 
          {
             log.debug("considering " + mBeanRefName + " with object name " + mBeanRefObjectName);
-            MBeanAttributeInfo[] attributes = info.getAttributes();
             for (int k = 0; k < attributes.length; k++) {
                if (mBeanRefName.equals(attributes[k].getName())) {
                   String typeName = attributes[k].getType();
@@ -320,7 +319,6 @@ public class ServiceConfigurator
          } // end of if ()
          else 
          {
-            MBeanAttributeInfo[] attributes = info.getAttributes();
             for (int k = 0; k < attributes.length; k++) {
                if (mBeanRefListName.equals(attributes[k].getName())) {
                   log.debug(mBeanRefListName + " set to " + mBeanRefListNames + " in " + objectName);

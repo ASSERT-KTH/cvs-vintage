@@ -7,7 +7,7 @@
 <!--                                                                       -->
 <!-- ===================================================================== -->
 
-<!-- $Id: jboss-service.xml,v 1.13 2001/09/26 21:47:04 d_jencks Exp $ -->
+<!-- $Id: jboss-service.xml,v 1.14 2001/11/19 06:58:56 d_jencks Exp $ -->
 
 <!-- 
    |  This is where you can add and configure your MBeans.
@@ -37,8 +37,6 @@
 	 gnu-regexp.jar,
 	 jaas.jar,
 	 JavaGroups.jar,
-	 javax.servlet.jar,
-	 javax-sasl.jar,
 	 jbossha.jar,
 	 jboss-j2ee.jar,
 	 jboss.jar,
