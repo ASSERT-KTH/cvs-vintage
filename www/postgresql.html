@@ -1,0 +1,67 @@
+<html>
+<head>
+<title>Scarab - Postgresql</title>
+</head>
+
+<body bgcolor="#ffffff">
+
+<h2>Scarab - Postgresql</h2>
+<h4>$Id: postgresql.html,v 1.1 2002/02/26 22:24:01 jon Exp $</h4>
+
+<p>
+Scarab has been developed with database independence in mind, however
+our primary goal has been to make Scarab work with MySQL. Therefore, our
+support for other RDBM's is largely untested. We are relying on the user
+community in order to help us test and develop further support for other
+databases. This document outlines the steps that we think are required
+to get Scarab working with Postgresql. <a
+href="mailto:dev@scarab.tigris.org">Community feedback</a> on this
+document will help improve things for others.
+</p>
+
+<p>
+<strong>NOTE: Scarab requires Postgresql version 7.2 and higher.</strong>
+</p>
+
+<p>
+<strong>NOTE: Scarab does not currently work with Postgresql. There is a 
+stack trace thrown when entering a new issue. We are working as 
+quickly as possible to resolve the problem.</strong>
+</p>
+
+<p>
+In order to get Torque to generate the right Scarab .sql files for
+Postgresql and to allow Scarab to connect to Postgres, please try the
+following directions:
+</p>
+
+<ol>
+<li>
+    Create a scarab/build/build.properties file.
+</li>
+<li>
+    In the build.properties file, fill out the following properties with
+    the right information pertaining to Postgresql (see below for
+    examples). Then, rm the target directory and rebuild.
+</li>
+<li>
+    One should also follow the directions for setting up Postgresql to
+    accept <a
+    href="http://www.ca.postgresql.org/users-lounge/docs/7.2/postgres/jdbc.html#JDBC-PREPARE">TCP/IP connections from localhost</a>.
+</li>
+</ol>
+
+<p>
+scarab.database.name=scarab<br />
+scarab.database.port=5432<br />
+scarab.database.host=localhost<br />
+scarab.database.url=jdbc:postgresql://${scarab.database.host}:${scarab.database.port}/${scarab.database.name}<br />
+scarab.database.admin.url=jdbc:postgresql://${scarab.database.host}:${scarab.database.port}/<br />
+scarab.database.type=postgresql<br />
+scarab.database.jdbc.driver=org.postgresql.Driver<br />
+scarab.database.username=[INSERT_USERNAME_HERE]<br />
+scarab.database.password=<br />
+</p>
+
+</body>
+</html>
