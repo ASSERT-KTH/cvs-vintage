@@ -1,4 +1,4 @@
-// $Id: NotationNameImpl.java,v 1.14 2003/09/05 15:31:52 jjones Exp $
+// $Id: NotationNameImpl.java,v 1.15 2003/09/17 21:29:03 thierrylach Exp $
 // Copyright (c) 1996-2001 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -134,7 +134,7 @@ public class NotationNameImpl
 
     /** Create a NotationName with or without a version.
      * The NotationName is only created if there is no such notation before.
-     * @returns the newly created or the old NotationName
+     * @return the newly created or the old NotationName
      */
     public static NotationName makeNotation(String k1, String k2, Icon icon) {
 	NotationName nn = null;

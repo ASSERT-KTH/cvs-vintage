@@ -1,4 +1,4 @@
-// $Id: ResourceLoaderWrapper.java,v 1.9 2003/08/30 13:56:54 alexb Exp $
+// $Id: ResourceLoaderWrapper.java,v 1.10 2003/09/17 21:29:01 thierrylach Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -103,7 +103,7 @@ public final class ResourceLoaderWrapper {
      *
      * @param classname The look and feel classname
      * @param element The en part of the path.
-     * @returns the complete path.
+     * @return the complete path.
      */
     private static String lookAndFeelPath(String classname, String element) {
 	return "/org/argouml/Images/plaf/"

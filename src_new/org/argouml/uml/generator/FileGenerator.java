@@ -1,4 +1,4 @@
-// $Id: FileGenerator.java,v 1.7 2003/06/30 21:59:33 linus Exp $
+// $Id: FileGenerator.java,v 1.8 2003/09/17 21:29:02 thierrylach Exp $
 // Copyright (c) 2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -39,7 +39,7 @@ public interface FileGenerator {
      * TODO:
      * This will only work for languages that have each node
      * in a separate files (one or more).
-     * @returns filename
+     * @return filename
      */
     public String GenerateFile(Object node, String path);
 }

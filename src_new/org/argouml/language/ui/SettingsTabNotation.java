@@ -1,4 +1,4 @@
-// $Id: SettingsTabNotation.java,v 1.15 2003/09/17 21:13:33 thierrylach Exp $
+// $Id: SettingsTabNotation.java,v 1.16 2003/09/17 21:29:03 thierrylach Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -144,7 +144,7 @@ public class SettingsTabNotation extends SettingsTabHelper
     /** Get a boolean from the configuration.
      *
      * @param a notation key.
-     * @returns a boolean
+     * @return a boolean
      */
     private static boolean getBoolean(ConfigurationKey key) {
     return Configuration.getBoolean(key, false);

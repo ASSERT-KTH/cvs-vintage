@@ -1,4 +1,4 @@
-// $Id: TabHistory.java,v 1.9 2003/09/04 20:11:45 thierrylach Exp $
+// $Id: TabHistory.java,v 1.10 2003/09/17 21:29:03 thierrylach Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -84,7 +84,7 @@ public class TabHistory extends TabSpawnable
     /** Get the ImageIcon.
      *
      * @param tag of the icon.
-     * @returns the ImageIcon of the tag.
+     * @return the ImageIcon of the tag.
      */
     private static ImageIcon lookupIconResource(String tag) {
 	return ResourceLoaderWrapper.getResourceLoaderWrapper()

@@ -1,4 +1,4 @@
-// $Id: AttributeCodePiece.java,v 1.14 2003/09/08 13:39:19 bobtarling Exp $
+// $Id: AttributeCodePiece.java,v 1.15 2003/09/17 21:29:02 thierrylach Exp $
 // Copyright (c) 1996-2001 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -22,7 +22,7 @@
 // CALIFORNIA HAS NO OBLIGATIONS TO PROVIDE MAINTENANCE, SUPPORT,
 // UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 
-// $Id: AttributeCodePiece.java,v 1.14 2003/09/08 13:39:19 bobtarling Exp $
+// $Id: AttributeCodePiece.java,v 1.15 2003/09/17 21:29:02 thierrylach Exp $
 
 /*
   JavaRE - Code generation and reverse engineering for UML and Java
@@ -209,7 +209,7 @@ public class AttributeCodePiece extends NamedCodePiece
     /**
      * Get the generator.
      *
-     * @returns the generator.
+     * @return the generator.
      */
     private GeneratorJava generator() {
 	return GeneratorJava.getInstance();

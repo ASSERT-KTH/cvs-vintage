@@ -1,4 +1,4 @@
-// $Id: CrAttrNameConflict.java,v 1.9 2003/08/30 21:28:52 alexb Exp $
+// $Id: CrAttrNameConflict.java,v 1.10 2003/09/17 21:29:02 thierrylach Exp $
 // Copyright (c) 1996-2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -27,7 +27,7 @@
 // File: CrAttrNameConflict.java
 // Classes: CrAttrNameConflict
 // Original Author: jrobbins@ics.uci.edu
-// $Id: CrAttrNameConflict.java,v 1.9 2003/08/30 21:28:52 alexb Exp $
+// $Id: CrAttrNameConflict.java,v 1.10 2003/09/17 21:29:02 thierrylach Exp $
 
 package org.argouml.uml.cognitive.critics;
 
@@ -72,7 +72,7 @@ public class CrAttrNameConflict extends CrUML {
      *
      * @param dm is the classifier
      * @param dsgr is not used.
-     * @returns true if there are two with the same name.
+     * @return true if there are two with the same name.
      */
     public boolean predicate2(Object dm, Designer dsgr) {
 	if (!(ModelFacade.isAClassifier(dm))) return NO_PROBLEM;

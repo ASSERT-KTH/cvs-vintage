@@ -1,4 +1,4 @@
-// $Id: CrNoAssociations.java,v 1.13 2003/09/01 15:02:06 bobtarling Exp $
+// $Id: CrNoAssociations.java,v 1.14 2003/09/17 21:29:02 thierrylach Exp $
 // Copyright (c) 1996-2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -80,7 +80,7 @@ public class CrNoAssociations extends CrUML {
     /**
      * @param handle the classifier to examine
      * @param number of levels searched
-     * @returns true if an association can be found in this classifier
+     * @return true if an association can be found in this classifier
      *		or in any of its generalizations.
      */
     private boolean findAssociation(Object dm, int depth) {

@@ -1,4 +1,4 @@
-// $Id: Project.java,v 1.80 2003/09/14 01:51:06 bobtarling Exp $
+// $Id: Project.java,v 1.81 2003/09/17 21:29:01 thierrylach Exp $
 // Copyright (c) 1996-2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -873,7 +873,7 @@ public class Project implements java.io.Serializable, TargetListener {
     /**
      * Finds a diagram with a specific name or UID.
      *
-     * @returns the diagram object (if found). Otherwize null.
+     * @return the diagram object (if found). Otherwize null.
      * @param name is the name to search for.
      */
     public ArgoDiagram getDiagram(String name) {
@@ -1110,7 +1110,7 @@ public class Project implements java.io.Serializable, TargetListener {
     /** Find a type by name in the default model.
      *
      * @param the name.
-     * @returns the type.
+     * @return the type.
      */
     public Object findTypeInDefaultModel(String name) {
 	if (_defaultModelCache.containsKey(name))

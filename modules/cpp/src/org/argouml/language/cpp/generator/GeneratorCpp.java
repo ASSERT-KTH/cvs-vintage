@@ -1,4 +1,4 @@
-// $Id: GeneratorCpp.java,v 1.5 2003/06/29 23:16:07 linus Exp $
+// $Id: GeneratorCpp.java,v 1.6 2003/09/17 21:29:01 thierrylach Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -26,7 +26,7 @@
 // File: GeneratorCpp.java
 // Classes: GeneratorCpp
 // Original Author:
-// $Id: GeneratorCpp.java,v 1.5 2003/06/29 23:16:07 linus Exp $
+// $Id: GeneratorCpp.java,v 1.6 2003/09/17 21:29:01 thierrylach Exp $
 
 
 package org.argouml.language.cpp.generator;
@@ -259,7 +259,7 @@ public class GeneratorCpp extends Generator
     /** Generates a file for the classifier.
      * This method could have been static if it where not for the need to
      * call it through the Generatorinterface.
-     * @returns the full path name of the the generated file.
+     * @return the full path name of the the generated file.
      */
     public String GenerateFile(Object o, String path) {
 	MClassifier cls = (MClassifier) o;

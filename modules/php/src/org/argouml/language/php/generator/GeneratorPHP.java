@@ -1,4 +1,4 @@
-// $Id: GeneratorPHP.java,v 1.16 2003/06/29 23:16:10 linus Exp $
+// $Id: GeneratorPHP.java,v 1.17 2003/09/17 21:29:00 thierrylach Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -112,7 +112,7 @@ public class GeneratorPHP extends Generator
     /** Generates a file for the classifier.
      * This method could have been static if it where not for the need to
      * call it through the Generatorinterface.
-     * @returns the full path name of the the generated file.
+     * @return the full path name of the the generated file.
      */
     public String GenerateFile(Object o, String path) {
 	MClassifier cls = (MClassifier) o;
