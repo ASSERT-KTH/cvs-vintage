@@ -30,7 +30,7 @@ import org.jboss.logging.Logger;
  * @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
  * @author <a href="mailto:shevlandj@kpi.com.au">Joe Shevland</a>
  * @author <a href="mailto:justin@j-m-f.demon.co.uk">Justin Forder</a>
- * @version $Revision: 1.2 $
+ * @version $Revision: 1.3 $
  */
 public class JDBCQueryManager {
    private final Map knownQueries = new HashMap();
@@ -54,17 +54,16 @@ public class JDBCQueryManager {
 
    public void start() throws DeploymentException {
       Logger log = Logger.getLogger(
-            this.getClass().getName() +
-            "." +
+            this.getClass().getName() + 
+            "." + 
             manager.getMetaData().getName());
-      boolean debug = log.isDebugEnabled();
-
-      JDBCCommandFactory factory = manager.getCommandFactory();
-
+      
+      JDBCCommandFactory factory = manager.getCommandFactory();      
+      
       Class homeClass = manager.getContainer().getHomeClass();
       Class localHomeClass = manager.getContainer().getLocalHomeClass();
 
-      //
+      // 
       // findByPrimaryKey
       //
       JDBCEntityBridge entity = manager.getEntityBridge();
@@ -72,52 +71,50 @@ public class JDBCQueryManager {
          try {
             // try to get the finder method on the home interface
             Method method = homeClass.getMethod(
-                  "findByPrimaryKey",
+                  "findByPrimaryKey", 
                   new Class[] {entity.getPrimaryKeyClass()});
-
+            
             // got it add it to known finders
             JDBCQueryMetaData q = new JDBCAutomaticQueryMetaData(method);
             knownQueries.put(
-                  method,
+                  method, 
                   factory.createFindByPrimaryKeyQuery(q));
 
-            if (debug)
-               log.debug("Added findByPrimaryKey query command for " +
+            log.debug("Added findByPrimaryKey query command for " +
                   "home interface");
          } catch(NoSuchMethodException e) {
             throw new DeploymentException("Home interface does not " +
                   "have a findByPrimaryKey method");
          }
       }
-
+         
       if(localHomeClass != null) {
          try {
             // try to get the finder method on the local home interface
             Method method = localHomeClass.getMethod(
-                  "findByPrimaryKey",
+                  "findByPrimaryKey", 
                   new Class[] {entity.getPrimaryKeyClass()});
-
+            
             // got it add it to known finders
             JDBCQueryMetaData q = new JDBCAutomaticQueryMetaData(method);
             knownQueries.put(
-                  method,
+                  method, 
                   factory.createFindByPrimaryKeyQuery(q));
 
-            if (debug)
-               log.debug("Added findByPrimaryKey query command for " +
+            log.debug("Added findByPrimaryKey query command for " +
                   "local home interface");
          } catch(NoSuchMethodException e) {
             throw new DeploymentException("Local home interface does " +
                   "not have a findByPrimaryKey method");
          }
       }
-
+ 
       //
       // Custom finders - Overrides defined and automatic finders.
       //
       Class ejbClass = manager.getMetaData().getEntityClass();
 
-      Method[] customMethods = ejbClass.getMethods();
+      Method[] customMethods = ejbClass.getMethods();         
       for (int i = 0; i < customMethods.length; i++) {
          Method m = customMethods[i];
          String  methodName = m.getName();
@@ -128,16 +125,15 @@ public class JDBCQueryManager {
                try {
                   // try to get the finder method on the home interface
                   Method interfaceMethod = homeClass.getMethod(
-                        interfaceName,
+                        interfaceName, 
                         m.getParameterTypes());
-
+                  
                   // got it add it to known finders
                   knownQueries.put(
-                        interfaceMethod,
+                        interfaceMethod, 
                         new JDBCCustomFinderQuery(manager, m));
 
-                  if (debug)
-                     log.debug("Added custom finder " + methodName +
+                  log.debug("Added custom finder " + methodName +
                         " on home interface");
                } catch(NoSuchMethodException e) {
                   // this is ok method may not be defined on this interface
@@ -156,8 +152,7 @@ public class JDBCQueryManager {
                         interfaceMethod, 
                         new JDBCCustomFinderQuery(manager, m));
 
-                  if (debug)
-                     log.debug("Added custom finder " + methodName +
+                  log.debug("Added custom finder " + methodName +
                         " on local home interface");
                } catch(NoSuchMethodException e) {
                   // this is ok method may not be defined on this interface
@@ -218,8 +213,7 @@ public class JDBCQueryManager {
                   JDBCQueryMetaData q = new JDBCAutomaticQueryMetaData(m);
                   knownQueries.put(m, factory.createFindByQuery(q));
                } catch (IllegalArgumentException e) {
-                  if (log.isDebugEnabled())
-                     log.debug("Could not create the finder " + name +
+                  log.debug("Could not create the finder " + name +
                         ", because no matching CMP field was found.");
                }
             }
