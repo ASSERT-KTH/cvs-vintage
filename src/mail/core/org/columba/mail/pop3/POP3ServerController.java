@@ -65,6 +65,7 @@ public class POP3ServerController implements ActionListener {
 					+ accountItem.getIdentityItem().get("address")
 					+ ")",
 				"",
+				"",
 				"CHECK",
 				null,
 				null,
@@ -78,6 +79,7 @@ public class POP3ServerController implements ActionListener {
 					+ " ("
 					+ accountItem.getIdentityItem().get("address")
 					+ ")",
+				"",
 				"",
 				"MANAGE",
 				null,

@@ -44,7 +44,7 @@ public class HeaderTableMenu
     {
         this.headerTableViewer = headerTableViewer;
 
-        initPopupMenu();
+        //initPopupMenu();
     }
 
     public JPopupMenu getPopupMenu()

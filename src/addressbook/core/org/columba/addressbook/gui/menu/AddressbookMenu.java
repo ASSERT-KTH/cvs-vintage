@@ -60,7 +60,7 @@ public class AddressbookMenu
 		ButtonGroup group;
 
 		menuBar = new JMenuBar();
-
+/*
 		menu = new JMenu(AddressbookResourceLoader.getString("menu","mainframe", "menu_file"));
 		menu.setMnemonic(KeyEvent.VK_F);
 		menuBar.add(menu);
@@ -192,7 +192,7 @@ public class AddressbookMenu
 				ImageLoader.getImageIcon("stock_help_16.png"));
 		menuItem.setEnabled(false);
 		menu.add(menuItem);
-		
+		*/
 	}
 
 	public JMenuBar getMenuBar()

@@ -27,14 +27,11 @@ import org.columba.core.config.HeaderItem;
 import org.columba.core.config.TableItem;
 import org.columba.core.gui.util.CScrollPane;
 import org.columba.core.logging.ColumbaLogger;
-import org.columba.core.main.MainInterface;
 import org.columba.core.util.SwingWorker;
 import org.columba.mail.command.FolderCommandReference;
 import org.columba.mail.config.MailConfig;
 import org.columba.mail.folder.Folder;
-import org.columba.mail.folder.FolderTreeNode;
 import org.columba.mail.gui.frame.MailFrameController;
-import org.columba.mail.gui.message.command.ViewMessageCommand;
 import org.columba.mail.gui.table.action.FilterActionListener;
 import org.columba.mail.gui.table.action.HeaderItemActionListener;
 import org.columba.mail.gui.table.action.HeaderTableActionListener;
@@ -44,7 +41,6 @@ import org.columba.mail.gui.table.action.HeaderTableMouseListener;
 import org.columba.mail.gui.table.menu.HeaderTableMenu;
 import org.columba.mail.gui.table.util.MarkAsReadTimer;
 import org.columba.mail.gui.table.util.MessageNode;
-import org.columba.mail.gui.tree.FolderSelectionListener;
 import org.columba.mail.message.HeaderList;
 
 /**
@@ -56,7 +52,7 @@ import org.columba.mail.message.HeaderList;
  */
 
 public class TableController
-	implements FolderSelectionListener, TreeSelectionListener {
+	implements TreeSelectionListener {
 
 	private HeaderTableMenu menu;
 
@@ -99,7 +95,6 @@ public class TableController
 
 	protected MailFrameController mailFrameController;
 
-	protected Object[] oldUidList;
 	protected Object[] newUidList;
 
 	protected MarkAsReadTimer markAsReadTimer;
@@ -112,9 +107,6 @@ public class TableController
 
 		//setLayout(new BorderLayout());
 
-		oldUidList = null;
-		newUidList = null;
-		
 		headerTableItem =
 			(TableItem) MailConfig
 				.getMainFrameOptionsConfig()
@@ -128,7 +120,7 @@ public class TableController
 		view = new TableView(headerTableModel);
 
 		tableSelectionManager = new TableSelectionManager();
-		tableSelectionManager.addFolderSelectionListener(this);
+		//tableSelectionManager.addFolderSelectionListener(this);
 
 		tableChangedListenerList = new Vector();
 		
@@ -136,7 +128,7 @@ public class TableController
 
 		menu = new HeaderTableMenu(this);
 
-		headerTableDnd = new HeaderTableDnd(this);
+		headerTableDnd = new HeaderTableDnd(view);
 
 		headerTableMouseListener = new HeaderTableMouseListener(this);
 		view.addMouseListener(headerTableMouseListener);
@@ -179,29 +171,6 @@ public class TableController
 	public TableView getView() {
 
 		return view;
-	}
-
-	/*
-	public void setSelectionManager(SelectionManager manager) {
-		this.selectionManager = manager;
-	
-		selectionManager.addFolderSelectionListener(this);
-	}
-	*/
-
-	public void folderSelectionChanged(FolderTreeNode newFolder) {
-
-		/*
-		ColumbaLogger.log.debug("selection=" + newFolder);
-
-		if (newFolder instanceof Folder) {
-			MainInterface.processor.addOp(
-				new ViewHeaderListCommand(
-					mailFrameController,
-					getTableSelectionManager().getSelection()));
-
-		}
-		*/
 	}
 
 	public HeaderTableMouseListener getHeaderTableMouseListener() {
@@ -415,15 +384,6 @@ public class TableController
 	public FilterActionListener getFilterActionListener() {
 		return filterActionListener;
 	}
-	
-	public void setSelection( Object[] uids)
-	{
-		oldUidList = newUidList;
-		newUidList = uids;
-		
-		getTableSelectionManager().fireMessageSelectionEvent(oldUidList, newUidList);
-
-	}
 
 	public void valueChanged(TreeSelectionEvent e) {
 		DefaultMutableTreeNode node =
@@ -444,12 +404,10 @@ public class TableController
 		if (nodes.length == 0)
 			return;
 
-		oldUidList = newUidList;
 		newUidList = MessageNode.toUidArray(nodes);
+		
 
-		if ( oldUidList == null ) oldUidList = newUidList;		
-
-		getTableSelectionManager().fireMessageSelectionEvent(oldUidList, newUidList);
+		getTableSelectionManager().fireMessageSelectionEvent(null, newUidList);
 
 	}
 
@@ -458,6 +416,7 @@ public class TableController
 	 */
 
 	public void showMessage() {
+		/*
 
 		FolderCommandReference[] reference =
 			(FolderCommandReference[]) 
@@ -487,6 +446,7 @@ public class TableController
 		
 		MainInterface.processor.addOp(
 			new ViewMessageCommand(mailFrameController, reference));
+			*/
 	}
 
 	/**
@@ -512,7 +472,7 @@ public class TableController
 	public void tableChanged(TableChangedEvent event) throws Exception {
 		ColumbaLogger.log.info("event="+event);
 		
-		Folder folder = (Folder) event.getSrcFolder();
+		Folder folder = event.getSrcFolder();
 
 		if (folder == null) {
 			if (event.getEventType() == TableChangedEvent.UPDATE)
@@ -523,8 +483,7 @@ public class TableController
 		}
 
 		FolderCommandReference[] r =
-			(FolderCommandReference[]) getTableSelectionManager()
-				.getSelection();
+			(FolderCommandReference[]) mailFrameController.getSelectionManager().getSelection("mail.headertable");				
 		Folder srcFolder = (Folder) r[0].getFolder();
 
 		if (!folder.equals(srcFolder))
@@ -535,7 +494,12 @@ public class TableController
 			case TableChangedEvent.UPDATE :
 				{
 					getHeaderTableModel().update();
-						
+					/*
+					HeaderInterface[] headerList = event.getHeaderList();
+					
+					getHeaderTableModel()
+								.setHeaderList(headerList);
+					*/			
 					break;
 				}
 			case TableChangedEvent.ADD :

@@ -13,20 +13,34 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
 //
 //All Rights Reserved.
-package org.columba.core.gui.util;
 
-import org.columba.core.command.DefaultCommandReference;
+package org.columba.mail.gui.table;
 
-/**
- * @author freddy
- *
- * To change this generated comment edit the template variable "typecomment":
- * Window>Preferences>Java>Templates.
- * To enable and disable the creation of type comments go to
- * Window>Preferences>Java>Code Generation.
- */
-public abstract class SelectionManager {
+import org.columba.core.gui.util.SelectionChangedEvent;
+import org.columba.mail.folder.Folder;
 
-	public abstract DefaultCommandReference[] getSelection();
+public class MessageSelectionChangedEvent extends SelectionChangedEvent {
+
+	private Folder folder;
+	private Object[] uids;
+
+	public MessageSelectionChangedEvent( Folder folder, Object[] uids) {
+		this.folder = folder;
+		this.uids = uids;
+	}
+
+	/**
+	 * @return Folder
+	 */
+	public Folder getFolder() {
+		return folder;
+	}
+
+	/**
+	 * @return Object[]
+	 */
+	public Object[] getUids() {
+		return uids;
+	}
 
 }

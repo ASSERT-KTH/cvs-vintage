@@ -51,7 +51,7 @@ public class AttachmentActionListener implements ActionListener {
 	public AttachmentActionListener(AttachmentController attachmentController) {
 		this.attachmentController = attachmentController;
 
-		initActions();
+		//initActions();
 	}
 
 	public void initActions() {

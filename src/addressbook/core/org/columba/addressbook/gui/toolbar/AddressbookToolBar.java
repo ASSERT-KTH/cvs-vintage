@@ -58,7 +58,7 @@ public class AddressbookToolBar extends JToolBar
         {
         	
 
-
+/*
 	    //MouseAdapter handler = MainInterface.statusBar.getHandler();
 	    ToolbarButton button;
 
@@ -80,7 +80,7 @@ public class AddressbookToolBar extends JToolBar
 	    addButton( button  );
 
             addSeparator();
-
+*/
 		
         }
 

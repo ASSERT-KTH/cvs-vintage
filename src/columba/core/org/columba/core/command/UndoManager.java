@@ -56,6 +56,7 @@ public class UndoManager implements ActionListener, WorkerListChangeListener {
 			new BasicAction(
 				MailResourceLoader.getString("action", "menu_edit_undo"),
 				MailResourceLoader.getString("action", "menu_edit_undo"),
+				"",
 				"UNDO",
 				ImageLoader.getSmallImageIcon("stock_undo-16.png"),
 				ImageLoader.getImageIcon("stock_undo.png"),
@@ -69,7 +70,8 @@ public class UndoManager implements ActionListener, WorkerListChangeListener {
 			new BasicAction(
 				MailResourceLoader.getString("action", "menu_edit_redo"),
 				MailResourceLoader.getString("action", "menu_edit_redo"),
-				"REDO",
+				"",
+				"REDO",				
 				ImageLoader.getSmallImageIcon("stock_redo-16.png"),
 				ImageLoader.getImageIcon("stock_redo.png"),
 				'T',

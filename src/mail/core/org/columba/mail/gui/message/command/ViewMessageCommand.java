@@ -143,7 +143,7 @@ public class ViewMessageCommand extends FolderCommand {
 				((MailFrameController) frameController)
 					.tableController
 					.getMarkAsReadTimer()
-					.restart(folder, uid);
+					.restart((FolderCommandReference)getReferences()[0]);
 			}
 
 		}

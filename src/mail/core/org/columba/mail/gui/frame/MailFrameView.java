@@ -19,7 +19,6 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.util.ResourceBundle;
 
-import javax.swing.BoxLayout;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
@@ -27,6 +26,7 @@ import javax.swing.JSplitPane;
 import org.columba.core.config.ViewItem;
 import org.columba.core.gui.FrameController;
 import org.columba.core.gui.FrameView;
+import org.columba.core.gui.ToolBar;
 import org.columba.core.gui.statusbar.StatusBar;
 import org.columba.mail.config.MailConfig;
 import org.columba.mail.gui.composer.HeaderView;
@@ -37,13 +37,9 @@ import org.columba.mail.gui.tree.TreeView;
 import org.columba.mail.gui.tree.util.FolderInfoPanel;
 
 public class MailFrameView extends FrameView {
-	private MailToolBar toolbar;
-
 	//private StatusBar statusBar;
 	public JSplitPane mainSplitPane;
 	public JSplitPane rightSplitPane;
-
-	private JPanel pane;
 
 	private FolderInfoPanel folderInfoPanel;
 
@@ -88,11 +84,11 @@ public class MailFrameView extends FrameView {
 		MessageView message,
 		StatusBar statusBar) {
 
+		super.init();
 		this.filterToolbar = filterToolbar;
 
 		
-		
-
+		menu.extendMenuFromFile("org/columba/mail/action/menu.xml");
 		//this.statusBar = statusBar;
 
 		mainSplitPane = new JSplitPane();
@@ -133,18 +129,14 @@ public class MailFrameView extends FrameView {
 			
 		mainSplitPane.add(rightSplitPane, JSplitPane.RIGHT);
 
-		pane = new JPanel();
-		pane.setLayout(new BoxLayout(pane, BoxLayout.Y_AXIS));
 
 		// same as menu
 
-		if (item.getBoolean("toolbars", "show_main") == true)
-			pane.add(toolbar);
 
 		if (item.getBoolean("toolbars", "show_folderinfo") == true)
-			pane.add(folderInfoPanel);
+			ToolbarPane.add(folderInfoPanel);
 
-		getContentPane().add(pane, BorderLayout.NORTH);
+		getContentPane().add(ToolbarPane, BorderLayout.NORTH);
 
 		int count = MailConfig.getAccountList().count();
 
@@ -161,39 +153,21 @@ public class MailFrameView extends FrameView {
 
 	}
 
-	public void setToolBar(MailToolBar toolBar) {
+	public void setToolBar(ToolBar toolBar) {
 		this.toolbar = toolBar;
 	}
 
 	public void hideToolbar(boolean b) {
-		pane.remove(toolbar);
+		ToolbarPane.remove(toolbar);
 
 		validate();
 		repaint();
 
 	}
 
-	public void showToolbar(boolean b) {
-
-		if (b) {
-			pane.removeAll();
-			pane.add(toolbar);
-			pane.add(folderInfoPanel);
-
-			validate();
-			repaint();
-		} else {
-
-			pane.add(toolbar);
-			validate();
-			repaint();
-		}
-
-	}
-
 	public void hideFolderInfo(boolean b) {
 
-		pane.remove(folderInfoPanel);
+		ToolbarPane.remove(folderInfoPanel);
 		validate();
 		repaint();
 
@@ -202,15 +176,15 @@ public class MailFrameView extends FrameView {
 	public void showFolderInfo(boolean b) {
 
 		if (b) {
-			pane.removeAll();
-			pane.add(toolbar);
-			pane.add(folderInfoPanel);
+			ToolbarPane.removeAll();
+			ToolbarPane.add(toolbar);
+			ToolbarPane.add(folderInfoPanel);
 
 			validate();
 			repaint();
 		} else {
 
-			pane.add(folderInfoPanel);
+			ToolbarPane.add(folderInfoPanel);
 
 			validate();
 			repaint();
@@ -230,9 +204,10 @@ public class MailFrameView extends FrameView {
 		repaint();
 	}
 
-	public void saveWindowPosition(ViewItem viewItem) {
+	public void saveWindowPosition() {
+		super.saveWindowPosition();
 
-		super.saveWindowPosition(viewItem);
+		ViewItem viewItem = frameController.getItem();
 
 		viewItem.set("splitpanes", "main", mainSplitPane.getDividerLocation());
 		viewItem.set(

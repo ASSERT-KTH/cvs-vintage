@@ -452,5 +452,9 @@ public class HeaderTableModel extends AbstractTreeTableModel {
 		}
 		*/
 	}
+	
+	public MessageNode getMessageNode( Object uid ) {
+		return (MessageNode) uidList.get(uid);
+	}
 
 }

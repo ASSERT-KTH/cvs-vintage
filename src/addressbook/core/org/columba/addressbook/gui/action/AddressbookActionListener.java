@@ -106,7 +106,7 @@ public class AddressbookActionListener implements ActionListener {
 	}
 
 	public void initAction() {
-
+/*
 		cutAction =
 			new BasicAction(
 				AddressbookResourceLoader.getString(
@@ -335,7 +335,7 @@ public class AddressbookActionListener implements ActionListener {
 				null);
 		addvcardAction.setEnabled(true);
 		addvcardAction.addActionListener(this);
-
+*/
 	}
 
 	public void actionPerformed(ActionEvent e) {

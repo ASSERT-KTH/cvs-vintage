@@ -39,25 +39,19 @@ public abstract class FrameModel {
 		this.viewList = viewList;
 		controllers = new Hashtable();
 
-		
 		for (int i = 0; i < viewList.count(); i++) {
 			XmlElement view = viewList.getElement(i);
 			String id = view.getAttribute("id");
 
-			/*
-			FrameController c = new MailFrameController(id);
-			*/
-
 			FrameController c = createInstance(new Integer(id).toString());
 
-			
-			c.getView().loadWindowPosition(new ViewItem(view));
+			c.getView().loadWindowPosition();
 			c.getView().setVisible(true);
-			register(id, c);
 
 			nextId = Integer.parseInt(id) + 1;
 		}
 	}
+
 
 	public abstract FrameController createInstance(String id);
 
@@ -72,55 +66,61 @@ public abstract class FrameModel {
 
 		c.getView().setVisible(true);
 		//c.getView().loadWindowPosition(new ViewItem(child));
-		register(new Integer(id).toString(), c);
 	}
 
 	/**
 	 * Registers the View
 	 * @param view
 	 */
-	public void register(String id, FrameController controller) {
+	void register(String id, FrameController controller) {
 		controllers.put(id, controller);
+		controller.setItem(getViewItem(id));
 	}
 
-	protected XmlElement ensureViewConfigurationExists(String key) {
-		XmlElement child = getChild(new Integer(key).toString());
-		if (child == null) {
-			// create new node
-			child = new XmlElement("view");
-			child.addAttribute("id", new Integer(key).toString());
-			XmlElement window = new XmlElement("window");
-			window.addAttribute("x", "0");
-			window.addAttribute("y", "0");
-			window.addAttribute("width", "900");
-			window.addAttribute("height", "700");
-			window.addAttribute("maximized", "true");
-			child.addElement(window);
-			/*
-			XmlElement toolbars = new XmlElement("toolbars");
-			toolbars.addAttribute("show_main", "true");
-			toolbars.addAttribute("show_filter", "true");
-			toolbars.addAttribute("show_folderinfo", "true");
-			child.addElement(toolbars);
-			XmlElement splitpanes = new XmlElement("splitpanes");
-			splitpanes.addAttribute("main", "200");
-			splitpanes.addAttribute("header", "200");
-			splitpanes.addAttribute("attachment", "100");
-			child.addElement(splitpanes);
-			*/
-			viewList.addElement(child);
+	protected ViewItem getViewItem( String id ) {
+		XmlElement viewElement = getChild(id);
+		if( viewElement == null ) {
+			viewElement = createDefaultConfiguration(id);
+			viewList.addElement(viewElement);
 		}
 		
+		return new ViewItem(viewElement);
+	}
+
+	protected XmlElement createDefaultConfiguration(String key) {
+		XmlElement child; // = getChild(new Integer(key).toString());
+
+		// create new node
+		child = new XmlElement("view");
+		child.addAttribute("id", new Integer(key).toString());
+		XmlElement window = new XmlElement("window");
+		window.addAttribute("x", "0");
+		window.addAttribute("y", "0");
+		window.addAttribute("width", "900");
+		window.addAttribute("height", "700");
+		window.addAttribute("maximized", "true");
+		child.addElement(window);
+		/*
+		XmlElement toolbars = new XmlElement("toolbars");
+		toolbars.addAttribute("show_main", "true");
+		toolbars.addAttribute("show_filter", "true");
+		toolbars.addAttribute("show_folderinfo", "true");
+		child.addElement(toolbars);
+		XmlElement splitpanes = new XmlElement("splitpanes");
+		splitpanes.addAttribute("main", "200");
+		splitpanes.addAttribute("header", "200");
+		splitpanes.addAttribute("attachment", "100");
+		child.addElement(splitpanes);
+		*/
+
 		return child;
 	}
 
 	public void saveAll() {
-		viewList.removeAllElements();
 		for (Enumeration e = controllers.keys(); e.hasMoreElements();) {
 			String key = (String) e.nextElement();
 			FrameController frame = (FrameController) controllers.get(key);
-			ensureViewConfigurationExists(key);
-			controllers.remove(key);
+			frame.close();
 		}
 		/*
 		saveAndExit();
@@ -132,19 +132,19 @@ public abstract class FrameModel {
 		 * @return boolean true if there are no more views for the model
 		 */
 
-	public void unregister(String id) {
+	void unregister(String id) {
 		FrameController controller = (FrameController) controllers.get(id);
 		if (controllers.size() == 1) {
 			// last window closed
 			//  close application
-			viewList.removeAllElements();
-			ensureViewConfigurationExists(id);
-			saveWindowPosition(id);
+			
+			//viewList.removeAllElements();
+			//ensureViewConfigurationExists(id);
+			//saveWindowPosition(id);
 			controllers.remove(id);
-			
+
 			MainInterface.shutdownManager.shutdown();
-			
-			
+
 			/*
 			saveAndExit();
 			*/
@@ -163,9 +163,4 @@ public abstract class FrameModel {
 		return null;
 	}
 
-	public void saveWindowPosition(String id) {
-		XmlElement child = getChild(id);
-		FrameController frame = (FrameController) controllers.get(id);
-		frame.getView().saveWindowPosition(new ViewItem(child));
-	}
 }

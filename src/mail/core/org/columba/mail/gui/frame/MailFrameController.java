@@ -17,7 +17,9 @@ package org.columba.mail.gui.frame;
 
 import org.columba.core.config.ViewItem;
 import org.columba.core.gui.FrameController;
+import org.columba.core.gui.FrameModel;
 import org.columba.core.gui.FrameView;
+import org.columba.core.gui.ToolBar;
 import org.columba.core.gui.util.DialogStore;
 import org.columba.core.logging.ColumbaLogger;
 import org.columba.core.main.MainInterface;
@@ -28,8 +30,12 @@ import org.columba.mail.gui.composer.HeaderController;
 import org.columba.mail.gui.frame.action.FrameActionListener;
 import org.columba.mail.gui.message.MessageController;
 import org.columba.mail.gui.table.FilterToolbar;
+import org.columba.mail.gui.table.HeaderTableSelectionHandler;
 import org.columba.mail.gui.table.TableController;
+import org.columba.mail.gui.table.action.ViewMessageAction;
 import org.columba.mail.gui.tree.TreeController;
+import org.columba.mail.gui.tree.TreeSelectionHandler;
+import org.columba.mail.gui.tree.action.ViewHeaderListAction;
 import org.columba.mail.gui.tree.util.FolderInfoPanel;
 
 
@@ -44,7 +50,6 @@ import org.columba.mail.gui.tree.util.FolderInfoPanel;
  */
 public class MailFrameController extends FrameController {
 
-	protected MailFrameView view;
 	//public SelectionManager selectionManager;
 
 	public TreeController treeController;
@@ -57,35 +62,29 @@ public class MailFrameController extends FrameController {
 	public FolderInfoPanel folderInfoPanel;
 
 	private FrameActionListener actionListener;
-	private MailToolBar toolBar;
-	private MailMenu menu;
-
+	private ToolBar toolBar;
 	public GlobalActionCollection globalActionCollection;
 
 	
 	
-	public MailFrameController( String id ) {
-		super(id);
-		
-		
-		
-		
+	public MailFrameController( String id, FrameModel model ) {
+		super(id, model);
 
-		new DialogStore(view);
+		new DialogStore((MailFrameView) view);
 
-		globalActionCollection = new GlobalActionCollection(this);
+		//globalActionCollection = new GlobalActionCollection(this);
 
-		actionListener = new FrameActionListener(this);
+		//actionListener = new FrameActionListener(this);
 		
-		createView();
+		// createView();
 
 		//selectionManager = new SelectionManager();
 
 	}
 
-	public void createView() {
+	public FrameView createView() {
 
-		view = new MailFrameView(this);
+		MailFrameView view = new MailFrameView(this);
 		treeController = new TreeController(this, MainInterface.treeModel);
 		//treeController.setSelectionManager(selectionManager);
 
@@ -112,12 +111,9 @@ public class MailFrameController extends FrameController {
 		folderInfoPanel = new FolderInfoPanel();
 		view.setFolderInfoPanel(folderInfoPanel);
 
-		toolBar = new MailToolBar(this);
-		view.setToolBar(toolBar);
-
 		filterToolbar = new FilterToolbar(tableController);
 
-		globalActionCollection.addActionListeners();
+		//globalActionCollection.addActionListeners();
 
 		view.init(
 			treeController.getView(),
@@ -126,8 +122,6 @@ public class MailFrameController extends FrameController {
 			messageController.getView(),
 			statusBar);
 
-		menu = new MailMenu(this);
-		view.setJMenuBar(menu);
 
 		/*
 		view.addWindowListener(new WindowAdapter() {
@@ -158,13 +152,10 @@ public class MailFrameController extends FrameController {
 		}
 		*/
 		//view.setVisible(true);
+		return view;
 	}
 
 	
-
-	public MailMenu getMenu() {
-		return menu;
-	}
 
 	public FrameView getView() {
 		return view;
@@ -210,5 +201,21 @@ public class MailFrameController extends FrameController {
 			super.close();
 			
 		}
+
+	/* (non-Javadoc)
+	 * @see org.columba.core.gui.FrameController#registerSelectionHandlers()
+	 */
+	protected void registerSelectionHandlers() {
+		selectionManager.addSelectionHandler(new TreeSelectionHandler(treeController.getView()));
+		selectionManager.addSelectionHandler(new HeaderTableSelectionHandler(tableController.getView()));
+	}
+
+	/* (non-Javadoc)
+	 * @see org.columba.core.gui.FrameController#initInternActions()
+	 */
+	protected void initInternActions() {
+		new ViewHeaderListAction(this);
+		new ViewMessageAction(this);
+	}
 
 }

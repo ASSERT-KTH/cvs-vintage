@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<menubar>
+
+	<menu name="menu_file">
+		<menuitem action="OpenNewWindow"/>
+		<separator/>
+		<extensionpoint name="main" />	
+		<menuitem action="Print"/>	
+		<menuitem action="PrintSetup"/>			
+		<separator/>
+		<menuitem action="Exit"/>			
+	</menu>
+	<menu name="menu_edit">
+		<menuitem action="Undo"/>			
+		<menuitem action="Redo"/>			
+		<separator/>
+		<menuitem action="Cut"/>			
+		<menuitem action="Copy"/>			
+		<menuitem action="Paste"/>			
+		<menuitem action="Delete"/>
+		<menuitem action="SelectAll"/>					
+		<separator/>
+		<menuitem action="Find"/>
+		<menuitem action="FindAgain"/>
+		<separator/>
+		<extensionpoint name="main"/>
+		<menuitem action="GlobalOptions"/>
+	</menu>
+	<menu name="menu_view">	
+		<menuitem action="Cancel"/>
+		<separator/>
+		<menu name="menu_view_show_hide">
+			<menuitem checkboxaction="ViewToolbar"/>	
+		</menu>
+		<separator/>
+		<extensionpoint name="sort"/>
+		<separator/>
+	</menu>
+
+</menubar>

@@ -90,6 +90,7 @@ public abstract class FolderTreeNode
 		 */
 	public TreePath getSelectionTreePath() {
 		//TreeNodeList list = new TreeNodeList( getTreePath() );
+		/*
 		TreeNode[] treeNodes = getPathToRoot(this, 0);
 		TreePath path = new TreePath(treeNodes[0]);
 
@@ -97,8 +98,9 @@ public abstract class FolderTreeNode
 			Folder folder = (Folder) treeNodes[i];
 			path.pathByAddingChild(folder);
 		}
-
 		return path;
+*/
+		return new TreePath(getPathToRoot(this,0));
 	}
 
 	public static XmlElement getDefaultProperties() {
@@ -256,7 +258,7 @@ public abstract class FolderTreeNode
 
 	public abstract void createChildren(WorkerStatusController worker);
 
-	public FolderTreeNode addFolder(String name, String type) throws Exception {
+	public void addFolder(String name, String type) throws Exception {
 		FolderPluginHandler handler =
 					(FolderPluginHandler) MainInterface.pluginManager.getHandler(
 						"folder");
@@ -287,8 +289,6 @@ public abstract class FolderTreeNode
 		} catch (Exception ex) {
 			ex.printStackTrace();
 		}
-		
-		return folder;
 		/*
 		Method m_getDefaultProperties =
 			childClass.getMethod("getDefaultProperties", null);
@@ -307,8 +307,8 @@ public abstract class FolderTreeNode
 		*/
 	}
 
-	public FolderTreeNode addFolder(String name) throws Exception {
-		return addFolder(name, getDefaultChild());
+	public void addFolder(String name) throws Exception {
+		addFolder(name, getDefaultChild());
 	}
 
 	public void addWithXml(FolderTreeNode folder) {

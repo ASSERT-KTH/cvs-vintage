@@ -34,7 +34,7 @@ public class AttachmentMenu {
 	public AttachmentMenu(AttachmentController attachmentViewer) {
 		this.attachmentViewer = attachmentViewer;
 
-		initPopupMenu();
+		//initPopupMenu();
 	}
 
 	public JPopupMenu getPopupMenu() {

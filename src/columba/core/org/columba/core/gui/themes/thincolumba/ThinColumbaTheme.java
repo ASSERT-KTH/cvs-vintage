@@ -148,6 +148,10 @@ public class ThinColumbaTheme extends DefaultCTheme {
 				thinPackage + "ThinToolBarUI",
 				"ToolTipUI",
 				thinPackage + "ThinToolTipUI",
+				"ListUI",
+				thinPackage + "ThinListUI",
+				"TableUI",
+				thinPackage + "ThinTableUI",
 				"TreeUI",
 				thinPackage + "ThinTreeUI" };
 		table.putDefaults(map);

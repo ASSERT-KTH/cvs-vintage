@@ -18,16 +18,18 @@ package org.columba.mail.gui.table.action;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
 
-import javax.swing.JCheckBoxMenuItem;
 import javax.swing.KeyStroke;
 
-import org.columba.core.action.DefaultCheckBoxAction;
+import org.columba.core.action.CheckBoxAction;
 import org.columba.core.gui.FrameController;
+import org.columba.core.gui.util.SelectionChangedEvent;
+import org.columba.core.gui.util.SelectionListener;
 import org.columba.core.logging.ColumbaLogger;
 import org.columba.mail.folder.Folder;
 import org.columba.mail.gui.frame.MailFrameController;
 import org.columba.mail.gui.table.TableChangeListener;
 import org.columba.mail.gui.table.TableChangedEvent;
+import org.columba.mail.gui.tree.FolderSelectionChangedEvent;
 import org.columba.mail.util.MailResourceLoader;
 
 /**
@@ -39,10 +41,8 @@ import org.columba.mail.util.MailResourceLoader;
  * Window>Preferences>Java>Code Generation.
  */
 public class ThreadedViewAction
-	extends DefaultCheckBoxAction
-	implements TableChangeListener {
-		
-	
+	extends CheckBoxAction
+	implements TableChangeListener, SelectionListener {
 
 	/**
 	 * Constructor for ThreadedViewAction.
@@ -73,17 +73,19 @@ public class ThreadedViewAction
 			KeyStroke.getKeyStroke(KeyEvent.VK_T, ActionEvent.CTRL_MASK));
 
 		/*
-		((MailFrameController) frameController)
+		(
+			(
+				MailFrameController) frameController)
 					.tableController
 					.addTableChangedListener(
 			this);
-		*/
-
+*/
+		setEnabled(false);
 	}
 
 	public void tableChanged(TableChangedEvent e) {
-		ColumbaLogger.log.info("event="+e);
-		
+		ColumbaLogger.log.info("event=" + e);
+
 		if (e.getEventType() == TableChangedEvent.UPDATE) {
 			Folder folder =
 				(Folder) ((MailFrameController) frameController)
@@ -97,34 +99,30 @@ public class ThreadedViewAction
 					false);
 
 			updateTable(enableThreadedView);
-			
-			
+
 			getCheckBoxMenuItem().setSelected(enableThreadedView);
-			
+
 		}
 	}
 
 	public void actionPerformed(ActionEvent e) {
-		ColumbaLogger.log.info("event-source=" + e.getSource());
+		/*
+		JCheckBoxMenuItem item = (JCheckBoxMenuItem) e.getSource();
 
-		if (e.getSource() instanceof JCheckBoxMenuItem) {
-			JCheckBoxMenuItem item = (JCheckBoxMenuItem) e.getSource();
+		Folder folder =
+			(Folder) ((MailFrameController) frameController)
+				.tableController
+				.getTableSelectionManager()
+				.getFolder();
 
-			Folder folder =
-				(Folder) ((MailFrameController) frameController)
-					.tableController
-					.getTableSelectionManager()
-					.getFolder();
-
-			boolean enableThreadedView = item.isSelected();
-			folder.getFolderItem().set(
-				"property",
-				"enable_threaded_view",
-				enableThreadedView);
-
-			updateTable(enableThreadedView);
-
-		}
+		boolean enableThreadedView = item.isSelected();
+		folder.getFolderItem().set(
+			"property",
+			"enable_threaded_view",
+			enableThreadedView);
+		*/
+		
+		updateTable(getState());
 	}
 
 	protected void updateTable(boolean enableThreadedView) {
@@ -140,6 +138,15 @@ public class ThreadedViewAction
 			.enableThreadedView(enableThreadedView);
 	}
 
-	
+	/* (non-Javadoc)
+	 * @see org.columba.core.gui.util.SelectionListener#selectionChanged(org.columba.core.gui.util.SelectionChangedEvent)
+	 */
+	public void selectionChanged(SelectionChangedEvent e) {
+		Folder[] selection = ((FolderSelectionChangedEvent) e).getSelected();
+		if (selection.length == 1)
+			setEnabled(true);
+		else
+			setEnabled(false);
+	}
 
 }

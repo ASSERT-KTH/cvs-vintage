@@ -26,8 +26,9 @@ import java.awt.dnd.DragSourceEvent;
 import java.awt.dnd.DragSourceListener;
 import java.awt.event.InputEvent;
 
-import org.columba.core.logging.ColumbaLogger;
-import org.columba.mail.gui.table.TableController;
+import javax.swing.JTable;
+
+import org.columba.mail.gui.table.HeaderTableSelectionModel;
 
 /**
  * Title:
@@ -40,17 +41,19 @@ import org.columba.mail.gui.table.TableController;
 
 public class HeaderTableDnd
 	implements DragGestureListener, DragSourceListener {
-	private TableController table;
+	private JTable table;
 	private DragSource dragSource;
+	private HeaderTableSelectionModel slm;
 
-	public HeaderTableDnd(TableController table) {
+	public HeaderTableDnd(JTable table) {
 		this.table = table;
+		//slm = (HeaderTableSelectionModel) table.getSelectionModel();
 
 		dragSource = DragSource.getDefaultDragSource();
 		// creating the recognizer is all that?s necessary - it
 		// does not need to be manipulated after creation
 
-		dragSource.createDefaultDragGestureRecognizer(table.getView(),
+		dragSource.createDefaultDragGestureRecognizer(table,
 		// component where drag originates
 		DnDConstants.ACTION_COPY_OR_MOVE, // actions
 		this); // drag gesture listener
@@ -59,56 +62,46 @@ public class HeaderTableDnd
 	public void dragGestureRecognized(DragGestureEvent e) {
 		InputEvent event = e.getTriggerEvent();
 		int mod = event.getModifiers();
+		//slm.setGestureStarted(true);		
 
 		if ((mod & InputEvent.BUTTON1_MASK) == InputEvent.BUTTON1_MASK) {
-
 			//System.out.println("middle button pressed");
 
-			Object[] uids = table.getTableSelectionManager().getOldUids();
-			if ( uids == null ) uids = table.getTableSelectionManager().getUids();
-			
-			for (int i = 0; i < uids.length; i++) {
-				ColumbaLogger.log.debug("uid[" + i + "]=" + uids[i]);
+			if (table.getSelectedRowCount() > 0) {
+				//mainInterface.treeViewer.saveTreePath();
+				//messageNodes = getSelectedNodes();
+				if ((mod & InputEvent.CTRL_MASK) == InputEvent.CTRL_MASK) {
+
+					//setSelection( getUidList() );
+					e.startDrag(DragSource.DefaultCopyDrop, // cursor
+					new StringSelection("message"), // transferable
+					this); // drag source listener
+
+				} else {
+
+					e.startDrag(DragSource.DefaultMoveDrop, // cursor
+					new StringSelection("message"), // transferable
+					this); // drag source listener
+
+				}
+
+				//setSelection( oldMessageNodes );
+
 			}
-			//messageNodes = getSelectedNodes();
-			if ((mod & InputEvent.CTRL_MASK) == InputEvent.CTRL_MASK) {
-
-				//setSelection( getUidList() );
-				e.startDrag(DragSource.DefaultCopyDrop, // cursor
-				new StringSelection("message"), // transferable
-				this); // drag source listener
-
-			} else {
-
-				e.startDrag(DragSource.DefaultMoveDrop, // cursor
-				new StringSelection("message"), // transferable
-				this); // drag source listener
-
-			}
-
-			table.setSelection(uids);
-			//setSelection( oldMessageNodes );
 
 		}
-
-		//System.out.println("draggesturerecognized");
 	}
 
 	public void dragDropEnd(DragSourceDropEvent e) {
-		System.out.println("dragdropend");
 	}
 
 	public void dragEnter(DragSourceDragEvent e) {
-		System.out.println("start enter");
 	}
 
 	public void dragExit(DragSourceEvent e) {
-		System.out.println("dragexit");
 	}
 	public void dragOver(DragSourceDragEvent e) {
-		System.out.println("dragover");
 	}
 	public void dropActionChanged(DragSourceDragEvent e) {
-		System.out.println("dragactioncahnged");
 	}
 }

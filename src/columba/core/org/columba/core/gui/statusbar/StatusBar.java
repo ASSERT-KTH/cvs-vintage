@@ -64,7 +64,6 @@ public class StatusBar
 
 	private TaskManager taskManager;
 
-	private BasicAction cancelAction;
 	private ImageSequenceTimer imageSequenceTimer;
 
 	private JButton onlineButton;
@@ -315,14 +314,6 @@ public class StatusBar
 			}
 			*/
 
-			if (workerListSize > 0) {
-				cancelAction.setEnabled(true);
-				imageSequenceTimer.start();
-			} else {
-				cancelAction.setEnabled(false);
-				setMaximumAndValue(100,100);
-				imageSequenceTimer.stop();
-			}
 		}
 
 	}
@@ -351,25 +342,6 @@ public class StatusBar
 
 	protected void initActions() {
 
-		cancelAction =
-			new BasicAction(
-				MailResourceLoader.getString(
-					"menu",
-					"mainframe",
-					"menu_file_cancel"),
-				MailResourceLoader.getString(
-					"menu",
-					"mainframe",
-					"menu_file_cancel"),
-				"CANCEL_ACTION",
-				ImageLoader.getSmallImageIcon("stock_stop-16.png"),
-				ImageLoader.getImageIcon("stock_stop.png"),
-				'0',
-				KeyStroke.getKeyStroke(KeyEvent.VK_CANCEL,0),
-				false);
-
-		cancelAction.setEnabled(false);
-		cancelAction.addActionListener(this);
 	}
 	public void actionPerformed(ActionEvent e) {
 		String command = e.getActionCommand();
@@ -413,12 +385,8 @@ public class StatusBar
 		}
 
 	}
-	/**
-	 * Returns the cancelAction.
-	 * @return BasicAction
-	 */
-	public BasicAction getCancelAction() {
-		return cancelAction;
+	public void cancelDisplayedWorker() {
+		displayedWorker.cancel();
 	}
 
 	/**

@@ -19,7 +19,7 @@ import javax.swing.ImageIcon;
 import javax.swing.JCheckBoxMenuItem;
 
 import org.columba.core.action.BasicAction;
-import org.columba.core.action.DefaultCheckBoxAction;
+import org.columba.core.action.CheckBoxAction;
 
 /**
  * @author frd
@@ -50,7 +50,7 @@ public class CCheckBoxMenuItem extends JCheckBoxMenuItem {
 	 * Constructor for CCheckBoxMenuItem.
 	 * @param a
 	 */
-	public CCheckBoxMenuItem(DefaultCheckBoxAction a) {
+	public CCheckBoxMenuItem(CheckBoxAction a) {
 		super(a);
 		
 		a.setCheckBoxMenuItem(this);

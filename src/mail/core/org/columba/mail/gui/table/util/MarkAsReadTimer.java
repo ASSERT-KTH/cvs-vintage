@@ -20,11 +20,12 @@ import java.awt.event.ActionListener;
 
 import javax.swing.Timer;
 
+import org.columba.core.logging.ColumbaLogger;
+import org.columba.core.main.MainInterface;
 import org.columba.mail.command.FolderCommandReference;
 import org.columba.mail.folder.Folder;
 import org.columba.mail.folder.command.MarkMessageCommand;
 import org.columba.mail.gui.table.TableController;
-import org.columba.core.main.MainInterface;
 /**
  * Title:
  * Description:
@@ -44,6 +45,8 @@ public class MarkAsReadTimer implements ActionListener {
 
 	private Folder folder;
 	private Object[] uids;
+	
+	private FolderCommandReference message;
 
 	private TableController tableController;
 
@@ -70,18 +73,16 @@ public class MarkAsReadTimer implements ActionListener {
 	public synchronized void stopTimer() {
 		value = 0;
 
-		System.out.println("timer stopped--------->");
+		ColumbaLogger.log.debug("MarkAsRead-timer stopped");
 
 		timer.stop();
 	}
 
-	public synchronized void restart(Folder f, Object uid) {
-		folder = f;
-		uids = new Object[1];
-		uids[0] = uid;
+	public synchronized void restart(FolderCommandReference reference) {
 
-		System.out.println("timer started--------->");
-
+		ColumbaLogger.log.debug("MarkAsRead-timer started");
+		
+		message = reference;
 		value = 0;
 		timer.restart();
 	}
@@ -90,10 +91,8 @@ public class MarkAsReadTimer implements ActionListener {
 
 		timer.stop();
 
-		FolderCommandReference[] r =
-			(FolderCommandReference[]) tableController
-				.getTableSelectionManager()
-				.getSelection();
+		FolderCommandReference[] r = new FolderCommandReference[]{ message };
+		
 		r[0].setMarkVariant(MarkMessageCommand.MARK_AS_READ);
 
 		MarkMessageCommand c = new MarkMessageCommand(r);

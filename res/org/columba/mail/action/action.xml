@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- <!DOCTYPE folderlist SYSTEM "folder.dtd"> -->
+
+<actionlist>
+ <action name="NewMessage" class="org.columba.mail.gui.action.NewMessageAction"/>
+ <action name="ReceiveSend" class="org.columba.mail.gui.action.ReceiveSendAction"/>
+ <action name="SendAll" class="org.columba.mail.smtp.SendAllMessagesAction"/>
+ <action name="Receive" class="org.columba.mail.pop3.ReceiveMessagesAction"/>
+ <action name="SearchMessage" class="org.columba.mail.gui.action.SearchMessageAction"/> 
+ <action name="MailAccount" class="org.columba.mail.gui.action.MailAccountAction"/>
+ <action name="GlobalOptions" class="org.columba.mail.gui.action.GlobalOptionsAction"/>
+ <action name="SortMessagesMenu" class="org.columba.mail.gui.table.action.SortMessagesMenu"/>
+ <action name="ThreadedView" class="org.columba.mail.gui.table.action.ThreadedViewAction"/>
+ <action name="ViewMessageSource" class="org.columba.mail.gui.table.action.ViewMessageSourceAction"/>
+</actionlist>

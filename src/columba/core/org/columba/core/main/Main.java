@@ -32,9 +32,11 @@ import org.columba.addressbook.config.AddressbookConfig;
 import org.columba.addressbook.main.AddressbookInterface;
 import org.columba.addressbook.main.AddressbookMain;
 import org.columba.addressbook.shutdown.SaveAllAddressbooksPlugin;
+import org.columba.core.action.ActionPluginHandler;
 import org.columba.core.command.DefaultProcessor;
 import org.columba.core.config.Config;
 import org.columba.core.config.ConfigPath;
+import org.columba.core.gui.MenuPluginHandler;
 import org.columba.core.gui.util.ImageLoader;
 import org.columba.core.gui.util.StartUpFrame;
 import org.columba.core.gui.util.ThemeSwitcher;
@@ -206,14 +208,21 @@ public class Main {
 				MainInterface.pluginManager = new PluginManager();
 				MainInterface.pluginManager.registerHandler( new InterpreterHandler() );
 				
+		
 				MainInterface.pluginManager.registerHandler(
 					new FilterActionPluginHandler());
 				MainInterface.pluginManager.registerHandler(
 					new LocalFilterPluginHandler());
 				MainInterface.pluginManager.registerHandler(
 					new FolderPluginHandler());
+				MainInterface.pluginManager.registerHandler(
+					new ActionPluginHandler());
+				MainInterface.pluginManager.registerHandler(
+					new MenuPluginHandler());
 
 				MainInterface.pluginManager.initPlugins();
+				
+				((ActionPluginHandler)MainInterface.pluginManager.getHandler("action")).addActionList("org/columba/mail/action/action.xml");
 
 				frame.advance();
 

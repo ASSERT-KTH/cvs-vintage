@@ -40,11 +40,11 @@ public class MailFrameModel extends FrameModel {
 	}
 
 	public FrameController createInstance(String id) {
-		return new MailFrameController(id);
+		return new MailFrameController(id, this);
 	}
 
-	protected XmlElement ensureViewConfigurationExists(String key) {
-		XmlElement child = super.ensureViewConfigurationExists(key);
+	protected XmlElement createDefaultConfiguration(String key) {
+		XmlElement child = super.createDefaultConfiguration(key);
 
 		XmlElement toolbars = new XmlElement("toolbars");
 		toolbars.addAttribute("show_main", "true");

@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+	<menubar>
+	<menu name="menu_file" extensionpoint="main">
+		<menuitem imenu="ReceiveMenu" />
+		<separator/>
+		<menuitem action="ReceiveSend"/>	
+		<menuitem action="Receive"/>	
+		<menuitem action="SendAll"/>	
+		<separator/>
+		<menuitem imenu="ManageServerMenu" />
+		<separator/>
+	</menu>
+
+	<menu name="menu_edit" extensionpoint="main">
+		<menuitem action="SearchMessage"/>
+		<separator/>
+		<menuitem action="MailAccount"/>
+		<separator/>
+	</menu>
+	
+	<menu name="menu_view" extensionpoint="sort">
+		<menuitem imenu="SortMessagesMenu"/>
+		<separator/>
+		<menuitem checkboxaction="ThreadedView"/>
+	</menu>
+	</menubar>
+		

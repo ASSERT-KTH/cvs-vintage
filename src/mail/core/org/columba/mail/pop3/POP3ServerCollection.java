@@ -15,8 +15,12 @@
 //All Rights Reserved.
 package org.columba.mail.pop3;
 
+import java.util.ListIterator;
 import java.util.Vector;
 
+import org.columba.core.event.ModelChangeListener;
+import org.columba.core.event.ModelChangedEvent;
+import org.columba.core.logging.ColumbaLogger;
 import org.columba.mail.config.AccountItem;
 import org.columba.mail.config.AccountList;
 import org.columba.mail.config.MailConfig;
@@ -26,9 +30,11 @@ public class POP3ServerCollection //implements ActionListener
 {
 	private Vector serverList;
 	private POP3Server popServer;
+	private Vector listeners;
 
 	public POP3ServerCollection() {
 		serverList = new Vector();
+		listeners = new Vector();
 
 		AccountList list = MailConfig.getAccountList();
 
@@ -42,6 +48,10 @@ public class POP3ServerCollection //implements ActionListener
 
 	}
 
+	public ListIterator getServerIterator() {
+		return serverList.listIterator();
+	}
+
 	public POP3ServerController[] getList() {
 		POP3ServerController[] list = new POP3ServerController[count()];
 
@@ -52,8 +62,9 @@ public class POP3ServerCollection //implements ActionListener
 
 	public void add(AccountItem item) {
 		POP3ServerController server = new POP3ServerController(item);
-
 		serverList.add(server);
+
+		notifyListeners(new ModelChangedEvent(ModelChangedEvent.ADDED, server));
 	}
 
 	public POP3ServerController uidGet(int uid) {
@@ -75,10 +86,16 @@ public class POP3ServerCollection //implements ActionListener
 
 	public void removePopServer(int uid) {
 		int index = getIndex(uid);
-		if (index == -1)
-			System.out.println("could not find popserver");
-		else
-			serverList.remove(index);
+		POP3ServerController server;
+		
+		if (index == -1) {
+			ColumbaLogger.log.error("could not find popserver");
+			return;
+		} else {
+			server = (POP3ServerController) serverList.remove(index);
+		}
+
+		notifyListeners(new ModelChangedEvent(ModelChangedEvent.REMOVED));
 	}
 
 	public int getIndex(int uid) {
@@ -112,4 +129,13 @@ public class POP3ServerCollection //implements ActionListener
 		return popServer;
 	}
 
+	public void addModelListener(ModelChangeListener l) {
+		listeners.add(l);
+	}
+
+	private void notifyListeners(ModelChangedEvent e) {
+		for (int i = 0; i < listeners.size(); i++) {
+			((ModelChangeListener) listeners.get(i)).modelChanged(e);
+		}
+	}
 }

@@ -90,15 +90,13 @@ public class HeaderTableActionListener
 	public BasicAction vFolderFromAction;
 	public BasicAction vFolderToAction;
 
-	public ThreadedViewAction viewThreadedAction;
-
 	public BasicAction openMessageWithComposerAction;
 
 	private TableController tableController;
 
 	public HeaderTableActionListener(TableController tableController) {
 		this.tableController = tableController;
-		initActions();
+		//initActions();
 	}
 
 	public void initActions() {
@@ -583,8 +581,6 @@ public class HeaderTableActionListener
 				'0',
 				null);
 
-		viewThreadedAction = new ThreadedViewAction( tableController.getMailFrameController() );
-		tableController.addTableChangedListener(viewThreadedAction);
 		
 		/*
 		viewThreadedAction =

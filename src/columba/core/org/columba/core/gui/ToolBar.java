@@ -13,42 +13,66 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
 //
 //All Rights Reserved.
-package org.columba.mail.gui.frame;
+package org.columba.core.gui;
 
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.event.MouseAdapter;
+import java.util.ListIterator;
 import java.util.ResourceBundle;
 
 import javax.swing.Box;
 import javax.swing.JToolBar;
 
+import org.columba.core.action.ActionPluginHandler;
+import org.columba.core.action.BasicAction;
 import org.columba.core.gui.util.ToolbarButton;
+import org.columba.core.main.MainInterface;
+import org.columba.core.xml.XmlElement;
 
-public class MailToolBar extends JToolBar {
+public class ToolBar extends JToolBar {
 
 	ResourceBundle toolbarLabels;
 	GridBagConstraints gridbagConstraints;
 	GridBagLayout gridbagLayout;
 	int i;
 
-	MailFrameController frame;
+	FrameController frameController;
 
-	public MailToolBar(MailFrameController f) {
+	public ToolBar( FrameController controller) {
 		super();
-		this.frame = f;
+		this.frameController = controller;
 
-		addCButtons();
+		//addCButtons();
+		createButtons(frameController.getItem().getElement("toolbar"));
 		putClientProperty("JToolBar.isRollover", Boolean.TRUE);
-		
 		
 		//setMargin( new Insets(0,0,0,0) );
 		
-		setFloatable(false);
+		setFloatable(false);		
 	}
 
-	public void addButton(ToolbarButton button) {
+	private void createButtons(XmlElement toolbar) {		
+		ListIterator iterator = toolbar.getElements().listIterator();
+		XmlElement buttonElement;
+		
+		while( iterator.hasNext()) {
+			try {
+				buttonElement = (XmlElement) iterator.next();
+				if( buttonElement.getName().equals("button"))
+					addButton( ((ActionPluginHandler) MainInterface.pluginManager.getHandler("action")).getAction(buttonElement.getAttribute("action"),frameController));
+				else if( buttonElement.getName().equals("separator"))
+					addSeparator();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+		add(Box.createHorizontalGlue());
+	}
 
+	public void addButton(BasicAction action) {
+
+		ToolbarButton button = new ToolbarButton(action);
 		button.setRolloverEnabled(true);
 
 		add(button);

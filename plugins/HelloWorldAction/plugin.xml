@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+
+<plugin id="com.mycom.myPlugin" description="Simple Example" version="1.0" >
+ <extension name="action">
+  <action name="HelloWorld" class="com.mycom.HelloWorldAction" />
+ </extension>
+ <extension name="menu">
+  <menu name="menu_file" extensionpoint="main">
+  	<menuitem action="com.mycom.myPlugin$HelloWorld"/>
+  	<separator/>
+  </menu>
+ </extension>
+ <runtime type="java" jar="HelloWorldAction.jar"/>
+</plugin>

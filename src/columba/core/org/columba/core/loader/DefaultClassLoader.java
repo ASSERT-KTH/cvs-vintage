@@ -46,10 +46,13 @@ public class DefaultClassLoader {
 		throws Exception {
 
 		Class actClass = loader.loadClass(className);
+		/*
+		Class[] argClazz = new Class[args.length];
+		for( int i=0; i<args.length;i++) {
+			argClazz[i]=args[i].getClass();
+		}*/
 
-		Constructor[] constructors = actClass.getConstructors();
-		Constructor constructor = constructors[0];
-
+		Constructor constructor = actClass.getConstructors()[0];//argClazz);
 		return constructor.newInstance(args);
 	}
 }

@@ -18,12 +18,11 @@ package org.columba.mail.gui.tree;
 import javax.swing.JPopupMenu;
 import javax.swing.JScrollPane;
 import javax.swing.event.TreeExpansionEvent;
-import javax.swing.event.TreeSelectionEvent;
-import javax.swing.event.TreeSelectionListener;
 import javax.swing.event.TreeWillExpandListener;
 import javax.swing.tree.ExpandVetoException;
 import javax.swing.tree.TreePath;
 
+import org.columba.core.main.MainInterface;
 import org.columba.mail.command.FolderCommandReference;
 import org.columba.mail.folder.Folder;
 import org.columba.mail.folder.FolderTreeNode;
@@ -35,14 +34,13 @@ import org.columba.mail.gui.tree.command.FetchSubFolderListCommand;
 import org.columba.mail.gui.tree.menu.FolderTreeMenu;
 import org.columba.mail.gui.tree.util.FolderInfoPanel;
 import org.columba.mail.gui.tree.util.FolderTreeCellRenderer;
-import org.columba.core.main.MainInterface;
 
 /**
  * this class shows the the folder hierarchy
  */
 
 public class TreeController
-implements TreeSelectionListener,
+implements /*TreeSelectionListener,*/
 		TreeWillExpandListener //, TreeNodeChangeListener
 {
 	private TreeView folderTree;
@@ -85,7 +83,7 @@ implements TreeSelectionListener,
 
 		treeSelectionManager = new TreeSelectionManager();
 
-		view.addTreeSelectionListener(this);
+		//view.addTreeSelectionListener(this);
 
 		//folderTreeActionListener = new FolderTreeActionListener(this);
 		view.addTreeWillExpandListener(this);
@@ -103,6 +101,7 @@ implements TreeSelectionListener,
 		FolderTreeCellRenderer renderer =
 			new FolderTreeCellRenderer(true);
 		view.setCellRenderer(renderer);
+
 
 		//MainInterface.focusManager.registerComponent( new TreeFocusOwner(this) );
 	}
@@ -163,6 +162,7 @@ implements TreeSelectionListener,
 				treeSelectionManager.getSelection()));
 	}
 
+	/*
 	// this method is called when the user selects another folder
 
 	public void valueChanged(TreeSelectionEvent e) {
@@ -181,7 +181,7 @@ implements TreeSelectionListener,
 
 		//if (selectedFolder == null) return;
 	}
-
+*/
 	public JPopupMenu getPopupMenu() {
 		return menu.getPopupMenu();
 	}
@@ -191,7 +191,7 @@ implements TreeSelectionListener,
 	}
 
 	public void selectFolder() {
-
+/*
 		if ( view.getLastSelectedPathComponent() == null ) return;
 		
 		if (  !getSelected().equals(oldSelection))
@@ -202,6 +202,7 @@ implements TreeSelectionListener,
 				treeSelectionManager.getSelection()));
 			oldSelection = getSelected();
 		}
+*/
 	}
 
 	/**

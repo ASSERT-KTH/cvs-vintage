@@ -20,7 +20,6 @@ import javax.swing.ImageIcon;
 import javax.swing.JMenuItem;
 
 import org.columba.core.action.BasicAction;
-import org.columba.core.action.DefaultAction;
 
 public class CMenuItem extends JMenuItem {
 
@@ -35,14 +34,6 @@ public class CMenuItem extends JMenuItem {
 
 	}
 	
-	public CMenuItem( DefaultAction a )
-	{
-		super(a);
-		
-		setAccelerator(a.getAcceleratorKey());
-		
-	}
-
 	public CMenuItem(String s) {
 		super(s);
 

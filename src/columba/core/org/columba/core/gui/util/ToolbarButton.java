@@ -90,10 +90,7 @@ public class ToolbarButton extends JButton {
 			setHorizontalTextPosition(SwingConstants.RIGHT);
 			setIcon(a.getLargeIcon());
 
-			if (a.isShowToolbarText())
-				setText(a.getName());
-			else
-				setText(null);
+			setText(a.getName());
 
 		} else if ((WITH_ICON == true) && (WITH_TEXT == false)) {
 

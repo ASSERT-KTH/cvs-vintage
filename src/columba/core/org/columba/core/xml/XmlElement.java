@@ -25,6 +25,9 @@
 // Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 //
 // $Log: XmlElement.java,v $
+// Revision 1.5  2003/03/11 15:01:42  tstich
+// [intern]new action/menu/toolbar structure
+//
 // Revision 1.4  2003/02/10 19:05:58  fdietz
 // [intern]re-added folder DND operations
 //
@@ -46,6 +49,7 @@ package org.columba.core.xml;
 
 import java.util.Enumeration;
 import java.util.Hashtable;
+import java.util.List;
 import java.util.Vector;
 
 import org.columba.core.logging.ColumbaLogger;

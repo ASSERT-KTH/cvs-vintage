@@ -20,6 +20,7 @@ import java.awt.Dimension;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 
+import javax.swing.BoxLayout;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 
@@ -37,7 +38,13 @@ import org.columba.core.util.WindowMaximizer;
  * Window>Preferences>Java>Code Generation.
  */
 public class FrameView extends JFrame implements WindowListener {
-	FrameController frameController;
+	protected FrameController frameController;
+	protected Menu menu;
+
+	protected ToolBar toolbar;
+
+	protected JPanel ToolbarPane;
+
 
 	public FrameView(FrameController frameController) {
 		this.frameController = frameController;
@@ -45,13 +52,50 @@ public class FrameView extends JFrame implements WindowListener {
 		this.setIconImage(
 			ImageLoader.getImageIcon("ColumbaIcon.png").getImage());
 
-		setTitle("Columba - version: " + org.columba.core.main.MainInterface.version);
+		setTitle(
+			"Columba - version: "
+				+ org.columba.core.main.MainInterface.version);
 
 		JPanel panel = (JPanel) this.getContentPane();
 		panel.setLayout(new BorderLayout());
 		panel.add(frameController.getStatusBar(), BorderLayout.SOUTH);
 
 		addWindowListener(this);
+		
+		ToolbarPane = new JPanel();
+		ToolbarPane.setLayout(new BoxLayout(ToolbarPane, BoxLayout.Y_AXIS));		
+	}
+
+	public void init() {
+		menu = new Menu(frameController);
+		setJMenuBar(menu);
+		
+		toolbar = new ToolBar(frameController);
+
+		if (isToolbarVisible() ) {
+			ToolbarPane.add(toolbar);
+		}		
+	}
+	
+	public boolean isToolbarVisible() {
+		return frameController.getItem().getBoolean("toolbar", "visible");
+	}
+
+	public void loadWindowPosition() {
+		ViewItem viewItem = frameController.getItem();
+		int x = viewItem.getInteger("window", "width");
+		int y = viewItem.getInteger("window", "height");
+		boolean maximized = viewItem.getBoolean("window", "maximized", true);
+
+		if (maximized)
+			maximize();
+		else {
+
+			Dimension dim = new Dimension(x, y);
+			setSize(dim);
+
+			validate();
+		}
 	}
 
 	public void maximize() {
@@ -67,36 +111,33 @@ public class FrameView extends JFrame implements WindowListener {
 		//setExtendedState(MAXIMIZED_BOTH);
 	}
 
-	public void saveWindowPosition(ViewItem viewItem) {
+	public void saveWindowPosition() {
 
 		java.awt.Dimension d = getSize();
 
-		WindowItem item = viewItem.getWindowItem();
+		WindowItem item = frameController.getItem().getWindowItem();
 
 		item.set("x", 0);
 		item.set("y", 0);
 		item.set("width", d.width);
 		item.set("height", d.height);
-		
+
 		boolean isMaximized = WindowMaximizer.isWindowMaximized(this);
-		
-		item.set("maximized", isMaximized );
+
+		item.set("maximized", isMaximized);
 	}
 
-	public void loadWindowPosition(ViewItem viewItem) {
-		int x = viewItem.getInteger("window", "width");
-		int y = viewItem.getInteger("window", "height");
-		boolean maximized = viewItem.getBoolean("window", "maximized", true);
-		
-		if (maximized)
-			maximize();
-		else {
-
-			Dimension dim = new Dimension(x, y);
-			setSize(dim);
-
-			validate();
+	public void showToolbar(boolean b) {
+		if (b) {
+			ToolbarPane.add(toolbar);
+			frameController.getItem().set("toolbar", "visible", "true");
+		} else {
+			ToolbarPane.removeAll();
+			frameController.getItem().set("toolbar", "visible", "false");
 		}
+		
+		validate();
+		repaint();		
 	}
 	/**
 	 * @see java.awt.event.WindowListener#windowActivated(java.awt.event.WindowEvent)
@@ -140,6 +181,12 @@ public class FrameView extends JFrame implements WindowListener {
 	 * @see java.awt.event.WindowListener#windowOpened(java.awt.event.WindowEvent)
 	 */
 	public void windowOpened(WindowEvent arg0) {
+	}
+	/**
+	 * @return Menu
+	 */
+	public Menu getMenu() {
+		return menu;
 	}
 
 }

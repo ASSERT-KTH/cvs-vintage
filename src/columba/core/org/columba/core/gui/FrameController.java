@@ -17,6 +17,7 @@ package org.columba.core.gui;
 
 import java.awt.event.MouseAdapter;
 
+import org.columba.core.config.ViewItem;
 import org.columba.core.gui.statusbar.StatusBar;
 import org.columba.core.logging.ColumbaLogger;
 import org.columba.core.main.MainInterface;
@@ -31,16 +32,35 @@ public abstract class FrameController {
 	protected StatusBar statusBar;
 	protected MouseAdapter mouseTooltipHandler;
 	protected String id;
+	protected ViewItem item;
+	protected FrameModel model;
+	protected FrameView view;
+	protected SelectionManager selectionManager;
+	
 	
 	/**
 	 * Constructor for FrameController.
 	 */
-	public FrameController( String id ) {
-		this.id = id;		
+	public FrameController( String id, FrameModel model ) {
+		this.id = id;
+		this.model =model;	
 		statusBar = new StatusBar( MainInterface.processor.getTaskManager() );
 		
-		mouseTooltipHandler = new TooltipMouseHandler( statusBar ); 		
+		mouseTooltipHandler = new TooltipMouseHandler( statusBar );
+		
+		model.register(id, this);
+		
+		view = createView();
+				
+		selectionManager = new SelectionManager();
+		registerSelectionHandlers();
+		
+		initInternActions();
 	}
+
+	protected abstract void registerSelectionHandlers();
+
+	protected abstract void initInternActions();
 
 	public StatusBar getStatusBar() {
 		return statusBar;
@@ -58,10 +78,54 @@ public abstract class FrameController {
 	{
 		ColumbaLogger.log.info("closing FrameController");
 		
-		MainInterface.frameModel.unregister(id);
+		view.saveWindowPosition();
+		model.unregister(id);
 
 		//getView().setVisible(false);	
 	}
 
-	abstract public FrameView getView();
+	abstract protected FrameView createView();
+	
+	/**
+	 * @return ViewItem
+	 */
+	public ViewItem getItem() {
+		return item;
+	}
+
+	/**
+	 * Sets the item.
+	 * @param item The item to set
+	 */
+	public void setItem(ViewItem item) {
+		this.item = item;
+	}
+	
+	
+	/**
+	 * @return FrameView
+	 */
+	public FrameView getView() {
+		return view;
+	}
+
+	public Menu getMenu() {
+		return view.getMenu();
+	}
+
+	/**
+	 * @return SelectionManager
+	 */
+	public SelectionManager getSelectionManager() {
+		return selectionManager;
+	}
+
+	/**
+	 * Sets the selectionManager.
+	 * @param selectionManager The selectionManager to set
+	 */
+	public void setSelectionManager(SelectionManager selectionManager) {
+		this.selectionManager = selectionManager;
+	}
+
 }
