@@ -76,7 +76,7 @@ import org.tigris.scarab.tools.ScarabRequestTool;
     This class is responsible for edit issue forms.
     ScarabIssueAttributeValue
     @author <a href="mailto:elicia@collab.net">Elicia David</a>
-    @version $Id: Approval.java,v 1.4 2001/09/14 22:06:54 elicia Exp $
+    @version $Id: Approval.java,v 1.5 2001/09/21 19:00:36 elicia Exp $
 */
 public class Approval extends TemplateAction
 {
@@ -149,7 +149,6 @@ public class Approval extends TemplateAction
             else if (key.startsWith("template_id_"))
             {
                String templateId = key.substring(12);
-System.out.println(templateId);
                IssueTemplate template = (IssueTemplate) IssueTemplatePeer
                                      .retrieveByPK(new NumberKey(templateId));
 
@@ -166,7 +165,7 @@ System.out.println(templateId);
                {
                    try
                    {
-                       template.setDeleted(user, module, true);
+                       template.approve(user, false);
                    }
                    catch(ScarabException e)
                    {
@@ -178,7 +177,7 @@ System.out.println(templateId);
                {
                    try
                    {
-                       template.setApproved(user, module, true);
+                       template.approve(user, true);
                    }
                    catch(ScarabException e)
                    {
