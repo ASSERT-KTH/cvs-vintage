@@ -17,6 +17,7 @@ package org.columba.mail.folder.command;
 
 import java.awt.Color;
 import java.awt.Font;
+import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
@@ -60,9 +61,7 @@ import org.columba.mail.util.MailResourceLoader;
 import org.columba.ristretto.coder.Base64DecoderInputStream;
 import org.columba.ristretto.coder.CharsetDecoderInputStream;
 import org.columba.ristretto.coder.QuotedPrintableDecoderInputStream;
-import org.columba.ristretto.io.CharSequenceSource;
 import org.columba.ristretto.message.Header;
-import org.columba.ristretto.message.LocalMimePart;
 import org.columba.ristretto.message.MimeHeader;
 import org.columba.ristretto.message.MimePart;
 import org.columba.ristretto.message.MimeTree;
@@ -87,7 +86,10 @@ public class PrintMessageCommand extends FolderCommand {
     private String attHeaderKey = "attachment";
     private Charset charset;
 
-    /**
+    
+	private MimeHeader bodyHeader;
+	private InputStream bodyStream;
+	/**
      * Constructor for PrintMessageCommdn.
      *
      * @param frameMediator
@@ -197,32 +199,13 @@ public class PrintMessageCommand extends FolderCommand {
             ColumbaMessage message = new ColumbaMessage();
             Header header = srcFolder.getHeaderFields(uids[j], getHeaderKeys());
 
-            MimeTree mimePartTree = srcFolder.getMimePartTree(uid);
-
             // Does the user prefer html or plain text?
             XmlElement html = MailConfig.getInstance().getMainFrameOptionsConfig()
                                                   .getRoot().getElement("/options/html");
             boolean viewhtml = Boolean.valueOf(html.getAttribute("prefer"))
                                       .booleanValue();
-
-            // Which Bodypart shall be shown? (html/plain)
-            MimePart bodyPart = null;
-
-            if (viewhtml) {
-                bodyPart = mimePartTree.getFirstTextPart("html");
-            } else {
-                bodyPart = mimePartTree.getFirstTextPart("plain");
-            }
-
-            if (bodyPart == null) {
-                bodyPart = new LocalMimePart(new MimeHeader(header));
-                ((LocalMimePart) bodyPart).setBody(new CharSequenceSource(
-                        "<No Message-Text>"));
-            } else {
-//				@TODO dont use deprecated method
-                bodyPart = srcFolder.getMimePart(uid, bodyPart.getAddress());
-            }
-
+            
+            
             // Setup print document for message
             cDocument messageDoc = new cDocument();
             messageDoc.setHeader(getMailHeader());
@@ -290,7 +273,7 @@ public class PrintMessageCommand extends FolderCommand {
 
             // Add list of attachments if applicable
             AttachmentModel attMod = new AttachmentModel();
-            attMod.setCollection(mimePartTree);
+            attMod.setCollection(srcFolder.getMimePartTree(uid));
 
             List attachments = attMod.getDisplayedMimeParts();
 
@@ -320,14 +303,12 @@ public class PrintMessageCommand extends FolderCommand {
             }
 
             // Add body of message to print
-            String mimesubtype = bodyPart.getHeader().getMimeType().getSubtype();
+            String mimesubtype = bodyHeader.getMimeType().getSubtype();
 
             if (mimesubtype.equals("html")) {
-                messageDoc.appendPrintObject(getHTMLBodyPrintObject(
-                        (StreamableMimePart) bodyPart));
+                messageDoc.appendPrintObject(getHTMLBodyPrintObject());
             } else {
-                messageDoc.appendPrintObject(getPlainBodyPrintObject(
-                        (StreamableMimePart) bodyPart));
+                messageDoc.appendPrintObject(getPlainBodyPrintObject());
             }
 
             // print the print document (i.e. the message)
@@ -347,10 +328,10 @@ public class PrintMessageCommand extends FolderCommand {
      * @return Print object ready to be appended to the print document
      * @author Karl Peder Olesen (karlpeder), 20030531
      */
-    private cPrintObject getPlainBodyPrintObject(StreamableMimePart bodyPart)
+    private cPrintObject getPlainBodyPrintObject()
         throws IOException {
         // decode message body with respect to charset
-        String decodedBody = getDecodedMessageBody(bodyPart);
+        String decodedBody = getDecodedMessageBody();
 
         // create a print object and return it
         cParagraph printBody = new cParagraph();
@@ -400,10 +381,10 @@ public class PrintMessageCommand extends FolderCommand {
          * @return Print object ready to be appended to the print document
          * @author Karl Peder Olesen (karlpeder), 20030531
          */
-    private cPrintObject getHTMLBodyPrintObject(StreamableMimePart bodyPart)
+    private cPrintObject getHTMLBodyPrintObject()
         throws IOException {
         // decode message body with respect to charset
-        String decodedBody = getDecodedMessageBody(bodyPart);
+        String decodedBody = getDecodedMessageBody();
 
         // try to fix broken html-strings
         String validated = HtmlParser.validateHTMLString(decodedBody);
@@ -435,20 +416,16 @@ public class PrintMessageCommand extends FolderCommand {
     }
 
     /**
-         * Private utility to decode the message body with the proper charset
-         *
-         * @param bodyPart
-         *            The body of the message
-         * @return Decoded message body
-         * @author Karl Peder Olesen (karlpeder), 20030601
-         */
-    private String getDecodedMessageBody(StreamableMimePart bodyPart)
+     * Private utility to decode the message body with the proper charset
+     *
+     * @param bodyPart
+     *            The body of the message
+     * @return Decoded message body
+     * @author Karl Peder Olesen (karlpeder), 20030601
+     */
+    private String getDecodedMessageBody()
         throws IOException {
-        MimeHeader header = bodyPart.getHeader();
-
-        // Decode message according to charset
-        InputStream bodyStream = bodyPart.getInputStream();
-        int encoding = header.getContentTransferEncoding();
+        int encoding = bodyHeader.getContentTransferEncoding();
 
         switch (encoding) {
         case MimeHeader.QUOTED_PRINTABLE: {
@@ -466,10 +443,9 @@ public class PrintMessageCommand extends FolderCommand {
 
         // First determine which charset to use
         if (charset == null) {
-            // get charset from message
             try {
-                charset = Charset.forName(bodyPart.getHeader()
-                                                  .getContentParameter("charset"));
+                // get charset from message
+                charset = Charset.forName(bodyHeader.getContentParameter("charset"));
             } catch (Exception ex) {
                 // decode using default charset
                 charset = Charset.forName(System.getProperty("file.encoding"));
@@ -480,4 +456,43 @@ public class PrintMessageCommand extends FolderCommand {
 
         return StreamUtils.readInString(bodyStream).toString();
     }
+    
+    /**
+     * Private utility to get body part of a message. User preferences
+     * regarding html messages is used to select what to retrieve. If the body
+     * part retrieved is null, a fake one containing a simple text is returned
+     *
+     * @param uid
+     *            ID of message
+     * @param srcFolder
+     *            AbstractMessageFolder containing the message
+     * @param worker
+     * @return body part of message
+     */
+    private void setupMessageBodyPart(Object uid, AbstractMessageFolder srcFolder,
+        WorkerStatusController worker) throws Exception {
+        // Does the user prefer html or plain text?
+        XmlElement html = MailConfig.getInstance().getMainFrameOptionsConfig()
+                                              .getRoot().getElement("/options/html");
+
+        // Get body of message depending on user preferences
+        MimeTree mimePartTree = srcFolder.getMimePartTree(uid);
+
+        MimePart bodyPart = null;
+
+        if (Boolean.valueOf(html.getAttribute("prefer")).booleanValue()) {
+            bodyPart = mimePartTree.getFirstTextPart("html");
+        } else {
+            bodyPart = mimePartTree.getFirstTextPart("plain");
+        }
+        
+        if (bodyPart == null) {
+        	bodyHeader = new MimeHeader();
+        	bodyStream = new ByteArrayInputStream(new byte[0]);
+        } else {
+        	bodyHeader = bodyPart.getHeader();
+            bodyStream = srcFolder.getMimePartBodyStream(uid, bodyPart.getAddress());
+        }
+    }
+    
 }

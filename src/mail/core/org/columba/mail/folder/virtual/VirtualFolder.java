@@ -31,10 +31,10 @@ import org.columba.mail.config.FolderItem;
 import org.columba.mail.filter.Filter;
 import org.columba.mail.filter.FilterCriteria;
 import org.columba.mail.folder.AbstractFolder;
+import org.columba.mail.folder.AbstractMessageFolder;
 import org.columba.mail.folder.FolderFactory;
 import org.columba.mail.folder.IHeaderListStorage;
 import org.columba.mail.folder.IMailbox;
-import org.columba.mail.folder.AbstractMessageFolder;
 import org.columba.mail.folder.headercache.CachedHeaderfields;
 import org.columba.mail.folder.imap.IMAPFolder;
 import org.columba.mail.folder.search.DefaultSearchEngine;
@@ -46,7 +46,6 @@ import org.columba.mail.message.HeaderList;
 import org.columba.ristretto.message.Attributes;
 import org.columba.ristretto.message.Flags;
 import org.columba.ristretto.message.Header;
-import org.columba.ristretto.message.MimePart;
 import org.columba.ristretto.message.MimeTree;
 
 /**
@@ -423,20 +422,6 @@ public class VirtualFolder extends AbstractMessageFolder {
 	}
 
 	/**
-	 * @see org.columba.modules.mail.folder.Folder#getMimePart(Object,
-	 *      Integer[], WorkerStatusController)
-	 * @TODO dont use deprecated method
-	 */
-	public MimePart getMimePart(Object uid, Integer[] address) throws Exception {
-
-		VirtualHeader h = (VirtualHeader) headerList.get(uid);
-		AbstractMessageFolder sourceFolder = h.getSrcFolder();
-		Object sourceUid = h.getSrcUid();
-
-		return sourceFolder.getMimePart(sourceUid, address);
-	}
-
-	/**
 	 * @see org.columba.modules.mail.folder.Folder#getMimeTree(Object,
 	 *      IMAPFolder)
 	 */
@@ -447,19 +432,6 @@ public class VirtualFolder extends AbstractMessageFolder {
 		Object sourceUid = h.getSrcUid();
 
 		return sourceFolder.getMimePartTree(sourceUid);
-	}
-
-	/**
-	 * @see org.columba.modules.mail.folder.Folder#getMessageHeader(Object,
-	 *      WorkerStatusController)
-	 * @TODO dont use deprecated method
-	 */
-	public ColumbaHeader getMessageHeader(Object uid) throws Exception {
-		VirtualHeader h = (VirtualHeader) headerList.get(uid);
-		AbstractMessageFolder sourceFolder = h.getSrcFolder();
-		Object sourceUid = h.getSrcUid();
-
-		return (ColumbaHeader) sourceFolder.getMessageHeader(sourceUid);
 	}
 
 	/**

@@ -409,7 +409,7 @@ public abstract class LocalFolder extends AbstractMessageFolder {
 	 * @see org.columba.mail.folder.IMailbox#getMessageHeader(java.lang.Object)
 	 * @TODO dont use deprecated method
 	 */
-	public ColumbaHeader getMessageHeader(Object uid) throws Exception {
+	protected ColumbaHeader getMessageHeader(Object uid) throws Exception {
 		if ((aktMessage != null) && (aktMessage.getUID().equals(uid))) {
 			// message is already cached
 			// try to compare the headerfield count of

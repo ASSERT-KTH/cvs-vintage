@@ -62,7 +62,6 @@ import org.columba.ristretto.message.Attributes;
 import org.columba.ristretto.message.Flags;
 import org.columba.ristretto.message.Header;
 import org.columba.ristretto.message.MailboxInfo;
-import org.columba.ristretto.message.MimePart;
 import org.columba.ristretto.message.MimeTree;
 
 public class IMAPFolder extends RemoteFolder {
@@ -595,15 +594,6 @@ public class IMAPFolder extends RemoteFolder {
 	}
 
 	/**
-	 * @see org.columba.mail.folder.Folder#getMimePart(java.lang.Object,
-	 *      java.lang.Integer, org.columba.core.command.WorkerStatusController)
-	 * @TODO dont use deprecated method
-	 */
-	public MimePart getMimePart(Object uid, Integer[] address) throws Exception {
-		return null;
-	}
-
-	/**
 	 * Copies a set of messages from this folder to a destination folder.
 	 * <p>
 	 * The IMAP copy command also keeps the flags intact. So, there's no need to
@@ -662,19 +652,6 @@ public class IMAPFolder extends RemoteFolder {
 		} catch (Exception e) {
 			throw e;
 		}
-	}
-
-	/**
-	 * @see org.columba.mail.folder.Folder#getMessageHeader(java.lang.Object,
-	 *      org.columba.core.command.WorkerStatusController)
-	 * @TODO dont use deprecated method
-	 */
-	public ColumbaHeader getMessageHeader(Object uid) throws Exception {
-		if (headerList == null) {
-			getHeaderList();
-		}
-
-		return (ColumbaHeader) headerList.get(uid);
 	}
 
 	/**

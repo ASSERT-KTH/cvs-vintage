@@ -32,7 +32,6 @@ import org.columba.mail.config.MailConfig;
 import org.columba.mail.config.PGPItem;
 import org.columba.mail.folder.AbstractMessageFolder;
 import org.columba.mail.gui.message.viewer.SecurityInformationController;
-import org.columba.mail.message.ColumbaHeader;
 import org.columba.mail.message.ColumbaMessage;
 import org.columba.mail.pgp.JSCFController;
 import org.columba.mail.pgp.PGPPassChecker;
@@ -69,8 +68,6 @@ public class PGPMessageFilter extends AbstractFilter {
 
 	private static final java.util.logging.Logger LOG = java.util.logging.Logger
 			.getLogger("org.columba.mail.gui.message.filter");
-
-	private ColumbaHeader header;
 
 	private MimeTree mimePartTree;
 
@@ -114,25 +111,21 @@ public class PGPMessageFilter extends AbstractFilter {
 
 		mimePartTree = folder.getMimePartTree(uid);
 
-		//		@TODO dont use deprecated method
-		header = folder.getMessageHeader(uid);
-		
 		// Check if the message still exists
 		// or has been moved by e.g. a filter
-		if(header == null ) return null;
+		if(mimePartTree == null ) return null;
 		
 		
 		// TODO (@author waffel): encrypt AND sign dosN#t work. The message is always only
 		// encrypted. We need a function that knows, here
 		// is an encrypted AND signed Message. Thus first encyrpt and then
 		// verifySign the message
-		MimeType firstPartMimeType = mimePartTree.getRootMimeNode().getHeader()
-				.getMimeType();
 		//      if this message is signed/encrypted we have to use
 		// GnuPG to extract the decrypted bodypart
 		// - multipart/encrypted
 		// - multipart/signed
-		String contentType = (String) header.get("Content-Type");
+		MimeType firstPartMimeType = mimePartTree.getRootMimeNode().getHeader()
+		.getMimeType();
 
 		AccountItem defAccount = MailConfig.getInstance().getAccountList()
 				.getDefaultAccount();
@@ -268,7 +261,7 @@ public class PGPMessageFilter extends AbstractFilter {
 			}
 			LOG.fine("the decrypted Body part: " + decryptedBodyPart);
 			// construct new Message from decrypted string
-			message = new ColumbaMessage(header);
+			message = new ColumbaMessage(folder.getAllHeaderFields(uid));
 
 			Source decryptedSource = new CharSequenceSource(decryptedBodyPart);
 			MimeHeader mimeHeader = new MimeHeader(HeaderParser
@@ -331,7 +324,7 @@ public class PGPMessageFilter extends AbstractFilter {
 				signedMultipart.getChild(1).getAddress());
 
 		// Get the mailaddress and use it as the id
-		Address fromAddress = new BasicHeader(header.getHeader()).getFrom();
+		Address fromAddress = new BasicHeader(folder.getHeaderFields(uid, new String[] { "From" })).getFrom();
 		try {
 			JSCFController controller = JSCFController.getInstance();
 			JSCFConnection con = controller.getConnection();

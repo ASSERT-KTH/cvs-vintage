@@ -15,13 +15,13 @@
 //All Rights Reserved.
 package org.columba.mail.folder.command;
 
+import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.Charset;
 import java.text.DateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.Enumeration;
 import java.util.List;
 import java.util.logging.Logger;
@@ -45,15 +45,13 @@ import org.columba.mail.config.MailConfig;
 import org.columba.mail.folder.AbstractMessageFolder;
 import org.columba.mail.gui.attachment.AttachmentModel;
 import org.columba.mail.gui.message.util.DocumentParser;
-import org.columba.mail.message.ColumbaHeader;
 import org.columba.mail.parser.text.HtmlParser;
 import org.columba.mail.util.MailResourceLoader;
 import org.columba.ristretto.coder.Base64DecoderInputStream;
 import org.columba.ristretto.coder.CharsetDecoderInputStream;
 import org.columba.ristretto.coder.QuotedPrintableDecoderInputStream;
-import org.columba.ristretto.io.CharSequenceSource;
 import org.columba.ristretto.message.BasicHeader;
-import org.columba.ristretto.message.LocalMimePart;
+import org.columba.ristretto.message.Header;
 import org.columba.ristretto.message.MimeHeader;
 import org.columba.ristretto.message.MimePart;
 import org.columba.ristretto.message.MimeTree;
@@ -79,6 +77,13 @@ public class SaveMessageBodyAsCommand extends FolderCommand {
     /** The charset to use for decoding messages before save */
     private Charset charset;
 
+	private Header header;
+
+	private MimeHeader bodyHeader;
+	private InputStream bodyStream;
+
+	private List attachments;
+	
     /**
      * Constructor for SaveMessageBodyAsCommand. Calls super constructor and
      * saves charset for later use
@@ -118,20 +123,18 @@ public class SaveMessageBodyAsCommand extends FolderCommand {
             Object uid = uids[j];
             LOG.info("Saving UID=" + uid);
 
-            // get headers, body part and attachment for message
-			//@TODO dont use deprecated method
-            ColumbaHeader header = srcFolder.getMessageHeader(uid);
-            StreamableMimePart bodyPart = getMessageBodyPart(uid, srcFolder,
-                    worker);
+            header = srcFolder.getAllHeaderFields(uid);
+            setupMessageBodyPart(uid, srcFolder,worker);
+            
             AttachmentModel attMod = new AttachmentModel();
             attMod.setCollection(srcFolder.getMimePartTree(uid));
 
-            List attachments = attMod.getDisplayedMimeParts();
-
-            // determine type of body part
+            attachments = attMod.getDisplayedMimeParts();
+            
+			// determine type of body part
             boolean ishtml = false;
 
-            if (bodyPart.getHeader().getMimeType().getSubtype().equals("html")) {
+            if (bodyHeader.getMimeType().getSubtype().equals("html")) {
                 ishtml = true;
             }
 
@@ -210,9 +213,9 @@ public class SaveMessageBodyAsCommand extends FolderCommand {
 
                     // save message
                     if (filter.getExtension().equals(htmlFilter.getExtension())) {
-                        saveMsgBodyAsHtml(header, bodyPart, attachments, incl, f);
+                        saveMsgBodyAsHtml(incl, f);
                     } else {
-                        saveMsgBodyAsText(header, bodyPart, attachments, incl, f);
+                        saveMsgBodyAsText(incl, f);
                     }
                 }
             }
@@ -320,7 +323,7 @@ public class SaveMessageBodyAsCommand extends FolderCommand {
      * @param worker
      * @return body part of message
      */
-    private StreamableMimePart getMessageBodyPart(Object uid, AbstractMessageFolder srcFolder,
+    private void setupMessageBodyPart(Object uid, AbstractMessageFolder srcFolder,
         WorkerStatusController worker) throws Exception {
         // Does the user prefer html or plain text?
         XmlElement html = MailConfig.getInstance().getMainFrameOptionsConfig()
@@ -336,18 +339,14 @@ public class SaveMessageBodyAsCommand extends FolderCommand {
         } else {
             bodyPart = mimePartTree.getFirstTextPart("plain");
         }
-
+        
         if (bodyPart == null) {
-            bodyPart = new LocalMimePart(new MimeHeader("text", "plain"));
-            ((LocalMimePart) bodyPart).setBody(new CharSequenceSource(
-                    "<No Message-Text>"));
+        	bodyHeader = new MimeHeader();
+        	bodyStream = new ByteArrayInputStream(new byte[0]);
         } else {
-//			@TODO dont use deprecated method
-            bodyPart = srcFolder.getMimePart(uid, bodyPart.getAddress());
+        	bodyHeader = bodyPart.getHeader();
+            bodyStream = srcFolder.getMimePartBodyStream(uid, bodyPart.getAddress());
         }
-
-        // return the body part found (or constructed)
-        return (StreamableMimePart) bodyPart;
     }
 
     /**
@@ -358,13 +357,9 @@ public class SaveMessageBodyAsCommand extends FolderCommand {
      * @return Decoded message body
      * @author Karl Peder Olesen (karlpeder), 20030601
      */
-    private String getDecodedMessageBody(StreamableMimePart bodyPart)
+    private String getDecodedMessageBody()
         throws IOException {
-        MimeHeader header = bodyPart.getHeader();
-
-        // Decode message according to charset
-        InputStream bodyStream = bodyPart.getInputStream();
-        int encoding = header.getContentTransferEncoding();
+        int encoding = bodyHeader.getContentTransferEncoding();
 
         switch (encoding) {
         case MimeHeader.QUOTED_PRINTABLE: {
@@ -384,8 +379,7 @@ public class SaveMessageBodyAsCommand extends FolderCommand {
         if (charset == null) {
             try {
                 // get charset from message
-                charset = Charset.forName(bodyPart.getHeader()
-                                                  .getContentParameter("charset"));
+                charset = Charset.forName(bodyHeader.getContentParameter("charset"));
             } catch (Exception ex) {
                 // decode using default charset
                 charset = Charset.forName(System.getProperty("file.encoding"));
@@ -413,19 +407,14 @@ public class SaveMessageBodyAsCommand extends FolderCommand {
      * @param file
      *            File to output to
      */
-    private void saveMsgBodyAsHtml(ColumbaHeader header,
-        StreamableMimePart bodyPart, List attachments, boolean inclAllHeaders,
+    private void saveMsgBodyAsHtml(boolean inclAllHeaders,
         File file) throws IOException {
         // decode message body with respect to charset
-        String decodedBody = getDecodedMessageBody(bodyPart);
+        String decodedBody = getDecodedMessageBody();
 
-        /*
-                 * if it is not a html message body - we have to fake one by
-                 * encapsulating the message body in html tags
-                 */
         String body;
 
-        if (!bodyPart.getHeader().getMimeType().getSubtype().equals("html")) {
+        if (!bodyHeader.getMimeType().getSubtype().equals("html")) {
             try {
                 // substitute special characters like: <,>,&,\t,\n
                 body = HtmlParser.substituteSpecialCharacters(decodedBody);
@@ -453,8 +442,7 @@ public class SaveMessageBodyAsCommand extends FolderCommand {
         }
 
         // headers
-        String[][] headers = getHeadersToSave(header, attachments,
-                inclAllHeaders);
+        String[][] headers = getHeadersToSave(inclAllHeaders);
         String msg = insertHtmlHeaderTable(body, headers);
 
         // save message
@@ -550,16 +538,15 @@ public class SaveMessageBodyAsCommand extends FolderCommand {
      *            are output. If false, only a small subset is included
      * @param file  File to output to
      */
-    private void saveMsgBodyAsText(ColumbaHeader header,
-        StreamableMimePart bodyPart, List attachments, boolean inclAllHeaders,
+    private void saveMsgBodyAsText(boolean inclAllHeaders,
         File file) throws IOException {
         //DocumentParser parser = new DocumentParser();
         // decode message body with respect to charset
-        String decodedBody = getDecodedMessageBody(bodyPart);
+        String decodedBody = getDecodedMessageBody();
 
         String body;
 
-        if (bodyPart.getHeader().getMimeType().getSubtype().equals("html")) {
+        if (bodyHeader.getMimeType().getSubtype().equals("html")) {
             // strip tags
             //body = parser.stripHTMLTags(decodedBody, true);
             //body = parser.restoreSpecialCharacters(body);
@@ -570,8 +557,7 @@ public class SaveMessageBodyAsCommand extends FolderCommand {
         }
 
         // headers
-        String[][] headers = getHeadersToSave(header, attachments,
-                inclAllHeaders);
+        String[][] headers = getHeadersToSave(inclAllHeaders);
         StringBuffer buf = new StringBuffer();
 
         for (int i = 0; i < headers[0].length; i++) {
@@ -601,23 +587,22 @@ public class SaveMessageBodyAsCommand extends FolderCommand {
      *            should be included
      * @return Array of headers to include when saving
      */
-    private String[][] getHeadersToSave(ColumbaHeader header, List attachments,
-        boolean inclAll) {
+    private String[][] getHeadersToSave(boolean inclAll) {
         List keyList = new ArrayList();
         List valueList = new ArrayList();
-        BasicHeader basicHeader = new BasicHeader(header.getHeader());
+        BasicHeader basicHeader = new BasicHeader(header);
 
         String from = (header.get("columba.from")).toString();
         String to = (basicHeader.getTo()[0]).toString();
 
         DateFormat df = DateFormat.getDateTimeInstance(DateFormat.LONG,
                 DateFormat.MEDIUM);
-        String date = df.format((Date) header.get("columba.date"));
+        String date = df.format(basicHeader.getDate());
 
         String subject = (String) header.get("columba.subject");
 
         // loop over all headers
-        Enumeration keys = header.getHeader().getKeys();
+        Enumeration keys = header.getKeys();
 
         while (keys.hasMoreElements()) {
             String key = (String) keys.nextElement();

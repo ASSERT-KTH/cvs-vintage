@@ -25,9 +25,9 @@ import org.columba.core.command.WorkerStatusController;
 import org.columba.core.io.DiskIO;
 import org.columba.mail.config.FolderItem;
 import org.columba.mail.filter.Filter;
+import org.columba.mail.folder.AbstractMessageFolder;
 import org.columba.mail.folder.IHeaderListStorage;
 import org.columba.mail.folder.IMailbox;
-import org.columba.mail.folder.AbstractMessageFolder;
 import org.columba.mail.folder.imap.IMAPFolder;
 import org.columba.mail.folder.search.DefaultSearchEngine;
 import org.columba.mail.message.ColumbaHeader;
@@ -40,7 +40,6 @@ import org.columba.ristretto.message.Flags;
 import org.columba.ristretto.message.Header;
 import org.columba.ristretto.message.LocalMimePart;
 import org.columba.ristretto.message.Message;
-import org.columba.ristretto.message.MimePart;
 import org.columba.ristretto.message.MimeTree;
 import org.columba.ristretto.parser.MessageParser;
 
@@ -125,36 +124,11 @@ public class TempFolder extends AbstractMessageFolder {
     }
 
     /**
-     * @see org.columba.modules.mail.folder.Folder#getMimePart(Object,
-     *      Integer[], WorkerStatusController)
-     * @TODO dont use deprecated method
-     */
-    public MimePart getMimePart(Object uid, Integer[] address)
-        throws Exception {
-        ColumbaMessage message = (ColumbaMessage) messageList.get(uid);
-
-        MimePart mimePart = message.getMimePartTree().getFromAddress(address);
-
-        return mimePart;
-    }
-
-    /**
      * @see org.columba.modules.mail.folder.Folder#getMimeTree(Object,
      *      IMAPFolder)
      */
     public MimeTree getMimePartTree(Object uid) throws Exception {
         return ((ColumbaMessage) messageList.get(uid)).getMimePartTree();
-    }
-
-    /**
-     * @see org.columba.modules.mail.folder.Folder#getMessageHeader(Object,
-     *      WorkerStatusController)
-     * @TODO dont use deprecated method
-     */
-    public ColumbaHeader getMessageHeader(Object uid) throws Exception {
-        ColumbaHeader header = (ColumbaHeader) headerList.get(uid);
-
-        return header;
     }
 
     /**

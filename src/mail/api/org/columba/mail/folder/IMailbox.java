@@ -20,13 +20,11 @@ package org.columba.mail.folder;
 import java.io.InputStream;
 
 import org.columba.mail.folder.command.MarkMessageCommand;
-import org.columba.mail.message.ColumbaHeader;
 import org.columba.mail.message.HeaderList;
 import org.columba.ristretto.message.Attributes;
 import org.columba.ristretto.message.Flags;
 import org.columba.ristretto.message.Header;
 import org.columba.ristretto.message.MailboxInfo;
-import org.columba.ristretto.message.MimePart;
 import org.columba.ristretto.message.MimeTree;
 
 /**
@@ -89,23 +87,6 @@ public interface IMailbox extends IFolder{
   
 
     /**
-     * 
-     * Read <class>MimePart </class> and <class>MimePartTree </class> for more
-     * details. Especially on the address parameter.
-     * 
-     * @deprecated Use #getMimePartBodyStream(Object, Integer[]) and
-     *             #getMimePartSourceStream(Object, Integer[])
-     * 
-     * @param uid
-     *            UID of message
-     * @param address
-     *            array of Integer, addressing the MimePart
-     * @return MimePart MimePart of message
-     * @throws Exception
-     */
-    public MimePart getMimePart(Object uid, Integer[] address) throws Exception;
-
-    /**
      * Return mimepart structure. See <class>MimePartTree </class> for more
      * details.
      * 
@@ -115,18 +96,6 @@ public interface IMailbox extends IFolder{
      * @throws Exception
      */
     public MimeTree getMimePartTree(Object uid) throws Exception;
-
-    /**
-     * Return header of message
-     * 
-     * @deprecated Use #getHeaderFields(Object, String[])
-     * 
-     * @param uid
-     *            UID of message
-     * @return ColumbaHeader header of message
-     * @throws Exception
-     */
-    public ColumbaHeader getMessageHeader(Object uid) throws Exception;
 
     /**
      * Copy messages identified by UID to this folder.
