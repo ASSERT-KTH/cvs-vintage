@@ -31,7 +31,6 @@ import javax.naming.Context;
 import javax.naming.NamingException;
 import javax.naming.NameNotFoundException;
 import javax.transaction.Transaction;
-import javax.transaction.TransactionManager;
 
 import org.jboss.invocation.jrmp.interfaces.JRMPInvokerProxy;
 import org.jboss.invocation.Invocation;
@@ -41,11 +40,9 @@ import org.jboss.invocation.MarshalledValueInputStream;
 import org.jboss.logging.Logger;
 import org.jboss.mx.util.JMXExceptionDecoder;
 import org.jboss.net.sockets.DefaultSocketFactory;
-import org.jboss.proxy.TransactionInterceptor;
 import org.jboss.security.SecurityDomain;
 import org.jboss.system.Registry;
 import org.jboss.system.ServiceMBeanSupport;
-import org.jboss.tm.TransactionPropagationContextFactory;
 import org.jboss.tm.TransactionPropagationContextImporter;
 import org.jboss.tm.TransactionPropagationContextUtil;
 
@@ -55,7 +52,7 @@ import org.jboss.tm.TransactionPropagationContextUtil;
  *
  * @author <a href="mailto:marc.fleury@jboss.org>Marc Fleury</a>
  * @author <a href="mailto:scott.stark@jboss.org>Scott Stark</a>
- * @version $Revision: 1.38 $
+ * @version $Revision: 1.39 $
  * @jmx.mbean extends="org.jboss.system.ServiceMBean"
  */
 public class JRMPInvoker
@@ -125,7 +122,6 @@ public class JRMPInvoker
     */
    private MBeanServerAction serverAction = new MBeanServerAction();
 
-   private static TransactionPropagationContextFactory tpcFactory;
    private static TransactionPropagationContextImporter tpcImporter;
 
    public JRMPInvoker()
@@ -236,6 +232,22 @@ public class JRMPInvoker
    /**
     * @jmx.managed-attribute
     */
+   public void setRMIClientSocketFactoryBean(final RMIClientSocketFactory bean)
+   {
+      clientSocketFactory = bean;
+   }
+
+   /**
+    * @jmx.managed-attribute
+    */
+   public RMIClientSocketFactory getRMIClientSocketFactoryBean()
+   {
+      return clientSocketFactory;
+   }
+   
+   /**
+    * @jmx.managed-attribute
+    */
    public void setRMIServerSocketFactory(final String name)
    {
       serverSocketFactoryName = name;
@@ -247,6 +259,22 @@ public class JRMPInvoker
    public String getRMIServerSocketFactory()
    {
       return serverSocketFactoryName;
+   }
+
+   /**
+    * @jmx.managed-attribute
+    */
+   public void setRMIServerSocketFactoryBean(final RMIServerSocketFactory bean)
+   {
+      serverSocketFactory = bean;
+   }
+
+   /**
+    * @jmx.managed-attribute
+    */
+   public RMIServerSocketFactory getRMIServerSocketFactoryBean()
+   {
+      return serverSocketFactory;
    }
 
    /**
@@ -315,10 +343,6 @@ public class JRMPInvoker
       InitialContext ctx = new InitialContext();
 
       // FIXME marcf: This should not be here
-
-      // Get the transaction propagation context factory
-      tpcFactory = TransactionPropagationContextUtil.getTPCFactory();
-
       // and the transaction propagation context importer
       tpcImporter = TransactionPropagationContextUtil.getTPCImporter();
 
@@ -452,90 +476,96 @@ public class JRMPInvoker
    {
       ClassLoader loader = TCLAction.UTIL.getContextClassLoader();
 
-      try
+      if( clientSocketFactory == null )
       {
-         if (clientSocketFactoryName != null)
+         try
          {
-            Class csfClass = loader.loadClass(clientSocketFactoryName);
-            clientSocketFactory = (RMIClientSocketFactory) csfClass.newInstance();
+            if (clientSocketFactoryName != null)
+            {
+               Class csfClass = loader.loadClass(clientSocketFactoryName);
+               clientSocketFactory = (RMIClientSocketFactory) csfClass.newInstance();
+            }
          }
-      }
-      catch (Exception e)
-      {
-         log.error("Failed to load client socket factory", e);
-         clientSocketFactory = null;
+         catch (Exception e)
+         {
+            log.error("Failed to load client socket factory", e);
+            clientSocketFactory = null;
+         }
       }
 
-      try
+      if( serverSocketFactory == null )
       {
-         if (serverSocketFactoryName != null)
+         try
          {
-            Class ssfClass = loader.loadClass(serverSocketFactoryName);
-            serverSocketFactory = (RMIServerSocketFactory) ssfClass.newInstance();
-            if (serverAddress != null)
+            if (serverSocketFactoryName != null)
             {
-               // See if the server socket supports setBindAddress(String)
-               try
+               Class ssfClass = loader.loadClass(serverSocketFactoryName);
+               serverSocketFactory = (RMIServerSocketFactory) ssfClass.newInstance();
+               if (serverAddress != null)
                {
-                  Class[] parameterTypes = {String.class};
-                  Method m = ssfClass.getMethod("setBindAddress", parameterTypes);
-                  Object[] args = {serverAddress};
-                  m.invoke(serverSocketFactory, args);
+                  // See if the server socket supports setBindAddress(String)
+                  try
+                  {
+                     Class[] parameterTypes = {String.class};
+                     Method m = ssfClass.getMethod("setBindAddress", parameterTypes);
+                     Object[] args = {serverAddress};
+                     m.invoke(serverSocketFactory, args);
+                  }
+                  catch (NoSuchMethodException e)
+                  {
+                     log.warn("Socket factory does not support setBindAddress(String)");
+                     // Go with default address
+                  }
+                  catch (Exception e)
+                  {
+                     log.warn("Failed to setBindAddress=" + serverAddress + " on socket factory", e);
+                     // Go with default address
+                  }
                }
-               catch (NoSuchMethodException e)
+               /* See if the server socket supports setSecurityDomain(SecurityDomain)
+               if an sslDomain was specified
+               */
+               if (sslDomain != null)
                {
-                  log.warn("Socket factory does not support setBindAddress(String)");
-                  // Go with default address
-               }
-               catch (Exception e)
-               {
-                  log.warn("Failed to setBindAddress=" + serverAddress + " on socket factory", e);
-                  // Go with default address
+                  try
+                  {
+                     InitialContext ctx = new InitialContext();
+                     SecurityDomain domain = (SecurityDomain) ctx.lookup(sslDomain);
+                     Class[] parameterTypes = {SecurityDomain.class};
+                     Method m = ssfClass.getMethod("setSecurityDomain", parameterTypes);
+                     Object[] args = {domain};
+                     m.invoke(serverSocketFactory, args);
+                  }
+                  catch (NoSuchMethodException e)
+                  {
+                     log.error("Socket factory does not support setSecurityDomain(SecurityDomain)");
+                  }
+                  catch (Exception e)
+                  {
+                     log.error("Failed to setSecurityDomain=" + sslDomain + " on socket factory", e);
+                  }
                }
             }
-            /* See if the server socket supports setSecurityDomain(SecurityDomain)
-            if an sslDomain was specified
-            */
-            if (sslDomain != null)
+            // If a bind address was specified create a DefaultSocketFactory
+            else if (serverAddress != null)
             {
+               DefaultSocketFactory defaultFactory = new DefaultSocketFactory(backlog);
+               serverSocketFactory = defaultFactory;
                try
                {
-                  InitialContext ctx = new InitialContext();
-                  SecurityDomain domain = (SecurityDomain) ctx.lookup(sslDomain);
-                  Class[] parameterTypes = {SecurityDomain.class};
-                  Method m = ssfClass.getMethod("setSecurityDomain", parameterTypes);
-                  Object[] args = {domain};
-                  m.invoke(serverSocketFactory, args);
+                  defaultFactory.setBindAddress(serverAddress);
                }
-               catch (NoSuchMethodException e)
+               catch (UnknownHostException e)
                {
-                  log.error("Socket factory does not support setSecurityDomain(SecurityDomain)");
-               }
-               catch (Exception e)
-               {
-                  log.error("Failed to setSecurityDomain=" + sslDomain + " on socket factory", e);
+                  log.error("Failed to setBindAddress=" + serverAddress + " on socket factory", e);
                }
             }
          }
-         // If a bind address was specified create a DefaultSocketFactory
-         else if (serverAddress != null)
+         catch (Exception e)
          {
-            DefaultSocketFactory defaultFactory = new DefaultSocketFactory(backlog);
-            serverSocketFactory = defaultFactory;
-            try
-            {
-               defaultFactory.setBindAddress(serverAddress);
-            }
-            catch (UnknownHostException e)
-            {
-               log.error("Failed to setBindAddress=" + serverAddress + " on socket factory", e);
-            }
+            log.error("operation failed", e);
+            serverSocketFactory = null;
          }
-      }
-      catch (Exception e)
-      {
-         log.error("operation failed", e);
-         serverSocketFactory = null;
       }
    }
 
