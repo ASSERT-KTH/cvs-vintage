@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/service/Attic/JNIEndpointConnector.java,v 1.5 2000/07/29 01:32:56 costin Exp $
- * $Revision: 1.5 $
- * $Date: 2000/07/29 01:32:56 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/service/Attic/JNIEndpointConnector.java,v 1.6 2000/08/11 16:24:23 costin Exp $
+ * $Revision: 1.6 $
+ * $Date: 2000/08/11 16:24:23 $
  *
  * ====================================================================
  *
@@ -78,7 +78,7 @@ import org.apache.tomcat.logging.*;
  *
  * @author Gal Shachor <shachor@il.ibm.com>
  */
-public class JNIEndpointConnector  extends BaseInterceptor implements ServerConnector {
+public class JNIEndpointConnector  extends BaseInterceptor {
     // XXX define ConnectorException
     // XXX replace strings with sm.get...
     // XXX replace static strings with constants

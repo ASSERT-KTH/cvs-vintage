@@ -114,7 +114,7 @@ public class Tomcat extends Logger.Helper {
 		    xh.setParent( "setServer", "java.lang.Object") );
 	xh.addRule( "ContextManager/Connector",
 		    xh.addChild( "addServerConnector",
-				 "org.apache.tomcat.core.ServerConnector") );
+				 "org.apache.tomcat.core.ContextInterceptor") );
 
 	xh.addRule( "ContextManager/Connector/Parameter",
 		    xh.methodSetter("setProperty",2) );

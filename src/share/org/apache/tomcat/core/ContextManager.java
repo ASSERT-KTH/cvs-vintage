@@ -395,20 +395,22 @@ public class ContextManager implements LogAware {
      *  It must be called after init.
      */
     public void start() throws Exception {// XXX TomcatException {
-	Enumeration connE=getConnectors();
-	while( connE.hasMoreElements() ) {
-	    ((ServerConnector)connE.nextElement()).start();
-	}
+	// XXX we may need a special callback to disable/enable the
+	// server from accepting connections ( to allow for startup ).
+	// 	Enumeration connE=getConnectors();
+	// 	while( connE.hasMoreElements() ) {
+	// 	    ((ServerConnector)connE.nextElement()).start();
+	// 	}
     }
 
     /** Will stop all connectors
      */
     public void stop() throws Exception {// XXX TomcatException {
-	if(debug>0) log("Stopping context manager ");
-	Enumeration connE=getConnectors();
-	while( connE.hasMoreElements() ) {
-	    ((ServerConnector)connE.nextElement()).stop();
-	}
+	// 	if(debug>0) log("Stopping context manager ");
+	// 	Enumeration connE=getConnectors();
+	// 	while( connE.hasMoreElements() ) {
+	// 	    ((ServerConnector)connE.nextElement()).stop();
+	// 	}
 	shutdown();
     }
 
@@ -509,10 +511,10 @@ public class ContextManager implements LogAware {
      *
      * @param con The new server connector
      */
-    public synchronized void addServerConnector( ServerConnector con ) {
+    public synchronized void addServerConnector( ContextInterceptor con ) {
 	if(debug>0) log("Add connector javaClass=\"" +
 			   con.getClass().getName() + "\"");
-	con.setServer( this );
+	//	con.setServer( this );
 	connectors.addElement( con );
     }
 

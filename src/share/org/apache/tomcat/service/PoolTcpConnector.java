@@ -86,7 +86,7 @@ import java.util.*;
  * @author costin@eng.sun.com
  * @author Gal Shachor [shachor@il.ibm.com]
  */
-public final class PoolTcpConnector extends BaseInterceptor implements ServerConnector, LogAware {
+public final class PoolTcpConnector extends BaseInterceptor implements LogAware {
     // Attributes we accept ( to support the old model of
     // configuration, will be deprecated )
     public static final String VHOST_PORT="vhost_port";
