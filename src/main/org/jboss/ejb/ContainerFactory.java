@@ -76,7 +76,7 @@ import org.jboss.logging.Logger;
 *   @author <a href="mailto:jplindfo@helsinki.fi">Juha Lindfors</a>
 *   @author <a href="mailto:sebastien.alborini@m4x.org">Sebastien Alborini</a>
 *
-*   @version $Revision: 1.46 $
+*   @version $Revision: 1.47 $
 */
 public class ContainerFactory
     extends org.jboss.util.ServiceMBeanSupport
@@ -702,6 +702,30 @@ public class ContainerFactory
 
        Log.unsetLog();
     }
+
+    /**
+    *	is the aplication with this url deployed
+    *
+    * @param   url
+    * @exception   MalformedURLException
+    */
+     public boolean isDeployed(String url)
+        throws MalformedURLException
+     {
+     	  return isDeployed (new URL (url));
+     }
+
+    /**
+    *   check if the application with this url is deployed
+    *
+    * @param   url
+    * @return true if deployed
+    */
+    public boolean isDeployed (URL url)
+    {
+    	 return (deployments.get(url) != null);
+    }
+
 
     // Protected -----------------------------------------------------
 }

@@ -13,7 +13,7 @@ import java.net.MalformedURLException;
  *      
  *   @see ContainerFactory
  *   @author Rickard Öberg (rickard.oberg@telkel.com)
- *   @version $Revision: 1.4 $
+ *   @version $Revision: 1.5 $
  */
 public interface ContainerFactoryMBean
 	extends org.jboss.util.ServiceMBean
@@ -57,5 +57,15 @@ public interface ContainerFactoryMBean
     * @return   true if verifier is enabled; false otherwise
     */
    public boolean getVerifyDeployments();
+
+	/**
+	 *	is the aplication with this url deployed
+	 *
+	 * @param   url
+	 * @exception   MalformedURLException
+	 */
+   public boolean isDeployed(String url)
+      throws MalformedURLException;
+
 }
 
