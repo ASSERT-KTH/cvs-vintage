@@ -5,21 +5,4 @@
     "http://java.sun.com/j2ee/dtds/web-app_2.2.dtd">
 
 <web-app>
-    <servlet>
-        <servlet-name>
-            zv
-        </servlet-name>
-        <servlet-class>
-            ZipView
-        </servlet-class>
-        <init-param>
-            <param-name>
-                docdir
-            </param-name>
-            <param-value>
-                /home/costin/doc/zip
-            </param-value>
-        </init-param>
-    </servlet>
-
 </web-app>
