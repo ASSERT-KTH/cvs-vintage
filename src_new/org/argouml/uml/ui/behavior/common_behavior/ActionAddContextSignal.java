@@ -1,4 +1,4 @@
-// $Id: ActionAddContextSignal.java,v 1.3 2005/01/02 16:43:49 linus Exp $
+// $Id: ActionAddContextSignal.java,v 1.4 2005/01/09 04:00:09 bobtarling Exp $
 // Copyright (c) 2004-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -27,6 +27,7 @@ package org.argouml.uml.ui.behavior.common_behavior;
 import java.util.Vector;
 
 import org.argouml.i18n.Translator;
+import org.argouml.kernel.ProjectManager;
 import org.argouml.model.Model;
 import org.argouml.model.ModelFacade;
 import org.argouml.uml.ui.AbstractActionAddModelElement;
@@ -50,9 +51,11 @@ public class ActionAddContextSignal extends AbstractActionAddModelElement {
      */
     protected Vector getChoices() {
         Vector ret = new Vector();
+        Object model =
+            ProjectManager.getManager().getCurrentProject().getModel();
         if (getTarget() != null) {
             ret.addAll(Model.getModelManagementHelper()
-                    .getAllBehavioralFeatures());
+                    .getAllBehavioralFeatures(model));
         }
         return ret;
     }

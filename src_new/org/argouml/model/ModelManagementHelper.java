@@ -1,4 +1,4 @@
-// $Id: ModelManagementHelper.java,v 1.2 2005/01/08 00:39:39 linus Exp $
+// $Id: ModelManagementHelper.java,v 1.3 2005/01/09 04:00:09 bobtarling Exp $
 // Copyright (c) 2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -91,11 +91,6 @@ public interface ModelManagementHelper {
      * @return Collection of surrounding namespaces.
      */
     Collection getAllSurroundingNamespaces(Object ns);
-
-    /**
-     * @return a collection of all behavioralfeatures in the current project
-     */
-    Collection getAllBehavioralFeatures();
 
     /**
      * @param ns the given namespace

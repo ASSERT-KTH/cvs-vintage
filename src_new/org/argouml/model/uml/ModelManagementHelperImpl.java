@@ -1,4 +1,4 @@
-// $Id: ModelManagementHelperImpl.java,v 1.3 2005/01/08 00:39:39 linus Exp $
+// $Id: ModelManagementHelperImpl.java,v 1.4 2005/01/09 04:00:08 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -295,15 +295,6 @@ class ModelManagementHelperImpl implements ModelManagementHelper {
             set.addAll(getAllSurroundingNamespaces(namespace.getNamespace()));
         }
         return set;
-    }
-
-    /**
-     * @return a collection of all behavioralfeatures in the current project
-     */
-    public Collection getAllBehavioralFeatures() {
-        Object model =
-            ProjectManager.getManager().getCurrentProject().getModel();
-        return getAllBehavioralFeatures(model);
     }
 
     /**
