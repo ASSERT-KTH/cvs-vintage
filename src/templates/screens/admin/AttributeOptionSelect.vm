@@ -33,8 +33,6 @@
 
 #else
 
-<p>$l10n.AttributesAvailable</p>
-
 <table border="1" cellspacing="2" cellpadding="3" width="100%">
 <tr>
 <th nowrap="nowrap" width="8%"></th>
