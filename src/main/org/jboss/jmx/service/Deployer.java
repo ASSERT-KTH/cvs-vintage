@@ -45,7 +45,7 @@ import org.jboss.logging.Logger;
 /**
  * A JMX client to deploy an application into a running JBoss server.
  *
- * @version <tt>$Revision: 1.7 $</tt>
+ * @version <tt>$Revision: 1.8 $</tt>
  * @author  <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
  * @author  <a href="mailto:jason@planet57.com">Jason Dillon</a>
  * @author  <a href="mailto:Christoph.Jung@infor.de">Christoph G. Jung</a>
@@ -301,6 +301,24 @@ public class Deployer
       }
    }
 
+   protected static class RedeployCommand
+      extends DeployerCommand
+   {
+      public RedeployCommand(final String url)
+      {
+         this.url = url;
+      }
+
+      public void execute(Deployer deployer) throws Exception
+      {
+         if (deployer.isDeployed(url)) {
+            deployer.undeploy(url);
+         }
+         deployer.deploy(url);
+         System.out.println(url + " has been redeployed.");
+      }
+   }
+   
    protected static class IsDeployedCommand
       extends DeployerCommand
    {
@@ -329,6 +347,7 @@ public class Deployer
       System.out.println("operations:");
       System.out.println("    -d, --deploy=<url>        Deploy a URL into the remote server");
       System.out.println("    -u, --undeploy=<url>      Undeploy a URL from the remote server");
+      System.out.println("    -r, --redeploy=<url>      Redeploy a URL from the remote server");
       System.out.println("    -i, --isdeployed=<url>    Check if a URL is deployed on the remote server");
       System.out.println();
    }
@@ -340,7 +359,7 @@ public class Deployer
          System.exit(0);
       }
       
-      String sopts = "-:hD:s:d:u:i:";
+      String sopts = "-:hD:s:d:u:i:r:";
       LongOpt[] lopts =
       {
          new LongOpt("help", LongOpt.NO_ARGUMENT, null, 'h'),
@@ -348,6 +367,7 @@ public class Deployer
          new LongOpt("deploy", LongOpt.REQUIRED_ARGUMENT, null, 'd'),
          new LongOpt("undeploy", LongOpt.REQUIRED_ARGUMENT, null, 'u'),
          new LongOpt("isdeployed", LongOpt.REQUIRED_ARGUMENT, null, 'i'),
+         new LongOpt("redeploy", LongOpt.REQUIRED_ARGUMENT, null, 'r'),
       };
 
       Getopt getopt = new Getopt(PROGRAM_NAME, args, sopts, lopts);
@@ -418,6 +438,12 @@ public class Deployer
                break;
             }
 
+            case 'r':
+            {
+               commands.add(new RedeployCommand(getopt.getOptarg()));
+               break;
+            }
+            
             case 'i':
             {
                commands.add(new IsDeployedCommand(getopt.getOptarg()));
