@@ -23,7 +23,7 @@ import org.jboss.ejb.plugins.jrmp.server.JRMPContainerInvoker;
  *      @see <related>
  *      @author Rickard Öberg (rickard.oberg@telkel.com)
  *		@author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
- *      @version $Revision: 1.10 $
+ *      @version $Revision: 1.11 $
  */
 public class HomeProxy
    extends GenericProxy
@@ -52,7 +52,7 @@ public class HomeProxy
          removeByHandle = EJBHome.class.getMethod("remove", new Class[] {Handle.class});
 		 removeByPrimaryKey = EJBHome.class.getMethod("remove", new Class[] {Object.class});
 		 // Get the "remove" method from the EJBObject
-		 removeObject = EJBObject.class.getMethod("remove", new Class[] {Object.class});
+		 removeObject = EJBObject.class.getMethod("remove", new Class[0]);
 		 
 		 // Object methods
 	     toStr = Object.class.getMethod("toString", new Class[0]);
