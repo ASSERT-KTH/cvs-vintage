@@ -1,4 +1,4 @@
-// $Id: Designer.java,v 1.17 2003/08/27 13:05:42 bobtarling Exp $
+// $Id: Designer.java,v 1.18 2003/08/30 13:11:24 alexb Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,22 +25,30 @@
 // File: Designer.java
 // Classes: Designer
 // Original Author: jrobbins@ics.uci.edu
-// $Id: Designer.java,v 1.17 2003/08/27 13:05:42 bobtarling Exp $
+// $Id: Designer.java,v 1.18 2003/08/30 13:11:24 alexb Exp $
 
 package org.argouml.cognitive;
 
-import org.argouml.kernel.*;
-import org.argouml.cognitive.critics.*;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
+import java.io.Serializable;
+import java.util.Enumeration;
+import java.util.Properties;
+import java.util.Vector;
 
-import org.tigris.gef.util.*;
+import javax.swing.Icon;
 
-import java.util.*;
-import java.beans.*;
-import javax.swing.*;
-
-import ru.novosoft.uml.MElementListener;
-import ru.novosoft.uml.MElementEvent;
 import org.apache.log4j.Category;
+
+import org.argouml.cognitive.critics.Agency;
+import org.argouml.cognitive.critics.Critic;
+
+import org.tigris.gef.util.ChildGenerator;
+import org.tigris.gef.util.VectorSet;
+import org.tigris.gef.util.EnumerationEmpty;
+
+import ru.novosoft.uml.MElementEvent;
+import ru.novosoft.uml.MElementListener;
 
 /** This class models the designer who is building a complex design in
  * some application domain and needs continuous feedback to aid in the
@@ -61,11 +69,11 @@ import org.apache.log4j.Category;
  * should be done.
  */
 public class Designer
-    implements Poster,
-        Runnable, // TODO remove/refactor per issue 1024
-        PropertyChangeListener,
-        MElementListener, // TODO remove.
-        java.io.Serializable 
+     implements Poster,
+         Runnable, // TODO remove/refactor per issue 1024
+         PropertyChangeListener,
+         MElementListener, // TODO remove.
+         java.io.Serializable
 {
     
     protected static Category cat = Category.getInstance(Designer.class);
