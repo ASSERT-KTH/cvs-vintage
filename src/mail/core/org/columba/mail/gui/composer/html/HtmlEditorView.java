@@ -1,5 +1,4 @@
-// The contents of this file are subject to the Mozilla Public License Version
-// 1.1
+//The contents of this file are subject to the Mozilla Public License Version 1.1
 //(the "License"); you may not use this file except in compliance with the
 //License. You may obtain a copy of the License at http://www.mozilla.org/MPL/
 //
@@ -10,18 +9,15 @@
 //
 //The Original Code is "The Columba Project"
 //
-//The Initial Developers of the Original Code are Frederik Dietz and Timo
-// Stich.
+//The Initial Developers of the Original Code are Frederik Dietz and Timo Stich.
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003.
 //
-//All Rights Reserved.undation, Inc., 59 Temple Place - Suite 330, Boston, MA
-// 02111-1307, USA.
+//All Rights Reserved.
 package org.columba.mail.gui.composer.html;
 
 import org.columba.core.charset.CharsetEvent;
 import org.columba.core.charset.CharsetListener;
 import org.columba.core.gui.util.FontProperties;
-import org.columba.core.logging.ColumbaLogger;
 import org.columba.core.main.MainInterface;
 import org.columba.core.xml.XmlElement;
 
@@ -43,6 +39,7 @@ import java.util.Enumeration;
 import java.util.List;
 import java.util.Observable;
 import java.util.Observer;
+import java.util.logging.Logger;
 
 import javax.swing.JTextPane;
 import javax.swing.text.AttributeSet;
@@ -62,6 +59,10 @@ import javax.swing.text.html.HTML;
  */
 public class HtmlEditorView extends JTextPane implements KeyListener, Observer,
     CharsetListener {
+
+    /** JDK 1.4+ logging framework logger, used for logging. */
+    private static final Logger LOG = Logger.getLogger("org.columba.mail.gui.composer.html");
+
     /** Reference to the controller of this view */
     private HtmlEditorController controller;
 
@@ -232,8 +233,8 @@ public class HtmlEditorView extends JTextPane implements KeyListener, Observer,
         while (enum.hasMoreElements()) {
             Object name = enum.nextElement();
 
-            if ((name instanceof HTML.Tag) &&
-                    (name.toString().equals(HTML.Tag.TT.toString()))) {
+            if ((name instanceof HTML.Tag)
+                    && (name.toString().equals(HTML.Tag.TT.toString()))) {
                 isTeleTyper = true;
 
                 break;
@@ -356,8 +357,7 @@ public class HtmlEditorView extends JTextPane implements KeyListener, Observer,
         }
 
         if (!supported) {
-            ColumbaLogger.log.severe("Alignment not set - alignment=" + align +
-                " not supported");
+            LOG.severe("Alignment not set - alignment=" + align + " not supported");
 
             return;
         }
@@ -381,14 +381,13 @@ public class HtmlEditorView extends JTextPane implements KeyListener, Observer,
     public void setParagraphFormat(HTML.Tag formatTag) {
         // Is the requested format supported?
         if (formatTag == null) {
-            ColumbaLogger.log.severe("Format not set - formatTag = null");
+            LOG.severe("Format not set - formatTag = null");
 
             return;
         }
 
         if (!supportedFormats.contains(formatTag)) {
-            ColumbaLogger.log.severe("Format not set - <" + formatTag +
-                "> not supported");
+            LOG.severe("Format not set - <" + formatTag + "> not supported");
 
             return;
         }
@@ -412,11 +411,9 @@ public class HtmlEditorView extends JTextPane implements KeyListener, Observer,
             htmlKit.insertHTML(htmlDoc, caretPos, "<br>", 0, 0, HTML.Tag.BR);
             this.setCaretPosition(caretPos + 1);
         } catch (BadLocationException e) {
-            ColumbaLogger.log.severe("Error inserting br tag: " +
-                e.getMessage());
+            LOG.severe("Error inserting br tag: " + e.getMessage());
         } catch (IOException e) {
-            ColumbaLogger.log.severe("Error inserting br tag: " +
-                e.getMessage());
+            LOG.severe("Error inserting br tag: " + e.getMessage());
         }
     }
 

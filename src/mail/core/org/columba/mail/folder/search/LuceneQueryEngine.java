@@ -1,16 +1,16 @@
 //The contents of this file are subject to the Mozilla Public License Version 1.1
-//(the "License"); you may not use this file except in compliance with the 
+//(the "License"); you may not use this file except in compliance with the
 //License. You may obtain a copy of the License at http://www.mozilla.org/MPL/
 //
 //Software distributed under the License is distributed on an "AS IS" basis,
-//WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License 
+//WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License
 //for the specific language governing rights and
 //limitations under the License.
 //
 //The Original Code is "The Columba Project"
 //
 //The Initial Developers of the Original Code are Frederik Dietz and Timo Stich.
-//Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
+//Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003.
 //
 //All Rights Reserved.
 package org.columba.mail.folder.search;
@@ -35,7 +35,6 @@ import org.apache.lucene.store.RAMDirectory;
 
 import org.columba.core.command.StatusObservable;
 import org.columba.core.io.DiskIO;
-import org.columba.core.logging.ColumbaLogger;
 import org.columba.core.util.ListTools;
 import org.columba.core.util.Mutex;
 
@@ -64,35 +63,35 @@ import java.util.Enumeration;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.ListIterator;
+import java.util.logging.Logger;
 
 import javax.swing.JOptionPane;
 
 
 /**
  * @author timo
- *
- * To change this generated comment edit the template variable "typecomment":
- * Window>Preferences>Java>Templates.
- * To enable and disable the creation of type comments go to
- * Window>Preferences>Java>Code Generation.
  */
 public class LuceneQueryEngine implements QueryEngine {
-    private final static int OPTIMIZE_AFTER_N_OPERATIONS = 30;
-    private final static String[] caps = {
+
+    /** JDK 1.4+ logging framework logger, used for logging. */
+    private static final Logger LOG = Logger.getLogger("org.columba.mail.folder.search");
+
+    private static final int OPTIMIZE_AFTER_N_OPERATIONS = 30;
+    private static final String[] CAPS = {
         "Body", "Subject", "From", "To", "Cc", "Bcc", "Custom Headerfield"
     };
-    File indexDir;
-    IndexReader fileIndexReader;
-    IndexReader ramIndexReader;
-    Directory luceneIndexDir;
-    Directory ramIndexDir;
-    long ramLastModified;
-    long luceneLastModified;
-    LinkedList deleted;
-    int operationCounter;
-    Analyzer analyzer;
-    Mutex indexMutex;
-    LocalFolder folder;
+    private File indexDir;
+    private IndexReader fileIndexReader;
+    private IndexReader ramIndexReader;
+    private Directory luceneIndexDir;
+    private Directory ramIndexDir;
+    private long ramLastModified;
+    private long luceneLastModified;
+    private LinkedList deleted;
+    private int operationCounter;
+    private Analyzer analyzer;
+    private Mutex indexMutex;
+    private LocalFolder folder;
 
     /**
      * Constructor for LuceneQueryEngine.
@@ -114,7 +113,7 @@ public class LuceneQueryEngine implements QueryEngine {
                         //to be executed on shutdown
                         mergeRAMtoIndex();
                     } catch (IOException ioe) {
-                        ColumbaLogger.log.severe(ioe.getMessage());
+                        LOG.severe(ioe.getMessage());
                     }
                 }
             }, "LuceneIndexMerger"));
@@ -162,7 +161,7 @@ public class LuceneQueryEngine implements QueryEngine {
 
         // Check if index is consitent with mailbox
         //if( getReader().numDocs() != folder.size() ) {
-        //	recreateIndex();
+        //  recreateIndex();
         //}
         indexMutex = new Mutex("indexMutex");
     }
@@ -240,8 +239,7 @@ public class LuceneQueryEngine implements QueryEngine {
 
                 while (token != null) {
                     String pattern = "*" + token.termText() + "*";
-                    ColumbaLogger.log.info("Field = \"" + field +
-                        "\" Text = \"" + pattern + "\"");
+                    LOG.info("Field = \"" + field + "\" Text = \"" + pattern + "\"");
                     termQuery.add(new WildcardQuery(new Term(field, pattern)),
                         true, false);
 
@@ -375,11 +373,11 @@ public class LuceneQueryEngine implements QueryEngine {
 
         String value;
 
-        for (int i = 0; i < caps.length; i++) {
-            value = (String) header.get(caps[i]);
+        for (int i = 0; i < CAPS.length; i++) {
+            value = (String) header.get(CAPS[i]);
 
             if (value != null) {
-                messageDoc.add(Field.UnStored(caps[i], value));
+                messageDoc.add(Field.UnStored(CAPS[i], value));
             }
         }
 
@@ -417,7 +415,7 @@ public class LuceneQueryEngine implements QueryEngine {
         IndexReader ramReader = getRAMReader();
         IndexReader fileReader = getFileReader();
 
-        ColumbaLogger.log.info("Lucene: Merging RAMIndex to FileIndex");
+        LOG.info("Lucene: Merging RAMIndex to FileIndex");
 
         /*
         Document doc;
@@ -442,7 +440,7 @@ public class LuceneQueryEngine implements QueryEngine {
 
         IndexWriter fileIndex = new IndexWriter(luceneIndexDir, analyzer, false);
 
-        fileIndex.addIndexes(new Directory[] { ramIndexDir });
+        fileIndex.addIndexes(new Directory[] {ramIndexDir});
 
         fileIndex.optimize();
         fileIndex.close();
@@ -474,7 +472,7 @@ public class LuceneQueryEngine implements QueryEngine {
      * @return String[]
      */
     public String[] getCaps() {
-        return caps;
+        return CAPS;
     }
 
     private boolean checkResult(List result) {
@@ -503,9 +501,8 @@ public class LuceneQueryEngine implements QueryEngine {
         createIndex();
     }
 
-    /* (non-Javadoc)
-     * @see org.columba.mail.folder.search.AbstractSearchEngine#sync(org.columba.mail.folder.DataStorageInterface, org.columba.core.command.WorkerStatusController)
-     */
+
+    /** {@inheritDoc} */
     public void sync() throws Exception {
         //ColumbaLogger.log.severe("Lucene Index inconsistent - recreation forced");
         DataStorageInterface ds = ((LocalFolder) folder).getDataStorageInstance();
@@ -552,8 +549,7 @@ public class LuceneQueryEngine implements QueryEngine {
             writer.optimize();
             writer.close();
         } catch (Exception e) {
-            ColumbaLogger.log.severe("Creation of Lucene Index failed :" +
-                e.getLocalizedMessage());
+            LOG.severe("Creation of Lucene Index failed :" + e.getLocalizedMessage());
 
             //show neat error dialog here
         }

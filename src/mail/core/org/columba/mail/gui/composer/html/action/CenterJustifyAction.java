@@ -1,16 +1,16 @@
 //The contents of this file are subject to the Mozilla Public License Version 1.1
-//(the "License"); you may not use this file except in compliance with the 
+//(the "License"); you may not use this file except in compliance with the
 //License. You may obtain a copy of the License at http://www.mozilla.org/MPL/
 //
 //Software distributed under the License is distributed on an "AS IS" basis,
-//WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License 
+//WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License
 //for the specific language governing rights and
 //limitations under the License.
 //
 //The Original Code is "The Columba Project"
 //
 //The Initial Developers of the Original Code are Frederik Dietz and Timo Stich.
-//Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
+//Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003.
 //
 //All Rights Reserved.
 package org.columba.mail.gui.composer.html.action;
@@ -18,7 +18,6 @@ package org.columba.mail.gui.composer.html.action;
 import org.columba.core.action.AbstractSelectableAction;
 import org.columba.core.gui.frame.FrameMediator;
 import org.columba.core.gui.util.ImageLoader;
-import org.columba.core.logging.ColumbaLogger;
 import org.columba.core.xml.XmlElement;
 
 import org.columba.mail.gui.composer.ComposerController;
@@ -33,6 +32,7 @@ import java.awt.event.ContainerListener;
 
 import java.util.Observable;
 import java.util.Observer;
+import java.util.logging.Logger;
 
 import javax.swing.text.StyleConstants;
 
@@ -44,6 +44,10 @@ import javax.swing.text.StyleConstants;
  */
 public class CenterJustifyAction extends AbstractSelectableAction
     implements Observer, ContainerListener {
+
+    /** JDK 1.4+ logging framework logger, used for logging. */
+    private static final Logger LOG = Logger.getLogger("org.columba.mail.gui.composer.html.action");
+
     /**
      * @param frameMediator
      * @param name
@@ -133,8 +137,7 @@ public class CenterJustifyAction extends AbstractSelectableAction
      * @see java.awt.event.ContainerListener#componentAdded(java.awt.event.ContainerEvent)
      */
     public void componentAdded(ContainerEvent e) {
-        ColumbaLogger.log.info(
-            "Re-registering as observer on editor controller");
+        LOG.info("Re-registering as observer on editor controller");
         ((ComposerController) getFrameMediator()).getEditorController()
          .addObserver(this);
     }

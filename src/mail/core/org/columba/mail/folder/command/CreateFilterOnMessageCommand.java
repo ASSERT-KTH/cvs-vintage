@@ -1,9 +1,4 @@
-/*
- * SaveMessageBodyAsCommand.java Created 2003-06-20
- */
-
-//The contents of this file are subject to the Mozilla Public License Version
-// 1.1
+//The contents of this file are subject to the Mozilla Public License Version 1.1
 //(the "License"); you may not use this file except in compliance with the
 //License. You may obtain a copy of the License at http://www.mozilla.org/MPL/
 //
@@ -14,18 +9,17 @@
 //
 //The Original Code is "The Columba Project"
 //
-//The Initial Developers of the Original Code are Frederik Dietz and Timo
-// Stich.
+//The Initial Developers of the Original Code are Frederik Dietz and Timo Stich.
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003.
 //
 //All Rights Reserved.
 package org.columba.mail.folder.command;
 
+import java.util.logging.Logger;
+
 import org.columba.core.command.DefaultCommandReference;
 import org.columba.core.command.StatusObservableImpl;
-import org.columba.core.command.Worker;
 import org.columba.core.command.WorkerStatusController;
-import org.columba.core.logging.ColumbaLogger;
 import org.columba.core.xml.XmlElement;
 
 import org.columba.mail.command.FolderCommand;
@@ -45,6 +39,10 @@ import org.columba.ristretto.message.Header;
  * @author Karl Peder Olesen (karlpeder), 20030620
  */
 public class CreateFilterOnMessageCommand extends FolderCommand {
+
+    /** JDK 1.4+ logging framework logger, used for logging. */
+    private static final Logger LOG = Logger.getLogger("org.columba.mail.folder.command");
+
     /** Used for creating a filter based on Subject */
     public static final String FILTER_ON_SUBJECT = "Subject";
 
@@ -69,8 +67,7 @@ public class CreateFilterOnMessageCommand extends FolderCommand {
      * type is FILTER_ON_SUBJECT.
      *
      * @param references
-     * @param filterType
-     *            Which type of filter to create. Used defined constants
+     * @param filterType  Which type of filter to create. Used defined constants
      */
     public CreateFilterOnMessageCommand(DefaultCommandReference[] references,
         String filterType) {
@@ -109,7 +106,7 @@ public class CreateFilterOnMessageCommand extends FolderCommand {
         Object[] uids = r[0].getUids(); // uid for messages to save
 
         if (uids.length == 0) {
-            ColumbaLogger.log.fine(
+            LOG.fine(
                 "No filter created since no message was selected");
 
             return; // no message selected.
@@ -123,12 +120,12 @@ public class CreateFilterOnMessageCommand extends FolderCommand {
 
         // get value of Subject, From or To header
         Header header = srcFolder.getHeaderFields(uid,
-                new String[] { "Subject", "From", "To" });
+                new String[] {"Subject", "From", "To"});
         String headerValue = (String) header.get(filterType);
 
         if (headerValue == null) {
-            ColumbaLogger.log.severe("Error getting " + filterType +
-                " header. No filter created");
+            LOG.warning("Error getting " + filterType
+                    + " header. No filter created");
 
             return;
         }
@@ -142,12 +139,9 @@ public class CreateFilterOnMessageCommand extends FolderCommand {
      * Private utility for creating a filter on a given headerfield. The
      * criteria used is "contains" and the action is set to "Mark as Read".
      *
-     * @param filterDescr
-     *            Name / description to assign to filter
-     * @param headerField
-     *            The header field to base filter on
-     * @param pattern
-     *            The pattern to use in the filter
+     * @param filterDescr  Name / description to assign to filter
+     * @param headerField  The header field to base filter on
+     * @param pattern  The pattern to use in the filter
      * @return The filter created
      */
     public Filter createFilter(String filterDescr, String headerField,

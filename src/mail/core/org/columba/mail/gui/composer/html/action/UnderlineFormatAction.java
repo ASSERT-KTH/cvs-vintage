@@ -1,5 +1,4 @@
-// The contents of this file are subject to the Mozilla Public License Version
-// 1.1
+//The contents of this file are subject to the Mozilla Public License Version 1.1
 //(the "License"); you may not use this file except in compliance with the
 //License. You may obtain a copy of the License at http://www.mozilla.org/MPL/
 //
@@ -10,8 +9,7 @@
 //
 //The Original Code is "The Columba Project"
 //
-//The Initial Developers of the Original Code are Frederik Dietz and Timo
-// Stich.
+//The Initial Developers of the Original Code are Frederik Dietz and Timo Stich.
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003.
 //
 //All Rights Reserved.
@@ -20,7 +18,6 @@ package org.columba.mail.gui.composer.html.action;
 import org.columba.core.action.AbstractSelectableAction;
 import org.columba.core.gui.frame.FrameMediator;
 import org.columba.core.gui.util.ImageLoader;
-import org.columba.core.logging.ColumbaLogger;
 import org.columba.core.xml.XmlElement;
 
 import org.columba.mail.gui.composer.ComposerController;
@@ -36,6 +33,7 @@ import java.awt.event.KeyEvent;
 
 import java.util.Observable;
 import java.util.Observer;
+import java.util.logging.Logger;
 
 import javax.swing.KeyStroke;
 
@@ -47,6 +45,10 @@ import javax.swing.KeyStroke;
  */
 public class UnderlineFormatAction extends AbstractSelectableAction
     implements Observer, ContainerListener {
+
+    /** JDK 1.4+ logging framework logger, used for logging. */
+    private static final Logger LOG = Logger.getLogger("org.columba.mail.gui.composer.html.action");
+
     /**
      * @param frameMediator
      * @param name
@@ -143,8 +145,7 @@ public class UnderlineFormatAction extends AbstractSelectableAction
      * @see java.awt.event.ContainerListener#componentAdded(java.awt.event.ContainerEvent)
      */
     public void componentAdded(ContainerEvent e) {
-        ColumbaLogger.log.info(
-            "Re-registering as observer on editor controller");
+        LOG.info("Re-registering as observer on editor controller");
         ((ComposerController) getFrameMediator()).getEditorController()
          .addObserver(this);
     }

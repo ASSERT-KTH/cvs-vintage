@@ -1,16 +1,16 @@
 //The contents of this file are subject to the Mozilla Public License Version 1.1
-//(the "License"); you may not use this file except in compliance with the 
+//(the "License"); you may not use this file except in compliance with the
 //License. You may obtain a copy of the License at http://www.mozilla.org/MPL/
 //
 //Software distributed under the License is distributed on an "AS IS" basis,
-//WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License 
+//WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License
 //for the specific language governing rights and
 //limitations under the License.
 //
 //The Original Code is "The Columba Project"
 //
 //The Initial Developers of the Original Code are Frederik Dietz and Timo Stich.
-//Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
+//Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003.
 //
 //All Rights Reserved.
 package org.columba.mail.gui.composer;
@@ -22,7 +22,6 @@ import org.columba.addressbook.parser.AddressParser;
 
 import org.columba.core.gui.focus.FocusOwner;
 import org.columba.core.gui.util.NotifyDialog;
-import org.columba.core.logging.ColumbaLogger;
 import org.columba.core.main.MainInterface;
 
 import org.columba.mail.gui.composer.util.RecipientsTableModel;
@@ -37,6 +36,7 @@ import java.awt.dnd.DropTargetListener;
 
 import java.util.Iterator;
 import java.util.List;
+import java.util.logging.Logger;
 
 import javax.swing.JComponent;
 import javax.swing.event.TableModelEvent;
@@ -45,14 +45,13 @@ import javax.swing.event.TableModelListener;
 
 /**
  * @author frd
- *
- * To change this generated comment edit the template variable "typecomment":
- * Window>Preferences>Java>Templates.
- * To enable and disable the creation of type comments go to
- * Window>Preferences>Java>Code Generation.
  */
 public class HeaderController implements TableModelListener, DropTargetListener,
     FocusOwner {
+
+    /** JDK 1.4+ logging framework logger, used for logging. */
+    private static final Logger LOG = Logger.getLogger("org.columba.mail.gui.composer");
+
     ComposerController controller;
     HeaderView view;
     DropTarget dropTarget = null;
@@ -131,11 +130,10 @@ public class HeaderController implements TableModelListener, DropTargetListener,
             try {
                 HeaderItem item = (HeaderItem) it.next();
 
-                //		for (int i = 0; i < v.size(); i++) {
-                //			try {
-                //				
-                //				HeaderItem item = (HeaderItem) v.get(i);
-                ColumbaLogger.log.info("item=" + item.toString());
+                // for (int i = 0; i < v.size(); i++) {
+                //  try {
+                //    HeaderItem item = (HeaderItem) v.get(i);
+                LOG.fine("item=" + item.toString());
 
                 String field = (String) item.get("field");
 
@@ -339,8 +337,7 @@ public void keyTyped(KeyEvent k) {
                 HeaderItem item = (HeaderItem) items[i].clone();
 
                 item.add("field", "To");
-                System.out.println("add dnd contact:" +
-                    (String) item.get("displayname"));
+                LOG.info("add dnd contact:" + (String) item.get("displayname"));
                 getAddressbookTableModel().addItem(item);
             } catch (Exception ex) {
                 ex.printStackTrace();
@@ -356,8 +353,8 @@ public void keyTyped(KeyEvent k) {
     }
 
     /* (non-Javadoc)
- * @see org.columba.core.gui.focus.FocusOwner#copy()
- */
+     * @see org.columba.core.gui.focus.FocusOwner#copy()
+     */
 
     /***************** FocusOwner implementation ***************************/
     public void copy() {

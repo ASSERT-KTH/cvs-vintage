@@ -1,25 +1,23 @@
 //The contents of this file are subject to the Mozilla Public License Version 1.1
-//(the "License"); you may not use this file except in compliance with the 
+//(the "License"); you may not use this file except in compliance with the
 //License. You may obtain a copy of the License at http://www.mozilla.org/MPL/
 //
 //Software distributed under the License is distributed on an "AS IS" basis,
-//WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License 
+//WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License
 //for the specific language governing rights and
 //limitations under the License.
 //
 //The Original Code is "The Columba Project"
 //
 //The Initial Developers of the Original Code are Frederik Dietz and Timo Stich.
-//Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
+//Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003.
 //
 //All Rights Reserved.
 package org.columba.mail.folder.command;
 
 import org.columba.core.command.DefaultCommandReference;
 import org.columba.core.command.StatusObservableImpl;
-import org.columba.core.command.Worker;
 import org.columba.core.command.WorkerStatusController;
-import org.columba.core.logging.ColumbaLogger;
 
 import org.columba.mail.command.FolderCommand;
 import org.columba.mail.command.FolderCommandReference;
@@ -33,6 +31,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.logging.Logger;
 
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
@@ -45,6 +44,10 @@ import javax.swing.JOptionPane;
  *
  */
 public class SaveMessageSourceAsCommand extends FolderCommand {
+
+    /** JDK 1.4+ logging framework logger, used for logging. */
+    private static final Logger LOG = Logger.getLogger("org.columba.mail.folder.command");
+
     /**
      * Constructor for SaveMessageSourceAsCommand.
      * @param frameMediator
@@ -72,7 +75,7 @@ public class SaveMessageSourceAsCommand extends FolderCommand {
         Object[] uids = r[0].getUids(); // uid for messages to save
         Folder srcFolder = (Folder) r[0].getFolder();
 
-        //		register for status events
+        //	register for status events
         ((StatusObservableImpl) srcFolder.getObservable()).setWorker(worker);
 
         JFileChooser fileChooser = new JFileChooser();
@@ -80,9 +83,9 @@ public class SaveMessageSourceAsCommand extends FolderCommand {
         // Save message source for each selected message
         for (int j = 0; j < uids.length; j++) {
             Object uid = uids[j];
-            ColumbaLogger.log.info("Saving UID=" + uid);
+            LOG.info("Saving UID=" + uid);
 
-            // setup save dialog			
+            //setup save dialog
             String subject = (String) srcFolder.getMessageHeader(uid).get("Subject");
             String defaultName = getValidFilename(subject, false);
 
@@ -132,8 +135,7 @@ public class SaveMessageSourceAsCommand extends FolderCommand {
                         out.write(buffer, 0, read);
                     }
                 } catch (IOException ioe) {
-                    ColumbaLogger.log.severe(
-                        "Error saving msg source to file: " + ioe.getMessage());
+                    LOG.severe("Error saving msg source to file: " + ioe.getMessage());
                     JOptionPane.showMessageDialog(null,
                         MailResourceLoader.getString("dialog", "saveas",
                             "err_save_msg"),
@@ -177,8 +179,8 @@ public class SaveMessageSourceAsCommand extends FolderCommand {
         for (int i = 0; i < subj.length(); i++) {
             char c = subj.charAt(i);
 
-            if ((c == '\\') || (c == '/') || (c == ':') || (c == ',') ||
-                    (c == '\n') || (c == '\t') || (c == '[') || (c == ']')) {
+            if ((c == '\\') || (c == '/') || (c == ':') || (c == ',')
+                    || (c == '\n') || (c == '\t') || (c == '[') || (c == ']')) {
                 // dismiss char
             } else if ((c == ' ') && (replSpaces)) {
                 buf.append('_');

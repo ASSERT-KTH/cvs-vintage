@@ -1,5 +1,4 @@
-// The contents of this file are subject to the Mozilla Public License Version
-// 1.1
+//The contents of this file are subject to the Mozilla Public License Version 1.1
 //(the "License"); you may not use this file except in compliance with the
 //License. You may obtain a copy of the License at http://www.mozilla.org/MPL/
 //
@@ -10,19 +9,17 @@
 //
 //The Original Code is "The Columba Project"
 //
-//The Initial Developers of the Original Code are Frederik Dietz and Timo
-// Stich.
+//The Initial Developers of the Original Code are Frederik Dietz and Timo Stich.
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003.
 //
 //All Rights Reserved.
 package org.columba.mail.filter.plugins;
 
-import org.columba.core.logging.ColumbaLogger;
-
 import org.columba.mail.filter.FilterCriteria;
 import org.columba.mail.folder.Folder;
 
 import java.util.Date;
+import java.util.logging.Logger;
 
 
 /**
@@ -32,15 +29,12 @@ import java.util.Date;
  * @author fdietz
  */
 public class DateFilter extends AbstractFilter {
+
+    /** JDK 1.4+ logging framework logger, used for logging. */
+    private static final Logger LOG = Logger.getLogger("org.columba.mail.filter.plugins");
+
     private String criteria;
     private String pattern;
-
-    /**
- * Constructor for DateFilter.
- */
-    public DateFilter() {
-        super();
-    }
 
     protected Date transformDate(String pattern) {
         java.text.DateFormat df = java.text.DateFormat.getDateInstance();
@@ -59,10 +53,10 @@ public class DateFilter extends AbstractFilter {
     }
 
     /**
- * @see org.columba.mail.filter.plugins.AbstractFilter#process(java.lang.Object,
- *      org.columba.mail.folder.Folder, java.lang.Object,
- *      org.columba.core.command.WorkerStatusController)
- */
+     * @see org.columba.mail.filter.plugins.AbstractFilter#process(java.lang.Object,
+     *      org.columba.mail.folder.Folder, java.lang.Object,
+     *      org.columba.core.command.WorkerStatusController)
+     */
     public boolean process(Folder folder, Object uid) throws Exception {
         // convert criteria into int-value
         int condition = FilterCriteria.getCriteria(criteria);
@@ -76,7 +70,7 @@ public class DateFilter extends AbstractFilter {
         Date d = (Date) folder.getAttribute(uid, "columba.date");
 
         if (d == null) {
-            ColumbaLogger.log.severe("field date not found");
+            LOG.fine("field date not found");
 
             return false;
         }
@@ -103,8 +97,8 @@ public class DateFilter extends AbstractFilter {
     }
 
     /**
- * @see org.columba.mail.filter.plugins.AbstractFilter#setUp(org.columba.mail.filter.FilterCriteria)
- */
+     * @see org.columba.mail.filter.plugins.AbstractFilter#setUp(org.columba.mail.filter.FilterCriteria)
+     */
     public void setUp(FilterCriteria f) {
         // before/after
         criteria = f.get("criteria");

@@ -1,5 +1,4 @@
-// The contents of this file are subject to the Mozilla Public License Version
-// 1.1
+//The contents of this file are subject to the Mozilla Public License Version 1.1
 //(the "License"); you may not use this file except in compliance with the
 //License. You may obtain a copy of the License at http://www.mozilla.org/MPL/
 //
@@ -10,8 +9,7 @@
 //
 //The Original Code is "The Columba Project"
 //
-//The Initial Developers of the Original Code are Frederik Dietz and Timo
-// Stich.
+//The Initial Developers of the Original Code are Frederik Dietz and Timo Stich.
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003.
 //
 //All Rights Reserved.
@@ -21,7 +19,6 @@ package org.columba.mail.gui.composer.command;
 import org.columba.core.command.DefaultCommandReference;
 import org.columba.core.command.WorkerStatusController;
 import org.columba.core.io.StreamUtils;
-import org.columba.core.logging.ColumbaLogger;
 import org.columba.core.main.MainInterface;
 import org.columba.core.xml.XmlElement;
 
@@ -51,15 +48,20 @@ import java.io.InputStream;
 import java.nio.charset.Charset;
 
 import java.text.DateFormat;
+import java.util.logging.Logger;
 
 /**
  * Reply to message.
  * <p>
  * Bodytext is quoted.
- * 
+ *
  * @author fdietz
  */
 public class ReplyCommand extends FolderCommand {
+
+    /** JDK 1.4+ logging framework logger, used for logging. */
+    private static final Logger LOG = Logger.getLogger("org.columba.mail.gui.composer.command");
+
     protected final String[] headerfields = new String[] {
             "Subject", "Date", "From", "To", "Reply-To", "Message-ID",
             "In-Reply-To", "References"
@@ -69,7 +71,7 @@ public class ReplyCommand extends FolderCommand {
 
     /**
      * Constructor for ReplyCommand.
-     * 
+     *
      * @param frameMediator
      * @param references
      */
@@ -128,7 +130,7 @@ public class ReplyCommand extends FolderCommand {
             String quotedBodyText = createQuotedBody(folder, uids, address);
 
             // debug output
-            ColumbaLogger.log.info("Quoted body text:\n" + quotedBodyText);
+            LOG.fine("Quoted body text:\n" + quotedBodyText);
 
             model.setBodyText(quotedBodyText);
         }
@@ -166,7 +168,7 @@ public class ReplyCommand extends FolderCommand {
         Address[] to = rfcHeader.getReplyTo();
 
         if (to.length == 0) {
-            to = new Address[] { rfcHeader.getFrom() };
+            to = new Address[] {rfcHeader.getFrom()};
         }
 
         // Add addresses to the addressbook
@@ -187,7 +189,7 @@ public class ReplyCommand extends FolderCommand {
         Integer[] address) throws IOException, Exception {
         InputStream bodyStream = folder.getMimePartBodyStream(uids[0], address);
 
-        // Quote original message - different methods for text and html 
+        // Quote original message - different methods for text and html
         if (model.isHtml()) {
             // Html: Insertion of text before and after original message
             // get necessary headerfields
@@ -207,20 +209,19 @@ public class ReplyCommand extends FolderCommand {
             buf.append("<html><body><p>");
             buf.append(MailResourceLoader.getString("dialog", "composer",
                     "original_message_start"));
-            buf.append("<br>" +
-                MailResourceLoader.getString("header", "header", "subject") +
-                ": " + subject);
-            buf.append("<br>" +
-                MailResourceLoader.getString("header", "header", "date") +
-                ": " + date);
-            buf.append("<br>" +
-                MailResourceLoader.getString("header", "header", "from") +
-                ": " + from);
-            buf.append("<br>" +
-                MailResourceLoader.getString("header", "header", "to") + ": " +
-                to);
+            buf.append("<br>"
+                    + MailResourceLoader.getString("header", "header", "subject") + ": " + subject);
+            buf.append("<br>"
+                    + MailResourceLoader.getString("header", "header", "date")
+                    + ": " + date);
+            buf.append("<br>"
+                    + MailResourceLoader.getString("header", "header", "from")
+                    + ": " + from);
+            buf.append("<br>"
+                    + MailResourceLoader.getString("header", "header", "to") + ": "
+                    + to);
             buf.append("</p>");
-            buf.append(HtmlParser.removeComments( // comments are not displayed correctly in composer
+            buf.append(HtmlParser.removeComments(// comments are not displayed correctly in composer
                     HtmlParser.getHtmlBody(StreamUtils.readInString(bodyStream)
                                                       .toString())));
             buf.append("<p>");

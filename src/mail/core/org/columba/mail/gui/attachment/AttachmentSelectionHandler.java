@@ -1,23 +1,24 @@
 //The contents of this file are subject to the Mozilla Public License Version 1.1
-//(the "License"); you may not use this file except in compliance with the 
+//(the "License"); you may not use this file except in compliance with the
 //License. You may obtain a copy of the License at http://www.mozilla.org/MPL/
 //
 //Software distributed under the License is distributed on an "AS IS" basis,
-//WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License 
+//WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License
 //for the specific language governing rights and
 //limitations under the License.
 //
 //The Original Code is "The Columba Project"
 //
 //The Initial Developers of the Original Code are Frederik Dietz and Timo Stich.
-//Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
+//Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003.
 //
 //All Rights Reserved.
 package org.columba.mail.gui.attachment;
 
+import java.util.logging.Logger;
+
 import org.columba.core.command.DefaultCommandReference;
 import org.columba.core.gui.selection.SelectionHandler;
-import org.columba.core.logging.ColumbaLogger;
 
 import org.columba.mail.command.FolderCommandReference;
 import org.columba.mail.folder.Folder;
@@ -26,6 +27,10 @@ import org.columba.mail.gui.attachment.util.IconPanelSelectionListener;
 
 public class AttachmentSelectionHandler extends SelectionHandler
     implements IconPanelSelectionListener {
+
+    /** JDK 1.4+ logging framework logger, used for logging. */
+    private static final Logger LOG = Logger.getLogger("org.columba.mail.gui.attachment");
+
     private Folder folder;
     private Object messageUid;
     private AttachmentView view;
@@ -45,7 +50,7 @@ public class AttachmentSelectionHandler extends SelectionHandler
      */
     public DefaultCommandReference[] getSelection() {
         return new FolderCommandReference[] {
-            new FolderCommandReference(folder, new Object[] { messageUid },
+            new FolderCommandReference(folder, new Object[] {messageUid},
                 address)
         };
     }
@@ -54,7 +59,7 @@ public class AttachmentSelectionHandler extends SelectionHandler
      * @see org.columba.core.gui.selection.SelectionHandler#setSelection(org.columba.core.command.DefaultCommandReference[])
      */
     public void setSelection(DefaultCommandReference[] selection) {
-        ColumbaLogger.log.severe("Not yet implemented!");
+        LOG.warning("Not yet implemented!");
     }
 
     public void setMessage(Folder folder, Object messageUid) {

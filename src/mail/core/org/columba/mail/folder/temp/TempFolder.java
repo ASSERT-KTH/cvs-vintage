@@ -1,5 +1,4 @@
-// The contents of this file are subject to the Mozilla Public License Version
-// 1.1
+//The contents of this file are subject to the Mozilla Public License Version 1.1
 //(the "License"); you may not use this file except in compliance with the
 //License. You may obtain a copy of the License at http://www.mozilla.org/MPL/
 //
@@ -10,8 +9,7 @@
 //
 //The Original Code is "The Columba Project"
 //
-//The Initial Developers of the Original Code are Frederik Dietz and Timo
-// Stich.
+//The Initial Developers of the Original Code are Frederik Dietz and Timo Stich.
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003.
 //
 //All Rights Reserved.
@@ -19,8 +17,6 @@ package org.columba.mail.folder.temp;
 
 import org.columba.core.io.DiskIO;
 import org.columba.core.io.StreamUtils;
-import org.columba.core.logging.ColumbaLogger;
-import org.columba.core.main.MainInterface;
 
 import org.columba.mail.filter.Filter;
 import org.columba.mail.folder.DataStorageInterface;
@@ -47,6 +43,7 @@ import java.io.File;
 import java.io.InputStream;
 
 import java.util.Hashtable;
+import java.util.logging.Logger;
 
 
 /**
@@ -57,6 +54,10 @@ import java.util.Hashtable;
  * type comments go to Window>Preferences>Java>Code Generation.
  */
 public class TempFolder extends Folder {
+
+    /** JDK 1.4+ logging framework logger, used for logging. */
+    private static final Logger LOG = Logger.getLogger("org.columba.mail.folder.temp");
+
     protected HeaderList headerList;
     protected Hashtable messageList;
     protected int nextUid;
@@ -101,8 +102,7 @@ public class TempFolder extends Folder {
 
             if (getFlags(uid).getExpunged()) {
                 // move message to trash
-                ColumbaLogger.log.fine("moving message with UID " + uid +
-                    " to trash");
+                LOG.fine("moving message with UID " + uid + " to trash");
 
                 // remove message
                 removeMessage(uid);
@@ -125,7 +125,7 @@ public class TempFolder extends Folder {
     public Object addMessage(ColumbaMessage message) throws Exception {
         Object newUid = generateNextUid();
 
-        ColumbaLogger.log.info("new UID=" + newUid);
+        LOG.info("new UID=" + newUid);
 
         ColumbaHeader h = (ColumbaHeader) ((ColumbaHeader) message.getHeader());
 
@@ -276,7 +276,7 @@ public class TempFolder extends Folder {
 
         Object newUid = generateNextUid();
 
-        ColumbaLogger.log.info("new UID=" + newUid);
+        LOG.info("new UID=" + newUid);
 
         ColumbaHeader h = new ColumbaHeader(message.getHeader());
 

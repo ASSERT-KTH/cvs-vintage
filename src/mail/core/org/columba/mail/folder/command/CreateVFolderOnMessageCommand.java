@@ -1,5 +1,4 @@
-//The contents of this file are subject to the Mozilla Public License Version
-// 1.1
+//The contents of this file are subject to the Mozilla Public License Version 1.1
 //(the "License"); you may not use this file except in compliance with the
 //License. You may obtain a copy of the License at http://www.mozilla.org/MPL/
 //
@@ -10,19 +9,18 @@
 //
 //The Original Code is "The Columba Project"
 //
-//The Initial Developers of the Original Code are Frederik Dietz and Timo
-// Stich.
+//The Initial Developers of the Original Code are Frederik Dietz and Timo Stich.
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003.
 //
 //All Rights Reserved.
 package org.columba.mail.folder.command;
 
+import java.util.logging.Logger;
+
 import org.columba.core.command.DefaultCommandReference;
 import org.columba.core.command.StatusObservableImpl;
-import org.columba.core.command.Worker;
 import org.columba.core.command.WorkerStatusController;
 import org.columba.core.gui.frame.FrameMediator;
-import org.columba.core.logging.ColumbaLogger;
 import org.columba.mail.command.FolderCommand;
 import org.columba.mail.command.FolderCommandReference;
 import org.columba.mail.filter.FilterCriteria;
@@ -43,6 +41,10 @@ import org.columba.ristretto.message.Header;
  * @author Karl Peder Olesen (karlpeder), 20030621
  */
 public class CreateVFolderOnMessageCommand extends FolderCommand {
+
+    /** JDK 1.4+ logging framework logger, used for logging. */
+    private static final Logger LOG = Logger.getLogger("org.columba.mail.folder.command");
+
     /** Used for creating a virtual folder based on Subject */
     public static final String VFOLDER_ON_SUBJECT = "Subject";
 
@@ -107,7 +109,7 @@ public class CreateVFolderOnMessageCommand extends FolderCommand {
         Object[] uids = r[0].getUids(); // uid for messages to save
 
         if (uids.length == 0) {
-            ColumbaLogger.log.fine(
+            LOG.fine(
                 "No virtual folder created since no message was selected");
 
             return; // no message selected.
@@ -116,17 +118,17 @@ public class CreateVFolderOnMessageCommand extends FolderCommand {
         Object uid = uids[0];
         parentFolder = (Folder) r[0].getFolder();
 
-        //		register for status events
+        //register for status events
         ((StatusObservableImpl) parentFolder.getObservable()).setWorker(worker);
 
         // get value of Subject, From or To header
         Header header = parentFolder.getHeaderFields(uid,
-                new String[] { "Subject", "From", "To" });
+                new String[] {"Subject", "From", "To"});
         String headerValue = (String) header.get(vfolderType);
 
         if (headerValue == null) {
-            ColumbaLogger.log.severe("Error getting " + vfolderType +
-                " header. No virtual folder created");
+            LOG.warning("Error getting " + vfolderType
+                    + " header. No virtual folder created");
 
             return;
         }
@@ -160,8 +162,8 @@ public class CreateVFolderOnMessageCommand extends FolderCommand {
             vfolder = (VirtualFolder) FolderFactory.getInstance().createChild(parent,
                     folderName, "VirtualFolder");
         } catch (Exception e) {
-            ColumbaLogger.log.severe("Error creating new virtual folder: " +
-                e.getMessage());
+            LOG.warning("Error creating new virtual folder: "
+                    + e.getMessage());
 
             return null;
         }

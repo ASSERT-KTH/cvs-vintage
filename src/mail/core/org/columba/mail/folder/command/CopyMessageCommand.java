@@ -18,9 +18,7 @@ package org.columba.mail.folder.command;
 import org.columba.core.command.Command;
 import org.columba.core.command.DefaultCommandReference;
 import org.columba.core.command.StatusObservableImpl;
-import org.columba.core.command.Worker;
 import org.columba.core.command.WorkerStatusController;
-import org.columba.core.logging.ColumbaLogger;
 
 import org.columba.mail.command.FolderCommand;
 import org.columba.mail.command.FolderCommandAdapter;
@@ -34,6 +32,7 @@ import org.columba.mail.util.MailResourceLoader;
 import java.io.IOException;
 
 import java.text.MessageFormat;
+import java.util.logging.Logger;
 
 import javax.swing.JOptionPane;
 
@@ -48,6 +47,10 @@ import javax.swing.JOptionPane;
  *
  */
 public class CopyMessageCommand extends FolderCommand {
+
+    /** JDK 1.4+ logging framework logger, used for logging. */
+    private static final Logger LOG = Logger.getLogger("org.columba.mail.folder.command");
+
     protected FolderCommandAdapter adapter;
     protected Folder destFolder;
 
@@ -103,12 +106,12 @@ public class CopyMessageCommand extends FolderCommand {
             // setting lastSelection for srcFolder to null
             srcFolder.setLastSelection(null);
 
-            ColumbaLogger.log.info("src=" + srcFolder + " dest=" + destFolder);
+            LOG.fine("src=" + srcFolder + " dest=" + destFolder);
 
             // update status message
             worker.setDisplayText(MessageFormat.format(
                     MailResourceLoader.getString("statusbar", "message",
-                        "copy_messages"), new Object[] { destFolder.getName() }));
+                        "copy_messages"), new Object[] {destFolder.getName()}));
 
             // initialize progress bar with total number of messages
             worker.setProgressBarMaximum(uids.length);

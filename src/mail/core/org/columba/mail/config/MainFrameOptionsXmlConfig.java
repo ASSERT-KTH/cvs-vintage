@@ -1,16 +1,16 @@
 //The contents of this file are subject to the Mozilla Public License Version 1.1
-//(the "License"); you may not use this file except in compliance with the 
+//(the "License"); you may not use this file except in compliance with the
 //License. You may obtain a copy of the License at http://www.mozilla.org/MPL/
 //
 //Software distributed under the License is distributed on an "AS IS" basis,
-//WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License 
+//WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License
 //for the specific language governing rights and
 //limitations under the License.
 //
 //The Original Code is "The Columba Project"
 //
 //The Initial Developers of the Original Code are Frederik Dietz and Timo Stich.
-//Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
+//Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003.
 //
 //All Rights Reserved.
 package org.columba.mail.config;
@@ -20,13 +20,17 @@ import org.columba.core.config.GuiItem;
 import org.columba.core.config.TableItem;
 import org.columba.core.config.ViewItem;
 import org.columba.core.config.WindowItem;
-import org.columba.core.logging.ColumbaLogger;
 import org.columba.core.xml.XmlElement;
 
 import java.io.File;
+import java.util.logging.Logger;
 
 
 public class MainFrameOptionsXmlConfig extends DefaultXmlConfig {
+
+    /** JDK 1.4+ logging framework logger, used for logging. */
+    private static final Logger LOG = Logger.getLogger("org.columba.mail.config");
+
     // private File file;
     WindowItem windowItem;
     GuiItem guiItem;
@@ -41,7 +45,7 @@ public class MainFrameOptionsXmlConfig extends DefaultXmlConfig {
     public boolean load() {
         boolean result = super.load();
 
-        //		apply initial version information
+        //apply initial version information
         XmlElement root = getRoot().getElement(0);
         String version = root.getAttribute("version");
 
@@ -61,7 +65,7 @@ public class MainFrameOptionsXmlConfig extends DefaultXmlConfig {
         String version = root.getAttribute("version");
 
         if (initialVersionWasApplied) {
-            ColumbaLogger.log.fine("converting configuration to new version...");
+            LOG.fine("converting configuration to new version...");
 
             XmlElement gui = root.getElement("/options/gui");
             XmlElement messageframe = new XmlElement("messageframe");

@@ -1,5 +1,4 @@
-// The contents of this file are subject to the Mozilla Public License Version
-// 1.1
+//The contents of this file are subject to the Mozilla Public License Version 1.1
 //(the "License"); you may not use this file except in compliance with the
 //License. You may obtain a copy of the License at http://www.mozilla.org/MPL/
 //
@@ -10,8 +9,7 @@
 //
 //The Original Code is "The Columba Project"
 //
-//The Initial Developers of the Original Code are Frederik Dietz and Timo
-// Stich.
+//The Initial Developers of the Original Code are Frederik Dietz and Timo Stich.
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003.
 //
 //All Rights Reserved.
@@ -19,11 +17,9 @@ package org.columba.mail.folder.command;
 
 import org.columba.core.command.DefaultCommandReference;
 import org.columba.core.command.StatusObservableImpl;
-import org.columba.core.command.Worker;
 import org.columba.core.command.WorkerStatusController;
 import org.columba.core.io.DiskIO;
 import org.columba.core.io.StreamUtils;
-import org.columba.core.logging.ColumbaLogger;
 import org.columba.core.main.MainInterface;
 import org.columba.core.xml.XmlElement;
 
@@ -61,6 +57,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.Enumeration;
 import java.util.List;
+import java.util.logging.Logger;
 
 import javax.swing.JCheckBox;
 import javax.swing.JFileChooser;
@@ -75,8 +72,12 @@ import javax.swing.filechooser.FileFilter;
  * @author Karl Peder Olesen (karlpeder), 20030611
  */
 public class SaveMessageBodyAsCommand extends FolderCommand {
+
+    /** JDK 1.4+ logging framework logger, used for logging. */
+    private static final Logger LOG = Logger.getLogger("org.columba.mail.folder.command");
+
     /** Static field representing the system line separator */
-    private static final String nl = "\n";
+    private static final String NL = "\n";
 
     //System.getProperty("line.separator");
 
@@ -84,13 +85,13 @@ public class SaveMessageBodyAsCommand extends FolderCommand {
     private Charset charset;
 
     /**
-         * Constructor for SaveMessageBodyAsCommand. Calls super constructor and
-         * saves charset for later use
-         *
-         * @param references
-         * @param charset
-         *            Charset to use for decoding messages before save
-         */
+     * Constructor for SaveMessageBodyAsCommand. Calls super constructor and
+     * saves charset for later use
+     *
+     * @param references
+     * @param charset
+     *            Charset to use for decoding messages before save
+     */
     public SaveMessageBodyAsCommand(DefaultCommandReference[] references,
         Charset charset) {
         super(references);
@@ -98,28 +99,28 @@ public class SaveMessageBodyAsCommand extends FolderCommand {
     }
 
     /**
-         * Implementation-specific: This method does not perform anything
-         *
-         * @see org.columba.core.command.Command#updateGUI()
-         */
+     * Implementation-specific: This method does not perform anything
+     *
+     * @see org.columba.core.command.Command#updateGUI()
+     */
     public void updatedGUI() throws Exception {
     }
 
     /**
-         * This method executes the save action, i.e. it saves the selected
-         * messages to disk as either plain text or as html. <br>At the momemt no
-         * header or attachment information is saved with the message!
-         *
-         * @param worker
-         * @see org.columba.core.command.Command#execute(Worker)
-         */
+     * This method executes the save action, i.e. it saves the selected
+     * messages to disk as either plain text or as html. <br>At the momemt no
+     * header or attachment information is saved with the message!
+     *
+     * @param worker
+     * @see org.columba.core.command.Command#execute(Worker)
+     */
     public void execute(WorkerStatusController worker)
         throws Exception {
         FolderCommandReference[] r = (FolderCommandReference[]) getReferences();
         Object[] uids = r[0].getUids(); // uid for messages to save
         Folder srcFolder = (Folder) r[0].getFolder();
 
-        //		register for status events
+        //	register for status events
         ((StatusObservableImpl) srcFolder.getObservable()).setWorker(worker);
 
         JFileChooser fileChooser = new JFileChooser();
@@ -127,7 +128,7 @@ public class SaveMessageBodyAsCommand extends FolderCommand {
         // save each message
         for (int j = 0; j < uids.length; j++) {
             Object uid = uids[j];
-            ColumbaLogger.log.info("Saving UID=" + uid);
+            LOG.info("Saving UID=" + uid);
 
             // get headers, body part and attachment for message
             ColumbaHeader header = srcFolder.getMessageHeader(uid);
@@ -171,8 +172,8 @@ public class SaveMessageBodyAsCommand extends FolderCommand {
                 fileChooser.setFileFilter(htmlFilter);
 
                 if (defaultName.length() > 0) {
-                    fileChooser.setSelectedFile(new File(defaultName + "." +
-                            htmlFilter.getExtension()));
+                    fileChooser.setSelectedFile(new File(defaultName + "."
+                            + htmlFilter.getExtension()));
                 }
             } else {
                 fileChooser.setDialogTitle(MailResourceLoader.getString(
@@ -180,8 +181,8 @@ public class SaveMessageBodyAsCommand extends FolderCommand {
                 fileChooser.setFileFilter(txtFilter);
 
                 if (defaultName.length() > 0) {
-                    fileChooser.setSelectedFile(new File(defaultName + "." +
-                            txtFilter.getExtension()));
+                    fileChooser.setSelectedFile(new File(defaultName + "."
+                            + txtFilter.getExtension()));
                 }
             }
 
@@ -194,8 +195,8 @@ public class SaveMessageBodyAsCommand extends FolderCommand {
 
                 // Add default extension if no extension is given by the user
                 if (ExtensionFileFilter.getFileExtension(f) == null) {
-                    f = new File(f.getAbsolutePath() + "." +
-                            filter.getExtension());
+                    f = new File(f.getAbsolutePath() + "."
+                            + filter.getExtension());
                 }
 
                 int confirm;
@@ -216,7 +217,7 @@ public class SaveMessageBodyAsCommand extends FolderCommand {
                     // store whether all headers should be incl.
                     boolean incl = inclHeaders.isSelected();
                     storeInclAllHeadersOption(incl);
-                    ColumbaLogger.log.info("Incl. all headers: " + incl);
+                    LOG.info("Incl. all headers: " + incl);
 
                     // save message
                     if (filter.getExtension().equals(htmlFilter.getExtension())) {
@@ -232,16 +233,16 @@ public class SaveMessageBodyAsCommand extends FolderCommand {
     }
 
     /**
-         * Private utility to extract a valid filename from a message subject or
-         * another string. <br>This means remove the chars: / \ : , \n \t NB: If
-         * the input string is null, an empty string is returned
-         *
-         * @param subj
-         *            Message subject
-         * @param replSpaces
-         *            If true, spaces are replaced by _
-         * @return A valid filename without the chars mentioned
-         */
+     * Private utility to extract a valid filename from a message subject or
+     * another string. <br>This means remove the chars: / \ : , \n \t NB: If
+     * the input string is null, an empty string is returned
+     *
+     * @param subj
+     *            Message subject
+     * @param replSpaces
+     *            If true, spaces are replaced by _
+     * @return A valid filename without the chars mentioned
+     */
     private String getValidFilename(String subj, boolean replSpaces) {
         if (subj == null) {
             return "";
@@ -252,8 +253,8 @@ public class SaveMessageBodyAsCommand extends FolderCommand {
         for (int i = 0; i < subj.length(); i++) {
             char c = subj.charAt(i);
 
-            if ((c == '\\') || (c == '/') || (c == ':') || (c == ',') ||
-                    (c == '\n') || (c == '\t')) {
+            if ((c == '\\') || (c == '/') || (c == ':') || (c == ',')
+                    || (c == '\n') || (c == '\t')) {
                 // dismiss char
             } else if ((c == ' ') && (replSpaces)) {
                 buf.append('_');
@@ -266,10 +267,10 @@ public class SaveMessageBodyAsCommand extends FolderCommand {
     }
 
     /**
-         * Gets the value of the option "Incl. all headers"
-         *
-         * @return true if all headers should be included, else false
-         */
+     * Gets the value of the option "Incl. all headers"
+     *
+     * @return true if all headers should be included, else false
+     */
     private boolean getInclAllHeadersOption() {
         boolean defaultValue = false; // default value
 
@@ -294,11 +295,11 @@ public class SaveMessageBodyAsCommand extends FolderCommand {
     }
 
     /**
-         * Saves the option "Incl. all headers"
-         *
-         * @param val
-         *            Value of the option (true to incl. all headers)
-         */
+     * Saves the option "Incl. all headers"
+     *
+     * @param val
+     *            Value of the option (true to incl. all headers)
+     */
     private void storeInclAllHeadersOption(boolean val) {
         XmlElement options = MainInterface.config.get("options").getElement("/options");
 
@@ -319,17 +320,17 @@ public class SaveMessageBodyAsCommand extends FolderCommand {
     }
 
     /**
-         * Private utility to get body part of a message. User preferences
-         * regarding html messages is used to select what to retrieve. If the body
-         * part retrieved is null, a fake one containing a simple text is returned
-         *
-         * @param uid
-         *            ID of message
-         * @param srcFolder
-         *            Folder containing the message
-         * @param worker
-         * @return body part of message
-         */
+     * Private utility to get body part of a message. User preferences
+     * regarding html messages is used to select what to retrieve. If the body
+     * part retrieved is null, a fake one containing a simple text is returned
+     *
+     * @param uid
+     *            ID of message
+     * @param srcFolder
+     *            Folder containing the message
+     * @param worker
+     * @return body part of message
+     */
     private StreamableMimePart getMessageBodyPart(Object uid, Folder srcFolder,
         WorkerStatusController worker) throws Exception {
         // Does the user prefer html or plain text?
@@ -360,13 +361,13 @@ public class SaveMessageBodyAsCommand extends FolderCommand {
     }
 
     /**
-         * Private utility to decode the message body with the proper charset
-         *
-         * @param bodyPart
-         *            The body of the message
-         * @return Decoded message body
-         * @author Karl Peder Olesen (karlpeder), 20030601
-         */
+     * Private utility to decode the message body with the proper charset
+     *
+     * @param bodyPart
+     *            The body of the message
+     * @return Decoded message body
+     * @author Karl Peder Olesen (karlpeder), 20030601
+     */
     private String getDecodedMessageBody(StreamableMimePart bodyPart)
         throws IOException {
         MimeHeader header = bodyPart.getHeader();
@@ -407,21 +408,21 @@ public class SaveMessageBodyAsCommand extends FolderCommand {
     }
 
     /**
-         * Method for saving a message body as a html file. No headers are saved
-         * with the message.
-         *
-         * @param header
-         *            Message headers
-         * @param bodyPart
-         *            Body of message
-         * @param attachments
-         *            List of attachments as MimePart objects
-         * @param inclAllHeaders
-         *            If true all (except Content-Type and Mime-Version) headers
-         *            are output. If false, only a small subset is included
-         * @param file
-         *            File to output to
-         */
+     * Method for saving a message body as a html file. No headers are saved
+     * with the message.
+     *
+     * @param header
+     *            Message headers
+     * @param bodyPart
+     *            Body of message
+     * @param attachments
+     *            List of attachments as MimePart objects
+     * @param inclAllHeaders
+     *            If true all (except Content-Type and Mime-Version) headers
+     *            are output. If false, only a small subset is included
+     * @param file
+     *            File to output to
+     */
     private void saveMsgBodyAsHtml(ColumbaHeader header,
         StreamableMimePart bodyPart, List attachments, boolean inclAllHeaders,
         File file) throws IOException {
@@ -446,17 +447,16 @@ public class SaveMessageBodyAsCommand extends FolderCommand {
                 // mark quotings with special font
                 body = DocumentParser.markQuotings(body);
             } catch (Exception e) {
-                ColumbaLogger.log.severe("Error parsing body: " +
-                    e.getMessage());
+                LOG.severe("Error parsing body: " +  e.getMessage());
                 body = "<em>Error parsing body!!!</em>";
             }
 
             // encapsulate bodytext in html-code
             String css = getDefaultStyleSheet();
-            body = "<html><head>" + nl + css + nl +
-                "<title>E-mail saved by Columba</title>" + nl +
-                "</head><body><p class=\"bodytext\">" + nl + body + nl +
-                "</p></body></html>";
+            body = "<html><head>" + NL + css + NL
+                    + "<title>E-mail saved by Columba</title>" + NL
+                    + "</head><body><p class=\"bodytext\">" + NL + body + NL
+                    + "</p></body></html>";
         } else {
             // use body as is
             body = HtmlParser.validateHTMLString(decodedBody);
@@ -470,19 +470,17 @@ public class SaveMessageBodyAsCommand extends FolderCommand {
         // save message
         try {
             DiskIO.saveStringInFile(file, msg);
-            ColumbaLogger.log.fine("Html msg saved as " +
-                file.getAbsolutePath());
+            LOG.fine("Html msg saved as " + file.getAbsolutePath());
         } catch (IOException ioe) {
-            ColumbaLogger.log.severe("Error saving message to file: " +
-                ioe.getMessage());
+            LOG.severe("Error saving message to file: " + ioe.getMessage());
         }
     }
 
     /**
-         * Defines and returns a default stylesheet for use when text messages are
-         * saved as html. <br>This stylesheet should be the same as the one
-         * defined in BodyTextViewer for use when displaying text messages.
-         */
+     * Defines and returns a default stylesheet for use when text messages are
+     * saved as html. <br>This stylesheet should be the same as the one
+     * defined in BodyTextViewer for use when displaying text messages.
+     */
     private String getDefaultStyleSheet() {
         // read configuration from options.xml file
         XmlElement textFont = MainInterface.config.get("options").getElement("/options/gui/textfont");
@@ -490,23 +488,23 @@ public class SaveMessageBodyAsCommand extends FolderCommand {
         String size = textFont.getAttribute("size");
 
         // create css-stylesheet string
-        String css = "<style type=\"text/css\"><!-- .bodytext {font-family:\"" +
-            name + "\"; font-size:\"" + size + "pt; \"}" +
-            ".quoting {color:#949494;}; --></style>";
+        String css = "<style type=\"text/css\"><!-- .bodytext {font-family:\""
+            + name + "\"; font-size:\"" + size + "pt; \"}"
+            + ".quoting {color:#949494;}; --></style>";
 
         return css;
     }
 
     /**
-         * Inserts a table with headers in a html message. The table is inserted
-         * just after the body tag.
-         *
-         * @param body
-         *            Original message body
-         * @param headers
-         *            Array with headers (keys and values)
-         * @return message body with header table inserted
-         */
+     * Inserts a table with headers in a html message. The table is inserted
+     * just after the body tag.
+     *
+     * @param body
+     *            Original message body
+     * @param headers
+     *            Array with headers (keys and values)
+     * @return message body with header table inserted
+     */
     private String insertHtmlHeaderTable(String body, String[][] headers) {
         // create header table
         StringBuffer buf = new StringBuffer();
@@ -514,7 +512,7 @@ public class SaveMessageBodyAsCommand extends FolderCommand {
         String cssval = "border: 1px solid black; font-size: 8pt;";
         buf.append(
             "<table style=\"background-color: #dddddd;\" cellspacing=\"0\">");
-        buf.append(nl);
+        buf.append(NL);
 
         for (int i = 0; i < headers[0].length; i++) {
             // process header value
@@ -525,8 +523,7 @@ public class SaveMessageBodyAsCommand extends FolderCommand {
                 val = HtmlParser.substituteURL(val);
                 val = HtmlParser.substituteEmailAddress(val);
             } catch (Exception e) {
-                ColumbaLogger.log.severe("Error parsing header value: " +
-                    e.getMessage());
+                LOG.severe("Error parsing header value: " + e.getMessage());
             }
 
             buf.append("<tr><td style=\"" + csskey + "\">");
@@ -535,11 +532,11 @@ public class SaveMessageBodyAsCommand extends FolderCommand {
             buf.append("<td style=\"" + cssval + "\">");
             buf.append(val);
             buf.append("</td></tr>");
-            buf.append(nl);
+            buf.append(NL);
         }
 
         buf.append("</table>");
-        buf.append("<br>" + nl);
+        buf.append("<br>" + NL);
 
         String headertbl = buf.toString();
 
@@ -554,20 +551,15 @@ public class SaveMessageBodyAsCommand extends FolderCommand {
     }
 
     /**
-         * Method for saving a message in a text file.
-         *
-         * @param header
-         *            Message headers
-         * @param bodyPart
-         *            Body of message
-         * @param attachments
-         *            List of attachments as MimePart objects
-         * @param inclAllHeaders
-         *            If true all (except Content-Type and Mime-Version) headers
-         *            are output. If false, only a small subset is included
-         * @param file
-         *            File to output to
-         */
+     * Method for saving a message in a text file.
+     *
+     * @param header  Message headers
+     * @param bodyPart  Body of message
+     * @param attachments  List of attachments as MimePart objects
+     * @param inclAllHeaders  If true all (except Content-Type and Mime-Version) headers
+     *            are output. If false, only a small subset is included
+     * @param file  File to output to
+     */
     private void saveMsgBodyAsText(ColumbaHeader header,
         StreamableMimePart bodyPart, List attachments, boolean inclAllHeaders,
         File file) throws IOException {
@@ -596,32 +588,29 @@ public class SaveMessageBodyAsCommand extends FolderCommand {
             buf.append(headers[0][i]);
             buf.append(": ");
             buf.append(headers[1][i]);
-            buf.append(nl);
+            buf.append(NL);
         }
 
-        buf.append(nl);
+        buf.append(NL);
 
         // message composed of headers and body
         String msg = buf.toString() + body;
 
         // save message
         DiskIO.saveStringInFile(file, msg);
-        ColumbaLogger.log.fine("Text msg saved as " + file.getAbsolutePath());
+        LOG.fine("Text msg saved as " + file.getAbsolutePath());
     }
 
     /**
-         * Private utility to get headers to save. Headers are returned in a 2D
-         * array, so [0][i] is key[i] and [1][i] is value[i].
-         *
-         * @param header
-         *            All message headers
-         * @param attachments
-         *            Attachments, header lines with file names are added
-         * @param inclAll
-         *            true if all headers except Content-Type and Mime-Version
-         *            should be included
-         * @return Array of headers to include when saving
-         */
+     * Private utility to get headers to save. Headers are returned in a 2D
+     * array, so [0][i] is key[i] and [1][i] is value[i].
+     *
+     * @param header  All message headers
+     * @param attachments  Attachments, header lines with file names are added
+     * @param inclAll  true if all headers except Content-Type and Mime-Version
+     *            should be included
+     * @return Array of headers to include when saving
+     */
     private String[][] getHeadersToSave(ColumbaHeader header, List attachments,
         boolean inclAll) {
         List keyList = new ArrayList();
@@ -650,8 +639,8 @@ public class SaveMessageBodyAsCommand extends FolderCommand {
                 // ignore - columba.date is used instead
             } else if (key.startsWith("Content-")) {
                 // ignore
-            } else if (key.equals("Mime-Version") ||
-                    key.equals("MIME-Version")) {
+            } else if (key.equals("Mime-Version")
+                        || key.equals("MIME-Version")) {
                 // ignore
             } else if (key.startsWith("columba")) {
                 if (key.equals("columba.date")) {
@@ -737,11 +726,11 @@ class ExtensionFileFilter extends FileFilter {
     }
 
     /**
-         * Static method for extracting the extension of a filename
-         *
-         * @return f File to get extension for
-         * @return extension or null if no extension exist
-         */
+     * Static method for extracting the extension of a filename
+     *
+     * @return f File to get extension for
+     * @return extension or null if no extension exist
+     */
     public static String getFileExtension(File f) {
         String ext = null;
         String s = f.getName();

@@ -1,5 +1,4 @@
-// The contents of this file are subject to the Mozilla Public License Version
-// 1.1
+//The contents of this file are subject to the Mozilla Public License Version 1.1
 //(the "License"); you may not use this file except in compliance with the
 //License. You may obtain a copy of the License at http://www.mozilla.org/MPL/
 //
@@ -10,8 +9,7 @@
 //
 //The Original Code is "The Columba Project"
 //
-//The Initial Developers of the Original Code are Frederik Dietz and Timo
-// Stich.
+//The Initial Developers of the Original Code are Frederik Dietz and Timo Stich.
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003.
 //
 //All Rights Reserved.
@@ -19,12 +17,10 @@ package org.columba.mail.folder.command;
 
 import org.columba.core.command.DefaultCommandReference;
 import org.columba.core.command.StatusObservableImpl;
-import org.columba.core.command.Worker;
 import org.columba.core.command.WorkerStatusController;
 import org.columba.core.io.DiskIO;
 import org.columba.core.io.StreamUtils;
 import org.columba.core.io.TempFileStore;
-import org.columba.core.logging.ColumbaLogger;
 import org.columba.core.main.MainInterface;
 import org.columba.core.print.cCmUnit;
 import org.columba.core.print.cDocument;
@@ -78,6 +74,7 @@ import java.text.SimpleDateFormat;
 
 import java.util.Date;
 import java.util.List;
+import java.util.logging.Logger;
 
 
 /**
@@ -86,22 +83,25 @@ import java.util.List;
  * @author karlpeder
  */
 public class PrintMessageCommand extends FolderCommand {
+
+    /** JDK 1.4+ logging framework logger, used for logging. */
+    private static final Logger LOG = Logger.getLogger("org.columba.mail.folder.command");
+
     private cPrintObject mailHeader;
     private cPrintObject mailFooter;
     private DateFormat mailDateFormat;
-    private String[] headerKeys = { "From", "To", "Date", "Subject" };
+    private String[] headerKeys = {"From", "To", "Date", "Subject"};
     private String dateHeaderKey = "Date"; // the header key for date field
     private String attHeaderKey = "attachment";
     private Charset charset;
 
     /**
-         * Constructor for PrintMessageCommdn.
-         *
-         * @param frameMediator
-         * @param references
-         */
-    public PrintMessageCommand(DefaultCommandReference[] references,
-        Charset charset) {
+     * Constructor for PrintMessageCommdn.
+     *
+     * @param frameMediator
+     * @param references
+     */
+    public PrintMessageCommand(DefaultCommandReference[] references, Charset charset) {
         super(references);
         this.charset = charset;
 
@@ -177,11 +177,11 @@ public class PrintMessageCommand extends FolderCommand {
     }
 
     /**
-         * This method executes the print action, i.e. it prints the selected
-         * messages.
-         *
-         * @see org.columba.core.command.Command#execute(Worker)
-         */
+     * This method executes the print action, i.e. it prints the selected
+     * messages.
+     *
+     * @see org.columba.core.command.Command#execute(Worker)
+     */
     public void execute(WorkerStatusController worker)
         throws Exception {
         /*
@@ -194,13 +194,13 @@ public class PrintMessageCommand extends FolderCommand {
 
         Folder srcFolder = (Folder) r[0].getFolder();
 
-        //		register for status events
+        //register for status events
         ((StatusObservableImpl) srcFolder.getObservable()).setWorker(worker);
 
         // Print each message
         for (int j = 0; j < uids.length; j++) {
             Object uid = uids[j];
-            ColumbaLogger.log.info("Printing UID=" + uid);
+            LOG.info("Printing UID=" + uid);
 
             ColumbaMessage message = new ColumbaMessage();
             Header header = srcFolder.getHeaderFields(uids[j], getHeaderKeys());
@@ -261,7 +261,7 @@ public class PrintMessageCommand extends FolderCommand {
                 //if (headerKeys[i].equalsIgnoreCase("date")) {
                 //    value = header.get("columba.date");
                 //} else {
-                //	value = header.get(headerKeys[i]);
+                //value = header.get(headerKeys[i]);
                 //}
                 value = header.get(headerKeys[i]);
 
@@ -272,9 +272,8 @@ public class PrintMessageCommand extends FolderCommand {
                     String dateStr = (String) value;
 
                     // ignore leading weekday name (e.g. "Mon,"), since this
-                    // seems to give problems during parsing 
-                    ParsePosition pos = new ParsePosition(dateStr.indexOf(',') +
-                            1);
+                    // seems to give problems during parsing
+                    ParsePosition pos = new ParsePosition(dateStr.indexOf(',') + 1);
                     Date d = formatter.parse((String) value, pos);
 
                     if (d != null) {
@@ -346,15 +345,15 @@ public class PrintMessageCommand extends FolderCommand {
     }
 
     /**
-         * Private utility to create a print object representing the body of a
-         * plain text message. The messagebody is decoded according to present
-         * charset. <br>Precondition: Mime subtype is "plain".
-         *
-         * @param bodyPart
-         *            Body part of message
-         * @return Print object ready to be appended to the print document
-         * @author Karl Peder Olesen (karlpeder), 20030531
-         */
+     * Private utility to create a print object representing the body of a
+     * plain text message. The messagebody is decoded according to present
+     * charset. <br>Precondition: Mime subtype is "plain".
+     *
+     * @param bodyPart
+     *            Body part of message
+     * @return Print object ready to be appended to the print document
+     * @author Karl Peder Olesen (karlpeder), 20030531
+     */
     private cPrintObject getPlainBodyPrintObject(StreamableMimePart bodyPart)
         throws IOException {
         // decode message body with respect to charset
@@ -384,14 +383,13 @@ public class PrintMessageCommand extends FolderCommand {
         // no configuration available, create default config
         if (printer == null) {
             // create new local xml treenode
-            ColumbaLogger.log.info(
-                "printer config node not found - creating new");
+            LOG.info("printer config node not found - creating new");
             printer = new XmlElement("printer");
             printer.addAttribute("allow_scaling", "true");
 
             // add to options if possible (so it will be saved)
             if (options != null) {
-                ColumbaLogger.log.info("storing new printer config node");
+                LOG.info("storing new printer config node");
                 options.addElement(printer);
             }
         }
@@ -433,13 +431,11 @@ public class PrintMessageCommand extends FolderCommand {
 
             return htmlBody;
         } catch (MalformedURLException e) {
-            ColumbaLogger.log.severe("Error loading html for print: " +
-                e.getMessage());
+            LOG.warning("Error loading html for print: " + e.getMessage());
 
             return null;
         } catch (IOException e) {
-            ColumbaLogger.log.severe("Error loading html for print: " +
-                e.getMessage());
+            LOG.warning("Error loading html for print: " + e.getMessage());
 
             return null;
         }
@@ -483,9 +479,9 @@ public class PrintMessageCommand extends FolderCommand {
                                                   .getContentParameter("charset"));
             } catch (UnsupportedCharsetException ex) {
                 // decode using default charset
-                ColumbaLogger.log.severe("The charset " + ex.getCharsetName() +
-                    " is not supported. " +
-                    "System default encoding will be used.");
+                LOG.warning("The charset " + ex.getCharsetName()
+                        + " is not supported. "
+                        + "System default encoding will be used.");
                 charset = Charset.forName(System.getProperty("file.encoding"));
             }
         }

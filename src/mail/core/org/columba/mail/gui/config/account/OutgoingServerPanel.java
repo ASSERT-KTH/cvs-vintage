@@ -1,5 +1,4 @@
-// The contents of this file are subject to the Mozilla Public License Version
-// 1.1
+//The contents of this file are subject to the Mozilla Public License Version 1.1
 //(the "License"); you may not use this file except in compliance with the
 //License. You may obtain a copy of the License at http://www.mozilla.org/MPL/
 //
@@ -10,8 +9,7 @@
 //
 //The Original Code is "The Columba Project"
 //
-//The Initial Developers of the Original Code are Frederik Dietz and Timo
-// Stich.
+//The Initial Developers of the Original Code are Frederik Dietz and Timo Stich.
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003.
 //
 //All Rights Reserved.
@@ -23,7 +21,6 @@ import org.columba.core.gui.util.ButtonWithMnemonic;
 import org.columba.core.gui.util.CheckBoxWithMnemonic;
 import org.columba.core.gui.util.DefaultFormBuilder;
 import org.columba.core.gui.util.LabelWithMnemonic;
-import org.columba.core.logging.ColumbaLogger;
 import org.columba.core.util.ListTools;
 
 import org.columba.mail.config.AccountItem;
@@ -50,6 +47,7 @@ import java.util.Arrays;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -69,7 +67,11 @@ import javax.swing.JTextField;
  * @version
  */
 public class OutgoingServerPanel extends DefaultPanel implements ActionListener {
-    private static final Pattern authModeTokenizePattern = Pattern.compile(
+
+    /** JDK 1.4+ logging framework logger, used for logging. */
+    private static final Logger LOG = Logger.getLogger("org.columba.mail.gui.config.account");
+
+    private static final Pattern AUTH_MODE_TOKENIZE_PATTERN = Pattern.compile(
             "([^;]+);?");
     private JLabel hostLabel;
     private JTextField hostTextField;
@@ -150,8 +152,8 @@ public class OutgoingServerPanel extends DefaultPanel implements ActionListener 
                                                                   .getDefaultAccountUid() != accountItem.getInteger(
                     "uid"));
 
-            if (defaultAccountCheckBox.isEnabled() &&
-                    defaultAccountCheckBox.isSelected()) {
+            if (defaultAccountCheckBox.isEnabled()
+                    && defaultAccountCheckBox.isSelected()) {
                 showDefaultAccountWarning();
             } else {
                 layoutComponents();
@@ -186,9 +188,9 @@ public class OutgoingServerPanel extends DefaultPanel implements ActionListener 
     }
 
     protected void layoutComponents() {
-        //		Create a FormLayout instance.
+        //Create a FormLayout instance.
         FormLayout layout = new FormLayout("10dlu, 10dlu, max(100;default), 3dlu, fill:max(150dlu;default):grow ",
-                
+
             // 2 columns
             ""); // rows are added dynamically (no need to define them here)
 
@@ -228,7 +230,7 @@ public class OutgoingServerPanel extends DefaultPanel implements ActionListener 
 
         JPanel panel = new JPanel();
         FormLayout l = new FormLayout("max(80dlu;default), 3dlu, fill:max(50dlu;default), 2dlu, left:max(50dlu;default)",
-                
+
             // 2 columns
             ""); // rows are added dynamically (no need to define them here)
 
@@ -241,14 +243,14 @@ public class OutgoingServerPanel extends DefaultPanel implements ActionListener 
         builder.nextLine();
 
         /*
- * JPanel panel2 = new JPanel(); l = new FormLayout("max(100;default),
- * 3dlu, left:max(50dlu;default)", // 2 columns ""); // rows are added
- * dynamically (no need to define them here) // create a form builder b =
- * new DefaultFormBuilder(panel2, l); b.append(loginLabel,
- * loginTextField);
- *
- * builder.append(panel2, 3); builder.nextLine();
- */
+         * JPanel panel2 = new JPanel(); l = new FormLayout("max(100;default),
+         * 3dlu, left:max(50dlu;default)", // 2 columns ""); // rows are added
+         * dynamically (no need to define them here) // create a form builder b =
+         * new DefaultFormBuilder(panel2, l); b.append(loginLabel,
+         * loginTextField);
+         *
+         * builder.append(panel2, 3); builder.nextLine();
+         */
         //builder.setLeadingColumnOffset(1);
         builder.append(storePasswordCheckBox, 3);
         builder.nextLine();
@@ -341,8 +343,8 @@ public class OutgoingServerPanel extends DefaultPanel implements ActionListener 
     }
 
     /**
- * 
- */
+     *
+     */
     private void updateAuthenticationComboBox() {
         authenticationComboBox.removeAllItems();
 
@@ -358,7 +360,7 @@ public class OutgoingServerPanel extends DefaultPanel implements ActionListener 
 
         // Add previously fetch authentication modes
         if (authMethods != null) {
-            Matcher matcher = authModeTokenizePattern.matcher(authMethods);
+            Matcher matcher = AUTH_MODE_TOKENIZE_PATTERN.matcher(authMethods);
 
             while (matcher.find()) {
                 authenticationComboBox.addItem(matcher.group(1));
@@ -415,8 +417,7 @@ public class OutgoingServerPanel extends DefaultPanel implements ActionListener 
 
             try {
                 list = getAuthSMTP();
-                ColumbaLogger.log.info("Server supported AUTH types: " +
-                    list.toString());
+                LOG.info("Server supported AUTH types: " + list.toString());
 
                 // If the server doesn't support an AUTH -> POP before SMTP is only choice
                 ListTools.intersect_astable(list,
@@ -427,8 +428,7 @@ public class OutgoingServerPanel extends DefaultPanel implements ActionListener 
                     name.substring(name.lastIndexOf(".")),
                     JOptionPane.ERROR_MESSAGE);
             } catch (SMTPException e1) {
-                ColumbaLogger.log.severe(
-                    "Server does not support the CAPA command");
+                LOG.severe("Server does not support the CAPA command");
 
                 // Let the user choose
                 list = AuthenticationFactory.getInstance()
@@ -457,8 +457,8 @@ public class OutgoingServerPanel extends DefaultPanel implements ActionListener 
     }
 
     /**
-  * @return
-  */
+      * @return
+      */
     private List getAuthSMTP() throws IOException, SMTPException {
         List result = new LinkedList();
         SMTPProtocol protocol = new SMTPProtocol(accountItem.get("smtpserver",
@@ -468,8 +468,7 @@ public class OutgoingServerPanel extends DefaultPanel implements ActionListener 
 
         String[] capas = protocol.ehlo(InetAddress.getLocalHost());
 
-        ColumbaLogger.log.info("Server CAPAs: " +
-            Arrays.asList(capas).toString());
+        LOG.info("Server CAPAs: " + Arrays.asList(capas).toString());
 
         for (int i = 0; i < capas.length; i++) {
             if (capas[i].startsWith("AUTH")) {
@@ -481,9 +480,9 @@ public class OutgoingServerPanel extends DefaultPanel implements ActionListener 
     }
 
     /**
- * @param string
- * @return
- */
+     * @param string
+     * @return
+     */
     private List parseAuthCapas(String string) {
         Matcher tokenizer = Pattern.compile("\\b[^\\s]+\\b").matcher(string);
         tokenizer.find();

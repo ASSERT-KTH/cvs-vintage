@@ -1,21 +1,20 @@
 //The contents of this file are subject to the Mozilla Public License Version 1.1
-//(the "License"); you may not use this file except in compliance with the 
+//(the "License"); you may not use this file except in compliance with the
 //License. You may obtain a copy of the License at http://www.mozilla.org/MPL/
 //
 //Software distributed under the License is distributed on an "AS IS" basis,
-//WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License 
+//WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License
 //for the specific language governing rights and
 //limitations under the License.
 //
 //The Original Code is "The Columba Project"
 //
 //The Initial Developers of the Original Code are Frederik Dietz and Timo Stich.
-//Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
+//Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003.
 //
 //All Rights Reserved.
 package org.columba.mail.gui.composer.html;
 
-import org.columba.core.logging.ColumbaLogger;
 import org.columba.core.main.MainInterface;
 
 import org.columba.mail.gui.composer.AbstractEditorController;
@@ -27,6 +26,7 @@ import java.awt.Font;
 import java.io.IOException;
 import java.io.Reader;
 import java.io.StringReader;
+import java.util.logging.Logger;
 
 import javax.swing.JComponent;
 import javax.swing.JScrollPane;
@@ -49,6 +49,10 @@ import javax.swing.text.html.HTML;
  */
 public class HtmlEditorController extends AbstractEditorController
     implements DocumentListener, CaretListener {
+
+    /** JDK 1.4+ logging framework logger, used for logging. */
+    private static final Logger LOG = Logger.getLogger("org.columba.mail.gui.composer.html");
+
     /** Main view (WYSIWYG) */
     protected HtmlEditorView view;
 
@@ -171,7 +175,7 @@ public class HtmlEditorController extends AbstractEditorController
 
     // the following lines add cut/copy/paste/undo/redo/selectall
     // actions support using the Columba action objects.
-    // 
+    //
     // This means that we only have a single instance of these
     // specific actions, which is shared by all menuitems and
     // toolbar buttons.
@@ -334,7 +338,7 @@ public class HtmlEditorController extends AbstractEditorController
      * @see org.columba.mail.gui.composer.AbstractEditorController#setViewText(java.lang.String)
      */
     public void setViewText(String text) {
-        //// This doesn't handle ChangedCharsetExceptions correctly.	
+        //// This doesn't handle ChangedCharsetExceptions correctly.
         //view.setText(text);
         try {
             loadHtmlIntoView(text, false);
@@ -343,13 +347,12 @@ public class HtmlEditorController extends AbstractEditorController
             try {
                 loadHtmlIntoView(text, true);
             } catch (IOException e) {
-                ColumbaLogger.log.severe("Error setting view content, " +
-                    "even after ignore charset spec: " + e.getMessage());
+                LOG.severe("Error setting view content, "
+                        + "even after ignore charset spec: " + e.getMessage());
             }
         } catch (IOException e) {
             // other IOExceptions than ChangedCharsetException
-            ColumbaLogger.log.severe("Error setting view content: " +
-                e.getMessage());
+            LOG.severe("Error setting view content: " + e.getMessage());
         }
     }
 
@@ -389,8 +392,7 @@ public class HtmlEditorController extends AbstractEditorController
             EditorKit kit = view.getEditorKit();
             kit.read(r, doc, 0); // this can throw a ChangedCharsetException
         } catch (BadLocationException e) {
-            ColumbaLogger.log.severe("Error deleting old view content: " +
-                e.getMessage());
+            LOG.severe("Error deleting old view content: " + e.getMessage());
 
             return;
         }
@@ -449,7 +451,7 @@ public class HtmlEditorController extends AbstractEditorController
      * @see javax.swing.event.CaretListener#caretUpdate(javax.swing.event.CaretEvent)
      */
     public void caretUpdate(CaretEvent e) {
-        // update state of actions such as cut, copy, paste, undo... 
+        // update state of actions such as cut, copy, paste, undo...
         MainInterface.focusManager.updateActions();
 
         // get info on current text selection

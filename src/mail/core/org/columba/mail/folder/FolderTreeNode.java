@@ -15,8 +15,9 @@
 //All Rights Reserved.
 package org.columba.mail.folder;
 
+import java.util.logging.Logger;
+
 import org.columba.core.gui.util.ImageLoader;
-import org.columba.core.logging.ColumbaLogger;
 import org.columba.core.util.Lock;
 import org.columba.core.xml.XmlElement;
 
@@ -39,9 +40,13 @@ import javax.swing.tree.TreePath;
  * @author fdietz
  */
 public abstract class FolderTreeNode extends DefaultMutableTreeNode {
-    protected static final ImageIcon collapsedIcon = ImageLoader.getSmallImageIcon(
+
+    /** JDK 1.4+ logging framework logger, used for logging. */
+    private static final Logger LOG = Logger.getLogger("org.columba.mail.folder");
+
+    private static final ImageIcon COLLAPSED_ICON = ImageLoader.getSmallImageIcon(
             "folder-closed.png");
-    protected static final ImageIcon expandedIcon = ImageLoader.getSmallImageIcon(
+    private static final ImageIcon EXPANDED_ICON = ImageLoader.getSmallImageIcon(
             "folder-open.png");
 
     // the next new folder will get this UID
@@ -96,11 +101,11 @@ public abstract class FolderTreeNode extends DefaultMutableTreeNode {
     }
 
     public ImageIcon getCollapsedIcon() {
-        return collapsedIcon;
+        return COLLAPSED_ICON;
     }
 
     public ImageIcon getExpandedIcon() {
-        return expandedIcon;
+        return EXPANDED_ICON;
     }
 
     public XmlElement getNode() {
@@ -267,14 +272,14 @@ public abstract class FolderTreeNode extends DefaultMutableTreeNode {
  * all treenode manipulation is passed to the corresponding XmlElement
  */
     public void append(FolderTreeNode child) {
-        ColumbaLogger.log.info("child=" + child);
+        LOG.info("Appending child=" + child);
 
         // remove child from parent
         child.removeFromParent();
 
         // do the same for the XmlElement node
-        ColumbaLogger.log.info("xmlelement=" +
-            child.getFolderItem().getRoot().getName());
+        LOG.info("Appending xmlelement="
+                + child.getFolderItem().getRoot().getName());
 
         child.getFolderItem().getRoot().removeFromParent();
 

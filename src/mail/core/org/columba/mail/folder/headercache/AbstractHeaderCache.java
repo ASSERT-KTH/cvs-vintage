@@ -1,5 +1,4 @@
-// The contents of this file are subject to the Mozilla Public License Version
-// 1.1
+//The contents of this file are subject to the Mozilla Public License Version 1.1
 //(the "License"); you may not use this file except in compliance with the
 //License. You may obtain a copy of the License at http://www.mozilla.org/MPL/
 //
@@ -10,14 +9,12 @@
 //
 //The Original Code is "The Columba Project"
 //
-//The Initial Developers of the Original Code are Frederik Dietz and Timo
-// Stich.
+//The Initial Developers of the Original Code are Frederik Dietz and Timo Stich.
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003.
 //
 //All Rights Reserved.
 package org.columba.mail.folder.headercache;
 
-import org.columba.core.logging.ColumbaLogger;
 import org.columba.core.util.BooleanCompressor;
 
 import org.columba.mail.message.ColumbaHeader;
@@ -27,6 +24,7 @@ import java.io.File;
 
 import java.util.List;
 import java.util.Vector;
+import java.util.logging.Logger;
 
 
 /**
@@ -41,6 +39,10 @@ import java.util.Vector;
  * @author fdietz
  */
 public abstract class AbstractHeaderCache {
+
+    /** JDK 1.4+ logging framework logger, used for logging. */
+    private static final Logger LOG = Logger.getLogger("org.columba.mail.folder.headercache");
+
     protected HeaderList headerList;
     protected File headerFile;
     private boolean headerCacheLoaded;
@@ -99,10 +101,10 @@ public abstract class AbstractHeaderCache {
      * @throws Exception
      */
     public void remove(Object uid) throws Exception {
-        ColumbaLogger.log.info("trying to remove message UID=" + uid);
+        LOG.info("trying to remove message UID=" + uid);
 
         if (headerList.containsKey(uid)) {
-            ColumbaLogger.log.info("remove UID=" + uid);
+            LOG.info("remove UID=" + uid);
 
             headerList.remove(uid);
         }
@@ -171,20 +173,20 @@ public abstract class AbstractHeaderCache {
         // load other internal headerfields, non-boolean type
         String[] columnNames = CachedHeaderfields.INTERNAL_HEADERFIELDS;
         Object value;
-        
+
         for (int j = 0; j < columnNames.length; j++) {
             value = reader.readObject();
-            if( value != null ) {
+            if (value != null) {
                 h.set(columnNames[j], value);
             }
         }
 
-        //		load default headerfields, as defined in RFC822
+        //load default headerfields, as defined in RFC822
         columnNames = CachedHeaderfields.getDefaultHeaderfields();
 
         for (int j = 0; j < columnNames.length; j++) {
             value = reader.readObject();
-            if( value != null ) {
+            if (value != null) {
                 h.set(columnNames[j], value);
             }
         }
@@ -194,7 +196,7 @@ public abstract class AbstractHeaderCache {
         // file.
         for (int j = 0; j < additionalHeaderfields.size(); j++) {
             value = reader.readObject();
-            if( value != null ) {
+            if (value != null) {
                 h.set((String) additionalHeaderfields.get(j),
                         (String) value);
             }

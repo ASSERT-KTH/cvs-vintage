@@ -1,5 +1,4 @@
-// The contents of this file are subject to the Mozilla Public License Version
-// 1.1
+//The contents of this file are subject to the Mozilla Public License Version 1.1
 //(the "License"); you may not use this file except in compliance with the
 //License. You may obtain a copy of the License at http://www.mozilla.org/MPL/
 //
@@ -10,8 +9,7 @@
 //
 //The Original Code is "The Columba Project"
 //
-//The Initial Developers of the Original Code are Frederik Dietz and Timo
-// Stich.
+//The Initial Developers of the Original Code are Frederik Dietz and Timo Stich.
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003.
 //
 //All Rights Reserved.
@@ -24,10 +22,10 @@ import java.util.Enumeration;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.logging.Logger;
 
 import org.columba.core.command.StatusObservable;
 import org.columba.core.io.StreamUtils;
-import org.columba.core.logging.ColumbaLogger;
 import org.columba.core.util.ListTools;
 import org.columba.core.xml.XmlElement;
 import org.columba.mail.config.FolderItem;
@@ -59,13 +57,17 @@ import org.columba.ristretto.message.io.SourceInputStream;
 
 public class IMAPFolder extends RemoteFolder {
 
+    /** JDK 1.4+ logging framework logger, used for logging. */
+    private static final Logger LOG = Logger.getLogger("org.columba.mail.folder.imap");
+
+
     /**
-     *  
+     *
      */
     private ImapItem item;
 
     /**
-     *  
+     *
      */
 
     //private boolean select=false;
@@ -74,27 +76,27 @@ public class IMAPFolder extends RemoteFolder {
     private Object aktMessageUid;
 
     /**
-     *  
+     *
      */
     private ColumbaMessage aktMessage;
 
     /**
-     *  
+     *
      */
     private boolean mailcheck = false;
 
     /**
-     *  
+     *
      */
     private IMAPStore store;
 
     /**
-     *  
+     *
      */
     protected HeaderList headerList;
 
     /**
-     *  
+     *
      */
 
 
@@ -103,7 +105,7 @@ public class IMAPFolder extends RemoteFolder {
     private DefaultSearchEngine engine;
 
     /**
-     *  
+     *
      */
 
     private HeaderListStorage attributeStorage;
@@ -115,8 +117,6 @@ public class IMAPFolder extends RemoteFolder {
      */
     public IMAPFolder(FolderItem folderItem, String path) {
         super(folderItem, path);
-
-      
 
         existsOnServer = true;
 
@@ -134,7 +134,6 @@ public class IMAPFolder extends RemoteFolder {
 
         existsOnServer = true;
 
-     
 
         FolderItem item = getFolderItem();
         item.set("property", "accessrights", "user");
@@ -162,7 +161,7 @@ public class IMAPFolder extends RemoteFolder {
      */
     public boolean renameFolder(String name) throws Exception {
         String oldPath = getImapPath();
-        ColumbaLogger.log.info("old path=" + oldPath);
+        LOG.info("old path=" + oldPath);
 
         String newPath = null;
 
@@ -171,11 +170,13 @@ public class IMAPFolder extends RemoteFolder {
         }
 
         newPath += (getStore().getDelimiter() + name);
-        ColumbaLogger.log.info("new path=" + newPath);
+        LOG.info("new path=" + newPath);
 
         boolean result = getStore().renameFolder(oldPath, newPath);
 
-        if (!result) { return false; }
+        if (!result) {
+            return false;
+        }
 
         return super.renameFolder(name);
     }
@@ -197,7 +198,7 @@ public class IMAPFolder extends RemoteFolder {
 
     /**
      * Method getStore.
-     * 
+     *
      * @return IMAPStore
      */
     public IMAPStore getStore() {
@@ -227,7 +228,9 @@ public class IMAPFolder extends RemoteFolder {
 
         List newList = getStore().fetchUIDList(getImapPath());
 
-        if (newList == null) { return new HeaderList(); }
+        if (newList == null) {
+            return new HeaderList();
+        }
 
         List result = synchronize(headerList, newList);
 
@@ -259,7 +262,7 @@ public class IMAPFolder extends RemoteFolder {
 
     /**
      * Method updateFlags.
-     * 
+     *
      * @param flagsList
      */
     protected void updateFlags(Flags[] flagsList) {
@@ -302,7 +305,7 @@ public class IMAPFolder extends RemoteFolder {
 
             //Junk flag
             header.getAttributes().put("columba.spam",
-                    new Boolean(flags.get(IMAPFlags.JUNK)));
+                    Boolean.valueOf(flags.get(IMAPFlags.JUNK)));
         }
     }
 
@@ -323,7 +326,7 @@ public class IMAPFolder extends RemoteFolder {
 
     /**
      * Method synchronize.
-     * 
+     *
      * @param headerList
      * @param newList
      * @return Vector
@@ -354,27 +357,27 @@ public class IMAPFolder extends RemoteFolder {
 
         /*
          * List result = new Vector(); // delete old headers
-         * 
+         *
          * for (Enumeration e = headerList.keys(); e.hasMoreElements();) {
          * String str = (String) e.nextElement();
-         * 
+         *
          * if (existsRemotely(str, 0, newList)) { // mail exists on server // ->
          * keep it } else { // mail doesn't exist on server // -> remove it
          * from local cache headerList.remove(str); } } for (Iterator it =
          * newList.iterator(); it.hasNext();) { String str = (String)
          * it.next(); // for (int i = 0; i < newList.size(); i++) { // String
          * str = (String) newList.get(i);
-         * 
+         *
          * if (existsLocally(str, headerList) == false) { // new message on
          * server result.add(str); } }
-         * 
+         *
          * return result;
          */
     }
 
     /**
      * Method existsRemotely.
-     * 
+     *
      * @param uid
      * @param startIndex
      * @param uidList
@@ -389,9 +392,10 @@ public class IMAPFolder extends RemoteFolder {
             // for (int i = startIndex; i < uidList.size(); i++) {
             // String serverUID = (String) uidList.get(i);
             //System.out.println("server message uid: "+ serverUID );
-            if (uid.equals(serverUID)) { 
-            //System.out.println("local uid exists remotely");
-            return true; }
+            if (uid.equals(serverUID)) {
+                //System.out.println("local uid exists remotely");
+                return true;
+            }
         }
 
         return false;
@@ -399,7 +403,7 @@ public class IMAPFolder extends RemoteFolder {
 
     /**
      * Method existsLocally.
-     * 
+     *
      * @param uid
      * @param list
      * @return boolean
@@ -411,9 +415,10 @@ public class IMAPFolder extends RemoteFolder {
             String localUID = (String) e.nextElement();
 
             //System.out.println("server message uid: "+ serverUID );
-            if (uid.equals(localUID)) { 
-            //System.out.println("local uid exists remotely");
-            return true; }
+            if (uid.equals(localUID)) {
+                //System.out.println("local uid exists remotely");
+                return true;
+            }
         }
 
         return false;
@@ -442,7 +447,7 @@ public class IMAPFolder extends RemoteFolder {
      * <p>
      * The IMAP copy command also keeps the flags intact. So, there's no need
      * to change these manually.
-     * 
+     *
      * @see org.columba.mail.folder.Folder#innerCopy(org.columba.mail.folder.MailboxInterface,
      *      java.lang.Object, org.columba.core.command.WorkerStatusController)
      */
@@ -538,13 +543,13 @@ public class IMAPFolder extends RemoteFolder {
 
                 if (flags.getExpunged()) {
                     // move message to trash
-                    ColumbaLogger.log.info("moving message with UID " + uid
+                    LOG.info("moving message with UID " + uid
                             + " to trash");
 
                     /*
                      * if (flags.getRecent()) {
                      * getMessageFolderInfo().decRecent(); }
-                     * 
+                     *
                      * if (!flags.getSeen()) {
                      * getMessageFolderInfo().decUnseen(); }
                      */
@@ -556,7 +561,7 @@ public class IMAPFolder extends RemoteFolder {
             }
         }
 
-        //		mailbox was modified
+        // mailbox was modified
         changed = true;
     }
 
@@ -574,7 +579,7 @@ public class IMAPFolder extends RemoteFolder {
 
     /**
      * Method getMessage.
-     * 
+     *
      * @param uid
      * @param worker
      * @return AbstractMessage
@@ -586,7 +591,7 @@ public class IMAPFolder extends RemoteFolder {
 
     /**
      * Method getImapPath.
-     * 
+     *
      * @return String
      */
     public String getImapPath() throws Exception {
@@ -650,7 +655,7 @@ public class IMAPFolder extends RemoteFolder {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.columba.mail.folder.FolderTreeNode#addSubfolder(org.columba.mail.folder.FolderTreeNode)
      */
     public void addSubfolder(FolderTreeNode child) throws Exception {
@@ -666,7 +671,7 @@ public class IMAPFolder extends RemoteFolder {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.columba.mail.folder.Folder#getObservable()
      */
     public StatusObservable getObservable() {
@@ -675,7 +680,7 @@ public class IMAPFolder extends RemoteFolder {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.columba.mail.folder.MailboxInterface#addMessage(java.io.InputStream)
      */
     public Object addMessage(InputStream in, Attributes attributes)
@@ -687,15 +692,9 @@ public class IMAPFolder extends RemoteFolder {
         return null;
     }
 
-   
-
-  
-
- 
-
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.columba.mail.folder.MailboxInterface#getHeaderFields(java.lang.Object,
      *      java.lang.String[])
      */
@@ -735,7 +734,7 @@ public class IMAPFolder extends RemoteFolder {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.columba.mail.folder.MailboxInterface#getMessageSourceStream(java.lang.Object)
      */
     public InputStream getMessageSourceStream(Object uid) throws Exception {
@@ -746,7 +745,7 @@ public class IMAPFolder extends RemoteFolder {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.columba.mail.folder.MailboxInterface#getMimePartSourceStream(java.lang.Object,
      *      java.lang.Integer[])
      */
@@ -756,11 +755,10 @@ public class IMAPFolder extends RemoteFolder {
                 getImapPath())).getInputStream();
     }
 
-   
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.columba.mail.folder.MailboxInterface#getMimePartBodyStream(java.lang.Object,
      *      java.lang.Integer[])
      */
@@ -774,7 +772,7 @@ public class IMAPFolder extends RemoteFolder {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.columba.mail.folder.Folder#isInboxFolder()
      */
     public boolean isInboxFolder() {
@@ -789,7 +787,7 @@ public class IMAPFolder extends RemoteFolder {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.columba.mail.folder.Folder#isTrashFolder()
      */
     public boolean isTrashFolder() {
@@ -805,7 +803,7 @@ public class IMAPFolder extends RemoteFolder {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.columba.mail.folder.MailboxInterface#addMessage(java.io.InputStream,
      *      org.columba.ristretto.message.Attributes)
      */
@@ -830,7 +828,7 @@ public class IMAPFolder extends RemoteFolder {
             searchEngine = new DefaultSearchEngine(this);
             searchEngine.setNonDefaultEngine(new IMAPQueryEngine(this));
         }
-        
+
         return searchEngine;
     }
 }
