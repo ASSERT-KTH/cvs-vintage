@@ -2,7 +2,7 @@
  * File:   DoubleBufferImage.java
  * Author: Andre Spiegel <spiegel@gnu.org>
  *
- * $Id: DoubleBufferImage.java,v 1.1 2002/04/30 20:40:06 mrfloppy Exp $
+ * $Id: DoubleBufferImage.java,v 1.2 2002/05/20 19:57:58 mrfloppy Exp $
  */
 
 package CH.ifa.draw.contrib.zoom;
