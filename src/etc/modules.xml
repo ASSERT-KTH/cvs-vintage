@@ -21,6 +21,8 @@
 
 <module name="CoyoteConnector" javaClass="org.apache.coyote.tomcat3.CoyoteInterceptor"/>
 
+<module name="CoyoteConnector2" javaClass="org.apache.coyote.tomcat3.CoyoteInterceptor2"/>
+
 <module name="JniConnector" javaClass="org.apache.tomcat.modules.server.JNIConnectionHandler"/>
 
 <module name="Ajp12Connector" javaClass="org.apache.tomcat.modules.server.Ajp12Interceptor"/>
