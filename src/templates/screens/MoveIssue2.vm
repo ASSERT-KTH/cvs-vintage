@@ -16,6 +16,7 @@
 #set ($selectAction = $moveIssueGroup.Action)
 #set ($moduleId = $moveIssueGroup.ModuleId)
 #set ($module = $scarabR.CurrentModule)
+#set($newModule = $scarabR.getModule("$moduleId"))
 
 #set ($matchingAttributes = $issue.getMatchingAttributeValuesList("$moduleId"))
 #set ($orphanAttributes = $issue.getOrphanAttributeValuesList("$moduleId"))
@@ -33,6 +34,7 @@
 <input type="hidden" name="id" value="$issueId" />
 <input type="hidden" name="$moveIssueGroup.IssueId.key" value="$issueId" />
 <input type="hidden" name="$moveIssueGroup.ModuleId.key" value="$moduleId" />
+<input type="hidden" name="$moveIssueGroup.Action.key" value="$selectAction" />
 
 <div class="functnbar">
 <table cellpadding="4" cellspacing="0" border="1">
@@ -74,8 +76,6 @@
  </tr>
 </table>
 
-#set($newModule = $scarabR.getModule("$moduleId"))
-#set ($userAction = $moveIssueGroup.Action)
 
 <div class="axial"> <table border="1" cellspacing="2" cellpadding="3">
 <tr>
@@ -83,7 +83,7 @@
 <td>$newModule.Name</td>
 <tr>
 <th>Action</th>
-<td>$userAction</td>
+<td>$selectAction</td>
 </tr>
 </table>
 </div>
