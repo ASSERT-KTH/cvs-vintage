@@ -1,4 +1,4 @@
-// $Id: SelectionActor.java,v 1.26 2005/01/29 20:08:27 linus Exp $
+// $Id: SelectionActor.java,v 1.27 2005/01/30 01:21:55 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -140,18 +140,18 @@ public class SelectionActor extends SelectionWButtons {
 	int newX = cx, newY = cy, newW = cw, newH = ch;
 	Dimension minSize = _content.getMinimumSize();
 	int minWidth = minSize.width, minHeight = minSize.height;
-	Class edgeClass = null;
-	Class nodeClass = (Class) Model.getMetaTypes().getUseCase();
+	Object edgeType = null;
+	Object nodeType = Model.getMetaTypes().getUseCase();
 	int bx = mX, by = mY;
 	boolean reverse = false;
 	switch (hand.index) {
 	case 12: //add assoc
-	    edgeClass = (Class) Model.getMetaTypes().getAssociation();
+	    edgeType = Model.getMetaTypes().getAssociation();
 	    by = cy + ch / 2;
 	    bx = cx + cw;
 	    break;
 	case 13: // add assoc
-	    edgeClass = (Class) Model.getMetaTypes().getAssociation();
+	    edgeType = Model.getMetaTypes().getAssociation();
 	    reverse = true;
 	    by = cy + ch / 2;
 	    bx = cx;
@@ -160,10 +160,10 @@ public class SelectionActor extends SelectionWButtons {
 	    LOG.warn("invalid handle number");
 	    break;
 	}
-	if (edgeClass != null && nodeClass != null) {
+	if (edgeType != null && nodeType != null) {
 	    Editor ce = Globals.curEditor();
 	    ModeCreateEdgeAndNode m = new
-		ModeCreateEdgeAndNode(ce, edgeClass, nodeClass, false);
+		ModeCreateEdgeAndNode(ce, edgeType, nodeType, false);
 	    m.setup((FigNode) _content, _content.getOwner(), bx, by, reverse);
 	    ce.pushMode(m);
 	}
@@ -187,7 +187,9 @@ public class SelectionActor extends SelectionWButtons {
      */
     protected Object createEdgeLeft(MutableGraphModel gm, Object newNode) {
         return gm.connect(newNode, _content.getOwner(),
-			  (Class) Model.getMetaTypes().getAssociation());
+            // TODO Remove when GEF with this fixed and incorporated
+            // http://gef.tigris.org/issues/show_bug.cgi?id=203
+			  (Class)Model.getMetaTypes().getAssociation());
     }
 
     /**
@@ -196,6 +198,8 @@ public class SelectionActor extends SelectionWButtons {
      */
     protected Object createEdgeRight(MutableGraphModel gm, Object newNode) {
         return gm.connect(_content.getOwner(), newNode ,
+            // TODO Remove when GEF with this fixed and incorporated
+            // http://gef.tigris.org/issues/show_bug.cgi?id=203
 			  (Class) Model.getMetaTypes().getAssociation());
     }
 

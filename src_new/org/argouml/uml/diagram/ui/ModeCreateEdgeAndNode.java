@@ -1,4 +1,4 @@
-// $Id: ModeCreateEdgeAndNode.java,v 1.33 2005/01/27 21:42:28 linus Exp $
+// $Id: ModeCreateEdgeAndNode.java,v 1.34 2005/01/30 01:21:56 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -132,19 +132,19 @@ public class ModeCreateEdgeAndNode extends ModeCreate {
      *
      * @param ed the parent editor of this mode. Each Mode instance belongs to
      *           exactly one Editor instance.
-     * @param edgeClass the class of the edge
-     * @param nodeClass the class of the node
+     * @param edgeType the class of the edge
+     * @param nodeType the class of the node
      * @param post if true, then the edge is postprocessed.
      *             See postProcessEdge().
      */
     public ModeCreateEdgeAndNode(
 				 Editor ed,
-				 Class edgeClass,
-				 Class nodeClass,
+				 Object edgeType,
+				 Object nodeType,
 				 boolean post) {
         super(ed);
-        setArg("edgeClass", edgeClass);
-        setArg("nodeClass", nodeClass);
+        setArg("edgeClass", edgeType);
+        setArg("nodeClass", nodeType);
         postProcessEdge = post;
         LOG.debug("postprocessing: " + postProcessEdge);
     }
@@ -327,7 +327,7 @@ public class ModeCreateEdgeAndNode extends ModeCreate {
             p._isComplete = true;
             if (foundPort != null && foundPort != startPort) {
                 Fig destPortFig = destFigNode.getPortFig(foundPort);
-                Class edgeClass = (Class) getArg("edgeClass");
+                Object edgeType = getArg("edgeClass");
                 if (destToSource) {
                     Object temp = startPort;
                     startPort = foundPort;
@@ -339,8 +339,8 @@ public class ModeCreateEdgeAndNode extends ModeCreate {
                     startPortFig = destPortFig;
                     destPortFig = tempFigPort;
                 }
-                if (edgeClass != null) {
-                    newEdge = mgm.connect(startPort, foundPort, edgeClass);
+                if (edgeType != null) {
+                    newEdge = mgm.connect(startPort, foundPort, (Class) edgeType);
                 } else {
                     newEdge = mgm.connect(startPort, foundPort);
                 }

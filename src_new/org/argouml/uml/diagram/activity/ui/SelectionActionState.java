@@ -1,4 +1,4 @@
-// $Id: SelectionActionState.java,v 1.24 2005/01/29 20:08:30 linus Exp $
+// $Id: SelectionActionState.java,v 1.25 2005/01/30 01:21:56 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -213,8 +213,8 @@ public class SelectionActionState extends SelectionWButtons {
 	int newX = cx, newY = cy, newW = cw, newH = ch;
 	Dimension minSize = _content.getMinimumSize();
 	int minWidth = minSize.width, minHeight = minSize.height;
-	Class edgeClass = null;
-	Class nodeClass = (Class) Model.getMetaTypes().getActionState();
+	Object edgeType = null;
+	Object nodeType = Model.getMetaTypes().getActionState();
 
 	Editor ce = Globals.curEditor();
 	GraphModel gm = ce.getGraphModel();
@@ -228,24 +228,24 @@ public class SelectionActionState extends SelectionWButtons {
 	boolean reverse = false;
 	switch (hand.index) {
 	case 12: //add incoming
-	    edgeClass = (Class) Model.getMetaTypes().getTransition();
+	    edgeType = Model.getMetaTypes().getTransition();
 	    by = cy + ch / 2;
 	    bx = cx + cw;
 	    break;
 	case 13: // add outgoing
-	    edgeClass = (Class) Model.getMetaTypes().getTransition();
+	    edgeType = Model.getMetaTypes().getTransition();
 	    reverse = true;
 	    by = cy + ch / 2;
 	    bx = cx;
 	    break;
 	case 10: // add incoming on top
-	    edgeClass = (Class) Model.getMetaTypes().getTransition();
+	    edgeType = Model.getMetaTypes().getTransition();
 	    reverse = true;
 	    by = cy;
 	    bx = cx + cw / 2;
 	    break;
 	case 11: // add outgoing below
-	    edgeClass = (Class) Model.getMetaTypes().getTransition();
+	    edgeType = Model.getMetaTypes().getTransition();
 	    by = cy + ch;
 	    bx = cx + cw / 2;
 	    break;
@@ -253,9 +253,9 @@ public class SelectionActionState extends SelectionWButtons {
 	    LOG.warn("invalid handle number");
 	    break;
 	}
-	if (edgeClass != null && nodeClass != null) {
+	if (edgeType != null && nodeType != null) {
 	    ModeCreateEdgeAndNode m =
-	        new ModeCreateEdgeAndNode(ce, edgeClass, nodeClass, false);
+	        new ModeCreateEdgeAndNode(ce, edgeType, nodeType, false);
 	    m.setup((FigNode) _content, _content.getOwner(), bx, by, reverse);
 	    ce.pushMode(m);
 	}

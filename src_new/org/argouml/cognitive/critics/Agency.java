@@ -1,4 +1,4 @@
-// $Id: Agency.java,v 1.17 2005/01/09 14:58:05 linus Exp $
+// $Id: Agency.java,v 1.18 2005/01/30 01:21:56 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -202,7 +202,7 @@ public class Agency extends Observable { //implements java.io.Serialization
      * @param cr the critic to register
      * @param clazz the design material class that is to be criticized
      */
-    public static void register(Critic cr, Class clazz) {
+    public static void register(Critic cr, Object clazz) {
         Vector theCritics = (Vector) getCriticRegistry().get(clazz);
         if (theCritics == null) {
             theCritics = new Vector();

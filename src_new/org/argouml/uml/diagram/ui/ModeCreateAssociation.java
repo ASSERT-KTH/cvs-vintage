@@ -1,4 +1,4 @@
-// $Id: ModeCreateAssociation.java,v 1.8 2005/01/29 20:08:27 linus Exp $
+// $Id: ModeCreateAssociation.java,v 1.9 2005/01/30 01:21:56 bobtarling Exp $
 // Copyright (c) 2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -153,10 +153,8 @@ public class ModeCreateAssociation extends ModeCreatePolyEdge {
         // TODO: potential class cast exception
         if (f instanceof FigAssociation)  {
             Object assoc = f.getOwner();
-            Class edgeClass = (Class) getArg("edgeClass");
-            if (edgeClass != null
-                    && edgeClass.equals(
-                            Model.getMetaTypes().getAssociation())) {
+            Object edgeType = getArg("edgeClass");
+            if (Model.getMetaTypes().getAssociation().equals(edgeType)) {
                 boolean isValid =
                     Model.getUmlFactory().isConnectionValid(
                         Model.getMetaTypes().getAssociationEnd(),
@@ -204,15 +202,14 @@ public class ModeCreateAssociation extends ModeCreatePolyEdge {
                 editor.damageAll();
                 p._isComplete = true;
 
-                Class edgeClass = (Class) getArg("edgeClass");
-                if (edgeClass.equals(Model.getMetaTypes().getAssociation())
+                Object edgeType = getArg("edgeClass");
+                if (edgeType.equals(Model.getMetaTypes().getAssociation())
                         && ModelFacade.isAAssociation(foundPort)) {
-                    edgeClass =
-                        (Class) Model.getMetaTypes().getAssociationEnd();
+                    edgeType = Model.getMetaTypes().getAssociationEnd();
                 }
-                if (edgeClass != null) {
+                if (edgeType != null) {
                     setNewEdge(mutableGraphModel.connect(
-                                    getStartPort(), foundPort, edgeClass));
+                                    getStartPort(), foundPort, (Class) edgeType));
                 } else {
                     setNewEdge(mutableGraphModel.connect(
                                     getStartPort(), foundPort));

@@ -1,4 +1,4 @@
-// $Id: ModeCreateLink.java,v 1.7 2005/01/09 14:58:38 linus Exp $
+// $Id: ModeCreateLink.java,v 1.8 2005/01/30 01:21:56 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -198,11 +198,12 @@ public class ModeCreateLink extends ModeCreate {
 
             if (foundPort != null && foundPort != startPort) {
                 Fig destPortFig = destFigNode.getPortFig(foundPort);
-                Class edgeClass = (Class) getArg("edgeClass");
-                if (edgeClass != null)
-                    newEdge = mgm.connect(startPort, foundPort, edgeClass);
-                else
+                Object edgeType = getArg("edgeClass");
+                if (edgeType != null) {
+                    newEdge = mgm.connect(startPort, foundPort, (Class) edgeType);
+                } else {
                     newEdge = mgm.connect(startPort, foundPort);
+                }
 
                 // Calling connect() will add the edge to the GraphModel and
                 // any LayerPersectives on that GraphModel will get a

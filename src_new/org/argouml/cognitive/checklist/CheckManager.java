@@ -1,4 +1,4 @@
-// $Id: CheckManager.java,v 1.10 2005/01/09 14:58:05 linus Exp $
+// $Id: CheckManager.java,v 1.11 2005/01/30 01:21:56 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -108,13 +108,13 @@ public class CheckManager implements Serializable {
         Enumeration enumeration = lists.keys();
 
         while (enumeration.hasMoreElements()) {
-            Class index = (Class) enumeration.nextElement();
+            Object clazz = enumeration.nextElement();
 
             Class[] intfs = cls.getInterfaces();
             for (int i = 0; i < intfs.length; i++) {
-                if (intfs[i].equals(index)) {
+                if (intfs[i].equals(clazz)) {
                     // We found it!
-                    Checklist chlist = (Checklist) lists.get(index);
+                    Checklist chlist = (Checklist) lists.get(clazz);
 
                     // Enter the class to speed up the next search.
                     lists.put(cls, chlist);

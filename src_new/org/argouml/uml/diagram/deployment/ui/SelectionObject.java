@@ -1,4 +1,4 @@
-// $Id: SelectionObject.java,v 1.22 2005/01/29 20:08:26 linus Exp $
+// $Id: SelectionObject.java,v 1.23 2005/01/30 01:21:55 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -145,29 +145,29 @@ public class SelectionObject extends SelectionWButtons {
 	int newX = cx, newY = cy, newW = cw, newH = ch;
 	Dimension minSize = _content.getMinimumSize();
 	int minWidth = minSize.width, minHeight = minSize.height;
-	Class edgeClass = null;
-	Class nodeClass = (Class) Model.getMetaTypes().getObject();
+	Object edgeType = null;
+	Object nodeType = Model.getMetaTypes().getObject();
 	int bx = mX, by = mY;
 	boolean reverse = false;
 	switch (hand.index) {
 	case 10: //add link
-	    edgeClass = (Class) Model.getMetaTypes().getLink();
+	    edgeType = Model.getMetaTypes().getLink();
 	    by = cy;
 	    bx = cx + cw / 2;
 	    break;
 	case 11: //add link
-	    edgeClass = (Class) Model.getMetaTypes().getLink();
+	    edgeType = Model.getMetaTypes().getLink();
 	    reverse = true;
 	    by = cy + ch;
 	    bx = cx + cw / 2;
 	    break;
 	case 12: //add link
-	    edgeClass = (Class) Model.getMetaTypes().getLink();
+	    edgeType = Model.getMetaTypes().getLink();
 	    by = cy + ch / 2;
 	    bx = cx + cw;
 	    break;
 	case 13: // add link
-	    edgeClass = (Class) Model.getMetaTypes().getLink();
+	    edgeType = Model.getMetaTypes().getLink();
 	    reverse = true;
 	    by = cy + ch / 2;
 	    bx = cx;
@@ -176,10 +176,10 @@ public class SelectionObject extends SelectionWButtons {
 	    LOG.warn("invalid handle number");
 	    break;
 	}
-	if (edgeClass != null && nodeClass != null) {
+	if (edgeType != null && nodeType != null) {
 	    Editor ce = Globals.curEditor();
 	    ModeCreateEdgeAndNode m =
-	        new ModeCreateEdgeAndNode(ce, edgeClass, nodeClass, false);
+	        new ModeCreateEdgeAndNode(ce, edgeType, nodeType, false);
 	    m.setup((FigNode) _content, _content.getOwner(), bx, by, reverse);
 	    ce.pushMode(m);
 	}
