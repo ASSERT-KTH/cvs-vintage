@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/service/http/Attic/HttpRequestAdapter.java,v 1.13 2000/05/24 16:34:14 costin Exp $
- * $Revision: 1.13 $
- * $Date: 2000/05/24 16:34:14 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/service/http/Attic/HttpRequestAdapter.java,v 1.14 2000/05/24 23:31:38 costin Exp $
+ * $Revision: 1.14 $
+ * $Date: 2000/05/24 23:31:38 $
  *
  * ====================================================================
  *
@@ -78,7 +78,13 @@ class RecycleBufferedInputStream extends BufferedInputStream {
     }
 
     void setInputStream( InputStream is ) {
+	this.count=0;
 	this.in=is;
+    }
+
+    void recycle() {
+	this.in=null;
+	this.count=0;
     }
 
     
@@ -114,6 +120,7 @@ public class HttpRequestAdapter extends RequestImpl {
 	super.recycle();
 	off=0;
 	count=0;
+	if( sin!=null )  sin.recycle();
     }
     
     public Socket getSocket() {
@@ -243,6 +250,7 @@ public class HttpRequestAdapter extends RequestImpl {
 
 	if (c != ':') {
 	    System.out.println("Parse error, missing : in  " + new String( b, off, len ));
+	    System.out.println("Full  " + new String( b, 0, b.length ));
 	    return false;
 	}
 
