@@ -1,8 +1,3 @@
-
-/*
- * $Id: RequestMap.java,v 1.3 1999/11/04 01:39:54 costin Exp $
- */
-
 /**
  * test various URI requests per servlet 2.2/10
  *

@@ -1,7 +1,3 @@
-/* $Id: EchoServlet.java,v 1.2 1999/11/04 01:39:57 costin Exp $
- *
- */
-
 package request;
 
 import java.io.*;

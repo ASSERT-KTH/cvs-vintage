@@ -1,8 +1,3 @@
-
-/*
- * $Id: Post.java,v 1.5 1999/11/04 01:39:54 costin Exp $
- */
-
 /**
  * test various POST requests
  *
