@@ -29,7 +29,14 @@ import org.jboss.security.SimplePrincipal;
  * @author <a href="mailto:docodan@mvcsoft.com">Daniel OConnor</a>
  * @author <a href="mailto:Scott_Stark@displayscape.com">Scott Stark</a>.
  * @author <a href="mailto:osh@sparre.dk">Ole Husgaard</a> 
- * @version $Revision: 1.29 $
+ * @author <a href="mailto:bill@burkecentral.com">Bill Burke</a> 
+ * @version $Revision: 1.30 $
+ *
+ *  <p><b>Revisions:</b><br>
+ *  <p><b>2001/10/16: billb</b>
+ *  <ol>
+ *   <li>Added clustering tags
+ *  </ol>
  */
 public abstract class BeanMetaData
    extends MetaData
@@ -92,6 +99,8 @@ public abstract class BeanMetaData
    private ArrayList transactionMethods = new ArrayList();
    /** The assembly-descriptor/exclude-list method(s) */
    private ArrayList excludedMethods = new ArrayList();
+   /** The cluster-config element info */
+   private ClusterConfigMetaData clusterConfig = null;
 
    // from jboss.xml
 	 
@@ -315,7 +324,9 @@ public abstract class BeanMetaData
    
    // Cluster configuration methods
    //
-   public boolean isClustered () { return this.clustered; }
+   public boolean isClustered() { return this.clustered; }
+
+   public ClusterConfigMetaData getClusterConfigMetaData() { return this.clusterConfig; }
 
    public void importEjbJarXml(Element element) throws DeploymentException
    {
@@ -471,6 +482,12 @@ public abstract class BeanMetaData
       String clusteredElt = getElementContent(getOptionalChild(element, "clustered"), (clustered? "True" : "False"));
       clustered = clusteredElt.equals ("True");
       
+      Element clusterConfigElement = getOptionalChild(element, "cluster-config");
+      if (clusterConfigElement != null)
+      {
+         this.clusterConfig = new ClusterConfigMetaData();
+         clusterConfig.importJbossXml(clusterConfigElement);
+      }
    }
 
    // Package protected ---------------------------------------------
