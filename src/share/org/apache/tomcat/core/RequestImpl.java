@@ -78,6 +78,7 @@ import javax.servlet.http.*;
  * @author Jason Hunter [jch@eng.sun.com]
  * @author Harish Prabandham
  * @author Alex Cruikshank [alex@epitonic.com]
+ * @author Hans Bergsten [hans@gefionsoftware.com]
  */
 public class RequestImpl  implements Request {
 
@@ -102,7 +103,7 @@ public class RequestImpl  implements Request {
     // Need to distinguish between null pathTranslated and
     // lazy-computed pathTranlsated
     protected boolean pathTranslatedIsSet=false;
-    
+
     protected Hashtable parameters = new Hashtable();
     protected int contentLength = -1;
     protected String contentType = null;
@@ -115,7 +116,7 @@ public class RequestImpl  implements Request {
     // active roles for the current user
     protected String userRoles[];
     protected String reqRoles[];
-    
+
     // Request
     protected Response response;
     protected HttpServletRequest requestFacade;
@@ -159,7 +160,7 @@ public class RequestImpl  implements Request {
     Request top;
     Request parent;
     Request child;
-    
+
     protected static StringManager sm =
         StringManager.getManager("org.apache.tomcat.core");
 
@@ -206,7 +207,7 @@ public class RequestImpl  implements Request {
 
     /** Return the server name. If none was set,
      *  extract it from the host header.
-     *  
+     *
      */
     public String getServerName() {
 	if(serverName!=null) return serverName;
@@ -253,7 +254,7 @@ public class RequestImpl  implements Request {
 	    return null;
         }
     }
-    
+
     public String[] getParameterValues(String name) {
 	handleParameters();
         return (String[])parameters.get(name);
@@ -326,7 +327,7 @@ public class RequestImpl  implements Request {
     public String getPathInfo() {
         return pathInfo;
     }
-    
+
     public void setRemoteUser(String s) {
 	remoteUser=s;
 	// this is set by an auth module
@@ -344,14 +345,14 @@ public class RequestImpl  implements Request {
     }
 
     public boolean isSecure() {
-	// The adapter is responsible for providing this information 
+	// The adapter is responsible for providing this information
         return getScheme().equalsIgnoreCase("HTTPS");
     }
-    
+
     public void setUserPrincipal( Principal p ) {
 	principal=p;
     }
-    
+
     /** Return the principal - the adapter will set it
      */
     public Principal getUserPrincipal() {
@@ -359,7 +360,7 @@ public class RequestImpl  implements Request {
 	if( principal == null ) {
 	    principal=new SimplePrincipal( getRemoteUser() );
 	}
-	return principal; 
+	return principal;
     }
 
     public void setRequiredRoles( String roles[] ) {
@@ -460,16 +461,16 @@ public class RequestImpl  implements Request {
 	    // if not null, it is validated by the session module
 	    return serverSession;
 	}
-	
+
 	if( ! create ) return null;
-	
+
 	//	context.log("RequestImpl:  created new session!");
 	contextM.doNewSessionRequest( this, response );
 	if ( serverSession == null ) {
 	    context.log("RequestImpl: no session created!");
 	    return null;
 	}
-	
+
 	reqSessionId = serverSession.getId();
 	response.setSessionId( reqSessionId );
 
@@ -492,7 +493,7 @@ public class RequestImpl  implements Request {
 	}
 	return (Cookie)cookies.elementAt(idx);
     }
-    
+
     public Cookie[] getCookies() {
 	int count=getCookieCount();
 	Cookie[] cookieArray = new Cookie[ count ];
@@ -589,10 +590,10 @@ public class RequestImpl  implements Request {
 	if( value != null )
 	    return value;
 
-	// allow access to FacadeManager for servlets 
+	// allow access to FacadeManager for servlets
 	// ( this way you don't need to deal with init ).
 	if( name.equals(FacadeManager.FACADE_ATTRIBUTE)) {
-	    return context.getAttribute( name ); 
+	    return context.getAttribute( name );
 	}
 	return null;
     }
@@ -629,7 +630,7 @@ public class RequestImpl  implements Request {
     public Request getChild() {
 	return child;
     }
-    
+
     public void setChild( Request req ) {
 	child=req;
     }
@@ -652,7 +653,7 @@ public class RequestImpl  implements Request {
 	}
 	return top;
     }
-    
+
     // -------------------- Facade for MimeHeaders
     public Enumeration getHeaders(String name) {
 	//	Vector v = reqA.getMimeHeaders().getHeadersVector(name);
@@ -719,6 +720,7 @@ public class RequestImpl  implements Request {
         pathTranslated=null;
         pathInfo=null;
         pathTranslatedIsSet=false;
+        sessionIdSource = null;
 
         // XXX a request need to override those if it cares
         // about security
@@ -756,7 +758,7 @@ public class RequestImpl  implements Request {
 	bBuffer=buf;
     }
 
-    
+
     public ServletInputStream getInputStream() throws IOException {
     	return in;
     }
@@ -838,11 +840,11 @@ public class RequestImpl  implements Request {
     public String getLocalHost() {
 	return localHost;
     }
-    
+
     public void setLocalHost(String host) {
 	this.localHost = host;
     }
-    
+
 
     public String toString() {
 	StringBuffer sb=new StringBuffer();
@@ -881,7 +883,7 @@ public class RequestImpl  implements Request {
     public static final int ACC_POST_SERVICE=4;
     public static final int ACC_IN_OUT=5;
     public static final int ACC_OUT_COUNT=6;
-    
+
     public static final int ACCOUNTS=7;
     long accTable[]=new long[ACCOUNTS];
 
