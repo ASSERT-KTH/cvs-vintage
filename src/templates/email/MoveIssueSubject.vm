@@ -1,1 +1,1 @@
-#set ($args = [$issue.UniqueId, $oldIssue.UniqueId, $oldModule.Name, $oldIssueType.Name])$l10n.format($defaultTextKey, $args)
+#set ($args = [$issue.UniqueId, $oldIssue.UniqueId, $oldModule.Name, $oldIssueType.Name])$l10n.setDisableFilter(true).format($defaultTextKey, $args)

@@ -110,6 +110,8 @@ public class ScarabLocalizationTool
     // store a locale which is useful for creating a tool outside of a request
     private Locale locale;
 
+    private boolean disableFilter = false;
+
     /**
      * Creates a new instance.  The object should have init(Object) called
      * being instantiated in this way, where Object is either a RunData 
@@ -218,6 +220,26 @@ public class ScarabLocalizationTool
         return format(key, args.toArray());
     }
 
+    /**
+     * Allow us to be able to disable a filter when rendering 
+     * something from the format() method. the default is to
+     * have it enabled.
+     */
+    public ScarabLocalizationTool setDisableFilter(boolean v)
+    {
+        disableFilter = v;
+        return this;
+    }
+    
+    /**
+     * Allow us to be able to disable a filter when rendering 
+     * something from the format() method. the default is to
+     * have it enabled.
+     */
+    public boolean getDisableFilter()
+    {
+        return disableFilter;
+    }
 
     /**
      * Formats a localized value using the provided objects.
@@ -243,14 +265,15 @@ public class ScarabLocalizationTool
             // we don't filter Number, because these are sometimes passed
             // to message formatter in order to make a choice.  Converting
             // the number to a String will cause error
-            if (obj != null && 
-                !(obj instanceof SkipFiltering) && 
-                !(obj instanceof Number) 
-               ) 
+            if (!getDisableFilter() && obj != null && 
+                   !(obj instanceof SkipFiltering) && 
+                   !(obj instanceof Number)) 
             {
                 args[i] = ReferenceInsertionFilter.filter(obj.toString());
             }
         }
+
+        setDisableFilter(false);
 
         try
         {
@@ -403,5 +426,6 @@ public class ScarabLocalizationTool
         bundlePrefix = null;
         oldBundlePrefix = null;
         locale = null;
+        setDisableFilter(false);
     }
 }
