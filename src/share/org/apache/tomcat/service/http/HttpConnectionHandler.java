@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/service/http/Attic/HttpConnectionHandler.java,v 1.28 2000/07/29 18:44:03 costin Exp $
- * $Revision: 1.28 $
- * $Date: 2000/07/29 18:44:03 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/service/http/Attic/HttpConnectionHandler.java,v 1.29 2000/08/12 02:46:48 costin Exp $
+ * $Revision: 1.29 $
+ * $Date: 2000/08/12 02:46:48 $
  *
  * ====================================================================
  *
@@ -77,12 +77,17 @@ import javax.servlet.http.*;
 
 public class HttpConnectionHandler  implements  TcpConnectionHandler {
     
+    boolean secure=false;
     ContextManager contextM;
     
     public HttpConnectionHandler() {
 	super();
     }
 
+    public void setSecure( boolean b ) {
+	secure=b;
+    }
+    
     public void setAttribute(String name, Object value ) {
 	if("context.manager".equals(name) ) {
 	    setServer(value);
@@ -181,7 +186,10 @@ public class HttpConnectionHandler  implements  TcpConnectionHandler {
 	    resA.setOutputStream( out );
 
 	    reqA.readNextRequest(resA);
-
+	    if( secure ) {
+		reqA.setScheme( "https" );
+	    }
+	    
 	    contextM.service( reqA, resA );
 
 	    try {
