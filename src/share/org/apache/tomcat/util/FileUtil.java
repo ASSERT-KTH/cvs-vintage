@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/util/Attic/FileUtil.java,v 1.7 2000/06/22 00:15:05 costin Exp $
- * $Revision: 1.7 $
- * $Date: 2000/06/22 00:15:05 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/util/Attic/FileUtil.java,v 1.8 2000/06/23 21:41:15 nacho Exp $
+ * $Revision: 1.8 $
+ * $Date: 2000/06/23 21:41:15 $
  *
  * ====================================================================
  *
@@ -158,8 +158,10 @@ public class FileUtil {
 	// happens on flavors of Windows.
 	if (File.separatorChar  == '\\') {
 	    // On Windows check ignore case....
-	    if(!realPath.equalsIgnoreCase(canPath)) {
-		return null;
+	    if(!realPath.equalsIgnoreCase(canPath){
+            int ls=realPath.lastIndexOf('\\');
+            if  ( (ls > 0) && !realPath.substring(0,ls).equalsIgnoreCase(canPath) ))
+        		return null;
 	    }
 	}
 
