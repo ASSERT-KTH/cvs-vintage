@@ -22,24 +22,16 @@ if [ "${TOMCAT_HOME}X" != "X" ] ; then
     fi
 fi
 
-if [ "${SPYDERMQ_HOME}X" != "X" ] ; then
-    if [ -x $SPYDERMQ_HOME ] ; then
-        echo "Adding jar files in ${SPYDERMQ_HOME}/lib to CLASSPATH"
-        CLASSPATH="$CLASSPATH:${SPYDERMQ_HOME}/lib/spydermq.jar"
-        CLASSPATH="$CLASSPATH:${SPYDERMQ_HOME}/lib/jms.jar"
-        CLASSPATH="$CLASSPATH:${SPYDERMQ_HOME}/lib/jnpserver.jar"
-    else 
-        echo "SPYDERMQ_HOME is set, but is an invalid directory"
-    fi
-fi
-
-# Add the $JBOSS_HOME/conf to the classpath so that 
-# the ClassLoader.getResource() will find the relevant
-# configuration and resource files.
-
-if [ "${JBOSS_HOME}X" != "X" ] ; then
-    CLASSPATH="$CLASSPATH:$JBOSS_HOME/conf"
-fi
+#if [ "${SPYDERMQ_HOME}X" != "X" ] ; then
+#    if [ -x $SPYDERMQ_HOME ] ; then
+#        echo "Adding jar files in ${SPYDERMQ_HOME}/lib to CLASSPATH"
+#        CLASSPATH="$CLASSPATH:${SPYDERMQ_HOME}/lib/spydermq.jar"
+#        CLASSPATH="$CLASSPATH:${SPYDERMQ_HOME}/lib/jms.jar"
+#        CLASSPATH="$CLASSPATH:${SPYDERMQ_HOME}/lib/jnpserver.jar"
+#    else 
+#        echo "SPYDERMQ_HOME is set, but is an invalid directory"
+#    fi
+#fi
 
 # Add all login modules for JAAS-based security
 # and all libraries that are used by them here
