@@ -82,7 +82,7 @@ import org.apache.torque.util.Criteria;
  * methodology</a> to be implemented.
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: ScarabGlobalTool.java,v 1.20 2002/01/25 02:59:07 jmcnally Exp $
+ * @version $Id: ScarabGlobalTool.java,v 1.21 2002/01/25 03:00:51 jmcnally Exp $
  */
 public class ScarabGlobalTool implements ScarabGlobalScope
 {
@@ -133,6 +133,11 @@ public class ScarabGlobalTool implements ScarabGlobalScope
         return security;
     }
 
+    /**
+     * Returns a list of all the permissions in use by scarab.  
+     *
+     * @return a <code>List</code> of <code>String</code>s
+     */
     public List getAllPermissions()
     {
         return ScarabSecurity.getAllPermissions();
