@@ -15,7 +15,7 @@
 
     <property name="final.name" value="${project}-${version}"/>
     <property name="final.dir" value="${basedir}/../${final.name}/"/>
-            
+
     <property name="src.conf.dir" value="${src.dir}/conf"/>
     <property name="www.dir" value="${src.dir}/../www"/>
     <property name="src.html.dir" value="${src.dir}/html"/>
@@ -33,7 +33,6 @@
     <property name="torque.dir.scarab" value="${build.src.scarab}/torque"/>
     <property name="javadoc.destdir" value="${build.project}/api"/>
     <property name="scarab.war.file" value="${build.webapps}/${project}.war"/>
-
 
     <!-- Build classpath -->
     <path id="classpath">
@@ -205,6 +204,9 @@
         </condition>
 
         <!-- things to go into the web-inf directory -->
+        <filter token="VERSION" value="${version}"/>
+        <tstamp/>
+        <filter token="BUILD_DATE" value="${DSTAMP}${TSTAMP}"/>
         <filter token="TEMPLATE_PATH" value="${template.path}"/>
         <filter token="PIPELINE_DESCRIPTOR"
             value="${scarab.default.pipeline.descriptor}"/>
