@@ -302,7 +302,7 @@
         <war.bundle>true</war.bundle>
       </properties>
     </dependency>
-    <dependency>
+    <!--dependency>
       <groupId>fulcrum</groupId>
       <artifactId>fulcrum</artifactId>
       <version>20040328.191814</version>
@@ -310,7 +310,7 @@
       <properties>
         <war.bundle>true</war.bundle>
       </properties>
-    </dependency>
+    </dependency-->
     <dependency>
       <groupId>oro</groupId>
       <artifactId>oro</artifactId>
