@@ -379,7 +379,7 @@ public final class ContextManager implements LogAware{
      *     added before init() and those added  by interceptors in
      *     engineInit hook ).
      *
-     *  It is possible to add and init contexts later. 
+     *  It is possible to add and init contexts later.
      *
      *  Note that addContext() is called each time a context is added,
      *  and that can be _before_ tomcat is initialized.
@@ -429,7 +429,7 @@ public final class ContextManager implements LogAware{
      *  It must be called after init.
      */
     public final void start() throws TomcatException {
-	
+
 	Enumeration enum = getContexts();
 	while (enum.hasMoreElements()) {
 	    Context ctx = (Context)enum.nextElement();
@@ -633,8 +633,8 @@ public final class ContextManager implements LogAware{
 	    String roles[]=req.getRequiredRoles();
 	    if(roles != null ) {
 		status=0;
-		BaseInterceptor reqI[]= req.getContainer().
-		    getInterceptors(Container.H_authorize);
+		BaseInterceptor reqI[]= req.getContext().getContainer().
+                getInterceptors(Container.H_authorize);
 
 		// Call all authorization callbacks. 
 		for( int i=0; i< reqI.length; i++ ) {
@@ -947,5 +947,5 @@ public final class ContextManager implements LogAware{
         System.setProperty(RANDOM_CLASS_PROPERTY, randomClass);
     }
 
-    
+
 }

@@ -319,14 +319,14 @@ public class Handler {
 		reqI[i].preService( req, res );
 	    }
 	}
-	
+
 	Throwable t=null;
 	try {
 	    doService( req, res );
 	} catch( Throwable t1 ) {
 	    t=t1;
 	}
-	
+
 	// continue with the postService
 	if( ! internal ) {
 	    for( int i=0; i< reqI.length; i++ ) {

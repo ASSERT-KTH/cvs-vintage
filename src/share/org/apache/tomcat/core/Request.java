@@ -442,8 +442,8 @@ public class Request {
 	    // Call all authentication callbacks. If any of them is able to
 	    // 	identify the user it will set the principal in req.
 	    int status=0;
-	    BaseInterceptor reqI[]= getContainer().
-		getInterceptors(Container.H_authenticate);
+	    BaseInterceptor reqI[]= getContext().getContainer().getInterceptors(Container.H_authenticate);
+            //.getInterceptors(this,);
 	    for( int i=0; i< reqI.length; i++ ) {
 		status=reqI[i].authenticate( this, response );
 		if ( status != 0 ) {
@@ -798,14 +798,14 @@ public class Request {
 	    serverName=hostHeader;
 	    return serverName;
 	}
-
 	if( localHost != null ) {
 	    serverName = localHost;
 	    return serverName;
 	}
 	// default to localhost - and warn
 	//	log("No server name, defaulting to localhost");
-	serverName="localhost";
+	localHost=getLocalHost();
+        serverName=localHost;
 	return serverName;
     }
 
@@ -925,7 +925,7 @@ public class Request {
         protoMB.setString("HTTP/1.0");
         remoteAddr="127.0.0.1";
         remoteHost="localhost";
-        localHost="localhost";
+//        localHost="localhost";
 
     }
 }
