@@ -9,7 +9,7 @@
  * Create the indexes
  *
  * Created By: Jon Scott Stevens
- * $Id: mysql-upgrade-1.0b13-1.0b14-8.sql,v 1.1 2002/12/08 21:19:58 jon Exp $
+ * $Id: mysql-upgrade-1.0b13-1.0b14-8.sql,v 1.2 2002/12/09 18:14:07 jon Exp $
  */
 
 drop table if exists xxxx_SCARAB_DEPEND;
@@ -37,8 +37,11 @@ drop table SCARAB_DEPEND;
 
 alter table xxxx_SCARAB_DEPEND rename SCARAB_DEPEND;
 
-CREATE INDEX IX_DEPEND ON 
-    SCARAB_DEPEND (DEPEND_ID, OBSERVED_ID, OBSERVER_ID, DEPEND_TYPE_ID);
+CREATE INDEX IX_DEPEND_OBSERVED ON 
+    SCARAB_DEPEND (OBSERVED_ID, DEPEND_TYPE_ID);
+
+CREATE INDEX IX_DEPEND_OBSERVER ON 
+    SCARAB_DEPEND (OBSERVER_ID, DEPEND_TYPE_ID);
 
 alter table SCARAB_ACTIVITY modify column DEPEND_ID INTEGER NULL;
 alter table SCARAB_ACTIVITY add FOREIGN KEY (DEPEND_ID) REFERENCES SCARAB_DEPEND(DEPEND_ID);

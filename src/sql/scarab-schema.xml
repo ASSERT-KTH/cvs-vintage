@@ -2,7 +2,7 @@
 <!DOCTYPE database SYSTEM
           "http://jakarta.apache.org/turbine/dtd/database.dtd">
 
-<!-- $Id: scarab-schema.xml,v 1.122 2002/12/08 21:25:22 jon Exp $ -->
+<!-- $Id: scarab-schema.xml,v 1.123 2002/12/09 18:14:32 jon Exp $ -->
 
 <database name="@DATABASE_PROP_NAME@">
 <!--
@@ -502,9 +502,11 @@
         <reference local="DEPEND_TYPE_ID" foreign="DEPEND_TYPE_ID"/>
     </foreign-key>
 
-    <index name="IX_DEPEND">
-        <index-column name="DEPEND_ID"/>
+    <index name="IX_DEPEND_OBSERVED">
         <index-column name="OBSERVED_ID"/>
+        <index-column name="DEPEND_TYPE_ID"/>
+    </index>
+    <index name="IX_DEPEND_OBSERVER">
         <index-column name="OBSERVER_ID"/>
         <index-column name="DEPEND_TYPE_ID"/>
     </index>
