@@ -31,7 +31,8 @@ import org.apache.log4j.Category;
  * @author <a href="mailto:menonv@cpw.co.uk">Vinay Menon</a>
  * @author <a href="mailto:danch@nvisia.com">danch (Dan Christopherson)</a>
  * @author <a href="mailto:bill@burkecentral.com">Bill Burke</a>
- * @version $Revision: 1.19 $
+ * @author <a href="mailto:lennart.petersson@benefit.se">Lennart Petersson</a>
+ * @version $Revision: 1.20 $
  *
  *   <p><b>Revisions:</b>
  *
@@ -226,7 +227,7 @@ public class JDBCDefinedFinderCommand extends JDBCFinderCommand
         Set setOfPkTokens = new HashSet(pkTokens.countTokens());
         while(pkTokens.hasMoreTokens())
         {
-          setOfPkTokens.add(pkTokens.nextToken().trim());
+          setOfPkTokens.add(pkTokens.nextToken().trim().toLowerCase());
         }
 
         //Now is the time to check for duplicates between pk and order tokens
@@ -234,7 +235,7 @@ public class JDBCDefinedFinderCommand extends JDBCFinderCommand
         while(i < checkedOrderTokens.length)
         {
           //If duplicate token, null it away
-          if(setOfPkTokens.contains(checkedOrderTokens[i]))
+          if(setOfPkTokens.contains(checkedOrderTokens[i].toLowerCase()))
           {
             checkedOrderTokens[i]=null;
           }
