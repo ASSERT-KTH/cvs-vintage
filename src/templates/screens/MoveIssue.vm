@@ -3,8 +3,11 @@
 #set ($user = $data.User)
 #set ($issueId = $data.Parameters.getString("id"))
 #set ($issue = $scarabR.getIssue($issueId))
-#set ($copyToModules = $user.getCopyToModules($scarabR.CurrentModule))
-#set ($moveToModules = $user.getMoveToModules($scarabR.CurrentModule))
+#set ($moveIssueGroup = $intake.MoveIssue.Default)
+#set ($selectAction = $moveIssueGroup.Action.Value)
+#set ($module= $issue.Module)
+#set ($moduleList = $user.getCopyToModules($module))
+
 #if (!$issueId || $issueId.length() == 0 || !$issue)
 
   <p><strong class="alert">$l10n.CouldNotFindIssue</strong></p>
@@ -14,7 +17,6 @@
 
 #else
 
-#set ($moveIssueGroup = $intake.MoveIssue.Default)
 ##set ($attrValues = $issue.AllAttributeValuesMap)
 ##set ($attrInput = $intake.AttributeValue.mapTo($attVal))
 <form method="post" action="$link.setPage("MoveIssue.vm").setAction("MoveIssue")">
@@ -32,7 +34,7 @@
 <td>
 <select name="mod_issuetype">
 <option>$l10n.SelectModuleIssueType</option>
- #foreach ($module in $copyToModules)
+ #foreach ($module in $moduleList)
     <option>module $module.Name</option>
     #foreach ($issueType in $module.IssueTypes)
        <option value="${module.ModuleId}_${issueType.IssueTypeId}">--artifact type $issueType.Name</option>
@@ -45,10 +47,10 @@
 <th>Action</th>
 <td> <select name="$moveIssueGroup.Action.Key" >
 <option value="copy"
-     #if ($moveIssueGroup.Action.Value.equals("copy")) selected="selected" #end >Copy</option>
-#if (!$moveToModules.isEmpty() && ($data.User.hasPermission($scarabG.Permission.ITEM__DELETE, $scarabR.CurrentModule)))
+     #if ($selectAction.equals("copy")) selected="selected" #end >Copy</option>
+#if ($scarabR.hasPermission($scarabG.Permission.ISSUE__EDIT, $module))
 <option value="move" 
-     #if ($moveIssueGroup.Action.Value.equals("move")) selected="selected" #end >Move</option>
+     #if ($selectAction.equals("move")) selected="selected" #end >Move</option>
 #end
 </select>
 </td>
