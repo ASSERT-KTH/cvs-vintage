@@ -1,4 +1,4 @@
-// $Id: GeneratorDisplay.java,v 1.52 2003/09/08 20:11:53 bobtarling Exp $
+// $Id: GeneratorDisplay.java,v 1.53 2003/09/14 15:04:26 bobtarling Exp $
 // Copyright (c) 1996-2001 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,7 +25,7 @@
 // File: GeneratorDisplay.java
 // Classes: GeneratorDisplay
 // Original Author: jrobbins@ics.uci.edu
-// $Id: GeneratorDisplay.java,v 1.52 2003/09/08 20:11:53 bobtarling Exp $
+// $Id: GeneratorDisplay.java,v 1.53 2003/09/14 15:04:26 bobtarling Exp $
 
 // 5 Mar 2002: Jeremy Bennett (mail@jeremybennett.com). Return text for
 // operations that have no return parameter made "" rather than ": void??"
@@ -58,7 +58,6 @@ import ru.novosoft.uml.foundation.core.MClassifier;
 import ru.novosoft.uml.foundation.core.MConstraint;
 import ru.novosoft.uml.foundation.core.MFeature;
 import ru.novosoft.uml.foundation.core.MModelElement;
-import ru.novosoft.uml.foundation.core.MNamespace;
 import ru.novosoft.uml.foundation.core.MOperation;
 import ru.novosoft.uml.foundation.core.MParameter;
 import ru.novosoft.uml.foundation.core.MStructuralFeature;
@@ -224,7 +223,7 @@ public class GeneratorDisplay extends Generator {
             Iterator it3 = taggedValues.iterator();
             while (it3.hasNext()) {
                 taggedValuesSb.append(
-                    generateTaggedValue((MTaggedValue) it3.next()));
+                    generateTaggedValue((MTaggedValue)it3.next()));
                 taggedValuesSb.append(",");
             }
             taggedValuesSb.delete(
@@ -348,10 +347,10 @@ public class GeneratorDisplay extends Generator {
         String packName = generateName(p.getName());
 
         java.util.Stack stack = new java.util.Stack();
-        MNamespace ns = p.getNamespace();
+        Object ns = p.getNamespace();
         while (ns != null) {
-            stack.push(ns.getName());
-            ns = ns.getNamespace();
+            stack.push(ModelFacade.getName(ns));
+            ns = ModelFacade.getNamespace(ns);
         }
         while (!stack.isEmpty())
             s += (String) stack.pop() + ".";
@@ -480,15 +479,15 @@ public class GeneratorDisplay extends Generator {
         Collection c;
         Iterator it;
         String mname = "";
-        MMessage act;
+        Object act;
         int subpos = 0, submax = 1;
 
         if (m == null)
             return null;
 
-        act = m.getActivator();
+        act = ModelFacade.getActivator(m);
         if (act != null)
-            mname = generateMessageNumber(act);
+            mname = generateMessageNumber((MMessage)act);
 
         if (pre != null) {
             c = pre.getMessages3();
@@ -677,7 +676,7 @@ public class GeneratorDisplay extends Generator {
         //     !String.UNSPEC.equals(n)) s += generateName(n) + " ";
         //     if (ae.isNavigable()) s += "navigable "; if
         //     (ae.getIsOrdered()) s += "ordered ";
-        MMultiplicity m = ae.getMultiplicity();
+        Object m = ae.getMultiplicity();
         if (MMultiplicity.M1_1.equals(m) || MMultiplicity.M0_1.equals(m))
             s += generateClassifierRef(ae.getType());
         else
@@ -686,8 +685,8 @@ public class GeneratorDisplay extends Generator {
         s += " ";
 
         String n = ae.getName();
-        MAssociation asc = ae.getAssociation();
-        String ascName = asc.getName();
+        Object asc = ae.getAssociation();
+        String ascName = ModelFacade.getName(asc);
         if (n != null && n != null && n.length() > 0) {
             s += generateName(n);
         } else if (
@@ -728,9 +727,9 @@ public class GeneratorDisplay extends Generator {
         //get the associationRole name
         String text = "/" + assocRole.getName() + ":";
         //get the base association name
-        MAssociation assoc = assocRole.getBase();
+        Object assoc = assocRole.getBase();
         if (assoc != null) {
-            text = text + assoc.getName();
+            text = text + ModelFacade.getName(assoc);
         }
         return text;
     }

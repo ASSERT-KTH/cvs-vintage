@@ -1,4 +1,4 @@
-// $Id: DataTypesFactory.java,v 1.7 2003/06/30 18:00:21 linus Exp $
+// $Id: DataTypesFactory.java,v 1.8 2003/09/14 15:04:27 bobtarling Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -71,7 +71,7 @@ public class DataTypesFactory extends AbstractUmlModelFactory {
      *  
      *  @return an initialized UML ActionExpression instance.
      */
-    public MActionExpression createActionExpression(String language,
+    public Object/*MActionExpression*/ createActionExpression(String language,
 						    String body) {
         MActionExpression expression = new MActionExpression(language, body);
 	super.initialize(expression);
@@ -95,9 +95,8 @@ public class DataTypesFactory extends AbstractUmlModelFactory {
      *  
      *  @return an initialized UML BooleanExpression instance.
      */
-    public MBooleanExpression createBooleanExpression(String language,
-						      String body)
-    {
+    public Object/*MBooleanExpression*/ createBooleanExpression(String language,
+						      String body) {
         MBooleanExpression expression = new MBooleanExpression(language, body);
 	super.initialize(expression);
 	return expression;

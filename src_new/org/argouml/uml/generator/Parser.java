@@ -1,4 +1,4 @@
-// $Id: Parser.java,v 1.17 2003/09/14 13:03:28 bobtarling Exp $
+// $Id: Parser.java,v 1.18 2003/09/14 15:04:26 bobtarling Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,7 +25,7 @@
 // File: Parser.java
 // Classes: Parser
 // Original Author:
-// $Id: Parser.java,v 1.17 2003/09/14 13:03:28 bobtarling Exp $
+// $Id: Parser.java,v 1.18 2003/09/14 15:04:26 bobtarling Exp $
 
 // 12 Apr 2002: Jeremy Bennett (mail@jeremybennett.com). Extended to support
 // extension points.
@@ -37,10 +37,6 @@ import java.text.ParseException;
 
 import org.argouml.model.uml.UmlFactory;
 
-import ru.novosoft.uml.behavior.state_machines.MEvent;
-import ru.novosoft.uml.behavior.state_machines.MGuard;
-import ru.novosoft.uml.foundation.core.MParameter;
-
 public abstract class Parser {
 
     public abstract Object parseExtensionPoint(String s);
@@ -48,7 +44,7 @@ public abstract class Parser {
 	throws ParseException;
     public abstract void parseAttribute(String s, Object attr)
 	throws ParseException;
-    public abstract MParameter parseParameter(String s);
+    public abstract Object parseParameter(String s);
     //   public abstract Package parsePackage(String s);
     //   public abstract MClassImpl parseClassifier(String s);
     public abstract Object parseStereotype(String s);
@@ -59,8 +55,8 @@ public abstract class Parser {
     public abstract Object parseState(String s);
     public abstract Object parseTransition(Object trans, String s);
     public abstract Object parseAction(String s);
-    public abstract MGuard parseGuard(String s);
-    public abstract MEvent parseEvent(String s);
+    public abstract Object parseGuard(String s);
+    public abstract Object parseEvent(String s);
 
 
     public Object parseExpression(String s) {

@@ -1,4 +1,4 @@
-// $Id: CoreHelper.java,v 1.68 2003/09/08 13:39:20 bobtarling Exp $
+// $Id: CoreHelper.java,v 1.69 2003/09/14 15:04:27 bobtarling Exp $
 // Copyright (c) 1996-2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -434,23 +434,22 @@ public class CoreHelper {
      * @param operation
      * @param newReturnParameter
      */
-    public void setReturnParameter(
-				   MOperation operation,
-				   MParameter newReturnParameter) {
-        Iterator params = operation.getParameters().iterator();
+    public void setReturnParameter(Object/*MOperation*/ operation,
+				   Object/*MParameter*/ newReturnParameter) {
+        Iterator params = ModelFacade.getParameters(operation).iterator();
         String name = "return";
         while (params.hasNext()) {
             MParameter parameter = (MParameter) params.next();
             if ((parameter.getKind()).equals(MParameterDirectionKind.RETURN)) {
-                operation.removeParameter(parameter);
+                ModelFacade.removeParameter(operation, parameter);
                 if (parameter.getName() != null || parameter.getName() == "") {
                     name = parameter.getName();
                 }
             }
         }
-        newReturnParameter.setName(name);
-        newReturnParameter.setKind(MParameterDirectionKind.RETURN);
-        operation.addParameter(0, newReturnParameter);
+        ModelFacade.setName(newReturnParameter, name);
+        ModelFacade.setKind(newReturnParameter, MParameterDirectionKind.RETURN);
+        ModelFacade.addParameter(operation, 0, newReturnParameter);
         // we set the listeners to the figs here too
         // it would be better to do that in the figs themselves
         Project p = ProjectManager.getManager().getCurrentProject();

@@ -1,4 +1,4 @@
-// $Id: StateMachinesFactory.java,v 1.24 2003/09/14 01:51:06 bobtarling Exp $
+// $Id: StateMachinesFactory.java,v 1.25 2003/09/14 15:04:26 bobtarling Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -28,6 +28,7 @@ import java.util.Collection;
 import java.util.Iterator;
 
 import org.argouml.kernel.ProjectManager;
+import org.argouml.model.ModelFacade;
 import org.argouml.model.uml.AbstractUmlModelFactory;
 import org.argouml.model.uml.UmlFactory;
 import ru.novosoft.uml.MFactory;
@@ -131,7 +132,7 @@ public class StateMachinesFactory extends AbstractUmlModelFactory {
      *  
      *  @return an initialized UML Guard instance.
      */
-    public MGuard createGuard() {
+    public Object/*MGuard*/ createGuard() {
         MGuard modelElement = MFactory.getDefaultFactory().createGuard();
 	super.initialize(modelElement);
 	return modelElement;
@@ -537,10 +538,10 @@ public class StateMachinesFactory extends AbstractUmlModelFactory {
      * @param transition The transition that owns the resulting guard condition
      * @return MGuard The resulting guard condition
      */
-    public MGuard buildGuard(Object transition) {
+    public Object/*MGuard*/ buildGuard(Object transition) {
         if (transition instanceof MTransition) {
-            MGuard guard = createGuard();
-            guard.setTransition((MTransition) transition);
+            Object guard = createGuard();
+            ModelFacade.setTransition(guard, transition);
             return guard;
         }
         return null;

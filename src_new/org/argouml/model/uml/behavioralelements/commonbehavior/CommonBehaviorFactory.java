@@ -1,4 +1,4 @@
-// $Id: CommonBehaviorFactory.java,v 1.21 2003/09/13 11:00:11 bobtarling Exp $
+// $Id: CommonBehaviorFactory.java,v 1.22 2003/09/14 15:04:27 bobtarling Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -128,7 +128,7 @@ public class CommonBehaviorFactory extends AbstractUmlModelFactory {
      *  
      *  @return an initialized UML CallAction instance.
      */
-    public MCallAction createCallAction() {
+    public Object createCallAction() {
         MCallAction modelElement =
             MFactory.getDefaultFactory().createCallAction();
         super.initialize(modelElement);
@@ -337,14 +337,14 @@ public class CommonBehaviorFactory extends AbstractUmlModelFactory {
      * @param name
      * @return MCallAction
      */
-    public MCallAction buildCallAction(MOperation oper, String name) {
+    public Object/*MCallAction*/ buildCallAction(MOperation oper, String name) {
         if (oper == null) {
             throw new IllegalArgumentException("There should be an operation"
 					       + " with a callaction.");
         }
-        MCallAction action = createCallAction();
-        action.setName(name);
-        action.setOperation(oper);
+        Object action = createCallAction();
+        ModelFacade.setName(action, name);
+        ModelFacade.setOperation(action, oper);
         return action;
     }
 
