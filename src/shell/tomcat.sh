@@ -1,6 +1,6 @@
 #!/bin/sh
 #
-# $Id: tomcat.sh,v 1.13 2000/03/01 20:24:23 costin Exp $
+# $Id: tomcat.sh,v 1.14 2000/03/01 20:32:48 costin Exp $
 
 # Shell script to start and stop the server
 
@@ -33,10 +33,10 @@ if [ "$TOMCAT_HOME" = "" ] ; then
   
   TOMCAT_HOME_1=`dirname "$PRG"`/..
   echo "Guessing TOMCAT_HOME from tomcat.sh to ${TOMCAT_HOME_1}" 
-  if [ -d ${TOMCAT_HOME_1}/conf ] ; then 
-      TOMCAT_HOME=${TOMCAT_HOME_1}
-      echo "Setting TOMCAT_HOME to $TOMCAT_HOME"
-  fi
+    if [ -d ${TOMCAT_HOME_1}/conf ] ; then 
+	TOMCAT_HOME=${TOMCAT_HOME_1}
+	echo "Setting TOMCAT_HOME to $TOMCAT_HOME"
+    fi
 fi
 
 
@@ -56,7 +56,7 @@ if [ "$TOMCAT_HOME" = "" ] ; then
 fi
 
 if [ "$TOMCAT_HOME" = "" ] ; then
-    echo Can't find TOMCAT_HOME, you need to set it or install in a standard location
+    echo TOMCAT_HOME not set, you need to set it or install in a standard location
     exit 1
 fi
 
