@@ -56,11 +56,12 @@
 /***************************************************************************
  * Description: NT System service for Jakarta/Tomcat                       *
  * Author:      Gal Shachor <shachor@il.ibm.com>                           *
- * Version:     $ $                                                        *
+ * Version:     $Revision: 1.3 $                                           *
  ***************************************************************************/
 
 #include "jk_global.h"
 #include "jk_util.h"
+#include "jk_ajp13.h"
 #include "jk_connect.h"
 
 #include <windows.h>
@@ -68,6 +69,8 @@
 #include <stdlib.h>
 #include <process.h>
 
+#define AJP12_TAG              ("ajp12")
+#define AJP13_TAG              ("ajp13")
 #define BASE_REGISTRY_LOCATION ("SYSTEM\\CurrentControlSet\\Services\\")
 #define IMAGE_NAME             ("ImagePath")
 #define PARAMS_LOCATION        ("Parameters")
@@ -80,6 +83,7 @@ static DWORD                   dwErr = 0;
 static char                    szErr[1024] = "";
 static HANDLE                  hServerStopEvent = NULL;
 static int                     shutdown_port;
+static char                    *shutdown_protocol = AJP12_TAG;
 
 struct jk_tomcat_startup_data {
     char *classpath;
@@ -91,6 +95,7 @@ struct jk_tomcat_startup_data {
     char *server_file;
     char *cmd_line;
     int  shutdown_port;
+    char *shutdown_protocol;
 
     char *extra_path;
 };
@@ -122,7 +127,8 @@ static int get_registry_config_parameter(HKEY hkey,
                                          char *b, DWORD sz);
 static int start_tomcat(const char *name, 
                         HANDLE *hTomcat);
-static void stop_tomcat(short ajp12port, 
+static void stop_tomcat(short port, 
+                        const char *protocol,
                         HANDLE hTomcat);
 static int read_startup_data(jk_map_t *init_map, 
                              jk_tomcat_startup_data_t *data, 
@@ -522,7 +528,7 @@ static void start_jk_service(char *name)
                          * Stop order arrived 
                          */ 
                         ResetEvent(hServerStopEvent);
-                        stop_tomcat((short)shutdown_port, hTomcat);
+                        stop_tomcat((short)shutdown_port, shutdown_protocol, hTomcat);
                         break;
                     case (WAIT_OBJECT_0 + 1):
                         /* 
@@ -534,7 +540,7 @@ static void start_jk_service(char *name)
                          * some error... 
                          * close the servlet container and exit 
                          */ 
-                        stop_tomcat((short)shutdown_port, hTomcat);
+                        stop_tomcat((short)shutdown_port, shutdown_protocol, hTomcat);
                     }
                     CloseHandle(hServerStopEvent);
                     CloseHandle(hTomcat);
@@ -630,22 +636,51 @@ char *GetLastErrorText( char *lpszBuf, DWORD dwSize )
     return lpszBuf;
 }
 
-static void stop_tomcat(short ajp12port, HANDLE hTomcat) 
+static void stop_tomcat(short port, 
+                        const char *protocol,
+                        HANDLE hTomcat)
 {
     struct sockaddr_in in;
     
-    if(jk_resolve("localhost", ajp12port, &in)) {
+    if(jk_resolve("localhost", port, &in)) {
         int sd = jk_open_socket(&in, JK_TRUE, NULL);
         if(sd >0) {
-            char b[] = {(char)254, (char)15};
-            int rc = send(sd, b, 2, 0);
+            int rc = JK_FALSE;
+            if(!strcasecmp(protocol, "ajp13")) {
+                jk_pool_t pool;
+                jk_msg_buf_t *msg = NULL;
+                jk_pool_atom_t buf[TINY_POOL_SIZE];
+
+                jk_open_pool(&pool, buf, sizeof(buf));
+
+                msg = jk_b_new(&pool);
+                jk_b_set_buffer_size(msg, 512); 
+
+                rc = ajp13_marshal_shutdown_into_msgb(msg, 
+                                                      &pool,
+                                                      NULL);
+                if(rc) {
+                    jk_b_end(msg);
+    
+                    if(0 > jk_tcp_socket_sendfull(sd, 
+                                                  jk_b_get_buff(msg),
+                                                  jk_b_get_len(msg))) {
+                        rc = JK_FALSE;
+                    }
+                }                                                    
+            } else {
+                char b[] = {(char)254, (char)15};
+                int rc = send(sd, b, 2, 0);
+                if(2 == rc) {
+                    rc = JK_TRUE;
+                }
+            }
             jk_close_socket(sd);
             if(2 == rc) {
                 if(WAIT_OBJECT_0 == WaitForSingleObject(hTomcat, 30*1000)) {
                     return;
                 }
-            }
-            
+            }            
         }
     }
 
@@ -729,6 +764,8 @@ static int start_tomcat(const char *name, HANDLE *hTomcat)
                             CloseHandle(startupInfo.hStdOutput);
                             CloseHandle(startupInfo.hStdError);
                             shutdown_port = data.shutdown_port;
+                            shutdown_protocol = strdup(data.shutdown_protocol);
+
                             return JK_TRUE;
                         } else {
                             printf("Error: Can not create new process - %s\n", 
@@ -892,6 +929,10 @@ static int read_startup_data(jk_map_t *init_map,
     data->shutdown_port = map_get_int(init_map,
                                       "wrapper.shutdown_port",
                                       8007);
+
+    data->shutdown_protocol = map_get_string(init_map,
+                                             "wrapper.shutdown_protocol",
+                                             AJP12_TAG);
 
     data->extra_path = map_get_string(init_map,
                                       "wrapper.ld_path",

@@ -87,11 +87,19 @@ LINK32=link.exe
 # PROP Default_Filter "cpp;c;cxx;rc;def;r;odl;idl;hpj;bat"
 # Begin Source File
 
+SOURCE=..\jk\jk_ajp13.c
+# End Source File
+# Begin Source File
+
 SOURCE=..\jk\jk_connect.c
 # End Source File
 # Begin Source File
 
 SOURCE=..\jk\jk_map.c
+# End Source File
+# Begin Source File
+
+SOURCE=..\jk\jk_msg_buff.c
 # End Source File
 # Begin Source File
 
