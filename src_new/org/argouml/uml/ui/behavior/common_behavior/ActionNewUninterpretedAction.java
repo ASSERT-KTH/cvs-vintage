@@ -1,4 +1,4 @@
-// $Id: ActionNewUninterpretedAction.java,v 1.3 2003/11/25 10:58:15 jhraigniac Exp $
+// $Id: ActionNewUninterpretedAction.java,v 1.4 2004/09/19 19:29:57 mvw Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -36,14 +36,16 @@ import org.argouml.model.uml.behavioralelements.commonbehavior.CommonBehaviorFac
  */
 public class ActionNewUninterpretedAction extends ActionNewAction {
 
-    public static ActionNewUninterpretedAction SINGLETON = new ActionNewUninterpretedAction();
+    private static final ActionNewUninterpretedAction SINGLETON = 
+        new ActionNewUninterpretedAction();
     
     /**
      * Constructor for ActionNewUninterpretedAction.
      */
     protected ActionNewUninterpretedAction() {
         super();
-        putValue(Action.NAME, Translator.localize("UMLMenu", "button.new-uninterpretedaction"));
+        putValue(Action.NAME, Translator.localize("UMLMenu", 
+                "button.new-uninterpretedaction"));
     }
     
     
@@ -52,6 +54,14 @@ public class ActionNewUninterpretedAction extends ActionNewAction {
      */
     protected Object createAction() {
         return CommonBehaviorFactory.getFactory().createUninterpretedAction();
+    }
+
+
+    /**
+     * @return Returns the SINGLETON.
+     */
+    public static ActionNewUninterpretedAction getInstance() {
+        return SINGLETON;
     }
 
 }

@@ -1,4 +1,4 @@
-// $Id: ActionAddAssociationSpecification.java,v 1.6 2003/11/25 11:38:55 jhraigniac Exp $
+// $Id: ActionAddAssociationSpecification.java,v 1.7 2004/09/19 19:29:59 mvw Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -22,7 +22,7 @@
 // CALIFORNIA HAS NO OBLIGATIONS TO PROVIDE MAINTENANCE, SUPPORT,
 // UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 
-// $Id: ActionAddAssociationSpecification.java,v 1.6 2003/11/25 11:38:55 jhraigniac Exp $
+// $Id: ActionAddAssociationSpecification.java,v 1.7 2004/09/19 19:29:59 mvw Exp $
 package org.argouml.uml.ui.foundation.core;
 
 import org.argouml.i18n.Translator;
@@ -37,9 +37,11 @@ import org.argouml.uml.ui.AbstractActionAddModelElement;
  * @author jaap.branderhorst@xs4all.nl	
  * @since Jan 4, 2003
  */
-public class ActionAddAssociationSpecification extends AbstractActionAddModelElement {
+public class ActionAddAssociationSpecification 
+    extends AbstractActionAddModelElement {
 
-    public final static ActionAddAssociationSpecification SINGLETON = new ActionAddAssociationSpecification();
+    private static final ActionAddAssociationSpecification SINGLETON = 
+        new ActionAddAssociationSpecification();
     /**
      * Constructor for ActionAddExtendExtensionPoint.
      */
@@ -60,7 +62,8 @@ public class ActionAddAssociationSpecification extends AbstractActionAddModelEle
     protected Vector getChoices() {
         Vector ret = new Vector();
         if (getTarget() != null) {
-            ret.addAll(ModelManagementHelper.getHelper().getAllModelElementsOfKind((Class)ModelFacade.CLASSIFIER));
+            ret.addAll(ModelManagementHelper.getHelper()
+                .getAllModelElementsOfKind((Class) ModelFacade.CLASSIFIER));
         }
         return ret;
     }
@@ -69,7 +72,8 @@ public class ActionAddAssociationSpecification extends AbstractActionAddModelEle
      * @see org.argouml.uml.ui.AbstractActionAddModelElement#getDialogTitle()
      */
     protected String getDialogTitle() {
-        return Translator.localize("UMLMenu", "dialog.title.add-specifications");
+        return Translator.localize("UMLMenu", 
+                "dialog.title.add-specifications");
     }
 
     /**
@@ -79,5 +83,12 @@ public class ActionAddAssociationSpecification extends AbstractActionAddModelEle
         Vector ret = new Vector();
         ret.addAll(ModelFacade.getSpecifications(getTarget()));
         return ret;
+    }
+
+    /**
+     * @return Returns the sINGLETON.
+     */
+    public static ActionAddAssociationSpecification getInstance() {
+        return SINGLETON;
     }
 }

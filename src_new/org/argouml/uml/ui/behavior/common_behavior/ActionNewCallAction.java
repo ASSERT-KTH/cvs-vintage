@@ -1,4 +1,4 @@
-// $Id: ActionNewCallAction.java,v 1.3 2003/11/25 10:58:14 jhraigniac Exp $
+// $Id: ActionNewCallAction.java,v 1.4 2004/09/19 19:29:57 mvw Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -36,14 +36,16 @@ import org.argouml.model.uml.behavioralelements.commonbehavior.CommonBehaviorFac
  */
 public class ActionNewCallAction extends ActionNewAction {
 
-    public static ActionNewCallAction SINGLETON = new ActionNewCallAction();
+    private static final ActionNewCallAction SINGLETON = 
+        new ActionNewCallAction();
     
     /**
      * Constructor for ActionNewCallAction.
      */
     protected ActionNewCallAction() {
         super();
-        putValue(Action.NAME, Translator.localize("UMLMenu", "button.new-callaction"));
+        putValue(Action.NAME, Translator.localize("UMLMenu", 
+                "button.new-callaction"));
     }
     
     
@@ -52,6 +54,14 @@ public class ActionNewCallAction extends ActionNewAction {
      */
     protected Object createAction() {
         return CommonBehaviorFactory.getFactory().createCallAction();
+    }
+
+
+    /**
+     * @return Returns the SINGLETON.
+     */
+    public static ActionNewCallAction getInstance() {
+        return SINGLETON;
     }
 
 }

@@ -1,4 +1,4 @@
-// $Id: ActionSetIncludeBase.java,v 1.9 2004/07/17 13:10:32 kataka Exp $
+// $Id: ActionSetIncludeBase.java,v 1.10 2004/09/19 19:29:58 mvw Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -38,7 +38,8 @@ import org.argouml.uml.ui.UMLComboBox2;
  */
 public class ActionSetIncludeBase extends UMLChangeAction {
 
-    public static final ActionSetIncludeBase SINGLETON = new ActionSetIncludeBase();
+    private static final ActionSetIncludeBase SINGLETON = 
+        new ActionSetIncludeBase();
 
     /**
      * Constructor for ActionSetIncludeBase.
@@ -79,6 +80,14 @@ public class ActionSetIncludeBase extends UMLChangeAction {
             }
 
         }
+    }
+
+
+    /**
+     * @return Returns the SINGLETON.
+     */
+    public static ActionSetIncludeBase getInstance() {
+        return SINGLETON;
     }
 
 }

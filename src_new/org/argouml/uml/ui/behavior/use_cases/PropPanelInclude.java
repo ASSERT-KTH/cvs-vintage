@@ -1,4 +1,4 @@
-// $Id: PropPanelInclude.java,v 1.25 2004/09/16 20:56:06 mvw Exp $
+// $Id: PropPanelInclude.java,v 1.26 2004/09/19 19:29:58 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -72,13 +72,13 @@ public class PropPanelInclude extends PropPanelModelElement {
 
         JComboBox baseBox =
 	    new UMLComboBox2(new UMLIncludeBaseComboBoxModel(),
-			     ActionSetIncludeBase.SINGLETON);
+			     ActionSetIncludeBase.getInstance());
         addField(Translator.localize("UMLMenu", "label.usecase-base"),
 		 baseBox);
 
         JComboBox additionBox =
 	    new UMLComboBox2(new UMLIncludeAdditionComboBoxModel(),
-			     ActionSetIncludeAddition.SINGLETON);
+			     ActionSetIncludeAddition.getInstance());
         addField(Translator.localize("UMLMenu", "label.addition"),
 		 additionBox);
 

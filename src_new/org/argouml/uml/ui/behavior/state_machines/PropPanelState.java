@@ -1,4 +1,4 @@
-// $Id: PropPanelState.java,v 1.17 2004/09/12 16:47:15 mvw Exp $
+// $Id: PropPanelState.java,v 1.18 2004/09/19 19:29:57 mvw Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -27,7 +27,7 @@
 // File: PropPanelState.java
 // Classes: PropPanelState
 // Original Author: your email address here
-// $Id: PropPanelState.java,v 1.17 2004/09/12 16:47:15 mvw Exp $
+// $Id: PropPanelState.java,v 1.18 2004/09/19 19:29:57 mvw Exp $
 
 package org.argouml.uml.ui.behavior.state_machines;
 
@@ -79,7 +79,7 @@ public abstract class PropPanelState extends PropPanelStateVertex {
         exitScroll = new JScrollPane(exitList);
         internalTransitionList = new UMLMutableLinkedList(
                 new UMLStateInternalTransition(), null, 
-                ActionNewTransition.SINGLETON);
+                ActionNewTransition.getInstance());
         internalTransitionsScroll = new JScrollPane(internalTransitionList);
         doList = new UMLStateDoActivityList(
                 new UMLStateDoActivityListModel());

@@ -1,4 +1,4 @@
-// $Id: ActionNewAction.java,v 1.8 2003/09/14 18:10:44 bobtarling Exp $
+// $Id: ActionNewAction.java,v 1.9 2004/09/19 19:29:58 mvw Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -38,10 +38,12 @@ import org.argouml.uml.ui.AbstractActionNewModelElement;
  */
 public class ActionNewAction extends AbstractActionNewModelElement {
 
-
+    private static final ActionNewAction SINGLETON = new ActionNewAction();
     
-    public final static ActionNewAction SINGLETON = new ActionNewAction();
-    
+    /**
+     * The constructor.
+     * 
+     */
     protected ActionNewAction() {
         super();
     }    
@@ -52,7 +54,8 @@ public class ActionNewAction extends AbstractActionNewModelElement {
      */
     public void actionPerformed(ActionEvent e) {
         super.actionPerformed(e);
-        CommonBehaviorFactory.getFactory().buildAction(/*(MMessage)*/ getTarget());
+        CommonBehaviorFactory.getFactory().buildAction(/*(MMessage)*/ 
+                getTarget());
     }
     
     /**
@@ -63,6 +66,13 @@ public class ActionNewAction extends AbstractActionNewModelElement {
             return ModelFacade.getAction(getTarget()) == null;
         }
         return false;
+    }
+
+    /**
+     * @return Returns the SINGLETON.
+     */
+    public static ActionNewAction getInstance() {
+        return SINGLETON;
     }
 
 }

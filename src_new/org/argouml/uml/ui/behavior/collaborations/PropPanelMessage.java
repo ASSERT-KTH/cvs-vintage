@@ -1,4 +1,4 @@
-// $Id: PropPanelMessage.java,v 1.46 2004/09/16 20:56:05 mvw Exp $
+// $Id: PropPanelMessage.java,v 1.47 2004/09/19 19:29:58 mvw Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -27,7 +27,7 @@
 // File: PropPanelMessage.java
 // Classes: PropPanelMessage
 // Original Author: agauthie@ics.uci.edu
-// $Id: PropPanelMessage.java,v 1.46 2004/09/16 20:56:05 mvw Exp $
+// $Id: PropPanelMessage.java,v 1.47 2004/09/19 19:29:58 mvw Exp $
 
 package org.argouml.uml.ui.behavior.collaborations;
 
@@ -103,14 +103,14 @@ public class PropPanelMessage extends PropPanelModelElement {
 	JList actionList =
 		 new UMLMutableLinkedList(new UMLMessageActionListModel(),
 					  null,
-					  ActionNewAction.SINGLETON);
+					  ActionNewAction.getInstance());
 	actionList.setVisibleRowCount(1);
 	JScrollPane actionScroll = new JScrollPane(actionList);
 	addField(Translator.localize("UMLMenu", "label.action"), actionScroll);
 
 	JScrollPane predecessorScroll = new JScrollPane(
             new UMLMutableLinkedList(new UMLMessagePredecessorListModel(),
-		ActionAddMessagePredecessor.SINGLETON,
+		ActionAddMessagePredecessor.getInstance(),
 		null));
 	addField(Translator.localize("UMLMenu", "label.predecessor"),
 		 predecessorScroll);

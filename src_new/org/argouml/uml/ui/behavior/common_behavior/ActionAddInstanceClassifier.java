@@ -1,4 +1,4 @@
-// $Id: ActionAddInstanceClassifier.java,v 1.2 2004/07/31 08:31:57 mkl Exp $
+// $Id: ActionAddInstanceClassifier.java,v 1.3 2004/09/19 19:29:57 mvw Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -22,7 +22,7 @@
 // CALIFORNIA HAS NO OBLIGATIONS TO PROVIDE MAINTENANCE, SUPPORT,
 // UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 
-// $Id: ActionAddInstanceClassifier.java,v 1.2 2004/07/31 08:31:57 mkl Exp $
+// $Id: ActionAddInstanceClassifier.java,v 1.3 2004/09/19 19:29:57 mvw Exp $
 package org.argouml.uml.ui.behavior.common_behavior;
 
 import org.argouml.i18n.Translator;
@@ -33,19 +33,34 @@ import org.argouml.model.uml.modelmanagement.ModelManagementHelper;
 import org.argouml.uml.ui.AbstractActionAddModelElement;
 
 
+/**
+ * This action binds Instances to one or more Classifiers, 
+ * which declare its structure and behaviour. 
+ * An Object is defined as an instance of a Class, which explains why 
+ * the type of Classifier is parameter to one of this action's constructors.
+ *
+ */
 public class ActionAddInstanceClassifier extends AbstractActionAddModelElement {
 
-    protected Class _choiceClass = (Class) ModelFacade.CLASSIFIER;
+    private Class choiceClass = (Class) ModelFacade.CLASSIFIER;
+    
     /**
-     * Constructor for ActionAddExtendExtensionPoint.
+     * The constructor for ActionAddExtendExtensionPoint.
      */
     public ActionAddInstanceClassifier() {
         super();
     }
     
+    /**
+     * The constructor for ActionAddExtendExtensionPoint.
+     * For an Object, the <code>choice</code> will be "Class", for any other
+     * Instance, it will be "Classifier".
+     * 
+     * @param choice the classifier type we are adding
+     */
     public ActionAddInstanceClassifier(Class choice) {
         super();
-        _choiceClass = choice;
+        choiceClass = choice;
     }
     
     /**
@@ -61,7 +76,8 @@ public class ActionAddInstanceClassifier extends AbstractActionAddModelElement {
     protected Vector getChoices() {
         Vector ret = new Vector();
         if (getTarget() != null) {
-            ret.addAll(ModelManagementHelper.getHelper().getAllModelElementsOfKind(_choiceClass));
+            ret.addAll(ModelManagementHelper.getHelper()
+                    .getAllModelElementsOfKind(choiceClass));
         }
         return ret;
     }
@@ -70,7 +86,8 @@ public class ActionAddInstanceClassifier extends AbstractActionAddModelElement {
      * @see org.argouml.uml.ui.AbstractActionAddModelElement#getDialogTitle()
      */
     protected String getDialogTitle() {
-        return Translator.localize("UMLMenu", "dialog.title.add-specifications");
+        return Translator.localize("UMLMenu", 
+                "dialog.title.add-specifications");
     }
 
     /**

@@ -1,4 +1,4 @@
-// $Id: PropPanelExtend.java,v 1.36 2004/09/16 20:56:06 mvw Exp $
+// $Id: PropPanelExtend.java,v 1.37 2004/09/19 19:29:58 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -89,15 +89,15 @@ public class PropPanelExtend extends PropPanelModelElement {
 
         addField(Translator.localize("UMLMenu", "label.usecase-base"),
 		 new UMLComboBox2(new UMLExtendBaseComboBoxModel(),
-				  ActionSetExtendBase.SINGLETON));
+				  ActionSetExtendBase.getInstance()));
 
         addField(Translator.localize("UMLMenu", "label.extension"),
 		 new UMLComboBox2(new UMLExtendExtensionComboBoxModel(),
-				  ActionSetExtendExtension.SINGLETON));
+				  ActionSetExtendExtension.getInstance()));
 
         JList extensionPointList =
 	    new UMLMutableLinkedList(new UMLExtendExtensionPointListModel(),
-				     ActionAddExtendExtensionPoint.SINGLETON,
+				     ActionAddExtendExtensionPoint.getInstance(),
 				     ActionNewExtendExtensionPoint.SINGLETON);
         addField(Translator.localize("UMLMenu", "label.extension-points"),
 		 new JScrollPane(extensionPointList));

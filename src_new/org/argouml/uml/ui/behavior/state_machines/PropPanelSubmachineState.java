@@ -1,4 +1,4 @@
-// $Id: PropPanelSubmachineState.java,v 1.11 2004/09/12 16:47:15 mvw Exp $
+// $Id: PropPanelSubmachineState.java,v 1.12 2004/09/19 19:29:57 mvw Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -72,7 +72,7 @@ public class PropPanelSubmachineState extends PropPanelCompositeState {
                 getContainerScroll());
         JComboBox submachineBox = new UMLComboBox2(
                 new UMLSubmachineStateComboBoxModel(), 
-                ActionSetSubmachineStateSubmachine.SINGLETON);
+                ActionSetSubmachineStateSubmachine.getInstance());
         addField(Translator.localize("UMLMenu", "label.submachine"), 
                 new UMLComboBoxNavigator(this, Translator.localize("UMLMenu", 
                         "tooltip.nav-submachine"), submachineBox));
@@ -89,7 +89,7 @@ public class PropPanelSubmachineState extends PropPanelCompositeState {
         addField(Translator.localize("UMLMenu", "label.subvertex"), 
                 new JScrollPane(new UMLMutableLinkedList(
                         new UMLCompositeStateSubvertexListModel(), null, 
-                        ActionNewStubState.SINGLETON)));
+                        ActionNewStubState.getInstance())));
     }
 
 }

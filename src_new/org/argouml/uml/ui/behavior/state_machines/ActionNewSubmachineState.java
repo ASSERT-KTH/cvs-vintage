@@ -1,4 +1,4 @@
-// $Id: ActionNewSubmachineState.java,v 1.3 2003/11/25 10:58:15 jhraigniac Exp $
+// $Id: ActionNewSubmachineState.java,v 1.4 2004/09/19 19:29:57 mvw Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -39,14 +39,16 @@ import org.argouml.uml.ui.AbstractActionNewModelElement;
  */
 public class ActionNewSubmachineState extends AbstractActionNewModelElement {
 
-    public static ActionNewSubmachineState SINGLETON = new ActionNewSubmachineState();
+    private static final ActionNewSubmachineState SINGLETON = 
+        new ActionNewSubmachineState();
     
     /**
      * Constructor for ActionNewFinalState.
      */
     protected ActionNewSubmachineState() {
         super();
-        putValue(Action.NAME, Translator.localize("UMLMenu", "button.new-submachinestate"));
+        putValue(Action.NAME, Translator.localize("UMLMenu", 
+                "button.new-submachinestate"));
     }
     
     /**
@@ -55,6 +57,13 @@ public class ActionNewSubmachineState extends AbstractActionNewModelElement {
     public void actionPerformed(ActionEvent e) {
         super.actionPerformed(e);
         StateMachinesFactory.getFactory().buildSubmachineState(getTarget());
+    }
+
+    /**
+     * @return Returns the SINGLETON.
+     */
+    public static ActionNewSubmachineState getInstance() {
+        return SINGLETON;
     }
 
 }

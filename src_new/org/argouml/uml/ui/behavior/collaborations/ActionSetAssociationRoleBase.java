@@ -1,4 +1,4 @@
-// $Id: ActionSetAssociationRoleBase.java,v 1.10 2004/02/08 12:45:26 mvw Exp $
+// $Id: ActionSetAssociationRoleBase.java,v 1.11 2004/09/19 19:29:58 mvw Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -28,6 +28,7 @@ package org.argouml.uml.ui.behavior.collaborations;
 import java.awt.event.ActionEvent;
 
 import org.argouml.i18n.Translator;
+import org.argouml.model.ModelFacade;
 import org.argouml.model.uml.behavioralelements.collaborations.CollaborationsHelper;
 import org.argouml.uml.ui.UMLChangeAction;
 import org.argouml.uml.ui.UMLComboBox2;
@@ -39,7 +40,7 @@ import org.argouml.uml.ui.UMLComboBox2;
  */
 public class ActionSetAssociationRoleBase extends UMLChangeAction {
 
-    public static final ActionSetAssociationRoleBase SINGLETON =
+    private static final ActionSetAssociationRoleBase SINGLETON =
 	new ActionSetAssociationRoleBase();
     
     /**
@@ -59,10 +60,19 @@ public class ActionSetAssociationRoleBase extends UMLChangeAction {
         if (e.getSource() instanceof UMLComboBox2) {
             UMLComboBox2 source = (UMLComboBox2) e.getSource();
             selected = source.getSelectedItem();
-            if (org.argouml.model.ModelFacade.isAAssociation(selected) && org.argouml.model.ModelFacade.isAAssociationRole(source.getTarget())) {
-                CollaborationsHelper.getHelper().setBase(source.getTarget(), selected);
+            if (ModelFacade.isAAssociation(selected) 
+                    && ModelFacade.isAAssociationRole(source.getTarget())) {
+                CollaborationsHelper.getHelper()
+                    .setBase(source.getTarget(), selected);
             }
         }
+    }
+
+    /**
+     * @return Returns the sINGLETON.
+     */
+    public static ActionSetAssociationRoleBase getInstance() {
+        return SINGLETON;
     }
 
 }

@@ -1,4 +1,4 @@
-// $Id: ActionNewSynchState.java,v 1.3 2003/11/25 10:58:15 jhraigniac Exp $
+// $Id: ActionNewSynchState.java,v 1.4 2004/09/19 19:29:57 mvw Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -39,14 +39,16 @@ import org.argouml.uml.ui.AbstractActionNewModelElement;
  */
 public class ActionNewSynchState extends AbstractActionNewModelElement {
 
-    public static ActionNewSynchState SINGLETON = new ActionNewSynchState();
+    private static final ActionNewSynchState SINGLETON = 
+        new ActionNewSynchState();
     
     /**
      * Constructor for ActionNewPseudoState.
      */
     protected ActionNewSynchState() {
         super();
-        putValue(Action.NAME, Translator.localize("UMLMenu", "button.new-synchstate"));
+        putValue(Action.NAME, Translator.localize("UMLMenu", 
+                "button.new-synchstate"));
     }
     
     /**
@@ -55,5 +57,12 @@ public class ActionNewSynchState extends AbstractActionNewModelElement {
     public void actionPerformed(ActionEvent e) {
         super.actionPerformed(e);
         StateMachinesFactory.getFactory().buildSynchState(getTarget());
+    }
+
+    /**
+     * @return Returns the SINGLETON.
+     */
+    public static ActionNewSynchState getInstance() {
+        return SINGLETON;
     }
 }

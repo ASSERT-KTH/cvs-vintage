@@ -1,4 +1,4 @@
-// $Id: ActionRemoveClassifierRoleBase.java,v 1.5 2003/11/25 10:58:13 jhraigniac Exp $
+// $Id: ActionRemoveClassifierRoleBase.java,v 1.6 2004/09/19 19:29:58 mvw Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -38,7 +38,7 @@ import org.argouml.uml.ui.AbstractActionRemoveElement;
 public class ActionRemoveClassifierRoleBase
     extends AbstractActionRemoveElement {
 
-    public static ActionRemoveClassifierRoleBase SINGLETON =
+    private static final ActionRemoveClassifierRoleBase SINGLETON =
 	new ActionRemoveClassifierRoleBase();
     
     /**
@@ -57,6 +57,15 @@ public class ActionRemoveClassifierRoleBase
     public void actionPerformed(ActionEvent e) {
         super.actionPerformed(e);
         ModelFacade.removeBase(getTarget(), getObjectToRemove());
+    }
+
+
+
+    /**
+     * @return Returns the sINGLETON.
+     */
+    public static ActionRemoveClassifierRoleBase getInstance() {
+        return SINGLETON;
     }
 
 }

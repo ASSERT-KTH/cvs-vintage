@@ -1,4 +1,4 @@
-// $Id: UMLCompositeStateSubvertexList.java,v 1.9 2004/08/14 21:47:20 mvw Exp $
+// $Id: UMLCompositeStateSubvertexList.java,v 1.10 2004/09/19 19:29:57 mvw Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -50,18 +50,18 @@ public class UMLCompositeStateSubvertexList extends UMLMutableLinkedList {
             newMenu.setText(Translator.localize("action.new"));
             ActionNewPseudoState.getSingleton().setTarget(getTarget());
             newMenu.add(ActionNewPseudoState.getSingleton());
-            newMenu.add(ActionNewSynchState.SINGLETON);
-            ActionNewSynchState.SINGLETON.setTarget(getTarget());
-            newMenu.add(ActionNewStubState.SINGLETON);
-            ActionNewStubState.SINGLETON.setTarget(getTarget());
+            newMenu.add(ActionNewSynchState.getInstance());
+            ActionNewSynchState.getInstance().setTarget(getTarget());
+            newMenu.add(ActionNewStubState.getInstance());
+            ActionNewStubState.getInstance().setTarget(getTarget());
             newMenu.add(ActionNewCompositeState.getSingleton());
             ActionNewCompositeState.getSingleton().setTarget(getTarget());
             newMenu.add(ActionNewSimpleState.getSingleton());
             ActionNewSimpleState.getSingleton().setTarget(getTarget());
             newMenu.add(ActionNewFinalState.getSingleton());
             ActionNewFinalState.getSingleton().setTarget(getTarget());
-            newMenu.add(ActionNewSubmachineState.SINGLETON);
-            ActionNewSubmachineState.SINGLETON.setTarget(getTarget());
+            newMenu.add(ActionNewSubmachineState.getInstance());
+            ActionNewSubmachineState.getInstance().setTarget(getTarget());
             add(newMenu);
             
             addSeparator();
@@ -75,7 +75,7 @@ public class UMLCompositeStateSubvertexList extends UMLMutableLinkedList {
     
     /**
      * Constructor for UMLCompositeStateSubvertexList.
-     * @param dataModel
+     * @param dataModel the data model
      */
     public UMLCompositeStateSubvertexList(
         UMLModelElementListModel2 dataModel) {

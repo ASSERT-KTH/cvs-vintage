@@ -1,4 +1,4 @@
-// $Id: ActionSetClassifierRoleMultiplicity.java,v 1.1 2004/07/25 16:08:56 mkl Exp $
+// $Id: ActionSetClassifierRoleMultiplicity.java,v 1.2 2004/09/19 19:29:58 mvw Exp $
 // Copyright (c) 2003-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -36,8 +36,8 @@ import org.argouml.uml.ui.ActionSetMultiplicity;
  */
 public class ActionSetClassifierRoleMultiplicity extends ActionSetMultiplicity {
 
-
-    public static final ActionSetClassifierRoleMultiplicity SINGLETON = new ActionSetClassifierRoleMultiplicity();
+    private static final ActionSetClassifierRoleMultiplicity SINGLETON = 
+        new ActionSetClassifierRoleMultiplicity();
 
     /**
      * 
@@ -47,7 +47,8 @@ public class ActionSetClassifierRoleMultiplicity extends ActionSetMultiplicity {
     }
 
     /**
-     * @see org.argouml.uml.ui.ActionSetMultiplicity#setSelectedItem(java.lang.Object, java.lang.Object)
+     * @see org.argouml.uml.ui.ActionSetMultiplicity#setSelectedItem(
+     * java.lang.Object, java.lang.Object)
      */
     public void setSelectedItem(Object item, Object target) {
         if (target != null
@@ -58,5 +59,12 @@ public class ActionSetClassifierRoleMultiplicity extends ActionSetMultiplicity {
                 ModelFacade.setMultiplicity(target, null);
 
         }
+    }
+
+    /**
+     * @return Returns the SINGLETON.
+     */
+    public static ActionSetClassifierRoleMultiplicity getInstance() {
+        return SINGLETON;
     }
 }

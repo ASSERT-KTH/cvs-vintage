@@ -1,4 +1,4 @@
-// $Id: ActionSetExtendBase.java,v 1.11 2004/02/08 12:45:27 mvw Exp $
+// $Id: ActionSetExtendBase.java,v 1.12 2004/09/19 19:29:58 mvw Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -39,7 +39,7 @@ import org.argouml.uml.ui.UMLComboBox2;
  */
 public class ActionSetExtendBase extends UMLChangeAction {
 
-    public static final ActionSetExtendBase SINGLETON =
+    private static final ActionSetExtendBase SINGLETON =
         new ActionSetExtendBase();
 
     /**
@@ -80,5 +80,12 @@ public class ActionSetExtendBase extends UMLChangeAction {
             }
 
         }
+    }
+
+    /**
+     * @return Returns the SINGLETON.
+     */
+    public static ActionSetExtendBase getInstance() {
+        return SINGLETON;
     }
 }

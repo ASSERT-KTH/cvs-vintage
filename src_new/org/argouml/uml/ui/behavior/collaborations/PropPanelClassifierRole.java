@@ -1,4 +1,4 @@
-// $Id: PropPanelClassifierRole.java,v 1.41 2004/09/16 20:56:02 mvw Exp $
+// $Id: PropPanelClassifierRole.java,v 1.42 2004/09/19 19:29:57 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,7 +25,7 @@
 // File: PropPanelClassifierRole.java
 // Classes: PropPanelClassifierRole
 // Original Author: agauthie@ics.uci.edu
-// $Id: PropPanelClassifierRole.java,v 1.41 2004/09/16 20:56:02 mvw Exp $
+// $Id: PropPanelClassifierRole.java,v 1.42 2004/09/19 19:29:57 mvw Exp $
 
 package org.argouml.uml.ui.behavior.collaborations;
 
@@ -85,7 +85,7 @@ public class PropPanelClassifierRole extends PropPanelClassifier {
 	    new UMLMutableLinkedList(new UMLClassifierRoleBaseListModel(),
 				     ActionAddClassifierRoleBase.SINGLETON,
 				     null,
-				     ActionRemoveClassifierRoleBase.SINGLETON,
+				     ActionRemoveClassifierRoleBase.getInstance(),
 				     false);
 	addField(Translator.localize("UMLMenu", "label.base"),
 		 new JScrollPane(baseList));
@@ -142,7 +142,7 @@ public class PropPanelClassifierRole extends PropPanelClassifier {
 	    multiplicityComboBox =
 		new UMLMultiplicityComboBox2(
 				 multiplicityComboBoxModel,
-				 ActionSetClassifierRoleMultiplicity.SINGLETON);
+				 ActionSetClassifierRoleMultiplicity.getInstance());
 	    multiplicityComboBox.setEditable(true);
 	}
 	return multiplicityComboBox;

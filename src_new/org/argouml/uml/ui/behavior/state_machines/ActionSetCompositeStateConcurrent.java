@@ -1,4 +1,4 @@
-// $Id: ActionSetCompositeStateConcurrent.java,v 1.6 2004/02/08 12:45:26 mvw Exp $
+// $Id: ActionSetCompositeStateConcurrent.java,v 1.7 2004/09/19 19:29:57 mvw Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -37,7 +37,7 @@ import org.argouml.uml.ui.UMLCheckBox2;
  */
 public class ActionSetCompositeStateConcurrent extends UMLChangeAction {
 
-    public static final ActionSetCompositeStateConcurrent SINGLETON =
+    private static final ActionSetCompositeStateConcurrent SINGLETON =
 	new ActionSetCompositeStateConcurrent();
 
     /**
@@ -60,6 +60,13 @@ public class ActionSetCompositeStateConcurrent extends UMLChangeAction {
                 ModelFacade.setConcurent(m, !ModelFacade.isConcurent(m));
             }
         }
+    }
+
+    /**
+     * @return Returns the sINGLETON.
+     */
+    public static ActionSetCompositeStateConcurrent getInstance() {
+        return SINGLETON;
     }
 
 }
