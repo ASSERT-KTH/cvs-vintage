@@ -56,7 +56,7 @@ import org.jboss.logging.Logger;
  * @author <a href="mailto:justin@j-m-f.demon.co.uk">Justin Forder</a>
  * @author <a href="mailto:dirk@jboss.de">Dirk Zimmermann</a>
  * @author <a href="mailto:danch@nvisia.com">danch (Dan Christopherson</a>
- * @version $Revision: 1.41 $ 
+ * @version $Revision: 1.42 $ 
  * 
  *   <p><b>Revisions:</b>
  *
@@ -454,6 +454,8 @@ public abstract class JDBCCommand
 
         if( bytes == null ) {
             result = null;
+        } else if (destination.getName().equals("[B")) {
+           return bytes;
         } else {
            // We should really reuse these guys
 
