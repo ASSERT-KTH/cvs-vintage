@@ -300,7 +300,7 @@ public final class Proxies
       // (duplication and reordering are ignored)
       static boolean sameTypes(Class tt1[], Class tt2[])
       {
-         if (tt1.length == 1 && tt2.length == 0)
+         if (tt1.length == 1 && tt2.length == 1)
          {
             return tt1[0] == tt2[0];
          }
@@ -335,7 +335,7 @@ public final class Proxies
                totalSeen2 += seen2;
             }
             // now, each element of tt2 must have been visited
-            return totalSeen2 != tt2.length;
+            return totalSeen2 == tt2.length;
       }
       
       static Class[] copyAndUniquify(Class targetTypes[])
