@@ -1,4 +1,4 @@
-// $Id: ExplorerPopup.java,v 1.18 2005/01/30 20:48:15 linus Exp $
+// $Id: ExplorerPopup.java,v 1.19 2005/02/05 13:39:34 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -103,7 +103,8 @@ public class ExplorerPopup extends JPopupMenu {
                 final boolean nAryAssociationSelected =
                         Model.getFacade().isANaryAssociation(selectedItem);
                 final boolean classifierAndRelationShipSelected =
-                    Model.getFacade().isAClassifierAndARelationship(selectedItem);
+                    Model.getFacade()
+                        .isAClassifierAndARelationship(selectedItem);
                 final boolean classifierSelected =
                     Model.getFacade().isAClassifier(selectedItem);
                 final boolean dataTypeSelected =
