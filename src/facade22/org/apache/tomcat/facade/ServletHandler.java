@@ -190,7 +190,11 @@ public final class ServletHandler extends Handler {
 	try {
 	    doDestroy();
 	} catch( Exception ex ) {
-	    log( "Error during destroy ", ex );
+	    if( context!=null )
+		context.log( "Error during destroy ", ex );
+	    else
+		log( "Error during destroy ", ex );
+
 	}
 	
 
@@ -228,7 +232,11 @@ public final class ServletHandler extends Handler {
 		// preInit may either throw exception or setState DELAYED_INIT
 	    } catch( Exception ex ) {
 		// save error, assume permanent
-		log("Exception in preInit  " + ex.getMessage(), ex );
+		if(context!=null)
+		    context.log("Exception in preInit  " +
+				ex.getMessage(), ex );
+		else 
+		    log("Exception in preInit  " + ex.getMessage(), ex );
 		setErrorException(ex);
 		setState(STATE_DISABLED);
 		return;
@@ -258,7 +266,10 @@ public final class ServletHandler extends Handler {
 		// if success, we are ready to serve
 	    } catch( Exception ex ) {
 		// save error, assume permanent
-		log("Exception in init  " + ex.getMessage(), ex );
+		if( context!=null )
+		    context.log("Exception in init  " + ex.getMessage(), ex );
+		else
+		    log("Exception in init  " + ex.getMessage(), ex );
 		setErrorException(ex);
 		state=STATE_DISABLED;
 	    }
@@ -295,7 +306,10 @@ public final class ServletHandler extends Handler {
 	    try {
 		destroy();
 	    } catch(Exception ex ) {
-		log( "Error in destroy ", ex );
+		if( context!=null )
+		    context.log( "Error in destroy ", ex );
+		else
+		    log( "Error in destroy ", ex );
 	    }
 	}
 
@@ -359,7 +373,10 @@ public final class ServletHandler extends Handler {
 		}
 	    } catch(Exception ex) {
 		// Should never come here...
-		log( "Error in destroy ", ex );
+		if( context!=null)
+		    context.log( "Error in destroy ", ex );
+		else
+		    log( "Error in destroy ", ex );
 	    }
 	}
     }
@@ -523,8 +540,12 @@ public final class ServletHandler extends Handler {
 		res.setHeader("Retry-After", Integer.toString(unavailableTime));
 	    }
 	    String msg=t.getMessage();
-	    log( "UnavailableException in: " + req +
-			", time remaining " + unavailableTime + " seconds : " + msg, t);
+	    String logMsg="UnavailableException in: " + req +
+		", time remaining " + unavailableTime + " seconds : " + msg;
+	    if( context!=null)
+		context.log( logMsg, t);
+	    else
+		log( logMsg, t);
 	    req.setAttribute("javax.servlet.error.message", msg );
             req.setAttribute("tomcat.servlet.error.service.unavailableTime", new Integer(unavailableTime));
 	    contextM.handleStatus( req, res, HttpServletResponse.SC_SERVICE_UNAVAILABLE );
@@ -578,8 +599,12 @@ public final class ServletHandler extends Handler {
 	    // disable the error - it expired
 	    unavailableTime=-1;
 	    setErrorException(null);
-	    log(getName() +
-			" unavailable time expired, trying again ");
+	    if( context!=null)
+		context.log(getName() +
+			    " unavailable time expired, trying again ");
+	    else 
+		log(getName() +
+		    " unavailable time expired, trying again ");
 	    return true;
 	}
 	// still unavailable
@@ -602,7 +627,11 @@ public final class ServletHandler extends Handler {
 		    // disable the error - it expired
 		    setErrorException(null);
 		    unavailableTime=-1;
-		    log(getName() +
+		    if( context!=null)
+			context.log(getName() +
+			" unavailable time expired, trying again ");
+		    else
+			log(getName() +
 			" unavailable time expired, trying again ");
 		}
 		return true;

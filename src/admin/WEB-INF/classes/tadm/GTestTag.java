@@ -74,6 +74,7 @@ public class GTestTag extends TagSupport {
     /** Set the target - a subset of tests to be run
      */
     public void setTarget( String s ) {
+	System.out.println("Setting target " + s );
 	target=s;
     }
 
@@ -89,8 +90,9 @@ public class GTestTag extends TagSupport {
     private void runTest( String base) throws IOException {
 	PrintWriter out=pageContext.getResponse().getWriter();
 	try {
-	    System.out.println("RUN TEST " + base + " " + testFileName + " "
-			       + target );
+	    out.flush();
+	    out.println("Running test " + base + " " + testFileName + " "
+			       + target + "</br>" );
 	    File testFile=new File( base + testFileName);
 
 

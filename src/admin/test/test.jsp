@@ -15,9 +15,10 @@ You can see the context log <a href="/test/context_log.txt">here</a>
 	   action="setLogger" 
 	   value="webapps/test/context_log.txt" />
 
+
 <adm:gtest testFile="WEB-INF/test-tomcat.xml" 
 	   testApp="/test" 
-	   target="file" />
+	   target='<%= request.getParameter("target") %>' />
 
 
 

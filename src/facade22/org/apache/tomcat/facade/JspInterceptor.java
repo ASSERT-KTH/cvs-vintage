@@ -85,10 +85,20 @@ import org.apache.tomcat.facade.*;
  */
 public class JspInterceptor extends BaseInterceptor {
     TomcatOptions options=new TomcatOptions();
-
+    boolean useJspServlet=true;
+    
     static final String JIKES="org.apache.jasper.compiler.JikesJavaCompiler";
 
     // -------------------- Configurable properties --------------------
+
+    /** Use the old JspServlet to execute Jsps, instead of the
+	new code. Note that init() never worked (AFAIK) and it'll
+	be slower - but given the stability of JspServlet it may
+	be a safe option
+    */
+    public void setUseJspServlet( boolean b ) {
+	useJspServlet=b;
+    }
     
     public void setJavaCompiler( String type ) {
 	// shortcut
@@ -186,6 +196,33 @@ public class JspInterceptor extends BaseInterceptor {
 	    return 0;
 	}
 
+	if( useJspServlet ) {
+	    ServletHandler jspServlet=(ServletHandler)wrapper;
+	    if( ! "jsp".equals( jspServlet.getServletClassName())  )
+		return 0; // it's all set, the JspServlet will do the job.
+
+	    if( debug > 0 ) {
+		log( "Using jsp servlet !");
+		//enable jasperServlet logging
+		org.apache.jasper.Constants.jasperLog=
+		    org.apache.tomcat.util.log.Logger.getDefaultLogger();
+		org.apache.jasper.Constants.jasperLog.
+		    setVerbosityLevel("debug");
+	    }
+
+	    // it's the first time a jsp is invoked, the jspServlet
+	    // is not setup
+	    jspServlet.
+		setServletClassName("org.apache.jasper.servlet.JspServlet");
+
+	    // XXX set the options
+	    // 	 jspServlet.getServletInfo().addInitParam("jspCompilerPlugin",
+	    // 	  "org.apache.jasper.compiler.JikesJavaCompiler");
+	    return 0;
+	    // nothing else happens during request map
+	    // XXX this can be done at context add time
+	}
+	
 	ServletHandler handler=null;
 	String jspFile=null;
 
@@ -342,7 +379,8 @@ final class JasperLiaison {
 	    dep.setLastModified( System.currentTimeMillis() );
 
 	    // Update the class name in wrapper
-	    log.log( "Update class Name " + mangler.getServletClassName());
+	    if( debug> 1 )
+		log.log( "Update class Name " + mangler.getServletClassName());
 	    handler.setServletClassName( mangler.getServletClassName() );
 
 	    compile( handler, req, mangler );
@@ -389,7 +427,11 @@ final class JasperLiaison {
 	    
 	    if(debug>0)log.log( "Generated " + mangler.getClassFileName() );
 	} catch( Exception ex ) {
-	    log.log("compile: req="+req, ex);
+	    Context ctx=req.getContext();
+	    if( ctx!=null )
+		ctx.log("compile error: req="+req, ex);
+	    else
+		log.log("compile error: req="+req, ex);
 	    wrapper.setErrorException(ex);
 	    wrapper.setState(Handler.STATE_DISABLED);
 	    // until the jsp cahnges, when it'll be enabled again
