@@ -1,4 +1,4 @@
-// $Id: CrWrongLinkEnds.java,v 1.9 2003/09/11 00:07:16 bobtarling Exp $
+// $Id: CrWrongLinkEnds.java,v 1.10 2003/09/13 18:16:33 alexb Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,7 +25,7 @@
 // File: CrClassWithoutComponent.java
 // Classes: CrClassWithoutComponent
 // Original Author: 5eichler@informatik.uni-hamburg.de
-// $Id: CrWrongLinkEnds.java,v 1.9 2003/09/11 00:07:16 bobtarling Exp $
+// $Id: CrWrongLinkEnds.java,v 1.10 2003/09/13 18:16:33 alexb Exp $
 
 package org.argouml.uml.cognitive.critics;
 
@@ -38,7 +38,6 @@ import org.argouml.model.ModelFacade;
 import org.argouml.uml.diagram.deployment.ui.UMLDeploymentDiagram;
 import org.argouml.uml.diagram.static_structure.ui.FigLink;
 import org.tigris.gef.util.VectorSet;
-import ru.novosoft.uml.behavior.common_behavior.MLinkEnd;
 
 /**
  * A critic to detect when in a deployment-diagram
@@ -99,11 +98,14 @@ public class CrWrongLinkEnds extends CrUML {
 		int count = 0;
 		Iterator it = ends.iterator();
 		while (it.hasNext()) {
-		    MLinkEnd le = (MLinkEnd) it.next();
-		    if (le.getInstance().getElementResidences() != null
-			&& (le.getInstance().getElementResidences().size() > 0))
+                    Object instance = ModelFacade.getInstance(it.next());
+                    Collection residencies = ModelFacade.getResidents(instance);
+		    if (residencies != null
+			&& (residencies.size() > 0))
 			count = count + 2;
-		    if (le.getInstance().getComponentInstance() != null)
+                    
+                    Object component =ModelFacade.getComponentInstance(instance);
+		    if (component != null)
 			count = count + 1;
 		}
 		if (count == 3) {

@@ -1,4 +1,4 @@
-// $Id: Tools.java,v 1.10 2003/09/04 20:11:51 thierrylach Exp $
+// $Id: Tools.java,v 1.11 2003/09/13 18:16:33 alexb Exp $
 // Copyright (c) 1996-2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -72,9 +72,7 @@ public class Tools {
         try {
 
             // class preloading, so packages are there...
-            Class cls = Class.forName("ru.novosoft.uml.MBase");
-            cls = Class.forName("org.tigris.gef.base.Editor");
-            cls = Class.forName("ru.novosoft.uml.MBase");
+            Class cls = Class.forName("org.tigris.gef.base.Editor");
             cls = Class.forName("org.xml.sax.AttributeList");
             cls = Class.forName("org.apache.log4j.Logger");
 

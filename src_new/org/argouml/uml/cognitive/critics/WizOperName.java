@@ -1,4 +1,4 @@
-// $Id: WizOperName.java,v 1.11 2003/09/11 00:07:16 bobtarling Exp $
+// $Id: WizOperName.java,v 1.12 2003/09/13 18:16:33 alexb Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -27,7 +27,7 @@
 // File: WizOperName.java
 // Classes: WizOperName
 // Original Author: Linus Tolke <linus@epact.se>
-// $Id: WizOperName.java,v 1.11 2003/09/11 00:07:16 bobtarling Exp $
+// $Id: WizOperName.java,v 1.12 2003/09/13 18:16:33 alexb Exp $
 
 package org.argouml.uml.cognitive.critics;
 
@@ -42,7 +42,6 @@ import org.argouml.cognitive.ui.WizStepCue;
 import org.argouml.model.ModelFacade;
 import org.argouml.model.uml.UmlFactory;
 
-import ru.novosoft.uml.foundation.core.MNamespace;
 /** A wizard to help the user change the name of an operation to a better name.
  * Same as WizMEName expect that it handles the special case where 
  * the operation instead should be made a constructor of the class.
@@ -243,7 +242,7 @@ public class WizOperName extends WizMEName {
     private static Object findNamespace(Object/*MNamespace*/ phantomNS,
 					Object/*MModel*/ targetModel) {
         Object ns = null;
-        MNamespace targetParentNS = null;
+        Object /*MNamespace*/ targetParentNS = null;
         if (phantomNS == null) {
             return targetModel;
         }
@@ -252,7 +251,7 @@ public class WizOperName extends WizMEName {
             return targetModel;
         }
         else {
-            targetParentNS = (MNamespace)findNamespace(parentNS, targetModel);
+            targetParentNS = findNamespace(parentNS, targetModel);
             //
             //   see if there is already an element with the same name
             //
@@ -274,7 +273,7 @@ public class WizOperName extends WizMEName {
                 }
             }
             if (ns == null) {
-                ns = targetParentNS.getFactory().createPackage();
+                ns = UmlFactory.getFactory().getCore().createNamespace();
                 ModelFacade.setName(ns, phantomName);
                 ModelFacade.addOwnedElement(targetParentNS, ns);
             }

@@ -1,4 +1,4 @@
-// $Id: CrNoIncomingTransitions.java,v 1.11 2003/09/11 00:07:16 bobtarling Exp $
+// $Id: CrNoIncomingTransitions.java,v 1.12 2003/09/13 18:16:33 alexb Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,16 +25,13 @@
 // File: CrNoIncomingTransitions.java
 // Classes: CrNoIncomingTransitions
 // Original Author: jrobbins@ics.uci.edu
-// $Id: CrNoIncomingTransitions.java,v 1.11 2003/09/11 00:07:16 bobtarling Exp $
+// $Id: CrNoIncomingTransitions.java,v 1.12 2003/09/13 18:16:33 alexb Exp $
 
 package org.argouml.uml.cognitive.critics;
 
 import java.util.Collection;
 import org.argouml.cognitive.Designer;
 import org.argouml.model.ModelFacade;
-
-
-import ru.novosoft.uml.foundation.data_types.MPseudostateKind;
 
 /** A critic to detect when a state has no outgoing transitions. */
 
@@ -58,7 +55,10 @@ public class CrNoIncomingTransitions extends CrUML {
 
 	boolean needsIncoming = incoming == null || incoming.size() == 0;
 	if (ModelFacade.isAPseudostate(sv)) {
-	    if (ModelFacade.getKind(sv).equals(MPseudostateKind.INITIAL)) needsIncoming = false;
+	    if (ModelFacade.getKind(sv)
+                    .equals(ModelFacade.INITIAL_PSEUDOSTATEKIND)){
+                        needsIncoming = false;
+            }
 	}
 
 	if (needsIncoming) return PROBLEM_FOUND;

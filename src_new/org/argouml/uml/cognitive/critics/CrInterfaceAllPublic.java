@@ -1,4 +1,4 @@
-// $Id: CrInterfaceAllPublic.java,v 1.7 2003/09/11 00:07:16 bobtarling Exp $
+// $Id: CrInterfaceAllPublic.java,v 1.8 2003/09/13 18:16:33 alexb Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -27,7 +27,7 @@
 // File: CrInterfaceAllPublic.java
 // Classes: CrInterfaceAllPublic
 // Original Author: jrobbins@ics.uci.edu
-// $Id: CrInterfaceAllPublic.java,v 1.7 2003/09/11 00:07:16 bobtarling Exp $
+// $Id: CrInterfaceAllPublic.java,v 1.8 2003/09/13 18:16:33 alexb Exp $
 
 package org.argouml.uml.cognitive.critics;
 
@@ -36,14 +36,9 @@ import java.util.Iterator;
 import org.argouml.cognitive.Designer;
 import org.argouml.cognitive.critics.Critic;
 import org.argouml.model.ModelFacade;
-import ru.novosoft.uml.foundation.data_types.MVisibilityKind;
-
-
 
 /** Well-formedness rule [3] for MInterface. See page 32 of UML 1.1
  *  Semantics. OMG document ad/97-08-04. */
-
-
 public class CrInterfaceAllPublic extends CrUML {
 
     public CrInterfaceAllPublic() {
@@ -62,7 +57,7 @@ public class CrInterfaceAllPublic extends CrUML {
 	while (enum.hasNext()) {
 	    Object f = /*(MFeature)*/ enum.next();
 	    if (ModelFacade.getVisibility(f) == null) return NO_PROBLEM;
-	    if (!ModelFacade.getVisibility(f).equals(MVisibilityKind.PUBLIC))
+	    if (!ModelFacade.getVisibility(f).equals(ModelFacade.PUBLIC_VISIBILITYKIND))
 		return PROBLEM_FOUND;
 	}
 	return NO_PROBLEM;

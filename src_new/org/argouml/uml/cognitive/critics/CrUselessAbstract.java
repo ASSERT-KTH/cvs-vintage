@@ -1,4 +1,4 @@
-// $Id: CrUselessAbstract.java,v 1.8 2003/09/11 00:07:16 bobtarling Exp $
+// $Id: CrUselessAbstract.java,v 1.9 2003/09/13 18:16:33 alexb Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -27,23 +27,23 @@
 // File: CrUselessAbstract.java
 // Classes: CrUselessAbstract
 // Original Author: jrobbins@ics.uci.edu
-// $Id: CrUselessAbstract.java,v 1.8 2003/09/11 00:07:16 bobtarling Exp $
+// $Id: CrUselessAbstract.java,v 1.9 2003/09/13 18:16:33 alexb Exp $
 
 package org.argouml.uml.cognitive.critics;
 
-import java.util.*;
-import java.awt.*;
+import java.util.Enumeration;
+import java.util.Vector;
 
-import ru.novosoft.uml.foundation.core.*;
-
-import org.tigris.gef.util.*;
-
-import org.argouml.cognitive.*;
+import org.argouml.cognitive.Designer;
+import org.argouml.cognitive.Goal;
 import org.argouml.model.ModelFacade;
+
+import org.tigris.gef.util.ChildGenerator;
+import org.tigris.gef.util.EnumerationEmpty;
+import org.tigris.gef.util.VectorSet;
 
 /** A critic to detect when a class can never have instances (of
  *  itself of any subclasses). */
-
 public class CrUselessAbstract extends CrUML {
 
     public CrUselessAbstract() {
@@ -61,7 +61,7 @@ public class CrUselessAbstract extends CrUML {
 	    return false;  // original class was not abstract
 	VectorSet derived =
 	    (new VectorSet(cls)).reachable(new ChildGenDerivedClasses());
-	java.util.Enumeration enum = derived.elements();
+	Enumeration enum = derived.elements();
 	Object c;
 	while (enum.hasMoreElements()) {
 	    c = /*(MClass)*/ enum.nextElement();
@@ -76,7 +76,7 @@ public class CrUselessAbstract extends CrUML {
 
 
 class ChildGenDerivedClasses implements ChildGenerator {
-    public java.util.Enumeration gen(Object o) {
+    public Enumeration gen(Object o) {
 	Object c = /*(MClass)*/ o;
 	Vector specs = new Vector(ModelFacade.getSpecializations(c));
 	if (specs == null) {
@@ -85,7 +85,7 @@ class ChildGenDerivedClasses implements ChildGenerator {
 	// TODO: it would be nice to have a EnumerationXform
 	// and a Functor object in uci.util
 	Vector specClasses = new Vector(specs.size());
-	java.util.Enumeration enum = specs.elements();
+	Enumeration enum = specs.elements();
 	while (enum.hasMoreElements()) {
 	    Object g = /*(MGeneralization)*/ enum.nextElement();
 	    Object ge = ModelFacade.getChild(g);
