@@ -94,6 +94,7 @@ public class PopupMenuGenerator extends AbstractMenuGenerator {
 							menu.add(tmp);
 						}
 					} catch (Exception e) {
+						e.printStackTrace();
 						ColumbaLogger.log.error(
 							e + ": " + next.getAttribute("action"));
 					}
@@ -117,6 +118,7 @@ public class PopupMenuGenerator extends AbstractMenuGenerator {
 						menu.add(menuitem);
 						action.setCheckBoxMenuItem(menuitem);
 					} catch (Exception e) {
+						e.printStackTrace();
 						ColumbaLogger.log.error(e);
 					}
 				} else if (next.getAttribute("imenu") != null) {
@@ -131,6 +133,7 @@ public class PopupMenuGenerator extends AbstractMenuGenerator {
 								next.getAttribute("imenu"),
 								frameController));
 					} catch (Exception e) {
+						e.printStackTrace();
 						ColumbaLogger.log.error(e);
 					}
 				}

@@ -134,6 +134,7 @@ public class ThreePaneMailFrameController
 		
 		tableController.createPopupMenu();
 		treeController.createPopupMenu();
+		messageController.createPopupMenu();
 		attachmentController.createPopupMenu();
 
 		initActions();

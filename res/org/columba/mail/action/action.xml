@@ -76,7 +76,11 @@
  
  <action name="MailImport" class="org.columba.mail.gui.action.ImportAction"/>
  
- 
+ <!-- message viewer -->
+ <action name="CopyLinkLocationAction" class="org.columba.mail.gui.message.action.CopyLinkLocationAction"/>
+ <action name="AddToAddressbookAction" class="org.columba.mail.gui.message.action.AddToAddressbookAction"/>
+ <action name="ComposeMessageAction" class="org.columba.mail.gui.message.action.ComposeMessageAction"/>
+     
  <!-- composer -->
  <action name="Addressbook" class="org.columba.mail.gui.composer.action.AddressbookAction"/>
  <action name="AttachFile" class="org.columba.mail.gui.composer.action.AttachFileAction"/>

@@ -80,7 +80,8 @@ public class MessageController
 	private String activeCharset;
 
 	private MessageView view;
-	
+
+	private URLObservable urlObservable;
 
 	protected AbstractMailFrameController abstractFrameController;
 	protected AttachmentController attachmentController;
@@ -98,8 +99,6 @@ public class MessageController
 		//view.addHyperlinkListener(this);
 		view.addMouseListener(this);
 
-		
-
 		((CharsetOwnerInterface) getFrameController())
 			.getCharsetManager()
 			.addCharsetListener(this);
@@ -110,20 +109,24 @@ public class MessageController
 
 		view.bodyTextViewer.addCaretListener(this);
 
-	}
+		urlObservable = new URLObservable();
 
+	}
 
 	public MessageView getView() {
 
 		return view;
 	}
 
+	public void createPopupMenu() {
+		menu = new MessageMenu(abstractFrameController);
+	}
+
 	/**
-		* return the PopupMenu for the table
-		*/
+	* return the PopupMenu for the message viewer
+	*/
 	public JPopupMenu getPopupMenu() {
-		if (menu == null)
-			menu = new MessageMenu(abstractFrameController);
+
 		return menu;
 	}
 
@@ -214,11 +217,10 @@ public class MessageController
 
 	}
 
-	public void setPGPMessage( int value, String message )
-	{
-		getView().getPgp().setValue(value, message);	
+	public void setPGPMessage(int value, String message) {
+		getView().getPgp().setValue(value, message);
 	}
-	
+
 	public void hyperlinkUpdate(HyperlinkEvent e) {
 
 	}
@@ -281,31 +283,15 @@ public class MessageController
 		final URL url = extractURL(ev);
 		final MouseEvent event = ev;
 		if (url == null) {
-			// no URL, this means opening the default context menu
-			// with actions like reply/forward/delete/etc.
-
-			// TODO: open table-view contextmenu here
-			// -> problem: actions listen for table-selection events
-			// ->          not message selection
-
-			/*
-			getPopupMenu().show((JEditorPane)event.getSource(), event.getX(), event.getY());
-			*/
-			
-			
-			return;
+			urlObservable.setUrl(null);
+		} else {
+			urlObservable.setUrl(url);
 		}
 
-		//		open context-menu with open/open with actions
+		// open context-menu 
+		// -> this has to happen in the awt-event dispatcher thread
 		SwingUtilities.invokeLater(new Runnable() {
 			public void run() {
-				
-				/*
-				URLController c = new URLController();
-				JPopupMenu menu = c.createMenu(url);
-				menu.show(getView(), event.getX(), event.getY());
-				*/
-				
 				getPopupMenu().show(getView(), event.getX(), event.getY());
 			}
 		});
@@ -469,4 +455,11 @@ public class MessageController
 		MainInterface.focusManager.updateActions();
 
 	}
+	/**
+	 * @return
+	 */
+	public URLObservable getUrlObservable() {
+		return urlObservable;
+	}
+
 }
