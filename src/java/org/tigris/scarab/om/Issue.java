@@ -345,10 +345,46 @@ public class Issue
     {
         attachment.setIssue(this);
         attachment.setTypeId(Attachment.COMMENT__PK);
-        attachment.setName("");
+        attachment.setName("comment");
         attachment.setCreatedBy(user.getUserId());
         attachment.setMimeType("text/plain");
+        attachment.setCreatedDate(new Date());
         attachment.save();
+
+        // update/clear the involved caches
+        getMethodResult().remove(this, GET_COMMENTS, new Boolean(false));
+        Object obj = getMethodResult().get(this, GET_COMMENTS, new Boolean(true));
+        if (obj != null)
+        {
+            List cachedResult = (List) obj;
+            cachedResult.add(attachment);
+            getMethodResult().put(cachedResult, this, GET_COMMENTS, new Boolean(true));
+        }
+        getMethodResult().removeAll(this, GET_ACTIVITY);
+    }
+    
+    /**
+     * Adds a URL to this issue.
+     */
+    public void addURL(Attachment attachment, ScarabUser user)
+        throws Exception
+    {
+        attachment.setIssue(this);
+        attachment.setTypeId(Attachment.URL__PK);
+        attachment.setCreatedBy(user.getUserId());
+        attachment.setMimeType("text/plain");
+        attachment.setCreatedDate(new Date());
+        attachment.save();
+
+        // update/clear the involved caches
+        Object obj = getMethodResult().get(this, GET_URLS);
+        if (obj != null)
+        {
+            List cachedResult = (List) obj;
+            cachedResult.add(attachment);
+            getMethodResult().put(cachedResult, this, GET_URLS);
+        }
+        getMethodResult().removeAll(this, GET_ACTIVITY);
     }
     
     /**
