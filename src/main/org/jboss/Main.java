@@ -46,7 +46,7 @@ import gnu.getopt.LongOpt;
 *
 * @author <a href="mailto:marc.fleury@jboss.org">Marc Fleury</a>
 * @author <a href="mailto:jason@planet57.com">Jason Dillon</a>
-* @version $Revision: 1.56 $
+* @version $Revision: 1.57 $
 *
 * <b>Revisions:</b>
 * <p>
@@ -234,7 +234,7 @@ public class Main
       long minutes = lapsedTime / 60000;
       long seconds = (lapsedTime - 60000 * minutes) / 1000;
       long milliseconds = (lapsedTime -60000 * minutes - 1000 * seconds);
-      System.out.println("JBoss " + version +
+      System.out.println("JBossMX MICRO-KERNEL" + version +
          " [" + version.getName() + "] Started in " +
          minutes  + "m:" + seconds  + "s:" +milliseconds +"ms");
    }
