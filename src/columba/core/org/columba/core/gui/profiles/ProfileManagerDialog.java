@@ -39,23 +39,27 @@ import javax.swing.JCheckBox;
 import javax.swing.JComponent;
 import javax.swing.JDialog;
 import javax.swing.JFileChooser;
-import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.KeyStroke;
+import javax.swing.ListSelectionModel;
 import javax.swing.SwingConstants;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
+import javax.swing.filechooser.FileFilter;
 
 import net.javaprog.ui.wizard.plaf.basic.SingleSideEtchedBorder;
 
+import org.columba.core.gui.frame.FrameMediator;
 import org.columba.core.gui.util.ButtonWithMnemonic;
 import org.columba.core.help.HelpManager;
+import org.columba.core.io.DiskIO;
 import org.columba.core.profiles.Profile;
 import org.columba.core.profiles.ProfileManager;
+import org.columba.core.util.GlobalResourceLoader;
 import org.columba.core.xml.XmlElement;
 
 /**
@@ -68,7 +72,7 @@ import org.columba.core.xml.XmlElement;
  * 
  * @author fdietz
  */
-public class ProfileDialog extends JDialog
+public class ProfileManagerDialog extends JDialog
 		implements
 			ActionListener,
 			ListSelectionListener {
@@ -77,6 +81,9 @@ public class ProfileDialog extends JDialog
 	protected JButton helpButton;
 	protected JButton addButton;
 	protected JButton editButton;
+	protected JButton removeButton;
+	protected JButton importButton;
+	protected JButton exportButton;
 	//protected JButton defaultButton;
 	private DefaultListModel model;
 	protected JList list;
@@ -84,12 +91,16 @@ public class ProfileDialog extends JDialog
 	protected JLabel nameLabel;
 	protected JCheckBox checkBox;
 
+	private FrameMediator mediator;
+
 	/**
 	 * @throws java.awt.HeadlessException
 	 */
-	public ProfileDialog() throws HeadlessException {
-		super(new JFrame(), true);
+	public ProfileManagerDialog(FrameMediator mediator)
+			throws HeadlessException {
+		super(mediator.getView().getFrame(), true);
 
+		this.mediator = mediator;
 		// TODO: i18n
 		setTitle("Profile Management");
 
@@ -148,22 +159,34 @@ public class ProfileDialog extends JDialog
 		gridBagLayout.setConstraints(addButton, c);
 		eastPanel.add(addButton);
 
-		Component strut1 = Box.createRigidArea(new Dimension(30, 5));
+		Component strut1 = Box.createRigidArea(new Dimension(30, 6));
 		gridBagLayout.setConstraints(strut1, c);
 		eastPanel.add(strut1);
 
 		gridBagLayout.setConstraints(editButton, c);
 		eastPanel.add(editButton);
 
-		/*
-		Component strut2 = Box.createRigidArea(new Dimension(30, 5));
+		Component strut2 = Box.createRigidArea(new Dimension(30, 6));
 		gridBagLayout.setConstraints(strut2, c);
 		eastPanel.add(strut2);
 
-		gridBagLayout.setConstraints(defaultButton, c);
-		eastPanel.add(defaultButton);
-		*/
-		
+		gridBagLayout.setConstraints(removeButton, c);
+		eastPanel.add(removeButton);
+
+		/*
+		 * Component strut3 = Box.createRigidArea(new Dimension(30, 12));
+		 * gridBagLayout.setConstraints(strut3, c); eastPanel.add(strut3);
+		 * 
+		 * gridBagLayout.setConstraints(importButton, c);
+		 * eastPanel.add(importButton);
+		 * 
+		 * Component strut4 = Box.createRigidArea(new Dimension(30, 6));
+		 * gridBagLayout.setConstraints(strut4, c); eastPanel.add(strut4);
+		 * 
+		 * gridBagLayout.setConstraints(exportButton, c);
+		 * eastPanel.add(exportButton);
+		 */
+
 		glue = Box.createVerticalGlue();
 		c.fill = GridBagConstraints.BOTH;
 		c.weighty = 1.0;
@@ -213,20 +236,32 @@ public class ProfileDialog extends JDialog
 		editButton.addActionListener(this);
 		editButton.setEnabled(false);
 
-		/*
 		// TODO: i18n
-		defaultButton = new ButtonWithMnemonic("Set &Default...");
-		defaultButton.setActionCommand("DEFAULT");
-		defaultButton.addActionListener(this);
-		defaultButton.setEnabled(false);
-		*/
-		
+		removeButton = new ButtonWithMnemonic("&Remove");
+		removeButton.setActionCommand("REMOVE");
+		removeButton.addActionListener(this);
+		removeButton.setEnabled(false);
+
+		//		 TODO: i18n
+		importButton = new ButtonWithMnemonic("&Import...");
+		importButton.setActionCommand("IMPORT");
+		importButton.addActionListener(this);
+
+		//		 TODO: i18n
+		exportButton = new ButtonWithMnemonic("&Export...");
+		exportButton.setActionCommand("EXPORT");
+		exportButton.addActionListener(this);
+		exportButton.setEnabled(false);
+
 		nameLabel = new JLabel("Choose Profile:");
 
-		checkBox = new JCheckBox("Don't ask on next startup.");
+		checkBox = new JCheckBox("Always ask on startup.");
+		checkBox.setSelected(ProfileManager.getInstance().isAlwaysAsk());
+		checkBox.setActionCommand("CHECKBOX");
+		checkBox.addActionListener(this);
 
-		okButton = new ButtonWithMnemonic("&Ok");
-		okButton.setActionCommand("OK"); //$NON-NLS-1$
+		okButton = new ButtonWithMnemonic("&Close");
+		okButton.setActionCommand("CLOSE"); //$NON-NLS-1$
 		okButton.addActionListener(this);
 
 		helpButton = new ButtonWithMnemonic("&Help");
@@ -248,6 +283,7 @@ public class ProfileDialog extends JDialog
 		}
 
 		list = new JList();
+		list.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		list.setModel(model);
 		list.addListSelectionListener(this);
 
@@ -265,8 +301,12 @@ public class ProfileDialog extends JDialog
 	public void actionPerformed(ActionEvent e) {
 		String action = e.getActionCommand();
 
-		if (action.equals("OK")) {
+		if (action.equals("CLOSE")) {
+			ProfileManager.getInstance().setAlwaysAsk(isAlwaysAskSelected());
+			
 			setVisible(false);
+		} else if (action.equals("CHECKBOX")) {
+				
 		} else if (action.equals("ADD")) {
 			JFileChooser fc = new JFileChooser();
 			fc.setMultiSelectionEnabled(true);
@@ -289,16 +329,67 @@ public class ProfileDialog extends JDialog
 
 			String inputValue = JOptionPane.showInputDialog(
 					"Enter Profile Name:", selection);
-			
-			if ( inputValue == null ) return;
-			
+
+			if (inputValue == null)
+				return;
+
 			// rename profile in profiles.xml
 			ProfileManager.getInstance().renameProfile(selection, inputValue);
-			
+
 			// modify listmodel
 			model.setElementAt(inputValue, model.indexOf(selection));
-			
+
 			selection = inputValue;
+		} else if (action.equals("REMOVE")) {
+
+			if (ProfileManager.getInstance().getCurrentProfile().getName()
+					.equals(selection)) {
+				// can't delete currently running profile
+				// TODO: i18n
+				JOptionPane.showMessageDialog(this,
+						"You can't delete the currently running profile.",
+						"Info Message", JOptionPane.INFORMATION_MESSAGE);
+			} else {
+
+				Profile p = ProfileManager.getInstance().getProfileForName(
+						selection);
+				if (p != null) {
+					// TODO: i18n
+					Object[] options = {"Delete", "No"};
+					int n = JOptionPane.showOptionDialog(this,
+							"Would you really like to delete this profile?",
+							"Question", JOptionPane.YES_NO_OPTION,
+							JOptionPane.QUESTION_MESSAGE, null, options,
+							options[1]);
+
+					if (n == JOptionPane.NO_OPTION) {
+						return;
+					}
+
+					File location = p.getLocation();
+					// delete directory recursivly
+					DiskIO.deleteDirectory(location);
+				}
+			}
+
+		} else if (action.equals("IMPORT")) {
+			// TODO: add import feature
+			/*
+			 * JFileChooser chooser = new JFileChooser();
+			 * chooser.addChoosableFileFilter(new FileFilter() { public boolean
+			 * accept(File file) { return file.isDirectory() ||
+			 * file.getName().toLowerCase().endsWith(".zip"); }
+			 * 
+			 * public String getDescription() { return "Columba Profile
+			 * Archive"; } }); chooser.setAcceptAllFileFilterUsed(false);
+			 * 
+			 * int result = chooser.showOpenDialog(this);
+			 * 
+			 * if (result == JFileChooser.APPROVE_OPTION) { File file =
+			 * chooser.getSelectedFile(); }
+			 */
+		} else if (action.equals("EXPORT")) {
+			// TODO: add export feature
 		}
 	}
 
@@ -310,11 +401,20 @@ public class ProfileDialog extends JDialog
 	public void valueChanged(ListSelectionEvent e) {
 		boolean enabled = !list.isSelectionEmpty();
 		addButton.setEnabled(enabled);
-		editButton.setEnabled(enabled);
-		okButton.setEnabled(enabled);
-		//defaultButton.setEnabled(enabled);
 
+		exportButton.setEnabled(enabled);
+
+		// get current list selection
 		selection = (String) list.getSelectedValue();
+
+		// user's can't delete default account
+		if ((selection != null) && (!selection.equals("Default"))) {
+			removeButton.setEnabled(true);
+			editButton.setEnabled(true);
+		} else {
+			removeButton.setEnabled(false);
+			editButton.setEnabled(false);
+		}
 	}
 
 	/**
@@ -324,7 +424,7 @@ public class ProfileDialog extends JDialog
 		return selection;
 	}
 
-	public boolean isDontAskedSelected() {
+	public boolean isAlwaysAskSelected() {
 		return checkBox.isSelected();
 	}
 }

@@ -9,6 +9,7 @@
  <action name="PluginManagerDialog" class="org.columba.core.gui.action.PluginManagerAction" />
  <action name="GlobalOptions" class="org.columba.core.gui.action.GlobalOptionsAction"/>
  <action name="OpenExternalToolsDialog" class="org.columba.core.gui.action.OpenExternalToolsDialogAction"/>
+ <action name="OpenProfileManagerDialog" class="org.columba.core.gui.action.OpenProfileManagerDialogAction"/>
  
  <action name="Cut" singleton="true" class="org.columba.core.gui.action.CutAction"/>
  <action name="Copy" singleton="true" class="org.columba.core.gui.action.CopyAction"/>

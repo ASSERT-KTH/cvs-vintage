@@ -26,7 +26,7 @@ import org.columba.core.io.DiskIO;
 import org.columba.core.util.OSInfo;
 import org.columba.core.xml.XmlElement;
 import org.columba.core.xml.XmlIO;
-import org.columba.core.gui.profiles.ProfileDialog;
+import org.columba.core.gui.profiles.ProfileChooserDialog;
 
 /**
  * Manages profiles consisting of configuration folders.
@@ -66,6 +66,11 @@ public class ProfileManager {
 	private XmlIO xml;
 
 	/**
+	 * Currently running profile.
+	 */
+	private Profile currentProfile;
+
+	/**
 	 * default constructor
 	 */
 	public ProfileManager() {
@@ -100,7 +105,7 @@ public class ProfileManager {
 	 * 
 	 * @return return profile if available. Otherwise, return null
 	 */
-	protected Profile getProfileForName(String name) {
+	public Profile getProfileForName(String name) {
 		for (int i = 0; i < profiles.count(); i++) {
 
 			XmlElement profile = profiles.getElement(i);
@@ -157,14 +162,14 @@ public class ProfileManager {
 		// load profiles.xml
 		loadProfilesConfiguration();
 
-		Profile profile = null;
+		currentProfile = null;
 		if (location == null) {
 			// prompt user for profile
-			profile = promptForProfile();
+			currentProfile = promptForProfile();
 		} else {
 			// use commandline-specified location
-			profile = getProfileForLocation(location);
-			if (profile == null) {
+			currentProfile = getProfileForLocation(location);
+			if (currentProfile == null) {
 				// create profile
 				XmlElement profileElement = new XmlElement("profile");
 				profileElement.addAttribute("name", location);
@@ -178,11 +183,11 @@ public class ProfileManager {
 					e.printStackTrace();
 				}
 
-				profile = getProfileForLocation(location);
+				currentProfile = getProfileForLocation(location);
 			}
 		}
 
-		return profile;
+		return currentProfile;
 	}
 
 	/**
@@ -199,6 +204,43 @@ public class ProfileManager {
 			selected = "Default";
 
 		return selected;
+	}
+
+	/**
+	 * Set always ask parameter.
+	 * 
+	 * @param alwaysAsk
+	 *            true, if user should be always asked which profile to use.
+	 *            False, otherwise.
+	 */
+	public void setAlwaysAsk(boolean alwaysAsk) {
+		if (alwaysAsk) {
+			profiles.addAttribute("dont_ask", "false");
+		} else {
+			profiles.addAttribute("dont_ask", "true");
+		}
+
+		//		 save to profiles.xml
+		try {
+			xml.save();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+	
+	/**
+	 * Check if user should always be prompted for a profile on startup.
+	 * 
+	 * @return	true, if user should be always asked. False, otherwise.
+	 */
+	public boolean isAlwaysAsk() {
+		String s = profiles.getAttribute("dont_ask");
+		if (s == null)
+			s = "false";
+		
+		if ( s.equals("true")) return false;
+		
+		return true;
 	}
 
 	/**
@@ -222,7 +264,7 @@ public class ProfileManager {
 		}
 
 		// show profile choosing dialog
-		ProfileDialog d = new ProfileDialog();
+		ProfileChooserDialog d = new ProfileChooserDialog();
 		String profileName = d.getSelection();
 
 		if (profileName.equals("Default")) {
@@ -318,5 +360,11 @@ public class ProfileManager {
 
 		} catch (MalformedURLException mue) {
 		}
+	}
+	/**
+	 * @return Returns the currentProfile.
+	 */
+	public Profile getCurrentProfile() {
+		return currentProfile;
 	}
 }
