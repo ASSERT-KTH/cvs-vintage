@@ -65,6 +65,7 @@ import org.tigris.scarab.om.ScarabUser;
 import org.tigris.scarab.om.ScarabUserManager;
 import org.tigris.scarab.om.Attachment;
 import org.tigris.scarab.om.ActivitySet;
+import org.tigris.scarab.om.ActivitySetManager;
 import org.tigris.scarab.om.ActivitySetTypePeer;
 import org.tigris.scarab.om.Query;
 import org.tigris.scarab.om.Module;
@@ -75,7 +76,7 @@ import org.tigris.scarab.om.Module;
  *
  * @author <a href="mailto:jon@latchkey.com">Jon S. Stevens</a>
  * @author <a href="mailto:dlr@finemaltcoding.com">Daniel Rall</a>
- * @version $Id: BaseTestCase.java,v 1.17 2002/07/30 22:48:16 jmcnally Exp $
+ * @version $Id: BaseTestCase.java,v 1.18 2002/07/31 00:57:19 jmcnally Exp $
  */
 public class BaseTestCase extends TestCase
 {

@@ -58,7 +58,7 @@ import java.util.List;
  * A Testing Suite for the om.ActivitySet class.
  *
  * @author <a href="mailto:mumbly@oneofus.org">Tim McNerney</a>
- * @version $Id: TransactionTest.java,v 1.3 2002/07/30 22:48:16 jmcnally Exp $
+ * @version $Id: ActivitySetTest.java,v 1.1 2002/07/31 00:57:19 jmcnally Exp $
  */
 public class ActivitySetTest extends BaseTestCase
 {
@@ -95,19 +95,20 @@ public class ActivitySetTest extends BaseTestCase
         attachment.setTextFields(getUser1(), issue, Attachment.COMMENT__PK);
         attachment.save();
         
-        ActivitySet trans = ActivitySetManager
+        trans = ActivitySetManager
             .getInstance(new NumberKey("1"), getUser1(), attachment);
         trans.save();
         System.out.println("new activitySet id = " + trans.getActivitySetId());
+        System.out.println("\n trans" + trans);
 
         // Create some activities
         Activity activity = ActivityManager
-            .createTextActivity(getIssue0(), null
+            .createTextActivity(getIssue0(), null,
             trans,"trans activity",null,
             "oldValue", "newValue");
         activity.save();
         Activity activity1 = ActivityManager
-            .createTextActivity(getIssue0(), null
+            .createTextActivity(getIssue0(), null,
             trans,"trans activity",null,
             "oldValue", "newValue");
         activity1.save();
@@ -115,6 +116,7 @@ public class ActivitySetTest extends BaseTestCase
 
     public void testGetActivityList() throws Exception
     {
+
         System.out.println("\ntestGetActivityList()");
         assertEquals(2, trans.getActivityList().size());
     }
