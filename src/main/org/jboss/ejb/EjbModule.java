@@ -80,7 +80,7 @@ import org.jboss.util.jmx.ObjectNameFactory;
  * @author <a href="mailto:d_jencks@users.sourceforge.net">David Jencks</a>
  * @author <a href="mailto:reverbel@ime.usp.br">Francisco Reverbel</a>
  * @author <a href="mailto:Adrian.Brock@HappeningTimes.com">Adrian.Brock</a>
- * @version $Revision: 1.18 $
+ * @version $Revision: 1.19 $
  *
  * @jmx:mbean extends="org.jboss.system.ServiceMBean"
  */
@@ -370,19 +370,21 @@ public class EjbModule
             
             ObjectName jmxName= con.getJmxName();
             server.registerMBean(con, jmxName);
-            serviceController.create(jmxName);
+            BeanMetaData metaData = con.getBeanMetaData();
+            Collection depends = metaData.getDepends();
+            serviceController.create(jmxName, depends);
             // Create JSR-77 EJB-Wrapper
             log.debug( "Application.create(), create JSR-77 EJB-Component" );
-            BeanMetaData lMetaData = con.getBeanMetaData();
+            //BeanMetaData lMetaData = con.getBeanMetaData();
             int lType =
-               lMetaData.isSession() ?
-                  ( ( (SessionMetaData) lMetaData ).isStateless() ? 2 : 1 ) :
-               ( lMetaData.isMessageDriven() ? 3 : 0 );
+               metaData.isSession() ?
+                  ( ( (SessionMetaData) metaData ).isStateless() ? 2 : 1 ) :
+               ( metaData.isMessageDriven() ? 3 : 0 );
             ObjectName lEJB = EJB.create(
                server,
                getModuleName().toString(),
                lType,
-               lMetaData.getJndiName()
+               metaData.getJndiName()
             );
             if (debug) {
                log.debug( "Application.start(), EJB: " + lEJB );

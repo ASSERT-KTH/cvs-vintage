@@ -7,20 +7,22 @@
 
 package org.jboss.metadata;
 
-import java.util.Iterator;
+
+
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.Set;
-import java.util.Collection;
-
-import org.w3c.dom.Element;
-import org.w3c.dom.NodeList;
-
 import org.jboss.deployment.DeploymentException;
 import org.jboss.security.AnybodyPrincipal;
 import org.jboss.security.NobodyPrincipal;
 import org.jboss.security.SimplePrincipal;
+import org.w3c.dom.Element;
+import org.w3c.dom.NodeList;
+import org.jboss.util.jmx.ObjectNameFactory;
 
 /**
  * A common meta data class for the entity, message-driven and session beans.
@@ -31,7 +33,7 @@ import org.jboss.security.SimplePrincipal;
  * @author <a href="mailto:Scott_Stark@displayscape.com">Scott Stark</a>.
  * @author <a href="mailto:osh@sparre.dk">Ole Husgaard</a> 
  * @author <a href="mailto:bill@burkecentral.com">Bill Burke</a> 
- * @version $Revision: 1.37 $
+ * @version $Revision: 1.38 $
  *
  *  <p><b>Revisions:</b><br>
  *  <p><b>2001/10/16: billb</b>
@@ -129,6 +131,8 @@ public abstract class BeanMetaData
    private String securityProxy;
    
    protected boolean clustered = false;
+
+   private Collection depends = new LinkedList();
 	
    // Static --------------------------------------------------------
     
@@ -290,6 +294,12 @@ public abstract class BeanMetaData
       return result;
    }
 
+   public Collection getDepends()
+   {
+      Collection allDepends = new LinkedList(depends);
+      allDepends.addAll(getContainerConfiguration().getDepends());
+      return allDepends;
+   }
 
    /**
     * Checks meta data to obtain the Method Attributes of a bean's method:
@@ -602,6 +612,15 @@ public abstract class BeanMetaData
 	    beanInvoker = DEFAULT_CLUSTERED_BEAN_INVOKER;
 	 }
       }
+
+      //Get depends object names
+      for (Iterator dependsElements = getChildrenByTagName(element, "depends"); dependsElements.hasNext();)
+      {
+         Element dependsElement = (Element)dependsElements.next();
+         String dependsName = getElementContent(dependsElement);
+         depends.add(ObjectNameFactory.create(dependsName));
+      } // end of for ()
+      
    }
 
    // Package protected ---------------------------------------------

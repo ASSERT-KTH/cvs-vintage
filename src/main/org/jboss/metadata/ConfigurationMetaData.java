@@ -6,18 +6,21 @@
  */
 package org.jboss.metadata;
 
+
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.LinkedList;
+import org.jboss.deployment.DeploymentException;
+import org.jboss.util.jmx.ObjectNameFactory;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
-import org.jboss.deployment.DeploymentException;
-import java.util.HashMap;
-import java.util.Iterator;
-
 /** The configuration information for an EJB container.
  *   @author <a href="mailto:sebastien.alborini@m4x.org">Sebastien Alborini</a>
  *   @author <a href="mailto:scott.stark@jboss.org">Scott Stark</a>
- *   @version $Revision: 1.25 $
+ *   @version $Revision: 1.26 $
  *
  *  <p><b>Revisions:</b><br>
  *  <p><b>2001/08/02: marcf</b>
@@ -99,6 +102,7 @@ public class ConfigurationMetaData extends MetaData
    private Element containerInterceptorsConf;
    private Element clientInterceptors;
    private HashMap clientInterceptorConfs = new HashMap();
+   private Collection depends = new LinkedList();
 
    // Static --------------------------------------------------------
 
@@ -146,6 +150,11 @@ public class ConfigurationMetaData extends MetaData
    public long getOptionDRefreshRate() { return optionDRefreshRate; }
 
    public boolean getReadOnlyGetMethods() { return readOnlyGetMethods; }
+
+   public Collection getDepends() 
+   {
+      return depends;
+   }
 
    public void importJbossXml(Element element) throws DeploymentException {
 
@@ -243,6 +252,15 @@ public class ConfigurationMetaData extends MetaData
 
       // configuration for instance cache
       containerCacheConf = getOptionalChild(element, "container-cache-conf", containerCacheConf);
+
+      //Get depends object names
+      for (Iterator dependsElements = getChildrenByTagName(element, "depends"); dependsElements.hasNext();)
+      {
+         Element dependsElement = (Element)dependsElements.next();
+         String dependsName = getElementContent(dependsElement);
+         depends.add(ObjectNameFactory.create(dependsName));
+      } // end of for ()
+      
 
       // DEPRECATED: Remove this in JBoss 4.0
       if (containerInvoker.equals("org.jboss.ejb.plugins.jrmp12.server.JRMPContainerInvoker") ||
