@@ -93,7 +93,7 @@ import org.tigris.scarab.util.ScarabConstants;
  *
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: MoveIssue.java,v 1.24 2002/04/04 00:45:46 elicia Exp $
+ * @version $Id: MoveIssue.java,v 1.25 2002/04/04 00:51:22 elicia Exp $
  */
 public class MoveIssue extends RequireLoginFirstAction
 {
@@ -144,6 +144,7 @@ public class MoveIssue extends RequireLoginFirstAction
         throws Exception
     {
         String template = getCurrentTemplate(data, null);
+        String nextTemplate = getNextTemplate(data, template);
 
         IntakeTool intake = getIntakeTool(context);
         if (!intake.isAllValid())
@@ -241,7 +242,67 @@ public class MoveIssue extends RequireLoginFirstAction
         if (!orphanAttributes.isEmpty())
         {
             // Save comment
-            StringBuffer descBuf.toString(),
+            StringBuffer dataBuf = new StringBuffer("Removed " + 
+                                                    "irrelevant attribute(s): ");
+            for (int i=0;i<orphanAttributes.size();i++)
+            {
+               AttributeValue attVal = (AttributeValue) orphanAttributes.get(i);
+               dataBuf.append(attVal.getAttribute().getName());
+               String field = null;
+               if (attVal.getAttribute().getAttributeType()
+                   .getName().equals("combo-box"))
+               {
+                   field = attVal.getAttributeOption().getName();
+               } 
+               else if (attVal.getAttribute().getAttributeType()
+                                             .getName().equals("user"))
+               {
+                   ScarabUser assignedUser = ScarabUserManager
+                            .getInstance((ObjectKey)attVal.getUserId());
+                   field = assignedUser.getUserName();
+               } 
+            
+               dataBuf.append("=").append(field);
+               if (i < orphanAttributes.size()-1 )
+               {
+                  dataBuf.append(",");
+               } 
+            }
+            attachment.setDataAsString(dataBuf.toString());
+            context.put("deletedAttributes", dataBuf.toString());
+        }
+        else
+        {
+            if (selectAction.equals("move"))
+            {
+                attachment.setDataAsString("All attributes were moved.");
+            }
+            else
+            {
+                attachment.setDataAsString("All attributes were copied.");
+            }
+        }
+            
+        if (selectAction.equals("move"))
+        {
+            attachment.setName("Moved Issue Note");
+        }
+        else
+        {
+            attachment.setName("Copied Issue Note");
+        }
+        attachment.setTextFields(user, newIssue, Attachment.MODIFICATION__PK);
+        attachment.save();
+
+        // Update transaction
+        transaction.setAttachment(attachment);
+        transaction.save();
+
+        // Save activity record
+        Activity activity = new Activity();
+        Attribute zeroAttribute = AttributeManager
+            .getInstance(new NumberKey("0"));
+        activity.create(newIssue, zeroAttribute, descBuf.toString(),
                         transaction, oldModule.getName(), newModule.getName());
 
         // placed in the context for the email to be able to access them
@@ -256,7 +317,7 @@ public class MoveIssue extends RequireLoginFirstAction
              data.setMessage("Your changes were saved, but could not send "
                              + "notification email due to a sendmail error.");
         }                      
-     
+
         // Redirect to moved or copied issue
         getScarabRequestTool(context).setCurrentModule(newModule);
         data.getParameters().remove("id");
