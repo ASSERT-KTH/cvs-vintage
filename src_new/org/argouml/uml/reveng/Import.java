@@ -1,4 +1,4 @@
-// $Id: Import.java,v 1.37 2003/09/15 21:29:43 alexb Exp $
+// $Id: Import.java,v 1.38 2003/11/08 12:03:48 alexb Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -55,7 +55,7 @@ import org.argouml.kernel.Project;
 import org.argouml.kernel.ProjectManager;
 import org.argouml.model.uml.UmlModelEventPump;
 import org.argouml.ui.ProjectBrowser;
-import org.argouml.ui.NavigatorPane;
+import org.argouml.ui.explorer.ExplorerEventAdaptor;
 import org.argouml.ui.StatusBar;
 import org.argouml.uml.diagram.static_structure.ClassDiagramGraphModel;
 import org.argouml.uml.diagram.static_structure.layout.ClassdiagramLayouter;
@@ -72,7 +72,7 @@ import org.tigris.gef.base.Globals;
  *
  * <p>Supports recursive search in folder for all .java classes.
  *
- * <p>$Id: Import.java,v 1.37 2003/09/15 21:29:43 alexb Exp $
+ * <p>$Id: Import.java,v 1.38 2003/11/08 12:03:48 alexb Exp $
  *
  * @author Andreas Rueckert <a_rueckert@gmx.net>
  */
@@ -527,7 +527,7 @@ public class Import {
             
             UmlModelEventPump.getPump().startPumpingEvents();
             
-            NavigatorPane.getInstance().forceUpdate();
+            ExplorerEventAdaptor.getInstance().structureChanged();
             pb.setEnabled(true);
             
             Argo.log.info(_st);

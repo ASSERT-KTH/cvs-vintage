@@ -1,4 +1,4 @@
-// $Id: UMLReflectionListModel.java,v 1.18 2003/09/28 19:10:53 bobtarling Exp $
+// $Id: UMLReflectionListModel.java,v 1.19 2003/11/08 12:03:48 alexb Exp $
 // Copyright (c) 1996-2001 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -32,7 +32,7 @@ import javax.swing.JPopupMenu;
 
 import org.apache.log4j.Logger;
 import org.argouml.model.ModelFacade;
-import org.argouml.ui.NavigatorPane;
+import org.argouml.ui.explorer.ExplorerEventAdaptor;
 import org.argouml.ui.targetmanager.TargetManager;
 
 import ru.novosoft.uml.foundation.core.MModelElement;
@@ -249,7 +249,7 @@ public class UMLReflectionListModel extends UMLModelElementListModel   {
                 _setMethod.invoke(getContainer(), new Object[] {
 		    newCollection 
 		});
-                NavigatorPane.getInstance().forceUpdate();
+                ExplorerEventAdaptor.getInstance().structureChanged();
             }
 	    catch (InvocationTargetException ex) {
                 cat.error(ex.getTargetException().toString() + " is InvocationTargetException in UMLReflectionListModel.moveUp()", ex);
@@ -268,7 +268,7 @@ public class UMLReflectionListModel extends UMLModelElementListModel   {
                 _setMethod.invoke(getContainer(), new Object[] {
 		    newCollection 
 		});
-                NavigatorPane.getInstance().forceUpdate();
+                ExplorerEventAdaptor.getInstance().structureChanged();
             }
 	    catch (InvocationTargetException ex) {
                 cat.error(ex.getTargetException().toString() + " is InvocationTargetException in UMLReflectionListModel.moveDown() ", ex.getTargetException());
@@ -286,7 +286,7 @@ public class UMLReflectionListModel extends UMLModelElementListModel   {
                 _deleteMethod.invoke(getContainer(), new Object[] {
 		    new Integer(index) 
 		});
-                NavigatorPane.getInstance().forceUpdate();
+                ExplorerEventAdaptor.getInstance().structureChanged();
             }
 	    catch (InvocationTargetException ex) {
                 cat.error(ex.getTargetException().toString() + " is InvocationTargetException in UMLReflectionListModel.delete()", ex);
