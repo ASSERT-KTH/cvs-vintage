@@ -16,8 +16,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Map;
 import java.util.Set;
 import javax.ejb.EJBContext;
 import javax.ejb.EJBException;
@@ -30,7 +30,6 @@ import javax.management.AttributeList;
 import javax.management.AttributeNotFoundException;
 import javax.management.DynamicMBean;
 import javax.management.InvalidAttributeValueException;
-import javax.management.MalformedObjectNameException;
 import javax.management.MBeanAttributeInfo;
 import javax.management.MBeanConstructorInfo;
 import javax.management.MBeanException;
@@ -39,6 +38,7 @@ import javax.management.MBeanNotificationInfo;
 import javax.management.MBeanOperationInfo;
 import javax.management.MBeanParameterInfo;
 import javax.management.MBeanRegistration;
+import javax.management.MalformedObjectNameException;
 import javax.management.ObjectName;
 import javax.management.ReflectionException;
 import javax.naming.Context;
@@ -50,8 +50,8 @@ import javax.naming.StringRefAddr;
 import javax.transaction.TransactionManager;
 import org.jboss.deployment.DeploymentException;
 import org.jboss.deployment.DeploymentInfo;
-import org.jboss.ejb.plugins.AbstractInterceptor;
 import org.jboss.ejb.plugins.AbstractInstanceCache;
+import org.jboss.ejb.plugins.AbstractInterceptor;
 import org.jboss.ejb.plugins.SecurityProxyInterceptor;
 import org.jboss.ejb.plugins.local.BaseLocalProxyFactory;
 import org.jboss.ejb.timer.ContainerTimerService;
@@ -75,18 +75,19 @@ import org.jboss.metadata.XmlLoadable;
 import org.jboss.monitor.StatisticsProvider;
 import org.jboss.mx.loading.UnifiedClassLoader;
 import org.jboss.naming.ENCThreadLocalKey;
-import org.jboss.util.naming.Util;
 import org.jboss.security.AuthenticationManager;
 import org.jboss.security.RealmMapping;
 import org.jboss.security.SecurityAssociation;
+import org.jboss.system.Registry;
 import org.jboss.system.ServiceMBeanSupport;
+import org.jboss.util.MethodHashing;
 import org.jboss.util.NestedError;
 import org.jboss.util.jmx.MBeanProxy;
+import org.jboss.util.jmx.ObjectNameConverter;
 import org.jboss.util.jmx.ObjectNameFactory;
+import org.jboss.util.naming.Util;
 import org.jboss.web.WebClassLoader;
 import org.jboss.web.WebServiceMBean;
-import org.jboss.system.Registry;
-import org.jboss.util.jmx.ObjectNameConverter;
 import org.w3c.dom.Element;
 
 /**
@@ -109,7 +110,7 @@ import org.w3c.dom.Element;
  * @author <a href="mailto:Scott.Stark@jboss.org">Scott Stark</a>.
  * @author <a href="bill@burkecentral.com">Bill Burke</a>
  * @author <a href="mailto:d_jencks@users.sourceforge.net">David Jencks</a>
- * @version $Revision: 1.112 $
+ * @version $Revision: 1.113 $
  *
  * @todo convert all the deployment/service lifecycle stuff to an
  * aspect/interceptor.  Make this whole stack into a model mbean.
@@ -577,14 +578,17 @@ public abstract class Container extends ServiceMBeanSupport
    {
       if (methodToTxSupportMap == null)
       {
-         return null;
-      } // end of if ()
+         throw new IllegalStateException("getMethodHashToTxSupportMap called without methodToTxSupportMap set");
+         //return null;
+     } // end of if ()
 
       Map result = new HashMap(methodToTxSupportMap.size());
       for (Iterator i = methodToTxSupportMap.entrySet().iterator(); i.hasNext();)
       {
          Map.Entry e = (Map.Entry)i.next();
-         result.put(new Integer(e.getKey().hashCode()), e.getValue());
+         Method m = (Method)e.getKey();
+         long hash = MethodHashing.calculateHash(m);
+         result.put(new Long(hash), e.getValue());
       } // end of for ()
       return result;
    }

@@ -109,13 +109,15 @@ public class BaseLocalProxyFactory implements LocalProxyFactory
 
    public void start() throws Exception
    {
-      Map methodToTxSupportMap = container.getMethodToTxSupportMap();
-      if (methodToTxSupportMap == null)
+      Map methodHashToTxSupportMap = container.getMethodHashToTxSupportMap();
+      if (methodHashToTxSupportMap == null || methodHashToTxSupportMap.isEmpty())
       {
-         log.warn("methodToTxSupportMap not set on container: " + container);
+         throw new IllegalStateException("methodToTxSupportMap not set on container: " + container);
       } // end of if ()
 
-      invocationContext.setMethodHashToTxSupportMap(methodToTxSupportMap);
+      invocationContext.setMethodHashToTxSupportMap(methodHashToTxSupportMap);
+      //This is used only for logging in tx interceptor
+      invocationContext.setObjectName(new Integer(container.getJmxName().hashCode()));
       Interceptor containerInterceptor = new ContainerInterceptor(container);
       next.setNext(containerInterceptor);
 
@@ -304,6 +306,11 @@ public class BaseLocalProxyFactory implements LocalProxyFactory
    public Object invoke(Object id, Method m, Object[] args, InvocationType type )
       throws Throwable
    {
+
+      if (invocationContext.getMethodHashToTxSupportMap() == null)
+      {
+         throw new IllegalStateException("No methodToTxSupportMap set!");
+      }
       // Set the right context classloader
       ClassLoader oldCl = Thread.currentThread().getContextClassLoader();
       Thread.currentThread().setContextClassLoader(container.getClassLoader());
