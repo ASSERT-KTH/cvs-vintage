@@ -70,8 +70,7 @@ public class Query
                               "email/RequireApproval.vm");
                 ScarabUser toUser = (ScarabUser) ScarabUserImplPeer
                                   .retrieveByPK((NumberKey)module.getOwnerId());
-                Email.sendEmail(context, null, toUser,
-                                subject, template);
+                Email.sendEmail(context, null, toUser, subject, template);
             }
         }
         save();
