@@ -11,17 +11,10 @@ import java.rmi.RemoteException;
 import java.security.Principal;
 import java.util.Collection;
 import java.util.Date;
+import java.util.Iterator;
+import java.util.ArrayList;
 
-import javax.ejb.EJBContext;
-import javax.ejb.EJBException;
-import javax.ejb.EJBHome;
-import javax.ejb.EJBLocalHome;
-import javax.ejb.EJBLocalObject;
-import javax.ejb.EJBObject;
-import javax.ejb.EntityBean;
-import javax.ejb.EntityContext;
-import javax.ejb.Timer;
-import javax.ejb.TimerService;
+import javax.ejb.*;
 import javax.transaction.UserTransaction;
 
 import org.jboss.ejb.EnterpriseContext.EJBContextImpl;
@@ -37,7 +30,7 @@ import org.jboss.ejb.plugins.lock.NonReentrantLock;
  * @author <a href="mailto:rickard.oberg@telkel.com">Rickard �berg</a>
  * @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
  * @author <a href="mailto:docodan@mvcsoft.com">Daniel OConnor</a>
- * @version $Revision: 1.40 $
+ * @version $Revision: 1.41 $
  */
 public class EntityEnterpriseContext extends EnterpriseContext
 {
@@ -81,12 +74,12 @@ public class EntityEnterpriseContext extends EnterpriseContext
       ctx = new EntityContextImpl();
       try
       {
-         pushInMethodFlag(IN_SET_ENTITY_CONTEXT);
+         AllowedOperationsAssociation.pushInMethodFlag(IN_SET_ENTITY_CONTEXT);
          ((EntityBean)instance).setEntityContext(ctx);
       }
       finally
       {
-         popInMethodFlag();
+         AllowedOperationsAssociation.popInMethodFlag();
       }
    }
 	
@@ -205,7 +198,7 @@ public class EntityEnterpriseContext extends EnterpriseContext
    {
       public EJBHome getEJBHome()
       {
-         assertAllowedIn("getEJBHome",
+         AllowedOperationsAssociation.assertAllowedIn("getEJBHome",
                  IN_SET_ENTITY_CONTEXT | IN_UNSET_ENTITY_CONTEXT |
                  IN_EJB_CREATE | IN_EJB_POST_CREATE | IN_EJB_REMOVE | IN_EJB_FIND | IN_EJB_HOME |
                  IN_EJB_ACTIVATE | IN_EJB_PASSIVATE | IN_EJB_LOAD | IN_EJB_STORE | IN_BUSINESS_METHOD |
@@ -216,7 +209,7 @@ public class EntityEnterpriseContext extends EnterpriseContext
 
       public EJBLocalHome getEJBLocalHome()
       {
-         assertAllowedIn("getEJBLocalHome",
+         AllowedOperationsAssociation.assertAllowedIn("getEJBLocalHome",
                  IN_SET_ENTITY_CONTEXT | IN_UNSET_ENTITY_CONTEXT |
                  IN_EJB_CREATE | IN_EJB_POST_CREATE | IN_EJB_REMOVE | IN_EJB_FIND | IN_EJB_HOME |
                  IN_EJB_ACTIVATE | IN_EJB_PASSIVATE | IN_EJB_LOAD | IN_EJB_STORE | IN_BUSINESS_METHOD |
@@ -227,7 +220,7 @@ public class EntityEnterpriseContext extends EnterpriseContext
 
       public Principal getCallerPrincipal()
       {
-         assertAllowedIn("getCallerPrincipal",
+         AllowedOperationsAssociation.assertAllowedIn("getCallerPrincipal",
                  IN_EJB_CREATE | IN_EJB_POST_CREATE | IN_EJB_REMOVE | IN_EJB_FIND | IN_EJB_HOME |
                  IN_EJB_LOAD | IN_EJB_STORE | IN_BUSINESS_METHOD |
                  IN_EJB_TIMEOUT);
@@ -237,7 +230,7 @@ public class EntityEnterpriseContext extends EnterpriseContext
 
       public boolean getRollbackOnly()
       {
-         assertAllowedIn("getRollbackOnly",
+         AllowedOperationsAssociation.assertAllowedIn("getRollbackOnly",
                  IN_EJB_CREATE | IN_EJB_POST_CREATE | IN_EJB_REMOVE | IN_EJB_FIND | IN_EJB_HOME |
                  IN_EJB_LOAD | IN_EJB_STORE | IN_BUSINESS_METHOD |
                  IN_EJB_TIMEOUT);
@@ -247,7 +240,7 @@ public class EntityEnterpriseContext extends EnterpriseContext
 
       public void setRollbackOnly()
       {
-         assertAllowedIn("setRollbackOnly",
+         AllowedOperationsAssociation.assertAllowedIn("setRollbackOnly",
                  IN_EJB_CREATE | IN_EJB_POST_CREATE | IN_EJB_REMOVE | IN_EJB_FIND | IN_EJB_HOME |
                  IN_EJB_LOAD | IN_EJB_STORE | IN_BUSINESS_METHOD |
                  IN_EJB_TIMEOUT);
@@ -257,7 +250,7 @@ public class EntityEnterpriseContext extends EnterpriseContext
 
       public boolean isCallerInRole(String id)
       {
-         assertAllowedIn("getCallerInRole",
+         AllowedOperationsAssociation.assertAllowedIn("getCallerInRole",
                  IN_EJB_CREATE | IN_EJB_POST_CREATE | IN_EJB_REMOVE | IN_EJB_FIND | IN_EJB_HOME |
                  IN_EJB_LOAD | IN_EJB_STORE | IN_BUSINESS_METHOD |
                  IN_EJB_TIMEOUT);
@@ -266,13 +259,13 @@ public class EntityEnterpriseContext extends EnterpriseContext
 
       public UserTransaction getUserTransaction()
       {
-         assertAllowedIn("getUserTransaction", NOT_ALLOWED);
+         AllowedOperationsAssociation.assertAllowedIn("getUserTransaction", NOT_ALLOWED);
          return super.getUserTransaction();
       }
 
       public EJBObject getEJBObject()
       {
-         assertAllowedIn("getEJBObject",
+         AllowedOperationsAssociation.assertAllowedIn("getEJBObject",
                  IN_EJB_POST_CREATE | IN_EJB_REMOVE |
                  IN_EJB_ACTIVATE | IN_EJB_PASSIVATE | IN_EJB_LOAD | IN_EJB_STORE | IN_BUSINESS_METHOD |
                  IN_EJB_TIMEOUT);
@@ -301,7 +294,7 @@ public class EntityEnterpriseContext extends EnterpriseContext
 		
       public EJBLocalObject getEJBLocalObject()
       {
-         assertAllowedIn("getEJBLocalObject",
+         AllowedOperationsAssociation.assertAllowedIn("getEJBLocalObject",
                  IN_EJB_POST_CREATE | IN_EJB_REMOVE |
                  IN_EJB_ACTIVATE | IN_EJB_PASSIVATE | IN_EJB_LOAD | IN_EJB_STORE | IN_BUSINESS_METHOD |
                  IN_EJB_TIMEOUT);
@@ -319,7 +312,7 @@ public class EntityEnterpriseContext extends EnterpriseContext
 		
       public Object getPrimaryKey()
       {
-         assertAllowedIn("getPrimaryKey",
+         AllowedOperationsAssociation.assertAllowedIn("getPrimaryKey",
                  IN_EJB_POST_CREATE | IN_EJB_REMOVE |
                  IN_EJB_ACTIVATE | IN_EJB_PASSIVATE | IN_EJB_LOAD | IN_EJB_STORE | IN_BUSINESS_METHOD |
                  IN_EJB_TIMEOUT);
@@ -329,7 +322,7 @@ public class EntityEnterpriseContext extends EnterpriseContext
 
       public TimerService getTimerService() throws IllegalStateException
       {
-         assertAllowedIn("getTimerService",
+         AllowedOperationsAssociation.assertAllowedIn("getTimerService",
                  IN_EJB_CREATE | IN_EJB_POST_CREATE | IN_EJB_REMOVE | IN_EJB_HOME |
                  IN_EJB_ACTIVATE | IN_EJB_PASSIVATE | IN_EJB_LOAD | IN_EJB_STORE | IN_BUSINESS_METHOD |
                  IN_EJB_TIMEOUT);
@@ -355,37 +348,39 @@ public class EntityEnterpriseContext extends EnterpriseContext
 
       public Timer createTimer(long duration, Serializable info) throws IllegalArgumentException, IllegalStateException, EJBException
       {
-         assertAllowedIn("createTimer");
+         assertAllowedIn("TimerService.createTimer");
          return timerService.createTimer(duration, info);
       }
 
       public Timer createTimer(long initialDuration, long intervalDuration, Serializable info) throws IllegalArgumentException, IllegalStateException, EJBException
       {
-         assertAllowedIn("createTimer");
+         assertAllowedIn("TimerService.createTimer");
          return timerService.createTimer(initialDuration, intervalDuration, info);
       }
 
       public Timer createTimer(Date expiration, Serializable info) throws IllegalArgumentException, IllegalStateException, EJBException
       {
-         assertAllowedIn("createTimer");
+         assertAllowedIn("TimerService.createTimer");
          return timerService.createTimer(expiration, info);
       }
 
       public Timer createTimer(Date initialExpiration, long intervalDuration, Serializable info) throws IllegalArgumentException, IllegalStateException, EJBException
       {
-         assertAllowedIn("createTimer");
+         assertAllowedIn("TimerService.createTimer");
          return timerService.createTimer(initialExpiration, intervalDuration, info);
       }
 
       public Collection getTimers() throws IllegalStateException, EJBException
       {
-         assertAllowedIn("getTimers");
+         assertAllowedIn("TimerService.getTimers");
          return timerService.getTimers();
       }
 
       private void assertAllowedIn(String timerMethod)
       {
-         context.assertAllowedIn(timerMethod, IN_EJB_POST_CREATE | IN_EJB_REMOVE | IN_EJB_LOAD | IN_EJB_STORE | IN_BUSINESS_METHOD | IN_EJB_TIMEOUT);
+         AllowedOperationsAssociation.assertAllowedIn(timerMethod,
+                 IN_EJB_POST_CREATE | IN_EJB_REMOVE | IN_EJB_LOAD | IN_EJB_STORE |
+                 IN_BUSINESS_METHOD | IN_EJB_TIMEOUT);
       }
    }
 }

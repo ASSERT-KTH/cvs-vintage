@@ -13,6 +13,7 @@ import java.io.ObjectOutputStream;
 
 import java.rmi.RemoteException;
 import java.security.Principal;
+import java.util.Date;
 
 import javax.ejb.EJBLocalObject;
 import javax.ejb.*;
@@ -25,7 +26,7 @@ import javax.xml.rpc.handler.MessageContext;
  *
  * @author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
  * @author <a href="mailto:docodan@mvcsoft.com">Daniel OConnor</a>
- * @version $Revision: 1.29 $
+ * @version $Revision: 1.30 $
  */
 public class StatefulSessionEnterpriseContext
    extends EnterpriseContext
@@ -49,12 +50,12 @@ public class StatefulSessionEnterpriseContext
       ctx = new StatefulSessionContextImpl();
       try
       {
-         pushInMethodFlag(IN_SET_SESSION_CONTEXT);
+         AllowedOperationsAssociation.pushInMethodFlag(IN_SET_SESSION_CONTEXT);
          ((SessionBean)instance).setSessionContext(ctx);
       }
       finally
       {
-         popInMethodFlag();
+         AllowedOperationsAssociation.popInMethodFlag();
       }
    }
 
@@ -135,7 +136,7 @@ public class StatefulSessionEnterpriseContext
 
       public EJBHome getEJBHome()
       {
-         assertAllowedIn("getEJBHome",
+         AllowedOperationsAssociation.assertAllowedIn("getEJBHome",
                  IN_SET_SESSION_CONTEXT |
                  IN_EJB_CREATE | IN_EJB_REMOVE | IN_EJB_ACTIVATE | IN_EJB_PASSIVATE | IN_BUSINESS_METHOD |
                  IN_AFTER_BEGIN | IN_BEFORE_COMPLETION | IN_AFTER_COMPLETION);
@@ -145,7 +146,7 @@ public class StatefulSessionEnterpriseContext
 
       public EJBLocalHome getEJBLocalHome()
       {
-         assertAllowedIn("getEJBLocalHome",
+         AllowedOperationsAssociation.assertAllowedIn("getEJBLocalHome",
                  IN_SET_SESSION_CONTEXT |
                  IN_EJB_CREATE | IN_EJB_REMOVE | IN_EJB_ACTIVATE | IN_EJB_PASSIVATE | IN_BUSINESS_METHOD |
                  IN_AFTER_BEGIN | IN_BEFORE_COMPLETION | IN_AFTER_COMPLETION);
@@ -158,7 +159,7 @@ public class StatefulSessionEnterpriseContext
        */
       public Principal getCallerPrincipal()
       {
-         assertAllowedIn("getCallerPrincipal",
+         AllowedOperationsAssociation.assertAllowedIn("getCallerPrincipal",
                  IN_EJB_CREATE | IN_EJB_REMOVE | IN_EJB_ACTIVATE | IN_EJB_PASSIVATE | IN_BUSINESS_METHOD |
                  IN_AFTER_BEGIN | IN_BEFORE_COMPLETION | IN_AFTER_COMPLETION);
 
@@ -167,7 +168,7 @@ public class StatefulSessionEnterpriseContext
 
       public boolean isCallerInRole(String id)
       {
-         assertAllowedIn("isCallerInRole",
+         AllowedOperationsAssociation.assertAllowedIn("isCallerInRole",
                  IN_EJB_CREATE | IN_EJB_REMOVE | IN_EJB_ACTIVATE | IN_EJB_PASSIVATE | IN_BUSINESS_METHOD |
                  IN_AFTER_BEGIN | IN_BEFORE_COMPLETION | IN_AFTER_COMPLETION);
 
@@ -176,7 +177,7 @@ public class StatefulSessionEnterpriseContext
 
       public EJBObject getEJBObject()
       {
-         assertAllowedIn("getEJBObject",
+         AllowedOperationsAssociation.assertAllowedIn("getEJBObject",
                  IN_EJB_CREATE | IN_EJB_REMOVE | IN_EJB_ACTIVATE | IN_EJB_PASSIVATE | IN_BUSINESS_METHOD |
                  IN_AFTER_BEGIN | IN_BEFORE_COMPLETION | IN_AFTER_COMPLETION);
 
@@ -200,7 +201,7 @@ public class StatefulSessionEnterpriseContext
 
       public EJBLocalObject getEJBLocalObject()
       {
-         assertAllowedIn("getEJBLocalObject",
+         AllowedOperationsAssociation.assertAllowedIn("getEJBLocalObject",
                  IN_EJB_CREATE | IN_EJB_REMOVE | IN_EJB_ACTIVATE | IN_EJB_PASSIVATE | IN_BUSINESS_METHOD |
                  IN_AFTER_BEGIN | IN_BEFORE_COMPLETION | IN_AFTER_COMPLETION);
 
@@ -215,7 +216,7 @@ public class StatefulSessionEnterpriseContext
 
       public boolean getRollbackOnly()
       {
-         assertAllowedIn("getRollbackOnly",
+         AllowedOperationsAssociation.assertAllowedIn("getRollbackOnly",
                  IN_BUSINESS_METHOD | IN_AFTER_BEGIN | IN_BEFORE_COMPLETION);
 
          return super.getRollbackOnly();
@@ -223,7 +224,7 @@ public class StatefulSessionEnterpriseContext
 
       public void setRollbackOnly()
       {
-         assertAllowedIn("setRollbackOnly",
+         AllowedOperationsAssociation.assertAllowedIn("setRollbackOnly",
                  IN_BUSINESS_METHOD | IN_AFTER_BEGIN | IN_BEFORE_COMPLETION);
 
          super.setRollbackOnly();
@@ -231,7 +232,7 @@ public class StatefulSessionEnterpriseContext
 
       public UserTransaction getUserTransaction()
       {
-         assertAllowedIn("getUserTransaction",
+         AllowedOperationsAssociation.assertAllowedIn("getUserTransaction",
                  IN_EJB_CREATE | IN_EJB_REMOVE | IN_EJB_ACTIVATE | IN_EJB_PASSIVATE | IN_BUSINESS_METHOD);
 
          return super.getUserTransaction();
@@ -244,7 +245,7 @@ public class StatefulSessionEnterpriseContext
 
       public MessageContext getMessageContext() throws IllegalStateException
       {
-         assertAllowedIn("getMessageContext", NOT_ALLOWED);
+         AllowedOperationsAssociation.assertAllowedIn("getMessageContext", NOT_ALLOWED);
          return null;
       }
 
