@@ -29,11 +29,26 @@ import java.util.*;
  * start the test.App2TEST application.  
  * Important Note: Notice that there are spaces before and after the ","!!!
  * 
- * TODO: Add debug print statments to help users figure out when they are improperly using this class.
- * TODO: Bring in some of the features that are in the org.jboss.main like the jboss.boot.loader.name property
+ * You can now boot other applications via ths Boot class from withing one of the applications 
+ * that was booted by the Boot.
+ * 
+ * Example usage:
+ * <code>
+ * Boot b = Boot.getInstance();
+ * Boot.ApplicationBoot ab = b.createApplicationBoot();
+ * ab.applicationClass = "org.jboss.Main"
+ * ab.classpath.add(new URL("file:run.jar"));
+ * ab.args.add("default");
+ * 
+ * // this would start the application in a new thread.
+ * b.startApplication( ab );
+ * 
+ * // Would boot the appp in the current thread.
+ * ab.boot();
+ * 
+ * </code>
  * 
  * @author <a href="mailto:cojonudo14@hotmail.com">Hiram Chirino</a>
- * 
  */
 public class Boot
 {
@@ -41,35 +56,49 @@ public class Boot
    /**
     * Indicates whether this instance is running in debug mode.
     */
-   protected boolean debug = false;
-   
+   protected boolean verbose = false;
+
    /**
     * For each booted application, we will store a ApplicationBoot object in this linked list.
     */
-   protected LinkedList applicationBoots;
+   protected LinkedList applicationBoots = new LinkedList();
+	static Boot instance;
+	ThreadGroup bootThreadGroup;
 
-   // constants
-   private static final String DEBUG = "-debug";
-   private static final String BOOT_APP_SEPERATOR = System.getProperty("org.jboss.Boot.APP_SEPERATOR", ",");
-   private static final String CP = "-cp";
+	/**
+	 * If boot is accessed via an API, force the use of the getInstance() method.
+	 */
+	protected Boot () {
+	   instance = this;
+	   bootThreadGroup = Thread.currentThread().getThreadGroup();
+	}
+	
+	public static Boot getInstance() {
+	   if( instance == null )
+		   instance = new Boot();
+	   return instance;
+	}
 
    /**
-    * Data that is extracted for each mbus app that is specified on the command line
+    * Represents an application that can be booted.
     */
-   class ApplicationBoot implements Runnable
+   public class ApplicationBoot implements Runnable
    {
+		/** LinkedList of URL that will be used to load the application's classes and resources */
+      public LinkedList classpath = new LinkedList();
+		/** The applications class that will be executed. */
+      public String applicationClass;
+		/** The aruments that will appsed to the application. */
+      public LinkedList args = new LinkedList();
+      
+      protected URLClassLoader classloader;
+      protected Thread bootThread;
 
-      LinkedList classpath = new LinkedList();
-      String applicationClass;
-      LinkedList passThruArgs = new LinkedList();
-      URLClassLoader classloader;
-      boolean isRunning;
-
-	  /**
-	   * This is what actually loads the application classes and
-	   * invokes the main method.  We send any unhandled exceptions to 
-	   * System.err
-	   */
+      /**
+       * This is what actually loads the application classes and
+       * invokes the main method.  We send any unhandled exceptions to 
+       * System.err
+       */
       public void run()
       {
          try
@@ -83,28 +112,36 @@ public class Boot
          }
       }
 
-	  /**
-	   * This is what actually loads the application classes and
-	   * invokes the main method.
-	   */
+      /**
+       * This is what actually loads the application classes and
+       * invokes the main method.
+       */
       public void boot()
          throws ClassNotFoundException, NoSuchMethodException, IllegalAccessException, InvocationTargetException
       {
+	   	verbose("Booting: "+applicationClass);
+	   	verbose("Classpath: "+classpath);
+	   	verbose("Arguments: "+args);
+	   	
+         bootThread = Thread.currentThread();
          URL urls[] = new URL[classpath.size()];
          urls = (URL[]) classpath.toArray(urls);
 
-         String args[] = new String[passThruArgs.size()];
-         args = (String[]) passThruArgs.toArray(args);
+         String passThruArgs[] = new String[args.size()];
+         passThruArgs = (String[]) args.toArray(passThruArgs);
 
-         classloader = new URLClassLoader(urls, Thread.currentThread().getContextClassLoader());
-         Class appClass = classloader.loadClass(applicationClass);
-         Method mainMethod = appClass.getMethod("main", new Class[] { String[].class });
+			// Save the current loader so we can restore it.
+			ClassLoader oldCL = Thread.currentThread().getContextClassLoader();
+			
+         try {
+            
+            classloader = new URLClassLoader(urls); // The parent is the system CL
+            Thread.currentThread().setContextClassLoader(classloader);
+            
+            Class appClass = classloader.loadClass(applicationClass);
+            Method mainMethod = appClass.getMethod("main", new Class[] { String[].class });
 
-         try
-         
-            {
-            isRunning = true;
-            mainMethod.invoke(null, new Object[] { args });
+            mainMethod.invoke(null, new Object[] { passThruArgs });
          }
          catch (InvocationTargetException e)
          {
@@ -115,50 +152,22 @@ public class Boot
          }
          finally
          {
-            isRunning = false;
+            // Restore the previous classloader ( in case we were called directly 
+            // an not via a Thread.start() )
+            Thread.currentThread().setContextClassLoader(oldCL);
          }
       }
    }
-
+   
    /**
-    * Main entry point when called from the command line
-    * @param args the command line arguments
+    * This can be used to boot another application 
+    * From within another one.
+    * 
+    * @returns ApplicationBoot data structure that must be configured before the application can be booted.
     */
-   public static void main(String[] args)
-   {
-      try
-      {
-         new Boot().run(args);
-      }
-      catch (Throwable e)
-      {
-         System.err.println("Exception launching the application(s):");
-         e.printStackTrace(System.err);
-      }
-   }
-
-
-   /**
-    * @param args the arguments to the Boot class, see class description
-    * @exception thrown if a problem occurs during launching
-    */
-   public void run(String[] args) throws Exception
-   {
-      // Put the args in a linked list since it easier to work with.
-      LinkedList llargs = new LinkedList();
-      for (int i = 0; i < args.length; i++)
-      {
-         llargs.add(args[i]);
-      }
-
-      applicationBoots = processCommandLine(llargs);
-      Iterator i = applicationBoots.iterator();
-      while (i.hasNext())
-      {
-         ApplicationBoot bootData = (ApplicationBoot) i.next();
-         bootApplication(bootData);
-      }
-   }
+   public ApplicationBoot createApplicationBoot() {
+      return new ApplicationBoot();
+   } 
 
    /**
     * Boots the application in a new threadgroup and thread.
@@ -166,10 +175,92 @@ public class Boot
     * @param bootData the application to boot.
     * @exception thrown if a problem occurs during launching
     */
-   public void bootApplication(ApplicationBoot bootData) throws Exception
+   synchronized public void startApplication(ApplicationBoot bootData) throws Exception
    {
-      ThreadGroup threads = new ThreadGroup(bootData.applicationClass);
+      if( bootData == null )
+      	throw new NullPointerException("Invalid argument: bootData argument was null");
+   
+      applicationBoots.add(bootData);
+      ThreadGroup threads = new ThreadGroup(bootThreadGroup, bootData.applicationClass);
       new Thread(threads, bootData, "main").start();
+   }
+   
+   synchronized public ApplicationBoot[] getStartedApplications() {
+      ApplicationBoot rc[] = new ApplicationBoot[applicationBoots.size()];
+      return (ApplicationBoot[])applicationBoots.toArray(rc);
+   }
+      
+	/** logs verbose message to the console */   
+   protected void verbose(String msg) {
+      if( verbose )
+      	System.out.println("[Boot] "+msg);
+   }
+   
+	//////////////////////////////////////////////////////////////////////
+	//
+	// THE FOLLOWING SET OF FUNCTIONS ARE RELATED TO PROCESSING COMMAND LINE
+	// ARGUMENTS.
+	//	
+	//////////////////////////////////////////////////////////////////////
+   protected static final String HELP = "-help";
+   protected static final String VERBOSE = "-verbose";
+   protected static final String BOOT_APP_SEPERATOR = System.getProperty("org.jboss.Boot.APP_SEPERATOR", ",");
+   protected static final String CP = "-cp";
+
+   protected static class InvalidCommandLineException extends Exception {
+      /**
+       * Constructor for InvalidCommandLineException.
+       * @param s
+       */
+      public InvalidCommandLineException(String s)
+      {
+         super(s);
+      }
+	}
+   
+   /**
+    * Main entry point when called from the command line
+    * @param args the command line arguments
+    */
+   public static void main(String[] args)
+   {
+      Boot boot = Boot.getInstance();
+      
+      // Put the args in a linked list since it easier to work with.
+      LinkedList llargs = new LinkedList();
+      for (int i = 0; i < args.length; i++)
+         llargs.add(args[i]);
+
+		try {
+         
+         LinkedList ab = boot.processCommandLine(llargs);
+         Iterator i = ab.iterator();
+         while (i.hasNext())
+         {
+            ApplicationBoot bootData = (ApplicationBoot) i.next();
+            boot.startApplication(bootData);
+         }
+         
+		} catch ( InvalidCommandLineException e ) {
+		   System.err.println("Invalid Usage: "+e.getMessage());
+		   System.err.println();
+		   showUsage();
+		   System.exit(1);
+		} catch ( Throwable e ) {
+         System.err.println("Failure occured while executing application: ");
+         e.printStackTrace(System.err);
+		   System.exit(1);
+		}
+   }
+   
+   /**
+    * This method is here so that if JBoss is running under
+    * Alexandria (An NT Service Installer), Alexandria can shutdown
+    * the system down correctly.
+    */
+   public static void systemExit(String argv[])
+   {
+      System.exit(0);
    }
 
    /**
@@ -192,7 +283,7 @@ public class Boot
 
       if (rc.size() == 0)
       {
-         throw new Exception("Invlid usage: An application class name must be provided.");
+         throw new InvalidCommandLineException("An application class name must be provided.");
       }
 
       return rc;
@@ -209,17 +300,40 @@ public class Boot
       while (i.hasNext())
       {
          String arg = (String) i.next();
-         if (arg.equalsIgnoreCase(DEBUG))
+         if (arg.equalsIgnoreCase(VERBOSE))
          {
-            debug = true;
+            verbose = true;
             i.remove();
             continue;
+         }
+         if (arg.equalsIgnoreCase(HELP))
+         {
+            showUsage();
+            System.exit(0);
          }
 
          // Didn't recognize it a boot option, then we must have started the application 
          // boot options.
          return;
       }
+   }
+
+   protected static void showUsage()
+   {
+      String programName = System.getProperty("org.jboss.Boot.proces-name", "boot");
+      
+      System.out.println("usage: " + programName + " [boot-options] [app-options] class [args..]");
+      System.out.println("       to execute a class");
+      System.out.println("   or  " + programName + " [boot-options] [app-options] class-1 [args..] , ... , [app-options] class-n [args..]");
+      System.out.println("       to execute multiple classes");
+      System.out.println();
+      System.out.println("boot-options:");
+      System.out.println("    -help         show this help message");
+      System.out.println("    -verbose      display detail messages regarding the boot process.");
+      System.out.println("app-options:");
+      System.out.println("    -cp <directories and zip/jar urls separated by ,> ");
+      System.out.println("                  set search path for application classes and resources");
+      System.out.println();
    }
 
    /**
@@ -242,7 +356,7 @@ public class Boot
             if (arg.equalsIgnoreCase(CP))
             {
                if (!i.hasNext())
-                  throw new Exception("Invalid option: classpath missing after the " + CP + " option.");
+                  throw new InvalidCommandLineException("Invalid option: classpath missing after the " + CP + " option.");
                String cp = (String) i.next();
                i.remove();
 
@@ -259,7 +373,7 @@ public class Boot
                   }
                   catch (MalformedURLException e)
                   {
-                     throw new Exception("Application classpath value was invalid: " + e.getMessage());
+                     throw new InvalidCommandLineException("Application classpath value was invalid: " + e.getMessage());
                   }
                }
                continue;
@@ -274,7 +388,7 @@ public class Boot
             {
                break;
             }
-            rc.passThruArgs.add(arg);
+            rc.args.add(arg);
          }
 
       }
@@ -285,13 +399,4 @@ public class Boot
       return rc;
    }
 
-   /**
-    * This method is here so that if JBoss is running under
-    * Alexandria (An NT Service Installer), Alexandria can shutdown
-    * the system down correctly.
-    */
-   public static void systemExit(String argv[])
-   {
-      System.exit(0);
-   }
 }
