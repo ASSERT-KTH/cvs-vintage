@@ -79,7 +79,7 @@ import org.tigris.scarab.util.word.IssueSearch;
  * methodology</a> to be implemented.
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: ScarabRequestScope.java,v 1.19 2001/12/10 21:12:58 elicia Exp $
+ * @version $Id: ScarabRequestScope.java,v 1.20 2001/12/10 23:43:18 elicia Exp $
  */
 public interface ScarabRequestScope extends ApplicationTool
 {
@@ -237,8 +237,7 @@ public interface ScarabRequestScope extends ApplicationTool
      * Return a subset of the passed-in list.
      */
     public List getPaginatedList(List fullList, String pgNbr,
-                                 String nbrItmsPerPage)
-       throws NumberFormatException;
+                                 String nbrItmsPerPage);
 
     /**
      * Return the previous page in the paginated list.
