@@ -1,4 +1,4 @@
-$Id: README.txt,v 1.6 2000/12/22 04:24:19 jon Exp $
+$Id: README.txt,v 1.7 2000/12/23 20:36:43 jon Exp $
 
 Welcome to Scarab!
 
@@ -7,6 +7,9 @@ possible. This document outlines the directory structure of the distribution
 (currently it mirrors the CVS tree), the requirements for running Scarab,
 the instructions for building and running an installation as well as 
 requirements for setting up the database.
+
+If you are doing development work with Scarab, please make sure to read 
+the DEVELOPMENT.txt file for more hints on working with the CVS tree.
 
 We appreciate your deciding to try Scarab out and appreciate constructive 
 feedback on your success (or failure...we hope not!) in getting the 
@@ -93,7 +96,8 @@ MySQL up and running with no username/password for localhost access,
 you can simply execute the following:
 
 cd src/sql
-./create-database.sh
+./create-database.sh   <-- Unix
+create-database.bat    <-- Win32
 
 Caution: This will attempt to first drop a database called "scarab" and 
 then re-create it. If you execute this script, all of your previous
