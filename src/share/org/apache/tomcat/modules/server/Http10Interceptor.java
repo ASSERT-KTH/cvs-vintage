@@ -242,6 +242,8 @@ class HttpRequest extends Request {
 	    return;
 	}
 
+    this.remoteAddr().setString(socket.getInetAddress().getHostAddress());
+
 	// for 0.9, we don't have headers!
 	if (! protoMB.equals("")) {
 	    // all HTTP versions with protocol also have headers
