@@ -1,4 +1,4 @@
-/* $Id: ApacheConfig.java,v 1.18 2001/07/20 12:45:20 larryi Exp $
+/* $Id: ApacheConfig.java,v 1.19 2001/07/20 18:46:04 costin Exp $
  * ====================================================================
  *
  * The Apache Software License, Version 1.1
@@ -127,9 +127,6 @@ import org.apache.tomcat.modules.server.Ajp13Interceptor;
                              the web.xml may not be duplicated in Apache.
                              Review the mod_jk.conf file to see what
                              configuration is actually being set in Apache.</li>
-     <li><b>useJkMount</b> - If true, use JkMount mount directives.  If false,
-                             &lt;Location&gt; and SetHandler directives are used.
-                             the default is true.</li>
      <li><b>jkDebug</b> - JK Loglevel setting.  May be debug, info, error, or emerg.
                           If not set, defaults to no log.</li>
      <li><b>noRoot</b> - If true, the root context is not mapped to
@@ -140,7 +137,7 @@ import org.apache.tomcat.modules.server.Ajp13Interceptor;
     <p>
     @author Costin Manolache
     @author Mel Martinez
-	@version $Revision: 1.18 $ $Date: 2001/07/20 12:45:20 $
+	@version $Revision: 1.19 $ $Date: 2001/07/20 18:46:04 $
  */
 public class ApacheConfig  extends BaseInterceptor { 
     
@@ -235,13 +232,6 @@ public class ApacheConfig  extends BaseInterceptor {
      */
     public void setForwardAll( boolean b ) {
 	forwardAll=b;
-    }
-
-    /** Use JkMount directives ( default ) or <Location>
-	and SetHandler ( if false )
-    */
-    public void setUseJkMount( boolean b ) {
-	useJkMount=b;
     }
 
     /** Special option - do not generate mappings for the ROOT
@@ -579,17 +569,11 @@ public class ApacheConfig  extends BaseInterceptor {
 	    log("Ignoring root context in mount-all mode  ");
 	    return true;
 	} 
-	if( useJkMount ) {
-	    mod_jk.println(indent + "JkMount " +  nPath + " " + jkProto );
-            if( "".equals(ctxPath) )
-                mod_jk.println(indent + "JkMount " +  nPath + "* " + jkProto );
-            else
-                mod_jk.println(indent + "JkMount " +  nPath + "/* " + jkProto );
-	} else {
-	    mod_jk.println(indent + "<Location \"" + nPath + "\">");
-	    mod_jk.println(indent + "    SetHandler jakarta-servlet");
-	    mod_jk.println(indent + "</Location>");
-	}
+	mod_jk.println(indent + "JkMount " +  nPath + " " + jkProto );
+	if( "".equals(ctxPath) )
+	    mod_jk.println(indent + "JkMount " +  nPath + "* " + jkProto );
+	else
+	    mod_jk.println(indent + "JkMount " +  nPath + "/* " + jkProto );
 	if( vhost != null ) {
 	    mod_jk.println("</VirtualHost>");
 	    indent="";
@@ -685,25 +669,15 @@ public class ApacheConfig  extends BaseInterceptor {
     private boolean addExtensionMapping( String ctxPath, String ext,
 					 PrintWriter mod_jk )
     {
-	mod_jk.println(indent + "<LocationMatch " + ctxPath + "/(.*/)*.*\\." +
-		       ext + " >" );
-	mod_jk.println(indent + "    SetHandler jakarta-servlet ");
-	mod_jk.println(indent + "</LocationMatch>");
+	mod_jk.println(indent + "JkMount " + ctxPath + "/*." + ext
+		       + " " + jkProto);
 	return true;
     }
     
     
     private boolean addMapping( String fullPath, PrintWriter mod_jk ) {
 	log( "Adding map for " + fullPath );
-	if( useJkMount ) {
-	    mod_jk.println(indent + "JkMount " + fullPath + "  " + jkProto );
-	} else {
-	    mod_jk.println(indent + "<Location " + fullPath + " >");
-	    mod_jk.println(indent + "    SetHandler jakarta-servlet ");
-	    // XXX Other nice things like setting servlet and other attributes
-	    mod_jk.println(indent + "</Location>");
-	    mod_jk.println();
-	}
+	mod_jk.println(indent + "JkMount " + fullPath + "  " + jkProto );
 	return true;
     }
 
