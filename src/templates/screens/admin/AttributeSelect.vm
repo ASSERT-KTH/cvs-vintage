@@ -8,7 +8,7 @@ $page.setTitle("Select global attribute")
 <div class="app" id="globalAttributeSelect">
 <h2>$page.Title</h2>
 
-<form action="$link.setPage("admin,AttributeSelect.vm")" method="get">
+<form action="$link.setPage("admin,AttributeSelect.vm")" method="post">
 <input type="hidden" name="action" value="admin.AttributeGroupEdit" />
 <input type="hidden" name="$agGroup.AttributeGroupId.Key" value="$data.Parameters.getString("groupId","").trim()" />
 <input type="hidden" name="issueTypeId" value="$data.Parameters.getString("issueTypeId","").trim()" />

@@ -20,7 +20,7 @@ $page.setTitle("Select user attribute")
 #set ($attributes = $scarabR.CurrentModule.getAvailableAttributes($issueType, "user"))
 #set ($attGroup = $intake.Attribute.Default)
 
-<form action="$link.setPage("admin,UserAttributeSelect.vm")" method="get">
+<form action="$link.setPage("admin,UserAttributeSelect.vm")" method="post">
 <input type="hidden" name="action" value="admin.ArtifactTypeEdit" />
 <input type="hidden" name="groupId" value="$data.Parameters.getString("groupId","").trim()" />
 <input type="hidden" name="issueTypeId" value="$data.Parameters.getString("issueTypeId","").trim()" />

@@ -22,7 +22,7 @@ On this screen, one can modify system wide Attribute information.
 Back to $link.setPage("admin,GlobalAttributeShow.vm").setLabel("Attribute Select")
 </p>
 
-<form action="$link.setPage("admin,GlobalAttributeEdit.vm")" method="get">
+<form action="$link.setPage("admin,GlobalAttributeEdit.vm")" method="post">
 <input type="hidden" name="action" value="admin.GlobalAttributeEdit" />
 #if ($createNew.equals("false"))
    <input type="hidden" name="attId" value="$attribute.AttributeId" />

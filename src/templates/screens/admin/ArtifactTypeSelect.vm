@@ -4,7 +4,7 @@
 
 <h2>$page.Title</h2>
 
-<form action="$link.setPage("admin,ArtifactTypeSelect.vm")" method="get">
+<form action="$link.setPage("admin,ArtifactTypeSelect.vm")" method="post">
 <input type="hidden" name="action" value="admin.ManageArtifactTypes" />
 <input type="hidden" name="$scarabG.Constant.OTHER_TEMPLATE" value="admin,ArtifactTypeCreate.vm" />
 

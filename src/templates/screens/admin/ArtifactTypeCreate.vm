@@ -13,7 +13,7 @@
 
 <h2>$page.Title</h2>
 
-<form method="get" action="$link.setPage("admin,ArtifactTypeCreate.vm")">
+<form method="post" action="$link.setPage("admin,ArtifactTypeCreate.vm")">
 <input type="hidden" name="action" value="admin.GlobalArtifactTypeCreate" />
 
 #ArtifactTypeCreateBar()

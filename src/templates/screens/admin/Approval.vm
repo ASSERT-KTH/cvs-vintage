@@ -2,7 +2,7 @@
 
 <h2>$page.Title</h2>
 
-<form action="$link.setPage("Approval.vm")" method="get">
+<form action="$link.setPage("Approval.vm")" method="post">
 <input type="hidden" name="action" value="admin.Approval" />
 <input type="hidden" name="$scarabG.Constant.NEXT_TEMPLATE" value="Approval.vm" />
 
@@ -16,15 +16,8 @@
 #else
 
  <div class="functnbar">
- <table cellpadding="4" cellspacing="0" border="1">
- <tr>
-  <td class="firstchild">
    <input type="submit" value="Submit" name="eventSubmit_doSubmit" />&#160; 
-   <input type="submit" value="Cancel" name="eventSubmit_doCancel" />&#160; 
-   <input type="submit" value="Clear form" />
-  </td>
-  </tr>
- </table>
+   <input type="submit" value="Cancel" name="eventSubmit_doCancel" />
  </div>
 
  <table width="100%" border="1" cellspacing="2" cellpadding="3">
@@ -34,7 +27,7 @@
    <th>Type</th>
    <th>Submitted by</th>
    ##<th>Project</th>
-  ## <th>User role</th>
+   ##<th>User role</th>
    <th>Name</th>
    <th>Description</th>
    <th>Comments</th>
@@ -102,16 +95,12 @@
  </table>
 </div>
 
- <div class="functnbar2">
- <table cellpadding="4" cellspacing="0" border="1">
- <tr>
-  <td class="firstchild">
-    <input type="submit" value="Submit" name="eventSubmit_doSubmit" />&#160; 
-    <input type="submit" value="Cancel" name="eventSubmit_doCancel" />&#160; 
-    <input type="submit" value="Clear form" />
-  </td>
-  </tr>
- </table>
- </div>
-</form>
+<div class="functnbar2">
+  <input type="submit" value="Submit" name="eventSubmit_doSubmit" />&#160; 
+  <input type="submit" value="Cancel" name="eventSubmit_doCancel" />&#160; 
+  <input type="submit" value="Clear form" />
+</div>
 #end
+
+</form>
+</div>

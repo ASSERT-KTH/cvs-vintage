@@ -6,7 +6,7 @@ $page.setTitle("Global Attributes")
 This page is for selecting an Attribute to edit which is defined in a global scale.
 </p>
 
-<form action="$link.setPage("admin,GlobalAttributeShow.vm")" method="get">
+<form action="$link.setPage("admin,GlobalAttributeShow.vm")" method="post">
 <input type="hidden" name="action" value="admin.GlobalAttributes" />
 <input type="hidden" name="$scarabG.Constant.NEXT_TEMPLATE" value="admin,AdminIndex.vm" />
 <input type="hidden" name="$scarabG.Constant.OTHER_TEMPLATE" value="admin,GlobalAttributeEdit.vm" />

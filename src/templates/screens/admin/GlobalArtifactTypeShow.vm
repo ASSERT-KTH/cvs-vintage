@@ -6,7 +6,7 @@ $page.setTitle("Global Issue Types")
 This page is for selecting an Issue type to edit which is defined in a global scope.
 </p>
 
-<form action="$link.setPage("admin,GlobalArtifactTypeShow.vm")" method="get">
+<form action="$link.setPage("admin,GlobalArtifactTypeShow.vm")" method="post">
 <input type="hidden" name="action" value="admin.GlobalArtifactTypes" />
 <input type="hidden" name="$scarabG.Constant.OTHER_TEMPLATE" value="admin,ArtifactTypeCreate.vm" />
 <input type="hidden" name="$scarabG.Constant.NEXT_TEMPLATE" value="admin,GlobalArtifactTypeShow.vm" />

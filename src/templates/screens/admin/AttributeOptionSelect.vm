@@ -9,7 +9,7 @@ $page.setTitle("Add global attribute option to attribute '$attribute.Name'")
 
 <h2>$page.Title</h2>
 
-<form action="$link.setPage("admin,AttributeOptionSelect.vm")" method="get">
+<form action="$link.setPage("admin,AttributeOptionSelect.vm")" method="post">
 <input type="hidden" name="action" value="admin.ModuleAttributeEdit" />
 <input type="hidden" name="attributeId" value="$data.Parameters.getString("attributeId","").trim()" />
 <input type="hidden" name="att_0id" value="$data.Parameters.getString("attributeId","").trim()" />

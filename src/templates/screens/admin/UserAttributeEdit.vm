@@ -16,7 +16,7 @@
 
 #set ($module = $scarabR.CurrentModule)
 
-<form action="$link.setPage("admin,UserAttributeEdit.vm")" method="get">
+<form action="$link.setPage("admin,UserAttributeEdit.vm")" method="post">
 <input type="hidden" name="action" value="admin.GlobalAttributeEdit" />
 <input type="hidden" name="$attgroup.TypeId.Key" value="8" />
 #if ($createNew.equals("false"))
@@ -51,7 +51,6 @@
 </tr>
 </table>
 </div>
-
 
 <h3>User attribute properties</h3>
 <div class="axial">
@@ -99,3 +98,5 @@
 
 $intake.declareGroups()
 </form>
+
+</div>
