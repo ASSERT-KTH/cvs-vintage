@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE jbosscmp-jdbc>
 
 <!-- ===================================================================== -->
 <!--                                                                       -->
@@ -6,7 +7,7 @@
 <!--                                                                       -->
 <!-- ===================================================================== -->
 
-<!-- $Id: standardjbosscmp-jdbc.xml,v 1.5 2001/08/20 17:19:40 dsundstrom Exp $ -->
+<!-- $Id: standardjbosscmp-jdbc.xml,v 1.6 2001/08/20 22:39:52 user57 Exp $ -->
 
 <jbosscmp-jdbc>
    
