@@ -147,8 +147,16 @@ public class AboutDialog extends JDialog implements ActionListener {
         if (MainInterface.DEBUG) {
                 tabbedPane.addTab("Memory", new MemoryPanel());
         }
-        getContentPane().add(tabbedPane);
-
+        
+		
+		JPanel center = new JPanel();
+		center.setLayout( new BorderLayout());
+		center.setBorder( BorderFactory.createEmptyBorder(12,12,12,12));
+		
+		center.add(tabbedPane, BorderLayout.CENTER);
+		
+		getContentPane().add(center,BorderLayout.CENTER);
+		
         JPanel buttonPanel = new JPanel(new BorderLayout(0, 0));
         buttonPanel.setBorder(BorderFactory.createEmptyBorder(5, 12, 11, 11));
 

@@ -150,7 +150,8 @@ public class AttributComboBox extends JPanel implements ActionListener,
         button = new JButton(name + " (" + (String) list.get(0) + "):",
                 ImageLoader.getSmallImageIcon("stock_down-16.png"));
         button.setActionCommand("BUTTON");
-        button.setMargin(new Insets(2, 5, 2, 0));
+        button.setMargin(new Insets(0,0,0,0));
+        //button.setMargin(new Insets(2, 5, 2, 0));
         button.setHorizontalTextPosition(SwingConstants.LEADING);
 
         //button.setIconTextGap(20);
