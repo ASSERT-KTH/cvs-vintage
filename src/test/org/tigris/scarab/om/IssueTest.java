@@ -60,7 +60,7 @@ import org.apache.torque.om.NumberKey;
  * A Testing Suite for the om.Issue class.
  *
  * @author <a href="mailto:jon@latchkey.com">Jon S. Stevens</a>
- * @version $Id: IssueTest.java,v 1.12 2002/03/14 02:16:37 jmcnally Exp $
+ * @version $Id: IssueTest.java,v 1.13 2002/04/25 01:13:27 jmcnally Exp $
  */
 public class IssueTest extends BaseTestCase
 {
@@ -95,13 +95,11 @@ public class IssueTest extends BaseTestCase
         {
             for (int j = 1;j<nbrDfltIssueTypes+1;j++)
             {
-                Issue issue = new Issue();
                 Module module = (Module) ScarabModulePeer
                     .retrieveByPK(new NumberKey(Integer.toString(i)));
-                issue.setModule(module);
                 IssueType issueType = (IssueType)IssueTypePeer
                     .retrieveByPK(new NumberKey(Integer.toString(j)));
-                issue.setIssueType(issueType);
+                Issue issue = Issue.getNewInstance(module, issueType);
                 issueList.add(issue);
             }
         }
