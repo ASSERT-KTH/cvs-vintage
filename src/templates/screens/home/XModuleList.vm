@@ -29,8 +29,6 @@
      value="AdvancedQuery.vm" />
 
 #createMITList("Finished" $l10n.DefineQuery $user)
-don't forget to check for changes - there was a conflict here
-
 
 #set ($mitList = $user.CurrentMITList)
 #if (!$mitList || $mitList.isEmpty())
