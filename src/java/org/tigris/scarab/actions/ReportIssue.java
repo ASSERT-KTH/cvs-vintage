@@ -98,7 +98,7 @@ import org.tigris.scarab.tools.ScarabRequestTool;
  * This class is responsible for report issue forms.
  *
  * @author <a href="mailto:jmcnally@collab.net">John D. McNally</a>
- * @version $Id: ReportIssue.java,v 1.109 2002/01/28 23:22:52 elicia Exp $
+ * @version $Id: ReportIssue.java,v 1.110 2002/02/02 00:20:46 elicia Exp $
  */
 public class ReportIssue extends RequireLoginFirstAction
 {
@@ -679,10 +679,13 @@ public class ReportIssue extends RequireLoginFirstAction
     public void doUsetemplates(RunData data, TemplateContext context)
         throws Exception
     {
-        IntakeTool intake = getIntakeTool(context);
-        intake.removeAll();
-        String template = getCurrentTemplate(data, null);
-        setTarget(data, template);
+        getIntakeTool(context).removeAll();
+        String templateId = data.getParameters().getString("select_template_id");
+        if (templateId != null && templateId.length() > 0)
+        {
+            data.getParameters().add("templateId", templateId);
+        }
+       
     }
     
     private void cleanup(RunData data, TemplateContext context)
@@ -697,20 +700,6 @@ public class ReportIssue extends RequireLoginFirstAction
         intake.removeAll();
     }
     
-    /*
-     private String getStartPoint()
-     throws Exception
-     {
-     String historyScreen = data.getParameters()
-     .getString(ScarabConstants.HISTORY_SCREEN);
-     if (historyScreen == null) 
-     {
-     historyScreen = "entry,Wizard3.vm";            
-     }
-     
-     return historyScreen;
-     }
-     */
 }
 
 
