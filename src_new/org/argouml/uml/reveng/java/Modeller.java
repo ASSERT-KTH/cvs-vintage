@@ -1,4 +1,4 @@
-// $Id: Modeller.java,v 1.9 2001/04/29 21:53:22 marcus Exp $
+// $Id: Modeller.java,v 1.10 2001/04/29 22:11:29 marcus Exp $
 
 /*
   JavaRE - Code generation and reverse engineering for UML and Java

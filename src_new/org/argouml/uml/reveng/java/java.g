@@ -60,7 +60,7 @@ import java.util.*;
  *
  * Version tracking now done with following ID:
  *
- * $Id: java.g,v 1.9 2001/04/29 21:53:22 marcus Exp $
+ * $Id: java.g,v 1.10 2001/04/29 22:11:29 marcus Exp $
  *
  * BUG:
  * 		Doesn't like boolean.class!
