@@ -24,6 +24,7 @@ import javax.swing.SwingConstants;
 import org.columba.core.gui.util.ImageLoader;
 import org.columba.mail.gui.table.model.MessageNode;
 import org.columba.mail.message.ColumbaHeader;
+import org.columba.mail.util.MailResourceLoader;
 import org.columba.ristretto.message.Flags;
 
 public class StatusRenderer extends DefaultLabelRenderer {
@@ -85,17 +86,17 @@ public class StatusRenderer extends DefaultLabelRenderer {
 
 			setIcon(image3);
 
-			//setToolTipText("Marked as expunged");
+			setToolTipText( MailResourceLoader.getString("header","column","expunged"));
 		} else if (flags.getAnswered()) {
 			setIcon(image1);
-			//setToolTipText("Marked as answered");
+			setToolTipText( MailResourceLoader.getString("header","column","answered"));
 		} else if (!flags.getSeen()) {
 			setIcon(image6);
-			//setToolTipText("Marked as unread");
+			setToolTipText( MailResourceLoader.getString("header","column","unread"));
 		} else if (flags.getSeen()) {
-			//setIcon( image5 );
+		
 			setIcon(image5);
-			//setToolTipText("Marked as read");
+			setToolTipText( MailResourceLoader.getString("header","column","read"));
 		} else {
 			setIcon(null);
 

@@ -23,6 +23,7 @@ import javax.swing.SwingConstants;
 
 import org.columba.core.gui.util.ImageLoader;
 import org.columba.mail.gui.table.model.MessageNode;
+import org.columba.mail.util.MailResourceLoader;
 
 public class AttachmentRenderer extends DefaultLabelRenderer {
 
@@ -67,6 +68,9 @@ public class AttachmentRenderer extends DefaultLabelRenderer {
 
 		if (hasAttachment) {
 			setIcon(image1);
+			
+			setToolTipText( MailResourceLoader.getString("header","column","attachment"));
+			
 		} else {
 			setIcon(null);
 

@@ -22,6 +22,7 @@ import javax.swing.JTable;
 
 import org.columba.core.gui.util.ImageLoader;
 import org.columba.mail.gui.table.model.MessageNode;
+import org.columba.mail.util.MailResourceLoader;
 
 public class PriorityRenderer extends DefaultLabelRenderer {
 
@@ -72,23 +73,23 @@ public class PriorityRenderer extends DefaultLabelRenderer {
 			//setText("!!");
 			setIcon(image1);
 
-			//setToolTipText("Highest Priority");
+			setToolTipText( MailResourceLoader.getString("header","column","priority_highest"));
 		} else if (i == 2) {
 			//setForeground( Color.red );
 			setIcon(image2);
-			//setToolTipText("High Priority");
+			setToolTipText( MailResourceLoader.getString("header","column","priority_high"));
 			//setText("!");
 		} else if (i == 3)
 			setIcon(null);
 		else if (i == 4) {
 			//eteTextForeground( Color.blue );
 			setIcon(image3);
-			//setToolTipText("Low Priority");
+			setToolTipText( MailResourceLoader.getString("header","column","priority_low"));
 			//setText("!");
 		} else if (i == 5) {
 			//setForeground( Color.blue );
 			setIcon(image4);
-			// setToolTipText("Lowest Priority");
+			setToolTipText( MailResourceLoader.getString("header","column","priority_lowest"));
 			//setText("!!");
 		}
 
