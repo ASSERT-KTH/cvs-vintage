@@ -23,7 +23,7 @@ import org.jboss.ejb.plugins.jaws.metadata.FinderMetaData;
  * @author <a href="mailto:shevlandj@kpi.com.au">Joe Shevland</a>
  * @author <a href="mailto:justin@j-m-f.demon.co.uk">Justin Forder</a>
  * @author <a href="mailto:michel.anke@wolmail.nl">Michel de Groot</a>
- * @version $Revision: 1.8 $
+ * @version $Revision: 1.9 $
  */
 public class JDBCDefinedFinderCommand extends JDBCFinderCommand
 {
@@ -37,24 +37,26 @@ public class JDBCDefinedFinderCommand extends JDBCFinderCommand
    {
       super(factory, f.getName());
       
-      // Replace placeholders with ?
+      // Replace placeholders with ?, but only if query is defined
       String query = "";
-      StringTokenizer finderQuery = new StringTokenizer(f.getQuery(),"{}", true);
       ArrayList parameters = new ArrayList();
-      
-      while (finderQuery.hasMoreTokens())
-      {
-         String t = finderQuery.nextToken();
-         if (t.equals("{"))
-         {
-            query += "?";
-            String idx = finderQuery.nextToken(); // Remove number
-            parameters.add(new Integer(idx));
-            finderQuery.nextToken(); // Remove }
-         } else
-            query += t;
-      }
-      
+      if (f.getQuery() != null)  {
+	      StringTokenizer finderQuery = new StringTokenizer(f.getQuery(),"{}", true);
+	      
+	      while (finderQuery.hasMoreTokens())
+	      {
+	         String t = finderQuery.nextToken();
+	         if (t.equals("{"))
+	         {
+	            query += "?";
+	            String idx = finderQuery.nextToken(); // Remove number
+	            parameters.add(new Integer(idx));
+	            finderQuery.nextToken(); // Remove }
+	         } else
+	            query += t;
+	      }
+      } 
+            
       // Copy index numbers to parameterArray
       parameterArray = new int[parameters.size()];
       for (int i = 0; i < parameterArray.length; i++)
@@ -76,9 +78,17 @@ public class JDBCDefinedFinderCommand extends JDBCFinderCommand
       	  	(f.getOrder() == null || f.getOrder().equals("") ? "" : ","+f.getOrder()) +
       	  	" FROM " + jawsEntity.getTableName() + " " + query;
       } else {
-      	sql = "SELECT " + getPkColumnList() +
-         	(f.getOrder() == null || f.getOrder().equals("") ? "" : ","+f.getOrder()) + 
-         	" FROM " + jawsEntity.getTableName() + " WHERE " + query;
+      	// regular query; check if query is empty,
+      	// if so, this is a select all and WHERE should not be used
+      	if (f.getQuery() == null)  {
+	      	sql = "SELECT " + getPkColumnList() +
+	      	 	(f.getOrder() == null || f.getOrder().equals("") ? "" : ","+f.getOrder()) + 
+	      	 	" FROM " + jawsEntity.getTableName();
+      	} else {
+	      	sql = "SELECT " + getPkColumnList() +
+	         	(f.getOrder() == null || f.getOrder().equals("") ? "" : ","+f.getOrder()) + 
+	         	" FROM " + jawsEntity.getTableName() + " WHERE " + query;
+      	}
       }
       if (f.getOrder() != null && !f.getOrder().equals(""))
       {
