@@ -73,7 +73,7 @@ import org.tigris.scarab.services.cache.ScarabCache;
 
 /**
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
- * @version $Id: ModuleAttributeEdit.java,v 1.24 2002/12/05 06:46:20 elicia Exp $
+ * @version $Id: ModuleAttributeEdit.java,v 1.25 2002/12/05 16:20:45 jon Exp $
  */
 public class ModuleAttributeEdit extends RequireLoginFirstAction
 {
@@ -200,7 +200,6 @@ public class ModuleAttributeEdit extends RequireLoginFirstAction
                ScarabCache.clear();
                getIntakeTool(context).removeAll();
                data.getParameters().add("att_0id", option.getAttribute().getAttributeId().toString());
-               //setTarget(data, "admin,ModuleAttributeEdit.vm");
             }
         }        
     }
@@ -251,9 +250,9 @@ public class ModuleAttributeEdit extends RequireLoginFirstAction
                     e.printStackTrace();
                 }
             }
-            doCancel(data, context);
-ScarabCache.clear();
+            ScarabCache.clear();
             scarabR.setConfirmMessage(l10n.get(DEFAULT_MSG));  
+            doCancel(data, context);
         }
     }
 }
