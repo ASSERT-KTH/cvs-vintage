@@ -1,4 +1,4 @@
-// $Id: FigTrace.java,v 1.2 2003/06/29 23:52:20 linus Exp $
+// $Id: FigTrace.java,v 1.3 2003/09/14 18:51:33 alexb Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -24,16 +24,12 @@
 
 // File: FigTrace.java
 // Classes: FigTrace
-// Original Author: your email address here
-// $Id: FigTrace.java,v 1.2 2003/06/29 23:52:20 linus Exp $
 
 package org.argouml.uml.diagram.ui;
 
-import java.awt.*;
-
-import ru.novosoft.uml.foundation.core.*;
-
-import org.tigris.gef.presentation.*;
+import java.awt.Color;
+import org.tigris.gef.presentation.ArrowHeadTriangle;
+import org.tigris.gef.presentation.FigEdgeLine;
 
 public class FigTrace extends FigEdgeLine {
 
@@ -56,4 +52,3 @@ public class FigTrace extends FigEdgeLine {
     static final long serialVersionUID = -2094146244090391544L;
 
 } /* end class FigTrace */
-

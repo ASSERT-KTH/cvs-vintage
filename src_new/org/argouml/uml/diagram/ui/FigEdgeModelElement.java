@@ -1,4 +1,4 @@
-// $Id: FigEdgeModelElement.java,v 1.39 2003/09/08 20:11:53 bobtarling Exp $
+// $Id: FigEdgeModelElement.java,v 1.40 2003/09/14 18:51:33 alexb Exp $
 // Copyright (c) 1996-2001 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -26,7 +26,7 @@
 // Classes: FigEdgeModelElement
 // Original Author: abonner
 
-// $Id: FigEdgeModelElement.java,v 1.39 2003/09/08 20:11:53 bobtarling Exp $
+// $Id: FigEdgeModelElement.java,v 1.40 2003/09/14 18:51:33 alexb Exp $
 
 package org.argouml.uml.diagram.ui;
 
@@ -92,7 +92,6 @@ import org.tigris.gef.presentation.FigText;
 
 import ru.novosoft.uml.MElementEvent;
 import ru.novosoft.uml.MElementListener;
-import ru.novosoft.uml.foundation.core.MModelElement;
 import ru.novosoft.uml.foundation.extension_mechanisms.MStereotype;
 
 /** Abstract class to display diagram arcs for UML ModelElements that
@@ -494,7 +493,7 @@ public abstract class FigEdgeModelElement
             Object oldOwner = getOwner();
 
             if (org.argouml.model.ModelFacade.isAModelElement(oldOwner))
-		((MModelElement)oldOwner).removeMElementListener(this);
+                UmlModelEventPump.getPump().removeModelEventListener(this,oldOwner);
             if (org.argouml.model.ModelFacade.isAModelElement(newOwner)) {
                 UmlModelEventPump.getPump().addModelEventListener(this, newOwner);
                 if (ModelFacade.getUUID(newOwner) == null)

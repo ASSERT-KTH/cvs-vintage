@@ -1,5 +1,5 @@
 
-// $Id: GoBehavioralFeatureToStateDiagram.java,v 1.6 2003/08/25 19:15:55 bobtarling Exp $
+// $Id: GoBehavioralFeatureToStateDiagram.java,v 1.7 2003/09/14 18:51:33 alexb Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -29,13 +29,12 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.Vector;
 
+import org.argouml.model.ModelFacade;
 import org.argouml.kernel.Project;
 import org.argouml.kernel.ProjectManager;
 import org.argouml.ui.AbstractGoRule;
 import org.argouml.ui.ArgoDiagram;
 import org.argouml.uml.diagram.state.ui.UMLStateDiagram;
-
-import ru.novosoft.uml.foundation.core.MBehavioralFeature;
 
 /**
  * 
@@ -50,8 +49,8 @@ public class GoBehavioralFeatureToStateDiagram extends AbstractGoRule {
     public Collection getChildren(Object parent) {
         
         if (org.argouml.model.ModelFacade.isABehavioralFeature(parent)) {
-            MBehavioralFeature operation = (MBehavioralFeature) parent;
-            Collection col = operation.getBehaviors();
+            Object operation = parent;//MBehavioralFeature
+            Collection col = ModelFacade.getBehaviors(operation);
             Vector ret = new Vector();
             Project p = ProjectManager.getManager().getCurrentProject();
             Vector diagrams = p.getDiagrams();

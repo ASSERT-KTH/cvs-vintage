@@ -1,4 +1,4 @@
-// $Id: CoreFactory.java,v 1.56 2003/09/08 14:02:45 thierrylach Exp $
+// $Id: CoreFactory.java,v 1.57 2003/09/14 18:51:33 alexb Exp $
 // Copyright (c) 1996-2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -1176,9 +1176,15 @@ public class CoreFactory extends AbstractUmlModelFactory {
      * @param parent
      * @return MGeneralization
      */
-    public MGeneralization buildGeneralization(
-					       MGeneralizableElement child,
-					       MGeneralizableElement parent) {
+    public MGeneralization buildGeneralization(Object child1, Object parent1)
+    {
+        if (!(child1 instanceof MGeneralizableElement)
+	    || !(parent1 instanceof MGeneralizableElement))
+            throw new IllegalArgumentException();
+        
+        MGeneralizableElement child = (MGeneralizableElement)child1;
+        MGeneralizableElement parent = (MGeneralizableElement)parent1;
+        
         if (parent.getParents().contains(child))
             return null;
         if (!child.getClass().equals(parent.getClass()))

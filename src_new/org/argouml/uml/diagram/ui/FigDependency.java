@@ -1,5 +1,5 @@
 
-// $Id: FigDependency.java,v 1.9 2003/08/25 19:15:56 bobtarling Exp $
+// $Id: FigDependency.java,v 1.10 2003/09/14 18:51:33 alexb Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -26,7 +26,6 @@
 // File: FigDependency.java
 // Classes: FigDependency
 // Original Author: ics 125b course, spring 1998
-// $Id: FigDependency.java,v 1.9 2003/08/25 19:15:56 bobtarling Exp $
 
 package org.argouml.uml.diagram.ui;
 
@@ -36,6 +35,7 @@ import java.util.Iterator;
 
 import org.argouml.kernel.ProjectManager;
 import org.argouml.model.uml.UmlModelEventPump;
+import org.argouml.model.ModelFacade;
 import org.tigris.gef.base.Layer;
 import org.tigris.gef.base.PathConvPercent;
 import org.tigris.gef.presentation.ArrowHeadGreater;
@@ -43,8 +43,6 @@ import org.tigris.gef.presentation.Fig;
 import org.tigris.gef.presentation.FigNode;
 
 import ru.novosoft.uml.MElementEvent;
-import ru.novosoft.uml.foundation.core.MDependency;
-import ru.novosoft.uml.foundation.core.MModelElement;
 
 public class FigDependency extends FigEdgeModelElement {
 
@@ -78,15 +76,15 @@ public class FigDependency extends FigEdgeModelElement {
         super.setOwner(own);
 
         if (org.argouml.model.ModelFacade.isADependency(own)) {
-            MDependency newDep = (MDependency) own;
+            Object newDep = own;//MDependency
             UmlModelEventPump pump = UmlModelEventPump.getPump();
-            Iterator it = newDep.getSuppliers().iterator();
+            Iterator it = ModelFacade.getSuppliers(newDep).iterator();
             while (it.hasNext()) {
                 Object o = it.next();
                 pump.removeModelEventListener(this, o);
                 pump.addModelEventListener(this, o);
             }
-            it = newDep.getSuppliers().iterator();
+            it = ModelFacade.getClients(newDep).iterator();
             while (it.hasNext()) {
                 Object o = it.next();
                 pump.removeModelEventListener(this, o);
@@ -94,10 +92,10 @@ public class FigDependency extends FigEdgeModelElement {
             }
             pump.removeModelEventListener(this, newDep);
             pump.addModelEventListener(this, newDep);
-            MModelElement supplier =
-                (MModelElement) ((newDep.getSuppliers().toArray())[0]);
-            MModelElement client =
-                (MModelElement) ((newDep.getClients().toArray())[0]);
+            Object supplier =
+                ((ModelFacade.getSuppliers(newDep).toArray())[0]);//MModelElement
+            Object client =
+                ((ModelFacade.getClients(newDep).toArray())[0]);//MModelElement
 
             FigNode supFN = (FigNode) getLayer().presentationFor(supplier);
             FigNode cliFN = (FigNode) getLayer().presentationFor(client);

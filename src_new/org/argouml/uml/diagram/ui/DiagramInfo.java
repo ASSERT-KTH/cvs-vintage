@@ -1,4 +1,4 @@
-// $Id: DiagramInfo.java,v 1.5 2003/06/29 23:52:20 linus Exp $
+// $Id: DiagramInfo.java,v 1.6 2003/09/14 18:51:33 alexb Exp $
 // Copyright (c) 1996-2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -28,26 +28,18 @@
 
 package org.argouml.uml.diagram.ui;
 
-import java.util.*;
-import java.awt.*;
-import java.beans.*;
-import javax.swing.*;
-import javax.swing.border.*;
+import java.awt.BorderLayout;
+import javax.swing.JComponent;
+import javax.swing.JLabel;
 import javax.swing.plaf.metal.MetalLookAndFeel;
-
-import ru.novosoft.uml.model_management.*;
-import ru.novosoft.uml.foundation.core.*;
-import ru.novosoft.uml.behavior.common_behavior.*;
-
-import org.tigris.gef.base.*;
-
-import org.argouml.uml.diagram.activity.ui.*;
-import org.argouml.uml.diagram.collaboration.ui.*;
-import org.argouml.uml.diagram.state.ui.*;
-import org.argouml.uml.diagram.static_structure.ui.*;
-import org.argouml.uml.diagram.use_case.ui.*;
-import org.argouml.uml.diagram.sequence.ui.*;
-import org.argouml.uml.diagram.deployment.ui.*;
+import org.argouml.uml.diagram.activity.ui.UMLActivityDiagram;
+import org.argouml.uml.diagram.collaboration.ui.UMLCollaborationDiagram;
+import org.argouml.uml.diagram.deployment.ui.UMLDeploymentDiagram;
+import org.argouml.uml.diagram.sequence.ui.UMLSequenceDiagram;
+import org.argouml.uml.diagram.state.ui.UMLStateDiagram;
+import org.argouml.uml.diagram.static_structure.ui.UMLClassDiagram;
+import org.argouml.uml.diagram.use_case.ui.UMLUseCaseDiagram;
+import org.tigris.gef.base.Diagram;
 
 public class DiagramInfo extends JComponent {
 

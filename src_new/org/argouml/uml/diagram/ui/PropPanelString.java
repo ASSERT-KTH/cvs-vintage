@@ -1,4 +1,4 @@
-// $Id: PropPanelString.java,v 1.9 2003/06/30 21:59:33 linus Exp $
+// $Id: PropPanelString.java,v 1.10 2003/09/14 18:51:33 alexb Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -24,25 +24,20 @@
 
 package org.argouml.uml.diagram.ui;
 
-import java.awt.*;
-import java.awt.event.*;
-import java.util.*;
-import java.beans.*;
-import javax.swing.*;
-import javax.swing.event.*;
-import javax.swing.tree.*;
-import javax.swing.text.*;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
+import javax.swing.JLabel;
+import javax.swing.JTextField;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
 
-import ru.novosoft.uml.foundation.core.*;
-import ru.novosoft.uml.foundation.data_types.*;
-import ru.novosoft.uml.foundation.extension_mechanisms.*;
-import ru.novosoft.uml.model_management.*;
+import org.argouml.ui.TabSpawnable;
+import org.argouml.ui.targetmanager.TargetEvent;
+import org.argouml.uml.ui.TabModelTarget;
 
 import org.tigris.gef.presentation.FigText;
-
-import org.argouml.ui.*;
-import org.argouml.ui.targetmanager.TargetEvent;
-import org.argouml.uml.ui.*;
 
 public class PropPanelString
     extends TabSpawnable
