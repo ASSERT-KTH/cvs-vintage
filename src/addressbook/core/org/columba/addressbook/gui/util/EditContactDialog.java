@@ -29,6 +29,7 @@ import javax.swing.event.DocumentListener;
 
 import org.columba.addressbook.config.AdapterNode;
 import org.columba.addressbook.main.AddressbookInterface;
+import org.columba.addressbook.util.AddressbookResourceLoader;
 import org.columba.core.config.DefaultXmlConfig;
 import org.columba.core.gui.util.CPanel;
 import org.columba.core.gui.util.DialogStore;
@@ -186,16 +187,16 @@ public class EditContactDialog implements ActionListener, DocumentListener
 
 		JPanel bottom = new JPanel(new BorderLayout(0,0));
 		JPanel buttonPanel = new JPanel(new GridLayout(1,3,5,0));
-		okButton = new JButton("Ok");
+		okButton = new JButton(AddressbookResourceLoader.getString("global", "ok"));
 		okButton.addActionListener(this);
 		okButton.setActionCommand("OK");
 		okButton.setEnabled(false);
 		buttonPanel.add(okButton);
-		JButton cancelButton = new JButton("Cancel");
+		JButton cancelButton = new JButton(AddressbookResourceLoader.getString("global", "cancel"));
 		cancelButton.addActionListener(this);
 		cancelButton.setActionCommand("CANCEL");
 		buttonPanel.add(cancelButton);
-		JButton helpButton = new JButton("Help");
+		JButton helpButton = new JButton(AddressbookResourceLoader.getString("global", "help"));
 		helpButton.setEnabled(false);
 		buttonPanel.add(helpButton);
 		bottom.add(buttonPanel,BorderLayout.EAST);
