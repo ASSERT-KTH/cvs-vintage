@@ -57,7 +57,7 @@ import org.jboss.security.SecurityAssociation;
  *      One for each role that entity has.       
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
- * @version $Revision: 1.32 $
+ * @version $Revision: 1.33 $
  */                            
 public class JDBCCMRFieldBridge implements JDBCFieldBridge, CMRFieldBridge {
    // ------ Invocation messages ------
@@ -907,6 +907,9 @@ public class JDBCCMRFieldBridge implements JDBCFieldBridge, CMRFieldBridge {
 
       // mark the field loaded
       fieldState.setLoaded(true);
+
+      // we just loaded the results we are clean
+      setClean(myCtx);
    }
 
    public void loadPreloadedValue(
