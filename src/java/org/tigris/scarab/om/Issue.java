@@ -93,7 +93,7 @@ import org.apache.commons.lang.StringUtils;
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
- * @version $Id: Issue.java,v 1.202 2002/10/24 22:59:26 jon Exp $
+ * @version $Id: Issue.java,v 1.203 2002/11/01 00:33:32 elicia Exp $
  */
 public class Issue 
     extends BaseIssue
@@ -2459,6 +2459,59 @@ public class Issue
             hasPerm = true;
         } 
         return hasPerm;
+    }
+
+    /**
+     * Returns users assigned to all user attributes.
+     */
+    public List getAssociatedUsers() throws Exception
+    {
+        List users = null;
+        List item = new ArrayList(2);
+        Object obj = ScarabCache.get(this, GET_ASSOCIATED_USERS); 
+        if ( obj == null ) 
+        {        
+            List attributeList = getModule()
+                .getUserAttributes(getIssueType(), true);
+            List attributeIdList = new ArrayList();
+            
+            for ( int i=0; i<attributeList.size(); i++ ) 
+            {
+                Attribute att = (Attribute) attributeList.get(i);
+                RModuleAttribute modAttr = getModule().
+                    getRModuleAttribute(att, getIssueType());
+                if (modAttr.getActive())
+                {
+                    attributeIdList.add(att.getAttributeId());
+                }
+            }
+            
+            if (!attributeIdList.isEmpty())
+            {
+                users = new ArrayList();
+                Criteria crit = new Criteria()
+                    .addIn(AttributeValuePeer.ATTRIBUTE_ID, attributeIdList)
+                    .add(AttributeValuePeer.DELETED, false);
+                crit.setDistinct();
+                
+                List attValues = getAttributeValues(crit);
+                for ( int i=0; i<attValues.size(); i++ ) 
+                {
+                    AttributeValue attVal = (AttributeValue) attValues.get(i);
+                    ScarabUser su = ScarabUserManager.getInstance(attVal.getUserId());
+                    Attribute attr = AttributeManager.getInstance(attVal.getAttributeId());
+                    item.add(attr);
+                    item.add(su);
+                    users.add(item);
+                }
+            }
+            ScarabCache.put(users, this, GET_ASSOCIATED_USERS);
+        }
+        else 
+        {
+            users = (List)obj;
+        }
+        return users;
     }
 
     /**
