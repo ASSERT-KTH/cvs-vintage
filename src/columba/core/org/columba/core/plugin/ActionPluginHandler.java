@@ -84,7 +84,7 @@ public class ActionPluginHandler extends AbstractPluginHandler {
      *
      */
     public boolean isSingleton(String name) {
-        ColumbaLogger.log.info("isSingleton=" + name);
+        
 
         return Boolean.valueOf(getAttribute(name, "singleton")).booleanValue();
     }
@@ -93,7 +93,7 @@ public class ActionPluginHandler extends AbstractPluginHandler {
         throws Exception {
         if (isSingleton(name)) {
             // their should be only one shared instance
-            ColumbaLogger.log.info("singleton found=" + name);
+         
 
             if (map.containsKey(name)) {
                 // already loaded 

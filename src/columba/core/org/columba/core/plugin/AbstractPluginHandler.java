@@ -144,11 +144,10 @@ public abstract class AbstractPluginHandler implements PluginHandlerInterface {
      */
     public Object getPlugin(String name, Object[] args)
         throws Exception {
-        ColumbaLogger.log.info("name=" + name);
-        ColumbaLogger.log.info("arguments=" + args);
+        
 
         String className = getPluginClassName(name, "class");
-        ColumbaLogger.log.info("class=" + className);
+     
 
         if (className == null) {
             if (MainInterface.DEBUG) {
@@ -179,13 +178,7 @@ public abstract class AbstractPluginHandler implements PluginHandlerInterface {
         try {
             return loadPlugin(className, args);
         } catch (ClassNotFoundException ex) {
-            ex.printStackTrace();
-
-            /*
-            int dollarLoc = name.indexOf('$');
-            String pluginId =
-                    (dollarLoc > 0 ? name.substring(0, dollarLoc) : name);
-            */
+           
 
             // get plugin id 
             String pluginId = (String) pluginMap.get(name);
