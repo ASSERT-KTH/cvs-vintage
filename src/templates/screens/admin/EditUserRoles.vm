@@ -69,7 +69,7 @@ Modifying roles for <b><a href="mailto:$user.Email">$!user.Name</a></b>
 </table>
 
 <div class="functnbar2">
- <input type="submit" name="eventSubmit_doRoles" value="Update Roles" />&#160;
+ <input type="submit" name="eventSubmit_doRoles" value="Save" />&#160;
  <input type="submit" name="eventSubmit_doCancel" value="Cancel" />
 </div>
 
