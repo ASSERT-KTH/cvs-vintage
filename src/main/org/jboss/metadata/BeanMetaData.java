@@ -31,7 +31,7 @@ import java.util.*;
  * @author <a href="mailto:criege@riege.com">Christian Riege</a>
  * @author <a href="mailto:Thomas.Diesler@jboss.org">Thomas Diesler</a>
  *
- * @version $Revision: 1.64 $
+ * @version $Revision: 1.65 $
  */
 public abstract class BeanMetaData
         extends MetaData
@@ -123,6 +123,9 @@ public abstract class BeanMetaData
    protected boolean callByValue = false;
    /** Any object names for services the bean depends on */
    private Collection depends = new LinkedList();
+
+   /** Describes the security configuration information for the IOR. Optional element. Since 4.0. */
+   private IorSecurityConfigMetaData iorSecurityConfig;
 
    // Static --------------------------------------------------------
 
@@ -592,6 +595,11 @@ public abstract class BeanMetaData
       return this.clusterConfig;
    }
 
+   public IorSecurityConfigMetaData getIorSecurityConfigMetaData()
+   {
+      return iorSecurityConfig;
+   }
+
    public void importEjbJarXml(Element element)
            throws DeploymentException
    {
@@ -714,41 +722,33 @@ public abstract class BeanMetaData
 
       // set the JNDI name under with the local home interface should be
       // bound (optional)
-      localJndiName = getElementContent(getOptionalChild(element,
-              "local-jndi-name"));
+      localJndiName = getElementContent(getOptionalChild(element, "local-jndi-name"));
 
       // Determine if the bean should use by value call semantics
-      String callByValueElt = getElementContent(getOptionalChild(element,
-              "call-by-value"), (callByValue ? "True" : "False"));
+      String callByValueElt = getElementContent(getOptionalChild(element, "call-by-value"), (callByValue ? "True" : "False"));
       callByValue = callByValueElt.equalsIgnoreCase("True");
 
       // set the configuration (optional)
-      configurationName = getElementContent(getOptionalChild(element,
-              "configuration-name"));
+      configurationName = getElementContent(getOptionalChild(element, "configuration-name"));
       if (configurationName != null && getApplicationMetaData().getConfigurationMetaDataByName(configurationName) == null)
       {
-         throw new DeploymentException("configuration '" + configurationName
-                 + "' not found in standardjboss.xml or jboss.xml");
+         throw new DeploymentException("configuration '" + configurationName + "' not found in standardjboss.xml or jboss.xml");
       }
 
       // Get the security proxy
-      securityProxy = getElementContent(getOptionalChild(element,
-              "security-proxy"), securityProxy);
+      securityProxy = getElementContent(getOptionalChild(element, "security-proxy"), securityProxy);
 
       // update the resource references (optional)
       Iterator iterator = getChildrenByTagName(element, "resource-ref");
       while (iterator.hasNext())
       {
          Element resourceRef = (Element) iterator.next();
-         String resRefName = getElementContent(getUniqueChild(resourceRef,
-                 "res-ref-name"));
-         ResourceRefMetaData resourceRefMetaData =
-                 (ResourceRefMetaData) resourceReferences.get(resRefName);
+         String resRefName = getElementContent(getUniqueChild(resourceRef, "res-ref-name"));
+         ResourceRefMetaData resourceRefMetaData = (ResourceRefMetaData) resourceReferences.get(resRefName);
 
          if (resourceRefMetaData == null)
          {
-            throw new DeploymentException("resource-ref " + resRefName
-                    + " found in jboss.xml but not in ejb-jar.xml");
+            throw new DeploymentException("resource-ref " + resRefName + " found in jboss.xml but not in ejb-jar.xml");
          }
          resourceRefMetaData.importJbossXml(resourceRef);
       }
@@ -758,14 +758,11 @@ public abstract class BeanMetaData
       while (iterator.hasNext())
       {
          Element resourceRef = (Element) iterator.next();
-         String resRefName = getElementContent(getUniqueChild(resourceRef,
-                 "resource-env-ref-name"));
-         ResourceEnvRefMetaData refMetaData =
-                 (ResourceEnvRefMetaData) resourceEnvReferences.get(resRefName);
+         String resRefName = getElementContent(getUniqueChild(resourceRef, "resource-env-ref-name"));
+         ResourceEnvRefMetaData refMetaData = (ResourceEnvRefMetaData) resourceEnvReferences.get(resRefName);
          if (refMetaData == null)
          {
-            throw new DeploymentException("resource-env-ref " + resRefName
-                    + " found in jboss.xml but not in ejb-jar.xml");
+            throw new DeploymentException("resource-env-ref " + resRefName + " found in jboss.xml but not in ejb-jar.xml");
          }
          refMetaData.importJbossXml(resourceRef);
       }
@@ -775,13 +772,11 @@ public abstract class BeanMetaData
       while (iterator.hasNext())
       {
          Element ejbRef = (Element) iterator.next();
-         String ejbRefName = getElementContent(getUniqueChild(ejbRef,
-                 "ejb-ref-name"));
+         String ejbRefName = getElementContent(getUniqueChild(ejbRef, "ejb-ref-name"));
          EjbRefMetaData ejbRefMetaData = getEjbRefByName(ejbRefName);
          if (ejbRefMetaData == null)
          {
-            throw new DeploymentException("ejb-ref " + ejbRefName
-                    + " found in jboss.xml but not in ejb-jar.xml");
+            throw new DeploymentException("ejb-ref " + ejbRefName + " found in jboss.xml but not in ejb-jar.xml");
          }
          ejbRefMetaData.importJbossXml(ejbRef);
       }
@@ -792,14 +787,12 @@ public abstract class BeanMetaData
       while (iterator.hasNext())
       {
          Element ejbLocalRef = (Element) iterator.next();
-         String ejbLocalRefName = getElementContent(getUniqueChild(ejbLocalRef,
-                 "ejb-ref-name"));
+         String ejbLocalRefName = getElementContent(getUniqueChild(ejbLocalRef, "ejb-ref-name"));
 
          EjbLocalRefMetaData ejbLocalRefMetaData = getEjbLocalRefByName(ejbLocalRefName);
          if (ejbLocalRefMetaData == null)
          {
-            throw new DeploymentException("ejb-local-ref " + ejbLocalRefName
-                    + " found in jboss.xml but not in ejb-jar.xml");
+            throw new DeploymentException("ejb-local-ref " + ejbLocalRefName + " found in jboss.xml but not in ejb-jar.xml");
          }
          ejbLocalRefMetaData.importJbossXml(ejbLocalRef);
       }
@@ -813,8 +806,7 @@ public abstract class BeanMetaData
          ServiceRefMetaData refMetaData = (ServiceRefMetaData)serviceReferences.get(serviceRefName);
          if (refMetaData == null)
          {
-            throw new DeploymentException("service-ref " + serviceRefName
-               + " found in jboss.xml but not in ejb-jar.xml");
+            throw new DeploymentException("service-ref " + serviceRefName + " found in jboss.xml but not in ejb-jar.xml");
          }
          refMetaData.importJBossXml(serviceRef);
       }
@@ -866,8 +858,7 @@ public abstract class BeanMetaData
          while (iterator.hasNext())
          {
             Element node = (Element) iterator.next();
-            String invokerBindingName = getUniqueChildContent(node,
-                    "invoker-proxy-binding-name");
+            String invokerBindingName = getUniqueChildContent(node, "invoker-proxy-binding-name");
             String jndiBinding = getOptionalChildContent(node, "jndi-name");
 
             if (jndiBinding == null)
@@ -881,13 +872,11 @@ public abstract class BeanMetaData
             while (ejbrefiterator.hasNext())
             {
                Element ejbRef = (Element) ejbrefiterator.next();
-               String ejbRefName = getElementContent(getUniqueChild(ejbRef,
-                       "ejb-ref-name"));
+               String ejbRefName = getElementContent(getUniqueChild(ejbRef, "ejb-ref-name"));
                EjbRefMetaData ejbRefMetaData = getEjbRefByName(ejbRefName);
                if (ejbRefMetaData == null)
                {
-                  throw new DeploymentException("ejb-ref " + ejbRefName
-                          + " found in jboss.xml but not in ejb-jar.xml");
+                  throw new DeploymentException("ejb-ref " + ejbRefName + " found in jboss.xml but not in ejb-jar.xml");
                }
                ejbRefMetaData.importJbossXml(invokerBindingName, ejbRef);
             }
@@ -896,12 +885,10 @@ public abstract class BeanMetaData
 
       // Determine if the bean is to be deployed in the cluster (more
       // advanced config will be added in the future)
-      String clusteredElt = getElementContent(getOptionalChild(element,
-              "clustered"), (clustered ? "True" : "False"));
+      String clusteredElt = getElementContent(getOptionalChild(element, "clustered"), (clustered ? "True" : "False"));
       clustered = clusteredElt.equalsIgnoreCase("True");
 
-      Element clusterConfigElement = getOptionalChild(element,
-              "cluster-config");
+      Element clusterConfigElement = getOptionalChild(element, "cluster-config");
       if (clusterConfigElement != null)
       {
          this.clusterConfig = new ClusterConfigMetaData();
@@ -910,12 +897,18 @@ public abstract class BeanMetaData
       }
 
       //Get depends object names
-      for (Iterator dependsElements = getChildrenByTagName(element, "depends");
-           dependsElements.hasNext();)
+      for (Iterator dependsElements = getChildrenByTagName(element, "depends"); dependsElements.hasNext();)
       {
          Element dependsElement = (Element) dependsElements.next();
          String dependsName = getElementContent(dependsElement);
          depends.add(ObjectNameFactory.create(dependsName));
       } // end of for ()
+
+      // ior-security-config optional element
+      Element iorSecurityConfigEl = getOptionalChild(element, "ior-security-config");
+      if(iorSecurityConfigEl != null)
+      {
+         iorSecurityConfig = new IorSecurityConfigMetaData(iorSecurityConfigEl);
+      }
    }
 }
