@@ -6,19 +6,18 @@
  */
 package org.jboss.ejb.plugins.local;
 
-import java.lang.reflect.InvocationHandler;
-import java.lang.reflect.Method;
 import javax.ejb.EJBLocalHome;
 import javax.ejb.EJBLocalObject;
-import javax.ejb.Handle;
-import javax.ejb.HomeHandle;
-import javax.naming.Name;
+import javax.ejb.RemoveException;
+import java.lang.reflect.InvocationHandler;
+import java.lang.reflect.Method;
 
-/** The proxy for an EJBLocalHome object.
-
- @author <a href="mailto:docodan@mvcsoft.com">Daniel OConnor</a>
- @author <a href="mailto:scott.stark@jboss.org">Scott Stark</a>
- @version $Revision: 1.9 $
+/**
+ * The proxy for an EJBLocalHome object.
+ *
+ * @author <a href="mailto:docodan@mvcsoft.com">Daniel OConnor</a>
+ * @author <a href="mailto:scott.stark@jboss.org">Scott Stark</a>
+ * @version $Revision: 1.10 $
  */
 public class LocalHomeProxy
    extends LocalProxy
@@ -26,14 +25,14 @@ public class LocalHomeProxy
 {
    static final long serialVersionUID = 1762319499924478521L;
 
-   /** {@link EJBHome#remove(Object)} method reference. */
+   /** {@link javax.ejb.EJBHome#remove(Object)} method reference. */
    protected static final Method REMOVE_BY_PRIMARY_KEY;
    
-   /** {@link EJBObject#remove} method reference. */
+   /** {@link javax.ejb.EJBObject#remove} method reference. */
    protected static final Method REMOVE_OBJECT;
    
    /**
-    * Initialize {@link EJBHome} and {@link EJBObject} method references.
+    * Initialize {@link javax.ejb.EJBHome} and {@link javax.ejb.EJBObject} method references.
     */
    static
    {
@@ -99,10 +98,19 @@ public class LocalHomeProxy
       }
       else if (m.equals(REMOVE_BY_PRIMARY_KEY))
       {
-         // The trick is simple we trick the container in believe it
-         // is a remove() on the instance
-         Object id = args[0];
-         retValue = factory.invoke(id, REMOVE_OBJECT, EMPTY_ARGS);
+         try
+         {
+            // The trick is simple we trick the container in believe it
+            // is a remove() on the instance
+            Object id = args[0];
+            retValue = factory.invoke(id, REMOVE_OBJECT, EMPTY_ARGS);
+         }
+         catch (Exception e)
+         {
+            RemoveException re = new RemoveException(e.getMessage());
+            re.initCause(e);
+            throw re;
+         }
       }
       // If not taken care of, go on and call the container
       else
