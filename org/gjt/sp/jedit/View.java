@@ -44,7 +44,7 @@ import org.gjt.sp.util.Log;
  * class.
  *
  * @author Slava Pestov
- * @version $Id: View.java,v 1.25 2002/06/01 05:15:09 spestov Exp $
+ * @version $Id: View.java,v 1.26 2002/06/03 06:11:33 spestov Exp $
  */
 public class View extends JFrame implements EBComponent
 {
@@ -614,7 +614,10 @@ public class View extends JFrame implements EBComponent
 	 */
 	public Buffer getBuffer()
 	{
-		return editPane.getBuffer();
+		if(editPane == null)
+			return null;
+		else
+			return editPane.getBuffer();
 	} //}}}
 
 	//{{{ setBuffer() method
@@ -632,7 +635,10 @@ public class View extends JFrame implements EBComponent
 	 */
 	public JEditTextArea getTextArea()
 	{
-		return editPane.getTextArea();
+		if(editPane == null)
+			return null;
+		else
+			return editPane.getTextArea();
 	} //}}}
 
 	//{{{ getEditPane() method
