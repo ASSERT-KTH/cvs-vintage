@@ -162,14 +162,19 @@ public class BasicAction extends JAbstractAction {
 	}
 	
 	/**
-	 * Set long description, which is used in tooltips, etc.
+	 * Sets the tooltip for this action.
+	 * The method removes all <code>&</code> characters from the tooltip
+	 * since the <code>&</code> marks an mnemonic character.
 	 * 
-	 * 
-	 * @param s		long description
+	 * @param s		the new tooltip, can be null.
 	 */
 	public void setTooltipText( String s)
 	{
-		putValue( Action.SHORT_DESCRIPTION, s );
+		String tooltip = s;
+		if ( tooltip != null ) {
+			tooltip = tooltip.replaceAll("&", "");
+		}
+		putValue( Action.SHORT_DESCRIPTION, tooltip );
 	}
 
 	/**
@@ -281,8 +286,8 @@ public class BasicAction extends JAbstractAction {
 		putValue(Action.SMALL_ICON, small_icon);
 		LARGE_ICON = big_icon;
 
-		putValue(Action.SHORT_DESCRIPTION, longDescription);
-		putValue(Action.SHORT_DESCRIPTION, tooltip);
+		//putValue(Action.SHORT_DESCRIPTION, longDescription);
+		setTooltipText(tooltip);
 		putValue(Action.ACTION_COMMAND_KEY, actionCommand);
 		putValue(Action.ACCELERATOR_KEY, keyStroke);
 		putValue(Action.MNEMONIC_KEY, new Integer(mnemonic));
