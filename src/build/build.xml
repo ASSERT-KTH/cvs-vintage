@@ -56,10 +56,6 @@
     <property name="build.verifier.classes.dir" value="${build.dir}/verifier/classes"/>
     <property name="build.deployer.classes.dir" value="${build.dir}/deployer/classes/"/>
 
-    <property name="verifier.classpath"         value="${build.verifier.classes.dir}"/>
-
-    <property name="util.classpath"             value="${build.util.classes.dir};${src.lib.dir}/ejb.jar;${lib.dir}/jmxri.jar"/>
-    <property name="deployer.classpath"         value="${build.deployer.classes.dir};${lib.dir}/jmxri.jar"/>
 
     <!-- to use other xml parsers - add them to this list (yuck) - these jars get put into jboss' main classpath - from whence everything else is loaded.
 	The xml.jar is only here to support the ejx editor app.
@@ -84,6 +80,20 @@
         <fileset dir="${src.lib.dir}">
             <include name="**/*.jar"/>
         </fileset>
+  </path>
+
+  <!-- Utility library build classpath -->
+  <path id="util.classpath">
+      <pathelement location="${build.util.classes.dir}"/>
+      <pathelement location="${src.lib.dir}/ejb.jar"/>
+      <pathelement location="${src.lib.dir}/log4j.jar"/>
+      <pathelement location="${lib.dir}/jmxri.jar"/>
+  </path>
+
+  <!-- Deployer library build classpath -->
+  <path id="deployer.classpath">
+      <pathelement location="${build.deployer.classes.dir}"/>
+      <pathelement location="${lib.dir}/jmxri.jar"/>
   </path>
 
   <!-- =================================================================== -->
@@ -492,7 +502,7 @@
    
     <javac srcdir="${src.dir}"
            destdir="${build.util.classes.dir}"
-           classpath="${util.classpath}"
+           classpathref="util.classpath"
            debug="on"
            deprecation="off"
            optimize="off"
@@ -527,7 +537,7 @@
    
     <javac srcdir="${src.dir}"
            destdir="${build.deployer.classes.dir}"
-           classpath="${deployer.classpath}"
+           classpathref="deployer.classpath"
            debug="on"
            deprecation="off"
            optimize="off"
