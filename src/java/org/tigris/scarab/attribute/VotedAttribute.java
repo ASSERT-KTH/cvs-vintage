@@ -49,6 +49,7 @@ package org.tigris.scarab.attribute;
 import org.tigris.scarab.om.ScarabUser;
 import org.tigris.scarab.baseom.*;
 import org.tigris.scarab.baseom.peer.*;
+import org.apache.turbine.om.security.TurbineUser;
 import org.apache.turbine.util.db.*;
 import org.apache.turbine.util.*;
 
@@ -58,7 +59,7 @@ import java.util.*;
 /**
  *
  * @author <a href="mailto:fedor.karpelevitch@home.com">Fedor</a>
- * @version $Revision: 1.1 $ $Date: 2000/12/18 05:03:29 $
+ * @version $Revision: 1.2 $ $Date: 2000/12/20 03:35:14 $
  */
 public abstract class VotedAttribute extends OptionAttribute
 {
@@ -115,7 +116,7 @@ public abstract class VotedAttribute extends OptionAttribute
         Criteria crit = new Criteria();
         crit.add(ScarabIssueAttributeVotePeer.ISSUE_ID, getIssue().getId())
             .add(ScarabIssueAttributeVotePeer.ATTRIBUTE_ID, getId())
-            .add(ScarabIssueAttributeVotePeer.VISITOR_ID, data.getUser().getUserId());
+            .add(ScarabIssueAttributeVotePeer.VISITOR_ID, ((TurbineUser)data.getUser()).getIdAsLong());
         if (votes.containsKey(userId))
         {
             if (newValue == null)

@@ -64,7 +64,7 @@ import org.apache.turbine.util.template.*;
     This class contains code for dealing with Modules.
 
     @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
-    @version $Id: ModuleManager.java,v 1.1 2000/12/18 05:03:33 jon Exp $
+    @version $Id: ModuleManager.java,v 1.2 2000/12/20 03:35:14 jon Exp $
 */
 public class ModuleManager
 {
@@ -249,8 +249,8 @@ public class ModuleManager
 
         // you are related to a new project
         Criteria crit = new Criteria();
-        crit.add (ScarabRModuleVisitorPeer.MODULE_ID, module.getIdAsInt());
-        crit.add (ScarabRModuleVisitorPeer.VISITOR_ID, data.getUser().getUserId());
+        crit.add (ScarabRModuleVisitorPeer.MODULE_ID, module.getIdAsLong());
+        crit.add (ScarabRModuleVisitorPeer.VISITOR_ID, ((TurbineUser)data.getUser()).getIdAsLong());
         ScarabRModuleVisitorPeer.doInsert(crit);
     }
 }

@@ -65,7 +65,7 @@ import org.tigris.scarab.om.peer.ScarabUserPeer;
     implementation needs.
 
     @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
-    @version $Id: ScarabUser.java,v 1.1 2000/12/18 05:03:33 jon Exp $
+    @version $Id: ScarabUser.java,v 1.2 2000/12/20 03:35:14 jon Exp $
 */
 public class ScarabUser extends TurbineUser
 {    
@@ -236,7 +236,7 @@ public class ScarabUser extends TurbineUser
                 throw new Exception ("Username does not exist!");
                 
             Criteria criteria = new Criteria();            
-            criteria.add (ScarabUserPeer.getColumnName(ScarabUserPeer.USER_ID), user.getUserId() );
+            criteria.add (ScarabUserPeer.getColumnName(ScarabUserPeer.USER_ID), ((TurbineUser)user).getIdAsLong() );
             criteria.add (ScarabUserPeer.getColumnName(User.CONFIRM_VALUE), ScarabUserPeer.CONFIRM_DATA);
             ScarabUserPeer.doUpdate(criteria);
             return true;
