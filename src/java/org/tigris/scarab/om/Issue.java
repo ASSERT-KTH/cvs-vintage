@@ -94,7 +94,7 @@ import org.apache.commons.lang.StringUtils;
  * @author <a href="mailto:jmcnally@collab.new">John McNally</a>
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
- * @version $Id: Issue.java,v 1.195 2002/10/04 01:52:33 jon Exp $
+ * @version $Id: Issue.java,v 1.196 2002/10/07 19:20:36 jon Exp $
  */
 public class Issue 
     extends BaseIssue
@@ -1391,7 +1391,9 @@ public class Issue
                     .getHistory();
         }
         catch (Exception e)
-        {}
+        {
+            log().error("Issue.getHistoryLimit(): " + e);
+        }
         
         return limit;
     }
