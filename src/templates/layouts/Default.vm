@@ -87,23 +87,29 @@
   <table border="0" cellspacing="0" cellpadding="3" width="100%">
   <tr>
    <td nowrap="nowrap">
-        #set ($action = $link.setPage("IssueList.vm").setAction("Search").addPathInfo("nextTemplate", "IssueList.vm"))
-
-        <form action="$action" method="post">
-			<select name="queryId">
-           #foreach ( $query in $scarabR.CurrentModule.getPrivateQueries($data.User) )
-            <option value="$query.QueryId">$query.Name</option>
-           #end
-           #foreach ( $query in $module.GlobalQueries )
-            <option value="$query.QueryId">$query.Name</option>
-           #end
-			</select>
-			<input type="submit"  value="Go" class="bttn" name="eventSubmit_doRunstoredquery"/>
-   &nbsp;<img src="$data.Request.ContextPath/images/seperator2.gif" width="2" height="15" alt="" border="0" />&nbsp;
-            <input type="text" name="id" size="15" maxlength="255" />
-            <input type="submit" name="Submit" value="Query" />
-   &nbsp;<img src="$data.Request.ContextPath/images/seperator2.gif" width="2" height="15" alt="" border="0" />&nbsp;
-   <small><a href="#">Advanced</a>&nbsp;|&nbsp;<a href="#">Custom</a></small>
+    <form action="$link.setPage("IssueList.vm").setAction("Search")" method="post">
+        <input type="hidden" name="$scarabR.Constant.NEXT_TEMPLATE" value="IssueList.vm" />
+     #set ($privateQueries = $scarabR.CurrentModule.getPrivateQueries($data.User))
+     #set ($globalQueries = $module.GlobalQueries)
+     #if ($privateQueries.size() > 0 || $globalQueries.size() > 0)
+        <select name="queryId">
+       #foreach ($query in $privateQueries)
+        <option value="$query.QueryId">$query.Name</option>
+       #end
+       #foreach ($query in $globalQueries)
+        <option value="$query.QueryId">$query.Name</option>
+       #end
+        </select>
+        <input type="submit"  value="Go" class="bttn" name="eventSubmit_doRunstoredquery"/>&#160;
+        <img src="$data.Request.ContextPath/images/seperator2.gif" width="2" height="15" alt="" border="0" />&#160;
+     #end
+        <input type="text" name="id" size="15" maxlength="255" />&#160;
+        <input type="submit" name="Submit" value="Query" />&#160;
+        <img src="$data.Request.ContextPath/images/seperator2.gif" width="2" height="15" alt="" border="0" />&#160;
+     <small>
+      <a href="$link.setPage("AdvancedQuery.vm")">Advanced</a>&#160;|&#160;
+      <a href="$link.setPage("Search.vm")">Custom</a>
+     </small>
    </form>
    </td>
   </tr>
