@@ -24,7 +24,7 @@ import org.jboss.logging.Logger;
  * {@link javax.management.j2ee.J2EEApplication J2EEApplication}.
  *
  * @author  <a href="mailto:andreas@jboss.org">Andreas Schaefer</a>.
- * @version $Revision: 1.5 $
+ * @version $Revision: 1.6 $
  *   
  * <p><b>Revisions:</b>
  *
@@ -38,7 +38,6 @@ public class J2EEApplication
    extends J2EEDeployedObject
    implements J2EEApplicationMBean
 {
-
    // Constants -----------------------------------------------------
    
    // Attributes ----------------------------------------------------

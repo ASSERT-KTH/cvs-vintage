@@ -19,7 +19,7 @@ import org.jboss.metadata.SessionMetaData;
  * {@link javax.management.j2ee.EJB EJB}.
  *
  * @author  <a href="mailto:andreas@jboss.org">Andreas Schaefer</a>.
- * @version $Revision: 1.3 $
+ * @version $Revision: 1.4 $
  *   
  * <p><b>Revisions:</b>
  *
@@ -98,9 +98,7 @@ public abstract class EJB
       super( pType, pName, pEJBModule );
    }
 
-   // -------------------------------------------------------------------------
-   // Properties (Getters/Setters)
-   // -------------------------------------------------------------------------  
+   // java.lang.Object overrides --------------------------------------
 
    public String toString() {
       return "EJB { " + super.toString() + " } []";

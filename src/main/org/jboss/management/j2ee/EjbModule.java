@@ -29,7 +29,7 @@ import org.jboss.logging.Logger;
  * {@link javax.management.j2ee.EjbModule EjbModule}.
  *
  * @author  <a href="mailto:andreas@jboss.org">Andreas Schaefer</a>.
- * @version $Revision: 1.6 $
+ * @version $Revision: 1.7 $
  *   
  * <p><b>Revisions:</b>
  *
@@ -132,12 +132,6 @@ public class EjbModule
          InvalidParentException
    {
       super( "EJBModule", pName, pApplication, pDeploymentDescriptor );
-/*
-      if( pEJBs == null || pEJBs.length == 0 ) {
-         throw new InvalidParameterException( "EJB list may not be null or empty" );
-      }
-      mEJBs = new ArrayList( Arrays.asList( pEJBs ) );
-*/
    }
 
    // Public --------------------------------------------------------

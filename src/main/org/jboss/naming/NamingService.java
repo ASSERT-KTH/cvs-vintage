@@ -22,13 +22,14 @@ import javax.naming.StringRefAddr;
 
 import org.jnp.server.Main;
 
+import org.jboss.management.j2ee.JNDI;
 import org.jboss.system.ServiceMBeanSupport;
 
 /** A JBoss service that starts the jnp JNDI server.
  *      
  *   @author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
  *   @author <a href="mailto:Scott_Stark@displayscape.com">Scott Stark</a>.
- *   @version $Revision: 1.20 $
+ *   @version $Revision: 1.21 $
  *
  * Revisions:
  * 20010622 scott.stark: Report IntialContext env for problem tracing
@@ -172,10 +173,16 @@ public class NamingService
       Context ctx = (Context)iniCtx.lookup("java:");
       ctx.rebind("comp", envRef);
       log.info("Naming started on port "+naming.getPort());
+      
+      // Finally create the JSR-77 management representation
+      JNDI.create( getServer(), "LocalJNDI" );
    }
 
    public void stopService()
    {
+      // First destroy the JSR-77 management representation
+      JNDI.destroy( getServer(), "LocalJNDI" );
+      
       naming.stop();
       log.info("JNP server stopped");
    }

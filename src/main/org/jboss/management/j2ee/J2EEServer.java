@@ -19,7 +19,7 @@ import javax.management.ObjectName;
  * J2EEServer}.
  *
  * @author <a href="mailto:andreas@jboss.org">Andreas Schaefer</a>
- * @version $Revision: 1.4 $
+ * @version $Revision: 1.5 $
  *   
  * <p><b>Revisions:</b>
  *
@@ -118,7 +118,15 @@ public class J2EEServer
          mNodes.add( pChild );
       } else if( "JVM".equals( lType ) ) {
          mJVMs.add( pChild );
-      } else if( "Resource".equals( lType ) ) {
+      } else
+      if( "JNDI".equals( lType ) ||
+         "JMS".equals( lType ) ||
+         "URL".equals( lType ) ||
+         "JTA".equals( lType ) ||
+         "JavaMail".equals( lType ) ||
+         "JDBC".equals( lType ) ||
+         "RMI IIOP".equals( lType )
+      ) {
          mResources.add( pChild );
       }
    }
@@ -131,7 +139,15 @@ public class J2EEServer
          mNodes.remove( pChild );
       } else if( "JVM".equals( lType ) ) {
          mJVMs.remove( pChild );
-      } else if( "Resource".equals( lType ) ) {
+      } else
+      if( "JNDI".equals( lType ) ||
+         "JMS".equals( lType ) ||
+         "URL".equals( lType ) ||
+         "JTA".equals( lType ) ||
+         "JavaMail".equals( lType ) ||
+         "JDBC".equals( lType ) ||
+         "RMI IIOP".equals( lType )
+      ) {
          mResources.remove( pChild );
       }
    }
