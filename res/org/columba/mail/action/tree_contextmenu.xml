@@ -14,4 +14,6 @@
 	 <menuitem action="FilterPreferences"/>
 	 <separator/>
 	 <menuitem action="SubscribeFolder"/>
+	 <separator/>
+	 <menuitem action="FolderOptions"/>
 </menu>

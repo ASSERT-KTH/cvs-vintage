@@ -66,6 +66,8 @@
 	 <extensionpoint name="bottom" />	
 	 <separator/>
 	 <menuitem action="SubscribeFolder"/>
+	 <separator/>
+	 <menuitem action="FolderOptions"/>
 	</menu>
 	
 	<menu name="menu_message">

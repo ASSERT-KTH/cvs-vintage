@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- <!DOCTYPE options SYSTEM "options.dtd"> -->
 
-<options>
+<options version="1.0">
  <gui>
   <mainfont name="Default" size="12"/> 
   <textfont name="Default" size="12"/> 

@@ -146,6 +146,7 @@ public class ExportDialog
 		tree.addMouseListener(new NodeSelectionListener(tree));
 		tree.expandRow(0);
 		tree.expandRow(1);
+		tree.addTreeSelectionListener(this);
 		// top panel
 
 		JPanel topPanel = new JPanel();
@@ -202,7 +203,7 @@ public class ExportDialog
 		JPanel centerPanel = new JPanel(new BorderLayout());
 		centerPanel.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 5));
 
-		tree.addTreeSelectionListener(this);
+		
 		JScrollPane scrollPane = new JScrollPane(tree);
 		scrollPane.setPreferredSize(new Dimension(450, 300));
 		scrollPane.getViewport().setBackground(Color.white);

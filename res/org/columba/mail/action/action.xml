@@ -62,6 +62,7 @@
  <action name="RemoveFolder" class="org.columba.mail.gui.tree.action.RemoveFolderAction"/>
  <action name="RenameFolder" class="org.columba.mail.gui.tree.action.RenameFolderAction"/>
  <action name="SubscribeFolder" class="org.columba.mail.gui.tree.action.SubscribeFolderAction"/>
+ <action name="FolderOptions" class="org.columba.mail.gui.tree.action.FolderOptionsAction"/>
  
  <!-- utilities menu -->
  <action name="CreateFilterOnSubject" class="org.columba.mail.gui.table.action.CreateFilterOnSubjectAction"/>
