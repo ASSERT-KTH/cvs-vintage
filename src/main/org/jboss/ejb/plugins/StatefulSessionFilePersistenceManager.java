@@ -37,6 +37,7 @@ import java.sql.Connection;
 import javax.ejb.EJBObject;
 import javax.ejb.Handle;
 import javax.ejb.SessionBean;
+import javax.ejb.SessionContext;
 import javax.ejb.CreateException;
 import javax.ejb.DuplicateKeyException;
 import javax.ejb.FinderException;
@@ -61,7 +62,7 @@ import org.jboss.logging.Logger;
  *  @see <related>
  *  @author Rickard Öberg (rickard.oberg@telkel.com)
  *  @author <a href="marc.fleury@telkel.com">Marc Fleury</a>
- *  @version $Revision: 1.12 $
+ *  @version $Revision: 1.13 $
  */
 public class StatefulSessionFilePersistenceManager
    implements StatefulSessionPersistenceManager
@@ -265,8 +266,14 @@ public class StatefulSessionFilePersistenceManager
          // Store state
          ObjectOutputStream out = new SessionObjectOutputStream(new FileOutputStream(new File(dir, ctx.getId()+".ser")));
 
-         for (int i = 0; i < fields.size(); i++)
-            out.writeObject(((Field)fields.get(i)).get(ctx.getInstance()));
+         for (int i = 0; i < fields.size(); i++) {
+            
+            // skip the sessionContext, we can't read the value (inner class, no constructor available)
+            // (it will be restored by the SessionObjectInputStream upon activation)
+            if (! SessionContext.class.isAssignableFrom(((Field)fields.get(i)).getType()))
+            
+               out.writeObject(((Field)fields.get(i)).get(ctx.getInstance()));
+         }
 
          out.close();   
       } catch (IOException e)
