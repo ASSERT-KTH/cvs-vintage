@@ -142,7 +142,7 @@
     <dependency>
       <groupId>commons-configuration</groupId>
       <artifactId>commons-configuration</artifactId>
-      <version>20040328.175011</version>
+      <version>20040401.185605</version>
       <type>jar</type>
       <properties>
         <war.bundle>true</war.bundle>
