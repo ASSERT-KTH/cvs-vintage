@@ -46,11 +46,13 @@ package org.tigris.scarab.actions;
  * individuals on behalf of Collab.Net.
  */ 
 
-// Turbine Stuff 
+import org.apache.fulcrum.security.entity.User;
+
 import org.apache.turbine.TemplateContext;
 import org.apache.turbine.RunData;
 import org.apache.turbine.modules.actions.TemplateSessionValidator;
 
+import org.tigris.scarab.util.Log;
 import org.tigris.scarab.util.ScarabConstants;
 import org.tigris.scarab.tools.ScarabRequestTool;
 import org.tigris.scarab.tools.ScarabLocalizationTool;
@@ -59,23 +61,49 @@ import org.tigris.scarab.tools.ScarabLocalizationTool;
  * Sets the home page to the current target
  *  
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: ScarabSessionValidator.java,v 1.3 2003/04/04 18:09:17 jon Exp $
+ * @version $Id: ScarabSessionValidator.java,v 1.4 2003/09/10 19:48:30 jmcnally Exp $
  */
 public class ScarabSessionValidator extends TemplateSessionValidator
 {
     protected void processCounter(RunData data)
     {
-        if (data.getParameters().getInt(COUNTER) <
-            (((Integer)data.getUser().getTemp(COUNTER)).intValue() - 1))
+        int userCounter = Integer.MAX_VALUE;
+        User user = data.getUser();
+        if (user != null)
+        {
+            Integer i = (Integer) user.getTemp(COUNTER);
+            if (i != null)
+            {
+                userCounter = i.intValue() - 1;
+            }
+        }
+
+        String error = null;
+        if (null == user)
+        {
+            Log.get().warn("User object was null in session validator");
+            error = "LostSessionStateError";
+        }
+        else if (userCounter == Integer.MAX_VALUE)
+        {
+            Log.get().debug("Could not determine " + COUNTER + 
+                            ". This normally occurs during a session timeout.");
+            error = "LostSessionStateError";
+        }
+        else if (data.getParameters().getInt(COUNTER) < userCounter)
+        {
+            error = "ResubmitError";
+        }
+        if (error != null) 
         {
             TemplateContext context = getTemplateContext(data);
-            String error = ((ScarabLocalizationTool)
-                context.get(ScarabConstants.LOCALIZATION_TOOL)).get("ResubmitError");
             ((ScarabRequestTool)context.get(ScarabConstants.SCARAB_REQUEST_TOOL))
-                .setAlertMessage(error);
+                .setAlertMessage( ((ScarabLocalizationTool)
+                context.get(ScarabConstants.LOCALIZATION_TOOL)).get(error));
             data.setAction("");
             setTarget(data, data.getParameters()
                 .getString(ScarabConstants.CANCEL_TEMPLATE, null));
+            
         }
     }
 }
