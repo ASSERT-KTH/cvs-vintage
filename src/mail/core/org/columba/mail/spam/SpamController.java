@@ -24,6 +24,8 @@ import java.security.NoSuchAlgorithmException;
 import java.util.List;
 import java.util.logging.Logger;
 
+import javax.swing.JOptionPane;
+
 import org.columba.core.gui.util.NotifyDialog;
 import org.columba.core.io.CloneStreamMaster;
 import org.columba.core.main.MainInterface;
@@ -241,7 +243,14 @@ public class SpamController {
             }
             
             alreadyLoaded = true;
-        } catch (Exception e) {
+        } catch (IOException e) {
+            //TODO: i18n
+            JOptionPane.showMessageDialog(
+                MainInterface.frameModel.getActiveFrame(),
+                "An error occured while loading the spam database.\n" +
+                "I will use an empty one.", 
+                "Error loading database",
+                JOptionPane.ERROR_MESSAGE);
             if (MainInterface.DEBUG) {
                 e.printStackTrace();
             }
@@ -266,9 +275,19 @@ public class SpamController {
                 // save DB to disk
                 FrequencyIO.save(db, file);
             }
-        } catch (Exception e) {
+        } catch (IOException e) {
             if (MainInterface.DEBUG) {
                 e.printStackTrace();
+            }
+            //TODO: i18n
+            int value = JOptionPane.showConfirmDialog(
+                MainInterface.frameModel.getActiveFrame(),
+                "An error occured while saving the spam database.\n" +
+                "Try again?",
+                "Error saving database",
+                JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE);
+            if (value == JOptionPane.YES_OPTION) {
+                save();
             }
         }
     }
