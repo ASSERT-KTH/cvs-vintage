@@ -54,7 +54,7 @@ import org.w3c.dom.Element;
 *  (ContainerFactory for jBoss and EmbededTomcatService for Tomcat).
 *
 *   @author <a href="mailto:daniel.schulze@telkel.com">Daniel Schulze</a>
-*   @version $Revision: 1.5 $
+*   @version $Revision: 1.6 $
 */
 public class J2eeDeployer 
 extends ServiceMBeanSupport
@@ -365,7 +365,15 @@ implements J2eeDeployerMBean
       
       // dont need it anymore...
       cl = null;
-      URLWizzard.deleteTree(localCopy);
+      try
+      {
+         URLWizzard.deleteTree(localCopy);
+      } 
+      catch (IOException _ioe)
+      {
+         // dont abort just give a note...
+         log.log ("could not delete temporary file: "+localCopy.getFile ());
+      }
       
       if (root == null)
       {

@@ -33,7 +33,7 @@ import java.util.jar.Manifest;
 * Very scratchy! Any improvements are welcome!
 *      
 *	@author Daniel Schulze <daniel.schulze@telkel.com>
-*	@version $Revision: 1.3 $
+*	@version $Revision: 1.4 $
 */
 public class URLWizzard
 {
@@ -77,18 +77,8 @@ public class URLWizzard
    _destDirectory, _prefix and _suffix  */
    public static URL downloadTemporary (URL _src, URL _destDirectory, String _prefix, String _suffix) throws IOException
    {
-      File f = new File (_destDirectory.getFile ()); 
-      if (!f.exists ())
-         f.mkdirs ();
       
-      File file;   
-      do
-      {
-         file = new File (f, _prefix + getId () + _suffix); 
-      }
-      while (!file.createNewFile ());
-         
-      return download (_src, file.toURL ());
+      return download (_src, createTempFile (_destDirectory, _prefix, _suffix));
    }
    
    
@@ -149,24 +139,14 @@ public class URLWizzard
       InputStream in;
       OutputStream out;
       
-      File f = new File (_destDir.getFile ()); 
-      if (!f.exists ())
-         f.mkdirs ();
-      
-      File file;   
-      do
-      {
-         file = new File (f, _prefix + getId () + _suffix); 
-      }
-      while (!file.createNewFile ());
-         
-      JarOutputStream jout = new JarOutputStream (new FileOutputStream (file));
+      File dest = new File (createTempFile (_destDir, _prefix, _suffix).getFile ()); 
+      JarOutputStream jout = new JarOutputStream (new FileOutputStream (dest));
       
       // put all into the jar...
       add (jout, new File (_src.getFile()), "");
       jout.close ();
       
-      return f.toURL ();
+      return dest.toURL ();
    }
    
    
@@ -245,6 +225,23 @@ public class URLWizzard
    private static String getId ()
    {
       return String.valueOf (++id);
+   }
+   
+   /** creates a temporary file like File.createTempFile() */
+   public static URL createTempFile (URL _baseDir, String _prefix, String _suffix) throws IOException
+   {
+      File f = new File (_baseDir.getFile ()); 
+      if (!f.exists ())
+         f.mkdirs ();
+      
+      File file;   
+      do
+      {
+         file = new File (f, _prefix + getId () + _suffix); 
+      }
+      while (!file.createNewFile ());
+         
+      return file.toURL ();
    }
    
    
