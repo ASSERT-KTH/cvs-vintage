@@ -28,7 +28,6 @@ import org.columba.core.command.WorkerStatusController;
 import org.columba.core.logging.ColumbaLogger;
 import org.columba.core.main.MainInterface;
 import org.columba.core.util.Mutex;
-import org.columba.core.util.StopWatch;
 import org.columba.mail.folder.LocalFolder;
 import org.columba.mail.message.ColumbaHeader;
 import org.columba.mail.message.HeaderInterface;
@@ -177,8 +176,6 @@ public abstract class AbstractHeaderCache {
 
 	public void load(WorkerStatusController worker) throws Exception {
 		
-		StopWatch stopWatch = new StopWatch();
-
 		if (MainInterface.DEBUG) {
 			ColumbaLogger.log.info("loading header-cache=" + headerFile);
 		}
