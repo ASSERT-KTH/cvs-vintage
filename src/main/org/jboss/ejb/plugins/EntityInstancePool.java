@@ -21,13 +21,19 @@ import org.jboss.ejb.EntityEnterpriseContext;
  *	@author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
  *  @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
  *  @author <a href="mailto:andreas.schaefer@madplanet.com">Andreas Schaefer</a>
- *	@version $Revision: 1.14 $
+ * @author <a href="mailto:sacha.labourey@cogito-info.ch">Sacha Labourey</a>
+ *	@version $Revision: 1.15 $
  *      
  * <p><b>Revisions:</b>
  * <p><b>20010718 andreas schaefer:</b>
  * <ul>
  * <li>- Added statistics gathering
  * </ul>
+*  <p><b>20010920 Sacha Labourey:</b>
+*  <ul>
+*  <li>- Moved "reclaim" flag (set by Bill Burke) to the AbstractInstancePool level.
+*        It can now be used for SLSB and MDB (pooling activated)
+*  </ul>
  */
 public class EntityInstancePool
    extends AbstractInstancePool
@@ -51,18 +57,6 @@ public class EntityInstancePool
     *
     * @param   ctx  
     */
-   private boolean reclaim = false;
-
-   public boolean getReclaim()
-   {
-      return reclaim;
-   }
-
-   public void setReclaim(boolean reclaim)
-   {
-      this.reclaim = reclaim;
-   }
-
    public synchronized void free(EnterpriseContext ctx)
    {
        // If transaction still present don't do anything (let the instance be GC)

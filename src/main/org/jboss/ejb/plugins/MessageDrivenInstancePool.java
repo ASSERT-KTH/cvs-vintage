@@ -19,13 +19,18 @@ import org.jboss.ejb.MessageDrivenEnterpriseContext;
  *	@author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
  *      @author <a href="mailto:peter.antman@tim.se">Peter Antman</a>.
  * @author <a href="mailto:andreas.schaefer@madplanet.com">Andreas Schaefer</a>
- *	@version $Revision: 1.6 $
+ * @author <a href="mailto:sacha.labourey@cogito-info.ch">Sacha Labourey</a>
+ *	@version $Revision: 1.7 $
  *      
  * <p><b>Revisions:</b>
  * <p><b>20010718 andreas schaefer:</b>
  * <ul>
  * <li>- Added Statistics Gathering
  * </ul>
+*  <p><b>20010920 Sacha Labourey:</b>
+*  <ul>
+*  <li>- Activate pooling for MDB
+*  </ul>
  */
 public class MessageDrivenInstancePool
    extends AbstractInstancePool
@@ -44,6 +49,9 @@ public class MessageDrivenInstancePool
    public void init()
       throws Exception
    {
+      super.init();
+      // for MDB, we *do* pool
+      this.reclaim = true;
    }
     
    // Package protected ---------------------------------------------

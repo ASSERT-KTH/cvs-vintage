@@ -36,8 +36,9 @@ import org.jboss.management.j2ee.CountStatistic;
 *   @author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
 *   @author <a href="mailto:marc.fleury@jboss.org">Marc Fleury</a>
 *  @author <a href="mailto:andreas.schaefer@madplanet.com">Andreas Schaefer</a>
+ * @author <a href="mailto:sacha.labourey@cogito-info.ch">Sacha Labourey</a>
 *   
-*  @version $Revision: 1.16 $
+*  @version $Revision: 1.17 $
 *
 *  <p><b>Revisions:</b>
 *  <p><b>20010704 marcf:</b>
@@ -47,6 +48,10 @@ import org.jboss.management.j2ee.CountStatistic;
 *  <p><b>20010709 andreas schaefer:</b>
 *  <ul>
 *  <li>- Added statistics gathering
+*  </ul>
+*  <p><b>20010920 Sacha Labourey:</b>
+*  <ul>
+*  <li>- Pooling made optional and only activated in concrete subclasses for SLSB and MDB
 *  </ul>
 */
 public abstract class AbstractInstancePool
@@ -66,7 +71,10 @@ implements InstancePool, XmlLoadable
    protected CountStatistic mDestroy = new CountStatistic( "Destroy", "", "Beans destroyed in Pool" );
    /** Counter of all the ready Beans within the Pool (which are not used now) **/
    protected CountStatistic mReadyBean = new CountStatistic( "ReadyBean", "", "Numbers of ready Bean Pool" );
-
+   
+   // determine if we reuse EnterpriseContext objects i.e. if we actually do pooling
+   protected boolean reclaim = false;
+   
     // Static --------------------------------------------------------
     
     // Constructors --------------------------------------------------
@@ -110,6 +118,16 @@ implements InstancePool, XmlLoadable
     
     public void destroy()
     {
+    }
+
+    public boolean getReclaim()
+    {
+       return reclaim;
+    }
+
+    public void setReclaim(boolean reclaim)
+    {
+       this.reclaim = reclaim;
     }
     
     /**
@@ -161,10 +179,18 @@ implements InstancePool, XmlLoadable
         if (pool.size() < maxSize)
         {
             
-            // We do not reuse but create a brand new instance simplifies the design
+            // If (!reclaim), we do not reuse but create a brand new instance simplifies the design
             try {
                 mReadyBean.add();
-                pool.push(create(container.createBeanClassInstance()));
+                if (this.reclaim)
+                {
+                   pool.push(ctx);                  
+                }
+                else
+                {
+                   discard (ctx);
+                   pool.push(create(container.createBeanClassInstance()));                  
+                }
             } catch (Exception ignored) {}          
             //pool.push(ctx);
         } else

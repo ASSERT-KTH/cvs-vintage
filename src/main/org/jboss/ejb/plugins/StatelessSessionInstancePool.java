@@ -18,13 +18,18 @@ import org.jboss.ejb.StatelessSessionEnterpriseContext;
  *	@see <related>
  *	@author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
  * @author <a href="mailto:andreas.schaefer@madplanet.com">Andreas Schaefer</a>
- *	@version $Revision: 1.7 $
+ * @author <a href="mailto:sacha.labourey@cogito-info.ch">Sacha Labourey</a>
+ *	@version $Revision: 1.8 $
  *      
  * <p><b>Revisions:</b>
  * <p><b>20010718 andreas schaefer:</b>
  * <ul>
  * <li>- Added Statistics Gathering
  * </ul>
+*  <p><b>20010920 Sacha Labourey:</b>
+*  <ul>
+*  <li>- Activate pooling for SLSB
+*  </ul>
  */
 public class StatelessSessionInstancePool
    extends AbstractInstancePool
@@ -43,6 +48,9 @@ public class StatelessSessionInstancePool
    public void init()
       throws Exception
    {
+      super.init();
+      // for SLSB, we *do* pool
+      this.reclaim = true;
    }
     
    // Package protected ---------------------------------------------
