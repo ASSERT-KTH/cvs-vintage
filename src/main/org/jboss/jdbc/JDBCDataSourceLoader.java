@@ -25,7 +25,7 @@ import org.jboss.logging.Logger;
 /**
  * Service that loads a JDBC 1 connection pool.  The constructors are called by
  * the JMX engine based on your MLET tags.
- * @version $Revision: 1.3 $
+ * @version $Revision: 1.4 $
  * @author Aaron Mulder (ammulder@alumni.princeton.edu)
  */
 public class JDBCDataSourceLoader extends ServiceMBeanSupport implements JDBCDataSourceLoaderMBean {
@@ -206,9 +206,9 @@ public class JDBCDataSourceLoader extends ServiceMBeanSupport implements JDBCDat
         source.initialize();
 
         // Bind in JNDI
-        bind(new InitialContext(), "jdbc."+source.getPoolName(), source);
+        bind(new InitialContext(), source.getPoolName(), source);
 
-        log.log("JDBC Connection pool "+source.getPoolName()+" bound to jdbc."+source.getPoolName());
+        log.log("JDBC Connection pool "+source.getPoolName()+" bound to "+source.getPoolName());
 
         // Test database
         source.getConnection().close();
