@@ -58,9 +58,9 @@ package org.apache.tomcat.util.log;
 
 import java.io.Writer;
 import java.io.PrintWriter;
-import java.io.OutputStreamWriter;
 import java.io.FileWriter;
 import java.io.File;
+import java.io.OutputStreamWriter;
 import java.io.IOException;
 import java.io.StringWriter;
 import java.lang.reflect.*;
@@ -80,6 +80,7 @@ import org.apache.tomcat.util.FastDateFormat;
  * 
  * @author Anil Vijendran (akv@eng.sun.com)
  * @author Alex Chaffee (alex@jguru.com)
+ * @author Ignacio J. Ortega (nacho@siapi.es)
  * @since  Tomcat 3.1
  */
 public abstract class Logger {
@@ -106,10 +107,10 @@ public abstract class Logger {
 	defaultLogger.setVerbosityLevel(DEBUG);
     }
     protected long day;
-    protected String fileDateFormat="yyyyMMdd";
     // Usefull for subclasses
     private static final String separator = System.getProperty("line.separator", "\n");
     public static final char[] NEWLINE=separator.toCharArray();
+
 
 
     /**
@@ -134,8 +135,8 @@ public abstract class Logger {
      * Prints the log message on a specified logger at the "default"
      * log leve: INFORMATION
      *
-     * @param	name		the name of the logger. 
-     * @param	message		the message to log. 
+     * @param	name		the name of the logger.
+     * @param	message		the message to log.
      */
     /*
       public static void log(String logName, String message)
@@ -145,12 +146,12 @@ public abstract class Logger {
 	    logger.log(message);
     }
     */
-    
+
     /**
      * Set the default output stream that is used by all logging
-     * channels. 
-     * 
-     * @param	w		the default output stream. 
+     * channels.
+     *
+     * @param	w		the default output stream.
      */
     public static void setDefaultSink(Writer w) {
 	defaultSink = w;
@@ -172,8 +173,8 @@ public abstract class Logger {
 	return loggers.keys();
     }
 
-    public static void putLogger(Logger logger) {	
-	loggers.put(logger.getName(), logger);	
+    public static void putLogger(Logger logger) {
+	loggers.put(logger.getName(), logger);
     }
 
     public static void removeLogger(Logger logger) {
@@ -185,7 +186,7 @@ public abstract class Logger {
      * nested root cause for a ServletException or TomcatException if
      * applicable
      * TODO: JDBCException too
-     * 
+     *
      * @param t any Throwable, or ServletException, or null
      **/
     public static String throwableToString( Throwable t ) {
@@ -198,12 +199,12 @@ public abstract class Logger {
     }
 
     public static final int MAX_THROWABLE_DEPTH=3;
-    
+
     /**
      * Converts a Throwable to a printable stack trace, including the
      * nested root cause for a ServletException or TomcatException or
      * SQLException if applicable
-     * 
+     *
      * @param t any Throwable, or ServletException, or null
      * @param rootcause localized string equivalent of "Root Cause"
      **/
@@ -217,7 +218,7 @@ public abstract class Logger {
 	return sw.toString();
     }
 
-    private static Object emptyObjectArray[]=new Object[0];
+    private static Object[] emptyObjectArray=new Object[0];
 
     private static void printThrowable(PrintWriter w, Throwable t, String rootcause, int depth ) {
 
@@ -295,7 +296,7 @@ public abstract class Logger {
     
     protected boolean custom = true;
     protected Writer sink = defaultSink;
-    String path;
+    protected String path;
     protected String name;
     
     private int level = WARNING;
@@ -318,7 +319,7 @@ public abstract class Logger {
 
     protected DateFormat timestampFormatter
 	= new FastDateFormat(new SimpleDateFormat(timestampFormat));
-    
+
     /**
      * Is this Log usable?
      */
@@ -328,9 +329,7 @@ public abstract class Logger {
 
     /**
      * Prints the log message at the "default" log level: INFORMATION
-     * 
-     * @param	message		the message to log.
-     */
+     * @param message 		the message to log.*/
     public final void log(String message) {
 	log(message, Logger.INFORMATION);
     }
@@ -367,11 +366,11 @@ public abstract class Logger {
      * @param	verbosityLevel	what type of message is this?
      * 				(WARNING/DEBUG/INFO etc)
      */
-    public final void log(String message, Throwable t, 
-			  int verbosityLevel) 
+    public final void log(String message, Throwable t,
+			  int verbosityLevel)
     {
 	if (matchVerbosityLevel(verbosityLevel)) {
-	// Construct the timestamp we will use, if requested
+            // check wheter we are logging to a file
             if (path!= null){
                 // If the date has changed, switch log files
                 if (day!=getDay(System.currentTimeMillis())) {
@@ -393,7 +392,7 @@ public abstract class Logger {
     public boolean matchVerbosityLevel(int verbosityLevel) {
 	return verbosityLevel <= getVerbosityLevel();
     }
-    
+
     /**
      * Subclasses implement these methods which are called by the
      * log(..) methods internally.
@@ -410,7 +409,7 @@ public abstract class Logger {
      * @param	t		the exception that was thrown.
      */
     protected abstract void realLog(String message, Throwable t);
-    
+
     /**
      * Flush the log. 
      */
@@ -435,20 +434,20 @@ public abstract class Logger {
     /**
      * Set name of this log channel.
      *
-     * @param	name		Name of this logger. 
+     * @param	name		Name of this logger.
      */
     public void setName(String name) {
 	this.name = name;
 
 	// Once the name of this logger is set, we add it to the list
-	// of loggers... 
+	// of loggers...
 	putLogger(this);
     }
 
     /**
      * Set the path name for the log output file.
-     * 
-     * @param	path		The path to the log file. 
+     *
+     * @param	path		The path to the log file.
      */
     public void setPath(String path) {
         if (File.separatorChar == '/')
@@ -476,10 +475,10 @@ public abstract class Logger {
         day=getDay(date);
 	try {
 	    File file = new File(path);
-
+            String logName=file.getParent()+File.separator+getDatePrefix(date,file.getName());
+            file=new File(logName);
 	    if (!file.exists())
 		new File(file.getParent()).mkdirs();
-            String logName=file.getParent()+File.separator+getDatePrefix(date)+file.getName();
 	    this.sink = new FileWriter(logName);
 	} catch (IOException ex) {
 	    System.err.print("Unable to open log file: "+path+"! ");
@@ -520,7 +519,7 @@ public abstract class Logger {
     }
     
     /**
-     * Get the current verbosity level. 
+     * Get the current verbosity level.
      */
     public int getVerbosityLevel() {
 	return this.level;
@@ -587,7 +586,7 @@ public abstract class Logger {
     private static java.text.FieldPosition position = new java.text.FieldPosition(DateFormat.YEAR_FIELD);
 
     protected void formatTimestamp(long msec, StringBuffer buf) {
-	if (timestamp == false)
+	if (!timestamp)
 	    return;
 	else if (timestampRaw) {
 	    buf.append(Long.toString(msec));
@@ -600,23 +599,29 @@ public abstract class Logger {
 	}
     }
 
-    // ----- Logger.Helper static inner class -----
+    // ----- utility methods; -----
+    static final String START_FORMAT="${";
+    static final String END_FORMAT="}";
 
-    String getDatePrefix(long millis) {
-        SimpleDateFormat sdf=new SimpleDateFormat(fileDateFormat);
-        return sdf.format(new Date(millis));
+    private String getDatePrefix(long millis,String format) {
+        try{
+            int pos=format.indexOf(Logger.START_FORMAT);
+            int lpos=format.lastIndexOf(Logger.END_FORMAT);
+            if( pos != -1 && lpos != -1){
+                String f="'"+format.substring(0,pos)+"'"
+                        +format.substring(pos+2,lpos)
+                        +"'"+format.substring(lpos+1)+"'";
+                SimpleDateFormat sdf=new SimpleDateFormat(f);
+                return sdf.format(new Date(millis));
+            }
+        }catch(Exception ex){
+        }
+        return format;
     }
 
-    long getDay(long millis){
+    private long getDay(long millis){
         return (millis+TimeZone.getDefault().getRawOffset()) / ( 24*60*60*1000 );
     }
 
-    public String getFileDateFormat() {
-        return fileDateFormat;
-    }
-
-    public void setFileDateFormat(String newFileDateFormat) {
-        fileDateFormat = newFileDateFormat;
-    }
 
 }
