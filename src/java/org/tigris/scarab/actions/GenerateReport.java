@@ -93,7 +93,7 @@ import org.tigris.scarab.actions.base.RequireLoginFirstAction;
 /**
     This class is responsible for report generation forms
     @author <a href="mailto:jmcnally@collab.net">John D. McNally</a>
-    @version $Id: GenerateReport.java,v 1.16 2002/03/21 01:51:52 elicia Exp $
+    @version $Id: GenerateReport.java,v 1.17 2002/04/09 01:16:06 jmcnally Exp $
 */
 public class GenerateReport 
     extends RequireLoginFirstAction
@@ -279,21 +279,6 @@ public class GenerateReport
         throws Exception
     {
         Report report = populateReport("reports,Step3_2b.vm", data, context);
-        Intake intake = getIntakeTool(context);
-        if ( intake.isAllValid() ) 
-        {
-            // add new option group
-            List dates = report.getReportDates();
-            Report.ReportDate newDate = report.getNewReportDate();
-            Group intakeDate = intake.get("ReportDate", 
-                                           newDate.getQueryKey(), false);
-            if ( intakeDate != null ) 
-            {                
-                intakeDate.setProperties(newDate);
-                newDate.setQueryKey(String.valueOf(dates.size()));
-                dates.add(newDate);
-            }
-        }
         setTarget(data, "reports,Step3_2b.vm");
     }
 
@@ -306,13 +291,16 @@ public class GenerateReport
         {
             // remove any selected option groups
             List dates = report.getReportDates();
-            for ( int i=dates.size()-1; i>=0; i-- ) 
+            if (dates != null && dates.size() > 0) 
             {
-                if (((Report.ReportDate)dates.get(i)).isSelected())
+                for ( int i=dates.size()-1; i>=0; i-- ) 
                 {
-                    dates.remove(i);
-                }
-            }
+                    if (((Report.ReportDate)dates.get(i)).isSelected())
+                    {
+                        dates.remove(i);
+                    }
+                }   
+            }            
         }
         setTarget(data, "reports,Step3_2b.vm");
     }

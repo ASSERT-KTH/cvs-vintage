@@ -1168,44 +1168,25 @@ public  class Report
 
         // set up dates
         i = 0;
-        Report.ReportDate date = this.getNewReportDate();
-        date.setQueryKey(String.valueOf(i++));
-        Group intakeDate = intake.get("ReportDate", 
-                                       date.getQueryKey(), false);
-        if ( intakeDate != null ) 
+        List dates = new ArrayList();
+        Group intakeDate = null;
+        do 
         {
-            List dates = new ArrayList();
-            while ( intakeDate != null ) 
+            Report.ReportDate date = this.getNewReportDate();
+            date.setQueryKey(String.valueOf(i++));
+            intakeDate = intake.get("ReportDate", 
+                                    date.getQueryKey(), false);
+            if (intakeDate != null && intakeDate.get("Date").isSet()) 
             {
-                if ( intakeDate.get("Date").isSet()) 
-                {
-                    intakeDate.setValidProperties(date);
-                    dates.add(date);                
-                }
-                
-                date = this.getNewReportDate();
-                date.setQueryKey(String.valueOf(i++));
-                intakeDate = intake.get("ReportDate", 
-                                        date.getQueryKey(), false);
-            }
-
-            if ( dates.size() > 0 ) 
-            {
-                // the intakeReport.setProperties call above may have added a
-                // date so we do not want to lose it. 
-                List reportDates = this.getReportDates();
-                if ( reportDates != null ) 
-                {
-                    for ( int j=0; j<reportDates.size(); j++ ) 
-                    {
-                        Report.ReportDate reportDate = 
-                            (Report.ReportDate)reportDates.get(j);
-                        date.setQueryKey(String.valueOf(i++));
-                        dates.add(reportDate);
-                    }
-                }
-                this.setReportDates(dates);            
-            }
+                intakeDate.setValidProperties(date);
+                dates.add(date);                
+            }                
+        }
+        while ( intakeDate != null );
+        
+        if ( dates.size() > 0 ) 
+        {
+            this.setReportDates(dates);            
         }
         }
     }
