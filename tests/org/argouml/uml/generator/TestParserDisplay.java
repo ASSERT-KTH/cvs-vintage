@@ -1,4 +1,4 @@
-// $Id: TestParserDisplay.java,v 1.6 2004/02/24 08:28:19 linus Exp $
+// $Id: TestParserDisplay.java,v 1.7 2004/08/26 20:02:34 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -41,6 +41,10 @@ import ru.novosoft.uml.foundation.core.MParameter;
 import ru.novosoft.uml.foundation.data_types.MMultiplicity;
 import ru.novosoft.uml.foundation.data_types.MParameterDirectionKind;
 
+/**
+ * Test the ParserDisplay.
+ *
+ */
 public class TestParserDisplay extends TestCase {
     private final String clro01 = "/ roname : int";
     private final String clro02 = " : int , double / roname2 ";
@@ -51,6 +55,11 @@ public class TestParserDisplay extends TestCase {
     private final String nclro03 = "/ roname roname2 : int ";
     private final String nclro04 = "/ roname : int double ";
 
+    /**
+     * The constructor.
+     * 
+     * @param str the name of the test
+     */
     public TestParserDisplay(String str) {
 	super(str);
     }
