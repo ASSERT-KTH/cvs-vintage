@@ -33,7 +33,7 @@
   <p>Each screen provides the following navigational aids</p>
   
 <ul>
-  <li> <strong>The Left navigation bar</strong>: The left navigation bar is organized 
+  <li> <strong>The Left navigation bar</strong>: The navigation bar is organized 
     by issue type, then by function. To access functionality within a specific 
     issue type, select the title of the issue type on the left navigation bar. 
     The functionality available to that issue type will appear below the title. 
@@ -68,7 +68,8 @@
     beside the field title. Often you will find textual guidelines within the 
     entry forms to help you through the form entry process.</p>
   <p><strong>Buttons</strong></p>
-  <p>Above and below the form appear a set of buttons. These buttons perform actions 
+  <p>Navigational buttons are available on each screen. These buttons perform actions 
+
     on the data entered in the form. The </p>
   <ul>
     <li> <strong>Cancel</strong> cancels the process in which you currently are engaged. 
