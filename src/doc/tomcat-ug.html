@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
 <html>
 <head>
-    <!-- $Id: tomcat-ug.html,v 1.21 2001/11/07 13:46:02 larryi Exp $ -->
+    <!-- $Id: tomcat-ug.html,v 1.22 2001/12/05 11:29:30 larryi Exp $ -->
     <!-- Copyright 1999-2001 Apache Software Foundation -->
     <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
     <link rel="stylesheet" type="text/css" href="style.css">
@@ -1199,13 +1199,13 @@ only the <code>&lt;Context&gt;</code> entries.</p>
 
 <h4><a name="conf_svr_cust">Tomcat Server.xml Customization</a></h4>
 
-<p>The following are some of the more common customization made to the
+<p>The following are some of the more common customizations made to the
 <code>server.xml</code> file.</p>
 
 <ol>
 <li><a href="#cust_chgports">Change ports for Http, Https, and Web Server connectors</a></li>
 <li><a href="#cust_session">Speed up initial session creation for development</a></li>
-<li><a href="#cust_auth">Configure whether Tomcat or a web server does authentication</a></li>\
+<li><a href="#cust_auth">Configure whether Tomcat or a web server does authentication</a></li>
 <li><a href="#cust_dirlist">Turn off directory listings></li>
 <li><a href="#cust_jikes">Use Jikes as the Java compiler</a></li>
 <li><a href="#cust_bind">Bind a connector to a single IP address</a></li>
@@ -1510,9 +1510,41 @@ associated with a virtual host, use:</p>
       <code>Context</code> declarations.</td><td><i>none, must be specified</i></td></tr>
 </table>
 
+<p>In Tomcat 3.3.1, each attribute value may use the ant-style variable
+substitution by using &quot;${<i>variable</i>}&quot; in the attribute string, i.e.
+<i>attribute</i>=&quot;<i>text</i>${<i>variable</i>}<i>text</i>&quot;.</p>
+
+<p>The <i>variable</i> must specify a Context property, a ContextManager
+property, or System property.  The Context properties take precedence, followed
+by ContextManager propertiers, and finally System properties.  If a matching
+property isn't found the attribute string is left as is.  Note that properties
+are not the same as attributes, and attributes are not accessible via
+&quot;variable substitution&quot;.</p>
+
+<p><a name="context_prop"></a>There are two methods for setting Context properties.</p>
+
+<ol>
+  <li>Include a <code><i>name</i>=&quot;<i>value</i>&quot;</code>
+    specification on the Context element, where <i>name</i> doesn't correspond
+    to a Context attribute. For example:<br>
+    <pre>    &lt;Context ... my.prop="myvalue" ... &gt;</pre></li>
+  <li>Include a <code>Property</code> element within the scope of the
+    Context element. For example:<br>
+    <pre>
+    &lt;Context ... &gt;
+        &lt;Property name=&quot;my.prop&quot; value=&quot;myvalue&quot; /&gt;
+        ...
+    &lt;/Context&gt;</pre>
+    This form of setting properties is logged if the Context's debug
+    level is one or greater.<br><br></li>
+</ol>
+
+<p><b>Note:</b> The property values may themselves use &quot;variable
+substitution&quot;, provided the specified property is already defined.</p>
+
 <p>Currently the <a href="serverxml.html#SimpleRealm">SimpleRealm</a>,
 <a href="serverxml.html#JDBCRealm">JDBCRealm</a>, and
-<a href="serverxml.html#LogSetter">Logsetter</a> modules are know to work
+<a href="serverxml.html#LogSetter">Logsetter</a> modules are known to work
 successfully as &quot;context local&quot; modules.  Other modules that can
 be used as &quot;context local&quot; modules and would be useful have yet to
 be identified.</p>
