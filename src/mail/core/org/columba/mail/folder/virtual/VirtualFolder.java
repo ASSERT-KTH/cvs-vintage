@@ -123,7 +123,6 @@ public class VirtualFolder extends Folder {
 
 	public void addSearchToHistory() throws Exception {
 
-		
 		VirtualFolder folder =
 			(VirtualFolder) MainInterface.treeModel.getFolder(106);
 
@@ -154,7 +153,6 @@ public class VirtualFolder extends Folder {
 		if (newFolder == null)
 			return;
 
-
 		// copy all properties to the subfolder
 		int uid = getFolderItem().getInteger("property", "source_uid");
 		boolean includes =
@@ -169,18 +167,18 @@ public class VirtualFolder extends Folder {
 			(XmlElement) getFolderItem().getElement("filter").clone());
 
 		FilterCriteria newc =
-					new Filter(getFolderItem().getElement("filter"))
-						.getFilterRule()
-						.get(
-						0);
-						
+			new Filter(getFolderItem().getElement("filter"))
+				.getFilterRule()
+				.get(
+				0);
+
 		/*
 		FilterCriteria c =
 			new Filter(getFolderItem().getElement("filter"))
 				.getFilterRule()
 				.get(
 				0);
-
+		
 		FilterCriteria newc =
 			new Filter(getFolderItem().getElement("filter"))
 				.getFilterRule()
@@ -191,7 +189,7 @@ public class VirtualFolder extends Folder {
 		newc.setPattern(c.getPattern());
 		newc.setType(c.getType());
 		*/
-		
+
 		// lets find a good name for our new vfolder
 
 		StringBuffer buf = new StringBuffer();
@@ -222,13 +220,12 @@ public class VirtualFolder extends Folder {
 			buf.append(")");
 
 		}
-		
 
 		newFolder.renameFolder(buf.toString());
-		
+
 		// update tree-view
 		MainInterface.treeModel.nodeStructureChanged(folder);
-		
+
 		// update tree-node (for renaming the new folder)
 		MainInterface.treeModel.nodeChanged(newFolder);
 
@@ -276,20 +273,21 @@ public class VirtualFolder extends Folder {
 		Folder folder = parent;
 
 		Object[] resultUids = folder.searchMessages(filter, worker);
+		if (resultUids != null) {
 
-		for (int i = 0; i < resultUids.length; i++) {
-			HeaderInterface header =
-				(HeaderInterface) folder.getMessageHeader(
-					resultUids[i],
-					worker);
-			try {
-				add((ColumbaHeader) header, folder, resultUids[i]);
-			} catch (Exception ex) {
-				System.out.println("Search exception: " + ex.getMessage());
-				ex.printStackTrace();
+			for (int i = 0; i < resultUids.length; i++) {
+				HeaderInterface header =
+					(HeaderInterface) folder.getMessageHeader(
+						resultUids[i],
+						worker);
+				try {
+					add((ColumbaHeader) header, folder, resultUids[i]);
+				} catch (Exception ex) {
+					System.out.println("Search exception: " + ex.getMessage());
+					ex.printStackTrace();
+				}
 			}
 		}
-
 		boolean isInclude =
 			(new Boolean(getFolderItem()
 				.get("property", "include_subfolders")))
@@ -358,11 +356,10 @@ public class VirtualFolder extends Folder {
 	/**
 	 * @see org.columba.modules.mail.folder.Folder#expungeFolder(WorkerStatusController)
 	 */
-	public void expungeFolder(WorkerStatusController worker)
-		throws Exception {
+	public void expungeFolder(WorkerStatusController worker) throws Exception {
 
 		Object[] uids = getUids(worker);
-			
+
 		for (int i = 0; i < uids.length; i++) {
 			Object uid = uids[i];
 
@@ -572,7 +569,7 @@ public class VirtualFolder extends Folder {
 
 			newReference[i] = new FolderCommandReference(srcFolder);
 			Object[] uidArray = new Object[v.size()];
-			((Vector)v).copyInto(uidArray);
+			((Vector) v).copyInto(uidArray);
 			newReference[i].setUids(uidArray);
 			newReference[i].setMarkVariant(r[0].getMarkVariant());
 			newReference[i].setMessage(r[0].getMessage());
@@ -609,13 +606,11 @@ public class VirtualFolder extends Folder {
 	 * @see org.columba.mail.folder.Folder#getUids(org.columba.core.command.WorkerStatusController)
 	 */
 	public Object[] getUids(WorkerStatusController worker) throws Exception {
-		
+
 		int count = headerList.count();
 		Object[] uids = new Object[count];
 		int i = 0;
-		for (Enumeration e = headerList.keys();
-			e.hasMoreElements();
-			) {
+		for (Enumeration e = headerList.keys(); e.hasMoreElements();) {
 			uids[i++] = e.nextElement();
 		}
 
