@@ -60,7 +60,7 @@ import org.tigris.scarab.om.ScarabUser;
  * This class provides access to security properties
  *
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: ScarabSecurity.java,v 1.5 2001/11/29 16:19:31 jmcnally Exp $
+ * @version $Id: ScarabSecurity.java,v 1.6 2001/12/07 21:36:43 dr Exp $
  */
 public class ScarabSecurity 
     extends BaseService
@@ -129,6 +129,12 @@ public class ScarabSecurity
      */
     public static final String USER__EDIT_PREFERENCES =         
         getService().getPermissionImpl("User__Edit_Preferences");
+
+    /** 
+     * Specifies that a User is allowed to administer a domain.
+     */
+    public static final String DOMAIN__ADMIN = 
+        getService().getPermissionImpl("Domain__Admin");
 
     /** 
      * Specifies that a User is allowed to edit a domain.
