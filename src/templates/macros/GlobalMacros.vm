@@ -612,8 +612,9 @@ $scarabR.IssuePosInList of $scarabR.CurrentSearchResultsSize
   <table width="100%" border="1" cellspacing="2" cellpadding="3">
    <tr>
     <th nowrap="nowrap">$l10n.Select</th>
-    <th>#userSort ("username" "$l10n.Username" $data.Target)</th>
-    <th>#userSort ("name" "$l10n.FullName" $data.Target)</th>
+  #set ($linkPage = $scarabG.replace($data.Target, '/', ','))
+    <th>#userSort ("username" "$l10n.Username" $linkPage)</th>
+    <th>#userSort ("name" "$l10n.FullName" $linkPage)</th>
     <th>$l10n.Association</th>
    </tr>
    #foreach ($user in $searchResultsList)

@@ -53,6 +53,7 @@ import java.util.ArrayList;
 import java.util.StringTokenizer;
 import java.util.Enumeration;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.apache.fulcrum.security.TurbineSecurity;
 import org.apache.fulcrum.security.entity.User;
@@ -96,7 +97,7 @@ import org.apache.turbine.Turbine;
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
  * @author <a href="mailto:dr@bitonic.com">Douglas B. Robertson</a>
- * @version $Id: ScarabGlobalTool.java,v 1.57 2003/03/28 00:13:03 jon Exp $
+ * @version $Id: ScarabGlobalTool.java,v 1.58 2003/04/11 22:59:44 dlr Exp $
  */
 public class ScarabGlobalTool implements ScarabGlobalScope
 {
@@ -177,6 +178,11 @@ public class ScarabGlobalTool implements ScarabGlobalScope
     public FieldMethodizer getParameterName()
     {
         return parameterName;
+    }
+
+    public String replace(String text, String a, String b)
+    {
+        return StringUtils.replace(text, a, b);
     }
 
     public GlobalParameterManager getParameter()
