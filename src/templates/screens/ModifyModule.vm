@@ -6,19 +6,39 @@ $page.setTitle("New Module")
 $page.setTitle("Modify Module") 
 #end
 
-  <div id="module" class="app">
+#macro (ModifyModuleBar $var)
+<div class="functnbar$var">
+<table cellpadding="4" cellspacing="0" border="1">
+ <tr>
+  <td class="firstchild">
+   <input type="submit" name="eventSubmit_doCancel" value="Cancel" />&#160;
+#if ($createNew && $createNew.equals("true"))
+   <input type="submit" name="eventSubmit_doCreate" value="Create" />
+#else
+   <input type="submit" name="eventSubmit_doUpdate" value="Update" />
+#end
+  </td>
+ </tr>
+</table>
+</div>
+#end
 
-<h3>$page.Title</h3>
+<div id="module" class="app">
+<h2>$page.Title</h2>
 
 #set ($currentModule = $scarabR.CurrentModule)
 #set ($canEdit = $security.hasPermission("Module | Edit", $currentModule))
 #if (!$canEdit)
 
+<h3>Module Details</h3>
 <p class="alert">Sorry, you do not have enough permissions to modify the
 module you have <a href="$link.setPage("SelectModule.vm")">currently selected</a>.</p>
 
 #else
+
+#ModifyModuleBar("")
   
+<h3>Module Details</h3>
 <form action="$link.setPage("ModifyModule.vm")" method="post">
 <input type="hidden" name="action" value="ModifyModule" /> 
 <input type="hidden" name="$scarabG.Constant.CANCEL_TEMPLATE" value="SelectModule.vm" /> 
@@ -86,20 +106,7 @@ module you have <a href="$link.setPage("SelectModule.vm")">currently selected</a
  </table>
 </div>
 
-<div class="functnbar2">
-<table cellpadding="4" cellspacing="0" border="1">
- <tr>
-  <td class="firstchild">
-   <input type="submit" name="eventSubmit_doCancel" value="Cancel" />&#160;
-#if ($createNew && $createNew.equals("true"))
-   <input type="submit" name="eventSubmit_doCreate" value="Create" />
-#else
-   <input type="submit" name="eventSubmit_doUpdate" value="Update" />
-#end
-  </td>
- </tr>
-</table>
-</div>
+#ModifyModuleBar("2")
 
 $intake.declareGroups()
 </form>
