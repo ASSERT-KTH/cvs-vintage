@@ -8,6 +8,17 @@
   <body>
     <release version="b19" date="in cvs">
       <action dev="pledbrook" type="fix">
+        SCB1131 - No longer get an error on the "possible duplicates found"
+        screen on systems lacking the sample data.
+      <action dev="pledbrook" type="fix">
+         SCB670 - Query results screen now honours the number of results
+         per page, the sort column and the sort polarity from a saved
+         query.
+      <action dev="pledbrook" type="fix">
+        SCB544 - Dates can now be entered into the advanced query screen in the
+        user's locale, rather than in the US date format.
+      </action>
+      <action dev="pledbrook" type="fix">
         SCB1065 - the admin user can now change their own details, although they
         can no longer change users' passwords.
       </action>

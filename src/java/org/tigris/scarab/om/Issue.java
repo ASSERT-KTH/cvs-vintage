@@ -97,7 +97,7 @@ import org.apache.commons.lang.StringUtils;
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
- * @version $Id: Issue.java,v 1.332 2004/02/03 11:31:47 dep4b Exp $
+ * @version $Id: Issue.java,v 1.333 2004/03/27 00:52:25 pledbrook Exp $
  */
 public class Issue 
     extends BaseIssue
@@ -2520,72 +2520,6 @@ public class Issue
 
 
         return newIssue;
-    }
-
-    /**
-     * The Date when this issue was closed.
-     *
-     * @return a <code>Date</code> value, null if status has not been
-     * set to Closed
-     */
-    public Date getClosedDate()
-        throws Exception
-    {
-        Date result = null;
-        Object obj = ScarabCache.get(this, GET_CLOSED_DATE); 
-        if (obj == null) 
-        {  
-            Attribute attribute = null;
-            try
-            { 
-                attribute = AttributeManager
-                    .getInstance(AttributePeer.STATUS__PK);
-            }
-            catch (TorqueException e)
-            {
-                if (e.getMessage() == null 
-                    || !e.getMessage().startsWith("Failed to select one")) 
-                {
-                    throw e;
-                }
-                // closed date has no meaning
-                return null;
-            }
-
-            AttributeValue status = getAttributeValue(attribute);
-            if (status != null && status.getOptionId()
-                 .equals(AttributeOption.getStatusClosedPK())) 
-            {
-                // the issue is currently closed, we can get the date
-                Criteria crit = new Criteria()
-                    .add(ActivityPeer.ISSUE_ID, getIssueId())
-                    .add(ActivityPeer.ATTRIBUTE_ID, AttributePeer.STATUS__PK)
-                    .addJoin(ActivityPeer.TRANSACTION_ID, 
-                             ActivitySetPeer.TRANSACTION_ID)
-                    .add(ActivityPeer.NEW_OPTION_ID, 
-                      AttributeOption.getStatusClosedPK())
-                    .addDescendingOrderByColumn(ActivitySetPeer.CREATED_DATE);
-                
-                List activitySets = ActivitySetPeer.doSelect(crit);
-                if (activitySets.size() > 0) 
-                {
-                    result = ((ActivitySet)activitySets.get(0))
-                        .getCreatedDate();
-                    ScarabCache.put(result, this, GET_CLOSED_DATE);
-                }
-                else 
-                {
-                    throw new ScarabException("Issue " + getIssueId() + 
-                        " was in a closed state, but" +
-                        "no activitySet is associated with the change.");   
-                }
-            }          
-        }
-        else 
-        {
-            result = (Date)obj;
-        }
-        return result;
     }
 
     public void addVote(ScarabUser user)

@@ -75,17 +75,6 @@
 #end
 <th>$l10n.CreationDate</th>
 
-#set ($includeClosedDate = false)
-#foreach ($issueId in $issueList)
-  #set ($issue = $scarabR.getIssue($issueId))
-  #if ($issue.ClosedDate)
-    #set ($includeClosedDate = true)
-  #end
-#end  
-
-#if ($includeClosedDate)
-  <th>$l10n.DateClosed</th>
-#end
 </tr>
 #foreach ($issueId in $issueList)
   #set ($issue = $scarabR.getIssue($issueId))
@@ -125,9 +114,6 @@
   #end
 #end
 <td>$format.getDate($scarabR.DateFormat, $issue.CreatedDate)</td>
-#if ($includeClosedDate)
-  <td>#if ($issue.ClosedDate)$format.getDate($scarabR.DateFormat, $issue.ClosedDate)#else&#160;#end</td>
-#end
 </tr>
 #end
 </table>
