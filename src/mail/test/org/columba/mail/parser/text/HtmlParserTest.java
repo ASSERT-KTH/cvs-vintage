@@ -103,4 +103,9 @@ public class HtmlParserTest extends TestCase {
     	assertEquals("this is<encoded>!", HtmlParser.restoreSpecialCharacters(input));
     }
 
+    public void restoreSpecialCharacters5() {
+    	String input = "&frac12; this is &#160;this is &#59;this is &#59;this is &#59;\nthis is &#59;\nthis is &#59;";
+    	
+    	assertEquals("\u00bd his is \u00a0this is ;this is ;this is ;\nthis is ;\nthis is ;", HtmlParser.restoreSpecialCharacters(input));
+    }
 }
