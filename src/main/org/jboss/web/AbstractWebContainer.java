@@ -38,7 +38,7 @@ import java.util.Set;
  @author  Scott.Stark@jboss.org
  @author  Christoph.Jung@infor.de
  @author  Thomas.Diesler@arcor.de
- @version $Revision: 1.84 $
+ @version $Revision: 1.85 $
  */
 public abstract class AbstractWebContainer
    extends SubDeployerSupport
@@ -188,9 +188,13 @@ public abstract class AbstractWebContainer
             di.watch = di.url;
          }
 
+         // We need to unpack the WAR if it has webservices, because we need
+         // to manipulate th web.xml before deploying to the web container 
+         boolean hasWebservices = di.localCl.findResource("WEB-INF/webservices.xml") != null;
+
          // Make sure the war is unpacked if unpackWars is true
          File warFile = new File(di.localUrl.getFile());
-         if( warFile.isDirectory() == false && unpackWars == true )
+         if (warFile.isDirectory() == false && (unpackWars == true || hasWebservices))
          {
             File tmp = new File(warFile.getAbsolutePath()+".tmp");
             if( warFile.renameTo(tmp) == false )
@@ -283,7 +287,7 @@ public abstract class AbstractWebContainer
    }
 
    /** A template pattern implementation of the deploy() method. This method
-    calls the {@link #performDeploy(String, String) performDeploy()} method to
+    calls the {@link AbstractWebDeployer#start(DeploymentInfo) AbstractWebDeployer.start()} method to
     perform the container specific deployment steps and registers the
     returned WebApplication in the deployment map. The steps performed are:
 
@@ -335,7 +339,7 @@ public abstract class AbstractWebContainer
    }
 
    /** A template pattern implementation of the undeploy() method. This method
-    calls the {@link #performUndeploy(String) performUndeploy()} method to
+    calls the {@link AbstractWebDeployer#stop(DeploymentInfo) AbstractWebDeployer.stop()} method to
     perform the container specific undeployment steps and unregisters the
     the warUrl from the deployment map.
     */
