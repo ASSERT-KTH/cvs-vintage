@@ -9,7 +9,7 @@
 <!--                                                                       -->
 <!-- ===================================================================== -->
 
-<!-- $Id: standardjbosscmp-jdbc.xml,v 1.71 2004/02/05 14:39:09 loubyansky Exp $ -->
+<!-- $Id: standardjbosscmp-jdbc.xml,v 1.72 2004/02/06 01:40:02 starksm Exp $ -->
 
 <jbosscmp-jdbc>
 
@@ -46,8 +46,8 @@
       <type-mapping>
          <name>FirstSQL/J</name>
          <row-locking-template/>
-         <pk-constraint-template>PRIMARY KEY (?1)</pk-constraint-template>
-         <fk-constraint-template>FOREIGN KEY (?1) REFERENCES ?2 (?3)</fk-constraint-template>
+         <pk-constraint-template>PRIMARY KEY (?2)</pk-constraint-template>
+         <fk-constraint-template>FOREIGN KEY (?3) REFERENCES ?4 (?5)</fk-constraint-template>
          <alias-header-prefix>t</alias-header-prefix>
          <alias-header-suffix>_</alias-header-suffix>
          <alias-max-length>32</alias-max-length>
