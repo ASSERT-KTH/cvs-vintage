@@ -92,7 +92,7 @@ public class RMIAdaptorImpl
 		mServer = pServer;
 	}
 	
-	// RMIConnector implementation -------------------------------------
+	// RMIAdaptor implementation -------------------------------------
 
 	public ObjectInstance createMBean(
 		String pClassName,

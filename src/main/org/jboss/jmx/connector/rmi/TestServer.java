@@ -92,8 +92,8 @@ public class TestServer {
 				e.printStackTrace();
 			}
 			lServer.invoke( lNamingName, "start", new Object[] {}, new String[] {} );
-			System.out.println( "Load and register the JMX RMI-Connector" );
-			ObjectName lConnectorName = new ObjectName( lServer.getDefaultDomain(), "service", "RMIConnector" );
+			System.out.println( "Load and register the JMX RMI-Adaptor" );
+			ObjectName lConnectorName = new ObjectName( lServer.getDefaultDomain(), "service", "RMIAdaptor" );
 			lServer.createMBean(
 				"org.jboss.jmx.connector.rmi.RMIAdaptorService",
 				lConnectorName
