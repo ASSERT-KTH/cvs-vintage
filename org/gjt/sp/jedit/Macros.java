@@ -42,7 +42,7 @@ import org.gjt.sp.util.Log;
  * This class records and runs macros.
  *
  * @author Slava Pestov
- * @version $Id: Macros.java,v 1.17 2002/03/25 09:37:31 spestov Exp $
+ * @version $Id: Macros.java,v 1.18 2002/04/08 05:33:31 spestov Exp $
  */
 public class Macros
 {
@@ -617,7 +617,7 @@ file_loop:			for(int i = 0; i < paths.length; i++)
 	//{{{ loadMacros() method
 	private static void loadMacros(Vector vector, String path, File directory)
 	{
-		String[] macroFiles = directory.list();
+		File[] macroFiles = directory.listFiles();
 		if(macroFiles == null || macroFiles.length == 0)
 			return;
 
@@ -625,9 +625,14 @@ file_loop:			for(int i = 0; i < paths.length; i++)
 
 		for(int i = 0; i < macroFiles.length; i++)
 		{
-			String fileName = macroFiles[i];
-			File file = new File(directory,fileName);
-			if(file.isDirectory())
+			File file = macroFiles[i];
+			String fileName = file.getName();
+			if(file.isHidden())
+			{
+				/* do nothing! */
+				continue;
+			}
+			else if(file.isDirectory())
 			{
 				Vector submenu = new Vector();
 				submenu.addElement(fileName.replace('_',' '));
