@@ -37,7 +37,7 @@
              includes="junit*.properties">
         </ant:fileset>
      </ant:delete>     
-     <ant:delete>
+     <ant:delete quiet="true">
         <ant:fileset dir="tomcat/logs">
             <ant:include name="*log*.txt"/>
         </ant:fileset>
@@ -50,7 +50,9 @@
         <ant:fileset dir="src/test/logs">
             <ant:include name="*.log"/>
         </ant:fileset>    
-    <ant:delete dir="src/test/WEB-INF"/>   
+        <ant:fileset dir="src/test/WEB-INF">
+            <ant:include name="*.*"/>
+        </ant:fileset>    
      </ant:delete>  
   </postGoal>
   
