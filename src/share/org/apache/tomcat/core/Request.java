@@ -222,13 +222,11 @@ public class Request {
     }
 
     public String getRequestURI() {
-        if( requestURI!=null) return requestURI;
 	return requestURI;
     }
 
     // XXX used by forward
     public String getQueryString() {
-	if( queryString != null ) return queryString;
         return queryString;
     }
 
@@ -266,14 +264,6 @@ public class Request {
     /** Virtual host */
     public void setServerName(String serverName) {
 	this.serverName = serverName;
-    }
-
-    public String getLookupPath() {
-	return lookupPath;
-    }
-
-    public void setLookupPath( String l ) {
-	lookupPath=l;
     }
 
     // XXX optimize for common case ( single params )
@@ -841,9 +831,11 @@ public class Request {
 	this.protocol=protocol;
     }
 
-    public void setMimeHeaders( MimeHeaders headers ) {
-	this.headers=headers;
-    }
+    // 1 mime headers per request, you change the content of
+    // MimeHeaders instead of replacing them.
+    //     public void setMimeHeaders( MimeHeaders headers ) {
+    // 	this.headers=headers;
+    //     }
 
     public void setServerPort(int serverPort ) {
 	this.serverPort=serverPort;
@@ -873,8 +865,6 @@ public class Request {
 	    sb.append( context.getPath() );
 	    if( getServletPath() != null )
 		sb.append( " + " + getServletPath() + " + " + getPathInfo());
-	    else
-		sb.append( " + " + getLookupPath());
 	} else {
 	    sb.append(getRequestURI());
 	}

@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/util/Attic/MimeHeaderField.java,v 1.12 2000/08/11 21:20:55 costin Exp $
- * $Revision: 1.12 $
- * $Date: 2000/08/11 21:20:55 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/util/Attic/MimeHeaderField.java,v 1.13 2000/08/15 23:03:19 costin Exp $
+ * $Revision: 1.13 $
+ * $Date: 2000/08/15 23:03:19 $
  *
  * ====================================================================
  *
@@ -79,31 +79,27 @@ import java.text.*;
  * @author James Todd [gonzo@eng.sun.com]
  */
 public class MimeHeaderField {
-    public static final byte[] charval = { 
-	(byte)'0', (byte)'1', (byte)'2', (byte)'3', (byte)'4',
-	(byte)'5', (byte)'6', (byte)'7', (byte)'8', (byte)'9' 
-    };
-
     private StringManager sm =
         StringManager.getManager("org.apache.tomcat.resources");
 
+    // multiple headers with same name - a linked list will
+    // speed up name enumerations and search ( both cpu and
+    // GC)
+    MimeHeaderField next; 
+    
     /**
      * The header field name.
      */
     protected final MessageBytes nameB = new MessageBytes();
-    protected final MessageChars nameC = new MessageChars();
-    protected final MessageString name = new MessageString();
 
     /**
      * The header field value.
      */
     protected final MessageBytes valueB = new MessageBytes();
-    protected final MessageChars valueC = new MessageChars();
-    protected final MessageString value = new MessageString();
 
+    // cache for special cases
     /** The header field integer value. */
     protected int intValue;
-
     /** The header field Date value.   */
     protected Date dateValue = null;
 
@@ -130,12 +126,9 @@ public class MimeHeaderField {
      * Resets the header field to an uninitialized state.
      */
     public void reset() {
-	name.reset();
-	value.reset();
 	nameB.reset();
 	valueB.reset();
-	nameC.reset();
-	valueC.reset();
+	next=null;
 	type = T_NULL;
 	nameType = T_NULL;
     }
@@ -146,7 +139,7 @@ public class MimeHeaderField {
      */
     public void setName(String s) {
 	nameType = T_STR;
-	name.setString(s);
+	nameB.setString(s);
     }
 
     /**
@@ -155,7 +148,7 @@ public class MimeHeaderField {
      */
     public void setName(char c[], int off, int len ) {
 	nameType = T_CHARS;
-	nameC.setChars(c, off, len);
+	nameB.setChars(c, off, len);
     }
 
     /**
@@ -180,9 +173,9 @@ public class MimeHeaderField {
     public String getName() {
 	switch (nameType) {
 	case T_STR:
-	    return name.toString();
+	    //	    return name.toString();
 	case T_CHARS:
-	    return nameC.toString(); 
+	    //	    return nameC.toString(); 
 	case T_BYTES:
 	    return nameB.toString(); // XXX encoding
 	default:
@@ -194,9 +187,9 @@ public class MimeHeaderField {
 	return nameB;
     }
 
-    public MessageChars getNameChars() {
-	return nameC;
-    }
+//     public MessageChars getNameChars() {
+// 	return nameC;
+//     }
 
     // -------------------- Value --------------------
 
@@ -206,7 +199,8 @@ public class MimeHeaderField {
      * @param s the header field value String
      */
     public void setValue(String s) {
-	value.setString(s);
+	//value.setString(s);
+	valueB.setString(s);
 	type = T_STR;
     }
 
@@ -222,7 +216,7 @@ public class MimeHeaderField {
     }
 
     public void setValue(char[] b, int off, int len) {
-	valueC.setChars(b, off, len);
+	valueB.setChars(b, off, len);
 	type = T_CHARS;
     }
 
@@ -253,14 +247,14 @@ public class MimeHeaderField {
      */
     public String getValue() {
 	switch (type) {
-	case T_STR:
-	    return value.toString();
 	case T_INT:
 	    return String.valueOf(intValue);
 	case T_DATE:
 	    return formatDate(dateValue);
+	case T_STR:
+	    //	    return value.toString();
 	case T_CHARS:
-	    return valueC.toString(); 
+	    //	    return valueC.toString(); 
 	case T_BYTES:
 	    return valueB.toString(); // XXX encoding
 	default:
@@ -272,9 +266,9 @@ public class MimeHeaderField {
 	return valueB;
     }
 
-    public MessageChars getValueChars() {
-	return valueC;
-    }
+//     public MessageChars getValueChars() {
+// 	return valueC;
+//     }
 
     /**
      * Returns the integer value of the header field.
@@ -287,9 +281,9 @@ public class MimeHeaderField {
 	case T_INT:
 	    return intValue;
 	case T_STR:
-	    return value.toInteger();
+	    //	    return value.toInteger();
 	case T_CHARS:
-	    return valueC.toInteger();
+	    //return valueC.toInteger();
 	case T_BYTES:
 	    if(valueB.getType() == MessageBytes.T_BYTES )
 		return Ascii.parseInt(valueB.getBytes(), valueB.getOffset(),
@@ -315,11 +309,11 @@ public class MimeHeaderField {
 	    if( dateValue==null) break;
 	    return dateValue.getTime();
 	case T_STR:
-	    return parseDate( value );
+	    //	    return parseDate( value );
 	case T_CHARS:
-	    return parseDate( value.toString() );
+	    // return parseDate( value.toString() );
 	case T_BYTES:
-	    return parseDate( valueB.toString() ); // XXX Encoding
+	    return parseDate( valueB ); // XXX Encoding
 	}
 	String msg = sm.getString("mimeHeaderField.date.iae");
 	throw new IllegalArgumentException(msg);
@@ -333,13 +327,13 @@ public class MimeHeaderField {
 	return DateTool.rfc1123Format.format(value);
     }
 
-    long parseDate( String s ) {
-	// XXX inefficient
-	value.setString( s );
-	return parseDate( value );
-    }
+//     long parseDate( String s ) {
+// 	// XXX inefficient
+// 	valueB.setString( s );
+// 	return parseDate( value );
+//     }
 
-    long parseDate( MessageString value ) {
+    long parseDate( MessageBytes value ) {
 	String dateString=value.toString();
 	Date date=null;
         try {
@@ -369,9 +363,9 @@ public class MimeHeaderField {
     public boolean nameEquals(String s) {
 	switch (type) {
 	case T_STR:
-	    return name.equalsIgnoreCase(s);
+	    //	    return name.equalsIgnoreCase(s);
 	case T_CHARS:
-	    return nameC.equalsIgnoreCase(s);
+	    //	    return nameC.equalsIgnoreCase(s);
 	case T_BYTES:
 	    return nameB.equalsIgnoreCase( s );
 	default:
