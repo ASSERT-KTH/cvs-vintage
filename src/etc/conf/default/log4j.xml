@@ -7,7 +7,7 @@
 <!--                                                                       -->
 <!-- ===================================================================== -->
 
-<!-- $Id: log4j.xml,v 1.3 2002/02/26 08:57:30 user57 Exp $ -->
+<!-- $Id: log4j.xml,v 1.4 2002/02/27 09:24:26 user57 Exp $ -->
 
 <!--
    | For more configuration infromation and examples see the Jakarta Log4j
@@ -22,7 +22,7 @@
 
   <!-- A time/date based rolling appender -->
   <appender name="FILE" class="org.apache.log4j.DailyRollingFileAppender">
-    <param name="File" value="${jboss.home}/log/server.log"/>
+    <param name="File" value="${jboss.server.home.dir}/log/server.log"/>
     <param name="Append" value="false"/>
 
     <!-- Rollover at midnight each day -->
@@ -44,7 +44,7 @@
 
   <!-- A size based file rolling appender
   <appender name="FILE" class="org.apache.log4j.RollingFileAppender">
-    <param name="File" value="../log/server.log"/>
+    <param name="File" value="${jboss.server.home.dir}/log/server.log"/>
     <param name="Append" value="false"/>
     <param name="MaxFileSize" value="500KB"/>
     <param name="MaxBackupIndex" value="1"/>
