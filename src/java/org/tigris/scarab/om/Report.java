@@ -1082,6 +1082,9 @@ public  class Report
     private int getCountAndCleanUp(Criteria crit)
         throws Exception
     {
+        crit.addJoin("a1." + ACT_ISSUE_ID, IssuePeer.ISSUE_ID);
+        crit.add(IssuePeer.MODULE_ID, getModuleId());
+        crit.add(IssuePeer.TYPE_ID, getIssueTypeId());
         List records = ActivityPeer.doSelectVillageRecords(crit);
         // clean up
         for ( int i=0; i<aliases.length; i++ ) 
