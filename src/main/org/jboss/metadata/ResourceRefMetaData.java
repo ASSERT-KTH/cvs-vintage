@@ -22,7 +22,7 @@ import org.jboss.deployment.DeploymentException;
 
  *   @author <a href="mailto:sebastien.alborini@m4x.org">Sebastien Alborini</a>
  *   @author <a href="mailto:Scott.Stark@jboss.org">Scott Stark</a>.
- *   @version $Revision: 1.11 $
+ *   @version $Revision: 1.12 $
  */
 public class ResourceRefMetaData extends MetaData
 {
@@ -158,7 +158,13 @@ public class ResourceRefMetaData extends MetaData
       {
          // There must be a resource-ref/res-url value if this is a URL resource
          if (type.equals("java.net.URL"))
-            jndiName = getElementContent(getUniqueChild(element, "res-url"));
+         {
+            Element resUrl = getOptionalChild(element, "res-url");
+            if (resUrl == null) {
+                resUrl = getUniqueChild(element, "jndi-name");
+            }
+            jndiName = getElementContent(resUrl);
+         }
          // There must be a resource-ref/jndi-name value otherwise
          else
             jndiName = getElementContent(getUniqueChild(element, "jndi-name"));
