@@ -7,7 +7,6 @@ import org.apache.torque.om.ObjectKey;
 import org.apache.torque.om.NumberKey;
 import org.apache.torque.om.Persistent;
 import org.apache.torque.util.Criteria;
-import org.apache.torque.pool.DBConnection;
 import org.tigris.scarab.util.ScarabConstants;
 
 import org.tigris.scarab.services.security.ScarabSecurity;

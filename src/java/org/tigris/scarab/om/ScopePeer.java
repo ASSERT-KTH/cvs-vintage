@@ -4,7 +4,6 @@ import java.util.List;
 import org.apache.torque.om.NumberKey;
 import com.workingdogs.village.*;
 import org.apache.torque.map.*;
-import org.apache.torque.pool.DBConnection;
 import org.apache.torque.util.Criteria;
 
 // Local classes

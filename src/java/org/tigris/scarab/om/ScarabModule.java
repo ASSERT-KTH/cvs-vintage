@@ -64,7 +64,7 @@ import org.apache.torque.om.Persistent;
 import org.apache.torque.util.Criteria;
 import org.apache.torque.util.BasePeer;
 import org.apache.torque.oid.IDBroker;
-import org.apache.torque.pool.DBConnection;
+import java.sql.Connection;
 import org.apache.fulcrum.security.TurbineSecurity;
 import org.apache.fulcrum.security.util.RoleSet;
 import org.apache.fulcrum.security.util.TurbineSecurityException;
@@ -104,7 +104,7 @@ import org.apache.fulcrum.security.impl.db.entity
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: ScarabModule.java,v 1.117 2002/06/06 20:55:57 jon Exp $
+ * @version $Id: ScarabModule.java,v 1.118 2002/06/20 18:13:37 jmcnally Exp $
  */
 public class ScarabModule
     extends BaseScarabModule
@@ -385,7 +385,7 @@ public class ScarabModule
      * because dbCon.commit() is called within the method. An
      * update can be done within a transaction though.
      */
-    public void save(DBConnection dbCon) 
+    public void save(Connection dbCon) 
         throws TorqueException
     {
         // if new, make sure the code has a value.
@@ -429,7 +429,14 @@ public class ScarabModule
             // need to do this before the relationship save below
             // in order to set the moduleid for the new module.
             super.save(dbCon);
-            dbCon.commit();
+            try
+            {
+                dbCon.commit();
+            }
+            catch (Exception e)
+            {
+                throw new TorqueException(e);
+            }
             
             if ( getOwnerId() == null ) 
             {

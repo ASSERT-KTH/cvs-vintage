@@ -55,7 +55,7 @@ import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 import java.text.SimpleDateFormat;
-
+import java.sql.Connection;
 import com.workingdogs.village.Record;
 
 // Turbine classes
@@ -64,7 +64,6 @@ import org.apache.torque.om.Persistent;
 import org.apache.torque.om.ObjectKey;
 import org.apache.torque.om.NumberKey;
 import org.apache.torque.util.Criteria;
-import org.apache.torque.pool.DBConnection;
 import org.apache.torque.TorqueException;
 
 import org.apache.fulcrum.cache.TurbineGlobalCacheService;
@@ -151,7 +150,7 @@ public  class Report
       return super.getQueryKey();
     }
 
-    public void save(DBConnection dbCon) throws TorqueException
+    public void save(Connection dbCon) throws TorqueException
     {
        try
        {

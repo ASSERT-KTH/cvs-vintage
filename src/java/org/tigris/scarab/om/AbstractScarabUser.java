@@ -59,8 +59,8 @@ import org.apache.fulcrum.security.entity.Group;
 import org.apache.fulcrum.security.util.GroupSet;
 import org.apache.fulcrum.security.TurbineSecurity;
 import org.apache.fulcrum.security.impl.db.entity.TurbineUserGroupRolePeer;
+import java.sql.Connection;
 import org.apache.torque.TorqueException;
-import org.apache.torque.pool.DBConnection;
 import org.apache.torque.util.Criteria;
 import org.apache.torque.om.BaseObject;
 import org.apache.torque.om.ObjectKey;
@@ -79,7 +79,7 @@ import org.tigris.scarab.services.cache.ScarabCache;
  * 
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
  * @author <a href="mailto:jon@collab.net">John McNally</a>
- * @version $Id: AbstractScarabUser.java,v 1.26 2002/06/19 03:44:25 jmcnally Exp $
+ * @version $Id: AbstractScarabUser.java,v 1.27 2002/06/20 18:13:37 jmcnally Exp $
  */
 public abstract class AbstractScarabUser 
     extends BaseObject 
@@ -569,10 +569,10 @@ public abstract class AbstractScarabUser
     }
 
     /**
-     * @see org.apache.torque.om.Persistent#save(DBConnection)
+     * @see org.apache.torque.om.Persistent#save(Connection)
      * this implementation throws an UnsupportedOperationException.
      */
-    public void save(DBConnection dbCon) throws Exception
+    public void save(Connection dbCon) throws Exception
     {
         throw new UnsupportedOperationException("Not implemented");
     }
@@ -715,6 +715,7 @@ public abstract class AbstractScarabUser
             if (mitList == null) 
             {
                 mitList = MITListManager.getInstance();
+                mitList.setScarabUser((ScarabUser)this);
             }
 
             Iterator i = rmits.iterator();
@@ -726,8 +727,7 @@ public abstract class AbstractScarabUser
                 item.setIssueTypeId(rmit.getIssueTypeId());
                 mitList.addMITListItem(item);
             }
-        }
-        
+        }        
     }
 
     public MITList getCurrentMITList()

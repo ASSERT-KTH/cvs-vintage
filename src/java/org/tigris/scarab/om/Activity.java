@@ -54,7 +54,7 @@ import org.apache.torque.TorqueException;
 import org.apache.torque.om.Persistent;
 import org.apache.torque.om.NumberKey;
 import org.apache.torque.util.Criteria;
-import org.apache.torque.pool.DBConnection;
+import java.sql.Connection;
 
 import org.tigris.scarab.om.Attribute;
 import org.tigris.scarab.om.Attachment;
@@ -66,7 +66,7 @@ import org.tigris.scarab.services.cache.ScarabCache;
  *
  * @author <a href="mailto:jmcnally@collab.new">JohnMcNally</a>
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: Activity.java,v 1.29 2002/06/20 00:28:20 jon Exp $
+ * @version $Id: Activity.java,v 1.30 2002/06/20 18:13:37 jmcnally Exp $
  */
 public class Activity 
     extends BaseActivity
@@ -176,7 +176,7 @@ public class Activity
     public void create(Issue issue, Attribute attribute, 
                        String desc, Transaction transaction,
                        String oldValue, String newValue, 
-                       DBConnection dbCon)
+                       Connection dbCon)
          throws TorqueException
     {
         create(issue, attribute, desc, transaction,
@@ -220,7 +220,7 @@ public class Activity
                        NumberKey oldUserId, NumberKey newUserId,
                        NumberKey oldOptionId, NumberKey newOptionId,
                        String oldValue, String newValue, 
-                       DBConnection dbCon)
+                       Connection dbCon)
          throws TorqueException
     {
         create(issue, attribute, desc, transaction,
@@ -239,7 +239,7 @@ public class Activity
                        NumberKey oldUserId, NumberKey newUserId,
                        NumberKey oldOptionId, NumberKey newOptionId,
                        String oldValue, String newValue, 
-                       Attachment attachment, DBConnection dbCon)
+                       Attachment attachment, Connection dbCon)
          throws TorqueException
     {
         setIssue(issue);
@@ -341,7 +341,7 @@ public class Activity
     }
      */
 
-    public void save(DBConnection dbCon)
+    public void save(Connection dbCon)
         throws TorqueException
     {
         // make sure to mark last related activity as done

@@ -7,7 +7,6 @@ import com.workingdogs.village.*;
 import org.apache.torque.TorqueException;
 import org.apache.torque.om.ObjectKey;
 import org.apache.torque.util.Criteria;
-import org.apache.torque.pool.DBConnection;
 
 // Scarab classes
 import org.tigris.scarab.services.cache.ScarabCache;

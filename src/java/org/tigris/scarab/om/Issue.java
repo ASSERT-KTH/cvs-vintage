@@ -67,7 +67,6 @@ import org.apache.torque.om.Persistent;
 import org.apache.torque.manager.MethodResultCache;
 import org.apache.torque.util.Criteria;
 import org.apache.commons.collections.SequencedHashMap;
-import org.apache.torque.pool.DBConnection;
 import org.apache.torque.map.DatabaseMap;
 import org.apache.torque.oid.IDBroker;
 import org.apache.torque.util.BasePeer;
@@ -93,7 +92,7 @@ import org.apache.commons.lang.Strings;
  * @author <a href="mailto:jmcnally@collab.new">JohnMcNally</a>
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
- * @version $Id: Issue.java,v 1.160 2002/06/18 23:09:40 jon Exp $
+ * @version $Id: Issue.java,v 1.161 2002/06/20 18:13:37 jmcnally Exp $
  */
 public class Issue 
     extends BaseIssue
@@ -1532,7 +1531,7 @@ public class Issue
      * @param dbCon a <code>DBConnection</code> value
      * @exception TorqueException if an error occurs
      */
-    public void save(DBConnection dbCon)
+    public void save(Connection dbCon)
         throws TorqueException
     {
         Module module = getModule();
@@ -1572,10 +1571,9 @@ public class Issue
     }
 
 
-    private int getNextIssueId(DBConnection dbCon)
+    private int getNextIssueId(Connection con)
         throws Exception
     {
-        Connection con = dbCon.getConnection();
         int id = -1;
         String key = getIdTableKey();
         DatabaseMap dbMap = IssuePeer.getTableMap().getDatabaseMap();
@@ -1598,7 +1596,7 @@ public class Issue
                     // entered, insert a row into the id_table and try again.
                     try
                     {
-                        saveIdTableKey(dbCon);
+                        saveIdTableKey(con);
                         id = 1;
                     }
                     catch (Exception badException)
@@ -1635,7 +1633,7 @@ public class Issue
         return prefix;
     }
 
-    private void saveIdTableKey(DBConnection dbCon)
+    private void saveIdTableKey(Connection dbCon)
         throws Exception
     {
         int id = 0;
@@ -1643,7 +1641,7 @@ public class Issue
         IDBroker idbroker = dbMap.getIDBroker();
         String idTable = IDBroker.TABLE_NAME.substring(0, 
              IDBroker.TABLE_NAME.indexOf('.'));
-        id = idbroker.getIdAsInt(dbCon.getConnection(), idTable);
+        id = idbroker.getIdAsInt(dbCon, idTable);
 
         String key = getIdTableKey();
 

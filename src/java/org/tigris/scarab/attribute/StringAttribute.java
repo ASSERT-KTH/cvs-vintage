@@ -46,7 +46,7 @@ package org.tigris.scarab.attribute;
  * individuals on behalf of Collab.Net.
  */ 
 
-import org.apache.torque.pool.DBConnection;
+import java.sql.Connection;
 import org.apache.torque.TorqueException;
 import org.tigris.scarab.util.word.SearchIndex;
 import org.tigris.scarab.util.word.SearchFactory;
@@ -56,7 +56,7 @@ import org.tigris.scarab.util.word.SearchFactory;
  *  Description of the Class
  *
  * @author <a href="mailto:fedor.karpelevitch@home.com">Fedor</a>
- * @version $Revision: 1.10 $ $Date: 2002/03/02 02:32:57 $
+ * @version $Revision: 1.11 $ $Date: 2002/06/20 18:13:37 $
  */
 public class StringAttribute extends FreeFormAttribute
 {
@@ -65,7 +65,7 @@ public class StringAttribute extends FreeFormAttribute
      * storage.  This method calls the parent save method and then
      * indexes the text value for searching.
      */
-    public void save(DBConnection dbCon)
+    public void save(Connection dbCon)
         throws TorqueException
     {
         try

@@ -1,10 +1,7 @@
 package org.tigris.scarab.om;
 
 import java.util.*;
-//import com.workingdogs.village.*;
-//import org.apache.torque.map.*;
 import org.apache.torque.TorqueException;
-import org.apache.torque.pool.DBConnection;
 import org.apache.torque.util.Criteria;
 import org.apache.torque.om.ObjectKey;
 import org.apache.torque.om.NumberKey;

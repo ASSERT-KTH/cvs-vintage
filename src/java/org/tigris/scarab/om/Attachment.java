@@ -47,12 +47,12 @@ package org.tigris.scarab.om;
  */ 
 
 import java.io.File;
+import java.sql.Connection;
 
 import org.apache.torque.TorqueException;
 import org.apache.torque.util.Criteria;
 import org.apache.torque.om.Persistent;
 import org.apache.torque.om.NumberKey;
-import org.apache.torque.pool.DBConnection;
 
 import org.apache.turbine.Turbine;
 
@@ -186,13 +186,13 @@ public class Attachment
     }
         
     /**
-     * Calls super.save(DBConnection) and also checks for a FileItem.  if one
+     * Calls super.save(Connection) and also checks for a FileItem.  if one
      * exists the file is moved to its final location.
      *
      * @param dbCon a <code>DBConnection</code> value
      * @exception TorqueException if an error occurs
      */
-    public void save(DBConnection dbCon)
+    public void save(Connection dbCon)
         throws TorqueException
     {
         if ( getIssue().isNew() ) 

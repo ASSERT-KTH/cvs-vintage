@@ -56,7 +56,7 @@ import org.apache.torque.TorqueException;
 import org.apache.torque.om.Persistent;
 import org.apache.torque.om.ObjectKey;
 import org.apache.torque.om.NumberKey;
-import org.apache.torque.pool.DBConnection;
+import java.sql.Connection;
 
 import org.apache.fulcrum.cache.TurbineGlobalCacheService;
 import org.apache.fulcrum.cache.GlobalCacheService;
@@ -703,7 +703,7 @@ public abstract class AttributeValue
         return copyInto(copyObj);
     }
 
-    public void save(DBConnection dbcon)
+    public void save(Connection dbcon)
         throws TorqueException
     {
         if ( isModified() && !getDeleted())

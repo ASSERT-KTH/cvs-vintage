@@ -3,7 +3,6 @@ package org.tigris.scarab.om;
 import java.util.*;
 import com.workingdogs.village.*;
 import org.apache.torque.map.*;
-import org.apache.torque.pool.DBConnection;
 import org.apache.torque.util.Criteria;
 
 // Local classes

@@ -62,7 +62,6 @@ import org.apache.fulcrum.security.impl.db.entity.TurbineRolePeer;
 import org.apache.fulcrum.security.impl.db.entity.TurbineUserGroupRolePeer;
 import org.apache.fulcrum.security.util.AccessControlList;
 import org.apache.fulcrum.security.util.GroupSet;
-import org.apache.torque.pool.DBConnection;
 import org.apache.torque.Torque;
 import org.apache.torque.TorqueException;
 import org.apache.torque.util.Criteria;
@@ -90,7 +89,7 @@ import org.apache.log4j.Category;
  * implementation needs.
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: ScarabUserImpl.java,v 1.65 2002/06/19 03:44:25 jmcnally Exp $
+ * @version $Id: ScarabUserImpl.java,v 1.66 2002/06/20 18:13:37 jmcnally Exp $
  */
 public class ScarabUserImpl 
     extends BaseScarabUserImpl 
