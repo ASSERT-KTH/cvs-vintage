@@ -6,12 +6,12 @@
 #macro (AttributeSelectBar $val)
 <div class="functnbar$val">
 #if ($attributes.size() > 0)
-   <input type="submit" value="Add selected to attribute group" name="eventSubmit_doSelectattribute" />
+   <input type="submit" value="$l10n.Add" name="eventSubmit_doSelectattribute" />
 #end
 #if ($canEditDomain)
-    <input type="submit" value="Create new" name="eventSubmit_doCreatenewglobalattribute"/>&#160;
+    <input type="submit" value="$l10n.CreateNew" name="eventSubmit_doCreatenewglobalattribute"/>&#160;
 #end
-<input type="submit" value="Cancel" name="eventSubmit_doCancel"/>
+<input type="submit" value="$l10n.Cancel" name="eventSubmit_doCancel"/>
 </div>
 #end
 
@@ -27,24 +27,22 @@
 
 #AttributeSelectBar("")
 
-<h3>Global attributes</h3>
+<h3>$l10n.GlobalAttributes</h3>
 
 #if ($attributes.size() == 0)
 
-<p class="alert">There are no more global attributes that are
-not already associated with an attribute group in this
-module.</p>
+<p class="alert">$l10n.NoGlobalAttributes</p>
 
 #else
 
 <table width="100%" border="1" cellspacing="2" cellpadding="3">
 <tr>
-<th width="70">Select</th>
-<th>Name</th>
-<th>Description</th>
-<th>Input type</th>
-<th>Author</th>
-<th>Creation date</th>
+<th width="70">$l10n.Select</th>
+<th>$l10n.Name</th>
+<th>$l10n.Description</th>
+<th>$l10n.InputType</th>
+<th>$l10n.Author</th>
+<th>$l10n.CreationDate</th>
 </tr>
 
 #foreach ($attribute in $attributes)

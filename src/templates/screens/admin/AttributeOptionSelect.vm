@@ -15,26 +15,25 @@
 <input type="hidden" name="$scarabG.Constant.OTHER_TEMPLATE" value="admin,GlobalAttributeEdit.vm" />
 <input type="hidden" name="$scarabG.Constant.CANCEL_TEMPLATE" value="admin,ModuleAttributeEdit.vm" />
 		
-<h3>Global attribute options</h3>
+<h3>$l10n.GlobalAttributeOptions</h3>
 
 <div class="functnbar">
 #if ($availOptions.size() > 0)
-<input type="submit" value="Add to attribute" name="eventSubmit_doSelectattributeoption" />&#160;
+<input type="submit" value="$l10n.Add" name="eventSubmit_doSelectattributeoption" />&#160;
 #end
 #if ($canEditDomain)
-<input type="submit" value="Create new" name="eventSubmit_doGotoothertemplate" />&#160;
+<input type="submit" value="$l10n.CreateNew" name="eventSubmit_doGotoothertemplate" />&#160;
 #end
-<input type="submit" value="Cancel" name="eventSubmit_doCancel" />&#160;
+<input type="submit" value="$l10n.Cancel" name="eventSubmit_doCancel" />&#160;
 </div>
 
 #if ($availOptions.size() == 0)
 
-<p class="alert">There are no more global attribute options available to
-be associated with this attribute in this module.</p>
+<p class="alert">$l10n.NoGlobalAttributeOptions</p>
 
 #else
 
-<p>The following attributes are available for use in this issue type.</p>
+<p>$l10n.AttributesAvailable</p>
 
 <table border="1" cellspacing="2" cellpadding="3" width="100%">
 <tr>
