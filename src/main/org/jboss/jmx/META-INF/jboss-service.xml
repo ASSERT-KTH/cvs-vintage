@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!-- EXAMPLE META-INF/jboss-service.xml file for the connector stuff in deploy/lib
+	No classpath is specified here as it points to the same jsr file
+	You can nevertheless specify a URL classpath that points outside the jar
+	-->
+
+<server>
+  <mbean code="org.jboss.jmx.server.JMXAdaptorService"
+	 name="JMX:name=Adaptor,type=RMI"/>
+
+  <mbean code="org.jboss.jmx.server.RMIConnectorService" 
+	 name="JMX:name=Connector,type=RMI"/>
+
+  <mbean code="com.sun.jdmk.comm.HtmlAdaptorServer" name="Adaptor:name=html">
+    <attribute name="MaxActiveClientCount">10</attribute>
+    <attribute name="Parser" />
+    <attribute name="Port">8082</attribute>
+  </mbean>
+</server>
