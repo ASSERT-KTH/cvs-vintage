@@ -14,22 +14,33 @@ Objective:
     of jakarta-tomcat 3.x  and achieve the stated goals of providing a 
     production quality 2.2/1.1 servlet container. 
 
-Goals:
 
-    The following goals should be met in executing this plan:
+Changes:
 
-    1. No regressions compared with 3.2. 
+    Tomcat 3.3 will implement no new major features compared with 3.2. 
+    Some tunning and improvements are made to various modules to increase
+    the usability and flexibility. The "changes3.3" document includes the 
+    code changes done during tomcat development. ( XXX needs to be 
+    cleaned and reorganized in STATUS )
 
-    2. Fixing the bugs found after and during 3.2 release cycle. 
+    Most of the changes are related with continuing the refactoring of the 
+    3.x and performance enhancements that couldn't make it into 3.2. 
 
-    3. Full review of the code, making sure the modularity and 
-       extensibility goals have been achieved.
-  
-    4. Make sure that the refactoring is clean, and maintainance will be
-       easier that 3.2
+Open items ( XXX move to STATUS ):
+ 
+    This list includes changes that need to be done in 3.3 
 
-    5. Ensure that the performance is (significantly) better than
-       3.2
+    1. Integrate the bug fixes from 3.2 that haven't been integrated/fixed
+       so far.
+
+    2. Review the code changes and do the required changes, and produce 
+       documentation for the resulting code.
+
+    3. If time permits, enable the use of the Parameters and Headers classes. 
+
+    4. Fix the encoding bugs ( reported by Larry )
+
+    5. Improve the test suite.
 
 Tomcat 3.3 Milestone 1 Release:
 
@@ -44,19 +55,22 @@ Tomcat 3.3 Milestone 1 Release:
     discussed and incorporated. Also, the documentation will be reviewed 
     and improved. 
     
-    In paralel, work will start on fixing a significant number ( most ? ) of 
+    In parallel, work will start on fixing a significant number ( most ? ) of 
     bugs that were reported  and fixed in 3.2 and post 3.2. This work will
     continue during the beta period.
 
     Whenever possible, we should try to create a self-test case ( using
     the current self-test application and GTest ).
-    More documentations should be added on running GTest and simplify the
-    test application. 
+    It is desirable to add more documentation on running GTest and the
+    test application, to simplify the testing work.
 
-Tomcat 3.3 BiWeekly milestones:
+    We must test and make sure that JspServlet still function properly.
+
+Tomcat 3.3 periodical milestones:
     
     After the first milestone, we will periodically build milestones in
     order to track the evolution. ( see also the testing plan at the end ).
+    The release manager will build and make them available.
 
 Tomcat 3.3 Beta:
 
@@ -64,7 +78,8 @@ Tomcat 3.3 Beta:
 	Release Manager:	???
 
      No major change will be done after the Beta is build without a 
-     vote. 
+     vote. The release team can reject any change they feel is too big
+     and can introduce regressions, or is not needed.
 
      No major bug ( spec compliance or stability ) should be open in order to
      enter beta.
@@ -84,9 +99,8 @@ Tomcat 3.3 Final Release
 Release criteria
 ================
 
-Given that this will be proposed as the final release of tomcat3.x the 
-standards of quality and testing will be significantly higher than in
- previous releases. 
+The standards of quality and testing will be significantly higher than in
+previous releases. 
 
 1. Tomcat 3.3 should have no regression compared with 3.2. 
 Any reported regression is a show-stopper and a release can't be made
@@ -97,9 +111,31 @@ before it is resovled.
 3. Tomcat 3.3 should be tested with existing, complex applications  ( cocoon, 
  bugrat, etc ).
 
+4. Jasper must include bug fixes that were done in both 3.2.x and 4.0, 
+and various enhancements that are deemed appropriate. 
+
+5.  Bugs found after and during 3.2 release cycle should be fixed. 
+
+6. Full review of the code, making sure the modularity and   extensibility 
+  goals have been achieved.
+  
+7. Make sure that the refactoring is clean, and maintainance will be
+easier that 3.2
+
+8. Ensure that the performance is (significantly) better than
+  3.2
+
+9. Ensure that Jasper is compatible ( as much as possible ) with the
+   version used in the proposed 4.0.
+
+
+
+
 Platorms.
- We must make sure that tomcat is tested ( at least watchdog + self-test )
-with at least Linux, Solaris, Windows 9x, Windows NT/2000. 
+ We must make sure that tomcat test reports ( at least watchdog + self-test ) 
+contributed by developers and usrs exists for at least Linux, Solaris, 
+Windows 9x, Windows NT/2000. It is desirable to have test reports on 
+MacOS 9/X, FreeBSD.
 
 JDK.
  We must test tomcat with at least JDK1.1 and Java2 (multiple versions if 
@@ -114,13 +150,12 @@ Configurations
 Maintainance Plan
 =================
 
-After tomcat 3.3 is released, no major development should go on into the main
-branch. 
-
-The release team should consist of at least 3 people, and will fix any major
+The release team must consist of at least 3 people, and will fix any major
 bugs that will be found after the 3.3 release, and propose to the group
 minor releases, if absolutely needed ( security or stability bugs ).
 In any case, no backward-incompatible or major changes should be made.
 
-
+The release team must coordinate the maintainace and support of tomcat, 
+dispatching bugs and user requests to developers and acting as the 
+last resort in resolving major support issues. 
 
