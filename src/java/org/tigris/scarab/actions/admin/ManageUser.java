@@ -81,7 +81,7 @@ import org.tigris.scarab.tools.ScarabRequestTool;
  * Action(s).
  *
  * @author <a href="mailto:dr@bitonic.com">Douglas B. Robertson</a>
- * @version $Id: ManageUser.java,v 1.6 2002/02/04 23:53:54 jon Exp $
+ * @version $Id: ManageUser.java,v 1.7 2002/02/08 17:51:34 jmcnally Exp $
  */
 public class ManageUser extends RequireLoginFirstAction
 {
@@ -263,7 +263,8 @@ public class ManageUser extends RequireLoginFirstAction
     public void doDeleteuser( RunData data, TemplateContext context )
         throws Exception
     {
-        data.setMessage("SUCCESS (sorta): the user <b>SHOULD</b> have been " + 
+        data.setMessage("User delete is not yet implemented. Instructions on"
+                        + " implementation are given in issue# 165.  " + 
                             "deleted [username: " + data.getParameters()
                             .getString("username") +"]");
         setTarget(data, data.getParameters()
