@@ -18,13 +18,15 @@ import org.jboss.ejb.plugins.cmp.bridge.CMRFieldBridge;
  * This abstract syntax node represents a path declaration.
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
- * @version $Revision: 1.2 $
+ * @version $Revision: 1.3 $
  */
 public final class ASTPath extends SimpleNode
 {
    public List pathList;
    public List fieldList;
    public int type;
+
+   public boolean innerJoin;
 
    public ASTPath(int id)
    {
