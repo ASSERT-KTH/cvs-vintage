@@ -88,7 +88,7 @@ import org.jboss.ejb.plugins.cmp.jdbc.metadata.JDBCTypeMappingMetaData;
  * Compiles EJB-QL and JBossQL into SQL.
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
- * @version $Revision: 1.13 $
+ * @version $Revision: 1.14 $
  */
 public class JDBCEJBQLCompiler extends BasicVisitor {
 
@@ -799,6 +799,7 @@ public class JDBCEJBQLCompiler extends BasicVisitor {
    /** Generates where clause without the "WHERE" keyword. */
    public Object visit(ASTWhere node, Object data) {
       BlockStringBuffer buf = (BlockStringBuffer)data;
+
       node.jjtGetChild(0).jjtAccept(this, data);
       return data;
    }
@@ -1012,6 +1013,7 @@ public class JDBCEJBQLCompiler extends BasicVisitor {
 
       Node toNode = node.jjtGetChild(1);
       if(toNode instanceof ASTParameter) {
+
          ASTParameter toParam = (ASTParameter)toNode;
 
          // can only compare like kind entities
@@ -1029,6 +1031,7 @@ public class JDBCEJBQLCompiler extends BasicVisitor {
          buf.append(SQLUtil.getWhereClause(fromCMPField, fromAlias));   
       } else {
          ASTPath toPath = (ASTPath)toNode;
+
          joinPaths.add(toPath);
          String toAlias = aliasManager.getAlias(
                (String)toPath.getPath(toPath.size()-2));
@@ -1041,9 +1044,10 @@ public class JDBCEJBQLCompiler extends BasicVisitor {
                   "compared: from CMP field=" + fromCMPField.getFieldType() +
                   " to CMP field=" + toCMPField.getFieldType());
          }
- 
+
          buf.append(SQLUtil.getSelfCompareWhereClause(
                fromCMPField,
+               toCMPField,
                fromAlias, 
                toAlias));   
       }   
