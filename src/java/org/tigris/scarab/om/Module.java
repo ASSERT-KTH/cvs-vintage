@@ -69,7 +69,7 @@ import org.apache.torque.util.Criteria;
  * This class describes a Module within the Scarab system
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: Module.java,v 1.43 2002/05/01 00:27:23 jon Exp $
+ * @version $Id: Module.java,v 1.44 2002/05/15 22:00:00 elicia Exp $
  */
 public interface Module
     extends Serializable
@@ -375,6 +375,9 @@ public interface Module
         throws Exception;
 
     public List getTemplateTypes()
+        throws Exception;
+
+    public List getNavIssueTypes()
         throws Exception;
 
     /**
