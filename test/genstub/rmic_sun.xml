@@ -24,11 +24,11 @@
  - USA
  -
  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- - $Id: rmic_sun.xml,v 1.6 2005/02/16 14:43:28 benoitf Exp $
+ - $Id: rmic_sun.xml,v 1.7 2005/02/17 09:08:44 benoitf Exp $
  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
  -->
 
-<project name="rmic_sun" default="compile.sun" basedir=".">
+<project name="rmic_sun" default="compile.all" basedir=".">
 
   <!-- Building of a path which contains carol jars for tests compilation-->
   <path id="sun.classpath">
@@ -41,7 +41,10 @@
     <pathelement location="${test.build}/classes" />
   </path>
 
-
+  <target name="compile.all">
+    <antcall target="compile.sun" />
+  </target>
+  
   <target name="compile.sun">
     <antcall target="compile.sunjrmp1.1" />
     <antcall target="compile.sunjrmp1.2" />

@@ -24,7 +24,7 @@
  - USA
  -
  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- - $Id: build.xml,v 1.19 2005/02/16 14:43:28 benoitf Exp $
+ - $Id: build.xml,v 1.20 2005/02/17 09:08:44 benoitf Exp $
  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
  -->
 <project name="carol.test" default="compile">
@@ -83,11 +83,6 @@
     <pathelement location="${test.build}/classes" />
   </path>
 
-  <!-- Multiple xml file task def -->
-  <taskdef name="multipleAnt"
-           classname="org.objectweb.util.ant.MultipleAnt"
-           classpath="${config}/ow_util_ant_tasks.jar" />
-
   <!-- **********************************-->
   <!-- *********    COMPILE    **********-->
   <!-- **********************************-->
@@ -116,7 +111,9 @@
   <target name="compile.stub">
     <mkdir dir="${test.dist.lib}" />
     <mkdir dir="${test.build.stub}" />
-    <multipleAnt dir="${test.genstub}" />
+    <subant target="compile.all" inheritall="true">
+      <fileset dir="${test.genstub}" includes="rmic_*.xml"/>
+    </subant>
   </target>
 
   <!-- **************************************-->
@@ -134,7 +131,9 @@
        present in ${archive} directory. -->
   <target name="jar" depends="compile">
     <mkdir dir="${test.dist.lib}" />
-    <multipleAnt dir="${test.archive}" />
+    <subant target="test.dist.jar" inheritall="true">
+      <fileset dir="${test.archive}" includes="*.xml"/>
+    </subant>
   </target>
 
   <!-- *************************************-->

@@ -24,7 +24,7 @@
  - USA
  -
  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- - $Id: build.xml,v 1.35 2005/02/16 14:43:28 benoitf Exp $
+ - $Id: build.xml,v 1.36 2005/02/17 09:08:43 benoitf Exp $
  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
  -->
 
@@ -74,10 +74,6 @@
     </fileset>
     <pathelement location="${build}/classes" />
   </path>
-
-  <taskdef name="multipleAnt"
-           classname="org.objectweb.util.ant.MultipleAnt"
-           classpath="${config}/ow_util_ant_tasks.jar" />
 
   <!-- **********************************-->
   <!-- *********    COMPILE    **********-->
@@ -238,14 +234,16 @@
   <!-- *************************************-->
   <!-- *********        JAR       **********-->
   <!-- *************************************-->
-  <!-- This target call every default target of each xml file
+  <!-- This target call every target "dist.jar" of each xml file
        present in ${archive} directory -->
   <target name="jar" depends="compile" description="Build carol jar">
     <mkdir dir="${dist.lib}" />
     <!-- copy default file in the compile base -->
     <copy file="${ext}/carol-defaults.properties"
           tofile="${build}/classes/carol-defaults.properties" />
-    <multipleAnt dir="${archive}" />
+      <subant target="dist.jar" inheritall="true">
+        <fileset dir="${archive}" includes="*.xml"/>
+      </subant>
     <copy file="${externals}/commons-cli.jar"
           tofile="${dist.lib}/commons-cli.jar" />
   </target>
