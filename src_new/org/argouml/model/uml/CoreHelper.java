@@ -1,4 +1,4 @@
-// $Id: CoreHelper.java,v 1.6 2004/12/27 21:51:52 bobtarling Exp $
+// $Id: CoreHelper.java,v 1.7 2004/12/28 10:29:48 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -894,7 +894,7 @@ public class CoreHelper {
     public Collection getAllClassifiers(Object namespace) {
         if (namespace == null)
             return new ArrayList();
-        MNamespace ns = (MNamespace)namespace;
+        MNamespace ns = (MNamespace) namespace;
         Iterator it = ns.getOwnedElements().iterator();
         List list = new ArrayList();
         while (it.hasNext()) {
@@ -1407,9 +1407,11 @@ public class CoreHelper {
      * isValidNamespace.<p>
      *
      * @param modelElement is the model element
+     * @param model the model to search
      * @return Collection
      */
-    public Collection getAllPossibleNamespaces(Object modelElement, Object model) {
+    public Collection getAllPossibleNamespaces(Object modelElement, 
+            Object model) {
         MModelElement m = (MModelElement) modelElement;
         List ret = new ArrayList();
         if (m == null)

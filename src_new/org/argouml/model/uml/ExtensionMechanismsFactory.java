@@ -1,4 +1,4 @@
-// $Id: ExtensionMechanismsFactory.java,v 1.5 2004/12/27 15:53:43 bobtarling Exp $
+// $Id: ExtensionMechanismsFactory.java,v 1.6 2004/12/28 10:33:53 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -156,7 +156,7 @@ public class ExtensionMechanismsFactory extends AbstractUmlModelFactory {
             UmlFactory.getFactory().delete(stereo);
             return stereo2;
         }
-        ((MModel)model).addOwnedElement(stereo);
+        ((MModel) model).addOwnedElement(stereo);
         if (me != null)
             stereo.addExtendedElement(me);
         return stereo;

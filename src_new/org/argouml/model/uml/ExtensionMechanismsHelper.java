@@ -1,4 +1,4 @@
-// $Id: ExtensionMechanismsHelper.java,v 1.2 2004/12/27 14:38:47 bobtarling Exp $
+// $Id: ExtensionMechanismsHelper.java,v 1.3 2004/12/28 10:33:53 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -211,9 +211,11 @@ public class ExtensionMechanismsHelper {
      * metamodelelement name of the modelelement.
      *
      * @param modelElement is the model element
+     * @param models the models to search in
      * @return Collection
      */
-    public Collection getAllPossibleStereotypes(Collection models, Object modelElement) {
+    public Collection getAllPossibleStereotypes(Collection models, 
+            Object modelElement) {
         MModelElement m = (MModelElement) modelElement;
         List ret = new ArrayList();
         if (m == null) return ret;
@@ -264,12 +266,9 @@ public class ExtensionMechanismsHelper {
     /**
      * TODO: Should it only search for stereotypes owned by the Model objects?
      *
-     * TODO: This function should get the project as parameter, 
-     * and be independent of the ProjectManager. 
-     * Or should it not even know what a project is?
-     *
      * @return the collection of stereotypes in all models 
      *         in the current project
+     * @param models the models to search 
      */
     public Collection getStereotypes(Collection models) {
         List ret = new ArrayList();

@@ -1,4 +1,4 @@
-// $Id: StateMachinesFactory.java,v 1.3 2004/12/27 19:56:38 bobtarling Exp $
+// $Id: StateMachinesFactory.java,v 1.4 2004/12/28 10:33:53 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -279,13 +279,13 @@ public class StateMachinesFactory extends AbstractUmlModelFactory {
         		.isAddingStatemachineAllowed(oContext))) {
 
     	    MStateMachine machine = createStateMachine();
-                MModelElement context = (MModelElement) oContext;
+            MModelElement context = (MModelElement) oContext;
     	    machine.setContext(context);
     	    if (context instanceof MClassifier) {
-        		machine.setNamespace((MClassifier) context);
+    	        machine.setNamespace((MClassifier) context);
     	    } else if (context instanceof MBehavioralFeature) {
-        		MBehavioralFeature feature = (MBehavioralFeature) context;
-        		machine.setNamespace(feature.getOwner());
+    	        MBehavioralFeature feature = (MBehavioralFeature) context;
+    	        machine.setNamespace(feature.getOwner());
     	    }
     	    StateMachinesFactory.getFactory().buildCompositeState(machine);
     	    return machine;
@@ -560,7 +560,7 @@ public class StateMachinesFactory extends AbstractUmlModelFactory {
      */
     public MSignalEvent buildSignalEvent(String name, Object model) {
         MSignalEvent event = createSignalEvent();
-        event.setNamespace((MModel)model);
+        event.setNamespace((MModel) model);
         event.setName(name);
         return event;
     }
