@@ -93,7 +93,7 @@ import org.apache.commons.lang.StringUtils;
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
- * @version $Id: Issue.java,v 1.226 2002/12/10 06:02:12 jon Exp $
+ * @version $Id: Issue.java,v 1.227 2002/12/10 21:38:39 elicia Exp $
  */
 public class Issue 
     extends BaseIssue
@@ -2090,6 +2090,7 @@ public class Issue
                ScarabConstants.DEFAULT_BUNDLE_NAME,
                Locale.getDefault(),
                "DidNotCopyAttributes"));
+            attachmentBuf.append("\n");
             for (int i=0;i<commentAttrs.size();i++)
             {
                 AttributeValue attVal = getAttributeValue((Attribute)commentAttrs.get(i));
@@ -2109,7 +2110,7 @@ public class Issue
               ScarabConstants.DEFAULT_BUNDLE_NAME,
               Locale.getDefault(),
               "DidNotCopyAttributesFromArtifact", getUniqueId()));
-           commentBuf.append(delAttrs);
+           commentBuf.append("\n").append(delAttrs);
            comment.setData(commentBuf.toString());
            comment.setName(Localization.getString(
                ScarabConstants.DEFAULT_BUNDLE_NAME,
