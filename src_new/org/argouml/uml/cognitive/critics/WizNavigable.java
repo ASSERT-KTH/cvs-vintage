@@ -1,4 +1,4 @@
-// $Id: WizNavigable.java,v 1.19 2005/02/13 12:55:15 mvw Exp $
+// $Id: WizNavigable.java,v 1.20 2005/02/19 22:00:39 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -73,7 +73,6 @@ public class WizNavigable extends UMLWizard {
 	    option1 = "Navigable Toward " + Model.getFacade().getName(cls1);
         }
 
-	// TODO: put in class names
 	res.addElement(option0);
 	res.addElement(option1);
 	res.addElement(option2);
