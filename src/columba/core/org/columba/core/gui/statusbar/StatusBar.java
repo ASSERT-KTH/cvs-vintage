@@ -20,6 +20,7 @@ import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.logging.Logger;
 
 import javax.swing.BorderFactory;
 import javax.swing.Icon;
@@ -28,7 +29,6 @@ import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JProgressBar;
-import javax.swing.SwingUtilities;
 import javax.swing.Timer;
 import javax.swing.UIManager;
 import javax.swing.border.Border;
@@ -41,349 +41,405 @@ import org.columba.core.command.TaskManager;
 import org.columba.core.command.TaskManagerEvent;
 import org.columba.core.command.TaskManagerListener;
 import org.columba.core.command.Worker;
-import org.columba.core.gui.statusbar.event.WorkerStatusChangeListener;
-import org.columba.core.gui.statusbar.event.WorkerStatusChangedEvent;
 import org.columba.core.gui.toolbar.ToolbarButton;
 import org.columba.core.gui.util.ImageLoader;
 import org.columba.core.main.ConnectionStateImpl;
 
 /**
  * A status bar intended to be displayed at the bottom of each window.
+ * <p>
+ * Implementation notes:
+ * <p>
+ * An update timer is used to only update the statusbar, every xx seconds. As a
+ * nice side-effect, all swing method calls happen in the awt-event dispatcher
+ * thread automatically. If we don't do this, we have to wrap every swing method
+ * in a Runnable interface and execute it using SwingUtilities.invokeLater().
+ * <p>
+ * Note, that without an update timer, the statusbar text and most importantly
+ * the progressbar are updated very frequently, using very small updates. But,
+ * because these are called using invokeLater(), all have to be placed in the
+ * awt-event dispatcher queue. This makes things very slow. We discovered, when
+ * moving around 1000 messages and updating the progressbar for every message,
+ * it will take more time to update the statusbar than actually moving the
+ * messages.
+ * <p>
+ * There's another Timer, addWorkerTimer which makes sure that only Workers who
+ * are alive for at most 2000 ms will appear in the statusbar. This prevents the
+ * statusbar from flicker, caused by many smaller tasks which usually tend to
+ * hide the parent task. For example when downloaded POP3 messages and using
+ * filters which move message to different folders. Without the addWorkerTimer
+ * you would see all those little move tasks. Instead now, you only see the POP3
+ * tasks which is much more comfortable for the user.
+ * <p>
+ * There's yet another Timer ;-), clearTextTimer which automatically clears the 
+ * statusbar after a delay of 2000 ms. 
  */
 public class StatusBar extends JComponent implements TaskManagerListener,
-    ActionListener, WorkerStatusChangeListener, ChangeListener {
-    
-    protected static Icon onlineIcon = ImageLoader.getImageIcon("online.png");
-    protected static Icon offlineIcon = ImageLoader.getImageIcon("offline.png");
-    
-    private JLabel label;
-    private JProgressBar progressBar;
-    private Border border;
-    private JPanel mainRightPanel;
-    private JButton taskButton;
-    private JPanel leftMainPanel;
-    private Worker displayedWorker;
-    private TaskManager taskManager;
-    private ImageSequenceTimer imageSequenceTimer;
-    private JButton onlineButton;
+		ActionListener, ChangeListener {
 
-    /** Timer to use when clearing status bar text after a certain timeout */
-    private Timer clearTextTimer;
-    private Timer updateTimer;
-    
-    
-    public StatusBar(TaskManager tm) {
-        taskManager = tm;
-        tm.addTaskManagerListener(this);
-        ConnectionStateImpl.getInstance().addChangeListener(this);
+	private static final Logger LOG = Logger
+			.getLogger("org.columba.core.gui.statusbar");
 
-        imageSequenceTimer = new ImageSequenceTimer(tm);
+	/**
+	 * update status every 10 ms
+	 */
+	private static final int UPDATE_TIMER_INTERVAL = 10;
 
-        setBorder(BorderFactory.createEmptyBorder(1, 2, 1, 2));
+	/**
+	 * Constant definining the delay used when using
+	 * clearDisplayTextWithDelay(). Defined to be 2000 millisec.
+	 */
+	private static final int CLEAR_TIMER_DELAY = 2000;
 
-        label = new JLabel("");
-        label.setAlignmentX(Component.LEFT_ALIGNMENT);
+	/**
+	 * time to wait until statusbar will show a tasks progress
+	 */
+	private static final int ADDWORKER_TIMER_INTERVAL = 2000;
 
-        onlineButton = new ToolbarButton();
-        onlineButton.setBorder(BorderFactory.createEmptyBorder(1, 1, 1, 1));
-        onlineButton.setRolloverEnabled(true);
-        onlineButton.setActionCommand("ONLINE");
-        onlineButton.addActionListener(this);
-        stateChanged(null);
+	protected static Icon onlineIcon = ImageLoader.getImageIcon("online.png");
 
-        progressBar = new JProgressBar(0, 100);
+	protected static Icon offlineIcon = ImageLoader.getImageIcon("offline.png");
 
-        //progressBar.setAlignmentX(Component.RIGHT_ALIGNMENT);
-        //progressBar.setAlignmentY(Component.CENTER_ALIGNMENT);
-        progressBar.setStringPainted(false);
-        progressBar.setBorderPainted(false);
-        progressBar.setValue(0);
+	/**
+	 * showing status messages
+	 */
+	private JLabel label;
 
-        taskButton = new ToolbarButton();
-        taskButton.setIcon(ImageLoader.getImageIcon("group_small.png"));
-        taskButton.setToolTipText("Show list of running tasks");
-        taskButton.setRolloverEnabled(true);
-        taskButton.setActionCommand("TASKMANAGER");
-        taskButton.addActionListener(this);
+	/**
+	 * showing progress info
+	 */
+	private JProgressBar progressBar;
 
-        //taskButton.setMargin(new Insets(0, 0, 0, 0));
-        taskButton.setBorder(BorderFactory.createEmptyBorder(1, 1, 1, 1));
+	private Border border;
 
-        //taskButton.setBorder(null);
-        setLayout(new BorderLayout());
+	private JPanel mainRightPanel;
 
-        leftMainPanel = new JPanel();
-        leftMainPanel.setLayout(new BorderLayout());
+	/**
+	 * button opening task manager dialog
+	 */
+	private JButton taskButton;
 
-        JPanel taskPanel = new JPanel();
-        taskPanel.setLayout(new BorderLayout());
+	private JPanel leftMainPanel;
 
-        Border border = getDefaultBorder();
-        Border margin = new EmptyBorder(0, 0, 0, 2);
+	/**
+	 * Currently displayed worker
+	 */
+	private Worker displayedWorker;
 
-        taskPanel.setBorder(new CompoundBorder(border, margin));
+	/**
+	 * manager of all running tasks
+	 */
+	private TaskManager taskManager;
 
-        taskPanel.add(taskButton, BorderLayout.CENTER);
+	/**
+	 * timer used by the spinner component showing tasks activity (right-most
+	 * component on the toolbar)
+	 */
+	private ImageSequenceTimer imageSequenceTimer;
 
-        leftMainPanel.add(taskPanel, BorderLayout.WEST);
-        JPanel labelPanel = new JPanel();
-        labelPanel.setLayout(new BorderLayout());
-        margin = new EmptyBorder(0, 10, 0, 10);
-        labelPanel.setBorder(new CompoundBorder(border, margin));
+	/**
+	 * connection state button
+	 */
+	private JButton onlineButton;
 
-        margin = new EmptyBorder(0, 0, 0, 2);
-        labelPanel.add(label, BorderLayout.CENTER);
+	/** Timer to use when clearing status bar text after a certain timeout */
+	private Timer clearTextTimer;
 
-        leftMainPanel.add(labelPanel, BorderLayout.CENTER);
+	/**
+	 * Timer makes sure that statusbar is only updated every xx ms, to make that
+	 * its not getting flooded with too many update notifications
+	 */
+	private Timer updateTimer;
 
-        add(leftMainPanel, BorderLayout.CENTER);
+	private Timer addWorkerTimer;
 
-        mainRightPanel = new JPanel();
-        mainRightPanel.setLayout(new BorderLayout());
+	/**
+	 * last displayed message
+	 */
+	private String lastMessage;
 
-        JPanel progressPanel = new JPanel();
-        progressPanel.setLayout(new BorderLayout());
-        progressPanel.setBorder(new CompoundBorder(border, margin));
+	private TaskManagerEvent currentEvent;
 
-        progressPanel.add(progressBar, BorderLayout.CENTER);
+	public StatusBar(TaskManager tm) {
+		taskManager = tm;
+		tm.addTaskManagerListener(this);
+		ConnectionStateImpl.getInstance().addChangeListener(this);
 
-        JPanel rightPanel = new JPanel();
-        rightPanel.setLayout(new BorderLayout());
+		setBorder(BorderFactory.createEmptyBorder(1, 2, 1, 2));
 
-        rightPanel.add(progressPanel, BorderLayout.CENTER);
+		initComponents();
 
-        JPanel onlinePanel = new JPanel();
-        onlinePanel.setLayout(new BorderLayout());
-        onlinePanel.setBorder(new CompoundBorder(border, margin));
+		layoutComponents();
 
-        onlinePanel.add(onlineButton, BorderLayout.CENTER);
+		// update connection state
+		stateChanged(null);
 
-        rightPanel.add(onlinePanel, BorderLayout.EAST);
-        add(rightPanel, BorderLayout.EAST);
+		clearTextTimer = new Timer(CLEAR_TIMER_DELAY, this);
 
-        // init timer
-        initClearTextTimer();
-        
-        updateTimer = new Timer(40, this);
-        updateTimer.start();
-    }
+		// init update timer
+		updateTimer = new Timer(UPDATE_TIMER_INTERVAL, this);
+		//updateTimer.start();
 
-    public Border getDefaultBorder() {
-        return UIManager.getBorder("TableHeader.cellBorder");
-    }
+		addWorkerTimer = new Timer(ADDWORKER_TIMER_INTERVAL, this);
 
-    public void displayTooltipMessage(String message) {
-        setText(message);
-    }
+	}
 
-    protected void updateTaskCount() {
-        Runnable run = new Runnable() {
-                public void run() {
-                    //taskButton.setText("Tasks: " + taskManager.count());
-                }
-            };
+	/**
+	 * init components
+	 */
+	private void initComponents() {
+		imageSequenceTimer = new ImageSequenceTimer(taskManager);
 
-        try {
-            SwingUtilities.invokeLater(run);
-        } catch (Exception ex) {
-        }
-    }
+		label = new JLabel("");
+		label.setAlignmentX(Component.LEFT_ALIGNMENT);
 
-    protected void setText(String s) {
-/*        // *20031102, karlpeder* Setting a new text must cancel pending
-        // requests for clearing the text
-        clearTextTimer.stop();
+		onlineButton = new ToolbarButton();
+		onlineButton.setBorder(BorderFactory.createEmptyBorder(1, 1, 1, 1));
+		onlineButton.setRolloverEnabled(true);
+		onlineButton.setActionCommand("ONLINE");
+		onlineButton.addActionListener(this);
 
-        final String str = s;
+		progressBar = new JProgressBar(0, 100);
 
-        Runnable run = new Runnable() {
-                public void run() {
-                    label.setText(str);
-                }
-            };
+		progressBar.setStringPainted(false);
+		progressBar.setBorderPainted(false);
+		progressBar.setValue(0);
 
-        try {
-            SwingUtilities.invokeLater(run);
-        } catch (Exception ex) {
-        }
-*/    }
+		taskButton = new ToolbarButton();
+		taskButton.setIcon(ImageLoader.getImageIcon("group_small.png"));
+		taskButton.setToolTipText("Show list of running tasks");
+		taskButton.setRolloverEnabled(true);
+		taskButton.setActionCommand("TASKMANAGER");
+		taskButton.addActionListener(this);
 
-    protected void setMaximum(int i) {
-/*        final int n = i;
+		taskButton.setBorder(BorderFactory.createEmptyBorder(1, 1, 1, 1));
+	}
 
-        Runnable run = new Runnable() {
-                public void run() {
-                    progressBar.setValue(0);
-                    progressBar.setMaximum(n);
-                }
-            };
+	/**
+	 * layout components
+	 */
+	protected void layoutComponents() {
+		setLayout(new BorderLayout());
 
-        try {
-            SwingUtilities.invokeLater(run);
-        } catch (Exception ex) {
-        }
-*/    }
+		leftMainPanel = new JPanel();
+		leftMainPanel.setLayout(new BorderLayout());
 
-    protected void setMaximumAndValue(int v, int m) {
-/*        final int max = m;
-        final int val = v;
+		JPanel taskPanel = new JPanel();
+		taskPanel.setLayout(new BorderLayout());
 
-        Runnable run = new Runnable() {
-                public void run() {
-                    progressBar.setValue(val);
-                    progressBar.setMaximum(max);
-                }
-            };
+		Border border = getDefaultBorder();
+		Border margin = new EmptyBorder(0, 0, 0, 2);
 
-        try {
-            SwingUtilities.invokeLater(run);
-        } catch (Exception ex) {
-        }
-*/    }
+		taskPanel.setBorder(new CompoundBorder(border, margin));
 
-    protected void setValue(int i) {
- /*       final int n = i;
+		taskPanel.add(taskButton, BorderLayout.CENTER);
 
-        Runnable run = new Runnable() {
-                public void run() {
-                    progressBar.setValue(n);
-                }
-            };
+		leftMainPanel.add(taskPanel, BorderLayout.WEST);
+		JPanel labelPanel = new JPanel();
+		labelPanel.setLayout(new BorderLayout());
+		margin = new EmptyBorder(0, 10, 0, 10);
+		labelPanel.setBorder(new CompoundBorder(border, margin));
 
-        try {
-            SwingUtilities.invokeLater(run);
-        } catch (Exception ex) {
-        }
-*/    }
+		margin = new EmptyBorder(0, 0, 0, 2);
+		labelPanel.add(label, BorderLayout.CENTER);
 
-    public void workerAdded(TaskManagerEvent e) {
-        updateTaskCount();
-        if( getDisplayedWorker() == null ) {
-        	setDisplayedWorker(e.getWorker());
-        } 
-    }
-    
-    public void workerRemoved(TaskManagerEvent e) {
-        updateTaskCount();
-        if (e.getWorker() == displayedWorker) {
-            Worker[] workers = taskManager.getWorkers();
-            setDisplayedWorker(workers.length > 0 ? workers[0] : null);
-        }
-    }
+		leftMainPanel.add(labelPanel, BorderLayout.CENTER);
 
-    public void workerStatusChanged(WorkerStatusChangedEvent e) {
-        switch (e.getType()) {
-        case WorkerStatusChangedEvent.DISPLAY_TEXT_CHANGED:
-            setText((String) e.getNewValue());
+		add(leftMainPanel, BorderLayout.CENTER);
 
-            break;
+		mainRightPanel = new JPanel();
+		mainRightPanel.setLayout(new BorderLayout());
 
-        /*
-         * 20031102, karlpeder* Added handling of DISPLAY_TEXT_CLEARED:
-         * The status bar text is cleared after a certain time out
-         * found as e.getNewValue()
-         */
-        case WorkerStatusChangedEvent.DISPLAY_TEXT_CLEARED:
-            clearTextTimer.stop();
-            clearTextTimer.setInitialDelay(((Integer) e.getNewValue()).intValue());
-            clearTextTimer.restart();
+		JPanel progressPanel = new JPanel();
+		progressPanel.setLayout(new BorderLayout());
+		progressPanel.setBorder(new CompoundBorder(border, margin));
 
-            break;
+		progressPanel.add(progressBar, BorderLayout.CENTER);
 
-        case WorkerStatusChangedEvent.PROGRESSBAR_MAX_CHANGED:
-            setMaximum(((Integer) e.getNewValue()).intValue());
+		JPanel rightPanel = new JPanel();
+		rightPanel.setLayout(new BorderLayout());
 
-            break;
+		rightPanel.add(progressPanel, BorderLayout.CENTER);
 
-        case WorkerStatusChangedEvent.PROGRESSBAR_VALUE_CHANGED:
-            setValue(((Integer) e.getNewValue()).intValue());
-        }
-    }
+		JPanel onlinePanel = new JPanel();
+		onlinePanel.setLayout(new BorderLayout());
+		onlinePanel.setBorder(new CompoundBorder(border, margin));
 
-    /**
-     * Initializes the timer to use when the status bar text must be cleared
-     * after a certain timeout.
-     */
-    private void initClearTextTimer() {
-        clearTextTimer = new Timer(0,
-                new ActionListener() {
-                    public void actionPerformed(ActionEvent evt) {
-                        // stop timer and clear status bar text when timer runs out
-                        clearTextTimer.stop();
-                        setText("");
-                    }
-                });
-    }
+		onlinePanel.add(onlineButton, BorderLayout.CENTER);
 
-    public void actionPerformed(ActionEvent e) {
-    	if( e.getSource() == updateTimer ) {
-    		updateGui();
-    		return;
-    	}
-    	
-        String command = e.getActionCommand();
+		rightPanel.add(onlinePanel, BorderLayout.EAST);
+		add(rightPanel, BorderLayout.EAST);
+	}
 
-        if (command.equals("ONLINE")) {
-        	ConnectionStateImpl.getInstance().setOnline(
-                    !ConnectionStateImpl.getInstance().isOnline());
-        } else if (command.equals("TASKMANAGER")) {
-            TaskManagerDialog.createInstance();
-        } else if (command.equals("CANCEL_ACTION")) {
-            displayedWorker.cancel();
-        }
-    }
-    
-    /**
-	 * Runs in EventDispoathcer
+	public Border getDefaultBorder() {
+		return UIManager.getBorder("TableHeader.cellBorder");
+	}
+
+	/**
+	 * Display status message. Used when moving the mouse in the menuitem. Its
+	 * used for displaying menuitem tooltip messages.
+	 * 
+	 * @param message
+	 */
+	public void displayTooltipMessage(String message) {
+		label.setText(message);
+	}
+
+	public void workerAdded(TaskManagerEvent e) {
+
+		if (getDisplayedWorker() == null) {
+
+			currentEvent = e;
+
+			if (taskManager.getWorkers().length == 1) {
+				setDisplayedWorker(currentEvent.getWorker());
+
+				// update text and progress bar
+				updateTimer.restart();
+
+				addWorkerTimer.stop();
+			} else {
+
+				addWorkerTimer.restart();
+			}
+
+		}
+	}
+
+	public void workerRemoved(TaskManagerEvent e) {
+
+		if (e.getWorker() == displayedWorker) {
+
+			// remember last message
+			lastMessage = e.getWorker().getDisplayText();
+
+			// immediately update text and progress bar
+			//updateGui();
+
+			Worker[] workers = taskManager.getWorkers();
+			setDisplayedWorker(workers.length > 0 ? workers[0] : null);
+		}
+
+		// if only one task left
+		if (taskManager.getWorkers().length == 0) {
+
+			// stop update timer
+			updateTimer.stop();
+
+			// set text
+			label.setText(lastMessage);
+
+			// clear text with delay
+			clearTextTimer.restart();
+		}
+
+	}
+
+	public void actionPerformed(ActionEvent e) {
+		if (e.getSource() == updateTimer) {
+			// update timer event
+			updateGui();
+			return;
+		}
+
+		if (e.getSource() == clearTextTimer) {
+
+			// clear label
+			label.setText("");
+
+			// stop clear timer
+			clearTextTimer.stop();
+
+			return;
+		}
+
+		if (e.getSource() == addWorkerTimer) {
+
+			if (taskManager.exists(currentEvent.getWorker())) {
+
+				setDisplayedWorker(currentEvent.getWorker());
+
+				// update text and progress bar
+				updateTimer.restart();
+
+				addWorkerTimer.stop();
+
+				return;
+			} else {
+
+				addWorkerTimer.stop();
+				return;
+			}
+		}
+
+		String command = e.getActionCommand();
+
+		if (command.equals("ONLINE")) {
+			ConnectionStateImpl.getInstance().setOnline(
+					!ConnectionStateImpl.getInstance().isOnline());
+		} else if (command.equals("TASKMANAGER")) {
+			TaskManagerDialog.createInstance();
+		} else if (command.equals("CANCEL_ACTION")) {
+			displayedWorker.cancel();
+		}
+	}
+
+	/**
+	 * Update statusbar with currently selected worker status.
+	 * <p>
+	 * Runs in awt-event dispatcher thread
 	 */
 	private void updateGui() {
-		if( displayedWorker != null) {
+		//System.out.println("update-gui");
+
+		if (displayedWorker != null) {
 			label.setText(displayedWorker.getDisplayText());
 			progressBar.setValue(displayedWorker.getProgressBarValue());
 			progressBar.setMaximum(displayedWorker.getProgessBarMaximum());
 		}
-		else
-		  label.setText("");//at least clear the text!
+
 	}
 
 	/**
-     * Sets the worker to be displayed.
-     */
-    protected void setDisplayedWorker(Worker w) {
-       	displayedWorker = w;
-    }
+	 * Sets the worker to be displayed.
+	 */
+	protected void setDisplayedWorker(Worker w) {
+		displayedWorker = w;
 
-    /**
-     * Returns the worker currently displayed.
-     */
-    public Worker getDisplayedWorker() {
-        return displayedWorker;
-    }
+	}
 
-    /**
-     * Returns the imageSequenceTimer.
-     * @return ImageSequenceTimer
-     */
-    public ImageSequenceTimer getImageSequenceTimer() {
-        return imageSequenceTimer;
-    }
-    
-    /**
-     * Returns the task manager this status bar is attached to.
-     */
-    public TaskManager getTaskManager() {
-        return taskManager;
-    }
-    
-    public void stateChanged(ChangeEvent e) {
-        if (ConnectionStateImpl.getInstance().isOnline()) {
-            onlineButton.setIcon(onlineIcon);
-            //TODO: i18n
-            onlineButton.setToolTipText("You are in ONLINE state");
-        } else {
-            onlineButton.setIcon(offlineIcon);
-            //TODO: i18n
-            onlineButton.setToolTipText("You are in OFFLINE state");
-        }
-    }
+	/**
+	 * Returns the worker currently displayed.
+	 */
+	public Worker getDisplayedWorker() {
+		return displayedWorker;
+	}
+
+	/**
+	 * Returns the imageSequenceTimer.
+	 * 
+	 * @return ImageSequenceTimer
+	 */
+	public ImageSequenceTimer getImageSequenceTimer() {
+		return imageSequenceTimer;
+	}
+
+	/**
+	 * Returns the task manager this status bar is attached to.
+	 */
+	public TaskManager getTaskManager() {
+		return taskManager;
+	}
+
+	public void stateChanged(ChangeEvent e) {
+		if (ConnectionStateImpl.getInstance().isOnline()) {
+			onlineButton.setIcon(onlineIcon);
+			//TODO: i18n
+			onlineButton.setToolTipText("You are in ONLINE state");
+		} else {
+			onlineButton.setIcon(offlineIcon);
+			//TODO: i18n
+			onlineButton.setToolTipText("You are in OFFLINE state");
+		}
+	}
 }

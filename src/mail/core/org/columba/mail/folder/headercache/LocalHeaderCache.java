@@ -152,7 +152,7 @@ public class LocalHeaderCache extends AbstractFolderHeaderCache {
         folder.setMessageFolderInfo(new MailboxInfo());
 
         for (int i = 0; i < capacity; i++) {
-            if ((getObservable() != null) && ((i % 100) == 0)) {
+            if (getObservable() != null) {
                 getObservable().setCurrent(i);
             }
 
@@ -206,11 +206,13 @@ public class LocalHeaderCache extends AbstractFolderHeaderCache {
             reorganizeCache();
         }
 
+        /*
         // we are done
         if (getObservable() != null) {
             getObservable().clearMessageWithDelay();
             getObservable().resetCurrent();
         }
+        */
     }
 
     /**
