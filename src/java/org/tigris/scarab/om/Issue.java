@@ -1972,6 +1972,7 @@ public class Issue
 
     /**
      * Checks if user has permission to enter issue.
+     * @deprecated user.hasPermission(ScarabSecurity.ISSUE__ENTER, module)
      */
     public boolean hasEnterPermission( ScarabUser user, ModuleEntity module)
         throws Exception
@@ -1988,6 +1989,7 @@ public class Issue
 
     /**
      * Checks if user has permission to edit issue.
+     * @deprecated user.hasPermission(ScarabSecurity.ISSUE__EDIT, module)
      */
     public boolean hasEditPermission( ScarabUser user, ModuleEntity module)
         throws Exception
