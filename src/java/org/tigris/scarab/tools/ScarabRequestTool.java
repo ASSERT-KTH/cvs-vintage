@@ -2091,14 +2091,14 @@ try{
     */
 
     /**
-     * Return all users for current module and issuetype.
+     * Return all users for module and issue type.
      */
-    public List getUsers( ) throws Exception
+    public List getUsers(Module module, IssueType issueType)
+        throws Exception
     {
         List users = new ArrayList();
-        Module module = getCurrentModule();  
         ScarabUser[] userArray = module
-            .getUsers(module.getUserPermissions(getCurrentIssueType()));
+            .getUsers(module.getUserPermissions(issueType));
         for (int i=0;i<userArray.length;i++)
         {
             users.add(userArray[i]);
@@ -2106,6 +2106,16 @@ try{
         return sortUsers(users);
     }
         
+    /**
+     * Return all users for current module and issue type.
+     */
+    public List getUsers( ) throws Exception
+    {
+        Module module = getCurrentModule();  
+        IssueType issueType = getCurrentIssueType();  
+        return getUsers(module, issueType);
+    }
+
     /**
      * Return results of user search.
      */
