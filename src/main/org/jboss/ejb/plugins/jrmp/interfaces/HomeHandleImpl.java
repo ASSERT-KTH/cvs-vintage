@@ -20,7 +20,7 @@ import java.lang.reflect.Method;
  *      
  *	@see <related>
  *	@author Rickard Öberg (rickard.oberg@telkel.com)
- *	@version $Revision: 1.2 $
+ *	@version $Revision: 1.3 $
  */
 public class HomeHandleImpl
    implements HomeHandle
@@ -44,16 +44,16 @@ public class HomeHandleImpl
    public EJBHome getEJBHome()
       throws RemoteException
    {
-		try {
+       try {
         
-			return (EJBHome) new InitialContext().lookup(name);
+         return (EJBHome) new InitialContext().lookup(name);
          
-      	} 
-		catch (NamingException e) {
-			
-			e.printStackTrace();
-         	throw new RemoteException("Could not get EJBHome");
-      	} 
+        } 
+       catch (NamingException e) {
+         
+         e.printStackTrace();
+            throw new RemoteException("Could not get EJBHome");
+        } 
    }
 
    // Package protected ---------------------------------------------
