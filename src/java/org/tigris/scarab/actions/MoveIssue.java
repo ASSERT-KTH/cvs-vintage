@@ -82,7 +82,7 @@ import org.tigris.scarab.services.security.ScarabSecurity;
  *
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: MoveIssue.java,v 1.53 2003/04/11 23:20:09 jmcnally Exp $
+ * @version $Id: MoveIssue.java,v 1.54 2003/04/15 16:01:44 jmcnally Exp $
  */
 public class MoveIssue extends RequireLoginFirstAction
 {
@@ -270,8 +270,6 @@ public class MoveIssue extends RequireLoginFirstAction
         
         // Send notification email
         EmailContext ectx = new EmailContext();
-        ectx.setLocalizationTool(
-                                 (ScarabLocalizationTool)context.get("l10n"));
         ectx.setLinkTool((ScarabLink)context.get("link"));
         ectx.setIssue(newIssue);
         ectx.setModule(newModule);

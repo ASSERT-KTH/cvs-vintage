@@ -91,7 +91,7 @@ import org.tigris.scarab.util.EmailContext;
  * This class is responsible for report issue forms.
  *
  * @author <a href="mailto:jmcnally@collab.net">John D. McNally</a>
- * @version $Id: ReportIssue.java,v 1.165 2003/03/20 00:57:30 jon Exp $
+ * @version $Id: ReportIssue.java,v 1.166 2003/04/15 16:01:44 jmcnally Exp $
  */
 public class ReportIssue extends RequireLoginFirstAction
 {
@@ -444,7 +444,6 @@ public class ReportIssue extends RequireLoginFirstAction
                 
                     // send email
                     EmailContext ectx= new EmailContext();
-                    ectx.setLocalizationTool(l10n);
                     ectx.setLinkTool((ScarabLink)context.get("link"));
                 
                     if (!activitySet.sendEmail(ectx, issue, 
@@ -574,7 +573,6 @@ public class ReportIssue extends RequireLoginFirstAction
                             prevIssue.addComment(activitySet, attachment, 
                                 (ScarabUser)data.getUser());
                         EmailContext ectx= new EmailContext();
-                        ectx.setLocalizationTool(l10n);
                         ectx.setLinkTool((ScarabLink)context.get("link"));
                         if (!activitySet.sendEmail(ectx, prevIssue))
                         {

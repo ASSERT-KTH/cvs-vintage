@@ -73,7 +73,7 @@ import org.tigris.scarab.tools.ScarabLocalizationTool;
  * This class manages the Query table.
  *
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: Query.java,v 1.57 2003/04/03 03:19:06 jmcnally Exp $
+ * @version $Id: Query.java,v 1.58 2003/04/15 16:01:44 jmcnally Exp $
  */
 public class Query 
     extends org.tigris.scarab.om.BaseQuery
@@ -246,8 +246,6 @@ public class Query
                 }
                 
                 EmailContext ectx = new EmailContext();
-                ectx.setLocalizationTool(
-                    (ScarabLocalizationTool)context.get("l10n"));
                 ectx.setLinkTool((ScarabLink)context.get("link"));
                 ectx.setUser(user);
                 ectx.setModule(module);

@@ -312,7 +312,6 @@
         <filter token="LOG_FILE_VELOCITY" value="${scarab.log.file.velocity}"/>
         <filter token="LOG_APPEND_VELOCITY" value="${scarab.log.append.velocity}"/>
         <filter token="TEMPLATE_CACHE" value="${scarab.template.cache}"/>
-        <filter token="EMAIL_ENCODING" value="${scarab.email.encoding}"/>
         <filter token="LOCALE_DEFAULT_LANGUAGE" 
             value="${scarab.locale.default.language}"/>
         <filter token="LOCALE_DEFAULT_COUNTRY" 

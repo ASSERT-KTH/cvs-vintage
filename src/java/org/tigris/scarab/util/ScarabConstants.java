@@ -50,7 +50,7 @@ package org.tigris.scarab.util;
  * A place to put public final static strings and other constants.
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: ScarabConstants.java,v 1.53 2003/04/01 02:50:44 jon Exp $
+ * @version $Id: ScarabConstants.java,v 1.54 2003/04/15 16:01:44 jmcnally Exp $
  */
 public interface ScarabConstants
 {
@@ -214,11 +214,6 @@ public interface ScarabConstants
      * format for displaying dates
      */
     String DATE_FORMAT = "yyyy-MM-dd HH:mm:ss z";
-
-    /**
-     * Encoding used to send emails.
-     */
-    String DEFAULT_EMAIL_ENCODING_KEY = "scarab.email.encoding";
 
     /**
      * The default base for resolving ResourceBundles.

@@ -95,7 +95,7 @@ import org.tigris.scarab.util.Log;
  * This class is responsible for edit issue forms.
  * ScarabIssueAttributeValue
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
- * @version $Id: ModifyIssue.java,v 1.154 2003/04/10 22:35:47 elicia Exp $
+ * @version $Id: ModifyIssue.java,v 1.155 2003/04/15 16:01:44 jmcnally Exp $
  */
 public class ModifyIssue extends BaseModifyIssue
 {
@@ -575,7 +575,6 @@ public class ModifyIssue extends BaseModifyIssue
         throws Exception
     {
         EmailContext ectx = new EmailContext();
-        ectx.setLocalizationTool((ScarabLocalizationTool)context.get("l10n"));
         ectx.setLinkTool((ScarabLink)context.get("link"));
 
         if (!activitySet.sendEmail(ectx, issue))

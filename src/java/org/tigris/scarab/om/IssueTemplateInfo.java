@@ -66,7 +66,7 @@ import org.tigris.scarab.util.ScarabException;
  * This class represents the IssueTemplateInfo object.
  *
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: IssueTemplateInfo.java,v 1.21 2003/03/25 16:57:53 jmcnally Exp $
+ * @version $Id: IssueTemplateInfo.java,v 1.22 2003/04/15 16:01:44 jmcnally Exp $
  */
 public  class IssueTemplateInfo 
     extends org.tigris.scarab.om.BaseIssueTemplateInfo
@@ -137,8 +137,6 @@ public  class IssueTemplateInfo
                 }
 
                 EmailContext ectx = new EmailContext();
-                ectx.setLocalizationTool(
-                    (ScarabLocalizationTool)context.get("l10n"));
                 ectx.setLinkTool((ScarabLink)context.get("link"));
                 ectx.setUser(user);
                 ectx.setModule(module);
