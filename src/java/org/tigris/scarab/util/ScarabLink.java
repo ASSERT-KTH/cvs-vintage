@@ -69,7 +69,9 @@ import org.tigris.scarab.om.ScarabUser;
     into the context to replace the $link that Turbine adds.
     
     @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
-    @version $Id: ScarabLink.java,v 1.22 2002/01/05 00:01:40 jmcnally Exp $
+    @author <a href="mailto:jmcnally@collab.net">John McNally</a>
+    @author <a href="mailto:maartenc@tigris.org">Maarten Coene</a>
+    @version $Id: ScarabLink.java,v 1.23 2002/01/05 16:57:37 jmcnally Exp $
 */
 public class ScarabLink extends TemplateLink
                         implements InitableRecyclable
@@ -243,6 +245,39 @@ public class ScarabLink extends TemplateLink
     public String toString()
     {
         String tostring = null;
+        if(isAllowed())
+        {
+            tostring = getLink();
+        }
+        else
+        {
+            // reset link
+            super.toString();
+            tostring = (alternateText == null) ? "" : alternateText;
+        }
+        resetProperties();
+        return tostring;
+    }
+
+    private void resetProperties()
+    {
+        setAbsolute(false);
+        label = null;
+        template = null;
+        attributeText = null;
+        alternateText = null;
+    }
+
+    /**
+     * Check if the user has the permission to see the link. If the user
+     * has the permission(s), <code>true</code> is returned.  if the
+     * user does NOT have the proper permissions, this method has the
+     * side effect of reseting the link, so that it is ready for use
+     * in building the next link.
+     */
+    public boolean isAllowed()
+    {
+        boolean allowed = false;
         String t = template.replace(',','.');
         String perm = ScarabSecurity.getScreenPermission(t);
         if (perm != null)
@@ -252,28 +287,25 @@ public class ScarabLink extends TemplateLink
                 .get(ScarabConstants.SCARAB_REQUEST_TOOL);
             ModuleEntity currentModule = scarabR.getCurrentModule();
             ScarabUser user = (ScarabUser)data.getUser();
-            if (! user.hasLoggedIn() 
-                || !user.hasPermission(perm, currentModule))
+            if (user.hasLoggedIn() 
+                && user.hasPermission(perm, currentModule))
             {
-                // reset link
-                super.toString();
-                tostring = (alternateText == null) ? "" : alternateText;
-            }
-            else 
-            {
-                tostring = getLink();
+                allowed = true;
             }
         }
         else 
         {
-            tostring = getLink();
+            allowed = true;
         }
-        setAbsolute(false);
-        label = null;
-        template = null;
-        attributeText = null;
-        alternateText = null;
-        return tostring;
+
+        if ( !allowed ) 
+        {
+            // reset link
+            super.toString();
+            resetProperties();
+        }
+        
+        return allowed;
     }
 
     private String getLink()

@@ -21,7 +21,7 @@ $page.setTitle("Scarab Links")
 <li>$link.setPage("SaveTemplate.vm").setLabel("Create Enter Issue Template")</li>
 <li>$link.setPage("TemplateList.vm").setLabel("Enter Issue Template List")</li>
 <li>$link.setPage("reports,Step1.vm").setLabel("Reports")</li>
-<li>$link.setPage("Approval.vm").setLabel("Approval.vm")</li>
+<li>$link.setPage("admin,Approval.vm").setLabel("Approval.vm")</li>
 <li>$link.setPage("ViewIssue.vm").addPathInfo("id", 1).setLabel("ViewIssue.vm?id=1")</li>
 </ul>
 
