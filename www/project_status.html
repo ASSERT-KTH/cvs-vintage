@@ -1,4 +1,4 @@
-<!-- $Id: project_status.html,v 1.42 2002/02/20 00:46:12 jon Exp $ -->
+<!-- $Id: project_status.html,v 1.43 2002/03/07 01:20:44 jon Exp $ -->
 <!doctype html public "-//w3c//dtd html 4.0 transitional//en">
 <html>
 <head>
@@ -21,7 +21,7 @@
 </p>
 
 <p align="center">
-Last Updated: $Date: 2002/02/20 00:46:12 $
+Last Updated: $Date: 2002/03/07 01:20:44 $
 </p>
 
 <h3><i>Tentative</i> Roadmap</h3>
@@ -31,7 +31,7 @@ Beta 1 Release Date: 1-28-2002<br />
 Beta 2 Release Date: 2-04-2002<br />
 Beta 3 Release Date: 2-11-2002<br />
 Beta 4 Release Date: 2-19-2002<br />
-Beta 5 Release Date: 2-25-2002
+Beta 5 Release Date: ???
 </p>
 
 <!--
@@ -70,6 +70,19 @@ up to date reflection of the current project status.
 </p>
 
 <ul>
+<li>
+    03-06-2002 - Beta 5 has been delayed until we are more confident
+    that Scarab will run in MySQL and Postgres. The reason why is that
+    the porting to Postgres effort revealed several places where we
+    either had bugs in Scarab or bad dependencies on MySQL. This also
+    gives us a chance to improve the database creation scripts and the
+    documentation surrounding that process. We are also fixing several
+    bugs that have been reported in Scarab as well as working on the XML
+    import/export (which has been hampered by bugs in Bugzilla).
+    <strong>Please note that b4 has several bugs in it as well that
+    prevent people from entering new issues to new Modules. This has
+    been fixed in CVS so please use a nightly snapshot.</strong>
+</li>
 <li>
     02-19-2002 - <a
     href="http://scarab.tigris.org/servlets/ProjectDownloadList">Beta 4 has been released</a>! 
