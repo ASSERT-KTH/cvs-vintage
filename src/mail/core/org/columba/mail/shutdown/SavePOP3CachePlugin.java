@@ -30,8 +30,8 @@ import org.columba.mail.main.MailInterface;
  */
 public class SavePOP3CachePlugin implements TaskInterface {
     /**
-     * @see org.columba.core.gui.ShutdownPluginInterface#run()
-     */
+ * @see org.columba.core.gui.ShutdownPluginInterface#run()
+ */
     public void run() {
         MailInterface.popServerCollection.saveAll();
     }

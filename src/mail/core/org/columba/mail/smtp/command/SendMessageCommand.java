@@ -17,17 +17,13 @@
 //All Rights Reserved.
 package org.columba.mail.smtp.command;
 
-import java.io.IOException;
-import java.net.UnknownHostException;
-
-import javax.swing.JOptionPane;
-
 import org.columba.core.command.CommandCancelledException;
 import org.columba.core.command.DefaultCommandReference;
 import org.columba.core.command.StatusObservableImpl;
 import org.columba.core.command.Worker;
 import org.columba.core.command.WorkerStatusController;
 import org.columba.core.main.MainInterface;
+
 import org.columba.mail.command.ComposerCommandReference;
 import org.columba.mail.command.FolderCommand;
 import org.columba.mail.composer.MessageComposer;
@@ -43,7 +39,14 @@ import org.columba.mail.pgp.CancelledException;
 import org.columba.mail.pgp.PGPException;
 import org.columba.mail.smtp.SMTPServer;
 import org.columba.mail.util.MailResourceLoader;
+
 import org.columba.ristretto.smtp.SMTPException;
+
+import java.io.IOException;
+
+import java.net.UnknownHostException;
+
+import javax.swing.JOptionPane;
 
 
 /**
@@ -64,19 +67,20 @@ public class SendMessageCommand extends FolderCommand {
     private ComposerController composerController;
 
     /**
-     * Constructor for SendMessageCommand.
-     *
-     * @param frameMediator
-     * @param references
-     */
+ * Constructor for SendMessageCommand.
+ *
+ * @param frameMediator
+ * @param references
+ */
     public SendMessageCommand(DefaultCommandReference[] references) {
         super(references);
     }
 
     /**
-     * @see org.columba.core.command.Command#execute(Worker)
-     */
-    public void execute(WorkerStatusController worker) throws Exception {
+ * @see org.columba.core.command.Command#execute(Worker)
+ */
+    public void execute(WorkerStatusController worker)
+        throws Exception {
         ComposerCommandReference[] r = (ComposerCommandReference[]) getReferences();
 
         //	display status message
@@ -127,38 +131,26 @@ public class SendMessageCommand extends FolderCommand {
 
         // open connection
         SMTPServer server = new SMTPServer(item);
+
         try {
             server.openConnection();
         } catch (UnknownHostException e2) {
-            Object[] options =
-                new String[] {
-                    MailResourceLoader.getString(
-                            "",
-                            "global",
-                    "ok").replaceAll(
-                            "&",
-                    "")};
-            int result =
-                JOptionPane.showOptionDialog(
-                        null,
-                        MailResourceLoader.getString(
-                                "dialog",
-                                "error",
-                        "unknown_host")
-                        ,
-                        e2.getLocalizedMessage(),
-                        JOptionPane.DEFAULT_OPTION,
-                        JOptionPane.ERROR_MESSAGE,
-                        null,
-                        options,
-                        options[0]);
+            Object[] options = new String[] {
+                    MailResourceLoader.getString("", "global", "ok").replaceAll("&",
+                        "")
+                };
+            int result = JOptionPane.showOptionDialog(null,
+                    MailResourceLoader.getString("dialog", "error",
+                        "unknown_host"), e2.getLocalizedMessage(),
+                    JOptionPane.DEFAULT_OPTION, JOptionPane.ERROR_MESSAGE,
+                    null, options, options[0]);
 
             showComposer = true;
-            
+
             throw new CommandCancelledException();
-        } catch (IOException e2 ) {            
+        } catch (IOException e2) {
             e2.printStackTrace();
-            
+
             showComposer = true;
             throw new CommandCancelledException();
         }
@@ -166,50 +158,49 @@ public class SendMessageCommand extends FolderCommand {
         // show interest on status information
         ((StatusObservableImpl) server.getObservable()).setWorker(worker);
 
-            // successfully connected and autenthenticated to SMTP server
-            try {
-                // display status message
-                worker.setDisplayText(MailResourceLoader.getString(
-                        "statusbar", "message", "send_message"));
+        // successfully connected and autenthenticated to SMTP server
+        try {
+            // display status message
+            worker.setDisplayText(MailResourceLoader.getString("statusbar",
+                    "message", "send_message"));
 
-                // send message
-                server.sendMessage(message, worker);
+            // send message
+            server.sendMessage(message, worker);
 
-                // close composer frame
-                composerController.close();
+            // close composer frame
+            composerController.close();
 
-                // save message in Sent folder
-                ComposerCommandReference[] ref = new ComposerCommandReference[1];
-                ref[0] = new ComposerCommandReference(composerController,
-                        sentFolder);
-                ref[0].setMessage(message);
+            // save message in Sent folder
+            ComposerCommandReference[] ref = new ComposerCommandReference[1];
+            ref[0] = new ComposerCommandReference(composerController, sentFolder);
+            ref[0].setMessage(message);
 
-                SaveMessageCommand c = new SaveMessageCommand(ref);
+            SaveMessageCommand c = new SaveMessageCommand(ref);
 
-                MainInterface.processor.addOp(c);
+            MainInterface.processor.addOp(c);
 
-                //	display status message
-                worker.setDisplayText(MailResourceLoader.getString(
-                        "statusbar", "message", "send_message_closing"));
+            //	display status message
+            worker.setDisplayText(MailResourceLoader.getString("statusbar",
+                    "message", "send_message_closing"));
 
-                // close connection to server
-                server.closeConnection();
+            // close connection to server
+            server.closeConnection();
 
-                // display status message
-                worker.setDisplayText(MailResourceLoader.getString(
-                        "statusbar", "message", "send_message_success"));
-            } catch (SMTPException e) {
-                JOptionPane.showMessageDialog(null, e.getMessage(),
-                    "Error while sending", JOptionPane.ERROR_MESSAGE);
+            // display status message
+            worker.setDisplayText(MailResourceLoader.getString("statusbar",
+                    "message", "send_message_success"));
+        } catch (SMTPException e) {
+            JOptionPane.showMessageDialog(null, e.getMessage(),
+                "Error while sending", JOptionPane.ERROR_MESSAGE);
 
-                // open composer view
-                showComposer = true;
-            } catch (Exception e) {
-                e.printStackTrace();
+            // open composer view
+            showComposer = true;
+        } catch (Exception e) {
+            e.printStackTrace();
 
-                // open composer view
-                showComposer = true;
-            }
+            // open composer view
+            showComposer = true;
+        }
     }
 
     public void updateGUI() throws Exception {

@@ -13,7 +13,6 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
 //
 //All Rights Reserved.
-
 package org.columba.mail.shutdown;
 
 import org.columba.core.backgroundtask.TaskInterface;
@@ -26,6 +25,7 @@ import org.columba.mail.folder.command.SaveFolderConfigurationCommand;
 import org.columba.mail.main.MailInterface;
 
 import java.util.Enumeration;
+
 
 /**
  * Launches a new SaveFolderConfigurationCommand for each folder in the

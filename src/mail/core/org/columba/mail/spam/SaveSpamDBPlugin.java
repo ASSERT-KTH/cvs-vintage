@@ -16,7 +16,7 @@
 package org.columba.mail.spam;
 
 import org.columba.core.backgroundtask.TaskInterface;
-import org.columba.mail.spam.SpamController;
+
 
 /**
  * Save spam filter token database. 
@@ -24,14 +24,10 @@ import org.columba.mail.spam.SpamController;
  * @author fdietz
  */
 public class SaveSpamDBPlugin implements TaskInterface {
-
-	/**
-	 * @see java.lang.Runnable#run()
-	 */
-	public void run() {
-
-		SpamController.getInstance().save();
-
-	}
-
+    /**
+ * @see java.lang.Runnable#run()
+ */
+    public void run() {
+        SpamController.getInstance().save();
+    }
 }

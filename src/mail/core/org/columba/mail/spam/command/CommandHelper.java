@@ -15,11 +15,11 @@
 //All Rights Reserved.
 package org.columba.mail.spam.command;
 
-import java.io.InputStream;
-
 import org.columba.core.xml.XmlElement;
+
 import org.columba.mail.folder.Folder;
 import org.columba.mail.main.MailInterface;
+
 import org.columba.ristretto.coder.Base64DecoderInputStream;
 import org.columba.ristretto.coder.QuotedPrintableDecoderInputStream;
 import org.columba.ristretto.message.LocalMimePart;
@@ -28,6 +28,9 @@ import org.columba.ristretto.message.MimeTree;
 import org.columba.ristretto.message.StreamableMimePart;
 import org.columba.ristretto.message.io.CharSequenceSource;
 
+import java.io.InputStream;
+
+
 /**
  * Helper class provides methods for preparing email messages
  * before getting passed along to the spam filter. 
@@ -35,67 +38,63 @@ import org.columba.ristretto.message.io.CharSequenceSource;
  * @author fdietz
  */
 public final class CommandHelper {
+    /**
+ * Return bodypart of message as inputstream.
+ * <p>
+ * Note, that this depends on wether the user prefers HTML or
+ * text messages.
+ * <p>
+ * Bodypart is decoded if necessary.
+ * 
+ * @param folder                selected folder containing the message
+ * @param uid                        ID of message
+ * @return                                inputstream of message bodypart
+ * @throws Exception
+ */
+    public static InputStream getBodyPart(Folder folder, Object uid)
+        throws Exception {
+        MimeTree mimePartTree = folder.getMimePartTree(uid);
+        XmlElement html = MailInterface.config.getMainFrameOptionsConfig()
+                                              .getRoot().getElement("/options/html");
 
-	/**
-	 * Return bodypart of message as inputstream.
-	 * <p>
-	 * Note, that this depends on wether the user prefers HTML or
-	 * text messages.
-	 * <p>
-	 * Bodypart is decoded if necessary.
-	 * 
-	 * @param folder		selected folder containing the message
-	 * @param uid			ID of message
-	 * @return				inputstream of message bodypart
-	 * @throws Exception
-	 */
-	public static InputStream getBodyPart(Folder folder, Object uid)
-		throws Exception {
-		MimeTree mimePartTree= folder.getMimePartTree(uid);
-		XmlElement html=
-			MailInterface.config.getMainFrameOptionsConfig().getRoot().getElement(
-				"/options/html");
+        StreamableMimePart bodyPart;
 
-		StreamableMimePart bodyPart;
-		// Which Bodypart shall be shown? (html/plain)
-		if (Boolean.valueOf(html.getAttribute("prefer")).booleanValue())
-			bodyPart=
-				(StreamableMimePart) mimePartTree.getFirstTextPart("html");
-		else
-			bodyPart=
-				(StreamableMimePart) mimePartTree.getFirstTextPart("plain");
-		if (bodyPart == null) {
-			bodyPart= new LocalMimePart(new MimeHeader());
-			((LocalMimePart) bodyPart).setBody(
-				new CharSequenceSource("<No Message-Text>"));
-		} else {
+        // Which Bodypart shall be shown? (html/plain)
+        if (Boolean.valueOf(html.getAttribute("prefer")).booleanValue()) {
+            bodyPart = (StreamableMimePart) mimePartTree.getFirstTextPart(
+                    "html");
+        } else {
+            bodyPart = (StreamableMimePart) mimePartTree.getFirstTextPart(
+                    "plain");
+        }
 
-			bodyPart=
-				(StreamableMimePart) folder.getMimePart(
-					uid,
-					bodyPart.getAddress());
-		}
+        if (bodyPart == null) {
+            bodyPart = new LocalMimePart(new MimeHeader());
+            ((LocalMimePart) bodyPart).setBody(new CharSequenceSource(
+                    "<No Message-Text>"));
+        } else {
+            bodyPart = (StreamableMimePart) folder.getMimePart(uid,
+                    bodyPart.getAddress());
+        }
 
-		InputStream bodyStream=
-			((StreamableMimePart) bodyPart).getInputStream();
+        InputStream bodyStream = ((StreamableMimePart) bodyPart).getInputStream();
 
-		int encoding= bodyPart.getHeader().getContentTransferEncoding();
+        int encoding = bodyPart.getHeader().getContentTransferEncoding();
 
-		switch (encoding) {
-			case MimeHeader.QUOTED_PRINTABLE :
-				{
-					bodyStream=
-						new QuotedPrintableDecoderInputStream(bodyStream);
-					break;
-				}
+        switch (encoding) {
+        case MimeHeader.QUOTED_PRINTABLE: {
+            bodyStream = new QuotedPrintableDecoderInputStream(bodyStream);
 
-			case MimeHeader.BASE64 :
-				{
-					bodyStream= new Base64DecoderInputStream(bodyStream);
-					break;
-				}
-		}
+            break;
+        }
 
-		return bodyStream;
-	}
+        case MimeHeader.BASE64: {
+            bodyStream = new Base64DecoderInputStream(bodyStream);
+
+            break;
+        }
+        }
+
+        return bodyStream;
+    }
 }

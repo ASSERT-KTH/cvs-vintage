@@ -13,23 +13,25 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
 //
 //All Rights Reserved.
-
 package org.columba.mail.url.cid;
 
 import java.io.IOException;
 
-import java.net.*;
+import java.net.URL;
+import java.net.URLConnection;
+import java.net.URLStreamHandler;
+
 
 public class Handler extends URLStreamHandler {
     protected void parseURL(URL u, String spec, int start, int limit) {
         setURL(u, u.getProtocol(), null, -1, null, null, null, null,
             spec.substring(start));
     }
-    
+
     protected URLConnection openConnection(URL u) throws IOException {
         return new CidURLConnection(u);
     }
-    
+
     protected String toExternalForm(URL u) {
         return u.getProtocol() + ':' + u.getRef();
     }

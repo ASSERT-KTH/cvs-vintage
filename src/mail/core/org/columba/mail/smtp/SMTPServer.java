@@ -17,20 +17,11 @@
 //All Rights Reserved.
 package org.columba.mail.smtp;
 
-import java.io.IOException;
-import java.net.InetAddress;
-import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
-import javax.swing.JOptionPane;
-
 import org.columba.core.command.CommandCancelledException;
 import org.columba.core.command.StatusObservable;
 import org.columba.core.command.StatusObservableImpl;
 import org.columba.core.command.WorkerStatusController;
+
 import org.columba.mail.composer.SendableMessage;
 import org.columba.mail.config.AccountItem;
 import org.columba.mail.config.IdentityItem;
@@ -41,6 +32,7 @@ import org.columba.mail.config.SpecialFoldersItem;
 import org.columba.mail.gui.util.PasswordDialog;
 import org.columba.mail.pop3.POP3Store;
 import org.columba.mail.util.MailResourceLoader;
+
 import org.columba.ristretto.auth.AuthenticationFactory;
 import org.columba.ristretto.message.Address;
 import org.columba.ristretto.parser.AddressParser;
@@ -49,6 +41,19 @@ import org.columba.ristretto.pop3.protocol.POP3Exception;
 import org.columba.ristretto.progress.ProgressObserver;
 import org.columba.ristretto.smtp.SMTPException;
 import org.columba.ristretto.smtp.SMTPProtocol;
+
+import java.io.IOException;
+
+import java.net.InetAddress;
+
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+import javax.swing.JOptionPane;
+
 
 /**
  * 
@@ -64,27 +69,24 @@ import org.columba.ristretto.smtp.SMTPProtocol;
  *  
  */
 public class SMTPServer {
+    private static final int NONE = 0;
+    private static final int POP = 1;
+    private static final int DEFAULT = 2;
+    private static final int AUTH = 3;
+    private static final int CLOSED = 0;
+    private static final int INITIALIZED = 1;
+    private static final int AUTHENTICTED = 2;
     private String[] capas;
     protected SMTPProtocol protocol;
     protected AccountItem accountItem;
     protected IdentityItem identityItem;
     protected String fromAddress;
     protected Object observer;
-
     private int state;
 
-    private static final int NONE = 0;
-    private static final int POP = 1;
-    private static final int DEFAULT = 2;
-    private static final int AUTH = 3;
-
-    private static final int CLOSED = 0;
-    private static final int INITIALIZED = 1;
-    private static final int AUTHENTICTED = 2;
-
     /**
-     * Constructor for SMTPServer.
-     */
+ * Constructor for SMTPServer.
+ */
     public SMTPServer(AccountItem accountItem) {
         super();
 
@@ -96,15 +98,14 @@ public class SMTPServer {
 
     private void ensureState(int newstate) throws IOException, SMTPException {
         if (newstate >= INITIALIZED) {
-
         }
     }
 
     /**
-     * Open connection to SMTP server and login if needed.
-     * 
-     * @return true if connection was successful, false otherwise
-     */
+ * Open connection to SMTP server and login if needed.
+ * 
+ * @return true if connection was successful, false otherwise
+ */
     public boolean openConnection()
         throws IOException, SMTPException, CommandCancelledException {
         String username;
@@ -120,8 +121,7 @@ public class SMTPServer {
         String host = smtpItem.get("host");
 
         // Sent Folder
-        SpecialFoldersItem specialFoldersItem =
-            accountItem.getSpecialFoldersItem();
+        SpecialFoldersItem specialFoldersItem = accountItem.getSpecialFoldersItem();
         Integer i = new Integer(specialFoldersItem.get("sent"));
         int sentFolder = i.intValue();
 
@@ -136,6 +136,7 @@ public class SMTPServer {
             } catch (POP3Exception e) {
                 throw new SMTPException(e);
             }
+
             authenticated = true;
         }
 
@@ -156,40 +157,21 @@ public class SMTPServer {
                     protocol.switchToSSL();
                     ssl = true;
                 } catch (Exception e) {
-                    Object[] options =
-                        new String[] {
-                            MailResourceLoader.getString(
-                                "",
-                                "global",
-                                "ok").replaceAll(
-                                "&",
-                                ""),
-                            MailResourceLoader.getString(
-                                "",
-                                "global",
-                                "cancel").replaceAll(
-                                "&",
-                                "")};
+                    Object[] options = new String[] {
+                            MailResourceLoader.getString("", "global", "ok")
+                                              .replaceAll("&", ""),
+                            MailResourceLoader.getString("", "global", "cancel")
+                                              .replaceAll("&", "")
+                        };
 
-                    int result =
-                        JOptionPane.showOptionDialog(
-                            null,
-                            MailResourceLoader.getString(
-                                "dialog",
-                                "error",
-                                "ssl_handshake_error")
-                                + ": "
-                                + e.getLocalizedMessage()
-                                + "\n"
-                                + MailResourceLoader.getString(
-                                    "dialog",
-                                    "error",
-                                    "ssl_turn_off"),
-                            "Warning",
+                    int result = JOptionPane.showOptionDialog(null,
+                            MailResourceLoader.getString("dialog", "error",
+                                "ssl_handshake_error") + ": " +
+                            e.getLocalizedMessage() + "\n" +
+                            MailResourceLoader.getString("dialog", "error",
+                                "ssl_turn_off"), "Warning",
                             JOptionPane.DEFAULT_OPTION,
-                            JOptionPane.WARNING_MESSAGE,
-                            null,
-                            options,
+                            JOptionPane.WARNING_MESSAGE, null, options,
                             options[0]);
 
                     if (result == 1) {
@@ -204,38 +186,19 @@ public class SMTPServer {
                     initialize();
                 }
             } else {
-                Object[] options =
-                    new String[] {
-                        MailResourceLoader.getString(
-                            "",
-                            "global",
-                            "ok").replaceAll(
-                            "&",
-                            ""),
-                        MailResourceLoader.getString(
-                            "",
-                            "global",
-                            "cancel").replaceAll(
-                            "&",
-                            "")};
-                int result =
-                    JOptionPane.showOptionDialog(
-                        null,
-                        MailResourceLoader.getString(
-                            "dialog",
-                            "error",
-                            "ssl_not_supported")
-                            + "\n"
-                            + MailResourceLoader.getString(
-                                "dialog",
-                                "error",
-                                "ssl_turn_off"),
-                        "Warning",
+                Object[] options = new String[] {
+                        MailResourceLoader.getString("", "global", "ok")
+                                          .replaceAll("&", ""),
+                        MailResourceLoader.getString("", "global", "cancel")
+                                          .replaceAll("&", "")
+                    };
+                int result = JOptionPane.showOptionDialog(null,
+                        MailResourceLoader.getString("dialog", "error",
+                            "ssl_not_supported") + "\n" +
+                        MailResourceLoader.getString("dialog", "error",
+                            "ssl_turn_off"), "Warning",
                         JOptionPane.DEFAULT_OPTION,
-                        JOptionPane.WARNING_MESSAGE,
-                        null,
-                        options,
-                        options[0]);
+                        JOptionPane.WARNING_MESSAGE, null, options, options[0]);
 
                 if (result == 1) {
                     throw new CommandCancelledException();
@@ -244,12 +207,11 @@ public class SMTPServer {
                 // turn off SSL for the future
                 smtpItem.set("enable_ssl", false);
             }
-
         }
 
         // Do the authentication stuff
-
         String authMechanism = null;
+
         if (!authenticated) {
             if (authMethod == DEFAULT) {
                 if (!ssl) {
@@ -257,14 +219,13 @@ public class SMTPServer {
                         authMechanism = findSecurestMechanism();
                     } catch (SMTPException e) {
                         //TODO show message: auth turned off
-                        
                         //Turn off authentication
-                        accountItem.getSmtpItem().set("login_method","NONE");
-                        
+                        accountItem.getSmtpItem().set("login_method", "NONE");
+
                         // Server does not support Authentication
                         authenticated = true;
                     }
-                } else {                    
+                } else {
                     // We only need plain since the connection
                     // is already secure
                     authMechanism = "PLAIN";
@@ -294,10 +255,8 @@ public class SMTPServer {
 
             // ask password from user
             if (password.length() == 0) {
-                passDialog.showDialog(
-                    username,
-                    accountItem.getSmtpItem().get("host"),
-                    password,
+                passDialog.showDialog(username,
+                    accountItem.getSmtpItem().get("host"), password,
                     accountItem.getSmtpItem().getBoolean("save_password"));
 
                 if (passDialog.success()) {
@@ -313,10 +272,8 @@ public class SMTPServer {
                     protocol.auth(authMechanism, username, password);
                     authenticated = true;
                 } catch (SMTPException e) {
-                    passDialog.showDialog(
-                        username,
-                        accountItem.getSmtpItem().get("host"),
-                        password,
+                    passDialog.showDialog(username,
+                        accountItem.getSmtpItem().get("host"), password,
                         accountItem.getSmtpItem().getBoolean("save_password"));
 
                     if (!passDialog.success()) {
@@ -331,30 +288,29 @@ public class SMTPServer {
             // -> save name/password
             accountItem.getSmtpItem().set("user", username);
             accountItem.getSmtpItem().set("password", password);
-            accountItem.getSmtpItem().set(
-                "save_password",
-                passDialog.getSave());
+            accountItem.getSmtpItem().set("save_password", passDialog.getSave());
         }
 
         return true;
     }
 
     /**
-     * @param string
-     * @return
-     */
+ * @param string
+ * @return
+ */
     private boolean isSupported(String string) {
         for (int i = 0; i < capas.length; i++) {
             if (capas[i].startsWith(string)) {
                 return true;
             }
         }
+
         return false;
     }
 
     /**
-     * @return
-     */
+ * @return
+ */
     private String findSecurestMechanism() throws SMTPException {
         List serverSupported = null;
 
@@ -364,15 +320,16 @@ public class SMTPServer {
             }
         }
 
-        if (serverSupported == null)
+        if (serverSupported == null) {
             throw new SMTPException("Server does not support the AUTH command");
+        }
 
         String mechanism = null;
 
-        for (int i = 0; i < serverSupported.size() && mechanism == null; i++) {
-            if (AuthenticationFactory
-                .getInstance()
-                .supports((String) serverSupported.get(i))) {
+        for (int i = 0; (i < serverSupported.size()) && (mechanism == null);
+                i++) {
+            if (AuthenticationFactory.getInstance().supports((String) serverSupported.get(
+                            i))) {
                 mechanism = (String) serverSupported.get(i);
             }
         }
@@ -385,9 +342,9 @@ public class SMTPServer {
     }
 
     /**
-     * @param string
-     * @return
-     */
+ * @param string
+ * @return
+ */
     private List parseAuthCapas(String string) {
         Matcher tokenizer = Pattern.compile("\\b[^\\s]+\\b").matcher(string);
         tokenizer.find();
@@ -407,15 +364,14 @@ public class SMTPServer {
         } catch (SMTPException e1) {
             // EHLO not supported -> AUTH not supported
             protocol.helo(InetAddress.getLocalHost());
-            capas = new String[] {
-            };
+            capas = new String[] {  };
         }
     }
 
     /**
-     * @param authType
-     * @return
-     */
+ * @param authType
+ * @return
+ */
     private int getAuthentication(String authType) {
         if (authType.equalsIgnoreCase("none")) {
             return NONE;
@@ -433,10 +389,10 @@ public class SMTPServer {
     }
 
     /**
-     * 
-     * close the connection to the SMTP server
-     *  
-     */
+ * 
+ * close the connection to the SMTP server
+ *  
+ */
     public void closeConnection() {
         // Close Port
         try {
@@ -447,15 +403,15 @@ public class SMTPServer {
     }
 
     /**
-     * 
-     * POP-before-SMTP authentication makes use of the POP3 authentication
-     * mechanism, before sending mail.
-     * 
-     * Basically you authenticate with the POP3 server, which allows you to use
-     * the SMTP server for sending mail for a specific amount of time.
-     * 
-     * @throws Exception
-     */
+ * 
+ * POP-before-SMTP authentication makes use of the POP3 authentication
+ * mechanism, before sending mail.
+ * 
+ * Basically you authenticate with the POP3 server, which allows you to use
+ * the SMTP server for sending mail for a specific amount of time.
+ * 
+ * @throws Exception
+ */
     protected void pop3Authentification()
         throws IOException, POP3Exception, CommandCancelledException {
         POP3Store pop3Store = new POP3Store(accountItem.getPopItem());
@@ -464,25 +420,24 @@ public class SMTPServer {
     }
 
     /**
-     * Send a message
-     * 
-     * For an complete example of creating a <class>SendableMessage</class>
-     * object see <class>MessageComposer</class>
-     * 
-     * @param message
-     * @param workerStatusController
-     * @throws Exception
-     */
-    public void sendMessage(
-        SendableMessage message,
+ * Send a message
+ * 
+ * For an complete example of creating a <class>SendableMessage</class>
+ * object see <class>MessageComposer</class>
+ * 
+ * @param message
+ * @param workerStatusController
+ * @throws Exception
+ */
+    public void sendMessage(SendableMessage message,
         WorkerStatusController workerStatusController)
         throws SMTPException, IOException {
         // send from address and recipient list to SMTP server
         // ->all addresses have to be normalized
         Address fromAddress;
+
         try {
-            fromAddress =
-                AddressParser.parseAddress(identityItem.get("address"));
+            fromAddress = AddressParser.parseAddress(identityItem.get("address"));
         } catch (ParserException e) {
             throw new SMTPException(e);
         }
@@ -490,10 +445,11 @@ public class SMTPServer {
         protocol.mail(fromAddress);
 
         Iterator recipients = message.getRecipients().iterator();
+
         while (recipients.hasNext()) {
             try {
-                protocol.rcpt(
-                    AddressParser.parseAddress((String) recipients.next()));
+                protocol.rcpt(AddressParser.parseAddress(
+                        (String) recipients.next()));
             } catch (ParserException e1) {
                 e1.printStackTrace();
             }
@@ -504,8 +460,8 @@ public class SMTPServer {
     }
 
     /**
-     * @return status notification observable
-     */
+ * @return status notification observable
+ */
     public StatusObservable getObservable() {
         return (StatusObservable) observer;
     }
@@ -518,6 +474,7 @@ public class SMTPServer {
     public String getName() {
         SmtpItem smtpItem = accountItem.getSmtpItem();
         String host = smtpItem.get("host");
+
         return host;
     }
 }

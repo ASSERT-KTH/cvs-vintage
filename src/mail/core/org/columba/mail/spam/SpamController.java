@@ -15,21 +15,25 @@
 //All Rights Reserved.
 package org.columba.mail.spam;
 
-import java.io.File;
-import java.io.InputStream;
-import java.util.List;
-
 import org.columba.core.gui.util.NotifyDialog;
 import org.columba.core.io.CloneStreamMaster;
 import org.columba.core.main.MainInterface;
+
 import org.macchiato.DBWrapper;
 import org.macchiato.Message;
 import org.macchiato.SpamFilter;
 import org.macchiato.SpamFilterImpl;
+
 import org.macchiato.db.FrequencyDB;
 import org.macchiato.db.FrequencyDBImpl;
 import org.macchiato.db.FrequencyIO;
 import org.macchiato.db.MD5SumHelper;
+
+import java.io.File;
+import java.io.InputStream;
+
+import java.util.List;
+
 
 /**
  * High-level wrapper for the spam filter.
@@ -49,205 +53,199 @@ import org.macchiato.db.MD5SumHelper;
  * @author fdietz
  */
 public class SpamController {
+    /**
+ * singleton pattern instance of this class
+ */
+    private static SpamController instance;
 
-	/**
-	 * spam filter in macchiator library doing the actual work
-	 */
-	private SpamFilter filter;
+    /**
+ * spam filter in macchiator library doing the actual work
+ */
+    private SpamFilter filter;
 
-	/**
-	 * database of tokens, storing occurences of tokens, etc.
-	 */
-	private FrequencyDB db;
+    /**
+ * database of tokens, storing occurences of tokens, etc.
+ */
+    private FrequencyDB db;
 
-	/**
-	 * file to store the token database
-	 */
-	private File file;
+    /**
+ * file to store the token database
+ */
+    private File file;
+    private boolean trainingMode;
 
-	/**
-	 * singleton pattern instance of this class
-	 */
-	private static SpamController instance;
+    /**
+ * private constructor 
+ *
+ */
+    private SpamController() {
+        db = new DBWrapper(new FrequencyDBImpl());
 
-	private boolean trainingMode;
+        filter = new SpamFilterImpl(db);
 
-	/**
-	 * private constructor 
-	 *
-	 */
-	private SpamController() {
+        trainingMode = false;
+    }
 
-		db= new DBWrapper(new FrequencyDBImpl());
+    /**
+ * Get instance of class.
+ * 
+ * @return                spam controller
+ */
+    public static SpamController getInstance() {
+        if (instance == null) {
+            instance = new SpamController();
 
-		filter= new SpamFilterImpl(db);
+            File configDirectory = MainInterface.config.getConfigDirectory();
 
-		trainingMode= false;
+            File mailDirectory = new File(configDirectory, "mail");
 
-	}
+            instance.file = new File(mailDirectory, "spam.db");
 
-	/**
-	 * Get instance of class.
-	 * 
-	 * @return		spam controller
-	 */
-	public static SpamController getInstance() {
-		if (instance == null) {
+            // load database from file
+            instance.load();
+        }
 
-			instance= new SpamController();
+        return instance;
+    }
 
-			File configDirectory= MainInterface.config.getConfigDirectory();
+    /**
+ * Add this message to the token database as spam.
+ * 
+ * @param istream                
+ */
+    public void trainMessageAsSpam(InputStream istream, List list) {
+        try {
+            CloneStreamMaster master = new CloneStreamMaster(istream);
+            InputStream inputStream = master.getClone();
 
-			File mailDirectory= new File(configDirectory, "mail");
+            byte[] md5sum = MD5SumHelper.createMD5(inputStream);
 
-			instance.file= new File(mailDirectory, "spam.db");
+            if (isTrainingModeEnabled()) {
+                // we are in training mode
+                // -> even if message was already learned, it can be re-learned again
+                filter.trainMessageAsSpam(new Message(master.getClone(), list,
+                        md5sum));
+            } else {
+                // we are *not* in training mode
+                // -> check if this message was already learned
+                // -> only add if this is not the case
+                if (db.MD5SumExists(md5sum) == false) {
+                    filter.trainMessageAsSpam(new Message(master.getClone(),
+                            list, md5sum));
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 
-			// load database from file
-			instance.load();
+    /**
+ * Add this message to the token database as ham.
+ * 
+ * @param istream
+ * @param list
+ */
+    public void trainMessageAsHam(InputStream istream, List list) {
+        try {
+            CloneStreamMaster master = new CloneStreamMaster(istream);
+            InputStream inputStream = master.getClone();
 
-		}
+            byte[] md5sum = MD5SumHelper.createMD5(inputStream);
 
-		return instance;
-	}
+            if (isTrainingModeEnabled()) {
+                // we are in training mode
+                // -> even if message was already learned, it can be re-learned again
+                filter.trainMessageAsHam(new Message(master.getClone(), list,
+                        md5sum));
+            } else {
+                // we are *not* in training mode
+                // -> check if this message was already learned
+                // -> only add if this is not the case
+                if (db.MD5SumExists(md5sum) == false) {
+                    filter.trainMessageAsHam(new Message(master.getClone(),
+                            list, md5sum));
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 
-	/**
-	 * Add this message to the token database as spam.
-	 * 
-	 * @param istream		
-	 */
-	public void trainMessageAsSpam(InputStream istream, List list) {
-		try {
-			CloneStreamMaster master= new CloneStreamMaster(istream);
-			InputStream inputStream= master.getClone();
+    /**
+ * Score message.
+ * 
+ * @param istream
+ * @return                        probability this message is spam (0.0-1.0 float values)
+ */
+    private float score(InputStream istream) {
+        return filter.scoreMessage(new Message(istream));
+    }
 
-			byte[] md5sum= MD5SumHelper.createMD5(inputStream);
+    /**
+ * Score message. Using a threshold of 90% here. Every message
+ * with at least 90% is spam. 
+ * 
+ * @param istream
+ * 
+ * @return                true, if message is spam. False, otherwise.
+ */
+    public boolean scoreMessage(InputStream istream) {
+        if (score(istream) > 0.9) {
+            return true;
+        }
 
-			if (isTrainingModeEnabled()) {
-				// we are in training mode
-				// -> even if message was already learned, it can be re-learned again
+        return false;
+    }
 
-				filter.trainMessageAsSpam(
-					new Message(master.getClone(), list, md5sum));
-			} else {
-				// we are *not* in training mode
-				// -> check if this message was already learned
-				// -> only add if this is not the case
+    public void printDebug() {
+        ((FrequencyDBImpl) db).printDebug();
+    }
 
-				if (db.MD5SumExists(md5sum) == false)
-					filter.trainMessageAsSpam(
-						new Message(master.getClone(), list, md5sum));
-			}
-		} catch (Exception e) {
+    /**
+ * Load frequency DB from file.
+ *
+ */
+    private void load() {
+        try {
+            if (file.exists()) {
+                FrequencyIO.load(db, file);
+            }
+        } catch (Exception e) {
+            NotifyDialog d = new NotifyDialog();
+            d.showDialog(e);
 
-			e.printStackTrace();
-		}
-	}
+            if (MainInterface.DEBUG) {
+                e.printStackTrace();
+            }
 
-	/**
-	 * Add this message to the token database as ham.
-	 * 
-	 * @param istream
-	 * @param list
-	 */
-	public void trainMessageAsHam(InputStream istream, List list) {
+            // fail-case 
+            db = new FrequencyDBImpl();
+        }
+    }
 
-		try {
-			CloneStreamMaster master= new CloneStreamMaster(istream);
-			InputStream inputStream= master.getClone();
+    /**
+ * Save frequency DB to file.
+ *
+ */
+    public void save() {
+        try {
+            FrequencyIO.save(db, file);
+        } catch (Exception e) {
+            NotifyDialog d = new NotifyDialog();
+            d.showDialog(e);
 
-			byte[] md5sum= MD5SumHelper.createMD5(inputStream);
+            if (MainInterface.DEBUG) {
+                e.printStackTrace();
+            }
+        }
+    }
 
-			if (isTrainingModeEnabled()) {
-				// we are in training mode
-				// -> even if message was already learned, it can be re-learned again
-
-				filter.trainMessageAsHam(
-					new Message(master.getClone(), list, md5sum));
-			} else {
-				// we are *not* in training mode
-				// -> check if this message was already learned
-				// -> only add if this is not the case
-
-				if (db.MD5SumExists(md5sum) == false)
-					filter.trainMessageAsHam(
-						new Message(master.getClone(), list, md5sum));
-			}
-		} catch (Exception e) {
-
-			e.printStackTrace();
-		}
-	}
-
-	/**
-	 * Score message.
-	 * 
-	 * @param istream
-	 * @return			probability this message is spam (0.0-1.0 float values)
-	 */
-	private float score(InputStream istream) {
-		return filter.scoreMessage(new Message(istream));
-	}
-
-	/**
-	 * Score message. Using a threshold of 90% here. Every message
-	 * with at least 90% is spam. 
-	 * 
-	 * @param istream
-	 * 
-	 * @return		true, if message is spam. False, otherwise.
-	 */
-	public boolean scoreMessage(InputStream istream) {
-		if (score(istream) > 0.9)
-			return true;
-
-		return false;
-	}
-
-	public void printDebug() {
-		((FrequencyDBImpl) db).printDebug();
-	}
-
-	/**
-	 * Load frequency DB from file.
-	 *
-	 */
-	private void load() {
-		try {
-			if (file.exists())
-				FrequencyIO.load(db, file);
-		} catch (Exception e) {
-			NotifyDialog d= new NotifyDialog();
-			d.showDialog(e);
-			if (MainInterface.DEBUG)
-				e.printStackTrace();
-
-			// fail-case 
-			db= new FrequencyDBImpl();
-		}
-	}
-
-	/**
-	 * Save frequency DB to file.
-	 *
-	 */
-	public void save() {
-		try {
-			FrequencyIO.save(db, file);
-		} catch (Exception e) {
-			NotifyDialog d= new NotifyDialog();
-			d.showDialog(e);
-			if (MainInterface.DEBUG)
-				e.printStackTrace();
-		}
-	}
-
-	/**
-	 * Checks if training mode is enabled.
-	 * 
-	 * @return		true, if enabled. False,otherwise.
-	 */
-	public boolean isTrainingModeEnabled() {
-		return trainingMode;
-	}
-
+    /**
+ * Checks if training mode is enabled.
+ * 
+ * @return                true, if enabled. False,otherwise.
+ */
+    public boolean isTrainingModeEnabled() {
+        return trainingMode;
+    }
 }
