@@ -1,4 +1,4 @@
-// $Id: AbstractSection.java,v 1.1 2004/12/16 01:26:32 euluis Exp $
+// $Id: AbstractSection.java,v 1.2 2004/12/16 18:03:43 euluis Exp $
 // Copyright (c) 1996-2001 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -104,9 +104,9 @@ public abstract class AbstractSection
                             endSectionId = getSectId(line);
                         } while (endSectionId == null);
                         if (!endSectionId.equals(sectionId))
-                            LOG.error("Mismatch between sectionId (\"" + 
-                                    sectionId + "\") and endSectionId (\"" + 
-                                    endSectionId + "\")!");
+                            LOG.error("Mismatch between sectionId (\"" 
+                                    + sectionId + "\") and endSectionId (\"" 
+                                    + endSectionId + "\")!");
                     }
                     mAry.remove(sectionId);
                 }
