@@ -25,7 +25,7 @@ import org.jboss.ejb.DeploymentException;
  *      
  *   @see <related>
  *   @author <a href="mailto:sebastien.alborini@m4x.org">Sebastien Alborini</a>
- *   @version $Revision: 1.6 $
+ *   @version $Revision: 1.7 $
  */
 public class ApplicationMetaData extends MetaData {
     // Constants -----------------------------------------------------
@@ -37,6 +37,7 @@ public class ApplicationMetaData extends MetaData {
     private ArrayList securityRoles = new ArrayList();
     private ArrayList configurations = new ArrayList();
     private HashMap resources = new HashMap();
+	private HashMap plugins = new HashMap();
 
     
     // Static --------------------------------------------------------
@@ -87,7 +88,15 @@ public class ApplicationMetaData extends MetaData {
        return (String)resources.get(name);
     }
     
-    
+
+    public void addPluginData(String pluginName, Object pluginData) {
+		plugins.put(pluginName, pluginData);
+	}
+	
+	public Object getPluginData(String pluginName) {
+		return plugins.get(pluginName);
+	}
+	
     public void importEjbJarXml (Element element) throws DeploymentException {
        
        // find the beans		

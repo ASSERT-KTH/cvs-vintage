@@ -10,6 +10,8 @@ import java.net.URL;
 import java.io.IOException;
 import java.io.Reader;
 import java.io.InputStreamReader;
+import java.io.InputStream;
+import java.util.Hashtable;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -17,6 +19,7 @@ import org.w3c.dom.Element;
 import org.xml.sax.Parser;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
+import org.xml.sax.EntityResolver;
 
 import org.jboss.ejb.DeploymentException;
 import org.jboss.logging.Logger;
@@ -26,7 +29,8 @@ import org.jboss.logging.Logger;
  *
  *   @see <related>
  *   @author <a href="mailto:sebastien.alborini@m4x.org">Sebastien Alborini</a>
- *   @version $Revision: 1.3 $
+ *   @author <a href="mailto:WolfgangWerner@gmx.net">Wolfgang Werner</a>
+ *   @version $Revision: 1.4 $
  */
 public class XmlFileLoader {
    	// Constants -----------------------------------------------------
@@ -116,22 +120,57 @@ public class XmlFileLoader {
    	// Package protected ---------------------------------------------
 
    	// Protected -----------------------------------------------------
-	protected Document getDocument(URL url) throws IOException {
-		Reader in = new InputStreamReader(url.openStream());
-		com.sun.xml.tree.XmlDocumentBuilder xdb = new com.sun.xml.tree.XmlDocumentBuilder();
-		Parser parser = new com.sun.xml.parser.Parser();
-		xdb.setParser(parser);
-		
+	public static Document getDocument(URL url) throws DeploymentException {
 		try {
-		    parser.parse(new InputSource(in));
+			Reader in = new InputStreamReader(url.openStream());
+			com.sun.xml.tree.XmlDocumentBuilder xdb = new com.sun.xml.tree.XmlDocumentBuilder();
+		
+			Parser parser = new com.sun.xml.parser.Parser();
+		
+			// Use a local entity resolver to get rid of the DTD loading via internet
+			EntityResolver er = new LocalResolver();
+			parser.setEntityResolver(er);
+			xdb.setParser(parser);
+			
+			parser.parse(new InputSource(in));
 			return xdb.getDocument();
-		} 
-		catch (SAXException se) { 
-			throw new IOException(se.getMessage()); 
+		} catch (Exception e) { 
+			throw new DeploymentException(e.getMessage()); 
 		}
 	}
 
 	// Private -------------------------------------------------------
 
 	// Inner classes -------------------------------------------------
+	/**
+	 * Local entity resolver to handle EJB 1.1 DTD. With this a http connection
+	 * to sun is not needed during deployment.
+	 * @author <a href="mailto:WolfgangWerner@gmx.net">Wolfgang Werner</a>
+	 **/
+	private static class LocalResolver implements EntityResolver {
+		private Hashtable dtds = new Hashtable();
+		
+		public LocalResolver() {
+			registerDTD("-//Sun Microsystems, Inc.//DTD Enterprise JavaBeans 1.1//EN", "ejb-jar.dtd");
+		}
+		
+		public void registerDTD(String publicId, String dtdFileName) {
+			dtds.put(publicId, dtdFileName);
+		}
+
+		public InputSource resolveEntity (String publicId, String systemId) {
+			String dtd = (String)dtds.get(publicId);
+			
+			if (dtd != null) {
+				try {
+					InputStream dtdStream = getClass().getResourceAsStream(dtd);
+					return new InputSource(dtdStream);
+				} catch( Exception ex ) {
+					// ignore
+				}
+			}
+			return null;
+		}
+	}
+		
 }

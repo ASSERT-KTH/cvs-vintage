@@ -17,7 +17,7 @@ import org.jboss.ejb.DeploymentException;
  *      
  *   @see <related>
  *   @author <a href="mailto:sebastien.alborini@m4x.org">Sebastien Alborini</a>
- *   @version $Revision: 1.3 $
+ *   @version $Revision: 1.4 $
  */
 public class EntityMetaData extends BeanMetaData {
     // Constants -----------------------------------------------------
@@ -42,7 +42,7 @@ public class EntityMetaData extends BeanMetaData {
 	public boolean isBMP() { return !cmp; }
 	public boolean isReentrant() { return reentrant; }
 	public String getPrimaryKeyClass() { return primaryKeyClass; }
-	public String[] getCMPFields() { return (String[]) cmpFields.toArray(); }
+	public Iterator getCMPFields() { return cmpFields.iterator(); }
 	public String getPrimKeyField() { return primKeyField; }
 	
 	public String getDefaultConfigurationName() {
