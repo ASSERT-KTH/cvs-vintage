@@ -18,6 +18,7 @@ import javax.ejb.EJBLocalHome;
 import javax.ejb.EJBHome;
 import javax.ejb.EJBContext;
 import javax.ejb.EJBException;
+import javax.ejb.TimerService;
 import javax.transaction.Status;
 import javax.transaction.Transaction;
 import javax.transaction.UserTransaction;
@@ -51,7 +52,7 @@ import org.jboss.tm.usertx.interfaces.UserTransactionStartedListener;
  * @author <a href="mailto:sebastien.alborini@m4x.org">Sebastien Alborini</a>
  * @author <a href="mailto:juha@jboss.org">Juha Lindfors</a>
  * @author <a href="mailto:osh@sparre.dk">Ole Husgaard</a>
- * @version $Revision: 1.51 $
+ * @version $Revision: 1.52 $
  *
  * Revisions:
  * 2001/06/29: marcf
@@ -430,6 +431,15 @@ public abstract class EnterpriseContext
          }
          return userTransaction;
       }
+      
+      /**
+       * @return EJB Timer Service to manage Timers
+       **/
+       public TimerService getTimerService()
+          throws IllegalStateException
+       {
+           return getContainer().createTimerService( this );
+       }
    }
    
    // Inner classes -------------------------------------------------

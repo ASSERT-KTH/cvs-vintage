@@ -24,6 +24,8 @@ import javax.ejb.EJBObject;
 import javax.ejb.Handle;
 import javax.ejb.HomeHandle;
 import javax.ejb.RemoveException;
+import javax.ejb.TimedObject;
+import javax.ejb.Timer;
 import org.jboss.invocation.Invocation;
 import org.jboss.invocation.MarshalledInvocation;
 import org.jboss.metadata.ConfigurationMetaData;
@@ -34,7 +36,7 @@ import org.jboss.metadata.ConfigurationMetaData;
  * @author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
  * @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
  * @author <a href="mailto:docodan@mvcsoft.com">Daniel OConnor</a>
- * @version $Revision: 1.40 $
+ * @version $Revision: 1.41 $
  */
 public class StatelessSessionContainer extends Container
    implements EJBProxyFactoryContainer
@@ -189,7 +191,8 @@ public class StatelessSessionContainer extends Container
       // Associate thread with classloader
       ClassLoader oldCl = Thread.currentThread().getContextClassLoader();
       Thread.currentThread().setContextClassLoader(getClassLoader());
-
+      
+      stopTimers();
       try
       {
          // Destroy container invoker
@@ -437,6 +440,13 @@ public class StatelessSessionContainer extends Container
       {
          Method[] m = localInterface.getMethods();
          setUpBeanMappingImpl( map, m, "javax.ejb.EJBLocalObject" );
+      }
+      if( TimedObject.class.isAssignableFrom( beanClass ) ) {
+          // Map ejbTimeout
+          map.put(
+             TimedObject.class.getMethod( "ejbTimeout", new Class[] { Timer.class } ),
+             beanClass.getMethod( "ejbTimeout", new Class[] { Timer.class } )
+          );
       }
       
       beanMapping = map;

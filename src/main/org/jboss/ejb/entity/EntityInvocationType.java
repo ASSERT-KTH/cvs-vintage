@@ -82,6 +82,13 @@ public final class EntityInvocationType {
    public static final EntityInvocationType PASSIVATE = 
          new EntityInvocationType("PASSIVATE");
 
+   /**
+    * Call the EJB Timeout method when Timer sends a Timed Event
+    * is send the entity.
+    */
+   public static final EntityInvocationType EJB_TIMEOUT = 
+         new EntityInvocationType( "EJB_TIMEOUT" );
+
 
    /**
     * Name of this type.  Used for toString.

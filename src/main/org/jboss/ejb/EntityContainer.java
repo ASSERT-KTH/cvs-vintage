@@ -25,6 +25,8 @@ import javax.ejb.EJBLocalHome;
 import javax.ejb.EJBLocalObject;
 import javax.ejb.EJBMetaData;
 import javax.ejb.EJBObject;
+import javax.ejb.EntityContext;
+import javax.ejb.Timer;
 import javax.management.Attribute;
 import javax.management.AttributeList;
 import javax.management.AttributeNotFoundException;
@@ -42,10 +44,12 @@ import javax.management.ReflectionException;
 import javax.transaction.Transaction;
 import javax.transaction.TransactionRolledbackException;
 import org.jboss.deployment.DeploymentException;
+import org.jboss.ejb.timer.ContainerTimer;
 import org.jboss.ejb.entity.EntityInvocationKey;
 import org.jboss.ejb.entity.EntityInvocationType;
 import org.jboss.ejb.plugins.lock.Entrancy;
 import org.jboss.invocation.Invocation;
+import org.jboss.invocation.InvocationKey;
 import org.jboss.invocation.InvocationType;
 import org.jboss.invocation.MarshalledInvocation;
 import org.jboss.invocation.PayloadKey;
@@ -69,7 +73,7 @@ import org.jboss.util.collection.SerializableEnumeration;
  * @author <a href="mailto:bill@burkecentral.com">Bill Burke</a>
  * @author <a href="mailto:andreas.schaefer@madplanet.com">Andreas Schaefer</a>
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
- * @version $Revision: 1.84 $
+ * @version $Revision: 1.85 $
  */
 public class EntityContainer
    extends Container implements EJBProxyFactoryContainer, 
@@ -445,7 +449,72 @@ public class EntityContainer
       //invocation.setCredential(SecurityAssociation.getCredential());
       invokeEntityInterceptor(invocation);
    }
-
+   
+   public void handleEjbTimeout( Timer pTimer ) {
+      EntityCache cache = (EntityCache) getInstanceCache();
+      EntityContext lContext = (EntityContext) ( (ContainerTimer) pTimer ).getContext();
+      Object cacheKey = cache.createCacheKey( lContext.getPrimaryKey() );
+      
+      ClassLoader oldCl = Thread.currentThread().getContextClassLoader();
+      Thread.currentThread().setContextClassLoader( getClassLoader() );
+      
+      try
+      {
+         Invocation invocation = new Invocation(
+            cacheKey,
+            EJB_TIMEOUT, 
+            new Class[] { Timer.class },
+            ( getTransactionManager() == null ?
+                 null:
+                 getTransactionManager().getTransaction()
+            ),
+            SecurityAssociation.getPrincipal(), 
+            SecurityAssociation.getCredential()
+         );
+         invocation.setArguments( new Object[] { pTimer } );
+         invocation.setType( InvocationType.LOCAL );
+         invocation.setValue(
+            InvocationKey.CALLBACK_METHOD, 
+            beanClass.getMethod( "ejbTimeout", new Class[] { Timer.class } ),
+            PayloadKey.TRANSIENT
+         );
+         invocation.setValue(
+            InvocationKey.CALLBACK_ARGUMENTS, 
+            invocation.getArguments(),
+            PayloadKey.TRANSIENT
+         );
+         
+         invoke( invocation );
+      }
+      catch( Exception e ) {
+          e.printStackTrace();
+          throw new RuntimeException( "call ejbTimeout() failed: " + e );
+      }
+/*AS TODO: Manage the exceptions properly
+      catch (AccessException ae)
+      {
+         throw new AccessLocalException( ae.getMessage(), ae );
+      }
+      catch (NoSuchObjectException nsoe)
+      {
+         throw new NoSuchObjectLocalException( nsoe.getMessage(), nsoe );
+      }
+      catch (TransactionRequiredException tre)
+      {
+         throw new TransactionRequiredLocalException( tre.getMessage() );
+      }
+      catch (TransactionRolledbackException trbe)
+      {
+         throw new TransactionRolledbackLocalException( 
+               trbe.getMessage(), trbe );
+      }
+*/
+      finally
+      {
+         Thread.currentThread().setContextClassLoader(oldCl);
+      }
+   }
+   
    private Object invokeEntityInterceptor(Invocation invocation) 
          throws Exception
    {

@@ -18,7 +18,11 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import javax.ejb.EJBContext;
 import javax.ejb.EJBException;
+import javax.ejb.TimedObject;
+import javax.ejb.Timer;
+import javax.ejb.TimerService;
 import javax.management.Attribute;
 import javax.management.AttributeList;
 import javax.management.AttributeNotFoundException;
@@ -48,6 +52,7 @@ import org.jboss.ejb.plugins.AbstractInterceptor;
 import org.jboss.ejb.plugins.AbstractInstanceCache;
 import org.jboss.ejb.plugins.SecurityProxyInterceptor;
 import org.jboss.ejb.plugins.local.BaseLocalProxyFactory;
+import org.jboss.ejb.timer.ContainerTimerService;
 import org.jboss.invocation.Invocation;
 import org.jboss.invocation.InvocationType;
 import org.jboss.invocation.MarshalledInvocation;
@@ -70,6 +75,7 @@ import org.jboss.naming.ENCThreadLocalKey;
 import org.jboss.util.naming.Util;
 import org.jboss.security.AuthenticationManager;
 import org.jboss.security.RealmMapping;
+import org.jboss.security.SecurityAssociation;
 import org.jboss.system.ServiceMBeanSupport;
 import org.jboss.util.NestedError;
 import org.jboss.util.jmx.MBeanProxy;
@@ -100,7 +106,7 @@ import org.w3c.dom.Element;
  * @author <a href="mailto:Scott.Stark@jboss.org">Scott Stark</a>.
  * @author <a href="bill@burkecentral.com">Bill Burke</a>
  * @author <a href="mailto:d_jencks@users.sourceforge.net">David Jencks</a>
- * @version $Revision: 1.105 $
+ * @version $Revision: 1.106 $
  *
  * @todo convert all the deployment/service lifecycle stuff to an 
  * aspect/interceptor.  Make this whole stack into a model mbean.
@@ -123,6 +129,22 @@ public abstract class Container extends ServiceMBeanSupport
    static final String BMT_VALUE = "Bean";
    static final String CMT_VALUE = "Container";
    static final String ANY_VALUE = "Both";
+   
+   /** A reference to {@link TimedObject#ejbTimeout}. */
+   protected static final Method EJB_TIMEOUT;
+   
+   /**
+    * Initialize <tt>TimedObject</tt> method references.
+    */
+   static {
+      try {
+         EJB_TIMEOUT = TimedObject.class.getMethod( "ejbTimeout", new Class[] { Timer.class } );
+      }
+      catch (Exception e) {
+         e.printStackTrace();
+         throw new ExceptionInInitializerError(e);
+      }
+   }
    
    /**
     * Externally supplied configuration data
@@ -273,7 +295,12 @@ public abstract class Container extends ServiceMBeanSupport
     * be provided by the container itself.
     */
    protected Interceptor interceptor;
-
+   
+   /**
+    * Timer Service for this Container
+    **/
+   public TimerService timerService;
+   
    /**
     * Get the Di value.
     * @return the Di value.
@@ -680,6 +707,106 @@ public abstract class Container extends ServiceMBeanSupport
       localProxyFactory.create();
       if (localHomeInterface != null)
          ejbModule.addLocalHome(this, localProxyFactory.getEJBLocalHome() );
+   }
+   
+   /**
+    * Creates the single Timer Servic for this container if not already created
+    *
+    * @param pContext Context of the EJB
+    *
+    * @return Container Timer Service
+    *
+    * @throws IllegalStateException If the type of EJB is not allowed to use the timer service
+    *
+    * @see javax.ejb.EJBContext#getTimerService
+    **/
+   public TimerService createTimerService( EJBContext pContext )
+      throws IllegalStateException
+   {
+       if( this instanceof StatefulSessionContainer ) {
+           throw new IllegalStateException( "Statefull Session Beans are not allowed to access Timer Service" );
+       }
+       if( timerService == null ) {
+           try {
+               timerService = (TimerService) server.invoke(
+                  new ObjectName( "jboss:service=EJBTimerService" ),
+                  "createTimerService",
+                  new Object[] { getJmxName().toString(), this, pContext },
+                  new String[] { String.class.getName(), Container.class.getName(), EJBContext.class.getName() }
+               );
+           }
+           catch( Exception e ) {
+               throw new RuntimeException( "Could not create timer service: " + e );
+           }
+       }
+       return timerService;
+   }
+   
+   /**
+    * Stops all the timers created by beans of this container
+    **/
+   public void stopTimers() {
+       if( timerService != null ) {
+          ( (ContainerTimerService) timerService ).stopService();
+          timerService = null;
+       }
+   }
+   
+   /**
+    * Handles an Timed Event by gettting the appropriate EJB instance,
+    * invoking the "ejbTimeout()" method on it with the given timer
+    *
+    * @param pTimer Timer causing this event
+    **/
+   public void handleEjbTimeout( Timer pTimer ) {
+      ClassLoader oldCl = Thread.currentThread().getContextClassLoader();
+      Thread.currentThread().setContextClassLoader( getClassLoader() );
+      
+      try
+      {
+         Invocation invocation = new Invocation(
+            "JNDI-NAME ??",
+            EJB_TIMEOUT, 
+            new Class[] { Timer.class },
+            ( getTransactionManager() == null ?
+                 null:
+                 getTransactionManager().getTransaction()
+            ),
+            SecurityAssociation.getPrincipal(), 
+            SecurityAssociation.getCredential()
+         );
+         invocation.setArguments( new Object[] { pTimer } );
+         invocation.setType( InvocationType.LOCAL );
+         
+         invoke( invocation );
+      }
+      catch( Exception e ) {
+          e.printStackTrace();
+          throw new RuntimeException( "call ejbTimeout() failed: " + e );
+      }
+/*AS TODO: Manage the exceptions properly
+      catch (AccessException ae)
+      {
+         throw new AccessLocalException( ae.getMessage(), ae );
+      }
+      catch (NoSuchObjectException nsoe)
+      {
+         throw new NoSuchObjectLocalException( nsoe.getMessage(), nsoe );
+      }
+      catch (TransactionRequiredException tre)
+      {
+         throw new TransactionRequiredLocalException( tre.getMessage() );
+      }
+      catch (TransactionRolledbackException trbe)
+      {
+         throw new TransactionRolledbackLocalException( 
+               trbe.getMessage(), trbe );
+      }
+*/
+      finally
+      {
+         Thread.currentThread().setContextClassLoader(oldCl);
+      }
    }
    
    /**
