@@ -9,9 +9,12 @@ package org.jboss.ejb.plugins.cmp.jdbc;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Set;
 import java.util.Iterator;
 import java.util.List;
 import javax.ejb.EJBLocalObject;
@@ -30,7 +33,7 @@ import org.jboss.logging.Logger;
  * @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
  * @author <a href="mailto:shevlandj@kpi.com.au">Joe Shevland</a>
  * @author <a href="mailto:justin@j-m-f.demon.co.uk">Justin Forder</a>
- * @version $Revision: 1.16 $
+ * @version $Revision: 1.17 $
  */
 public class JDBCRemoveEntityCommand {
    
@@ -66,7 +69,7 @@ public class JDBCRemoveEntityCommand {
       HashMap oldRelations = removeFromRelations(context);
 
       // update the related entities (stores the removal from relationships)
-      if(!entity.getCMRFields().isEmpty()) {
+      if(!oldRelations.isEmpty()) {
          // if one of the store fails an EJBException will be thrown
          manager.getContainer().synchronizeEntitiesWithinTransaction(
                context.getTransaction());
@@ -113,49 +116,56 @@ public class JDBCRemoveEntityCommand {
       HashMap oldRelations = new HashMap();
       
       // remove entity from all relations before removing from db
-      List cmrFields = entity.getCMRFields();
-      for(Iterator iter = cmrFields.iterator(); iter.hasNext();) { 
-         JDBCCMRFieldBridge cmrField = (JDBCCMRFieldBridge)iter.next();
+      for(Iterator cmrFields = entity.getCMRFields().iterator(); 
+            cmrFields.hasNext();) { 
+
+         JDBCCMRFieldBridge cmrField = (JDBCCMRFieldBridge)cmrFields.next();
 
          if(cmrField.isCollectionValued()) {
-            Collection oldValue = 
+            Collection c = 
                   (Collection)cmrField.getInstanceValue(context);
-            oldRelations.put(cmrField, new HashSet(oldValue));
-            oldValue.clear();
+            if(!c.isEmpty()) {
+               oldRelations.put(cmrField, new ArrayList(c));
+               c.clear();
+            }
          } else {
-            Object oldValue = cmrField.getInstanceValue(context);
-            oldRelations.put(cmrField, oldValue);
-            cmrField.setInstanceValue(context, null);
+            Object o = cmrField.getInstanceValue(context);
+            if(o != null) {
+               oldRelations.put(cmrField, Collections.singletonList(o));
+               cmrField.setInstanceValue(context, null);
+            }
          }
       }
       return oldRelations;
    }
    
    private void cascadeDelete(HashMap oldRelations) throws RemoveException {
-      HashSet deletedEntities = new HashSet();
+      HashMap deletedPksByEntity = new HashMap();
 
-      List cmrFields = entity.getCMRFields();
-      for(Iterator iter = cmrFields.iterator(); iter.hasNext();) { 
-         JDBCCMRFieldBridge cmrField = (JDBCCMRFieldBridge)iter.next();
+      for(Iterator cmrFields = oldRelations.keySet().iterator(); 
+            cmrFields.hasNext();) { 
 
+         JDBCCMRFieldBridge cmrField = (JDBCCMRFieldBridge)cmrFields.next();
+         JDBCEntityBridge relatedEntity = cmrField.getRelatedJDBCEntity();
+         
          if(cmrField.getMetaData().getRelatedRole().isCascadeDelete()) {
-            Object oldRelation = oldRelations.get(cmrField);
-            if(oldRelation instanceof Collection) {
-               Iterator oldValues = ((Collection)oldRelation).iterator();
-               while(oldValues.hasNext()) {
-                  EJBLocalObject oldValue = (EJBLocalObject)oldValues.next(); 
-                  if(!deletedEntities.contains(oldValue)) {
-                     deletedEntities.add(oldValue);
-                     oldValue.remove();
-                  }
-               }
-            } else {
-               EJBLocalObject oldValue = (EJBLocalObject)oldRelation;
-               if(oldValue != null) {
-                  if(!deletedEntities.contains(oldValue)) {
-                     deletedEntities.add(oldValue);
-                     oldValue.remove();
-                  }
+            List oldValues = (List)oldRelations.get(cmrField);
+
+            Set deletedPks = (Set)deletedPksByEntity.get(relatedEntity);
+            if(deletedPks == null) {
+               deletedPks = new HashSet();
+               deletedPksByEntity.put(relatedEntity, deletedPks);
+            }
+
+            for(Iterator iter = oldValues.iterator(); iter.hasNext();) {
+               EJBLocalObject oldValue = (EJBLocalObject)iter.next(); 
+               Object oldValuePk = oldValue.getPrimaryKey();
+
+               log.info("Checking if already deleted: " + oldValuePk);
+               if(!deletedPks.contains(oldValuePk)) {
+                  deletedPks.add(oldValuePk);
+                  log.info("Deleteing: " + oldValuePk);
+                  oldValue.remove();
                }
             }
          }
