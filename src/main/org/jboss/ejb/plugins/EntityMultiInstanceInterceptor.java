@@ -20,47 +20,60 @@ import org.jboss.invocation.InvocationResponse;
  * the target object from the cache.
  *    
  * @author <a href="mailto:bill@burkecentral.com">Bill Burke</a>
- * @version $Revision: 1.10 $
+ * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
+ * @version $Revision: 1.11 $
  */
 public class EntityMultiInstanceInterceptor extends AbstractInterceptor
 {
    public InvocationResponse invoke(Invocation invocation) throws Exception
    {
       EntityContainer container = (EntityContainer)getContainer();
-      Transaction transaction = invocation.getTransaction();
-
+      Transaction tx = invocation.getTransaction();
       EntityEnterpriseContext ctx = null;
+      boolean trace = log.isTraceEnabled();
+
       if(invocation.getType().isHome())
       {
-         ctx = (EntityEnterpriseContext)container.getInstancePool().get();
+         if(trace)
+         {
+            log.trace("Begin home invoke");
+         }
+         ctx = (EntityEnterpriseContext) container.getInstancePool().get();
       }
       else
       {
-         // The key
-         Object key = invocation.getId();
-         if(transaction != null)
+         Object id = invocation.getId();
+         if(trace)
          {
-            ctx = container.getTxEntityMap().getCtx(transaction, key);
+            log.trace("Begin invoke, id=" + id);
+         }
+
+         if(tx != null)
+         {
+            ctx = EntityContainer.getEntityInvocationRegistry().getContext(
+                  container,
+                  id,
+                  tx);
          }
 
          if(ctx == null)
          {
             ctx = (EntityEnterpriseContext)container.getInstancePool().get();
-            ctx.setCacheKey(key);
-            ctx.setId(key);
+            ctx.setCacheKey(id);
+            ctx.setId(id);
             container.activateEntity(ctx);
          }
       }
 
-      // Associate transaction, in the new design the lock already has the 
-      // transaction from the previous interceptor
-      ctx.setTransaction(transaction);
+      // Pass it to the method invocation
+      invocation.setEnterpriseContext(ctx);
 
       // Set the current security information
       ctx.setPrincipal(invocation.getPrincipal());
 
-      // Set context on the method invocation
-      invocation.setEnterpriseContext(ctx);
+      // Associate transaction, in the new design the lock already has the 
+      // transaction from the previous interceptor
+      ctx.setTransaction(tx);
 
       return getNext().invoke(invocation);
    }

@@ -43,14 +43,14 @@ import org.jboss.invocation.InvocationResponse;
  * @author <a href="mailto:Scott.Stark@jboss.org">Scott Stark</a>
  * @author <a href="mailto:bill@burkecentral.com">Bill Burke</a>
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
- * @version $Revision: 1.59 $
+ * @version $Revision: 1.60 $
  */
 public class EntityInstanceInterceptor extends AbstractInterceptor
 {
    public InvocationResponse invoke(Invocation invocation) throws Exception
    {
       EntityContainer container = (EntityContainer)getContainer();
-      Object key = null;
+      Object id = null;
       EntityEnterpriseContext ctx = null;
       boolean trace = log.isTraceEnabled();
 
@@ -61,16 +61,16 @@ public class EntityInstanceInterceptor extends AbstractInterceptor
          {
             log.trace("Begin home invoke");
          }
-         ctx = (EntityEnterpriseContext)container.getInstancePool().get();
+         ctx = (EntityEnterpriseContext) container.getInstancePool().get();
       }
       else
       {
-         key = invocation.getId();
+         id = invocation.getId();
          if(trace)
          {
-            log.trace("Begin invoke, key=" + key);
+            log.trace("Begin invoke, id=" + id);
          }
-         ctx = (EntityEnterpriseContext) container.getInstanceCache().get(key);
+         ctx = (EntityEnterpriseContext) container.getInstanceCache().get(id);
       }
 
       if(ctx == null)
@@ -145,7 +145,7 @@ public class EntityInstanceInterceptor extends AbstractInterceptor
 
                if(trace)
                {
-                  log.trace("End home invocation, key=" + ctx.getId() + 
+                  log.trace("End home invocation, id=" + ctx.getId() + 
                         ", ctx=" + ctx);
                }
             }
@@ -163,7 +163,7 @@ public class EntityInstanceInterceptor extends AbstractInterceptor
          else if(exceptionThrown != null && !ctx.hasTxSynchronization())
          {
             // Discard instance [EJB 1.1 spec 12.3.1]
-            container.getInstanceCache().remove(key);
+            container.getInstanceCache().remove(id);
 
             if(trace)
             {
@@ -175,9 +175,9 @@ public class EntityInstanceInterceptor extends AbstractInterceptor
          // the context from the cache here.
          else if(ctx.getId() == null)
          {
-            // The key from the Invocation still identifies the 
+            // The id from the Invocation still identifies the 
             // right cachekey
-            container.getInstanceCache().remove(key);
+            container.getInstanceCache().remove(id);
 
             if(trace)
             {
@@ -190,7 +190,7 @@ public class EntityInstanceInterceptor extends AbstractInterceptor
          {
             if(trace)
             {
-               log.trace("End invoke, key=" + key + ", ctx=" + ctx);
+               log.trace("End invoke, id=" + id + ", ctx=" + ctx);
             }
          }
       }
