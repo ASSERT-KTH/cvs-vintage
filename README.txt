@@ -1,4 +1,4 @@
-$Id: README.txt,v 1.61 2003/07/30 17:21:24 dlr Exp $
+$Id: README.txt,v 1.62 2003/09/18 17:12:15 dlr Exp $
 
 Welcome to Scarab!
 
@@ -16,9 +16,9 @@ feedback on your success (or failure...we hope not!) in getting the
 system running.
 
 
--------------------------------------------------------------------------
+,-----------------------------------------------------------------------.
 | R E Q U I R E M E N T S                                               |
--------------------------------------------------------------------------
+'-----------------------------------------------------------------------'
 
 SDK 1.3.1 or higher      --> <http://java.sun.com/>
 Make sure that you download the SDK and not the JRE!
@@ -121,9 +121,9 @@ Xerces 2.x) are in your JAVA_HOME, ANT_HOME or your CLASSPATH.
 Otherwise, you may get build errors.
 
 
--------------------------------------------------------------------------
+,-----------------------------------------------------------------------.
 | D I R E C T O R Y  S T R U C T U R E                                  |
--------------------------------------------------------------------------
+'-----------------------------------------------------------------------'
 
 Here is a description of the Scarab directory tree:
 
@@ -159,9 +159,9 @@ Within the /src directory are a number of sub directories...
                     sandbox.
 
 
--------------------------------------------------------------------------
+,-----------------------------------------------------------------------.
 | S E T T I N G S                                                       |
--------------------------------------------------------------------------
+'-----------------------------------------------------------------------'
 
 The Scarab build process depends on having a few properties which are
 defined in the build/default.properties. The settings in the
@@ -189,9 +189,9 @@ define.
 NOTE: The ~ character represents your user account home directory.
 
 
--------------------------------------------------------------------------
+,-----------------------------------------------------------------------.
 | S E T T I N G  T H E  M A I L S E R V E R                             |
--------------------------------------------------------------------------
+'-----------------------------------------------------------------------'
 
 In order to use Scarab, you need to first set the relay outgoing mail
 server so that email can be sent from Scarab. This is important for many
@@ -214,9 +214,9 @@ NOTE: If you modify this value after you have build the sandbox
       take effect.
 
 
--------------------------------------------------------------------------
+,-----------------------------------------------------------------------.
 | S E T T I N G  T H E  U P L O A D  D I R E C T O R Y                  |
--------------------------------------------------------------------------
+'-----------------------------------------------------------------------'
 
 When users attach files to an issue, by default, the file is saved to
 disk in the WEB-INF/attachments directory. This may or may not be an
@@ -241,9 +241,9 @@ NOTE: Please see the documentation above for instructions on how to set
       properties and rebuild Scarab.
 
 
--------------------------------------------------------------------------
+,-----------------------------------------------------------------------.
 | S E T T I N G  T H E  I N D E X E S  D I R E C T O R Y                |
--------------------------------------------------------------------------
+'-----------------------------------------------------------------------'
 
 Scarab uses Lucene to create searchable indexes for the issue data.
 Lucene needs to be able to store its indexes somewhere on disk. If the
@@ -255,9 +255,11 @@ relative path or an absolute path.
 NOTE: Please see the documentation above for instructions on how to set
       properties and rebuild Scarab.
 
--------------------------------------------------------------------------
+
+,-----------------------------------------------------------------------.
 | R U N N I N G   W I T H   S E R V L E T   2 . 2                        |
--------------------------------------------------------------------------
+'-----------------------------------------------------------------------'
+
 Non-current versions of some commonly used application servers may not
 support the servlet 2.3 specification.  One such server is Websphere 4.0
 which only supports the servlet 2.2 specification.
@@ -274,9 +276,10 @@ build properties files as documented above:
 
 scarab.default.pipeline.descriptor=org/tigris/scarab/pipeline/scarab-pipeline22.xml
 
--------------------------------------------------------------------------
+
+,-----------------------------------------------------------------------.
 | B U I L D I N G  T H E  S A N D B O X                                 |
--------------------------------------------------------------------------
+'-----------------------------------------------------------------------'
 
 The Scarab sandbox contains everything you need in order to get started
 with Scarab. It includes a stripped down version of the Java Servlet
@@ -321,9 +324,9 @@ NOTE: You should use the copy of Xerces 1.x that is included with Scarab
       you may get build errors.
 
 
--------------------------------------------------------------------------
+,-----------------------------------------------------------------------.
 | I N S T A L L I N G  T H E  D A T A B A S E                           |
--------------------------------------------------------------------------
+'-----------------------------------------------------------------------'
 
 The process of building Scarab creates the .sql file that is used to
 describe the Scarab database schema. To install the database schema's,
@@ -413,9 +416,10 @@ NOTE: Sometimes it may be useful to use "ant create-db" rather than "create-db.s
 NOTE: We realize that the Win32 script is not as good as the Unix
       script. Contributions to improve the script are appreciated.
 
--------------------------------------------------------------------------
+
+,-----------------------------------------------------------------------.
 | R U N N I N G  T H E  S A N D B O X                                   |
--------------------------------------------------------------------------
+'-----------------------------------------------------------------------'
 
 To run Tomcat from within the target directory that was created by 
 following the steps above under building the sandbox, all you need to do 
@@ -445,9 +449,9 @@ NOTE: Substitute 'my.server.com' for the DNS name that the server is
 NOTE: You can define your own URL by editing src/conf/web.xml and defining
       a different servlet mapping and then rebuilding.
 
--------------------------------------------------------------------------
+,-----------------------------------------------------------------------.
 | C U S T O M I Z I N G   S C A R A B                                   |
--------------------------------------------------------------------------
+'-----------------------------------------------------------------------'
 At times it may be useful to make minor modifications to Scarab without
 applying those changes directly to the Scarab sources (since this
 will cause CVS to report those differences, and even worse, the custom
@@ -471,11 +475,16 @@ NOTE: It is the responsibility of the builder to ensure that any
       to these replacements.
 
 
+,-----------------------------------------------------------------------.
+| D A T A  M I G R A T I O N                                            |
+'-----------------------------------------------------------------------'
+
+See the MIGRATION-README.txt file.
 
 
--------------------------------------------------------------------------
+,-----------------------------------------------------------------------.
 | Q U E S T I O N S  /  P R O B L E M S                                 |
--------------------------------------------------------------------------
+'-----------------------------------------------------------------------'
 
 If you have problems or questions, please join the Scarab developer mailing 
 list and post a detailed message describing your issues. :-)
