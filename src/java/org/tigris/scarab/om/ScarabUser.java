@@ -66,7 +66,7 @@ import org.tigris.scarab.services.module.ModuleEntity;
     implementation needs.
 
     @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
-    @version $Id: ScarabUser.java,v 1.17 2001/05/31 01:44:51 jon Exp $
+    @version $Id: ScarabUser.java,v 1.18 2001/06/24 18:38:02 jmcnally Exp $
 */
 public class ScarabUser extends BaseScarabUser
 {    
@@ -313,4 +313,17 @@ public class ScarabUser extends BaseScarabUser
         
         return issue;
     }
+
+    public void setReportingIssue(Issue issue)
+    {
+        if ( issue == null ) 
+        {
+            removeTemp(REPORTING_ISSUE);
+        }
+        else 
+        {
+            setTemp(REPORTING_ISSUE, issue);            
+        }
+    }
+
 }    
