@@ -24,7 +24,7 @@
 // File: ChildGenFind.java
 // Classes: ChildGenFind
 // Original Author: jrobbins
-// $Id: ChildGenFind.java,v 1.3 2002/10/20 21:11:14 linus Exp $
+// $Id: ChildGenFind.java,v 1.4 2002/11/18 04:05:58 mkl Exp $
 
 package org.argouml.uml.cognitive;
 
@@ -46,7 +46,9 @@ import org.argouml.kernel.*;
  *  Project, to Models, to ModelElements.  Argo's critic Agency uses
  *  this to apply critics where appropriate.
  *
- * @see org.argouml.cognitive.critics.Agency */
+ * @see org.argouml.cognitive.critics.Agency 
+ * @stereotype singleton
+ */
 
 public class ChildGenFind implements ChildGenerator {
   public static ChildGenFind SINGLETON = new ChildGenFind();
