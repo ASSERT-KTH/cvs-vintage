@@ -59,7 +59,7 @@ $l10n.format("ViewIssueInDifferentModule", $currentIssue.Module.Name)
 <th>$l10n.Attributes</th>
 #else
 #initializeTabLink()
-<td><a href="$tabLink.addPathInfo("tab", "1")">$10n.Attributes</a></td>
+<td><a href="$tabLink.addPathInfo("tab", "1")">$l10n.Attributes</a></td>
 #end
 #if ($tab.equals("2"))
 <th>$l10n.Personnel</th>
