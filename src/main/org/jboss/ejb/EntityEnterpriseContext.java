@@ -9,7 +9,6 @@ package org.jboss.ejb;
 import java.rmi.RemoteException;
 
 import javax.ejb.EJBContext;
-import javax.ejb.EJBHome;
 import javax.ejb.EJBObject;
 import javax.ejb.EJBLocalObject;
 import javax.ejb.EJBLocalObject;
@@ -17,7 +16,6 @@ import javax.ejb.EJBObject;
 import javax.ejb.EntityBean;
 import javax.ejb.EntityContext;
 
-import javax.transaction.Transaction;
 
 /**
  * The EntityEnterpriseContext is used to associate EntityBean instances
@@ -28,7 +26,7 @@ import javax.transaction.Transaction;
  * @author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
  * @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
  * @author <a href="mailto:docodan@mvcsoft.com">Daniel OConnor</a>
- * @version $Revision: 1.23 $
+ * @version $Revision: 1.24 $
  *
  * <p><b>Revisions</b>
  * <p>20010703 marcf

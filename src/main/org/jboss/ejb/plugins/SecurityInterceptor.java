@@ -9,10 +9,8 @@ package org.jboss.ejb.plugins;
 import java.lang.reflect.Method;
 import java.rmi.RemoteException;
 import java.security.Principal;
-import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
-import javax.naming.InitialContext;
 
 import org.jboss.ejb.Container;
 import org.jboss.ejb.MethodInvocation;
@@ -30,7 +28,7 @@ is enforced. This is where the caller identity propagation is controlled as well
 
 @author <a href="on@ibis.odessa.ua">Oleg Nitz</a>
 @author <a href="mailto:Scott_Stark@displayscape.com">Scott Stark</a>.
-@version $Revision: 1.24 $
+@version $Revision: 1.25 $
 */
 public class SecurityInterceptor extends AbstractInterceptor
 {

@@ -14,7 +14,6 @@ import javax.ejb.EJBMetaData;
 import javax.ejb.EJBHome;
 import javax.ejb.EJBObject;
 
-import org.jboss.proxy.InvocationHandler;
 import org.jboss.proxy.Proxy;
 
 import org.jboss.ejb.Container;
@@ -39,7 +38,7 @@ import org.jboss.logging.Logger;
  *  @see <related>
  *  @author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
  *  @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
- *  @version $Revision: 1.17 $
+ *  @version $Revision: 1.18 $
  */
 public final class JRMPContainerInvoker
    implements ContainerInvoker

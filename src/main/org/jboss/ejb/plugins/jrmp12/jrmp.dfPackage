@@ -46,7 +46,19 @@ class link60 {
 */
 class link61 {
 }
-}
+/**
+@__ref <oiref:design#Class#id3gombc3l65dw7c3l6bqi3.diagram:oiref><oihard>
+@__modelType reference
+@__fqn <oiref:#Package#org.jboss.ejb.plugins.jrmp12.interfaces:oiref> 
+*/
+class reference {
+}/**
+@__ref <oiref:design#Class#id3gx06c3l65dw7c3l6bsm1.diagram:oiref><oihard>
+@__modelType reference
+@__fqn <oiref:#Package#org.jboss.ejb.plugins.jrmp12.server:oiref> 
+*/
+class reference1 {
+}}
 /**
 @__tags
 @shapeType ClassDiagram 

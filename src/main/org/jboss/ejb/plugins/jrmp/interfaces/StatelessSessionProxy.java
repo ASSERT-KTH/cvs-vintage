@@ -8,7 +8,6 @@ package org.jboss.ejb.plugins.jrmp.interfaces;
 
 import java.lang.reflect.Method;
 
-import org.jboss.ejb.plugins.jrmp.server.JRMPContainerInvoker;
 
 /**
  * An EJB stateless session bean proxy class.
@@ -16,7 +15,7 @@ import org.jboss.ejb.plugins.jrmp.server.JRMPContainerInvoker;
  * @author  <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>.
  * @author  <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
  * @author  <a href="mailto:jason@planet57.com">Jason Dillon</a>
- * @version $Revision: 1.17 $
+ * @version $Revision: 1.18 $
  */
 public class StatelessSessionProxy
     extends BeanProxy

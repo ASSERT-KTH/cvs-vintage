@@ -9,9 +9,7 @@ package org.jboss.ejb;
 
 import java.util.HashMap;
 
-import org.jboss.metadata.EntityMetaData;
 import org.jboss.ejb.Container;
-import org.jboss.tm.TxManager;
 
 /**
  * Manages BeanLocks.  All BeanLocks have a reference count.
@@ -21,7 +19,7 @@ import org.jboss.tm.TxManager;
  * @author <a href="bill@burkecentral.com">Bill Burke</a>
  * @author <a href="marc.fleury@jboss.org">Marc Fleury</a>
  *
- * @version $Revision: 1.5 $
+ * @version $Revision: 1.6 $
  * <p><b>Revisions:</b><br>
  * <p><b>20010802: marcf</b>
  * <ol>

@@ -6,7 +6,6 @@
  */
 package org.jboss.ejb;
 
-import java.io.Externalizable;
 import java.io.ObjectOutput;
 import java.io.ObjectInput;
 import java.io.IOException;
@@ -16,7 +15,7 @@ import java.io.IOException;
  * it is used with CMP 2.0 for reading ahead.
  *
  * @author <a href="mailto:on@ibis.odessa.ua">Oleg Nitz</a>
- * @version $Revision: 1.1 $
+ * @version $Revision: 1.2 $
  */
 public final class ListCacheKey
 extends CacheKey

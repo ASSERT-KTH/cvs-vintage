@@ -8,12 +8,9 @@
 package org.jboss.ejb.plugins.jaws.jdbc;
 
 import java.lang.reflect.Field;
-import java.lang.reflect.Method;
 
-import java.util.Map;
 import java.util.Iterator;
 
-import java.rmi.NoSuchObjectException;
 import java.rmi.RemoteException;
 import java.rmi.ServerException;
 
@@ -21,8 +18,6 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-import org.jboss.ejb.EntityEnterpriseContext;
-import org.jboss.ejb.plugins.jaws.JAWSPersistenceManager;
 import org.jboss.ejb.plugins.jaws.JPMLoadEntitiesCommand;
 import org.jboss.ejb.plugins.jaws.metadata.CMPFieldMetaData;
 import org.jboss.ejb.plugins.jaws.metadata.FinderMetaData;
@@ -43,7 +38,7 @@ import org.apache.log4j.Category;
  * @author <a href="mailto:justin@j-m-f.demon.co.uk">Justin Forder</a>
  * @author <a href="mailto:dirk@jboss.de">Dirk Zimmermann</a>
  * @author <a href="mailto:danch@nvisia.com">Dan Christopherson</a>
- * @version $Revision: 1.7 $
+ * @version $Revision: 1.8 $
  *
  *   <p><b>Revisions:</b>
  *

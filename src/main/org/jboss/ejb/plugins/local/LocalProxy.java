@@ -6,24 +6,14 @@
  */
 package org.jboss.ejb.plugins.local;
 
-import java.io.IOException;
-import java.io.ObjectInput;
-import java.io.ObjectOutput;
 
-import java.util.HashMap;
 import java.lang.reflect.Method;
-import java.security.Principal;
 
-import javax.transaction.Transaction;
-import javax.transaction.TransactionManager;
-import javax.transaction.SystemException;
 
 import javax.ejb.EJBLocalHome;
 import javax.ejb.EJBLocalObject;
 
 
-import org.jboss.security.SecurityAssociation;
-import org.jboss.ejb.CacheKey;
 
 
 /**

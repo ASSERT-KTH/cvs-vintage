@@ -8,7 +8,6 @@ package org.jboss.ejb.plugins.local;
 
 
 import java.lang.reflect.Method;
-import java.rmi.MarshalledObject;
 
 import javax.naming.Name;
 
@@ -16,9 +15,7 @@ import javax.ejb.EJBLocalHome;
 import javax.ejb.EJBLocalObject;
 import javax.ejb.Handle;
 import javax.ejb.HomeHandle;
-import javax.ejb.EJBMetaData;
 
-import org.jboss.ejb.CacheKey;
 
 /**
  * The client-side proxy for an EJB Home object.

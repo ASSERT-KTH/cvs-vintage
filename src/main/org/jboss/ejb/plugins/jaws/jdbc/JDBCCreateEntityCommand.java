@@ -8,7 +8,6 @@
 package org.jboss.ejb.plugins.jaws.jdbc;
 
 import java.lang.reflect.Field;
-import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
 import java.util.Iterator;
@@ -17,12 +16,10 @@ import java.rmi.RemoteException;
 import java.rmi.ServerException;
 
 import java.sql.PreparedStatement;
-import java.sql.SQLException;
 
 import javax.ejb.CreateException;
 import javax.ejb.DuplicateKeyException;
 
-import org.jboss.ejb.EntityContainer;
 import org.jboss.ejb.EntityEnterpriseContext;
 import org.jboss.ejb.plugins.jaws.JAWSPersistenceManager;
 import org.jboss.ejb.plugins.jaws.JPMCreateEntityCommand;
@@ -40,7 +37,7 @@ import org.apache.log4j.Category;
  * @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
  * @author <a href="mailto:shevlandj@kpi.com.au">Joe Shevland</a>
  * @author <a href="mailto:justin@j-m-f.demon.co.uk">Justin Forder</a>
- * @version $Revision: 1.8 $
+ * @version $Revision: 1.9 $
  *
  *   <p><b>Revisions:</b>
  *

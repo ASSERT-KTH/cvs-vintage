@@ -8,10 +8,7 @@
 package org.jboss.ejb.plugins.jaws.jdbc;
 
 import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
 
-import org.jboss.ejb.EntityEnterpriseContext;
 
 /**
  * JDBCPreloadByPrimaryKey
@@ -21,7 +18,7 @@ import org.jboss.ejb.EntityEnterpriseContext;
  *
  * @see <related>
  * @author <a href="mailto:bill@burkecentral.com">Bill Burke</a>
- * @version $Revision: 1.2 $
+ * @version $Revision: 1.3 $
  */
 public class JDBCPreloadByPrimaryKeyCommand extends JDBCPreloadFinderCommand
 {

@@ -17,15 +17,12 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Field;
-import java.lang.reflect.InvocationTargetException;
 import java.rmi.RemoteException;
 import java.rmi.ServerException;
-import java.util.Collection;
 import java.util.ArrayList;
 
 import javax.ejb.EJBObject;
 import javax.ejb.Handle;
-import javax.ejb.EntityBean;
 import javax.ejb.CreateException;
 import javax.ejb.DuplicateKeyException;
 import javax.ejb.FinderException;
@@ -43,7 +40,7 @@ import org.jboss.util.FinderResults;
 *   @see <related>
 *   @author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
 *   @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
-*   @version $Revision: 1.12 $
+*   @version $Revision: 1.13 $
 *   <p><b>20010801 marc fleury:</b>
 *   <ul>
 *   <li>- insertion in cache upon create in now done in the instance interceptor

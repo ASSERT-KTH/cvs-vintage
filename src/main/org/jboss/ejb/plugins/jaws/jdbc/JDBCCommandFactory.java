@@ -9,14 +9,9 @@ package org.jboss.ejb.plugins.jaws.jdbc;
 
 import java.lang.reflect.Method;
 import java.lang.ref.SoftReference;
-import java.lang.ref.WeakReference;
 import java.lang.ref.ReferenceQueue;
 import java.util.Map;
 import java.util.HashMap;
-import java.util.List;
-import java.util.LinkedList;
-import java.util.Iterator;
-import java.util.WeakHashMap;
 
 import javax.naming.Context;
 import javax.naming.InitialContext;
@@ -48,7 +43,6 @@ import org.jboss.ejb.plugins.jaws.metadata.JawsEntityMetaData;
 import org.jboss.ejb.plugins.jaws.metadata.JawsApplicationMetaData;
 import org.jboss.ejb.plugins.jaws.metadata.FinderMetaData;
 
-import org.jboss.util.FinderResults;
 import org.jboss.util.TimerTask;
 import org.jboss.util.TimerQueue;
 
@@ -70,7 +64,7 @@ import org.apache.log4j.Category;
  * @author <a href="mailto:justin@j-m-f.demon.co.uk">Justin Forder</a>
  * @author <a href="danch@nvisia.com">danch (Dan Christopherson)</a>
  * @author <a href="bill@burkecentral.com">Bill Burke</a>
- * @version $Revision: 1.14 $
+ * @version $Revision: 1.15 $
  *
  *   <p><b>Revisions:</b>
  *

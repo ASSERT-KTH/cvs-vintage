@@ -7,7 +7,6 @@
 package org.jboss.ejb.plugins.jaws.metadata;
 
 import java.lang.reflect.Field;
-import java.util.Iterator;
 
 /**
  * This is a wrapper class that holds all the
@@ -19,7 +18,7 @@ import java.util.Iterator;
  * @see <related>
  * @author <a href="mailto:justin@j-m-f.demon.co.uk">Justin Forder</a>
  * @author <a href="mailto:sebastien.alborini@m4x.org">Sebastien Alborini</a>
- * @version $Revision: 1.3 $
+ * @version $Revision: 1.4 $
  */
 
 public class PkFieldMetaData

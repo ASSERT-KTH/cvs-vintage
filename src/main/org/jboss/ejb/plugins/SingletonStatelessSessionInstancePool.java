@@ -10,7 +10,6 @@ import java.rmi.RemoteException;
 import java.rmi.ServerException;
 import java.util.Map;
 import java.util.HashMap;
-import javax.ejb.EJBHome;
 
 import org.jboss.ejb.Container;
 import org.jboss.ejb.InstancePool;
@@ -30,7 +29,7 @@ import org.jboss.management.j2ee.CountStatistic;
  *
  *  @see <related>
  *  @author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
- *  @version $Revision: 1.12 $
+ *  @version $Revision: 1.13 $
  *
  * <p><b>Revisions:</b>
  * <p><b>20010718 andreas schaefer:</b>

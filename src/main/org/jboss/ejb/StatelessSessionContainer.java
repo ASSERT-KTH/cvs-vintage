@@ -8,7 +8,6 @@ package org.jboss.ejb;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.security.Principal;
 import java.util.Map;
 import java.util.HashMap;
 import java.rmi.RemoteException;
@@ -30,7 +29,7 @@ import javax.ejb.EJBException;
  * @author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
  * @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
  * @author <a href="mailto:docodan@mvcsoft.com">Daniel OConnor</a>
- * @version $Revision: 1.28 $
+ * @version $Revision: 1.29 $
  */
 public class StatelessSessionContainer
    extends Container

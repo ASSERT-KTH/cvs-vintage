@@ -9,17 +9,15 @@ package org.jboss.ejb;
 import java.lang.reflect.Method;
 import java.rmi.RemoteException;
 
-import javax.ejb.CreateException;
 import javax.ejb.RemoveException;
 
-import org.jboss.ejb.Container;
 
 /**
  *	<description> 
  *      
  *	@see <related>
  *	@author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
- *	@version $Revision: 1.6 $
+ *	@version $Revision: 1.7 $
  */
 public interface StatefulSessionPersistenceManager
    extends ContainerPlugin

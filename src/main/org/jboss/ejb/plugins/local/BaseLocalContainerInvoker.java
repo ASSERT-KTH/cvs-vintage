@@ -6,24 +6,18 @@
  */
 package org.jboss.ejb.plugins.local;
 
-import java.awt.Component;
-import java.beans.beancontext.BeanContextChildComponentProxy;
-import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.Method;
-import java.lang.reflect.Constructor;
 import java.security.Principal;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.HashMap;
-import java.util.Properties;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Proxy;
 
 import org.jboss.ejb.LocalHomeObjectFactory;
-import javax.ejb.EJBMetaData;
 import javax.ejb.EJBLocalHome;
 import javax.ejb.EJBLocalObject;
 import javax.ejb.AccessLocalException;
@@ -51,9 +45,7 @@ import org.jboss.ejb.plugins.jrmp.interfaces.RemoteMethodInvocation;
 
 import org.jboss.ejb.Container;
 import org.jboss.ejb.ContainerInvokerContainer;
-import org.jboss.ejb.Interceptor;
 import org.jboss.ejb.LocalContainerInvoker;
-import org.jboss.ejb.plugins.jrmp.interfaces.EJBMetaDataImpl;
 import org.jboss.ejb.CacheKey;
 
 import org.jboss.tm.TransactionPropagationContextFactory;
@@ -63,9 +55,6 @@ import org.jboss.security.SecurityAssociation;
 import org.jboss.logging.Logger;
 
 import org.jboss.ejb.DeploymentException;
-import org.jboss.metadata.MetaData;
-import org.jboss.metadata.EntityMetaData;
-import org.jboss.metadata.SessionMetaData;
 
 
 /**

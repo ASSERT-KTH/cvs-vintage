@@ -7,8 +7,6 @@
 
 package org.jboss.ejb.plugins.jaws.jdbc;
 
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
 
 import org.jboss.ejb.plugins.jaws.JPMDestroyCommand;
 
@@ -22,7 +20,7 @@ import org.apache.log4j.Category;
  * @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
  * @author <a href="mailto:shevlandj@kpi.com.au">Joe Shevland</a>
  * @author <a href="mailto:justin@j-m-f.demon.co.uk">Justin Forder</a>
- * @version $Revision: 1.8 $
+ * @version $Revision: 1.9 $
  *
  *   <p><b>Revisions:</b>
  *

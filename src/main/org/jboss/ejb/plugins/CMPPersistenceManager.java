@@ -10,21 +10,15 @@ import java.lang.reflect.Method;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Field;
 import java.rmi.RemoteException;
-import java.rmi.ServerException;
 import java.util.Collection;
 import java.util.Iterator;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
 import javax.ejb.EntityBean;
-import javax.ejb.CreateException;
-import javax.ejb.FinderException;
 import javax.ejb.RemoveException;
 import javax.ejb.EJBException;
 
-import javax.transaction.Transaction;
-import javax.transaction.Status;
 
 import org.jboss.ejb.Container;
 import org.jboss.ejb.EntityContainer;
@@ -35,7 +29,6 @@ import org.jboss.ejb.EntityPersistenceStore;
 import org.jboss.ejb.EntityPersistenceStore2;
 import org.jboss.metadata.EntityMetaData;
 
-import org.jboss.util.FinderResults;
 import org.jboss.util.Sync;
 
 import org.jboss.management.j2ee.CountStatistic;
@@ -53,7 +46,7 @@ import org.jboss.management.j2ee.TimeStatistic;
  *   @author <a href="mailto:danch@nvisia.com">Dan Christopherson</a>
  *   @author <a href="mailto:bill@burkecentral.com">Bill Burke</a>
  *   @author <a href="mailto:andreas.schaefer@madplanet.com">Andreas Schaefer</a>
- *   @version $Revision: 1.34 $
+ *   @version $Revision: 1.35 $
  *
  *   Revisions:
  *   20010621 Bill Burke: removed loadEntities call because CMP read-ahead is now

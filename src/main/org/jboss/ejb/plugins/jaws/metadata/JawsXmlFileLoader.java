@@ -8,10 +8,8 @@
 package org.jboss.ejb.plugins.jaws.metadata;
 
 import java.net.URL;
-import java.io.IOException;
 
 import org.w3c.dom.Document;
-import org.w3c.dom.Element;
 
 import org.jboss.ejb.DeploymentException;
 
@@ -26,7 +24,7 @@ import org.apache.log4j.Category;
  *
  *	@see <related>
  *	@author <a href="sebastien.alborini@m4x.org">Sebastien Alborini</a>
- *	@version $Revision: 1.7 $
+ *	@version $Revision: 1.8 $
  *
  *   <p><b>Revisions:</b>
  *

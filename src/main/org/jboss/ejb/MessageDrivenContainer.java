@@ -8,7 +8,6 @@ package org.jboss.ejb;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.security.Principal;
 import java.util.Map;
 import java.util.HashMap;
 
@@ -32,7 +31,7 @@ import javax.ejb.EJBException;
  * @author <a href="mailto:docodan@mvcsoft.com">Daniel OConnor</a>
  * @author <a href="mailto:jason@planet57.com">Jason Dillon</a>
  * @author <a href="mailto:Scott.Stark@jboss.org">Scott Stark</a>
- * @version $Revision: 1.15 $
+ * @version $Revision: 1.16 $
  */
 public class MessageDrivenContainer
     extends Container

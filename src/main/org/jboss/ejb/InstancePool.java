@@ -6,7 +6,6 @@
  */
 package org.jboss.ejb;
 
-import java.rmi.RemoteException;
 
 import org.jboss.monitor.StatisticsProvider;
 
@@ -14,7 +13,7 @@ import org.jboss.monitor.StatisticsProvider;
  * Defines the model for a EnterpriseContext instance pool.
  *      
  * @author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
- * @version $Revision: 1.7 $
+ * @version $Revision: 1.8 $
  *      
  * <p><b>Revisions:</b>
  * <p><b>20010718 andreas schaefer:</b>

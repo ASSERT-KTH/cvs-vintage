@@ -6,9 +6,7 @@
  */
 package org.jboss.ejb.plugins;
 
-import java.lang.reflect.Method;
 import java.rmi.RemoteException;
-import java.util.Map;
 import java.security.Principal;
 import javax.ejb.EJBContext;
 import javax.naming.InitialContext;
@@ -32,7 +30,7 @@ import org.jboss.security.SecurityProxyFactory;
  * interceptor has access to the EJB instance and context.
  * 
  * @author <a href="mailto:Scott_Stark@displayscape.com">Scott Stark</a>.
- * @version $Revision: 1.6 $
+ * @version $Revision: 1.7 $
  */
 public class SecurityProxyInterceptor
    extends AbstractInterceptor

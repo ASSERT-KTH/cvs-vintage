@@ -8,30 +8,19 @@
 package org.jboss.ejb.plugins.jaws.jdbc;
 
 import java.lang.reflect.Field;
-import java.lang.reflect.Method;
 
-import java.util.Map;
 import java.util.Iterator;
 import java.util.ArrayList;
 import java.util.Collection;
 
-import java.rmi.NoSuchObjectException;
-import java.rmi.RemoteException;
-import java.rmi.ServerException;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import java.sql.SQLException;
 
-import org.jboss.ejb.EntityEnterpriseContext;
-import org.jboss.ejb.plugins.jaws.JAWSPersistenceManager;
-import org.jboss.ejb.plugins.jaws.JPMLoadEntitiesCommand;
 import org.jboss.ejb.plugins.jaws.metadata.CMPFieldMetaData;
 import org.jboss.ejb.plugins.jaws.metadata.FinderMetaData;
 import org.jboss.ejb.plugins.jaws.metadata.JawsEntityMetaData;
 import org.jboss.ejb.plugins.jaws.metadata.PkFieldMetaData;
-import org.jboss.ejb.plugins.jaws.metadata.TypeMappingMetaData;
-import org.jboss.util.FinderResults;
 
 import org.apache.log4j.Category;
 
@@ -41,7 +30,7 @@ import org.apache.log4j.Category;
  * @see <related>
  * @author <a href="mailto:danch@nvisia.com">danch (Dan Christopherson)</a>
  * @author <a href="mailto:bill@burkecentral.com">Bill Burke</a>
- * @version $Revision: 1.4 $
+ * @version $Revision: 1.5 $
  * 
  *   <p><b>Revisions:</b>
  *

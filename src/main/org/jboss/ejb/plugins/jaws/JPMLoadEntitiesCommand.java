@@ -8,9 +8,7 @@
 package org.jboss.ejb.plugins.jaws;
 
 import java.rmi.RemoteException;
-import java.util.Map;
 import org.jboss.util.FinderResults;
-import org.jboss.ejb.plugins.jaws.metadata.PkFieldMetaData;
 
 /**
  * Interface for JAWSPersistenceManager LoadEntities - <b>pre</b> load data for a 
@@ -20,7 +18,7 @@ import org.jboss.ejb.plugins.jaws.metadata.PkFieldMetaData;
  * violate the container contract by loading data before ejbActivate is called.
  *      
  * @author <a href="mailto:danch@nvisia.com">Dan Christopherson</a>
- * @version $Revision: 1.4 $
+ * @version $Revision: 1.5 $
  */
 public interface JPMLoadEntitiesCommand
 {

@@ -7,7 +7,6 @@
  
 package org.jboss.ejb.plugins.jaws;
 
-import java.util.Collection;
 import java.lang.reflect.Method;
 import org.jboss.ejb.EntityEnterpriseContext;
 import org.jboss.util.FinderResults;
@@ -16,7 +15,7 @@ import org.jboss.util.FinderResults;
  * Interface for JAWSPersistenceManager FindEntities Command.
  *      
  * @author <a href="mailto:justin@j-m-f.demon.co.uk">Justin Forder</a>
- * @version $Revision: 1.5 $
+ * @version $Revision: 1.6 $
  */
 public interface JPMFindEntitiesCommand
 {

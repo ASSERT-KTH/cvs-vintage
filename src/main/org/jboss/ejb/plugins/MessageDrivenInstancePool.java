@@ -6,9 +6,7 @@
  */
 package org.jboss.ejb.plugins;
 
-import java.rmi.RemoteException;
 
-import org.jboss.ejb.Container;
 import org.jboss.ejb.EnterpriseContext;
 import org.jboss.ejb.MessageDrivenEnterpriseContext;
 
@@ -20,7 +18,7 @@ import org.jboss.ejb.MessageDrivenEnterpriseContext;
  *      @author <a href="mailto:peter.antman@tim.se">Peter Antman</a>.
  * @author <a href="mailto:andreas.schaefer@madplanet.com">Andreas Schaefer</a>
  * @author <a href="mailto:sacha.labourey@cogito-info.ch">Sacha Labourey</a>
- *	@version $Revision: 1.7 $
+ *	@version $Revision: 1.8 $
  *      
  * <p><b>Revisions:</b>
  * <p><b>20010718 andreas schaefer:</b>

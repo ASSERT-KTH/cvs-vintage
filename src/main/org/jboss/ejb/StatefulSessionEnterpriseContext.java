@@ -14,7 +14,6 @@ import java.io.ObjectOutputStream;
 import java.rmi.RemoteException;
 
 import javax.ejb.EJBContext;
-import javax.ejb.EJBHome;
 import javax.ejb.EJBLocalObject;
 import javax.ejb.EJBObject;
 import javax.ejb.EJBLocalObject;
@@ -22,14 +21,13 @@ import javax.ejb.SessionBean;
 import javax.ejb.SessionContext;
 import org.jboss.logging.Logger;
 
-import org.jboss.metadata.SessionMetaData;
 
 /**
  * The enterprise context for stateful session beans.
  *
  * @author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
  * @author <a href="mailto:docodan@mvcsoft.com">Daniel OConnor</a>
- * @version $Revision: 1.17 $
+ * @version $Revision: 1.18 $
  */
 public class StatefulSessionEnterpriseContext
    extends EnterpriseContext

@@ -6,8 +6,6 @@
 */
 package org.jboss.ejb.plugins;
 
-import java.beans.Beans;
-import java.beans.beancontext.BeanContextServicesSupport;
 import java.io.File;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -21,30 +19,13 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 import java.lang.reflect.InvocationTargetException;
 import java.rmi.RemoteException;
-import java.rmi.NoSuchObjectException;
 import java.rmi.ServerException;
-import java.util.Collection;
 import java.util.ArrayList;
-import java.util.Iterator;
-import java.sql.SQLException;
-import java.sql.ResultSet;
-import java.sql.ResultSetMetaData;
-import java.sql.DriverManager;
-import java.sql.Statement;
-import java.sql.PreparedStatement;
-import java.sql.Connection;
 
-import javax.ejb.EJBObject;
 import javax.ejb.Handle;
 import javax.ejb.SessionBean;
-import javax.ejb.SessionContext;
-import javax.ejb.CreateException;
-import javax.ejb.DuplicateKeyException;
-import javax.ejb.FinderException;
 import javax.ejb.RemoveException;
 import javax.ejb.EJBException;
-import javax.naming.Context;
-import javax.naming.InitialContext;
 
 import org.jboss.ejb.Container;
 import org.jboss.ejb.StatefulSessionContainer;
@@ -63,7 +44,7 @@ import org.jboss.logging.Logger;
 *  @author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
 *  @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
 *  @author <a href="mailto:sebastien.alborini@m4x.org">Sebastien Alborini</a>
-*  @version $Revision: 1.24 $
+*  @version $Revision: 1.25 $
 */
 public class StatefulSessionFilePersistenceManager
 implements StatefulSessionPersistenceManager

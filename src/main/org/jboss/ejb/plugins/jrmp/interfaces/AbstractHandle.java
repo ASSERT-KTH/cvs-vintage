@@ -6,7 +6,6 @@
  */
 package org.jboss.ejb.plugins.jrmp.interfaces;
 
-import java.io.IOException;
 import java.io.Serializable;
 import java.rmi.ServerException;
 
@@ -18,7 +17,7 @@ import javax.naming.*;
  * An abstract base handle class from which all handles extend from.
  *      
  * @author  <a href="mailto:jason@planet57.com">Jason Dillon</a>
- * @version $Revision: 1.3 $
+ * @version $Revision: 1.4 $
  */
 public abstract class AbstractHandle
    implements Serializable

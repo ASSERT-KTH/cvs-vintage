@@ -9,7 +9,6 @@ package org.jboss.ejb.plugins;
 import java.lang.reflect.Method;
 import java.lang.reflect.InvocationTargetException;
 import java.rmi.RemoteException;
-import java.rmi.ServerException;
 import java.util.Collection;
 import java.util.ArrayList;
 import java.util.Enumeration;
@@ -40,7 +39,7 @@ import org.apache.log4j.Category;
 *  @author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
 *  @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
 *  @author <a href="mailto:andreas.schaefer@madplanet.com">Andreas Schaefer</a>
-*  @version $Revision: 1.31 $
+*  @version $Revision: 1.32 $
 *
 *  <p><b>Revisions:</b>
 *  <p><b>20010709 andreas schaefer:</b>

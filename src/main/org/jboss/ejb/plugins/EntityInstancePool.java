@@ -6,11 +6,8 @@
  */
 package org.jboss.ejb.plugins;
 
-import java.rmi.RemoteException;
 
-import javax.ejb.EJBException;
 
-import org.jboss.ejb.Container;
 import org.jboss.ejb.EnterpriseContext;
 import org.jboss.ejb.EntityEnterpriseContext;
 
@@ -22,7 +19,7 @@ import org.jboss.ejb.EntityEnterpriseContext;
  *  @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
  *  @author <a href="mailto:andreas.schaefer@madplanet.com">Andreas Schaefer</a>
  * @author <a href="mailto:sacha.labourey@cogito-info.ch">Sacha Labourey</a>
- *	@version $Revision: 1.15 $
+ *	@version $Revision: 1.16 $
  *      
  * <p><b>Revisions:</b>
  * <p><b>20010718 andreas schaefer:</b>

@@ -7,17 +7,8 @@
 
 package org.jboss.ejb;
 
-import java.util.LinkedList;
-import java.util.HashMap;
-import java.util.Collections;
-import java.lang.reflect.Method;
 
 import javax.transaction.Transaction;
-import javax.transaction.Status;
-import javax.transaction.Synchronization;
-import javax.transaction.TransactionManager;
-import javax.transaction.RollbackException;
-import javax.ejb.EJBObject;
 
 import org.jboss.ejb.MethodInvocation;
 
@@ -27,7 +18,7 @@ import org.jboss.ejb.MethodInvocation;
  * @author <a href="bill@burkecentral.com">Bill Burke</a>
  * @author <a href="marc.fleury@jboss.org">Marc Fleury</a>
  *
- * @version $Revision: 1.11 $
+ * @version $Revision: 1.12 $
  *
  * <p><b>Revisions:</b><br>
 *  <p><b>2001/07/29: marcf</b>

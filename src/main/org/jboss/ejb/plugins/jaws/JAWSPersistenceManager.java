@@ -10,12 +10,8 @@ import java.lang.reflect.Method;
 
 import java.rmi.RemoteException;
 
-import java.util.Collection;
-import java.util.Map;
 
 import javax.ejb.CreateException;
-import javax.ejb.DuplicateKeyException;
-import javax.ejb.FinderException;
 import javax.ejb.RemoveException;
 
 import org.apache.log4j.Category;
@@ -38,7 +34,7 @@ import org.jboss.util.FinderResults;
  * @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
  * @author <a href="mailto:shevlandj@kpi.com.au">Joe Shevland</a>
  * @author <a href="mailto:justin@j-m-f.demon.co.uk">Justin Forder</a>
- * @version $Revision: 1.32 $
+ * @version $Revision: 1.33 $
  *
  *   <p><b>Revisions:</b>
  *

@@ -19,7 +19,6 @@ import org.jboss.ejb.EntityEnterpriseContext;
 import org.jboss.logging.Logger;
 
 import org.jboss.ejb.plugins.jaws.JPMFindEntitiesCommand;
-import org.jboss.metadata.BeanMetaData;
 import org.jboss.util.FinderResults;
 
 /**
@@ -31,7 +30,7 @@ import org.jboss.util.FinderResults;
  *
  * @see org.jboss.ejb.plugins.jaws.jdbc.JDBCFindEntitiesCommand
  * @author <a href="mailto:michel.anke@wolmail.nl">Michel de Groot</a>
- * @version $Revision: 1.8 $
+ * @version $Revision: 1.9 $
  */
 public class CustomFindByEntitiesCommand
    implements JPMFindEntitiesCommand

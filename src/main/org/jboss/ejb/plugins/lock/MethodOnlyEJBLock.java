@@ -7,21 +7,10 @@
 
 package org.jboss.ejb.plugins.lock;
 
-import java.util.LinkedList;
-import java.util.HashMap;
-import java.util.Collections;
-import java.lang.reflect.Method;
 
 import javax.transaction.Transaction;
-import javax.transaction.Status;
-import javax.transaction.Synchronization;
-import javax.transaction.TransactionManager;
-import javax.transaction.RollbackException;
-import javax.ejb.EJBObject;
 
 import org.jboss.ejb.MethodInvocation;
-import java.io.FileOutputStream;
-import java.io.PrintStream;
 
 /**
  * This class does not perform any pessimistic transactional locking. Only locking
@@ -35,7 +24,7 @@ import java.io.PrintStream;
  *
  * @author <a href="bill@burkecentral.com">Bill Burke</a>
  *
- * @version $Revision: 1.2 $
+ * @version $Revision: 1.3 $
  *
  * <p><b>Revisions:</b><br>
  * <p><b>2001/08/08: billb</b>

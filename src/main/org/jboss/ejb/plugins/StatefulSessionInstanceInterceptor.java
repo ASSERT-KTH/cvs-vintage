@@ -8,7 +8,6 @@ package org.jboss.ejb.plugins;
 
 import java.lang.reflect.Method;
 import java.rmi.RemoteException;
-import java.util.Map;
 
 import javax.transaction.Transaction;
 import javax.transaction.RollbackException;
@@ -26,7 +25,6 @@ import org.jboss.ejb.Container;
 import org.jboss.ejb.InstanceCache;
 import org.jboss.ejb.InstancePool;
 import org.jboss.ejb.StatefulSessionContainer;
-import org.jboss.ejb.StatefulSessionEnterpriseContext;
 import org.jboss.ejb.EnterpriseContext;
 import org.jboss.ejb.MethodInvocation;
 import org.jboss.metadata.SessionMetaData;
@@ -37,7 +35,7 @@ import org.jboss.metadata.SessionMetaData;
  * @author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
  * @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
  * @author <a href="mailto:bill@burkecentral.com">Bill Burke</a>
- * @version $Revision: 1.22 $
+ * @version $Revision: 1.23 $
  *
  * <p><b>Revisions:</b>
  * <p><b>20010704 marcf</b>

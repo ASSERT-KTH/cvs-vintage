@@ -9,16 +9,13 @@ package org.jboss.ejb.plugins.jaws.metadata;
 import java.util.Hashtable;
 import java.util.Iterator;
 
-import java.sql.Types;
 
-import javax.ejb.EJBObject;
 
 import org.w3c.dom.Element;
 
 import org.jboss.ejb.DeploymentException;
 
 import org.jboss.metadata.MetaData;
-import org.jboss.metadata.EjbRefMetaData;
 import org.jboss.metadata.XmlLoadable;
 
 
@@ -27,7 +24,7 @@ import org.jboss.metadata.XmlLoadable;
  *
  *  @see <related>
  *  @author <a href="sebastien.alborini@m4x.org">Sebastien Alborini</a>
- *  @version $Revision: 1.4 $
+ *  @version $Revision: 1.5 $
  */
 public class TypeMappingMetaData extends MetaData implements XmlLoadable {
     // Constants -----------------------------------------------------

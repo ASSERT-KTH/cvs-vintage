@@ -6,7 +6,6 @@
  */
 package org.jboss.ejb.plugins;
 
-import java.lang.reflect.Method;
 
 import org.jboss.ejb.Container;
 import org.jboss.ejb.Interceptor;
@@ -18,7 +17,7 @@ import org.jboss.logging.Logger;
  *      
  * @author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
  * @author <a href="mailto:jason@planet57.com">Jason Dillon</a>
- * @version $Revision: 1.8 $
+ * @version $Revision: 1.9 $
  */
 public abstract class AbstractInterceptor
    implements Interceptor

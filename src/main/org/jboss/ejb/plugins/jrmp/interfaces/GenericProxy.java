@@ -26,7 +26,6 @@ import javax.transaction.SystemException;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
 
-import org.jboss.ejb.plugins.jrmp.server.JRMPContainerInvoker;
 import org.jboss.tm.TransactionPropagationContextFactory;
 
 import org.jboss.security.SecurityAssociation;
@@ -40,7 +39,7 @@ import org.jboss.security.SecurityAssociation;
  * @author  <a href="mailto:jason@planet57.com">Jason Dillon</a> *  
  * @author <a href="mailto:osh@sparre.dk">Ole Husgaard</a>
  * @author <a href="mailto:bill@burkecentral.com">Bill Burke</a>
- * @version $Revision: 1.15 $
+ * @version $Revision: 1.16 $
  *
  * <p><b>Revisions:</b><br>
  * <p><b>2001/10/16: billb</b>

@@ -11,15 +11,9 @@ import java.io.ObjectOutput;
 import java.io.ObjectInput;
 
 import java.lang.reflect.Method;
-import java.rmi.MarshalledObject;
 
-import javax.naming.InitialContext;
 
-import javax.ejb.EJBObject;
-import javax.ejb.EJBHome;
-import javax.naming.Name;
 
-import org.jboss.ejb.plugins.jrmp.server.JRMPContainerInvoker;
 
 /**
  * An EJB stateful session bean proxy class.
@@ -27,7 +21,7 @@ import org.jboss.ejb.plugins.jrmp.server.JRMPContainerInvoker;
  * @author  <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>.
  * @author  <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
  * @author  <a href="mailto:jason@planet57.com">Jason Dillon</a>
- * @version $Revision: 1.22 $
+ * @version $Revision: 1.23 $
  */
 public class StatefulSessionProxy
    extends BeanProxy

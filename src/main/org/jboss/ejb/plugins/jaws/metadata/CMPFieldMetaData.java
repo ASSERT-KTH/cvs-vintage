@@ -10,7 +10,6 @@ import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.sql.Types;
 import java.util.ArrayList;
-import java.util.Iterator;
 
 import org.w3c.dom.Element;
 
@@ -18,7 +17,6 @@ import org.jboss.ejb.DeploymentException;
 
 import org.jboss.metadata.XmlLoadable;
 import org.jboss.metadata.MetaData;
-import org.jboss.metadata.EjbRefMetaData;
 
 import java.util.*;
 
@@ -33,7 +31,7 @@ import org.jboss.logging.Logger;
  * @author <a href="mailto:dirk@jboss.de">Dirk Zimmermann</a>
  * @author <a href="mailto:vincent.harcq@hubmethods.com">Vincent Harcq</a>
  * @author <a href="mailto:david_jencks@earthlink.net">David Jencks</a>
- * @version $Revision: 1.11 $
+ * @version $Revision: 1.12 $
  *
  * Revison:
  * 20010621 danch: merged patch from David Jenks - null constraint on columns.

@@ -10,7 +10,6 @@ package org.jboss.ejb.plugins.jaws.jdbc;
 import java.lang.reflect.Method;
 
 import java.util.Collection;
-import java.util.ArrayList;
 
 import javax.ejb.FinderException;
 import javax.ejb.ObjectNotFoundException;
@@ -29,7 +28,7 @@ import org.jboss.util.FinderResults;
  * @author <a href="mailto:shevlandj@kpi.com.au">Joe Shevland</a>
  * @author <a href="mailto:justin@j-m-f.demon.co.uk">Justin Forder</a>
  * @author <a href="mailto:bill@burkecentral.com">Bill Burke</a>
- * @version $Revision: 1.9 $
+ * @version $Revision: 1.10 $
  *
  * Revision:
  * 20010621 Bill Burke: findByPrimaryKey may now do a read-ahead depending on configuration

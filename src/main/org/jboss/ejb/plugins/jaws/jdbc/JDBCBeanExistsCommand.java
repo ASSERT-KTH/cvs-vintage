@@ -11,7 +11,6 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-import org.jboss.ejb.EntityEnterpriseContext;
 
 import org.apache.log4j.Category;
 
@@ -21,7 +20,7 @@ import org.apache.log4j.Category;
  * @see <related>
  * @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
  * @author <a href="mailto:justin@j-m-f.demon.co.uk">Justin Forder</a>
- * @version $Revision: 1.9 $
+ * @version $Revision: 1.10 $
  *
  *   <p><b>Revisions:</b>
  *

@@ -23,14 +23,13 @@ import javax.naming.spi.ObjectFactory;
 
 import org.jboss.ejb.EnterpriseContext;
 import org.jboss.ejb.MethodInvocation;
-import org.jboss.logging.Logger;
 
 
 /**
  *  A common superclass for the BMT transaction interceptors.
  *
  *  @author <a href="mailto:osh@sparre.dk">Ole Husgaard</a>
- *  @version $Revision: 1.4 $
+ *  @version $Revision: 1.5 $
  */
 abstract class AbstractTxInterceptorBMT
    extends AbstractTxInterceptor

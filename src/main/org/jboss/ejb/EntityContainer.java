@@ -9,12 +9,9 @@ package org.jboss.ejb;
 import java.lang.reflect.Method;
 import java.lang.reflect.InvocationTargetException;
 import java.rmi.RemoteException;
-import java.security.Principal;
 import java.util.Map;
 import java.util.HashMap;
-import java.util.Enumeration;
 import java.util.Collection;
-import java.util.ArrayList;
 
 import javax.ejb.Handle;
 import javax.ejb.HomeHandle;
@@ -24,8 +21,6 @@ import javax.ejb.EJBHome;
 import javax.ejb.EJBLocalHome;
 import javax.ejb.EJBMetaData;
 import javax.ejb.EJBException;
-import javax.ejb.CreateException;
-import javax.ejb.FinderException;
 import javax.ejb.RemoveException;
 import javax.transaction.Transaction;
 
@@ -46,7 +41,7 @@ import javax.management.j2ee.CountStatistic;
  * @author <a href="mailto:docodan@mvcsoft.com">Daniel OConnor</a>
  * @author <a href="bill@burkecentral.com">Bill Burke</a>
  * @author <a href="mailto:andreas.schaefer@madplanet.com">Andreas Schaefer</a>
- * @version $Revision: 1.56 $
+ * @version $Revision: 1.57 $
  *
  * <p><b>Revisions:</b>
  *

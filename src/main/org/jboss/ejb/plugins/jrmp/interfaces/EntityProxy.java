@@ -10,14 +10,9 @@ import java.io.IOException;
 import java.io.ObjectOutput;
 import java.io.ObjectInput;
 
-import java.rmi.MarshalledObject;
 import java.lang.reflect.Method;
 
-import javax.naming.InitialContext;
-import javax.ejb.EJBObject;
-import javax.ejb.EJBHome;
 
-import org.jboss.ejb.plugins.jrmp.server.JRMPContainerInvoker;
 import org.jboss.ejb.CacheKey;
 
 /**
@@ -26,7 +21,7 @@ import org.jboss.ejb.CacheKey;
  * @author  <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>.
  * @author  <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
  * @author  <a href="mailto:jason@planet57.com">Jason Dillon</a>
- * @version $Revision: 1.27 $
+ * @version $Revision: 1.28 $
  */
 public class EntityProxy
     extends BeanProxy

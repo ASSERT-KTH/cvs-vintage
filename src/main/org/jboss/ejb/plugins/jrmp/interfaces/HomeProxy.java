@@ -23,7 +23,6 @@ import javax.ejb.EJBMetaData;
 import javax.ejb.RemoveException;
 
 import org.jboss.ejb.CacheKey;
-import org.jboss.ejb.plugins.jrmp.server.JRMPContainerInvoker;
 
 /**
  * The client-side proxy for an EJB Home object.
@@ -31,7 +30,7 @@ import org.jboss.ejb.plugins.jrmp.server.JRMPContainerInvoker;
  * @author  <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>.
  * @author  <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
  * @author  <a href="mailto:jason@planet57.com">Jason Dillon</a>
- * @version $Revision: 1.25 $
+ * @version $Revision: 1.26 $
  */
 public class HomeProxy
     extends GenericProxy

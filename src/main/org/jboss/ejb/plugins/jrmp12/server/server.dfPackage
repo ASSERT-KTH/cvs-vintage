@@ -54,7 +54,12 @@ class link70 {
 */
 class link71 {
 }
-}
+/**
+@__ref <oiref:java#Class#org.jboss.ejb.plugins.jrmp12.server.JRMPContainerInvoker:oiref><oihard>
+@__modelType reference 
+*/
+class reference {
+}}
 /**
 @__tags
 @shapeType ClassDiagram 

@@ -12,7 +12,6 @@ import java.util.HashMap;
 import java.util.Iterator;
 
 import java.rmi.RemoteException;
-import java.rmi.NoSuchObjectException;
 
 import javax.transaction.Status;
 import javax.transaction.SystemException;
@@ -32,7 +31,7 @@ import org.jboss.logging.Logger;
  *
  * @author <a href="mailto:simone.bordet@compaq.com">Simone Bordet</a>
  * @author <a href="mailto:sebastien.alborini@m4x.org">Sebastien Alborini</a>
- * @version $Revision: 1.12 $
+ * @version $Revision: 1.13 $
  */
 public class StatefulSessionInstanceCache
     extends AbstractInstanceCache

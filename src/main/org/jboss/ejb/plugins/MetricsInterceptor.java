@@ -10,7 +10,6 @@ package org.jboss.ejb.plugins;
 import java.lang.reflect.Method;
 import java.security.Principal;
 import java.util.Map;
-import java.util.Properties;
 import java.util.List;
 import java.util.ArrayList;
 
@@ -28,8 +27,6 @@ import javax.jms.Message;
 import javax.jms.Session;
 import javax.jms.Connection;
 import javax.jms.JMSException;
-import javax.jms.TransactionRolledBackException;
-import javax.jms.IllegalStateException;
 
 // jboss imports
 import org.jboss.ejb.Container;

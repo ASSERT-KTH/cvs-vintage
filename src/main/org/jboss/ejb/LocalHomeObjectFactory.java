@@ -12,12 +12,9 @@ import java.util.Hashtable;
 import java.util.Map;
 import javax.naming.Context;
 import javax.naming.Name;
-import javax.naming.NameAlreadyBoundException;
 import javax.naming.NameNotFoundException;
-import javax.naming.NamingException;
 import javax.naming.Reference;
 import javax.naming.RefAddr;
-import javax.naming.StringRefAddr;
 import javax.naming.spi.ObjectFactory;
 
 /**
@@ -25,7 +22,7 @@ import javax.naming.spi.ObjectFactory;
  *
  * @author <a href="mailto:Scott_Stark@displayscape.com">Scott Stark</a>.
  * @author <a href="mailto:docodan@mvcsoft.com">Daniel OConnor</a>
- * @version $Revision: 1.4 $
+ * @version $Revision: 1.5 $
  */
 public class LocalHomeObjectFactory
    implements ObjectFactory

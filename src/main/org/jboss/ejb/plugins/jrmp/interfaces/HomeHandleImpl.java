@@ -10,16 +10,14 @@ import java.rmi.RemoteException;
 import java.rmi.ServerException;
 import javax.ejb.HomeHandle;
 import javax.ejb.EJBHome;
-import javax.naming.InitialContext;
 import javax.naming.NamingException;
-import java.lang.reflect.Method;
 
 /**
  * An EJB home handle implementation.
  *      
  * @author  <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>.
  * @author  <a href="mailto:jason@planet57.com">Jason Dillon</a>
- * @version $Revision: 1.8 $
+ * @version $Revision: 1.9 $
  */
 public class HomeHandleImpl
     extends AbstractHandle

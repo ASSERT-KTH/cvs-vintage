@@ -8,12 +8,8 @@ package org.jboss.ejb;
 
 import java.lang.reflect.Method;
 import java.lang.reflect.InvocationTargetException;
-import java.security.Principal;
 import java.util.Map;
 import java.util.HashMap;
-import java.util.Enumeration;
-import java.util.Collection;
-import java.util.ArrayList;
 import java.rmi.RemoteException;
 
 import javax.ejb.Handle;
@@ -23,8 +19,6 @@ import javax.ejb.EJBLocalObject;
 import javax.ejb.EJBLocalHome;
 import javax.ejb.EJBHome;
 import javax.ejb.EJBMetaData;
-import javax.ejb.CreateException;
-import javax.ejb.FinderException;
 import javax.ejb.RemoveException;
 import javax.ejb.EJBException;
 
@@ -34,7 +28,7 @@ import javax.ejb.EJBException;
  * @author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
  * @author <a href="mailto:docodan@mvcsoft.com">Daniel OConnor</a>
  * @author <a href="mailto:marc.fleury@jboss.org">Marc Fleury</a>
- * @version $Revision: 1.37 $
+ * @version $Revision: 1.38 $
  *
  * <p><b>Revisions</b>
  * <p><b>20010704</b>

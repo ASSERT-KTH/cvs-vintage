@@ -18,7 +18,6 @@ import javax.transaction.TransactionRequiredException;
 import org.jboss.ejb.MethodInvocation;
 
 // TODO this needs to be replaced with the log4j logging
-import org.jboss.logging.Logger;
 
 import org.jboss.metadata.MetaData;
 import org.jboss.metadata.BeanMetaData;
@@ -31,7 +30,7 @@ import org.jboss.metadata.BeanMetaData;
  *  @author <a href="mailto:sebastien.alborini@m4x.org">Sebastien Alborini</a>
  *  @author <a href="mailto:akkerman@cs.nyu.edu">Anatoly Akkerman</a>
  *  @author <a href="mailto:osh@sparre.dk">Ole Husgaard</a>
- *  @version $Revision: 1.18 $
+ *  @version $Revision: 1.19 $
  */
 public class TxInterceptorCMT
     extends AbstractTxInterceptor

@@ -32,8 +32,6 @@ import org.w3c.dom.Element;
 import org.jboss.util.CachePolicy;
 import org.jboss.util.Executable;
 import org.jboss.util.WorkerQueue;
-import org.jboss.util.Sync;
-import org.jboss.util.Semaphore;
 import org.jboss.ejb.InstanceCache;
 import org.jboss.ejb.EnterpriseContext;
 import org.jboss.ejb.EntityEnterpriseContext;
@@ -64,7 +62,7 @@ import org.jboss.monitor.MetricsConstants;
  * @author <a href="bill@burkecentral.com">Bill Burke</a>
  * @author <a href="marc.fleury@jboss.org">Marc Fleury</a>
  *
- * @version $Revision: 1.21 $
+ * @version $Revision: 1.22 $
  *
  *   <p><b>Revisions:</b>
  *

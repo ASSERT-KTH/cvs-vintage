@@ -6,40 +6,15 @@
  */
 package org.jboss.ejb.plugins;
 
-import java.io.File;
 import java.io.InputStream;
-import java.io.OutputStream;
 import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
 import java.io.ObjectStreamClass;
-import java.io.FileOutputStream;
-import java.io.FileInputStream;
 import java.io.IOException;
-import java.lang.reflect.Method;
-import java.lang.reflect.Field;
-import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Proxy;
-import java.rmi.RemoteException;
-import java.rmi.ServerException;
-import java.util.Collection;
-import java.util.ArrayList;
 
-import javax.ejb.EJBObject;
-import javax.ejb.EJBHome;
 import javax.ejb.Handle;
 import javax.ejb.HomeHandle;
-import javax.ejb.EntityBean;
-import javax.ejb.SessionContext;
-import javax.ejb.CreateException;
-import javax.ejb.DuplicateKeyException;
-import javax.ejb.FinderException;
-import javax.ejb.RemoveException;
-import javax.naming.Context;
-import javax.transaction.UserTransaction;
 
-import org.jboss.ejb.Container;
-import org.jboss.ejb.EntityContainer;
-import org.jboss.ejb.EntityPersistenceManager;
 import org.jboss.ejb.StatefulSessionEnterpriseContext;
 
 /**
@@ -49,7 +24,7 @@ import org.jboss.ejb.StatefulSessionEnterpriseContext;
  *	@author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
  *	@author <a href="mailto:sebastien.alborini@m4x.org">Sebastien Alborini</a>
  *	@author <a href="mailto:scott.stark@jboss.org">Scott Stark</a>
- *	@version $Revision: 1.7 $
+ *	@version $Revision: 1.8 $
  */
 public class SessionObjectInputStream
 	extends ObjectInputStream

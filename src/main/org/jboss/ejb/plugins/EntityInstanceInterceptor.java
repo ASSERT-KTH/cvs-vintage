@@ -6,38 +6,18 @@
 */
 package org.jboss.ejb.plugins;
 
-import java.lang.reflect.Method;
 import java.rmi.RemoteException;
-import java.util.Map;
-import java.util.HashMap;
-import java.util.ArrayList;
-
-import javax.ejb.EJBObject;
-import javax.ejb.CreateException;
-import javax.ejb.EJBException;
-import javax.ejb.NoSuchEntityException;
-import javax.ejb.RemoveException;
-import javax.ejb.EntityBean;
-import javax.transaction.Status;
-import javax.transaction.Synchronization;
-import javax.transaction.Transaction;
-import javax.transaction.TransactionManager;
-import javax.transaction.RollbackException;
-import javax.transaction.SystemException;
 
 import org.jboss.ejb.Container;
 import org.jboss.ejb.BeanLock;
 import org.jboss.ejb.BeanLockManager;
 import org.jboss.ejb.EntityContainer;
-import org.jboss.ejb.EntityPersistenceManager;
 import org.jboss.ejb.EntityEnterpriseContext;
 import org.jboss.ejb.EnterpriseContext;
 import org.jboss.ejb.InstanceCache;
 import org.jboss.ejb.InstancePool;
 import org.jboss.ejb.MethodInvocation;
 import org.jboss.ejb.CacheKey;
-import org.jboss.metadata.EntityMetaData;
-import org.jboss.tm.TxManager;
 
 /**
 * The instance interceptors role is to acquire a context representing
@@ -60,7 +40,7 @@ import org.jboss.tm.TxManager;
 * @author <a href="mailto:marc.fleury@jboss.org">Marc Fleury</a>
 * @author <a href="mailto:Scott.Stark@jboss.org">Scott Stark</a>
 * @author <a href="mailto:bill@burkecentral.com">Bill Burke</a>
-* @version $Revision: 1.45 $
+* @version $Revision: 1.46 $
 *
 * <p><b>Revisions:</b><br>
 * <p><b>2001/06/28: marcf</b>

@@ -10,10 +10,8 @@ package org.jboss.ejb.plugins.jaws.jdbc;
 import java.util.Iterator;
 
 import java.sql.Connection;
-import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
 import java.sql.DatabaseMetaData;
 
 
@@ -35,7 +33,7 @@ import org.apache.log4j.Category;
  * @author <a href="mailto:david_jencks@earthlink.net">David Jencks</a>
  * @author <a href="mailto:danch@nvisia.com">danch (Dan Christopherson</a>
  * 
- * @version $Revision: 1.15 $
+ * @version $Revision: 1.16 $
  * 
  *   <p><b>Revisions:</b>
  *

@@ -8,9 +8,7 @@
 package org.jboss.ejb.plugins.jaws.jdbc;
 
 import java.rmi.RemoteException;
-import java.rmi.ServerException;
 
-import javax.ejb.EntityBean;
 
 import org.jboss.ejb.EntityEnterpriseContext;
 import org.jboss.ejb.plugins.jaws.JAWSPersistenceManager;
@@ -22,7 +20,7 @@ import org.jboss.ejb.plugins.jaws.JPMActivateEntityCommand;
  * @see <related>
  * @author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
  * @author <a href="mailto:justin@j-m-f.demon.co.uk">Justin Forder</a>
- * @version $Revision: 1.3 $
+ * @version $Revision: 1.4 $
  */
  
 public class JDBCActivateEntityCommand implements JPMActivateEntityCommand

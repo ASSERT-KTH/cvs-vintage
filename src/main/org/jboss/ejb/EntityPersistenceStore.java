@@ -9,7 +9,6 @@ package org.jboss.ejb;
 import java.lang.reflect.Method;
 import java.rmi.RemoteException;
 
-import javax.ejb.FinderException;
 import javax.ejb.RemoveException;
 
 import org.jboss.ejb.ContainerPlugin;
@@ -27,7 +26,7 @@ import org.jboss.util.FinderResults;
  * @author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
  * @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
  * @author <a href="mailto:simone.bordet@compaq.com">Simone Bordet</a>
- * @version $Revision: 1.7 $
+ * @version $Revision: 1.8 $
  */
 public interface EntityPersistenceStore
    extends ContainerPlugin

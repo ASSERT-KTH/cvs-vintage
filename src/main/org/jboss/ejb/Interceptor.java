@@ -6,14 +6,12 @@
  */
 package org.jboss.ejb;
 
-import java.lang.reflect.Method;
-import java.security.Principal;
 
 /**
  * Provides the interface for all container interceptors.
  *      
  * @author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
- * @version $Revision: 1.7 $
+ * @version $Revision: 1.8 $
  */
 public interface Interceptor
    extends ContainerPlugin

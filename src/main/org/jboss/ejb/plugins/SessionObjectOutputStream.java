@@ -6,39 +6,15 @@
  */
 package org.jboss.ejb.plugins;
 
-import java.io.File;
-import java.io.InputStream;
 import java.io.OutputStream;
-import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-import java.io.FileOutputStream;
-import java.io.FileInputStream;
 import java.io.IOException;
-import java.lang.reflect.Method;
-import java.lang.reflect.Field;
-import java.lang.reflect.InvocationTargetException;
-import java.rmi.RemoteException;
-import java.rmi.ServerException;
-import java.util.Collection;
-import java.util.ArrayList;
 
 import javax.ejb.EJBObject;
 import javax.ejb.EJBHome;
-import javax.ejb.Handle;
-import javax.ejb.HomeHandle;
-import javax.ejb.EntityBean;
-import javax.ejb.CreateException;
-import javax.ejb.DuplicateKeyException;
-import javax.ejb.FinderException;
-import javax.ejb.RemoveException;
 import javax.ejb.SessionContext;
-import javax.naming.Context;
 import javax.transaction.UserTransaction;
 
-import org.jboss.ejb.Container;
-import org.jboss.ejb.EntityContainer;
-import org.jboss.ejb.EntityPersistenceManager;
-import org.jboss.ejb.EntityEnterpriseContext;
 
 /**
  * The SessionObjectOutputStream is used to serialize stateful session beans when they are passivated
@@ -46,7 +22,7 @@ import org.jboss.ejb.EntityEnterpriseContext;
  *	@see org.jboss.ejb.plugins.SessionObjectInputStream
  *	@author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
  *	@author <a href="mailto:sebastien.alborini@m4x.org">Sebastien Alborini</a>
- *	@version $Revision: 1.6 $
+ *	@version $Revision: 1.7 $
  */
 public class SessionObjectOutputStream
 	extends ObjectOutputStream
