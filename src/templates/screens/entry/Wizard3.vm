@@ -214,7 +214,7 @@
 <th width="120">$l10n.AfterSubmit</th>
 <td><select name="template_code">
 <option value="1"
-  #if ($userPref == 1) selected="selected" #end>$l10n.EnterNew $scarabR.CurrentRModuleIssueType.DisplayName.toLowerCase()</option>
+  #if ($userPref == 1) selected="selected" #end>$l10n.EnterNew: $scarabR.CurrentRModuleIssueType.DisplayName.toLowerCase()</option>
 #if (($scarabR.hasPermission($scarabG.Permission.ISSUE__ASSIGN, $module))
      && (!$module.getUserAttributes($issueType).isEmpty()))
   <option value="2"
