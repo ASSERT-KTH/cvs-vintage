@@ -16,7 +16,7 @@ import org.jboss.util.ServiceMBean;
  * 
  * @author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
  * @author <a href="mailto:toby.allsopp@peace.com">Toby Allsopp</a>
- * @version $Revision: 1.7 $
+ * @version $Revision: 1.8 $
  */
 public interface AutoDeployerMBean
    extends ServiceMBean
@@ -51,5 +51,22 @@ public interface AutoDeployerMBean
     * @return   The list of deployers that is currently being used.
     */
    String getDeployers();
+
+   /**
+    * Set the time in milli seconds the AutoDeployer have to sleep before
+    * looking again for new files.
+    *
+    * @param to Timeout in miliseconds
+    */
+   void setTimeout(int to);
+
+   /**
+    * Return the time in milli seconds the AutoDeployer have to sleep before
+    * looking again for new files.
+    *
+    * @return The timeout in miliseconds
+    */
+   int getTimeout();
+
 }
 

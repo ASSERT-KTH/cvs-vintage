@@ -47,7 +47,7 @@ import org.jboss.util.ServiceMBeanSupport;
  * @author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
  * @author <a href="mailto:toby.allsopp@peace.com">Toby Allsopp</a>
  * @author <a href="mailto:jason@planet57.com">Jason Dillon</a>
- * @version $Revision: 1.20 $
+ * @version $Revision: 1.21 $
  */
 public class AutoDeployer
 	extends ServiceMBeanSupport
@@ -83,6 +83,9 @@ public class AutoDeployer
    
    // URL list
    String urlList = "";
+
+   // TimeOut that in case of big ears to deploy should be set high enough
+   int timeout = 3000;
 
    /** Filters, one per configured deployer, to decide which files are
        deployable and which should be ignored */
@@ -127,6 +130,16 @@ public class AutoDeployer
       return deployerList;
    }
 
+   public void setTimeout(int to)
+   {
+      this.timeout = to;
+   }
+
+   public int getTimeout()
+   {
+      return timeout;
+   }
+
    // Public --------------------------------------------------------
    public void run()
    {
@@ -135,7 +148,11 @@ public class AutoDeployer
          // Sleep
          if (running)
          {
-            try { Thread.sleep(3000); } catch (InterruptedException e) {}
+            try
+            {
+               if (log.isDebugEnabled()) log.debug("Wait for "+timeout / 1000 +" seconds");
+               Thread.sleep(timeout);
+            } catch (InterruptedException e) {}
          }
 
          try
