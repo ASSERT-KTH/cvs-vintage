@@ -51,6 +51,7 @@ import org.argouml.cognitive.ui.TabToDoTarget;
 import org.argouml.model.ModelFacade;
 import org.argouml.swingext.Orientable;
 import org.argouml.swingext.Orientation;
+import org.argouml.ui.TabSpawnable;
 import org.argouml.ui.targetmanager.TargetEvent;
 import org.argouml.ui.targetmanager.TargetListener;
 import org.argouml.ui.targetmanager.TargetManager;
@@ -70,7 +71,7 @@ import org.argouml.util.ConfigLoader;
  * There are requests to have the cursor automatically
  * be set to the primary field.
  *
- * $Id: DetailsPane.java,v 1.29 2003/06/16 00:19:01 bobtarling Exp $
+ * $Id: DetailsPane.java,v 1.30 2003/06/22 17:12:22 bobtarling Exp $
  */
 public class DetailsPane
     extends JPanel
@@ -403,9 +404,20 @@ public class DetailsPane
         return null;
     }
 
-    
-
-    
+    /**
+     * returns the tab instance of the specified class
+     */
+    public TabSpawnable getTab(Class tabClass) {
+        Iterator iter = _tabPanels.iterator();
+        Object o;
+        while (iter.hasNext()) {
+            o = iter.next();
+            if (o.getClass().equals(tabClass)) {
+                return (TabSpawnable)o;
+            }
+        }
+        return null;
+    }
 
     ////////////////////////////////////////////////////////////////
     // event handlers
