@@ -49,12 +49,9 @@ package org.tigris.scarab.actions.admin;
 import java.util.List;
 import java.util.Iterator;
 import java.util.Locale;
-import java.sql.SQLException;
 
 // Turbine Stuff 
-import org.apache.fulcrum.template.DefaultTemplateContext;
-import org.apache.torque.om.NumberKey; 
-import org.apache.turbine.TemplateAction;
+import org.apache.torque.om.NumberKey;
 import org.apache.turbine.TemplateContext;
 import org.apache.turbine.modules.ContextAdapter;
 import org.apache.turbine.RunData;
@@ -69,18 +66,13 @@ import org.apache.fulcrum.localization.Localization;
 // Scarab Stuff
 import org.tigris.scarab.om.Query;
 import org.tigris.scarab.om.QueryPeer;
-import org.tigris.scarab.om.ActivitySet;
 import org.tigris.scarab.om.ScarabUser;
-import org.tigris.scarab.om.ScarabUserImplPeer;
 import org.tigris.scarab.om.ScarabUserManager;
 import org.tigris.scarab.om.PendingGroupUserRole;
 import org.tigris.scarab.om.Module;
-import org.tigris.scarab.om.Issue;
-import org.tigris.scarab.om.IssuePeer;
 import org.tigris.scarab.om.IssueTemplateInfo;
 import org.tigris.scarab.om.IssueTemplateInfoPeer;
 import org.tigris.scarab.util.Email;
-import org.tigris.scarab.attribute.OptionAttribute;
 import org.tigris.scarab.util.ScarabConstants;
 import org.tigris.scarab.util.ScarabException;
 import org.tigris.scarab.tools.ScarabRequestTool;
@@ -93,7 +85,7 @@ import org.tigris.scarab.services.security.ScarabSecurity;
  * This class is responsible for managing the approval process.
  *
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
- * @version $Id: Approval.java,v 1.28 2002/10/22 22:26:53 jon Exp $
+ * @version $Id: Approval.java,v 1.29 2002/10/23 21:35:47 jon Exp $
  */
 public class Approval extends RequireLoginFirstAction
 {
@@ -138,8 +130,7 @@ public class Approval extends RequireLoginFirstAction
             if (key.startsWith("query_id_"))
             {
                String queryId = key.substring(9);
-               Query query = (Query) QueryPeer
-                                     .retrieveByPK(new NumberKey(queryId));
+               Query query = QueryPeer.retrieveByPK(new NumberKey(queryId));
 
                action = params.getString("query_action_" + queryId);
                comment = params.getString("query_comment_" + queryId);
@@ -178,7 +169,7 @@ public class Approval extends RequireLoginFirstAction
             else if (key.startsWith("template_id_"))
             {
                String templateId = key.substring(12);
-               IssueTemplateInfo info = (IssueTemplateInfo) IssueTemplateInfoPeer
+               IssueTemplateInfo info = IssueTemplateInfoPeer
                                      .retrieveByPK(new NumberKey(templateId));
 
                action = params.getString("template_action_" + templateId);
