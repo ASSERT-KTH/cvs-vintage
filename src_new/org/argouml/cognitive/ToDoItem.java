@@ -1,4 +1,4 @@
-// $Id: ToDoItem.java,v 1.14 2004/08/29 10:30:57 mvw Exp $
+// $Id: ToDoItem.java,v 1.15 2004/10/21 11:18:05 mkl Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -27,7 +27,7 @@
 // File: ToDoItem.java
 // Classes: ToDoItem
 // Original Author: jrobbins@ics.uci.edu
-// $Id: ToDoItem.java,v 1.14 2004/08/29 10:30:57 mvw Exp $
+// $Id: ToDoItem.java,v 1.15 2004/10/21 11:18:05 mkl Exp $
 
 package org.argouml.cognitive;
 
@@ -36,6 +36,7 @@ import java.util.Enumeration;
 import javax.swing.Icon;
 import org.argouml.cognitive.critics.Critic;
 import org.argouml.kernel.Wizard;
+import org.argouml.kernel.WizardItem;
 import org.tigris.gef.ui.Highlightable;
 
 import org.tigris.gef.util.VectorSet;
@@ -55,7 +56,7 @@ import org.tigris.gef.util.VectorSet;
  *  Also the run-time system needs to know who posted each ToDoItem so
  *  that it can automatically remove it if it is no longer valid. 
  */
-public class ToDoItem implements Serializable {
+public class ToDoItem implements Serializable, WizardItem {
 
     ////////////////////////////////////////////////////////////////
     // constants
