@@ -4,8 +4,11 @@
 POPULATION_SCRIPT_DIR='../../target/webapps/scarab/WEB-INF/sql'
 
 # Sanity check
-if [ ! -d "${POPULATION_SCRIPT_DIR}" ]; then
-    echo "Population script directory '${POPULATION_SCRIPT_DIR}' does not exist"
+if [ ! -d "${POPULATION_SCRIPT_DIR}" ] ; then
+    echo "The population script directory:"
+    echo "'${POPULATION_SCRIPT_DIR}'"
+    echo "does not exist. Please build Scarab first using the"
+    echo "ant build system as described in the scarab/README.txt file."
     exit 1
 fi
 
@@ -28,7 +31,7 @@ fi
 if [ "$4" != "" ] ; then
     LOAD_ORDER=$4
 else
-    LOAD_ORDER=./LoadOrder.lst
+    LOAD_ORDER=${POPULATION_SCRIPT_DIR}/LoadOrder.lst
 fi
 
 MYSQL=`which mysql`
