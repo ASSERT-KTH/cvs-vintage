@@ -7,11 +7,6 @@
 
 package org.jboss.invocation.jrmp.interfaces;
 
-
-
-
-
-
 import java.io.Externalizable;
 import java.io.IOException;
 import java.io.ObjectInput;
@@ -30,15 +25,12 @@ import org.jboss.security.SecurityAssociation;
 import org.jboss.tm.TransactionPropagationContextFactory;
 
 /**
- * JRMPInvokerProxy, local to the proxy and is capable of delegating to local and JRMP implementations
+ * JRMPInvokerProxy, local to the proxy and is capable of delegating to
+ * the JRMP implementations
  * 
  * @author <a href="mailto:marc.fleury@jboss.org">Marc Fleury</a>
- * @version $Revision: 1.8 $
- *
- * <p><b>2001/11/19: marcf</b>
- * <ol>
- *   <li>Initial checkin
- * </ol>
+ * @author <a href="mailto:scott.stark@jboss.org">Scott Stark</a>
+ * @version $Revision: 1.9 $
  */
 public class JRMPInvokerProxy
    implements Invoker, Externalizable
@@ -66,14 +58,16 @@ public class JRMPInvokerProxy
    //  @todo: MOVE TO TRANSACTION
    // 
    // TPC factory
-   public static void setTPCFactory(TransactionPropagationContextFactory tpcf) {
+   public static void setTPCFactory(TransactionPropagationContextFactory tpcf)
+   {
       tpcFactory = tpcf;
    }
    
    /**
     * Exposed for externalization.
     */
-   public JRMPInvokerProxy() {
+   public JRMPInvokerProxy()
+   {
       super();
    }
    
@@ -91,7 +85,8 @@ public class JRMPInvokerProxy
    /**
     * The name of of the server.
     */
-   public String getServerHostName() throws Exception {
+   public String getServerHostName() throws Exception
+   {
       return remoteInvoker.getServerHostName();
    }
    
@@ -125,10 +120,13 @@ public class JRMPInvokerProxy
       //  @todo: MOVE TO TRANSACTION
       mi.setTransactionPropagationContext(getTransactionPropagationContext());
          
-      try { 
-         return ((MarshalledObject) remoteInvoker.invoke(mi)).get();
+      try
+      { 
+         MarshalledObject result = (MarshalledObject) remoteInvoker.invoke(mi);
+         return result.get();
       }
-      catch (ServerException ex) {
+      catch (ServerException ex)
+      {
          // Suns RMI implementation wraps NoSuchObjectException in
          // a ServerException. We cannot have that if we want
          // to comply with the spec, so we unwrap here.
@@ -152,22 +150,30 @@ public class JRMPInvokerProxy
    }
    
    /**
-    * Externalize this instance.
+    * Externalize this instance and handle obtaining the remoteInvoker stub
     *
-    * If this instance lives in a different VM than its container
-    * invoker, the remote interface of the container invoker is
-    * not externalized.
     */
    public void writeExternal(final ObjectOutput out)
       throws IOException
    { 
-      out.writeObject(remoteInvoker);
+      /** We need to handle obtaining the RemoteStub for the remoteInvoker
+       * since this proxy may be serialized in contexts that are not JRMP
+       * aware.
+       */
+      if( remoteInvoker instanceof RemoteStub )
+      {
+         out.writeObject(remoteInvoker);
+      }
+      else
+      {
+         Object replacement = RemoteObject.toStub(remoteInvoker);
+         out.writeObject(replacement);
+      }
    }
    
    /**
     * Un-externalize this instance.
     *
-    * We check timestamps of the interfaces to see if the instance is in the original VM of creation
     */
    public void readExternal(final ObjectInput in)
       throws IOException, ClassNotFoundException
