@@ -4,14 +4,10 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
 import java.util.Hashtable;
-import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
-
 import javax.ejb.EntityBean;
-
 import org.jboss.ejb.Application;
 import org.jboss.ejb.EntityContainer;
 import org.jboss.ejb.plugins.CMPPersistenceManager;
@@ -27,8 +23,8 @@ import org.jboss.ejb.plugins.cmp.jdbc.metadata.JDBCFunctionMappingMetaData;
 import org.jboss.ejb.plugins.cmp.jdbc.metadata.JDBCTypeMappingMetaData;
 
 public class SQLTarget implements DeepCloneable {
+	private final IdentifierManager idManager;
 	private final Application application;
-	private final Map pathElements = new Hashtable();
 	private final Map managerByAbstractSchemaName = new Hashtable();
 	private final List inputParameters = new ArrayList();
 	
@@ -62,6 +58,8 @@ public class SQLTarget implements DeepCloneable {
 				}
 			}
 		}
+		
+		idManager = new IdentifierManager(getTypeMappingMetaData());
 	}
 
 	/**
@@ -69,8 +67,8 @@ public class SQLTarget implements DeepCloneable {
 	 * @param target the SQLTarget to be coppied
 	 */
 	public SQLTarget(SQLTarget target) {
+		idManager = new IdentifierManager(target.idManager);
 		application = target.application;
-		pathElements.putAll(target.pathElements);
 		managerByAbstractSchemaName.putAll(target.managerByAbstractSchemaName);
 		inputParameters.addAll(target.inputParameters);
 
@@ -103,12 +101,13 @@ public class SQLTarget implements DeepCloneable {
 
 		// is this a select object(o) style query?
 		if(selectPathList.size() == 1) {
-			String path = (String)selectPathList.get(0);
-			AbstractSchema schema = (AbstractSchema)pathElements.get(path);
-			if(schema == null) {
-				throw new IllegalStateException("Unknown identifier: " + path);
-			}
-			selectPath = path;
+			String identifier = (String)selectPathList.get(0);
+			
+			// verify that the abstract schema already exists
+			// this method will throw an exception if the identifier
+			// is unknown or if the identifer does not map to a schema
+			idManager.getExistingAbstractSchema(identifier);
+			selectPath = identifier;
 		} else {
 			// select a.b.c.d style query				
 			String path = (String)selectPathList.get(0);
@@ -124,7 +123,7 @@ public class SQLTarget implements DeepCloneable {
 						path = cmpFieldPath;
 					} else {
 						// create the single valued cmr field object
-						String cmrFieldPath = this.getSingleValuedCMRField(path, (String)selectPathList.get(i));
+						String cmrFieldPath = getSingleValuedCMRField(path, (String)selectPathList.get(i));
 						if(cmrFieldPath == null) {
 							throw new IllegalStateException("Unknown path: " + path + "." + selectPathList.get(i));
 						}
@@ -140,54 +139,42 @@ public class SQLTarget implements DeepCloneable {
 		return selectPath;
 	}
 	
-	public Object getSelectBridgeObject() {
-		Object selectPathElement = pathElements.get(selectPath);
-		if(selectPathElement instanceof PathElement) {
-			PathElement pathElement = (PathElement)selectPathElement;
-			return pathElement.getEntityBridge();
+	public Object getSelectObject() {
+		PathElement selectPathElement = idManager.getExistingPathElement(selectPath);
+		if(selectPathElement instanceof AbstractSchema) {
+			AbstractSchema schema = (AbstractSchema)selectPathElement;
+			return schema.getEntityBridge();
 		} else if(selectPathElement instanceof CMPField) {
 			CMPField cmpField = (CMPField)selectPathElement;
 			return cmpField.getCMPFieldBridge();
+		} else if(selectPathElement instanceof CMRField) {
+			CMRField cmrField = (CMRField)selectPathElement;
+			if(cmrField.isSingleValued()) {
+				return cmrField.getEntityBridge();
+			} 
+			throw new IllegalStateException("Select path is a collection valued cmr field.");
 		}
+		// should never happen
 		throw new IllegalStateException("Select path element is instance of unknown type: " +
 				"selectPath=" + selectPath + " selectPathElement=" + selectPathElement);
 	}
 	
+
 	public void setWhereClause(String whereClause) {
 		this.whereClause = whereClause;
 	}
 	
 	public boolean isIdentifierRegistered(String identifier) {
-		if(identifier.indexOf(".")>=0) {
-			throw new IllegalArgumentException("identifier is a path not an identifier: " + identifier);
-		}
-		return pathElements.containsKey(identifier);
+		return idManager.isIdentifierRegistered(identifier);
 	}
 	
 	public void registerIdentifier(String path, String identifier) {
-		if(identifier.indexOf(".")>=0) {
-			throw new IllegalArgumentException("identifier is a path not an identifier: " + identifier);
-		}		
-		Object o = pathElements.get(path);
-		if(o == null) {
-			throw new IllegalArgumentException("Unknown path: "+path);
-		}
-		if(!(o instanceof CollectionValuedCMRField)) {
-			throw new IllegalArgumentException("path must map to an instance CollectionValuedCMRField: path="+path+", mappedPath="+o);
-		}
-		CollectionValuedCMRField cmrField = (CollectionValuedCMRField)o;
-		
-		pathElements.put(identifier, cmrField);
+		CMRField cmrField = idManager.getExistingCMRField(path);
+		idManager.registerIdentifier(cmrField, identifier);
 	}
 
 	public void registerIdentifier(AbstractSchema abstractSchema, String identifier) {
-		if(identifier.indexOf(".")>=0) {
-			throw new IllegalArgumentException("identifier is apath not an identifier: " + identifier);
-		}
-		if(abstractSchema == null) {
-			throw new IllegalArgumentException("abstractSchema is null");
-		}
-		pathElements.put(identifier, abstractSchema);
+		idManager.registerIdentifier(abstractSchema, identifier);
 	}
 
 	public void registerParameter(InputParameterToken parameter) {
@@ -204,75 +191,71 @@ public class SQLTarget implements DeepCloneable {
 
 	public String getCollectionValuedCMRField(String path, String fieldName) {
 		String fullPath = path + "." + fieldName;
-		if(pathElements.containsKey(fullPath)) {
-			Object o = pathElements.get(fullPath);
-			if(o instanceof CollectionValuedCMRField) {
+		if(idManager.isKnownPath(fullPath)) {
+			CMRField cmrField = idManager.getCMRField(fullPath);
+			if(cmrField != null && cmrField.isCollectionValued()) {
 				return fullPath;
 			} else {
 				return null;
 			}
 		}
-		
-		Object o = pathElements.get(path);
-		if(o == null || !(o instanceof PathElement)) {
+
+		EntityPathElement pathElement = idManager.getEntityPathElement(path);
+		if(pathElement == null) {
 			return null;
 		}
-		PathElement pathElement = (PathElement)o;
 		
 		JDBCCMRFieldBridge cmrFieldBridge = pathElement.getCMRFieldBridge(fieldName);
 		if(cmrFieldBridge == null || !cmrFieldBridge.isCollectionValued()) {
 			return null;
 		}
 
-		CollectionValuedCMRField collectionValuedCMRField = new CollectionValuedCMRField(cmrFieldBridge, pathElement);
-		pathElements.put(fullPath, collectionValuedCMRField);
+		CMRField cmrField = new CMRField(cmrFieldBridge, pathElement);
+		idManager.registerPath(cmrField, fullPath);
 		return fullPath;
 	}
 	
 	public String getSingleValuedCMRField(String path, String fieldName) {
 		String fullPath = path + "." + fieldName;
-		
-		if(pathElements.containsKey(fullPath)) {
-			Object o = pathElements.get(fullPath);
-			if(o instanceof SingleValuedCMRField) {
+		if(idManager.isKnownPath(fullPath)) {
+			CMRField cmrField = idManager.getCMRField(fullPath);
+			if(cmrField != null && cmrField.isSingleValued()) {
 				return fullPath;
 			} else {
 				return null;
 			}
 		}
-		
-		Object o = pathElements.get(path);
-		if(o == null || !(o instanceof PathElement)) {
+
+		EntityPathElement pathElement = idManager.getEntityPathElement(path);
+		if(pathElement == null) {
 			return null;
 		}
-		PathElement pathElement = (PathElement)o;
 		
 		JDBCCMRFieldBridge cmrFieldBridge = pathElement.getCMRFieldBridge(fieldName);
 		if(cmrFieldBridge == null || !cmrFieldBridge.isSingleValued()) {
 			return null;
 		}
 
-		SingleValuedCMRField singleValuedCMRField = new SingleValuedCMRField(cmrFieldBridge, pathElement);
-		pathElements.put(fullPath, singleValuedCMRField);
+		CMRField cmrField = new CMRField(cmrFieldBridge, pathElement);
+		idManager.registerPath(cmrField, fullPath);
 		return fullPath;
 	}
 	
 	public String getCMPField(String path, String fieldName) {
 		String fullPath = path + "." + fieldName;
-		if(pathElements.containsKey(fullPath)) {
-			Object o = pathElements.get(fullPath);
-			if(o instanceof CMPField) {
+		if(idManager.isKnownPath(fullPath)) {
+			CMPField cmpField = idManager.getCMPField(fullPath);
+			if(cmpField != null) {
 				return fullPath;
 			} else {
 				return null;
 			}
 		}
-		
-		Object o = pathElements.get(path);
-		if(o == null || !(o instanceof PathElement)) {
+
+		EntityPathElement pathElement = idManager.getEntityPathElement(path);
+		if(pathElement == null) {
 			return null;
 		}
-		PathElement pathElement = (PathElement)o;
 		
 		JDBCCMPFieldBridge cmpFieldBridge = pathElement.getCMPFieldBridge(fieldName);
 		if(cmpFieldBridge == null) {
@@ -280,81 +263,10 @@ public class SQLTarget implements DeepCloneable {
 		}
 
 		CMPField cmpField = new CMPField(cmpFieldBridge, pathElement);
-		pathElements.put(fullPath, cmpField);
+		idManager.registerPath(cmpField, fullPath);
 		return fullPath;
 	}	
-	
-	public String getCMPFieldColumnNamesClause(String path) {
-		Map identifiersByPathElement = getIdentifiersByPathElement();	
-		CMPField cmpField = (CMPField)pathElements.get(path);
-		return cmpField.getColumnNamesClause(identifiersByPathElement);
-	}
-	
-	public String toSQL() {
-		if(sql == null) {
-			Map identifiersByPathElement = getIdentifiersByPathElement();
-			StringBuffer buf = new StringBuffer();
-			
-			// SELECT
-			buf.append("SELECT ");
-			if(isSelectDistinct) {
-				buf.append("DISTINCT ");
-			}
-			
-			Object selectPathElement = pathElements.get(selectPath);
-			if(selectPathElement instanceof AbstractSchema) {
-				AbstractSchema schema = (AbstractSchema)selectPathElement;
-				buf.append(schema.getSelectClause(identifiersByPathElement));
-			} else if(selectPathElement instanceof SingleValuedCMRField) {
-				SingleValuedCMRField cmrField = (SingleValuedCMRField)selectPathElement;
-				buf.append(cmrField.getSelectClause(identifiersByPathElement));
-			} else if(selectPathElement instanceof CMPField) {
-				CMPField cmpField = (CMPField)selectPathElement;
-				buf.append(cmpField.getColumnNamesClause(identifiersByPathElement));
-			} else {
-				throw new IllegalStateException("Path element is instance of unknown type: " +
-						"selectPath=" + selectPath + " selectPathElement=" + selectPathElement);
-			}			
-			
-			// FROM
-			buf.append(" FROM ");
-	
-			for(Iterator i = getUniquePathElements().iterator(); i.hasNext(); ) {
-				PathElement pathElement = (PathElement)i.next();
-				buf.append(pathElement.getTableDeclarations(identifiersByPathElement));
-				if(i.hasNext()) {
-					buf.append(", ");
-				}
-			}
-	
-			// [WHERE]
-			Set cmrFields = getUniqueCMRFields();
-			if(whereClause.length() > 0 || cmrFields.size() > 0) {
-				buf.append(" WHERE ");
-				
-				if(whereClause.length() > 0) {
-					if(cmrFields.size() > 0) {
-						buf.append("(");
-					}
-					buf.append(whereClause);
-					if(cmrFields.size() > 0) {
-						buf.append(") AND ");
-					}
-				}
-	
-				for(Iterator i = getUniqueCMRFields().iterator(); i.hasNext(); ) {
-					CMRField pathElement = (CMRField)i.next();
-					buf.append(pathElement.getTableWhereClause(identifiersByPathElement));
-					if(i.hasNext()) {
-						buf.append(" AND ");
-					}
-				}
-			}
-			sql = buf.toString();
-		}
-		return sql;
-	}
-	
+		
 	public List getInputParameters() {
 		return Collections.unmodifiableList(inputParameters);
 	}
@@ -408,34 +320,52 @@ public class SQLTarget implements DeepCloneable {
 			!isEntityBeanTypePath(path);
 	}
 	
-	public String getEntityWherePathToParameter(String compareFromPath, String compareSymbol) {
-		Map identifiersByPathElement = getIdentifiersByPathElement();
+	private Class getPathType(String fullPath) {
+		if(!idManager.isKnownPath(fullPath)) {
+			return null;
+		}
+		
+		PathElement pathElement = idManager.getExistingPathElement(fullPath);
+		return pathElement.getFieldType();
+	}
+	
 
-		PathElement e = (PathElement)pathElements.get(compareFromPath);
-		JDBCEntityBridge entity = e.getEntityBridge();
+	public String getCMPFieldColumnNamesClause(String path) {
+		CMPField cmpField = idManager.getExistingCMPField(path);
+		String identifier = idManager.getTableAlias(cmpField.getParent());
+		return SQLUtil.getColumnNamesClause(cmpField.getCMPFieldBridge(), identifier);
+	}	
+
+	public String getEntityWherePathToParameter(String compareFromPath, String compareSymbol) {
+		EntityPathElement entityPathElement = idManager.getExistingEntityPathElement(compareFromPath);
+		String identifier = idManager.getTableAlias(entityPathElement);
+		JDBCEntityBridge entity = entityPathElement.getEntityBridge();
 		
 		StringBuffer buf = new StringBuffer();
 		buf.append("(");
 		if(compareSymbol.equals("<>")) {
 			buf.append("NOT(");
-		}	
+		}
 		
-		buf.append(SQLUtil.getWhereClause(entity.getJDBCPrimaryKeyFields(), e.getIdentifier(identifiersByPathElement)));	
+		buf.append(SQLUtil.getWhereClause(entity.getJDBCPrimaryKeyFields(), identifier));	
 
 		if(compareSymbol.equals("<>")) {
 			buf.append(")");
-		}	
+		}
 		buf.append(")");
 		return buf.toString();
 	}
 	
 	public String getEntityWherePathToPath(String compareFromPath, String compareSymbol, String compareToPath) {
-		Map identifiersByPathElement = getIdentifiersByPathElement();
+		EntityPathElement fromEntityPathElement = idManager.getExistingEntityPathElement(compareFromPath);
+		String fromIdentifier = idManager.getTableAlias(fromEntityPathElement);
+		JDBCEntityBridge fromEntity = fromEntityPathElement.getEntityBridge();
 
-		PathElement fromPathElement = (PathElement)pathElements.get(compareFromPath);
-		PathElement toPathElement = (PathElement)pathElements.get(compareToPath);
-		JDBCEntityBridge fromEntity = fromPathElement.getEntityBridge();
-		JDBCEntityBridge toEntity = toPathElement.getEntityBridge();
+		EntityPathElement toEntityPathElement = idManager.getExistingEntityPathElement(compareToPath);
+		String toIdentifier = idManager.getTableAlias(toEntityPathElement);
+		JDBCEntityBridge toEntity = toEntityPathElement.getEntityBridge();
+
+		// can only compare like kind entities
 		if(!fromEntity.equals(toEntity)) {
 			return null;
 		}
@@ -446,9 +376,10 @@ public class SQLTarget implements DeepCloneable {
 			buf.append("NOT(");
 		}	
 		
-		buf.append(SQLUtil.getSelfCompareWhereClause(fromEntity.getJDBCPrimaryKeyFields(), 
-				fromPathElement.getIdentifier(identifiersByPathElement), 
-				toPathElement.getIdentifier(identifiersByPathElement)));	
+		buf.append(SQLUtil.getSelfCompareWhereClause(
+				fromEntity.getJDBCPrimaryKeyFields(), 
+				fromIdentifier, 
+				toIdentifier));	
 
 		if(compareSymbol.equals("<>")) {
 			buf.append(")");
@@ -458,9 +389,8 @@ public class SQLTarget implements DeepCloneable {
 	}
 	
 	public String getValueObjectWherePathToParameter(String compareFromPath, String compareSymbol) {
-		Map identifiersByPathElement = getIdentifiersByPathElement();
-
-		CMPField cmpField = (CMPField)pathElements.get(compareFromPath);
+		CMPField cmpField = idManager.getExistingCMPField(compareFromPath);
+		String parentIdentifier = idManager.getTableAlias(cmpField.getParent());
 		JDBCCMPFieldBridge cmpFieldBridge = cmpField.getCMPFieldBridge();
 
 		StringBuffer buf = new StringBuffer();
@@ -469,7 +399,7 @@ public class SQLTarget implements DeepCloneable {
 			buf.append("NOT(");
 		}	
 		
-		buf.append(SQLUtil.getWhereClause(cmpFieldBridge.getJDBCType(), cmpField.getParent().getIdentifier(identifiersByPathElement)));	
+		buf.append(SQLUtil.getWhereClause(cmpFieldBridge.getJDBCType(), parentIdentifier));	
 
 		if(compareSymbol.equals("<>")) {
 			buf.append(")");
@@ -479,13 +409,16 @@ public class SQLTarget implements DeepCloneable {
 	}
 	
 	public String getValueObjectWherePathToPath(String compareFromPath, String compareSymbol, String compareToPath) {
-		Map identifiersByPathElement = getIdentifiersByPathElement();
+		CMPField fromCMPField = idManager.getExistingCMPField(compareFromPath);
+		String fromParentIdentifier = idManager.getTableAlias(fromCMPField.getParent());
+		JDBCCMPFieldBridge fromCMPFieldBridge = fromCMPField.getCMPFieldBridge();
 
-		CMPField fromCMPField = (CMPField)pathElements.get(compareFromPath);
-		CMPField toCMPField = (CMPField)pathElements.get(compareToPath);
-		JDBCCMPFieldBridge fromCCMPFieldBridge = fromCMPField.getCMPFieldBridge();
-		JDBCCMPFieldBridge toCCMPFieldBridge = toCMPField.getCMPFieldBridge();
-		if(!fromCCMPFieldBridge.getFieldType().equals(toCCMPFieldBridge.getFieldType())) {
+		CMPField toCMPField = idManager.getExistingCMPField(compareToPath);
+		String toParentIdentifier = idManager.getTableAlias(toCMPField.getParent());
+		JDBCCMPFieldBridge toCMPFieldBridge = toCMPField.getCMPFieldBridge();
+
+		// can only compare like types
+		if(!fromCMPFieldBridge.getFieldType().equals(toCMPFieldBridge.getFieldType())) {
 			return null;
 		}
 		
@@ -495,9 +428,9 @@ public class SQLTarget implements DeepCloneable {
 			buf.append("NOT(");
 		}	
 		
-		buf.append(SQLUtil.getSelfCompareWhereClause(fromCCMPFieldBridge.getJDBCType(), 
-				fromCMPField.getParent().getIdentifier(identifiersByPathElement), 
-				toCMPField.getParent().getIdentifier(identifiersByPathElement)));	
+		buf.append(SQLUtil.getSelfCompareWhereClause(fromCMPFieldBridge.getJDBCType(), 
+				fromParentIdentifier, 
+				toParentIdentifier));	
 
 		if(compareSymbol.equals("<>")) {
 			buf.append(")");
@@ -506,49 +439,55 @@ public class SQLTarget implements DeepCloneable {
 		return buf.toString();
 	}
 	
-	public String getNotExistsClause(String path, String field) {
-		Map identifiersByPathElement = getIdentifiersByPathElement();
-
-		PathElement parent = (PathElement)pathElements.get(path);
-		JDBCCMRFieldBridge cmrField = parent.getCMRFieldBridge(field);
-		if(cmrField == null) {
+	public String getNotExistsClause(String path, String fieldName) {
+		EntityPathElement parent = idManager.getExistingEntityPathElement(path);		
+		JDBCCMRFieldBridge cmrFieldBridge = parent.getCMRFieldBridge(fieldName);
+		if(cmrFieldBridge == null || !cmrFieldBridge.isCollectionValued()) {
 			return null;
 		}
-		
-		String childIdentifier = field+"_blah";
-		JDBCEntityBridge entity = cmrField.getRelatedEntity();
+
+		CMRField cmrField = new CMRField(cmrFieldBridge, parent);
+		JDBCEntityBridge entity = cmrFieldBridge.getRelatedEntity();
+		String tableAlias = idManager.getTableAlias(cmrField);
 		
 		StringBuffer buf = new StringBuffer();
 		buf.append("NOT EXISTS (");
 			buf.append("SELECT ");
 				buf.append(SQLUtil.getColumnNamesClause(
-						entity.getJDBCPrimaryKeyFields(), childIdentifier));
+						entity.getJDBCPrimaryKeyFields(), tableAlias));
 			buf.append(" FROM ");
 				buf.append(entity.getMetaData().getTableName());
 				buf.append(" ");
-				buf.append(childIdentifier);
-			buf.append(" WHERE ").append(getTableWhereClause(cmrField, parent, childIdentifier, identifiersByPathElement));
+				buf.append(tableAlias);
+			buf.append(" WHERE ");
+				SQLGenerator sqlGen = new SQLGenerator(idManager);
+				buf.append(sqlGen.getTableWhereClause(cmrField));
 		buf.append(")");
 	   return buf.toString();
 	}
 	
 	public String getNullComparison(String path, boolean not) {
-		Map identifiersByPathElement = getIdentifiersByPathElement();
+		PathElement pathElement = idManager.getExistingPathElement(path);
 
-		Object o = pathElements.get(path);
 		JDBCCMPFieldBridge[] fields;
 		String identifier;
-		if(o instanceof CMPField) {
+		if(pathElement instanceof CMPField) {
+			CMPField cmpField = (CMPField)pathElement;
 			fields = new JDBCCMPFieldBridge[1];
-			fields[0] = ((CMPField)o).getCMPFieldBridge();
-			identifier = ((CMPField)o).getParent().getIdentifier(identifiersByPathElement);
+			fields[0] = cmpField.getCMPFieldBridge();
+			identifier = idManager.getTableAlias(cmpField.getParent());
 		} else {
-			fields = ((PathElement)o).getEntityBridge().getJDBCPrimaryKeyFields();
-			identifier = ((PathElement)o).getIdentifier(identifiersByPathElement);
+			EntityPathElement entityPathElement = (EntityPathElement)pathElement;
+			fields = entityPathElement.getEntityBridge().getJDBCPrimaryKeyFields();
+			identifier = idManager.getTableAlias(entityPathElement);
 		}
 			
 		StringBuffer buf = new StringBuffer();
 		buf.append("(");
+		if(not) {
+			buf.append(" NOT(");
+		}
+		
 		for(int i=0; i<fields.length; i++) {
 			if(i > 0) {
 				buf.append(" AND ");
@@ -560,12 +499,12 @@ public class SQLTarget implements DeepCloneable {
 					buf.append(" AND ");
 				}
 				buf.append(identifier).append(".").append(columnNames[i]);
-				buf.append(" IS ");
-				if(not) {
-					buf.append("NOT ");
-				}
-				buf.append("NULL");
+				buf.append(" IS NULL");
 			}
+		}
+
+		if(not) {
+			buf.append(")");
 		}
 		buf.append(")");
 	   return buf.toString();
@@ -575,109 +514,6 @@ public class SQLTarget implements DeepCloneable {
 		return new SQLTarget(this);
 	}
 	
-	private Set getUniquePathElements() {
-		Set set = new HashSet();
-		for(Iterator i=pathElements.values().iterator(); i.hasNext(); ) {
-			Object o = i.next();
-			if(o instanceof PathElement) {
-				set.add(o);
-			}
-		}
-		return set;
-	}
-	
-	private Set getUniqueCMRFields() {
-		Set set = new HashSet();
-		for(Iterator i=pathElements.values().iterator(); i.hasNext(); ) {
-			Object o = i.next();
-			if(o instanceof CMRField) {
-				set.add(o);
-			}
-		}
-		return set;
-	}
-	
-	private Map getIdentifiersByPathElement() {
-		Map map = new Hashtable();
-		for(Iterator i=pathElements.keySet().iterator(); i.hasNext(); ) {
-			String identifier = (String)i.next();
-			if(identifier.indexOf(".")<0) {
-				map.put(pathElements.get(identifier), identifier);
-			}
-		}
-		return map;
-	}
-	
-	private Class getPathType(String fullPath) {
-		if(!pathElements.containsKey(fullPath)) {
-			return null;
-		}
-		
-		Object o = pathElements.get(fullPath);
-		if(o instanceof CMPField) {
-			return ((CMPField)o).getFieldType();
-		} else if(!(o instanceof CollectionValuedCMRField)) {
-			return ((PathElement)o).getFieldType();
-		} else {
-			return null;
-		}
-	}
-	
-	public String getTableWhereClause(JDBCCMRFieldBridge cmrFieldBridge, PathElement parent, String childIdentifier, Map identifiersByPathElement) {
-		StringBuffer buf = new StringBuffer();
-		if(cmrFieldBridge.getMetaData().getRelationMetaData().isForeignKeyMappingStyle()) {
-			String parentIdentifier = parent.getIdentifier(identifiersByPathElement);
-			
-			if(cmrFieldBridge.hasForeignKey()) {				
-				JDBCCMPFieldBridge[] parentFkKeyFields = cmrFieldBridge.getForeignKeyFields();
-				for(int i=0; i < parentFkKeyFields.length; i++) {
-					if(i > 0) {
-						buf.append(" AND ");
-					}
-					JDBCCMPFieldBridge parentFkField = parentFkKeyFields[i];
-					JDBCCMPFieldBridge childPkField = cmrFieldBridge.getRelatedEntity().getCMPFieldByName(parentFkField.getFieldName());
-					buf.append(SQLUtil.getWhereClause(parentFkField, parentIdentifier, childPkField, childIdentifier));
-				}	
-			} else {
-				JDBCCMPFieldBridge[] childFkKeyFields = cmrFieldBridge.getRelatedCMRField().getForeignKeyFields();
-				for(int i=0; i < childFkKeyFields.length; i++) {
-					if(i > 0) {
-						buf.append(" AND ");
-					}
-					JDBCCMPFieldBridge childFkKeyField = childFkKeyFields[i];
-					JDBCCMPFieldBridge parentPkField = parent.getCMPFieldBridge(childFkKeyField.getFieldName());
-					buf.append(SQLUtil.getWhereClause(parentPkField, parentIdentifier, childFkKeyField, childIdentifier));
-				}	
-			}
-		} else {
-			String parentIdentifier = parent.getIdentifier(identifiersByPathElement);
-			String relationTableIdentifier = parent.getIdentifier(identifiersByPathElement) + "_to_" + childIdentifier;
-			
-			JDBCCMPFieldBridge[] parentTableKeyFields = cmrFieldBridge.getTableKeyFields();
-			for(int i=0; i < parentTableKeyFields.length; i++) {
-				if(i > 0) {
-					buf.append(" AND ");
-				}
-				JDBCCMPFieldBridge fkField = parentTableKeyFields[i];
-				JDBCCMPFieldBridge pkField = parent.getCMPFieldBridge(fkField.getFieldName());
-				buf.append(SQLUtil.getWhereClause(pkField, parentIdentifier, fkField, relationTableIdentifier));
-			}	
-
-			buf.append(" AND ");
-
-			JDBCCMPFieldBridge[] childTableKeyFields = cmrFieldBridge.getRelatedCMRField().getTableKeyFields();
-			for(int i=0; i < childTableKeyFields.length; i++) {
-				if(i > 0) {
-					buf.append(" AND ");
-				}
-				JDBCCMPFieldBridge fkField = childTableKeyFields[i];
-				JDBCCMPFieldBridge pkField = cmrFieldBridge.getRelatedEntity().getCMPFieldByName(fkField.getFieldName());
-				buf.append(SQLUtil.getWhereClause(pkField, childIdentifier, fkField, relationTableIdentifier));
-			}	
-		}	
-		return buf.toString();
-	}
-
 	public String getConcatFunction(String param1, String param2) {
 		String[] args = new String[] {param1, param2};
 	   JDBCFunctionMappingMetaData function = getTypeMappingMetaData().getFunctionMapping("concat");
@@ -717,5 +553,13 @@ public class SQLTarget implements DeepCloneable {
 	private JDBCTypeMappingMetaData getTypeMappingMetaData() {
 		JDBCStoreManager manager = (JDBCStoreManager)managerByAbstractSchemaName.values().iterator().next();
 		return manager.getMetaData().getTypeMapping();
+	}
+
+	public String toSQL() {
+		if(sql == null) {
+			SQLGenerator sqlGen = new SQLGenerator(idManager);
+			sql = sqlGen.getSQL(isSelectDistinct, selectPath, whereClause);
+		}
+		return sql;
 	}
 }

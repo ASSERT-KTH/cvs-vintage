@@ -27,7 +27,7 @@ import org.jboss.ejb.plugins.cmp.jdbc.metadata.JDBCQueryMetaData;
  * clause. This code has been cleaned up to improve readability.
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
- * @version $Revision: 1.3 $
+ * @version $Revision: 1.4 $
  */
 public class JDBCEJBQLFinderCommand extends JDBCFinderCommand
 {
@@ -66,7 +66,7 @@ public class JDBCEJBQLFinderCommand extends JDBCFinderCommand
 		setSQL(target.toSQL());
 		
 		// select bridge object
-		Object selectBridgeObject = target.getSelectBridgeObject();
+		Object selectBridgeObject = target.getSelectObject();
 		if(selectBridgeObject instanceof JDBCEntityBridge) {
 			selectEntity = (JDBCEntityBridge)selectBridgeObject;
 			selectCMPField = null;

@@ -18,7 +18,7 @@ import org.w3c.dom.Element;
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
  *	@author <a href="sebastien.alborini@m4x.org">Sebastien Alborini</a>
- *	@version $Revision: 1.4 $
+ *	@version $Revision: 1.5 $
  */
 public final class JDBCTypeMappingMetaData {
 	
@@ -31,6 +31,10 @@ public final class JDBCTypeMappingMetaData {
 	private final HashMap mappings = new HashMap();
 	
 	private final HashMap functionMappings = new HashMap();
+
+	private final String aliasHeaderPrefix;
+	private final String aliasHeaderSuffix;
+	private final int aliasMaxLength;
 
 	/**
 	 * Constructs a mapping with the data contained in the type-mapping xml element
@@ -63,6 +67,24 @@ public final class JDBCTypeMappingMetaData {
 			JDBCFunctionMappingMetaData functionMapping = new JDBCFunctionMappingMetaData(mappingElement);
 			functionMappings.put(functionMapping.getFunctionName().toLowerCase(), functionMapping);
 		}
+		
+		String prefix = MetaData.getOptionalChildContent(element, "alias-header-prefix");
+		if(prefix == null) {
+			prefix = "t";
+		}
+		aliasHeaderPrefix = prefix;
+		
+		String suffix = MetaData.getOptionalChildContent(element, "alias-header-suffix");
+		if(suffix == null) {
+			suffix = "_";
+		}
+		aliasHeaderSuffix = suffix;
+		
+		String max = MetaData.getOptionalChildContent(element, "alias-max-length");
+		if(max == null) {
+			max = "32";
+		}
+		aliasMaxLength = Integer.parseInt(max);
 	}
     	
 	/**
@@ -74,7 +96,36 @@ public final class JDBCTypeMappingMetaData {
 	public String getName() {
 		return name;
 	}
+	
+	/**
+	 * Gets the prefix for that is used when generating an alias header.  An alias header
+	 * is prepended to a generated table alias to prevent name collisions. An alias header
+	 * is constructed as folows: aliasHeaderPrefix + int_counter + aliasHeaderSuffix
+	 * @return the prefix for alias headers
+	 */
+	public String getAliasHeaderPrefix() {
+		return aliasHeaderPrefix;
+	}
    
+	/**
+	 * Gets the suffix for that is used when generating an alias header.  An alias header
+	 * is prepended to a generated table alias to prevent name collisions. An alias header
+	 * is constructed as folows: aliasHeaderPrefix + int_counter + aliasHeaderSuffix
+	 * @return the suffix for alias headers
+	 */
+	public String getAliasHeaderSuffix() {
+		return aliasHeaderSuffix;
+	}
+   
+	/**
+	 * Gets maximum length of a table alias.
+	 * An alias is constructed as folows: aliasHeader + ejb_ql_identifier_path
+	 * @return the maximum length that a table alias can be
+	 */
+	public int getAliasMaxLength() {
+		return aliasMaxLength;
+	}
+      
 	/**
 	 * Gets the jdbc type which this class has mapped to the specified java class. 
 	 * The jdbc type is used to retrieve data from a result set and to set 
