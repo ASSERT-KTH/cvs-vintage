@@ -35,6 +35,7 @@ project=scarab
 # the SQL for your Turbine project. Your possible choices are
 #
 # db2
+# db2400
 # hypersonic
 # mysql
 # oracle
@@ -61,6 +62,8 @@ database=@DATABASE_TYPE@
 # complexObjectModel=true generates an om with collection support
 #
 # addTimeStamp=true puts time stamps in generated files
+#
+# addIntakeRetrievable=implement Intake's Retrievable interface
 # -------------------------------------------------------------------
 
 targetPackage=org.tigris.scarab.om
@@ -71,10 +74,6 @@ complexObjectModel=true
 addTimeStamp=false
 addIntakeRetrievable=true
 
-extend=TurbineMapBuilder
-mapname=TurbineMap
-suffix=MapBuilder
-
 # -------------------------------------------------------------------
 # Generate Manager classes that use JCS for caching.  This is still
 # considered experimental.
@@ -82,7 +81,7 @@ suffix=MapBuilder
 useManagers=true
 
 # -------------------------------------------------------------------
-# 
+#
 #  D A T A B A S E  S E T T I N G S
 #
 # -------------------------------------------------------------------
@@ -103,6 +102,17 @@ createDatabaseUrl = @DATABASE_ADMIN_URL@
 # Tells JDBC task that javaName attribute for the tables and columns
 # should be made same as SQL name.
 sameJavaName=false
+
+# -------------------------------------------------------------------
+#
+#  D O C U M E N T A T I O   S E T T I N G S
+#
+# -------------------------------------------------------------------
+# These settings will allow you to customize the way your schema
+# documentation is created.
+# Valid formats are: html, anakia (for use with jakarta-site2)
+# -------------------------------------------------------------------
+documentationFormat=html
 
 # -------------------------------------------------------------------
 # You should NOT have to edit anything below here.
@@ -128,6 +138,7 @@ idTableControlTemplate = sql/id-table/Control.vm
 DataDTDControlTemplate = data/Control.vm
 DataDumpControlTemplate = data/dump/Control.vm
 DataSQLControlTemplate = sql/load/Control.vm
+DocControlTemplate = doc/Control.vm
 
 # -------------------------------------------------------------------
 # 
