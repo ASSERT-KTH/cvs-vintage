@@ -4,16 +4,14 @@ $page.setTitle("Query results")
 
 <h2>$page.Title</h2>
 
-#set ($action = $link.setPage("IssueList.vm").setAction("Search").toString())
 #set ($user = $data.User)
 #set ($module = $scarabR.CurrentModule)
 #set ($search = $scarabR.Search)
 #set ($searchGroup = $intake.SearchIssue.mapTo($search))
-#set ($searchType = $data.Parameters.getString("searchType"))
-#set ($resultsPerPage = $data.Parameters.getInt("resultsPerPage"))
-#set ($pageNum = $data.Parameters.getInt("pageNum"))
+#set ($searchType = $data.Parameters.getString("searchType",""))
+#set ($resultsPerPage = $data.Parameters.getInt("resultsPerPage",0))
+#set ($pageNum = $data.Parameters.getInt("pageNum",0))
 #set ($issueList = $scarabR.IssueList)
-
 
 #if ($issueList.size() == 0)
   <h3>$page.Title</h3>
@@ -21,7 +19,7 @@ $page.setTitle("Query results")
 #else
 
 #if ($resultsPerPage == 0)
-  #set ($resultsPerPage = "25")
+  #set ($resultsPerPage = 25)
 #end
 #if ($pageNum == 0)
   #set ($pageNum = "1")
@@ -35,9 +33,11 @@ $page.setTitle("Query results")
  #end
 #end
 
-<form action="$action" method="post">
+<form action="$link.setPage("IssueList.vm").setAction("Search")" method="post">
 <input type="hidden" name="pageNum" value="$pageNum" />
+#if ($queryString)
 <input type="hidden" name="$scarabG.Constant.CURRENT_QUERY" value="$queryString" />
+#end
 
 <div class="functnbar">
 <input type="submit" value="Done" name="eventSubmit_doCancel" />&#160;
@@ -61,9 +61,9 @@ $link.setPage("ConfigureIssueList.vm").setLabel("Add/remove attributes from view
   #paginate ($pageNum $resultsPerPage $searchType "IssueList.vm")
 #end
 
-#set ($sortAttrId = $data.Parameters.getString("sortAttrId"))
-#set ($sortPolarity = $data.Parameters.getString("sortPolarity"))
-#if (!$sortPolarity)
+#set ($sortAttrId = $data.Parameters.getString("sortAttrId",""))
+#set ($sortPolarity = $data.Parameters.getString("sortPolarity",""))
+#if (!$sortPolarity || $sortPolarity.length() == 0)
     #set ($sortPolarity = "asc")
 #end
 
@@ -151,10 +151,10 @@ $link.setPage("ConfigureIssueList.vm").setLabel("Add/remove attributes from view
     <tr>
        <th>Max items per page</td>
  <td>
- <input type="radio" value="2" name="resultsPerPage" #if( $resultsPerPage == 25 ) checked="checked" #end /> 25
- <input type="radio" name="resultsPerPage" value="50" #if( $resultsPerPage == 50 ) checked="checked" #end /> 50
- <input type="radio" name="resultsPerPage" value="75" #if( $resultsPerPage == 75 ) checked="checked" #end /> 75
- <input type="radio" name="resultsPerPage" value="100" #if( $resultsPerPage == 100 ) checked="checked" #end /> 100
+ <input type="radio" value="2" name="resultsPerPage" #if ($resultsPerPage.equals("25")) checked="checked" #end /> 25
+ <input type="radio" name="resultsPerPage" value="50" #if ($resultsPerPage.equals("50")) checked="checked" #end /> 50
+ <input type="radio" name="resultsPerPage" value="75" #if ($resultsPerPage.equals("75")) checked="checked" #end /> 75
+ <input type="radio" name="resultsPerPage" value="100" #if ($resultsPerPage.equals("100")) checked="checked" #end /> 100
  <input type="submit" name="eventSubmit_doSearch" value="Refresh" />
  </td>
    </tr>

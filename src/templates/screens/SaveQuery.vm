@@ -2,7 +2,6 @@ $page.setTitle("Save query")
 
 <h2>$page.Title</h2>
 
-#set ($action = $link.setPage("SaveQuery.vm").setAction("Search").addPathInfo("$scarabG.Constant.NEXT_TEMPLATE", "QueryList.vm").toString())
 #set ($query = $scarabR.Query)
 #set ($queryGroup = $intake.Query.mapTo($query))
 #set ($user = $data.User)
@@ -12,7 +11,8 @@ $page.setTitle("Save query")
 <div id="savequery" class="app">
 
 #if ($queryString && $queryString.length() > 0)
-<form method="post" action="$action" >
+<form method="post" action="$link.setPage("SaveQuery.vm").setAction("Search")" >
+<input type="hidden" name="$scarabG.Constant.NEXT_TEMPLATE" value="QueryList.vm" />
 <input type="hidden" name="$queryGroup.Value.Key" value="$queryString" />
 
 <p>
