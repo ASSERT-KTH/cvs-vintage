@@ -29,7 +29,7 @@ import org.jboss.logging.Logger;
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
  * @author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
  * @author <a href="mailto:justin@j-m-f.demon.co.uk">Justin Forder</a>
- * @version $Revision: 1.12 $
+ * @version $Revision: 1.13 $
  */
 public class JDBCStopCommand {
 
@@ -116,7 +116,9 @@ public class JDBCStopCommand {
             statement = con.createStatement();
          
             // execute sql
-            statement.executeUpdate("DROP TABLE " + tableName);
+            String sql = "DROP TABLE " + tableName;
+            log.debug("Executing SQL: " + sql);
+            statement.executeUpdate(sql);
          }
          finally
          {
