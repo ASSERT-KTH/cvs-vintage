@@ -12,7 +12,7 @@ import java.awt.event.ActionListener;
 import org.columba.core.action.FrameAction;
 import org.columba.core.gui.frame.AbstractFrameController;
 import org.columba.core.gui.util.ImageLoader;
-import org.columba.mail.gui.config.mailboximport.ImportWizard;
+import org.columba.mail.gui.config.mailboximport.ImportWizardLauncher;
 
 /**
  * @author frd
@@ -33,8 +33,7 @@ public class ImportAction extends FrameAction implements ActionListener {
 	 * @param keyStroke
 	 */
 	public ImportAction(AbstractFrameController frameController) {
-		super(
-			frameController,
+		super(frameController,
 			"Import Mailbox...",
 			"Import Mailbox...",
 			"Import Mailbox...",
@@ -50,14 +49,6 @@ public class ImportAction extends FrameAction implements ActionListener {
 	 * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
 	 */
 	public void actionPerformed(ActionEvent evt) {
-		try {
-
-			new ImportWizard();
-			
-		} catch (Exception ex) {
-			ex.printStackTrace();
-		}
-
+		new ImportWizardLauncher().launchWizard();
 	}
-
 }
