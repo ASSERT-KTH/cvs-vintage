@@ -224,13 +224,11 @@ public class TableModelFilteredView extends TableModelPlugin {
 		} else
 			result2 = true;
 
-		if (result2 == true) {
-			if ((result == true)) {
+		if (result2) {
+			if (result) {
 
 				return true;
-
 			}
-
 		}
 
 		return false;
@@ -249,7 +247,7 @@ public class TableModelFilteredView extends TableModelPlugin {
 					if (headerList.count() == 0)
 						return false;
 
-					if (getDataFiltering() == true) {
+					if (getDataFiltering()) {
 						//System.out.println("starting filtering");
 
 						ColumbaHeader header;
@@ -312,10 +310,10 @@ public class TableModelFilteredView extends TableModelPlugin {
 						getHeaderTableModel().getSelectedMessageNode();
 					HeaderInterface header = node.getHeader();
 
-					if (getDataFiltering() == true) {
+					if (getDataFiltering()) {
 						boolean result = addItem(header);
 
-						if (result == true) {
+						if (result) {
 							return true;
 						} else
 							return false;

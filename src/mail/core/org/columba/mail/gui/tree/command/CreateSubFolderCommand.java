@@ -13,6 +13,7 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
 //
 //All Rights Reserved.
+
 package org.columba.mail.gui.tree.command;
 
 import java.util.Hashtable;
@@ -51,12 +52,8 @@ public class CreateSubFolderCommand extends Command {
 	 * @see org.columba.core.command.Command#updateGUI()
 	 */
 	public void updateGUI() throws Exception {
-		// if creating of folder failed -> exit
-		if (success == false)
-			return;
-
-		// else update TreeModel
-		MainInterface.treeModel.nodeStructureChanged(parentFolder);
+		if (success)
+                        MainInterface.treeModel.nodeStructureChanged(parentFolder);
 	}
 
 	/**
@@ -89,13 +86,10 @@ public class CreateSubFolderCommand extends Command {
 	/**
 	 * @see org.columba.core.command.Command#undo(Worker)
 	 */
-	public void undo(Worker worker) throws Exception {
-	}
+	public void undo(Worker worker) throws Exception {}
 
 	/**
 	 * @see org.columba.core.command.Command#undo(Worker)
 	 */
-	public void redo(Worker worker) throws Exception {
-	}
-
+	public void redo(Worker worker) throws Exception {}
 }

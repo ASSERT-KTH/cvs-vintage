@@ -80,7 +80,7 @@ public class CreateSubFolderAction
 
 		String name;
 
-		if (dialog.success() == true) {
+		if (dialog.success()) {
 			// ok pressed
 			name = dialog.getName();
 		} else {

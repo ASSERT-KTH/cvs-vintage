@@ -105,8 +105,6 @@ public class TableModelSorter extends TableModelPlugin {
 
 			MessageNode rootNode = getHeaderTableModel().getRootNode();
 
-			Vector v = rootNode.getVector();
-
 			System.out.println("in order received");
 
 			setDataSorting(false);
@@ -142,27 +140,24 @@ public class TableModelSorter extends TableModelPlugin {
 	}
 
 	public void sort(int column) {
-
 		String c = getHeaderTableModel().getColumnName(column);
 
 		if (getSortingColumn().equals(c)) {
-			if (getSortingOrder() == true)
+			if (getSortingOrder())
 				setSortingOrder(false);
 			else
 				setSortingOrder(true);
 		}
 
 		setSortingColumn(c);
-
 		sortTable(c);
-
 	}
 
 	public void setSortingColumn(int column) {
 		String c = getHeaderTableModel().getColumnName(column);
 
 		if (getSortingColumn().equals(c)) {
-			if (getSortingOrder() == true)
+			if (getSortingOrder())
 				setSortingOrder(false);
 			else
 				setSortingOrder(true);
@@ -172,20 +167,15 @@ public class TableModelSorter extends TableModelPlugin {
 	}
 
 	public boolean manipulateModel(int mode) {
-
 		sortTable(getSortingColumn());
-
 		return true;
 	}
 
 	public int getSortInt() {
-
 		return getHeaderTableModel().getColumnNumber(getSortingColumn());
-
 	}
 
 	public int getInsertionSortIndex(MessageNode newChild) {
-
 		MessageNode rootNode = getHeaderTableModel().getRootNode();
 		Vector v = rootNode.getVector();
 

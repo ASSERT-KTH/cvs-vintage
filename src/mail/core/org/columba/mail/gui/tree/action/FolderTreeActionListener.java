@@ -343,7 +343,7 @@ public class FolderTreeActionListener implements ActionListener {
 
 			String name;
 
-			if (dialog.success() == true) {
+			if (dialog.success()) {
 				// ok pressed
 				name = dialog.getName();
 			} else {
@@ -364,7 +364,7 @@ public class FolderTreeActionListener implements ActionListener {
 
 			String name;
 
-			if (dialog.success() == true) {
+			if (dialog.success()) {
 				// ok pressed
 				name = dialog.getName();
 				
@@ -419,7 +419,7 @@ public class FolderTreeActionListener implements ActionListener {
 
 			String name;
 
-			if (dialog.success() == true) {
+			if (dialog.success()) {
 				// ok pressed
 				name = dialog.getName();
 			} else {

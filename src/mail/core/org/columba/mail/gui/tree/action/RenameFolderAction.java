@@ -78,7 +78,7 @@ public class RenameFolderAction
 
 		String name;
 
-		if (dialog.success() == true) {
+		if (dialog.success()) {
 			// ok pressed
 			name = dialog.getName();
 		} else {

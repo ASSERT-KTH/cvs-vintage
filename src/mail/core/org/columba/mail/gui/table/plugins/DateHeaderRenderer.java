@@ -13,6 +13,7 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
 //
 //All Rights Reserved.
+
 package org.columba.mail.gui.table.plugins;
 
 import java.awt.Component;
@@ -66,7 +67,6 @@ public class DateHeaderRenderer extends JButton implements TableCellRenderer
 
                 this.tableModelSorter = tableModelSorter;
 
-
 		setHorizontalAlignment( SwingConstants.LEFT );
                 setHorizontalTextPosition( SwingConstants.LEFT );
                     //setIconTextGap( 5 );
@@ -91,27 +91,19 @@ public class DateHeaderRenderer extends JButton implements TableCellRenderer
 
             setText( this.name );
 
-
-            if ( tableModelSorter.getSortingColumn().equals( this.str ) )
-            {
-                if ( tableModelSorter.getSortingOrder() == true )
+            if ( tableModelSorter.getSortingColumn().equals( this.str ) ) {
+                if (tableModelSorter.getSortingOrder())
                     setIcon( new AscendingIcon() );
                 else
                     setIcon( new DescendingIcon() );
 
-            } else if ( tableModelSorter.getSortingColumn().equals("In Order Received") )
-            {
+            } else if ( tableModelSorter.getSortingColumn().equals("In Order Received") ) {
                 setText( this.name+" (In Order Received)" );
                 setIcon( null );
-            }
-            else
-            {
-
+            } else {
                 setIcon( null );
             }
-
 
             return this;
         }
-
 }

@@ -45,9 +45,6 @@ public class MarkAsReadTimer implements ActionListener {
 	private int value;
 	private int maxValue;
 
-	private Folder folder;
-	private Object[] uids;
-	
 	private FolderCommandReference message;
 
 	private TableController tableController;

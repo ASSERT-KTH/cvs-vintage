@@ -220,9 +220,6 @@ public class TreeModel extends DefaultTreeModel {
 	}
 
 	public FolderTreeNode getFolder(TreeNodeList list) {
-
-		FolderTreeNode folder = null;
-
 		FolderTreeNode parentFolder = (FolderTreeNode) getRoot();
 
 		if (list == null)
@@ -242,14 +239,10 @@ public class TreeModel extends DefaultTreeModel {
 		}
 
 		return child;
-
 	}
 
 	public FolderTreeNode findFolder(FolderTreeNode parentFolder, String str) {
-
-		int count = parentFolder.getChildCount();
 		FolderTreeNode child;
-		FolderTreeNode folder;
 
 		for (Enumeration e = parentFolder.children(); e.hasMoreElements();) {
 			child = (FolderTreeNode) e.nextElement();

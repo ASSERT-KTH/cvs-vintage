@@ -119,7 +119,7 @@ public class FolderTreeDnd
 
 			sourceFolder = (Folder) treeController.getSelected();
 			FolderItem item = sourceFolder.getFolderItem();
-			String access = item.get("property", "accessrights");
+			//String access = item.get("property", "accessrights");
 
 			e.startDrag(DragSource.DefaultMoveDrop,
 			//ImageLoader.getImageIcon("","folder1").getImage(),
@@ -596,7 +596,6 @@ public class FolderTreeDnd
 							Folder destParent = (Folder) dest.getParent();
 							ColumbaLogger.log.debug(
 								"destParent" + destParent.getName());
-							int count = destParent.getChildCount();
 							int destIndex = destParent.getIndex(dest);
 							Folder sourceParent = (Folder) source.getParent();
 							ColumbaLogger.log.debug(

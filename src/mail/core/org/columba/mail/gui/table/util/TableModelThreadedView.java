@@ -13,6 +13,7 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
 //
 //All Rights Reserved.
+
 package org.columba.mail.gui.table.util;
 
 import java.text.Collator;
@@ -55,10 +56,7 @@ public class TableModelThreadedView extends TableModelPlugin {
 	}
 
 	public void toggleView( boolean b ) {
-		
 		setEnabled(b);
-		
-
 		getHeaderTableModel().update();
 	}
 
@@ -71,10 +69,7 @@ public class TableModelThreadedView extends TableModelPlugin {
 	}
 
 	protected String parseSubject(String subject) {
-		if (subject == null)
-			return "";
-
-		if (subject.length() == 0)
+		if (subject == null || subject.length() == 0)
 			return "";
 
 		int start = 0;
@@ -83,7 +78,6 @@ public class TableModelThreadedView extends TableModelPlugin {
 		boolean done = false;
 
 		try {
-
 			while (!done) {
 				done = true;
 
@@ -204,7 +198,7 @@ public class TableModelThreadedView extends TableModelPlugin {
 			if (inReply != null) {
 				inReply = inReply.trim();
 
-				if (hashtable.containsKey(inReply) == true) {
+				if (hashtable.containsKey(inReply)) {
 					//System.out.println("contains: "+ inReply );
 					MessageNode parent = (MessageNode) hashtable.get(inReply);
 					parent.add(node);
@@ -231,7 +225,6 @@ public class TableModelThreadedView extends TableModelPlugin {
 			references = references.trim();
 			String[] referenceList = parseReferences(references);
 			int count = referenceList.length;
-			int lastElement = count - 1;
 
 			if (count >= 1) {
 				// create empty container
@@ -292,7 +285,7 @@ public class TableModelThreadedView extends TableModelPlugin {
 			MessageNode node = (MessageNode) rootNode.getChildAt(i);
 			boolean result = add(node, rootNode);
 
-			if (result == true)
+			if (result)
 				i--;
 		}
 
@@ -349,9 +342,9 @@ public class TableModelThreadedView extends TableModelPlugin {
 		String[] referenceList,
 		MessageNode rootNode) {
 		MessageNode parent = null;
-		MessageNode child = null;
 
 		/*
+		MessageNode child = null;
 		for ( int index=i; index<referenceList.length; index++ )
 		{
 		
@@ -386,8 +379,7 @@ public class TableModelThreadedView extends TableModelPlugin {
 		}
 		*/
 
-		if (hashtable.containsKey(referenceList[referenceList.length - 1].trim())
-			== true) {
+		if (hashtable.containsKey(referenceList[referenceList.length - 1].trim())) {
 			//System.out.println("reference is in hashtable: "+index);
 			parent =
 				(MessageNode) hashtable.get(referenceList[referenceList.length - 1].trim());
@@ -407,7 +399,7 @@ public class TableModelThreadedView extends TableModelPlugin {
 			MessageNode child = (MessageNode) node.getChildAt(i);
 
 			//if ( ( child.isLeaf() == false ) && ( !child.getParent().equals( node ) ) )
-			if (child.isLeaf() == false) {
+			if (!child.isLeaf()) {
 				// has children
 				Vector v = child.getVector();
 				Collections.sort(
@@ -449,7 +441,7 @@ public class TableModelThreadedView extends TableModelPlugin {
 	public boolean manipulateModel(int mode) {
 		//System.out.println("threading enabled: "+ isEnabled() );
 
-		if (isEnabled() == false)
+		if (!isEnabled())
 			return false;
 
 		switch (mode) {

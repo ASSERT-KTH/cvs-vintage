@@ -42,8 +42,6 @@ public class SubjectTreeCellRenderer extends DefaultTreeCellRenderer {
 	private ImageIcon image2;
 	private Font plainFont, boldFont, underlinedFont;
 
-	private TableView headerTable;
-
 	private JTree tree1;
 
 	private Color background;
@@ -113,12 +111,12 @@ public class SubjectTreeCellRenderer extends DefaultTreeCellRenderer {
 
 		if (header.getFlags() != null) {
 			if (header.getFlags().getRecent()) {
-				if (getFont().equals(boldFont) == false)
+				if (!getFont().equals(boldFont))
 					setFont(boldFont);
 			} else if (messageNode.isHasRecentChildren()) {
-				if (getFont().equals(underlinedFont) == false)
+				if (!getFont().equals(underlinedFont))
 					setFont(underlinedFont);
-			} else if (getFont().equals(plainFont) == false) {
+			} else if (!getFont().equals(plainFont)) {
 				setFont(plainFont);
 			}
 		}

@@ -168,14 +168,12 @@ public class DefaultLabelRenderer extends JLabel implements TableCellRenderer {
 
 		if (header.getFlags() != null) {
 			if (header.getFlags().getRecent()) {
-				if (getFont().equals(boldFont) == false)
+				if (!getFont().equals(boldFont))
 					setFont(boldFont);
-			} else if ( messageNode.isHasRecentChildren() )
-			{
-				if ( getFont().equals(underlinedFont) == false )
+			} else if (messageNode.isHasRecentChildren())	{
+				if (!getFont().equals(underlinedFont))
 					setFont(underlinedFont);
-			}
-			else if (getFont().equals(plainFont) == false) {
+			} else if (!getFont().equals(plainFont)) {
 				setFont(plainFont);
 			}
 		}
