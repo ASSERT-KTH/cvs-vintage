@@ -55,7 +55,7 @@
  *
  * [Additional notices, if required by prior licensing conditions]
  *
- */ 
+ */
 
 package org.apache.tomcat.modules.aaa;
 
@@ -459,7 +459,7 @@ class FormAuthHandler extends Handler {
 	ServerSession session=req.getSession( false );
 	if( session == null ) {
 	}
-	
+
 	String page=ctx.getFormLoginPage();
 	String errorPage=ctx.getFormErrorPage();
 	// assert errorPage!=null ( AccessInterceptor will check
@@ -481,8 +481,15 @@ class FormAuthHandler extends Handler {
 	}
 
 	String originalLocation = req.requestURI().toString();
-	if (req.queryString().toString() != null)
+	if (req.queryString().toString() != null
+                && !req.queryString().toString().equals(""))
 	    originalLocation += "?" + req.queryString().toString();
+        //XXX is needed to put the JVM route too?
+        if (req.getSessionIdSource().equals(Request.SESSIONID_FROM_URL)){
+            String id=";jsessionid="+req.getSessionId() ;
+            originalLocation += id ;
+            page += id ;
+        }
 	session.setAttribute( "tomcat.auth.originalLocation",
 			      originalLocation);
 	if( debug > 0 )
@@ -502,7 +509,7 @@ class FormAuthHandler extends Handler {
     This is called after the user POST the form login page.
 */
 class FormSecurityCheckHandler extends Handler {
-    
+
     FormSecurityCheckHandler() {
 	//	setOrigin( Handler.ORIGIN_INTERNAL );
 	name="tomcat.formSecurityCheck";
