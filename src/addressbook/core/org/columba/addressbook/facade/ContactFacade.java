@@ -61,7 +61,7 @@ public final class ContactFacade {
 		AbstractFolder selectedFolder = (AbstractFolder) AddressbookInterface.addressbookTreeModel
 				.getFolder(uid);
 		try {
-			if (!selectedFolder.exists(adr)) {
+			if (selectedFolder.exists(adr.getMailAddress()) != null) {
 				Contact card = new Contact();
 
 				String fn = adr.getShortAddress();
