@@ -2,7 +2,7 @@
 <!DOCTYPE database SYSTEM
           "http://jakarta.apache.org/turbine/dtd/database.dtd">
 
-<!-- $Id: scarab-schema.xml,v 1.108 2002/09/11 21:49:03 elicia Exp $ -->
+<!-- $Id: scarab-schema.xml,v 1.109 2002/09/12 00:58:18 elicia Exp $ -->
 
 <database name="@DATABASE_PROP_NAME@">
 <!--
@@ -571,6 +571,8 @@
         default="1" size="1"/>
     <column name="DELETED" required="false" type="BOOLEANINT" 
         default="0" size="1"></column>
+    <column name="LOCKED" required="false" type="BOOLEANINT" 
+        default="0" size="1"/>
     <foreign-key foreignTable="SCARAB_ISSUE_TYPE">
         <reference local="PARENT_ID" foreign="ISSUE_TYPE_ID"/>
     </foreign-key>
@@ -1055,10 +1057,6 @@
         Option.
     -->
     <column name="OPTION_ID" primaryKey="true" required="true" type="INTEGER"/>
-    <!--
-        Value that represents the option in the UI.
-    -->
-    <column name="DISPLAY_VALUE" required="false" type="VARCHAR" size="255"/>
     <!--
         Flag, which marks that option has been deleted within the module.
     -->
