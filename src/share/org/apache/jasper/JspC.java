@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/jasper/JspC.java,v 1.19 2001/01/14 20:45:40 larryi Exp $
- * $Revision: 1.19 $
- * $Date: 2001/01/14 20:45:40 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/jasper/JspC.java,v 1.20 2001/02/20 03:36:00 costin Exp $
+ * $Revision: 1.20 $
+ * $Date: 2001/02/20 03:36:00 $
  *
  * ====================================================================
  * 
@@ -116,7 +116,7 @@ public class JspC implements Options { //, JspCompilationContext {
     boolean largeFile = false;
     boolean mappedFile = false;
 
-    int jspVerbosityLevel = Logger.INFORMATION;
+    int jspVerbosityLevel = Log.INFORMATION;
 
     File scratchDir;
 
@@ -245,15 +245,15 @@ public class JspC implements Options { //, JspCompilationContext {
         args = arg;
         String tok;
 
-        int verbosityLevel = Logger.WARNING;
+        int verbosityLevel = Log.WARNING;
         dieLevel = NO_DIE_LEVEL;
         die = dieLevel;
 
         while ((tok = nextArg()) != null) {
             if (tok.equals(SWITCH_QUIET)) {
-                verbosityLevel = Logger.WARNING;
+                verbosityLevel = Log.WARNING;
             } else if (tok.equals(SWITCH_VERBOSE)) {
-                verbosityLevel = Logger.INFORMATION;
+                verbosityLevel = Log.INFORMATION;
             } else if (tok.startsWith(SWITCH_VERBOSE)) {
                 try {
                     verbosityLevel
@@ -322,8 +322,10 @@ public class JspC implements Options { //, JspCompilationContext {
             }
         }
 
-        Constants.jasperLog = new QueueLogger();
-        Constants.jasperLog.setVerbosityLevel(verbosityLevel);
+	QueueLogger ql = new QueueLogger();
+	ql.setVerbosityLevel(verbosityLevel);
+        Constants.jasperLog = Log.getLog("JASPER_LOG", this );
+        Constants.jasperLog.setLogger( ql );
 
     }
     
@@ -400,16 +402,16 @@ public class JspC implements Options { //, JspCompilationContext {
         } catch (JasperException je) {
             //je.printStackTrace(log);
             Constants.message("jspc.error.jasperException", 
-                    new Object[] {file, je}, Logger.ERROR);
+                    new Object[] {file, je}, Log.ERROR);
             if (dieLevel != NO_DIE_LEVEL) {
                 dieOnExit = true;
             }
         } catch (FileNotFoundException fne) {
                 Constants.message("jspc.error.fileDoesNotExist", 
-                        new Object[] {fne.getMessage()}, Logger.WARNING);
+                        new Object[] {fne.getMessage()}, Log.WARNING);
         } catch (Exception e) {
             Constants.message("jspc.error.generalException", 
-                    new Object[] {file, e}, Logger.ERROR);
+                    new Object[] {file, e}, Log.ERROR);
             if (dieLevel != NO_DIE_LEVEL) {
                 dieOnExit = true;
             }
@@ -443,13 +445,13 @@ public class JspC implements Options { //, JspCompilationContext {
                 } else {
                     // end of arguments, nothing left to parse
                     Constants.message("jspc.error.emptyWebApp", 
-                            Logger.ERROR);
+                            Log.ERROR);
                     return;
                 }
             }
             if (!f.exists()) {
                 Constants.message("jspc.error.fileDoesNotExist", 
-                        new Object[] {f}, Logger.WARNING);
+                        new Object[] {f}, Log.WARNING);
                 argPos++;
                 if (webApp) {
                     argPos++;
@@ -486,7 +488,7 @@ public class JspC implements Options { //, JspCompilationContext {
                             uriBase = tUriBase;
                             Constants.message("jspc.implicit.uriRoot",
                                               new Object[] { uriRoot },
-                                              Logger.INFORMATION);
+                                              Log.INFORMATION);
                             break;
                         }
                         if (f.exists() && f.isDirectory()) {
@@ -534,7 +536,7 @@ public class JspC implements Options { //, JspCompilationContext {
                 String base = nextFile();
                 if (base == null) {
                     Constants.message("jspc.error.emptyWebApp", 
-                            Logger.ERROR);
+                            Log.ERROR);
                     return;
                 }// else if (".".equals(base)) {
                 //    base = "";

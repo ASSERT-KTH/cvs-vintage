@@ -84,7 +84,7 @@ import org.apache.jasper.runtime.*;
 
 import org.apache.jasper.compiler.Compiler;
 
-import org.apache.tomcat.util.log.*;
+import org.apache.tomcat.util.log.Log;
 
 /**
  * The JSP engine (a.k.a Jasper)! 
@@ -94,7 +94,7 @@ import org.apache.tomcat.util.log.*;
  */
 public class JspServlet extends HttpServlet {
 
-    Log loghelper = new Log("JASPER_LOG", "JspServlet");
+    Log loghelper = Log.getLog("JASPER_LOG", "JspServlet");
 
     class JspServletWrapper {
         Servlet theServlet;
@@ -149,7 +149,7 @@ public class JspServlet extends HttpServlet {
                                   accordingto,
                                   cp == null ? "" : cp
                               }, 
-                              Logger.INFORMATION);
+                              Log.INFORMATION);
 
             if (loadJSP(jspUri, cp, isErrorPage, req, res) 
                     || theServlet == null) {
@@ -203,7 +203,7 @@ public class JspServlet extends HttpServlet {
 					     new Object[] {
 						 ex.getMessage()
 					     }), ex,
-					    Logger.ERROR);
+					    Log.ERROR);
 		    // rethrow FileNotFoundException so someone higher up can handle
                     if (insecure_TMI)
                         throw ex;
@@ -267,13 +267,13 @@ public class JspServlet extends HttpServlet {
             Constants.message("jsp.message.parent_class_loader_is", 
                               new Object[] {
                                   parentClassLoader.toString()
-                              }, Logger.DEBUG);
+                              }, Log.DEBUG);
             }
 	else {
             Constants.message("jsp.message.parent_class_loader_is", 
                               new Object[] {
                                   "<none>"
-                              }, Logger.DEBUG);
+                              }, Log.DEBUG);
 	}
 	//	System.out.println("JspServlet: init " + config.getServletName() );
 	if( loader==null ) {
@@ -298,8 +298,8 @@ public class JspServlet extends HttpServlet {
 	    Constants.message("jsp.message.scratch.dir.is", 
 			      new Object[] { 
 				  options.getScratchDir().toString() 
-			      }, Logger.INFORMATION );
-	    Constants.message("jsp.message.dont.modify.servlets", Logger.INFORMATION);
+			      }, Log.INFORMATION );
+	    Constants.message("jsp.message.dont.modify.servlets", Log.INFORMATION);
 	    JspFactory.setDefaultFactory(new JspFactoryImpl());
 	}
     }
@@ -371,10 +371,10 @@ public class JspServlet extends HttpServlet {
 
             boolean precompile = preCompile(request);
 
-	    Logger jasperLog = Constants.jasperLog;
+	    Log jasperLog = Constants.jasperLog;
 	    
             if (jasperLog != null &&
-		jasperLog.matchVerbosityLevel(Logger.INFORMATION))
+		jasperLog.getLevel() >= Log.INFORMATION)
 		{
 		    jasperLog.log("JspEngine --> "+jspUri);
 		    jasperLog.log("\t     ServletPath: "+request.getServletPath());
@@ -411,7 +411,7 @@ public class JspServlet extends HttpServlet {
 
     public void destroy() {
 	if (Constants.jasperLog != null)
-	    Constants.jasperLog.log("JspServlet.destroy()", Logger.INFORMATION);
+	    Constants.jasperLog.log("JspServlet.destroy()", Log.INFORMATION);
 
 	Enumeration servlets = jsps.elements();
 	while (servlets.hasMoreElements()) 

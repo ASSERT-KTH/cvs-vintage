@@ -62,7 +62,7 @@ import org.apache.jasper.compiler.Mangler;
 
 // utils - can be moved here if needed
 import org.apache.tomcat.util.JavaGeneratorTool;
-import org.apache.tomcat.util.FileUtil;
+import org.apache.tomcat.util.io.FileUtil;
 
 
 /** Mangler implementation - use the directory of the jsp file as a package

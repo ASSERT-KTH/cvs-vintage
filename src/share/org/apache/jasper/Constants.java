@@ -60,8 +60,8 @@ import java.util.ResourceBundle;
 import java.util.MissingResourceException;
 import java.text.MessageFormat;
 
-import org.apache.tomcat.util.log.*;
-
+import org.apache.tomcat.util.log.Log;
+ 
 /**
  * Some constants and other global data that are used by the compiler and the runtime.
  *
@@ -257,12 +257,12 @@ public class Constants {
      */
     public static final void message(String key, Object[] args, int verbosityLevel) {
 	if (jasperLog == null)
-	    jasperLog = Logger.getLogger("JASPER_LOG");
+	    jasperLog = Log.getLog("JASPER_LOG", null);
 
 	if (jasperLog != null)
 	    jasperLog.log(getString(key, args), verbosityLevel);
     }
 
-    public static Logger jasperLog = null;
+    public static Log jasperLog = null;
 }
 
