@@ -1,7 +1,7 @@
 #set ($module = $scarabR.CurrentModule)
 #set ($issueType = $scarabR.IssueType)
 #set ($itGroup = $intake.IssueType.mapTo($issueType))
-#set ($lastTemplate = $data.Parameters.getString("$scarabG.Constant.LAST_TEMPLATE"))
+#set ($lastTemplate = $data.Parameters.getString($scarabG.Constant.LAST_TEMPLATE))
 
 #macro (ArtifactTypeCreateBar $var)
 <div class="functnbar$var">
