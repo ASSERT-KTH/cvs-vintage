@@ -37,7 +37,7 @@ to the jboss.jcml file.
 
 @author <a href="mailto:Scott.Stark@jboss.org">Scott Stark</a>.
 @author Vladimir Blagojevic <vladimir@xisnext.2y.net>
-@version $Revision: 1.11 $
+@version $Revision: 1.12 $
 */
 public class JNDIView extends ServiceMBeanSupport implements JNDIViewMBean
 {
@@ -393,7 +393,7 @@ public class JNDIView extends ServiceMBeanSupport implements JNDIViewMBean
                             buffer.append(ifaces[i]);
                             buffer.append(',');
                         }
-                        buffer.setCharAt(buffer.length(), ')');
+                        buffer.setCharAt(buffer.length()-1, ')');
                     }
                     else
                     {
