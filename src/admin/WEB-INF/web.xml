@@ -9,6 +9,25 @@
      Tomcat Admin 
   </description>
 
+    <security-constraint>
+      <web-resource-collection>
+         <web-resource-name>Protected Area</web-resource-name>
+         <url-pattern>/contextAdmin/*</url-pattern>
+	 <http-method>DELETE</http-method>
+         <http-method>GET</http-method>
+         <http-method>POST</http-method>
+	 <http-method>PUT</http-method>
+      </web-resource-collection>
+      <auth-constraint>
+         <role-name>admin</role-name>
+      </auth-constraint>
+    </security-constraint>
+
+    <login-config>
+      <auth-method>BASIC</auth-method>
+      <realm-name>Admin</realm-name>
+    </login-config>
+
   <taglib>
     <taglib-uri>http://jakarta.apache.org/taglibs/tomcat_admin-1.0</taglib-uri>
     <taglib-location>/WEB-INF/admin.tld</taglib-location>
