@@ -42,7 +42,7 @@
   <img src="$staticLink.setPath("/images/icon_downarrow.gif")" width="13" height="8" alt="sort descending" title="sort descending" border="0" />
    Template name</th>
   <th>Template description</th>
-  <th>Location</th>
+  <th>Availability</th>
   <th>Author</th>
   </tr>
 
