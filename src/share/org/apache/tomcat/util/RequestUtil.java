@@ -80,7 +80,12 @@ import javax.servlet.http.*;
 public class RequestUtil {
 
     public static Hashtable readFormData( Request request ) {
-	String contentType=request.getContentType();
+
+        String contentType=request.getContentType().toLowerCase();
+        if (contentType.indexOf(";")>0)
+            contentType=contentType.substring(0,contentType.indexOf(";")-1);
+        contentType = contentType.trim();
+
 	int contentLength=request.getContentLength();
 
 	if (contentType != null &&
