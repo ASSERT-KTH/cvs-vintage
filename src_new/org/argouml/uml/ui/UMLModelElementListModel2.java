@@ -1,4 +1,4 @@
-// $Id: UMLModelElementListModel2.java,v 1.23 2004/12/14 20:48:16 mvw Exp $
+// $Id: UMLModelElementListModel2.java,v 1.24 2004/12/14 21:14:42 mvw Exp $
 // Copyright (c) 2002-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -430,6 +430,7 @@ public abstract class UMLModelElementListModel2
 
     /**
      * Override this if you want a popup menu.
+     * See for an example UMLClassifierParameterListModel.
      * 
      * @param popup the popup menu
      * @param index the selected item in the list at the moment 

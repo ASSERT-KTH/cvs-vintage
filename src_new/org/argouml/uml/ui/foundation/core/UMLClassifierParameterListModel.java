@@ -1,4 +1,4 @@
-// $Id: UMLClassifierParameterListModel.java,v 1.8 2004/12/14 20:48:16 mvw Exp $
+// $Id: UMLClassifierParameterListModel.java,v 1.9 2004/12/14 21:18:08 mvw Exp $
 // Copyright (c) 1996-2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -79,6 +79,12 @@ public class UMLClassifierParameterListModel
         return true; // i.e. yes, we generated a menu
     }
 
+    /**
+     * TODO: Once finished, this class should be extracted in a seperate file, 
+     * for use in other places.
+     * 
+     * @author Michiel
+     */
     class MoveUpAction extends UMLAction {
         private UMLModelElementListModel2 model;
         private int index;
@@ -111,8 +117,10 @@ public class UMLClassifierParameterListModel
     }
     
     /**
+     * TODO: Once finished, this class should be extracted in a seperate file, 
+     * for use in other places.
+     * 
      * @author Michiel
-     *
      */
     class MoveDownAction extends UMLAction {
         private UMLModelElementListModel2 model;
