@@ -47,7 +47,7 @@ import org.gjt.sp.util.Log;
 /**
  * The main class of the jEdit text editor.
  * @author Slava Pestov
- * @version $Id: jEdit.java,v 1.27 2001/12/02 07:34:51 spestov Exp $
+ * @version $Id: jEdit.java,v 1.28 2001/12/02 11:40:50 spestov Exp $
  */
 public class jEdit
 {
@@ -2581,6 +2581,13 @@ public class jEdit
 		System.getProperties().put("java.protocol.handler.pkgs",
 			"org.gjt.sp.jedit.proto|" +
 			System.getProperty("java.protocol.handler.pkgs",""));
+
+		// Set the User-Agent string used by the java.net HTTP handler
+		String userAgent = "jEdit/" + getVersion()
+			+ " (Java " + System.getProperty("java.version")
+			+ ". " + System.getProperty("java.vendor")
+			+ "; " + System.getProperty("os.arch") + ")";
+		System.getProperties().put("http.agent",userAgent);
 
 		inputHandler = new DefaultInputHandler(null);
 

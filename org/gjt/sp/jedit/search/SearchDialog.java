@@ -39,7 +39,7 @@ import org.gjt.sp.util.Log;
 /**
  * Search and replace dialog.
  * @author Slava Pestov
- * @version $Id: SearchDialog.java,v 1.7 2001/11/07 06:31:50 spestov Exp $
+ * @version $Id: SearchDialog.java,v 1.8 2001/12/02 11:40:51 spestov Exp $
  */
 public class SearchDialog extends EnhancedDialog implements EBComponent
 {
@@ -633,7 +633,7 @@ public class SearchDialog extends EnhancedDialog implements EBComponent
 
 		boolean ok = true;
 
-		if(fileset.getBufferCount() == 0)
+		if(fileset.getFileCount() == 0)
 		{
 			// oops
 			GUIUtilities.error(this,"empty-fileset",null);

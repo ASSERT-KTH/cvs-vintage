@@ -1,6 +1,9 @@
 /*
  * CurrentBufferSet.java - Current buffer matcher
- * Copyright (C) 1999 Slava Pestov
+ * :tabSize=8:indentSize=8:noTabs=false:
+ * :folding=explicit:collapseFolds=1:
+ *
+ * Copyright (C) 1999, 2001 Slava Pestov
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -24,52 +27,40 @@ import org.gjt.sp.jedit.*;
 /**
  * A file set for searching the current buffer.
  * @author Slava Pestov
- * @version $Id: CurrentBufferSet.java,v 1.2 2001/09/08 04:50:46 spestov Exp $
+ * @version $Id: CurrentBufferSet.java,v 1.3 2001/12/02 11:40:51 spestov Exp $
  */
 public class CurrentBufferSet implements SearchFileSet
 {
-	/**
-	 * Returns the first buffer to search.
-	 * @param view The view performing the search
-	 */
-	public Buffer getFirstBuffer(View view)
+	//{{{ getFirstFile() method
+	public String getFirstFile(View view)
 	{
-		return view.getBuffer();
-	}
+		return view.getBuffer().getPath();
+	} //}}}
 
-	/**
-	 * Returns the next buffer to search.
-	 * @param view The view performing the search
-	 * @param buffer The last buffer searched
-	 */
-	public Buffer getNextBuffer(View view, Buffer buffer)
+	//{{{ getNextFile() method
+	public String getNextFile(View view, String file)
 	{
-		if(buffer == null)
-			return view.getBuffer();
+		if(file == null)
+			return view.getBuffer().getPath();
 		else
 			return null;
-	}
+	} //}}}
 
-	/**
-	 * Called if the specified buffer was found to have a match.
-	 * @param buffer The buffer
-	 */
-	public void matchFound(Buffer buffer) {}
+	//{{{ getFiles() method
+	public String[] getFiles(View view)
+	{
+		return new String[] { view.getBuffer().getPath() };
+	} //}}}
 
-	/**
-	 * Returns the number of buffers in this file set.
-	 */
-	public int getBufferCount()
+	//{{{ getFileCount() method
+	public int getFileCount()
 	{
 		return 1;
-	}
+	} //}}}
 
-	/**
-	 * Returns the BeanShell code that will recreate this file set.
-	 * @since jEdit 2.7pre3
-	 */
+	//{{{ getCode() method
 	public String getCode()
 	{
 		return "new CurrentBufferSet()";
-	}
+	} //}}}
 }

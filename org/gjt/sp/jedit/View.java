@@ -38,7 +38,7 @@ import org.gjt.sp.util.Log;
  * class.
  *
  * @author Slava Pestov
- * @version $Id: View.java,v 1.5 2001/12/02 07:34:51 spestov Exp $
+ * @version $Id: View.java,v 1.6 2001/12/02 11:40:50 spestov Exp $
  */
 public class View extends JFrame implements EBComponent
 {
@@ -62,9 +62,9 @@ public class View extends JFrame implements EBComponent
 
 	/**
 	 * Quick search.
-	 * @since jEdit 2.7pre2
+	 * @since jEdit 4.0pre3
 	 */
-	public void quickIncrementalSearch()
+	public void quickIncrementalSearch(boolean word)
 	{
 		if(searchBar == null)
 		{
@@ -72,21 +72,27 @@ public class View extends JFrame implements EBComponent
 			return;
 		}
 
-		String text = getTextArea().getSelectedText();
-		if(text != null && text.indexOf('\n') != -1)
+		JEditTextArea textArea = getTextArea();
+
+		String text = textArea.getSelectedText();
+		if(text == null && word)
+		{
+			textArea.selectWord();
+			text = textArea.getSelectedText();
+		}
+		else if(text != null && text.indexOf('\n') != -1)
 			text = null;
 
 		searchBar.setHyperSearch(false);
 		searchBar.getField().setText(text);
-		searchBar.getField().selectAll();
 		searchBar.getField().requestFocus();
 	}
 
 	/**
 	 * Quick HyperSearch.
-	 * @since jEdit 2.7pre2
+	 * @since jEdit 4.0pre3
 	 */
-	public void quickHyperSearch()
+	public void quickHyperSearch(boolean word)
 	{
 		if(searchBar == null)
 		{
@@ -96,7 +102,15 @@ public class View extends JFrame implements EBComponent
 
 		searchBar.setHyperSearch(true);
 
-		String text = getTextArea().getSelectedText();
+		JEditTextArea textArea = getTextArea();
+
+		String text = textArea.getSelectedText();
+		if(text == null && word)
+		{
+			textArea.selectWord();
+			text = textArea.getSelectedText();
+		}
+
 		if(text != null && text.indexOf('\n') == -1)
 		{
 			HistoryModel.getModel("find").addItem(text);
