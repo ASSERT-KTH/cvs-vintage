@@ -13,16 +13,18 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
 //
 //All Rights Reserved.
+
 package org.columba.mail.gui.tree.util;
 
 import java.io.File;
+import java.util.List;
 import java.util.StringTokenizer;
 import java.util.Vector;
 
 import javax.swing.tree.TreePath;
 
 public class TreeNodeList {
-	Vector list;
+	protected List list;
 
 	public TreeNodeList() {
 		list = new Vector();
@@ -36,7 +38,6 @@ public class TreeNodeList {
 		for (int i = 0; i < str.length; i++) {
 			list.add(str[i]);
 		}
-
 	}
 
 	public TreeNodeList(String s) {
@@ -49,7 +50,6 @@ public class TreeNodeList {
 
 			list.add(next);
 		}
-
 	}
 
 	public TreePath getTreePath() {
@@ -65,20 +65,15 @@ public class TreeNodeList {
 	}
 
 	public void removeElementAt(int index) {
-		getList().removeElementAt(index);
+		list.remove(index);
 	}
 
-	public Vector getList() {
+	public List getList() {
 		return list;
 	}
 
 	public void setElementAt(String s, int i) {
-		list.setElementAt(s, i);
-
-	}
-
-	public void insertElementAt(String s, int i) {
-		list.insertElementAt(s, i);
+		list.set(i, s);
 	}
 
 	public void add(String s) {
@@ -89,7 +84,7 @@ public class TreeNodeList {
 		if (count() > 0)
 			return (String) list.get(i);
 		else
-			return new String("");
+			return "";
 	}
 
 	public int count() {
@@ -101,11 +96,11 @@ public class TreeNodeList {
 	}
 
 	public String lastElement() {
-		return (String) list.lastElement();
+		return (String) list.get(list.size()-1);
 	}
 
 	public void removeLastElement() {
-		list.removeElementAt(count() - 1);
+		list.remove(list.size()-1);
 	}
 
 	public boolean equals(TreeNodeList v) {
@@ -135,7 +130,5 @@ public class TreeNodeList {
 		}
 
 		return file;
-
 	}
-
 }
