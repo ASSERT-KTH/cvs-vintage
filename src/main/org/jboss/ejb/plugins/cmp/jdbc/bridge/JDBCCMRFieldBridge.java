@@ -66,7 +66,7 @@ import org.jboss.security.SecurityAssociation;
  *      One for each role that entity has.       
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
- * @version $Revision: 1.43 $
+ * @version $Revision: 1.44 $
  */                            
 public class JDBCCMRFieldBridge implements JDBCFieldBridge, CMRFieldBridge {
    /**
@@ -522,6 +522,12 @@ public class JDBCCMRFieldBridge implements JDBCFieldBridge, CMRFieldBridge {
       load(myCtx);
       
       FieldState fieldState = getFieldState(myCtx);
+
+      // is this just setting our own relation set back
+      if(newValue == fieldState.getRelationSet()) {
+         return;
+      }
+
       try{
          // Remove old value(s)
          List valuesCopy = new ArrayList(fieldState.getValue());
