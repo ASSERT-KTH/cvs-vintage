@@ -22,6 +22,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Vector;
 
+import javax.net.ssl.SSLException;
 import javax.swing.JOptionPane;
 
 import org.columba.core.command.StatusObservable;
@@ -276,6 +277,18 @@ public class IMAPStore {
 		}
 
 		if (openport) {
+			try {
+				// Try first communication with NOOP
+				getProtocol().noop();
+			} catch (Exception e1) {
+				getProtocol().setUseSSL(false);
+				getProtocol().openPort();
+				
+				//update configuration
+				item.set("enable_ssl", "true");
+			}
+			
+			
 			while (!cancel) {
 				if (first) {
 
