@@ -17,15 +17,14 @@ import javax.net.ssl.TrustManagerFactory;
  JSSE KeyManagerFactory and TrustManagerFactory accessors for use with SSL/JSSE.
 
 @see java.security.KeyStore
-@see com.sun.net.ssl.KeyManagerFactory
-@see com.sun.net.ssl.TrustManagerFactory
+@see javax.net.ssl.KeyManagerFactory
+@see javax.net.ssl.TrustManagerFactory
 
  * @author  Scott.Stark@jboss.org
- * @version $Revision: 1.3 $
+ * @version $Revision: 1.4 $
  */
 public interface SecurityDomain extends SubjectSecurityManager, RealmMapping
 {
-
    /** Get the keystore associated with the security domain */
    public KeyStore getKeyStore() throws SecurityException;
    /** Get the KeyManagerFactory associated with the security domain */
