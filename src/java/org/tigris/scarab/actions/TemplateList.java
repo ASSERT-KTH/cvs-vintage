@@ -81,7 +81,7 @@ import org.tigris.scarab.tools.ScarabRequestTool;
     This class is responsible for report managing enter issue templates.
     ScarabIssueAttributeValue
     @author <a href="mailto:elicia@collab.net">Elicia David</a>
-    @version $Id: TemplateList.java,v 1.6 2001/09/30 18:31:38 jon Exp $
+    @version $Id: TemplateList.java,v 1.7 2001/10/08 03:32:38 jmcnally Exp $
 */
 public class TemplateList extends RequireLoginFirstAction
 {
@@ -105,7 +105,7 @@ public class TemplateList extends RequireLoginFirstAction
         //if there is an issue id, this is an edit; otherwise create new issue
         if (id == null)
         {
-            issue = user.getReportingIssue(scarabR.getCurrentModule());
+            issue = scarabR.getCurrentModule().getNewIssue();
         } 
         else
         {
