@@ -61,7 +61,7 @@ import org.tigris.scarab.om.*;
     into the context to replace the $link that Turbine adds.
     
     @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
-    @version $Id: ScarabLink.java,v 1.3 2001/05/11 17:34:18 jmcnally Exp $
+    @version $Id: ScarabLink.java,v 1.4 2001/05/17 15:56:48 jmcnally Exp $
 */
 public class ScarabLink extends TemplateLink
                         implements InitableRecyclable
@@ -100,7 +100,7 @@ public class ScarabLink extends TemplateLink
      * @param t A String with the template name.
      * @return A TemplateLink.
      */
-    public DynamicURI setPage(String t)
+    public TemplateLink setPage(String t)
     {
         /*
         String project_id = data.getParameters().getString(ModuleManager.CURRENT_PROJECT, "");
