@@ -14,15 +14,11 @@ import org.jnp.interfaces.NamingContext;
 import org.jnp.server.NamingServer;
 
 /**
- *   Implementation of "java:" namespace factory. The context is associated
- *   with the thread, so the root context must be set before this is used in a thread
- *   
- *   SA FIXME: the java: namespace should be global.  the java:comp/env subcontext should 
- *   be threadlocal
+ *   Implementation of "java:" namespace factory. java: is a VM-local namespace.
  *     
  *   @see <related>
  *   @author Rickard Öberg (rickard.oberg@telkel.com)
- *   @version $Revision: 1.5 $
+ *   @version $Revision: 1.6 $
  */
 public class javaURLContextFactory
    implements ObjectFactory
@@ -58,14 +54,4 @@ public class javaURLContextFactory
    {
       return new NamingContext(environment, name, root);
    }
-    
-   // Y overrides ---------------------------------------------------
-
-   // Package protected ---------------------------------------------
-    
-   // Protected -----------------------------------------------------
-    
-   // Private -------------------------------------------------------
-
-   // Inner classes -------------------------------------------------
 }
