@@ -59,7 +59,7 @@ public class TreeController implements TreeWillExpandListener {
         this.model = model;
         this.mailFrameController = mailFrameController;
 
-        view = new TreeView(mailFrameController, model);
+        view = new TreeView(model);
 
         view.addTreeWillExpandListener(this);
 
@@ -70,9 +70,8 @@ public class TreeController implements TreeWillExpandListener {
         FolderTreeCellRenderer renderer = new FolderTreeCellRenderer();
         view.setCellRenderer(renderer);
 
-        getView().setTransferHandler(new MessageTransferHandler(
-                ((TableViewOwner) getMailFrameController()).getTableController()));
-
+        getView().setTransferHandler(new TreeViewTransferHandler());
+        getView().setDragEnabled(true);
         /*
         getView().getInputMap().put(
                 KeyStroke.getKeyStroke(KeyEvent.VK_F2, 0),

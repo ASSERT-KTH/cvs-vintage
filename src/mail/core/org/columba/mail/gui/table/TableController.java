@@ -36,7 +36,6 @@ import org.columba.mail.gui.table.action.CutAction;
 import org.columba.mail.gui.table.action.DeleteAction;
 import org.columba.mail.gui.table.action.PasteAction;
 import org.columba.mail.gui.table.dnd.HeaderTableDnd;
-import org.columba.mail.gui.table.dnd.MessageTransferHandler;
 import org.columba.mail.gui.table.model.HeaderTableModel;
 import org.columba.mail.gui.table.model.MessageNode;
 import org.columba.mail.gui.table.model.TableModelChangedEvent;
@@ -76,7 +75,7 @@ public class TableController implements FocusOwner, ListSelectionListener {
     private HeaderTableDnd headerTableDnd;
 
     /**
-     * filter action which should be accessible from the menu 
+     * filter action which should be accessible from the menu
      * only
      */
     private FilterActionListener filterActionListener;
@@ -176,9 +175,8 @@ public class TableController implements FocusOwner, ListSelectionListener {
         // create a new markAsReadTimer
         markAsReadTimer = new MarkAsReadTimer(this);
 
-        // not used currently
-        getView().setTransferHandler(new MessageTransferHandler(this));
-        getView().setDragEnabled(false);
+        getView().setTransferHandler(new TableViewTransferHandler(getMailFrameController()));
+        getView().setDragEnabled(true);
 
         // MouseListener sorts table when clicking on a column header
         new TableHeaderMouseListener(getView(), getTableModelSorter());

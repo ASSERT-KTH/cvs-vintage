@@ -21,6 +21,7 @@ import org.columba.core.logging.ColumbaLogger;
 
 import org.columba.mail.composer.SendableMessage;
 import org.columba.mail.config.FolderItem;
+import org.columba.mail.folder.FolderTreeNode;
 import org.columba.mail.folder.headercache.AbstractHeaderCache;
 import org.columba.mail.folder.headercache.CachedFolder;
 import org.columba.mail.folder.headercache.LocalHeaderCache;
@@ -48,7 +49,7 @@ public class OutboxFolder extends CachedMHFolder {
     private SendListManager[] sendListManager = new SendListManager[2];
     private int actSender;
     private boolean isSending;
-    protected OutboxHeaderCache cache;
+    private OutboxHeaderCache cache;
 
     public OutboxFolder(FolderItem item) {
         super(item);
@@ -97,8 +98,8 @@ public class OutboxFolder extends CachedMHFolder {
 
     private void swapListManagers() throws Exception {
         // copy lost Messages
-        System.out.println("Sizes : " + sendListManager[actSender].count() +
-            " - " + sendListManager[1 - actSender].count());
+        System.out.println("Sizes : " + sendListManager[actSender].count()
+            + " - " + sendListManager[1 - actSender].count());
 
         while (sendListManager[actSender].hasMoreMessages()) {
             sendListManager[1 - actSender].add((SendableMessage) getMessage(
@@ -108,8 +109,8 @@ public class OutboxFolder extends CachedMHFolder {
         // swap
         actSender = 1 - actSender;
 
-        System.out.println("Sizes : " + sendListManager[actSender].count() +
-            " - " + sendListManager[1 - actSender].count());
+        System.out.println("Sizes : " + sendListManager[actSender].count()
+            + " - " + sendListManager[1 - actSender].count());
     }
 
     public void stoppedSending() {
@@ -118,7 +119,7 @@ public class OutboxFolder extends CachedMHFolder {
 
     public void save() throws Exception {
         // only save header-cache if folder data changed
-        if (hasChanged() == true) {
+        if (hasChanged()) {
             getHeaderCacheInstance().save();
             setChanged(false);
         }
@@ -132,6 +133,23 @@ public class OutboxFolder extends CachedMHFolder {
      * @see org.columba.mail.folder.FolderTreeNode#supportsAddMessage()
      */
     public boolean supportsAddMessage() {
+        return false;
+    }
+
+    /**
+     * The outbox folder doesnt allow adding folders to it.
+     * @param newFolder folder to check..
+     * @return false always.
+     */
+    public boolean supportsAddFolder(FolderTreeNode newFolder) {
+        return false;
+    }
+
+    /**
+     * Returns if this folder type can be moved.
+     * @return false always.
+     */
+    public boolean supportsMove() {
         return false;
     }
 
@@ -162,4 +180,5 @@ public class OutboxFolder extends CachedMHFolder {
             writer.writeObject(((SendableHeader) h).getRecipients());
         }
     }
+
 }

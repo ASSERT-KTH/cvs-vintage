@@ -27,6 +27,7 @@ import org.columba.mail.filter.Filter;
 import org.columba.mail.filter.FilterList;
 import org.columba.mail.folder.search.DefaultSearchEngine;
 import org.columba.mail.folder.search.LuceneQueryEngine;
+import org.columba.mail.folder.virtual.VirtualFolder;
 import org.columba.mail.message.ColumbaHeader;
 import org.columba.mail.message.ColumbaMessage;
 import org.columba.ristretto.coder.Base64DecoderInputStream;
@@ -437,17 +438,16 @@ public abstract class LocalFolder extends Folder implements MailboxInterface {
 
         InputStream bodyStream = mimepart.getInputStream();
         MimeHeader header = mimepart.getHeader();
-        
+
         bodyStream = decodeStream(header, bodyStream);
-        
-        
-        return bodyStream; 
+
+        return bodyStream;
     }
 
     private InputStream decodeStream(MimeHeader header, InputStream bodyStream) {
         String charsetName = header.getContentParameter("charset");
         int encoding = header.getContentTransferEncoding();
-        
+
         switch (encoding) {
             case MimeHeader.QUOTED_PRINTABLE :
                 {
@@ -475,8 +475,8 @@ public abstract class LocalFolder extends Folder implements MailboxInterface {
         }
         return bodyStream;
     }
-    
-    
+
+
     /** {@inheritDoc} */
     public InputStream getMimePartSourceStream(Object uid, Integer[] address)
         throws Exception {
@@ -560,5 +560,20 @@ public abstract class LocalFolder extends Folder implements MailboxInterface {
     /** {@inheritDoc} */
     public boolean isTrashFolder() {
         return getUid() == 105;
+    }
+
+
+    /** {@inheritDoc} */
+    public boolean supportsAddFolder(FolderTreeNode newFolder) {
+        return ((newFolder instanceof LocalFolder)
+            || (newFolder instanceof VirtualFolder));
+    }
+
+    /**
+     * Returns true since local folders can be moved.
+     * @return true.
+     */
+    public boolean supportsMove() {
+        return true;
     }
 }

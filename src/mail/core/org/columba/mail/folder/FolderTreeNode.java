@@ -1,16 +1,16 @@
 //The contents of this file are subject to the Mozilla Public License Version 1.1
-//(the "License"); you may not use this file except in compliance with the 
+//(the "License"); you may not use this file except in compliance with the
 //License. You may obtain a copy of the License at http://www.mozilla.org/MPL/
 //
 //Software distributed under the License is distributed on an "AS IS" basis,
-//WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License 
+//WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License
 //for the specific language governing rights and
 //limitations under the License.
 //
 //The Original Code is "The Columba Project"
 //
 //The Initial Developers of the Original Code are Frederik Dietz and Timo Stich.
-//Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
+//Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003.
 //
 //All Rights Reserved.
 package org.columba.mail.folder;
@@ -39,9 +39,9 @@ import javax.swing.tree.TreePath;
  * @author fdietz
  */
 public abstract class FolderTreeNode extends DefaultMutableTreeNode {
-    protected final static ImageIcon collapsedIcon = ImageLoader.getSmallImageIcon(
+    protected static final ImageIcon collapsedIcon = ImageLoader.getSmallImageIcon(
             "folder-closed.png");
-    protected final static ImageIcon expandedIcon = ImageLoader.getSmallImageIcon(
+    protected static final ImageIcon expandedIcon = ImageLoader.getSmallImageIcon(
             "folder-open.png");
 
     // the next new folder will get this UID
@@ -184,7 +184,7 @@ public abstract class FolderTreeNode extends DefaultMutableTreeNode {
             }
         }
 
-        if (inserted == false) {
+        if (!inserted) {
             if ((j + 1) == newIndex) {
                 newParentNode.append(newChildNode);
                 System.out.println("------> adapternode appended correctly");
@@ -273,8 +273,8 @@ public abstract class FolderTreeNode extends DefaultMutableTreeNode {
         child.removeFromParent();
 
         // do the same for the XmlElement node
-        ColumbaLogger.log.info("xmlelement=" +
-            child.getFolderItem().getRoot().getName());
+        ColumbaLogger.log.info("xmlelement="
+            + child.getFolderItem().getRoot().getName());
 
         child.getFolderItem().getRoot().removeFromParent();
 
@@ -293,6 +293,23 @@ public abstract class FolderTreeNode extends DefaultMutableTreeNode {
      *
      */
     public boolean supportsAddMessage() {
+        return false;
+    }
+
+    /**
+     * Returns true if this folder can have sub folders of the specified type; false otherwise.
+     * @param newFolder the folder that is going to be inserted as a child.
+     * @return true if this folder can have sub folders; false otherwise.
+     */
+    public boolean supportsAddFolder(FolderTreeNode newFolder) {
+        return false;
+    }
+
+    /**
+     * Returns true if this folder type can be moved around in the folder tree.
+     * @return true if this folder type can be moved around in the folder tree.
+     */
+    public boolean supportsMove() {
         return false;
     }
 }
