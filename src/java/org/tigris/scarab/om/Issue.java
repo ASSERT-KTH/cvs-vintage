@@ -52,46 +52,43 @@ import java.sql.Connection;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
-import java.util.List;
-import java.util.Locale;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 
-import com.workingdogs.village.Record;
-
+import org.apache.commons.collections.MapIterator;
+import org.apache.commons.collections.map.LinkedMap;
 import org.apache.commons.lang.ObjectUtils;
-// Turbine classes
+import org.apache.commons.lang.StringUtils;
+import org.apache.fulcrum.localization.Localization;
 import org.apache.torque.TorqueException;
-import org.apache.torque.om.Persistent;
 import org.apache.torque.manager.MethodResultCache;
-import org.apache.torque.util.Criteria;
-import org.apache.commons.collections.SequencedHashMap;
 import org.apache.torque.map.DatabaseMap;
 import org.apache.torque.oid.IDBroker;
+import org.apache.torque.om.Persistent;
 import org.apache.torque.util.BasePeer;
+import org.apache.torque.util.Criteria;
 import org.apache.turbine.Turbine;
-import org.apache.fulcrum.localization.Localization;
-
-// Scarab classes
+import org.tigris.scarab.attribute.OptionAttribute;
+import org.tigris.scarab.attribute.TotalVotesAttribute;
 import org.tigris.scarab.attribute.UserAttribute;
-import org.tigris.scarab.services.security.ScarabSecurity;
 import org.tigris.scarab.services.cache.ScarabCache;
+import org.tigris.scarab.services.security.ScarabSecurity;
 import org.tigris.scarab.tools.ScarabGlobalTool;
 import org.tigris.scarab.tools.localization.L10NKeySet;
 import org.tigris.scarab.tools.localization.L10NMessage;
 import org.tigris.scarab.tools.localization.Localizable;
-import org.tigris.scarab.util.ScarabException;
-import org.tigris.scarab.attribute.TotalVotesAttribute;
-import org.tigris.scarab.attribute.OptionAttribute;
+import org.tigris.scarab.util.Log;
 import org.tigris.scarab.util.MutableBoolean;
 import org.tigris.scarab.util.ScarabConstants;
-import org.tigris.scarab.util.Log;
+import org.tigris.scarab.util.ScarabException;
 import org.tigris.scarab.workflow.WorkflowFactory;
 
-import org.apache.commons.lang.StringUtils;
+import com.workingdogs.village.Record;
 
 /** 
  * This class represents an Issue.
@@ -99,7 +96,7 @@ import org.apache.commons.lang.StringUtils;
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
- * @version $Id: Issue.java,v 1.339 2004/11/02 10:22:38 dabbous Exp $
+ * @version $Id: Issue.java,v 1.340 2004/12/03 16:10:13 dep4b Exp $
  */
 public class Issue 
     extends BaseIssue
@@ -850,7 +847,7 @@ public class Issue
      * attributes will be considered.
      * @see #getModuleAttributeValuesMap(boolean)
      */
-    public SequencedHashMap getModuleAttributeValuesMap()
+    public LinkedMap getModuleAttributeValuesMap()
         throws Exception
     {
         return getModuleAttributeValuesMap(true);
@@ -865,10 +862,10 @@ public class Issue
      * @param isActive TRUE if only active attributes need to be considered
      * and FALSE if both active and inactive attributes need to be considered
      */
-    public SequencedHashMap getModuleAttributeValuesMap(boolean isActive)
+    public LinkedMap getModuleAttributeValuesMap(boolean isActive)
         throws Exception
     {
-        SequencedHashMap result = null;
+    	LinkedMap result = null;
         Object obj = getCachedObject(GET_MODULE_ATTRVALUES_MAP, isActive ? Boolean.TRUE : Boolean.FALSE);
         if (obj == null) 
         {        
@@ -882,7 +879,7 @@ public class Issue
                 attributes = getModule().getAttributes(getIssueType());
             }
             Map siaValuesMap = getAttributeValuesMap();
-            result = new SequencedHashMap((int)(1.25*attributes.size() + 1));
+            result = new LinkedMap((int)(1.25*attributes.size() + 1));
             for (int i=0; i<attributes.size(); i++)
             {
                 String key = ((Attribute)attributes.get(i)).getName().toUpperCase();
@@ -904,7 +901,7 @@ public class Issue
         }
         else
         {
-            result = (SequencedHashMap)obj;
+            result = (LinkedMap)obj;
         }
         return result;
     }
@@ -1087,8 +1084,8 @@ public class Issue
             .getRequiredAttributes(getModule());
 
         boolean result = true;
-        SequencedHashMap avMap = getModuleAttributeValuesMap();
-        Iterator i = avMap.iterator();
+        LinkedMap avMap = getModuleAttributeValuesMap();
+        MapIterator i = avMap.mapIterator();
         while (i.hasNext()) 
         {
             AttributeValue aval = (AttributeValue)avMap.get(i.next());
@@ -3511,8 +3508,8 @@ public class Issue
         setActivitySet(activitySet);
 
         // enter the values into the activitySet
-        SequencedHashMap avMap = getModuleAttributeValuesMap(); 
-        Iterator iter = avMap.iterator();
+        LinkedMap avMap = getModuleAttributeValuesMap(); 
+        MapIterator iter = avMap.mapIterator();
         while (iter.hasNext())
         {
             AttributeValue aval = (AttributeValue)avMap.get(iter.next());
@@ -3595,7 +3592,7 @@ public class Issue
             ScarabCache.clear();
         }
 
-        SequencedHashMap avMap = getModuleAttributeValuesMap(); 
+        LinkedMap avMap = getModuleAttributeValuesMap(); 
         AttributeValue oldAttVal = null;
         AttributeValue newAttVal = null;
         Iterator iter = newAttVals.keySet().iterator();
@@ -3675,7 +3672,7 @@ public class Issue
                                                 ScarabUser user)
         throws Exception
     {
-        SequencedHashMap avMap = getModuleAttributeValuesMap(); 
+    	LinkedMap avMap = getModuleAttributeValuesMap(); 
         AttributeValue oldAttVal = null;
         AttributeValue newAttVal = null;
         String msg = null;

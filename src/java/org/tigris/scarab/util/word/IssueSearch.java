@@ -65,8 +65,8 @@ import java.util.Map;
 import java.util.NoSuchElementException;
 import java.util.Set;
 
-import org.apache.commons.collections.LRUMap;
-import org.apache.commons.collections.SequencedHashMap;
+import org.apache.commons.collections.map.LRUMap;
+import org.apache.commons.collections.map.LinkedMap;
 import org.apache.commons.lang.ObjectUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.fulcrum.localization.Localization;
@@ -113,7 +113,7 @@ import org.tigris.scarab.util.ScarabException;
  * not a more specific type of Issue.
  *
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: IssueSearch.java,v 1.129 2004/11/23 14:01:01 dep4b Exp $
+ * @version $Id: IssueSearch.java,v 1.130 2004/12/03 16:10:11 dep4b Exp $
  */
 public class IssueSearch 
     extends Issue
@@ -413,10 +413,10 @@ public class IssueSearch
         return userIdList;
     }
 
-    public SequencedHashMap getCommonAttributeValuesMap()
+    public LinkedMap getCommonAttributeValuesMap()
         throws Exception
     {
-        SequencedHashMap result = null;
+    	LinkedMap result = null;
         if (isXMITSearch()) 
         {
             result = getMITAttributeValuesMap();
@@ -434,16 +434,16 @@ public class IssueSearch
      * not been set for the issue are included.  The values are ordered
      * according to the module's preference
      */
-    private SequencedHashMap getMITAttributeValuesMap() 
+    private LinkedMap getMITAttributeValuesMap() 
         throws Exception
     {
-        SequencedHashMap result = null;
+    	LinkedMap result = null;
 
         List attributes = mitList.getCommonAttributes(false);
         Map siaValuesMap = getAttributeValuesMap();
         if (attributes != null) 
         {
-            result = new SequencedHashMap((int)(1.25*attributes.size() + 1));
+            result = new LinkedMap((int)(1.25*attributes.size() + 1));
             Iterator i = attributes.iterator();
             while (i.hasNext()) 
             {
@@ -1073,7 +1073,7 @@ public class IssueSearch
     private List getTextAttributeValues(boolean quickSearchOnly)
         throws Exception
     {
-        SequencedHashMap searchValues = getCommonAttributeValuesMap();
+    	LinkedMap searchValues = getCommonAttributeValuesMap();
         List searchAttributes = new ArrayList(searchValues.size());
 
         for (int i=0; i<searchValues.size(); i++) 
@@ -1124,7 +1124,7 @@ public class IssueSearch
     private List getOptionAttributeValues(boolean quickSearchOnly)
         throws Exception
     {
-        SequencedHashMap searchValues = getCommonAttributeValuesMap();
+    	LinkedMap searchValues = getCommonAttributeValuesMap();
         List searchAttributeValues = new ArrayList(searchValues.size());
 
         for (int i=0; i<searchValues.size(); i++) 
