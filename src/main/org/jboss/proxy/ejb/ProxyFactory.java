@@ -6,6 +6,7 @@
 */
 package org.jboss.proxy.ejb;
 
+
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Proxy;
 import java.util.ArrayList;
@@ -29,13 +30,18 @@ import org.jboss.ejb.Container;
 import org.jboss.ejb.ContainerInvoker;
 import org.jboss.ejb.ContainerInvokerContainer;
 import org.jboss.invocation.Invoker;
+import org.jboss.invocation.InvocationContext;
+import org.jboss.proxy.Interceptor;
+import org.jboss.proxy.ClientContainer;
 import org.jboss.proxy.ejb.handle.HomeHandleImpl;
 import org.jboss.metadata.EntityMetaData;
 import org.jboss.metadata.SessionMetaData;
 import org.jboss.system.Registry;
 import org.jboss.ejb.FinderResults;
+import org.jboss.ejb.ListCacheKey;
 
 import org.jboss.logging.Logger;
+
 
 /**
 * As we remove the one one association between container STACK and invoker we keep this around
@@ -49,7 +55,7 @@ import org.jboss.logging.Logger;
 * just implementing the Proxy generation calls. Separation of concern. 
 *
 *  @author <a href="mailto:marc.fleury@jboss.org">Marc Fleury</a>
-*  @version $Revision: 1.8 $
+*  @version $Revision: 1.9 $
 *
 *  <p><b>Revisions:</b><br>
 *  <p><b>2001/12/30: billb</b>
@@ -58,7 +64,7 @@ import org.jboss.logging.Logger;
 *  </ol>
 */
 public class ProxyFactory
-   implements ContainerInvoker
+ implements ContainerInvoker
 {
    // Metadata for the proxies
    public EJBMetaData ejbMetaData ;
@@ -78,7 +84,7 @@ public class ProxyFactory
    protected Invoker beanInvoker;
    
    // A pointer to the container this proxy factory is dedicated to
-   protected Container container;
+   protected org.jboss.ejb.Container container;
    
    // Container plugin implementation -----------------------------------------
    
@@ -113,6 +119,7 @@ public class ProxyFactory
       boolean statelessSession,
       HomeHandle homeHandle)
       */      
+      
       if (container.getBeanMetaData() instanceof EntityMetaData)
       {
          Class pkClass;
@@ -188,6 +195,27 @@ public class ProxyFactory
          
          initInvokers();
          
+         // Create a stack from the description (in the future) for now we hardcode it
+         InvocationContext context = new InvocationContext();
+      
+         context.setObjectName(new Integer(objectName));
+         context.setValue(org.jboss.proxy.ejb.GenericEJBInterceptor.JNDI_NAME, jndiName);
+         // The behavior for home proxying should be isolated in an interceptor FIXME
+         context.setInvoker(homeInvoker);
+         context.setValue(org.jboss.proxy.ejb.HomeInterceptor.EJB_METADATA, ejbMetaData);
+         
+         ClientContainer client = new ClientContainer(context);
+      
+         // FIXME FIXME FIXME move to externalized XML
+         client.setNext(new org.jboss.proxy.ejb.HomeInterceptor())
+         // FIXME FIXME FIXME move to externalized XML
+         .setNext(new org.jboss.proxy.SecurityInterceptor())
+         // FIXME FIXME FIXME move to externalized XML
+         .setNext(new org.jboss.proxy.TransactionInterceptor())
+         // FIXME FIXME FIXME move to externalized XML
+         .setNext(new org.jboss.invocation.InvokerInterceptor());
+         
+         
          // Create the EJBHome
          this.home = 
          (EJBHome)Proxy.newProxyInstance(
@@ -196,8 +224,30 @@ public class ProxyFactory
             // The classes we want to implement home and handle
             new Class[] { ((ContainerInvokerContainer)container).getHomeClass(), Class.forName("javax.ejb.Handle")},
             // The home proxy as invocation handler
-            new HomeProxy(objectName, jndiName, homeInvoker, ejbMetaData));
+            client);
+            
+            
          
+         // Create a stack from the description (in the future) for now we hardcode it
+         context = new InvocationContext();
+      
+         context.setObjectName(new Integer(objectName));
+         context.setValue(org.jboss.proxy.ejb.GenericEJBInterceptor.JNDI_NAME, jndiName);
+         // The behavior for home proxying should be isolated in an interceptor FIXME
+         context.setInvoker(homeInvoker);
+         
+         client = new ClientContainer(context);
+      
+         // FIXME FIXME FIXME move to externalized XML
+         client.setNext(new org.jboss.proxy.ejb.StatelessSessionInterceptor())
+         // FIXME FIXME FIXME move to externalized XML
+         .setNext(new org.jboss.proxy.SecurityInterceptor())
+         // FIXME FIXME FIXME move to externalized XML
+         .setNext(new org.jboss.proxy.TransactionInterceptor())
+         // FIXME FIXME FIXME move to externalized XML
+         .setNext(new org.jboss.invocation.InvokerInterceptor());
+            
+    
          // Create stateless session object
          // Same instance is used for all objects
          if (!(container.getBeanMetaData() instanceof EntityMetaData) &&
@@ -210,7 +260,7 @@ public class ProxyFactory
                // Interfaces    
                new Class[] { ((ContainerInvokerContainer)container).getRemoteClass() } ,
                // SLSB proxy as invocation handler
-               new StatelessSessionProxy(objectName, jndiName, beanInvoker)
+               client
             );
          }
          
@@ -272,7 +322,34 @@ public class ProxyFactory
    
    public Object getStatefulSessionEJBObject(Object id)
    {
-      // marcf fixme: for the jrmp stuff include this creation on the client side
+      // Create a stack from the description (in the future) for now we hardcode it
+      InvocationContext context = new InvocationContext();
+      
+      context.setObjectName(new Integer(objectName));
+      context.setCacheId(id);
+      context.setValue(org.jboss.proxy.ejb.GenericEJBInterceptor.JNDI_NAME, jndiName);
+      context.setInvoker(beanInvoker);
+      
+      ClientContainer client = new ClientContainer(context);
+      
+      // FIXME FIXME FIXME move to externalized XML
+      client.setNext(new org.jboss.proxy.ejb.StatefulSessionInterceptor())
+      // FIXME FIXME FIXME move to externalized XML
+      .setNext(new org.jboss.proxy.SecurityInterceptor())
+      // FIXME FIXME FIXME move to externalized XML
+      .setNext(new org.jboss.proxy.TransactionInterceptor())
+      // FIXME FIXME FIXME move to externalized XML
+      .setNext(new org.jboss.invocation.InvokerInterceptor());
+      
+      return (EJBObject)Proxy.newProxyInstance(
+         // Classloaders
+         ((ContainerInvokerContainer)container).getRemoteClass().getClassLoader(),
+         // Interfaces
+         new Class[] { ((ContainerInvokerContainer)container).getRemoteClass() },
+         // Proxy as invocation handler
+         client);
+         
+      /*
       return (EJBObject)Proxy.newProxyInstance(
          // Classloaders
          ((ContainerInvokerContainer)container).getRemoteClass().getClassLoader(),
@@ -280,10 +357,40 @@ public class ProxyFactory
          new Class[] { ((ContainerInvokerContainer)container).getRemoteClass() },
          // Proxy as invocation handler
          new StatefulSessionProxy(objectName, jndiName, id, beanInvoker));
+   
+      */
    }
    
    public Object getEntityEJBObject(Object id)
    {
+
+      // Create a stack from the description (in the future) for now we hardcode it
+      InvocationContext context = new InvocationContext();
+      
+      context.setObjectName(new Integer(objectName));
+      context.setCacheId(id);
+      context.setValue(org.jboss.proxy.ejb.GenericEJBInterceptor.JNDI_NAME, jndiName);
+      context.setInvoker(beanInvoker);
+      
+      ClientContainer client = new ClientContainer(context);
+      
+      // FIXME FIXME FIXME move to externalized XML
+      client.setNext(new org.jboss.proxy.ejb.EntityInterceptor())
+      // FIXME FIXME FIXME move to externalized XML
+      .setNext(new org.jboss.proxy.SecurityInterceptor())
+      // FIXME FIXME FIXME move to externalized XML
+      .setNext(new org.jboss.proxy.TransactionInterceptor())
+      // FIXME FIXME FIXME move to externalized XML
+      .setNext(new org.jboss.invocation.InvokerInterceptor());
+
+      return (EJBObject)Proxy.newProxyInstance(
+         // Classloaders
+         ((ContainerInvokerContainer)container).getRemoteClass().getClassLoader(),
+         // Interfaces
+         new Class[] { ((ContainerInvokerContainer)container).getRemoteClass() },
+         // Proxy as invocation handler
+         client);
+      /*
       // marcf fixme: for the jrmp stuff include this creation on the client side
       return (EJBObject)Proxy.newProxyInstance(
          // Classloaders
@@ -292,6 +399,7 @@ public class ProxyFactory
          new Class[] { ((ContainerInvokerContainer)container).getRemoteClass() },
          // Proxy as invocation handler
          new EntityProxy(objectName, jndiName, id,beanInvoker));
+      */
    }
    
    public Collection getEntityCollection(Collection ids)
@@ -304,17 +412,61 @@ public class ProxyFactory
          
          for (int i = 0; idEnum.hasNext(); i++)
          {
+            
+            // Create a stack from the description (in the future) for now we hardcode it
+            InvocationContext context = new InvocationContext();
+      
+            Object id = idEnum.next();
+
+            context.setObjectName(new Integer(objectName));
+            context.setCacheId(new ListCacheKey(id, listId, i));
+            context.setValue(org.jboss.proxy.ejb.GenericEJBInterceptor.JNDI_NAME, jndiName);
+            context.setInvoker(beanInvoker);
+      
+            ClientContainer client = new ClientContainer(context);
+      
+            // FIXME FIXME FIXME move to externalized XML
+            client.setNext(new org.jboss.proxy.ejb.ListEntityInterceptor(list))
+            // FIXME FIXME FIXME move to externalized XML
+            .setNext(new org.jboss.proxy.SecurityInterceptor())
+            // FIXME FIXME FIXME move to externalized XML
+            .setNext(new org.jboss.proxy.TransactionInterceptor())
+            // FIXME FIXME FIXME move to externalized XML
+            .setNext(new org.jboss.invocation.InvokerInterceptor());
+            
             list.add(Proxy.newProxyInstance(((ContainerInvokerContainer)container).getRemoteClass().getClassLoader(),
                   new Class[] { ((ContainerInvokerContainer)container).getRemoteClass(), ReadAheadBuffer.class },
-                  new ListEntityProxy(objectName, jndiName, beanInvoker, idEnum.next(), list, listId, i)));        
+                  client));
          }
-      } 
+      }
+      
+      
       else {
          while(idEnum.hasNext())
          {
+      
+            // Create a stack from the description (in the future) for now we hardcode it
+            InvocationContext context = new InvocationContext();
+      
+            context.setObjectName(new Integer(objectName));
+            context.setCacheId(idEnum.next());
+            context.setValue(org.jboss.proxy.ejb.GenericEJBInterceptor.JNDI_NAME, jndiName);
+            context.setInvoker(beanInvoker);
+      
+            ClientContainer client = new ClientContainer(context);
+      
+            // FIXME FIXME FIXME move to externalized XML
+            client.setNext(new org.jboss.proxy.ejb.EntityInterceptor())
+            // FIXME FIXME FIXME move to externalized XML
+            .setNext(new org.jboss.proxy.SecurityInterceptor())
+            // FIXME FIXME FIXME move to externalized XML
+            .setNext(new org.jboss.proxy.TransactionInterceptor())
+            // FIXME FIXME FIXME move to externalized XML
+            .setNext(new org.jboss.invocation.InvokerInterceptor());
+            
             list.add(Proxy.newProxyInstance(((ContainerInvokerContainer)container).getRemoteClass().getClassLoader(),
                   new Class[] { ((ContainerInvokerContainer)container).getRemoteClass() },
-                  new EntityProxy(objectName, jndiName, idEnum.next(), beanInvoker)));
+                  client));
          }
       }
       return list;
