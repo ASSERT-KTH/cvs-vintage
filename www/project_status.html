@@ -1,4 +1,4 @@
-<!-- $Id: project_status.html,v 1.9 2001/05/24 22:39:06 braino Exp $ -->
+<!-- $Id: project_status.html,v 1.10 2001/05/30 00:20:56 jon Exp $ -->
 <!doctype html public "-//w3c//dtd html 4.0 transitional//en">
 <html>
 <head>
@@ -20,7 +20,7 @@
 </p>
 
 <p align="center">
-Last Updated: $Date: 2001/05/24 22:39:06 $
+Last Updated: $Date: 2001/05/30 00:20:56 $
 </p>
 
 <h3><i>Tentative</i> Roadmap</h3>
@@ -31,12 +31,13 @@ Last Updated: $Date: 2001/05/24 22:39:06 $
 </li>
 <li>
     <strong>Milestone 1</strong>: Enter an Issue. Show an Issue.
-    Attribute Editor. Integration issues identified and abstracted.
-    Login. Registration.
+    Attribute Editor. <a href="integration.html">Integration</a> issues
+    identified and abstracted. Login. Registration.
 </li>
 <li>
-    <strong>Milestone 2</strong>: Query for an Issue (basic and
-    advanced). Query for an Issue by id. Save stored query.
+    <strong>Milestone 2</strong>: Query for an Issue (3 types: simple
+    text entry box, basic and advanced). Query for an Issue by id. Save
+    stored query.
 </li>
 <li>
     <strong>Milestone 3</strong>: Edit an Issue. Assign people to an
@@ -113,16 +114,20 @@ up to date reflection of the current project status.
     mailing list</a> to discuss this development.
 </li>
 <li>
-    John has <a href="/issues/show_bug.cgi?id=5">started</a> working on
-    integration of Flux which is a web application that allows for the
-    modification of users/roles/permissions/groups within the Scarab
-    system. This is important for standalone use as well as for testing
-    integrated use.
-</li>
-<li>
     5-21-01 - Jon S. pretty much finished up the abstraction of the
     Module code so that any implementation can be provided of a Module
     and Scarab will just use that.
+</li>
+<li>
+    5-29-01 - Jon met with Elicia and BrianO and went over preliminary
+    UI screens. BrianO will isolate which screens make it into Milestone
+    1 and then over the next few days, Elicia will be working to convert
+    those screens into Turbine Screen modules and get them checked into
+    CVS so that we can start to make them functional.
+</li>
+<li>
+    5-29-01 - John is working on assigning an issue to a user and the 
+    permission system integration.
 </li>
 </ul>
 
