@@ -40,21 +40,21 @@
        #Password=guest
      </attribute>
     <attribute name="ConnectionManagerProperties">
-      # Pool type - uncomment to force, otherwise it is the default
-      #PoolConfiguration=per-factory
-
-      # Connection pooling properties - see
-      # org.jboss.resource.connectionmanager.PoolParameters
-      MinSize=0
-      MaxSize=10
-      BlockingTimeoutMillis=5000
-      IdleTimeoutMinutes=30
-      CleanupIntervalMinutes=10
-      MaxIdleTimeoutPercent=1.0
+       # Pool type - uncomment to force, otherwise it is the default
+       #PoolConfiguration=per-factory
+ 
+       # Connection pooling properties - see
+       # org.jboss.resource.connectionmanager.PoolParameters
+       MinSize=0
+       MaxSize=10
+       BlockingTimeoutMillis=5000
+       IdleTimeoutMinutes=30
+       CleanupIntervalMinutes=10
+       MaxIdleTimeoutPercent=1.0
     </attribute>
 
     <attribute name="PrincipalMappingClass">
-      org.jboss.resource.security.ManyToOnePrincipalMapping
+       org.jboss.resource.security.ManyToOnePrincipalMapping
     </attribute>
     <attribute name="PrincipalMappingProperties">
     </attribute>

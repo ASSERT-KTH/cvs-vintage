@@ -52,7 +52,7 @@ import org.jboss.jms.jndi.JMSProviderAdapter;
  * Created: Thu Aug 23 21:17:26 2001
  *
  * @author
- * @version $Revision: 1.9 $ $Date: 2002/02/12 08:15:36 $
+ * @version $Revision: 1.10 $ $Date: 2002/02/17 06:13:30 $
  */
 
 public class DLQHandler
@@ -182,13 +182,12 @@ public class DLQHandler
          String id = msg.getJMSMessageID();
          if (id == null)
          {
-            // Warning function
-            log.debug("Message id is null, can't handle message");
+            // if we can't get the id we are basically fucked
+            log.error("Message id is null, can't handle message");
          }
-         // if we can't get the id we are basically fucked
-         if(id != null && incrementResentCount(id) > maxResent)
+         else if(incrementResentCount(id) > maxResent)
          {
-            log.info("Message resent too many time, sending it to DLQ. Id: " + id);
+            log.warn("Message resent too many times; sending it to DLQ. Id: " + id);
             sendMessage(msg);
             deleteFromBuffer(id);
             return true;
@@ -198,8 +197,8 @@ public class DLQHandler
       {
          // If we can't send it ahead, we do not dare to just drop it...or?
          log.error("Could not send message to Dead Letter Queue", ex);
-         return false;
       }
+      
       return false;
    }
 

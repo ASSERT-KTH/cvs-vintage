@@ -12,7 +12,7 @@
 <!--                                                                        -->
 <!-- ====================================================================== -->
 
-<!-- $Id: build.xml,v 1.65 2002/02/17 04:22:25 user57 Exp $ -->
+<!-- $Id: build.xml,v 1.66 2002/02/17 06:13:29 user57 Exp $ -->
 
 <project default="main" name="JBoss/Server">
 
@@ -476,7 +476,6 @@
         <include name="org/jboss/**"/>
         <exclude name="org/jboss/ejb/deployment/**"/>
         <exclude name="org/jboss/ejb/plugins/**"/>
-        <exclude name="org/jboss/jms/ra/META-INF*"/>
       </fileset>
     </jar>
 
@@ -701,21 +700,6 @@
         <include name="org/jboss/system/Service.class"/>
         <include name="org/jboss/system/ServiceMBean*.class"/>
         <include name="org/jboss/logging/**"/>
-      </fileset>
-    </jar>
-
-    <!-- jms-ra.rar -->
-    <jar jarfile="${build.lib}/jms-ra.jar">
-      <fileset dir="${build.classes}">
-        <include name="org/jboss/jms/ra/**"/>
-      </fileset>
-    </jar>
-    <jar jarfile="${build.lib}/jms-ra.rar">
-      <fileset dir="${build.lib}">
-        <include name="jms-ra.jar"/>
-      </fileset>
-      <fileset dir="${build.resources}/org/jboss/jms/ra/">
-        <include name="**"/>
       </fileset>
     </jar>
 
