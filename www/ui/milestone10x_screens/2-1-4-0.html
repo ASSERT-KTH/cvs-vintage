@@ -143,9 +143,34 @@
 	<div class="app" id="div2-1-4-0">
 		<h2>Customize / create "enter issue" (2.1.4.0) milestone10 ver.</h2>
 
-		<p class="functnbar"><input type="submit" value="preview enter issue" class="button" />&#160;<input type="submit" value="save" class="button" />&#160;<input type="submit" value="cancel" class="button" /></p>
 		
-		<h3>Options</h3>
+		<div id="tabs">
+			<table cellpadding="3" cellspacing="0" border="0">
+			<tr>
+			<td><a href="#" title="Global attributes">global attributes</a></td>
+			<th>Customize "enter issue"</th>
+			</tr>
+			</table>
+		</div><br>
+
+
+		<div class="functnbar">
+			<table cellpadding="0" cellspacing="0" border="0">
+			<tr>
+			<td><strong>"enter issue" options:</strong></td>
+			<td rowspan="2"><img src="../csi/images/seperator.gif" width="2" height="35" alt="" border="0" /></td>
+			<td><strong>attribute groups options:</strong></td>
+			<td rowspan="2"><img src="../csi/images/seperator.gif" width="2" height="35" alt="" border="0" /></td>
+			</tr>
+			<tr>
+			<td><input type="submit" value="save" class="button" />&#160;<input type="submit" value="cancel" class="button" />&#160;<input type="submit" value="preview" class="button" /></td>
+			<td><input type="submit" value="add" class="button" />&#160;<input type="submit" value="delete" class="button" />&#160;<input type="submit" value="resort" class="button" /></td>
+
+			</tr>
+			</table>
+		</div>
+		
+		<h3>"Issue history" and "Comments" display options</h3>
 		
 		<p><input type="checkbox" checked="checked" />&nbsp;Show&nbsp;
 		<select class="select">
@@ -193,15 +218,14 @@
 			<div class="datatablechild">
 				<table width="100%" border="1" cellspacing="2" cellpadding="3">
 				<tr>
-				<th>select:</th>
-				<th>name:</th>
-				<th>name/project:</th>
-				<th>input type:</th>
-				<th>active:</th>
-				<th>required:</th>
-				<th>dedupe:</th>
-				<th>quick search:</th>
-				<th>sequence #:</th>
+				<th>select</th>
+				<th>name</th>
+				<th>name/project</th>
+				<th>input type</th>
+				<th>active</th>
+				<th>required</th>
+				<th>quick search</th>
+				<th>sequence #</th>
 				</tr>
 				
 				<tr class="a">
@@ -209,7 +233,6 @@
 				<td><a href="#">attribute x</a></td>
 				<td><input type="text" size="15" class="text" value="" /></td>
 				<td>pull-down</td>
-				<td><input type="checkbox" /></td>
 				<td><input type="checkbox" /></td>
 				<td><input type="checkbox" /></td>
 				<td><input type="checkbox" /></td>
@@ -228,7 +251,6 @@
 				<td><input type="checkbox" /></td>
 				<td><input type="checkbox" /></td>
 				<td><input type="checkbox" /></td>
-				<td><input type="checkbox" /></td>
 				<td>
 				<select class="select">
 				<option>2</option>
@@ -241,7 +263,6 @@
 				<td><a href="#">attribute z</a></td>
 				<td><input type="text" size="15" class="text" value="" /></td>
 				<td>text-area</td>
-				<td><input type="checkbox" /></td>
 				<td><input type="checkbox" /></td>
 				<td><input type="checkbox" /></td>
 				<td><input type="checkbox" /></td>
@@ -258,6 +279,15 @@
 		</table>
 		
 		<p><input type="submit" value="add attribute" class="button" />&#160;<input type="submit" value="delete selected" class="button" />&#160;<input type="submit" value="resort attributes in this group" class="button" /></p>
+
+<br>
+	<table cellpadding="3" cellspacing="0" width="100%" border="2">
+	<tr bgcolor="#ff0000" nowrap="nowrap">
+	<td>2. Check above information against existing data (duplicate check)</td>
+	<td><input type="submit" value="up" />&nbsp;<input type="submit" value="down" /></td>
+	</tr>
+	</table>
+<br>
 		
 		<h3>Attribute group two</h3>
 		
@@ -291,7 +321,6 @@
 				<th>input type:</th>
 				<th>active:</th>
 				<th>required:</th>
-				<th>dedupe:</th>
 				<th>quick search:</th>
 				<th>sequence #:</th>
 				</tr>
@@ -301,7 +330,6 @@
 				<td><a href="#">attribute x</a></td>
 				<td><input type="text" size="15" class="text" value="" /></td>
 				<td>pull-down</td>
-				<td><input type="checkbox" /></td>
 				<td><input type="checkbox" /></td>
 				<td><input type="checkbox" /></td>
 				<td><input type="checkbox" /></td>
@@ -320,7 +348,6 @@
 				<td><input type="checkbox" /></td>
 				<td><input type="checkbox" /></td>
 				<td><input type="checkbox" /></td>
-				<td><input type="checkbox" /></td>
 				<td>
 				<select class="select">
 				<option>2</option>
@@ -336,7 +363,6 @@
 				<td><input type="checkbox" /></td>
 				<td><input type="checkbox" /></td>
 				<td><input type="checkbox" /></td>
-				<td><input type="checkbox" /></td>
 				<td>
 				<select class="select">
 				<option>3</option>
@@ -349,14 +375,26 @@
 		</tr>
 		</table>
 		
-		<p><input type="submit" value="add attribute" class="button" />&#160;<input type="submit" value="delete selected" class="button" />&#160;<input type="submit" value="resort attributes in this group" class="button" /></p>
+		<p><input type="submit" value="add attribute" class="button" />&#160;<input type="submit" value="delete selected" class="button" />&#160;<input type="submit" value="resort attributes in this group" class="button" /></p><br>
 		
-		<p><a href="#">back to previous page</a></p>
-		
-		<p><input type="submit" value="add group" class="button" />&#160;<input type="submit" value="delete group" class="button" />&#160;<input type="submit" value="resort groups" class="button" /></p>
 
-		<p class="functnbar"><input type="submit" value="preview enter issue" class="button" />&#160;<input type="submit" value="save" class="button" />&#160;<input type="submit" value="cancel" class="button" /></p>
-	</div>
+		<div class="functnbar">
+			<table cellpadding="0" cellspacing="0" border="0">
+			<tr>
+			<td><strong>"enter issue" options:</strong></td>
+			<td rowspan="2"><img src="../csi/images/seperator.gif" width="2" height="35" alt="" border="0" /></td>
+			<td><strong>attribute groups options:</strong></td>
+			<td rowspan="2"><img src="../csi/images/seperator.gif" width="2" height="35" alt="" border="0" /></td>
+			</tr>
+			<tr>
+			<td><input type="submit" value="save" class="button" />&#160;<input type="submit" value="cancel" class="button" />&#160;<input type="submit" value="preview" class="button" /></td>
+			<td><input type="submit" value="add" class="button" />&#160;<input type="submit" value="delete" class="button" />&#160;<input type="submit" value="resort" class="button" /></td>
+
+			</tr>
+			</table>
+		</div>
+		
+
 	<!-- Scarab - App -->
 
 <!-- Structural Elements -->
