@@ -19,6 +19,7 @@ import java.rmi.ServerException;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 
 import org.jboss.ejb.EntityEnterpriseContext;
 import org.jboss.ejb.plugins.jaws.JAWSPersistenceManager;
@@ -30,7 +31,8 @@ import org.jboss.ejb.plugins.jaws.metadata.PkFieldMetaData;
 import org.jboss.util.FinderResults;
 
 /**
- * JAWSPersistenceManager JDBCLoadEntityCommand
+ * Implementation of the LoadEntitiesCommand added in JBoss 2.3. This preloads
+ * data for all entities whose keys were retrieved by a finder.
  *
  * @see <related>
  * @author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
@@ -39,7 +41,7 @@ import org.jboss.util.FinderResults;
  * @author <a href="mailto:justin@j-m-f.demon.co.uk">Justin Forder</a>
  * @author <a href="mailto:dirk@jboss.de">Dirk Zimmermann</a>
  * @author <a href="mailto:danch@nvisia.com">danch (Dan Christopherson)</a>
- * @version $Revision: 1.1 $
+ * @version $Revision: 1.2 $
  */
 public class JDBCLoadEntitiesCommand
    extends JDBCLoadEntityCommand
@@ -86,21 +88,37 @@ public class JDBCLoadEntitiesCommand
       while (rs.next())
       {
          Object key = createKey(rs);
-         
-         //find the context
-         EntityEnterpriseContext ctx = (EntityEnterpriseContext)instances.get(key);
-         if (ctx != null) {
-            //if the context says it's already valid, don't load it.
-            if (!ctx.isValid()) {
-               loadOneEntity(rs, ctx);
-               ctx.setValid(true);
-            }
-         } else {
-            //if ctx was null, the CMPPersistenceManager doesn't want us to try
-            // to load it due to a transaction issue.
-         }
+         preloadOneEntity(rs, key);
       }
       return null;
+   }
+   
+   protected void preloadOneEntity(ResultSet rs, Object key) {
+//log.debug("PRELOAD: preloading entity "+key);   
+      int idx = 1;
+      // skip the PK fields at the beginning of the select.
+      Iterator keyIt = jawsEntity.getPkFields();
+      while (keyIt.hasNext()) {
+         keyIt.next();
+         idx++;
+      }
+
+      int fieldCount = 0;
+      Object[] allValues = new Object[jawsEntity.getNumberOfCMPFields()];
+      Iterator iter = jawsEntity.getCMPFields();
+      try {
+         while (iter.hasNext())
+         {
+            CMPFieldMetaData cmpField = (CMPFieldMetaData)iter.next();
+            
+            Object value = getResultObject(rs, cmpFieldPositionInSelect[fieldCount], cmpField);
+            allValues[fieldCount] = value;
+            fieldCount++;
+         }
+         factory.addPreloadData(key, allValues);
+      } catch (SQLException sqle) {
+         log.warning("SQL Error preloading data for key "+key);
+      }
    }
    
    protected void setParameters(PreparedStatement stmt, Object argOrArgs)
@@ -116,7 +134,8 @@ public class JDBCLoadEntitiesCommand
    protected String getSQL(Object argOrArgs) throws Exception
    {
       FinderResults keys = (FinderResults)((Object[])argOrArgs)[0];
-      return selectClause + " " + keys.getQueryData().toString();
+      JDBCFinderCommand finder = (JDBCFinderCommand)keys.getFinder();
+      return selectClause + " " + finder.getFromClause() + " " + finder.getWhereClause() + " " + finder.getOrderByClause();
    }
    
    // protected -----------------------------------------------------

@@ -39,7 +39,7 @@ import org.jboss.ejb.plugins.jaws.metadata.JawsEntityMetaData;
  * @author <a href="mailto:justin@j-m-f.demon.co.uk">Justin Forder</a>
  * @author <a href="mailto:dirk@jboss.de">Dirk Zimmermann</a>
  * @author <a href="mailto:danch@nvisia.com">danch (Dan Christopherson)</a>
- * @version $Revision: 1.10 $
+ * @version $Revision: 1.11 $
  */
 public class JDBCLoadEntityCommand
    extends JDBCQueryCommand
@@ -66,7 +66,8 @@ public class JDBCLoadEntityCommand
    {
       super(factory, "Load");
 
-      String sql = createSelectClause() + " WHERE " + getPkColumnWhereList();
+      String sql = createSelectClause() + " FROM " + jawsEntity.getTableName() 
+                   + " WHERE " + getPkColumnWhereList();
       if (jawsEntity.hasSelectForUpdate())
       {
          sql += " FOR UPDATE";
@@ -89,7 +90,8 @@ public class JDBCLoadEntityCommand
       {
          PkFieldMetaData pkField = (PkFieldMetaData)keyIt.next();
          
-         sql += ((fieldCount==0) ? "" : ",") + pkField.getColumnName();
+         sql += ((fieldCount==0) ? "" : ",") + 
+                jawsEntity.getTableName() + "." + pkField.getColumnName();
          alreadyListed.put(pkField.getColumnName().toUpperCase(), pkField);
          pkColumnNames[fieldCount]=pkField.getColumnName();
          fieldCount++;
@@ -102,7 +104,7 @@ public class JDBCLoadEntityCommand
       {
          CMPFieldMetaData cmpField = (CMPFieldMetaData)it.next();
          if (alreadyListed.get(cmpField.getColumnName().toUpperCase()) == null) {
-            sql += "," + cmpField.getColumnName();
+            sql += "," + jawsEntity.getTableName() + "." + cmpField.getColumnName();
             cmpFieldPositionInSelect[cmpFieldCount] = fieldCount+JDBC_WART_OFFSET;
             fieldCount++;//because this was another field in the select
          } else {
@@ -123,7 +125,7 @@ public class JDBCLoadEntityCommand
          cmpFieldCount++;
       }
       
-      sql += " FROM " + jawsEntity.getTableName();
+      
       
       return sql;
    }
@@ -137,7 +139,13 @@ public class JDBCLoadEntityCommand
       {
          try
          {
-            jdbcExecute(ctx);
+            //first check to see if the data was preloaded
+            Object[] data = factory.getPreloadData(ctx.getId());
+            if (data != null) {
+               loadFromPreload(data, ctx);
+            } else {
+               jdbcExecute(ctx);
+            }
          } catch (Exception e)
          {
             throw new ServerException("Load failed", e);
@@ -170,7 +178,28 @@ public class JDBCLoadEntityCommand
       return null;
    }
 
-   protected void loadOneEntity(ResultSet rs, EntityEnterpriseContext ctx) throws Exception {      
+   protected void loadFromPreload(Object[] data, EntityEnterpriseContext ctx) throws Exception {
+//log.debug("PRELOAD: Loading from preload - entity "+ctx.getId());   
+      int fieldCount = 0;
+      Iterator iter = jawsEntity.getCMPFields();
+      while (iter.hasNext())
+      {
+         CMPFieldMetaData cmpField = (CMPFieldMetaData)iter.next();
+         
+         setCMPFieldValue(ctx.getInstance(),
+                          cmpField,
+                          data[fieldCount]);
+         fieldCount++;
+      }
+
+      // Store state to be able to do tuned updates
+      JAWSPersistenceManager.PersistenceContext pCtx =
+         (JAWSPersistenceManager.PersistenceContext)ctx.getPersistenceContext();
+      if (jawsEntity.isReadOnly()) pCtx.lastRead = System.currentTimeMillis();
+      pCtx.state = getState(ctx);
+   }
+   
+   protected void loadOneEntity(ResultSet rs, EntityEnterpriseContext ctx) throws Exception { 
       int idx = 1;
       // skip the PK fields at the beginning of the select.
       Iterator keyIt = jawsEntity.getPkFields();
@@ -185,8 +214,8 @@ public class JDBCLoadEntityCommand
       {
          CMPFieldMetaData cmpField = (CMPFieldMetaData)iter.next();
          
-         setCMPFieldValue(ctx.getInstance(), 
-                          cmpField, 
+         setCMPFieldValue(ctx.getInstance(),
+                          cmpField,
                           getResultObject(rs, cmpFieldPositionInSelect[fieldCount], cmpField));
          fieldCount++;
       }

@@ -27,7 +27,7 @@ import org.jboss.ejb.plugins.jaws.metadata.FinderMetaData;
  * @author <a href="mailto:shevlandj@kpi.com.au">Joe Shevland</a>
  * @author <a href="mailto:justin@j-m-f.demon.co.uk">Justin Forder</a>
  * @author <a href="mailto:danch@nvisia.com">danch (Dan Christopherson)</a>
- * @version $Revision: 1.8 $
+ * @version $Revision: 1.9 $
  */
 public class JDBCFindByCommand extends JDBCFinderCommand
 {
@@ -75,6 +75,20 @@ public class JDBCFindByCommand extends JDBCFinderCommand
       sql += cmpField.getColumnName() + "=?";
       
       setSQL(sql);
+   }
+   
+   // JDBCQueryCommand overrides
+
+   public String getWhereClause() {
+      return cmpField.getColumnName() + "=?";
+   }
+
+   public String getFromClause() {
+      return " FROM "+jawsEntity.getTableName();
+   }
+   
+   public String getOrderByClause() {
+      return "";
    }
    
    // JDBCFinderCommand overrides -----------------------------------

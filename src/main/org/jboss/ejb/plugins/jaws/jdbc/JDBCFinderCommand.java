@@ -35,7 +35,7 @@ import org.jboss.util.FinderResults;
  * @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
  * @author <a href="mailto:shevlandj@kpi.com.au">Joe Shevland</a>
  * @author <a href="mailto:justin@j-m-f.demon.co.uk">Justin Forder</a>
- * @version $Revision: 1.10 $
+ * @version $Revision: 1.11 $
  */
 public abstract class JDBCFinderCommand
    extends JDBCQueryCommand
@@ -55,6 +55,24 @@ public abstract class JDBCFinderCommand
       return finderMetaData;
    }
 
+
+   /** This method must be overridden to return the where clause used in 
+    *  this query. This must start with the keyword 'WHERE' and include all 
+    *  conditions needed to execute the query properly. 
+    */
+   public abstract String getWhereClause();
+
+   /** This method must be ovverridden to return the full table list for 
+    *  the query, including any join statements. This must start with the 
+    *  keyword 'FROM' and include all tables needed to execute the query properly.
+    */   
+   public abstract String getFromClause();
+   
+   /** This method must be ovverridded to return the full order by clause for 
+    *  the query, including the 'ORDER BY' keyword.
+    */
+   public abstract String getOrderByClause();
+   
    // JPMFindEntitiesCommand implementation -------------------------
 
    public FinderResults execute(Method finderMethod,

@@ -53,7 +53,9 @@ This is the XML DTD for the JAWS deployment descriptor.
  a specific ordering. it must contain name and query elements and my contain
  1 order element.
  After JBoss version 2.3, it may contain a read-ahead element indicating whether
- or not all data for the entities selected should be loaded immediatly. -->
+ or not all data for the entities selected should be loaded immediatly. Note 
+ that JAWS/JBoss cannot guarentee serializable transactions with the read-ahead 
+ option!-->
 <!ELEMENT finder (name,query,order?,read-ahead?)>
 
 <!-- the name within a finder element must contain the name of the finder 

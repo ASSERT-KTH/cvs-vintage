@@ -26,8 +26,9 @@ import org.jboss.ejb.plugins.jaws.metadata.TypeMappingMetaData;
  * @author <a href="mailto:shevlandj@kpi.com.au">Joe Shevland</a>
  * @author <a href="mailto:justin@j-m-f.demon.co.uk">Justin Forder</a>
  * @author <a href="mailto:michel.anke@wolmail.nl">Michel de Groot</a>
- * @author <a href="danch@nvisia.com">danch (Dan Christopherson</a>
- * @version $Revision: 1.13 $
+ * @author Vinay Menon
+ * @author <a href="mailto:danch@nvisia.com">danch (Dan Christopherson</a>
+ * @version $Revision: 1.14 $
  */
 public class JDBCDefinedFinderCommand extends JDBCFinderCommand
 {
@@ -35,6 +36,10 @@ public class JDBCDefinedFinderCommand extends JDBCFinderCommand
 
    private int[] parameterArray;
    private TypeMappingMetaData typeMapping;
+   
+   private String fromClause = "";
+   private String whereClause = "";
+   private String orderClause = "";
 
    // Constructors --------------------------------------------------
 
@@ -72,36 +77,128 @@ public class JDBCDefinedFinderCommand extends JDBCFinderCommand
       // Since the fields in order clause also will form the select clause together with
       // the pk field list, we have to clean the order clause from ASC/DESC's and fields
       // that already are within the pk list
+      // Note that extraOrderColumns will start with a ','
+      String extraOrderColumns = getExtraOrderColumns(f);
+
+      String lcQuery = query.toLowerCase();
+      // build from clause, including any joins specified by the deployer/assembler
+      // In case of join query:
+      // order must explicitly identify tablename.field to order on
+      // query must start with "INNER JOIN <table to join with> WHERE
+      // <regular query with fully identified fields>"      
+      if (lcQuery.startsWith(",") || lcQuery.startsWith("inner join")) {
+         //this is the case of a 'where' that is build to actually join tables:
+         //  ,table2 as foo where foo.col1 = entitytable.col2 AND entitytable.filter = {1}
+         // or
+         //  inner join table2 on table2.col1 = entitytable.col2 AND entitytable.filter = {1}
+         String tableList = null;
+         int whereStart = lcQuery.indexOf("where");
+         if (whereStart == -1) {
+            //log this at debug in case someone has made a mistake, but assume that
+            // they mean a findAll.
+            log.debug("Strange query for finder "+f.getName()+
+               ". Includes join, but no 'where' clause. Is this a findAll?");
+            tableList = lcQuery;
+            whereClause = "";
+         } else {
+            tableList = lcQuery.substring(0, whereStart);
+            whereClause = lcQuery.substring(whereStart);
+         }
+         fromClause = "FROM "+jawsEntity.getTableName()+tableList;
+      } else {
+         fromClause = "FROM "+jawsEntity.getTableName();
+         if (lcQuery.startsWith("where"))
+            whereClause = lcQuery;
+         else 
+            whereClause = "where "+lcQuery;
+      }
+      
+
+      StringBuffer sqlBuffer = new StringBuffer();
+      sqlBuffer.append("SELECT ");
+      //where clauseString primaryKeyList = getPkColumnList();
+      String tableName = jawsEntity.getTableName();
+      StringTokenizer stok = new StringTokenizer(getPkColumnList(),",");
+
+      while(stok.hasMoreTokens()){
+        sqlBuffer.append(tableName);
+        sqlBuffer.append(".");
+        sqlBuffer.append(stok.nextElement().toString());
+        sqlBuffer.append(",");
+      }
+      // ditch the last ',' at the end...
+      sqlBuffer.setLength(sqlBuffer.length()-1);
+      // because it's already on the front of extraOrderColumns
+      sqlBuffer.append(extraOrderColumns);
+      sqlBuffer.append(' ');
+      sqlBuffer.append(fromClause);
+      sqlBuffer.append(' ');
+      sqlBuffer.append(whereClause);
+      
+      if (f.getOrder() != null && !f.getOrder().equals(""))
+      {
+         orderClause = " ORDER BY "+f.getOrder();
+         sqlBuffer.append(orderClause);
+      }
+      setSQL(sqlBuffer.toString());
+   }
+
+   public String getWhereClause() {
+      return whereClause;
+   }
+
+   public String getFromClause() {
+      return fromClause;
+   }
+   public String getOrderByClause() {
+      return orderClause;
+   }
+
+   /** helper method to clean the order clause into a list of table.field 
+    *  entries. This is used only to clean up the algorythm in the ctor.
+    *  @return String array containing order fields stripped of 'ASC' or 'DESC'
+    *  modifiers.
+    */
+   protected String[] cleanOrderClause(String rawOrder) {
+     //Split it into tokens. These tokens might contain ASC/DESC that we have to get rid of
+     StringTokenizer orderTokens = new StringTokenizer(rawOrder, ",");
+     String orderToken;
+     String[] checkedOrderTokens = new String[orderTokens.countTokens()];
+     int ix = 0;
+     while(orderTokens.hasMoreTokens())
+     {
+       orderToken = orderTokens.nextToken().trim();
+       //Get rid of ASC's
+       int i = orderToken.toUpperCase().indexOf(" ASC");
+       if(i!=-1)
+         checkedOrderTokens[ix] = orderToken.substring(0, i).trim();
+       else
+       {
+         //Get rid of DESC's
+         i = orderToken.toUpperCase().indexOf(" DESC");
+         if(i!=-1)
+           checkedOrderTokens[ix] = orderToken.substring(0, i).trim();
+         else
+         {
+           //No ASC/DESC - just use it as it is
+           checkedOrderTokens[ix] = new String(orderToken).trim();
+         }
+       }
+       ix++;
+     }
+     return checkedOrderTokens;
+   }
+
+   /** A helper method that 'folds' any columns specified in an order clause
+    *  into the primary key fields so that they can be included in the select
+    *  list <b>after</b> all primary key fields.
+    */
+   private String getExtraOrderColumns(FinderMetaData f) {
       String strippedOrder = "";
       if(f.getOrder()!=null && f.getOrder()!="")
       {
-        //Split it into tokens. These tokens might contain ASC/DESC that we have to get rid of
-        StringTokenizer orderTokens = new StringTokenizer(f.getOrder(), ",");
-        String orderToken;
-        String[] checkedOrderTokens = new String[orderTokens.countTokens()];
-        int ix = 0;
-        while(orderTokens.hasMoreTokens())
-        {
-          orderToken = orderTokens.nextToken().trim();
-          //Get rid of ASC's
-          int i = orderToken.toUpperCase().indexOf(" ASC");
-          if(i!=-1)
-            checkedOrderTokens[ix] = orderToken.substring(0, i).trim();
-          else
-          {
-            //Get rid of DESC's
-            i = orderToken.toUpperCase().indexOf(" DESC");
-            if(i!=-1)
-              checkedOrderTokens[ix] = orderToken.substring(0, i).trim();
-            else
-            {
-              //No ASC/DESC - just use it as it is
-              checkedOrderTokens[ix] = new String(orderToken).trim();
-            }
-          }
-          ix++;
-        }
-
+        String[] checkedOrderTokens = cleanOrderClause(f.getOrder());
+   
         //Next step is to make up a Set of all pk tokens
         StringTokenizer pkTokens = new StringTokenizer(getPkColumnList(), ",");
         Set setOfPkTokens = new HashSet(pkTokens.countTokens());
@@ -109,7 +206,7 @@ public class JDBCDefinedFinderCommand extends JDBCFinderCommand
         {
           setOfPkTokens.add(pkTokens.nextToken().trim());
         }
-
+   
         //Now is the time to check for duplicates between pk and order tokens
         int i = 0;
         while(i < checkedOrderTokens.length)
@@ -121,7 +218,7 @@ public class JDBCDefinedFinderCommand extends JDBCFinderCommand
           }
           i++;
         }
-
+   
         //Ok, build a new order string that we can use later on
         StringBuffer orderTokensToUse = new StringBuffer("");
         i = 0;
@@ -137,82 +234,8 @@ public class JDBCDefinedFinderCommand extends JDBCFinderCommand
         // Note that orderTokensToUse will always start with ", " if there is any order tokens
         strippedOrder = orderTokensToUse.toString();
       }
-
-      // Construct SQL
-      // In case of join query:
-      // order must explicitly identify tablename.field to order on
-      // query must start with "INNER JOIN <table to join with> WHERE
-      // <regular query with fully identified fields>"
-      String sql = null;
-      if (query.toLowerCase().startsWith(",")) {
-          //Modified by Vinay Menon
-          StringBuffer sqlBuffer = new StringBuffer();
-
-      	  sqlBuffer.append("SELECT ");
-
-          String primaryKeyList = getPkColumnList();
-          String tableName = jawsEntity.getTableName();
-          StringTokenizer stok = new StringTokenizer(primaryKeyList,",");
-
-          while(stok.hasMoreTokens()){
-            sqlBuffer.append(tableName);
-            sqlBuffer.append(".");
-            sqlBuffer.append(stok.nextElement().toString());
-            sqlBuffer.append(",");
-          }
-
-         sqlBuffer.setLength(sqlBuffer.length()-1);
-         sqlBuffer.append(strippedOrder);
-         sqlBuffer.append(" FROM ");
-         sqlBuffer.append(jawsEntity.getTableName());
-         sqlBuffer.append(" ");
-         sqlBuffer.append(query);
-
-         sql = sqlBuffer.toString();
-      } else
-      if (query.toLowerCase().startsWith("inner join")) {
-          StringBuffer sqlBuffer = new StringBuffer();
-
-      	  sqlBuffer.append("SELECT ");
-
-          String primaryKeyList = getPkColumnList();
-          String tableName = jawsEntity.getTableName();
-          StringTokenizer stok = new StringTokenizer(primaryKeyList,",");
-
-          while(stok.hasMoreTokens()){
-            sqlBuffer.append(tableName);
-            sqlBuffer.append(".");
-            sqlBuffer.append(stok.nextElement().toString());
-            sqlBuffer.append(",");
-          }
-
-         sqlBuffer.setLength(sqlBuffer.length()-1);
-         sqlBuffer.append(strippedOrder);
-         sqlBuffer.append(" FROM ");
-         sqlBuffer.append(jawsEntity.getTableName());
-         sqlBuffer.append(" ");
-         sqlBuffer.append(query);
-
-         sql = sqlBuffer.toString();
-      } else {
-      	// regular query; check if query is empty,
-      	// if so, this is a select all and WHERE should not be used
-      	if (f.getQuery() == null)  {
-	      	sql = "SELECT " + getPkColumnList() + strippedOrder +
-	      	 	" FROM " + jawsEntity.getTableName();
-      	} else {
-	      	sql = "SELECT " + getPkColumnList() + strippedOrder +
-	         	" FROM " + jawsEntity.getTableName() + " WHERE " + query;
-      	}
-      }
-      if (f.getOrder() != null && !f.getOrder().equals(""))
-      {
-         sql += " ORDER BY "+f.getOrder();
-      }
-
-      setSQL(sql);
-   }
-
+      return strippedOrder;
+   }      
    // JDBCFinderCommand overrides ------------------------------------
 
    protected void setParameters(PreparedStatement stmt, Object argOrArgs)
