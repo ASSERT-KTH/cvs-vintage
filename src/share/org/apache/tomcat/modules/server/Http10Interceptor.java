@@ -224,6 +224,9 @@ class HttpRequest extends Request {
     public void recycle() {
 	super.recycle();
 	if( http!=null) http.recycle();
+        // recycle these to remove the defaults
+        remoteAddrMB.recycle();
+        remoteHostMB.recycle();
     }
 
     public void setSocket(Socket socket) throws IOException {
