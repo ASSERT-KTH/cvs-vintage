@@ -28,7 +28,7 @@ import javax.transaction.Transaction;
  *    pointers.  But really it is just  a repository of objects. 
  *
  * @author  <a href="mailto:marc@jboss.org">Marc Fleury</a>
- * @version $Revision: 1.12 $
+ * @version $Revision: 1.13 $
  *   <p><b>20020911 Bill Burke:</b>
  *   <ul>
  *   <li> Optimize access to certain variables.  Avoid hash lookups
@@ -38,24 +38,24 @@ public class Invocation
 {
    /** The signature of the invoke() method */
    public static final String[] INVOKE_SIGNATURE = { "java.lang.Object" };
-   
+
    // The payload is a repository of everything associated with the invocation
    // It is information that will need to travel 
 
    /** 
     * Contextual information to the invocation that is not part of the payload. 
     */
-   public Map transient_payload = new HashMap();
+   public Map transient_payload = null;
 
    /**
     * as_is classes that will not be marshalled by the invocation
     * (java.* and javax.* or anything in system classpath is OK)
     */
-   public Map as_is_payload = new HashMap();
+   public Map as_is_payload = null;
 
    /** Payload will be marshalled for type hiding at the RMI layers. */
-   public Map payload = new HashMap();
-   
+   public Map payload = null;
+
    protected InvocationContext invocationContext = null;
    protected Object[] args = null;
    protected Object objectName = null;
@@ -85,25 +85,20 @@ public class Invocation
       payload = new HashMap(invocation.payload);
       as_is_payload = new HashMap(invocation.as_is_payload);
       transient_payload = new HashMap(invocation.transient_payload);
-      
+
       invocationContext = invocation.invocationContext;
       args = invocation.args;
       objectName = invocation.objectName;
       method = invocation.method;
    }
-   
-   public Invocation(
-      Object id, 
-      Method m, 
-      Object[] args, 
-      Transaction tx, 
-      Principal identity, 
-      Object credential)
+
+   public Invocation( Object id, Method m, Object[] args, Transaction tx,
+      Principal identity, Object credential )
    {
-      this.payload = new HashMap();
-      this.as_is_payload = new HashMap();
-      this.transient_payload = new HashMap();
-      
+      payload = new HashMap();
+      as_is_payload = new HashMap();
+      transient_payload = new HashMap();
+
       setId(id);
       setMethod(m);
       setArguments(args);    
@@ -111,7 +106,7 @@ public class Invocation
       setPrincipal(identity);
       setCredential(credential);
    }
-   
+
    /**
     * The generic store of variables.
     *
@@ -322,3 +317,6 @@ public class Invocation
 
 
 }
+/*
+vim:ts=3:sw=3:et
+*/
