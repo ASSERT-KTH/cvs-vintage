@@ -26,7 +26,7 @@
 // File: PropPanelLink.java
 // Classes: PropPanelLink
 // Original Author: jrobbins@ics.uci.edu
-// $Id: PropPanelLink.java,v 1.11 2002/10/10 21:34:31 kataka Exp $
+// $Id: PropPanelLink.java,v 1.12 2002/10/11 21:11:17 kataka Exp $
 
 package org.argouml.uml.ui.behavior.common_behavior;
 
@@ -60,7 +60,6 @@ public class PropPanelLink extends PropPanelModelElement {
 
 
     addCaption(Argo.localize("UMLMenu", "label.stereotype"),2,0,0);
-    JComboBox stereotypeBox = new UMLStereotypeComboBox(this);
     addField(stereotypeBox,2,0,0);
 
 

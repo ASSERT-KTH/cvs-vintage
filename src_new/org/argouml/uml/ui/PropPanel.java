@@ -24,7 +24,7 @@
 // File: PropPanel.java
 // Classes: PropPanel
 // Original Author:
-// $Id: PropPanel.java,v 1.33 2002/10/11 20:55:21 kataka Exp $
+// $Id: PropPanel.java,v 1.34 2002/10/11 21:11:17 kataka Exp $
 
 // 23 Apr 2002: Jeremy Bennett (mail@jeremybennett.com). Added the third party
 // event listener.
@@ -683,53 +683,6 @@ implements TabModelTarget, MElementListener, UMLUserInterfaceContainer {
         	}
 	   
         }
-    }
-
-    public boolean isAcceptibleStereotype(MModelElement element) {
-        boolean isAcceptible = false;
-        if(element instanceof MStereotype) {
-            String baseClass = ((MStereotype) element).getBaseClass();
-            isAcceptible = true;
-            if(baseClass != null && !baseClass.equals("ModelElement")) {
-                isAcceptible = isAcceptibleBaseMetaClass(baseClass);
-            }
-        }
-        return isAcceptible;
-    }
-
-    /**
-     *   This function is used to determine what stereotypes are appropriate
-     *   to list in the stereotype combo box.
-     *
-     *   For example, PropPanelClass would return true for ModelElement,
-     *      Namespace, Classifier and Class and false for everything else.
-     *
-     *   @param a metaclass name such as 'Class', 'Association'.
-     *       Typically the baseClass attribute for a Stereotype.
-     *   @return true if target type of the panel is an instance
-     *       of the metaclass or a derived metaclass.
-     * 
-     * Jaap Branderhorst 2002-11-10 made this a concrete method. In time it will
-     * be removed
-     */
-    protected boolean isAcceptibleBaseMetaClass(String baseClass) {
-        return false;
-    }
-
-    public void setStereotype(MStereotype stereotype) {
-        Object target = getTarget();
-        if(target instanceof MModelElement) {
-            ((MModelElement) target).setStereotype(stereotype);
-        }
-    }
-
-    public MStereotype getStereotype() {
-        MStereotype stereotype = null;
-        Object target = getTarget();
-        if(target instanceof MModelElement) {
-            stereotype = ((MModelElement) target).getStereotype();
-        }
-        return stereotype;
     }
 
 } /* end class PropPanel */
