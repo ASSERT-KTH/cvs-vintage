@@ -83,7 +83,7 @@ import org.tigris.scarab.om.Module;
  * Action.
  *   
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: Register.java,v 1.24 2002/05/30 00:35:45 jon Exp $
+ * @version $Id: Register.java,v 1.25 2002/05/30 01:00:57 jon Exp $
  */
 public class Register extends ScarabTemplateAction
 {
@@ -155,7 +155,7 @@ public class Register extends ScarabTemplateAction
             {
                 setTarget(data, template);
                 getScarabRequestTool(context).setAlertMessage(
-                    "Sorry, a user with that email address already exists!");
+                    "Sorry, a user with that user name already exists!");
                 return;
             }
 
@@ -354,7 +354,7 @@ public class Register extends ScarabTemplateAction
             }
             else // we don't have confirmation! :-(
             {
-                getScarabRequestTool(context).setAlertMessage("Sorry, that email address and/or confirmation"
+                getScarabRequestTool(context).setAlertMessage("Sorry, that user name and/or confirmation"
                                 + "code is invalid.");
                 setTarget(data, template);
             }
@@ -420,7 +420,7 @@ public class Register extends ScarabTemplateAction
         
             // send an email that is for confirming the registration
             sendConfirmationEmail((ScarabUser) user, context);
-            scarabR.setConfirmMessage("Confirmation Code sent!");
+            scarabR.setConfirmMessage("Confirmation code sent!");
 
             // set the next template on success
             data.getUser().setTemp(ScarabConstants.SESSION_REGISTER, user);
