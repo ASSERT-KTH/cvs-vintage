@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
 <html>
 <head>
-    <!-- $Id: tomcat-ug.html,v 1.9 2001/08/10 02:56:09 larryi Exp $ -->
+    <!-- $Id: tomcat-ug.html,v 1.10 2001/08/15 19:53:19 larryi Exp $ -->
     <!-- Copyright 1999-2001 Apache Software Foundation -->
     <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
     <link rel="stylesheet" href="style.css">
@@ -60,7 +60,7 @@
 </ul>
 
 
-<h3>Table of Contents</h3>
+<h2>Table of Contents</h2>
 
 <p>[This section needs to be revised to match current outline. Wouldn't
 it be nice if we used XSL to generate this file from an XML source?]</p>
@@ -92,14 +92,12 @@ it be nice if we used XSL to generate this file from an XML source?]</p>
 		<li><a href="#tomcat_scripts">Tomcat scripts</a><br>
 	</ul>
       </li>
+  <li><a href="#container_types">Types of servlet
+			containers</a></li>
 	<li><a href="#configuring_tomcat">Configuring Tomcat</a>
 	<ul>
-		<li><a href="#container_types">Types of servlet
-			containers</a></li>
-		<li><a href="#server_xml">server.xml - Tomcat's main configuration
-			file</a></li>
-		<li><a href="#web_xml">web.xml - Default
-			deployment descriptor</a></li>
+    <li><a href="#configuring_classes">Configuring Classes</a></li>
+    <li><a href="#configuring_server">Configuring the Server</a></li>
 		<li>Web application/context security and authorization</li>
 		<li>tomcat-users.xml</li>
 		<li>JDBC realms</li>
@@ -137,7 +135,7 @@ it be nice if we used XSL to generate this file from an XML source?]</p>
 <hr size="5">
 
 
-<h3><a name="about_tomcat">About Tomcat: Q&amp;A</a></h3>
+<h2><a name="about_tomcat">About Tomcat: Q&amp;A</a></h2>
 
 <p>See also the official <a
 	href="http://jakarta.apache.org/site/faqs.html">Jakarta FAQ Page</a>.</p>
@@ -266,7 +264,7 @@ it be nice if we used XSL to generate this file from an XML source?]</p>
 <hr size="5">
 
 
-<h3><a name="installing_tomcat">Installing Tomcat</a></h3>
+<h2><a name="installing_tomcat">Installing Tomcat</a></h2>
 
 
 <h4><a name="file_placement">File placement and environment setup</a></h4>
@@ -284,10 +282,11 @@ it be nice if we used XSL to generate this file from an XML source?]</p>
           should create a new subdirectory named
           <tt>&quot;jakarta-tomcat-<i>&lt;version&gt;</i>&quot;</tt>.</li>
     
-      <li>Change to the <tt>&quot;jakarta-tomcat-<i>&lt;version&gt;</i>&quot;</tt> directory
+      <li>In a shell or DOS window, change to the
+          <tt>&quot;jakarta-tomcat-<i>&lt;version&gt;</i>&quot;</tt> directory
           and set a new environment variable (<a name="tomcat_home_env">TOMCAT_HOME</a>)
           to point to the root directory of your Tomcat hierarchy. The exact directory may
-          change from system to system; check your local filesystem to be sure where Tomcat
+          vary from system to system; check your local file system to be sure where Tomcat
           is installed.
           <ol>
               <li>On Win32 systems you should type: <br>
@@ -302,26 +301,27 @@ it be nice if we used XSL to generate this file from an XML source?]</p>
           </ol></li>
 
         <li>Set the environment variable JAVA_HOME to point to the root
-          directory of your JDK hierarchy, then add the Java interpreter to your PATH
-          environment variable. The exact directory may change from system to system;
-          check your local filesystem to be sure where Java is installed.
+          directory of your JDK hierarchy.  You may optionally add the Java
+          interpreter to your PATH environment variable. The exact directory
+          may vary from system to system. Check your local file system to be sure
+          where Java is installed.
         	<ol>
           	<li>Win32:<br>
               	<tt><big>
               	set JAVA_HOME=c:/jdk1.3.1<br>
-              	set PATH=%PATH%;%JAVA_HOME%\bin
+              	set PATH=%JAVA_HOME%\bin;%PATH%
               	</big></tt>
               	</li>
           	<li>Unix (bash/sh):<br>
               	<tt><big>
               	set JAVA_HOME=/user/local/java/jdk1.3.1; export JAVA_HOME<br>
-              	set PATH=$PATH:$JAVA_HOME/bin; export PATH<br>
+              	set PATH=$JAVA_HOME/bin:$PATH; export PATH<br>
               	</big></tt>
               	</li>
           	<li>Unix (tcsh):<br>
               	<tt><big>
               	setenv JAVA_HOME=/user/local/java/jdk1.3.1<br>
-              	setenv PATH=$PATH:$JAVA_HOME/bin <br>
+              	setenv PATH=$JAVA_HOME/bin:$PATH<br>
               	</big></tt>
               	</li>
         	</ol></li>
@@ -331,9 +331,9 @@ it be nice if we used XSL to generate this file from an XML source?]</p>
 	execute Tomcat</a> and it will run as a <a
 	href="#type_1"> stand-alone</a> servlet container.</p>
 
-    <p>Once you're sure they work, these environment variables should probably be set in a
-      config file: C:/AUTOEXEC.BAT for Windows, ~/bash_profile
-      or ~/[what is it for tcsh?]</p>
+    <p>Once you're sure they work, you may wish to set these environment
+      variables in a config file: C:/AUTOEXEC.BAT for Windows, ~/.bash_profile
+      or ~/.cshrc, etc.</p>
 
 </blockquote>
 
@@ -665,7 +665,7 @@ it be nice if we used XSL to generate this file from an XML source?]</p>
 <hr size="5">
 
 
-<h3><a name="configuring_tomcat">Configuring Tomcat</a></h3>
+<h2><a name="configuring_tomcat">Configuring Tomcat</a></h2>
 
 <p>There are two parts to Tomcat configuration:</p>
 <ul>
@@ -673,7 +673,7 @@ it be nice if we used XSL to generate this file from an XML source?]</p>
   <li>Configuring the server</li>
 </ul>
 
-<h4>Configuring Classes</h4>
+<h3><a name="configuring_classes">Configuring Classes</a></h3>
 
 <p>Configuring classes refers to configuring what classes are available and in
 what manner when Tomcat is running.  You may wish to add additional classes and
@@ -762,8 +762,84 @@ and <b>Apps Classloader</b>.  Entries found in an <code>org.apache.tomcat.common
 system property are added to the <b>Common Classloader</b> and entries found in
 an <code>org.apache.tomcat.apps.classpath</code> are added to the <b>Apps CLassloader</b>.</p>
 
-<h4>Configuring the Server</h4>
+<h3><a name="configuring_server">Configuring the Server</a></h3>
 
+<h4>Overview</h4>
+
+<p>By default, Tomcat's configuration is determined by the contents of the
+<code>server.xml</code> file found in Tomcat's <code>conf</code> directory.
+This file specifies the sequence of <strong>modules</strong> (a.k.a. interceptors)
+that should participate in the operation of this instance of Tomcat.  This file
+also includes the operating parameters for those modules.</p>
+
+<p>Prior to reading the <code>server.xml</code> file, Tomcat reads the
+<code>modules.xml</code> file which is also found in the <code>conf</code>
+directory.  This file specifies mappings between module names and the class
+that implements the module.  This simplifies the syntax in <code>servers.xml</code>
+and allows you to update a module's class by updating just <code>modules.xml</code>.
+The <code>server.xml</code>, and possibly other files, do not have to change.</p>
+
+<p>To allow for customization of Tomcat's configuration without requiring
+modification of <code>modules.xml</code> and <code>server.xml</code>, Tomcat
+will read additional files during startup.  In addition to <code>modules.xml</code>,
+Tomcat will read any file in the <code>conf</code> directory that matches the
+pattern <code>modules-*.xml</code>.  Likewise for <code>server.xml</code>,
+by default Tomcat will read additional files which match the pattern
+<code>server-*.xml</code>.</p>
+
+<p>If you specify the configuration file (i.e. the file to use in place of
+<code>server.xml</code>) as a command line argument, the additional files read
+will be derived from the base name of the file you specify.  For example, if
+the configuration file specified was <code>myserver.xml</code>, then the file
+pattern would be <code>myserver-*.xml</code>.  Because of this, you should avoid
+using '-' in your configuration file names except when taking advantage of this
+feature.</p>
+
+<p>When using additional configuration files in conjunction with
+<code>server.xml</code> it is important to note that these configuration files
+apply to a single Tomcat 3.3 server instance.  In other words, all
+&lt;ContextManager&gt; elements in these files refer to the same ContextManager
+instance. ContextManager is the controlling class for the Tomcat 3.3 server.</p>
+
+<p>Other files may be read as well for configuration. These, however, are determined
+by the <strong>modules</strong> that are included by <code>server.xml</code>
+and associated files.  The primary example of this is <code>ContextXmlReader</code>.
+It is responsible for reading files containing Context declarations in the form:
+<pre>&lt;Context path="myapp" docBase="somepath" ... /></pre> or 
+<pre>&lt;Context path="myapp" docBase="somepath" ...&gt;
+    <i>context local modules</i>
+&lt;/Context&gt;</pre></p>
+
+<p>By separating the reading of &quot;context&quot; configurations from the
+server configuration, you can manually add additional contexts without
+modifying the <code>server.xml</code> file.</p>
+
+<p>The <code>ContextXmlReader</code> module supports a <code>config</code>
+parameter which specifies the file to read.  Like <code>server.xml</code>,
+additional files are read based on the pattern <code><i>base</i>-*.xml</code>.
+Thus, specifying <code>config=&quot;conf/myapps.xml&quot;</code> would read
+<code>conf/myapps.xml</code>, if it exists, plus all files in the
+<code>conf</code> directory matching the pattern <code>myapps-*.xml</code>.</p>
+
+<p>Tomcat 3.3's default <code>server.xml</code> includes two instances of the
+<code>ContextXmlReader</code> module.  One reads <code>conf/apps.xml</code>,
+which reads all the &quot;apps&quot; files found in the <code>conf</code>
+directory by default.  For backward compatibility with having &quot;context&quot;
+declarations in <code>server.xml</code>, the second instance of
+<code>ContextXmlReader</code> reads <code>conf/server.xml</code>, processing
+only the <code>&lt;Context&gt;</code> entries.</p>
+
+<h4>Default Tomcat Configuration</h4>
+
+<p><i>This section will describe the default configuration supplied with Tomcat 3.3</i></p>
+
+<h4>Tomcat Server Customization</h4>
+
+<p><i>This section will describe the most common customizations</i></p>
+
+
+<p><b><i>The rest of this section is obsolete. Please ignore.  It remains for the
+moment in case it contains some useful text.</i></b></p>
     <p> Tomcat's configuration is based on two files:</p>
     <ol>
       <li> <a href="#server_xml"> server.xml</a> - Tomcat's global configuration file. </li>
