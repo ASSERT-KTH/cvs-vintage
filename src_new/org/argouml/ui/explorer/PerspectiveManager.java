@@ -1,4 +1,4 @@
-// $Id: PerspectiveManager.java,v 1.18 2004/11/20 20:45:52 mvw Exp $
+// $Id: PerspectiveManager.java,v 1.19 2004/11/21 19:06:35 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -339,9 +339,13 @@ public class PerspectiveManager {
     }
 
     /**
-     * hard coded rules library for now, it is quite a lot of work to 
+     * Get the predefined rules. <p>
+     * 
+     * This is a hard coded rules library for now, 
+     * since it is quite a lot of work to 
      * get all possible rule names in "org.argouml.ui.explorer.rules" from
-     * the classpath.
+     * the classpath 
+     * (which would also not allow adding rules from other locations). 
      */
     public void loadRules() {
         
@@ -409,6 +413,24 @@ public class PerspectiveManager {
 	};
          
 	rules = Arrays.asList(ruleNamesArray);
+    }
+    
+    /**
+     * Add a rule to the list of rules.
+     * 
+     * @param rule the PerspectiveRule to be added
+     */
+    public void addRule(PerspectiveRule rule) {
+        rules.add(rule);
+    }
+    
+    /**
+     * Remove a rule from the list.
+     * 
+     * @param rule the PerspectiveRule to be removed
+     */
+    public void removeRule(PerspectiveRule rule) {
+        rules.remove(rule);
     }
     
     /**
