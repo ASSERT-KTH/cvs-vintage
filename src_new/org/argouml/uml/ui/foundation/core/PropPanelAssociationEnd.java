@@ -1,4 +1,4 @@
-// $Id: PropPanelAssociationEnd.java,v 1.48 2004/09/22 17:27:46 mvw Exp $
+// $Id: PropPanelAssociationEnd.java,v 1.49 2004/10/02 13:11:35 mvw Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -24,7 +24,6 @@
 
 package org.argouml.uml.ui.foundation.core;
 
-import javax.swing.Icon;
 import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
