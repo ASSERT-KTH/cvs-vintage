@@ -45,7 +45,7 @@ import org.columba.ristretto.message.MimePart;
  */
 public class ImageViewer extends JPanel implements IMimePartViewer {
 
-	private MailFrameMediator mediator;
+	private MessageController mediator;
 
 	private byte[] data;
 
@@ -56,7 +56,7 @@ public class ImageViewer extends JPanel implements IMimePartViewer {
 	/**
 	 *  
 	 */
-	public ImageViewer(MailFrameMediator mediator) {
+	public ImageViewer(MessageController mediator) {
 		super();
 
 		this.mediator = mediator;

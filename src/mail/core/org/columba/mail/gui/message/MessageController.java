@@ -17,32 +17,53 @@
 package org.columba.mail.gui.message;
 
 import java.awt.Color;
-import java.awt.Rectangle;
+import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.Observer;
 
+import javax.swing.JEditorPane;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JPopupMenu;
 import javax.swing.JScrollPane;
+import javax.swing.JTextPane;
+import javax.swing.SwingUtilities;
 import javax.swing.event.HyperlinkEvent;
 import javax.swing.event.HyperlinkListener;
+import javax.swing.text.AttributeSet;
+import javax.swing.text.BadLocationException;
+import javax.swing.text.Element;
+import javax.swing.text.html.HTML;
+import javax.swing.text.html.HTMLDocument;
 
 import org.columba.core.charset.CharsetEvent;
 import org.columba.core.charset.CharsetListener;
 import org.columba.core.charset.CharsetOwnerInterface;
 import org.columba.core.command.CommandProcessor;
+import org.columba.core.gui.frame.DefaultContainer;
 import org.columba.core.gui.frame.FrameMediator;
+import org.columba.core.gui.menu.ColumbaPopupMenu;
+import org.columba.core.util.GlobalResourceLoader;
 import org.columba.mail.command.MailFolderCommandReference;
 import org.columba.mail.folder.IMailbox;
+import org.columba.mail.gui.composer.ComposerController;
+import org.columba.mail.gui.composer.ComposerModel;
 import org.columba.mail.gui.frame.MailFrameMediator;
 import org.columba.mail.gui.message.command.ViewMessageCommand;
+import org.columba.mail.gui.message.util.ColumbaURL;
 import org.columba.mail.gui.message.viewer.Rfc822MessageViewer;
+import org.jdesktop.jdic.desktop.Desktop;
+import org.jdesktop.jdic.desktop.DesktopException;
 
 /**
  * this class shows the messagebody
  */
 public class MessageController extends JScrollPane implements
 		HyperlinkListener, CharsetListener, IMessageController {
-	protected FrameMediator frameController;
+	
+	private MailFrameMediator frameController;
 
 	private MouseListener listener;
 
@@ -52,21 +73,27 @@ public class MessageController extends JScrollPane implements
 
 	private Rfc822MessageViewer messageViewer;
 
-	public MessageController(FrameMediator frameMediator) {
+	private URLObservable urlObservable;
+
+	private ColumbaPopupMenu menu;
+
+	private URLMouseListener mouseListener;
+
+	public MessageController(MailFrameMediator frameMediator) {
 		this.frameController = frameMediator;
 
-		messageViewer = new Rfc822MessageViewer(
-				(MailFrameMediator) frameMediator);
+		mouseListener = new URLMouseListener();
 
+		messageViewer = new Rfc822MessageViewer(this);
+
+		// FIXME: no hardcoded Color.white
 		getViewport().setBackground(Color.white);
 
 		setViewportView(messageViewer);
 
-		// FIXME
-		//getViewport().getView().addMouseListener(new MyMouseListener());
-
 		((CharsetOwnerInterface) getFrameController()).addCharsetListener(this);
 
+		urlObservable = new URLObservable();
 	}
 
 	public void clear() {
@@ -83,7 +110,7 @@ public class MessageController extends JScrollPane implements
 	 * 
 	 * @return MailFrameController
 	 */
-	public FrameMediator getFrameController() {
+	public MailFrameMediator getFrameController() {
 		return frameController;
 	}
 
@@ -145,15 +172,168 @@ public class MessageController extends JScrollPane implements
 	}
 
 	public void addURLObserver(Observer observer) {
-		getMessageViewer().getUrlObservable().addObserver(observer);
+		getUrlObservable().addObserver(observer);
 	}
 
 	public String getSelectedText() {
 		return getMessageViewer().getSelectedText();
 	}
 
-	public void createPopupMenu() {
-		getMessageViewer().createPopupMenu();
+	protected void processPopup(MouseEvent ev) {
+		//        final URL url = extractURL(ev);
+		ColumbaURL mailto = extractMailToURL(ev);
+		urlObservable.setUrl(mailto);
 
+		final MouseEvent event = ev;
+		// open context-menu
+		// -> this has to happen in the awt-event dispatcher thread
+		SwingUtilities.invokeLater(new Runnable() {
+
+			public void run() {
+				getPopupMenu().show(event.getComponent(), event.getX(),
+						event.getY());
+			}
+		});
+	}
+
+	protected URL extractURL(MouseEvent event) {
+		JEditorPane pane = (JEditorPane) event.getSource();
+		HTMLDocument doc = (HTMLDocument) pane.getDocument();
+
+		Element e = doc.getCharacterElement(pane.viewToModel(event.getPoint()));
+		AttributeSet a = e.getAttributes();
+		AttributeSet anchor = (AttributeSet) a.getAttribute(HTML.Tag.A);
+
+		if (anchor == null) {
+			return null;
+		}
+
+		URL url = null;
+
+		try {
+			url = new URL((String) anchor.getAttribute(HTML.Attribute.HREF));
+		} catch (MalformedURLException mue) {
+			return null;
+		}
+
+		return url;
+	}
+
+	/**
+	 * this method extracts any url, but if URL's protocol is mailto: then this
+	 * method also extracts the corresponding recipient name whatever it may be.
+	 * <br>
+	 * This "kind of" superseeds the previous extractURL(MouseEvent) method.
+	 */
+	private ColumbaURL extractMailToURL(MouseEvent event) {
+
+		ColumbaURL url = new ColumbaURL(extractURL(event));
+		if (url.getRealURL() == null)
+			return null;
+
+		if (!url.getRealURL().getProtocol().equalsIgnoreCase("mailto"))
+			return url;
+
+		JEditorPane pane = (JEditorPane) event.getSource();
+		HTMLDocument doc = (HTMLDocument) pane.getDocument();
+
+		Element e = doc.getCharacterElement(pane.viewToModel(event.getPoint()));
+		AttributeSet a = e.getAttributes();
+		AttributeSet anchor = (AttributeSet) a.getAttribute(HTML.Tag.A);
+
+		try {
+			url.setSender(doc.getText(e.getStartOffset(), (e.getEndOffset() - e
+					.getStartOffset())));
+		} catch (BadLocationException e1) {
+			url.setSender("");
+		}
+
+		return url;
+	}
+
+	class URLMouseListener implements MouseListener {
+
+		public void mousePressed(MouseEvent event) {
+			if (event.isPopupTrigger()) {
+				processPopup(event);
+			}
+		}
+
+		public void mouseReleased(MouseEvent event) {
+			if (event.isPopupTrigger()) {
+				processPopup(event);
+			}
+		}
+
+		public void mouseEntered(MouseEvent event) {
+		}
+
+		public void mouseExited(MouseEvent event) {
+		}
+
+		public void mouseClicked(MouseEvent event) {
+			if (!SwingUtilities.isLeftMouseButton(event)) {
+				return;
+			}
+
+			URL url = extractURL(event);
+
+			if (url == null) {
+				return;
+			}
+
+			getUrlObservable().setUrl(new ColumbaURL(url));
+
+			//URLController c = new URLController();
+
+			if (url.getProtocol().equalsIgnoreCase("mailto")) {
+				// open composer
+				ComposerController controller = new ComposerController();
+				new DefaultContainer(controller);
+
+				ComposerModel model = new ComposerModel();
+				model.setTo(url.getFile());
+
+				// apply model
+				controller.setComposerModel(model);
+
+				controller.updateComponents(true);
+			} else {
+				try {
+					Desktop.browse(url);
+				} catch (DesktopException e) {
+					JOptionPane.showMessageDialog(null, GlobalResourceLoader
+							.getString("dialog", "error", "no_browser"),
+							"Error", JOptionPane.ERROR_MESSAGE);
+				}
+			}
+		}
+	}
+
+	/**
+	 * @return Returns the urlObservable.
+	 */
+	public URLObservable getUrlObservable() {
+		return urlObservable;
+	}
+
+	/**
+	 * return the PopupMenu for the message viewer
+	 */
+	public JPopupMenu getPopupMenu() {
+		return menu;
+	}
+
+	public void createPopupMenu() {
+		if (menu == null)
+			menu = new ColumbaPopupMenu(getFrameController(),
+					"org/columba/mail/action/message_contextmenu.xml");
+	}
+
+	/**
+	 * @see org.columba.mail.gui.message.IMessageController#addMouseListener(javax.swing.JTextPane)
+	 */
+	public void addMouseListener(JTextPane textPane) {
+		textPane.addMouseListener(mouseListener);
 	}
 }

@@ -27,6 +27,7 @@ import javax.swing.JPanel;
 import org.columba.core.gui.util.ImageLoader;
 import org.columba.mail.folder.IMailbox;
 import org.columba.mail.gui.frame.MailFrameMediator;
+import org.columba.mail.gui.message.MessageController;
 import org.columba.mail.gui.message.filter.SecurityStatusEvent;
 import org.columba.mail.gui.message.filter.SecurityStatusListener;
 import org.columba.mail.parser.text.HtmlParser;
@@ -60,9 +61,9 @@ public class EncryptionStatusViewer extends JPanel implements ICustomViewer,
 
     private boolean visible;
     
-    private MailFrameMediator mediator;
+    private MessageController mediator;
 
-    public EncryptionStatusViewer(MailFrameMediator mediator) {
+    public EncryptionStatusViewer(MessageController mediator) {
         super();
 
         this.mediator = mediator;

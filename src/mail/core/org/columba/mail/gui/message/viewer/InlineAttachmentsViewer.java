@@ -48,6 +48,7 @@ import org.columba.mail.config.MailConfig;
 import org.columba.mail.folder.IMailbox;
 import org.columba.mail.folder.temp.TempFolder;
 import org.columba.mail.gui.frame.MailFrameMediator;
+import org.columba.mail.gui.message.MessageController;
 import org.columba.mail.gui.message.command.OpenAttachmentCommand;
 import org.columba.mail.gui.message.command.SaveAttachmentAsCommand;
 import org.columba.mail.gui.tree.FolderTreeModel;
@@ -67,7 +68,7 @@ public class InlineAttachmentsViewer extends JPanel implements ICustomViewer {
 
 	private Vector viewers;
 
-	private MailFrameMediator mediator;
+	private MessageController mediator;
 
 	private ViewerPluginHandler handler;
 
@@ -76,7 +77,7 @@ public class InlineAttachmentsViewer extends JPanel implements ICustomViewer {
 	/**
 	 *  
 	 */
-	public InlineAttachmentsViewer(MailFrameMediator mediator) {
+	public InlineAttachmentsViewer(MessageController mediator) {
 		super();
 
 		this.mediator = mediator;
@@ -110,10 +111,12 @@ public class InlineAttachmentsViewer extends JPanel implements ICustomViewer {
 
 		MimeType mt = parent.getHeader().getMimeType();
 
-		if (mt.equalsIgnoreCase("multipart/mixed")
-				|| mt.equalsIgnoreCase("multipart/alternative"))
+		if (mt.equalsIgnoreCase("multipart/mixed")) {
 			traverseChildren(parent, ref);
-		else
+		} else if (mt.equalsIgnoreCase("multipart/alternative")) {
+			traverseAlternativePart(parent, ref);
+
+		} else
 			createChild(parent, ref);
 	}
 
@@ -236,7 +239,7 @@ public class InlineAttachmentsViewer extends JPanel implements ICustomViewer {
 
 			ref = createNewReference(h, mp, folder, uid);
 			viewer.view((IMailbox) ref.getSourceFolder(), ref.getUids()[0],
-					mediator);
+					mediator.getFrameController());
 
 			viewers.add(viewer);
 		} else {
@@ -251,7 +254,7 @@ public class InlineAttachmentsViewer extends JPanel implements ICustomViewer {
 				panel = createFileAttachmentPanel(description, viewer, ref);
 
 				viewer.view((IMailbox) ref.getSourceFolder(), ref.getUids()[0],
-						address, mediator);
+						address, mediator.getFrameController());
 				viewers.add(viewer);
 
 			} else if (type.equalsIgnoreCase("text")) {
@@ -261,7 +264,7 @@ public class InlineAttachmentsViewer extends JPanel implements ICustomViewer {
 				panel = createFileAttachmentPanel(description, viewer, ref);
 
 				viewer.view((IMailbox) ref.getSourceFolder(), ref.getUids()[0],
-						address, mediator);
+						address, mediator.getFrameController());
 				viewers.add(viewer);
 			} else if (type.equalsIgnoreCase("image")) {
 
@@ -270,7 +273,7 @@ public class InlineAttachmentsViewer extends JPanel implements ICustomViewer {
 				panel = createFileAttachmentPanel(description, viewer, ref);
 
 				viewer.view((IMailbox) ref.getSourceFolder(), ref.getUids()[0],
-						address, mediator);
+						address, mediator.getFrameController());
 				viewers.add(viewer);
 			} else {
 				panel = createBasicPanel(description, ref, true);
@@ -433,7 +436,7 @@ public class InlineAttachmentsViewer extends JPanel implements ICustomViewer {
 		openButton.setIcon(ImageLoader.getImageIcon("folder-open.png"));
 		JButton saveButton = new JButton("Save As...");
 		saveButton.setIcon(ImageLoader.getImageIcon("stock_save_as-16.png"));
-		
+
 		JLabel label = new JLabel(name);
 		label.setFont(label.getFont().deriveFont(Font.BOLD));
 
@@ -460,17 +463,20 @@ public class InlineAttachmentsViewer extends JPanel implements ICustomViewer {
 			centerPanel.setLayout(new BorderLayout());
 		} else {
 			centerPanel.setBorder(BorderFactory.createCompoundBorder(
-					BorderFactory.createEmptyBorder(5, 5, 5, 5), BorderFactory.createCompoundBorder(BorderFactory
-							.createEtchedBorder(), BorderFactory.createEmptyBorder(5, 5, 5, 5))));
+					BorderFactory.createEmptyBorder(5, 5, 5, 5), BorderFactory
+							.createCompoundBorder(BorderFactory
+									.createEtchedBorder(), BorderFactory
+									.createEmptyBorder(5, 5, 5, 5))));
 			centerPanel
 					.setBackground(UIManager.getColor("TextArea.background"));
 			centerPanel.setLayout(new BorderLayout());
 			centerPanel.add(topPanel, BorderLayout.NORTH);
-			
+
 		}
-		
-		hideButton.addActionListener(new HideActionListener(centerPanel, topPanel, hideButton));
-		
+
+		hideButton.addActionListener(new HideActionListener(centerPanel,
+				topPanel, hideButton));
+
 		openButton.addActionListener(new OpenActionListener(ref));
 		saveButton.addActionListener(new SaveAsActionListener(ref));
 		return centerPanel;
@@ -512,16 +518,20 @@ public class InlineAttachmentsViewer extends JPanel implements ICustomViewer {
 	class HideActionListener implements ActionListener {
 
 		private JPanel center;
+
 		private JPanel top;
+
 		private JToggleButton button;
+
 		private Component contents;
-		
-		public HideActionListener(JPanel center, JPanel top, JToggleButton button) {
+
+		public HideActionListener(JPanel center, JPanel top,
+				JToggleButton button) {
 			this.center = center;
 			this.top = top;
 			this.button = button;
-			
-			if ( center.getComponentCount() == 2)
+
+			if (center.getComponentCount() == 2)
 				contents = center.getComponent(1);
 		}
 
@@ -529,17 +539,16 @@ public class InlineAttachmentsViewer extends JPanel implements ICustomViewer {
 		 * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
 		 */
 		public void actionPerformed(ActionEvent arg0) {
-			if ( !button.isSelected()) {
+			if (!button.isSelected()) {
 				// show contents
-				if ( contents != null)
+				if (contents != null)
 					center.add(contents);
-				
-			} else
-			{
+
+			} else {
 				// hide contents
-				if ( center.getComponentCount() == 2)
+				if (center.getComponentCount() == 2)
 					contents = center.getComponent(1);
-				if ( contents != null)
+				if (contents != null)
 					center.remove(contents);
 			}
 			center.revalidate();

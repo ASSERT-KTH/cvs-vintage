@@ -21,53 +21,32 @@ import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Rectangle;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.util.Observer;
 
 import javax.swing.JComponent;
-import javax.swing.JEditorPane;
-import javax.swing.JOptionPane;
 import javax.swing.JPanel;
-import javax.swing.JPopupMenu;
 import javax.swing.Scrollable;
-import javax.swing.SwingUtilities;
-import javax.swing.text.AttributeSet;
-import javax.swing.text.BadLocationException;
-import javax.swing.text.Element;
-import javax.swing.text.html.HTML;
-import javax.swing.text.html.HTMLDocument;
 
 import org.columba.core.config.DefaultItem;
-import org.columba.core.gui.frame.DefaultContainer;
-import org.columba.core.gui.menu.ColumbaPopupMenu;
 import org.columba.core.gui.util.FontProperties;
-import org.columba.core.util.GlobalResourceLoader;
 import org.columba.core.xml.XmlElement;
 import org.columba.mail.command.IMailFolderCommandReference;
 import org.columba.mail.command.MailFolderCommandReference;
 import org.columba.mail.config.MailConfig;
 import org.columba.mail.folder.AbstractMessageFolder;
 import org.columba.mail.folder.IMailbox;
-import org.columba.mail.gui.composer.ComposerController;
-import org.columba.mail.gui.composer.ComposerModel;
 import org.columba.mail.gui.frame.MailFrameMediator;
-import org.columba.mail.gui.message.URLObservable;
+import org.columba.mail.gui.message.MessageController;
 import org.columba.mail.gui.message.filter.PGPMessageFilter;
-import org.columba.mail.gui.message.util.ColumbaURL;
 import org.columba.ristretto.message.MimePart;
 import org.columba.ristretto.message.MimeTree;
-import org.jdesktop.jdic.desktop.Desktop;
-import org.jdesktop.jdic.desktop.DesktopException;
 
 /**
  * IViewer for a complete RFC822 message.
  * 
  * @author fdietz
  */
-public class Rfc822MessageViewer extends JPanel implements ICustomViewer, Scrollable {
+public class Rfc822MessageViewer extends JPanel implements ICustomViewer,
+		Scrollable {
 
 	protected AttachmentsViewer attachmentsViewer;
 
@@ -83,17 +62,12 @@ public class Rfc822MessageViewer extends JPanel implements ICustomViewer, Scroll
 
 	private PGPMessageFilter pgpFilter;
 
-	private URLObservable urlObservable;
-
-	private ColumbaPopupMenu menu;
-
-	private MailFrameMediator mediator;
-
+	private MessageController mediator;
 
 	/**
 	 *  
 	 */
-	public Rfc822MessageViewer(MailFrameMediator mediator) {
+	public Rfc822MessageViewer(MessageController mediator) {
 		super();
 
 		this.mediator = mediator;
@@ -103,7 +77,7 @@ public class Rfc822MessageViewer extends JPanel implements ICustomViewer, Scroll
 		layoutComponents();
 
 	}
-	
+
 	private boolean showAttachmentsInlineEnabled() {
 		XmlElement gui = MailConfig.getInstance().get("options").getElement(
 				"/options/gui");
@@ -112,7 +86,7 @@ public class Rfc822MessageViewer extends JPanel implements ICustomViewer, Scroll
 		if (messageviewer == null) {
 			messageviewer = gui.addSubElement("messageviewer");
 		}
-		
+
 		DefaultItem item = new DefaultItem(messageviewer);
 		return item.getBoolean("inline_attachments", false);
 	}
@@ -135,9 +109,9 @@ public class Rfc822MessageViewer extends JPanel implements ICustomViewer, Scroll
 
 		MimeTree mimePartTree = folder.getMimePartTree(uid);
 		MimePart mp = chooseBodyPart(mimePartTree);
-		if ( mp != null) 
+		if (mp != null)
 			getBodytextViewer().view(folder, uid, mp.getAddress(), mediator);
-		
+
 		getHeaderController().view(folder, uid, mediator);
 
 		if (showAttachmentsInlineEnabled())
@@ -230,13 +204,6 @@ public class Rfc822MessageViewer extends JPanel implements ICustomViewer, Scroll
 		return spamStatusController;
 	}
 
-	/**
-	 * return the PopupMenu for the message viewer
-	 */
-	public JPopupMenu getPopupMenu() {
-		return menu;
-	}
-
 	public void setAttachmentSelectionReference(MailFolderCommandReference ref) {
 		getAttachmentsViewer().setLocalReference(ref);
 	}
@@ -251,19 +218,14 @@ public class Rfc822MessageViewer extends JPanel implements ICustomViewer, Scroll
 		securityInformationController = new EncryptionStatusViewer(mediator);
 		headerController = new HeaderViewer(mediator);
 
-		headerController.getHeaderTextPane().addMouseListener(
-				new MyMouseListener());
-		bodytextViewer.addMouseListener(new MyMouseListener());
-
 		attachmentsViewer = new AttachmentsViewer(mediator);
 
 		inlineAttachmentsViewer = new InlineAttachmentsViewer(mediator);
 
-		pgpFilter = new PGPMessageFilter(mediator, this);
+		pgpFilter = new PGPMessageFilter(mediator.getFrameController(), this);
 		pgpFilter.addSecurityStatusListener(securityInformationController);
 		pgpFilter.addSecurityStatusListener(headerController.getStatusPanel());
 
-		urlObservable = new URLObservable();
 	}
 
 	private void layoutComponents() {
@@ -283,7 +245,7 @@ public class Rfc822MessageViewer extends JPanel implements ICustomViewer, Scroll
 
 		add(top, BorderLayout.NORTH);
 
-		if (!showAttachmentsInlineEnabled()) 
+		if (!showAttachmentsInlineEnabled())
 			add(bodytextViewer, BorderLayout.CENTER);
 
 		JPanel bottom = new JPanel();
@@ -305,150 +267,6 @@ public class Rfc822MessageViewer extends JPanel implements ICustomViewer, Scroll
 		removeAll();
 	}
 
-	public void createPopupMenu() {
-		if (menu == null)
-			menu = new ColumbaPopupMenu(mediator,
-					"org/columba/mail/action/message_contextmenu.xml");
-	}
-
-	protected void processPopup(MouseEvent ev) {
-		//        final URL url = extractURL(ev);
-		ColumbaURL mailto = extractMailToURL(ev);
-		urlObservable.setUrl(mailto);
-
-		final MouseEvent event = ev;
-		// open context-menu
-		// -> this has to happen in the awt-event dispatcher thread
-		SwingUtilities.invokeLater(new Runnable() {
-
-			public void run() {
-				getPopupMenu().show(event.getComponent(), event.getX(),
-						event.getY());
-			}
-		});
-	}
-
-	protected URL extractURL(MouseEvent event) {
-		JEditorPane pane = (JEditorPane) event.getSource();
-		HTMLDocument doc = (HTMLDocument) pane.getDocument();
-
-		Element e = doc.getCharacterElement(pane.viewToModel(event.getPoint()));
-		AttributeSet a = e.getAttributes();
-		AttributeSet anchor = (AttributeSet) a.getAttribute(HTML.Tag.A);
-
-		if (anchor == null) {
-			return null;
-		}
-
-		URL url = null;
-
-		try {
-			url = new URL((String) anchor.getAttribute(HTML.Attribute.HREF));
-		} catch (MalformedURLException mue) {
-			return null;
-		}
-
-		return url;
-	}
-
-	/**
-	 * this method extracts any url, but if URL's protocol is mailto: then this
-	 * method also extracts the corresponding recipient name whatever it may be.
-	 * <br>
-	 * This "kind of" superseeds the previous extractURL(MouseEvent) method.
-	 */
-	private ColumbaURL extractMailToURL(MouseEvent event) {
-
-		ColumbaURL url = new ColumbaURL(extractURL(event));
-		if (url.getRealURL() == null)
-			return null;
-
-		if (!url.getRealURL().getProtocol().equalsIgnoreCase("mailto"))
-			return url;
-
-		JEditorPane pane = (JEditorPane) event.getSource();
-		HTMLDocument doc = (HTMLDocument) pane.getDocument();
-
-		Element e = doc.getCharacterElement(pane.viewToModel(event.getPoint()));
-		AttributeSet a = e.getAttributes();
-		AttributeSet anchor = (AttributeSet) a.getAttribute(HTML.Tag.A);
-
-		try {
-			url.setSender(doc.getText(e.getStartOffset(), (e.getEndOffset() - e
-					.getStartOffset())));
-		} catch (BadLocationException e1) {
-			url.setSender("");
-		}
-
-		return url;
-	}
-
-	class MyMouseListener implements MouseListener {
-
-		public void mousePressed(MouseEvent event) {
-			if (event.isPopupTrigger()) {
-				processPopup(event);
-			}
-		}
-
-		public void mouseReleased(MouseEvent event) {
-			if (event.isPopupTrigger()) {
-				processPopup(event);
-			}
-		}
-
-		public void mouseEntered(MouseEvent event) {
-		}
-
-		public void mouseExited(MouseEvent event) {
-		}
-
-		public void mouseClicked(MouseEvent event) {
-			if (!SwingUtilities.isLeftMouseButton(event)) {
-				return;
-			}
-
-			URL url = extractURL(event);
-
-			if (url == null) {
-				return;
-			}
-
-			getUrlObservable().setUrl(new ColumbaURL(url));
-
-			//URLController c = new URLController();
-
-			if (url.getProtocol().equalsIgnoreCase("mailto")) {
-				// open composer
-				ComposerController controller = new ComposerController();
-				new DefaultContainer(controller);
-
-				ComposerModel model = new ComposerModel();
-				model.setTo(url.getFile());
-
-				// apply model
-				controller.setComposerModel(model);
-
-				controller.updateComponents(true);
-			} else {
-				try {
-					Desktop.browse(url);
-				} catch (DesktopException e) {
-					JOptionPane.showMessageDialog(null, GlobalResourceLoader
-							.getString("dialog", "error", "no_browser"), "Error",
-							JOptionPane.ERROR_MESSAGE);
-				}
-			}
-		}
-	}
-
-	/**
-	 * @return Returns the urlObservable.
-	 */
-	public URLObservable getUrlObservable() {
-		return urlObservable;
-	}
-
 	/**
 	 * @see org.columba.mail.gui.message.IMessageController#filterMessage(org.columba.mail.folder.IMailbox,
 	 *      java.lang.Object)
@@ -456,13 +274,6 @@ public class Rfc822MessageViewer extends JPanel implements ICustomViewer, Scroll
 	public IMailFolderCommandReference filterMessage(IMailbox folder, Object uid)
 			throws Exception {
 		return getPgpFilter().filter(folder, uid);
-	}
-
-	/**
-	 * @see org.columba.mail.gui.message.IMessageController#addURLObserver(java.util.Observer)
-	 */
-	public void addURLObserver(Observer observer) {
-		getUrlObservable().addObserver(observer);
 	}
 
 	public String getSelectedText() {
@@ -532,7 +343,7 @@ public class Rfc822MessageViewer extends JPanel implements ICustomViewer, Scroll
 		return bodyPart;
 
 	}
-	
+
 	private boolean hasHtmlPart(MimePart mimeTypes) {
 
 		if (mimeTypes.getHeader().getMimeType().equalsIgnoreCase("text/html"))
@@ -548,7 +359,7 @@ public class Rfc822MessageViewer extends JPanel implements ICustomViewer, Scroll
 		return false;
 
 	}
-	
+
 	/**
 	 * @param mimePartTree
 	 */

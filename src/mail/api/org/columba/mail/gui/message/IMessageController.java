@@ -19,7 +19,8 @@ package org.columba.mail.gui.message;
 
 import java.util.Observer;
 
-import org.columba.mail.command.IMailFolderCommandReference;
+import javax.swing.JTextPane;
+
 import org.columba.mail.folder.IMailbox;
 
 /**
@@ -54,4 +55,6 @@ public interface IMessageController {
 	//IMailFolderCommandReference filterMessage(IMailbox folder, Object uid) throws Exception;
 	
 	void addURLObserver(Observer observer);
+	
+	void addMouseListener(JTextPane textPane);
 }

@@ -55,6 +55,8 @@ import org.columba.core.xml.XmlElement;
 import org.columba.mail.config.MailConfig;
 import org.columba.mail.folder.IMailbox;
 import org.columba.mail.gui.frame.MailFrameMediator;
+import org.columba.mail.gui.frame.MessageViewOwner;
+import org.columba.mail.gui.message.MessageController;
 import org.columba.mail.gui.message.util.DocumentParser;
 import org.columba.mail.parser.text.HtmlParser;
 import org.columba.ristretto.coder.Base64DecoderInputStream;
@@ -109,9 +111,9 @@ public class TextViewer extends JTextPane implements IMimePartViewer, Observer,
 	 */
 	private boolean htmlMessage;
 
-	private MailFrameMediator mediator;
+	private MessageController mediator;
 
-	public TextViewer(MailFrameMediator mediator) {
+	public TextViewer(MessageController mediator) {
 		super();
 
 		this.mediator = mediator;
@@ -130,6 +132,8 @@ public class TextViewer extends JTextPane implements IMimePartViewer, Observer,
 		initStyleSheet();
 
 		FocusManager.getInstance().registerComponent(new MyFocusOwner());
+		
+		mediator.addMouseListener(this);
 	}
 
 	/**

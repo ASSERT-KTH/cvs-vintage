@@ -49,6 +49,7 @@ import org.columba.core.xml.XmlElement;
 import org.columba.mail.config.MailConfig;
 import org.columba.mail.folder.IMailbox;
 import org.columba.mail.gui.frame.MailFrameMediator;
+import org.columba.mail.gui.message.MessageController;
 import org.columba.mail.gui.message.filter.SecurityStatusEvent;
 import org.columba.mail.gui.message.filter.SecurityStatusListener;
 import org.columba.mail.gui.util.AddressListRenderer;
@@ -80,13 +81,13 @@ public class HeaderViewer extends JPanel implements ICustomViewer {
 	private StatusPanel statusPanel;
 
 	private boolean hasAttachment;
-	
-	private MailFrameMediator mediator;
 
-	public HeaderViewer(MailFrameMediator mediator) {
+	private MessageController mediator;
+
+	public HeaderViewer(MessageController mediator) {
 
 		this.mediator = mediator;
-		
+
 		setLayout(new BorderLayout());
 		setBorder(BorderFactory.createEmptyBorder(5, 5, 2, 5));
 
@@ -108,6 +109,7 @@ public class HeaderViewer extends JPanel implements ICustomViewer {
 
 		visible = false;
 
+		mediator.addMouseListener(headerTextPane);
 	}
 
 	/**
@@ -290,7 +292,8 @@ public class HeaderViewer extends JPanel implements ICustomViewer {
 	}
 
 	/**
-	 * IViewer displays the message headers, including From:, To:, Subject:, etc.
+	 * IViewer displays the message headers, including From:, To:, Subject:,
+	 * etc.
 	 * 
 	 * @author fdietz
 	 */
@@ -363,8 +366,9 @@ public class HeaderViewer extends JPanel implements ICustomViewer {
 		}
 
 		public void setHeader(Map keys) {
-			if ( keys == null ) throw new IllegalArgumentException("keys == null");
-			
+			if (keys == null)
+				throw new IllegalArgumentException("keys == null");
+
 			//      border #949494
 			// background #989898
 			// #a0a0a0

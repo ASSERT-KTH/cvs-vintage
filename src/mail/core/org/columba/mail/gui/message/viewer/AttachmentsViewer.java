@@ -37,6 +37,7 @@ import org.columba.core.gui.util.ImageLoader;
 import org.columba.mail.command.MailFolderCommandReference;
 import org.columba.mail.folder.IMailbox;
 import org.columba.mail.gui.frame.MailFrameMediator;
+import org.columba.mail.gui.message.MessageController;
 import org.columba.mail.gui.message.action.OpenAttachmentAction;
 import org.columba.mail.gui.message.command.SaveAttachmentTemporaryCommand;
 import org.columba.ristretto.message.MimeHeader;
@@ -59,11 +60,11 @@ public class AttachmentsViewer extends IconPanel implements ICustomViewer {
 
 	private AttachmentModel model;
 
-	private MailFrameMediator mediator;
+	private MessageController mediator;
 
 	private MailFolderCommandReference ref;
 
-	public AttachmentsViewer(MailFrameMediator mediator) {
+	public AttachmentsViewer(MessageController mediator) {
 		super();
 
 		this.mediator = mediator;
@@ -80,7 +81,8 @@ public class AttachmentsViewer extends IconPanel implements ICustomViewer {
 		addMouseListener(popupListener);
 
 		// set double-click action for attachment viewer
-		setDoubleClickAction(new OpenAttachmentAction(mediator));
+		setDoubleClickAction(new OpenAttachmentAction(mediator
+				.getFrameController()));
 	}
 
 	/**
@@ -184,7 +186,7 @@ public class AttachmentsViewer extends IconPanel implements ICustomViewer {
 
 	public void createPopupMenu() {
 		//menu = new AttachmentMenu(getFrameController());
-		menu = new ColumbaPopupMenu(mediator,
+		menu = new ColumbaPopupMenu(mediator.getFrameController(),
 				"org/columba/mail/action/attachment_contextmenu.xml");
 
 	}
@@ -240,7 +242,7 @@ public class AttachmentsViewer extends IconPanel implements ICustomViewer {
 			File[] files = new File[1];
 
 			SaveAttachmentTemporaryCommand command = new SaveAttachmentTemporaryCommand(
-					mediator.getSelectionManager()
+					mediator.getFrameController().getSelectionManager()
 							.getHandler("mail.attachment").getSelection());
 
 			CommandProcessor.getInstance().addOp(command);
