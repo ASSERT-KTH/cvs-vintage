@@ -47,7 +47,7 @@ import org.gjt.sp.util.Log;
 /**
  * The main class of the jEdit text editor.
  * @author Slava Pestov
- * @version $Id: jEdit.java,v 1.177 2003/06/08 22:23:40 spestov Exp $
+ * @version $Id: jEdit.java,v 1.178 2003/06/08 22:49:09 spestov Exp $
  */
 public class jEdit
 {
@@ -2056,8 +2056,20 @@ public class jEdit
 
 			if(config.width != 0 && config.height != 0)
 			{
-				GUIUtilities.setWindowBounds(newView,config.x,config.y,
-					config.width,config.height,config.extState);
+				Rectangle desired = new Rectangle(
+					config.x,config.y,config.width,
+					config.height);
+				if(OperatingSystem.isX11())
+				{
+					new GUIUtilities.UnixWorkaround(newView,
+						"view",desired,config.extState);
+				}
+				else
+				{
+					newView.setBounds(desired);
+					GUIUtilities.setExtendedState(newView,
+						config.extState);
+				}
 			}
 			else
 				GUIUtilities.centerOnScreen(newView);

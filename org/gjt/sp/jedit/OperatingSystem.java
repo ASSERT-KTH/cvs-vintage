@@ -39,7 +39,7 @@ import org.gjt.sp.util.Log;
 /**
  * Operating system detection routines.
  * @author Slava Pestov
- * @version $Id: OperatingSystem.java,v 1.13 2003/06/07 21:22:17 spestov Exp $
+ * @version $Id: OperatingSystem.java,v 1.14 2003/06/08 22:49:09 spestov Exp $
  * @since jEdit 4.0pre4
  */
 public class OperatingSystem
@@ -228,6 +228,17 @@ L2:			for (int j=0; j < gc.length; j++)
 	public static final boolean isMacOS()
 	{
 		return os == MAC_OS_X;
+	} //}}}
+
+	//{{{ isX11() method
+	/**
+	 * Returns if this OS is likely to be using X11 as the graphics
+	 * system.
+	 * @since jEdit 4.2pre3
+	 */
+	public static boolean isX11()
+	{
+		return os == UNIX;
 	} //}}}
 
 	//{{{ isVMS() method
