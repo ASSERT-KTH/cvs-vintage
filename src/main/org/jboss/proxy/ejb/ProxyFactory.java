@@ -40,21 +40,27 @@ import org.jboss.logging.Logger;
 
 
 /**
-*  <description>
-*
-* As we remove the one one association between container STACK and invoker we keep this around
-* IN the future the creation of proxies is a task done on a container basis but the container
-* as a logical representation, in other words, the container "Entity with RMI/IIOP" is not a 
-* container stack but an association at the invocation level that points to all metadata for 
-* a given container. 
-*
-* In other words this is here for legacy reason and to not disrupt the container at once
-* In particular we declare that we "implement" the container invoker interface when we are
-* just implementing the Proxy generation calls. Separation of concern. 
-*
-*  @see <related>
-*  @author <a href="mailto:marc.fleury@jboss.org">Marc Fleury</a>
-*  @version $Revision: 1.1 $
+ *  <description>
+ *
+ * As we remove the one one association between container STACK and invoker we keep this around
+ * IN the future the creation of proxies is a task done on a container basis but the container
+ * as a logical representation, in other words, the container "Entity with RMI/IIOP" is not a 
+ * container stack but an association at the invocation level that points to all metadata for 
+ * a given container. 
+ *
+ * In other words this is here for legacy reason and to not disrupt the container at once
+ * In particular we declare that we "implement" the container invoker interface when we are
+ * just implementing the Proxy generation calls. Separation of concern. 
+ *
+ *  @see <related>
+ *  @author <a href="mailto:marc.fleury@jboss.org">Marc Fleury</a>
+ *  @version $Revision: 1.2 $
+ *
+ *  <p><b>Revisions:</b><br>
+ *  <p><b>2001/12/30: billb</b>
+ *  <ol>
+ *   <li>made home and bean invokers pluggable
+ *  </ol>
 */
 
 public class ProxyFactory
@@ -72,7 +78,8 @@ implements ContainerInvoker
    String jndiName;
    
    // The name of the delegate invoker
-   Invoker invoker;
+   Invoker homeInvoker;
+   Invoker beanInvoker;
    
    // A pointer to the container this proxy factory is dedicated to
    Container container;
@@ -165,7 +172,8 @@ implements ContainerInvoker
       try{
 
          // Get the local invoker
-         invoker = (Invoker) Registry.lookup(new ObjectName("JBOSS-SYSTEM:service=invoker,type=jrmp"));
+         homeInvoker = (Invoker) Registry.lookup(new ObjectName(container.getBeanMetaData().getHomeInvoker()));
+         beanInvoker = (Invoker) Registry.lookup(new ObjectName(container.getBeanMetaData().getBeanInvoker()));
          
          // FIXME FIXME In the near future move to 
          // invoker = (Invoker) Registry.lookup(new ObjectName(container.getInvokerType()));
@@ -178,7 +186,7 @@ implements ContainerInvoker
             // The classes we want to implement home and handle
             new Class[] { ((ContainerInvokerContainer)container).getHomeClass(), Class.forName("javax.ejb.Handle")},
             // The home proxy as invocation handler
-            new HomeProxy(jndiName,invoker, ejbMetaData));
+            new HomeProxy(jndiName,homeInvoker, ejbMetaData));
          
          // Create stateless session object
          // Same instance is used for all objects
@@ -192,7 +200,7 @@ implements ContainerInvoker
                // Interfaces    
                new Class[] { ((ContainerInvokerContainer)container).getRemoteClass() } ,
                // SLSB proxy as invocation handler
-               new StatelessSessionProxy(jndiName, invoker)
+               new StatelessSessionProxy(jndiName, beanInvoker)
             );
          }
          
@@ -263,7 +271,7 @@ implements ContainerInvoker
          // Interfaces
          new Class[] { ((ContainerInvokerContainer)container).getRemoteClass() },
          // Proxy as invocation handler
-         new StatefulSessionProxy(jndiName, id, invoker));
+         new StatefulSessionProxy(jndiName, id, beanInvoker));
    }
    
    public Object getEntityEJBObject(Object id)
@@ -275,7 +283,7 @@ implements ContainerInvoker
          // Interfaces
          new Class[] { ((ContainerInvokerContainer)container).getRemoteClass() },
          // Proxy as invocation handler
-         new EntityProxy(jndiName, id,invoker));
+         new EntityProxy(jndiName, id,beanInvoker));
    }
    
    public Collection getEntityCollection(Collection ids)
@@ -290,14 +298,14 @@ implements ContainerInvoker
          {
             list.add(Proxy.newProxyInstance(((ContainerInvokerContainer)container).getRemoteClass().getClassLoader(),
                   new Class[] { ((ContainerInvokerContainer)container).getRemoteClass(), ReadAheadBuffer.class },
-                  new ListEntityProxy(jndiName, invoker, idEnum.next(), list, listId, i)));        
+                  new ListEntityProxy(jndiName, beanInvoker, idEnum.next(), list, listId, i)));        
          }
       } else {
          while(idEnum.hasNext())
          {
             list.add(Proxy.newProxyInstance(((ContainerInvokerContainer)container).getRemoteClass().getClassLoader(),
                   new Class[] { ((ContainerInvokerContainer)container).getRemoteClass() },
-                  new EntityProxy(jndiName, idEnum.next(), invoker)));
+                  new EntityProxy(jndiName, idEnum.next(), beanInvoker)));
          }
       }
       return list;

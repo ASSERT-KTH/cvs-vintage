@@ -127,7 +127,7 @@ level using the authentication-module and role-mapping-manager elements.
 
     Used in: enterprise-beans
     -->
-<!ELEMENT entity (ejb-name , jndi-name? , configuration-name? , security-proxy?, ejb-ref* , resource-ref*)>
+<!ELEMENT entity (ejb-name , jndi-name? , home-invoker? , bean-invoker? , configuration-name? , security-proxy?, ejb-ref* , resource-ref*)>
 
 <!--
     The session element holds information specific to jboss and not declared
@@ -138,7 +138,7 @@ level using the authentication-module and role-mapping-manager elements.
 
     Used in: enterprise-beans
     -->
-<!ELEMENT session (ejb-name , jndi-name? , configuration-name?, security-proxy?, ejb-ref* , resource-ref*)>
+<!ELEMENT session (ejb-name , jndi-name? , home-invoker? , bean-invoker? , configuration-name?, security-proxy?, ejb-ref* , resource-ref*)>
 
 <!--
       The ejb-name element gives the name of the bean, it must correspond to
@@ -156,6 +156,15 @@ level using the authentication-module and role-mapping-manager elements.
       Used in: entity and session
       -->
 <!ELEMENT jndi-name (#PCDATA)>
+
+<!--
+      The home-invoker and bean-invoker elements defines the Invoker MBean to use
+      for Home Proxies and Bean Proxies.
+
+      Used in: entity and session
+      -->
+<!ELEMENT home-invoker (#PCDATA)>
+<!ELEMENT bean-invoker (#PCDATA)>
 
 <!--
       The configuration-name element gives the name of the container

@@ -30,19 +30,23 @@ import org.jboss.security.SimplePrincipal;
  * @author <a href="mailto:Scott_Stark@displayscape.com">Scott Stark</a>.
  * @author <a href="mailto:osh@sparre.dk">Ole Husgaard</a> 
  * @author <a href="mailto:bill@burkecentral.com">Bill Burke</a> 
- * @version $Revision: 1.31 $
+ * @version $Revision: 1.32 $
  *
  *  <p><b>Revisions:</b><br>
  *  <p><b>2001/10/16: billb</b>
  *  <ol>
  *   <li>Added clustering tags
  *  </ol>
+ *  <p><b>2001/12/30: billb</b>
+ *  <ol>
+ *   <li>made home and bean invokers pluggable
+ *  </ol>
  */
 public abstract class BeanMetaData
    extends MetaData
 {
    // Constants -----------------------------------------------------
-
+   
    public static final char SESSION_TYPE = 'S';
    public static final char ENTITY_TYPE = 'E';
    public static final char MDB_TYPE = 'M';
@@ -99,6 +103,16 @@ public abstract class BeanMetaData
    private ArrayList transactionMethods = new ArrayList();
    /** The assembly-descriptor/exclude-list method(s) */
    private ArrayList excludedMethods = new ArrayList();
+   /** what JRMP invokers do we use? **/
+   private String homeInvoker = null;
+   private String beanInvoker = null;
+   public static final String DEFAULT_HOME_INVOKER = "JBOSS-SYSTEM:service=invoker,type=jrmp";
+   public static final String DEFAULT_BEAN_INVOKER = "JBOSS-SYSTEM:service=invoker,type=jrmp";
+   public static final String DEFAULT_CLUSTERED_HOME_INVOKER = "JBOSS-SYSTEM:service=invoker,type=jrmpha,partition=DefaultPartition,load-balance=RoundRobin";
+   public static final String DEFAULT_CLUSTERED_SLSB_INVOKER = "JBOSS-SYSTEM:service=invoker,type=jrmpha,partition=DefaultPartition,load-balance=RoundRobin";
+   public static final String DEFAULT_CLUSTERED_SFSB_INVOKER = "JBOSS-SYSTEM:service=invoker,type=jrmpha,partition=DefaultPartition,load-balance=FirstAvailable";
+   public static final String DEFAULT_CLUSTERED_EB_INVOKER = "JBOSS-SYSTEM:service=invoker,type=jrmpha,partition=DefaultPartition,load-balance=FirstAvailable";
+   public static final String DEFAULT_CLUSTERED_BEAN_INVOKER = "JBOSS-SYSTEM:service=invoker,type=jrmpha,partition=DefaultPartition,load-balance=FirstAvailable";
    /** The cluster-config element info */
    private ClusterConfigMetaData clusterConfig = null;
 
@@ -150,6 +164,10 @@ public abstract class BeanMetaData
    public Iterator getEjbReferences() { return ejbReferences.values().iterator(); }
         
    public Iterator getEjbLocalReferences() { return ejbLocalReferences.values().iterator(); }
+
+   public String getHomeInvoker() { return homeInvoker; }
+
+   public String getBeanInvoker() { return beanInvoker; }
 	
    public EjbRefMetaData getEjbRefByName(String name)
    {
@@ -477,16 +495,71 @@ public abstract class BeanMetaData
          ejbRefMetaData.importJbossXml(ejbRef);
       }
       
+      // Has a custom invoker been defined?
+      //
+      homeInvoker = getElementContent(getOptionalChild(element, "home-invoker"));
+      beanInvoker = getElementContent(getOptionalChild(element, "bean-invoker"));
+
       // Determine if the bean is to be deployed in the cluster (more advanced config will be added in the future)
       //
       String clusteredElt = getElementContent(getOptionalChild(element, "clustered"), (clustered? "True" : "False"));
       clustered = clusteredElt.equals ("True");
-      
+
+
       Element clusterConfigElement = getOptionalChild(element, "cluster-config");
       if (clusterConfigElement != null)
       {
          this.clusterConfig = new ClusterConfigMetaData();
          clusterConfig.importJbossXml(clusterConfigElement);
+      }
+
+      // Setup default invokers for this bean
+      if (homeInvoker == null)
+      {
+	 if (clustered)
+	 {
+	    homeInvoker = DEFAULT_CLUSTERED_HOME_INVOKER;
+	 }
+	 else
+	 {
+	    homeInvoker = DEFAULT_HOME_INVOKER;
+	 }
+      }
+      if (beanInvoker == null)
+      {
+	 if (!clustered)
+	 {
+	    beanInvoker = DEFAULT_BEAN_INVOKER;
+	 }
+	 else // Setup default clustered bean invoker
+	 {
+	    if (isEntity())
+	    {
+	       beanInvoker = DEFAULT_CLUSTERED_EB_INVOKER;
+	    }
+	    else if (isSession())
+	    {
+	       if (this instanceof SessionMetaData)
+	       {
+		  if (((SessionMetaData)this).isStateful())
+		  {
+		     beanInvoker = DEFAULT_CLUSTERED_SFSB_INVOKER;
+		  }
+		  else
+		  {
+		     beanInvoker = DEFAULT_CLUSTERED_SLSB_INVOKER;
+		  }
+	       }
+	       else
+	       {
+		  beanInvoker = DEFAULT_CLUSTERED_BEAN_INVOKER;
+	       }
+	    }
+	    else
+	    {
+	       beanInvoker = DEFAULT_CLUSTERED_BEAN_INVOKER;
+	    }
+	 }
       }
    }
 
