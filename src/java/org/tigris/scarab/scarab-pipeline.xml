@@ -16,7 +16,7 @@
     <valve className="org.apache.turbine.pipeline.DefaultACLCreationValve"/>
     <valve className="org.apache.turbine.pipeline.DefaultActionValve"/>
     <valve className="org.apache.turbine.pipeline.RunModulesValve"/>
-    <valve className="org.apache.turbine.pipeline.DefaultTargetValve"/>
+    <valve className="org.apache.turbine.pipeline.DirectTargetValve"/>
 
     <!-- reset the cache as soon as we are done with the pipeline -->
     <valve className="org.tigris.scarab.services.cache.ResetCacheValve"/>
