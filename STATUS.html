@@ -64,6 +64,8 @@ categories of actions are currently identified:
 <li><a href="#Containers">Containers</a> in the Tomcat core engine
 <li><a href="#JSP">JSP</a> functionality enhancements
 <li><a href="#Servlet">Servlet</a> functionality enhancements
+<li><a href="#Performance">Performance</a> improvements
+<li><a href="#Release">Release</a> preparation items
 </ul>
 
 <p>NOTE:  In addition to this list of action items related to the main CVS
@@ -121,6 +123,31 @@ is maintained in the <code>proposals/catalina</code> subdirectory.
         with all currently included functionality.</td>
     <td>--- and <a href="mailto:costin@eng.sun.com">Costin Manolache</a></td>
   </tr>
+  <tr>
+    <td>High</td>
+    <td>3.3</td>
+    <td>Refactoring of existing code to improve configurability and flexibility
+        of Tomcat, as well as minimize the amount of spaghetti code to help
+        readability and maintainability of the code.  Though listed separately,
+        some of the performance improvements come about as part of this
+        refactoring effort.</td>
+    <td><a href="mailto:costin@eng.sun.com">Costin Manolache</a></td>
+  </tr>
+  <tr>
+    <td>High</td>
+    <td>3.3</td>
+    <td>Separate the Servlet 2.2/JSP 1.1 API implementation from the Tomcat's core
+        classes through the use of a facade.  If implemented properly, bug fixing
+        of Servlet 2.2/JSP 1.1 bugs should only affect the facade and not the
+        core Tomcat classes.</td>
+    <td><a href="mailto:costin@eng.sun.com">Costin Manolache</a></td>
+  </tr>
+  <tr>
+    <td>Medium</td>
+    <td>3.3</td>
+    <td>Implement per context interceptors.</td>
+    <td><a href="mailto:nacho@siapi.es">Ignacio Ortega</a></td>
+  </tr>
 </table>
 
 
@@ -169,6 +196,15 @@ is maintained in the <code>proposals/catalina</code> subdirectory.
         deployment descriptors (i.e. <code>web.xml</code> files) in a
         user friendly manner.</td>
     <td><a href="mailto:tmcalees@rochester.rr.com">Tom McAlees</a></td>
+  </tr>
+  <tr>
+    <td>Medium</td>
+    <td>3.3</td>
+    <td>Separate Tomcat classes into appropriate jar files to facilitate Tomcat's
+        use in different environments.  For example, if used in an embedded
+        environment, the jar containing the Tomcat startup classes may be
+        left out of the classpath.</td>
+    <td><a href="mailto:costin@eng.sun.com">Costin Manolache</a></td>
   </tr>
 </table>
 
@@ -382,10 +418,10 @@ is maintained in the <code>proposals/catalina</code> subdirectory.
   </tr>
   <tr>
     <td>Medium</td>
-    <td>---</td>
+    <td>3.3</td>
     <td>Make dependency checking a stand-alone module, and extend it to
       allow complex dependency checking. Make it useable from outside
-      jsp, and add a "shortcut" for tocmat that will allow fast invocation
+      jsp, and add a "shortcut" for Tomcat that will allow fast invocation
     </td>
     <td><a href="mailto:akv@eng.sun.com">Anil Vijendran</a>
       <a href="mailto:costin@eng.sun.com">Costin Manolache</a></td>
@@ -439,10 +475,58 @@ is maintained in the <code>proposals/catalina</code> subdirectory.
   </tr>
 </table>
 
+<a name="Performance"></a>
+<div align="center"><h1>Performance Improvements</h1></div>
+<table border="1" width="100%">
+  <tr>
+    <th width="10%">Priority</th>
+    <th width="10%">Release</th>
+    <th width="50%">Action Item</th>
+    <th width="30%">Volunteers</th>
+  </tr>
+  <tr>
+    <td>Medium</td>
+    <td>3.3</td>
+    <td>Use pooling and recycling where possible.</td>
+    <td><a href="mailto:costin@eng.sun.com">Costin Manolache</a></td>
+  </tr>
+  <tr>
+    <td>Medium</td>
+    <td>3.3</td>
+    <td>Use introspection to determine which methods are implemented by an
+        interceptor so only those interceptors which implement a method are
+        called.</td>
+    <td><a href="mailto:costin@eng.sun.com">Costin Manolache</a></td>
+  </tr>
+  <tr>
+    <td>Medium</td>
+    <td>3.3</td>
+    <td>Wider use of MessageBytes to help minimize string garbage.</td>
+    <td><a href="mailto:costin@eng.sun.com">Costin Manolache</a></td>
+  </tr>
+</table>
+
+<a name="Release"></a>
+<div align="center"><h1>Release Preparation</h1></div>
+<table border="1" width="100%">
+  <tr>
+    <th width="10%">Priority</th>
+    <th width="10%">Release</th>
+    <th width="50%">Action Item</th>
+    <th width="30%">Volunteers</th>
+  </tr>
+  <tr>
+    <td>High</td>
+    <td>3.3</td>
+    <td>---</td>
+    <td>---</td>
+  </tr>
+</table>
+
 
 <br>
 <div align="center"><hr width="75%"><font size="2">
-$Id: STATUS.html,v 1.6 2000/04/13 21:12:15 craigmcc Exp $
+$Id: STATUS.html,v 1.7 2001/01/22 04:28:43 larryi Exp $
 </font></div>
 
 </body>
