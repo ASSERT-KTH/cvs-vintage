@@ -1,4 +1,4 @@
-// $Id: XmiReader.java,v 1.5 2005/01/09 14:58:07 linus Exp $
+// $Id: XmiReader.java,v 1.6 2005/02/20 17:49:58 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -66,12 +66,12 @@ public class XmiReader {
 	return nsumlXmiReader.parseToModel(pIs);
     }
 
-    /**
-     * @return true if there were errors
-     */
-    public boolean getErrors() {
-        return nsumlXmiReader.getErrors();
-    }
+//    /**
+//     * @return true if there were errors
+//     */
+//    public boolean getErrors() {
+//        return nsumlXmiReader.getErrors();
+//    }
 
     /**
      * @return the map

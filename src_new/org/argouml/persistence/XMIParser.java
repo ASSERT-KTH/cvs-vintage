@@ -1,4 +1,4 @@
-// $Id: XMIParser.java,v 1.4 2005/01/30 20:48:39 linus Exp $
+// $Id: XMIParser.java,v 1.5 2005/02/20 17:49:58 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -105,9 +105,9 @@ public class XMIParser {
      *
      * @param p the project
      * @param url the URL
-     * @throws IOException when there is an IO error
+     * @throws OpenException when there is an IO error
      */
-    public synchronized void readModels(Project p, URL url) throws IOException {
+    public synchronized void readModels(Project p, URL url) throws OpenException {
 
         proj = p;
 
@@ -118,35 +118,13 @@ public class XMIParser {
             InputSource source = new InputSource(url.openStream());
             source.setSystemId(url.toString());
             curModel = reader.parseToModel(source);
-            if (reader.getErrors()) {
-            	throw new IOException("XMI file " + url.toString()
-                        + " could not be parsed.");
-            }
             uUIDRefs = new HashMap(reader.getXMIUUIDToObjectMap());
-
-        }
-        catch (SAXException saxEx) {
-            //
-            //  a SAX exception could have been generated
-            //    because of another exception.
-            //    Get the initial exception to display the
-            //    location of the true error
-            Exception ex = saxEx.getException();
-            if (ex == null) {
-                saxEx.printStackTrace();
-            }
-            else {
-                ex.printStackTrace();
-            }
-        }
-        catch (Exception ex) {
-            ex.printStackTrace();
+        } catch (Exception ex) {
+            throw new OpenException(ex);
         }
         LOG.info("=======================================");
 
-
-	proj.addModel(curModel);
-
+        proj.addModel(curModel);
 
         Collection ownedElements = Model.getFacade().getOwnedElements(curModel);
         Iterator oeIterator = ownedElements.iterator();

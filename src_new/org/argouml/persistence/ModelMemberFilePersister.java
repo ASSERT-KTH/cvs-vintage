@@ -1,4 +1,4 @@
-// $Id: ModelMemberFilePersister.java,v 1.5 2005/01/09 21:10:37 linus Exp $
+// $Id: ModelMemberFilePersister.java,v 1.6 2005/02/20 17:49:58 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -84,23 +84,26 @@ public class ModelMemberFilePersister extends MemberFilePersister {
             source.setEncoding("UTF-8");
             mmodel = xmiReader.parseToModel(source);
         } catch (SAXException e) { // duh, this must be caught and handled
+            LastLoadInfo.getInstance().setLastLoadStatus(false);
+            LastLoadInfo.getInstance().setLastLoadMessage(
+                    "SAXException parsing XMI.");
+            LOG.error("SAXException parsing XMI.");
             LOG.error("SAXException caught", e);
             throw new OpenException(e);
         } catch (ParserConfigurationException e) {
+            LastLoadInfo.getInstance().setLastLoadStatus(false);
+            LastLoadInfo.getInstance().setLastLoadMessage(
+                    "ParserConfigurationException parsing XMI.");
+            LOG.error("ParserConfigurationException parsing XMI.");
             LOG.error("ParserConfigurationException caught", e);
             throw new OpenException(e);
         } catch (IOException e) {
-            LOG.error("IOException caught", e);
-            throw new OpenException(e);
-        }
-
-        if (xmiReader.getErrors()) {
             LastLoadInfo.getInstance().setLastLoadStatus(false);
             LastLoadInfo.getInstance().setLastLoadMessage(
-                    "XMI file could not be parsed.");
-            LOG.error("XMI file could not be parsed.");
-            throw new OpenException(
-                    "XMI file could not be parsed.");
+                    "IOException parsing XMI.");
+            LOG.error("IOException parsing XMI.");
+            LOG.error("IOException caught", e);
+            throw new OpenException(e);
         }
 
         // This should probably be inside xmiReader.parse

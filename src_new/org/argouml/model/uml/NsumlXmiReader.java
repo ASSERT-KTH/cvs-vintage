@@ -1,4 +1,4 @@
-// $Id: NsumlXmiReader.java,v 1.3 2005/02/14 21:36:57 bobtarling Exp $
+// $Id: NsumlXmiReader.java,v 1.4 2005/02/20 17:49:58 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -210,10 +210,13 @@ class NsumlXmiReader extends ru.novosoft.uml.xmi.XMIReader {
      * @throws IOException if there is a file I/O problem
      */
     public MModel parseToModel(InputSource pIs)
-        throws SAXException, IOException {
-	parseSourceStream(pIs);
-	return getParsedModel();
-
+            throws SAXException, IOException {
+        parseSourceStream(pIs);
+        MModel model = getParsedModel();
+        if (errors) {
+            throw new SAXException("Errors parsing XMI");
+        }
+        return model;
     }
 
     /**
