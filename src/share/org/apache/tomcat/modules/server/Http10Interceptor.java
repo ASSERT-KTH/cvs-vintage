@@ -232,17 +232,26 @@ class HttpRequest extends Request {
     }
 
     public int doRead() throws IOException {
-	if( available <= 0 )
+	if( available == 0 ) 
 	    return -1;
-	available--;
+	// #3745
+	// if available == -1: unknown length, we'll read until end of stream.
+	if( available!= -1 )
+	    available--;
 	return http.doRead();
     }
 
     public int doRead(byte[] b, int off, int len) throws IOException {
-	if( available <= 0 )
-	    return 0;
+	if( available == 0 )
+	    return -1;
+	// if available == -1: unknown length, we'll read until end of stream.
 	int rd=http.doRead( b, off, len );
-	available -= rd;
+	if( rd==-1) {
+	    available=0;
+	    return -1;
+	}
+	if( available!= -1 )
+	    available -= rd;
 	return rd;
     }
     
