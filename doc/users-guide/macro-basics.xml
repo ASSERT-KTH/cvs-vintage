@@ -5,7 +5,7 @@
 <!-- :xml.root=users-guide.xml:                                  -->
 <!--                                                             -->
 <!-- This file cover the introductory section of the macro guide -->
-<!-- $Id: macro-basics.xml,v 1.10 2004/03/17 05:15:52 spestov Exp $
+<!-- $Id: macro-basics.xml,v 1.11 2004/10/17 04:36:31 spestov Exp $
  -->
 
 <chapter id="macro-basics"><title>Macro Basics</title>
@@ -552,7 +552,7 @@ String result = Macros.input(view, "Type something here.");
 String result = Macros.input(view, "When were you born?",
     "I don't remember, I was very young at the time");
 
-int result = Macros.confirm("Do you really want to learn"
+int result = Macros.confirm(view, "Do you really want to learn"
     + " about BeanShell?",JOptionPane.YES_NO_OPTION);
     </programlisting>
   </informalexample>

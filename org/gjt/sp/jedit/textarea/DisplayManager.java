@@ -34,7 +34,7 @@ import org.gjt.sp.util.Log;
  * Manages low-level text display tasks.
  * @since jEdit 4.2pre1
  * @author Slava Pestov
- * @version $Id: DisplayManager.java,v 1.100 2004/09/05 20:14:10 spestov Exp $
+ * @version $Id: DisplayManager.java,v 1.101 2004/10/17 04:36:32 spestov Exp $
  */
 public class DisplayManager
 {
@@ -647,6 +647,7 @@ public class DisplayManager
 				foo[i] = ' ';
 			}
 			TextAreaPainter painter = textArea.getPainter();
+			wrapToWidth = false;
 			wrapMargin = (int)painter.getFont().getStringBounds(
 				foo,0,foo.length,
 				painter.getFontRenderContext())

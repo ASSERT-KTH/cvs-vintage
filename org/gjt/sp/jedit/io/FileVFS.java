@@ -35,7 +35,7 @@ import org.gjt.sp.util.Log;
 /**
  * Local filesystem VFS.
  * @author Slava Pestov
- * @version $Id: FileVFS.java,v 1.48 2004/09/01 21:57:16 spestov Exp $
+ * @version $Id: FileVFS.java,v 1.49 2004/10/17 04:36:32 spestov Exp $
  */
 public class FileVFS extends VFS
 {
@@ -356,6 +356,9 @@ public class FileVFS extends VFS
 
 		int backupTimeDistance = jEdit.getIntegerProperty("backup.minTime",0);
 		File file = new File(path);
+
+		if (!file.exists())
+			return;
 
 		// Check for backup.directory, and create that
 		// directory if it doesn't exist

@@ -3,7 +3,7 @@
  * :tabSize=8:indentSize=8:noTabs=false:
  * :folding=explicit:collapseFolds=1:
  *
- * Copyright (C) 2001, 2003 Slava Pestov
+ * Copyright (C) 2001, 2004 Slava Pestov
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -25,6 +25,7 @@ package org.gjt.sp.jedit.buffer;
 //{{{ Imports
 import javax.swing.text.Position;
 import java.util.*;
+import org.gjt.sp.jedit.Buffer;
 import org.gjt.sp.util.Log;
 //}}}
 
@@ -33,11 +34,17 @@ import org.gjt.sp.util.Log;
  * directly.
  *
  * @author Slava Pestov
- * @version $Id: PositionManager.java,v 1.35 2003/11/18 20:51:57 spestov Exp $
+ * @version $Id: PositionManager.java,v 1.36 2004/10/17 04:36:32 spestov Exp $
  * @since jEdit 4.2pre3
  */
 public class PositionManager
 {
+	//{{{ PositionManager constructor
+	public PositionManager(Buffer buffer)
+	{
+		this.buffer = buffer;
+	} //}}}
+	
 	//{{{ createPosition() method
 	public synchronized Position createPosition(int offset)
 	{
@@ -65,8 +72,8 @@ public class PositionManager
 		iteration = true;
 		while(iter.hasNext())
 		{
-			PosBottomHalf bh = (PosBottomHalf)iter.next();
-			bh.offset += length;
+			((PosBottomHalf)iter.next())
+				.contentInserted(offset,length);
 		}
 		iteration = false;
 	} //}}}
@@ -84,11 +91,8 @@ public class PositionManager
 		iteration = true;
 		while(iter.hasNext())
 		{
-			PosBottomHalf bh = (PosBottomHalf)iter.next();
-			if(bh.offset <= offset + length)
-				bh.offset = offset;
-			else
-				bh.offset -= length;
+			((PosBottomHalf)iter.next())
+				.contentRemoved(offset,length);
 		}
 		iteration = false;
 
@@ -97,6 +101,7 @@ public class PositionManager
 	boolean iteration;
 
 	//{{{ Private members
+	private Buffer buffer;
 	private SortedMap positions = new TreeMap();
 	//}}}
 
@@ -155,6 +160,27 @@ public class PositionManager
 				positions.remove(this);
 		} //}}}
 
+		//{{{ contentInserted() method
+		void contentInserted(int offset, int length)
+		{
+			if(offset > this.offset)
+				throw new ArrayIndexOutOfBoundsException();
+			this.offset += length;
+			checkInvariants();
+		} //}}}
+
+		//{{{ contentRemoved() method
+		void contentRemoved(int offset, int length)
+		{
+			if(offset > this.offset)
+				throw new ArrayIndexOutOfBoundsException();
+			if(this.offset <= offset + length)
+				this.offset = offset;
+			else
+				this.offset -= length;
+			checkInvariants();
+		} //}}}
+
 		//{{{ equals() method
 		public boolean equals(Object o)
 		{
@@ -170,6 +196,13 @@ public class PositionManager
 			if(iteration)
 				Log.log(Log.ERROR,this,"Consistency failure");
 			return offset - ((PosBottomHalf)o).offset;
+		} //}}}
+		
+		//{{{ checkInvariants() method
+		private void checkInvariants()
+		{
+			if(offset < 0 || offset > buffer.getLength())
+				throw new ArrayIndexOutOfBoundsException();
 		} //}}}
 	} //}}}
 

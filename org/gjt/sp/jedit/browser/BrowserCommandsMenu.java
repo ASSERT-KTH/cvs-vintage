@@ -33,7 +33,7 @@ import org.gjt.sp.jedit.*;
 //}}}
 
 /**
- * @version $Id: BrowserCommandsMenu.java,v 1.25 2004/07/12 19:25:07 spestov Exp $
+ * @version $Id: BrowserCommandsMenu.java,v 1.26 2004/10/17 04:36:31 spestov Exp $
  * @author Slava Pestov and Jason Ginchereau
  */
 public class BrowserCommandsMenu extends JPopupMenu
@@ -45,11 +45,22 @@ public class BrowserCommandsMenu extends JPopupMenu
 
 		if(files != null)
 		{
-			VFS vfs = VFSManager.getVFSForPath(files[0].deletePath);
+			VFS vfs = VFSManager.getVFSForPath(
+				files[0].deletePath);
 			int type = files[0].type;
+
 			boolean fileOpen = (jEdit.getBuffer(files[0].path) != null);
-			boolean delete = !fileOpen && (vfs.getCapabilities() & VFS.DELETE_CAP) != 0;
-			boolean rename = !fileOpen && (vfs.getCapabilities() & VFS.RENAME_CAP) != 0;
+
+			/* We check this flag separately so that we can
+			delete open files from the favorites. */
+			boolean deletePathOpen = (jEdit.getBuffer(files[0].deletePath) != null);
+
+			boolean delete = !deletePathOpen
+				&& (vfs.getCapabilities()
+				& VFS.DELETE_CAP) != 0;
+			boolean rename = !fileOpen
+				&& (vfs.getCapabilities()
+				& VFS.RENAME_CAP) != 0;
 
 			for(int i = 1; i < files.length; i++)
 			{
@@ -103,6 +114,7 @@ public class BrowserCommandsMenu extends JPopupMenu
 
 			if(rename)
 				add(createMenuItem("rename"));
+
 			if(delete)
 				add(createMenuItem("delete"));
 

@@ -37,7 +37,7 @@ import org.gjt.sp.jedit.*;
  * to the implementations of this class to do so.
  *
  * @author Slava Pestov
- * @version $Id: InputHandler.java,v 1.21 2004/01/14 04:36:50 spestov Exp $
+ * @version $Id: InputHandler.java,v 1.22 2004/10/17 04:36:32 spestov Exp $
  * @see org.gjt.sp.jedit.gui.DefaultInputHandler
  */
 public abstract class InputHandler
@@ -387,6 +387,8 @@ public abstract class InputHandler
 		if(recorder != null)
 			recorder.record(getRepeatCount(),readNextChar);
 
+		view.getStatus().setMessage(null);
+
 		if(getRepeatCount() != 1)
 		{
 			try
@@ -407,8 +409,6 @@ public abstract class InputHandler
 			BeanShell.eval(view,BeanShell.getNameSpace(),readNextChar);
 
 		readNextChar = null;
-
-		view.getStatus().setMessage(null);
 	} //}}}
 
 	//}}}

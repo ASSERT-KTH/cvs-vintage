@@ -30,13 +30,15 @@ import javax.swing.border.CompoundBorder;
 import javax.swing.event.MouseInputAdapter;
 import java.awt.*;
 import java.awt.event.*;
+import java.util.Set;
+import java.util.TreeSet;
 import org.gjt.sp.jedit.*;
 //}}}
 
 /**
  * Text area with a history.
  * @author Slava Pestov
- * @version $Id: HistoryTextArea.java,v 1.2 2004/09/02 05:07:13 spestov Exp $
+ * @version $Id: HistoryTextArea.java,v 1.3 2004/10/17 04:36:32 spestov Exp $
  */
 public class HistoryTextArea extends JTextArea
 {
@@ -45,6 +47,19 @@ public class HistoryTextArea extends JTextArea
 	{
 		super(3,15);
 		controller = new HistoryText(this,name);
+		Set focusForwardTraversalKeys = new TreeSet();
+		focusForwardTraversalKeys.add(
+			KeyStroke.getKeyStroke(KeyEvent.VK_TAB,0));
+		Set focusBackwardTraversalKeys = new TreeSet();
+		focusBackwardTraversalKeys.add(
+			KeyStroke.getKeyStroke(KeyEvent.VK_TAB,
+			InputEvent.SHIFT_MASK));
+		setFocusTraversalKeys(
+			KeyboardFocusManager.FORWARD_TRAVERSAL_KEYS,
+			focusForwardTraversalKeys);
+		setFocusTraversalKeys(
+			KeyboardFocusManager.BACKWARD_TRAVERSAL_KEYS,
+			focusBackwardTraversalKeys);
 	} //}}}
 
 	//{{{ getModel() method
@@ -120,9 +135,16 @@ public class HistoryTextArea extends JTextArea
 			switch(evt.getKeyCode())
 			{
 			case KeyEvent.VK_ENTER:
-				if(evt.isShiftDown())
+				if(evt.isControlDown())
 				{
 					replaceSelection("\n");
+					evt.consume();
+				}
+				break;
+			case KeyEvent.VK_TAB:
+				if(evt.isControlDown())
+				{
+					replaceSelection("\t");
 					evt.consume();
 				}
 				break;
@@ -176,7 +198,9 @@ public class HistoryTextArea extends JTextArea
 		}
 	} //}}}
 	
-	//{{{ Instance variables
+	//}}}
+
+	//{{{ Private variables
 	private HistoryText controller;
 	//}}}
 }

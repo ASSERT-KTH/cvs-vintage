@@ -56,7 +56,7 @@ import org.gjt.sp.util.Log;
  *
  * @author Slava Pestov
  * @author John Gellene (API documentation)
- * @version $Id: JEditTextArea.java,v 1.325 2004/09/05 20:14:11 spestov Exp $
+ * @version $Id: JEditTextArea.java,v 1.326 2004/10/17 04:36:32 spestov Exp $
  */
 public class JEditTextArea extends JComponent
 {
@@ -1276,12 +1276,18 @@ public class JEditTextArea extends JComponent
 
 	//{{{ selectAll() method
 	/**
-	 * Selects all text in the buffer.
+	 * Selects all text in the buffer. Preserves the scroll position.
 	 */
 	public final void selectAll()
 	{
+		int firstLine = getFirstLine();
+		int horizOffset = getHorizontalOffset();
+
 		setSelection(new Selection.Range(0,buffer.getLength()));
 		moveCaretPosition(buffer.getLength(),true);
+
+		setFirstLine(firstLine);
+		setHorizontalOffset(horizOffset);
 	} //}}}
 
 	//{{{ selectLine() method
