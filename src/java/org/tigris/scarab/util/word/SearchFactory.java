@@ -54,18 +54,21 @@ import org.tigris.scarab.util.Log;
  * Returns an instance of the SearchIndex specified in Scarab.properties
  * 
  * @author <a href="mailto:jmcnally@collab.net">John D. McNally </a>
- * @version $Id: SearchFactory.java,v 1.19 2004/11/23 08:28:27 dep4b Exp $
+ * @version $Id: SearchFactory.java,v 1.20 2005/01/06 21:03:55 dabbous Exp $
  */
 public class SearchFactory {
     private static SearchIndex searchIndex;
 
-    public static SearchIndex getInstance() throws InstantiationException {
+    public static SearchIndex getInstance() throws InstantiationException 
+    {
+        SearchIndex result = searchIndex;
 
-        if (searchIndex == null) {
+        if (result == null) 
+        {
             try {
                 YaafiComponentService yaafi = (YaafiComponentService) TurbineServices.getInstance().getService(
                         YaafiComponentService.SERVICE_NAME);
-                searchIndex = (SearchIndex) yaafi.lookup(SearchIndex.class.getName());
+                result = (SearchIndex) yaafi.lookup(SearchIndex.class.getName());                
             } catch (Exception e) {
                 String str = "Could not create new instance of SearchIndex. "
                         + "Could be a result of insufficient permission "
@@ -74,13 +77,31 @@ public class SearchFactory {
                 Log.get().error(str, e);
                 throw new InstantiationException(str); //EXCEPTION
             }
-
         }
-        return searchIndex;
+        return result;
     }
-    
-    public static void setSearchIndex(SearchIndex searchIndex){
+
+    /**
+     * Release a searchIndex after it as been looked up from @getInstance()
+     * @param searchIndex
+     */
+    public static void releaseInstance(SearchIndex searchIndex) 
+    {
+        YaafiComponentService yaafi = (YaafiComponentService) TurbineServices.getInstance().getService(
+                                                              YaafiComponentService.SERVICE_NAME);
+        searchIndex.clear();
+        yaafi.release(searchIndex);
+    }
+
+
+    /**
+     * Needed for unit testing only
+     * @param searchIndex
+     */
+    public static void setSearchIndex(SearchIndex searchIndex)
+    {
         SearchFactory.searchIndex = searchIndex;
     }
+    
 }
 

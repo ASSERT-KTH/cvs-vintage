@@ -104,7 +104,7 @@ import org.tigris.scarab.reports.ReportBridge;
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: AbstractScarabModule.java,v 1.125 2004/12/27 22:43:35 jorgeuriarte Exp $
+ * @version $Id: AbstractScarabModule.java,v 1.126 2005/01/06 21:03:54 dabbous Exp $
  */
 public abstract class AbstractScarabModule
     extends BaseObject
@@ -1183,6 +1183,14 @@ public abstract class AbstractScarabModule
     private List getAllRModuleOptions(Attribute attribute, IssueType issueType)
         throws Exception
     {
+        if(attribute == null)
+        {
+          // during initilaization of a new query, no
+          // attributes are available.
+          // This check avoids a NLP
+          return null;
+        }
+
         List rModOpts = null;
         Object obj = ScarabCache.get(this, GET_ALL_R_MODULE_OPTIONS, 
                                      attribute, issueType); 
@@ -1327,9 +1335,9 @@ public abstract class AbstractScarabModule
                         }
                     }
                 }
+                getMethodResult().put(rModOpts, this, GET_LEAF_R_MODULE_OPTIONS, 
+                                      attribute, issueType, activeBool); 
             }
-            getMethodResult().put(rModOpts, this, GET_LEAF_R_MODULE_OPTIONS, 
-                                  attribute, issueType, activeBool); 
         }
         else 
         {

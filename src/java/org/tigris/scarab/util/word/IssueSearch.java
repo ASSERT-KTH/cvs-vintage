@@ -113,7 +113,7 @@ import org.tigris.scarab.util.ScarabException;
  * not a more specific type of Issue.
  *
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: IssueSearch.java,v 1.130 2004/12/03 16:10:11 dep4b Exp $
+ * @version $Id: IssueSearch.java,v 1.131 2005/01/06 21:03:55 dabbous Exp $
  */
 public class IssueSearch 
     extends Issue
@@ -1867,7 +1867,9 @@ public class IssueSearch
             matchingIssueIds = searchIndex.getRelatedIssues();    
         }
 
+        SearchFactory.releaseInstance(searchIndex);
         return matchingIssueIds;
+
     }
 
     private void addStateChangeQuery(StringBuffer from)

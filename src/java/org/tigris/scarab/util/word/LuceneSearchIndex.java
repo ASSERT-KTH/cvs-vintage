@@ -89,7 +89,7 @@ import com.workingdogs.village.Record;
  * Support for searching/indexing text
  *
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: LuceneSearchIndex.java,v 1.1 2004/11/23 08:28:27 dep4b Exp $
+ * @version $Id: LuceneSearchIndex.java,v 1.2 2005/01/06 21:03:55 dabbous Exp $
  */
 public class LuceneSearchIndex 
     implements SearchIndex, Configurable,Contextualizable,Initializable
@@ -661,10 +661,7 @@ public class LuceneSearchIndex
             }
         }        
 
-        attributeIds = new ArrayList(5);
-        queryText = new ArrayList(5);
-        attachmentIds = new ArrayList(2);
-        attachmentQueryText = new ArrayList(2);
+        clear();
     }
     
     private String getRealPath(String path)
@@ -679,5 +676,17 @@ public class LuceneSearchIndex
             absolutePath = new File(applicationRoot, path).getAbsolutePath();
         }
         return absolutePath;
-    }    
+    }
+
+    /* (non-Javadoc)
+     * @see org.tigris.scarab.util.word.SearchIndex#clear()
+     */
+    public void clear()
+    {
+        attributeIds        = new ArrayList(5);
+        queryText           = new ArrayList(5);
+        attachmentIds       = new ArrayList(2);
+        attachmentQueryText = new ArrayList(2);
+    }
+    
 }
