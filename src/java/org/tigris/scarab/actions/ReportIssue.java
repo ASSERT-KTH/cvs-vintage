@@ -83,7 +83,7 @@ import org.tigris.scarab.tools.ScarabRequestTool;
     This class is responsible for report issue forms.
     ScarabIssueAttributeValue
     @author <a href="mailto:jmcnally@collab.net">John D. McNally</a>
-    @version $Id: ReportIssue.java,v 1.17 2001/06/27 22:47:05 jmcnally Exp $
+    @version $Id: ReportIssue.java,v 1.18 2001/06/27 23:43:41 elicia Exp $
 */
 public class ReportIssue extends VelocityAction
 {
@@ -263,6 +263,7 @@ public class ReportIssue extends VelocityAction
                 Attachment attachment = new Attachment();
                 Group group = intake.get("Attachment", 
                                    attachment.getQueryKey(), false);
+System.out.println("wizard attachment group= " + group);
                 if ( group != null ) 
                 {
                     group.setProperties(attachment);
