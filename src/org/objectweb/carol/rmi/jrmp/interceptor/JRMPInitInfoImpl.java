@@ -28,8 +28,9 @@
 package org.objectweb.carol.rmi.jrmp.interceptor;
 
 //java import
-import java.util.Enumeration;
-import java.util.Hashtable;
+import java.util.ArrayList;
+import java.util.Iterator;
+
 
 /** 
  * Class <code>JRMPInitInfoImpl</code> is the CAROL JRMP Initializer Implementation
@@ -43,35 +44,27 @@ public class JRMPInitInfoImpl implements JInitInfo {
     /**
      * Request Server Interceptor Hashtable
      */
-    protected Hashtable serverInterceptors = new Hashtable();
+    protected ArrayList serverInterceptors = new ArrayList();
 
     /**
      * Request Client Interceptor Hashtable
      */
-    protected Hashtable clientInterceptors = new Hashtable();
+    protected ArrayList clientInterceptors = new ArrayList();
 
     /**
      * add client interceptor
      * @param JClientRequestInterceptor the client interceptor to add
      */
-    public void add_client_request_interceptor(JClientRequestInterceptor interceptor) throws JDuplicateName {
-	    if (clientInterceptors.containsKey(interceptor.name())) {
-		throw new JDuplicateName(interceptor.name()); 
-	    } else {
-		clientInterceptors.put(interceptor.name(), interceptor);
-	    }
+    public void add_client_request_interceptor(JClientRequestInterceptor interceptor) {
+		clientInterceptors.add(interceptor);
     }
 
     /**
      * add server interceptor
      * @param JServerRequestInterceptor the server interceptor to add
      */
-    public void add_server_request_interceptor(JServerRequestInterceptor interceptor) throws JDuplicateName {
-	if (serverInterceptors.containsKey(interceptor.name())) {
-	    throw new JDuplicateName(interceptor.name()); 
-	} else {
-	    serverInterceptors.put(interceptor.name(), interceptor);
-	}
+    public void add_server_request_interceptor(JServerRequestInterceptor interceptor) {
+	    serverInterceptors.add(interceptor);
     }
 
     /**
@@ -80,10 +73,10 @@ public class JRMPInitInfoImpl implements JInitInfo {
      */
     public JClientRequestInterceptor [] getClientRequestInterceptors() {
 	JClientRequestInterceptor [] result = new JClientRequestInterceptor [clientInterceptors.size()];
-	int i = 0;
-	for (Enumeration e = clientInterceptors.elements() ; e.hasMoreElements() ;) {
-	    result[i] = (JClientRequestInterceptor) e.nextElement(); 
-	    i++;
+	int j = 0;
+	for (Iterator i = clientInterceptors.iterator() ; i.hasNext() ;) {
+		result[j] = (JClientRequestInterceptor)i.next(); 
+		j++;
 	}
 	return result;
     }
@@ -94,11 +87,16 @@ public class JRMPInitInfoImpl implements JInitInfo {
      */
     public JServerRequestInterceptor [] getServerRequestInterceptors() {
 	JServerRequestInterceptor [] result = new JServerRequestInterceptor [serverInterceptors.size()];
-	int i = 0;
-	for (Enumeration e = serverInterceptors.elements() ; e.hasMoreElements() ;) {
-	    result[i] = (JServerRequestInterceptor) e.nextElement(); 
-	    i++;
-	}	
+	int j = 0;
+	for (Iterator i = serverInterceptors.iterator() ; i.hasNext() ;) {
+		result[j] = (JServerRequestInterceptor)i.next(); 
+		j++;
+	}
 	return result;
+    }
+    
+    public void clear() {
+		serverInterceptors.clear();
+		clientInterceptors.clear();
     }
 }

@@ -39,12 +39,18 @@ import java.rmi.server.Operation;
 import java.rmi.server.RemoteCall;
 import java.rmi.server.RemoteObject;
 import java.rmi.server.UID;
+import java.util.Arrays;
 
 import org.objectweb.carol.rmi.jrmp.interceptor.JClientInterceptorHelper;
+import org.objectweb.carol.rmi.jrmp.interceptor.JClientRequestInfo;
 import org.objectweb.carol.rmi.jrmp.interceptor.JClientRequestInterceptor;
+import org.objectweb.carol.rmi.jrmp.interceptor.JInitInfo;
+import org.objectweb.carol.rmi.jrmp.interceptor.JInitializer;
 import org.objectweb.carol.rmi.jrmp.interceptor.JInterceptorHelper;
 import org.objectweb.carol.rmi.jrmp.interceptor.JInterceptorStore;
-import org.objectweb.carol.rmi.jrmp.interceptor.RemoteKey;
+import org.objectweb.carol.rmi.jrmp.interceptor.JRMPClientRequestInfoImpl;
+import org.objectweb.carol.rmi.jrmp.interceptor.JRMPInitInfoImpl;
+import org.objectweb.carol.util.configuration.TraceCarol;
 
 import sun.rmi.server.UnicastRef;
 import sun.rmi.transport.Connection;
@@ -64,12 +70,22 @@ public class JUnicastRef extends UnicastRef {
      * flag for local server
      */
     private transient boolean localRef = false;
-
+	
+	/**
+	 * flag for InetAddress 
+	 */
+	private transient byte [] raddr = null;
+	
+	/**
+	 * flag for UID
+	 */
+	private transient UID ruid = null;
+	
     /**
      * Client Interceptor for context propagation
      */
     protected transient JClientRequestInterceptor [] cis = null;
-
+    
     /**
      * empty constructor
      */
@@ -92,6 +108,8 @@ public class JUnicastRef extends UnicastRef {
     public JUnicastRef(LiveRef liveRef, JClientRequestInterceptor [] cis) {
         super(liveRef);
 	this.cis=cis;
+	this.raddr=JInterceptorHelper.getInetAddress();
+	this.ruid=JInterceptorHelper.getSpaceID();
     }
 
     /**
@@ -139,8 +157,9 @@ public class JUnicastRef extends UnicastRef {
 
             try {
                 Class rtype = method.getReturnType();
-                if (rtype == void.class)
-                    return null;
+                if (rtype == void.class) {
+                		return null;
+                } 
                 ObjectInput in = call.getInputStream();
                 Object returnValue = unmarshalValue(rtype, in);
                 alreadyFreed = true;
@@ -260,17 +279,17 @@ public class JUnicastRef extends UnicastRef {
      */
     public void readExternal(ObjectInput in, boolean newFormat)
         throws IOException, ClassNotFoundException {
-        byte[] a = new byte[in.readInt()];
-        in.read(a);
-        UID uid = UID.read(in);
-        RemoteKey rk = new RemoteKey(uid, a);
-        localRef = JInterceptorHelper.getRemoteKey().equals(rk);
+        raddr = new byte[in.readInt()];
+        in.read(raddr);
+        ruid = UID.read(in);
+        localRef = ((Arrays.equals(raddr, JInterceptorHelper.getInetAddress()))
+        	&&(ruid.equals(JInterceptorHelper.getSpaceID())));
 	// write initializers array in UTF
 	String[] ia = new String [in.readInt()];
 	for (int i=0; i< ia.length; i++) {
 	    ia[i] = in.readUTF();
 	}
-        cis = JInterceptorStore.setRemoteInterceptors(rk,ia);
+        cis = JInterceptorStore.setRemoteInterceptors(raddr, ruid,ia);
         ref = LiveRef.read(in, newFormat);
     }
 
@@ -281,16 +300,16 @@ public class JUnicastRef extends UnicastRef {
      * @param newFormat the boolean new format
      */
     public void writeExternal(ObjectOutput out, boolean newFormat) throws IOException {
-        RemoteKey rk = JInterceptorHelper.getRemoteKey();
-        out.writeInt(rk.getInetA().length);
-        out.write(rk.getInetA());
-        rk.getUid().write(out);
+        out.writeInt(raddr.length);
+        out.write(raddr);
+        ruid.write(out);
 	// write initializers array in UTF
 	String [] ia = JInterceptorStore.getJRMPInitializers();
 	out.writeInt(ia.length);
 	for (int i=0; i< ia.length; i++) {
 	    out.writeUTF(ia[i]);
 	}
-        ref.write(out, newFormat);
+    ref.write(out, newFormat);
+    out.flush();
     }
 }

@@ -58,7 +58,6 @@ public class JrmpPRODelegate implements PortableRemoteObjectDelegate {
      * Constructor 
      */ 
     public JrmpPRODelegate() {
-	JInterceptorStore.initLocalInterceptors();
 	sis=JInterceptorStore.getLocalServerInterceptors();
 	cis=JInterceptorStore.getLocalClientInterceptors();
     }

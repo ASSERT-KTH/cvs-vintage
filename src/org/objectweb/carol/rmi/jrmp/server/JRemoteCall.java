@@ -34,6 +34,7 @@ import java.rmi.UnmarshalException;
 import java.rmi.server.ObjID;
 
 import org.objectweb.carol.rmi.jrmp.interceptor.JClientInterceptorHelper;
+import org.objectweb.carol.rmi.jrmp.interceptor.JClientRequestInfo;
 import org.objectweb.carol.rmi.jrmp.interceptor.JClientRequestInterceptor;
 
 import sun.rmi.transport.Connection;
@@ -50,7 +51,7 @@ public class JRemoteCall extends StreamRemoteCall {
     /**
      * Client Interceptor for context propagation
      */
-    protected JClientRequestInterceptor [] cis = null;
+    protected JClientRequestInterceptor [] cis = null;  
 
     /**
      * Constructor for client side call
@@ -73,8 +74,7 @@ public class JRemoteCall extends StreamRemoteCall {
      * @deprecated
      */
     public void executeCall() throws Exception {
-        Exception ex2 = null;
-        try {
+          try {
             super.executeCall();
         } catch (Exception e) {
             // if it is our dummy exception read the real one

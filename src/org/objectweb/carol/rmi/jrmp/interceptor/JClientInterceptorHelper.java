@@ -31,6 +31,8 @@ package org.objectweb.carol.rmi.jrmp.interceptor;
 import java.io.IOException;
 import java.io.ObjectInput;
 import java.io.ObjectOutput;
+import java.util.Collection;
+import java.util.Iterator;
 
 import org.objectweb.carol.util.configuration.TraceCarol;
 /**
@@ -50,21 +52,23 @@ public class JClientInterceptorHelper extends JInterceptorHelper {
      * @exception IOException if an exception occur with the ObjectOutput
      */
     public static void send_request(ObjectOutput out, 
-				    JClientRequestInterceptor [] cis, 
+				    JClientRequestInterceptor [] cis,
 				    boolean localRef) throws IOException {
 	if ((cis==null)||(cis.length==0)) {
 	    if (TraceCarol.isDebugRmiCarol()) {
-		TraceCarol.debugRmiCarol("JClientInterceptorHelper send request with no contexts");
+		TraceCarol.debugRmiCarol("JClientInterceptorHelper send request without interceptors");
 	    }
 	    // send no service context
 	    out.writeInt(NO_CTX);
 	} else { 
-	    JClientRequestInfo ri = new  JRMPClientRequestInfoImpl();
+		JClientRequestInfo jrc = new JRMPClientRequestInfoImpl();
 	    for (int i = 0; i < cis.length; i++) {
-		cis[i].send_request(ri);		
+		cis[i].send_request(jrc);		
 	    }
-	    setClientContextInOutput(out, ri, localRef);
+	    setClientContextInOutput(out, jrc, localRef);
 	}
+		// flush and reset output stream for garbage collection
+		out.flush();
     }
 
 
@@ -76,7 +80,7 @@ public class JClientInterceptorHelper extends JInterceptorHelper {
      * @exception IOException if an exception occur with the ObjectOutput 
      */
     public static void send_poll(ObjectOutput out, 
-				 JClientRequestInterceptor [] cis, 
+				 JClientRequestInterceptor [] cis,
 				 boolean localRef) throws IOException {
     }
 
@@ -90,18 +94,19 @@ public class JClientInterceptorHelper extends JInterceptorHelper {
     public static void receive_reply(ObjectInput in, JClientRequestInterceptor [] cis)throws IOException {
 	try {
 	    int ctxValue= in.readInt();
+		JClientRequestInfo jrc = new JRMPClientRequestInfoImpl();
 	    if ((cis == null)||(cis.length==0)) {
 		// no interceptions
 		if (TraceCarol.isDebugRmiCarol()) {
-		    TraceCarol.debugRmiCarol("JClientInterceptorHelper receive reply with no contexts");
+		    TraceCarol.debugRmiCarol("JClientInterceptorHelper receive reply without interceptors");
 		}
-		getClientContextFromInput(in, ctxValue, false);
+		getClientRequestContextFromInput(in, ctxValue, jrc);
 	    } else {
 		// context and interception
 		if (TraceCarol.isDebugRmiCarol()) {
 		    TraceCarol.debugRmiCarol("JClientInterceptorHelper receive reply contexts");
 		}
-		JClientRequestInfo ri = new JRMPClientRequestInfoImpl(getClientContextFromInput(in, ctxValue, true));
+		JClientRequestInfo ri = getClientRequestContextFromInput(in, ctxValue, jrc);
 		for (int i = 0; i < cis.length; i++) {
 		    cis[i].receive_reply(ri);		
 		}
@@ -121,18 +126,19 @@ public class JClientInterceptorHelper extends JInterceptorHelper {
     public static void receive_exception(ObjectInput in, JClientRequestInterceptor [] cis) throws IOException {
 	try {	  
 	    int ctxValue= in.readInt();
+		JClientRequestInfo jrc = new JRMPClientRequestInfoImpl();
 	    if ((cis == null)||(cis.length==0)) {
 		// no interceptions
 		if (TraceCarol.isDebugRmiCarol()) {
-		    TraceCarol.debugRmiCarol("JClientInterceptorHelper receive exception with no contexts");
+		    TraceCarol.debugRmiCarol("JClientInterceptorHelper receive exception without interceptors");
 		}
-		getClientContextFromInput(in, ctxValue, false);
+		getClientRequestContextFromInput(in, ctxValue, jrc);
 	    } else {
 		// context and interception
 		if (TraceCarol.isDebugRmiCarol()) {
 		    TraceCarol.debugRmiCarol("JClientInterceptorHelper receive exception contexts");
 		}
-		JClientRequestInfo ri = new JRMPClientRequestInfoImpl(getClientContextFromInput(in, ctxValue, true));
+		JClientRequestInfo ri = getClientRequestContextFromInput(in, ctxValue, jrc);
 		for (int i = 0; i < cis.length; i++) {
 		    cis[i].receive_exception(ri);		
 		}
@@ -155,18 +161,19 @@ public class JClientInterceptorHelper extends JInterceptorHelper {
     public static void receive_other(ObjectInput in, JClientRequestInterceptor [] cis) throws IOException {
 	try {
 	    int ctxValue= in.readInt();
+		JClientRequestInfo jrc = new JRMPClientRequestInfoImpl();
 	    if ((cis == null)||(cis.length==0)) {
 		// no interceptions
 		if (TraceCarol.isDebugRmiCarol()) {
-		    TraceCarol.debugRmiCarol("JClientInterceptorHelper receive other with no contexts");
+		    TraceCarol.debugRmiCarol("JClientInterceptorHelper receive other without interceptors");
 		}
-		getClientContextFromInput(in, ctxValue, false);
+		getClientRequestContextFromInput(in, ctxValue, jrc);
 	    } else {
 		// context and interception
 		if (TraceCarol.isDebugRmiCarol()) {
 		    TraceCarol.debugRmiCarol("JClientInterceptorHelper receive other contexts");
 		}
-		JClientRequestInfo ri = new JRMPClientRequestInfoImpl(getClientContextFromInput(in, ctxValue, true));
+		JClientRequestInfo ri = getClientRequestContextFromInput(in, ctxValue,jrc);
 		for (int i = 0; i < cis.length; i++) {
 		    cis[i].receive_other(ri);		
 		}
@@ -182,46 +189,35 @@ public class JClientInterceptorHelper extends JInterceptorHelper {
      * @param ObjectInput in the object input stream
      * @param int the context value
      * @param boolean do not build Request Info
+     * @return jrc the client request info
      */
-    public static JServiceContext [] getClientContextFromInput(ObjectInput in, 
+    public static JClientRequestInfo getClientRequestContextFromInput(ObjectInput in, 
 							       int ctxValue, 
-							       boolean request) throws ClassNotFoundException, 
+							       JClientRequestInfo jrc) throws ClassNotFoundException, 
 										       IOException {
 	if (ctxValue==NO_CTX) {
 	    if (TraceCarol.isDebugRmiCarol()) {
-		TraceCarol.debugRmiCarol("JClientInterceptorHelper getObjectFromInput no context, request="+request);
+		TraceCarol.debugRmiCarol("JClientInterceptorHelper getObjectFromInput no context");
 	    }
-	    return null;
-	} else if (ctxValue==REMOTE_CTX) {
+	    return jrc;
+	}  else if (ctxValue==REMOTE_CTX) {
 	    if (TraceCarol.isDebugRmiCarol()) {
-		TraceCarol.debugRmiCarol("JClientInterceptorHelper getObjectFromInput remote, request="+request);
+		TraceCarol.debugRmiCarol("JClientInterceptorHelper getObjectFromInput remote");
 	    }
 	    int sz = in.readInt();
-	    if (request) {
-		JServiceContext [] jcs = new JServiceContext[sz];
 		for (int i=0; i<sz; i++) {
-		    jcs[i] = (JServiceContext)in.readObject();
+		    jrc.add_request_service_context((JServiceContext)in.readObject());
 		}
-		return jcs;
-	    } else {
-		for (int i=0; i<sz; i++) {
-		    in.readObject();
-		}
-		return null;
-	    }
+		return jrc;
 	} else if (ctxValue==LOCAL_CTX) {
 	    // local context case 
 	    int id = in.readInt();
 	    // local context
 	    if (TraceCarol.isDebugRmiCarol()) {
-		TraceCarol.debugRmiCarol("JClientInterceptorHelper getObjectFromInput local id("+id+"), request="+request);
+		TraceCarol.debugRmiCarol("JClientInterceptorHelper getObjectFromInput local id("+id+")");
 	    }
-	    if (request) {
-		return (JServiceContext [])JContextStore.getObject(id);
-	    } else {
-		JContextStore.getObject(id);
-		return null;
-	    }
+		jrc.add_all_request_service_context((Collection)JContextStore.getObject(id));
+		return jrc;
 	} else {
 	    throw new IOException("Unknow context type:" + ctxValue);
 	}
@@ -248,20 +244,27 @@ public class JClientInterceptorHelper extends JInterceptorHelper {
 	    out.writeInt(LOCAL_CTX);
 	    out.writeInt(k);
 	    if (TraceCarol.isDebugRmiCarol()) {
-		TraceCarol.debugRmiCarol("JClientInterceptorHelper send request with local contexts id("+k+")");
-	    }
-	    // send local service context		    
+			TraceCarol.debugRmiCarol("JClientInterceptorHelper send request with local contexts id("+k+")");
+			// print the contexts sended
+			for (Iterator i = ((Collection)ctx).iterator(); i.hasNext();) {
+				TraceCarol.debugRmiCarol("ctx:"  + i.next());
+			}		
+	    }	    
 	} else {
-	    if (TraceCarol.isDebugRmiCarol()) {
-		TraceCarol.debugRmiCarol("JClientInterceptorHelper send request with remote contexts");
-	    }
 	    // send remotes service context
 	    out.writeInt(REMOTE_CTX);
-	    JServiceContext [] jcs = ri.get_all_request_service_context();
-	    out.writeInt(jcs.length);
-	    for (int i=0; i<jcs.length; i++) {
-		out.writeObject(jcs[i]);
-	    }
+	   	Collection allCtx = ri.get_all_request_service_context();
+	    out.writeInt(allCtx.size());
+		for (Iterator i = allCtx.iterator(); i.hasNext();) {
+		out.writeObject(i.next());
+		}
+		if (TraceCarol.isDebugRmiCarol()) {
+		 TraceCarol.debugRmiCarol("JClientInterceptorHelper send request with remote contexts");	
+		 // print the contexts sended
+		 for (Iterator i = allCtx.iterator(); i.hasNext();) {
+			 TraceCarol.debugRmiCarol("ctx:"  + i.next());
+		 }		
+		}
 	}
     }
 }

@@ -28,8 +28,9 @@
 package org.objectweb.carol.rmi.jrmp.interceptor;
 
 //java import
-import java.util.Enumeration;
-import java.util.Hashtable;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Iterator;
 
 /**
   * Class <code>JRMPServerRequestInfoImpl</code> is the CAROL JRMP Server Request info (JServerRequestInfo) Implementation
@@ -41,44 +42,17 @@ import java.util.Hashtable;
 public class JRMPServerRequestInfoImpl implements JServerRequestInfo {
 
     /**
-     * exiting contexts, true if there is one or more context 
+     * Request Service Context ArrayList
      */
-    public transient boolean contexts = false;
+    protected ArrayList scTable = new ArrayList();  
 
-    /**
-     * Request Service Context HasTable
-     */
-    protected Hashtable scRequestTable = null;  
 
-    /**
-     * Reply Service Context HasTable
-     */
-    protected Hashtable scReplyTable = null;  
 
     /**
      * Empty constructor
      * available for Request Information
      */
     public JRMPServerRequestInfoImpl () {
-	scReplyTable = new Hashtable();
-    }
-
-    /**
-     * Full constructor 
-     * available for Reply Information
-     * @param JServiceContext [] the table for Reply SC instantiation 
-     */
-    public JRMPServerRequestInfoImpl (JServiceContext [] scs) {
-	if (scs==null) {
-	    // empty, no contexts
-	} else {
-	    scReplyTable = new Hashtable();
-	    scRequestTable = new Hashtable();
-	    for (int i = 0; i < scs.length; i++) {
-		scRequestTable.put(new Integer(scs[i].getContextId()), scs[i]);
-		contexts=true;	
-	    }
-	}
     }
 
     /**
@@ -86,20 +60,18 @@ public class JRMPServerRequestInfoImpl implements JServerRequestInfo {
      * @param JServiceContext the context to add
      * @param boolean replace if true replace the existing service context
      */
-    public void add_reply_service_context(JServiceContext jServiceContext, boolean replace) {
-	if (scReplyTable!=null) {
-	    Integer ctxId = new Integer(jServiceContext.getContextId());
-	    contexts=true;
-	    if (replace) {
-		scReplyTable.put(ctxId, jServiceContext);
-	    } else {
-		if (!scReplyTable.containsKey(ctxId)) {
-		    scReplyTable.put(ctxId, jServiceContext);
-		}	
-	    }
-	}
+    public void add_reply_service_context(JServiceContext jServiceContext) {
+		scTable.add(jServiceContext);
     }
-
+	
+	/**
+	*Add the all the reply service context 
+	* @param c Services contexts
+	*/
+   public void add_all_reply_service_context(Collection c) {
+	scTable.addAll(c);
+   }  
+   
     /**
      * Get the context specifie by this id 
      * if there is no context corresponding with this id
@@ -108,33 +80,26 @@ public class JRMPServerRequestInfoImpl implements JServerRequestInfo {
      * @return JServiceContex the specific ServiceContext
      */
     public JServiceContext get_request_service_context(int id) {
-	if (scRequestTable!=null) {
-	    return (JServiceContext)scRequestTable.get(new Integer(id));
-	} else {
-	    return null;
-	}
+		JServiceContext jc = null;
+		for (Iterator i = scTable.iterator() ; i.hasNext() ;) {
+			jc = (JServiceContext)i.next(); 
+			if (jc.getContextId()==id) {
+				return jc;
+			}
+		}
+		return null;
     }
 
     /**
      * Get the all the request service context 
      * if there is no context
      * return null
-     * @return JServiceContext []  the  ServiceContexts
+     * @return Collection  the  ServiceContexts
      */
-    public JServiceContext [] get_all_request_service_context() {
-	if (scRequestTable!=null) {
-	    JServiceContext [] result = new JServiceContext [scRequestTable.size()];
-	    int i =0;
-	    for (Enumeration e = scRequestTable.elements() ; e.hasMoreElements() ;) {
-		result[i] = (JServiceContext)(e.nextElement());
-		i ++;
-	    }
-	    return result;
-	} else {
-	    return null;
-	}
-    }  
-
+    public Collection get_all_request_service_context() {
+	return scTable;
+    }      
+    
     /**
      * Get the context specifie by this id 
      * if there is no context corresponding with this id
@@ -143,38 +108,36 @@ public class JRMPServerRequestInfoImpl implements JServerRequestInfo {
      * @return JServiceContex the specific ServiceContext
      */
     public JServiceContext get_reply_service_context(int id) {
-	if (scReplyTable!=null) {
-	    return (JServiceContext)scReplyTable.get(new Integer(id));
-	} else {
-	    return null;
-	}
+		JServiceContext jc = null;
+		for (Iterator i = scTable.iterator() ; i.hasNext() ;) {
+			jc = (JServiceContext)i.next(); 
+			if (jc.getContextId()==id) {
+				return jc;
+			}
+		}
+		return null;
     }
 
     /**
-     * Get the all the reply service context 
-     * if there is no context
-     * return null
-     * @return JServiceContext []  the  ServiceContexts
+     * Get the all the reply service context
+     * @return Collection the  ServiceContexts
      */
-    public JServiceContext [] get_all_reply_service_context() {
-	if (scReplyTable!=null) {
-	    JServiceContext [] result = new JServiceContext [scReplyTable.size()];
-	    int i = 0;
-	    for (Enumeration e = scReplyTable.elements() ; e.hasMoreElements() ;) {
-		result[i] = ((JServiceContext)e.nextElement());	 
-		i ++;
-	    }
-	    return result;
-	} else {
-	   return null;
-	}
+    public Collection get_all_reply_service_context() {
+	return scTable;
     }  
 
-    /** 
-     * true if exit one or more context
-     */
-    public boolean hasContexts() {
-	return contexts;
-    }
-
+	/** 
+	 * true if exit one or more context
+	 */
+	public boolean hasContexts() {
+			return !(scTable.isEmpty());
+	}
+    
+	/**
+	 * clear the service contexts table
+	 *
+	 */
+	public void clearAllContexts() {
+			scTable.clear();
+	}
 }

@@ -28,6 +28,7 @@
 package org.objectweb.carol.jtests.conform.basic.clients;
 
 // java import
+import java.net.InetAddress;
 import java.rmi.Remote;
 
 // javax import 
@@ -43,6 +44,7 @@ import junit.framework.TestCase;
 import org.objectweb.carol.jtests.conform.basic.server.BasicObjectItf;
 import org.objectweb.carol.jtests.conform.basic.server.BasicMultiObjectItf;
 import org.objectweb.carol.jtests.conform.basic.server.BasicObjectRef;
+import org.objectweb.carol.rmi.jrmp.interceptor.JInterceptorHelper;
 
 /*
  * Class <code>MultiProtocolTests</code> is a Junit BasicTest Test :

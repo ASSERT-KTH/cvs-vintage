@@ -27,6 +27,8 @@
  */
 package org.objectweb.carol.rmi.jrmp.interceptor;
 
+import java.util.Collection;
+
 /**
  * Class <code>JRequestInfo</code> is the CAROL JRMP general Request info
  *
@@ -44,14 +46,14 @@ public interface JRequestInfo {
      */
     public JServiceContext get_request_service_context(int id);
 
-    /**
-     * Get the all the request service context 
-     * if there is no context
-     * return null
-     * @return JServiceContext []  the  ServiceContexts
-     */
-    public JServiceContext [] get_all_request_service_context();    
-
+	/**
+	 * Get the all the request service context 
+	 * if there is no context
+	 * return null
+	 * @return Collection  the  ServiceContexts
+	 */
+	public Collection get_all_request_service_context();    
+		
     /**
      * Get the context specifie by this id 
      * if there is no context corresponding with this id
@@ -65,12 +67,18 @@ public interface JRequestInfo {
      * Get the all the reply service context 
      * if there is no context
      * return null
-     * @return JServiceContext []  the  ServiceContexts
+     * @return Collection  the  ServiceContexts Array
      */
-    public JServiceContext [] get_all_reply_service_context();
-
+    public Collection get_all_reply_service_context();
+	
     /** 
      * true if exit one or more context
      */
     public boolean hasContexts();
+    
+	/**
+	 * clear the service contexts table
+	 *
+	 */
+	public void clearAllContexts();
 }

@@ -83,7 +83,7 @@ public class DummyServerInterceptor implements  JServerRequestInterceptor {
      */
     public void send_reply(JServerRequestInfo jri)throws IOException {	
 	//System.out.println("JRMP ServerInterceptor Add/Send Dummy Server Service Context");
-	jri.add_reply_service_context(new DummyServerServiceContext(SERVER_CTX_ID, java.net.InetAddress.getLocalHost().getHostName()), true);
+	jri.add_reply_service_context(new DummyServerServiceContext(SERVER_CTX_ID, java.net.InetAddress.getLocalHost().getHostName()));
     }
 
     

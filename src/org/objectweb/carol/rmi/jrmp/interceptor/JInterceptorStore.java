@@ -27,9 +27,10 @@
  */
 package org.objectweb.carol.rmi.jrmp.interceptor;
 
+import java.rmi.server.UID;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Enumeration;
-import java.util.HashMap;
 import java.util.Properties;
 
 import org.objectweb.carol.util.configuration.TraceCarol;
@@ -53,30 +54,46 @@ public class JInterceptorStore {
      */
     private static boolean init = false;
 
-    /**
-     * private Interceptor for Context propagation
-     */
-    private static JServerRequestInterceptor [] sis = null;
+	/**
+	 * private Interceptor for Context propagation
+	 */
+	private static JServerRequestInterceptor [] sis = null;
 
-    /**
-     * private Interceptor for Context propagation
-     */
-    private static JClientRequestInterceptor [] cis = null;
-
+   /**
+	* private Interceptor for Context propagation
+	*/
+   private static JClientRequestInterceptor [] cis = null;
+   
+   /**
+	* private remote Interceptor cache for Context propagation
+	*/
+   private static JClientRequestInterceptor [] rcis = null; 
+   
+   /**
+	* private remote UID for cache
+	*/
+   private static UID uid = null;
+   
+   /**
+    * private remote addr for cache 
+    */
+   private static byte [] address = null;
+	
     /**
      * private Interceptors Initializers for Context propagation
      */
     private static String [] initializers = null;
-
-    /** 
-     * private Remote Client Interceptor for Context propagation
+    
+    /**
+     *  
+     * JRMPINfo Impl
      */
-    private static HashMap remoteClientInterceptors = new HashMap();
-   
+	private static JRMPInitInfoImpl jrmpInfo = new JRMPInitInfoImpl();	
+    
     /**
      * Intialize interceptors for a carol server
      */
-    public static void initLocalInterceptors() {
+    static {
 	if (!init) {
 	    // Load the Interceptors
 	    try {
@@ -89,7 +106,10 @@ public class JInterceptorStore {
 		}	    
 		sis = jrmpInfo.getServerRequestInterceptors();
 		cis = jrmpInfo.getClientRequestInterceptors();
-		init = true;
+		// fisrt remote reference = local reference
+		rcis = cis;
+		uid = JInterceptorHelper.getSpaceID();
+		address=JInterceptorHelper.getInetAddress();
 	    } catch ( Exception e) {
 		//we did not found the interceptor do nothing but a trace ?
 		TraceCarol.error("JrmpPRODelegate(), No interceptors found", e);
@@ -137,32 +157,35 @@ public class JInterceptorStore {
 	}
     }
 
- 
-    /**
-     * Set the remote client interceptor
-     */
-    public static JClientRequestInterceptor [] setRemoteInterceptors(RemoteKey rk, String [] ins) {
-	if (remoteClientInterceptors.containsKey(rk)) {
-	    return (JClientRequestInterceptor [])remoteClientInterceptors.get(rk);
-	} else {	    
-	    // Load the Interceptors
-	    try {
-		JInitInfo jrmpInfo = new JRMPInitInfoImpl();
-		for (int i = 0; i < ins.length ; i ++) {
-		    JInitializer jinit = (JInitializer) Class.forName(ins[i]).newInstance();
-		    jinit.pre_init(jrmpInfo);
-		    jinit.post_init(jrmpInfo);
+	/**
+	 * Get interceptor if exist
+	 * @param raddr The remote adress (later)
+	 * @param ruid The remote uid (later)
+	 * @param ia iterceptors initializers
+	 * @return JClientRequestInterceptors [] , the interceptors
+	 */
+	public synchronized static JClientRequestInterceptor []  setRemoteInterceptors(byte [] raddr,UID ruid,String [] ia) {
+		if ((Arrays.equals(raddr, address))
+		&&(ruid.equals(uid))) {
+				return rcis;
+		} else {
+			jrmpInfo.clear();	
+		    for (int i = 0; i < ia.length ; i ++) {
+			JInitializer jinit = null;
+			try {
+				jinit = (JInitializer) Class.forName(ia[i]).newInstance();
+				jinit.pre_init(jrmpInfo);
+				jinit.post_init(jrmpInfo);
+			} catch (Exception e) {
+				TraceCarol.error("can not load interceptors", e);
+			} 
+		}	
+		ruid=uid;
+		address=raddr;
+		rcis = jrmpInfo.getClientRequestInterceptors();
+		return rcis;
 		}
-		JClientRequestInterceptor [] rci = jrmpInfo.getClientRequestInterceptors();
-		remoteClientInterceptors.put(rk,rci);
-		return rci;
-	    } catch ( Exception e) {
-		//we did not found the interceptor do nothing but a trace ?
-		TraceCarol.error("JrmpPRODelegate(), No remote interceptors found", e);
-		return null;
-	    }
 	}
-    }
 }
 
 

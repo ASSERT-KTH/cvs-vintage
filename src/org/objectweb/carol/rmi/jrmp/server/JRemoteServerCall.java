@@ -35,6 +35,7 @@ import java.io.StreamCorruptedException;
 import java.rmi.server.RemoteCall;
 
 import org.objectweb.carol.rmi.jrmp.interceptor.JServerInterceptorHelper;
+import org.objectweb.carol.rmi.jrmp.interceptor.JServerRequestInfo;
 import org.objectweb.carol.rmi.jrmp.interceptor.JServerRequestInterceptor;
 
 /**
@@ -47,6 +48,7 @@ public class JRemoteServerCall implements RemoteCall {
     
     /**
      * The Remote Call Impl
+     * @deprecated
      */
     RemoteCall impl;
 
@@ -54,7 +56,7 @@ public class JRemoteServerCall implements RemoteCall {
      * Array of Interceptor for this Server Ref
      */
     protected JServerRequestInterceptor [] sis = null;
-
+    
     /**
      * Constructor for server side call
      * @param impl the Remote call 

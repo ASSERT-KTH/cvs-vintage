@@ -27,6 +27,8 @@
  */
 package org.objectweb.carol.rmi.jrmp.interceptor;
 
+import java.util.Collection;
+
 
 /**
  * Interface <code>JServerRequestInfo</code> is the CAROL JServerRequestInfo
@@ -40,7 +42,13 @@ public interface JServerRequestInfo extends JRequestInfo{
     /**
      * add a JServicecontext
      * @param JServiceContext the context to add
-     * @param boolean replace if true replace the existing service context
      */
-    public void add_reply_service_context(JServiceContext jServiceContext, boolean replace);
+    public void add_reply_service_context(JServiceContext jServiceContext);
+    
+    /**
+	*Add the all the reply service context 
+	* @param c Services contexts
+	*/
+   public void add_all_reply_service_context(Collection c);    
+	
 }

@@ -28,6 +28,7 @@
 package org.objectweb.carol.rmi.jrmp.interceptor;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 
 /**
  * Class <code>JContextObjectStore</code> is the CAROL JRMP Client Interceptor Contexts
@@ -61,11 +62,10 @@ public class JContextStore {
      * Stote an object context  
      */
     public static int storeObject(Object ob) {
-
         // The context is often null so return a key that can be decoded
         // quickly. This coresponding to a "no context send"
         if (ob == null) {
-            return -2;
+            return -1;
         }
 
         int i = 0;
@@ -101,8 +101,7 @@ public class JContextStore {
      */
 
     public static Object getObject(int key) {
-
-        if (key < 0) {
+        if (key==-1) {
             return null;
         }
         Object ob;
@@ -125,7 +124,20 @@ public class JContextStore {
         return ob;
     }
 
-
+	public String toString() {
+			String result ="";
+			int x=0;
+			for (Iterator i=lists.iterator(); i.hasNext();) {
+				int y=0;
+				ArrayList ara = (ArrayList)i.next();
+				for (Iterator j=ara.iterator(); j.hasNext();) {
+					result+="object at x="+x+", y="+y+" object:"+j.next();
+					y++;
+				}
+				x++;
+			}
+			return result;
+	}
 }
 
 

@@ -47,29 +47,36 @@ public abstract class JInterceptorHelper {
     
 
     /**
-     * The spaceID
+     * The Inet Adress
      */
-    protected static RemoteKey rk = null;   
+    protected static  byte [] ia = null;   
     
     /**
      * The spaceID
      */
     protected static UID spaceID = null;
 
-    /**
-     * hold a unique identifier of this class and jvm
-     */
-    public static RemoteKey getRemoteKey() {
-        return rk;
-    }
-
+ 
     static {
 	try {
 	    spaceID = new UID();
-	    rk = new RemoteKey(spaceID, InetAddress.getLocalHost().getAddress());
+	    ia =  InetAddress.getLocalHost().getAddress();
 	} catch (Exception e) {
 	    e.printStackTrace();
 	}
     }
 
+	/**
+	 * @return byte [] InetAddress
+	 */
+	public static byte [] getInetAddress() {
+		return ia;
+	}
+
+	/**
+	 * @return
+	 */
+	public static UID getSpaceID() {
+		return spaceID;
+	}
 }

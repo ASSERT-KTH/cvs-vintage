@@ -74,14 +74,12 @@
     <mkdir   dir="${test.build.stub}/suniiop"/>
     <rmic base="${test.build.stub}/suniiop" iiop="true"
       compiler="sun"
-      stubversion="1.2"
       classname="org.objectweb.carol.jtests.conform.basic.server.BasicObject"
       sourcebase="${test.build.stub}/suniiop">
       <classpath refid="sun.classpath"/>
     </rmic>
     <rmic base="${test.build.stub}/suniiop" iiop="true"
       compiler="sun"     
-      stubversion="1.2"
       classname="org.objectweb.carol.jtests.conform.basic.server.BasicMultiObject"
       sourcebase="${test.build.stub}/suniiop">
       <classpath refid="sun.classpath"/>

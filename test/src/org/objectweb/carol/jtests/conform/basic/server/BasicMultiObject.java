@@ -36,6 +36,8 @@ import java.rmi.RemoteException;
 import javax.naming.InitialContext;
 import javax.rmi.PortableRemoteObject;
 
+import org.objectweb.carol.rmi.jrmp.interceptor.JInterceptorHelper;
+
 /**
  * Class <code>BasicMultiObject</code> is a basic remote object with reference to another object
  * 

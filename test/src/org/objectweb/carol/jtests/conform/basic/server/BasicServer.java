@@ -39,6 +39,8 @@ import javax.rmi.PortableRemoteObject;
 import javax.naming.InitialContext;
 import javax.naming.Context;
 
+import org.objectweb.carol.rmi.jrmp.interceptor.JInterceptorHelper;
+
 
 /*
  * Class <code>BasicServer</code> is a  Server for Junit tests

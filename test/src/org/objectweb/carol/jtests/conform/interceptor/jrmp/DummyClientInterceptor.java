@@ -82,7 +82,7 @@ public class DummyClientInterceptor implements JClientRequestInterceptor {
      */
     public void send_request(JClientRequestInfo jri) throws IOException {
 	//	System.out.println("JRMP ClientInterceptor Add/Send Dummy Client Service Context");
-	jri.add_request_service_context(new DummyClientServiceContext(CLIENT_CTX_ID, java.net.InetAddress.getLocalHost().getHostName()), true);
+	jri.add_request_service_context(new DummyClientServiceContext(CLIENT_CTX_ID, java.net.InetAddress.getLocalHost().getHostName()));
     }
 
     /**

@@ -26,11 +26,9 @@
  *
  */
 package org.objectweb.carol.util.perfs;
-
 import java.io.ByteArrayOutputStream;
 
 import sun.rmi.server.MarshalOutputStream;
-
 /**
  * Class <code>CarolJRMPPerfomanceHelper</code>Provide an Helper for perfs mesures
  * 
@@ -39,41 +37,60 @@ import sun.rmi.server.MarshalOutputStream;
  * @version 1.0, 15/03/2003
  *
  */
-public class CarolJRMPPerfomanceHelper {
-
-    public static String getMarshalBytes(Object obj) {
-	try {
-	    String result = "";
-	    // Print the Context value and size
-	    ByteArrayOutputStream ostream = new ByteArrayOutputStream();
-	    MarshalOutputStream p = new MarshalOutputStream(ostream);
-	    p.writeObject(obj);
-	    p.flush();
-	    byte[] b = ostream.toByteArray();
-	    for (int i=0; i<b.length; i++) {
-		if ((b[i] >= 0) && (b[i] < 32)) {
-		    result+="<"+b[i]+">";
-		} else
-		    result+=(char)b[i];
-	    }
-	    return result;
-	} catch (Exception e) {
-	    e.printStackTrace();
-	    return null;
+public class CarolJRMPPerfomanceHelper
+{
+	/**
+	 * See a marshalled object 
+	 * 
+	 * @param obj the object to marchal
+	 * @return a visible format of the marshalled object
+	 */
+	public static String getMarshalBytes(Object obj)
+	{
+		try
+		{
+			String result = "";
+			// Print the Context value and size
+			ByteArrayOutputStream ostream = new ByteArrayOutputStream();
+			MarshalOutputStream p = new MarshalOutputStream(ostream);
+			p.writeObject(obj);
+			p.flush();
+			byte[] b = ostream.toByteArray();
+			for (int i = 0; i < b.length; i++)
+			{
+				if ((b[i] >= 0) && (b[i] < 32))
+				{
+					result += "<" + b[i] + ">";
+				} else
+					result += (char) b[i];
+			}
+			return result;
+		} catch (Exception e)
+		{
+			e.printStackTrace();
+			return null;
+		}
 	}
-    }
-
-    public static int getMarshalSize(Object obj) {
-	try {
-	    // Print the Context value and size
-	    ByteArrayOutputStream ostream = new ByteArrayOutputStream();
-	    MarshalOutputStream p = new MarshalOutputStream(ostream);
-	    p.writeObject(obj);
-	    p.flush();
-	    return ostream.size();
-	} catch (Exception e) {
-	    e.printStackTrace();
-	    return 0;
+	/**
+	 * See the size of a Marchalled object
+	 * 
+	 * @param obj the Object to marchal
+	 * @return the size of this Marchalled object
+	 */
+	public static int getMarshalSize(Object obj)
+	{
+		try
+		{
+			// Print the Context value and size
+			ByteArrayOutputStream ostream = new ByteArrayOutputStream();
+			MarshalOutputStream p = new MarshalOutputStream(ostream);
+			p.writeObject(obj);
+			p.flush();
+			return ostream.size();
+		} catch (Exception e)
+		{
+			e.printStackTrace();
+			return 0;
+		}
 	}
-    }
 }
