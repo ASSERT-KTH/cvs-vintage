@@ -35,7 +35,7 @@ import org.gjt.sp.util.Log;
 /**
  * Abbreviation manager.
  * @author Slava Pestov
- * @version $Id: Abbrevs.java,v 1.8 2002/08/09 21:24:12 spestov Exp $
+ * @version $Id: Abbrevs.java,v 1.9 2002/11/07 22:52:14 spestov Exp $
  */
 public class Abbrevs
 {
@@ -571,6 +571,8 @@ public class Abbrevs
 							buf.append('$');
 						}
 					}
+					else
+						buf.append('$'); // $ at end is literal
 				} //}}}
 				else
 					buf.append(ch);
