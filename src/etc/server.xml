@@ -100,12 +100,15 @@
             Other options for driverName: 
               driverName="oracle.jdbc.driver.OracleDriver"
               connectionURL="jdbc:oracle:thin:@ntserver:1521:ORCL"
-                              "?user=scott;password=tiger"  
+              connectionName="scott"
+              connectionPassword="tiger"
 
               driverName="org.gjt.mm.mysql.Driver"
               connectionURL="jdbc:mysql://localhost/authority"
-                            "?user=test;password=test"
+              connectionName="test"
+              connectionPassword="test"
 
+            "connectionName" and "connectionPassword" are optional.
         -->
         <!--
         <RequestInterceptor 
