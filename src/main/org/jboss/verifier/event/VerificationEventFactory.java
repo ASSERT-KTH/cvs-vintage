@@ -19,7 +19,7 @@ package org.jboss.verifier.event;
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  *
  * This package and its source code is available at www.jboss.org
- * $Id: VerificationEventFactory.java,v 1.3 2000/06/03 17:49:33 juha Exp $
+ * $Id: VerificationEventFactory.java,v 1.4 2000/06/03 21:43:56 juha Exp $
  */
 
  
@@ -49,7 +49,7 @@ import org.jboss.verifier.strategy.EJBVerifier11;
  * @see     << OTHER RELATED CLASSES >>
  *
  * @author 	Juha Lindfors   (jplindfo@helsinki.fi)
- * @version $Revision: 1.3 $
+ * @version $Revision: 1.4 $
  * @since  	JDK 1.3
  */
 public class VerificationEventFactory {
@@ -147,7 +147,7 @@ public class VerificationEventFactory {
 
     private void buildStatelessSessionCannotSynchEvent(VerificationEvent event, String name) {
         
-    //    event.setMessage();
+        event.setMessage(STATELESS_MUST_NOT_IMPLEMENT_SYNCHRONIZATION);
     //    event.setVerbose();
     }
     
@@ -171,25 +171,25 @@ public class VerificationEventFactory {
     
     private void buildSessionBeanClassNotPublicEvent(VerificationEvent event, String name) {
         
-    //    event.setMessage();
+        event.setMessage(SESSION_BEAN_CLASS_MUST_BE_PUBLIC);
     //    event.setVerbose();
     }
 
     private void buildSessionBeanClassIsFinalEvent(VerificationEvent event, String name) {
         
-    //    event.setMessage();
+        event.setMessage(SESSION_BEAN_CLASS_MUST_NOT_BE_FINAL);
     //    event.setVerbose();
     }
 
     private void buildSessionBeanClassIsAbstractEvent(VerificationEvent event, String name) {
         
-    //    event.setMessage();
+        event.setMessage(SESSION_BEAN_CLASS_MUST_NOT_BE_ABSTRACT);
     //    event.setVerbose();
     }
 
     private void buildNoDefaultConstructorInSessionBeanEvent(VerificationEvent event, String name) {
         
-    //    event.setMessage();
+        event.setMessage(SESSION_BEAN_CLASS_MUST_DEFINE_DEFAULT_CONSTRUCTOR);
     //    event.setVerbose();
     }
 
@@ -207,7 +207,16 @@ public class VerificationEventFactory {
     
     
     
-    
+    /*
+     * [TODO] these are the messages for verification events, mostly citing the
+     *        ejb bible. they should be moved to separate resource files, probably
+     *        wrapped into something nice, like XML, so that we can format the
+     *        messages properly depending on the situation. For example, the EJX
+     *        might like to have nice purdy styles for GUI stuff, maybe links to
+     *        the spec, or something more fancy.
+     *
+     *        cause I'm lazy, I haven't done this yet.
+     */
     private final static String SESSION_DOES_NOT_IMPLEMENT_SESSIONBEAN =
         "Session bean does not implement the required SessionBean interface.";        
         
@@ -221,6 +230,23 @@ public class VerificationEventFactory {
         
         "All session beans must implement the SessionBean interface.";
 
+
+    private final static String STATELESS_MUST_NOT_IMPLEMENT_SYNCHRONIZATION =
+        "A stateless Session bean must not implement the SessionSynchronization interface.";
+        
+
+    private final static String SESSION_BEAN_CLASS_MUST_BE_PUBLIC     =
+        "Session bean class must be defined as public.";
+
+    private final static String SESSION_BEAN_CLASS_MUST_NOT_BE_ABSTRACT =
+        "Session bean class must not be abstract.";
+
+    private final static String SESSION_BEAN_CLASS_MUST_NOT_BE_FINAL  =
+        "Session bean class must not be final.";
+
+    private final static String SESSION_BEAN_CLASS_MUST_DEFINE_DEFAULT_CONSTRUCTOR =
+        "Session bean class must have a public constructor that takes no parameters.";
+        
         
     private final static String SESSION_DOES_NOT_DEFINE_EJBCREATE     =
         "Session bean does not define the required ejbCreate method.";

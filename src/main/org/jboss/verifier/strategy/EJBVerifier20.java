@@ -19,7 +19,7 @@ package org.jboss.verifier.strategy;
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  *
  * This package and its source code is available at www.jboss.org
- * $Id: EJBVerifier20.java,v 1.3 2000/06/03 17:49:32 juha Exp $
+ * $Id: EJBVerifier20.java,v 1.4 2000/06/03 21:43:55 juha Exp $
  */
 
 
@@ -50,10 +50,10 @@ import com.dreambean.ejx.ejb.Entity;
  * @see     << OTHER RELATED CLASSES >>
  *
  * @author 	Juha Lindfors   (jplindfo@helsinki.fi)
- * @version $Revision: 1.3 $
+ * @version $Revision: 1.4 $
  * @since  	JDK 1.3
  */
-public class EJBVerifier20 implements VerificationStrategy {
+public class EJBVerifier20 extends AbstractVerifier {
 
     /*
      * [TODO]   The EJB 1.1 verifier and EJB 2.0 verifier are going to share

@@ -18,11 +18,8 @@ package org.jboss.verifier;
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  *
- * This package and its source code is available at www.gjt.org
- * $Id: BeanVerifier.java,v 1.1 2000/05/29 18:26:32 juha Exp $
- *
- * You can reach the author by sending email to jpl@gjt.org or
- * directly to jplindfo@helsinki.fi.
+ * This package and its source code is available at www.jboss.org
+ * $Id: BeanVerifier.java,v 1.2 2000/06/03 21:43:56 juha Exp $
  */
 
  
@@ -65,8 +62,8 @@ import org.jboss.ejb.deployment.jBossEjbJar;
  *
  * @see     << OTHER RELATED CLASSES >>
  *
- * @author 	Juha Lindfors
- * @version $Revision: 1.1 $
+ * @author 	Juha Lindfors (jplindfo@helsinki.fi)
+ * @version $Revision: 1.2 $
  * @since  	JDK 1.3
  */
 public class BeanVerifier implements VerificationContext {

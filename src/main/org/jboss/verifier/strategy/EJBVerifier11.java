@@ -19,7 +19,7 @@ package org.jboss.verifier.strategy;
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  *
  * This package and its source code is available at www.jboss.org
- * $Id: EJBVerifier11.java,v 1.4 2000/06/03 17:49:32 juha Exp $
+ * $Id: EJBVerifier11.java,v 1.5 2000/06/03 21:43:55 juha Exp $
  */
 
 
@@ -53,10 +53,10 @@ import com.dreambean.ejx.ejb.Entity;
  * @see     << OTHER RELATED CLASSES >>
  *
  * @author 	Juha Lindfors (jplindfo@helsinki.fi)
- * @version $Revision: 1.4 $
+ * @version $Revision: 1.5 $
  * @since  	JDK 1.3
  */
-public class EJBVerifier11 implements VerificationStrategy {
+public class EJBVerifier11 extends AbstractVerifier {
 
     private VerificationContext context      = null;
     private VerificationEventFactory factory = null;
@@ -373,14 +373,21 @@ public class EJBVerifier11 implements VerificationStrategy {
     private boolean hasEJBCreateMethod(Class c) {
     
         try {
-            Method[] methods = c.getMethods();
+            Method[] method = c.getMethods();
          
-            for (int i = 0; i < methods.length; ++i) {
+            for (int i = 0; i < method.length; ++i) {
             
-                String name = methods[i].getName();
+                String name = method[i].getName();
                 
                 if (name.equals(EJB_CREATE_METHOD))
-                    return true;
+                    // check the requirements for ejbCreate methods (spec 6.10.3)
+                    // check for public modifier done by getMethods() call
+                    // (it only returns public member methods)
+                    if (!isStaticMember(method[i])
+                            && !isFinalMember(method[i])
+                            && hasVoidReturnType(method[i]))
+                    
+                        return true;
             }
         }
         catch (SecurityException e) {
