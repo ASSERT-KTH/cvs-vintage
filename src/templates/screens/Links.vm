@@ -24,11 +24,13 @@ $page.setTitle("Scarab Links")
     <a href="$link.setPage("admin,GlobalAttributeShow.vm")">admin,GlobalAttributeShow.vm</a>
 </li>
 <li>
-    <a href="$link.setPage("admin,AttributeShow.vm")">admin,AttributeShow.vm</a>
-</li>
+    <a 
+href="$link.setPage("admin,AttributeShow.vm")">admin,AttributeShow.vm</a> 
+(not working currently)</li>
 <li>
-    <a href="$link.setPage("admin,ModuleAttributeEditor.vm")">admin,ModuleAttributeEditor.vm</a>
-</li>
+    <a 
+href="$link.setPage("admin,ModuleAttributeEditor.vm")">admin,ModuleAttributeEditor.vm</a> 
+(not working currently)</li>
 <li>
     <a href="$link.setPage("admin,Approval.vm")">admin,Approval.vm</a>
 </li>
