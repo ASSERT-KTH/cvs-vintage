@@ -6,7 +6,7 @@
  */
 package org.jboss.metadata;
 
-// $Id: ClientMetaData.java,v 1.5 2004/04/20 16:57:30 tdiesler Exp $
+// $Id: ClientMetaData.java,v 1.6 2004/04/21 13:30:43 tdiesler Exp $
 
 import org.jboss.deployment.DeploymentException;
 import org.w3c.dom.Element;
@@ -19,10 +19,13 @@ import java.util.Iterator;
  * 
  * @author Scott.Stark@jboss.org
  * @author Thomas.Diesler@jboss.org
- * @version $Revision: 1.5 $
+ * @version $Revision: 1.6 $
  */
 public class ClientMetaData
 {
+   /** The ClassLoader to load additional resources */
+   private ClassLoader localCl;
+
    /** The application-client/display-name */
    private String displayName;
    /** The location for the server side client context ENC bindings */
@@ -39,6 +42,13 @@ public class ClientMetaData
    private String callbackHandler;
    /** The HashMap<ServiceRefMetaData> service-ref element(s) info */
    private HashMap serviceReferences = new HashMap();
+
+   /** Set the ClassLoader to load additional resources
+    */
+   public void setResourceClassLoader(ClassLoader localCl)
+   {
+      this.localCl = localCl;
+   }
 
    /** The application-client/display-name
     * @return application-client/display-name value
@@ -171,7 +181,7 @@ public class ClientMetaData
       while (iterator.hasNext())
       {
          Element serviceRef = (Element) iterator.next();
-         ServiceRefMetaData refMetaData = new ServiceRefMetaData();
+         ServiceRefMetaData refMetaData = new ServiceRefMetaData(localCl);
          refMetaData.importClientXml(serviceRef);
          serviceReferences.put(refMetaData.getServiceRefName(), refMetaData);
       }
