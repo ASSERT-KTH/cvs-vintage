@@ -8,7 +8,7 @@
 
 <div id="savequery" class="app">
 
-#if ($queryString.length() > 0)
+#if ($queryString && $queryString.length() > 0)
 <form method="post" action="$link.setPage("SaveQuery.vm").setAction("Search")" >
 <input type="hidden" name="$scarabG.Constant.NEXT_TEMPLATE" value="QueryList.vm" />
 <input type="hidden" name="$queryGroup.Value.Key" value="$queryString" />
