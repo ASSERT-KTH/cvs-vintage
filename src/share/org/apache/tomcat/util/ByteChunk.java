@@ -345,6 +345,7 @@ public final class ByteChunk implements Cloneable, Serializable {
 		if( res=='/' || res=='\0' )
 		    return 400;
 		bytes[idx]=(byte)res;
+		bytesLen-=2;
 	    }
 	}
 	return 0;

@@ -314,6 +314,7 @@ public final class CharChunk implements Cloneable, Serializable {
 		if( res=='/' || res=='\0' )
 		    return 400;
 		chars[idx]=(char)res;
+		charsLen-=2;
 	    }
 	}
 	return 0;
