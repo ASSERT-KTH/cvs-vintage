@@ -7,9 +7,9 @@
 
 package org.jboss.security;
 
+import javax.security.auth.Subject;
 import java.security.Principal;
 import java.util.ArrayList;
-import javax.security.auth.Subject;
 
 /** The SecurityAssociation class maintains the security principal and
 credentials. This can be done on either a singleton basis or a thread
@@ -33,7 +33,7 @@ the current VM.
 
 @author Daniel O'Connor (docodan@nycap.rr.com)
 @author Scott.Stark@jboss.org
-@version $Revision: 1.14 $
+@version $Revision: 1.15 $
  */
 public final class SecurityAssociation
 {
@@ -111,6 +111,9 @@ public final class SecurityAssociation
       if( sm != null )
          sm.checkPermission(getPrincipalInfoPermission);
 
+      if (peekRunAsIdentity() != null)
+         return peekRunAsIdentity();
+
       if (server)
          return (Principal) threadPrincipal.get();
       else
@@ -135,6 +138,9 @@ public final class SecurityAssociation
       if( sm != null )
          sm.checkPermission(getPrincipalInfoPermission);
 
+      if (peekRunAsIdentity() != null)
+         return peekRunAsIdentity().getCredential();
+
       if (server)
          return threadCredential.get();
       else
@@ -156,6 +162,8 @@ public final class SecurityAssociation
       SecurityManager sm = System.getSecurityManager();
       if( sm != null )
          sm.checkPermission(getPrincipalInfoPermission);
+
+      // [todo] what subject do we return if there is a run-as identity 
 
       if (server)
          return (Subject) threadSubject.get();
