@@ -48,11 +48,11 @@ import org.jboss.ejb.plugins.jrmp.interfaces.IteratorImpl;
 import org.jboss.ejb.plugins.jrmp.interfaces.EJBMetaDataImpl;
 
 /**
- *	<description> 
+ *      <description> 
  *      
- *	@see <related>
- *	@author Rickard Öberg (rickard.oberg@telkel.com)
- *	@version $Revision: 1.2 $
+ *      @see <related>
+ *      @author Rickard Öberg (rickard.oberg@telkel.com)
+ *      @version $Revision: 1.4 $
  */
 public abstract class JRMPContainerInvoker
    extends RemoteServer
@@ -66,9 +66,6 @@ public abstract class JRMPContainerInvoker
    protected String jndiName;
    protected EJBMetaDataImpl ejbMetaData;
    protected EJBHome home;
-   
-   static Object semaphore = new Object();
-   static int lock = 5;
    
    // Static --------------------------------------------------------
    
@@ -144,8 +141,6 @@ public abstract class JRMPContainerInvoker
    public Object invokeHome(Method m, Object[] args, Object tx, Principal user)
       throws Exception
    {
-      begin();
-      
       ClassLoader oldCl = Thread.currentThread().getContextClassLoader();
       Thread.currentThread().setContextClassLoader(con.getClassLoader());
       
@@ -155,15 +150,12 @@ public abstract class JRMPContainerInvoker
       } finally
       {
          Thread.currentThread().setContextClassLoader(oldCl);
-         finished();
       }
    }
       
    public Object invoke(Object id, Method m, Object[] args, Object tx, Principal user)
       throws Exception
    {
-      begin();
-      
       ClassLoader oldCl = Thread.currentThread().getContextClassLoader();
       Thread.currentThread().setContextClassLoader(con.getClassLoader());
       
@@ -172,7 +164,6 @@ public abstract class JRMPContainerInvoker
          return con.invoke(id, m, args);
       } finally
       {
-         finished();
          Thread.currentThread().setContextClassLoader(oldCl);
       }
       
@@ -243,28 +234,6 @@ public abstract class JRMPContainerInvoker
    // Protected -----------------------------------------------------
     
    // Private -------------------------------------------------------
-   private void begin()
-   {
-/*      synchronized (semaphore)
-      {
-         while (lock == 0)
-            try { semaphore.wait(); } catch (InterruptedException e) {}
-            
-         lock--;
-      }
-*/      
-   }
-
-   private void finished()
-   {
-/*      
-      synchronized (semaphore)
-      {
-         lock++;
-         semaphore.notify();
-      }
-*/      
-   }
-
+ 
    // Inner classes -------------------------------------------------
 }
