@@ -27,7 +27,7 @@
 // File: ClassDiagramGraphModel.java
 // Classes: ClassDiagramGraphModel
 // Original Author: jrobbins@ics.uci.edu
-// $Id: ClassDiagramGraphModel.java,v 1.9 1998/09/10 21:42:13 jrobbins Exp $
+// $Id: ClassDiagramGraphModel.java,v 1.10 1998/10/01 20:22:48 jrobbins Exp $
 
 
 package uci.uml.visual;
@@ -282,20 +282,49 @@ implements MutableGraphModel, VetoableChangeListener {
 
       // break
       else if ((fromPort instanceof MMClass) && (toPort instanceof Interface)) {
-	    MMClass fromCls = (MMClass) fromPort;
-	    Interface toIntf = (Interface) toPort;
+	MMClass fromCls = (MMClass) fromPort;
+	Interface toIntf = (Interface) toPort;
 
-	    if (edgeClass == Realization.class) {
-	      Realization real = new Realization(fromCls, toIntf);
-	      addEdge(real);
-	      return real;
-	    }
-	    else {
-	      System.out.println("asdwwads");
-	      return null;
-	    }
+	if (edgeClass == Realization.class) {
+	  Realization real = new Realization(fromCls, toIntf);
+	  addEdge(real);
+	  return real;
+	}
+	else if (edgeClass == Association.class) {
+	  Association asc = new Association(fromCls, toIntf);
+	  Vector conn = asc.getConnection();
+	  AssociationEnd ae = (AssociationEnd) conn.elementAt(0);
+	  try { ae.setIsNavigable(false); }
+	  catch (PropertyVetoException pve) { }
+	  addEdge(asc);
+	  return asc;
+	}
+	else {
+	  System.out.println("asdwwads");
+	  return null;
+	}
       }
-    
+
+      // break
+      else if ((fromPort instanceof Interface) && (toPort instanceof MMClass)) {
+	Interface fromIntf = (Interface) fromPort;
+	MMClass toCls = (MMClass) toPort;
+
+	if (edgeClass == Association.class) {
+	  Association asc = new Association(fromIntf, toCls);
+	  Vector conn = asc.getConnection();
+	  AssociationEnd ae = (AssociationEnd) conn.elementAt(1);
+	  try { ae.setIsNavigable(false); }
+	  catch (PropertyVetoException pve) { }
+	  addEdge(asc);
+	  return asc;
+	}
+	else {
+	  System.out.println("asdwwads");
+	  return null;
+	}
+      }
+
       // break
       else if ((fromPort instanceof Instance) && (toPort instanceof Instance)) {
         Instance fromInst = (Instance) fromPort;

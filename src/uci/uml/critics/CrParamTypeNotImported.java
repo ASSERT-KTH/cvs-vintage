@@ -27,7 +27,7 @@
 // File: CrParamTypeNotImported.java.java
 // Classes: CrParamTypeNotImported.java
 // Original Author: jrobbins@ics.uci.edu
-// $Id: CrParamTypeNotImported.java,v 1.9 1998/07/15 18:17:10 jrobbins Exp $
+// $Id: CrParamTypeNotImported.java,v 1.10 1998/10/01 20:22:33 jrobbins Exp $
 
 package uci.uml.critics;
 
@@ -53,7 +53,7 @@ public class CrParamTypeNotImported extends CrUML {
     addSupportedDecision(CrUML.decCONTAINMENT);
   }
 
-  public boolean predicate(Object dm, Designer dsgr) {
+  public boolean predicate2(Object dm, Designer dsgr) {
     if (!(dm instanceof BehavioralFeature)) return NO_PROBLEM;
     // needs-more-work
     return NO_PROBLEM;

@@ -27,7 +27,7 @@
 // File: ToDoItem.java
 // Classes: ToDoItem
 // Original Author: jrobbins@ics.uci.edu
-// $Id: ToDoItem.java,v 1.8 1998/07/17 22:53:55 jrobbins Exp $
+// $Id: ToDoItem.java,v 1.9 1998/10/01 20:22:28 jrobbins Exp $
 
 package uci.argo.kernel;
 
@@ -82,7 +82,7 @@ public class ToDoItem implements java.io.Serializable {
 
   private Icon _clarifier = null;
 
-  private int _progress = (int) (Math.random()*100); // 0-100%
+  private int _progress = 0; //(int) (Math.random()*100); // 0-100%
 
   ////////////////////////////////////////////////////////////////
   // constructors
@@ -168,6 +168,15 @@ public class ToDoItem implements java.io.Serializable {
   public boolean containsKnowledgeType(String type) {
     return getPoster().containsKnowledgeType(type);
   }
+
+  public boolean supports(Decision d) {
+    return getPoster().supports(d);
+  }
+
+  public boolean supports(Goal g) {
+    return getPoster().supports(g);
+  }
+
 
   /** Is this item already on the list? */
   public boolean equals(Object o) {

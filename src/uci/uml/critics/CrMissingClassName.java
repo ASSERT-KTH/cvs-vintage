@@ -27,7 +27,7 @@
 // File: CrMissingClassName.java.java
 // Classes: CrMissingClassName.java
 // Original Author: jrobbins@ics.uci.edu
-// $Id: CrMissingClassName.java,v 1.9 1998/09/29 21:50:42 jrobbins Exp $
+// $Id: CrMissingClassName.java,v 1.10 1998/10/01 20:22:32 jrobbins Exp $
 
 package uci.uml.critics;
 
@@ -55,7 +55,7 @@ public class CrMissingClassName extends CrUML {
     addSupportedDecision(CrUML.decNAMING);
   }
 
-  public boolean predicate(Object dm, Designer dsgr) {
+  public boolean predicate2(Object dm, Designer dsgr) {
     if (!(dm instanceof Element)) return NO_PROBLEM;
     Element e = (Element) dm;
     Name myName = e.getName();
