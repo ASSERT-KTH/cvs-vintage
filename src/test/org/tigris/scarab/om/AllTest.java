@@ -54,7 +54,7 @@ import junit.framework.TestSuite;
  * Used for running all of the tests at once.
  *
  * @author <a href="mailto:tmcnerney@truis.com">Tim McNerney</a>
- * @version $Id: AllTest.java,v 1.8 2002/03/26 22:06:46 elicia Exp $
+ * @version $Id: AllTest.java,v 1.9 2002/05/28 23:10:24 jmcnally Exp $
  */
 public class AllTest extends BaseTestCase
 {
@@ -84,6 +84,7 @@ public class AllTest extends BaseTestCase
         suite.addTest(TransactionTest.suite());
         suite.addTest(RModuleAttributeTest.suite());
         suite.addTest(AttributeGroupTest.suite());
+        suite.addTest(AttachmentTest.suite());
         return suite;
     }
 
