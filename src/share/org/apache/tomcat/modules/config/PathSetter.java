@@ -65,8 +65,10 @@ import java.net.*;
 import java.util.*;
 import java.security.*;
 
-import org.apache.tomcat.util.*;
-import org.apache.tomcat.util.log.*;
+import org.apache.tomcat.util.res.StringManager;
+import org.apache.tomcat.util.log.Log;
+import org.apache.tomcat.util.io.FileUtil;
+import org.apache.tomcat.util.IntrospectionUtils;
 
 /**
  * Set ( and guess ) the paths to absolute ( and canonical ) directories.

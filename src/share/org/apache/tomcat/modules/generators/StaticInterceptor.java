@@ -59,7 +59,8 @@
 package org.apache.tomcat.modules.generators;
 
 import org.apache.tomcat.core.*;
-import org.apache.tomcat.util.*;
+import org.apache.tomcat.util.res.StringManager;
+import org.apache.tomcat.util.io.FileUtil;
 import org.apache.tomcat.util.http.*;
 import java.io.*;
 import java.net.*;

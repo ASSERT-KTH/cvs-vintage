@@ -60,7 +60,7 @@
 package org.apache.tomcat.modules.generators;
 
 import org.apache.tomcat.core.*;
-import org.apache.tomcat.util.*;
+import org.apache.tomcat.util.res.StringManager;
 import java.io.*;
 import java.net.*;
 import java.util.*;

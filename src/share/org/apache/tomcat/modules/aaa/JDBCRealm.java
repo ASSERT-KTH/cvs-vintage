@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/modules/aaa/JDBCRealm.java,v 1.3 2001/02/06 02:05:46 nacho Exp $
- * $Revision: 1.3 $
- * $Date: 2001/02/06 02:05:46 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/modules/aaa/JDBCRealm.java,v 1.4 2001/02/20 03:16:51 costin Exp $
+ * $Revision: 1.4 $
+ * $Date: 2001/02/20 03:16:51 $
  *
  * The Apache Software License, Version 1.1
  *
@@ -62,7 +62,8 @@
 package org.apache.tomcat.modules.aaa;
 
 import org.apache.tomcat.core.*;
-import org.apache.tomcat.util.*;
+import org.apache.tomcat.util.res.StringManager;
+import org.apache.tomcat.util.buf.HexUtils;
 import java.security.*;
 //import java.security.Principal;
 //import java.io.File;

@@ -60,7 +60,8 @@
 package org.apache.tomcat.modules.aaa;
 
 import org.apache.tomcat.core.*;
-import org.apache.tomcat.util.*;
+import org.apache.tomcat.util.buf.MessageBytes;
+import org.apache.tomcat.util.io.FileUtil;
 import org.apache.tomcat.util.http.*;
 import java.util.*;
 import java.io.*;

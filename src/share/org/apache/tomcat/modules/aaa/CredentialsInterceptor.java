@@ -59,8 +59,7 @@
 package org.apache.tomcat.modules.aaa;
 
 import org.apache.tomcat.core.*;
-import org.apache.tomcat.util.*;
-//import org.apache.tomcat.session.ServerSession;
+import org.apache.tomcat.util.buf.Base64;
 import org.apache.tomcat.util.xml.*;
 import java.io.*;
 import java.net.*;

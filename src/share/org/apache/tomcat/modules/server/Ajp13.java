@@ -67,8 +67,8 @@ import java.net.Socket;
 import java.util.Enumeration;
 
 import org.apache.tomcat.core.Request;
-import org.apache.tomcat.util.MimeHeaders;
-import org.apache.tomcat.util.MessageBytes;
+import org.apache.tomcat.util.http.MimeHeaders;
+import org.apache.tomcat.util.buf.MessageBytes;
 import org.apache.tomcat.util.http.HttpMessages;
 
 /**

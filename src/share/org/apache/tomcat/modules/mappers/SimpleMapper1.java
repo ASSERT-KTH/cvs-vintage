@@ -60,7 +60,9 @@
 package org.apache.tomcat.modules.mappers;
 
 import org.apache.tomcat.core.*;
-import org.apache.tomcat.util.*;
+import org.apache.tomcat.util.buf.MessageBytes;
+import org.apache.tomcat.util.io.FileUtil;
+import org.apache.tomcat.util.PrefixMapper;
 import org.apache.tomcat.util.collections.*;
 import java.util.*;
 

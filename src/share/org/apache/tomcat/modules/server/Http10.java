@@ -61,8 +61,10 @@
 package org.apache.tomcat.modules.server;
 
 import org.apache.tomcat.core.*;
-import org.apache.tomcat.util.*;
-import org.apache.tomcat.util.log.*;
+import org.apache.tomcat.util.http.*;
+import org.apache.tomcat.util.buf.*;
+import org.apache.tomcat.util.io.*;
+import org.apache.tomcat.util.log.Log;
 import java.io.*;
 import java.net.*;
 import java.util.*;
@@ -193,7 +195,7 @@ public class Http10 {
 	while ((c = b[off++]) != ':' && c != ' ') {
 	    if (c == '\n') {
 		loghelper.log("Parse error, empty line: " +
-			      new String( b, off, len ), Logger.ERROR);
+			      new String( b, off, len ), Log.ERROR);
 		return false;
 	    }
 	}
@@ -207,9 +209,9 @@ public class Http10 {
 
 	if (c != ':') {
 	    loghelper.log("Parse error, missing : in  " +
-			  new String( b, off, len ), Logger.ERROR);
+			  new String( b, off, len ), Log.ERROR);
 	    loghelper.log("Full  " + new String( b, 0, b.length ),
-			  Logger.ERROR);
+			  Log.ERROR);
 	    return false;
 	}
 
@@ -469,7 +471,7 @@ public class Http10 {
 	    if ((c & 0xff00) != 0) {	// high order byte must be zero
 		// XXX will go away after we change the I/O system
 		loghelper.log("Header character is not iso8859_1, " +
-			      "not supported yet: " + c, Logger.ERROR ) ;
+			      "not supported yet: " + c, Log.ERROR ) ;
 	    }
 	    if( oBufferCount >= oBuffer.length ) {
 		byte bufferNew[]=new byte[ oBuffer.length * 2 ];
