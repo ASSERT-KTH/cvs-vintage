@@ -1,13 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <modules>
 
-<module name="PoolTcpConnector" javaClass="org.apache.tomcat.modules.server.PoolTcpConnector"/>
-
 <module name="JNIConnectionHandler" javaClass="org.apache.tomcat.modules.server.JNIConnectionHandler"/>
 
 <module name="WorkDirSetup" javaClass="org.apache.tomcat.modules.config.WorkDirSetup"/>
-
-<module name="RelativePathFix" javaClass="org.apache.tomcat.modules.config.RelativePathFix"/>
 
 <module name="PathSetter" javaClass="org.apache.tomcat.modules.config.PathSetter"/>
 
@@ -16,12 +12,6 @@
 <module name="JservConfig" javaClass="org.apache.tomcat.modules.config.JservConfig"/>
 
 <module name="PolicyLoader" javaClass="org.apache.tomcat.modules.config.PolicyLoader"/>
-
-<module name="DefaultCMSetter" javaClass="org.apache.tomcat.modules.config.DefaultCMSetter"/>
-
-<module name="PermissionAdd" javaClass="org.apache.tomcat.modules.config.PermissionAdd"/>
-
-<module name="AutoSetup" javaClass="org.apache.tomcat.modules.config.AutoSetup"/>
 
 <module name="AutoWebApp" javaClass="org.apache.tomcat.modules.config.AutoWebApp"/>
 
@@ -43,15 +33,9 @@
 
 <module name="ServerXmlReader" javaClass="org.apache.tomcat.modules.config.ServerXmlReader"/>
 
-<module name="ServerXmlInterceptor" javaClass="org.apache.tomcat.modules.config.ServerXmlInterceptor"/>
-
-<module name="AutoLoad" javaClass="org.apache.tomcat.modules.config.AutoLoad"/>
-
 <module name="LoaderInterceptor11" javaClass="org.apache.tomcat.modules.config.LoaderInterceptor11"/>
 
 <module name="ContextXmlReader" javaClass="org.apache.tomcat.modules.config.ContextXmlReader"/>
-
-<module name="WebAppsConfig" javaClass="org.apache.tomcat.modules.config.WebAppsConfig"/>
 
 <module name="LogSetter" javaClass="org.apache.tomcat.modules.config.LogSetter"/>
 
