@@ -17,7 +17,9 @@ import java.util.HashMap;
 import java.util.ArrayList;
 import javax.management.*;
 
+
 import org.jboss.logging.Log;
+//import org.jboss.cluster.*;
 import org.jboss.util.MBeanProxy;
 
 /**
@@ -25,7 +27,7 @@ import org.jboss.util.MBeanProxy;
  *      
  *   @see <related>
  *   @author Rickard Öberg (rickard.oberg@telkel.com)
- *   @version $Revision: 1.2 $
+ *   @version $Revision: 1.3 $
  */
 public class AutoDeployer
    implements AutoDeployerMBean, MBeanRegistration, Runnable
@@ -134,7 +136,10 @@ public class AutoDeployer
       throws Exception
    {
       try
-      {
+      {   
+        
+         // MF INFO: the call will land on ContainerFactory
+         
          server.invoke(factoryName, "deploy",
                          new Object[] { url }, new String[] { "java.lang.String" });
       } catch (MBeanException e)
@@ -146,10 +151,13 @@ public class AutoDeployer
       }
    }
    
+   
    public ObjectName preRegister(MBeanServer server, ObjectName name)
       throws java.lang.Exception
    {
       this.server = server;
+      
+      // MF INFO: the ObjetName is ContainerFactory 
       factoryName = new ObjectName(ContainerFactoryMBean.OBJECT_NAME);
       
       run(); // Pre-deploy
