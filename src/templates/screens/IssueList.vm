@@ -36,12 +36,11 @@ $page.setTitle("Queue list")
  <tr>
   <td class="firstchild">
 #if ($searchType.equals("advanced"))
-  <td>
  <div>
  Save
-</div> <input type="submit" value="query" name="eventSubmit_doRedirecttosavequery" /></td>
+</div> <input type="submit" value="query" name="eventSubmit_doRedirecttosavequery" /></td><td>
 #end
-  <td><div>
+  <div>
 Verbose view
 </div><input type="submit" value="Selected"  name="eventSubmit_doViewselected" name="eventSubmit_doViewselected" />&nbsp;<input type="submit" value="All" name="eventSubmit_doViewall" />
 </td>
@@ -114,12 +113,11 @@ Refine query
  <tr>
   <td class="firstchild">
 #if ($searchType.equals("advanced"))
-  <td>
  <div>
  Save
-</div> <input type="submit" value="query" name="eventSubmit_doRedirecttosavequery" /></td>
+</div> <input type="submit" value="query" name="eventSubmit_doRedirecttosavequery" /></td><td>
 #end
-  <td><div>
+  <div>
 Verbose view
 </div><input type="submit" value="Selected"  name="eventSubmit_doViewselected" name="eventSubmit_doViewselected" />&nbsp;<input type="submit" value="All" name="eventSubmit_doViewall" />
 </td>
@@ -131,12 +129,6 @@ Reassign
 #if ($searchType.equals("advanced"))
   <td><div>
 Refine query
-</div>
-<input type="submit" value="go" name="eventSubmit_doRefinequery" />
-</td>
-#end
- </tr>
- </table>
 </div>
 
 
