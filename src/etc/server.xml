@@ -95,6 +95,9 @@
          but it will cause sessions to be less secure.
       -->
     <ContextManager debug="0" workDir="work" >
+
+      <!-- ==================== Interceptors ==================== -->
+
         <!-- 
          ContextInterceptor className="org.apache.tomcat.context.LogEvents" 
          -->
@@ -134,8 +137,6 @@
             className="org.apache.tomcat.context.DefaultCMSetter" />
         <ContextInterceptor 
             className="org.apache.tomcat.context.WorkDirInterceptor" />
-        <ContextInterceptor 
-            className="org.apache.tomcat.context.LoadOnStartupInterceptor" />
 
         <!-- Request processing -->
         <!-- Session interceptor will extract the session id from cookies and 
@@ -217,6 +218,10 @@
 	    userRoleTable="user_roles" 
             roleNameCol="role_name" />
         -->
+
+        <!-- Loaded last since JSP's that load-on-startup use request handling -->
+        <ContextInterceptor 
+            className="org.apache.tomcat.context.LoadOnStartupInterceptor" />
 
       <!-- ==================== Connectors ==================== -->
 
