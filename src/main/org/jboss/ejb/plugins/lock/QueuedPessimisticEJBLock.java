@@ -45,7 +45,7 @@ import org.jboss.monitor.LockMonitor;
  * @author <a href="bill@burkecentral.com">Bill Burke</a>
  * @author <a href="pete@subx.com">Peter Murray</a>
  *
- * @version $Revision: 1.19 $
+ * @version $Revision: 1.21 $
  */
 public class QueuedPessimisticEJBLock extends BeanLockSupport
 {
@@ -137,17 +137,17 @@ public class QueuedPessimisticEJBLock extends BeanLockSupport
    }
 
 
-   public boolean lockNoWait(Invocation mi) throws Exception
+   public boolean lockNoWait(Transaction transaction) throws Exception
    {
       this.sync();
       try
       {
-         if (getTransaction() != null &&           // And are we trying to enter with another transaction?
-             !getTransaction().equals(mi.getTransaction()))
+         // And are we trying to enter with another transaction?
+         if(getTransaction() != null && !getTransaction().equals(transaction))
          {
             return false;
          }
-         setTransaction(mi.getTransaction());
+         setTransaction(transaction);
          this.holdingThread = Thread.currentThread();
          return true;
       }
