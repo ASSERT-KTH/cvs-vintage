@@ -33,11 +33,13 @@ import org.jboss.metadata.ResourceRefMetaData;
 import org.jboss.mx.util.ObjectNameConverter;
 import org.jboss.mx.util.ObjectNameFactory;
 import org.jboss.naming.ENCThreadLocalKey;
+import org.jboss.naming.NonSerializableFactory;
 import org.jboss.naming.Util;
 import org.jboss.security.AuthenticationManager;
 import org.jboss.security.RealmMapping;
 import org.jboss.system.ServiceMBeanSupport;
 import org.jboss.util.NestedError;
+import org.omg.CORBA.ORB;
 
 import javax.ejb.EJBException;
 import javax.ejb.TimedObject;
@@ -49,6 +51,7 @@ import javax.management.ObjectName;
 import javax.naming.Context;
 import javax.naming.InitialContext;
 import javax.naming.LinkRef;
+import javax.naming.NamingException;
 import javax.naming.Reference;
 import javax.naming.StringRefAddr;
 import javax.transaction.Transaction;
@@ -81,7 +84,7 @@ import java.util.Set;
  * @author <a href="bill@burkecentral.com">Bill Burke</a>
  * @author <a href="mailto:d_jencks@users.sourceforge.net">David Jencks</a>
  * @author <a href="mailto:christoph.jung@infor.de">Christoph G. Jung</a>
- * @version $Revision: 1.139 $
+ * @version $Revision: 1.140 $
  *
  * @jmx.mbean extends="org.jboss.system.ServiceMBean"
  */
@@ -92,6 +95,8 @@ public abstract class Container
    public final static String BASE_EJB_CONTAINER_NAME =
            "jboss.j2ee:service=EJB";
 
+   public final static ObjectName ORB_NAME = ObjectNameFactory.create("jboss:service=CorbaORB");
+   
    public final static ObjectName EJB_CONTAINER_QUERY_NAME =
            ObjectNameFactory.create(BASE_EJB_CONTAINER_NAME + ",*");
 
@@ -950,9 +955,27 @@ public abstract class Container
          log.debug("TCL: " + Thread.currentThread().getContextClassLoader());
       }
 
+      ORB orb = null;
+      try
+      {
+         orb = (ORB) server.getAttribute(ORB_NAME, "ORB");
+      }
+      catch (Throwable t)
+      {
+         log.debug("Unable to retrieve orb" + t.toString());
+      }
+      
       // Since the BCL is already associated with this thread we can start
       // using the java: namespace directly
       Context ctx = (Context) new InitialContext().lookup("java:comp");
+
+      // Bind the orb
+      if (orb != null)
+      {
+         NonSerializableFactory.rebind(ctx, "ORB", orb);
+         log.debug("Bound java:comp/ORB for EJB: " + getBeanMetaData().getEjbName());
+      }
+      
       Context envCtx = ctx.createSubcontext("env");
 
       // Bind environment properties
@@ -1259,6 +1282,14 @@ public abstract class Container
       Context ctx = (Context) new InitialContext().lookup("java:comp");
       ctx.unbind("env");
       log.debug("Removed bindings from java:comp/env for EJB: " + getBeanMetaData().getEjbName());
+      try
+      {
+         NonSerializableFactory.unbind("ORB");
+         log.debug("Unbound java:comp/ORB for EJB: " + getBeanMetaData().getEjbName());
+      }
+      catch (NamingException ignored)
+      {
+      }
    }
 
 

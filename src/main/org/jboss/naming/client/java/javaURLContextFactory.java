@@ -27,7 +27,7 @@ import javax.naming.spi.ObjectFactory;
  * @see javax.naming.spi.ObjectFactory
  * 
  * @author Scott.Stark@jboss.org
- * @version $Revision: 1.3 $
+ * @version $Revision: 1.4 $
  */
 public class javaURLContextFactory
    implements ObjectFactory
@@ -110,10 +110,23 @@ public class javaURLContextFactory
 
          // Lookup the client application context from the server
          Context clientCtx = (Context) lookupCtx.lookup(clientName);
+         // Check for special objects not in the env
+         if (name.size() < 2 || "java:comp".equals(name.get(0)) == false || "env".equals(name.get(1)) == false)
+            return getSpecialObject(name);
          // Strip the comp/env prefix
          Name bindingName = name.getSuffix(2);
          Object binding = clientCtx.lookup(bindingName);
          return binding;
+      }
+      
+      public Object getSpecialObject(Name name) throws NamingException
+      {
+         if (name.size() > 0 && "java:comp".equals(name.get(0)))
+         {
+            if (name.size() == 2 && "ORB".equals(name.get(1)))
+               return ORBFactory.getORBSingleton();
+         }
+         throw new NamingException("Name not found " + name);
       }
    }
 }

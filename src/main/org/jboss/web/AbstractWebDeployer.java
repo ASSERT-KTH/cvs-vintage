@@ -11,6 +11,7 @@ import org.jboss.deployment.DeploymentException;
 import org.jboss.deployment.DeploymentInfo;
 import org.jboss.deployment.WebserviceClientDeployer;
 import org.jboss.deployment.J2eeApplicationMetaData;
+import org.jboss.ejb.Container;
 import org.jboss.ejb.EjbUtil;
 import org.jboss.logging.Logger;
 import org.jboss.metadata.EjbLocalRefMetaData;
@@ -21,9 +22,11 @@ import org.jboss.metadata.ResourceRefMetaData;
 import org.jboss.metadata.WebMetaData;
 import org.jboss.metadata.XmlFileLoader;
 import org.jboss.mx.loading.LoaderRepositoryFactory;
+import org.jboss.naming.NonSerializableFactory;
 import org.jboss.naming.Util;
 import org.jboss.security.plugins.NullSecurityManager;
 import org.jboss.web.AbstractWebContainer.WebDescriptorParser;
+import org.omg.CORBA.ORB;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
@@ -136,7 +139,7 @@ thread context ClassLoader as was used to dispatch the http service request.
 @jmx:mbean extends="org.jboss.deployment.SubDeployerMBean"
 
 @author  Scott.Stark@jboss.org
-@version $Revision: 1.4 $
+@version $Revision: 1.5 $
 */
 public abstract class AbstractWebDeployer
 {
@@ -411,10 +414,28 @@ public abstract class AbstractWebDeployer
             log.debug(".."+parent);
             parent = parent.getParent();
          }
+         // TODO: Where does this ENC get tidied up?
          currentThread.setContextClassLoader(loader);
          metaData.setENCLoader(loader);
          envCtx = (Context) iniCtx.lookup("java:comp");
 
+         ORB orb = null;
+         try
+         {
+            orb = (ORB) server.getAttribute(Container.ORB_NAME, "ORB");
+         }
+         catch (Throwable t)
+         {
+            log.debug("Unable to retrieve orb" + t.toString());
+         }
+
+         // Bind the orb
+         if (orb != null)
+         {
+            NonSerializableFactory.rebind(envCtx, "ORB", orb);
+            log.debug("Bound java:comp/ORB");
+         }
+         
          // Add a link to the global transaction manager
          envCtx.bind("UserTransaction", new LinkRef("UserTransaction"));
          log.debug("Linked java:comp/UserTransaction to JNDI name: UserTransaction");
