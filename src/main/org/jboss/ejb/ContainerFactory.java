@@ -76,7 +76,7 @@ import org.jboss.logging.Logger;
 *   @author <a href="mailto:jplindfo@helsinki.fi">Juha Lindfors</a>
 *   @author <a href="mailto:sebastien.alborini@m4x.org">Sebastien Alborini</a>
 *
-*   @version $Revision: 1.32 $
+*   @version $Revision: 1.33 $
 */
 public class ContainerFactory
 	extends org.jboss.util.ServiceMBeanSupport
@@ -246,7 +246,7 @@ public class ContainerFactory
 			URL origUrl = url;
 			
 			// copy the jar file to prevent locking - redeploy failure
-			if (url.getProtocol().startsWith("file")) 
+			if (url.getProtocol().startsWith("file") && url.getFile().endsWith(".jar")) 
          {
 				File jarFile = new File(url.getFile());
 				File tmp = File.createTempFile("tmpejbjar",".jar");
