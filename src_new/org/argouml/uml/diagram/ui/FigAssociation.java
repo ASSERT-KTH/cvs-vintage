@@ -1,4 +1,4 @@
-// $Id: FigAssociation.java,v 1.73 2004/12/09 19:09:13 mvw Exp $
+// $Id: FigAssociation.java,v 1.74 2004/12/10 18:44:03 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -76,7 +76,7 @@ public class FigAssociation extends FigEdgeModelElement {
      * association itself.
      * TODO: provide getter instead and maybe setter if needed
      */
-    protected FigTextGroup middleGroup = new FigTextGroup();
+    private FigTextGroup middleGroup = new FigTextGroup();
     
     private FigText srcMult, srcRole;
     private FigText destMult, destRole;
@@ -513,6 +513,13 @@ public class FigAssociation extends FigEdgeModelElement {
 	    destArrowHead.setLineColor(getLineColor());   
         }
         super.paint(g);
+    }
+
+    /**
+     * @return Returns the middleGroup.
+     */
+    protected FigTextGroup getMiddleGroup() {
+        return middleGroup;
     }
 
 } /* end class FigAssociation */
