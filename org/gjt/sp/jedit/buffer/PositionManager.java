@@ -40,7 +40,7 @@ import org.gjt.sp.util.Log;
  * called through, implements such protection.
  *
  * @author Slava Pestov
- * @version $Id: PositionManager.java,v 1.22 2003/07/21 21:22:12 spestov Exp $
+ * @version $Id: PositionManager.java,v 1.23 2003/07/28 02:10:56 spestov Exp $
  * @since jEdit 4.2pre3
  */
 public class PositionManager
@@ -105,42 +105,21 @@ public class PositionManager
 			return;
 		}
 
-		// p1 --------------------- p2 ---------------------- p3
-		// kill if bias:   ^---- false        ^----- true
-		// update if bias: ^---- true         ^----- false
-		boolean bias;
-		int p1, p2, p3;
-		if(gapWidth == 0)
+		if(gapWidth != 0 && gapOffset < offset)
 		{
-			p1 = offset;
-			p2 = p3 = offset + length;
-			bias = true;
+			root.contentRemoved(gapOffset,offset,offset + length,
+				gapWidth,true);
+		}
+		else if(gapWidth != 0 && gapOffset > offset + length)
+		{
+			root.contentRemoved(offset,offset + length,gapOffset,
+				gapWidth,false);
 		}
 		else
 		{
-			if(gapOffset < offset)
-			{
-				p1 = gapOffset;
-				p2 = offset;
-				p3 = offset + length;
-				bias = true;
-			}
-			else if(gapOffset > offset + length)
-			{
-				p1 = offset;
-				p2 = offset + length;
-				p3 = gapOffset;
-				bias = false;
-			}
-			else
-			{
-				p1 = offset;
-				p2 = p3 = offset + length;
-				bias = false;
-			}
+			root.contentRemoved(offset,offset + length,
+				offset + length,gapWidth,false);
 		}
-
-		root.contentRemoved(p1,p2,p3,gapWidth,bias);
 
 		gapOffset = offset;
 		gapWidth -= length;
@@ -542,28 +521,17 @@ public class PositionManager
 			}
 			else
 			{
-				// recall from above:
-				// p1 --------------------- p2 ---------------------- p3
-				// kill if bias:   ^---- false        ^----- true
-				// update if bias: ^---- true         ^----- false
 				if(bias)
 				{
-					if(getOffset() > p2)
-					{
-						if(p2 == p3)
-							offset = p2 + length;
-						else
-							offset = p2;
-					}
+					if(getOffset() >= p2)
+						offset = p2 - length;
 					else
-					{
 						offset += length;
-					}
 				}
 				else
 				{
-					if(getOffset() < p2)
-						offset = p1;
+					if(getOffset() <= p2)
+						offset = p2 - length;
 					else
 						offset -= length;
 				}
