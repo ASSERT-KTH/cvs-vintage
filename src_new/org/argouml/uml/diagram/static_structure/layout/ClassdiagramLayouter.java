@@ -1,4 +1,4 @@
-// $Id: ClassdiagramLayouter.java,v 1.17 2003/09/04 20:11:50 thierrylach Exp $
+// $Id: ClassdiagramLayouter.java,v 1.18 2003/09/08 20:11:54 bobtarling Exp $
 // Copyright (c) 1996-2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -37,9 +37,6 @@ import org.argouml.uml.diagram.layout.Layouter;
 import org.argouml.uml.diagram.ui.UMLDiagram;
 import org.tigris.gef.presentation.FigEdge;
 import org.tigris.gef.presentation.FigNode;
-
-import ru.novosoft.uml.foundation.core.MModelElement;
-
 
 /**
  * This class implements a layout algoritms for class diagrams.
@@ -192,22 +189,15 @@ public class ClassdiagramLayouter implements Layouter {
                                 Collection clients =
 				    ModelFacade.getClients(abstr);
                                 for (Iterator iter2 = clients.iterator();
-				     iter2.hasNext();
-				     ) 
-				{
-                                    MModelElement me =
-					(MModelElement) iter2.next();
+                                        iter2.hasNext();) {
+                                    Object me = /*(MModelElement)*/ iter2.next();
                                     if (node == me) {
                                         Collection suppliers =
 					    ModelFacade.getSuppliers(abstr);
-                                        for (Iterator iter3 =
-						 suppliers.iterator();
-					     iter3.hasNext(); 
-					     ) 
-					{
+                                        Iterator iter3 = suppliers.iterator();
+                                        while (iter3.hasNext()) {
                                             Object me2 = iter3.next();
-                                            if (ModelFacade.isAClassifier(me2))
-					    {
+                                            if (ModelFacade.isAClassifier(me2)) {
                                                 ClassdiagramNode superNode = 
 						    getClassdiagramNode4owner(me2);
                                                 
@@ -227,8 +217,8 @@ public class ClassdiagramLayouter implements Layouter {
 				     iter2.hasNext();
 				     )
 				{
-                                    MModelElement me =
-					(MModelElement) iter2.next();
+                                    Object me =
+					/*(MModelElement)*/ iter2.next();
                                     if (node == me) {
                                         clients = ModelFacade.getClients(abstr);
                                         for (Iterator iter3 =
@@ -796,8 +786,6 @@ public class ClassdiagramLayouter implements Layouter {
     /** internal */
     private int yPos;
 }
-
-
 
 
 

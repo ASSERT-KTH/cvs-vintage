@@ -1,4 +1,4 @@
-// $Id: ExtensionMechanismsHelper.java,v 1.21 2003/06/30 18:00:21 linus Exp $
+// $Id: ExtensionMechanismsHelper.java,v 1.22 2003/09/08 20:11:53 bobtarling Exp $
 // Copyright (c) 1996-2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -31,6 +31,7 @@ import java.util.List;
 
 import org.argouml.kernel.Project;
 import org.argouml.kernel.ProjectManager;
+import org.argouml.model.ModelFacade;
 import org.argouml.model.uml.foundation.core.CoreHelper;
 
 import ru.novosoft.uml.foundation.core.MModelElement;
@@ -188,9 +189,9 @@ public class ExtensionMechanismsHelper {
         return ret;
     }
 
-    protected boolean isValidStereoType(Class clazz, MStereotype stereo) {
+    protected boolean isValidStereoType(Class clazz, Object stereo) {
         if (clazz == null || stereo == null) return false;
-        if (getMetaModelName(clazz).equals(stereo.getBaseClass()))
+        if (getMetaModelName(clazz).equals(ModelFacade.getBaseClass(stereo)))
             return true;
         else {
             if (getMetaModelName(clazz).equals("ModelElement")) return false;
@@ -206,7 +207,7 @@ public class ExtensionMechanismsHelper {
      * @param stereo
      * @return boolean
      */
-    public boolean isValidStereoType(Object m, MStereotype stereo) {
+    public boolean isValidStereoType(Object m, Object stereo) {
         if (m == null) return false;
 	return isValidStereoType(m.getClass(), stereo);
     }

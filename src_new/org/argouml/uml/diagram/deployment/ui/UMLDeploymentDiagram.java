@@ -1,4 +1,4 @@
-// $Id: UMLDeploymentDiagram.java,v 1.22 2003/09/04 20:11:46 thierrylach Exp $
+// $Id: UMLDeploymentDiagram.java,v 1.23 2003/09/08 20:11:52 bobtarling Exp $
 // Copyright (c) 2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -173,12 +173,12 @@ public class UMLDeploymentDiagram extends UMLDiagram {
 					       + handle
 					       + " is not a namespace");
         }
-        MNamespace m = (MNamespace) handle;
+        Object m = /*(MNamespace)*/ handle;
         super.setNamespace(m);
         DeploymentDiagramGraphModel gm = new DeploymentDiagramGraphModel();
         gm.setNamespace(m);
         setGraphModel(gm);
-        LayerPerspective lay = new LayerPerspectiveMutable(m.getName(), gm);
+        LayerPerspective lay = new LayerPerspectiveMutable(ModelFacade.getName(m), gm);
         setLayer(lay);
         DeploymentDiagramRenderer rend = new DeploymentDiagramRenderer();
         // singleton

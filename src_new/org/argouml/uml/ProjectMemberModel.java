@@ -1,4 +1,4 @@
-// $Id: ProjectMemberModel.java,v 1.14 2003/09/04 20:11:43 thierrylach Exp $
+// $Id: ProjectMemberModel.java,v 1.15 2003/09/08 20:11:53 bobtarling Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -58,7 +58,7 @@ public class ProjectMemberModel extends ProjectMember {
     ////////////////////////////////////////////////////////////////
     // instance variables
 
-    private MModel _model;
+    private Object _model;
 
     ////////////////////////////////////////////////////////////////
     // constructors
@@ -80,11 +80,11 @@ public class ProjectMemberModel extends ProjectMember {
     ////////////////////////////////////////////////////////////////
     // accessors
 
-    public MModel getModel() {
+    public Object getModel() {
         return _model;
     }
     protected void setModel(Object model) {
-        _model = (MModel)model;
+        _model = /*(MModel)*/model;
     }
 
     public String getType() {
@@ -123,7 +123,7 @@ public class ProjectMemberModel extends ProjectMember {
 
         try {
 
-            xmiwriter = new XMIWriter(_model, writer);
+            xmiwriter = new XMIWriter((MModel)_model, writer);
             xmiwriter.gen();
         } catch (Exception ex) {
             logNotContainedElements(xmiwriter);
@@ -150,7 +150,7 @@ public class ProjectMemberModel extends ProjectMember {
 
         try {
 
-            xmiwriter = new XMIWriter(_model, writer);
+            xmiwriter = new XMIWriter((MModel)_model, writer);
             xmiwriter.gen();
         } catch (Exception ex) {
             logNotContainedElements(xmiwriter);

@@ -1,5 +1,4 @@
-
-// $Id: TableModelOper.java,v 1.6 2003/08/31 15:19:41 alexb Exp $
+// $Id: TableModelOper.java,v 1.7 2003/09/08 20:11:53 bobtarling Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -57,7 +56,7 @@ public class TableModelOper extends TableModelComposite {
 
     public Vector rowObjectsFor(Object t) {
 	if (!(org.argouml.model.ModelFacade.isAClassifier(t))) return new Vector();
-	MClassifier cls = (MClassifier) t;
+	Object cls = /*(MClassifier)*/ t;
 	Collection oper = ModelFacade.getOperations(cls);
 	return new Vector(oper);
     }

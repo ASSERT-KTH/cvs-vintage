@@ -1,6 +1,4 @@
-
-
-// $Id: FigEdgeModelElement.java,v 1.38 2003/09/05 22:35:21 bobtarling Exp $
+// $Id: FigEdgeModelElement.java,v 1.39 2003/09/08 20:11:53 bobtarling Exp $
 // Copyright (c) 1996-2001 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -28,7 +26,7 @@
 // Classes: FigEdgeModelElement
 // Original Author: abonner
 
-// $Id: FigEdgeModelElement.java,v 1.38 2003/09/05 22:35:21 bobtarling Exp $
+// $Id: FigEdgeModelElement.java,v 1.39 2003/09/08 20:11:53 bobtarling Exp $
 
 package org.argouml.uml.diagram.ui;
 
@@ -496,7 +494,7 @@ public abstract class FigEdgeModelElement
             Object oldOwner = getOwner();
 
             if (org.argouml.model.ModelFacade.isAModelElement(oldOwner))
-		((MModelElement) oldOwner).removeMElementListener(this);
+		((MModelElement)oldOwner).removeMElementListener(this);
             if (org.argouml.model.ModelFacade.isAModelElement(newOwner)) {
                 UmlModelEventPump.getPump().addModelEventListener(this, newOwner);
                 if (ModelFacade.getUUID(newOwner) == null)

@@ -1,4 +1,4 @@
-// $Id: ModelFacade.java,v 1.121 2003/09/08 18:58:11 bobtarling Exp $
+// $Id: ModelFacade.java,v 1.122 2003/09/08 20:11:53 bobtarling Exp $
 // Copyright (c) 2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -126,7 +126,6 @@ import ru.novosoft.uml.foundation.data_types.MBooleanExpression;
 import ru.novosoft.uml.foundation.data_types.MCallConcurrencyKind;
 import ru.novosoft.uml.foundation.data_types.MChangeableKind;
 import ru.novosoft.uml.foundation.data_types.MExpression;
-import ru.novosoft.uml.foundation.data_types.MMessageDirectionKind;
 import ru.novosoft.uml.foundation.data_types.MMultiplicity;
 import ru.novosoft.uml.foundation.data_types.MObjectSetExpression;
 import ru.novosoft.uml.foundation.data_types.MOrderingKind;
