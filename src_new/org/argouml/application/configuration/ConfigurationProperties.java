@@ -1,4 +1,4 @@
-// $Id: ConfigurationProperties.java,v 1.8 2003/09/03 15:16:49 thierrylach Exp $
+// $Id: ConfigurationProperties.java,v 1.9 2003/09/16 23:42:55 thierrylach Exp $
 // Copyright (c) 1996-2001 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -47,10 +47,11 @@ public class ConfigurationProperties extends ConfigurationHandler {
     /** The location of Argo's default properties resource.
      */
     private static String PROPERTIES =
-	"/org/argouml/resource/default.properties";
+        "/org/argouml/resource/default.properties";
+    
     /** The primary property bundle.
      */
-    protected Properties _properties = null;
+    private Properties _properties = null;
 
     /** Flag to ensure that only the first load failure is reported
      *  even though we keep trying because the file or URL may only
@@ -92,32 +93,32 @@ public class ConfigurationProperties extends ConfigurationHandler {
      * @return true if the load was successful, false if not.
      */
     public boolean loadFile(File file) {
-	try {
-	    _properties.load(new FileInputStream(file));
-	    Argo.log.info ("Configuration loaded from " + file);
-	    return true;
-	}
-	catch (Exception e) {
-	    if (_canComplain) {
-			Argo.log.warn ("Unable to load configuration " + file);
-	    }
-		// Try to create an empty file.
-		try {
-			file.createNewFile();
-			if (file.exists() && file.isFile()) {
-	    		Argo.log.info ("New configuration created as " + file);
-				// Pretend we loaded the file correctly
-				return true;
-			}
-		}
-		catch (IOException e1) {
-			// Ignore an error here
-			Argo.log.warn ("Unable to create configuration " + file, e1);
-		}
-	    _canComplain = false;
-	}
+        try {
+            _properties.load(new FileInputStream(file));
+            Argo.log.info ("Configuration loaded from " + file);
+            return true;
+        }
+        catch (Exception e) {
+            if (_canComplain) {
+                Argo.log.warn ("Unable to load configuration " + file);
+            }
+            // Try to create an empty file.
+            try {
+                file.createNewFile();
+                if (file.exists() && file.isFile()) {
+                    Argo.log.info ("New configuration created as " + file);
+                    // Pretend we loaded the file correctly
+                    return true;
+                }
+            }
+            catch (IOException e1) {
+                // Ignore an error here
+                Argo.log.warn ("Unable to create configuration " + file, e1);
+            }
+            _canComplain = false;
+        }
 
-	return false;
+        return false;
     }
 
     /** Save the configuration to a specified location.
