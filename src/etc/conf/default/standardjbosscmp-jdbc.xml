@@ -7,7 +7,7 @@
 <!--                                                                       -->
 <!-- ===================================================================== -->
 
-<!-- $Id: standardjbosscmp-jdbc.xml,v 1.24 2002/04/18 19:22:35 dsundstrom Exp $ -->
+<!-- $Id: standardjbosscmp-jdbc.xml,v 1.25 2002/04/19 15:24:50 dsundstrom Exp $ -->
 
 <jbosscmp-jdbc>
    
@@ -198,7 +198,7 @@
          <fk-constraint-template>ALTER TABLE ?1 ADD CONSTRAINT ?2 FOREIGN KEY (?3) REFERENCES ?4 (?5)</fk-constraint-template>
          <alias-header-prefix>t</alias-header-prefix>
          <alias-header-suffix>_</alias-header-suffix>
-         <alias-max-length>32</alias-max-length>
+         <alias-max-length>30</alias-max-length>
          <subquery-supported>true</subquery-supported>
          <function-mapping>
             <function-name>concat</function-name>
@@ -321,7 +321,7 @@
          <fk-constraint-template>ALTER TABLE ?1 ADD CONSTRAINT ?2 FOREIGN KEY (?3) REFERENCES ?4 (?5)</fk-constraint-template>
          <alias-header-prefix>t</alias-header-prefix>
          <alias-header-suffix>_</alias-header-suffix>
-         <alias-max-length>32</alias-max-length>
+         <alias-max-length>30</alias-max-length>
          <subquery-supported>true</subquery-supported>
          <function-mapping>
             <function-name>concat</function-name>
@@ -448,7 +448,7 @@
          <fk-constraint-template>ALTER TABLE ?1 ADD CONSTRAINT ?2 FOREIGN KEY (?3) REFERENCES ?4 (?5)</fk-constraint-template>
          <alias-header-prefix>t</alias-header-prefix>
          <alias-header-suffix>_</alias-header-suffix>
-         <alias-max-length>32</alias-max-length>
+         <alias-max-length>30</alias-max-length>
          <subquery-supported>true</subquery-supported>
          <function-mapping>
             <function-name>concat</function-name>
