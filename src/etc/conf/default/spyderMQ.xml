@@ -11,6 +11,7 @@
 	<Topic><Name>metrics</Name></Topic>
 	<Topic><Name>beancache</Name></Topic>
 	<Topic><Name>testTopic</Name></Topic>
+        <Topic><Name>testDurableTopic</Name></Topic>
 	<Topic><Name>example</Name></Topic>
 	<Topic><Name>bob</Name></Topic>
 
