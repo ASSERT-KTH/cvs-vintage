@@ -1,4 +1,4 @@
-// $Id: GeneratorPHP4.java,v 1.13 2004/10/03 17:59:19 mvw Exp $
+// $Id: GeneratorPHP4.java,v 1.14 2004/12/26 22:57:28 bobtarling Exp $
 // Copyright (c) 2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -51,6 +51,7 @@ import org.argouml.language.php.PHPDocumentor;
 
 import org.argouml.model.ModelFacade;
 
+import org.argouml.uml.UUIDManager;
 import org.argouml.uml.generator.FileGenerator;
 import org.argouml.uml.generator.Generator2;
 
@@ -1172,16 +1173,16 @@ public class GeneratorPHP4
      */
     private final String generateSection(Object modelElement, String sIndent,
                                    String sSuffix) {
-        String sId = ModelFacade.getUUID(modelElement);
-        if (sId == null) {
-            sId = (new UID().toString());
-            ModelFacade.setUUID(modelElement, sId);
+        String uuid = UUIDManager.getInstance().getUUID(modelElement);
+        if (uuid == null) {
+            uuid = (new UID().toString());
+            ModelFacade.setUUID(modelElement, uuid);
         }
 
         if (sSuffix != null && sSuffix.trim() != "") {
-            return Section.generate(sId + "-" + sSuffix.trim(), sIndent);
+            return Section.generate(uuid + "-" + sSuffix.trim(), sIndent);
         } else {
-            return Section.generate(sId, sIndent);
+            return Section.generate(uuid, sIndent);
         }
     }
 

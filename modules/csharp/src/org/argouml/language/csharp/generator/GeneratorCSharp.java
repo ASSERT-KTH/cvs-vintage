@@ -1,4 +1,4 @@
-// $Id: GeneratorCSharp.java,v 1.19 2004/12/21 10:56:10 mvw Exp $
+// $Id: GeneratorCSharp.java,v 1.20 2004/12/26 22:57:28 bobtarling Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -42,6 +42,7 @@ import org.argouml.application.api.PluggableNotation;
 import org.argouml.model.ModelFacade;
 import org.argouml.model.uml.UmlHelper;
 import org.argouml.uml.DocumentationManager;
+import org.argouml.uml.UUIDManager;
 import org.argouml.uml.generator.FileGenerator;
 import org.argouml.uml.generator.Generator2;
 
@@ -1511,7 +1512,7 @@ public class GeneratorCSharp extends Generator2
     }
 
     private String generateSection(Object cls) {
-	String id = ModelFacade.getUUID(cls);
+        String id = UUIDManager.getInstance().getUUID(cls);
 	if (id == null) {
 	    id = (new UID().toString());
 	    // id = cls.getName() + "__" + static_count;
