@@ -25,7 +25,7 @@
 // File: CollabDiagramGraphModel.java
 // Classes: CollabDiagramGraphModel
 // Original Author: agauthie@ics.uci.edu
-// $Id: CollabDiagramGraphModel.java,v 1.12 2002/10/10 13:18:51 kataka Exp $
+// $Id: CollabDiagramGraphModel.java,v 1.13 2002/10/10 13:25:43 kataka Exp $
 
 package org.argouml.uml.diagram.collaboration;
 import org.apache.log4j.Category;
@@ -50,7 +50,7 @@ import org.tigris.gef.graph.*;
  *  GEF.  This class handles only UML Use Case Digrams.  */
 
 public class CollabDiagramGraphModel extends MutableGraphSupport
-implements MElementListener, VetoableChangeListener {
+implements VetoableChangeListener {
     protected static Category cat = Category.getInstance(CollabDiagramGraphModel.class);
   ////////////////////////////////////////////////////////////////
   // instance variables
@@ -75,9 +75,7 @@ implements MElementListener, VetoableChangeListener {
     if (!(m instanceof MCollaboration)) {
       throw new IllegalArgumentException("invalid namespace for CollabDiagramGraphModel");
     }
-    if (_collab != null) _collab.removeMElementListener(this);
     _collab = (MCollaboration) m;
-    if (_collab != null) _collab.addMElementListener(this);
   }
 
 
@@ -324,17 +322,5 @@ implements MElementListener, VetoableChangeListener {
     }
   }
 
-	public void propertySet(MElementEvent mee) {
-	}
-	public void listRoleItemSet(MElementEvent mee) {
-	}
-	public void recovered(MElementEvent mee) {
-	}
-	public void removed(MElementEvent mee) {
-	}
-	public void roleAdded(MElementEvent mee) {
-	}
-	public void roleRemoved(MElementEvent mee) {
-	}
 } /* end class CollabDiagramGraphModel */
 

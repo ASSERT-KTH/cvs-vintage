@@ -25,7 +25,7 @@
 // File: UseCaseDiagramGraphModel.java
 // Classes: UseCaseDiagramGraphModel
 // Original Author: your email address here
-// $Id: UseCaseDiagramGraphModel.java,v 1.13 2002/10/10 13:18:51 kataka Exp $
+// $Id: UseCaseDiagramGraphModel.java,v 1.14 2002/10/10 13:25:44 kataka Exp $
 
 // 3 Apr 2002: Jeremy Bennett (mail@jeremybennett.com). Extended to support
 // the Extend and Include relationships. JavaDoc added for clarity. Adding edge
@@ -59,7 +59,7 @@ import org.argouml.uml.MMUtil;
  */
 
 public class UseCaseDiagramGraphModel extends MutableGraphSupport
-    implements VetoableChangeListener, MElementListener {
+    implements VetoableChangeListener {
         protected static Category cat = Category.getInstance(UseCaseDiagramGraphModel.class);
 
     ///////////////////////////////////////////////////////////////////////////
@@ -119,16 +119,7 @@ public class UseCaseDiagramGraphModel extends MutableGraphSupport
      */
 
     public void setNamespace(MNamespace m) {
-
-        if (_model != null) {
-            _model.removeMElementListener(this);
-        }
-
         _model = m;
-
-        if (_model != null) {
-            _model.addMElementListener(this);
-        }
     }
 
 
@@ -898,89 +889,7 @@ public class UseCaseDiagramGraphModel extends MutableGraphSupport
         }
     }
 
-    ///////////////////////////////////////////////////////////////////////////
-    //
-    // Methods that implement the MElementListener interface
-    //
-    ///////////////////////////////////////////////////////////////////////////
-
-    /**
-     * <p>Provided to meet the requirements of the {@link MElementListener}
-     *   interface.</p>
-     *
-     * <p>This implementation is empty.</p>
-     *
-     * @param mee  The event that caused this method to be invoked.
-     */
-
-    public void listRoleItemSet(MElementEvent mee) {
-    }
-
-
-    /**
-     * <p>Provided to meet the requirements of the {@link MElementListener}
-     *   interface.</p>
-     *
-     * <p>This implementation is empty.</p>
-     *
-     * @param mee  The event that caused this method to be invoked.
-     */
-
-    public void propertySet(MElementEvent mee) {
-    }
-
-
-    /**
-     * <p>Provided to meet the requirements of the {@link MElementListener}
-     *   interface.</p>
-     *
-     * <p>This implementation is empty.</p>
-     *
-     * @param mee  The event that caused this method to be invoked.
-     */
-
-    public void recovered(MElementEvent mee) {
-    }
-
-
-    /**
-     * <p>Provided to meet the requirements of the {@link MElementListener}
-     *   interface.</p>
-     *
-     * <p>This implementation is empty.</p>
-     *
-     * @param mee  The event that caused this method to be invoked.
-     */
-
-    public void removed(MElementEvent mee) {
-    }
-
-
-    /**
-     * <p>Provided to meet the requirements of the {@link MElementListener}
-     *   interface.</p>
-     *
-     * <p>This implementation is empty.</p>
-     *
-     * @param mee  The event that caused this method to be invoked.
-     */
-
-    public void roleAdded(MElementEvent mee) {
-    }
-
-
-    /**
-     * <p>Provided to meet the requirements of the {@link MElementListener}
-     *   interface.</p>
-     *
-     * <p>This implementation is empty.</p>
-     *
-     * @param mee  The event that caused this method to be invoked.
-     */
-
-    public void roleRemoved(MElementEvent mee) {
-    }
-
+  
 
     ///////////////////////////////////////////////////////////////////////////
     //

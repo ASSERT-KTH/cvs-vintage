@@ -24,7 +24,7 @@
 // File: ClassDiagramGraphModel.java
 // Classes: ClassDiagramGraphModel
 // Original Author: jrobbins@ics.uci.edu
-// $Id: ClassDiagramGraphModel.java,v 1.15 2002/10/10 13:18:51 kataka Exp $
+// $Id: ClassDiagramGraphModel.java,v 1.16 2002/10/10 13:25:43 kataka Exp $
 
 package org.argouml.uml.diagram.static_structure;
 
@@ -50,7 +50,7 @@ import org.argouml.uml.MMUtil;
  *  GEF.  This class handles only UML Class digrams.  */
 
 public class ClassDiagramGraphModel extends MutableGraphSupport
-implements VetoableChangeListener, MElementListener {
+implements VetoableChangeListener  {
     protected static Category cat = Category.getInstance(ClassDiagramGraphModel.class);
   ////////////////////////////////////////////////////////////////
   // instance variables
@@ -70,9 +70,7 @@ implements VetoableChangeListener, MElementListener {
 
   public MNamespace getNamespace() { return _model; }
   public void setNamespace(MNamespace m) {
-    if (_model != null) _model.removeMElementListener(this);
     _model = m;
-    if (_model != null) _model.addMElementListener(this);
   }
 
   ////////////////////////////////////////////////////////////////
@@ -506,20 +504,6 @@ implements VetoableChangeListener, MElementListener {
       }
     }
   }
-
-
-	public void propertySet(MElementEvent mee) {
-	}
-	public void listRoleItemSet(MElementEvent mee) {
-	}
-	public void recovered(MElementEvent mee) {
-	}
-	public void removed(MElementEvent mee) {
-	}
-	public void roleAdded(MElementEvent mee) {
-	}
-	public void roleRemoved(MElementEvent mee) {
-	}
 
 
   static final long serialVersionUID = -2638688086415040146L;
