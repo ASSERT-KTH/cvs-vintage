@@ -89,8 +89,14 @@ public class OptionsXmlConfig extends DefaultXmlConfig
 
 
     public XmlElement getMimeTypeNode()
-    {        
-        return getRoot().getElement("/options/mimetypes");
+    {   
+    	XmlElement mimeTypes = getRoot().getElement("/options/mimetypes");
+    	if( mimeTypes == null ) {
+    		getRoot().getElement("options").addElement(new XmlElement("mimetypes"));
+			mimeTypes = getRoot().getElement("/options/mimetypes");
+    	}
+    	
+		return mimeTypes;
     }
 
 
