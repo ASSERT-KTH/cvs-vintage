@@ -9,6 +9,7 @@
 package org.jboss.aspect.spi;
 
 import java.lang.reflect.InvocationHandler;
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Map;
 
@@ -89,14 +90,17 @@ final public class AspectInvocation
                 {
 
                     // Invoke the target object if we can.
-
-                    // Use the InvocationHandler of the target object proxy if we can.
-                    if (targetObjectIH != null)
-                        return targetObjectIH.invoke(targetObject, method, args);
-
-                    // Use reflection to call the method on the target object.
-                    else if (targetObject != null)
-                        return method.invoke(targetObject, args);
+			        try {
+	                    // Use the InvocationHandler of the target object proxy if we can.
+	                    if (targetObjectIH != null)
+	                        return targetObjectIH.invoke(targetObject, method, args);
+	
+	                    // Use reflection to call the method on the target object.
+	                    else if (targetObject != null)
+	                        return method.invoke(targetObject, args);
+			        } catch ( InvocationTargetException e ) {
+			        	throw e.getTargetException();
+			        }
 
                     throw new AspectRuntimeException(
                         "Aspect failed to process a method call: "

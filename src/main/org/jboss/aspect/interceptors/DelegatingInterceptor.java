@@ -8,6 +8,7 @@
  ***************************************/
 package org.jboss.aspect.interceptors;
 
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Map;
 import java.util.Set;
@@ -74,8 +75,12 @@ public class DelegatingInterceptor implements AspectInterceptor
                 attachments.put(this, delegate);
             }
         }
-        return invocation.method.invoke(delegate, invocation.args);
-
+        
+        try {
+	        return invocation.method.invoke(delegate, invocation.args);
+        } catch ( InvocationTargetException e ) {
+        	throw e.getTargetException();
+        }
     }
 
     /**
