@@ -164,10 +164,10 @@ public class TreeView extends JTree {
      * Selects the previous selected tree leaf before the DnD action began.
      */
     private void resetDndAction() {
-        selectedPathBeforeDrag = null;
-        dropTargetPath = null;
         dndAutoExpanderTimer.stop();
         setSelectionPath(selectedPathBeforeDrag);
+        dropTargetPath = null;
+        selectedPathBeforeDrag = null;
         isInDndMode = false;
     }
 
