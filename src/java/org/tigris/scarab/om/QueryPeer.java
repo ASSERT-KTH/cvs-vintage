@@ -48,6 +48,7 @@ package org.tigris.scarab.om;
 
 import java.util.List;
 import java.util.ArrayList;
+import java.io.Serializable;
 import org.apache.torque.util.Criteria;
 import org.tigris.scarab.services.cache.ScarabCache;
 
@@ -63,47 +64,49 @@ public class QueryPeer
     extends org.tigris.scarab.om.BaseQueryPeer
 {
 
-    public static final String GET_ALL_QUERIES = 
-        "getAllQueries";
-    public static final String GET_PRIVATE_QUERIES = 
-        "getPrivateQueries";
-    public static final String GET_MODULE_QUERIES = 
-        "getGlobalQueries";
+    static final String GET_QUERIES = 
+        "getQueries";
+    static final String QUERY_PEER = 
+        "QueryPeer";
+
+    // query types
+    public static final String TYPE_PRIVATE = "private";
+    public static final String TYPE_GLOBAL = "global";
+    public static final String TYPE_ALL = "all";
+
+    // sort columns
+    public static final String SORT_NAME = "name";
+    public static final String SORT_DESCRIPTION = "desc";
+    public static final String SORT_AVAILABILITY = "avail";
+    public static final String SORT_USER = "user";
 
     /**
      * List of private queries associated with this module.
      * Created by this user.
      */
-    public static List getQueries(Module me, IssueType issueType,
+    public static List getQueries(Module module, IssueType issueType,
                                   ScarabUser user, String sortColumn,   
                                   String sortPolarity, String type)
         throws Exception
     {
         List queries = null;
-        String cacheKey = "all";
-        if (type.equals("private"))
-        {
-            cacheKey = GET_PRIVATE_QUERIES;
-        }
-        else if (type.equals("global"))
-        {
-            cacheKey = GET_MODULE_QUERIES;  
-        }
-      
-        Object obj = ScarabCache.get("QueryPeer", GET_ALL_QUERIES, 
-                                     user, issueType); 
-
-        if (me == null || issueType == null)
+        if (module == null || issueType == null)
         {
             queries = new ArrayList();
         }
-        else if ( obj == null ) 
+        else 
         {
+            // 4th element is ignored due to bug in torque
+            Serializable[] key = {QUERY_PEER, GET_QUERIES, module, null, 
+                issueType, user, sortColumn, sortPolarity, type};
+            Object obj = QueryManager.getMethodResult().get(key);
+            if ( obj == null ) 
+            {
             Criteria crit = new Criteria()
                 .add(QueryPeer.DELETED, 0);
 
             Criteria.Criterion moduleCrit = crit.getNewCriterion(
-                QueryPeer.MODULE_ID, me.getModuleId(), Criteria.EQUAL);
+                QueryPeer.MODULE_ID, module.getModuleId(), Criteria.EQUAL);
             Criteria.Criterion issueTypeCrit = crit.getNewCriterion(
                 QueryPeer.ISSUE_TYPE_ID, issueType.getIssueTypeId(), 
                 Criteria.EQUAL);
@@ -123,11 +126,11 @@ public class QueryPeer
                 QueryPeer.SCOPE_ID, Scope.PERSONAL__PK, 
                 Criteria.EQUAL);
             cPriv1.and(cPriv2);
-            if (type.equals("private"))
+            if (TYPE_PRIVATE.equals(type))
             {
                 crit.add(cPriv1);
             }
-            else if (type.equals("global"))
+            else if (TYPE_GLOBAL.equals(type))
             {
                 crit.add(cGlob);
             }
@@ -140,18 +143,18 @@ public class QueryPeer
             crit.setDistinct();
 
             // Add sort criteria
-            if (sortColumn.equals("desc"))
+            if (SORT_DESCRIPTION.equals(sortColumn))
             {
                 addSortOrder(crit, QueryPeer.DESCRIPTION, 
                              sortPolarity);
             }
-            else if (sortColumn.equals("avail"))
+            else if (SORT_AVAILABILITY.equals(sortColumn))
             {
                 crit.addJoin(QueryPeer.SCOPE_ID,
                              ScopePeer.SCOPE_ID);
                 addSortOrder(crit, ScopePeer.SCOPE_NAME, sortPolarity);
             }
-            else if (sortColumn.equals("user"))
+            else if (SORT_USER.equals(sortColumn))
             {
                 addSortOrder(crit, QueryPeer.USER_ID, sortPolarity);
             }
@@ -161,30 +164,31 @@ public class QueryPeer
                 addSortOrder(crit, QueryPeer.NAME, sortPolarity);
             }
             queries = QueryPeer.doSelect(crit);
-            ScarabCache.put(queries, "QueryPeer", 
-                            cacheKey, user, issueType);
+            QueryManager.getMethodResult().put(queries, key);
         }
         else 
         {
             queries = (List)obj;
         }
+        }
         return queries;
     }
 
-    public static List getQueries(Module me, IssueType issueType,
+    public static List getQueries(Module module, IssueType issueType,
                                      ScarabUser user)
         throws Exception
     {
-        return getQueries(me, issueType, user, "avail", "asc", "all");
+        return getQueries(module, issueType, user, SORT_AVAILABILITY, "asc", 
+                          TYPE_ALL);
     }
 
-    public static List getQueries(Module me, IssueType issueType,
+    public static List getQueries(Module module, IssueType issueType,
                                      ScarabUser user, String sortColumn,   
                                      String sortPolarity)
         throws Exception
     {
-        return getQueries(me, issueType, user, sortColumn, 
-                          sortPolarity, "all");
+        return getQueries(module, issueType, user, sortColumn, 
+                          sortPolarity, TYPE_ALL);
     }
 
     private static Criteria addSortOrder(Criteria crit, 

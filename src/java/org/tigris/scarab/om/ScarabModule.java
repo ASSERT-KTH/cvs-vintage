@@ -94,7 +94,7 @@ import org.apache.fulcrum.security.impl.db.entity
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: ScarabModule.java,v 1.122 2003/01/07 00:36:28 elicia Exp $
+ * @version $Id: ScarabModule.java,v 1.123 2003/01/22 23:23:07 jmcnally Exp $
  */
 public class ScarabModule
     extends BaseScarabModule
@@ -194,7 +194,8 @@ public class ScarabModule
         throws Exception
     {
         List result = null;
-        Serializable[] keys = {this, GET_USERS, firstName, lastName, 
+        // 4th element is ignored due to bug in torque
+        Serializable[] keys = {this, GET_USERS, firstName, null, lastName, 
                                username, email, issueType};
         Object obj = ScarabCache.get(keys); 
         if ( obj == null ) 

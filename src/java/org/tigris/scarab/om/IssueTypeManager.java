@@ -51,7 +51,7 @@ import org.apache.torque.TorqueException;
 /** 
  * This class manages IssueType objects.  
  *
- * @version $Id: IssueTypeManager.java,v 1.3 2002/10/24 22:59:26 jon Exp $
+ * @version $Id: IssueTypeManager.java,v 1.4 2003/01/22 23:23:07 jmcnally Exp $
  */
 public class IssueTypeManager
     extends BaseIssueTypeManager
@@ -65,5 +65,6 @@ public class IssueTypeManager
         throws TorqueException
     {
         super();
+        setRegion(getClassName().replace('.', '_'));
     }
 }
