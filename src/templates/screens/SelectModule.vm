@@ -1,4 +1,4 @@
-$page.setTitle("Select Module")
+#set ($page.Title = $l10n.Title)
 
 #set ($userModules = $data.User.Modules)
 #if ($scarabR.CurrentModule)

@@ -1,8 +1,8 @@
-$page.setTitle("Scarab Links")
+#set ($page.Title = $l10n.ScarabLinks)
 
 <div class="app" id="links">
 
-<h2>$l10n.SCARAB_LINKS</h2>
+<h2>$l10n.ScarabLinks</h2>
 
 <h3>Site Pages</h3>
 <ul>
