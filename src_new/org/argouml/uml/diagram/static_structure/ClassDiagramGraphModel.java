@@ -24,7 +24,7 @@
 // File: ClassDiagramGraphModel.java
 // Classes: ClassDiagramGraphModel
 // Original Author: jrobbins@ics.uci.edu
-// $Id: ClassDiagramGraphModel.java,v 1.17 2002/10/18 11:46:36 mkl Exp $
+// $Id: ClassDiagramGraphModel.java,v 1.18 2002/10/20 21:11:17 linus Exp $
 
 package org.argouml.uml.diagram.static_structure;
 
@@ -141,7 +141,7 @@ implements VetoableChangeListener  {
 
   /** Return all edges going from given port */
   public Vector getOutEdges(Object port) {
-    return new Vector(); // needs-more-work?
+    return new Vector(); // TODO?
   }
 
   /** Return one end of an edge */
@@ -149,7 +149,7 @@ implements VetoableChangeListener  {
     if (edge instanceof MRelationship) {
         return CoreHelper.getHelper().getSource((MRelationship)edge);
     }
-    cat.debug("needs-more-work getSourcePort");
+    cat.debug("TODO getSourcePort");
     return null;
   }
 
@@ -158,7 +158,7 @@ implements VetoableChangeListener  {
     if (edge instanceof MRelationship) {
         return CoreHelper.getHelper().getDestination((MRelationship)edge);
     }
-    cat.debug("needs-more-work getSourcePort");
+    cat.debug("TODO getSourcePort");
     return null;
   }
 
@@ -243,7 +243,7 @@ implements VetoableChangeListener  {
     cat.debug("adding class edge!!!!!!");
     if (!canAddEdge(edge)) return;
     _edges.addElement(edge);
-    // needs-more-work: assumes public
+    // TODO: assumes public
     if (edge instanceof MModelElement &&
        ((MModelElement)edge).getNamespace() == null) {
       _model.addOwnedElement((MModelElement) edge);
@@ -360,7 +360,7 @@ implements VetoableChangeListener  {
           {
               MPackage fromPack = (MPackage) fromPort;
               MPackage toPack = (MPackage) toPort;
-              // needs-more-work: assumes public, user pref for default visibility?
+              // TODO: assumes public, user pref for default visibility?
               //do I have to check the namespace here? (Toby)
               if (edgeClass == MDependency.class) {
                   // nsuml: using Usage as default

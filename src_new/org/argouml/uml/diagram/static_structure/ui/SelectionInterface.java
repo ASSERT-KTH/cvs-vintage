@@ -24,7 +24,7 @@
 // File: SelectionInterface.java
 // Classes: SelectionInterface
 // Original Author: jrobbins@ics.uci.edu
-// $Id: SelectionInterface.java,v 1.7 2002/10/08 20:04:31 kataka Exp $
+// $Id: SelectionInterface.java,v 1.8 2002/10/20 21:11:17 linus Exp $
 
 package org.argouml.uml.diagram.static_structure.ui;
 
@@ -61,7 +61,7 @@ public class SelectionInterface extends SelectionWButtons {
   public SelectionInterface(Fig f) { super(f); }
 
   /** Return a handle ID for the handle under the mouse, or -1 if
-   *  none. Needs-More-Work: in the future, return a Handle instance or
+   *  none. TODO: in the future, return a Handle instance or
    *  null. <p>
    *  <pre>
    *   0-------1-------2

@@ -26,7 +26,7 @@
 // File: SequenceDiagramRenderer.java
 // Classes: SequenceDiagramRenderer
 // Original Author: 5eichler@inormatik.uni-hamburg.de
-// $Id: SequenceDiagramRenderer.java,v 1.2 2002/10/08 20:04:30 kataka Exp $
+// $Id: SequenceDiagramRenderer.java,v 1.3 2002/10/20 21:11:16 linus Exp $
 
 package org.argouml.uml.diagram.sequence.ui;
 
@@ -50,7 +50,7 @@ implements GraphNodeRenderer, GraphEdgeRenderer {    protected static Category 
   public FigNode getFigNodeFor(GraphModel gm, Layer lay, Object node) {
     if (node instanceof MObject) return new FigSeqObject(gm, node);
     if (node instanceof MStimulus) return new FigSeqStimulus(gm, node);
-    cat.debug("needs-more-work SequenceDiagramRenderer getFigNodeFor");
+    cat.debug("TODO SequenceDiagramRenderer getFigNodeFor");
     return null;
   }
 
@@ -76,7 +76,7 @@ implements GraphNodeRenderer, GraphEdgeRenderer {    protected static Category 
       return mlFig;
     }
 
-    cat.debug("needs-more-work SequenceDiagramRenderer getFigEdgeFor");
+    cat.debug("TODO SequenceDiagramRenderer getFigEdgeFor");
     return null;
   }
 

@@ -26,7 +26,7 @@
 // File: ToDoItem.java
 // Classes: ToDoItem
 // Original Author: jrobbins@ics.uci.edu
-// $Id: ToDoItem.java,v 1.5 2002/08/10 14:57:44 linus Exp $
+// $Id: ToDoItem.java,v 1.6 2002/10/20 21:11:13 linus Exp $
 
 package org.argouml.cognitive;
 
@@ -279,7 +279,7 @@ public class ToDoItem implements java.io.Serializable {
    *  it if it can. <p> */
   public boolean canFixIt() { return _poster.canFixIt(this); }
 
-  /** Needs-More-Work: this is not done yet. Eventually this will also
+  /** TODO: this is not done yet. Eventually this will also
    *  feed the rational log. */
 //   public void resolve(Object reason) {
 //     ToDoList list = Designer.theDesigner().getToDoList();

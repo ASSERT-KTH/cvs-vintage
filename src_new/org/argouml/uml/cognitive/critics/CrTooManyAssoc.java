@@ -24,7 +24,7 @@
 // File: CrTooManyAssoc.java
 // Classes: CrTooManyAssoc
 // Original Author: jrobbins@ics.uci.edu
-// $Id: CrTooManyAssoc.java,v 1.2 2002/02/25 08:37:50 linus Exp $
+// $Id: CrTooManyAssoc.java,v 1.3 2002/10/20 21:11:15 linus Exp $
 
 package org.argouml.uml.cognitive.critics;
 
@@ -61,8 +61,8 @@ public class CrTooManyAssoc extends CrUML {
   public boolean predicate2(Object dm, Designer dsgr) {
     if (!(dm instanceof MClassifier)) return NO_PROBLEM;
     MClassifier cls = (MClassifier) dm;
-    // needs-more-work: consider inherited associations?
-    // needs-more-work: self loops are double counted
+    // TODO: consider inherited associations?
+    // TODO: self loops are double counted
     int threshold = ((Integer)getArg(THRESHOLD)).intValue();
     Collection aes = cls.getAssociationEnds();
     if (aes == null || aes.size() <= threshold) return NO_PROBLEM;

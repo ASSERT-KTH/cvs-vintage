@@ -24,7 +24,7 @@
 // File: Init.java
 // Classes: Init
 // Original Author: jrobbins@ics.uci.edu
-// $Id: Init.java,v 1.9 2002/10/08 20:04:27 kataka Exp $
+// $Id: Init.java,v 1.10 2002/10/20 21:11:15 linus Exp $
 
 // 8 Mar 2002: Jeremy Bennett (mail@jeremybennett.com). CrCrossNamespaceAssoc
 // registration corrected to Association, rather than AssociationClass
@@ -223,7 +223,7 @@ public class Init {
       java.lang.Class edgeCls           = FigEdgeModelElement.class;
 
 
-      // needs-more-work: Agency should allow registration by interface
+      // TODO: Agency should allow registration by interface
       // useful for MAssociation.
 
       Agency.register(crAssocNameConflict, namespaceCls);
@@ -232,7 +232,7 @@ public class Init {
       Agency.register(crCircularAssocClass, assocClassCls);
       Agency.register(crCircularInheritance, genElementCls);
       Agency.register(crCircularComposition, classCls);
-      Agency.register(crClassMustBeAbstract, classCls); //needs-more-work
+      Agency.register(crClassMustBeAbstract, classCls); //TODO
       Agency.register(crCrossNamespaceAssoc, assocCls); // Jeremy Bennett fix
       Agency.register(crDupParamName, operCls);
       Agency.register(crDupRoleNames, assocCls);  // Jeremy Bennett fix
@@ -256,7 +256,7 @@ public class Init {
       Agency.register(clsNaming, actorCls);
       Agency.register(clsNaming, useCaseCls);
 
-      // needs-more-work: should be just CrMissingName with a
+      // TODO: should be just CrMissingName with a
       // customized description
       Agency.register(crMissingClassName, modelCls);
       Agency.register(crMissingAttrName, attrCls);

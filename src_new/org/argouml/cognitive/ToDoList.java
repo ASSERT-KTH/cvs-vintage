@@ -26,7 +26,7 @@
 // File: ToDoList.java
 // Class: ToDoList
 // Original Author: jrobbins@ics.uci.edu
-// $Id: ToDoList.java,v 1.9 2002/10/08 20:04:21 kataka Exp $
+// $Id: ToDoList.java,v 1.10 2002/10/20 21:11:13 linus Exp $
 
 package org.argouml.cognitive;
 
@@ -81,7 +81,7 @@ implements Runnable, java.io.Serializable {
   private VectorSet _allPosters = null;
   
   /** ToDoItems that the designer has explicitly indicated that (s)he
-   * considers resolved.  Needs-More-Work: generalize into a design
+   * considers resolved.  TODO: generalize into a design
    * rationale logging facility. */
   protected Vector _resolvedItems = new Vector(100);
 
@@ -463,7 +463,7 @@ implements Runnable, java.io.Serializable {
   
   /** Sort the items by priority.
    *
-   *  Needs-More-Work: not done yet.  It has been pointed out that
+   *  TODO: not done yet.  It has been pointed out that
    *  sorting and priorities will probably be pretty arbitrary and hard
    *  to match with the Designer's (tacit) feelings about the
    *  importance of various items.  We are thinking about a

@@ -24,7 +24,7 @@
 // File: Notation.java
 // Classes: Notation
 // Original Author: Thierry Lach
-// $Id: Notation.java,v 1.19 2002/10/18 07:13:52 mkl Exp $
+// $Id: Notation.java,v 1.20 2002/10/20 21:11:12 linus Exp $
 
 // 8 Apr 2002: Jeremy Bennett (mail@jeremybennett.com). Extended to support
 // extension points.
@@ -66,7 +66,7 @@ implements PropertyChangeListener {
   /** Define a static log4j category variable for ArgoUML notation.
    */
   public final static Category cat = Category.getInstance("org.argouml.application.notation");
-    // needs-more-work:  JDK 1.2 seems to not return the package name if
+    // TODO:  JDK 1.2 seems to not return the package name if
     // not running from a jar.
     //
   // public final static Category cat = Category.getInstance(NotationNameImpl.class.getPackage().getName()); 
@@ -170,7 +170,7 @@ implements PropertyChangeListener {
 
   public static NotationName getDefaultNotation() {
     NotationName n = NotationNameImpl.findNotation(Configuration.getString(KEY_DEFAULT_NOTATION, NOTATION_ARGO.getConfigurationValue()));
-      // Needs-more-work:
+      // TODO:
       // This is needed for the case when the default notation is 
       // not loaded at this point.
       // We need then to refetch the default notation from the configuration
@@ -454,7 +454,7 @@ implements PropertyChangeListener {
   }
 
     public static NotationName getNotation(NotationContext context) {
-        // needs-more-work: base it on the configuration.
+        // TODO: base it on the configuration.
 	// Make sure you check the ModelElement to see if it has
 	// an override on the notation.
 
@@ -478,7 +478,7 @@ implements PropertyChangeListener {
     }
  
   ////////////////////////////////////////////////////////////////
-  // needs-more-work:  The following accessors are commented out
+  // TODO:  The following accessors are commented out
   //                   and should be uncommented by those initially
   //                   incorporating this code into production,
   //                   only using those methods that are necessary.

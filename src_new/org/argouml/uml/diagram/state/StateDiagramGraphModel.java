@@ -24,7 +24,7 @@
 // File: StateDiagramGraphModel.java
 // Classes: StateDiagramGraphModel
 // Original Author: your email address here
-// $Id: StateDiagramGraphModel.java,v 1.13 2002/10/10 13:25:43 kataka Exp $
+// $Id: StateDiagramGraphModel.java,v 1.14 2002/10/20 21:11:16 linus Exp $
 
 package org.argouml.uml.diagram.state;
 import org.apache.log4j.Category;
@@ -110,7 +110,7 @@ implements VetoableChangeListener {
     if (port instanceof MStateVertex) {
       return new Vector(((MStateVertex)port).getIncomings());
     }
-    cat.debug("needs-more-work getInEdges of MState");
+    cat.debug("TODO getInEdges of MState");
     return new Vector(); //wasteful!
   }
 
@@ -119,7 +119,7 @@ implements VetoableChangeListener {
     if (port instanceof MStateVertex) {
       return new Vector(((MStateVertex)port).getOutgoings());
     }
-    cat.debug("needs-more-work getOutEdges of MState");
+    cat.debug("TODO getOutEdges of MState");
     return new Vector(); //wasteful!
   }
 
@@ -128,7 +128,7 @@ implements VetoableChangeListener {
     if (edge instanceof MTransition) {
         return StateMachinesHelper.getHelper().getSource((MTransition)edge);
     }
-    cat.debug("needs-more-work getSourcePort of MTransition");
+    cat.debug("TODO getSourcePort of MTransition");
     return null;
   }
 
@@ -137,7 +137,7 @@ implements VetoableChangeListener {
     if (edge instanceof MTransition) {
         return StateMachinesHelper.getHelper().getDestination((MTransition)edge);
     }
-    cat.debug("needs-more-work getDestPort of MTransition");
+    cat.debug("TODO getDestPort of MTransition");
     return null;
   }
 
@@ -188,10 +188,10 @@ implements VetoableChangeListener {
 
     if (_nodes.contains(sv)) return;
     _nodes.addElement(sv);
-	// needs-more-work: assumes public, user pref for default visibility?
+	// TODO: assumes public, user pref for default visibility?
     //if (sv.getNamespace() == null)
     //_namespace.addOwnedElement(sv);
-      // needs-more-work: assumes not nested in another composite state
+      // TODO: assumes not nested in another composite state
       MCompositeState top = (MCompositeState) _machine.getTop();
 
       top.addSubvertex(sv);

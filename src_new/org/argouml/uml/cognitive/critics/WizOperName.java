@@ -26,7 +26,7 @@
 // File: WizOperName.java
 // Classes: WizOperName
 // Original Author: Linus Tolke <linus@epact.se>
-// $Id: WizOperName.java,v 1.4 2002/10/08 20:04:27 kataka Exp $
+// $Id: WizOperName.java,v 1.5 2002/10/20 21:11:15 linus Exp $
 
 package org.argouml.uml.cognitive.critics;
 
@@ -136,7 +136,7 @@ public class WizOperName extends WizMEName {
     /** There is a possibility that the next step forward takes another path
      * in this wizard. To allow for this we must destroy the path already 
      * traveled by.
-     * needs-more-work:
+     * TODO:
      * I (Linus) would say that this is really a problem with the Wizard 
      * implementation since I believe it should be possible to explore a 
      * path in the wizard and then go back.
@@ -236,7 +236,7 @@ public class WizOperName extends WizMEName {
     }
     
     
-    // Needs-more-work:
+    // TODO:
     // Move to MMUtil or some other common place and merge with 
     // UMLComboBoxEntry::findNamespace()
     private static MNamespace findNamespace(MNamespace phantomNS, MModel targetModel) {

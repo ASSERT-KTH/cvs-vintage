@@ -26,7 +26,7 @@
 // File: WizNavigable.java
 // Classes: WizNavigable
 // Original Author: jrobbins@ics.uci.edu
-// $Id: WizNavigable.java,v 1.3 2002/10/08 20:04:27 kataka Exp $
+// $Id: WizNavigable.java,v 1.4 2002/10/20 21:11:15 linus Exp $
 
 package org.argouml.uml.cognitive.critics;
 
@@ -85,7 +85,7 @@ public class WizNavigable extends Wizard {    protected static Category cat = C
     if (cls1 != null && !"".equals(cls1.getName()))
       _option1 = "Navigable Toward " + cls1.getName();
 
-    // needs-more-work: put in class names
+    // TODO: put in class names
     res.addElement(_option0);
     res.addElement(_option1);
     res.addElement(_option2);

@@ -26,7 +26,7 @@
 // File: PropPanelTransition.java
 // Classes: PropPanelTransition
 // Original Author: jrobbins@ics.uci.edu
-// $Id: PropPanelTransition.java,v 1.9 2002/10/08 20:04:38 kataka Exp $
+// $Id: PropPanelTransition.java,v 1.10 2002/10/20 21:11:18 linus Exp $
 
 package org.argouml.uml.ui.behavior.state_machines;
 
@@ -176,7 +176,7 @@ public class PropPanelTransition extends PropPanelModelElement {
 	    MFactory factory=trans.getFactory();
             trigger = factory.createCallEvent();
 	    trigger.setName("anon");
-	    //needs-more-work
+	    //TODO
 	    trigger.setNamespace(ProjectBrowser.TheInstance.getProject().getModel());
             trans.setTrigger(trigger);
         }

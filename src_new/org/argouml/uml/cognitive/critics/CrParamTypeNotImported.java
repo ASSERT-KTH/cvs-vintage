@@ -26,7 +26,7 @@
 // File: CrParamTypeNotImported.java
 // Classes: CrParamTypeNotImported
 // Original Author: jrobbins@ics.uci.edu
-// $Id: CrParamTypeNotImported.java,v 1.2 2002/02/25 08:37:50 linus Exp $
+// $Id: CrParamTypeNotImported.java,v 1.3 2002/10/20 21:11:15 linus Exp $
 
 package org.argouml.uml.cognitive.critics;
 
@@ -50,7 +50,7 @@ public class CrParamTypeNotImported extends CrUML {
 
   public boolean predicate2(Object dm, Designer dsgr) {
     if (!(dm instanceof MBehavioralFeature)) return NO_PROBLEM;
-    // needs-more-work
+    // TODO
     return NO_PROBLEM;
   }
 

@@ -26,7 +26,7 @@
 // File: DecisionModel.java
 // Classes: DecisionModel
 // Original Author: jrobbins@ics.uci.edu
-// $Id: DecisionModel.java,v 1.2 2002/08/10 14:57:44 linus Exp $
+// $Id: DecisionModel.java,v 1.3 2002/10/20 21:11:12 linus Exp $
 
 package org.argouml.cognitive;
 
@@ -39,12 +39,12 @@ import java.awt.*;
  *  those decisions are made active, Critics that are not relevant are
  *  made inactive.
  *
- *  Needs-More-Work: There is some notion that each decision has a
+ *  TODO: There is some notion that each decision has a
  *  certain importanance at a certain time, but I have not followed
  *  through on that because I don't have good examples of how to
  *  quantify the importance of a decision.
  *
- *  Needs-More-Work: Right now the individual decisions are just
+ *  TODO: Right now the individual decisions are just
  *  Strings, maybe they should have some non-atomic structure? */
 
 public class DecisionModel extends Observable

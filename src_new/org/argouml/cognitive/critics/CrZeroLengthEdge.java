@@ -24,7 +24,7 @@
 // File: CrZeroLengthEdge.java
 // Classes: CrZeroLengthEdge
 // Original Author: jrobbins@ics.uci.edu
-// $Id: CrZeroLengthEdge.java,v 1.3 2002/07/10 07:46:42 mkl Exp $
+// $Id: CrZeroLengthEdge.java,v 1.4 2002/10/20 21:11:13 linus Exp $
 
 package org.argouml.cognitive.critics;
 
@@ -47,7 +47,7 @@ public class CrZeroLengthEdge extends CrUML {
   ////////////////////////////////////////////////////////////////
   // constructor
   public CrZeroLengthEdge() {
-    // needs-more-work: {name} is not expanded for diagram objects
+    // TODO: {name} is not expanded for diagram objects
     setHeadline("Make Edge More Visible");
     addSupportedDecision(CrUML.decRELATIONSHIPS);
     addSupportedDecision(CrUML.decINHERITANCE);

@@ -24,7 +24,7 @@
 // File: CrSubclassReference.javoa
 // Classes: CrSubclassReference
 // Original Author: jrobbins@ics.uci.edu
-// $Id: CrSubclassReference.java,v 1.2 2002/02/25 08:37:50 linus Exp $
+// $Id: CrSubclassReference.java,v 1.3 2002/10/20 21:11:15 linus Exp $
 
 package org.argouml.uml.cognitive.critics;
 
@@ -86,7 +86,7 @@ public class CrSubclassReference extends CrUML {
     while (descendEnum.hasMoreElements())
       descendants.addElement(descendEnum.nextElement());
 
-    //needs-more-work: GenNavigableClasses?
+    //TODO: GenNavigableClasses?
     int nAsc = asc.size();
     VectorSet offs = null;
     for (Iterator iter = asc.iterator(); iter.hasNext();) {

@@ -26,7 +26,7 @@
 // File: CrDisambigStateName.java
 // Classes: CrDisambigStateName
 // Original Author: jrobbins@ics.uci.edu
-// $Id: CrDisambigStateName.java,v 1.2 2002/02/25 08:37:50 linus Exp $
+// $Id: CrDisambigStateName.java,v 1.3 2002/10/20 21:11:15 linus Exp $
 
 package org.argouml.uml.cognitive.critics;
 
@@ -55,7 +55,7 @@ public class CrDisambigStateName extends CrUML {
     if (!(dm instanceof MState)) return NO_PROBLEM;
     MState s = (MState) dm;
     String myName = s.getName();
-    // needs-more-work: should define a CompoundCritic
+    // TODO: should define a CompoundCritic
     if (myName == null || myName.equals("")) return NO_PROBLEM;
     String myNameString = myName;
     if (myNameString.length() == 0) return NO_PROBLEM;

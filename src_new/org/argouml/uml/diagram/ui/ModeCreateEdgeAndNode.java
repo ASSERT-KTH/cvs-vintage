@@ -24,7 +24,7 @@
 // File: ModeCreateEdgeAndNode.java
 // Classes: ModeCreateEdgeAndNode
 // Original Author: jrobbins
-// $Id: ModeCreateEdgeAndNode.java,v 1.9 2002/10/08 20:04:32 kataka Exp $
+// $Id: ModeCreateEdgeAndNode.java,v 1.10 2002/10/20 21:11:17 linus Exp $
 
 package org.argouml.uml.diagram.ui;
 
@@ -169,7 +169,7 @@ public class ModeCreateEdgeAndNode extends ModeCreate {
 		GraphModel gm = ce.getGraphModel();
 		if (!(gm instanceof MutableGraphModel)) f = null;
 		MutableGraphModel mgm = (MutableGraphModel) gm;
-		// needs-more-work: potential class cast exception
+		// TODO: potential class cast exception
 
 		if (f == null) {
 			cat.debug("make new node");

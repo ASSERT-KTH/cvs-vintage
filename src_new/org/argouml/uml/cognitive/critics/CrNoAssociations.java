@@ -24,7 +24,7 @@
 // File: CrNoAssociations.javoa
 // Classes: CrNoAssociations
 // Original Author: jrobbins@ics.uci.edu
-// $Id: CrNoAssociations.java,v 1.6 2002/09/17 09:19:44 kataka Exp $
+// $Id: CrNoAssociations.java,v 1.7 2002/10/20 21:11:15 linus Exp $
 
 package org.argouml.uml.cognitive.critics;
 
@@ -57,7 +57,7 @@ public class CrNoAssociations extends CrUML {
     
     //if (cls.containsStereotype(MStereotype.UTILITY)) return NO_PROBLEM;
     // stereotype <<record>>?
-    //needs-more-work: different critic or special message for classes
+    //TODO: different critic or special message for classes
     //that inherit all ops but define none of their own.
 
     Collection asc = getInheritedAssociationEnds(cls,0);

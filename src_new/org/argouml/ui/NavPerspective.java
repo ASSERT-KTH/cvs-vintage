@@ -24,7 +24,7 @@
 // File: NavPerspective.java
 // Classes: NavPerspective
 // Original Author: your email address here
-// $Id: NavPerspective.java,v 1.14 2002/10/08 20:04:26 kataka Exp $
+// $Id: NavPerspective.java,v 1.15 2002/10/20 21:11:14 linus Exp $
 
 // 16 Apr 2002: Jeremy Bennett (mail@jeremybennett.com). Extended to support
 // the display of extends/includes and extension points in the package centric
@@ -383,7 +383,7 @@ implements Serializable, TreeModel, Cloneable {
     registerRule(new GoChildGenerator(new ChildGenRelated(),
 				      "ChildGenRelated"));
     registerRule(new GoChildGenerator(new ChildGenUML(), "ChildGenUML"));
-    // needs-more-work: this list is not updated
+    // TODO: this list is not updated
   }
 
   ////////////////////////////////////////////////////////////////

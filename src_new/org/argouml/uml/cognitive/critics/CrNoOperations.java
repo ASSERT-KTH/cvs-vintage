@@ -24,7 +24,7 @@
 // File: CrNoOperations.javoa
 // Classes: CrNoOperations
 // Original Author: jrobbins@ics.uci.edu
-// $Id: CrNoOperations.java,v 1.8 2002/10/02 19:58:56 linus Exp $
+// $Id: CrNoOperations.java,v 1.9 2002/10/20 21:11:15 linus Exp $
 
 package org.argouml.uml.cognitive.critics;
 
@@ -56,7 +56,7 @@ public class CrNoOperations extends CrUML {
     if (!(CriticUtils.isPrimaryObject(cls))) return NO_PROBLEM;
     //if (cls.containsStereotype(MStereotype.UTILITY)) return NO_PROBLEM;
     // stereotype <<record>>?
-    //needs-more-work: different critic or special message for classes
+    //TODO: different critic or special message for classes
     //that inherit all ops but define none of their own.
 	
     Collection beh = getInheritedBehavioralFeatures(cls,0);
@@ -71,7 +71,7 @@ public class CrNoOperations extends CrUML {
       MScopeKind sk = bf.getOwnerScope();
       if (MScopeKind.INSTANCE.equals(sk)) return NO_PROBLEM;
     }
-    //needs-more-work?: don't count static or constants?
+    //TODO?: don't count static or constants?
     return PROBLEM_FOUND;
   }
 

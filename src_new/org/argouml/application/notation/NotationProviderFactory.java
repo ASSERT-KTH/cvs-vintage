@@ -24,7 +24,7 @@
 // File: NotationProviderFactory.java
 // Classes: NotationProviderFactory
 // Original Author: Thierry Lach
-// $Id: NotationProviderFactory.java,v 1.3 2002/05/03 19:12:54 jeremybennett Exp $
+// $Id: NotationProviderFactory.java,v 1.4 2002/10/20 21:11:12 linus Exp $
 
 // 8 Apr 2002: Jeremy Bennett (mail@jeremybennett.com). Extended to support
 // extension points.
@@ -121,7 +121,7 @@ implements ArgoModuleEventListener {
     public NotationProvider getDefaultProvider() {
       if (_defaultProvider == null) {
           _defaultProvider = (NotationProvider)org.argouml.uml.generator.GeneratorDisplay.getInstance();
-          // needs-more-work:  This must be the provider pointed to by the configuration,
+          // TODO:  This must be the provider pointed to by the configuration,
 	  // or UML 13 if none.
 	  // 
       }

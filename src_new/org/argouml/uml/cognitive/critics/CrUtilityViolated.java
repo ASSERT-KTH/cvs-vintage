@@ -24,7 +24,7 @@
 // File: CrUtilityViolated.java
 // Classes: CrUtilityViolated
 // Original Author: jrobbins@ics.uci.edu
-// $Id: CrUtilityViolated.java,v 1.4 2002/08/19 08:18:16 kataka Exp $
+// $Id: CrUtilityViolated.java,v 1.5 2002/10/20 21:11:15 linus Exp $
 
 package org.argouml.uml.cognitive.critics;
 
@@ -65,7 +65,7 @@ public class CrUtilityViolated extends CrUML {
       if (MScopeKind.INSTANCE.equals(sk))
 	return PROBLEM_FOUND;
     }
-    //needs-more-work?: don't count static or constants?
+    //TODO?: don't count static or constants?
     return NO_PROBLEM;
   }
 

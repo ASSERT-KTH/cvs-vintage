@@ -26,7 +26,7 @@
 // File: CrUselessAbstract.java
 // Classes: CrUselessAbstract
 // Original Author: jrobbins@ics.uci.edu
-// $Id: CrUselessAbstract.java,v 1.2 2002/02/25 08:37:50 linus Exp $
+// $Id: CrUselessAbstract.java,v 1.3 2002/10/20 21:11:15 linus Exp $
 
 package org.argouml.uml.cognitive.critics;
 
@@ -77,7 +77,7 @@ class ChildGenDerivedClasses implements ChildGenerator {
     if (specs == null) {
       return EnumerationEmpty.theInstance();
     }
-    // needs-more-work: it would be nice to have a EnumerationXform
+    // TODO: it would be nice to have a EnumerationXform
     // and a Functor object in uci.util
     Vector specClasses = new Vector(specs.size());
     java.util.Enumeration enum = specs.elements();

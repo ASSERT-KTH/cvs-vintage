@@ -25,7 +25,7 @@
 // File: GeneratorDisplay.java
 // Classes: GeneratorDisplay
 // Original Author: jrobbins@ics.uci.edu
-// $Id: GeneratorDisplay.java,v 1.32 2002/10/08 20:04:33 kataka Exp $
+// $Id: GeneratorDisplay.java,v 1.33 2002/10/20 21:11:17 linus Exp $
 
 // 5 Mar 2002: Jeremy Bennett (mail@jeremybennett.com). Return text for
 // operations that have no return parameter made "" rather than ": void??"
@@ -65,7 +65,7 @@ import org.argouml.uml.MMUtil;
  * placeholder for future development, I expect it to be totally
  * replaced. */
 
-// needs-more-work: always check for null!!!
+// TODO: always check for null!!!
 
 public class GeneratorDisplay extends Generator
 implements PluggableNotation {
@@ -295,11 +295,11 @@ public String generateConcurrency(MCallConcurrencyKind concurrency) {
 
   public String generateParameter(MParameter param) {
     String s = "";
-    //needs-more-work: qualifiers (e.g., const)
-    //needs-more-work: stereotypes...
+    //TODO: qualifiers (e.g., const)
+    //TODO: stereotypes...
     s += generateName(param.getName()) + ": ";
     s += generateClassifierRef(param.getType());
-    //needs-more-work: initial value
+    //TODO: initial value
     return s;
   }
 
@@ -382,7 +382,7 @@ public String generateConcurrency(MCallConcurrencyKind concurrency) {
       }
     }
 
-    // needs-more-work: constructors
+    // TODO: constructors
 
     Collection behs = UmlHelper.getHelper().getCore().getOperations(cls);
     if (behs != null) {
@@ -581,7 +581,7 @@ public String generateConcurrency(MCallConcurrencyKind concurrency) {
   }
 
     public String generateAssociationFrom(MAssociation a, MAssociationEnd ae) {
-    // needs-more-work: does not handle n-ary associations
+    // TODO: does not handle n-ary associations
     String s = "";
     Collection connections = a.getConnections();
     Iterator connEnum = connections.iterator();
@@ -771,7 +771,7 @@ public String generateConcurrency(MCallConcurrencyKind concurrency) {
  * @return String
  */
   //public static final String ANY_RANGE = "*";
-  // needs-more-work: user preference between "*" and "0..*"
+  // TODO: user preference between "*" and "0..*"
 
   protected String generateMultiplicityRange(MMultiplicityRange mr) {
 
@@ -900,7 +900,7 @@ public String generateConcurrency(MCallConcurrencyKind concurrency) {
         return "Uml 1.3 Notation Generator";
     }
     public String getModuleAuthor() { return "ArgoUML Core"; }
-    public String getModuleVersion() { return ArgoVersion.VERSION; }
+    public String getModuleVersion() { return ArgoVersion.getVersion(); }
     public String getModuleKey() { return "module.language.uml.generator"; }
 
 } /* end class GeneratorDisplay */

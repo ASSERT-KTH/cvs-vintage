@@ -24,7 +24,7 @@
 // File: SelectionUseCase.java
 // Classes: SelectionUseCase
 // Original Author: jrobbins@ics.uci.edu
-// $Id: SelectionUseCase.java,v 1.6 2002/10/08 20:04:33 kataka Exp $
+// $Id: SelectionUseCase.java,v 1.7 2002/10/20 21:11:17 linus Exp $
 
 package org.argouml.uml.diagram.use_case.ui;
 
@@ -63,7 +63,7 @@ public class SelectionUseCase extends SelectionWButtons {
   public SelectionUseCase(Fig f) { super(f); }
 
   /** Return a handle ID for the handle under the mouse, or -1 if
-   *  none. Needs-More-Work: in the future, return a Handle instance or
+   *  none. TODO: in the future, return a Handle instance or
    *  null. <p>
    *  <pre>
    *   0-------1-------2

@@ -26,7 +26,7 @@
 // File: CrClassMustBeAbstract.java
 // Classes: CrClassMustBeAbstract
 // Original Author: jrobbins@ics.uci.edu
-// $Id: CrClassMustBeAbstract.java,v 1.3 2002/08/19 08:18:16 kataka Exp $
+// $Id: CrClassMustBeAbstract.java,v 1.4 2002/10/20 21:11:15 linus Exp $
 
 package org.argouml.uml.cognitive.critics;
 
@@ -61,7 +61,7 @@ public class CrClassMustBeAbstract extends CrUML {
     Iterator enum = beh.iterator();
     while (enum.hasNext()) {
       MBehavioralFeature bf = (MBehavioralFeature) enum.next();
-      //needs-more-work: abstract methods are not part of UML, only java
+      //TODO: abstract methods are not part of UML, only java
       //if (bf.getIsAbstract()) return PROBLEM_FOUND;
     }
     return NO_PROBLEM;

@@ -24,7 +24,7 @@
 // File: CrTooManyClasses.java
 // Classes: CrTooManyClasses
 // Original Author: jrobbins@ics.uci.edu
-// $Id: CrTooManyClasses.java,v 1.2 2002/02/25 08:37:50 linus Exp $
+// $Id: CrTooManyClasses.java,v 1.3 2002/10/20 21:11:15 linus Exp $
 
 package org.argouml.uml.cognitive.critics;
 
@@ -49,7 +49,7 @@ public class CrTooManyClasses extends CrUML {
   ////////////////////////////////////////////////////////////////
   // constructor
   public CrTooManyClasses() {
-    // needs-more-work: <ocl>self.name</ocl> is not expanded for diagram objects
+    // TODO: <ocl>self.name</ocl> is not expanded for diagram objects
     setHeadline("Reduce Classes in diagram <ocl>self</ocl>");
     addSupportedDecision(CrUML.decCLASS_SELECTION);
     setArg(THRESHOLD, new Integer(20));

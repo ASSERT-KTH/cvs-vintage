@@ -24,7 +24,7 @@
 // File: CrTooManyOper.java
 // Classes: CrTooManyOper
 // Original Author: jrobbins@ics.uci.edu
-// $Id: CrTooManyOper.java,v 1.2 2002/02/25 08:37:50 linus Exp $
+// $Id: CrTooManyOper.java,v 1.3 2002/10/20 21:11:15 linus Exp $
 
 package org.argouml.uml.cognitive.critics;
 
@@ -60,7 +60,7 @@ public class CrTooManyOper extends CrUML {
   public boolean predicate2(Object dm, Designer dsgr) {
     if (!(dm instanceof MClassifier)) return NO_PROBLEM;
     MClassifier cls = (MClassifier) dm;
-    // needs-more-work: consider inherited attributes?
+    // TODO: consider inherited attributes?
     int threshold = ((Integer)getArg(THRESHOLD)).intValue();
     Collection str = cls.getFeatures();
     if (str == null) return NO_PROBLEM;

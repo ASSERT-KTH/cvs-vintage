@@ -24,7 +24,7 @@
 // File: StateDiagramRenderer.java
 // Classes: StateDiagramRenderer
 // Original Author: ics125b spring 1998
-// $Id: StateDiagramRenderer.java,v 1.4 2002/10/08 20:04:30 kataka Exp $
+// $Id: StateDiagramRenderer.java,v 1.5 2002/10/20 21:11:17 linus Exp $
 
 package org.argouml.uml.diagram.state.ui;
 
@@ -111,7 +111,7 @@ public class StateDiagramRenderer implements GraphNodeRenderer, GraphEdgeRendere
                 cat.warn("found a type not known");
             }
         }
-        cat.debug("needs-more-work StateDiagramRenderer getFigNodeFor");
+        cat.debug("TODO StateDiagramRenderer getFigNodeFor");
         return null;
     }
 
@@ -124,7 +124,7 @@ public class StateDiagramRenderer implements GraphNodeRenderer, GraphEdgeRendere
       return trFig;
     }
 
-    cat.debug("needs-more-work StateDiagramRenderer getFigEdgeFor");
+    cat.debug("TODO StateDiagramRenderer getFigEdgeFor");
     return null;
   }
 

@@ -26,7 +26,7 @@
 // File: CrUnconventionalAttrName.java
 // Classes: CrUnconventionalAttrName
 // Original Author: jrobbins@ics.uci.edu
-// $Id: CrUnconventionalAttrName.java,v 1.3 2002/10/08 20:04:27 kataka Exp $
+// $Id: CrUnconventionalAttrName.java,v 1.4 2002/10/20 21:11:15 linus Exp $
 
 package org.argouml.uml.cognitive.critics;
 
@@ -61,11 +61,11 @@ public class CrUnconventionalAttrName extends CrUML {
     if (nameStr == null || nameStr.length() == 0) return NO_PROBLEM;
     while (nameStr.startsWith("_")) nameStr = nameStr.substring(1);
     if (nameStr.length() == 0) return NO_PROBLEM;
-    // needs-more-work: should check for all underscores
+    // TODO: should check for all underscores
     char initalChar = nameStr.charAt(0);
     MChangeableKind ck = attr.getChangeability();
     if (MChangeableKind.FROZEN.equals(ck)) return NO_PROBLEM;
-    // needs-more-work: should check for all caps constants
+    // TODO: should check for all caps constants
     if (!Character.isLowerCase(initalChar)) {
       return PROBLEM_FOUND;
     }

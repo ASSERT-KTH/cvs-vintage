@@ -26,7 +26,7 @@
 // File: Checklist.java
 // Class: Checklist
 // Original Author: jrobbins@ics.uci.edu
-// $Id: Checklist.java,v 1.1 2000/09/04 12:50:27 1sturm Exp $
+// $Id: Checklist.java,v 1.2 2002/10/20 21:11:13 linus Exp $
 
 package org.argouml.cognitive.checklist;
 
@@ -98,7 +98,7 @@ public class Checklist implements java.io.Serializable {
   
   /** Sort the items by priority.
    *
-   *  Needs-More-Work: not done yet.  It has been pointed out that
+   *  TODO: not done yet.  It has been pointed out that
    *  sorting and priorities will probably be pretty arbitrary and hard
    *  to match with the Designer's (tacit) feelings about the
    *  importance of various items.  We are thinking about a

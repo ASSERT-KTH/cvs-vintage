@@ -25,7 +25,7 @@
 // File: SequenceDiagramGraphModel.java
 // Classes: SequenceDiagramGraphModel
 // Original Author: 5eichler@informatik.uni-hamburg.de
-// $Id: SequenceDiagramGraphModel.java,v 1.11 2002/10/10 13:25:43 kataka Exp $
+// $Id: SequenceDiagramGraphModel.java,v 1.12 2002/10/20 21:11:15 linus Exp $
 
 package org.argouml.uml.diagram.sequence;
 
@@ -126,7 +126,7 @@ implements VetoableChangeListener {
 
   /** Return all edges going from given port */
   public Vector getOutEdges(Object port) {
-    return new Vector(); // needs-more-work?
+    return new Vector(); // TODO?
   }
 
   /** Return one end of an edge */
@@ -134,7 +134,7 @@ implements VetoableChangeListener {
     if (edge instanceof MLink) {
       return CommonBehaviorHelper.getHelper().getSource((MLink)edge);
     }
-    cat.debug("needs-more-work getSourcePort");
+    cat.debug("TODO getSourcePort");
     return null;
   }
 
@@ -143,7 +143,7 @@ implements VetoableChangeListener {
     if (edge instanceof MLink) {
       return CommonBehaviorHelper.getHelper().getDestination((MLink)edge);
     }
-    cat.debug("needs-more-work getDestPort");
+    cat.debug("TODO getDestPort");
     return null;
   }
 
@@ -185,7 +185,7 @@ implements VetoableChangeListener {
   public void addNode(Object node) {
     if (!canAddNode(node)) return;
     _nodes.addElement(node);
-    // needs-more-work: assumes public, user pref for default visibility?
+    // TODO: assumes public, user pref for default visibility?
       if (node instanceof MModelElement) {
 		  _Sequence.addOwnedElement((MModelElement) node);
 		  // ((MClassifier)node).setNamespace(_Sequence.getNamespace());
@@ -198,7 +198,7 @@ implements VetoableChangeListener {
   public void addEdge(Object edge) {
     if (!canAddEdge(edge)) return;
     _edges.addElement(edge);
-    // needs-more-work: assumes public
+    // TODO: assumes public
      if (edge instanceof MModelElement) {
         _Sequence.addOwnedElement((MModelElement) edge);
       }

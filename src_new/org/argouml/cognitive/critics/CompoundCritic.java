@@ -26,7 +26,7 @@
 // File: CompoundCritic.java
 // Classes: CompoundCritic
 // Original Author: jrobbins@ics.uci.edu
-// $Id: CompoundCritic.java,v 1.4 2002/09/11 20:32:12 linus Exp $
+// $Id: CompoundCritic.java,v 1.5 2002/10/20 21:11:13 linus Exp $
 
 package org.argouml.cognitive.critics;
 
@@ -49,7 +49,7 @@ import org.argouml.cognitive.*;
  *  critics could produce feedback, but it would be more useful if
  *  only the first one did.  */
 
-// needs-more-work: maybe should stop at first, or find highest priority.
+// TODO: maybe should stop at first, or find highest priority.
 
 public class CompoundCritic extends Critic {
 

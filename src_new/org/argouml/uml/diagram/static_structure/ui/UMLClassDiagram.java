@@ -24,7 +24,7 @@
 // File: UMLClassDiagram.java
 // Classes: UMLClassDiagram
 // Original Author: jrobbins@ics.uci.edy
-// $Id: UMLClassDiagram.java,v 1.10 2002/10/18 12:07:30 mkl Exp $
+// $Id: UMLClassDiagram.java,v 1.11 2002/10/20 21:11:17 linus Exp $
 
 package org.argouml.uml.diagram.static_structure.ui;
 
@@ -52,7 +52,7 @@ public class UMLClassDiagram extends UMLDiagram {
 
   ////////////////
   // actions for toolbar
-  // needs-more-work: should these be static?
+  // TODO: should these be static?
 
 
 
@@ -172,7 +172,7 @@ public class UMLClassDiagram extends UMLDiagram {
 
     _toolBar.add(ActionAddAttribute.SINGLETON);
     _toolBar.add(ActionAddOperation.SINGLETON);
-    // needs-more-work: remove attribute and operation?
+    // TODO: remove attribute and operation?
     _toolBar.addSeparator();
 
     _toolBar.add(ActionAddNote.SINGLETON);

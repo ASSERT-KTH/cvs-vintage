@@ -26,7 +26,7 @@
 // File: CrAssocNameConflict.java
 // Classes: CrAssocNameConflict
 // Original Author: jrobbins@ics.uci.edu
-// $Id: CrAssocNameConflict.java,v 1.2 2002/02/25 08:37:50 linus Exp $
+// $Id: CrAssocNameConflict.java,v 1.3 2002/10/20 21:11:14 linus Exp $
 
 package org.argouml.uml.cognitive.critics;
 
@@ -60,7 +60,7 @@ public class CrAssocNameConflict extends CrUML {
     while (enum.hasNext()) {
       MModelElement me = (MModelElement) enum.next();
       if (!(me instanceof MAssociation)) continue;
-      // needs-more-work: not implemented yet
+      // TODO: not implemented yet
     }
     return NO_PROBLEM;
   }

@@ -24,7 +24,7 @@
 // File: FigLink.java
 // Classes: FigLink
 // Original Author: your email address here
-// $Id: FigLink.java,v 1.1 2000/09/04 12:50:23 1sturm Exp $
+// $Id: FigLink.java,v 1.2 2002/10/20 21:11:17 linus Exp $
 
 package org.argouml.uml.diagram.static_structure.ui;
 
@@ -52,7 +52,7 @@ public class FigLink extends FigEdgeModelElement {
     setOwner(edge);
   }
 
-  // needs-more-work: should edit something...
+  // TODO: should edit something...
   protected boolean canEdit(Fig f) { return false; }
 
 

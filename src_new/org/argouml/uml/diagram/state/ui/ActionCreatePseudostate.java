@@ -24,7 +24,7 @@
 // File: ActionCreatePseudostate.java
 // Classes: ActionCreatePseudostate
 // Original Author: jrobbins@ics.uci.edu
-// $Id: ActionCreatePseudostate.java,v 1.3 2002/10/08 20:04:30 kataka Exp $
+// $Id: ActionCreatePseudostate.java,v 1.4 2002/10/20 21:11:17 linus Exp $
 
 package org.argouml.uml.diagram.state.ui;
 
@@ -59,7 +59,7 @@ public class ActionCreatePseudostate extends CmdCreateNode {
 
   /** Actually instanciate the NetNode and FigNode objects and
    * set the global next mode to ModePlace */
-  // needs-more-work: should call super, reduce code volume!
+  // TODO: should call super, reduce code volume!
   public Object makeNode() {
     Object newNode = super.makeNode();
     MPseudostateKind kind = (MPseudostateKind) _args.get("kind");

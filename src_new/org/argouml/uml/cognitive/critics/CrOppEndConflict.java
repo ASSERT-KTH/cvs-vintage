@@ -26,7 +26,7 @@
 // File: CrOppEndConflict.java
 // Classes: CrOppEndConflict
 // Original Author: jrobbins@ics.uci.edu
-// $Id: CrOppEndConflict.java,v 1.2 2002/02/25 08:37:50 linus Exp $
+// $Id: CrOppEndConflict.java,v 1.3 2002/10/20 21:11:15 linus Exp $
 
 package org.argouml.uml.cognitive.critics;
 
@@ -42,7 +42,7 @@ import org.argouml.cognitive.critics.*;
 /** Well-formedness rule [2] for MClassifier. See page 29 of UML 1.1
  *  Semantics. OMG document ad/97-08-04. */
 
-//needs-more-work: split into an inherited attr critic and a local
+//TODO: split into an inherited attr critic and a local
 //attr critic
 
 public class CrOppEndConflict extends CrUML {

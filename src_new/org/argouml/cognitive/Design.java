@@ -24,7 +24,7 @@
 // File: Design.java
 // Classes: Design
 // Original Author: jrobbins@ics.uci.edu
-// $Id: Design.java,v 1.2 2002/07/14 23:44:58 linus Exp $
+// $Id: Design.java,v 1.3 2002/10/20 21:11:12 linus Exp $
 
 package org.argouml.cognitive;
 
@@ -97,7 +97,7 @@ public class Design extends DesignMaterial {
   /** Critique a Design by critiquing each contained
    * DesignMaterial. <p>
    *
-   * Needs-More-Work: in the future Argo will use less tree walking
+   * TODO: in the future Argo will use less tree walking
    * and more trigger-driven critiquing. I.e., critiquing will be done
    * in response to specific manipulations in the editor.  */
   public void critique(Designer d) {

@@ -28,7 +28,7 @@
 // File: CrEmptyPackage.java
 // Classes: CrEmptyPackage
 // Original Author: jrobbins@ics.uci.edu
-// $Id: CrEmptyPackage.java,v 1.4 2002/10/08 20:04:27 kataka Exp $
+// $Id: CrEmptyPackage.java,v 1.5 2002/10/20 21:11:15 linus Exp $
 
 package org.argouml.uml.cognitive.critics;
 
@@ -62,7 +62,7 @@ public class CrEmptyPackage extends CrUML {
     Collection elms = mod.getOwnedElements();
     if (elms == null || elms.size() == 0) return PROBLEM_FOUND;
     return NO_PROBLEM;
-    //needs-more-work: different critic for packages consisting only
+    //TODO: different critic for packages consisting only
     //of references to elements of other packages?
   }
 
