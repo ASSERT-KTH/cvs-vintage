@@ -16,6 +16,7 @@ import org.jboss.ejb.EntityEnterpriseContext;
 
 import org.jboss.ejb.plugins.cmp.CMPStoreManager;
 import org.jboss.ejb.plugins.cmp.jdbc.JDBCStoreManager;
+import org.jboss.ejb.plugins.cmp.jdbc.JDBCType;
 import org.jboss.ejb.plugins.cmp.jdbc.metadata.JDBCCMPFieldMetaData;
 
 import org.jboss.logging.Log;
@@ -33,11 +34,15 @@ import org.jboss.logging.Log;
  *		One for each entity bean cmp field. 		
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
- * @version $Revision: 1.2 $
+ * @version $Revision: 1.3 $
  */                            
 public class JDBCCMP2xFieldBridge extends JDBCAbstractCMPFieldBridge {
-	public JDBCCMP2xFieldBridge(JDBCStoreManager manager, JDBCCMPFieldMetaData metadata, Log log) throws DeploymentException {
-		super(manager, metadata, log);
+	public JDBCCMP2xFieldBridge(JDBCStoreManager manager, JDBCCMPFieldMetaData metadata) throws DeploymentException {
+		super(manager, metadata);
+	}
+
+	public JDBCCMP2xFieldBridge(JDBCStoreManager manager, JDBCCMPFieldMetaData metadata, JDBCType jdbcType) throws DeploymentException {
+		super(manager, metadata, jdbcType);
 	}
 
 	public Object getInstanceValue(EntityEnterpriseContext ctx) {

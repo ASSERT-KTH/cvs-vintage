@@ -36,16 +36,16 @@ import org.jboss.logging.Log;
  *		One for each entity bean cmp field. 		
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
- * @version $Revision: 1.2 $
+ * @version $Revision: 1.3 $
  */                            
 public class JDBCCMP1xFieldBridge extends JDBCAbstractCMPFieldBridge {
 	protected Field field;
  	
-	public JDBCCMP1xFieldBridge(JDBCStoreManager manager, JDBCCMPFieldMetaData metadata, Log log) throws DeploymentException {
-		super(manager, metadata, log);
+	public JDBCCMP1xFieldBridge(JDBCStoreManager manager, JDBCCMPFieldMetaData metadata) throws DeploymentException {
+		super(manager, metadata);
 
 		try {
-			field = metadata.getJDBCEntity().getEntityClass().getField(getFieldName());
+			field = manager.getMetaData().getEntityClass().getField(getFieldName());
 		} catch(NoSuchFieldException e) {
 			// Non recoverable internal exception
 			throw new DeploymentException("No field named '" + getFieldName() + "' found in entity class.");

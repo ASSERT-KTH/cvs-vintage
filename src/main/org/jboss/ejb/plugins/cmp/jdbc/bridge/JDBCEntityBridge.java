@@ -51,7 +51,7 @@ import org.jboss.logging.Log;
  *		One per cmp entity bean type. 		
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
- * @version $Revision: 1.3 $
+ * @version $Revision: 1.4 $
  */                            
 public class JDBCEntityBridge implements EntityBridge {
    protected JDBCEntityMetaData metadata;
@@ -84,14 +84,14 @@ public class JDBCEntityBridge implements EntityBridge {
 
 	protected void loadCMPFields(JDBCEntityMetaData metadata) throws DeploymentException {
 		// map between field names and field objects
-		cmpFieldsByName = new HashMap(metadata.getCMPFieldCount());
+		cmpFieldsByName = new HashMap(metadata.getCMPFields().size());
 		// non primary key cmp fields
-		ArrayList cmpFieldList = new ArrayList(metadata.getCMPFieldCount());
+		ArrayList cmpFieldList = new ArrayList(metadata.getCMPFields().size());
 		// primary key cmp fields
-		ArrayList pkFieldList = new ArrayList(metadata.getCMPFieldCount());
+		ArrayList pkFieldList = new ArrayList(metadata.getCMPFields().size());
 		                        
       // create each field    
-		Iterator iter = metadata.getCMPFields();
+		Iterator iter = metadata.getCMPFields().iterator();
 		while(iter.hasNext()) {
 			JDBCCMPFieldMetaData cmpFieldMetaData = (JDBCCMPFieldMetaData)iter.next();
 			JDBCCMPFieldBridge cmpField = createCMPField(metadata, cmpFieldMetaData);
@@ -118,8 +118,8 @@ public class JDBCEntityBridge implements EntityBridge {
 	}
 
 	protected void loadEagerLoadFields(JDBCEntityMetaData metadata) throws DeploymentException {
-		ArrayList fields = new ArrayList(metadata.getCMPFieldCount());
-		Iterator iter = metadata.getEagerLoadFields();
+		ArrayList fields = new ArrayList(metadata.getCMPFields().size());
+		Iterator iter = metadata.getEagerLoadFields().iterator();
 		while(iter.hasNext()) {
 			JDBCCMPFieldMetaData field = (JDBCCMPFieldMetaData)iter.next();
 			fields.add(getExistingCMPFieldByName(field.getFieldName()));
@@ -131,7 +131,7 @@ public class JDBCEntityBridge implements EntityBridge {
 	protected void loadLazyLoadGroups(JDBCEntityMetaData metadata) throws DeploymentException {
 		lazyLoadGroups = new ArrayList();
 		
-		Iterator groups = metadata.getLazyLoadGroups();
+		Iterator groups = metadata.getLazyLoadGroups().iterator();
 		while(groups.hasNext()) {
 			ArrayList group = new ArrayList();
 
@@ -147,20 +147,20 @@ public class JDBCEntityBridge implements EntityBridge {
 	protected JDBCCMPFieldBridge createCMPField(JDBCEntityMetaData metadata, JDBCCMPFieldMetaData cmpFieldMetaData) 
 			throws DeploymentException {
 		if(metadata.isCMP1x()) {
-			return new JDBCCMP1xFieldBridge(manager, cmpFieldMetaData, log);
+			return new JDBCCMP1xFieldBridge(manager, cmpFieldMetaData);
 		} else {
-			return new JDBCCMP2xFieldBridge(manager, cmpFieldMetaData, log);
+			return new JDBCCMP2xFieldBridge(manager, cmpFieldMetaData);
 		}
 	}
 	
 	protected void loadCMRFields(JDBCEntityMetaData metadata) throws DeploymentException {
-		ArrayList cmrFieldList = new ArrayList(metadata.getCMPFieldCount());
+		ArrayList cmrFieldList = new ArrayList(metadata.getCMPFields().size());
 
       // create each field    
-		Iterator iter = metadata.getRelationshipRoles();
+		Iterator iter = metadata.getRelationshipRoles().iterator();
 		while(iter.hasNext()) {
 			JDBCRelationshipRoleMetaData relationshipRole = (JDBCRelationshipRoleMetaData)iter.next();
-			JDBCCMRFieldBridge cmrField = new JDBCCMRFieldBridge(this, manager, relationshipRole, log); 
+			JDBCCMRFieldBridge cmrField = new JDBCCMRFieldBridge(this, manager, relationshipRole); 
 			cmrFieldList.add(cmrField);
 		}
 		
@@ -190,7 +190,7 @@ public class JDBCEntityBridge implements EntityBridge {
 	}
 	
 	public Object createPrimaryKeyInstance() {
-		if(metadata.getPrimKeyField() ==  null) {
+		if(metadata.getPrimaryKeyFieldName() ==  null) {
 			try {
 				return getPrimaryKeyClass().newInstance();
 			} catch(Exception e) {
