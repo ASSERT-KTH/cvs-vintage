@@ -77,8 +77,6 @@ public class AttributePeer
     {
         Criteria crit = new Criteria();
         crit.add(AttributePeer.ATTRIBUTE_ID, 0, Criteria.NOT_EQUAL);
-        return (List)doSelect(crit);
+        return doSelect(crit);
     }
-
 }
-
