@@ -27,7 +27,7 @@ import org.jboss.invocation.MarshalledValue;
  * starts the invocation interceptor call chain.
  * 
  * @author <a href="mailto:marc.fleury@jboss.org">Marc Fleury</a>
- * @version $Revision: 1.10 $
+ * @version $Revision: 1.11 $
  */
 public class ClientContainer
    implements Externalizable, InvocationHandler
@@ -82,6 +82,7 @@ public class ClientContainer
                           context.getInvokerProxyBinding(),
                           PayloadKey.AS_IS);
 
+/*
       // If we have call by value semantics, we make defensive copies of the args
       Boolean callByValue = (Boolean)context.getValue(InvocationKey.CALL_BY_VALUE);
       if (callByValue != null && callByValue.booleanValue())
@@ -93,6 +94,7 @@ public class ClientContainer
          }
          invocation.setArguments(copies);
       }
+*/
 
       // send the invocation down the client interceptor chain
       Object obj = next.invoke(invocation);

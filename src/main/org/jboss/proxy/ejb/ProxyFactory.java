@@ -61,11 +61,12 @@ import org.w3c.dom.NodeList;
  * interface when we are just implementing the Proxy generation calls.
  * Separation of concern. 
  *
- * @todo eliminate this class, at least in its present form.
+ * todo eliminate this class, at least in its present form.
  *
  * @author <a href="mailto:marc.fleury@jboss.org">Marc Fleury</a>
  * @author <a href="mailto:scott.stark@jboss.org">Scott Stark/a>
- * @version $Revision: 1.33 $
+ * @author <a href="mailto:thomas.diesler@jboss.org">Thomas Diesler/a>
+ * @version $Revision: 1.34 $
  */
 public class ProxyFactory
    implements EJBProxyFactory
@@ -264,13 +265,28 @@ public class ProxyFactory
    {
       Iterator interceptorElements = MetaData.getChildrenByTagName(interceptors, "interceptor");
       ClassLoader loader = container.getClassLoader();
+      BeanMetaData beanMetaData = container.getBeanMetaData();
       while( interceptorElements != null && interceptorElements.hasNext() )
       {
          Element ielement = (Element) interceptorElements.next();
          String className = null;
          className = MetaData.getElementContent(ielement);
-         Class clazz = loader.loadClass(className);
-         classes.add(clazz);
+
+         // load the invoker interceptor that corresponds to the beans call semantic
+         String byValueAttr = MetaData.getElementAttribute(ielement, "call-by-value");
+         if (byValueAttr != null)
+         {
+            if (beanMetaData.isCallByValue() == new Boolean(byValueAttr).booleanValue())
+            {
+               Class clazz = loader.loadClass(className);
+               classes.add(clazz);
+            }
+         }
+         else
+         {
+            Class clazz = loader.loadClass(className);
+            classes.add(clazz);
+         }
       }
    }
 
