@@ -65,9 +65,11 @@ import org.apache.fulcrum.security.entity.Role;
 import org.apache.fulcrum.security.entity.Permission;
 import org.apache.fulcrum.security.entity.User;
 import org.apache.fulcrum.security.util.AccessControlList;
+import org.apache.fulcrum.security.util.EntityExistsException;
 import org.apache.fulcrum.security.util.PermissionSet;
 import org.apache.torque.util.Criteria;
 import org.apache.turbine.ParameterParser;
+
 
 // Scarab Stuff
 import org.tigris.scarab.om.ScarabUser;
@@ -83,7 +85,7 @@ import org.tigris.scarab.tools.ScarabRequestTool;
  * Action(s).
  *
  * @author <a href="mailto:dr@bitonic.com">Douglas B. Robertson</a>
- * @version $Id: ManageRoles.java,v 1.2 2001/11/28 22:11:20 dr Exp $
+ * @version $Id: ManageRoles.java,v 1.3 2001/11/29 21:34:22 dr Exp $
  */
 public class ManageRoles extends RequireLoginFirstAction
 {
@@ -115,8 +117,49 @@ public class ManageRoles extends RequireLoginFirstAction
         setTarget(data, "admin,DeleteRole.vm");
     }
     
+    /** 
+     * Manages the adding of a new role when the 'Add Role' button is pressed.
+     */
+    public void doAddrole( RunData data, TemplateContext context )
+        throws Exception
+    {
+        IntakeTool intake = getIntakeTool(context);
+        
+        if (intake.isAllValid())
+        {
+            Object user = data.getUser().getTemp(ScarabConstants.SESSION_REGISTER);
+            
+            Group editRole = null;
+            if (user != null && user instanceof ScarabUser)
+            {
+                editRole = intake.get("EditRole", ((ScarabUser)user).getQueryKey(), false);
+            }
+            else
+            {
+                editRole = intake.get("EditRole", IntakeTool.DEFAULT_KEY, false);
+            }
+            String name = editRole.get("RoleName").toString();
+            
+            try
+            {        
+                Role role = TurbineSecurity.getNewRole(null);
+                role.setName(name);
+                
+                TurbineSecurity.addRole(role);
+                data.getParameters().setString("lastAction","addedrole");
+                data.setMessage("SUCCESS: a new role was created [role: " + name +"]");
+                
+            }
+            catch (EntityExistsException eee)
+            {
+                data.setMessage("ERROR: a role already exists with that name [role: " + name +"]");
+                data.getParameters().setString("lastAction","");
+            }
+        }
+    }
+    
     /**
-     * 
+     * Manages the editing of an existing role when the 'Update Role' button is pressed.
      */
     public void doEditrole( RunData data, TemplateContext context )
         throws Exception
