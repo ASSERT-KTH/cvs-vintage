@@ -61,7 +61,7 @@ import org.tigris.scarab.util.ScarabException;
  * This is an interface which describes what a ScarabUser is...
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: ScarabUser.java,v 1.58 2002/03/15 04:07:59 jon Exp $
+ * @version $Id: ScarabUser.java,v 1.59 2002/03/15 11:33:33 jon Exp $
  */
 public interface ScarabUser extends User
 {
@@ -79,7 +79,7 @@ public interface ScarabUser extends User
      * Gets all modules the user has permissions to edit.
      * The default is to not show global modules if you have 
      * the permission to edit it.
-     * @see #getEditableModules(boolean)
+     * @see #getEditableModules(Module)
      */
     public List getEditableModules() throws Exception;
 
