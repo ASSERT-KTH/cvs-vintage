@@ -7,7 +7,7 @@
 <body bgcolor="#ffffff">
 
 <h3>FAQ: Importing issue data</h3>
-<h5>$Id: faq.html,v 1.4 2003/03/27 19:44:40 stack Exp $</h5>
+<h5>$Id: faq.html,v 1.5 2003/03/27 19:48:22 stack Exp $</h5>
 
 <ul>
     <li><a href="#begin">I need to add issues to scarab.  How do I begin?</a>
@@ -24,6 +24,7 @@
     </li>
     <li><a href="#activityset">When would I start a new activity set?</a></li>
     <li><a href="#workflow">How does workflow affect xml import?</a></li>
+    <li><a href="#owner">Why when I import is issue 'created-by' not respected?</a></li>
     <li><a href="#sample">Are there sample xml issues that I can study?</a>
     </li>
 
@@ -111,9 +112,36 @@ attribute options. This facility is to be added soon.
 <ul>
     <li><a href="update-example.xml">Example</a> that updates an existing 
     issue adding a comment.</li>
-    <li><a href="dependencies.xml">Example</a> that imports 3 issues 
+    <li><a href="interdependencies.xml">Example</a> that imports 3 issues 
     preserving the dependency issue 3 has on issue 1.</li>
 </ul>
+
+<h4><a name="owner">Why when I import is issue 'created-by' not respected?</a></h4>
+<p>What may be happening is that the activity-set id in your xml may be that
+of an already existing activity-set; you may be picking up the 'created-by'
+of the activity-set that already exists in scarab.  Ensure your activity-set
+id is definetly not that of an already existing activity-set in scarab.
+This section from the scarab.dtd is pertinent:
+<pre>
+    The activity-set id passed is checked against the db to see if
+    this activity-set already exists (The activity-set id 
+    == SCARAB_TRANSACTION.TRANSACTION_ID).  If the activity-set id
+    does not refer to an already-existing activity-set, a new
+    activity-set id is created by taking the next id off the top of 
+    auto-incrementing sequence; the passed activity-set id is
+    discarded.  If an activity-set w/ the passed id already exists,
+    then we'll use the already-existing activity-set during import of
+    this activity-set's activites. To avoid picking up an extant
+    activity-set unintentionally on import, i.e. in the case where
+    you are doing an import of all new issues w/ no desire to refer
+    to already existing activity-sets, do not use a purely numerical
+    id for your activity-set id: Give the activity-set an alphabetic 
+    prefix.  In other words, instead of using numeric ids like 
+    1,2,3,4,5, use ids that run new1, new2, new3, etc.
+</pre>
+
+</p>
+
 
 </body>
 </html>
