@@ -19,7 +19,7 @@
  * USA
  *
  * --------------------------------------------------------------------------
- * $Id: JacORBCosNaming.java,v 1.5 2005/02/17 16:48:44 benoitf Exp $
+ * $Id: JacORBCosNaming.java,v 1.6 2005/03/03 16:10:15 benoitf Exp $
  * --------------------------------------------------------------------------
  */
 package org.objectweb.carol.jndi.ns;
@@ -35,6 +35,7 @@ import javax.naming.InitialContext;
 
 import org.omg.CORBA.ORB;
 
+import org.objectweb.carol.rmi.util.PortNumber;
 import org.objectweb.carol.util.configuration.CarolDefaultValues;
 import org.objectweb.carol.util.configuration.RMIConfiguration;
 import org.objectweb.carol.util.configuration.TraceCarol;
@@ -128,37 +129,40 @@ public class JacORBCosNaming implements NameService {
 
         // Fix iiop port if running inside a server
         if (System.getProperty(CarolDefaultValues.SERVER_MODE, "false").equalsIgnoreCase("true")) {
-            String iiopPortStr = null;
             if (configurationProperties != null) {
-                iiopPortStr = configurationProperties.getProperty(CarolDefaultValues.SERVER_IIOP_PORT, "0");
-                int iiopPort = 0;
-                try {
-                    iiopPort = Integer.parseInt(iiopPortStr);
-                } catch (NumberFormatException nfe) {
-                    TraceCarol.error("Invalid port number for property '" + CarolDefaultValues.SERVER_IIOP_PORT + "'. Value set was '" + iiopPortStr + "'. It should be 0(random) or greater than 0. Error : " + nfe.getMessage());
-                }
+                String propertyName = CarolDefaultValues.SERVER_IIOP_PORT;
+                int iiopPort = PortNumber.strToint(configurationProperties.getProperty(propertyName, "0"), propertyName);
                 if (iiopPort > 0) {
-                    TraceCarol.infoCarol("Using fixed IIOP server port number '" + iiopPort + "'.");
-                    System.setProperty("OAPort", iiopPortStr);
-                } else if (iiopPort < 0) {
-                    TraceCarol.error("Invalid port number for property '" + CarolDefaultValues.SERVER_IIOP_PORT + "'. It should be 0(random) or greater than 0.");
-                }
-                if (iiopPort == 0) {
-                    if (TraceCarol.isDebugJndiCarol()) {
-                        TraceCarol.debugCarol("IIOP port was 0, will use a random port");
-                    }
+                    TraceCarol.infoCarol("Using IIOP fixed server port number '" + iiopPort + "'.");
+                    System.setProperty("OAPort", String.valueOf(iiopPort));
                 }
             } else {
                 TraceCarol.debugCarol("No properties '" + CarolDefaultValues.SERVER_IIOP_PORT + "' defined in carol.properties file.");
             }
         }
 
+        // Set SSL Port
+        if (System.getProperty(CarolDefaultValues.SERVER_MODE, "false").equalsIgnoreCase("true")) {
+            if (configurationProperties != null) {
+                String propertyName = CarolDefaultValues.SERVER_SSL_IIOP_PORT;
+                int iiopSslPort = PortNumber.strToint(configurationProperties.getProperty(propertyName, String.valueOf(CarolDefaultValues.DEFAULT_SSL_PORT)), propertyName);
+                if (iiopSslPort > 0) {
+                    TraceCarol.infoCarol("Using SSL IIOP port number '" + iiopSslPort + "'.");
+                    System.setProperty("OASSLPort", String.valueOf(iiopSslPort));
+                }
+            } else {
+                TraceCarol.debugCarol("No properties '" + CarolDefaultValues.SERVER_SSL_IIOP_PORT + "' defined in carol.properties file.");
+            }
+        }
+
+
+
 
         try {
             if (!isRemoteNameServiceStarted()) {
                 // start the registry
                 String jvmProperties = "-Djava.endorsed.dirs=" + System.getProperty("java.endorsed.dirs") + " "
-                        + "-Djacorb.orb.print_version=on " + "-Djacorb.log.default.verbosity=4 "
+                        + "-Djacorb.orb.print_version=off " + "-Djacorb.log.default.verbosity=0 "
                         + "-Dorg.omg.CORBA.ORBClass=org.jacorb.orb.ORB "
                         + "-Dorg.omg.CORBA.ORBSingletonClass=org.jacorb.orb.ORBSingleton " + "-DOAPort=";
 
@@ -306,8 +310,6 @@ public class JacORBCosNaming implements NameService {
                 + "/StandardNS/NameServer-POA/_root");
 
         if (orb == null) {
-            // Properties p = new Properties();
-            // p.put("jacorb.log.default.verbosity", "4");
             orb = ORB.init(new String[0], null);
         }
 
