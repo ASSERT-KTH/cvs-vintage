@@ -24,7 +24,7 @@ import org.jboss.ejb.EntityEnterpriseContext;
  * @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
  * @author <a href="mailto:shevlandj@kpi.com.au">Joe Shevland</a>
  * @author <a href="mailto:justin@j-m-f.demon.co.uk">Justin Forder</a>
- * @version $Revision: 1.13 $
+ * @version $Revision: 1.14 $
  */
 public final class JDBCFindEntityCommand
 {
@@ -43,7 +43,7 @@ public final class JDBCFindEntityCommand
       Collection result = query.execute(finderMethod, args, ctx);
       if(result.isEmpty())
       {
-         return null;
+         throw new ObjectNotFoundException("No such entity!");
       }
       else if(result.size() == 1)
       {

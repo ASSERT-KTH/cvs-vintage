@@ -45,7 +45,7 @@ import org.jboss.logging.Logger;
  * @author <a href="mailto:justin@j-m-f.demon.co.uk">Justin Forder</a>
  * @author <a href="mailto:alex@jboss.org">Alex Loubyansky</a>
  *
- * @version $Revision: 1.23 $
+ * @version $Revision: 1.24 $
  */
 public abstract class JDBCAbstractQueryCommand implements JDBCQueryCommand
 {
@@ -219,6 +219,7 @@ public abstract class JDBCAbstractQueryCommand implements JDBCQueryCommand
                index = selectEntity.loadPrimaryKeyResults(rs, index, ref);
                Object pk = ref[0];
 
+               // note: loaded pk might be null
                boolean addPk = (loadOnFindCmr ? !pk.equals(prevPk) : true);
                if(addPk)
                {
