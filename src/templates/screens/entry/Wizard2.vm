@@ -118,9 +118,9 @@
      #end
   #end
 #end
-<td>$issue.CreatedDate</td>
+<td>$format.getDate($scarabR.DateFormat, $issue.CreatedDate)</td>
 #if ($includeClosedDate)
-  <td>#if ($issue.ClosedDate)$issue.ClosedDate#else&#160;#end</td>
+  <td>#if ($issue.ClosedDate)$format.getDate($scarabR.DateFormat, $issue.ClosedDate)#else&#160;#end</td>
 #end
 </tr>
 #end
