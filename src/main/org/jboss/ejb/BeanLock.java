@@ -19,7 +19,7 @@ import org.w3c.dom.Element;
  * @author <a href="bill@burkecentral.com">Bill Burke</a>
  * @author <a href="marc.fleury@jboss.org">Marc Fleury</a>
  *
- * @version $Revision: 1.17 $
+ * @version $Revision: 1.18 $
  *
  * <p><b>Revisions:</b><br>
 *  <p><b>2001/07/29: marcf</b>
@@ -73,6 +73,11 @@ public interface BeanLock
     */
    public void releaseSync();
 	
+
+   /**
+    * Lock bean with no wait.  Returns true if lock acquired.
+    */
+   public boolean lockNoWait(Invocation mi) throws Exception;
    /**
     *  This method implements the actual logic of the lock.
     *  In the case of an EJB lock it must at least implement

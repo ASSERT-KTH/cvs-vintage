@@ -26,7 +26,7 @@ import org.w3c.dom.Element;
  *
  * @author <a href="bill@burkecentral.com">Bill Burke</a>
  * @author <a href="marc.fleury@jboss.org">Marc Fleury</a>
- * @version $Revision: 1.21 $
+ * @version $Revision: 1.22 $
  */
 public abstract class BeanLockSupport
    implements BeanLock
@@ -78,6 +78,7 @@ public abstract class BeanLockSupport
       }
    }
  
+   public boolean lockNoWait(Invocation mi) throws Exception { return false; }
    public abstract void schedule(Invocation mi) throws Exception;
 	
    /**
