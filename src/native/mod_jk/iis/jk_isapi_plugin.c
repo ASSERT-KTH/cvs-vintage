@@ -57,8 +57,11 @@
  * Description: ISAPI plugin for IIS/PWS                                   *
  * Author:      Gal Shachor <shachor@il.ibm.com>                           *
  * Author:      Ignacio J. Ortega <nacho@apache.org>                       *
- * Version:     $Revision: 1.6 $                                           *
+ * Version:     $Revision: 1.7 $                                           *
  ***************************************************************************/
+
+// This define is needed to include wincrypt,h, needed to get client certificates
+#define _WIN32_WINNT 0x0400
 
 #include <httpext.h>
 #include <httpfilt.h>
@@ -178,6 +181,13 @@ static int get_server_value(LPEXTENSION_CONTROL_BLOCK lpEcb,
                             char  *buf,
                             DWORD bufsz,
                             char  *def_val);
+
+static int base64_encode_cert_len(int len);
+
+static int base64_encode_cert(char *encoded,
+                              const unsigned char *string,
+                              int len);
+
 
 static int uri_is_web_inf(char *uri)
 {
@@ -913,6 +923,7 @@ static int init_ws_service(isapi_private_data_t *private_data,
         for(i = 0 ; i < 9 ; i++) {
             GET_SERVER_VARIABLE_VALUE(ssl_env_names[i], ssl_env_values[i]);
             if(ssl_env_values[i]) {
+				jk_log(logger, JK_LOG_DEBUG, "SSL vars %s:%s.\n", ssl_env_names[i], ssl_env_values[i]);
                 num_of_vars++;
             }
         }
@@ -933,6 +944,28 @@ static int init_ws_service(isapi_private_data_t *private_data,
                 }
             }
             s->num_attributes = num_of_vars;
+ 			if (ssl_env_values[4] && ssl_env_values[4][0] == '1') {
+				CERT_CONTEXT_EX cc;
+				DWORD cc_sz = sizeof(cc);
+				cc.cbAllocated = sizeof(huge_buf);
+				cc.CertContext.pbCertEncoded = (BYTE*) huge_buf;
+				cc.CertContext.cbCertEncoded = 0;
+
+				if (private_data->lpEcb->ServerSupportFunction(private_data->lpEcb->ConnID,
+											 (DWORD)HSE_REQ_GET_CERT_INFO_EX,                               
+											 (LPVOID)&cc,NULL,NULL) != FALSE)
+				{
+					jk_log(logger, JK_LOG_DEBUG,"Client Certificate encoding:%d sz:%d flags:%ld\n",
+								cc.CertContext.dwCertEncodingType & X509_ASN_ENCODING ,
+								cc.CertContext.cbCertEncoded,
+								cc.dwCertificateFlags);
+                    s->ssl_cert=jk_pool_alloc(&private_data->p,
+                                base64_encode_cert_len(cc.CertContext.cbCertEncoded));
+
+                    s->ssl_cert_len = base64_encode_cert(s->ssl_cert,
+                                huge_buf,cc.CertContext.cbCertEncoded) - 1;
+				}
+			}
         }
     }
 
@@ -1057,4 +1090,76 @@ static int get_server_value(LPEXTENSION_CONTROL_BLOCK lpEcb,
     }
 
     return JK_TRUE;
+}
+
+static const char begin_cert [] = 
+	"-----BEGIN CERTIFICATE-----\r\n";
+
+static const char end_cert [] = 
+	"-----END CERTIFICATE-----\r\n";
+
+static const char basis_64[] =
+    "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
+
+static int base64_encode_cert_len(int len)
+{
+	int n = ((len + 2) / 3 * 4) + 1; // base64 encoded size
+	n += (n + 63 / 64) * 2; // add CRLF's
+	n += sizeof(begin_cert) + sizeof(end_cert) - 2;  // add enclosing strings.
+    return n;
+}
+
+static int base64_encode_cert(char *encoded,
+                              const unsigned char *string, int len)
+{
+    int i,c;
+    char *p;
+	const char *t;
+
+    p = encoded;
+
+	t = begin_cert;
+	while (*t != '\0')
+		*p++ = *t++;
+
+    c = 0;
+    for (i = 0; i < len - 2; i += 3) {
+        *p++ = basis_64[(string[i] >> 2) & 0x3F];
+        *p++ = basis_64[((string[i] & 0x3) << 4) |
+                        ((int) (string[i + 1] & 0xF0) >> 4)];
+        *p++ = basis_64[((string[i + 1] & 0xF) << 2) |
+                        ((int) (string[i + 2] & 0xC0) >> 6)];
+        *p++ = basis_64[string[i + 2] & 0x3F];
+        c += 4;
+        if ( c >= 64 ) {
+            *p++ = '\r';
+            *p++ = '\n';
+            c = 0;
+		}
+    }
+    if (i < len) {
+        *p++ = basis_64[(string[i] >> 2) & 0x3F];
+        if (i == (len - 1)) {
+            *p++ = basis_64[((string[i] & 0x3) << 4)];
+            *p++ = '=';
+        }
+        else {
+            *p++ = basis_64[((string[i] & 0x3) << 4) |
+                            ((int) (string[i + 1] & 0xF0) >> 4)];
+            *p++ = basis_64[((string[i + 1] & 0xF) << 2)];
+        }
+        *p++ = '=';
+        c++;
+    }
+    if ( c != 0 ) {
+        *p++ = '\r';
+        *p++ = '\n';
+    }
+
+	t = end_cert;
+	while (*t != '\0')
+		*p++ = *t++;
+
+    *p++ = '\0';
+    return p - encoded;
 }
