@@ -28,7 +28,7 @@ import org.jboss.logging.Logger;
  *   <LI>Shut it down</LI>
  * </OL>
  * @see org.jboss.minerva.pools.PooledObject
- * @version $Revision: 1.11 $
+ * @version $Revision: 1.12 $
  * @author Aaron Mulder (ammulder@alumni.princeton.edu)
  */
 public class ObjectPool implements PoolEventListener {
@@ -52,7 +52,7 @@ public class ObjectPool implements PoolEventListener {
     private long gcMinIdleMillis   = 1200000l; // must be unused by client for 20 minutes
     private long gcIntervalMillis  =  120000l; // shrink & gc every 2 minutes
     private long lastGC = System.currentTimeMillis();
-    private boolean blocking = false;
+    private boolean blocking = true;
     private boolean trackLastUsed = false;
     private boolean invalidateOnError = false;
     private PrintWriter logWriter = null;
@@ -394,7 +394,7 @@ public class ObjectPool implements PoolEventListener {
      * will not return until an object is available.  Otherwise, the request
      * will return null immediately (and may be retried).  If multiple
      * requests block, there is no guarantee which will return first.  The
-     * default is not to block (to return null).
+     * default is to block.
      * @throws java.lang.IllegalStateException
      *    Occurs when you try to set the blocking parameter after the
      *    pool has been initialized.
