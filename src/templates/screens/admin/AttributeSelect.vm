@@ -5,6 +5,20 @@ $page.setTitle("Select global attribute")
 #set ($agGroup = $intake.AttributeGroup.Default)
 
 
+#macro (AttributeSelectBar $val)
+<div class="functnbar$val">
+#if ($attributes.size() > 0)
+   <input type="submit" value="Add selected to attribute group" name="eventSubmit_doSelectattribute" />
+#end
+#if ($canEditDomain)
+    <input type="submit" value="Create new" name="eventSubmit_doCreatenewglobalattribute"/>&#160;
+#end
+<input type="submit" value="Cancel" name="eventSubmit_doCancel" />
+</div>
+#end
+
+
+
 <div class="app" id="globalAttributeSelect">
 <h2>$page.Title</h2>
 
@@ -61,27 +75,4 @@ $intake.declareGroups()
 
 
 
-#macro (AttributeSelectBar $val)
-<div class="functnbar$val">
-#if ($attributes.size() > 0)
-   <input type="submit" value="Add selected to attribute group" name="eventSubmit_doSelectattribute" />
-#end
-#if ($canEditDomain)
-    <input type="submit" value="Create new" name="eventSubmit_doCreatenewglobalattribute"/>&#160;
-#end
-<input type="submit" value="Cancel" name="eventSubmit_doCancel" />
-</div>
-#end
-
-#macro (AttributeSelectBar $val)
-<div class="functnbar$val">
-#if ($attributes.size() > 0)
-   <input type="submit" value="Add selected to attribute group" name="eventSubmit_doSelectattribute" />
-#end
-#if ($canEditDomain)
-    <input type="submit" value="Create new" name="eventSubmit_doCreatenewglobalattribute"/>&#160;
-#end
-<input type="submit" value="Cancel" name="eventSubmit_doCancel" />
-</div>
-#end
 
