@@ -1,4 +1,4 @@
-// $Id: FigNodeModelElement.java,v 1.134 2004/12/28 13:59:03 bobtarling Exp $
+// $Id: FigNodeModelElement.java,v 1.135 2004/12/28 19:04:50 bobtarling Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -74,7 +74,6 @@ import org.argouml.kernel.Project;
 import org.argouml.kernel.ProjectManager;
 import org.argouml.model.Model;
 import org.argouml.model.ModelFacade;
-import org.argouml.model.UUIDManager;
 import org.argouml.model.uml.CoreHelper;
 import org.argouml.model.uml.ModelManagementHelper;
 import org.argouml.model.uml.UmlFactory;
@@ -85,6 +84,7 @@ import org.argouml.ui.Clarifier;
 import org.argouml.ui.ProjectBrowser;
 import org.argouml.uml.generator.ParserDisplay;
 import org.argouml.uml.ui.UMLAction;
+import org.argouml.uml.UUIDHelper;
 import org.argouml.util.Trash;
 import org.tigris.gef.base.Globals;
 import org.tigris.gef.base.Selection;
@@ -1220,8 +1220,8 @@ public abstract class FigNodeModelElement
         updateListeners(own);
         super.setOwner(own);
         if (ModelFacade.isAModelElement(own)
-                && ProjectManager.getUUID(own) == null) {
-            ModelFacade.setUUID(own, UUIDManager.getInstance().getNewUUID());
+                && UUIDHelper.getInstance().getUUID(own) == null) {
+            ModelFacade.setUUID(own, UUIDHelper.getInstance().getNewUUID());
         }
         readyToEdit = true;
         if (own != null) {

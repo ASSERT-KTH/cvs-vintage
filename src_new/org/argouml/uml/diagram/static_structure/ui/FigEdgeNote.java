@@ -1,4 +1,4 @@
-// $Id: FigEdgeNote.java,v 1.13 2004/12/28 13:59:09 bobtarling Exp $
+// $Id: FigEdgeNote.java,v 1.14 2004/12/28 19:04:51 bobtarling Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -34,7 +34,7 @@ import org.argouml.i18n.Translator;
 import org.argouml.kernel.DelayedVChangeListener;
 import org.argouml.kernel.ProjectManager;
 import org.argouml.model.ModelFacade;
-import org.argouml.model.UUIDManager;
+import org.argouml.uml.UUIDHelper;
 import org.argouml.uml.diagram.ui.FigEdgeModelElement;
 import org.tigris.gef.base.Layer;
 import org.tigris.gef.presentation.Fig;
@@ -149,9 +149,9 @@ public class FigEdgeNote
             newOwner = new CommentEdge(getSourceFigNode(), getDestFigNode());
         }
         owner = newOwner;
-        if (ProjectManager.getUUID(newOwner) == null) {
+        if (UUIDHelper.getInstance().getUUID(newOwner) == null) {
             ModelFacade.setUUID(newOwner,
-				UUIDManager.getInstance().getNewUUID());
+				UUIDHelper.getInstance().getNewUUID());
 	}
     }
     

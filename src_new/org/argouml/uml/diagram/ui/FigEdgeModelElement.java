@@ -1,4 +1,4 @@
-// $Id: FigEdgeModelElement.java,v 1.72 2004/12/28 13:59:03 bobtarling Exp $
+// $Id: FigEdgeModelElement.java,v 1.73 2004/12/28 19:04:50 bobtarling Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -62,7 +62,6 @@ import org.argouml.kernel.Project;
 import org.argouml.kernel.ProjectManager;
 import org.argouml.model.Model;
 import org.argouml.model.ModelFacade;
-import org.argouml.model.UUIDManager;
 import org.argouml.model.uml.CoreHelper;
 import org.argouml.model.uml.UmlFactory;
 import org.argouml.model.uml.UmlHelper;
@@ -72,6 +71,7 @@ import org.argouml.ui.ArgoDiagram;
 import org.argouml.ui.ArgoJMenu;
 import org.argouml.ui.Clarifier;
 import org.argouml.ui.cmd.CmdSetPreferredSize;
+import org.argouml.uml.UUIDHelper;
 import org.argouml.util.Trash;
 import org.tigris.gef.base.Globals;
 import org.tigris.gef.base.Selection;
@@ -627,9 +627,9 @@ public abstract class FigEdgeModelElement
             if (org.argouml.model.ModelFacade.isAModelElement(newOwner)) {
                 Model.getPump().addModelEventListener(this, oldOwner);
                 
-                if (ProjectManager.getUUID(newOwner) == null) {
+                if (UUIDHelper.getInstance().getUUID(newOwner) == null) {
                     ModelFacade.setUUID(newOwner,
-					UUIDManager.getInstance().getNewUUID());
+					UUIDHelper.getInstance().getNewUUID());
 		}
             }
             modelChanged(null);
