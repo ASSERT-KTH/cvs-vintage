@@ -99,7 +99,7 @@ import org.apache.turbine.Turbine;
  * methodology</a> to be implemented.
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: ScarabGlobalTool.java,v 1.39 2002/10/07 12:15:44 thierrylach Exp $
+ * @version $Id: ScarabGlobalTool.java,v 1.40 2002/10/07 12:45:12 thierrylach Exp $
  */
 public class ScarabGlobalTool implements ScarabGlobalScope
 {
@@ -557,7 +557,7 @@ public class ScarabGlobalTool implements ScarabGlobalScope
      * Provides the site name for the top banner.
      *
      * @return the configured site name, the hostname if the site name
-     * was not configured, or a "cute" message if unable to get the host name.
+     * was not configured, or nothing if unable to get the host name.
      */
     public String getSiteName()
     {
@@ -569,6 +569,10 @@ public class ScarabGlobalTool implements ScarabGlobalScope
             try
             {
                 String hostName = InetAddress.getLocalHost().getHostName();
+                if ("localhost".equals(hostName))
+                {
+                    hostName = "Unconfigured";
+                }
                 siteName = hostName;
             }
             catch (UnknownHostException uhe)
@@ -578,7 +582,7 @@ public class ScarabGlobalTool implements ScarabGlobalScope
         }
         if ("Unconfigured".equals(siteName))
         {
-            siteName = "Your Site Name Here!";
+            siteName = "";
         }
         return siteName;
     }
