@@ -38,7 +38,7 @@ import org.gjt.sp.util.Log;
  * or font style for painting that token.
  *
  * @author Slava Pestov, mike dillon
- * @version $Id: TokenMarker.java,v 1.33 2002/06/01 04:52:12 spestov Exp $
+ * @version $Id: TokenMarker.java,v 1.34 2002/06/02 06:16:59 spestov Exp $
  *
  * @see org.gjt.sp.jedit.syntax.Token
  * @see org.gjt.sp.jedit.syntax.TokenHandler
@@ -252,20 +252,15 @@ main_loop:	for(pos = line.offset; pos < lineLength; pos++)
 					handleNoWordBreak();
 
 					markKeyword(true);
-	
+
 					tokenHandler.handleToken(
 						context.rules.getDefault(),
 						lastOffset - line.offset,1,
 						context);
 					lastOffset = pos + 1;
 				}
-				else
-				{
-					// a character which is not a word
-					// separator... nor did it match any
-					// rule. so \ has no effect
-					escaped = false;
-				}
+
+				escaped = false;
 			} //}}}
 		} //}}}
 
