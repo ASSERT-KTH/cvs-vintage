@@ -9,28 +9,20 @@ package org.jboss.ejb;
 import java.lang.reflect.Method;
 import java.lang.reflect.InvocationTargetException;
 import java.rmi.RemoteException;
-import java.rmi.ServerException;
 
 import javax.ejb.EJBContext;
-import javax.ejb.EJBHome;
 import javax.ejb.EJBLocalObject;
 import javax.ejb.EJBObject;
 import javax.ejb.SessionContext;
 import javax.ejb.SessionBean;
 import javax.ejb.EJBException;
 
-import javax.transaction.UserTransaction;
-
-import org.jboss.metadata.SessionMetaData;
-
-
 /**
- *	<description> 
+ * The enterprise context for stateless session beans.
  *      
- *	@see <related>
- *	@author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
- *  @author <a href="sebastien.alborini@m4x.org">Sebastien Alborini</a>
- *	@version $Revision: 1.11 $
+ * @author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
+ * @author <a href="sebastien.alborini@m4x.org">Sebastien Alborini</a>
+ * @version $Revision: 1.12 $
  */
 public class StatelessSessionEnterpriseContext
    extends EnterpriseContext
@@ -38,6 +30,7 @@ public class StatelessSessionEnterpriseContext
    // Constants -----------------------------------------------------
     
    // Attributes ----------------------------------------------------
+   
    EJBObject ejbObject;
    EJBLocalObject ejbLocalObject;
    SessionContext ctx;
@@ -45,13 +38,14 @@ public class StatelessSessionEnterpriseContext
    // Static --------------------------------------------------------
    
    // Constructors --------------------------------------------------
+   
    public StatelessSessionEnterpriseContext(Object instance, Container con)
       throws Exception
    {
       super(instance, con);
       ctx = new SessionContextImpl();
-	  
-	  ((SessionBean)instance).setSessionContext(ctx);
+      
+      ((SessionBean)instance).setSessionContext(ctx);
       
       try
       {
@@ -59,38 +53,52 @@ public class StatelessSessionEnterpriseContext
          ejbCreate.invoke(instance, new Object[0]);
       } catch (InvocationTargetException e) 
       {
-          Throwable ex = e.getTargetException();
-          if (ex instanceof EJBException)
-             throw (Exception)ex;
-          else if (ex instanceof RuntimeException)
-             throw new EJBException((Exception)ex); // Transform runtime exception into what a bean *should* have thrown
-          else if (ex instanceof Exception)
-             throw (Exception)ex;
-          else
-             throw (Error)ex;
+         Throwable ex = e.getTargetException();
+         if (ex instanceof EJBException)
+            throw (Exception)ex;
+         else if (ex instanceof RuntimeException)
+            throw new EJBException((Exception)ex); // Transform runtime exception into what a bean *should* have thrown
+         else if (ex instanceof Exception)
+            throw (Exception)ex;
+         else
+            throw (Error)ex;
       }
    }
    
    // Public --------------------------------------------------------
-   public void setEJBObject(EJBObject eo) { ejbObject = eo; }
-   public EJBObject getEJBObject() { return ejbObject; }
-   public void setEJBLocalObject(EJBLocalObject eo) { ejbLocalObject = eo; }
-   public EJBLocalObject getEJBLocalObject() { return ejbLocalObject; }
+   
+   public void setEJBObject(EJBObject eo) {
+      ejbObject = eo;
+   }
+   
+   public EJBObject getEJBObject() {
+      return ejbObject;
+   }
+   
+   public void setEJBLocalObject(EJBLocalObject eo) {
+      ejbLocalObject = eo;
+   }
+   
+   public EJBLocalObject getEJBLocalObject() {
+      return ejbLocalObject;
+   }
    
    public SessionContext getSessionContext() {
-	   return ctx;
+      return ctx;
    }
 
    // EnterpriseContext overrides -----------------------------------
-   public void discard()
-      throws RemoteException
+   
+   public void discard() throws RemoteException
    {
       ((SessionBean)instance).ejbRemove();
    }
+   
    public EJBContext getEJBContext()
    {
       return ctx;
    }
+   
    // Package protected ---------------------------------------------
     
    // Protected -----------------------------------------------------
@@ -98,6 +106,7 @@ public class StatelessSessionEnterpriseContext
    // Private -------------------------------------------------------
 
    // Inner classes -------------------------------------------------
+   
    protected class SessionContextImpl
       extends EJBContextImpl
       implements SessionContext
@@ -111,7 +120,6 @@ public class StatelessSessionEnterpriseContext
             try {
                ejbObject = ((StatelessSessionContainer)con).getContainerInvoker().getStatelessSessionEJBObject(); 
             } catch (RemoteException re) {
-               // ...
                throw new IllegalStateException();
             }
          } 	

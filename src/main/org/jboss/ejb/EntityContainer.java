@@ -1,13 +1,14 @@
 /*
-* JBoss, the OpenSource EJB server
-*
-* Distributable under LGPL license.
-* See terms of license at gnu.org.
-*/
+ * JBoss, the OpenSource EJB server
+ *
+ * Distributable under LGPL license.
+ * See terms of license at gnu.org.
+ */
 package org.jboss.ejb;
 
 import java.lang.reflect.Method;
 import java.lang.reflect.InvocationTargetException;
+import java.rmi.RemoteException;
 import java.security.Principal;
 import java.util.Map;
 import java.util.HashMap;
@@ -31,76 +32,84 @@ import org.jboss.logging.Logger;
 import org.jboss.util.SerializableEnumeration;
 
 /**
-*   This is a Container for EntityBeans (both BMP and CMP).
-*   
-*
-*   @see Container
-*   @see EntityEnterpriseContext
-*   @author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
-*   @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
-*   @author <a href="mailto:sebastien.alborini@m4x.org">Sebastien Alborini</a>
-*   @author <a href="mailto:docodan@mvcsoft.com">Daniel OConnor</a>
-*   @author <a href="bill@burkecentral.com">Bill Burke</a>
-*   @version $Revision: 1.44 $
-*
-* 
-*   <p><b>Revisions:</b>
-*
-*   <p><b>20010701 marc fleury:</b>
-*   <ul>
-*   <li>Transaction to context wiring was moved to the instance interceptor
-*   </ul>
-*/
-
-
+ * This is a Container for EntityBeans (both BMP and CMP).
+ *   
+ * @see Container
+ * @see EntityEnterpriseContext
+ *   
+ * @author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
+ * @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
+ * @author <a href="mailto:sebastien.alborini@m4x.org">Sebastien Alborini</a>
+ * @author <a href="mailto:docodan@mvcsoft.com">Daniel OConnor</a>
+ * @author <a href="bill@burkecentral.com">Bill Burke</a>
+ * @version $Revision: 1.45 $
+ *
+ * <p><b>Revisions:</b>
+ *
+ * <p><b>20010701 marc fleury:</b>
+ * <ul>
+ * <li>Transaction to context wiring was moved to the instance interceptor
+ * </ul>
+ */
 public class EntityContainer
-extends Container
-implements ContainerInvokerContainer, InstancePoolContainer
+   extends Container
+   implements ContainerInvokerContainer, InstancePoolContainer
 {
    // Constants -----------------------------------------------------
 
    // Attributes ----------------------------------------------------
 
-   // This is the Home interface class
+   /** This is the Home interface class. */
    protected Class homeInterface;
 
-   // This is the Remote interface class
+   /** This is the Remote interface class. */
    protected Class remoteInterface;
    
-   // These are the mappings between the home interface methods and the container methods
+   /**
+    * These are the mappings between the home interface methods and the
+    * container methods.
+    */
    protected Map homeMapping;
 
-   // These are the mappings between the remote interface methods and the bean methods
+   /**
+    * These are the mappings between the remote interface methods and the
+    * bean methods.
+    */
    protected Map beanMapping;
-
    
-   // This is the container invoker for this container
+   /** This is the container invoker for this container */
    protected ContainerInvoker containerInvoker;
 
-   // This is the persistence manager for this container
+   /** This is the persistence manager for this container */
    protected EntityPersistenceManager persistenceManager;
 
-   // This is the instance cache for this container
+   /** This is the instance cache for this container */
    protected InstanceCache instanceCache;
 
-   // This is the instancepool that is to be used
+   /** This is the instancepool that is to be used */
    protected InstancePool instancePool;
 
-   // This provides a way to find the entities that are part of a given transaction
-   // EntitySynchronizationInterceptor and InstanceSynchronization manage
-   // this instance.
+   /**
+    * This provides a way to find the entities that are part of a given
+    * transaction EntitySynchronizationInterceptor and InstanceSynchronization
+    * manage this instance.
+    */
    protected TxEntityMap txEntityMap = new TxEntityMap();
 
-   // This is the first interceptor in the chain. The last interceptor must be provided by the container itself
+   /**
+    * This is the first interceptor in the chain. The last interceptor must
+    * be provided by the container itself.
+    */
    protected Interceptor interceptor;
 
    // Public --------------------------------------------------------
+   
    public void setContainerInvoker(ContainerInvoker ci)
    {
       if (ci == null)
          throw new IllegalArgumentException("Null invoker");
 
-         this.containerInvoker = ci;
+      this.containerInvoker = ci;
       ci.setContainer(this);
    }
 
@@ -109,17 +118,17 @@ implements ContainerInvokerContainer, InstancePoolContainer
       return containerInvoker;
    }
    
-    public LocalContainerInvoker getLocalContainerInvoker()
-    {
-       return localContainerInvoker;
-    }     
+   public LocalContainerInvoker getLocalContainerInvoker()
+   {
+      return localContainerInvoker;
+   }     
 
    public void setInstancePool(InstancePool ip)
    {
       if (ip == null)
          throw new IllegalArgumentException("Null pool");
 
-         this.instancePool = ip;
+      this.instancePool = ip;
       ip.setContainer(this);
    }
 
@@ -133,7 +142,7 @@ implements ContainerInvokerContainer, InstancePoolContainer
       if (ic == null)
          throw new IllegalArgumentException("Null cache");
 
-         this.instanceCache = ic;
+      this.instanceCache = ic;
       ic.setContainer(this);
    }
 
@@ -157,7 +166,7 @@ implements ContainerInvokerContainer, InstancePoolContainer
       if (pm == null)
          throw new IllegalArgumentException("Null persistence manager");
 
-         persistenceManager = pm;
+      persistenceManager = pm;
       pm.setContainer(this);
    }
 
@@ -195,22 +204,23 @@ implements ContainerInvokerContainer, InstancePoolContainer
       return remoteInterface;
    }
  
- 	/**
-	* Returns a new instance of the bean class or a subclass of the bean class.
-	* If this is 1.x cmp, simply return a new instance of the bean class.
-	* If this is 2.x cmp, return a subclass that provides an implementation
-	* of the abstract accessors.
-	* 
-	* @see java.lang.Class#newInstance 
-	* @return the new instance
-	*/
-	public Object createBeanClassInstance() throws Exception {
-		return persistenceManager.createBeanClassInstance();
-	}
+   /**
+    * Returns a new instance of the bean class or a subclass of the bean class.
+    * If this is 1.x cmp, simply return a new instance of the bean class.
+    * If this is 2.x cmp, return a subclass that provides an implementation
+    * of the abstract accessors.
+    * 
+    * @see java.lang.Class#newInstance
+    * 
+    * @return   The new instance.
+    */
+   public Object createBeanClassInstance() throws Exception {
+      return persistenceManager.createBeanClassInstance();
+   }
 
    // Container implementation --------------------------------------
-   public void init()
-   throws Exception
+   
+   public void init() throws Exception
    {
       // Associate thread with classloader
       ClassLoader oldCl = Thread.currentThread().getContextClassLoader();
@@ -257,8 +267,7 @@ implements ContainerInvokerContainer, InstancePoolContainer
       Thread.currentThread().setContextClassLoader(oldCl);
    }
 
-   public void start()
-   throws Exception
+   public void start() throws Exception
    {
       // Associate thread with classloader
       ClassLoader oldCl = Thread.currentThread().getContextClassLoader();
@@ -303,7 +312,7 @@ implements ContainerInvokerContainer, InstancePoolContainer
 
       // Stop container invoker
       if (containerInvoker != null)
-      containerInvoker.stop();
+         containerInvoker.stop();
 
       // Stop instance cache
       instanceCache.stop();
@@ -360,58 +369,66 @@ implements ContainerInvokerContainer, InstancePoolContainer
       Thread.currentThread().setContextClassLoader(oldCl);
    }
 
-   public Object invokeHome(MethodInvocation mi)
-   throws Exception
+   public Object invokeHome(MethodInvocation mi) throws Exception
    {
       return getInterceptor().invokeHome(mi);
    }
 
-   public Object invoke(MethodInvocation mi)
-   throws Exception
+   public Object invoke(MethodInvocation mi) throws Exception
    {
       // Invoke through interceptors
       return getInterceptor().invoke(mi);
    }
 
    // EJBObject implementation --------------------------------------
+
    public void remove(MethodInvocation mi)
-   throws java.rmi.RemoteException, RemoveException
+      throws RemoteException, RemoveException
    {
       // Get the persistence manager to do the dirty work
       getPersistenceManager().removeEntity((EntityEnterpriseContext)mi.getEnterpriseContext());
 
       // We signify "removed" with a null id
-		// There is no need to synchronize on the context since all the threads reaching here have
-		// gone through the InstanceInterceptor so the instance is locked and we only have one thread 
-		// the case of reentrant threads is unclear (would you want to delete an instance in reentrancy)
+      // There is no need to synchronize on the context since all the threads reaching here have
+      // gone through the InstanceInterceptor so the instance is locked and we only have one thread 
+      // the case of reentrant threads is unclear (would you want to delete an instance in reentrancy)
       mi.getEnterpriseContext().setId(null);
    }
 
+   /**
+    * @throws Error    Not yet implemented.
+    */
    public Handle getHandle(MethodInvocation mi)
-   throws java.rmi.RemoteException
+      throws RemoteException
    {
       // TODO
       throw new Error("Not yet implemented");
    }
 
+   /**
+    * @throws Error    Not yet implemented.
+    */
    public Object getPrimaryKey(MethodInvocation mi)
-   throws java.rmi.RemoteException
+      throws RemoteException
    {
       // TODO
       throw new Error("Not yet implemented");
    }
 
+   /**
+    * @throws IllegalStateException     If container invoker is null.
+    */
    public EJBHome getEJBHome(MethodInvocation mi)
-   throws java.rmi.RemoteException
+      throws RemoteException
    {
-      if (containerInvoker == null)
-         throw new java.lang.IllegalStateException();
+      if (containerInvoker == null) {
+         throw new IllegalStateException();
+      }
       return containerInvoker.getEJBHome();
    }
 
-
    public boolean isIdentical(MethodInvocation mi)
-   throws java.rmi.RemoteException
+      throws RemoteException
    {
       return ((EJBObject)mi.getArguments()[0]).getPrimaryKey().equals(mi.getEnterpriseContext().getId());
       // TODO - should also check type
@@ -420,37 +437,37 @@ implements ContainerInvokerContainer, InstancePoolContainer
    /**
     * MF FIXME these are implemented on the client
     */
-
-    public EJBLocalHome getEJBLocalHome(MethodInvocation mi)
-    {
-      return localContainerInvoker.getEJBLocalHome();
-    }
- 
-   public void removeLocalHome(MethodInvocation mi)
-    throws java.rmi.RemoteException, RemoveException
+   public EJBLocalHome getEJBLocalHome(MethodInvocation mi)
    {
-       throw new Error("Not Yet Implemented");
+      return localContainerInvoker.getEJBLocalHome();
+   }
+
+   /**
+    * @throws Error    Not yet implemented.
+    */
+   public void removeLocalHome(MethodInvocation mi)
+      throws RemoteException, RemoveException
+   {
+      throw new Error("Not Yet Implemented");
    }
     
-    // Local home interface implementation
-   
+   /**
+    * Local home interface implementation
+    */
    public EJBLocalObject createLocalHome(MethodInvocation mi)
-   throws Exception
+      throws Exception
    {
-
       // The persistence manager takes care of the wiring and creating the EJBLocalObject
       getPersistenceManager().createEntity(mi.getMethod(),mi.getArguments(),
-         (EntityEnterpriseContext) mi.getEnterpriseContext());
+                                           (EntityEnterpriseContext) mi.getEnterpriseContext());
 
       // The context implicitely carries the EJBObject
       return ((EntityEnterpriseContext)mi.getEnterpriseContext()).getEJBLocalObject();
    }
    
-   
    public Object findLocal(MethodInvocation mi)
-   throws Exception
+      throws Exception
    {
-
       // Multi-finder?
       if (!mi.getMethod().getReturnType().equals(getLocalClass()))
       {
@@ -475,35 +492,28 @@ implements ContainerInvokerContainer, InstancePoolContainer
             // shouldn't happen
             return ec;
          }
-
       }
       else
       {
-
          // Single entity finder
          Object id = getPersistenceManager().findEntity(mi.getMethod(),
-            mi.getArguments(),
-            (EntityEnterpriseContext)mi.getEnterpriseContext());
+                                                        mi.getArguments(),
+                                                        (EntityEnterpriseContext)mi.getEnterpriseContext());
 
          //create the EJBObject
          return (EJBLocalObject)localContainerInvoker.getEntityEJBLocalObject(id);
       }
    }
    
-   
    // Home interface implementation ---------------------------------
 
-   /*
-   * find(MethodInvocation)
-   *
-   * This methods finds the target instances by delegating to the persistence manager
-   * It then manufactures EJBObject for all the involved instances found
-   */
-
-   public Object find(MethodInvocation mi)
-   throws Exception
+   /**
+    * This methods finds the target instances by delegating to the persistence
+    * manager It then manufactures EJBObject for all the involved instances
+    * found.
+    */
+   public Object find(MethodInvocation mi) throws Exception
    {
-
       // Multi-finder?
       if (!mi.getMethod().getReturnType().equals(getRemoteClass()))
       {
@@ -529,15 +539,13 @@ implements ContainerInvokerContainer, InstancePoolContainer
             // shouldn't happen
             return ec;
          }
-
       }
       else
       {
-
          // Single entity finder
          Object id = getPersistenceManager().findEntity(mi.getMethod(),
-            mi.getArguments(),
-            (EntityEnterpriseContext)mi.getEnterpriseContext());
+                                                        mi.getArguments(),
+                                                        (EntityEnterpriseContext)mi.getEnterpriseContext());
 
          //create the EJBObject
          return (EJBObject)containerInvoker.getEntityEJBObject(id);
@@ -545,66 +553,64 @@ implements ContainerInvokerContainer, InstancePoolContainer
    }
 
    /**
-   * createHome(MethodInvocation)
-   *
-   * This method takes care of the wiring of the "EJBObject" trio (target, context, proxy)
-   * It delegates to the persistence manager.
-   *
-   */
-
+    * This method takes care of the wiring of the "EJBObject" trio
+    * (target, context, proxy).  It delegates to the persistence manager.
+    */
    public EJBObject createHome(MethodInvocation mi)
-   throws Exception
+      throws Exception
    {
-
       // The persistence manager takes care of the wiring and creating the EJBObject
       getPersistenceManager().createEntity(mi.getMethod(),mi.getArguments(),
-         (EntityEnterpriseContext) mi.getEnterpriseContext());
+                                           (EntityEnterpriseContext) mi.getEnterpriseContext());
 
       // The context implicitely carries the EJBObject
       return ((EntityEnterpriseContext)mi.getEnterpriseContext()).getEJBObject();
    }
 
    /**
-   * A method for the getEJBObject from the handle
-   *
-   */
+    * A method for the getEJBObject from the handle
+    */
    public EJBObject getEJBObject(MethodInvocation mi)
-   throws java.rmi.RemoteException
+      throws RemoteException
    {
-
       // All we need is an EJBObject for this Id;
       return (EJBObject)containerInvoker.getEntityEJBObject(((EntityCache) instanceCache).createCacheKey(mi.getId()));
    }
 
-
-
    // EJBHome implementation ----------------------------------------
 
-
-      public void removeHome(MethodInvocation mi)
-   throws java.rmi.RemoteException, RemoveException
+   /**
+    * @throws Error    Not yet implemented.
+    */
+   public void removeHome(MethodInvocation mi)
+      throws RemoteException, RemoveException
    {
       throw new Error("Not yet implemented");
    }
 
    public EJBMetaData getEJBMetaDataHome(MethodInvocation mi)
-   throws java.rmi.RemoteException
+      throws RemoteException
    {
       return getContainerInvoker().getEJBMetaData();
    }
 
+   /**
+    * @throws Error    Not yet implemented.
+    */
    public HomeHandle getHomeHandleHome(MethodInvocation mi)
-   throws java.rmi.RemoteException
+      throws RemoteException
    {
       // TODO
       throw new Error("Not yet implemented");
    }
 
-
    // Private -------------------------------------------------------
    
-   private void setupHomeMappingImpl( Map map, Method[] m, String finderName, String append )
-     throws DeploymentException
+   private void setupHomeMappingImpl( Map map,
+                                      Method[] m,
+                                      String finderName,
+                                      String append )
+      throws DeploymentException
    {
       for (int i = 0; i < m.length; i++)
       {
@@ -637,7 +643,7 @@ implements ContainerInvokerContainer, InstancePoolContainer
    }
    
    protected void setupHomeMapping()
-   throws DeploymentException
+      throws DeploymentException
    {
       Map map = new HashMap();
 
@@ -675,12 +681,12 @@ implements ContainerInvokerContainer, InstancePoolContainer
 
                   //Map it in the home stuff
                   map.put(handleMethods[j], this.getClass().getMethod("getEJBObject", new Class[]
-                     {MethodInvocation.class
-                     }));
-                  }
+                  {MethodInvocation.class
+                      }));
                }
-               catch (NoSuchMethodException e)
-               {
+            }
+            catch (NoSuchMethodException e)
+            {
                throw new DeploymentException("Couldn't find getEJBObject method on container");
             }
          }
@@ -710,18 +716,18 @@ implements ContainerInvokerContainer, InstancePoolContainer
             {
                // Implemented by container
                map.put(m[i], getClass().getMethod(m[i].getName(), new Class[]
-                  { MethodInvocation.class
-                  }));
-               }
-            } catch (NoSuchMethodException e)
-            {
+               { MethodInvocation.class
+                    }));
+            }
+         } catch (NoSuchMethodException e)
+         {
             throw new DeploymentException("Could not find matching method for "+m[i], e);
          }
       }
    }
 
    protected void setupBeanMapping()
-   throws DeploymentException
+      throws DeploymentException
    {
       Map map = new HashMap();
 
@@ -746,9 +752,11 @@ implements ContainerInvokerContainer, InstancePoolContainer
    }
    
    // Inner classes -------------------------------------------------
+
    // This is the last step before invocation - all interceptors are done
+   
    class ContainerInterceptor
-   implements Interceptor
+      implements Interceptor
    {
       public void setContainer(Container con)
       {
@@ -757,25 +765,30 @@ implements ContainerInvokerContainer, InstancePoolContainer
       public void setNext(Interceptor interceptor)
       {
       }
+      
       public Interceptor getNext()
-      { return null;
+      {
+         return null;
       }
 
       public void init()
       {
       }
+      
       public void start()
       {
       }
+      
       public void stop()
       {
       }
+      
       public void destroy()
       {
       }
 
       public Object invokeHome(MethodInvocation mi)
-      throws Exception
+         throws Exception
       {
          // Invoke and handle exceptions
          Method m = (Method)homeMapping.get(mi.getMethod());
@@ -826,7 +839,7 @@ implements ContainerInvokerContainer, InstancePoolContainer
       }
 
       public Object invoke(MethodInvocation mi)
-      throws Exception
+         throws Exception
       {
          // Get method
          Method m = (Method)beanMapping.get(mi.getMethod());
@@ -837,10 +850,7 @@ implements ContainerInvokerContainer, InstancePoolContainer
             // Invoke and handle exceptions
             try
             {
-               return m.invoke(EntityContainer.this, new Object[]
-               {
-                  mi
-               });
+               return m.invoke(EntityContainer.this, new Object[]{ mi });
             } catch (IllegalAccessException e)
             {
                // Throw this as a bean exception...(?)
@@ -860,8 +870,7 @@ implements ContainerInvokerContainer, InstancePoolContainer
          }
          else
          {
-    
-	         // Invoke and handle exceptions
+            // Invoke and handle exceptions
             try
             {
                return m.invoke(mi.getEnterpriseContext().getInstance(), mi.getArguments());
@@ -885,5 +894,3 @@ implements ContainerInvokerContainer, InstancePoolContainer
       }
    }
 }
-
-
