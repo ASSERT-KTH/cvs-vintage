@@ -56,7 +56,7 @@ import org.gjt.sp.util.Log;
  * @see View#getEditPanes()
  *
  * @author Slava Pestov
- * @version $Id: EditPane.java,v 1.50 2004/08/12 22:42:43 spestov Exp $
+ * @version $Id: EditPane.java,v 1.51 2004/08/17 06:37:35 spestov Exp $
  */
 public class EditPane extends JPanel implements EBComponent
 {
@@ -140,11 +140,7 @@ public class EditPane extends JPanel implements EBComponent
 				// avoid a race condition
 				// see bug #834338
 				if(buffer == getBuffer())
-				{
-					System.err.println("load caret info");
 					loadCaretInfo();
-					System.err.println(buffer.getProperty(Buffer.CARET));
-				}
 			}
 		};
 
