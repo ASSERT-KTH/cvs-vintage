@@ -27,6 +27,7 @@ import org.columba.core.config.ConfigPath;
  * @author waffel
  */
 public class ColumbaCmdLineParser {
+    private static CmdLineParser parser;
     private static CmdLineParser.Option help;
     private static CmdLineParser.Option version;
     private static CmdLineParser.Option debug;
@@ -39,24 +40,9 @@ public class ColumbaCmdLineParser {
     private static CmdLineParser.Option cc;
     private static CmdLineParser.Option bcc;
     
-    protected CmdLineParser parser;
-    private String rcptOption = null;
-    private String bodyOption = null;
-    private boolean composerOption = false;
-    private String mailurlOption = null;
-    private String subjectOption = null;
-    private String ccOption = null;
-    private String bccOption = null;
-
-    public ColumbaCmdLineParser() {
+    static {
         parser = new CmdLineParser();
-    }
-    
-    /**
-     * Parsing the commandline arguments and set the given values to the commandline arguments.
-     * @param args commandline arguments to be parsed
-     */
-    public void initCmdLine(String[] args) {
+        
         // setting any options
         // the short option '+' is an hack until jargs supports also "only long commands"
         // TODO make options i18n compatible
@@ -71,12 +57,27 @@ public class ColumbaCmdLineParser {
         subject = parser.addStringOption('s', "subject");
         cc = parser.addStringOption('+', "cc");
         bcc = parser.addStringOption('+', "bcc");
+    }
+    
+    protected String rcptOption = null;
+    protected String bodyOption = null;
+    protected boolean composerOption = false;
+    protected String mailurlOption = null;
+    protected String subjectOption = null;
+    protected String ccOption = null;
+    protected String bccOption = null;
 
+    public ColumbaCmdLineParser() {}
+    
+    /**
+     * Parsing the commandline arguments and set the given values to the commandline arguments.
+     * @param args commandline arguments to be parsed
+     */
+    public void parseCmdLine(String[] args) throws IllegalArgumentException {
         try {
             parser.parse(args);
         } catch (CmdLineParser.OptionException e) {
-            printUsage();
-            System.exit(2);
+            throw new IllegalArgumentException(e.getMessage());
         }
 
         checkHelp();

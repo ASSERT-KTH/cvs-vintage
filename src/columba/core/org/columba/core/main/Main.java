@@ -47,7 +47,12 @@ public class Main {
     
     public static void main(String[] args) {
         ColumbaCmdLineParser cmdLineParser = new ColumbaCmdLineParser();
-        cmdLineParser.initCmdLine(args);
+        try {
+            cmdLineParser.parseCmdLine(args);
+        } catch (IllegalArgumentException e) {
+            ColumbaCmdLineParser.printUsage();
+            System.exit(2);
+        }
 
         // the configPath settings are made in the commandlineParser @see ColumbaCmdLineParser
         ColumbaClient.loadInVMInstance(args);

@@ -251,7 +251,9 @@ public class ColumbaServer implements Runnable {
         }
 
         ColumbaCmdLineParser cmdLineParser = new ColumbaCmdLineParser();
-        cmdLineParser.initCmdLine((String[])list.toArray(new String[0]));
-        new CmdLineArgumentHandler(cmdLineParser);
+        try {
+            cmdLineParser.parseCmdLine((String[])list.toArray(new String[0]));
+            new CmdLineArgumentHandler(cmdLineParser);
+        } catch (IllegalArgumentException e) {}
     }
 }
