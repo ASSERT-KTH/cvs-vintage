@@ -71,9 +71,15 @@ public class DefaultClassLoader {
         //Constructor constructor = actClass.getConstructors()[0];//argClazz);
         //
         if ((args == null) || (args.length == 0)) {
+        	// @author fdietz
+        	// #987119 import wizard plugin loading error
+        	// simply load default constructor with no arguments
+        	//
+        	/*
             constructor = actClass.getConstructors()[0];
-
             return constructor.newInstance(args);
+            */
+        	return actClass.newInstance();
         }
 
         Constructor[] list = actClass.getConstructors();
