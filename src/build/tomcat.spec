@@ -1,405 +1,235 @@
 Summary: Apache's servlet engine
 Name: tomcat
-Version: 3.0
-Release: 0
+Version: 3.1
+%define packname jakarta-tomcat
+Release: 3
 Vendor: Apache Software Foundation
 Group: System Environment/Daemons
 Copyright: Apache - free
-## Icon: tomcat.gif
+Icon: tomcat.gif
 Url: http://jakarta.apache.org
-# BuildRoot: /home/costin/
 Provides: tomcat 
-
-Prefix: /opt
-
-Source: http://jakarta.apache.org/builds/tmp/tomcat/jakarta-tomcat.src.zip
-Source: http://jakarta.apache.org/builds/tmp/tomcat/jakarta-tools.src.zip
+#BuildArchitectures: noarch
+Requires: ant
+BuildRequires: ant apache-devel
+Source: http://jakarta.apache.org/builds/tomcat/release/v%{version}/src/%{packname}.tar.gz
+Source1: tomcat.init
+Source2: tomcat.logrotate
+Patch: Ajp12ConnectionHandler.diff
+BuildRoot: /var/tmp/%{name}-root
 
 %description
 Develop Web applications in Java.
 
+%package doc
+Group: Applications/Internet
+Requires: webserver
+Summary: Online manual for tomcat
+
+%description doc
+Documentation for tomcat.
+
+%package jserv
+Group: Applications/Internet
+Requires: apache
+Summary: add mod_jserv support to apache
+
+%description jserv
+mod_jserv support for apache
 
 %prep
-cd /usr/src/redhat/BUILD
-rm -rf jakarta-tomcat
-rm -rf jakarta-tools
-rm -rf build
-unzip -x ${RPM_SOURCE_DIR}/jakarta-tomcat.src.zip
-unzip -x ${RPM_SOURCE_DIR}/jakarta-tools.src.zip
-cd jakarta-tomcat
+rm -rf $RPM_BUILD_ROOT
+rm -rf $RPM_BUILD_DIR/%{packname}
+
+%setup -n %{packname}
+%patch
 
 %build
-cd /usr/src/redhat/BUILD/jakarta-tomcat
-ant 
+ant -Dant.home /opt/ant -Dtomcat.home $RPM_BUILD_DIR/%{packname} -Dtomcat.build $RPM_BUILD_DIR/%{packname}/build
+cd src/native/apache/jserv
+/usr/sbin/apxs -c -o mod_jserv.so *.c
+
 
 %install
-cd /usr/src/redhat/BUILD/jakarta-tomcat
-ant -Dtomcat.home /opt/tomcat dist 
+cd $RPM_BUILD_DIR/%{packname}
+mkdir -p $RPM_BUILD_ROOT/home/httpd/html/manual/%{name}
+ant -Dant.home /opt/ant -Dtomcat.build $RPM_BUILD_DIR/%{packname}/build -Dtomcat.home $RPM_BUILD_ROOT/opt/%{name} dist 
+mkdir -p $RPM_BUILD_ROOT/usr/lib/apache
+install src/native/apache/jserv/mod_jserv.so $RPM_BUILD_ROOT/usr/lib/apache/mod_jserv_tomcat.so
+
+cd $RPM_BUILD_ROOT/home/httpd/html/manual/%{name}
+jar xvf $RPM_BUILD_ROOT/opt/%{name}/webapps/ROOT.war
+
+# sysv init and logging
+mkdir -p $RPM_BUILD_ROOT/etc/rc.d/init.d
+install $RPM_SOURCE_DIR/tomcat.logrotate $RPM_BUILD_ROOT/opt/tomcat/conf
+install $RPM_SOURCE_DIR/tomcat.init $RPM_BUILD_ROOT/etc/rc.d/init.d/tomcat
+
 
 %clean
-rm -rf jakarta-tomcat 
-rm -rf jakarta-tools 
-rm -rf build
+rm -rf $RPM_BUILD_ROOT
+rm -rf $RPM_BUILD_DIR/%{packname}
 
 %post
+rm -f /usr/bin/tomcat
+ln -s /opt/tomcat/bin/tomcat.sh /usr/bin/tomcat
+/sbin/chkconfig --add tomcat
+
+echo ""
+echo ""
+echo "Don't forget to set JAVA_HOME in /etc/rc.d/init.d/tomcat"
+echo "to your JDK/JRE directory since we didn't have these info"
+echo "at boot time."
+echo "As supplied we assume you're using IBM JDK 1.1.8"
+echo ""
+
+%post jserv
+cp -f /opt/tomcat/conf/tomcat.logrotate /etc/logrotate.d/tomcat
+
+if [ -f /etc/httpd/conf/httpd.conf ] ; then
+    if ! grep -q '.*LoadModule *jserv_module *lib/apache/mod_jserv_tomcat.so' /etc/httpd/conf/httpd.conf ; then
+        sed "s|^\LoadModule *rewrite_module *lib/apache/mod_rewrite.so\$|LoadModule jserv_module       lib/apache/mod_jserv_tomcat.so\\
+LoadModule rewrite_module     lib/apache/mod_rewrite.so|" < /etc/httpd/conf/httpd.conf > /etc/httpd/conf/httpd.conf-
+        mv -f /etc/httpd/conf/httpd.conf- /etc/httpd/conf/httpd.conf
+    fi
+
+    if ! grep -q '.*AddModule *mod_jserv.c' /etc/httpd/conf/httpd.conf ; then
+      sed "s|^\AddModule *mod_rewrite.c\$|AddModule mod_jserv.c\\
+AddModule mod_rewrite.c|" < /etc/httpd/conf/httpd.conf > /etc/httpd/conf/httpd.conf-
+        mv -f /etc/httpd/conf/httpd.conf- /etc/httpd/conf/httpd.conf
+    fi
+
+    if ! grep -q '.*Include /opt/tomcat/conf/tomcat.conf' /etc/httpd/conf/httpd.conf ; then
+        cat >>/etc/httpd/conf/httpd.conf<<EOT
+<IfModule mod_jserv.c>
+ApJServLogFile /var/log/httpd/mod_jserv_tomcat.log
+Include /opt/tomcat/conf/tomcat.conf
+</IfModule>
+EOT
+    fi
+fi
 
 %preun
-  
+if [ $1 = 0 ]; then
+    if [ -f /usr/bin/tomcat ]; then
+        rm -f /usr/bin/tomcat
+    fi
+
+    if [ -f /var/lock/subsys/tomcat ]; then
+        /etc/rc.d/init.d/tomcat stop
+    fi
+    if [ -f /etc/rc.d/init.d/tomcat ]; then
+        /sbin/chkconfig --del tomcat
+    fi
+
+fi
+
+%preun jserv
+if [ $1 = 0 ]; then
+# remove existing map if any
+	sed -e '/^Include \/opt\/tomcat\/conf\/tomcat.conf/d' \
+        -e '/^ApJServLogFile \/var\/log\/httpd\/mod_jserv_tomcat.log/d' \
+        -e '/^LoadModule jserv_module lib\/apache\/mod_jserv_tomcat.so/d' \
+        -e '/^AddModule mod_jserv.c/d' \
+      < /etc/httpd/conf/httpd.conf \
+      > /etc/httpd/conf/httpd.conf-
+  	mv /etc/httpd/conf/httpd.conf- \
+     	/etc/httpd/conf/httpd.conf
+
+	rm -f /etc/logrotate.d/tomcat
+fi
+
 %files
-%dir /opt/tomcat
-%dir /opt/tomcat/lib
-%dir /opt/tomcat/etc
-%dir /opt/tomcat/src
-%dir /opt/tomcat/src/javax
-%dir /opt/tomcat/src/javax/servlet
-%dir /opt/tomcat/src/javax/servlet/http
-%dir /opt/tomcat/src/javax/servlet/jsp
-%dir /opt/tomcat/src/javax/servlet/jsp/tagext
-%dir /opt/tomcat/examples
-%dir /opt/tomcat/examples/WEB-INF
-%dir /opt/tomcat/examples/WEB-INF/classes
-%dir /opt/tomcat/examples/WEB-INF/classes/examples
-%dir /opt/tomcat/examples/WEB-INF/classes/checkbox
-%dir /opt/tomcat/examples/WEB-INF/classes/error
-%dir /opt/tomcat/examples/WEB-INF/classes/num
-%dir /opt/tomcat/examples/WEB-INF/classes/cal
-%dir /opt/tomcat/examples/WEB-INF/classes/colors
-%dir /opt/tomcat/examples/WEB-INF/classes/sessions
-%dir /opt/tomcat/examples/WEB-INF/classes/dates
-%dir /opt/tomcat/examples/WEB-INF/jsp
-%dir /opt/tomcat/examples/WEB-INF/jsp/applet
-%dir /opt/tomcat/examples/jsp
-%dir /opt/tomcat/examples/jsp/plugin
-%dir /opt/tomcat/examples/jsp/plugin/applet
-%dir /opt/tomcat/examples/jsp/cal
-%dir /opt/tomcat/examples/jsp/jsptoserv
-%dir /opt/tomcat/examples/jsp/dates
-%dir /opt/tomcat/examples/jsp/colors
-%dir /opt/tomcat/examples/jsp/error
-%dir /opt/tomcat/examples/jsp/sessions
-%dir /opt/tomcat/examples/jsp/forward
-%dir /opt/tomcat/examples/jsp/checkbox
-%dir /opt/tomcat/examples/jsp/simpletag
-%dir /opt/tomcat/examples/jsp/include
-%dir /opt/tomcat/examples/jsp/num
-%dir /opt/tomcat/examples/jsp/snp
-%dir /opt/tomcat/examples/servlets
-%dir /opt/tomcat/examples/images
-%dir /opt/tomcat/webpages
-%dir /opt/tomcat/webpages/docs
-%dir /opt/tomcat/webpages/docs/api
-%dir /opt/tomcat/webpages/docs/api/javax
-%dir /opt/tomcat/webpages/docs/api/javax/servlet
-%dir /opt/tomcat/webpages/docs/api/javax/servlet/jsp
-%dir /opt/tomcat/webpages/docs/api/javax/servlet/jsp/tagext
-%dir /opt/tomcat/webpages/docs/api/javax/servlet/jsp/tagext/class-use
-%dir /opt/tomcat/webpages/docs/api/javax/servlet/jsp/class-use
-%dir /opt/tomcat/webpages/docs/api/javax/servlet/class-use
-%dir /opt/tomcat/webpages/docs/api/javax/servlet/http
-%dir /opt/tomcat/webpages/docs/api/javax/servlet/http/class-use
-%dir /opt/tomcat/webpages/WEB-INF
-%dir /opt/tomcat/webpages/WEB-INF/classes
-/opt/tomcat/lib/servlet.jar
-/opt/tomcat/lib/jasper.jar
-/opt/tomcat/etc/server.xml
-/opt/tomcat/etc/server.dtd
-/opt/tomcat/etc/web.xml
-/opt/tomcat/etc/web.dtd
-/opt/tomcat/etc/tomcat.conf
-/opt/tomcat/etc/SimpleStartup.java
-/opt/tomcat/src/javax/servlet/http/HttpServletResponse.java
-/opt/tomcat/src/javax/servlet/http/LocalStrings.properties
-/opt/tomcat/src/javax/servlet/http/Cookie.java
-/opt/tomcat/src/javax/servlet/http/HttpSessionBindingListener.java
-/opt/tomcat/src/javax/servlet/http/HttpServlet.java
-/opt/tomcat/src/javax/servlet/http/HttpSession.java
-/opt/tomcat/src/javax/servlet/http/HttpSessionContext.java
-/opt/tomcat/src/javax/servlet/http/HttpUtils.java
-/opt/tomcat/src/javax/servlet/http/HttpSessionBindingEvent.java
-/opt/tomcat/src/javax/servlet/http/HttpServletRequest.java
-/opt/tomcat/src/javax/servlet/jsp/JspEngineInfo.java
-/opt/tomcat/src/javax/servlet/jsp/PageContext.java
-/opt/tomcat/src/javax/servlet/jsp/tagext/BodyTagSupport.java
-/opt/tomcat/src/javax/servlet/jsp/tagext/TagSupport.java
-/opt/tomcat/src/javax/servlet/jsp/tagext/TagAttributeInfo.java
-/opt/tomcat/src/javax/servlet/jsp/tagext/BodyTag.java
-/opt/tomcat/src/javax/servlet/jsp/tagext/TagLibraryInfo.java
-/opt/tomcat/src/javax/servlet/jsp/tagext/Tag.java
-/opt/tomcat/src/javax/servlet/jsp/tagext/BodyContent.java
-/opt/tomcat/src/javax/servlet/jsp/tagext/TagInfo.java
-/opt/tomcat/src/javax/servlet/jsp/tagext/VariableInfo.java
-/opt/tomcat/src/javax/servlet/jsp/tagext/TagData.java
-/opt/tomcat/src/javax/servlet/jsp/tagext/TagExtraInfo.java
-/opt/tomcat/src/javax/servlet/jsp/JspPage.java
-/opt/tomcat/src/javax/servlet/jsp/JspTagException.java
-/opt/tomcat/src/javax/servlet/jsp/JspFactory.java
-/opt/tomcat/src/javax/servlet/jsp/JspWriter.java
-/opt/tomcat/src/javax/servlet/jsp/JspException.java
-/opt/tomcat/src/javax/servlet/jsp/HttpJspPage.java
-/opt/tomcat/src/javax/servlet/ServletContext.java
-/opt/tomcat/src/javax/servlet/ServletOutputStream.java
-/opt/tomcat/src/javax/servlet/Servlet.java
-/opt/tomcat/src/javax/servlet/ServletConfig.java
-/opt/tomcat/src/javax/servlet/UnavailableException.java
-/opt/tomcat/src/javax/servlet/ServletRequest.java
-/opt/tomcat/src/javax/servlet/GenericServlet.java
-/opt/tomcat/src/javax/servlet/RequestDispatcher.java
-/opt/tomcat/src/javax/servlet/SingleThreadModel.java
-/opt/tomcat/src/javax/servlet/LocalStrings.properties
-/opt/tomcat/src/javax/servlet/ServletInputStream.java
-/opt/tomcat/src/javax/servlet/ServletResponse.java
-/opt/tomcat/src/javax/servlet/ServletException.java
-/opt/tomcat/examples/WEB-INF/classes/examples/FooTagExtraInfo.class
-/opt/tomcat/examples/WEB-INF/classes/examples/ExampleTagBase.class
-/opt/tomcat/examples/WEB-INF/classes/examples/FooTag.class
-/opt/tomcat/examples/WEB-INF/classes/examples/LogTag.class
-/opt/tomcat/examples/WEB-INF/classes/examples/FooTag.java
-/opt/tomcat/examples/WEB-INF/classes/examples/FooTagExtraInfo.java
-/opt/tomcat/examples/WEB-INF/classes/examples/ShowSource.class
-/opt/tomcat/examples/WEB-INF/classes/examples/ExampleTagBase.java
-/opt/tomcat/examples/WEB-INF/classes/examples/ShowSource.java
-/opt/tomcat/examples/WEB-INF/classes/examples/LogTag.java
-/opt/tomcat/examples/WEB-INF/classes/RequestHeaderExample.java
-/opt/tomcat/examples/WEB-INF/classes/servletToJsp.class
-/opt/tomcat/examples/WEB-INF/classes/checkbox/CheckTest.class
-/opt/tomcat/examples/WEB-INF/classes/checkbox/CheckTest.java
-/opt/tomcat/examples/WEB-INF/classes/error/Smart.java
-/opt/tomcat/examples/WEB-INF/classes/error/Smart.class
-/opt/tomcat/examples/WEB-INF/classes/LocalStrings.properties
-/opt/tomcat/examples/WEB-INF/classes/num/NumberGuessBean.java
-/opt/tomcat/examples/WEB-INF/classes/num/NumberGuessBean.class
-/opt/tomcat/examples/WEB-INF/classes/RequestParamExample.java
-/opt/tomcat/examples/WEB-INF/classes/cal/Entry.java
-/opt/tomcat/examples/WEB-INF/classes/cal/TableBean.java
-/opt/tomcat/examples/WEB-INF/classes/cal/TableBean.class
-/opt/tomcat/examples/WEB-INF/classes/cal/JspCalendar.java
-/opt/tomcat/examples/WEB-INF/classes/cal/Entries.java
-/opt/tomcat/examples/WEB-INF/classes/cal/JspCalendar.class
-/opt/tomcat/examples/WEB-INF/classes/cal/Entries.class
-/opt/tomcat/examples/WEB-INF/classes/cal/Entry.class
-/opt/tomcat/examples/WEB-INF/classes/colors/ColorGameBean.java
-/opt/tomcat/examples/WEB-INF/classes/colors/ColorGameBean.class
-/opt/tomcat/examples/WEB-INF/classes/CookieExample.java
-/opt/tomcat/examples/WEB-INF/classes/SessionExample.class
-/opt/tomcat/examples/WEB-INF/classes/SnoopServlet.java
-/opt/tomcat/examples/WEB-INF/classes/RequestParamExample.class
-/opt/tomcat/examples/WEB-INF/classes/CookieExample.class
-/opt/tomcat/examples/WEB-INF/classes/RequestInfoExample.class
-/opt/tomcat/examples/WEB-INF/classes/sessions/DummyCart.java
-/opt/tomcat/examples/WEB-INF/classes/sessions/DummyCart.class
-/opt/tomcat/examples/WEB-INF/classes/SessionExample.java
-/opt/tomcat/examples/WEB-INF/classes/RequestInfoExample.java
-/opt/tomcat/examples/WEB-INF/classes/servletToJsp.java
-/opt/tomcat/examples/WEB-INF/classes/SnoopServlet.class
-/opt/tomcat/examples/WEB-INF/classes/RequestHeaderExample.class
-/opt/tomcat/examples/WEB-INF/classes/dates/JspCalendar.class
-/opt/tomcat/examples/WEB-INF/classes/dates/JspCalendar.java
-/opt/tomcat/examples/WEB-INF/classes/HelloWorldExample.java
-/opt/tomcat/examples/WEB-INF/classes/HelloWorldExample.class
-/opt/tomcat/examples/WEB-INF/jsp/applet/Clock2.java
-/opt/tomcat/examples/WEB-INF/jsp/example-taglib.tld
-/opt/tomcat/examples/WEB-INF/web.xml
-/opt/tomcat/examples/jsp/plugin/applet/Clock2.class
-/opt/tomcat/examples/jsp/plugin/applet/Clock2.java
-/opt/tomcat/examples/jsp/plugin/plugin.txt
-/opt/tomcat/examples/jsp/plugin/plugin.html
-/opt/tomcat/examples/jsp/plugin/plugin.jsp
-/opt/tomcat/examples/jsp/cal/cal2.txt
-/opt/tomcat/examples/jsp/cal/TableBean.txt
-/opt/tomcat/examples/jsp/cal/calendar.html
-/opt/tomcat/examples/jsp/cal/cal2.jsp
-/opt/tomcat/examples/jsp/cal/Entries.txt
-/opt/tomcat/examples/jsp/cal/JspCalendar.txt
-/opt/tomcat/examples/jsp/cal/Entry.txt
-/opt/tomcat/examples/jsp/cal/cal1.txt
-/opt/tomcat/examples/jsp/cal/cal1.jsp
-/opt/tomcat/examples/jsp/cal/login.html
-/opt/tomcat/examples/jsp/jsptoserv/jsptoservlet.jsp
-/opt/tomcat/examples/jsp/jsptoserv/jts.txt
-/opt/tomcat/examples/jsp/jsptoserv/stj.txt
-/opt/tomcat/examples/jsp/jsptoserv/jts.html
-/opt/tomcat/examples/jsp/jsptoserv/hello.jsp
-/opt/tomcat/examples/jsp/dates/date.html
-/opt/tomcat/examples/jsp/dates/date.txt
-/opt/tomcat/examples/jsp/dates/date.jsp
-/opt/tomcat/examples/jsp/colors/ColorGameBean.html
-/opt/tomcat/examples/jsp/colors/colors.html
-/opt/tomcat/examples/jsp/colors/colors.txt
-/opt/tomcat/examples/jsp/colors/colrs.jsp
-/opt/tomcat/examples/jsp/colors/clr.html
-/opt/tomcat/examples/jsp/error/er.html
-/opt/tomcat/examples/jsp/error/err.txt
-/opt/tomcat/examples/jsp/error/err.jsp
-/opt/tomcat/examples/jsp/error/error.html
-/opt/tomcat/examples/jsp/error/errorpge.jsp
-/opt/tomcat/examples/jsp/sessions/DummyCart.html
-/opt/tomcat/examples/jsp/sessions/carts.txt
-/opt/tomcat/examples/jsp/sessions/carts.html
-/opt/tomcat/examples/jsp/sessions/crt.html
-/opt/tomcat/examples/jsp/sessions/carts.jsp
-/opt/tomcat/examples/jsp/forward/one.jsp
-/opt/tomcat/examples/jsp/forward/fwd.html
-/opt/tomcat/examples/jsp/forward/forward.txt
-/opt/tomcat/examples/jsp/forward/forward.jsp
-/opt/tomcat/examples/jsp/forward/two.html
-/opt/tomcat/examples/jsp/checkbox/checkresult.txt
-/opt/tomcat/examples/jsp/checkbox/CheckTest.html
-/opt/tomcat/examples/jsp/checkbox/checkresult.jsp
-/opt/tomcat/examples/jsp/checkbox/check.html
-/opt/tomcat/examples/jsp/checkbox/cresult.html
-/opt/tomcat/examples/jsp/simpletag/foo.html
-/opt/tomcat/examples/jsp/simpletag/foo.txt
-/opt/tomcat/examples/jsp/simpletag/foo.jsp
-/opt/tomcat/examples/jsp/include/foo.html
-/opt/tomcat/examples/jsp/include/include.txt
-/opt/tomcat/examples/jsp/include/include.jsp
-/opt/tomcat/examples/jsp/include/foo.jsp
-/opt/tomcat/examples/jsp/include/inc.html
-/opt/tomcat/examples/jsp/num/numguess.html
-/opt/tomcat/examples/jsp/num/numguess.txt
-/opt/tomcat/examples/jsp/num/numguess.jsp
-/opt/tomcat/examples/jsp/snp/snoop.txt
-/opt/tomcat/examples/jsp/snp/snoop.jsp
-/opt/tomcat/examples/jsp/snp/snoop.html
-/opt/tomcat/examples/jsp/index.html
-/opt/tomcat/examples/jsp/source.jsp
-/opt/tomcat/examples/servlets/sessions.html
-/opt/tomcat/examples/servlets/helloworld.html
-/opt/tomcat/examples/servlets/reqinfo.html
-/opt/tomcat/examples/servlets/cookies.html
-/opt/tomcat/examples/servlets/reqparams.html
-/opt/tomcat/examples/servlets/index.html
-/opt/tomcat/examples/servlets/reqheaders.html
-/opt/tomcat/examples/images/code.gif
-/opt/tomcat/examples/images/return.gif
-/opt/tomcat/examples/images/execute.gif
-/opt/tomcat/webpages/docs/api/javax/servlet/jsp/package-summary.html
-/opt/tomcat/webpages/docs/api/javax/servlet/jsp/tagext/VariableInfo.html
-/opt/tomcat/webpages/docs/api/javax/servlet/jsp/tagext/class-use/Tag.html
-/opt/tomcat/webpages/docs/api/javax/servlet/jsp/tagext/class-use/VariableInfo.html
-/opt/tomcat/webpages/docs/api/javax/servlet/jsp/tagext/class-use/TagAttributeInfo.html
-/opt/tomcat/webpages/docs/api/javax/servlet/jsp/tagext/class-use/TagSupport.html
-/opt/tomcat/webpages/docs/api/javax/servlet/jsp/tagext/class-use/TagData.html
-/opt/tomcat/webpages/docs/api/javax/servlet/jsp/tagext/class-use/TagExtraInfo.html
-/opt/tomcat/webpages/docs/api/javax/servlet/jsp/tagext/class-use/TagLibraryInfo.html
-/opt/tomcat/webpages/docs/api/javax/servlet/jsp/tagext/class-use/BodyContent.html
-/opt/tomcat/webpages/docs/api/javax/servlet/jsp/tagext/class-use/TagInfo.html
-/opt/tomcat/webpages/docs/api/javax/servlet/jsp/tagext/class-use/BodyJspWriter.html
-/opt/tomcat/webpages/docs/api/javax/servlet/jsp/tagext/class-use/BodyTagSupport.html
-/opt/tomcat/webpages/docs/api/javax/servlet/jsp/tagext/class-use/BodyTag.html
-/opt/tomcat/webpages/docs/api/javax/servlet/jsp/tagext/TagLibraryInfo.html
-/opt/tomcat/webpages/docs/api/javax/servlet/jsp/tagext/BodyJspWriter.html
-/opt/tomcat/webpages/docs/api/javax/servlet/jsp/tagext/TagAttributeInfo.html
-/opt/tomcat/webpages/docs/api/javax/servlet/jsp/tagext/TagExtraInfo.html
-/opt/tomcat/webpages/docs/api/javax/servlet/jsp/tagext/BodyTagSupport.html
-/opt/tomcat/webpages/docs/api/javax/servlet/jsp/tagext/Tag.html
-/opt/tomcat/webpages/docs/api/javax/servlet/jsp/tagext/TagInfo.html
-/opt/tomcat/webpages/docs/api/javax/servlet/jsp/tagext/TagSupport.html
-/opt/tomcat/webpages/docs/api/javax/servlet/jsp/tagext/package-frame.html
-/opt/tomcat/webpages/docs/api/javax/servlet/jsp/tagext/package-use.html
-/opt/tomcat/webpages/docs/api/javax/servlet/jsp/tagext/package-summary.html
-/opt/tomcat/webpages/docs/api/javax/servlet/jsp/tagext/package-tree.html
-/opt/tomcat/webpages/docs/api/javax/servlet/jsp/tagext/BodyContent.html
-/opt/tomcat/webpages/docs/api/javax/servlet/jsp/tagext/BodyTag.html
-/opt/tomcat/webpages/docs/api/javax/servlet/jsp/tagext/TagData.html
-/opt/tomcat/webpages/docs/api/javax/servlet/jsp/JspEngineInfo.html
-/opt/tomcat/webpages/docs/api/javax/servlet/jsp/class-use/JspFactory.html
-/opt/tomcat/webpages/docs/api/javax/servlet/jsp/class-use/JspWriter.html
-/opt/tomcat/webpages/docs/api/javax/servlet/jsp/class-use/JspEngineInfo.html
-/opt/tomcat/webpages/docs/api/javax/servlet/jsp/class-use/JspPage.html
-/opt/tomcat/webpages/docs/api/javax/servlet/jsp/class-use/HttpJspPage.html
-/opt/tomcat/webpages/docs/api/javax/servlet/jsp/class-use/JspError.html
-/opt/tomcat/webpages/docs/api/javax/servlet/jsp/class-use/PageContext.html
-/opt/tomcat/webpages/docs/api/javax/servlet/jsp/class-use/JspException.html
-/opt/tomcat/webpages/docs/api/javax/servlet/jsp/JspFactory.html
-/opt/tomcat/webpages/docs/api/javax/servlet/jsp/JspError.html
-/opt/tomcat/webpages/docs/api/javax/servlet/jsp/JspWriter.html
-/opt/tomcat/webpages/docs/api/javax/servlet/jsp/JspPage.html
-/opt/tomcat/webpages/docs/api/javax/servlet/jsp/package-frame.html
-/opt/tomcat/webpages/docs/api/javax/servlet/jsp/JspException.html
-/opt/tomcat/webpages/docs/api/javax/servlet/jsp/HttpJspPage.html
-/opt/tomcat/webpages/docs/api/javax/servlet/jsp/package-tree.html
-/opt/tomcat/webpages/docs/api/javax/servlet/jsp/package-use.html
-/opt/tomcat/webpages/docs/api/javax/servlet/jsp/PageContext.html
-/opt/tomcat/webpages/docs/api/javax/servlet/class-use/ServletConfig.html
-/opt/tomcat/webpages/docs/api/javax/servlet/class-use/RequestDispatcher.html
-/opt/tomcat/webpages/docs/api/javax/servlet/class-use/ServletRequest.html
-/opt/tomcat/webpages/docs/api/javax/servlet/class-use/ServletOutputStream.html
-/opt/tomcat/webpages/docs/api/javax/servlet/class-use/Servlet.html
-/opt/tomcat/webpages/docs/api/javax/servlet/class-use/ServletResponse.html
-/opt/tomcat/webpages/docs/api/javax/servlet/class-use/SingleThreadModel.html
-/opt/tomcat/webpages/docs/api/javax/servlet/class-use/ServletException.html
-/opt/tomcat/webpages/docs/api/javax/servlet/class-use/ServletInputStream.html
-/opt/tomcat/webpages/docs/api/javax/servlet/class-use/ServletContext.html
-/opt/tomcat/webpages/docs/api/javax/servlet/class-use/GenericServlet.html
-/opt/tomcat/webpages/docs/api/javax/servlet/class-use/UnavailableException.html
-/opt/tomcat/webpages/docs/api/javax/servlet/http/class-use/HttpServletRequest.html
-/opt/tomcat/webpages/docs/api/javax/servlet/http/class-use/HttpUtils.html
-/opt/tomcat/webpages/docs/api/javax/servlet/http/class-use/HttpServletResponse.html
-/opt/tomcat/webpages/docs/api/javax/servlet/http/class-use/Cookie.html
-/opt/tomcat/webpages/docs/api/javax/servlet/http/class-use/HttpServlet.html
-/opt/tomcat/webpages/docs/api/javax/servlet/http/class-use/HttpSessionContext.html
-/opt/tomcat/webpages/docs/api/javax/servlet/http/class-use/HttpSession.html
-/opt/tomcat/webpages/docs/api/javax/servlet/http/class-use/HttpSessionBindingListener.html
-/opt/tomcat/webpages/docs/api/javax/servlet/http/class-use/HttpSessionBindingEvent.html
-/opt/tomcat/webpages/docs/api/javax/servlet/http/HttpSessionBindingListener.html
-/opt/tomcat/webpages/docs/api/javax/servlet/http/HttpServletRequest.html
-/opt/tomcat/webpages/docs/api/javax/servlet/http/HttpUtils.html
-/opt/tomcat/webpages/docs/api/javax/servlet/http/HttpServlet.html
-/opt/tomcat/webpages/docs/api/javax/servlet/http/HttpServletResponse.html
-/opt/tomcat/webpages/docs/api/javax/servlet/http/package-summary.html
-/opt/tomcat/webpages/docs/api/javax/servlet/http/HttpSessionContext.html
-/opt/tomcat/webpages/docs/api/javax/servlet/http/HttpSession.html
-/opt/tomcat/webpages/docs/api/javax/servlet/http/package-frame.html
-/opt/tomcat/webpages/docs/api/javax/servlet/http/HttpSessionBindingEvent.html
-/opt/tomcat/webpages/docs/api/javax/servlet/http/package-use.html
-/opt/tomcat/webpages/docs/api/javax/servlet/http/package-tree.html
-/opt/tomcat/webpages/docs/api/javax/servlet/http/Cookie.html
-/opt/tomcat/webpages/docs/api/javax/servlet/package-tree.html
-/opt/tomcat/webpages/docs/api/javax/servlet/RequestDispatcher.html
-/opt/tomcat/webpages/docs/api/javax/servlet/package-frame.html
-/opt/tomcat/webpages/docs/api/javax/servlet/ServletContext.html
-/opt/tomcat/webpages/docs/api/javax/servlet/GenericServlet.html
-/opt/tomcat/webpages/docs/api/javax/servlet/ServletOutputStream.html
-/opt/tomcat/webpages/docs/api/javax/servlet/ServletException.html
-/opt/tomcat/webpages/docs/api/javax/servlet/ServletInputStream.html
-/opt/tomcat/webpages/docs/api/javax/servlet/SingleThreadModel.html
-/opt/tomcat/webpages/docs/api/javax/servlet/ServletRequest.html
-/opt/tomcat/webpages/docs/api/javax/servlet/package-summary.html
-/opt/tomcat/webpages/docs/api/javax/servlet/Servlet.html
-/opt/tomcat/webpages/docs/api/javax/servlet/package-use.html
-/opt/tomcat/webpages/docs/api/javax/servlet/ServletConfig.html
-/opt/tomcat/webpages/docs/api/javax/servlet/UnavailableException.html
-/opt/tomcat/webpages/docs/api/javax/servlet/ServletResponse.html
-/opt/tomcat/webpages/docs/api/serialized-form.html
-/opt/tomcat/webpages/docs/api/package-list
-/opt/tomcat/webpages/docs/api/packages.html
-/opt/tomcat/webpages/docs/api/index.html
-/opt/tomcat/webpages/docs/api/help-doc.html
-/opt/tomcat/webpages/docs/api/stylesheet.css
-/opt/tomcat/webpages/docs/api/deprecated-list.html
-/opt/tomcat/webpages/docs/api/overview-summary.html
-/opt/tomcat/webpages/docs/api/overview-frame.html
-/opt/tomcat/webpages/docs/api/index-all.html
-/opt/tomcat/webpages/docs/api/overview-tree.html
-/opt/tomcat/webpages/docs/api/allclasses-frame.html
-/opt/tomcat/webpages/WEB-INF/classes/SnoopServlet.class
-/opt/tomcat/webpages/WEB-INF/classes/SnoopServlet.java
-/opt/tomcat/webpages/WEB-INF/web.xml
-/opt/tomcat/webpages/tomcat.gif
-/opt/tomcat/webpages/index.html
-/opt/tomcat/tomcatEnv.bat
-/opt/tomcat/shutdown.bat
-/opt/tomcat/ant
-/opt/tomcat/startup.sh
-/opt/tomcat/startup.bat
-/opt/tomcat/env.tomcat
-/opt/tomcat/tomcat.sh
-/opt/tomcat/tomcat.bat
-/opt/tomcat/shutdown.sh
-/opt/tomcat/server.xml
-/opt/tomcat/README
-/opt/tomcat/FAQ
-/opt/tomcat/webserver.jar
+%defattr(644 root root 755)
+%attr(755,root,root)  %dir 				 /opt/tomcat
+%attr(755,root,root)  %dir 				 /opt/tomcat/bin
+%attr(755,root,root)  %dir 				 /opt/tomcat/conf
+%attr(755,root,root)  %dir 				 /opt/tomcat/lib
+%attr(755,root,root)  %dir 				 /opt/tomcat/webapps
+%attr( - ,root,root)       				 /opt/tomcat/bin/*
+%attr( - ,root,root)  %config(noreplace) /opt/tomcat/conf/*
+%attr(755,root,root)  %config 			 /etc/rc.d/init.d/*
+%attr( - ,root,root)       				 /opt/tomcat/lib/*
+%attr( - ,root,root)       				 /opt/tomcat/webapps/*
+%attr( - ,root,root)  %doc 				 build/doc/* LICENSE README RELE* TODO
+
+%files doc
+%defattr(644 root root 755)
+%attr( - ,root,root)                /home/httpd/html/manual/%{name}
+
+%files jserv
+%attr(755,root,root)  %dir               /usr/lib/apache
+%attr( - ,root,root)                     /usr/lib/apache/*
+
 
 %changelog
+* Mon May 22 2000 Henri Gomez <hgomez@slib.fr>
+- v3.1-3
+- apply SSL patch (Ajp12ConnectionHandler.java)
+
+* Thu May 04 2000 Henri Gomez <hgomez@slib.fr>
+- v3.1-2
+- Added JAVA_HOME to tomcat.init, necessary at init
+  time to determine where is your JAVA_HOME
+ 
+* Tue May 02 2000 Henri Gomez <hgomez@slib.fr>
+- v3.1 final release
+- Compiled on Redhat 6.1 with IBM JDK 1.1.8 (20000328)
+  for apache 1.3.12 + mod_ssl 2.6.4 (EAPI support).
+
+* Thu Apr 13 2000 Henri Gomez <hgomez@slib.fr>
+- v3.1_rc1
+- RPM didn't replace configuration files of tomcat in /opt/tomcat/conf 
+  This choice is to avoid trashing your own settings. 
+  Warning, since v3.1_rc1, you need to to set home vars in ContextManager 
+  in file /opt/tomcat/conf/server.xml like this :
+  <ContextManager debug="0" workDir="work" home="/opt/tomcat">
+- New in v3.1_rc1 is that tomcat generate dynamically a conf file,
+  tomcat-apache.conf, in /opt/tomcat/conf
+- compiled on Redhat 6.1 with IBM JDK 1.1.8 (20000328)
+  for apache 1.3.12 + mod_ssl 2.6.2 (EAPI support).
+
+* Thu Mar 09 2000 Henri Gomez <gomez@slib.fr>
+- v3.1b1-2
+- added missing tomcat.init (oups)
+- tomcat home is in /opt/tomcat but there is a link
+  /usr/bin/tomcat to allow any user to start it since
+  now it didn't use privilegied port (8007 & 8080).
+  This may be an issue if you only want root start it.
+- added logrotate support for apache/jserv side. 
+  Will add tomcat log support when we could signal
+  tomcat to rotate logs.
+- compiled on Redhat 6.1 with IBM JDK 1.1.8 (19991220) 
+  for apache 1.3.12 + mod_ssl 2.6.2 (EAPI support).
+
+* Thu Mar 09 2000 Henri Gomez <gomez@slib.fr>
+- v3.1b1-1
+- compile and install mod_jserv for apache
+  renamed to mod_jserv_tomcat.so to avoid conflict
+  with mod_jserv.so from jserv 1.1 (java.apache.org)
+
+* Wed Mar 08 2000 Henri Gomez <gomez@slib.fr>
+- v3.1b1
+
+* Tue Feb 29 2000 Henri Gomez <gomez@slib.fr>
+- v3.1_m2rc2
+
+* Fri Feb 25 2000 Henri Gomez <gomez@slib.fr>
+- v3.1_m2rc1
+
+* Fri Jan 28 2000 Henri Gomez <gomez@slib.fr>
+- v3.1_m1
+
+* Tue Jan 18 2000 Henri Gomez <gomez@slib.fr>
+- first RPM of tomcat 3.1 m1_rc1
+
+* Tue Jan  4 2000 Henri Gomez <gomez@slib.fr>
+- moved from /opt/jakarta/jakarta-tomcat to /opt/tomcat
+
+* Tue Jan  4 2000 Henri Gomez <gomez@slib.fr>
+- CVS 4 Jan 2000
+
+* Thu Dec 30 1999 Henri Gomez <gomez@slib.fr>
+- Initial release for jakarta-tomcat cvs
+
+
