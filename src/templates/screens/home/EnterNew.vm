@@ -4,11 +4,11 @@
  <table cellpadding="3" cellspacing="0" border="0">
   <tr>
    #if ($link.setPage("home,ModuleQuery.vm").setAction("SetHomePage").isAllowed())
-    <td><a href="$link">Module query</a></td>
+    <td><a href="$link">$l10n.ModuleQuery</a></td>
    #end
-    <th>Enter new...</th>
+    <th>$l10n.EnterNew$l10n.Dots</th>
    #if ($link.setPage("home,XModuleList.vm").setAction("SetHomePage").isAllowed())
-	<td><a href="$link">Build cross module query</a></td>
+	<td><a href="$link">$l10n.BuildXModuleQuery</a></td>
    #end
   </tr>
  </table>
@@ -16,25 +16,25 @@
 
 <!-- commenting out until functionality is added
 <div class="functnbar">
-     <input type="submit" value="Save" name="#" />
+     <input type="submit" value="$l10n.Save" name="#" />
 </div>
 -->       
 
-<h3>Issue types in this project</h3>
+<h3>$l10n.IssueTypesInProject</h3>
 
 #set ($currentModule = $scarabR.CurrentModule)
 #set ($currentModuleIssueTypes = $scarabR.CurrentModule.IssueTypes)
 
 #if ($currentModuleIssueTypes.isEmpty())
-<p class="alert">Sorry, there are no available issue types.</p>
+<p class="alert">$l10n.NoIssueTypes</p>
 #else
   <table width="100%" border="1" cellspacing="2" cellpadding="3">
     <tr>
-      <th>Name</th>
+      <th>$l10n.Name</th>
 <!-- commenting out until functionality is added
-      <th>Show in left nav</th>
+      <th>$l10n.ShowInLeftNav</th>
 -->
-      <th>Description</th>
+      <th>$l10n.Description</th>
     </tr>
 
 #foreach ($issueType in $currentModuleIssueTypes)
@@ -53,7 +53,7 @@
 #end
 <!-- commenting out until functionality is added
   <div class="functnbar2">
-     <input type="submit" value="Save" name="#" />
+     <input type="submit" value="$l10n.Save" name="#" />
   </div>
 -->
 
