@@ -154,6 +154,7 @@ public class ContextXmlReader extends BaseInterceptor {
 	// Virtual host support - if Context is inside a <Host>
 	xh.addRule( "Host", xh.setVar( "current_host", "name"));
 	xh.addRule( "Host", xh.setVar( "current_address", "address"));
+	xh.addRule( "Host", xh.setVar( "host_aliases", "")); // so host_aliases will get reset
 	xh.addRule( "Host", xh.setProperties());
 	xh.addRule( "Alias", new XmlAction() {
 		public void start( SaxContext xctx) throws Exception {
