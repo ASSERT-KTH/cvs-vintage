@@ -57,6 +57,9 @@ $page.setTitle("Enter issue")
     <table cellpadding="3" cellspacing="2" border="0">
 #foreach ($attKey in $attrValues.sequence())
   #set ($attVal = $attrValues.get($attKey))
+ ## we are handling the assigned_to attribute specially.  This needs to be
+ ## generalized and I am not sure why we can't just add users on this page
+ ##if (!$attVal.AttributeId.equals($scarabG.Constant.ASSIGNED_TO__PK))
   #set ($attrInput = $intake.AttributeValue.mapTo($attVal))
   #set ($templAttVal = $templAttrValues.get($attKey))
   #set ($templAttrInput = $intake.AttributeValue.mapTo($templAttVal))
@@ -75,9 +78,9 @@ $page.setTitle("Enter issue")
     #attrValueErrorMsg ($attVal $field)<br />
             </th>
             <td>
-    #if ($attVal.Attribute.AttributeType.AttributeClass.Name == "user")
-          #userSelectBox ($attVal "")
-    #elseif ($attVal.Attribute.AttributeType.Name == "combo-box")
+    #if ($attVal.Attribute.isUserAttribute())
+          #userSelectBox ($attVal "3" "true") 
+    #elseif ($attVal.Attribute.isOptionAttribute())
         #if ($templateId)
           #templateAttrValueLeafSelect ($attVal $templAttVal $field "")
         #else
@@ -101,6 +104,7 @@ $page.setTitle("Enter issue")
             </td>
         </tr>
   #end
+ ##end
 #end
         </table>
 </div>
