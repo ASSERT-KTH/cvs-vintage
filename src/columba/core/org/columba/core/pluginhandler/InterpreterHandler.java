@@ -17,59 +17,79 @@ package org.columba.core.pluginhandler;
 
 import java.util.Hashtable;
 
+import org.columba.core.loader.DefaultClassLoader;
 import org.columba.core.main.Main;
 import org.columba.core.plugin.AbstractPluginHandler;
 import org.columba.core.plugin.PluginLoader;
 import org.columba.core.scripting.AbstractInterpreter;
 import org.columba.core.xml.XmlElement;
 
-
 /**
- * This handler makes it possible to add new interpreter support
- * in Columba.
+ * This handler makes it possible to add new interpreter support in Columba.
  * <p>
  * This is the way we realized the python support for plugins.
- *
+ * 
  * @author fdietz
  */
 public class InterpreterHandler extends AbstractPluginHandler {
-    private Hashtable interpreterTable;
+	private Hashtable interpreterTable;
 
-    /**
- * Constructor for InterpreterHandler.
- * @param id
- * @param config
- */
-    public InterpreterHandler() {
-        super("org.columba.core.interpreter", null);
-        interpreterTable = new Hashtable();
-    }
+	private PluginLoader pluginLoader;
 
-    /**
- * @see org.columba.core.plugin.AbstractPluginHandler#getDefaultNames()
- */
-    public String[] getPluginIdList() {
-        return null;
-    }
+	/**
+	 * Constructor for InterpreterHandler.
+	 * 
+	 * @param id
+	 * @param config
+	 */
+	public InterpreterHandler() {
+		super("org.columba.core.interpreter", null);
+		interpreterTable = new Hashtable();
 
-    public AbstractInterpreter getInterpreter(String type) {
-        return (AbstractInterpreter) interpreterTable.get(type);
-    }
+		pluginLoader = new PluginLoader();
+	}
 
-    /* (non-Javadoc)
- * @see org.columba.core.plugin.AbstractPluginHandler#addExtension(java.lang.String, org.columba.core.xml.XmlElement)
- */
-    public void addExtension(String id, XmlElement extension) {
-        XmlElement interpreter = extension.getElement("interpreter");
+	/**
+	 * @see org.columba.core.plugin.AbstractPluginHandler#getDefaultNames()
+	 */
+	public String[] getPluginIdList() {
+		return null;
+	}
 
-        try {
-            interpreterTable.put(interpreter.getAttribute("name"),
-                PluginLoader.loadExternalPlugin(interpreter.getAttribute(
-                        "main_class"), pluginManager.getPluginType(id),
-                    pluginManager.getJarFile(id), null));
-        } catch (Exception e) {
-        	if ( Main.DEBUG )
-        		e.printStackTrace();
-        }
-    }
+	public AbstractInterpreter getInterpreter(String type) {
+		return (AbstractInterpreter) interpreterTable.get(type);
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.columba.core.plugin.AbstractPluginHandler#addExtension(java.lang.String,
+	 *      org.columba.core.xml.XmlElement)
+	 */
+	public void addExtension(String id, XmlElement extension) {
+		XmlElement interpreter = extension.getElement("interpreter");
+
+		String className = interpreter.getAttribute("main_class");
+		Object object = null;
+
+		try {
+			object = new DefaultClassLoader().instanciate(className, null);
+		} catch (ClassNotFoundException ex) {
+
+			try {
+				object = pluginLoader.loadExternalPlugin(className, pluginManager
+						.getPluginType(id), pluginManager.getJarFile(id), null);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+
+		} catch (Exception ex) {
+			if (Main.DEBUG)
+				ex.printStackTrace();
+		}
+
+		if (object != null)
+			interpreterTable.put(interpreter.getAttribute("name"), object);
+
+	}
 }

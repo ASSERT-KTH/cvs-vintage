@@ -23,6 +23,7 @@ import org.columba.core.action.IMenu;
 import org.columba.core.gui.frame.FrameMediator;
 import org.columba.core.io.DiskIO;
 import org.columba.core.plugin.AbstractPluginHandler;
+import org.columba.core.plugin.PluginLoadingFailedException;
 import org.columba.core.xml.XmlElement;
 import org.columba.core.xml.XmlIO;
 
@@ -76,7 +77,7 @@ public class ActionPluginHandler extends AbstractPluginHandler {
 		return Boolean.valueOf(getAttribute(name, "singleton")).booleanValue();
 	}
 
-	public AbstractColumbaAction getAction(String name, FrameMediator controller) {
+	public AbstractColumbaAction getAction(String name, FrameMediator controller) {	
 		if (isSingleton(name)) {
 			// their should be only one shared instance
 			if (map.containsKey(name)) {
@@ -90,11 +91,10 @@ public class ActionPluginHandler extends AbstractPluginHandler {
 
 				try {
 					a = (AbstractColumbaAction) getPlugin(name,
-							new Object[]{controller});
+							new Object[] { controller });
 					map.put(name, a);
-				} catch (Exception e) {
-
-					e.printStackTrace();
+				} catch (PluginLoadingFailedException e) {
+					//					 exception already handled
 				}
 
 				return a;
@@ -105,10 +105,9 @@ public class ActionPluginHandler extends AbstractPluginHandler {
 
 		try {
 			a = (AbstractColumbaAction) getPlugin(name,
-					new Object[]{controller});
-		} catch (Exception e) {
-
-			e.printStackTrace();
+					new Object[] { controller });
+		} catch (PluginLoadingFailedException e) {
+			// exception already handled
 		}
 
 		return a;
@@ -116,7 +115,7 @@ public class ActionPluginHandler extends AbstractPluginHandler {
 
 	public IMenu getIMenu(String name, FrameMediator controller)
 			throws Exception {
-		return (IMenu) getPlugin(name, new Object[]{controller});
+		return (IMenu) getPlugin(name, new Object[] { controller });
 	}
 
 	public void addActionList(String actionXml) {
@@ -131,28 +130,4 @@ public class ActionPluginHandler extends AbstractPluginHandler {
 		}
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.columba.core.plugin.AbstractPluginHandler#addPlugin(java.lang.String,
-	 *      java.io.File, org.columba.core.xml.XmlElement)
-	 */
-	/*
-	 * public void addPlugin(String name, File pluginFolder, XmlElement element) {
-	 * XmlElement extension;
-	 * 
-	 * for( int i=0; i <element.count(); i++) { extension =
-	 * element.getElement(i);
-	 * extension.addAttribute("name",name+"$"+extension.getAttribute("name"));
-	 * 
-	 * super.addPlugin(extension.getAttribute("name"), pluginFolder, element);
-	 * parentNode.addElement(extension); } }
-	 */
-	/*
-	 * public void addExtension(String id, XmlElement extension) { ListIterator
-	 * iterator = extension.getElements().listIterator(); XmlElement action;
-	 * while( iterator.hasNext() ) { action = (XmlElement) iterator.next();
-	 * action.addAttribute("name", id + '$' + action.getAttribute("name"));
-	 * parentNode.addElement(action); } }
-	 */
 }

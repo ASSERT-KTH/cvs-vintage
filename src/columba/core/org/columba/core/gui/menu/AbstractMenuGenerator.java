@@ -33,232 +33,243 @@ import org.columba.core.pluginhandler.ActionPluginHandler;
 import org.columba.core.xml.XmlElement;
 import org.columba.core.xml.XmlIO;
 
-
 /**
  * @author frd
  */
 public abstract class AbstractMenuGenerator {
 
-    private static final Logger LOG = Logger.getLogger("org.columba.core.gui.menu");
+	private static final Logger LOG = Logger
+			.getLogger("org.columba.core.gui.menu");
 
-    protected XmlElement menuRoot;
-    protected XmlIO xmlFile;
-    protected FrameMediator frameMediator;
+	protected XmlElement menuRoot;
 
-    /**
-     *
-     */
-    public AbstractMenuGenerator(FrameMediator frameMediator, String path) {
-        this.frameMediator = frameMediator;
+	protected XmlIO xmlFile;
 
-        xmlFile = new XmlIO(DiskIO.getResourceURL(path));
-        xmlFile.load();
-    }
+	protected FrameMediator frameMediator;
 
-    public String getString(String sPath, String sName, String sID) {
-        return frameMediator.getString(sPath, sName, sID);
-    }
+	private ActionPluginHandler handler;
 
-    // XmlIO.getRoot().getElement("menubar");
-    // or
-    // XmlIO.getRoot().getElement("menu");
-    public abstract XmlElement getMenuRoot();
+	/**
+	 *  
+	 */
+	public AbstractMenuGenerator(FrameMediator frameMediator, String path) {
+		this.frameMediator = frameMediator;
 
-    // this should be "menubar" or "menu"
-    public abstract String getRootElementName();
+		handler = null;
+		try {
 
-    public void extendMenuFromFile(String path) {
-        XmlIO menuXml = new XmlIO();
-        menuXml.setURL(DiskIO.getResourceURL(path));
-        menuXml.load();
+			handler = ((ActionPluginHandler) PluginManager.getInstance()
+					.getHandler("org.columba.core.action"));
 
-        ListIterator iterator = menuXml.getRoot()
-                                       .getElement(getRootElementName())
-                                       .getElements().listIterator();
+		} catch (PluginHandlerNotFoundException e) {
+			if (Main.DEBUG)
+				e.printStackTrace();
+		}
 
-        while (iterator.hasNext()) {
-            extendMenu((XmlElement) iterator.next());
-        }
-    }
+		xmlFile = new XmlIO(DiskIO.getResourceURL(path));
+		xmlFile.load();
+	}
 
-    public void extendMenu(XmlElement menuExtension) {
-        XmlElement menu;
-        XmlElement extension;
-        String menuName = menuExtension.getAttribute("name");
-        String extensionName = menuExtension.getAttribute("extensionpoint");
+	public String getString(String sPath, String sName, String sID) {
+		return frameMediator.getString(sPath, sName, sID);
+	}
 
-        if (extensionName == null) {
-            // new menu
-            //
-            // !!! Note that we don't append the new menu
-            // we insert it before the second last menu in the menubar of core
-            // as defined in "core.actions.menu.xml"
-            // -> meaning before "Utilities" and "Help" and after "View"
-            getMenuRoot().insertElement((XmlElement) menuExtension.clone(),
-                getMenuRoot().count() - 2);
+	// XmlIO.getRoot().getElement("menubar");
+	// or
+	// XmlIO.getRoot().getElement("menu");
+	public abstract XmlElement getMenuRoot();
 
-            return;
-        }
+	// this should be "menubar" or "menu"
+	public abstract String getRootElementName();
 
-        ListIterator iterator = getMenuRoot().getElements().listIterator();
+	public void extendMenuFromFile(String path) {
+		XmlIO menuXml = new XmlIO();
+		menuXml.setURL(DiskIO.getResourceURL(path));
+		menuXml.load();
 
-        while (iterator.hasNext()) {
-            menu = ((XmlElement) iterator.next());
+		ListIterator iterator = menuXml.getRoot().getElement(
+				getRootElementName()).getElements().listIterator();
 
-            if (menu.getAttribute("name").equals(menuName)) {
-                createExtension(menu, (XmlElement) menuExtension.clone(),
-                    extensionName);
-            }
-        }
-    }
+		while (iterator.hasNext()) {
+			extendMenu((XmlElement) iterator.next());
+		}
+	}
 
-    private void createExtension(XmlElement menu, XmlElement menuExtension,
-        String extensionName) {
-        XmlElement extension;
-        int insertIndex = 0;
+	public void extendMenu(XmlElement menuExtension) {
+		XmlElement menu;
+		XmlElement extension;
+		String menuName = menuExtension.getAttribute("name");
+		String extensionName = menuExtension.getAttribute("extensionpoint");
 
-        ListIterator iterator;
+		if (extensionName == null) {
+			// new menu
+			//
+			// !!! Note that we don't append the new menu
+			// we insert it before the second last menu in the menubar of core
+			// as defined in "core.actions.menu.xml"
+			// -> meaning before "Utilities" and "Help" and after "View"
+			getMenuRoot().insertElement((XmlElement) menuExtension.clone(),
+					getMenuRoot().count() - 2);
 
-        iterator = menu.getElements().listIterator();
+			return;
+		}
 
-        while (iterator.hasNext()) {
-            extension = ((XmlElement) iterator.next());
+		ListIterator iterator = getMenuRoot().getElements().listIterator();
 
-            if (extension.getName().equals("extensionpoint")) {
-                if (extension.getAttribute("name").equals(extensionName)) {
-                    int size = menuExtension.count();
+		while (iterator.hasNext()) {
+			menu = ((XmlElement) iterator.next());
 
-                    if (size > 0) {
-                        menu.insertElement(new XmlElement("separator"),
-                            insertIndex);
-                    }
+			if (menu.getAttribute("name").equals(menuName)) {
+				createExtension(menu, (XmlElement) menuExtension.clone(),
+						extensionName);
+			}
+		}
+	}
 
-                    for (int i = 0; i < size; i++) {
-                        menu.insertElement(menuExtension.getElement(0),
-                            insertIndex + i + 1);
-                    }
+	private void createExtension(XmlElement menu, XmlElement menuExtension,
+			String extensionName) {
+		XmlElement extension;
+		int insertIndex = 0;
 
-                    if (size > 0) {
-                        menu.insertElement(new XmlElement("separator"),
-                            insertIndex + size + 1);
-                    }
+		ListIterator iterator;
 
-                    return;
-                }
-            } else if (extension.getName().equals("menu")) {
-                createExtension(extension, menuExtension, extensionName);
-            }
+		iterator = menu.getElements().listIterator();
 
-            insertIndex++;
-        }
-    }
+		while (iterator.hasNext()) {
+			extension = ((XmlElement) iterator.next());
 
-    protected JMenu createMenu(XmlElement menuElement) {
-    	
-        List childs = menuElement.getElements();
-        ListIterator it = childs.listIterator();
+			if (extension.getName().equals("extensionpoint")) {
+				if (extension.getAttribute("name").equals(extensionName)) {
+					int size = menuExtension.count();
 
-        // *20031004, karlpeder* Changed from JMenu to CMenu to support mnemonics
-        CMenu menu = new CMenu(getString("menu", "mainframe",
-                    menuElement.getAttribute("name")));
+					if (size > 0) {
+						menu.insertElement(new XmlElement("separator"),
+								insertIndex);
+					}
 
-        createMenuEntries(menu, it);
+					for (int i = 0; i < size; i++) {
+						menu.insertElement(menuExtension.getElement(0),
+								insertIndex + i + 1);
+					}
 
-        return menu;
-    }
+					if (size > 0) {
+						menu.insertElement(new XmlElement("separator"),
+								insertIndex + size + 1);
+					}
 
-    protected void createMenuEntries(JMenu menu, ListIterator it) {
-        boolean lastWasSeparator = false;
+					return;
+				}
+			} else if (extension.getName().equals("menu")) {
+				createExtension(extension, menuExtension, extensionName);
+			}
 
-        while (it.hasNext()) {
-            XmlElement next = (XmlElement) it.next();
-            String name = next.getName();
+			insertIndex++;
+		}
+	}
 
-            if (name.equals("menuitem")) {
-                if (next.getAttribute("action") != null) {
-                    //try {
-                        AbstractColumbaAction action=null;
-						try {
-							action = ((ActionPluginHandler) PluginManager.getInstance().getHandler(
-							        "org.columba.core.action")).getAction(next.getAttribute(
-							            "action"), frameMediator);
-						} catch (PluginHandlerNotFoundException e) {
-							if ( Main.DEBUG)
-								e.printStackTrace();
-						}
-						
+	protected JMenu createMenu(XmlElement menuElement) {		
+		List childs = menuElement.getElements();
+		ListIterator it = childs.listIterator();
+
+		// *20031004, karlpeder* Changed from JMenu to CMenu to support
+		// mnemonics
+		CMenu menu = new CMenu(getString("menu", "mainframe", menuElement
+				.getAttribute("name")));
+
+		createMenuEntries(menu, it);
+
+		return menu;
+	}
+
+	protected void createMenuEntries(JMenu menu, ListIterator it) {
+		boolean lastWasSeparator = false;
+	
+		while (it.hasNext()) {
+			XmlElement next = (XmlElement) it.next();
+			String name = next.getName();
+
+			if (name.equals("menuitem")) {
+				if (next.getAttribute("action") != null) {
+					//try {
+
+					AbstractColumbaAction action = handler.getAction(next
+							.getAttribute("action"), frameMediator);
+
+					if (action != null) {
+						// use our custom CMenuItem here
+						// -> in order to support JavaHelp support
+						// -> @see CMenuItem for more details
+						CMenuItem tmp = new CMenuItem(action);
+
+						// display tooltip in statusbar
+						tmp.addMouseListener(frameMediator.getContainer()
+								.getMouseTooltipHandler());
+						menu.add(tmp);
+						lastWasSeparator = false;
+					}
+				} else if (next.getAttribute("checkboxaction") != null) {
+					try {
+						AbstractSelectableAction action = (AbstractSelectableAction) handler
+								.getAction(next.getAttribute("checkboxaction"),
+										frameMediator);
+
 						if (action != null) {
-                            // use our custom CMenuItem here
-                            // -> in order to support JavaHelp support
-                            // -> @see CMenuItem for more details
-                            CMenuItem tmp = new CMenuItem(action);
+							CCheckBoxMenuItem menuitem = new CCheckBoxMenuItem(
+									action);
 
-                            // display tooltip in statusbar
-                            tmp.addMouseListener(frameMediator.getContainer().getMouseTooltipHandler());
-                            menu.add(tmp);
-                            lastWasSeparator = false;
-                        }
-                } else if (next.getAttribute("checkboxaction") != null) {
-                    try {
-                        AbstractSelectableAction action = (AbstractSelectableAction) ((ActionPluginHandler) PluginManager.getInstance().getHandler(
-                                "org.columba.core.action")).getAction(next.getAttribute(
-                                    "checkboxaction"), frameMediator);
+							// display tooltip in statusbar
+							menuitem.addMouseListener(frameMediator
+									.getContainer().getMouseTooltipHandler());
+							menu.add(menuitem);
 
-                        if (action != null) {
-                            CCheckBoxMenuItem menuitem = new CCheckBoxMenuItem(action);
+							lastWasSeparator = false;
+						}
+					} catch (Exception e) {
+						LOG.severe(e.getMessage() + " - "
+								+ next.getAttribute("checkboxaction"));
+						e.printStackTrace();
+					}
+				} else if (next.getAttribute("imenu") != null) {
+					try {
+						IMenu imenu = handler.getIMenu(next
+								.getAttribute("imenu"), frameMediator);
 
-                            // display tooltip in statusbar
-                            menuitem.addMouseListener(frameMediator.getContainer().getMouseTooltipHandler());
-                            menu.add(menuitem);
+						if (imenu != null) {
+							menu.add(imenu);
+						}
 
-                            lastWasSeparator = false;
-                        }
-                    } catch (Exception e) {
-                        LOG.severe(e.getMessage() + " - " + next.getAttribute("checkboxaction"));
-                        e.printStackTrace();
-                    }
-                } else if (next.getAttribute("imenu") != null) {
-                    try {
-                        IMenu imenu = ((ActionPluginHandler) PluginManager.getInstance().getHandler(
-                                "org.columba.core.action")).getIMenu(next.getAttribute(
-                                    "imenu"), frameMediator);
+						lastWasSeparator = false;
+					} catch (Exception e) {
+						e.printStackTrace();
+						LOG.severe(e.getMessage());
+					}
+				}
+			} else if (name.equals("separator")) {
+				if (!lastWasSeparator) {
+					menu.addSeparator();
+				}
 
-                        if (imenu != null) {
-                            menu.add(imenu);
-                        }
+				lastWasSeparator = true;
+			} else if (name.equals("menu")) {
+				menu.add(createSubMenu(next));
+				lastWasSeparator = false;
+			}
+		}
 
-                        lastWasSeparator = false;
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                        LOG.severe(e.getMessage());
-                    }
-                }
-            } else if (name.equals("separator")) {
-                if (!lastWasSeparator) {
-                    menu.addSeparator();
-                }
+		if (lastWasSeparator) {
+			menu.remove(menu.getMenuComponentCount() - 1);
+		}
+	}
 
-                lastWasSeparator = true;
-            } else if (name.equals("menu")) {
-                menu.add(createSubMenu(next));
-                lastWasSeparator = false;
-            }
-        }
+	protected JMenu createSubMenu(XmlElement menuElement) {
+		List childs = menuElement.getElements();
+		ListIterator it = childs.listIterator();
 
-        if (lastWasSeparator) {
-            menu.remove(menu.getMenuComponentCount() - 1);
-        }
-    }
+		CMenu menu = new CMenu(getString("menu", "mainframe", menuElement
+				.getAttribute("name")));
 
-    protected JMenu createSubMenu(XmlElement menuElement) {
-        List childs = menuElement.getElements();
-        ListIterator it = childs.listIterator();
+		createMenuEntries(menu, it);
 
-        CMenu menu = new CMenu(getString("menu", "mainframe",
-                    menuElement.getAttribute("name")));
-
-        createMenuEntries(menu, it);
-
-        return menu;
-    }
+		return menu;
+	}
 }

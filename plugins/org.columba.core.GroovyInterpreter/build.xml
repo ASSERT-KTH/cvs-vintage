@@ -6,9 +6,9 @@
  <property name="build" value="build"/>
  <property name="user.name" value="The Columba Team"/>
  <property name="version" value="1.0"/>
- <property name="dest" value="PythonInterpreter"/>
- <property name="plugin-id" value="org.columba.core.PythonInterpreter"/>
- <property name="ownclasspath" value="${classpath}:${columba_src}:${columba_src}/lib/log4j.jar:./lib/jython.jar:${columba_src}/lib/junit.jar:${columba_src}/lib/jakarta-oro-2.0.6.jar"/>
+ <property name="dest" value="GroovyInterpreter"/>
+ <property name="plugin-id" value="org.columba.core.GroovyInterpreter"/>
+ <property name="ownclasspath" value="${classpath}:${columba_src}:${src}/lib/groovy-1.0-beta-8.jar:${src}/lib/asm-1.5.2.jar:${src}/lib/asm-util-1.5.2.jar"/>
 
  <!-- compile the classes -->
  <target name="compile">
@@ -26,7 +26,7 @@
    <exclude name="build.xml"/>   
    <exclude name="plugin.xml"/>
    <manifest>
-    <attribute name="Class-Path" value="lib/jython.jar"/>
+    <attribute name="Class-Path" value="lib/groovy-1.0-beta-8.jar lib/asm-1.5.2.jar lib/asm-util-1.5.2.jar"/>
     <attribute name="Sealed" value="true"/>
    </manifest>
   </jar>

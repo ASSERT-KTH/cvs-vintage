@@ -57,29 +57,33 @@ public class ColumbaMenu extends JMenuBar {
 	public MenuBarGenerator createMenuBarGeneratorInstance(String xmlRoot,
 			FrameMediator frameController) {
 
-		menuGenerator = new MenuBarGenerator(frameController, xmlRoot);
-		menuGenerator.createMenuBar(this);
-
-		try {
-			((MenuPluginHandler) PluginManager.getInstance()
-					.getHandler("org.columba.core.menu")).insertPlugins(this);
-		} catch (PluginHandlerNotFoundException ex) {
-			throw new RuntimeException(ex);
+		if (menuGenerator == null) {
+			menuGenerator = new MenuBarGenerator(frameController, xmlRoot);
+			try {
+				((MenuPluginHandler) PluginManager.getInstance().getHandler(
+						"org.columba.core.menu")).insertPlugins(this);
+			} catch (PluginHandlerNotFoundException ex) {
+				throw new RuntimeException(ex);
+			}
 		}
 
 		return menuGenerator;
+	}
+
+	public void populateMenu() {
+		menuGenerator.createMenuBar(this);
 	}
 
 	public void extendMenuFromFile(FrameMediator mediator, String path) {
 		menuGenerator = createMenuBarGeneratorInstance(menuRoot, mediator);
 
 		menuGenerator.extendMenuFromFile(path);
-		menuGenerator.createMenuBar(this);
+
 	}
 
 	public void extendMenu(XmlElement menuExtension) {
 		menuGenerator.extendMenu(menuExtension);
-		menuGenerator.createMenuBar(this);
+
 	}
 
 	public JMenu getMenu(String id) {

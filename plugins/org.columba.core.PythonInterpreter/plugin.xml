@@ -3,5 +3,6 @@
   <extension name="org.columba.core.interpreter">
     <interpreter main_class="org.columba.core.scripting.PythonInterpreterPlugin" name="python"></interpreter>
   </extension>
-  <runtime jar="PythonInterpreter.jar" type="java"></runtime>
+  <!--<runtime type="java" jar="PythonInterpreter.jar"></runtime>-->
+<runtime type="java"></runtime>
 </plugin>

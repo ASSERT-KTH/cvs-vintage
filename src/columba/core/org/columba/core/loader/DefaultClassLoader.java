@@ -18,115 +18,87 @@ package org.columba.core.loader;
 import java.lang.reflect.Constructor;
 import java.util.logging.Logger;
 
-
 /**
- * Classloader responsible for instanciating plugins which are
- * located inside the Columba sources.
+ * Classloader responsible for instanciating plugins which are located inside
+ * the Columba sources.
  * <p>
- * Note, that this classloader tries to find the correct
- * constructor based on the arguments.
- *
+ * Note, that this classloader tries to find the correct constructor based on
+ * the arguments.
+ * 
  * @author fdietz
  */
 public class DefaultClassLoader {
-	
-	private static final Logger LOG = Logger.getLogger("org.columba.core.loader");
-	
-    // we can't use SystemClassLoader here, because that doesn't work
-    // with java webstart
-    // -> instead we use this.getClass().getClassLoader()
-    // -> which seems to work perfectly
 
-    /*
-    protected static ClassLoader loader = ClassLoader.getSystemClassLoader();
-    */
-    ClassLoader loader;
+	private static final Logger LOG = Logger
+			.getLogger("org.columba.core.loader");
 
-    /**
-     * Constructor for CClassLoader.
-     */
-    public DefaultClassLoader() {
-        super();
+	// we can't use SystemClassLoader here, because that doesn't work
+	// with java webstart
+	// -> instead we use this.getClass().getClassLoader()
+	// -> which seems to work perfectly
 
-        loader = this.getClass().getClassLoader();
-    }
+	/*
+	 * protected static ClassLoader loader = ClassLoader.getSystemClassLoader();
+	 */
+	ClassLoader loader;
 
-    public Object instanciate(String className) throws Exception {
-        //ColumbaLogger.log.info("class="+className);
-        Class actClass = loader.loadClass(className);
+	/**
+	 * Constructor for CClassLoader.
+	 */
+	public DefaultClassLoader() {
+		super();
 
-        return actClass.newInstance();
-    }
+		loader = this.getClass().getClassLoader();
+	}
 
-    public Object instanciate(String className, Object[] args)
-        throws Exception {
-        //ColumbaLogger.log.info("class="+className);
-        Class actClass = loader.loadClass(className);
+	public Object instanciate(String className) throws Exception {
+		//ColumbaLogger.log.info("class="+className);
+		Class actClass = loader.loadClass(className);
 
-        Constructor constructor = null;
+		return actClass.newInstance();
+	}
 
-        //
-        // we can't just load the first constructor 
-        //  -> go find the correct constructor based
-        //  -> based on the arguments
-        //
-        //    old solution and wrong:
-        //Constructor constructor = actClass.getConstructors()[0];//argClazz);
-        //
-        if ((args == null) || (args.length == 0)) {
-        	// @author fdietz
-        	// #987119 import wizard plugin loading error
-        	// simply load default constructor with no arguments
-        	//
-        	/*
-            constructor = actClass.getConstructors()[0];
-            return constructor.newInstance(args);
-            */
-        	return actClass.newInstance();
-        }
+	public Object instanciate(String className, Object[] args) throws Exception {
+		//ColumbaLogger.log.info("class="+className);
+		Class actClass = loader.loadClass(className);
 
-        Constructor[] list = actClass.getConstructors();
+		Constructor constructor = null;
 
-        Class[] classes = new Class[args.length];
+		//
+		// we can't just load the first constructor
+		//  -> go find the correct constructor based
+		//  -> based on the arguments
+		//
+		//    old solution and wrong:
+		//Constructor constructor = actClass.getConstructors()[0];//argClazz);
+		//
+		if ((args == null) || (args.length == 0)) {
+			// @author fdietz
+			// #987119 import wizard plugin loading error
+			// simply load default constructor with no arguments
+			//
+			/*
+			 * constructor = actClass.getConstructors()[0]; return
+			 * constructor.newInstance(args);
+			 */
 
-        for (int i = 0; i < list.length; i++) {
-            Constructor c = list[i];
+			return actClass.newInstance();
+		}
 
-            Class[] parameterTypes = c.getParameterTypes();
+		constructor = ClassLoaderHelper.findConstructor(args, actClass);
 
-            // this constructor has the correct number 
-            // of arguments
-            if (parameterTypes.length == args.length) {
-                boolean success = true;
+		// couldn't find correct constructor
+		if (constructor == null) {
+			LOG.severe("Couldn't find constructor for " + className
+					+ " with matching argument-list: ");
+			for (int i = 0; i < args.length; i++) {
+				LOG.severe("argument[" + i + "]=" + args[i]);
+			}
 
-                for (int j = 0; j < parameterTypes.length; j++) {
-                    Class parameter = parameterTypes[j];
+			return null;
+		}
 
-                    if (args[j] == null) {
-                        success = true;
-                    } else if (!parameter.isAssignableFrom(args[j].getClass())) {
-                        success = false;
-                    }
-                }
+		return constructor.newInstance(args);
+	}
 
-                // ok, we found a matching constructor
-                // -> create correct list of arguments
-                if (success) {
-                    constructor = actClass.getConstructor(parameterTypes);
-                }
-            }
-        }
-
-        // couldn't find correct constructor
-        if (constructor == null) {
-        	LOG.severe("Couldn't find constructor for "+className+" with matching argument-list: ");
-        	for ( int i=0; i<args.length; i++) {
-        		LOG.severe("argument["+i+"]="+args[i]);
-        	}
-        	
-            return null;
-        }
-
-        return constructor.newInstance(args);
-    }
 }

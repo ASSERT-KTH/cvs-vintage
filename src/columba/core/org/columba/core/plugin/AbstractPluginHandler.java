@@ -86,6 +86,8 @@ public abstract class AbstractPluginHandler implements PluginHandler {
 	//  example: org.columba.example.HelloWorld$HelloPlugin -> HelloWorld
 	protected Hashtable transformationTable;
 
+	private PluginLoader pluginLoader;
+
 	/**
 	 * associate extension with plugin which owns the extension
 	 */
@@ -109,6 +111,8 @@ public abstract class AbstractPluginHandler implements PluginHandler {
 		externalPlugins = new Vector();
 
 		pluginMap = new HashMap();
+
+		pluginLoader = new PluginLoader();
 
 		LOG.info("initialising plugin-handler: " + id);
 	}
@@ -167,6 +171,13 @@ public abstract class AbstractPluginHandler implements PluginHandler {
 			// show error message
 			handlePluginError(name);
 			throw new PluginLoadingFailedException();
+		} catch (Error e) {
+			if (Main.DEBUG)
+				e.printStackTrace();
+
+			// show error message
+			handlePluginError(name);
+			throw new PluginLoadingFailedException();
 		}
 
 		return plugin;
@@ -176,15 +187,18 @@ public abstract class AbstractPluginHandler implements PluginHandler {
 	 * Shows an error message and disables the plugin.
 	 */
 	protected void handlePluginError(String plugin) {
+
+		//		 get plugin id
+		String pluginId = (String) pluginMap.get(plugin);
+
+		LOG.severe("Failed to load plugin " + pluginId);
+
 		JOptionPane.showMessageDialog(null, new MultiLineLabel(MessageFormat
 				.format(GlobalResourceLoader.getString(RESOURCE_PATH,
 						"pluginmanager", "errLoad.msg"),
 						new String[] { plugin })), GlobalResourceLoader
 				.getString(RESOURCE_PATH, "pluginmanager", "errLoad.title"),
 				JOptionPane.ERROR_MESSAGE);
-
-		// get plugin id
-		String pluginId = (String) pluginMap.get(plugin);
 
 		// disable plugin
 		pluginManager.setEnabled(pluginId, false);
@@ -199,9 +213,12 @@ public abstract class AbstractPluginHandler implements PluginHandler {
 	 */
 	protected Object getPlugin(String name, String className, Object[] args)
 			throws Exception {
+
+		Object object = null;
+
 		try {
 			// first try to load this plugin as internal plugin
-			return loadPlugin(className, args);
+			object = loadPlugin(className, args);
 		} catch (ClassNotFoundException ex) {
 			// this didn't work -> try to load it as external plugin
 
@@ -215,8 +232,9 @@ public abstract class AbstractPluginHandler implements PluginHandler {
 			// if type=="java", it could be packaged as jar-file
 			File pluginDir = pluginManager.getJarFile(pluginId);
 
-			return PluginLoader.loadExternalPlugin(className, type, pluginDir,
-					args);
+			object = pluginLoader.loadExternalPlugin(className, type,
+					pluginDir, args);
+
 		} catch (InvocationTargetException ex) {
 			// error while instanciating plugin
 			ex.getTargetException().printStackTrace();
@@ -226,6 +244,8 @@ public abstract class AbstractPluginHandler implements PluginHandler {
 
 			throw ex;
 		}
+
+		return object;
 	}
 
 	/**

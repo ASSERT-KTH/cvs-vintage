@@ -271,6 +271,7 @@ public class ThreePaneMailFrameController extends AbstractMailFrameController
 						"splitpanes", "header", 100));
 		}
 
+
 		getContainer().extendMenuFromFile(this,
 				"org/columba/mail/action/menu.xml");
 

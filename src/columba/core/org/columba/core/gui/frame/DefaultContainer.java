@@ -459,6 +459,9 @@ public class DefaultContainer extends JFrame implements Container,
 	 */
 	public void extendMenuFromFile(FrameMediator mediator, String file) {
 		getMenu().extendMenuFromFile(mediator, file);
+		
+		// now create menu
+		getMenu().populateMenu();
 	}
 
 	/**

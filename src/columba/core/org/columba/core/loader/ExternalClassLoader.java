@@ -21,125 +21,98 @@ import java.net.URLClassLoader;
 import java.net.URLStreamHandlerFactory;
 import java.util.logging.Logger;
 
-
 /**
- * Classloader responsible for instanciating plugins which
- * can also be outside.
+ * Classloader responsible for instanciating plugins which can also be outside.
  * <p>
- * Note, that this classloader tries to find the correct
- * constructor based on the arguments.
- *
+ * Note, that this classloader tries to find the correct constructor based on
+ * the arguments.
+ * 
  * @author fdietz
  */
 public class ExternalClassLoader extends URLClassLoader {
-	
-	private static final Logger LOG = Logger.getLogger("org.columba.core.loader");
-	
-    /**
-     * Constructor for ExternalClassLoader.
-     * @param urls
-     * @param parent
-     */
-    public ExternalClassLoader(URL[] urls, ClassLoader parent) {
-        super(urls, parent);
-    }
 
-    /**
-     * Constructor for ExternalClassLoader.
-     * @param urls
-     */
-    public ExternalClassLoader(URL[] urls) {
-        super(urls);
-    }
+	private static final Logger LOG = Logger
+			.getLogger("org.columba.core.loader");
 
-    /**
-     * Constructor for ExternalClassLoader.
-     * @param urls
-     * @param parent
-     * @param factory
-     */
-    public ExternalClassLoader(URL[] urls, ClassLoader parent,
-        URLStreamHandlerFactory factory) {
-        super(urls, parent, factory);
-    }
+	/**
+	 * Constructor for ExternalClassLoader.
+	 * 
+	 * @param urls
+	 * @param parent
+	 */
+	public ExternalClassLoader(URL[] urls, ClassLoader parent) {
+		super(urls, parent);
+	}
 
-    public void addURL(URL url) {
-        super.addURL(url);
-    }
+	/**
+	 * Constructor for ExternalClassLoader.
+	 * 
+	 * @param urls
+	 */
+	public ExternalClassLoader(URL[] urls) {
+		super(urls);
+	}
 
-    public Class findClass(String className) throws ClassNotFoundException {
-        Class temp = super.findClass(className);
+	/**
+	 * Constructor for ExternalClassLoader.
+	 * 
+	 * @param urls
+	 * @param parent
+	 * @param factory
+	 */
+	public ExternalClassLoader(URL[] urls, ClassLoader parent,
+			URLStreamHandlerFactory factory) {
+		super(urls, parent, factory);
+	}
 
-        return temp;
-    }
+	public void addURL(URL url) {
+		super.addURL(url);
+	}
 
-    public Object instanciate(String className) throws Exception {
-        Class actClass = findClass(className);
+	public Class findClass(String className) throws ClassNotFoundException {
+		Class temp = super.findClass(className);
 
-        return actClass.newInstance();
-    }
+		return temp;
+	}
 
-    public Object instanciate(String className, Object[] args)
-        throws Exception {
-       
-        Class actClass = findClass(className);
+	public Object instanciate(String className) throws Exception {
+		Class actClass = findClass(className);
 
-        Constructor constructor = null;
-        //
-        // we can't just load the first constructor 
-        //  -> go find the correct constructor based
-        //  -> based on the arguments
-        //
-        //    old solution and wrong:
-        //Constructor constructor = actClass.getConstructors()[0];//argClazz);
-        //
-        if ((args == null) || (args.length == 0)) {
-            constructor = actClass.getConstructors()[0];
+		return actClass.newInstance();
+	}
 
-            return constructor.newInstance(args);
-        }
+	public Object instanciate(String className, Object[] args) throws Exception {
 
-        Constructor[] list = actClass.getConstructors();
+		Class actClass = findClass(className);
 
-        Class[] classes = new Class[args.length];
+		Constructor constructor = null;
+		//
+		// we can't just load the first constructor
+		//  -> go find the correct constructor based
+		//  -> based on the arguments
+		//
+		//    old solution and wrong:
+		//Constructor constructor = actClass.getConstructors()[0];//argClazz);
+		//
+		if ((args == null) || (args.length == 0)) {
+			constructor = actClass.getConstructors()[0];
 
-        for (int i = 0; i < list.length; i++) {
-            Constructor c = list[i];
+			return constructor.newInstance(args);
+		}
 
-            Class[] parameterTypes = c.getParameterTypes();
+		constructor = ClassLoaderHelper.findConstructor(args, actClass);
 
-            // this constructor has the correct number 
-            // of arguments
-            if (parameterTypes.length == args.length) {
-                boolean success = true;
+		// couldn't find correct constructor
+		if (constructor == null) {
+			LOG.severe("Couldn't find constructor for " + className
+					+ " with matching argument-list: ");
+			for (int i = 0; i < args.length; i++) {
+				LOG.severe("argument[" + i + "]=" + args[i]);
+			}
+			return null;
+		}
 
-                for (int j = 0; j < parameterTypes.length; j++) {
-                    Class parameter = parameterTypes[j];
+		return constructor.newInstance(args);
+	}
 
-                    if (args[j] == null) {
-                        success = true;
-                    } else if (!parameter.isAssignableFrom(args[j].getClass())) {
-                        success = false;
-                    }
-                }
-
-                // ok, we found a matching constructor
-                // -> create correct list of arguments
-                if (success) {
-                    constructor = actClass.getConstructor(parameterTypes);
-                }
-            }
-        }
-
-        // couldn't find correct constructor
-        if (constructor == null) {
-        	LOG.severe("Couldn't find constructor for "+className+" with matching argument-list: ");
-        	for ( int i=0; i<args.length; i++) {
-        		LOG.severe("argument["+i+"]="+args[i]);
-        	}
-            return null;
-        }
-
-        return constructor.newInstance(args);
-    }
 }
