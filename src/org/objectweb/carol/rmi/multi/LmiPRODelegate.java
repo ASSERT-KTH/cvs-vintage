@@ -1,5 +1,5 @@
 /*
- * @(#) JrmpPRODelegate.java	1.0 02/07/15
+ * @(#) LmiPRODelegate.java	1.0 02/07/15
  *
  * Copyright (C) 2002 - INRIA (www.inria.fr)
  *
@@ -28,9 +28,6 @@
 package org.objectweb.carol.rmi.multi;
 
 // rmi import
-import java.util.Properties;
-import java.util.Vector;
-import java.util.Enumeration;
 import java.rmi.Remote;
 import java.rmi.RemoteException;
 import java.rmi.NoSuchObjectException;
@@ -38,58 +35,12 @@ import java.rmi.NoSuchObjectException;
 // corba import
 import javax.rmi.CORBA.PortableRemoteObjectDelegate;
 
-// carol jrmp import 
-import org.objectweb.carol.rmi.jrmp.server.JUnicastRemoteObject;
-import org.objectweb.carol.rmi.jrmp.interceptor.JServerRequestInterceptor;
-import org.objectweb.carol.rmi.jrmp.interceptor.JClientRequestInterceptor;
-import org.objectweb.carol.rmi.jrmp.interceptor.JInitializer;
-import org.objectweb.carol.rmi.jrmp.interceptor.JInitInfo;
-import org.objectweb.carol.rmi.jrmp.interceptor.JRMPInitInfoImpl;
-import org.objectweb.carol.rmi.jrmp.interceptor.ProtocolInterceptor;
-
 
 /**
- * Class <code>JrmpPRODelegate</code>  for the mapping between Rmi jrmp UnicastRemoteObject and PortableRemoteObject
+ * Class <code>LmiPRODelegate</code>  is a fake PortableRemoteObject for local methods call
+ *
  */
-public class JrmpPRODelegate implements PortableRemoteObjectDelegate {
-
-    /**
-     * Initilazer class prefix
-     */
-    public static String INTIALIZER_PREFIX = "org.objectweb.PortableInterceptor.JRMPInitializerClass";
-
-    /**
-     * private Interceptor for Context propagation
-     */
-    private JServerRequestInterceptor [] sis = null;
-
-    /**
-     * private Interceptor for Context propagation
-     */
-    private JClientRequestInterceptor [] cis = null;
-
-    /**
-     * Constructor 
-     */ 
-    public JrmpPRODelegate() {
-
-
-	// Load the Interceptors
-	try {
-	    JInitInfo jrmpInfo = new JRMPInitInfoImpl();	    
-	    for (Enumeration e = getJRMPIntializers() ; e.hasMoreElements() ;) {
-		JInitializer jinit = (JInitializer) Class.forName((String)e.nextElement()).newInstance();
-		jinit.pre_init(jrmpInfo);
-		jinit.post_init(jrmpInfo);
-	    }	    
-	    sis = jrmpInfo.getServerRequestInterceptors();
-	    cis = jrmpInfo.getClientRequestInterceptors();
-	} catch ( Exception e) {
-	    e.printStackTrace();
-	    //we did not found the interceptor do nothing but a trace ?
-	}	
-
-    }
+public class LmiPRODelegate implements PortableRemoteObjectDelegate {
 
     /**
      * Export a Remote Object 
@@ -97,7 +48,7 @@ public class JrmpPRODelegate implements PortableRemoteObjectDelegate {
      * @exception RemoteException exporting remote object problem 
      */
     public void exportObject(Remote obj) throws RemoteException {
-	JUnicastRemoteObject.exportObject(obj, sis, cis);
+
     }
 
     
@@ -107,7 +58,7 @@ public class JrmpPRODelegate implements PortableRemoteObjectDelegate {
      * @exception NoSuchObjectException if the object is not currently exported
      */
     public void unexportObject(Remote obj) throws NoSuchObjectException {
-	JUnicastRemoteObject.unexportObject(obj, true);	
+
     }
 
     /**
@@ -117,7 +68,7 @@ public class JrmpPRODelegate implements PortableRemoteObjectDelegate {
      * @exception RemoteException if the connection fail
      */ 
     public void connect(Remote target,Remote source) throws RemoteException {
-	// do nothing
+
     }
 
 	
@@ -143,29 +94,6 @@ public class JrmpPRODelegate implements PortableRemoteObjectDelegate {
      * @exception NoSuchObjectException if the object is not currently exported
      */
     public Remote toStub(Remote obj) throws NoSuchObjectException {
-	try {
-	    return (Remote)JUnicastRemoteObject.exportObject(obj, sis, cis);
-	} catch (java.rmi.server.ExportException e) {
 	    return obj;
-	} catch (RemoteException re) {
-	    throw new NoSuchObjectException(re.toString());
-	}
     }
-
-    /**
-     * Get Intializers method
-     * @return JRMP Initializers enuumeration
-     */
-    private Enumeration getJRMPIntializers() {
-	Vector initializers =  new Vector();
-	Properties sys = System.getProperties();
-	for (Enumeration e = System.getProperties().propertyNames(); e.hasMoreElements() ;) {
-	    String pkey = (String)e.nextElement();
-	    if (pkey.startsWith(INTIALIZER_PREFIX)) {
-		initializers.add(pkey.substring(INTIALIZER_PREFIX.length() + 1));
-	    }
-	}
-	return initializers.elements();
-    }
-    
 }

@@ -38,9 +38,8 @@ import java.util.Enumeration;
 
 //carol import
 import org.objectweb.carol.util.configuration.RMIConfiguration;
-import org.objectweb.carol.util.configuration.CommunicationConfiguration; 
+import org.objectweb.carol.util.configuration.CarolConfiguration; 
 import org.objectweb.carol.util.configuration.TraceCarol; 
-import org.objectweb.carol.jndi.iiop.IIOPReferenceContextWrapper;
 
 /**
  * Class <code>ProtocolCurrent</code>For handling the association Rmi/ Thread
@@ -88,25 +87,16 @@ public class ProtocolCurrent {
 	    prodHashtable = new Hashtable();
 	    icHashtable = new Hashtable();
 	    //get rmi configuration  hashtable 	    
-	    Hashtable allRMIConfiguration = CommunicationConfiguration.getAllRMIConfiguration();	    
+	    Hashtable allRMIConfiguration = CarolConfiguration.getAllRMIConfiguration();	    
 	    int nbProtocol = allRMIConfiguration.size();
 	    for (Enumeration e = allRMIConfiguration.elements() ; e.hasMoreElements() ;) {
 		RMIConfiguration currentConf = (RMIConfiguration)e.nextElement();
 		String rmiName = currentConf.getName();
-		if (currentConf.isActivate()) {
-		    // get the PRO 
-		    prodHashtable.put(rmiName, (PortableRemoteObjectDelegate)Class.forName(currentConf.getPro()).newInstance());
-		    // get the IC 
-		    // here there is a ad hoc iiop hacking because off the Referenceable CosNaming Binding problem
-		    // this problem will be solve when object global name service come
-		    if (rmiName.equals("iiop")) {
-			icHashtable.put(rmiName,  new IIOPReferenceContextWrapper(new InitialContext(currentConf.getJndiProperties())));
-		    } else {
-			icHashtable.put(rmiName,  new InitialContext(currentConf.getJndiProperties()));
-		    }
-		}
+		// get the PRO 
+		prodHashtable.put(rmiName, (PortableRemoteObjectDelegate)Class.forName(currentConf.getPro()).newInstance());
+		icHashtable.put(rmiName,  new InitialContext(currentConf.getJndiProperties()));
 	    }
-	    defaultRMI = CommunicationConfiguration.getDefaultProtocol().getName();
+	    defaultRMI = CarolConfiguration.getDefaultProtocol().getName();
 	    // set the default protocol
 	    threadCtx.set(defaultRMI) ;
 	    

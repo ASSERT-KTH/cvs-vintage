@@ -38,6 +38,7 @@ import javax.naming.Name;
 import javax.naming.spi.InitialContextFactory;
 import javax.naming.spi.ObjectFactory;
 
+import com.sun.jndi.cosnaming.CNCtxFactory;
 /*
  * Class <code>IIOPRemoteReferenceContextWrapperFactory</code> is the CAROL JNDI Context factory. This context factory
  * build the iiop context for reference wrapping to/from a remote object
@@ -46,7 +47,7 @@ import javax.naming.spi.ObjectFactory;
  * @see javax.naming.spi.InitialContextFactory
  * @version 1.0, 15/07/2002
  */
-public class IIOPReferenceContextWrapperFactory implements ObjectFactory, InitialContextFactory {
+public class IIOPReferenceContextWrapperFactory extends CNCtxFactory {
 
     /**
      * Get/Build the IIOP Wrapper InitialContext
@@ -59,17 +60,8 @@ public class IIOPReferenceContextWrapperFactory implements ObjectFactory, Initia
      */   
     public Context getInitialContext(Hashtable env) throws NamingException {
 	env.put("java.naming.factory.initial","com.sun.jndi.cosnaming.CNCtxFactory");
-	return new IIOPReferenceContextWrapper(new InitialContext(env));
+	return new IIOPReferenceContextWrapper(super.getInitialContext(env));
     }
 
-    /**
-     * Get/Build the ObjectInstance 
-     * Alway return <code>null</code> for the moment
-     *
-     * @return null
-     */
-    public Object getObjectInstance(Object ref, Name name, Context nameCtx, Hashtable env) throws NamingException {
-	// never use
-	return null;
-    }
+
 }

@@ -89,7 +89,7 @@ public class IIOPReferenceContextWrapper implements Context {
      * @return a <code>Referenceable ((IIOPRemoteReference)o).getReference()</code> if o is a IIOPRemoteReference
      *         and the inititial object o if else
      */
-    private Object resolveObject(Object o) {
+    private Object resolveObject(Object o) throws NamingException {
 	try {
 	    if (o instanceof IIOPRemoteReference) {
 		// build of the Referenceable object with is Reference
@@ -102,8 +102,7 @@ public class IIOPReferenceContextWrapper implements Context {
 		return o;
 	    }
 	} catch (Exception e) {
-	    e.printStackTrace();
-	    return o;
+	    throw new NamingException("" + e);
 	}
     }
 
@@ -151,8 +150,7 @@ public class IIOPReferenceContextWrapper implements Context {
 		return o;
 	    }
 	} catch (Exception e) {
-	    e.printStackTrace();
-	    return o;
+	    throw new NamingException("" +e);
 	}
     }
     

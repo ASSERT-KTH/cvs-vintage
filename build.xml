@@ -151,6 +151,8 @@
        present in ${archive} directory -->
   <target name="jar" depends="compile" description="Build carol jar">
     <mkdir dir="${dist.lib}"/>
+    <!-- copy default file in the compile base -->
+    <copy file="${ext}/carol-defaults.properties" tofile="${build}/classes/carol-defaults.properties"/>
     <multipleAnt dir="${archive}" />
     <copy file="${externals}/commons-cli.jar" tofile="${dist.lib}/commons-cli.jar"/>  
   </target>
@@ -215,7 +217,7 @@
   </target>
 
   <!-- ***********************************************-->
-  <!-- *********     PACKAGE (thanks Jef!)      *******-->
+  <!-- *********     PACKAGE (thanks Jeff!)      *******-->
   <!-- ***********************************************-->
   <target name="packages" depends="clean,package.src,package.jar"
     if="version"

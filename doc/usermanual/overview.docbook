@@ -134,10 +134,10 @@
 	  <para> The 3 points below are mandatory for CAROL server deploying on multi-RMI architecture:
 	    <itemizedlist>
 	      <listitem>
-		<para>The system property <property>javax.rmi.CORBA.PortableRemoteObjectClass</property> need to be instantiated to <classname>org.objectweb.carol.rmi.multi.MultiPRODelegate</classname> in the server JVM.</para>
+		<para>There is 2 ways for carol initialization: first, the best way, is to call the org.objectweb.carol.util.configuration.CarolConfiguration.init() method. The second way is to set the 2 system property <property>javax.rmi.CORBA.PortableRemoteObjectClass =org.objectweb.carol.rmi.multi.MultiPRODelegate</property> and  <property>java.naming.factory.initial =org.objectweb.carol.jndi.spi.MultiOrbInitialContextFactory</property> in the server JVM. This second method doesn't allows to switch off carol features by configuration: The properties <property>carol.start.rmi=false</property> and <property>carol.start.jndi=false</property> doesn't work with this configuration method.</para>
 	      </listitem>
 	      <listitem>
-		<para>The <filename>carol.properties</filename> file need to be configured (see the <link linkend="configuration">CAROL Configuration</link> chapter) and visible in the JVM classpath.</para>
+		<para>The <filename>carol.properties</filename> file can be configured (see the <link linkend="configuration">CAROL Configuration</link> chapter) and visible in the JVM classpath.</para>
 	      </listitem>
 	      <listitem>
 		<para>For each RMI architecture all remote objects stub and skeleton have to be visible in the classpath.</para>
@@ -145,7 +145,7 @@
 	    </itemizedlist>
 	    <note>
 	      <para>
-		For the moment, in CAROL library, there is 3 architectures available (CAROL SPI implementation): IIOP, JRMP and JEREMIE. There is no, in those 3 architectures, stub/skeleton class conflicts. For example, if my remote object is Foo with FooItf remote interface: 
+		For the moment, in CAROL library, there is 3 remote architectures available (CAROL SPI implementation): IIOP, JRMP and JEREMIE. There is no, in those 3 architectures, stub/skeleton class conflicts. For example, if my remote object is Foo with FooItf remote interface: 
 		<itemizedlist>
 		  <listitem>
 		    <para>The stub/skel name for IIOP are: <classname>_FooItf_Stub</classname>/<classname>_Foo_Tie</classname></para>
@@ -198,7 +198,7 @@
 	    </note>
 	  <warning>
 	    <para>
-	      But, be careful, there is stubs and/or skeletons class name conflicts for different provider of the same RMI architecture. For example, this is not possible, with CAROL, to deploy a remote object on two RMI provider with the same architecture (for example RMI JRMP 1.1 and RMI JRMP 1.2 or DAVID RMI IIOP and SUN  JDK 1.4 RMI IIOP) because there are a stubs and/or skeletons class name conflicts in the server JVM.</para>   
+	      But, be careful, there is stubs and/or skeletons class name conflicts for different providers of the same RMI architecture. For example, this is not possible, with CAROL, to deploy a remote object on two RMI provider with the same architecture (for example RMI JRMP 1.1 and RMI JRMP 1.2 or DAVID RMI IIOP and SUN  JDK 1.4 RMI IIOP) because there are a stubs and/or skeletons class name conflicts in the server JVM.</para>   
 	  </warning>
 	</para>
       </sect3>
@@ -240,7 +240,7 @@
 	      <para>The <filename>carol.properties</filename> and the <filename>jndi.properties</filename> files need to be configured (see the <link linkend="configuration">CAROL Configuration</link> chapter) and visible in the server JVM classpath.</para>
 	    </listitem>
 	    <listitem>
-	      <para>Each name service (registry, cosnaming, ...) need to be launched in the distribute environment.</para>
+	      <para>Each name service (registry, cosnaming, ...) can be launched in the distribute environment.</para>
 	    </listitem>
 	  </itemizedlist>
 	  <warning>
@@ -268,7 +268,7 @@
 	</sect3>
       </sect2>
       <sect2>
-	<title>Refereanceable binding through a RMI IIOP CosNaming</title>
+	<title>Referenceable binding through a RMI IIOP CosNaming</title>
 	<para>
 	  The second non standard CAROL features is a way to register Referenceable and Serializable objects in a CosNaming through JNDI. The IIOP InitialContext delivered for IIOP wrap the  Referenceable or Serializable object into a standard remote object. This remote object is exported into the JNDI context bind(or rebind) method and unexported into the JNDI context unbind method. CAROL use automatically, on the server side, this mechanism with a standard CAROL IIOP configuration (you need to call the IIOP protocol 'iiop' in the <filename>carol.properties</filename> file see the <link linkend="configuration">CAROL configuration</link> chapter).  
 	</para>

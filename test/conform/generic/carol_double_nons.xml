@@ -26,7 +26,7 @@
   <property name="test.tmp.client1"               value="${test.tmp}/client/1"/>
   <property name="test.tmp.client2"               value="${test.tmp}/client/2"/>
   <property name="test.tmp.server"                value="${test.tmp}/server"/>
-  <property name="test.multi.jvmargs"             value="-Djavax.rmi.CORBA.PortableRemoteObjectClass=org.objectweb.carol.rmi.multi.MultiPRODelegate -Djava.naming.factory.initial=org.objectweb.carol.jndi.spi.MultiOrbInitialContextFactory -Djava.security.policy=${test.ext}/java.policy"/>
+  <property name="test.multi.jvmargs"             value="-Djava.security.policy=${test.ext}/java.policy"/>
   <property name="test.client.jvmarg1"            value="${test.client.jvm.xtra1}"/>
   <property name="test.client.jvmarg2"            value="${test.client.jvm.xtra2}"/>
   <property name="trace.properties.file.name"     value="trace.properties"/>

@@ -3,7 +3,7 @@
     <!-- CAROL JAR -->
     <jar jarfile="${dist.lib}/carol.jar" basedir="${build}/classes"
       manifest="${archive}/carol.mf"
-      includes="**/*.class"
+      includes="**/*.class,carol-defaults.properties"
       excludes="**/jtests/**/*.class"/>
   </target>
 </project>

@@ -85,10 +85,14 @@ public class BasicServer {
      * Main method 
      * This method bind all the name in the registry 
      */
-    public static void main(String [] args) {
-	
+    public static void main(String [] args) {	
+	start();
+    }
 
+    public static void start() {
 	try {
+	    
+	    org.objectweb.carol.util.configuration.CarolConfiguration.initCarol();
 
 	    // create, export and bind TheBasicObject an the BasicMultiObject (wich call the BasicObject)
 	    ba = new BasicObject();
@@ -107,6 +111,23 @@ public class BasicServer {
 	    e.printStackTrace();
 	    System.err.println("Server can't start :" + e);
 	}
-	
+    }
+
+    public static void stop() {
+	try {
+	    // get the IntialContext
+	    ic = new InitialContext();
+	    
+	    // multi rebind
+	    ic.unbind(basicObjectName);   	    
+	    ic.unbind(basicMultiObjectName);
+	    ic.unbind(basicObjectRefName);	
+	} catch (Exception e) {
+	    e.printStackTrace();
+	    System.err.println("Server can't start :" + e);
+	}
+
+	// for the moment
+	System.exit(0);
     }
 }

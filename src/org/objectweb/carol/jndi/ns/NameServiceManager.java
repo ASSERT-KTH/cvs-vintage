@@ -32,7 +32,7 @@ import java.util.Enumeration;
 
 //carol import
 import org.objectweb.carol.util.configuration.RMIConfiguration;
-import org.objectweb.carol.util.configuration.CommunicationConfiguration; 
+import org.objectweb.carol.util.configuration.CarolConfiguration; 
 import org.objectweb.carol.util.configuration.TraceCarol; 
 
 /*
@@ -63,17 +63,15 @@ public class NameServiceManager {
 	try {
 	    nsTable = new Hashtable();
 	    //get rmi configuration  hashtable 	    
-	    Hashtable allRMIConfiguration = CommunicationConfiguration.getAllRMIConfiguration();	    
+	    Hashtable allRMIConfiguration = CarolConfiguration.getAllRMIConfiguration();	    
 	    int nbProtocol = allRMIConfiguration.size();
 	    for (Enumeration e = allRMIConfiguration.elements() ; e.hasMoreElements() ;) {
 		RMIConfiguration currentConf = (RMIConfiguration)e.nextElement();
 		String rmiName = currentConf.getName();
-		if (currentConf.isActivate()) {
-		    NameService nsC = (NameService)Class.forName(currentConf.getNameService()).newInstance();
-		    nsC.setPort(currentConf.getPort());
-		    // get the Name Service
-		    nsTable.put(rmiName, nsC);
-		}
+		NameService nsC = (NameService)Class.forName(currentConf.getNameService()).newInstance();
+		nsC.setPort(currentConf.getPort());
+		// get the Name Service
+		nsTable.put(rmiName, nsC);
 	    }
 	} catch (Exception e) {
 	    String msg = "NameServiceManager.NameServiceManager() fail"; 

@@ -2,7 +2,7 @@ grant {
   //access for jonathan
   permission java.net.SocketPermission "*:1024-65535", "accept, connect, listen, resolve";
   permission java.net.SocketPermission "*:80", "connect,resolve";
-  permission java.io.FilePermission "<<ALL FILES>>", "read";
+  permission java.io.FilePermission "<<ALL FILES>>", "read, execute";
   permission java.io.SerializablePermission "enableSubstitution";
   permission java.lang.reflect.ReflectPermission "suppressAccessChecks";
   permission java.util.PropertyPermission "*", "read, write";
@@ -13,4 +13,5 @@ grant {
   // access permission for RMI JRMP class
   permission java.lang.RuntimePermission "accessClassInPackage.sun.rmi.server";
   permission java.lang.RuntimePermission "accessClassInPackage.sun.rmi.transport";
+
 };

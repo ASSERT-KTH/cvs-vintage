@@ -22,7 +22,7 @@
   <!-- test tmp location -->
   <property name="test.tmp.client"         value="${test.tmp}/client"/>
   <property name="test.tmp.server"         value="${test.tmp}/server"/>
-  <property name="test.single.jvmargs"     value="-Djavax.rmi.CORBA.PortableRemoteObjectClass=org.objectweb.carol.rmi.multi.MultiPRODelegate -Djava.naming.factory.initial=org.objectweb.carol.jndi.spi.MultiOrbInitialContextFactory -Djava.security.policy=${test.ext}/java.policy"/>
+  <property name="test.single.jvmargs"     value="-Djava.security.policy=${test.ext}/java.policy"/>
 
   <property name="trace.properties.file.name"     value="trace.properties"/>
 

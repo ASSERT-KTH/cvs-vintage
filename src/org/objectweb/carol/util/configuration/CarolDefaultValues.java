@@ -84,126 +84,72 @@ public class CarolDefaultValues {
     public static String URL_PREFIX="java.naming.provider.url";
 
     /**
+     * jndi pkgs  Prefix
+     */
+    public static String PKGS_PREFIX="java.naming.factory.url.pkgs";
+
+    /**
      * start name service Prefix
      */
-    public static String START_NS_PREFIX="start.all.ns";
+    public static String START_NS_PREFIX="start.ns";
+    
+
+    /**
+     * default activation key
+     */
+    public static String DEFAULT_ACTIVATION_KEY="carol.rmi.activated.default";   
+
+    /**
+     * acativation key
+     */
+    public static String ACTIVATION_KEY="carol.rmi.activated";   
+
+    /**
+     * start ns  key
+     */
+    public static String START_NS_KEY="carol.start.ns"; 
+
+   /**
+     * start rmi  key
+     */
+    public static String START_RMI_KEY="carol.start.rmi"; 
     
     /**
-     * default CAROL Properties with all configuration
+     * start jndi  key
      */ 
-    private Properties defaultProperties;
+    public static String START_JNDI_KEY="carol.start.jndi";
 
-
-    // default for jrmp
-    public static String jrmpName="jrmp";
-    public static String jrmpJNDIPrefix="rmi";
-    public static String jrmpPROD="org.objectweb.carol.rmi.multi.JrmpPRODelegate";
-    public static String jrmpNS="org.objectweb.carol.jndi.ns.JRMPRegistry";
-    public static Properties jrmpProps = new Properties();
-
-    // default for iiop
-    public static String iiopName="iiop";   
-    public static String iiopJNDIPrefix="iiop";
-    public static String iiopPROD="com.sun.corba.se.internal.javax.rmi.PortableRemoteObject";
-    public static String iiopNS="org.objectweb.carol.jndi.ns.IIOPCosNaming";
-    public static Properties iiopProps = new Properties();
-
-    //default for jeremie
-    public static String jeremieName="jeremie";
-    public static String jeremieJNDIPrefix="jrmi";
-    public static String jeremiePROD="org.objectweb.carol.rmi.multi.JeremiePRODelegate";
-    public static String jeremieNS="org.objectweb.carol.jndi.ns.JeremieRegistry";
-    public static Properties jeremieProps = new Properties();
-
-    static {
-
-	// add jrmp default configuration 
-	jrmpProps.setProperty(CAROL_PREFIX+"."+RMI_PREFIX+"."+ACTIVATION_PREFIX,jrmpName); 
-	jrmpProps.setProperty(CAROL_PREFIX+"."+RMI_PREFIX+"."+jrmpName+"."+PRO_PREFIX,jrmpPROD);
-	jrmpProps.setProperty(CAROL_PREFIX+"."+RMI_PREFIX+"."+jrmpName+"."+NS_PREFIX,jrmpNS); 
-
-	// add iiop default configuration
-	iiopProps.setProperty(CAROL_PREFIX+"."+RMI_PREFIX+"."+ACTIVATION_PREFIX,iiopName); 
-	iiopProps.setProperty(CAROL_PREFIX+"."+RMI_PREFIX+"."+iiopName+"."+PRO_PREFIX,iiopPROD);
-	iiopProps.setProperty(CAROL_PREFIX+"."+RMI_PREFIX+"."+iiopName+"."+NS_PREFIX,iiopNS);
-	// add jeremie default configuration
-	jeremieProps.setProperty(CAROL_PREFIX+"."+RMI_PREFIX+"."+ACTIVATION_PREFIX,jeremieName); 
-	jeremieProps.setProperty(CAROL_PREFIX+"."+RMI_PREFIX+"."+jeremieName+"."+PRO_PREFIX,jeremiePROD); 
-	jeremieProps.setProperty(CAROL_PREFIX+"."+RMI_PREFIX+"."+jeremieName+"."+NS_PREFIX,jeremieNS);
-    }
-
-    /**
-     * Return a default carol properties link toi the jndi properties
-     * @param carol properties (can be null) 
-     * @param jndi properties
-     * @return carol properties (without the jndi properties)
-     * @throws RMIConfigurationException if the jndi property url java.naming.provider.url is not set to one of the default *
-     * protocol (iiop, jrmp or jeremie)
+   /**
+     * start ns  key
      */
-    public static Properties getCarolProperties(Properties rmiP, Properties jndiP) throws RMIConfigurationException {
-	if (rmiP==null) {	    
-	    if (jndiP==null) throw new RMIConfigurationException("No carol or jndi properties found");
-	    String url = jndiP.getProperty(URL_PREFIX);
-	    if (url != null) {
-		String protocol = getRMIProtocol(url);
-		if (protocol.equals(jrmpName)) {
-		    return jrmpProps;
-		} else if (protocol.equals(iiopName)) {
-		    return iiopProps;
-		} else if (protocol.equals(jeremieName)){
-		    return jeremieProps;
-		} else  {
-		    throw new RMIConfigurationException("Can not load default protocol configuration, rmi protocol unknow:" + protocol);
-   		} 
-	    } else {
-	    	throw new RMIConfigurationException("Rmi protocol unknow, the jndi property " + URL_PREFIX + " is not set");  
-	    }
-	} else if (!rmiConfigurationExist(rmiP)) {  //rmiP is not null but there is no rmi configuration inside
-	    if (jndiP==null) throw new RMIConfigurationException("No carol or jndi properties found");
-	    String url = jndiP.getProperty(URL_PREFIX);
-	    if (url != null) {
-		String protocol = getRMIProtocol(url);
-		Properties r = new Properties();
-		r.putAll(rmiP);
-		if (protocol.equals(jrmpName)) {
-		    r.putAll(jrmpProps);
-		    return r;
-		} else if (protocol.equals(iiopName)) {
-		    r.putAll(iiopProps);
-		    return r;
-		} else if (protocol.equals(jeremieName)){
-		    r.putAll(jeremieProps);
-		    return r;
-		} else  {
-		    throw new RMIConfigurationException("Can not load default protocol configuration, rmi protocol unknow:" + protocol);
-   		} 
-	    } else {
-	    	throw new RMIConfigurationException("Rmi protocol unknow, the jndi property " + URL_PREFIX + " is not set");  
-	    }
-	} else { //rmiP is not null and there is rmi configuration inside
-	    return rmiP;
-	}		
-    }
+    public static String MULTI_RMI_PREFIX="multi.carol";
+
+
+   /**
+     * start prod  key
+     */
+    public static String MULTI_PROD="org.objectweb.carol.rmi.multi.MultiPRODelegate";
+
+
+   /**
+     * start jndi  key
+     */
+    public static String MULTI_JNDI="org.objectweb.carol.jndi.spi.MultiOrbInitialContextFactory";
 
 
     /**
-     * return false if there is no rmi configuration inside the properties
-     * @param p the properties to check
-     * @return boolean the result of this check
+     * Hashtable mapping between default en rmi name
      */
-    public static boolean rmiConfigurationExist(Properties p){
-	boolean result = false;
-	for (Enumeration e =  p.propertyNames() ; e.hasMoreElements() ;) {
-	    String pkey = ((String)e.nextElement()).trim();
-	    if  (pkey.startsWith(CAROL_PREFIX+"."+RMI_PREFIX+"."+ACTIVATION_PREFIX)) { 
-		//there is 
-		result=true;
-	    }
-	}
-	return result;
+    public static Properties mapping = new Properties();
+
+    static {	
+	mapping.setProperty("rmi","jrmp");
+	mapping.setProperty("iiop","iiop");
+	mapping.setProperty("jrmi","jeremie");
+	mapping.setProperty("cmi","cmi");
+	mapping.setProperty("lmi","lmi");
     }
-
-
+  
     /**
      * return protocol name from url
      * @return protocol name
@@ -212,14 +158,6 @@ public class CarolDefaultValues {
     public static String getRMIProtocol(String url) {
 	StringTokenizer st = new StringTokenizer(url, "://");
 	String pref = st.nextToken().trim();
-	if (pref.equals(jrmpJNDIPrefix)) {
-	    return jrmpName;
-	} else if (pref.equals(iiopJNDIPrefix)) {
-	    return iiopName;
-	} else if (pref.equals(jeremieJNDIPrefix)) {
-	    return jeremieName;
-	} else {
-	    return pref;
-	}
+	return mapping.getProperty(pref,pref);
     }
 }

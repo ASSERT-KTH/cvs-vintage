@@ -53,7 +53,7 @@ public class IIOPCosNaming implements NameService {
     /**
      * start Method, Start a new NameService or do nothing if the name service is all ready start
      * @param int port is port number
-     * @throws NameServiceException if a problem occure 
+     * @throws NameServiceException if a problem occurs
      */
     public void start() throws NameServiceException {	
 	if (TraceCarol.isDebugJndiCarol()) {
@@ -66,7 +66,7 @@ public class IIOPCosNaming implements NameService {
 		    cosNamingProcess = Runtime.getRuntime().exec(System.getProperty("java.home") +
 								 System.getProperty("file.separator") +
 								 "bin" + System.getProperty("file.separator") +
-								 "orbd -ORBInitialPort " + port);
+								 "tnameserv -ORBInitialPort " + port);
 		    // wait for starting
 		    Thread.sleep(2000);
 
@@ -110,7 +110,8 @@ public class IIOPCosNaming implements NameService {
 		    TraceCarol.debugJndiCarol("IIOPCosNaming is already start on port:" + port);
 		}
 	    }
-	} catch (Exception e) {	    
+	} catch (Exception e) {	    		
+	    TraceCarol.error("Can not start IIOPCosNaming for an unknow Reason",e);
 	    throw new NameServiceException("can not start cosnaming daemon: " +e);
 	}
     }

@@ -21,6 +21,7 @@
   <!ENTITY jeremiecarol.properties SYSTEM "example/jeremiecarol.properties">
   <!ENTITY jonathan.xml SYSTEM "example/jonathan.xml">
   <!ENTITY carol.properties SYSTEM "example/carol.properties">
+  <!ENTITY lmicarol.properties SYSTEM "example/lmicarol.properties">
   
   <!ENTITY www "World Wide Web">
 

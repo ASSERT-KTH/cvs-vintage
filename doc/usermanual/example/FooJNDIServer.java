@@ -2,12 +2,16 @@
 import java.rmi.RemoteException;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
+import org.objectweb.carol.util.configuration.CarolConfiguration;
 
 public class Server {
 
     //The main method of this server
     public static void main(String [] args)  {
 	try {
+	    //initialize carol
+	    CarolConfiguration.init();
+
 	    // the object is automatically 
 	    // exported on RMI IIOP
 	    FooRemoteInterface myFoo = new Foo();

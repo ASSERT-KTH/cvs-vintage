@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+ - The contents of this file are subject to the LGPL Licence 
+ - 
+ - Autor:               <a href="sebastien.chassande@inriaples.fr">Sebastien Chassande</a>
+ - Carol Modifications :<a href="Guillaume.Riviere@inrialpes.fr">Guillaume RIVIERE</a>
+ -
+ - Compilation directive for testing a basic server with carol over sun jrmp
+ - this test create 3 jvm (registry, server, junit-client) for carol jrmp unit testing 
+ -
+ - to call this projecrt set the properties : 
+ -                      stub.jar.name, 
+ -                      client.properties.file.name, server.properties.file.name,
+ -                      name.server.class.name, name.server.option 
+ - 
+ -->
+<project name="carol.test.local.server" default="all" >
+
+  <!-- test result location -->
+  <property name="report.dir"  value="${test.dist.results}/${test.name}"/>
+
+  <!-- test tmp location -->
+  <property name="test.tmp.local"         value="${test.tmp}/local"/>
+  <property name="test.single.jvmargs"     value="-Djava.security.policy=${test.ext}/java.policy"/>
+
+  <property name="trace.properties.file.name"     value="trace.properties"/>
+
+  <!-- Building of a path which contains carol jars for tests compilation-->
+  <path id="test.local.classpath">
+    <fileset dir="${carol.dist}/lib">
+      <include name="**/*.jar"/>
+    </fileset> 
+    <fileset dir="${test.dist.lib}">
+      <include name="**/carol_test.jar"/>  
+    </fileset> 
+    <fileset dir="${test.externals}">
+      <include name="**/*.jar"/>
+    </fileset>
+    <pathelement location="${test.tmp.local}"/>
+  </path>
+  
+  <target name="all">
+    <antcall  target="purge.tmp.dir"/>
+    <antcall  target="build.tmp.dir"/>
+    <antcall  target="launch.test.local"/>
+  </target>
+
+  <!-- lauching directories purge and creation -->
+   <target name="purge.tmp.dir">
+    <delete dir="${test.tmp.local}"/>
+  </target>
+
+  <target name="build.tmp.dir">
+    <mkdir dir="${test.tmp.local}"/>
+    <copy file="${test.ext}/${local.properties.file.name}" tofile="${test.tmp.local}/carol.properties" />  
+    <copy file="${test.ext}/${trace.properties.file.name}" tofile="${test.tmp.local}/trace.properties" />  
+  </target>
+
+  <!-- test launching --> 
+  <!-- those tests are launch with a parallele task -->
+  <target name="launch.test.local">
+    <mkdir dir="${report.dir}" />
+    <mkdir dir="${report.dir}/html" />
+    <junit printsummary="yes" 
+           haltonfailure="no"
+	   haltonerror="no"
+	   fork="yes" >
+	   <classpath refid="test.local.classpath" />
+	   <formatter type="xml" />
+	   <batchtest fork="yes" todir="${report.dir}">
+	    <fileset dir="${test.src}">
+	      <include name="${test.local.pkg}/*Test.java" />
+	    </fileset>
+	   </batchtest>
+    </junit>
+    <antcall  target="report"/>
+  </target> 
+  
+  <target name="report" if="is.jvm.1.4">
+    <junitreport todir="${report.dir}" >
+      <fileset dir="${report.dir}">
+	<include name="TEST-*.xml"/>
+      </fileset>
+      <report format="frames" todir="${report.dir}/html"/>
+    </junitreport>
+  </target>
+</project>
