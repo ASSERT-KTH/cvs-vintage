@@ -82,7 +82,7 @@ import org.tigris.scarab.util.ScarabConstants;
  * inValidationMode set to false will do actual insert of the xml issues.
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: ScarabIssues.java,v 1.34 2003/04/28 19:11:25 dlr Exp $
+ * @version $Id: ScarabIssues.java,v 1.35 2003/05/08 22:08:01 jmcnally Exp $
  */
 public class ScarabIssues implements java.io.Serializable
 {
@@ -123,8 +123,21 @@ public class ScarabIssues implements java.io.Serializable
     private List importErrors = null;
     private List importUsers = null;
 
-    public ScarabIssues() 
+    // current file attachment handling code has a security bug that can allow a user
+    // to see any file on the host that is readable by scarab.  It is not easy to exploit
+    // this hole, and there are cases where we want to use the functionality and can be
+    // sure the hole is not being exploited.  So adding a flag to disallow file attachments
+    // when importing through the UI.
+    // This class is instantiated as a bean while parsing the xml file and the addIssue method
+    // will be called before we have an opportunity to enable file attachments.  We do not
+    // want to enable file attachments via the xml file as that defeats the lockdown.
+    // ThreadLocal variable fits the bill, so until a better solution is found...
+    private static final ThreadLocal allowFileAttachmentsTL = new ThreadLocal();
+    private boolean allowFileAttachments;
+    
+    public ScarabIssues()
     {
+        this.allowFileAttachments = Boolean.TRUE.equals(allowFileAttachmentsTL.get());
         issues = new ArrayList();
         if (nullAttribute == null)
         {
@@ -137,6 +150,20 @@ public class ScarabIssues implements java.io.Serializable
                 LOG.debug("Could not assign nullAttribute");
             }
         }
+    }
+
+    /**
+     * Instances of this class will have the allowFileAttachments flag set to this value
+     * upon instantiation.
+     * Current file attachment handling code has a security bug that can allow a user
+     * to see any file on the host that is readable by scarab.  It is not easy to exploit
+     * this hole, and there are cases where we want to use the functionality and can be
+     * sure the hole is not being exploited.  So adding a flag to allow file attachments
+     * under certain circumstances.
+     */
+    public static void allowFileAttachments(boolean b)
+    {
+        allowFileAttachmentsTL.set( b ? Boolean.TRUE : Boolean.FALSE );
     }
 
     public static void setInValidationMode(boolean value)
@@ -502,7 +529,7 @@ public class ScarabIssues implements java.io.Serializable
                 Attachment activityAttachment = activity.getAttachment();
                 if (activityAttachment != null)
                 {
-                    if (activityAttachment.getReconcilePath() &&
+                    if (allowFileAttachments && activityAttachment.getReconcilePath() &&
                        ! new File(activityAttachment.getFilename()).exists())
                     {
                         String error = Localization.format(
@@ -887,7 +914,7 @@ public class ScarabIssues implements java.io.Serializable
                         // that the fileName is an absolute path to a file and
                         // copy it to the right directory
                         // structure under Scarab's path.
-                        if (activityAttachment.getReconcilePath())
+                        if (allowFileAttachments && activityAttachment.getReconcilePath())
                         {
                             activityAttachmentOM
                                 .copyFileFromTo(activityAttachment.getFilename(), 
@@ -1126,11 +1153,33 @@ public class ScarabIssues implements java.io.Serializable
     {
         @OM@.Attachment attachmentOM = @OM@.AttachmentManager.getInstance();
         attachmentOM.setIssue(issueOM);
-        attachmentOM.setName(attachment.getName());
-        attachmentOM.setAttachmentType(@OM@.AttachmentType.getInstance(attachment.getType()));
-        attachmentOM.setMimeType(attachment.getMimetype());
-        attachmentOM.setFileName(attachment.getFilename());
-        attachmentOM.setData(attachment.getData());
+        @OM@.AttachmentType type = @OM@.AttachmentType.getInstance(attachment.getType());
+        if (allowFileAttachments || !@OM@.Attachment.FILE__PK.equals(type.getAttachmentTypeId())) 
+        {
+            attachmentOM.setName(attachment.getName());
+            attachmentOM.setAttachmentType(type);
+            attachmentOM.setMimeType(attachment.getMimetype());
+            attachmentOM.setFileName(attachment.getFilename());        
+            attachmentOM.setData(attachment.getData());
+        }
+        else 
+        {
+            // add a comment that the file will not be imported.  An alternative would be
+            // to skip the activity altogether, but we will then need to check that there 
+            // are other activities or we need to completely ignore the ActivitySet
+            attachmentOM.setName("comment");
+            attachmentOM.setTypeId(@OM@.Attachment.COMMENT__PK);
+            attachmentOM.setMimeType("text/plain");
+            String text = "File, " + attachment.getFilename() + 
+                ", was not imported. The old description follows:\n\n" + attachment.getName();
+            String data = attachment.getData();  // this should be null, but just in case
+            if (data != null) 
+            {
+                text += "\n\n" + data;
+            }
+            attachmentOM.setData(text);
+        }
+        
         attachmentOM.setCreatedDate(attachment.getCreatedDate().getDate());
         ModifiedDate modifiedDate = attachment.getModifiedDate();
         if (modifiedDate != null)
