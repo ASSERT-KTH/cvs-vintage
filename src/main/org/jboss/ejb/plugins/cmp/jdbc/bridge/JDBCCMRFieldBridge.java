@@ -66,7 +66,7 @@ import org.jboss.security.SecurityAssociation;
  *      One for each role that entity has.       
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
- * @version $Revision: 1.46 $
+ * @version $Revision: 1.47 $
  */                            
 public class JDBCCMRFieldBridge implements JDBCFieldBridge, CMRFieldBridge {
    /**
@@ -499,8 +499,9 @@ public class JDBCCMRFieldBridge implements JDBCFieldBridge, CMRFieldBridge {
       
       // only return one      
       try {
-         if(fieldState.getValue().size() > 0) {
-            Object fk = fieldState.getValue().iterator().next();
+         Collection c = fieldState.getValue();
+         if(!c.isEmpty()) {
+            Object fk = c.iterator().next();
             return getRelatedInvoker().getEntityEJBLocalObject(
                   getRelatedCache().createCacheKey(fk));
          }
@@ -724,9 +725,9 @@ public class JDBCCMRFieldBridge implements JDBCFieldBridge, CMRFieldBridge {
       
       load(myCtx);
 
-      FieldState fieldState = getFieldState(myCtx);
-      if(fieldState.getValue().size() > 0) {
-         return fieldState.getValue().iterator().next();
+      Collection c = getFieldState(myCtx).getValue();
+      if(!c.isEmpty()) {
+         return c.iterator().next();
       }
       return null;
    }
@@ -746,24 +747,8 @@ public class JDBCCMRFieldBridge implements JDBCFieldBridge, CMRFieldBridge {
                "ejbPostCreate method instead [EJB 2.0 Spec. 10.5.2].");
       }
 
-      load(myCtx);
-      
-      FieldState fieldState = getFieldState(myCtx);
-      
-      // Check that single value relations are current not related to anything.
-      if(isSingleValued() && fieldState.getValue().size() > 0) {
-         throw new IllegalStateException("This bean may only be related to " +
-               "one other bean at a time");
-      }
-
-      // must check to avoid dupes in the list
-      if(fieldState.getValue().contains(fk)) {
-         // we are already related to this entity
-         return;
-      }
-      
       // add to current related set
-      fieldState.getValue().add(fk);
+      getFieldState(myCtx).addRelation(fk);
       
       // set the foreign key, if we have one.
       if(hasForeignKey()) {
@@ -795,11 +780,9 @@ public class JDBCCMRFieldBridge implements JDBCFieldBridge, CMRFieldBridge {
          throw new EJBException("Field is read-only: " + getFieldName());
       }
 
-      load(myCtx);
-      
       // remove from current related set
       if(updateValueCollection) {
-         getFieldState(myCtx).getValue().remove(fk);
+         getFieldState(myCtx).removeRelation(fk);
       }
       
       // set the foreign key to null, if we have one.
@@ -812,6 +795,7 @@ public class JDBCCMRFieldBridge implements JDBCFieldBridge, CMRFieldBridge {
     * loads the collection of related ids
     */
    private void load(EntityEnterpriseContext myCtx) {
+      // if we are already loaded we're done
       FieldState fieldState = getFieldState(myCtx);
       if(fieldState.isLoaded()) {
          return;
@@ -829,67 +813,32 @@ public class JDBCCMRFieldBridge implements JDBCFieldBridge, CMRFieldBridge {
       }
       
       // load the value from the database
-      Collection values = manager.loadRelation(this, myCtx.getId());
+      load(myCtx, manager.loadRelation(this, myCtx.getId()));
 
-      // did we get more then one value for a single valued field
-      if(isSingleValued() && values.size() > 1) {
-         throw new EJBException("Preload data contains multiple values, but " +
-               "this cmr field is single valued");
-      }
-
-      // just in the case where there are lingering values
-      fieldState.getValue().clear();
-      
-      // add the new values
-      fieldState.getValue().addAll(values);
-      
-      // set the foreign key, if we have one.
-      if(hasForeignKey() && values.size()==1) {
-         setForeignKey(myCtx, values.iterator().next());
-      }
-
-      // mark the field loaded
-      fieldState.setLoaded(true);
-
-      // we just loaded the results we are clean
+      // we just loaded the results so we are clean
       setClean(myCtx);
    }
 
-   public void loadPreloadedValue(
+   public void load(
          EntityEnterpriseContext myCtx,
          Collection values) {
 
+      // did we get more then one value for a single valued field
       if(isSingleValued() && values.size() > 1) {
-         throw new EJBException("Preload data contains multiple values, but " +
+         throw new EJBException("Data contains multiple values, but " +
                "this cmr field is single valued");
       }
 
-      FieldState fieldState = getFieldState(myCtx);
-
-      // check if we are aleready loaded
-      if(fieldState.isLoaded()) {
-         throw new EJBException("CMR field value is already loaded");
-      }
-
-      // just in the case where there are lingering values
-      fieldState.getValue().clear();
-      
       // add the new values
-      fieldState.getValue().addAll(values);
+      getFieldState(myCtx).loadRelations(values);
       
       // set the foreign key, if we have one.
-      if(hasForeignKey() && values.size()==1) {
-         setForeignKey(myCtx, values.iterator().next());
-      }
-
-      // mark the field loaded
-      fieldState.setLoaded(true);
-      
-      if(log.isTraceEnabled()) {
-         log.trace("Preloaded value: "+
-               " cmrField="+getFieldName()+
-               " pk="+myCtx.getId()+
-               " values="+values);
+      if(hasForeignKey()) {
+         if(values.isEmpty()) {
+            setForeignKey(myCtx, null);
+         } else {
+            setForeignKey(myCtx, values.iterator().next());
+         }
       }
    }
    
@@ -916,7 +865,7 @@ public class JDBCCMRFieldBridge implements JDBCFieldBridge, CMRFieldBridge {
     */
    public void initInstance(EntityEnterpriseContext ctx) {
       // mark this field as loaded
-      getFieldState(ctx).setLoaded(true);
+      getFieldState(ctx).loadRelations(Collections.EMPTY_SET);
 
       if(!hasForeignKey()) {
          return;
@@ -961,7 +910,7 @@ public class JDBCCMRFieldBridge implements JDBCFieldBridge, CMRFieldBridge {
 
       Object fk = null;
       Collection c = getFieldState(ctx).getValue();
-      if(c.size() > 0) {
+      if(!c.isEmpty()) {
          fk = c.iterator().next();
       }
       for(Iterator fields = foreignKeyFields.iterator(); fields.hasNext();) {
@@ -980,26 +929,19 @@ public class JDBCCMRFieldBridge implements JDBCFieldBridge, CMRFieldBridge {
          return parameterIndex;
       }
 
-      FieldState fieldState = getFieldState(ctx);
-
       // load the value from the database
       Object[] ref = new Object[1];
       parameterIndex = loadArgumentResults(rs, parameterIndex, ref);
 
-      // just in the case where there are lingering values
-      fieldState.getValue().clear();
-      
-      // add the new values
-      if(ref[0] != null) {
-         fieldState.getValue().add(ref[0]);
+      // only actually set the value if the state is not already loaded
+      FieldState fieldState = getFieldState(ctx);
+      if(!fieldState.isLoaded()) {
+         if(ref[0] != null) {
+            load(ctx, Collections.singleton(ref[0]));
+         } else {
+            load(ctx, Collections.EMPTY_SET);
+         }
       }
-      
-      // set the foreign key, if we have one.
-      setForeignKey(ctx, ref[0]);
-
-      // mark the field loaded
-      fieldState.setLoaded(true);
-
       return parameterIndex;
    }
 
@@ -1112,6 +1054,8 @@ public class JDBCCMRFieldBridge implements JDBCFieldBridge, CMRFieldBridge {
    private final class FieldState {
       private EntityEnterpriseContext ctx;
       private List[] setHandle = new List[1];
+      private Set addedRelations = new HashSet();
+      private Set removedRelations = new HashSet();
       private Set relationSet;
       private boolean isLoaded = false;
       private long lastRead = -1;
@@ -1120,10 +1064,88 @@ public class JDBCCMRFieldBridge implements JDBCFieldBridge, CMRFieldBridge {
          this.ctx = ctx;
          setHandle[0] = new ArrayList();
       }
+
+      /**
+       * Get the current value (list of primary keys).
+       */
       public List getValue() {
-         return setHandle[0];
+         if(!isLoaded) {
+            throw new EJBException("CMR field value not loaded yet");
+         }
+         return Collections.unmodifiableList(setHandle[0]);
       }
+
+      /**
+       * Has this relation been loaded.
+       */
+      public boolean isLoaded() {
+         return isLoaded;
+      }
+
+      /**
+       * When was this value last read from the datastore.
+       */
+      public long getLastRead() {
+         return lastRead;
+      }
+
+      /**
+       * Add this foreign to the relationship.
+       */
+      public void addRelation(Object fk) {
+         if(isLoaded) {
+            setHandle[0].add(fk);
+         } else {
+            removedRelations.remove(fk);
+            addedRelations.add(fk);
+         }
+      }
+
+      /**
+       * Remove this foreign to the relationship.
+       */
+      public void removeRelation(Object fk) {
+         if(isLoaded) {
+            setHandle[0].remove(fk);
+         } else {
+            addedRelations.remove(fk);
+            removedRelations.add(fk);
+         }
+      }
+
+      /**
+       * loads the collection of related ids
+       */
+      public void loadRelations(Collection values) {
+         // check if we are aleready loaded
+         if(isLoaded) {
+            throw new EJBException("CMR field value is already loaded");
+         }
+
+         // just in the case where there are lingering values
+         setHandle[0].clear();
+
+         // add the new values
+         setHandle[0].addAll(values);
+
+         // remove the already removed values
+         setHandle[0].removeAll(removedRelations);
+
+         // add the already added values
+         setHandle[0].addAll(addedRelations);
+
+         // mark the field loaded
+         isLoaded = true;
+      }
+
+      /**
+       * Get the current relation set or create a new one.
+       */
       public Set getRelationSet() {
+         if(!isLoaded) {
+            throw new EJBException("CMR field value not loaded yet");
+         }
+
          if(relationSet == null) {
             try {
                // get the curent transaction
@@ -1157,15 +1179,10 @@ public class JDBCCMRFieldBridge implements JDBCFieldBridge, CMRFieldBridge {
          }
          return relationSet;
       }
-      public boolean isLoaded() {
-         return isLoaded;
-      }
-      public void setLoaded(boolean isLoaded) {
-         this.isLoaded = isLoaded;
-      }
-      public long getLastRead() {
-         return lastRead;
-      }
+
+      /**
+       * Invalidate the current relationship set.
+       */
       public void invalidate() {
          // make a new set handle and copy the currentList to the new handle
          // this will cause old references to the relationSet to throw an
@@ -1277,5 +1294,4 @@ public class JDBCCMRFieldBridge implements JDBCFieldBridge, CMRFieldBridge {
          }
       }
    }
-
 }
