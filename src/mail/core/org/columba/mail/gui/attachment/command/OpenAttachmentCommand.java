@@ -30,6 +30,8 @@ import org.columba.mail.command.FolderCommand;
 import org.columba.mail.command.FolderCommandReference;
 import org.columba.mail.folder.Folder;
 import org.columba.mail.folder.temp.TempFolder;
+import org.columba.mail.gui.message.command.ViewMessageCommand;
+import org.columba.mail.gui.messageframe.MessageFrameController;
 import org.columba.mail.gui.mimetype.MimeTypeViewer;
 import org.columba.mail.message.AbstractMessage;
 import org.columba.mail.message.MimeHeader;
@@ -71,25 +73,20 @@ public class OpenAttachmentCommand extends FolderCommand {
 		MimeHeader header = part.getHeader();
 
 		if (header.getContentType().toLowerCase().indexOf("message") != -1) {
-			
-			// TODO: fix openAttachmentCommand (message)
-			/*
-			MailFrameInterface c = (MailFrameInterface) FrameModel.openView("MessageFrame");
-			
+
+			MessageFrameController c = new MessageFrameController();
+
 			FolderCommandReference[] r = new FolderCommandReference[1];
 			Object[] uidList = new Object[1];
 			uidList[0] = tempMessageUid;
-			
-			c.setTableSelection(r);
-			
+
 			r[0] = new FolderCommandReference(tempFolder, uidList);
-			MainInterface.processor.addOp(
-						new ViewMessageCommand(c,
-						r));
-			*/			
-			
-			
-			
+
+			c.setTreeSelection(r);
+			c.setTableSelection(r);
+
+			MainInterface.processor.addOp(new ViewMessageCommand(c, r));
+
 			//inline = true;
 			//openInlineMessage(part, tempFile);
 		} else {
@@ -122,13 +119,13 @@ public class OpenAttachmentCommand extends FolderCommand {
 
 		if (part.getHeader().getContentType().equals("message")) {
 			tempFolder = MainInterface.treeModel.getTempFolder();
-			tempMessageUid = tempFolder.addMessage( (AbstractMessage) part.getContent(), worker );
-			
+			tempMessageUid =
+				tempFolder.addMessage(//(AbstractMessage) part.getContent(),
+				(String) part.getContent(),
+	worker);
+
 			inline = true;
-		}
-		else
-		{
-		
+		} else {
 
 			try {
 				String filename = part.getHeader().getFileName();

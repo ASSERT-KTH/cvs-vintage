@@ -139,11 +139,16 @@ public class TempFolder extends Folder {
 
 		Rfc822Parser parser = new Rfc822Parser();
 
+		/*
 		ColumbaHeader header = parser.parseHeader(source);
 
 		AbstractMessage m = new Message(header);
 		ColumbaHeader h = (ColumbaHeader) m.getHeader();
-
+		*/
+		
+		
+		AbstractMessage m = parser.parse(source, null);
+		ColumbaHeader h = (ColumbaHeader) m.getHeader();
 		parser.addColumbaHeaderFields(h);
 
 		Integer sizeInt = new Integer(source.length());

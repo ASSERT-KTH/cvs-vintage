@@ -19,14 +19,12 @@ package org.columba.mail.gui.attachment;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
-import java.io.File;
 
 import javax.swing.JPopupMenu;
 import javax.swing.JScrollPane;
 
 import org.columba.core.gui.frame.AbstractFrameController;
-import org.columba.mail.gui.attachment.util.IconPanel;
-import org.columba.mail.message.MimePart;
+import org.columba.mail.gui.attachment.action.OpenAction;
 import org.columba.mail.message.MimePartTree;
 
 /**
@@ -41,7 +39,7 @@ public class AttachmentController {
 
 	public JScrollPane scrollPane;
 
-	private IconPanel attachmentPanel;
+	//private IconPanel attachmentPanel;
 
 	//private int actIndex;
 	//private Object actUid;
@@ -67,35 +65,14 @@ public class AttachmentController {
 
 		view = new AttachmentView(model);
 
-		//attachmentSelectionManager = new AttachmentSelectionManager();
-		// FIXME
-		/*
-			abstractFrameController.getSelectionManager().addSelectionHandler(
-				new AttachmentSelectionHandler(view));
-		*/
-		//actionListener = new AttachmentActionListener(this);
+		abstractFrameController.getSelectionManager().addSelectionHandler(
+			new AttachmentSelectionHandler(view));
 
-		
-		// TODO: re-enable double-click open-action
-		/*
 		getView().setDoubleClickAction(new OpenAction(superController));
-		*/
-		
+
 		MouseListener popupListener = new PopupListener();
 		getView().addMouseListener(popupListener);
 
-		/*
-		attachmentPanel = new IconPanel();
-		attachmentPanel.setDoubleClickActionCommand("OPEN");
-		attachmentPanel.addActionListener(getActionListener());
-		attachmentPanel.addMouseListener(popupListener);
-		*/
-
-		/*
-			scrollPane = new JScrollPane(attachmentPanel);
-			scrollPane.getViewport().setBackground(Color.white);
-			//attachmentPanel.setPreferredSize(new Dimension(600, 50));
-			 */
 	}
 
 	public AbstractFrameController getFrameController() {
@@ -114,66 +91,12 @@ public class AttachmentController {
 		return getView().setMimePartTree(collection);
 	}
 
-	/*
-	public void openWith(MimePart part, File tempFile) {
-		MimeHeader header = part.getHeader();
-	
-		MimeTypeViewer viewer = new MimeTypeViewer();
-		viewer.openWith(header, tempFile);
-	
-	}
-	*/
-
-	/*
-	public void open(MimePart part, File tempFile) {
-		MimeHeader header = part.getHeader();
-	
-		if (header.getContentType().toLowerCase().indexOf("message") != -1) {
-			inline = true;
-			openInlineMessage(part, tempFile);
-		} else {
-			inline = false;
-			MimeTypeViewer viewer = new MimeTypeViewer();
-			viewer.open(header, tempFile);
-		}
-	
-	}
-	*/
-
-	protected void openInlineMessage(MimePart part, File tempFile) {
-
-		/*
-		subMessageFolder = new TempFolder();
-		uid = null;
-		
-		Message subMessage = (Message) part.getContent();
-		try {
-			uid = subMessageFolder.add(subMessage, null);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		
-		
-		MainInterface.crossbar.operate(
-			new GuiOperation(Operation.MESSAGEBODY, 4, subMessageFolder, uid));
-		*/
-	}
-
-	private int countSelected() {
-		return attachmentPanel.countSelected();
-	}
-
-	public int[] getSelection() {
-		return attachmentPanel.getSelection();
-	}
-
-	public void createPopupMenu()
-	{
+	public void createPopupMenu() {
 		menu = new AttachmentMenu(getFrameController());
 	}
-	
+
 	private JPopupMenu getPopupMenu() {
-		
+
 		return menu;
 	}
 
