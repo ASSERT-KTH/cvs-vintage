@@ -464,6 +464,8 @@ final class JasperLiaison {
         if (compilerPath != null)
             javac.setCompilerPath(compilerPath);
 
+	javac.setClassDebugInfo(options.getClassDebugInfo());
+
 	return javac;
     }
 
@@ -502,6 +504,7 @@ class TomcatOptions implements Options {
     public boolean largeFile = false;
     public boolean mappedFile = false;
     public boolean sendErrorToClient = false;
+    public boolean classDebugInfo = false;
     public String ieClassId = "clsid:8AD9C840-044E-11D1-B3E9-00805F499D93";
     public Class jspCompilerPlugin = null;
     public String jspCompilerPath = null;
@@ -531,6 +534,10 @@ class TomcatOptions implements Options {
         return sendErrorToClient;
     }
  
+    public boolean getClassDebugInfo() {
+        return classDebugInfo;
+    }
+
     public String getIeClassId() {
         return ieClassId;
     }
