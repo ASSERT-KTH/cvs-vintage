@@ -118,7 +118,7 @@ import java.security.*;
  * @author Martin Pool
  * @author Jim Heintz
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version $Revision: 1.9 $ $Date: 2000/06/19 21:53:14 $
+ * @version $Revision: 1.10 $ $Date: 2000/07/14 19:34:24 $
  * @see java.lang.ClassLoader
  */
 public class AdaptiveClassLoader extends ClassLoader {
@@ -164,6 +164,15 @@ public class AdaptiveClassLoader extends ClassLoader {
      */
     protected ClassLoader parent;
     
+    /**
+     * Is the application running under this class loader trusted?  If so,
+     * we will look at the defined repositories <strong>before</strong> we
+     * look to the system class loader.  For untrusted applications, we
+     * always check the system class loader first.
+     */
+    protected boolean trusted = false;
+
+
     /**
      * Private class used to maintain information about the classes that
      * we loaded.
@@ -270,6 +279,14 @@ public class AdaptiveClassLoader extends ClassLoader {
 
     public void setParent( ClassLoader p ) {
 	parent=p;
+    }
+
+    public boolean isTrusted() {
+	return this.trusted;
+    }
+
+    public void setTrusted(boolean trusted) {
+	this.trusted = trusted;
     }
 
     void log( String s ) {
@@ -439,7 +456,8 @@ public class AdaptiveClassLoader extends ClassLoader {
 	    }
 	}
 
-	if (parent != null) {
+	// Attempt to load the class from the parent class loader (untrusted case)
+	if (!trusted && (parent != null)) {
 	    try {
 		if( debug>0) log( "loadClass() from parent " + name);
 		c = parent.loadClass(name);
@@ -454,16 +472,18 @@ public class AdaptiveClassLoader extends ClassLoader {
 	    }
 	}
 
-        // Attempt to load the class from the system
-	if( debug>0) log( "loadClass() from system " + name);
-        try {
-            c = loadSystemClass(name, resolve);
-            if (c != null) {
-                return c;
-            }
-        } catch (Exception e) {
-            c = null;
-        }
+        // Attempt to load the class from the system class loader (untrusted case)
+	if (!trusted) {
+	    if( debug>0) log( "loadClass() from system " + name);
+	    try {
+		c = loadSystemClass(name, resolve);
+		if (c != null) {
+		    return c;
+		}
+	    } catch (Exception e) {
+		c = null;
+	    }
+	}
 
 	if( debug>0) log( "loadClass() from local repository " + name);
         // Try to load it from each repository
@@ -518,6 +538,35 @@ public class AdaptiveClassLoader extends ClassLoader {
                 return classCache.loadedClass;
             }
         }
+
+	// Attempt to load the class from the parent class loader (trusted case)
+	if (trusted && (parent != null)) {
+	    try {
+		if( debug>0) log( "loadClass() from parent " + name);
+		c = parent.loadClass(name);
+		if (c != null) {
+		    if (resolve) resolveClass(c);
+		    return c;
+		}
+	    } catch (ClassNotFoundException e) {
+		c = null;
+	    } catch (Exception e) {
+		c = null;
+	    }
+	}
+
+        // Attempt to load the class from the system (trusted case)
+	if (trusted) {
+	    if( debug>0) log( "loadClass() from system " + name);
+	    try {
+		c = loadSystemClass(name, resolve);
+		if (c != null) {
+		    return c;
+		}
+	    } catch (Exception e) {
+		c = null;
+	    }
+	}
 
         // If not found in any repository
         throw new ClassNotFoundException(name);
@@ -660,7 +709,12 @@ public class AdaptiveClassLoader extends ClassLoader {
     public InputStream getResourceAsStream(String name) {
         // Try to load it from the system class
         if( debug > 0 ) log( "getResourceAsStream() " + name );
-	InputStream s = getSystemResourceAsStream(name);
+	//	InputStream s = getSystemResourceAsStream(name);
+	InputStream s = null;
+
+	// Get this resource from system class loader (untrusted case)
+	if (!trusted && (s == null))
+	    s = getSystemResourceAsStream(name);
 
         if (s == null) {
             // Try to find it from every repository
@@ -684,6 +738,10 @@ public class AdaptiveClassLoader extends ClassLoader {
                 }
             }
         }
+
+	// Get this resource from system class loader (trusted case)
+	if (trusted && (s == null))
+	    s= getSystemResourceAsStream(name);
 
         return s;
     }
@@ -755,14 +813,22 @@ public class AdaptiveClassLoader extends ClassLoader {
     public URL getResource(String name) {
         if( debug > 0 ) log( "getResource() " + name );
         // First ask the primordial class loader to fetch it from the classpath
-        URL u = getSystemResource(name);
-        if (u != null) {
-            return u;
-        }
+	//        URL u = getSystemResource(name);
+	//        if (u != null) {
+	//            return u;
+	//        }
 
         if (name == null) {
             return null;
         }
+	URL u = null;
+
+	// Get this resource from the system class path (untrusted case)
+	if (!trusted && (u == null)) {
+	    u = getSystemResource(name);
+	    if (u != null)
+		return u;
+	}
 
         // We got here so we have to look for the resource in our list of repository elements
         Enumeration repEnum = repository.elements();
@@ -806,8 +872,16 @@ public class AdaptiveClassLoader extends ClassLoader {
             }   
         }
 
+	// Get this resource from the system class path (trusted case)
+	if (trusted && (u == null)) {
+	    u = getSystemResource(name);
+	    if (u != null)
+		return u;
+	}
+
         // Not found
         return null;
+
     }
 
     public String toString() {
