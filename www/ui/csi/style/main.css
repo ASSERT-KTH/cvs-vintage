@@ -10,16 +10,14 @@ body {
 	padding: 0;
 	line-height: 140%; 
 	}
-	
-a:link, a:visted {
-	color: blue;
+a:link, a:visited {
+	color: blue; 
 	text-decoration: underline;
 	}
 a:active, a:hover {
 	color: red;
 	text-decoration: underline;
 	}
-	
 body, div, p, th, td, li, dl, dd {
 	font-family: Lucida, Arial, Helvetica, sans-serif;
 	}
