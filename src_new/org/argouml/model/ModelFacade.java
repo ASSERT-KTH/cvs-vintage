@@ -1,4 +1,4 @@
-// $Id: ModelFacade.java,v 1.116 2003/09/07 07:34:58 linus Exp $
+// $Id: ModelFacade.java,v 1.117 2003/09/07 09:13:28 bobtarling Exp $
 // Copyright (c) 2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -117,6 +117,7 @@ import ru.novosoft.uml.foundation.core.MStructuralFeature;
 import ru.novosoft.uml.foundation.core.MUsage;
 import ru.novosoft.uml.foundation.data_types.MActionExpression;
 import ru.novosoft.uml.foundation.data_types.MAggregationKind;
+import ru.novosoft.uml.foundation.data_types.MBooleanExpression;
 import ru.novosoft.uml.foundation.data_types.MCallConcurrencyKind;
 import ru.novosoft.uml.foundation.data_types.MChangeableKind;
 import ru.novosoft.uml.foundation.data_types.MExpression;
@@ -3883,6 +3884,36 @@ public class ModelFacade {
                 oper.setConcurrency(MCallConcurrencyKind.SEQUENTIAL);
             }
         }
+    }
+
+    /**
+     * Set the concurrency of some operation.
+     * @param operation
+     * @param concurrency
+     */
+    public static void setConcurrency(Object operation, Object concurrencyKind) {
+        if (operation instanceof MOperation && 
+                concurrencyKind instanceof MCallConcurrencyKind) {
+            ((MOperation)operation).setConcurrency((MCallConcurrencyKind)concurrencyKind);
+            return;
+        }
+        throw new IllegalArgumentException("Unrecognized object " + operation
+					   + " or " + concurrencyKind);
+    }
+
+    /**
+     * Set the concurrency of some operation.
+     * @param operation
+     * @param concurrency
+     */
+    public static void setCondition(Object extend, Object booleanExpression) {
+        if (extend instanceof MExtend && 
+                booleanExpression instanceof MBooleanExpression) {
+            ((MExtend)extend).setCondition((MBooleanExpression)booleanExpression);
+            return;
+        }
+        throw new IllegalArgumentException("Unrecognized object " + extend
+					   + " or " + booleanExpression);
     }
 
     /**
