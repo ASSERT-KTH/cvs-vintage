@@ -43,9 +43,9 @@
       <include name="**/carol_test.jar"/>
       <include name="**/${stub.jar.name1}"/>
     </fileset> 
-    <fileset dir="${test.externals}">
-      <include name="**/*.jar"/>
-    </fileset> 
+    <fileset dir="${test.ext}">
+      <include name="**/jonathan.xml"/>
+    </fileset>  
     <pathelement location="${test.tmp.client1}"/>
   </path>
 
@@ -59,18 +59,21 @@
     </fileset> 
     <fileset dir="${test.externals}">
       <include name="**/*.jar"/>
-    </fileset> 
+    </fileset>
     <pathelement location="${test.tmp.client2}"/>
   </path>
 
   <path id="test.name.server.classpath1">
     <fileset dir="${carol.dist}/lib">
       <include name="**/*.jar"/>
-    </fileset> 
+    </fileset>
+    <fileset dir="${test.externals}">
+      <include name="**/*.jar"/>
+    </fileset>  
     <fileset dir="${test.dist.lib}">
       <include name="**/carol_test.jar"/>
       <include name="**/${stub.jar.name1}"/>      
-    </fileset>  
+    </fileset> 
   </path>
 
   <path id="test.name.server.classpath2">
@@ -80,7 +83,7 @@
     <fileset dir="${test.dist.lib}">
       <include name="**/carol_test.jar"/>
       <include name="**/${stub.jar.name2}"/>      
-    </fileset>  
+    </fileset> 
   </path>
 
   <path id="test.server.classpath">
@@ -101,7 +104,7 @@
   <target name="all">
     <antcall  target="purge.tmp.dir"/>
     <antcall  target="build.tmp.dir"/>
-    <antcall  target="launch.test.single"/>
+    <antcall  target="launch.test.double"/>
   </target>
 
   <!-- lauching directories purge and creation -->
@@ -130,7 +133,7 @@
 
   <!-- test launching --> 
   <!-- those tests are launch with a parallele task -->
-  <target name="launch.test.single">
+  <target name="launch.test.double">
     <parallel>
       <java classname="${name.server.class.name1}" fork="true" timeout="10000">
 	<jvmarg value="-Djava.security.policy=${test.ext}/java.policy"/>
@@ -179,7 +182,6 @@
 
       <sequential>
 	<sleep seconds="5"/>
-	<delete dir="${report.dir}" />
 	<mkdir dir="${report.dir}" />
 	<mkdir dir="${report.dir}/html" />
 	<junit printsummary="yes" 

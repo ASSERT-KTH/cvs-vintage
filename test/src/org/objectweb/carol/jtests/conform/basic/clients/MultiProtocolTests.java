@@ -178,7 +178,7 @@ public class MultiProtocolTests extends TestCase {
     public void testReferenceString() {
 	try {
 	    String expected = bma.getBasicRefString();
-	    assertEquals(expected, "string");
+	    assertEquals(expected, "string2");
 	} catch (Exception e) {
 	    e.printStackTrace();
 	    fail("Can't get ref string" + e);  	    

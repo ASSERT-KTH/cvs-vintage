@@ -20,6 +20,7 @@
   <property name="config" 	  value="${basedir}/config"/>
   <property name="archive" 	  value="${basedir}/archive"/>
   <property name="test" 	  value="${basedir}/test"/>
+  <property name="externals" 	  value="${basedir}/externals"/>
 
   <!--======================================================
   load the following user properties from a file:
@@ -35,7 +36,17 @@
   <property name="dist.jdoc"  	   value="${dist}/jdoc"/>
   <property name="dist.config"     value="${dist}/config"/>
   <property name="dist.doc"  	   value="${dist}/doc"/> 
- 
+
+  <!-- joanthan jar properties -->
+  <property name="jonathan.jar"   value="${externals}/jonathan.jar"/> 
+
+  <!-- externals classpath -->
+  <path id="externals.classpath">
+    <fileset dir="${externals}">
+      <include name="**/*.jar"/>
+    </fileset>
+    <pathelement location="${build}/classes"/>   
+  </path>
 
   <!-- Building of carol compilation classpath (no externals needed) -->
   <path id="carol.classpath">
@@ -54,10 +65,22 @@
   <!-- *********    COMPILE    **********-->
   <!-- **********************************-->
   <!-- compile all -->
-  <target name="compile" depends="compile.base, compile.stub" description="Compiles carol" />
+  <target name="compile" description="Compiles carol">
+    <condition property="interceptor.classes.presents">
+      <available classname="org.omg.PortableInterceptor.ORBInitInfo">
+	<classpath refid="externals.classpath"/>
+      </available>
+    </condition>
+    <condition property="jonathan.jar.present">
+      <available file="${jonathan.jar}"/>
+    </condition>   
+    <antcall target="compile.base"/>
+    <antcall target="compile.iiop"/> 
+    <antcall target="compile.jonathan"/>
+  </target>
 
   <!-- Compile base file -->
-  <target name="compile.base" description="Compiles carol base classes">
+  <target name="compile.base" description="Compiles the CAROL base classes">
     <mkdir dir="${build}/classes"/>
     <javac 
       srcdir="${src}"
@@ -68,20 +91,49 @@
       optimize="${compile.optimize}">
       <classpath refid="carol.classpath"/>
       <include name="**/*.java"/>
-    </javac> 
+      <!-- exclude specific rmi iiop interception features -->
+      <exclude name="**/org/objectweb/carol/rmi/iiop/interceptor/*.java"/>
+      <!-- exclude specific jonathan interception features -->
+      <exclude name="**/org/objectweb/carol/rmi/jonathan/**/*.java"/>
+      <!-- we didn'nt exclude the jrmp features because existed in all java 2 jdk --> 
+    </javac>     
   </target>
 
-  <!-- Compile Specific Remote Interface Stub/Skek -->
-  <target name="compile.stub" depends="compile.stub.iiop, compile.base" description="Compiles specifics stub for carol"/> 
-
-  <!-- Compile Remote Interface Stub/Skel target for IIOP -->
-  <target name="compile.stub.iiop" description="Compiles specifics iiop stub for carol" >
+  <target name="compile.iiop" if="interceptor.classes.presents">
+    <javac 
+      srcdir="${src}"
+      destdir="${build}/classes"
+      deprecation="${deprecation}"
+      debug="${compile.debug}"
+      nowarn="${compile.nowarn}"
+      optimize="${compile.optimize}">
+      <classpath refid="externals.classpath"/>
+      <!-- include specific rmi iiop interception features -->
+      <include name="**/org/objectweb/carol/rmi/iiop/interceptor/*.java"/>
+    </javac>       
     <rmic base="${build}/classes" iiop="true" compiler="sun"
-          classname="org.objectweb.carol.jndi.iiop.IIOPResourceWrapper">
+      classname="org.objectweb.carol.jndi.iiop.IIOPResourceWrapper">
+    <classpath refid="carol.classpath"/>
+    </rmic> 
+   <rmic base="${build}/classes" iiop="true" compiler="sun"
+      classname="org.objectweb.carol.jndi.iiop.IIOPReferenceWrapper">
     <classpath refid="carol.classpath"/>
     </rmic>
-  </target> 
-  
+  </target>
+
+  <target name="compile.jonathan" if="jonathan.jar.present">
+    <javac 
+      srcdir="${src}"
+      destdir="${build}/classes"
+      deprecation="${deprecation}"
+      debug="${compile.debug}"
+      nowarn="${compile.nowarn}"
+      optimize="${compile.optimize}">
+      <classpath refid="externals.classpath"/>
+      <!-- include specific rmi iiop interception features -->
+      <include name="**/org/objectweb/carol/rmi/jonathan/**/*.java"/>
+    </javac> 
+  </target>
 
   <!-- **************************************-->
   <!-- *********        DIST       **********-->

@@ -1,9 +1,0 @@
-<?xml version="1.0"?>
-
-<!DOCTYPE Configuration SYSTEM "configuration.dtd">
-
-<CONFIGURATION>
-   <ELEM name="jeremie"><CONFIGURATION>
-      <ELEM name="extention"><ATOM string="OW"/></ELEM>
-   </CONFIGURATION></ELEM>
-</CONFIGURATION>

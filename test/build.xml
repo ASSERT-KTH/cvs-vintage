@@ -49,8 +49,7 @@
 
   <!-- tmp directories for tests lauhing -->
   <property name="test.tmp"                value="${test.dist}/tmp"/> 
- 
-   
+    
   <property name="test.build.stub"          value="${test.build}/test/stub"/>
 
   <!-- Building of a path which contains carol jars for tests compilation-->
@@ -60,6 +59,9 @@
     </fileset>  
     <fileset dir="${test.externals}">
       <include name="**/*.jar"/>
+    </fileset>
+    <fileset dir="${test.ext}">
+      <include name="**/jonathan.xml"/>
     </fileset>
     <pathelement location="${test.build}/classes"/>
   </path>
@@ -174,7 +176,7 @@
   <!-- ************************************-->
   <!-- *********     TEST ALL    **********-->
   <!-- ************************************-->
-  <target name="test.all">   
+  <target name="test.all" description="Lauch all the test">   
     <multipleAnt dir="${test.conform}" />
   </target> 
 

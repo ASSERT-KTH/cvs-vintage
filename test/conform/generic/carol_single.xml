@@ -51,7 +51,7 @@
     </fileset> 
     <fileset dir="${test.externals}">
       <include name="**/*.jar"/>
-    </fileset> 
+    </fileset>
     <pathelement location="${test.tmp.server}"/>
   </path>
 
@@ -63,6 +63,9 @@
       <include name="**/carol_test.jar"/>
       <include name="**/${stub.jar.name}"/>      
     </fileset>  
+    <fileset dir="${test.externals}">
+      <include name="**/*.jar"/>
+    </fileset>
   </path>
   
   <target name="all">
@@ -90,12 +93,14 @@
   <!-- those tests are launch with a parallele task -->
   <target name="launch.test.single">
     <parallel>
+      <!-- launch the name server -->
       <java classname="${name.server.class.name}" fork="true" timeout="10000">
 	<jvmarg value="-Djava.security.policy=${test.ext}/java.policy"/>
 	<arg line="${name.server.option}"/>	
 	<classpath refid="test.name.server.classpath"/>
       </java>
 
+      <!-- launch the server -->
       <sequential>
 	<sleep seconds="3"/>
 	<java classname="org.objectweb.carol.jtests.conform.basic.server.BasicServer" fork="true" timeout="10000">
@@ -104,9 +109,9 @@
 	</java>
       </sequential>
 
+      <!-- launch the client -->
       <sequential>
 	<sleep seconds="5"/>
-	<delete dir="${report.dir}" />
 	<mkdir dir="${report.dir}" />
 	<mkdir dir="${report.dir}/html" />
 	<junit printsummary="yes" 

@@ -38,24 +38,27 @@ import javax.naming.Name;
 import javax.naming.NameParser;
 import javax.naming.NamingEnumeration;
 import javax.naming.NamingException;
+import javax.naming.Referenceable;
+import javax.naming.Reference;
+import javax.naming.spi.ObjectFactory;
 
 // carol import 
 import  org.objectweb.carol.util.multi.ProtocolCurrent;
 
 /*
- * Class <code>IIOPRemoteResourceContextWrapper</code> is the CAROL JNDI Context. This context make the 
- * iiop serializable resource wrapping to/from a remote object. This context unexport the resource in the unbind method 
+ * Class <code>IIOPRemoteReferenceContextWrapper</code> is the CAROL JNDI Context. This context make the 
+ * iiop referenceable reference wrapping to/from a remote object. This context unexport the reference in the unbind method 
  * 
  * 
  * @author  Guillaume Riviere (Guillaume.Riviere@inrialpes.fr)
  * @see javax.naming.Context
  * @version 1.1, 15/07/2002
  */
-public class IIOPResourceContextWrapper implements Context {
+public class IIOPReferenceContextWrapper implements Context {
     
     /**
      * the IIOP JNDI context
-     * @see #IIOPResourceContextWrapper
+     * @see #IIOPReferenceContextWrapper
      */
      private static Context iiopContext = null;
 
@@ -72,7 +75,7 @@ public class IIOPResourceContextWrapper implements Context {
      *
      * @throws NamingException if a naming exception is encountered
      */
-    public IIOPResourceContextWrapper (Context iiopContext ) throws NamingException {
+    public IIOPReferenceContextWrapper (Context iiopContext ) throws NamingException {
 	this.iiopContext = iiopContext;
 	this.wrapperHash = new Hashtable();
     }
@@ -80,15 +83,20 @@ public class IIOPResourceContextWrapper implements Context {
 
     /**
      * Resolve a Remote Object: 
-     * If this object is a resource return the resource 
+     * If this object is a reference return the reference 
      *
      * @param o the object to resolve
-     * @return a <code>Serializable ((IIOPRemoteResource)o).getResource()</code> if o is a IIOPRemoteResource
+     * @return a <code>Referenceable ((IIOPRemoteReference)o).getReference()</code> if o is a IIOPRemoteReference
      *         and the inititial object o if else
      */
     private Object resolveObject(Object o) {
 	try {
-	    if (o instanceof IIOPRemoteResource) {
+	    if (o instanceof IIOPRemoteReference) {
+		// build of the Referenceable object with is Reference
+		Reference objRef = ((IIOPRemoteReference)o).getReference();
+		ObjectFactory objFact = (ObjectFactory)(Class.forName(objRef.getFactoryClassName())).newInstance(); 
+		return (Referenceable)objFact.getObjectInstance(objRef,null,null,null);
+	    } else if (o instanceof IIOPRemoteResource) {
 		return ((IIOPRemoteResource)o).getResource();
 	    } else {
 		return o;
@@ -101,17 +109,31 @@ public class IIOPResourceContextWrapper implements Context {
 
     /**
      * Encode an Object :
-     * If the object is a resource wrap it into a IIOPResourceWrapper Object
+     * If the object is a reference wrap it into a IIOPReferenceWrapper Object
      * here the good way is to contact the carol configuration to get the iiop
      * protable remote object
      *
      * @param o the object to encode
-     * @return  a <code>Remote IIOPRemoteResource Object</code> if o is a ressource
+     * @return  a <code>Remote IIOPRemoteReference Object</code> if o is a ressource
      *          o if else
      */
     private Object encodeObject(Object o, Object name, boolean replace) throws NamingException {
 	try {
-	    if ((!(o instanceof Remote)) && (o instanceof Serializable)) {
+	    if ((!(o instanceof Remote)) && (o instanceof Referenceable)) {
+		IIOPReferenceWrapper irw =  new IIOPReferenceWrapper(((Referenceable)o).getReference());
+		ProtocolCurrent.getCurrent().getCurrentPortableRemoteObject().exportObject(irw);
+		IIOPReferenceWrapper oldObj = (IIOPReferenceWrapper) wrapperHash.put(name, irw);
+		if (oldObj != null) {
+		    if (replace) {
+			ProtocolCurrent.getCurrent().getCurrentPortableRemoteObject().unexportObject(oldObj);
+		    } else {
+			ProtocolCurrent.getCurrent().getCurrentPortableRemoteObject().unexportObject(irw);
+			wrapperHash.put(name, oldObj);
+			throw new NamingException("Object already bind");
+		    }
+		} 
+		return irw;
+	    } else if ((!(o instanceof Remote)) && (o instanceof Serializable)) {
 		IIOPResourceWrapper irw =  new IIOPResourceWrapper((Serializable) o);
 		ProtocolCurrent.getCurrent().getCurrentPortableRemoteObject().exportObject(irw);
 		IIOPResourceWrapper oldObj = (IIOPResourceWrapper) wrapperHash.put(name, irw);
@@ -166,7 +188,7 @@ public class IIOPResourceContextWrapper implements Context {
 	try {
 	    iiopContext.unbind(name);
 	    if(wrapperHash.containsKey(name)){
-		ProtocolCurrent.getCurrent().getCurrentPortableRemoteObject().unexportObject((IIOPResourceWrapper)wrapperHash.remove(name));
+		ProtocolCurrent.getCurrent().getCurrentPortableRemoteObject().unexportObject((Remote)wrapperHash.remove(name));
 	    }
 	} catch (Exception e) {
 	    throw new NamingException("" +e);  
@@ -177,7 +199,7 @@ public class IIOPResourceContextWrapper implements Context {
 	try {
 	    iiopContext.unbind(name);
 	    if(wrapperHash.containsKey(name)){
-		ProtocolCurrent.getCurrent().getCurrentPortableRemoteObject().unexportObject((IIOPResourceWrapper)wrapperHash.remove(name));
+		ProtocolCurrent.getCurrent().getCurrentPortableRemoteObject().unexportObject((Remote)wrapperHash.remove(name));
 	    }
 	} catch (Exception e) {
 	    throw new NamingException("" +e);  

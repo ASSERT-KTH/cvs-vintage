@@ -1,5 +1,5 @@
 /*
- * @(#) BasicObjectRef.java	1.0 02/07/15
+ * @(#)IIOPRessourceWrapper.java	1.0 02/07/15
  *
  * Copyright (C) 2002 - INRIA (www.inria.fr)
  *
@@ -22,60 +22,47 @@
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  * USA
- * 
  *
  */
-package org.objectweb.carol.jtests.conform.basic.server;
-
+package org.objectweb.carol.jndi.iiop;
 
 // java import
-import java.io.Serializable;
+import java.rmi.RemoteException;
 
-// javax import
-import javax.naming.Referenceable;
+// javax import 
 import javax.naming.Reference;
-import javax.naming.StringRefAddr;
-import javax.naming.NamingException;
 
-
-/**
- * Class <code>BasicObjectRef</code> is a Basic referenceable (and serializable) class for testing
+/*
+ * Class <code>IIOPReferenceWrapper</code> is the CAROL Remote Reference implementation. This implementation make the 
+ * iiop reference wrapping to/from a remote object
  * 
  * @author  Guillaume Riviere (Guillaume.Riviere@inrialpes.fr)
- * @version 1.0, 15/07/2002 
+ * @version 1.0, 15/07/2002
  */
-public class BasicObjectRef implements Referenceable, Serializable {
+public class IIOPReferenceWrapper implements IIOPRemoteReference {
+    
+    /**
+     * <code>Reference</code> reference to wrap
+     */
+    protected Reference reference;	
+
 
     /**
-     * String object content
+     * constructor, export this object
+     *
+     * @param reference the <code>Reference</code> reference to wrap
      */
-    String content = "string";
-
-    /**
-     * Constructor
-     */
-    public BasicObjectRef(String content) throws Exception {
-	this.content = content;
+    public IIOPReferenceWrapper(Reference reference) throws RemoteException {
+	super();
+	this.reference = reference;
     }
 
     /**
-     * get Reference methode
+     * Get the <code>Reference</code> reference 
+     *
+     * @return the <code>Reference</code> reference
      */
-    public Reference getReference() throws NamingException {	return new Reference(
-	    BasicObjectRef.class.getName(),
-	    new StringRefAddr("content", "string2"),
-	    BasicObjectRefFactory.class.getName(),
-	    null);
+    public Reference getReference() throws RemoteException {
+	return reference;
     }
-
-
-    /**
-     * to String method
-     * @return String content
-     */
-    public String toString() {
-	return content;
-    }
-
-
 }

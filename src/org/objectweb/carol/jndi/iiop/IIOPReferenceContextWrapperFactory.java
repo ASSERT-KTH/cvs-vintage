@@ -1,5 +1,5 @@
 /*
- * @(#)IIOPResourceContextWrapper.java	1.0 02/07/15
+ * @(#)IIOPReferenceContextWrapper.java	1.0 02/07/15
  *
  * Copyright (C) 2002 - INRIA (www.inria.fr)
  *
@@ -39,14 +39,14 @@ import javax.naming.spi.InitialContextFactory;
 import javax.naming.spi.ObjectFactory;
 
 /*
- * Class <code>IIOPRemoteResourceContextWrapperFactory</code> is the CAROL JNDI Context factory. This context factory
- * build the iiop context for resource wrapping to/from a remote object
+ * Class <code>IIOPRemoteReferenceContextWrapperFactory</code> is the CAROL JNDI Context factory. This context factory
+ * build the iiop context for reference wrapping to/from a remote object
  * 
  * @author  Guillaume Riviere (Guillaume.Riviere@inrialpes.fr)
  * @see javax.naming.spi.InitialContextFactory
  * @version 1.0, 15/07/2002
  */
-public class IIOPResourceContextWrapperFactory implements ObjectFactory, InitialContextFactory {
+public class IIOPReferenceContextWrapperFactory implements ObjectFactory, InitialContextFactory {
 
     /**
      * Get/Build the IIOP Wrapper InitialContext
@@ -59,7 +59,7 @@ public class IIOPResourceContextWrapperFactory implements ObjectFactory, Initial
      */   
     public Context getInitialContext(Hashtable env) throws NamingException {
 	env.put("java.naming.factory.initial","com.sun.jndi.cosnaming.CNCtxFactory");
-	return new IIOPResourceContextWrapper(new InitialContext(env));
+	return new IIOPReferenceContextWrapper(new InitialContext(env));
     }
 
     /**

@@ -21,17 +21,21 @@
     </fileset>  
     <fileset dir="${test.externals}">
       <include name="**/*.jar"/>
+    </fileset>    
+    <fileset dir="${test.ext}">
+      <include name="jonathan.xml"/>
     </fileset>
     <pathelement location="${test.build}/classes"/>
+    
   </path>
 
   <property name="compiler.jeremie" value="org.objectweb.jeremie.tools.jrmic.JRMICompiler" />
   <property name="compiler.david"   value="org.objectweb.david.tools.jrmic.JRMICompiler" />
-  <property name="jonathan.jvmarg"  value="-Xbootclasspath/p:${test.externals}/jonathan.jar:${test.externals}/kilim.jar:${test.externals}/kilim-tools.jar:${test.externals}/nanoxml-lite-2.2.1.jar:${test.build}/classes"/>
+  <property name="jonathan.jvmarg"  value="-Xbootclasspath/p:${test.externals}/jonathan.jar:${test.externals}/kilim.jar:${test.externals}/kilim-tools.jar:${test.externals}/nanoxml-lite-2.2.1.jar:${test.build}/classes:${test.ext}/jonathan.xml"/>
 
   <target name="compile.all"> 
     <antcall target="compile.jeremie"/>
-    <antcall target="compile.david"/>
+    <!--antcall target="compile.david"/-->
   </target>
 
 
@@ -40,15 +44,10 @@
     <mkdir dir="${test.build.stub}/jeremie"/>
     <java classname="${compiler.jeremie}" fork="true" failonerror="true" jvmargs="${jonathan.jvmarg}">
             <arg value="-opt"/>
+            <arg value="-owext"/>
             <arg value="-d"/>
             <arg path="${test.build.stub}/jeremie"/>
             <arg value="org.objectweb.carol.jtests.conform.basic.server.BasicObject"/>
-            <classpath refid="jonathan.classpath"/>
-    </java>
-    <java classname="${compiler.jeremie}" fork="true" failonerror="true" jvmargs="${jonathan.jvmarg}">
-            <arg value="-opt"/>
-            <arg value="-d"/>
-            <arg path="${test.build.stub}/jeremie"/>
             <arg value="org.objectweb.carol.jtests.conform.basic.server.BasicMultiObject"/>
             <classpath refid="jonathan.classpath"/>
     </java>

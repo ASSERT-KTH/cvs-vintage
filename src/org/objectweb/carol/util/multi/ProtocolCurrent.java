@@ -39,7 +39,7 @@ import java.util.Enumeration;
 //carol import
 import org.objectweb.carol.util.configuration.RMIConfiguration;
 import org.objectweb.carol.util.configuration.CommunicationConfiguration; 
-import org.objectweb.carol.jndi.iiop.IIOPResourceContextWrapper;
+import org.objectweb.carol.jndi.iiop.IIOPReferenceContextWrapper;
 
 /**
  * Class <code>ProtocolCurrent</code>For handling the association Rmi/ Thread
@@ -99,7 +99,7 @@ public class ProtocolCurrent {
 		    // here there is a ad hoc iiop hacking because off the Referenceable CosNaming Binding problem
 		    // this problem will be solve when object global name service come
 		    if (rmiName.equals("iiop")) {
-			icHashtable.put(rmiName,  new IIOPResourceContextWrapper(new InitialContext(currentConf.getJndiProperties())));
+			icHashtable.put(rmiName,  new IIOPReferenceContextWrapper(new InitialContext(currentConf.getJndiProperties())));
 		    } else {
 			icHashtable.put(rmiName,  new InitialContext(currentConf.getJndiProperties()));
 		    }
@@ -181,6 +181,18 @@ public class ProtocolCurrent {
 	    return (Context)icHashtable.get(defaultRMI); 
 	} else {
 	    return (Context)icHashtable.get((String)threadCtx.get());
+	}
+    }
+
+    /**
+     * Get current protocol RMI name
+     * @return String the RMI name
+     */
+    public String getCurrentRMIName() {
+	if (threadCtx.get() == null) {
+	    return defaultRMI; 
+	} else {
+	    return (String)threadCtx.get();
 	}
     }
 
