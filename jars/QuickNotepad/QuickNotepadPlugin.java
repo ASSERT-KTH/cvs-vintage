@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
- * $Id: QuickNotepadPlugin.java,v 1.4 2001/11/10 18:57:08 jgellene Exp $
+ * $Id: QuickNotepadPlugin.java,v 1.5 2001/11/11 12:26:20 jgellene Exp $
  */
 
 import java.util.Vector;
@@ -36,14 +36,14 @@ import org.gjt.sp.jedit.gui.*;
  */
 public class QuickNotepadPlugin extends EditPlugin
 {
-    public static final String NAME = "quicknotepad";
+	public static final String NAME = "quicknotepad";
 	public static final String MENU = "quicknotepad.menu";
-    public static final String PROPERTY_PREFIX = "plugin.QuickNotepadPlugin.";
-    public static final String OPTION_PREFIX = "options.quicknotepad.";
+	public static final String PROPERTY_PREFIX = "plugin.QuickNotepadPlugin.";
+	public static final String OPTION_PREFIX = "options.quicknotepad.";
 
-    public void start()
+	public void start()
 	{
-    }
+	}
 
 
 	public void stop()
@@ -51,16 +51,16 @@ public class QuickNotepadPlugin extends EditPlugin
 	}
 
 
-    public void createMenuItems(Vector menuItems)
+	public void createMenuItems(Vector menuItems)
 	{
-        menuItems.addElement(GUIUtilities.loadMenu(MENU));
-    }
+		menuItems.addElement(GUIUtilities.loadMenu(MENU));
+	}
 
 
-    public void createOptionPanes(OptionsDialog od)
+	public void createOptionPanes(OptionsDialog od)
 	{
-        od.addOptionPane(new QuickNotepadOptionPane());
-    }
+		od.addOptionPane(new QuickNotepadOptionPane());
+	}
 
 }
 
