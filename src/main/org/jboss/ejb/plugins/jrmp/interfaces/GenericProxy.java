@@ -12,6 +12,9 @@ import java.io.ObjectInput;
 import java.io.ObjectOutput;
 
 import java.rmi.MarshalledObject;
+import java.rmi.ServerException;
+import java.rmi.NoSuchObjectException;
+
 import java.util.HashMap;
 import java.lang.reflect.Method;
 import java.security.Principal;
@@ -35,7 +38,8 @@ import org.jboss.security.SecurityAssociation;
  * 
  * @author  <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>.
  * @author  <a href="mailto:jason@planet57.com">Jason Dillon</a> *  
- * @version $Revision: 1.12 $
+ *  @author <a href="mailto:osh@sparre.dk">Ole Husgaard</a>
+ * @version $Revision: 1.13 $
  */
 public abstract class GenericProxy
    implements Externalizable
@@ -354,7 +358,16 @@ public abstract class GenericProxy
             }
             else {
                 // Marshaling is done by RMI
-                result = container.invoke(mo).get();
+                try {
+                    result = container.invoke(mo).get();
+                } catch (ServerException ex) {
+                    // Suns RMI implementation wraps NoSuchObjectException in
+                    // a ServerException. We cannot have that if we want
+                    // to comply with the spec, so we unwrap here.
+                    if (ex.detail instanceof NoSuchObjectException)
+                        throw ex.detail;
+                    throw ex;
+                }
             }
         }
         
