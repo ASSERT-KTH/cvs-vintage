@@ -76,7 +76,7 @@ import org.tigris.scarab.tools.ScarabGlobalTool;
  * Action(s).
  *
  * @author <a href="mailto:dr@bitonic.com">Douglas B. Robertson</a>
- * @version $Id: ManageUser.java,v 1.18 2003/04/11 16:33:55 jmcnally Exp $
+ * @version $Id: ManageUser.java,v 1.19 2003/05/23 19:51:50 dlr Exp $
  */
 public class ManageUser extends RequireLoginFirstAction
 {
@@ -189,9 +189,10 @@ public class ManageUser extends RequireLoginFirstAction
                 if ((su != null) && (register != null))
                 {
                     // update the first name, last name, email
-                    // Turbine's security service does not allow changing 
-                    // the username, this is considered the defining info
-                    // of a particular user.
+                    // Turbine's security service does not allow
+                    // changing the username, this is considered the
+                    // defining info of a particular user.  SCB197 is
+                    // a request to make this information modifiable.
                     su.setFirstName(register.get("FirstName").toString());
                     su.setLastName(register.get("LastName").toString());
                     su.setEmail(register.get("Email").toString());
