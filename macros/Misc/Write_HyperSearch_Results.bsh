@@ -32,7 +32,7 @@
  * routines.  To be completely reliable, the macro should be run immediately
  * after a HyperSearch.
  *
- * $Id: Write_HyperSearch_Results.bsh,v 1.1 2001/11/24 03:56:51 jgellene Exp $
+ * $Id: Write_HyperSearch_Results.bsh,v 1.2 2002/03/23 03:20:26 spestov Exp $
  *
  * Checked for jEdit 4.0 API
  *
@@ -45,7 +45,7 @@ void writeHyperSearchResults()
 {
     title = "Write HyperSearch results";
     hsearch = view.getDockableWindowManager()
-        .getDockableWindow("hypersearch-results");
+        .getDockable("hypersearch-results");
     if(hsearch == null)
     {
         JOptionPane.showMessageDialog(view,
