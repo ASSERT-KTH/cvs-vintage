@@ -1,4 +1,5 @@
-// Copyright (c) 1996-2003 The Regents of the University of California. All
+// $Id: GUITestPropertyPanels.java,v 1.4 2004/01/20 07:09:00 linus Exp $
+// Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
 // agreement is hereby granted, provided that the above copyright notice
@@ -21,7 +22,6 @@
 // CALIFORNIA HAS NO OBLIGATIONS TO PROVIDE MAINTENANCE, SUPPORT,
 // UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 
-// $Id: GUITestPropertyPanels.java,v 1.3 2004/01/01 23:04:28 bobtarling Exp $
 package org.argouml.ui;
 
 import com.sun.image.codec.jpeg.JPEGCodec;
@@ -96,12 +96,12 @@ public class GUITestPropertyPanels extends TestCase {
     
     
     /**
-     * @param arg0
+     * @param modelElement is the type of object to test
+     * @param arg0 is the name of the test case
      */
     public GUITestPropertyPanels(Object modelElement, String arg0) {
         super(arg0);
         _modelElement = modelElement;
-        
     }
     
     /**
@@ -177,14 +177,6 @@ public class GUITestPropertyPanels extends TestCase {
     
     protected void runTest() throws Throwable {
         testPropertyTab();
-    }
-    
-    /**
-     * @see junit.framework.TestCase#tearDown()
-     */
-    protected void tearDown() throws Exception {
-        // TODO Auto-generated method stub
-        super.tearDown();
     }
     
     public void testPropertyTab() throws Throwable {
