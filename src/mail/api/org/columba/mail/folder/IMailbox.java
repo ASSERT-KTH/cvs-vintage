@@ -20,7 +20,6 @@ package org.columba.mail.folder;
 import java.io.InputStream;
 
 import org.columba.core.command.StatusObservable;
-import org.columba.mail.folder.command.MarkMessageCommand;
 import org.columba.mail.message.IHeaderList;
 import org.columba.ristretto.message.Attributes;
 import org.columba.ristretto.message.Flags;
