@@ -1,4 +1,4 @@
-// $Id: UMLElementOwnershipVisibilityButtonGroup.java,v 1.7 2003/08/30 10:51:52 bobtarling Exp $
+// $Id: UMLElementOwnershipVisibilityButtonGroup.java,v 1.8 2003/10/04 18:12:48 d00mst Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -52,7 +52,7 @@ public class UMLElementOwnershipVisibilityButtonGroup extends UMLVisibilityButto
         if (ModelFacade.isPrivate(getTarget())) {
             getPrivateButton().setSelected(true);
         } else {
-	    if (ModelFacade.isPrivate(getTarget())) {
+	    if (ModelFacade.isProtected(getTarget())) {
 		getProtectedButton().setSelected(true);
 	    } else {
 		getPublicButton().setSelected(true);
