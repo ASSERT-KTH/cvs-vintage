@@ -1,4 +1,4 @@
-// $Id: TestParseTransition.java,v 1.1 2004/11/10 22:19:02 mvw Exp $
+// $Id: TestParseTransition.java,v 1.2 2004/11/11 09:40:53 mvw Exp $
 // Copyright (c) 2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -95,7 +95,6 @@ public class TestParseTransition extends TestCase {
      * These should generate a ParseException.
      */
     public void testParseTransitionNotCreate() {
-        /* : */
         checkGenerated(aState, "trigger[guard/effect", false, false, false, 
                 true);
         checkGenerated(aState, "trigger(", false, false, false, true);
@@ -104,6 +103,7 @@ public class TestParseTransition extends TestCase {
         checkGenerated(aState, "tr]jhgf[ijh", false, false, false, true);
         checkGenerated(aState, "tr]/e", false, false, false, true);
         checkGenerated(aState, "tr/i[gg]er", false, false, false, true);
+        checkGenerated(aState, "tri[g/g]er", false, false, false, true);
     }
     
     /**
