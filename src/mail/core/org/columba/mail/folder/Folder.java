@@ -14,6 +14,7 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003.
 //
 //All Rights Reserved.
+
 package org.columba.mail.folder;
 
 import java.io.File;
@@ -44,7 +45,6 @@ import org.columba.ristretto.message.MessageFolderInfo;
 import org.columba.ristretto.message.MimeHeader;
 
 /**
- * 
  * Abstract Basic Folder class. It is subclassed by every folder class
  * containing messages and therefore offering methods to alter the mailbox.
  * <p>
@@ -110,7 +110,7 @@ public abstract class Folder extends FolderTreeNode implements MailboxInterface 
      * Every command has to register its interest to this events before
      * accessing the folder.
      */
-    protected StatusObservable observable;
+    protected StatusObservable observable = new StatusObservableImpl();
 
     // implement your own search-engine here
     protected DefaultSearchEngine searchEngine;
@@ -134,14 +134,10 @@ public abstract class Folder extends FolderTreeNode implements MailboxInterface 
         }
 
         loadMessageFolderInfo();
-
-        observable = new StatusObservableImpl();
     }
 
     protected Folder() {
         super();
-
-        observable = new StatusObservableImpl();
     }
 
     /**
@@ -157,8 +153,6 @@ public abstract class Folder extends FolderTreeNode implements MailboxInterface 
         }
 
         loadMessageFolderInfo();
-
-        observable = new StatusObservableImpl();
     }
 
     /**
@@ -444,7 +438,7 @@ public abstract class Folder extends FolderTreeNode implements MailboxInterface 
         getHeaderListStorage().removeMessage(uid);
 
         // notify search-engine
-        getSearchEngineInstance().messageRemoved(uid);
+        getSearchEngine().messageRemoved(uid);
 
         // set folder changed flag
         // -> if not, the header cache wouldn't notice that something
@@ -609,21 +603,6 @@ public abstract class Folder extends FolderTreeNode implements MailboxInterface 
         return null;
     }
 
-    /**
-     * @see org.columba.mail.folder.MailboxInterface#addMessage(org.columba.mail.message.ColumbaMessage)
-     */
-    public Object addMessage(ColumbaMessage message) throws Exception {
-        // increase total count of messages
-        getMessageFolderInfo().incExists();
-
-        // notify search-engine
-        getSearchEngineInstance().messageAdded(message);
-
-        setChanged(true);
-
-        return null;
-    }
-
     /** ****************************** AttributeStorage *********************** */
 
     /**
@@ -695,7 +674,9 @@ public abstract class Folder extends FolderTreeNode implements MailboxInterface 
     /**
      * @return
      */
-    public abstract DefaultSearchEngine getSearchEngineInstance();
+    public DefaultSearchEngine getSearchEngine() {
+        return searchEngine;
+    }
 
     /**
      * @param filter
@@ -705,7 +686,7 @@ public abstract class Folder extends FolderTreeNode implements MailboxInterface 
      */
     public Object[] searchMessages(Filter filter, Object[] uids)
             throws Exception {
-        return getSearchEngineInstance().searchMessages(filter, uids);
+        return getSearchEngine().searchMessages(filter, uids);
     }
 
     /**
@@ -714,7 +695,7 @@ public abstract class Folder extends FolderTreeNode implements MailboxInterface 
      *         Exception
      */
     public Object[] searchMessages(Filter filter) throws Exception {
-        return getSearchEngineInstance().searchMessages(filter);
+        return getSearchEngine().searchMessages(filter);
     }
 
     /**

@@ -15,6 +15,7 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003.
 //
 //All Rights Reserved.
+
 package org.columba.mail.folder.command;
 
 import org.columba.core.command.Command;
@@ -31,7 +32,7 @@ import org.columba.mail.main.MailInterface;
 import org.columba.mail.message.ColumbaMessage;
 
 import org.columba.ristretto.message.HeaderInterface;
-
+import org.columba.ristretto.message.io.SourceInputStream;
 
 /**
  * Add message to folder
@@ -84,6 +85,6 @@ public class AddMessageCommand extends Command {
         ColumbaMessage message = (ColumbaMessage) r[0].getMessage();
 
         // add message to folder
-        Object uid = folder.addMessage(message);
+        Object uid = folder.addMessage(new SourceInputStream(message.getSource()));
     }
 }

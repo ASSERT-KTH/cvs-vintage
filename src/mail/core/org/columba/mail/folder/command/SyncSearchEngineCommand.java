@@ -50,7 +50,7 @@ public class SyncSearchEngineCommand extends FolderCommand {
 
         // resync search engine
         // -> this is only needed for Lucene right now
-        DefaultSearchEngine engine = parentFolder.getSearchEngineInstance();
+        DefaultSearchEngine engine = parentFolder.getSearchEngine();
         engine.sync();
     }
 }

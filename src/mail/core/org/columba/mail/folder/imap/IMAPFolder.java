@@ -13,15 +13,11 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003.
 //
 //All Rights Reserved.
+
 package org.columba.mail.folder.imap;
 
 import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Enumeration;
-import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.*;
 import java.util.logging.Logger;
 
 import org.columba.core.command.StatusObservable;
@@ -45,13 +41,7 @@ import org.columba.mail.message.ColumbaMessage;
 import org.columba.mail.message.HeaderList;
 import org.columba.mail.util.MailResourceLoader;
 import org.columba.ristretto.imap.IMAPFlags;
-import org.columba.ristretto.message.Attributes;
-import org.columba.ristretto.message.Flags;
-import org.columba.ristretto.message.Header;
-import org.columba.ristretto.message.MessageFolderInfo;
-import org.columba.ristretto.message.MimePart;
-import org.columba.ristretto.message.MimeTree;
-import org.columba.ristretto.message.StreamableMimePart;
+import org.columba.ristretto.message.*;
 import org.columba.ristretto.message.io.Source;
 import org.columba.ristretto.message.io.SourceInputStream;
 
@@ -60,15 +50,10 @@ public class IMAPFolder extends RemoteFolder {
     /** JDK 1.4+ logging framework logger, used for logging. */
     private static final Logger LOG = Logger.getLogger("org.columba.mail.folder.imap");
 
-
     /**
      *
      */
     private ImapItem item;
-
-    /**
-     *
-     */
 
     //private boolean select=false;
     //private boolean fetch=false;
@@ -98,19 +83,12 @@ public class IMAPFolder extends RemoteFolder {
     /**
      *
      */
-
-
-    protected boolean existsOnServer;
-
-    private DefaultSearchEngine engine;
+    protected boolean existsOnServer = true;
 
     /**
      *
      */
-
     private HeaderListStorage attributeStorage;
-
-    //protected RemoteSearchEngine searchEngine;
 
     /**
      * @see org.columba.mail.folder.FolderTreeNode#FolderTreeNode(org.columba.mail.config.FolderItem)
@@ -118,10 +96,9 @@ public class IMAPFolder extends RemoteFolder {
     public IMAPFolder(FolderItem folderItem, String path) {
         super(folderItem, path);
 
-        existsOnServer = true;
-
-        engine = new DefaultSearchEngine(this);
+        DefaultSearchEngine engine = new DefaultSearchEngine(this);
         engine.setNonDefaultEngine(new IMAPQueryEngine(this));
+        setSearchEngine(engine);
 
         //setChanged(true);
     }
@@ -131,9 +108,6 @@ public class IMAPFolder extends RemoteFolder {
      */
     public IMAPFolder(String name, String type, String path) throws Exception {
         super(name, type, path);
-
-        existsOnServer = true;
-
 
         FolderItem item = getFolderItem();
         item.set("property", "accessrights", "user");
@@ -484,28 +458,6 @@ public class IMAPFolder extends RemoteFolder {
     }
 
     /**
-     * @see org.columba.mail.folder.Folder#addMessage(org.columba.mail.message.AbstractMessage,
-     *      org.columba.core.command.WorkerStatusController)
-     */
-    public Object addMessage(ColumbaMessage message) throws Exception {
-        return null;
-    }
-
-    /**
-     * @see org.columba.mail.folder.Folder#addMessage(java.lang.String,
-     *      org.columba.core.command.WorkerStatusController)
-     */
-    public Object addMessage(String source) throws Exception {
-        getStore().append(getImapPath(), source);
-
-        // mailbox was modified
-        changed = true;
-
-        return null;
-    }
-
-
-    /**
      * @see org.columba.mail.folder.Folder#markMessage(java.lang.Object, int,
      *      org.columba.core.command.WorkerStatusController)
      */
@@ -799,7 +751,6 @@ public class IMAPFolder extends RemoteFolder {
             return false;
         }
     }
-
 
     /*
      * (non-Javadoc)

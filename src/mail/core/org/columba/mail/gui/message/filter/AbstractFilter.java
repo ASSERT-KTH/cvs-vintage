@@ -15,6 +15,7 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003.
 //
 //All Rights Reserved.
+
 package org.columba.mail.gui.message.filter;
 
 import org.columba.core.gui.frame.FrameMediator;
@@ -26,16 +27,17 @@ import org.columba.mail.gui.table.selection.TableSelectionHandler;
 import org.columba.mail.main.MailInterface;
 import org.columba.mail.message.ColumbaMessage;
 
+import org.columba.ristretto.message.io.SourceInputStream;
 
 /**
- * Should be used by every filter, which alters the message contains. This
+ * Should be used by every filter, which alters the message contents. This
  * is done the following way:
  * <p>
  * A new message is created and added to a temporary folder. All references of
  * the sources folder are re-mapped to the message in the temporary folder.
  * <p>
- * @author fdietz
  *
+ * @author fdietz
  */
 public abstract class AbstractFilter implements Filter {
 
@@ -52,7 +54,7 @@ public abstract class AbstractFilter implements Filter {
         TempFolder tempFolder = MailInterface.treeModel.getTempFolder();
 
         // add message to temporary folder
-        uid = tempFolder.addMessage(message);
+        uid = tempFolder.addMessage(new SourceInputStream(message.getSource()));
 
         // create reference to this message
         FolderCommandReference[] local = new FolderCommandReference[1];
@@ -74,8 +76,7 @@ public abstract class AbstractFilter implements Filter {
         h.setLocalReference(local);
     }
     
-  
-    /**
+      /**
      * @return Returns the mediator.
      */
     public FrameMediator getMediator() {

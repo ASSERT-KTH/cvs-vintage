@@ -729,17 +729,11 @@ public class VirtualFolder extends Folder {
         throws Exception {
         return null;
     }
+    
     /**
      * @see org.columba.mail.folder.Folder#getHeaderListStorage()
      */
     public HeaderListStorage getHeaderListStorage() {
-       
-        return null;
-    }
-    /**
-     * @see org.columba.mail.folder.Folder#getSearchEngineInstance()
-     */
-    public DefaultSearchEngine getSearchEngineInstance() {
        
         return null;
     }

@@ -13,13 +13,13 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003.
 //
 //All Rights Reserved.
+
 package org.columba.mail.folder.temp;
 
 import org.columba.core.io.DiskIO;
 import org.columba.core.io.StreamUtils;
 
 import org.columba.mail.filter.Filter;
-import org.columba.mail.folder.DataStorageInterface;
 import org.columba.mail.folder.Folder;
 import org.columba.mail.folder.HeaderListStorage;
 import org.columba.mail.folder.MailboxInterface;
@@ -28,13 +28,7 @@ import org.columba.mail.message.ColumbaHeader;
 import org.columba.mail.message.ColumbaMessage;
 import org.columba.mail.message.HeaderList;
 
-import org.columba.ristretto.message.Attributes;
-import org.columba.ristretto.message.Flags;
-import org.columba.ristretto.message.Header;
-import org.columba.ristretto.message.LocalMimePart;
-import org.columba.ristretto.message.Message;
-import org.columba.ristretto.message.MimePart;
-import org.columba.ristretto.message.MimeTree;
+import org.columba.ristretto.message.*;
 import org.columba.ristretto.message.io.CharSequenceSource;
 import org.columba.ristretto.message.io.SourceInputStream;
 import org.columba.ristretto.parser.MessageParser;
@@ -44,7 +38,6 @@ import java.io.InputStream;
 
 import java.util.Hashtable;
 import java.util.logging.Logger;
-
 
 /**
  * @author freddy
@@ -60,10 +53,8 @@ public class TempFolder extends Folder {
 
     protected HeaderList headerList;
     protected Hashtable messageList;
-    protected int nextUid;
+    protected int nextUid = 0;
     protected ColumbaMessage aktMessage;
-    protected DataStorageInterface dataStorage;
-    protected DefaultSearchEngine searchEngine;
 
     /**
      * Constructor for TempFolder.
@@ -81,8 +72,8 @@ public class TempFolder extends Folder {
 
         headerList = new HeaderList();
         messageList = new Hashtable();
-
-        nextUid = 0;
+        
+        setSearchEngine(new DefaultSearchEngine(this));
     }
 
     public void clear() {
@@ -116,34 +107,6 @@ public class TempFolder extends Folder {
 
     public void setNextUid(int next) {
         nextUid = next;
-    }
-
-    /**
-     * @see org.columba.modules.mail.folder.Folder#addMessage(AbstractMessage,
-     *      WorkerStatusController)
-     */
-    public Object addMessage(ColumbaMessage message) throws Exception {
-        Object newUid = generateNextUid();
-
-        LOG.info("new UID=" + newUid);
-
-        ColumbaHeader h = (ColumbaHeader) ((ColumbaHeader) message.getHeader());
-
-        h.set("columba.uid", newUid);
-
-        headerList.add(h, newUid);
-
-        messageList.put(newUid, message);
-
-        return newUid;
-    }
-
-    /**
-     * @see org.columba.modules.mail.folder.Folder#addMessage(String,
-     *      WorkerStatusController)
-     */
-    public Object addMessage(String source) throws Exception {
-        return null;
     }
 
     /**
@@ -217,21 +180,13 @@ public class TempFolder extends Folder {
         return message;
     }
 
-    public DefaultSearchEngine getSearchEngineInstance() {
-        if (searchEngine == null) {
-            searchEngine = new DefaultSearchEngine(this);
-        }
-
-        return searchEngine;
-    }
-
     /**
      * @see org.columba.modules.mail.folder.Folder#searchMessages(Filter,
      *      Object[], WorkerStatusController)
      */
     public Object[] searchMessages(Filter filter, Object[] uids)
         throws Exception {
-        return getSearchEngineInstance().searchMessages(filter, uids);
+        return getSearchEngine().searchMessages(filter, uids);
     }
 
     /**
@@ -239,7 +194,7 @@ public class TempFolder extends Folder {
      *      WorkerStatusController)
      */
     public Object[] searchMessages(Filter filter) throws Exception {
-        return getSearchEngineInstance().searchMessages(filter);
+        return getSearchEngine().searchMessages(filter);
     }
 
     /**

@@ -13,6 +13,7 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003.
 //
 //All Rights Reserved.
+
 package org.columba.mail.folder;
 
 import java.io.InputStream;
@@ -30,13 +31,7 @@ import org.columba.mail.folder.headercache.CachedHeaderfields;
 import org.columba.mail.folder.virtual.VirtualFolder;
 import org.columba.mail.message.ColumbaHeader;
 import org.columba.mail.message.ColumbaMessage;
-import org.columba.ristretto.message.Attributes;
-import org.columba.ristretto.message.Flags;
-import org.columba.ristretto.message.Header;
-import org.columba.ristretto.message.LocalMimePart;
-import org.columba.ristretto.message.MimeHeader;
-import org.columba.ristretto.message.MimePart;
-import org.columba.ristretto.message.MimeTree;
+import org.columba.ristretto.message.*;
 import org.columba.ristretto.message.io.Source;
 import org.columba.ristretto.message.io.SourceInputStream;
 import org.columba.ristretto.parser.HeaderParser;
@@ -68,7 +63,6 @@ public abstract class LocalFolder extends Folder implements MailboxInterface {
 
     /** JDK 1.4+ logging framework logger, used for logging. */
     private static final Logger LOG = Logger.getLogger("org.columba.mail.folder");
-
 
     /**
      * the next messag which gets added to this folder receives this unique ID
@@ -352,78 +346,6 @@ public abstract class LocalFolder extends Folder implements MailboxInterface {
         return newUid;
     }
 
-
-    /**
-     * TODO: remove this method
-     * @see org.columba.mail.folder.MailboxInterface#addMessage(org.columba.mail.message.ColumbaMessage)
-     */
-    public Object addMessage(ColumbaMessage message) throws Exception {
-        if (message == null) { return null; }
-
-        // increase total count of message, etc.
-        super.addMessage(message);
-
-        // get headerlist before adding a message
-        getHeaderList();
-
-        // generate UID for new message
-        Object newUid = generateNextMessageUid();
-
-        // apply UID for message
-        message.setUID(newUid);
-
-        LOG.info("new UID=" + newUid);
-
-        // get message source
-        Source source = message.getSource();
-
-        if (source == null) {
-            System.out.println("source is null " + newUid);
-
-            return null;
-        }
-
-        // save message to disk
-        getDataStorageInstance().saveMessage(newUid,
-                new SourceInputStream(source));
-
-        // free memory
-        // -> we don't need the message object anymore
-        message.freeMemory();
-
-        // this message was already parsed and so we
-        // re-use the header to save us some cpu time
-        ColumbaHeader h = (ColumbaHeader) ((ColumbaHeader) message.getHeader())
-                .clone();
-
-        // decode all headerfields:
-        // remove all unnecessary headerfields which doesn't
-        // need to be cached
-        // -> saves much memory
-        ColumbaHeader strippedHeader = CachedHeaderfields.stripHeaders(h);
-
-        // free memory
-        h = null;
-
-        // set UID for new message
-        strippedHeader.set("columba.uid", newUid);
-
-        // increment recent count of messages if appropriate
-        if (strippedHeader.getFlags().getRecent()) {
-            getMessageFolderInfo().incRecent();
-        }
-
-        // increment unseen count of messages if appropriate
-        if (strippedHeader.getFlags().getSeen()) {
-            getMessageFolderInfo().incUnseen();
-        }
-
-        // add header to header-cache list
-        getHeaderList().add(strippedHeader, newUid);
-
-        return newUid;
-    }
-
     /** {@inheritDoc} */
     public boolean isInboxFolder() {
         return getUid() == 101;
@@ -643,5 +565,4 @@ public abstract class LocalFolder extends Folder implements MailboxInterface {
             return subHeader;
         }
     }
-
 }

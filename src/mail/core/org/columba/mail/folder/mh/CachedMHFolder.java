@@ -13,6 +13,7 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
 //
 //All Rights Reserved.
+
 package org.columba.mail.folder.mh;
 
 import org.columba.mail.config.FolderItem;
@@ -22,7 +23,6 @@ import org.columba.mail.folder.LocalFolder;
 import org.columba.mail.folder.headercache.LocalHeaderListStorage;
 import org.columba.mail.folder.search.DefaultSearchEngine;
 import org.columba.mail.folder.search.LuceneQueryEngine;
-
 
 /**
  * @author freddy
@@ -35,6 +35,14 @@ import org.columba.mail.folder.search.LuceneQueryEngine;
 public class CachedMHFolder extends LocalFolder {
     public CachedMHFolder(FolderItem item, String path) {
         super(item, path);
+
+        DefaultSearchEngine engine = new DefaultSearchEngine(this);
+        boolean enableLucene = getFolderItem().getBoolean("property",
+                "enable_lucene", false);
+        if (enableLucene) {
+            engine.setNonDefaultEngine(new LuceneQueryEngine(this));
+        }
+        setSearchEngine(engine);
     }
 
     /**
@@ -65,25 +73,5 @@ public class CachedMHFolder extends LocalFolder {
         }
 
         return headerListStorage;
-    }
-
-    /** ******************** searching/filtering ********************** */
-    /**
-     * @return instance of search-engine implementation
-     */
-    public DefaultSearchEngine getSearchEngineInstance() {
-        // only use lucene backend if specified in tree.xml
-        if (searchEngine == null) {
-            boolean enableLucene = getFolderItem().getBoolean("property",
-                    "enable_lucene", false);
-
-            searchEngine = new DefaultSearchEngine(this);
-
-            if (enableLucene) {
-                searchEngine.setNonDefaultEngine(new LuceneQueryEngine(this));
-            }
-        }
-
-        return searchEngine;
     }
 }

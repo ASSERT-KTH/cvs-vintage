@@ -14,6 +14,7 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003.
 //
 //All Rights Reserved.
+
 package org.columba.mail.folder;
 
 import org.columba.mail.message.ColumbaHeader;
@@ -54,20 +55,6 @@ public interface MailboxInterface {
      * @throws Exception
      */
     public void expungeFolder() throws Exception;
-
-    /**
-     * Add message to this folder.
-     * 
-     * @deprecated Use #addMessage(InputStream)
-     * 
-     * @param message
-     *            Message object can be null
-     * @param source
-     *            raw string of message
-     * @return Object UID of message
-     * @throws Exception
-     */
-    public Object addMessage(ColumbaMessage message) throws Exception;
 
     /**
      * Checks if message with uid exists in this folder.
