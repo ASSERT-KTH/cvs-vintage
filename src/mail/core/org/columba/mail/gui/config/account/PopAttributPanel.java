@@ -51,6 +51,7 @@ public class PopAttributPanel extends JPanel implements ActionListener {
 	private JCheckBox leaveOnServerCheckBox;
 	private JCheckBox storePasswordCheckBox;
 	private JCheckBox excludeCheckBox;
+	private JCheckBox enablePreProcessingFilterCheckBox;
 	//private JCheckBox intervalCheckingCheckBox;
 	//private JButton mailcheckButton;
 
@@ -59,6 +60,7 @@ public class PopAttributPanel extends JPanel implements ActionListener {
 	private JCheckBox limitMessageDownloadCheckBox;
 	private JLabel limitMessageDownloadLabel2;
 	private JTextField limitMessageDownloadTextField;
+	private JButton configurePreProcessingFilterButton;
 
 	private JPanel jPanel1;
 	private JPanel jPanel4;
@@ -101,7 +103,7 @@ public class PopAttributPanel extends JPanel implements ActionListener {
 				item.getBoolean("leave_messages_on_server"));
 
 			excludeCheckBox.setSelected(
-				item.getBoolean("exclude_from_checkall",false));
+				item.getBoolean("exclude_from_checkall", false));
 
 			limitMessageDownloadCheckBox.setSelected(
 				item.getBoolean("enable_download_limit"));
@@ -114,32 +116,14 @@ public class PopAttributPanel extends JPanel implements ActionListener {
 			item.set("exclude_from_checkall", excludeCheckBox.isSelected()); //$NON-NLS-1$
 
 			item.set("download_limit", limitMessageDownloadTextField.getText());
-			
-			item.set("enable_download_limit", limitMessageDownloadCheckBox.isSelected());
+
+			item.set(
+				"enable_download_limit",
+				limitMessageDownloadCheckBox.isSelected());
 		}
 	}
 
 	private void initComponents() {
-		/*
-		setLayout(new BorderLayout());
-		setBorder(
-			javax.swing.BorderFactory.createTitledBorder(
-				javax.swing.BorderFactory.createEtchedBorder(),
-				MailResourceLoader.getString(
-					"dialog","account",
-					
-					"_POP3_Settings")));
-		//$NON-NLS-1$
-		
-		JPanel innerPanel = new JPanel();
-		GridBagLayout layout = new GridBagLayout();
-		GridBagConstraints c = new GridBagConstraints();
-		innerPanel.setLayout(layout);
-		innerPanel.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
-		
-		add(innerPanel, BorderLayout.NORTH);
-		*/
-
 		GridBagLayout layout = new GridBagLayout();
 		GridBagConstraints c = new GridBagConstraints();
 
@@ -153,37 +137,6 @@ public class PopAttributPanel extends JPanel implements ActionListener {
 		c.gridwidth = GridBagConstraints.REMAINDER;
 		layout.setConstraints(panel, c);
 		add(panel);
-
-		/*
-		intervalCheckingCheckBox = new JCheckBox();
-		intervalCheckingCheckBox.setEnabled(true);
-		intervalCheckingCheckBox.setActionCommand("INTERVAL_CHECKING");
-		intervalCheckingCheckBox.addActionListener(this);
-		intervalCheckingCheckBox.setText(
-			MailResourceLoader.getString(
-				"dialog","account",
-			
-				"Enable_interval_message_checking"));
-		//$NON-NLS-1$
-		c = new GridBagConstraints();
-		c.gridwidth = GridBagConstraints.RELATIVE;
-		c.gridx = 0;
-		c.weightx = 0.75;
-		c.anchor = GridBagConstraints.WEST;
-		layout.setConstraints(intervalCheckingCheckBox, c);
-		innerPanel.add(intervalCheckingCheckBox);
-		
-		mailcheckButton = new JButton("Options..");
-		mailcheckButton.setMargin( new Insets(0,2,0,2) );
-		mailcheckButton.addActionListener(this);
-		mailcheckButton.setActionCommand("MAILCHECK");
-		c.gridx = 1;
-		c.anchor = GridBagConstraints.WEST;
-		c.weightx = 0.25;
-		c.gridwidth = GridBagConstraints.REMAINDER;
-		layout.setConstraints( mailcheckButton, c);
-		innerPanel.add( mailcheckButton );
-		*/
 
 		leaveOnServerCheckBox = new JCheckBox();
 		leaveOnServerCheckBox.setText(
@@ -269,50 +222,38 @@ public class PopAttributPanel extends JPanel implements ActionListener {
 		layout.setConstraints(excludeCheckBox, c);
 		add(excludeCheckBox);
 
+		enablePreProcessingFilterCheckBox =
+			new JCheckBox("Enable Pre-Processing Filter");
+
+		JPanel filterPanel = new JPanel();
+		filterPanel.setLayout(new BoxLayout(filterPanel, BoxLayout.X_AXIS));
+
+		filterPanel.add(enablePreProcessingFilterCheckBox);
+
+		filterPanel.add(Box.createRigidArea(new java.awt.Dimension(5, 0)));
+
+		configurePreProcessingFilterButton = new JButton("Configure...");
+		configurePreProcessingFilterButton.setActionCommand("CONFIGURE_FILTER");
+		configurePreProcessingFilterButton.addActionListener(this);
+
+		filterPanel.add(configurePreProcessingFilterButton);
+
+		c = new GridBagConstraints();
+		c.gridx = 0;
+		c.weightx = 1.0;
+		c.anchor = GridBagConstraints.NORTHWEST;
+		c.gridwidth = GridBagConstraints.REMAINDER;
+		layout.setConstraints(filterPanel, c);
+		add(filterPanel);
+
 	}
 
 	public void actionPerformed(ActionEvent e) {
 		String action = e.getActionCommand();
 
-		/*
-		if ( action.equals("SELECT") )
-		{
-		    SelectFolderDialog dialog = MainInterface.treeViewer.getSelectFolderDialog();
-		    //SelectFolderDialog dialog = new SelectFolderDialog( frame.mainInterface );
-		    dialog.show();
-		
-		    if ( dialog.success() )
-		    {
-		        Folder selectedFolder = dialog.getSelectedFolder();
-		        String path = selectedFolder.getTreePath();
-		
-		        destinationTextField.setText( path );
-		
-		        int uid = selectedFolder.getUid();
-		        //int uid = frame.mainInterface.treeViewer.getUid( path );
-		        item.setUid( uid );
-		    }
-		
-		}
-		*/
+		if (action.equals("CONFIGURE_FILTER")) {
 
-		/*
-		if (action.equals("INTERVAL_CHECKING"))
-		{
-			if (intervalCheckingCheckBox.isSelected())
-			{
-				mailcheckButton.setEnabled(true);
-			}
-			else
-			{
-				mailcheckButton.setEnabled(false);
-			}
 		}
-		else if ( action.equals("MAILCHECK") )
-		{
-			mailCheckDialog.setVisible(true);
-		}
-		*/
 
 	}
 

@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<pop3preprocessingfilterlist>
+ <pop3preprocessingfilter name="AddHeader" class="org.columba.mail.pop3.plugins.AddHeaderPOP3PreProcessingFilterPlugin"/>
+</pop3preprocessingfilterlist>

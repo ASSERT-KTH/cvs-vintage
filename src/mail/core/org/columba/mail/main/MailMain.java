@@ -22,6 +22,7 @@ import org.columba.mail.plugin.FilterActionPluginHandler;
 import org.columba.mail.plugin.FilterPluginHandler;
 import org.columba.mail.plugin.FolderPluginHandler;
 import org.columba.mail.plugin.ImportPluginHandler;
+import org.columba.mail.plugin.POP3PreProcessingFilterPluginHandler;
 import org.columba.mail.pop3.POP3ServerCollection;
 import org.columba.mail.shutdown.SaveAllFoldersPlugin;
 import org.columba.mail.shutdown.SavePOP3CachePlugin;
@@ -90,7 +91,8 @@ public class MailMain extends DefaultMain {
 			new FilterActionPluginHandler());
 		MainInterface.pluginManager.registerHandler(new FilterPluginHandler());
 		MainInterface.pluginManager.registerHandler(new FolderPluginHandler());
-
+		MainInterface.pluginManager.registerHandler(new POP3PreProcessingFilterPluginHandler());
+		
 		MainInterface.pluginManager.registerHandler(
 			new MenuPluginHandler("org.columba.mail.menu"));
 			
