@@ -32,7 +32,7 @@ import org.jboss.logging.log4j.JBossCategory;
  * @author <a href="bill@burkecentral.com">Bill Burke</a>
  * @author <a href="marc.fleury@jboss.org">Marc Fleury</a>
  *
- * @version $Revision: 1.1 $
+ * @version $Revision: 1.2 $
  *
  * <p><b>Revisions:</b><br>
 *  <p><b>2001/07/29: billb</b>
@@ -179,10 +179,9 @@ public class BeanLock
                   syncAlreadyReleased = true;
                   releaseSync(); 
 
-                  //FIXME: use this line when 2.5 is released otherwise
-                  // transaction timeouts will never happen.
-                  // txLocks.get(miTx).wait(txTimeout);
-                  txLocks.get(miTx).wait(); 
+                  
+                  txLocks.get(miTx).wait(txTimeout);
+                  //txLocks.get(miTx).wait(); 
                }
                if( trace ) log.trace("End wait on TxLock="+tx);
             }
@@ -224,8 +223,8 @@ public class BeanLock
       
                      //FIXME: use this line when 2.5 is released otherwise
                      // transaction timeouts will never happen.
-                     // currentLock.wait(txTimeout);
-                     currentLock.wait(); 
+                      currentLock.wait(txTimeout);
+                     //currentLock.wait(); 
                   }
                }
     
