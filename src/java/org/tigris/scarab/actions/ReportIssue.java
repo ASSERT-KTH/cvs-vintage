@@ -87,7 +87,7 @@ import org.tigris.scarab.services.security.ScarabSecurity;
  * This class is responsible for report issue forms.
  *
  * @author <a href="mailto:jmcnally@collab.net">John D. McNally</a>
- * @version $Id: ReportIssue.java,v 1.147 2002/11/04 23:41:28 elicia Exp $
+ * @version $Id: ReportIssue.java,v 1.148 2002/11/06 23:19:24 jon Exp $
  */
 public class ReportIssue extends RequireLoginFirstAction
 {
@@ -583,6 +583,10 @@ public class ReportIssue extends RequireLoginFirstAction
                     {
                         cleanup(data, context);
                     }
+                    else
+                    {
+                        intake.remove(group);
+                    }
                 }
                 else 
                 {
@@ -603,7 +607,6 @@ public class ReportIssue extends RequireLoginFirstAction
     /**
      * The button for this action is commented out on Wizard2, so it
      * will not be called
-     */
     public void doAddvote(RunData data, TemplateContext context)
         throws Exception
     {
@@ -646,6 +649,7 @@ public class ReportIssue extends RequireLoginFirstAction
             searchAndSetTemplate(data, context, 0, "entry,Wizard2.vm");
         }
     }
+     */
     
     public void doGotowizard3(RunData data, TemplateContext context)
         throws Exception
