@@ -67,8 +67,13 @@ import org.jboss.util.TimerQueue;
  * object so that we can keep the hashtables clean.
  *
  * @author <a href="mailto:justin@j-m-f.demon.co.uk">Justin Forder</a>
- * @author <a href="danch@nvisia.com">danch (Dan Christopherson</a>
- * @version $Revision: 1.10 $
+ * @author <a href="danch@nvisia.com">danch (Dan Christopherson)</a>
+ * @author <a href="bill@burkecentral.com">Bill Burke</a>
+ * @version $Revision: 1.11 $
+ *
+ * Revision:
+ * 20010621 Bill Burke: createDefinedFinderCommand creates different objects
+ * based on the read-head flag of the FinderMetaData.
  */
 public class JDBCCommandFactory implements JPMCommandFactory
 {
@@ -195,7 +200,14 @@ public class JDBCCommandFactory implements JPMCommandFactory
    
    public JPMFindEntitiesCommand createDefinedFinderCommand(FinderMetaData f)
    {
-      return new JDBCDefinedFinderCommand(this, f);
+      if (f.hasReadAhead())
+      {
+         return new JDBCPreloadFinderCommand(this, f);
+      }
+      else
+      {
+         return new JDBCDefinedFinderCommand(this, f);
+      }
    }
    
    public JPMFindEntitiesCommand createFindByCommand(Method finderMethod, FinderMetaData f)
