@@ -51,6 +51,11 @@ import org.jboss.web.WebProviderMBean;
 
 import org.jboss.ejb.plugins.*;
 
+import org.jboss.verifier.BeanVerifier;
+import org.jboss.verifier.event.VerificationEvent;
+import org.jboss.verifier.event.VerificationListener;
+
+
 /**
 *   A ContainerFactory is used to deploy EJB applications. It can be given a URL to 
 *	  an EJB-jar or EJB-JAR XML file, which will be used to instantiate containers and make
@@ -59,7 +64,9 @@ import org.jboss.ejb.plugins.*;
 *   @see Container
 *   @author Rickard Öberg (rickard.oberg@telkel.com)
 *   @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
-*   @version $Revision: 1.19 $
+*   @author <a href="mailto:jplindfo@helsinki.fi">Juha Lindfors</a>
+*
+*   @version $Revision: 1.20 $
 */
 public class ContainerFactory
 implements ContainerFactoryMBean, MBeanRegistration
@@ -130,15 +137,32 @@ implements ContainerFactoryMBean, MBeanRegistration
 	{
 		try
 		{
+			Log.setLog(log);
+
 			// Check if already deployed -> undeploy first, this is re-deploy
 			if (deployments.containsKey(url))
 				undeploy(url);
-			
+
+            // [JPL] for now, use verifier only for testing..
+            boolean useVerifier = Boolean.getBoolean("jboss.verifier.isEnabled");
+            
+            if (useVerifier) {
+                BeanVerifier verifier = new BeanVerifier();
+                
+                verifier.addVerificationListener(new VerificationListener() {
+                    
+                    public void beanChecked(VerificationEvent event) {
+                        System.out.println(event.getMessage());
+                    }
+                });
+                
+                verifier.verify(url);
+            }
+            
 			// Create application
 			Application app = new Application();
 			app.setURL(url);
 			
-			Log.setLog(log);
 			log.log("Deploying:"+url);
 			
 			// Create a file manager with which to load the files
