@@ -107,7 +107,7 @@ import org.tigris.scarab.util.ScarabConstants;
     This class is responsible for edit issue forms.
     ScarabIssueAttributeValue
     @author <a href="mailto:elicia@collab.net">Elicia David</a>
-    @version $Id: ModifyIssue.java,v 1.98 2002/05/31 01:41:18 elicia Exp $
+    @version $Id: ModifyIssue.java,v 1.99 2002/06/08 01:54:33 jon Exp $
 */
 public class ModifyIssue extends BaseModifyIssue
 {
@@ -431,7 +431,7 @@ public class ModifyIssue extends BaseModifyIssue
                    .append("added File '").append(name)
                    .append("' at ").append(path).toString();
                     registerActivity(desc, "Your file was added", issue, user, 
-                                     null, context, data);
+                                     attachment, context, data);
                     data.setMessage(DEFAULT_MSG);  
                 }
             } 
@@ -633,7 +633,7 @@ public class ModifyIssue extends BaseModifyIssue
                    .append("deleted attachment for File '").append(name)
                    .append("'; path=").append(path).toString();
                registerActivity(desc, "Your file was deleted", issue, user, 
-                                null, context, data);
+                                attachment, context, data);
             } 
         }
     }
@@ -643,7 +643,7 @@ public class ModifyIssue extends BaseModifyIssue
         TemplateContext context, RunData data)
         throws Exception
     {
-        registerActivity(description, message, issue, user, null, 
+        registerActivity(description, message, issue, user, attachment, 
                          context, data, "", "");
     }
 
