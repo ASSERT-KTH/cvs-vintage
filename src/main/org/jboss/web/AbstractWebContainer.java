@@ -155,7 +155,7 @@ in the catalina module.
 @see org.jboss.security.SecurityAssociation;
 
 @author  Scott.Stark@jboss.org
-@version $Revision: 1.47 $
+@version $Revision: 1.48 $
 */
 public abstract class AbstractWebContainer 
    extends SubDeployerSupport
@@ -350,7 +350,7 @@ public abstract class AbstractWebContainer
    returned WebApplication in the deployment map. The steps performed are:
    
       ClassLoader appClassLoader = thread.getContextClassLoader();
-      URLClassLoader warLoader = URLClassLoader.newInstance(empty, appClassLoader);
+      URLClassLoader warLoader = URLClassLoader.newInstance(empty, di.ucl);
       thread.setContextClassLoader(warLoader);
       WebDescriptorParser webAppParser = ...;
       WebMetaData metaData = parseMetaData(ctxPath, warUrl);
@@ -377,7 +377,7 @@ public abstract class AbstractWebContainer
       {
          // Create a classloader for the war to ensure a unique ENC
          URL[] empty = {};
-         URLClassLoader warLoader = URLClassLoader.newInstance(empty, appClassLoader);
+         URLClassLoader warLoader = URLClassLoader.newInstance(empty, di.ucl);
          thread.setContextClassLoader(warLoader);
          WebDescriptorParser webAppParser = new DescriptorParser(di);
          String webContext = di.webContext;
