@@ -94,7 +94,7 @@ import org.apache.commons.lang.StringUtils;
  * @author <a href="mailto:jmcnally@collab.new">John McNally</a>
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
- * @version $Id: Issue.java,v 1.178 2002/08/15 20:16:17 jon Exp $
+ * @version $Id: Issue.java,v 1.179 2002/08/15 23:26:34 jon Exp $
  */
 public class Issue 
     extends BaseIssue
@@ -2502,18 +2502,61 @@ public class Issue
     }
 
     /**
+     * This method is used with the setAttributeValues() method to 
+     * Make sure that workflow is valid. It will return a non-null String
+     * which is the workflow error message otherwise it will return null.
+     */
+    public String doCheckAttributeValueWorkflow(HashMap newAttVals, 
+                                                Attachment attachment, ScarabUser user)
+        throws Exception
+    {
+        SequencedHashMap avMap = getModuleAttributeValuesMap(); 
+        AttributeValue oldAttVal = null;
+        AttributeValue newAttVal = null;
+        Iterator iter = avMap.iterator();
+        String msg = null;
+
+        while (iter.hasNext())
+        {
+            oldAttVal = (AttributeValue)avMap.get(iter.next());
+            newAttVal = (AttributeValue)newAttVals.get(oldAttVal.getAttributeId());
+
+            if (newAttVal != null)
+            {
+                if (oldAttVal.getOptionId() != null 
+                    && newAttVal.getAttribute().isOptionAttribute())
+                {
+                    AttributeOption fromOption = oldAttVal.getAttributeOption();
+                    AttributeOption toOption = newAttVal.getAttributeOption();
+                    msg = WorkflowFactory.getInstance().checkTransition(fromOption, 
+                                                        toOption, this, 
+                                                        newAttVals, user);
+                }
+                if (msg != null)
+                {
+                    return msg;
+                }
+            }
+        }
+    }
+
+    /**
      * Sets AttributeValues for an issue based on a hashmap of attribute values
      * This is data is saved to the database and the proper ActivitySet is 
-     * also recorded. FIXME: If there is a workflow error, then any data which has been
-     * set already is recorded to the database and anything after the workflow
-     * error is not recorded.
+     * also recorded.
      *
-     * @throws ScarabException if there is a workflow error.
+     * @throws Exception when the workflow has an error to report
      */
     public ActivitySet setAttributeValues(HashMap newAttVals, Attachment attachment,
                                 ScarabUser user)
         throws Exception
     {
+        String msg = doCheckAttributeValueWorkflow(newAttVals, attachment user);
+        if (msg != null)
+        {
+            throw new Exception(msg);
+        }
+
         // Save explanatory comment
         attachment.setTextFields(user, this, 
                                  Attachment.MODIFICATION__PK);
@@ -2540,25 +2583,12 @@ public class Issue
                 if (oldAttVal.getOptionId() != null 
                     && newAttVal.getAttribute().isOptionAttribute())
                 {
-                    AttributeOption fromOption = oldAttVal.getAttributeOption();
-                    AttributeOption toOption = newAttVal.getAttributeOption();
-                    msg = WorkflowFactory.getInstance().checkTransition(fromOption, 
-                                                        toOption, this, 
-                                                        newAttVals, user);
-                }
-                if (msg == null)
-                {
                     oldAttVal.startActivitySet(activitySet);
                     oldAttVal.setProperties(newAttVal);
                     oldAttVal.save();
-                }
-                else
-                {
-                    throw new ScarabException(msg);
                 }
             }
         }
         return activitySet;
     }
-
 }
