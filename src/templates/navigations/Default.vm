@@ -17,7 +17,7 @@
 </div>
 </p>
 
-#set ($issueTypes = $scarabR.CurrentModule.IssueTypes)
+#set ($issueTypes = $scarabR.CurrentModule.NavIssueTypes)
 #if ($issueTypes.size() > 0)
 <div><small><strong>Artifact Types</strong></small>
 #foreach($issueType in $issueTypes)
