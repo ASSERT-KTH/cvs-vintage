@@ -19,7 +19,7 @@
 # File: uci/Makefile
 # makefile for the uci shared code directory
 # original author: jrobbins@ics.uci.edu
-# $Id: Makefile,v 1.11 1998/08/06 21:31:13 jrobbins Exp $
+# $Id: Makefile,v 1.12 1998/09/06 08:31:45 abonner Exp $
 
 include Makefile.config
 
@@ -69,6 +69,7 @@ argoumlClasses:
 	cd .. ; \
 	cd uml ; \
 	cd ui; make classes; cd .. ; \
+	cd xmi; make classes; cd .. ; \
 	cd visual; make classes; cd .. ; \
 	cd .. ; \
 	fi
