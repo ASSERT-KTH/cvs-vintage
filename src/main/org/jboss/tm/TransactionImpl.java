@@ -35,7 +35,7 @@ import javax.transaction.xa.XAException;
  *  @author Rickard Öberg (rickard.oberg@telkel.com)
  *  @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
  *  @author <a href="mailto:osh@sparre.dk">Ole Husgaard</a>
- *  @version $Revision: 1.9 $
+ *  @version $Revision: 1.10 $
  */
 public class TransactionImpl
    implements Transaction, Serializable
@@ -44,17 +44,17 @@ public class TransactionImpl
 
    // Attributes ----------------------------------------------------
 
-   XidImpl xid; // Transaction ID.
-   
+   Xid xid; // Transaction ID.
+
    // Constructors --------------------------------------------------
-   
-   TransactionImpl(TxCapsule txCapsule, XidImpl xid)
+
+   TransactionImpl(TxCapsule txCapsule, Xid xid)
    {
       this.txCapsule = txCapsule;
-      this.xid = xid; 
+      this.xid = xid;
       travelled = false;
    }
-   
+
    // Public --------------------------------------------------------
 
    // In the following methods we synchronize to avoid races with transaction
@@ -153,7 +153,7 @@ public class TransactionImpl
 
    public int hashCode()
    {
-      return xid.hash;
+      return xid.hashCode();
    }
 
    public String toString()

@@ -43,7 +43,7 @@ import org.jboss.minerva.pools.PoolEventListener;
  * also register a TransactionListener that will be notified when the
  * Transaction is finished, and release the XAConnection at that time.</P>
  * @see org.jboss.minerva.xa.TransactionListener
- * @version $Revision: 1.7 $
+ * @version $Revision: 1.8 $
  * @author Aaron Mulder (ammulder@alumni.princeton.edu)
  */
 public class XAConnectionImpl implements XAConnection, PooledObject {
@@ -114,8 +114,8 @@ public class XAConnectionImpl implements XAConnection, PooledObject {
         Vector local = (Vector)listeners.clone();
         for(int i=local.size()-1; i>=0; i--)
             ((ConnectionEventListener)local.elementAt(i)).connectionClosed(new ConnectionEvent(this));
-        if(!trans)
-            transactionFinished();
+//        if(!trans)
+//            transactionFinished();
     }
 
     /**

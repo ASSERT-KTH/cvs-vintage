@@ -22,7 +22,7 @@ import java.sql.*;
  * <P><FONT COLOR="RED"><B>Warning:</B></FONT></P> This implementation assumes
  * that forget will be called after a failed commit or rollback.  Otherwise,
  * the database connection will never be closed.</P>
- * @version $Revision: 1.6 $
+ * @version $Revision: 1.7 $
  * @author Aaron Mulder (ammulder@alumni.princeton.edu)
  */
 public class XAResourceImpl implements XAResource {
@@ -51,6 +51,10 @@ public class XAResourceImpl implements XAResource {
         if(this.xaCon != null)
             throw new IllegalStateException();
         this.xaCon = xaCon;
+    }
+
+    public XAConnectionImpl getXAConnection() {
+        return xaCon;
     }
 
     /**

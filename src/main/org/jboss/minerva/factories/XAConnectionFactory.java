@@ -25,6 +25,7 @@ import org.jboss.minerva.xa.TransactionListener;
 import org.jboss.minerva.xa.XAConnectionImpl;
 import org.jboss.logging.Logger;
 
+
 /**
  * Object factory for JDBC 2.0 standard extension XAConnections.  You pool the
  * XAConnections instead of the java.sql.Connections since with vendor
@@ -38,7 +39,7 @@ import org.jboss.logging.Logger;
  * connection, the same previous connection will be returned.  Otherwise,
  * you won't be able to share changes across connections like you can with
  * the native JDBC 2 Standard Extension implementations.</P>
- * @version $Revision: 1.9 $
+ * @version $Revision: 1.10 $
  * @author Aaron Mulder (ammulder@alumni.princeton.edu)
  */
 public class XAConnectionFactory extends PoolObjectFactory {
@@ -51,7 +52,7 @@ public class XAConnectionFactory extends PoolObjectFactory {
     private TransactionListener transListener;
     private ObjectPool pool;
     private PrintWriter log;
-    private HashMap wrapperTx;
+    private HashMap wrapperTx, rms;
     private TransactionManager tm;
 
     /**
@@ -61,6 +62,7 @@ public class XAConnectionFactory extends PoolObjectFactory {
     public XAConnectionFactory() throws NamingException {
         ctx = new InitialContext();
         wrapperTx = new HashMap();
+        rms = new HashMap();
         errorListener = new ConnectionEventListener() {
             public void connectionErrorOccurred(ConnectionEvent evt) {
                 if(pool.isInvalidateOnError()) {
@@ -89,7 +91,9 @@ public class XAConnectionFactory extends PoolObjectFactory {
                 try {
                     if(tm.getStatus() != Status.STATUS_NO_TRANSACTION) {
                         trans = tm.getTransaction();
-                        trans.delistResource(con.getXAResource(), status);
+                        XAResource res = (XAResource)rms.get(con);//con.getXAResource();
+                        trans.delistResource(res, status);
+                        rms.remove(con);
                     }
                 } catch(Exception e) {
                     Logger.exception(e);
@@ -225,13 +229,15 @@ public class XAConnectionFactory extends PoolObjectFactory {
      */
     public Object prepareObject(Object pooledObject) {
         XAConnection con = (XAConnection)pooledObject;
+        con.addConnectionEventListener(listener);
         Transaction trans = null;
         try {
             if(tm.getStatus() != Status.STATUS_NO_TRANSACTION) {
                 trans = tm.getTransaction();
-                trans.enlistResource(con.getXAResource());
-                con.addConnectionEventListener(listener);
-                if(log != null) log.println("Enlisted with transaction.");
+                XAResource res = con.getXAResource();
+                trans.enlistResource(res);
+                rms.put(con, res);
+                if(log != null) log.println("Resource '"+res+"' enlisted for '"+con+"'.");
             } else {
                 if(log != null) log.println("No transaction right now.");
             }

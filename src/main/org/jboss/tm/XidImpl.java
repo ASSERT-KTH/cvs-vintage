@@ -18,13 +18,13 @@ import javax.transaction.xa.Xid;
  *  @see TransactionImpl
  *  @author Rickard Öberg (rickard.oberg@telkel.com)
  *  @author <a href="mailto:osh@sparre.dk">Ole Husgaard</a>
- *  @version $Revision: 1.4 $
+ *  @version $Revision: 1.5 $
  */
 class XidImpl
    implements Xid, java.io.Serializable
 {
    // Constants -----------------------------------------------------
-    
+
    // Attributes ----------------------------------------------------
 
    /**
@@ -42,7 +42,7 @@ class XidImpl
     *  This identifies the branch of a transaction.
     */
    byte[] branchId;
-    
+
    // Static --------------------------------------------------------
 
    /**
@@ -66,7 +66,7 @@ class XidImpl
             hostName = "localhost/";
          }
       }
- 
+
       return hostName;
    }
 
@@ -78,7 +78,7 @@ class XidImpl
    /**
     *  Return a new unique transaction id to use on this host.
     */
-   static private synchronized int getNextId()
+   static synchronized int getNextId()
    {
       return nextId++;
    }
@@ -86,18 +86,22 @@ class XidImpl
    /**
     *  Singleton for no branch qualifier.
     */
-   static private byte[] noBranchQualifier = new byte[0];
+    static byte[] noBranchQualifier = new byte[MAXBQUALSIZE];
+    static {
+        for(int i=0; i<noBranchQualifier.length; i++)
+            noBranchQualifier[i] = 0;
+    }
 
    // Constructors --------------------------------------------------
 
    /**
     *  Create a new unique branch qualifier.
     */
-   public XidImpl()
+   public XidImpl(int formatId, byte[] globalId, byte[] branchId)
    {
-      hash = getNextId();
-      this.globalId = getGlobalIdString().getBytes();
-      this.branchId = noBranchQualifier;
+      this.hash = getNextId();
+      this.globalId = globalId;
+      this.branchId = branchId;
    }
 
    /**
@@ -109,9 +113,9 @@ class XidImpl
       this.globalId = xid.globalId;
       this.branchId = branchId;
    }
-   
+
    // Public --------------------------------------------------------
-   
+
    // Xid implementation --------------------------------------------
 
    /**
@@ -121,7 +125,7 @@ class XidImpl
    {
       return (byte[])globalId.clone();
    }
-   
+
    /**
     *  Return the branch qualifier of this transaction.
     */
@@ -139,7 +143,11 @@ class XidImpl
     *  The format identifier augments the global id and specifies
     *  how the global id and branch qualifier should be interpreted.
     */
-   public int getFormatId()
+   public int getFormatId() {
+       return getJbossFormatId();
+   }
+
+   public static int getJbossFormatId()
    {
       // The id we return here should be different from all other transaction
       // implementations.
@@ -150,7 +158,7 @@ class XidImpl
       //         OSI TP do have the same id format.)
       // 0xBB14: Used by JONAS
       // 0xBB20: Used by JONAS
-      return 1;
+      return 0x0101;
    }
 
    /**
@@ -185,18 +193,26 @@ class XidImpl
 
    public String toString()
    {
-      return "XidImpl:" + getGlobalIdString();
+      return "XidImpl:" + getGlobalTransactionId();
    }
 
    // Package protected ---------------------------------------------
-    
+
    // Protected -----------------------------------------------------
-    
+
    // Private -------------------------------------------------------
 
-   private String getGlobalIdString()
+   static byte[] getGlobalIdString(int hash)
    {
-      return getHostName() + hash;
+      String value;
+      String s = getHostName();
+      String h = Integer.toString(hash);
+      if(s.length() + h.length() > 64) {
+          value = s.substring(0, 64-h.length())+h;
+      } else value = s+h;
+      byte b[] = new byte[MAXGTRIDSIZE];
+      System.arraycopy(value.getBytes(), 0, b, 0, value.length());
+      return b;
    }
 
    // Inner classes -------------------------------------------------

@@ -7,6 +7,7 @@
 package org.jboss.tm;
 
 import java.io.Serializable;
+import java.lang.reflect.Constructor;
 import java.util.ArrayList;
 import java.util.Set;
 import java.util.HashSet;
@@ -43,14 +44,16 @@ import org.jboss.util.timeout.TimeoutFactory;
  *  @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
  *  @author <a href="mailto:osh@sparre.dk">Ole Husgaard</a>
  *
- *  @version $Revision: 1.16 $
+ *  @version $Revision: 1.17 $
  */
 class TxCapsule implements TimeoutTarget
 {
    // Constants -----------------------------------------------------
 
    // Trace enabled flag
-   static private final boolean trace = true;
+   static private final boolean trace = false;
+   // Constructor for Xid instances
+   private static Constructor xidConstructor = null;
 
    // Code meaning "no heuristics seen", must not be XAException.XA_HEURxxx
    static private final int HEUR_NONE     = XAException.XA_RETRY;
@@ -85,7 +88,7 @@ class TxCapsule implements TimeoutTarget
     */
    private TxCapsule(TxManager tm)
    {
-      xid = new XidImpl();
+      xid = createXid();
       this.tm = tm;
 
       if (trace)
@@ -114,7 +117,7 @@ class TxCapsule implements TimeoutTarget
       done = false;
       resourcesEnded = false;
 
-      xid = new XidImpl();
+      xid = createXid();
 
       status = Status.STATUS_ACTIVE;
       heuristicCode = HEUR_NONE;
@@ -194,7 +197,7 @@ class TxCapsule implements TimeoutTarget
 
    // Package protected ---------------------------------------------
 
-   XidImpl getXid()
+   Xid getXid()
    {
 	  return xid;
    }
@@ -732,7 +735,7 @@ class TxCapsule implements TimeoutTarget
    /**
     *  The ID of this transaction.
     */
-   private XidImpl xid; // Transaction id
+   private Xid xid; // Transaction id
 
    /**
     *  Status of this transaction.
@@ -803,7 +806,7 @@ class TxCapsule implements TimeoutTarget
             return "STATUS_MARKED_ROLLBACK";
          case Status.STATUS_ACTIVE:
             return "STATUS_ACTIVE";
- 
+
          default:
             return "STATUS_UNKNOWN(" + status + ")";
       }
@@ -864,7 +867,7 @@ class TxCapsule implements TimeoutTarget
             return "XAER_RMERR";
          case XAException.XAER_RMFAIL:
             return "XAER_RMFAIL";
- 
+
          default:
             return "XA_UNKNOWN(" + errorCode + ")";
       }
@@ -890,7 +893,7 @@ class TxCapsule implements TimeoutTarget
             } catch (InterruptedException ex) {}
 
             // MF FIXME: don't we need a notify() in this case?
-            // we need to release all the thread waiting on this lock 
+            // we need to release all the thread waiting on this lock
 
             // OSH: notifyAll() is done in instanceDone()
             // and notify() is done in unlock().
@@ -942,14 +945,16 @@ class TxCapsule implements TimeoutTarget
    /**
     *  Return index of XAResource, or <code>-1</code> if not found.
     */
-   private int findResource(XAResource xaRes)
-   {
-      for (int i = 0; i < resourceCount; ++i)
-         if (resources[i] == xaRes)
-            return i;
+    private int findResource(XAResource xaRes) {
+        int pos = -1;
+        for (int i = 0; i < resourceCount; ++i)
+            try { // FIXME: Do we need to join if there's more than one?
+                if(resources[i].isSameRM(xaRes))
+                    pos = i;
+            } catch(XAException e) {}
 
-      return -1;
-   }
+        return pos;
+    }
 
    /**
     *  Add a resource, expanding tables if needed.
@@ -996,18 +1001,20 @@ class TxCapsule implements TimeoutTarget
    private void startResource(XAResource xaRes, int flags)
       throws XAException
    {
-        Logger.debug("TxCapsule.startResource(" + xid.toString() +
-                   ") entered: " + xaRes.toString() +
-                   " flags=" + flags);
+        if(trace)
+            Logger.debug("TxCapsule.startResource(" + xid.toString() +
+                         ") entered: " + xaRes.toString() +
+                         " flags=" + flags);
       unlock();
       // OSH FIXME: resourceState could be incorrect during this callout.
       try {
          xaRes.start(xid, flags);
       } finally {
          lock();
-        Logger.debug("TxCapsule.startResource(" + xid.toString() +
-                   ") leaving: " + xaRes.toString() +
-                   " flags=" + flags);
+         if(trace)
+            Logger.debug("TxCapsule.startResource(" + xid.toString() +
+                         ") leaving: " + xaRes.toString() +
+                         " flags=" + flags);
       }
    }
 
@@ -1018,18 +1025,20 @@ class TxCapsule implements TimeoutTarget
    private void endResource(XAResource xaRes, int flag)
       throws XAException
    {
-      Logger.debug("TxCapsule.endResource(" + xid.toString() +
-                   ") entered: " + xaRes.toString() +
-                   " flag=" + flag);
+      if(trace)
+          Logger.debug("TxCapsule.endResource(" + xid.toString() +
+                       ") entered: " + xaRes.toString() +
+                       " flag=" + flag);
       unlock();
       // OSH FIXME: resourceState could be incorrect during this callout.
       try {
          xaRes.end(xid, flag);
       } finally {
          lock();
-         Logger.debug("TxCapsule.endResource(" + xid.toString() +
-                      ") leaving: " + xaRes.toString() +
-                      " flag=" + flag);
+         if(trace)
+             Logger.debug("TxCapsule.endResource(" + xid.toString() +
+                          ") leaving: " + xaRes.toString() +
+                          " flag=" + flag);
       }
    }
 
@@ -1304,7 +1313,9 @@ class TxCapsule implements TimeoutTarget
       status = Status.STATUS_COMMITTING;
 
       for (int i = 0; i < resourceCount; i++) {
-        Logger.debug("TxCapsule.commitResources(): resourceStates["+i+"]="+resourceState[i]);
+         if(trace) {
+            Logger.debug("TxCapsule.commitResources(): resourceStates["+i+"]="+resourceState[i]);
+         }
          if (!onePhase && resourceState[i] != RS_VOTE_OK)
            continue;
 
@@ -1376,11 +1387,35 @@ class TxCapsule implements TimeoutTarget
                Logger.exception(e);
                break;
             }
+            try {
+                resources[i].forget(xid);
+            } catch(XAException forgetEx) {}
          }
       }
 
       status = Status.STATUS_ROLLEDBACK;
    }
+
+    private Xid createXid() {
+        String name = System.getProperty("jboss.xa.xidclass", "org.jboss.tm.XidImpl");
+        if(xidConstructor == null) {
+            try {
+                Class cls = Class.forName(name);
+                xidConstructor = cls.getConstructor(new Class[]{Integer.TYPE, byte[].class, byte[].class});
+            } catch(Exception e) {
+                System.out.println("Unable to load Xid class '"+name+"'");
+            }
+        }
+        try {
+            Object xid = xidConstructor.newInstance(new Object[]{new Integer(XidImpl.getJbossFormatId()),
+                                                                 XidImpl.getGlobalIdString(XidImpl.getNextId()),
+                                                                 XidImpl.noBranchQualifier});
+            return (Xid)xid;
+        } catch(Exception e) {
+            System.out.println("Unable to create an Xid (reverting to default impl): "+e);
+            return new XidImpl(XidImpl.getJbossFormatId(), XidImpl.getGlobalIdString(XidImpl.getNextId()), XidImpl.noBranchQualifier);
+        }
+    }
 
    // Inner classes -------------------------------------------------
 }
