@@ -16,13 +16,18 @@
 		<ant target="release" inheritall="false" dir="./org.columba.mail.ToOrCcFilter"/>
 		<ant target="release" inheritall="false" dir="./org.columba.mail.MozillaMailImportFilter"/>
 		<ant target="release" inheritall="false" dir="./org.columba.mail.PlaySoundFilterAction"/>
-			</target>
+		<ant target="release" inheritall="false" dir="./org.columba.mail.MarkFolderAsReadAction"/>
+	</target>
 	
 	<target name="core" description="Builds all core plugins">
 		<ant target="release" inheritall="false" dir="./org.columba.core.KunststoffLookAndFeel"/>
 		<ant target="release" inheritall="false" dir="./org.columba.core.MetouiaLookAndFeel"/>
 		<ant target="release" inheritall="false" dir="./org.columba.core.PythonInterpreter"/>
 		<ant target="release" inheritall="false" dir="./org.columba.core.ThinColumbaLookAndFeel"/>
+		<ant target="release" inheritall="false" dir="./org.columba.core.HippoLookAndFeel"/>
+		<ant target="release" inheritall="false" dir="./org.columba.core.LiquidLookAndFeel"/>
+		<ant target="release" inheritall="false" dir="./org.columba.core.LogDisplay"/>
+		<ant target="release" inheritall="false" dir="./org.columba.core.WinLAFLookAndFeel"/>
 	</target>
 	
 	<target name="examples" description="Builds all example plugins">
