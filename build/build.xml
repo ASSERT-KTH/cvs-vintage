@@ -183,6 +183,7 @@
             <property name="version" value="2.1-dev-unreleased"/>
             <property name="project" value="turbine"/>
             <property name="final.name" value="turbine-2.1-dev-unreleased"/>
+            <property name="src.dir" value="${turbine.dir}/src"/>
         </ant>
         <copy file="${turbine.dir}/bin/${turbine.latest.jar}" overwrite="true"
             todir="${src.lib.dir}"/>

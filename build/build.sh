@@ -13,7 +13,7 @@ fi
 CLASSPATH="."
 
 if [ -f ${JAVA_HOME}/lib/tools.jar ] ; then
-    CLASSPATH=${JAVA_HOME}/lib/tools.jar:$CLASSPATH
+    CLASSPATH="${JAVA_HOME}/lib/tools.jar:${CLASSPATH}"
 fi
 
 # convert the existing path to unix
