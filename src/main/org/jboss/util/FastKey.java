@@ -16,9 +16,10 @@ package org.jboss.util;
 *   
 *   @see org.jboss.ejb.plugins.NoPassivationInstanceCache.java
 *   @author <a href="marc.fleury@telkel.com">Marc Fleury</a>
-*   @version $Revision: 1.4 $
+*   @version $Revision: 1.5 $
 */
 public class FastKey
+    implements java.io.Externalizable
 {
     // Constants -----------------------------------------------------
     
@@ -62,6 +63,22 @@ public class FastKey
         //increment the timeStamp
         return new Long(seedKey++);
     }
+    
+    
+   public void writeExternal(java.io.ObjectOutput out)
+      throws java.io.IOException
+   {
+        out.writeObject(id);
+       out.writeObject(fastKey);
+   }
+   
+   public void readExternal(java.io.ObjectInput in)
+      throws java.io.IOException, ClassNotFoundException
+   {
+        id = in.readObject();
+       fastKey = (Long) in.readObject();
+   }
+
     
     // Private -------------------------------------------------------
     
