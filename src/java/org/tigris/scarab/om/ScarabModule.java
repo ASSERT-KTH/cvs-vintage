@@ -88,7 +88,7 @@ import org.tigris.scarab.security.SecurityFactory;
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: ScarabModule.java,v 1.38 2001/10/14 01:21:28 jon Exp $
+ * @version $Id: ScarabModule.java,v 1.39 2001/10/16 00:28:17 elicia Exp $
  */
 public class ScarabModule
     extends BaseScarabModule
@@ -406,39 +406,48 @@ public class ScarabModule
     }
 
     /**
-     * List of attribute groups associated with this module.
+     * gets a list of all Issue Types 
      */
-    public Vector getAttributeGroups()
+    public List getAllIssueTypes()
         throws Exception
     {
-        Vector groups = null;
-        Criteria crit = new Criteria()
-            .add(AttributeGroupPeer.MODULE_ID, getModuleId())
-            .addAscendingOrderByColumn(AttributeGroupPeer.PREFERRED_ORDER);
-        groups = AttributeGroupPeer.doSelect(crit);
-        return groups;
+        return IssueTypePeer.getAllIssueTypes();
     }
 
     /**
-     * Gets the sequence where the dedupe screen fits between groups.
+     * gets a list of the Issue Types for this module.
      */
-    public int getDedupeSequence()
+    public List getIssueTypes()
         throws Exception
     {
-        int sequence = 1;
-        Vector groups = getAttributeGroups();
-        for (int i=1; i<groups.size(); i++)
+        Criteria crit = new Criteria(3);
+        crit.addJoin(RModuleIssueTypePeer.ISSUE_TYPE_ID, 
+                     IssueTypePeer. ISSUE_TYPE_ID);
+        crit.add(RModuleIssueTypePeer. MODULE_ID, getModuleId());
+        crit.add(IssueTypePeer. TEMPLATE, false);
+        return IssueTypePeer.doSelect(crit);
+    }
+
+    /**
+     * gets a list of all of the issue types that are not associated with 
+     * this module
+     */
+    public List getAvailableIssueTypes()
+        throws Exception
+    {
+        List issueTypes = getIssueTypes();
+        List allIssueTypes = getAllIssueTypes();
+        List availIssueTypes = new ArrayList();
+
+        for ( int i=0; i<allIssueTypes.size(); i++ )
         {
-           int order = ((AttributeGroup)groups.get(i)).getOrder();
-           int previousOrder = ((AttributeGroup)groups.get(i-1)).getOrder();
-           System.out.println(order + " " + previousOrder);
-           if (order != previousOrder +1)
-           {
-               sequence = order-1;
-               break;
-           }
+            IssueType issueType = (IssueType)allIssueTypes.get(i);
+            if (!issueTypes.contains(issueType))
+            {
+                availIssueTypes.add(issueType);
+            }
         }
-        return sequence;
+        return availIssueTypes;
     }
 
     /**
@@ -463,6 +472,17 @@ public class ScarabModule
         return rModAtts;
     }
 
+    /**
+     * Overridden method.  Calls the super method and if no results are
+     * returned the call is passed on to the parent module.
+     */
+    public Vector getRModuleAttributes(IssueType issueType)
+        throws Exception
+    {
+        Criteria crit = new Criteria(1);
+        crit.add(RModuleAttributePeer.ISSUE_TYPE_ID, issueType.getIssueTypeId());
+        return getRModuleAttributes(crit);
+    }
 
     /**
      * Array of Attributes used for deduping.
@@ -874,6 +894,33 @@ try{
 
     }
 
+    public Vector getRModuleIssueTypes()
+        throws Exception
+    {
+        List rmits = null;
+        Criteria crit = new Criteria(2);
+        crit.add(RModuleIssueTypePeer.MODULE_ID, getModuleId())
+        .addJoin(RModuleIssueTypePeer.ISSUE_TYPE_ID, 
+                     IssueTypePeer.ISSUE_TYPE_ID)
+        .add(IssueTypePeer.TEMPLATE, false)
+        .addAscendingOrderByColumn(RModuleIssueTypePeer.PREFERRED_ORDER);
+        return RModuleIssueTypePeer.doSelect(crit);
+    }
+
+    public RModuleIssueType getRModuleIssueType(IssueType issueType)
+        throws Exception
+    {
+        RModuleIssueType rmit = null;
+        Criteria crit = new Criteria(2);
+        crit.add(RModuleIssueTypePeer.MODULE_ID, getModuleId())
+           .add(RModuleIssueTypePeer.ISSUE_TYPE_ID, issueType.getIssueTypeId());
+        List results = RModuleIssueTypePeer.doSelect(crit);
+        if (results.size() > 0)
+        {
+            rmit = (RModuleIssueType)results.get(0);
+        }
+        return rmit;
+    }
 
     /**
      * Determines whether this module allows users to vote many times for

@@ -1,8 +1,14 @@
 package org.tigris.scarab.om;
 
-
 import org.apache.torque.om.UnsecurePersistent;
+//import org.apache.fulcrum.template.TemplateContext;
 import org.apache.torque.util.Criteria;
+
+import org.tigris.scarab.security.ScarabSecurity;
+import org.tigris.scarab.security.SecurityFactory;
+import org.tigris.scarab.services.module.ModuleEntity;
+import org.tigris.scarab.util.ScarabConstants;
+import org.tigris.scarab.util.ScarabException;
 
 /** 
  * You should add additional methods to this class to meet the
@@ -16,13 +22,23 @@ public  class RAttributeAttributeGroup
 
     /**
      * Delete the record.
-     * TODO: permission
      */
-    public void delete() throws Exception 
+    public void delete(ScarabUser user) throws Exception 
     { 
-        Criteria c = new Criteria()
-            .add(RAttributeAttributeGroupPeer.GROUP_ID, getGroupId())
-            .add(RAttributeAttributeGroupPeer.ATTRIBUTE_ID, getAttributeId());
-        RAttributeAttributeGroupPeer.doDelete(c);
+        ModuleEntity module = getAttributeGroup().getScarabModule();
+        ScarabSecurity security = SecurityFactory.getInstance();
+
+        if (security.hasPermission(ScarabSecurity.ITEM__APPROVE, 
+                                   user, module))
+        {
+            Criteria c = new Criteria()
+                .add(RAttributeAttributeGroupPeer.GROUP_ID, getGroupId())
+                .add(RAttributeAttributeGroupPeer.ATTRIBUTE_ID, getAttributeId());
+            RAttributeAttributeGroupPeer.doDelete(c);
+        } 
+        else
+        {
+            throw new ScarabException(ScarabConstants.NO_PERMISSION_MESSAGE);
+        }            
     }
 }

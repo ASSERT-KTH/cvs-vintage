@@ -110,7 +110,7 @@ public  class AttributeGroup
         ModuleEntity module = getScarabModule();
         ScarabSecurity security = SecurityFactory.getInstance();
 
-        if (security.hasPermission(ScarabSecurity.MODULE_EDIT,
+        if (security.hasPermission(ScarabSecurity.MODULE__EDIT,
                                    user, module))
         {
             // Delete module-attribute mapping
@@ -123,7 +123,7 @@ public  class AttributeGroup
             for (int i=0; i<results.size(); i++)
             {
                  RModuleAttribute rma = (RModuleAttribute)results.get(i);
-                 rma.delete();
+                 rma.delete(user);
             }
 
             // Delete attribute - attribute group mapping
