@@ -1268,7 +1268,7 @@ public class IMAPStore {
                 ColumbaLogger.log.info("flags=" + flagsString);
 
                 // unset flags command
-                if (variant >= 4) {
+                if (variant < 0) {
                     IMAPResponse[] responses = getProtocol().removeFlags(UIDSetParser.parse(
                                 list.toArray()), flagsString, true);
                 } else {
@@ -1484,6 +1484,14 @@ public class IMAPStore {
 
             break;
         }
+        
+        case MarkMessageCommand.MARK_AS_SPAM:
+        case MarkMessageCommand.MARK_AS_NOTSPAM: {
+            arg.add("Junk");
+
+            break;
+        }
+        
         }
 
         //if (arg.size() > 1)

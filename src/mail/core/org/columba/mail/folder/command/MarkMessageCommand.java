@@ -44,11 +44,11 @@ public class MarkMessageCommand extends FolderCommand {
     public final static int MARK_AS_FLAGGED = 1;
     public final static int MARK_AS_EXPUNGED = 2;
     public final static int MARK_AS_ANSWERED = 3;
-    public final static int MARK_AS_UNREAD = 4;
-    public final static int MARK_AS_UNFLAGGED = 5;
-    public final static int MARK_AS_UNEXPUNGED = 6;
-    public final static int MARK_AS_SPAM = 7;
-    public final static int MARK_AS_NOTSPAM = 8;
+    public final static int MARK_AS_SPAM = 4;
+    public final static int MARK_AS_UNREAD = -1;
+    public final static int MARK_AS_UNFLAGGED = -2;
+    public final static int MARK_AS_UNEXPUNGED = -3;
+    public final static int MARK_AS_NOTSPAM = -4;
     protected FolderCommandAdapter adapter;
 
     /**
