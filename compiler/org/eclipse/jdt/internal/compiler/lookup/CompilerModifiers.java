@@ -29,7 +29,10 @@ public interface CompilerModifiers extends ClassFileConstants { // modifier cons
 	final int AccSemicolonBody = 0x1000000; // bit25
 	final int AccUnresolved = 0x2000000; // bit26
 	final int AccClearPrivateModifier = 0x4000000; // bit27 might be requested during private access emulation
-	final int AccPrivateUsed = 0x8000000; // bit28 used to diagnose unused private members
 	final int AccBlankFinal = 0x4000000; // bit27 for blank final variables
+	final int AccPrivateUsed = 0x8000000; // bit28 used to diagnose unused private members
 	final int AccVisibilityMASK = AccPublic | AccProtected | AccPrivate;
+	
+	final int AccOverriding = 0x10000000; // bit29 to record fact a method overrides another one
+	final int AccImplementing = 0x20000000; // bit30 to record fact a method implements another one (i.e. is concrete and overrides an abstract one)
 }
