@@ -285,7 +285,7 @@ final class RequestDispatcherImpl implements RequestDispatcher {
 	    includeNamed( request, response );
 	    return;
 	}
-	
+
 	// Implement the spec that "no changes in response, only write"
 	// can also be done by setting the response to 0.9 mode
 	//	IncludedResponse iResponse = new IncludedResponse(realResponse);
