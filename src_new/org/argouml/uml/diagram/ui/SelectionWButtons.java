@@ -1,4 +1,4 @@
-// $Id: SelectionWButtons.java,v 1.9 2005/01/09 14:58:57 linus Exp $
+// $Id: SelectionWButtons.java,v 1.10 2005/01/15 17:17:12 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -65,10 +65,17 @@ public abstract class SelectionWButtons extends SelectionNodeClarifiers {
     ////////////////////////////////////////////////////////////////
     // static variables
     private static int numButtonClicks = 0;
+    
+    /**
+     * The bool showRapidButtons is only false if the user selected 
+     * to never show the buttons. The user can not do this currently.
+     */
     private static boolean showRapidButtons = true;
 
     ////////////////////////////////////////////////////////////////
     // instance variables
+    
+    /** True if the buttons on selection are currently shown. */
     private boolean paintButtons = true;
     private int pressedButton = -1;
 
@@ -95,7 +102,10 @@ public abstract class SelectionWButtons extends SelectionNodeClarifiers {
     // static accessors
 
     /**
-     * toggle ShowRapidButtons
+     * Toggle ShowRapidButtons. Use this to switch off the displaying 
+     * of the rapid buttons completely. This may be used for a user setting,
+     * although the benefit of switching them of is debatable. 
+     * See also issue 2492.
      */
     public static void toggleShowRapidButtons() {
         showRapidButtons = !showRapidButtons;

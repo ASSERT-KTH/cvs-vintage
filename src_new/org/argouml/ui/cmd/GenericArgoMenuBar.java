@@ -1,4 +1,4 @@
-// $Id: GenericArgoMenuBar.java,v 1.9 2005/01/02 23:11:02 mvw Exp $
+// $Id: GenericArgoMenuBar.java,v 1.10 2005/01/15 17:17:12 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -581,9 +581,6 @@ public class GenericArgoMenuBar extends JMenuBar
         setMnemonic(adjustGuide, "Adjust Guide");
         JMenuItem adjustPageBreaks = view.add(new CmdAdjustPageBreaks());
         setMnemonic(adjustPageBreaks, "Adjust Pagebreaks");
-        JMenuItem buttonsOnSelection =
-            view.addCheckItem(new ActionShowRapidButtons());
-        setMnemonic(buttonsOnSelection, "Buttons On Selection");
 
         view.addSeparator();
         JMenu notation = (JMenu) view.add(
