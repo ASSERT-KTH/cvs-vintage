@@ -64,6 +64,7 @@ import java.util.Arrays;
 import org.apache.turbine.RunData;
 import org.apache.turbine.Turbine;
 import org.apache.turbine.tool.IntakeTool;
+import org.apache.turbine.services.pull.ApplicationTool;
 import org.apache.torque.om.ComboKey;
 import org.apache.torque.om.SimpleKey;
 import org.apache.torque.om.NumberKey;
@@ -140,7 +141,7 @@ import org.tigris.scarab.tools.ScarabLocalizationTool;
  */
 public class ScarabRequestTool
     extends RecyclableSupport
-    implements ScarabRequestScope
+    implements ApplicationTool
 {
     private static final String TIME_ZONE =
         Turbine.getConfiguration().getString("scarab.timezone");
@@ -471,15 +472,24 @@ e.printStackTrace();
     }
 
     /**
-     * @see org.tigris.scarab.tools.ScarabRequestScope#setUser(ScarabUser)
+     * A <code>User</code> object for use within the Scarab API,
+     * generally <i>not</i> the user who is logged in.
      */
-    public void setUser (ScarabUser user)
+    public void setUser(ScarabUser user)
     {
         this.user = user;
     }
 
     /**
-     * @see org.tigris.scarab.tools.ScarabRequestScope#getUser()
+     * A <code>User</code> object for use within the Scarab API. This
+     * is the result of whatever was set with <code>setUser()</code>
+     * (generally <i>not</i> the user who is logged in).  It can
+     * return <code>null</code> if <code>setUser()</code> has not been
+     * previously called.  If you would like to get the currently
+     * logged in <code>User</code>, retrieve that from the
+     * data.getUser() method.
+     *
+     * @return A user used during this request.
      */
     public ScarabUser getUser()
     {
