@@ -355,15 +355,24 @@ public class ConfigFrame
 			moveupButton.setEnabled(false);
 		} else {
 			removeButton.setEnabled(true);
-			editButton.setEnabled(true);
+			
+			int[] selectedRows = listView.getSelectedRows();
+			int minIndex = selectedRows[0];
+			int maxIndex = selectedRows[selectedRows.length-1]; 
+			
+			if (minIndex == maxIndex) {  
+				editButton.setEnabled(true);
+			} else {
+				editButton.setEnabled(false);
+			}
 
-			if (theList.getAnchorSelectionIndex() == 0) {
+			if (minIndex == 0) {
 				moveupButton.setEnabled(false);
 			} else {
 				moveupButton.setEnabled(true);
 			}
 			
-			if (theList.getLeadSelectionIndex() == (filterList.count()-1)) {
+			if (maxIndex == (filterList.count()-1)) {
 				movedownButton.setEnabled(false);
 			} else {
 				movedownButton.setEnabled(true);
@@ -406,7 +415,11 @@ public class ConfigFrame
 			}
 
 		} else if (action.equals("REMOVE")) {
-			filterList.remove( getSelected() );
+			int[] selectedRows = listView.getSelectedRows();
+			// Must go backwards or else the list will remove the wrong filters.
+			for (int i = selectedRows.length - 1; i >= 0; i--) {
+				filterList.remove(selectedRows[i]);
+			}
 			listView.update();
 
 		} else if (action.equals("EDIT")) {
@@ -414,14 +427,21 @@ public class ConfigFrame
 			showFilterDialog(filter);
 			
 		} else if (action.equals("MOVEUP")) {
-			Filter filter = getSelected();
-			filterList.moveUp(filter);
-			setSelected(filter);
+			int[] selectedRows = listView.getSelectedRows();
+			for (int i = 0; i < selectedRows.length; i++) {
+				filterList.move(selectedRows[i], -1);
+				selectedRows[i]--;
+			}
+			listView.setRowSelection(selectedRows);
 			
 		} else if (action.equals("MOVEDOWN")) {
-			Filter filter = getSelected();
-			filterList.moveDown(filter);
-			setSelected(filter);
+			int[] selectedRows = listView.getSelectedRows();
+			// Must go backwards or else the filters will swap places with each other.
+			for (int i = selectedRows.length - 1; i >= 0; i--) {
+				filterList.move(selectedRows[i], 1);
+				selectedRows[i]++;
+			}
+			listView.setRowSelection(selectedRows);
 		}
 	}
 }
