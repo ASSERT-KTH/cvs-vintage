@@ -1,4 +1,4 @@
-// $Id: Project.java,v 1.109 2004/08/16 16:47:09 mvw Exp $
+// $Id: Project.java,v 1.110 2004/08/31 19:22:22 bobtarling Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -72,7 +72,6 @@ import org.argouml.xml.pgml.PGMLParser;
 import org.argouml.xml.xmi.XMIReader;
 
 import org.tigris.gef.base.Diagram;
-import org.tigris.gef.ocl.OCLExpander;
 import org.tigris.gef.presentation.Fig;
 import org.tigris.gef.util.Util;
 
@@ -101,11 +100,6 @@ public class Project implements java.io.Serializable, TargetListener {
     ////////////////////////////////////////////////////////////////
     // static variables
     
-    /**
-     * This is used in the save process for PGML.
-     */
-    protected static OCLExpander expander;
-
     static final long serialVersionUID = 1399111233978692444L;
 
     ////////////////////////////////////////////////////////////////
@@ -1453,7 +1447,6 @@ public class Project implements java.io.Serializable, TargetListener {
         uuidRefs = null;
         defaultModelCache = null;
         
-        expander = null;
         url = null;
         saveRegistry = null;
         authorname = null;
