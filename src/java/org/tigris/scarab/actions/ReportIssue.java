@@ -98,7 +98,7 @@ import org.tigris.scarab.tools.ScarabRequestTool;
  * This class is responsible for report issue forms.
  *
  * @author <a href="mailto:jmcnally@collab.net">John D. McNally</a>
- * @version $Id: ReportIssue.java,v 1.89 2002/01/15 03:04:26 jmcnally Exp $
+ * @version $Id: ReportIssue.java,v 1.90 2002/01/18 17:08:52 jmcnally Exp $
  */
 public class ReportIssue extends RequireLoginFirstAction
 {
@@ -326,7 +326,14 @@ public class ReportIssue extends RequireLoginFirstAction
         
         // set any required flags
         setRequiredFlags(issue, intake);
-        
+        String summary = issue.getDefaultText();
+        if ( summary.length() == 0 ) 
+        {
+            Group commentGroup = intake.get("Attachment", "_1", false);
+            Field commentField = commentGroup.get("DataAsString");
+            commentField.setRequired(true);
+        }
+
         if (intake.isAllValid())
         {
             setAttributeValues(issue, intake, context);
@@ -375,6 +382,8 @@ public class ReportIssue extends RequireLoginFirstAction
                         attachment.setAttachmentType(AttachmentType
                                                          .getInstance(AttachmentTypePeer.ATTACHMENT_TYPE_NAME));
                         attachment.setIssue(issue);
+                        // FIXME! this duplicates setAttachmentType from two
+                        // lines above, it should not be needed.
                         attachment.setTypeId(new NumberKey(1));
                         attachment.save();    
                         
@@ -391,6 +400,13 @@ public class ReportIssue extends RequireLoginFirstAction
                     }
                     
                 }
+
+                // save the comment
+                Group commentGroup = intake.get("Attachment", "_1", false);
+                Attachment comment = new Attachment();
+                commentGroup.setProperties(comment);
+                issue.addComment(comment, (ScarabUser)data.getUser());
+
                 // set the template to the user selected value
                 String template = data.getParameters()
                     .getString(ScarabConstants.NEXT_TEMPLATE, "ViewIssue.vm");
@@ -403,7 +419,10 @@ public class ReportIssue extends RequireLoginFirstAction
                 setTarget(data, template);
                 
                 // send email
-                String summary = issue.getDefaultText();
+                if ( summary.length() == 0 ) 
+                {
+                    summary = comment.getDataAsString();
+                }
                 if ( summary.length() > 60 ) 
                 {
                     summary = summary.substring(0,60) + "...";
