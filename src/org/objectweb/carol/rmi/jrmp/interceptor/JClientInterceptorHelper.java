@@ -31,9 +31,9 @@ package org.objectweb.carol.rmi.jrmp.interceptor;
 import java.io.IOException;
 import java.io.ObjectInput;
 import java.io.ObjectOutput;
-import java.rmi.server.UID;
 
 
+import org.objectweb.carol.util.configuration.TraceCarol;
 /**
  * Class <code>JClientInterceptorHelper</code> is the CAROL JRMP Client Interceptor Helper 
  * this class is used by the other pakage class to manage client interception 
@@ -41,23 +41,8 @@ import java.rmi.server.UID;
  * @author  Guillaume Riviere (Guillaume.Riviere@inrialpes.fr)
  * @version 1.0, 15/07/2002
  */
-public class JClientInterceptorHelper {
-  
-    /**
-     * hold a unique identifier of this class. This is used to determine if
-     * contexts can be passed by reference using the JObjectStore
-     * this is for performance optimization
-     */
-    public static UID getSpaceID() {
-        return spaceID;
-    }
-
-    /**
-     * The spaceID
-     */
-    private final static UID spaceID = new UID();
-
-
+public class JClientInterceptorHelper extends JInterceptorHelper {
+ 
     /**
      * send client context with the request. The sendingRequest method of the PortableInterceptors
      * is called prior to marshalling arguments and contexts
@@ -65,16 +50,22 @@ public class JClientInterceptorHelper {
      * @param ClientRequestInterceptor All interceptor for this context
      * @exception IOException if an exception occur with the ObjectOutput
      */
-    public static void send_request(ObjectOutput out, JClientRequestInterceptor [] cis) throws IOException {
-	if (cis != null) {
+    public static void send_request(ObjectOutput out, 
+				    JClientRequestInterceptor [] cis, 
+				    boolean localRef) throws IOException {
+	if ((cis==null)||(cis.length==0)) {
+	    if (TraceCarol.isDebugRmiCarol()) {
+		TraceCarol.debugRmiCarol("JClientInterceptorHelper send request with no contexts");
+	    }
+	    // send no service context
+	    out.writeInt(NO_CTX);
+	} else { 
 	    JClientRequestInfo ri = new  JRMPClientRequestInfoImpl();
 	    for (int i = 0; i < cis.length; i++) {
 		cis[i].send_request(ri);		
 	    }
-	    // send all service context
-	    out.writeObject(ri.get_all_request_service_context());
+	    setClientContextInOutput(out, ri, localRef);
 	}
-	
     }
 
 
@@ -85,10 +76,9 @@ public class JClientInterceptorHelper {
      * @param JClientRequestInterceptor All interceptor for this context
      * @exception IOException if an exception occur with the ObjectOutput 
      */
-    public static void send_poll(ObjectOutput out, JClientRequestInterceptor [] cis) throws IOException {
-	if (cis != null) {
-	    // nothing fo the moment
-	}
+    public static void send_poll(ObjectOutput out, 
+				 JClientRequestInterceptor [] cis, 
+				 boolean localRef) throws IOException {
     }
 
 
@@ -100,8 +90,19 @@ public class JClientInterceptorHelper {
      */
     public static void receive_reply(ObjectInput in, JClientRequestInterceptor [] cis)throws IOException {
 	try {
-	    if (cis != null) {
-		JClientRequestInfo ri = new  JRMPClientRequestInfoImpl((JServiceContext [])in.readObject());
+	    int ctxValue= in.readInt();
+	    if ((cis == null)||(cis.length==0)) {
+		// no interceptions
+		if (TraceCarol.isDebugRmiCarol()) {
+		    TraceCarol.debugRmiCarol("JClientInterceptorHelper receive reply with no contexts");
+		}
+		getClientContextFromInput(in, ctxValue, false);
+	    } else {
+		// context and interception
+		if (TraceCarol.isDebugRmiCarol()) {
+		    TraceCarol.debugRmiCarol("JClientInterceptorHelper receive reply contexts");
+		}
+		JClientRequestInfo ri = new JRMPClientRequestInfoImpl(getClientContextFromInput(in, ctxValue, true));
 		for (int i = 0; i < cis.length; i++) {
 		    cis[i].receive_reply(ri);		
 		}
@@ -112,16 +113,27 @@ public class JClientInterceptorHelper {
     }
 
     /**
-      
+     *      
      * Receive exception interception
      * @param ObjectInput in
      * @param ClientRequestInterceptor All interceptor for this context
      * @exception IOException if an exception occur with the ObjectOutput 
      */
     public static void receive_exception(ObjectInput in, JClientRequestInterceptor [] cis) throws IOException {
-	try {
-	    if (cis != null) {
-		JClientRequestInfo ri = new  JRMPClientRequestInfoImpl((JServiceContext [])in.readObject());
+	try {	  
+	    int ctxValue= in.readInt();
+	    if ((cis == null)||(cis.length==0)) {
+		// no interceptions
+		if (TraceCarol.isDebugRmiCarol()) {
+		    TraceCarol.debugRmiCarol("JClientInterceptorHelper receive exception with no contexts");
+		}
+		getClientContextFromInput(in, ctxValue, false);
+	    } else {
+		// context and interception
+		if (TraceCarol.isDebugRmiCarol()) {
+		    TraceCarol.debugRmiCarol("JClientInterceptorHelper receive exception contexts");
+		}
+		JClientRequestInfo ri = new JRMPClientRequestInfoImpl(getClientContextFromInput(in, ctxValue, true));
 		for (int i = 0; i < cis.length; i++) {
 		    cis[i].receive_exception(ri);		
 		}
@@ -143,8 +155,19 @@ public class JClientInterceptorHelper {
      */
     public static void receive_other(ObjectInput in, JClientRequestInterceptor [] cis) throws IOException {
 	try {
-	    if (cis != null) {
-		JClientRequestInfo ri = new  JRMPClientRequestInfoImpl((JServiceContext [])in.readObject());
+	    int ctxValue= in.readInt();
+	    if ((cis == null)||(cis.length==0)) {
+		// no interceptions
+		if (TraceCarol.isDebugRmiCarol()) {
+		    TraceCarol.debugRmiCarol("JClientInterceptorHelper receive other with no contexts");
+		}
+		getClientContextFromInput(in, ctxValue, false);
+	    } else {
+		// context and interception
+		if (TraceCarol.isDebugRmiCarol()) {
+		    TraceCarol.debugRmiCarol("JClientInterceptorHelper receive other contexts");
+		}
+		JClientRequestInfo ri = new JRMPClientRequestInfoImpl(getClientContextFromInput(in, ctxValue, true));
 		for (int i = 0; i < cis.length; i++) {
 		    cis[i].receive_other(ri);		
 		}
@@ -152,6 +175,83 @@ public class JClientInterceptorHelper {
 	} catch (ClassNotFoundException cnfe) {
 	    throw new IOException("" +cnfe);
 	}
+    }    
+
+
+    /**
+     * Get Context from Object Input
+     * @param ObjectInput in the object input stream
+     * @param int the context value
+     * @param boolean do not build Request Info
+     */
+    public static JServiceContext [] getClientContextFromInput(ObjectInput in, 
+							       int ctxValue, 
+							       boolean request) throws ClassNotFoundException, 
+										       IOException {
+	if (ctxValue==NO_CTX) {
+	    if (TraceCarol.isDebugRmiCarol()) {
+		TraceCarol.debugRmiCarol("JClientInterceptorHelper getObjectFromInput no context, request="+request);
+	    }
+	    return null;
+	} else if (ctxValue==REMOTE_CTX) {
+	    if (TraceCarol.isDebugRmiCarol()) {
+		TraceCarol.debugRmiCarol("JClientInterceptorHelper getObjectFromInput remote, request="+request);
+	    }
+	    if (request) {
+		return (JServiceContext [])in.readObject();
+	    } else {
+		in.readObject();
+		return null;
+	    }
+	} else if (ctxValue==LOCAL_CTX) {
+	    // local context case 
+	    int id = in.readInt();
+	    // local context
+	    if (TraceCarol.isDebugRmiCarol()) {
+		TraceCarol.debugRmiCarol("JClientInterceptorHelper getObjectFromInput local id("+id+"), request="+request);
+	    }
+	    if (request) {
+		return (JServiceContext [])JContextStore.getObject(id);
+	    } else {
+		JContextStore.getObject(id);
+		return null;
+	    }
+	} else {
+	    throw new IOException("Unknow context type:" + ctxValue);
+	}
     }
 
+    /**
+     * Set Context inObject Outut
+     * @param ObjectOutput in the object OutPutStream
+     * @param int the context value
+     * @param boolean do not build Request Info
+     */
+    public static void setClientContextInOutput(ObjectOutput out, 
+						JClientRequestInfo ri, 
+						boolean locRef) throws IOException {
+	if (!ri.hasContexts()) {
+	    if (TraceCarol.isDebugRmiCarol()) {
+		TraceCarol.debugRmiCarol("JClientInterceptorHelper send request without contexts");
+	    }
+	    // send no service context
+	    out.writeInt(NO_CTX);
+	} else if (locRef) {
+	    Object ctx = ri.get_all_request_service_context();
+	    int k = JContextStore.storeObject(ctx);
+	    out.writeInt(LOCAL_CTX);
+	    out.writeInt(k);
+	    if (TraceCarol.isDebugRmiCarol()) {
+		TraceCarol.debugRmiCarol("JClientInterceptorHelper send request with local contexts id("+k+")");
+	    }
+	    // send local service context		    
+	} else {
+	    if (TraceCarol.isDebugRmiCarol()) {
+		TraceCarol.debugRmiCarol("JClientInterceptorHelper send request with remote contexts");
+	    }
+	    // send remotes service context
+	    out.writeInt(REMOTE_CTX);
+	    out.writeObject(ri.get_all_request_service_context());
+	}
+    }
 }

@@ -1,7 +1,7 @@
 Manifest-Version: 1.0
 Specification-Title: "CAROL"
-Specification-Version: "1.0.2"
+Specification-Version: "1.3.4-3"
 Specification-Vendor: "ObjectWeb"
 Implementation-Title: "org.objectweb.carol"
-Implementation-Version: "1.0.2"
+Implementation-Version: "1.3.4-3"
 Implementation-Vendor: "INRIA"

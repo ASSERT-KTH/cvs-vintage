@@ -51,6 +51,7 @@ import java.net.InetAddress;
 // carol import
 import org.objectweb.carol.rmi.jrmp.interceptor.JClientInterceptorHelper;
 import org.objectweb.carol.rmi.jrmp.interceptor.JClientRequestInterceptor;
+import org.objectweb.carol.rmi.jrmp.interceptor.JInterceptorHelper;
 
 /**
  * Class <code>JUnicastRef</code> is the CAROL JRMP UnicastRef with context propagation
@@ -62,9 +63,14 @@ import org.objectweb.carol.rmi.jrmp.interceptor.JClientRequestInterceptor;
 public class JUnicastRef extends UnicastRef {
 
     /**
+     * flag for local server
+     */
+    private transient boolean localRef = false;
+
+    /**
      * Client Interceptor for context propagation
      */
-    protected JClientRequestInterceptor [] cis = null;
+    protected transient JClientRequestInterceptor [] cis = null;
 
     /**
      * empty constructor
@@ -225,7 +231,7 @@ public class JUnicastRef extends UnicastRef {
      * @param out the ObjectOutput for the call marchalling
     */
     protected void marshalCustomCallData(ObjectOutput out) throws IOException {
-        JClientInterceptorHelper.send_request(out, cis);
+        JClientInterceptorHelper.send_request(out, cis, localRef);
         super.marshalCustomCallData(out);
     }
 
@@ -251,13 +257,16 @@ public class JUnicastRef extends UnicastRef {
     /**
      * override readExternal to initialise localRef
      * We could actually receive anything from the server on lookup
-     * @param in the objject imput 
+     * @param in the object input 
      * @param newFormat the new format boolean 
      */
     public void readExternal(ObjectInput in, boolean newFormat)
             throws IOException, ClassNotFoundException {
         InetAddress addr = (InetAddress)in.readObject();
         UID uid = (UID)in.readObject();
+	if (addr.equals(InetAddress.getLocalHost())) {
+             localRef=JInterceptorHelper.getSpaceID().equals(uid);
+	}	
 	cis = (JClientRequestInterceptor []) in.readObject();
         ref = LiveRef.read(in, newFormat);
     }
@@ -270,7 +279,7 @@ public class JUnicastRef extends UnicastRef {
      */
     public void writeExternal(ObjectOutput out, boolean newFormat) throws IOException {
         out.writeObject(InetAddress.getLocalHost());
-        out.writeObject(JClientInterceptorHelper.getSpaceID());
+        out.writeObject(JInterceptorHelper.getSpaceID());
 	out.writeObject(cis);
         ref.write(out, newFormat);
     }

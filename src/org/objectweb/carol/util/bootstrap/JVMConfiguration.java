@@ -118,7 +118,8 @@ public class JVMConfiguration implements Serializable {
     /**
      * Constuctor with the jvm string
      * This constructor is use "like a java ... command"
-     * and parse the string 
+     * and parse the string
+     *
      */
     public JVMConfiguration(String commandLine) throws ProcessException {
 	StringTokenizer st = new StringTokenizer(commandLine);
@@ -259,7 +260,8 @@ public class JVMConfiguration implements Serializable {
     }
 
     /**
-     * set -jar ... option 
+     * set -jar ... option
+     *
      * @throws ProcessException if the class option is set
      */
     public void setJar(String jName) throws  ProcessException {
@@ -271,7 +273,8 @@ public class JVMConfiguration implements Serializable {
     }   
 
     /**
-     * add mains args ... option 
+     * add mains args ... option
+     *
      */
     public void addArgs(String args) throws  ProcessException {
 	mainArgs+=" "+args;

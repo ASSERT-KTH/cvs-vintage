@@ -41,6 +41,11 @@ import java.util.Hashtable;
 public class JRMPServerRequestInfoImpl implements JServerRequestInfo {
 
     /**
+     * exiting contexts, true if there is one or more context 
+     */
+    public transient boolean contexts = false;
+
+    /**
      * Request Service Context HasTable
      */
     protected Hashtable scRequestTable = null;  
@@ -64,25 +69,34 @@ public class JRMPServerRequestInfoImpl implements JServerRequestInfo {
      * @param JServiceContext [] the table for Reply SC instantiation 
      */
     public JRMPServerRequestInfoImpl (JServiceContext [] scs) {
-	scReplyTable = new Hashtable();
-	scRequestTable = new Hashtable();
-	for (int i = 0; i < scs.length; i++) {
-	    scRequestTable.put(new Integer(scs[i].context_id), scs[i]);
+	if (scs==null) {
+	    // empty, no contexts
+	} else {
+	    scReplyTable = new Hashtable();
+	    scRequestTable = new Hashtable();
+	    for (int i = 0; i < scs.length; i++) {
+		scRequestTable.put(new Integer(scs[i].context_id), scs[i]);
+		contexts=true;	
+	    }
 	}
-    }    
+    }
+
     /**
      * add a JServicecontext
      * @param JServiceContext the context to add
      * @param boolean replace if true replace the existing service context
      */
     public void add_reply_service_context(JServiceContext jServiceContext, boolean replace) {
-	Integer ctxId = new Integer(jServiceContext.context_id);
-	if (replace) {
-	    scReplyTable.put(ctxId, jServiceContext);
-	} else {
-	    if (!scReplyTable.containsKey(ctxId)) {
+	if (scReplyTable!=null) {
+	    Integer ctxId = new Integer(jServiceContext.context_id);
+	    contexts=true;
+	    if (replace) {
 		scReplyTable.put(ctxId, jServiceContext);
-	    }	
+	    } else {
+		if (!scReplyTable.containsKey(ctxId)) {
+		    scReplyTable.put(ctxId, jServiceContext);
+		}	
+	    }
 	}
     }
 
@@ -94,7 +108,11 @@ public class JRMPServerRequestInfoImpl implements JServerRequestInfo {
      * @return JServiceContex the specific ServiceContext
      */
     public JServiceContext get_request_service_context(int id) {
-	return (JServiceContext)scRequestTable.get(new Integer(id));
+	if (scRequestTable!=null) {
+	    return (JServiceContext)scRequestTable.get(new Integer(id));
+	} else {
+	    return null;
+	}
     }
 
     /**
@@ -104,13 +122,17 @@ public class JRMPServerRequestInfoImpl implements JServerRequestInfo {
      * @return JServiceContext []  the  ServiceContexts
      */
     public JServiceContext [] get_all_request_service_context() {
-	JServiceContext [] result = new JServiceContext [scRequestTable.size()];
-	int i =0;
-	for (Enumeration e = scRequestTable.elements() ; e.hasMoreElements() ;) {
-	    result[i] = (JServiceContext)(e.nextElement());
-	    i ++;
+	if (scRequestTable!=null) {
+	    JServiceContext [] result = new JServiceContext [scRequestTable.size()];
+	    int i =0;
+	    for (Enumeration e = scRequestTable.elements() ; e.hasMoreElements() ;) {
+		result[i] = (JServiceContext)(e.nextElement());
+		i ++;
+	    }
+	    return result;
+	} else {
+	    return null;
 	}
-	return result; 
     }  
 
     /**
@@ -121,7 +143,11 @@ public class JRMPServerRequestInfoImpl implements JServerRequestInfo {
      * @return JServiceContex the specific ServiceContext
      */
     public JServiceContext get_reply_service_context(int id) {
-	return (JServiceContext)scReplyTable.get(new Integer(id));
+	if (scReplyTable!=null) {
+	    return (JServiceContext)scReplyTable.get(new Integer(id));
+	} else {
+	    return null;
+	}
     }
 
     /**
@@ -131,14 +157,24 @@ public class JRMPServerRequestInfoImpl implements JServerRequestInfo {
      * @return JServiceContext []  the  ServiceContexts
      */
     public JServiceContext [] get_all_reply_service_context() {
-	JServiceContext [] result = new JServiceContext [scReplyTable.size()];
-	int i = 0;
-	for (Enumeration e = scReplyTable.elements() ; e.hasMoreElements() ;) {
-	    result[i] = ((JServiceContext)e.nextElement());	 
-	    i ++;
+	if (scReplyTable!=null) {
+	    JServiceContext [] result = new JServiceContext [scReplyTable.size()];
+	    int i = 0;
+	    for (Enumeration e = scReplyTable.elements() ; e.hasMoreElements() ;) {
+		result[i] = ((JServiceContext)e.nextElement());	 
+		i ++;
+	    }
+	    return result;
+	} else {
+	   return null;
 	}
-	return result;
     }  
 
+    /** 
+     * true if exit one or more context
+     */
+    public boolean hasContexts() {
+	return contexts;
+    }
 
 }

@@ -67,5 +67,10 @@ public interface JRequestInfo {
      * return null
      * @return JServiceContext []  the  ServiceContexts
      */
-    public JServiceContext [] get_all_reply_service_context();   
+    public JServiceContext [] get_all_reply_service_context();
+
+    /** 
+     * true if exit one or more context
+     */
+    public boolean hasContexts();
 }
