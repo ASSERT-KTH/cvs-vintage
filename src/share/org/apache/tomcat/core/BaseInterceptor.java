@@ -513,6 +513,13 @@ public class BaseInterceptor
     public final int getDebug() {
         return debug;
     }
-    
+
+    /** Special method for self-registered hooks, intended to support
+     *  a mechanism similar with Apache2.0 and further extensibility
+     *  without interface changes.
+     */
+    public int registerHooks() {
+	return DECLINED;
+    }
 
 }

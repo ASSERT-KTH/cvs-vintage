@@ -60,6 +60,7 @@
 package org.apache.tomcat.core;
 
 import org.apache.tomcat.util.*;
+import org.apache.tomcat.util.hooks.*;
 import java.io.*;
 import java.net.*;
 import java.util.*;
@@ -135,6 +136,7 @@ public class Container implements Cloneable{
     String methods[]=null;
     
     public Container() {
+	initHooks();
     }
 
     /** Get the context manager
@@ -374,12 +376,6 @@ public class Container implements Cloneable{
     }
 
     // -------------------- Interceptors --------------------
-    public static final int MAX_HOOKS=20;
-
-    // Hook Ids - keep them in sync with PREDEFINED_I
-    // ( static final for performance and to simplify code )
-    // H_ is from "hook"
-    
     public static final int H_requestMap=0;
     public static final int H_contextMap=1;
     public static final int H_authenticate=2;
@@ -393,126 +389,119 @@ public class Container implements Cloneable{
     public static final int H_postRequest=10;
     public static final int H_handleError=11;
     public static final int H_engineInit=12;
+    public static final int H_COUNT=14;
 
-    public static final String PREDEFINED_I[]= {
-	"requestMap", "contextMap", "authenticate",
-	"authorize", "preService", "beforeBody",
-	"newSessionRequest", "beforeCommit",
-	"afterBody", "postService", "postRequest",
-	"handleError",
-	// special case - all interceptors will be added to the "context"
-	// chain. We plan to use a simpler Event/Listener model for
-	// all context hooks, since they don't have any performance requirement
-	"engineInit" };
-    
-    // local interceptors - all interceptors added to this
-    // container
-    Vector interceptors[]=new Vector[ MAX_HOOKS ];
+    Hooks hooks=new Hooks();
+    BaseInterceptor hooksCache[][]=null;
+    BaseInterceptor allHooksCache[]=null;
 
-    // Merged interceptors - local and global ( upper-level ) interceptors
-    BaseInterceptor hooks[][]=new BaseInterceptor[MAX_HOOKS][];
-
-    // used internally 
-    private Vector getLocalInterceptors(int hookId) {
-	if( interceptors[hookId]==null )
-	    interceptors[hookId]=new Vector();
-	return interceptors[hookId];
+    private void initHooks() {
+	hooks.registerHook( "requestMap", H_requestMap );
+	hooks.registerHook( "contextMap", H_contextMap );
+	hooks.registerHook( "authenticate", H_authenticate );
+	hooks.registerHook( "authorize", H_authorize );
+	hooks.registerHook( "preService", H_preService );
+	hooks.registerHook( "beforeBody", H_beforeBody );
+	hooks.registerHook( "newSessionRequest", H_newSessionRequest );
+	hooks.registerHook( "beforeCommit", H_beforeCommit );
+	hooks.registerHook( "afterBody", H_afterBody );
+	hooks.registerHook( "postService", H_postService );
+	hooks.registerHook( "postRequest", H_postRequest );
+	hooks.registerHook( "handleError", H_handleError );
+	hooks.registerHook( "engineInit", H_handleError );
     }
-    
+
+    public Hooks getHooks() {
+	return hooks;
+    }
+
     /** Add the interceptor to all the hook chains it's interested
-	in
-    */
+     *	in
+     */
     public void addInterceptor( BaseInterceptor bi ) {
 	bi.setContext( getContext() );
-	
-	for( int i=0; i< PREDEFINED_I.length -1 ; i++ ) {
-	    if( IntrospectionUtils.hasHook( bi, PREDEFINED_I[i] )) {
-		if( interceptors[i]==null )
-		    interceptors[i]=new Vector();
-		if( dL > 0 ) debug( "Adding " + PREDEFINED_I[i] + " " +bi );
-		interceptors[i].addElement( bi );
-		resetInterceptorCache( i );
-	    }
-	}
-	// last position just gets all interceptors
-	// ( to be used for context-level hooks )
-	if( interceptors[H_engineInit]==null )
-	    interceptors[H_engineInit]=new Vector();
-	resetInterceptorCache( H_engineInit );
-	
-	interceptors[ H_engineInit ].addElement( bi );
-    }
 
+	hooks.addModule( bi );
+	hooksCache=null;
+	allHooksCache=null;
+    }
 
     public void removeInterceptor( BaseInterceptor bi ) {
-	for( int i=0; i<PREDEFINED_I.length-1; i++ ) {
-	    if( interceptors[i].contains( bi )) {
-		interceptors[i].removeElement( bi );
-		resetInterceptorCache( i );
-	    }
-	}
-	interceptors[H_engineInit].removeElement( bi );
-	resetInterceptorCache( H_engineInit );
-    }
-    
-    // make sure we reset the cache.
-    // dynamic addition of interceptors is not implemented,
-    // but this is a start
-    public void resetInterceptorCache( int id ) {
-	hooks[id]=null;
-    }
-
-    public static int getHookId( String hookName ) {
-	for( int i=0; i< PREDEFINED_I.length; i++ ) {
-	    if( PREDEFINED_I[i].equals(hookName))
-		return i;
-	    
-	}
-	// get all interceptors for unknown hook names
-	return PREDEFINED_I.length-1;
+	hooks.removeModule( bi );
+	hooksCache=null;
+	allHooksCache=null;
     }
     
     public BaseInterceptor[] getInterceptors( int type )
     {
-	if( hooks[type] != null ) {
-	    return hooks[type];
+	if( hooksCache != null ) {
+	    return hooksCache[type];
 	}
-	if( dL>5 ) 
-	    debug("create hooks for " + type + " " + PREDEFINED_I[type]);
-	
+
+	// load the cache with all the hooks
 	Container globalIntContainer=getContextManager().getContainer();
-	Vector globals=globalIntContainer.getLocalInterceptors( type );
-	Vector locals=null;
-	if( this != globalIntContainer ) {
-	    locals=this.getLocalInterceptors( type );
-	}
+	Hooks globals=globalIntContainer.getHooks();
 
-	int gsize=globals.size();
-	int lsize=(locals==null) ? 0 : locals.size();
-	hooks[type]=new BaseInterceptor[gsize+lsize];
-	
-	for ( int i = 0 ; i < gsize ; i++ ){
-	    hooks[type][i]=(BaseInterceptor)globals.elementAt(i);
-	    if( dL > 5 ) debug( "Add " + i + " " + hooks[type][i]);
+	hooksCache=new BaseInterceptor[H_COUNT][];
+	for( int i=0; i<H_COUNT; i++ ) {
+	    Hooks locals=null;
+	    if( this != globalIntContainer ) {
+		hooksCache[i]=mergeHooks( globals.getModules(i),
+					  getHooks().getModules(i));
+	    } else {
+		hooksCache[i]=mergeHooks( globals.getModules(i), null);
+	    }
 	}
-	for ( int i = 0 ; i < lsize  ; i++ ){
-	    hooks[type][gsize+i]=(BaseInterceptor)locals.elementAt(i);
-	    if( dL > 5 ) debug( "Add " + i + " " + hooks[type][i+gsize]);
-	}
-
-	return hooks[type];
+	return hooksCache[type];
     }
 
     /** Get all interceptors
      */
     public BaseInterceptor[] getInterceptors()
     {
-	// We don't check for "hasHook", so all
-	// interceptors are available here
-	return getInterceptors( H_engineInit );
+	if( allHooksCache != null ) {
+	    return allHooksCache;
+	}
+
+	// load the cache with all the hooks
+	Container globalIntContainer=getContextManager().getContainer();
+	Hooks globals=globalIntContainer.getHooks();
+	if( this == globalIntContainer ) {
+	    allHooksCache=mergeHooks( globals.getModules(), null );
+	} else {
+	    allHooksCache=mergeHooks( globals.getModules(),
+				      this.getHooks().getModules());
+	}
+	return allHooksCache;
     }
 
+    private BaseInterceptor[] mergeHooks( Object globalM[], Object localM[] ) {
+	BaseInterceptor hA[]=null;
+	if( localM==null ) {
+	    hA=new BaseInterceptor[ globalM.length ];
+	    for( int j=0; j<globalM.length; j++ ) {
+		hA[j]=(BaseInterceptor)globalM[j];
+	    }
+	} else {
+	    hA=new BaseInterceptor[ globalM.length +
+				    localM.length ];
+	    int gsize=globalM.length;
+	    for( int j=0; j<globalM.length; j++ ) {
+		hA[j]=(BaseInterceptor)globalM[j];
+	    }
+	    for( int j=0; j<localM.length; j++ ) {
+		hA[gsize+j]=(BaseInterceptor)localM[j];
+	    }
+	}
+	return hA;
+    }
     
+
+    public void resetInterceptorCache( int id ) {
+ 	allHooksCache=null;
+	hooksCache=null;
+    }
+
     // debug
     public static final int dL=0;
     private void debug( String s ) {

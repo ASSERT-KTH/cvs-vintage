@@ -86,6 +86,7 @@ import java.lang.reflect.*;
  * implementation
  */
 public class Hooks {
+    public static final int INITIAL_HOOKS=20;
     int hookCount;
     String hookNames[];
     Vector hooksV[];
@@ -97,8 +98,8 @@ public class Hooks {
 
     private static final int dL=0;
 
-    public Hooks(int hookCount ) {
-	this.hookCount=hookCount;
+    public Hooks() {
+	this.hookCount=INITIAL_HOOKS; // XXX TODO: resizing
 	hooksV=new Vector[hookCount];
 	for( int i=0; i<hookCount ; i++ )
 	    hooksV[i]=new Vector();
@@ -140,6 +141,7 @@ public class Hooks {
      */
     public void addModule( Object bi ) {
 	for( int i=0; i< hookNames.length ; i++ ) {
+	    if( hookNames[i]==null ) continue;
 	    if( hasHook( bi, hookNames[i] )) {
 		if( dL > 0 ) debug( "Adding " + hookNames[i] + " " +bi );
 		hooksV[i].addElement( bi );
@@ -162,8 +164,6 @@ public class Hooks {
 	allModules=null;
     }
 
-    Hooks localHooks;
-    
     public Object[] getModules( int type )
     {
 	if( hooks[type] != null ) {
