@@ -28,6 +28,8 @@
 package org.objectweb.carol.jndi.spi;
 
 //java import
+import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.util.Enumeration;
 import java.util.Hashtable;
 
@@ -95,12 +97,15 @@ public class MultiOrbInitialContext implements Context {
 	try {
 	    return pcur.getCurrentInitialContext().lookup(encode(name));
 	} catch (NamingException e) {
-		String msg=e.getMessage();
 		if (TraceCarol.isDebugJndiCarol()) {
-	    msg = "MultiOrbInitialContext.lookup(\""+name+"\") failed: " + e; 
-	    TraceCarol.debugJndiCarol("Error: " + msg + " " + e);
+            String msg = "MultiOrbInitialContext.lookup(\""+name+"\") failed: " + e; 
+            TraceCarol.debugJndiCarol("Error: " + msg);
 		}
-		throw new NamingException(msg);
+        StringWriter sw = new StringWriter();
+        PrintWriter pw = new PrintWriter(sw);
+        e.printStackTrace(pw);
+        pw.flush();
+		throw new NamingException(e.toString() + "\nCaused by: " + sw.toString() + "\n<End of Cause>");
 	}
 	
     }
