@@ -46,6 +46,8 @@ package org.tigris.scarab.actions;
  * individuals on behalf of Collab.Net.
  */ 
 
+import java.util.List;
+
 // Turbine Stuff 
 import org.apache.turbine.Turbine;
 import org.apache.turbine.TemplateContext;
@@ -64,6 +66,7 @@ import org.tigris.scarab.tools.ScarabRequestTool;
 import org.tigris.scarab.util.ScarabConstants;
 import org.tigris.scarab.util.Log;
 import org.tigris.scarab.om.ScarabUser;
+import org.tigris.scarab.om.Module;
 import org.tigris.scarab.actions.base.ScarabTemplateAction;
 
 /**
@@ -71,7 +74,7 @@ import org.tigris.scarab.actions.base.ScarabTemplateAction;
  * Action.
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: Login.java,v 1.31 2002/04/26 23:34:51 jmcnally Exp $
+ * @version $Id: Login.java,v 1.32 2002/05/06 17:53:06 jon Exp $
  */
 public class Login extends ScarabTemplateAction
 {
@@ -87,11 +90,22 @@ public class Login extends ScarabTemplateAction
 
         if (intake.isAllValid() && checkUser(data, context))
         {
-            String template = data.getParameters()
-                .getString(ScarabConstants.NEXT_TEMPLATE, 
-                Turbine.getConfiguration()
-                           .getString("template.homepage", "Index.vm"));
-            setTarget(data, template);
+            ScarabUser user = (ScarabUser)data.getUser();
+            List userModules = user.getModules();
+            if (userModules.size() == 1)
+            {
+                ScarabRequestTool scarabR = getScarabRequestTool(context);
+                scarabR.setCurrentModule((Module)(userModules).get(0));
+                setTarget(data, "SelectArtifactType.vm");
+            }
+            else
+            {
+                String template = data.getParameters()
+                    .getString(ScarabConstants.NEXT_TEMPLATE, 
+                    Turbine.getConfiguration()
+                               .getString("template.homepage", "Index.vm"));
+                setTarget(data, template);
+            }
         }
     }
 
