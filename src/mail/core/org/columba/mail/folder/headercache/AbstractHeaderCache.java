@@ -15,16 +15,22 @@
 //All Rights Reserved.
 package org.columba.mail.folder.headercache;
 
+import java.awt.Color;
 import java.io.File;
 import java.io.IOException;
+import java.util.Date;
 import java.util.List;
 import java.util.Vector;
 import java.util.logging.Logger;
 
+import org.columba.core.gui.util.ColorFactory;
 import org.columba.core.main.Main;
 import org.columba.core.util.BooleanCompressor;
 import org.columba.mail.message.ColumbaHeader;
 import org.columba.mail.message.HeaderList;
+import org.columba.ristretto.message.Address;
+import org.columba.ristretto.parser.AddressParser;
+import org.columba.ristretto.parser.ParserException;
 
 /**
  * Provides basic support for saving and loading email headers as fast as
@@ -44,11 +50,17 @@ public abstract class AbstractHeaderCache {
 			.getLogger("org.columba.mail.folder.headercache");
 
 	protected HeaderList headerList;
+
 	protected File headerFile;
+
 	private boolean headerCacheLoaded;
+
 	protected String[] columnNames;
+
 	protected ObjectWriter writer;
+
 	protected ObjectReader reader;
+
 	protected List additionalHeaderfields;
 
 	/**
@@ -141,16 +153,15 @@ public abstract class AbstractHeaderCache {
 					// -> use ".old" file as fallback
 
 					File oldFile = headerFile;
-					
-					headerFile = new File(headerFile.getAbsolutePath()
-							+ ".old");
+
+					headerFile = new File(headerFile.getAbsolutePath() + ".old");
 					try {
 						load();
-						
+
 						oldFile.delete();
-						
+
 						headerFile.renameTo(oldFile);
-						
+
 					} catch (Exception e2) {
 						if (Main.DEBUG)
 							e2.printStackTrace();
@@ -192,10 +203,30 @@ public abstract class AbstractHeaderCache {
 
 		// load other internal headerfields, non-boolean type
 		String[] columnNames = CachedHeaderfields.INTERNAL_HEADERFIELDS;
-		Object value;
+		Class[] columnTypes = CachedHeaderfields.INTERNAL_HEADERFIELDS_TYPE;
 
 		for (int j = 0; j < columnNames.length; j++) {
-			value = reader.readObject();
+			Object value = null;
+
+			if (columnTypes[j] == Integer.class) {
+				value = new Integer(reader.readInt());
+			} else if (columnTypes[j] == Date.class) {
+				value = new Date(reader.readLong());
+			} else if (columnTypes[j] == Color.class) {
+				value = ColorFactory.getColor(reader.readInt());
+			} else if (columnTypes[j] == Address.class) {
+				try {
+					value = AddressParser.parseAddress(reader.readString());
+				} catch (IndexOutOfBoundsException e) {
+				} catch (IllegalArgumentException e) {
+				} catch (ParserException e) {
+				} finally {
+					if (value == null)
+						value = "";
+				}
+			} else
+				value = reader.readString();
+
 			if (value != null) {
 				h.set(columnNames[j], value);
 			}
@@ -205,21 +236,12 @@ public abstract class AbstractHeaderCache {
 		columnNames = CachedHeaderfields.getDefaultHeaderfields();
 
 		for (int j = 0; j < columnNames.length; j++) {
-			value = reader.readObject();
+			String value = reader.readString();
 			if (value != null) {
 				h.set(columnNames[j], value);
 			}
 		}
 
-		// load user-specified additional headerfields
-		// Note, that we use keys loaded from the headercache
-		// file.
-		for (int j = 0; j < additionalHeaderfields.size(); j++) {
-			value = reader.readObject();
-			if (value != null) {
-				h.set((String) additionalHeaderfields.get(j), (String) value);
-			}
-		}
 	}
 
 	protected void saveHeader(ColumbaHeader h) throws Exception {
@@ -240,17 +262,36 @@ public abstract class AbstractHeaderCache {
 
 		// save other internal headerfields, of non-boolean type
 		String[] columnNames = CachedHeaderfields.INTERNAL_HEADERFIELDS;
+		Class[] columnTypes = CachedHeaderfields.INTERNAL_HEADERFIELDS_TYPE;
 		Object o;
 
 		for (int j = 0; j < columnNames.length; j++) {
-			writer.writeObject(h.get(columnNames[j]));
+			o = h.get(columnNames[j]);
+
+			//System.out.println("type="+o.getClass());
+
+			if (columnTypes[j] == Integer.class)
+				writer.writeInt(((Integer) o).intValue());
+			else if (columnTypes[j] == Date.class) {
+				writer.writeLong(((Date) o).getTime());
+			} else if (columnTypes[j] == Color.class) {
+				writer.writeInt(((Color) o).getRGB());
+			} else if (columnTypes[j] == Address.class) {
+				if (o instanceof Address)
+					writer.writeString(((Address) o).toString());
+				else
+					writer.writeString((String) o);
+			} else
+				writer.writeString(o.toString());
 		}
 
 		// save default headerfields, as defined in RFC822
 		columnNames = CachedHeaderfields.DEFAULT_HEADERFIELDS;
 
 		for (int j = 0; j < columnNames.length; j++) {
-			writer.writeObject(h.get(columnNames[j]));
+			String v = (String) h.get(columnNames[j]);
+			if ( v==null) v = "";
+			writer.writeString(v);
 		}
 
 	}
@@ -264,7 +305,7 @@ public abstract class AbstractHeaderCache {
 
 	/**
 	 * Resets the headercache by removing all entries.
-	 * 
+	 *  
 	 */
 	public void reset() {
 		headerList = new HeaderList();

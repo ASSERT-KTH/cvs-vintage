@@ -20,10 +20,8 @@ package org.columba.mail.folder.headercache;
 import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.IOException;
 import java.io.ObjectInputStream;
-import java.util.Date;
-
-import org.columba.core.gui.util.ColorFactory;
 
 
 /**
@@ -56,6 +54,23 @@ public class ObjectReader {
         
     }
 
+    public String readString() throws IOException{
+    	return ois.readUTF();
+    }
+    
+    public int readInt() throws IOException {
+    	return ois.readInt();
+    }
+    
+    public long readLong() throws IOException {
+    	return ois.readLong();
+    }
+    
+    public Object readObject() throws IOException, ClassNotFoundException {
+    	return ois.readObject();	
+    }
+    
+    /*
     public Object readObject() throws Exception {
         // if no data available
         if (ois.available()==0) return null;
@@ -88,6 +103,7 @@ public class ObjectReader {
             return ois.readObject();
         }
     }
+    */
 
     public void close() throws Exception {
         ois.close();

@@ -17,8 +17,12 @@
 //All Rights Reserved.
 package org.columba.mail.folder.headercache;
 
+import java.awt.Color;
+import java.util.Date;
+
 import org.columba.mail.message.ColumbaHeader;
 import org.columba.mail.message.IColumbaHeader;
+import org.columba.ristretto.message.Address;
 
 /**
  * 
@@ -39,7 +43,6 @@ public class CachedHeaderfields {
 			"columba.flags.seen", "columba.flags.recent",
 			"columba.flags.answered", "columba.flags.flagged",
 			"columba.flags.expunged", "columba.flags.draft",
-
 			//	true, if message has attachments, false otherwise
 			"columba.attachment",
 			//	true/false
@@ -51,36 +54,29 @@ public class CachedHeaderfields {
 
 	// priority as integer value
 			"columba.priority",
-
 			// short from, containing only name of person
 			"columba.from",
-
 			// host from which this message was downloaded
 			"columba.host",
-
 			// date
 			"columba.date",
-
 			// size of message
 			"columba.size",
-
 			// properly decoded subject
 			"columba.subject",
-
 			// message color
 			"columba.color",
-
 			// account ID
 			"columba.accountuid",
-
 			// to
 			"columba.to",
-
 			// Cc
-			"columba.cc",
+			"columba.cc" };
 
-			// from
-			"columba.from" };
+	public static final Class[] INTERNAL_HEADERFIELDS_TYPE = { Integer.class,
+			Address.class, String.class, Date.class, Integer.class,
+			String.class, Color.class, Integer.class, Address.class,
+			String.class };
 
 	// these are cached by default
 	public static final String[] DEFAULT_HEADERFIELDS = { "Subject", "From",
@@ -89,12 +85,14 @@ public class CachedHeaderfields {
 
 	public static final String[] POP3_HEADERFIELDS = { "Subject", "From",
 			"columba.date", "columba.size",
-
 			// POP3 message UID
 			"columba.pop3uid",
-
 			// was this message already fetched from the server?
 			"columba.alreadyfetched" };
+
+	public static final Class[] POP3_HEADERFIELDS_TYPE = { String.class,
+			String.class, Date.class, Integer.class, String.class,
+			Boolean.class };
 
 	/**
 	 * No need for creating instances of this class.

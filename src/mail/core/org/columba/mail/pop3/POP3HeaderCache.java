@@ -15,6 +15,7 @@
 //All Rights Reserved.
 package org.columba.mail.pop3;
 
+import java.util.Date;
 import java.util.Enumeration;
 import java.util.logging.Logger;
 
@@ -148,19 +149,40 @@ public class POP3HeaderCache extends AbstractHeaderCache {
 
     protected void loadHeader(ColumbaHeader h) throws Exception {
         String[] columnNames = CachedHeaderfields.POP3_HEADERFIELDS;
+        Class[] columnTypes = CachedHeaderfields.POP3_HEADERFIELDS_TYPE;
 
-        for (int j = 0; j < columnNames.length; j++) {
-            h.set(columnNames[j], reader.readObject());
-        }
+		for (int j = 0; j < columnNames.length; j++) {
+			Object value = null;
+
+			if (columnTypes[j] == Integer.class) {
+				value = new Integer(reader.readInt());
+			} else if (columnTypes[j] == Date.class) {
+				value = new Date(reader.readLong());
+			} else if (columnTypes[j] == String.class) {
+				value = reader.readString();
+			}
+
+			if (value != null) {
+				h.set(columnNames[j], value);
+			}
+		}
     }
 
     protected void saveHeader(ColumbaHeader h) throws Exception {
         String[] columnNames = CachedHeaderfields.POP3_HEADERFIELDS;
-        Object o;
+        Class[] columnTypes = CachedHeaderfields.POP3_HEADERFIELDS_TYPE;
+		Object o;
 
-        for (int j = 0; j < columnNames.length; j++) {
-            writer.writeObject(h.get(columnNames[j]));
-        }
+		for (int j = 0; j < columnNames.length; j++) {
+			o = h.get(columnNames[j]);
+
+			if (columnTypes[j] == Integer.class)
+				writer.writeInt(((Integer) o).intValue());
+			else if (columnTypes[j] == Date.class) {
+				writer.writeLong(((Date) o).getTime());
+			} else if (columnTypes[j] == String.class)
+				writer.writeString((String) o);
+		}
     }
 	/**
 	 * @see org.columba.mail.folder.headercache.AbstractHeaderCache#add(org.columba.mail.message.ColumbaHeader)
@@ -171,6 +193,6 @@ public class POP3HeaderCache extends AbstractHeaderCache {
 			strippedHeader.set(CachedHeaderfields.POP3_HEADERFIELDS[i], header.get(CachedHeaderfields.POP3_HEADERFIELDS[i]));
 		}
 		
-		headerList.add(strippedHeader, strippedHeader.get("columba.pop3uid"));
+		headerList.add(strippedHeader, strippedHeader.getAttributes().get("columba.pop3uid"));
 	}
 }

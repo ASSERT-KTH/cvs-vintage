@@ -101,6 +101,9 @@ public class LocalHeaderCache extends AbstractHeaderCache {
 		int mcount = ((AbstractLocalFolder) folder).getDataStorageInstance()
 				.getMessageCount();
 
+		System.out.println("message count="+mcount);
+		System.out.println("header count="+capacity);
+		
 		if (capacity != mcount) {
 			return true;
 		}
@@ -122,17 +125,6 @@ public class LocalHeaderCache extends AbstractHeaderCache {
 			LOG.fine("capacity=" + capacity);
 
 			boolean needToRelease = false;
-
-			int additionalHeaderfieldsCount = ((Integer) reader.readObject())
-					.intValue();
-
-			if (additionalHeaderfieldsCount != 0) {
-				// user-defined headerfields found
-				// -> read all keys from file
-				for (int i = 0; i < additionalHeaderfieldsCount; i++) {
-					additionalHeaderfields.add((String) reader.readObject());
-				}
-			}
 
 			headerList = new HeaderList(capacity);
 
@@ -195,6 +187,8 @@ public class LocalHeaderCache extends AbstractHeaderCache {
 			((AbstractLocalFolder) folder).setNextMessageUid(nextUid);
 
 		} catch (Exception e) {
+			LOG.severe(e.getMessage());
+			
 			if (Main.DEBUG) {
 				e.printStackTrace();
 			}
@@ -315,14 +309,14 @@ public class LocalHeaderCache extends AbstractHeaderCache {
 
 					// message size should be at least 1 KB
 					int size = Math.max(source.length() / 1024, 1);
-					header.set("columba.size", new Integer(size));
+					header.getAttributes().put("columba.size", new Integer(size));
 
 					// set the attachment flag
 					String contentType = (String) header.get("Content-Type");
 
-					header.set("columba.attachment", header.hasAttachments());
+					header.getAttributes().put("columba.attachment", header.hasAttachments());
 
-					header.set("columba.uid", uids[i]);
+					header.getAttributes().put("columba.uid", uids[i]);
 
 					headerList.add(header, uids[i]);
 					source.close();
@@ -334,11 +328,11 @@ public class LocalHeaderCache extends AbstractHeaderCache {
 				}
 			}
 
-			if (header.get("columba.flags.recent").equals(Boolean.TRUE)) {
+			if (header.getFlags().getRecent()) {
 				messageFolderInfo.incRecent();
 			}
 
-			if (header.get("columba.flags.seen").equals(Boolean.FALSE)) {
+			if (!header.getFlags().getSeen()) {
 				messageFolderInfo.incUnseen();
 			}
 
@@ -362,13 +356,13 @@ public class LocalHeaderCache extends AbstractHeaderCache {
 	}
 
 	protected void loadHeader(ColumbaHeader h) throws Exception {
-		h.set("columba.uid", reader.readObject());
+		h.getAttributes().put("columba.uid", new Integer(reader.readInt()));
 
 		super.loadHeader(h);
 	}
 
 	protected void saveHeader(ColumbaHeader h) throws Exception {
-		writer.writeObject(h.get("columba.uid"));
+		writer.writeInt( ((Integer)h.getAttributes().get("columba.uid")).intValue());
 
 		super.saveHeader(h);
 	}

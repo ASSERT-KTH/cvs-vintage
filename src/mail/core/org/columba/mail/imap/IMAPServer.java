@@ -1110,13 +1110,13 @@ public class IMAPServer implements IMAPListener {
 				ColumbaHeader header = new ColumbaHeader(headers[i].getHeader());
 				Object uid = headers[i].getUid();
 
-				header.set("columba.uid", uid);
-				header.set("columba.size", headers[i].getSize());
+				header.getAttributes().put("columba.uid", uid);
+				header.getAttributes().put("columba.size", headers[i].getSize());
 
 				// set the attachment flag
 				String contentType = (String) header.get("Content-Type");
 
-				header.set("columba.attachment", header.hasAttachments());
+				header.getAttributes().put("columba.attachment", header.hasAttachments());
 
 				// make sure that we have a Message-ID
 				String messageID = (String) header.get("Message-Id");

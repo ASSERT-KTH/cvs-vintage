@@ -494,7 +494,7 @@ public class IMAPFolder extends AbstractRemoteFolder {
 					.setFlagged(Collections
 							.binarySearch(remoteFlaggedUids, uid) >= 0);
 
-			header.set("columba.spam", new Boolean(Collections.binarySearch(
+			header.getAttributes().put("columba.spam", new Boolean(Collections.binarySearch(
 					remoteJunkUids, uid) >= 0));
 
 			fireMessageFlagChanged(uid);

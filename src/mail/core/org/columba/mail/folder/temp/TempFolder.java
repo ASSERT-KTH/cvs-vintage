@@ -222,7 +222,7 @@ public class TempFolder extends AbstractMessageFolder {
             h.setFlags((Flags) flags.clone());
         }
 
-        h.set("columba.uid", newUid);
+        h.getAttributes().put("columba.uid", newUid);
 
         headerList.add(h, newUid);
 
@@ -350,7 +350,7 @@ public class TempFolder extends AbstractMessageFolder {
 
         ColumbaHeader h = (ColumbaHeader) ((ColumbaHeader) message.getHeader());
 
-        h.set("columba.uid", newUid);
+        h.getAttributes().put("columba.uid", newUid);
 
         headerList.add(h, newUid);
 

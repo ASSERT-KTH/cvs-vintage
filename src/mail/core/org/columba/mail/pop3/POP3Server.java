@@ -255,7 +255,7 @@ public class POP3Server {
 		// set the attachment flag
 		String contentType = (String) header.get("Content-Type");
 
-		h.set("columba.attachment", h.hasAttachments());
+		h.getAttributes().put("columba.attachment", h.hasAttachments());
 		h.getAttributes().put("columba.fetchstate", Boolean.TRUE);
 		h.getAttributes().put("columba.accountuid",
 				new Integer(accountItem.getInteger("uid")));

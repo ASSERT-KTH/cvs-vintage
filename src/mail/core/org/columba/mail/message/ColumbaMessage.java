@@ -81,16 +81,16 @@ public class ColumbaMessage implements IColumbaMessage {
 
     public void setUID(Object o) {
         if (o != null) {
-            columbaHeader.set("columba.uid", o);
+            columbaHeader.getAttributes().put("columba.uid", o);
         } else {
-            columbaHeader.set("columba.uid", "");
+            columbaHeader.getAttributes().put("columba.uid", "");
         }
 
         //uid = o;
     }
 
     public Object getUID() {
-        return getHeader().get("columba.uid");
+        return getHeader().getAttributes().get("columba.uid");
     }
 
     public MimeTree getMimePartTree() {

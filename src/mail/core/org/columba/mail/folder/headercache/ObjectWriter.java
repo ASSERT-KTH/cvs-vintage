@@ -17,12 +17,10 @@
 //All Rights Reserved.
 package org.columba.mail.folder.headercache;
 
-import java.awt.Color;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectOutputStream;
-import java.util.Date;
 
 import org.columba.core.main.Main;
 
@@ -59,6 +57,23 @@ public class ObjectWriter {
 		oos = new ObjectOutputStream(ostream);
 	}
 
+	public void writeString(String str) throws IOException {
+		oos.writeUTF(str);
+	}
+	
+	public void writeInt(int in) throws IOException {
+		oos.writeInt(in);
+	}
+	
+	public void writeLong(long lon) throws IOException {
+		oos.writeLong(lon);
+	}
+	
+	public void writeObject(Object o) throws IOException {
+		oos.writeObject(o);
+	}
+
+	/*
 	public void writeObject(Object value) throws Exception {
 		Object o = value;
 
@@ -84,7 +99,8 @@ public class ObjectWriter {
 			oos.writeObject(value);
 		}
 	}
-
+	*/
+	
 	public void close() throws Exception {
 
 		try {

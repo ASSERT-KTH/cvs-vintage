@@ -90,7 +90,7 @@ public class MessageComposer {
 		}
 
 
-		header.set("columba.subject", model.getSubject());
+		header.getAttributes().put("columba.subject", model.getSubject());
 
 		//header.set("Subject",
 		//	EncodedWord.encode(model.getSubject(),
@@ -153,15 +153,15 @@ public class MessageComposer {
 		header.set("X-Mailer", "Columba ("
 				+ VersionInfo.getVersion() + ")");
 
-		header.set("columba.from", identity.getAddress());
+		header.getAttributes().put("columba.from", identity.getAddress());
 
 		// date
 		Date date = new Date();
-		header.set("columba.date", date);
+		header.getAttributes().put("columba.date", date);
 		header.set("Date", MessageDate.toString(date));
 
 		//attachments
-		header.set("columba.attachment", new Boolean(model.getAttachments().size() > 0));
+		header.getAttributes().put("columba.attachment", new Boolean(model.getAttachments().size() > 0));
 		
 		// copy flags
 		header.setFlags(model.getMessage().getHeader().getFlags());
@@ -545,7 +545,7 @@ public class MessageComposer {
 			Address adr = null;
 			try {
 				adr = Address.parse((String) headerItemList.get(0));
-				header.set("columba.to", adr);
+				header.getAttributes().put("columba.to", adr);
 			} catch (ParserException e) {
 				if (Main.DEBUG)
 					e.printStackTrace();
@@ -558,7 +558,7 @@ public class MessageComposer {
 			Address adr = null;
 			try {
 				adr = Address.parse((String) headerItemList.get(0));
-				header.set("columba.cc", adr);
+				header.getAttributes().put("columba.cc", adr);
 			} catch (ParserException e) {
 				if (Main.DEBUG)
 					e.printStackTrace();
@@ -574,7 +574,7 @@ public class MessageComposer {
 
 		// size
 		int size = in.available() / 1024;
-		header.set("columba.size", new Integer(size));
+		header.getAttributes().put("columba.size", new Integer(size));
 
 		message.setHeader(header);
 

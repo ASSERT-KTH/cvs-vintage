@@ -65,6 +65,7 @@ public class RemoteHeaderCache extends AbstractHeaderCache {
 		try {
 			reader = new ObjectReader(headerFile);
 		} catch (Exception e) {
+			LOG.severe(e.getMessage());
 			if (Main.DEBUG) {
 				e.printStackTrace();
 			}
@@ -73,17 +74,6 @@ public class RemoteHeaderCache extends AbstractHeaderCache {
 		int capacity = ((Integer) reader.readObject()).intValue();
 
 		LOG.fine("capacity=" + capacity);
-
-		int additionalHeaderfieldsCount = ((Integer) reader.readObject())
-				.intValue();
-
-		if (additionalHeaderfieldsCount != 0) {
-			// user-defined headerfields found
-			// -> read all keys from file
-			for (int i = 0; i < additionalHeaderfieldsCount; i++) {
-				additionalHeaderfields.add((String) reader.readObject());
-			}
-		}
 
 		if (getObservable() != null) {
 			getObservable().setMessage(
@@ -132,6 +122,7 @@ public class RemoteHeaderCache extends AbstractHeaderCache {
 		try {
 			writer = new ObjectWriter(headerFile);
 		} catch (Exception e) {
+			LOG.severe(e.getMessage());
 			if (Main.DEBUG) {
 				e.printStackTrace();
 			}
@@ -159,13 +150,13 @@ public class RemoteHeaderCache extends AbstractHeaderCache {
 	}
 
 	protected void loadHeader(ColumbaHeader h) throws Exception {
-		h.set("columba.uid", reader.readObject());
+		h.getAttributes().put("columba.uid", new Integer(reader.readInt()));
 
 		super.loadHeader(h);
 	}
 
 	protected void saveHeader(ColumbaHeader h) throws Exception {
-		writer.writeObject(h.get("columba.uid"));
+		writer.writeInt( ((Integer)h.getAttributes().get("columba.uid")).intValue());
 
 		super.saveHeader(h);
 	}
