@@ -109,7 +109,7 @@ import org.tigris.scarab.util.ScarabConstants;
     This class is responsible for edit issue forms.
     ScarabIssueAttributeValue
     @author <a href="mailto:elicia@collab.net">Elicia David</a>
-    @version $Id: ModifyIssue.java,v 1.108 2002/07/30 02:36:25 elicia Exp $
+    @version $Id: ModifyIssue.java,v 1.109 2002/07/30 20:30:49 elicia Exp $
 */
 public class ModifyIssue extends BaseModifyIssue
 {
@@ -200,9 +200,7 @@ public class ModifyIssue extends BaseModifyIssue
             attachment.save();
 
             // Save transaction record
-            Transaction transaction = TransactionManager
-                .getInstance(TransactionTypePeer.EDIT_ISSUE__PK, user, attachment);
-            transaction.save();
+            Transaction transaction = issue.getTransaction(user, attachment);
 
             // Set the attribute values entered 
             SequencedHashMap avMap = issue.getModuleAttributeValuesMap(); 

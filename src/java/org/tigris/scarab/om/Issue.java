@@ -93,7 +93,7 @@ import org.apache.commons.lang.StringUtils;
  * @author <a href="mailto:jmcnally@collab.new">John McNally</a>
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
- * @version $Id: Issue.java,v 1.172 2002/07/30 02:36:25 elicia Exp $
+ * @version $Id: Issue.java,v 1.173 2002/07/30 20:30:49 elicia Exp $
  */
 public class Issue 
     extends BaseIssue
@@ -1484,6 +1484,18 @@ public class Issue
             result = (List)obj;
         }
         return result;
+    }
+
+    /**
+     * Creates a new Transaction object for the issue.
+     */
+    public Transaction getTransaction(ScarabUser user, Attachment attachment)
+        throws Exception
+    {
+        Transaction transaction = TransactionManager
+            .getInstance(TransactionTypePeer.EDIT_ISSUE__PK, user, attachment);
+        transaction.save();
+        return transaction;
     }
 
     /**
