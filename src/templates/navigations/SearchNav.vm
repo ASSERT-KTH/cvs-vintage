@@ -1,6 +1,8 @@
 #if ($scarabR.CurrentModule)
   #set ($module = $scarabR.CurrentModule)
 #end
+#set ($issuetype = $scarabR.CurrentIssueType)
+
 #if ($data.User.hasLoggedIn() && $module)
 <div id="topmodule">
  <table border="0" cellspacing="0" cellpadding="3" width="100%">
@@ -24,8 +26,9 @@
     <option value="AdvancedQuery.vm">&#160;Advanced</option>
     <option value="Search.vm">&#160;Custom</option>
     <option value="IssueList.vm">&#160;Most Recent</option>
-
-#set ($issuetype = $scarabR.CurrentIssueType)
+    #if ($data.User.getDefaultQuery($module, $scarabR.CurrentIssueType))
+    <option value="$data.User.getDefaultQuery($module, $scarabR.CurrentIssueType).QueryId" >&#160;Default Query</option> 
+    #end
 #set ($privateQueries = $module.getPrivateQueries($data.User, $issuetype))
 #set ($globalQueries = $module.getGlobalQueries($issuetype))
 
