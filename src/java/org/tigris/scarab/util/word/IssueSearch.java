@@ -218,6 +218,7 @@ public class IssueSearch
     private static int NO_ATTRIBUTE_SORT = -1;
 
     private static final NumberKey NUMBERKEY_0 = new NumberKey(0);
+    private static final NumberKey ALL_TEXT = NUMBERKEY_0;
 
     /**
      * The managed database connection used while iterating over large
@@ -502,7 +503,7 @@ public class IssueSearch
         {
             for (int i = textScope.length - 1; i >= 0; i--)
             {
-                if (NUMBERKEY_0.equals(textScope[i])) 
+                if (ALL_TEXT.equals(textScope[i])) 
                 {
                     textScope = getTextScopeForAll();
                     break;
@@ -544,7 +545,7 @@ public class IssueSearch
         {
             for (int i=v.length-1; i>=0; i--) 
             {
-                if (v[i].equals(NUMBERKEY_0)) 
+                if (v[i].equals(ALL_TEXT)) 
                 {
                     v = getTextScopeForAll();
                     break;
@@ -976,7 +977,7 @@ public class IssueSearch
 
     public NumberKey getALL_TEXT()
     {
-        return NUMBERKEY_0;
+        return ALL_TEXT;
     }
 
     public List getQuickSearchTextAttributeValues()
