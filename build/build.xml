@@ -414,18 +414,21 @@
         <copy tofile="${build.dest.scarab}/ScarabBundle_fr.properties" 
               filtering="no" 
               file="${src.i18n.dir}/ScarabBundle_fr_FR.properties"/>
+        <copy tofile="${build.dest.scarab}/ScarabBundle_ja.properties" 
+              filtering="no"
+              file="${src.i18n.dir}/ScarabBundle_ja_JP.properties"/>
         <copy tofile="${build.dest.scarab}/ScarabBundle_ko.properties" 
               filtering="no"
               file="${src.i18n.dir}/ScarabBundle_ko_KR.properties"/>
+        <copy tofile="${build.dest.scarab}/ScarabBundle_nl.properties" 
+              filtering="no"
+              file="${src.i18n.dir}/ScarabBundle_nl_NL.properties"/>
         <copy tofile="${build.dest.scarab}/ScarabBundle_pt.properties" 
               filtering="no"
               file="${src.i18n.dir}/ScarabBundle_pt_BR.properties"/>
         <copy tofile="${build.dest.scarab}/ScarabBundle_ru.properties" 
               filtering="no"
               file="${src.i18n.dir}/ScarabBundle_ru_RU.properties"/>
-        <copy tofile="${build.dest.scarab}/ScarabBundle_ja.properties" 
-              filtering="no"
-              file="${src.i18n.dir}/ScarabBundle_ja_JP.properties"/>
         <!-- final default language is english -->
         <copy tofile="${build.dest.scarab}/ScarabBundle.properties" 
               filtering="no"
