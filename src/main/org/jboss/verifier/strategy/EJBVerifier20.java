@@ -19,7 +19,7 @@ package org.jboss.verifier.strategy;
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  *
  * This package and its source code is available at www.jboss.org
- * $Id: EJBVerifier20.java,v 1.13 2002/04/09 04:27:25 jwalters Exp $
+ * $Id: EJBVerifier20.java,v 1.14 2002/04/11 10:17:42 jwalters Exp $
  */
 
 
@@ -49,7 +49,7 @@ import org.jboss.metadata.EntityMetaData;
  *
  * @author 	Juha Lindfors   (jplindfo@helsinki.fi)
  * @author  Jay Walters     (jwalters@computer.org)
- * @version $Revision: 1.13 $
+ * @version $Revision: 1.14 $
  * @since  	JDK 1.3
  */
 public class EJBVerifier20 extends AbstractVerifier {
@@ -110,6 +110,8 @@ public class EJBVerifier20 extends AbstractVerifier {
     public void checkEntity(EntityMetaData entity)
     {
         boolean pkVerified     = false;
+        System.out.println("WARNING: EJBVerifier2.0 Entity Bean verification not implemented");
+        if (!pkVerified) return;
         boolean beanVerified   = false; 
         boolean remoteHomeVerified = false;
         boolean remoteVerified = false;
