@@ -55,4 +55,13 @@
     <dependency service="TransactionManager" required="true"/>
     <dependency service="Configuration" required="true"/>
   </service>
+  <service name="CastorJDO">
+    <dependency service="Naming" required="true"/>
+    <dependency service="XADataSource" required="false"/>
+    <dependency service="JDBCDataSource" required="false"/>
+    <dependency service="Logging" required="false"/>
+    <dependency service="ClassPathExtension" required="true"/>
+    <dependency service="TransactionManager" required="true"/>
+    <dependency service="Configuration" required="true"/>
+  </service>
 </server>
