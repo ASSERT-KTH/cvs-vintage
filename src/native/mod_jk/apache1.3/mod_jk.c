@@ -485,7 +485,7 @@ static int init_ws_service(apache_private_data_t *private_data,
     s->headers_values   = NULL;
     s->num_headers      = 0;
     if(r->headers_in && ap_table_elts(r->headers_in)) {
-        int need_content_length_header = (s->content_length == 0) ? JK_TRUE : JK_FALSE;
+        int need_content_length_header = (!s->is_chunked && s->content_length == 0) ? JK_TRUE : JK_FALSE;
         array_header *t = ap_table_elts(r->headers_in);        
         if(t && t->nelts) {
             int i;
