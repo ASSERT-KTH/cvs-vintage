@@ -89,33 +89,39 @@ Tomcat 3.3.1 Release Candidate 1 Release:
 	Item  Description 
         1      Update build.xml to work with Ant 1.4 with no warnings, i.e.
                require Ant 1.4.
+               DONE
         2      Document special handling of '_' and '.' by AutoWebApp.
                Make special characters configurable.
+               DONE
 
-
-        Bugs to fix:
-        5532  underscore is wrong (fixed by item 2 above)
-
+        Addressed
         4206  missing config files do not cause an error
               (add error or warning messages)
+              Resolved as FIXED
+
+        4365  build-solaris for Apache connector does not compile with -DE
+              (do what we can to review and update the connector make files)
+              Resolved as FIXED
+
+        5532  underscore is wrong (fixed by item 2 above)
+              Resolved as FIXED
 
         5769  NT Service display name should not be used as service name
               (determine solution and patch)
 
-        4364  build-solaris for Apache connector does not compile with -DE
-              (do what we can to review and update the connector make files)
+        6448  NullPointerException when docBase is missing
+              (implement better error handling)
+              Resolved as LATER
 
         6214  Problems on ClientAuth
               (fix documentation to indicate PoolTcpConnector's attribute
                is clientauth, not clientAuth)
 
-        6448  NullPointerException when docBase is missing
-              (implement better error handling)
-
         6518  class name generated from jsp filename mangles some valid
                   identifier characters
               (derive patch from the one supplied and Tomcat 4.x
                implementation)
+              Resolved as FIXED
     
 
 Tomcat 3.3.1 Final Release:
