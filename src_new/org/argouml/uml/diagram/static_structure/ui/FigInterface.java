@@ -1,4 +1,4 @@
-// $Id: FigInterface.java,v 1.71 2004/08/15 22:39:23 bobtarling Exp $
+// $Id: FigInterface.java,v 1.72 2004/08/16 18:57:34 bobtarling Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -48,7 +48,7 @@ import org.argouml.ui.targetmanager.TargetManager;
 import org.argouml.uml.diagram.ui.CompartmentFigText;
 import org.argouml.uml.diagram.ui.FigNodeModelElement;
 import org.argouml.uml.diagram.ui.FigOperationsCompartment;
-import org.argouml.uml.diagram.ui.HasOperationsCompartment;
+import org.argouml.uml.diagram.ui.OperationsCompartmentContainer;
 import org.argouml.uml.diagram.ui.UMLDiagram;
 import org.argouml.uml.diagram.ui.ActionAddNote;
 import org.argouml.uml.generator.ParserDisplay;
@@ -70,7 +70,7 @@ import ru.novosoft.uml.MElementEvent;
  * 
  */
 public class FigInterface extends FigNodeModelElement 
-        implements HasOperationsCompartment {
+        implements OperationsCompartmentContainer {
     
     private static final Logger LOG = Logger.getLogger(FigInterface.class);
 

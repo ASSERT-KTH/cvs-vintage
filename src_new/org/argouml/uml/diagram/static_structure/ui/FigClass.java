@@ -1,4 +1,4 @@
-// $Id: FigClass.java,v 1.110 2004/08/15 22:39:23 bobtarling Exp $
+// $Id: FigClass.java,v 1.111 2004/08/16 18:57:34 bobtarling Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -50,8 +50,8 @@ import org.argouml.uml.diagram.ui.FigNodeModelElement;
 import org.argouml.uml.diagram.ui.ActionAddNote;
 import org.argouml.uml.diagram.ui.ActionAddAttribute;
 import org.argouml.uml.diagram.ui.FigOperationsCompartment;
-import org.argouml.uml.diagram.ui.HasAttributesCompartment;
-import org.argouml.uml.diagram.ui.HasOperationsCompartment;
+import org.argouml.uml.diagram.ui.AttributesCompartmentContainer;
+import org.argouml.uml.diagram.ui.OperationsCompartmentContainer;
 import org.argouml.uml.generator.ParserDisplay;
 import org.argouml.uml.diagram.ui.ActionAddOperation;
 import org.argouml.uml.diagram.ui.ActionCompartmentDisplay;
@@ -73,7 +73,7 @@ import ru.novosoft.uml.MElementEvent;
  */
 
 public class FigClass extends FigNodeModelElement 
-        implements HasAttributesCompartment, HasOperationsCompartment{
+        implements AttributesCompartmentContainer, OperationsCompartmentContainer{
 
 
     ////////////////////////////////////////////////////////////////

@@ -1,4 +1,4 @@
-// $Id: PGMLParser.java,v 1.31 2004/08/15 22:39:23 bobtarling Exp $
+// $Id: PGMLParser.java,v 1.32 2004/08/16 18:57:34 bobtarling Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -41,9 +41,9 @@ import org.argouml.cognitive.ItemUID;
 import org.argouml.ui.ArgoDiagram;
 import org.argouml.uml.diagram.ui.FigEdgeModelElement;
 import org.argouml.uml.diagram.ui.FigNodeModelElement;
-import org.argouml.uml.diagram.ui.HasAttributesCompartment;
-import org.argouml.uml.diagram.ui.HasFeaturesCompartment;
-import org.argouml.uml.diagram.ui.HasOperationsCompartment;
+import org.argouml.uml.diagram.ui.AttributesCompartmentContainer;
+import org.argouml.uml.diagram.ui.FeaturesCompartmentContainer;
+import org.argouml.uml.diagram.ui.OperationsCompartmentContainer;
 import org.apache.log4j.Logger;
 import org.argouml.uml.diagram.static_structure.ui.FigClass;
 import org.argouml.uml.diagram.static_structure.ui.FigInterface;
@@ -227,19 +227,19 @@ public class PGMLParser extends org.tigris.gef.xml.pgml.PGMLParser {
             descr = descr.trim();
         }
         if (_elementState == NODE_STATE && elementName.equals("group") 
-                && _currentNode instanceof HasOperationsCompartment
+                && _currentNode instanceof OperationsCompartmentContainer
                 && isOperationsXml(attrList)) {
             if (isHiddenXml(descr)) {
-                ((HasOperationsCompartment) _currentNode).setOperationsVisible(false);
+                ((OperationsCompartmentContainer) _currentNode).setOperationsVisible(false);
             }
             previousNode = _currentNode;
         } else if (_elementState == DEFAULT_STATE && elementName.equals("group") 
-                && previousNode instanceof HasAttributesCompartment
+                && previousNode instanceof AttributesCompartmentContainer
                     && isAttributesXml(attrList)) {
             _elementState = NODE_STATE;
             _currentNode = previousNode;
             if (isHiddenXml(descr)) {
-                ((HasAttributesCompartment) previousNode).setAttributesVisible(false);
+                ((AttributesCompartmentContainer) previousNode).setAttributesVisible(false);
             }
         } else {
             // The following is required only for backwards
