@@ -29,7 +29,6 @@
    #set ($attgroup = $intake.Attribute.Default)
    #set ($createNew = "true")
 #end
-cn =$createNew
 
 <p>$l10n.GlobalAttributes </p>
 
