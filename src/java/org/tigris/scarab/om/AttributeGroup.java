@@ -353,7 +353,7 @@ public  class AttributeGroup
             issueType.addRIssueTypeAttribute(attribute);
 
             // add issueType-attributeoption mappings
-            List options = attribute.getAttributeOptions();
+            List options = attribute.getAttributeOptions(false);
             for (int j=0;j < options.size();j++)
             {
                 AttributeOption option = (AttributeOption)options.get(j);

@@ -64,7 +64,7 @@ import org.tigris.scarab.util.ScarabException;
  *
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: IssueType.java,v 1.32 2002/11/07 23:26:43 elicia Exp $
+ * @version $Id: IssueType.java,v 1.33 2002/11/19 20:34:15 elicia Exp $
  */
 public  class IssueType 
     extends org.tigris.scarab.om.BaseIssueType
@@ -639,7 +639,7 @@ public  class IssueType
                                      attribute); 
         if ( obj == null ) 
         {        
-            List options = attribute.getAttributeOptions(true);
+            List options = attribute.getAttributeOptions(false);
             NumberKey[] optIds = null;
             if (options == null)
             {
