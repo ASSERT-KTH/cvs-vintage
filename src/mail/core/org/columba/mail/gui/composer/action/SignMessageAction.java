@@ -9,66 +9,85 @@
 //
 //The Original Code is "The Columba Project"
 //
-//The Initial Developers of the Original Code are Frederik Dietz and Timo Stich.
+//The Initial Developers of the Original Code are Frederik Dietz and Timo
+// Stich.
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003.
 //
 //All Rights Reserved.
 package org.columba.mail.gui.composer.action;
 
+import java.awt.event.ActionEvent;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
+import java.util.logging.Logger;
+
 import org.columba.core.action.AbstractSelectableAction;
 import org.columba.core.gui.util.ImageLoader;
-
+import org.columba.mail.config.AccountItem;
 import org.columba.mail.config.PGPItem;
+import org.columba.mail.gui.composer.AccountView;
 import org.columba.mail.gui.composer.ComposerController;
 import org.columba.mail.util.MailResourceLoader;
 
-import java.awt.event.ActionEvent;
-import java.util.logging.Logger;
-
-
 /**
  * @author frd
- *
- * To change this generated comment go to
- * Window>Preferences>Java>Code Generation>Code and Comments
+ * 
+ * To change this generated comment go to Window>Preferences>Java>Code
+ * Generation>Code and Comments
  */
-public class SignMessageAction extends AbstractSelectableAction {
+public class SignMessageAction extends AbstractSelectableAction implements
+        ItemListener {
 
     /** JDK 1.4+ logging framework logger, used for logging. */
-    private static final Logger LOG = Logger.getLogger("org.columba.mail.gui.composer.action");
+    private static final Logger LOG = Logger
+            .getLogger("org.columba.mail.gui.composer.action");
 
     private ComposerController composerController;
 
     public SignMessageAction(ComposerController composerController) {
-        super(composerController,
-            MailResourceLoader.getString("menu", "composer", "menu_message_sign"));
+        super(composerController, MailResourceLoader.getString("menu",
+                "composer", "menu_message_sign"));
         this.composerController = composerController;
 
         // tooltip text
-        putValue(SHORT_DESCRIPTION,
-            MailResourceLoader.getString("menu", "composer", "menu_message_sign")
-                              .replaceAll("&", ""));
+        putValue(SHORT_DESCRIPTION, MailResourceLoader.getString("menu",
+                "composer", "menu_message_sign").replaceAll("&", ""));
 
         // small icon for menu
         putValue(SMALL_ICON, ImageLoader.getSmallImageIcon("16_sign.png"));
 
+        composerController.getAccountController().getView().addItemListener(
+                this);
+
         PGPItem item = this.composerController.getModel().getAccountItem()
-                                              .getPGPItem();
-        String attribute = item.get("always_sign");
-        setState(Boolean.valueOf(attribute).booleanValue());
+                .getPGPItem();
+        setState(item.getBoolean("always_sign", false));
+        System.out.println("always_sign=" + item.get("always_sign"));
 
         composerController.getModel().setSignMessage(getState());
 
         //setEnabled(false);
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
      */
     public void actionPerformed(ActionEvent evt) {
         LOG.info("start signing...");
 
-        //ComposerModel model = (ComposerModel) ((ComposerController)getFrameController()).getModel();
+        //ComposerModel model = (ComposerModel)
+        // ((ComposerController)getFrameController()).getModel();
         composerController.getModel().setSignMessage(getState());
     }
+
+    public void itemStateChanged(ItemEvent e) {
+        if (e.getStateChange() == ItemEvent.SELECTED) {
+            AccountItem item = (AccountItem) ((AccountView)e.getSource()).getSelectedItem();
+            PGPItem pgp = item.getPGPItem();
+            setState(pgp.getBoolean("always_sign", false));
+        }
+    }
+
 }

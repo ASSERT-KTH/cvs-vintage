@@ -119,4 +119,10 @@ public class AccountController implements ItemListener {
             */
         }
     }
+    /**
+     * @return Returns the view.
+     */
+    public AccountView getView() {
+        return view;
+    }
 }
