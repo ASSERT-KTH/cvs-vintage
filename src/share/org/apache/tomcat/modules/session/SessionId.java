@@ -62,6 +62,8 @@ package org.apache.tomcat.modules.session;
 import org.apache.tomcat.core.*;
 import org.apache.tomcat.util.*;
 import org.apache.tomcat.helper.*;
+import org.apache.tomcat.session.ServerSessionManager;
+import org.apache.tomcat.session.ServerSession;
 import java.io.*;
 import java.net.*;
 import java.util.*;
@@ -80,21 +82,37 @@ import java.util.*;
  *
  * This implementation only handles Cookies and URL rewriting sessions,
  * please extend or add new interceptors for other methods.
+ * 
+ * You can set this interceptor to not use cookies, but only rewriting.
  *
- *
+ * @author costin@eng.sun.com
+ * @author Shai Fultheim [shai@brm.com]
  */
 public class SessionId extends  BaseInterceptor
 {
-
+    private int manager_note;
+    
     // GS, separates the session id from the jvm route
     static final char SESSIONID_ROUTE_SEP = '.';
     ContextManager cm;
+    boolean noCookies=false;
     
     public SessionId() {
     }
 
     public void setContextManager( ContextManager cm ) {
 	this.cm=cm;
+    }
+
+    public void setNoCookies(boolean noCookies) {
+        this.noCookies = noCookies;
+    }
+
+    public void engineInit( ContextManager cm ) throws TomcatException {
+	// set-up a per/container note for StandardManager
+	// the standard manager is used to verify the session ID.
+	manager_note = cm.getNoteId( ContextManager.CONTAINER_NOTE,
+				     "tomcat.standardManager");
     }
 
     /** Extract the session id from the request.
@@ -119,8 +137,8 @@ public class SessionId extends  BaseInterceptor
 	
 	if ((foundAt=uri.indexOf(sig))!=-1){
 	    sessionId=uri.substring(foundAt+sig.length());
-	    // I hope the optimizer does it's job:-)
-	    sessionId = fixSessionId( request, sessionId );
+	    // FIX shai@brm.com: reloading 
+	    // 	    sessionId = fixSessionId( request, sessionId );
 	    
 	    // rewrite URL, do I need to do anything more?
 	    request.requestURI().setString(uri.substring(0, foundAt));
@@ -138,9 +156,16 @@ public class SessionId extends  BaseInterceptor
      */
     public int requestMap(Request request ) {
 	String sessionId = null;
+	Context ctx=request.getContext();
+	if( ctx==null ) {
+	    log( "Configuration error in StandardSessionInterceptor " +
+		 " - no context " + request );
+	    return 0;
+	}
+
 
 	int count=request.getCookieCount();
-	
+
 	// Give priority to cookies. I don't know if that's part
 	// of the spec - XXX
 	for( int i=0; i<count; i++ ) {
@@ -148,54 +173,55 @@ public class SessionId extends  BaseInterceptor
 	    
 	    if (cookie.getName().equals("JSESSIONID")) {
 		sessionId = cookie.getValue().toString();
-		sessionId = fixSessionId( request, sessionId );
+		if (debug > 0) log("Found session id cookie " +
+				   sessionId);
+		// 3.2 - load balancing fix
+		// sessionId = fixSessionId( request, sessionId );
+		// 3.2 - PF ( pfrieden@dChain.com ): check the session id from
+		// cookies for validity
 
-		// XXX what if we have multiple session cookies ?
-		// right now only the first is used
-		request.setRequestedSessionId( sessionId );
-		request.setSessionIdSource( Request.SESSIONID_FROM_COOKIE);
-		break;
+		ServerSessionManager sM = getManager( ctx );
+		ServerSession sess = sM.findSession(sessionId);
+		if (sess != null) {
+		    request.setRequestedSessionId( sessionId );
+		    request.setSessionIdSource(Request.SESSIONID_FROM_COOKIE );
+		    // since we verified this sessionID, we can also set
+		    // it and adjust the session
+		    request.setSession( sess );
+		    request.setSessionId( sessionId );
+		    break;
+		}
 	    }
 	}
 
  	return 0;
     }
 
-//     private void findSessionCookie( MimeHeaders headers ) {
-// 	int pos=0;
-// 	while( pos>=0 ) {
-// 	    pos=headers.findHeader( "Cookie", pos );
-// 	    // no more cookie headers headers
-// 	    if( pos<0 ) break;
+//     /** Fix the session id. If the session is not valid return null.
+//      *  It will also clean up the session from load-balancing strings.
+//      * @return sessionId, or null if not valid
+//      */
+//     private String fixSessionId(Request request, String sessionId){
+// 	// GS, We piggyback the JVM id on top of the session cookie
+// 	// Separate them ...
 
-// 	    MessageBytes cookieValue=getValue( pos );
-	    
+// 	if( debug>0 ) cm.log(" Orig sessionId  " + sessionId );
+// 	if (null != sessionId) {
+// 	    int idex = sessionId.lastIndexOf(SESSIONID_ROUTE_SEP);
+// 	    if(idex > 0) {
+// 		sessionId = sessionId.substring(0, idex);
+// 	    }
 // 	}
+// 	return sessionId;
 //     }
-    
-    /** Fix the session id. If the session is not valid return null.
-     *  It will also clean up the session from load-balancing strings.
-     * @return sessionId, or null if not valid
-     */
-    private String fixSessionId(Request request, String sessionId){
-	// GS, We piggyback the JVM id on top of the session cookie
-	// Separate them ...
-
-	if( debug>0 ) cm.log(" Orig sessionId  " + sessionId );
-	if (null != sessionId) {
-	    int idex = sessionId.lastIndexOf(SESSIONID_ROUTE_SEP);
-	    if(idex > 0) {
-		sessionId = sessionId.substring(0, idex);
-	    }
-	}
-	return sessionId;
-    }
 
     public int beforeBody( Request rrequest, Response response ) {
     	String reqSessionId = rrequest.getSessionId();
 	if( debug>0 ) cm.log("Before Body " + reqSessionId );
 	if( reqSessionId==null)
 	    return 0;
+        if (noCookies)
+            return 0;
 
 	
         // GS, set the path attribute to the cookie. This way
@@ -206,13 +232,13 @@ public class SessionId extends  BaseInterceptor
             sessionPath = "/";
         }
 
-        // GS, piggyback the jvm route on the session id.
-        if(!sessionPath.equals("/")) {
-            String jvmRoute = rrequest.getJvmRoute();
-            if(null != jvmRoute) {
-                reqSessionId = reqSessionId + SESSIONID_ROUTE_SEP + jvmRoute;
-            }
-        }
+//         // GS, piggyback the jvm route on the session id.
+//  //        if(!sessionPath.equals("/")) {
+//             String jvmRoute = rrequest.getJvmRoute();
+//             if(null != jvmRoute) {
+//                 reqSessionId = reqSessionId + SESSIONID_ROUTE_SEP + jvmRoute;
+//             }
+//  //     }
 
 	// we know reqSessionId doesn't need quoting ( we generate it )
 	StringBuffer buf = new StringBuffer();
@@ -234,6 +260,11 @@ public class SessionId extends  BaseInterceptor
 			    buf.toString());
 	
     	return 0;
+    }
+
+    // -------------------- Internal methods --------------------
+    private ServerSessionManager getManager( Context ctx ) {
+	return (ServerSessionManager)ctx.getContainer().getNote(manager_note);
     }
 
 

@@ -100,7 +100,6 @@ public final class ServerSessionManager
     long maxInactiveInterval;
     
     protected Reaper reaper;
-
     Random randomSource=null;
     
     public ServerSessionManager() {
@@ -168,6 +167,10 @@ public final class ServerSessionManager
     }
 
     public ServerSession getNewSession() {
+	return getNewSession( null ) ;
+    }
+    
+    public ServerSession getNewSession(String jsIdent) {
 	if ((maxActiveSessions >= 0) &&
 	    (sessions.size() >= maxActiveSessions)) {
 	    loghelper.log( "Too many sessions " + maxActiveSessions );
@@ -184,7 +187,7 @@ public final class ServerSessionManager
 	// XXX can return MessageBytes !!!
 
 
-	String newId= SessionIdGenerator.generateId(randomSource);
+	String newId= SessionIdGenerator.getIdentifier(randomSource, jsIdent);
 
 	// What if the newId belongs to an existing session ?
 	// This shouldn't happen ( maybe we can try again ? )

@@ -58,6 +58,7 @@
  */ 
 package org.apache.tomcat.util.threads;
 
+import org.apache.tomcat.util.MessageBytes;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
@@ -68,10 +69,13 @@ import java.util.Vector;
 
 
 /**
- * Marks creation and access times, plus validity.
+ * Main tool for object expiry. 
+ * Marks creation and access time of an "expirable" object,
+ * and extra properties like "id", "valid", etc.
  *
  * Used for objects that expire - originally Sessions, but 
- * soon Contexts and Servlets ( scalability issues, large server support ).
+ * also Contexts, Servlets, cache - or any other object that
+ * expires.
  * 
  * @author Costin Manolache
  */
@@ -82,7 +86,9 @@ public final class TimeStamp implements  Serializable {
     private boolean isNew = true;
     private long maxInactiveInterval = -1;
     private boolean isValid = false;
-
+    MessageBytes name;
+    int id=-1;
+    
     Object parent;
     
     public TimeStamp() {
@@ -103,8 +109,29 @@ public final class TimeStamp implements  Serializable {
 
     // -------------------- Property access --------------------
 
+    /** Return the "name" of the timestamp. This can be used
+     *  to associate unique identifier with each timestamped object.
+     *  The name is a MessageBytes - i.e. a modifiable byte[] or char[]. 
+     */
+    public MessageBytes getName() {
+	if( name==null ) name=new MessageBytes();//lazy
+	return name;
+    }
+
+    /** Each object can have an unique id, similar with name but
+     *  providing faster access ( array vs. hashtable lookup )
+     */
+    public int getId() {
+	return id;
+    }
+
+    public void setId( int id ) {
+	this.id=id;
+    }
+    
     /** Returns the owner of this stamp ( the object that is
-     *  time-stamped
+     *  time-stamped ).
+     *  For a 
      */
     public void setParent( Object o ) {
 	parent=o;
@@ -164,6 +191,8 @@ public final class TimeStamp implements  Serializable {
 	maxInactiveInterval = -1;
 	isNew = true;
 	isValid = false;
+	id=-1;
+	if( name!=null) name.recycle();
     }
 
 }

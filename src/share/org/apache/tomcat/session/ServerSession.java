@@ -75,7 +75,7 @@ import org.apache.tomcat.util.threads.*;
  *  - serializable ( by external components )
  *
  * Components:
- *  - timestamp ( expire )
+ *  - timestamp ( expire ) 
  *  - id
  *  - name/value repository
  *

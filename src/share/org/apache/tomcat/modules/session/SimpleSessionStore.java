@@ -84,6 +84,9 @@ import org.apache.tomcat.session.*;
  * session stuff ( cookie, rewrite, etc)
  *
  * @author costin@eng.sun.com
+ * @author hans@gefionsoftware.com
+ * @author pfrieden@dChain.com
+ * @author Shai Fultheim [shai@brm.com]
  */
 public final class SimpleSessionStore  extends BaseInterceptor {
     int manager_note;
@@ -144,10 +147,24 @@ public final class SimpleSessionStore  extends BaseInterceptor {
 	    // context and one for the real context... or old session
 	    // cookie. We must check for validity in the current context.
 	    ServerSessionManager sM = getManager( ctx );    
-	    ServerSession sess= sM.findSession( sessionId );
-	    //	    log("Try to find: " + sessionId );
+	    ServerSession sess= request.getSession( false );
+
+	    // if not set already, try to find it using the session id
+	    if( sess==null )
+		sess=sM.findSession( sessionId );
+
+	    // 3.2 - Hans fix ( use the session id from URL ) - it's
+	    // part of the current code
+
+	    // 3.2 - PF ( pfrieden@dChain.com ): fix moved to SessionId.
+	    // ( check if the ID is valid before setting it, do that
+	    //  for cookies since we can have multiple cookies, some
+	    //  from old sessions )
+
 	    if(null != sess) {
+		// touch it 
 		sess.getTimeStamp().touch( System.currentTimeMillis() );
+
 		//log("Session found " + sessionId );
 		// set it only if nobody else did !
 		if( null == request.getSession( false ) ) {
@@ -207,7 +224,9 @@ public final class SimpleSessionStore  extends BaseInterceptor {
 
 	if( request.getSession( false ) != null )
 	    return 0; // somebody already set the session
-	ServerSession newS=sM.getNewSession();
+
+	// Fix from Shai Fultheim: load balancing needs jvmRoute
+	ServerSession newS=sM.getNewSession(request.getJvmRoute());
 	request.setSession( newS );
 	request.setSessionId( newS.getId().toString());
 	return 0;
