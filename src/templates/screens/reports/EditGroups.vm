@@ -114,7 +114,7 @@
   <input type="submit" name="eventSubmit_doEditGroupName" value="$l10n.ChangeGroupName" />&#160;
   <input type="submit" name="eventSubmit_doDeleteGroup" value="$l10n.DeleteSelected" />&#160;
  #end
-  <input type="submit" name="eventSubmit_doCancel" value="$l10n.Cancel" />
+## FIXME: need a cancel button here  <input type="submit" name="eventSubmit_doCancel" value="$l10n.Cancel" />
 </div>
 
 #if ($reportGroupsSize > 0)
