@@ -7,7 +7,7 @@
 <!--                                                                        -->
 <!-- ====================================================================== -->
 
-<!-- $Id: config.xml,v 1.4 2001/08/19 04:48:41 d_jencks Exp $ -->
+<!-- $Id: config.xml,v 1.5 2001/08/19 18:51:29 slaboure Exp $ -->
 
   <!-- ================================================================== -->
   <!-- Module Setup                                                       -->
@@ -133,6 +133,13 @@
   <property name="junit.junit.lib" value="${junit.junit.root}/lib"/>
   <path id="junit.junit.classpath">
     <pathelement path="${junit.junit.lib}/junit.jar"/>
+  </path>
+
+  <!-- JavaGroups -->
+  <property name="javagroups.javagroups.root" value="${thirdparty.root}/javagroups/javagroups"/>
+  <property name="javagroups.javagroups.lib" value="${javagroups.javagroups.root}/lib"/>
+  <path id="javagroups.javagroups.classpath">
+    <pathelement path="${javagroups.javagroups.lib}/JavaGroups.jar"/>
   </path>
 
   <!-- *HACK* jsr77.jar -->

@@ -10,7 +10,7 @@
 <!--                                                                        -->
 <!-- ====================================================================== -->
 
-<!-- $Id: build.xml,v 1.7 2001/08/19 04:48:41 d_jencks Exp $ -->
+<!-- $Id: build.xml,v 1.8 2001/08/19 18:51:29 slaboure Exp $ -->
 
 <project default="main">
 
@@ -725,6 +725,9 @@
       </fileset>
       <fileset dir="${gjt.jpl-util.lib}">
         <include name="*.jar"/>
+      </fileset>
+      <fileset dir="${javagroups.javagroups.lib}">
+        <include name="JavaGroups.jar"/>
       </fileset>
       <!-- *HACK* -->
       <fileset dir="${hack.jsr77.lib}">
