@@ -170,6 +170,9 @@ public class JasperMangler implements Mangler{
 	// Fix for invalid characters. From CommandLineCompiler
 	StringBuffer modifiedClassName = new StringBuffer();
 	char c='/';
+	if( Character.isDigit( className.charAt( 0 )  )) {
+	    className="_" +className;
+	}
 	for (int i = 0; i < className.length(); i++) {
 	    char prev=c;
 	    c=className.charAt(i);
@@ -246,6 +249,9 @@ public class JasperMangler implements Mangler{
 		baseClassN=jspFile.substring( 1, extIdx );
 	}
 
+	if( JavaGeneratorTool.isKeyword( baseClassN ) )
+	    baseClassN="_" + baseClassN;
+	
 	baseClassN=fixInvalidChars( baseClassN );
 	
 	//	System.out.println("XXXMangler: " + jspFile + " " +
