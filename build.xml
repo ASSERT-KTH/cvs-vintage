@@ -2,6 +2,7 @@
 <!DOCTYPE project [
   <!ENTITY buildmagic SYSTEM "resource://org/jboss/tools/buildmagic/common.xml">
   <!ENTITY xdoclet SYSTEM "../tools/etc/buildfragments/xdoclet.ent">
+  <!ENTITY libraries-jmx SYSTEM "../tools/etc/buildfragments/libraries-jmx.ent">
   <!ENTITY libraries SYSTEM "../tools/etc/buildfragments/libraries.ent">
   <!ENTITY modules SYSTEM "../tools/etc/buildfragments/modules.ent">
   <!ENTITY locations SYSTEM "../tools/etc/buildfragments/locations.ent">
@@ -17,7 +18,7 @@
 <!--                                                                        -->
 <!-- ====================================================================== -->
 
-<!-- $Id: build.xml,v 1.115 2002/09/13 17:53:49 loubyansky Exp $ -->
+<!-- $Id: build.xml,v 1.116 2002/09/13 19:17:34 d_jencks Exp $ -->
 
 <project default="main" name="JBoss/Server">
 
@@ -73,6 +74,7 @@
     <!-- ========= -->
     <!-- Libraries -->
     <!-- ========= -->
+    &libraries-jmx;
     &libraries;
 
     <!-- The combined library classpath -->
@@ -81,7 +83,7 @@
       <path refid="sun.jaas.classpath"/>
       <path refid="sun.jsse.classpath"/>
       <path refid="sun.jts.classpath"/>
-      <path refid="apache.crimson.classpath"/>
+      <path refid="apache.xalan.classpath"/>
       <path refid="apache.log4j.classpath"/>
       <path refid="apache.bcel.classpath"/>
       <path refid="dom4j.dom4j.classpath"/>
