@@ -60,7 +60,7 @@ import org.tigris.scarab.util.ScarabException;
  * This is an interface which describes what a ScarabUser is...
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: ScarabUser.java,v 1.44 2001/10/24 23:03:41 jon Exp $
+ * @version $Id: ScarabUser.java,v 1.45 2001/10/26 00:43:45 elicia Exp $
  */
 public interface ScarabUser extends User
 {
@@ -127,6 +127,24 @@ public interface ScarabUser extends User
      * issue already stored under key.
      */
     public void setReportingIssue(String key, Issue issue);
+
+    /**
+     * Gets default query-user map for this module/issue type.
+     */
+    public RQueryUser getDefaultQueryUser(ModuleEntity me, IssueType issueType)
+        throws Exception;
+
+    /**
+     * Gets default query for this module/issuetype.
+     */
+    public Query getDefaultQuery(ModuleEntity me, IssueType issueType)
+        throws Exception;
+
+    /**
+     * Clears default query for this module/issuetype.
+     */
+    public void resetDefaultQuery(ModuleEntity me, IssueType issueType)
+        throws Exception;
 
     /** Used for the password management features */
     public boolean isPasswordExpired() throws Exception;
