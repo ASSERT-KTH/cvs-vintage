@@ -31,7 +31,7 @@ import org.jboss.tm.TransactionPropagationContextFactory;
 * JRMPInvokerProxy, local to the proxy and is capable of delegating to local and JRMP implementations
 * 
 * @author <a href="mailto:marc.fleury@jboss.org">Marc Fleury</a>
-* @version $Revision: 1.5 $
+* @version $Revision: 1.6 $
 *
 * <p><b>2001/11/19: marcf</b>
 * <ol>
@@ -48,19 +48,14 @@ public class JRMPInvokerProxy
    
    // Attributes ----------------------------------------------------
    
-   // We use this startup time to find if we are in the original VM
-   private long containerStartup = Invoker.STARTUP;
-   
    // Invoker to the remote JMX node
    protected Invoker remoteInvoker;
-   
-   // Static references to local invokers
-   protected static Invoker localInvoker; 
-   
    
    /**
    *  Factory for transaction propagation contexts.
    *
+   *  @todo: marcf remove all transaction spill from here
+   * 
    *  When set to a non-null value, it is used to get transaction
    *  propagation contexts for remote method invocations.
    *  If <code>null</code>, transactions are not propagated on
@@ -70,15 +65,12 @@ public class JRMPInvokerProxy
    
    // Get and set methods
    
-   //Local invoker reference, useful for optimization
-   public static Invoker getLocal() { return localInvoker;}
-   public static void setLocal(Invoker invoker) { localInvoker = invoker ;}
    
+   //  @todo: MOVE TO TRANSACTION
    // TPC factory
    public static void setTPCFactory(TransactionPropagationContextFactory tpcf) { tpcFactory = tpcf; }
    
    // Constructors --------------------------------------------------
-   
    public JRMPInvokerProxy() {
       // For externalization to work
    }
@@ -97,25 +89,21 @@ public class JRMPInvokerProxy
    
    // Public --------------------------------------------------------
    
-   
-   /**
-   * Returns wether we are local to the originating container or not. 
-   */
-   public boolean isLocal() { return containerStartup == Invoker.STARTUP; }
-   
-   
    // The name of of the server
    public String getServerHostName() throws Exception {return remoteInvoker.getServerHostName();}
    
    /**
-   *  Return the transaction propagation context of the transaction
+   *  
+   *  @Return the transaction propagation context of the transaction
    *  associated with the current thread.
    *  Returns <code>null</code> if the transaction manager was never
    *  set, or if no transaction is associated with the current thread.
    */
+   //  @todo: MOVE TO TRANSACTION
    public Object getTransactionPropagationContext()
    throws SystemException
    {
+      //  @todo: MOVE TO TRANSACTION
       return (tpcFactory == null) ? null : tpcFactory.getTransactionPropagationContext();
    }
    
@@ -128,60 +116,24 @@ public class JRMPInvokerProxy
    throws Exception
    {
       
-      // Pass the current security information
-      invocation.setPrincipal(SecurityAssociation.getPrincipal());
-      invocation.setCredential(SecurityAssociation.getCredential());
-      
-      // optimize if calling another bean in same EJB-application
-      if (isLocal()) {
+      // We are going to go through a Remote invocation, switch to a Marshalled Invocation
+      MarshalledInvocation mi = new MarshalledInvocation(invocation);
          
-         // The payload as is is good
-         // FIXME FIXME FIXME FIXME FIXME ****USE THIS**** WHEN CL ARE INTEGRATED
-         // return localInvoker.invoke(invocation);
+      // Set the transaction propagation context
+      //  @todo: MOVE TO TRANSACTION
+      mi.setTransactionPropagationContext(getTransactionPropagationContext());
          
-         // FIXME FIXME FIXME FIXME FIXME REMOVE WHEN CL ARE INTEGRATED
-         Object value;
-         
-         // FIXME FIXME FIXME FIXME FIXME REMOVE WHEN CL ARE INTEGRATED
-         try {
+      try{ 
             
-            
-            // FIXME FIXME FIXME FIXME FIXME REMOVE WHEN CL ARE INTEGRATED
-            value = localInvoker.invoke(invocation);
-            
-            // FIXME FIXME FIXME FIXME FIXME REMOVE WHEN CL ARE INTEGRATED
-            if (value instanceof MarshalledObject) 
-            {
-               return ((MarshalledObject) value).get();
-            }     
-            // FIXME FIXME FIXME FIXME FIXME REMOVE WHEN CL ARE INTEGRATED
-            else return value;
-         }
-         // FIXME FIXME FIXME FIXME FIXME REMOVE WHEN CL ARE INTEGRATED
-         catch (Exception e) {throw (Exception) new MarshalledObject(e).get();}
-      
-      }
-      else {
-         
-         // We are going to go through a Remote invocation, switch to a Marshalled Invocation
-         MarshalledInvocation mi = new MarshalledInvocation(invocation.payload);
-         
-         // Set the transaction propagation context
-         mi.setTransactionPropagationContext(getTransactionPropagationContext());
-         
-         try{ 
-            
-            return ((MarshalledObject) remoteInvoker.invoke(mi)).get();
-         } catch (ServerException ex) {
-            // Suns RMI implementation wraps NoSuchObjectException in
-            // a ServerException. We cannot have that if we want
-            // to comply with the spec, so we unwrap here.
-            if (ex.detail instanceof NoSuchObjectException)
-               throw (NoSuchObjectException) ex.detail;
-            throw ex;
-         }
-      
-      }   
+         return ((MarshalledObject) remoteInvoker.invoke(mi)).get();
+      } catch (ServerException ex) {
+         // Suns RMI implementation wraps NoSuchObjectException in
+         // a ServerException. We cannot have that if we want
+         // to comply with the spec, so we unwrap here.
+         if (ex.detail instanceof NoSuchObjectException)
+            throw (NoSuchObjectException) ex.detail;
+         throw ex;
+      }  
    }
    
    /**
@@ -194,7 +146,6 @@ public class JRMPInvokerProxy
    public void writeExternal(final ObjectOutput out)
    throws IOException
    { 
-      out.writeLong(containerStartup);
       out.writeObject(remoteInvoker);
    }
    
@@ -206,11 +157,11 @@ public class JRMPInvokerProxy
    public void readExternal(final ObjectInput in)
    throws IOException, ClassNotFoundException
    {
-      containerStartup = in.readLong();
       remoteInvoker = (Invoker) in.readObject();
    }
    
    // Private -------------------------------------------------------
+
    
    // Inner classes -------------------------------------------------
 }
