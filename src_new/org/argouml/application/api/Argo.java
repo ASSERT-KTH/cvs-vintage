@@ -1,4 +1,4 @@
-// $Id: Argo.java,v 1.33 2004/03/06 09:15:17 mvw Exp $
+// $Id: Argo.java,v 1.34 2004/04/05 07:55:01 lepekhine Exp $
 // Copyright (c) 1996-2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -211,6 +211,12 @@ public class Argo
      */
     public static final ConfigurationKey KEY_USER_IMPORT_CLASSPATH =
 	Configuration.makeKey("import", "clazzpath");
+    
+    /** Key for input source file encoding used in RE. 
+	 *  Will be used for generated file also.
+     */
+    public static final ConfigurationKey KEY_INPUT_SOURCE_ENCODING =
+	Configuration.makeKey("import", "file", "encoding");
     
     /** Key for user explorer perspectives.
      *<pre>
