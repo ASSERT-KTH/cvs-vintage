@@ -19,6 +19,6 @@ public class ScopePeer
     public static List getAllScopes()
         throws Exception
     {
-        return doSelect(new Criteria());
+        return doSelect(new Criteria(0));
     }
 }
