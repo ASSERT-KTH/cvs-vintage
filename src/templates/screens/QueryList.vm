@@ -7,7 +7,6 @@
 <form method="post" action="$link.setPage("QueryList.vm").setAction("QueryList")">
 <input type="hidden" name="$scarabG.Constant.NEXT_TEMPLATE" value="QueryList.vm" />
 
-
 ## SORTING
 #set ($sortColumn = $data.Parameters.getString("sortColumn",""))
 #set ($sortPolarity = $data.Parameters.getString("sortPolarity",""))
@@ -98,10 +97,7 @@
    &#160;<input type="submit" value="Create new query" name="eventSubmit_doNewquery" />
 </div>
 
-##    <p>&#171; previous | 1 of 1 | next &#187; </p>
-
 #end
-
 
 $intake.declareGroups()
 </form>
