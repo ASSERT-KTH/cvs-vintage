@@ -15,22 +15,26 @@ import java.lang.reflect.Proxy;
 import java.lang.reflect.UndeclaredThrowableException;
 import java.util.Hashtable;
 import java.util.ArrayList;
+import javax.management.MBeanServerConnection;
+import javax.management.ObjectName;
 import javax.naming.Context;
 import javax.naming.InitialContext;
-import javax.management.ObjectName;
+
 
 import gnu.getopt.Getopt;
 import gnu.getopt.LongOpt;
 
-import org.jboss.jmx.adaptor.rmi.RMIAdaptor;
 import org.jboss.system.server.Server;
 import org.jboss.system.server.ServerImplMBean;
+import org.jboss.security.SecurityAssociation;
+import org.jboss.security.SimplePrincipal;
 import org.jnp.interfaces.NamingContext;
 
 /**
- * A JMX client that uses an RMIAdaptor to shutdown a remote JBoss server.
+ * A JMX client that uses an MBeanServerConnection to shutdown a remote JBoss
+ * server.
  *
- * @version <tt>$Revision: 1.17 $</tt>
+ * @version <tt>$Revision: 1.18 $</tt>
  * @author  <a href="mailto:jason@planet57.com">Jason Dillon</a>
  * @author  Scott.Stark@jboss.org
  */
@@ -54,9 +58,9 @@ public class Shutdown
       System.out.println("    --                        Stop processing options");
       System.out.println("    -s, --server=<url>        Specify the JNDI URL of the remote server");
       System.out.println("    -n, --serverName=<url>    Specify the JMX name of the ServerImpl");
-      System.out.println("    -a, --adapter=<name>      Specify JNDI name of the RMI adapter to use");
-      System.out.println("    -u, --user=<name>         Specify the username for authentication[not implemented yet]");
-      System.out.println("    -p, --password=<name>     Specify the password for authentication[not implemented yet]");
+      System.out.println("    -a, --adapter=<name>      Specify JNDI name of the MBeanServerConnection to use");
+      System.out.println("    -u, --user=<name>         Specify the username for authentication");
+      System.out.println("    -p, --password=<name>     Specify the password for authentication");
       System.out.println();
       System.out.println("operations:");
       System.out.println("    -S, --shutdown            Shutdown the server (default)");
@@ -150,9 +154,11 @@ public class Shutdown
                break;
             case 'u':
                username = getopt.getOptarg();
+               SecurityAssociation.setPrincipal(new SimplePrincipal(username));
                break;
             case 'p':
                password = getopt.getOptarg();
+               SecurityAssociation.setCredential(password);
                break;
             case 'e':
                exitcode = Integer.parseInt(getopt.getOptarg());
@@ -178,15 +184,15 @@ public class Shutdown
          env.put(NamingContext.JNP_DISABLE_DISCOVERY, "true");
          ctx  = new InitialContext(env);
       }
-      
+
       Object obj = ctx.lookup(adapterName);
-      if (!(obj instanceof RMIAdaptor))
+      if (!(obj instanceof MBeanServerConnection))
       {
-         throw new RuntimeException("Object not of type: RMIAdaptor, but: " +
+         throw new RuntimeException("Object not of type: MBeanServerConnection, but: " +
             (obj == null ? "not found" : obj.getClass().getName()));
       }
 
-      RMIAdaptor adaptor = (RMIAdaptor) obj;
+      MBeanServerConnection adaptor = (MBeanServerConnection) obj;
       ServerProxyHandler handler = new ServerProxyHandler(adaptor, serverJMXName);
       Class[] ifaces = {Server.class};
       ClassLoader tcl = Thread.currentThread().getContextClassLoader();
@@ -211,8 +217,8 @@ public class Shutdown
    private static class ServerProxyHandler implements InvocationHandler
    {
       ObjectName serverName;
-      RMIAdaptor server;
-      ServerProxyHandler(RMIAdaptor server, ObjectName serverName)
+      MBeanServerConnection server;
+      ServerProxyHandler(MBeanServerConnection server, ObjectName serverName)
       {
          this.server = server;
          this.serverName = serverName;
