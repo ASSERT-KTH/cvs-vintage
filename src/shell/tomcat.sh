@@ -1,6 +1,6 @@
 #!/bin/sh
 #
-# $Id: tomcat.sh,v 1.30 2001/09/20 03:35:41 larryi Exp $
+# $Id: tomcat.sh,v 1.31 2001/10/21 17:33:41 larryi Exp $
 
 # Shell script to start and stop the server
 
@@ -32,9 +32,9 @@ if [ "$TOMCAT_INSTALL" = "" ] ; then
     ls=`ls -ld "$PRG"`
     link=`expr "$ls" : '.*-> \(.*\)$'`
     if expr "$link" : '.*/.*' > /dev/null; then
-	PRG="$link"
+        PRG="$link"
     else
-	PRG="`dirname $PRG`/$link"
+        PRG="`dirname $PRG`/$link"
     fi
   done
   
@@ -43,10 +43,10 @@ if [ "$TOMCAT_INSTALL" = "" ] ; then
     echo "Guessing TOMCAT_INSTALL from tomcat.sh to ${TOMCAT_INSTALL_1}" 
   fi
     if [ -d ${TOMCAT_INSTALL_1}/lib ] ; then 
-	TOMCAT_INSTALL=${TOMCAT_INSTALL_1}
+        TOMCAT_INSTALL=${TOMCAT_INSTALL_1}
         if [ "$DEBUG_HOMEFIND" != "false" ] ; then
           echo "Setting TOMCAT_INSTALL to $TOMCAT_INSTALL"
-	fi
+        fi
     fi
 fi
 
@@ -85,11 +85,11 @@ fi
 
 if [ "$TOMCAT_HOME" = "" ] ; then
     if [ -d ./conf ] ; then 
-	TOMCAT_HOME=.
+        TOMCAT_HOME=.
     elif [ -d ../conf ] ; then 
-	TOMCAT_HOME=..
+        TOMCAT_HOME=..
     else
-	TOMCAT_HOME=$TOMCAT_INSTALL
+        TOMCAT_HOME=$TOMCAT_INSTALL
     fi
 fi
 
@@ -147,11 +147,12 @@ elif [ "$1" = "start" ] ; then
         rm -f  ${TOMCAT_HOME}/conf/ajp12.id
   fi
 
+  MAX_WAIT=360
   WAIT=0
   if [ "$1" = "-wait" ] ; then
     shift
     # wait at least 6 min 
-    WAIT=360
+    WAIT=${MAX_WAIT}
   fi
     
   if [ "$1" = "-noout" ] ; then
@@ -175,8 +176,8 @@ elif [ "$1" = "start" ] ; then
 
         WAIT=`expr $WAIT - 1`
         if [ "$WAIT" = "0" ] ; then
-            echo "Tomcat was no ready after 120 seconds, giving up waiting "
-	    break;
+            echo "Tomcat was not ready after ${MAX_WAIT} seconds, giving up waiting "
+            break;
         fi
     done
   fi
@@ -223,17 +224,17 @@ elif [ "$1" = "jspcOrig" ] ; then
     shift 
     CLASSPATH=.
     for i in ${TOMCAT_HOME}/lib/container/* ${TOMCAT_HOME}/lib/common/* ; do
-	CLASSPATH=${CLASSPATH}:$i
+        CLASSPATH=${CLASSPATH}:$i
     done
     CLASSPATH=${CLASSPATH}:${JAVA_HOME}/lib/tools.jar
     # Backdoor classpath setting for development purposes when all classes
-	# are compiled into a /classes dir and are not yet jarred.
+    # are compiled into a /classes dir and are not yet jarred.
     if [ -d ${TOMCAT_HOME}/classes ]; then
-	    CLASSPATH=${TOMCAT_HOME}/classes:${CLASSPATH}
+        CLASSPATH=${TOMCAT_HOME}/classes:${CLASSPATH}
     fi
     
     if [ "$oldCP" != "" ]; then
-	CLASSPATH=${CLASSPATH}:${oldCP}
+        CLASSPATH=${CLASSPATH}:${oldCP}
     fi
     (cd $TOMCAT_HOME; $JAVACMD $JSPC_OPTS -Dtomcat.home=${TOMCAT_HOME} org.apache.jasper.JspC $@ )
 
@@ -266,15 +267,25 @@ elif [ "$1" = "env" ] ; then
 
 else
   echo "Usage:"
-  echo "tomcat (start|env|run|stop|jspc)"
-  echo "        start - start tomcat in the background"
-  echo "        run   - start tomcat in the foreground"
-  echo "        run -wait - wait until tomcat is initialized before returning  "
-  echo "            -security - use a SecurityManager when starting"
-  echo "        stop  - stop tomcat"
-  echo "        env  -  set CLASSPATH and TOMCAT_HOME env. variables"
-  echo "        jspc - run jsp pre compiler"
-
+  echo "$0 (start|run|stop|enableAdmin|estart|env|jspc)"
+  echo "  start            - start tomcat in the background"
+  echo "  start -security  -   use a SecurityManager when starting"
+  echo "  start -noout     -   redirect stdout/stderr to \$TOMCAT_HOME/logs/stdout.log"
+  echo "  start -wait      -   wait until tomcat is initialized before returning"
+  echo "  start -help      -   more options"
+  echo "                         (config, debug, estart, home, install, jkconf, sandbox)"
+  echo "  run              - start tomcat in the foreground"
+  echo "  run -security    -   use a SecurityManager when starting"
+  echo "  stop             - stop tomcat"
+  echo "  stop -force      -   stop tomcat with the 'kill' command if necessary"
+  echo "  stop -help       -   more options"
+  echo "                         (ajpid, host, home, pass, port)"
+  echo "  enableAdmin      - Trust the admin web application,"
+  echo "                     i.e. rewrites conf/apps-admin.xml with trusted=\"true\""
+  echo "  estart           - Start Tomcat using the/your EmbededTomcat class which"
+  echo "                     uses a hardcoded set of modules"
+  echo "  env              - set CLASSPATH and TOMCAT_HOME env. variables"
+  echo "  jspc             - run jsp pre compiler"
   exit 0
 fi
 
