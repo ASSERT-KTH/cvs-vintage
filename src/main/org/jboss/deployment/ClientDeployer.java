@@ -1,33 +1,32 @@
 package org.jboss.deployment;
 
-import java.io.InputStream;
-import java.io.IOException;
-import java.io.FileInputStream;
-import java.io.File;
-import java.net.URL;
-import java.util.Iterator;
-import java.util.HashMap;
-import javax.naming.Context;
-import javax.naming.InitialContext;
-import javax.naming.LinkRef;
-import javax.naming.NamingException;
-
 import org.jboss.ejb.EjbUtil;
 import org.jboss.metadata.ClientMetaData;
-import org.jboss.metadata.EnvEntryMetaData;
 import org.jboss.metadata.EjbRefMetaData;
+import org.jboss.metadata.EnvEntryMetaData;
 import org.jboss.metadata.ResourceEnvRefMetaData;
 import org.jboss.metadata.ResourceRefMetaData;
 import org.jboss.metadata.XmlFileLoader;
 import org.jboss.naming.Util;
-
 import org.w3c.dom.Element;
+
+import javax.naming.Context;
+import javax.naming.InitialContext;
+import javax.naming.LinkRef;
+import javax.naming.NamingException;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.URL;
+import java.util.HashMap;
+import java.util.Iterator;
 
 /** An XMBean resource implementation of a deployer for j2ee application
  * client jars 
  * 
  * @author Scott.Stark@jboss.org
- * @version $Revision: 1.7 $
+ * @version $Revision: 1.8 $
  */
 public class ClientDeployer extends SubDeployerSupport
 {
@@ -88,7 +87,7 @@ public class ClientDeployer extends SubDeployerSupport
     */
    public void create(DeploymentInfo di) throws DeploymentException
    {
-      super.start(di);
+      super.create(di);
    }
 
    /** Parse the application-client.xml and jboss-client.xml descriptors.
@@ -115,9 +114,10 @@ public class ClientDeployer extends SubDeployerSupport
 
          metaData = null;
          XmlFileLoader xfl = new XmlFileLoader(true);
-         Element appClient = xfl.getDocument(in, "META-INF/application.xml").getDocumentElement();
+         Element appClient = xfl.getDocument(in, "META-INF/application-client.xml").getDocumentElement();
          in.close();
          metaData = new ClientMetaData();
+         metaData.setResourceClassLoader(di.localCl);
          metaData.importClientXml(appClient);
          di.metaData = metaData;
 
@@ -145,7 +145,7 @@ public class ClientDeployer extends SubDeployerSupport
          throw new DeploymentException("Failed to setup client ENC", e);
       }
 
-      super.create(di);
+      super.start(di);
    }
 
    /**
@@ -273,7 +273,6 @@ public class ClientDeployer extends SubDeployerSupport
                   " to JDNI as: " +jndiName);
          Util.bind(envCtx, encName, new LinkRef(jndiName));
       }
-
    }
 }
 
