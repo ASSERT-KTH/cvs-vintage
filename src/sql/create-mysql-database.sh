@@ -8,7 +8,7 @@ if [ ! -d "${POPULATION_SCRIPT_DIR}" ] ; then
     echo "The population script directory:"
     echo "${POPULATION_SCRIPT_DIR}"
     echo "does not exist. Please build Scarab first using the"
-    echo "ant build system as described in the scarab/README.txt file."
+    echo "Ant build system as described in the scarab/README.txt file."
     exit 1
 fi
 
