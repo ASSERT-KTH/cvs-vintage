@@ -34,16 +34,16 @@ in-process make sure that top speed is what you need.
 
 <h2>Document Conventions and Assumptions</h2>
 
-<p>&lt;tomcat_root&gt; is the root directory of tomcat. Your Tomcat
+<p>&lt;tomcat_home&gt; is the root directory of tomcat. Your Tomcat
 installation should have the following subdirectories:
 
 <ol>
-  <li>&lt;tomcat_root&gt;\conf - Where you can place various configuration files</li>
-  <li>&lt;tomcat_root&gt;\webapps - Containing example applications </li>
-  <li>&lt;tomcat_root&gt;\bin - Where you place web server plugins </li>
+  <li>&lt;tomcat_home&gt;\conf - Where you can place various configuration files</li>
+  <li>&lt;tomcat_home&gt;\webapps - Containing example applications </li>
+  <li>&lt;tomcat_home&gt;\bin - Where you place web server plugins </li>
 </ol>
 
-<p>In all the examples in this document &lt;tomcat_root&gt; will be d:\tomcat.</p>
+<p>In all the examples in this document &lt;tomcat_home&gt; will be d:\tomcat.</p>
 
 <p>A <tt>worker</tt> is defined to be a Tomcat process that accepts work from
 the web server.</p>
@@ -58,7 +58,7 @@ redirectors, look at their supported configuration sections.
 <h2>Installation</h2>
 
 <p>The in-process adapter is not part of the "official" build of Jakarta, You
-can obtain the code and binaries needed for it by accessing 
+can obtain the code and binaries needed for it by accessing
 http://jakarta.apache.org/builds/tomcat/release/v3.1_beta_1/bin/win32/i386/.
 The adapter related file is <tt>jni_connect.dll</tt>.</p>
 
@@ -68,12 +68,13 @@ The adapter related file is <tt>jni_connect.dll</tt>.</p>
   <li>Putting jni_connect.dll in the bin directory - jni_connect.dll is used
   to issue callbacks from Tomcat back to the web server, either obtain a
   pre-built DLL or build it yourself (see the build section).</li>
-  <li>Update <tt>worker.properties</tt> and add the JNI worker - The JNI worker
+  <li>Update <tt>workers.properties</tt> and add the JNI worker - The JNI worker
   needs several configuration items, you will need to add those to the worker
   properties file.</li>
   <li>Updating server.xml - You need to instruct Tomcat to use the JNI
-  connection handlers. You will also need to provide full path to the
-  directory used by the various contexts</li>
+  connection handlers. You will also need to provide the home property for
+  your ContextManager (later on the log files and work directories will
+  be created under this home). </li>
   <li>Directing context(s) to the in-process Tomcat - You need to instruct
   the redirector to send work to the in-process Tomcat</li>
   <li>Restart your server (so changes will take effect)</li>
@@ -82,7 +83,8 @@ The adapter related file is <tt>jni_connect.dll</tt>.</p>
 
 <h3>Putting jni_connect.dll in the bin directory</h3>
 
-<p> Put jni_connect.dll inside <tt>&lt;tomcat_root&gt;\bin\jni_connect\nt4\i386\</tt>.
+<p> Put jni_connect.dll inside 
+    <tt>&lt;tomcat_home&gt;\bin\i386\</tt>.
 </p>
 
 <h3>Update worker.properties and add the JNI worker</h3>
@@ -113,15 +115,19 @@ mandatory and some are an option...
   <li>You <b>should</b> provide command line options for Tomcat; you must provide
   a -config option to specify your JNI configured server.xml. For example:<br>
   <tt>worker.jni.cmd_line=-config</tt><br>
-  <tt>worker.jni.cmd_line=d:\tomcat\jni_server.xml</tt>
+  <tt>worker.jni.cmd_line=d:\tomcat\conf\jni_server.xml</tt>
+  </li>
+  <li>You <b>should</b> specify the tomcat home location as a Java system
+  properties. For example:<br>
+  <tt>worker.jni.sysprops=tomcat.home=d:\tomcat</tt>
+  </li>
+  <li>You can specify additional Java system properties. For example:<br>
+  <tt>worker.jni.sysprops=java.compiler=NONE</tt>
   </li>
   <li>You can specify files to by used by the JVM for stdout and stderr.
   For example:<br>
   <tt>worker.jni.stdout=d:\jvm.stdout</tt><br>
   <tt>worker.jni.stderr=d:\jvm.stderr</tt>
-  </li>
-  <li>You can specify additional Java system properties. For example:<br>
-  <tt>worker.jni.sysprops=java.compiler=NONE</tt>
   </li>
   <li>You can specify additional PATH, to be use when loading dlls (useful
   when you are using native code). For example:<br>
@@ -129,11 +135,11 @@ mandatory and some are an option...
   <tt>worker.jni.ld_path=d:\my\native\code</tt>
   </li>
 </ol>
-You can find a sample worker file (<tt>jni_workers.properties</tt>)  under <tt>tomcat/conf</tt>. 
+You can find a sample worker file (<tt>jni_workers.properties</tt>)  under <tt>tomcat/conf</tt>.
 
 <h3>Update server.xml</h3>
 <p>
-By default Tomcat read the file &lt;tomcat_root&gt;\conf\server.xml. This
+By default Tomcat reads the file &lt;tomcat_home&gt;\conf\server.xml. This
 file defines among other things the contexts and connectors used by Tomcat.
 In order to work in-process you will have to perform the following actions:
 </p>
@@ -141,31 +147,27 @@ In order to work in-process you will have to perform the following actions:
   <li>You should update the connectors list.<br>
   Remove all the connectors from your server.xml and add the following
   lines (note that you will need to update the area marked
-  with &lt;tomcat_root&gt;)
+  with &lt;tomcat_home&gt;)
   <pre>
     &lt;!-- New JNI, you need to compile the new/experimental module --&gt;
     &lt;Connector className="org.apache.tomcat.service.JNIEndpointConnector"&gt;
-        &lt;Parameter name="native_lib" value="&lt;tomcat_root&gt;\bin\jni_connect\nt4\i386\jni_connect.dll"/&gt;
+        &lt;Parameter name="native_lib" value="&lt;tomcat_home&gt;\bin\i386\jni_connect.dll"/&gt;
     &lt;/Connector&gt;
   </pre>
   These lines add a JNI connector to Tomcat.
-  <li>You should update the <tt>docBase</tt> attribute used by the contexts.<br>
-  By default the <tt>docBase</tt> attribute points to a directory relative
-  to &lt;tomcat_root&gt;. The web server however executes at another
-  directory so you will have to modify the <tt>docBase</tt>s to point to a
-  full path to the context directories. For example:
+  <li>You should update the <tt>home</tt> attribute used by the
+  ContextManager so that the ContextManager will know where to place the
+  log, work and webapps directories. For example:
   <pre>
-    &lt;Context path="/" docBase="&lt;tomcat_root&gt;\webapps\ROOT" /&gt;
-    &lt;Context path="/examples" docBase="&lt;tomcat_root&gt;\webapps\examples" /&gt;
-    &lt;Context path="/test" docBase="&lt;tomcat_root&gt;\webapps\test" /&gt;
+    &lt;ContextManager debug="0" workDir="work" home="&lt;tomcat_home&gt;" /&gt;
+    .
+    .
+    .
+    &lt;/ContextManager /&gt;
   </pre>
-  Again, make sure that you update &lt;tomcat_root&gt; to your real Tomcat
-  root. <br>
-  <b>Note:</b> Tomcat now has 3 "built in" contexts, <tt>"/"</tt>,
-  <tt>"/examples"</tt> and <tt>"/test"</tt>, you will have to fix their
-  docBase too (as demonstrated above).
+  Again, make sure that you update &lt;tomcat_home&gt; to your real Tomcat
+  root.
   </li>
-  <li>Make sure you set the home attribute to point to tomcat home.</li>
 </ol>
 You can find a sample server file (<tt>jni_server.xml</tt>) under <tt>jakarta-tomcat/conf</tt>.
 

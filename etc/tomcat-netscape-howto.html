@@ -17,16 +17,16 @@ using the Tomcat redirector plugin.</p>
 
 <h2>Document Conventions and Assumptions</h2>
 
-<p>&lt;tomcat_root&gt; is the root directory of tomcat. Your Tomcat
+<p>&lt;tomcat_home&gt; is the root directory of tomcat. Your Tomcat
 installation should have the following subdirectories:
 
 <ol>
-  <li>&lt;tomcat_root&gt;\conf - Where you can place various configuration files</li>
-  <li>&lt;tomcat_root&gt;\webapps - Containing example applications </li>
-  <li>&lt;tomcat_root&gt;\bin - Where you place web server plugins </li>
+  <li>&lt;tomcat_home&gt;\conf - Where you can place various configuration files</li>
+  <li>&lt;tomcat_home&gt;\webapps - Containing example applications </li>
+  <li>&lt;tomcat_home&gt;\bin - Where you place web server plugins </li>
 </ol>
 
-<p>In all the examples in this document &lt;tomcat_root&gt; will be d:\tomcat.</p>
+<p>In all the examples in this document &lt;tomcat_home&gt; will be d:\tomcat.</p>
 
 <p>A <tt>worker</tt> is defined to be a tomcat process that accepts work from
 the Netscape server.</p>
@@ -36,10 +36,10 @@ the Netscape server.</p>
 <p>The Netscape-Tomcat redirector was developed and tested on:
 
 <ol>
-  <li>WinNT4.0-i386 SP4/SP5/SP6a (it should be able to work on other versions 
+  <li>WinNT4.0-i386 SP4/SP5/SP6a (it should be able to work on other versions
   of the NT service pack and also UNIX) </li>
   <li>Netscape Enterprise 3.0 and 3.61</li>
-  <li>Tomcat3.0 - Tomcat3.1 build of 02/07/2000</li>
+  <li>Tomcat3.0 - Tomcat3.1beta1 </li>
 </ol>
 
 <p>The redirector uses <b>ajp12</b> to send requests to the Tomcat
@@ -49,7 +49,7 @@ in-process mode can be found in the in process howto.</p>
 <h2>Installation</h2>
 
 <p>The Netscape redirector is not part of the "official" build of Jakarta, You
-can obtain the code and binaries needed for it by accessing 
+can obtain the code and binaries needed for it by accessing
 http://jakarta.apache.org/builds/tomcat/release/v3.1_beta_1/bin/win32/i386/.
 The redirector related file is <tt>nsapi_redirect.dll</tt>.</p>
 
