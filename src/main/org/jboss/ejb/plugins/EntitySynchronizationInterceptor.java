@@ -48,7 +48,7 @@ import org.jboss.logging.Logger;
 *   @see <related>
 *   @author Rickard Öberg (rickard.oberg@telkel.com)
 *   @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
-*   @version $Revision: 1.21 $
+*   @version $Revision: 1.22 $
 */
 public class EntitySynchronizationInterceptor
 extends AbstractInterceptor
@@ -337,6 +337,10 @@ extends AbstractInterceptor
 		{
 			// DEBUG Logger.debug("beforeCompletion called for ctx "+ctx.hashCode());
 			
+			// This is an independent point of entry. We need to make sure the 
+			// thread is associated with the right context class loader
+			Thread.currentThread().setContextClassLoader(container.getClassLoader());
+			
 			if (ctx.getId() != null) {
 				try {
 					try {
@@ -388,6 +392,11 @@ extends AbstractInterceptor
 		
 		public void afterCompletion(int status)
 		{
+			
+			// This is an independent point of entry. We need to make sure the 
+			// thread is associated with the right context class loader
+			Thread.currentThread().setContextClassLoader(container.getClassLoader());
+			
 			if (ctx.getId() != null) {
 				
 				//DEBUG Logger.debug("afterCompletion called for ctx "+ctx.hashCode());
