@@ -32,10 +32,12 @@ import javax.transaction.Transaction;
 import javax.management.ObjectName;
 
 import org.jboss.invocation.Invocation;
+import org.jboss.invocation.InvocationType;
 import org.jboss.invocation.MarshalledInvocation;
 import org.jboss.monitor.StatisticsProvider;
 import org.jboss.metadata.EntityMetaData;
 import org.jboss.metadata.ConfigurationMetaData;
+import org.jboss.util.NestedRuntimeException;
 import org.jboss.util.collection.SerializableEnumeration;
 
 /**
@@ -44,14 +46,14 @@ import org.jboss.util.collection.SerializableEnumeration;
  * @see Container
  * @see EntityEnterpriseContext
  *
- * @author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
+ * @author <a href="mailto:rickard.oberg@telkel.com">Rickard ï¿½berg</a>
  * @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
  * @author <a href="mailto:sebastien.alborini@m4x.org">Sebastien Alborini</a>
  * @author <a href="mailto:docodan@mvcsoft.com">Daniel OConnor</a>
  * @author <a href="mailto:bill@burkecentral.com">Bill Burke</a>
  * @author <a href="mailto:andreas.schaefer@madplanet.com">Andreas Schaefer</a>
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
- * @version $Revision: 1.117 $
+ * @version $Revision: 1.118 $
  *
  * @jmx.mbean extends="org.jboss.ejb.ContainerMBean"
  */
@@ -60,6 +62,8 @@ public class EntityContainer
    implements EJBProxyFactoryContainer, InstancePoolContainer,
       EntityContainerMBean
 {
+   protected static final Method EJBOBJECT_REMOVE;
+   
    /**
     * These are the mappings between the home interface methods and the
     * container methods.
@@ -101,6 +105,18 @@ public class EntityContainer
     */
    protected static GlobalTxEntityMap globalTxEntityMap = new GlobalTxEntityMap();
 
+   static
+   {
+      try
+      {
+         EJBOBJECT_REMOVE = EJBObject.class.getMethod("remove", new Class[0]);
+      }
+      catch (Throwable t)
+      {
+         throw new NestedRuntimeException(t);
+      }
+   }
+   
    public static GlobalTxEntityMap getGlobalTxEntityMap()
    {
       return globalTxEntityMap;
@@ -484,6 +500,33 @@ public class EntityContainer
 
    public Object internalInvokeHome(Invocation mi) throws Exception
    {
+      Method method = mi.getMethod();
+      if (method != null && method.getName().equals("remove"))
+      {
+         // Map to EJBHome.remove(Object) to EJBObject.remove()
+         InvocationType type = mi.getType(); 
+         if (type == InvocationType.HOME)
+            mi.setType(InvocationType.REMOTE);
+         else if (type == InvocationType.LOCALHOME)
+            mi.setType(InvocationType.LOCAL);
+         mi.setMethod(EJBOBJECT_REMOVE);
+
+         // Handle or primary key?
+         Object arg = mi.getArguments()[0];
+         if (arg instanceof Handle)
+         {
+            if (arg == null)
+               throw new RemoteException("Null handle");
+            Handle handle = (Handle) arg;
+            EJBObject ejbObject = handle.getEJBObject();
+            mi.setId(ejbObject.getPrimaryKey());
+         }
+         else
+            mi.setId(arg);
+
+         mi.setArguments(new Object[0]);
+         return getInterceptor().invoke(mi);
+      }
       return getInterceptor().invokeHome(mi);
    }
 
