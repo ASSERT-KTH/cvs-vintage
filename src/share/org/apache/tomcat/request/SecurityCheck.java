@@ -200,7 +200,7 @@ public class SecurityCheck extends  BaseInterceptor {
 
     /** Wrong user/password
      */
-    private int errorPage( Request req, Response response ) {
+    protected int errorPage( Request req, Response response ) {
 	System.out.println("Wrong user/password");
 	return 0;
     }
@@ -258,7 +258,7 @@ public class SecurityCheck extends  BaseInterceptor {
 	    64, 64, 64, 64, 64, 64, 64, 64, 64, 64, 64, 64, 64, 64, 64, 64
     };
     
-    private String base64Decode( String orig ) {
+    protected String base64Decode( String orig ) {
 	char chars[]=orig.toCharArray();
 	StringBuffer sb=new StringBuffer();
 	int i=0;
@@ -284,12 +284,12 @@ public class SecurityCheck extends  BaseInterceptor {
 	return sb.toString();
     }
 
-    private boolean checkPassword( String user, String pass ) {
+    protected boolean checkPassword( String user, String pass ) {
 	if( memoryRealm != null ) return memoryRealm.checkPassword( user, pass );
 	return false;
     }
 
-    private boolean userInRole( String user, String role ) {
+    protected boolean userInRole( String user, String role ) {
 	if( memoryRealm != null ) return memoryRealm.userInRole( user, role );
 	return false;
     }
