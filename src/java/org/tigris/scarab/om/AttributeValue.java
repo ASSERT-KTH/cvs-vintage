@@ -87,9 +87,11 @@ public abstract class AttributeValue
     private NumberKey oldOptionId;
     private NumberKey oldUserId;
     private String oldValue;
+    private int oldNumericValue;
     private boolean oldOptionIdIsSet;
     private boolean oldUserIdIsSet;
     private boolean oldValueIsSet;
+    private boolean oldNumericValueIsSet;
     private AttributeValue chainedValue;
     
     private static String className = "AttributeValue";
@@ -103,6 +105,7 @@ public abstract class AttributeValue
         oldOptionIdIsSet = false;
         oldUserIdIsSet = false;
         oldValueIsSet = false;
+        oldNumericValueIsSet = false;
     }
 
     /**
@@ -351,8 +354,18 @@ public abstract class AttributeValue
      */
     public void setNumericValue(int v)
     {        
-        super.setNumericValue(v);
         setValueOnly(String.valueOf(v));
+        if ( v != getNumericValue() )
+        { 
+            // if the value is set multiple times before saving only
+            // save the last saved value
+            if ( !isNew() && !oldNumericValueIsSet ) 
+            {
+                oldNumericValue = getNumericValue();
+                oldNumericValueIsSet = true;
+            }
+            super.setNumericValue(v);
+        }  
     }
 
     protected void setOptionIdOnly(NumberKey optionId)
@@ -654,6 +667,8 @@ public abstract class AttributeValue
             Activity activity = new Activity();
             String desc = getActivityDescription();
             activity.create(getIssue(), getAttribute(), desc, this.transaction,
+                            oldNumericValue, getNumericValue(),
+                            oldUserId, getUserId(),
                             oldOptionId, getOptionId(),
                             oldValue , getValue());
         }        

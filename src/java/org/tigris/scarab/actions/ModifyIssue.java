@@ -95,7 +95,7 @@ import org.tigris.scarab.util.ScarabConstants;
     This class is responsible for edit issue forms.
     ScarabIssueAttributeValue
     @author <a href="mailto:elicia@collab.net">Elicia David</a>
-    @version $Id: ModifyIssue.java,v 1.38 2001/09/30 19:07:44 jon Exp $
+    @version $Id: ModifyIssue.java,v 1.39 2001/10/11 17:28:15 jmcnally Exp $
 */
 public class ModifyIssue extends RequireLoginFirstAction
 {
@@ -322,8 +322,7 @@ public class ModifyIssue extends RequireLoginFirstAction
                     StringBuffer descBuf = new StringBuffer("added URL '");
                     descBuf.append(nameField.toString()).append("'");
                     String desc = descBuf.toString();
-                    activity.create(issue, null, desc, transaction,
-                                    null, null, "", "");
+                    activity.create(issue, null, desc, transaction, "", "");
                 }
                 intake.remove(group);
                 issue.save();
@@ -410,8 +409,7 @@ public class ModifyIssue extends RequireLoginFirstAction
                StringBuffer descBuf = new StringBuffer("deleted URL '");
                descBuf.append(attachment.getName()).append("'");
                String desc = descBuf.toString();
-               activity.create(issue, null, desc, transaction,
-                               null, null, "", "");
+               activity.create(issue, null, desc, transaction, "", "");
                issue.save();
                transaction.sendEmail(new ContextAdapter(context), issue);
             } 
@@ -482,8 +480,7 @@ public class ModifyIssue extends RequireLoginFirstAction
                descBuf.append(" from ").append(oldValue);
                descBuf.append(" to ").append(newValue);
                String desc = descBuf.toString();
-               activity.create(currentIssue, null, desc,
-                               transaction, null, null,
+               activity.create(currentIssue, null, desc, transaction,
                                oldValue, newValue);
                transaction.sendEmail(new ContextAdapter(context), 
                                      currentIssue);
@@ -550,8 +547,7 @@ public class ModifyIssue extends RequireLoginFirstAction
                descBuf.append(" from ").append(oldValue);
                descBuf.append(" to ").append(newValue);
                String desc = descBuf.toString();
-               activity.create(issue, null, desc,
-                               transaction, null, null,
+               activity.create(issue, null, desc, transaction,
                                oldValue, newValue);
                issue.save();
                transaction.sendEmail(new ContextAdapter(context), issue);
@@ -643,8 +639,7 @@ public class ModifyIssue extends RequireLoginFirstAction
             descBuf.append(" on Issue ");
             descBuf.append(parentIssue.getUniqueId());
             String desc = descBuf.toString();
-            activity.create(issue, null, desc,
-                            transaction, null, null, "", "");
+            activity.create(issue, null, desc, transaction, "", "");
             issue.save();
             transaction.sendEmail(new ContextAdapter(context), issue);
         }

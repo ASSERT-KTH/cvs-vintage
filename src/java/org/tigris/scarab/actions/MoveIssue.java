@@ -91,7 +91,7 @@ import org.tigris.scarab.attribute.OptionAttribute;
     FIXME: rewrite this class using intake.
     
     @author <a href="mailto:elicia@collab.net">Elicia David</a>
-    @version $Id: MoveIssue.java,v 1.9 2001/10/08 06:35:23 jon Exp $
+    @version $Id: MoveIssue.java,v 1.10 2001/10/11 17:28:15 jmcnally Exp $
 */
 public class MoveIssue extends RequireLoginFirstAction
 {
@@ -265,7 +265,7 @@ public class MoveIssue extends RequireLoginFirstAction
         Attribute zeroAttribute = (Attribute) AttributePeer
                                   .retrieveByPK(new NumberKey("0"));
         activity.create(newIssue, zeroAttribute, desc, transaction, 
-                        null, null, oldModule.getName(), newModule.getName());
+                        oldModule.getName(), newModule.getName());
 
         context.put("action", selectAction);
         context.put("oldModule", oldModule.getName());

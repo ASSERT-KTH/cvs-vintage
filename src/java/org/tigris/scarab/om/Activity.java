@@ -110,6 +110,8 @@ public class Activity
      */
     public void create(Issue issue, Attribute attribute, 
                        String desc, Transaction transaction,
+                       int oldNumericValue, int newNumericValue,
+                       NumberKey oldUserId, NumberKey newUserId,
                        NumberKey oldOptionId, NumberKey newOptionId,
                        String oldValue, String newValue)
          throws Exception
@@ -122,8 +124,33 @@ public class Activity
             setAttribute(attribute);
             setDescription(desc);
             setTransaction(transaction);
+            setOldNumericValue(oldNumericValue);
+            setNewNumericValue(newNumericValue);
+            setOldUserId(oldUserId);
+            setNewUserId(newUserId);
             setOldOptionId(oldOptionId);
             setNewOptionId(newOptionId);
+            setOldValue(oldValue);
+            setNewValue(newValue);
+            save();
+    }
+
+    /**
+     * Populates a new Activity object.
+     */
+    public void create(Issue issue, Attribute attribute, 
+                       String desc, Transaction transaction,
+                       String oldValue, String newValue)
+         throws Exception
+    {
+            setIssue(issue);
+            if (attribute == null)
+            {
+                attribute = Attribute.getInstance(0);
+            }
+            setAttribute(attribute);
+            setDescription(desc);
+            setTransaction(transaction);
             setOldValue(oldValue);
             setNewValue(newValue);
             save();

@@ -2,7 +2,7 @@
 <!DOCTYPE app-data SYSTEM
           "http://jakarta.apache.org/turbine/dtd/database.dtd">
 
-<!-- $Id: scarab-schema.xml,v 1.54 2001/10/09 03:50:42 elicia Exp $ -->
+<!-- $Id: scarab-schema.xml,v 1.55 2001/10/11 17:28:15 jmcnally Exp $ -->
 
 <app-data>
 <database>
@@ -27,6 +27,22 @@
         Transaction to which the attribute modification belongs.
     -->
     <column name="TRANSACTION_ID" required="true" type="INTEGER"/>
+    <!--
+        Value of integer attribute before modification.
+    -->
+    <column name="OLD_NUMERIC_VALUE" required="false" type="INTEGER" />
+    <!--
+        Value of integer attribute after modification.
+    -->
+    <column name="NEW_NUMERIC_VALUE" required="false" type="INTEGER" />
+    <!--
+        Value of user attribute before modification.
+    -->
+    <column name="OLD_USER_ID" required="false" type="INTEGER" />
+    <!--
+        Value of user attribute after modification.
+    -->
+    <column name="NEW_USER_ID" required="false" type="INTEGER" />
     <!--
         Value of option attribute before modification.
     -->
@@ -60,6 +76,12 @@
     </foreign-key>
     <foreign-key foreignTable="SCARAB_TRANSACTION">
         <reference local="TRANSACTION_ID" foreign="TRANSACTION_ID"/>
+    </foreign-key>
+    <foreign-key foreignTable="SCARAB_USER">
+        <reference local="OLD_USER_ID" foreign="USER_ID"/>
+    </foreign-key>
+    <foreign-key foreignTable="SCARAB_USER">
+        <reference local="NEW_USER_ID" foreign="USER_ID"/>
     </foreign-key>
     <foreign-key foreignTable="SCARAB_ATTRIBUTE_OPTION">
         <reference local="OLD_OPTION_ID" foreign="OPTION_ID"/>
