@@ -24,7 +24,7 @@
 // File: FigClassifierRole.java
 // Classes: FigClassifierRole
 // Original Author: agauthie@ics.uci.edu
-// $Id: FigClassifierRole.java,v 1.6 2002/04/10 16:41:46 jeremybennett Exp $
+// $Id: FigClassifierRole.java,v 1.7 2002/04/11 10:50:00 jeremybennett Exp $
 
 // 10 Apr 2002: Jeremy Bennett (mail@jeremybennett.com). Fixed to stop
 // collaboration roles all stretching to the top left on reload. Problem was
@@ -287,7 +287,6 @@ public class FigClassifierRole extends FigNodeModelElement {
         // stereotype away). If the bounds aren't big enough when we've added a
         // stereotype, they'll get increased as needed.
 
-        System.out.println("stereo: " + bounds);
         setBounds(bounds.x, bounds.y, bounds.width, bounds.height);
     }
 
@@ -364,7 +363,6 @@ public class FigClassifierRole extends FigNodeModelElement {
                                  Math.max(coverMin.width,
                                           newMin.width + _PADDING * 2));
 
-        System.out.println("getMinimumSize: " + newMin);
         return newMin;
     }
 
@@ -397,9 +395,6 @@ public class FigClassifierRole extends FigNodeModelElement {
         if (_name == null) {
             return;
         }
-
-        System.out.println("Setting bounds: " + x + ", " + y + ", " + w +
-                           ", " + h);
 
         // Remember where we are at present, so we can tell GEF later. Then
         // check we are as big as the minimum size
