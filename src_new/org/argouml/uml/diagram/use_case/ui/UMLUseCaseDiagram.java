@@ -1,4 +1,4 @@
-// $Id: UMLUseCaseDiagram.java,v 1.37 2003/11/10 12:35:00 jhraigniac Exp $
+// $Id: UMLUseCaseDiagram.java,v 1.38 2003/12/15 22:11:42 bobtarling Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,7 +25,7 @@
 // File: UMLUseCaseDiagram.java
 // Classes: UMLUseCaseDiagram
 // Original Author: your email here
-// $Id: UMLUseCaseDiagram.java,v 1.37 2003/11/10 12:35:00 jhraigniac Exp $
+// $Id: UMLUseCaseDiagram.java,v 1.38 2003/12/15 22:11:42 bobtarling Exp $
 
 // 3 Apr 2002: Jeremy Bennett (mail@jeremybennett.com). Extended to support the
 // Extend and Include relationships. JavaDoc added for clarity. Default
@@ -53,6 +53,7 @@ import org.argouml.uml.diagram.ui.UMLDiagram;
 import org.argouml.uml.diagram.use_case.UseCaseDiagramGraphModel;
 import org.argouml.uml.diagram.ui.ActionAddNote;
 import org.argouml.uml.diagram.ui.ActionAddExtensionPoint;
+import org.argouml.uml.diagram.ui.RadioAction;
 import org.tigris.gef.base.LayerPerspective;
 import org.tigris.gef.base.LayerPerspectiveMutable;
 import org.tigris.gef.base.ModeCreatePolyEdge;
@@ -74,13 +75,15 @@ public class UMLUseCaseDiagram extends UMLDiagram {
      * <p>Tool to add an actor node.</p>
      */
     protected static Action _actionActor =
-        new CmdCreateNode(ModelFacade.ACTOR, "Actor");
-
+    new RadioAction(
+        new CmdCreateNode(ModelFacade.ACTOR, "Actor"));
+    
     /**
      * <p>Tool to add a use case node.</p>
      */
     protected static Action _actionUseCase =
-        new CmdCreateNode(ModelFacade.USE_CASE, "UseCase");
+    new RadioAction(
+        new CmdCreateNode(ModelFacade.USE_CASE, "UseCase"));
 
     /**
      * <p>Tool to create an association between UML artifacts using a
@@ -89,81 +92,81 @@ public class UMLUseCaseDiagram extends UMLDiagram {
     //protected static Action _actionAssoc = new
     //CmdSetMode(ModeCreatePolyEdge.class, "edgeClass",
     //MAssociation.class, "Association");
-    protected static Action _actionAssociation =
+    protected static Action _actionAssociation = new RadioAction(
         new ActionAddAssociation(
             ModelFacade.NONE_AGGREGATIONKIND,
             false,
-            "Association");
-    protected static Action _actionAggregation =
+            "Association"));
+    protected static Action _actionAggregation = new RadioAction(
         new ActionAddAssociation(
             ModelFacade.AGGREGATE_AGGREGATIONKIND,
             false,
-            "Aggregation");
-    protected static Action _actionComposition =
+            "Aggregation"));
+    protected static Action _actionComposition = new RadioAction(
         new ActionAddAssociation(
             ModelFacade.COMPOSITE_AGGREGATIONKIND,
             false,
-            "Composition");
-    protected static Action _actionUniAssociation =
+            "Composition"));
+    protected static Action _actionUniAssociation = new RadioAction(
         new ActionAddAssociation(
             ModelFacade.NONE_AGGREGATIONKIND,
             true,
-            "UniAssociation");
-    protected static Action _actionUniAggregation =
+            "UniAssociation"));
+    protected static Action _actionUniAggregation = new RadioAction(
         new ActionAddAssociation(
             ModelFacade.AGGREGATE_AGGREGATIONKIND,
             true,
-            "UniAggregation");
-    protected static Action _actionUniComposition =
+            "UniAggregation"));
+    protected static Action _actionUniComposition = new RadioAction(
         new ActionAddAssociation(
             ModelFacade.COMPOSITE_AGGREGATIONKIND,
             true,
-            "UniComposition");
+            "UniComposition"));
 
     /**
      * <p>Tool to create a generalization between UML artifacts using a
      *   polyedge.</p>
      */
-    protected static Action _actionGeneralize =
+    protected static Action _actionGeneralize = new RadioAction(
         new CmdSetMode(
             ModeCreatePolyEdge.class,
             "edgeClass",
             ModelFacade.GENERALIZATION,
-            "Generalization");
+            "Generalization"));
 
     /**
      * <p>Tool to create an extend relationship between UML use cases using a
      *   polyedge.</p>
      */
-    protected static Action _actionExtend =
+    protected static Action _actionExtend = new RadioAction(
         new CmdSetMode(
             ModeCreatePolyEdge.class,
             "edgeClass",
             ModelFacade.EXTEND,
-            "Extend");
+            "Extend"));
 
     /**
      * <p>Tool to create an include relationship between UML use cases using a
      *   polyedge.</p>
      */
-    protected static Action _actionInclude =
+    protected static Action _actionInclude = new RadioAction(
         new CmdSetMode(
             ModeCreatePolyEdge.class,
             "edgeClass",
             ModelFacade.INCLUDE,
-            "Include");
+            "Include"));
 
     /**
      * <p>Tool to create a dependency between UML artifacts using a
      *   polyedge.</p>
      */
 
-    protected static Action _actionDependency =
+    protected static Action _actionDependency = new RadioAction(
         new CmdSetMode(
             ModeCreatePolyEdge.class,
             "edgeClass",
             ModelFacade.DEPENDENCY,
-            "Dependency");
+            "Dependency"));
     /**
      * <p>A static counter of the use case index (used in constructing a unique
      *   name for each new diagram.</p>
