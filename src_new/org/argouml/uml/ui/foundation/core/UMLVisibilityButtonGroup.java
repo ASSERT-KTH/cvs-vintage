@@ -1,4 +1,4 @@
-// $Id: UMLVisibilityButtonGroup.java,v 1.8 2004/10/13 05:52:11 linus Exp $
+// $Id: UMLVisibilityButtonGroup.java,v 1.9 2004/10/29 19:37:03 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -106,6 +106,9 @@ public abstract class UMLVisibilityButtonGroup extends UMLButtonGroup {
         return publicButton;
     }
     
+    /**
+     * Set the actions for the buttons.
+     */
     protected abstract void setActions();
 
 }

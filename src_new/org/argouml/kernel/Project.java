@@ -1,4 +1,4 @@
-// $Id: Project.java,v 1.117 2004/10/22 18:28:55 mvw Exp $
+// $Id: Project.java,v 1.118 2004/10/29 19:37:03 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -853,7 +853,7 @@ public class Project implements java.io.Serializable, TargetListener {
     // event handling
 
     /**
-     * @return
+     * @return the VetoableChangeSupport
      */
     public VetoableChangeSupport getVetoSupport() {
         if (vetoSupport == null) {
@@ -862,6 +862,9 @@ public class Project implements java.io.Serializable, TargetListener {
         return vetoSupport;
     }
 
+    /**
+     * This is executed before a save.
+     */
     public void preSave() {
         for (int i = 0; i < diagrams.size(); i++) {
             ((Diagram) diagrams.elementAt(i)).preSave();
@@ -869,6 +872,9 @@ public class Project implements java.io.Serializable, TargetListener {
         // TODO: is preSave needed for models?
     }
 
+    /**
+     * This is execcuted after a save.
+     */
     public void postSave() {
         for (int i = 0; i < diagrams.size(); i++) {
             ((Diagram) diagrams.elementAt(i)).postSave();
@@ -877,6 +883,9 @@ public class Project implements java.io.Serializable, TargetListener {
         setNeedsSave(false);
     }
 
+    /**
+     * This is executed after a load.
+     */
     protected void postLoad() {
         for (int i = 0; i < diagrams.size(); i++) {
             ((Diagram) diagrams.elementAt(i)).postLoad();

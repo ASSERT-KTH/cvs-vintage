@@ -1,4 +1,4 @@
-// $Id: ActionNewParameter.java,v 1.3 2004/10/28 15:15:54 mkl Exp $
+// $Id: ActionNewParameter.java,v 1.4 2004/10/29 19:37:03 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -59,8 +59,9 @@ public class ActionNewParameter extends AbstractActionNewModelElement {
     }
 
     /**
-     * @return Returns the sINGLETON.
-     * @deprecated singleton use will be removed in 0.18.0. Use the constructor instead
+     * @return Returns the SINGLETON.
+     * @deprecated singleton use will be removed in 0.18.0. 
+     * Use the constructor instead.
      */
     public static ActionNewParameter getInstance() {
         return SINGLETON;

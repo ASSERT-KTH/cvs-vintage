@@ -1,4 +1,4 @@
-// $Id: WizAssocComposite.java,v 1.18 2004/10/23 11:05:43 mvw Exp $
+// $Id: WizAssocComposite.java,v 1.19 2004/10/29 19:37:04 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -31,7 +31,6 @@ import javax.swing.JPanel;
 
 import org.apache.log4j.Logger;
 import org.argouml.cognitive.ui.WizStepChoice;
-import org.argouml.kernel.Wizard;
 import org.argouml.model.ModelFacade;
 
 /**
