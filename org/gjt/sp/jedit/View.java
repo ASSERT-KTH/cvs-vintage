@@ -44,7 +44,7 @@ import org.gjt.sp.util.Log;
  * class.
  *
  * @author Slava Pestov
- * @version $Id: View.java,v 1.37 2002/10/23 21:14:58 spestov Exp $
+ * @version $Id: View.java,v 1.38 2002/10/23 21:36:06 spestov Exp $
  */
 public class View extends JFrame implements EBComponent
 {
@@ -593,10 +593,12 @@ public class View extends JFrame implements EBComponent
 			if(parent instanceof JSplitPane)
 			{
 				JSplitPane parentSplit = (JSplitPane)parent;
+				int pos = parentSplit.getDividerLocation();
 				if(parentSplit.getLeftComponent() == comp)
 					parentSplit.setLeftComponent(editPane);
 				else
 					parentSplit.setRightComponent(editPane);
+				parentSplit.setDividerLocation(pos);
 			}
 			else
 			{
