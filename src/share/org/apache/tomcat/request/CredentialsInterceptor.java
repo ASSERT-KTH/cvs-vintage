@@ -60,7 +60,7 @@ package org.apache.tomcat.request;
 
 import org.apache.tomcat.core.*;
 import org.apache.tomcat.util.*;
-import org.apache.tomcat.session.ServerSession;
+//import org.apache.tomcat.session.ServerSession;
 import org.apache.tomcat.util.xml.*;
 import java.io.*;
 import java.net.*;

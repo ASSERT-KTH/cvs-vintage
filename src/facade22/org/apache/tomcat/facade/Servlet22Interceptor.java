@@ -157,6 +157,42 @@ public final class Servlet22Interceptor
 	}
 	    
     }
+
+
+    /** Call the Servlet22 callbacks when session expires.
+     */
+    public int sessionState( Request req, ServerSession sess, int newState)
+    {
+	if( newState==ServerSession.STATE_SUSPEND ||
+	    newState==ServerSession.STATE_EXPIRED )   {
+	    
+	    // generate "unbould" events when the session is suspended or
+	    // expired
+	    Vector removed=new Vector();
+	    Enumeration e = sess.getAttributeNames();
+	    // announce all values with listener that we'll remove them
+	    while( e.hasMoreElements() )   {
+		String key = (String) e.nextElement();
+		Object value = sess.getAttribute(key);
+
+		HttpSession httpSess=(HttpSession)sess.getFacade();
+		
+		if( value instanceof  HttpSessionBindingListener) {
+		    ((HttpSessionBindingListener) value).valueUnbound
+			(new HttpSessionBindingEvent(httpSess , key));
+		    removed.addElement( key );
+		}
+	    }
+	    // remove
+	    e=removed.elements();
+	    while( e.hasMoreElements() ) {
+		String key = (String) e.nextElement();
+		sess.removeAttribute( key );
+	    }
+	} 
+	return 0;
+    }
+
     
     public int postRequest(Request rreq, Response rres ) {
 	//if( rreq.getContext() != ctx ) return; // throw

@@ -149,6 +149,10 @@ public class LoaderInterceptor11 extends BaseInterceptor {
 
 	DependManager dm=new DependManager();
 	context.setDependManager( dm );
+	ClassLoader oldLoader=context.getClassLoader();
+	int oldLoaderNote=cm.getNoteId( ContextManager.CONTAINER_NOTE,
+					"oldLoader");
+	context.getContainer().setNote( oldLoaderNote, oldLoader);
 	
 	// XXX Customize this - based on context prefs,
 	// select the right parent - it may be CM.getParentLoader()

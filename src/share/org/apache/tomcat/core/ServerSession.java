@@ -56,7 +56,7 @@
  * [Additional notices, if required by prior licensing conditions]
  *
  */ 
-package org.apache.tomcat.session;
+package org.apache.tomcat.core;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -83,9 +83,20 @@ import org.apache.tomcat.util.threads.*;
  * @author <a href="mailto:jon@latchkey.com">Jon S. Stevens</a>
  * @author Costin Manolache
  */
-public final class ServerSession  implements  Serializable {
-    private static StringManager sm =
-        StringManager.getManager("org.apache.tomcat.resources");
+public class ServerSession  implements  Serializable {
+
+    public static final int STATE_NEW=0;
+
+    public static final int STATE_ACCESSED=1;
+
+    public static final int STATE_EXPIRED=2;
+
+    public static final int STATE_INVALID=3;
+
+    public static final int STATE_SUSPEND=4;
+
+    public static final int STATE_RESTORED=5;
+
 
     private MessageBytes id = new MessageBytes();
     // XXX This must be replaced with a more efficient storage
@@ -93,17 +104,54 @@ public final class ServerSession  implements  Serializable {
 
     TimeStamp ts=new TimeStamp();
     boolean distributable=false;
-    ServerSessionManager ssm;
+    Object manager;
+    Context context;
+    private Object notes[]=new Object[ContextManager.MAX_NOTES];
+    private Counters cntr=new Counters(ContextManager.MAX_NOTES);
+    private int state=STATE_NEW;
+    Object facade;
+    
+    public ServerSession() {
+    }
 
-    /** Only ServerSessionManager can create ServerSessions
+    /** The object that controls this server session. We don't
+	care about the implementation details of the manager, but
+	store a reference.
      */
-    ServerSession(ServerSessionManager ssm) {
-	this.ssm=ssm;
+    public void setManager( Object m ) {
+	manager=m;
+    }
+    
+    public Object getManager() {
+	return manager;
     }
 
-    public ServerSessionManager getSessionManager() {
-	return ssm;
+    /** The web application that creates this session
+     */
+    public Context getContext() {
+	return context;
     }
+
+    public void setContext( Context ctx ) {
+	context=ctx;
+    }
+
+    public Object getFacade() {
+	return facade;
+    }
+
+    public void setFacade( Object o ) {
+	facade=o;
+    }
+    
+    public int getState() {
+	return state;
+    }
+
+    public void setState( int state ) {
+	this.state=state;
+    }
+
     // ----------------------------------------------------- Session Properties
     /** The time stamp associated with this session
      */
@@ -124,7 +172,7 @@ public final class ServerSession  implements  Serializable {
 	return attributes.get(name);
     }
 
-
+    
     public Enumeration getAttributeNames() {
 	return (attributes.keys());
     }
@@ -150,7 +198,20 @@ public final class ServerSession  implements  Serializable {
 	attributes.put(name, value);
     }
 
+    /** Set the session access time
+     */
+    public void touch(long time ) {
+	getTimeStamp().touch( time );
+    }
 
+    public void setValid( boolean b ) {
+	getTimeStamp().setValid( b );
+    }
+
+    public boolean isValid() {
+	return getTimeStamp().isValid();
+    }
+    
     /**
      * Release all object references, and initialize instance variables, in
      * preparation for reuse of this object.
@@ -161,5 +222,21 @@ public final class ServerSession  implements  Serializable {
 	ts.recycle();
 	id.recycle();
     }
+
+    
+    // -------------------- Per-Request "notes" --------------------
+
+    public final void setNote( int pos, Object value ) {
+	notes[pos]=value;
+    }
+
+    public final Object getNote( int pos ) {
+	return notes[pos];
+    }
+
+    public final Counters getCounters() {
+	return cntr;
+    }
+    
 }
 

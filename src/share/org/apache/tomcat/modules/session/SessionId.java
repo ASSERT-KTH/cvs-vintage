@@ -62,8 +62,6 @@ package org.apache.tomcat.modules.session;
 import org.apache.tomcat.core.*;
 import org.apache.tomcat.util.*;
 import org.apache.tomcat.util.http.*;
-import org.apache.tomcat.session.ServerSessionManager;
-import org.apache.tomcat.session.ServerSession;
 import java.io.*;
 import java.net.*;
 import java.util.*;
@@ -73,12 +71,15 @@ import java.util.*;
  * session rewriting.
  * 
  * Will process the request and determine the session Id, and set it
- * in the Request. It doesn't marks the session as accessed.
+ * in the Request. It doesn't marks the session as accessed, and it
+ * doesn't retrieve or set the HttpSession - the storage and management
+ * of sessions is implemented in a separate module. 
  *
  * This interceptor doesn't deal with any of the Session internals -
  * it just works with the sessionID. A pluggable session manager 
  *  ( or user-space manager !) will deal with marking the session
- * as accessed or setting the session implementation.
+ * as accessed or setting the session implementation and maintaining
+ * lifecycles.
  *
  * This implementation only handles Cookies and URL rewriting sessions,
  * please extend or add new interceptors for other methods.
@@ -90,27 +91,24 @@ import java.util.*;
  */
 public class SessionId extends  BaseInterceptor
 {
-    private int manager_note;
-    
     // GS, separates the session id from the jvm route
     static final char SESSIONID_ROUTE_SEP = '.';
     ContextManager cm;
     boolean noCookies=false;
+    boolean cookiesFirst=true;
     
     public SessionId() {
+    }
+
+    public void setCookiesFirst( boolean b ) {
+	cookiesFirst=b;
     }
 
     public void setNoCookies(boolean noCookies) {
         this.noCookies = noCookies;
     }
 
-    public void engineInit( ContextManager cm ) throws TomcatException {
-	// set-up a per/container note for StandardManager
-	// the standard manager is used to verify the session ID.
-	manager_note = cm.getNoteId( ContextManager.CONTAINER_NOTE,
-				     "tomcat.standardManager");
-    }
-
+    
     /** Extract the session id from the request.
      * SessionInterceptor will have to be called _before_ mapper,
      * to avoid coding session stuff inside the mapper.
@@ -125,7 +123,12 @@ public class SessionId extends  BaseInterceptor
 	    return 0;
 	}
 
-	// fix URL rewriting
+	// quick test: if no extra path, no url rewriting.
+	if( request.requestURI().indexOf( ';' ) < 0 )
+	    return 0;
+	
+	// In case URI rewriting is used, extract the uri and fix
+	// the request.
 	String sig=";jsessionid=";
 	int foundAt=-1;
 	String uri=request.requestURI().toString();
@@ -133,9 +136,6 @@ public class SessionId extends  BaseInterceptor
 	
 	if ((foundAt=uri.indexOf(sig))!=-1){
 	    sessionId=uri.substring(foundAt+sig.length());
-	    // FIX shai@brm.com: reloading 
-	    // 	    sessionId = fixSessionId( request, sessionId );
-	    
 	    // rewrite URL, do I need to do anything more?
 	    request.requestURI().setString(uri.substring(0, foundAt));
 
@@ -147,8 +147,14 @@ public class SessionId extends  BaseInterceptor
 	return 0;
     }
 
-    /** This happens after context map, so we know the context.
-     *  We can probably do it later too.
+    /**
+     *  Extract and set the session id and ServerSession.
+     *  We know the Context - and all local interceptors can be used
+     *  ( like session managers that are set per context ).
+     *
+     *  This module knows about URI and cookies. It will validate the
+     *  session id ( and set it only if valid ), and "touch" the 
+     *  session.
      */
     public int requestMap(Request request ) {
 	String sessionId = null;
@@ -159,9 +165,19 @@ public class SessionId extends  BaseInterceptor
 	    return 0;
 	}
 
-
 	int count=request.getCookies().getCookieCount();
 
+	ServerSession sess=null;
+
+	if( ! cookiesFirst  ) {
+	    // try the information from URL rewriting
+	    sessionId= request.getRequestedSessionId();
+	    sess=processSession( request, sessionId,
+			      request.getSessionIdSource() );
+	    if( sess!=null )
+		return 0;
+	}
+	
 	// Give priority to cookies. I don't know if that's part
 	// of the spec - XXX
 	for( int i=0; i<count; i++ ) {
@@ -171,28 +187,68 @@ public class SessionId extends  BaseInterceptor
 		sessionId = cookie.getValue().toString();
 		if (debug > 0) log("Found session id cookie " +
 				   sessionId);
-		// 3.2 - load balancing fix
-		// sessionId = fixSessionId( request, sessionId );
 		// 3.2 - PF ( pfrieden@dChain.com ): check the session id from
 		// cookies for validity
-
-		ServerSessionManager sM = getManager( ctx );
-		ServerSession sess = sM.findSession(sessionId);
+		sess=processSession( request, sessionId,
+				  Request.SESSIONID_FROM_COOKIE );
 		if (sess != null) {
-		    request.setRequestedSessionId( sessionId );
-		    request.setSessionIdSource(Request.SESSIONID_FROM_COOKIE );
-		    // since we verified this sessionID, we can also set
-		    // it and adjust the session
-		    request.setSession( sess );
-		    request.setSessionId( sessionId );
 		    break;
 		}
 	    }
 	}
 
+	if( sess==null ) {
+	    // try the information from URL rewriting
+	    sessionId= request.getRequestedSessionId();
+	    sess=processSession( request, sessionId,
+			      request.getSessionIdSource() );
+	    if( sess!=null )
+		return 0;
+	}
+
  	return 0;
     }
 
+
+    /** Find the session, set session id, source, mark it as accessed.
+     */
+    private ServerSession processSession(Request request,
+			     String sessionId, String source )
+    {
+	BaseInterceptor reqI[]= request.getContainer().
+	    getInterceptors(Container.H_findSession);
+	
+	ServerSession sess=null;
+	for( int i=0; i< reqI.length; i++ ) {
+	    sess=reqI[i].findSession( request,
+				      sessionId,  false );
+	    if( sess!=null ) break;
+	}
+
+	if (sess != null) {
+	    request.setRequestedSessionId( sessionId );
+	    request.setSessionIdSource( source );
+	    // since we verified this sessionID, we can also set
+	    // it and adjust the session
+	    request.setSession( sess );
+	    request.setSessionId( sessionId );
+	    
+	    sess.touch( System.currentTimeMillis() );
+
+	    // if the session was NEW ( never accessed - change it's state )
+	    if( sess.getState() == ServerSession.STATE_NEW ) {
+		reqI= request.getContainer().
+		    getInterceptors(Container.H_sessionState);
+		for( int i=0; i< reqI.length; i++ ) {
+		    reqI[i].sessionState( request,
+					  sess,  ServerSession.STATE_ACCESSED);
+		}
+		sess.setState( ServerSession.STATE_ACCESSED);
+	    }
+	}
+	return sess;
+    }
+    
 //     /** Fix the session id. If the session is not valid return null.
 //      *  It will also clean up the session from load-balancing strings.
 //      * @return sessionId, or null if not valid
@@ -242,19 +298,6 @@ public class SessionId extends  BaseInterceptor
 //             }
 //  //     }
 
-	// we know reqSessionId doesn't need quoting ( we generate it )
-// 	StringBuffer buf = new StringBuffer();
-// 	buf.append( "JSESSIONID=" ).append( reqSessionId );
-// 	buf.append( ";Version=1" );
-// 	buf.append( ";Path=" );
-// 	ServerCookie.maybeQuote( 1 , buf, sessionPath ); // XXX ugly 
-// 	buf.append( ";Discard" );
-// 	// discard results from:    	cookie.setMaxAge(-1);
-	
-	
-// 	response.addHeader( "Set-Cookie2",
-// 			    buf.toString() ); // XXX XXX garbage generator
-
 	// We'll use a Netscape cookie for sessions - it's
 	// the only one supported by all browsers
 	StringBuffer buf = new StringBuffer();
@@ -265,11 +308,5 @@ public class SessionId extends  BaseInterceptor
 	
     	return 0;
     }
-
-    // -------------------- Internal methods --------------------
-    private ServerSessionManager getManager( Context ctx ) {
-	return (ServerSessionManager)ctx.getContainer().getNote(manager_note);
-    }
-
 
 }

@@ -108,6 +108,13 @@ public class Hooks {
 	hooks=new Object[hookCount][];
     }
 
+    /** Allow direct access to hooks. You must call resetCache()
+	if you change the hooks
+    */
+    public Vector getHooksVector( int type ) {
+	return hooksV[type];
+    }
+    
     public int registerHook( String name ) {
 	for( int i=0; i<hookNames.length; i++ ) {
 	    if( hookNames[i]==null ) {
@@ -140,6 +147,7 @@ public class Hooks {
      *  ( not inherited - explicitely defined there )
      */
     public void addModule( Object bi ) {
+	// the module wants to register the hooks itself
 	for( int i=0; i< hookNames.length ; i++ ) {
 	    if( hookNames[i]==null ) continue;
 	    if( hasHook( bi, hookNames[i] )) {

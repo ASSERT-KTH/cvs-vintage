@@ -66,7 +66,11 @@ import java.util.*;
 
 /**
  * Helper for object reloading. Will change the classloader of a
- * serializable object.
+ * serializable object. 
+ *
+ * The object must be serializable - the caller should do special
+ * actions for all non-serializable objects ( like using their
+ *  specific protocol ).
  * 
  * Old comment: ( code works now for any object, not only HttpSession )
  *

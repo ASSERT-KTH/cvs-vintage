@@ -865,18 +865,19 @@ public final class ContextManager implements LogAware{
     /** Note id counters. Synchronized access is not necesarily needed
      *  ( the initialization is in one thread ), but anyway we do it
      */
-    public static final int NOTE_COUNT=5;
+    public static final int NOTE_COUNT=8;
     private  int noteId[]=new int[NOTE_COUNT];
 
     /** Maximum number of notes supported
      */
     public static final int MAX_NOTES=32;
-    public static final int RESERVED=3;
+    public static final int RESERVED=5;
 
     public static final int SERVER_NOTE=0;
     public static final int CONTAINER_NOTE=1;
     public static final int REQUEST_NOTE=2;
     public static final int HANDLER_NOTE=3;
+    public static final int SESSION_NOTE=4;
     
     public static final int REQ_RE_NOTE=0;
 

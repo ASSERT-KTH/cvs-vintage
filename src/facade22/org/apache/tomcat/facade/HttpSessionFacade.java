@@ -61,7 +61,6 @@
 package org.apache.tomcat.facade;
 
 import org.apache.tomcat.core.*;
-import org.apache.tomcat.session.*;
 import org.apache.tomcat.util.StringManager;
 import java.io.*;
 import java.net.*;
@@ -102,6 +101,7 @@ final class HttpSessionFacade implements HttpSession {
      */
     void setRealSession(ServerSession s) {
  	realSession=s;
+	realSession.setFacade( this );
      }
 
     /** Package-level method - accessible only by core
@@ -180,7 +180,8 @@ final class HttpSessionFacade implements HttpSession {
     public void setAttribute(String name, Object value) {
 	checkValid();
 
-	ServerSessionManager ssm=realSession.getSessionManager();
+	// 	ServerSessionManager ssm=(ServerSessionManager)
+	// 	    realSession.getManager();
 	// Original code - it's up to session manager to decide
 	// what it can handle. 
 	// 	if (ssm.isDistributable() &&

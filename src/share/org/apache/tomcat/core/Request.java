@@ -69,8 +69,6 @@ import org.apache.tomcat.util.http.ContentType;
 
 import org.apache.tomcat.util.http.*;
 
-import org.apache.tomcat.session.ServerSession;
-
 import java.security.Principal;
 import java.io.IOException;
 import java.util.Enumeration;
@@ -527,27 +525,24 @@ public class Request {
 
     
     public ServerSession getSession(boolean create) {
+	if (serverSession!=null && !serverSession.isValid())
+	    serverSession=null;
 
+	if( ! create || serverSession!=null )
+	    return serverSession;
 
-	if( serverSession!=null ) {
-             /// XXX a forwarded request whose session was invalidated
-            if (!serverSession.getTimeStamp().isValid() && create){
-                 serverSession.getSessionManager().removeSession( serverSession );
-                 serverSession=null;
-            } else
-                // if not null, it is validated by the session module
-        	return serverSession;
-	}
+	// create && serverSession==null
 
-	if( ! create ) return null;
-        
 	BaseInterceptor reqI[]= getContainer().
-	    getInterceptors(Container.H_newSessionRequest);
+	    getInterceptors(Container.H_findSession);
 
 	for( int i=0; i< reqI.length; i++ ) {
-	    reqI[i].newSessionRequest( this, response );
+	    serverSession=reqI[i].findSession( this, null, create );
+	    if( serverSession!=null ) break;
 	}
-
+	if( serverSession!= null ) {
+	    setSessionId( serverSession.getId().toString());
+	}
 	return serverSession;
     }
 

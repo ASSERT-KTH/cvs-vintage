@@ -59,14 +59,14 @@
 package org.apache.tomcat.modules.session;
 
 import java.io.*;
-import java.util.Enumeration;
-import java.util.Hashtable;
-import java.util.Vector;
 import java.util.Random;
 import org.apache.tomcat.util.*;
 import org.apache.tomcat.util.threads.*;
 import org.apache.tomcat.core.*;
-import org.apache.tomcat.session.*;
+import java.util.*;
+import org.apache.tomcat.util.collections.SimplePool;
+import org.apache.tomcat.util.log.*;
+//import org.apache.tomcat.session.*;
 
 
 /**
@@ -133,111 +133,93 @@ public final class SimpleSessionStore  extends BaseInterceptor {
 	manager_note = cm.getNoteId( ContextManager.CONTAINER_NOTE,
 				     "tomcat.standardManager");
     }
-
-    /**
-     *  StandardManager will set the HttpSession if one is found.
-     */
-    public int requestMap(Request request ) {
-	String sessionId = null;
-	Context ctx=request.getContext();
-	if( ctx==null ) {
-	    log( "Configuration error in StandardSessionInterceptor " +
-		 " - no context " + request );
-	    return 0;
-	}
-
-	// "access" it and set HttpSession if valid
-	sessionId=request.getRequestedSessionId();
-
-	if (sessionId != null && sessionId.length()!=0) {
-	    // GS, We are in a problem here, we may actually get
-	    // multiple Session cookies (one for the root
-	    // context and one for the real context... or old session
-	    // cookie. We must check for validity in the current context.
-	    ServerSessionManager sM = getManager( ctx );    
-	    ServerSession sess= request.getSession( false );
-
-	    // if not set already, try to find it using the session id
-	    if( sess==null )
-		sess=sM.findSession( sessionId );
-
-	    // 3.2 - Hans fix ( use the session id from URL ) - it's
-	    // part of the current code
-
-	    // 3.2 - PF ( pfrieden@dChain.com ): fix moved to SessionId.
-	    // ( check if the ID is valid before setting it, do that
-	    //  for cookies since we can have multiple cookies, some
-	    //  from old sessions )
-
-	    if(null != sess) {
-		// touch it 
-		sess.getTimeStamp().touch( System.currentTimeMillis() );
-
-		//log("Session found " + sessionId );
-		// set it only if nobody else did !
-		if( null == request.getSession( false ) ) {
-		    request.setSession( sess );
-		    // XXX use MessageBytes!
-		    request.setSessionId( sessionId );
-		    //log("Session set " + sessionId );
-		}
-	    }
-	    return 0;
-	}
-	return 0;
-    }
     
-    public void reload( Request req, Context ctx ) {
+    public void reload( Request req, Context ctx ) throws TomcatException {
 	ClassLoader newLoader = ctx.getClassLoader();
-	ServerSessionManager sM = getManager( ctx );    
+	SimpleSessionManager sM = getManager( ctx );    
 
 	// remove all non-serializable objects from session
 	Enumeration sessionEnum=sM.getSessions().keys();
 	while( sessionEnum.hasMoreElements() ) {
 	    ServerSession session = (ServerSession)sessionEnum.nextElement();
+
+	    // Move it to SUSPEND state
+	    BaseInterceptor reqI[]= req.getContainer().
+		getInterceptors(Container.H_sessionState);
+	    for( int i=0; i< reqI.length; i++ ) {
+		// during suspend hook the servlet callbacks will be called
+		// - typically from the ServletInterceptor
+		reqI[i].sessionState( req,
+				      session,  ServerSession.STATE_SUSPEND);
+	    }
+	    session.setState( ServerSession.STATE_SUSPEND );
+	    
+	    int oldLoaderNote=cm.getNoteId( ContextManager.CONTAINER_NOTE,
+					    "oldLoader");
+	    ClassLoader oldLoader=(ClassLoader)ctx.getContainer().
+		getNote(oldLoaderNote);
+
+	    Hashtable newSession=new Hashtable();
 	    Enumeration e = session.getAttributeNames();
 	    while( e.hasMoreElements() )   {
 		String key = (String) e.nextElement();
 		Object value = session.getAttribute(key);
-		// XXX XXX We don't have to change loader for objects loaded
-		// by the parent loader ?
-		if (! ( value instanceof Serializable)) {
-		    session.removeAttribute( key );
-		    // XXX notification!!
-		}
+
+		if( value.getClass().getClassLoader() != oldLoader ) {
+		    // it's loaded by the parent loader, no need to reload
+		    newSession.put( key, value );
+		} else if ( value instanceof Serializable ) {
+		    Object newValue =
+			ObjectSerializer.doSerialization( newLoader,
+							  value);
+		    newSession.put( key, newValue );
+		} 
+	    }
+
+	    // Move it to RESTORE state
+	    reqI= req.getContainer().
+		getInterceptors(Container.H_sessionState);
+	    for( int i=0; i< reqI.length; i++ ) {
+		// during suspend hook the servlet callbacks will be called
+		// - typically from the ServletInterceptor
+		reqI[i].sessionState( req,
+				      session,  ServerSession.STATE_RESTORED);
+	    }
+	    session.setState( ServerSession.STATE_RESTORED );
+
+	    /* now put back all attributs */
+	    e=newSession.keys();
+	    while(e.hasMoreElements() ) {
+		String key = (String) e.nextElement();
+		Object value=newSession.get(key );
+		session.setAttribute( key, value );
 	    }
 	}
 
-	// XXX We should change the loader for each object, and
-	// avoid accessing object's internals
-	// XXX PipeStream !?!
-	Hashtable orig= sM.getSessions();
-	Object newS = ObjectSerializer.doSerialization( newLoader, orig);
-	sM.setSessions( (Hashtable)newS );
 	
-	// Update the request session id
-	String reqId=req.getRequestedSessionId();
-	ServerSession sS=sM.findSession( reqId );
-	if ( sS != null) {
-	    req.setSession(sS);
-	    req.setSessionId( reqId );
-	}
     }
-    
-    public int newSessionRequest( Request request, Response response) {
+
+    /** The session store hook
+     */
+    public ServerSession findSession( Request request,
+				      String sessionId, boolean create)
+    {
 	Context ctx=request.getContext();
-	if( ctx==null ) return 0;
+	if( ctx==null ) return null;
+	SimpleSessionManager sM = getManager( ctx );    
 	
-	ServerSessionManager sM = getManager( ctx );    
+	ServerSession sess=sM.findSession( sessionId );
+	if( sess!= null ) return sess;
 
-	if( request.getSession( false ) != null )
-	    return 0; // somebody already set the session
+	if( ! create ) return null; // not found, don't create
 
+	// create new session
 	// Fix from Shai Fultheim: load balancing needs jvmRoute
 	ServerSession newS=sM.getNewSession(request.getJvmRoute());
-	request.setSession( newS );
-	request.setSessionId( newS.getId().toString());
-	return 0;
+	if( newS==null ) return null;
+	newS.setContext( ctx );
+	
+	return newS;
     }
 
     //--------------------  Tomcat context events --------------------
@@ -247,10 +229,10 @@ public final class SimpleSessionStore  extends BaseInterceptor {
      */
     public void contextInit(Context ctx) throws TomcatException {
 	// Defaults !!
-	ServerSessionManager sm= getManager( ctx );
+	SimpleSessionManager sm= getManager( ctx );
 	
 	if( sm == null ) {
-	    sm=new ServerSessionManager();
+	    sm=new SimpleSessionManager();
 	    ctx.getContainer().setNote( manager_note, sm );
 	    if( randomClassName==null )
 		setRandomClass("java.security.SecureRandom" );
@@ -265,7 +247,8 @@ public final class SimpleSessionStore  extends BaseInterceptor {
 	expirer.setExpireCallback( new Expirer.ExpireCallback() {
 		public void expired(TimeStamp o ) {
 		    ServerSession sses=(ServerSession)o.getParent();
-		    ServerSessionManager ssm=sses.getSessionManager();
+		    SimpleSessionManager ssm=(SimpleSessionManager)
+			sses.getManager();
 		    ssm.removeSession( sses );
 		}
 	    });
@@ -281,14 +264,14 @@ public final class SimpleSessionStore  extends BaseInterceptor {
 	throws TomcatException
     {
 	if( debug > 0 ) ctx.log("Removing sessions from " + ctx );
-	ServerSessionManager sm=getManager(ctx);
+	SimpleSessionManager sm=getManager(ctx);
 	sm.getExpirer().stop();
 	sm.removeAllSessions();
     }
 
     // -------------------- Internal methods --------------------
-    private ServerSessionManager getManager( Context ctx ) {
-	return (ServerSessionManager)ctx.getContainer().getNote(manager_note);
+    private SimpleSessionManager getManager( Context ctx ) {
+	return (SimpleSessionManager)ctx.getContainer().getNote(manager_note);
     }
 
     private Random createRandomClass( String s ) {
@@ -307,4 +290,180 @@ public final class SimpleSessionStore  extends BaseInterceptor {
 	return randomSource;
     }
     
+}
+
+/**
+ * The actual "simple" manager
+ * 
+ */
+class SimpleSessionManager  
+{
+    protected Log loghelper = new Log("tc_log", this);
+    
+    /** The set of previously recycled Sessions for this Manager.
+     */
+    protected SimplePool recycled = new SimplePool();
+
+    /**
+     * The set of currently active Sessions for this Manager, keyed by
+     * session identifier.
+     */
+    protected Hashtable sessions = new Hashtable();
+
+    protected Expirer expirer;
+    /**
+     * The interval (in seconds) between checks for expired sessions.
+     */
+    private int checkInterval = 60;
+
+    /**
+     * The maximum number of active Sessions allowed, or -1 for no limit.
+     */
+    protected int maxActiveSessions = -1;
+
+    long maxInactiveInterval;
+    
+    protected Reaper reaper;
+    Random randomSource=null;
+    
+    public SimpleSessionManager() {
+    }
+
+    public void setExpirer( Expirer ex ) {
+	expirer = ex;
+    }
+
+    public Expirer getExpirer() {
+	return expirer;
+    }
+
+    public void setRandomSource( Random r ) {
+	randomSource=r;
+    }
+
+    // ------------------------------------------------------------- Properties
+
+    public int getMaxActiveSessions() {
+	return maxActiveSessions;
+    }
+
+    public void setMaxActiveSessions(int max) {
+	maxActiveSessions = max;
+    }
+
+    // --------------------------------------------------------- Public Methods
+
+    public void setMaxInactiveInterval( long l ) {
+	maxInactiveInterval=l;
+    }
+    
+    /**
+     * Return the default maximum inactive interval (in miliseconds)
+     * for Sessions created by this Manager. We use miliseconds
+     * because that's how the time is expressed, avoid /1000
+     * in the common code
+     */
+    public long getMaxInactiveInterval() {
+	return maxInactiveInterval;
+    }
+
+
+    public Hashtable getSessions() {
+	return sessions;
+    }
+    
+    public void setSessions(Hashtable s) {
+	sessions=s;
+    }
+
+    public ServerSession findSession(String id) {
+	if (id == null) return null;
+	return (ServerSession)sessions.get(id);
+    }
+
+    /**
+     * Remove this Session from the active Sessions for this Manager.
+     *
+     * @param session Session to be removed
+     */
+    public void removeSession(ServerSession session) {
+	sessions.remove(session.getId().toString());
+	recycled.put(session);
+	// announce the state change
+	BaseInterceptor reqI[]=session.getContext().getContainer().
+	    getInterceptors(Container.H_sessionState);
+	for( int i=0; i< reqI.length; i++ ) {
+	    // during suspend hook the servlet callbacks will be called
+	    // - typically from the ServletInterceptor
+	    reqI[i].sessionState( null,
+				  session,  ServerSession.STATE_EXPIRED);
+	}
+	session.setState( ServerSession.STATE_EXPIRED );
+	
+	session.removeAllAttributes();
+	expirer.removeManagedObject( session.getTimeStamp());
+	session.setValid(false);
+	
+    }
+
+    public ServerSession getNewSession() {
+	return getNewSession( null ) ;
+    }
+    
+    public ServerSession getNewSession(String jsIdent) {
+	if ((maxActiveSessions >= 0) &&
+	    (sessions.size() >= maxActiveSessions)) {
+	    loghelper.log( "Too many sessions " + maxActiveSessions );
+	    return null;
+	}
+
+	// Recycle or create a Session instance
+	ServerSession session = (ServerSession)recycled.get();
+	if (session == null) {
+	    session = new ServerSession();
+	    session.setManager( this );
+	    recycled.put( session );
+	}
+	
+	// XXX can return MessageBytes !!!
+
+
+	String newId= SessionIdGenerator.getIdentifier(randomSource, jsIdent);
+
+	// What if the newId belongs to an existing session ?
+	// This shouldn't happen ( maybe we can try again ? )
+	ServerSession oldS=findSession( newId );
+	if( oldS!=null) {
+	    // that's what the original code did
+	    removeSession( oldS );
+	}
+
+	// Initialize the properties of the new session and return it
+	session.getId().setString( newId );
+
+	TimeStamp ts=session.getTimeStamp();
+	ts.setNew(true);
+	ts.setValid(true);
+
+	ts.setCreationTime(System.currentTimeMillis());
+	ts.setMaxInactiveInterval(getMaxInactiveInterval());
+	session.getTimeStamp().setParent( session );
+
+	//	System.out.println("New session: " + newId );
+	sessions.put( newId, session );
+	expirer.addManagedObject( session.getTimeStamp());
+	return (session);
+    }
+
+    public void removeAllSessions() {
+	Enumeration ids = sessions.keys();
+	while (ids.hasMoreElements()) {
+	    String id = (String) ids.nextElement();
+	    ServerSession session = (ServerSession) sessions.get(id);
+	    if (!session.getTimeStamp().isValid())
+		continue;
+	    removeSession( session );
+	}
+    }
+
 }

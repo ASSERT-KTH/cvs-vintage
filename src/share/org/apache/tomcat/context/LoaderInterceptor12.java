@@ -156,6 +156,11 @@ public class LoaderInterceptor12 extends BaseInterceptor {
 	ContextManager cm = context.getContextManager();
 	URL urls[]=context.getClassPath();
 
+	ClassLoader oldLoader=context.getClassLoader();
+	int oldLoaderNote=cm.getNoteId( ContextManager.CONTAINER_NOTE,
+					"oldLoader");
+	context.getContainer().setNote( oldLoaderNote, oldLoader);
+
 	DependManager dm=new DependManager();
 	context.setDependManager( dm );
 

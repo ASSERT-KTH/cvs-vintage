@@ -61,6 +61,7 @@
 package org.apache.tomcat.core;
 
 import org.apache.tomcat.util.log.*;
+import org.apache.tomcat.util.hooks.*;
 
 /** Implement "Chain of Responsiblity" pattern ( == hooks ).
  *
@@ -165,15 +166,53 @@ public class BaseInterceptor
 	return 0;
     }
 
-    /** New Session notification - called when the servlet
-	asks for a new session. You can do all kind of stuff with
-	this notification - the most important is create a session
-	object. This will be the base for controling the
-	session allocation.
-    */
-    public int newSessionRequest( Request request, Response response) {
+//     /** New Session notification - called when the servlet
+// 	asks for a new session. You can do all kind of stuff with
+// 	this notification - the most important is create a session
+// 	object. This will be the base for controling the
+// 	session allocation.
+//     */
+//     public int newSessionRequest( Request request, Response response) {
+// 	return 0;
+//     }
+
+    /** The hook for session managers. It'll be called to
+     *  find or create a ServerSession object associated with a request.
+     *
+     *  There are 2 components of tomcat's session management - finding 
+     *  the session ID, typically done during mapping ( either in tomcat
+     *  or by a load balancer or web server ) and the actual storage
+     *  manager ( including expiration, persistence, events, etc ).
+     *
+     *  This hook allow to plug different session managers. The mapping
+     *  hooks ( combined with native code in the server/load balancer )
+     *  are used to determine the session id and do low-level operations.
+     *
+     *  The hook will be called from the mapping hook whenever a session
+     *  is detected ( create==false ) - the manager can update the timers.
+     *  It will also be called if the user requests a new session, and
+     *  none is created.
+     *
+     *  XXX should we return a status code and let the manager call
+     *  req.setSession() ? Returning ServerSession seems more flexible,
+     *  ( but different from the rest of the hooks )
+     * @param reqSessionId if null the manager will generate the id
+     */
+    public ServerSession findSession( Request req,
+				      String reqSessionId, boolean create) {
+	return null;
+    }
+
+    /** Hook for session state changes.
+     *  Will be called every time a session change it's state.
+     *  A session module will announce all changes - like STATE_NEW when
+     *  the session is created, STATE_EXPIRED when the session is expired,
+     *  STATE_INVALID when the session is invalidated.
+     */
+    public int sessionState( Request req, ServerSession sess, int newState) {
 	return 0;
     }
+
     
     /** Called before the output buffer is commited.
      */
@@ -367,6 +406,13 @@ public class BaseInterceptor
     {
     }
 
+    /** Notify that the context state changed
+     */
+    public void contextState( Context ctx, int newState )
+	throws TomcatException
+    {
+    }
+    
     /** Reload notification - called whenever a reload is done.
 	This can be used to serialize sessions, log the event,
 	remove any resource that was class-loader dependent.
@@ -522,7 +568,7 @@ public class BaseInterceptor
      *  a mechanism similar with Apache2.0 and further extensibility
      *  without interface changes.
      */
-    public int registerHooks() {
+    public int registerHooks(Hooks h) {
 	return DECLINED;
     }
 

@@ -380,13 +380,14 @@ public class Container implements Cloneable{
     public static final int H_authorize=3;
     public static final int H_preService=4;
     public static final int H_beforeBody=5;
-    public static final int H_newSessionRequest=6;
-    public static final int H_beforeCommit=7;
-    public static final int H_afterBody=8;
-    public static final int H_postService=9;
-    public static final int H_postRequest=10;
-    public static final int H_handleError=11;
-    public static final int H_engineInit=12;
+    public static final int H_findSession=6;
+    public static final int H_sessionState=7;
+    public static final int H_beforeCommit=8;
+    public static final int H_afterBody=9;
+    public static final int H_postService=10;
+    public static final int H_postRequest=11;
+    public static final int H_handleError=12;
+    public static final int H_engineInit=13;
     public static final int H_COUNT=14;
 
     Hooks hooks=new Hooks();
@@ -400,7 +401,8 @@ public class Container implements Cloneable{
 	hooks.registerHook( "authorize", H_authorize );
 	hooks.registerHook( "preService", H_preService );
 	hooks.registerHook( "beforeBody", H_beforeBody );
-	hooks.registerHook( "newSessionRequest", H_newSessionRequest );
+	hooks.registerHook( "findSession", H_findSession );
+	hooks.registerHook( "sessionState", H_sessionState );
 	hooks.registerHook( "beforeCommit", H_beforeCommit );
 	hooks.registerHook( "afterBody", H_afterBody );
 	hooks.registerHook( "postService", H_postService );
@@ -419,7 +421,11 @@ public class Container implements Cloneable{
     public void addInterceptor( BaseInterceptor bi ) {
 	bi.setContext( getContext() );
 
-	hooks.addModule( bi );
+	if( Hooks.hasHook( bi, "registerHooks" ) ) {
+	    bi.registerHooks( hooks );
+	} else {
+	    hooks.addModule( bi );
+	}
 	hooksCache=null;
 	allHooksCache=null;
     }
