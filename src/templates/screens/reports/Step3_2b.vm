@@ -1,6 +1,6 @@
-#set ( $report = $scarabR.Report )
-#set ( $intakeReport = $intake.Report.mapTo($report) )
-#set ( $action = $link.setPage("reports,Step3_2b.vm").setAction("GenerateReport") )
+#set ($report = $scarabR.Report)
+#set ($intakeReport = $intake.Report.mapTo($report))
+#set ($action = $link.setPage("reports,Step3_2b.vm").setAction("GenerateReport").toString())
 <div class="app" id="div2-4-1-step5b">
 <h2>Define report (2.4.1)</h2>
   <div class="tabs">
@@ -55,7 +55,7 @@
 #set ($finalKey = "0" )
 #foreach ($date in $report.ReportDates)
     #set ($intakeDate = $intake.ReportDate.mapTo($date))
-   #rows()
+   #indexedRows($velocityCount)
        <td width="120">
            <input type="checkbox"
                name="$intakeDate.Selected.Key" />

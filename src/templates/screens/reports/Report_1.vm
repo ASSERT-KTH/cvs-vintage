@@ -18,7 +18,7 @@
 #end
 #reportTable( $report.Model )
 <p>page 1 of 1</p>
-#set ( $action = $link.setPage("Links.vm").setAction("GenerateReport") )
+#set ($action = $link.setPage("Links.vm").setAction("GenerateReport").toString())
 <form method="get" action="$action">
 <div class="functnbar">
 <table cellpadding="4" cellspacing="0" border="1">

@@ -1,21 +1,27 @@
+$page.setTitle("Attribute show")
+
 <div id="globalattributeshow" class="app">
-$page.setTitle("Global attribute editor")
 <h2>$page.Title</h2>
 <p>
-This page is for editing the Global Attributes.
+This page is for selecting an Attribute to edit which is defined in a global scale.
 </p>
+
 <form action="$link.setPage("admin,GlobalAttributeShow.vm")" method="get">
-    <input type="hidden" name="action" value="admin.GlobalAttributes" />
-    <input type="hidden" name="nextTemplate" value="admin,GlobalAttributeEdit.vm" />
+<input type="hidden" name="action" value="admin.GlobalAttributes" />
+<input type="hidden" name="nextTemplate" value="admin,GlobalAttributeEdit.vm" />
+
 <div class="functnbar">
 <table cellpadding="4" cellspacing="0" border="1">
-	<tr>
-		<td class="firstchild">
+<tr>
+<td class="firstchild">
 <input type="submit" value="Create New Attribute" name="eventSubmit_doCreatenew" />
 <input type="submit" value="Delete Selected Attributes" name="eventSubmit_doDeleteaelectedattributes" />
-</td></tr></table></div>
+</td>
+</tr>
+</table>
+</div>
 
-#datatitle("Attributes")
+<h3>Attributes</h3>
 
 <table width="100%" border="1" cellspacing="2" cellpadding="3">
 <tr>
@@ -29,11 +35,7 @@ This page is for editing the Global Attributes.
 #set ($allAttributes = $scarabG.AllAttributes)
 #foreach( $attribute in $allAttributes )
 #set ($attgroup = $intake.Attribute.mapTo($attribute))
-#if ( $velocityCount % 2 > 0 )
-<tr class="a">
-#else
-<tr class="b">
-#end
+#indexedRows($velocityCount)
 <td>#booleanCheckbox ($attgroup.Deleted)</td>
 <td>$attribute.Name (<a href="$link.setPage("admin,GlobalAttributeShow.vm").setAction("admin.GlobalAttributes").addPathInfo("nextTemplate","admin,GlobalAttributeEdit.vm").addPathInfo("eventSubmit_doSelectattribute", "foo").addPathInfo("intake-grp", "att").addPathInfo("att", "_0").addPathInfo("att_0id", "$attgroup.Id")">edit</a>)</td>
 <td>
@@ -53,13 +55,16 @@ This page is for editing the Global Attributes.
 </table>
 
 $intake.declareGroups()
+
 <div class="functnbar2">
 <table cellpadding="4" cellspacing="0" border="1">
-	<tr>
-		<td class="firstchild">
+<tr>
+<td class="firstchild">
 <input type="submit" value="Create New Attribute" name="eventSubmit_doCreatenew" />
-<input type="submit" value="Delete Selected Attributes" name="eventSubmit_doDeleteaelectedattributes" /></td>
-	</tr>
+<input type="submit" value="Delete Selected Attributes" name="eventSubmit_doDeleteaelectedattributes" />
+</td>
+</tr>
 </table>
+
 </form>
 </div>

@@ -1,11 +1,15 @@
-<div id="wizard1" class="app">
 $page.setTitle("Enter issue")
+
+<div id="wizard1" class="app">
+
 #set ($issue = $scarabR.ReportingIssue)
-#set ($action = $link.setPage("entry,Wizard1.vm").setAction("ReportIssue").addPathInfo("nextTemplate", "entry,Wizard3.vm"))
+#set ($action = $link.setPage("entry,Wizard1.vm").setAction("ReportIssue").addPathInfo("nextTemplate", "entry,Wizard3.vm").toString())
 #set ($attrValues = $issue.ModuleAttributeValuesMap)
 #set ($module = $scarabR.CurrentModule)
 #set ($user = $data.User)
+
 <h2>$page.Title</h2>
+
 <div class="tabs">
 <table cellpadding="3" cellspacing="0" border="0">
 <tr>
@@ -15,7 +19,9 @@ $page.setTitle("Enter issue")
 </tr>
 </table>
 </div>
+
 <form name="ReportForm" method="get" action="$action">
+
 <div class="functnbar">
 <table cellpadding="4" cellspacing="0" border="1">
  <tr>
@@ -24,6 +30,8 @@ $page.setTitle("Enter issue")
  </tr>
 </table>
 </div>
+
+## FIXME: Not working yet
 #set ($privateTemplateList = $module.getPrivateTemplates($user))
 #set ($globalTemplateList = $module.GlobalTemplates)
 #if ($privateTemplateList.size() > 0 || $globalTemplateList.size() > 0)
@@ -31,30 +39,33 @@ $page.setTitle("Enter issue")
 <div class="axial">
  <table cellpadding="3" cellspacing="2" border="0">
  <tr>
- <th width="120">Templates</th>
+ <th>Templates</th>
  <td>
  <select>
 #foreach ($template in $privateTemplateList)
-<option value="">$template.TemplateInfo.Name
+<option value="" />$template.TemplateInfo.Name
 #end
 #foreach ($template in $globalTemplateList)
-<option value="">$template.TemplateInfo.Name
+<option value="" />$template.TemplateInfo.Name
 #end
 </select>
-   <input type="submit" value="Select" /> &#160;<a href="$link.setPage("TemplateList.vm")">Template List</a>
+   <input type="submit" value="Select" /> &#160;
+   <a href="$link.setPage("TemplateList.vm")">Template List</a>
  </td>
  </tr>
  </table>
  </div>
 #end
+
 <h3>Input your issue</h3>
+
 <div class="axial">
-    <table cellpadding="3" cellspacing="2" border="0">
+<table cellpadding="3" cellspacing="2" border="0">
 #foreach ( $attKey in $attrValues.sequence() )
   #set ( $attVal = $attrValues.get($attKey) )
   #if ($attVal.isDedupeAttribute())
-    <tr>
-        <th>
+  <tr>
+   <th>
      #if ( $attVal.Attribute.AttributeType.ValidationKey )
         #set ( $field = $attVal.Attribute.AttributeType.ValidationKey )
      #elseif ($attVal.Attribute.AttributeType.Name == "combo-box" )
@@ -65,27 +76,33 @@ $page.setTitle("Enter issue")
      #if ( $attVal.isRequired() )
         *
      #end
-     $attVal.Attribute.Name</th>
-    <td>
+     $attVal.Attribute.Name
+   </th>
+   <td>
     #if ( $attVal.Attribute.AttributeType.Name == "string" )
         #attrValueText ( $attVal "50" )
     #else
         #attrValueLeafSelect ($attVal $field "")
     #end
      #attrValueErrorMsg ( $attVal $field )
-    </td>
+   </td>
    </tr>
   #end
 #end
-    </table>
+</table>
 </div>
+
 <div class="functnbar2">
 <table cellpadding="4" cellspacing="0" border="1">
  <tr>
-  <td class="firstchild"><input type="submit" name="eventSubmit_doCheckforduplicates" value="Check for duplicates" />&#160;
-<input type="reset" value="Reset" /></td>
+  <td class="firstchild">
+  <input type="submit" name="eventSubmit_doCheckforduplicates" value="Check for duplicates" />&#160;
+  <input type="reset" value="Reset" />
+  </td>
  </tr>
 </table>
-</div>$intake.declareGroups()
+</div>
+
+$intake.declareGroups()
 </form>
 </div>

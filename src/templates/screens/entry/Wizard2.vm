@@ -6,21 +6,41 @@ $page.setTitle("Identified as duplicate")
 #set ($action = $link.setPage("entry,Wizard2.vm").setAction("ReportIssue").addPathInfo("nextTemplate", "entry,Wizard3.vm").toString())
 
 <h2>$page.Title</h2>
+
+<div class="tabs">
+    <table cellpadding="3" cellspacing="0" border="0">
+    <tr>
+    <td>1: Summary info</td>
+    <th>2: Duplicate check</th>
+    <td>3: Verbose info</td>
+    </tr>
+    </table>
+</div>
+	
 <form method="get" name="Report2Form" action="$action">
 
 <h3>New issue</h3>
 
 <table width="100%" border="1" cellspacing="2" cellpadding="3">
-<tr>
 #set ($attrValues = $currentIssue.ModuleAttributeValuesMap)
 #set ($keys = $attrValues.sequence())
+<tr>
+#foreach ($attKey in $keys)
+  #set ($attVal = $attrValues.get($attKey))
+  #if ($attVal.isDedupeAttribute())
+  <th>
+  $attVal.Attribute.Name 
+  </th>
+  #end
+#end
+</tr>
+<tr>
 #foreach ($attKey in $keys)
   #set ($attVal = $attrValues.get($attKey))
   #if ($attVal.isDedupeAttribute())
   <td>
-  <strong>$attVal.Attribute.Name:</strong> 
    #if ($attVal.Attribute.AttributeType.Name.equals("email") && $attVal.Value && $attVal.Value.toString().length() != 0)
-    <a href="mailto:$attVal.Value">$attVal.Value</a>
+    <a href="mailto:$attVal.Value">$attVal.FirstName $attVal.LastName</a>
    #else
     $!attVal.Value
    #end
@@ -50,7 +70,7 @@ $page.setTitle("Identified as duplicate")
 </tr>
 #foreach ($issue in $scarabR.IssueList)
   #set ($issueLink = $link.addPathInfo($data.Parameters).setPathInfo("currentIssueId", $issue.UniqueId).setPage($link.CurrentView).addPathInfo("action", "ReportIssue").toString())
-  <tr>
+  #indexedRows($velocityCount)
   #set ($issueGroup = $intake.Issue.Default)
   <td>
   #if ($velocityCount == 1)
@@ -86,12 +106,12 @@ $page.setTitle("Identified as duplicate")
 <div class="axial">
 <table cellpadding="3" cellspacing="2" border="0">
 <tr>
-<th>Append with note</th>
+<th width="120">Note</th>
 <td>
 <textarea name="$intakeAttachment.DataAsString.Key" rows="4"
  cols="40">$!intakeAttachment.DataAsString</textarea>
 <p>
-<input type="submit" name="eventSubmit_doAddnote" value="submit note" />
+<input type="submit" name="eventSubmit_doAddnote" value="Submit note" />
 </p>
 </td>
 </tr>
@@ -99,10 +119,21 @@ $page.setTitle("Identified as duplicate")
 </div>
 
 <p>
-The issues above do not match my issue:<br />
-<input type="submit" name="eventSubmit_doGotowizard3" value="Continue issue entry" />&#160;
-<input type="submit" name="eventSubmit_doCancel" value="Cancel" />
+Text entered into the "Note" text area will be appended to "Comments" of
+selected Issue when either "Add vote to selected" or "Submit note" are executed.
+Click Bypass Duplicates to continue entering your Issue.
 </p>
+
+<div class="functnbar2">
+<table cellpadding="4" cellspacing="0" border="1">
+ <tr>
+  <td class="firstchild">
+<input type="submit" name="eventSubmit_doGotowizard3" value="Bypass Duplicates" />&#160;
+<input type="submit" name="eventSubmit_doCancel" value="Cancel" />
+  </td>
+ </tr>
+</table>
+</div>
 
 #*
 <table border="0" cellpadding="0" cellspacing="0" width="100%">

@@ -1,4 +1,5 @@
 $page.setTitle("Enter issue")
+
 #set ($issue = $scarabR.ReportingIssue)
 #set ($action = $link.setPage("entry,Wizard3.vm").setAction("ReportIssue").toString())
 #set ($attrValues = $issue.ModuleAttributeValuesMap)
@@ -7,25 +8,21 @@ $page.setTitle("Enter issue")
 #set ($templateId = $data.Parameters.getString("templateId"))
 #set ($template = $scarabR.getIssue($templateId))
 #set ($templAttrValues = $template.ModuleAttributeValuesMap)
+
 <div class="app" id="div2-1-0">
-<h2>Enter issue (2.1.0)</h2>
+
+<h2>Enter issue</h2>
+
 <div class="tabs">
   <table cellpadding="3" cellspacing="0" border="0">
   <tr>
-  <th>1: Summary info</th>
-  <td>2: <a href="#" title="view duplicate check information">Duplicate check</a></td>
-  <td>3: <a href="#" title="view verbose information">Verbose info</a></td>
+  <td>1: Summary info</td>
+  <td>2: Duplicate check</td>
+  <th>3: Verbose info</th>
   </tr>
   </table>
 </div>
 
-<div class="functnbar">
-<table cellpadding="4" cellspacing="0" border="1">
- <tr>
-  <td class="firstchild"><input type="submit" value="Check for dupes" />&#160;<input type="reset" value="Reset form" /></td>
- </tr>
-</table>
-</div>
 <form method="get" action="$action">
 #set ($privateTemplateList = $module.getPrivateTemplates($user))
 #set ($globalTemplateList = $module.GlobalTemplates)
@@ -37,10 +34,10 @@ $page.setTitle("Enter issue")
       <th width="120">Templates</th>
       <td><select name="templateId">
  #foreach ($template in $privateTemplateList)
- <option value="$template.IssueId">$template.TemplateInfo.Name
+ <option value="$template.IssueId" />$template.TemplateInfo.Name
  #end
  #foreach ($template in $globalTemplateList)
- <option value="$template.IssueId">$template.TemplateInfo.Name
+ <option value="$template.IssueId" />$template.TemplateInfo.Name
  #end
          </select> &#160;<input type="submit" value="Select" name="eventSubmit_doGotowizard3" /> &#160;<a href="#">template list</a></td>
          </tr>
@@ -48,34 +45,35 @@ $page.setTitle("Enter issue")
  </div>
 #end
 </form>
+
 <form method="get" action="$link.setPage("entry,Wizard3.vm")">
-<input type="hidden" name="action" value="ReportIssue"); />
+<input type="hidden" name="action" value="ReportIssue" />
 <div class="axial">
 <h3>Input your issue</h3>
     <table cellpadding="3" cellspacing="2" border="0">
-#foreach ( $attKey in $attrValues.sequence() )
-  #set ( $attVal = $attrValues.get($attKey) )
-  #set ( $attrInput = $intake.AttributeValue.mapTo($attVal) )
-  #set ( $templAttVal = $templAttrValues.get($attKey) )
-  #set ( $templAttrInput = $intake.AttributeValue.mapTo($templAttVal) )
-  #if ( $attVal.Attribute.AttributeType.ValidationKey )
-        #set ( $field = $attVal.Attribute.AttributeType.ValidationKey )
-  #elseif ($attVal.Attribute.AttributeType.Name == "combo-box" )
-        #set ( $field = "OptionId" )
+#foreach ($attKey in $attrValues.sequence())
+  #set ($attVal = $attrValues.get($attKey))
+  #set ($attrInput = $intake.AttributeValue.mapTo($attVal))
+  #set ($templAttVal = $templAttrValues.get($attKey))
+  #set ($templAttrInput = $intake.AttributeValue.mapTo($templAttVal))
+  #if ($attVal.Attribute.AttributeType.ValidationKey)
+        #set ($field = $attVal.Attribute.AttributeType.ValidationKey)
+  #elseif ($attVal.Attribute.AttributeType.Name == "combo-box")
+        #set ($field = "OptionId")
   #else
-        #set ( $field = "Value" )
+        #set ($field = "Value")
   #end
-  #if ( !$attVal.isSet() )
+  #if (!$attVal.isSet())
         <tr>
             <th>
-    #if ( $attVal.isRequired() )*#end
+    #if ($attVal.isRequired())*#end
     $attVal.Attribute.Name:
-    #attrValueErrorMsg ( $attVal $field )<br />
+    #attrValueErrorMsg ($attVal $field)<br />
             </th>
             <td>
     #if ($attVal.Attribute.AttributeType.AttributeClass.Name == "user")
           #userSelectBox ($attVal "")
-    #elseif ($attVal.Attribute.AttributeType.Name == "combo-box" )
+    #elseif ($attVal.Attribute.AttributeType.Name == "combo-box")
         #if ($templateId)
           #templateAttrValueLeafSelect ($attVal $templAttVal $field "")
         #else
@@ -88,7 +86,7 @@ $page.setTitle("Enter issue")
         #elseif ($templAttrInput.Value.toString().length() > 0)
              #set ($currentValue = $templAttrInput.Value)
         #end
-        #if ($attVal.Attribute.AttributeType.Name == "long-string" )
+        #if ($attVal.Attribute.AttributeType.Name == "long-string")
             <textarea name= "$attrInput.Value.Key" cols="40"
                rows="4">$!currentValue</textarea>
         #else
@@ -107,8 +105,8 @@ $page.setTitle("Enter issue")
     <table cellpadding="3" cellspacing="2" border="0">
      <tr>
       <th>Attachment description</th>
-#set ( $atch = $scarabR.Attachment )
-#set( $intakeAttachment = $intake.Attachment.mapTo($atch) )
+#set ($atch = $scarabR.Attachment)
+#set ($intakeAttachment = $intake.Attachment.mapTo($atch))
       <td>
        <textarea name="$intakeAttachment.Name.Key" cols="45" rows="2"
            >$!intakeAttachment.Name</textarea>
@@ -151,13 +149,17 @@ $page.setTitle("Enter issue")
       </tr>
     </table>
 </div>
+
 <div class="functnbar2">
 <table cellpadding="4" cellspacing="0" border="1">
  <tr>
-  <td class="firstchild"><input type="submit" value="Check for dupes" />&#160;<input type="reset" value="Reset form" /></td>
+  <td class="firstchild">
+  <input type="submit" name="eventSubmit_doEnterissue" value="Save" />
+  </td>
  </tr>
 </table>
 </div>
+
 $intake.declareGroups()
 </form>
 </div>
