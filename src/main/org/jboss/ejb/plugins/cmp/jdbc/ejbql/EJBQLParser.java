@@ -497,12 +497,20 @@ public class EJBQLParser {
       return emptyColCompExp;
    }
    
-   // collection_member_expression ::= single_valued_path_expression [NOT ]MEMBER [OF ] collection_valued_path_expression
+   // collection_member_expression ::=
+   // {single_valued_navigation | identification_variable | input_parameter}
+   // [NOT ]MEMBER [OF ] collection_valued_path_expression
    private Sequence colMemExp;
    protected Parser collectionMemberExpression() {
       if(colMemExp == null) {
          colMemExp = new Sequence();
-         colMemExp.add(singleValuedPathExpression());
+         
+         Alternation varOrParam = new Alternation();
+         varOrParam.add(singleValuedNavigation());
+         varOrParam.add(identificationVariable());
+         //varOrParam.add(inputParameter());
+
+         colMemExp.add(varOrParam);
          colMemExp.add(new Optional(new Literal("NOT")));
          colMemExp.add(new Literal("MEMBER").discard());
          colMemExp.add(new Optional(new Literal("OF").discard()));
@@ -518,7 +526,18 @@ public class EJBQLParser {
                   compareFromPath = a.pop().toString();
                }
                
-               String comparison = target.getEntityWherePathToPath(compareFromPath, compareSymbol, compareTo);
+               String comparison;
+               if("?".equals(compareFromPath)) {
+                  comparison = target.getEntityWherePathToParameter(
+                     compareFromPath,
+                     compareSymbol);
+               } else {
+                  comparison = target.getEntityWherePathToPath(
+                     compareFromPath,
+                     compareSymbol,
+                     compareTo);
+               }
+               
                if(comparison == null) {
                   a.setInvalid();
                } else {
@@ -775,6 +794,7 @@ public class EJBQLParser {
       return entBeanVal;
    }
    
+   // CHANGED in FD
    // entity_bean_expression ::= entity_bean_value | input_parameter
    private Alternation entBeanExp;
    protected Parser entityBeanExpression() {
