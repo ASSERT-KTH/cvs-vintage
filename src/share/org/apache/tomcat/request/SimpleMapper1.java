@@ -405,8 +405,8 @@ public class SimpleMapper1 extends  BaseInterceptor  {
 	    if( debug>0 ) log( "Adjust for prefix map " + s + " " + pathI );
 	    break;
 	case Container.DEFAULT_MAP:
-	    s="/";
-	    pathI= path.substring( ctxPLen ) ;
+            s = path.substring( ctxPLen );
+            pathI = null;
 	    if( debug>0 ) log( "Default map " + s + " " + pathI );
 	    break;
 	case Container.PATH_MAP:

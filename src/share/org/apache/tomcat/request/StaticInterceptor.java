@@ -129,7 +129,7 @@ public class StaticInterceptor extends BaseInterceptor {
 
 	// will call getRealPath(), all path normalization
 	// and a number of checks
-	String pathInfo=req.getPathInfo();
+	String pathInfo=req.getServletPath();
 	if( pathInfo==null ) pathInfo="";
 	String absPath=ctx.getRealPath( pathInfo );
 	if( absPath == null ) return 0;
@@ -160,7 +160,7 @@ public class StaticInterceptor extends BaseInterceptor {
 
 	// Doesn't matter if we are or not in include
 	if( welcomeFile == null  ) {
-	    // normal dir, no welcome. 
+	    // normal dir, no welcome.
 	    req.setWrapper( ctx.getServletByName( "tomcat.dirHandler"));
 	    if( debug > 0) log( "Dir handler");
 	    return 0;
@@ -194,7 +194,7 @@ public class StaticInterceptor extends BaseInterceptor {
 		return s1 + "/" + s2;
 	}
     }
-    
+
     private String getWelcomeFile(Context context, File dir) {
         Enumeration enum = context.getWelcomeFiles();
 
@@ -218,7 +218,7 @@ public class StaticInterceptor extends BaseInterceptor {
  */
 class FileHandler extends Handler  {
     int realFileNote;
-    
+
     FileHandler() {
 	initialized=true;
 	internal=true;
@@ -235,13 +235,13 @@ class FileHandler extends Handler  {
 	// if we are in include, with req==original request
 	// - just use the current sub-request
 	Request subReq=req;
-	if(req.getChild()!=null) 
+	if(req.getChild()!=null)
 	    subReq=req.getChild();
 
 	Context ctx=subReq.getContext();
-	String pathInfo=subReq.getPathInfo();
+	String pathInfo=subReq.getServletPath();
 	String absPath = (String)subReq.getNote( realFileNote );
-	if( absPath==null ) 
+	if( absPath==null )
 	    absPath=ctx.getRealPath( pathInfo );
 
 	if( debug>0) log( "Requested file = " + absPath);
