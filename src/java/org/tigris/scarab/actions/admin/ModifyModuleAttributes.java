@@ -80,7 +80,7 @@ import org.tigris.scarab.tools.ScarabRequestTool;
  * action methods on RModuleAttribute table
  *      
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: ModifyModuleAttributes.java,v 1.34 2001/10/29 19:46:22 elicia Exp $
+ * @version $Id: ModifyModuleAttributes.java,v 1.35 2001/10/31 00:23:00 elicia Exp $
  */
 public class ModifyModuleAttributes extends RequireLoginFirstAction
 {
@@ -728,9 +728,17 @@ public class ModifyModuleAttributes extends RequireLoginFirstAction
                                      .retrieveByPK(new NumberKey(attributeId));
 
                // Remove attribute - module mapping
+               IssueType issueType = ag.getIssueType();
                RModuleAttribute rma = module
-                   .getRModuleAttribute(attribute, ag.getIssueType());
+                   .getRModuleAttribute(attribute, issueType);
                rma.delete(user);
+
+               // Remove attribute - module mapping from template type
+               IssueType templateType = (IssueType)IssueTypePeer
+                                        .retrieveByPK(new NumberKey("2"));
+               RModuleAttribute rma2 = module
+                   .getRModuleAttribute(attribute, templateType); 
+               rma2.delete(user);
 
                // Remove attribute - group mapping
                RAttributeAttributeGroup raag = 
