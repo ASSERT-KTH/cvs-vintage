@@ -102,7 +102,7 @@ ExceptionListener and mark al handles as errounous? And then let them send the e
  * Created: Tue Apr 10 13:09:45 2001
  *
  * @author <a href="mailto:peter.antman@tim.se">Peter Antman</a>.
- * @version $Revision: 1.2 $
+ * @version $Revision: 1.3 $
  */
 
 public class JmsManagedConnection  implements ManagedConnection{
@@ -396,7 +396,7 @@ public class JmsManagedConnection  implements ManagedConnection{
 		// Get connectionFactory
 		TopicConnectionFactory topicFactory = 
 		    (TopicConnectionFactory)context.
-		    lookup(adapter.getTopicFactoryName());
+		    lookup(adapter.getTopicFactoryRef());
 		
 	    // Set up connection
 		if(user != null) 
@@ -415,7 +415,7 @@ public class JmsManagedConnection  implements ManagedConnection{
 		// Get connectionFactory
 		QueueConnectionFactory queueFactory = 
 		    (QueueConnectionFactory)context.
-		    lookup(adapter.getQueueFactoryName());
+		    lookup(adapter.getQueueFactoryRef());
 		
 		// Queue connection
 		if (user != null) 

@@ -25,17 +25,18 @@ import javax.naming.NamingException;
  * provide connection names via instance initialzation and provide an 
  * implementaion of {@link #getInitialContext}.
  *
- * @version <pre>$Revision: 1.3 $</pre>
+ * 6/22/01 - hchirino - The queue/topic jndi references are now configed via JMX
+ *
+ * @version <pre>$Revision: 1.4 $</pre>
  * @author  <a href="mailto:jason@planet57.com">Jason Dillon</a>
+ * @author  <a href="mailto:cojonudo14@hotmail.com">Hiram Chirino</a>
  */
-public abstract class AbstractJMSProviderAdapter
+public class AbstractJMSProviderAdapter
    implements JMSProviderAdapter, java.io.Serializable
 {
-   /** The queue factory name to use. */
-   protected String queueFactoryName;
 
-   /** The topic factory name to use. */
-   protected String topicFactoryName;
+
+
 
    /** The name of the provider. */
    protected String name;
@@ -43,73 +44,94 @@ public abstract class AbstractJMSProviderAdapter
    /** The provider url. */
    protected String providerURL;
 
-   /**
-    * Initialize.
-    *
-    * @param queueFactoryName    The name of the queue factory to use.
-    * @param topicFactoryName    The name of the topic factory to use.
-    */
-   protected AbstractJMSProviderAdapter(final String queueFactoryName,
-                                        final String topicFactoryName)
-   {
-      this.queueFactoryName = queueFactoryName;
-      System.out.println("queue factory name: " + this.queueFactoryName);
-      this.topicFactoryName = topicFactoryName;
-      System.out.println("topic factory name: " + this.topicFactoryName);
-   }
+
 
    /**
-    * Set the name of the provider.
-    *
-    * @param name    The provider name.
-    */
+	* Set the name of the provider.
+	*
+	* @param name    The provider name.
+	*/
    public void setName(final String name) {
-      this.name = name;
-   }
+	  this.name = name;
+   }   
 
    /**
-    * Get the name of the provider.
-    *
-    * @return  The provider name.
-    */
+	* Get the name of the provider.
+	*
+	* @return  The provider name.
+	*/
    public final String getName() {
-      return name;
-   }
+	  return name;
+   }   
 
    /**
-    * Set the URL that will be used to connect to the JNDI provider.
-    *
-    * @param url  The URL that will be used to connect.
-    */
+	* Set the URL that will be used to connect to the JNDI provider.
+	*
+	* @param url  The URL that will be used to connect.
+	*/
    public void setProviderUrl(final String url) {
-      this.providerURL = url;
-   }
+	  this.providerURL = url;
+   }   
 
    /**
-    * Get the URL that is currently being used to connect to the JNDI 
-    * provider.
-    *
-    * @return     The URL that is currently being used.
-    */
+	* Get the URL that is currently being used to connect to the JNDI 
+	* provider.
+	*
+	* @return     The URL that is currently being used.
+	*/
    public final String getProviderUrl() {
-      return providerURL;
-   }
+	  return providerURL;
+   }   
 
-   /**
-    * Get the JNDI name of the queue factory connection to use.
-    *
-    * @return  JNDI name of the queue factory connection to use.
-    */
-   public final String getQueueFactoryName() {
-      return queueFactoryName;
-   }
 
-   /**
-    * Get the JNDI name of the topic factory connection to use.
-    *
-    * @return  JNDI name of the topic factory connection to use.
-    */
-   public final String getTopicFactoryName() {
-      return topicFactoryName;
-   }
+
+
+
+   /** The queue factory name to use. */
+   protected String queueFactoryRef;
+   /** The topic factory name to use. */
+   protected String topicFactoryRef;
+
+	/**
+	 * getInitialContext method comment.
+	 */
+	public javax.naming.Context getInitialContext() throws javax.naming.NamingException {
+		return new javax.naming.InitialContext(); // Connect to the JBoss JNDI
+	}
+
+/**
+ * Insert the method's description here.
+ * Creation date: (6/22/2001 12:41:44 AM)
+ * @return java.lang.String
+ */
+public java.lang.String getQueueFactoryRef() {
+	return queueFactoryRef;
+}
+
+/**
+ * Insert the method's description here.
+ * Creation date: (6/22/2001 12:41:44 AM)
+ * @return java.lang.String
+ */
+public java.lang.String getTopicFactoryRef() {
+	return topicFactoryRef;
+}
+
+/**
+ * Insert the method's description here.
+ * Creation date: (6/22/2001 12:41:44 AM)
+ * @param newQueueFactoryRef java.lang.String
+ */
+public void setQueueFactoryRef(java.lang.String newQueueFactoryRef) {
+	queueFactoryRef = newQueueFactoryRef;
+}
+
+/**
+ * Insert the method's description here.
+ * Creation date: (6/22/2001 12:41:44 AM)
+ * @param newTopicFactoryRef java.lang.String
+ */
+public void setTopicFactoryRef(java.lang.String newTopicFactoryRef) {
+	topicFactoryRef = newTopicFactoryRef;
+}
 }

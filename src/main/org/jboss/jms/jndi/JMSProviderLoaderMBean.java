@@ -18,31 +18,41 @@
 package org.jboss.jms.jndi;
 
 import org.jboss.util.ServiceMBean;
+
 /**
  * JMSProviderLoaderMBean.java
  *
  *
  * Created: Wed Nov 29 14:08:39 2000
+ * 6/22/01 - hchirino - The queue/topic jndi references are now configed via JMX
  *
  * @author 
+ * @author  <a href="mailto:cojonudo14@hotmail.com">Hiram Chirino</a>
  * @version
  */
 
 public interface JMSProviderLoaderMBean  
    extends ServiceMBean
 {
-    public static final String OBJECT_NAME = ":service=JMSProviderLoader";
+	public static final String OBJECT_NAME = ":service=JMSProviderLoader";
 
-    public void setProviderName(String name);
-    
-    public String getProviderName();
-    
-    public void setProviderAdapterClass(String clazz);
-    
-    public String getProviderAdapterClass();
+	public void setProviderName(String name);
+	
+	public String getProviderName();
+	
+	public void setProviderAdapterClass(String clazz);
+	
+	public String getProviderAdapterClass();
 
-    public void setProviderUrl(String url);
+	public void setProviderUrl(String url);
 
-    public String getProviderUrl();
-    
+	public String getProviderUrl();
+	
+	public java.lang.String getQueueFactoryRef();
+
+	public java.lang.String getTopicFactoryRef();
+	
+	public void setQueueFactoryRef(java.lang.String newQueueFactoryRef);
+
+	public void setTopicFactoryRef(java.lang.String newTopicFactoryRef);
 }

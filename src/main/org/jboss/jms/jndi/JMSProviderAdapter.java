@@ -19,22 +19,28 @@ package org.jboss.jms.jndi;
 
 import javax.naming.Context;
 import javax.naming.NamingException;
+
 /**
  * JMSProviderAdapter.java
  *
  *
  * Created: Wed Nov 29 14:15:07 2000
+ * 6/22/01 - hchirino - The queue/topic jndi references are now configed via JMX
  *
  * @author 
+ * @author  <a href="mailto:cojonudo14@hotmail.com">Hiram Chirino</a>
  * @version
  */
 
-public interface JMSProviderAdapter  {
-    public Context getInitialContext() throws NamingException;
-    public  String getTopicFactoryName();
-    public String getQueueFactoryName();
-    public void setName(String name);
-    public String getName();
-    public void setProviderUrl(String url);
-    public String getProviderUrl();
-} // JMSProviderAdapter
+public interface JMSProviderAdapter {
+	public Context getInitialContext() throws NamingException;
+
+	public void setName(String name);
+	public String getName();
+	public void setProviderUrl(String url);
+	public String getProviderUrl();
+	public java.lang.String getQueueFactoryRef();
+	public java.lang.String getTopicFactoryRef();
+	public void setQueueFactoryRef(java.lang.String newQueueFactoryRef);
+	public void setTopicFactoryRef(java.lang.String newTopicFactoryRef);
+}

@@ -58,7 +58,7 @@ import javax.management.ObjectName;
  *      @author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
  *      @author <a href="mailto:sebastien.alborini@m4x.org">Sebastien Alborini</a>
  *      @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
- *      @version $Revision: 1.14 $
+ *      @version $Revision: 1.15 $
  */
 public class JMSContainerInvoker implements
 ContainerInvoker, XmlLoadable
@@ -233,7 +233,7 @@ ContainerInvoker, XmlLoadable
 	       // All classes are different between topics and queues!!
 	       TopicConnectionFactory topicFactory = 
 		   (TopicConnectionFactory)context.
-		   lookup(adapter.getTopicFactoryName());
+		   lookup(adapter.getTopicFactoryRef());
 	       // Do we have a user - this is messy code (should be done for queues to)
 	       TopicConnection topicConnection;
 	       if(user != null) 
@@ -307,7 +307,7 @@ ContainerInvoker, XmlLoadable
 	   {
 	       Logger.debug("Got destination type Queue");
 	       QueueConnectionFactory queueFactory = 
-		   (QueueConnectionFactory)context.lookup(adapter.getQueueFactoryName());
+		   (QueueConnectionFactory)context.lookup(adapter.getQueueFactoryRef());
 	       
 	       // Do we have a user
 	       QueueConnection queueConnection;
