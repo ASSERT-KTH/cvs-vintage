@@ -1,4 +1,4 @@
-// $Id: ExplorerTree.java,v 1.4 2003/10/05 16:13:44 alexb Exp $
+// $Id: ExplorerTree.java,v 1.5 2003/10/05 16:55:41 alexb Exp $
 // Copyright (c) 1996-2001 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -139,6 +139,9 @@ extends DisplayTextTree
         
         /** builds a pop-up menu for extra functionality for the Tree*/
         public void showPopupMenu(MouseEvent me) {
+            
+            if(getLastSelectedPathComponent() == null)
+                return;
             
             Object selectedItem = 
                 ((DefaultMutableTreeNode)getLastSelectedPathComponent())
