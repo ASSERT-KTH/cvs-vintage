@@ -1,4 +1,4 @@
-// $Id: Notation.java,v 1.37 2003/09/22 18:58:41 bobtarling Exp $
+// $Id: Notation.java,v 1.38 2003/11/05 01:01:23 thierrylach Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,7 +25,7 @@
 // File: Notation.java
 // Classes: Notation
 // Original Author: Thierry Lach
-// $Id: Notation.java,v 1.37 2003/09/22 18:58:41 bobtarling Exp $
+// $Id: Notation.java,v 1.38 2003/11/05 01:01:23 thierrylach Exp $
 
 // 8 Apr 2002: Jeremy Bennett (mail@jeremybennett.com). Extended to support
 // extension points.
@@ -79,11 +79,6 @@ public final class Notation implements PropertyChangeListener {
      */
     public static final Logger cat =
         Logger.getLogger("org.argouml.application.notation");
-    // TODO:  JDK 1.2 seems to not return the package name if
-    // not running from a jar.
-    //
-    // public final static Logger cat =
-    // Logger.getLogger(NotationNameImpl.class.getPackage().getName());
 
     /** The name of the default Argo notation.  This notation is
      *  part of Argo core distribution.

@@ -1,4 +1,4 @@
-// $Id: Configuration.java,v 1.15 2003/09/17 14:27:58 thierrylach Exp $
+// $Id: Configuration.java,v 1.16 2003/11/05 00:59:56 thierrylach Exp $
 // Copyright (c) 1996-2001 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -49,11 +49,6 @@ public class Configuration {
      */
     public static final Logger cat = 
 	Logger.getLogger("org.argouml.application.configuration");
-    // TODO:  JDK 1.2 seems to not return the package name if
-    // not running from a jar.
-    //
-    // public final static Logger cat = 
-    // Logger.getLogger(ConfigurationHandler.class.getPackage().getName()); 
 
     /** Property to indicate configuration load from file
      */
