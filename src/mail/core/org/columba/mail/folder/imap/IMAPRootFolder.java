@@ -225,7 +225,10 @@ public class IMAPRootFolder extends Folder implements ActionListener {
 			} else {
 				((IMAPFolder) subFolder).existsOnServer = true;
 			}
-
+			
+			if( info.getParameter(ListInfo.NOSELECT) ) {
+				subFolder.getFolderItem().set("selectable", "false");
+			}
 		}
 	}
 
