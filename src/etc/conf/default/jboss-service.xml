@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE server>
-<!-- $Id: jboss-service.xml,v 1.73 2002/12/13 04:33:24 patriot1burke Exp $ -->
+<!-- $Id: jboss-service.xml,v 1.74 2002/12/19 17:15:10 jboynes Exp $ -->
 
 <!-- ===================================================================== -->
 <!--                                                                       -->
@@ -343,14 +343,32 @@
 
     <attribute name="ScanPeriod">5000</attribute>
 
-    <!-- URLs are comma seperated and unprefixed arguments are considered
-       file URLs and resolve relative to server home(JBOSS_DIST/server/default)
-       unless the given path is absolute. Any referenced directories cannot
-       be unpackaged archives, use the parent directory of the unpacked
-       archive.
+    <!-- URLs are comma separated and resolve relative to the server home URL
+       unless the given path is absolute. If the URL ends in "/" it is
+       considered a collection and scanned, otherwise it is simply deployed;
+       this follows RFC2518 convention and allows discrimination between
+       collections and directories that are simply unpacked archives.
+
+       URLs may be local (file:) or remote (http:). Scanning is supported
+       for remote URLs but unpacked deployment units are not.
+
+       Example URLs:
+          deploy/
+               scans ${jboss.server.url}/deploy/, which is local or remote
+               depending on the URL used to boot the server
+          ${jboss.server.home}/deploy/
+               scans ${jboss.server.home)/deploy, which is always local
+          file:/var/opt/myapp.ear
+               deploy myapp.ear from a local location
+          file:/var/opt/apps/
+               scans the specified directory
+          http://www.test.com/netboot/myapp.ear
+               deploys myapp.ear from a remote location
+          http://www.test.com/netboot/apps/
+               scans the specified WebDAV location
      -->
     <attribute name="URLs">
-       ./deploy
+       deploy/
     </attribute>
   </mbean>
 
@@ -359,6 +377,7 @@
     deployed directly. URLDeploymentScanner assumes that all directories are to
     be scanned, which can cause problems if directory referred to in the
     deploy attribute is an exploded archive.
+
   <mbean code="org.jboss.deployment.scanner.URLDirectoryScanner"
        name="jboss.deployment:type=DeploymentScanner,flavor=URL">
 
