@@ -56,8 +56,8 @@
                port="@TOMCAT_HTTP_PORT@" minProcessors="5" maxProcessors="75"
                enableLookups="true" redirectPort="8443"
                acceptCount="10" debug="0" connectionTimeout="60000"
-               proxyName="@TOMCAT_PROXY_NAME@"
-               proxyPort="@TOMCAT_PROXY_PORT@"/>
+               @TOMCAT_PROXY_NAME@ 
+               @TOMCAT_PROXY_PORT@ />
 
     <!-- Define a non-SSL HTTP/1.1 Connector on port 8080
     <Connector className="org.apache.catalina.connector.http.HttpConnector"
