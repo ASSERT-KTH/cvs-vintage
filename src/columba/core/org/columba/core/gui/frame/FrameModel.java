@@ -132,17 +132,4 @@ public class FrameModel {
 
 		return c;
 	}
-	
-	/**
-	 * Alternative version of openView supporting a view specification
-	 * @param	id		Frame id
-	 * @param	view	view specification (size, maximized/normal)
-	 * @author 	Karl Peder Olesen (karlpeder), 20030803
-	 * 
-	 */
-	public static AbstractFrameController openView(String id, ViewItem view) {
-		AbstractFrameController c = createFrameController(id, view);
-		c.openView();
-		return c;
-	}
 }

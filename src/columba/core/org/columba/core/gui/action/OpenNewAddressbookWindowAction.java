@@ -18,13 +18,9 @@ package org.columba.core.gui.action;
 
 import java.awt.event.ActionEvent;
 
-import org.columba.addressbook.config.AddressbookConfig;
 import org.columba.core.action.FrameAction;
-import org.columba.core.config.ViewItem;
 import org.columba.core.gui.frame.AbstractFrameController;
 import org.columba.core.gui.frame.FrameModel;
-import org.columba.core.logging.ColumbaLogger;
-import org.columba.core.xml.XmlElement;
 
 /**
  * @author frd
@@ -50,46 +46,7 @@ public class OpenNewAddressbookWindowAction extends FrameAction {
 		 * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
 		 */
 		public void actionPerformed(ActionEvent evt) {
-			
-			/*
-			 * *20030803, karlpeder* A new way to open adressbook
-			 * window - which reads window position from options file.
-			 * This fixes bug #778200 since the window now remembers its size
-			 */
-			////FrameModel.openView("Addressbook");
-			
-			// get stored view element, or create a new (backward compability!)
-			XmlElement view = AddressbookConfig.get("options").
-						getElement("/options/gui/view");
-			if (view == null) {
-				// get root for new view element (= gui element)
-				XmlElement gui = AddressbookConfig.get("options").
-							getElement("/options/gui");
-				if (gui != null) {
-					// create new view element 
-					view = new XmlElement("view");
-					XmlElement window = new XmlElement("window");
-					window.addAttribute("width", "640");
-					window.addAttribute("height", "480");
-					window.addAttribute("maximized", "true");
-					view.addElement(window);
-					XmlElement toolbars = new XmlElement("toolbars");
-					toolbars.addAttribute("main", "true");
-					view.addElement(toolbars);
-					gui.addElement(view);
-				} else {
-					// can not create a new view element due to some error !?!
-					ColumbaLogger.log.debug("Can not create new view element");
-				}
-			}
-			
-			// open view
-			if (view == null) {
-				// we didn't succeeded in getting/creating view element
-				FrameModel.openView("Addressbook");
-			} else {
-				// open view with view specification
-				FrameModel.openView("Addressbook", new ViewItem(view));
-			}
+			FrameModel.openView("Addressbook");
+			//getFrameController().getModel().openView();
 		}
 }
