@@ -74,7 +74,7 @@ import org.tigris.scarab.tools.ScarabLocalizationTool;
  * This class is responsible for building a list of Module/IssueTypes.
  *
  * @author <a href="mailto:jmcnally@collab.net">John D. McNally</a>
- * @version $Id: DefineXModuleList.java,v 1.22 2003/06/25 17:46:01 mpoeschl Exp $
+ * @version $Id: DefineXModuleList.java,v 1.23 2003/08/16 04:09:11 elicia Exp $
  */
 public class DefineXModuleList extends RequireLoginFirstAction
 {
@@ -100,12 +100,19 @@ public class DefineXModuleList extends RequireLoginFirstAction
             }
             else 
             {
-                list = MITListManager.getAllModulesSingleIssueTypeList(
-                    scarabR.getCurrentIssueType(), user);
+                if (scarabR.getCurrentIssueType() == null)
+                {
+                    scarabR.setAlertMessage(l10n.get("NoIssueTypesInModule"));
+                }
+                else
+                {
+                    list = MITListManager.getAllModulesSingleIssueTypeList(
+                        scarabR.getCurrentIssueType(), user);
+                }
             }
             user.setCurrentMITList(list);
             // reset selected users map
-            getScarabRequestTool(context).resetSelectedUsers();
+            scarabR.resetSelectedUsers();
             setTarget(data, data.getParameters()
                       .getString(ScarabConstants.NEXT_TEMPLATE));
         }
