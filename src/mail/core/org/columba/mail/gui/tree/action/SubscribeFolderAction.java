@@ -15,20 +15,20 @@
 //All Rights Reserved.
 package org.columba.mail.gui.tree.action;
 
-import org.columba.core.action.AbstractColumbaAction;
-import org.columba.core.gui.frame.FrameMediator;
-import org.columba.core.gui.selection.SelectionChangedEvent;
-import org.columba.core.gui.selection.SelectionListener;
-import org.columba.core.gui.util.ImageLoader;
-
-import org.columba.mail.gui.tree.selection.TreeSelectionChangedEvent;
-import org.columba.mail.util.MailResourceLoader;
-
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
 
 import javax.swing.KeyStroke;
 
+import org.columba.core.action.AbstractColumbaAction;
+import org.columba.core.gui.frame.FrameMediator;
+import org.columba.core.gui.selection.SelectionChangedEvent;
+import org.columba.core.gui.selection.SelectionListener;
+import org.columba.core.gui.util.ImageLoader;
+import org.columba.mail.gui.config.subscribe.SubscribeDialog;
+import org.columba.mail.gui.frame.MailFrameMediator;
+import org.columba.mail.gui.tree.selection.TreeSelectionChangedEvent;
+import org.columba.mail.util.MailResourceLoader;
 
 /**
  * @author frd
@@ -36,42 +36,45 @@ import javax.swing.KeyStroke;
  * To change this generated comment go to
  * Window>Preferences>Java>Code Generation>Code and Comments
  */
-public class SubscribeFolderAction extends AbstractColumbaAction
+public class SubscribeFolderAction
+    extends AbstractColumbaAction
     implements SelectionListener {
     public SubscribeFolderAction(FrameMediator frameMediator) {
-        super(frameMediator,
-            MailResourceLoader.getString("menu", "mainframe",
+        super(
+            frameMediator,
+            MailResourceLoader.getString(
+                "menu",
+                "mainframe",
                 "menu_folder_subscribe"));
 
         // tooltip text
-        putValue(SHORT_DESCRIPTION,
-            MailResourceLoader.getString("menu", "mainframe",
-                "menu_folder_subscribe").replaceAll("&", ""));
+        putValue(
+            SHORT_DESCRIPTION,
+            MailResourceLoader
+                .getString("menu", "mainframe", "menu_folder_subscribe")
+                .replaceAll("&", ""));
 
         // icons
         putValue(SMALL_ICON, ImageLoader.getSmallImageIcon("remotehost.png"));
         putValue(LARGE_ICON, ImageLoader.getImageIcon("remotehost.png"));
 
         // shortcut key
-        putValue(ACCELERATOR_KEY,
+        putValue(
+            ACCELERATOR_KEY,
             KeyStroke.getKeyStroke(KeyEvent.VK_S, ActionEvent.ALT_MASK));
 
         setEnabled(false);
 
-        // FIXME
-        //  -> uncomment to enable/disable action
+        ((MailFrameMediator) frameMediator).registerTreeSelectionListener(
+            this);
 
-        /*
-        ((MailFrameController) frameMediator).registerTreeSelectionListener(
-                this);
-        */
     }
 
     /* (non-Javadoc)
      * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
      */
     public void actionPerformed(ActionEvent evt) {
-        //TODO: implementation
+        new SubscribeDialog();
     }
 
     /* (non-Javadoc)
