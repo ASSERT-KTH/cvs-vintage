@@ -49,7 +49,7 @@ import org.gjt.sp.util.*;
  * <li>And so on
  * </ul>
  *
- * @version $Id: StatusBar.java,v 1.18 2002/02/17 05:28:55 spestov Exp $
+ * @version $Id: StatusBar.java,v 1.19 2002/02/17 05:30:26 spestov Exp $
  * @author Slava Pestov
  * @since jEdit 3.2pre2
  */
@@ -554,7 +554,7 @@ public class StatusBar extends JPanel implements WorkThreadProgressListener
 				- insets.left - insets.right;
 
 			Color text = MemoryStatus.this.getForeground();
-			Color status = UIManager.getColor("ProgressBar.foreground");
+			Color status = text.darker();//UIManager.getColor("ProgressBar.foreground");
 
 			float fraction = ((float)usedMemory) / totalMemory;
 
