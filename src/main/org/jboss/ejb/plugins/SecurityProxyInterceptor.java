@@ -12,7 +12,7 @@ import javax.ejb.EJBContext;
 import javax.naming.InitialContext;
 
 import org.jboss.ejb.Container;
-import org.jboss.ejb.ContainerInvokerContainer;
+import org.jboss.ejb.EJBProxyFactoryContainer;
 import org.jboss.ejb.EnterpriseContext;
 import org.jboss.invocation.Invocation;
 import org.jboss.logging.Logger;
@@ -29,7 +29,7 @@ import org.jboss.security.SecurityProxyFactory;
  * interceptor has access to the EJB instance and context.
  * 
  * @author <a href="mailto:Scott.Stark@jboss.org">Scott Stark</a>.
- * @version $Revision: 1.15 $
+ * @version $Revision: 1.16 $
  */
 public class SecurityProxyInterceptor
    extends AbstractInterceptor
@@ -98,8 +98,8 @@ public class SecurityProxyInterceptor
             // Initialize the securityProxy
             try
             {
-               ContainerInvokerContainer ic =
-                  (ContainerInvokerContainer)container;
+               EJBProxyFactoryContainer  ic =
+                  (EJBProxyFactoryContainer)container;
                Class beanHome = ic.getHomeClass();
                Class beanRemote = ic.getRemoteClass();
                securityProxy.init(beanHome, beanRemote, securityManager);
