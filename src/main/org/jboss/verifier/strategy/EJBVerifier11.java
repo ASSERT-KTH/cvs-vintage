@@ -19,7 +19,7 @@ package org.jboss.verifier.strategy;
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  *
  * This package and its source code is available at www.jboss.org
- * $Id: EJBVerifier11.java,v 1.12 2000/08/12 00:42:13 salborini Exp $
+ * $Id: EJBVerifier11.java,v 1.13 2000/08/20 20:29:16 juha Exp $
  */
 
 
@@ -58,7 +58,7 @@ import org.jboss.metadata.EntityMetaData;
  * @see     org.jboss.verifier.strategy.AbstractVerifier
  *
  * @author 	Juha Lindfors (jplindfo@helsinki.fi)
- * @version $Revision: 1.12 $
+ * @version $Revision: 1.13 $
  * @since  	JDK 1.3
  */
 public class EJBVerifier11 extends AbstractVerifier {
@@ -69,7 +69,9 @@ public class EJBVerifier11 extends AbstractVerifier {
 
 
     /*
-     *  Constructor
+     * Constructor
+     *  
+     * @param   context
      */
     public EJBVerifier11(VerificationContext context) {
 
@@ -99,14 +101,9 @@ public class EJBVerifier11 extends AbstractVerifier {
 
     public void checkSession(SessionMetaData session) {
 
-        boolean sessionDescriptorVerified = true; //  false;
-
         boolean beanVerified   = false;
         boolean homeVerified   = false;
         boolean remoteVerified = false;
-
-        //sessionDescriptorVerified = verifySessionDescriptor();
-
 
 
         beanVerified   = verifySessionBean(session);
@@ -114,42 +111,58 @@ public class EJBVerifier11 extends AbstractVerifier {
         remoteVerified = verifySessionRemote(session);
 
 
-        if ( beanVerified && homeVerified && remoteVerified &&
-             sessionDescriptorVerified) {
+        if (beanVerified && homeVerified && remoteVerified) {
 
             /*
              * Verification for this session bean done. Fire the event
              * to tell listeneres everything is ok.
              */
-            VerificationEvent event = factory.createBeanVerifiedEvent(context);
-            context.fireBeanChecked(event);
+            fireBeanVerifiedEvent(session);
         }
     }
 
 
     public void checkEntity(EntityMetaData entity) {
-        boolean pkVerified = false;
+        
+        boolean pkVerified     = true;      // false;
+        boolean beanVerified   = false;
+        boolean homeVerified   = false;
+        boolean remoteVerified = false;
+
+        /*
+         * [TODO] verify the contents of the ejb-jar.xml:
+         *
+         *  - prim key class is fully qualified class name
+         */
+         
+        beanVerified   = verifyEntityBean(entity);
+        homeVerified   = verifyEntityHome(entity);
+        remoteVerified = verifyEntityRemote(entity);
+
 
         // will put this back later
         //pkVerified = verifyPrimaryKey(entity.getPrimaryKeyClass());
 
-        // NO IMPLEMENTATION
+        if ( beanVerified && homeVerified && remoteVerified && pkVerified) {
+
+            /*
+             * Verification for this entity bean done. Fire the event
+             * to tell listeneres everything is ok.
+             */
+            fireBeanVerifiedEvent(entity);
+        }
+
     }
 
     public StrategyContext getContext() {
         return context;
     }
 
-    public void checkMessageDriven(BeanMetaData beans) {
-
-            // EMPTY IMPLEMENTATION, EJB 2.0 ONLY
-    }
-
 
 /*
  *****************************************************************************
  *
- *  PRIVATE INSTANCE METHODS
+ *      VERIFY SESSION BEAN HOME INTERFACE
  *
  *****************************************************************************
  */
@@ -181,19 +194,19 @@ public class EJBVerifier11 extends AbstractVerifier {
              if (session.isStateless()) {
                  
                  if (!hasDefaultCreateMethod(home)) {
-                    fireSpecViolationEvent(new Section("6.8.a"));
+                    fireSpecViolationEvent(session, new Section("6.8.a"));
 
                     status = false;
                  }
                  
                  if (!hasRemoteReturnType(session, getDefaultCreateMethod(home))) {
-                     fireSpecViolationEvent(new Section("6.8.b"));;
+                     fireSpecViolationEvent(session, new Section("6.8.b"));;
                      
                      status = false;
                  }
                  
                  if (hasMoreThanOneCreateMethods(home)) {
-                     fireSpecViolationEvent(new Section("6.8.c"));
+                     fireSpecViolationEvent(session, new Section("6.8.c"));
                      
                      status = false;
                  }   
@@ -207,7 +220,7 @@ public class EJBVerifier11 extends AbstractVerifier {
              */
             if (!hasEJBHomeInterface(home)) {
                 
-                fireSpecViolationEvent(new Section("6.10.6.a"));
+                fireSpecViolationEvent(session, new Section("6.10.6.a"));
                 
                 status = false;
             }
@@ -232,21 +245,21 @@ public class EJBVerifier11 extends AbstractVerifier {
                 
                 if (!hasLegalRMIIIOPArguments(method)) {
                     
-                    fireSpecViolationEvent(new Section("6.10.6.b"));
+                    fireSpecViolationEvent(session, new Section("6.10.6.b"));
                     
                     status = false;
                 }
                 
                 if (!hasLegalRMIIIOPReturnType(method)) {
                     
-                    fireSpecViolationEvent(new Section("6.10.6.c"));
+                    fireSpecViolationEvent(session, new Section("6.10.6.c"));
                     
                     status = false;
                 }
                 
                 if (!throwsRemoteException(method)) {
                     
-                    fireSpecViolationEvent(new Section("6.10.6.d"));
+                    fireSpecViolationEvent(session, new Section("6.10.6.d"));
                     
                     status = false;
                 }
@@ -260,7 +273,7 @@ public class EJBVerifier11 extends AbstractVerifier {
              */
             if (!hasCreateMethod(home)) {
                 
-                fireSpecViolationEvent(new Section("6.10.6.e"));
+                fireSpecViolationEvent(session, new Section("6.10.6.e"));
 
                 status = false;
             }
@@ -269,10 +282,13 @@ public class EJBVerifier11 extends AbstractVerifier {
         }
         catch (ClassNotFoundException e) {
 
-            VerificationEvent event =
-                    factory.createSpecViolationEvent(context, new Section("16.2.c"));
-
-            context.fireBeanChecked(event);
+            /*
+             * The bean provider MUST specify the fully-qualified name of the
+             * enterprise bean's  home interface in the <home> element.
+             *
+             * Spec 16.2
+             */
+            fireSpecViolationEvent(session, new Section("16.2.c"));
 
             status = false;
         }
@@ -281,7 +297,13 @@ public class EJBVerifier11 extends AbstractVerifier {
 
     }
 
-    
+/*
+ *************************************************************************
+ *
+ *      VERIFY SESSION BEAN REMOTE INTERFACE
+ *
+ *************************************************************************
+ */    
     
     private boolean verifySessionRemote(SessionMetaData session) {
 
@@ -305,7 +327,7 @@ public class EJBVerifier11 extends AbstractVerifier {
              */
             if (!hasEJBObjectInterface(remote)) {
                 
-                fireSpecViolationEvent(new Section("6.10.5.a"));
+                fireSpecViolationEvent(session, new Section("6.10.5.a"));
     
                 status = false;
             }
@@ -330,21 +352,21 @@ public class EJBVerifier11 extends AbstractVerifier {
                 
                 if (!hasLegalRMIIIOPArguments(method)) {
                     
-                    fireSpecViolationEvent(new Section("6.10.5.b"));
+                    fireSpecViolationEvent(session, new Section("6.10.5.b"));
                     
                     status = false;
                 }
                 
                 if (!hasLegalRMIIIOPReturnType(method)) {
                     
-                    fireSpecViolationEvent(new Section("6.10.5.c"));
+                    fireSpecViolationEvent(session, new Section("6.10.5.c"));
                     
                     status = false;
                 }
                 
                 if (!throwsRemoteException(method)) {
                     
-                    fireSpecViolationEvent(new Section("6.10.5.d"));
+                    fireSpecViolationEvent(session, new Section("6.10.5.d"));
                     
                     status = false;
                 }
@@ -370,21 +392,21 @@ public class EJBVerifier11 extends AbstractVerifier {
                 
                 if (!hasMatchingMethodNames(remote, bean)) {
                     
-                    fireSpecViolationEvent(new Section("6.10.5.e"));
+                    fireSpecViolationEvent(session, new Section("6.10.5.e"));
                     
                     status = false;
                 }
                 
                 if (!hasMatchingMethodArgs(remote, bean)) {
                     
-                    fireSpecViolationEvent(new Section("6.10.5.f"));
+                    fireSpecViolationEvent(session, new Section("6.10.5.f"));
                     
                     status = false;
                 }
                 
                 if (!hasMatchingMethodExceptions(remote, bean)) {
                     
-                    fireSpecViolationEvent(new Section("6.10.5.g"));
+                    fireSpecViolationEvent(session, new Section("6.10.5.g"));
                     
                     status = false;
                 }
@@ -395,10 +417,13 @@ public class EJBVerifier11 extends AbstractVerifier {
         }
         catch (ClassNotFoundException e) {
 
-            VerificationEvent event =
-                    factory.createSpecViolationEvent(context, new Section("16.2.d"));
-
-            context.fireBeanChecked(event);
+            /*
+             * The Bean Provider MUST specify the fully-qualified name of the
+             * enterprise bean's remote interface in the <remote> element.
+             *
+             * Spec 16.2
+             */
+            fireSpecViolationEvent(session, new Section("16.2.d"));
 
             status = false;
         }
@@ -406,7 +431,13 @@ public class EJBVerifier11 extends AbstractVerifier {
         return status;
     }
 
-    
+/*
+ *************************************************************************
+ *
+ *      VERIFY SESSION BEAN CLASS
+ *
+ *************************************************************************
+ */    
     
     private boolean verifySessionBean(SessionMetaData session) {
 
@@ -432,7 +463,7 @@ public class EJBVerifier11 extends AbstractVerifier {
              */
             if (!hasSessionBeanInterface(bean)) {
 
-                fireSpecViolationEvent(new Section("6.5.1"));
+                fireSpecViolationEvent(session, new Section("6.5.1"));
 
                 status = false;
             }
@@ -450,13 +481,13 @@ public class EJBVerifier11 extends AbstractVerifier {
             if (hasSessionSynchronizationInterface(bean)) {
 
                 if (session.isStateless()) {
-                    fireSpecViolationEvent(new Section("6.5.3.a"));
+                    fireSpecViolationEvent(session, new Section("6.5.3.a"));
 
                     status = false;
                 }
 
                 if (session.isBeanManagedTx()) {
-                    fireSpecViolationEvent(new Section("6.5.3.b"));
+                    fireSpecViolationEvent(session, new Section("6.5.3.b"));
 
                     status = false;
                 }
@@ -470,7 +501,7 @@ public class EJBVerifier11 extends AbstractVerifier {
              */
             if (!hasEJBCreateMethod(bean)) {
                 
-                fireSpecViolationEvent(new Section("6.5.5"));
+                fireSpecViolationEvent(session, new Section("6.5.5"));
 
                 status = false;
             }
@@ -484,7 +515,7 @@ public class EJBVerifier11 extends AbstractVerifier {
              */
             if (hasSessionSynchronizationInterface(bean) && session.isBeanManagedTx()) {
 
-                fireSpecViolationEvent(new Section("6.6.1"));
+                fireSpecViolationEvent(session, new Section("6.6.1"));
 
                 status = false;
             }
@@ -494,9 +525,9 @@ public class EJBVerifier11 extends AbstractVerifier {
              *
              * Spec 6.10.2
              */
-            if (!isPublicClass(bean)) {
+            if (!isPublic(bean)) {
 
-               fireSpecViolationEvent(new Section("6.10.2.a"));
+               fireSpecViolationEvent(session, new Section("6.10.2.a"));
 
                status = false;
             }
@@ -506,9 +537,9 @@ public class EJBVerifier11 extends AbstractVerifier {
              *
              * Spec 6.10.2
              */
-            if (isFinalClass(bean)) {
+            if (isFinal(bean)) {
 
-                fireSpecViolationEvent(new Section("6.10.2.b"));
+                fireSpecViolationEvent(session, new Section("6.10.2.b"));
 
                 status = false;
             }
@@ -518,9 +549,9 @@ public class EJBVerifier11 extends AbstractVerifier {
              *
              * Spec 6.10.2
              */
-            if (isAbstractClass(bean)) {
+            if (isAbstract(bean)) {
 
-                fireSpecViolationEvent(new Section("6.10.2.c"));
+                fireSpecViolationEvent(session, new Section("6.10.2.c"));
 
                 status = false;
             }
@@ -533,7 +564,7 @@ public class EJBVerifier11 extends AbstractVerifier {
              */
             if (!hasDefaultConstructor(bean)) {
 
-                fireSpecViolationEvent(new Section("6.10.2.d"));
+                fireSpecViolationEvent(session, new Section("6.10.2.d"));
 
                 status = false;
             }
@@ -545,7 +576,7 @@ public class EJBVerifier11 extends AbstractVerifier {
              */
             if (hasFinalizer(bean)) {
 
-                fireSpecViolationEvent(new Section("6.10.2.e"));
+                fireSpecViolationEvent(session, new Section("6.10.2.e"));
 
                 status = false;
             }
@@ -568,28 +599,28 @@ public class EJBVerifier11 extends AbstractVerifier {
                     
                     Method ejbCreate = (Method)it.next();
                     
-                    if (!isPublicMember(ejbCreate)) {
+                    if (!isPublic(ejbCreate)) {
                         
-                        fireSpecViolationEvent(new Section("6.10.3.a"));
+                        fireSpecViolationEvent(session, new Section("6.10.3.a"));
                         status = false;
                     }
                     
-                    if ( (isFinalMember(ejbCreate)) ||
-                         (isStaticMember(ejbCreate)) ) {
+                    if ( (isFinal(ejbCreate)) ||
+                         (isStatic(ejbCreate)) ) {
                               
-                        fireSpecViolationEvent(new Section("6.10.3.b"));
+                        fireSpecViolationEvent(session, new Section("6.10.3.b"));
                         status = false;
                     }
                     
                     if (!hasVoidReturnType(ejbCreate)) {
                         
-                        fireSpecViolationEvent(new Section("6.10.3.c"));
+                        fireSpecViolationEvent(session, new Section("6.10.3.c"));
                         status = false;
                     }
                     
                     if (!hasLegalRMIIIOPArguments(ejbCreate)) {
                         
-                        fireSpecViolationEvent(new Section("6.10.3.d"));
+                        fireSpecViolationEvent(session, new Section("6.10.3.d"));
                         status = false;
                     }
                 }
@@ -599,11 +630,15 @@ public class EJBVerifier11 extends AbstractVerifier {
         }
         catch (ClassNotFoundException e) {
 
-            VerificationEvent event =
-                    factory.createSpecViolationEvent(context, new Section("16.2.b"));
-
-            context.fireBeanChecked(event);
-
+            /*
+             * The Bean Provider MUST specify the fully-qualified name of the
+             * Java class that implements the enterprise bean's business
+             * methods.
+             *
+             * Spec 16.2
+             */
+            fireSpecViolationEvent(session, new Section("16.2.b"));
+            
             status = false;
         }
 
@@ -611,6 +646,440 @@ public class EJBVerifier11 extends AbstractVerifier {
     }
 
 
+/*
+ *************************************************************************
+ *
+ *      VERIFY ENTITY BEAN HOME INTERFACE
+ *
+ *************************************************************************
+ */
+ 
+    private boolean verifyEntityHome(EntityMetaData entity) {
+
+        /*
+         * Indicates whether we issued warnings or not during verification.
+         * This boolean is returned to the caller.
+         */
+        boolean status = true;
+
+        String name = entity.getHome();
+        
+        try {
+            Class home = classloader.loadClass(name);
+
+
+             
+        }
+        catch (ClassNotFoundException e) {
+
+            /*
+             * The bean provider MUST specify the fully-qualified name of the
+             * enterprise bean's  home interface in the <home> element.
+             *
+             * Spec 16.2
+             */
+            fireSpecViolationEvent(entity, new Section("16.2.c"));
+
+            status = false;
+        }
+        
+        return status;
+
+    }
+
+    
+/*
+ *************************************************************************
+ *  
+ *      VERIFY ENTITY BEAN REMOTE INTERFACE
+ *
+ *************************************************************************
+ */
+    
+    private boolean verifyEntityRemote(EntityMetaData entity) {
+
+        /*
+         * Indicates whether we issued warnings or not during verification.
+         * This boolean is returned to the caller.
+         */
+        boolean status = true;
+
+        String  name   = entity.getRemote();
+
+
+        try {
+            Class home = classloader.loadClass(name);
+
+
+        }
+        catch (ClassNotFoundException e) {
+
+            /*
+             * The Bean Provider MUST specify the fully-qualified name of the
+             * enterprise bean's remote interface in the <remote> element.
+             *
+             * Spec 16.2
+             */
+            fireSpecViolationEvent(entity, new Section("16.2.d"));
+
+            status = false;
+        }
+
+        return status;
+    }
+
+    
+
+/*
+ *************************************************************************
+ *
+ *      VERIFY ENTITY BEAN CLASS
+ *
+ *************************************************************************
+ */
+    
+    private boolean verifyEntityBean(EntityMetaData entity) {
+
+        /*
+         * Indicates whether we issued warnings or not during verification.
+         * This boolean is returned to the caller.
+         */
+        boolean status = true;
+
+        String  name   = entity.getEjbClass();
+
+
+        try {
+            Class bean = classloader.loadClass(name);
+
+            /*
+             * The enterprise bean class MUST implement, directly or
+             * indirectly, the javax.ejb.EntityBean interface.
+             *
+             * Spec 9.2.2
+             */
+            if (!hasEntityBeanInterface(bean)) {
+
+                fireSpecViolationEvent(entity, new Section("9.2.2.a"));
+
+                status = false;
+            }
+            
+            /*
+             * The entity bean class MUST be defined as public.
+             *
+             * Spec 9.2.2
+             */
+            if (!isPublic(bean))  {
+                
+                fireSpecViolationEvent(entity, new Section("9.2.2.b"));
+            
+                status = false;
+            }
+            
+            /*
+             * The entity bean class MUST NOT be defined as abstract.
+             *
+             * Spec 9.2.2
+             */
+            if (isAbstract(bean)) {
+                     
+                fireSpecViolationEvent(entity, new Section("9.2.2.c"));
+                
+                status = false;
+            }
+            
+            /*
+             * The entity bean class MUST NOT be defined as final.
+             *
+             * Spec 9.2.2
+             */
+            if (isFinal(bean)) {
+            
+                fireSpecViolationEvent(entity, new Section("9.2.2.d"));
+                
+                status = false;
+            }
+            
+            /*
+             * The entity bean class MUST define a public constructor that
+             * takes no arguments
+             *
+             * Spec 9.2.2
+             */
+            if (!hasDefaultConstructor(bean)) {
+            
+                fireSpecViolationEvent(entity, new Section("9.2.2.e"));
+                
+                status = false;
+            }
+            
+            /*
+             * The entity bean class MUST NOT define the finalize() method.
+             *
+             * Spec 9.2.2
+             */
+            if (hasFinalizer(bean)) {
+                 
+                fireSpecViolationEvent(entity, new Section("9.2.2.f"));
+                 
+                status = false;
+            }
+            
+            /*
+             * The ejbCreate(...) method signatures MUST follow these rules:
+             *
+             *      - The method MUST be declared as public
+             *      - The method MUST NOT be declared as final or static
+             *      - The return type MUST be the entity bean's primary key type
+             *      - The method arguments MUST be legal types for RMI/IIOP
+             *      - The method return value type MUST be legal type for RMI/IIOP
+             *
+             * Spec 9.2.3
+             */
+            if (hasEJBCreateMethod(bean)) {
+                
+                Iterator it = getEJBCreateMethods(bean);
+                
+                while (it.hasNext()) {
+                    
+                    Method ejbCreate = (Method)it.next();
+                    
+                    if (!isPublic(ejbCreate)) {
+                        
+                        fireSpecViolationEvent(entity, new Section("9.2.3.a"));
+                        status = false;
+                    }
+                    
+                    if ( (isFinal(ejbCreate)) ||
+                         (isStatic(ejbCreate)) ) {
+                              
+                        fireSpecViolationEvent(entity, new Section("9.2.3.b"));
+                        status = false;
+                    }
+                    
+                    if (!hasPrimaryKeyReturnType(entity, ejbCreate)) {
+                        
+                        fireSpecViolationEvent(entity, new Section("9.2.3.c"));
+                        status = false;
+                    }
+                    
+                    if (!hasLegalRMIIIOPArguments(ejbCreate)) {
+                        
+                        fireSpecViolationEvent(entity, new Section("9.2.3.d"));
+                        status = false;
+                    }
+                    
+                    if (!hasLegalRMIIIOPReturnType(ejbCreate)) {
+                        
+                        fireSpecViolationEvent(entity, new Section("9.2.3.e"));
+                        status = false;
+                    }
+                }
+            }
+            
+            /*
+             * For each ejbCreate(...) method, the entity bean class MUST
+             * define a matching ejbPostCreate(...) method. 
+             *
+             * The ejbPostCreate(...) method MUST follow these rules:
+             *
+             *   - the method MUST be declared as public
+             *   - the method MUST NOT be declared as final or static
+             *   - the return type MUST be void
+             *   - the method arguments MUST be the same as the matching
+             *     ejbCreate(...) method
+             *
+             * Spec 9.2.4
+             */
+            if (hasEJBCreateMethod(bean)) {
+                
+                Iterator it =  getEJBCreateMethods(bean);
+                
+                while (it.hasNext()) {
+                    
+                    Method ejbCreate = (Method)it.next();
+                    
+                    if (!hasMatchingEJBPostCreate(bean, ejbCreate)) {
+                        
+                        fireSpecViolationEvent(entity, new Section("9.2.4.a"));
+                        
+                        status = false;
+                    }
+                    
+                    if (hasMatchingEJBPostCreate(bean, ejbCreate)) {
+                        
+                        Method ejbPostCreate = getMatchingEJBPostCreate(bean, ejbCreate);
+                        
+                        if (!isPublic(ejbPostCreate)) {
+                            
+                            fireSpecViolationEvent(entity, new Section("9.2.4.b"));
+                            
+                            status = false;
+                        }
+                        
+                        if (isStatic(ejbPostCreate)) {
+                            
+                            fireSpecViolationEvent(entity, new Section("9.2.4.c"));
+                            
+                            status = false;
+                        }
+                        
+                        if (isFinal(ejbPostCreate)) {
+                            
+                            fireSpecViolationEvent(entity, new Section("9.2.4.d"));
+                            
+                            status = false;
+                        }
+                    }
+                }
+            }
+            
+            
+            /*
+             * Every entity bean MUST define the ejbFindByPrimaryKey method.
+             *
+             * The return type for the ejbFindByPrimaryKey method MUST be the
+             * primary key type.
+             *
+             * The ejbFindByPrimaryKey method MUST be a single-object finder.
+             *
+             * Spec 9.2.5
+             */
+            if (!hasEJBFindByPrimaryKey(bean)) {
+                
+                fireSpecViolationEvent(entity, new Section("9.2.5.a"));
+                
+                status = false;
+            }
+            
+            if (hasEJBFindByPrimaryKey(bean)) {
+                
+                Method ejbFindByPrimaryKey = getEJBFindByPrimaryKey(bean);
+                
+                if (!hasPrimaryKeyReturnType(entity, ejbFindByPrimaryKey)) {
+                    
+                    fireSpecViolationEvent(entity, new Section("9.2.5.b"));
+                    
+                    status = false;
+                }
+                
+                if (!isSingleObjectFinder(entity, ejbFindByPrimaryKey)) {
+                    
+                    fireSpecViolationEvent(entity, new Section("9.2.5.c"));
+                    
+                    status = false;
+                }
+            }
+            
+            /*
+             * A finder method MUST be declared as public.
+             *
+             * A finder method MUST NOT be declared as static.
+             *
+             * A finder method MUST NOT be declared as final.
+             *
+             * The finder method argument types MUST be legal types
+             * for RMI/IIOP
+             *
+             * The finder method return type MUST be either the entity bean's
+             * primary key type, or java.lang.util.Enumeration interface or
+             * java.lang.util.Collection interface.
+             *
+             * Spec 9.2.5
+             */
+            if (hasFinderMethod(bean)) {
+                 
+                Iterator it = getFinderMethods(bean);
+                
+                while (it.hasNext()) {
+                    
+                    Method finder = (Method)it.next();
+                    
+                    if (!isPublic(finder)) {
+                        
+                        fireSpecViolationEvent(entity, new Section("9.2.5.d"));
+                        
+                        status = false;
+                    }
+                    
+                    if (isFinal(finder)) {
+                        
+                        fireSpecViolationEvent(entity, new Section("9.2.5.e"));
+                        
+                        status = false;
+                    }
+                    
+                    if (isStatic(finder)) {
+                        
+                        fireSpecViolationEvent(entity, new Section("9.2.5.f"));
+                        
+                        status = false;
+                    }
+                    
+                    if (!hasLegalRMIIIOPArguments(finder)) {
+                        
+                        fireSpecViolationEvent(entity, new Section("9.2.5.g"));
+                        
+                        status = false;
+                    }
+                    
+                    if (! (isSingleObjectFinder(entity, finder)
+                        || isMultiObjectFinder(finder))) {
+                        
+                        fireSpecViolationEvent(entity, new Section("9.2.5.h"));
+                        
+                        status = false;
+                    }
+                } 
+            }
+            
+            
+            
+            
+        }
+        catch (ClassNotFoundException e) {
+
+            /*
+             * The Bean Provider MUST specify the fully-qualified name of the
+             * Java class that implements the enterprise bean's business
+             * methods.
+             *
+             * Spec 16.2
+             */
+            fireSpecViolationEvent(entity, new Section("16.2.b"));
+            
+            status = false;
+        }
+
+        return status;
+    }
+
+    
+    
+    private void fireSpecViolationEvent(BeanMetaData bean, Section section) {
+
+        VerificationEvent event = factory.createSpecViolationEvent(context, section);
+        event.setName(bean.getEjbName());
+        
+        context.fireSpecViolation(event);
+    }
+    
+    private void fireBeanVerifiedEvent(BeanMetaData bean) {
+        
+        VerificationEvent event = factory.createBeanVerifiedEvent(context);
+        event.setName(bean.getEjbName());
+        
+        context.fireBeanChecked(event);
+    }
+
+    
+
+    
+    
+
+
+    
     private boolean verifyPrimaryKey(String className) {
         boolean status = true;
         Class cls = null;
@@ -622,7 +1091,7 @@ public class EJBVerifier11 extends AbstractVerifier {
             return false;  // Can't do any other checks if the class is null!
         }
 
-        if(!isPublicClass(cls)) {
+        if(!isPublic(cls)) {
             status = false;
             context.fireBeanChecked(new VerificationEvent(context, "Primary key class must be public (see section 9.4.7.2)."));
         }
@@ -657,12 +1126,6 @@ public class EJBVerifier11 extends AbstractVerifier {
     }
 
 
-
-
-
-
-
-
     private boolean isAllFieldsPublic(Class c) {
         try {
             Field list[] = c.getFields();
@@ -688,13 +1151,7 @@ public class EJBVerifier11 extends AbstractVerifier {
 
 
 
-    private void fireSpecViolationEvent(Section section) {
-
-        VerificationEvent event =
-                factory.createSpecViolationEvent(context, section);
-
-        context.fireBeanChecked(event);
-    }
+    
 
 
 
