@@ -24,7 +24,7 @@
 // File: FigPackage.java
 // Classes: FigPackage
 // Original Author: agauthie@ics.uci.edu
-// $Id: FigPackage.java,v 1.13 2002/10/08 20:04:31 kataka Exp $
+// $Id: FigPackage.java,v 1.14 2002/10/21 06:58:56 mkl Exp $
 
 
 package org.argouml.uml.diagram.static_structure.ui;
@@ -480,7 +480,7 @@ public class FigPackage extends FigNodeModelElement {
 		  aSize.height = 21;
 		  }
 	  
-	  int minWidth = Math.max(0, indentX +1 + _shadowSize);
+	  int minWidth = Math.max(0, w +1 + _shadowSize);
 	  if (aSize.width < minWidth) 
 		  {
 		  aSize.width = minWidth;
@@ -495,8 +495,9 @@ public class FigPackage extends FigNodeModelElement {
 								 _stereo.getMinimumSize().width);
 		  aSize.height += STEREOHEIGHT;
 		  }
+      // we want at least some of the package body to be displayed
+      aSize.height = Math.max(aSize.height, 60);
 	  // And now aSize has the answer
-
         return aSize;
   }
 
