@@ -335,10 +335,14 @@ public class MailMenu extends JMenuBar {
 
 		menuItem =
 			new CMenuItem(frameController.getStatusBar().getCancelAction());
+		
 		viewMenu.add(menuItem);
+		
 
 		menuItem = new CMenuItem("Refresh");
+		menuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_F5, 0));
 		menuItem.setIcon(ImageLoader.getSmallImageIcon("stock_refresh-16.png"));
+		
 		viewMenu.add(menuItem);
 
 		viewMenu.addSeparator();
