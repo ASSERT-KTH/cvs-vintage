@@ -160,6 +160,7 @@
 
         <!-- things to go into the web-inf directory -->
         <filter token="TEMPLATE_PATH" value="${template.path}"/>
+        <filter token="DATABASE_PROP_NAME" value="${scarab.database.prop.name}"/>
         <filter token="DATABASE_NAME" value="${scarab.database.name}"/>
         <filter token="SESSION_VALIDATOR" value="${scarab.sessionvalidator}"/>
         <filter token="USER_SERVICE" value="${scarab.user.service}"/>
@@ -261,6 +262,7 @@
         </copy>
         <!-- removing sample schema that comes packaged with torque -->
         <delete file="${torque.dir.scarab}/schema/project-schema.xml"/>
+        <filter token="DATABASE_PROP_NAME" value="${scarab.database.prop.name}"/>
         <filter token="DATABASE_NAME" value="${scarab.database.name}"/>
         <copy file="${src.sql.dir}/${project}-schema.xml" 
               todir="${torque.dir.scarab}/schema"
