@@ -97,7 +97,7 @@ import java.util.*;
  * it makes a significant difference when normalizing attributes,
  * which is done for each start-element construct.
  *
- * @version $Revision: 1.4 $
+ * @version $Revision: 1.5 $
  */
 public final class SimpleHashtable implements Enumeration
 {
@@ -166,6 +166,7 @@ public final class SimpleHashtable implements Enumeration
     public Enumeration keys() {
 	currentBucket = 0;
 	current = null;
+	hasMoreElements();
 	return this;
     }
 
@@ -197,6 +198,9 @@ public final class SimpleHashtable implements Enumeration
 	    throw new IllegalStateException ();
 	retval = current.key;
 	current = current.next;
+	// Advance to the next position ( we may call next after next,
+	// without hasMore )
+	hasMoreElements();
 	return retval;
     }
 
