@@ -342,6 +342,8 @@ public class StatusBar extends JComponent implements TaskManagerListener,
 			progressBar.setValue(displayedWorker.getProgressBarValue());
 			progressBar.setMaximum(displayedWorker.getProgessBarMaximum());
 		}
+		else
+		  label.setText("");//at least clear the text!
 	}
 
 	/**
