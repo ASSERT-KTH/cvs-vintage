@@ -143,7 +143,7 @@ public class ForgotPassword extends ScarabTemplateAction
                                "Scarab System"),
                 Turbine.getConfiguration()
                     .getString("scarab.email.forgotpassword.fromAddress",
-                               "help@scarab.tigris.org"));
+                               "help@localhost"));
             te.setSubject(
                 Turbine.getConfiguration()
                     .getString("scarab.email.forgotpassword.subject",

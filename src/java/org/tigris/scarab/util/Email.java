@@ -68,7 +68,7 @@ import org.tigris.scarab.om.Module;
  * @author <a href="mailto:jon@collab.net">Jon Scott Stevens</a>
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: Email.java,v 1.3 2002/04/04 00:57:08 jon Exp $
+ * @version $Id: Email.java,v 1.4 2002/07/03 22:37:42 jon Exp $
  */
 public class Email
 {
@@ -128,7 +128,7 @@ public class Email
                            (key + ".fromName", "Scarab System"), 
                            Turbine.getConfiguration().getString
                            (key + ".fromAddress",
-                            "help@scarab.tigris.org"));
+                            "help@localhost"));
             }
             
             if (subject == null)

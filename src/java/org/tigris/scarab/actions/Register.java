@@ -83,7 +83,7 @@ import org.tigris.scarab.om.Module;
  * Action.
  *   
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: Register.java,v 1.25 2002/05/30 01:00:57 jon Exp $
+ * @version $Id: Register.java,v 1.26 2002/07/03 22:39:01 jon Exp $
  */
 public class Register extends ScarabTemplateAction
 {
@@ -222,7 +222,7 @@ public class Register extends ScarabTemplateAction
                                 "Scarab System"), 
                 Turbine.getConfiguration()
                     .getString("scarab.email.register.fromAddress",
-                                "register@scarab.tigris.org"));
+                                "register@localhost"));
             te.setSubject(
                 Turbine.getConfiguration()
                     .getString("scarab.email.register.subject",
@@ -452,7 +452,7 @@ public class Register extends ScarabTemplateAction
                            "Scarab System"), 
             Turbine.getConfiguration()
                 .getString("scarab.email.register.fromAddress",
-                           "register@scarab.tigris.org"));
+                           "register@localhost"));
         te.setSubject(
             Turbine.getConfiguration()
                 .getString("scarab.email.register.subject",
