@@ -13,22 +13,32 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
 //
 //All Rights Reserved.
+
 package org.columba.core.gui.checkabletree;
 
 import javax.swing.JTree;
-
+import javax.swing.BorderFactory;
 
 /**
+ * A tree with items that can be checked or unchecked. This is
+ * useful if you want to let the user select items from a hierarchical
+ * realm.
+ *
  * @author fdietz
  */
 public class CheckableTree extends JTree {
+    
+    /**
+     * Creates a new checkable tree using a dummy root node.
+     */
     public CheckableTree() {
-        super(new CheckableItemImpl("root"));
-
-        setCellRenderer(new CheckRenderer());
+        this(new CheckableItemImpl("root"));
     }
     
-    public CheckableTree( CheckableItem root) {
+    /**
+     * Creates a new checkable tree using the given root node.
+     */
+    public CheckableTree(CheckableItem root) {
         super(root);
         
         setCellRenderer(new CheckRenderer());
