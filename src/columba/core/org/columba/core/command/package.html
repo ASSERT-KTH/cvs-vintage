@@ -37,6 +37,18 @@ all resources they need are free at once. Which is no problem, because for
 example a "copy message from folder a to folder b" operation needs only two 
 resources: folder a and folder b.
 
+The org.columba.core.command.Command class has two methods. The execute-method is for time consuming background tasks, the updateGUI-method is called after the execute-method is finished (the thread is finished). The nice thing about updateGUI() is that is called in the awt-event dispatcher thread. It is therefore thread-safe, and can be used to update the gui.
+
+Note, that execute() has Worker in its signature, which has a couple of methods to display a text in the statusbar, or updating the progressbar.
+
+Worker registers at the taskmanager, which is basically the model for statusbar. We use an easy listener pattern to register all the workers.
+
+This makes it easy for commands to send status updates.
+
+Then we have actions in org.columba.core.action. These provide the glue between the gui-elements and the commands. An action initializes a command and passes it along to the Processor (task scheduler) to execute.
+
+You can find many examples in the packages ending with "action" and "command". Adapting, this schema should be pretty easy for developers. 
+
 
 </body>
 </html>

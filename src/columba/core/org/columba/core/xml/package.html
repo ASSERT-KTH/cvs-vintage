@@ -28,6 +28,21 @@ All Rights Reserved.
 
 Very simple sax-based XML configuration backend.
 
+A more complete example on using the backend:
+
+<pre>
+// use a path-like navigation to get the interesting option
+// first part is getting the file "options.xml" from the "mail" directory (MailOptions)
+// we also have the same for addressbook -> AddressbookOptions
+// second part address the xml-treenode "/options/gui/html"
+XmlElement preferHtml = MailConfig.get("options").getElement("/options/gui/html");
+
+// register as observer
+preferHtml.addObserver(this);
+
+// example of getting a property
+String enableHtml = preferHtml.getAttribute("enable"); 
+</pre>
 
 </body>
 </html>
