@@ -58,7 +58,7 @@ import org.apache.velocity.app.event.ReferenceInsertionEventHandler;
  * only filter references that need to be filtered. But it is a start.
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: ReferenceInsertionFilter.java,v 1.5 2002/01/23 02:06:03 jon Exp $
+ * @version $Id: ReferenceInsertionFilter.java,v 1.6 2002/01/23 08:20:04 jon Exp $
  */
 public class ReferenceInsertionFilter
     implements ReferenceInsertionEventHandler
@@ -93,7 +93,7 @@ public class ReferenceInsertionFilter
         else if (
                 // don't filter links!
                 ! (value instanceof org.tigris.scarab.util.ScarabLink) &&
-                ! (value instanceof org.tigris.scarab.screens.SelectModule$ModuleSwitchingLink)
+                ! (value instanceof org.tigris.scarab.screens.SelectModule.ModuleSwitchingLink)
                 )
         {
             // We convert the object to a string and output the result
