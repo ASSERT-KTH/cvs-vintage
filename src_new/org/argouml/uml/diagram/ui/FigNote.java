@@ -1,4 +1,4 @@
-// $Id: FigNote.java,v 1.7 2003/06/29 23:52:20 linus Exp $
+// $Id: FigNote.java,v 1.8 2003/10/12 09:08:50 alexb Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,7 +25,7 @@
 // File: FigNote.java
 // Classes: FigNote
 // Original Author: your email address here
-// $Id: FigNote.java,v 1.7 2003/06/29 23:52:20 linus Exp $
+// $Id: FigNote.java,v 1.8 2003/10/12 09:08:50 alexb Exp $
 
 package org.argouml.uml.diagram.ui;
 
@@ -37,7 +37,14 @@ import org.tigris.gef.base.Globals;
 import org.tigris.gef.graph.GraphModel;
 import org.tigris.gef.presentation.FigRect;
 
-/** Class to display graphics for a UML MState in a diagram. */
+/** Renders a Comment in a diagram.
+ *
+ * @deprecated as of 0.15.1, but don't remove becuase it is need for loading
+ *             'old' .zargo project files, replaced by 
+ *             {@link org.argouml.uml.diagram.static_structure.ui.FigComment 
+ *             FigComment}
+ *
+ */
 
 public class FigNote extends FigNodeModelElement {
 
