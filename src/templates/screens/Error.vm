@@ -13,7 +13,7 @@ found (404) and is probably the result of a broken link.
 
 If the stack trace has something else, please enter a copy of the stack
 trace <strong>and an explanation of what you did to cause it</strong> to the 
-<a href="http://scarab.tigris.org/servlets/ProjectIssues">Issue Tracking System</a> for analysis. If you are a developer and think you 
+<a href="http://scarab.tigris.org/issues.html">Issue Tracking System</a> for analysis. If you are a developer and think you 
 know what the problem is, feel free to send in a patch to fix the
 problem.
 </pre>
