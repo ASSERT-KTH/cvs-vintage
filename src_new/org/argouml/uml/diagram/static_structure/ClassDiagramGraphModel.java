@@ -1,4 +1,4 @@
-// $Id: ClassDiagramGraphModel.java,v 1.69 2005/01/22 22:08:44 bobtarling Exp $
+// $Id: ClassDiagramGraphModel.java,v 1.70 2005/01/23 19:41:06 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -368,7 +368,7 @@ public class ClassDiagramGraphModel extends UMLMutableGraphSupport
         if (!containsNode(end0)) {
             return false;
         }
-            if (!containsNode(end1)) {
+        if (!containsNode(end1)) {
             return false;
         }
         
