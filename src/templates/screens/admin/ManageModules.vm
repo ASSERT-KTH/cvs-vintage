@@ -1,4 +1,4 @@
-$page.setTitle("Manage Modules ")
+$page.setTitle("Manage modules ")
 
 #set ($userModules = $data.User.EditableModules)
 <div id="managemodule" class="app">
