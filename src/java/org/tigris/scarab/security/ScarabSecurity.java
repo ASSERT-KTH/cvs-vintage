@@ -55,7 +55,7 @@ import org.tigris.scarab.om.ScarabUser;
  * Constants for permissions should be grouped here as well.
  *
  * @author <a href="mailto:jmcnally@collab.net">John D. McNally</a>
- * @version $Id: ScarabSecurity.java,v 1.8 2001/08/13 20:38:18 jmcnally Exp $
+ * @version $Id: ScarabSecurity.java,v 1.9 2001/08/29 23:53:39 elicia Exp $
 */
 public interface ScarabSecurity
 {
@@ -71,6 +71,12 @@ public interface ScarabSecurity
      * Specifies that a User is allowed to enter an issue.
      */
     public static final String ISSUE__ENTER = "Issue | Enter";
+
+    /** 
+     * Specifies that a User is allowed to approve a query.
+     */
+    public static final String QUERY__APPROVE = "Query | Approve";
+
 
     /**
      * Determine if a user has a permission within a module.
