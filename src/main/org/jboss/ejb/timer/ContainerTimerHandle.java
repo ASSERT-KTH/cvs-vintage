@@ -19,7 +19,7 @@ import javax.management.ObjectName;
  * The TimerHandle interface is implemented by all EJB timer handles.
  *
  * @author <a href="mailto:andreas.schaefer@madplanet.com">Andreas Schaefer</a>
- * @version $Revision: 1.4 $
+ * @version $Revision: 1.5 $
  **/
 public class ContainerTimerHandle
     implements TimerHandle
@@ -50,7 +50,7 @@ public class ContainerTimerHandle
          EJBException
    {
       if( mTimer != null ) {
-         if( mTimer.isValid() ) {
+         if( mTimer.isValid() == false ) {
             throw new NoSuchObjectLocalException( "Timer is cancelled and no longer available" );
          }
       } else {
