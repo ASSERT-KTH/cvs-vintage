@@ -49,7 +49,7 @@ import org.jboss.logging.Logger;
 * just implementing the Proxy generation calls. Separation of concern. 
 *
 *  @author <a href="mailto:marc.fleury@jboss.org">Marc Fleury</a>
-*  @version $Revision: 1.7 $
+*  @version $Revision: 1.8 $
 *
 *  <p><b>Revisions:</b><br>
 *  <p><b>2001/12/30: billb</b>
@@ -58,7 +58,7 @@ import org.jboss.logging.Logger;
 *  </ol>
 */
 public class ProxyFactory
-implements ContainerInvoker
+   implements ContainerInvoker
 {
    // Metadata for the proxies
    public EJBMetaData ejbMetaData ;
@@ -98,9 +98,9 @@ implements ContainerInvoker
        
       // We keep the hashCode around for fast creation of proxies
       objectName = jmx.hashCode();
-      
       Registry.bind(new Integer(objectName), jmx);
-      
+      log.debug("Bound jmxName="+jmx+", hash="+objectName+"into Registry");
+
       // Create metadata
       
       /**

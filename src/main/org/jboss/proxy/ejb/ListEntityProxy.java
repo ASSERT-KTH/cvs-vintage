@@ -14,7 +14,6 @@ import java.io.IOException;
 import java.io.ObjectOutput;
 import java.io.ObjectInput;
 
-import java.rmi.MarshalledObject;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 
@@ -30,7 +29,7 @@ import org.jboss.ejb.ListCacheKey;
 * is used for reading ahead.
 *
 * @author <a href="mailto:on@ibis.odessa.ua">Oleg Nitz</a>
-* @version $Revision: 1.2 $
+* @version $Revision: 1.3 $
 */
 public class ListEntityProxy
 extends EntityProxy

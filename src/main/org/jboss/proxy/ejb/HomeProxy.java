@@ -9,7 +9,6 @@ package org.jboss.proxy.ejb;
 import java.io.IOException;
 import java.io.ObjectOutput;
 import java.io.ObjectInput;
-import java.rmi.MarshalledObject;
 
 import java.lang.reflect.Method;
 import java.util.HashMap;
@@ -36,7 +35,7 @@ import org.jboss.ejb.plugins.jrmp.server.JRMPContainerInvoker;
 * The client-side proxy for an EJB Home object.
 *      
 * @author <a href="mailto:marc.fleury@jboss.org">Marc Fleury</a>
-* @version $Revision: 1.7 $
+* @version $Revision: 1.8 $
 *
 * <p><b>2001/11/21: marcf</b>
 * <ol>

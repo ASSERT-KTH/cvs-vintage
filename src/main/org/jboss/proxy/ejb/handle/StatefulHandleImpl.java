@@ -9,7 +9,6 @@ package org.jboss.proxy.ejb.handle;
 
 import java.rmi.RemoteException;
 import java.rmi.ServerException;
-import java.rmi.MarshalledObject;
 import java.lang.reflect.Method;
 
 import java.util.Hashtable;
@@ -31,7 +30,7 @@ import org.jboss.security.SecurityAssociation;
  * @author  <a href="mailto:jason@planet57.com">Jason Dillon</a>
  * @author  <a href="mailto:jason@planet57.com">Jason Dillon</a>
  * @author <a href="bill@burkecentral.com">Bill Burke</a>
- * @version $Revision: 1.5 $
+ * @version $Revision: 1.6 $
  *
  * <p><b>Revisions:</b><br>
  * <p><b>2002/01/09: billb</b>

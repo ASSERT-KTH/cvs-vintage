@@ -11,7 +11,6 @@ import java.io.ObjectOutput;
 import java.io.ObjectInput;
 
 import java.util.HashMap;
-import java.rmi.MarshalledObject;
 import java.lang.reflect.Method;
 
 import javax.naming.InitialContext;
@@ -27,7 +26,7 @@ import org.jboss.proxy.ejb.handle.EntityHandleImpl;
 /**
 * An EJB entity bean proxy class.
 * @author <a href="mailto:marc.fleury@jboss.org">Marc Fleury</a>
-* @version $Revision: 1.5 $
+* @version $Revision: 1.6 $
 *
 * <p><b>2001/11/19: marcf</b>
 * <ol>

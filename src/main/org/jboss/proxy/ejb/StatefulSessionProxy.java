@@ -11,7 +11,6 @@ import java.io.ObjectOutput;
 import java.io.ObjectInput;
 
 import java.lang.reflect.Method;
-import java.rmi.MarshalledObject;
 import java.util.HashMap;
 
 import javax.naming.InitialContext;
@@ -29,7 +28,7 @@ import org.jboss.proxy.ejb.handle.StatefulHandleImpl;
 * An EJB stateful session bean proxy class.
 *   
 * @author <a href="mailto:marc.fleury@jboss.org">Marc Fleury</a>
-* @version $Revision: 1.6 $
+* @version $Revision: 1.7 $
 *
 * <p><b>2001/11/23: marcf</b>
 * <ol>
