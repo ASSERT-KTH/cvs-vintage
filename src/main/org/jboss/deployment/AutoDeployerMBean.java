@@ -16,7 +16,7 @@ import org.jboss.system.ServiceMBean;
  * 
  * @author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
  * @author <a href="mailto:toby.allsopp@peace.com">Toby Allsopp</a>
- * @version $Revision: 1.1 $
+ * @version $Revision: 1.2 $
  */
 public interface AutoDeployerMBean
    extends ServiceMBean
@@ -67,6 +67,24 @@ public interface AutoDeployerMBean
     * @return The timeout in miliseconds
     */
    int getTimeout();
+   
+   /**
+    * @return True if this Auto Deployer runs a initial deployment in the starting
+    *         thread
+    **/
+   public boolean isWithInitialRun();
+   
+   /**
+    * Set if the AutoDeployer should run an intial deployment in the starting
+    * thread or wait until the deployer thread picks it up. This is important
+    * to be set to false when the AutoDeployer is deployed within a service
+    * deployed by the AutoDeployer because this causes the entire auto deployment
+    * to hand.
+    *
+    * @param pWithInitialRun True if the initial run should be performed by the
+    *                        starting thread.
+    **/
+   public void setWithInitialRun( boolean pWithInitialRun );
 
 }
 

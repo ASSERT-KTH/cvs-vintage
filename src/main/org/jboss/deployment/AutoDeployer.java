@@ -49,11 +49,16 @@ import org.jboss.system.ServiceMBeanSupport;
  * will not be deployed until that deployer does exist (is registered with main
  * MBeanServer).
  *
+ * If another Auto Deployer is deployed by an AutoDeployer then the initial deployment
+ * must be switched of to avoid the auto deployment to hang (see {@link #setWithInitialRun
+ * setWithInitialRun()}).
+ *
  * @see org.jboss.deployment.J2eeDeployer
  * @author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
  * @author <a href="mailto:toby.allsopp@peace.com">Toby Allsopp</a>
  * @author <a href="mailto:David.Maplesden@orion.co.nz">David Maplesden</a>
- * @version $Revision: 1.4 $
+ * @author <a href="mailto:andreas@jboss.org">Andreas Schaefer</a>
+ * @version $Revision: 1.5 $
  */
 public class AutoDeployer
        extends ServiceMBeanSupport
@@ -107,6 +112,12 @@ public class AutoDeployer
     */
    int timeout = 3000;
 
+   /**
+    * WithInitialRun indicates if a deployment should be performed by the
+    * starting thread or not. Default is true.
+    */
+   boolean withInitialRun = true;
+   
    /**
     * Filters, one per configured deployer, to decide which files are deployable
     * and which should be ignored.
@@ -207,6 +218,14 @@ public class AutoDeployer
       return timeout;
    }
 
+   public boolean isWithInitialRun() {
+      return withInitialRun;
+   }
+   
+   public void setWithInitialRun( boolean pWithInitialRun ) {
+      withInitialRun = pWithInitialRun;
+   }
+   
    // ServiceMBeanSupport overrides ---------------------------------
 
    /**
@@ -484,9 +503,11 @@ public class AutoDeployer
       // during the pre-deploy are not missed.
       server.addNotificationListener(new ObjectName("JMImplementation:type=MBeanServerDelegate"),this,null,null);
 
-      // Pre-deploy. This is done so that deployments available
-      // on start of container is deployed ASAP
-      run();
+      if( withInitialRun ) {
+         // Pre-deploy. This is done so that deployments available
+         // on start of container is deployed ASAP
+         run();
+      }
 
       // Start auto deploy thread
       running = true;
