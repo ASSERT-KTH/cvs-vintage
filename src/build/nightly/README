@@ -59,7 +59,7 @@ functions_build.sh -> various shell functions ( I use to source it and
 Build Functions
 ===============
 
-build_tomcat SUFIX TARGET -> build and zip the result
+build_tomcat SUFIX TARGET -> build, add jaxp1.0 and zip the result
 ant_build REPOSITORY DISTNAME LOGFILE TARGET -> use ant to build 
           repository ( jakarta-tomcat ) into DISTNAME ( tomcat ), 
 	  with log ( build-full.log ) and using TARGET ( main )

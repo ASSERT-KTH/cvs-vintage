@@ -4,10 +4,7 @@
 
 ######## MAIN 
 
-ROOT=$WS/dist
-if [ "$1" = "-b" ] ; then 
-    ROOT=$WS/build
-fi
+ROOT=$WS/jakarta-tomcat/dist
 
 CLASSPATH=$ANT_HOME/lib/parser.jar:$CLASSPATH
 CLASSPATH=$ANT_HOME/lib/jaxp.jar:$CLASSPATH

@@ -4,13 +4,7 @@
 
 ######## MAIN 
 
-ROOT=$WS/dist
-if [ "$1" = "-b" ] ; then 
-    ROOT=$WS/build
-    BUILD=true
-    echo Using build $1
-    shift
-fi
+TOMCAT_HOME=$WS/jakarta-tomcat/dist
 if [ "$1" = "-s" ] ; then
     NOSTART=true;
     echo No start
@@ -23,28 +17,21 @@ CLASSPATH=$ANT_HOME/lib/jaxp.jar:$CLASSPATH
 CLASSPATH=$ANT_HOME/lib/ant.jar:$CLASSPATH
 export CLASSPATH
 
-cd $ROOT
+cd $TOMCAT_HOME
 
-cp $ANT_HOME/lib/ant.jar $ROOT/watchdog/lib
-
-#rm -rf tomcat/webapps/jsp-tests >/dev/null 2>&1 
-#rm -rf tomcat/webapps/servlet-tests >/dev/null 2>&1 
-if [ "$BUILD" != "" ]; then
-    ln -s $ROOT/watchdog/webapps/jsp-tests tomcat/webapps >/dev/null 2>&1 
-    ln -s $ROOT/watchdog/webapps/servlet-tests tomcat/webapps >/dev/null 2>&1 
-else
-    ln -s $ROOT/watchdog/webapps/jsp-tests.war tomcat/webapps >/dev/null 2>&1 
-    ln -s $ROOT/watchdog/webapps/servlet-tests.war tomcat/webapps >/dev/null 2>&1 
-fi
+cp $ANT_HOME/lib/ant.jar $TOMCAT_HOME/watchdog/lib
+    
+ln -s $WS/dist/watchdog/webapps/jsp-tests.war tomcat/webapps >/dev/null 2>&1 
+ln -s $WS/dist/watchdog/webapps/servlet-tests.war tomcat/webapps >/dev/null 2>&1 
 
 echo ---------- Start  tomcat `date` ---------- 
-echo WS=$ROOT EXT=$EXT 
+echo WS=$TOMCAT_HOME EXT=$EXT 
 
 echo Start `date` >$LOGDIR/watchdog-$EXT-1.log 2>&1 
 
 # Port 9080
-mv $ROOT/tomcat/conf/server.xml $ROOT/tomcat/conf/server.xml.orig
-sed s/8080/9080/ <$ROOT/tomcat/conf/server.xml.orig >$ROOT/tomcat/conf/server.xml
+mv $TOMCAT_HOME/tomcat/conf/server.xml $TOMCAT_HOME/tomcat/conf/server.xml.orig
+sed s/8080/9080/ <$TOMCAT_HOME/tomcat/conf/server.xml.orig >$TOMCAT_HOME/tomcat/conf/server.xml
 
 if [ "$NOSTART" = "" ]; then
     if [ "$BUILD" = "" ]; then
@@ -60,7 +47,7 @@ if [ "$NOSTART" = "" ]; then
     fi
 fi
 
-cd $ROOT/watchdog
+cd $WS/dist/watchdog
 WATCHDOG_HOME=`pwd`
 export WATCHDOG_HOME
 
@@ -69,6 +56,9 @@ export WATCHDOG_HOME
 echo 
 echo ---------- Running watchdog `date` ---------- 
 echo JAVA_VERSION `$JAVA_HOME/bin/java -version`
+
+PATH_ORIG=$PATH
+PATH=$PATH:$JAVA_HOME/bin
 
 rm -rf $TOMCAT_HOME/work/DEFAULT/jsp-tests/jsp/tagext
 time bin/watchdog.sh all localhost 9080 >>$LOGDIR/watchdog-$EXT-1.log 2>&1 
@@ -116,7 +106,9 @@ count_errors $LOGDIR/sanity-$EXT
 PATH=$X
 export PATH
 
+PATH=$PATH_ORIG
+
 if [ "$NOSTART" = "" ]; then
-   stop_tomcat.sh >>$LOGDIR/watchdog-$EXT-1.log 2>&1 
+    stop_tomcat.sh >>$LOGDIR/watchdog-$EXT-1.log 2>&1 
 fi
 

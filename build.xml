@@ -24,7 +24,7 @@
        is installed in the same directory ).
        
        Note that this assumes binary packages ( i.e. dists )
-   --
+   -->
   <property name="install.dir" value=".." /> 
 
 

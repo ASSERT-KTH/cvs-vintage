@@ -1,3 +1,4 @@
+
 #!/bin/sh
 
 # Config: ZIPDIR CVSROOT ANT_HOME JAVA_HOME
@@ -119,10 +120,10 @@ ant_build() {
   $JAVA_HOME/bin/java -version  >> $LOG 2>&1
 
   cd $WS/$MOD
-  echo rm -rf $WS/build/$DIST >> $LOG 2>&1
-  echo rm -rf $WS/dist/$DIST  >> $LOG 2>&1
-  rm -rf $WS/build/$DIST >> $LOG 2>&1
-  rm -rf $WS/dist/$DIST  >> $LOG 2>&1
+  echo rm -rf $WS/jakarta-tomcat/build/$DIST >> $LOG 2>&1
+  echo rm -rf $WS/jakarta-tomcat/dist/$DIST  >> $LOG 2>&1
+  rm -rf $WS/jakarta-tomcat/build/$DIST >> $LOG 2>&1
+  rm -rf $WS/jakarta-tomcat/dist/$DIST  >> $LOG 2>&1
 
   JAVACMD=$JAVA_HOME/bin/java
   export JAVACMD
@@ -149,7 +150,7 @@ zip_src() {
   cd $WS
   echo 
   echo zip -r  $ZIPNAME $MOD
-  zip -r $MOD >/dev/null
+  zip -r $MOD -x \*CVS\* >/dev/null
   mv zip.zip $ZIPDIR/$ZIPNAME
   echo 
 }
@@ -161,7 +162,7 @@ zip_dist() {
   echo 
   echo Creating $DIST distribution in $ZIPDIR:
   echo $ARCH.tar.gz $ARCH.zip
-  cd $WS/dist
+  cd $WS/jakarta-tomcat/dist
 
   rm -f $ZIPDIR/$ARCH.tar >/dev/null 2>&1
   rm -f $ZIPDIR/$ARCH.tar.gz >/dev/null 2>&1
@@ -173,18 +174,12 @@ zip_dist() {
   echo 
 }	
 
-fix_tomcat() {
-
-  cp $ANT_HOME/lib/parser.jar $WS/dist/tomcat/lib
-  cp $ANT_HOME/lib/jaxp.jar $WS/dist/tomcat/lib
-}
-
-## Will build tomcat and zip the result
+## Will build tomcat, copy the jaxp files, and zip the result
 build_tomcat() {
   SUFIX=$1
   TARGET=$2
   
-  ant_build jakarta-tomcat tomcat tomcat-build-$SUFIX.log $TARGET
+  ant_build jakarta-tomcat tomcat tomcat-build-$SUFIX.log "$TARGET"
   zip_dist tomcat tomcat-$SUFIX 
 }
 
