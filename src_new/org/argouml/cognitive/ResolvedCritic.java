@@ -1,4 +1,4 @@
-// $Id: ResolvedCritic.java,v 1.8 2004/07/17 16:20:56 mvw Exp $
+// $Id: ResolvedCritic.java,v 1.9 2004/09/05 10:32:30 mvw Exp $
 // Copyright (c) 2002-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -47,23 +47,23 @@ public class ResolvedCritic
     private static final Logger LOG = Logger.getLogger(ResolvedCritic.class);
 
     /** The name of the critic. */
-    String critic;
+    private String critic;
 
     /** The IDs of the objects that define the context of the critic. */
-    Vector offenders;
+    private Vector offenders;
 
     /**
      * Creates a new ResolvedCritic using the name of the Critic and the
      * Vector of objects that triggered the Critic given as parameters.
      *
-     * @param	critic	The name of the Critic that has been resolved
-     * @param	offenders	The Vector of related objects.
+     * @param	cr	The name of the Critic that has been resolved
+     * @param	offs	The Vector of related objects.
      */
-    public ResolvedCritic(String critic, Vector offenders)
+    public ResolvedCritic(String cr, Vector offs)
     {
-	this.critic = critic;
-	if (offenders != null && offenders.size() > 0)
-	    this.offenders = new Vector(offenders);
+	this.critic = cr;
+	if (offs != null && offs.size() > 0)
+	    this.offenders = new Vector(offs);
 	else
 	    this.offenders = null;
     }
@@ -141,6 +141,8 @@ public class ResolvedCritic
      * @param	obj	Object to compare to.
      * @return	True if equal according to the description, false
      *		otherwise.
+     *
+     * @see java.lang.Object#equals(java.lang.Object)
      */
     public boolean equals(Object obj)
     {

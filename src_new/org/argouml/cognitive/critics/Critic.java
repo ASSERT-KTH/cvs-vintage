@@ -1,4 +1,4 @@
-// $Id: Critic.java,v 1.37 2004/09/04 21:33:02 mvw Exp $
+// $Id: Critic.java,v 1.38 2004/09/05 10:32:51 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,7 +25,7 @@
 // File: Critic.java
 // Classes: Critic
 // Original Author: jrobbins@ics.uci.edu
-// $Id: Critic.java,v 1.37 2004/09/04 21:33:02 mvw Exp $
+// $Id: Critic.java,v 1.38 2004/09/05 10:32:51 mvw Exp $
 
 
 package org.argouml.cognitive.critics;
@@ -943,11 +943,12 @@ public class Critic implements Poster, Serializable {
     }
 
     /** TODO: Not implemented yet. If the given ToDoItem can
-     *  be fixed automaically, and the user wants that to happen, then do
+     *  be fixed automatically, and the user wants that to happen, then do
      *  it. Obviously, this depends on the specific Critic and
      *  problem. By default this method does nothing.
      *
-     * @see Critic#canFixIt */
+     * @see Critic#canFixIt 
+     */
     public void fixIt(ToDoItem item, Object arg) { }
 
     /** 

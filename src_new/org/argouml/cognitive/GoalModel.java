@@ -1,4 +1,4 @@
-// $Id: GoalModel.java,v 1.5 2003/08/30 20:09:52 alexb Exp $
+// $Id: GoalModel.java,v 1.6 2004/09/05 10:32:30 mvw Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -27,7 +27,7 @@
 // File: GoalModel.java
 // Classes: GoalModel
 // Original Author: jrobbins@ics.uci.edu
-// $Id: GoalModel.java,v 1.5 2003/08/30 20:09:52 alexb Exp $
+// $Id: GoalModel.java,v 1.6 2004/09/05 10:32:30 mvw Exp $
 
 
 package org.argouml.cognitive;
@@ -47,28 +47,42 @@ import java.util.Vector;
 
 public class GoalModel extends Observable implements Serializable 
 {
-    ////////////////////////////////////////////////////////////////
-    // instance variables
+    private Vector goals = new Vector();
 
-    private Vector _goals = new Vector();
-
-    ////////////////////////////////////////////////////////////////
-    // constructor
-
+    /**
+     * The constructor.
+     * 
+     */
     public GoalModel() {
-	addGoal(Goal.UNSPEC);
+	addGoal(Goal.getUnspecifiedGoal());
     }
 
     ////////////////////////////////////////////////////////////////
     // accessors
 
-    public Vector getGoals() { return _goals; }
-    public void addGoal(Goal g) { _goals.addElement(g); }
-    public void removeGoal(Goal g) { _goals.removeElement(g); }
+    /**
+     * @return the list of goals
+     */
+    public Vector getGoals() { return goals; }
+    
+    /**
+     * @param g the goal to be added
+     */
+    public void addGoal(Goal g) { goals.addElement(g); }
+    
+    /**
+     * @param g the goal to be removed
+     */
+    public void removeGoal(Goal g) { goals.removeElement(g); }
   
-    /** Reply true iff the Designer wants to achieve the given goal. */
+    /** 
+     * Reply true iff the Designer wants to achieve the given goal. 
+     * 
+     * @param goalName the given goal
+     * @return true if the designer wants this
+     */
     public boolean hasGoal(String goalName) {
-	Enumeration goalEnum = _goals.elements();
+	Enumeration goalEnum = goals.elements();
 	while (goalEnum.hasMoreElements()) {
 	    Goal g = (Goal) goalEnum.nextElement();
 	    if (g.getName().equals(goalName)) return g.getPriority() > 0;
@@ -76,28 +90,40 @@ public class GoalModel extends Observable implements Serializable
 	return false;
     }
 
+    /**
+     * @param goalName the given goal
+     * @param priority the new priority for the goal
+     */
     public synchronized void setGoalPriority(String goalName, int priority) {
 	Goal g = new Goal(goalName, priority);
-	_goals.removeElement(g);
-	_goals.addElement(g);
+	goals.removeElement(g);
+	goals.addElement(g);
     }
 
     //   public Object getGoalInfo(String goal) {
     //     return _goals.getProperty(goal);
-    //     /* TODO, we need a better representation of goals */
+    //     /* TODO: we need a better representation of goals */
     //   }
 
     //   public void setGoalInfo(String goal, String info) {
     //     _goals.put(goal, info);
-    //     /* TODO, we need a better representation of goals */
+    //     /* TODO: we need a better representation of goals */
     //   }
 
-    /** The Designer wants to achieve the given goal. */
+    /** 
+     * The Designer wants to achieve the given goal.
+     * 
+     * @param goalName the wanted goal
+     */
     public void startDesiring(String goalName) {
 	addGoal(new Goal(goalName, 1));
     }
 
-    /** The Designer does not care about the given goal. */
+    /** 
+     * The Designer does not care about the given goal. 
+     * 
+     * @param goalName the unwanted goal
+     */
     public void stopDesiring(String goalName) {
 	removeGoal(new Goal(goalName, 0));
     }

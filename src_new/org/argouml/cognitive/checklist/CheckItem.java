@@ -1,4 +1,4 @@
-// $Id: CheckItem.java,v 1.5 2004/09/05 06:46:44 mvw Exp $
+// $Id: CheckItem.java,v 1.6 2004/09/05 10:32:30 mvw Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -27,7 +27,7 @@
 // File: CheckItem.java
 // Classes: CheckItem
 // Original Author: jrobbins@ics.uci.edu
-// $Id: CheckItem.java,v 1.5 2004/09/05 06:46:44 mvw Exp $
+// $Id: CheckItem.java,v 1.6 2004/09/05 10:32:30 mvw Exp $
 
 package org.argouml.cognitive.checklist;
 
@@ -122,7 +122,7 @@ public class CheckItem implements Serializable {
     public String getDescription() { return description; }
     
     /**
-     * @param dm 
+     * @param dm the design material
      * @return the description
      */
     public String getDescription(Object dm) {
@@ -170,10 +170,12 @@ public class CheckItem implements Serializable {
     public String toString() { return getDescription(); }
 
     /**
-     * TODO: Document the purpose of this function.
+     * Customize/expand the description string just before it is displayed.
+     * I.e. add offender specific information to the description string 
+     * (e.g. its name). 
      * 
      * @param desc       the description
-     * @param dm         ignored
+     * @param dm         the design material
      * @return           the description
      */
     public String expand(String desc, Object dm) { return desc; }
