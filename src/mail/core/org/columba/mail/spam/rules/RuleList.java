@@ -20,6 +20,7 @@ package org.columba.mail.spam.rules;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.logging.Logger;
 
 import org.columba.mail.folder.MessageFolder;
 import org.macchiato.maps.ProbabilityMap;
@@ -37,6 +38,10 @@ import org.macchiato.tokenizer.Token;
  */
 public class RuleList {
 
+	/** JDK 1.4+ logging framework logger, used for logging. */
+	private static final Logger LOG = Logger
+			.getLogger("org.columba.mail.spam.rules");
+	
     private List list;
 
     private static RuleList instance;
@@ -67,7 +72,10 @@ public class RuleList {
 
         while (it.hasNext()) {
             Rule rule = (Rule) it.next();
+            LOG.info("rule "+rule.getName());
+            
             float score = rule.score(folder, uid);
+            LOG.info("score="+score);
 
             map.addToken(new Token(rule.getName()), score);
         }
