@@ -1,4 +1,4 @@
-// $Id: Translator.java,v 1.27 2005/01/09 14:58:06 linus Exp $
+// $Id: Translator.java,v 1.28 2005/03/17 19:25:05 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -48,6 +48,13 @@ public class Translator {
 
     /** Property file containing the bindings. */
     private static String propertiesFile = "images.properties";
+
+    /** 
+     * This class should only be used in a static constant so make
+     * the constructor private. See issue 3111.
+     */
+    private Translator() {
+    }
 
     /**
      * Default Locale is set and resources Bundles are loaded.

@@ -1,4 +1,4 @@
-// $Id: Main.java,v 1.116 2005/02/21 22:16:26 bobtarling Exp $
+// $Id: Main.java,v 1.117 2005/03/17 19:25:06 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -116,7 +116,6 @@ public class Main {
         org.tigris.gef.base.Globals.setLastDirectory(directory);
 
         // load i18n bundles
-        Translator trans = new org.argouml.i18n.Translator();
         Translator.init();
         // create an anonymous class as a kind of adaptor for the cognitive
         // System to provide proper translation/i18n.
