@@ -41,7 +41,7 @@ import javax.swing.event.*;
  * This class can also optionally redirect standard output and error to the log.
  *
  * @author Slava Pestov
- * @version $Id: Log.java,v 1.12 2003/06/05 20:37:02 spestov Exp $
+ * @version $Id: Log.java,v 1.13 2003/06/11 23:55:39 spestov Exp $
  */
 public class Log
 {
@@ -228,8 +228,9 @@ public class Log
 	 * <pre>[debug] JavaParser: counter = 15</pre>
 	 *
 	 * @param urgency The urgency; can be one of
-	 * <code>DEBUG</code>, <code>MESSAGE</code>, <code>NOTICE</code>,
-	 * <code>WARNING</code>, or <code>ERROR</code>.
+	 * <code>Log.DEBUG</code>, <code>Log.MESSAGE</code>,
+	 * <code>Log.NOTICE</code>, <code>Log.WARNING</code>, or
+	 * <code>Log.ERROR</code>.
 	 * @param source The source of the message, either an object or a
 	 * class instance. When writing log messages from macros, set
 	 * this parameter to <code>BeanShell.class</code> to make macro
