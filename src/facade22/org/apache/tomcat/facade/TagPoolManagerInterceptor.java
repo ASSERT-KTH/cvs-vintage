@@ -1,4 +1,6 @@
 /*
+ * $Header: /tmp/cvs-vintage/tomcat/src/facade22/org/apache/tomcat/facade/TagPoolManagerInterceptor.java,v 1.2 2001/05/11 18:45:25 clucas Exp $
+ *
  * ====================================================================
  *
  * The Apache Software License, Version 1.1
@@ -71,7 +73,7 @@ import org.apache.jasper.runtime.TagPoolManagerImpl;
  * dont include this interceptor.
  *
  * @author Casey Lucas <clucas@armassolutions.com>
- * @see TagPoolManager
+ * @see org.apache.jasper.runtime.TagPoolManager
  */
 public class TagPoolManagerInterceptor extends BaseInterceptor {
 
