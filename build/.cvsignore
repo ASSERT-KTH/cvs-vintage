@@ -1,3 +1,4 @@
 build*.properties
 velocity.log
 velocity.log.1
+build.properties.*
