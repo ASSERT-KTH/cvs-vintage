@@ -113,7 +113,6 @@ public class AdaptiveServletLoader  extends AdaptiveClassLoader implements Servl
      *  required by this step ( free resources for GC, etc)
      */
     public void reload() {
-	System.out.println("RELOAD!!!");
 	if( classL==null )
 	    getClassLoader();
 	else
