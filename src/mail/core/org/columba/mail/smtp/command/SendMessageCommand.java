@@ -53,6 +53,11 @@ import org.columba.ristretto.smtp.SMTPException;
  */
 public class SendMessageCommand extends FolderCommand {
 
+	private SendMessageDialog sendMessageDialog;
+	private boolean showComposer = false;
+	
+	private ComposerController composerController;
+
 	/**
 	 * Constructor for SendMessageCommand.
 	 * 
@@ -80,12 +85,12 @@ public class SendMessageCommand extends FolderCommand {
 
 		// get composer controller
 		// -> get all the account information from the controller
-		ComposerController composerController = r[0].getComposerController();
+		composerController = r[0].getComposerController();
 
 		// close composer view
 		composerController.getView().setVisible(false);
 
-		new SendMessageDialog(worker);
+		sendMessageDialog = new SendMessageDialog(worker);
 
 		AccountItem item =
 			((ComposerModel) composerController.getModel()).getAccountItem();
@@ -108,14 +113,12 @@ public class SendMessageCommand extends FolderCommand {
 				// user cancelled sending operation
 
 				// open composer view
-				composerController.getView().setVisible(true);
-				composerController.getView().requestFocus();
+				showComposer = true;
 				return;
 			} else {
 				JOptionPane.showMessageDialog(null, e1.getMessage());
 				//	open composer view
-				composerController.getView().setVisible(true);
-				composerController.getView().requestFocus();
+				showComposer = true;
 				return;
 			}
 		}
@@ -181,6 +184,7 @@ public class SendMessageCommand extends FolderCommand {
 						"statusbar",
 						"message",
 						"send_message_success"));
+			
 			} catch (SMTPException e) {
 				JOptionPane.showMessageDialog(
 					null,
@@ -189,13 +193,11 @@ public class SendMessageCommand extends FolderCommand {
 					JOptionPane.ERROR_MESSAGE);
 
 				// open composer view
-				composerController.getView().setVisible(true);
-				composerController.getView().requestFocus();
+				showComposer = true;
 			} catch (Exception e) {
 				e.printStackTrace();
 				// open composer view
-				composerController.getView().setVisible(true);
-				composerController.getView().requestFocus();
+				showComposer = true;
 			}
 
 		} else {
@@ -203,10 +205,21 @@ public class SendMessageCommand extends FolderCommand {
 			// -> user cancelled sending 
 
 			// open composer view
+			showComposer = true;
+		}
+
+	}
+
+	public void updateGUI() throws Exception {
+		// close send message dialog
+		sendMessageDialog.setVisible(false);
+		
+		if (showComposer == true) {
+			// re-open composer view
 			composerController.getView().setVisible(true);
 			composerController.getView().requestFocus();
 		}
-
+		
 	}
 
 }

@@ -141,9 +141,11 @@ public class SendMessageDialog
 						((Integer) e.getNewValue()).intValue());
 					break;
 
+				/*
 				case WorkerStatusChangedEvent.FINISHED :
 					setVisible(false);
-
+					break;
+					*/
 			}
 		}
 	}
@@ -158,6 +160,7 @@ public class SendMessageDialog
 		if (arg0.equals("CANCEL")) {
 			// send cancel event to worker
 			worker.cancel();
+			setVisible(false);
 		}
 
 	}
