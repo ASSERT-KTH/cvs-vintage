@@ -34,7 +34,7 @@ import org.gjt.sp.util.Log;
  * Manages low-level text display tasks.
  * @since jEdit 4.2pre1
  * @author Slava Pestov
- * @version $Id: DisplayManager.java,v 1.105 2004/10/30 19:58:51 spestov Exp $
+ * @version $Id: DisplayManager.java,v 1.106 2004/11/02 00:42:45 spestov Exp $
  */
 public class DisplayManager
 {
@@ -564,9 +564,10 @@ public class DisplayManager
 	//{{{ init() method
 	void init()
 	{
+		updateWrapSettings();
+
 		if(initialized)
 		{
-			updateWrapSettings();
 			if(buffer.isLoaded())
 			{
 				firstLine.reset();

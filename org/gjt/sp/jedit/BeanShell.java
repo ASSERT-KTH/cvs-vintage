@@ -52,7 +52,7 @@ import org.gjt.sp.util.Log;
  * </ul>
  *
  * @author Slava Pestov
- * @version $Id: BeanShell.java,v 1.44 2004/02/22 20:00:50 spestov Exp $
+ * @version $Id: BeanShell.java,v 1.45 2004/11/02 00:42:45 spestov Exp $
  */
 public class BeanShell
 {
@@ -321,30 +321,14 @@ public class BeanShell
 		{
 			if(in == null)
 			{
-				Buffer buffer = jEdit.getBuffer(path);
+				Buffer buffer = jEdit.openTemporary(null,
+					null,path,false);
 
-				vfs = VFSManager.getVFSForPath(path);
-				session = vfs.createVFSSession(path,view);
-				if(session == null)
-				{
-					// user cancelled???
-					return;
-				}
+				if(!buffer.isLoaded())
+					VFSManager.waitForRequests();
 
-				if(buffer != null)
-				{
-					if(!buffer.isLoaded())
-						VFSManager.waitForRequests();
-
-					in = new StringReader(buffer.getText(0,
-						buffer.getLength()));
-				}
-				else
-				{
-					in = new BufferedReader(new InputStreamReader(
-						vfs._createInputStream(session,
-						path,false,view)));
-				}
+				in = new StringReader(buffer.getText(0,
+					buffer.getLength()));
 			}
 
 			setupDefaultVariables(namespace,view);

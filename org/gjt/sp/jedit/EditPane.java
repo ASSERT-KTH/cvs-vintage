@@ -56,7 +56,7 @@ import org.gjt.sp.util.Log;
  * @see View#getEditPanes()
  *
  * @author Slava Pestov
- * @version $Id: EditPane.java,v 1.54 2004/10/30 19:25:00 spestov Exp $
+ * @version $Id: EditPane.java,v 1.55 2004/11/02 00:42:45 spestov Exp $
  */
 public class EditPane extends JPanel implements EBComponent
 {
@@ -635,7 +635,7 @@ public class EditPane extends JPanel implements EBComponent
 		}
 		else if(msg.getWhat() == BufferUpdate.PROPERTIES_CHANGED)
 		{
-			if(_buffer == buffer)
+			if(_buffer == buffer && buffer.isLoaded())
 			{
 				textArea.propertiesChanged();
 				if(view.getEditPane() == this)
