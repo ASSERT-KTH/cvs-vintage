@@ -803,8 +803,8 @@ public class IMAPStore {
 		String path)
 		throws Exception {
 
-		ColumbaLogger.log.debug("list-count="+list.size());
-		
+		ColumbaLogger.log.debug("list-count=" + list.size());
+
 		isLogin(worker);
 
 		isSelected(worker, path);
@@ -871,22 +871,33 @@ public class IMAPStore {
 			if (!finished) {
 				IMAPResponse[] r = new IMAPResponse[1];
 				r[0] = imapResponse;
-				//System.out.println("header="+imapResponse.getSource());
-				
+				System.out.println("header=" + imapResponse.getSource());
+
 				String buffer = imapResponse.getSource();
 
 				if (buffer.length() != 0) {
-					
-					Object uid = null;
-					ColumbaHeader header = parseMessage(buffer);
-					if (header != null) {
-						header.set("columba.uid", list.get(i));
-						headerList.add(header, list.get(i));
-					}
 
-					i++;
-					worker.setProgressBarValue(i);
-					worker.setDisplayText(item.getHost()+": Fetching "+i+"/"+list.size()+" headers..." );
+					if (buffer.indexOf("FLAGS") != -1) {
+						// flags updated
+					} else {
+						Object uid = null;
+						ColumbaHeader header = parseMessage(buffer);
+						if (header != null) {
+
+							header.set("columba.uid", list.get(i));
+							headerList.add(header, list.get(i));
+						}
+
+						i++;
+						worker.setProgressBarValue(i);
+						worker.setDisplayText(
+							item.getHost()
+								+ ": Fetching "
+								+ i
+								+ "/"
+								+ list.size()
+								+ " headers...");
+					}
 				}
 			}
 		}

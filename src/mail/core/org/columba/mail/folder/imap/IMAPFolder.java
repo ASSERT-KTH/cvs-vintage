@@ -556,24 +556,5 @@ public class IMAPFolder extends RemoteFolder {
 		*/
 	}
 
-	public synchronized boolean tryToGetLock() {
-		boolean result = getRootFolder().tryToGetLock();
-		
-		if ( result == false )
-		{
-			if ( ((IMAPRootFolder)getRootFolder()).isAlreadyLocked() == true )
-			{
-				return true;
-			}
-			
-			return false;
-		}
-		
-		return result;
-	}
-
-	public void releaseLock() {
-		getRootFolder().releaseLock();
-	}
-
+	
 }
