@@ -26,7 +26,7 @@ import javax.ejb.RemoveException;
 *   @see <related>
 *   @author Rickard Öberg (rickard.oberg@telkel.com)
 *   @author <a href="marc.fleury@telkel.com">Marc Fleury</a>
-*   @version $Revision: 1.5 $
+*   @version $Revision: 1.6 $
 */
 public class StatelessSessionContainer
 extends Container
@@ -49,10 +49,6 @@ extends Container
 		ci.setContainer(this);
 	}
 	
-	public ContainerInvoker getContainerInvoker() 
-	{ 
-		return containerInvoker; 
-	}
 	
 	// Container implementation --------------------------------------
 	public void init()
