@@ -89,7 +89,7 @@ import org.apache.turbine.Log;
  * implementation needs.
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: ScarabUserImpl.java,v 1.44 2002/01/18 22:26:07 jon Exp $
+ * @version $Id: ScarabUserImpl.java,v 1.45 2002/01/28 18:47:55 jmcnally Exp $
  */
 public class ScarabUserImpl 
     extends BaseScarabUserImpl 
@@ -115,6 +115,15 @@ public class ScarabUserImpl
     {
         super();
         
+        /*
+         * Functionality that would be useful in any implementation of
+         * ScarabUser is available in AbstractScarabUser (ASU).  This 
+         * implementation must extend from TurbineUser, so TurbineUser 
+         * would need to extend ASU to gain the functionality through
+         * inheritance.  This is possible with some modifications to 
+         * fulcrum's build process.  But until changes to fulcrum allow it,
+         * we will wrap a instance of ASU.
+         */
         internalUser = new AbstractScarabUser()
         {
             public NumberKey getUserId()

@@ -98,7 +98,7 @@ import org.apache.fulcrum.security.impl.db.entity
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: ScarabModule.java,v 1.84 2002/01/27 21:21:12 jmcnally Exp $
+ * @version $Id: ScarabModule.java,v 1.85 2002/01/28 18:47:55 jmcnally Exp $
  */
 public class ScarabModule
     extends BaseScarabModule
@@ -167,6 +167,9 @@ public class ScarabModule
 
     /**
      * @see org.tigris.scarab.services.module.ModuleEntity#getUsers(String, String, String, IssueType)
+     * This implementation adds wildcard prefix and suffix and performs an SQL 
+     * LIKE query for each of the String args that are not null.
+     * WARNING: This is potentially a very EXPENSIVE method.
      */
     public List getUsers(String firstName, String lastName, 
                          String username, String email, IssueType issueType)
