@@ -17,7 +17,7 @@ rem                implementation.
 rem
 rem   JAVA_HOME    Must point at your Java Development Kit installation.
 rem
-rem $Id: tomcat.bat,v 1.23 2000/06/19 00:35:46 craigmcc Exp $
+rem $Id: tomcat.bat,v 1.24 2000/06/19 02:44:55 rubys Exp $
 rem -------------------------------------------------------------------------
 
 
@@ -55,12 +55,12 @@ rem ----- Execute The Requested Command -------------------------------------
 if "%1" == "start" goto startServer
 if "%1" == "stop" goto stopServer
 if "%1" == "run" goto runServer
-if "%1" == "ant goto runAnt
+if "%1" == "ant" goto runAnt
 if "%1" == "env" goto doEnv
 if "%1" == "jspc" goto runJspc
 
 :doUsage
-echo Usage:  tomcat ( ant | env | jspc | run | start | stop )
+echo Usage:  tomcat ( ant ^| env ^| jspc ^| run ^| start ^| stop )
 echo Commands:
 echo   ant -   Run Ant in Tomcat's environment
 echo   env -   Set up environment variables that Tomcat would use
