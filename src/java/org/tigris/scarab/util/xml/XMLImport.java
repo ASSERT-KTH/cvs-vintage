@@ -63,7 +63,7 @@ import org.tigris.scarab.util.TurbineInitialization;
  * an Ant xml file.
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: XMLImport.java,v 1.13 2002/04/24 01:12:56 jon Exp $
+ * @version $Id: XMLImport.java,v 1.14 2002/07/30 22:48:15 jmcnally Exp $
  */
 public class XMLImport extends MatchingTask
 {
@@ -314,15 +314,15 @@ public class XMLImport extends MatchingTask
         getDigester().addRule("scarab/module/issue/attachment/modified-date", new AttachmentModifiedDateRule(ib));
         getDigester().addRule("scarab/module/issue/attachment/created-by", new AttachmentCreatedByRule(ib));
         getDigester().addRule("scarab/module/issue/attachment/modified-by", new AttachmentModifiedByRule(ib));
-        getDigester().addRule("scarab/module/issue/transaction", new TransactionRule(ib));
-        getDigester().addRule("scarab/module/issue/transaction/type", new TransactionTypeRule(ib));
-        getDigester().addRule("scarab/module/issue/transaction/committed-by", new TransactionCommittedByRule(ib));
-        getDigester().addRule("scarab/module/issue/transaction/activity", new ActivityRule(ib));
-        getDigester().addRule("scarab/module/issue/transaction/activity/attribute/name", new ActivityAttributeNameRule(ib));
-        getDigester().addRule("scarab/module/issue/transaction/activity/attribute/value", new ActivityAttributeValueRule(ib));
-        getDigester().addRule("scarab/module/issue/transaction/activity/attribute/old-value", new ActivityAttributeOldValueRule(ib));
-        getDigester().addRule("scarab/module/issue/transaction/activity/attribute/type", new ActivityAttributeTypeRule(ib));
-        getDigester().addRule("scarab/module/issue/transaction/activity/description", new ActivityDescriptionRule(ib));
+        getDigester().addRule("scarab/module/issue/activitySet", new ActivitySetRule(ib));
+        getDigester().addRule("scarab/module/issue/activitySet/type", new ActivitySetTypeRule(ib));
+        getDigester().addRule("scarab/module/issue/activitySet/committed-by", new ActivitySetCommittedByRule(ib));
+        getDigester().addRule("scarab/module/issue/activitySet/activity", new ActivityRule(ib));
+        getDigester().addRule("scarab/module/issue/activitySet/activity/attribute/name", new ActivityAttributeNameRule(ib));
+        getDigester().addRule("scarab/module/issue/activitySet/activity/attribute/value", new ActivityAttributeValueRule(ib));
+        getDigester().addRule("scarab/module/issue/activitySet/activity/attribute/old-value", new ActivityAttributeOldValueRule(ib));
+        getDigester().addRule("scarab/module/issue/activitySet/activity/attribute/type", new ActivityAttributeTypeRule(ib));
+        getDigester().addRule("scarab/module/issue/activitySet/activity/description", new ActivityDescriptionRule(ib));
         getDigester().addRule("scarab/module/user", new UserRule(ib));
         getDigester().addRule("scarab/module/user/firstname", new UserFirstNameRule(ib));
         getDigester().addRule("scarab/module/user/lastname", new UserLastNameRule(ib));

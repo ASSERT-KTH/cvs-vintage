@@ -1,4 +1,4 @@
-package org.tigris.scarab.util.xml;
+package org.tigris.scarab.om;
 
 /* ================================================================
  * Copyright (c) 2000-2002 CollabNet.  All rights reserved.
@@ -44,54 +44,30 @@ package org.tigris.scarab.util.xml;
  * 
  * This software consists of voluntary contributions made by many
  * individuals on behalf of Collab.Net.
- */
+ */ 
 
-import org.apache.fulcrum.security.TurbineSecurity;
+// Turbine classes
+import org.apache.torque.om.Persistent;
 
-import org.tigris.scarab.om.ScarabUser;
-import org.tigris.scarab.om.Transaction;
-import org.tigris.scarab.om.TransactionType;
-
-/**
- * Handler for the xpath "scarab/module/issue/transaction/committed-by"
+/** 
+ * You should add additional methods to this class to meet the
+ * application requirements.  This class will only be generated as
+ * long as it does not already exist in the output directory.
  *
- * @author <a href="mailto:kevin.minshull@bitonic.com">Kevin Minshull</a>
- * @author <a href="mailto:richard.han@bitonic.com">Richard Han</a>
+ * @author <a href="mailto:jmcnally@collab.new">John McNally</a>
+ * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
+ * @version $Id: ActivitySetType.java,v 1.1 2002/07/30 22:48:15 jmcnally Exp $
  */
-public class TransactionCommittedByRule extends BaseRule
+public  class ActivitySetType 
+    extends org.tigris.scarab.om.BaseActivitySetType
+    implements Persistent
 {
-    public TransactionCommittedByRule(ImportBean ib)
-    {
-        super(ib);
-    }
-    
     /**
-     * This method is called when the body of a matching XML element
-     * is encountered.  If the element has no body, this method is
-     * not called at all.
-     *
-     * @param text The text of the body of this element
+     * @deprecated Use ActivitySetTypeManager.getInstance(String)
      */
-    public void body(String text)
+    public static ActivitySetType getInstance(String activitySetTypeName) 
         throws Exception
     {
-        log().debug("(" + getImportBean().getState() + 
-            ") transaction committed by body: " + text);
-        super.doInsertionOrValidationAtBody(text);
-    }
-    
-    protected void doInsertionAtBody(String committedByName)
-        throws Exception
-    {
-        ScarabUser user = (ScarabUser)TurbineSecurity.getUser(committedByName);
-        TransactionType transactionType = getImportBean().getTransactionType();
-//        Transaction transaction = getImportBean().getTransaction();
-//        transaction.create(transactionType.getTypeId(), user, null);
-    }
-    
-    protected void doValidationAtBody(String committedByName)
-        throws Exception
-    {
-        validateUser(committedByName);
+        return ActivitySetTypeManager.getInstance(activitySetTypeName);
     }
 }

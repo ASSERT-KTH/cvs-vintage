@@ -80,9 +80,9 @@ import org.tigris.scarab.om.Issue;
 import org.tigris.scarab.om.IssueType;
 import org.tigris.scarab.om.IssuePeer;
 import org.tigris.scarab.om.AttributeValue;
-import org.tigris.scarab.om.Transaction;
-import org.tigris.scarab.om.TransactionManager;
-import org.tigris.scarab.om.TransactionTypePeer;
+import org.tigris.scarab.om.ActivitySet;
+import org.tigris.scarab.om.ActivitySetManager;
+import org.tigris.scarab.om.ActivitySetTypePeer;
 import org.tigris.scarab.om.Attribute;
 import org.tigris.scarab.om.Attachment;
 import org.tigris.scarab.om.AttachmentType;
@@ -99,7 +99,7 @@ import org.tigris.scarab.services.security.ScarabSecurity;
  * This class is responsible for report issue forms.
  *
  * @author <a href="mailto:jmcnally@collab.net">John D. McNally</a>
- * @version $Id: ReportIssue.java,v 1.134 2002/07/17 22:06:51 jon Exp $
+ * @version $Id: ReportIssue.java,v 1.135 2002/07/30 22:48:14 jmcnally Exp $
  */
 public class ReportIssue extends RequireLoginFirstAction
 {
@@ -375,12 +375,12 @@ public class ReportIssue extends RequireLoginFirstAction
                 // Been provided, proceed.
                 if (commentField.isValid() || saveIssue)
                 {
-                    // Save transaction record
-                    Transaction transaction = TransactionManager
-                        .getInstance(TransactionTypePeer.CREATE_ISSUE__PK, user);
-                    transaction.save();
+                    // Save activitySet record
+                    ActivitySet activitySet = ActivitySetManager
+                        .getInstance(ActivitySetTypePeer.CREATE_ISSUE__PK, user);
+                    activitySet.save();
                     
-                    // enter the values into the transaction
+                    // enter the values into the activitySet
                     SequencedHashMap avMap = 
                         issue.getModuleAttributeValuesMap(); 
                     Iterator i = avMap.iterator();
@@ -389,7 +389,7 @@ public class ReportIssue extends RequireLoginFirstAction
                         AttributeValue aval = (AttributeValue)avMap.get(i.next());
                         try
                         {
-                            aval.startTransaction(transaction);
+                            aval.startActivitySet(activitySet);
                         }
                         catch (ScarabException se)
                         {
@@ -438,7 +438,7 @@ public class ReportIssue extends RequireLoginFirstAction
                     subj.append("] Issue #").append(issue.getUniqueId());
                     subj.append(summary);
                 
-                    if (!transaction.sendEmail(new ContextAdapter(context), issue, 
+                    if (!activitySet.sendEmail(new ContextAdapter(context), issue, 
                                      subj.toString(), "email/NewIssueNotification.vm"))
                     {
                         scarabR.setInfoMessage(

@@ -82,8 +82,8 @@ import org.tigris.scarab.om.Attribute;
 import org.tigris.scarab.om.AttributePeer;
 import org.tigris.scarab.om.AttributeManager;
 import org.tigris.scarab.om.AttributeValue;
-import org.tigris.scarab.om.Transaction;
-import org.tigris.scarab.om.TransactionTypePeer;
+import org.tigris.scarab.om.ActivitySet;
+import org.tigris.scarab.om.ActivitySetTypePeer;
 import org.tigris.scarab.om.Activity;
 import org.tigris.scarab.om.ScarabUser;
 import org.tigris.scarab.attribute.OptionAttribute;
@@ -97,7 +97,7 @@ import org.tigris.scarab.services.security.ScarabSecurity;
  *
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: MoveIssue.java,v 1.30 2002/07/26 21:14:40 jmcnally Exp $
+ * @version $Id: MoveIssue.java,v 1.31 2002/07/30 22:48:14 jmcnally Exp $
  */
 public class MoveIssue extends RequireLoginFirstAction
 {

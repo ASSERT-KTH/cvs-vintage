@@ -82,9 +82,9 @@ import org.tigris.scarab.om.AttributePeer;
 import org.tigris.scarab.om.RModuleAttributePeer;
 import org.tigris.scarab.om.Attribute;
 import org.tigris.scarab.om.AttributeValue;
-import org.tigris.scarab.om.Transaction;
-import org.tigris.scarab.om.TransactionManager;
-import org.tigris.scarab.om.TransactionTypePeer;
+import org.tigris.scarab.om.ActivitySet;
+import org.tigris.scarab.om.ActivitySetManager;
+import org.tigris.scarab.om.ActivitySetTypePeer;
 import org.tigris.scarab.om.ActivityManager;
 import org.tigris.scarab.om.AttributeOption;
 import org.tigris.scarab.om.AttributeOptionManager;
@@ -109,7 +109,7 @@ import org.tigris.scarab.util.ScarabConstants;
     This class is responsible for edit issue forms.
     ScarabIssueAttributeValue
     @author <a href="mailto:elicia@collab.net">Elicia David</a>
-    @version $Id: ModifyIssue.java,v 1.111 2002/07/30 21:55:55 elicia Exp $
+    @version $Id: ModifyIssue.java,v 1.112 2002/07/30 22:48:14 jmcnally Exp $
 */
 public class ModifyIssue extends BaseModifyIssue
 {
@@ -199,10 +199,10 @@ public class ModifyIssue extends BaseModifyIssue
                                      Attachment.MODIFICATION__PK);
             attachment.save();
 
-            // Create transaction record
-            Transaction transaction = issue.getTransaction(user, attachment,
-                                      TransactionTypePeer.EDIT_ISSUE__PK);
-            transaction.save();
+            // Create activitySet record
+            ActivitySet activitySet = issue.getActivitySet(user, attachment,
+                                      ActivitySetTypePeer.EDIT_ISSUE__PK);
+            activitySet.save();
 
             // Set the attribute values entered 
             SequencedHashMap avMap = issue.getModuleAttributeValuesMap(); 
@@ -238,9 +238,9 @@ public class ModifyIssue extends BaseModifyIssue
                     }
                 }
             } 
-            issue.setProperties(newAttVals, transaction);
+            issue.setProperties(newAttVals, activitySet);
             intake.removeAll();
-            sendEmail(transaction, issue, DEFAULT_MSG, context, data);
+            sendEmail(activitySet, issue, DEFAULT_MSG, context, data);
             scarabR.setConfirmMessage("Your changes have been saved.");
         } 
         else
@@ -456,11 +456,11 @@ public class ModifyIssue extends BaseModifyIssue
         }
     } 
 
-    private void sendEmail(Transaction transaction, Issue issue, String msg,
+    private void sendEmail(ActivitySet activitySet, Issue issue, String msg,
                            TemplateContext context, RunData data)
         throws Exception
     {
-        if (!transaction.sendEmail(new ContextAdapter(context), issue))
+        if (!activitySet.sendEmail(new ContextAdapter(context), issue))
         {
             StringBuffer sb = 
                 new StringBuffer(msg.length() + EMAIL_ERROR.length());
@@ -699,17 +699,17 @@ public class ModifyIssue extends BaseModifyIssue
         TemplateContext context, RunData data, String oldVal, String newVal)
         throws Exception
     {
-        // Save transaction record
-        Transaction transaction = issue.getTransaction(user, attachment,
-                                  TransactionTypePeer.EDIT_ISSUE__PK);
-        transaction.save();
+        // Save activitySet record
+        ActivitySet activitySet = issue.getActivitySet(user, attachment,
+                                  ActivitySetTypePeer.EDIT_ISSUE__PK);
+        activitySet.save();
 
         // Save activity record
         ActivityManager
-            .createTextActivity(issue, null, transaction,
+            .createTextActivity(issue, null, activitySet,
                                 description, attachment,
                                 oldVal, newVal);
-        sendEmail(transaction, issue, message, context, data);
+        sendEmail(activitySet, issue, message, context, data);
     }
 
     /**
@@ -784,7 +784,6 @@ public class ModifyIssue extends BaseModifyIssue
                     }
 
                     currentIssue.save();
-                    
                     String uniqueId = otherIssue.getUniqueId();
                     String s = "changed dependency type for issue ";
                     String from = " from ";
@@ -896,12 +895,12 @@ public class ModifyIssue extends BaseModifyIssue
             group.setProperties(depend);
             depend.save();
 
-            // Save transaction record
-            Transaction transaction = issue.getTransaction(user, null,
-                                      TransactionTypePeer.EDIT_ISSUE__PK);
-            transaction.save();
+            // Save activitySet record
+            ActivitySet activitySet = issue.getActivitySet(user, null,
+                                      ActivitySetTypePeer.EDIT_ISSUE__PK);
+            activitySet.save();
 
-            // Save transaction record for parent
+            // Save activitySet record for parent
             String desc = new StringBuffer("Added '")
                 .append(depend.getDependType().getName())
                 .append("' child dependency on issue ")
@@ -911,12 +910,12 @@ public class ModifyIssue extends BaseModifyIssue
             // Save activity record
             // FIXME: test to see if null instead of "" is ok.
             ActivityManager
-                .createTextActivity(issue, null, transaction,
+                .createTextActivity(issue, null, activitySet,
                                     desc, null,
                                     "", childIssue.getUniqueId());
-            sendEmail(transaction, childIssue, desc, context, data);
+            sendEmail(activitySet, childIssue, desc, context, data);
 
-            // Save transaction record for child
+            // Save activitySet record for child
             desc = new StringBuffer("Added '")
                 .append(depend.getDependType().getName())
                 .append("' parent dependency on issue ")
@@ -926,10 +925,10 @@ public class ModifyIssue extends BaseModifyIssue
             // Save activity record
             // FIXME: test to see if null instead of "" is ok.
             ActivityManager
-                .createTextActivity(childIssue, null, transaction,
+                .createTextActivity(childIssue, null, activitySet,
                                     desc, null,
                                     "", issue.getUniqueId());
-            sendEmail(transaction, issue, desc, context, data);
+            sendEmail(activitySet, issue, desc, context, data);
 
             data.setMessage(DEFAULT_MSG);
             intake.remove(group);

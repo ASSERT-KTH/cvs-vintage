@@ -70,9 +70,9 @@ import org.tigris.scarab.om.IssueManager;
 import org.tigris.scarab.om.IssueType;
 import org.tigris.scarab.om.IssueTemplateInfo;
 import org.tigris.scarab.om.AttributeValue;
-import org.tigris.scarab.om.Transaction;
-import org.tigris.scarab.om.TransactionManager;
-import org.tigris.scarab.om.TransactionTypePeer;
+import org.tigris.scarab.om.ActivitySet;
+import org.tigris.scarab.om.ActivitySetManager;
+import org.tigris.scarab.om.ActivitySetTypePeer;
 import org.tigris.scarab.attribute.OptionAttribute;
 import org.tigris.scarab.util.ScarabConstants;
 import org.tigris.scarab.tools.ScarabRequestTool;
@@ -84,7 +84,7 @@ import org.tigris.scarab.om.AttributeOptionManager;
  * This class is responsible for report managing enter issue templates.
  *   
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
- * @version $Id: TemplateList.java,v 1.33 2002/07/17 22:06:51 jon Exp $
+ * @version $Id: TemplateList.java,v 1.34 2002/07/30 22:48:14 jmcnally Exp $
  */
 public class TemplateList extends RequireLoginFirstAction
 {
@@ -114,10 +114,10 @@ public class TemplateList extends RequireLoginFirstAction
 
         if (intake.isAllValid() ) 
         {
-            // Save transaction record
-            Transaction transaction = TransactionManager
-                .getInstance(TransactionTypePeer.CREATE_ISSUE__PK, user);
-            transaction.save();
+            // Save activitySet record
+            ActivitySet activitySet = ActivitySetManager
+                .getInstance(ActivitySetTypePeer.CREATE_ISSUE__PK, user);
+            activitySet.save();
 
             Iterator iter = avMap.iterator();
             while (iter.hasNext()) 
@@ -126,7 +126,7 @@ public class TemplateList extends RequireLoginFirstAction
                 group = intake.get("AttributeValue", aval.getQueryKey(),false);
                 if ( group != null )
                 {
-                    aval.startTransaction(transaction);
+                    aval.startActivitySet(activitySet);
                     group.setProperties(aval);
                 }                
             }
@@ -168,10 +168,10 @@ public class TemplateList extends RequireLoginFirstAction
 
         if (intake.isAllValid() ) 
         {
-            // Save transaction record
-            Transaction transaction = TransactionManager
-                .getInstance(TransactionTypePeer.CREATE_ISSUE__PK, user);
-            transaction.save();
+            // Save activitySet record
+            ActivitySet activitySet = ActivitySetManager
+                .getInstance(ActivitySetTypePeer.CREATE_ISSUE__PK, user);
+            activitySet.save();
 
             Iterator iter = avMap.iterator();
             while (iter.hasNext()) 
@@ -216,7 +216,7 @@ public class TemplateList extends RequireLoginFirstAction
                     if (!newValue.equals("") && 
                         (oldValue == null  || !oldValue.equals(newValue)))
                     {
-                        aval.startTransaction(transaction);
+                        aval.startActivitySet(activitySet);
                         group.setProperties(aval);
                         aval.save();
                     }

@@ -59,7 +59,7 @@ import org.apache.torque.om.Persistent;
  *
  * @author <a href="mailto:jmcnally@collab.new">John McNally</a>
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: ActivityManager.java,v 1.5 2002/07/19 01:28:36 jon Exp $
+ * @version $Id: ActivityManager.java,v 1.6 2002/07/30 22:48:15 jmcnally Exp $
  */
 public class ActivityManager
     extends BaseActivityManager
@@ -97,41 +97,41 @@ public class ActivityManager
     }
     
     public static Activity createNumericActivity(Issue issue, Attribute attribute,
-                                                 Transaction transaction, 
+                                                 ActivitySet activitySet, 
                                                  String description,
                                                  Attachment attachment,
                                                  int oldNumericValue,
                                                  int newNumericValue)
         throws TorqueException
     {
-        return create(issue,attribute,transaction,description,attachment,
+        return create(issue,attribute,activitySet,description,attachment,
                       oldNumericValue, newNumericValue,
                       null, null, null, null, null, null);
     }
 
     public static Activity createUserActivity(Issue issue, Attribute attribute,
-                                                 Transaction transaction, 
+                                                 ActivitySet activitySet, 
                                                  String description,
                                                  Attachment attachment,
                                                  NumberKey oldUserId,
                                                  NumberKey newUserId)
         throws TorqueException
     {
-        return create(issue,attribute,transaction,description,attachment,
+        return create(issue,attribute,activitySet,description,attachment,
                       0, 0,
                       oldUserId, newUserId, 
                       null, null, null, null);
     }
     
     public static Activity createOptionActivity(Issue issue, Attribute attribute,
-                                                 Transaction transaction, 
+                                                 ActivitySet activitySet, 
                                                  String description,
                                                  Attachment attachment,
                                                  NumberKey oldOptionId,
                                                  NumberKey newOptionId)
         throws TorqueException
     {
-        return create(issue,attribute,transaction,description,attachment,
+        return create(issue,attribute,activitySet,description,attachment,
                       0, 0,
                       null, null,
                       oldOptionId, newOptionId,
@@ -139,14 +139,14 @@ public class ActivityManager
     }
 
     public static Activity createTextActivity(Issue issue, Attribute attribute,
-                                                 Transaction transaction, 
+                                                 ActivitySet activitySet, 
                                                  String description,
                                                  Attachment attachment,
                                                  String oldTextValue,
                                                  String newTextValue)
         throws TorqueException
     {
-        return create(issue,attribute,transaction,description,attachment,
+        return create(issue,attribute,activitySet,description,attachment,
                       0, 0,
                       null, null,
                       null, null,
@@ -157,7 +157,7 @@ public class ActivityManager
      * Populates a new Activity object.
      */
     public static Activity create(Issue issue, Attribute attribute, 
-                       Transaction transaction, String description, 
+                       ActivitySet activitySet, String description, 
                        Attachment attachment, 
                        int oldNumericValue, int newNumericValue,
                        NumberKey oldUserId, NumberKey newUserId,
@@ -165,7 +165,7 @@ public class ActivityManager
                        String oldTextValue, String newTextValue)
          throws TorqueException
     {
-        return create(issue,attribute,transaction,description,attachment,
+        return create(issue,attribute,activitySet,description,attachment,
                       oldNumericValue, newNumericValue,
                       oldUserId, newUserId,
                       oldOptionId, newOptionId,
@@ -176,7 +176,7 @@ public class ActivityManager
      * Populates a new Activity object.
      */
     public static Activity create(Issue issue, Attribute attribute, 
-                       Transaction transaction, String description, 
+                       ActivitySet activitySet, String description, 
                        Attachment attachment, 
                        int oldNumericValue, int newNumericValue,
                        NumberKey oldUserId, NumberKey newUserId,
@@ -193,7 +193,7 @@ public class ActivityManager
         }
         activity.setAttribute(attribute);
         activity.setDescription(description);
-        activity.setTransaction(transaction);
+        activity.setActivitySet(activitySet);
         activity.setOldNumericValue(oldNumericValue);
         activity.setNewNumericValue(newNumericValue);
         activity.setOldUserId(oldUserId);

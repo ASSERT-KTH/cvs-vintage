@@ -7,7 +7,7 @@
   <!ELEMENT url (#PCDATA)>
   <!ELEMENT domain (#PCDATA)>
 
-<!ELEMENT issue (artifact-type, transaction+, dependency*, attachment*)>
+<!ELEMENT issue (artifact-type, activity-set+, dependency*, attachment*)>
 <!ATTLIST issue id CDATA #REQUIRED>
 
 <!ELEMENT dependency (type, (child | parent))>
@@ -19,8 +19,8 @@
   <!ELEMENT created-date (#PCDATA)>
   <!ATTLIST created-date format CDATA #REQUIRED>
 
-<!ELEMENT transaction (type, committed-by, created-date, attachment*, activity+)>
-<!ATTLIST transaction id CDATA #REQUIRED>
+<!ELEMENT activity-set (type, committed-by, created-date, attachment*, activity+)>
+<!ATTLIST activity-set id CDATA #REQUIRED>
 
 <!ELEMENT activity (attribute, description, end-date)>
 

@@ -1,4 +1,4 @@
-package org.tigris.scarab.util.xml;
+package org.tigris.scarab.util.xmlissues;
 
 /* ================================================================
  * Copyright (c) 2000-2002 CollabNet.  All rights reserved.
@@ -44,55 +44,87 @@ package org.tigris.scarab.util.xml;
  * 
  * This software consists of voluntary contributions made by many
  * individuals on behalf of Collab.Net.
- */
+ */ 
 
-import org.tigris.scarab.om.TransactionType;
-import org.tigris.scarab.om.TransactionTypePeer;
-import org.tigris.scarab.om.TransactionTypeManager;
+import java.util.List;
+import java.util.ArrayList;
 
-/**
- * Handler for the xpath "scarab/module/issue/transaction/type"
- *
- * @author <a href="mailto:kevin.minshull@bitonic.com">Kevin Minshull</a>
- * @author <a href="mailto:richard.han@bitonic.com">Richard Han</a>
- */
-public class TransactionTypeRule extends BaseRule
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
+public class ActivitySet implements java.io.Serializable
 {
-    private boolean foundCreateTransactionType = false;
-    
-    public TransactionTypeRule(ImportBean ib)
+    private final static Log log = LogFactory.getLog(ActivitySet.class);
+
+    private String id = null;
+    private String type = null;
+    private String createdBy = null;
+    private CreatedDate createdDate = null;
+    private List activities = null;
+    private Attachment attachment = null;
+
+    public ActivitySet()
     {
-        super(ib);
+        this.activities = new ArrayList();
+    }
+
+    public String getId()
+    {
+        return id;
+    }
+
+    public void setId(String id)
+    {
+        this.id = id;
+    }
+
+    public String getType()
+    {
+        return type;
+    }
+
+    public void setType(String type)
+    {
+        this.type = type;
+    }
+
+    public String getCreatedBy()
+    {
+        return createdBy;
+    }
+
+    public void setCreatedBy(String createdBy)
+    {
+        this.createdBy = createdBy;
+    }
+
+    public CreatedDate getCreatedDate()
+    {
+        return createdDate;
     }
     
-    /**
-     * This method is called when the body of a matching XML element
-     * is encountered.  If the element has no body, this method is
-     * not called at all.
-     *
-     * @param transactionTypeName The text of the body of this element
-     */
-    public void body(String transactionTypeName) throws Exception
+    public void setCreatedDate(CreatedDate createdDate)
     {
-        log().debug("(" + getImportBean().getState() + 
-            ") transaction type body: " + transactionTypeName);
-        TransactionType transactionType = 
-            TransactionTypeManager.getInstance(transactionTypeName);
-        checkCreateTransaction(transactionType);
-        getImportBean().setTransactionType(transactionType);
+        this.createdDate = createdDate;
     }
-    
-    private void checkCreateTransaction(TransactionType transactionType)
-        throws Exception
+
+    public List getActivities()
     {
-        if (transactionType.getTypeId()
-            .equals(TransactionTypePeer.CREATE_ISSUE__PK))
-        {
-            foundCreateTransactionType = true;
-        }
-        if (!foundCreateTransactionType)
-        {
-            throw new Exception("Create transaction must be the first transaction");
-        }
+        return this.activities;
+    }
+
+    public void addActivity(Activity activity)
+    {
+        activities.add(activity);
+    }
+
+    public Attachment getAttachment()
+    {
+        return this.attachment;
+    }
+
+    public void setAttachment(Attachment attachment)
+    {
+        this.attachment = attachment;
     }
 }

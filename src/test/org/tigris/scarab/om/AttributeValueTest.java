@@ -58,7 +58,7 @@ import java.util.List;
  * A Testing Suite for the om.Query class.
  *
  * @author <a href="mailto:mumbly@oneofus.org">Tim McNerney</a>
- * @version $Id: AttributeValueTest.java,v 1.1 2002/03/26 02:32:02 elicia Exp $
+ * @version $Id: AttributeValueTest.java,v 1.2 2002/07/30 22:48:16 jmcnally Exp $
  */
 public class AttributeValueTest extends BaseTestCase
 {
@@ -102,13 +102,13 @@ public class AttributeValueTest extends BaseTestCase
         System.out.println("\ntestCopy()");
         newAttVal = attVal.copy();
         Attachment attachment = AttachmentManager.getInstance();
-        attachment.setName("transaction test");
+        attachment.setName("activitySet test");
         attachment.setDataAsString("Test comment");
         attachment.setTextFields(getUser1(), issue, Attachment.COMMENT__PK);
         attachment.save();
-        Transaction trans = new Transaction();
+        ActivitySet trans = new ActivitySet();
         trans.create(new NumberKey("1"), getUser1(), attachment);
-        newAttVal.startTransaction(trans);
+        newAttVal.startActivitySet(trans);
         newAttVal.setOptionId(new NumberKey("70"));
         newAttVal.setUserId(new NumberKey("1"));
     }

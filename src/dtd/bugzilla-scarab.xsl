@@ -18,7 +18,7 @@
             <issue id="{bug_id}">
                 <artifact-type>defect</artifact-type>
                 
-                <transaction id="1">
+                <activity-set id="1">
                     <type>Create Issue</type>
                     <committed-by><xsl:value-of select="reporter"/></committed-by>
                     <!-- FIXME: need to figure out what date to use -->
@@ -110,7 +110,7 @@
                         <end-date format="yyyy-MM-dd HH:mm:ss"><xsl:value-of select="create_ts"/></created-date>
                     </activity>
                     </xsl:if>
-                </transaction>
+                </activity-set>
                 
                 <xsl:for-each select="dependson">
                 <dependency>

@@ -63,7 +63,7 @@ import org.apache.turbine.ParameterParser;
 import org.tigris.scarab.actions.base.RequireLoginFirstAction;
 import org.tigris.scarab.om.Issue;
 import org.tigris.scarab.om.IssueManager;
-import org.tigris.scarab.om.Transaction;
+import org.tigris.scarab.om.ActivitySet;
 import org.tigris.scarab.tools.ScarabRequestTool;
 import org.tigris.scarab.util.ScarabConstants;
 
@@ -72,7 +72,7 @@ import org.tigris.scarab.util.ScarabConstants;
  * for collisions between different changes.
  * 
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: BaseModifyIssue.java,v 1.1 2002/04/29 18:56:01 jmcnally Exp $
+ * @version $Id: BaseModifyIssue.java,v 1.2 2002/07/30 22:48:14 jmcnally Exp $
  */
 public class BaseModifyIssue extends RequireLoginFirstAction
 {
@@ -100,8 +100,8 @@ public class BaseModifyIssue extends RequireLoginFirstAction
                     scarabR.setAlertMessage(
                         "At least one issue has been modified, please review" +
                         " before submitting your changes.");
-                    Transaction lastTransaction = issue.getLastTransaction();
-                    List activities = lastTransaction.getActivitys();
+                    ActivitySet lastActivitySet = issue.getLastActivitySet();
+                    List activities = lastActivitySet.getActivitys();
                     ArrayList objs = new ArrayList(2);
                     objs.add(issue);
                     objs.add(activities);
@@ -121,8 +121,8 @@ public class BaseModifyIssue extends RequireLoginFirstAction
                 scarabR.setAlertMessage(
                      "Issue has been modified, please review before " + 
                      "submitting your changes.");
-                Transaction lastTransaction = issue.getLastTransaction();
-                List activities = lastTransaction.getActivitys();
+                ActivitySet lastActivitySet = issue.getLastActivitySet();
+                List activities = lastActivitySet.getActivitys();
                 ArrayList objs = new ArrayList(2);
                 objs.add(issue);
                 objs.add(activities);

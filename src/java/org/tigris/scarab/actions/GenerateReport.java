@@ -73,14 +73,14 @@ import org.tigris.scarab.om.Issue;
 import org.tigris.scarab.om.RModuleOption;
 import org.tigris.scarab.om.IssuePeer;
 import org.tigris.scarab.om.AttributeValue;
-import org.tigris.scarab.om.Transaction;
+import org.tigris.scarab.om.ActivitySet;
 import org.tigris.scarab.attribute.OptionAttribute;
 import org.tigris.scarab.attribute.UserAttribute;
 import org.tigris.scarab.om.Attribute;
 import org.tigris.scarab.om.Attachment;
 import org.tigris.scarab.om.Module;
 import org.tigris.scarab.om.RModuleAttributePeer;
-import org.tigris.scarab.om.TransactionTypePeer;
+import org.tigris.scarab.om.ActivitySetTypePeer;
 import org.tigris.scarab.util.ScarabConstants;
 import org.tigris.scarab.util.ScarabException;
 import org.tigris.scarab.util.word.IssueSearch;
@@ -93,7 +93,7 @@ import org.tigris.scarab.actions.base.RequireLoginFirstAction;
 /**
     This class is responsible for report generation forms
     @author <a href="mailto:jmcnally@collab.net">John D. McNally</a>
-    @version $Id: GenerateReport.java,v 1.20 2002/05/14 04:32:05 jmcnally Exp $
+    @version $Id: GenerateReport.java,v 1.21 2002/07/30 22:48:14 jmcnally Exp $
 */
 public class GenerateReport 
     extends RequireLoginFirstAction

@@ -93,7 +93,7 @@ import org.apache.commons.lang.StringUtils;
  * @author <a href="mailto:jmcnally@collab.new">John McNally</a>
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
- * @version $Id: Issue.java,v 1.174 2002/07/30 21:27:10 elicia Exp $
+ * @version $Id: Issue.java,v 1.175 2002/07/30 22:48:15 jmcnally Exp $
  */
 public class Issue 
     extends BaseIssue
@@ -123,7 +123,7 @@ public class Issue
     protected static final String GET_CREATED_BY = 
         "getCreatedBy";
     protected static final String GET_LAST_TRANSACTION = 
-        "getLastTransaction";
+        "getLastActivitySet";
     protected static final String GET_MODIFIED_BY = 
         "getModifiedBy";
     protected static final String GET_MODIFIED_DATE = 
@@ -137,7 +137,7 @@ public class Issue
     protected static final String GET_ACTIVITY = 
         "getActivity";
     protected static final String GET_TRANSACTIONS = 
-        "getTransactions";
+        "getActivitySets";
     protected static final String GET_CHILDREN = 
         "getChildren";
     protected static final String GET_PARENTS = 
@@ -1077,16 +1077,16 @@ public class Issue
             if ( obj == null ) 
             {        
                 Criteria crit = new Criteria();
-                crit.addJoin(TransactionPeer.TRANSACTION_ID, 
+                crit.addJoin(ActivitySetPeer.TRANSACTION_ID, 
                              ActivityPeer.TRANSACTION_ID);
                 crit.add(ActivityPeer.ISSUE_ID, getIssueId());
-                crit.add(TransactionPeer.TYPE_ID, 
-                         TransactionTypePeer.CREATE_ISSUE__PK);
+                crit.add(ActivitySetPeer.TYPE_ID, 
+                         ActivitySetTypePeer.CREATE_ISSUE__PK);
                 // there could be multiple attributes modified during the 
                 // creation which will lead to duplicates
                 crit.setDistinct();
-                List transactions = TransactionPeer.doSelect(crit);
-                Transaction t = (Transaction)transactions.get(0);
+                List activitySets = ActivitySetPeer.doSelect(crit);
+                ActivitySet t = (ActivitySet)activitySets.get(0);
                 result = t.getCreatedDate();
                 ScarabCache.put(result, this, GET_CREATED_DATE);
             }
@@ -1116,20 +1116,20 @@ public class Issue
             if ( obj == null ) 
             {        
                 Criteria crit = new Criteria();
-                crit.addJoin(TransactionPeer.TRANSACTION_ID, 
+                crit.addJoin(ActivitySetPeer.TRANSACTION_ID, 
                              ActivityPeer.TRANSACTION_ID);
                 crit.add(ActivityPeer.ISSUE_ID, getIssueId());
-                crit.add(TransactionPeer.TYPE_ID, 
-                         TransactionTypePeer.CREATE_ISSUE__PK);
+                crit.add(ActivitySetPeer.TYPE_ID, 
+                         ActivitySetTypePeer.CREATE_ISSUE__PK);
                 /*
                   // there could be multiple attributes modified during the 
                   // creation which will lead to duplicates
                   crit.setDistinct();
                 */
-                List transactions = TransactionPeer.doSelect(crit);
-                if (transactions.size() > 0)
+                List activitySets = ActivitySetPeer.doSelect(crit);
+                if (activitySets.size() > 0)
                 {
-                    Transaction t = (Transaction)transactions.get(0);
+                    ActivitySet t = (ActivitySet)activitySets.get(0);
                     result = ScarabUserManager.getInstance(t.getCreatedBy());
                 }
                 ScarabCache.put(result, this, GET_CREATED_BY);
@@ -1153,35 +1153,35 @@ public class Issue
      *
      * @return a <code>ScarabUser</code> value
      */
-    public Transaction getLastTransaction()
+    public ActivitySet getLastActivitySet()
         throws Exception
     {
-        Transaction t = null;
+        ActivitySet t = null;
         if ( !isNew() ) 
         {
             Object obj = ScarabCache.get(this, GET_LAST_TRANSACTION); 
             if ( obj == null ) 
             {        
                 Criteria crit = new Criteria();
-                crit.addJoin(TransactionPeer.TRANSACTION_ID, 
+                crit.addJoin(ActivitySetPeer.TRANSACTION_ID, 
                          ActivityPeer.TRANSACTION_ID);
                 crit.add(ActivityPeer.ISSUE_ID, getIssueId());
-                crit.add(TransactionPeer.TYPE_ID, 
-                         TransactionTypePeer.EDIT_ISSUE__PK);
+                crit.add(ActivitySetPeer.TYPE_ID, 
+                         ActivitySetTypePeer.EDIT_ISSUE__PK);
                 // there could be multiple attributes modified during the 
                 // creation which will lead to duplicates
                 crit.setDistinct();
-                crit.addDescendingOrderByColumn(TransactionPeer.CREATED_DATE);
-                List transactions = TransactionPeer.doSelect(crit);
-                if ( transactions.size() > 0 ) 
+                crit.addDescendingOrderByColumn(ActivitySetPeer.CREATED_DATE);
+                List activitySets = ActivitySetPeer.doSelect(crit);
+                if ( activitySets.size() > 0 ) 
                 {
-                    t = (Transaction)transactions.get(0);
+                    t = (ActivitySet)activitySets.get(0);
                 }
                 ScarabCache.put(t, this, GET_LAST_TRANSACTION);
             }
             else 
             {
-                t = (Transaction)obj;
+                t = (ActivitySet)obj;
             }
         }
         return t;
@@ -1199,7 +1199,7 @@ public class Issue
         Date result = null;
         if ( !isNew() ) 
         {
-            Transaction t = getLastTransaction();
+            ActivitySet t = getLastActivitySet();
             if ( t == null)
             {
                 result = getCreatedDate();
@@ -1223,7 +1223,7 @@ public class Issue
         ScarabUser result = null;
         if ( !isNew() ) 
         {
-            Transaction t = getLastTransaction();
+            ActivitySet t = getLastActivitySet();
             if ( t == null)
             {
                 result = getCreatedBy();
@@ -1463,9 +1463,9 @@ public class Issue
     }
 
     /**
-     * Returns a list of Transaction objects associated to this issue.
+     * Returns a list of ActivitySet objects associated to this issue.
      */
-    public List getTransactions()
+    public List getActivitySets()
         throws Exception
     {
         List result = null;
@@ -1474,9 +1474,9 @@ public class Issue
         {
             Criteria crit = new Criteria();
             crit.add(ActivityPeer.ISSUE_ID, getIssueId());
-            crit.addJoin(TransactionPeer.TRANSACTION_ID, ActivityPeer.TRANSACTION_ID);
+            crit.addJoin(ActivitySetPeer.TRANSACTION_ID, ActivityPeer.TRANSACTION_ID);
             crit.setDistinct();
-            result = TransactionPeer.doSelect(crit);
+            result = ActivitySetPeer.doSelect(crit);
             ScarabCache.put(result, this, GET_TRANSACTIONS);
         }
         else
@@ -1487,15 +1487,15 @@ public class Issue
     }
 
     /**
-     * Creates a new Transaction object for the issue.
+     * Creates a new ActivitySet object for the issue.
      */
-    public Transaction getTransaction(ScarabUser user, Attachment attachment,
+    public ActivitySet getActivitySet(ScarabUser user, Attachment attachment,
                                       NumberKey type)
         throws Exception
     {
-        Transaction transaction = TransactionManager
+        ActivitySet activitySet = ActivitySetManager
             .getInstance( type, user, attachment);
-        return transaction;
+        return activitySet;
     }
 
     /**
@@ -1788,10 +1788,10 @@ public class Issue
         Attribute zeroAttribute = AttributeManager
             .getInstance(new NumberKey("0"));
 
-        // Save transaction record
-        Transaction transaction = TransactionManager
-            .getInstance(TransactionTypePeer.CREATE_ISSUE__PK, getCreatedBy());
-        transaction.save();
+        // Save activitySet record
+        ActivitySet activitySet = ActivitySetManager
+            .getInstance(ActivitySetTypePeer.CREATE_ISSUE__PK, getCreatedBy());
+        activitySet.save();
         
         // Copy over attributes
         for (int i=0;i<matchingAttributes.size();i++)
@@ -1800,7 +1800,7 @@ public class Issue
                                                     .get(i);
            AttributeValue newAttVal = attVal.copy();
            newAttVal.setIssueId(newIssue.getIssueId());
-           newAttVal.startTransaction(transaction);
+           newAttVal.startActivitySet(activitySet);
            newAttVal.save();
         }
 
@@ -1838,10 +1838,10 @@ public class Issue
         attachment.setTextFields(user, newIssue, Attachment.MODIFICATION__PK);
         attachment.save();
 
-        // Create transaction for the MoveIssue activity
-        Transaction transaction2 = TransactionManager
-            .getInstance(TransactionTypePeer.MOVE_ISSUE__PK, user, attachment);
-        transaction2.save();
+        // Create activitySet for the MoveIssue activity
+        ActivitySet activitySet2 = ActivitySetManager
+            .getInstance(ActivitySetTypePeer.MOVE_ISSUE__PK, user, attachment);
+        activitySet2.save();
 
         // Generate comment
         // If moving issue, delete original
@@ -1865,7 +1865,7 @@ public class Issue
         descBuf.append(" in module ").append(oldModule.getName());
 
         ActivityManager
-            .createTextActivity(newIssue, zeroAttribute, transaction2,
+            .createTextActivity(newIssue, zeroAttribute, activitySet2,
                                 descBuf.toString(), null,
                                 oldModule.getName(), newModule.getName());
         // Save activity record for old issue
@@ -1873,7 +1873,7 @@ public class Issue
         descBuf2.append(" in module ").append(newModule.getName());
 
         ActivityManager
-            .createTextActivity(this, zeroAttribute, transaction2,
+            .createTextActivity(this, zeroAttribute, activitySet2,
                                 descBuf.toString(), null,
                                 newModule.getName(), oldModule.getName());
 
@@ -1919,15 +1919,15 @@ public class Issue
                     .add(ActivityPeer.ISSUE_ID, getIssueId())
                     .add(ActivityPeer.ATTRIBUTE_ID, AttributePeer.STATUS__PK)
                     .addJoin(ActivityPeer.TRANSACTION_ID, 
-                             TransactionPeer.TRANSACTION_ID)
+                             ActivitySetPeer.TRANSACTION_ID)
                     .add( ActivityPeer.NEW_OPTION_ID, 
                       AttributeOption.STATUS__CLOSED__PK )
-                    .addDescendingOrderByColumn(TransactionPeer.CREATED_DATE);
+                    .addDescendingOrderByColumn(ActivitySetPeer.CREATED_DATE);
                 
-                List transactions = TransactionPeer.doSelect(crit);
-                if ( transactions.size() > 0 ) 
+                List activitySets = ActivitySetPeer.doSelect(crit);
+                if ( activitySets.size() > 0 ) 
                 {
-                    result = ((Transaction)transactions.get(0))
+                    result = ((ActivitySet)activitySets.get(0))
                         .getCreatedDate();
                     ScarabCache.put(result, this, GET_CLOSED_DATE);
                 }
@@ -1935,7 +1935,7 @@ public class Issue
                 {
                     throw new ScarabException("Issue " + getIssueId() + 
                         " was in a closed state, but" +
-                        "no transaction is associated with the change.");   
+                        "no activitySet is associated with the change.");   
                 }
             }          
         }
@@ -1996,11 +1996,11 @@ public class Issue
         {
             voteValue = (TotalVotesAttribute)voteValues.get(0);
         }
-        // Updating attribute values requires a transaction
-        Transaction transaction = TransactionManager
-            .getInstance(TransactionTypePeer.RETOTAL_ISSUE_VOTE__PK, user);
-        transaction.save();
-        voteValue.startTransaction(transaction);
+        // Updating attribute values requires a activitySet
+        ActivitySet activitySet = ActivitySetManager
+            .getInstance(ActivitySetTypePeer.RETOTAL_ISSUE_VOTE__PK, user);
+        activitySet.save();
+        voteValue.startActivitySet(activitySet);
         voteValue.addVote();
         voteValue.save();
     }
@@ -2359,11 +2359,11 @@ public class Issue
             attachment.save();
         }
 
-        // Save transaction record
-        Transaction transaction = TransactionManager
-            .getInstance(TransactionTypePeer.EDIT_ISSUE__PK, assigner, attachment);
-        transaction.save();
-        attVal.startTransaction(transaction);
+        // Save activitySet record
+        ActivitySet activitySet = ActivitySetManager
+            .getInstance(ActivitySetTypePeer.EDIT_ISSUE__PK, assigner, attachment);
+        activitySet.save();
+        attVal.startActivitySet(activitySet);
 
         // Save user attribute values
         attVal.setIssue(this);
@@ -2424,11 +2424,11 @@ public class Issue
             attachment.save();
         }
 
-        // Save transaction record
-        Transaction transaction = TransactionManager
-            .getInstance(TransactionTypePeer.EDIT_ISSUE__PK, assigner, attachment);
-        transaction.save();
-        oldAttVal.startTransaction(transaction);
+        // Save activitySet record
+        ActivitySet activitySet = ActivitySetManager
+            .getInstance(ActivitySetTypePeer.EDIT_ISSUE__PK, assigner, attachment);
+        activitySet.save();
+        oldAttVal.startActivitySet(activitySet);
 
         // Save assignee value
         oldAttVal.setAttributeId(newUserAttribute.getAttributeId());
@@ -2479,15 +2479,15 @@ public class Issue
             attachment.save();
         }
 
-        // Save transaction record
-        Transaction transaction = TransactionManager
-            .getInstance(TransactionTypePeer.EDIT_ISSUE__PK, assigner, attachment);
-        transaction.save();
-        attVal.startTransaction(transaction);
+        // Save activitySet record
+        ActivitySet activitySet = ActivitySetManager
+            .getInstance(ActivitySetTypePeer.EDIT_ISSUE__PK, assigner, attachment);
+        activitySet.save();
+        attVal.startActivitySet(activitySet);
 
         // Save activity record
         ActivityManager
-            .createUserActivity(attVal.getIssue(), attVal.getAttribute(), transaction,
+            .createUserActivity(attVal.getIssue(), attVal.getAttribute(), activitySet,
                                 othersAction, attachment,
                                 assignee.getUserId(), null);
 
@@ -2503,7 +2503,7 @@ public class Issue
     /*
     *  Sets AttributeValues for an issue based on a hashmap of attribute values
     */
-    public void setProperties(HashMap newAttVals, Transaction transaction)
+    public void setProperties(HashMap newAttVals, ActivitySet activitySet)
         throws Exception
     {
         SequencedHashMap avMap = getModuleAttributeValuesMap(); 
@@ -2516,7 +2516,7 @@ public class Issue
             newAttVal = (AttributeValue)newAttVals.get(oldAttVal.getAttributeId());
             if (newAttVal != null)
             {
-                oldAttVal.startTransaction(transaction);
+                oldAttVal.startActivitySet(activitySet);
                 oldAttVal.setProperties(newAttVal);
                 oldAttVal.save();
             }

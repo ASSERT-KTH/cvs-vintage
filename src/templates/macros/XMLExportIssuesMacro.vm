@@ -23,19 +23,19 @@
     <issue>
       <id>$issue.IdCount</id>
       <artifact-type>$issue.IssueType.Name</artifact-type>
-      <transactions>
-      #foreach ($transaction in $issue.Transactions)
+      <activity-sets>
+      #foreach ($activitySet in $issue.ActivitySets)
 
-        <transaction>
-          <id>$transaction.TransactionId</id>
-          <type>$transaction.TransactionType.Name</type>
-          <created-by>$scarabR.getUser($transaction.CreatedBy).UserName</created-by>
+        <activity-set>
+          <id>$activitySet.ActivitySetId</id>
+          <type>$activitySet.ActivitySetType.Name</type>
+          <created-by>$scarabR.getUser($activitySet.CreatedBy).UserName</created-by>
           <created-date>
             <format>$sdf.toPattern()</format>
-            <timestamp>$sdf.format($transaction.CreatedDate)</timestamp>
+            <timestamp>$sdf.format($activitySet.CreatedDate)</timestamp>
           </created-date>
           <activities>
-          #foreach ($activity in $transaction.ActivityList)
+          #foreach ($activity in $activitySet.ActivityList)
 
             <activity>
               <id>$activity.ActivityId</id>
@@ -79,13 +79,13 @@
           #end
 
           </activities>
-          #set ($attachment = $transaction.Attachment)
+          #set ($attachment = $activitySet.Attachment)
           #attachment ($attachment)
 
-        </transaction>
+        </activity-set>
       #end
 
-      </transactions>
+      </activity-sets>
 
       #set ($dependA = $issue.DependsRelatedByObserverId)
       #set ($dependB = $issue.DependsRelatedByObservedId)

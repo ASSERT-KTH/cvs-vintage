@@ -50,8 +50,8 @@ import java.util.ArrayList;
 import org.xml.sax.Attributes;
 
 import org.tigris.scarab.om.Activity;
-import org.tigris.scarab.om.Transaction;
-import org.tigris.scarab.om.TransactionTypePeer;
+import org.tigris.scarab.om.ActivitySet;
+import org.tigris.scarab.om.ActivitySetTypePeer;
 import org.tigris.scarab.om.Issue;
 import org.tigris.scarab.om.Attribute;
 import org.tigris.scarab.om.AttributeManager;
@@ -60,7 +60,7 @@ import org.tigris.scarab.om.AttributeValue;
 import org.tigris.scarab.om.ParentChildAttributeOption;
 
 /**
- * Handler for the xpath "scarab/module/issue/transaction/activity"
+ * Handler for the xpath "scarab/module/issue/activitySet/activity"
  *
  * @author <a href="mailto:kevin.minshull@bitonic.com">Kevin Minshull</a>
  * @author <a href="mailto:richard.han@bitonic.com">Richard Han</a>
@@ -109,7 +109,7 @@ public class ActivityRule extends BaseRule
     }
     
     /**
-     * This function will add the activity to the transaction.
+     * This function will add the activity to the activitySet.
      * FIXME: there is a problem with this function (besides the bad code)
      * the create issue stuff is working, but the edit issue stuff
      * does not appear to be working.
@@ -118,7 +118,7 @@ public class ActivityRule extends BaseRule
         throws Exception
     {
         ActivityInfo activityInfo = getImportBean().getActivityInfo();
-        Transaction transaction = getImportBean().getTransaction();
+        ActivitySet activitySet = getImportBean().getActivitySet();
         Issue issue = getImportBean().getIssue();
         Attribute attribute = Attribute.getInstance(activityInfo.getName());
         if (attribute == null)
@@ -167,10 +167,10 @@ public class ActivityRule extends BaseRule
             attributeValue.setValue(activityInfo.getValue());
         }
         
-        if (transaction.getTransactionType().getTypeId()
-            .equals(TransactionTypePeer.CREATE_ISSUE__PK))
+        if (activitySet.getActivitySetType().getTypeId()
+            .equals(ActivitySetTypePeer.CREATE_ISSUE__PK))
         {
-            attributeValue.startTransaction(transaction);
+            attributeValue.startActivitySet(activitySet);
             attributeValue.save();
         }
         else
@@ -178,7 +178,7 @@ public class ActivityRule extends BaseRule
 /*
             Activity activity = new Activity();
             activity.create(issue, attribute, activityInfo.getDescription(), 
-                            transaction, activityInfo.getOldValue(), 
+                            activitySet, activityInfo.getOldValue(), 
                             activityInfo.getValue());
 */
         }

@@ -122,15 +122,15 @@ public class ScarabIssues implements java.io.Serializable
             log.debug("Found issue in db: " + issueOM.getUniqueId());
         }
 
-        // Loop over the XML transactions
-        List transactions = issue.getTransactions();
-        log.debug("Number of transactions in issue: " + transactions.size());
-        for (Iterator itr = transactions.iterator(); itr.hasNext();)
+        // Loop over the XML activitySets
+        List activitySets = issue.getActivitySets();
+        log.debug("Number of activitySets in issue: " + activitySets.size());
+        for (Iterator itr = activitySets.iterator(); itr.hasNext();)
         {
-            Transaction transaction = (Transaction) itr.next();
+            ActivitySet activitySet = (ActivitySet) itr.next();
 
-            // deal with the attachment for the transaction
-            Attachment attachment = transaction.getAttachment();
+            // deal with the attachment for the activitySet
+            Attachment attachment = activitySet.getAttachment();
             @OM@.Attachment attachmentOM = null;
             if (attachment != null)
             {
@@ -140,29 +140,29 @@ public class ScarabIssues implements java.io.Serializable
                     attachmentOM = createAttachment(issueOM, attachment);
                 }
             }
-            // attempt to get the transaction OM
-            @OM@.Transaction transactionOM = @OM@.TransactionManager.getInstance(transaction.getId());
-            if (transactionOM == null)
+            // attempt to get the activitySet OM
+            @OM@.ActivitySet activitySetOM = @OM@.ActivitySetManager.getInstance(activitySet.getId());
+            if (activitySetOM == null)
             {
-                transactionOM = @OM@.TransactionManager.getInstance();
-                log.debug("Created new transaction");
+                activitySetOM = @OM@.ActivitySetManager.getInstance();
+                log.debug("Created new activitySet");
             }
             else
             {
-                log.debug("Found transaction in db: " + transactionOM.getTransactionId());
+                log.debug("Found activitySet in db: " + activitySetOM.getActivitySetId());
             }
             // get the type/createdby values (we know these are valid)
-            @OM@.TransactionType ttOM = @OM@.TransactionTypeManager.getInstance(transaction.getType());
-            @OM@.ScarabUser createdByOM = @OM@.ScarabUserManager.getInstance(transaction.getCreatedBy(), 
+            @OM@.ActivitySetType ttOM = @OM@.ActivitySetTypeManager.getInstance(activitySet.getType());
+            @OM@.ScarabUser createdByOM = @OM@.ScarabUserManager.getInstance(activitySet.getCreatedBy(), 
                  module.getDomain());
-            transactionOM.setTransactionType(ttOM);
-            transactionOM.setCreatedBy(createdByOM.getUserId());
-            transactionOM.setAttachment(attachmentOM);
-            transactionOM.save();
+            activitySetOM.setActivitySetType(ttOM);
+            activitySetOM.setCreatedBy(createdByOM.getUserId());
+            activitySetOM.setAttachment(attachmentOM);
+            activitySetOM.save();
 
-            // deal with the activities in the transaction
-            List activities = transaction.getActivities();
-            log.debug("Number of activities in transactionid '" + transactionOM.getTransactionId() + 
+            // deal with the activities in the activitySet
+            List activities = activitySet.getActivities();
+            log.debug("Number of activities in activitySetid '" + activitySetOM.getActivitySetId() + 
                 "': " + activities.size());
             for (Iterator itrb = activities.iterator(); itrb.hasNext();)
             {
@@ -207,7 +207,7 @@ public class ScarabIssues implements java.io.Serializable
                         attributeValueOM.setValue(activity.getNewValue());
                     }
 
-                    attributeValueOM.startTransaction(transactionOM);
+                    attributeValueOM.startActivitySet(activitySetOM);
                     attributeValueOM.save();
 
                     if (activity.getAttachment() != null)

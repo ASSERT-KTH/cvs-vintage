@@ -66,22 +66,22 @@ import org.tigris.scarab.util.Email;
 import org.tigris.scarab.services.cache.ScarabCache;
 
 /** 
- * This object represents a Transaction. It is used as a container
+ * This object represents a ActivitySet. It is used as a container
  * for one or more Activity objects.
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: Transaction.java,v 1.42 2002/07/26 21:14:40 jmcnally Exp $
+ * @version $Id: ActivitySet.java,v 1.1 2002/07/30 22:48:15 jmcnally Exp $
  */
-public class Transaction 
-    extends BaseTransaction
+public class ActivitySet 
+    extends BaseActivitySet
     implements Persistent
 {
     private static final String GET_ACTIVITY_LIST = 
         "getActivityList";
     
     /**
-     * Sets the activity list for this transaction.
+     * Sets the activity list for this activitySet.
      */
     public void setActivityList(List activityList)
         throws Exception
@@ -90,14 +90,14 @@ public class Transaction
         while (itr.hasNext())
         {
             Activity activity = (Activity) itr.next();
-            activity.setTransaction(this);
+            activity.setActivitySet(this);
             activity.save();
         }
         ScarabCache.put(activityList, this, GET_ACTIVITY_LIST);
     }
 
     /**
-     * Returns a list of Activity objects associated with this Transaction.
+     * Returns a list of Activity objects associated with this ActivitySet.
      */
     public List getActivityList() throws Exception
     {
@@ -106,7 +106,7 @@ public class Transaction
         if ( obj == null ) 
         {        
             Criteria crit = new Criteria()
-                .add(ActivityPeer.TRANSACTION_ID, getTransactionId());
+                .add(ActivityPeer.TRANSACTION_ID, getActivitySetId());
             result = ActivityPeer.doSelect(crit);
             ScarabCache.put(result, this, GET_ACTIVITY_LIST);
         }
@@ -131,7 +131,7 @@ public class Transaction
 
     /** 
      *   Sends email to the users associated with the issue.
-     *   That is associated with this transaction.
+     *   That is associated with this activitySet.
      *   If no subject and template specified, assume modify issue action.
      *   throws Exception
      */

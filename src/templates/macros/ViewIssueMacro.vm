@@ -580,29 +580,29 @@ $l10n.NoDependencies
   #foreach ($act in $activity)
     #indexedRows($velocityCount)
      <td>
-     #set ($transaction = $act.Transaction)
-     #if ($transaction)
-       $format.getDate($scarabR.DateFormat, $transaction.CreatedDate)
+     #set ($activitySet = $act.ActivitySet)
+     #if ($activitySet)
+       $format.getDate($scarabR.DateFormat, $activitySet.CreatedDate)
      #end
      </td>
      <td>$act.Description</td>
 
      <td>
-     #if ($transaction && $transaction.Attachment)
-       #if ($transaction.Attachment.DataAsString && !$transaction.Attachment.AttachmentType.Name.equals("COMMENT"))
-         $transaction.Attachment.DataAsString
+     #if ($activitySet && $activitySet.Attachment)
+       #if ($activitySet.Attachment.DataAsString && !$activitySet.Attachment.AttachmentType.Name.equals("COMMENT"))
+         $activitySet.Attachment.DataAsString
        #else Not provided. #end
      #elseif ($act.Attachment)
        #if ($act.Attachment.DataAsString && !$act.Attachment.AttachmentType.Name.equals("COMMENT"))
           $act.Attachment.DataAsString 
        #else Not provided. #end     
-     #elseif ($transaction && $transaction.TransactionType.Name.equals("Create Issue"))
+     #elseif ($activitySet && $activitySet.ActivitySetType.Name.equals("Create Issue"))
            $l10n.InitialEntry
      #else Not provided.
      #end
      </td>
      <td>
-     #set ($user = $scarabR.getUser($transaction.CreatedBy))
+     #set ($user = $scarabR.getUser($activitySet.CreatedBy))
      <a href="mailto:$user.Email">$!user.Name</a>
      </td>
     </tr>

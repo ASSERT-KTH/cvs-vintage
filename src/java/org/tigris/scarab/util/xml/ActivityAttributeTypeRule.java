@@ -49,7 +49,7 @@ package org.tigris.scarab.util.xml;
 import org.tigris.scarab.om.AttributeType;
 
 /**
- * Handler for the xpath "scarab/module/issue/transaction/activity/activity-attribute/type"
+ * Handler for the xpath "scarab/module/issue/activitySet/activity/activity-attribute/type"
  *
  * @author <a href="mailto:kevin.minshull@bitonic.com">Kevin Minshull</a>
  * @author <a href="mailto:richard.han@bitonic.com">Richard Han</a>

@@ -1,4 +1,4 @@
-package org.tigris.scarab.util.xmlissues;
+package org.tigris.scarab.util.xml;
 
 /* ================================================================
  * Copyright (c) 2000-2002 CollabNet.  All rights reserved.
@@ -44,87 +44,55 @@ package org.tigris.scarab.util.xmlissues;
  * 
  * This software consists of voluntary contributions made by many
  * individuals on behalf of Collab.Net.
- */ 
+ */
 
-import java.util.List;
-import java.util.ArrayList;
+import org.tigris.scarab.om.ActivitySetType;
+import org.tigris.scarab.om.ActivitySetTypePeer;
+import org.tigris.scarab.om.ActivitySetTypeManager;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-
-public class Transaction implements java.io.Serializable
+/**
+ * Handler for the xpath "scarab/module/issue/activitySet/type"
+ *
+ * @author <a href="mailto:kevin.minshull@bitonic.com">Kevin Minshull</a>
+ * @author <a href="mailto:richard.han@bitonic.com">Richard Han</a>
+ */
+public class ActivitySetTypeRule extends BaseRule
 {
-    private final static Log log = LogFactory.getLog(Transaction.class);
-
-    private String id = null;
-    private String type = null;
-    private String createdBy = null;
-    private CreatedDate createdDate = null;
-    private List activities = null;
-    private Attachment attachment = null;
-
-    public Transaction()
+    private boolean foundCreateActivitySetType = false;
+    
+    public ActivitySetTypeRule(ImportBean ib)
     {
-        this.activities = new ArrayList();
-    }
-
-    public String getId()
-    {
-        return id;
-    }
-
-    public void setId(String id)
-    {
-        this.id = id;
-    }
-
-    public String getType()
-    {
-        return type;
-    }
-
-    public void setType(String type)
-    {
-        this.type = type;
-    }
-
-    public String getCreatedBy()
-    {
-        return createdBy;
-    }
-
-    public void setCreatedBy(String createdBy)
-    {
-        this.createdBy = createdBy;
-    }
-
-    public CreatedDate getCreatedDate()
-    {
-        return createdDate;
+        super(ib);
     }
     
-    public void setCreatedDate(CreatedDate createdDate)
+    /**
+     * This method is called when the body of a matching XML element
+     * is encountered.  If the element has no body, this method is
+     * not called at all.
+     *
+     * @param activitySetTypeName The text of the body of this element
+     */
+    public void body(String activitySetTypeName) throws Exception
     {
-        this.createdDate = createdDate;
+        log().debug("(" + getImportBean().getState() + 
+            ") activitySet type body: " + activitySetTypeName);
+        ActivitySetType activitySetType = 
+            ActivitySetTypeManager.getInstance(activitySetTypeName);
+        checkCreateActivitySet(activitySetType);
+        getImportBean().setActivitySetType(activitySetType);
     }
-
-    public List getActivities()
+    
+    private void checkCreateActivitySet(ActivitySetType activitySetType)
+        throws Exception
     {
-        return this.activities;
-    }
-
-    public void addActivity(Activity activity)
-    {
-        activities.add(activity);
-    }
-
-    public Attachment getAttachment()
-    {
-        return this.attachment;
-    }
-
-    public void setAttachment(Attachment attachment)
-    {
-        this.attachment = attachment;
+        if (activitySetType.getTypeId()
+            .equals(ActivitySetTypePeer.CREATE_ISSUE__PK))
+        {
+            foundCreateActivitySetType = true;
+        }
+        if (!foundCreateActivitySetType)
+        {
+            throw new Exception("Create activitySet must be the first activitySet");
+        }
     }
 }

@@ -2,7 +2,7 @@
 <!DOCTYPE database SYSTEM
           "http://jakarta.apache.org/turbine/dtd/database.dtd">
 
-<!-- $Id: scarab-schema.xml,v 1.105 2002/07/13 00:44:35 jmcnally Exp $ -->
+<!-- $Id: scarab-schema.xml,v 1.106 2002/07/30 22:48:16 jmcnally Exp $ -->
 
 <database name="@DATABASE_PROP_NAME@">
 <!--
@@ -23,7 +23,7 @@
     -->
     <column name="ATTRIBUTE_ID" required="true" type="INTEGER"/>
     <!--
-        Transaction to which the attribute modification belongs.
+        ActivitySet to which the attribute modification belongs.
     -->
     <column name="TRANSACTION_ID" required="true" type="INTEGER"/>
     <!--
@@ -70,7 +70,7 @@
     <!--
         If an attachment is associated to the activity, store it
         here. Note: there is also attachments associated to the 
-        transaction which 'contains' the activity. These are generally
+        activitySet which 'contains' the activity. These are generally
         the result of multiple activity records being created via
         the modification of several attributes at one time.
     -->
@@ -1090,13 +1090,13 @@
     Transaction is a group of attribute modification that are performed 
     together.
 -->
-<table name="SCARAB_TRANSACTION" idMethod="idbroker" javaName="Transaction">
+<table name="SCARAB_TRANSACTION" idMethod="idbroker" javaName="ActivitySet">
     <!--
         Unique identifier.
     -->
-    <column name="TRANSACTION_ID" primaryKey="true" required="true" type="INTEGER"></column>
+    <column name="TRANSACTION_ID" primaryKey="true" required="true" type="INTEGER" javaName="ActivitySetId"/>
     <!--
-        Possible enumerated transaction type.
+        Possible enumerated activitySet type.
     -->
     <column name="TYPE_ID"  required="false" type="INTEGER"/>
     <!--
@@ -1104,11 +1104,11 @@
     -->
     <column name="ATTACHMENT_ID"  required="false" type="INTEGER"/>
     <!--
-        Person that performed the transaction.
+        Person that performed the activitySet.
     -->
     <column name="CREATED_BY" required="false" type="INTEGER"></column>
     <!--
-        Date of the transaction.
+        Date of the activitySet.
     -->
     <column name="CREATED_DATE" required="false" type="TIMESTAMP"></column>
 
@@ -1129,7 +1129,7 @@
     Example: Issue Moved
 -->
 <table name="SCARAB_TRANSACTION_TYPE" idMethod="idbroker" 
-        javaName="TransactionType">
+        javaName="ActivitySetType">
     <!--
         Unique identifier.
     -->

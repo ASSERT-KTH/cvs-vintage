@@ -58,12 +58,12 @@ public class Issue implements java.io.Serializable
 
     private Integer id = null;
     private String artifactType = null;
-    private List transactions = null;
+    private List activitySets = null;
     private List dependencies = null;
 
     public Issue()
     {
-        transactions = new ArrayList();
+        activitySets = new ArrayList();
         dependencies = new ArrayList();
     }
     
@@ -88,14 +88,14 @@ public class Issue implements java.io.Serializable
         this.artifactType = name;
     }
 
-    public List getTransactions()
+    public List getActivitySets()
     {
-        return transactions;
+        return activitySets;
     }
     
-    public void addTransaction(Transaction name)
+    public void addActivitySet(ActivitySet name)
     {
-        transactions.add(name);
+        activitySets.add(name);
     }
 
     public List getDependencies()

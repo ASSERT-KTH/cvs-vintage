@@ -64,7 +64,7 @@ import org.apache.fulcrum.security.TurbineSecurity;
 // Scarab Stuff
 import org.tigris.scarab.om.Query;
 import org.tigris.scarab.om.QueryPeer;
-import org.tigris.scarab.om.Transaction;
+import org.tigris.scarab.om.ActivitySet;
 import org.tigris.scarab.om.ScarabUser;
 import org.tigris.scarab.om.ScarabUserImplPeer;
 import org.tigris.scarab.om.ScarabUserManager;
@@ -87,7 +87,7 @@ import org.tigris.scarab.services.security.ScarabSecurity;
     This class is responsible for edit issue forms.
     ScarabIssueAttributeValue
     @author <a href="mailto:elicia@collab.net">Elicia David</a>
-    @version $Id: Approval.java,v 1.20 2002/07/26 21:14:40 jmcnally Exp $
+    @version $Id: Approval.java,v 1.21 2002/07/30 22:48:14 jmcnally Exp $
 */
 public class Approval extends RequireLoginFirstAction
 {

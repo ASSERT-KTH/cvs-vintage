@@ -47,7 +47,7 @@ package org.tigris.scarab.util.xml;
  */ 
 
 /**
- * Handler for the xpath "scarab/module/issue/transaction/activity/description"
+ * Handler for the xpath "scarab/module/issue/activitySet/activity/description"
  *
  * @author <a href="mailto:kevin.minshull@bitonic.com">Kevin Minshull</a>
  * @author <a href="mailto:richard.han@bitonic.com">Richard Han</a>

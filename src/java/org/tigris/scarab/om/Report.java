@@ -88,8 +88,8 @@ import org.tigris.scarab.om.AttributeOption;
 import org.tigris.scarab.om.Attribute;
 import org.tigris.scarab.om.ScarabUser;
 import org.tigris.scarab.om.ActivityPeer;
-import org.tigris.scarab.om.TransactionPeer;
-import org.tigris.scarab.om.TransactionTypePeer;
+import org.tigris.scarab.om.ActivitySetPeer;
+import org.tigris.scarab.om.ActivitySetTypePeer;
 import org.tigris.scarab.util.OptionModel;
 import org.tigris.scarab.util.TableModel;
 import org.tigris.scarab.services.security.ScarabSecurity;
@@ -122,14 +122,14 @@ public  class Report
             ActivityPeer.TRANSACTION_ID.indexOf('.')+1);
     private static final String ACT_END_DATE = ActivityPeer.END_DATE.substring(
             ActivityPeer.END_DATE.indexOf('.')+1);
-    private static final String TRAN_TRANSACTION_ID = TransactionPeer.TRANSACTION_ID.substring(
-            TransactionPeer.TRANSACTION_ID.indexOf('.')+1);
-    private static final String TRAN_CREATED_DATE = TransactionPeer.CREATED_DATE.substring(
-            TransactionPeer.CREATED_DATE.indexOf('.')+1);
-    private static final String TRAN_CREATED_BY = TransactionPeer.CREATED_BY.substring(
-            TransactionPeer.CREATED_BY.indexOf('.')+1);
-    private static final String TRAN_TYPE_ID = TransactionPeer.TYPE_ID.substring(
-            TransactionPeer.TYPE_ID.indexOf('.')+1);
+    private static final String TRAN_TRANSACTION_ID = ActivitySetPeer.TRANSACTION_ID.substring(
+            ActivitySetPeer.TRANSACTION_ID.indexOf('.')+1);
+    private static final String TRAN_CREATED_DATE = ActivitySetPeer.CREATED_DATE.substring(
+            ActivitySetPeer.CREATED_DATE.indexOf('.')+1);
+    private static final String TRAN_CREATED_BY = ActivitySetPeer.CREATED_BY.substring(
+            ActivitySetPeer.CREATED_BY.indexOf('.')+1);
+    private static final String TRAN_TYPE_ID = ActivitySetPeer.TYPE_ID.substring(
+            ActivitySetPeer.TYPE_ID.indexOf('.')+1);
 
     private int type=0;
     private ScarabUser generatedBy;
@@ -1003,7 +1003,7 @@ public  class Report
         throws Exception
     {
         Criteria crit = new Criteria();
-        // select count(issue_id) from activity a1 a2 a3, transaction t1 t2 t3
+        // select count(issue_id) from activity a1 a2 a3, activitySet t1 t2 t3
         crit.addSelectColumn("count(DISTINCT a1." + ACT_ISSUE_ID + ')');
         addOptionOrGroup(1, o1, date, crit);
         addOptionOrGroup(2, o2, date, crit);
@@ -1044,7 +1044,7 @@ public  class Report
             }
         }
         crit.addAlias("a"+alias, ActivityPeer.TABLE_NAME);
-        crit.addAlias("t"+alias, TransactionPeer.TABLE_NAME);
+        crit.addAlias("t"+alias, ActivitySetPeer.TABLE_NAME);
     }
 
     private void addOptionOrGroup(int alias, Object optionOrGroup, 
@@ -1104,7 +1104,7 @@ public  class Report
         else if (optionOrGroup instanceof ScarabUser)
         {
             crit.add(t, TRAN_TYPE_ID, 
-                     TransactionTypePeer.CREATE_ISSUE__PK);
+                     ActivitySetTypePeer.CREATE_ISSUE__PK);
             crit.add(t, TRAN_CREATED_BY, 
                      ((ScarabUser)optionOrGroup).getUserId());
         }

@@ -118,8 +118,8 @@ import org.tigris.scarab.om.MITList;
 import org.tigris.scarab.om.MITListManager;
 import org.tigris.scarab.om.Report;
 import org.tigris.scarab.om.ReportManager;
-import org.tigris.scarab.om.TransactionPeer;
-import org.tigris.scarab.om.TransactionTypePeer;
+import org.tigris.scarab.om.ActivitySetPeer;
+import org.tigris.scarab.om.ActivitySetTypePeer;
 import org.tigris.scarab.om.ActivityPeer;
 import org.tigris.scarab.tools.SecurityAdminTool;
 import org.tigris.scarab.util.Log;
@@ -1745,12 +1745,12 @@ try{
                
                // Build Criteria for created by
                Criteria createdByCrit = new Criteria()
-                   .addJoin(TransactionPeer.TRANSACTION_ID, 
+                   .addJoin(ActivitySetPeer.TRANSACTION_ID, 
                                 ActivityPeer.TRANSACTION_ID)
                    .addJoin(ActivityPeer.ISSUE_ID, IssuePeer.ISSUE_ID)
-                   .add(TransactionPeer.TYPE_ID, 
-                        TransactionTypePeer.CREATE_ISSUE__PK)
-                   .add(TransactionPeer.CREATED_BY, userId);
+                   .add(ActivitySetPeer.TYPE_ID, 
+                        ActivitySetTypePeer.CREATE_ISSUE__PK)
+                   .add(ActivitySetPeer.CREATED_BY, userId);
 
                // If attribute is "committed by", search for creating user
                if (attrId.equals("created_by"))

@@ -105,7 +105,7 @@ import org.apache.fulcrum.security.impl.db.entity
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: ScarabModule.java,v 1.119 2002/06/27 22:17:14 elicia Exp $
+ * @version $Id: ScarabModule.java,v 1.120 2002/07/30 22:48:15 jmcnally Exp $
  */
 public class ScarabModule
     extends BaseScarabModule
@@ -382,9 +382,9 @@ public class ScarabModule
 
     /**
      * Saves the module into the database. Note that this
-     * cannot be used within a transaction if the module isNew()
+     * cannot be used within a activitySet if the module isNew()
      * because dbCon.commit() is called within the method. An
-     * update can be done within a transaction though.
+     * update can be done within a activitySet though.
      */
     public void save(Connection dbCon) 
         throws TorqueException

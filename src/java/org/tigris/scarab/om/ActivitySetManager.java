@@ -46,74 +46,94 @@ package org.tigris.scarab.om;
  * individuals on behalf of Collab.Net.
  */ 
 
-// Java classes
-import java.util.List;
+import java.util.Date;
+
+import org.tigris.scarab.util.ScarabException;
 
 import org.apache.torque.Torque;
 import org.apache.torque.TorqueException;
+import org.apache.torque.om.NumberKey;
 import org.apache.torque.om.Persistent;
-import org.apache.torque.util.Criteria;
-
-import org.tigris.scarab.util.ScarabException;
-import org.tigris.scarab.services.cache.ScarabCache;
 
 /** 
- * This class manages TransactionType objects.  
+ * This class manages ActivitySet objects.
  *
- * @author <a href="mailto:jmcnally@collab.new">John McNally</a>
+ * @author <a href="mailto:jmcnally@collab.new">JohnMcNally</a>
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: TransactionTypeManager.java,v 1.3 2002/06/24 21:43:20 jon Exp $
+ * @version $Id: ActivitySetManager.java,v 1.1 2002/07/30 22:48:15 jmcnally Exp $
  */
-public class TransactionTypeManager
-    extends BaseTransactionTypeManager
+public class ActivitySetManager
+    extends BaseActivitySetManager
 {
-    // the following Strings are method names that are used in caching results
-    private static final String TRANSACTION_TYPE =
-        "TransactionType";
-    private static final String GET_INSTANCE =
-        "getInstance";
-
     /**
-     * Creates a new <code>TransactionTypeManager</code> instance.
+     * Creates a new <code>ActivitySetManager</code> instance.
      *
      * @exception TorqueException if an error occurs
      */
-    public TransactionTypeManager()
+    public ActivitySetManager()
         throws TorqueException
     {
         super();
     }
 
-    public static TransactionType getInstance(String transactionTypeName) 
+    /**
+     * Gets a new ActivitySet object by the ActivitySetId String
+     */
+    public static ActivitySet getInstance(String key)
+        throws TorqueException
+    {
+        return getInstance(new NumberKey(key));
+    }
+
+    /**
+     * Populates a new activitySet object.
+     */
+    public static ActivitySet getInstance(ActivitySetType tt, ScarabUser user)
         throws Exception
     {
-        TransactionType ttype = null; 
-        Object obj = ScarabCache.get(TRANSACTION_TYPE, GET_INSTANCE, 
-                                     transactionTypeName);
-        if (obj == null) 
-        {        
-            Criteria crit = new Criteria();
-            crit.add(TransactionTypePeer.NAME, transactionTypeName);
-            List transactionTypes = TransactionTypePeer.doSelect(crit);
-            if (transactionTypes.size() < 1) 
-            {
-                throw new ScarabException("Transaction type name: " + 
-                                          transactionTypeName + " not found.");
-            }
-            if (transactionTypes.size() > 1)
-            {
-                throw new ScarabException(
-                    "duplicate transaction type name found");
-            }
-            ttype = (TransactionType)transactionTypes.get(0);
-            ScarabCache.put(ttype, "TransactionType", "getInstance", 
-                            transactionTypeName);
-        }
-        else 
+        return getInstance(tt.getTypeId(), user, null);
+    }
+
+    /**
+     * Populates a new activitySet object.
+     */
+    public static ActivitySet getInstance(ActivitySetType tt, 
+                                          ScarabUser user, Attachment attachment)
+        throws Exception
+    {
+        return getInstance(tt.getTypeId(), user, attachment);
+    }
+
+    /**
+     * Populates a new activitySet object.
+     */
+    public static ActivitySet getInstance(NumberKey typeId, ScarabUser user)
+        throws Exception
+    {
+        return getInstance(typeId, user, null);
+    }
+
+    /**
+     * Populates a new activitySet object.
+     */
+    public static ActivitySet getInstance(NumberKey typeId, 
+                                          ScarabUser user, Attachment attachment)
+        throws Exception
+    {
+        if (attachment != null && attachment.getAttachmentId() == null) 
         {
-            ttype = (TransactionType)obj;
+            String mesg = 
+                "Attachment must be saved before starting activitySet";
+            throw new ScarabException(mesg);
         }
-        
-        return ttype;
+        ActivitySet activitySet = new ActivitySet();
+        activitySet.setTypeId(typeId);
+        activitySet.setCreatedBy(user.getUserId());
+        activitySet.setCreatedDate(new Date());
+        if (attachment != null)
+        {
+            activitySet.setAttachment(attachment);
+        }
+        return activitySet;
     }
 }

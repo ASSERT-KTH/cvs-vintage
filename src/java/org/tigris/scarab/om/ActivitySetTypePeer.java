@@ -7,8 +7,8 @@ import org.apache.torque.om.NumberKey;
  *  application requirements.  This class will only be generated as
  *  long as it does not already exist in the output directory.
  */
-public class TransactionTypePeer 
-    extends org.tigris.scarab.om.BaseTransactionTypePeer
+public class ActivitySetTypePeer 
+    extends org.tigris.scarab.om.BaseActivitySetTypePeer
 {
     public static final NumberKey CREATE_ISSUE__PK = new NumberKey("1");
     public static final NumberKey EDIT_ISSUE__PK = new NumberKey("2");

@@ -54,14 +54,14 @@ import org.tigris.scarab.om.DependType;
 import org.tigris.scarab.om.Issue;
 import org.tigris.scarab.om.Module;
 import org.tigris.scarab.om.ScarabUser;
-import org.tigris.scarab.om.Transaction;
-import org.tigris.scarab.om.TransactionType;
+import org.tigris.scarab.om.ActivitySet;
+import org.tigris.scarab.om.ActivitySetType;
 import org.apache.commons.digester.Digester;
 
 /**
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: ImportBean.java,v 1.6 2002/05/06 22:56:26 jon Exp $
+ * @version $Id: ImportBean.java,v 1.7 2002/07/30 22:48:15 jmcnally Exp $
  */
 public class ImportBean
 {
@@ -76,8 +76,8 @@ public class ImportBean
     private ActivityInfo activityInfo = null;
     private Issue issue = null;
     private String issueId = null;
-    private Transaction transaction = null;
-    private TransactionType transactionType = null;
+    private ActivitySet activitySet = null;
+    private ActivitySetType activitySetType = null;
     private Attachment attachment = null;
     private String attachmentDateFormat = null;
 
@@ -180,24 +180,24 @@ public class ImportBean
         this.userList = value;
     }
 
-    public Transaction getTransaction()
+    public ActivitySet getActivitySet()
     {
-        return this.transaction;
+        return this.activitySet;
     }
     
-    public void setTransaction(Transaction value)
+    public void setActivitySet(ActivitySet value)
     {
-        this.transaction = value;
+        this.activitySet = value;
     }
 
-    public TransactionType getTransactionType()
+    public ActivitySetType getActivitySetType()
     {
-        return this.transactionType;
+        return this.activitySetType;
     }
     
-    public void setTransactionType(TransactionType value)
+    public void setActivitySetType(ActivitySetType value)
     {
-        this.transactionType = value;
+        this.activitySetType = value;
     }
 
     public Module getModule()

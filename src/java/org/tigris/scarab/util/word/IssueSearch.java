@@ -78,8 +78,8 @@ import org.tigris.scarab.om.AttributeValuePeer;
 import org.tigris.scarab.om.AttributeValue;
 import org.tigris.scarab.om.AttributePeer;
 import org.tigris.scarab.om.ActivityPeer;
-import org.tigris.scarab.om.TransactionPeer;
-import org.tigris.scarab.om.TransactionTypePeer;
+import org.tigris.scarab.om.ActivitySetPeer;
+import org.tigris.scarab.om.ActivitySetTypePeer;
 import org.tigris.scarab.om.RModuleOptionPeer;
 import org.tigris.scarab.om.ScarabUser;
 import org.tigris.scarab.om.ScarabUserManager;
@@ -956,13 +956,13 @@ public class IssueSearch
         Date maxUtilDate = parseDate(getMaxDate(), true);
         if ( minUtilDate != null || maxUtilDate != null ) 
         {
-            addDateRange(TransactionPeer.CREATED_DATE, 
+            addDateRange(ActivitySetPeer.CREATED_DATE, 
                          minUtilDate, maxUtilDate, crit);
-            crit.addJoin(TransactionPeer.TRANSACTION_ID, 
+            crit.addJoin(ActivitySetPeer.TRANSACTION_ID, 
                          ActivityPeer.TRANSACTION_ID);
             crit.addJoin(ActivityPeer.ISSUE_ID, IssuePeer.ISSUE_ID);
-            crit.add(TransactionPeer.TYPE_ID, 
-                     TransactionTypePeer.CREATE_ISSUE__PK);
+            crit.add(ActivitySetPeer.TYPE_ID, 
+                     ActivitySetTypePeer.CREATE_ISSUE__PK);
             // there could be multiple attributes modified during the creation
             // which will lead to duplicate issue selection, so we need to 
             // specify only unique issues
@@ -1306,9 +1306,9 @@ public class IssueSearch
             Date maxUtilDate = parseDate(getStateChangeToDate(), true);
             if ( minUtilDate != null || maxUtilDate != null ) 
             {
-                addDateRange(TransactionPeer.CREATED_DATE, 
+                addDateRange(ActivitySetPeer.CREATED_DATE, 
                              minUtilDate, maxUtilDate, crit);
-                crit.addJoin(TransactionPeer.TRANSACTION_ID, 
+                crit.addJoin(ActivitySetPeer.TRANSACTION_ID, 
                              ActivityPeer.TRANSACTION_ID);
             }
         }

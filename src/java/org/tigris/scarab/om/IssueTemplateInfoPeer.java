@@ -38,7 +38,7 @@ public class IssueTemplateInfoPeer
             Criteria crit = new Criteria()
                 .add(IssuePeer.MODULE_ID, me.getModuleId())
                 .add(IssuePeer.DELETED, 0)
-                .addJoin(TransactionPeer.TRANSACTION_ID, 
+                .addJoin(ActivitySetPeer.TRANSACTION_ID, 
                          ActivityPeer.TRANSACTION_ID) 
                 .addJoin(IssuePeer.ISSUE_ID, 
                          ActivityPeer.ISSUE_ID) 
@@ -50,7 +50,7 @@ public class IssueTemplateInfoPeer
             Criteria.Criterion cPriv1 = crit.getNewCriterion(
                 IssueTemplateInfoPeer.SCOPE_ID, Scope.PERSONAL__PK, 
                 Criteria.EQUAL);
-            cPriv1.and( crit.getNewCriterion(TransactionPeer.CREATED_BY, 
+            cPriv1.and( crit.getNewCriterion(ActivitySetPeer.CREATED_BY, 
                 user.getUserId(),  Criteria.EQUAL));
             Criteria.Criterion cGlob = crit.getNewCriterion(
                 IssueTemplateInfoPeer.SCOPE_ID, Scope.MODULE__PK,

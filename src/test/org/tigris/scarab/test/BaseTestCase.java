@@ -64,8 +64,8 @@ import org.tigris.scarab.om.AttributeManager;
 import org.tigris.scarab.om.ScarabUser;
 import org.tigris.scarab.om.ScarabUserManager;
 import org.tigris.scarab.om.Attachment;
-import org.tigris.scarab.om.Transaction;
-import org.tigris.scarab.om.TransactionTypePeer;
+import org.tigris.scarab.om.ActivitySet;
+import org.tigris.scarab.om.ActivitySetTypePeer;
 import org.tigris.scarab.om.Query;
 import org.tigris.scarab.om.Module;
 
@@ -75,7 +75,7 @@ import org.tigris.scarab.om.Module;
  *
  * @author <a href="mailto:jon@latchkey.com">Jon S. Stevens</a>
  * @author <a href="mailto:dlr@finemaltcoding.com">Daniel Rall</a>
- * @version $Id: BaseTestCase.java,v 1.16 2002/07/24 18:05:51 jon Exp $
+ * @version $Id: BaseTestCase.java,v 1.17 2002/07/30 22:48:16 jmcnally Exp $
  */
 public class BaseTestCase extends TestCase
 {
@@ -223,7 +223,7 @@ public class BaseTestCase extends TestCase
         return assignAttribute;
     }
 
-    protected Transaction getEditTransaction()
+    protected ActivitySet getEditActivitySet()
         throws Exception
     {
         Attachment attach = new Attachment();
@@ -231,8 +231,8 @@ public class BaseTestCase extends TestCase
         attach.setName("commenttest");
         attach.save();
 
-        Transaction trans = TransactionManager
-            .getInstance(TransactionTypePeer.EDIT_ISSUE__PK, getUser1(), attach);
+        ActivitySet trans = ActivitySetManager
+            .getInstance(ActivitySetTypePeer.EDIT_ISSUE__PK, getUser1(), attach);
         trans.save();
         return trans;
     }

@@ -85,9 +85,9 @@ import org.tigris.scarab.om.AttributeManager;
 import org.tigris.scarab.om.AttributePeer;
 import org.tigris.scarab.attribute.UserAttribute;
 import org.tigris.scarab.om.Attachment;
-import org.tigris.scarab.om.Transaction;
+import org.tigris.scarab.om.ActivitySet;
 import org.tigris.scarab.om.Activity;
-import org.tigris.scarab.om.TransactionTypePeer;
+import org.tigris.scarab.om.ActivitySetTypePeer;
 import org.tigris.scarab.om.Module;
 import org.tigris.scarab.om.RModuleAttributePeer;
 import org.tigris.scarab.util.ScarabConstants;
@@ -103,7 +103,7 @@ import org.tigris.scarab.services.security.ScarabSecurity;
  * This class is responsible for assigning users to attributes.
  *
  * @author <a href="mailto:jmcnally@collab.net">John D. McNally</a>
- * @version $Id: AssignIssue.java,v 1.56 2002/07/26 21:14:40 jmcnally Exp $
+ * @version $Id: AssignIssue.java,v 1.57 2002/07/30 22:48:14 jmcnally Exp $
  */
 public class AssignIssue extends BaseModifyIssue
 {

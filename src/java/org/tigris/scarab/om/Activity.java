@@ -66,7 +66,7 @@ import org.tigris.scarab.services.cache.ScarabCache;
  *
  * @author <a href="mailto:jmcnally@collab.new">John McNally</a>
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: Activity.java,v 1.34 2002/07/19 01:28:36 jon Exp $
+ * @version $Id: Activity.java,v 1.35 2002/07/30 22:48:15 jmcnally Exp $
  */
 public class Activity 
     extends BaseActivity
@@ -155,7 +155,7 @@ public class Activity
             if (result.size() == 1) 
             {
                 Activity a = (Activity)result.get(0);
-                a.setEndDate(getTransaction().getCreatedDate());
+                a.setEndDate(getActivitySet().getCreatedDate());
                 a.save(dbCon);
             }
             else if (result.size() > 1) 

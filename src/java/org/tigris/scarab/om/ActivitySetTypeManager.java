@@ -1,4 +1,4 @@
-package org.tigris.scarab.util.xml;
+package org.tigris.scarab.om;
 
 /* ================================================================
  * Copyright (c) 2000-2002 CollabNet.  All rights reserved.
@@ -44,51 +44,76 @@ package org.tigris.scarab.util.xml;
  * 
  * This software consists of voluntary contributions made by many
  * individuals on behalf of Collab.Net.
- */
+ */ 
 
-import org.xml.sax.Attributes;
+// Java classes
+import java.util.List;
 
-import org.tigris.scarab.om.Transaction;
-import org.tigris.scarab.om.TransactionManager;
-import org.tigris.scarab.om.Issue;
+import org.apache.torque.Torque;
+import org.apache.torque.TorqueException;
+import org.apache.torque.om.Persistent;
+import org.apache.torque.util.Criteria;
 
-import org.apache.torque.om.NumberKey;
+import org.tigris.scarab.util.ScarabException;
+import org.tigris.scarab.services.cache.ScarabCache;
 
-/**
- * Handler for the xpath "scarab/module/issue/transaction"
+/** 
+ * This class manages ActivitySetType objects.  
  *
- * @author <a href="mailto:kevin.minshull@bitonic.com">Kevin Minshull</a>
- * @author <a href="mailto:richard.han@bitonic.com">Richard Han</a>
+ * @author <a href="mailto:jmcnally@collab.new">John McNally</a>
+ * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
+ * @version $Id: ActivitySetTypeManager.java,v 1.1 2002/07/30 22:48:15 jmcnally Exp $
  */
-public class TransactionRule extends BaseRule
+public class ActivitySetTypeManager
+    extends BaseActivitySetTypeManager
 {
-    public TransactionRule(ImportBean ib)
-    {
-        super(ib);
-    }
-    
+    // the following Strings are method names that are used in caching results
+    private static final String TRANSACTION_TYPE =
+        "ActivitySetType";
+    private static final String GET_INSTANCE =
+        "getInstance";
+
     /**
-     * This method is called when the beginning of a matching XML element
-     * is encountered.
+     * Creates a new <code>ActivitySetTypeManager</code> instance.
      *
-     * @param attributes The attribute list of this element
+     * @exception TorqueException if an error occurs
      */
-    public void begin(Attributes attributes) throws Exception
+    public ActivitySetTypeManager()
+        throws TorqueException
     {
-        log().debug("(" + getImportBean().getState() + 
-            ") transaction begin");
-        String id = attributes.getValue("id");
-        log().debug("transaction id: " + id);
-        Transaction transaction = TransactionManager.getInstance(new NumberKey(id));
-        getImportBean().setTransaction(transaction);
+        super();
     }
-    
-    /**
-     * This method is called when the end of a matching XML element
-     * is encountered.
-     */
-    public void end() throws Exception
+
+    public static ActivitySetType getInstance(String activitySetTypeName) 
+        throws Exception
     {
-        log().debug("(" + getImportBean().getState() + ") transaction end");
+        ActivitySetType ttype = null; 
+        Object obj = ScarabCache.get(TRANSACTION_TYPE, GET_INSTANCE, 
+                                     activitySetTypeName);
+        if (obj == null) 
+        {        
+            Criteria crit = new Criteria();
+            crit.add(ActivitySetTypePeer.NAME, activitySetTypeName);
+            List activitySetTypes = ActivitySetTypePeer.doSelect(crit);
+            if (activitySetTypes.size() < 1) 
+            {
+                throw new ScarabException("ActivitySet type name: " + 
+                                          activitySetTypeName + " not found.");
+            }
+            if (activitySetTypes.size() > 1)
+            {
+                throw new ScarabException(
+                    "duplicate activitySet type name found");
+            }
+            ttype = (ActivitySetType)activitySetTypes.get(0);
+            ScarabCache.put(ttype, "ActivitySetType", "getInstance", 
+                            activitySetTypeName);
+        }
+        else 
+        {
+            ttype = (ActivitySetType)obj;
+        }
+        
+        return ttype;
     }
 }

@@ -59,7 +59,7 @@ import junit.framework.*;
  * A Testing Suite for the om.Activity class.
  *
  * @author <a href="mailto:mumbly@oneofus.org">Tim McNerney</a>
- * @version $Id: ActivityTest.java,v 1.4 2002/07/24 18:05:50 jon Exp $
+ * @version $Id: ActivityTest.java,v 1.5 2002/07/30 22:48:16 jmcnally Exp $
  */
 public class ActivityTest extends BaseTestCase
 {
@@ -89,16 +89,16 @@ public class ActivityTest extends BaseTestCase
     public void testCreateLong() throws Exception
     {
         System.out.println("\ntestCreateLong()");
-        Transaction trans = getEditTransaction();
+        ActivitySet trans = getEditActivitySet();
         Activity activity = ActivityManager
             .createNumericActivity(getIssue0(), getPlatformAttribute()
             trans,"new activity long create",null,
             new NumberKey(5), new NumberKey(6));
         activity.save();
-        Transaction newtrans = activity.getTransaction();
-        assertEquals("getTransaction expected: " + trans.getTransactionId() +
-        " got: " + newtrans.getTransactionId(),
-        trans.getTransactionId().toString(), newtrans.getTransactionId().toString());
+        ActivitySet newtrans = activity.getActivitySet();
+        assertEquals("getActivitySet expected: " + trans.getActivitySetId() +
+        " got: " + newtrans.getActivitySetId(),
+        trans.getActivitySetId().toString(), newtrans.getActivitySetId().toString());
         Activity retActivity = ActivityManager
             .getInstance(activity.getActivityId(), false);
         assertEquals("OldValue", activity.getOldValue(), retActivity.getOldValue());
@@ -109,7 +109,7 @@ public class ActivityTest extends BaseTestCase
     public void testCreateShort() throws Exception
     {
         System.out.println("\ntestCreateShort()");
-        Transaction trans = getEditTransaction();
+        ActivitySet trans = getEditActivitySet();
 
         Activity activity = ActivityManager
             .createTextActivity(getIssue0(), getPlatformAttribute()
@@ -117,10 +117,10 @@ public class ActivityTest extends BaseTestCase
             "oldValue", "newValue");
         activity.save();
 
-        Transaction newtrans = activity.getTransaction();
-        assertEquals("getTransaction expected: " + trans.getTransactionId() +
-        " got: " + newtrans.getTransactionId(),
-        trans.getTransactionId().toString(), newtrans.getTransactionId().toString());
+        ActivitySet newtrans = activity.getActivitySet();
+        assertEquals("getActivitySet expected: " + trans.getActivitySetId() +
+        " got: " + newtrans.getActivitySetId(),
+        trans.getActivitySetId().toString(), newtrans.getActivitySetId().toString());
         Activity retActivity = ActivityManager
             .getInstance(activity.getActivityId(), false);
         assertEquals("OldValue", activity.getOldValue(), retActivity.getOldValue());

@@ -1,4 +1,4 @@
-package org.tigris.scarab.om;
+package org.tigris.scarab.util.xml;
 
 /* ================================================================
  * Copyright (c) 2000-2002 CollabNet.  All rights reserved.
@@ -44,96 +44,54 @@ package org.tigris.scarab.om;
  * 
  * This software consists of voluntary contributions made by many
  * individuals on behalf of Collab.Net.
- */ 
-
-import java.util.Date;
-
-import org.tigris.scarab.util.ScarabException;
-
-import org.apache.torque.Torque;
-import org.apache.torque.TorqueException;
-import org.apache.torque.om.NumberKey;
-import org.apache.torque.om.Persistent;
-
-/** 
- * This class manages Transaction objects.
- *
- * @author <a href="mailto:jmcnally@collab.new">JohnMcNally</a>
- * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: TransactionManager.java,v 1.3 2002/07/17 22:06:28 jon Exp $
  */
-public class TransactionManager
-    extends BaseTransactionManager
+
+import org.apache.fulcrum.security.TurbineSecurity;
+
+import org.tigris.scarab.om.ScarabUser;
+import org.tigris.scarab.om.ActivitySet;
+import org.tigris.scarab.om.ActivitySetType;
+
+/**
+ * Handler for the xpath "scarab/module/issue/activitySet/committed-by"
+ *
+ * @author <a href="mailto:kevin.minshull@bitonic.com">Kevin Minshull</a>
+ * @author <a href="mailto:richard.han@bitonic.com">Richard Han</a>
+ */
+public class ActivitySetCommittedByRule extends BaseRule
 {
+    public ActivitySetCommittedByRule(ImportBean ib)
+    {
+        super(ib);
+    }
+    
     /**
-     * Creates a new <code>TransactionManager</code> instance.
+     * This method is called when the body of a matching XML element
+     * is encountered.  If the element has no body, this method is
+     * not called at all.
      *
-     * @exception TorqueException if an error occurs
+     * @param text The text of the body of this element
      */
-    public TransactionManager()
-        throws TorqueException
-    {
-        super();
-    }
-
-    /**
-     * Gets a new Transaction object by the TransactionId String
-     */
-    public static Transaction getInstance(String key)
-        throws TorqueException
-    {
-        return getInstance(new NumberKey(key));
-    }
-
-    /**
-     * Populates a new transaction object.
-     */
-    public static Transaction getInstance(TransactionType tt, ScarabUser user)
+    public void body(String text)
         throws Exception
     {
-        return getInstance(tt.getTypeId(), user, null);
+        log().debug("(" + getImportBean().getState() + 
+            ") activitySet committed by body: " + text);
+        super.doInsertionOrValidationAtBody(text);
     }
-
-    /**
-     * Populates a new transaction object.
-     */
-    public static Transaction getInstance(TransactionType tt, 
-                                          ScarabUser user, Attachment attachment)
+    
+    protected void doInsertionAtBody(String committedByName)
         throws Exception
     {
-        return getInstance(tt.getTypeId(), user, attachment);
+        ScarabUser user = (ScarabUser)TurbineSecurity.getUser(committedByName);
+        ActivitySetType activitySetType = getImportBean().getActivitySetType();
+//        ActivitySet activitySet = getImportBean().getActivitySet();
+//        activitySet.create(activitySetType.getTypeId(), user, null);
     }
-
-    /**
-     * Populates a new transaction object.
-     */
-    public static Transaction getInstance(NumberKey typeId, ScarabUser user)
+    
+    protected void doValidationAtBody(String committedByName)
         throws Exception
     {
-        return getInstance(typeId, user, null);
-    }
-
-    /**
-     * Populates a new transaction object.
-     */
-    public static Transaction getInstance(NumberKey typeId, 
-                                          ScarabUser user, Attachment attachment)
-        throws Exception
-    {
-        if (attachment != null && attachment.getAttachmentId() == null) 
-        {
-            String mesg = 
-                "Attachment must be saved before starting transaction";
-            throw new ScarabException(mesg);
-        }
-        Transaction transaction = new Transaction();
-        transaction.setTypeId(typeId);
-        transaction.setCreatedBy(user.getUserId());
-        transaction.setCreatedDate(new Date());
-        if (attachment != null)
-        {
-            transaction.setAttachment(attachment);
-        }
-        return transaction;
+        validateUser(committedByName);
     }
 }
