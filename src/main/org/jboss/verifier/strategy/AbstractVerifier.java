@@ -19,7 +19,7 @@ package org.jboss.verifier.strategy;
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  *
  * This package and its source code is available at www.jboss.org
- * $Id: AbstractVerifier.java,v 1.25 2002/02/10 17:02:50 luke_t Exp $
+ * $Id: AbstractVerifier.java,v 1.26 2002/02/10 17:19:50 luke_t Exp $
  */
 
 // standard imports
@@ -77,7 +77,7 @@ import org.gjt.lindfors.pattern.StrategyContext;
  * </ul>
  * </p>
  *
- * @version $Revision: 1.25 $
+ * @version $Revision: 1.26 $
  * @since  	JDK 1.3
  */
 public abstract class AbstractVerifier implements VerificationStrategy {
@@ -325,7 +325,6 @@ public abstract class AbstractVerifier implements VerificationStrategy {
     public boolean hasRemoteReturnType(BeanMetaData bean, Method m) {
         try {
              Class clazz = classloader.loadClass(bean.getRemote());
-             System.out.println("Bean remote "+bean.getRemote()+ ", return type " + m.getReturnType().getName());
              return m.getReturnType().isAssignableFrom(clazz);
         } catch(Exception e) {
            e.printStackTrace();
