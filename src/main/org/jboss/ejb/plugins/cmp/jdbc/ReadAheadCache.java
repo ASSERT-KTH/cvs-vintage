@@ -31,7 +31,7 @@ import org.jboss.util.LRUCachePolicy;
  * basis. The read ahead data for each entity is stored with a soft reference.
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
- * @version $Revision: 1.4 $
+ * @version $Revision: 1.5 $
  */
 public class ReadAheadCache {
    /**
@@ -264,6 +264,9 @@ public class ReadAheadCache {
                      relatedManager.getReadAheadCache();
                relatedReadAheadCache.addFinderResult(new FinderResults(
                      (List)value, cmrField.getReadAhead(), null, null));
+
+               // mark this field clean as it's value was just loaded
+               cmrField.setClean(ctx);
             } else {
                if(log.isTraceEnabled()) {
                   log.trace("CMRField already loaded:" +
