@@ -3,6 +3,7 @@
   #set ($attrInput = $intake.AttributeValue.mapTo($attrValue))
   #set ($attr = $attrValue.Attribute)
   #set ($module = $attrValue.Issue.Module)
+  #set ($values = "")
   #set ($issueType = $attrValue.Issue.IssueType)
   #set ($values = $attrInput.get($optionFieldName).Value)
 
@@ -15,7 +16,7 @@
   #foreach ($option in $module.getLeafRModuleOptions($attr, $issueType))
     #set ($selected = false)
     #set ($canMakeTransition = "true")
-    #if ($values)   
+    #if ($values && !$values.equals(""))   
        #if ($multiple.equals("true"))
          #foreach ($value in $values)
             #if ($value.equals($option.OptionId))
@@ -222,6 +223,14 @@
 <input type="radio" name="$booleanField.Key" value="true" />
 #end
 <input type="hidden" name="$booleanField.ValueIfAbsent" value="false" />
+#end
+
+#macro (Radio $field $value)
+#if ($field.Value.equals($value))
+<input type="radio" name="$field.Key" value="$value" checked="checked" />
+#else
+<input type="radio" name="$field.Key" value="$value" />
+#end
 #end
 
 #macro (checked $v1 $v2)
