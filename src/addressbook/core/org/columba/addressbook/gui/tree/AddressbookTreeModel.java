@@ -1,16 +1,18 @@
-//The contents of this file are subject to the Mozilla Public License Version 1.1
-//(the "License"); you may not use this file except in compliance with the 
+// The contents of this file are subject to the Mozilla Public License Version
+// 1.1
+//(the "License"); you may not use this file except in compliance with the
 //License. You may obtain a copy of the License at http://www.mozilla.org/MPL/
 //
 //Software distributed under the License is distributed on an "AS IS" basis,
-//WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License 
+//WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License
 //for the specific language governing rights and
 //limitations under the License.
 //
 //The Original Code is "The Columba Project"
 //
-//The Initial Developers of the Original Code are Frederik Dietz and Timo Stich.
-//Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
+//The Initial Developers of the Original Code are Frederik Dietz and Timo
+// Stich.
+//Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003.
 //
 //All Rights Reserved.
 package org.columba.addressbook.gui.tree;
@@ -31,210 +33,111 @@ import java.util.Enumeration;
 import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.TreeModel;
 
-
 public class AddressbookTreeModel extends DefaultTreeModel implements TreeModel {
-    //private AddressbookTreeNode rootNode;
-    protected DefaultXmlConfig folderXmlConfig;
-    private final Class[] FOLDER_ITEM_ARG = new Class[] { FolderItem.class };
 
-    public AddressbookTreeModel(XmlElement root) {
-        super(new Root(root));
+	protected DefaultXmlConfig folderXmlConfig;
 
-        //this.folderXmlConfig = xmlConfig;
-        //System.out.println("root1=" + getRoot().toString());
-        createDirectories(((AddressbookTreeNode) getRoot()).getNode(),
-            (AddressbookTreeNode) getRoot());
-    }
+	private final Class[] FOLDER_ITEM_ARG = new Class[] { FolderItem.class };
 
-    public SelectAddressbookFolderDialog getSelectAddressbookFolderDialog() {
-        SelectAddressbookFolderDialog dialog = new SelectAddressbookFolderDialog(this);
+	public AddressbookTreeModel(XmlElement root) {
+		super(new Root(root));
 
-        return dialog;
-    }
+		createDirectories(((AddressbookTreeNode) getRoot()).getNode(),
+				(AddressbookTreeNode) getRoot());
+	}
 
-    public void createDirectories(XmlElement parentTreeNode,
-        AddressbookTreeNode parentFolder) {
-        int count = parentTreeNode.count();
+	public SelectAddressbookFolderDialog getSelectAddressbookFolderDialog() {
+		SelectAddressbookFolderDialog dialog = new SelectAddressbookFolderDialog(
+				this);
 
-        XmlElement child;
+		return dialog;
+	}
 
-        for (int i = 0; i < count; i++) {
-            child = parentTreeNode.getElement(i);
+	public void createDirectories(XmlElement parentTreeNode,
+			AddressbookTreeNode parentFolder) {
+		int count = parentTreeNode.count();
 
-            String name = child.getName();
+		XmlElement child;
 
-            //XmlElement nameNode = child.getName();
-            //                System.out.println( "node: "+child );
-            //                System.out.println( "nodename: "+nameNode.getValue());
+		for (int i = 0; i < count; i++) {
+			child = parentTreeNode.getElement(i);
 
-            /*
-            if ((name.equals("tree")) || (name.equals("folder"))) {
-                    FolderTreeNode folder = add(child, parentFolder);
-                    if (folder != null)
-                            createDirectories(child, folder);
-            }
-            */
-            if (name.equals("folder")) {
-                AddressbookTreeNode folder = add(child, parentFolder);
+			String name = child.getName();
 
-                if (folder != null) {
-                    createDirectories(child, folder);
-                }
-            }
-        }
-    }
+			if (name.equals("folder")) {
+				AddressbookTreeNode folder = add(child, parentFolder);
 
-    public AddressbookTreeNode add(XmlElement childNode,
-        AddressbookTreeNode parentFolder) {
-        FolderItem item = new FolderItem(childNode);
+				if (folder != null) {
+					createDirectories(child, folder);
+				}
+			}
+		}
+	}
 
-        if (item == null) {
-            return null;
-        }
+	public AddressbookTreeNode add(XmlElement childNode,
+			AddressbookTreeNode parentFolder) {
+		FolderItem item = new FolderItem(childNode);
 
-        // i18n stuff
-        String name = item.get("property", "name");
+		if (item == null) {
+			return null;
+		}
 
-        //XmlElement.printNode(item.getRoot(), "");
-        int uid = item.getInteger("uid");
+		// i18n stuff
+		String name = item.get("property", "name");
 
-        // now instanciate the folder classes
-        String type = item.get("type");
+		//XmlElement.printNode(item.getRoot(), "");
+		int uid = item.getInteger("uid");
 
-        Object[] args = { item };
+		if ( AddressbookTreeNode.getNextFolderUid() <= uid)
+			AddressbookTreeNode.setNextFolderUid(uid+1);
+		
+		// now instanciate the folder classes
+		String type = item.get("type");
 
-        FolderPluginHandler handler = null;
+		Object[] args = { item };
 
-        try {
-            handler = (FolderPluginHandler) MainInterface.pluginManager.getHandler(
-                    "org.columba.addressbook.folder");
-        } catch (PluginHandlerNotFoundException ex) {
-            NotifyDialog d = new NotifyDialog();
-            d.showDialog(ex);
-        }
+		FolderPluginHandler handler = null;
 
-        AddressbookTreeNode folder = null;
+		try {
+			handler = (FolderPluginHandler) MainInterface.pluginManager
+					.getHandler("org.columba.addressbook.folder");
+		} catch (PluginHandlerNotFoundException ex) {
+			NotifyDialog d = new NotifyDialog();
+			d.showDialog(ex);
+		}
 
-        try {
-            folder = (AddressbookTreeNode) handler.getPlugin(type, args);
-            parentFolder.add(folder);
-        } catch (Exception ex) {
-            ex.printStackTrace();
-        }
+		AddressbookTreeNode folder = null;
 
-        return folder;
+		try {
+			folder = (AddressbookTreeNode) handler.getPlugin(type, args);
+			parentFolder.add(folder);
+		} catch (Exception ex) {
+			ex.printStackTrace();
+		}
 
-        /*
-        if (item.getType().equals("columba")) {
-                //ColumbaFolder f = new ColumbaFolder(childNode, item);
-                CachedMHFolder f = new CachedMHFolder(childNode, item);
+		return folder;
 
-                FilterList list = new FilterList(f);
-                parentFolder.add(f);
+	}
 
-                return f;
-        } else if (item.getType().equals("virtual")) {
+	public AddressbookTreeNode getFolder(int uid) {
+		AddressbookTreeNode root = (AddressbookTreeNode) getRoot();
 
-                VirtualFolder f = new VirtualFolder(childNode, item);
-                Search search = new Search(childNode, f);
-                parentFolder.add(f);
+		for (Enumeration e = root.breadthFirstEnumeration(); e
+				.hasMoreElements();) {
+			AddressbookTreeNode node = (AddressbookTreeNode) e.nextElement();
 
-                return f;
-        } else if (item.getType().equals("outbox")) {
+			if (node instanceof Root) {
+				continue;
+			}
 
-                OutboxFolder f = new OutboxFolder(childNode, item);
-                parentFolder.add(f); // Do never exchange with line below!!
+			int id = node.getUid();
 
-                return f;
+			if (uid == id) {
+				return node;
+			}
+		}
 
-        } else if (item.getType().equals("imap")) {
-                AccountItem accountItem =
-                        MailInterface.config.getAccountList().uidGet(item.getAccountUid());
+		return null;
+	}
 
-                ImapItem item2 = accountItem.getImapItem();
-
-                IMAPRootFolder imapRootFolder = null;
-
-                IMAPFolder f =
-                        new IMAPFolder(childNode, item, item2, imapRootFolder);
-                FilterList list = new FilterList(f);
-                parentFolder.add(f);
-
-                return f;
-
-        } else if (item.getType().equals("imaproot")) {
-
-                AccountItem accountItem =
-                        MailInterface.config.getAccountList().uidGet(item.getAccountUid());
-
-                ImapItem item2 = accountItem.getImapItem();
-
-                IMAPRootFolder f =
-                        new IMAPRootFolder(
-                                childNode,
-                                item,
-                                item2,
-                                item.getAccountUid());
-                f.setName(accountItem.getName());
-                parentFolder.add(f);
-
-                return f;
-        }
-        */
-
-        //return null;
-    }
-
-    public AddressbookTreeNode getFolder(int uid) {
-        AddressbookTreeNode root = (AddressbookTreeNode) getRoot();
-
-        for (Enumeration e = root.breadthFirstEnumeration();
-                e.hasMoreElements();) {
-            AddressbookTreeNode node = (AddressbookTreeNode) e.nextElement();
-
-            if (node instanceof Root) {
-                continue;
-            }
-
-            int id = node.getUid();
-
-            if (uid == id) {
-                return node;
-            }
-        }
-
-        return null;
-    }
-
-    /* ===================================================================== */
-
-    // methods for TreeModel implementation
-
-    /*
-    public Object getRoot() {
-            return rootNode;
-    }
-
-    public boolean isLeaf(Object aNode) {
-            AddressbookTreeNode node = (AddressbookTreeNode) aNode;
-            if (node.getChildCount() > 0)
-                    return false;
-            return true;
-    }
-
-    public int getChildCount(Object parent) {
-            AddressbookTreeNode node = (AddressbookTreeNode) parent;
-            return node.getChildCount();
-    }
-
-    public Object getChild(Object parent, int index) {
-            AddressbookTreeNode node = (AddressbookTreeNode) parent;
-            return node.getChildAt(index);
-    }
-
-    public int getIndexOfChild(Object parent, Object child) {
-            AddressbookTreeNode node = (AddressbookTreeNode) parent;
-            return node.getIndex((AddressbookTreeNode) child);
-    }
-    */
 }

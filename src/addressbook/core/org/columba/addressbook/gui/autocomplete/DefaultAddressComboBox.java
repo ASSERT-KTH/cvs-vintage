@@ -15,58 +15,40 @@
 //All Rights Reserved.
 package org.columba.addressbook.gui.autocomplete;
 
-import org.columba.addressbook.folder.Folder;
-import org.columba.addressbook.folder.HeaderItem;
-import org.columba.addressbook.folder.HeaderItemList;
+import java.util.Iterator;
+
+import org.columba.addressbook.folder.AbstractFolder;
 import org.columba.addressbook.main.AddressbookInterface;
-
-import org.columba.mail.util.AddressCollector;
-
+import org.columba.addressbook.model.ContactItem;
+import org.columba.addressbook.model.ContactItemMap;
+import org.columba.addressbook.model.HeaderItem;
 
 /**
  * JCombox includes autocomplete feature.
  * <p>
- * This class automatically initializes the data
- * for the autocomplete feature.
- *
+ * This class automatically initializes the data for the autocomplete feature.
+ * 
  * @author fdietz
  */
 public class DefaultAddressComboBox extends BasicAddressAutocompleteComboBox {
-    public DefaultAddressComboBox() {
-        super();
+	public DefaultAddressComboBox() {
+		super();
 
-        initData();
+		initData();
 
-        // initialize completer
-        addCompleter();
-    }
+		// initialize completer
+		addCompleter();
+	}
 
-    private void addList(HeaderItemList list) {
-        for (int i = 0; i < list.count(); i++) {
-            HeaderItem item = list.get(i);
+	/**
+	 * Add data from the Personal Addressbook and Collected Addresses
+	 *  
+	 */
+	private void initData() {
+		AddressCollector.getInstance().clear();
 
-            if (item.contains("displayname")) {
-                AddressCollector.addAddress((String) item.get("displayname"),
-                    item); //$NON-NLS-1$ //$NON-NLS-2$
-            }
-
-            if (item.contains("email;internet")) {
-                AddressCollector.addAddress((String) item.get("email;internet"),
-                    item); //$NON-NLS-1$ //$NON-NLS-2$
-            }
-        }
-    }
-
-    /**
- * Add data from the Personal Addressbook and Collected Addresses
- *
- */
-    private void initData() {
-        AddressCollector.clear();
-
-        HeaderItemList list = ((Folder) AddressbookInterface.addressbookTreeModel.getFolder(101)).getHeaderItemList();
-        addList(list);
-        list = ((Folder) AddressbookInterface.addressbookTreeModel.getFolder(102)).getHeaderItemList();
-        addList(list);
-    }
+		AddressCollector.getInstance().addAllContacts(101);
+		AddressCollector.getInstance().addAllContacts(102);
+	
+	}
 }

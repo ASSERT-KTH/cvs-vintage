@@ -15,15 +15,6 @@
 //All Rights Reserved.ndation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 package org.columba.mail.gui.composer;
 
-import org.columba.addressbook.folder.HeaderItem;
-
-import org.columba.mail.gui.composer.util.AddressComboBox;
-import org.columba.mail.gui.composer.util.DisplaynameEditor;
-import org.columba.mail.gui.composer.util.DisplaynameRenderer;
-import org.columba.mail.gui.composer.util.FieldEditor;
-import org.columba.mail.gui.composer.util.FieldRenderer;
-import org.columba.mail.gui.composer.util.RecipientsTableModel;
-
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Rectangle;
@@ -32,6 +23,15 @@ import javax.swing.JComboBox;
 import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.table.TableColumn;
+
+import org.columba.addressbook.model.ContactItem;
+import org.columba.addressbook.model.HeaderItem;
+import org.columba.mail.gui.composer.util.AddressComboBox;
+import org.columba.mail.gui.composer.util.DisplaynameEditor;
+import org.columba.mail.gui.composer.util.DisplaynameRenderer;
+import org.columba.mail.gui.composer.util.FieldEditor;
+import org.columba.mail.gui.composer.util.FieldRenderer;
+import org.columba.mail.gui.composer.util.RecipientsTableModel;
 
 
 /**
@@ -131,10 +131,10 @@ public class HeaderView extends JTable {
 if (emptyRowExists())
                 return;
 */
-        HeaderItem item = new HeaderItem(HeaderItem.CONTACT);
-        item.add("displayname", "");
-        item.add("field", "To");
-
+        ContactItem item = new ContactItem();
+        item.setDisplayName("");
+        item.setHeader("To");
+        
         try {
             model.addItem(item);
         } catch (Exception ex) {
@@ -155,7 +155,7 @@ if (emptyRowExists())
     private boolean isEmpty(int row) {
         HeaderItem item1 = (HeaderItem) model.getValueAt(row, 1);
 
-        String value = (String) item1.get("displayname");
+        String value = (String) item1.getDisplayName();
 
         return value.length() == 0;
     }
@@ -169,7 +169,7 @@ if (emptyRowExists())
 
         HeaderItem item1 = (HeaderItem) model.getValueAt(rowCount - 1, 1);
 
-        String value = (String) item1.get("displayname");
+        String value = (String) item1.getDisplayName();
 
         return value.length() == 0;
     }
@@ -181,14 +181,14 @@ if (emptyRowExists())
             // be sure that the old field value (to:, cc:, bcc:) is
             // properly set 
             HeaderItem old = model.get(row);
-            String oldField = (String) old.get("field");
+            String oldField = (String) old.getHeader();
 
-            String newField = (String) item.get("field");
+            String newField = (String) item.getHeader();
 
             if (newField == null) {
-                item.add("field", oldField);
+                item.setHeader( oldField);
             } else if (newField.length() == 0) {
-                item.add("field", oldField);
+                item.setHeader( oldField);
             }
         }
 

@@ -15,7 +15,6 @@
 //All Rights Reserved.
 package org.columba.addressbook.gui.autocomplete;
 
-import org.columba.mail.util.AddressCollector;
 
 import java.util.List;
 import java.util.Vector;
@@ -59,7 +58,7 @@ public class BasicAddressAutocompleteComboBox extends JComboBox {
     }
 
     private Object[] getAddresses() {
-        return AddressCollector.getAddresses();
+        return AddressCollector.getInstance().getAddresses();
     }
 
     public String getText() {

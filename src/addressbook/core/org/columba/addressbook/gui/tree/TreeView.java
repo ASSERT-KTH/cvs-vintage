@@ -17,12 +17,13 @@
 //All Rights Reserved.
 package org.columba.addressbook.gui.tree;
 
-import org.columba.addressbook.folder.Folder;
+import javax.swing.JTree;
+import javax.swing.ListSelectionModel;
+
+import org.columba.addressbook.folder.AbstractFolder;
 import org.columba.addressbook.gui.frame.AddressbookFrameController;
 import org.columba.addressbook.gui.tree.util.AddressbookTreeCellRenderer;
 import org.columba.addressbook.main.AddressbookInterface;
-
-import javax.swing.JTree;
 
 
 /**
@@ -45,12 +46,14 @@ public class TreeView extends JTree {
         setShowsRootHandles(true);
         setRootVisible(false);
         expandRow(0);
+        
+        getSelectionModel().setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 
         setCellRenderer(new AddressbookTreeCellRenderer(true));
     }
 
-    public Folder getRootFolder() {
-        return (Folder) model.getRoot();
+    public AbstractFolder getRootFolder() {
+        return (AbstractFolder) model.getRoot();
     }
 
     public void removeAll() {

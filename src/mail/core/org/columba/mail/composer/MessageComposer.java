@@ -16,7 +16,7 @@
 
 package org.columba.mail.composer;
 
-import org.columba.addressbook.folder.HeaderItem;
+import org.columba.addressbook.model.HeaderItem;
 import org.columba.addressbook.parser.ListParser;
 
 import org.columba.core.command.WorkerStatusController;
@@ -67,15 +67,15 @@ public class MessageComposer {
 
         // RFC822 - Header
         if (model.getToList().size() > 0) {
-            header.set("To", ListParser.parse(model.getToList()));
+            header.set("To", ListParser.createStringFromList(model.getToList()));
         }
 
         if (model.getCcList().size() > 0) {
-            header.set("Cc", ListParser.parse(model.getCcList()));
+            header.set("Cc", ListParser.createStringFromList(model.getCcList()));
         }
 
         if (model.getBccList().size() > 0) {
-            header.set("Bcc", ListParser.parse(model.getBccList()));
+            header.set("Bcc", ListParser.createStringFromList(model.getBccList()));
         }
 
         header.set("columba.subject", model.getSubject());
@@ -512,16 +512,14 @@ BufferedReader in =
 
         if (headerItemList.size() > 0) {
             header.set("columba.to",
-                Address.parse((String) ((HeaderItem) headerItemList.get(0)).get(
-                        "displayname")));
+                Address.parse((String) ((HeaderItem) headerItemList.get(0)).getDisplayName()));
         }
 
         headerItemList = model.getCcList();
 
         if (headerItemList.size() > 0) {
             header.set("columba.cc",
-                Address.parse((String) ((HeaderItem) headerItemList.get(0)).get(
-                        "displayname")));
+                Address.parse((String) ((HeaderItem) headerItemList.get(0)).getDisplayName()));
         }
 
         String composedBody;

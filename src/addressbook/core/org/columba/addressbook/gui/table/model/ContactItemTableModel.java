@@ -17,8 +17,8 @@ package org.columba.addressbook.gui.table.model;
 
 import javax.swing.table.TableModel;
 
-import org.columba.addressbook.folder.HeaderItem;
-import org.columba.addressbook.folder.HeaderItemList;
+import org.columba.addressbook.model.ContactItem;
+import org.columba.addressbook.model.ContactItemMap;
 
 
 /**
@@ -26,10 +26,10 @@ import org.columba.addressbook.folder.HeaderItemList;
  * 
  * @author fdietz
  */
-public interface HeaderListTableModel extends TableModel {
-    void setHeaderList(HeaderItemList list);
+public interface ContactItemTableModel extends TableModel {
+    void setContactItemMap(ContactItemMap list);
 
-    HeaderItemList getHeaderList();
+    ContactItemMap getContactItemMap();
     
-    HeaderItem getHeaderItem(int index);
+    ContactItem getContactItem(int index);
 }

@@ -15,24 +15,20 @@
 //All Rights Reserved.
 package org.columba.mail.gui.message.action;
 
-import org.columba.addressbook.folder.ContactCard;
+import java.awt.event.ActionEvent;
+import java.net.URL;
+import java.util.Observable;
+import java.util.Observer;
+
 import org.columba.addressbook.gui.tree.util.SelectAddressbookFolderDialog;
 import org.columba.addressbook.main.AddressbookInterface;
-
+import org.columba.addressbook.model.Contact;
 import org.columba.core.action.AbstractColumbaAction;
 import org.columba.core.gui.frame.FrameMediator;
 import org.columba.core.gui.util.ImageLoader;
-
 import org.columba.mail.gui.frame.MessageViewOwner;
 import org.columba.mail.gui.message.URLObservable;
 import org.columba.mail.util.MailResourceLoader;
-
-import java.awt.event.ActionEvent;
-
-import java.net.URL;
-
-import java.util.Observable;
-import java.util.Observer;
 
 
 /**
@@ -67,7 +63,7 @@ public class AddToAddressbookAction extends AbstractColumbaAction
     public void actionPerformed(ActionEvent evt) {
         SelectAddressbookFolderDialog dialog = AddressbookInterface.addressbookTreeModel.getSelectAddressbookFolderDialog();
 
-        org.columba.addressbook.folder.Folder selectedFolder = dialog.getSelectedFolder();
+        org.columba.addressbook.folder.AbstractFolder selectedFolder = dialog.getSelectedFolder();
 
         if (selectedFolder == null) {
             return;
@@ -76,7 +72,7 @@ public class AddToAddressbookAction extends AbstractColumbaAction
         String address = url.getFile();
 
         try {
-            ContactCard card = new ContactCard();
+            Contact card = new Contact();
             card.set("displayname", address);
             card.set("email", "internet", address);
 

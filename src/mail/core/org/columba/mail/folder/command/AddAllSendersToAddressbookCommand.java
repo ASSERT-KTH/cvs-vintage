@@ -17,130 +17,94 @@
 //All Rights Reserved.
 package org.columba.mail.folder.command;
 
-import org.columba.addressbook.folder.ContactCard;
+import org.columba.addressbook.facade.ContactFacade;
 import org.columba.addressbook.gui.tree.util.SelectAddressbookFolderDialog;
 import org.columba.addressbook.main.AddressbookInterface;
-import org.columba.addressbook.parser.AddressParser;
-
 import org.columba.core.command.DefaultCommandReference;
 import org.columba.core.command.StatusObservableImpl;
 import org.columba.core.command.WorkerStatusController;
 import org.columba.core.gui.frame.FrameMediator;
-
 import org.columba.mail.command.FolderCommand;
 import org.columba.mail.command.FolderCommandReference;
 import org.columba.mail.folder.MessageFolder;
-
 import org.columba.ristretto.message.Header;
-
 
 /**
  * Add all senders contained in the selected messages to the addressbook.
  * <p>
  * A dialog asks the user to choose the destination addressbook.
- *
+ * 
  * @author fdietz
  */
 public class AddAllSendersToAddressbookCommand extends FolderCommand {
-    org.columba.addressbook.folder.Folder selectedFolder;
+	org.columba.addressbook.folder.AbstractFolder selectedFolder;
 
-    /**
- * Constructor for AddAllSendersToAddressbookCommand.
- *
- * @param references
- */
-    public AddAllSendersToAddressbookCommand(
-        DefaultCommandReference[] references) {
-        super(references);
-    }
+	/**
+	 * Constructor for AddAllSendersToAddressbookCommand.
+	 * 
+	 * @param references
+	 */
+	public AddAllSendersToAddressbookCommand(
+			DefaultCommandReference[] references) {
+		super(references);
+	}
 
-    /**
- * Constructor for AddAllSendersToAddressbookCommand.
- *
- * @param frame
- * @param references
- */
-    public AddAllSendersToAddressbookCommand(FrameMediator frame,
-        DefaultCommandReference[] references) {
-        super(frame, references);
-    }
+	/**
+	 * Constructor for AddAllSendersToAddressbookCommand.
+	 * 
+	 * @param frame
+	 * @param references
+	 */
+	public AddAllSendersToAddressbookCommand(FrameMediator frame,
+			DefaultCommandReference[] references) {
+		super(frame, references);
+	}
 
-    /**
- * @see org.columba.core.command.Command#execute(org.columba.core.command.Worker)
- */
-    public void execute(WorkerStatusController worker)
-        throws Exception {
-        // get reference
-        FolderCommandReference[] r = (FolderCommandReference[]) getReferences();
+	/**
+	 * @see org.columba.core.command.Command#execute(org.columba.core.command.Worker)
+	 */
+	public void execute(WorkerStatusController worker) throws Exception {
+		// get reference
+		FolderCommandReference[] r = (FolderCommandReference[]) getReferences();
 
-        // selected messages
-        Object[] uids = r[0].getUids();
+		// selected messages
+		Object[] uids = r[0].getUids();
 
-        // selected folder
-        MessageFolder folder = (MessageFolder) r[0].getFolder();
+		// selected folder
+		MessageFolder folder = (MessageFolder) r[0].getFolder();
 
-        // register for status events
-        ((StatusObservableImpl) folder.getObservable()).setWorker(worker);
+		// register for status events
+		((StatusObservableImpl) folder.getObservable()).setWorker(worker);
 
-        // open addressbook selection dialog
-        SelectAddressbookFolderDialog dialog = AddressbookInterface.addressbookTreeModel.getSelectAddressbookFolderDialog();
+		// open addressbook selection dialog
+		SelectAddressbookFolderDialog dialog = AddressbookInterface.addressbookTreeModel
+				.getSelectAddressbookFolderDialog();
 
-        selectedFolder = dialog.getSelectedFolder();
+		selectedFolder = dialog.getSelectedFolder();
 
-        if (selectedFolder == null) {
-            return;
-        }
+		if (selectedFolder == null) {
+			return;
+		}
 
-        // for every message
-        for (int i = 0; i < uids.length; i++) {
-            // get header of message
-            Header header = folder.getHeaderFields(uids[i],
-                    new String[] { "From", "Cc", "Bcc" });
+		// for every message
+		for (int i = 0; i < uids.length; i++) {
+			// get header of message
+			Header header = folder.getHeaderFields(uids[i], new String[] {
+					"From", "Cc", "Bcc" });
 
-            String sender = (String) header.get("From");
+			String sender = (String) header.get("From");
 
-            // add sender to addressbook
-            addSender(sender);
+			// add sender to addressbook
+			ContactFacade.addContact(selectedFolder.getUid(), sender);
 
-            sender = (String) header.get("Cc");
+			sender = (String) header.get("Cc");
 
-            addSender(sender);
+			ContactFacade.addContact(selectedFolder.getUid(), sender);
 
-            sender = (String) header.get("Bcc");
+			sender = (String) header.get("Bcc");
 
-            addSender(sender);
-        }
-    }
+			ContactFacade.addContact(selectedFolder.getUid(), sender);
+		}
+	}
 
-    /**
- * Add sender to selected addressbook.
- * <p>
- * TODO: This code should most probably moved to the addressbook component
- *
- * @param sender
- *            email address of sender
- */
-    public void addSender(String sender) {
-        if (sender == null) {
-            return;
-        }
-
-        if (sender.length() > 0) {
-            String address = AddressParser.getAddress(sender);
-            System.out.println("address:" + address);
-
-            if (!selectedFolder.exists(address)) {
-                ContactCard card = new ContactCard();
-
-                String fn = AddressParser.getDisplayname(sender);
-                System.out.println("fn=" + fn);
-
-                card.set("fn", fn);
-                card.set("displayname", fn);
-                card.set("email", "internet", address);
-
-                selectedFolder.add(card);
-            }
-        }
-    }
 }

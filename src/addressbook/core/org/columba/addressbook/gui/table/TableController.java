@@ -17,160 +17,335 @@
 //All Rights Reserved.
 package org.columba.addressbook.gui.table;
 
-import org.columba.addressbook.folder.Folder;
-import org.columba.addressbook.folder.HeaderItem;
-import org.columba.addressbook.gui.frame.AddressbookFrameMediator;
-import org.columba.addressbook.gui.table.model.AddressbookTableModel;
-import org.columba.addressbook.gui.table.model.SortDecorator;
-
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
+import javax.swing.JComponent;
 import javax.swing.JTable;
 import javax.swing.event.TreeSelectionEvent;
 import javax.swing.event.TreeSelectionListener;
 import javax.swing.table.JTableHeader;
 import javax.swing.table.TableColumnModel;
 
+import org.columba.addressbook.folder.AbstractFolder;
+import org.columba.addressbook.folder.ContactStorage;
+import org.columba.addressbook.folder.FolderEvent;
+import org.columba.addressbook.folder.FolderListener;
+import org.columba.addressbook.gui.frame.AddressbookFrameMediator;
+import org.columba.addressbook.gui.table.model.AddressbookTableModel;
+import org.columba.addressbook.gui.table.model.SortDecorator;
+import org.columba.addressbook.gui.tree.AddressbookTreeNode;
+import org.columba.addressbook.model.ContactItem;
+import org.columba.core.gui.focus.FocusOwner;
+import org.columba.core.main.MainInterface;
 
 /**
  * @author fdietz
  */
-public class TableController implements TreeSelectionListener {
-    private TableView view;
-    private AddressbookFrameMediator mediator;
-    private AddressbookTableModel addressbookModel;
-    private FilterToolbar toolbar;
-    private SortDecorator sortDecorator;
+public class TableController implements TreeSelectionListener, FolderListener,
+		FocusOwner {
 
-    /**
- *  
- */
-    public TableController(AddressbookFrameMediator mediator) {
-        super();
+	private TableView view;
 
-        this.mediator = mediator;
+	private AddressbookFrameMediator mediator;
 
-        addressbookModel = new AddressbookTableModel();
+	private AddressbookTableModel addressbookModel;
 
-        sortDecorator = new SortDecorator(addressbookModel);
+	private FilterToolbar toolbar;
 
-        /*
- * filteredView = new TableModelFilteredView(addressbookModel); sorter =
- * new TableModelSorter(addressbookModel);
- * 
- * addressbookModel.registerPlugin(filteredView);
- * addressbookModel.registerPlugin(sorter);
- */
-        view = new TableView(this, sortDecorator);
+	private SortDecorator sortDecorator;
 
-        addMouseListenerToHeaderInTable();
+	private AddressbookTreeNode selectedFolder;
 
-        //view.setModel(addressbookModel);
-        // TODO: move outside TableController
-        //toolbar = new FilterToolbar(this);
-    }
+	/**
+	 *  
+	 */
+	public TableController(AddressbookFrameMediator mediator) {
+		super();
 
-    /**
- * Add MouseListener to JTableHeader to sort table based on clicked column
- * header.
- *  
- */
-    protected void addMouseListenerToHeaderInTable() {
-        final JTable tableView = getView();
+		this.mediator = mediator;
 
-        tableView.setColumnSelectionAllowed(false);
+		addressbookModel = new AddressbookTableModel();
 
-        MouseAdapter listMouseListener = new MouseAdapter() {
-                public void mouseClicked(MouseEvent e) {
-                    TableColumnModel columnModel = tableView.getColumnModel();
-                    int viewColumn = columnModel.getColumnIndexAtX(e.getX());
-                    int column = tableView.convertColumnIndexToModel(viewColumn);
+		sortDecorator = new SortDecorator(addressbookModel);
 
-                    if ((e.getClickCount() == 1) && (column != -1)) {
-                        //controller.getSorter().sort(column);
-                        sortDecorator.sort(column);
+		/*
+		 * filteredView = new TableModelFilteredView(addressbookModel); sorter =
+		 * new TableModelSorter(addressbookModel);
+		 * 
+		 * addressbookModel.registerPlugin(filteredView);
+		 * addressbookModel.registerPlugin(sorter);
+		 */
+		view = new TableView(this, sortDecorator);
 
-                        /*
- * sortDecorator.tableChanged( new
- * TableModelEvent(addressbookModel));
- */
+		addMouseListenerToHeaderInTable();
 
-                        //addressbookModel.update();
-                        //mainInterface.mainFrame.getMenu().updateSortMenu();
-                    }
-                }
-            };
+		//view.setModel(addressbookModel);
+		// TODO: move outside TableController
+		//toolbar = new FilterToolbar(this);
 
-        JTableHeader th = tableView.getTableHeader();
-        th.addMouseListener(listMouseListener);
-    }
+		// register as focus owner
+		MainInterface.focusManager.registerComponent(this);
+	}
 
-    /**
- * @return AddressbookFrameController
- */
-    public AddressbookFrameMediator getMediator() {
-        return mediator;
-    }
+	/**
+	 * Add MouseListener to JTableHeader to sort table based on clicked column
+	 * header.
+	 *  
+	 */
+	protected void addMouseListenerToHeaderInTable() {
+		final JTable tableView = getView();
 
-    /**
- * @return TableView
- */
-    public TableView getView() {
-        return view;
-    }
+		tableView.setColumnSelectionAllowed(false);
 
-    /**
- * Update table on tree selection changes.
- */
-    public void valueChanged(TreeSelectionEvent e) {
-        Object o = e.getPath().getLastPathComponent();
+		MouseAdapter listMouseListener = new MouseAdapter() {
+			public void mouseClicked(MouseEvent e) {
+				TableColumnModel columnModel = tableView.getColumnModel();
+				int viewColumn = columnModel.getColumnIndexAtX(e.getX());
+				int column = tableView.convertColumnIndexToModel(viewColumn);
 
-        if (o == null) {
-            return;
-        }
+				if ((e.getClickCount() == 1) && (column != -1)) {
+					//controller.getSorter().sort(column);
+					sortDecorator.sort(column);
 
-        if (o instanceof Folder) {
-            sortDecorator.setHeaderList(((Folder) o).getHeaderItemList());
-        } else {
-            sortDecorator.setHeaderList(null);
-        }
-    }
+					/*
+					 * sortDecorator.tableChanged( new
+					 * TableModelEvent(addressbookModel));
+					 */
 
-    /**
- * Get selected uids.
- * 
- * @return
- */
-    public Object[] getUids() {
-        int[] rows = getView().getSelectedRows();
-        Object[] uids = new Object[rows.length];
+					//addressbookModel.update();
+					//mainInterface.mainFrame.getMenu().updateSortMenu();
+				}
+			}
+		};
 
-        HeaderItem item;
+		JTableHeader th = tableView.getTableHeader();
+		th.addMouseListener(listMouseListener);
+	}
 
-        for (int i = 0; i < rows.length; i++) {
-            item = (HeaderItem) sortDecorator.getHeaderItem(rows[i]);
+	/**
+	 * @return AddressbookFrameController
+	 */
+	public AddressbookFrameMediator getMediator() {
+		return mediator;
+	}
 
-            Object uid = item.getUid();
-            uids[i] = uid;
-        }
+	/**
+	 * @return TableView
+	 */
+	public TableView getView() {
+		return view;
+	}
 
-        return uids;
-    }
+	/**
+	 * Update table on tree selection changes.
+	 */
+	public void valueChanged(TreeSelectionEvent e) {
+		AddressbookTreeNode node = (AddressbookTreeNode) e.getPath()
+				.getLastPathComponent();
 
-    /**
- * @return Returns the addressbookModel.
- */
-    public AddressbookTableModel getAddressbookModel() {
-        return addressbookModel;
-    }
+		if (node == null) {
+			return;
+		}
 
-    public HeaderItem getSelectedItem() {
-        int row = getView().getSelectedRow();
+		if (node instanceof ContactStorage) {
+			try {
 
-        // we use the SortDecorator, because the indices are sorted
-        HeaderItem item = (HeaderItem) sortDecorator.getHeaderItem(row);
+				((AbstractFolder) node).removeFolderListener(this);
 
-        return item;
-    }
+				selectedFolder = node;
+				((AbstractFolder) node).addFolderListener(this);
+
+				sortDecorator
+						.setContactItemMap(((AbstractFolder) selectedFolder)
+								.getContactItemMap());
+			} catch (Exception e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+		} else {
+			sortDecorator.setContactItemMap(null);
+		}
+	}
+
+	/**
+	 * Get selected uids.
+	 * 
+	 * @return
+	 */
+	public Object[] getUids() {
+		int[] rows = getView().getSelectedRows();
+		Object[] uids = new Object[rows.length];
+
+		ContactItem item;
+
+		for (int i = 0; i < rows.length; i++) {
+			item = (ContactItem) sortDecorator.getContactItem(rows[i]);
+
+			Object uid = item.getUid();
+			uids[i] = uid;
+		}
+
+		return uids;
+	}
+
+	/**
+	 * @return Returns the addressbookModel.
+	 */
+	public AddressbookTableModel getAddressbookModel() {
+		return addressbookModel;
+	}
+
+	public ContactItem getSelectedItem() {
+		int row = getView().getSelectedRow();
+
+		// we use the SortDecorator, because the indices are sorted
+		ContactItem item = (ContactItem) sortDecorator.getContactItem(row);
+
+		return item;
+	}
+	
+
+	/** ********************** FolderListener ***************** */
+
+	/**
+	 * @see org.columba.addressbook.folder.FolderListener#itemAdded(org.columba.addressbook.folder.FolderEvent)
+	 */
+	public void itemAdded(FolderEvent e) {
+		getAddressbookModel().update();
+
+	}
+
+	/**
+	 * @see org.columba.addressbook.folder.FolderListener#itemChanged(org.columba.addressbook.folder.FolderEvent)
+	 */
+	public void itemChanged(FolderEvent e) {
+		getAddressbookModel().update();
+
+	}
+
+	/**
+	 * @see org.columba.addressbook.folder.FolderListener#itemRemoved(org.columba.addressbook.folder.FolderEvent)
+	 */
+	public void itemRemoved(FolderEvent e) {
+		getAddressbookModel().update();
+
+	}
+
+	/** ************* FocusOwner Implementation ****************** */
+
+	/**
+	 * @see org.columba.core.gui.focus.FocusOwner#copy()
+	 */
+	public void copy() {
+
+	}
+
+	/**
+	 * @see org.columba.core.gui.focus.FocusOwner#cut()
+	 */
+	public void cut() {
+
+	}
+
+	/**
+	 * @see org.columba.core.gui.focus.FocusOwner#delete()
+	 */
+	public void delete() {
+
+	}
+
+	/**
+	 * @see org.columba.core.gui.focus.FocusOwner#getComponent()
+	 */
+	public JComponent getComponent() {
+		return getView();
+	}
+
+	/**
+	 * @see org.columba.core.gui.focus.FocusOwner#isCopyActionEnabled()
+	 */
+	public boolean isCopyActionEnabled() {
+
+		return false;
+	}
+
+	/**
+	 * @see org.columba.core.gui.focus.FocusOwner#isCutActionEnabled()
+	 */
+	public boolean isCutActionEnabled() {
+
+		return false;
+	}
+
+	/**
+	 * @see org.columba.core.gui.focus.FocusOwner#isDeleteActionEnabled()
+	 */
+	public boolean isDeleteActionEnabled() {
+
+		return false;
+	}
+
+	/**
+	 * @see org.columba.core.gui.focus.FocusOwner#isPasteActionEnabled()
+	 */
+	public boolean isPasteActionEnabled() {
+
+		return false;
+	}
+
+	/**
+	 * @see org.columba.core.gui.focus.FocusOwner#isRedoActionEnabled()
+	 */
+	public boolean isRedoActionEnabled() {
+
+		return false;
+	}
+
+	/**
+	 * @see org.columba.core.gui.focus.FocusOwner#isSelectAllActionEnabled()
+	 */
+	public boolean isSelectAllActionEnabled() {
+		if (getView().getRowCount() > 0) {
+			return true;
+		}
+
+		return false;
+	}
+
+	/**
+	 * @see org.columba.core.gui.focus.FocusOwner#isUndoActionEnabled()
+	 */
+	public boolean isUndoActionEnabled() {
+
+		return false;
+	}
+
+	/**
+	 * @see org.columba.core.gui.focus.FocusOwner#paste()
+	 */
+	public void paste() {
+
+	}
+
+	/**
+	 * @see org.columba.core.gui.focus.FocusOwner#redo()
+	 */
+	public void redo() {
+
+	}
+
+	/**
+	 * @see org.columba.core.gui.focus.FocusOwner#selectAll()
+	 */
+	public void selectAll() {
+		 getView().selectAll();
+	}
+
+	/**
+	 * @see org.columba.core.gui.focus.FocusOwner#undo()
+	 */
+	public void undo() {
+
+	}
 }

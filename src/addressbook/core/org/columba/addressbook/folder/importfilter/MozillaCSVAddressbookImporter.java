@@ -17,13 +17,13 @@
 //All Rights Reserved.
 package org.columba.addressbook.folder.importfilter;
 
-import org.columba.addressbook.folder.ContactCard;
-import org.columba.addressbook.folder.Folder;
-import org.columba.addressbook.util.AddressbookResourceLoader;
-
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
+
+import org.columba.addressbook.folder.AbstractFolder;
+import org.columba.addressbook.model.Contact;
+import org.columba.addressbook.util.AddressbookResourceLoader;
 
 
 /**
@@ -36,7 +36,7 @@ public class MozillaCSVAddressbookImporter extends DefaultAddressbookImporter {
     }
 
     public MozillaCSVAddressbookImporter(File sourceFile,
-        Folder destinationFolder) {
+        AbstractFolder destinationFolder) {
         super(sourceFile, destinationFolder);
     }
 
@@ -49,7 +49,7 @@ public class MozillaCSVAddressbookImporter extends DefaultAddressbookImporter {
         while ((str = in.readLine()) != null) {
             // start parsing line
             int counter = -1;
-            ContactCard card = new ContactCard();
+            Contact card = new Contact();
 
             StringBuffer token = new StringBuffer();
             int pos = 0;

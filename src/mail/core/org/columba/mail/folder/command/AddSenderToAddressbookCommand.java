@@ -17,20 +17,16 @@
 //All Rights Reserved.
 package org.columba.mail.folder.command;
 
-import org.columba.addressbook.folder.ContactCard;
+import org.columba.addressbook.facade.ContactFacade;
 import org.columba.addressbook.gui.tree.util.SelectAddressbookFolderDialog;
 import org.columba.addressbook.main.AddressbookInterface;
-import org.columba.addressbook.parser.AddressParser;
-
 import org.columba.core.command.DefaultCommandReference;
 import org.columba.core.command.StatusObservableImpl;
 import org.columba.core.command.WorkerStatusController;
 import org.columba.core.gui.frame.FrameMediator;
-
 import org.columba.mail.command.FolderCommand;
 import org.columba.mail.command.FolderCommandReference;
 import org.columba.mail.folder.MessageFolder;
-
 import org.columba.ristretto.message.Header;
 
 
@@ -42,7 +38,7 @@ import org.columba.ristretto.message.Header;
  * @author fdietz
  */
 public class AddSenderToAddressbookCommand extends FolderCommand {
-    org.columba.addressbook.folder.Folder selectedFolder;
+    org.columba.addressbook.folder.AbstractFolder selectedFolder;
 
     /**
  * Constructor for AddSenderToAddressbookCommand.
@@ -100,39 +96,8 @@ public class AddSenderToAddressbookCommand extends FolderCommand {
             String sender = (String) header.get("From");
 
             // add sender to addressbook
-            addSender(sender);
+            ContactFacade.addContact(selectedFolder.getUid(), sender);
         }
     }
 
-    /**
- * Add sender to selected addressbook.
- * <p>
- * TODO: This code should most probably moved to the addressbook component
- *
- * @param sender
- *            email address of sender
- */
-    public void addSender(String sender) {
-        if (sender == null) {
-            return;
-        }
-
-        if (sender.length() > 0) {
-            String address = AddressParser.getAddress(sender);
-            System.out.println("address:" + address);
-
-            if (!selectedFolder.exists(address)) {
-                ContactCard card = new ContactCard();
-
-                String fn = AddressParser.getDisplayname(sender);
-                System.out.println("fn=" + fn);
-
-                card.set("fn", fn);
-                card.set("displayname", fn);
-                card.set("email", "internet", address);
-
-                selectedFolder.add(card);
-            }
-        }
-    }
 }

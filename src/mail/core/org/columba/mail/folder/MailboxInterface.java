@@ -19,7 +19,6 @@ package org.columba.mail.folder;
 
 import java.io.InputStream;
 
-import org.columba.addressbook.folder.Folder;
 import org.columba.mail.folder.command.MarkMessageCommand;
 import org.columba.mail.message.ColumbaHeader;
 import org.columba.mail.message.HeaderList;

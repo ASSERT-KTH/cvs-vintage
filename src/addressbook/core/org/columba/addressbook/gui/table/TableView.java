@@ -51,17 +51,19 @@ public class TableView extends JTable {
 
         // set renderers for columns
         TableColumn tc = getColumnModel().getColumn(0);
+        /*
         tc.setHeaderRenderer(new DefaultHeaderRenderer(""));
         tc.setCellRenderer(new TypeRenderer());
         tc.setMaxWidth(23);
-
-        tc = getColumnModel().getColumn(1);
+        */
+        
+        tc = getColumnModel().getColumn(0);
         tc.setHeaderRenderer(createHeader("displayname"));
 
-        tc = getColumnModel().getColumn(2);
+        tc = getColumnModel().getColumn(1);
         tc.setHeaderRenderer(createHeader("email;internet"));
 
-        tc = getColumnModel().getColumn(3);
+        tc = getColumnModel().getColumn(2);
         tc.setHeaderRenderer(createHeader("url"));
     }
 

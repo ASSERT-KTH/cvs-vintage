@@ -17,64 +17,64 @@
 //All Rights Reserved.
 package org.columba.addressbook.gui.action;
 
-import org.columba.addressbook.gui.frame.AddressbookFrameMediator;
-import org.columba.addressbook.gui.tree.AddressbookTreeNode;
-
-import org.columba.core.action.AbstractColumbaAction;
-import org.columba.core.gui.frame.FrameMediator;
-
 import javax.swing.event.TreeSelectionEvent;
 import javax.swing.event.TreeSelectionListener;
 import javax.swing.tree.TreePath;
 
+import org.columba.addressbook.folder.AddressbookFolder;
+import org.columba.addressbook.gui.frame.AddressbookFrameMediator;
+import org.columba.addressbook.gui.tree.AddressbookTreeNode;
+import org.columba.core.action.AbstractColumbaAction;
+import org.columba.core.gui.frame.FrameMediator;
 
 /**
  * Action which is listening for tree selection changes.
  * 
  * @author fdietz
  */
-public abstract class DefaultTreeAction extends AbstractColumbaAction
-    implements TreeSelectionListener {
-    private AddressbookTreeNode treeNode;
+public abstract class DefaultTreeAction extends AbstractColumbaAction implements
+		TreeSelectionListener {
+	private AddressbookTreeNode treeNode;
 
-    /**
- * @param frameMediator
- * @param name
- */
-    public DefaultTreeAction(FrameMediator frameMediator, String name) {
-        super(frameMediator, name);
+	/**
+	 * @param frameMediator
+	 * @param name
+	 */
+	public DefaultTreeAction(FrameMediator frameMediator, String name) {
+		super(frameMediator, name);
 
-        // register interest on tree selection changes
-        ((AddressbookFrameMediator) frameMediator).addTreeSelectionListener(this);
-    }
+		// register interest on tree selection changes
+		((AddressbookFrameMediator) frameMediator)
+				.addTreeSelectionListener(this);
+	}
 
-    /**
- * Enable or disable action on tree selection changes.
- * <p>
- * Actions should overwrite this method if they need more fine-grained
- * control.
- *  
- */
-    public void valueChanged(TreeSelectionEvent e) {
-        TreePath path = e.getNewLeadSelectionPath();
+	/**
+	 * Enable or disable action on tree selection changes.
+	 * <p>
+	 * Actions should overwrite this method if they need more fine-grained
+	 * control.
+	 *  
+	 */
+	public void valueChanged(TreeSelectionEvent e) {
+		TreePath path = e.getNewLeadSelectionPath();
 
-        // remember last selected folder treenode
-        if (path != null) {
-            treeNode = (AddressbookTreeNode) path.getLastPathComponent();
-        }
+		// remember last selected folder treenode
+		if (path != null) {
+			treeNode = (AddressbookTreeNode) path.getLastPathComponent();
+		}
 
-        // enable, if more than zero treenodes selected
-        if (path != null) {
-            setEnabled(true);
-        } else {
-            setEnabled(false);
-        }
-    }
+		// enable, if more than zero treenodes selected
+		if ( (path != null) && ( treeNode instanceof AddressbookFolder ) ){
+			setEnabled(true);
+		} else {
+			setEnabled(false);
+		}
+	}
 
-    /**
- * @return Returns the treeNode.
- */
-    public AddressbookTreeNode getTreeNode() {
-        return treeNode;
-    }
+	/**
+	 * @return Returns the treeNode.
+	 */
+	public AddressbookTreeNode getTreeNode() {
+		return treeNode;
+	}
 }

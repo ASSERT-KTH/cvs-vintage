@@ -13,5 +13,8 @@
          class="org.columba.addressbook.folder.RemoteRootFolder" />  
   <folder  
          name="AddressbookFolder"  
-         class="org.columba.addressbook.folder.AddressbookFolder" />  
+         class="org.columba.addressbook.folder.AddressbookFolder" />
+  <folder  
+         name="GroupFolder"  
+         class="org.columba.addressbook.folder.GroupFolder" />  
  </folderlist>

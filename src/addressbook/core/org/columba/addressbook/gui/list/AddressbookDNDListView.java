@@ -15,7 +15,7 @@
 //All Rights Reserved.
 package org.columba.addressbook.gui.list;
 
-import org.columba.addressbook.folder.HeaderItem;
+import org.columba.addressbook.model.HeaderItem;
 
 import java.awt.Point;
 import java.awt.datatransfer.StringSelection;
@@ -295,7 +295,7 @@ dragSource.startDrag(
  * removes an element from itself
  */
     public void removeElement() {
-        ((AddressbookListModel) getModel()).removeElement(getSelectedValue());
+        ((AddressbookListModel) getModel()).removeElement((HeaderItem)getSelectedValue());
     }
 
     public void valueChanged(ListSelectionEvent e) {

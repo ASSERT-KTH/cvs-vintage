@@ -25,273 +25,278 @@ import java.util.List;
 import java.util.Map;
 import java.util.Vector;
 
-
 /**
- *
- * Every {@link FocusOwner} should register at the <code>FocusManager</code>.
+ * 
+ * Every {@link FocusOwner}should register at the <code>FocusManager</code>.
  * <p>
  * FocusManager enables and disables the following Actions:
  * <ul>
- *  <li>CutAction</li>
- *  <li>CopyAction</li>
- *  <li>PasteAction</li>
- *  <li>DeleteAction</li>
- *  <li>SelectAllAction</li>
+ * <li>CutAction</li>
+ * <li>CopyAction</li>
+ * <li>PasteAction</li>
+ * <li>DeleteAction</li>
+ * <li>SelectAllAction</li>
  * </ul>
- *
- *
+ * 
+ * 
  * @author fdietz
- *
+ *  
  */
 public class FocusManager implements FocusListener {
-    /**
-     * list of focus owners
-     */
-    List list;
+	/**
+	 * list of focus owners
+	 */
+	List list;
 
-    /**
-     * map associating focus listener ui with focus owner
-     */
-    Map map;
+	/**
+	 * map associating focus listener ui with focus owner
+	 */
+	Map map;
 
-    /**
-     * all actions
-     */
-    AbstractColumbaAction cutAction;
-    AbstractColumbaAction copyAction;
-    AbstractColumbaAction pasteAction;
-    AbstractColumbaAction deleteAction;
-    AbstractColumbaAction selectAllAction;
-    AbstractColumbaAction undoAction;
-    AbstractColumbaAction redoAction;
+	/**
+	 * all actions
+	 */
+	AbstractColumbaAction cutAction;
 
-    /**
-     * current focus owner
-     */
-    FocusOwner current = null;
+	AbstractColumbaAction copyAction;
 
-    /**
-     * last available focus owner
-     */
-    FocusOwner last = null;
+	AbstractColumbaAction pasteAction;
 
-    public FocusManager() {
-        list = new Vector();
-        map = new HashMap();
-    }
+	AbstractColumbaAction deleteAction;
 
-    /**
-     * register FocusOwner and add FocusListener
-     *
-     * @param c                focus owner
-     */
-    public void registerComponent(FocusOwner c) {
-        list.add(c);
+	AbstractColumbaAction selectAllAction;
 
-        // associate ui component with FocusOwner
-        map.put(c.getComponent(), c);
+	AbstractColumbaAction undoAction;
 
-        c.getComponent().addFocusListener(this);
-    }
+	AbstractColumbaAction redoAction;
 
-    /**
-     * Get current focus owner
-     *
-     * Try first current owner. If this fails, try
-     * the last available one.
-     *
-     * @return        current focus owner
-     */
-    protected FocusOwner getCurrentOwner() {
-        if (current != null) {
-            return current;
-        }
+	/**
+	 * current focus owner
+	 */
+	FocusOwner current = null;
 
-        if (last != null) {
-            return last;
-        }
+	/**
+	 * last available focus owner
+	 */
+	FocusOwner last = null;
 
-        return null;
-    }
+	public FocusManager() {
+		list = new Vector();
+		map = new HashMap();
+	}
 
-    /**
-     *
-     * FocusOwner objects should call this method on
-     * selection changes in their view component to
-     * enable/disable the actions
-     *
-     */
-    public void updateActions() {
-        enableActions(getCurrentOwner());
-    }
+	/**
+	 * register FocusOwner and add FocusListener
+	 * 
+	 * @param c
+	 *            focus owner
+	 */
+	public void registerComponent(FocusOwner c) {
+		list.add(c);
 
-    /**
-     * enable/disable actions
-     *
-     * @param o                current focus owner
-     */
-    protected void enableActions(FocusOwner o) {
-        if (o == null) {
-            //  no component has the focus
-            // -> disable all actions
-            cutAction.setEnabled(false);
-            copyAction.setEnabled(false);
-            pasteAction.setEnabled(false);
-            deleteAction.setEnabled(false);
-            undoAction.setEnabled(false);
-            redoAction.setEnabled(false);
-            selectAllAction.setEnabled(false);
+		// associate ui component with FocusOwner
+		map.put(c.getComponent(), c);
 
-            return;
-        }
+		c.getComponent().addFocusListener(this);
+	}
 
-        cutAction.setEnabled(o.isCutActionEnabled());
-        copyAction.setEnabled(o.isCopyActionEnabled());
-        pasteAction.setEnabled(o.isPasteActionEnabled());
-        deleteAction.setEnabled(o.isDeleteActionEnabled());
-        undoAction.setEnabled(o.isUndoActionEnabled());
-        redoAction.setEnabled(o.isRedoActionEnabled());
-        selectAllAction.setEnabled(o.isSelectAllActionEnabled());
-    }
+	/**
+	 * Get current focus owner
+	 * 
+	 * Try first current owner. If this fails, try the last available one.
+	 * 
+	 * @return current focus owner
+	 */
+	public FocusOwner getCurrentOwner() {
+		if (current != null) {
+			return current;
+		}
 
-    /**
-     * Component gained focus
-     *
-     */
-    public void focusGained(FocusEvent event) {
-        current = (FocusOwner) map.get(event.getSource());
+		if (last != null) {
+			return last;
+		}
 
-        updateActions();
-    }
+		return null;
+	}
 
-    /**
-     * Component lost focus
-     */
-    public void focusLost(FocusEvent event) {
-        FocusOwner lost = (FocusOwner) map.get(event.getSource());
+	/**
+	 * 
+	 * FocusOwner objects should call this method on selection changes in their
+	 * view component to enable/disable the actions
+	 *  
+	 */
+	public void updateActions() {
+		enableActions(getCurrentOwner());
+	}
 
-        last = current;
+	/**
+	 * enable/disable actions
+	 * 
+	 * @param o
+	 *            current focus owner
+	 */
+	protected void enableActions(FocusOwner o) {
+		if (o == null) {
+			//  no component has the focus
+			// -> disable all actions
+			cutAction.setEnabled(false);
+			copyAction.setEnabled(false);
+			pasteAction.setEnabled(false);
+			deleteAction.setEnabled(false);
+			undoAction.setEnabled(false);
+			redoAction.setEnabled(false);
+			selectAllAction.setEnabled(false);
 
-        current = null;
+			return;
+		}
 
-        //current = lost;
-        updateActions();
-    }
+		cutAction.setEnabled(o.isCutActionEnabled());
+		copyAction.setEnabled(o.isCopyActionEnabled());
+		pasteAction.setEnabled(o.isPasteActionEnabled());
+		deleteAction.setEnabled(o.isDeleteActionEnabled());
+		undoAction.setEnabled(o.isUndoActionEnabled());
+		redoAction.setEnabled(o.isRedoActionEnabled());
+		selectAllAction.setEnabled(o.isSelectAllActionEnabled());
+	}
 
-    /**
-     * execute cut action of currently available focus owner
-     *
-     */
-    public void cut() {
-        getCurrentOwner().cut();
+	/**
+	 * Component gained focus
+	 *  
+	 */
+	public void focusGained(FocusEvent event) {
+		current = (FocusOwner) map.get(event.getSource());
 
-        enableActions(getCurrentOwner());
-    }
+		updateActions();
+	}
 
-    /**
-             * execute copy action of currently available focus owner
-             *
-             */
-    public void copy() {
-        getCurrentOwner().copy();
+	/**
+	 * Component lost focus
+	 */
+	public void focusLost(FocusEvent event) {
+		FocusOwner lost = (FocusOwner) map.get(event.getSource());
 
-        enableActions(getCurrentOwner());
-    }
+		last = current;
 
-    /**
-             * execute paste action of currently available focus owner
-             *
-             */
-    public void paste() {
-        getCurrentOwner().paste();
+		current = null;
 
-        enableActions(getCurrentOwner());
-    }
+		//current = lost;
+		updateActions();
+	}
 
-    /**
-             * execute delete action of currently available focus owner
-             *
-             */
-    public void delete() {
-        getCurrentOwner().delete();
+	/**
+	 * execute cut action of currently available focus owner
+	 *  
+	 */
+	public void cut() {
+		getCurrentOwner().cut();
 
-        enableActions(getCurrentOwner());
-    }
+		enableActions(getCurrentOwner());
+	}
 
-    /**
-     * execute redo action of currentyl available focus owner
-     *
-     */
-    public void redo() {
-        getCurrentOwner().redo();
-        enableActions(getCurrentOwner());
-    }
+	/**
+	 * execute copy action of currently available focus owner
+	 *  
+	 */
+	public void copy() {
+		getCurrentOwner().copy();
 
-    /**
-     * execute undo action of currentyl available focus owner
-     *
-     */
-    public void undo() {
-        getCurrentOwner().undo();
-        enableActions(getCurrentOwner());
-    }
+		enableActions(getCurrentOwner());
+	}
 
-    /**
-             * execute selectAll action of currentyl available focus owner
-             *
-             */
-    public void selectAll() {
-        getCurrentOwner().selectAll();
-        enableActions(getCurrentOwner());
-    }
+	/**
+	 * execute paste action of currently available focus owner
+	 *  
+	 */
+	public void paste() {
+		getCurrentOwner().paste();
 
-    /************************* setter of actions **********************/
-    /**
-     * @param action
-     */
-    public void setCopyAction(AbstractColumbaAction action) {
-        copyAction = action;
-    }
+		enableActions(getCurrentOwner());
+	}
 
-    /**
-     * @param action
-     */
-    public void setCutAction(AbstractColumbaAction action) {
-        cutAction = action;
-    }
+	/**
+	 * execute delete action of currently available focus owner
+	 *  
+	 */
+	public void delete() {
+		getCurrentOwner().delete();
 
-    /**
-     * @param action
-     */
-    public void setDeleteAction(AbstractColumbaAction action) {
-        deleteAction = action;
-    }
+		enableActions(getCurrentOwner());
+	}
 
-    /**
-     * @param action
-     */
-    public void setPasteAction(AbstractColumbaAction action) {
-        pasteAction = action;
-    }
+	/**
+	 * execute redo action of currentyl available focus owner
+	 *  
+	 */
+	public void redo() {
+		getCurrentOwner().redo();
+		enableActions(getCurrentOwner());
+	}
 
-    /**
-     * @param action
-     */
-    public void setRedoAction(AbstractColumbaAction action) {
-        redoAction = action;
-    }
+	/**
+	 * execute undo action of currentyl available focus owner
+	 *  
+	 */
+	public void undo() {
+		getCurrentOwner().undo();
+		enableActions(getCurrentOwner());
+	}
 
-    /**
-     * @param action
-     */
-    public void setSelectAllAction(AbstractColumbaAction action) {
-        selectAllAction = action;
-    }
+	/**
+	 * execute selectAll action of currentyl available focus owner
+	 *  
+	 */
+	public void selectAll() {
+		getCurrentOwner().selectAll();
+		enableActions(getCurrentOwner());
+	}
 
-    /**
-     * @param action
-     */
-    public void setUndoAction(AbstractColumbaAction action) {
-        undoAction = action;
-    }
+	/** *********************** setter of actions ********************* */
+	/**
+	 * @param action
+	 */
+	public void setCopyAction(AbstractColumbaAction action) {
+		copyAction = action;
+	}
+
+	/**
+	 * @param action
+	 */
+	public void setCutAction(AbstractColumbaAction action) {
+		cutAction = action;
+	}
+
+	/**
+	 * @param action
+	 */
+	public void setDeleteAction(AbstractColumbaAction action) {
+		deleteAction = action;
+	}
+
+	/**
+	 * @param action
+	 */
+	public void setPasteAction(AbstractColumbaAction action) {
+		pasteAction = action;
+	}
+
+	/**
+	 * @param action
+	 */
+	public void setRedoAction(AbstractColumbaAction action) {
+		redoAction = action;
+	}
+
+	/**
+	 * @param action
+	 */
+	public void setSelectAllAction(AbstractColumbaAction action) {
+		selectAllAction = action;
+	}
+
+	/**
+	 * @param action
+	 */
+	public void setUndoAction(AbstractColumbaAction action) {
+		undoAction = action;
+	}
 }

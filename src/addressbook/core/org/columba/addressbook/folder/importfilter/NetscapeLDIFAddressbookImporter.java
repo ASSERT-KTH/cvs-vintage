@@ -17,17 +17,15 @@
 //All Rights Reserved.
 package org.columba.addressbook.folder.importfilter;
 
-import org.columba.addressbook.folder.ContactCard;
-import org.columba.addressbook.folder.Folder;
-import org.columba.addressbook.util.AddressbookResourceLoader;
-
-import org.columba.ristretto.coder.Base64;
-
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
-
 import java.nio.ByteBuffer;
+
+import org.columba.addressbook.folder.AbstractFolder;
+import org.columba.addressbook.model.Contact;
+import org.columba.addressbook.util.AddressbookResourceLoader;
+import org.columba.ristretto.coder.Base64;
 
 
 /**
@@ -39,14 +37,14 @@ public class NetscapeLDIFAddressbookImporter extends DefaultAddressbookImporter 
     }
 
     public NetscapeLDIFAddressbookImporter(File sourceFile,
-        Folder destinationFolder) {
+        AbstractFolder destinationFolder) {
         super(sourceFile, destinationFolder);
     }
 
     public void importAddressbook(File file) throws Exception {
         BufferedReader in = new BufferedReader(new FileReader(file));
         String str;
-        ContactCard card = new ContactCard();
+        Contact card = new Contact();
 
         while ((str = in.readLine()) != null) {
             // start parsing line by line
@@ -54,7 +52,7 @@ public class NetscapeLDIFAddressbookImporter extends DefaultAddressbookImporter 
                 // empty line, means new contactcard
                 saveContact(card);
 
-                card = new ContactCard();
+                card = new Contact();
             } else {
                 // parse key:value lines
                 int index = str.indexOf(':');

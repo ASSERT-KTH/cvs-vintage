@@ -17,87 +17,82 @@
 //All Rights Reserved.
 package org.columba.addressbook.gui.action;
 
-import org.columba.addressbook.folder.AddressbookFolder;
-import org.columba.addressbook.folder.ContactCard;
-import org.columba.addressbook.gui.frame.AddressbookFrameMediator;
-import org.columba.addressbook.parser.VCardParser;
-import org.columba.addressbook.util.AddressbookResourceLoader;
-
-import org.columba.core.gui.frame.FrameMediator;
-
 import java.awt.event.ActionEvent;
-
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 
 import javax.swing.JFileChooser;
 
+import org.columba.addressbook.folder.AddressbookFolder;
+import org.columba.addressbook.gui.frame.AddressbookFrameMediator;
+import org.columba.addressbook.model.Contact;
+import org.columba.addressbook.parser.VCardParser;
+import org.columba.addressbook.util.AddressbookResourceLoader;
+import org.columba.core.gui.frame.FrameMediator;
 
 /**
  * Import VCARD contact to selected addressbook.
  */
 public class AddVCardAction extends DefaultTreeAction {
-    public AddVCardAction(FrameMediator frameController) {
-        super(frameController,
-            AddressbookResourceLoader.getString("menu", "mainframe",
-                "menu_file_addvcard"));
+	public AddVCardAction(FrameMediator frameController) {
+		super(frameController, AddressbookResourceLoader.getString("menu",
+				"mainframe", "menu_file_addvcard"));
 
-        // tooltip text
-        putValue(SHORT_DESCRIPTION,
-            AddressbookResourceLoader.getString("menu", "mainframe",
-                "menu_file_addvcard").replaceAll("&", ""));
-    }
+		// tooltip text
+		putValue(SHORT_DESCRIPTION, AddressbookResourceLoader.getString("menu",
+				"mainframe", "menu_file_addvcard").replaceAll("&", ""));
+	}
 
-    /**
-     * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
-     */
-    public void actionPerformed(ActionEvent evt) {
-        AddressbookFrameMediator mediator = (AddressbookFrameMediator) frameMediator;
+	/**
+	 * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
+	 */
+	public void actionPerformed(ActionEvent evt) {
+		AddressbookFrameMediator mediator = (AddressbookFrameMediator) frameMediator;
 
-        // get selected folder
-        AddressbookFolder destinationFolder = (AddressbookFolder) mediator.getTree()
-                                                                          .getSelectedFolder();
+		// get selected folder
+		AddressbookFolder destinationFolder = (AddressbookFolder) mediator
+				.getTree().getSelectedFolder();
 
-        // create open file dialog
-        JFileChooser fc = new JFileChooser();
-        fc.setFileSelectionMode(JFileChooser.FILES_ONLY);
-        fc.setMultiSelectionEnabled(true);
+		// create open file dialog
+		JFileChooser fc = new JFileChooser();
+		fc.setFileSelectionMode(JFileChooser.FILES_ONLY);
+		fc.setMultiSelectionEnabled(true);
 
-        int returnVal = fc.showOpenDialog(frameMediator.getView().getFrame());
+		int returnVal = fc.showOpenDialog(frameMediator.getView().getFrame());
 
-        //if user pressed OK button
-        if (returnVal == JFileChooser.APPROVE_OPTION) {
-            File[] files = fc.getSelectedFiles();
+		//if user pressed OK button
+		if (returnVal == JFileChooser.APPROVE_OPTION) {
+			File[] files = fc.getSelectedFiles();
 
-            for (int i = 0; i < files.length; i++) {
-                try {
-                    StringBuffer strbuf = new StringBuffer();
+			for (int i = 0; i < files.length; i++) {
+				try {
+					StringBuffer strbuf = new StringBuffer();
 
-                    // read VCARD file into string buffer
-                    BufferedReader in = new BufferedReader(new FileReader(
-                                files[i]));
-                    String str;
+					// read VCARD file into string buffer
+					BufferedReader in = new BufferedReader(new FileReader(
+							files[i]));
+					String str;
 
-                    while ((str = in.readLine()) != null) {
-                        strbuf.append(str + "\n");
-                    }
+					while ((str = in.readLine()) != null) {
+						strbuf.append(str + "\n");
+					}
 
-                    in.close();
+					in.close();
 
-                    // create contact card
-                    ContactCard card = VCardParser.parse(strbuf.toString());
+					// create contact card
+					Contact card = VCardParser.parse(strbuf.toString());
 
-                    // add to folder
-                    destinationFolder.add(card);
-                } catch (Exception ex) {
-                    ex.printStackTrace();
-                }
-            }
-        }
+					// add to folder
+					destinationFolder.add(card);
+				} catch (Exception ex) {
+					ex.printStackTrace();
+				}
+			}
+		}
 
-        // update table
-        // TODO: fire event of table model instead
-        mediator.getTable().getAddressbookModel().update();
-    }
+		// update table
+		// TODO: fire event of table model instead
+		mediator.getTable().getAddressbookModel().update();
+	}
 }

@@ -15,32 +15,12 @@
 //All Rights Reserved.
 package org.columba.addressbook.gui;
 
-import com.jgoodies.forms.builder.PanelBuilder;
-import com.jgoodies.forms.layout.CellConstraints;
-import com.jgoodies.forms.layout.FormLayout;
-
-import net.javaprog.ui.wizard.plaf.basic.SingleSideEtchedBorder;
-
-import org.columba.addressbook.folder.Folder;
-import org.columba.addressbook.folder.HeaderItem;
-import org.columba.addressbook.folder.HeaderItemList;
-import org.columba.addressbook.gui.list.AddressbookDNDListView;
-import org.columba.addressbook.gui.list.AddressbookListModel;
-import org.columba.addressbook.gui.tree.util.SelectAddressbookFolderDialog;
-import org.columba.addressbook.main.AddressbookInterface;
-import org.columba.addressbook.util.AddressbookResourceLoader;
-
-import org.columba.core.gui.util.ButtonWithMnemonic;
-
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
-
-import java.util.List;
-import java.util.Vector;
 
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
@@ -53,6 +33,22 @@ import javax.swing.JScrollPane;
 import javax.swing.KeyStroke;
 import javax.swing.ListModel;
 import javax.swing.SwingConstants;
+
+import net.javaprog.ui.wizard.plaf.basic.SingleSideEtchedBorder;
+
+import org.columba.addressbook.folder.AbstractFolder;
+import org.columba.addressbook.gui.list.AddressbookDNDListView;
+import org.columba.addressbook.gui.list.AddressbookListModel;
+import org.columba.addressbook.gui.tree.util.SelectAddressbookFolderDialog;
+import org.columba.addressbook.main.AddressbookInterface;
+import org.columba.addressbook.model.HeaderItem;
+import org.columba.addressbook.model.HeaderItemList;
+import org.columba.addressbook.util.AddressbookResourceLoader;
+import org.columba.core.gui.util.ButtonWithMnemonic;
+
+import com.jgoodies.forms.builder.PanelBuilder;
+import com.jgoodies.forms.layout.CellConstraints;
+import com.jgoodies.forms.layout.FormLayout;
 
 
 public class SelectAddressDialog extends JDialog implements ActionListener {
@@ -82,10 +78,12 @@ public class SelectAddressDialog extends JDialog implements ActionListener {
     private JLabel chooseLabel;
 
     // models for addressbook/recipients lists
-    private AddressbookListModel[] dialogList;
+    private AddressbookListModel[] dialogAddressbookListModel;
     private HeaderItemList[] headerItemList;
     private ButtonWithMnemonic cancelButton;
     private ButtonWithMnemonic okButton;
+    
+    private boolean success;
 
     public SelectAddressDialog(JFrame frame, HeaderItemList[] list) {
         super(frame, true);
@@ -95,14 +93,24 @@ public class SelectAddressDialog extends JDialog implements ActionListener {
 
         this.headerItemList = list;
 
-        dialogList = new AddressbookListModel[3];
+        dialogAddressbookListModel = new AddressbookListModel[3];
 
         initComponents();
 
         layoutComponents();
+        
+       AbstractFolder folder = (AbstractFolder) AddressbookInterface.addressbookTreeModel.getFolder(101);
+        try {
+        	addressbook.setHeaderItemList(folder.getHeaderItemList());
+        }
+        catch (Exception ex) {
+        	
+        }
 
         pack();
         setLocationRelativeTo(null);
+        
+        setVisible(true);
     }
 
     public HeaderItemList[] getHeaderItemLists() {
@@ -197,25 +205,25 @@ public class SelectAddressDialog extends JDialog implements ActionListener {
         toLabel = new JLabel(AddressbookResourceLoader.getString("dialog",
                     "selectaddressdialog", "to")); //$NON-NLS-1$
 
-        dialogList[0] = new AddressbookListModel();
-        dialogList[0].setHeaderList(headerItemList[0]);
-        toList = new AddressbookDNDListView(dialogList[0]);
+        dialogAddressbookListModel[0] = new AddressbookListModel();
+        dialogAddressbookListModel[0].setHeaderItemList(headerItemList[0]);
+        toList = new AddressbookDNDListView(dialogAddressbookListModel[0]);
         toList.setMinimumSize(new Dimension(150, 150));
 
         ccLabel = new JLabel(AddressbookResourceLoader.getString("dialog",
                     "selectaddressdialog", "cc")); //$NON-NLS-1$
 
-        dialogList[1] = new AddressbookListModel();
-        dialogList[1].setHeaderList(headerItemList[1]);
-        ccList = new AddressbookDNDListView(dialogList[1]);
+        dialogAddressbookListModel[1] = new AddressbookListModel();
+        dialogAddressbookListModel[1].setHeaderItemList(headerItemList[1]);
+        ccList = new AddressbookDNDListView(dialogAddressbookListModel[1]);
         ccList.setMinimumSize(new Dimension(150, 150));
 
         bccLabel = new JLabel(AddressbookResourceLoader.getString("dialog",
                     "selectaddressdialog", "bcc")); //$NON-NLS-1$
 
-        dialogList[2] = new AddressbookListModel();
-        dialogList[2].setHeaderList(headerItemList[2]);
-        bccList = new AddressbookDNDListView(dialogList[2]);
+        dialogAddressbookListModel[2] = new AddressbookListModel();
+        dialogAddressbookListModel[2].setHeaderItemList(headerItemList[2]);
+        bccList = new AddressbookDNDListView(dialogAddressbookListModel[2]);
         bccList.setMinimumSize(new Dimension(150, 150));
 
         toButton = new JButton(AddressbookResourceLoader.getString("dialog",
@@ -276,11 +284,12 @@ public class SelectAddressDialog extends JDialog implements ActionListener {
             JComponent.WHEN_IN_FOCUSED_WINDOW);
     }
 
-    public void setHeaderList(HeaderItemList list) {
-        List v = list.getVector();
-
-        addressbook.setListData((Vector) v);
-    }
+    /**
+	 * @return Returns the success.
+	 */
+	public boolean isSuccess() {
+		return success;
+	}
 
     public void actionPerformed(ActionEvent e) {
         String command = e.getActionCommand();
@@ -290,8 +299,9 @@ public class SelectAddressDialog extends JDialog implements ActionListener {
         } else if (command.equals("OK")) { //$NON-NLS-1$
             setVisible(false);
 
+            success = true;
             for (int i = 0; i < 3; i++) {
-                Object[] array = dialogList[i].toArray();
+                Object[] array = dialogAddressbookListModel[i].toArray();
                 headerItemList[i].clear();
 
                 System.out.println("array-size=" + array.length); //$NON-NLS-1$
@@ -299,6 +309,7 @@ public class SelectAddressDialog extends JDialog implements ActionListener {
                 for (int j = 0; j < array.length; j++) {
                     HeaderItem item = (HeaderItem) array[j];
 
+                    /*
                     if (item.isContact()) {
                         String address = (String) item.get("email;internet"); //$NON-NLS-1$
                         System.out.println("old address:" + address); //$NON-NLS-1$
@@ -307,16 +318,20 @@ public class SelectAddressDialog extends JDialog implements ActionListener {
                             address = ""; //$NON-NLS-1$
                         }
                     }
+                    */
 
                     if (i == 0) {
-                        item.add("field", "To"); //$NON-NLS-1$ //$NON-NLS-2$
+                        item.setHeader("To");
+                        
                     } else if (i == 1) {
-                        item.add("field", "Cc"); //$NON-NLS-1$ //$NON-NLS-2$
+                    	item.setHeader("Cc");
                     } else if (i == 2) {
-                        item.add("field", "Bcc"); //$NON-NLS-1$ //$NON-NLS-2$
+                    	item.setHeader("Bcc");
                     }
-
+                    
+                    
                     headerItemList[i].add((HeaderItem) item.clone());
+                    
                 }
             }
         } else if (command.equals("TO")) { //$NON-NLS-1$
@@ -327,7 +342,7 @@ public class SelectAddressDialog extends JDialog implements ActionListener {
 
             for (int j = 0; j < array.length; j++) {
                 item = (HeaderItem) model.getElementAt(array[j]);
-                dialogList[0].addElement((HeaderItem) item.clone());
+                dialogAddressbookListModel[0].addElement((HeaderItem) item.clone());
             }
         } else if (command.equals("CC")) { //$NON-NLS-1$
 
@@ -337,7 +352,7 @@ public class SelectAddressDialog extends JDialog implements ActionListener {
 
             for (int j = 0; j < array.length; j++) {
                 item = (HeaderItem) model.getElementAt(array[j]);
-                dialogList[1].addElement((HeaderItem) item.clone());
+                dialogAddressbookListModel[1].addElement((HeaderItem) item.clone());
             }
         } else if (command.equals("BCC")) { //$NON-NLS-1$
 
@@ -347,39 +362,45 @@ public class SelectAddressDialog extends JDialog implements ActionListener {
 
             for (int j = 0; j < array.length; j++) {
                 item = (HeaderItem) model.getElementAt(array[j]);
-                dialogList[2].addElement((HeaderItem) item.clone());
+                dialogAddressbookListModel[2].addElement((HeaderItem) item.clone());
             }
         } else if (command.equals("TO_REMOVE")) { //$NON-NLS-1$
 
             Object[] array = toList.getSelectedValues();
 
             for (int j = 0; j < array.length; j++) {
-                dialogList[0].removeElement(array[j]);
+                dialogAddressbookListModel[0].removeElement((HeaderItem)array[j]);
             }
         } else if (command.equals("CC_REMOVE")) { //$NON-NLS-1$
 
             Object[] array = ccList.getSelectedValues();
 
             for (int j = 0; j < array.length; j++) {
-                dialogList[1].removeElement(array[j]);
+                dialogAddressbookListModel[1].removeElement((HeaderItem)array[j]);
             }
         } else if (command.equals("BCC_REMOVE")) { //$NON-NLS-1$
 
             Object[] array = bccList.getSelectedValues();
 
             for (int j = 0; j < array.length; j++) {
-                dialogList[2].removeElement(array[j]);
+                dialogAddressbookListModel[2].removeElement((HeaderItem)array[j]);
             }
         } else if (command.equals("CHOOSE")) { //$NON-NLS-1$
 
             SelectAddressbookFolderDialog dialog = AddressbookInterface.addressbookTreeModel.getSelectAddressbookFolderDialog();
 
-            Folder selectedFolder = dialog.getSelectedFolder();
+            AbstractFolder selectedFolder = dialog.getSelectedFolder();
 
             if (selectedFolder != null) {
-                HeaderItemList list = selectedFolder.getHeaderItemList();
-                setHeaderList(list);
-                chooseButton.setText(selectedFolder.getName());
+                try {
+					//ContactItemMap list = selectedFolder.getContactItemMap();
+                	HeaderItemList itemList = selectedFolder.getHeaderItemList();
+					addressbook.setHeaderItemList(itemList);
+					chooseButton.setText(selectedFolder.getName());
+				} catch (Exception e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
             }
         }
     }

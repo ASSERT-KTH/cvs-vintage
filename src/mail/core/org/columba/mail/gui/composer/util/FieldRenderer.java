@@ -15,7 +15,7 @@
 //All Rights Reserved.
 package org.columba.mail.gui.composer.util;
 
-import org.columba.addressbook.folder.HeaderItem;
+import org.columba.addressbook.model.HeaderItem;
 
 import java.awt.Component;
 
@@ -41,7 +41,7 @@ public class FieldRenderer extends JComboBox implements TableCellRenderer {
     public Component getTableCellRendererComponent(JTable table, Object object,
         boolean isSelected, boolean hasFocus, int row, int column) {
         HeaderItem item = (HeaderItem) object;
-        String field = (String) item.get("field");
+        String field = (String) item.getHeader();
 
         setSelectedItem(field);
 

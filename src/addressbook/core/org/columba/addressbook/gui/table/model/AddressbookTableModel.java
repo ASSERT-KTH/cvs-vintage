@@ -17,10 +17,13 @@
 //All Rights Reserved.
 package org.columba.addressbook.gui.table.model;
 
+import java.util.Iterator;
+import java.util.logging.Logger;
+
 import javax.swing.table.AbstractTableModel;
 
-import org.columba.addressbook.folder.HeaderItem;
-import org.columba.addressbook.folder.HeaderItemList;
+import org.columba.addressbook.model.ContactItem;
+import org.columba.addressbook.model.ContactItemMap;
 
 /**
  * Simple table model, using an extended TableModel interface.
@@ -29,27 +32,61 @@ import org.columba.addressbook.folder.HeaderItemList;
  */
 public class AddressbookTableModel extends AbstractTableModel
 		implements
-			HeaderListTableModel {
-	private String[] columns = {"type", "displayname", "email;internet", "url"};
-	private HeaderItemList rows;
+			ContactItemTableModel {
+	
+	/** JDK 1.4+ logging framework logger, used for logging. */
+    private static final Logger LOG = Logger
+            .getLogger("org.columba.addressbook.gui.table.model");
+    
+	private String[] columns = {"displayname", "email;internet", "url"};
+	private ContactItem[] rows;
+
+	private ContactItemMap headerItemList;
 
 	public AddressbookTableModel() {
 		super();
 
-		rows = new HeaderItemList();
 	}
 
-	public HeaderItemList getHeaderList() {
-		return rows;
-	}
+	public void setContactItemMap(ContactItemMap list) {
+		
+		
+		if ( list == null) {
+			LOG.fine("map == null");
+			
+			rows = new ContactItem[0];
+		
+			fireTableDataChanged();
+			
+			return;
+			
+		}
+		
+		
+		this.headerItemList = list;
 
-	public void setHeaderList(HeaderItemList list) {
-		this.rows = list;
+		if ( list.count() == 0) LOG.fine("map is empty");
+		
+		rows = new ContactItem[list.count()];
+
+		Iterator it = list.iterator();
+		int i = 0;
+		while (it.hasNext()) {
+			rows[i++] = (ContactItem) it.next();
+		}
 
 		fireTableDataChanged();
 	}
 
 	public void update() {
+		rows = new ContactItem[headerItemList.count()];
+
+		Iterator it = headerItemList.iterator();
+		int i = 0;
+		while (it.hasNext()) {
+			rows[i++] = (ContactItem) it.next();
+		}
+
 		fireTableDataChanged();
 	}
 
@@ -64,24 +101,42 @@ public class AddressbookTableModel extends AbstractTableModel
 	 * @see javax.swing.table.TableModel#getRowCount()
 	 */
 	public int getRowCount() {
-		if ( rows == null ) return 0;
-		
-		return rows.count();
+		if (rows == null)
+			return 0;
+
+		return rows.length;
 	}
 
 	/**
 	 * @see javax.swing.table.TableModel#getValueAt(int, int)
 	 */
 	public Object getValueAt(int row, int column) {
-		HeaderItem item = rows.get(row);
+		ContactItem item = rows[row];
 
-		return item.get(columns[column]);
+		switch (column) {
+			case 0 :
+				return item.getDisplayName();
+			case 1 :
+				return item.getAddress();
+			case 2 :
+				return item.getWebsite();
+			default :
+				return "";
+
+		}
+
 	}
 	/**
-	 * @see org.columba.addressbook.gui.table.model.HeaderListTableModel#getHeaderItem(int)
+	 * @see org.columba.addressbook.gui.table.model.ContactItemTableModel#getHeaderItem(int)
 	 */
-	public HeaderItem getHeaderItem(int index) {
+	public ContactItem getContactItem(int index) {
 
-		return rows.get(index);
+		return rows[index];
+	}
+	/**
+	 * @return Returns the headerItemList.
+	 */
+	public ContactItemMap getContactItemMap() {
+		return headerItemList;
 	}
 }

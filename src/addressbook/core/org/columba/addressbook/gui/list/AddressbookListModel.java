@@ -17,13 +17,14 @@
 //All Rights Reserved.
 package org.columba.addressbook.gui.list;
 
-import org.columba.addressbook.folder.HeaderItem;
-import org.columba.addressbook.folder.HeaderItemList;
-
 import java.util.List;
 import java.util.Vector;
 
 import javax.swing.AbstractListModel;
+
+import org.columba.addressbook.model.ContactItemMap;
+import org.columba.addressbook.model.HeaderItem;
+import org.columba.addressbook.model.HeaderItemList;
 
 
 /**
@@ -31,14 +32,14 @@ import javax.swing.AbstractListModel;
  * @author
  */
 public class AddressbookListModel extends AbstractListModel {
-    private List listClone;
-    private List list;
+   private HeaderItemList list;
+   
     private String patternString = "";
 
     public AddressbookListModel() {
         super();
-        list = new Vector();
-        listClone = new Vector();
+        list = new HeaderItemList();
+        
     }
 
     public Object getElementAt(int index) {
@@ -46,7 +47,7 @@ public class AddressbookListModel extends AbstractListModel {
     }
 
     public int getSize() {
-        return list.size();
+        return list.count();
     }
 
     public String getPatternString() {
@@ -63,7 +64,7 @@ public class AddressbookListModel extends AbstractListModel {
         list.clear();
     }
 
-    public void addElement(Object item) {
+    public void addElement(HeaderItem item) {
         list.add(item);
 
         int index = list.indexOf(item);
@@ -71,12 +72,12 @@ public class AddressbookListModel extends AbstractListModel {
         fireIntervalAdded(this, index, index);
     }
 
-    public void setHeaderList(HeaderItemList l) {
-        System.out.println("list size:" + l.count());
+    public void setHeaderItemList(HeaderItemList l) {
+      
 
-        list = (List) ((Vector) l.getVector()).clone();
+      this.list = l;
 
-        fireContentsChanged(this, 0, list.size() - 1);
+        fireContentsChanged(this, 0, list.count() - 1);
     }
 
     public HeaderItem get(int i) {
@@ -86,7 +87,7 @@ public class AddressbookListModel extends AbstractListModel {
     public boolean addItem(HeaderItem header) {
         boolean result1 = false;
 
-        Object o = header.get("displayname");
+        Object o = header.getDisplayName();
 
         if (o != null) {
             if (o instanceof String) {
@@ -121,8 +122,8 @@ public class AddressbookListModel extends AbstractListModel {
         fireIntervalRemoved(this, index, index);
     }
 
-    public void removeElement(Object o) {
-        int index = list.indexOf(o);
+    public void removeElement(HeaderItem item) {
+        int index = list.indexOf(item);
 
         remove(index);
     }

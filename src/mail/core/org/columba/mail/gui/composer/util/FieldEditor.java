@@ -15,7 +15,7 @@
 //All Rights Reserved.
 package org.columba.mail.gui.composer.util;
 
-import org.columba.addressbook.folder.HeaderItem;
+import org.columba.addressbook.model.HeaderItem;
 
 import java.awt.Component;
 
@@ -45,7 +45,7 @@ public class FieldEditor extends DefaultCellEditor {
         super.getTableCellEditorComponent(arg0, value, arg2, arg3, arg4);
 
         HeaderItem item = (HeaderItem) value;
-        String s = (String) item.get("field");
+        String s = (String) item.getHeader();
 
         ((JComboBox) editorComponent).setSelectedItem(s);
 

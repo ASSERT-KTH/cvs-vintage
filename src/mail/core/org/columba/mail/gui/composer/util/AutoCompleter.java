@@ -15,22 +15,21 @@
 //All Rights Reserved.
 package org.columba.mail.gui.composer.util;
 
-import org.columba.addressbook.folder.HeaderItem;
-
-import org.columba.mail.gui.composer.HeaderView;
-import org.columba.mail.util.AddressCollector;
-
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
-
 import java.util.List;
 import java.util.Vector;
 
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JComboBox;
 import javax.swing.JTextField;
+
+import org.columba.addressbook.gui.autocomplete.AddressCollector;
+import org.columba.addressbook.model.ContactItem;
+import org.columba.addressbook.model.HeaderItem;
+import org.columba.mail.gui.composer.HeaderView;
 
 
 /**
@@ -90,23 +89,26 @@ public class AutoCompleter implements KeyListener, ItemListener {
         if (opts.length > 0) {
             String str = opts[0].toString();
 
-            HeaderItem item = AddressCollector.getHeaderItem((String) opts[0]);
+            HeaderItem item = AddressCollector.getInstance().getHeaderItem((String) opts[0]);
 
             if (item == null) {
-                item = new HeaderItem(HeaderItem.CONTACT);
-                item.add("displayname", str);
-                item.add("field", "To");
+                item = new ContactItem();
+                item.setDisplayName(str);
+                item.setHeader("To");
             } else {
                 item = (HeaderItem) item.clone();
             }
 
             _table.setHeaderItem(item);
 
+            /*
+             * FIXME
             String address = (String) item.get("displayname");
 
             if (address == null) {
                 address = (String) item.get("email;internet");
             }
+            */
 
             _editor.setCaretPosition(cursor_pos);
 
@@ -122,7 +124,7 @@ public class AutoCompleter implements KeyListener, ItemListener {
     }
 
     private Object[] getMatchingOptions(String str) {
-        _options = AddressCollector.getAddresses();
+        _options = AddressCollector.getInstance().getAddresses();
 
         List v = new Vector();
 
@@ -145,23 +147,26 @@ public class AutoCompleter implements KeyListener, ItemListener {
         if (event.getStateChange() == ItemEvent.SELECTED) {
             String selected = (String) _comboBox.getSelectedItem();
 
-            HeaderItem item = AddressCollector.getHeaderItem(selected);
-
+            HeaderItem item = AddressCollector.getInstance().getHeaderItem(selected);
             if (item == null) {
-                item = new HeaderItem(HeaderItem.CONTACT);
-                item.add("displayname", selected);
-                item.add("field", "To");
+                item = new ContactItem();
+                item.setDisplayName(selected);
+                item.setHeader("To");
             } else {
                 item = (HeaderItem) item.clone();
             }
 
             _table.setHeaderItem(item);
 
+            /*
+             * 
+             * FIXME
             String address = (String) item.get("displayname");
 
             if (address == null) {
                 address = (String) item.get("email;internet");
             }
+            */
 
             int pos2 = _editor.getCaretPosition();
 

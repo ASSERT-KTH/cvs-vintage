@@ -65,7 +65,7 @@ public class CachedMHFolder extends LocalFolder {
     }
 
     /**
-     * @see org.columba.mail.folder.Folder#getHeaderListStorage()
+     * @see org.columba.mail.folder.AbstractFolder#getHeaderListStorage()
      */
     public HeaderListStorage getHeaderListStorage() {
         if (headerListStorage == null) {

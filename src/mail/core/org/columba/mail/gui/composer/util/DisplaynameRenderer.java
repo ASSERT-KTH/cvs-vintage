@@ -15,10 +15,6 @@
 //All Rights Reserved.
 package org.columba.mail.gui.composer.util;
 
-import org.columba.addressbook.folder.HeaderItem;
-
-import org.columba.core.gui.util.ImageLoader;
-
 import java.awt.Component;
 
 import javax.swing.BorderFactory;
@@ -28,91 +24,69 @@ import javax.swing.JTable;
 import javax.swing.border.Border;
 import javax.swing.table.TableCellRenderer;
 
+import org.columba.addressbook.gui.util.ToolTipFactory;
+import org.columba.addressbook.model.ContactItem;
+import org.columba.addressbook.model.GroupItem;
+import org.columba.addressbook.model.HeaderItem;
+import org.columba.core.gui.util.ImageLoader;
 
 /**
  * Renderer for contact column.
  */
 public class DisplaynameRenderer extends JLabel implements TableCellRenderer {
-    protected Border unselectedBorder = null;
-    protected Border selectedBorder = null;
-    protected boolean isBordered = true;
-    ImageIcon contactIcon = ImageLoader.getSmallImageIcon("contact_small.png");
-    ImageIcon groupIcon = ImageLoader.getSmallImageIcon("group_small.png");
+	protected Border unselectedBorder = null;
 
-    public DisplaynameRenderer() {
-        setOpaque(true);
+	protected Border selectedBorder = null;
 
-        isBordered = true;
-    }
+	protected boolean isBordered = true;
 
-    public Component getTableCellRendererComponent(JTable table, Object object,
-        boolean isSelected, boolean hasFocus, int row, int column) {
-        if (isBordered) {
-            if (isSelected) {
-                if (selectedBorder == null) {
-                    selectedBorder = BorderFactory.createMatteBorder(2, 5, 2,
-                            5, table.getSelectionBackground());
-                }
+	ImageIcon contactIcon = ImageLoader.getSmallImageIcon("contact_small.png");
 
-                setBackground(table.getSelectionBackground());
-                setForeground(table.getSelectionForeground());
-            } else {
-                if (unselectedBorder == null) {
-                    unselectedBorder = BorderFactory.createMatteBorder(2, 5, 2,
-                            5, table.getBackground());
-                }
+	ImageIcon groupIcon = ImageLoader.getSmallImageIcon("group_small.png");
 
-                setBackground(table.getBackground());
+	public DisplaynameRenderer() {
+		setOpaque(true);
 
-                setForeground(table.getForeground());
-            }
-        }
+		isBordered = true;
+	}
 
-        HeaderItem item = (HeaderItem) object;
+	public Component getTableCellRendererComponent(JTable table, Object object,
+			boolean isSelected, boolean hasFocus, int row, int column) {
+		if (isBordered) {
+			if (isSelected) {
+				if (selectedBorder == null) {
+					selectedBorder = BorderFactory.createMatteBorder(2, 5, 2,
+							5, table.getSelectionBackground());
+				}
 
-        setText(item.toString());
+				setBackground(table.getSelectionBackground());
+				setForeground(table.getSelectionForeground());
+			} else {
+				if (unselectedBorder == null) {
+					unselectedBorder = BorderFactory.createMatteBorder(2, 5, 2,
+							5, table.getBackground());
+				}
 
-        if (item.isContact()) {
-            String displayname = (String) item.get("displayname");
+				setBackground(table.getBackground());
 
-            StringBuffer buf = new StringBuffer();
-            buf.append("<html><body>&nbsp;Name: " + convert(displayname));
-            buf.append("<br>&nbsp;eMail: " +
-                convert((String) item.get("email;internet")));
-            buf.append("</body></html>");
-            setToolTipText(buf.toString());
-            setIcon(contactIcon);
-        } else {
-            setIcon(groupIcon);
-            setToolTipText("");
-        }
+				setForeground(table.getForeground());
+			}
+		}
 
-        return this;
-    }
+		HeaderItem item = (HeaderItem) object;
 
-    private String convert(String str) {
-        if (str == null) {
-            return "";
-        }
+		setText(item.toString());
 
-        StringBuffer result = new StringBuffer();
-        int pos = 0;
-        char ch;
+		if (item.isContact()) {
+			setIcon(contactIcon);
+			setToolTipText(ToolTipFactory.createToolTip((ContactItem) item));
+		} else {
+			setIcon(groupIcon);
+			setToolTipText(ToolTipFactory.createToolTip((GroupItem) item));
 
-        while (pos < str.length()) {
-            ch = str.charAt(pos);
+		}
 
-            if (ch == '<') {
-                result.append("&lt;");
-            } else if (ch == '>') {
-                result.append("&gt;");
-            } else {
-                result.append(ch);
-            }
+		return this;
+	}
 
-            pos++;
-        }
-
-        return result.toString();
-    }
 }

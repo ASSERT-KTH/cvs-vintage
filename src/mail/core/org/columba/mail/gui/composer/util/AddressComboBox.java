@@ -15,8 +15,8 @@
 //All Rights Reserved.
 package org.columba.mail.gui.composer.util;
 
+import org.columba.addressbook.gui.autocomplete.AddressCollector;
 import org.columba.mail.gui.composer.HeaderView;
-import org.columba.mail.util.AddressCollector;
 
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
@@ -41,7 +41,7 @@ public class AddressComboBox extends JComboBox implements KeyListener {
 
         setEditable(true);
 
-        Object[] completions = AddressCollector.getAddresses();
+        Object[] completions = AddressCollector.getInstance().getAddresses();
 
         new AutoCompleter(this, table, completions);
 

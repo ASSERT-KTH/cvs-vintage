@@ -38,6 +38,8 @@ public class AddressbookTreeCellRenderer extends DefaultTreeCellRenderer {
     private ImageIcon image3;
     private String fontName;
     private int fontSize;
+    
+    ImageIcon groupImageIcon = ImageLoader.getSmallImageIcon("group_small.png");
 
     public AddressbookTreeCellRenderer(boolean bool) {
         super();
@@ -68,56 +70,7 @@ public class AddressbookTreeCellRenderer extends DefaultTreeCellRenderer {
         setText(folder.getName());
         setIcon(folder.getIcon());
 
-        /*
-FolderItem item = folder.getFolderItem();
-if ( item==null ) return this;
-
-//int uid = item.getUid();
-int uid = 100;
-
-if ( uid == 100 )
-{
-        setIcon(image2);
-}
-else if ( uid == 200 )
-{
-        setIcon(image3);
-}
-else
-{
-        setIcon(image1);
-}
-*/
-        /*
-if (value instanceof AddressbookFolder)
-{
-        AddressbookFolder folder = (AddressbookFolder) value;
-
-        FolderItem item = folder.getFolderItem();
-        if (item != null)
-        {
-                String name = item.getName();
-                String type = item.getType();
-
-                if ( type == "addressbook") )
-                        setIcon(image1);
-                else
-                        setIcon(image2);
-
-
-        }
-
-
-        setText(folder.getName());
-
-
-}
-else
-{
-
-
-}
-*/
+      
         return this;
     }
 }

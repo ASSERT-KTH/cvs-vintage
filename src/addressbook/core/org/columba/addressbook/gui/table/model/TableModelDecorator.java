@@ -19,8 +19,8 @@ package org.columba.addressbook.gui.table.model;
 
 import javax.swing.event.TableModelListener;
 
-import org.columba.addressbook.folder.HeaderItem;
-import org.columba.addressbook.folder.HeaderItemList;
+import org.columba.addressbook.model.ContactItem;
+import org.columba.addressbook.model.ContactItemMap;
 
 /**
  * Decorator for TableModel.
@@ -29,12 +29,12 @@ import org.columba.addressbook.folder.HeaderItemList;
  */
 public abstract class TableModelDecorator
 		implements
-			HeaderListTableModel,
+			ContactItemTableModel,
 			TableModelListener {
 	// the model which is decorated
-	private HeaderListTableModel realModel;
+	private ContactItemTableModel realModel;
 
-	public TableModelDecorator(HeaderListTableModel model) {
+	public TableModelDecorator(ContactItemTableModel model) {
 		this.realModel = model;
 		realModel.addTableModelListener(this);
 	}
@@ -81,28 +81,28 @@ public abstract class TableModelDecorator
 	 * 
 	 * @return
 	 */
-	protected HeaderListTableModel getRealModel() {
+	protected ContactItemTableModel getRealModel() {
 		return realModel;
 	}
 
 	/**
-	 * @see org.columba.addressbook.gui.table.model.HeaderListTableModel#getHeaderList()
+	 * @see org.columba.addressbook.gui.table.model.ContactItemTableModel#getContactItemMap()
 	 */
-	public HeaderItemList getHeaderList() {
-		return realModel.getHeaderList();
+	public ContactItemMap getContactItemMap() {
+		return realModel.getContactItemMap();
 	}
 
 	/**
-	 * @see org.columba.addressbook.gui.table.model.HeaderListTableModel#setHeaderList(org.columba.addressbook.folder.HeaderItemList)
+	 * @see org.columba.addressbook.gui.table.model.ContactItemTableModel#setHeaderItemList(org.columba.addressbook.folder.HeaderItemList)
 	 */
-	public void setHeaderList(HeaderItemList list) {
-		realModel.setHeaderList(list);
+	public void setContactItemMap(ContactItemMap list) {
+		realModel.setContactItemMap(list);
 	}
 
 	/**
-	 * @see org.columba.addressbook.gui.table.model.HeaderListTableModel#getHeaderItem(int)
+	 * @see org.columba.addressbook.gui.table.model.ContactItemTableModel#getHeaderItem(int)
 	 */
-	public HeaderItem getHeaderItem(int index) {
-		return realModel.getHeaderItem(index);
+	public ContactItem getContactItem(int index) {
+		return realModel.getContactItem(index);
 	}
 }

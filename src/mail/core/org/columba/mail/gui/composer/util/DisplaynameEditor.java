@@ -15,7 +15,7 @@
 //All Rights Reserved.
 package org.columba.mail.gui.composer.util;
 
-import org.columba.addressbook.folder.HeaderItem;
+import org.columba.addressbook.model.HeaderItem;
 
 import org.columba.mail.gui.composer.HeaderView;
 
@@ -119,7 +119,7 @@ public class DisplaynameEditor extends AddressComboBox
         boolean isSelected, int row, int column) {
         selection = (HeaderItem) value;
 
-        setSelectedItem(selection.get("displayname"));
+        setSelectedItem(selection.getDisplayName());
 
         return this;
     }

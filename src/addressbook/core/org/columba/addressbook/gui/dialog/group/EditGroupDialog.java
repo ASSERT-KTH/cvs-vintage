@@ -17,27 +17,6 @@
 //All Rights Reserved.
 package org.columba.addressbook.gui.dialog.group;
 
-import com.jgoodies.forms.builder.PanelBuilder;
-import com.jgoodies.forms.layout.CellConstraints;
-import com.jgoodies.forms.layout.FormLayout;
-
-import net.javaprog.ui.wizard.plaf.basic.SingleSideEtchedBorder;
-
-import org.columba.addressbook.config.AdapterNode;
-import org.columba.addressbook.folder.GroupListCard;
-import org.columba.addressbook.folder.HeaderItem;
-import org.columba.addressbook.folder.HeaderItemList;
-import org.columba.addressbook.gui.autocomplete.DefaultAddressComboBox;
-import org.columba.addressbook.gui.list.AddressbookDNDListView;
-import org.columba.addressbook.gui.list.AddressbookListModel;
-import org.columba.addressbook.gui.list.AddressbookListRenderer;
-import org.columba.addressbook.util.AddressbookResourceLoader;
-
-import org.columba.core.gui.util.ButtonWithMnemonic;
-import org.columba.core.gui.util.DefaultFormBuilder;
-
-import org.columba.mail.util.AddressCollector;
-
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.GridLayout;
@@ -60,6 +39,26 @@ import javax.swing.KeyStroke;
 import javax.swing.SwingConstants;
 import javax.swing.text.JTextComponent;
 
+import net.javaprog.ui.wizard.plaf.basic.SingleSideEtchedBorder;
+
+import org.columba.addressbook.folder.AbstractFolder;
+import org.columba.addressbook.gui.autocomplete.AddressCollector;
+import org.columba.addressbook.gui.autocomplete.DefaultAddressComboBox;
+import org.columba.addressbook.gui.list.AddressbookDNDListView;
+import org.columba.addressbook.gui.list.AddressbookListModel;
+import org.columba.addressbook.gui.list.AddressbookListRenderer;
+import org.columba.addressbook.model.ContactItem;
+import org.columba.addressbook.model.ContactItemMap;
+import org.columba.addressbook.model.Group;
+import org.columba.addressbook.model.HeaderItem;
+import org.columba.addressbook.util.AddressbookResourceLoader;
+import org.columba.core.gui.util.ButtonWithMnemonic;
+import org.columba.core.gui.util.DefaultFormBuilder;
+
+import com.jgoodies.forms.builder.PanelBuilder;
+import com.jgoodies.forms.layout.CellConstraints;
+import com.jgoodies.forms.layout.FormLayout;
+
 
 public class EditGroupDialog extends JDialog implements ActionListener,
     KeyListener {
@@ -77,6 +76,11 @@ public class EditGroupDialog extends JDialog implements ActionListener,
     private ButtonWithMnemonic okButton;
     private ButtonWithMnemonic cancelButton;
 
+    
+    private Group group;
+    
+    private AbstractFolder parentFolder;
+    
     /**
  * Constructor
  * 
@@ -86,9 +90,13 @@ public class EditGroupDialog extends JDialog implements ActionListener,
  *            null, if you want to create a new group. Otherwise, the
  *            groupNode will be modified.
  */
-    public EditGroupDialog(JFrame frame, AdapterNode groupNode) {
+    public EditGroupDialog(JFrame frame, Group group, AbstractFolder parentFolder) {
         super(frame, true);
 
+        this.group = group;
+        this.parentFolder = parentFolder;
+        
+        
         result = false;
 
         renderer = new AddressbookListRenderer();
@@ -100,6 +108,8 @@ public class EditGroupDialog extends JDialog implements ActionListener,
         initComponents();
 
         layoutComponents();
+        
+        updateComponents(true);
 
         pack();
 
@@ -222,34 +232,45 @@ public class EditGroupDialog extends JDialog implements ActionListener,
         return result;
     }
 
-    public void updateComponents(GroupListCard card, HeaderItemList list,
+    public void updateComponents(
         boolean b) {
         if (b) {
             // gettext
-            nameTextField.setText(card.get("displayname")); //$NON-NLS-1$
-            descriptionTextField.setText(card.get("description")); //$NON-NLS-1$
+            nameTextField.setText(group.getName()); //$NON-NLS-1$
+            descriptionTextField.setText(group.getDescription()); //$NON-NLS-1$
 
             members = new AddressbookListModel();
 
-            for (int i = 0; i < list.count(); i++) {
-                HeaderItem item = list.get(i);
-                members.addElement(item);
-            }
+            Integer[] m = group.getMembers();
+           
+            try {
+				ContactItemMap l = parentFolder.getContactItemMap();
+				
+				for (int i = 0; i < m.length; i++) {
+					
+				    ContactItem item = l.get(m[i]);
+				    
+				    members.addElement(item);
+				}
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 
             this.list.setModel(members);
         } else {
             // settext
-            card.set("displayname", nameTextField.getText()); //$NON-NLS-1$
-            card.set("description", descriptionTextField.getText()); //$NON-NLS-1$
+           group.setName(nameTextField.getText()); //$NON-NLS-1$
+            group.setDescription( descriptionTextField.getText()); //$NON-NLS-1$
 
             // remove all children
-            card.removeMembers();
+            group.removeAllMembers();
 
             // add children
             for (int i = 0; i < members.getSize(); i++) {
-                HeaderItem item = (HeaderItem) members.get(i);
+                ContactItem item = (ContactItem) members.get(i);
                 Object uid = item.getUid();
-                card.addMember(((Integer) uid).toString());
+                group.addMember(((Integer) uid).toString());
             }
         }
     }
@@ -260,7 +281,7 @@ public class EditGroupDialog extends JDialog implements ActionListener,
  */
     private void addHeaderItem() {
         String s = addComboBox.getText();
-        Object o = AddressCollector.getHeaderItem(s);
+        Object o = AddressCollector.getInstance().getHeaderItem(s);
 
         if (o != null) {
             // this is a headeritem from autocompletion
@@ -305,6 +326,9 @@ public class EditGroupDialog extends JDialog implements ActionListener,
             }
 
             result = true;
+            
+            updateComponents(false);
+            
             setVisible(false);
         } else if (command.equals("ADD")) { //$NON-NLS-1$
             addHeaderItem();

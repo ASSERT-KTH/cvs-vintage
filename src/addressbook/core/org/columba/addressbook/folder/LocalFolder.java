@@ -15,7 +15,10 @@
 //All Rights Reserved.
 package org.columba.addressbook.folder;
 
+import java.util.logging.Logger;
+
 import org.columba.addressbook.config.FolderItem;
+import org.columba.addressbook.model.Contact;
 
 
 /**
@@ -30,59 +33,58 @@ import org.columba.addressbook.config.FolderItem;
  *
  *
  */
-public abstract class LocalFolder extends Folder {
+public abstract class LocalFolder extends AbstractFolder {
+	/** JDK 1.4+ logging framework logger, used for logging. */
+    private static final Logger LOG = Logger
+            .getLogger("org.columba.addressbook.folder");
+    
     protected DataStorage dataStorage;
 
-    /**
- *
- * unique identification number for the list of HeaderItem's
- *
- */
-    protected int nextUid;
+    public LocalFolder(String name, String path) {
+    	super(name, path);
+    }
 
     public LocalFolder(FolderItem item) {
         super(item);
-        nextUid = 0;
+       
     }
 
-    protected Object generateNextUid() {
-        return new Integer(nextUid++);
-    }
 
     public abstract DataStorage getDataStorageInstance();
 
-    /*
-public void add(ContactCard item)
-{
-        Object newUid = generateNextUid();
+  
+	/**
+	 * @see org.columba.addressbook.folder.ContactStorage#add(org.columba.addressbook.folder.Contact)
+	 */
+	public Object add(Contact contact) throws Exception{
+		Object uid = super.add(contact);
 
-        getDataStorageInstance().saveDefaultCard(item, newUid);
-}
-*/
-    public void add(DefaultCard item) {
-        Object newUid = generateNextUid();
+        getDataStorageInstance().save(uid, contact);
 
-        getDataStorageInstance().saveDefaultCard(item, newUid);
-    }
+        return uid;
+	}
+	/**
+	 * @see org.columba.addressbook.folder.ContactStorage#get(java.lang.Object)
+	 */
+	public Contact get(Object uid) throws Exception{
+		return getDataStorageInstance().load(uid);
+	}
+	/**
+	 * @see org.columba.addressbook.folder.ContactStorage#modify(java.lang.Object, org.columba.addressbook.folder.Contact)
+	 */
+	public void modify(Object uid, Contact contact) throws Exception{
+		super.modify(uid, contact);
+		
+		getDataStorageInstance().modify(uid, contact);
 
-    public void remove(Object uid) {
-        getDataStorageInstance().removeCard(uid);
-    }
+	}
+	/**
+	 * @see org.columba.addressbook.folder.ContactStorage#remove(java.lang.Object)
+	 */
+	public void remove(Object uid) throws Exception{
+		super.remove(uid);
+		
+		getDataStorageInstance().remove(uid);
 
-    /*
-public void removeFolder()
-{
-        super.removeFolder();
-
-        // remove folder from disc
-        directoryFile.delete();
-}
-*/
-    public DefaultCard get(Object uid) {
-        return getDataStorageInstance().loadDefaultCard(uid);
-    }
-
-    public void modify(DefaultCard card, Object uid) {
-        getDataStorageInstance().modifyCard(card, uid);
-    }
+	}
 }

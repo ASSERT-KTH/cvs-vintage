@@ -15,15 +15,6 @@
 //All Rights Reserved.
 package org.columba.addressbook.gui;
 
-import org.columba.addressbook.folder.HeaderItemList;
-import org.columba.addressbook.gui.list.AddressbookDNDListView;
-import org.columba.addressbook.gui.list.AddressbookListModel;
-import org.columba.addressbook.util.AddressbookResourceLoader;
-
-import org.columba.core.gui.util.CTabbedPane;
-
-import org.columba.mail.gui.composer.ComposerController;
-
 import java.awt.BorderLayout;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
@@ -31,9 +22,6 @@ import java.awt.GridLayout;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-
-import java.util.List;
-import java.util.Vector;
 
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
@@ -43,6 +31,14 @@ import javax.swing.JScrollPane;
 import javax.swing.JTextField;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
+
+import org.columba.addressbook.gui.list.AddressbookDNDListView;
+import org.columba.addressbook.gui.list.AddressbookListModel;
+import org.columba.addressbook.model.ContactItemMap;
+import org.columba.addressbook.model.HeaderItemList;
+import org.columba.addressbook.util.AddressbookResourceLoader;
+import org.columba.core.gui.util.CTabbedPane;
+import org.columba.mail.gui.composer.ComposerController;
 
 
 /**
@@ -174,10 +170,10 @@ setHeaderList(folder.getHeaderItemList());
         return panel;
     }
 
-    public void setHeaderList(HeaderItemList list) {
-        List v = list.getVector();
+    public void setHeaderList(ContactItemMap map) {
+      
 
-        addressbook.setListData((Vector) v);
+        addressbook.setHeaderItemList(new HeaderItemList(map));
     }
 
     public void actionPerformed(ActionEvent ev) {

@@ -15,11 +15,11 @@
 //All Rights Reserved.
 package org.columba.addressbook.parser;
 
-import org.columba.addressbook.folder.ContactCard;
-
 import java.util.Iterator;
 import java.util.List;
 import java.util.Vector;
+
+import org.columba.addressbook.model.Contact;
 
 
 /**
@@ -27,9 +27,9 @@ import java.util.Vector;
  * @author
  */
 public class VCardParser {
-    public static ContactCard parse(String str) {
+    public static Contact parse(String str) {
         //char[] chars = new char[ str.length() ];
-        ContactCard card = new ContactCard();
+        Contact card = new Contact();
 
         List keys = new Vector();
         List values = new Vector();

@@ -16,7 +16,7 @@
 //All Rights Reserved.
 package org.columba.addressbook.facade;
 
-import org.columba.addressbook.folder.Folder;
+import org.columba.addressbook.folder.AbstractFolder;
 import org.columba.addressbook.gui.tree.AddressbookTreeModel;
 import org.columba.addressbook.main.AddressbookInterface;
 
@@ -34,8 +34,8 @@ public class FolderFacade {
      *            id of folder
      * @return Folder
      */
-    public static Folder getAddressbook(int uid) {
-        return (Folder) AddressbookInterface.addressbookTreeModel
+    public static AbstractFolder getAddressbook(int uid) {
+        return (AbstractFolder) AddressbookInterface.addressbookTreeModel
                 .getFolder(uid);
     }
 
@@ -46,9 +46,9 @@ public class FolderFacade {
      * 
      * @return Folder
      */
-    public static Folder getCollectedAddresses() {
+    public static AbstractFolder getCollectedAddresses() {
         AddressbookTreeModel model = AddressbookInterface.addressbookTreeModel;
-        if (model != null) return (Folder) model.getFolder(102);
+        if (model != null) return (AbstractFolder) model.getFolder(102);
 
         return null;
     }

@@ -17,44 +17,175 @@
 //All Rights Reserved.
 package org.columba.addressbook.gui.tree;
 
-import org.columba.addressbook.folder.Folder;
-import org.columba.addressbook.gui.frame.AddressbookFrameController;
+import javax.swing.JComponent;
+import javax.swing.tree.TreePath;
 
+import org.columba.addressbook.folder.AbstractFolder;
+import org.columba.addressbook.gui.frame.AddressbookFrameController;
+import org.columba.core.gui.focus.FocusOwner;
+import org.columba.core.main.MainInterface;
 
 /**
  * 
- *
+ * 
  * @author fdietz
  */
-public class TreeController {
-    TreeView view;
-    AddressbookFrameController frameController;
+public class TreeController implements FocusOwner {
 
-    /**
- *
- */
-    public TreeController(AddressbookFrameController frameController) {
-        super();
-        this.frameController = frameController;
+	TreeView view;
 
-        view = new TreeView(frameController);
-    }
+	AddressbookFrameController frameController;
 
-    /**
- * @return AddressbookTreeView
- */
-    public TreeView getView() {
-        return view;
-    }
+	/**
+	 *  
+	 */
+	public TreeController(AddressbookFrameController frameController) {
+		super();
+		this.frameController = frameController;
 
-    /**
- * @return AddressbookFrameController
- */
-    public AddressbookFrameController getFrameController() {
-        return frameController;
-    }
+		view = new TreeView(frameController);
+		
+//		 register as focus owner
+		MainInterface.focusManager.registerComponent(this);
+	}
 
-    public Folder getSelectedFolder() {
-        return (Folder) getView().getLastSelectedPathComponent();
-    }
+	/**
+	 * @return AddressbookTreeView
+	 */
+	public TreeView getView() {
+		return view;
+	}
+
+	/**
+	 * @return AddressbookFrameController
+	 */
+	public AddressbookFrameController getFrameController() {
+		return frameController;
+	}
+
+	public AbstractFolder getSelectedFolder() {
+		return (AbstractFolder) getView().getLastSelectedPathComponent();
+	}
+	
+	public void setSelectedFolder(AbstractFolder folder) {
+		getView().clearSelection();
+		
+		TreePath path = new TreePath(folder.getPath());
+		
+		getView().setSelectionPath(path);
+	}
+
+	/** ************* FocusOwner Implementation ****************** */
+
+	/**
+	 * @see org.columba.core.gui.focus.FocusOwner#copy()
+	 */
+	public void copy() {
+
+	}
+
+	/**
+	 * @see org.columba.core.gui.focus.FocusOwner#cut()
+	 */
+	public void cut() {
+
+	}
+
+	/**
+	 * @see org.columba.core.gui.focus.FocusOwner#delete()
+	 */
+	public void delete() {
+
+	}
+
+	/**
+	 * @see org.columba.core.gui.focus.FocusOwner#getComponent()
+	 */
+	public JComponent getComponent() {
+		return getView();
+	}
+
+	/**
+	 * @see org.columba.core.gui.focus.FocusOwner#isCopyActionEnabled()
+	 */
+	public boolean isCopyActionEnabled() {
+
+		return false;
+	}
+
+	/**
+	 * @see org.columba.core.gui.focus.FocusOwner#isCutActionEnabled()
+	 */
+	public boolean isCutActionEnabled() {
+
+		return false;
+	}
+
+	/**
+	 * @see org.columba.core.gui.focus.FocusOwner#isDeleteActionEnabled()
+	 */
+	public boolean isDeleteActionEnabled() {
+
+		return false;
+	}
+
+	/**
+	 * @see org.columba.core.gui.focus.FocusOwner#isPasteActionEnabled()
+	 */
+	public boolean isPasteActionEnabled() {
+
+		return false;
+	}
+
+	/**
+	 * @see org.columba.core.gui.focus.FocusOwner#isRedoActionEnabled()
+	 */
+	public boolean isRedoActionEnabled() {
+
+		return false;
+	}
+
+	/**
+	 * @see org.columba.core.gui.focus.FocusOwner#isSelectAllActionEnabled()
+	 */
+	public boolean isSelectAllActionEnabled() {
+
+		return false;
+	}
+
+	/**
+	 * @see org.columba.core.gui.focus.FocusOwner#isUndoActionEnabled()
+	 */
+	public boolean isUndoActionEnabled() {
+
+		return false;
+	}
+
+	/**
+	 * @see org.columba.core.gui.focus.FocusOwner#paste()
+	 */
+	public void paste() {
+
+	}
+
+	/**
+	 * @see org.columba.core.gui.focus.FocusOwner#redo()
+	 */
+	public void redo() {
+
+	}
+
+	/**
+	 * @see org.columba.core.gui.focus.FocusOwner#selectAll()
+	 */
+	public void selectAll() {
+
+	}
+
+	/**
+	 * @see org.columba.core.gui.focus.FocusOwner#undo()
+	 */
+	public void undo() {
+
+	}
 }

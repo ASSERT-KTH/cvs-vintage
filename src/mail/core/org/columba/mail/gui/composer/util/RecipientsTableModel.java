@@ -15,18 +15,19 @@
 //All Rights Reserved.
 package org.columba.mail.gui.composer.util;
 
-import org.columba.addressbook.folder.HeaderItem;
-import org.columba.addressbook.folder.HeaderItemList;
-
 import java.util.List;
 import java.util.Vector;
 import java.util.logging.Logger;
 
 import javax.swing.table.AbstractTableModel;
 
+import org.columba.addressbook.model.ContactItemMap;
+import org.columba.addressbook.model.HeaderItem;
+import org.columba.addressbook.model.HeaderItemList;
+
 
 /**
- * TableModel encapsulates {@link HeaderItemList} used in composer.
+ * TableModel encapsulates {@link ContactItemMap} used in composer.
  *
  * @author fdietz
  */
@@ -36,7 +37,7 @@ public class RecipientsTableModel extends AbstractTableModel {
     private static final Logger LOG = Logger.getLogger("org.columba.mail.gui.composer.util");
 
     private static final String[] COLUMNS = { "field", "displayname" };
-    private HeaderItemList rows;
+    private HeaderItemList list;
 
     public RecipientsTableModel() {
     }
@@ -61,7 +62,7 @@ public class RecipientsTableModel extends AbstractTableModel {
     }
 
     public HeaderItemList getHeaderList() {
-        return rows;
+        return list;
     }
 
     public HeaderItem get(int index) {
@@ -76,7 +77,7 @@ public class RecipientsTableModel extends AbstractTableModel {
         }
 
         if (count == 0) {
-            rows = new HeaderItemList();
+            list = new HeaderItemList();
 
             // first message
             getHeaderList().add(item);
@@ -89,26 +90,30 @@ public class RecipientsTableModel extends AbstractTableModel {
         }
     }
 
-    public void setHeaderList(HeaderItemList list) {
-        if (list == null) {
+    public void setHeaderList(HeaderItemList l) {
+        if (l == null) {
             LOG.fine("list == null");
-            rows = new HeaderItemList();
+            list = new HeaderItemList();
 
             fireTableDataChanged();
 
             return;
         }
 
-        LOG.fine("list size=" + list.count());
+        LOG.fine("list size=" + l.count());
 
-        List clone = (Vector) ((Vector) list.getVector()).clone();
-        rows = new HeaderItemList(clone);
+        /*
+         * FIXME
+        List clone = (Vector) ((Vector) list.getList()).clone();
+        list = new HeaderItemList(clone);
+        */
+        list = l;
 
         fireTableDataChanged();
     }
 
     public void setHeaderItem(int row, HeaderItem item) {
-        rows.replace(row, item);
+        list.replace(row, item);
 
         fireTableDataChanged();
     }
@@ -118,10 +123,10 @@ public class RecipientsTableModel extends AbstractTableModel {
     }
 
     public int getRowCount() {
-        if (rows == null) {
+        if (list == null) {
             return 0;
         } else {
-            return rows.count();
+            return list.count();
         }
     }
 
@@ -140,11 +145,11 @@ public class RecipientsTableModel extends AbstractTableModel {
     }
 
     public Object getValueAt(int row, int col) {
-        if (rows == null) {
+        if (list == null) {
             return null;
         }
 
-        HeaderItem item = rows.get(row);
+        HeaderItem item = list.get(row);
 
         /*
 if (col == 0)
@@ -158,7 +163,7 @@ if (col == 1)
     }
 
     public Class getColumnClass(int c) {
-        if (rows == null) {
+        if (list == null) {
             return null;
         }
 
@@ -175,13 +180,14 @@ if (col == 1)
 
     public void setValueAt(Object value, int row, int col) {
         if (col == 1) {
-            HeaderItem item = rows.get(row);
+            HeaderItem item = list.get(row);
 
-            item.add("displayname", value);
+            item.setDisplayName((String)value);
+            
             fireTableCellUpdated(row, col);
         } else if (col == 0) {
-            HeaderItem item = rows.get(row);
-            item.add("field", value);
+            HeaderItem item = list.get(row);
+            item.setHeader((String)value);
             fireTableCellUpdated(row, col);
         }
     }

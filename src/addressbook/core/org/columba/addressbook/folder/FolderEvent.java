@@ -13,31 +13,29 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
 //
 //All Rights Reserved.
-package org.columba.mail.util;
 
-import org.columba.addressbook.folder.HeaderItem;
+package org.columba.addressbook.folder;
 
-import java.util.Hashtable;
+import java.util.EventObject;
 
-
-public class AddressCollector {
-    static private Hashtable _adds = new Hashtable();
-
-    static public void addAddress(String add, HeaderItem item) {
-        if (add != null) {
-            _adds.put(add, item);
-        }
+/**
+ * Passed to listeners to notify them of changes.
+ */
+public class FolderEvent extends EventObject {
+    protected Object changes;
+    
+    /**
+     * Creates a new event for the given folder.
+     */
+    public FolderEvent(AbstractFolder source, Object changes) {
+        super(source);
+        this.changes = changes;
     }
-
-    static public Object[] getAddresses() {
-        return _adds.keySet().toArray();
-    }
-
-    static public HeaderItem getHeaderItem(String add) {
-        return (HeaderItem) _adds.get(add);
-    }
-
-    static public void clear() {
-        _adds.clear();
+    
+    /**
+     * Encapsulates the changes that have occured.
+     */
+    public Object getChanges() {
+        return changes;
     }
 }

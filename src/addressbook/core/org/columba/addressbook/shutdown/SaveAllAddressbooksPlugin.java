@@ -51,7 +51,7 @@ public class SaveAllAddressbooksPlugin implements TaskInterface {
 
             if (child instanceof AddressbookFolder) {
                 try {
-                    ((AddressbookFolder) child).save(null);
+                    ((AddressbookFolder) child).save();
                 } catch (Exception ex) {
                     ex.printStackTrace();
                 }

@@ -50,7 +50,7 @@ public class AddressbookFilter extends AbstractFilter {
             return false;
         }
 
-        org.columba.addressbook.folder.Folder addressbook = org.columba.addressbook.facade.FolderFacade
+        org.columba.addressbook.folder.AbstractFolder addressbook = org.columba.addressbook.facade.FolderFacade
                 .getCollectedAddresses();
 
         if (addressbook.exists(address.getMailAddress())) return true;

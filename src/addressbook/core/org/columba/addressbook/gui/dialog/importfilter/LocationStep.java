@@ -19,7 +19,7 @@ import net.javaprog.ui.wizard.AbstractStep;
 import net.javaprog.ui.wizard.DataLookup;
 import net.javaprog.ui.wizard.DataModel;
 
-import org.columba.addressbook.folder.Folder;
+import org.columba.addressbook.folder.AbstractFolder;
 import org.columba.addressbook.gui.tree.util.SelectAddressbookFolderDialog;
 import org.columba.addressbook.main.AddressbookInterface;
 import org.columba.addressbook.util.AddressbookResourceLoader;
@@ -44,7 +44,7 @@ import javax.swing.JPanel;
 
 class LocationStep extends AbstractStep implements ActionListener {
     protected File sourceFile;
-    protected Folder destinationFolder;
+    protected AbstractFolder destinationFolder;
     protected JButton sourceButton;
     protected JButton destinationButton;
 
@@ -116,7 +116,8 @@ class LocationStep extends AbstractStep implements ActionListener {
 
             if (dialog.success()) {
                 destinationFolder = dialog.getSelectedFolder();
-                destinationButton.setText(destinationFolder.getTreePath());
+                //destinationButton.setText(destinationFolder.getTreePath());
+                destinationButton.setText(destinationFolder.getName());
                 updateCanFinish();
             }
         }

@@ -32,7 +32,7 @@ import org.columba.ristretto.message.Header;
 
 /**
  * Abstract base class for handling headers and attributes. Used by
- * {@link Folder}.
+ * {@link AbstractFolder}.
  * 
  * @author fdietz 
  */

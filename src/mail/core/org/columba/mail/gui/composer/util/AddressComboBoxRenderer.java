@@ -15,12 +15,6 @@
 //All Rights Reserved.
 package org.columba.mail.gui.composer.util;
 
-import org.columba.addressbook.folder.HeaderItem;
-
-import org.columba.core.gui.util.ImageLoader;
-
-import org.columba.mail.util.AddressCollector;
-
 import java.awt.Component;
 
 import javax.swing.ImageIcon;
@@ -28,85 +22,59 @@ import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.ListCellRenderer;
 
+import org.columba.addressbook.gui.autocomplete.AddressCollector;
+import org.columba.addressbook.gui.util.ToolTipFactory;
+import org.columba.addressbook.model.ContactItem;
+import org.columba.addressbook.model.GroupItem;
+import org.columba.addressbook.model.HeaderItem;
+import org.columba.core.gui.util.ImageLoader;
 
 /**
- *
- *
+ * 
+ * 
  * @author fdietz
  */
 public class AddressComboBoxRenderer extends JLabel implements ListCellRenderer {
-    private ImageIcon contactIcon = ImageLoader.getSmallImageIcon(
-            "contact_small.png");
-    private ImageIcon groupIcon = ImageLoader.getSmallImageIcon(
-            "group_small.png");
+	private ImageIcon contactIcon = ImageLoader
+			.getSmallImageIcon("contact_small.png");
 
-    public AddressComboBoxRenderer() {
-        setOpaque(true);
-    }
+	private ImageIcon groupIcon = ImageLoader
+			.getSmallImageIcon("group_small.png");
 
-    /** {@inheritDoc} */
-    public Component getListCellRendererComponent(JList list, Object value,
-        int index, boolean isSelected, boolean cellHasFocus) {
-        if (isSelected) {
-            setBackground(list.getSelectionBackground());
-            setForeground(list.getSelectionForeground());
-        } else {
-            setBackground(list.getBackground());
-            setForeground(list.getForeground());
-        }
+	public AddressComboBoxRenderer() {
+		setOpaque(true);
+	}
 
-        HeaderItem item = AddressCollector.getHeaderItem((String) value);
+	/** {@inheritDoc} */
+	public Component getListCellRendererComponent(JList list, Object value,
+			int index, boolean isSelected, boolean cellHasFocus) {
+		if (isSelected) {
+			setBackground(list.getSelectionBackground());
+			setForeground(list.getSelectionForeground());
+		} else {
+			setBackground(list.getBackground());
+			setForeground(list.getForeground());
+		}
 
-        if (item == null) {
-            setToolTipText("");
-            setText((String) value);
-            setIcon(null);
-        } else {
-            setText(item.toString());
+		HeaderItem item = AddressCollector.getInstance().getHeaderItem((String) value);
 
-            if (item.isContact()) {
-                String displayname = (String) item.get("displayname");
+		if (item == null) {
+			setToolTipText("");
+			setText((String) value);
+			setIcon(null);
+		} else {
+			setText(item.getDisplayName());
 
-                StringBuffer buf = new StringBuffer();
-                buf.append("<html><body>&nbsp;Name: " + convert(displayname));
-                buf.append("<br>&nbsp;eMail: " +
-                    convert((String) item.get("email;internet")));
-                buf.append("</body></html>");
-                setToolTipText(buf.toString());
+			if (item.isContact()) {
+				setIcon(contactIcon);
+				setToolTipText(ToolTipFactory.createToolTip((ContactItem) item));
+			} else {
+				setIcon(groupIcon);
+				setToolTipText(ToolTipFactory.createToolTip((GroupItem) item));
+			}
+		}
 
-                setIcon(contactIcon);
-            } else {
-                setIcon(groupIcon);
-                setToolTipText("");
-            }
-        }
+		return this;
+	}
 
-        return this;
-    }
-
-    private String convert(String str) {
-        if (str == null) {
-            return "";
-        }
-
-        StringBuffer result = new StringBuffer();
-        int pos = 0;
-        char ch;
-
-        while (pos < str.length()) {
-            ch = str.charAt(pos);
-
-            if (ch == '<') {
-                result.append("&lt;");
-            } else if (ch == '>') {
-                result.append("&gt;");
-            } else {
-                result.append(ch);
-            }
-
-            pos++;
-        }
-
-        return result.toString();
-    }
 }

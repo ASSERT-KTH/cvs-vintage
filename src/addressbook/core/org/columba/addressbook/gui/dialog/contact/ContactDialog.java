@@ -15,16 +15,6 @@
 //All Rights Reserved.
 package org.columba.addressbook.gui.dialog.contact;
 
-import com.jgoodies.forms.layout.CellConstraints;
-import com.jgoodies.forms.layout.FormLayout;
-
-import net.javaprog.ui.wizard.plaf.basic.SingleSideEtchedBorder;
-
-import org.columba.addressbook.folder.ContactCard;
-import org.columba.addressbook.util.AddressbookResourceLoader;
-
-import org.columba.core.gui.util.ButtonWithMnemonic;
-
 import java.awt.BorderLayout;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
@@ -41,50 +31,60 @@ import javax.swing.JTabbedPane;
 import javax.swing.KeyStroke;
 import javax.swing.SwingConstants;
 
+import net.javaprog.ui.wizard.plaf.basic.SingleSideEtchedBorder;
+
+import org.columba.addressbook.model.Contact;
+import org.columba.addressbook.util.AddressbookResourceLoader;
+import org.columba.core.gui.util.ButtonWithMnemonic;
+
+import com.jgoodies.forms.layout.CellConstraints;
+import com.jgoodies.forms.layout.FormLayout;
+
 
 public class ContactDialog extends JDialog implements ActionListener {
-    JTabbedPane centerPane;
-    IdentityPanel identityPanel;
-    AddressPanel addressPanel;
-    JButton okButton;
-    boolean result;
-
-    public ContactDialog(JFrame frame) {
+    private JTabbedPane centerPane;
+    private IdentityPanel identityPanel;
+    //private AddressPanel addressPanel;
+    private JButton okButton;
+    private boolean result;
+    
+    private Contact contact;
+    
+    public ContactDialog(JFrame frame, Contact contact) {
         super(frame, true);
+        
+        this.contact = contact;
 
         //LOCALIZE
         setTitle(AddressbookResourceLoader.getString("dialog", "contact",
                 "add_contact")); //$NON-NLS-1$
         initComponents();
+        
+        updateComponents(true);
+        
         pack();
         setLocationRelativeTo(null);
+        
+        setVisible(true);
     }
 
-    public void updateComponents(ContactCard card, boolean b) {
-        identityPanel.updateComponents(card, b);
-        addressPanel.updateComponents(card, b);
+    public void updateComponents(boolean b) {
+        identityPanel.updateComponents(b);
+        //addressPanel.updateComponents(b);
 
-        /*
-if ( b == true )
-{
-        identityPanel.updateComponents( rootNode, b );
-}
-else
-{
-}
-*/
+       
     }
 
     protected void initComponents() {
         JPanel contentPane = new JPanel(new BorderLayout(0, 0));
 
-        //centerPane = new JTabbedPane();
-        identityPanel = new IdentityPanel();
-        identityPanel.dialog = new FullNameDialog(this, identityPanel);
+      
+        identityPanel = new IdentityPanel(contact);
+        identityPanel.dialog = new FullNameDialog(this, identityPanel, contact);
 
         //LOCALIZE
         //centerPane.add(identityPanel, AddressbookResourceLoader.getString("dialog", "contact", "identity")); //$NON-NLS-1$
-        addressPanel = new AddressPanel();
+        //addressPanel = new AddressPanel();
 
         //LOCALIZE
         //centerPane.add(addressPanel, "Address & Phone");
@@ -130,6 +130,9 @@ else
 
         if (action.equals("OK")) { //$NON-NLS-1$
             result = true;
+            
+            updateComponents(false);
+            
             setVisible(false);
         } else if (action.equals("CANCEL")) { //$NON-NLS-1$
             result = false;

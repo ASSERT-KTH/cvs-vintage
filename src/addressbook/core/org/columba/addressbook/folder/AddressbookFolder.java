@@ -20,20 +20,20 @@ import org.columba.addressbook.config.FolderItem;
 import org.columba.core.config.TableItem;
 
 
-public class AddressbookFolder extends LocalHeaderCacheFolder {
-    private TableItem headerTableItemList;
+public class AddressbookFolder extends LocalFolder {
 
+    public AddressbookFolder(String name, String path) {
+    	super(name, path);
+    }
+    
     public AddressbookFolder(FolderItem folderItem) {
         super(folderItem);
 
-        if (isHeaderCacheAlreadyLoaded() == false) {
-            recreateIndex();
-        }
     }
 
     public DataStorage getDataStorageInstance() {
         if (dataStorage == null) {
-            dataStorage = new VCardXmlDataStorage(this);
+            dataStorage = new XmlDataStorage(this);
         }
 
         return dataStorage;

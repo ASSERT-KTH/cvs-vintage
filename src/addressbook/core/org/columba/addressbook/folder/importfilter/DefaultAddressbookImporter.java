@@ -17,25 +17,24 @@
 //All Rights Reserved.
 package org.columba.addressbook.folder.importfilter;
 
-import org.columba.addressbook.folder.ContactCard;
-import org.columba.addressbook.folder.Folder;
-import org.columba.addressbook.util.AddressbookResourceLoader;
-
-import org.columba.core.gui.util.ExceptionDialog;
-import org.columba.core.gui.util.ImageLoader;
-import org.columba.core.gui.util.NotifyDialog;
-import org.columba.core.plugin.Plugin;
-
 import java.io.File;
 import java.io.FileNotFoundException;
 
 import javax.swing.JOptionPane;
 
+import org.columba.addressbook.folder.AbstractFolder;
+import org.columba.addressbook.model.Contact;
+import org.columba.addressbook.util.AddressbookResourceLoader;
+import org.columba.core.gui.util.ExceptionDialog;
+import org.columba.core.gui.util.ImageLoader;
+import org.columba.core.gui.util.NotifyDialog;
+import org.columba.core.plugin.Plugin;
+
 
 public abstract class DefaultAddressbookImporter implements Plugin {
     public static int TYPE_FILE = 0;
     public static int TYPE_DIRECTORY = 1;
-    protected Folder destinationFolder;
+    protected AbstractFolder destinationFolder;
     protected File sourceFile;
 
     //protected AddressbookFolder tempFolder;
@@ -44,7 +43,7 @@ public abstract class DefaultAddressbookImporter implements Plugin {
     public DefaultAddressbookImporter() {
     }
 
-    public DefaultAddressbookImporter(File sourceFile, Folder destinationFolder) {
+    public DefaultAddressbookImporter(File sourceFile, AbstractFolder destinationFolder) {
         this.sourceFile = sourceFile;
         this.destinationFolder = destinationFolder;
     }
@@ -83,7 +82,7 @@ public abstract class DefaultAddressbookImporter implements Plugin {
     /**
      * set destination folder
      */
-    public void setDestinationFolder(Folder folder) {
+    public void setDestinationFolder(AbstractFolder folder) {
         destinationFolder = folder;
     }
 
@@ -135,7 +134,7 @@ public abstract class DefaultAddressbookImporter implements Plugin {
     /**
      * use this method to save a message to the specified destination folder
      */
-    protected void saveContact(ContactCard card) throws Exception {
+    protected void saveContact(Contact card) throws Exception {
         destinationFolder.add(card);
 
         counter++;

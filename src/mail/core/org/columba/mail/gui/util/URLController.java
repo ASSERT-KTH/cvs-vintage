@@ -16,25 +16,24 @@
 
 package org.columba.mail.gui.util;
 
-import org.columba.addressbook.folder.ContactCard;
-import org.columba.addressbook.gui.tree.util.SelectAddressbookFolderDialog;
-import org.columba.addressbook.main.AddressbookInterface;
-
-import org.columba.core.main.MainInterface;
-import org.columba.core.xml.XmlElement;
-
-import org.columba.mail.gui.composer.ComposerController;
-import org.columba.mail.gui.composer.ComposerModel;
-import org.columba.mail.gui.mimetype.MimeTypeViewer;
-import org.columba.mail.main.MailInterface;
-
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-
 import java.net.URL;
 
 import javax.swing.JMenuItem;
 import javax.swing.JPopupMenu;
+
+import org.columba.addressbook.gui.tree.util.SelectAddressbookFolderDialog;
+import org.columba.addressbook.main.AddressbookInterface;
+import org.columba.addressbook.model.Contact;
+import org.columba.addressbook.model.VCARD;
+import org.columba.core.main.MainInterface;
+import org.columba.core.xml.XmlElement;
+import org.columba.mail.gui.composer.ComposerController;
+import org.columba.mail.gui.composer.ComposerModel;
+import org.columba.mail.gui.mimetype.MimeTypeViewer;
+import org.columba.mail.main.MailInterface;
+import org.columba.ristretto.message.Address;
 
 public class URLController implements ActionListener {
     private String address;
@@ -113,17 +112,17 @@ public class URLController implements ActionListener {
     public void contact(String address) {
         SelectAddressbookFolderDialog dialog = AddressbookInterface.addressbookTreeModel.getSelectAddressbookFolderDialog();
 
-        org.columba.addressbook.folder.Folder selectedFolder = dialog.getSelectedFolder();
+        org.columba.addressbook.folder.AbstractFolder selectedFolder = dialog.getSelectedFolder();
 
         if (selectedFolder == null) {
             return;
         }
 
         try {
-            ContactCard card = new ContactCard();
-            card.set("displayname", address);
-            card.set("email", "internet", address);
-
+            Contact card = new Contact();
+            card.set(VCARD.DISPLAYNAME, address);
+            card.set(VCARD.EMAIL, address);
+            
             selectedFolder.add(card);
         } catch (Exception ex) {
             ex.printStackTrace();
