@@ -93,7 +93,7 @@ import org.apache.commons.lang.StringUtils;
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
- * @version $Id: Issue.java,v 1.218 2002/11/23 00:03:17 elicia Exp $
+ * @version $Id: Issue.java,v 1.219 2002/11/25 23:38:11 elicia Exp $
  */
 public class Issue 
     extends BaseIssue
@@ -2059,11 +2059,12 @@ public class Issue
         descBuf = new StringBuffer();
         descBuf = new StringBuffer(comment).append(getUniqueId());
         descBuf.append(" in module ").append(oldModule.getName());
+        descBuf.append(" / ").append(getIssueType().getName());
 
         ActivityManager
             .createTextActivity(newIssue, zeroAttribute, activitySet2,
                                 descBuf.toString(), null,
-                                oldModule.getName(), newModule.getName());
+                                getUniqueId(), newIssue.getUniqueId());
         // Save activity record for old issue
         descBuf2 = new StringBuffer(comment2).append(newIssue.getUniqueId());
         descBuf2 = new StringBuffer();
@@ -2072,7 +2073,7 @@ public class Issue
         ActivityManager
             .createTextActivity(this, zeroAttribute, activitySet2,
                                 descBuf.toString(), null,
-                                newModule.getName(), oldModule.getName());
+                                getUniqueId(), newIssue.getUniqueId());
 
         return newIssue;
     }
