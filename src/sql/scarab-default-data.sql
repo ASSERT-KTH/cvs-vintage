@@ -3,52 +3,52 @@
  */
 
 /* Null Attribute */
-insert into SCARAB_ATTRIBUTE(ATTRIBUTE_ID, ATTRIBUTE_NAME, ATTRIBUTE_TYPE_ID, DESCRIPTION)
-        values(0, 'Null Attribute', 1, 'Null Attribute');
+insert into SCARAB_ATTRIBUTE(ATTRIBUTE_ID, ATTRIBUTE_NAME, ATTRIBUTE_TYPE_ID, DESCRIPTION, CREATED_DATE)
+        values(0, 'Null Attribute', 1, 'Null Attribute', '2002-01-01 00:30:00');
 /* Description */
-insert into SCARAB_ATTRIBUTE(ATTRIBUTE_ID, ATTRIBUTE_NAME, ATTRIBUTE_TYPE_ID, DESCRIPTION)
-        values(1, 'Description', 12, 'Description');
+insert into SCARAB_ATTRIBUTE(ATTRIBUTE_ID, ATTRIBUTE_NAME, ATTRIBUTE_TYPE_ID, DESCRIPTION, CREATED_DATE)
+        values(1, 'Description', 12, 'Description', '2002-01-01 00:30:00');
 /* Assigned to */
 insert into SCARAB_ATTRIBUTE(ATTRIBUTE_ID, ATTRIBUTE_NAME, 
-       ATTRIBUTE_TYPE_ID, PERMISSION, ACTION, DESCRIPTION)
-       values(2, 'Assigned To', 8, 'Issue | Edit', 'to', 'Assigned To');
+       ATTRIBUTE_TYPE_ID, PERMISSION, ACTION, DESCRIPTION, CREATED_DATE)
+       values(2, 'Assigned To', 8, 'Issue | Edit', 'to', 'Assigned To', '2002-01-01 00:30:00');
 /* Status */
-insert into SCARAB_ATTRIBUTE(ATTRIBUTE_ID, ATTRIBUTE_NAME, ATTRIBUTE_TYPE_ID, DESCRIPTION)
-        values(3, 'Status', 5, 'Status');
+insert into SCARAB_ATTRIBUTE(ATTRIBUTE_ID, ATTRIBUTE_NAME, ATTRIBUTE_TYPE_ID, DESCRIPTION, CREATED_DATE)
+        values(3, 'Status', 5, 'Status', '2002-01-01 00:30:00');
 /* Resolution */
 insert into SCARAB_ATTRIBUTE(ATTRIBUTE_ID, ATTRIBUTE_NAME, 
-       ATTRIBUTE_TYPE_ID, DESCRIPTION)
-        values(4, 'Resolution', 5, 'Resolution');
+       ATTRIBUTE_TYPE_ID, DESCRIPTION, CREATED_DATE)
+        values(4, 'Resolution', 5, 'Resolution', '2002-01-01 00:30:00');
 /* Platform */
 insert into SCARAB_ATTRIBUTE(ATTRIBUTE_ID, ATTRIBUTE_NAME, 
-       ATTRIBUTE_TYPE_ID, DESCRIPTION)
-       values(5, 'Platform', 5, 'Platform');
+       ATTRIBUTE_TYPE_ID, DESCRIPTION, CREATED_DATE)
+       values(5, 'Platform', 5, 'Platform', '2002-01-01 00:30:00');
 /* Operating System */
-insert into SCARAB_ATTRIBUTE(ATTRIBUTE_ID, ATTRIBUTE_NAME, ATTRIBUTE_TYPE_ID, DESCRIPTION)
-        values(6, 'Operating System', 5, 'Operating System');
+insert into SCARAB_ATTRIBUTE(ATTRIBUTE_ID, ATTRIBUTE_NAME, ATTRIBUTE_TYPE_ID, DESCRIPTION, CREATED_DATE)
+        values(6, 'Operating System', 5, 'Operating System', '2002-01-01 00:30:00');
 /* Priority select-one */
-insert into SCARAB_ATTRIBUTE(ATTRIBUTE_ID, ATTRIBUTE_NAME, ATTRIBUTE_TYPE_ID, DESCRIPTION)
-        values(7, 'Priority', 5, 'Priority');
+insert into SCARAB_ATTRIBUTE(ATTRIBUTE_ID, ATTRIBUTE_NAME, ATTRIBUTE_TYPE_ID, DESCRIPTION, CREATED_DATE)
+        values(7, 'Priority', 5, 'Priority', '2002-01-01 00:30:00');
 /* Priority voted */
-insert into SCARAB_ATTRIBUTE(ATTRIBUTE_ID, ATTRIBUTE_NAME, ATTRIBUTE_TYPE_ID, DESCRIPTION)
-        values(8, 'Vote', 5, 'Vote');
+insert into SCARAB_ATTRIBUTE(ATTRIBUTE_ID, ATTRIBUTE_NAME, ATTRIBUTE_TYPE_ID, DESCRIPTION, CREATED_DATE)
+        values(8, 'Vote', 5, 'Vote', '2002-01-01 00:30:00');
 /* Severity */
-insert into SCARAB_ATTRIBUTE(ATTRIBUTE_ID, ATTRIBUTE_NAME, ATTRIBUTE_TYPE_ID, DESCRIPTION)
-        values(9, 'Severity', 5, 'Severity');
+insert into SCARAB_ATTRIBUTE(ATTRIBUTE_ID, ATTRIBUTE_NAME, ATTRIBUTE_TYPE_ID, DESCRIPTION, CREATED_DATE)
+        values(9, 'Severity', 5, 'Severity', '2002-01-01 00:30:00');
 
 /* Tracking */
 /* 
  * removing until further discussion
- * insert into SCARAB_ATTRIBUTE(ATTRIBUTE_ID, ATTRIBUTE_NAME, ATTRIBUTE_TYPE_ID, DESCRIPTION)
- *         values(10, 'Tracking', 10, 'Tracking')
+ * insert into SCARAB_ATTRIBUTE(ATTRIBUTE_ID, ATTRIBUTE_NAME, ATTRIBUTE_TYPE_ID, DESCRIPTION, CREATED_DATE)
+ *         values(10, 'Tracking', 10, 'Tracking', '2002-01-01 00:30:00')
  */
 
 /* Brief (one-line) Description */
-insert into SCARAB_ATTRIBUTE(ATTRIBUTE_ID, ATTRIBUTE_NAME, ATTRIBUTE_TYPE_ID, DESCRIPTION)
-        values(11, 'Summary', 1, 'Summary');
+insert into SCARAB_ATTRIBUTE(ATTRIBUTE_ID, ATTRIBUTE_NAME, ATTRIBUTE_TYPE_ID, DESCRIPTION, CREATED_DATE)
+        values(11, 'Summary', 1, 'Summary', '2002-01-01 00:30:00');
 /* Functional Area */
-insert into SCARAB_ATTRIBUTE(ATTRIBUTE_ID, ATTRIBUTE_NAME, ATTRIBUTE_TYPE_ID, DESCRIPTION)
-        values(12, 'Functional Area', 5, 'Functional Area');
+insert into SCARAB_ATTRIBUTE(ATTRIBUTE_ID, ATTRIBUTE_NAME, ATTRIBUTE_TYPE_ID, DESCRIPTION, CREATED_DATE)
+        values(12, 'Functional Area', 5, 'Functional Area', '2002-01-01 00:30:00');
 
 update SCARAB_ATTRIBUTE set CREATED_BY='0';
 
@@ -1547,3 +1547,4 @@ INSERT INTO SCARAB_R_MODULE_OPTION VALUES (0,10,87,NULL,1,17,17);
 INSERT INTO SCARAB_R_MODULE_OPTION VALUES (0,10,88,NULL,1,1,1);
 INSERT INTO SCARAB_R_MODULE_OPTION VALUES (0,10,89,NULL,1,2,2);
 INSERT INTO SCARAB_R_MODULE_OPTION VALUES (0,10,90,NULL,1,3,3);
+
