@@ -58,7 +58,7 @@
  *              several workers.                                           *
  * Author:      Gal Shachor <shachor@il.ibm.com>                           *
  * Based on:                                                               *
- * Version:     $Revision: 1.1 $                                               *
+ * Version:     $Revision: 1.2 $                                               *
  ***************************************************************************/
 
 #include "jk_pool.h"
@@ -297,6 +297,9 @@ static int JK_METHOD service(jk_endpoint_t *e,
                              jk_logger_t *l,
                              int *is_recoverable_error)
 {
+    jk_log(l, JK_LOG_DEBUG, 
+           "Into jk_endpoint_t::service\n");
+
     if(e && e->endpoint_private && s && is_recoverable_error) {
         lb_endpoint_t *p = e->endpoint_private;
         jk_endpoint_t *end = NULL;
@@ -362,12 +365,19 @@ static int JK_METHOD service(jk_endpoint_t *e,
             }
         }
     }
+
+    jk_log(l, JK_LOG_ERROR, 
+           "In jk_endpoint_t::service: NULL Parameters\n");
+
     return JK_FALSE;
 }
 
 static int JK_METHOD done(jk_endpoint_t **e,
                           jk_logger_t *l)
 {
+    jk_log(l, JK_LOG_DEBUG, 
+           "Into jk_endpoint_t::done\n");
+
     if(e && *e && (*e)->endpoint_private) {
         lb_endpoint_t *p = (*e)->endpoint_private;
 
@@ -380,6 +390,9 @@ static int JK_METHOD done(jk_endpoint_t **e,
         return JK_TRUE;
     }
 
+    jk_log(l, JK_LOG_ERROR, 
+           "In jk_endpoint_t::done: NULL Parameters\n");
+
     return JK_FALSE;
 }
 
@@ -387,6 +400,9 @@ static int JK_METHOD validate(jk_worker_t *pThis,
                               jk_map_t *props,                            
                               jk_logger_t *l)
 {
+    jk_log(l, JK_LOG_DEBUG, 
+           "Into jk_worker_t::validate\n");
+
     if(pThis && pThis->worker_private) {        
         lb_worker_t *p = pThis->worker_private;
         char **worker_names;
@@ -423,12 +439,19 @@ static int JK_METHOD validate(jk_worker_t *pThis,
 
             if(i != num_of_workers) {
                 close_workers(p, i, l);
+                jk_log(l, JK_LOG_ERROR, 
+                       "In jk_worker_t::validate: Failed to create worker %s\n",
+                       p->lb_workers[i].name);
+
             } else {
                 p->num_of_workers = num_of_workers;
                 return JK_TRUE;
             }
         }        
     }
+
+    jk_log(l, JK_LOG_ERROR, 
+           "In jk_worker_t::validate: NULL Parameters\n");
 
     return JK_FALSE;
 }
@@ -445,7 +468,8 @@ static int JK_METHOD get_endpoint(jk_worker_t *pThis,
                                   jk_endpoint_t **pend,
                                   jk_logger_t *l)
 {
-    jk_log(l, JK_LOG_DEBUG, "Into jk_worker_t::get_endpoint\n");
+    jk_log(l, JK_LOG_DEBUG, 
+           "Into jk_worker_t::get_endpoint\n");
 
     if(pThis && pThis->worker_private && pend) {        
         lb_endpoint_t *p = (lb_endpoint_t *)malloc(sizeof(lb_endpoint_t));
@@ -459,9 +483,11 @@ static int JK_METHOD get_endpoint(jk_worker_t *pThis,
 
             return JK_TRUE;
         }
-        jk_log(l, JK_LOG_ERROR, "In jk_worker_t::get_endpoint, malloc failed\n");
+        jk_log(l, JK_LOG_ERROR, 
+               "In jk_worker_t::get_endpoint, malloc failed\n");
     } else {
-        jk_log(l, JK_LOG_ERROR, "In jk_worker_t::get_endpoint, NULL parameters\n");
+        jk_log(l, JK_LOG_ERROR, 
+               "In jk_worker_t::get_endpoint, NULL parameters\n");
     }
 
     return JK_FALSE;
@@ -470,7 +496,9 @@ static int JK_METHOD get_endpoint(jk_worker_t *pThis,
 static int JK_METHOD destroy(jk_worker_t **pThis,
                              jk_logger_t *l)
 {
-    jk_log(l, JK_LOG_DEBUG, "Into jk_worker_t::destroy\n");
+    jk_log(l, JK_LOG_DEBUG, 
+           "Into jk_worker_t::destroy\n");
+
     if(pThis && *pThis && (*pThis)->worker_private) {
         lb_worker_t *private_data = (*pThis)->worker_private;
 
@@ -484,7 +512,8 @@ static int JK_METHOD destroy(jk_worker_t **pThis,
         return JK_TRUE;
     }
 
-    jk_log(l, JK_LOG_ERROR, "In jk_worker_t::destroy, NULL parameters\n");
+    jk_log(l, JK_LOG_ERROR, 
+           "In jk_worker_t::destroy, NULL parameters\n");
     return JK_FALSE;
 }
 
@@ -492,6 +521,9 @@ int JK_METHOD lb_worker_factory(jk_worker_t **w,
                                 const char *name,
                                 jk_logger_t *l)
 {
+    jk_log(l, JK_LOG_DEBUG, 
+           "Into lb_worker_factory\n");
+
     if(NULL != name && NULL != w) {
         lb_worker_t *private_data = 
             (lb_worker_t *)malloc(sizeof(lb_worker_t));
@@ -520,9 +552,11 @@ int JK_METHOD lb_worker_factory(jk_worker_t **w,
             jk_close_pool(&private_data->p);
             free(private_data);
         }
-        jk_log(l, JK_LOG_ERROR, "In lb_worker_factory, malloc failed\n");
+        jk_log(l, JK_LOG_ERROR, 
+               "In lb_worker_factory, malloc failed\n");
     } else {
-        jk_log(l, JK_LOG_ERROR, "In lb_worker_factory, NULL parameters\n");
+        jk_log(l, JK_LOG_ERROR, 
+               "In lb_worker_factory, NULL parameters\n");
     }
 
     return JK_FALSE;

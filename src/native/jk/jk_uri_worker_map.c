@@ -65,7 +65,7 @@
  * servlet container.                                                      *
  *                                                                         *
  * Author:      Gal Shachor <shachor@il.ibm.com>                           *
- * Version:     $Revision: 1.2 $                                               *
+ * Version:     $Revision: 1.3 $                                               *
  ***************************************************************************/
 
 #include "jk_pool.h"
@@ -152,14 +152,18 @@ int uri_worker_map_alloc(jk_uri_worker_map_t **uw_map,
                          jk_map_t *init_data,
                          jk_logger_t *l)
 {
-    jk_log(l, JK_LOG_DEBUG, "Into jk_uri_worker_map_t::uri_worker_map_alloc\n");    
+    jk_log(l, JK_LOG_DEBUG, 
+           "Into jk_uri_worker_map_t::uri_worker_map_alloc\n");    
+
     if(init_data && uw_map) {
         return uri_worker_map_open(*uw_map = (jk_uri_worker_map_t *)malloc(sizeof(jk_uri_worker_map_t)),
                                    init_data,
                                    l);
     }
 
-    jk_log(l, JK_LOG_ERROR, "In jk_uri_worker_map_t::uri_worker_map_alloc, NULL parameters\n");    
+    jk_log(l, JK_LOG_ERROR, 
+           "In jk_uri_worker_map_t::uri_worker_map_alloc, NULL parameters\n");    
+
     return JK_FALSE;
 }
 
@@ -168,14 +172,17 @@ int uri_worker_map_free(jk_uri_worker_map_t **uw_map,
 {
     int rc = JK_FALSE;
 
-    jk_log(l, JK_LOG_DEBUG, "Into jk_uri_worker_map_t::uri_worker_map_free\n");    
+    jk_log(l, JK_LOG_DEBUG, 
+           "Into jk_uri_worker_map_t::uri_worker_map_free\n");    
+
     if(uw_map && *uw_map) {
         uri_worker_map_close(*uw_map, l);  
         free(*uw_map);
         *uw_map = NULL;
     }
     
-    jk_log(l, JK_LOG_ERROR, "In jk_uri_worker_map_t::uri_worker_map_free, NULL parameters\n");    
+    jk_log(l, JK_LOG_ERROR, 
+           "In jk_uri_worker_map_t::uri_worker_map_free, NULL parameters\n");    
     return rc;
 }
 
@@ -185,7 +192,8 @@ int uri_worker_map_open(jk_uri_worker_map_t *uw_map,
 {
     int rc = JK_FALSE;
 
-    jk_log(l, JK_LOG_DEBUG, "Into jk_uri_worker_map_t::uri_worker_map_open\n");    
+    jk_log(l, JK_LOG_DEBUG, 
+           "Into jk_uri_worker_map_t::uri_worker_map_open\n");    
 
     if(uw_map) {
         int sz;
@@ -305,7 +313,8 @@ int uri_worker_map_open(jk_uri_worker_map_t *uw_map,
         }
     }
     
-    jk_log(l, JK_LOG_DEBUG, "jk_uri_worker_map_t::uri_worker_map_open, done\n"); 
+    jk_log(l, JK_LOG_DEBUG, 
+           "jk_uri_worker_map_t::uri_worker_map_open, done\n"); 
     return rc;
 }
 
@@ -314,12 +323,17 @@ int uri_worker_map_close(jk_uri_worker_map_t *uw_map,
 {
     int rc = JK_FALSE;
 
-    jk_log(l, JK_LOG_DEBUG, "Into jk_uri_worker_map_t::uri_worker_map_close\n"); 
+    jk_log(l, JK_LOG_DEBUG, 
+           "Into jk_uri_worker_map_t::uri_worker_map_close\n"); 
+
     if(uw_map) {
         jk_close_pool(&uw_map->p);
         rc = JK_TRUE;
     }
-    jk_log(l, JK_LOG_ERROR, "jk_uri_worker_map_t::uri_worker_map_close, NULL parameter\n"); 
+
+    jk_log(l, JK_LOG_ERROR, 
+           "jk_uri_worker_map_t::uri_worker_map_close, NULL parameter\n"); 
+
     return rc;
 }
 
@@ -389,8 +403,10 @@ char *map_uri_to_worker(jk_uri_worker_map_t *uw_map,
         }
 
         if(-1 != best_match) {
-            jk_log(l, JK_LOG_DEBUG, "jk_uri_worker_map_t::uri_worker_map_open, done with %s\n",
+            jk_log(l, JK_LOG_DEBUG, 
+                   "jk_uri_worker_map_t::map_uri_to_worker, Found a match %s\n",
                    uw_map->maps[best_match].worker_name); 
+
             return uw_map->maps[best_match].worker_name;
         } else {
             /*
@@ -417,5 +433,6 @@ char *map_uri_to_worker(jk_uri_worker_map_t *uw_map,
 
     jk_log(l, JK_LOG_DEBUG, 
            "jk_uri_worker_map_t::map_uri_to_worker, done without a match\n"); 
+
     return NULL;
 }

@@ -56,7 +56,7 @@
 /***************************************************************************
  * Description: Experimental bi-directionl protocol handler.               *
  * Author:      Gal Shachor <shachor@il.ibm.com>                           *
- * Version:     $Revision: 1.2 $                                           *
+ * Version:     $Revision: 1.3 $                                           *
  ***************************************************************************/
 
 
@@ -342,7 +342,12 @@ int ajp13_marshal_into_msgb(jk_msg_buf_t *msg,
     unsigned char method;
     unsigned i;
 
+    jk_log(l, JK_LOG_DEBUG, 
+           "Into ajp13_marshal_into_msgb\n");
+
     if(!sc_for_req_method(s->method, &method)) { 
+        jk_log(l, JK_LOG_ERROR, 
+               "Error ajp13_marshal_into_msgb - No such method %s\n", s->method);
         return JK_FALSE;
     }
 
@@ -356,6 +361,10 @@ int ajp13_marshal_into_msgb(jk_msg_buf_t *msg,
        0 != jk_b_append_int(msg, (unsigned short)s->server_port) ||
        0 != jk_b_append_byte(msg, (unsigned char)(s->is_ssl)) ||
        0 != jk_b_append_int(msg, (unsigned short)(s->num_headers))) {
+
+        jk_log(l, JK_LOG_ERROR, 
+               "Error ajp13_marshal_into_msgb - Error appending the message begining\n");
+
         return JK_FALSE;
     }
 
@@ -364,15 +373,21 @@ int ajp13_marshal_into_msgb(jk_msg_buf_t *msg,
 
         if(sc_for_req_header(s->headers_names[i], &sc) ) {
             if(0 != jk_b_append_int(msg, sc)) {
+                jk_log(l, JK_LOG_ERROR, 
+                       "Error ajp13_marshal_into_msgb - Error appending the header name\n");
                 return JK_FALSE;
             }
         } else {
             if(0 != jk_b_append_string(msg, s->headers_names[i])) {
+                jk_log(l, JK_LOG_ERROR, 
+                       "Error ajp13_marshal_into_msgb - Error appending the header name\n");
                 return JK_FALSE;
             }
         }
         
         if(0 != jk_b_append_string(msg, s->headers_values[i])) {
+            jk_log(l, JK_LOG_ERROR, 
+                   "Error ajp13_marshal_into_msgb - Error appending the header value\n");
             return JK_FALSE;
         }
     }
@@ -380,30 +395,45 @@ int ajp13_marshal_into_msgb(jk_msg_buf_t *msg,
     if(s->remote_user) {
         if(0 != jk_b_append_byte(msg, SC_A_REMOTE_USER) ||
            0 != jk_b_append_string(msg, s->remote_user)) {
+            jk_log(l, JK_LOG_ERROR, 
+                   "Error ajp13_marshal_into_msgb - Error appending the remote user\n");
+
             return JK_FALSE;
         }
     }
     if(s->auth_type) {
         if(0 != jk_b_append_byte(msg, SC_A_AUTH_TYPE) ||
            0 != jk_b_append_string(msg, s->auth_type)) {
+            jk_log(l, JK_LOG_ERROR, 
+                   "Error ajp13_marshal_into_msgb - Error appending the auth type\n");
+
             return JK_FALSE;
         }
     }
     if(s->query_string) {
         if(0 != jk_b_append_byte(msg, SC_A_QUERY_STRING) ||
            0 != jk_b_append_string(msg, s->query_string)) {
+            jk_log(l, JK_LOG_ERROR, 
+                   "Error ajp13_marshal_into_msgb - Error appending the query string\n");
+
             return JK_FALSE;
         }
     }
     if(s->jvm_route) {
         if(0 != jk_b_append_byte(msg, SC_A_JVM_ROUTE) ||
            0 != jk_b_append_string(msg, s->jvm_route)) {
+            jk_log(l, JK_LOG_ERROR, 
+                   "Error ajp13_marshal_into_msgb - Error appending the jvm route\n");
+
             return JK_FALSE;
         }
     }
     if(s->ssl_cert_len) {
         if(0 != jk_b_append_byte(msg, SC_A_SSL_CERT) ||
            0 != jk_b_append_string(msg, s->ssl_cert)) {
+            jk_log(l, JK_LOG_ERROR, 
+                   "Error ajp13_marshal_into_msgb - Error appending the SSL certificates\n");
+
             return JK_FALSE;
         }
     }
@@ -411,20 +441,30 @@ int ajp13_marshal_into_msgb(jk_msg_buf_t *msg,
     if(s->ssl_cipher) {
         if(0 != jk_b_append_byte(msg, SC_A_SSL_CIPHER) ||
            0 != jk_b_append_string(msg, s->ssl_cipher)) {
+            jk_log(l, JK_LOG_ERROR, 
+                   "Error ajp13_marshal_into_msgb - Error appending the SSL ciphers\n");
+
             return JK_FALSE;
         }
     }
     if(s->ssl_session) {
         if(0 != jk_b_append_byte(msg, SC_A_SSL_SESSION) ||
            0 != jk_b_append_string(msg, s->ssl_session)) {
+            jk_log(l, JK_LOG_ERROR, 
+                   "Error ajp13_marshal_into_msgb - Error appending the SSL session\n");
+
             return JK_FALSE;
         }
     }
 
     if(0 != jk_b_append_byte(msg, SC_A_ARE_DONE)) {
+        jk_log(l, JK_LOG_ERROR, 
+               "Error ajp13_marshal_into_msgb - Error appending the message end\n");
         return JK_FALSE;
     }
     
+    jk_log(l, JK_LOG_DEBUG, 
+           "ajp13_marshal_into_msgb - Done\n");
     return JK_TRUE;
 }
 
@@ -462,6 +502,9 @@ int ajp13_unmarshal_response(jk_msg_buf_t *msg,
     d->status = jk_b_get_int(msg);
 
     if(!d->status) {
+        jk_log(l, JK_LOG_ERROR, 
+               "Error ajp13_unmarshal_response - Null status\n");
+
         return JK_FALSE;
     }
 
@@ -485,17 +528,26 @@ int ajp13_unmarshal_response(jk_msg_buf_t *msg,
                     if(name < SC_RES_HEADERS_NUM) {
                         d->header_names[i] = (char *)long_res_header_for_sc(name);
                     } else {
+                        jk_log(l, JK_LOG_ERROR, 
+                               "Error ajp13_unmarshal_response - No such sc\n");
+
                         return JK_FALSE;
                     }
                 } else {
                     d->header_names[i] = jk_b_get_string(msg);
                     if(!d->header_names[i]) {
+                        jk_log(l, JK_LOG_ERROR, 
+                               "Error ajp13_unmarshal_response - Null header name\n");
+
                         return JK_FALSE;
                     }
                 }
 
                 d->header_values[i] = jk_b_get_string(msg);
                 if(!d->header_values[i]) {
+                    jk_log(l, JK_LOG_ERROR, 
+                           "Error ajp13_unmarshal_response - Null header value\n");
+
                     return JK_FALSE;
                 }
             }
