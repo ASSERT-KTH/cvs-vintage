@@ -1,0 +1,15 @@
+# Columba .lap file
+# Configuration for the Janel Launcher
+# Janel Version > 1.3.0
+
+-Djava.class.path=columba.jar
+janel.main.class=org.columba.core.main.Main
+janel.min.java.version=1.4
+
+#uncomment this line when using a SDK
+#janel.java.bundle=SDK
+
+
+
+
+
