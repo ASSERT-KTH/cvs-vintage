@@ -241,7 +241,7 @@ public class AutoWebApp extends BaseInterceptor {
 
 	Hashtable loaded=(Hashtable)hosts.get(host);
 	if( loaded != null && loaded.get( path ) != null ) {
-	    log( "Already loaded: " + host + ":" +
+	    log( "Loaded from config: " + host + ":" +
 		 ( "".equals(path) ? "/" : path ) );
 	    return; // already loaded
 	}
