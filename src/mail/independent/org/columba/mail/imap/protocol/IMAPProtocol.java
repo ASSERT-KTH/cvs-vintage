@@ -1,16 +1,16 @@
 //The contents of this file are subject to the Mozilla Public License Version 1.1
-//(the "License"); you may not use this file except in compliance with the 
+//(the "License"); you may not use this file except in compliance with the
 //License. You may obtain a copy of the License at http://www.mozilla.org/MPL/
 //
 //Software distributed under the License is distributed on an "AS IS" basis,
-//WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License 
+//WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License
 //for the specific language governing rights and
 //limitations under the License.
 //
 //The Original Code is "The Columba Project"
 //
 //The Initial Developers of the Original Code are Frederik Dietz and Timo Stich.
-//Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
+//Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003.
 //
 //All Rights Reserved.
 //
@@ -31,31 +31,31 @@ import org.columba.mail.folder.MessageFolderInfo;
 import org.columba.mail.imap.IMAPResponse;
 
 /**
- * 
+ *
  * @author frd
  *
  * This is the implementation of the IMAP protocol as defined in
  * RFC2060 (http://www.rfc-editor.org). Every IMAP command has
- * its corresponding function. So, you *really* need to read the 
+ * its corresponding function. So, you *really* need to read the
  * RFC to understand it.
- * 
+ *
  * You should also take a look at the following classes:
  * - <code>IMAPInputStream</code> is a special inputstream which
  *   handles all IMAP related specialities
- * - <code>ArgumentWriter</code> takes all arguments you pass 
- *   to          the server and makes sure they are escaped (etc.) correctly 
+ * - <code>ArgumentWriter</code> takes all arguments you pass
+ *   to          the server and makes sure they are escaped (etc.) correctly
  * - <code>Arguments</code> is a lightweight class to encapsulate the
  *   different  arguments
  * - exception classes:
- *    - <code>BadCommandException</code> 
+ *    - <code>BadCommandException</code>
  *    - <code>CommandFailedException</code>
  *    - <code>DisconnectedException</code>
  *    - <code>IMAPProtocolException</code>
- * 
+ *
  */
 public class IMAPProtocol {
 	/**
-	 *	default IMAP port 
+	 *	default IMAP port
 	 */
 	public static final int DEFAULT_PORT = 143;
 
@@ -85,7 +85,7 @@ public class IMAPProtocol {
 	private ArgumentWriter argumentWriter;
 
 	/**
-	 * IMAP server answer 
+	 * IMAP server answer
 	 */
 	public String answer;
 
@@ -104,7 +104,7 @@ public class IMAPProtocol {
 	private String idString;
 
 	/**
-	 * 
+	 *
 	 */
 	private String result;
 
@@ -118,8 +118,8 @@ public class IMAPProtocol {
 
 	/**
 	 * Method openPort with default port
-	 * 
-	 * 
+	 *
+	 *
 	 * @param host
 	 * @return boolean
 	 * @throws IOException
@@ -130,8 +130,8 @@ public class IMAPProtocol {
 
 	/**
 	 * Method openPort
-	 * 
-	 * 
+	 *
+	 *
 	 * @param host		name of IMAP server
 	 * @param port	    port of IMAP server
 	 * @return boolean  true if connection was established correctly
@@ -162,10 +162,10 @@ public class IMAPProtocol {
 
 	/**
 	 * Method generateIdentifier.
-	 * 
+	 *
 	 * generate client request ID
-	 * 
-	 * 
+	 *
+	 *
 	 * @return String
 	 */
 	protected String generateIdentifier() {
@@ -250,7 +250,7 @@ public class IMAPProtocol {
 				// any status information printed
 				imapResponse = getResponse(null);
 			} catch (IOException ex) {
-				// disconnect exception	
+				// disconnect exception
 				ex.printStackTrace();
 
 				imapResponse = IMAPResponse.BYEResponse;
@@ -304,7 +304,7 @@ public class IMAPProtocol {
 			try {
 				imapResponse = getResponse(worker);
 			} catch (IOException ex) {
-				// disconnect exception	
+				// disconnect exception
 				ex.printStackTrace();
 
 				imapResponse = IMAPResponse.BYEResponse;
@@ -363,11 +363,11 @@ public class IMAPProtocol {
 
 		while (!finished) {
 			try {
-				imapResponse = getResponse(worker);
+                imapResponse = getResponse(worker);
 
 				worker.setProgressBarValue(++counter);
 			} catch (IOException ex) {
-				// disconnect exception	
+				// disconnect exception
 				ex.printStackTrace();
 
 				imapResponse = IMAPResponse.BYEResponse;
@@ -795,7 +795,7 @@ public class IMAPProtocol {
 
 		IMAPResponse[] responses =
 			fetch(
-				"BODY[HEADER.FIELDS (" + headerFields + ")]",
+				"BODY.PEEK[HEADER.FIELDS (" + headerFields + ")]",
 				messageSet,
 				true);
 		//IMAPResponse[] responses = fetch("ENVELOPE", messageSet, true);
@@ -984,3 +984,7 @@ public class IMAPProtocol {
 	}
 
 }
+
+///////////////////////////////////////////////////////////////////////////
+// $Log:$
+///////////////////////////////////////////////////////////////////////////
