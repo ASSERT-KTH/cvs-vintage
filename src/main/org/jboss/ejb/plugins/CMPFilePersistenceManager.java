@@ -38,13 +38,17 @@ import org.jboss.ejb.EntityEnterpriseContext;
 import org.jboss.util.FinderResults;
 
 /**
- *	<description> 
- *      
- *	@see <related>
- *	@author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
- *  @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
- *	@version $Revision: 1.10 $
- */
+*	<description> 
+*      
+*   @see <related>
+*   @author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
+*   @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
+*   @version $Revision: 1.11 $
+*   <p><b>20010801 marc fleury:</b>
+*   <ul>
+*   <li>- insertion in cache upon create in now done in the instance interceptor
+*   </ul>
+*/
 public class CMPFilePersistenceManager
    implements EntityPersistenceStore
 {
