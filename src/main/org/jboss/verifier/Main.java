@@ -19,7 +19,7 @@ package org.jboss.verifier;
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  *
  * This package and its source code is available at www.jboss.org
- * $Id: Main.java,v 1.4 2001/01/03 08:28:41 tobias Exp $
+ * $Id: Main.java,v 1.5 2001/03/24 21:14:14 juhalindfors Exp $
  *
  * You can reach the author by sending email to jplindfo@helsinki.fi.
  */
@@ -46,11 +46,16 @@ import org.jboss.metadata.XmlFileLoader;
  * @see     << OTHER RELATED CLASSES >>
  *
  * @author 	Juha Lindfors
- * @version $Revision: 1.4 $
+ * @version $Revision: 1.5 $
  * @since  	JDK 1.3
  */
 public class Main {
 
+    public final static int OK      = 0;
+    public final static int WARNING = 1;
+
+    static int returnCode = OK;
+    
     /**
      * Starts the application.
      *
@@ -77,9 +82,12 @@ public class Main {
             System.err.println("Exception: " + e);
             System.err.println("Message:   " + e.getMessage());
             e.printStackTrace();
+            
+            System.exit(-1);
         }
+
+        System.exit(returnCode);    
     }
-    
     
 }
 
@@ -87,6 +95,8 @@ class Listener implements VerificationListener {
     
     public void specViolation(VerificationEvent event) {
         System.out.println(event.getVerbose());
+        
+        Main.returnCode = Main.WARNING;
     }
     
     public void beanChecked(VerificationEvent event) {
