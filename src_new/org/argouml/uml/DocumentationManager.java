@@ -1,4 +1,4 @@
-// $Id: DocumentationManager.java,v 1.17 2004/06/29 00:21:56 d00mst Exp $
+// $Id: DocumentationManager.java,v 1.18 2004/06/29 11:48:21 d00mst Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -247,10 +247,14 @@ public class DocumentationManager {
 	if (ModelFacade.isAModelElement(o)) {
 	    Collection comments = ModelFacade.getComments(o);
 	    if (!comments.isEmpty()) {
+		int nlcount = 2;
 		for (Iterator iter = comments.iterator(); iter.hasNext(); ) {
 		    Object c = iter.next();
 		    String s = ModelFacade.getName(c);
-		    appendComment(result, prefix, s);
+		    nlcount = appendComment(result,
+					    prefix,
+					    s,
+					    nlcount > 1 ? 0 : 1);
 		}
 	    } else {
 		return "";
@@ -269,11 +273,26 @@ public class DocumentationManager {
     /**
      * Append a string to sb which is chopped into lines and each line
      * prefixed with prefix.
+     *
+     * @param sb the StringBuffer to append to.
+     * @param prefix the prefix to each line.
+     * @param comment the text to reformat.
+     * @param nlprefix the number of empty lines to prefix the comment with.
+     * @return the number of pending empty lines.
      */
-    private static void appendComment(StringBuffer sb, String prefix,
-				      String comment) {
+    private static int appendComment(StringBuffer sb, String prefix,
+				      String comment, int nlprefix) {
+	int nlcount = 0;
+
+	for (; nlprefix > 0; nlprefix--) {
+	    if (prefix != null)
+		sb.append(prefix);
+	    sb.append(LINE_SEPARATOR);
+	    nlcount++;
+	}
+
 	if (comment == null) {
-	    return;
+	    return nlcount;
 	}
 
 	MyTokenizer tokens = new MyTokenizer(comment,
@@ -283,11 +302,22 @@ public class DocumentationManager {
 	while (tokens.hasMoreTokens()) {
 	    String s = tokens.nextToken();
 	    if (!s.startsWith("\r") && !s.startsWith("\n")) {
-		sb.append(prefix);
+		if (prefix != null)
+		    sb.append(prefix);
 		sb.append(s);
 		sb.append(LINE_SEPARATOR);
+		nlcount = 0;
+	    } else if (nlcount > 0) {
+		if (prefix != null)
+		    sb.append(prefix);
+		sb.append(LINE_SEPARATOR);
+		nlcount++;
+	    } else {
+		nlcount++;
 	    }
 	}
+
+	return nlcount;
     }
 
 } /* end class DocumentationManager */
