@@ -5,8 +5,6 @@
 <form method="get" action="$link.setPage("reports,Step1.vm")">
 <input type="hidden" name="action" value="GenerateReport" />
 
-<h2>$page.Title</h2>
-
 <h3>
 #if ($report.Name)
 $report.Name

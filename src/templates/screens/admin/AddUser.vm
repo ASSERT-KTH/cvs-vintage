@@ -9,8 +9,6 @@
 
 <div id="adduser" class="app">
 
-<h2>$page.Title</h2>
-
 <h3>Add new user</h3>
 
 <form name="AddUserForm" action="$link.setPage("admin,AddUser.vm")" method="post">

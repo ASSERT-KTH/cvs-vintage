@@ -19,16 +19,7 @@
 </div>
 #end
 
-#if (!$currentTemplate.IssueId)
-    #set ($pageTitle = "Save template")
-#else
-    #set ($pageTitle = "Edit template '$templateInfo.Name'")
-#end
-
 <div class="app" id="savetemplate">
-
-<h2>$pageTitle</h2>
-
 
 <form method="post" action="$link.setPage("SaveTemplate.vm").setAction("TemplateList")">
 <input type="hidden" name="$scarabG.Constant.NEXT_TEMPLATE" value="TemplateList.vm" />

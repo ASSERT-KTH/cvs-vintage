@@ -1,12 +1,10 @@
 #**
 @author <a href="mailto:dr@bitonic.com">Douglas B. Robertson</a>
 @author <a href="mailto:jon@collab.net">Jon Stevens</a>
-@version $Id: AdminIndex.vm,v 1.21 2002/04/24 23:47:24 jon Exp $
+@version $Id: AdminIndex.vm,v 1.22 2002/05/24 03:26:12 jmcnally Exp $
 *#
 
 <div id="adminIndex" class="app">
-
-<h2>$page.Title</h2>
 
 #if ($link.isAllowed("admin,GlobalArtifactTypeShow.vm") || $link.isAllowed("admin,GlobalAttributeShow.vm"))
 <h3>Global data</h3>

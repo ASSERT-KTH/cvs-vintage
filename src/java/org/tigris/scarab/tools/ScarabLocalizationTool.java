@@ -47,7 +47,9 @@ package org.tigris.scarab.tools;
  */
 
 import java.util.Map;
+import java.util.List;
 import java.util.Properties;
+import java.util.MissingResourceException;
 
 import org.apache.commons.configuration.Configuration;
 import org.apache.turbine.RunData;
@@ -117,6 +119,124 @@ public class ScarabLocalizationTool
         return value;
     }
 
+
+   /**
+     * Formats a localized value using the provided object.
+     *
+     * @param key The identifier for the localized text to retrieve,
+     * @param arg1 The object to use as {0} when formatting the localized text.
+     * @return Formatted localized text.
+     * @see #format(String, List)
+     */
+    public String format(String key, Object arg1)
+    {
+        String value = null;
+        try
+        {
+            value =super.format(key, arg1);
+        }
+        catch (MissingResourceException tryAgain)
+        {
+            String prefix = getPrefix(null);
+            setPrefix(DEFAULT_SCOPE + '.');
+            value = super.format(key, arg1);
+            setPrefix(prefix);
+        }
+        return value;
+    }
+
+    /**
+     * Formats a localized value using the provided objects.
+     *
+     * @param key The identifier for the localized text to retrieve,
+     * @param arg1 The object to use as {0} when formatting the localized text.
+     * @param arg2 The object to use as {1} when formatting the localized text.
+     * @return Formatted localized text.
+     * @see #format(String, List)
+     */
+    public String format(String key, Object arg1, Object arg2)
+    {
+        String value = null;
+        try
+        {
+            value =super.format(key, arg1, arg2);
+        }
+        catch (MissingResourceException tryAgain)
+        {
+            String prefix = getPrefix(null);
+            setPrefix(DEFAULT_SCOPE + '.');
+            value = super.format(key, arg1, arg2);
+            setPrefix(prefix);
+        }
+        return value;
+    }
+
+    /**
+     * Formats a localized value using the provided objects.
+     *
+     * @param key The identifier for the localized text to retrieve,
+     * @param args The <code>MessageFormat</code> data used when
+     * formatting the localized text.
+     * @return Formatted localized text.
+     * @see #format(String, List)
+     */
+    public String format(String key, Object[] args)
+    {
+        String value = null;
+        try
+        {
+            value =super.format(key, args);
+        }
+        catch (MissingResourceException tryAgain)
+        {
+            String prefix = getPrefix(null);
+            setPrefix(DEFAULT_SCOPE + '.');
+            value = super.format(key, args);
+            setPrefix(prefix);
+        }
+        return value;
+    }
+
+    /**
+     * <p>Formats a localized value using the provided objects.</p>
+     *
+     * <p>ResourceBundle:
+     * <blockquote><code><pre>
+     * VelocityUsersNotWrong={0} out of {1} users can't be wrong!
+     * </pre></code></blockquote>
+     *
+     * Template:
+     * <blockquote><code><pre>
+     * $l10n.format("VelocityUsersNotWrong", ["9", "10"])
+     * </pre></code></blockquote>
+     *
+     * Result:
+     * <blockquote><code><pre>
+     * 9 out of 10 Velocity users can't be wrong!
+     * </pre></code></blockquote></p>
+     *
+     * @param key The identifier for the localized text to retrieve,
+     * @param args The objects to use as {0}, {1}, etc. when
+     *             formatting the localized text.
+     * @return Formatted localized text.
+     */
+    public String format(String key, List args)
+    {
+        String value = null;
+        try
+        {
+            value = super.format(key, args);
+        }
+        catch (MissingResourceException tryAgain)
+        {
+            String prefix = getPrefix(null);
+            setPrefix(DEFAULT_SCOPE + '.');
+            value = super.format(key, args);
+            setPrefix(prefix);
+        }
+        return value;
+    }
+
     /**
      * Provides <code>$l10n.Title</code> to templates, grabbing it
      * from the <code>title</code> property for the current template.
@@ -159,7 +279,8 @@ public class ScarabLocalizationTool
             // $l10n.get($props.get($template, "title"))
 
             String templateName =
-                (useDefaultScope ? DEFAULT_SCOPE : data.getTarget());
+                (useDefaultScope ? DEFAULT_SCOPE : 
+                 data.getTarget().replace(',', '/'));
             if (templateName == null)
             {
                 templateName = DEFAULT_SCOPE;

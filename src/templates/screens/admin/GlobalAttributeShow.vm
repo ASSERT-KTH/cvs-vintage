@@ -1,6 +1,5 @@
 <div id="globalattributeshow" class="app">
 
-<h2>$page.Title</h2>
 <p>
 This page is for selecting an Attribute to edit which is defined in a global scale.
 </p>

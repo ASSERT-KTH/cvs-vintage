@@ -33,7 +33,6 @@
 #end
 
 <div id="module" class="app">
-<h2>$page.Title</h2>
 
 <h3>$title</h3>
 

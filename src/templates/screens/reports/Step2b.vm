@@ -1,7 +1,6 @@
 #set ($report = $scarabR.Report)
 
 <div class="app" id="div2-4-1-step3">
-<h2>$page.Title</h2>
 
 #wizardLinks("reports,Step2b.vm" $reportParameters $link)
 #subWizardLinks("reports,Step2b.vm" $reportParameters $link "2a: Select report data-set" "reports,Step2.vm" "2b: Group related data" "reports,Step2b.vm")

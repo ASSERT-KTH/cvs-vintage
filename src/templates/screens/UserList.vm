@@ -14,8 +14,6 @@
 #set ($issueType = $scarabR.CurrentIssueType)
 #set ($searchString = $data.Parameters.getString("searchString" , ""))
 
-<h2>Select users</h2> 
-
 <h3>Users</h3>
 
 <div class="functnbar">

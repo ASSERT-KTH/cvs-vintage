@@ -4,8 +4,6 @@
 
 <div class="app" id="templateList">
 
-<h2>$page.Title</h2>
-
 <form method="post" action="$link.setPage("TemplateList.vm").setAction("TemplateList")">
 <input type="hidden" name="$scarabG.Constant.NEXT_TEMPLATE" value="TemplateList.vm" />
 <input type="hidden" name="$scarabG.Constant.OTHER_TEMPLATE" value="SaveTemplate.vm" />

@@ -1,7 +1,5 @@
 <div class="app" id="moveissue">
 
-<h2>$page.Title</h2>
-
 #set ($user = $data.User)
 #set ($issueId = $data.Parameters.getString("id"))
 #set ($issue = $scarabR.getIssue($issueId))

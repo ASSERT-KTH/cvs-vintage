@@ -1,7 +1,5 @@
 <div id="requestuser" class="app">
 
-<h2>$page.Title</h2>
-
 <h3>Request roles</h3>
 
 #set ($user = $data.User)

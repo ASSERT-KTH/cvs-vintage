@@ -1,7 +1,5 @@
 <div class="app" id="configureissuelist">
 
-<h2>$page.Title</h2>
-
 #set ($action = $link.setPage("ConfigureIssueList.vm").setAction("ConfigureIssueList"))
 #set ($user = $data.User)
 #set ($module = $scarabR.CurrentModule)

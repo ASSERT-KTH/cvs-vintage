@@ -1,6 +1,6 @@
 #**
 @author <a href="mailto:dr@bitonic.com">Douglas B. Robertson</a>
-@version $Id: DeleteUser.vm,v 1.5 2002/03/13 21:34:44 jon Exp $
+@version $Id: DeleteUser.vm,v 1.6 2002/05/24 03:26:12 jmcnally Exp $
 *#
 
 #set ($state = $data.Parameters.getString("state"))
@@ -9,8 +9,6 @@
 #end
 
 <div id="deleteuser" class="app">
-
-<h2>$page.Title</h2>
 
 <h3>Confirm delete user</h3>
 

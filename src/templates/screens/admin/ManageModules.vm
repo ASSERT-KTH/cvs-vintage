@@ -1,8 +1,6 @@
 #set ($userModules = $data.User.EditableModules)
 <div id="managemodule" class="app">
 
-<h2>$page.Title</h2>
-
 <h3>Modules</h3>
 #if ($userModules.size() > 0)
 <table border="1" cellspacing="2" cellpadding="3" width="100%">

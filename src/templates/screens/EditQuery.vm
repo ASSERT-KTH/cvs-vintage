@@ -5,8 +5,6 @@
 #set ($queryGroup = $intake.Query.mapTo($currentQuery))
 #set ($module = $scarabR.CurrentModule)
 
-<h2>Edit query</h2>
-
 #set ($action = $link.setPage("EditQuery.vm").setAction("Search"))
 <form action="$action" method="post">
 <input type="hidden" name="queryId" value="$queryId" />

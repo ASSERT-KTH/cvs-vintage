@@ -1,8 +1,6 @@
      <div class="app" id="divselect_module">
 
-<h2>Issue tracking: $scarabR.CurrentModule.RealName</h2>
-
-        <h3>$page.Title</h3>
+        <h3>$l10n.Title</h3>
         
 #set ($module = $scarabR.CurrentModule)
 #set ($activeIssueTypes = $module.IssueTypes)

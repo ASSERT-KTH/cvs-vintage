@@ -60,6 +60,7 @@ import org.apache.turbine.Turbine;
 // Scarab Stuff
 import org.tigris.scarab.services.security.ScarabSecurity;
 import org.tigris.scarab.tools.ScarabRequestTool;
+import org.tigris.scarab.tools.ScarabLocalizationTool;
 import org.tigris.scarab.util.ScarabConstants;
 import org.tigris.scarab.om.Module;
 import org.tigris.scarab.om.ScarabUser;
@@ -74,7 +75,7 @@ import org.tigris.scarab.om.IssueType;
  * duplication of code.
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: Default.java,v 1.50 2002/05/18 16:17:12 jmcnally Exp $
+ * @version $Id: Default.java,v 1.51 2002/05/24 03:26:09 jmcnally Exp $
  */
 public class Default extends TemplateSecureScreen
 {
@@ -84,14 +85,15 @@ public class Default extends TemplateSecureScreen
     public void doBuildTemplate( RunData data, TemplateContext context )
         throws Exception 
     {
+        ScarabRequestTool scarabR = ((ScarabRequestTool)context
+                                 .get(ScarabConstants.SCARAB_REQUEST_TOOL));
         // This may not be the best location for this, we might need to create
         // a valve.  
         // check that the module exists, it may not have been created yet.
         Module module = null;
         try
         {
-            module = ((ScarabRequestTool)context
-                      .get(ScarabConstants.SCARAB_REQUEST_TOOL)).getCurrentModule();
+            module = scarabR.getCurrentModule();
         }
         catch (Exception ignore)
         {
@@ -100,6 +102,19 @@ public class Default extends TemplateSecureScreen
         {
             data.setTarget("ModuleNotReady.vm");
         }        
+
+        // add the title text to the context.
+        ScarabLocalizationTool l10n = (ScarabLocalizationTool)
+            context.get("l10n");
+        context.put("title", getTitle(scarabR, l10n, data, context));
+    }
+
+    protected String getTitle(ScarabRequestTool scarabR, 
+                              ScarabLocalizationTool l10n,
+                              RunData data, TemplateContext context)
+        throws Exception
+    {
+        return l10n.getTitle();
     }
 
     /**

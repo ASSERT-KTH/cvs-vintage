@@ -15,13 +15,9 @@
 
 #if ($issueType.IssueTypeId)
    #set ($createNew = false)
-   $page.setTitle("Edit global issue type '$issueType.Name'")
 #else
    #set ($createNew = true)
-   $page.setTitle("Create new issue type")
 #end
-
-<h2>$page.Title</h2>
 
 #asterisk()
 

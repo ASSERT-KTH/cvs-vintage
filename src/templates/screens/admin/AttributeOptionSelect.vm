@@ -1,13 +1,9 @@
 #set ($attribute = $scarabR.Attribute)
-$page.setTitle("Add global attribute option to attribute '$attribute.Name'")
-
 #set ($canEditDomain=$scarabR.hasPermission($scarabG.Permission.DOMAIN__EDIT))
 #set ($editIssueType = $scarabR.getIssueType($data.Parameters.getString("issuetypeid")))
 #set ($availOptions = $scarabR.CurrentModule.getAvailableAttributeOptions($attribute, $editIssueType))
 
 <div class="app" id="AttributeOptionSelect">
-
-<h2>$page.Title</h2>
 
 <form action="$link.setPage("admin,AttributeOptionSelect.vm")" method="post">
 <input type="hidden" name="action" value="admin.ModuleAttributeEdit" />

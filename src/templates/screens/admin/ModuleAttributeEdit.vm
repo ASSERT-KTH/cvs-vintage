@@ -14,10 +14,7 @@
 </div>
 #end
 
-$page.setTitle("Edit Module Attribute '$attribute.Name'")
-
 <div class="app" id="div3-0-2-0">
-<h2>$page.Title</h2>
 
 #if (!$attType)
 <p class="alert">Attribute not found. Please click 

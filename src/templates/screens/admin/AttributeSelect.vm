@@ -16,7 +16,6 @@
 #end
 
 <div class="app" id="globalAttributeSelect">
-<h2>Select global attribute</h2>
 
 <form action="$link.setPage("admin,AttributeSelect.vm")" method="post">
 <input type="hidden" name="action" value="admin.AttributeGroupEdit" />

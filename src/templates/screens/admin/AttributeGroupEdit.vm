@@ -2,14 +2,7 @@
 #set ($group = $scarabR.getAttributeGroup($groupId))
 #set ($issueTypeId = $data.Parameters.getString("issueTypeId"))
 
-#if ($group)
-  $page.setTitle("Edit attribute group '$group.Name'")
-#else
-  $page.setTitle("Add attribute group")
-#end
-
 <div class="app" id="div2-1-4-0">
-<h2>$page.Title</h2>
 
 #if (!$groupId)
 <p class="alert">Group not found. Please click 

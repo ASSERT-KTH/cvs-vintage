@@ -1,7 +1,7 @@
 #**
 @author <a href="mailto:dr@bitonic.com">Douglas B. Robertson</a>
 @author <a href="mailto:jon@collab.net">Jon Stevens</a>
-@version $Id: ManageUserSearch.vm,v 1.22 2002/04/26 21:35:53 jon Exp $
+@version $Id: ManageUserSearch.vm,v 1.23 2002/05/24 03:26:12 jmcnally Exp $
 *#
 
 #set ($newSearch = $data.Parameters.getString("newSearch",""))
@@ -28,8 +28,6 @@
 $scarabR.setGlobalUserSearchParam("pageNum",$pageNum.toString())
 
 <div id="ManageUserSearch" class="app">
-
-<h2>$page.Title</h2>
 
 <h3>Search</h3>
 

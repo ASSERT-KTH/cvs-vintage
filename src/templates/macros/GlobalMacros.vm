@@ -343,10 +343,6 @@
 <h3>$title</h3>
 #end
 
-#macro (pagetitle)
-<h2>$page.Title</h2>
-#end
-
 #macro (selected $boolean)
 #if ($boolean) selected="selected"#end
 #end

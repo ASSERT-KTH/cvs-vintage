@@ -1,7 +1,5 @@
 <div class="app" id="issuelist">
 
-<h2>$page.Title</h2>
-
 #set ($user = $data.User)
 #set ($module = $scarabR.CurrentModule)
 #set ($search = $scarabR.Search)

@@ -1,7 +1,5 @@
 <div class="app" id="querylist">
 
-<h2>$page.Title</h2>
-
 #set ($module = $scarabR.CurrentModule)
 #set ($issueType = $scarabR.CurrentIssueType)
 #set ($user = $data.User)

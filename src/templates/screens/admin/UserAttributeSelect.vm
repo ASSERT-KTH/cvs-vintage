@@ -12,7 +12,6 @@
 #end
 
 <div class="app" id="globalAttributeSelect">
-<h2>$page.Title</h2>
 
 #set ($issueType = $scarabR.IssueType)
 #set ($attributes = $scarabR.CurrentModule.getAvailableAttributes($issueType, "user"))

@@ -7,10 +7,6 @@
 <input type="hidden" name=$scarabG.Constant.NEXT_TEMPLATE value="admin,ManageArtifactTypes.vm" />
 <input type="hidden" name=$scarabG.Constant.OTHER_TEMPLATE value="admin,ArtifactTypeSelect.vm" />
 
-#set ($pageTitle = "Manage Issue Types -  $module.RealName")
-<h2>$pageTitle</h2>
-
-
 ## SORTING
 #set ($sortColumn = $data.Parameters.getString("sortColumn",""))
 #set ($sortPolarity = $data.Parameters.getString("sortPolarity",""))

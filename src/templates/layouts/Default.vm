@@ -1,9 +1,8 @@
 <!DOCTYPE html PUBLIC "-//Tigris//DTD XHTML 1.0 Transitional//EN"
     "http://style.tigris.org/nonav/tigris_transitional.dtd">
-#set ($page.Title = $l10n.Title)
 <html>
  <head>
-  <title>$page.Title</title>
+  <title>Scarab: $title</title>
   <meta http-equiv="Content-type" content="$data.ContentType" />
   <style type="text/css">
   @import url($staticLink.setPath("/style/tigris.css"));
@@ -73,7 +72,12 @@ $renderer.render("navigations", $template, "Default.vm")
 </table>
 </div>
  </td>
- <td><div id="bodycol">
+ <td>
+#if (!$data.Parameters.getString("nonav") && !$data.Parameters.getString("nosearchnav"))
+    $renderer.render("navigations", "SearchNav.vm")
+#end
+<div id="apphead"><h2>$title</h2></div>
+<div id="bodycol">
  <!-- Scarab - App -->
 $renderer.render("layouts", "MainContent.vm")
 <!-- Structural Elements -->

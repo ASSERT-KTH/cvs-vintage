@@ -8,8 +8,6 @@
 
 <div id="adduser" class="app">
 
-<h2>$page.Title</h2>
-
 <h3>User roles</h3>
 
 <p>

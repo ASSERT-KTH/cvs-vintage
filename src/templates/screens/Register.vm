@@ -1,7 +1,5 @@
 <div id="register" class="app">
 
-<h2>$page.Title</h2>
-
 <h3>Registration</h3>
 
 <form name="register" action="$link.setPage("Register.vm")" method="post">

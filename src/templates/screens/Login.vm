@@ -1,13 +1,14 @@
 <div class="app" id="loginDONOTCHANGETHISID">
 
-<h2>$page.Title</h2>
+Login.vm.Title=[ko]  ·Î±×ÀÎ
+$l10n.Login
 
 <p>$l10n.NewUsers,
   <strong>$link.setPage("Register.vm").setLabel("register here")</strong>.</p>
 <p>Forgot your password,
   <strong>$link.setPage("ForgotPassword.vm").setLabel("click here")</strong>.</p>
 
-<h3>Login</h3>
+<h3>$l10n.Login</h3>
 
 #set ($nextTemplate = $data.Parameters.getString($scarabG.Constant.NEXT_TEMPLATE, ""))
 

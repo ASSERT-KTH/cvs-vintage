@@ -1,11 +1,9 @@
 #**
 @author <a href="mailto:dr@bitonic.com">Douglas B.Robertson</a>
-@version $Id: ManagePermissions.vm,v 1.4 2002/04/09 22:06:28 jon Exp $
+@version $Id: ManagePermissions.vm,v 1.5 2002/05/24 03:26:12 jmcnally Exp $
 *#
 
 <div id="managePermissions" class="app">
-
-<h2>$page.Title</h2>
 
 <h3>Permission list</h3>
 

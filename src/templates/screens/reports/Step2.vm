@@ -2,7 +2,6 @@
 #set ($intakeReport = $intake.Report.mapTo($report))
 
 <div class="app" id="div2-4-1-step2">
-<h2>$page.Title</h2>
 #wizardLinks("reports,Step2.vm" $reportParameters $link)
 #subWizardLinks("reports,Step2.vm" $reportParameters $link "2a: Select report data-set" "reports,Step2.vm" "2b: Group related data" "reports,Step2b.vm")
 

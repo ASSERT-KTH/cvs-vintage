@@ -9,14 +9,6 @@
 #set ($searchField = $data.Parameters.getString("searchField" , ""))
 #set ($now = $scarabG.Now.Time)
 
-#if ($issueListSize > 1)
-  #set ($thisIssue = "these issues")
-#else
-  #set ($thisIssue = "this issue")
-#end
-#set ($pageTitle = "Associate users with $thisIssue")
-<h2>$pageTitle</h2>
-
 #if ($userAttrs.isEmpty())
  <p><strong class="alert">
   There are no active user attributes to which to assign users.
@@ -74,7 +66,7 @@
 
     #if ($noUsers.equals("true"))
      <p><strong class="alert">None assigned.</strong></p>
-     <p><a href="#add">Click here</a> to select users to associate with ${thisIssue}.  </p>
+     <p><a href="#add">$l10n.ClickHereToSelectUsersPart1</a>$l10n.format("ClickHereToSelectUsersPart2", $issueListSize)</p>
     #else
 		
 		<table width="100%" border="1" cellspacing="2" cellpadding="3">

@@ -3,8 +3,6 @@
 
 <div class="app" id="div2-4-1-step1">
 
-<h2>$page.Title</h2>
-
 #wizardLinks("reports,Step1.vm" $reportParameters $link)
 
 <form method="get" action="$link.setPage("reports,Step1.vm")">

@@ -1,11 +1,9 @@
 #**
 @author <a href="mailto:dr@bitonic.com">Douglas B. Robertson</a>
-@version $Id: DeleteRole.vm,v 1.5 2002/03/13 21:34:44 jon Exp $
+@version $Id: DeleteRole.vm,v 1.6 2002/05/24 03:26:12 jmcnally Exp $
 *#
 
 <div id="deleterole" class="app">
-
-<h2>$page.Title</h2>
 
 <h3>Confirm delete role</h3>
 

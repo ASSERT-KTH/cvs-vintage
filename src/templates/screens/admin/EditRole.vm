@@ -1,13 +1,11 @@
 #** 
 @author <a href="mailto:dr@bitonic.com">Douglas B. Robertson</a>
-@version $Id: EditRole.vm,v 1.8 2002/05/02 00:20:44 jon Exp $
+@version $Id: EditRole.vm,v 1.9 2002/05/24 03:26:12 jmcnally Exp $
 *#
 
 #set ($role = $securityAdmin.getRoleByName($data.Parameters.getString("name")))
 
 <div id="editrole" class="app">
-
-<h2>$page.Title</h2>
 
 <h3>Edit permissions for the [$role.Name] role</h3>
 

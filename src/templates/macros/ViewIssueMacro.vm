@@ -20,9 +20,6 @@
 #macro (viewIssue $currentIssue $module)
 
 #set ($issueType = $scarabR.CurrentIssueType)
-<h2>$currentIssue.IssueType.Name ID: $currentIssue.UniqueId</h2>
-
-
 #set ($fullHistory = $data.Parameters.getString("fullhistory",""))
 #set ($fullComments = $data.Parameters.getString("fullcomments",""))
 #set ($canEdit = $scarabR.hasPermission($scarabG.Permission.ISSUE__EDIT, $module))

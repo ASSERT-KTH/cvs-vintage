@@ -1,7 +1,5 @@
 <div class="app" id="confirm">
 
-<h2>$page.Title</h2>
-
 ## attempt to get the user out of the temp hashtable
 #set ($user = $data.User.getTemp($scarabG.Constant.SESSION_REGISTER))
 #if ($user)

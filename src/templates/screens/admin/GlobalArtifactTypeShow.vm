@@ -1,5 +1,4 @@
 <div id="globalartifactshow" class="app">
-<h2>$page.Title</h2>
 <p>$l10n.GlobalIssueTypes </p>
 
 <form action="$link.setPage("admin,GlobalArtifactTypeShow.vm")" method="post">

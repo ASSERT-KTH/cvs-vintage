@@ -1,7 +1,5 @@
 <div id="savequery" class="app">
 
-<h2>$page.Title</h2>
-
 #asterisk()
 
 <h3>Saved query information</h3>

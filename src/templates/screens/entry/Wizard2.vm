@@ -4,8 +4,6 @@
 #set ($module = $scarabR.CurrentModule)
 #set ($issueType = $scarabR.CurrentIssueType)
 
-<h2>$page.Title</h2>
-	
 #set ($templateId = $data.Parameters.getString("templateId"))
 <form method="post" name="Report2Form" action="$link.setPage("entry,Wizard2.vm")">
 <input type="hidden" name="action" value="ReportIssue" />

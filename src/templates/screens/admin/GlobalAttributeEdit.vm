@@ -4,15 +4,12 @@
 #if ($attribute.AttributeId)
    #set ($attgroup = $intake.Attribute.mapTo($attribute))
    #set ($createNew = false)
-   $page.setTitle("Edit global attribute '$attribute.Name'")
 #else
    #set ($attgroup = $intake.Attribute.Default)
    #set ($createNew = true)
-   $page.setTitle("Create new global attribute")
 #end
 
 <div class="app" id="div3-0-2-0">
-<h2>$page.Title</h2>
 
 <p>$l10n.GlobalAttributes </p>
 

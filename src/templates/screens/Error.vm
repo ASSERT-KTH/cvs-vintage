@@ -1,6 +1,5 @@
 <div class="app" id="error">
 
-<h2>$page.Title</h2>
 #if( $data.getMessage() )
  Message: $data.getMessage()
 #else
