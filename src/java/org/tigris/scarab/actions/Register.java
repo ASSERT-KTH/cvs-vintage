@@ -80,7 +80,7 @@ import org.xbill.DNS.Type;
  * Action.
  *   
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: Register.java,v 1.38 2003/06/25 16:52:34 dlr Exp $
+ * @version $Id: Register.java,v 1.39 2003/07/11 23:57:40 dlr Exp $
  */
 public class Register extends ScarabTemplateAction
 {
@@ -343,6 +343,11 @@ public class Register extends ScarabTemplateAction
             if (register == null)
             {
                 scarabR.setAlertMessage(l10n.get("RegisterGroupIsNullError"));
+                String msg = "Register group is null: user="
+                    + (user != null && user instanceof ScarabUser ?
+                       ((ScarabUser) user).getQueryKey() : "[none]")
+                    + " IntakeTool.DEFAULT_KEY=" + IntakeTool.DEFAULT_KEY;
+                Log.get().warn(msg);
                 return;
             }
             String username = null;
