@@ -36,7 +36,7 @@ import org.jboss.logging.Logger;
  * @author <a href="mailto:dirk@jboss.de">Dirk Zimmermann</a>
  * @author <a href="mailto:danch@nvisia.com">danch (Dan Christopherson)</a>
  * @author <a href="mailto:alex@jboss.org">Alexey Loubyansky</a>
- * @version $Revision: 1.32 $
+ * @version $Revision: 1.33 $
  */
 public final class JDBCLoadEntityCommand
 {
@@ -108,7 +108,10 @@ public final class JDBCLoadEntityCommand
       // load any preloaded fields into the context
       if(readAheadCache.load(ctx))
       {
-         return true;
+         if(requiredField != null && requiredField.isLoaded(ctx))
+         {
+              return true;
+         }
       }
 
       // get the finder results associated with this context, if it exists
