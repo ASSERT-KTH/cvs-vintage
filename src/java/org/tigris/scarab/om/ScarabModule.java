@@ -87,7 +87,7 @@ import org.tigris.scarab.security.SecurityFactory;
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: ScarabModule.java,v 1.35 2001/10/09 20:38:26 elicia Exp $
+ * @version $Id: ScarabModule.java,v 1.36 2001/10/11 17:34:09 jmcnally Exp $
  */
 public class ScarabModule
     extends BaseScarabModule
@@ -198,11 +198,49 @@ public class ScarabModule
         return users;
     }
 
+    /*
     public ScarabUser[] getEligibleAssignees()
+        throws Exception
     {
-        ScarabSecurity security = SecurityFactory.getInstance();
-        ScarabUser[] users = 
-            security.getUsers(ScarabSecurity.ISSUE__EDIT, this);
+        Attribute attribute = Attribute
+            .getInstance(AttributePeer.ASSIGNED_TO__PK);
+        return getEligibleUsers(attribute);
+    }
+    */
+
+    /**
+     * The users who are possible candidates as values for the given
+     * attribute.  An eligible user is determined by checking for users that
+     * have the permission associated with the attribute.
+     *
+     * @param attribute an <code>Attribute</code> value
+     * @return a <code>ScarabUser[]</code> value
+     * @exception ScarabException if the attribute has no associated permission
+     * @exception Exception if an error occurs
+     */
+    public ScarabUser[] getEligibleUsers(Attribute attribute)
+        throws Exception
+    {
+        ScarabUser[] users = null;
+        if ( attribute.isUserAttribute() ) 
+        {
+            ScarabSecurity security = SecurityFactory.getInstance();
+            String permission = attribute.getPermission();
+            System.out.println("Attribute: " + attribute.getName() + 
+                               " has permission " + permission); 
+            if ( permission == null ) 
+            {
+                throw new ScarabException("Attribute: " + attribute.getName() + 
+                         " has no permission associated with it, so no users"
+                         + " can be associated with it." );
+            }
+            else 
+            {
+                users = security.getUsers(permission, this);
+            }
+        }
+        System.out.println("# of Users: " + users.length); 
+        
         return users;
     }
 

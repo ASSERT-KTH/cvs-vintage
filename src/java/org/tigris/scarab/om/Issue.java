@@ -484,7 +484,10 @@ public class Issue
     public List getEligibleAssignees()
         throws Exception
     {
-        ScarabUser[] users = getScarabModule().getEligibleAssignees();
+        // get users who are candidates for the assigned_to attribute
+        Attribute attribute = Attribute
+            .getInstance(AttributePeer.ASSIGNED_TO__PK);
+        ScarabUser[] users = getScarabModule().getEligibleUsers(attribute);
         // remove those already assigned
         List assigneeAVs = getAssigneeAttributeValues();
         if ( users != null && assigneeAVs != null ) 
