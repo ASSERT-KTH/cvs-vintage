@@ -7,51 +7,50 @@
 
 package org.jboss.web;
 
+
+
+
+
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
-import java.io.InputStream;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.io.IOException;
 import java.lang.reflect.Method;
 import java.net.JarURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.util.ArrayList;
+import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
-import java.util.jar.JarFile;
+import java.util.Set;
 import java.util.jar.Attributes;
 import java.util.jar.JarEntry;
-import java.util.Enumeration;
+import java.util.jar.JarFile;
+import javax.management.ObjectName;
 import javax.naming.Context;
 import javax.naming.InitialContext;
 import javax.naming.LinkRef;
-import javax.naming.NamingException;
 import javax.naming.Name;
 import javax.naming.NameNotFoundException;
-import javax.management.ObjectName;
-
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
-import org.w3c.dom.NodeList;
-
-import org.jboss.deployment.DeploymentInfo;
+import javax.naming.NamingException;
 import org.jboss.deployment.DeploymentException;
-import org.jboss.deployment.SubDeployer;
-import org.jboss.deployment.SubDeployerSupport;
+import org.jboss.deployment.DeploymentInfo;
 import org.jboss.deployment.J2eeApplicationMetaData;
 import org.jboss.deployment.J2eeModuleMetaData;
-
+import org.jboss.deployment.SubDeployer;
+import org.jboss.deployment.SubDeployerSupport;
 import org.jboss.metadata.ApplicationMetaData;
 import org.jboss.metadata.BeanMetaData;
-import org.jboss.metadata.EjbRefMetaData;
 import org.jboss.metadata.EjbLocalRefMetaData;
+import org.jboss.metadata.EjbRefMetaData;
 import org.jboss.metadata.EnvEntryMetaData;
 import org.jboss.metadata.ResourceEnvRefMetaData;
 import org.jboss.metadata.ResourceRefMetaData;
@@ -61,8 +60,10 @@ import org.jboss.naming.ENCFactory;
 import org.jboss.naming.Util;
 import org.jboss.security.plugins.NullSecurityManager;
 import org.jboss.system.ServiceMBeanSupport;
-
 import org.jboss.system.server.ServerConfigLocator;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.NodeList;
 
 /** A template pattern class for web container integration into JBoss. This class
 should be subclasses by web container providers wishing to integrate their
@@ -158,7 +159,7 @@ in the catalina module.
 @see org.jboss.security.SecurityAssociation;
 
 @author  Scott.Stark@jboss.org
-@version $Revision: 1.43 $
+@version $Revision: 1.44 $
 */
 public abstract class AbstractWebContainer 
    extends SubDeployerSupport
@@ -260,6 +261,13 @@ public abstract class AbstractWebContainer
       log.debug("End init");
    }
 
+   /**
+    * Describe <code>parseWEBINFClasses</code> method here.
+    *
+    * @param di a <code>DeploymentInfo</code> value
+    * @exception DeploymentException if an error occurs
+    * @todo THIS HAS NO BUSINESS DUPLICATING MAINDEPLOYER FUNCTIONALITY!!!
+    */
    public void parseWEBINFClasses(DeploymentInfo di) throws DeploymentException
    {
       File systemTmpDir = ServerConfigLocator.locate().getServerTempDir();
@@ -298,7 +306,7 @@ public abstract class AbstractWebContainer
                   sub.localUrl = sub.url;
 
                   // Create a URL for the sub
-                  sub.createClassLoaders();
+                  sub.createClassLoaders(getServer());
                   uclCreated = true;  
                   di.subDeployments.add(sub);
                }
@@ -834,19 +842,41 @@ public abstract class AbstractWebContainer
       while( cl != null )
       {
          URL[] urls = getClassLoaderURLs(cl);
+         addURLs(tmp, urls);
+         /*
          for(int u = 0; u < urls.length; u ++)
          {
             URL url = urls[u];
             url = org.jboss.net.protocol.njar.Handler.njarToFile(url);
             tmp.add(url.toExternalForm());
          }
+         */
          cl = cl.getParent();
       }
-
+      try 
+      {
+         URL[] globalUrls = (URL[])getServer().getAttribute(DeploymentInfo.DEFAULT_LOADER_REPOSITORY,
+                                                         "URLs");
+         addURLs(tmp, globalUrls);
+      }
+      catch (Exception e)
+      {
+         log.warn("Could not get global URL[] from default loader repository!");
+      } // end of try-catch
       log.trace("JSP CompileClasspath: " + tmp);
       String[] cp = new String[tmp.size()];
       tmp.toArray(cp);
       return cp;
+   }
+
+   private void addURLs(Set urlSet, URL[] urls)
+   {
+      for(int u = 0; u < urls.length; u ++)
+      {
+         URL url = urls[u];
+         url = org.jboss.net.protocol.njar.Handler.njarToFile(url);
+         urlSet.add(url.toExternalForm());
+      }
    }
 
    /** Use reflection to access a URL[] getURLs method so that non-URLClassLoader

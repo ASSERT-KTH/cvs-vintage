@@ -48,7 +48,8 @@ import org.jboss.security.RealmMapping;
 import org.jboss.system.Service;
 import org.jboss.system.ServiceControllerMBean;
 import org.jboss.system.ServiceMBeanSupport;
-import org.jboss.system.UnifiedClassLoader;
+//import org.jboss.system.UnifiedClassLoader;
+import org.jboss.mx.loading.UnifiedClassLoader;
 import org.jboss.util.jmx.MBeanProxy;
 import org.jboss.verifier.BeanVerifier;
 import org.jboss.verifier.event.VerificationEvent;
@@ -80,7 +81,7 @@ import org.jboss.util.jmx.ObjectNameFactory;
  * @author <a href="mailto:d_jencks@users.sourceforge.net">David Jencks</a>
  * @author <a href="mailto:reverbel@ime.usp.br">Francisco Reverbel</a>
  * @author <a href="mailto:Adrian.Brock@HappeningTimes.com">Adrian.Brock</a>
- * @version $Revision: 1.20 $
+ * @version $Revision: 1.21 $
  *
  * @jmx:mbean extends="org.jboss.system.ServiceMBean"
  */
