@@ -46,26 +46,19 @@ The CVS repository has the following directory structure:
 /native    native code for a better integration of Columba
 /plugins   a collection of plugins to extend Columba's functionality
 /classes   compiled classes will be put here
+/doc       run 'ant doc' to generate the JavaDocs
+/report    reports of the Unit tests run with 'ant test-report'
 
 The scripts are used to build the binary and source distributions. 
 
-o Building Columba on Unix/Linux type operating systems:
+o Building Columba:
   bash# ant
   
-  Running Columba using JDK1.4:
-  bash# chmod 0775 run_source.sh
-  bash# run_source.sh
+  Running Columba
+  bash# ant run
 
-  (The "chmod" command is used to make the run_source.sh script executable.
-   Alternatively, you can also start the script using "sh run_source.sh".)
-  
-o Building Columba on Windows type operating systems:
-  shell# ant
-  
-  Running Columba using JDK1.4:
-  shell# run_source.bat
-  
-
+To get more information on all defined ant tasks:
+  bash# ant -p
 
 4. Getting Help
 ---------------

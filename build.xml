@@ -304,18 +304,18 @@
 				<include name="CHANGES"/>
 				<include name="run.bat"/>
 				<include name="columba.jar"/>
-				<include name="**/*.jar"/>
+				<include name="${lib.basedir}/*.jar"/>
 				<include name="**/*.dll"/>
 				<!--
 				<include name="plugins/**/*.py"/>
 				<include name="plugins/**/*.jar"/>
 				<include name="plugins/**/plugin.xml"/>
 				-->
-				<exclude name="lib/checkstyle-all-2.1.jar"/>
-				<exclude name="lib/jcoverage.jar"/>
-				<exclude name="lib/junit.jar"/>
+				<exclude name="${lib.checkstyle}"/>
+				<exclude name="${lib.jreleaseinfo}"/>
+				<exclude name="${lib.junit}"/>
 				<exclude name="plugins/**" />
-				<exclude name="classes/**"/>
+				<exclude name="${dest}/**"/>
 			</zipfileset>
 			<zipfileset dir="." includes="native/win32/launcher/Columba.exe" fullpath="columba-win32-${version}-bin/Columba.exe"/>
 			<zipfileset dir="." includes="native/win32/launcher/Columba.lap" fullpath="columba-win32-${version}-bin/Columba.lap"/>
