@@ -59,6 +59,7 @@
 
 package org.apache.tomcat.util.compat;
 
+import java.io.ByteArrayInputStream;
 import java.net.*;
 import java.util.*;
 import java.security.cert.X509Certificate;
