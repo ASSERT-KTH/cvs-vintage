@@ -1,5 +1,3 @@
-package org.jboss.verifier.strategy;
-
 /*
  * Class org.jboss.verifier.strategy.AbstractVerifier
  * Copyright (C) 2000  Juha Lindfors
@@ -19,8 +17,9 @@ package org.jboss.verifier.strategy;
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  *
  * This package and its source code is available at www.jboss.org
- * $Id: AbstractVerifier.java,v 1.32 2002/05/31 13:02:14 lqd Exp $
+ * $Id: AbstractVerifier.java,v 1.33 2002/06/04 15:18:10 lqd Exp $
  */
+package org.jboss.verifier.strategy;
 
 // standard imports
 import java.lang.reflect.Field;
@@ -84,7 +83,7 @@ import org.gjt.lindfors.pattern.StrategyContext;
  * </ul>
  * </p>
  *
- * @version $Revision: 1.32 $
+ * @version $Revision: 1.33 $
  * @since   JDK 1.3
  */
 public abstract class AbstractVerifier

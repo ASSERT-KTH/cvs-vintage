@@ -18,7 +18,7 @@ package org.jboss.verifier.strategy;
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  *
  * This package and its source code is available at www.jboss.org
- * $Id: EJBVerifier20.java,v 1.23 2002/05/31 13:02:14 lqd Exp $
+ * $Id: EJBVerifier20.java,v 1.24 2002/06/04 15:18:10 lqd Exp $
  */
 
 
@@ -46,12 +46,14 @@ import org.jboss.metadata.MessageDrivenMetaData;
  *
  * @author  Juha Lindfors   (jplindfo@helsinki.fi)
  * @author  Jay Walters     (jwalters@computer.org)
- * @version $Revision: 1.23 $
+ * @version $Revision: 1.24 $
  * @since   JDK 1.3
  */
 public class EJBVerifier20
    extends AbstractVerifier
 {
+   private static final String msgBundle = "EJB20Messages.properties";
+
    protected EJBVerifier11 cmp1XVerifier;
 
    // The classes for an EJB
@@ -66,7 +68,7 @@ public class EJBVerifier20
     */
    public EJBVerifier20(VerificationContext context)
    {
-      super(context, new DefaultEventFactory());
+      super( context, new DefaultEventFactory(msgBundle) );
       cmp1XVerifier = new EJBVerifier11(context);
    }
 
@@ -597,7 +599,7 @@ public class EJBVerifier20
       //
       // There CAN NOT be other create() methods in the home interface.
       //
-      // Spec 7.8
+      // Spec 7.10.8
       //
       if (session.isStateless())
       {
@@ -698,18 +700,18 @@ public class EJBVerifier20
 
          if (hasMatchingEJBCreate(bean, create))
          {
-            Method ejbCreate     = getMatchingEJBCreate(bean, create);
+            Method ejbCreate = getMatchingEJBCreate(bean, create);
             if (!hasMatchingExceptions(ejbCreate, create))
             {
                fireSpecViolationEvent(session, create,
-                  new Section("7.10.6.g"));
+                  new Section("7.10.8.g"));
             }
          }
 
          if (!throwsCreateException(create))
          {
             fireSpecViolationEvent(session, create,
-               new Section("7.10.6.h"));
+               new Section("7.10.8.h"));
             status = false;
          }
       }
@@ -1822,12 +1824,12 @@ public class EJBVerifier20
              *  This is only true if the method is on the remote home
              * interface
              if (!hasLegalRMIIIOPArguments(ejbCreate)) {
-             fireSpecViolationEvent(entity, ejbCreate, new Section("9.2.3.d"));
+             fireSpecViolationEvent(entity, ejbCreate, new Section("10.6.4.d"));
              status = false;
              }
 
              if (!hasLegalRMIIIOPReturnType(ejbCreate)) {
-             fireSpecViolationEvent(entity, ejbCreate, new Section("9.2.3.e"));
+             fireSpecViolationEvent(entity, ejbCreate, new Section("10.5.4.f"));
              status = false;
              }
              */
@@ -1835,7 +1837,7 @@ public class EJBVerifier20
             if (!throwsCreateException(ejbCreate))
             {
                fireSpecViolationEvent( entity, ejbCreate,
-                  new Section("10.6.4.f"));
+                  new Section("10.6.4.g"));
                status = false;
             }
          }
@@ -2236,7 +2238,7 @@ public class EJBVerifier20
          if (!isSingleObjectFinder(entity, ejbFindByPrimaryKey))
          {
             fireSpecViolationEvent( entity, ejbFindByPrimaryKey,
-               new Section("9.2.5.e2"));
+               new Section("12.2.5.e2"));
             status = false;
          }
       }
@@ -2279,7 +2281,7 @@ public class EJBVerifier20
              * this path should only get invoked if the finder is on the
              * remote interface.
              if (!hasLegalRMIIIOPArguments(finder)) {
-               fireSpecViolationEvent(entity, finder, new Section("9.2.5.g"));
+               fireSpecViolationEvent(entity, finder, new Section("12.2.5.c"));
                status = false;
              }
              */
@@ -2361,9 +2363,9 @@ public class EJBVerifier20
       } catch(ClassNotFoundException e)
       {
          if( cmp )
-            fireSpecViolationEvent(entity, new Section("10.6.13.d"));
+            fireSpecViolationEvent(entity, new Section("10.6.13.a"));
          else
-            fireSpecViolationEvent(entity, new Section("12.2.12.d"));
+            fireSpecViolationEvent(entity, new Section("12.2.12.a"));
 
          // Can't do any other checks if the class is null!
          return false;
@@ -2376,9 +2378,9 @@ public class EJBVerifier20
       if( !isRMIIDLValueType(cls) )
       {
          if( cmp )
-            fireSpecViolationEvent(entity, new Section("10.6.13.a"));
+            fireSpecViolationEvent(entity, new Section("10.6.13.b"));
          else
-            fireSpecViolationEvent(entity, new Section("12.2.12.a"));
+            fireSpecViolationEvent(entity, new Section("12.2.12.b"));
          status = false;
       }
 
@@ -2405,12 +2407,12 @@ public class EJBVerifier20
                      if( cmp )
                      {
                         fireSpecViolationEvent( entity,
-                           new Section("10.6.13.b"));
+                           new Section("10.6.13.c"));
                      }
                      else
                      {
                         fireSpecViolationEvent( entity,
-                           new Section("12.2.12.b"));
+                           new Section("12.2.12.c"));
                      }
                      status = false;
                   }
@@ -2428,12 +2430,12 @@ public class EJBVerifier20
                      if( cmp )
                      {
                         fireSpecViolationEvent( entity,
-                           new Section("10.6.13.c"));
+                           new Section("10.6.13.d"));
                      }
                      else
                      {
                         fireSpecViolationEvent( entity,
-                           new Section("12.2.12.c"));
+                           new Section("12.2.12.d"));
                      }
                      status = false;
                   }

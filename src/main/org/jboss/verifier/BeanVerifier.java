@@ -19,7 +19,7 @@ package org.jboss.verifier;
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  *
  * This package and its source code is available at www.jboss.org
- * $Id: BeanVerifier.java,v 1.13 2002/05/31 13:02:14 lqd Exp $
+ * $Id: BeanVerifier.java,v 1.14 2002/06/04 15:18:09 lqd Exp $
  */
 
  
@@ -40,7 +40,6 @@ import org.jboss.verifier.event.VerificationListener;
 import org.jboss.verifier.event.VerificationEventGeneratorSupport;
 
 import org.jboss.verifier.factory.VerificationEventFactory;
-import org.jboss.verifier.factory.DefaultEventFactory;
 
 import org.jboss.metadata.ApplicationMetaData;
 import org.jboss.metadata.BeanMetaData;
@@ -58,7 +57,7 @@ import org.jboss.metadata.MessageDrivenMetaData;
  * @see     org.jboss.verifier.factory.VerificationEventFactory
  *
  * @author  <a href="mailto:juha.lindfors@jboss.org">Juha Lindfors</a>
- * @version $Revision: 1.13 $
+ * @version $Revision: 1.14 $
  * @since   JDK 1.3
  */
 public class BeanVerifier
@@ -72,15 +71,9 @@ public class BeanVerifier
 
    /*
     * Support class which handles the event notification logic.
-    */                    
+    */
    private VerificationEventGeneratorSupport events =
       new VerificationEventGeneratorSupport();
-
-   /*
-    * Factory for creating the events. DefaultEventFactory produces
-    * plain string events.
-    */
-   private VerificationEventFactory eventFactory = new DefaultEventFactory();
 
    /**
     * Default constructor.
