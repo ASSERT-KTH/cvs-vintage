@@ -4,6 +4,7 @@
  * Distributable under LGPL license.
  * See terms of license at gnu.org.
  */
+
 package org.jboss.web;
 
 import java.net.MalformedURLException;
@@ -44,6 +45,7 @@ import org.jboss.metadata.WebMetaData;
 import org.jboss.naming.Util;
 import org.jboss.security.plugins.NullSecurityManager;
 import org.jboss.system.ServiceMBeanSupport;
+import org.jboss.system.ServerConfigMBean;
 
 /** A template pattern class for web container integration into JBoss. This class
 should be subclasses by web container providers wishing to integrate their
@@ -134,7 +136,7 @@ in the contrib/tomcat module.
 @see org.jboss.security.SecurityAssociation;
 
 @author  Scott.Stark@jboss.org
-@version $Revision: 1.24 $
+@version $Revision: 1.25 $
 */
 public abstract class AbstractWebContainer 
    extends ServiceMBeanSupport 
@@ -242,23 +244,42 @@ public abstract class AbstractWebContainer
 
    public void parseWEBINFClasses(DeploymentInfo di) throws DeploymentException
    {
+      File tmpDeployDir = null;
+
+      try {
+         File systemTmpDir = (File)
+            server.getAttribute(ServerConfigMBean.OBJECT_NAME, "TempDir");
+         tmpDeployDir = new File(systemTmpDir, "deploy");
+      }
+      catch (Exception e) {
+         // should never happen
+         throw new Error("Failed to get system temporary directory: " + e);
+      }
+      
       JarFile jarFile = null;
+      
       // Do we have a jar file jar:<theURL>!/..
-      try {jarFile = ((JarURLConnection)new URL("jar:"+di.localUrl.toString()+"!/").openConnection()).getJarFile();}
-         catch (Exception ignored) {log.warn("could not extract webinf classes", ignored); return;}
+      try {
+         jarFile = ((JarURLConnection)new URL("jar:"+di.localUrl.toString()+"!/").openConnection()).getJarFile();
+      }
+      catch (Exception e) {
+         log.warn("could not extract webinf classes", e);
+         return;
+      }
       
       boolean uclCreated = false;
       for (Enumeration e = jarFile.entries(); e.hasMoreElements(); )
       {
          JarEntry entry = (JarEntry)e.nextElement();
          String name = entry.getName();
-         File localCopyDir = new File(System.getProperty("jboss.system.home")+File.separator+"tmp"+File.separator+"deploy");        
          if (name.lastIndexOf("WEB-INF/classes") != -1 && name.endsWith("class") )
          {
             try
             {
                // We use the name of the entry as the name of the file under deploy 
-               File outFile = new File(localCopyDir, di.shortName+".webinf"+File.separator+name);
+               File outFile =
+                  new File(tmpDeployDir, di.shortName+".webinf"+File.separator+name);
+                                       
                outFile.getParentFile().mkdirs();
                if (!uclCreated) 
                {
@@ -459,7 +480,8 @@ public abstract class AbstractWebContainer
    @param jbossWeb, the root element of thw jboss-web.xml descriptor. May be null
    to indicate that no jboss-web.xml descriptor exists.
    */
-   protected void parseWebAppDescriptors(ClassLoader loader, Element webApp, Element jbossWeb) throws Exception
+   protected void parseWebAppDescriptors(ClassLoader loader, Element webApp, Element jbossWeb)
+      throws Exception
    {
       log.debug("AbstractWebContainer.parseWebAppDescriptors, Begin");
       WebMetaData metaData = new WebMetaData();
@@ -510,8 +532,10 @@ public abstract class AbstractWebContainer
       while( envEntries.hasNext() )
       {
          EnvEntryMetaData entry = (EnvEntryMetaData) envEntries.next();
-         if (debug)
-            log.debug("Binding env-entry: "+entry.getName()+" of type: "+entry.getType()+" to value:"+entry.getValue());
+         if (debug) {
+            log.debug("Binding env-entry: "+entry.getName()+" of type: " +
+                      entry.getType()+" to value:"+entry.getValue());
+         }
          EnvEntryMetaData.bindEnvEntry(envCtx, entry);
       }
    }
@@ -531,18 +555,20 @@ public abstract class AbstractWebContainer
             try
             {
                if (debug) log.debug("Binding '"+refName+"' to URL: "+resourceName);
-                  URL url = new URL(resourceName);
+               URL url = new URL(resourceName);
                Util.bind(envCtx, refName, url);
             }
             catch(MalformedURLException e)
             {
                if (debug) log.debug("Linking '"+refName+"' to JNDI name: "+resourceName);
-                  Util.bind(envCtx, refName, new LinkRef(resourceName));
+               Util.bind(envCtx, refName, new LinkRef(resourceName));
             }
          }
          else
          {
-            log.debug("Linking '"+refName+"' to JNDI name: "+resourceName);
+            if (debug) {
+               log.debug("Linking '"+refName+"' to JNDI name: "+resourceName);
+            }
             Util.bind(envCtx, refName, new LinkRef(resourceName));
          }
       }
@@ -634,8 +660,6 @@ public abstract class AbstractWebContainer
       catch (Exception e) {log.error("Could not register with MainDeployer", e);}
    
    }
-   
-   
    
    /** This creates a java:comp/env/security context that contains a
    securityMgr binding pointing to an AuthenticationManager implementation

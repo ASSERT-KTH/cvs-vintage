@@ -45,7 +45,7 @@ import org.jboss.util.MBeanProxy;
  * Takes a series of URL to watch, detects changes and calls the appropriate Deployers 
  *
  * @author <a href="mailto:marc.fleury@jboss.org">Marc Fleury</a>
- * @version $Revision: 1.16 $
+ * @version $Revision: 1.17 $
  */
 public class MainDeployer
    extends ServiceMBeanSupport
@@ -104,7 +104,7 @@ public class MainDeployer
       while (urls.hasMoreTokens())
       {
          addDirectory(urls.nextToken().trim()) ;
-      } 
+     } 
    }
    
    public void addDirectory(String url) throws MalformedURLException

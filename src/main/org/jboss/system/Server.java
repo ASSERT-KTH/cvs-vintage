@@ -32,7 +32,7 @@ import org.jboss.Version;
  *      
  * @author <a href="mailto:marc.fleury@jboss.org">Marc Fleury</a>
  * @author <a href="mailto:jason@planet57.com">Jason Dillon</a>
- * @version $Revision: 1.13 $
+ * @version $Revision: 1.14 $
  */
 public class Server
    implements ServerMBean
@@ -82,32 +82,24 @@ public class Server
       log.info("Starting General Purpose Architecture (GPA)...");
       
       // Create the MBeanServer
-      server = MBeanServerFactory.createMBeanServer(config.getDomain());
+      server = MBeanServerFactory.createMBeanServer("jboss");
       if (debug) {
 	 log.debug("Created MBeanServer: " + server);
       }
       
-      String systemDomain = server.getDefaultDomain() + ".system";
-      if (debug) {
-	 log.debug("Using system domain: " + systemDomain);
-      }
-      
       // Register server components
-      server.registerMBean(this,
-                           new ObjectName(systemDomain,"service", "Server"));
-      server.registerMBean(config,
-                           new ObjectName(systemDomain,"service", "ServerConfig"));
+      server.registerMBean(this, ServerMBean.OBJECT_NAME);
+      server.registerMBean(config, ServerConfigMBean.OBJECT_NAME);
       
       // Initialize the MBean libraries repository
-      server.registerMBean(ServiceLibraries.getLibraries(),
-                           new ObjectName(systemDomain, "service", "ServiceLibraries"));
+      server.registerMBean(ServiceLibraries.getLibraries(), null);
       
       // Initialize spine boot libraries
       initBootLibraries();
       
       // Create MBeanClassLoader for the base system
       ObjectName loaderName = 
-	 new ObjectName(systemDomain, "service", "ServiceClassLoader");
+	 new ObjectName("jboss.system", "service", "ServiceClassLoader");
       
       MBeanClassLoader mcl = new MBeanClassLoader(loaderName);
       server.registerMBean(mcl, loaderName);
@@ -120,9 +112,7 @@ public class Server
       Thread.currentThread().setContextClassLoader(mcl);
       
       // Setup logging
-      server.createMBean("org.jboss.logging.Log4jService", 
-                         new ObjectName(systemDomain, "service", "Logging"),
-                         loaderName);
+      server.createMBean("org.jboss.logging.Log4jService", null, loaderName);
       
       log.debug("Logging has been initialized");
       
@@ -135,15 +125,11 @@ public class Server
       log.info("Patch URL: " + config.getPatchURL());
       
       // General Purpose Architecture information
-      server.createMBean("org.jboss.system.Info",
-                         new ObjectName(systemDomain, "service", "Info"),
-                         loaderName);
+      server.createMBean("org.jboss.system.Info", null, loaderName);
       
       // Service Controller
       ObjectName controllerName = 
-         server.createMBean("org.jboss.system.ServiceController", 
-                            new ObjectName(systemDomain, "service", "ServiceController"),
-                            loaderName).getObjectName();
+         server.createMBean("org.jboss.system.ServiceController", null, loaderName).getObjectName();
       
       if (debug) {
 	 log.debug("Registered service controller: " + controllerName);
@@ -159,28 +145,24 @@ public class Server
 	 log.warn("Failed to add shutdown hook", e);
       }
       
-      // Deployer
+      // Main Deployer
       ObjectName mainDeployer = 
-	 server.createMBean("org.jboss.deployment.MainDeployer",
-			    null,
-			    loaderName).getObjectName();
-      //Initialize the MainDeployer
-      server.invoke(mainDeployer, "create", new Object[]{}, new String[] {});
+	 server.createMBean("org.jboss.deployment.MainDeployer", null, loaderName).getObjectName();
+
+      // Initialize the MainDeployer
+      server.invoke(mainDeployer, "create", new Object[0], new String[0]);
       
       // SAR Deployer
-      ObjectName sarDeployer = 
-         server.createMBean("org.jboss.deployment.SARDeployer",
-			    null, 
-			    loaderName).getObjectName();
+      server.createMBean("org.jboss.deployment.SARDeployer", null, loaderName);
       
       // Ok, now do a first deploy of JBoss' jboss-service.xml
       server.invoke(mainDeployer, 
                     "deploy", 
-                    new Object[] {config.getConfigURL() + "jboss-service.xml"},
-                    new String[] {"java.lang.String"});
+                    new Object[] { config.getConfigURL() + "jboss-service.xml" },
+                    new String[] { "java.lang.String" });
       
       // Start the main deployer thread
-      server.invoke(mainDeployer, "start", new Object[]{}, new String[] {});
+      server.invoke(mainDeployer, "start", new Object[0], new String[0]);
       
       // Calculate how long it took
       long lapsedTime = System.currentTimeMillis() - started.getTime();

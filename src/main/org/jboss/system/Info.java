@@ -27,7 +27,7 @@ import org.jboss.logging.Logger;
  * @author <a href="mailto:hiram.chirino@jboss.org">Hiram Chirino</a>
  * @author <a href="mailto:jason@planet57.com">Jason Dillon</a>
  * @author <a href="mailto:marc.fleury@jboss.org">Marc Fleury</a>
- * @version $Revision: 1.9 $
+ * @version $Revision: 1.10 $
  */
 public class Info
    implements InfoMBean, MBeanRegistration
@@ -76,7 +76,7 @@ public class Info
          }
       }
       
-      return (name != null ? name : new ObjectName(OBJECT_NAME));
+      return name == null ? OBJECT_NAME : name;
    }
    
    public void postRegister(Boolean registrationDone)

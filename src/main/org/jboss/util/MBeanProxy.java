@@ -9,7 +9,6 @@ package org.jboss.util;
 import java.lang.reflect.Method;
 
 import javax.management.MBeanServer;
-import javax.management.MBeanServerFactory;
 import javax.management.ObjectName;
 import javax.management.MalformedObjectNameException;
 import javax.management.MBeanException;
@@ -26,22 +25,77 @@ import org.jboss.proxy.compiler.InvocationHandler;
  *      
  * @author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>.
  * @author <a href="mailto:jason@planet57.com">Jason Dillon</a>
- * @version $Revision: 1.8 $
+ * @version $Revision: 1.9 $
  */
 public class MBeanProxy
    implements InvocationHandler
 {
-   // Constants -----------------------------------------------------
-    
-   // Attributes ----------------------------------------------------
-
    /** The server to proxy invoke calls to. */
    private final MBeanServer server;
 
    /** The name of the object to invoke. */
    private final ObjectName name;
    
-   // Static --------------------------------------------------------
+   /**
+    * Construct a MBeanProxy.
+    */
+   MBeanProxy(final ObjectName name)
+   {
+      this(name, MBeanServerLocator.locate());
+   }
+   
+   /**
+    * Construct a MBeanProxy.
+    */
+   MBeanProxy(final ObjectName name, final MBeanServer server)
+   {
+      this.name = name;
+      this.server = server;
+   }
+       
+   /**
+    * Invoke the configured MBean via the target MBeanServer and decode
+    * any resulting JMX exceptions that are thrown.
+    */
+   public Object invoke(final Object proxy,
+                        final Method method,
+                        Object[] args)
+      throws Throwable
+   {
+      if (args == null) args = new Object[0];
+
+      // convert the parameter types to strings for JMX
+      Class[] types = method.getParameterTypes();
+      String[] sig = new String[types.length];
+      for (int i = 0; i < types.length; i++) {
+         sig[i] = types[i].getName();
+      }
+
+      // invoke the server and decode JMX exceptions
+      try {
+         return server.invoke(name, method.getName(), args, sig);
+      }
+      catch (MBeanException e) {
+         throw e.getTargetException();
+      }
+      catch (ReflectionException e) {
+         throw e.getTargetException();
+      }
+      catch (RuntimeOperationsException e) {
+         throw e.getTargetException();
+      }
+      catch (RuntimeMBeanException e) {
+         throw e.getTargetException();
+      }
+      catch (RuntimeErrorException e) {
+         throw e.getTargetError();
+      }
+   }
+
+
+   ///////////////////////////////////////////////////////////////////////////
+   //                            Factory Methods                            //
+   ///////////////////////////////////////////////////////////////////////////
 
    /**
     * Create an MBean proxy.
@@ -113,75 +167,5 @@ public class MBeanProxy
                                     new Class[] { intf },
                                     new MBeanProxy(name, server));
    }
-   
-   // Constructors --------------------------------------------------
-
-   /**
-    * Construct a MBeanProxy.
-    */
-   MBeanProxy(final ObjectName name)
-   {
-      this(name, getServer());
-   }
-   
-   /**
-    * Find the first MBeanServer.
-    */
-   private static MBeanServer getServer() {
-      return (MBeanServer)
-         MBeanServerFactory.findMBeanServer(null).iterator().next();
-   }
-
-   /**
-    * Construct a MBeanProxy.
-    */
-   MBeanProxy(final ObjectName name, final MBeanServer server)
-   {
-      this.name = name;
-      this.server = server;
-   }
-       
-   // Public --------------------------------------------------------
-
-   /**
-    * Invoke the configured MBean via the target MBeanServer and decode
-    * any resulting JMX exceptions that are thrown.
-    */
-   public Object invoke(final Object proxy,
-                        final Method method,
-                        Object[] args)
-      throws Throwable
-   {
-      if (args == null) args = new Object[0];
-
-      // convert the parameter types to strings for JMX
-      Class[] types = method.getParameterTypes();
-      String[] sig = new String[types.length];
-      for (int i = 0; i < types.length; i++) {
-         sig[i] = types[i].getName();
-      }
-
-      // invoke the server and decode JMX exceptions
-      try {
-         return server.invoke(name, method.getName(), args, sig);
-      }
-      catch (MBeanException e) {
-         throw e.getTargetException();
-      }
-      catch (ReflectionException e) {
-         throw e.getTargetException();
-      }
-      catch (RuntimeOperationsException e) {
-         throw e.getTargetException();
-      }
-      catch (RuntimeMBeanException e) {
-         throw e.getTargetException();
-      }
-      catch (RuntimeErrorException e) {
-         throw e.getTargetError();
-      }
-   }
-   
-   // Protected -----------------------------------------------------
 }
 

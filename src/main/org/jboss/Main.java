@@ -29,7 +29,7 @@ import org.jboss.system.ServerConfig;
  *
  * @author <a href="mailto:marc.fleury@jboss.org">Marc Fleury</a>
  * @author <a href="mailto:jason@planet57.com">Jason Dillon</a>
- * @version $Revision: 1.67 $
+ * @version $Revision: 1.68 $
  */
 public class Main
    implements Runnable
@@ -234,15 +234,6 @@ public class Main
          }
       }
    
-      // setup legecy properties
-      // should do away with components that depend on these
-      System.setProperty("jboss.system.installationURL", 
-                         config.getInstallURL().toString());
-      System.setProperty("jboss.system.configurationDirectory", 
-                         config.getConfigURL().toString());
-      System.setProperty("jboss.system.libraryDirectory", 
-                         config.getLibraryURL().toString());
-
       // Make sure that shutdown exits the VM
       config.setExitOnShutdown(true);
 

@@ -26,7 +26,7 @@ import javax.management.ObjectName;
  * @see <related>
  * @author <a href="mailto:marc@jboss.org">Marc Fleury</a>
  * @author <a href="mailto:osh@sparre.dk">Ole Husgaard</a>
- * @version $Revision: 1.15 $ <p>
+ * @version $Revision: 1.16 $ <p>
  *
  * <p><b>20010830 marc fleury:</b>
  * <ul>
@@ -448,7 +448,6 @@ public class ServiceLibraries
    public ObjectName preRegister(MBeanServer server, ObjectName name)
       throws Exception
    {
-
       classLoaders = new HashSet();
       classes = new HashMap();
       resources = new HashMap();
@@ -456,7 +455,8 @@ public class ServiceLibraries
       clToClassSetMap = new HashMap();
 
       log.info("ClassLoaders and ServiceLibraries initialized");
-      return name == null ? new ObjectName(OBJECT_NAME) : name;
+      
+      return name == null ? OBJECT_NAME : name;
    }
 
    /** 

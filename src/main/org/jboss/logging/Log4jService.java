@@ -41,7 +41,7 @@ import org.apache.log4j.xml.DOMConfigurator;
  * @author <a href="mailto:Scott_Stark@displayscape.com">Scott Stark</a>
  * @author <a href="mailto:davidjencks@earthlink.net">David Jencks</a>
  * @author <a href="mailto:jason@planet57.com">Jason Dillon</a>
- * @version $Revision: 1.13 $
+ * @version $Revision: 1.14 $
  */
 public class Log4jService
    implements Log4jServiceMBean, MBeanRegistration
@@ -194,7 +194,7 @@ public class Log4jService
       throws Exception
    {
       start();
-      return name == null ? new ObjectName(OBJECT_NAME) : name;
+      return name == null ? OBJECT_NAME : name;
    }
    
    public void postRegister(Boolean b)

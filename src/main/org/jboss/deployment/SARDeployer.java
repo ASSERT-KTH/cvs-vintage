@@ -67,7 +67,7 @@ import org.xml.sax.SAXException;
  * @author <a href="mailto:David.Maplesden@orion.co.nz">David Maplesden</a>
  * @author <a href="mailto:d_jencks@users.sourceforge.net">David Jencks</a>
  * @author <a href="mailto:jason@planet57.com">Jason Dillon</a>
- * @version $Revision: 1.11 $
+ * @version $Revision: 1.12 $
  *
  * <p><b>20010830 marc fleury:</b>
  * <ul>
@@ -114,20 +114,16 @@ public class SARDeployer
    /** A proxy to the MainDeployer. */
    private MainDeployerMBean mainDeployer;
 
-   /** The system state data directory. */
-   private File stateDataDir;
+   /** The system data directory. */
+   private File dataDir;
+
+   /** The system install URL. */
+   private URL installURL;
+
+   /** The system library URL. */
+   private URL libraryURL;
    
    // Public --------------------------------------------------------
-   
-   /**
-    * Gets the Name of the ServiceDeployer object
-    *
-    * @return   returns "ServiceDeployer"
-    */
-   public String getName()
-   {
-      return "ServiceDeployer";
-   }
    
    /**
     * Gets the FilenameFilter that the AutoDeployer uses to decide which files
@@ -155,7 +151,6 @@ public class SARDeployer
             // We watch the top only, no directory support
             di.watch = di.url;
          }
-         
          else if(di.url.getProtocol().startsWith("file"))
          {
             File file = new File(di.url.getFile());
@@ -195,10 +190,10 @@ public class SARDeployer
 
             // Get the url of the local copy from the classloader.
             if (debug) {
-               log.debug("copying from " + di.localUrl + path + " -> " + stateDataDir);
+               log.debug("copying from " + di.localUrl + path + " -> " + dataDir);
             }
             
-            inflateJar(di.localUrl, stateDataDir, path);
+            inflateJar(di.localUrl, dataDir, path);
          }
       }
       catch (Exception e) 
@@ -282,7 +277,6 @@ public class SARDeployer
             log.debug("Found classpath element: " + classpathElement);
          }
          
-         //String codebase = System.getProperty("jboss.system.libraryDirectory");
          String codebase = "";
          String archives = "";
          
@@ -305,7 +299,12 @@ public class SARDeployer
             if (!(codebase.startsWith("http:") || codebase.startsWith("file:"))) 
             {
                // put the jboss/system base in front of it
-               codebase = System.getProperty("jboss.system.installationURL")+codebase;
+               try {
+                  codebase = new URL(installURL, codebase).toString();
+               }
+               catch (MalformedURLException e) {
+                  throw new DeploymentException(e);
+               }
             }
             
             // Let's make sure the formatting of the codebase ends with the /
@@ -384,8 +383,9 @@ public class SARDeployer
          else if (!archives.equals(""))
          {
             // Still no codebase? safeguard
-            if (codebase.equals(""))
-               codebase = System.getProperty("jboss.system.libraryDirectory");
+            if (codebase.equals("")) {
+               codebase = libraryURL.toString();
+            }
                
             if (archives.equals("*")) 
             {
@@ -580,11 +580,15 @@ public class SARDeployer
 			   ServiceControllerMBean.OBJECT_NAME,
 			   server);
       
-      // get the state directory
-      stateDataDir = (File)
-         server.getAttribute(ServerConfigMBean.OBJECT_NAME, "StateDataDir");
-      
-      return name == null ? new ObjectName(OBJECT_NAME) : name;
+      // get the data directory, install url & library url
+      dataDir = (File)
+         server.getAttribute(ServerConfigMBean.OBJECT_NAME, "DataDir");
+      installURL = (URL)
+         server.getAttribute(ServerConfigMBean.OBJECT_NAME, "InstallURL");
+      libraryURL = (URL)
+         server.getAttribute(ServerConfigMBean.OBJECT_NAME, "LibraryURL");
+
+      return name == null ? OBJECT_NAME : name;
    }
 
    public void preDeregister()

@@ -22,7 +22,7 @@ import java.net.MalformedURLException;
  *    Should use nested version when JDK 1.4 is standardized.
  *      
  * @author <a href="mailto:jason@planet57.com">Jason Dillon</a>
- * @version $Revision: 1.3 $
+ * @version $Revision: 1.4 $
  */
 public class ServerConfig
    implements ServerConfigMBean
@@ -33,11 +33,8 @@ public class ServerConfig
    /** The directory for server temporay files. */
    private File tempDir;
 
-   /** The directory for local state data files. */
-   private File stateDataDir;
-   
-   /** The JMX domain for the base MBean server. */
-   private String domain = "jboss";
+   /** The directory for local data files. */
+   private File dataDir;
    
    /** The base installation URL, used to construct other URLs. */
    private URL installURL;
@@ -82,17 +79,6 @@ public class ServerConfig
       throws MalformedURLException 
    {
       this(dir, dir.toURL());
-   }
-
-   public void setDomain(final String domain) {
-      if (domain == null)
-         throw new IllegalArgumentException("domain is null");
-      
-      this.domain = domain;
-   }
-   
-   public String getDomain() {
-      return domain;
    }
 
    public void setConfigName(final String name) {
@@ -141,26 +127,26 @@ public class ServerConfig
       return tempDir;
    }
 
-   public void setStateDataDir(final File dir) {
+   public void setDataDir(final File dir) {
       if (dir == null)
          throw new IllegalArgumentException("dir is null");
       
       // FIXME: check if this is really a directory
       // FIXME: check if this is writable
-      stateDataDir = dir;
+      dataDir = dir;
    }
 
    /**
-    * Get the directory where local state data will be stored.
+    * Get the directory where local data will be stored.
     *
-    * @return    The directory where the server stores local state data.
+    * @return    The directory where the server stores local data.
     */
-   public File getStateDataDir() {
-      if (stateDataDir == null) {
-         stateDataDir = new File(homeDir, "db");
+   public File getDataDir() {
+      if (dataDir == null) {
+         dataDir = new File(homeDir, "db");
       }
 
-      return stateDataDir;
+      return dataDir;
    }
    
    public void setInstallURL(final URL url) {
