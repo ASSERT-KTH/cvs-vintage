@@ -1,4 +1,4 @@
-// $Id: ActionNew.java,v 1.28 2004/12/29 02:31:50 bobtarling Exp $
+// $Id: ActionNew.java,v 1.29 2004/12/29 09:23:33 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -74,7 +74,7 @@ public class ActionNew extends ActionFileOperations {
         
         if (!askConfirmationAndSave()) return;
         
-        // TODO yuk! Why is this needed? In fact how can anyone select
+        // TODO: yuk! Why is this needed? In fact how can anyone select
         // the new action if there is a dialog?
 	// We should remove all open dialogs. They have as parent the
 	// ProjectBrowser

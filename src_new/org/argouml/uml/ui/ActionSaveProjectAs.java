@@ -1,4 +1,4 @@
-// $Id: ActionSaveProjectAs.java,v 1.30 2004/12/29 02:31:49 bobtarling Exp $
+// $Id: ActionSaveProjectAs.java,v 1.31 2004/12/29 09:23:32 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -63,7 +63,10 @@ public class ActionSaveProjectAs extends ActionSaveProject {
      * The constructor. 
      */
     protected ActionSaveProjectAs() {
-        super(Translator.localize("action.save-project-as"));
+        super(Translator.localize("action.save-project-as"), 
+                ResourceLoaderWrapper.lookupIconResource(
+                        Translator.getImageBinding("SaveProjectAs"),
+                        Translator.localize("SaveProjectAs")));
     }
 
     ////////////////////////////////////////////////////////////////

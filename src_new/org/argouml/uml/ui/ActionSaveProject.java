@@ -1,4 +1,4 @@
-// $Id: ActionSaveProject.java,v 1.42 2004/12/29 02:31:49 bobtarling Exp $
+// $Id: ActionSaveProject.java,v 1.43 2004/12/29 09:23:32 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -31,7 +31,6 @@ import java.io.IOException;
 import java.net.URL;
 import java.text.MessageFormat;
 
-import javax.swing.Action;
 import javax.swing.Icon;
 import javax.swing.JOptionPane;
 
@@ -49,10 +48,6 @@ import org.argouml.ui.cmd.GenericArgoMenuBar;
 
 /**
  * Action that saves the project.
- * 
- * TODO: Currently, this action is a "global" action, i.e. its enabled status
- * gets updated when the target changes. But that is not correct; 
- * it should be updated inmediately after the project became dirty (needsSave).
  * 
  * @see ActionOpenProject
  * @stereotype singleton
@@ -86,14 +81,6 @@ public class ActionSaveProject extends ActionFileOperations {
         super(Translator.localize("action.save-project"), ResourceLoaderWrapper
                 .lookupIconResource(Translator.getImageBinding("SaveProject"),
                         Translator.localize("SaveProject")));
-    }
-
-    /**
-     * The constructor.
-     * @param name the name of the action.
-     */
-    protected ActionSaveProject(String name) {
-        super(name);
     }
 
     /**
@@ -239,12 +226,4 @@ public class ActionSaveProject extends ActionFileOperations {
 	return false;
     }
 
-//    /**
-//     * @see org.argouml.uml.ui.UMLAction#shouldBeEnabled()
-//     */
-//    public boolean shouldBeEnabled() {
-//        super.shouldBeEnabled();
-//        Project p = ProjectManager.getManager().getCurrentProject();
-//        return (p != null && p.needsSave());
-//    }
 } /* end class ActionSaveProject */

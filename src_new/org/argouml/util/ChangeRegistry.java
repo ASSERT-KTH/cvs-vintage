@@ -1,4 +1,4 @@
-// $Id: ChangeRegistry.java,v 1.8 2004/12/29 02:31:49 bobtarling Exp $
+// $Id: ChangeRegistry.java,v 1.9 2004/12/29 09:23:31 mvw Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,7 +25,7 @@
 // File: ChangeRegistry.java
 // Classes: ChangeRegistry
 // Original Author: thorsten Jun 2000
-// $Id: ChangeRegistry.java,v 1.8 2004/12/29 02:31:49 bobtarling Exp $
+// $Id: ChangeRegistry.java,v 1.9 2004/12/29 09:23:31 mvw Exp $
 
 package org.argouml.util;
 
@@ -36,12 +36,16 @@ import org.tigris.gef.graph.GraphEvent;
 import org.tigris.gef.graph.GraphListener;
 
 /** 
- * This class holds the information about the "change flag" of 
+ * This class captures the information about the "change flag" of 
  * the current project. Initially, the "change flag" is clear, 
  * which means that there is nothing in the project to save. 
  * The "change flag" is set by every change made to its diagrams, 
- * which means that the project becomes 'dirty', i.e. it needs saving. 
- *
+ * which means that the project becomes 'dirty', i.e. it needs saving. <p>
+ * 
+ * This class only keeps an eye on changes to graphs - i.e. 
+ * it does not notice changes done to e.g. the UML model 
+ * (when they do not also change the graphs), settings or the diagrams. 
+ * 
  * @see org.argouml.kernel.Project
  */
 public class ChangeRegistry implements GraphListener

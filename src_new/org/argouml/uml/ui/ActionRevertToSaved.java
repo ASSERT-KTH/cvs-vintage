@@ -1,4 +1,4 @@
-// $Id: ActionRevertToSaved.java,v 1.8 2004/12/29 02:31:50 bobtarling Exp $
+// $Id: ActionRevertToSaved.java,v 1.9 2004/12/29 09:23:32 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -37,10 +37,6 @@ import org.argouml.ui.ProjectBrowser;
 /**
  * Action that reverts to the previously saved version of the project.
  * 
- * TODO: Currently, this action is a "global" action, i.e. its enabled status
- * gets updated when the target changes. But that is not correct; 
- * it should be updated inmediately after the project became dirty (needsSave).
- *
  * @see ActionOpenProject
  */
 public class ActionRevertToSaved extends ActionFileOperations {
