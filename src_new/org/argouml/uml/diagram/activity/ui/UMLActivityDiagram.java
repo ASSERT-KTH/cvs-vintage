@@ -24,7 +24,7 @@
 // File: UMLActivityDiagram.java
 // Classes: UMLActivityDiagram
 // Original Author: your email here
-// $Id: UMLActivityDiagram.java,v 1.6 2002/01/16 20:55:28 bobtarling Exp $
+// $Id: UMLActivityDiagram.java,v 1.7 2002/01/24 19:23:33 psager Exp $
 
 package org.argouml.uml.diagram.activity.ui;
 
@@ -140,7 +140,7 @@ public class UMLActivityDiagram extends UMLDiagram {
     gm.setNamespace(m);
 	if (agraph != null) gm.setMachine(agraph);
     setGraphModel(gm);
-    LayerPerspective lay = new LayerPerspective(m.getName(), gm);
+    LayerPerspective lay = new LayerPerspectiveMutable(m.getName(), gm);
     setLayer(lay);
     StateDiagramRenderer rend = new StateDiagramRenderer(); // singleton
     lay.setGraphNodeRenderer(rend);

@@ -24,7 +24,7 @@
 // File: UMLUseCaseDiagram.java
 // Classes: UMLUseCaseDiagram
 // Original Author: your email here
-// $Id: UMLUseCaseDiagram.java,v 1.2 2001/04/02 14:28:42 5heyden Exp $
+// $Id: UMLUseCaseDiagram.java,v 1.3 2002/01/24 19:29:32 psager Exp $
 
 package org.argouml.uml.diagram.use_case.ui;
 
@@ -90,7 +90,7 @@ public class UMLUseCaseDiagram extends UMLDiagram {
     UseCaseDiagramGraphModel gm = new UseCaseDiagramGraphModel();
     gm.setNamespace(m);
     setGraphModel(gm);
-    LayerPerspective lay = new LayerPerspective(m.getName(), gm);
+    LayerPerspective lay = new LayerPerspectiveMutable(m.getName(), gm);
     setLayer(lay);
     UseCaseDiagramRenderer rend = new UseCaseDiagramRenderer(); // singleton
     lay.setGraphNodeRenderer(rend);

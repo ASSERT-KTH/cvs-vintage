@@ -24,7 +24,7 @@
 // File: UMLCollaborationDiagram.java
 // Classes: UMLCollaborationDiagram
 // Original Author: agauthie@ics.uci.edu
-// $Id: UMLCollaborationDiagram.java,v 1.5 2001/12/12 04:03:40 mkl Exp $
+// $Id: UMLCollaborationDiagram.java,v 1.6 2002/01/24 19:24:55 psager Exp $
 
 package org.argouml.uml.diagram.collaboration.ui;
 
@@ -99,7 +99,7 @@ public class UMLCollaborationDiagram extends UMLDiagram {
     CollabDiagramGraphModel gm = new CollabDiagramGraphModel();
     gm.setNamespace(m);
     setGraphModel(gm);
-    LayerPerspective lay = new LayerPerspective(m.getName(), gm);
+    LayerPerspective lay = new LayerPerspectiveMutable(m.getName(), gm);
     setLayer(lay);
     CollabDiagramRenderer rend = new CollabDiagramRenderer(); // singleton
     lay.setGraphNodeRenderer(rend);
