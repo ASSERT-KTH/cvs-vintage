@@ -78,9 +78,14 @@ import java.security.*;
  * @author costin@dnt.ro
  */
 public class LoaderInterceptor11 extends BaseInterceptor {
-    boolean useAL=true;
+    boolean useAppsL=true;
+    boolean useParentL=false;
+    boolean useCommonL=false;
+    boolean useContainerL=false;
     boolean useNoParent=false;
+
     private int attributeInfo;
+    String loader=null;
     
     public LoaderInterceptor11() {
     }
@@ -89,7 +94,7 @@ public class LoaderInterceptor11 extends BaseInterceptor {
      *  that is set by the application embedding tomcat.
      */
     public void setUseApplicationLoader( boolean b ) {
-	useAL=b;
+	useAppsL=b;
     }
 
     /** Use no parent loader. The contexts will be completely isolated.
@@ -98,6 +103,10 @@ public class LoaderInterceptor11 extends BaseInterceptor {
 	useNoParent=b;
     }
 
+    public void setLoader( String name ) {
+	loader=name;
+    }
+    
     public void engineInit( ContextManager cm )
 	throws TomcatException
     {
@@ -198,9 +207,9 @@ public class LoaderInterceptor11 extends BaseInterceptor {
         }
 
 	ClassLoader parent=null;
-	if( useAL && !context.isTrusted() ) {
+	if( useAppsL && !context.isTrusted() ) {
 	    if( debug > 0 ) log( "Using webapp loader " + context.isTrusted());
-	    parent=cm.getParentLoader();
+	    parent=cm.getAppsLoader();
 	} else if( useNoParent ) {
 	    if( debug > 0 ) log( "Using no parent loader ");
 	    parent=null;
