@@ -17,7 +17,7 @@ import javax.management.*;
  *      
  *   @see <related>
  *   @author Rickard Öberg (rickard.oberg@telkel.com)
- *   @version $Revision: 1.2 $
+ *   @version $Revision: 1.3 $
  */
 public class Log
 {
@@ -31,7 +31,7 @@ public class Log
    Object source = null;
    
    // Static --------------------------------------------------------
-   static ThreadLocal currentLog = new InheritedThreadLocal();
+   static ThreadLocal currentLog = new InheritableThreadLocal();
    static Log defaultLog = new Log();
    
    public static void setLog(Log log)
