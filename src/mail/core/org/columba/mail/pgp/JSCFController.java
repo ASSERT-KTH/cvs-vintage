@@ -138,7 +138,7 @@ public class JSCFController
        */
       Properties props = con.getProperties();
       if (path == null) {
-        path = pgpItem.get("PATH");
+        throw new ProgramNotFoundException("invalid path");
       }
       props.put("PATH", path);
       if (handler != null) {
