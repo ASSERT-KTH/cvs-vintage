@@ -43,7 +43,7 @@ import org.gjt.sp.util.Log;
  * jEdit's text component.
  *
  * @author Slava Pestov
- * @version $Id: JEditTextArea.java,v 1.3 2001/09/10 08:46:23 spestov Exp $
+ * @version $Id: JEditTextArea.java,v 1.4 2001/09/13 06:49:26 spestov Exp $
  */
 public class JEditTextArea extends JComponent
 {
@@ -2054,6 +2054,22 @@ public class JEditTextArea extends JComponent
 	public final void removeScrollListener(ScrollListener listener)
 	{
 		listenerList.remove(ScrollListener.class,listener);
+	}
+
+	/**
+	 * Hides all lines except those in the selection.
+	 * @since jEdit 4.0pre1
+	 */
+	public void narrowToSelection()
+	{
+		if(selection.size() != 1)
+		{
+			getToolkit().beep();
+			return;
+		}
+
+		Selection sel = (Selection)selection.elementAt(0);
+		buffer.narrow(sel.getStartLine(),sel.getEndLine());
 	}
 
 	/**

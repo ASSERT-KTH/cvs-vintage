@@ -42,7 +42,7 @@ import org.gjt.sp.util.Log;
 /**
  * The main class of the jEdit text editor.
  * @author Slava Pestov
- * @version $Id: jEdit.java,v 1.6 2001/09/10 12:12:50 spestov Exp $
+ * @version $Id: jEdit.java,v 1.7 2001/09/13 06:49:26 spestov Exp $
  */
 public class jEdit
 {
@@ -2557,6 +2557,7 @@ public class jEdit
 		}
 
 		String lf = getProperty("lookAndFeel");
+		LookAndFeel lookAndFeel;
 		try
 		{
 			if(lf == null
@@ -2567,19 +2568,23 @@ public class jEdit
 			}
 
 			if(lf != null && lf.length() != 0)
-				UIManager.setLookAndFeel(lf);
+				lookAndFeel = (LookAndFeel)Class.forName(lf).newInstance();
+
+			UIManager.setLookAndFeel(lookAndFeel);
 		}
 		catch(Exception e)
 		{
 			Log.log(Log.ERROR,jEdit.class,e);
 		}
 
-		if(UIManager.getLookAndFeel() instanceof MetalLookAndFeel)
+		if(lookAndFeel == null)
+			lookAndFeel = UIManager.getLookAndFeel();
+
+		if(lookAndFeel instanceof MetalLookAndFeel)
 		{
 			theme = new JEditMetalTheme();
 			theme.propertiesChanged();
-			((MetalLookAndFeel)UIManager.getLookAndFeel())
-				.setCurrentTheme(theme);
+			((MetalLookAndFeel)lookAndFeel).setCurrentTheme(theme);
 		}
 	}
 
