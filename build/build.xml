@@ -16,6 +16,10 @@
     <property file="${user.home}/scarab.build.properties" /> 
     <property file="${user.home}/build.properties" />
 
+    <!-- Allow a build.properties in the project root in the
+         same place it would be used by Maven. -->
+    <property file="${basedir}/../${configuration.file}" />    
+
     <property file="${basedir}/default.properties" />
     <property file="${basedir}/default.${scarab.database.type}.properties" />
 
@@ -189,6 +193,7 @@
             <fileset dir="${build.sql.scarab}" includes="**/*.sh"/>
         </chmod>
 
+        <mkdir dir="${build.sql.scarab}/${scarab.database.type}"/>
         <!-- express the type of database we are generating -->
         <touch>
           	<fileset dir="${build.sql.scarab}/${scarab.database.type}">
@@ -442,8 +447,6 @@
     <!-- ================================================================== -->
     <target name="load-default-data" depends="create-db-schema">
 
-        <property name="file.prefix" value="${build.sql.scarab}/"/>
-
         <!-- Oracle does not have any type of conditional execution    -->
         <!-- of "drop table".  So when running the table creation,     -->
         <!-- it fails when dropping a table.  Rather than setting the  -->
@@ -459,7 +462,7 @@
             password="${scarab.database.admin.password}">
             <classpath refid="classpath"/>
             <transaction 
-                src="${file.prefix}prepare-dummy-tables.sql"/>
+                src="${build.sql.scarab}/prepare-oracle-dummy-tables.sql"/>
         </sql>
 
 
@@ -471,17 +474,17 @@
             userid="${scarab.database.admin.username}"
             password="${scarab.database.admin.password}">
             <classpath refid="classpath"/>
-            <transaction src="${file.prefix}standard-${scarab.database.type}-init.sql"/>
+            <transaction src="${build.sql.scarab}/standard-${scarab.database.type}-init.sql"/>
 
-            <transaction src="${file.prefix}${scarab.database.type}/turbine.sql"/>
-            <transaction src="${file.prefix}${scarab.database.type}/${project}.sql"/>
-            <transaction src="${file.prefix}${scarab.database.type}/scheduler.sql"/>
-            <transaction src="${file.prefix}${scarab.database.type}/id-table.sql"/>
-            <transaction src="${file.prefix}turbine-id-table-init.sql"/>
-            <transaction src="${file.prefix}${project}-id-table-init.sql"/>
-            <transaction src="${file.prefix}${project}-required-data.sql"/>
-            <transaction src="${file.prefix}${project}-default-data.sql"/>
-            <transaction src="${file.prefix}${project}-security.sql"/>
+            <transaction src="${build.sql.scarab}/${scarab.database.type}/turbine.sql"/>
+            <transaction src="${build.sql.scarab}/${scarab.database.type}/${project}.sql"/>
+            <transaction src="${build.sql.scarab}/${scarab.database.type}/scheduler.sql"/>
+            <transaction src="${build.sql.scarab}/${scarab.database.type}/id-table.sql"/>
+            <transaction src="${build.sql.scarab}/turbine-id-table-init.sql"/>
+            <transaction src="${build.sql.scarab}/${project}-id-table-init.sql"/>
+            <transaction src="${build.sql.scarab}/${project}-required-data.sql"/>
+            <transaction src="${build.sql.scarab}/${project}-default-data.sql"/>
+            <transaction src="${build.sql.scarab}/${project}-security.sql"/>
         </sql>
     </target>
 
@@ -496,16 +499,15 @@
         <!-- in "build.properties" by setting "seed.data.sql"               -->
         <!-- to an alternate file.                                          -->
         <!-- ============================================================== -->
-        <property name="file.prefix" value="${build.sql.scarab}/"/>
         <property name="seed.data.sql"
-            value="${file.prefix}${project}-sample-data.sql"/>
+            value="${build.sql.scarab}/${project}-sample-data.sql"/>
         <sql
             driver="${scarab.database.jdbc.driver}"
             url="${scarab.database.url}"
             userid="${scarab.database.admin.username}"
             password="${scarab.database.admin.password}">
             <classpath refid="classpath"/>
-            <transaction src="${file.prefix}standard-${scarab.database.type}-init.sql"/>
+            <transaction src="${build.sql.scarab}/standard-${scarab.database.type}-init.sql"/>
             <transaction src="${seed.data.sql}"/>
         </sql>
     </target>
@@ -514,6 +516,94 @@
     <!-- Create DB from Torque                                              -->
     <!-- ================================================================== -->
     <target name="create-db" depends="load-seed-data"/>
+
+    <!-- ================================================================== -->
+    <!-- Create database if not bypassed in "db-type-check"                 -->
+    <!-- ================================================================== -->
+    <target name="create-test-db-schema" depends="db-type-check,sql-all,prepare" 
+            if="auto.create.db">
+
+        <copy file="${src.sql.dir}/create-${scarab.database.type}-db.sql" 
+              todir="${build.src.scarab}"
+              filtering="true" overwrite="true"/>
+        <echo message="Connecting to ${scarab.database.type} at ${scarab.database.admin.url}"/>
+        <sql
+            driver="${scarab.database.jdbc.driver}"
+            url="${scarab.test.database.url}"
+            userid="${scarab.test.database.username}"
+            password="${scarab.test.database.password}">
+            <classpath refid="classpath"/>
+            <transaction 
+                src="${build.src.scarab}/create-${scarab.database.type}-db.sql"/>
+        </sql>
+
+    </target>
+
+    <!-- ================================================================== -->
+    <!-- Load test default data                                             -->
+    <!-- ================================================================== -->
+    <target name="load-test-default-data" depends="create-test-db-schema, prepare">
+
+        <!-- Oracle does not have any type of conditional execution    -->
+        <!-- of "drop table".  So when running the table creation,     -->
+        <!-- it fails when dropping a table.  Rather than setting the  -->
+        <!-- onerror of the actual creation class to "continue", this  -->
+        <!-- pre-creates dummy tables (ignoring any errors if the      -->
+        <!-- tables already exist) so that they can be dropped.        -->
+        <sql
+            rdbms="oracle"
+            onerror="continue"
+            driver="${scarab.database.jdbc.driver}"
+            url="${scarab.test.database.url}"
+            userid="${scarab.test.database.username}"
+            password="${scarab.test.database.password}">
+            <classpath refid="classpath"/>
+            <transaction 
+                src="${build.sql.scarab}/prepare-oracle-dummy-tables.sql"/>
+        </sql>
+
+
+        <echo message=
+            "Connecting to ${scarab.database.type} at ${scarab.test.database.url}"/>
+        <sql
+            driver="${scarab.database.jdbc.driver}"
+            url="${scarab.test.database.url}"
+            userid="${scarab.test.database.username}"
+            password="${scarab.test.database.password}">
+            <classpath refid="classpath"/>
+            <transaction src="${build.sql.scarab}/standard-${scarab.database.type}-init.sql"/>
+
+            <transaction src="${build.sql.scarab}/${scarab.database.type}/turbine.sql"/>
+            <transaction src="${build.sql.scarab}/${scarab.database.type}/${project}.sql"/>
+            <transaction src="${build.sql.scarab}/${scarab.database.type}/scheduler.sql"/>
+            <transaction src="${build.sql.scarab}/${scarab.database.type}/id-table.sql"/>
+            <transaction src="${build.sql.scarab}/turbine-id-table-init.sql"/>
+            <transaction src="${build.sql.scarab}/${project}-id-table-init.sql"/>
+            <transaction src="${build.sql.scarab}/${project}-required-data.sql"/>
+            <transaction src="${build.sql.scarab}/${project}-default-data.sql"/>
+            <transaction src="${build.sql.scarab}/${project}-security.sql"/>
+        </sql>
+    </target>
+
+    <!-- ================================================================== -->
+    <!-- Load test seed data                                                -->
+    <!-- ================================================================== -->
+    <target name="load-test-seed-data" depends="load-test-default-data">
+        <sql
+            driver="${scarab.database.jdbc.driver}"
+            url="${scarab.test.database.url}"
+            userid="${scarab.test.database.username}"
+            password="${scarab.test.database.password}">
+            <classpath refid="classpath"/>
+            <transaction src="${build.sql.scarab}/standard-${scarab.database.type}-init.sql"/>
+	    <transaction src="${build.sql.scarab}/${project}-sample-data.sql"/>
+        </sql>
+    </target>
+
+    <!-- ================================================================== -->
+    <!-- Create test DB from Torque                                              -->
+    <!-- ================================================================== -->
+    <target name="create-test-db" depends="load-test-seed-data"/>
 
     <!-- ================================================================== -->
     <!-- Generate Data DTD from Torque                                      -->
