@@ -7,7 +7,7 @@
 <!--                                                                       -->
 <!-- ===================================================================== -->
 
-<!-- $Id: standardjboss.xml,v 1.23 2001/10/21 03:21:03 dsundstrom Exp $ -->
+<!-- $Id: standardjboss.xml,v 1.24 2001/11/02 21:19:12 dsundstrom Exp $ -->
 
 <jboss>
    <enforce-ejb-restrictions>false</enforce-ejb-restrictions>
@@ -32,8 +32,7 @@
 	 <instance-cache>org.jboss.ejb.plugins.EntityInstanceCache</instance-cache>
 	 <persistence-manager>org.jboss.ejb.plugins.cmp.jdbc.JDBCStoreManager</persistence-manager>
 	 <transaction-manager>org.jboss.tm.TxManager</transaction-manager>
-    <!-- <locking-policy>org.jboss.ejb.plugins.lock.QueuedPessimisticEJBLock</locking-policy> -->
-    <locking-policy>org.jboss.ejb.plugins.cmp.jdbc.bridge.NewQueuedPessimisticEJBLock</locking-policy>
+    <locking-policy>org.jboss.ejb.plugins.lock.QueuedPessimisticEJBLock</locking-policy>
 	 <container-invoker-conf>
 	    <Optimized>True</Optimized>
 	    <RMIObjectPort>4444</RMIObjectPort>
