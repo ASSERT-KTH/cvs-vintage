@@ -1331,8 +1331,10 @@ try{
            pageResults = fullList.subList ((pgNbr - 1) * nbrItmsPerPage, 
                Math.min(pgNbr * nbrItmsPerPage, fullList.size()));
         }
-        catch (Exception e)
-        {}
+        catch(Exception e)
+        {
+            e.printStackTrace();
+        }
         return pageResults;
     }
 
