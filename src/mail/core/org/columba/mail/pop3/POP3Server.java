@@ -28,6 +28,7 @@ import java.util.logging.Logger;
 
 import org.columba.core.command.CommandCancelledException;
 import org.columba.core.command.StatusObservable;
+import org.columba.core.command.WorkerStatusController;
 import org.columba.core.util.ListTools;
 import org.columba.core.util.Lock;
 import org.columba.mail.config.AccountItem;
@@ -39,6 +40,7 @@ import org.columba.mail.main.MailInterface;
 import org.columba.mail.message.ColumbaHeader;
 import org.columba.mail.message.ColumbaMessage;
 import org.columba.mail.message.HeaderList;
+import org.columba.ristretto.pop3.MessageNotOnServerException;
 import org.columba.ristretto.pop3.POP3Exception;
 
 
@@ -156,12 +158,12 @@ public class POP3Server {
 	        // set dirty flag
 	        setCacheChanged(true);
         } catch (POP3Exception e) {
-        	if( e.getResponse() != null && e.getResponse().isERR() ) {
+        	if( (e instanceof MessageNotOnServerException ) || (e.getResponse() != null && e.getResponse().isERR()) ) {
         		// Message already deleted from server
         		headerCache.remove(uid);
         		setCacheChanged(true);
         	} else throw e;
-		}
+		} 
         
     }
     
@@ -195,8 +197,8 @@ public class POP3Server {
         return getStore().getMessageCount();
     }
 
-    public ColumbaMessage getMessage(Object uid) throws Exception {
-        ColumbaMessage message = getStore().fetchMessage(uid);
+    public ColumbaMessage getMessage(Object uid, WorkerStatusController worker) throws Exception {
+        ColumbaMessage message = getStore().fetchMessage(uid,worker);
 
         if (message == null) {
             return null;
@@ -212,8 +214,6 @@ public class POP3Server {
         header.getAttributes().put("columba.accountuid",
             new Integer(accountItem.getInteger("uid")));
 
-        // remove useless headers to save memory
-        header = CachedHeaderfields.stripHeaders(header);
         
         headerCache.getHeaderList().add(header, uid);
         

@@ -27,8 +27,10 @@ import javax.net.ssl.SSLException;
 import javax.swing.JOptionPane;
 
 import org.columba.core.command.CommandCancelledException;
+import org.columba.core.command.ProgressObservedInputStream;
 import org.columba.core.command.StatusObservable;
 import org.columba.core.command.StatusObservableImpl;
+import org.columba.core.command.WorkerStatusController;
 import org.columba.core.gui.util.NotifyDialog;
 import org.columba.core.main.MainInterface;
 import org.columba.core.plugin.PluginHandlerNotFoundException;
@@ -45,6 +47,7 @@ import org.columba.ristretto.io.Source;
 import org.columba.ristretto.io.TempSourceFactory;
 import org.columba.ristretto.message.Header;
 import org.columba.ristretto.parser.HeaderParser;
+import org.columba.ristretto.pop3.MessageNotOnServerException;
 import org.columba.ristretto.pop3.POP3Exception;
 import org.columba.ristretto.pop3.POP3Protocol;
 import org.columba.ristretto.pop3.ScanListEntry;
@@ -101,15 +104,13 @@ public class POP3Store {
 	public List getUIDList() throws Exception {
 		ensureTransaction();
 
-		uidMap = protocol.uidl();
-
 		//Delete the old sizes
 		sizes = null;
 
 		LinkedList list = new LinkedList();
 
-		for (int i = 0; i < uidMap.length; i++) {
-			list.add(uidMap[i].getUid());
+		for (int i = 0; i < getUidMap().length; i++) {
+			list.add(getUidMap()[i].getUid());
 		}
 
 		return list;
@@ -146,7 +147,7 @@ public class POP3Store {
 
 	public boolean deleteMessage(Object uid) throws CommandCancelledException, IOException, POP3Exception {
 		ensureTransaction();
-
+		
 		return protocol.dele(getIndex(uid));
 	}
 
@@ -220,19 +221,19 @@ public class POP3Store {
 
 	protected int getIndex(Object uid) throws IOException, POP3Exception,
 			CommandCancelledException {
-		for (int i = 0; i < uidMap.length; i++) {
-			if (uidMap[i].getUid().equals(uid)) {
-				return uidMap[i].getIndex();
+		for (int i = 0; i < getUidMap().length; i++) {
+			if (getUidMap()[i].getUid().equals(uid)) {
+				return getUidMap()[i].getIndex();
 			}
 		}
-
-		throw new POP3Exception("No message with uid " + uid + " on server.");
+		
+		throw new MessageNotOnServerException( uid);
 	}
 
-	public ColumbaMessage fetchMessage(Object uid) throws Exception {
+	public ColumbaMessage fetchMessage(Object uid, WorkerStatusController worker) throws Exception {
 		ensureTransaction();
-
-		InputStream messageStream = protocol.retr(getIndex(uid), getSize(uid)); 
+		
+		InputStream messageStream = new ProgressObservedInputStream( protocol.retr(getIndex(uid), getSize(uid)), worker, true);  
 		Source source = TempSourceFactory.createTempSource(messageStream, messageStream.available());
 		
 		// pipe through preprocessing filter
@@ -249,7 +250,6 @@ public class POP3Store {
 		h.getAttributes().put("columba.size",
 				new Integer(source.length() / 1024));
 
-		//h.set("columba.pop3uid", (String) uids.get(number - 1));
 		return m;
 	}
 
@@ -530,5 +530,17 @@ public class POP3Store {
 
 	public StatusObservable getObservable() {
 		return observable;
+	}
+
+	/**
+	 * @return Returns the uidMap.
+	 */
+	private UidListEntry[] getUidMap() throws CommandCancelledException, IOException ,POP3Exception {
+		if( uidMap == null ) {
+			ensureTransaction();
+			
+			uidMap = protocol.uidl();
+		}
+		return uidMap;
 	}
 }

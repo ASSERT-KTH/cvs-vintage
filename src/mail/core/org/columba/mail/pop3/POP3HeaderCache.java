@@ -15,9 +15,11 @@
 //All Rights Reserved.
 package org.columba.mail.pop3;
 
+import java.util.Enumeration;
+import java.util.logging.Logger;
+
 import org.columba.core.command.StatusObservable;
 import org.columba.core.main.MainInterface;
-
 import org.columba.mail.folder.headercache.AbstractHeaderCache;
 import org.columba.mail.folder.headercache.CachedHeaderfields;
 import org.columba.mail.folder.headercache.ObjectReader;
@@ -25,9 +27,6 @@ import org.columba.mail.folder.headercache.ObjectWriter;
 import org.columba.mail.message.ColumbaHeader;
 import org.columba.mail.message.HeaderList;
 import org.columba.mail.util.MailResourceLoader;
-
-import java.util.Enumeration;
-import java.util.logging.Logger;
 
 
 /**
@@ -163,4 +162,15 @@ public class POP3HeaderCache extends AbstractHeaderCache {
             writer.writeObject(h.get(columnNames[j]));
         }
     }
+	/**
+	 * @see org.columba.mail.folder.headercache.AbstractHeaderCache#add(org.columba.mail.message.ColumbaHeader)
+	 */
+	public void add(ColumbaHeader header) throws Exception {
+		ColumbaHeader strippedHeader = new ColumbaHeader();
+		for( int i=0; i < CachedHeaderfields.POP3_HEADERFIELDS.length; i++) {
+			strippedHeader.set(CachedHeaderfields.POP3_HEADERFIELDS[i], header.get(CachedHeaderfields.POP3_HEADERFIELDS[i]));
+		}
+		
+		super.add(strippedHeader);
+	}
 }
