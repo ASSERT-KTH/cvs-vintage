@@ -76,7 +76,7 @@ import org.tigris.scarab.util.ScarabConstants;
     logged in. That part isn't a priority yet though.
 
     @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
-    @version $Id: RequireLoginFirst.java,v 1.2 2001/01/04 03:02:12 jon Exp $    
+    @version $Id: RequireLoginFirst.java,v 1.3 2001/05/24 02:12:56 jmcnally Exp $    
 */
 public abstract class RequireLoginFirst extends VelocitySecureScreen
 {
@@ -87,7 +87,8 @@ public abstract class RequireLoginFirst extends VelocitySecureScreen
     {
         if (!data.getUser().hasLoggedIn())
         {
-            getContext(data).put(ScarabConstants.NEXT_TEMPLATE, data.getTemplateInfo().getScreenTemplate());
+            getContext(data).put( ScarabConstants.NEXT_TEMPLATE, 
+                                  data.getTemplateInfo().getScreenTemplate() );
             doRedirect(data, "Login.vm");
             return false;
         }
