@@ -1,4 +1,4 @@
-// $Id: PerspectiveConfigurator.java,v 1.6 2004/09/01 15:43:20 mvw Exp $
+// $Id: PerspectiveConfigurator.java,v 1.7 2004/10/19 21:01:58 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -36,6 +36,7 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.Vector;
 
+import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
 import javax.swing.DefaultListModel;
 import javax.swing.JButton;
@@ -69,6 +70,9 @@ public class PerspectiveConfigurator extends ArgoDialog {
 	Logger.getLogger(PerspectiveConfigurator.class);
     
     private static int numNavConfig = 0;
+
+    /** Insets in pixels  */
+    private static final int INSET_PX = 3;
     
     ////////////////////////////////////////////////////////////////
     // instance variables
@@ -148,16 +152,21 @@ public class PerspectiveConfigurator extends ArgoDialog {
      */
     public void initPersPanel() {
         configPanel = new JPanel();
-        
+                
 	perspectiveListModel = new DefaultListModel();
         perspectiveList = new JList(perspectiveListModel);
-
 	perspectiveRulesListModel = new DefaultListModel();
         perspectiveRulesList = new JList(perspectiveRulesListModel);
-
 	ruleLibraryListModel = new DefaultListModel();
         ruleLibraryList = new JList(ruleLibraryListModel);
 
+        perspectiveList.setBorder(BorderFactory.createEmptyBorder(
+                INSET_PX, INSET_PX, INSET_PX, INSET_PX));
+        perspectiveRulesList.setBorder(BorderFactory.createEmptyBorder(
+                INSET_PX, INSET_PX, INSET_PX, INSET_PX));
+        ruleLibraryList.setBorder(BorderFactory.createEmptyBorder(
+                INSET_PX, INSET_PX, INSET_PX, INSET_PX));
+        
         newPerspectiveButton = new JButton();
         nameButton(newPerspectiveButton, "button.new");
         removePerspectiveButton = new JButton();
@@ -189,16 +198,12 @@ public class PerspectiveConfigurator extends ArgoDialog {
         gb.setConstraints(persLabel, c);
         configPanel.add(persLabel);
         
-        JScrollPane persScroll =
-	    new JScrollPane(perspectiveList,
+        JScrollPane persScroll = new JScrollPane(perspectiveList,
 			    JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,
 			    JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
-        c.gridx = 0;
-	c.gridy = 1;
+        c.gridx = 0;	  c.gridy = 1;
         c.gridwidth = 4;
-        c.weightx = 1.0;
-	c.weighty = 1.0;
-
+        c.weightx = 1.0;  c.weighty = 1.0;
         gb.setConstraints(persScroll, c);
         configPanel.add(persScroll);
         
@@ -209,7 +214,6 @@ public class PerspectiveConfigurator extends ArgoDialog {
         JPanel persButtonWrapper =
 	    new JPanel(new FlowLayout(FlowLayout.RIGHT, 0, 0));
         persButtonWrapper.add(persButtons);
-        
         c.gridx = 4;      c.gridy = 1;
         c.gridwidth = 1;
         c.weightx = 0.0;  c.weighty = 0.0;
@@ -228,14 +232,13 @@ public class PerspectiveConfigurator extends ArgoDialog {
         gb.setConstraints(ruleLibLabel, c);
         configPanel.add(ruleLibLabel);
         
-        addRuleButton.setMargin(new Insets(2, 2, 2, 2));
-        removeRuleButton.setMargin(new Insets(2, 2, 2, 2));
+        addRuleButton.setMargin(new Insets(2, 15, 2, 15));
+        removeRuleButton.setMargin(new Insets(2, 15, 2, 15));
         JPanel xferButtons = new JPanel();
         xferButtons.setLayout(new BoxLayout(xferButtons, BoxLayout.Y_AXIS));
         xferButtons.add(addRuleButton);
         xferButtons.add(new SpacerPanel());
         xferButtons.add(removeRuleButton);
-        
         c.gridx = 2;      c.gridy = 4;
         c.weightx = 0.0;  c.weighty = 0.0;
         c.insets = new Insets(0, 3, 0, 5);
@@ -262,11 +265,8 @@ public class PerspectiveConfigurator extends ArgoDialog {
         gb.setConstraints(ruleLibScroll, c);
         configPanel.add(ruleLibScroll);
         
-        c.gridx = 3;
-	c.gridy = 4;
-        c.gridwidth = 2;
-	c.gridheight = 2;
-
+        c.gridx = 3;	  c.gridy = 4;
+        c.gridwidth = 2;  c.gridheight = 2;
         JScrollPane rulesScroll =
 	    new JScrollPane(perspectiveRulesList,
 			    JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,
