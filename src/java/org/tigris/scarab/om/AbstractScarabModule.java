@@ -127,7 +127,7 @@ import org.tigris.scarab.services.cache.ScarabCache;
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: AbstractScarabModule.java,v 1.29 2002/05/08 22:36:56 jon Exp $
+ * @version $Id: AbstractScarabModule.java,v 1.30 2002/05/13 21:07:16 jmcnally Exp $
  */
 public abstract class AbstractScarabModule
     extends BaseObject
@@ -852,12 +852,11 @@ public abstract class AbstractScarabModule
             ObjectKey attributeId = null;
             // get related RMAs
             Criteria crit = new Criteria()
-                .add(RModuleAttributePeer.MODULE_ID, getModuleId())
                 .add(RModuleAttributePeer.ISSUE_TYPE_ID, 
                      issueType.getIssueTypeId());
             crit.addAscendingOrderByColumn(
                 RModuleAttributePeer.PREFERRED_ORDER);
-            List rmas = RModuleAttributePeer.doSelect(crit);
+            List rmas = getRModuleAttributes(crit);
             
             // the code to find the correct attribute could be quite simple by
             // looping and calling RMA.isDefaultText().  The code from
@@ -1001,51 +1000,37 @@ public abstract class AbstractScarabModule
     }
 
     /**
-     * Overridden method.  Calls the super method and if no results are
-     * returned the call is passed on to the parent module.
+     * Returns RModuleAttributes associated with this Module.  Tries to find
+     * RModuleAttributes associated directly through the db, but if none are
+     * found it should look up the parent module tree until it finds a 
+     * non-empty list.
      */
-    public List getRModuleAttributes(Criteria crit)
+    public abstract List getRModuleAttributes(Criteria crit)
+        throws TorqueException;
+
+    /** 
+     * Returns RModuleAttributes associated with this module through the
+     * foreign key in the schema. This method will return an empty list, if the
+     * RModuleAttributes are inherited from its parent.  Will not return an
+     * RModuleAttribute if the Attribute is deleted.
+     */
+    protected List getRModuleAttributesThisModuleOnly(Criteria crit)
         throws TorqueException
     {
-        List rModAtts = null;
-        AbstractScarabModule module = this;
-        AbstractScarabModule prevModule = null;
-        do
-        {
-            rModAtts = module.getRModuleAttributesThisModuleOnly(crit);
-            prevModule = module;
-            try
-            {
-                module = (AbstractScarabModule)prevModule.getParent();
-            }
-            catch (Exception e)
-            {
-                throw new TorqueException(e);
-            }
-        }
-        while ( rModAtts.size() == 0 &&
-               !ROOT_ID.equals(prevModule.getModuleId()));
-
-        return rModAtts;
+        System.out.println("Adding deleted flag");
+        crit.add(RModuleAttributePeer.MODULE_ID, getModuleId() );
+        crit.addJoin(RModuleAttributePeer.ATTRIBUTE_ID, 
+                     AttributePeer.ATTRIBUTE_ID);
+        crit.add(AttributePeer.DELETED, false);
+        return RModuleAttributePeer.doSelect(crit);
     }
-
-    /**
-     * Gets the RModuleAttributes that are related directly to this module.
-     * Will return null, if the RModuleAttributes are inherited from its
-     * parent.
-     *
-     * @param crit a <code>Criteria</code> value
-     * @return a <code>List</code> value
-     * @exception TorqueException if an error occurs
-     */
-    protected abstract List getRModuleAttributesThisModuleOnly(Criteria crit)
-        throws TorqueException;
 
     /**
      * Overridden method.
      */
     public abstract List getRModuleOptions(Criteria crit)
         throws TorqueException;
+
 
     /**
      * Adds module-attribute mapping to module.
@@ -1242,16 +1227,12 @@ public abstract class AbstractScarabModule
         if ( obj == null ) 
         {        
             Criteria crit = new Criteria();
-            crit.add(RModuleAttributePeer.MODULE_ID, 
-                     getModuleId());
             crit.add(RModuleAttributePeer.ISSUE_TYPE_ID, 
                      issueType.getIssueTypeId());
             crit.addAscendingOrderByColumn(
                 RModuleAttributePeer.PREFERRED_ORDER);
             crit.addAscendingOrderByColumn(
                 RModuleAttributePeer.DISPLAY_VALUE);
-            crit.addJoin(RModuleAttributePeer.ATTRIBUTE_ID, 
-                         AttributePeer.ATTRIBUTE_ID);
             
             if ( activeOnly )
             {
@@ -1270,7 +1251,10 @@ public abstract class AbstractScarabModule
                          Criteria.NOT_EQUAL);
             }
             
-            rmas = RModuleAttributePeer.doSelect(crit);
+            // this method calls getRModuleAttributesThisModuleOnly
+            // which adds some additional criteria (and a join to the 
+            // ATTRIBUTE table)
+            rmas = getRModuleAttributes(crit);
             getMethodResult().put(rmas, this, GET_R_MODULE_ATTRIBUTES, 
                 issueType, activeBool, attributeType);
         }

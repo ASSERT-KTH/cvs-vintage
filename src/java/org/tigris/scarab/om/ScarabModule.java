@@ -104,7 +104,7 @@ import org.apache.fulcrum.security.impl.db.entity
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: ScarabModule.java,v 1.112 2002/05/02 01:18:27 jon Exp $
+ * @version $Id: ScarabModule.java,v 1.113 2002/05/13 21:07:16 jmcnally Exp $
  */
 public class ScarabModule
     extends BaseScarabModule
@@ -299,12 +299,6 @@ public class ScarabModule
         resetAncestors();
     }
 
-    protected List getRModuleAttributesThisModuleOnly(Criteria crit)
-        throws TorqueException
-    {
-        return super.getRModuleAttributes(crit);
-    }
-
 
     public List getRModuleIssueTypes()
         throws TorqueException
@@ -330,6 +324,38 @@ public class ScarabModule
         }
         return result;
     }
+
+    /**
+     * Returns RModuleAttributes associated with this Module.  Tries to find
+     * RModuleAttributes associated directly through the db, but if none are
+     * found it should look up the parent module tree until it finds a 
+     * non-empty list.
+     */
+    public List getRModuleAttributes(Criteria crit)
+        throws TorqueException
+    {
+        List rModAtts = null;
+        AbstractScarabModule module = this;
+        AbstractScarabModule prevModule = null;
+        do
+        {
+            rModAtts = module.getRModuleAttributesThisModuleOnly(crit);
+            prevModule = module;
+            try
+            {
+                module = (AbstractScarabModule)prevModule.getParent();
+            }
+            catch (Exception e)
+            {
+                throw new TorqueException(e);
+            }
+        }
+        while ( rModAtts.size() == 0 &&
+               !ROOT_ID.equals(prevModule.getModuleId()));
+
+        return rModAtts;
+    }
+
 
     public boolean allowsIssues()
     {
