@@ -19,7 +19,7 @@ import org.jboss.metadata.SessionMetaData;
  * {@link javax.management.j2ee.EJB EJB}.
  *
  * @author  <a href="mailto:andreas@jboss.org">Andreas Schaefer</a>.
- * @version $Revision: 1.6 $
+ * @version $Revision: 1.7 $
  *   
  * <p><b>Revisions:</b>
  *
@@ -45,7 +45,7 @@ public abstract class EJB
                                              "MessageDrivenBean"
                                           };
    
-   public static ObjectName create( MBeanServer pServer, String pEJBModule, BeanMetaData pBeanMeta ) {
+   public static ObjectName create( MBeanServer pServer, String pEjbModule, BeanMetaData pBeanMeta ) {
       Logger lLog = Logger.getLogger( EJB.class );
       try {
          int lType =
@@ -58,7 +58,7 @@ public abstract class EJB
             null,
             new Object[] {
                pBeanMeta.getJndiName(),
-               new ObjectName( pEJBModule )
+               new ObjectName( pEjbModule )
             },
             new String[] {
                String.class.getName(),
@@ -90,12 +90,12 @@ public abstract class EJB
     *
     * @throws InvalidParameterException If list of nodes or ports was null or empty
     **/
-   public EJB( String pType, String pName, ObjectName pEJBModule )
+   public EJB( String pType, String pName, ObjectName pEjbModule )
       throws
          MalformedObjectNameException,
          InvalidParentException
    {
-      super( pType, pName, pEJBModule );
+      super( pType, pName, pEjbModule );
    }
 
    // java.lang.Object overrides --------------------------------------

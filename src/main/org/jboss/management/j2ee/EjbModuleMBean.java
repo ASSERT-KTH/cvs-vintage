@@ -13,7 +13,7 @@ import javax.management.j2ee.EJBModule;
  * EJBModule}.
  *
  * @author  <a href="mailto:andreas@jboss.org">Andreas Schaefer</a>.
- * @version $Revision: 1.4 $
+ * @version $Revision: 1.5 $
  *   
  * <p><b>Revisions:</b>
  *
@@ -22,7 +22,7 @@ import javax.management.j2ee.EJBModule;
  * <li> Adjustments to the JBoss Guidelines
  * </ul>
  **/
-public interface EJBModuleMBean
+public interface EjbModuleMBean
    extends EJBModule, J2EEManagedObjectMBean
 {
 }

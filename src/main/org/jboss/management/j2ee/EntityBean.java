@@ -14,7 +14,7 @@ import javax.management.ObjectName;
  * {@link javax.management.j2ee.EntityBean EntityBean}.
  *
  * @author  <a href="mailto:andreas@jboss.org">Andreas Schaefer</a>.
- * @version $Revision: 1.3 $
+ * @version $Revision: 1.4 $
  *   
  * <p><b>Revisions:</b>
  *
@@ -40,12 +40,12 @@ public class EntityBean
     *
     * @throws InvalidParameterException If list of nodes or ports was null or empty
     **/
-   public EntityBean( String pName, ObjectName pEJBModule )
+   public EntityBean( String pName, ObjectName pEjbModule )
       throws
          MalformedObjectNameException,
          InvalidParentException
    {
-      super( "EntityBean", pName, pEJBModule );
+      super( "EntityBean", pName, pEjbModule );
    }
 
    // -------------------------------------------------------------------------

@@ -18,6 +18,7 @@ import javax.management.ObjectName;
 
 import org.jboss.system.Service;
 import org.jboss.management.j2ee.EJB;
+import org.jboss.management.j2ee.EjbModule;
 
 /**
  * An Application represents a collection of beans that are deployed as a
@@ -30,7 +31,7 @@ import org.jboss.management.j2ee.EJB;
  * @see EJBDeployer
  * 
  * @author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
- * @version $Revision: 1.25 $
+ * @version $Revision: 1.26 $
  */
 public class Application
    implements Service
@@ -208,6 +209,7 @@ public class Application
     */
    public void start() throws Exception
    {
+      System.out.println( "Application.start(), begin" );
       for (Iterator i = containers.values().iterator(); i.hasNext();)
       {
          Container con = (Container)i.next();
@@ -216,13 +218,16 @@ public class Application
       for (Iterator i = containers.values().iterator(); i.hasNext();)
       {
          Container con = (Container)i.next();
+         System.out.println( "Application.start(), start container: " + con );
          con.start();
          // Create JSR-77 EJB-Wrapper
+         System.out.println( "Application.start(), create JSR-77 EJB-Component" );
          ObjectName lEJB = EJB.create(
             con.mbeanServer,
             getModuleName(),
             con.getBeanMetaData()
          );
+         System.out.println( "Application.start(), EJB: " + lEJB );
          if( lEJB != null ) {
             con.mEJBObjectName = lEJB.toString();
          }

@@ -24,7 +24,7 @@ import org.jboss.logging.Logger;
  * {@link javax.management.j2ee.J2EEApplication J2EEApplication}.
  *
  * @author  <a href="mailto:andreas@jboss.org">Andreas Schaefer</a>.
- * @version $Revision: 1.7 $
+ * @version $Revision: 1.8 $
  *   
  * <p><b>Revisions:</b>
  *
@@ -46,7 +46,7 @@ public class J2EEApplication
    
    // Static --------------------------------------------------------
    
-   public static ObjectName create( MBeanServer pServer, String pName, String pDescriptor ) {
+   public static ObjectName create( MBeanServer pServer, String pName, URL pURL ) {
       Logger lLog = Logger.getLogger( J2EEApplication.class );
       String lDD = null;
       ObjectName lServer = null;
@@ -55,12 +55,17 @@ public class J2EEApplication
              new ObjectName( J2EEManagedObject.getDomainName() + ":type=J2EEServer,*" ),
              null
          ).iterator().next();
+         // First get the deployement descriptor
+         lDD = J2EEDeployedObject.getDeploymentDescriptor( pURL, J2EEDeployedObject.APPLICATION );
       }
       catch( Exception e ) {
 //AS         lLog.error( "Could not create JSR-77 J2EEApplication: " + pName, e );
          return null;
       }
       try {
+         lLog.debug( "Create J2EE Application, name: " + pName +
+            ", server: " + lServer
+         );
          // Now create the J2EEApplication
          return pServer.createMBean(
             "org.jboss.management.j2ee.J2EEApplication",
@@ -68,7 +73,7 @@ public class J2EEApplication
             new Object[] {
                pName,
                lServer,
-               pDescriptor
+               lDD
             },
             new String[] {
                String.class.getName(),
@@ -140,7 +145,7 @@ public class J2EEApplication
    
    public void addChild( ObjectName pChild ) {
       String lType = J2EEManagedObject.getType( pChild );
-      if( "EJBModule".equals( lType ) ) {
+      if( "EjbModule".equals( lType ) ) {
          mModules.add( pChild );
       } else if( "WebModule".equals( lType ) ) {
          mModules.add( pChild );
@@ -151,7 +156,7 @@ public class J2EEApplication
    
    public void removeChild( ObjectName pChild ) {
       String lType = J2EEManagedObject.getType( pChild );
-      if( "EJBModule".equals( lType ) ) {
+      if( "EjbModule".equals( lType ) ) {
          mModules.remove( pChild );
       } else if( "WebModule".equals( lType ) ) {
          mModules.remove( pChild );

@@ -19,7 +19,7 @@ import org.jboss.logging.Logger;
 
 import org.w3c.dom.Element;
 
-/*
+// /*
 import java.net.MalformedURLException;
 import java.net.URLClassLoader;
 import java.io.File;
@@ -44,12 +44,12 @@ import javax.management.RuntimeErrorException;
 
 import org.jboss.management.j2ee.J2EEApplication;
 
-*/
+// */
 
 /**
 *
 * @author <a href="mailto:marc.fleury@jboss.org">Marc Fleury</a>
-* @version $Revision: 1.5 $
+* @version $Revision: 1.6 $
 */
 public class EARDeployer
 extends ServiceMBeanSupport
@@ -129,6 +129,16 @@ implements EARDeployerMBean
       {
          throw new DeploymentException("Error in accessing application metadata: "+e.getMessage());
       }
+      
+      // Create the appropriate JSR-77 instance
+//      /*  
+      ObjectName lApplication = J2EEApplication.create(
+         server,
+         di.shortName,
+         di.url
+         // di.getApplicationDeploymentDescriptor()
+      );
+//      */
    }
    
    
@@ -138,15 +148,6 @@ implements EARDeployerMBean
       // now try to deploy
       if (log.isInfoEnabled())
         log.info("Deploying J2EE application: " + di.url);
-      
-      // Create the appropriate JSR-77 instance
-      /*  
-      ObjectName lApplication = J2EEApplication.create(
-      getServer(),
-      _d.getName(),
-      _d.getApplicationDeploymentDescriptor()
-      );
-      */
    }
    
    
@@ -160,13 +161,13 @@ implements EARDeployerMBean
    */
    public void undeploy(DeploymentInfo di) throws DeploymentException
    {
-      /*
+//      /*
       // Destroy the appropriate JSR-77 instance
       J2EEApplication.destroy(
-      getServer(),
-      _d.getName()
+         server,
+         di.shortName
       );
-      */
+//      */
    }
    
    

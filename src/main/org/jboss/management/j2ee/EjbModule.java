@@ -29,7 +29,7 @@ import org.jboss.logging.Logger;
  * {@link javax.management.j2ee.EJBModule EJBModule}.
  *
  * @author  <a href="mailto:andreas@jboss.org">Andreas Schaefer</a>.
- * @version $Revision: 1.10 $
+ * @version $Revision: 1.11 $
  *   
  * <p><b>Revisions:</b>
  *
@@ -39,9 +39,9 @@ import org.jboss.logging.Logger;
  *      the create() and destroy() helper method
  * </ul>
  **/
-public class EJBModule
+public class EjbModule
   extends J2EEModule
-  implements EJBModuleMBean
+  implements EjbModuleMBean
 {
 
    // Constants -----------------------------------------------------
@@ -53,7 +53,7 @@ public class EJBModule
    // Static --------------------------------------------------------
    
    public static ObjectName create( MBeanServer pServer, String pApplicationName, String pName, URL pURL ) {
-      Logger lLog = Logger.getLogger( EJBModule.class );
+      Logger lLog = Logger.getLogger( EjbModule.class );
       String lDD = null;
       ObjectName lApplication = null;
       try {
@@ -63,7 +63,7 @@ public class EJBModule
          ).iterator().next();
          String lServerName = lServer.getKeyPropertyList().get( "type" ) + "=" +
                               lServer.getKeyPropertyList().get( "name" );
-         lLog.debug( "EJBModule.create(), server name: " + lServerName );
+         lLog.debug( "EjbModule.create(), server name: " + lServerName );
          lApplication = (ObjectName) pServer.queryNames(
              new ObjectName( J2EEManagedObject.getDomainName() + ":type=J2EEApplication" +
                 ",name=" + pApplicationName + "," + lServerName + ",*"
@@ -74,7 +74,7 @@ public class EJBModule
          lDD = J2EEDeployedObject.getDeploymentDescriptor( pURL, J2EEDeployedObject.EJB );
       }
       catch( Exception e ) {
-//AS         lLog.error( "Could not create JSR-77 EJBModule: " + pApplicationName, e );
+//AS         lLog.error( "Could not create JSR-77 EjbModule: " + pApplicationName, e );
          return null;
       }
       try {
@@ -85,7 +85,7 @@ public class EJBModule
             ", dd: " + lDD
          );
          return pServer.createMBean(
-            "org.jboss.management.j2ee.EJBModule",
+            "org.jboss.management.j2ee.EjbModule",
             null,
             new Object[] {
                pName,
@@ -100,19 +100,19 @@ public class EJBModule
          ).getObjectName();
       }
       catch( Exception e ) {
-//AS         lLog.error( "Could not create JSR-77 EJBModule: " + pApplicationName, e );
+//AS         lLog.error( "Could not create JSR-77 EjbModule: " + pApplicationName, e );
          return null;
       }
    }
    
    public static void destroy( MBeanServer pServer, String pModuleName ) {
-      Logger lLog = Logger.getLogger( EJBModule.class );
+      Logger lLog = Logger.getLogger( EjbModule.class );
       try {
-         // Now remove the EJBModule
+         // Now remove the EjbModule
          pServer.unregisterMBean( new ObjectName( pModuleName ) );
       }
       catch( Exception e ) {
-//AS         lLog.error( "Could not destory JSR-77 EJBModule: " + pModuleName, e );
+//AS         lLog.error( "Could not destory JSR-77 EjbModule: " + pModuleName, e );
       }
    }
    
@@ -126,17 +126,17 @@ public class EJBModule
    *
    * @throws InvalidParameterException If the given Name is null
    **/
-   public EJBModule( String pName, ObjectName pApplication, String pDeploymentDescriptor )
+   public EjbModule( String pName, ObjectName pApplication, String pDeploymentDescriptor )
       throws
          MalformedObjectNameException,
          InvalidParentException
    {
-      super( "EJBModule", pName, pApplication, pDeploymentDescriptor );
+      super( "EjbModule", pName, pApplication, pDeploymentDescriptor );
    }
 
    // Public --------------------------------------------------------
    
-   // EJBModule implementation --------------------------------------
+   // EjbModule implementation --------------------------------------
    
    public ObjectName[] getEjbs() {
       return (ObjectName[]) mEJBs.toArray( new ObjectName[ 0 ] );
@@ -180,7 +180,7 @@ public class EJBModule
    // Object overrides ---------------------------------------------------
    
    public String toString() {
-      return "EJBModule[ " + super.toString() +
+      return "EjbModule[ " + super.toString() +
          "EJBs: " + mEJBs +
          " ]";
    }
