@@ -1,4 +1,4 @@
-// $Id: TestMyTokenizer.java,v 1.4 2004/02/24 08:28:20 linus Exp $
+// $Id: TestMyTokenizer.java,v 1.5 2004/06/29 00:14:58 d00mst Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -289,6 +289,32 @@ public class TestMyTokenizer extends TestCase {
 	    assertTrue("Allows nulls", false);
 	} catch (NullPointerException npe) {
 	}
+    }
+
+    public void testLineSeparator() {
+	MyTokenizer st = new MyTokenizer("str1\nstr2\r\nstr3\rstr4",
+					 "",
+					 MyTokenizer.LINE_SEPARATOR);
+	MyTokenizer st2 = new MyTokenizer("\n\n\r\n\r\n\r\r",
+					  "",
+					  MyTokenizer.LINE_SEPARATOR);
+
+	assertEquals(st.nextElement(), "str1");
+	assertEquals(st.nextElement(), "\n");
+	assertEquals(st.nextElement(), "str2");
+	assertEquals(st.nextElement(), "\r\n");
+	assertEquals(st.nextElement(), "str3");
+	assertEquals(st.nextElement(), "\r");
+	assertEquals(st.nextElement(), "str4");
+	assertTrue(!st.hasMoreElements());
+
+	assertEquals(st2.nextElement(), "\n");
+	assertEquals(st2.nextElement(), "\n");
+	assertEquals(st2.nextElement(), "\r\n");
+	assertEquals(st2.nextElement(), "\r\n");
+	assertEquals(st2.nextElement(), "\r");
+	assertEquals(st2.nextElement(), "\r");
+	assertTrue(!st2.hasMoreElements());
     }
 
     private void checkConstr(String str, String delim, String res[]) {
