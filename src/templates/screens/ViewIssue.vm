@@ -22,6 +22,9 @@
  #if ($fullHistory)
    <input type="hidden" name="fullHistory" value="$fullHistory" />
  #end
+ #foreach ($prevNextId in $prevNextList)
+   <input type="hidden" name="issueList" value="$prevNextId" />
+ #end
 
 #if ($data.User.getTemp($scarabG.Constant.TAB_KEY))
     #set ($tab = $data.User.getTemp($scarabG.Constant.TAB_KEY))
