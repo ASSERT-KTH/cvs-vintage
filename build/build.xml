@@ -23,12 +23,7 @@
     <property name="ant.home" value="."/>
     <property name="year" value="2000-2001"/>
 
-    <property name="build.dir" value="../target"/>
-    <property name="build.webapps" value="${build.dir}/webapps"/>
-    <property name="build.project" value="${build.webapps}/${project}"/>
-    <property name="build.project.webinf" value="${build.project}/WEB-INF"/>
-    <property name="build.src" value="${build.project.webinf}/src"/>
-    <property name="build.dest" value="${build.project.webinf}/classes"/>
+    <property name="build.dir.default" value="../target"/>
 
     <property name="src.dir" value="../src"/>
     <property name="src.conf.dir" value="${src.dir}/conf"/>
@@ -50,9 +45,28 @@
     </path>
 
     <!-- ================================================================== -->
+    <!-- Prepares the Build directory properties                            -->
+    <!-- ================================================================== -->
+    <target name="pre-prepare-build.dir" unless="build.dir">
+        <property name="build.dir" value="${build.dir.default}"/>
+        <property name="prepare-tomcat-true" value="yes"/>
+    </target>
+    <target name="prepare-build.dir" depends="pre-prepare-build.dir">
+        <property name="build.webapps" value="${build.dir}/webapps"/>
+        <property name="build.project" value="${build.webapps}/${project}"/>
+        <property name="build.project.webinf" value="${build.project}/WEB-INF"/>
+        <property name="build.src" value="${build.project.webinf}/src"/>
+        <property name="build.dest"
+                 value="${build.project.webinf}/classes"/>
+    </target>
+
+    <!-- ================================================================== -->
     <!-- Prepares the Tomcat directory                                      -->
     <!-- ================================================================== -->
-    <target name="prepare-tomcat">
+    <target name="prepare-tomcat" if="prepare-tomcat-true" 
+         depends="prepare-build.dir">
+
+        <echo message="Build Dir: ${build.dir}"/>
         <mkdir dir="${build.dir}"/>
 
         <!-- copy over tomcat -->
@@ -68,9 +82,9 @@
     </target>
 
     <!-- ================================================================== -->
-    <!-- Prepares the build directory                                   -->
+    <!-- Prepares the build directory                                       -->
     <!-- ================================================================== -->
-    <target name="prepare" depends="prepare-tomcat">
+    <target name="prepare" depends="prepare-tomcat, prepare-build.dir">
 
         <!-- things to go into the project directory -->
         <copy todir="${build.project}" filtering="no">
@@ -183,7 +197,8 @@
             <fileset dir="../lib"/>
         </copy>
 
-        <copy file="${build.dir}/${final.name}.jar" tofile="${final.dir}/${final.name}.jar"/>
+        <copy file="${build.dir}/${final.name}.jar" 
+            tofile="${final.dir}/${final.name}.jar"/>
     </target>
     -->
 
@@ -193,7 +208,8 @@
     <!--
     <target name="package-zip" depends="package">
         <delete file="../${Name}-${version}.zip"/>
-        <zip zipfile="../${Name}-${version}.zip" basedir="../" includes="**/${final.name}/**"/>
+        <zip zipfile="../${Name}-${version}.zip" 
+             basedir="../" includes="**/${final.name}/**"/>
     </target>
     -->
 
@@ -204,8 +220,10 @@
     <target name="package-tgz" depends="package">
         <delete file="../${Name}-${version}.tar"/>
         <delete file="../${Name}-${version}.tar.gz"/>
-        <tar tarfile="../${Name}-${version}.tar" basedir="../" includes="**/${final.name}/**"/>
-        <gzip zipfile="../${Name}-${version}.tar.gz" src="../${Name}-${version}.tar"/>
+        <tar tarfile="../${Name}-${version}.tar" 
+             basedir="../" includes="**/${final.name}/**"/>
+        <gzip zipfile="../${Name}-${version}.tar.gz" 
+                  src="../${Name}-${version}.tar"/>
     </target>
     -->
 
@@ -228,7 +246,10 @@
     <!-- ================================================================== -->
     <!-- Cleans up the build directory                                      -->
     <!-- ================================================================== -->
-    <target name="clean">
+    <target name="clean" depends="prepare-build.dir">
+        <delete dir="${build.project}"/>
+    </target>
+    <target name="clean-all" depends="prepare-build.dir">
         <delete dir="${build.dir}"/>
     </target>
 
