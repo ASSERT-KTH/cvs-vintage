@@ -829,13 +829,22 @@ public  class Report
     public List getPossibleCommitters()
         throws Exception
     {
-        List users = Arrays.asList(getModule().getEligibleIssueReporters());
-        List options = new ArrayList(users.size());
-        for ( int j=0; j<users.size(); j++ ) 
+        ScarabUser[] userArray = getModule().getEligibleIssueReporters();
+        List options = null;
+        if (userArray != null && userArray.length > 0) 
         {
-            ScarabUser user = (ScarabUser)users.get(j);
-            options.add( new ReportOptionModel(user) );
-        }               
+            List users = Arrays.asList(userArray);
+            options = new ArrayList(users.size());
+            for ( int j=0; j<users.size(); j++ ) 
+            {
+                ScarabUser user = (ScarabUser)users.get(j);
+                options.add( new ReportOptionModel(user) );
+            }               
+        }
+        else 
+        {
+            options = new ArrayList(0);
+        }
 
         return options;
     }
