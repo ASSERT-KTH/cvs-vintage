@@ -1,6 +1,6 @@
 <!-- 
     Intake XML input constraints DTD 
-    $Id: intake.dtd,v 1.6 2001/05/31 01:44:51 jon Exp $
+    $Id: intake.dtd,v 1.7 2001/06/12 20:05:28 jon Exp $
 -->
 
 <!ELEMENT input-data (group+)>
@@ -24,6 +24,7 @@
        | StringKey | NumberKey | DateKey | ComboKey ) "String"      
   onError CDATA #IMPLIED
   multiValued ( true | false ) "false"
+  displayName CDATA #IMPLIED
   mapToObject CDATA #IMPLIED
   mapToProperty CDATA #IMPLIED
   validator CDATA #IMPLIED
