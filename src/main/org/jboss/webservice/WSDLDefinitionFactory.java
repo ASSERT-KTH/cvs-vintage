@@ -6,7 +6,7 @@
  */
 package org.jboss.webservice;
 
-// $Id: WSDLDefinitionFactory.java,v 1.11 2004/06/22 14:28:28 tdiesler Exp $
+// $Id: WSDLDefinitionFactory.java,v 1.12 2004/07/20 15:19:02 tdiesler Exp $
 
 import org.jboss.logging.Logger;
 import org.xml.sax.InputSource;
@@ -16,14 +16,10 @@ import javax.wsdl.WSDLException;
 import javax.wsdl.factory.WSDLFactory;
 import javax.wsdl.xml.WSDLLocator;
 import javax.wsdl.xml.WSDLReader;
-import java.io.BufferedReader;
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.PrintStream;
-import java.io.StringReader;
-import java.net.URL;
 import java.net.MalformedURLException;
+import java.net.URL;
 
 /**
  * A factory that creates a WSDL <code>Definition</code> from an URL.
@@ -71,38 +67,8 @@ public class WSDLDefinitionFactory
       if (wsdlLocation == null)
          throw new IllegalArgumentException("URL cannot be null");
 
-      // wsdl4j is quite noisy on system out, we swallow the output
-      PrintStream out = System.out;
-      ByteArrayOutputStream baos = new ByteArrayOutputStream(128);
-      System.setOut(new PrintStream(baos));
-
-      Definition wsdlDefinition = null;
-      try
-      {
-         wsdlDefinition = wsdlReader.readWSDL(new WSDLLocatorImpl(wsdlLocation));
-      }
-      finally
-      {
-         System.setOut(out);
-      }
-
-      // write wsdl4j output as trace
-      try
-      {
-         baos.close();
-         BufferedReader br = new BufferedReader(new StringReader(new String(baos.toByteArray())));
-         String line = br.readLine();
-         while (line != null)
-         {
-            log.trace(line);
-            line = br.readLine();
-         }
-      }
-      catch (IOException ignore)
-      {
-         // do nothing
-      }
-
+      // wsdl4j-1.4 is quite noisy on system out in verbose mode
+      Definition wsdlDefinition = wsdlReader.readWSDL(new WSDLLocatorImpl(wsdlLocation));
       return wsdlDefinition;
    }
 
