@@ -76,7 +76,7 @@ import org.tigris.scarab.om.ModuleManager;
  * @author <a href="mailto:jmcnally@collab.new">John McNally</a>
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
- * @version $Id: AttributeValue.java,v 1.70 2002/07/30 22:48:15 jmcnally Exp $
+ * @version $Id: AttributeValue.java,v 1.71 2002/08/15 20:15:16 jon Exp $
  */
 public abstract class AttributeValue 
     extends BaseAttributeValue
@@ -263,7 +263,7 @@ public abstract class AttributeValue
         if ( chainedValue != null ) 
         {
             chainedValue.endActivitySet();
-        }        
+        }
     }
 
     private void checkActivitySet(String errorMessage)
@@ -758,7 +758,7 @@ public abstract class AttributeValue
                                     oldNumericValue, getNumericValue(), oldUserId,
                                     getUserId(), oldOptionId, getOptionId(), 
                                     oldValue, getValue(), dbcon);
-        }        
+        }
         super.save(dbcon);
         if ( chainedValue != null ) 
         {
