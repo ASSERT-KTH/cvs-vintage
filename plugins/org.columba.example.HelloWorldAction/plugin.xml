@@ -6,9 +6,13 @@
   <action name="HelloWorld" class="com.mycom.HelloWorldAction" />
  </extension>
  <extension name="org.columba.mail.menu">
-  <menu name="menu_utilities" extensionpoint="top">
+  <menu name="menu_utilities" extensionpoint="bottom">
+   <menu name="trest">
+   
   	<menuitem action="org.columba.example.HelloWorldAction$HelloWorld"/>
+  	
   	<separator/>
+  	</menu>
   </menu>
  </extension>
  <runtime type="java" jar="HelloWorldAction.jar"/>
