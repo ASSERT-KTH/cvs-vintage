@@ -1,4 +1,4 @@
-// $Id: DiagramInfo.java,v 1.10 2004/09/10 20:05:30 mvw Exp $
+// $Id: DiagramInfo.java,v 1.11 2004/09/29 18:46:27 mvw Exp $
 // Copyright (c) 1996-2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -42,16 +42,15 @@ import org.argouml.uml.diagram.static_structure.ui.UMLClassDiagram;
 import org.argouml.uml.diagram.use_case.ui.UMLUseCaseDiagram;
 import org.tigris.gef.base.Diagram;
 
+/**
+ * This class holds information about a diagram.
+ * Currently, it only holds the name of the diagram.
+ *
+ */
 public class DiagramInfo extends JComponent {
-
-    ////////////////////////////////////////////////////////////////
-    // instance variables
 
     private Diagram diagram = null;
     private JLabel name = null;
-
-    ////////////////////////////////////////////////////////////////
-    // constructor
 
     /**
      * The constructor.
@@ -75,10 +74,8 @@ public class DiagramInfo extends JComponent {
 	return this;
     }
 
-    ////////////////////////////////////////////////////////////////
-    // updates
     /**
-     * the name of the diagram
+     * Update the name of the diagram.
      */
     public void updateName() {
 	if (name == null)

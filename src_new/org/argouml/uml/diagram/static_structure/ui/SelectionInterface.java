@@ -1,4 +1,4 @@
-// $Id: SelectionInterface.java,v 1.21 2004/08/28 15:15:19 mvw Exp $
+// $Id: SelectionInterface.java,v 1.22 2004/09/29 18:46:28 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -165,10 +165,10 @@ public class SelectionInterface extends SelectionWButtons {
      * TODO: This is never used by anybody. What is it for? 
      * Document it, or remove!
      *
-     * @param mgm
-     * @param interf4ce
-     * @param cl4ss
-     * @return
+     * @param mgm the graphmodel
+     * @param interf4ce a UML interface
+     * @param cl4ss a UML class 
+     * @return the new realization edge
      */
     public Object addRealization(MutableGraphModel mgm, Object interf4ce,
 				 Object cl4ss) {

@@ -1,4 +1,4 @@
-// $Id: SequenceDiagramRenderer.java,v 1.12 2004/09/09 18:07:17 mvw Exp $
+// $Id: SequenceDiagramRenderer.java,v 1.13 2004/09/29 18:46:28 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -26,7 +26,7 @@
 // Classes: SequenceDiagramRenderer
 // Original Author: 5eichler@inormatik.uni-hamburg.de
 
-// $Id: SequenceDiagramRenderer.java,v 1.12 2004/09/09 18:07:17 mvw Exp $
+// $Id: SequenceDiagramRenderer.java,v 1.13 2004/09/29 18:46:28 mvw Exp $
 
 
 package org.argouml.uml.diagram.sequence.ui;
@@ -40,6 +40,10 @@ import org.tigris.gef.graph.GraphNodeRenderer;
 import org.tigris.gef.presentation.FigEdge;
 import org.tigris.gef.presentation.FigNode;
 
+/**
+ * This class renders a sequence diagram.
+ *
+ */
 public class SequenceDiagramRenderer
 	implements GraphNodeRenderer, GraphEdgeRenderer {
     private static final Logger LOG =
@@ -48,7 +52,9 @@ public class SequenceDiagramRenderer
     /** 
      * Return a Fig that can be used to represent the given node.
      * 
-     * @see org.tigris.gef.graph.GraphNodeRenderer#getFigNodeFor(org.tigris.gef.graph.GraphModel, org.tigris.gef.base.Layer, java.lang.Object)
+     * @see org.tigris.gef.graph.GraphNodeRenderer#getFigNodeFor(
+     * org.tigris.gef.graph.GraphModel, org.tigris.gef.base.Layer, 
+     * java.lang.Object)
      */
     public FigNode getFigNodeFor(GraphModel gm, Layer lay, Object node) {
 	if (ModelFacade.isAObject(node))
@@ -62,7 +68,9 @@ public class SequenceDiagramRenderer
     /** 
      * Return a Fig that can be used to represent the given edge.
      * 
-     * @see org.tigris.gef.graph.GraphEdgeRenderer#getFigEdgeFor(org.tigris.gef.graph.GraphModel, org.tigris.gef.base.Layer, java.lang.Object)
+     * @see org.tigris.gef.graph.GraphEdgeRenderer#getFigEdgeFor(
+     * org.tigris.gef.graph.GraphModel, org.tigris.gef.base.Layer, 
+     * java.lang.Object)
      */
     public FigEdge getFigEdgeFor(GraphModel gm, Layer lay, Object edge) {
 	if (ModelFacade.isALink(edge)) {

@@ -1,4 +1,4 @@
-// $Id: ClassdiagramInheritanceEdge.java,v 1.8 2004/09/21 19:03:30 mvw Exp $
+// $Id: ClassdiagramInheritanceEdge.java,v 1.9 2004/09/29 18:46:28 mvw Exp $
 // Copyright (c) 1996-2001 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -36,7 +36,7 @@ public abstract class ClassdiagramInheritanceEdge extends ClassdiagramEdge {
     private static final Logger LOG = 
         Logger.getLogger(ClassdiagramInheritanceEdge.class);
     
-    Fig high, low;
+    private Fig high, low;
     
     /**
      * Constructor.
@@ -70,11 +70,17 @@ public abstract class ClassdiagramInheritanceEdge extends ClassdiagramEdge {
      */
     public abstract int getVerticalOffset();
         
+    /**
+     * @return the center of the high node
+     */
     public int getCenterHigh() {
         return (int) 
 	    (high.getLocation().getX() + high.getSize().getWidth() / 2);
     }
     
+    /**
+     * @return the center of the low node
+     */
     public int getCenterLow() {
         return (int) (low.getLocation().getX() + low.getSize().getWidth() / 2);
     }

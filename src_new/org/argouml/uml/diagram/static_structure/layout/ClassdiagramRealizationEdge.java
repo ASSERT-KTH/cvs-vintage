@@ -1,4 +1,4 @@
-// $Id: ClassdiagramRealizationEdge.java,v 1.5 2004/09/09 18:07:19 mvw Exp $
+// $Id: ClassdiagramRealizationEdge.java,v 1.6 2004/09/29 18:46:28 mvw Exp $
 // Copyright (c) 1996-2001 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -53,18 +53,14 @@ public class ClassdiagramRealizationEdge extends ClassdiagramInheritanceEdge {
      * @see org.argouml.uml.diagram.static_structure.layout.ClassdiagramInheritanceEdge#getCenterHigh()
      */
     public int getCenterHigh() {
-        return
-	    (int)
-	    (high.getLocation().getX() + high.getSize().getWidth() / 2 + 10);
+        return super.getCenterHigh() + 10;
     }
     
     /**
      * @see org.argouml.uml.diagram.static_structure.layout.ClassdiagramInheritanceEdge#getCenterLow()
      */
     public int getCenterLow() {
-        return
-	    (int)
-	    (low.getLocation().getX() + low.getSize().getWidth() / 2 + 10);
+        return super.getCenterLow() + 10;
     }    
 }
 

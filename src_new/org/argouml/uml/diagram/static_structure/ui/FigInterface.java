@@ -1,4 +1,4 @@
-// $Id: FigInterface.java,v 1.74 2004/09/27 21:18:23 mvw Exp $
+// $Id: FigInterface.java,v 1.75 2004/09/29 18:46:28 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -99,10 +99,10 @@ public class FigInterface extends FigNodeModelElement
 
     /**
      * Manages residency of an interface within a component on a deployment
-     * diagram. Not clear why it is public, or even why it is an instance
+     * diagram. Not clear why it is an instance
      * variable (rather than local to the method).<p>
      */
-    public Object resident =
+    private Object resident =
         UmlFactory.getFactory().getCore().createElementResidence();
 
     /**

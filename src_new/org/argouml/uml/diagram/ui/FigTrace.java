@@ -1,4 +1,4 @@
-// $Id: FigTrace.java,v 1.4 2004/09/10 20:05:30 mvw Exp $
+// $Id: FigTrace.java,v 1.5 2004/09/29 18:46:27 mvw Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -31,14 +31,14 @@ import java.awt.Color;
 import org.tigris.gef.presentation.ArrowHeadTriangle;
 import org.tigris.gef.presentation.FigEdgeLine;
 
+/**
+ * This class is not used at all.
+ *
+ */
 public class FigTrace extends FigEdgeLine {
-
-    ////////////////////////////////////////////////////////////////
-    // constructors
 
     /**
      * The constructor.
-     * 
      */
     public FigTrace() {
 	_fig.setLineColor(Color.red);

@@ -1,4 +1,4 @@
-// $Id: NewspaperLayout.java,v 1.12 2004/09/27 19:49:41 mvw Exp $
+// $Id: NewspaperLayout.java,v 1.13 2004/09/29 18:46:27 mvw Exp $
 // Copyright (c) 2003-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -174,14 +174,14 @@ public class NewspaperLayout extends GridLayout2 {
                         int i = r * ncols + c;
                         if (parent.getComponent(i).getPreferredSize().getWidth()
                                 > getColWidth()[c]) {
-                                getColWidth()[c] = (int) parent.getComponent(i)
+                            getColWidth()[c] = (int) parent.getComponent(i)
 				    .getPreferredSize().getWidth();
                             if (getColWidth()[c] > getLargestWidth())
 				setLargestWidth(getColWidth()[c]);
                         }
                         if ((parent.getComponent(i).getPreferredSize()
                                 .getHeight()) > getRowHeight()[r]) {
-                                getRowHeight()[r] = (int) parent.getComponent(i)
+                            getRowHeight()[r] = (int) parent.getComponent(i)
 				    .getPreferredSize().getHeight();
                             if (getRowHeight()[r] > getLargestHeight()) {
                                 setLargestHeight(getRowHeight()[r]);

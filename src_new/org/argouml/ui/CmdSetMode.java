@@ -1,4 +1,4 @@
-// $Id: CmdSetMode.java,v 1.5 2004/03/20 07:43:30 linus Exp $
+// $Id: CmdSetMode.java,v 1.6 2004/09/29 18:46:29 mvw Exp $
 // Copyright (c) 2003-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -43,10 +43,20 @@ public class CmdSetMode extends org.tigris.gef.base.CmdSetMode {
 
     private static final String ACTION_PREFIX_KEY = "action.new";
 
+    /**
+     * The constructor.
+     * 
+     * @param args arguments
+     */
     public CmdSetMode(Properties args) {
         super(args);
     }
 
+    /**
+     * The constructor.
+     * 
+     * @param modeClass the mode
+     */
     public CmdSetMode(Class modeClass) {
         super(modeClass);
     }

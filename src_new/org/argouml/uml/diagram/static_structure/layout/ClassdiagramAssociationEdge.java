@@ -1,4 +1,4 @@
-// $Id: ClassdiagramAssociationEdge.java,v 1.7 2004/09/21 19:03:30 mvw Exp $
+// $Id: ClassdiagramAssociationEdge.java,v 1.8 2004/09/29 18:46:28 mvw Exp $
 // Copyright (c) 1996-2001 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -51,13 +51,15 @@ public class ClassdiagramAssociationEdge extends ClassdiagramEdge {
         // runner find the way.
         if (getDestFigNode() == getSourceFigNode()) {
             Point centerRight = getCenterRight((FigNode) getSourceFigNode());
-            int yoffset = (int) ((getSourceFigNode().getSize().getHeight() / 2));
+            int yoffset = 
+                (int) ((getSourceFigNode().getSize().getHeight() / 2));
             yoffset = java.lang.Math.min(30, yoffset);
             getUnderlyingFig().addPoint(centerRight.x, centerRight.y);
             // move more right
             getUnderlyingFig().addPoint(centerRight.x + 30, centerRight.y);
             // move down
-            getUnderlyingFig().addPoint(centerRight.x + 30, centerRight.y + yoffset);
+            getUnderlyingFig().addPoint(centerRight.x + 30, 
+                                        centerRight.y + yoffset);
             // move left
             getUnderlyingFig().addPoint(centerRight.x, centerRight.y + yoffset);
             

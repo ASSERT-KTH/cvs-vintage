@@ -1,4 +1,4 @@
-// $Id: PropPanelString.java,v 1.12 2004/09/11 06:34:51 mvw Exp $
+// $Id: PropPanelString.java,v 1.13 2004/09/29 18:46:27 mvw Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -39,6 +39,10 @@ import org.argouml.uml.ui.TabModelTarget;
 
 import org.tigris.gef.presentation.FigText;
 
+/**
+ * The properties panel for a simple text / string.
+ *
+ */
 public class PropPanelString
     extends TabSpawnable
     implements TabModelTarget, PropertyChangeListener, DocumentListener

@@ -1,4 +1,4 @@
-// $Id: ActionModifier.java,v 1.3 2004/08/14 19:28:19 mvw Exp $
+// $Id: ActionModifier.java,v 1.4 2004/09/29 18:46:27 mvw Exp $
 // Copyright (c) 1996-2001 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,7 +25,7 @@
 // File: ActionModifier.java
 // Classes: ActionModifier
 // Original Author: Bob Tarling
-// $Id: ActionModifier.java,v 1.3 2004/08/14 19:28:19 mvw Exp $
+// $Id: ActionModifier.java,v 1.4 2004/09/29 18:46:27 mvw Exp $
 
 // 9 Apr 2002: Jeremy Bennett (mail@jeremybennett.com). Extended to support
 // use cases
@@ -48,7 +48,7 @@ import org.argouml.model.ModelFacade;
  */
 
 public class ActionModifier extends UMLAction {
-    private UMLBooleanProperty _property;
+    private UMLBooleanProperty property;
     private Object object;
     private Class mclassClass = (Class) ModelFacade.CLASS;
     private Class mpackageClass = (Class) ModelFacade.PACKAGE;
@@ -77,11 +77,11 @@ public class ActionModifier extends UMLAction {
 			  Object mclass) {
 	super(name, NO_ICON);
 	this.object = mclass;
-	_property =
+	property =
 	    new UMLReflectionBooleanProperty(propertyName, mclassClass,
 					     getMethod,
 					     setMethod);
-	putValue("SELECTED", new Boolean(_property.getProperty(object)));
+	putValue("SELECTED", new Boolean(property.getProperty(object)));
     }
 
     /**
@@ -111,14 +111,14 @@ public class ActionModifier extends UMLAction {
     {
 	super(name, NO_ICON);
 	this.object = mclass;
-	_property =
+	property =
 	    new UMLEnumerationBooleanProperty(propertyName, mclassClass,
 					      getMethod,
 					      setMethod,
 					      enumClass,
 					      theTrueValue,
 					      theFalseValue);
-	putValue("SELECTED", new Boolean(_property.getProperty(object)));
+	putValue("SELECTED", new Boolean(property.getProperty(object)));
     }
 
     ////////////////////////////////////////////////////////////////
@@ -131,7 +131,7 @@ public class ActionModifier extends UMLAction {
      */
     public void actionPerformed(ActionEvent ae) {
     	try {
-	    _property.setProperty(object, !_property.getProperty(object));
+	    property.setProperty(object, !property.getProperty(object));
     	}
     	catch (PropertyVetoException ve) { }
     }

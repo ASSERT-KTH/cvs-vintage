@@ -1,4 +1,4 @@
-// $Id: ClassdiagramModelElementFactory.java,v 1.8 2004/09/09 18:07:19 mvw Exp $
+// $Id: ClassdiagramModelElementFactory.java,v 1.9 2004/09/29 18:46:28 mvw Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -42,7 +42,7 @@ public class ClassdiagramModelElementFactory
     /**
      * The singleton.
      */
-    public static ClassdiagramModelElementFactory SINGLETON =
+    public static final ClassdiagramModelElementFactory SINGLETON =
 	new ClassdiagramModelElementFactory();
     
     private ClassdiagramModelElementFactory() { }
