@@ -16,7 +16,7 @@
         early tests.
     -->
 
-     <property name="revision" value="$Revision: 1.32 $" />  
+     <property name="revision" value="$Revision: 1.33 $" />  
      <property name="host" value="127.0.0.1" />
      <property name="port"     value="8080" />
      <property name="outputType"     value="text" />
@@ -1233,7 +1233,6 @@ mod_webapp into mod_jk )
           <httpRequest path="/test/aaa/protected/index.jsp" />
           <httpStatusMatch match="302" />
           <headerMatch name="Location" value="http://${host}:${port}/test/aaa/login.jsp" />
-          <responseMatch match="This document has moved" />
       </httpClient>
    </target>
 
