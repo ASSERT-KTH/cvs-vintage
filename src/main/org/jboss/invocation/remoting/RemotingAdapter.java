@@ -146,10 +146,10 @@ public class RemotingAdapter
       }
       catch (ClassCastException cce)
       {
-         log.error("***CCE want InvocationResponse, the object is:" + result.getClass().getName());
+         System.err.println("***CCE want InvocationResponse, the object is:" + result.getClass().getName());
          if (marshalled.getMethod() != null)
          {
-            log.error("calling method: " + marshalled.getMethod().getName());
+            System.err.println("calling method: " + marshalled.getMethod().getName());
          }
          throw cce;
       }

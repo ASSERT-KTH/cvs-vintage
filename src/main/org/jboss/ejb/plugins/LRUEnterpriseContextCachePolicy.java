@@ -6,68 +6,67 @@
  */
 package org.jboss.ejb.plugins;
 
-import java.util.HashMap;
-import java.util.Timer;
-import java.util.TimerTask;
-
 import org.jboss.deployment.DeploymentException;
 import org.jboss.ejb.EnterpriseContext;
 import org.jboss.logging.Logger;
-import org.jboss.metadata.XmlLoadable;
 import org.jboss.metadata.MetaData;
+import org.jboss.metadata.XmlLoadable;
+import org.jboss.monitor.Monitorable;
+import org.jboss.monitor.client.BeanCacheSnapshot;
 import org.jboss.util.LRUCachePolicy;
 import org.w3c.dom.Element;
 
-import org.jboss.monitor.Monitorable;
-import org.jboss.monitor.client.BeanCacheSnapshot;
+import java.util.Timer;
+import java.util.TimerTask;
 
 /**
  * Least Recently Used cache policy for EnterpriseContexts.
  *
  * @see AbstractInstanceCache
  * @author <a href="mailto:simone.bordet@compaq.com">Simone Bordet</a>
- * @version $Revision: 1.19 $
+ * @version $Revision: 1.20 $
  */
 public class LRUEnterpriseContextCachePolicy
-   extends LRUCachePolicy
-   implements XmlLoadable, Monitorable
+        extends LRUCachePolicy
+        implements XmlLoadable, Monitorable
 {
    // Constants -----------------------------------------------------
 
    // Attributes ----------------------------------------------------
    protected static Logger log = Logger.getLogger(LRUEnterpriseContextCachePolicy.class);
    protected static Timer tasksTimer = new Timer(true);
+
    static
    {
-      log.debug("Cache policy timer started, tasksTimer="+tasksTimer);
+      log.debug("Cache policy timer started, tasksTimer=" + tasksTimer);
    }
 
    /** The AbstractInstanceCache that uses this cache policy */
    private AbstractInstanceCache m_cache;
-   
+
    /** The period of the resizer's runs */
    private long m_resizerPeriod;
-   
+
    /** The period of the overager's runs */
    private long m_overagerPeriod;
-   
+
    /** The age after which a bean is automatically passivated */
    private long m_maxBeanAge;
-   
+
    /**
     * Enlarge cache capacity if there is a cache miss every or less
     * this member's value
     */
    private long m_minPeriod;
-   
+
    /**
     * Shrink cache capacity if there is a cache miss every or more
     * this member's value
     */
    private long m_maxPeriod;
-   
+
    /**
-    * The resizer will always try to keep the cache capacity so 
+    * The resizer will always try to keep the cache capacity so
     * that the cache is this member's value loaded of cached objects
     */
    private double m_factor;
@@ -77,7 +76,7 @@ public class LRUEnterpriseContextCachePolicy
 
    /** The resizer timer task */
    private TimerTask m_resizer;
-   
+
    /** Useful for log messages */
    private StringBuffer m_buffer = new StringBuffer();
 
@@ -88,14 +87,14 @@ public class LRUEnterpriseContextCachePolicy
 
    /**
     * Creates a LRU cache policy object given the instance cache that use
-    * this policy object. 
+    * this policy object.
     */
-   public LRUEnterpriseContextCachePolicy(AbstractInstanceCache eic) 
-   {	
-      if (eic == null) 
+   public LRUEnterpriseContextCachePolicy(AbstractInstanceCache eic)
+   {
+      if (eic == null)
          throw new IllegalArgumentException
-            ("Instance cache argument cannot be null");
-      
+                 ("Instance cache argument cannot be null");
+
       m_cache = eic;
    }
 
@@ -105,10 +104,10 @@ public class LRUEnterpriseContextCachePolicy
 
    public void sample(Object s)
    {
-      if( m_cache == null )
+      if (m_cache == null)
          return;
 
-      BeanCacheSnapshot snapshot = (BeanCacheSnapshot)s;
+      BeanCacheSnapshot snapshot = (BeanCacheSnapshot) s;
       LRUList list = getList();
       synchronized (m_cache.getCacheLock())
       {
@@ -129,8 +128,8 @@ public class LRUEnterpriseContextCachePolicy
          long delay = (long) (Math.random() * m_resizerPeriod);
          tasksTimer.schedule(m_resizer, delay, m_resizerPeriod);
       }
-				
-      if (m_overagerPeriod > 0) 
+
+      if (m_overagerPeriod > 0)
       {
          m_overager = new OveragerTask(m_overagerPeriod);
          long delay = (long) (Math.random() * m_overagerPeriod);
@@ -138,10 +137,16 @@ public class LRUEnterpriseContextCachePolicy
       }
    }
 
-   public void stop() 
+   public void stop()
    {
-      if (m_resizer != null) {m_resizer.cancel();}
-      if (m_overager != null) {m_overager.cancel();}
+      if (m_resizer != null)
+      {
+         m_resizer.cancel();
+      }
+      if (m_overager != null)
+      {
+         m_overager.cancel();
+      }
       super.stop();
    }
 
@@ -156,11 +161,11 @@ public class LRUEnterpriseContextCachePolicy
    /**
     * Reads from the configuration the parameters for this cache policy, that are
     * all optionals.
-    * FIXME 20010626 marcf: 
+    * FIXME 20010626 marcf:
     *  Simone seriously arent' all the options overkill? give it another 6 month .
     *	 Remember you are exposing the guts of this to the end user, also provide defaults
-    *  so that if an entry is not specified you can still work and it looks _much_ better in 
-    *  the configuration files. 
+    *  so that if an entry is not specified you can still work and it looks _much_ better in
+    *  the configuration files.
     *
     */
    public void importXml(Element element) throws DeploymentException
@@ -173,12 +178,12 @@ public class LRUEnterpriseContextCachePolicy
       String map = MetaData.getElementContent(MetaData.getOptionalChild(element, "max-cache-miss-period"));
       String mip = MetaData.getElementContent(MetaData.getOptionalChild(element, "min-cache-miss-period"));
       String fa = MetaData.getElementContent(MetaData.getOptionalChild(element, "cache-load-factor"));
-      try 
+      try
       {
          if (min != null)
          {
             int s = Integer.parseInt(min);
-            if (s <= 0) 
+            if (s <= 0)
             {
                throw new DeploymentException("Min cache capacity can't be <= 0");
             }
@@ -192,45 +197,63 @@ public class LRUEnterpriseContextCachePolicy
                throw new DeploymentException("Max cache capacity can't be <= 0");
             }
             m_maxCapacity = s;
-         }				
+         }
          if (op != null)
          {
             int p = Integer.parseInt(op);
-            if (p <= 0) {throw new DeploymentException("Overager period can't be <= 0");}
+            if (p <= 0)
+            {
+               throw new DeploymentException("Overager period can't be <= 0");
+            }
             m_overagerPeriod = p * 1000;
          }
-         if (rp != null)				
+         if (rp != null)
          {
             int p = Integer.parseInt(rp);
-            if (p <= 0) {throw new DeploymentException("Resizer period can't be <= 0");}
+            if (p <= 0)
+            {
+               throw new DeploymentException("Resizer period can't be <= 0");
+            }
             m_resizerPeriod = p * 1000;
          }
          if (ma != null)
          {
             int a = Integer.parseInt(ma);
-            if (a <= 0) {throw new DeploymentException("Max bean age can't be <= 0");}
+            if (a <= 0)
+            {
+               throw new DeploymentException("Max bean age can't be <= 0");
+            }
             m_maxBeanAge = a * 1000;
          }
          if (map != null)
          {
             int p = Integer.parseInt(map);
-            if (p <= 0) {throw new DeploymentException("Max cache miss period can't be <= 0");}
+            if (p <= 0)
+            {
+               throw new DeploymentException("Max cache miss period can't be <= 0");
+            }
             m_maxPeriod = p * 1000;
          }
          if (mip != null)
          {
             int p = Integer.parseInt(mip);
-            if (p <= 0) {throw new DeploymentException("Min cache miss period can't be <= 0");}
+            if (p <= 0)
+            {
+               throw new DeploymentException("Min cache miss period can't be <= 0");
+            }
             m_minPeriod = p * 1000;
          }
          if (fa != null)
          {
             double f = Double.parseDouble(fa);
-            if (f <= 0.0) {throw new DeploymentException("Cache load factor can't be <= 0");}
+            if (f <= 0.0)
+            {
+               throw new DeploymentException("Cache load factor can't be <= 0");
+            }
             m_factor = f;
          }
       }
-      catch (NumberFormatException x) 
+      catch (NumberFormatException x)
       {
          throw new DeploymentException("Can't parse policy configuration", x);
       }
@@ -247,18 +270,18 @@ public class LRUEnterpriseContextCachePolicy
       return new ContextLRUList();
    }
 
-   protected void ageOut(LRUCacheEntry entry) 
+   protected void ageOut(LRUCacheEntry entry)
    {
-      if( m_cache == null )
+      if (m_cache == null)
          return;
 
       if (entry == null)
       {
          throw new IllegalArgumentException
-            ("Cannot remove a null cache entry");
+                 ("Cannot remove a null cache entry");
       }
 
-      if( log.isTraceEnabled() )
+      if (log.isTraceEnabled())
       {
          m_buffer.setLength(0);
          m_buffer.append("Aging out from cache bean ");
@@ -271,10 +294,10 @@ public class LRUEnterpriseContextCachePolicy
       }
 
       // This will schedule the passivation
-      m_cache.release((EnterpriseContext)entry.m_object);
+      m_cache.release((EnterpriseContext) entry.m_object);
    }
 
-   protected void cacheMiss() 
+   protected void cacheMiss()
    {
       LRUList list = getList();
       ++list.m_cacheMiss;
@@ -288,7 +311,7 @@ public class LRUEnterpriseContextCachePolicy
    }
 
    // Inner classes -------------------------------------------------
-   
+
    /**
     * This TimerTask resizes the cache capacity using the cache miss frequency
     * algorithm, that is the more cache misses we have, the more the cache size
@@ -302,48 +325,48 @@ public class LRUEnterpriseContextCachePolicy
       private StringBuffer m_buffer;
       private long resizerPeriod;
 
-      protected ResizerTask(long resizerPeriod) 
+      protected ResizerTask(long resizerPeriod)
       {
          this.resizerPeriod = resizerPeriod;
          m_message = "Resized cache for bean " +
-            m_cache.getContainer().getBeanMetaData().getEjbName() +
-            ": old capacity = ";
+                 m_cache.getContainer().getBeanMetaData().getEjbName() +
+                 ": old capacity = ";
          m_buffer = new StringBuffer();
       }
-      
-      public void run() 
+
+      public void run()
       {
          try
          {
             // For now implemented as a Cache Miss Frequency algorithm
-            if( m_cache == null )
+            if (m_cache == null)
             {
                cancel();
                return;
             }
-            
+
             LRUList list = getList();
 
             // Sync with the cache, since it is accessed also by another thread
             synchronized (m_cache.getCacheLock())
             {
-               int period = list.m_cacheMiss == 0 ? Integer.MAX_VALUE : (int)(resizerPeriod / list.m_cacheMiss);
+               int period = list.m_cacheMiss == 0 ? Integer.MAX_VALUE : (int) (resizerPeriod / list.m_cacheMiss);
                int cap = list.m_capacity;
-               if (period <= m_minPeriod && cap < list.m_maxCapacity) 
+               if (period <= m_minPeriod && cap < list.m_maxCapacity)
                {
                   // Enlarge cache capacity: if period == m_minPeriod then
                   // the capacity is increased of the (1-m_factor)*100 %.
-                  double factor = 1.0 + ((double)m_minPeriod / period) * (1.0 - m_factor);
-                  int newCap = (int)(cap * factor);
+                  double factor = 1.0 + ((double) m_minPeriod / period) * (1.0 - m_factor);
+                  int newCap = (int) (cap * factor);
                   list.m_capacity = newCap < list.m_maxCapacity ? newCap : list.m_maxCapacity;
                   log(cap, list.m_capacity);
                }
-               else if (period >= m_maxPeriod && 
-                        cap > list.m_minCapacity && 
-                        list.m_count < (cap * m_factor))
+               else if (period >= m_maxPeriod &&
+                       cap > list.m_minCapacity &&
+                       list.m_count < (cap * m_factor))
                {
                   // Shrink cache capacity
-                  int newCap = (int)(list.m_count / m_factor);
+                  int newCap = (int) (list.m_count / m_factor);
                   list.m_capacity = newCap > list.m_minCapacity ? newCap : list.m_minCapacity;
                   log(cap, list.m_capacity);
                }
@@ -352,13 +375,13 @@ public class LRUEnterpriseContextCachePolicy
          }
          catch (Exception ex)
          {
-            log.error("*****ResizerTask failed", ex);
+            // TODO should we log? log.error("*****ResizerTask failed", ex);
          }
       }
-      
-      private void log(int oldCapacity, int newCapacity) 
+
+      private void log(int oldCapacity, int newCapacity)
       {
-         if( log.isTraceEnabled() )
+         if (log.isTraceEnabled())
          {
             m_buffer.setLength(0);
             m_buffer.append(m_message);
@@ -369,7 +392,7 @@ public class LRUEnterpriseContextCachePolicy
          }
       }
    }
-   
+
    /**
     * This TimerTask passivates cached beans that have not been called for a while.
     */
@@ -378,27 +401,27 @@ public class LRUEnterpriseContextCachePolicy
       private String m_message;
       private StringBuffer m_buffer;
 
-      protected OveragerTask(long period) 
+      protected OveragerTask(long period)
       {
          m_message = getTaskLogMessage() + " " +
-            m_cache.getContainer().getBeanMetaData().getEjbName() +
-            " with id = ";
+                 m_cache.getContainer().getBeanMetaData().getEjbName() +
+                 " with id = ";
          m_buffer = new StringBuffer();
       }
-      
-      public void run() 
+
+      public void run()
       {
          try
          {
-            if( m_cache == null )
+            if (m_cache == null)
             {
                cancel();
                return;
             }
-            
+
             LRUList list = getList();
             long now = System.currentTimeMillis();
-            
+
             synchronized (m_cache.getCacheLock())
             {
                for (LRUCacheEntry entry = list.m_tail; entry != null; entry = list.m_tail)
@@ -406,35 +429,38 @@ public class LRUEnterpriseContextCachePolicy
                   if (now - entry.m_time >= getMaxAge())
                   {
                      int initialSize = list.m_count;
-                     
+
                      // Log informations
                      log(entry.m_key, initialSize);
-                     
+
                      // Kick out of the cache this entry
                      kickOut(entry);
-                     
+
                      int finalSize = list.m_count;
-                     
-                     if (initialSize == finalSize) 
+
+                     if (initialSize == finalSize)
                      {
                         // Here is a bug.
                         throw new IllegalStateException
-                           ("Cache synchronization bug");
+                                ("Cache synchronization bug");
                      }
                   }
-                  else {break;}
+                  else
+                  {
+                     break;
+                  }
                }
             }
          }
          catch (Exception ex)
          {
-            log.error("OveragerTask failed", ex);
+            // TODO should we log? log.error("OveragerTask failed", ex);
          }
       }
-      
-      private void log(Object key, int count) 
+
+      private void log(Object key, int count)
       {
-         if( log.isTraceEnabled() )
+         if (log.isTraceEnabled())
          {
             m_buffer.setLength(0);
             m_buffer.append(m_message);
@@ -444,22 +470,22 @@ public class LRUEnterpriseContextCachePolicy
             log.trace(m_buffer.toString());
          }
       }
-      
+
       protected String getTaskLogMessage()
       {
          return "Scheduling for passivation overaged bean";
       }
-      
+
       protected String getJMSTaskType()
       {
          return "OVERAGER";
       }
-      
+
       protected void kickOut(LRUCacheEntry entry)
       {
          ageOut(entry);
       }
-      
+
       protected long getMaxAge()
       {
          return m_maxBeanAge;
@@ -469,22 +495,24 @@ public class LRUEnterpriseContextCachePolicy
    /**
     * Subclass that logs list activity events.
     */
-   protected class ContextLRUList extends LRUList 
+   protected class ContextLRUList extends LRUList
    {
-      protected void entryAdded(LRUCacheEntry entry) 
+      protected void entryAdded(LRUCacheEntry entry)
       {
-         if( log.isTraceEnabled() )
-            log.trace("entryAdded, entry="+entry);
-      }      
-      protected void entryRemoved(LRUCacheEntry entry) 
-      {
-         if( log.isTraceEnabled() )
-            log.trace("entryRemoved, entry="+entry);
+         if (log.isTraceEnabled())
+            log.trace("entryAdded, entry=" + entry);
       }
-      protected void capacityChanged(int oldCapacity) 
+
+      protected void entryRemoved(LRUCacheEntry entry)
       {
-         if( log.isTraceEnabled() )
-            log.trace("capacityChanged, oldCapacity="+oldCapacity);
+         if (log.isTraceEnabled())
+            log.trace("entryRemoved, entry=" + entry);
+      }
+
+      protected void capacityChanged(int oldCapacity)
+      {
+         if (log.isTraceEnabled())
+            log.trace("capacityChanged, oldCapacity=" + oldCapacity);
       }
    }
 
