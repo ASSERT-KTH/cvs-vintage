@@ -24,8 +24,8 @@ import org.columba.core.gui.util.ButtonWithMnemonic;
 import org.columba.core.gui.util.InfoViewerDialog;
 import org.columba.core.help.HelpManager;
 import org.columba.core.main.MainInterface;
-import org.columba.core.plugin.ExternalToolsPluginHandler;
 import org.columba.core.plugin.PluginHandlerNotFoundException;
+import org.columba.core.pluginhandler.ExternalToolsPluginHandler;
 
 import org.columba.mail.util.MailResourceLoader;
 

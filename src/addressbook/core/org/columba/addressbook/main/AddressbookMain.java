@@ -24,9 +24,9 @@ import org.columba.addressbook.shutdown.SaveAllAddressbooksPlugin;
 import org.columba.core.backgroundtask.TaskInterface;
 import org.columba.core.main.DefaultMain;
 import org.columba.core.main.MainInterface;
-import org.columba.core.plugin.ActionPluginHandler;
-import org.columba.core.plugin.MenuPluginHandler;
 import org.columba.core.plugin.PluginHandlerNotFoundException;
+import org.columba.core.pluginhandler.ActionPluginHandler;
+import org.columba.core.pluginhandler.MenuPluginHandler;
 import org.columba.core.shutdown.ShutdownManager;
 
 

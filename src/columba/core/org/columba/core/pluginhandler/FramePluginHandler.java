@@ -13,26 +13,24 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
 //
 //All Rights Reserved.
-package org.columba.core.plugin;
+package org.columba.core.pluginhandler;
+
+import org.columba.core.plugin.AbstractPluginHandler;
 
 
 /**
- * ConfigPluginHandler provides an easy way for plugins to have
- * their own configuration dialog.
+ * Frames found in package org.columba.core.gui.frame are loaded
+ * dynamically.
  * <p>
- * Note that every plugin can have its own configuration file
- * "config.xml" in its folder anyway.
+ * This makes it possible to write a plugin, for the mail component
+ * where the frame has a completely different layout.
  *
  * @author fdietz
  */
-public class ConfigPluginHandler extends AbstractPluginHandler {
-    /**
- * @param id
- * @param config
- */
-    public ConfigPluginHandler() {
-        super("org.columba.core.config", "org/columba/core/plugin/config.xml");
+public class FramePluginHandler extends AbstractPluginHandler {
+    public FramePluginHandler() {
+        super("org.columba.core.frame", "org/columba/core/plugin/frame.xml");
 
-        parentNode = getConfig().getRoot().getElement("configlist");
+        parentNode = getConfig().getRoot().getElement("framelist");
     }
 }

@@ -24,7 +24,7 @@ import org.columba.core.help.HelpManager;
 import org.columba.core.io.DirectoryIO;
 import org.columba.core.io.ZipFileIO;
 import org.columba.core.main.MainInterface;
-import org.columba.core.plugin.ConfigPluginHandler;
+import org.columba.core.pluginhandler.ConfigPluginHandler;
 import org.columba.core.util.GlobalResourceLoader;
 import org.columba.core.xml.XmlElement;
 

@@ -96,11 +96,6 @@ public class PluginManager {
     }
 
     public String addPlugin(File folder) {
-        if ((!folder.isDirectory()) || (folder.getName().equals("CVS"))) {
-            // this file isn't a directory
-            // -> skip it
-            return null;
-        }
 
         LOG.fine("registering plugin: " + folder);
 
@@ -172,6 +167,8 @@ public class PluginManager {
                     } catch (Exception ex) {
                         LOG.severe(ex.getMessage());
                     }
+                } else {
+                    LOG.severe("No suitable plugin handler with name "+extensionPoint+" found");
                 }
             }
         }
@@ -332,6 +329,14 @@ public class PluginManager {
         }
     }
 
+    public void removeHandler(String id) {
+        if ( pluginHandlers.containsKey(id)) {
+            AbstractPluginHandler h = (AbstractPluginHandler) pluginHandlers.get(id);
+            
+            pluginHandlers.remove(id);
+            
+        }
+    }
     /**
      * register plugin handler at plugin manager
      *

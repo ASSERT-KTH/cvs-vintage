@@ -18,9 +18,9 @@ package org.columba.mail.main;
 import org.columba.core.backgroundtask.TaskInterface;
 import org.columba.core.main.DefaultMain;
 import org.columba.core.main.MainInterface;
-import org.columba.core.plugin.ActionPluginHandler;
-import org.columba.core.plugin.MenuPluginHandler;
 import org.columba.core.plugin.PluginHandlerNotFoundException;
+import org.columba.core.pluginhandler.ActionPluginHandler;
+import org.columba.core.pluginhandler.MenuPluginHandler;
 import org.columba.core.shutdown.ShutdownManager;
 
 import org.columba.mail.config.MailConfig;

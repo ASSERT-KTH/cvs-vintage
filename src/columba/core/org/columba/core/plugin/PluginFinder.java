@@ -15,13 +15,13 @@
 //All Rights Reserved.
 package org.columba.core.plugin;
 
-import org.columba.core.main.MainInterface;
-
 import java.io.File;
-
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Vector;
 import java.util.logging.Logger;
+
+import org.columba.core.main.MainInterface;
 
 
 /**
@@ -80,7 +80,8 @@ public final class PluginFinder {
             System.arraycopy(configList, 0, result, programList.length,
                 configList.length);
 
-            return result;
+            // remove directories which don't contain a plugin
+            return filterDirectories(result);
         } else if (programList != null) {
             return programList;
         } else if (configList != null) {
@@ -88,5 +89,45 @@ public final class PluginFinder {
         }
 
         return null;
+    }
+    
+    /**
+     * Filter out directories which are valid. Remove all
+     * other files.
+     * 
+     * @param files		array of plugin directories
+     * @return			array of valid plugin directories
+     */
+    public static File[] filterDirectories(File[] files) {
+        List list = new ArrayList();
+        
+        for ( int i=0; i<files.length; i++) {
+            if ( checkDirectory(files[i]) ) list.add(files[i]);
+        }
+        
+        File[] newArray = new File[list.size()];
+        return (File[]) list.toArray(newArray);
+    }
+    
+    
+    /**
+     * Check if directory is valid plugin directory.
+     * <p>
+     * A directory is valid if it contains a plugin.xml file
+     * containing the plugin's meta information.
+     * 
+     * @param file		plugin directory to check
+     * @return			true, if directory contains plugin. False, otherwise.
+     */
+    public static boolean checkDirectory(File file) {
+        boolean result = false;
+        
+        if ( file.isDirectory() ) {
+            
+            File plugin = new File(file, "plugin.xml");
+            if ( plugin.exists() ) result = true;
+        }
+        
+        return result;
     }
 }

@@ -21,7 +21,7 @@ import org.columba.core.gui.util.ButtonWithMnemonic;
 import org.columba.core.gui.util.NotifyDialog;
 import org.columba.core.help.HelpManager;
 import org.columba.core.main.MainInterface;
-import org.columba.core.plugin.ConfigPluginHandler;
+import org.columba.core.pluginhandler.ConfigPluginHandler;
 
 import org.columba.mail.util.MailResourceLoader;
 

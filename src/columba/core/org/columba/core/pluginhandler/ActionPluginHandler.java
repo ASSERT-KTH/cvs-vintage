@@ -13,12 +13,13 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003.
 //
 //All Rights Reserved.
-package org.columba.core.plugin;
+package org.columba.core.pluginhandler;
 
 import org.columba.core.action.AbstractColumbaAction;
 import org.columba.core.action.IMenu;
 import org.columba.core.gui.frame.FrameMediator;
 import org.columba.core.io.DiskIO;
+import org.columba.core.plugin.AbstractPluginHandler;
 import org.columba.core.xml.XmlElement;
 import org.columba.core.xml.XmlIO;
 

@@ -52,8 +52,8 @@ import org.columba.core.gui.util.FontSelectionDialog;
 import org.columba.core.gui.util.LabelWithMnemonic;
 import org.columba.core.help.HelpManager;
 import org.columba.core.main.MainInterface;
-import org.columba.core.plugin.ConfigPluginHandler;
-import org.columba.core.plugin.ThemePluginHandler;
+import org.columba.core.pluginhandler.ConfigPluginHandler;
+import org.columba.core.pluginhandler.ThemePluginHandler;
 import org.columba.core.util.GlobalResourceLoader;
 import org.columba.core.xml.XmlElement;
 

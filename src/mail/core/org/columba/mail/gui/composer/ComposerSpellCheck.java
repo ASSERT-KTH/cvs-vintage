@@ -16,7 +16,7 @@
 package org.columba.mail.gui.composer;
 
 import org.columba.core.main.MainInterface;
-import org.columba.core.plugin.ExternalToolsPluginHandler;
+import org.columba.core.pluginhandler.ExternalToolsPluginHandler;
 
 import org.columba.mail.config.SpellcheckItem;
 import org.columba.mail.spellcheck.ASpellInterface;

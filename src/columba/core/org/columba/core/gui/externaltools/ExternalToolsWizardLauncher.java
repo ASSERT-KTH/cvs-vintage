@@ -29,8 +29,8 @@ import org.columba.core.externaltools.AbstractExternalToolsPlugin;
 import org.columba.core.gui.util.ImageLoader;
 import org.columba.core.help.HelpManager;
 import org.columba.core.main.MainInterface;
-import org.columba.core.plugin.ExternalToolsPluginHandler;
 import org.columba.core.plugin.PluginHandlerNotFoundException;
+import org.columba.core.pluginhandler.ExternalToolsPluginHandler;
 
 import javax.help.CSH;
 

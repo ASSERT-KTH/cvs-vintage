@@ -19,8 +19,8 @@ import org.columba.core.action.AbstractColumbaAction;
 import org.columba.core.gui.frame.FrameMediator;
 import org.columba.core.gui.util.NotifyDialog;
 import org.columba.core.main.MainInterface;
-import org.columba.core.plugin.MenuPluginHandler;
 import org.columba.core.plugin.PluginHandlerNotFoundException;
+import org.columba.core.pluginhandler.MenuPluginHandler;
 import org.columba.core.xml.XmlElement;
 
 import java.awt.event.MouseAdapter;

@@ -19,7 +19,7 @@ package org.columba.core.gui.config;
 import org.columba.core.gui.util.NotifyDialog;
 import org.columba.core.main.MainInterface;
 import org.columba.core.plugin.PluginHandlerNotFoundException;
-import org.columba.core.plugin.ThemePluginHandler;
+import org.columba.core.pluginhandler.ThemePluginHandler;
 
 import java.awt.Component;
 

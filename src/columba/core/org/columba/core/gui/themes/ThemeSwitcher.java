@@ -25,7 +25,7 @@ import javax.swing.UIManager;
 
 import org.columba.core.gui.themes.plugin.AbstractThemePlugin;
 import org.columba.core.main.MainInterface;
-import org.columba.core.plugin.ThemePluginHandler;
+import org.columba.core.pluginhandler.ThemePluginHandler;
 import org.columba.core.xml.XmlElement;
 
 /**

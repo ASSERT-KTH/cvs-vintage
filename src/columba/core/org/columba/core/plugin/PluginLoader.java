@@ -17,6 +17,7 @@ package org.columba.core.plugin;
 
 import org.columba.core.loader.ExternalClassLoader;
 import org.columba.core.main.MainInterface;
+import org.columba.core.pluginhandler.*;
 import org.columba.core.scripting.AbstractInterpreter;
 
 import java.io.File;

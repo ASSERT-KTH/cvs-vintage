@@ -23,7 +23,7 @@ import org.columba.core.gui.util.DialogStore;
 import org.columba.core.gui.util.NotifyDialog;
 import org.columba.core.main.MainInterface;
 import org.columba.core.plugin.PluginHandlerNotFoundException;
-import org.columba.core.plugin.ViewPluginHandler;
+import org.columba.core.pluginhandler.ViewPluginHandler;
 import org.columba.core.xml.XmlElement;
 
 import org.columba.mail.gui.attachment.AttachmentSelectionHandler;
