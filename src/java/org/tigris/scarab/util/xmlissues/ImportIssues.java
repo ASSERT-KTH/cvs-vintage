@@ -54,12 +54,21 @@ import java.util.Locale;
 import java.io.File;
 import java.io.Writer;
 import java.io.InputStream;
+import java.io.IOException;
 import java.io.FileInputStream;
 import java.io.BufferedInputStream;
+
+import javax.xml.parsers.ParserConfigurationException;
+
+import org.xml.sax.ErrorHandler;
+import org.xml.sax.InputSource;
+import org.xml.sax.SAXException;
+import org.xml.sax.SAXParseException;
 
 import org.apache.commons.fileupload.FileItem;
 
 import org.apache.fulcrum.localization.Localization;
+import org.apache.commons.digester.Digester;
 import org.apache.commons.betwixt.XMLIntrospector;
 import org.apache.commons.betwixt.io.BeanReader;
 import org.apache.commons.betwixt.io.BeanWriter;
@@ -88,13 +97,36 @@ import org.tigris.scarab.om.Module;
  * and execute methods to start running things. Note: If Turbine is already
  * initialized, there is no need to call the init() method.
  *
- * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: ImportIssues.java,v 1.18 2003/05/08 22:08:01 jmcnally Exp $
+ * @author <a href="mailto:jon@latchkey.com">Jon S. Stevens</a>
+ * @author <a href="mailto:dlr@collab.net">Daniel Rall</a>
+ * @version $Id: ImportIssues.java,v 1.19 2003/07/27 02:26:15 dlr Exp $
  */
 public class ImportIssues
+    implements ErrorHandler
 {
     private static final Log LOG = LogFactory.getLog(ImportIssues.class);
 
+    /**
+     * The virtual URL to the document type definition (DTD) used with
+     * this version of Scarab.  Though this file doesn't actually
+     * exist, it's what can be used as a friendly way to refer to
+     * Scarab's DTD in an XML file's <code>DOCTYPE</code> declaration.
+     */
+    public static final String SYSTEM_DTD_URI =
+        "http://scarab.tigris.org/dtd/scarab-0.16.28.dtd";
+
+    /**
+     * The absolute URL to the document type definition (DTD) used
+     * with this version of Scarab.
+     */
+    private static final String INTERNAL_DTD_URI =
+        "http://scarab.tigris.org/unbranded-source/browse/scarab/src/dtd/scarab.dtd?rev=1.49&content-type=text/plain";
+
+    /**
+     * The resource location of the DTD in the classpath.
+     */
+    private static final String DTD_RESOURCE =
+        "/org/tigris/scarab/dtd/scarab-0.16.28.dtd";
 
     /** 
      * Name of the properties file.
@@ -110,13 +142,18 @@ public class ImportIssues
     private boolean sendEmail = false;
     private File xmlFile = null;
 
-    // current file attachment handling code has a security bug that can allow a user
-    // to see any file on the host that is readable by scarab.  It is not easy to exploit
-    // this hole, and there are cases where we want to use the functionality and can be
-    // sure the hole is not being exploited.  So adding a flag to disallow file attachments
-    // when importing through the UI.
+    /**
+     * Current file attachment handling code contains a security hole
+     * which can allow a user to see any file on the host that is
+     * readable by Scarab.  It is not easy to exploit this hole (you
+     * have to know about file paths on a host you likely don't have
+     * access to), and there are cases where we want to use the
+     * functionality and can be sure the hole is not being exploited.
+     * So adding a flag to disallow file attachments when importing
+     * through the UI.  private boolean allowFileAttachments;
+     */    
     private boolean allowFileAttachments;
-    
+
     public ImportIssues()
     {
         this(false);
@@ -214,7 +251,7 @@ public class ImportIssues
     public List runImport(File importFile)
         throws Exception
     {
-        return runImport(importFile, null);
+        return runImport(importFile, (Module) null);
     }
 
     /**
@@ -233,40 +270,8 @@ public class ImportIssues
     public List runImport(File importFile, Module currentModule)
         throws Exception
     {
-        List importErrors = null;
-        LOG.debug("Importing issues from XML file: "
-                  + importFile.getAbsolutePath());
-
-        try
-        {
-            // Disable workflow and set file attachment flag
-            WorkflowFactory.setForceUseDefault(true);
-            ScarabIssues.allowFileAttachments(allowFileAttachments);
-            BeanReader reader = createScarabIssuesBeanReader();
-            importErrors = validate(importFile.getAbsolutePath(), 
-                new BufferedInputStream(new FileInputStream(importFile)),
-                reader, currentModule);
-            if (importErrors == null)
-            {
-                this.si = insert(importFile.getAbsolutePath(), 
-                    new BufferedInputStream(new FileInputStream(importFile)),
-                    reader);
-            }
-        }
-        catch (Exception e)
-        {
-            LOG.error("Error importing issues from XML file: "
-                      + importFile.getAbsolutePath(), e);
-            throw e;
-        }
-        finally
-        {
-            // Renable workflow and disable file attachments
-            WorkflowFactory.setForceUseDefault(false);
-            ScarabIssues.allowFileAttachments(false);
-        }
-
-        return importErrors;
+        return runImport(importFile.getAbsolutePath(), importFile,
+                         currentModule);
     }
 
     /**
@@ -288,7 +293,7 @@ public class ImportIssues
     public List runImport(FileItem importFile)
         throws Exception
     {
-        return runImport(importFile, null);
+        return runImport(importFile, (Module) null);
     }
 
     /**
@@ -312,29 +317,39 @@ public class ImportIssues
     public List runImport(FileItem importFile, Module currentModule)
         throws Exception
     {
-        List importErrors = null;
-        LOG.debug("Importing issues from uploaded XML: "
-                  + importFile.getName());
+        return runImport(importFile.getName(), importFile, currentModule);
+    }
 
+    /**
+     * @param input A <code>File</code> or <code>FileItem</code>.
+     */
+    protected List runImport(String filePath, Object input,
+                             Module currentModule)
+        throws Exception
+    {
+        List importErrors = null;
+        String msgFragment = "mporting issues from " +
+            (input instanceof FileItem ? "uploaded " : "") + "XML '" +
+            filePath + '\'';
+        LOG.debug('I' + msgFragment);
         try
         {
             // Disable workflow and set file attachment flag
             WorkflowFactory.setForceUseDefault(true);
             ScarabIssues.allowFileAttachments(allowFileAttachments);
             BeanReader reader = createScarabIssuesBeanReader();
-            importErrors = validate(importFile.getName(), 
-                importFile.getInputStream(), reader, currentModule);
+            importErrors = validate(filePath, inputStreamFor(input),
+                                    reader, currentModule);
+
             if (importErrors == null)
             {
                 // Reget the input stream.
-                this.si = insert(importFile.getName(), 
-                    importFile.getInputStream(), reader);
+                this.si = insert(filePath, inputStreamFor(input), reader);
             }
         }
         catch (Exception e)
         {
-            LOG.error("Error importing issues from uploaded XML: "
-                      + importFile.getName(), e);
+            LOG.error("Error i" + msgFragment, e);
             throw e;
         }
         finally
@@ -348,7 +363,32 @@ public class ImportIssues
     }
 
     /**
-     * Run validation phase.
+     * Coerces a new <code>InputStream</code> from <code>input</code>.
+     * Necessary because the stream is read twice by
+     * <code>runImport()</code>, so the source of the stream must be
+     * passed into that method.
+     */
+    private InputStream inputStreamFor(Object input)
+        throws IOException
+    {
+        if (input instanceof FileItem)
+        {
+            return ((FileItem) input).getInputStream();
+        }
+        else if (input instanceof File)
+        {
+            return new BufferedInputStream(new FileInputStream((File) input));
+        }
+        else
+        {
+            throw new IllegalArgumentException();
+        }
+    }
+
+    /**
+     * Run validation phase.  Starts by performing XML-well
+     * formed-ness and DTD validation (if present), then checks the
+     * content.
      *
      * @param name Filename to output in log message.  May be null.
      * @param is Input stream to read.
@@ -356,7 +396,8 @@ public class ImportIssues
      * @param currentModule If non-null, run check that import is going 
      * against this module.
      *
-     * @return Null if stream passes validation else list of errors.
+     * @return <code>null</code> if the XML stream passes validation,
+     * or otherwise the list of errors.
      *
      * @exception Exception.
      */
@@ -364,52 +405,78 @@ public class ImportIssues
             Module currentModule)
         throws Exception
     {
-        ScarabIssues.setInValidationMode(true);
-        ScarabIssues si = (ScarabIssues)reader.parse(is);
-        si.doValidateDependencies();
-        si.doValidateUsers();
-        List importErrors = si.doGetImportErrors();
-        if(currentModule != null)
-        {
-            // If currentModule is not null, make sure the xml module is that
-            // of the passed currentModule.  We do the check here late because
-            // we know the xml is good if we get this far -- that the 
-            // si.getModule() will not return null.
-            String xmlCode = si.getModule().getCode();
-            if (xmlCode == null || !currentModule.getCode().equals(xmlCode))
-            {
-                if (importErrors == null)
-                {
-                    importErrors = new ArrayList();
-                }
+        List importErrors = null;
 
-                Object[] args = {si.getModule().getName(), currentModule.getName()};
-                String error = Localization.format(
-                    ScarabConstants.DEFAULT_BUNDLE_NAME,
-                    getLocale(),
-                    "XMLModuleNotCurrent", args);
-                importErrors.add(error);
-            }
+        // While parsing the XML, we perform well formed-ness and DTD
+        // validation (if present, see Xerces dynamic feature).
+        setValidationMode(reader, true);
+        ScarabIssues si = null;
+        try
+        {
+            si = (ScarabIssues) reader.parse(is);
+        }
+        catch (SAXParseException e)
+        {
+            importErrors = new ArrayList(1);
+            // TODO: L10N this error message from Xerces (somehow),
+            // and provide a prefix that describes that a XML parse
+            // error was encountered.
+            importErrors.add("XML parse error at line " + e.getLineNumber() +
+                             " column " + e.getColumnNumber() + ": " +
+                             e.getMessage());
         }
 
-        if (importErrors != null) 
+        // If the XML is okay, validate the actual content.
+        if (si != null)
         {
-            if (importErrors.size() == 0)
+            si.doValidateDependencies();
+            si.doValidateUsers();
+            importErrors = si.doGetImportErrors();
+            if (currentModule != null)
             {
-                importErrors = null;
-            }
-            else
-            {
-                LOG.error("Found " + importErrors.size() + " errors importing "
-                    + ((name != null)? name: "null") + ":");
-                for (Iterator itr = importErrors.iterator(); itr.hasNext();)
+                // If currentModule is not null, make sure the XML
+                // module is that of the passed currentModule.  We do
+                // the check here late because we know the xml is good
+                // if we get this far -- that the si.getModule() will
+                // not return null.
+                String xmlCode = si.getModule().getCode();
+                if (xmlCode == null ||
+                    !currentModule.getCode().equals(xmlCode))
                 {
-                    String message = (String)itr.next();
-                    LOG.error(message);
+                    if (importErrors == null)
+                    {
+                        importErrors = new ArrayList(1);
+                    }
+
+                    Object[] args = { si.getModule().getName(),
+                                      currentModule.getName() };
+                    String error = Localization.format
+                        (ScarabConstants.DEFAULT_BUNDLE_NAME, getLocale(),
+                         "XMLModuleNotCurrent", args);
+                    importErrors.add(error);
                 }
             }
-        }
 
+            // Error handling.
+            if (importErrors != null) 
+            {
+                if (importErrors.isEmpty())
+                {
+                    importErrors = null;
+                }
+                else
+                {
+                    LOG.error("Found " + importErrors.size() +
+                              " errors importing '" + name + "':");
+                    for (Iterator itr = importErrors.iterator();
+                         itr.hasNext(); )
+                    {
+                        LOG.error(itr.next());
+                    }
+                }
+            }
+
+        }
         return importErrors;
     }
 
@@ -430,11 +497,40 @@ public class ImportIssues
             BeanReader reader)
         throws Exception
     {
-        ScarabIssues.setInValidationMode(false);
+        setValidationMode(reader, false);
         ScarabIssues si = (ScarabIssues)reader.parse(is);
         si.doHandleDependencies();
-        LOG.debug("Successfully imported " + name + "!");
+        LOG.debug("Successfully imported " + name + '!');
         return si;
+    }
+
+    /**
+     * Sets the validation mode for both this instance and the
+     * specified <code>Digester</code>.
+     *
+     * @param reader The XML parser to set the validation mode for.
+     * @param state The validation mode.
+     * @see <a href="http://xml.apache.org/xerces-j/faq-general.html#valid">Xerces validation FAQ</a>
+     * @see <a href="http://xml.apache.org/xerces-j/features.html">Xerces SAX2 feature list</a>
+     */
+    private void setValidationMode(Digester reader, boolean state)
+        throws ParserConfigurationException, SAXException
+    {
+        ScarabIssues.setInValidationMode(state);
+
+        // Setup the XML parser SAX2 features.
+        // http://xml.apache.org/xerces-c/program-sax2.html#validation
+
+        // Turn on DTD validation (these are functionally equivalent
+        // with Xerces 1.4.4 and likely most other SAX2 impls).
+        reader.setValidating(state);
+        reader.setFeature("http://xml.org/sax/features/validation", state);
+        LOG.debug("reader.validating=" + reader.getValidating());
+
+        // Validate the document only if a grammar is specified
+        // (http://xml.org/sax/features/validation must be state).
+        reader.setFeature("http://apache.org/xml/features/validation/dynamic",
+                          state);
     }
 
     /**
@@ -460,9 +556,53 @@ public class ImportIssues
     protected BeanReader createScarabIssuesBeanReader()
         throws Exception
     {
-        BeanReader reader = new BeanReader();
+        BeanReader reader = new BeanReader()
+            {
+                public InputSource resolveEntity(String publicId,
+                                                 String systemId)
+                    throws SAXException
+                {
+                    InputSource input = null;
+                    if (publicId == null && systemId != null)
+                    {
+                        // Resolve SYSTEM DOCTYPE (untested).
+                        if (SYSTEM_DTD_URI.equalsIgnoreCase(systemId) ||
+                            INTERNAL_DTD_URI.equalsIgnoreCase(systemId))
+                        {
+                            // First look for the DTD in the classpath.
+                            Class c = getClass();
+                            try
+                            {
+                                input = new InputSource
+                                    (c.getResourceAsStream(DTD_RESOURCE));
+                            }
+                            catch (Exception e)
+                            {
+                                LOG.debug("DTD not found in classpath: " +
+                                          e.getMessage());
+                            }
+
+                            if (input == null)
+                            {
+                                // Kick resolution back to Digester.
+                                input = super.resolveEntity(publicId,
+                                                            systemId);
+                            }
+                        }
+                    }
+                    return input;
+                }
+            };
+
+        // Connecting Digster's logger to ours logs too verbosely.
+        //reader.setLogger(LOG);
+        reader.register(SYSTEM_DTD_URI, INTERNAL_DTD_URI);
+        // Be forgiving about the encodings we accept.
+        reader.setFeature("http://apache.org/xml/features/allow-java-encodings",
+                          true);
         reader.setXMLIntrospector(createXMLIntrospector());
         reader.registerBeanClass(ScarabIssues.class);
+        reader.setErrorHandler(this);
         return reader;
     }
 
@@ -500,5 +640,34 @@ public class ImportIssues
     private Locale getLocale()
     {
         return ScarabConstants.DEFAULT_LOCALE;
+    }
+
+
+    // ---- org.xml.sax.ErrorHandler implementation ------------------------
+
+    /** Receive notification of a recoverable error. */
+    public void error(SAXParseException e)
+        throws SAXParseException
+    {
+        LOG.error("Parse Error at line " + e.getLineNumber() +
+                  " column " + e.getColumnNumber() + ": " + e.getMessage(), e);
+        throw e;
+    }
+
+    /** Receive notification of a non-recoverable error. */
+    public void fatalError(SAXParseException e)
+        throws SAXParseException
+    {
+        LOG.error("Parse Fatal Error at line " + e.getLineNumber() +
+                  " column " + e.getColumnNumber() + ": " + e.getMessage(), e);
+        throw e;
+    }
+
+    /** Receive notification of a warning. */
+    public void warning(SAXParseException e)
+        throws SAXParseException
+    {
+        // Warnings are non-fatal.  At some point we should report
+        // these back to the end user.
     }
 }
