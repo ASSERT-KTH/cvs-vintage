@@ -10,14 +10,14 @@
     #else
         #set ($spaces = "&#160;&#160;&#160;")
     #end
-    #set ($selected = "")
-    #set ($quote = '"')
+    #set ($selected = false)
     #foreach ($value in $selectOptions)
         #if ($option.Value == $value)
-            #set ($selected = ' selected="selected"')
+            #set ($selected = true)
         #end
     #end
-    <option value="$option.Value"$selected>$spaces$option.Name</option>
+    <option value="$option.Value"
+        #if($selected) selected="selected"#end>$spaces$option.Name</option>
 #end
 #end
 
@@ -26,7 +26,6 @@
 ## track which cells to skip.  For now assume rowspan and colspan are always 1.
 #macro ( reportTable $model $issueType )
 
-    #set ($quote = '"')
     #set ($maxRow = $model.RowCount)
     #set ($maxColumn = $model.ColumnCount)
 <table width="100%" border="1" cellspacing="2" cellpadding="3">
@@ -59,19 +58,11 @@
                     #end
                 #end
                 #if ($model.isColumnHeading($cell))
-                    #if ($cell.Colspan > 1)
-                        #set ($colspan = " colspan=$quote$cell.Colspan$quote")
-                    #else
-                        #set ($colspan = "")
-                    #end
-              <th$colspan>$label</th>
+              <th#if ($cell.Colspan > 1) colspan="$cell.Colspan"#end>
+                    $label</th>
                 #else
-                    #if ($cell.Rowspan > 1)
-                        #set ($rowspan = " rowspan=$quote$cell.Rowspan$quote")
-                    #else
-                        #set ($rowspan = "")
-                    #end
-          <td$rowspan><strong>$label</strong></td>
+              <td#if ($cell.Rowspan > 1) rowspan="$cell.Rowspan"#end>
+                    <strong>$label</strong></td>
                 #end
             #else
                 <td>
