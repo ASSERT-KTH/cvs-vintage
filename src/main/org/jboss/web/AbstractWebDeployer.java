@@ -151,7 +151,7 @@ thread context ClassLoader as was used to dispatch the http service request.
    extends="org.jboss.deployment.SubDeployerMBean"
 
 @author  Scott.Stark@jboss.org
-@version $Revision: 1.13 $
+@version $Revision: 1.14 $
 */
 public abstract class AbstractWebDeployer
 {
@@ -398,6 +398,12 @@ public abstract class AbstractWebDeployer
       {
          WebApplication webApp = (WebApplication) di.context.get(AbstractWebContainer.WEB_APP);
          performUndeploy(warUrl, webApp);
+         // Unegister the permissions with the JACC layer
+         WebMetaData webMetaData = (WebMetaData) di.metaData;
+         String contextID = webMetaData.getJaccContextID();
+         PolicyConfigurationFactory pcFactory = PolicyConfigurationFactory.getPolicyConfigurationFactory();
+         PolicyConfiguration pc = pcFactory.getPolicyConfiguration(contextID, true);
+         pc.delete();
       }
       catch(DeploymentException e)
       {
