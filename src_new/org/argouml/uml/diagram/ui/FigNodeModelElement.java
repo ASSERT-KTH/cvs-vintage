@@ -1,4 +1,4 @@
-// $Id: FigNodeModelElement.java,v 1.113 2004/08/01 18:00:57 mvw Exp $
+// $Id: FigNodeModelElement.java,v 1.114 2004/08/04 13:34:43 bobtarling Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -117,7 +117,7 @@ public abstract class FigNodeModelElement
         ArgoNotationEventListener {            
 
     private static final Logger LOG =
-	Logger.getLogger(FigNodeModelElement.class);
+        Logger.getLogger(FigNodeModelElement.class);
 
     ////////////////////////////////////////////////////////////////
     // constants
@@ -196,7 +196,7 @@ public abstract class FigNodeModelElement
     ////////////////////////////////////////////////////////////////
     // instance variables
 
-    private FigRect bigPort;
+    private Fig bigPort;
 
     /**
      * use getNameFig() and setNameFig() to access the Figs.
@@ -1451,14 +1451,14 @@ public abstract class FigNodeModelElement
     /**
      * @param bp The _bigPort to set.
      */
-    protected void setBigPort(FigRect bp) {
+    protected void setBigPort(Fig bp) {
         this.bigPort = bp;
     }
 
     /**
      * @return Returns the _bigPort.
      */
-    protected FigRect getBigPort() {
+    protected Fig getBigPort() {
         return bigPort;
     }
 
