@@ -83,7 +83,7 @@ import org.tigris.scarab.services.cache.ScarabCache;
  * go here.
  * 
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: AbstractScarabUser.java,v 1.17 2002/03/02 02:32:57 jmcnally Exp $
+ * @version $Id: AbstractScarabUser.java,v 1.18 2002/03/07 23:06:52 elicia Exp $
  */
 public abstract class AbstractScarabUser 
     extends BaseObject 
@@ -190,7 +190,7 @@ public abstract class AbstractScarabUser
                 .add(RModuleUserAttributePeer.MODULE_ID, module.getModuleId())
                 .add(RModuleUserAttributePeer.ISSUE_TYPE_ID, 
                      issueType.getIssueTypeId())
-                .addDescendingOrderByColumn(
+                .addAscendingOrderByColumn(
                     RModuleUserAttributePeer.PREFERRED_ORDER);
             
             result = getRModuleUserAttributes(crit);
