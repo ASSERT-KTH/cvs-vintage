@@ -41,8 +41,9 @@ html>body #bodycol {
 table, th, td {
  border: none
  }
-.app h3 {
- background: #036 url(/@SCARAB_CONTEXT@/images/nw_min.gif) no-repeat;
+.app h3, .app h4, .tabs th, .tabs td, .functnbar {
+	background-image: url(/@SCARAB_CONTEXT@/images/nw_min.gif);
+	background-repeat: no-repeat;
  }
 .app h3, .app h4 {
  padding: 5px;
@@ -50,8 +51,11 @@ table, th, td {
  margin-left: 2px;
  color: #fff;
  }
+.app h3 {
+ background-color: #036;
+ }
 .app h4 { 
- background: #ccc url(/@SCARAB_CONTEXT@/images/nw_min.gif) no-repeat;
+ background-color: #ccc;
  color: #000;
  }
 .app h3 a {
@@ -110,14 +114,11 @@ ul.tasks li {
  margin-right: 2px;
  margin-left: 2px;
  }
-.tabs th {
- background: url(/@SCARAB_CONTEXT@/images/nw_min.gif) no-repeat top left;
+.tabs th, .tabs td {
  border-right: 1px solid #666;
  }
 .tabs td {
- background: url(/@SCARAB_CONTEXT@/images/nw_min.gif) no-repeat top left;
  border-bottom: 1px solid #ccc;
- border-right: 1px solid #666;
  }
 #leftcol {
  background: #efefef;
@@ -125,18 +126,22 @@ ul.tasks li {
  border-bottom: 1px solid #999;
  padding-bottom: .5em;
  }
-#navcolumn div div {
+#navcolumn div div, body.docs #toc li li  {
  background-image: url(/@SCARAB_CONTEXT@/images/strich.gif);
  background-repeat: no-repeat;
  background-position: .5em .5em;
+ }
+#navcolumn div div.heading  {
+ background-image: none;
  }
 #breadcrumbs {
  border-bottom: 1px solid #999;
  background-color: #ccc
  }
 #breadcrumbs td {
- vertical-align: bottom;
- padding: 2px 8px
+ vertical-align: middle;
+ padding: 2px 8px;
+ font-weight: bold;
  } 
 #leftcol, #breadcrumbs {
  border-top: 1px solid #fff;
@@ -148,8 +153,9 @@ ul.tasks li {
 #navcolumn div {
  padding-left: 5px
  }
-#navcolumn div div {
- margin-top: .2em;
+div#navcolumn div div {
+ margin-top: .3em;
+ margin-bottom: .3em;
  }
 div#navcolumn div.focus { 
  margin-top: -.1em;
@@ -173,11 +179,6 @@ body.docs #toc li {
  margin-top: 7px;
  padding-left: 10px;
  list-style-type: none;
- }
-body.docs #toc li li {
- background-image: url(/@SCARAB_CONTEXT@/images/strich.gif);
- background-repeat: no-repeat;
- background-position: .5em .5em;
  }
 body.docs div#toc {
  font-size: xx-small !important;
@@ -223,13 +224,13 @@ body.docs {
  }
 /* Scarab/App - styles start here */
 .functnbar {
- background: #999 url(/@SCARAB_CONTEXT@/images/nw_min.gif) no-repeat top left;
+ background-color: #999;
  }
-.functnbar2 {
+.functnbar2, .functnbar3  {
  background: #999 url(/@SCARAB_CONTEXT@/images/sw_min.gif) no-repeat bottom left;
  }
 .functnbar3 {
- background: #ccc url(/@SCARAB_CONTEXT@/images/sw_min.gif) no-repeat bottom left;
+ background-color: #ccc;
  }
 .functnbar, .functnbar2, .functnbar3 {
  padding: 5px;

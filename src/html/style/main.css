@@ -61,7 +61,7 @@ a:active, a:hover, #leftcol a:active, #leftcol a:hover {
 .datatablechild tr.a td {
 	background: #cf9;
 	}
-.axial th {
+body .axial th {
 	background-color: #efefef;
 	text-align: right;
 	color: black
@@ -125,7 +125,10 @@ dd	{
 	padding-top: 1em
 	}
 #navcolumn div {
- margin-bottom: .5em
+ margin-bottom: .5em;
+ }
+#navcolumn div div {
+ margin-top: .5em
  }
 #navcolumn div div {
  padding-left: 1em;
