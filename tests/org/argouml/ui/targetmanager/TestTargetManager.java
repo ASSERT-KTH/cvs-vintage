@@ -1,4 +1,4 @@
-// $Id: TestTargetManager.java,v 1.9 2004/07/31 22:30:23 kataka Exp $
+// $Id: TestTargetManager.java,v 1.10 2004/08/26 20:09:49 mvw Exp $
 // Copyright (c) 2002-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -26,7 +26,6 @@ package org.argouml.ui.targetmanager;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 
@@ -347,7 +346,8 @@ public class TestTargetManager extends TestCase {
 	targetAddedObjects = null;
 	TargetManager.getInstance().addTarget(testObject);
 	assertTrue(targetAddedCalled);
-	assertTrue(newList.containsAll(Arrays.asList(targetAddedObjects)) && newList.size() == targetAddedObjects.length);
+	assertTrue(newList.containsAll(Arrays.asList(targetAddedObjects)) 
+            && newList.size() == targetAddedObjects.length);
 	assertTrue(TargetManager.getInstance().getTarget() == testObject);	
 	targetAddedCalled = false;
 	TargetManager.getInstance().addTarget(testObject);

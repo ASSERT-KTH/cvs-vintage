@@ -1,4 +1,4 @@
-// $Id: GUITestActionGoToDetails.java,v 1.2 2004/02/24 08:28:19 linus Exp $
+// $Id: GUITestActionGoToDetails.java,v 1.3 2004/08/26 20:09:49 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -101,7 +101,7 @@ import junit.framework.TestCase;
  */
 public class GUITestActionGoToDetails extends TestCase {
     
-    ActionGoToDetails _action;
+    private ActionGoToDetails action;
 
     
 
@@ -117,7 +117,7 @@ public class GUITestActionGoToDetails extends TestCase {
      */
     protected void setUp() throws Exception {       
         super.setUp();
-        _action = new ActionGoToDetails("");
+        action = new ActionGoToDetails("");
     }
 
     public void testToDoTab() {    

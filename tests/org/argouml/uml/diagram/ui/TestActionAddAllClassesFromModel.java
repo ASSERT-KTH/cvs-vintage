@@ -1,4 +1,4 @@
-// $Id: TestActionAddAllClassesFromModel.java,v 1.2 2004/02/24 08:28:19 linus Exp $
+// $Id: TestActionAddAllClassesFromModel.java,v 1.3 2004/08/26 20:09:51 mvw Exp $
 // Copyright (c) 2003-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -34,8 +34,8 @@ import org.argouml.uml.diagram.static_structure.ui.UMLClassDiagram;
  */
 public class TestActionAddAllClassesFromModel extends TestCase {
 
-    private ActionAddAllClassesFromModel _action;
-    private UMLClassDiagram _diagram;
+    private ActionAddAllClassesFromModel action;
+    private UMLClassDiagram diagram;
 
     /**
      * Constructor for TestActionAddAllClassesFromModel.
@@ -50,9 +50,9 @@ public class TestActionAddAllClassesFromModel extends TestCase {
      */
     protected void setUp() throws Exception {
         super.setUp();
-        _diagram = new UMLClassDiagram();
-	_action = new ActionAddAllClassesFromModel("Add all classes from model",
-						   _diagram);
+        diagram = new UMLClassDiagram();
+	action = new ActionAddAllClassesFromModel("Add all classes from model",
+						   diagram);
     }
     
     /**
@@ -61,9 +61,9 @@ public class TestActionAddAllClassesFromModel extends TestCase {
      */
     public void testConstruction() {
         try {
-            ActionAddAllClassesFromModel action = 
+            ActionAddAllClassesFromModel a = 
 		new ActionAddAllClassesFromModel("Add all classes from model",
-						 _diagram);
+						 diagram);
         } catch (Exception noHead) {
         }
     }
@@ -79,7 +79,7 @@ public class TestActionAddAllClassesFromModel extends TestCase {
      * @since November 3, 2003
      */
     public void testShouldBeEnabled() {
-	assertTrue(_action.shouldBeEnabled());
+	assertTrue(action.shouldBeEnabled());
     }
 
     /**
@@ -90,8 +90,8 @@ public class TestActionAddAllClassesFromModel extends TestCase {
      * @since November 3, 2003
      */
     public void testShouldNotBeEnabled() {
-	_action = new ActionAddAllClassesFromModel("Add all classes from model",
+	action = new ActionAddAllClassesFromModel("Add all classes from model",
 						   new Object());
-	assertEquals(_action.shouldBeEnabled(), false);
+	assertEquals(action.shouldBeEnabled(), false);
     }
 }

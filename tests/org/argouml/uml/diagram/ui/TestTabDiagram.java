@@ -1,4 +1,4 @@
-// $Id: TestTabDiagram.java,v 1.6 2004/02/24 08:28:19 linus Exp $
+// $Id: TestTabDiagram.java,v 1.7 2004/08/26 20:09:51 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -23,7 +23,7 @@
 // UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 
 
-// $Id: TestTabDiagram.java,v 1.6 2004/02/24 08:28:19 linus Exp $
+// $Id: TestTabDiagram.java,v 1.7 2004/08/26 20:09:51 mvw Exp $
 
 package org.argouml.uml.diagram.ui;
 
@@ -51,7 +51,7 @@ public class TestTabDiagram extends TestCase {
 
     private static final boolean PERFORMANCE_TEST = false;
 
-    private UMLDiagram _diagram;
+    private UMLDiagram diagram;
 
     /**
      * Constructor for TestTabDiagram.
@@ -67,7 +67,7 @@ public class TestTabDiagram extends TestCase {
      */
     protected void setUp() throws Exception {
         super.setUp();
-        _diagram = new UMLClassDiagram();
+        diagram = new UMLClassDiagram();
     }
 
     /**
@@ -75,7 +75,7 @@ public class TestTabDiagram extends TestCase {
      */
     protected void tearDown() throws Exception {
         super.tearDown();
-        _diagram = null;
+        diagram = null;
 
     }
 
@@ -93,12 +93,12 @@ public class TestTabDiagram extends TestCase {
     public void testSetTargetWithDiagram() {
         try {
             TabDiagram tabDiagram = new TabDiagram();
-            tabDiagram.setTarget(_diagram);
+            tabDiagram.setTarget(diagram);
             assertEquals(
                 tabDiagram.getJGraph().getGraphModel(),
-                _diagram.getGraphModel());
-            assertEquals(tabDiagram.getTarget(), _diagram);
-            assertTrue(tabDiagram.shouldBeEnabled(_diagram));
+                diagram.getGraphModel());
+            assertEquals(tabDiagram.getTarget(), diagram);
+            assertTrue(tabDiagram.shouldBeEnabled(diagram));
         } catch (Exception noHead) {
         }
     }
