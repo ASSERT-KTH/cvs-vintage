@@ -1,6 +1,7 @@
 #set ($module = $scarabR.CurrentModule)
 #set ($issueType = $scarabR.CurrentIssueType)
 #set ($user = $data.User)
+#set ($ownsAtLeastOne = false)
 
 <div class="app" id="templateList">
 
@@ -58,6 +59,7 @@ $l10n.NoTemplates
 #foreach ($template in $allTemplates)
 #indexedRows($velocityCount)
 #set ($isCreatedBy = $template.isCreatingUser($user))
+#if ($isCreatedBy) #set ($ownsAtLeastOne = true) #end
 #if ($permItemDelete || $isCreatedBy)
   <td><input type="checkbox" name="delete_$template.IssueId" /></td>
 #else
@@ -100,7 +102,7 @@ $l10n.NoTemplates
 
 <div class="functnbar3">
   <input type="submit" value="Create new" name="eventSubmit_doGotoothertemplate" />
-  #if ($permItemDelete)
+  #if ($permItemDelete || $ownsAtLeastOne)
     &#160;<input type="submit" value="Delete selected" name="eventSubmit_doDeletetemplates" />
   #end
 </div>
