@@ -1,4 +1,4 @@
-// $Id: FigPackage.java,v 1.34 2003/09/20 13:10:46 bobtarling Exp $
+// $Id: FigPackage.java,v 1.35 2003/09/29 17:40:55 jjones Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,7 +25,7 @@
 // File: FigPackage.java
 // Classes: FigPackage
 // Original Author: agauthie@ics.uci.edu
-// $Id: FigPackage.java,v 1.34 2003/09/20 13:10:46 bobtarling Exp $
+// $Id: FigPackage.java,v 1.35 2003/09/29 17:40:55 jjones Exp $
 
 package org.argouml.uml.diagram.static_structure.ui;
 
@@ -108,59 +108,7 @@ public class FigPackage extends FigNodeModelElement {
 
     public FigPackage() {
         Color handleColor = Globals.getPrefs().getHandleColor();
-        _bigPort = new FigRect(x, y, width, height, null, null) 
-	    {
-		public void paint(Graphics g) {
-		    super.paint(g);
-                
-		    // Draw the shadow                
-		    if (_shadowSize > 0) {
-			for (int i = 0; i < _shadowSize; ++i) {
-                Color shadow = new Color(
-                    SHADOW_COLOR_VALUE, SHADOW_COLOR_VALUE, SHADOW_COLOR_VALUE, 
-                    SHADOW_COLOR_ALPHA
-                        * (((float) _shadowSize - i)
-                        / (float) _shadowSize));
-			    g.setColor(shadow);
-
-			    g.drawLine(
-				       _body.getX() + _shadowSize,
-				       _body.getY() + _body.getHeight() + i,
-				       _body.getX() + _body.getWidth() + i,
-				       _body.getY() + _body.getHeight() + i);
-
-			    g.drawLine(
-				       _body.getX() + _body.getWidth() + i,
-				       _body.getY() + _shadowSize,
-				       _body.getX() + _body.getWidth() + i,
-				       _body.getY() + _body.getHeight() + i - 1);                        
-                    
-			    if (_stereo.getHeight() > _shadowSize) {
-				g.drawLine(
-					   _stereo.getX() + _stereo.getWidth() + i,
-					   _stereo.getY() + _shadowSize,
-					   _stereo.getX() + _stereo.getWidth() + i,
-					   _stereo.getY() + _stereo.getHeight() + _name.getHeight() + _shadowSize - 2);
-                                
-				//int blinderheight = (_name.getY() -
-				//1 - (_stereo.getY() +
-				//_stereo.getHeight() + 1)); if
-				//(blinderheight > 0) {
-				//g.fillRect(_stereo.getX()+_stereo.getWidth(),
-				//_stereo.getY()+_stereo.getHeight(),
-				//_shadowSize, blinderheight); }
-			    }
-			    else if (_name.getHeight() > _shadowSize) {
-				g.drawLine(
-					   _name.getX() + _name.getWidth() + i,
-					   _name.getY() + _shadowSize,
-					   _name.getX() + _name.getWidth() + i,
-					   _name.getY() + _name.getHeight());
-			    }
-			}
-		    }
-		}
-	    };
+        _bigPort = new FigRect(x, y, width, height, null, null);
 
         //
         // Create a Body that reacts to double-clicks and jumps to a diagram.

@@ -1,4 +1,4 @@
-// $Id: FigObject.java,v 1.15 2003/09/15 14:56:48 jjones Exp $
+// $Id: FigObject.java,v 1.16 2003/09/29 17:41:10 jjones Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,7 +25,7 @@
 // File: FigObject.java
 // Classes: FigObject
 // Original Author: 5eichler@informatik.uni-hamburg.de
-// $Id: FigObject.java,v 1.15 2003/09/15 14:56:48 jjones Exp $
+// $Id: FigObject.java,v 1.16 2003/09/29 17:41:10 jjones Exp $
 
 package org.argouml.uml.diagram.deployment.ui;
 
@@ -64,7 +64,7 @@ public class FigObject extends FigNodeModelElement {
 
     public FigObject() {
 	_bigPort = new FigRect(10, 10, 90, 50, Color.cyan, Color.cyan);
-	_cover = new ShadowRect(10, 10, 90, 50, Color.black, Color.white);
+	_cover = new FigRect(10, 10, 90, 50, Color.black, Color.white);
 	_name.setLineWidth(0);
 	_name.setFilled(false);
 	_name.setUnderline(true);
