@@ -54,7 +54,7 @@ import org.jboss.system.Registry;
 *
 *  @author <a href="mailto:marc.fleury@jboss.org>Marc Fleury</a>
 *
-*  @version $Revision: 1.10 $
+*  @version $Revision: 1.11 $
 *
 *  <p><b>Revisions:</b><br>
 *  <p><b>2002/01/13: Sacha Labourey</b>
@@ -316,6 +316,9 @@ implements Invoker, JRMPInvokerMBean,  MBeanRegistration
          // Extract the ObjectName, the rest is still marshalled
          // ObjectName mbean = new ObjectName((String) invocation.getContainer());
          
+         // This is bad it should at least be using a sub set of the Registry 
+         // store a map of these names under a specific entry (lookup("ObjecNames")) and look on 
+         // that subset FIXME
          ObjectName mbean = (ObjectName) Registry.lookup((Integer) invocation.getContainer());
          
          // The cl on the thread should be set in another interceptor

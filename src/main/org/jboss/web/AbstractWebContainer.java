@@ -128,7 +128,7 @@ in the contrib/tomcat module.
 @see org.jboss.security.SecurityAssociation;
 
 @author  Scott.Stark@jboss.org
-@version $Revision: 1.20 $
+@version $Revision: 1.21 $
 */
 public abstract class AbstractWebContainer 
 extends ServiceMBeanSupport 
@@ -247,7 +247,7 @@ implements AbstractWebContainerMBean
       try {jarFile = ((JarURLConnection)new URL("jar:"+di.localUrl.toString()+"!/").openConnection()).getJarFile();}
          catch (Exception ignored) {throw new DeploymentException(ignored.getMessage());}
       
-      boolean directoryCreated = false;
+      boolean uclCreated = false;
       
       for (Enumeration e = jarFile.entries(); e.hasMoreElements(); )
       {
@@ -262,13 +262,13 @@ implements AbstractWebContainerMBean
             
             try {
                
-               
                // We use the name of the entry as the name of the file under deploy 
                File outFile = new File(localCopyDir, di.shortName+".webinf"+File.separator+name);
                
-               if (!directoryCreated) 
+               outFile.getParentFile().mkdirs();
+               
+               if (!uclCreated) 
                {
-                  outFile.getParentFile().mkdirs();
                   
                   DeploymentInfo sub = new DeploymentInfo(outFile.getParentFile().toURL(), di);
                   // There is no copying over, just use the url for the UCL
@@ -277,7 +277,7 @@ implements AbstractWebContainerMBean
                   // Create a URL for the sub
                   sub.createClassLoaders();
                   
-                  directoryCreated = true;  
+                  uclCreated = true;  
                   
                   di.subDeployments.add(sub);
                }
