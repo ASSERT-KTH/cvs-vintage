@@ -1,4 +1,4 @@
-// $Id: AboutBox.java,v 1.37 2004/02/08 12:58:20 mvw Exp $
+// $Id: AboutBox.java,v 1.38 2004/04/09 06:35:25 linus Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -34,7 +34,6 @@ import javax.swing.JTextArea;
 import javax.swing.JPanel; 
 import javax.swing.border.EmptyBorder;
 
-import org.apache.log4j.Logger;
 import org.argouml.application.api.AboutTabPanel;
 import org.argouml.application.api.Argo;
 import org.argouml.application.api.PluggableAboutTab;
@@ -45,9 +44,6 @@ import org.argouml.util.Tools;
  * 
  */
 public class AboutBox extends JDialog {
-
-    /** logger */
-    private static Logger _Log = Logger.getLogger(AboutBox.class);
 
     ////////////////////////////////////////////////////////////////
     // instance variables
