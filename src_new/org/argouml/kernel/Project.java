@@ -1,4 +1,4 @@
-// $Id: Project.java,v 1.60 2003/05/06 21:52:14 alexb Exp $
+// $Id: Project.java,v 1.61 2003/05/10 21:35:18 kataka Exp $
 // Copyright (c) 1996-2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -65,6 +65,7 @@ import org.argouml.cognitive.ui.ToDoPane;
 import org.argouml.model.ModelFacade;
 import org.argouml.model.uml.UmlFactory;
 import org.argouml.model.uml.UmlHelper;
+import org.argouml.model.uml.UmlModelEventPump;
 import org.argouml.model.uml.modelmanagement.ModelManagementHelper;
 import org.argouml.ui.ArgoDiagram;
 import org.argouml.ui.FindDialog;
