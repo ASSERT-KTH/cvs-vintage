@@ -18,12 +18,12 @@ import java.net.MalformedURLException;
 
 import java.util.Timer;
 import java.util.TimerTask;
+import java.util.StringTokenizer;
 
 import javax.management.MBeanServer;
 import javax.management.ObjectName;
 import javax.management.MalformedObjectNameException;
    
-import org.apache.log4j.Category;
 import org.apache.log4j.Level;
 import org.apache.log4j.PropertyConfigurator;
 import org.apache.log4j.xml.DOMConfigurator;
@@ -33,7 +33,7 @@ import org.jboss.util.ThrowableListener;
 import org.jboss.util.NullArgumentException;
 import org.jboss.util.Strings;
 
-import org.jboss.logging.util.CategoryStream;
+import org.jboss.logging.util.LoggerStream;
 
 import org.jboss.system.ServiceMBeanSupport;
 
@@ -43,15 +43,15 @@ import org.jboss.system.ServiceMBeanSupport;
  * from a system resource.
  *
  * <p>Sets up a {@link ThrowableListener} to adapt unhandled
- *    throwables to a category.
+ *    throwables to a logger.
  *
- * <p>Installs CategoryStream adapters for System.out and System.err
- *    to catch and redirect calls to Log4j.
+ * <p>Installs {@link LoggerStream} adapters for <tt>System.out</tt> and 
+ *    <tt>System.err</tt> to catch and redirect calls to Log4j.
  *
  * @jmx:mbean name="jboss.system:type=Log4jService,service=Logging"
  *            extends="org.jboss.system.ServiceMBean"
  *
- * @version <tt>$Revision: 1.23 $</tt>
+ * @version <tt>$Revision: 1.24 $</tt>
  * @author <a href="mailto:phox@galactica.it">Fulco Muriglio</a>
  * @author <a href="mailto:Scott_Stark@displayscape.com">Scott Stark</a>
  * @author <a href="mailto:davidjencks@earthlink.net">David Jencks</a>
@@ -108,14 +108,34 @@ public class Log4jService
    /** The previous value of System.err. */
    private PrintStream err;
 
+   /**
+    * Flag to enable/disable adapting <tt>System.out</tt> to the
+    * <tt>STDOUT</tt> logger.
+    */   
+   private boolean catchSystemOut = CATCH_SYSTEM_OUT;
+
+   /**
+    * Flag to enable/disable adapting <tt>System.out</tt> to the
+    * <tt>STDERR</tt> logger.
+    */   
+   private boolean catchSystemErr = CATCH_SYSTEM_ERR;
+   
    /** The URL watch timer (in daemon mode). */
    private Timer timer = new Timer(true);
 
    /** The specialized timer task to watch our config file. */
    private URLWatchTimerTask timerTask;
-   
+
+   /**
+    * A flag to enable start/stop to work as expected,
+    * but still use create to init early.
+    */
+   private boolean initialized;
+  
    /**
     * Uses defaults.
+    *
+    * @jmx:managed-constructor
     *
     * @throws MalformedURLException    Could not create URL from default (propbably
     *                                  a problem with overridden properties).
@@ -126,6 +146,8 @@ public class Log4jService
    }
    
    /**
+    * @jmx:managed-constructor
+    * 
     * @param url    The configuration URL.
     */
    public Log4jService(final URL url)
@@ -134,6 +156,8 @@ public class Log4jService
    }
 
    /**
+    * @jmx:managed-constructor
+    * 
     * @param url    The configuration URL.
     */
    public Log4jService(final String url) throws MalformedURLException
@@ -142,6 +166,8 @@ public class Log4jService
    }
    
    /**
+    * @jmx:managed-constructor
+    * 
     * @param url              The configuration URL.
     * @param refreshPeriod    The refreshPeriod in seconds to wait between each check.
     */
@@ -152,6 +178,8 @@ public class Log4jService
    }
 
    /**
+    * @jmx:managed-constructor
+    * 
     * @param url              The configuration URL.
     * @param refreshPeriod    The refreshPeriod in seconds to wait between each check.
     */
@@ -161,6 +189,54 @@ public class Log4jService
       this.refreshPeriod = refreshPeriod;
    }
 
+   /**
+    * Set the catch <tt>System.out</tt> flag.
+    *
+    * @jmx:managed-attribute
+    *
+    * @param flag    True to enable, false to disable.
+    */
+   public void setCatchSystemOut(final boolean flag)
+   {
+      this.catchSystemOut = flag;
+   }
+
+   /**
+    * Get the catch <tt>System.out</tt> flag.
+    *
+    * @jmx:managed-attribute
+    *
+    * @return  True if enabled, false if disabled.
+    */
+   public boolean getCatchSystemOut()
+   {
+      return catchSystemOut;
+   }
+
+   /**
+    * Set the catch <tt>System.err</tt> flag.
+    *
+    * @jmx:managed-attribute
+    *
+    * @param flag    True to enable, false to disable.
+    */
+   public void setCatchSystemErr(final boolean flag)
+   {
+      this.catchSystemErr = flag;
+   }
+
+   /**
+    * Get the catch <tt>System.err</tt> flag.
+    *
+    * @jmx:managed-attribute
+    *
+    * @return  True if enabled, false if disabled.
+    */
+   public boolean getCatchSystemErr()
+   {
+      return catchSystemErr;
+   }
+   
    /**
     * Get the refresh period.
     *
@@ -202,37 +278,59 @@ public class Log4jService
    }
 
    /**
-    * Sets the priority for a logger of the give name.
+    * Sets the level for a logger of the give name.
+    *
+    * <p>Values are trimmed before used.
     *
     * @jmx:managed-operation
     *
-    * @param name       The name of the logger to change priority
-    * @param priority   The name of the priority to change the logger to.
+    * @param name        The name of the logger to change level
+    * @param levelName   The name of the level to change the logger to.
     */
-   public void setLoggerPriority(final String name, final String priority)
+   public void setLoggerLevel(final String name, final String levelName)
    {
-      Category c = Category.getInstance(name);
-      Level p = XLevel.toLevel(priority);
+      org.apache.log4j.Logger logger = org.apache.log4j.Logger.getLogger(name.trim());
+      Level level = XLevel.toLevel(levelName.trim());
 
-      c.setLevel(p);
-
-      log.info("Priority set to " + p + " for " + name);
+      logger.setLevel(level);
+      log.info("Level set to " + level + " for " + name);
    }
 
    /**
-    * Gets the priority of the logger of the give name.
+    * Sets the levels of each logger specified by the given comma
+    * seperated list of logger names.
+    *
+    * @jmx:managed-operation
+    *
+    * @see #setLoggerLevel
+    *
+    * @param list        A comma seperated list of logger names.
+    * @param levelName   The name of the level to change the logger to.
+    */
+   public void setLoggerLevels(final String list, final String levelName)
+   {
+      StringTokenizer stok = new StringTokenizer(list, ",");
+      
+      while (stok.hasMoreTokens()) {
+         String name = stok.nextToken();
+         setLoggerLevel(name, levelName);
+      }
+   }
+   
+   /**
+    * Gets the level of the logger of the give name.
     *
     * @jmx:managed-operation
     *
     * @param name       The name of the logger to inspect.
     */
-   public String getLoggerPriority(final String name)
+   public String getLoggerLevel(final String name)
    {
-      Category c = Category.getInstance(name);
-      Level p = c.getLevel();
+      org.apache.log4j.Logger logger = org.apache.log4j.Logger.getLogger(name);
+      Level level = logger.getLevel();
 
-      if (p != null) 
-         return p.toString();
+      if (level != null) 
+         return level.toString();
 
       return null;
    }
@@ -264,49 +362,24 @@ public class Log4jService
       reconfigure();
    }
    
-   
-   ///////////////////////////////////////////////////////////////////////////
-   //                       Concrete Service Overrides                      //
-   ///////////////////////////////////////////////////////////////////////////
-
-   protected ObjectName getObjectName(MBeanServer server, ObjectName name)
-      throws MalformedObjectNameException
-   {
-      return name == null ? OBJECT_NAME : name;
-   }
-
-   protected void createService() throws Exception
-   {
-      timerTask = new URLWatchTimerTask(); /* (configURL); */
-      timerTask.run();
-      timer.schedule(timerTask, 1000 * refreshPeriod, 1000 * refreshPeriod);
-
-      // Make sure Category has loaded
-      Category category = Category.getRoot();
-      
-      // Install listener for unhandled throwables to turn them into log messages
-      throwableAdapter = new ThrowableListenerLoggingAdapter();
-      ThrowableHandler.addThrowableListener(throwableAdapter);
-      log.debug("Added ThrowableListener: " + throwableAdapter);
-   }
-
    private void installSystemAdapters()
    {
-      Category category;
+      org.apache.log4j.Logger logger;
 
       // Install catchers
-      if (CATCH_SYSTEM_OUT)
+      if (catchSystemOut)
       {
-         category = Category.getInstance("STDOUT");
+         logger = org.apache.log4j.Logger.getLogger("STDOUT");
          out = System.out;
-         System.setOut(new CategoryStream(category, Level.INFO, out));
+         System.setOut(new LoggerStream(logger, Level.INFO, out));
          log.debug("Installed System.out adapter");
       }
-      if (CATCH_SYSTEM_ERR)
+      
+      if (catchSystemErr)
       {
-         category = Category.getInstance("STDERR");
+         logger = org.apache.log4j.Logger.getLogger("STDERR");
          err = System.err;
-         System.setErr(new CategoryStream(category, Level.ERROR, err));
+         System.setErr(new LoggerStream(logger, Level.ERROR, err));
          log.debug("Installed System.err adapter");
       }
    }
@@ -320,6 +393,7 @@ public class Log4jService
          log.debug("Removed System.out adapter");
          out = null;
       }
+      
       if (err != null) {
          System.err.flush();
          System.setErr(err);
@@ -328,9 +402,46 @@ public class Log4jService
       }
    }
 
-   /**
-    * Stops the log4j framework by calling the Category.shutdown() method.
-    */
+
+   ///////////////////////////////////////////////////////////////////////////
+   //                       Concrete Service Overrides                      //
+   ///////////////////////////////////////////////////////////////////////////
+
+   protected ObjectName getObjectName(MBeanServer server, ObjectName name)
+      throws MalformedObjectNameException
+   {
+      return name == null ? OBJECT_NAME : name;
+   }
+
+   private void setup() throws Exception
+   {
+      if (initialized) return;
+      
+      timerTask = new URLWatchTimerTask();
+      timerTask.run();
+      timer.schedule(timerTask, 1000 * refreshPeriod, 1000 * refreshPeriod);
+
+      // Make sure the root Logger has loaded
+      org.apache.log4j.Logger.getRootLogger();
+      
+      // Install listener for unhandled throwables to turn them into log messages
+      throwableAdapter = new ThrowableListenerLoggingAdapter();
+      ThrowableHandler.addThrowableListener(throwableAdapter);
+      log.debug("Added ThrowableListener: " + throwableAdapter);
+
+      initialized = true;
+   }
+
+   protected void createService() throws Exception
+   {
+      setup();
+   }
+
+   protected void startService() throws Exception
+   {
+      setup();
+   }
+   
    protected void stopService() throws Exception
    {
       timerTask.cancel();
@@ -342,8 +453,8 @@ public class Log4jService
 
       uninstallSystemAdapters();
 
-      uninstallSystemAdapters();
-      
+      // allow start to re-initalize
+      initialized = false;
    }
 
 
@@ -353,7 +464,7 @@ public class Log4jService
    
    /**
     * Adapts ThrowableHandler to the Loggger interface.  Using nested 
-    * class instead of anoynmous class for better category naming.
+    * class instead of anoynmous class for better logger naming.
     */
    private static class ThrowableListenerLoggingAdapter
       implements ThrowableListener
@@ -368,16 +479,16 @@ public class Log4jService
                 // if type is not valid then make it any error
              
              case ThrowableHandler.Type.ERROR:
-                log.error("unhandled throwable", t);
+                log.error("Unhandled Throwable", t);
                 break;
              
              case ThrowableHandler.Type.WARNING:
-                log.warn("unhandled throwable", t);
+                log.warn("Unhandled Throwable", t);
                 break;
              
              case ThrowableHandler.Type.UNKNOWN:
                 // these could be red-herrings, so log them as trace
-                log.trace("unhandled throwable, status is unknown", t);
+                log.trace("Ynhandled Throwable; status is unknown", t);
                 break;
          }
       }
