@@ -176,7 +176,7 @@
            <Logger className="org.apache.catalina.logger.FileLogger"
                      prefix="scarab_log." suffix=".txt"
                   timestamp="true"/>
-           <Loader checkInterval="3"
+           <Loader checkInterval="1"
                 className="org.apache.catalina.loader.StandardLoader"/>
            <Manager debug="99"/>
         </Context>
