@@ -55,7 +55,7 @@ import org.tigris.scarab.om.ScarabUser;
  * Constants for permissions should be grouped here as well.
  *
  * @author <a href="mailto:jmcnally@collab.net">John D. McNally</a>
- * @version $Id: ScarabSecurity.java,v 1.10 2001/09/06 20:57:42 elicia Exp $
+ * @version $Id: ScarabSecurity.java,v 1.11 2001/09/07 01:12:47 elicia Exp $
 */
 public interface ScarabSecurity
 {
@@ -75,7 +75,7 @@ public interface ScarabSecurity
     /** 
      * Specifies that a User is allowed to approve a query.
      */
-    public static final String QUERY__APPROVE = "Query | Approve";
+    public static final String ITEM__APPROVE = "Item | Approve";
 
 
     /**
