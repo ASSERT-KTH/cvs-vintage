@@ -7,19 +7,20 @@
 <tr>
     <th>$l10n.Name</th>
     <th>$l10n.Description</th>
-    <th>$l10n.Deleted</th>
 </tr>
 
 #foreach ($module in $userModules)
 #indexedRows($velocityCount)
+#set ($modDel = $module.Deleted)
 <td>
+#if ($modDel)<strike>#end
 $link.setPage("admin,ModifyModule.vm").addPathInfo("moduleId", $module.ModuleId).setLabel("$module.Name")
+#if ($modDel)</strike>#end
 </td>
 <td>
+#if ($modDel)<strike>#end
 $module.Description
-</td>
-<td>
-$module.Deleted
+#if ($modDel)</strike>#end
 </td>
 </tr>
 #end
