@@ -47,7 +47,7 @@ import org.jboss.logging.Logger;
  * @author <a href="mailto:shevlandj@kpi.com.au">Joe Shevland</a>
  * @author <a href="mailto:justin@j-m-f.demon.co.uk">Justin Forder</a>
  * @author <a href="mailto:alex@jboss.org">Alex Loubyansky</a>
- * @version $Revision: 1.26 $
+ * @version $Revision: 1.27 $
  */
 public abstract class JDBCAbstractQueryCommand implements JDBCQueryCommand
 {
@@ -220,7 +220,9 @@ public abstract class JDBCAbstractQueryCommand implements JDBCQueryCommand
          JDBCUtil.safeClose(con);
 
          log.error("Find failed", e);
-         throw new FinderException("Find failed: " + e);
+         FinderException fe = new FinderException("Find failed: " + e);
+         fe.initCause(e);
+         throw fe;
       }
 
       return collectionFactory.createCollection(con,

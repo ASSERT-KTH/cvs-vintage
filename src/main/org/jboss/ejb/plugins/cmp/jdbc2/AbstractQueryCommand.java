@@ -30,7 +30,7 @@ import java.sql.SQLException;
 
 /**
  * @author <a href="mailto:alex@jboss.org">Alexey Loubyansky</a>
- * @version <tt>$Revision: 1.3 $</tt>
+ * @version <tt>$Revision: 1.4 $</tt>
  */
 public abstract class AbstractQueryCommand implements QueryCommand
 {
@@ -132,7 +132,9 @@ public abstract class AbstractQueryCommand implements QueryCommand
          JDBCUtil.safeClose(con);
 
          log.error("Finder failed: " + e.getMessage(), e);
-         throw new FinderException(e.getMessage());
+         FinderException fe = new FinderException(e.getMessage());
+         fe.initCause(e);
+         throw fe;
       }
 
       result = collectionStrategy.readResultSet(con, ps, rs, factory);
@@ -199,7 +201,9 @@ public abstract class AbstractQueryCommand implements QueryCommand
       }
       catch(Exception e)
       {
-         throw new FinderException(e.getMessage());
+          FinderException fe = new FinderException(e.getMessage());
+          fe.initCause(e);
+          throw fe;
       }
       finally
       {
