@@ -61,7 +61,7 @@ import org.jboss.util.WorkerQueue;
  * @author <a href="bill@burkecentral.com">Bill Burke</a>
  * @author <a href="marc.fleury@jboss.org">Marc Fleury</a>
  *
- * @version $Revision: 1.25 $
+ * @version $Revision: 1.26 $
  *
  *   <p><b>Revisions:</b>
  *
@@ -348,9 +348,9 @@ public abstract class AbstractInstanceCache
    }
 
    /* From Service interface*/
-   public void init() throws Exception
+   public void create() throws Exception
    {
-      getCache().init();
+      getCache().create();
       m_passivationHelper = new PassivationHelper();
       String threadName = "Passivator Thread for " + getContainer().getBeanMetaData().getEjbName();
 

@@ -37,7 +37,7 @@ import org.jboss.management.j2ee.CountStatistic;
 *  @author <a href="mailto:andreas.schaefer@madplanet.com">Andreas Schaefer</a>
  * @author <a href="mailto:sacha.labourey@cogito-info.ch">Sacha Labourey</a>
 *   
-*  @version $Revision: 1.19 $
+*  @version $Revision: 1.20 $
 *
 *  <p><b>Revisions:</b>
 *  <p><b>20010704 marcf:</b>
@@ -101,7 +101,7 @@ implements InstancePool, XmlLoadable
         return container;
     }
     
-    public void init()
+    public void create()
     throws Exception
     {
     }

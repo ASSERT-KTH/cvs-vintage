@@ -9,7 +9,7 @@ package org.jboss.ejb.plugins;
 
 import org.jboss.ejb.Container;
 import org.jboss.ejb.Interceptor;
-import org.jboss.ejb.MethodInvocation;
+import org.jboss.invocation.Invocation;
 import org.jboss.logging.Logger;
 
 /**
@@ -17,7 +17,7 @@ import org.jboss.logging.Logger;
  *      
  * @author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
  * @author <a href="mailto:jason@planet57.com">Jason Dillon</a>
- * @version $Revision: 1.10 $
+ * @version $Revision: 1.11 $
  */
 public abstract class AbstractInterceptor
    implements Interceptor
@@ -52,7 +52,7 @@ public abstract class AbstractInterceptor
       return nextInterceptor;
    }
 
-   public void init() throws Exception {
+   public void create() throws Exception {
       // empty
    }
    
@@ -68,12 +68,12 @@ public abstract class AbstractInterceptor
       // empty
    }
 
-   public Object invokeHome(final MethodInvocation mi) throws Exception {
+   public Object invokeHome(final Invocation mi) throws Exception {
       // assert mi != null;
       return getNext().invokeHome(mi);
    }
 
-   public Object invoke(final MethodInvocation mi) throws Exception {
+   public Object invoke(final Invocation mi) throws Exception {
       // assert mi != null;
       return getNext().invoke(mi);
    }
