@@ -49,7 +49,7 @@ import org.gjt.sp.util.*;
  * <li>And so on
  * </ul>
  *
- * @version $Id: StatusBar.java,v 1.37 2002/06/02 03:29:43 spestov Exp $
+ * @version $Id: StatusBar.java,v 1.38 2002/06/02 05:40:42 spestov Exp $
  * @author Slava Pestov
  * @since jEdit 3.2pre2
  */
@@ -219,6 +219,11 @@ public class StatusBar extends JPanel implements WorkThreadProgressListener
 		{
 			public void run()
 			{
+				// don't obscure existing message
+				if(message != null && message.getText() != null
+					&& !"".equals(message.getText()))
+					return;
+
 				int requestCount = threadPool.getRequestCount();
 				if(requestCount == 0)
 				{
