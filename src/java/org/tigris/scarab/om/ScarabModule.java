@@ -105,7 +105,7 @@ import org.apache.fulcrum.security.impl.db.entity
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: ScarabModule.java,v 1.102 2002/03/28 03:56:04 jon Exp $
+ * @version $Id: ScarabModule.java,v 1.103 2002/04/03 20:05:30 jmcnally Exp $
  */
 public class ScarabModule
     extends BaseScarabModule
@@ -171,6 +171,11 @@ public class ScarabModule
                 catch (Exception e)
                 {
                     Log.error("An exception prevented retrieving any users", e);
+                    // this method should probably throw the exception, but
+                    // until the interface is changed, wrap it in a RuntimeExc.
+                    throw new RuntimeException(
+                        "Please check turbine.log for more info: " + 
+                        e.getMessage());
                 }
             }
             else 
