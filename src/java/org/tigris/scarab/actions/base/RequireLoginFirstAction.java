@@ -66,13 +66,18 @@ import org.tigris.scarab.tools.ScarabRequestTool;
 import org.tigris.scarab.tools.ScarabLocalizationTool;
 import org.tigris.scarab.screens.Default;
 import org.tigris.scarab.om.ScarabUser;
+import org.tigris.scarab.services.security.ScarabSecurity;
+//import org.tigris.scarab.util.ScarabConstants;
+import org.tigris.scarab.om.Module;
+//import org.tigris.scarab.om.Issue;
+import org.tigris.scarab.om.IssueType;
 
 /**
  * This is a badly named class which is essentially equivalent to the 
  * Default.java Screen except that it has a few helper methods.
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: RequireLoginFirstAction.java,v 1.39 2002/09/20 20:28:45 elicia Exp $    
+ * @version $Id: RequireLoginFirstAction.java,v 1.40 2002/10/17 00:26:51 jmcnally Exp $    
  */
 public abstract class RequireLoginFirstAction extends TemplateSecureAction
 {
@@ -91,7 +96,49 @@ public abstract class RequireLoginFirstAction extends TemplateSecureAction
      */
     protected boolean isAuthorized( RunData data ) throws Exception
     {
-        return Default.checkAuthorized(data);
+        boolean auth = false;
+        String action = data.getAction();
+        String perm = ScarabSecurity.getActionPermission(action);
+        TemplateContext context = getTemplateContext(data);
+        ScarabRequestTool scarabR = getScarabRequestTool(context);
+        ScarabLocalizationTool l10n = getLocalizationTool(context);
+        Module currentModule = scarabR.getCurrentModule();
+        IssueType currentIssueType = scarabR.getCurrentIssueType();
+        ScarabUser user = (ScarabUser)data.getUser();
+
+        // there should be no action that requires login that does
+        // not also have a permission
+        if (perm == null)
+        {
+            //scarabR.setAlertMessage("Action is not assigned a permission.");
+            // FIXME! remove the following line and uncomment the previous
+            // after it is assumed that all the actions are accounted for.
+            auth = true;
+        }
+        else
+        {
+            if (currentModule == null)
+            {
+                scarabR.setInfoMessage(l10n.get("SelectModuleToWorkIn"));
+                Default.setTargetSelectModule(data);
+                auth = false;
+            }
+            else if (! user.hasLoggedIn() 
+                || !user.hasPermission(perm, currentModule))
+            {
+                scarabR.setInfoMessage(
+                     l10n.get("LoginToAccountWithPermissions"));
+
+                Default.setTargetLogin(data);
+                scarabR.setCurrentModule(null);
+                auth = false;
+            }
+            else 
+            {
+                auth = true;
+            }
+        }
+        return auth;
     }
 
     /**

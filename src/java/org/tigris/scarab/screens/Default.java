@@ -76,7 +76,7 @@ import org.tigris.scarab.om.IssueType;
  * duplication of code.
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: Default.java,v 1.63 2002/09/15 15:37:18 jmcnally Exp $
+ * @version $Id: Default.java,v 1.64 2002/10/17 00:26:51 jmcnally Exp $
  */
 public class Default extends TemplateSecureScreen
 {
@@ -205,7 +205,7 @@ public class Default extends TemplateSecureScreen
         return true;
     }
 
-    private static void setTargetSelectModule(RunData data)
+    public static void setTargetSelectModule(RunData data)
     {
         getTemplateContext(data)
             .put( ScarabConstants.NEXT_TEMPLATE,
@@ -216,7 +216,7 @@ public class Default extends TemplateSecureScreen
                 .getString("scarab.CurrentModuleTemplate", "SelectModule.vm"));        
     }
 
-    private static void setTargetLogin(RunData data)
+    public static void setTargetLogin(RunData data)
     {
         getTemplateContext(data).put( ScarabConstants.NEXT_TEMPLATE, 
             data.getParameters().getString("template") );
