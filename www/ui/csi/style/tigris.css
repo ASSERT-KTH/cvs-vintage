@@ -1,6 +1,6 @@
 
 
-/* $Id: tigris.css,v 1.3 2002/10/17 22:33:26 braino Exp $
+/* $Id: tigris.css,v 1.4 2002/10/17 22:34:37 braino Exp $
 
 contains rules unsuitable for Netscape 4.x; simpler rules are in ns4_only.css. see <http://style.tigris.org/> */
 
@@ -48,10 +48,10 @@ table, th, td {
  border: none
  } 
 div.colbar {
- border-right: 1px solid #999;
- border-left: 1px solid #eee;
- border-top: 1px solid #eee;
- border-bottom: 1px solid #999;
+ border-left: 1px solid #999;
+ border-bottom: 1px solid #eee;
+ border-right: 1px solid #eee;
+ border-top: 1px solid #999;
  background: #eee;
  }
 #banner {
