@@ -39,7 +39,7 @@ import org.gjt.sp.util.Log;
  * this file out.
  * @since jEdit 4.0pre4
  * @author Slava Pestov
- * @version $Id: Java14.java,v 1.21 2003/08/12 01:40:16 spestov Exp $
+ * @version $Id: Java14.java,v 1.22 2003/08/12 03:47:52 spestov Exp $
  */
 public class Java14
 {
@@ -273,7 +273,9 @@ public class Java14
 			catch(Exception e)
 			{
 			}
-						
+
+			c.requestFocus();
+
 			return true;
 		}
 

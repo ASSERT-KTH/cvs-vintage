@@ -38,7 +38,7 @@ import org.gjt.sp.jedit.*;
  * to the implementations of this class to do so.
  *
  * @author Slava Pestov
- * @version $Id: InputHandler.java,v 1.18 2003/04/14 22:43:16 spestov Exp $
+ * @version $Id: InputHandler.java,v 1.19 2003/08/12 03:47:52 spestov Exp $
  * @see org.gjt.sp.jedit.gui.DefaultInputHandler
  */
 public abstract class InputHandler extends KeyAdapter
@@ -370,7 +370,10 @@ public abstract class InputHandler extends KeyAdapter
 		Macros.Recorder recorder = view.getMacroRecorder();
 
 		if(recorder != null)
-			recorder.record(repeatCount,ch);
+		{
+			recorder.recordInput(repeatCount,ch,
+				textArea.isOverwriteEnabled());
+		}
 
 		repeatCount = 1;
 	} //}}}

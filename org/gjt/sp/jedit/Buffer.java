@@ -66,7 +66,7 @@ import org.gjt.sp.util.*;
  * </ul>
  *
  * @author Slava Pestov
- * @version $Id: Buffer.java,v 1.197 2003/08/10 03:11:19 spestov Exp $
+ * @version $Id: Buffer.java,v 1.198 2003/08/12 03:47:52 spestov Exp $
  */
 public class Buffer
 {
@@ -4058,13 +4058,24 @@ loop:		for(int i = 0; i < seg.count; i++)
 	 */
 	private int getPriorNonEmptyLine(int lineIndex)
 	{
+		int returnValue = -1;
+
 		for(int i = lineIndex - 1; i >= 0; i--)
 		{
-			if(getLineLength(i) != 0)
-				return i;
+			getLineText(i,seg);
+			if(seg.count != 0)
+				returnValue = i;
+			for(int j = 0; j < seg.count; j++)
+			{
+				char ch = seg.array[j];
+				if(!Character.isWhitespace(ch))
+					return i;
+			}
 		}
 
-		return -1;
+		// didn't find a line that contains non-whitespace chars
+		// so return index of prior whitespace line
+		return returnValue;
 	} //}}}
 
 	//{{{ contentInserted() method
