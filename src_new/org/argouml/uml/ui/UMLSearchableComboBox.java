@@ -21,7 +21,7 @@
 // CALIFORNIA HAS NO OBLIGATIONS TO PROVIDE MAINTENANCE, SUPPORT,
 // UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 
-// $Id: UMLSearchableComboBox.java,v 1.2 2003/01/05 19:45:52 kataka Exp $
+// $Id: UMLSearchableComboBox.java,v 1.3 2003/01/06 20:03:04 kataka Exp $
 package org.argouml.uml.ui;
 
 import javax.swing.ComboBoxModel;
@@ -65,7 +65,20 @@ public class UMLSearchableComboBox extends UMLEditableComboBox {
      * text. As the element is found, this is made to the selected item.
      * @see org.argouml.uml.ui.UMLEditableComboBox#doIt(java.lang.Object)
      */
-    protected void doIt(Object item) {
+    protected void doOnEdit(Object item) {
+        Object element = search(item);
+        if (element != null) {
+            setSelectedItem(element);
+        }
+    }
+    
+    /**
+     * Does the actual searching. Returns the item found or null if there is no
+     * item found.
+     * @param item
+     * @return Object
+     */
+    protected Object search(Object item) {
         String text = (String) item;
         ComboBoxModel model = getModel();
         for (int i = 0; i < model.getSize(); i++) {
@@ -73,23 +86,21 @@ public class UMLSearchableComboBox extends UMLEditableComboBox {
             if (element instanceof MBase) {
                 if (getRenderer() instanceof UMLListCellRenderer2) {
                     String labelText = ((UMLListCellRenderer2) getRenderer()).makeText((MBase) element);
-                    if (labelText != null && labelText.startsWith(text)) {
-                        model.setSelectedItem(element);
-                        break;
+                    if (labelText != null && labelText.startsWith(text)) {                        
+                        return element;
                     }
                 }
                 if (element instanceof MModelElement) {
                     MModelElement elem = (MModelElement) element;
                     String name = elem.getName();
                     if (name != null && name.startsWith(text)) {
-                        model.setSelectedItem(element);
-                        break;
+                        return element;
                     }
                 }
             }
 
         }
-
+        return null;
     }
 
 }

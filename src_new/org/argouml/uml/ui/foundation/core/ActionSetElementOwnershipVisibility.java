@@ -21,7 +21,7 @@
 // CALIFORNIA HAS NO OBLIGATIONS TO PROVIDE MAINTENANCE, SUPPORT,
 // UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 
-// $Header: /tmp/cvs-vintage/argouml/argouml/src_new/org/argouml/uml/ui/foundation/core/Attic/ActionSetElementOwnershipVisibility.java,v 1.3 2002/11/23 22:04:46 kataka Exp $
+// $Header: /tmp/cvs-vintage/argouml/argouml/src_new/org/argouml/uml/ui/foundation/core/Attic/ActionSetElementOwnershipVisibility.java,v 1.4 2003/01/06 20:03:05 kataka Exp $
 package org.argouml.uml.ui.foundation.core;
 
 import java.awt.event.ActionEvent;
@@ -29,11 +29,11 @@ import java.awt.event.ActionEvent;
 import javax.swing.AbstractAction;
 import javax.swing.JRadioButton;
 
-import org.argouml.application.api.Argo;
 import org.argouml.kernel.Project;
 import org.argouml.kernel.ProjectManager;
 import org.argouml.ui.ProjectBrowser;
 import org.argouml.uml.ui.UMLButtonGroup;
+
 import ru.novosoft.uml.foundation.core.MModelElement;
 import ru.novosoft.uml.foundation.data_types.MVisibilityKind;
 

@@ -1,4 +1,4 @@
-// $Id: PropPanelParameter.java,v 1.19 2002/12/27 10:08:02 linus Exp $
+// $Id: PropPanelParameter.java,v 1.20 2003/01/06 20:03:05 kataka Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -41,6 +41,7 @@ import org.argouml.uml.ui.UMLInitialValueComboBox;
 import org.argouml.uml.ui.UMLList;
 import org.argouml.uml.ui.UMLRadioButton;
 import org.argouml.uml.ui.UMLReflectionListModel;
+
 import ru.novosoft.uml.foundation.core.MBehavioralFeature;
 import ru.novosoft.uml.foundation.core.MClassifier;
 import ru.novosoft.uml.foundation.core.MModelElement;

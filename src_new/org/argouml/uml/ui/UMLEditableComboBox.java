@@ -21,7 +21,7 @@
 // CALIFORNIA HAS NO OBLIGATIONS TO PROVIDE MAINTENANCE, SUPPORT,
 // UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 
-// $Id: UMLEditableComboBox.java,v 1.2 2003/01/05 19:45:52 kataka Exp $
+// $Id: UMLEditableComboBox.java,v 1.3 2003/01/06 20:03:04 kataka Exp $
 
 package org.argouml.uml.ui;
 
@@ -252,7 +252,7 @@ public abstract class UMLEditableComboBox extends UMLComboBox2 {
             Object oldValue = getSelectedItem();
             ComboBoxEditor editor = getEditor();
             Object item = editor.getItem();
-            doIt(item);
+            doOnEdit(item);
             // next statement is necessary to update the textfield if the selection is equal to what was allready
             // selected
             if (oldValue == getSelectedItem())
@@ -267,6 +267,6 @@ public abstract class UMLEditableComboBox extends UMLComboBox2 {
      * @param item The item in the comboboxeditor. In this case it's the text of
      * the editable textfield.
      */
-    protected abstract void doIt(Object item);
+    protected abstract void doOnEdit(Object item);
 
 }

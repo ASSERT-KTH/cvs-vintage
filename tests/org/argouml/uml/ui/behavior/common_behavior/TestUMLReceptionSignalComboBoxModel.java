@@ -1,4 +1,4 @@
-// $Id: TestUMLReceptionSignalComboBoxModel.java,v 1.4 2002/12/21 19:48:10 linus Exp $
+// $Id: TestUMLReceptionSignalComboBoxModel.java,v 1.5 2003/01/06 20:03:56 kataka Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -108,11 +108,11 @@ public class TestUMLReceptionSignalComboBoxModel extends TestCase {
         assertNull(model.getSelectedItem());
     }
     
-// For some reason this test does not work. Please fix!
-//     public void testRemoveSignal() {
-// 	   UmlFactory.getFactory().delete(signals[9]);
-// 	   assertEquals(9, model.getSize());
-// 	   assertTrue(!model.contains(signals[9]));
-//     } 
+
+    public void testRemoveSignal() {
+        UmlFactory.getFactory().delete(signals[9]);
+        assertEquals(9, model.getSize());
+        assertTrue(!model.contains(signals[9]));
+    } 
 
 }
