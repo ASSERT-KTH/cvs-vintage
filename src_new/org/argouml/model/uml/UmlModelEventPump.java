@@ -1,4 +1,4 @@
-// $Id: UmlModelEventPump.java,v 1.9 2002/12/28 20:52:53 kataka Exp $
+// $Id: UmlModelEventPump.java,v 1.10 2003/01/01 18:21:55 kataka Exp $
 // Copyright (c) 2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -428,7 +428,7 @@ public final class UmlModelEventPump implements MElementListener {
             else 
                 listenerList.addAll((Set)_listenerModelEventsMap.get(getKey(source, null)));
         }
-        return listenerList;
+        return listenerList != null ? listenerList : new HashSet();
     }
         
     /**
