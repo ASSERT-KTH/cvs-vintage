@@ -125,7 +125,7 @@ public class IssueListExport extends DataExport
         // ISSUE ATTRIBUTE VALUES as column headings.
         if (containsElements(rmuas)) 
         {
-            for(Iterator i = rmuas.iterator(); i.hasNext();) 
+            for (Iterator i = rmuas.iterator(); i.hasNext();) 
             {
                 RModuleUserAttribute rmua = (RModuleUserAttribute)i.next();
                 Attribute userAttribute = rmua.getAttribute();
@@ -154,14 +154,11 @@ public class IssueListExport extends DataExport
         List issueIdList = scarabR.getCurrentSearchResults();
         if (containsElements(issueIdList)) 
         {
-            for (Iterator i = issueIdList.iterator();i.hasNext(); )
+            for (Iterator i = issueIdList.iterator();i.hasNext();)
             {
-                String issueId = ((QueryResult)i.next()).getUniqueId();
-                // FIXME! don't do this QueryResult should already have
-                // the info pcn#16558
-                Issue issue = IssueManager.getIssueById(issueId);
                 printer.println();
-                writeRow(printer, mitlist, l10n, rmuas, issue);
+                QueryResult queryResult = (QueryResult)i.next();
+                writeRow(printer, mitlist, l10n, rmuas, queryResult);
             }
         }
     }
@@ -178,67 +175,35 @@ public class IssueListExport extends DataExport
      * @exception Exception
      */
     private void writeRow(TSVPrinter printer, MITList mitlist, 
-            ScarabLocalizationTool l10n, List rmuas, Issue issue)
+            ScarabLocalizationTool l10n, List rmuas, QueryResult queryResult)
         throws Exception
     {
         if (mitlist != null)
         {
             if (!mitlist.isSingleModule())
             {
-                printer.print(issue.getModule().getRealName());
+                printer.print(queryResult.getModule().getRealName());
             }
 
             if (!mitlist.isSingleIssueType())
             {
-                printer.print(issue.getRModuleIssueType().getDisplayName());
+                printer.print(queryResult.getRModuleIssueType().getDisplayName());
             }
         }
 
-        printer.print(issue.getUniqueId());
+        printer.print(queryResult.getUniqueId());
 
-        // Add ISSUE ATTRIBUTE VALUES
-        if (containsElements(rmuas))
+        List values = queryResult.getAttributeValuesAsCSV();
+        for (Iterator itr = values.iterator();itr.hasNext();)
         {
-            for (Iterator rmuai = rmuas.iterator(); rmuai.hasNext(); )
+            String val = (String)itr.next();
+            if (val.length() == 0)
             {
-                RModuleUserAttribute rmua = (RModuleUserAttribute)rmuai.next();
-                Attribute userAttribute = rmua.getAttribute();
-                String value = null;
-                if (userAttribute.isUserAttribute())
-                {
-                    List values = issue.getAttributeValues(userAttribute);
-                    if (containsElements(values)) 
-                    {
-                        StringBuffer buf = new StringBuffer();
-                        String comma = null;
-                        for (Iterator i = values.iterator(); i.hasNext(); )
-                        {
-                            if (comma != null)
-                            {
-                                buf.append(comma);
-                            }
-                            else
-                            {
-                                comma = ", ";
-                            }
-
-                            buf.append(escapeCommas(((AttributeValue) i.next())
-                                                    .getValue()));
-                        }
-                        value = buf.toString();
-                    }
-                    else 
-                    {
-                        value = NO_CONTENT;
-                    }   
-                }
-                else 
-                {
-                    AttributeValue av = issue.getAttributeValue(userAttribute);
-                    value = (av == null ? NO_CONTENT : av.getValue());
-                }
-                
-                printer.print(value);
+                printer.print("-------");
+            }
+            else
+            {
+                printer.print(val);
             }
         }
     }
