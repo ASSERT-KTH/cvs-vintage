@@ -71,7 +71,7 @@ import org.tigris.scarab.om.Module;
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
- * @version $Id: AttributeValue.java,v 1.95 2003/04/21 19:39:14 jackrepenning Exp $
+ * @version $Id: AttributeValue.java,v 1.96 2003/06/03 20:23:28 elicia Exp $
  */
 public abstract class AttributeValue 
     extends BaseAttributeValue
@@ -325,6 +325,8 @@ Leaving here so that John can remove or fix.
             b = super.equals(obj);
             if (!b) 
             {
+                FIXME! this code will equate 2 AttributeValues that are
+                // multivalued, but are in a flat list.  
                 AttributeValue aval = (AttributeValue)obj;
                 b = (getChainedValue() == null) && 
                     ObjectUtils.equals(aval.getAttributeId(), getAttributeId())

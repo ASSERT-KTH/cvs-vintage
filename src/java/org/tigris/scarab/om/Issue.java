@@ -96,7 +96,7 @@ import org.apache.commons.lang.StringUtils;
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
- * @version $Id: Issue.java,v 1.303 2003/05/20 19:32:17 jmcnally Exp $
+ * @version $Id: Issue.java,v 1.304 2003/06/03 20:23:28 elicia Exp $
  */
 public class Issue 
     extends BaseIssue
@@ -3252,8 +3252,6 @@ public class Issue
         // Save assignee value
         attVal.setDeleted(true);
         attVal.save();
-        // FIXME! invalidate the cache instead
-        getUserAttributeValues().remove(attVal);
 
         return activitySet;
     }
