@@ -20,7 +20,7 @@ import org.apache.log4j.Category;
  * @author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>.
  * @author <a href="mailto:Scott.Stark@jboss.org">Scott Stark</a>.
  * @author <a href="mailto:hiram.chirino@jboss.org">Hiram Chirino</a>.
- * @version $Revision: 1.11 $
+ * @version $Revision: 1.12 $
  */
 public class Info
    implements InfoMBean, MBeanRegistration
@@ -118,7 +118,10 @@ public class Info
       buff.append("<h3>Before</h3>");
       buff.append(listMemoryUsage());
       buff.append("<h3>After</h3>");
+
+      log.info("hinting the VM to run the garbage collector");
       System.gc();
+      
       buff.append(listMemoryUsage());
       return buff.toString();
    }
