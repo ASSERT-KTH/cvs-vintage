@@ -13,6 +13,7 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
 //
 //All Rights Reserved.
+
 package org.columba.mail.folder.command;
 
 import java.awt.Color;
@@ -32,15 +33,8 @@ import org.columba.core.command.Worker;
 import org.columba.core.config.Config;
 import org.columba.core.io.DiskIO;
 import org.columba.core.logging.ColumbaLogger;
-import org.columba.core.print.cCmUnit;
-import org.columba.core.print.cDocument;
-import org.columba.core.print.cHGroup;
-import org.columba.core.print.cHTMLPart;
-import org.columba.core.print.cLine;
-import org.columba.core.print.cParagraph;
-import org.columba.core.print.cPrintObject;
-import org.columba.core.print.cPrintVariable;
-import org.columba.core.print.cVGroup;
+import org.columba.core.main.MainInterface;
+import org.columba.core.print.*;
 import org.columba.core.util.TempFileStore;
 import org.columba.core.xml.XmlElement;
 import org.columba.mail.coder.CoderRouter;
@@ -181,7 +175,9 @@ public class PrintMessageCommand extends FolderCommand {
 		// Print each message
 		for (int j = 0; j < uids.length; j++) {
 			Object uid = uids[j];
-			ColumbaLogger.log.debug("Printing UID=" + uid);
+			if (MainInterface.DEBUG) {
+                                ColumbaLogger.log.debug("Printing UID=" + uid);
+                        }
 
 			Message message = new Message();
 			ColumbaHeader header = srcFolder.getMessageHeader(uid, worker);
@@ -331,21 +327,22 @@ public class PrintMessageCommand extends FolderCommand {
 		// no configuration available, create default config
 		if (printer == null) {
 			// create new local xml treenode
-			ColumbaLogger.log.debug("printer config node not found - creating new");
+			if (MainInterface.DEBUG) {
+                                ColumbaLogger.log.debug("printer config node not found - creating new");
+                        }
 			printer = new XmlElement("printer");
 			printer.addAttribute("allow_scaling", "true");
 
 			// add to options if possible (so it will be saved)
 			if (options != null) {
-				ColumbaLogger.log.debug("storing new printer config node");
+				if (MainInterface.DEBUG) {
+                                        ColumbaLogger.log.debug("storing new printer config node");
+                                }
 				options.addElement(printer);
 			}
 		}
-
-		if (printer.getAttribute("allow_scaling", "true").equals("true"))
-			return true;
-		else
-			return false;
+                
+                return Boolean.valueOf(printer.getAttribute("allow_scaling", "true")).booleanValue();
 	}
 
 	/**
@@ -412,10 +409,10 @@ public class PrintMessageCommand extends FolderCommand {
 			// decode using specified charset
 			decodedBody = decoder.decode(bodyPart.getBody(), charsetToUse);
 		} catch (UnsupportedEncodingException ex) {
-			ColumbaLogger.log.info(
-				"charset "
-					+ charsetToUse
+			if (MainInterface.DEBUG) {
+                                ColumbaLogger.log.info("charset " + charsetToUse
 					+ " isn't supported, falling back to default...");
+                        }
 			try {
 				// decode using default charset
 				decodedBody = decoder.decode(bodyPart.getBody(), null);
@@ -427,5 +424,4 @@ public class PrintMessageCommand extends FolderCommand {
 
 		return decodedBody;
 	}
-
 }
