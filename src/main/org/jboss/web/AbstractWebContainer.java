@@ -38,7 +38,7 @@ import java.util.Set;
  @author  Scott.Stark@jboss.org
  @author  Christoph.Jung@infor.de
  @author  Thomas.Diesler@arcor.de
- @version $Revision: 1.86 $
+ @version $Revision: 1.87 $
  */
 public abstract class AbstractWebContainer
    extends SubDeployerSupport
@@ -220,6 +220,7 @@ public abstract class AbstractWebContainer
          }
 
          WebMetaData metaData = new WebMetaData();
+         metaData.setResourceClassLoader(di.localCl);
          metaData.setJava2ClassLoadingCompliance(this.java2ClassLoadingCompliance);
          di.metaData = metaData;
          
