@@ -2,28 +2,28 @@
 
   <title>CAROL Library User Manual</title>
   <subtitle> </subtitle>
-  
+
   	<mediaobject>
 	  <imageobject>
 	    <imagedata fileref="img/carol" align="center"  format="eps" width="325px" depth="174px" scalefit="1" >
 	  </imageobject>
 	  <imageobject>
-	    <imagedata fileref="img/carol.jpg" format="jpg" align="center" 		      
-	           width="325px" 
+	    <imagedata fileref="img/carol.jpg" format="jpg" align="center"
+	           width="325px"
 		       depth="174px"
 		       scalefit="1" >
 	  </imageobject>
 	</mediaobject>
-  		
- 
-  <date>2005-02-18</date>
-  
+
+
+  <date>2005-03-25</date>
+
   <abstract>
     <para>
-      CAROL is a library allowing to use different RMI implementations. Thanks to CAROL, a Java server application can be independent of RMI implementations and accessible simultaneously by RMI clients using different RMI implementations. CAROL allows to design, implement, compile, package, deploy, and execute distributed applications compliant with the RMI model.     
+      CAROL is a library allowing to use different RMI implementations. Thanks to CAROL, a Java server application can be independent of RMI implementations and accessible simultaneously by RMI clients using different RMI implementations. CAROL allows to design, implement, compile, package, deploy, and execute distributed applications compliant with the RMI model.
     </para>
   </abstract>
-  
+
   <copyright>
     <year>1999-2005</year>
     <holder>ObjectWeb Consortium</holder>
@@ -51,5 +51,5 @@
     <keyword>jndi</keyword>
     <keyword>context</keyword>
   </keywordset>
-  
+
 </bookinfo>

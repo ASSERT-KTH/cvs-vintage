@@ -6,16 +6,13 @@
       This section describes the configuration rules for different RMI and name services managed by CAROL. Currently, CAROL is distributed with tools and classes that allow to use:
 	<itemizedlist>
 	<listitem>
-	  <para>ObjectWeb/Jonathan <ulink url="http://objectweb.org/jonathan">JEREMIE</ulink> RMI JRMP like</para>
+	  <para>Jonathan/ObjectWeb <ulink url="http://jonathan.objectweb.org/">JEREMIE</ulink> RMI JRMP like</para>
 	</listitem>
 	<listitem>
 	  <para>Sun <ulink url="http://java.sun.com/j2se/1.4/docs/guide/rmi/index.html">RMI JRMP</ulink> (version 1.1 and 1.2)</para>
 	</listitem>
 	<listitem>
 	  <para>Sun <ulink url="http://java.sun.com/j2se/1.4/docs/guide/idl/index.html">RMI IIOP (>JDK 1.4)</ulink></para>
-	</listitem>
-	<listitem>
-	  <para>Local Method Invocation (LMI) for embedded server</para>
 	</listitem>
 	<listitem>
 	  <para>Cluster Method Invocation (CMI) for clustered rmi server</para>
@@ -36,7 +33,7 @@
     </sect2>
     <sect2>
       <title>General configuration rules for all RMI and JNDI architectures</title>
-      <para>The <filename>carol.properties</filename> file is a standard Java properties file. All properties, in this file, follow the rules below (we suppose that XXX is the RMI name like 'jrmp', 'iiop','jeremie','cmi' or 'lmi'. For all those defaults provided RMI protocol, please use those names.
+      <para>The <filename>carol.properties</filename> file is a standard Java properties file. All properties, in this file, follow the rules below (we suppose that XXX is the RMI name like 'jrmp', 'iiop','jeremie' or 'cmi'. For all those defaults provided RMI protocol, please use those names.
       </para>
       <para>
 	<table>
@@ -47,7 +44,7 @@
 		<entry>Property name</entry>
 		<entry>Property value</entry>
 		<entry>Description</entry
-		<entry>Required</entry>		
+		<entry>Required</entry>
 	      </row>
 	    </thead>
 	    <tbody>
@@ -100,14 +97,14 @@
 		<entry>Property name</entry>
 		<entry>Property value</entry>
 		<entry>Description</entry
-		  <entry>Required</entry>		
+		  <entry>Required</entry>
 	      </row>
 	    </thead>
 	    <tbody>
 	      <row>
 		<entry>carol.XXX .PortableRemoteObjectClass</entry>
 		<entry>'XXX portable remote object class name'</entry>
-		<entry>The portable remote object delegate class name for this RMI (CAROL provide implementation of those classes for RMI JRMP,JEREMIE, LMI and CMI, see below)</entry>
+		<entry>The portable remote object delegate class name for this RMI (CAROL provide implementation of those classes for RMI JRMP,JEREMIE and CMI, see below)</entry>
 		<entry>No, There is a default for each RMI provided by carol</entry>
 	      </row>
 	      <row>
@@ -136,15 +133,15 @@
 	      </row>
 	    </tbody>
 	  </tgroup>
-	</table>  
+	</table>
       </para>
     </sect2>
     <sect2>
       <title>RMI JRMP configuration</title>
-      <para>One of the SPI personality provided by CAROL is the standard Sun RMI JRMP. This personality can be used with all standard RMI JRMP features. CAROL allow implicit context propagation with RMI JRMP (like a transactional or a security context) via a RMI IIOP Interceptors like mechanism. The example below explains the general way for CAROL RMI JRMP configuration:</para> 
+      <para>One of the SPI personality provided by CAROL is the standard Sun RMI JRMP. This personality can be used with all standard RMI JRMP features. CAROL allow implicit context propagation with RMI JRMP (like a transactional or a security context) via a RMI IIOP Interceptors like mechanism. The example below explains the general way for CAROL RMI JRMP configuration:</para>
       <example>
 	<title>RMI JRMP <filename>carol.properties</filename> file.</title>
-	<screen> 
+	<screen>
 &jrmpcarol.properties;
 	</screen>
 	<para>In the file above we see a JRMP standard configuration, note that nothing is needed except custom interceptors configuration. You can customized your configuration with:
@@ -159,7 +156,7 @@
 		<entry>Property name</entry>
 		<entry>Property value</entry>
 		<entry>Description</entry
-	        <entry>Required</entry>		
+	        <entry>Required</entry>
 	      </row>
 	    </thead>
 	    <tbody>
@@ -189,15 +186,15 @@
 	      </row>
 	    </tbody>
 	  </tgroup>
-	</table>  
+	</table>
       </para>
     </sect2>
     <sect2>
       <title>RMI IIOP configuration</title>
-      <para>One of the SPI personality provided by CAROL is the standard Sun RMI IIOP. This personality can be used with all standard RMI IIOP features. CAROL allow implicit context propagation with RMI IIOP (like a transactional or a security context) via a RMI IIOP Interceptors mechanism. The example below explains the general way for CAROL RMI IIOP configuration:</para> 
+      <para>One of the SPI personality provided by CAROL is the standard Sun RMI IIOP. This personality can be used with all standard RMI IIOP features. CAROL allow implicit context propagation with RMI IIOP (like a transactional or a security context) via a RMI IIOP Interceptors mechanism. The example below explains the general way for CAROL RMI IIOP configuration:</para>
       <example>
 	<title>RMI IIOP <filename>carol.properties</filename> file.</title>
-	<screen> 
+	<screen>
 &iiopcarol.properties;
 	</screen>
 	<para>In the file above we see a IIOP standard configuration, note that nothing is needed except custom interceptors configuration. You can customized your configuration with:
@@ -212,7 +209,7 @@
 		<entry>Property name</entry>
 		<entry>Property value</entry>
 		<entry>Description</entry
-	        <entry>Required</entry>		
+	        <entry>Required</entry>
 	      </row>
 	    </thead>
 	    <tbody>
@@ -236,7 +233,7 @@
 	      </row>
 	    </tbody>
 	  </tgroup>
-	</table>  
+	</table>
       </para>
     </sect2>
     <sect2>
@@ -266,7 +263,7 @@
 		<entry>Property name</entry>
 		<entry>Property value</entry>
 		<entry>Description</entry
-	        <entry>Required</entry>		
+	        <entry>Required</entry>
 	      </row>
 	    </thead>
 	    <tbody>
@@ -290,63 +287,18 @@
 	      </row>
 	    </tbody>
 	  </tgroup>
-	</table>  
-      </para>
-    </sect2>    
-    <sect2>
-      <title>LMI personality configuration</title>
-      <para>One of the SPI personality available/provided by CAROL is the CAROL LMI personality. This personality is for, an only for, local methods call. With this personality, jndi register (and return) local java references. The Referenceable mechanism is also provide in LMI context. For the moment, LMI is only tested in a non multi protocol environment.
-</para>
-      <note>
-	<para>This implementation is not conform to RMI specifications: There is no serialization and the server "remote" call is executed is the client thread. This is a fake implementation, faster than standard RMI but not conform.</para>
-      </note>
-      <example>
-	<title>LMI <filename>carol.properties</filename> file</title>
-	<screen>
-&lmicarol.properties;
-	</screen>
-        <para>In the file above we see a LMI standard configuration, note that nothing is needed. You can customized your configuration with:
-        </para>
-      </example>
-      <para>
-	<table>
-	  <title>Carol RMI LMI specifics properties</title>
-	  <tgroup cols="4">
-	    <thead>
-	      <row>
-		<entry>Property name</entry>
-		<entry>Property value</entry>
-		<entry>Description</entry
-	        <entry>Required</entry>		
-	      </row>
-	    </thead>
-	    <tbody>
-	      <row>
-		<entry>carol.lmi. PortableRemoteObjectClass</entry>
-		<entry>'LMI portable remote object class name'</entry>
-		<entry>LMI implementation of the Portable Remote Object class name</entry>
-		<entry>No, there is a default for LMI</entry>
-	      </row>
-	      <row>
-		<entry>carol.lmi. NameServiceClass</entry>
-		<entry>'LMI carol Name Service class name'</entry>
-		<entry>LMI implementation of the Carol name service (fake)</entry>
-		<entry>No, there is a default for LMI based on a fake registry service</entry>
-	      </row>
-	    </tbody>
-	  </tgroup>
-	</table>  
+	</table>
       </para>
     </sect2>
     <sect2>
       <title>MULTI RMI configuration</title>
-      <para>The example below describes a general RMI configuration with 3 RMI architectures configured and 2 RMI activated (RMI IIOP and JEREMIE) and with RMI IIOP default:</para> 
+      <para>The example below describes a general RMI configuration with 3 RMI architectures configured and 2 RMI activated (RMI IIOP and JEREMIE) and with RMI IIOP default:</para>
       <example>
 	<title>MULTI RMI <filename>carol.properties</filename>s file</title>
-      	<screen> 
+      	<screen>
 &carol.properties;
 	</screen>
       </example>
-    </sect2> 
+    </sect2>
   </sect1>
 </chapter>
