@@ -36,8 +36,6 @@ import org.jboss.security.EJBSecurityManager;
 import org.jboss.security.RealmMapping;
 import org.jboss.security.SecurityAssociation;
 
-import com.dreambean.ejx.ejb.AssemblyDescriptor;
-
 
 /**
  *   <description>
@@ -45,7 +43,7 @@ import com.dreambean.ejx.ejb.AssemblyDescriptor;
  *   @see <related>
  *   @author Rickard Öberg (rickard.oberg@telkel.com)
  *   @author <a href="mailto:docodan@nycap.rr.com">Daniel O'Connor</a>.
- *   @version $Revision: 1.8 $
+ *   @version $Revision: 1.9 $
  */
 public class SecurityInterceptor
    extends AbstractInterceptor
@@ -89,7 +87,7 @@ public class SecurityInterceptor
           return;
       }
       if (realmMapping == null) {
-          throw new java.rmi.RemoteException("Role mapping manager has not been set");
+          throw new java.rmi.RemoteException("checkSecurityAssociation", new SecurityException("Role mapping manager has not been set"));
       }
 
       Principal principal = SecurityAssociation.getPrincipal();
@@ -101,7 +99,7 @@ public class SecurityInterceptor
          if (principal == null || !securityManager.isValid( principal, credential ))
          {
             // should log illegal access
-            throw new java.rmi.RemoteException("Authentication exception");
+            throw new java.rmi.RemoteException("checkSecurityAssociation", new SecurityException("Authentication exception"));
          }
          else
          {
@@ -114,7 +112,7 @@ public class SecurityInterceptor
       if (methodPermissions != null && !realmMapping.doesUserHaveRole( principal, methodPermissions ))
       {
         // should log illegal access
-        throw new java.rmi.RemoteException("Illegal access exception");
+        throw new java.rmi.RemoteException("checkSecurityAssociation", new SecurityException("Illegal access exception"));
       }
    }
 
