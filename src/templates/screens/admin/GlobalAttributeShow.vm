@@ -84,8 +84,22 @@ Global attributes
   #if (!$attribute.isUserAttribute()) 
     #set ($attgroup = $intake.Attribute.mapTo($attribute))
     #indexedRows($velocityCount)
+    #set ($attType = $attribute.AttributeType)
 
   <td><input type="checkbox" name="action_$attribute.AttributeId"></td>
+  #if ($attribute.Deleted)
+  <td><strike>$link.setPage("admin,GlobalAttributeEdit.vm").addPathInfo("att_0id", "$attgroup.Id").setLabel("$attribute.Name")</strike></td>
+  <td><strike>#if ($attribute.Description) $attribute.Description #else &nbsp; #end</strike></td>
+  <td>
+    #foreach ( $atype in $attribute.AllAttributeTypes )
+      #if ($attType.AttributeTypeId == $atype.AttributeTypeId)
+        <strike>$atype.Name</strike>
+      #end
+    #end
+  </td>
+  <td><strike>#attributeCreatedBy($attribute)</strike></td>
+  <td><strike>$format.getDate($scarabR.DateFormat, $attribute.CreatedDate)</strike></td>
+  #else
   <td>$link.setPage("admin,GlobalAttributeEdit.vm").addPathInfo("att_0id", "$attgroup.Id").setLabel("$attribute.Name")</td>
   <td>#if ($attribute.Description) $attribute.Description #else &nbsp; #end</td>
   <td>
@@ -99,6 +113,7 @@ Global attributes
   </td>
   <td>#attributeCreatedBy($attribute)</td>
   <td>$format.getDate($scarabR.DateFormat, $attribute.CreatedDate)</td>
+#end
   <td>$attgroup.Deleted</td>
   </tr>
   #end
