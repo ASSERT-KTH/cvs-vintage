@@ -77,6 +77,15 @@ public class Activity implements java.io.Serializable
         return isNewActivity;
     }
     
+    public boolean isRemoveUserActivity()
+    {
+        if (getNewUser() == null && getOldUser() != null)
+        {
+            return true;
+        }
+        return false;
+    }
+
     public String getId()
     {
         return id;
