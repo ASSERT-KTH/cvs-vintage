@@ -6,27 +6,18 @@
 */
 package org.jboss.jmx.connector.invoker.client;
 
-import java.io.Externalizable;
-import java.io.IOException;
-import java.io.ObjectInput;
-import java.io.ObjectOutput;
-
-import javax.management.Attribute;
-import javax.management.AttributeList;
-import javax.management.NotificationFilter;
-import javax.management.NotificationListener;
-import javax.management.ObjectName;
-
 import org.jboss.invocation.Invocation;
 import org.jboss.invocation.PayloadKey;
 import org.jboss.proxy.Interceptor;
+
+import javax.management.ObjectName;
 
 /**
 * An Interceptor that plucks the object name out of the arguments
 * into an unmarshalled part of the payload.
 * 
 * @author <a href="mailto:adrian.brock@happeningtimes.com">Adrian Brock</a>
-* @version $Revision: 1.2 $
+* @version $Revision: 1.3 $
 */
 public class InvokerAdaptorClientInterceptor
    extends Interceptor
@@ -55,7 +46,14 @@ public class InvokerAdaptorClientInterceptor
       if (objectName != null)
          invocation.setValue("JMX_OBJECT_NAME", objectName, PayloadKey.AS_IS);
 
-      return getNext().invoke(invocation);
+      try
+      {
+         return getNext().invoke(invocation);
+      }
+      catch (InvokerAdaptorException e)
+      {
+         throw e.getWrapped();
+      }
    }
 
    /**

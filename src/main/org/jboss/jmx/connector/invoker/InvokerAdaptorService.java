@@ -22,10 +22,12 @@ import javax.management.Notification;
 import javax.management.NotificationFilter;
 import javax.management.NotificationListener;
 import javax.management.ObjectName;
+import javax.security.auth.Subject;
 
 import org.jboss.invocation.Invocation;
 import org.jboss.invocation.MarshalledInvocation;
 import org.jboss.jmx.adaptor.rmi.RMINotificationListener;
+import org.jboss.jmx.connector.invoker.client.InvokerAdaptorException;
 import org.jboss.mx.server.ServerConstants;
 import org.jboss.security.SecurityAssociation;
 import org.jboss.system.Registry;
@@ -50,7 +52,7 @@ import org.jboss.system.ServiceMBeanSupport;
  *
  * @author <a href="mailto:Adrian.Brock@HappeningTimes.com">Adrian Brock</a>
  * @author Scott.Stark@jboss.org
- * @version $Revision: 1.4 $
+ * @version $Revision: 1.5 $
  *
  * @jmx:mbean name="jboss.jmx:type=adaptor,protocol=INVOKER"
  *            extends="org.jboss.system.ServiceMBean"
@@ -185,88 +187,98 @@ public class InvokerAdaptorService
    public Object invoke(Invocation invocation)
        throws Exception
    {
-      // Make sure we have the correct classloader before unmarshalling
-      Thread thread = Thread.currentThread();
-      ClassLoader oldCL = thread.getContextClassLoader();
-
-      ClassLoader newCL = null;
-      // Get the MBean this operation applies to
-      ObjectName objectName = (ObjectName) invocation.getValue("JMX_OBJECT_NAME");
-      if (objectName != null)
-      {
-         // Obtain the ClassLoader associated with the MBean deployment
-         newCL = (ClassLoader) server.invoke
-         (
-            mbeanRegistry, "getValue",
-            new Object[] { objectName, CLASSLOADER },
-            new String[] { ObjectName.class.getName(), String.class.getName() }
-         );
-      }
-
-      if (newCL != null && newCL != oldCL)
-         thread.setContextClassLoader(newCL);
-
       try
       {
-         // Set the method hash to Method mapping
-         if (invocation instanceof MarshalledInvocation)
-         {
-            MarshalledInvocation mi = (MarshalledInvocation) invocation;
-            mi.setMethodMap(marshalledInvocationMapping);
-         }
-         // Invoke the MBeanServer method via reflection
-         Method method = invocation.getMethod();
-         Object[] args = invocation.getArguments();
-         Principal principal = invocation.getPrincipal();
-         Object credential = invocation.getCredential();
-         Object value = null;
-         SecurityAssociation.setPrincipal(principal);
-         SecurityAssociation.setCredential(credential);
+         // Make sure we have the correct classloader before unmarshalling
+         ClassLoader oldCL = SecurityActions.getContextClassLoader();
 
+         ClassLoader newCL = null;
+         // Get the MBean this operation applies to
+         ObjectName objectName = (ObjectName) invocation.getValue("JMX_OBJECT_NAME");
+         if (objectName != null)
+         {
+            // Obtain the ClassLoader associated with the MBean deployment
+            newCL = (ClassLoader) server.invoke
+            (
+               mbeanRegistry, "getValue",
+               new Object[] { objectName, CLASSLOADER },
+               new String[] { ObjectName.class.getName(), String.class.getName() }
+            );
+         }
+
+         if (newCL != null && newCL != oldCL)
+            SecurityActions.setContextClassLoader(newCL);
+
+         // Get the current security context
+         Subject oldSubject = SecurityActions.getActiveSubject();
+         Object oldCredential = SecurityActions.getCredential();
+         Principal oldPrincipal = SecurityActions.getPrincipal();
          try
          {
-            if( addNotificationListeners.contains(method) )
+            // Set the method hash to Method mapping
+            if (invocation instanceof MarshalledInvocation)
             {
-               ObjectName name = (ObjectName) args[0];
-               RMINotificationListener listener = (RMINotificationListener)
-                  args[1];
-               NotificationFilter filter = (NotificationFilter) args[2];
-               Object handback = args[3];
-               addNotificationListener(name, listener, filter, handback);
+               MarshalledInvocation mi = (MarshalledInvocation) invocation;
+               mi.setMethodMap(marshalledInvocationMapping);
             }
-            else if( removeNotificationListeners.contains(method) )
-            {
-               ObjectName name = (ObjectName) args[0];
-               RMINotificationListener listener = (RMINotificationListener)
-                  args[1];
-               removeNotificationListener(name, listener);            
-            }
-            else
-            {
-               String name = method.getName();
-               Class[] paramTypes = method.getParameterTypes();
-               Method mbeanServerMethod = MBeanServer.class.getMethod(name,
-                  paramTypes);
-               value = mbeanServerMethod.invoke(server, args);
-            }
-         }
-         catch(InvocationTargetException e)
-         {
-            Throwable t = e.getTargetException();
-            if( t instanceof Exception )
-               throw (Exception) t;
-            else
-               throw new UndeclaredThrowableException(t, method.toString());
-         }
+            // Invoke the MBeanServer method via reflection
+            Method method = invocation.getMethod();
+            Object[] args = invocation.getArguments();
+            Principal principal = invocation.getPrincipal();
+            Object credential = invocation.getCredential();
+            Object value = null;
+            SecurityAssociation.setPrincipal(principal);
+            SecurityAssociation.setCredential(credential);
 
-         return value;
+            try
+            {
+               if( addNotificationListeners.contains(method) )
+               {
+                  ObjectName name = (ObjectName) args[0];
+                  RMINotificationListener listener = (RMINotificationListener)
+                     args[1];
+                  NotificationFilter filter = (NotificationFilter) args[2];
+                  Object handback = args[3];
+                  addNotificationListener(name, listener, filter, handback);
+               }
+               else if( removeNotificationListeners.contains(method) )
+               {
+                  ObjectName name = (ObjectName) args[0];
+                  RMINotificationListener listener = (RMINotificationListener)
+                     args[1];
+                  removeNotificationListener(name, listener);            
+               }
+               else
+               {
+                  String name = method.getName();
+                  Class[] paramTypes = method.getParameterTypes();
+                  Method mbeanServerMethod = MBeanServer.class.getMethod(name,
+                     paramTypes);
+                  value = mbeanServerMethod.invoke(server, args);
+               }
+            }
+            catch(InvocationTargetException e)
+            {
+               Throwable t = e.getTargetException();
+               if( t instanceof Exception )
+                  throw (Exception) t;
+               else
+                  throw new UndeclaredThrowableException(t, method.toString());
+            }
+
+            return value;
+         }
+         finally
+         {
+            // Don't leak any security context 
+            SecurityActions.setPrincipalInfo(oldPrincipal, oldCredential, oldSubject);
+            if (newCL != null && newCL != oldCL)
+               SecurityActions.setContextClassLoader(oldCL);
+         }
       }
-      finally
+      catch (Throwable t)
       {
-         // Don't leak any security context 
-         SecurityAssociation.clear();
-         if (newCL != null && newCL != oldCL)
-            thread.setContextClassLoader(oldCL);
+         throw new InvokerAdaptorException(t);
       }
    }
 
