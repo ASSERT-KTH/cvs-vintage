@@ -19,9 +19,10 @@
     <input type="submit" value="Cancel" name="eventSubmit_doCancel" />
 </div>
 
-    <h3>Issue Types</h3>
+    <h3>Issue types</h3>
 
-    <p><strong class="alert"> There are no more issue types to add to this module.</strong></p>
+    <p><strong class="alert">There are no more issue types to add to
+    this module.</strong></p>
 
 <div class="functnbar2">
     #if ($canEditDomain)
@@ -33,7 +34,7 @@
 #else
 
 <div class="functnbar">
-      <input type="submit" value="Add Issue Type" name="eventSubmit_doSelectissueType" />
+      <input type="submit" value="Add Issue Type" name="eventSubmit_doSelectissueType" />&#160;
     #if ($canEditDomain)
       <input type="submit" value="Create new" name="eventSubmit_doCreateartifacttype" />&#160;
     #end
@@ -59,7 +60,7 @@
 </table>
 
 <div class="functnbar2">
-      <input type="submit" value="Add Issue Type" name="eventSubmit_doSelectissueType" />
+      <input type="submit" value="Add Issue Type" name="eventSubmit_doSelectissueType" />&#160;
     #if ($canEditDomain)
        <input type="submit" value="Create new" name="eventSubmit_doCreateartifacttype" />&#160;
     #end

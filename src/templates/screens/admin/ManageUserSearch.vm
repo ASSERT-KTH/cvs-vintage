@@ -1,10 +1,8 @@
 #**
 @author <a href="mailto:dr@bitonic.com">Douglas B. Robertson</a>
 @author <a href="mailto:jon@collab.net">Jon Stevens</a>
-@version $Id: ManageUserSearch.vm,v 1.17 2002/03/04 21:47:32 jon Exp $
+@version $Id: ManageUserSearch.vm,v 1.18 2002/03/13 21:34:44 jon Exp $
 *#
-
-$page.setTitle("User search")
 
 #set ($newSearch = $data.Parameters.getString("newSearch",""))
 #set ($searchCriteria = "")

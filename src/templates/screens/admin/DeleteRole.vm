@@ -1,17 +1,15 @@
 #**
 @author <a href="mailto:dr@bitonic.com">Douglas B. Robertson</a>
-@version $Id: DeleteRole.vm,v 1.4 2001/12/04 23:46:25 dr Exp $
+@version $Id: DeleteRole.vm,v 1.5 2002/03/13 21:34:44 jon Exp $
 *#
-
-$page.setTitle("Role Administration")
 
 <div id="deleterole" class="app">
 
 <h2>$page.Title</h2>
 
-<h3>Confirm Delete Role</h3>
+<h3>Confirm delete role</h3>
 
-<form name="EditUserForm" action="admin%2cDeleteRole.vm" method="post">
+<form name="EditUserForm" action="$link.setPage("admin,DeleteRole.vm")" method="post">
   <input type="hidden" name="action" value="admin.ManageRoles" />
   <input type="hidden" name="$scarabG.Constant.NEXT_TEMPLATE" value="admin,ManageRoles.vm" />
   <input type="hidden" name="$scarabG.Constant.CANCEL_TEMPLATE" value="admin,ManageRoles.vm" />
@@ -30,14 +28,8 @@ $page.setTitle("Role Administration")
 </div>
 
 <div class="functnbar2">
-<table cellpadding="4" cellspacing="0" border="1">
- <tr>
-  <td class="firstchild">
- <input type="submit" name="eventSubmit_doCancel" value="Cancel" />&#160;
- <input type="submit" name="eventSubmit_doDeleterole" value="Confirm Delete" />
-  </td>
- </tr>
-</table>
+ <input type="submit" name="eventSubmit_doDeleterole" value="Confirm delete" />&#160;
+ <input type="submit" name="eventSubmit_doCancel" value="Cancel" />
 </div>
 
 </form>

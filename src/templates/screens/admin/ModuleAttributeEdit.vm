@@ -8,9 +8,9 @@ $page.setTitle("Edit Module Attribute '$attribute.Name'")
 <h2>$page.Title</h2>
 
 #if (!$attType)
-<p class="alert">Attribute not found. Please click $link.setPage("admin,ManageArtifactTypes.vm").setLabel("here") to proceed.</p>
+<p class="alert">Attribute not found. Please click 
+$link.setPage("admin,ManageArtifactTypes.vm").setLabel("here") to proceed.</p>
 #else
-
 
 <p>
 On this screen, one can modify a module's Attribute information.
@@ -27,7 +27,7 @@ On this screen, one can modify a module's Attribute information.
 #if ($attType.AttributeClass.Name.equals("select-one"))
 <input type="submit" value="Done"  name="eventSubmit_doDone" />&#160;
 #end
-<input type="submit" value="Cancel"  name="eventSubmit_doCancel" />&#160;
+<input type="submit" value="Cancel"  name="eventSubmit_doCancel" />
 </div>
 
 <h3>Attribute Info</h3>

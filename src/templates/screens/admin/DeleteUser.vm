@@ -1,9 +1,7 @@
 #**
 @author <a href="mailto:dr@bitonic.com">Douglas B. Robertson</a>
-@version $Id: DeleteUser.vm,v 1.4 2001/12/04 15:59:30 dr Exp $
+@version $Id: DeleteUser.vm,v 1.5 2002/03/13 21:34:44 jon Exp $
 *#
-
-$page.setTitle("User Administration")
 
 #set ($state = $data.Parameters.getString("state"))
 #if (!$state)
@@ -14,16 +12,18 @@ $page.setTitle("User Administration")
 
 <h2>$page.Title</h2>
 
-<h3>Confirm Delete User</h3>
+<h3>Confirm delete user</h3>
 
-<form name="EditUserForm" action="admin%2CDeleteUser.vm" method="post">
+#set ($username = $data.Parameters.getString("username",""))
+
+<form name="EditUserForm" action="$link.setPage("admin,DeleteUser.vm")" method="post">
   <input type="hidden" name="action" value="admin.ManageUser" />
   <input type="hidden" name="$scarabG.Constant.NEXT_TEMPLATE" value="admin,ManageUserSearch.vm" />
   <input type="hidden" name="$scarabG.Constant.CANCEL_TEMPLATE" value="admin,ManageUserSearch.vm" />
   <input type="hidden" name="state" value="$nextState">
-  <input type="hidden" name="username" value="$data.Parameters.getString("username")">
+  <input type="hidden" name="username" value="$username">
 
-#set ($user = $securityAdmin.getUserByUsername($data.Parameters.getString("username")))
+#set ($user = $securityAdmin.getUserByUsername($username))
 #set ($firstNameData = $user.FirstName)
 #set ($lastNameData = $user.LastName)
 #set ($emailData = $user.Email)
@@ -47,14 +47,8 @@ $page.setTitle("User Administration")
 </div>
 
 <div class="functnbar2">
-<table cellpadding="4" cellspacing="0" border="1">
- <tr>
-  <td class="firstchild">
- <input type="submit" name="eventSubmit_doCancel" value="Cancel" />&#160;
- <input type="submit" name="eventSubmit_doDeleteuser" value="Confirm Delete" />
-  </td>
- </tr>
-</table>
+ <input type="submit" name="eventSubmit_doDeleteuser" value="Confirm delete" />&#160;
+ <input type="submit" name="eventSubmit_doCancel" value="Cancel" />
 </div>
 
 </form>

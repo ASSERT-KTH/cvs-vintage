@@ -1,9 +1,8 @@
 #**
 @author <a href="mailto:dr@bitonic.com">Douglas B. Robertson</a>
-@version $Id: EditUser.vm,v 1.8 2002/03/11 17:42:51 jon Exp $
+@version $Id: EditUser.vm,v 1.9 2002/03/13 21:34:44 jon Exp $
 *#
 
-$page.setTitle("User administration")
 #set ($state = $data.Parameters.getString("state",""))
 
 <div id="edituser" class="app">

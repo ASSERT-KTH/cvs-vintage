@@ -1,7 +1,7 @@
 #**
 @author <a href="mailto:dr@bitonic.com">Douglas B. Robertson</a>
 @author <a href="mailto:jon@collab.net">Jon Stevens</a>
-@version $Id: AdminIndex.vm,v 1.16 2002/03/02 17:28:02 maartenc Exp $
+@version $Id: AdminIndex.vm,v 1.17 2002/03/13 21:34:44 jon Exp $
 *#
 
 <div id="adminIndex" class="app">
@@ -13,25 +13,25 @@
 <h3>Users</h3>
 
 <ul>
- <li> $link.setPage("admin,ManageUserSearch.vm").setPathInfo("newSearch","true").setLabel("User Management") </li>
- <li> $link.setPage("admin,AddUser.vm").addQueryData("state","showadduser").setLabel("Add New User") </li>
+ <li>$link.setPage("admin,ManageUserSearch.vm").setPathInfo("newSearch","true").setLabel("User management")</li>
+ <li>$link.setPage("admin,AddUser.vm").addQueryData("state","showadduser").setLabel("Add new user")</li>
 </ul>
 
 
 <h3>Roles</h3>
 
 <ul>
- <li> <a href="admin,ManageRoles.vm">Role List</a> </li>
- <li> <a href="admin,AddRole.vm">Add New Role</a> </li>
+ <li><a href="admin,ManageRoles.vm">Role list</a></li>
+ <li><a href="admin,AddRole.vm">Add new role</a></li>
 </ul>
 
 #end
 
 #if ($scarabR.hasPermission($scarabG.Permission.DOMAIN__EDIT, $scarabR.CurrentModule))
 
-<h3>Global Data</h3>
+<h3>Global data</h3>
 <ul>
- <li>$link.setPage("admin,GlobalArtifactTypeShow.vm").setLabel("Global Issue Types")</li>
+ <li>$link.setPage("admin,GlobalArtifactTypeShow.vm").setLabel("Global Issue types")</li>
  <li>$link.setPage("admin,GlobalAttributeShow.vm").setLabel("Global Attributes")</li>
 </ul>
 
@@ -40,10 +40,10 @@
 <h3>Modules</h3>
 <ul>
 #if ($link.setPage("admin,ManageArtifactTypes.vm").isAllowed())
- <li>$link.setLabel("Manage Issue Types")</li>
+ <li>$link.setLabel("Manage Issue types")</li>
 #end
 #if ($link.setPage("admin,ManageModules.vm").isAllowed())
- <li>$link.setLabel("Manage Modules")</li>
+ <li>$link.setLabel("Manage modules")</li>
 #end
 #if ($scarabR.hasPermission($scarabG.Permission.ITEM__APPROVE, $scarabR.CurrentModule))
  <li>$link.setPage("admin,Approval.vm").setLabel("Approve")</li>
@@ -51,5 +51,3 @@
 </ul>
 
 </div>
-
-

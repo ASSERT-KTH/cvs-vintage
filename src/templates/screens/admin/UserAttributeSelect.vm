@@ -1,4 +1,3 @@
-$page.setTitle("Select user attribute")
 #set ($canEditDomain=$scarabR.hasPermission($scarabG.Permission.DOMAIN__EDIT))
 
 #macro (AttributeSelectBar $val)

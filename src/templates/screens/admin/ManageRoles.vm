@@ -1,9 +1,7 @@
 #**
 @author <a href="mailto:dr@bitonic.com">Douglas B. Robertson</a>
-@version $Id: ManageRoles.vm,v 1.7 2002/01/22 00:47:16 jon Exp $
+@version $Id: ManageRoles.vm,v 1.8 2002/03/13 21:34:44 jon Exp $
 *#
-
-$page.setTitle("Role Administration")
 
 <div id="manageRoles" class="app">
 
@@ -28,21 +26,14 @@ $page.setTitle("Role Administration")
   <td>
     $role.Name
   </td>
-  <!--
-  <td>
-      $link.setPage("role,FluxRoleForm.vm").addPathInfo("name",$role.Name).addQueryData("mode","modify").setLabel("Details") &nbsp;
-      $link.setPage("role,FluxRoleForm.vm").addPathInfo("name",$role.Name).addQueryData("mode","delete").setLabel("Remove")
-  </td>
-  -->
-
 </tr>
 #end
 </table>
 
 <div class="functnbar2">
-   <input type="submit" name="eventSubmit_doGotoeditrole" value="Edit Role" />&#160;
-   <input type="submit" name="eventSubmit_doGotodeleterole" value="Delete Role" />&#160;
-   <input type="submit" name="eventSubmit_doGotoaddrole" value="Add New Role" />
+ <input type="submit" name="eventSubmit_doGotoeditrole" value="Edit Role" />&#160;
+ <input type="submit" name="eventSubmit_doGotodeleterole" value="Delete Role" />&#160;
+ <input type="submit" name="eventSubmit_doGotoaddrole" value="Add New Role" />
 </div>
 
 </form>

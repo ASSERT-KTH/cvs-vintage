@@ -1,9 +1,7 @@
 #**
 @author <a href="mailto:dr@bitonic.com">Douglas B.Robertson</a>
-@version $Id: ManagePermissions.vm,v 1.2 2002/01/14 21:05:55 jon Exp $
+@version $Id: ManagePermissions.vm,v 1.3 2002/03/13 21:34:44 jon Exp $
 *#
-
-$page.setTitle("Permission Administration")
 
 <div id="managePermissions" class="app">
 
@@ -11,7 +9,7 @@ $page.setTitle("Permission Administration")
 
 <h3>Permission List</h3>
 
-<form action="admin%2CManagePermissions.vm" method="post">
+<form action="$link.setPage("admin,ManagePermissions.vm")" method="post">
   <input type="hidden" name="action" value="admin.ManagePermissions" />
 
 <table cellspacing="0" cellpadding="2">
@@ -29,15 +27,8 @@ $page.setTitle("Permission Administration")
 </table>
 
 <div class="functnbar2">
-<table cellpadding="4" cellspacing="0" border="1">
- <tr>
-  <td class="firstchild">
-   <input type="submit" name="eventSubmit_doGotodeletepermission" value="Delete Permission" />
-   &#160;
-   <input type="submit" name="eventSubmit_doGotoaddpermission" value="Add New Permission" />
-  </td>
- </tr>
-</table>
+ <input type="submit" name="eventSubmit_doGotodeletepermission" value="Delete permission" />&#160;
+ <input type="submit" name="eventSubmit_doGotoaddpermission" value="Add new permission" />
 </div>
 
 </form>

@@ -1,6 +1,4 @@
-$page.setTitle("Manage modules ")
-
-#set ($userModules = $data.User.EditableModules)
+#set ($userModules = $data.User.getEditableModules(true))
 <div id="managemodule" class="app">
 
 <h2>$page.Title</h2>
@@ -25,6 +23,8 @@ $module.Description
 #end
 
 </table>
+#else
+<p class="alert">Sorry, no modules to edit.</a>
 #end
 
 <form action="$link.setPage("admin,ModifyModule.vm").addPathInfo("new", "true")" method="post">

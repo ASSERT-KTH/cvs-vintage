@@ -1,5 +1,3 @@
-$page.setTitle("XML Export")
-
 <div id="xmlexportselect" class="app">
 
 <h2>$page.Title</h2>

@@ -2,8 +2,6 @@
 @author <a href="mailto:dr@bitonic.com">Douglas B. Robertson</a>
 *#
 
-$page.setTitle("User Administration")
-
 #set ($username = $data.Parameters.getString("username"))
 #set ($user = $securityAdmin.getUserByUsername($username))
 #set ($acl = $securityAdmin.getACL($user))
@@ -12,7 +10,7 @@ $page.setTitle("User Administration")
 
 <h2>$page.Title</h2>
 
-<h3>User Roles</h3>
+<h3>User roles</h3>
 
 <p>
 Modifying roles for <b>$!user.FirstName $!user.LastName</b> [$user.UserName]
@@ -69,8 +67,8 @@ Modifying roles for <b>$!user.FirstName $!user.LastName</b> [$user.UserName]
 </table>
 
 <div class="functnbar2">
- <input type="submit" name="eventSubmit_doCancel" value="Cancel" />&#160;
- <input type="submit" name="eventSubmit_doRoles" value="Update Roles" />
+ <input type="submit" name="eventSubmit_doRoles" value="Update Roles" />&#160;
+ <input type="submit" name="eventSubmit_doCancel" value="Cancel" />
 </div>
 
 </form>

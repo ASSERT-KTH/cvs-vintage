@@ -6,11 +6,11 @@
 #if ($attribute.AttributeId)
    #set ($attgroup = $intake.Attribute.mapTo($attribute))
    #set ($createNew = "false")
-   $page.setTitle("Edit Global Attribute '$attribute.Name'")
+   $page.setTitle("Edit global attribute '$attribute.Name'")
 #else
    #set ($attgroup = $intake.Attribute.Default )
    #set ($createNew = "true")
-   $page.setTitle("Create New Global User Attribute")
+   $page.setTitle("Create new global user attribute")
 #end
 
 <h2>$page.Title</h2>

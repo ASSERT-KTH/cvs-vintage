@@ -1,5 +1,3 @@
-$page.setTitle("Global Issue types")
-
 <div id="globalartifactshow" class="app">
 <h2>$page.Title</h2>
 <p>

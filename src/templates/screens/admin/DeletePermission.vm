@@ -1,17 +1,15 @@
 #**
 @author <a href="mailto:dr@bitonic.com">Douglas B. Robertson</a>
-@version $Id: DeletePermission.vm,v 1.1 2001/12/04 23:39:59 dr Exp $
+@version $Id: DeletePermission.vm,v 1.2 2002/03/13 21:34:44 jon Exp $
 *#
 
-$page.setTitle("Permission Administration")
-
-<div id="deleterole" class="app">
+<div id="deletepermission" class="app">
 
 <h2>$page.Title</h2>
 
-<h3>Confirm Delete Permission</h3>
+<h3>Confirm delete permission</h3>
 
-<form name="DeletePermissionForm" action="admin%2cDeletePermission.vm" method="post">
+<form name="DeletePermissionForm" action="$link.setPage("admin,DeletePermission.vm")" method="post">
   <input type="hidden" name="action" value="admin.ManagePermissions" />
   <input type="hidden" name="$scarabG.Constant.NEXT_TEMPLATE" value="admin,ManagePermissions.vm" />
   <input type="hidden" name="$scarabG.Constant.CANCEL_TEMPLATE" value="admin,ManagePermissions.vm" />
@@ -30,14 +28,8 @@ $page.setTitle("Permission Administration")
 </div>
 
 <div class="functnbar2">
-<table cellpadding="4" cellspacing="0" border="1">
- <tr>
-  <td class="firstchild">
- <input type="submit" name="eventSubmit_doCancel" value="Cancel" />
- <input type="submit" name="eventSubmit_doDeletepermission" value="Confirm Delete" />
-  </td>
- </tr>
-</table>
+ <input type="submit" name="eventSubmit_doDeletepermission" value="Confirm delete" />
+ <input type="submit" name="eventSubmit_doCancel" value="Cancel" />&#160;
 </div>
 
 </form>

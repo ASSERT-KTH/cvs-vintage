@@ -1,5 +1,3 @@
-$page.setTitle("User Attributes")
-
 <div class="app" id=""div3-0-0-1"">
 <h2>$page.Title</h2>
 
