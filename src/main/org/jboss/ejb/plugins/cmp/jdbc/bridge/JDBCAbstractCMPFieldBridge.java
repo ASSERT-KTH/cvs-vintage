@@ -41,7 +41,7 @@ import org.jboss.logging.Log;
  *		One for each entity bean cmp field. 		
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
- * @version $Revision: 1.1 $
+ * @version $Revision: 1.2 $
  */                            
 public abstract class JDBCAbstractCMPFieldBridge implements JDBCCMPFieldBridge {
 	protected JDBCStoreManager manager;
@@ -49,12 +49,15 @@ public abstract class JDBCAbstractCMPFieldBridge implements JDBCCMPFieldBridge {
 	protected JDBCType jdbcType;
 	protected Log log;
 	
-	public JDBCAbstractCMPFieldBridge(JDBCStoreManager manager, JDBCCMPFieldMetaData metadata, Log log) throws DeploymentException {
+	public JDBCAbstractCMPFieldBridge(JDBCStoreManager manager, JDBCCMPFieldMetaData metadata) throws DeploymentException {		
+		this(manager, metadata, manager.getJDBCTypeFactory().getFieldJDBCType(metadata));
+	}
+	
+	public JDBCAbstractCMPFieldBridge(JDBCStoreManager manager, JDBCCMPFieldMetaData metadata, JDBCType jdbcType) throws DeploymentException {
 		this.manager = manager;
 		this.metadata = metadata;
-		this.log = log;
-		
-		jdbcType =  manager.getJDBCTypeFactory().getFieldJDBCType(metadata);
+		this.jdbcType = jdbcType;
+		this.log = manager.getLog();
 	}
 
    public JDBCCMPFieldMetaData getMetaData() {
@@ -80,10 +83,6 @@ public abstract class JDBCAbstractCMPFieldBridge implements JDBCCMPFieldBridge {
 	}
 
 	public Object getPrimaryKeyValue(Object primaryKey) throws IllegalArgumentException {
-		if(!isPrimaryKeyMember()) {
-			throw new IllegalArgumentException(getFieldName() + " is not a member of the primary key.");
-		}
-		
 		try {
 			if(metadata.getPrimaryKeyField() != null) {
 				if(primaryKey == null) {
@@ -103,10 +102,6 @@ public abstract class JDBCAbstractCMPFieldBridge implements JDBCCMPFieldBridge {
 	}
 
 	public Object setPrimaryKeyValue(Object primaryKey, Object value) throws IllegalArgumentException {
-		if(!isPrimaryKeyMember()) {
-			throw new IllegalArgumentException(getFieldName() + " is not a member of the primary key.");
-		}
-		
 		try {
 			if(metadata.getPrimaryKeyField() != null) {
 				// if we are tring to set a null value 
@@ -175,9 +170,6 @@ public abstract class JDBCAbstractCMPFieldBridge implements JDBCCMPFieldBridge {
 	}	
 
 	public int setPrimaryKeyParameters(PreparedStatement ps, int parameterIndex, Object primaryKey) throws IllegalArgumentException {
-		if(!isPrimaryKeyMember()) {
-			throw new IllegalArgumentException(getFieldName() + " is not a member of the primary key.");
-		}
 		Object primaryKeyValue = getPrimaryKeyValue(primaryKey);
 		return setArgumentParameters(ps, parameterIndex, primaryKeyValue);
 	}
@@ -217,10 +209,6 @@ public abstract class JDBCAbstractCMPFieldBridge implements JDBCCMPFieldBridge {
 	}		
 	
 	public int loadPrimaryKeyResults(ResultSet rs, int parameterIndex, Object[] pkRef) throws IllegalArgumentException {
-		if(!isPrimaryKeyMember()) {
-			throw new IllegalArgumentException(getFieldName() + " is not a member of the primary key.");
-		}
-
 		try {
 			// value of this field,  will be filled in below
 			Object value = null;
