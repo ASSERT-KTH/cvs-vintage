@@ -1,24 +1,14 @@
 /*
-* JBoss, the OpenSource EJB server
-*
-* Distributable under LGPL license.
-* See terms of license at gnu.org.
-*/
+ * JBoss, the OpenSource EJB server
+ *
+ * Distributable under LGPL license.
+ * See terms of license at gnu.org.
+ */
 package org.jboss.ejb.plugins;
 
 import java.lang.reflect.Method;
 import java.rmi.RemoteException;
 
-import org.jboss.ejb.Container;
-import org.jboss.ejb.InstanceCache;
-import org.jboss.ejb.InstancePool;
-import org.jboss.ejb.StatefulSessionContainer;
-import org.jboss.ejb.StatefulSessionEnterpriseContext;
-import org.jboss.ejb.EnterpriseContext;
-import org.jboss.ejb.MethodInvocation;
-import org.jboss.logging.Logger;
-import org.jboss.metadata.SessionMetaData;
-import org.jboss.util.Sync;
 import javax.transaction.Transaction;
 import javax.transaction.RollbackException;
 import javax.transaction.Status;
@@ -27,346 +17,375 @@ import javax.transaction.Synchronization;
 import javax.ejb.EJBException;
 import javax.ejb.EJBObject;
 
+import org.apache.log4j.Category;
+
+import org.jboss.ejb.Container;
+import org.jboss.ejb.InstanceCache;
+import org.jboss.ejb.InstancePool;
+import org.jboss.ejb.StatefulSessionContainer;
+import org.jboss.ejb.StatefulSessionEnterpriseContext;
+import org.jboss.ejb.EnterpriseContext;
+import org.jboss.ejb.MethodInvocation;
+import org.jboss.metadata.SessionMetaData;
+import org.jboss.util.Sync;
 
 /**
-*   This container acquires the given instance. 
-*
-*   @see <related>
-*   @author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
-*   @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
-*   @version $Revision: 1.17 $
-*
-*   <p><b>Revisions:</b>
-*   <p><b>20010704 marcf</b>
-*   <ul>
-*   <li>- Moved to new synchronization
-*   </ul>
-*/
+ * This container acquires the given instance. 
+ *
+ * @author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
+ * @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
+ * @version $Revision: 1.18 $
+ *
+ * <p><b>Revisions:</b>
+ * <p><b>20010704 marcf</b>
+ * <ul>
+ * <li>- Moved to new synchronization
+ * </ul>
+ */
 public class StatefulSessionInstanceInterceptor
-extends AbstractInterceptor
+   extends AbstractInterceptor
 {
-	// Constants ----------------------------------------------------
+   // Constants ----------------------------------------------------
 	
-	// Attributes ---------------------------------------------------
-	protected StatefulSessionContainer container;
+   // Attributes ---------------------------------------------------
+
+   /** Instance logger. */
+   protected Category log = Category.getInstance(this.getClass());
+   
+   protected StatefulSessionContainer container;
 	
-	// Static -------------------------------------------------------
-	private static Method getEJBHome;
-	private static Method getHandle;
-	private static Method getPrimaryKey;
-	private static Method isIdentical;
-	private static Method remove;
-	static 
-	{
-		try 
-		{
-			Class[] noArg = new Class[0];
-			getEJBHome = EJBObject.class.getMethod("getEJBHome", noArg);
-			getHandle = EJBObject.class.getMethod("getHandle", noArg);
-			getPrimaryKey = EJBObject.class.getMethod("getPrimaryKey", noArg);
-			isIdentical = EJBObject.class.getMethod("isIdentical", new Class[] {EJBObject.class});
-			remove = EJBObject.class.getMethod("remove", noArg);
-		}
-		catch (Exception x) {x.printStackTrace();}
-	}
+   // Static -------------------------------------------------------
+
+   private static Method getEJBHome;
+   private static Method getHandle;
+   private static Method getPrimaryKey;
+   private static Method isIdentical;
+   private static Method remove;
+   
+   static 
+   {
+      try 
+      {
+         Class[] noArg = new Class[0];
+         getEJBHome = EJBObject.class.getMethod("getEJBHome", noArg);
+         getHandle = EJBObject.class.getMethod("getHandle", noArg);
+         getPrimaryKey = EJBObject.class.getMethod("getPrimaryKey", noArg);
+         isIdentical = EJBObject.class.getMethod("isIdentical", new Class[] {EJBObject.class});
+         remove = EJBObject.class.getMethod("remove", noArg);
+      }
+      catch (Exception e) {
+         e.printStackTrace();
+         throw new ExceptionInInitializerError(e);
+      }
+   }
 	
-	// Constructors -------------------------------------------------
+   // Constructors -------------------------------------------------
 	
-	// Public -------------------------------------------------------
+   // Public -------------------------------------------------------
 	
-	public void setContainer(Container container) 
-	{ 
-		this.container = (StatefulSessionContainer)container; 
-	}
+   public void setContainer(Container container) 
+   { 
+      this.container = (StatefulSessionContainer)container; 
+   }
 	
-	public  Container getContainer()
-	{
-		return container;
-	}
-	// Interceptor implementation -----------------------------------
-	public Object invokeHome(MethodInvocation mi)
-	throws Exception
-	{
-		// Get context
+   public  Container getContainer()
+   {
+      return container;
+   }
+   
+   // Interceptor implementation -----------------------------------
+   
+   public Object invokeHome(MethodInvocation mi)
+      throws Exception
+   {
+      // Get context
 		
-		// get a new context from the pool (this is a home method call)
-		EnterpriseContext ctx = container.getInstancePool().get();
+      // get a new context from the pool (this is a home method call)
+      EnterpriseContext ctx = container.getInstancePool().get();
 		
 		
-		// set the context on the methodInvocation
-		mi.setEnterpriseContext(ctx);
+      // set the context on the methodInvocation
+      mi.setEnterpriseContext(ctx);
 		
-		// It is a new context for sure so we can lock it
-		ctx.lock();
+      // It is a new context for sure so we can lock it
+      ctx.lock();
 		
-		try
-		{
-			// Invoke through interceptors
-			return getNext().invokeHome(mi);
-		} finally
-		{
-			synchronized (ctx) 
-			{
-				// Release the lock
-				ctx.unlock();
+      try
+      {
+         // Invoke through interceptors
+         return getNext().invokeHome(mi);
+      } finally
+      {
+         synchronized (ctx) 
+         {
+            // Release the lock
+            ctx.unlock();
 				
-				// Still free? Not free if create() was called successfully
-				if (ctx.getId() == null)
-				{
-					container.getInstancePool().free(ctx); 
-				}
-			}
-		}
-	}
+            // Still free? Not free if create() was called successfully
+            if (ctx.getId() == null)
+            {
+               container.getInstancePool().free(ctx); 
+            }
+         }
+      }
+   }
 	
-	
-	private void register(EnterpriseContext ctx, Transaction tx)
-	{
-		// Create a new synchronization
-		InstanceSynchronization synch = new InstanceSynchronization(tx, ctx);
+   private void register(EnterpriseContext ctx, Transaction tx)
+   {
+      // Create a new synchronization
+      InstanceSynchronization synch = new InstanceSynchronization(tx, ctx);
 		
-		try {
-			// OSH: An extra check to avoid warning.
-			// Can go when we are sure that we no longer get
-			// the JTA violation warning.
-			if (tx.getStatus() == Status.STATUS_MARKED_ROLLBACK) {
+      try {
+         // OSH: An extra check to avoid warning.
+         // Can go when we are sure that we no longer get
+         // the JTA violation warning.
+         if (tx.getStatus() == Status.STATUS_MARKED_ROLLBACK) {
 				
-				return;
-			}
+            return;
+         }
 			
-			// We want to be notified when the transaction commits
-			tx.registerSynchronization(synch);
+         // We want to be notified when the transaction commits
+         tx.registerSynchronization(synch);
 			
-			// EJB 1.1, 6.5.3
-			synch.afterBegin();
+         // EJB 1.1, 6.5.3
+         synch.afterBegin();
 		
-		} catch (RollbackException e) {
+      } catch (RollbackException e) {
 		
-		} catch (Exception e) {
+      } catch (Exception e) {
 			
-			throw new EJBException(e);
+         throw new EJBException(e);
 		
-		}
-	}
+      }
+   }
 	
-	public Object invoke(MethodInvocation mi)
-	throws Exception
-	{
-		AbstractInstanceCache cache = (AbstractInstanceCache)container.getInstanceCache();
-		Object id = mi.getId();
-		EnterpriseContext ctx = null;
+   public Object invoke(MethodInvocation mi)
+      throws Exception
+   {
+      AbstractInstanceCache cache =
+         (AbstractInstanceCache)container.getInstanceCache();
+      Object id = mi.getId();
+      EnterpriseContext ctx = null;
 		
-		// Get context
-		ctx = container.getInstanceCache().get(mi.getId());
+      // Get context
+      ctx = container.getInstanceCache().get(mi.getId());
 		
-		synchronized(ctx) 
-		{
+      synchronized(ctx) 
+      {
 			
-			// Associate it with the method invocation
-			mi.setEnterpriseContext(ctx);
+         // Associate it with the method invocation
+         mi.setEnterpriseContext(ctx);
 			
-			// BMT beans will lock and replace tx no matter what, CMT do work on transaction
-			if (!((SessionMetaData)container.getBeanMetaData()).isBeanManagedTx()) {
+         // BMT beans will lock and replace tx no matter what, CMT do work on transaction
+         if (!((SessionMetaData)container.getBeanMetaData()).isBeanManagedTx()) {
 				
-				// Do we have a running transaction with the context
-				if (ctx.getTransaction() != null &&
-					// And are we trying to enter with another transaction
-					!ctx.getTransaction().equals(mi.getTransaction()))
-				{
-					// Calls must be in the same transaction
-					throw new RemoteException("Application Error: tried to enter Stateful bean with different transaction context");
-				}
+            // Do we have a running transaction with the context
+            if (ctx.getTransaction() != null &&
+                // And are we trying to enter with another transaction
+                !ctx.getTransaction().equals(mi.getTransaction()))
+            {
+               // Calls must be in the same transaction
+               throw new RemoteException("Application Error: tried to enter Stateful bean with different transaction context");
+            }
 				
-				//If the instance will participate in a new transaction we register a sync for it
-				if (ctx.getTransaction() == null && mi.getTransaction() != null) {
-					
-					register(ctx, mi.getTransaction());
-				}
-			}
+            //If the instance will participate in a new transaction we register a sync for it
+            if (ctx.getTransaction() == null && mi.getTransaction() != null) {
+               register(ctx, mi.getTransaction());
+            }
+         }
 			
-			if (!ctx.isLocked()){
+         if (!ctx.isLocked()){
 				
-				//take it!
-				ctx.lock();  
-			} else 
-			{
-				if (!isCallAllowed(mi))
-				{
-					// Calls must be in the same transaction
-					throw new RemoteException("Application Error: no concurrent calls on stateful beans");
-				}
-				else 
-				{
-					ctx.lock();
-				}
-			}
-		}
+            //take it!
+            ctx.lock();  
+         } else 
+         {
+            if (!isCallAllowed(mi))
+            {
+               // Calls must be in the same transaction
+               throw new RemoteException("Application Error: no concurrent calls on stateful beans");
+            }
+            else 
+            {
+               ctx.lock();
+            }
+         }
+      }
 		
-		try
-		{
-			// Invoke through interceptors
-			return getNext().invoke(mi);
-		} catch (RemoteException e)
-		{
-			// Discard instance
-			container.getInstanceCache().remove(mi.getId());
-			ctx = null;
+      try
+      {
+         // Invoke through interceptors
+         return getNext().invoke(mi);
+      } catch (RemoteException e)
+      {
+         // Discard instance
+         container.getInstanceCache().remove(mi.getId());
+         ctx = null;
 			
-			throw e;
-		} catch (RuntimeException e)
-		{
-			// Discard instance
-			container.getInstanceCache().remove(mi.getId());
-			ctx = null;
+         throw e;
+      } catch (RuntimeException e)
+      {
+         // Discard instance
+         container.getInstanceCache().remove(mi.getId());
+         ctx = null;
 			
-			throw e;
-		} catch (Error e)
-		{
-			// Discard instance
-			container.getInstanceCache().remove(mi.getId());
-			ctx = null;
+         throw e;
+      } catch (Error e)
+      {
+         // Discard instance
+         container.getInstanceCache().remove(mi.getId());
+         ctx = null;
 			
-			throw e;
-		} finally 
-		{
-			if (ctx != null)
-			{
-				// Still a valid instance
-				synchronized(ctx) 
-				{
+         throw e;
+      } finally 
+      {
+         if (ctx != null)
+         {
+            // Still a valid instance
+            synchronized(ctx) 
+            {
 					
-					// release it
-					ctx.unlock();
+               // release it
+               ctx.unlock();
 					
-					// if removed, remove from cache
-					if (ctx.getId() == null)
-					{
-						// Remove from cache
-						container.getInstanceCache().remove(mi.getId());
-					}
-				}
-			}
-		}
-	}
+               // if removed, remove from cache
+               if (ctx.getId() == null)
+               {
+                  // Remove from cache
+                  container.getInstanceCache().remove(mi.getId());
+               }
+            }
+         }
+      }
+   }
 	
-	private boolean isCallAllowed(MethodInvocation mi) 
-	{
-		Method m = mi.getMethod();
-		if (m.equals(getEJBHome) ||
-			m.equals(getHandle) ||
-			m.equals(getPrimaryKey) ||
-			m.equals(isIdentical) ||
-			m.equals(remove))
-		{
-			return true;
-		}
-		return false;
-	}
+   private boolean isCallAllowed(MethodInvocation mi) 
+   {
+      Method m = mi.getMethod();
+      if (m.equals(getEJBHome) ||
+          m.equals(getHandle) ||
+          m.equals(getPrimaryKey) ||
+          m.equals(isIdentical) ||
+          m.equals(remove))
+      {
+         return true;
+      }
+      return false;
+   }
 	
-	// Inner classes -------------------------------------------------
+   // Inner classes -------------------------------------------------
 	
-	private class InstanceSynchronization
-	implements Synchronization
-	{
-		/**
-		*  The transaction we follow.
-		*/
-		private Transaction tx;
+   private class InstanceSynchronization
+      implements Synchronization
+   {
+      /**
+       *  The transaction we follow.
+       */
+      private Transaction tx;
 		
-		/**
-		*  The context we manage.
-		*/
-		private EnterpriseContext ctx;
+      /**
+       *  The context we manage.
+       */
+      private EnterpriseContext ctx;
 		
-		// a utility boolean for session sync
-		private boolean notifySession = false;
+      // a utility boolean for session sync
+      private boolean notifySession = false;
 		
-		// Utility methods for the notifications
-		private Method afterBegin;
-		private Method beforeCompletion;
-		private Method afterCompletion;
+      // Utility methods for the notifications
+      private Method afterBegin;
+      private Method beforeCompletion;
+      private Method afterCompletion;
 		
-		
-		/**
-		*  Create a new instance synchronization instance.
-		*/
-		InstanceSynchronization(Transaction tx, EnterpriseContext ctx)
-		{
-			this.tx = tx;
-			this.ctx = ctx;
+      /**
+       *  Create a new instance synchronization instance.
+       */
+      InstanceSynchronization(Transaction tx, EnterpriseContext ctx)
+      {
+         this.tx = tx;
+         this.ctx = ctx;
 			
-			// Let's compute it now, to speed things up we could 
-			notifySession = (ctx.getInstance() instanceof javax.ejb.SessionSynchronization);
+         // Let's compute it now, to speed things up we could 
+         notifySession = (ctx.getInstance() instanceof javax.ejb.SessionSynchronization);
 			
-			if (notifySession) {
-				try {
+         if (notifySession) {
+            try {
+               // Get the class we are working on
+               Class sync = Class.forName("javax.ejb.SessionSynchronization");
 					
-					// Get the class we are working on
-					Class sync = Class.forName("javax.ejb.SessionSynchronization");
+               // Lookup the methods on it
+               afterBegin = sync.getMethod("afterBegin", new Class[0]);
+               beforeCompletion = sync.getMethod("beforeCompletion", new Class[0]);
+               afterCompletion =  sync.getMethod("afterCompletion", new Class[] {boolean.class});
+            }
+            catch (Exception e) {
+               log.error("failed to setup InstanceSynchronization", e);
+            }
+         }
+      }
+		
+      // Synchronization implementation -----------------------------
+
+      public void afterBegin() 
+      {
+         if (notifySession) 
+         {
+            try 
+            {
+               afterBegin.invoke(ctx.getInstance(), new Object[0]);
+            }
+            catch (Exception e) 
+            {
+               log.error("failed to invoke afterBegin", e);
+            }
+         }
+      }
+		
+      public void beforeCompletion()
+      {
+         // DEBUG log.debug("beforeCompletion called");
+			
+         // lock the context the transaction is being commited (no need for sync)
+         ctx.lock();
+			
+         if (notifySession) {
+            try {
 					
-					// Lookup the methods on it
-					afterBegin = sync.getMethod("afterBegin", new Class[0]);
-					beforeCompletion = sync.getMethod("beforeCompletion", new Class[0]);
-					afterCompletion =  sync.getMethod("afterCompletion", new Class[] {boolean.class});
-				}
-				catch (Exception e) { Logger.exception(e);}
-			}
-		}
+               beforeCompletion.invoke(ctx.getInstance(), new Object[0]);
+            }
+            catch (Exception e) {
+               log.error("failed to invoke beforeCompletion", e);
+            }
+         }
+      }
 		
-		// Synchronization implementation -----------------------------
-		public void afterBegin() 
-		{
-			if (notifySession) 
-			{
-				try 
-				{
-					afterBegin.invoke(ctx.getInstance(), new Object[0]);
-				}
-				catch (Exception x) 
-				{
-					Logger.exception(x);
-				}
-			}
-		}
-		
-		public void beforeCompletion()
-		{
-			// DEBUG Logger.debug("beforeCompletion called");
+      public void afterCompletion(int status)
+      {
+         // DEBUG log.debug("afterCompletion called");
 			
-			// lock the context the transaction is being commited (no need for sync)
-			ctx.lock();
+         // finish the transaction association
+         ctx.setTransaction(null);
 			
-			if (notifySession) {
-				try {
-					
-					beforeCompletion.invoke(ctx.getInstance(), new Object[0]);
-				}
-				catch (Exception e) { Logger.exception(e);}
-			}
-		}
-		
-		public void afterCompletion(int status)
-		{
-			// DEBUG Logger.debug("afterCompletion called");
+         // unlock this context
+         ctx.unlock();
 			
-			// finish the transaction association
-			ctx.setTransaction(null);
-			
-			// unlock this context
-			ctx.unlock();
-			
-			if (notifySession) {
+         if (notifySession) {
 				
-				try {
+            try {
 					
-					if (status == Status.STATUS_COMMITTED) 
-						afterCompletion.invoke(ctx.getInstance(), new Object[] {new Boolean(true)});
-					else
-						afterCompletion.invoke(ctx.getInstance(), new Object[] {new Boolean(false)});
-				}
-				catch (Exception e) {Logger.exception(e);}
-			}			
-		}
-	}
+               if (status == Status.STATUS_COMMITTED) {
+                  afterCompletion.invoke(ctx.getInstance(),
+                                         new Object[] { Boolean.TRUE });
+               }
+               else {
+                  afterCompletion.invoke(ctx.getInstance(),
+                                         new Object[] { Boolean.FALSE });
+               }
+            }
+            catch (Exception e) {
+               log.error("failed to invoke afterCompletion", e);
+            }
+         }			
+      }
+   }
 }
 
