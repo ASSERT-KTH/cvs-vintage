@@ -157,7 +157,7 @@ public abstract class AbstractPluginHandler implements PluginHandlerInterface {
 
             // if className isn't specified show error dialog
             NotifyDialog dialog = new NotifyDialog();
-            dialog.showDialog("Error while trying to instanciate plugin " +
+            dialog.showDialog("Error while trying to instantiate plugin " +
                 name +
                 ".\n Classname wasn't found. This probably means that plugin.xml is broken or incomplete.");
 
