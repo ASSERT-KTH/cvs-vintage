@@ -1,5 +1,5 @@
 <bean 
-  class="org.jboss.ejb.deployment.ResourceReference"
+  class="org.jboss.ejb.deployment.jBossResourceReference"
   displayname="Resource reference"
   iconcolor16="/images/bean.gif">
   
