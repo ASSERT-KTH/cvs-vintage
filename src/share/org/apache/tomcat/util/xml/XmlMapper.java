@@ -23,6 +23,9 @@ import org.apache.tomcat.util.compat.*;
  */
 public class XmlMapper  extends HandlerBase implements SaxContext
 {
+    static org.apache.commons.logging.Log logger =
+	org.apache.commons.logging.LogFactory.getLog(XmlMapper.class);
+
     Locator locator;
 
     /**
@@ -44,7 +47,6 @@ public class XmlMapper  extends HandlerBase implements SaxContext
     
     String body;
 
-    int debug=0;
     boolean validating=false;
     private Hashtable entities = new Hashtable();
     
@@ -56,7 +58,8 @@ public class XmlMapper  extends HandlerBase implements SaxContext
 
     public void setDocumentLocator (Locator locator)
     {
-	if( debug>0 ) log("Set locator : " + locator);
+	if( logger.isDebugEnabled() ) 
+	    logger.debug("Set locator : " + locator);
 	this.locator = locator;
     }
 
@@ -80,7 +83,8 @@ public class XmlMapper  extends HandlerBase implements SaxContext
 	throws SAXException
     {
 	try {
-	    if( debug>5) log(sp + " <" + tag + " " + attributes + ">");
+	    if( logger.isTraceEnabled() ) 
+		logger.trace(sp + " <" + tag + " " + attributes + ">");
 	    attributeStack[sp]=attributes;
 	    tagStack[sp]=tag;
 	    sp++;
@@ -223,28 +227,20 @@ public class XmlMapper  extends HandlerBase implements SaxContext
     // -------------------- Utils --------------------
     // Debug ( to be replaced with the real thing )
     public void setDebug( int level ) {
-	if(level!=0) log( "Debug level: " + level );
-	debug=level;
     }
 
     public int getDebug() {
-	return debug;
+	return logger.isDebugEnabled() ? 1 : 0;
     }
 
     public void setValidating( boolean validating ) {
-	if (debug >= 1)
-	    log("Validating = " + validating);
+	if ( logger.isTraceEnabled() )
+	    logger.trace("Validating = " + validating);
 	this.validating = validating;
     }
 
     public boolean getValidating() {
 	return (this.validating);
-    }
-
-    public void log(String msg) {
-	// log is for debug only, it should't be enabled for anything else
-	// ( no dependency on Logger or any external tomcat package )
-	System.out.println("XmlMapper: " + msg);
     }
 
     public void setVariable( String name, Object value ) {
@@ -271,6 +267,10 @@ public class XmlMapper  extends HandlerBase implements SaxContext
     public void useLocalLoader(boolean b ) {
 	useLocalLoader=b;
     }
+    public void log(String msg) {
+	logger.info(msg);
+    }
+
     static final Jdk11Compat jdk11Compat=Jdk11Compat.getJdkCompat();
 
     /** read an XML file, construct and return the object hierarchy
