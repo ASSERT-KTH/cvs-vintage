@@ -19,7 +19,7 @@ import java.io.IOException;
 import java.io.ObjectInput;
 import java.io.ObjectOutput;
 import java.rmi.MarshalledObject;
-import java.rmi.AccessException;
+import java.rmi.RemoteException;
 import java.rmi.ServerException;
 
 /**
@@ -112,7 +112,7 @@ public class UnifiedInvokerProxy implements Invoker, Externalizable
          return response;
 
       }
-      catch(AccessException aex)
+      catch(RemoteException aex)
       {
          // per Jira issue JBREM-61
          throw new ServerException(aex.getMessage(), aex);
