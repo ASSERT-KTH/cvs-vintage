@@ -16,9 +16,10 @@ import java.lang.reflect.Method;
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
  *   @author <a href="sebastien.alborini@m4x.org">Sebastien Alborini</a>
- *   @version $Revision: 1.8 $
+ *   @version $Revision: 1.9 $
  */
-public final class JDBCAutomaticQueryMetaData implements JDBCQueryMetaData {
+public final class JDBCAutomaticQueryMetaData implements JDBCQueryMetaData
+{
    /**
     * A referance to the method which invokes this query.
     */
@@ -33,32 +34,24 @@ public final class JDBCAutomaticQueryMetaData implements JDBCQueryMetaData {
     * Constructs a JDBCAutomaticQueryMetaData which is invoked by the specified
     * method.
     * @param method the method which invokes this query
-    */
-   /*
-   public JDBCAutomaticQueryMetaData(Method method, JDBCReadAheadMetaData readAhead) {
-      this.method = method;
-      this.readAhead = JDBCReadAheadMetaData.DEFAULT;
-   }
-*/
-   /**
-    * Constructs a JDBCAutomaticQueryMetaData which is invoked by the specified
-    * method.
-    * @param method the method which invokes this query
     * @readAhead Read ahead meta data.
     */
    public JDBCAutomaticQueryMetaData(
-         Method method,
-         JDBCReadAheadMetaData readAhead) {
+      Method method,
+      JDBCReadAheadMetaData readAhead)
+   {
 
       this.method = method;
       this.readAhead = readAhead;
    }
 
-   public Method getMethod() {
+   public Method getMethod()
+   {
       return method;
    }
 
-   public boolean isResultTypeMappingLocal() {
+   public boolean isResultTypeMappingLocal()
+   {
       return false;
    }
 
@@ -66,20 +59,23 @@ public final class JDBCAutomaticQueryMetaData implements JDBCQueryMetaData {
     * Gets the read ahead metadata for the query.
     * @return the read ahead metadata for the query.
     */
-   public JDBCReadAheadMetaData getReadAhead() {
+   public JDBCReadAheadMetaData getReadAhead()
+   {
       return readAhead;
    }
 
-    /**
+   /**
     * Compares this JDBCAutomaticQueryMetaData against the specified object. Returns
     * true if the objects are the same. Two JDBCAutomaticQueryMetaData are the same
     * if they are both invoked by the same method.
     * @param o the reference object with which to compare
     * @return true if this object is the same as the object argument; false otherwise
     */
-   public boolean equals(Object o) {
-      if(o instanceof JDBCAutomaticQueryMetaData) {
-         return ((JDBCAutomaticQueryMetaData)o).method.equals(method);
+   public boolean equals(Object o)
+   {
+      if(o instanceof JDBCAutomaticQueryMetaData)
+      {
+         return ((JDBCAutomaticQueryMetaData) o).method.equals(method);
       }
       return false;
    }
@@ -89,9 +85,11 @@ public final class JDBCAutomaticQueryMetaData implements JDBCQueryMetaData {
     * by the method which invokes this query.
     * @return a hash code value for this object
     */
-   public int hashCode() {
+   public int hashCode()
+   {
       return method.hashCode();
    }
+
    /**
     * Returns a string describing this JDBCAutomaticQueryMetaData. The exact details
     * of the representation are unspecified and subject to change, but the following
@@ -101,7 +99,8 @@ public final class JDBCAutomaticQueryMetaData implements JDBCQueryMetaData {
     *
     * @return a string representation of the object
     */
-   public String toString() {
+   public String toString()
+   {
       return "[JDBCAutomaticQueryMetaData : method=" + method + "]";
    }
 }

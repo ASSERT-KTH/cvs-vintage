@@ -23,7 +23,7 @@ import org.w3c.dom.Element;
  * the ejb-jar.xml file's ejb-relation elements.
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
- * @version $Revision: 1.18 $
+ * @version $Revision: 1.19 $
  */
 public final class JDBCRelationshipRoleMetaData
 {
@@ -88,6 +88,9 @@ public final class JDBCRelationshipRoleMetaData
     * The key fields used by this role by field name.
     */
    private Map keyFields;
+
+   /** deep read ahead. */
+   private boolean deepReadAhead = false;
 
    public JDBCRelationshipRoleMetaData(
       JDBCRelationMetaData relationMetaData,
@@ -161,13 +164,12 @@ public final class JDBCRelationshipRoleMetaData
       if(readAheadElement != null)
       {
          readAhead = new JDBCReadAheadMetaData(readAheadElement, entity.getReadAhead());
+         deepReadAhead = readAhead.isDeepReadAhead();
       }
       else
       {
          readAhead = entity.getReadAhead();
       }
-
-
    }
 
    public void init(JDBCRelationshipRoleMetaData relatedRole)
@@ -190,12 +192,12 @@ public final class JDBCRelationshipRoleMetaData
       }
    }
 
-   private String loadCMRFieldName(RelationshipRoleMetaData role)
+   private static String loadCMRFieldName(RelationshipRoleMetaData role)
    {
       return role.getCMRFieldName();
    }
 
-   private String generateNonNavigableCMRName(RelationshipRoleMetaData role)
+   private static String generateNonNavigableCMRName(RelationshipRoleMetaData role)
    {
       RelationshipRoleMetaData relatedRole = role.getRelatedRoleMetaData();
       return relatedRole.getEntityName() + "_" + relatedRole.getCMRFieldName();
@@ -244,33 +246,16 @@ public final class JDBCRelationshipRoleMetaData
    }
 
    /**
-    * Is this field single valued, that means it does not return a collection.
-    * A relationship role is single valued if the related role has a
-    * multiplicity of one.
-    * @return true if this role does not return a collection
-    */
-   public boolean isSingleValued()
-   {
-      return getRelatedRole().isMultiplicityOne();
-   }
-
-   /**
-    * Is this field collection valued, that means it returns a collection.
-    * A relationship role is collection valued if the related role has a
-    * multiplicity of many.
-    * @return true if this role returns a collection
-    */
-   public boolean isCollectionValued()
-   {
-      return getRelatedRole().isMultiplicityMany();
-   }
-
-   /**
     * Should this entity be deleted when related entity is deleted.
     */
    public boolean isCascadeDelete()
    {
       return cascadeDelete;
+   }
+
+   public boolean isDeepReadAhead()
+   {
+      return deepReadAhead;
    }
 
    /**
@@ -289,7 +274,7 @@ public final class JDBCRelationshipRoleMetaData
       return cmrFieldName;
    }
 
-   public boolean isNavigable()
+   private boolean isNavigable()
    {
       return navigable;
    }
@@ -297,7 +282,7 @@ public final class JDBCRelationshipRoleMetaData
    /**
     * Gets the type of the cmr field (i.e., collection or set)
     */
-   public String getCMRFieldType()
+   private String getCMRFieldType()
    {
       return cmrFieldType;
    }
@@ -353,7 +338,7 @@ public final class JDBCRelationshipRoleMetaData
       ArrayList pkFields = new ArrayList();
       for(Iterator i = entity.getCMPFields().iterator(); i.hasNext();)
       {
-         JDBCCMPFieldMetaData cmpField = (JDBCCMPFieldMetaData)i.next();
+         JDBCCMPFieldMetaData cmpField = (JDBCCMPFieldMetaData) i.next();
          if(cmpField.isPrimaryKeyMember())
          {
             pkFields.add(cmpField);
@@ -364,19 +349,15 @@ public final class JDBCRelationshipRoleMetaData
       Map fields = new HashMap(pkFields.size());
       for(Iterator i = pkFields.iterator(); i.hasNext();)
       {
-         JDBCCMPFieldMetaData cmpField = (JDBCCMPFieldMetaData)i.next();
+         JDBCCMPFieldMetaData cmpField = (JDBCCMPFieldMetaData) i.next();
 
          String columnName;
          if(relationMetaData.isTableMappingStyle())
          {
             if(entity.equals(relatedRole.getEntity()))
-            {
                columnName = getCMRFieldName();
-            }
             else
-            {
                columnName = entity.getName();
-            }
          }
          else
          {
@@ -395,7 +376,8 @@ public final class JDBCRelationshipRoleMetaData
             false,
             relationMetaData.isTableMappingStyle(),
             relationMetaData.isReadOnly(),
-            relationMetaData.getReadTimeOut());
+            relationMetaData.getReadTimeOut(),
+            relationMetaData.isTableMappingStyle());
          fields.put(cmpField.getFieldName(), cmpField);
       }
       return Collections.unmodifiableMap(fields);
@@ -408,9 +390,7 @@ public final class JDBCRelationshipRoleMetaData
    private Map loadKeyFields(Element element)
       throws DeploymentException
    {
-
-      Element keysElement =
-         MetaData.getOptionalChild(element, "key-fields");
+      Element keysElement = MetaData.getOptionalChild(element, "key-fields");
 
       // no field overrides, we're done
       if(keysElement == null)
@@ -426,8 +406,7 @@ public final class JDBCRelationshipRoleMetaData
       {
          return Collections.EMPTY_MAP;
       }
-      else if(relationMetaData.isForeignKeyMappingStyle()
-         && isMultiplicityMany())
+      else if(relationMetaData.isForeignKeyMappingStyle() && isMultiplicityMany())
       {
          throw new DeploymentException("Role: " + relationshipRoleName + " with multiplicity many using " +
             "foreign-key mapping is not allowed to have key-fields");
@@ -440,10 +419,10 @@ public final class JDBCRelationshipRoleMetaData
       Map fields = new HashMap(defaultFields.size());
       while(iter.hasNext())
       {
-         Element keyElement = (Element)iter.next();
+         Element keyElement = (Element) iter.next();
          String fieldName = MetaData.getUniqueChildContent(keyElement, "field-name");
 
-         JDBCCMPFieldMetaData cmpField = (JDBCCMPFieldMetaData)defaultFields.remove(fieldName);
+         JDBCCMPFieldMetaData cmpField = (JDBCCMPFieldMetaData) defaultFields.remove(fieldName);
          if(cmpField == null)
          {
             throw new DeploymentException(
@@ -468,7 +447,8 @@ public final class JDBCRelationshipRoleMetaData
             false,
             relationMetaData.isTableMappingStyle(),
             relationMetaData.isReadOnly(),
-            relationMetaData.getReadTimeOut());
+            relationMetaData.getReadTimeOut(),
+            relationMetaData.isTableMappingStyle());
          fields.put(cmpField.getFieldName(), cmpField);
       }
 
@@ -490,7 +470,7 @@ public final class JDBCRelationshipRoleMetaData
       Map pkFields = new HashMap();
       for(Iterator cmpFieldsIter = entity.getCMPFields().iterator(); cmpFieldsIter.hasNext();)
       {
-         JDBCCMPFieldMetaData cmpField = (JDBCCMPFieldMetaData)cmpFieldsIter.next();
+         JDBCCMPFieldMetaData cmpField = (JDBCCMPFieldMetaData) cmpFieldsIter.next();
          if(cmpField.isPrimaryKeyMember())
             pkFields.put(cmpField.getFieldName(), cmpField);
       }

@@ -20,11 +20,11 @@ import org.w3c.dom.Element;
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
  * @author <a href="sebastien.alborini@m4x.org">Sebastien Alborini</a>
- * @version $Revision: 1.10 $
+ * @version $Revision: 1.11 $
  */
 public final class JDBCMappingMetaData
 {
-   static Logger log = Logger.getLogger(JDBCMappingMetaData.class.getName());
+   private static Logger log = Logger.getLogger(JDBCMappingMetaData.class.getName());
 
    /**
     * Gets the JDBC type constant int for the name. The mapping from name to jdbc
@@ -43,7 +43,7 @@ public final class JDBCMappingMetaData
 
       try
       {
-         Integer constant = (Integer)Types.class.getField(name).get(null);
+         Integer constant = (Integer) Types.class.getField(name).get(null);
          return constant.intValue();
 
       }
@@ -60,10 +60,6 @@ public final class JDBCMappingMetaData
    private final int jdbcType;
    /** SQL type */
    private final String sqlType;
-   /** fully qualified Java type <code>javaType</code> is mapped to */
-   private final String mappedType;
-   /** fully qualified Java type name of the Mapper implementation */
-   private final String mapper;
 
    /**
     * Constructs a mapping with the data contained in the mapping xml element
@@ -78,22 +74,6 @@ public final class JDBCMappingMetaData
       javaType = MetaData.getUniqueChildContent(element, "java-type");
       jdbcType = getJdbcTypeFromName(MetaData.getUniqueChildContent(element, "jdbc-type"));
       sqlType = MetaData.getUniqueChildContent(element, "sql-type");
-      mapper = null;
-      mappedType = null;
-   }
-
-   /**
-    * This constructor is used for user type mapping
-    */
-   public JDBCMappingMetaData(JDBCUserTypeMappingMetaData userTypeMappingMD,
-                              int jdbcType,
-                              String sqlType)
-   {
-      this.javaType = userTypeMappingMD.getJavaType();
-      this.jdbcType = jdbcType;
-      this.sqlType = sqlType;
-      this.mappedType = userTypeMappingMD.getMappedType();
-      this.mapper = userTypeMappingMD.getMapper();
    }
 
    /**
@@ -127,15 +107,5 @@ public final class JDBCMappingMetaData
    public String getSqlType()
    {
       return sqlType;
-   }
-
-   public String getMapper()
-   {
-      return mapper;
-   }
-
-   public String getMappedType()
-   {
-      return mappedType;
    }
 }

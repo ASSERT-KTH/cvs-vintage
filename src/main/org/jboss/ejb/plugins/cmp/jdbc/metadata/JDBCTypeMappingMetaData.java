@@ -19,7 +19,7 @@ import org.w3c.dom.Element;
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
  * @author <a href="sebastien.alborini@m4x.org">Sebastien Alborini</a>
  * @author <a href="mailto:loubyansky@ua.fm">Alex Loubyansky</a>
- * @version $Revision: 1.18 $
+ * @version $Revision: 1.19 $
  */
 public final class JDBCTypeMappingMetaData
 {
@@ -42,6 +42,26 @@ public final class JDBCTypeMappingMetaData
    public static final String ABS = "abs";
    public static final String SQRT = "sqrt";
    public static final String COUNT = "count";
+
+   public static JDBCFunctionMappingMetaData MAX_FUNC;
+   public static JDBCFunctionMappingMetaData MIN_FUNC;
+   public static JDBCFunctionMappingMetaData AVG_FUNC;
+   public static JDBCFunctionMappingMetaData SUM_FUNC;
+
+   static
+   {
+      try
+      {
+         MAX_FUNC = new JDBCFunctionMappingMetaData("max", "max(?1)");
+         MIN_FUNC = new JDBCFunctionMappingMetaData("min", "min(?1)");
+         AVG_FUNC = new JDBCFunctionMappingMetaData("avg", "avg(?1)");
+         SUM_FUNC = new JDBCFunctionMappingMetaData("sum", "sum(?1)");
+      }
+      catch(DeploymentException e)
+      {
+         throw new IllegalStateException(e.getMessage());
+      }
+   }
 
    private final String name;
 
@@ -109,7 +129,7 @@ public final class JDBCTypeMappingMetaData
       Iterator iterator = MetaData.getChildrenByTagName(element, "mapping");
       while(iterator.hasNext())
       {
-         Element mappingElement = (Element)iterator.next();
+         Element mappingElement = (Element) iterator.next();
          JDBCMappingMetaData mapping = new JDBCMappingMetaData(mappingElement);
          mappings.put(mapping.getJavaType(), mapping);
       }
@@ -120,7 +140,7 @@ public final class JDBCTypeMappingMetaData
       Iterator functions = MetaData.getChildrenByTagName(element, "function-mapping");
       while(functions.hasNext())
       {
-         Element mappingElement = (Element)functions.next();
+         Element mappingElement = (Element) functions.next();
          JDBCFunctionMappingMetaData functionMapping = new JDBCFunctionMappingMetaData(mappingElement);
          functionMappings.put(functionMapping.getFunctionName().toLowerCase(), functionMapping);
       }
@@ -241,12 +261,12 @@ public final class JDBCTypeMappingMetaData
       }
 
       // Check other types
-      JDBCMappingMetaData mapping = (JDBCMappingMetaData)mappings.get(javaType);
+      JDBCMappingMetaData mapping = (JDBCMappingMetaData) mappings.get(javaType);
 
       // if not found, return mapping for java.lang.object
       if(mapping == null)
       {
-         mapping = (JDBCMappingMetaData)mappings.get("java.lang.Object");
+         mapping = (JDBCMappingMetaData) mappings.get("java.lang.Object");
       }
 
       return mapping.getJdbcType();
@@ -275,12 +295,12 @@ public final class JDBCTypeMappingMetaData
       }
 
       // Check other types
-      JDBCMappingMetaData mapping = (JDBCMappingMetaData)mappings.get(javaType);
+      JDBCMappingMetaData mapping = (JDBCMappingMetaData) mappings.get(javaType);
 
       // if not found, return mapping for java.lang.object
       if(mapping == null)
       {
-         mapping = (JDBCMappingMetaData)mappings.get("java.lang.Object");
+         mapping = (JDBCMappingMetaData) mappings.get("java.lang.Object");
       }
 
       return mapping.getSqlType();
@@ -288,7 +308,7 @@ public final class JDBCTypeMappingMetaData
 
    public JDBCFunctionMappingMetaData getFunctionMapping(String name)
    {
-      JDBCFunctionMappingMetaData funcMapping = (JDBCFunctionMappingMetaData)functionMappings.get(name.toLowerCase());
+      JDBCFunctionMappingMetaData funcMapping = (JDBCFunctionMappingMetaData) functionMappings.get(name.toLowerCase());
       if(funcMapping == null)
          throw new IllegalStateException("Function " + name + " is not defined for " + this.name);
       return funcMapping;

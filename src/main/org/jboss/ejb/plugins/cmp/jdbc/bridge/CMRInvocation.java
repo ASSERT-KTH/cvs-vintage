@@ -11,7 +11,7 @@ import java.security.Principal;
  * Optimized invocation object for local CMR invocations
  *
  * @author  <a href="mailto:bill@jboss.org">Bill Burke</a>
- * @version $Revision: 1.2 $
+ * @version $Revision: 1.3 $
  */
 public class CMRInvocation extends LocalEJBInvocation
 {
@@ -23,7 +23,7 @@ public class CMRInvocation extends LocalEJBInvocation
    }
 
    public CMRInvocation(Object id, Method m, Object[] args, Transaction tx,
-                Principal identity, Object credential)
+                        Principal identity, Object credential)
    {
       super(id, m, args, tx, identity, credential);
    }

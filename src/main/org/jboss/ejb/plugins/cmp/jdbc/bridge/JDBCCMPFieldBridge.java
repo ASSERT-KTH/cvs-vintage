@@ -4,7 +4,7 @@
  * Distributable under LGPL license.
  * See terms of license at gnu.org.
  */
- 
+
 package org.jboss.ejb.plugins.cmp.jdbc.bridge;
 
 
@@ -12,14 +12,13 @@ import java.lang.reflect.Field;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 
-import org.jboss.ejb.EntityEnterpriseContext;
 import org.jboss.ejb.plugins.cmp.bridge.CMPFieldBridge;
 import org.jboss.ejb.plugins.cmp.jdbc.JDBCStoreManager;
-import org.jboss.ejb.plugins.cmp.jdbc.JDBCType;
-import org.jboss.ejb.plugins.cmp.jdbc.metadata.JDBCCMPFieldMetaData;
+import org.jboss.ejb.plugins.cmp.jdbc.LockingStrategy;
+import org.jboss.ejb.EntityEnterpriseContext;
 
 /**
- * JDBCCMPFieldBridge represents one CMP field. This implementations of 
+ * JDBCCMPFieldBridge represents one CMP field. This implementations of
  * this interface handles setting are responsible for setting statement
  * parameters and loading results for instance values and primary
  * keys.
@@ -33,18 +32,44 @@ import org.jboss.ejb.plugins.cmp.jdbc.metadata.JDBCCMPFieldMetaData;
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
  * @author <a href="mailto:loubyansky@hotmail.com">Alex Loubyansky</a>
  *
- * @version $Revision: 1.16 $
+ * @version $Revision: 1.17 $
  */
-public interface JDBCCMPFieldBridge extends JDBCFieldBridge, CMPFieldBridge {
-
+public interface JDBCCMPFieldBridge extends JDBCFieldBridge, CMPFieldBridge
+{
    /**
-    * Gets the java class type of the field.
-    * @return the java class type of this field
+    * The index of the field among the table fields.
     */
-   public Class getFieldType();
+   int getTableIndex();
 
    /**
-    * Gets the field of the primary key object in which the value of this 
+    * Returns the default field flags.
+    */
+   byte getDefaultFlags();
+
+   /**
+    * TODO: Get rid of it
+    * @param flag
+    */
+   void addDefaultFlag(byte flag);
+
+   /**
+    * @param ctx  instance's context
+    * @return  field value that was locked.
+    */
+   Object getLockedValue(EntityEnterpriseContext ctx);
+
+   /**
+    * Optimistically locks field value.
+    */
+   public void lockInstanceValue(EntityEnterpriseContext ctx);
+
+   /**
+    * @param lockingStrategy locking strategy assigned to the field
+    */
+   void setLockingStrategy(LockingStrategy lockingStrategy);
+
+   /**
+    * Gets the field of the primary key object in which the value of this
     * field is stored.
     */
    public Field getPrimaryKeyField();
@@ -56,38 +81,38 @@ public interface JDBCCMPFieldBridge extends JDBCFieldBridge, CMPFieldBridge {
 
    /**
     * Gets the value of this field in the specified primaryKey object.
-    * @param primaryKey the primary key object from which this fields value 
+    * @param primaryKey the primary key object from which this fields value
     *    will be extracted
     * @return the value of this field in the primaryKey object
     */
    public Object getPrimaryKeyValue(Object primaryKey)
-         throws IllegalArgumentException;
+      throws IllegalArgumentException;
 
    /**
-    * Unknown primary key flag
+    * @return true if the field belongs to a relation table
     */
-   public boolean isUnknownPk();
-   
+   boolean isRelationTableField();
+
    /**
-    * Sets the value of this field to the specified value in the 
+    * Sets the value of this field to the specified value in the
     * specified primaryKey object.
-    * @param primaryKey the primary key object which the value 
+    * @param primaryKey the primary key object which the value
     *    will be inserted
     * @param value the value for field that will be set in the pk
-    * @return the updated primary key object; the actual object may 
+    * @return the updated primary key object; the actual object may
     *    change not just the value
     */
-    public Object setPrimaryKeyValue(Object primaryKey, Object value)
-         throws IllegalArgumentException;
-   
+   public Object setPrimaryKeyValue(Object primaryKey, Object value)
+      throws IllegalArgumentException;
+
    /**
-    * Sets the prepared statement parameters with the data from the 
+    * Sets the prepared statement parameters with the data from the
     * primary key.
     */
    public int setPrimaryKeyParameters(PreparedStatement ps, int parameterIndex, Object primaryKey) throws IllegalArgumentException;
-   
+
    /**
-    * Sets the prepared statement parameters with the data from the 
+    * Sets the prepared statement parameters with the data from the
     * object. The object must be the type of this field.
     */
    public int setArgumentParameters(PreparedStatement ps, int parameterIndex, Object arg);
@@ -96,4 +121,4 @@ public interface JDBCCMPFieldBridge extends JDBCFieldBridge, CMPFieldBridge {
     * Loads the data from result set into the primary key object.
     */
    public int loadPrimaryKeyResults(ResultSet rs, int parameterIndex, Object[] pkRef) throws IllegalArgumentException;
-}                                         
+}

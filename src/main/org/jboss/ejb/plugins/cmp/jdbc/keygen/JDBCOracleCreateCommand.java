@@ -12,8 +12,6 @@ import java.sql.PreparedStatement;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.sql.CallableStatement;
-import java.util.List;
-import java.util.Arrays;
 
 import org.jboss.ejb.plugins.cmp.jdbc.JDBCIdentityColumnCreateCommand;
 import org.jboss.ejb.plugins.cmp.jdbc.SQLUtil;
@@ -26,7 +24,7 @@ import org.jboss.deployment.DeploymentException;
 /**
  * Create command for use with Oracle that uses a sequence in conjuction with
  * a RETURNING clause to generate keys in a single statement
- * 
+ *
  * @author <a href="mailto:jeremy@boynes.com">Jeremy Boynes</a>
  */
 public class JDBCOracleCreateCommand extends JDBCIdentityColumnCreateCommand
@@ -44,7 +42,8 @@ public class JDBCOracleCreateCommand extends JDBCIdentityColumnCreateCommand
    {
       super.initEntityCommand(entityCommand);
       sequence = entityCommand.getAttribute("sequence");
-      if (sequence == null) {
+      if(sequence == null)
+      {
          throw new DeploymentException("Sequence must be specified");
       }
    }
@@ -54,21 +53,22 @@ public class JDBCOracleCreateCommand extends JDBCIdentityColumnCreateCommand
       pkIndex = 1 + insertFields.length;
       jdbcType = pkField.getJDBCType().getJDBCTypes()[0];
 
-      List insertFieldsList = Arrays.asList(insertFields);
       StringBuffer sql = new StringBuffer();
       sql.append("{call INSERT INTO ").append(entity.getTableName());
       sql.append(" (");
-      sql.append(SQLUtil.getColumnNamesClause(pkField)).append(", ");
-      sql.append(SQLUtil.getColumnNamesClause(insertFieldsList));
-      sql.append(")");
+      SQLUtil.getColumnNamesClause(pkField, sql)
+         .append(", ");
+      SQLUtil.getColumnNamesClause(insertFields, sql)
+         .append(")");
       sql.append(" VALUES (");
-      sql.append(sequence+".NEXTVAL, ");
-      sql.append(SQLUtil.getValuesClause(insertFieldsList));
+      sql.append(sequence + ".NEXTVAL, ");
+      SQLUtil.getValuesClause(insertFields, sql);
       sql.append(")");
       sql.append(" RETURNING ");
-      sql.append(SQLUtil.getColumnNamesClause(pkField)).append(" INTO ? }");
+      SQLUtil.getColumnNamesClause(pkField, sql).append(" INTO ? }");
       insertSQL = sql.toString();
-      if (debug) {
+      if(debug)
+      {
          log.debug("Insert Entity SQL: " + insertSQL);
       }
    }

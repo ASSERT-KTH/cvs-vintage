@@ -19,9 +19,10 @@ import org.w3c.dom.Element;
  * It loads its data from standardjbosscmp-jdbc.xml and jbosscmp-jdbc.xml
  *
  * @author <a href="mailto:on@ibis.odessa.ua">Oleg Nitz</a>
- * @version $Revision: 1.9 $
+ * @version $Revision: 1.10 $
  */
-public final class JDBCReadAheadMetaData {
+public final class JDBCReadAheadMetaData
+{
 
    public static final JDBCReadAheadMetaData DEFAULT = new JDBCReadAheadMetaData();
 
@@ -34,23 +35,23 @@ public final class JDBCReadAheadMetaData {
    private static final byte NONE = 0;
 
    /**
-    * Read ahead when some entity is being loaded (lazily, good for 
+    * Read ahead when some entity is being loaded (lazily, good for
     * all queries).
     */
    private static final byte ON_LOAD = 1;
 
    /**
-    * Read ahead during "find" (not lazily, the best for queries with 
+    * Read ahead during "find" (not lazily, the best for queries with
     * small result set).
     */
    private static final byte ON_FIND = 2;
 
 
-   private static final List STRATEGIES = 
-         Arrays.asList(new String[] {"none", "on-load", "on-find"});
+   private static final List STRATEGIES =
+      Arrays.asList(new String[]{"none", "on-load", "on-find"});
 
    /**
-    * The strategy of reading ahead, one of 
+    * The strategy of reading ahead, one of
     * {@link #NONE}, {@link #ON_LOAD}, {@link #ON_FIND}.
     */
    private final byte strategy;
@@ -66,27 +67,35 @@ public final class JDBCReadAheadMetaData {
    private final String eagerLoadGroup;
 
    /**
+    * add this to a deeper left joined query
+    */
+   private boolean deepReadAhead = false;
+
+   /**
     * Constructs default read ahead meta data: no read ahead.
     */
-   private JDBCReadAheadMetaData() {
+   private JDBCReadAheadMetaData()
+   {
       strategy = ON_LOAD;
       pageSize = 255;
       eagerLoadGroup = "*";
    }
 
    /**
-    * Constructs read ahead meta data with specified strategy, pageSize and 
+    * Constructs read ahead meta data with specified strategy, pageSize and
     * eagerLoadGroup.
     */
    public JDBCReadAheadMetaData(
-         String strategy, 
-         int pageSize, 
-         String eagerLoadGroup) {
-      
+      String strategy,
+      int pageSize,
+      String eagerLoadGroup)
+   {
+
       this.strategy = (byte) STRATEGIES.indexOf(strategy);
-      if(this.strategy < 0) {
-         throw new IllegalArgumentException("Unknown read ahead strategy '" + 
-               strategy + "'.");
+      if(this.strategy < 0)
+      {
+         throw new IllegalArgumentException("Unknown read ahead strategy '" +
+            strategy + "'.");
       }
       this.pageSize = pageSize;
       this.eagerLoadGroup = eagerLoadGroup;
@@ -94,7 +103,7 @@ public final class JDBCReadAheadMetaData {
 
    /**
     * Constructs read ahead meta data with the data contained in the read-ahead
-    * xml element from a jbosscmp-jdbc xml file. Optional values of the xml 
+    * xml element from a jbosscmp-jdbc xml file. Optional values of the xml
     * element that are not present are instead loaded from the defalutValues
     * parameter.
     *
@@ -102,41 +111,57 @@ public final class JDBCReadAheadMetaData {
     * @throws DeploymentException if the xml element is invalid
     */
    public JDBCReadAheadMetaData(
-         Element element,
-         JDBCReadAheadMetaData defaultValue) throws DeploymentException {
+      Element element,
+      JDBCReadAheadMetaData defaultValue) throws DeploymentException
+   {
 
       // Strategy
       String strategyStr = MetaData.getUniqueChildContent(element, "strategy");
       strategy = (byte) STRATEGIES.indexOf(strategyStr);
-      if(strategy < 0) {
-         throw new DeploymentException("Unknown read ahead strategy '" + 
-               strategyStr + "'.");
+      if(strategy < 0)
+      {
+         throw new DeploymentException("Unknown read ahead strategy '" +
+            strategyStr + "'.");
+      }
+      if(MetaData.getOptionalChild(element, "deep-read-ahead") != null)
+      {
+         deepReadAhead = true;
       }
 
       // page-size
-      String pageSizeStr = 
-            MetaData.getOptionalChildContent(element, "page-size");
-      if(pageSizeStr != null) {
-         try {
+      String pageSizeStr =
+         MetaData.getOptionalChildContent(element, "page-size");
+      if(pageSizeStr != null)
+      {
+         try
+         {
             pageSize = Integer.parseInt(pageSizeStr);
-         } catch (NumberFormatException ex) {
+         }
+         catch(NumberFormatException ex)
+         {
             throw new DeploymentException("Invalid number format in read-" +
-                  "ahead page-size '" + pageSizeStr + "': " + ex);
+               "ahead page-size '" + pageSizeStr + "': " + ex);
          }
-         if(pageSize < 0) {
+         if(pageSize < 0)
+         {
             throw new DeploymentException("Negative value for read ahead " +
-                  "page-size '" + pageSizeStr + "'.");
+               "page-size '" + pageSizeStr + "'.");
          }
-      } else {
+      }
+      else
+      {
          pageSize = defaultValue.getPageSize();
       }
 
       // eager-load-group
-      Element eagerLoadGroupElement = 
-            MetaData.getOptionalChild(element, "eager-load-group");
-      if(eagerLoadGroupElement != null) {
+      Element eagerLoadGroupElement =
+         MetaData.getOptionalChild(element, "eager-load-group");
+      if(eagerLoadGroupElement != null)
+      {
          eagerLoadGroup = MetaData.getElementContent(eagerLoadGroupElement);
-      } else {
+      }
+      else
+      {
          eagerLoadGroup = defaultValue.getEagerLoadGroup();
       }
    }
@@ -144,35 +169,45 @@ public final class JDBCReadAheadMetaData {
    /**
     * Is read ahead strategy is none.
     */
-   public boolean isNone() {
+   public boolean isNone()
+   {
       return (strategy == NONE);
    }
 
    /**
     * Is the read ahead stratey on-load
     */
-   public boolean isOnLoad() {
+   public boolean isOnLoad()
+   {
       return (strategy == ON_LOAD);
    }
 
    /**
     * Is the read ahead stratey on-find
     */
-   public boolean isOnFind() {
+   public boolean isOnFind()
+   {
       return (strategy == ON_FIND);
+   }
+
+   public boolean isDeepReadAhead()
+   {
+      return deepReadAhead;
    }
 
    /**
     * Gets the read ahead page size.
     */
-   public int getPageSize() {
+   public int getPageSize()
+   {
       return pageSize;
    }
 
    /**
     * Gets the eager load group.
     */
-   public String getEagerLoadGroup() {
+   public String getEagerLoadGroup()
+   {
       return eagerLoadGroup;
    }
 
@@ -180,10 +215,11 @@ public final class JDBCReadAheadMetaData {
     * Returns a string describing this JDBCReadAheadMetaData.
     * @return a string representation of the object
     */
-   public String toString() {
-      return "[JDBCReadAheadMetaData :"+
-            " strategy=" + STRATEGIES.get(strategy) +
-            ", pageSize=" + pageSize +
-            ", eagerLoadGroup=" + eagerLoadGroup + "]";
+   public String toString()
+   {
+      return "[JDBCReadAheadMetaData :" +
+         " strategy=" + STRATEGIES.get(strategy) +
+         ", pageSize=" + pageSize +
+         ", eagerLoadGroup=" + eagerLoadGroup + "]";
    }
 }

@@ -15,7 +15,7 @@ import org.w3c.dom.Element;
  * Optimistick locking metadata
  *
  * @author <a href="mailto:aloubyansky@hotmail.com">Alex Loubyansky</a>
- * @version $Revision: 1.4 $
+ * @version $Revision: 1.5 $
  */
 public final class JDBCOptimisticLockingMetaData
 {
@@ -54,7 +54,7 @@ public final class JDBCOptimisticLockingMetaData
    {
       log = Logger.getLogger(entityMetaData.getName());
 
-      Element strategyEl = null;
+      Element strategyEl;
       if((strategyEl = MetaData.getOptionalChild(element, "group-name")) != null)
       {
          lockingStrategy = FIELD_GROUP_STRATEGY;
@@ -163,13 +163,13 @@ public final class JDBCOptimisticLockingMetaData
       // field name
       String fieldName = MetaData.getOptionalChildContent(element, "field-name");
       if(fieldName == null || fieldName.trim().length() < 1)
-         fieldName = (lockingStrategy == VERSION_COLUMN_STRATEGY ?  "version_lock" :
+         fieldName = (lockingStrategy == VERSION_COLUMN_STRATEGY ? "version_lock" :
             (lockingStrategy == TIMESTAMP_COLUMN_STRATEGY ? "timestamp_lock" : "generated_lock"));
 
       // column name
       String columnName = MetaData.getOptionalChildContent(element, "column-name");
       if(columnName == null || columnName.trim().length() < 1)
-         columnName = (lockingStrategy == VERSION_COLUMN_STRATEGY ?  "version_lock" :
+         columnName = (lockingStrategy == VERSION_COLUMN_STRATEGY ? "version_lock" :
             (lockingStrategy == TIMESTAMP_COLUMN_STRATEGY ? "timestamp_lock" : "generated_lock"));
 
       // field type
@@ -196,7 +196,7 @@ public final class JDBCOptimisticLockingMetaData
 
       // JDBC/SQL Type
       int jdbcType;
-      String sqlType = null;
+      String sqlType;
       String jdbcTypeName = MetaData.getOptionalChildContent(element, "jdbc-type");
       if(jdbcTypeName != null)
       {

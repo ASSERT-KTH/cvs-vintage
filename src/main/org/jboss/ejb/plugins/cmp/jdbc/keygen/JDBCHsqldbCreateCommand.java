@@ -14,7 +14,7 @@ import org.jboss.deployment.DeploymentException;
 
 /**
  * Create command for Hypersonic that generated keys using an IDENTITY column.
- * 
+ *
  * @author <a href="mailto:jeremy@boynes.com">Jeremy Boynes</a>
  */
 public class JDBCHsqldbCreateCommand extends JDBCIdentityColumnCreateCommand
@@ -23,7 +23,8 @@ public class JDBCHsqldbCreateCommand extends JDBCIdentityColumnCreateCommand
    {
       super.initEntityCommand(entityCommand);
       pkSQL = entityCommand.getAttribute("pk-sql");
-      if (pkSQL == null) {
+      if(pkSQL == null)
+      {
          pkSQL = "CALL IDENTITY()";
       }
    }

@@ -14,36 +14,40 @@ import java.io.ObjectStreamException;
  * interceptor chain and caught by the JDBCRelationInterceptor.
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
- * @version $Revision: 1.9 $
+ * @version $Revision: 1.10 $
  */
-public final class CMRMessage implements Serializable {
+public final class CMRMessage implements Serializable
+{
    private static int nextOrdinal = 0;
    private static final CMRMessage[] VALUES = new CMRMessage[4];
 
    public static final CMRMessage GET_RELATED_ID =
-         new CMRMessage("GET_RELATED_ID");
-   public static final CMRMessage ADD_RELATION = 
-         new CMRMessage("ADD_RELATION");
+      new CMRMessage("GET_RELATED_ID");
+   public static final CMRMessage ADD_RELATION =
+      new CMRMessage("ADD_RELATION");
    public static final CMRMessage REMOVE_RELATION =
-         new CMRMessage("REMOVE_RELATION");
+      new CMRMessage("REMOVE_RELATION");
    public static final CMRMessage INIT_RELATED_CTX =
-         new CMRMessage("INIT_RELATED_CTX");
+      new CMRMessage("INIT_RELATED_CTX");
 
 
    private final transient String name;
    private final int ordinal;
-    
-   private CMRMessage(String name) {
+
+   private CMRMessage(String name)
+   {
       this.name = name;
       this.ordinal = nextOrdinal++;
       VALUES[ordinal] = this;
    }
 
-   public String toString() {
+   public String toString()
+   {
       return name;
    }
 
-   Object readResolve() throws ObjectStreamException {
+   Object readResolve() throws ObjectStreamException
+   {
       return VALUES[ordinal];
    }
 

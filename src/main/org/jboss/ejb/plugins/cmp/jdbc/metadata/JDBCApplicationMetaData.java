@@ -31,11 +31,11 @@ import org.jboss.ejb.plugins.cmp.jdbc.SQLUtil;
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
  * @author <a href="sebastien.alborini@m4x.org">Sebastien Alborini</a>
  * @author <a href="alex@jboss.org">Alexey Loubyansky</a>
- * @version $Revision: 1.20 $
+ * @version $Revision: 1.21 $
  */
 public final class JDBCApplicationMetaData
 {
-   public final static Class JDBC_PM = org.jboss.ejb.plugins.cmp.jdbc.JDBCStoreManager.class;
+   private final static Class JDBC_PM = org.jboss.ejb.plugins.cmp.jdbc.JDBCStoreManager.class;
 
    /**
     * The class loader for this application.  The class loader is used to
@@ -117,20 +117,20 @@ public final class JDBCApplicationMetaData
       Iterator beans = applicationMetaData.getEnterpriseBeans();
       while(beans.hasNext())
       {
-         BeanMetaData bean = (BeanMetaData)beans.next();
+         BeanMetaData bean = (BeanMetaData) beans.next();
 
          // only take entities
          if(bean.isEntity())
          {
-            EntityMetaData entity = (EntityMetaData)bean;
+            EntityMetaData entity = (EntityMetaData) bean;
 
             // only take jbosscmp-jdbc-managed CMP entities
-            Class pm = null;
+            Class pm;
             try
             {
                pm = classLoader.loadClass(entity.getContainerConfiguration().getPersistenceManager());
             }
-            catch (ClassNotFoundException e)
+            catch(ClassNotFoundException e)
             {
                throw new DeploymentException("Unable to load persistence manager", e);
             }
@@ -168,7 +168,7 @@ public final class JDBCApplicationMetaData
       Iterator iterator = applicationMetaData.getRelationships();
       while(iterator.hasNext())
       {
-         RelationMetaData relation = (RelationMetaData)iterator.next();
+         RelationMetaData relation = (RelationMetaData) iterator.next();
 
          // Relationship metadata
          JDBCRelationMetaData jdbcRelation =
@@ -179,14 +179,14 @@ public final class JDBCApplicationMetaData
          JDBCRelationshipRoleMetaData left =
             jdbcRelation.getLeftRelationshipRole();
          Collection leftEntityRoles =
-            (Collection)entityRoles.get(left.getEntity().getName());
+            (Collection) entityRoles.get(left.getEntity().getName());
          leftEntityRoles.add(left);
 
          // Right relationship-role metadata
          JDBCRelationshipRoleMetaData right =
             jdbcRelation.getRightRelationshipRole();
          Collection rightEntityRoles =
-            (Collection)entityRoles.get(right.getEntity().getName());
+            (Collection) entityRoles.get(right.getEntity().getName());
          rightEntityRoles.add(right);
       }
 
@@ -221,8 +221,9 @@ public final class JDBCApplicationMetaData
       {
          userTypeMappings = new HashMap();
          Iterator iter = MetaData.getChildrenByTagName(userTypeMaps, "user-type-mapping");
+         while(iter.hasNext())
          {
-            Element userTypeMappingEl = (Element)iter.next();
+            Element userTypeMappingEl = (Element) iter.next();
             JDBCUserTypeMappingMetaData userTypeMapping = new JDBCUserTypeMappingMetaData(userTypeMappingEl);
             userTypeMappings.put(userTypeMapping.getJavaType(), userTypeMapping);
          }
@@ -237,7 +238,7 @@ public final class JDBCApplicationMetaData
       {
          for(Iterator i = MetaData.getChildrenByTagName(typeMaps, "type-mapping"); i.hasNext();)
          {
-            Element typeMappingElement = (Element)i.next();
+            Element typeMappingElement = (Element) i.next();
             JDBCTypeMappingMetaData typeMapping =
                new JDBCTypeMappingMetaData(typeMappingElement);
             typeMappings.put(typeMapping.getName(), typeMapping);
@@ -255,7 +256,7 @@ public final class JDBCApplicationMetaData
              i.hasNext();)
          {
 
-            Element valueClassElement = (Element)i.next();
+            Element valueClassElement = (Element) i.next();
             JDBCValueClassMetaData valueClass =
                new JDBCValueClassMetaData(valueClassElement, classLoader);
             valueClasses.put(valueClass.getJavaType(), valueClass);
@@ -273,23 +274,23 @@ public final class JDBCApplicationMetaData
              i.hasNext();)
          {
 
-            Element entityCommandElement = (Element)i.next();
+            Element entityCommandElement = (Element) i.next();
             JDBCEntityCommandMetaData entityCommand =
                new JDBCEntityCommandMetaData(entityCommandElement);
             entityCommands.put(entityCommand.getCommandName(), entityCommand);
          }
       }
-      
+
       // reserved words: (optional, always set in standardjbosscmp-jdbc.xml)
-      // list of reserved words that should be escaped in table names 
-      Element rWords = MetaData.getOptionalChild(element,"reserved-words");
-      if (rWords!=null) 
+      // list of reserved words that should be escaped in table names
+      Element rWords = MetaData.getOptionalChild(element, "reserved-words");
+      if(rWords != null)
       {
-      	for (Iterator i = MetaData.getChildrenByTagName(rWords,"word"); i.hasNext() ; ) 
-      	{
-      			Element rWord = (Element)i.next();
-      			SQLUtil.addToRwords(MetaData.getElementContent(rWord));      				
-      	}
+         for(Iterator i = MetaData.getChildrenByTagName(rWords, "word"); i.hasNext();)
+         {
+            Element rWord = (Element) i.next();
+            SQLUtil.addToRwords(MetaData.getElementContent(rWord));
+         }
       }
 
       // defaults: apply defaults for entities (optional, always
@@ -304,7 +305,7 @@ public final class JDBCApplicationMetaData
          ArrayList values = new ArrayList(entities.values());
          for(Iterator i = values.iterator(); i.hasNext();)
          {
-            JDBCEntityMetaData entityMetaData = (JDBCEntityMetaData)i.next();
+            JDBCEntityMetaData entityMetaData = (JDBCEntityMetaData) i.next();
 
             // create the new metadata with the defaults applied
             entityMetaData =
@@ -344,7 +345,7 @@ public final class JDBCApplicationMetaData
              i.hasNext();)
          {
 
-            Element beanElement = (Element)i.next();
+            Element beanElement = (Element) i.next();
 
             // get entity by name, if not found, it is a config error
             String ejbName =
@@ -396,7 +397,7 @@ public final class JDBCApplicationMetaData
          // create a new empty role collection for each entity
          for(Iterator i = entities.values().iterator(); i.hasNext();)
          {
-            JDBCEntityMetaData entity = (JDBCEntityMetaData)i.next();
+            JDBCEntityMetaData entity = (JDBCEntityMetaData) i.next();
             entityRoles.put(entity.getName(), new HashSet());
          }
 
@@ -406,7 +407,7 @@ public final class JDBCApplicationMetaData
          {
 
             JDBCRelationMetaData relationMetaData =
-               (JDBCRelationMetaData)i.next();
+               (JDBCRelationMetaData) i.next();
 
             // create the new metadata with the defaults applied
             relationMetaData =
@@ -419,14 +420,14 @@ public final class JDBCApplicationMetaData
             JDBCRelationshipRoleMetaData left =
                relationMetaData.getLeftRelationshipRole();
             Collection leftEntityRoles =
-               (Collection)entityRoles.get(left.getEntity().getName());
+               (Collection) entityRoles.get(left.getEntity().getName());
             leftEntityRoles.add(left);
 
             // store new right role
             JDBCRelationshipRoleMetaData right =
                relationMetaData.getRightRelationshipRole();
             Collection rightEntityRoles =
-               (Collection)entityRoles.get(right.getEntity().getName());
+               (Collection) entityRoles.get(right.getEntity().getName());
             rightEntityRoles.add(right);
          }
       }
@@ -442,7 +443,7 @@ public final class JDBCApplicationMetaData
          Map relationByName = new HashMap();
          for(Iterator i = relationships.iterator(); i.hasNext();)
          {
-            JDBCRelationMetaData relation = (JDBCRelationMetaData)i.next();
+            JDBCRelationMetaData relation = (JDBCRelationMetaData) i.next();
             if(relation.getRelationName() != null)
             {
                relationByName.put(relation.getRelationName(), relation);
@@ -452,11 +453,11 @@ public final class JDBCApplicationMetaData
 
          for(Iterator i = MetaData.getChildrenByTagName(relationshipsElement, "ejb-relation"); i.hasNext();)
          {
-            Element relationElement = (Element)i.next();
+            Element relationElement = (Element) i.next();
 
             // get relation by name, if not found, it is a config error
             String relationName = MetaData.getUniqueChildContent(relationElement, "ejb-relation-name");
-            JDBCRelationMetaData oldRelation = (JDBCRelationMetaData)relationByName.get(relationName);
+            JDBCRelationMetaData oldRelation = (JDBCRelationMetaData) relationByName.get(relationName);
 
             if(oldRelation == null)
             {
@@ -477,7 +478,7 @@ public final class JDBCApplicationMetaData
             JDBCRelationshipRoleMetaData newLeft =
                newRelation.getLeftRelationshipRole();
             Collection leftEntityRoles =
-               (Collection)entityRoles.get(newLeft.getEntity().getName());
+               (Collection) entityRoles.get(newLeft.getEntity().getName());
             leftEntityRoles.remove(oldRelation.getLeftRelationshipRole());
             leftEntityRoles.add(newLeft);
 
@@ -485,7 +486,7 @@ public final class JDBCApplicationMetaData
             JDBCRelationshipRoleMetaData newRight =
                newRelation.getRightRelationshipRole();
             Collection rightEntityRoles =
-               (Collection)entityRoles.get(newRight.getEntity().getName());
+               (Collection) entityRoles.get(newRight.getEntity().getName());
             rightEntityRoles.remove(oldRelation.getRightRelationshipRole());
             rightEntityRoles.add(newRight);
          }
@@ -500,17 +501,7 @@ public final class JDBCApplicationMetaData
     */
    public JDBCTypeMappingMetaData getTypeMappingByName(String name)
    {
-      return (JDBCTypeMappingMetaData)typeMappings.get(name);
-   }
-
-   /**
-    * Gets the container managed relations in this application.
-    * Items are instance of JDBCRelationMetaData.
-    * @retun an unmodifiable collection of JDBCRelationMetaData objects
-    */
-   public Collection getRelationships()
-   {
-      return Collections.unmodifiableCollection(relationships);
+      return (JDBCTypeMappingMetaData) typeMappings.get(name);
    }
 
    /**
@@ -521,7 +512,7 @@ public final class JDBCApplicationMetaData
     */
    public Collection getRolesForEntity(String entityName)
    {
-      Collection roles = (Collection)entityRoles.get(entityName);
+      Collection roles = (Collection) entityRoles.get(entityName);
       return Collections.unmodifiableCollection(roles);
    }
 
@@ -551,28 +542,7 @@ public final class JDBCApplicationMetaData
     */
    public JDBCEntityMetaData getBeanByEjbName(String name)
    {
-      return (JDBCEntityMetaData)entities.get(name);
-   }
-
-   /**
-    * Gets the metadata for an entity bean by the abstract schema name.
-    * @param name the abstract schema name of the entity meta data to return
-    * @return the entity meta data for the specified name
-    */
-   public JDBCEntityMetaData getBeanByAbstractSchemaName(String name)
-   {
-      return (JDBCEntityMetaData)entitiesByAbstractSchemaName.get(name);
-   }
-
-   /**
-    * Gets the metadata for an entity bean by the interface.
-    * @param intf the remote or local interface of the entity meta data
-    *    to return
-    * @return the entity meta data for the specified interface
-    */
-   public JDBCEntityMetaData getBeanByInterface(Class intf)
-   {
-      return (JDBCEntityMetaData)entitiesByInterface.get(intf);
+      return (JDBCEntityMetaData) entities.get(name);
    }
 
    /**
@@ -582,7 +552,7 @@ public final class JDBCApplicationMetaData
     */
    public JDBCEntityCommandMetaData getEntityCommandByName(String name)
    {
-      return (JDBCEntityCommandMetaData)entityCommands.get(name);
+      return (JDBCEntityCommandMetaData) entityCommands.get(name);
    }
 
    public Map getUserTypeMappings()

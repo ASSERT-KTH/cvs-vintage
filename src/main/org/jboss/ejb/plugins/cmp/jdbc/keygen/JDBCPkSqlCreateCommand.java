@@ -28,7 +28,7 @@ import org.jboss.ejb.plugins.cmp.jdbc.JDBCUtil;
  *
  * @author <a href="mailto:loubyansky@hotmail.com">Alex Loubyansky</a>
  *
- * @version $Revision: 1.3 $
+ * @version $Revision: 1.4 $
  */
 public class JDBCPkSqlCreateCommand extends JDBCInsertPKCreateCommand
 {
@@ -46,10 +46,12 @@ public class JDBCPkSqlCreateCommand extends JDBCInsertPKCreateCommand
       super.initEntityCommand(entityCommand);
 
       pkSQL = entityCommand.getAttribute("pk-sql");
-      if (pkSQL == null) {
+      if(pkSQL == null)
+      {
          throw new DeploymentException("pk-sql attribute must be set for entity " + entity.getEntityName());
       }
-      if (debug) {
+      if(debug)
+      {
          log.debug("Generate PK sql is: " + pkSQL);
       }
    }
@@ -61,8 +63,10 @@ public class JDBCPkSqlCreateCommand extends JDBCInsertPKCreateCommand
       Connection con = null;
       Statement s = null;
       ResultSet rs = null;
-      try {
-         if (debug) {
+      try
+      {
+         if(debug)
+         {
             log.debug("Executing SQL: " + pkSQL);
          }
 
@@ -71,14 +75,19 @@ public class JDBCPkSqlCreateCommand extends JDBCInsertPKCreateCommand
          s = con.createStatement();
 
          rs = s.executeQuery(pkSQL);
-         if (!rs.next()) {
+         if(!rs.next())
+         {
             throw new CreateException("Error fetching next primary key value: result set contains no rows");
          }
          pkField.loadInstanceResults(rs, 1, ctx);
-      } catch (SQLException e) {
+      }
+      catch(SQLException e)
+      {
          log.error("Error fetching the next primary key value", e);
          throw new CreateException("Error fetching the next primary key value:" + e);
-      } finally {
+      }
+      finally
+      {
          JDBCUtil.safeClose(rs);
          JDBCUtil.safeClose(s);
          JDBCUtil.safeClose(con);

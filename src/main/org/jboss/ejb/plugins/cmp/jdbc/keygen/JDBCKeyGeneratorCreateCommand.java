@@ -27,7 +27,7 @@ import org.jboss.ejb.plugins.keygenerator.KeyGeneratorFactory;
  *
  * @author <a href="mailto:loubyansky@hotmail.com">Alex Loubyansky</a>
  *
- * @version $Revision: 1.3 $
+ * @version $Revision: 1.4 $
  */
 public class JDBCKeyGeneratorCreateCommand extends JDBCInsertPKCreateCommand
 {
@@ -45,16 +45,22 @@ public class JDBCKeyGeneratorCreateCommand extends JDBCInsertPKCreateCommand
       super.initEntityCommand(entityCommand);
 
       String factoryName = entityCommand.getAttribute("key-generator-factory");
-      if (factoryName == null) {
+      if(factoryName == null)
+      {
          throw new DeploymentException("key-generator-factory attribute must be set for entity " + entity.getEntityName());
       }
 
-      try {
+      try
+      {
          KeyGeneratorFactory keyGeneratorFactory = (KeyGeneratorFactory) new InitialContext().lookup(factoryName);
          keyGenerator = keyGeneratorFactory.getKeyGenerator();
-      } catch (NamingException e) {
+      }
+      catch(NamingException e)
+      {
          throw new DeploymentException("Error: can't find key generator factory: " + factoryName, e);
-      } catch (Exception e) {
+      }
+      catch(Exception e)
+      {
          throw new DeploymentException("Error: can't create key generator instance; key generator factory: " + factoryName, e);
       }
    }
