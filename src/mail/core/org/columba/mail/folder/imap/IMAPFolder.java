@@ -717,16 +717,20 @@ public class IMAPFolder extends RemoteFolder {
 	public boolean tryToGetLock(Object locker) {
 		// IMAP Folders have no own lock ,but share the lock from the Root
 		// to ensure that only one operation can be processed simultanous
-
-		return getRootFolder().tryToGetLock(locker);
+		FolderTreeNode root = getRootFolder();
+		if( root != null ) 
+			return root.tryToGetLock(locker);
+		else
+			return false;
 	}
 
 	/**
 	 * @see org.columba.mail.folder.FolderTreeNode#releaseLock()
 	 */
 	public void releaseLock(Object locker) {
-		if (getRootFolder() != null)
-			getRootFolder().releaseLock(locker);
+		FolderTreeNode root = getRootFolder();
+		if( root != null ) 
+			root.releaseLock(locker);
 	}
 	/**
 	 * @param type
