@@ -3,7 +3,7 @@
  * :tabSize=8:indentSize=8:noTabs=false:
  * :folding=explicit:collapseFolds=1:
  *
- * Copyright (C) 2000, 2002 Slava Pestov
+ * Copyright (C) 2000, 2003 Slava Pestov
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -38,7 +38,7 @@ import org.gjt.sp.util.*;
 /**
  * Wraps the VFS browser in a modal dialog.
  * @author Slava Pestov
- * @version $Id: VFSFileChooserDialog.java,v 1.29 2003/04/15 23:25:49 spestov Exp $
+ * @version $Id: VFSFileChooserDialog.java,v 1.30 2003/04/16 23:56:22 spestov Exp $
  */
 public class VFSFileChooserDialog extends EnhancedDialog
 {
@@ -69,6 +69,7 @@ public class VFSFileChooserDialog extends EnhancedDialog
 
 		browser = new VFSBrowser(view,path,mode,multipleSelection,null);
 		browser.addBrowserListener(new BrowserHandler());
+		browser.getBrowserView().getTree().addKeyListener(new KeyHandler());
 		content.add(BorderLayout.CENTER,browser);
 
 		JPanel panel = new JPanel();
@@ -400,6 +401,23 @@ public class VFSFileChooserDialog extends EnhancedDialog
 			else
 				ok();
 		} //}}}
+	} //}}}
+
+	//{{{ KeyHandler class
+	class KeyHandler extends KeyAdapter
+	{
+		public void keyTyped(KeyEvent evt)
+		{
+			switch(evt.getKeyChar())
+			{
+			case '/':
+			case '-':
+			case '~':
+				filenameField.processKeyEvent(evt);
+				filenameField.requestFocus();
+				break;
+			}
+		}
 	} //}}}
 
 	//{{{ WorkThreadListener implementation

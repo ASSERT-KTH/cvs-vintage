@@ -54,7 +54,7 @@ import org.gjt.sp.util.Log;
  *
  * @author Slava Pestov
  * @author John Gellene (API documentation)
- * @version $Id: JEditTextArea.java,v 1.237 2003/04/15 23:25:51 spestov Exp $
+ * @version $Id: JEditTextArea.java,v 1.238 2003/04/16 23:56:23 spestov Exp $
  */
 public class JEditTextArea extends JComponent
 {
@@ -341,6 +341,25 @@ public class JEditTextArea extends JComponent
 	//}}}
 
 	//{{{ Scrolling
+
+	public void scrollTest(boolean paint)
+	{
+		Image im = painter.createImage(painter.getWidth(),painter.getHeight());
+		Graphics gfx = im.getGraphics();
+		gfx.setFont(painter.getFont());
+		gfx.setColor(painter.getForeground());
+		gfx.clipRect(0,0,painter.getWidth(),painter.getHeight());
+		long start = System.currentTimeMillis();
+		for(int i = 0; i < displayManager.getScrollLineCount(); i++)
+		{
+			setFirstLine(i);
+			if(!paint)
+				chunkCache.getLineInfo(visibleLines - 1);
+			else
+				painter.paintComponent(gfx);
+		}
+		System.err.println(System.currentTimeMillis() - start);
+	}
 
 	//{{{ getFirstLine() method
 	/**
@@ -4691,6 +4710,9 @@ loop:			for(int i = lineNo + 1; i < getLineCount(); i++)
 
 		maxHorizontalScrollWidth = 0;
 
+		if(displayManager != null && !bufferChanging)
+			displayManager.updateWrapSettings();
+
 		chunkCache.invalidateAll();
 		gutter.repaint();
 		painter.repaint();
@@ -6035,8 +6057,8 @@ loop:			for(int i = lineNo + 1; i < getLineCount(); i++)
 			{
 				extraEndVirt = (int)((x - dragStartLineWidth)
 					/ charWidth);
-				if(x % charWidth  > charWidth / 2)
-					extraEndVirt++;
+				if((x - getHorizontalOffset()) % charWidth > charWidth / 2)
+						extraEndVirt++;
 			}
 			else
 				extraEndVirt = 0;
@@ -6203,7 +6225,7 @@ loop:			for(int i = lineNo + 1; i < getLineCount(); i++)
 				if(x > dotLineWidth)
 				{
 					extraEndVirt = (int)((x - dotLineWidth) / charWidth);
-					if(x % charWidth > charWidth / 2)
+					if((x - getHorizontalOffset()) % charWidth > charWidth / 2)
 						extraEndVirt++;
 				}
 			}

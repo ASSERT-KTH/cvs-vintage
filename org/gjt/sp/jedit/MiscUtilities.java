@@ -66,7 +66,7 @@ import org.gjt.sp.util.Log;
  *
  * @author Slava Pestov
  * @author John Gellene (API documentation)
- * @version $Id: MiscUtilities.java,v 1.43 2003/04/15 23:25:48 spestov Exp $
+ * @version $Id: MiscUtilities.java,v 1.44 2003/04/16 23:56:21 spestov Exp $
  */
 public class MiscUtilities
 {
@@ -673,7 +673,7 @@ loop:		for(int i = 0; i < str.length(); i++)
 	{
 		StringBuffer buf = new StringBuffer();
 		boolean backslash = false;
-		boolean insideGroup = false;
+		int insideGroup = 0;
 		boolean insideNegativeLookahead = false;
 
 		for(int i = 0; i < glob.length(); i++)
@@ -709,10 +709,10 @@ loop:		for(int i = 0; i < str.length(); i++)
 					insideNegativeLookahead = true;
 				}
 				else
-					insideGroup = true;
+					insideGroup++;
 				break;
 			case ',':
-				if(insideGroup)
+				if(insideGroup != 0)
 				{
 					if(insideNegativeLookahead)
 					{
@@ -730,10 +730,10 @@ loop:		for(int i = 0; i < str.length(); i++)
 					buf.append(").*");
 					insideNegativeLookahead = false;
 				}
-				else if(insideGroup)
+				else if(insideGroup != 0)
 				{
 					buf.append(')');
-					insideGroup = false;
+					insideGroup--;
 				}
 				else
 					buf.append('}');
