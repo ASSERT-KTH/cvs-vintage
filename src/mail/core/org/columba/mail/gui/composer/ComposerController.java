@@ -24,8 +24,10 @@ import java.awt.FocusTraversalPolicy;
 import java.awt.event.ContainerListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+
 import java.nio.charset.Charset;
 import java.nio.charset.UnsupportedCharsetException;
+
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -43,12 +45,12 @@ import org.columba.core.charset.CharsetListener;
 import org.columba.core.charset.CharsetOwnerInterface;
 import org.columba.core.config.ViewItem;
 import org.columba.core.gui.frame.AbstractFrameController;
-import org.columba.core.gui.util.NotifyDialog;
 import org.columba.core.gui.view.AbstractView;
 import org.columba.core.main.MainInterface;
 import org.columba.core.plugin.PluginHandlerNotFoundException;
 import org.columba.core.pluginhandler.ViewPluginHandler;
 import org.columba.core.xml.XmlElement;
+
 import org.columba.mail.gui.composer.action.SaveAsDraftAction;
 import org.columba.mail.gui.composer.html.HtmlEditorController;
 import org.columba.mail.gui.composer.text.TextEditorController;
@@ -144,8 +146,7 @@ public class ComposerController extends AbstractFrameController implements
 			handler = (ViewPluginHandler) MainInterface.pluginManager
 					.getHandler("org.columba.core.view");
 		} catch (PluginHandlerNotFoundException ex) {
-			NotifyDialog d = new NotifyDialog();
-			d.showDialog(ex);
+                        throw new RuntimeException(ex);
 		}
 
 		// get view using the plugin handler found above
