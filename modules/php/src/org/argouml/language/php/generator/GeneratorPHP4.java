@@ -1,4 +1,4 @@
-// $Id: GeneratorPHP4.java,v 1.4 2004/06/04 22:01:30 kscr Exp $
+// $Id: GeneratorPHP4.java,v 1.5 2004/06/05 04:23:16 kscr Exp $
 // Copyright (c) 2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -228,8 +228,31 @@ public class GeneratorPHP4
             }
         }
 
-        sOperation += "function " + NameGenerator.generate(modelElement,
-                iLanguageMajorVersion) + "(";
+        boolean bReturnByReference = false;
+
+        Iterator itTaggedValues = ModelFacade.getTaggedValues(modelElement);
+        if (itTaggedValues != null && itTaggedValues instanceof Iterator) {
+            while (itTaggedValues.hasNext()) {
+                Object objTaggedValue = itTaggedValues.next();
+                if (ModelFacade.getTagOfTag(objTaggedValue).equals("&")) {
+                    if (ModelFacade.getValueOfTag(objTaggedValue)
+                            .equals("true")) {
+                        bReturnByReference = true;
+
+                        break;
+                    }
+                }
+            }
+        }
+
+        String sOperationName = NameGenerator.generate(modelElement,
+                iLanguageMajorVersion);
+
+        if (bReturnByReference) {
+            sOperationName = "&" + sOperationName;
+        }
+
+        sOperation += "function " + sOperationName + "(";
 
         Collection colParameters = ModelFacade.getParameters(modelElement);
         if (colParameters != null) {
