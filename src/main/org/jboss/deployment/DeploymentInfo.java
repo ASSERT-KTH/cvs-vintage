@@ -6,34 +6,35 @@
 */
 package org.jboss.deployment;
 
-import java.net.URL;
-import java.net.URLClassLoader;
+
+
 import java.io.File;
 import java.io.FileInputStream;
+import java.net.URL;
+import java.net.URLClassLoader;
 import java.util.ArrayList;
-import java.util.Set;
-import java.util.HashSet;
 import java.util.Collection;
+import java.util.Date;
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Iterator;
+import java.util.Set;
 import java.util.Vector;
-import java.util.Date;
 import java.util.jar.JarFile;
 import java.util.jar.Manifest;
-
-import org.xml.sax.InputSource;
-import org.xml.sax.SAXException;
-import org.w3c.dom.Document;
-import javax.xml.parsers.DocumentBuilderFactory;
+import javax.management.ObjectName;
 import javax.xml.parsers.DocumentBuilder;
-
-import org.jboss.system.UnifiedClassLoader;
-import org.jboss.system.ServiceLibraries;
+import javax.xml.parsers.DocumentBuilderFactory;
 import org.jboss.logging.Logger;
 import org.jboss.metadata.ApplicationMetaData;
 import org.jboss.metadata.BeanMetaData;
+import org.jboss.system.ServiceLibraries;
+import org.jboss.system.UnifiedClassLoader;
+import org.w3c.dom.Document;
+import org.xml.sax.InputSource;
+import org.xml.sax.SAXException;
 
 /**
 * Service Deployment Info .
@@ -48,7 +49,7 @@ import org.jboss.metadata.BeanMetaData;
 * @author <a href="mailto:daniel.schulze@telkel.com">Daniel Schulze</a>
 * @author <a href="mailto:Christoph.Jung@infor.de">Christoph G. Jung</a>
 * @author <a href="mailto:scott.stark@jboss.org">Scott Stark</a>
-* @version   $Revision: 1.9 $ <p>
+* @version   $Revision: 1.10 $ <p>
 *
 *      <b>20011211 marc fleury:</b>
 *      <ul>
@@ -96,13 +97,13 @@ public class DeploymentInfo
    public ClassLoader localCl;
    
    /** The classpath declared by this xml descriptor, needs <classpath> entry **/
-   public Collection classpath = new ArrayList();
+   final public Collection classpath = new ArrayList();
    
    // The mbeans deployed
-   public List mbeans = new ArrayList();
+   final public List mbeans = new ArrayList();
    
    // Anyone can have subdeployments
-   public Set subDeployments = new HashSet();
+   final public Set subDeployments = new HashSet();
    
    // And the subDeployments have a parent
    public DeploymentInfo parent = null;
@@ -124,6 +125,14 @@ public class DeploymentInfo
    
    public boolean isXML;
    public boolean isDirectory;
+
+   /**
+    * The variable <code>deployedObject</code> can contain the MBean that
+    * is created through the deployment.  for instance, deploying an ejb-jar
+    * results in an EjbModule mbean, which is stored here.
+    *
+    */
+   public ObjectName deployedObject;
    
    public DeploymentInfo(URL url, DeploymentInfo parent)
    throws DeploymentException

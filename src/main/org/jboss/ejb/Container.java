@@ -32,7 +32,10 @@ import javax.management.MBeanInfo;
 import javax.management.MBeanNotificationInfo;
 import javax.management.MBeanOperationInfo;
 import javax.management.MBeanParameterInfo;
+import javax.management.MBeanRegistration;
 import javax.management.MBeanServer;
+import javax.management.MBeanServer;
+import javax.management.ObjectName;
 import javax.management.ObjectName;
 import javax.management.ReflectionException;
 import javax.naming.Context;
@@ -82,7 +85,7 @@ import org.jboss.util.jmx.ObjectNameFactory;
 * @author <a href="mailto:marc.fleury@jboss.org">Marc Fleury</a>
 * @author <a href="mailto:Scott.Stark@jboss.org">Scott Stark</a>.
 * @author <a href="bill@burkecentral.com">Bill Burke</a>
-* @version $Revision: 1.77 $
+* @version $Revision: 1.78 $
 ** <p><b>Revisions:</b>
 *
 * <p><b>2001/07/26 bill burke:</b>
@@ -99,7 +102,7 @@ import org.jboss.util.jmx.ObjectNameFactory;
 *  <li> Use the method mappings for MarshalledInvocation.
 * </ul>
 */
-public abstract class Container implements DynamicMBean
+public abstract class Container implements MBeanRegistration, DynamicMBean
 {
    // Constants -----------------------------------------------------
    
@@ -109,27 +112,27 @@ public abstract class Container implements DynamicMBean
    protected Logger log = Logger.getLogger(this.getClass());
    
    /** This is the application that this container is a part of */
-   protected Application application;
+   protected EjbModule ejbModule;
    
    /**
-   * This is the local classloader of this container. Used for loading
-   * resources that must come from the local jar file for the container.
-   * NOT for loading classes!
-   */
+    * This is the local classloader of this container. Used for loading
+    * resources that must come from the local jar file for the container.
+    * NOT for loading classes!
+    */
    protected ClassLoader localClassLoader;
    
    /**
-   * This is the classloader of this container. All classes and resources that
-   * the bean uses will be loaded from here. By doing this we make the bean
-   * re-deployable
-   */
+    * This is the classloader of this container. All classes and resources that
+    * the bean uses will be loaded from here. By doing this we make the bean
+    * re-deployable
+    */
    protected ClassLoader classLoader;
    
    /**
-   * This is the new metadata. it includes information from both ejb-jar and
-   * jboss.xml the metadata for the application can be accessed trough
-   * metaData.getApplicationMetaData()
-   */
+    * This is the new metadata. it includes information from both ejb-jar and
+    * jboss.xml the metadata for the application can be accessed trough
+    * metaData.getApplicationMetaData()
+    */
    protected BeanMetaData metaData;
    
    /** This is the EnterpriseBean class */
@@ -164,7 +167,7 @@ public abstract class Container implements DynamicMBean
    
    /** ??? */
    protected LocalContainerInvoker localContainerInvoker = 
-   new BaseLocalContainerInvoker();
+      new BaseLocalContainerInvoker();
    
    /** This is a cache for method permissions */
    private HashMap methodPermissionsCache = new HashMap();
@@ -176,13 +179,13 @@ public abstract class Container implements DynamicMBean
    /** ObjectName of the JSR-77 EJB representation **/
    protected String mEJBObjectName;
    
-    /** ObjectName of Container **/
+   /** ObjectName of Container **/
    private ObjectName jmxName;
 
    /** 
-   * The name of the Remote invoker dedicated to this container, 
-   * the type is set through deployment
-   */
+    * The name of the Remote invoker dedicated to this container, 
+    * the type is set through deployment
+    */
    // marcf FIXME: FOR NOW ONLY JRMP (Debugging) but in the future make 
    // configurable from xml
    // FIXME
@@ -200,6 +203,45 @@ public abstract class Container implements DynamicMBean
    private boolean started = false;
    
    // Public --------------------------------------------------------
+
+   // implementation of javax.management.MBeanRegistration interface
+
+   /**
+    *
+    */
+   public void postDeregister()
+   {
+   }
+
+   /**
+    *
+    * @param param1 <description>
+    */
+   public void postRegister(Boolean param1)
+   {
+   }
+
+   /**
+    *
+    * @exception java.lang.Exception <description>
+    */
+   public void preDeregister() throws Exception
+   {
+   }
+
+   /**
+    *
+    * @param param1 <description>
+    * @param param2 <description>
+    * @return <description>
+    * @exception java.lang.Exception <description>
+    */
+   public ObjectName preRegister(MBeanServer server, ObjectName name) throws Exception
+   {
+      this.mbeanServer = server;
+      return name;
+   }
+
    
    public Class getLocalClass() 
    {
@@ -212,22 +254,22 @@ public abstract class Container implements DynamicMBean
    }
    
    /**
-   * Sets a transaction manager for this container.
-   *
-   * @see javax.transaction.TransactionManager
-   *
-   * @param tm
-   */
+    * Sets a transaction manager for this container.
+    *
+    * @see javax.transaction.TransactionManager
+    *
+    * @param tm
+    */
    public void setTransactionManager(TransactionManager tm)
    {
       this.tm = tm;
    }
    
    /**
-   * Returns this container's transaction manager.
-   *
-   * @return    A concrete instance of javax.transaction.TransactionManager
-   */
+    * Returns this container's transaction manager.
+    *
+    * @return    A concrete instance of javax.transaction.TransactionManager
+    */
    public TransactionManager getTransactionManager()
    {
       return tm;
@@ -277,104 +319,100 @@ public abstract class Container implements DynamicMBean
    {
       return securityProxy;
    }
-   void setMBeanServer(MBeanServer mbeanServer)
-   {
-      this.mbeanServer = mbeanServer;
-   }
    
    /**
-   * Sets the application deployment unit for this container. All the bean
-   * containers within the same application unit share the same instance.
-   *
-   * @param   app     application for this container
-   */
-   public void setApplication(Application app)
+    * Sets the application deployment unit for this container. All the bean
+    * containers within the same application unit share the same instance.
+    *
+    * @param   app     application for this container
+    */
+   public void setEjbModule(EjbModule app)
    {
       if (app == null)
-         throw new IllegalArgumentException("Null application");
+         throw new IllegalArgumentException("Null EjbModule");
       
-      application = app;
+      ejbModule = app;
    }
    
    /**
-   * Returns the application for this container.
-   *
-   * @return
-   */
-   public Application getApplication()
+    * Returns the application for this container.
+    *
+    * @return
+    */
+   public EjbModule getEjbModule()
    {
-      return application;
+      return ejbModule;
    }
    
    /**
-   * Sets the local class loader for this container. 
-   * Used for loading resources from the local jar file for this container. 
-   * NOT for loading classes!
-   *
-   * @param   cl
-   */
+    * Sets the local class loader for this container. 
+    * Used for loading resources from the local jar file for this container. 
+    * NOT for loading classes!
+    *
+    * @param   cl
+    */
    public void setLocalClassLoader(ClassLoader cl)
    {
       this.localClassLoader = cl;
    }
    
    /**
-   * Returns the local classloader for this container.
-   *
-   * @return
-   */
+    * Returns the local classloader for this container.
+    *
+    * @return
+    */
    public ClassLoader getLocalClassLoader()
    {
       return localClassLoader;
    }
    
    /**
-   * Sets the class loader for this container. All the classes and resources
-   * used by the bean in this container will use this classloader.
-   *
-   * @param   cl
-   */
+    * Sets the class loader for this container. All the classes and resources
+    * used by the bean in this container will use this classloader.
+    *
+    * @param   cl
+    */
    public void setClassLoader(ClassLoader cl)
    {
       this.classLoader = cl;
    }
    
    /**
-   * Returns the classloader for this container.
-   *
-   * @return
-   */
+    * Returns the classloader for this container.
+    *
+    * @return
+    */
    public ClassLoader getClassLoader()
    {
       return classLoader;
    }
    
    /**
-   * Sets the meta data for this container. The meta data consists of the
-   * properties found in the XML descriptors.
-   *
-   * @param metaData
-   */
+    * Sets the meta data for this container. The meta data consists of the
+    * properties found in the XML descriptors.
+    *
+    * @param metaData
+    */
    public void setBeanMetaData(BeanMetaData metaData)
    {
       this.metaData = metaData;
    }
    
    /**
-   * Returns the metadata of this container.
-   *
-   * @return metaData;
-   */
+    * Returns the metadata of this container.
+    *
+    * @return metaData;
+    */
    public BeanMetaData getBeanMetaData()
    {
       return metaData;
    }
    
    /**
-   * Returns the permissions for a method. (a set of roles)
-   *
-   * @return assemblyDescriptor;
-   */
+    * Returns the permissions for a method. (a set of roles)
+    *
+    * @return assemblyDescriptor;
+    */
    public Set getMethodPermissions( Method m, boolean home )
    {
       Set permissions;
@@ -383,33 +421,33 @@ public abstract class Container implements DynamicMBean
          permissions = (Set) methodPermissionsCache.get( m );
       } else {
          permissions = getBeanMetaData().
-         getMethodPermissions(m.getName(), m.getParameterTypes(), !home);
+            getMethodPermissions(m.getName(), m.getParameterTypes(), !home);
          methodPermissionsCache.put(m, permissions);
       }
       return permissions;
    }
    
    /**
-   * Returns the bean class instance of this container.
-   *
-   * @return    instance of the Enterprise bean class.
-   */
+    * Returns the bean class instance of this container.
+    *
+    * @return    instance of the Enterprise bean class.
+    */
    public Class getBeanClass()
    {
       return beanClass;
    }
    
    /**
-   * Returns a new instance of the bean class or a subclass of the bean class.
-   * This factory style method is speciffically used by a container to supply
-   * an implementation of the abstract accessors in EJB2.0, but could be 
-   * usefull in other situations. This method should ALWAYS be used instead 
-   * of getBeanClass().newInstance();
-   * 
-   * @return    the new instance
-   * 
-   * @see java.lang.Class#newInstance 
-   */
+    * Returns a new instance of the bean class or a subclass of the bean class.
+    * This factory style method is speciffically used by a container to supply
+    * an implementation of the abstract accessors in EJB2.0, but could be 
+    * usefull in other situations. This method should ALWAYS be used instead 
+    * of getBeanClass().newInstance();
+    * 
+    * @return    the new instance
+    * 
+    * @see java.lang.Class#newInstance 
+    */
    public Object createBeanClassInstance() throws Exception {
       return getBeanClass().newInstance();
    }
@@ -430,17 +468,17 @@ public abstract class Container implements DynamicMBean
    }
     
    /**
-   * The EJBDeployer calls this method.  The EJBDeployer has set
-   * all the plugins and interceptors that this bean requires and now proceeds
-   * to initialize the chain.  The method looks for the standard classes in 
-   * the URL, sets up the naming environment of the bean. The concrete 
-   * container classes should override this method to introduce
-   * implementation specific initialization behaviour.
-   *
-   * @throws Exception    if loading the bean class failed
-   *                      (ClassNotFoundException) or setting up "java:"
-   *                      naming environment failed (DeploymentException)
-   */
+    * The EJBDeployer calls this method.  The EJBDeployer has set
+    * all the plugins and interceptors that this bean requires and now proceeds
+    * to initialize the chain.  The method looks for the standard classes in 
+    * the URL, sets up the naming environment of the bean. The concrete 
+    * container classes should override this method to introduce
+    * implementation specific initialization behaviour.
+    *
+    * @throws Exception    if loading the bean class failed
+    *                      (ClassNotFoundException) or setting up "java:"
+    *                      naming environment failed (DeploymentException)
+    */
    public void create() throws Exception
    {
       // Acquire classes from CL
@@ -454,23 +492,23 @@ public abstract class Container implements DynamicMBean
       localContainerInvoker.setContainer( this );
       localContainerInvoker.create();
       if (localHomeInterface != null)
-         application.addLocalHome(this, localContainerInvoker.getEJBLocalHome() );
+         ejbModule.addLocalHome(this, localContainerInvoker.getEJBLocalHome() );
       // Setup "java:comp/env" namespace
       setupEnvironment();
    }
    
    /**
-   * A default implementation of starting the container service.
-   * The container registers it's dynamic MBean interface in the JMX base.
-   * FIXME marcf: give some more thought as to where to start and stop MBean registration.
-   * stop could be a flag in the JMX server that essentially doesn't proxy invocations but the 
-   * MBean would still be registered in the MBeanServer under the right name until undeploy
-   *
-   * The concrete container classes should override this method to introduce
-   * implementation specific start behaviour.
-   *
-   * @throws Exception    An exception that occured during start
-   */
+    * A default implementation of starting the container service.
+    * The container registers it's dynamic MBean interface in the JMX base.
+    * FIXME marcf: give some more thought as to where to start and stop MBean registration.
+    * stop could be a flag in the JMX server that essentially doesn't proxy invocations but the 
+    * MBean would still be registered in the MBeanServer under the right name until undeploy
+    *
+    * The concrete container classes should override this method to introduce
+    * implementation specific start behaviour.
+    *
+    * @throws Exception    An exception that occured during start
+    */
    public void start() throws Exception
    {
       started = true;
@@ -478,10 +516,10 @@ public abstract class Container implements DynamicMBean
    }
    
    /**
-   * A default implementation of stopping the container service (no-op). The
-   * concrete container classes should override this method to introduce
-   * implementation specific stop behaviour.
-   */
+    * A default implementation of stopping the container service (no-op). The
+    * concrete container classes should override this method to introduce
+    * implementation specific stop behaviour.
+    */
    public void stop()
    {
       started = false;
@@ -489,61 +527,61 @@ public abstract class Container implements DynamicMBean
    }
    
    /**
-   * A default implementation of destroying the container service (no-op).
-   * The concrete container classes should override this method to introduce
-   * implementation specific destroy behaviour.
-   */
+    * A default implementation of destroying the container service (no-op).
+    * The concrete container classes should override this method to introduce
+    * implementation specific destroy behaviour.
+    */
    public void destroy()
    {
       localContainerInvoker.destroy();
-      application.removeLocalHome( this );
+      ejbModule.removeLocalHome( this );
    }
    
    /**
-   * This method is called by the ContainerInvoker when a method call comes
-   * in on the Home object.  The Container forwards this call to the
-   * interceptor chain for further processing.
-   *
-   * @param mi   the object holding all info about this invocation
-   * @return     the result of the home invocation
-   * 
-   * @throws Exception
-   */
+    * This method is called by the ContainerInvoker when a method call comes
+    * in on the Home object.  The Container forwards this call to the
+    * interceptor chain for further processing.
+    *
+    * @param mi   the object holding all info about this invocation
+    * @return     the result of the home invocation
+    * 
+    * @throws Exception
+    */
    public abstract Object invokeHome(Invocation mi)
-   throws Exception;
+      throws Exception;
    
    /**
-   * This method is called by the ContainerInvoker when a method call comes
-   * in on an EJBObject.  The Container forwards this call to the interceptor
-   * chain for further processing.
-   *
-   * @param id        the id of the object being invoked. May be null
-   *                  if stateless
-   * @param method    the method being invoked
-   * @param args      the parameters
-   * @return          the result of the invocation
-   * 
-   * @throws Exception
-   */
+    * This method is called by the ContainerInvoker when a method call comes
+    * in on an EJBObject.  The Container forwards this call to the interceptor
+    * chain for further processing.
+    *
+    * @param id        the id of the object being invoked. May be null
+    *                  if stateless
+    * @param method    the method being invoked
+    * @param args      the parameters
+    * @return          the result of the invocation
+    * 
+    * @throws Exception
+    */
    public abstract Object invoke(Invocation mi)
-   throws Exception;
+      throws Exception;
    
    
    // DynamicMBean interface implementation ----------------------------------------------
    
    public Object getAttribute(String attribute)
-   throws AttributeNotFoundException,
-   MBeanException,
-   ReflectionException
+      throws AttributeNotFoundException,
+             MBeanException,
+             ReflectionException
    {
       return null;
    }
    
    public void setAttribute(Attribute attribute)
-   throws AttributeNotFoundException,
-   InvalidAttributeValueException,
-   MBeanException,
-   ReflectionException
+      throws AttributeNotFoundException,
+             InvalidAttributeValueException,
+             MBeanException,
+             ReflectionException
    {
    }
    
@@ -629,7 +667,7 @@ public abstract class Container implements DynamicMBean
                
                value= invoke(mi);
             
-            break;
+               break;
             
             
             case Invocation.LOCAL:
@@ -779,22 +817,22 @@ public abstract class Container implements DynamicMBean
    }
    
    /**
-   * Build the container MBean information on attributes, contstructors,
-   * operations, and notifications. Currently there are no attributes, no
-   * constructors, no notifications, and the following ops:
-   * <ul>
-   * <li>'home' -> invokeHome(Invocation);</li>
-   * <li>'remote' -> invoke(Invocation);</li>
-   * <li>'localHome' -> not implemented;</li>
-   * <li>'local' -> not implemented;</li>
-   * <li>'getHome' -> return EBJHome interface;</li>
-   * <li>'getRemote' -> return EJBObject interface</li>
-   * <li>'create' -> create service lifecycle operation</li>
-   * <li>'start' -> start service lifecycle operation</li>
-   * <li>'stop' -> stop service lifecycle operation</li>
-   * <li>'destroy' -> destroy service lifecycle operation</li>
-   * </ul>
-   */
+    * Build the container MBean information on attributes, contstructors,
+    * operations, and notifications. Currently there are no attributes, no
+    * constructors, no notifications, and the following ops:
+    * <ul>
+    * <li>'home' -> invokeHome(Invocation);</li>
+    * <li>'remote' -> invoke(Invocation);</li>
+    * <li>'localHome' -> not implemented;</li>
+    * <li>'local' -> not implemented;</li>
+    * <li>'getHome' -> return EBJHome interface;</li>
+    * <li>'getRemote' -> return EJBObject interface</li>
+    * <li>'create' -> create service lifecycle operation</li>
+    * <li>'start' -> start service lifecycle operation</li>
+    * <li>'stop' -> stop service lifecycle operation</li>
+    * <li>'destroy' -> destroy service lifecycle operation</li>
+    * </ul>
+    */
    public MBeanInfo getMBeanInfo()
    {
       MBeanParameterInfo[] miInfoParams = new MBeanParameterInfo[] {new MBeanParameterInfo("method", Invocation.class.getName(), "Invocation data")};
@@ -803,29 +841,29 @@ public abstract class Container implements DynamicMBean
       MBeanAttributeInfo[] attrInfo = new MBeanAttributeInfo[] {};
       MBeanOperationInfo[] opInfo = {
          new MBeanOperationInfo("home", "Invoke an EJBHome interface method",
-            miInfoParams,
-            "java.lang.Object", MBeanOperationInfo.ACTION_INFO),
+                                miInfoParams,
+                                "java.lang.Object", MBeanOperationInfo.ACTION_INFO),
          new MBeanOperationInfo("remote", "Invoke an EJBObject interface method",
-            miInfoParams,
-            "java.lang.Object", MBeanOperationInfo.ACTION_INFO),
+                                miInfoParams,
+                                "java.lang.Object", MBeanOperationInfo.ACTION_INFO),
          new MBeanOperationInfo("getHome", "Get the EJBHome interface class",
-            noParams,
-            "java.lang.Class", MBeanOperationInfo.INFO),
+                                noParams,
+                                "java.lang.Class", MBeanOperationInfo.INFO),
          new MBeanOperationInfo("getRemote", "Get the EJBObject interface class",
-            noParams,
-            "java.lang.Class", MBeanOperationInfo.INFO),
+                                noParams,
+                                "java.lang.Class", MBeanOperationInfo.INFO),
          new MBeanOperationInfo("create", "create service lifecycle operation",
-            noParams,
-            "void", MBeanOperationInfo.ACTION),
+                                noParams,
+                                "void", MBeanOperationInfo.ACTION),
          new MBeanOperationInfo("start", "start service lifecycle operation",
-            noParams,
-            "void", MBeanOperationInfo.ACTION),
+                                noParams,
+                                "void", MBeanOperationInfo.ACTION),
          new MBeanOperationInfo("stop", "stop service lifecycle operation",
-            noParams,
-            "void", MBeanOperationInfo.ACTION),
+                                noParams,
+                                "void", MBeanOperationInfo.ACTION),
          new MBeanOperationInfo("destroy", "destroy service lifecycle operation",
-            noParams,
-            "void", MBeanOperationInfo.ACTION)
+                                noParams,
+                                "void", MBeanOperationInfo.ACTION)
       };
       MBeanNotificationInfo[] notifyInfo = null;
       return new MBeanInfo(getClass().getName(), 
@@ -847,10 +885,10 @@ public abstract class Container implements DynamicMBean
    // Private -------------------------------------------------------
    
    /**
-   * This method sets up the naming environment of the bean.
-   * We create the java:comp/env namespace with properties, EJB-References,
-   * and DataSource ressources.
-   */
+    * This method sets up the naming environment of the bean.
+    * We create the java:comp/env namespace with properties, EJB-References,
+    * and DataSource ressources.
+    */
    private void setupEnvironment()
       throws DeploymentException
    {
@@ -901,7 +939,7 @@ public abstract class Container implements DynamicMBean
                   // Internal link
                   if (debug)
                      log.debug("Binding "+ref.getName()+" to internal JNDI source: "+ref.getLink());
-                  Container refContainer = getApplication().getContainer(ref.getLink());
+                  Container refContainer = ejbModule.getContainer(ref.getLink());
                   if (refContainer == null)
                      throw new DeploymentException ("Bean "+ref.getLink()+" not found within this application.");
                   Util.bind(envCtx, ref.getName(), new LinkRef(refContainer.getBeanMetaData().getJndiName()));
@@ -938,10 +976,10 @@ public abstract class Container implements DynamicMBean
                {
                   // Internal link
                   log.debug("Binding "+refName+" to bean source: "+ref.getLink());
-                  Container refContainer = getApplication().getContainer(ref.getLink());
+                  Container refContainer = ejbModule.getContainer(ref.getLink());
                   if (refContainer == null)
                   {
-                      throw new DeploymentException ("Bean "+ref.getLink()+" not found within this application.");
+                     throw new DeploymentException ("Bean "+ref.getLink()+" not found within this application.");
                   }
 
                   Util.bind(envCtx, ref.getName(), new LinkRef(refContainer.getBeanMetaData().getLocalJndiName()));
@@ -967,7 +1005,7 @@ public abstract class Container implements DynamicMBean
                String resourceName = ref.getResourceName();
                String finalName = application.getResourceByName(resourceName);
                /* If there was no resource-manager specified then an immeadiate
-               jndi-name or res-url name should have been given */
+                  jndi-name or res-url name should have been given */
                if (finalName == null)
                   finalName = ref.getJndiName();
                
@@ -1040,8 +1078,8 @@ public abstract class Container implements DynamicMBean
          }
          
          /* Create a java:comp/env/security/security-domain link to the container
-         or application security-domain if one exists so that access to the
-         security manager can be made without knowing the global jndi name.
+            or application security-domain if one exists so that access to the
+            security manager can be made without knowing the global jndi name.
          */
          String securityDomain = metaData.getContainerConfiguration().getSecurityDomain();
          if( securityDomain == null )

@@ -26,7 +26,7 @@ import org.jboss.system.ServiceMBean;
  * @author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
  * @author <a href="mailto:juha.lindfors@jboss.org">Juha Lindfors</a>
  * @author <a href="mailto:marc.fleury@jboss.org">Marc Fleury</a>
- * @version $Revision: 1.4 $
+ * @version $Revision: 1.5 $
  * 
  * <p><b>20011227 marc fleury:</b>
  * <ul>
@@ -100,6 +100,8 @@ public interface EJBDeployerMBean
     */
    void setBeanCacheJMSMonitoringEnabled(boolean enable);
    
+   boolean isBeanCacheJMSMonitoringEnabled();
+
    /**
     * Get the flag indicating that ejb-jar.dtd, jboss.dtd &
     * jboss-web.dtd conforming documents should be validated

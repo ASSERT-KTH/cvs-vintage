@@ -146,7 +146,7 @@ in the catalina module.
 @see org.jboss.security.SecurityAssociation;
 
 @author  Scott.Stark@jboss.org
-@version $Revision: 1.32 $
+@version $Revision: 1.33 $
 */
 public abstract class AbstractWebContainer 
    extends ServiceMBeanSupport 
@@ -337,6 +337,9 @@ public abstract class AbstractWebContainer
       }
    }
 
+   public void create(DeploymentInfo di) throws DeploymentException
+   {
+   }
    /** A template pattern implementation of the deploy() method. This method
    calls the {@link #performDeploy(String, String) performDeploy()} method to
    perform the container specific deployment steps and registers the
@@ -363,7 +366,7 @@ public abstract class AbstractWebContainer
    if war was is not being deployed as part of an enterprise application.
    @param warUrl, The string for the URL of the web application war.
    */
-   public synchronized void deploy(DeploymentInfo di) throws DeploymentException
+   public synchronized void start(DeploymentInfo di) throws DeploymentException
    {
       Thread thread = Thread.currentThread();
       ClassLoader appClassLoader = thread.getContextClassLoader();
@@ -427,14 +430,10 @@ public abstract class AbstractWebContainer
    perform the container specific undeployment steps and unregisters the
    the warUrl from the deployment map.
    */
-   public void undeploy(DeploymentInfo sdi) 
+   public synchronized void stop(DeploymentInfo sdi) 
       throws DeploymentException 
    {
-      undeploy(sdi.localUrl.toString());
-   }
-   
-   public synchronized void undeploy(String warUrl) throws DeploymentException
-   {
+      String warUrl = sdi.localUrl.toString();
       try
       {
          performUndeploy(warUrl);
@@ -449,6 +448,11 @@ public abstract class AbstractWebContainer
       {
          throw new DeploymentException("Error during deploy", e);
       }
+   }
+
+   public void destroy(DeploymentInfo sdi) 
+      throws DeploymentException 
+   {
    }
    /** Called as part of the undeploy() method template to ask the
    subclass for perform the web container specific undeployment steps.

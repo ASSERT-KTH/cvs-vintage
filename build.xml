@@ -12,7 +12,7 @@
 <!--                                                                        -->
 <!-- ====================================================================== -->
 
-<!-- $Id: build.xml,v 1.69 2002/02/21 23:33:19 chirino Exp $ -->
+<!-- $Id: build.xml,v 1.70 2002/02/22 04:24:54 d_jencks Exp $ -->
 
 <project default="main" name="JBoss/Server">
 
@@ -235,6 +235,7 @@
     <property name="build.bin" value="${module.output}/bin"/>
     <property name="build.docs" value="${module.output}/docs"/>
     <property name="build.beans" value="${module.output}/beans"/>
+    <property name="build.gen-src" value="${module.output}/gen-src"/>
     <property name="build.resources" value="${module.output}/resources"/>
     <property name="build.reports" value="${module.output}/reports"/>
 
@@ -303,12 +304,30 @@
     -->
   <target name="compile" 
 	  depends="compile-bean-sources, 
+                   compile-mbean-sources,
                    compile-classes, 
                    compile-rmi, 
                    compile-etc, 
                    compile-resources, 
                    compile-bin"
 	  description="Compile all source files."/>
+
+  <!-- Compile mbeans with XDoclet -->
+  <target name="compile-mbean-sources" depends="init">
+    <taskdef name="xdoclet" classname="xdoclet.jmx.JMXDocletTask"/>
+
+    <mkdir dir="${build.gen-src}"/>
+    <xdoclet sourcepath="${source.java}"
+	     destdir="${build.gen-src}"
+	     classpath="${xdoclet.task.classpath}"
+	     excludedtags="@version,@author">
+      <fileset dir="${source.java}">
+        <include name="org/jboss/ejb/EjbModule.java"/>
+      </fileset>
+      <mbeaninterface/>
+
+    </xdoclet>
+  </target>
 
   <!-- Compile EJB beans with XDoclet -->
   <target name="compile-bean-sources" depends="init">
@@ -368,6 +387,7 @@
 
        <src path="${source.java}"/>
        <src path="${build.beans}"/>
+       <src path="${build.gen-src}"/>
 
        <include name="${javac.includes}"/>
        <exclude name="${javac.excludes}"/>

@@ -46,7 +46,7 @@ import org.jboss.util.jmx.MBeanProxy;
  *
  * @author <a href="mailto:marc.fleury@jboss.org">Marc Fleury</a>
  * @author <a href="mailto:scott.stark@jboss.org">Scott Stark</a>
- * @version $Revision: 1.20 $
+ * @version $Revision: 1.21 $
  */
 public class MainDeployer
    extends ServiceMBeanSupport
@@ -169,6 +169,11 @@ public class MainDeployer
    public void removeDeployer(DeployerMBean deployer) 
    {
       deployers.remove(deployer); 
+   }
+
+   public Collection listDeployers()
+   {
+      return new ArrayList(deployers);
    }
    
    
@@ -323,7 +328,12 @@ public class MainDeployer
    public void undeploy(DeploymentInfo di)
    {
       log.info("Undeploying "+di.url);
+      stop(di);
+      destroy(di);
+   }
 
+   private void stop(DeploymentInfo di)
+   {
       // First remove all sub-deployments
       for (Iterator subs = di.subDeployments.iterator(); subs.hasNext();)
       {
@@ -333,7 +343,7 @@ public class MainDeployer
          {
             log.debug("UNDEPLOYMENT OF SUB "+sub.url);
          }
-         undeploy(sub);      
+         stop(sub);      
       }
 
       // Then remove the deployment itself
@@ -342,7 +352,40 @@ public class MainDeployer
          // Tell the respective deployer to undeploy this one
          if (di.deployer != null)
          {
-            di.deployer.undeploy(di); 
+            di.deployer.stop(di); 
+         }
+      }
+      catch (Exception e)
+      {
+         log.error("Undeployment failed: " + di.url, e); 
+      }
+      catch (Throwable t)
+      {
+         log.error("Undeployment failed: " + di.url, t); 
+      }
+   }
+
+   private void destroy(DeploymentInfo di)
+   {
+      // First remove all sub-deployments
+      for (Iterator subs = di.subDeployments.iterator(); subs.hasNext();)
+      {
+         DeploymentInfo sub = (DeploymentInfo) subs.next();
+         
+         if (log.isDebugEnabled())
+         {
+            log.debug("UNDEPLOYMENT OF SUB "+sub.url);
+         }
+         destroy(sub);      
+      }
+
+      // Then remove the deployment itself
+      try 
+      { 
+         // Tell the respective deployer to undeploy this one
+         if (di.deployer != null)
+         {
+            di.deployer.destroy(di); 
          }
       }
       catch (Exception e)
@@ -422,19 +465,32 @@ public class MainDeployer
    public void deploy(DeploymentInfo deployment) 
       throws DeploymentException
    {      
-      boolean debug = log.isDebugEnabled();
-
-      try
+      // If we are already deployed return
+      if (isDeployed(deployment.url))
       {
-         // If we are already deployed return
-         if (isDeployed(deployment.url))
-         {
-            return;
-         }
+         return;
+      }
 
-         if (log.isInfoEnabled());
-           log.info("Deploying: " + deployment.url.toString());
+      log.info("Deploying: " + deployment.url.toString());
+      init(deployment);
+      create(deployment);
+      start(deployment);
+   }
+   
 
+   /**
+    * The <code>init</code> method is to copy the code if necessary, 
+    * set up classloaders, and identify the deployer for the package.
+    *
+    * @param deployment a <code>DeploymentInfo</code> value
+    * @exception DeploymentException if an error occurs
+    */
+   private void init(DeploymentInfo deployment) throws DeploymentException
+   {
+      log.debug("init on deployment " + deployment.url);
+      try 
+      {
+      
          // Create a local copy of that File, the sdi keeps track of the copy directory
          makeLocalCopy(deployment);
          
@@ -448,26 +504,63 @@ public class MainDeployer
          {
             deployment.deployer.init(deployment); 
          }
+         else
+         {
+            log.info("No deployer for package: " + deployment.url);
+         } // end of else
+         
 
          // create subdeployments as needed
-         deploySubPackages(deployment);
-         
+         unpackSubPackages(deployment);
+         log.debug("found " + deployment.subDeployments.size() + " subpackages of " + deployment.url);
+         for (Iterator lt = sortDeployments(deployment.subDeployments).listIterator(); lt.hasNext();) 
+         { 
+            init((DeploymentInfo) lt.next());
+         }
+
+      }
+      catch (Exception e)
+      {
+         throw new DeploymentException("exception in init of " + deployment.url, e);
+      } // end of try-catch
+   }
+
+   /**
+    * The <code>create</code> method should set up all information not 
+    * requiring other components.  for instance, the ejb Container is created,
+    * and the proxy bound into jndi.
+    *
+    * @param deployment a <code>DeploymentInfo</code> value
+    * @exception DeploymentException if an error occurs
+    */
+   private void create(DeploymentInfo deployment) throws DeploymentException
+   {
+      log.debug("create on deployment " + deployment.url);
+      try 
+      {
+         for (Iterator lt = sortDeployments(deployment.subDeployments).listIterator(); lt.hasNext();) 
+         { 
+            create((DeploymentInfo) lt.next());
+         }
+
          // Deploy this SDI, if it is a deployable type
          if (deployment.deployer != null)
          {
-            deployment.deployer.deploy(deployment);
+            deployment.deployer.create(deployment);
          }
 
-         deployment.status="Deployed";
+         deployment.status="Created";
 
-         if (debug)
+         if (log.isDebugEnabled())
+         {
             log.debug("Done deploying " + deployment.shortName);
+         }
       }  
       catch (Throwable t) 
       { 
-         log.error("could not deploy :" + deployment.url, t);
+         log.error("could not create deployment :" + deployment.url, t);
          deployment.status = "Deployment FAILED reason: " + t.getMessage();         
-         throw new DeploymentException("Could not deploy: " + deployment.url, t);
+         throw new DeploymentException("Could not create deployment: " + deployment.url, t);
       }
       finally 
       {
@@ -483,13 +576,50 @@ public class MainDeployer
             if (!deployment.url.toString().startsWith(tempDirString)) 
             {
                deploymentsList.add(deployment);
-               if (debug)
-               {
-                  log.debug("Watching new file: " + deployment.url);  
-               }
+               log.debug("Watching new file: " + deployment.url);  
             }
          }
       }
+   }
+
+   /**
+    * The <code>start</code> method sets up relationships between components.
+    * for instance, ejb links are set up here.
+    *
+    * @param deployment a <code>DeploymentInfo</code> value
+    * @exception DeploymentException if an error occurs
+    */
+   private void start(DeploymentInfo deployment) throws DeploymentException
+   {
+      log.debug("start on deployment " + deployment.url);
+      try 
+      {
+         for (Iterator lt = sortDeployments(deployment.subDeployments).listIterator(); lt.hasNext();) 
+         { 
+            start((DeploymentInfo) lt.next());
+         }
+
+
+         // Deploy this SDI, if it is a deployable type
+         if (deployment.deployer != null)
+         {
+            deployment.deployer.start(deployment);
+         }
+
+         deployment.status="Deployed";
+
+         if (log.isDebugEnabled())
+         {
+            log.debug("Done deploying " + deployment.shortName);
+         }
+      }  
+      catch (Throwable t) 
+      { 
+         log.error("could not start deployment :" + deployment.url, t);
+         deployment.status = "Deployment FAILED reason: " + t.getMessage();         
+         throw new DeploymentException("Could not create deployment: " + deployment.url, t);
+      }
+
    }
 
 
@@ -683,7 +813,7 @@ public class MainDeployer
     * In case of identifiable sub-deployment we recursively call the deploy method 
     * on the deployer
     */
-   protected void deploySubPackages(DeploymentInfo di)
+   protected void unpackSubPackages(DeploymentInfo di)
       throws DeploymentException
    {
       // If XML only no subdeployment to speak of. We also do not
@@ -700,7 +830,6 @@ public class MainDeployer
       JarFile jarFile =null;
       
       // Then the packages inside the package being deployed
-      HashSet subDeployments = new HashSet();
       
       // marcf FIXME FIXME FIXME add support for directories not just jar files
       
@@ -764,7 +893,7 @@ public class MainDeployer
                DeploymentInfo sub = new DeploymentInfo(subURL, di);
                
                // And deploy it, this call is recursive
-               subDeployments.add(sub);
+               di.subDeployments.add(sub);
             }
             catch (Exception ex) 
             { 
@@ -784,20 +913,8 @@ public class MainDeployer
          // We should encapsulate "opening and closing of the jarFile" in the DeploymentInfo
          // Here we let it be open and cached
       }
-      
-      // Order the deployments
-      for (Iterator lt = sortDeployments(subDeployments).listIterator(); lt.hasNext();) 
-      { 
-         try
-         { 
-            deploy((DeploymentInfo) lt.next());
-         }
-         catch (DeploymentException e)
-         {
-            di.subDeployments.remove(di);
-         }
-      }
    }
+
    
    public void parseManifestLibraries(DeploymentInfo sdi) throws DeploymentException
    {
@@ -969,11 +1086,12 @@ public class MainDeployer
    
    public ArrayList sortDeployments(Set urls)
    {
+      //sort a copy, so we don't kill the original!
       ArrayList list = new ArrayList(urls.size());
-      
+      Set copy = new HashSet(urls);
       for (int i = 0 ; i < order.length ; i++)
       {
-         for (Iterator it = urls.iterator(); it.hasNext();) 
+         for (Iterator it = copy.iterator(); it.hasNext();) 
          {
             DeploymentInfo di = (DeploymentInfo) it.next();
             
@@ -985,7 +1103,7 @@ public class MainDeployer
       }
       
       // Unknown types deployed at the end
-      list.addAll(urls);
+      list.addAll(copy);
       if (log.isTraceEnabled()) 
       {
          log.trace("about to do something with: " + list);
@@ -1022,3 +1140,4 @@ public class MainDeployer
    
    private synchronized int getNextID() { return id++;}
 }
+

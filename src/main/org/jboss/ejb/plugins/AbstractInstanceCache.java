@@ -61,7 +61,7 @@ import org.jboss.util.WorkerQueue;
  * @author <a href="bill@burkecentral.com">Bill Burke</a>
  * @author <a href="marc.fleury@jboss.org">Marc Fleury</a>
  *
- * @version $Revision: 1.27 $
+ * @version $Revision: 1.28 $
  *
  *   <p><b>Revisions:</b>
  *
@@ -176,7 +176,7 @@ public abstract class AbstractInstanceCache
       try
       {
          message = m_jmsSession.createMessage();
-         message.setStringProperty(APPLICATION, getContainer().getApplication().getName());
+         message.setStringProperty(APPLICATION, getContainer().getEjbModule().getName());
          message.setStringProperty(BEAN, getContainer().getBeanMetaData().getEjbName());
          if (id != null)
          {

@@ -146,7 +146,7 @@ public class BaseLocalContainerInvoker implements LocalContainerInvoker
 
       // setup local home object factory, which is used for non-serializable objects such as local home
       // create link from unique name to application and container
-      LocalHomeObjectFactory.rebind(jndiName, container.getApplication(), container);
+      LocalHomeObjectFactory.rebind(jndiName, container.getEjbModule(), container);
 
       // address used to lookup referance in LocalHomeObjectFactory
       StringRefAddr refAddr = new StringRefAddr("nns", jndiName);

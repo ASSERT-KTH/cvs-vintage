@@ -12,7 +12,7 @@ import java.util.Set;
 import javax.ejb.EJBLocalObject;
 import javax.ejb.EJBObject;
 import javax.ejb.EntityBean;
-import org.jboss.ejb.Application;
+import org.jboss.ejb.EjbModule;
 import org.jboss.ejb.EntityContainer;
 import org.jboss.ejb.plugins.CMPPersistenceManager;
 import org.jboss.ejb.plugins.cmp.ejbql.DeepCloneable;
@@ -37,7 +37,7 @@ public class SQLTarget implements DeepCloneable {
    private final Method method;
    private final JDBCTypeFactory typeFactory;
    private final IdentifierManager idManager;
-   private final Application application;
+   private final EjbModule ejbModule;
    private final Map managerByAbstractSchemaName = new Hashtable();
    private final List inputParameters = new ArrayList();
    private final JDBCReadAheadMetaData readAhead;
@@ -51,24 +51,24 @@ public class SQLTarget implements DeepCloneable {
    private String sql;
    
    /**
-    * Constructs an a sql target for an EJB-QL query over the specified application.
-    * @param application the application over which this query is defined
+    * Constructs an a sql target for an EJB-QL query over the specified ejbModule.
+    * @param ejbModule the ejbModule over which this query is defined
     */
    public SQLTarget(Method method, 
          JDBCTypeFactory typeFactory,
-         Application application,
+         EjbModule ejbModule,
          JDBCReadAheadMetaData readAhead) {
 
       this.method = method;
       this.typeFactory = typeFactory;
-      this.application = application;
+      this.ejbModule = ejbModule;
       this.readAhead = readAhead;
 
       if(method.getReturnType().equals(Set.class)) {
          isSelectDistinct = true;
       }
       
-      for(Iterator i = application.getContainers().iterator(); i.hasNext(); ) {
+      for(Iterator i = ejbModule.getContainers().iterator(); i.hasNext(); ) {
          Object o = i.next();
          if(o instanceof EntityContainer) {
             EntityContainer container = (EntityContainer)o;
@@ -94,7 +94,7 @@ public class SQLTarget implements DeepCloneable {
    public SQLTarget(SQLTarget target) {
       method = target.method;
       typeFactory = target.typeFactory;
-      application = target.application;
+      ejbModule = target.ejbModule;
       readAhead = target.readAhead;
       idManager = new IdentifierManager(target.idManager);
       managerByAbstractSchemaName.putAll(target.managerByAbstractSchemaName);

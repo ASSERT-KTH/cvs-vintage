@@ -8,7 +8,7 @@ package org.jboss.ejb.plugins;
 
 import java.rmi.RemoteException;
 import java.rmi.ServerException;
-import java.util.Stack;
+import java.util.LinkedList;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.HashMap;
@@ -40,7 +40,7 @@ import org.w3c.dom.Element;
  *  @author <a href="mailto:andreas.schaefer@madplanet.com">Andreas Schaefer</a>
  *  @author <a href="mailto:sacha.labourey@cogito-info.ch">Sacha Labourey</a>
  *
- *  @version $Revision: 1.22 $
+ *  @version $Revision: 1.23 $
  *
  *  <p><b>Revisions:</b>
  *  <p><b>20010704 marcf:</b>
@@ -72,7 +72,7 @@ implements InstancePool, XmlLoadable
 
    protected Container container;
 
-   protected Stack pool = new Stack();
+   protected LinkedList pool = new LinkedList();
 
    /** The maximum number of instances allowed in the pool */
    protected int maxSize = 30;
@@ -160,7 +160,10 @@ implements InstancePool, XmlLoadable
       EnterpriseContext ctx = create(container.createBeanClassInstance());
       if( log.isTraceEnabled() )
          log.trace("Add instance "+this+"#"+ctx);
-      this.pool.push(ctx);
+      synchronized (pool)
+      {
+         pool.addFirst(ctx);
+      }
    }
 
    /**
@@ -170,21 +173,24 @@ implements InstancePool, XmlLoadable
     * @return     Context /w instance
     * @exception   RemoteException
     */
-   public synchronized EnterpriseContext get()
+   public EnterpriseContext get()
    throws Exception
    {
       if( log.isTraceEnabled() )
-         log.trace("Get instance "+this+"#"+pool.empty()+"#"+getContainer().getBeanClass());
+         log.trace("Get instance "+this+"#"+pool.isEmpty()+"#"+getContainer().getBeanClass());
 
       EnterpriseContext ctx = null;
-
-      if (!pool.empty())
+      synchronized (pool)
       {
-         mReadyBean.remove();
-         ctx = (EnterpriseContext) pool.pop();
+         if (!pool.isEmpty())
+         {
+            mReadyBean.remove();
+            return (EnterpriseContext) pool.removeFirst();
+         }
       }
+      //pool is empty
       // The Pool feeder should avoid this
-      else
+      
       {
          if (useFeeder && poolFeeder.isStarted() && log.isDebugEnabled())
          {
@@ -193,9 +199,14 @@ implements InstancePool, XmlLoadable
          }
          try
          {
-             if (useFeeder && ! poolFeeder.isStarted())
-                poolFeeder.start();
-             ctx = create(container.createBeanClassInstance());
+            synchronized (this)
+            {
+               if (useFeeder && ! poolFeeder.isStarted())
+               {
+                  poolFeeder.start();
+               }
+            }
+            return create(container.createBeanClassInstance());
          } catch (InstantiationException e)
          {
             throw new ServerException("Could not instantiate bean", e);
@@ -204,8 +215,6 @@ implements InstancePool, XmlLoadable
             throw new ServerException("Could not instantiate bean", e);
          }
       }
-
-      return ctx;
    }
 
    /**
@@ -217,7 +226,7 @@ implements InstancePool, XmlLoadable
     *
     * @param   ctx
     */
-   public synchronized void free(EnterpriseContext ctx)
+   public void free(EnterpriseContext ctx)
    {
       if( log.isTraceEnabled() )
       {
@@ -232,15 +241,16 @@ implements InstancePool, XmlLoadable
       // If (!reclaim), we do not reuse but create a brand new instance simplifies the design
       try {
          mReadyBean.add();
-         if( this.reclaim && pool.size() < maxSize )
+         if (this.reclaim)
          {
             // Add the unused context back into the pool
-            try
+            synchronized (pool)
             {
-               pool.push(ctx);
-            }
-            catch (Exception ignored)
-            {
+               if (pool.size() < maxSize) 
+               {
+                  pool.addFirst(ctx);
+                  return;
+               } // end of if ()
             }
          }
          else
@@ -271,7 +281,10 @@ implements InstancePool, XmlLoadable
 
    public int getCurrentSize()
    {
-      return this.pool.size();
+      synchronized (pool)
+      {
+         return this.pool.size();
+      }
    }
 
    // Z implementation ----------------------------------------------
@@ -342,8 +355,8 @@ implements InstancePool, XmlLoadable
     */
    private void freeAll()
    {
-      Iterator i = this.pool.iterator();
-      while (i.hasNext())
+      LinkedList clone = (LinkedList)pool.clone();
+      for (Iterator i = clone.iterator(); i.hasNext(); )
       {
          EnterpriseContext ec = (EnterpriseContext)i.next();
          // Clear TX so that still TX entity pools get killed as well

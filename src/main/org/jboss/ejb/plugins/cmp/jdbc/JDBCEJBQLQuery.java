@@ -21,7 +21,7 @@ import org.jboss.ejb.plugins.cmp.jdbc.metadata.JDBCQueryMetaData;
  * This class generates a query from EJB-QL.
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
- * @version $Revision: 1.4 $
+ * @version $Revision: 1.5 $
  */
 public class JDBCEJBQLQuery extends JDBCAbstractQueryCommand {
 
@@ -42,7 +42,7 @@ public class JDBCEJBQLQuery extends JDBCAbstractQueryCommand {
       a.setTarget(new SQLTarget(
             q.getMethod(),
             manager.getJDBCTypeFactory(),
-            manager.getContainer().getApplication(),
+            manager.getContainer().getEjbModule(),
             q.getReadAhead()));
       
       // match the query

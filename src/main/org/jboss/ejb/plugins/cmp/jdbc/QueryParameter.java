@@ -10,7 +10,7 @@ import javax.ejb.EJBException;
 import javax.ejb.EJBLocalObject;
 import javax.ejb.EJBObject;
 
-import org.jboss.ejb.Application;
+import org.jboss.ejb.EjbModule;
 import org.jboss.ejb.EntityContainer;
 import org.jboss.ejb.plugins.CMPPersistenceManager;
 import org.jboss.ejb.plugins.cmp.jdbc.bridge.JDBCCMPFieldBridge;
@@ -293,7 +293,7 @@ public class QueryParameter {
          JDBCEntityMetaData entMD = appMD.getBeanByInterface(intf);
 
          // get this application's object
-         Application app = manager.getContainer().getApplication();
+         EjbModule app = manager.getContainer().getEjbModule();
 
          // get the entity container with the name from 
          // the found entity metadata

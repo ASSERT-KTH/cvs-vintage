@@ -49,7 +49,7 @@ import org.jboss.management.j2ee.J2EEApplication;
 /**
 *
 * @author <a href="mailto:marc.fleury@jboss.org">Marc Fleury</a>
-* @version $Revision: 1.6 $
+* @version $Revision: 1.7 $
 */
 public class EARDeployer
 extends ServiceMBeanSupport
@@ -127,7 +127,8 @@ implements EARDeployerMBean
       }
       catch (Exception e)
       {
-         throw new DeploymentException("Error in accessing application metadata: "+e.getMessage());
+         log.error("Error in init step of ear deployment", e);
+         throw new DeploymentException("Error in accessing application metadata: ", e);
       }
       
       // Create the appropriate JSR-77 instance
@@ -142,25 +143,42 @@ implements EARDeployerMBean
    }
    
    
-   public void deploy(DeploymentInfo di)
-   throws DeploymentException
+   public void create(DeploymentInfo di)
+      throws DeploymentException
    {
       // now try to deploy
-      if (log.isInfoEnabled())
-        log.info("Deploying J2EE application: " + di.url);
+      log.info("Deploying J2EE application, create step: " + di.url);
+      // Create the appropriate JSR-77 instance
+//      /*  
+      ObjectName lApplication = J2EEApplication.create(
+         server,
+         di.shortName,
+         di.url
+         // di.getApplicationDeploymentDescriptor()
+      );
+//      */
    }
    
-   
-   /** Undeploys the given URL (if it is deployed).
-   *   Actually only the file name is of interest, so it dont has to be
-   *   an URL to be undeployed, the file name is ok as well.
-   *   @param _url the url to to undeploy
-   *   @throws MalformedURLException in case of a malformed url
-   *   @throws J2eeDeploymentException if something went wrong (but should have removed all files)
-   *   @throws IOException if file removement fails
-   */
-   public void undeploy(DeploymentInfo di) throws DeploymentException
+   public void start(DeploymentInfo di)
+      throws DeploymentException
    {
+      log.info("Deploying J2EE application, start step, a no-op: " + di.url);
+   }
+   
+   public void stop(DeploymentInfo di) throws DeploymentException
+   {
+      log.info("Undeploying J2EE application, stop step, a no-op: " + di.url);
+   }
+   
+   /**
+    * Describe <code>destroy</code> method here.
+    *
+    * @param di a <code>DeploymentInfo</code> value
+    * @exception DeploymentException if an error occurs
+    */
+   public void destroy(DeploymentInfo di) throws DeploymentException
+   {
+      log.info("Undeploying J2EE application, destroy step: " + di.url);
 //      /*
       // Destroy the appropriate JSR-77 instance
       J2EEApplication.destroy(

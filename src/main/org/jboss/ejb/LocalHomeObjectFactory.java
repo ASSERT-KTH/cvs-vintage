@@ -22,12 +22,12 @@ import javax.naming.spi.ObjectFactory;
  *
  * @author <a href="mailto:Scott.Stark@jboss.org">Scott Stark</a>.
  * @author <a href="mailto:docodan@mvcsoft.com">Daniel OConnor</a>
- * @version $Revision: 1.6 $
+ * @version $Revision: 1.7 $
  */
 public class LocalHomeObjectFactory
    implements ObjectFactory
 {
-   private static Map applicationMap =
+   private static Map ejbModuleMap =
       Collections.synchronizedMap(new HashMap());
    
    private static Map containerMap =
@@ -43,10 +43,10 @@ public class LocalHomeObjectFactory
     * @param target    the non-Serializable object to bind.
     */
    public static synchronized void rebind(String key,
-                                          Application application,
+                                          EjbModule ejbModule,
                                           Container container)
    {
-      applicationMap.put(key, application);
+      ejbModuleMap.put(key, ejbModule);
       containerMap.put(key, container); 
    }
    
@@ -65,7 +65,7 @@ public class LocalHomeObjectFactory
     */
    public static void unbind(String key) throws NameNotFoundException
    {
-      if( applicationMap.remove(key) == null )
+      if( ejbModuleMap.remove(key) == null )
          throw new NameNotFoundException
             (key+" was not found in the NonSerializableFactory map");
       containerMap.remove(key);
@@ -78,7 +78,7 @@ public class LocalHomeObjectFactory
     */
    public static Object lookup(String key)
    {
-      Application app = (Application) applicationMap.get(key);
+      EjbModule app = (EjbModule) ejbModuleMap.get(key);
       Container container = (Container) containerMap.get(key);
       return app.getLocalHome( container );
    }

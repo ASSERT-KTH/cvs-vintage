@@ -31,7 +31,7 @@ import org.jboss.ejb.plugins.cmp.jdbc.metadata.JDBCReadAheadMetaData;
  * @author <a href="mailto:justin@j-m-f.demon.co.uk">Justin Forder</a>
  * @author <a href="mailto:michel.anke@wolmail.nl">Michel de Groot</a>
  * @author <a href="danch@nvisia.com">danch (Dan Christopherson</a>
- * @version $Revision: 1.3 $
+ * @version $Revision: 1.4 $
  */
 public class JDBCDeclaredSQLQuery extends JDBCAbstractQueryCommand {
    
@@ -76,7 +76,7 @@ public class JDBCDeclaredSQLQuery extends JDBCAbstractQueryCommand {
          return;
       }
 
-      Container c = manager.getContainer().getApplication().getContainer(
+      Container c = manager.getContainer().getEjbModule().getContainer(
             metadata.getEJBName());
 
       if( !(c instanceof EntityContainer)) {

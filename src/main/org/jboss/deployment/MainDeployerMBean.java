@@ -26,7 +26,7 @@ import org.jboss.util.jmx.ObjectNameFactory;
  * @author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
  * @author <a href="mailto:toby.allsopp@peace.com">Toby Allsopp</a>
  * @author <a href="mailto:marc.fleury@jboss.org">Marc Fleury</a>
- * @version $Revision: 1.7 $
+ * @version $Revision: 1.8 $
  *      <p><b>20011223 marc fleury:</b>
  *      <ul> 
  *      <li>add/RemoveURL, added the capacity to dynamically add a URL to watch
@@ -65,6 +65,8 @@ public interface MainDeployerMBean
    
    /** get all the watched URLs in this deployment **/
    Collection listDeployed();
+
+   Collection listDeployers();
    
    /** Get set scan-period**/
    void setScan( boolean scan);

@@ -67,7 +67,7 @@ import org.xml.sax.SAXException;
  * @author <a href="mailto:David.Maplesden@orion.co.nz">David Maplesden</a>
  * @author <a href="mailto:d_jencks@users.sourceforge.net">David Jencks</a>
  * @author <a href="mailto:jason@planet57.com">Jason Dillon</a>
- * @version $Revision: 1.13 $
+ * @version $Revision: 1.14 $
  *
  * <p><b>20010830 marc fleury:</b>
  * <ul>
@@ -203,17 +203,14 @@ public class SARDeployer
       }
    }
 
-   public void deploy(DeploymentInfo di)
+   public void create(DeploymentInfo di)
       throws DeploymentException
    {
-      boolean debug = log.isDebugEnabled();
-
       try
       {
          // install the MBeans in this descriptor
-         if (debug) {
-            log.debug("Deploying SAR: url " + di.url);
-	 }
+         log.debug("Deploying SAR, create step: url " + di.url);
+
          
          List mbeans = di.mbeans;
          mbeans.clear();
@@ -234,24 +231,38 @@ public class SARDeployer
             }
          }
          
-	 Iterator iter;
-	 ObjectName service;
 
          // create the services
-         iter = di.mbeans.iterator();
-         while (iter.hasNext()) 
+         for (Iterator iter = di.mbeans.iterator(); iter.hasNext(); ) 
          {
-            service = (ObjectName)iter.next();
+            ObjectName service = (ObjectName)iter.next();
             
             // The service won't be created until explicitely dependent mbeans are created
 	    serviceController.create(service);
          }
-         
+      }
+      catch (Exception e) {
+	 log.error("operation failed", e);
+	 throw new DeploymentException(e);
+      }
+   }
+
+   /**
+    * The <code>start</code> method starts all the mbeans in this DeploymentInfo..
+    *
+    * @param di a <code>DeploymentInfo</code> value
+    * @exception DeploymentException if an error occurs
+    */
+   public void start(DeploymentInfo di) throws DeploymentException
+   {
+      log.debug("Deploying SAR, start step: url " + di.url);
+      try 
+      {
          // start the services
-         iter = di.mbeans.iterator();
-         while (iter.hasNext()) 
+         
+         for (Iterator iter = di.mbeans.iterator(); iter.hasNext(); ) 
          {
-            service = (ObjectName)iter.next();
+            ObjectName service = (ObjectName)iter.next();
             
             // The service won't be started until explicitely dependent mbeans are started
 	    serviceController.start(service);
@@ -495,23 +506,15 @@ public class SARDeployer
     * we undeployed so that they can be redeployed should this one be
     * redeployed.
     *
-    * @param urlString    The location of the package to be
-    *                     undeployed (used to index the packages, not to read 
-    *                     service.xml on undeploy!
     *
-    * @exception MalformedURLException  Thrown if the url string is not valid.
-    * @exception IOException            Thrown if something could not be read.
+    * @param service the <code>DeploymentInfo</code> value to stop.
     * @exception DeploymentException    Thrown if the package could not be
     *                                   undeployed
     */
-   public void undeploy(DeploymentInfo sdi)
+   public void stop(DeploymentInfo sdi)
       throws DeploymentException
    {
-      boolean debug = log.isDebugEnabled();
-
-      if (debug) {
-         log.debug("undeploying document " + sdi.url);
-      }
+      log.debug("undeploying document " + sdi.url);
       
       List services = sdi.mbeans;
       int lastService = services.size();
@@ -521,27 +524,39 @@ public class SARDeployer
 	 for (ListIterator i = services.listIterator(lastService); i.hasPrevious();)
 	 {
 	    ObjectName name = (ObjectName)i.previous();
-            if (debug) {
-               log.debug("stopping mbean " + name);
-            }
+            log.debug("stopping mbean " + name);
 	    serviceController.stop(name);
 	 }
+      }
+      catch (Exception e) {
+	 throw new DeploymentException(e);
+      }
+   }
 
+   /**
+    * Describe <code>destroy</code> method here.
+    *
+    * @param service a <code>DeploymentInfo</code> value
+    * @exception DeploymentException if an error occurs
+    */
+   public void destroy(DeploymentInfo sdi) throws DeploymentException
+   {
+      List services = sdi.mbeans;
+      int lastService = services.size();
+
+      try 
+      {
 	 for (ListIterator i = services.listIterator(lastService); i.hasPrevious();)
          {
 	    ObjectName name = (ObjectName)i.previous();
-            if (debug) {
-               log.debug("destroying mbean " + name);
-            }
+            log.debug("destroying mbean " + name);
 	    serviceController.destroy(name);
 	 }
 
 	 for (ListIterator i = services.listIterator(lastService); i.hasPrevious();)
          {
 	    ObjectName name = (ObjectName)i.previous();
-            if (debug) {
-               log.debug("removing mbean " + name);
-            }
+            log.debug("removing mbean " + name);
 	    serviceController.remove(name);
 	 }
       }

@@ -53,7 +53,7 @@ import org.jboss.security.SecurityAssociation;
  *      One for each role that entity has.       
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
- * @version $Revision: 1.23 $
+ * @version $Revision: 1.24 $
  */                            
 public class JDBCCMRFieldBridge implements JDBCFieldBridge {
    // ------ Invocation messages ------
@@ -207,7 +207,7 @@ public class JDBCCMRFieldBridge implements JDBCFieldBridge {
       String relatedName = metadata.getRelatedRole().getEntity().getName();
       
       // get the related container
-      Container c = manager.getContainer().getApplication().getContainer(
+      Container c = manager.getContainer().getEjbModule().getContainer(
             relatedName);
       if( !(c instanceof EntityContainer)) {
          throw new DeploymentException("Relationships are not allowed " +
