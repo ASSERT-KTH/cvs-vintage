@@ -45,7 +45,7 @@ import org.jboss.util.MBeanProxy;
  * Takes a series of URL to watch, detects changes and calls the appropriate Deployers 
  *
  * @author <a href="mailto:marc.fleury@jboss.org">Marc Fleury</a>
- * @version $Revision: 1.17 $
+ * @version $Revision: 1.18 $
  */
 public class MainDeployer
    extends ServiceMBeanSupport
@@ -153,7 +153,10 @@ public class MainDeployer
 
    public Collection listDeployed()
    {
-      return new ArrayList(deploymentsList);
+      synchronized (deploymentsList)
+      {
+         return new ArrayList(deploymentsList);
+      }
    }
    
    public void addDeployer(DeployerMBean deployer) 
@@ -302,7 +305,7 @@ public class MainDeployer
    {
       try 
       {
-         DeploymentInfo sdi = (DeploymentInfo) deployments.get(new URL(url));
+         DeploymentInfo sdi = getDeployment(new URL(url));
          
          if (sdi!= null)
          {
@@ -352,12 +355,14 @@ public class MainDeployer
       try
       {
          // remove from local maps
-         deployments.remove(di.url);
-         if (deploymentsList.lastIndexOf(di) != -1)
+         synchronized (deploymentsList)
          {
-            deploymentsList.remove(deploymentsList.lastIndexOf(di));
+            deployments.remove(di.url);
+            if (deploymentsList.lastIndexOf(di) != -1)
+            {
+               deploymentsList.remove(deploymentsList.lastIndexOf(di));
+            }
          }
-            
          // Nuke my stuff, this includes the class loader
          di.cleanup(log);
          
@@ -397,7 +402,7 @@ public class MainDeployer
 
    public void deploy(URL url)
    {
-      DeploymentInfo sdi = (DeploymentInfo) deployments.get(url);
+      DeploymentInfo sdi = getDeployment(url);
       try 
       {
          // if it does not exist create a new deployment
@@ -421,7 +426,7 @@ public class MainDeployer
       try
       {
          // If we are already deployed return
-         if (deployments.containsKey(deployment.url))
+         if (isDeployed(deployment.url))
          {
             return;
          }
@@ -468,16 +473,19 @@ public class MainDeployer
          // whether you do it or not, for the autodeployer
          deployment.lastDeployed = System.currentTimeMillis();
          
-         //watch it, it will be picked up as modified below, deployments is a map duplicates are ok
-         deployments.put(deployment.url, deployment);
-         
-         // Do we watch it? Watch only urls outside our copy directory.
-         if (!deployment.url.toString().startsWith(tempDirString)) 
+         synchronized (deploymentsList)
          {
-            deploymentsList.add(deployment);
-            if (debug)
+            //watch it, it will be picked up as modified below, deployments is a map duplicates are ok
+            deployments.put(deployment.url, deployment);
+            
+            // Do we watch it? Watch only urls outside our copy directory.
+            if (!deployment.url.toString().startsWith(tempDirString)) 
             {
-               log.debug("Watching new file: " + deployment.url);  
+               deploymentsList.add(deployment);
+               if (debug)
+               {
+                  log.debug("Watching new file: " + deployment.url);  
+               }
             }
          }
       }
@@ -547,7 +555,7 @@ public class MainDeployer
                   log.trace("Checking deployment file: "+files[i]);
                }
                // It is a new file
-               if (!deployments.containsKey(files[i].toURL())) 
+               if (!isDeployed(files[i].toURL())) 
                {
                   newDeployments.add(files[i].toURL());
                }
@@ -576,28 +584,31 @@ public class MainDeployer
          log.trace("Scanning installed deployments");
       }
       // People already deployed, scan for modifications  
-      for (Iterator it = deploymentsList.listIterator(); it.hasNext(); )
+      synchronized (deploymentsList)
       {
-         DeploymentInfo deployment = (DeploymentInfo) it.next();
-         if (deployment.url.getProtocol().startsWith("file")) 
+         for (Iterator it = deploymentsList.listIterator(); it.hasNext(); )
          {
-            File theFile = new File(deployment.url.getFile());
-            if (!theFile.exists())
+            DeploymentInfo deployment = (DeploymentInfo) it.next();
+            if (deployment.url.getProtocol().startsWith("file")) 
             {
-               removed.add(deployment);
-            }
+               File theFile = new File(deployment.url.getFile());
+               if (!theFile.exists())
+               {
+                  removed.add(deployment);
+               }
                
-         } // end of if ()
-         else
-         {
-            try 
+            } // end of if ()
+            else
             {
-               deployment.url.openConnection();
+               try 
+               {
+                  deployment.url.openConnection();
+               }
+               catch (java.io.IOException ioe)
+               {
+                  removed.add(deployment);
+               } // end of try-catch
             }
-            catch (java.io.IOException ioe)
-            {
-               removed.add(deployment);
-            } // end of try-catch
          }
       }
       return sortDeployments(removed);
@@ -616,46 +627,48 @@ public class MainDeployer
          log.trace("Scanning installed deployments");
       }
       // People already deployed, scan for modifications  
-      for (Iterator it = deploymentsList.listIterator(); it.hasNext(); )
+      synchronized (deploymentsList)
       {
-         DeploymentInfo deployment = (DeploymentInfo) it.next();
-            
-         long lastModified = 0;
-            
-         // if noone told us what to watch, we'll look for something...
-         if (deployment.watch == null)
+         for (Iterator it = deploymentsList.listIterator(); it.hasNext(); )
          {
-            deployment.watch = deployment.url;
-         }
-         // Get lastModified of file from file system
-         if (deployment.watch.getProtocol().startsWith("file"))
-         {
-            File theFile = new File(deployment.watch.getFile());
-            if (theFile.exists())
+            DeploymentInfo deployment = (DeploymentInfo) it.next();
+            
+            long lastModified = 0;
+            
+            // if noone told us what to watch, we'll look for something...
+            if (deployment.watch == null)
             {
-               lastModified = theFile.lastModified();
+               deployment.watch = deployment.url;
             }
-         }
-            
-         // Use URL connection to get lastModified on http
-         else 
-         {
-            try 
+            // Get lastModified of file from file system
+            if (deployment.watch.getProtocol().startsWith("file"))
             {
-               lastModified = deployment.watch.openConnection().getLastModified();
+               File theFile = new File(deployment.watch.getFile());
+               if (theFile.exists())
+               {
+                  lastModified = theFile.lastModified();
+               }
             }
-            catch (java.io.IOException ioe)
+            
+            // Use URL connection to get lastModified on http
+            else 
             {
-               //ignored, watch is missing.
-            } // end of try-catch
-         }
+               try 
+               {
+                  lastModified = deployment.watch.openConnection().getLastModified();
+               }
+               catch (java.io.IOException ioe)
+               {
+                  //ignored, watch is missing.
+               } // end of try-catch
+            }
                
-         // Check the record in the DeploymentInfo against the physical one 
-         if (deployment.lastDeployed < lastModified) 
-         {
-            modified.add(deployment);
+            // Check the record in the DeploymentInfo against the physical one 
+            if (deployment.lastDeployed < lastModified) 
+            {
+               modified.add(deployment);
+            }
          }
-         
       }
       return sortDeployments(modified);
    }
@@ -825,7 +838,7 @@ public class MainDeployer
             {   
                lib = new URL(sdi.url, tk);
                
-               if (!deployments.containsKey(lib))
+               if (!isDeployed(lib))
                {
                   // Try having it as a full subdeployment
                   sub = new DeploymentInfo(lib, sdi);
@@ -981,21 +994,30 @@ public class MainDeployer
    public boolean isDeployed(String url) 
       throws MalformedURLException
    {
-      URL deployURL = new URL(url);
-      DeploymentInfo di = getDeployment(deployURL);
-      return ( di != null );
+      return isDeployed(new URL(url));
+   }
+
+   public boolean isDeployed(URL url)
+   {
+      return getDeployment(url) != null;
    }
 
    public DeploymentInfo getDeployment(URL url)  
    { 
-      return (DeploymentInfo) deployments.get(url); 
+      synchronized (deploymentsList)
+      {
+         return (DeploymentInfo) deployments.get(url); 
+      }
    }
    
    public DeploymentInfo removeDeployment(DeploymentInfo di) 
    { 
-      return (DeploymentInfo) deployments.remove(di.url); 
+      synchronized (deploymentsList)
+      {
+         return (DeploymentInfo) deployments.remove(di.url); 
+      }
    } 
    
-   private int getNextID() { return id++;}
+   private synchronized int getNextID() { return id++;}
 }
 
