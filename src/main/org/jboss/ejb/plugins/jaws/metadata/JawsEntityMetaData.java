@@ -34,7 +34,7 @@ import org.jboss.logging.Logger;
  *	@see <related>
  *	@author <a href="sebastien.alborini@m4x.org">Sebastien Alborini</a>
  *  @author <a href="mailto:dirk@jboss.de">Dirk Zimmermann</a>
- *	@version $Revision: 1.8 $
+ *	@version $Revision: 1.9 $
  */
 public class JawsEntityMetaData extends MetaData implements XmlLoadable {
 	// Constants -----------------------------------------------------
@@ -166,6 +166,8 @@ public class JawsEntityMetaData extends MetaData implements XmlLoadable {
 	
 	public Iterator getPkFields() { return pkFields.iterator(); }
 	
+   public int getNumberOfPkFields() { return pkFields.size(); }
+   
 	public String getTableName() { return tableName; }
 	
 	public boolean getCreateTable() { return createTable; }

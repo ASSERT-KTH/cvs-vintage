@@ -11,6 +11,8 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 
 import java.util.Iterator;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.HashMap;
 
 import java.rmi.NoSuchObjectException;
@@ -36,12 +38,28 @@ import org.jboss.ejb.plugins.jaws.metadata.JawsEntityMetaData;
  * @author <a href="mailto:shevlandj@kpi.com.au">Joe Shevland</a>
  * @author <a href="mailto:justin@j-m-f.demon.co.uk">Justin Forder</a>
  * @author <a href="mailto:dirk@jboss.de">Dirk Zimmermann</a>
- * @version $Revision: 1.9 $
+ * @author <a href="mailto:danch@nvisia.com">danch (Dan Christopherson)</a>
+ * @version $Revision: 1.10 $
  */
 public class JDBCLoadEntityCommand
    extends JDBCQueryCommand
    implements JPMLoadEntityCommand
 {
+   /**what is the position of each cmp field in the generated select statement?
+    * this simply maps the position of the field in the CMP list to its position
+    * in the generated select statement. This is neccessary because of the variable
+    * number of key columns (which are skipped in a load) and because there can
+    * be overlap between the two: pkfields and cmpfields are neither disjoint sets
+    * nor is the cmpfields a subset of pkfields (not that that makes sense to
+    * me right now, but I'll roll with it until I have more chance to analyse - danch)
+    */
+   int [] cmpFieldPositionInSelect = null;
+
+   /** This const is used in places where I need to add an offset to a count
+    *  to account for the fact that JDBC counts from one whilst every other
+    *  damn thing in the languase starts at 0, the way God intended!
+    */
+   private static final int JDBC_WART_OFFSET = 1;   
    // Constructors --------------------------------------------------
 
    public JDBCLoadEntityCommand(JDBCCommandFactory factory)
@@ -62,27 +80,47 @@ public class JDBCLoadEntityCommand
       String sql = "SELECT ";
       HashMap alreadyListed = new HashMap();
       // put the key fields in first 
+      // we'll stash the column names here so that we can later map an overlapped
+      // column (overlap between PK and CMP) into its spot in the select statement.
+      String[] pkColumnNames = new String[jawsEntity.getNumberOfPkFields()];
       Iterator keyIt = jawsEntity.getPkFields();
-      boolean first = true;
+      int fieldCount = 0;
       while (keyIt.hasNext())
       {
          PkFieldMetaData pkField = (PkFieldMetaData)keyIt.next();
          
-         sql += (first ? "" : ",") +
-                pkField.getColumnName();
+         sql += ((fieldCount==0) ? "" : ",") + pkField.getColumnName();
          alreadyListed.put(pkField.getColumnName().toUpperCase(), pkField);
-         first = false;
+         pkColumnNames[fieldCount]=pkField.getColumnName();
+         fieldCount++;
       }
       
+      cmpFieldPositionInSelect = new int[jawsEntity.getNumberOfCMPFields()];
       Iterator it = jawsEntity.getCMPFields();
-
+      int cmpFieldCount = 0;
       while (it.hasNext())
       {
          CMPFieldMetaData cmpField = (CMPFieldMetaData)it.next();
          if (alreadyListed.get(cmpField.getColumnName().toUpperCase()) == null) {
             sql += "," + cmpField.getColumnName();
-            alreadyListed.put(cmpField.getColumnName().toUpperCase(), cmpField);
+            cmpFieldPositionInSelect[cmpFieldCount] = fieldCount+JDBC_WART_OFFSET;
+            fieldCount++;//because this was another field in the select
+         } else {
+            //DO NOT increment field count, this isn't another in the select.
+            //linear search (yech!) of the pkColumnNames - we only do this once per bean, however
+            for (int i=0;i<pkColumnNames.length;i++) {
+               if (pkColumnNames[i].equalsIgnoreCase(cmpField.getColumnName())) {
+                  cmpFieldPositionInSelect[cmpFieldCount] = i+JDBC_WART_OFFSET;
+                  break;
+               }
+            }
+            if (cmpFieldPositionInSelect[cmpFieldCount] < 1) {
+               log.error("Error: Can't find first occurence of repeated column "+
+                         cmpField.getName()+" when building CMP load SQL for "+
+                         jawsEntity.getName());
+            }
          }
+         cmpFieldCount++;
       }
       
       sql += " FROM " + jawsEntity.getTableName();
@@ -127,7 +165,6 @@ public class JDBCLoadEntityCommand
       }
 
       // Set values
-System.out.print("!");
       loadOneEntity(rs, ctx);
       
       return null;
@@ -135,7 +172,14 @@ System.out.print("!");
 
    protected void loadOneEntity(ResultSet rs, EntityEnterpriseContext ctx) throws Exception {      
       int idx = 1;
-      
+      // skip the PK fields at the beginning of the select.
+      Iterator keyIt = jawsEntity.getPkFields();
+      while (keyIt.hasNext()) {
+         keyIt.next();
+         idx++;
+      }
+
+      int fieldCount = 0;
       Iterator iter = jawsEntity.getCMPFields();
       while (iter.hasNext())
       {
@@ -143,7 +187,8 @@ System.out.print("!");
          
          setCMPFieldValue(ctx.getInstance(), 
                           cmpField, 
-                          getResultObject(rs, idx++, cmpField));
+                          getResultObject(rs, cmpFieldPositionInSelect[fieldCount], cmpField));
+         fieldCount++;
       }
 
       // Store state to be able to do tuned updates

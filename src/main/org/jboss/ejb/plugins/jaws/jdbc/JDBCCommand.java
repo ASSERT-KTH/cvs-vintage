@@ -57,7 +57,7 @@ import org.jboss.logging.Logger;
  *
  * @author <a href="mailto:justin@j-m-f.demon.co.uk">Justin Forder</a>
  * @author <a href="mailto:dirk@jboss.de">Dirk Zimmermann</a>
- * @version $Revision: 1.31 $
+ * @version $Revision: 1.32 $
  */
 public abstract class JDBCCommand
 {
@@ -386,6 +386,7 @@ public abstract class JDBCCommand
     protected Object getResultObject(ResultSet rs, int idx, Class destination)
         throws SQLException{
 
+log.debug("getting a "+destination.getName()+" from resultset at index "+idx);
         Object result = null;
 
         Method method = (Method)rsTypes.get(destination.getName());
@@ -484,9 +485,9 @@ public abstract class JDBCCommand
 			} catch (RemoteException e) {
 				throw new SQLException("Unable to load EJBObject back from Handle: " +e);
             } catch (IOException e) {
-                throw new SQLException("Unable to load a ResultSet column into a variable of type '"+destination.getName()+"': "+e);
+                throw new SQLException("Unable to load a ResultSet column "+idx+" into a variable of type '"+destination.getName()+"': "+e);
             } catch (ClassNotFoundException e) {
-                throw new SQLException("Unable to load a ResultSet column into a variable of type '"+destination.getName()+"': "+e);
+                throw new SQLException("Unable to load a ResultSet column "+idx+" into a variable of type '"+destination.getName()+"': "+e);
             }
         }
 
