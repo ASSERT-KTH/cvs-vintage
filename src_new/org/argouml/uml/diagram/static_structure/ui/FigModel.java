@@ -1,4 +1,4 @@
-// $Id: FigModel.java,v 1.11 2004/05/19 22:06:38 mkl Exp $
+// $Id: FigModel.java,v 1.12 2004/08/12 20:16:33 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -22,7 +22,7 @@
 // CALIFORNIA HAS NO OBLIGATIONS TO PROVIDE MAINTENANCE, SUPPORT,
 // UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 
-// $Id: FigModel.java,v 1.11 2004/05/19 22:06:38 mkl Exp $
+// $Id: FigModel.java,v 1.12 2004/08/12 20:16:33 mvw Exp $
 
 package org.argouml.uml.diagram.static_structure.ui;
 
@@ -38,23 +38,31 @@ import org.tigris.gef.presentation.FigPoly;
 
 public class FigModel extends FigPackage {
 
-    protected FigPoly _figPoly = new FigPoly(Color.black, Color.black);
+    private FigPoly figPoly = new FigPoly(Color.black, Color.black);
 
+    /**
+     * Constructor
+     */
     public FigModel() {
         super();
 
-        int[] xpoints = { 125, 130, 135, 125};
-        int[] ypoints = { 45, 40, 45, 45};
+        int[] xpoints = {125, 130, 135, 125};
+        int[] ypoints = {45, 40, 45, 45};
         Polygon polygon = new Polygon(xpoints, ypoints, 4);
-        _figPoly.setPolygon(polygon);
-        _figPoly.setFilled(false);
-        addFig(_figPoly);
+        figPoly.setPolygon(polygon);
+        figPoly.setFilled(false);
+        addFig(figPoly);
         Rectangle r = getBounds();
         setBounds(r.x, r.y, r.width, r.height);
         updateEdges();
 
     }
 
+    /** 
+     * The constructor that hooks the Fig into the UML modelelement
+     * @param gm ignored
+     * @param node the UMl element
+     */
     public FigModel(GraphModel gm, Object node) {
         this();
         setOwner(node);
@@ -70,17 +78,20 @@ public class FigModel extends FigPackage {
      */
     public void setBounds(int x, int y, int w, int h) {
 
-        if (_figPoly != null) {
+        if (figPoly != null) {
             Rectangle oldBounds = getBounds();
-            Rectangle polyBounds = _figPoly.getBounds();
+            Rectangle polyBounds = figPoly.getBounds();
 ;
-            _figPoly.translate((x - oldBounds.x) + (w - oldBounds.width), y
+            figPoly.translate((x - oldBounds.x) + (w - oldBounds.width), y
                     - oldBounds.y);
 
         }
         super.setBounds(x, y, w, h);
     }
 
+    /**
+     * @see org.argouml.uml.diagram.ui.FigNodeModelElement#placeString()
+     */
     public String placeString() {
         return "new Model";
     }
