@@ -77,7 +77,7 @@ import org.gjt.sp.util.Log;
  *
  * @author Slava Pestov
  * @author John Gellene (API documentation)
- * @version $Id: View.java,v 1.101 2003/07/28 21:08:04 spestov Exp $
+ * @version $Id: View.java,v 1.102 2003/08/12 01:40:16 spestov Exp $
  */
 public class View extends JFrame implements EBComponent
 {
@@ -444,7 +444,10 @@ public class View extends JFrame implements EBComponent
 	public void processKeyEvent(KeyEvent evt, boolean calledFromTextArea)
 	{
 		if(Debug.DUMP_KEY_EVENTS && calledFromTextArea)
-			Log.log(Log.DEBUG,this,"Key event: " + evt);
+		{
+			Log.log(Log.DEBUG,this,"Key event: "
+				+ GrabKeyDialog.toString(evt));
+		}
 
 		if(getTextArea().hasFocus() && !calledFromTextArea)
 			return;

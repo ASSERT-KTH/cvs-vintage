@@ -39,7 +39,7 @@ import org.gjt.sp.util.Log;
  * this file out.
  * @since jEdit 4.0pre4
  * @author Slava Pestov
- * @version $Id: Java14.java,v 1.20 2003/08/11 23:19:20 spestov Exp $
+ * @version $Id: Java14.java,v 1.21 2003/08/12 01:40:16 spestov Exp $
  */
 public class Java14
 {
@@ -282,7 +282,7 @@ public class Java14
 		{
 			JEditTextArea textArea = (JEditTextArea)c;
 			if(action == MOVE)
-				textArea.setSelectedText(null);
+				textArea.setSelectedText(null,false);
 		}
 
 		public boolean canImport(JComponent c, DataFlavor[] flavors)
