@@ -1,6 +1,6 @@
 
 
-// $Id: PropPanel.java,v 1.67 2003/08/25 19:15:51 bobtarling Exp $
+// $Id: PropPanel.java,v 1.68 2003/08/26 17:13:33 bobtarling Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -27,7 +27,7 @@
 // File: PropPanel.java
 // Classes: PropPanel
 // Original Author:
-// $Id: PropPanel.java,v 1.67 2003/08/25 19:15:51 bobtarling Exp $
+// $Id: PropPanel.java,v 1.68 2003/08/26 17:13:33 bobtarling Exp $
 
 // 23 Apr 2002: Jeremy Bennett (mail@jeremybennett.com). Added the third party
 // event listener.
@@ -153,6 +153,7 @@ abstract public class PropPanel
         super(title);
         setOrientation(orientation);
         buttonPanel = new ToolBar();
+        buttonPanel.putClientProperty("JToolBar.isRollover",  Boolean.TRUE);
         buttonPanel.setFloatable(false);
         //buttonPanel.putClientProperty("JToolBar.isRollover",  Boolean.TRUE);
         
@@ -721,6 +722,7 @@ abstract public class PropPanel
         addCaption(captionPanel, 0, 0, 0);
 
         buttonPanel = new ToolBar();
+        buttonPanel.putClientProperty("JToolBar.isRollover",  Boolean.TRUE);
         // TODO buttonPanelWithFlowLayout shouldn't exist any more
         // It's just another useless layer
         buttonPanelWithFlowLayout = new JPanel(new FlowLayout());

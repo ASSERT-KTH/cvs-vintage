@@ -1,4 +1,4 @@
-// $Id: GenericArgoMenuBar.java,v 1.33 2003/08/22 17:37:30 bobtarling Exp $
+// $Id: GenericArgoMenuBar.java,v 1.34 2003/08/26 17:13:33 bobtarling Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -22,7 +22,7 @@
 // CALIFORNIA HAS NO OBLIGATIONS TO PROVIDE MAINTENANCE, SUPPORT,
 // UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 
-//$Id: GenericArgoMenuBar.java,v 1.33 2003/08/22 17:37:30 bobtarling Exp $
+//$Id: GenericArgoMenuBar.java,v 1.34 2003/08/26 17:13:33 bobtarling Exp $
 
 package org.argouml.ui.menubar;
 
@@ -298,6 +298,7 @@ public class GenericArgoMenuBar extends JMenuBar
         add(_file);
         setMnemonic(_file, "File", 'F');
         _fileToolbar = new ToolBar("File Toolbar");
+        _fileToolbar.putClientProperty("JToolBar.isRollover",  Boolean.TRUE);
         JMenuItem newItem = _file.add(ActionNew.SINGLETON);
         setMnemonic(newItem, "New", 'N');
         setAccelerator(newItem, ctrlN);
@@ -448,6 +449,7 @@ public class GenericArgoMenuBar extends JMenuBar
 	    (JMenu) add(new JMenu(menuLocalize("Create Diagram")));
         setMnemonic(_createDiagrams, "Create Diagram", 'C');
         _createDiagramToolbar = new ToolBar("Create Diagram Toolbar");
+        _createDiagramToolbar.putClientProperty("JToolBar.isRollover",  Boolean.TRUE);
         _createDiagrams.add(ActionClassDiagram.SINGLETON);
         _createDiagramToolbar.add((ActionClassDiagram.SINGLETON));
         _createDiagrams.add(ActionUseCaseDiagram.SINGLETON);
@@ -548,6 +550,7 @@ public class GenericArgoMenuBar extends JMenuBar
     public JToolBar getEditToolbar() {
         if (_editToolbar == null) {
             _editToolbar = new ToolBar("Edit Toolbar");
+            _editToolbar.putClientProperty("JToolBar.isRollover",  Boolean.TRUE);
             _editToolbar.add(ActionCut.getInstance());
             _editToolbar.add(ActionCopy.getInstance());
             _editToolbar.add(ActionPaste.getInstance());
@@ -573,6 +576,7 @@ public class GenericArgoMenuBar extends JMenuBar
     public JToolBar getViewToolbar() {
         if (_viewToolbar == null) {
             _viewToolbar = new ToolBar("View Toolbar");
+            _viewToolbar.putClientProperty("JToolBar.isRollover",  Boolean.TRUE);
             _viewToolbar.add((Actions.Find));
         }
         return _viewToolbar;

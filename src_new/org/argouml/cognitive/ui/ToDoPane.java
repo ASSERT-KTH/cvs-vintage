@@ -1,5 +1,5 @@
 
-// $Id: ToDoPane.java,v 1.24 2003/08/25 23:57:42 bobtarling Exp $
+// $Id: ToDoPane.java,v 1.25 2003/08/26 17:13:33 bobtarling Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -91,7 +91,7 @@ import org.tigris.gef.util.VectorSet;
  *  ToDoPerspective skill = new ToDoBySkill();
  *</pre>
 
- * $Id: ToDoPane.java,v 1.24 2003/08/25 23:57:42 bobtarling Exp $
+ * $Id: ToDoPane.java,v 1.25 2003/08/26 17:13:33 bobtarling Exp $
  */
 public class ToDoPane extends JPanel
     implements ItemListener,
@@ -167,13 +167,13 @@ public class ToDoPane extends JPanel
         _combo = new JComboBox();
         _tree = new DisplayTextTree();
         _toolbar = new ToolBar();
+        _toolbar.putClientProperty("JToolBar.isRollover",  Boolean.TRUE);
         
         _perspectives = new Vector();
         
         _flatView = Actions.FlatToDo;
         _countLabel = new JLabel(formatCountLabel(999));
         
-        _toolbar.putClientProperty("JToolBar.isRollover", Boolean.TRUE);
         _toolbar.add(_combo);
         // This is the only reason GEF toolbar is used here.
         // Must find a way to implement the same.
