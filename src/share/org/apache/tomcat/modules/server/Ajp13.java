@@ -211,6 +211,7 @@ public class Ajp13
       // This is a touch cargo-cultish, but I think wise.
       blen = 0; 
       pos = 0;
+      if( dL>0 ) d( "recycle()");
       headersWriter.recycle();
     }
     
@@ -382,6 +383,7 @@ public class Ajp13
 	// immediately after
 	MessageBytes clB=headers.getValue("content-length");
         int contentLength = (clB==null) ? -1 : clB.getInt();
+	if( dL > 0 ) d("Content-Length: " + contentLength );
     	if(contentLength > 0) {
 	    req.setContentLength( contentLength );
 	    /* Read present data */
@@ -389,10 +391,18 @@ public class Ajp13
             if(err < 0) {
             	return 500;
 	    }
-	    
-	    blen = inBuf.peekInt();
+
+	    // We may get an empty packet ( no data available right now )
 	    pos = 0;
-	    inBuf.getBytes(bodyBuff);
+	    blen=0;
+	    if( inBuf.getLen() != 0 ) {
+		blen = inBuf.peekInt();
+		int cpl=inBuf.getBytes(bodyBuff);
+		if( dL > 0 )
+		    d( "Copy into body buffer " + bodyBuff + " " + cpl
+		       + " " + blen + " " + new String( bodyBuff, 0, cpl ));
+	    }
+		
     	}
     
         return 200; // Success
@@ -438,6 +448,9 @@ public class Ajp13
 	if(pos + len <= blen) { // Fear the off by one error
 	    // Sanity check b.length > off + len?
 	    System.arraycopy(bodyBuff, pos, b, off, len);
+	    if( dL > 0 )
+		d("doRead1: " + pos + " " + len + " " + blen + " " +
+		  new String( b, off, len ) + " " + Thread.currentThread());
 	    pos += len;
 	    return len;
 	}
@@ -451,6 +464,9 @@ public class Ajp13
 	    int c = bytesRemaining < toCopy ? bytesRemaining : toCopy;
 
 	    System.arraycopy(bodyBuff, pos, b, off, c);
+	    if( dL > 0 ) d("doRead2: " + pos + " " + len + " " + blen + " " + c +
+			   " " + new String( b, off, len ) + " " +
+			   new String( bodyBuff, pos, len ));
 
 	    toCopy    -= c;
 
@@ -481,20 +497,28 @@ public class Ajp13
 	inBuf.reset();
 	inBuf.appendByte(JK_AJP13_GET_BODY_CHUNK);
 	inBuf.appendInt(MAX_READ_SIZE);
+	if( dL>0 ) d("refillReadBuffer " + Thread.currentThread());
 	send(inBuf);
 	
 	int err = receive(inBuf);
         if(err < 0) {
 	    throw new IOException();
 	}
-	
+
+	// No data received.
+	if( inBuf.getLen() == 0 ) {
+	    pos=0;
+	    blen=0;
+	    return false;
+	}
     	blen = inBuf.peekInt();
     	pos = 0;
-    	inBuf.getBytes(bodyBuff);
+    	int cpl=inBuf.getBytes(bodyBuff);
+	if( dL > 0 ) d( "Copy into body buffer2 " + bodyBuff + " " + cpl + " " + blen + " "  +
+			    new String( bodyBuff, 0, cpl ));
 
 	return (blen > 0);
-    }    
-
+    }
     // ==================== Servlet Output Support =================
     
     /**
@@ -665,6 +689,7 @@ public class Ajp13
 	    }
      	    total_read += rd;
 	}
+	if( dL>0 ) msg.dump("Ajp13.receive() " + rd + " " + len );
 	return total_read;
     }
 
@@ -679,6 +704,7 @@ public class Ajp13
 	byte b[] = msg.getBuff();
 	int len  = msg.getLen();
 	out.write( b, 0, len );
+	if( dL>0 ) msg.dump("Ajp13.send()");
     }
 	
     /**
@@ -695,5 +721,10 @@ public class Ajp13
 	if(null !=in) {
 	    in.close();
 	}
+    }
+
+    private static final int dL=0;
+    private void d(String s ) {
+	System.err.println( "Ajp13: " + s );
     }
 }

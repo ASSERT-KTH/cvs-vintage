@@ -365,9 +365,9 @@ public class Ajp13Packet {
 	    System.out.println("null string " + length);
 	    return 0;
 	}
-	
+
 	System.arraycopy( buff, pos,  dest, 0, length );
-	pos += length;
+	pos += length; 
 	pos++; // Skip terminating \0  XXX I believe this is wrong but harmless
 	return length;
     }
@@ -380,29 +380,41 @@ public class Ajp13Packet {
 	return h.substring( h.length() - 2 );
     }
     
-    private void hexLine( int start ) {
+    private void hexLine( int start , StringBuffer sb) {
 	for( int i=start; i< start+16 ; i++ ) {
 	    if( i < len + 4)
-		System.out.print( hex( buff[i] ) + " ");
+		sb.append( hex( buff[i] ) + " ");
 	    else 
-		System.out.print( "   " );
+		sb.append( "   " );
 	}
-	System.out.print(" | ");
+	sb.append(" | ");
 	for( int i=start; i < start+16 && i < len + 4; i++ ) {
-	    if( Character.isLetterOrDigit( (char)buff[i] ))
-		System.out.print( new Character((char)buff[i]) );
+	    char c=(char)buff[i];
+	    if( ! Character.isISOControl(c) &&
+		Character.isDefined(c) )
+		sb.append( c );
+	    else if( c==(char)0x20 )
+		sb.append( c );
 	    else
-		System.out.print( "." );
+		sb.append( "." );
 	}
-	System.out.println();
+	sb.append("\n");
     }
     
     public void dump(String msg) {
-	System.out.println( msg + ": " + buff + " " + pos +"/" + (len + 4));
+	StringBuffer sb=new StringBuffer();
+	sb.append( this ).append("/").append(Thread.currentThread()).append("\n");
+	sb.append( msg + ": " + buff + " " + pos +"/" + (len + 4) + "\n");
 	
 	for( int j=0; j < len + 4; j+=16 )
-	    hexLine( j );
+	    hexLine( j, sb );
 	
-	System.out.println();
+	System.out.println(sb);
     }
+
+    private static final int dL=0;
+    private void d(String s ) {
+	System.err.println( "Ajp13Packet: " + s );
     }
+
+}
