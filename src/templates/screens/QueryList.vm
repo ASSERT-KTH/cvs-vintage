@@ -42,7 +42,7 @@
 #end
 
 
-<P>$l10n.Click</p>
+<P><small>$l10n.Click</small></p>
 <table width="100%" border="1" cellspacing="2" cellpadding="3">
  <tr>
   <th nowrap="nowrap">$l10n.Select</th>
