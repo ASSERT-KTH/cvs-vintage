@@ -13,6 +13,7 @@ import org.tigris.scarab.services.security.ScarabSecurity;
 import org.tigris.scarab.util.ScarabException;
 import org.tigris.scarab.om.Module;
 import org.tigris.scarab.om.ModuleManager;
+import org.tigris.scarab.workflow.WorkflowFactory;
 
 /** 
  * You should add additional methods to this class to meet the
@@ -115,6 +116,10 @@ public  class RModuleIssueType
             {
                 ((RModuleAttribute)rmas.get(i)).delete(user);
             }
+ 
+            // delete workflows
+            WorkflowFactory.getInstance().resetAllWorkflowsForIssueType(module, 
+                                                                        issueType);
 
             Criteria c = new Criteria()
                 .add(RModuleIssueTypePeer.MODULE_ID, getModuleId())

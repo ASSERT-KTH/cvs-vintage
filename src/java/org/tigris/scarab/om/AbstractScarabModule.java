@@ -103,6 +103,7 @@ import org.tigris.scarab.util.ScarabException;
 import org.tigris.scarab.util.ScarabConstants;
 import org.tigris.scarab.services.security.ScarabSecurity;
 import org.tigris.scarab.services.cache.ScarabCache;
+import org.tigris.scarab.workflow.WorkflowFactory;
 
 /**
  * <p>
@@ -122,7 +123,7 @@ import org.tigris.scarab.services.cache.ScarabCache;
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: AbstractScarabModule.java,v 1.63 2002/11/06 23:21:13 elicia Exp $
+ * @version $Id: AbstractScarabModule.java,v 1.64 2002/11/15 01:08:59 elicia Exp $
  */
 public abstract class AbstractScarabModule
     extends BaseObject
@@ -1790,6 +1791,9 @@ try{
             RIssueTypeAttribute userRia = (RIssueTypeAttribute)userRIAs.get(m);
             setRmaBasedOnIssueType(userRia);
         }
+
+        // add workflow 
+        WorkflowFactory.getInstance().addIssueTypeWorkflowToModule(this, issueType);
 
         // add attribute groups
         List groups = issueType.getAttributeGroups(false);

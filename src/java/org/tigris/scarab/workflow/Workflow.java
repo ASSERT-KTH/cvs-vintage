@@ -67,7 +67,7 @@ import org.tigris.scarab.util.ScarabException;
  * from the Scarab.properties file.
  *   
  * @author <a href="mailto:elicia@tigris.org">Elicia David</a>
- * @version $Id: Workflow.java,v 1.9 2002/10/24 22:59:31 jon Exp $
+ * @version $Id: Workflow.java,v 1.10 2002/11/15 01:08:59 elicia Exp $
  */
 public interface Workflow
 {
@@ -135,6 +135,14 @@ public interface Workflow
 
     public void deleteWorkflowsForAttribute(Attribute attr, Module module, 
                                             IssueType issueType)
+        throws ScarabException;
+
+    public void addIssueTypeWorkflowToModule(Module module, 
+                                            IssueType issueType)
+        throws ScarabException;
+
+    public void resetAllWorkflowsForIssueType(Module module, 
+                                              IssueType issueType)
         throws ScarabException;
 
 }
