@@ -4,6 +4,7 @@
 #set ($issueId = $data.Parameters.getString("id"))
 #set ($issue = $scarabR.getIssue($issueId))
 #set ($copyToModules = $user.getCopyToModules($scarabR.CurrentModule))
+#set ($moveToModules = $user.getMoveToModules($scarabR.CurrentModule))
 #if (!$issueId || $issueId.length() == 0 || !$issue)
 
   <p><strong class="alert">$l10n.CouldNotFindIssue</strong></p>
@@ -34,19 +35,18 @@
  #foreach ($module in $copyToModules)
     <option>module $module.Name</option>
     #foreach ($issueType in $module.IssueTypes)
-      #if (!($module.ModuleId.equals($scarabR.CurrentModule.ModuleId) && $issueType.IssueTypeId.equals($scarabR.CurrentIssueType.IssueTypeId)))
-          <option value="${module.ModuleId}_${issueType.IssueTypeId}">--artifact type $issueType.Name</option>
-      #end
+       <option value="${module.ModuleId}_${issueType.IssueTypeId}">--artifact type $issueType.Name</option>
     #end
  #end
 </td>
 </tr>
+
 <tr>
 <th>Action</th>
 <td> <select name="$moveIssueGroup.Action.Key" >
 <option value="copy"
      #if ($moveIssueGroup.Action.Value.equals("copy")) selected="selected" #end >Copy</option>
-#if ($user.hasPermission($scarabG.Permission.MODULE__EDIT, $scarabR.CurrentModule))
+#if (!$moveToModules.isEmpty() && ($data.User.hasPermission($scarabG.Permission.ISSUE__MOVE, $scarabR.CurrentModule)))
 <option value="move" 
      #if ($moveIssueGroup.Action.Value.equals("move")) selected="selected" #end >Move</option>
 #end

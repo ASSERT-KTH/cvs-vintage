@@ -5,7 +5,6 @@
 #set ($canEdit = $scarabR.hasPermission($scarabG.Permission.ISSUE__EDIT, $module))
 #set ($attrValues = $currentIssue.ModuleAttributeValuesMap)
 #set ($currentIssueId = $currentIssue.UniqueId)
-#set ($copyToModules = $data.User.getCopyToModules($module))
 #set ($moveToModules = $data.User.getMoveToModules($module))
 
 <input type="hidden" name="action" value="ModifyIssue" />
@@ -18,7 +17,7 @@
 #if (!$moveToModules.isEmpty() && ($data.User.hasPermission($scarabG.Permission.ISSUE__MOVE, $scarabR.CurrentModule)))
     <input type="submit" value="$l10n.MoveIssue" name="eventSubmit_doMove" />&#160;
 #end
-#if (!$copyToModules.isEmpty() && ($data.User.hasPermission($scarabG.Permission.ISSUE__MOVE, $scarabR.CurrentModule)))
+#if ($data.User.hasPermission($scarabG.Permission.ISSUE__MOVE, $scarabR.CurrentModule))
     <input type="submit" value="$l10n.CopyIssue" name="eventSubmit_doCopy" />
 #end
 </div>
