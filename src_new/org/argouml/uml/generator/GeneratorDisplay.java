@@ -1,4 +1,4 @@
-// $Id: GeneratorDisplay.java,v 1.50 2003/08/27 16:45:59 bobtarling Exp $
+// $Id: GeneratorDisplay.java,v 1.51 2003/08/30 13:58:02 bobtarling Exp $
 // Copyright (c) 1996-2001 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,7 +25,7 @@
 // File: GeneratorDisplay.java
 // Classes: GeneratorDisplay
 // Original Author: jrobbins@ics.uci.edu
-// $Id: GeneratorDisplay.java,v 1.50 2003/08/27 16:45:59 bobtarling Exp $
+// $Id: GeneratorDisplay.java,v 1.51 2003/08/30 13:58:02 bobtarling Exp $
 
 // 5 Mar 2002: Jeremy Bennett (mail@jeremybennett.com). Return text for
 // operations that have no return parameter made "" rather than ": void??"
@@ -65,6 +65,7 @@ import ru.novosoft.uml.foundation.core.MGeneralization;
 import ru.novosoft.uml.foundation.core.MModelElement;
 import ru.novosoft.uml.foundation.core.MNamespace;
 import ru.novosoft.uml.foundation.core.MOperation;
+import ru.novosoft.uml.foundation.core.MParameter;
 import ru.novosoft.uml.foundation.core.MStructuralFeature;
 import ru.novosoft.uml.foundation.data_types.MChangeableKind;
 import ru.novosoft.uml.foundation.data_types.MMultiplicity;
@@ -174,7 +175,7 @@ public class GeneratorDisplay extends Generator {
             if (!ModelFacade.hasReturnParameterDirectionKind(parameter)) {
                 counter++;
                 parameterListBuffer.append(
-                    generateParameter(parameter)).append(
+                    generateParameter((MParameter)parameter)).append(
                     ",");
             }
         }
@@ -336,7 +337,7 @@ public class GeneratorDisplay extends Generator {
 
     }
 
-    public String generateParameter(Object parameter) {
+    public String generateParameter(MParameter parameter) {
         String s = "";
         //TODO: qualifiers (e.g., const)
         //TODO: stereotypes...

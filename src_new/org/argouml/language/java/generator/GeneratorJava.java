@@ -1,4 +1,4 @@
-// $Id: GeneratorJava.java,v 1.73 2003/08/27 16:45:59 bobtarling Exp $
+// $Id: GeneratorJava.java,v 1.74 2003/08/30 13:58:02 bobtarling Exp $
 // Copyright (c) 1996-2001 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,7 +25,7 @@
 // File: GeneratorJava.java
 // Classes: GeneratorJava
 // Original Author:
-// $Id: GeneratorJava.java,v 1.73 2003/08/27 16:45:59 bobtarling Exp $
+// $Id: GeneratorJava.java,v 1.74 2003/08/30 13:58:02 bobtarling Exp $
 
 // 12 Apr 2002: Jeremy Bennett (mail@jeremybennett.com). Extended to support
 // extension points.
@@ -424,7 +424,7 @@ public class GeneratorJava
                 if (i > 0) {
                     sb.append(", ");
                 }
-                sb.append(generateParameter(params.elementAt(i)));
+                sb.append(generateParameter((MParameter)params.elementAt(i)));
 //                MParameter p = (MParameter) params.elementAt(i);
 //                sb.append(generateParameter(p));
             }
@@ -498,7 +498,7 @@ public class GeneratorJava
         return sb.toString();
     }
 
-    public String generateParameter(Object parameter) {
+    public String generateParameter(MParameter parameter) {
         StringBuffer sb = new StringBuffer(20);
         //TODO: qualifiers (e.g., const)
         //TODO: stereotypes...
