@@ -63,13 +63,14 @@ import java.io.FileWriter;
 import java.io.File;
 import java.io.IOException;
 import java.io.StringWriter;
+import java.lang.reflect.*;
 
 import java.util.*;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 
-import javax.servlet.ServletException;	// for throwableToString()
-import org.apache.tomcat.core.TomcatException;	// for throwableToString()
+// import javax.servlet.ServletException;	// for throwableToString()
+// import org.apache.tomcat.core.TomcatException;	// for throwableToString()
 import org.apache.tomcat.util.FastDateFormat;
 
 /**
@@ -187,6 +188,8 @@ public abstract class Logger {
 	return throwableToString( t, "Root cause:" );
     }
 
+    public static final int MAX_THROWABLE_DEPTH=3;
+    
     /**
      * Converts a Throwable to a printable stack trace, including the
      * nested root cause for a ServletException or TomcatException or
@@ -200,42 +203,81 @@ public abstract class Logger {
 	    rootcause = "Root Cause:";
 	StringWriter sw = new StringWriter();
 	PrintWriter w = new PrintWriter(sw);
-	printThrowable(w, t, rootcause);
+	printThrowable(w, t, rootcause, MAX_THROWABLE_DEPTH);
 	w.flush();
 	return sw.toString();
     }
 
-    private static void printThrowable(PrintWriter w, Throwable t, String rootcause ) {
+    private static Object emptyObjectArray[]=new Object[0];
+
+    private static void printThrowable(PrintWriter w, Throwable t, String rootcause, int depth ) {
 	if (t != null) {
+	    // XXX XXX XXX Something seems wrong - DOS, permissions. Need to
+	    // check.
 	    t.printStackTrace(w);
-	    if (t instanceof ServletException) {
-		Throwable cause = ((ServletException)t).getRootCause();
-		if (cause != null) {
-		    w.println(rootcause);
-		    printThrowable(w, cause, rootcause);
+
+	    // Find chained exception using few general patterns
+	    
+	    Class tC=t.getClass();
+	    Method mA[]= tC.getMethods();
+	    Method nextThrowableMethod=null;
+	    for( int i=0; i< mA.length ; i++  ) {
+		if( "getRootCause".equals( mA[i].getName() )
+		    || "getNextException".equals( mA[i].getName() )
+		    || "getException".equals( mA[i].getName() )) {
+		    // check param types
+		    Class params[]=mA[i].getParameterTypes();
+		    if( params==null || params.length==0 ) {
+			nextThrowableMethod=mA[i];
+			break;
+		    }
 		}
 	    }
-	    else if (t instanceof TomcatException) {
-		Throwable cause = ((TomcatException)t).getRootCause();
-		if (cause != null) {
-		    w.println(rootcause);
-		    printThrowable(w, cause, rootcause);
+
+	    if( nextThrowableMethod != null ) {
+		try {
+		    Throwable nextT=(Throwable)nextThrowableMethod.invoke( t , emptyObjectArray );
+		    if( nextT != null ) {
+			w.println(rootcause);
+			if( depth > 0 ) {
+			    printThrowable(w, nextT, rootcause, depth-1);
+			}
+		    }
+		} catch( Exception ex ) {
+		    // ignore
 		}
 	    }
-	    else if (t instanceof java.sql.SQLException) {
-		java.sql.SQLException sql = ((java.sql.SQLException)t).getNextException();
-		if (sql != null) {
-		    w.println("Next SQL Exception:");
-		    printThrowable(w, sql, rootcause);
-		}
-	    }
-	    else if (t instanceof org.xml.sax.SAXException) {
-		Throwable embedded = ((org.xml.sax.SAXException)t).getException();
-		if (embedded != null) {
-		    w.println("Embedded SAX Exception:");
-		    printThrowable(w, embedded, rootcause);
-		}
-	    }
+
+	    // Original code - roll back if any problem
+	    
+	    // 	    if (t instanceof ServletException) {
+	    // 		Throwable cause = ((ServletException)t).getRootCause();
+	    // 		if (cause != null) {
+	    // 		    w.println(rootcause);
+	    // 		    printThrowable(w, cause, rootcause);
+	    // 		}
+	    // 	    }
+	    // 	    else if (t instanceof TomcatException) {
+	    // 		Throwable cause = ((TomcatException)t).getRootCause();
+	    // 		if (cause != null) {
+	    // 		    w.println(rootcause);
+	    // 		    printThrowable(w, cause, rootcause);
+	    // 		}
+	    // 	    }
+	    // 	    else if (t instanceof java.sql.SQLException) {
+	    // 		java.sql.SQLException sql = ((java.sql.SQLException)t).getNextException();
+	    // 		if (sql != null) {
+	    // 		    w.println("Next SQL Exception:");
+	    // 		    printThrowable(w, sql, rootcause);
+	    // 		}
+	    // 	    }
+	    // 	    else if (t instanceof org.xml.sax.SAXException) {
+	    // 		Throwable embedded = ((org.xml.sax.SAXException)t).getException();
+	    // 		if (embedded != null) {
+	    // 		    w.println("Embedded SAX Exception:");
+	    // 		    printThrowable(w, embedded, rootcause);
+	    // 		}
+	    // 	    }
 	}
     }
     
