@@ -115,25 +115,11 @@
         <ContextInterceptor 
             className="org.apache.tomcat.modules.config.PolicyLoader" />
 
-        <!-- Uncomment out if you have JDK1.2 and want to implement
-	     the Java SecurityManager
-        <ContextInterceptor 
-            className="org.apache.tomcat.modules.config.PolicyInterceptor" />
-        -->
-
-        <!-- For JDK1.2 and URLClassLoader 
-        <ContextInterceptor 
-            className="org.apache.tomcat.modules.config.LoaderInterceptor12" />
-        -->
-
         <ContextInterceptor 
             className="org.apache.tomcat.modules.config.LoaderInterceptor11" />
 
-        <!-- Default Error handler 
-          -->
         <ContextInterceptor 
             className="org.apache.tomcat.modules.generators.ErrorHandler" />
-
 
         <ContextInterceptor 
             className="org.apache.tomcat.modules.config.WorkDirSetup" />
