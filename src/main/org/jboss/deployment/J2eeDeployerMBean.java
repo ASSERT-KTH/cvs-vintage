@@ -15,7 +15,7 @@ import org.jboss.system.ServiceMBean;
  *   @see 
  *   @author <a href="mailto:daniel.schulze@telkel.com">Daniel Schulze</a>
  *   @author <a href="mailto:toby.allsopp@peace.com">Toby Allsopp</a>
- *   @version $Revision: 1.7 $
+ *   @version $Revision: 1.8 $
  */
 public interface J2eeDeployerMBean
    extends DeployerMBean
@@ -32,4 +32,11 @@ public interface J2eeDeployerMBean
    
    public void setWarDeployerName(String warDeployerName);
    public String getWarDeployerName();
+   
+   public void setRarDeployerName(String rarDeployerName);
+   public String getRarDeployerName();
+   
+   public void setJavaDeployerName(String javaDeployerName);
+   public String getJavaDeployerName();
+
 }

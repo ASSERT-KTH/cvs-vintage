@@ -4,6 +4,7 @@
  * Distributable under LGPL license.
  * See terms of license at gnu.org.
  */
+
 package org.jboss.deployment;
 
 import java.net.URL;
@@ -33,7 +34,6 @@ import java.util.zip.ZipInputStream;
 import java.util.zip.ZipEntry;
 import java.util.Enumeration;
 
-
 import javax.management.MBeanServer;
 import javax.management.MBeanException;
 import javax.management.JMException;
@@ -51,13 +51,18 @@ import org.apache.log4j.Category;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
-/** A class intended to encapsulate the complex task of making an URL pointed
- *  to an J2ee module an installed Deployment.
- *
- *	@see <related>
- *	@author <a href="mailto:daniel.schulze@telkel.com">Daniel Schulze</a>
- *	@version $Revision: 1.14 $
+/** 
+ * A class intended to encapsulate the complex task of making an URL pointed
+ * to an J2ee module an installed Deployment.
+ * <br>
+ * Extended and refactored on 5th October 2001 by CGJ to also cater for 
+ * connector and java-client module support 
+ * 
+ * @author <a href="mailto:daniel.schulze@telkel.com">Daniel Schulze</a>
+ * @author <a href="mailto:Christoph.Jung@infor.de">Christoph G. Jung</a>
+ * @version $Revision: 1.15 $
  */
+
 public class Installer
 {
    // Constants -----------------------------------------------------
@@ -67,7 +72,7 @@ public class Installer
    public static final int RAR_MODULE = 3;
 
    // the order is the order of the type constants defined in this class
-   private static final String[] files = {"META-INF/ejb-jar.xml", "WEB-INF/web.xml", "META-INF/application.xml"};
+   private static final String[] files = {"META-INF/ejb-jar.xml", "WEB-INF/web.xml", "META-INF/application.xml", "META-INF/ra.xml"};
    
    // Attributes ----------------------------------------------------
    
@@ -112,6 +117,169 @@ public class Installer
       this.src = src;
    }
 
+   // protected --------------------------------------------------
+   
+   /** install pure ejb module */
+   protected URL executeEJBModule(String name, Deployment d, InputStream in, URL libraryRoot)  throws IOException {
+       // just install the package
+       log.info("install EJB module "+name);
+       File f = install(in, "ejb");
+       // Check for libs declared int the EJB jar manifest
+       JarFile jar = new JarFile(f);
+       Manifest mf = jar.getManifest();
+       URL[] libs = resolveLibraries(mf, libraryRoot);
+       URL localJar = f.toURL();
+       d.addEjbModule(name, localJar, libs);
+       return localJar;
+   }
+
+   /** install pure war module */
+   protected URL executeWarModule(String name, Deployment d, InputStream in, URL libraryRoot, String webContext) throws IOException {
+       // just inflate the package and determine the context name
+       log.info("inflate and install WEB module "+name);
+       File f = installInflate(in, "web");
+       // Check for libs declared int the WAR jar manifest
+       URL[] libs = {};
+       try {
+           InputStream mfIn = new FileInputStream(new File(f, "META-INF/MANIFEST.MF"));
+           Manifest mf = new Manifest(mfIn);
+           libs = resolveLibraries(mf, libraryRoot);
+       }
+       catch (FileNotFoundException _fnfe) {
+           // No manifest
+       }
+       URL localJar = f.toURL();
+       d.addWebModule(name, webContext, localJar, libs); 
+       return localJar;
+   }
+   
+   /** install pure rar module */
+   protected URL executeConnectorModule(String name, Deployment d, InputStream in, URL libraryRoot) throws IOException {
+       log.info("install CONNECTOR module "+name);
+       File f = install(in, "rar");
+       // Check for libs declared int the EJB jar manifest
+       JarFile jar = new JarFile(f);
+       Manifest mf = jar.getManifest();
+       URL[] libs = resolveLibraries(mf, libraryRoot);
+       URL localJar = f.toURL();
+       d.addConnectorModule(name, localJar, libs);
+       return localJar;
+   }
+
+   /** install pure java client module */
+   protected URL executeJavaModule(String name, Deployment d, InputStream in, URL libraryRoot) throws IOException {
+       log.info("install JAVA application module "+name);
+       File f = install(in, "java");
+       // Check for libs declared int the EJB jar manifest
+       JarFile jar = new JarFile(f);
+       Manifest mf = jar.getManifest();
+       URL[] libs = resolveLibraries(mf, libraryRoot);
+       URL localJar = f.toURL();
+       d.addJavaModule(name, localJar, libs);
+       return localJar;
+   }
+
+   /** install EAR application */
+   protected void executeEARModule(String name, Deployment d, File localCopy, URL libraryRoot) throws J2eeDeploymentException, IOException {
+       // reading the deployment descriptor...
+       JarFile jarFile = new JarFile(localCopy);
+       J2eeApplicationMetaData app = null;
+       try {
+           InputStream in = jarFile.getInputStream(jarFile.getEntry(files[EAR_MODULE]));
+           XmlFileLoader xfl = new XmlFileLoader();
+           Element root = xfl.getDocument(in, files[EAR_MODULE]).getDocumentElement();
+           app = new J2eeApplicationMetaData(root);
+           in.close();
+       }
+       catch (IOException _ioe) {
+           throw new J2eeDeploymentException("Error in accessing application metadata: "+_ioe.getMessage());
+       }
+       catch (DeploymentException _de) {
+           throw new J2eeDeploymentException("Error in parsing application.xml: "+_de.getMessage());
+       }
+       catch (NullPointerException _npe) {
+           throw new J2eeDeploymentException("unexpected error: application.xml was found once but not a second time?!");
+       }
+       
+       // iterating the modules and install them
+       // the library url is used to root the embedded classpaths
+       libraryRoot=new URL("jar:file:"+localCopy.getAbsolutePath()+"!/");
+       File f = null;
+       J2eeModuleMetaData mod;
+       ArrayList ejbJars = new ArrayList();
+       Iterator it = app.getModules();
+       while (it.hasNext()) {
+           // iterate the ear modules
+           mod = (J2eeModuleMetaData) it.next();
+           // get the name of the module
+           String modName=mod.getFileName();
+           
+           if (mod.isEjb()) {
+               try {
+                   URL localJar=executeEJBModule(modName,d,jarFile.
+                    getInputStream(jarFile.getEntry(modName)),libraryRoot);
+                   ejbJars.add(localJar);
+               }
+               catch (IOException _ioe) {
+                   throw _ioe;
+               }
+               catch (NullPointerException _npe) {
+                   log.info("module "+modName+" not found in "+d.name);
+                   throw new J2eeDeploymentException("module "+modName+" not found in "+d.name);
+               }
+           }
+           else if (mod.isWeb()) {
+               try {
+                   String webContext = mod.getWebContext();
+                   if (webContext == null)
+                       // this line here is not smart yet!!!
+                       webContext = name.substring(Math.max(0, modName.lastIndexOf("/")));
+                   
+                   // make sure the context starts with a slash
+                   if (!webContext.startsWith("/"))
+                       webContext = "/"+webContext;
+                   
+                   executeWarModule(modName,d,jarFile.
+                    getInputStream(jarFile.getEntry(modName)),libraryRoot,webContext);
+               }
+               catch (IOException _ioe) {
+                   throw _ioe;
+               }
+               catch (NullPointerException _npe) {
+                   log.info("module "+modName+" not found in "+d.name);
+                   throw new J2eeDeploymentException("module "+modName+" not found in "+d.name);
+               }
+           } 
+           else if (mod.isConnector()) {
+               try{
+                   executeConnectorModule(modName,d,jarFile.
+                    getInputStream(jarFile.getEntry(modName)),libraryRoot);
+               } catch(NullPointerException e) {
+                   log.info("module "+modName+" not found in "+d.name);
+                   throw new J2eeDeploymentException("module "+modName+" not found in "+d.name);
+               }
+           } else if(mod.isJava()) {
+               try{
+                   executeJavaModule(modName,d,
+                    jarFile.getInputStream(jarFile.getEntry(modName)),libraryRoot);
+                } catch(NullPointerException e) {
+                   log.info("module "+modName+" not found in "+d.name);
+                   throw new J2eeDeploymentException("module "+modName+" not found in "+d.name);
+               }
+           } //
+                     
+           // other packages we dont care about (currently)
+       }
+       
+       // put all ejb jars to the common classpath too
+       if( ejbJars.size() > 0 )
+           log.info("add all ejb jar files to the common classpath");
+       for(int e = 0; e < ejbJars.size(); e ++) {
+           URL jar = (URL) ejbJars.get(e);
+           d.commonUrls.add(jar);
+       }
+   }
+
    // Public --------------------------------------------------------
 
    /** performes the complex task of installation
@@ -151,168 +319,31 @@ public class Installer
          
          // determine the type...
          int type = determineType(new JarFile(localCopy));
-         
-         
+                  
          log.info("Create application " + d.name);
          switch (type)
          {
             case EJB_MODULE:
             {
-               // just install the package
-               log.info("install EJB module "+d.name);
-               File f = install(new FileInputStream(localCopy), "ejb");               
-               // Check for libs declared int the EJB jar manifest
-               JarFile jar = new JarFile(f);
-               Manifest mf = jar.getManifest();
-               URL[] libs = resolveLibraries(mf, src);               
-               URL localJar = f.toURL();
-               d.addEjbModule(d.name, localJar, libs);
+               executeEJBModule(d.name,d,new FileInputStream(localCopy),src);
             }
             break;
 
             case WAR_MODULE:
             {
-               // just inflate the package and determine the context name
-               String webContext = getWebContext(src.toString());
-               
-               log.info("inflate and install WEB module "+d.name);
-               File f = installInflate(new FileInputStream(localCopy), "web");
-               // Check for libs declared int the WAR jar manifest
-               URL[] libs = {};
-               try
-               {
-                  InputStream mfIn = new FileInputStream(new File(f, "META-INF/MANIFEST.MF"));
-                  Manifest mf = new Manifest(mfIn);
-                  libs = resolveLibraries(mf, src);
-               }
-               catch (FileNotFoundException _fnfe)
-               {
-                  // No manifest
-               }
+                executeWarModule(d.name,d,new FileInputStream(localCopy),src,getWebContext(src.toString()));
+            }
+            break;
 
-               URL localJar = f.toURL();
-               d.addWebModule(d.name, webContext, localJar, libs);
+             case RAR_MODULE:
+            {
+                executeConnectorModule(d.name,d,new FileInputStream(localCopy),src);
             }
             break;
 
             case EAR_MODULE:
             {
-               // reading the deployment descriptor...
-               JarFile jarFile = new JarFile(localCopy);
-               J2eeApplicationMetaData app = null;
-               try
-               {
-                  InputStream in = jarFile.getInputStream(jarFile.getEntry(files[type]));
-                  XmlFileLoader xfl = new XmlFileLoader();
-                  Element root = xfl.getDocument(in, files[type]).getDocumentElement();
-                  app = new J2eeApplicationMetaData(root);
-                  in.close();
-               }
-               catch (IOException _ioe)
-               {
-                  throw new J2eeDeploymentException("Error in accessing application metadata: "+_ioe.getMessage());
-               }
-               catch (DeploymentException _de)
-               {
-                  throw new J2eeDeploymentException("Error in parsing application.xml: "+_de.getMessage());
-               }
-               catch (NullPointerException _npe)
-               {
-                  throw new J2eeDeploymentException("unexpected error: application.xml was found once but not a second time?!");
-               }
-               
-               // iterating the ejb and web modules and install them
-               File f = null;
-               J2eeModuleMetaData mod;
-               ArrayList ejbJars = new ArrayList();
-               Iterator it = app.getModules();
-               while (it.hasNext())
-               {
-                  // iterate the ear modules
-                  mod = (J2eeModuleMetaData) it.next();
-                  
-                  if (mod.isEjb())
-                  {
-                     String name = mod.getFileName();                     
-                     log.info("install EJB module "+name);
-                     try
-                     {
-                        String ejbJarName = mod.getFileName();
-                        InputStream in = jarFile.getInputStream(jarFile.getEntry(ejbJarName));
-                        f = install(in, "ejb");
-                        // Check for libs declared int the EJB jar manifest
-                        JarFile jar = new JarFile(f);
-                        Manifest mf = jar.getManifest();
-                        URL jarURL = new URL("jar:file:"+localCopy.getAbsolutePath()+"!/");
-                        URL[] libs = resolveLibraries(mf, jarURL);
-                        URL localJar = f.toURL();
-                        d.addEjbModule(name, localJar, libs);
-                        ejbJars.add(localJar);
-                     }
-                     catch (IOException _ioe)
-                     {
-                        throw _ioe;
-                     }
-                     catch (NullPointerException _npe)
-                     {
-                        log.info("module "+name+" not found in "+d.name);
-                        throw new J2eeDeploymentException("module "+name+" not found in "+d.name);
-                     }
-                  }
-                  else if (mod.isWeb())
-                  {
-                     String name = mod.getFileName();                     
-                     String webContext = mod.getWebContext();
-                     if (webContext == null)
-                        // this line here is not smart yet!!!
-                        webContext = name.substring(Math.max(0, name.lastIndexOf("/")));
-
-                     // make sure the context starts with a slash
-                     if (!webContext.startsWith("/"))
-                        webContext = "/"+webContext;
-                     
-                     log.info("inflate and install WEB module "+name);
-                     try
-                     {
-                        InputStream in = jarFile.getInputStream(jarFile.getEntry(name));
-                        f = installInflate(in, "web");
-                        
-                        // Check for libs declared int the WAR jar manifest
-                        URL[] libs = {};
-                        try
-                        {
-                           InputStream mfIn = new FileInputStream(new File(f, "META-INF/MANIFEST.MF"));
-                           Manifest mf = new Manifest(mfIn);
-                           URL jarURL = new URL("jar:file:"+localCopy.getAbsolutePath()+"!/");
-                           libs = resolveLibraries(mf, jarURL);
-                        }
-                        catch (FileNotFoundException _fnfe)
-                        {}
-
-                        URL localJar = f.toURL();
-                        d.addWebModule(name, webContext, localJar, libs);
-                     }
-                     catch (IOException _ioe)
-                     {
-                        throw _ioe;
-                     }
-                     catch (NullPointerException _npe)
-                     {
-                        log.info("module "+name+" not found in "+d.name);
-                        throw new J2eeDeploymentException("module "+name+" not found in "+d.name);
-                     }
-                  }
-                  // other packages we dont care about (currently)
-               }
-
-               // put all ejb jars to the common classpath too
-               if( ejbJars.size() > 0 )
-                  log.info("add all ejb jar files to the common classpath");
-               for(int e = 0; e < ejbJars.size(); e ++)
-               {
-                  URL jar = (URL) ejbJars.get(e);
-                  d.commonUrls.add(jar);
-               }
+                executeEARModule(d.name,d,localCopy,src);
             }
             break;
          }
@@ -469,7 +500,7 @@ public class Installer
       return libs;
    }
 
-   /** Creates a temporary jar file from the InputStream with the given _prefix in its name.
+    /** Creates a temporary jar file from the InputStream with the given _prefix in its name.
     *  @param _in an InputStream of a jar/zip file
     *  @param _prefix name prefix for the temporary file (prefix&lt;number&gt;.jar)
     *  @return a File representing the newly created jar file
@@ -477,7 +508,20 @@ public class Installer
     */
    private File install(InputStream _in, String _prefix) throws IOException
    {
-      File result = createTmpFile(baseDir, _prefix, ".jar");
+      return install(_in,_prefix,".jar");
+   }
+   
+   /** Creates a temporary .xxx-jar file from the InputStream 
+    *  with the given _prefix and _suffix in its name.
+    *  @param _in an InputStream of a jar/zip file
+    *  @param _prefix name prefix for the temporary file (prefix&lt;number&gt;.jar)
+    *  @param _suffix name suffix for the temporary file (bla&lt;number&gt;.suffix)
+    *  @return a File representing the newly created jar file
+    *  @throws IOException
+    */
+   private File install(InputStream _in, String _prefix, String _suffix) throws IOException
+   {
+      File result = createTmpFile(baseDir, _prefix, _suffix);
       copy(_in, new FileOutputStream(result), true);
       
       return result;
