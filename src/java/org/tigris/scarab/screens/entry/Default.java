@@ -63,7 +63,7 @@ import org.tigris.scarab.pages.ScarabPage;
     for the Issue Entry templates.
 
     @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
-    @version $Id: Default.java,v 1.10 2001/07/21 00:52:51 jmcnally Exp $
+    @version $Id: Default.java,v 1.11 2001/07/24 20:43:12 jmcnally Exp $
 */
 public class Default extends TemplateSecureScreen
 {
@@ -85,9 +85,9 @@ public class Default extends TemplateSecureScreen
             .get(ScarabConstants.SECURITY_TOOL);
         ScarabRequestTool scarab = (ScarabRequestTool)context
             .get(ScarabConstants.SCARAB_REQUEST_TOOL);
-        
+
         if ( !(scarab.getUser().hasLoggedIn()
-               && security.hasPermission(ScarabSecurityPull.EDIT_ISSUE, 
+               && security.hasPermission(ScarabSecurityPull.ISSUE__ENTER, 
                                          scarab.getUser().getCurrentModule())))
         {
             // Note: we need to replace '/' with ',' so that 

@@ -410,7 +410,7 @@ public class Issue
     {
         ScarabSecurity security = SecurityFactory.getInstance();
         ScarabUser[] users = 
-            security.getUsers(ScarabSecurity.EDIT_ISSUE, getScarabModule());
+            security.getUsers(ScarabSecurity.ISSUE__EDIT, getScarabModule());
         // remove those already assigned
         List assigneeAVs = getAssigneeAttributeValues();
         if ( users != null && assigneeAVs != null ) 

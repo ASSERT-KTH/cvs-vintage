@@ -56,7 +56,7 @@ import org.tigris.scarab.om.ScarabUser;
  * Constants for permissions should be grouped here as well.
  *
  * @author <a href="mailto:jmcnally@collab.net">John D. McNally</a>
- * @version $Id: ScarabSecurity.java,v 1.4 2001/07/21 00:52:51 jmcnally Exp $
+ * @version $Id: ScarabSecurity.java,v 1.5 2001/07/24 20:43:12 jmcnally Exp $
 */
 public interface ScarabSecurity
 {
@@ -66,7 +66,12 @@ public interface ScarabSecurity
     /** 
      * Specifies that a User is valid as an assignee for an issue.
      */
-    public static final String EDIT_ISSUE = "Issue | Edit";
+    public static final String ISSUE__EDIT = "Issue | Edit";
+
+    /** 
+     * Specifies that a User is allowed to enter an issue.
+     */
+    public static final String ISSUE__ENTER = "Issue | Enter";
 
     /**
      * Determine if a user has a permission within a module.
