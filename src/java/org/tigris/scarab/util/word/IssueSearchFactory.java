@@ -48,9 +48,7 @@ package org.tigris.scarab.util.word;
 
 // JDK classes
 
-import java.lang.ref.WeakReference;
 import org.apache.turbine.Turbine;
-import org.tigris.scarab.util.Log;
 import org.tigris.scarab.om.MITList;
 import org.tigris.scarab.om.ScarabUser;
 import org.tigris.scarab.om.Issue;
@@ -63,7 +61,7 @@ import org.tigris.scarab.om.IssueType;
  *
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
  * @since 0.16.25
- * @version $Id: IssueSearchFactory.java,v 1.1 2003/07/17 17:57:13 jmcnally Exp $
+ * @version $Id: IssueSearchFactory.java,v 1.2 2003/07/25 17:35:15 thierrylach Exp $
  */
 public class IssueSearchFactory
 {
