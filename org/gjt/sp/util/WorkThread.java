@@ -22,7 +22,7 @@ package org.gjt.sp.util;
 /**
  * Services work requests in the background.
  * @author Slava Pestov
- * @version $Id: WorkThread.java,v 1.6 2002/05/28 03:53:21 spestov Exp $
+ * @version $Id: WorkThread.java,v 1.7 2003/03/12 17:01:50 spestov Exp $
  */
 public class WorkThread extends Thread
 {
@@ -31,7 +31,7 @@ public class WorkThread extends Thread
 		super(group, name);
 		// so that jEdit doesn't exit with no views open automatically
 		//setDaemon(true);
-		setPriority(4);
+		setPriority(Thread.MIN_PRIORITY);
 
 		this.pool = pool;
 	}

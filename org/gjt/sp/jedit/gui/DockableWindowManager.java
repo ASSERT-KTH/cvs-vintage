@@ -101,7 +101,7 @@ import java.util.*;
  *
  * @author Slava Pestov
  * @author John Gellene (API documentation)
- * @version $Id: DockableWindowManager.java,v 1.54 2003/03/11 18:00:56 spestov Exp $
+ * @version $Id: DockableWindowManager.java,v 1.55 2003/03/12 17:01:48 spestov Exp $
  * @since jEdit 2.6pre3
  */
 public class DockableWindowManager extends JPanel
@@ -866,6 +866,7 @@ public class DockableWindowManager extends JPanel
 		JPopupMenu popup = new JPopupMenu();
 		JMenuItem caption = new JMenuItem(jEdit.getProperty(dockable + ".title",
 			"NO TITLE PROPERTY: " + dockable));
+		caption.setEnabled(false);
 		popup.add(caption);
 		popup.addSeparator();
 		String currentPos = jEdit.getProperty(dockable + ".dock-position");
@@ -877,10 +878,10 @@ public class DockableWindowManager extends JPanel
 				final String pos = positions[i];
 				if(pos.equals(currentPos))
 					continue;
-	
+
 				JMenuItem moveMenuItem = new JMenuItem(jEdit.getProperty("view.docking.menu-"
 					+ pos));
-	
+
 				moveMenuItem.addActionListener(new ActionListener()
 				{
 					public void actionPerformed(ActionEvent evt)
