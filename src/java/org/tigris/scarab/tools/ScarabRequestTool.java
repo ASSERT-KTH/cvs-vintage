@@ -509,7 +509,8 @@ try{
         {
             if ( templateId == null || templateId.length() == 0 )
             {
-                data.setMessage("No template id specified.");
+                template = getCurrentModule().getNewIssue(getIssueType(
+                                   getCurrentIssueType().getTemplateId().toString()));
             }
             else 
             {
