@@ -127,7 +127,7 @@ import org.tigris.scarab.services.cache.ScarabCache;
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: AbstractScarabModule.java,v 1.36 2002/05/18 15:24:09 jmcnally Exp $
+ * @version $Id: AbstractScarabModule.java,v 1.37 2002/06/06 20:45:20 jon Exp $
  */
 public abstract class AbstractScarabModule
     extends BaseObject
@@ -1557,14 +1557,13 @@ try{
         return moduleOptions;
 
     }
+    
+    /** 
+     * This method is implemented in ScarabModule
+     */
+    public abstract List getRModuleIssueTypes() throws TorqueException;
 
-
-    public List getRModuleIssueTypes() throws TorqueException
-    {
-        return  getRModuleIssueTypes("sequence", "asc", 25, 1);
-    }
-
-    public List getRModuleIssueTypes( String sortColumn, String sortPolarity,
+    public List getRModuleIssueTypes(String sortColumn, String sortPolarity,
                                         int resultsPerPage, int pageNum)
         throws TorqueException
     {

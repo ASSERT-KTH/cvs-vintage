@@ -104,7 +104,7 @@ import org.apache.fulcrum.security.impl.db.entity
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: ScarabModule.java,v 1.115 2002/05/18 16:50:48 jmcnally Exp $
+ * @version $Id: ScarabModule.java,v 1.116 2002/06/06 20:45:20 jon Exp $
  */
 public class ScarabModule
     extends BaseScarabModule
@@ -299,14 +299,18 @@ public class ScarabModule
         resetAncestors();
     }
 
-
+    /**
+     * This method returns a complete list of RModuleIssueTypes
+     * which are not deleted, have a IssueType.PARENT_ID of 0 and
+     * sorted ascending by PREFERRED_ORDER.
+     */
     public List getRModuleIssueTypes()
         throws TorqueException
     {
         List result = null;
         Object obj = ScarabCache.get(this, GET_R_MODULE_ISSUE_TYPES); 
         if ( obj == null ) 
-        {        
+        {
             Criteria crit = new Criteria();
             crit.add(RModuleIssueTypePeer.MODULE_ID, getModuleId())
                 .addJoin(RModuleIssueTypePeer.ISSUE_TYPE_ID, 
