@@ -25,9 +25,9 @@ import com.sun.syndication.feed.synd.SyndFeedImpl;
 import com.sun.syndication.io.FeedException;
 
 /**
- * Converts a Issue to an RSS feed.  The private methods are mostly ripped off
- * of ScarabRequestTool and there should be some refactoring done here.
+ * Converts a Issue to an RSS feed.
  * 
+ * @todo improve what is shown to a user
  * @author Eric Pugh
  *  
  */
@@ -48,9 +48,7 @@ public class IssueFeed implements Feed{
     public SyndFeed getFeed() throws IOException, FeedException, TorqueException, Exception {
         DateFormat dateParser = new SimpleDateFormat(DATE_FORMAT);
 
-
         SyndFeed feed = new SyndFeedImpl();
-
        
         String title = issue.getUniqueId() + ": " + issue.getDefaultText();
         feed.setTitle(title);
@@ -65,40 +63,23 @@ public class IssueFeed implements Feed{
         for (Iterator i = allActivities.iterator(); i.hasNext();) {
             SyndEntry entry;
             SyndContent description;
-            //MITListItem item = (MITListItem) i.next();
+            
             Activity activity = (Activity)i.next();
-
             
             ActivitySet activitySet = activity.getActivitySet();
             Date date =activitySet.getCreatedDate();
             entry = new SyndEntryImpl();
-            //String title = "";
             
             entry.setTitle(title);
-            
-            
 
-            //link = scarabLink.getIssueIdAbsoluteLink(issue).toString();
-            //entry.setLink(link);
-            
-            /*Date publishedDate = null;
-            if(issue.getModifiedDate()!= null){
-                publishedDate = issue.getModifiedDate();
-            }
-            else {
-                publishedDate = issue.getCreatedDate();
-            }
-            */
             entry.setPublishedDate(date);
             
-
             description = new SyndContentImpl();
             description.setType("text/html");
-            StringBuffer desc = new StringBuffer();
             
-
-                desc.append("<b>Description:</b>" + activity.getDescription() +"<br/>");
-                desc.append("<b>Reason:</b>" + scarabToolManager.getActivityReason(activitySet,activity) +"<br/>");                
+            StringBuffer desc = new StringBuffer();            
+            desc.append("<b>Description:</b>" + activity.getDescription() +"<br/>");
+            desc.append("<b>Reason:</b>" + scarabToolManager.getActivityReason(activitySet,activity) +"<br/>");                
 
             description.setValue(desc.toString());            
 
@@ -111,8 +92,6 @@ public class IssueFeed implements Feed{
 
         feed.setEntries(entries);
         
-        
-
         return feed;
     }
 

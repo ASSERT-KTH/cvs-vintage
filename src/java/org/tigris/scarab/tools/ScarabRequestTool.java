@@ -79,7 +79,6 @@ import org.apache.turbine.services.pull.ApplicationTool;
 import org.apache.turbine.tool.IntakeTool;
 import org.tigris.scarab.om.Activity;
 import org.tigris.scarab.om.ActivitySet;
-import org.tigris.scarab.om.ActivitySetTypePeer;
 import org.tigris.scarab.om.Attachment;
 import org.tigris.scarab.om.AttachmentManager;
 import org.tigris.scarab.om.Attribute;
@@ -271,6 +270,7 @@ public class ScarabRequestTool
     /** The time zone that will be used when formatting dates */
     private final TimeZone timezone;
     
+    
     /**
      * Constructor does initialization stuff
      */    
@@ -286,6 +286,7 @@ public class ScarabRequestTool
     public void init(Object data)
     {
         this.data = (RunData)data;
+
     }
 
     /**
@@ -655,68 +656,20 @@ public class ScarabRequestTool
     public List getRModuleUserAttributes()
     {
         ScarabUser user = (ScarabUser)data.getUser();
-        if (issueListColumns == null) 
-        {
-            try
-            {
-                //
-                // First check whether an MIT list is currently
-                // active and if so, whether it has attributes
-                // associated with it. 
-                //
-                MITList currentList = user.getCurrentMITList();
-                if (currentList != null)
-                {
-                    //
-                    // Here we fetch the collection of attributes
-                    // associated with the current MIT list.
-                    //
-                    issueListColumns =
-                        currentList.getCommonRModuleUserAttributes();
-                    
-                    //
-                    // If there are no attributes associated with
-                    // the list, and the list only contains a single
-                    // module and a single issue type, get the default
-                    // attributes for that combination of module and
-                    // issue type.
-                    //
-                    if (issueListColumns.isEmpty()
-                        && currentList.isSingleModuleIssueType())
-                    {
-                        issueListColumns = currentList.getModule()
-                            .getDefaultRModuleUserAttributes(
-                                currentList.getIssueType());
-                    }
-                }
-    
-                if (issueListColumns == null)
-                {
-                    issueListColumns = user.getRModuleUserAttributes(module,
-                                                                     issueType);
-                    if (issueListColumns.isEmpty())
-                    {
-                        issueListColumns =
-                            module.getDefaultRModuleUserAttributes(issueType);
-                    }
-                }
-                initialIssueListColumnsSize = issueListColumns.size();
-            }
-            catch (Exception e)
-            {
-                Log.get().error("Could not get list attributes", e);
-            }
-        }
-        else if (initialIssueListColumnsSize > issueListColumns.size())
+        
+        if(issueListColumns == null){
+            ScarabLocalizationTool l10n = getLocalizationTool();
+            ScarabToolManager toolManager = new ScarabToolManager(l10n);        	
+        	issueListColumns= toolManager.getRModuleUserAttributes(user, module, issueType);
+        	initialIssueListColumnsSize = issueListColumns.size();
+        }                
+        
+        // DEP: Not sure about this initial list stuff, or if we need it..
+        if (initialIssueListColumnsSize > issueListColumns.size())
         {
             TemplateContext context =
                 (TemplateContext) data.getTemp(Turbine.CONTEXT);
             context.put("columnLimitExceeded", Boolean.TRUE);
-        }
-
-        if (issueListColumns == null)
-        {
-            issueListColumns = Collections.EMPTY_LIST;
         }
         return issueListColumns;
     }
@@ -896,9 +849,9 @@ public class ScarabRequestTool
      */
     public String getActivityReason(ActivitySet activitySet, Activity activity)
      throws Exception
-    {    	
+    {   
         ScarabLocalizationTool l10n = getLocalizationTool();
-        ScarabToolManager toolManager = new ScarabToolManager(l10n);
+        ScarabToolManager toolManager = new ScarabToolManager(l10n);    	
         return toolManager.getActivityReason(activitySet,activity);
         
     }

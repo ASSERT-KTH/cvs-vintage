@@ -143,7 +143,7 @@ public class RSSDataExport extends TemplateScreen {
                 }            	
             	Query query = QueryManager.getInstance(new Long(queryId));
                 ScarabUser user1 = ScarabUserManager.getInstance(new NumberKey(userId), false);
-            	feedSource = new QueryFeed(query,user1,scarabRequestTool,scarabLink);
+            	feedSource = new QueryFeed(query,user1,scarabToolManager,scarabLink);
             }
             else if (feedType.equals("IssueFeed")){
                 String issueId = parser.getString(ISSUE_ID_KEY);                

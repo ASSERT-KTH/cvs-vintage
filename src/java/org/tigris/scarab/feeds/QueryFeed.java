@@ -5,7 +5,6 @@ import java.io.IOException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
@@ -16,13 +15,14 @@ import org.apache.torque.TorqueException;
 import org.tigris.scarab.om.AttributeValue;
 import org.tigris.scarab.om.Issue;
 import org.tigris.scarab.om.IssueManager;
+import org.tigris.scarab.om.IssueType;
 import org.tigris.scarab.om.MITList;
+import org.tigris.scarab.om.Module;
 import org.tigris.scarab.om.Query;
 import org.tigris.scarab.om.RModuleUserAttribute;
 import org.tigris.scarab.om.ScarabUser;
-import org.tigris.scarab.tools.ScarabRequestTool;
+import org.tigris.scarab.tools.ScarabToolManager;
 import org.tigris.scarab.util.IteratorWithSize;
-import org.tigris.scarab.util.Log;
 import org.tigris.scarab.util.ScarabLink;
 import org.tigris.scarab.util.word.IssueSearch;
 import org.tigris.scarab.util.word.IssueSearchFactory;
@@ -50,12 +50,14 @@ public class QueryFeed implements Feed {
     private Query query;
     private ScarabUser user;
     private ScarabLink scarabLink;
-    private ScarabRequestTool scarabRequestTool;
+	private ScarabToolManager scarabToolManager;
+    
 
-    public QueryFeed(Query query, ScarabUser user,ScarabRequestTool scarabRequestTool, ScarabLink scarabLink) {
+    public QueryFeed(Query query, ScarabUser user,ScarabToolManager scarabToolManager, ScarabLink scarabLink) {
         this.query = query;
         this.user = user;
         this.scarabLink = scarabLink;
+        this.scarabToolManager = scarabToolManager;
     }
 
     public SyndFeed getFeed() throws IOException, FeedException, TorqueException, Exception {
@@ -157,7 +159,17 @@ public class QueryFeed implements Feed {
      */
     private IssueSearch getPopulatedSearch(String query, MITList mitList, ScarabUser searcher) throws Exception {
         IssueSearch search = getNewSearch(mitList,searcher);
-        search.setIssueListAttributeColumns(getRModuleUserAttributes(mitList));
+        Module module = mitList.getModule();   
+        IssueType issueType = null;
+        // this sucks, but seems required...
+        if(mitList.isSingleIssueType()){
+        	issueType = mitList.getIssueType();
+        }
+        else {
+        	issueType = mitList.getFirstItem().getIssueType();
+        }
+        List listUserAttributes = scarabToolManager.getRModuleUserAttributes(user,module,issueType);
+        search.setIssueListAttributeColumns(listUserAttributes);
 
        //Intake intake = null;
 
@@ -254,75 +266,6 @@ public class QueryFeed implements Feed {
         // issueSearch.setLocale(getLocalizationTool().getPrimaryLocale());
 
         return issueSearch;
-    }
-    /**
-     * First attempts to get the RModuleUserAttributes from the user.
-     * If it is empty, then it will try to get the defaults from the module.
-     * If anything fails, it will return an empty list.
-     * 
-     * Ripped off of ScarabRequestTool, but quite modified to not be user sepecific.
-     */
-    private List getRModuleUserAttributes(MITList currentList)
-    {
-        List issueListColumns =null;
-        if (issueListColumns == null) 
-        {
-            try
-            {
-                //
-                // First check whether an MIT list is currently
-                // active and if so, whether it has attributes
-                // associated with it. 
-                //
-              //  MITList currentList = user.getCurrentMITList();
-                if (currentList != null)
-                {
-                    //
-                    // Here we fetch the collection of attributes
-                    // associated with the current MIT list.
-                    //
-                    issueListColumns =
-                        currentList.getCommonRModuleUserAttributes();
-                    
-                    //
-                    // If there are no attributes associated with
-                    // the list, and the list only contains a single
-                    // module and a single issue type, get the default
-                    // attributes for that combination of module and
-                    // issue type.
-                    //
-                    if (issueListColumns.isEmpty()
-                        && currentList.isSingleModuleIssueType())
-                    {
-                        issueListColumns = currentList.getModule()
-                            .getDefaultRModuleUserAttributes(
-                                currentList.getIssueType());
-                    }
-                }
-    
-                if (issueListColumns == null)
-                {
-                //    issueListColumns = user.getRModuleUserAttributes(module,
-                  //                                                   issueType);
-                    if (issueListColumns.isEmpty())
-                    {
-                //        issueListColumns =
-                  //          module.getDefaultRModuleUserAttributes(issueType);
-                    }
-                }
-                //initialIssueListColumnsSize = issueListColumns.size();
-                
-            }
-            catch (Exception e)
-            {
-                Log.get().error("Could not get list attributes", e);
-            }
-        }
-        if (issueListColumns == null)
-        {
-            issueListColumns = Collections.EMPTY_LIST;
-        }
-        return issueListColumns;
     }
 
 }
