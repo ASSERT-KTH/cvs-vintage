@@ -25,7 +25,7 @@
 // File: GeneratorDisplay.java
 // Classes: GeneratorDisplay
 // Original Author: jrobbins@ics.uci.edu
-// $Id: GeneratorDisplay.java,v 1.17 2002/07/25 12:00:45 kataka Exp $
+// $Id: GeneratorDisplay.java,v 1.18 2002/07/29 14:28:39 kataka Exp $
 
 // 5 Mar 2002: Jeremy Bennett (mail@jeremybennett.com). Return text for
 // operations that have no return parameter made "" rather than ": void??"
@@ -183,7 +183,9 @@ public String generateConcurrency(MCallConcurrencyKind concurrency) {
   	if (op.isLeaf()) {
   		propertySb.append("leaf,");
   	}
-  	propertySb.append(op.getConcurrency().getName().toString()).append(",");
+    if (op.getConcurrency() != null) {
+  	 propertySb.append(op.getConcurrency().getName().toString()).append(",");
+    }
   	Collection taggedValues = op.getTaggedValues();
   	StringBuffer taggedValuesSb = new StringBuffer();
   	if (taggedValues.size() > 0) {
@@ -248,10 +250,18 @@ public String generateConcurrency(MCallConcurrencyKind concurrency) {
   	cat.debug("Stereotype: " + stereo);
   	String name = attr.getName();
   	String multiplicity = generateMultiplicity(attr.getMultiplicity());
-    String type = attr.getType().getName();
-    String initialValue = attr.getInitialValue().getBody();
-    
-    String finall = attr.getChangeability().equals(MChangeableKind.FROZEN) ? "final" : "";
+    String type = ""; // fix for loading bad projects
+    if (attr.getType() != null) {
+        type = attr.getType().getName();
+    }
+    String initialValue = "";
+    if (attr.getInitialValue() != null) {
+        initialValue = attr.getInitialValue().getBody();
+    }   
+    String finall = "";
+    if (attr.getChangeability() != null) {
+        finall = attr.getChangeability().equals(MChangeableKind.FROZEN) ? "final" : "";
+    }
     String properties = "";
     if (finall.length() > 0) {
     	properties = "{ " + finall + " }";
