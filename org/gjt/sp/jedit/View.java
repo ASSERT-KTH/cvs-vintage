@@ -38,7 +38,7 @@ import org.gjt.sp.util.Log;
  * class.
  *
  * @author Slava Pestov
- * @version $Id: View.java,v 1.7 2001/12/03 01:17:45 spestov Exp $
+ * @version $Id: View.java,v 1.8 2001/12/21 07:02:14 spestov Exp $
  */
 public class View extends JFrame implements EBComponent
 {
@@ -237,7 +237,9 @@ public class View extends JFrame implements EBComponent
 			Component left = oldSplitPane.getLeftComponent();
 			final JSplitPane newSplitPane = new JSplitPane(orientation,
 				oldEditPane,editPane);
-			newSplitPane.setBorder(null);
+			// not null, because then it would be reset to the
+			// default by updateUI()
+			newSplitPane.setBorder(new EmptyBorder(0,0,0,0));
 
 			if(left == oldEditPane)
 				oldSplitPane.setLeftComponent(newSplitPane);

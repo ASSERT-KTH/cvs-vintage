@@ -47,7 +47,7 @@ import org.gjt.sp.util.Log;
 /**
  * The main class of the jEdit text editor.
  * @author Slava Pestov
- * @version $Id: jEdit.java,v 1.28 2001/12/02 11:40:50 spestov Exp $
+ * @version $Id: jEdit.java,v 1.29 2001/12/21 07:02:14 spestov Exp $
  */
 public class jEdit
 {
@@ -2192,7 +2192,7 @@ public class jEdit
 				try
 				{
 					OutputStream out = new FileOutputStream(file1);
-					props.save(out,"jEdit properties");
+					props.store(out,"jEdit properties");
 					out.close();
 				}
 				catch(IOException io)
@@ -2358,7 +2358,7 @@ public class jEdit
 
 			parser.parse(null, null, grammar);
 		}
-		catch (Exception e)
+		catch (Throwable e)
 		{
 			Log.log(Log.ERROR, jEdit.class, e);
 

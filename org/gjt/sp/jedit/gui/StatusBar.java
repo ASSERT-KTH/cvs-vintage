@@ -46,7 +46,7 @@ import org.gjt.sp.util.*;
  * <li>And so on
  * </ul>
  *
- * @version $Id: StatusBar.java,v 1.11 2001/11/09 07:43:22 spestov Exp $
+ * @version $Id: StatusBar.java,v 1.12 2001/12/21 07:02:14 spestov Exp $
  * @author Slava Pestov
  * @since jEdit 3.2pre2
  */
@@ -95,8 +95,7 @@ public class StatusBar extends JPanel implements WorkThreadProgressListener
 		box.add(encoding);
 		box.add(Box.createHorizontalStrut(3));
 
-		FontMetrics fm = getToolkit().getFontMetrics(
-			UIManager.getFont("Label.font"));
+		FontMetrics fm = getFontMetrics(UIManager.getFont("Label.font"));
 
 		foldMode = new JLabel();
 		foldMode.setHorizontalAlignment(SwingConstants.CENTER);

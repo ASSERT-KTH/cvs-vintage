@@ -37,7 +37,7 @@ import org.gjt.sp.util.Log;
  * A virtual filesystem implementation. Note tha methods whose names are
  * prefixed with "_" are called from the I/O thread.
  * @param author Slava Pestov
- * @author $Id: VFS.java,v 1.9 2001/11/30 11:40:16 spestov Exp $
+ * @author $Id: VFS.java,v 1.10 2001/12/21 07:02:14 spestov Exp $
  */
 public abstract class VFS
 {
@@ -252,6 +252,9 @@ public abstract class VFS
 		Object session = createVFSSession(path,view);
 		if(session == null)
 			return false;
+
+		if((getCapabilities() & WRITE_CAP) == 0)
+			buffer.setReadOnly(true);
 
 		BufferIORequest request = new BufferIORequest(
 			BufferIORequest.LOAD,view,buffer,session,this,path);

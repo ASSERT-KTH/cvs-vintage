@@ -38,7 +38,7 @@ import org.gjt.sp.util.Log;
  * A panel containing a text area. Each edit pane can edit one buffer at
  * a time.
  * @author Slava Pestov
- * @version $Id: EditPane.java,v 1.12 2001/11/23 11:16:41 spestov Exp $
+ * @version $Id: EditPane.java,v 1.13 2001/12/21 07:02:14 spestov Exp $
  */
 public class EditPane extends JPanel implements EBComponent
 {
@@ -205,9 +205,9 @@ public class EditPane extends JPanel implements EBComponent
 		buffer.setIntegerProperty(Buffer.CARET,
 			textArea.getCaretPosition());
 
-		Selection[] selection = textArea.getSelection();
+		/*Selection[] selection = textArea.getSelection();
 		if(selection != null)
-			buffer.setProperty(Buffer.SELECTION,selection);
+			buffer.setProperty(Buffer.SELECTION,selection);*/
 
 		buffer.setIntegerProperty(Buffer.SCROLL_VERT,
 			textArea.virtualToPhysical(textArea.getFirstLine()));
@@ -217,7 +217,7 @@ public class EditPane extends JPanel implements EBComponent
 
 	//{{{ loadCaretInfo() method
 	/**
-	 * Loads the caret information from the curret buffer.
+	 * Loads the caret information from the current buffer.
 	 * @since jEdit 2.5pre2
 	 */
 	public void loadCaretInfo()
@@ -234,8 +234,8 @@ public class EditPane extends JPanel implements EBComponent
 				buffer.getLength()));
 		}
 
-		if(selection != null)
-			textArea.setSelection(selection);
+		/*if(selection != null)
+			textArea.setSelection(selection);*/
 
 		if(firstLine != null)
 			textArea.setFirstLine(textArea.physicalToVirtual(firstLine.intValue()));
