@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/util/Attic/StringManager.java,v 1.5 2000/07/11 03:49:05 alex Exp $
- * $Revision: 1.5 $
- * $Date: 2000/07/11 03:49:05 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/util/Attic/StringManager.java,v 1.6 2001/02/12 03:25:04 costin Exp $
+ * $Revision: 1.6 $
+ * $Date: 2001/02/12 03:25:04 $
  *
  * ====================================================================
  *
@@ -109,12 +109,20 @@ public class StringManager {
 
     private StringManager(String packageName) {
         String bundleName = packageName + ".LocalStrings";
-        bundle = ResourceBundle.getBundle(bundleName);
+        try {
+	    bundle = ResourceBundle.getBundle(bundleName);
+	} catch( MissingResourceException ex ) {
+	    bundle= ResourceBundle.getBundle( bundleName, Locale.US);
+	}
     }
 
     private StringManager(String packageName,Locale loc) {
         String bundleName = packageName + ".LocalStrings";
-        bundle = ResourceBundle.getBundle(bundleName,loc);
+        try {
+	    bundle = ResourceBundle.getBundle(bundleName,loc);
+	} catch( MissingResourceException ex ) {
+	    bundle= ResourceBundle.getBundle( bundleName, Locale.US);
+	}
     }
 
     /**
