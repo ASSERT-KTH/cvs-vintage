@@ -55,8 +55,9 @@
 
 /***************************************************************************
  * Description: Utility functions (mainly configuration)                   *
+ * Author:      Henri Gomez <hgomez@slib.fr>                               *
  * Author:      Gal Shachor <shachor@il.ibm.com>                           *
- * Version:     $Revision: 1.4 $                                               *
+ * Version:     $Revision: 1.5 $                                           *
  ***************************************************************************/
 
 
@@ -86,6 +87,7 @@
 #define DEFAULT_WORKER              JK_AJP12_WORKER_NAME
 #define WORKER_LIST_PROPERTY_NAME   ("worker.list")
 #define DEFAULT_LB_FACTOR           (1.0)
+#define LOG_FORMAT		    ("log_format")
 
 #define HUGE_BUFFER_SIZE (8*1024)
 #define LOG_LINE_SIZE    (1024)
@@ -94,6 +96,27 @@ struct file_logger {
     FILE *logfile;
 };
 typedef struct file_logger file_logger_t;
+
+/* 
+ * define the log format, we're using by default the one from error.log 
+ *
+ * [Mon Mar 26 19:44:48 2001] [jk_uri_worker_map.c (155)]: Into jk_uri_worker_map_t::uri_worker_map_alloc
+ * log format used by apache in error.log
+ */
+#ifndef JK_TIME_FORMAT 
+#define JK_TIME_FORMAT "[%a %b %d %H:%M:%S %Y] "
+#endif
+
+char * jk_log_fmt = JK_TIME_FORMAT;
+
+static void set_time_str(char * str, int len)
+{
+	time_t		t = time(NULL);
+    	struct tm 	*tms;
+
+    	tms = localtime(&t);
+	strftime(str, len, jk_log_fmt, tms);
+}
 
 static int JK_METHOD log_to_file(jk_logger_t *l,                                 
                                  int level,
@@ -211,17 +234,23 @@ int jk_log(jk_logger_t *l,
         if(f != file) {
             f++;
         }
-                       
+
 #ifdef WIN32
-        used = _snprintf(buf, HUGE_BUFFER_SIZE, "[%s (%d)]: ", f, line);        
+	set_time_str(buf, HUGE_BUFFER_SIZE);
+	used = strlen(buf);
+        used += _snprintf(&buf[used], HUGE_BUFFER_SIZE, " [%s (%d)]: ", f, line);        
 #elif defined(NETWARE) // until we get a snprintf function
         buf = (char *) malloc(HUGE_BUFFER_SIZE);
         if (NULL == buf)
            return -1;
 
-        used = sprintf(buf, "[%s (%d)]: ", f, line);
+	set_time_str(buf, HUGE_BUFFER_SIZE);
+	used = strlen(buf);
+        used += sprintf(&buf[used], " [%s (%d)]: ", f, line);
 #else 
-        used = snprintf(buf, HUGE_BUFFER_SIZE, "[%s (%d)]: ", f, line);        
+	set_time_str(buf, HUGE_BUFFER_SIZE);
+	used = strlen(buf);
+        used += snprintf(&buf[used], HUGE_BUFFER_SIZE, " [%s (%d)]: ", f, line);        
 #endif
         if(used < 0) {
             return 0; /* [V] not sure what to return... */
@@ -363,6 +392,11 @@ int jk_get_worker_list(jk_map_t *m,
     }
 
     return JK_FALSE;
+}
+
+void jk_set_log_format(char * logformat)
+{
+	jk_log_fmt = (logformat) ? logformat : JK_TIME_FORMAT;
 }
 
 double jk_get_lb_factor(jk_map_t *m, 
