@@ -13,6 +13,7 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
 //
 //All Rights Reserved.
+
 package org.columba.mail.gui.config.export;
 
 import net.javaprog.ui.wizard.plaf.basic.SingleSideEtchedBorder;
@@ -51,20 +52,7 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.Vector;
 
-import javax.swing.BorderFactory;
-import javax.swing.Box;
-import javax.swing.BoxLayout;
-import javax.swing.JButton;
-import javax.swing.JComponent;
-import javax.swing.JDialog;
-import javax.swing.JFileChooser;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.JTree;
-import javax.swing.KeyStroke;
-import javax.swing.SwingConstants;
+import javax.swing.*;
 import javax.swing.event.TreeSelectionEvent;
 import javax.swing.event.TreeSelectionListener;
 import javax.swing.tree.DefaultMutableTreeNode;
@@ -74,33 +62,24 @@ import javax.swing.tree.TreeSelectionModel;
 
 /**
  * ExportDialog lets you select a number of folders for exporting
- * messages.
+ * messages into the MBOX format.
  *
-
  * @author fdietz
- *
  */
-public class ExportDialog
-    extends JDialog
-    implements ActionListener, TreeSelectionListener {
-    private static final String RESOURCE_PATH = "org.columba.core.i18n.dialog";
-    private JButton exportButton;
-    private JButton selectAllButton;
-    private JButton helpButton;
-    private JButton closeButton;
+public class ExportDialog extends JDialog implements ActionListener {
+    private ButtonWithMnemonic exportButton;
     private JTree tree;
-    private DefaultMutableTreeNode selectedNode;
 
     public ExportDialog() {
-        // modal JDialog
-        super(new JFrame(), true);
+        super((JFrame)null, MailResourceLoader.getString(
+                "dialog",
+                "export",
+                "dialog_title"), false);
 
         initComponents();
 
         pack();
-
         setLocationRelativeTo(null);
-
         setVisible(true);
     }
 
@@ -118,18 +97,22 @@ public class ExportDialog
     }
 
     protected void initComponents() {
-        JPanel mainPanel = new JPanel();
-        mainPanel.setLayout(new BorderLayout());
+        JPanel mainPanel = new JPanel(new BorderLayout());
         mainPanel.setBorder(BorderFactory.createEmptyBorder(12, 12, 12, 12));
         getContentPane().add(mainPanel);
 
-        exportButton = new JButton("Export...");
-
+        exportButton = new ButtonWithMnemonic(MailResourceLoader.getString(
+                "dialog",
+                "export",
+                "export"));
         exportButton.setActionCommand("EXPORT");
         exportButton.addActionListener(this);
 
-        selectAllButton = new JButton("Select All");
-
+        ButtonWithMnemonic selectAllButton = new ButtonWithMnemonic(
+            MailResourceLoader.getString(
+                "dialog",
+                "export",
+                "select_all"));
         selectAllButton.setActionCommand("SELECTALL");
         selectAllButton.addActionListener(this);
 
@@ -147,36 +130,14 @@ public class ExportDialog
         tree.addMouseListener(new NodeSelectionListener(tree));
         tree.expandRow(0);
         tree.expandRow(1);
-        tree.addTreeSelectionListener(this);
-
-        // top panel
-        JPanel topPanel = new JPanel();
-        topPanel.setLayout(new BoxLayout(topPanel, BoxLayout.X_AXIS));
 
         GridBagLayout gridBagLayout = new GridBagLayout();
         GridBagConstraints c = new GridBagConstraints();
 
-        //topPanel.setLayout( );
-        JPanel topBorderPanel = new JPanel();
-        topBorderPanel.setLayout(new BorderLayout());
-
-        //topBorderPanel.setBorder(BorderFactory.createEmptyBorder(0, 0, 5, 0));
-        topBorderPanel.add(topPanel);
-
-        //mainPanel.add( topBorderPanel, BorderLayout.NORTH );
-        JLabel nameLabel = new JLabel("name");
-        nameLabel.setEnabled(false);
-        topPanel.add(nameLabel);
-
-        topPanel.add(Box.createRigidArea(new java.awt.Dimension(10, 0)));
-        topPanel.add(Box.createHorizontalGlue());
-
-        Component glue = Box.createVerticalGlue();
-        c.anchor = GridBagConstraints.EAST;
-        c.gridwidth = GridBagConstraints.REMAINDER;
-
-        //c.fill = GridBagConstraints.HORIZONTAL;
-        gridBagLayout.setConstraints(glue, c);
+        mainPanel.add(new JLabel(MailResourceLoader.getString(
+                "dialog",
+                "export",
+                "info")), BorderLayout.NORTH);
 
         gridBagLayout = new GridBagLayout();
         c = new GridBagConstraints();
@@ -197,7 +158,7 @@ public class ExportDialog
         gridBagLayout.setConstraints(selectAllButton, c);
         eastPanel.add(selectAllButton);
 
-        glue = Box.createVerticalGlue();
+        Component glue = Box.createVerticalGlue();
         c.fill = GridBagConstraints.BOTH;
         c.weighty = 1.0;
         gridBagLayout.setConstraints(glue, c);
@@ -328,25 +289,6 @@ public class ExportDialog
             // execute the command
             MainInterface.processor.addOp(new ExportFolderCommand(r));
         }
-    }
-
-    /* (non-Javadoc)
-     * @see javax.swing.event.TreeSelectionListener#valueChanged(javax.swing.event.TreeSelectionEvent)
-     */
-    public void valueChanged(TreeSelectionEvent arg0) {
-        selectedNode =
-            (DefaultMutableTreeNode) arg0.getPath().getLastPathComponent();
-
-        if (selectedNode == null) {
-            return;
-        }
-    }
-
-    /**
-     * @return
-     */
-    public DefaultMutableTreeNode getSelectedNode() {
-        return selectedNode;
     }
 
     class NodeSelectionListener extends MouseAdapter {
