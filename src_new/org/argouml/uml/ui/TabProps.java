@@ -1,4 +1,4 @@
-// $Id: TabProps.java,v 1.45 2003/12/15 09:32:14 mkl Exp $
+// $Id: TabProps.java,v 1.46 2004/05/24 10:06:57 mkl Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -300,7 +300,7 @@ public class TabProps
         String base = "";
 
         String targetClassName = targetClass.getName();
-	cat.info("Trying to locate panel for: " + targetClassName);
+        cat.info("Trying to locate panel for: " + targetClassName);
         int lastDot = targetClassName.lastIndexOf(".");
 
         //remove "ru.novosoft.uml"
