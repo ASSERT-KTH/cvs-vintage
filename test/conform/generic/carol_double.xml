@@ -42,9 +42,9 @@
     <fileset dir="${test.dist.lib}">
       <include name="**/carol_test.jar"/>
       <include name="**/${stub.jar.name1}"/>
-    </fileset> 
-    <fileset dir="${test.ext}">
-      <include name="**/jonathan.xml"/>
+    </fileset>  
+    <fileset dir="${test.externals}">
+      <include name="**/*.jar"/>
     </fileset>  
     <pathelement location="${test.tmp.client1}"/>
   </path>
@@ -77,6 +77,9 @@
   </path>
 
   <path id="test.name.server.classpath2">
+    <fileset dir="${test.externals}">
+      <include name="**/*.jar"/>
+    </fileset>
     <fileset dir="${carol.dist}/lib">
       <include name="**/*.jar"/>
     </fileset> 
