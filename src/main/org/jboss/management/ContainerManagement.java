@@ -61,10 +61,10 @@ import org.jboss.logging.Logger;
 *   @author <a href="mailto:marc.fleury@jboss.org">Marc Fleury</a>
 *   @author <a href="mailto:andreas.schaefer@madplanet.com">Andreas Schaefer</a>
 *
-*   @version $Revision: 1.4 $
+*   @version $Revision: 1.5 $
 */
 public class ContainerManagement
-  extends org.jboss.util.ServiceMBeanSupport
+  extends org.jboss.system.ServiceMBeanSupport
   implements ContainerManagementMBean
 {
    // Attributes ----------------------------------------------------

@@ -20,7 +20,7 @@ import javax.mail.Session;
 import javax.mail.PasswordAuthentication;
 import javax.mail.Authenticator;
 
-import org.jboss.util.ServiceMBeanSupport;
+import org.jboss.system.ServiceMBeanSupport;
 import org.jboss.naming.NonSerializableFactory;
 
 /**
@@ -28,7 +28,7 @@ import org.jboss.naming.NonSerializableFactory;
  * in JNDI under java:/ namespace with the name provided with method {@link #setJNDIName}.
  *
  * @author <a href="mailto:simone.bordet@compaq.com">Simone Bordet</a>
- * @version $Revision: 1.4 $
+ * @version $Revision: 1.5 $
  */
 public class MailService
 	extends ServiceMBeanSupport

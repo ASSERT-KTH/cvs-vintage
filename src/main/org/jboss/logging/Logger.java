@@ -17,7 +17,7 @@ import javax.management.*;
  * @deprecated, As of JBoss 2.3, replaced by the org.apache.log4j framework
  * @author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
  * @author <a href="mailto:Scott_Stark@displayscape.com">Scott Stark</a>.
- * @version $Revision: 1.10 $
+ * @version $Revision: 1.11 $
  */
 public class Logger
    extends NotificationBroadcasterSupport
@@ -111,7 +111,7 @@ public class Logger
    public ObjectName preRegister(MBeanServer server, ObjectName name)
       throws java.lang.Exception
    {
-      return name == null ? new ObjectName("DefaultDomain:service=Log") : name;
+      return name == null ? new ObjectName("JBOSS-SYSTEM:spine=Log") : name;
    }
    
    public void postRegister(java.lang.Boolean registrationDone) 

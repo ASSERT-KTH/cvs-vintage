@@ -39,7 +39,7 @@ import org.apache.log4j.xml.DOMConfigurator;
 @author <a href="mailto:phox@galactica.it">Fulco Muriglio</a>
 @author <a href="mailto:Scott_Stark@displayscape.com">Scott Stark</a>.
 @author <a href="mailto:davidjencks@earthlink.net">David Jencks</a>
-@version $Revision: 1.9 $
+@version $Revision: 1.10 $
 */
 public class Log4jService implements Log4jServiceMBean, NotificationListener,
     MBeanRegistration
@@ -188,7 +188,7 @@ public class Log4jService implements Log4jServiceMBean, NotificationListener,
     {
         start();
         // Receive notification events sent by the Logger mbean
-        ObjectName logger = new ObjectName(server.getDefaultDomain(),"service","Log");
+        ObjectName logger = new ObjectName(server.getDefaultDomain(),"spine","Log");
         server.addNotificationListener(logger,this,null,null);
         return name == null ? new ObjectName(OBJECT_NAME) : name;
     }

@@ -12,10 +12,10 @@ package org.jboss.mail;
  * 
  * @see
  * @author <a href="mailto:simone.bordet@compaq.com">Simone Bordet</a>
- * @version $Revision: 1.3 $
+ * @version $Revision: 1.4 $
  */
 public interface MailServiceMBean
-	extends org.jboss.util.ServiceMBean
+	extends org.jboss.system.ServiceMBean
 {
 	// Constants -----------------------------------------------------
 	public static final String OBJECT_NAME = ":service=Mail";
