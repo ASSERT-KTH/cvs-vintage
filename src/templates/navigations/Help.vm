@@ -3,12 +3,13 @@ Links given doc and label in 'Help window' mode.
 Usage: #enterHelp($link "#middle" "label")
 ------------------------------------------------------------------------- *#
 #macro (enterHelp $link $anchor $linktext)
-<a href="$link$anchor" onclick="return launch(this.href, 1)"
-title="New Window - Help">$linktext</a>
+    <a href="$link$anchor" onClick="helpWindow=window.open('', 'helpwindow',
+    'resizable=yes,menubar=yes,scrollbars=yes,height=450,width=700'); helpWindow.focus();" 
+    target="helpwindow" title="New Window - Help">$linktext</a>
 
 #end
 
-#if( $helplink.setPage("help,Introduction.vm").isAllowed() ) 
+#if( $link.setPage("help,Introduction.vm").isAllowed() ) 
  <div>#enterHelp($link "" "Introduction to Scarab")</div>
 #end
 #if( $link.setPage("help,UserIssues.vm").isAllowed() ) 
@@ -18,20 +19,24 @@ title="New Window - Help">$linktext</a>
  <div>#enterHelp($link "" "Searching the database")</div>
 #end
 #*
-#if( $helplink.setPage("help,UserReports.vm").isAllowed() ) 
+#if( $link.setPage("help,UserReports.vm").isAllowed() ) 
  <div>#enterHelp($link "" "Reports")</div>
 #end
-#if( $helplink.setPage("help,ScarabBestPractices.vm").isAllowed() ) 
+*#
+#if( $link.setPage("help,ScarabBestPractices.vm").isAllowed() ) 
  <div>#enterHelp($link "" "Best Practices")</div>
 #end
-#if( $helplink.setPage("help,ScarabFaq.vm").isAllowed() ) 
+#if( $link.setPage("help,ScarabFaq.vm").isAllowed() ) 
  <div>#enterHelp($link "" "FAQ")</div>
 #end
-#if( $helplink.setPage("help,ScarabGlossary.vm").isAllowed() ) 
+#*
+#if( $link.setPage("help,ScarabGlossary.vm").isAllowed() ) 
  <div>#enterHelp($link "" "Glossary")</div>
 #end
+*#
 
-#if( $helplink.setPage("help,").isAllowed() ) 
+#* link template
+#if( $link.setPage("help,").isAllowed() ) 
  <div>#enterHelp($link "" "")</div>
 #end
 *#
