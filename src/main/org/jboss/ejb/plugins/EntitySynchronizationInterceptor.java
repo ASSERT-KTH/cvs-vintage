@@ -43,7 +43,7 @@ import org.jboss.metadata.ConfigurationMetaData;
  * @author <a href="mailto:marc.fleury@jboss.org">Marc Fleury</a>
  * @author <a href="mailto:Scott.Stark@jboss.org">Scott Stark</a>
  * @author <a href="mailto:bill@burkecentral.com">Bill Burke</a>
- * @version $Revision: 1.64 $
+ * @version $Revision: 1.65 $
  *
  * <p><b>Revisions:</b><br>
  * <p><b>2001/06/28: marcf</b>
@@ -100,6 +100,12 @@ public class EntitySynchronizationInterceptor
    // Constants -----------------------------------------------------
 
    // Attributes ----------------------------------------------------
+
+   /**
+    * The variable <code>vcrThread</code> holds the valid context refresher thread for 
+    * this interceptor, so it may be shut down in stop.
+    */
+   private Thread vcrThread;
  
    /**
     *  The current commit option.
@@ -144,17 +150,38 @@ public class EntitySynchronizationInterceptor
          commitOption = configuration.getCommitOption();
          optionDRefreshRate = configuration.getOptionDRefreshRate();
    
-         //start up the validContexts thread if commit option D
-         if(commitOption == ConfigurationMetaData.D_COMMIT_OPTION)
-         {
-            ValidContextsRefresher vcr = new ValidContextsRefresher(validContexts, optionDRefreshRate);
-            new Thread(vcr).start();
-         }
-   
       } catch (Exception e)
       {
          log.warn(e.getMessage());
       }
+   }
+
+   public void start()
+   {
+      try 
+      {         
+         //start up the validContexts thread if commit option D
+         if(commitOption == ConfigurationMetaData.D_COMMIT_OPTION)
+         {
+            ValidContextsRefresher vcr = new ValidContextsRefresher(validContexts, optionDRefreshRate);
+            vcrThread = new Thread(vcr);
+            vcrThread.start();
+         }
+      }
+      catch (Exception e)
+      {
+         vcrThread = null;
+         log.warn("problem starting valid contexts refresher thread", e);
+      } // end of try-catch
+   }      
+
+   public void stop()
+   {
+      if (vcrThread != null) 
+      {
+         vcrThread.interrupt();
+      } // end of if ()
+      
    }
  
    public Container getContainer()
@@ -509,11 +536,12 @@ public class EntitySynchronizationInterceptor
             {
                Thread.sleep(refreshRate);
             }
-            catch(Exception e)
+            catch (InterruptedException  e)
             {
-               if( log.isDebugEnabled() )
-                 log.debug("Interrupted from sleep", e);
-            }
+               validContexts.clear();
+               log.trace("ValidContextRefresher thread interrupted and shutting down");
+               return;
+            } // end of catch
          }
       }
    }
