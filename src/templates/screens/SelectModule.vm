@@ -41,14 +41,16 @@
 </tr>
 
 #foreach ($module in $userModules)
-#indexedRows($velocityCount)
-<td>
-$modulelink.setPage("$module.ModuleId").setLabel($module.Name)
-</td>
-<td>
-$module.Description
-</td>
-</tr>
+ #if (!$module.isGlobalModule())
+  #indexedRows($velocityCount)
+   <td>
+     $modulelink.setPage("$module.ModuleId").setLabel($module.Name)
+   </td>
+   <td>
+     $module.Description
+   </td>
+  </tr>
+  #end
 #end
 
 </table>
