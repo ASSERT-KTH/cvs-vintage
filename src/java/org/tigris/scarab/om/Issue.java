@@ -93,7 +93,7 @@ import org.apache.commons.lang.StringUtils;
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
- * @version $Id: Issue.java,v 1.212 2002/11/12 19:04:02 elicia Exp $
+ * @version $Id: Issue.java,v 1.213 2002/11/12 21:48:25 elicia Exp $
  */
 public class Issue 
     extends BaseIssue
@@ -2869,7 +2869,7 @@ public class Issue
             Attribute attr = AttributeManager.getInstance(attrId);
             oldAttVal = (AttributeValue)avMap.get(attr.getName().toUpperCase());
             newAttVal = (AttributeValue)newAttVals.get(attrId);
-            if (newAttVal.getValue() != null && newAttVal.getValue() != "")
+            if (newAttVal.getValue() != null && newAttVal.getValue().length() > 0)
             {
                 oldAttVal.setProperties(newAttVal);
             }
