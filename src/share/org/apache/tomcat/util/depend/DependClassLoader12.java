@@ -70,6 +70,10 @@ import org.apache.tomcat.util.compat.*;
  * 
  */
 public class DependClassLoader12 extends DependClassLoader {
+	
+    private final static String FILE_PROTOCOL = "file:";
+    private final static String BANG = "!";
+	
     DependClassLoader12() {
     }
     
@@ -115,7 +119,11 @@ public class DependClassLoader12 extends DependClassLoader {
             if ( "jar".equals(res.getProtocol()) ) {
               try {
 		  String JarN = res.getFile();
-		  JarFile JarF = new JarFile(JarN);
+		  if (JarN.startsWith(FILE_PROTOCOL)) 
+		      JarN = JarN.substring(FILE_PROTOCOL.length());
+		  int bang = JarN.indexOf(BANG);
+		  if (bang != -1) JarN = JarN.substring(0, bang);
+ 		  JarFile JarF = new JarFile(JarN);
 		  Manifest mf = JarF.getManifest();
 		  if(mf == null) // Jar may not be Java2
 		      throw new IOException("No Manifest");
