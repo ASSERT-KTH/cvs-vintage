@@ -16,6 +16,7 @@ import java.lang.reflect.Field;
 import javax.sql.DataSource;
 
 import javax.naming.InitialContext;
+import javax.naming.NamingException;
 
 import org.w3c.dom.Element;
 
@@ -36,7 +37,7 @@ import org.jboss.logging.Logger;
  *      @author <a href="mailto:dirk@jboss.de">Dirk Zimmermann</a>
  *      @author <a href="mailto:bill@burkecentral.com">Bill Burke</a>
  *      @author <a href="mailto:menonv@cpw.co.uk">Vinay Menon</a>
- *	@version $Revision: 1.11 $
+ *	@version $Revision: 1.12 $
  *
  *      Revisions:
  *      20010621 Bill Burke: made read-ahead defaultable in standardjboss.xml and jaws.xml
