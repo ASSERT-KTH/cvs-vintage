@@ -4,3 +4,5 @@ report.scarab.datasql.generation
 report.scarab.sql.generation
 report.scarab.om.generation
 cache.ccf
+InitDbScarabBundle*.properties
+ScarabBundle*.properties
