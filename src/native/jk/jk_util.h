@@ -56,7 +56,7 @@
 /***************************************************************************
  * Description: Various utility functions                                  *
  * Author:      Gal Shachor <shachor@il.ibm.com>                           *
- * Version:     $Revision: 1.3 $                                               *
+ * Version:     $Revision: 1.4 $                                               *
  ***************************************************************************/
 #ifndef _JK_UTIL_H
 #define _JK_UTIL_H
@@ -80,6 +80,17 @@ int jk_log(jk_logger_t *l,
            int line,
            int level,
            const char *fmt, ...);
+
+/* [V] Two general purpose functions. Should ease the function bloat. */
+int jk_get_worker_str_prop(jk_map_t *m,
+			   const char *wname,
+			   const char *pname,
+			   char **prop);
+
+int jk_get_worker_int_prop(jk_map_t *m,
+			   const char *wname,
+			   const char *pname,
+			   int *prop);
 
 char *jk_get_worker_host(jk_map_t *m,
                          const char *wname,

@@ -57,7 +57,7 @@
  * Description: In process JNI worker                                      *
  * Author:      Gal Shachor <shachor@il.ibm.com>                           *
  * Based on:                                                               *
- * Version:     $Revision: 1.6 $                                               *
+ * Version:     $Revision: 1.7 $                                           *
  ***************************************************************************/
 
 #ifndef WIN32
@@ -70,11 +70,17 @@
 #include "jk_jni_worker.h"
 #include "jk_util.h"
 
-#ifdef LINUX
+#if defined LINUX && defined APACHE2_SIGHACK
 #include <pthread.h>
 #include <signal.h>
 #include <bits/signum.h>
 #endif
+
+#ifndef JNI_VERSION_1_1
+#define JNI_VERSION_1_1 0x00010001
+#endif
+
+#define null_check(e) if ((e) == 0) return JK_FALSE
 
 jint (JNICALL *jni_get_default_java_vm_init_args)(void *) = NULL;
 jint (JNICALL *jni_create_java_vm)(JavaVM **, JNIEnv **, void *) = NULL;
@@ -90,10 +96,16 @@ struct jni_worker {
 
     jk_pool_t p;
     jk_pool_atom_t buf[TINY_POOL_SIZE];
+
     /*
      * JVM Object pointer.
      */
     JavaVM      *jvm;   
+
+    /*
+     * [V] JNIEnv used for boostraping from validate -> init w/o an attach
+     */
+    JNIEnv	*tmp_env;
 
     /*
      * Web Server to Java bridge, instance and class.
@@ -134,9 +146,21 @@ struct jni_worker {
     unsigned tomcat_mx;
 
     /*
-     * Javas system properties.
+     * Java system properties
      */
     char **sysprops;
+
+#ifdef JNI_VERSION_1_2
+    /*
+     * Java 2 initialization options (-X... , -verbose etc.)
+     */
+    char **java2opts;
+
+    /*
+     * Java 2 lax/strict option checking (bool)
+     */    
+    int java2lax;
+#endif
 
     /*
      * stdout and stderr file names for Java
@@ -166,6 +190,19 @@ static int open_jvm(jni_worker_t *p,
                     JNIEnv **env,
                     jk_logger_t *l);
 
+static int open_jvm1(jni_worker_t *p,
+                    JNIEnv **env,
+                    jk_logger_t *l);
+
+#ifdef JNI_VERSION_1_2
+static int detect_jvm_version(jk_logger_t *l);
+
+static int open_jvm2(jni_worker_t *p,
+                    JNIEnv **env,
+                    jk_logger_t *l);
+#endif
+
+
 static int get_bridge_object(jni_worker_t *p,
                              JNIEnv *env,
                              jk_logger_t *l);
@@ -174,13 +211,16 @@ static int get_method_ids(jni_worker_t *p,
                           JNIEnv *env,
                           jk_logger_t *l);
 
-static JNIEnv *attach_to_jvm(jni_worker_t *p);
+static JNIEnv *attach_to_jvm(jni_worker_t *p, 
+                             jk_logger_t *l);
 
-static void detach_from_jvm(jni_worker_t *p);
+static void detach_from_jvm(jni_worker_t *p, 
+                            jk_logger_t *l);
 
 
-#ifndef WIN32
-static void linux_signal_hack() {
+#if defined LINUX && defined APACHE2_SIGHACK
+static void linux_signal_hack() 
+{
     sigset_t newM;
     sigset_t old;
     
@@ -204,348 +244,434 @@ static void print_signals( sigset_t *sset) {
 }
 #endif
 
-static int JK_METHOD service(jk_endpoint_t *e, 
+static int JK_METHOD service(jk_endpoint_t *e,
                              jk_ws_service_t *s,
                              jk_logger_t *l,
                              int *is_recoverable_error)
 {
-    if( ! e ||  ! e->endpoint_private || ! s ) {
-	jk_log(l, JK_LOG_EMERG, "Assert failed - invalid parameters\n");  
-	return JK_FALSE;
-    }
-    
-    if( ! is_recoverable_error ) {
-	return JK_FALSE;
+    jni_endpoint_t *p;
+    jint rc;
+
+    jk_log(l, JK_LOG_DEBUG, "Into service\n");
+    if(!e || !e->endpoint_private || !s) {
+	    jk_log(l, JK_LOG_EMERG, "In service, assert failed - invalid parameters\n");
+	    return JK_FALSE;
     }
 
-    {
-	jni_endpoint_t *p = e->endpoint_private;
+    p = e->endpoint_private;
 
-        if(! p->attached ) { 
-	    /* Try to attach */
-	    if( ! (p->env = attach_to_jvm(p->worker))) {
-		jk_log(l, JK_LOG_EMERG, "Attach failed\n");  
-		/*   Is it recoverable ?? */
-		*is_recoverable_error = JK_TRUE;
-		return JK_FALSE;
+    if(!is_recoverable_error) {
+	    return JK_FALSE;
+    }
+
+    if(!p->attached) { 
+        /* Try to attach */
+        if(!(p->env = attach_to_jvm(p->worker, l))) {
+	        jk_log(l, JK_LOG_EMERG, "Attach failed\n");  
+	        /*   Is it recoverable ?? */
+	        *is_recoverable_error = JK_TRUE;
+	        return JK_FALSE;
 	    } 
-            p->attached = JK_TRUE;
-	}
+        p->attached = JK_TRUE;
+    }
 
-	/* we are attached now */
-	{ 
-	    jint rc = 0;
-            /* 
-             * When we call the JVM we can not know what happen 
-             * So we can not recover !!!
-             */
-            *is_recoverable_error = JK_FALSE;
+    /* we are attached now */
 
-	    jk_log(l, JK_LOG_DEBUG, "Calling native method\n");  
+    /* 
+     * When we call the JVM we cannot know what happens
+     * So we can not recover !!!
+     */
+    *is_recoverable_error = JK_FALSE;
+	    
+    jk_log(l, JK_LOG_DEBUG, "In service, calling Tomcat...\n");
 
-            rc = (*(p->env))->CallIntMethod(p->env,
-                                            p->worker->jk_java_bridge_object,
-                                            p->worker->jk_service_method,
-                                            (jlong)s,
-                                            (jlong)l );
+    rc = (*(p->env))->CallIntMethod(p->env,
+                                    p->worker->jk_java_bridge_object,
+                                    p->worker->jk_service_method,
+    /* [V] For some reason gcc likes this pointer -> int -> jlong conversion, */
+    /*     but not the direct pointer -> jlong conversion. I hope it's okay.  */
+                                    (jlong)(int)s,
+                                    (jlong)(int)l);
 
-	    if( rc==0 ) {
-		jk_log(l, JK_LOG_EMERG, "service() returned 0, error\n");  
-		return JK_FALSE;
-	    }
-	    jk_log(l, JK_LOG_DEBUG, "Native call returned %d\n", rc);  
+    /* [V] Righ now JNIEndpoint::service() only returns 1 or 0 */
+    if(rc) {
+	    jk_log(l, JK_LOG_DEBUG, 
+               "In service, Tomcat returned OK, done\n");
 	    return JK_TRUE;
-        }
+    } else {
+	    jk_log(l, JK_LOG_ERROR, 
+               "In service, Tomcat FAILED!\n");
+	    return JK_FALSE;
     }
 }
 
 static int JK_METHOD done(jk_endpoint_t **e,
                           jk_logger_t *l)
 {
-    jk_log(l, JK_LOG_DEBUG, "Into done\n"); 
-    if(! e || ! *e || ! (*e)->endpoint_private) {
-	jk_log( l, JK_LOG_EMERG, "Done - wrong arguments \n");
-	return JK_FALSE;
-    }
-    {
-        jni_endpoint_t *p = (*e)->endpoint_private;
+    jni_endpoint_t *p;
 
-        if(p->attached) {
-            detach_from_jvm(p->worker);
-        }
-
-        free(p);
-        *e = NULL;
-	jk_log(l, JK_LOG_DEBUG, "Done ok\n"); 
-        return JK_TRUE;
+    jk_log(l, JK_LOG_DEBUG, "Into done\n");
+    if(!e || !*e || !(*e)->endpoint_private) {
+	    jk_log(l, JK_LOG_EMERG, 
+               "In done, assert failed - invalid parameters\n");
+	    return JK_FALSE;
     }
+
+    p = (*e)->endpoint_private;
+
+    if(p->attached) {
+        detach_from_jvm(p->worker,l);
+    }
+
+    free(p);
+    *e = NULL;
+    jk_log(l, JK_LOG_DEBUG, 
+           "Done ok\n");
+    return JK_TRUE;
 }
 
 static int JK_METHOD validate(jk_worker_t *pThis,
                               jk_map_t *props,
                               jk_logger_t *l)
 {
-    if(pThis && pThis->worker_private) {        
-        jni_worker_t *p = pThis->worker_private;
-        unsigned mem_config = 0;
-        char *str_config = NULL;
-        JNIEnv *env;
+    jni_worker_t *p;
+    int mem_config = 0;
+    char *str_config = NULL;
+    JNIEnv *env;
 
-	    jk_log(l, JK_LOG_DEBUG, "Into jni_validate\n"); 
-        if(p->was_verified) {
-            return JK_TRUE;
-        }
+    jk_log(l, JK_LOG_DEBUG, "Into validate\n");
 
-        if(jk_get_worker_mx(props, p->name, &mem_config)) {
-            p->tomcat_mx = mem_config;
-        }
-
-        if(jk_get_worker_ms(props, p->name, &mem_config)) {
-            p->tomcat_ms = mem_config;
-        }
-
-        if(jk_get_worker_classpath(props, p->name, &str_config)) {
-            p->tomcat_classpath = jk_pool_strdup(&p->p, str_config);
-        }
-
-        if(!p->tomcat_classpath) {
-	        jk_log(l, JK_LOG_EMERG, "Fail-> no classpath\n"); 
-            return JK_FALSE;
-        }
-
-        if(jk_get_worker_jvm_path(props, p->name, &str_config)) {
-            p->jvm_dll_path  = jk_pool_strdup(&p->p, str_config);
-        }
-
-        if(!p->jvm_dll_path || 
-           !jk_file_exists(p->jvm_dll_path)) {
-	        jk_log(l, JK_LOG_EMERG, "Fail-> no jvm_dll_path\n"); 
-            return JK_FALSE;
-        }
-
-        if(jk_get_worker_cmd_line(props, p->name, &str_config)) {
-            p->tomcat_cmd_line  = jk_pool_strdup(&p->p, str_config);
-        }
-
-        if(jk_get_worker_stdout(props, p->name, &str_config)) {
-            p->stdout_name  = jk_pool_strdup(&p->p, str_config);
-        }
-
-        if(jk_get_worker_stderr(props, p->name, &str_config)) {
-            p->stderr_name  = jk_pool_strdup(&p->p, str_config);
-        }
-
-        if(jk_get_worker_sysprops(props, p->name, &str_config)) {
-            p->sysprops  = jk_parse_sysprops(&p->p, str_config);
-        }
-        
-        if(jk_get_worker_libpath(props, p->name, &str_config)) {
-            jk_append_libpath(&p->p, str_config);
-        }
-
-        if(!load_jvm_dll(p, l)) {
-	        jk_log(l, JK_LOG_EMERG, "Fail-> can't load jvm dll\n"); 
-	        detach_from_jvm(p);
-	        return JK_FALSE;
-	    }
-
-	    if(!open_jvm(p, &env, l)) {
-	        jk_log(l, JK_LOG_EMERG, "Fail-> can't open jvm\n"); 
-	        detach_from_jvm(p);
-	        return JK_FALSE;
-	    }
-
-	    if(!get_bridge_object(p, env, l)) {
-	        jk_log(l, JK_LOG_EMERG, "Fail-> can't get bridge object\n"); 
-	        detach_from_jvm(p);
-	        return JK_FALSE;
-	    }
-	
-	    if(!get_method_ids(p, env, l)) {
-	        jk_log(l, JK_LOG_EMERG, "Fail-> can't get method ids\n"); 
-	        detach_from_jvm(p);
-	        return JK_FALSE;
-	    }
-
-	    p->was_verified = JK_TRUE;
-	    return JK_TRUE;
+    if(! pThis || ! pThis->worker_private) {
+	    jk_log(l, JK_LOG_EMERG, "In validate, assert failed - invalid parameters\n");
+	    return JK_FALSE;
     }
-    
-    return JK_FALSE;
+
+    p = pThis->worker_private;
+
+    if(p->was_verified) {
+    	jk_log(l, JK_LOG_DEBUG, "validate, been here before, done\n");
+        return JK_TRUE;
+    }
+
+    if(jk_get_worker_mx(props, p->name, &mem_config)) {
+        p->tomcat_mx = mem_config;
+    }
+
+    if(jk_get_worker_ms(props, p->name, &mem_config)) {
+        p->tomcat_ms = mem_config;
+    }
+
+    if(jk_get_worker_classpath(props, p->name, &str_config)) {
+        p->tomcat_classpath = jk_pool_strdup(&p->p, str_config);
+    }
+
+    if(!p->tomcat_classpath) {
+        jk_log(l, JK_LOG_EMERG, "Fail-> no classpath\n");
+        return JK_FALSE;
+    }
+
+    if(jk_get_worker_jvm_path(props, p->name, &str_config)) {
+        p->jvm_dll_path  = jk_pool_strdup(&p->p, str_config);
+    }
+
+    if(!p->jvm_dll_path || !jk_file_exists(p->jvm_dll_path)) {
+        jk_log(l, JK_LOG_EMERG, "Fail-> no jvm_dll_path\n");
+        return JK_FALSE;
+    }
+
+    if(jk_get_worker_cmd_line(props, p->name, &str_config)) {
+        p->tomcat_cmd_line  = jk_pool_strdup(&p->p, str_config);
+    }
+
+    if(jk_get_worker_stdout(props, p->name, &str_config)) {
+        p->stdout_name  = jk_pool_strdup(&p->p, str_config);
+    }
+
+    if(jk_get_worker_stderr(props, p->name, &str_config)) {
+        p->stderr_name  = jk_pool_strdup(&p->p, str_config);
+    }
+
+    if(jk_get_worker_sysprops(props, p->name, &str_config)) {
+        p->sysprops  = jk_parse_sysprops(&p->p, str_config);
+    }
+
+#ifdef JNI_VERSION_1_2
+    if(jk_get_worker_str_prop(props, p->name, "java2opts", &str_config)) {
+    	/* jk_log(l, JK_LOG_DEBUG, "Got opts: %s\n", str_config); */
+	    p->java2opts = jk_parse_sysprops(&p->p, str_config);
+    }
+    if(jk_get_worker_int_prop(props, p->name, "java2lax", &mem_config)) {
+        p->java2lax = mem_config ? JK_TRUE : JK_FALSE;
+    }
+#endif
+
+    if(jk_get_worker_libpath(props, p->name, &str_config)) {
+        jk_append_libpath(&p->p, str_config);
+    }
+
+    if(!load_jvm_dll(p, l)) {
+	    jk_log(l, JK_LOG_EMERG, "Fail-> can't load jvm dll\n");
+	    /* [V] no detach needed here */
+	    return JK_FALSE;
+    }
+
+    if(!open_jvm(p, &env, l)) {
+	    jk_log(l, JK_LOG_EMERG, "Fail-> can't open jvm\n");
+	    /* [V] no detach needed here */
+	    return JK_FALSE;
+    }
+
+    if(!get_bridge_object(p, env, l)) {
+        jk_log(l, JK_LOG_EMERG, "Fail-> can't get bridge object\n");
+        /* [V] the detach here may segfault on 1.1 JVM... */
+        detach_from_jvm(p, l);
+        return JK_FALSE;
+    }
+
+    if(!get_method_ids(p, env, l)) {
+        jk_log(l, JK_LOG_EMERG, "Fail-> can't get method ids\n");
+        /* [V] the detach here may segfault on 1.1 JVM... */
+        detach_from_jvm(p, l);
+        return JK_FALSE;
+    }
+
+    p->was_verified = JK_TRUE;
+    p->tmp_env = env;
+
+    jk_log(l, JK_LOG_DEBUG, 
+           "Done validate\n");
+
+    return JK_TRUE;
 }
 
 static int JK_METHOD init(jk_worker_t *pThis,
-                          jk_map_t *props, 
+                          jk_map_t *props,
                           jk_logger_t *l)
 {
-    if(pThis && pThis->worker_private) {        
-        jni_worker_t *p = pThis->worker_private;
-        JNIEnv *env;
+    jni_worker_t *p;
+    JNIEnv *env;
 
-        if(p->was_initialized) {
-            return JK_TRUE;
-        }
+    jk_log(l, JK_LOG_DEBUG, "Into init\n");
 
-        if(!p->jvm ||
-           !p->jk_java_bridge_object ||
-           !p->jk_service_method     ||
-           !p->jk_startup_method     ||
-           !p->jk_shutdown_method) {
-	    jk_log(l, JK_LOG_EMERG, "Fail-> worker not set completely\n"); 
-            return JK_FALSE;
-        }
-       
-        if(env = attach_to_jvm(p)) {
-            jstring cmd_line = NULL;
-            jstring stdout_name = NULL;
-            jstring stderr_name = NULL;
-            jint rc = 0;
-            
-            if(p->tomcat_cmd_line) {
-                cmd_line = (*env)->NewStringUTF(env, p->tomcat_cmd_line); 
-            }
-            if(p->stdout_name) {
-                stdout_name = (*env)->NewStringUTF(env, p->stdout_name); 
-            }
-            if(p->stdout_name) {
-                stderr_name = (*env)->NewStringUTF(env, p->stderr_name); 
-            }
-
-            rc = (*env)->CallIntMethod(env,
-                                       p->jk_java_bridge_object, 
-                                       p->jk_startup_method,
-                                       cmd_line,
-                                       stdout_name,
-                                       stderr_name);
-
-            detach_from_jvm(p);
-
-            if(rc) {
-                p->was_initialized = JK_TRUE; 
-                return JK_TRUE;
-            }
-	    jk_log(l, JK_LOG_EMERG, "Fail-> result from call is 0\n"); 
-            return JK_FALSE;
-        }
+    if(! pThis || ! pThis->worker_private) {
+	    jk_log(l, JK_LOG_EMERG, "In init, assert failed - invalid parameters\n");
+	    return JK_FALSE;
     }
-    return JK_FALSE;
+
+    p = pThis->worker_private;
+
+    if(p->was_initialized) {
+	    jk_log(l, JK_LOG_DEBUG, "init, done (been here!)\n");
+        return JK_TRUE;
+    }
+
+    if(!p->jvm ||
+       !p->jk_java_bridge_object ||
+       !p->jk_service_method     ||
+       !p->jk_startup_method     ||
+       !p->jk_shutdown_method) {
+	    jk_log(l, JK_LOG_EMERG, "Fail-> worker not set completely\n");
+	    return JK_FALSE;
+    }
+
+    /* [V] init is called from the same thread that called validate */
+    /* there is no need to attach to the JVM, just get the env */
+
+    /* if(env = attach_to_jvm(p,l)) { */
+    if((env = p->tmp_env)) {
+        jstring cmd_line = NULL;
+        jstring stdout_name = NULL;
+        jstring stderr_name = NULL;
+        jint rc = 0;
+
+        if(p->tomcat_cmd_line) {
+            cmd_line = (*env)->NewStringUTF(env, p->tomcat_cmd_line);
+        }
+        if(p->stdout_name) {
+            stdout_name = (*env)->NewStringUTF(env, p->stdout_name);
+        }
+        if(p->stdout_name) {
+            stderr_name = (*env)->NewStringUTF(env, p->stderr_name);
+        }
+
+	    jk_log(l, JK_LOG_DEBUG, "In init, calling Tomcat to intialize itself...\n");
+        rc = (*env)->CallIntMethod(env,
+                                   p->jk_java_bridge_object,
+                                   p->jk_startup_method,
+                                   cmd_line,
+                                   stdout_name,
+                                   stderr_name);
+
+        detach_from_jvm(p, l); 
+
+	    if(rc) {
+	        p->was_initialized = JK_TRUE;
+	        jk_log(l, JK_LOG_DEBUG, 
+                   "In init, Tomcat initialized OK, done\n");
+	        return JK_TRUE;
+	    } else {
+	        jk_log(l, JK_LOG_EMERG, 
+                   "Fail-> could not initialize Tomcat\n");
+	        return JK_FALSE;
+	    }
+    } else {
+	    jk_log(l, JK_LOG_ERROR, 
+               "In init, FIXME: init didn't gen env from validate!\n");
+	    return JK_FALSE;
+    }
 }
 
 static int JK_METHOD get_endpoint(jk_worker_t *pThis,
                                   jk_endpoint_t **pend,
-                                  jk_logger_t *log)
+                                  jk_logger_t *l)
 {
-    if(pThis && pThis->worker_private && pend) {        
-        jni_endpoint_t *p = (jni_endpoint_t *)malloc(sizeof(jni_endpoint_t));
-        if(p) {
+    /* [V] This slow, needs replacement */
+    jni_endpoint_t *p = (jni_endpoint_t *)malloc(sizeof(jni_endpoint_t));
 
-            p->attached = JK_FALSE;
-            p->env = NULL;
-            p->worker = pThis->worker_private;
-            p->endpoint.endpoint_private = p;
-            p->endpoint.service = service;
-            p->endpoint.done = done;
-            *pend = &p->endpoint;
+    jk_log(l, JK_LOG_DEBUG, 
+           "Into get_endpoint\n");
 
-            return JK_TRUE;
-        }
+    if(!pThis || ! pThis->worker_private || !pend) {
+	    jk_log(l, JK_LOG_EMERG, 
+               "In get_endpoint, assert failed - invalid parameters\n");
+	    return JK_FALSE;
     }
 
-    return JK_FALSE;
+    if(p) {
+        p->attached = JK_FALSE;
+        p->env = NULL;
+        p->worker = pThis->worker_private;
+        p->endpoint.endpoint_private = p;
+        p->endpoint.service = service;
+        p->endpoint.done = done;
+        *pend = &p->endpoint;
+	
+        return JK_TRUE;
+    } else {
+	    jk_log(l, JK_LOG_ERROR, "In get_endpoint, could not allocate endpoint\n");
+	    return JK_FALSE;
+    }
 }
 
 static int JK_METHOD destroy(jk_worker_t **pThis,
                              jk_logger_t *l)
 {
-    if(pThis && *pThis && (*pThis)->worker_private) {
-        jni_worker_t *p = (*pThis)->worker_private;
+    jni_worker_t *p;
+    JNIEnv *env;
 
-        if(p->jvm) {
-            if(p->jk_java_bridge_object && p->jk_shutdown_method) {
-                JNIEnv *env;
+    jk_log(l, JK_LOG_DEBUG, 
+           "Into destroy\n");
 
-                if(env = attach_to_jvm(p)) {
-                    (*env)->CallVoidMethod(env,
-                                           p->jk_java_bridge_object, 
-                                           p->jk_shutdown_method);
-                    detach_from_jvm(p);
-                }                
-            }
-
-            /* 
-             * FIXME:
-             * Block forever ...remove for now
-             *
-            (*(p->jvm))->DestroyJavaVM(p->jvm);
-             */
-        }
-
-        jk_close_pool(&p->p);
-        free(p);
-
-        return JK_TRUE;
+    if(!pThis || !*pThis || ! (*pThis)->worker_private) {
+	    jk_log(l, JK_LOG_EMERG, "In destroy, assert failed - invalid parameters\n");
+	    return JK_FALSE;
     }
 
-    return JK_FALSE;
+    p = (*pThis)->worker_private;
+
+    if(!p->jvm) {
+	    jk_log(l, JK_LOG_DEBUG, "In destroy, JVM not intantiated\n");
+	    return JK_FALSE;
+    }
+
+    if(!p->jk_java_bridge_object || ! p->jk_shutdown_method) {
+        jk_log(l, JK_LOG_DEBUG, "In destroy, Tomcat not intantiated\n");
+	    return JK_FALSE;
+    }
+
+    if((env = attach_to_jvm(p,l))) {
+	    jk_log(l, JK_LOG_DEBUG, 
+               "In destroy, shutting down Tomcat...\n");
+        (*env)->CallVoidMethod(env,
+                               p->jk_java_bridge_object,
+                               p->jk_shutdown_method);
+        detach_from_jvm(p, l);
+    }
+
+    jk_close_pool(&p->p);
+    free(p);
+
+    jk_log(l, JK_LOG_DEBUG, "Done destroy\n");
+
+    return JK_TRUE;
 }
 
 int JK_METHOD jni_worker_factory(jk_worker_t **w,
                                  const char *name,
                                  jk_logger_t *l)
 {
+    jni_worker_t *private_data;
 
-    if(NULL != name && NULL != w) {
-        if(the_singleton_jni_worker) {
-            *w = the_singleton_jni_worker;
-            return JK_TRUE;
-        } else {
-            jni_worker_t *private_data = 
-                (jni_worker_t *)malloc(sizeof(jni_worker_t ));
+    jk_log(l, JK_LOG_DEBUG, "Into jni_worker_factory\n");
 
-            if(private_data) {
-
-                jk_open_pool(&private_data->p, 
-                             private_data->buf, 
-                             sizeof(jk_pool_atom_t) * TINY_POOL_SIZE);
-
-                private_data->name = jk_pool_strdup(&private_data->p, name);          
-
-                if(private_data->name) {
-                    private_data->was_verified          = JK_FALSE;
-                    private_data->was_initialized       = JK_FALSE;
-                    private_data->jvm                   = NULL; 
-                    private_data->jk_java_bridge_object = NULL;
-                    private_data->jk_java_bridge_class  = NULL;
-                    private_data->jk_startup_method     = NULL;
-                    private_data->jk_service_method     = NULL;
-                    private_data->jk_shutdown_method    = NULL;
-                    private_data->tomcat_cmd_line       = NULL;
-                    private_data->tomcat_classpath      = NULL;
-                    private_data->jvm_dll_path          = NULL;
-                    private_data->tomcat_ms             = 0;
-                    private_data->tomcat_mx             = 0;
-                    private_data->sysprops              = NULL;
-                    private_data->stdout_name           = NULL;
-                    private_data->stderr_name           = NULL;
-
-                    private_data->worker.worker_private = private_data;
-                    private_data->worker.validate       = validate;
-                    private_data->worker.init           = init;
-                    private_data->worker.get_endpoint   = get_endpoint;
-                    private_data->worker.destroy        = destroy;
-
-                    *w = &private_data->worker;
-                    the_singleton_jni_worker = &private_data->worker; 
-                    return JK_TRUE;
-                }
-
-                jk_close_pool(&private_data->p);
-                free(private_data);
-            }
-        }
+    if(!name || !w) {
+	    jk_log(l, JK_LOG_EMERG, 
+               "In jni_worker_factory, assert failed - invalid parameters\n");
+	    return JK_FALSE;
     }
 
-    return JK_FALSE;
+    if(the_singleton_jni_worker) {
+	    jk_log(l, JK_LOG_DEBUG, 
+               "In jni_worker_factory, instance already created\n");
+        *w = the_singleton_jni_worker;
+	    return JK_TRUE;
+    }
+
+    private_data = (jni_worker_t *)malloc(sizeof(jni_worker_t ));
+
+    if(!private_data) {
+	    jk_log(l, JK_LOG_ERROR, 
+               "In jni_worker_factory, memory allocation error\n");
+	    return JK_FALSE;
+    }
+
+    jk_open_pool(&private_data->p,
+	             private_data->buf,
+                 sizeof(jk_pool_atom_t) * TINY_POOL_SIZE);
+
+    private_data->name = jk_pool_strdup(&private_data->p, name);
+
+    if(!private_data->name) {
+        jk_log(l, JK_LOG_ERROR, 
+               "In jni_worker_factory, memory allocation error\n");
+	    jk_close_pool(&private_data->p);
+        free(private_data);
+        return JK_FALSE;
+    }
+
+    private_data->was_verified          = JK_FALSE;
+    private_data->was_initialized       = JK_FALSE;
+    private_data->jvm                   = NULL;
+    private_data->tmp_env               = NULL;
+    private_data->jk_java_bridge_object = NULL;
+    private_data->jk_java_bridge_class  = NULL;
+    private_data->jk_startup_method     = NULL;
+    private_data->jk_service_method     = NULL;
+    private_data->jk_shutdown_method    = NULL;
+    private_data->tomcat_cmd_line       = NULL;
+    private_data->tomcat_classpath      = NULL;
+    private_data->jvm_dll_path          = NULL;
+    private_data->tomcat_ms             = 0;
+    private_data->tomcat_mx             = 0;
+    private_data->sysprops              = NULL;
+#ifdef JNI_VERSION_1_2
+    private_data->java2opts             = NULL;
+    private_data->java2lax              = JK_TRUE;
+#endif
+    private_data->stdout_name           = NULL;
+    private_data->stderr_name           = NULL;
+
+    private_data->worker.worker_private = private_data;
+    private_data->worker.validate       = validate;
+    private_data->worker.init           = init;
+    private_data->worker.get_endpoint   = get_endpoint;
+    private_data->worker.destroy        = destroy;
+
+    *w = &private_data->worker;
+    the_singleton_jni_worker = &private_data->worker;
+
+    jk_log(l, JK_LOG_DEBUG, "Done jni_worker_factory\n");
+    return JK_TRUE;
 }
 
 static int load_jvm_dll(jni_worker_t *p,
@@ -567,19 +693,27 @@ static int load_jvm_dll(jni_worker_t *p,
         FreeLibrary(hInst);
     }
 #else 
-    void *handle = dlopen(p->jvm_dll_path, RTLD_NOW | RTLD_GLOBAL);
+    void *handle;
+    jk_log(l, JK_LOG_DEBUG, 
+           "Into load_jvm_dll, load %s\n", p->jvm_dll_path);
+
+    handle = dlopen(p->jvm_dll_path, RTLD_NOW | RTLD_GLOBAL);
+
     if(!handle) {
-	    jk_log(l, JK_LOG_EMERG, "Can't log native library %s : %s\n", p->jvm_dll_path,
-	           dlerror() );  
-	    return JK_FALSE;
-    }
-    {
+        jk_log(l, JK_LOG_EMERG, 
+               "Can't log native library %s : %s\n", p->jvm_dll_path,
+               dlerror());
+    } else {
         jni_create_java_vm = dlsym(handle, "JNI_CreateJavaVM");
         jni_get_default_java_vm_init_args = dlsym(handle, "JNI_GetDefaultJavaVMInitArgs");
-        if( jni_create_java_vm && jni_get_default_java_vm_init_args ) {
+
+        if(jni_create_java_vm && jni_get_default_java_vm_init_args) {
+    	    jk_log(l, JK_LOG_DEBUG, 
+                   "In load_jvm_dll, symbols resolved, done\n");
             return JK_TRUE;
         }
-	    jk_log(l, JK_LOG_EMERG, "Can't find JNI_CreateJavaVM or JNI_GetDefaultJavaVMInitArgs\n");
+	    jk_log(l, JK_LOG_EMERG, 
+               "Can't resolve JNI_CreateJavaVM or JNI_GetDefaultJavaVMInitArgs\n");
         dlclose(handle);
     }
 #endif
@@ -590,18 +724,46 @@ static int open_jvm(jni_worker_t *p,
                     JNIEnv **env,
                     jk_logger_t *l)
 {
+#ifdef JNI_VERSION_1_2
+    int jvm_version = detect_jvm_version(l);
+
+    switch(jvm_version) {
+	    case JNI_VERSION_1_1:
+	        return open_jvm1(p, env, l);
+        case JNI_VERSION_1_2:
+	        return open_jvm2(p, env, l);
+	    default:
+            return JK_FALSE;
+    }
+#else
+    /* [V] Make sure this is _really_ visible */
+    #warning -------------------------------------------------------
+    #warning NO JAVA 2 HEADERS! SUPPORT FOR JAVA 2 FEATURES DISABLED
+    #warning -------------------------------------------------------
+    return open_jvm1(p, env, l);
+#endif
+}
+
+static int open_jvm1(jni_worker_t *p,
+                    JNIEnv **env,
+                    jk_logger_t *l)
+{
     JDK1_1InitArgs vm_args;  
     JNIEnv *penv;
     int err;
     *env = NULL;
 
-    vm_args.version = 0x00010001;
+    jk_log(l, JK_LOG_DEBUG, 
+           "Into open_jvm1\n");
+
+    vm_args.version = JNI_VERSION_1_1;
 
     if(0 != jni_get_default_java_vm_init_args(&vm_args)) {
-	jk_log(l, JK_LOG_EMERG, "Fail-> can't get default vm init args\n"); 
+    	jk_log(l, JK_LOG_EMERG, "Fail-> can't get default vm init args\n"); 
         return JK_FALSE;
     }
-
+    jk_log(l, JK_LOG_DEBUG, 
+           "In open_jvm_dll, got default jvm args\n"); 
 
     if(vm_args.classpath) {
         unsigned len = strlen(vm_args.classpath) + 
@@ -615,7 +777,8 @@ static int open_jvm(jni_worker_t *p,
                     vm_args.classpath);
             p->tomcat_classpath = tmp;
         } else {
-	    jk_log(l, JK_LOG_EMERG, "Fail-> allocation error for classpath\n"); 
+	        jk_log(l, JK_LOG_EMERG, 
+                   "Fail-> allocation error for classpath\n"); 
             return JK_FALSE;
         }
     }
@@ -633,95 +796,217 @@ static int open_jvm(jni_worker_t *p,
         vm_args.properties = p->sysprops;
     }
 
-    if(err=jni_create_java_vm(&(p->jvm), 
-                          &penv, 
-                          &vm_args) != 0) {
-	jk_log(l, JK_LOG_EMERG, "Fail-> create java vm %d \n", err); 
+    jk_log(l, JK_LOG_DEBUG, "In open_jvm1, about to create JVM...\n");
+    if((err=jni_create_java_vm(&(p->jvm), 
+                               &penv, 
+                               &vm_args)) != 0) {
+	    jk_log(l, JK_LOG_EMERG, 
+               "Fail-> could not create JVM, code: %d \n", err); 
         return JK_FALSE;
     }
+    jk_log(l, JK_LOG_DEBUG, 
+           "In open_jvm1, JVM created, done\n");
 
     *env = penv;
 
     return JK_TRUE;
 }
 
-/** Start of JDK1.2 loader ( allow -X, etc )
- */
+#ifdef JNI_VERSION_1_2
+static int detect_jvm_version(jk_logger_t *l)
+{
+    JNIEnv *env = NULL;
+    JDK1_1InitArgs vm_args;
+
+    jk_log(l, JK_LOG_DEBUG, 
+           "Into detect_jvm_version\n");
+
+    /* [V] Idea: ask for 1.2. If the JVM is 1.1 it will return 1.1 instead  */
+    /*     Note: asking for 1.1 won't work, 'cause 1.2 JVMs will return 1.1 */
+    vm_args.version = JNI_VERSION_1_2;
+
+    if(0 != jni_get_default_java_vm_init_args(&vm_args)) {
+    	jk_log(l, JK_LOG_EMERG, "Fail-> can't get default vm init args\n"); 
+        return JK_FALSE;
+    }
+    jk_log(l, JK_LOG_DEBUG, 
+           "In detect_jvm_version, found: %X, done\n", vm_args.version);
+
+    return vm_args.version;
+}
+
+static char* build_opt_str(jk_pool_t *p, 
+                           char* opt_name, 
+                           char* opt_value, 
+                           jk_logger_t *l)
+{
+    unsigned len = strlen(opt_name) + strlen(opt_value) + 2;
+
+    /* [V] IMHO, these should not be deallocated as long as the JVM runs */
+    char *tmp = jk_pool_alloc(p, len);
+
+    if(tmp) {
+	    sprintf(tmp, "%s%s", opt_name, opt_value);
+	    return tmp;
+    } else {
+	    jk_log(l, JK_LOG_EMERG, 
+               "Fail-> build_opt_str allocation error for %s\n", opt_name);
+	    return NULL;
+    }
+}
+
+static char* build_opt_int(jk_pool_t *p, 
+                           char* opt_name, 
+                           int opt_value, 
+                           jk_logger_t *l)
+{
+    /* [V] this should suffice even for 64-bit int */
+    unsigned len = strlen(opt_name) + 20 + 2;
+    /* [V] IMHO, these should not be deallocated as long as the JVM runs */
+    char *tmp = jk_pool_alloc(p, len);
+
+    if(tmp) {
+	    sprintf(tmp, "%s%d", opt_name, opt_value);
+	    return tmp;
+    } else {
+	    jk_log(l, JK_LOG_EMERG, 
+               "Fail-> build_opt_int allocation error for %s\n", opt_name);
+	    return NULL;
+    }
+}
+
 static int open_jvm2(jni_worker_t *p,
                     JNIEnv **env,
                     jk_logger_t *l)
 {
     JavaVMInitArgs vm_args;
     JNIEnv *penv;
-    JavaVMOption options[1];
+    JavaVMOption options[100];
+    int optn = 0, err;
+    char* tmp;
 
     *env = NULL;
 
-    vm_args.version = 0x00010002;
-    vm_args.options = options;
-    vm_args.nOptions = 1;
+    jk_log(l, JK_LOG_DEBUG, 
+           "Into open_jvm2\n");
 
-    /* Set classpath */
-    {
-	    unsigned len = strlen("-Djava.class.path=") + 
-	    strlen(p->tomcat_classpath) + 2;
-	    char *tmp = jk_pool_alloc(&p->p, len);
-	    if(tmp) {
-	        sprintf(tmp, "-Djava.class.path=%s", 
-		    p->tomcat_classpath );
-	        options[0].optionString = tmp;
-	    } else {
-	        jk_log(l, JK_LOG_EMERG, "Fail-> allocation error for classpath\n"); 
-	        return JK_FALSE;
+    vm_args.version = JNI_VERSION_1_2;
+    vm_args.options = options;
+
+    if(p->tomcat_classpath) {
+    	jk_log(l, JK_LOG_DEBUG, "In open_jvm2, setting classpath to %s\n", p->tomcat_classpath);
+	    tmp = build_opt_str(&p->p, "-Djava.class.path=", p->tomcat_classpath, l);
+	    null_check(tmp);
+        options[optn++].optionString = tmp;
+    }
+
+    if(p->tomcat_mx) {
+	    jk_log(l, JK_LOG_DEBUG, "In open_jvm2, setting max heap to %d\n", p->tomcat_mx);
+    	tmp = build_opt_int(&p->p, "-Xmx", p->tomcat_mx, l);
+	    null_check(tmp);
+        options[optn++].optionString = tmp;
+    }
+
+    if(p->tomcat_ms) {
+    	jk_log(l, JK_LOG_DEBUG, "In open_jvm2, setting start heap to %d\n", p->tomcat_ms);
+        tmp = build_opt_int(&p->p, "-Xms", p->tomcat_ms, l);
+	    null_check(tmp);
+        options[optn++].optionString = tmp;
+    }
+
+    if(p->sysprops) {
+	    int i = 0;
+	    while(p->sysprops[i]) {
+	        jk_log(l, JK_LOG_DEBUG, "In open_jvm2, setting %s\n", p->sysprops[i]);
+	        tmp = build_opt_str(&p->p, "-D", p->sysprops[i], l);
+	        null_check(tmp);
+	        options[optn++].optionString = tmp;
+	        i++;
 	    }
     }
 
-    jk_log(l, JK_LOG_DEBUG, "Set classpath to %s\n", options[0].optionString); 
+    if(p->java2opts) {
+	    int i=0;
+
+	    while(p->java2opts[i]) {
+	        jk_log(l, JK_LOG_DEBUG, "In open_jvm2, using option: %s\n", p->java2opts[i]);
+	        /* Pass it "as is" */
+	        options[optn++].optionString = p->java2opts[i++];
+	    }
+    }
+
+    vm_args.nOptions = optn;
+    
+    if(p->java2lax) {
+    	jk_log(l, JK_LOG_DEBUG, "In open_jvm2, the JVM will ignore unknown options\n");
+	    vm_args.ignoreUnrecognized = JNI_TRUE;
+    } else {
+    	jk_log(l, JK_LOG_DEBUG, "In open_jvm2, the JVM will FAIL if it finds unknown options\n");
+	    vm_args.ignoreUnrecognized = JNI_FALSE;
+    }
+
+    jk_log(l, JK_LOG_DEBUG, "In open_jvm2, about to create JVM...\n");
+
+    if((err=jni_create_java_vm(&(p->jvm), &penv, &vm_args)) != 0) {
+    	jk_log(l, JK_LOG_EMERG, "Fail-> could not create JVM, code: %d \n", err); 
+        return JK_FALSE;
+    }
+    jk_log(l, JK_LOG_DEBUG, "In open_jvm2, JVM created, done\n");
 
     *env = penv;
 
     return JK_TRUE;
 }
+#endif
 
 static int get_bridge_object(jni_worker_t *p,
                              JNIEnv *env,
                              jk_logger_t *l)
 {
+    jmethodID  constructor_method_id;
+
+    jk_log(l, JK_LOG_DEBUG, 
+           "Into get_bridge_object\n");
+
     p->jk_java_bridge_class = (*env)->FindClass(env, JAVA_BRIDGE_CLASS_NAME);
-    if(! p->jk_java_bridge_class) {
-	jk_log(l, JK_LOG_EMERG, "Can't find class %s\n", JAVA_BRIDGE_CLASS_NAME); 
-	return JK_FALSE;
-    }
-    
-    {
-        jmethodID  constructor_method_id = (*env)->GetMethodID(env,
-                                                               p->jk_java_bridge_class, 
-                                                               "<init>", /* method name */
-                                                               "()V");   /* method sign */   
-        if(! constructor_method_id) {
-	    p->jk_java_bridge_class = NULL;
-	    jk_log(l, JK_LOG_EMERG, "Can't find constructor\n"); 
+    if(!p->jk_java_bridge_class) {
+	    jk_log(l, JK_LOG_EMERG, "Can't find class %s\n", JAVA_BRIDGE_CLASS_NAME);
 	    return JK_FALSE;
-	}
-	{
-	    p->jk_java_bridge_object = (*env)->NewObject(env, 
-                                                         p->jk_java_bridge_class,
-                                                         constructor_method_id);
-            if(! p->jk_java_bridge_object) {
-		p->jk_java_bridge_class = NULL;
-		jk_log(l, JK_LOG_EMERG, "Can't create new object\n"); 
-		return JK_FALSE;
-	    }
-	    
-	    p->jk_java_bridge_object = (jobject)(*env)->NewGlobalRef(env, p->jk_java_bridge_object);
-	    if(! p->jk_java_bridge_object) {
-		jk_log(l, JK_LOG_EMERG, "Can't create global ref\n"); 
-		p->jk_java_bridge_class = NULL;
-                p->jk_java_bridge_object = NULL;
-		return JK_FALSE;
-	    }
-	}
     }
+    jk_log(l, JK_LOG_DEBUG, 
+           "In get_bridge_object, loaded %s bridge class\n", JAVA_BRIDGE_CLASS_NAME);
+
+    constructor_method_id = (*env)->GetMethodID(env,
+                                                p->jk_java_bridge_class,
+                                                "<init>", /* method name */
+                                                "()V");   /* method sign */
+    if(!constructor_method_id) {
+	    p->jk_java_bridge_class = NULL;
+	    jk_log(l, JK_LOG_EMERG, 
+               "Can't find constructor\n");
+	    return JK_FALSE;
+    }
+
+    p->jk_java_bridge_object = (*env)->NewObject(env,
+                                                 p->jk_java_bridge_class,
+                                                 constructor_method_id);
+    if(! p->jk_java_bridge_object) {
+	    p->jk_java_bridge_class = NULL;
+	    jk_log(l, JK_LOG_EMERG, 
+               "Can't create new bridge object\n");
+	    return JK_FALSE;
+    }
+
+    p->jk_java_bridge_object = (jobject)(*env)->NewGlobalRef(env, p->jk_java_bridge_object);
+    if(! p->jk_java_bridge_object) {
+	    jk_log(l, JK_LOG_EMERG, "Can't create global ref to bridge object\n");
+	    p->jk_java_bridge_class = NULL;
+        p->jk_java_bridge_object = NULL;
+	    return JK_FALSE;
+    }
+
+    jk_log(l, JK_LOG_DEBUG, 
+           "In get_bridge_object, bridge built, done\n");
     return JK_TRUE;
 }
 
@@ -759,14 +1044,41 @@ static int get_method_ids(jni_worker_t *p,
     return JK_TRUE;
 }
 
+static JNIEnv *attach_to_jvm(jni_worker_t *p, jk_logger_t *l)
+{
+    JNIEnv *rc = NULL;
+    /* [V] This message is important. If there are signal mask issues,    *
+     *     the JVM usually hangs when a new thread tries to attach to it  */
+    jk_log(l, JK_LOG_DEBUG, 
+           "Into attach_to_jvm\n");
 
+#if defined LINUX && defined APACHE2_SIGHACK
+    linux_signal_hack();
+#endif
+
+    if(0 == (*(p->jvm))->AttachCurrentThread(p->jvm,
+#ifdef JNI_VERSION_1_2
+					                        (void **)
+#endif
+                                             &rc,
+                                             NULL)) {
+	    jk_log(l, JK_LOG_DEBUG, 
+               "In attach_to_jvm, attached ok\n");
+        return rc;
+    }
+    jk_log(l, JK_LOG_ERROR, 
+           "In attach_to_jvm, cannot attach thread to JVM.\n");
+    return NULL;
+}
+
+/*
 static JNIEnv *attach_to_jvm(jni_worker_t *p)
 {
     JNIEnv *rc = NULL;
 
     /* It's needed only once per thread, but there is no
        generic/good way to keep per/thread data. 
-    */
+    
 #ifdef LINUX
     linux_signal_hack();
 #endif    
@@ -782,9 +1094,20 @@ static JNIEnv *attach_to_jvm(jni_worker_t *p)
 
     return NULL;
 }
-
-static void detach_from_jvm(jni_worker_t *p)
+*/
+static void detach_from_jvm(jni_worker_t *p, 
+                            jk_logger_t *l)
 {
-    if(p->jvm == NULL ) return;
-    (*(p->jvm))->DetachCurrentThread(p->jvm);
+    if(!p->jvm || !(*(p->jvm))) {
+	    jk_log(l, JK_LOG_ERROR, 
+               "In detach_from_jvm, cannot detach from NULL JVM.\n");
+    }
+
+    if(0 == (*(p->jvm))->DetachCurrentThread(p->jvm)) {
+	    jk_log(l, JK_LOG_DEBUG, 
+               "In detach_from_jvm, detached ok\n");
+    } else {
+	    jk_log(l, JK_LOG_ERROR, 
+               "In detach_from_jvm, cannot detach from JVM.\n");
+    }
 }

@@ -56,7 +56,7 @@
 /***************************************************************************
  * Description: General purpose map object                                 *
  * Author:      Gal Shachor <shachor@il.ibm.com>                           *
- * Version:     $Revision: 1.2 $                                               *
+ * Version:     $Revision: 1.3 $                                               *
  ***************************************************************************/
 
 #include "jk_global.h"
@@ -222,9 +222,14 @@ char **map_get_string_list(jk_map_t *m,
             return NULL;
         }
 
-        for(l = strtok(v, " \t,") ; 
+        /*
+         * GS, in addition to VG's patch, we now need to 
+         * strtok also by a "*"
+         */
+
+        for(l = strtok(v, " \t,*") ; 
             l ; 
-            l = strtok(NULL, " \t,")) {
+            l = strtok(NULL, " \t,*")) {
         
             if(idex == capacity) {
                 ar = jk_pool_realloc(&m->p, 
@@ -308,7 +313,7 @@ int map_read_properties(jk_map_t *m,
                                 char *tmpv = jk_pool_alloc(&m->p, 
                                                            strlen(v) + strlen(oldv) + 3);
                                 if(tmpv) {
-                                    char sep = ',';
+                                    char sep = '*';
                                     if(jk_is_path_poperty(prp)) {
                                         sep = PATH_SEPERATOR;
                                     } else if(jk_is_cmd_line_poperty(prp)) {

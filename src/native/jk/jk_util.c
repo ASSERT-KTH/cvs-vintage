@@ -56,7 +56,7 @@
 /***************************************************************************
  * Description: Utility functions (mainly configuration)                   *
  * Author:      Gal Shachor <shachor@il.ibm.com>                           *
- * Version:     $Revision: 1.3 $                                               *
+ * Version:     $Revision: 1.4 $                                               *
  ***************************************************************************/
 
 
@@ -104,6 +104,11 @@ static int JK_METHOD log_to_file(jk_logger_t *l,
         if(sz) {
             file_logger_t *p = l->logger_private;
             fwrite(what, 1, sz, p->logfile);
+	    /* [V] Flush the dam' thing! */
+	    fflush(p->logfile);
+#ifndef WIN32
+	    fdatasync(fileno(p->logfile));
+#endif
         }
 
         return JK_TRUE;
@@ -219,6 +224,46 @@ char *jk_get_worker_type(jk_map_t *m,
     sprintf(buf, "%s.%s.%s", PREFIX_OF_WORKER, wname, TYPE_OF_WORKER);
 
     return map_get_string(m, buf, DEFAULT_WORKER_TYPE);
+}
+
+/* [V] I suggest that the following general purpose functions be used.       */
+/*     More should be added (double etc.), but now these were enough for me. */
+/*     Functions that can be simulated with these should be "deprecated".    */
+
+int jk_get_worker_str_prop(jk_map_t *m,
+			   const char *wname,
+			   const char *pname,
+			   char **prop)
+{
+    char buf[1024];
+
+    if(m && prop && wname && pname) {
+        sprintf(buf, "%s.%s.%s", PREFIX_OF_WORKER, wname, pname);
+        *prop = map_get_string(m, buf, NULL);
+        if(*prop) {
+            return JK_TRUE;
+        }
+    }
+    return JK_FALSE;
+}
+
+int jk_get_worker_int_prop(jk_map_t *m,
+			   const char *wname,
+			   const char *pname,
+			   int *prop)
+{
+    char buf[1024];
+
+    if(m && prop && wname && pname) {
+        int i;
+        sprintf(buf, "%s.%s.%s", PREFIX_OF_WORKER, wname, pname);
+        i = map_get_int(m, buf, -1);
+        if(-1 != i) {
+            *prop = i;
+            return JK_TRUE;
+        }
+    }
+    return JK_FALSE;
 }
 
 char *jk_get_worker_host(jk_map_t *m,
@@ -403,6 +448,7 @@ int jk_get_worker_jvm_path(jk_map_t *m,
     return JK_FALSE;
 }
 
+/* [V] This is unused. currently. */
 int jk_get_worker_callback_dll(jk_map_t *m, 
                                const char *wname, 
                                char **cb_path)
@@ -562,7 +608,7 @@ char **jk_parse_sysprops(jk_pool_t *p,
             unsigned num_of_prps;
 
             for(num_of_prps = 1; *sysprops ; sysprops++) {
-                if(',' == *sysprops) {
+                if('*' == *sysprops) {
                     num_of_prps++;
                 }
             }            
@@ -570,11 +616,11 @@ char **jk_parse_sysprops(jk_pool_t *p,
             rc = jk_pool_alloc(p, (num_of_prps + 1) * sizeof(char *));
             if(rc) {
                 unsigned i = 0;
-                char *tmp = strtok(prps, ",");
+                char *tmp = strtok(prps, "*");
 
                 while(tmp && i < num_of_prps) {
                     rc[i] = tmp;
-                    tmp = strtok(NULL, ",");
+                    tmp = strtok(NULL, "*");
                     i++;
                 }
                 rc[i] = NULL;
