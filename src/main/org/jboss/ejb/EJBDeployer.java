@@ -66,7 +66,7 @@ import org.w3c.dom.Element;
  * @author <a href="mailto:scott.stark@jboss.org">Scott Stark</a>
  * @author <a href="mailto:sacha.labourey@cogito-info.ch">Sacha Labourey</a>
  * @author <a href="mailto:jason@planet57.com">Jason Dillon</a>
- * @version <tt>$Revision: 1.21 $</tt>
+ * @version <tt>$Revision: 1.22 $</tt>
  */
 public class EJBDeployer
    extends SubDeployerSupport
@@ -85,9 +85,6 @@ public class EJBDeployer
    
    /** Enable metrics interceptor */
    private boolean metricsEnabled;
-   
-   /** Enable JMS monitoring of the bean cache */
-   private boolean beanCacheJMSMonitoring;
    
    /** A flag indicating if deployment descriptors should be validated */
    private boolean validateDTDs;
@@ -202,19 +199,6 @@ public class EJBDeployer
    public boolean isMetricsEnabled()
    {
       return metricsEnabled;
-   }
-   
-   /**
-    * Set JMS monitoring of the bean cache.
-    */
-   public void setBeanCacheJMSMonitoringEnabled(boolean enable)
-   {
-      beanCacheJMSMonitoring = enable;
-   }
-   
-   public boolean isBeanCacheJMSMonitoringEnabled()
-   {
-      return beanCacheJMSMonitoring;
    }
    
    /**

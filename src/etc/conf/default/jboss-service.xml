@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE server>
-<!-- $Id: jboss-service.xml,v 1.58 2002/07/12 21:38:16 user57 Exp $ -->
+<!-- $Id: jboss-service.xml,v 1.59 2002/07/14 09:40:12 starksm Exp $ -->
 
 <!-- ===================================================================== -->
 <!--                                                                       -->
@@ -123,7 +123,6 @@
     <attribute name="ValidateDTDs">false</attribute>
     <attribute name="MetricsEnabled">false</attribute>
     <attribute name="VerifierVerbose">true</attribute>
-    <attribute name="BeanCacheJMSMonitoringEnabled">false</attribute>
 
     <depends>jboss:service=TransactionManager</depends>
     <depends>jboss:service=WebService</depends>
@@ -156,6 +155,7 @@
     <attribute name="RMIClientSocketFactory">custom</attribute>
     <attribute name="RMIServerSocketFactory">custom</attribute>
     <attribute name="RMIServerSocketAddr">custom</attribute>
+    <attribute name="SecurityDomain">ssl-domain-name</attribute>
     -->
 
     <depends>jboss:service=TransactionManager</depends>

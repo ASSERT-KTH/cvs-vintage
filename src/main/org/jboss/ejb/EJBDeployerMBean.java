@@ -25,12 +25,7 @@ import org.jboss.deployment.DeploymentException;
  * @author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
  * @author <a href="mailto:juha.lindfors@jboss.org">Juha Lindfors</a>
  * @author <a href="mailto:marc.fleury@jboss.org">Marc Fleury</a>
- * @version $Revision: 1.6 $
- * 
- * <p><b>20011227 marc fleury:</b>
- * <ul>
- *    <li>Deployer and ClassLoader unification extends DeployerMBean
- * </ul>
+ * @version $Revision: 1.7 $
  */
 public interface EJBDeployerMBean
    extends SubDeployerMBean
@@ -95,13 +90,6 @@ public interface EJBDeployerMBean
    boolean isDeployed(String url) throws MalformedURLException;
    
    /**
-    * Set the JMS monitoring of the bean cache.
-    */
-   void setBeanCacheJMSMonitoringEnabled(boolean enable);
-   
-   boolean isBeanCacheJMSMonitoringEnabled();
-
-   /**
     * Get the flag indicating that ejb-jar.dtd, jboss.dtd &
     * jboss-web.dtd conforming documents should be validated
     * against the DTD.
@@ -115,9 +103,3 @@ public interface EJBDeployerMBean
     */
    void setValidateDTDs(boolean validate);
 }
-
-/* Change log.
- * 
- * Author: starksm, Date: Thu Jun 14 17:14:14  2001 GMT
- * Added getValidateDTDs/setValidateDTDs methods.
- */
