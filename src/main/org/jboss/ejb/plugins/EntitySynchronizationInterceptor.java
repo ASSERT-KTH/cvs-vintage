@@ -40,7 +40,7 @@ import org.jboss.util.NestedRuntimeException;
  * @author <a href="mailto:marc.fleury@jboss.org">Marc Fleury</a>
  * @author <a href="mailto:Scott.Stark@jboss.org">Scott Stark</a>
  * @author <a href="mailto:bill@burkecentral.com">Bill Burke</a>
- * @version $Revision: 1.85 $
+ * @version $Revision: 1.86 $
  */
 public class EntitySynchronizationInterceptor
         extends AbstractInterceptor
@@ -425,7 +425,11 @@ public class EntitySynchronizationInterceptor
          // This is an independent point of entry. We need to make sure the
          // thread is associated with the right context class loader
          ClassLoader oldCl = SecurityActions.getContextClassLoader();
-         SecurityActions.setContextClassLoader(container.getClassLoader());
+         boolean setCl = !oldCl.equals(container.getClassLoader());
+         if(setCl)
+         {
+            SecurityActions.setContextClassLoader(container.getClassLoader());
+         }
 
          lock.sync();
          // The context is no longer synchronized on the TX
@@ -495,7 +499,10 @@ public class EntitySynchronizationInterceptor
          {
             lock.releaseSync();
             container.getLockManager().removeLockRef(lock.getId());
-            SecurityActions.setContextClassLoader(oldCl);
+            if(setCl)
+            {
+               SecurityActions.setContextClassLoader(oldCl);
+            }
          }
       }
 

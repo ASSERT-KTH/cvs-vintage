@@ -33,7 +33,7 @@ import java.security.Principal;
 /**
  *
  * @author <a href="mailto:alex@jboss.org">Alexey Loubyansky</a>
- * @version $Revision: 1.6 $
+ * @version $Revision: 1.7 $
  */
 public abstract class CascadeDeleteStrategy
 {
@@ -313,12 +313,9 @@ public abstract class CascadeDeleteStrategy
    public void invokeRemoveRelated(Object relatedId)
    {
       EntityContainer container = relatedManager.getContainer();
-      final Thread thread = Thread.currentThread();
-      ClassLoader curCl = thread.getContextClassLoader();
 
       try
       {
-         thread.setContextClassLoader(container.getClassLoader());
          EntityCache instanceCache = (EntityCache) container.getInstanceCache();
 
          org.jboss.invocation.Invocation invocation = new org.jboss.invocation.Invocation();
@@ -339,10 +336,6 @@ public abstract class CascadeDeleteStrategy
       catch(Exception e)
       {
          throw new EJBException("Error in remove instance", e);
-      }
-      finally
-      {
-         thread.setContextClassLoader(curCl);
       }
    }
 

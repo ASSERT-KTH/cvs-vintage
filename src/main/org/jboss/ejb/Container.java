@@ -34,7 +34,6 @@ import org.jboss.security.RealmMapping;
 import org.jboss.system.ServiceMBeanSupport;
 import org.jboss.util.NestedError;
 import org.jboss.util.NestedRuntimeException;
-import org.jboss.webservice.WebServiceClientDeployer;
 import org.jboss.webservice.WebServiceClientHandler;
 import org.omg.CORBA.ORB;
 
@@ -60,8 +59,6 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
-import java.security.PrivilegedAction;
-import java.security.AccessController;
 
 /**
  * This is the base class for all EJB-containers in JBoss. A Container
@@ -83,7 +80,7 @@ import java.security.AccessController;
  * @author <a href="bill@burkecentral.com">Bill Burke</a>
  * @author <a href="mailto:d_jencks@users.sourceforge.net">David Jencks</a>
  * @author <a href="mailto:christoph.jung@infor.de">Christoph G. Jung</a>
- * @version $Revision: 1.157 $
+ * @version $Revision: 1.158 $
  *
  * @jmx.mbean extends="org.jboss.system.ServiceMBean"
  */
@@ -803,11 +800,16 @@ public abstract class Container
       long start = System.currentTimeMillis();
       Method m = null;
 
+      boolean setCl = false;
       Object type = null;
       String contextID = getJaccContextID();
       try
       {
-         SecurityActions.setContextClassLoader(this.classLoader);
+         if(!callerClassLoader.equals(classLoader))
+         {
+            setCl = true;
+            SecurityActions.setContextClassLoader(this.classLoader);
+         }
 
          // Set the JACC context id
          mi.setValue(InvocationKey.JACC_CONTEXT_ID, contextID);
@@ -896,7 +898,10 @@ public abstract class Container
          this.invokeStats.callOut();
 
          // Restore the incoming class loader
-         SecurityActions.setContextClassLoader(callerClassLoader);
+         if(setCl)
+         {
+            SecurityActions.setContextClassLoader(callerClassLoader);
+         }
          // Restore the incoming context id
          contextID = SecurityActions.setContextID(contextID);
       }

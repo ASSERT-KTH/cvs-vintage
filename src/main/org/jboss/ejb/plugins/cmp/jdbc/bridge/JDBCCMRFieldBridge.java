@@ -76,7 +76,7 @@ import org.jboss.security.SecurityAssociation;
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
  * @author <a href="mailto:alex@jboss.org">Alex Loubyansky</a>
- * @version $Revision: 1.86 $
+ * @version $Revision: 1.87 $
  */
 public final class JDBCCMRFieldBridge extends JDBCAbstractCMRFieldBridge
 {
@@ -979,9 +979,6 @@ public final class JDBCCMRFieldBridge extends JDBCAbstractCMRFieldBridge
     */
    private Object invokeScheduleForCascadeDelete(Transaction tx, Object myId)
    {
-      ClassLoader oldCL = GetTCLAction.getContextClassLoader();
-      SetTCLAction.setContextClassLoader(manager.getContainer().getClassLoader());
-
       try
       {
          EntityCache instanceCache = (EntityCache)manager.getContainer().getInstanceCache();
@@ -1005,10 +1002,6 @@ public final class JDBCCMRFieldBridge extends JDBCAbstractCMRFieldBridge
       {
          throw new EJBException("Error in scheduleForCascadeDelete()", e);
       }
-      finally
-      {
-         SetTCLAction.setContextClassLoader(oldCL);
-      }
    }
 
    /**
@@ -1016,9 +1009,6 @@ public final class JDBCCMRFieldBridge extends JDBCAbstractCMRFieldBridge
     */
    private Object invokeScheduleForBatchCascadeDelete(Transaction tx, Object myId)
    {
-      ClassLoader oldCL = GetTCLAction.getContextClassLoader();
-      SetTCLAction.setContextClassLoader(manager.getContainer().getClassLoader());
-
       try
       {
          EntityCache instanceCache = (EntityCache)manager.getContainer().getInstanceCache();
@@ -1042,10 +1032,6 @@ public final class JDBCCMRFieldBridge extends JDBCAbstractCMRFieldBridge
       {
          throw new EJBException("Error in scheduleForBatchCascadeDelete()", e);
       }
-      finally
-      {
-         SetTCLAction.setContextClassLoader(oldCL);
-      }
    }
 
    /**
@@ -1054,9 +1040,6 @@ public final class JDBCCMRFieldBridge extends JDBCAbstractCMRFieldBridge
     */
    private Object invokeGetRelatedId(Transaction tx, Object myId)
    {
-      ClassLoader oldCL = GetTCLAction.getContextClassLoader();
-      SetTCLAction.setContextClassLoader(manager.getContainer().getClassLoader());
-
       try
       {
          EntityCache instanceCache = (EntityCache)manager.getContainer().getInstanceCache();
@@ -1080,10 +1063,6 @@ public final class JDBCCMRFieldBridge extends JDBCAbstractCMRFieldBridge
       {
          throw new EJBException("Error in getRelatedId", e);
       }
-      finally
-      {
-         SetTCLAction.setContextClassLoader(oldCL);
-      }
    }
 
    /**
@@ -1092,9 +1071,6 @@ public final class JDBCCMRFieldBridge extends JDBCAbstractCMRFieldBridge
     */
    private void invokeAddRelation(Transaction tx, Object myId, Object relatedId)
    {
-      ClassLoader oldCL = GetTCLAction.getContextClassLoader();
-      SetTCLAction.setContextClassLoader(manager.getContainer().getClassLoader());
-
       try
       {
          EntityCache instanceCache = (EntityCache)manager.getContainer().getInstanceCache();
@@ -1118,10 +1094,6 @@ public final class JDBCCMRFieldBridge extends JDBCAbstractCMRFieldBridge
       {
          throw new EJBException("Error in addRelation", e);
       }
-      finally
-      {
-         SetTCLAction.setContextClassLoader(oldCL);
-      }
    }
 
    /**
@@ -1130,9 +1102,6 @@ public final class JDBCCMRFieldBridge extends JDBCAbstractCMRFieldBridge
     */
    private void invokeRemoveRelation(Transaction tx, Object myId, Object relatedId)
    {
-      ClassLoader oldCL = GetTCLAction.getContextClassLoader();
-      SetTCLAction.setContextClassLoader(manager.getContainer().getClassLoader());
-
       try
       {
          EntityCache instanceCache = (EntityCache)manager.getContainer().getInstanceCache();
@@ -1155,10 +1124,6 @@ public final class JDBCCMRFieldBridge extends JDBCAbstractCMRFieldBridge
       catch(Exception e)
       {
          throw new EJBException("Error in removeRelation", e);
-      }
-      finally
-      {
-         SetTCLAction.setContextClassLoader(oldCL);
       }
    }
 
@@ -2146,40 +2111,6 @@ public final class JDBCCMRFieldBridge extends JDBCAbstractCMRFieldBridge
       }
    }
 
-   private static class GetTCLAction implements PrivilegedAction
-   {
-      static PrivilegedAction ACTION = new GetTCLAction();
-      public Object run()
-      {
-         ClassLoader loader = Thread.currentThread().getContextClassLoader();
-         return loader;
-      }
-      static ClassLoader getContextClassLoader()
-      {
-         ClassLoader loader = (ClassLoader) AccessController.doPrivileged(ACTION);
-         return loader;
-      }
-   }
-   private static class SetTCLAction implements PrivilegedAction
-   {
-      ClassLoader loader;
-      SetTCLAction(ClassLoader loader)
-      {
-         this.loader = loader;
-      }
-      public Object run()
-      {
-         Thread.currentThread().setContextClassLoader(loader);
-         loader = null;
-         return null;
-      }
-      static void setContextClassLoader(ClassLoader loader)
-      {
-         PrivilegedAction action = new SetTCLAction(loader);
-         AccessController.doPrivileged(action);
-      }
-   }
-   
    private static class GetPrincipalAction implements PrivilegedAction
    {
       static PrivilegedAction ACTION = new GetPrincipalAction();

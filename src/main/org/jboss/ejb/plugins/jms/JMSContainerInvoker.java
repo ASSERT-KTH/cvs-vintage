@@ -63,7 +63,7 @@ import org.jboss.metadata.InvokerProxyBindingMetaData;
 /**
  * EJBProxyFactory for JMS MessageDrivenBeans
  *
- * @version <tt>$Revision: 1.63 $</tt>
+ * @version <tt>$Revision: 1.64 $</tt>
  * @author <a href="mailto:peter.antman@tim.se">Peter Antman</a> .
  * @author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
  * @author <a href="mailto:sebastien.alborini@m4x.org">Sebastien Alborini</a>
@@ -913,15 +913,15 @@ public class JMSContainerInvoker
       Invocation invocation = new Invocation(id, m, args, tx, identity, credential);
       invocation.setType(InvocationType.LOCAL);
       
-      ClassLoader oldCL = GetTCLAction.getContextClassLoader();
-      SetTCLAction.setContextClassLoader(container.getClassLoader());
+      ClassLoader oldCL = TCLAction.UTIL.getContextClassLoader();
+      TCLAction.UTIL.setContextClassLoader(container.getClassLoader());
       try
       {
          return container.invoke(invocation);
       }
       finally
       {
-         SetTCLAction.setContextClassLoader(oldCL);
+         TCLAction.UTIL.setContextClassLoader(oldCL);
       }
    }
    
@@ -1314,37 +1314,120 @@ public class JMSContainerInvoker
          " }";
    }   
 
-   private static class GetTCLAction implements PrivilegedAction
+   interface TCLAction
    {
-      static PrivilegedAction ACTION = new GetTCLAction();
-      public Object run()
+      class UTIL
       {
-         ClassLoader loader = Thread.currentThread().getContextClassLoader();
-         return loader;
+         static TCLAction getTCLAction()
+         {
+            return System.getSecurityManager() == null ? NON_PRIVILEGED : PRIVILEGED;
+         }
+
+         static ClassLoader getContextClassLoader()
+         {
+            return getTCLAction().getContextClassLoader();
+         }
+
+         static ClassLoader getContextClassLoader(Thread thread)
+         {
+            return getTCLAction().getContextClassLoader(thread);
+         }
+
+         static void setContextClassLoader(ClassLoader cl)
+         {
+            getTCLAction().setContextClassLoader(cl);
+         }
+
+         static void setContextClassLoader(Thread thread, ClassLoader cl)
+         {
+            getTCLAction().setContextClassLoader(thread, cl);
+         }
       }
-      static ClassLoader getContextClassLoader()
+
+      TCLAction NON_PRIVILEGED = new TCLAction()
       {
-         ClassLoader loader = (ClassLoader) AccessController.doPrivileged(ACTION);
-         return loader;
-      }
-   }
-   private static class SetTCLAction implements PrivilegedAction
-   {
-      ClassLoader loader;
-      SetTCLAction(ClassLoader loader)
+         public ClassLoader getContextClassLoader()
+         {
+            return Thread.currentThread().getContextClassLoader();
+         }
+
+         public ClassLoader getContextClassLoader(Thread thread)
+         {
+            return thread.getContextClassLoader();
+         }
+
+         public void setContextClassLoader(ClassLoader cl)
+         {
+            Thread.currentThread().setContextClassLoader(cl);
+         }
+
+         public void setContextClassLoader(Thread thread, ClassLoader cl)
+         {
+            thread.setContextClassLoader(cl);
+         }
+      };
+
+      TCLAction PRIVILEGED = new TCLAction()
       {
-         this.loader = loader;
-      }
-      public Object run()
-      {
-         Thread.currentThread().setContextClassLoader(loader);
-         loader = null;
-         return null;
-      }
-      static void setContextClassLoader(ClassLoader loader)
-      {
-         PrivilegedAction action = new SetTCLAction(loader);
-         AccessController.doPrivileged(action);
-      }
+         private final PrivilegedAction getTCLPrivilegedAction = new PrivilegedAction()
+         {
+            public Object run()
+            {
+               return Thread.currentThread().getContextClassLoader();
+            }
+         };
+
+         public ClassLoader getContextClassLoader()
+         {
+            return (ClassLoader)AccessController.doPrivileged(getTCLPrivilegedAction);
+         }
+
+         public ClassLoader getContextClassLoader(final Thread thread)
+         {
+            return (ClassLoader)AccessController.doPrivileged(new PrivilegedAction()
+            {
+               public Object run()
+               {
+                  return thread.getContextClassLoader();
+               }
+            });
+         }
+
+         public void setContextClassLoader(final ClassLoader cl)
+         {
+            AccessController.doPrivileged(
+               new PrivilegedAction()
+               {
+                  public Object run()
+                  {
+                     Thread.currentThread().setContextClassLoader(cl);
+                     return null;
+                  }
+               }
+            );
+         }
+
+         public void setContextClassLoader(final Thread thread, final ClassLoader cl)
+         {
+            AccessController.doPrivileged(
+               new PrivilegedAction()
+               {
+                  public Object run()
+                  {
+                     thread.setContextClassLoader(cl);
+                     return null;
+                  }
+               }
+            );
+         }
+      };
+
+      ClassLoader getContextClassLoader();
+
+      ClassLoader getContextClassLoader(Thread thread);
+
+      void setContextClassLoader(ClassLoader cl);
+
+      void setContextClassLoader(Thread thread, ClassLoader cl);
    }
 }

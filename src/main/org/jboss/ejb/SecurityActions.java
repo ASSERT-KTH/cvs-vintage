@@ -14,30 +14,6 @@ import org.jboss.security.SecurityAssociation;
  */
 public class SecurityActions
 {
-   private static class GetTCLAction implements PrivilegedAction
-   {
-      static PrivilegedAction ACTION = new GetTCLAction();
-      public Object run()
-      {
-         ClassLoader loader = Thread.currentThread().getContextClassLoader();
-         return loader;
-      }
-   }
-   private static class SetTCLAction implements PrivilegedAction
-   {
-      ClassLoader loader;
-      SetTCLAction(ClassLoader loader)
-      {
-         this.loader = loader;
-      }
-      public Object run()
-      {
-         Thread.currentThread().setContextClassLoader(loader);
-         loader = null;
-         return null;
-      }
-   }
-
    private static class SetContextID implements PrivilegedAction
    {
       String contextID;
@@ -69,14 +45,24 @@ public class SecurityActions
 
    static ClassLoader getContextClassLoader()
    {
-      ClassLoader loader = (ClassLoader) AccessController.doPrivileged(GetTCLAction.ACTION);
-      return loader;
+      return TCLAction.UTIL.getContextClassLoader();
    }
+
+   static ClassLoader getContextClassLoader(Thread thread)
+   {
+      return TCLAction.UTIL.getContextClassLoader(thread);
+   }
+
    static void setContextClassLoader(ClassLoader loader)
    {
-      PrivilegedAction action = new SetTCLAction(loader);
-      AccessController.doPrivileged(action);
+      TCLAction.UTIL.setContextClassLoader(loader);
    }
+
+   static void setContextClassLoader(Thread thread, ClassLoader loader)
+   {
+      TCLAction.UTIL.setContextClassLoader(thread, loader);
+   }
+
    static String setContextID(String contextID)
    {
       PrivilegedAction action = new SetContextID(contextID);
@@ -90,4 +76,120 @@ public class SecurityActions
       return principal;
    }
 
+   interface TCLAction
+   {
+      class UTIL
+      {
+         static TCLAction getTCLAction()
+         {
+            return System.getSecurityManager() == null ? NON_PRIVILEGED : PRIVILEGED;
+         }
+
+         static ClassLoader getContextClassLoader()
+         {
+            return getTCLAction().getContextClassLoader();
+         }
+
+         static ClassLoader getContextClassLoader(Thread thread)
+         {
+            return getTCLAction().getContextClassLoader(thread);
+         }
+
+         static void setContextClassLoader(ClassLoader cl)
+         {
+            getTCLAction().setContextClassLoader(cl);
+         }
+
+         static void setContextClassLoader(Thread thread, ClassLoader cl)
+         {
+            getTCLAction().setContextClassLoader(thread, cl);
+         }
+      }
+
+      TCLAction NON_PRIVILEGED = new TCLAction()
+      {
+         public ClassLoader getContextClassLoader()
+         {
+            return Thread.currentThread().getContextClassLoader();
+         }
+
+         public ClassLoader getContextClassLoader(Thread thread)
+         {
+            return thread.getContextClassLoader();
+         }
+
+         public void setContextClassLoader(ClassLoader cl)
+         {
+            Thread.currentThread().setContextClassLoader(cl);
+         }
+
+         public void setContextClassLoader(Thread thread, ClassLoader cl)
+         {
+            thread.setContextClassLoader(cl);
+         }
+      };
+
+      TCLAction PRIVILEGED = new TCLAction()
+      {
+         private final PrivilegedAction getTCLPrivilegedAction = new PrivilegedAction()
+         {
+            public Object run()
+            {
+               return Thread.currentThread().getContextClassLoader();
+            }
+         };
+
+         public ClassLoader getContextClassLoader()
+         {
+            return (ClassLoader)AccessController.doPrivileged(getTCLPrivilegedAction);
+         }
+
+         public ClassLoader getContextClassLoader(final Thread thread)
+         {
+            return (ClassLoader)AccessController.doPrivileged(new PrivilegedAction()
+            {
+               public Object run()
+               {
+                  return thread.getContextClassLoader();
+               }
+            });
+         }
+
+         public void setContextClassLoader(final ClassLoader cl)
+         {
+            AccessController.doPrivileged(
+               new PrivilegedAction()
+               {
+                  public Object run()
+                  {
+                     Thread.currentThread().setContextClassLoader(cl);
+                     return null;
+                  }
+               }
+            );
+         }
+
+         public void setContextClassLoader(final Thread thread, final ClassLoader cl)
+         {
+            AccessController.doPrivileged(
+               new PrivilegedAction()
+               {
+                  public Object run()
+                  {
+                     thread.setContextClassLoader(cl);
+                     return null;
+                  }
+               }
+            );
+         }
+      };
+
+      ClassLoader getContextClassLoader();
+
+      ClassLoader getContextClassLoader(Thread thread);
+
+      void setContextClassLoader(ClassLoader cl);
+
+      void setContextClassLoader(Thread thread, ClassLoader cl);
+   }
 }

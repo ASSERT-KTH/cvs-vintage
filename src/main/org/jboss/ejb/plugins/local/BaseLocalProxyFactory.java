@@ -55,7 +55,7 @@ import org.jboss.tm.TransactionLocal;
  * @author <a href="mailto:docodan@mvcsoft.com">Daniel OConnor</a>
  * @author <a href="mailto:scott.stark@jboss.org">Scott Stark</a>
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
- * $Revision: 1.20 $
+ * $Revision: 1.21 $
  */
 public class BaseLocalProxyFactory implements LocalProxyFactory
 {
@@ -320,8 +320,12 @@ public class BaseLocalProxyFactory implements LocalProxyFactory
    public Object invokeHome(Method m, Object[] args) throws Exception
    {
       // Set the right context classloader
-      ClassLoader oldCl = GetTCLAction.getContextClassLoader();
-      SetTCLAction.setContextClassLoader(container.getClassLoader());
+      ClassLoader oldCl = TCLAction.UTIL.getContextClassLoader();
+      boolean setCl = !oldCl.equals(container.getClassLoader());
+      if(setCl)
+      {
+         TCLAction.UTIL.setContextClassLoader(container.getClassLoader());
+      }
 
       try
       {
@@ -353,7 +357,10 @@ public class BaseLocalProxyFactory implements LocalProxyFactory
       }
       finally
       {
-         SetTCLAction.setContextClassLoader(oldCl);
+         if(setCl)
+         {
+            TCLAction.UTIL.setContextClassLoader(oldCl);
+         }
       }
    }
 
@@ -383,8 +390,12 @@ public class BaseLocalProxyFactory implements LocalProxyFactory
       throws Exception
    {
       // Set the right context classloader
-      ClassLoader oldCl = GetTCLAction.getContextClassLoader();
-      SetTCLAction.setContextClassLoader(container.getClassLoader());
+      ClassLoader oldCl = TCLAction.UTIL.getContextClassLoader();
+      boolean setCl = !oldCl.equals(container.getClassLoader());
+      if(setCl)
+      {
+         TCLAction.UTIL.setContextClassLoader(container.getClassLoader());
+      }
 
       try
       {
@@ -416,7 +427,10 @@ public class BaseLocalProxyFactory implements LocalProxyFactory
       }
       finally
       {
-         SetTCLAction.setContextClassLoader(oldCl);
+         if(setCl)
+         {
+            TCLAction.UTIL.setContextClassLoader(oldCl);
+         }
       }
    }
 
@@ -454,40 +468,6 @@ public class BaseLocalProxyFactory implements LocalProxyFactory
       }
    }
 
-   private static class GetTCLAction implements PrivilegedAction
-   {
-      static PrivilegedAction ACTION = new GetTCLAction();
-      public Object run()
-      {
-         ClassLoader loader = Thread.currentThread().getContextClassLoader();
-         return loader;
-      }
-      static ClassLoader getContextClassLoader()
-      {
-         ClassLoader loader = (ClassLoader) AccessController.doPrivileged(ACTION);
-         return loader;
-      }
-   }
-   private static class SetTCLAction implements PrivilegedAction
-   {
-      ClassLoader loader;
-      SetTCLAction(ClassLoader loader)
-      {
-         this.loader = loader;
-      }
-      public Object run()
-      {
-         Thread.currentThread().setContextClassLoader(loader);
-         loader = null;
-         return null;
-      }
-      static void setContextClassLoader(ClassLoader loader)
-      {
-         PrivilegedAction action = new SetTCLAction(loader);
-         AccessController.doPrivileged(action);
-      }
-   }
-
    private static class GetPrincipalAction implements PrivilegedAction
    {
       static PrivilegedAction ACTION = new GetPrincipalAction();
@@ -516,5 +496,122 @@ public class BaseLocalProxyFactory implements LocalProxyFactory
          Object credential = AccessController.doPrivileged(ACTION);
          return credential;
       }
+   }
+
+   interface TCLAction
+   {
+      class UTIL
+      {
+         static TCLAction getTCLAction()
+         {
+            return System.getSecurityManager() == null ? NON_PRIVILEGED : PRIVILEGED;
+         }
+
+         static ClassLoader getContextClassLoader()
+         {
+            return getTCLAction().getContextClassLoader();
+         }
+
+         static ClassLoader getContextClassLoader(Thread thread)
+         {
+            return getTCLAction().getContextClassLoader(thread);
+         }
+
+         static void setContextClassLoader(ClassLoader cl)
+         {
+            getTCLAction().setContextClassLoader(cl);
+         }
+
+         static void setContextClassLoader(Thread thread, ClassLoader cl)
+         {
+            getTCLAction().setContextClassLoader(thread, cl);
+         }
+      }
+
+      TCLAction NON_PRIVILEGED = new TCLAction()
+      {
+         public ClassLoader getContextClassLoader()
+         {
+            return Thread.currentThread().getContextClassLoader();
+         }
+
+         public ClassLoader getContextClassLoader(Thread thread)
+         {
+            return thread.getContextClassLoader();
+         }
+
+         public void setContextClassLoader(ClassLoader cl)
+         {
+            Thread.currentThread().setContextClassLoader(cl);
+         }
+
+         public void setContextClassLoader(Thread thread, ClassLoader cl)
+         {
+            thread.setContextClassLoader(cl);
+         }
+      };
+
+      TCLAction PRIVILEGED = new TCLAction()
+      {
+         private final PrivilegedAction getTCLPrivilegedAction = new PrivilegedAction()
+         {
+            public Object run()
+            {
+               return Thread.currentThread().getContextClassLoader();
+            }
+         };
+
+         public ClassLoader getContextClassLoader()
+         {
+            return (ClassLoader)AccessController.doPrivileged(getTCLPrivilegedAction);
+         }
+
+         public ClassLoader getContextClassLoader(final Thread thread)
+         {
+            return (ClassLoader)AccessController.doPrivileged(new PrivilegedAction()
+            {
+               public Object run()
+               {
+                  return thread.getContextClassLoader();
+               }
+            });
+         }
+
+         public void setContextClassLoader(final ClassLoader cl)
+         {
+            AccessController.doPrivileged(
+               new PrivilegedAction()
+               {
+                  public Object run()
+                  {
+                     Thread.currentThread().setContextClassLoader(cl);
+                     return null;
+                  }
+               }
+            );
+         }
+
+         public void setContextClassLoader(final Thread thread, final ClassLoader cl)
+         {
+            AccessController.doPrivileged(
+               new PrivilegedAction()
+               {
+                  public Object run()
+                  {
+                     thread.setContextClassLoader(cl);
+                     return null;
+                  }
+               }
+            );
+         }
+      };
+
+      ClassLoader getContextClassLoader();
+
+      ClassLoader getContextClassLoader(Thread thread);
+
+      void setContextClassLoader(ClassLoader cl);
+
+      void setContextClassLoader(Thread thread, ClassLoader cl);
    }
 }

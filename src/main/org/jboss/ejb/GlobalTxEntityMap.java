@@ -17,8 +17,6 @@ import javax.transaction.SystemException;
 import javax.transaction.Transaction;
 import java.util.ArrayList;
 import java.util.List;
-import java.security.PrivilegedAction;
-import java.security.AccessController;
 
 /**
  * This class provides a way to find out what entities are contained in
@@ -31,7 +29,7 @@ import java.security.AccessController;
  *
  * @author <a href="bill@burkecentral.com">Bill Burke</a>
  * @author <a href="alex@jboss.org">Alexey Loubyansky</a>
- * @version $Revision: 1.13 $
+ * @version $Revision: 1.14 $
  */
 public class GlobalTxEntityMap
 {
@@ -113,7 +111,7 @@ public class GlobalTxEntityMap
          {
             EntityContainer container = (EntityContainer) instance.getContainer();
             // set the context class loader before calling the store method
-            SetTCLAction.setContextClassLoader(container.getClassLoader(), thread);
+            SecurityActions.setContextClassLoader(thread, container.getClassLoader());
 
             // store it
             container.invokeEjbStore(instance);
@@ -130,7 +128,7 @@ public class GlobalTxEntityMap
             EntityContainer container = (EntityContainer) instance.getContainer();
 
             // set the context class loader before calling the store method
-            SetTCLAction.setContextClassLoader(container.getClassLoader(), thread);
+            SecurityActions.setContextClassLoader(thread, container.getClassLoader());
 
             // store it
             container.storeEntity(instance);
@@ -223,7 +221,7 @@ public class GlobalTxEntityMap
          // This is an independent point of entry. We need to make sure the
          // thread is associated with the right context class loader
          Thread currentThread = Thread.currentThread();
-         ClassLoader oldCl = GetTCLAction.getContextClassLoader();
+         ClassLoader oldCl = SecurityActions.getContextClassLoader();
 
          EntityEnterpriseContext instance = null;
          try
@@ -285,7 +283,7 @@ public class GlobalTxEntityMap
          }
          finally
          {
-            SetTCLAction.setContextClassLoader(oldCl);
+            SecurityActions.setContextClassLoader(oldCl);
             synchronizing = false;
          }
       }
@@ -307,47 +305,6 @@ public class GlobalTxEntityMap
       public void afterCompletion(int status)
       {
          //no-op
-      }
-   }
-
-   private static class GetTCLAction implements PrivilegedAction
-   {
-      static PrivilegedAction ACTION = new GetTCLAction();
-      public Object run()
-      {
-         ClassLoader loader = Thread.currentThread().getContextClassLoader();
-         return loader;
-      }
-      static ClassLoader getContextClassLoader()
-      {
-         ClassLoader loader = (ClassLoader) AccessController.doPrivileged(ACTION);
-         return loader;
-      }
-   }
-   private static class SetTCLAction implements PrivilegedAction
-   {
-      ClassLoader loader;
-      Thread t;
-      SetTCLAction(ClassLoader loader, Thread t)
-      {
-         this.loader = loader;
-         this.t = t;
-      }
-      public Object run()
-      {
-         t.setContextClassLoader(loader);
-         t = null;
-         loader = null;
-         return null;
-      }
-      static void setContextClassLoader(ClassLoader loader)
-      {
-         setContextClassLoader(loader, Thread.currentThread());
-      }
-      static void setContextClassLoader(ClassLoader loader, Thread t)
-      {
-         PrivilegedAction action = new SetTCLAction(loader, t);
-         AccessController.doPrivileged(action);
       }
    }
 }

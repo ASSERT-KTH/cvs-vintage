@@ -63,7 +63,7 @@ import java.security.Principal;
 
 /**
  * @author <a href="mailto:alex@jboss.org">Alexey Loubyansky</a>
- * @version <tt>$Revision: 1.5 $</tt>
+ * @version <tt>$Revision: 1.6 $</tt>
  */
 public class JDBCCMRFieldBridge2
    extends JDBCAbstractCMRFieldBridge
@@ -527,9 +527,6 @@ public class JDBCCMRFieldBridge2
 
    private void invokeRemoveRelatedId(Object myId, Object relatedId)
    {
-      ClassLoader oldCL = GetTCLAction.getContextClassLoader();
-      SetTCLAction.setContextClassLoader(manager.getContainer().getClassLoader());
-
       try
       {
          Transaction tx = getTransaction();
@@ -566,17 +563,10 @@ public class JDBCCMRFieldBridge2
       {
          throw new EJBException("Error in invokeRemoveRelatedId()", e);
       }
-      finally
-      {
-         SetTCLAction.setContextClassLoader(oldCL);
-      }
    }
 
    private void invokeAddRelatedId(Object myId, Object relatedId)
    {
-      ClassLoader oldCL = GetTCLAction.getContextClassLoader();
-      SetTCLAction.setContextClassLoader(manager.getContainer().getClassLoader());
-
       try
       {
          Transaction tx = getTransaction();
@@ -610,10 +600,6 @@ public class JDBCCMRFieldBridge2
       catch(Exception e)
       {
          throw new EJBException("Error in invokeAddRelatedId()", e);
-      }
-      finally
-      {
-         SetTCLAction.setContextClassLoader(oldCL);
       }
    }
 
@@ -1640,46 +1626,6 @@ public class JDBCCMRFieldBridge2
       }
    }
 
-   private static class GetTCLAction implements PrivilegedAction
-   {
-      static PrivilegedAction ACTION = new GetTCLAction();
-
-      public Object run()
-      {
-         ClassLoader loader = Thread.currentThread().getContextClassLoader();
-         return loader;
-      }
-
-      static ClassLoader getContextClassLoader()
-      {
-         ClassLoader loader = (ClassLoader) AccessController.doPrivileged(ACTION);
-         return loader;
-      }
-   }
-
-   private static class SetTCLAction implements PrivilegedAction
-   {
-      ClassLoader loader;
-
-      SetTCLAction(ClassLoader loader)
-      {
-         this.loader = loader;
-      }
-
-      public Object run()
-      {
-         Thread.currentThread().setContextClassLoader(loader);
-         loader = null;
-         return null;
-      }
-
-      static void setContextClassLoader(ClassLoader loader)
-      {
-         PrivilegedAction action = new SetTCLAction(loader);
-         AccessController.doPrivileged(action);
-      }
-   }
-
    private static class GetPrincipalAction implements PrivilegedAction
    {
       static PrivilegedAction ACTION = new GetPrincipalAction();
@@ -1713,5 +1659,4 @@ public class JDBCCMRFieldBridge2
          return credential;
       }
    }
-
 }
