@@ -30,7 +30,7 @@ import org.jboss.metadata.ConfigurationMetaData;
  *    before changing.
  *
  * @author <a href="mailto:bill@burkecentral.com">Bill Burke</a>
- * @version $Revision: 1.12 $
+ * @version $Revision: 1.13 $
  */
 public class EntityMultiInstanceSynchronizationInterceptor
         extends EntitySynchronizationInterceptor
@@ -43,9 +43,14 @@ public class EntityMultiInstanceSynchronizationInterceptor
 
    public void start()
    {
-      if (!container.getLockManager().lockClass.equals(org.jboss.ejb.plugins.lock.NoLock.class))
+      // This is in here so that EntityMultiInstanceInterceptor can avoid doing a lock.sync().  
+      // 
+      if (!container.getLockManager().lockClass.equals(org.jboss.ejb.plugins.lock.NoLock.class)
+          && !container.getLockManager().lockClass.equals(org.jboss.ejb.plugins.lock.JDBCOptimisticLock.class)
+          && !container.getLockManager().lockClass.equals(org.jboss.ejb.plugins.lock.MethodOnlyEJBLock.class)
+          )
       {
-         throw new IllegalStateException("the <locking-policy> must be org.jboss.ejb.plugins.lock.NoLock for Instance Per Transaction:"
+         throw new IllegalStateException("the <locking-policy> must be org.jboss.ejb.plugins.lock.NoLock, JDBCOptimisticLock, or MethodOnlyEJBLock for Instance Per Transaction:"
                                           + container.getLockManager().lockClass.getName());
       }
    }

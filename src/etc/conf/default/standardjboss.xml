@@ -6,7 +6,7 @@
 <!-- ===================================================================== -->
 <!--  Standard JBoss EJB Configurations                                    -->
 <!-- ===================================================================== -->
-<!-- $Id: standardjboss.xml,v 1.67 2003/09/11 14:11:20 patriot1burke Exp $ -->
+<!-- $Id: standardjboss.xml,v 1.68 2003/09/12 02:23:44 patriot1burke Exp $ -->
 
 <jboss>
    <enforce-ejb-restrictions>false</enforce-ejb-restrictions>
@@ -326,6 +326,7 @@
             <interceptor>org.jboss.ejb.plugins.TxInterceptorCMT</interceptor>
             <interceptor metricsEnabled="true">org.jboss.ejb.plugins.MetricsInterceptor</interceptor>
             <interceptor>org.jboss.ejb.plugins.EntityCreationInterceptor</interceptor>
+            <interceptor>org.jboss.ejb.plugins.EntityLockInterceptor</interceptor>
             <interceptor>org.jboss.ejb.plugins.EntityMultiInstanceInterceptor</interceptor>
             <interceptor>org.jboss.ejb.plugins.EntityReentranceInterceptor</interceptor>
             <interceptor>org.jboss.resource.connectionmanager.CachedConnectionInterceptor</interceptor>
@@ -453,6 +454,7 @@
             <interceptor>org.jboss.ejb.plugins.TxInterceptorCMT</interceptor>
             <interceptor metricsEnabled="true">org.jboss.ejb.plugins.MetricsInterceptor</interceptor>
             <interceptor>org.jboss.ejb.plugins.EntityCreationInterceptor</interceptor>
+            <interceptor>org.jboss.ejb.plugins.EntityLockInterceptor</interceptor>
             <interceptor>org.jboss.ejb.plugins.EntityMultiInstanceInterceptor</interceptor>
             <interceptor>org.jboss.ejb.plugins.EntityReentranceInterceptor</interceptor>
             <interceptor>org.jboss.resource.connectionmanager.CachedConnectionInterceptor</interceptor>
@@ -715,6 +717,7 @@
             <interceptor>org.jboss.ejb.plugins.TxInterceptorCMT</interceptor>
             <interceptor metricsEnabled="true">org.jboss.ejb.plugins.MetricsInterceptor</interceptor>
             <interceptor>org.jboss.ejb.plugins.EntityCreationInterceptor</interceptor>
+            <interceptor>org.jboss.ejb.plugins.EntityLockInterceptor</interceptor>
             <interceptor>org.jboss.ejb.plugins.EntityMultiInstanceInterceptor</interceptor>
             <interceptor>org.jboss.ejb.plugins.EntityReentranceInterceptor</interceptor>
             <interceptor>org.jboss.resource.connectionmanager.CachedConnectionInterceptor</interceptor>
