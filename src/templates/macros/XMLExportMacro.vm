@@ -91,7 +91,7 @@
         <name>$attachment.Name</name>
         <type>$attachment.AttachmentType.Name</type>
         <path>$!attachment.FilePath</path>
-        <data>$attachment.DataAsString</data>
+        <data>$!attachment.DataAsString</data>
         <mimetype>$attachment.MimeType</mimetype>
         <created-date format="$sdf.toPattern()">$sdf.format($attachment.CreatedDate)</created-date>
         <modified-date format="$sdf.toPattern()">$sdf.format($attachment.ModifiedDate)</modified-date>
