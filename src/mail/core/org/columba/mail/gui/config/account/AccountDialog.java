@@ -31,9 +31,6 @@ import javax.swing.JPanel;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
-import org.columba.core.gui.button.CancelButton;
-import org.columba.core.gui.button.HelpButton;
-import org.columba.core.gui.button.OkButton;
 import org.columba.core.gui.util.CTabbedPane;
 import org.columba.core.gui.util.DialogStore;
 import org.columba.core.gui.util.wizard.WizardTopBorder;
@@ -48,15 +45,6 @@ import org.columba.mail.gui.util.URLController;
 import org.columba.mail.pop3.POP3ServerController;
 import org.columba.mail.util.MailResourceLoader;
 
-/**
- * Title:
- * Description:
- * Copyright:    Copyright (c) 2001
- * Company:
- * @author
- * @version 1.0
- */
-
 public class AccountDialog implements ActionListener, ListSelectionListener {
 	private JDialog dialog;
 
@@ -69,9 +57,7 @@ public class AccountDialog implements ActionListener, ListSelectionListener {
 	private SpecialFoldersPanel specialFoldersPanel;
 	private ReceiveOptionsPanel receiveOptionsPanel;
 
-	private OkButton okButton;
-	private CancelButton cancelButton;
-	private HelpButton helpButton;
+	private JButton okButton, cancelButton, helpButton;
 
 	//private PanelChooser panelChooser;
 
@@ -94,22 +80,8 @@ public class AccountDialog implements ActionListener, ListSelectionListener {
 		//panelChooser.addListSelectionListener(this);
 
 		dialog.pack();
-
-		//dialog.setSize( new Dimension( 700,550 ) );
-
-		/*
-		java.awt.Dimension dim = dialog.getSize();
-		
-		
-		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-		
-		dialog.setLocation(screenSize.width/2 - dim.width/2, screenSize.height/2 - dim.height/2);
-		*/
-
 		dialog.setLocationRelativeTo(null);
 		dialog.setVisible(true);
-
-		//setSize( new Dimension( 600,500 ) );
 	}
 
 	protected void createPanels() {
@@ -234,22 +206,19 @@ public class AccountDialog implements ActionListener, ListSelectionListener {
 		//bottom.add( Box.createHorizontalStrut());
 		
 		
-		//cancelButton = new JButton(GlobalResourceLoader.getString("dialog", "cancel"));
-		cancelButton = new CancelButton();
+		cancelButton = new JButton(GlobalResourceLoader.getString("dialog", "cancel"));
 		//$NON-NLS-1$ //$NON-NLS-2$
 		cancelButton.addActionListener(this);
 		cancelButton.setActionCommand("CANCEL"); //$NON-NLS-1$
 		
-		//okButton = new JButton(GlobalResourceLoader.getString("dialog", "ok"));
+		okButton = new JButton(GlobalResourceLoader.getString("dialog", "ok"));
 		//$NON-NLS-1$ //$NON-NLS-2$
-		okButton = new OkButton();
 		okButton.addActionListener(this);
 		okButton.setActionCommand("OK"); //$NON-NLS-1$
 		okButton.setDefaultCapable(true);
 		dialog.getRootPane().setDefaultButton(okButton);
 		
-		//helpButton = new JButton(GlobalResourceLoader.getString("dialog", "help"));
-		helpButton = new HelpButton();
+		helpButton = new JButton(GlobalResourceLoader.getString("dialog", "help"));
 		//$NON-NLS-1$ //$NON-NLS-2$
 		
 		JPanel buttonPanel = new JPanel();
@@ -301,22 +270,19 @@ public class AccountDialog implements ActionListener, ListSelectionListener {
 
 		//bottom.add( Box.createHorizontalStrut());
 
-		//cancelButton = new JButton(GlobalResourceLoader.getString("dialog", "cancel"));
-		cancelButton = new CancelButton();
+		cancelButton = new JButton(MailResourceLoader.getString("global", "cancel"));
 		//$NON-NLS-1$ //$NON-NLS-2$
 		cancelButton.addActionListener(this);
 		cancelButton.setActionCommand("CANCEL"); //$NON-NLS-1$
 
-		//okButton = new JButton(GlobalResourceLoader.getString("dialog", "ok"));
+		okButton = new JButton(MailResourceLoader.getString("global", "ok"));
 		//$NON-NLS-1$ //$NON-NLS-2$
-		okButton = new OkButton();
 		okButton.addActionListener(this);
 		okButton.setActionCommand("OK"); //$NON-NLS-1$
 		okButton.setDefaultCapable(true);
 		dialog.getRootPane().setDefaultButton(okButton);
 
-		//helpButton = new JButton(GlobalResourceLoader.getString("dialog", "help"));
-		helpButton = new HelpButton();
+		helpButton = new JButton(MailResourceLoader.getString("global", "help"));
 		helpButton.setActionCommand("HELP");
 		helpButton.addActionListener(this);
 		//$NON-NLS-1$ //$NON-NLS-2$

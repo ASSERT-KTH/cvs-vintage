@@ -13,34 +13,16 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
 //
 //All Rights Reserved.
+
 package org.columba.mail.gui.util;
 
-import java.awt.BorderLayout;
-import java.awt.Color;
-import java.awt.Component;
-import java.awt.Dimension;
-import java.awt.Graphics;
-import java.awt.GridBagConstraints;
-import java.awt.GridBagLayout;
-import java.awt.GridLayout;
-import java.awt.Insets;
-import java.awt.Toolkit;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-import javax.swing.BorderFactory;
-import javax.swing.JCheckBox;
-import javax.swing.JDialog;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.JPasswordField;
-import javax.swing.UIManager;
+import javax.swing.*;
 import javax.swing.border.AbstractBorder;
 
-import org.columba.core.gui.button.CancelButton;
-import org.columba.core.gui.button.HelpButton;
-import org.columba.core.gui.button.OkButton;
 import org.columba.core.gui.util.ImageLoader;
 import org.columba.mail.util.MailResourceLoader;
 
@@ -60,9 +42,7 @@ public class PasswordDialog implements ActionListener {
 
 	private boolean save;
 
-	private OkButton okButton;
-	private CancelButton cancelButton;
-	private HelpButton helpButton;
+	private JButton okButton, cancelButton, helpButton;
 
 	//private JComboBox loginMethodComboBox;
 	//String loginMethod;
@@ -79,22 +59,19 @@ public class PasswordDialog implements ActionListener {
 
 		//bottom.add( Box.createHorizontalStrut());
 
-		//cancelButton = new JButton(GlobalResourceLoader.getString("dialog", "cancel"));
-		cancelButton = new CancelButton();
+		cancelButton = new JButton(MailResourceLoader.getString("global", "cancel"));
 		//$NON-NLS-1$ //$NON-NLS-2$
 		cancelButton.addActionListener(this);
 		cancelButton.setActionCommand("CANCEL"); //$NON-NLS-1$
 
-		//okButton = new JButton(GlobalResourceLoader.getString("dialog", "ok"));
+		okButton = new JButton(MailResourceLoader.getString("global", "ok"));
 		//$NON-NLS-1$ //$NON-NLS-2$
-		okButton = new OkButton();
 		okButton.addActionListener(this);
 		okButton.setActionCommand("OK"); //$NON-NLS-1$
 		okButton.setDefaultCapable(true);
 		dialog.getRootPane().setDefaultButton(okButton);
 
-		//helpButton = new JButton(GlobalResourceLoader.getString("dialog", "help"));
-		helpButton = new HelpButton();
+		helpButton = new JButton(MailResourceLoader.getString("global", "help"));
 		//$NON-NLS-1$ //$NON-NLS-2$
 
 		JPanel buttonPanel = new JPanel();
