@@ -443,6 +443,14 @@ public class BaseInterceptor
     /** Reload notification - called whenever a reload is done.
 	This can be used to serialize sessions, log the event,
 	remove any resource that was class-loader dependent.
+
+	Note. The current implementation uses a note "oldLoader"
+	that will keep a reference to the previous class loader
+	during this hook. It will be set by the module that creates
+	the loaders, and should be destroyed when the hook is done.
+	This can also be implemented using a get/setOldClassLoader
+	in Context, but so far this is used in only 2 modules, adding
+	new API is not needed.
      */
     public void reload( Request req, Context ctx)
 	throws TomcatException

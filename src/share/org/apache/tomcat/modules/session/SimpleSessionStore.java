@@ -156,10 +156,8 @@ public final class SimpleSessionStore  extends BaseInterceptor {
 	    }
 	    session.setState( ServerSession.STATE_SUSPEND );
 	    
-	    int oldLoaderNote=cm.getNoteId( ContextManager.CONTAINER_NOTE,
-					    "oldLoader");
 	    ClassLoader oldLoader=(ClassLoader)ctx.getContainer().
-		getNote(oldLoaderNote);
+		getNote("oldLoader");
 
 	    Hashtable newSession=new Hashtable();
 	    Enumeration e = session.getAttributeNames();

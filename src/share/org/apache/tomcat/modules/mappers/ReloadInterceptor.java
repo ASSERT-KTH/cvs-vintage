@@ -72,6 +72,7 @@ import java.util.*;
  *  will determine if the context needs reload.
  *
  *  This interceptor supports multiple forms of reloading.
+ *  Configuration. Must be set after LoaderInterceptor
  */
 public class ReloadInterceptor extends  BaseInterceptor
 {
@@ -126,6 +127,31 @@ public class ReloadInterceptor extends  BaseInterceptor
 	    dep.setLastModified( inf_xml.lastModified() );
 	    dm.addDependency( dep );
 	}
+
+	// Use a DependClassLoader to autmatically record class loader
+	// deps
+	loaderHook(dm, context);
+    }
+    
+    public void reload( Request req, Context context) throws TomcatException {
+
+	DependManager dm=(DependManager)context.getContainer().
+	    getNote("DependManager");
+
+	if( dm!=null ) {
+	    // we are using a util.depend for reloading
+	    dm.reset();
+	}
+	loaderHook(dm, context);
+    }
+
+    
+    protected void  loaderHook( DependManager dm, Context context ) {
+	// ReloadInterceptor must be configured _after_ LoaderInterceptor
+	ClassLoader cl=context.getClassLoader();
+	ClassLoader loader=new DependClassLoader( dm, cl);
+	context.setClassLoader(loader);
+	context.setAttribute( "org.apache.tomcat.classloader", loader);
     }
 
     
@@ -136,6 +162,10 @@ public class ReloadInterceptor extends  BaseInterceptor
 	// XXX This interceptor will be added per/context.
 	if( ! ctx.getReloadable() ) return 0;
 
+	// We are remapping ?
+	if( request.getAttribute("tomcat.ReloadInterceptor")!=null)
+	    return DECLINED;
+	
 	DependManager dm=(DependManager)ctx.getContainer().
 	    getNote(dependManagerNote);
 	if( ! dm.shouldReload() ) return 0;
@@ -171,8 +201,16 @@ public class ReloadInterceptor extends  BaseInterceptor
 
 		ctx1.init();
 
-		// XXX Make sure ctx is destroyed - we may have
-		// undetected leaks 
+		// remap the request
+		request.setAttribute("tomcat.ReloadInterceptor", this);
+		BaseInterceptor ri[]=
+		    cm.getContainer().getInterceptors(Container.H_contextMap);
+		
+		for( int i=0; i< ri.length; i++ ) {
+		    if( ri[i]==this ) break;
+		    int status=ri[i].contextMap( request );
+		    if( status!=0 ) return status;
+		}
 
 	    } else {
 		// This is the old ( buggy) behavior
@@ -204,9 +242,7 @@ public class ReloadInterceptor extends  BaseInterceptor
 		BaseInterceptor cI[]=ctx.getContainer().getInterceptors();
 		for( int i=0; i< cI.length; i++ ) {
 		    cI[i].reload(  request, ctx );
-		    int oldLoaderNote=cm.getNoteId
-			( ContextManager.CONTAINER_NOTE, "oldLoader");
-		    ctx.getContainer().setNote( oldLoaderNote, null);
+		    ctx.getContainer().setNote( "oldLoader", null);
 		}
 	    }
 	} catch( TomcatException ex) {
