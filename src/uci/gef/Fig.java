@@ -27,7 +27,7 @@
 // File: Fig.java
 // Classes: Fig
 // Original Author: ics125 spring 1996
-// $Id: Fig.java,v 1.7 1998/04/18 02:08:44 jrobbins Exp $
+// $Id: Fig.java,v 1.8 1998/04/21 02:54:36 jrobbins Exp $
 
 package uci.gef;
 
@@ -273,7 +273,7 @@ public class Fig implements java.io.Serializable  {
   public Rectangle getBounds() { return new Rectangle(_x, _y, _w, _h); }
 
   /** Reshape the given rectangle to be my bounding box. */
-  public void stuffBounds(Rectangle r) { r.reshape(_x, _y, _w, _h); }
+  public void stuffBounds(Rectangle r) { r.setBounds(_x, _y, _w, _h); }
 
   /** Change my bounding box to the given Rectangle. Just calls
    *  setBounds(x, y, w, h). */

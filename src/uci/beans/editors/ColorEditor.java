@@ -28,7 +28,7 @@
 // File: ColorEditor.java
 // Interfaces: ColorEditor
 // Original Author: jrobbins@ics.uci.edu
-// $Id: ColorEditor.java,v 1.3 1998/04/18 01:25:44 jrobbins Exp $
+// $Id: ColorEditor.java,v 1.4 1998/04/21 02:58:06 jrobbins Exp $
 
 package uci.beans.editors;
 
@@ -87,7 +87,7 @@ implements PropertyEditor { //, MouseListener {
   }
 
   public void paint(java.awt.Graphics g) {
-    System.out.println("painting!");
+    //System.out.println("painting!");
     paintValue(g, getBounds());
   }
 
@@ -108,9 +108,9 @@ implements PropertyEditor { //, MouseListener {
 
   public java.awt.Component getCustomEditor() {
     ColorPickerGrid cpg = new ColorPickerGrid(Color.white);
-    System.out.println("made ColorPickerGrid");
+    //System.out.println("made ColorPickerGrid");
     cpg.setPEColor(this);
-    System.out.println("set ColorPickerGrid editor");
+    //System.out.println("set ColorPickerGrid editor");
     return cpg;
   }
 

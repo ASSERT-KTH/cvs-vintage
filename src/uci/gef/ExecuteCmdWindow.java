@@ -28,7 +28,7 @@
 // File: ExecuteCmdWindow.java
 // Classes: ExecuteCmdWindow
 // Original Author: jrobbins@ics.uci.edu
-// $Id: ExecuteCmdWindow.java,v 1.3 1998/04/18 01:26:12 jrobbins Exp $
+// $Id: ExecuteCmdWindow.java,v 1.4 1998/04/21 02:54:35 jrobbins Exp $
 
 package uci.gef;
 
@@ -75,13 +75,13 @@ public class ExecuteCmdWindow extends Frame {
     buttons.setLayout(new FlowLayout());
     buttons.add(_execute);
     buttons.add(_about);
-    _execute.disable();
-    _about.disable();
+    _execute.setEnabled(false);
+    _about.setEnabled(false);
     buttons.add(_close);
     add("South", buttons);
     pack();
-    Dimension d = size();
-    resize(d.width, Math.min(d.height * 2, 350));
+    Dimension d = getSize();
+    setSize(d.width, Math.min(d.height * 2, 350));
   }
 
   ////////////////////////////////////////////////////////////////
@@ -96,12 +96,12 @@ public class ExecuteCmdWindow extends Frame {
       }
       break;
     case Event.LIST_SELECT:
-      _execute.enable();
-      _about.enable();
+      _execute.setEnabled(true);
+      _about.setEnabled(true);
       return true;
     case Event.LIST_DESELECT:
-      _execute.disable();
-      _about.disable();
+      _execute.setEnabled(false);
+      _about.setEnabled(false);
       return true;
     }
     return super.handleEvent(e);

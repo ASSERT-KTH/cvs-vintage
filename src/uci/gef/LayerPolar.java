@@ -27,7 +27,7 @@
 // File: LayerPolar.java
 // Classes: LayerPolar
 // Original Author: jrobbins@ics.uci.edu
-// $Id: LayerPolar.java,v 1.5 1998/04/18 01:26:29 jrobbins Exp $
+// $Id: LayerPolar.java,v 1.6 1998/04/21 02:54:41 jrobbins Exp $
 
 package uci.gef;
 
@@ -107,7 +107,7 @@ public class LayerPolar extends Layer {
   /** Paint concentric circles around the origin with each circle a
    *  certain spacing from the previous one */
   public void paintContents(Graphics g) {
-    Rectangle clip = g.getClipRect();
+    Rectangle clip = g.getClipBounds();
     int clipBot = clip.y + clip.height;
     int clipRight = clip.x + clip.width;
 
@@ -160,7 +160,7 @@ public class LayerPolar extends Layer {
       setHidden(false);
       Editor ce = Globals.curEditor();
       if (ce != null) {
-	Dimension d = ce.getAwtComponent().size();
+	Dimension d = ce.getAwtComponent().getSize();
 	origin(d.width / 2, d.height / 2);
       }
       else origin(100,100);

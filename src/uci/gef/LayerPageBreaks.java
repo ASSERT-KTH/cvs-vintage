@@ -28,7 +28,7 @@
 // File: LayerPageBreaks.java
 // Classes: LayerPageBreaks
 // Original Author: jrobbins@ics.uci.edu
-// $Id: LayerPageBreaks.java,v 1.3 1998/04/18 01:26:28 jrobbins Exp $
+// $Id: LayerPageBreaks.java,v 1.4 1998/04/21 02:54:40 jrobbins Exp $
 
 package uci.gef;
 
@@ -77,7 +77,7 @@ public class LayerPageBreaks extends Layer {
     if (g instanceof PrintGraphics) return; // for printing under Java 1.1
     if (!_paintLines) return;
     if (_pageSize == null) return;
-    Rectangle clip = g.getClipRect();
+    Rectangle clip = g.getClipBounds();
     int x = clip.x / _pageSize.width * _pageSize.width - _pageSize.width;
     int y = clip.y / _pageSize.height * _pageSize.height - _pageSize.height;
     int right = clip.x + clip.width;

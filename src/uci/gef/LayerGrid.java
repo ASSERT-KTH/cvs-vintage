@@ -28,7 +28,7 @@
 // File: LayerGrid.java
 // Classes: LayerGrid
 // Original Author: jrobbins@ics.uci.edu
-// $Id: LayerGrid.java,v 1.5 1998/04/18 01:26:26 jrobbins Exp $
+// $Id: LayerGrid.java,v 1.6 1998/04/21 02:54:39 jrobbins Exp $
 
 package uci.gef;
 
@@ -143,7 +143,7 @@ public class LayerGrid extends Layer {
       }
     }
 
-    Rectangle clip = g.getClipRect();
+    Rectangle clip = g.getClipBounds();
     int x = clip.x / _spacing * _spacing;
     int y = clip.y / _spacing * _spacing;
     int bot = clip.y + clip.height;
@@ -176,7 +176,7 @@ public class LayerGrid extends Layer {
 
   /** Paint lines on the given Graphics. */
   private void paintLines(Graphics g, boolean paintBackground) {
-    Rectangle clip = g.getClipRect();
+    Rectangle clip = g.getClipBounds();
     if (paintBackground) {
       g.setColor(_bgColor);
       g.fillRect(clip.x, clip.y, clip.width, clip.height);
@@ -203,7 +203,7 @@ public class LayerGrid extends Layer {
 
   /** Paint dots on the given Graphics. */
   protected void paintDots(Graphics g, boolean paintBackground) {
-    Rectangle clip = g.getClipRect();
+    Rectangle clip = g.getClipBounds();
     if (paintBackground) {
       g.setColor(_bgColor);
       g.fillRect(clip.x, clip.y, clip.width, clip.height);

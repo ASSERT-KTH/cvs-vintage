@@ -28,7 +28,7 @@
 // File: LayerDiagram.java
 // Classes: LayerDiagram
 // Original Author: jrobbins@ics.uci.edu
-// $Id: LayerDiagram.java,v 1.6 1998/04/18 01:26:26 jrobbins Exp $
+// $Id: LayerDiagram.java,v 1.7 1998/04/21 02:54:38 jrobbins Exp $
 
 package uci.gef;
 
@@ -186,7 +186,7 @@ public class LayerDiagram extends Layer {
 
   /** Paint all the Fig's that belong to this layer. */
   public void paintContents(Graphics g) {
-    Rectangle clip = g.getClipRect();
+    Rectangle clip = g.getClipBounds();
     Enumeration figs = elements();
     while (figs.hasMoreElements()) {
       Fig f = (Fig) figs.nextElement();

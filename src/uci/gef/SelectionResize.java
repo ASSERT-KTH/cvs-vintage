@@ -28,7 +28,7 @@
 // File: SelectionResize.java
 // Classes: SelectionResize
 // Original Author: jrobbins@ics.uci.edu
-// $Id: SelectionResize.java,v 1.3 1998/04/18 01:26:51 jrobbins Exp $
+// $Id: SelectionResize.java,v 1.4 1998/04/21 02:54:46 jrobbins Exp $
 
 package uci.gef;
 
@@ -67,16 +67,16 @@ public class SelectionResize extends Selection {
     int cw = _content.getWidth();
     int ch = _content.getHeight();
     Rectangle testRect = new Rectangle(0, 0, 0, 0);
-    testRect.reshape(cx-HAND_SIZE/2, cy-HAND_SIZE/2,
+    testRect.setBounds(cx-HAND_SIZE/2, cy-HAND_SIZE/2,
 		     HAND_SIZE, ch+HAND_SIZE/2);
     boolean leftEdge = r.intersects(testRect);
-    testRect.reshape(cx+cw-HAND_SIZE/2, cy-HAND_SIZE/2,
+    testRect.setBounds(cx+cw-HAND_SIZE/2, cy-HAND_SIZE/2,
 		     HAND_SIZE, ch+HAND_SIZE/2);
     boolean rightEdge = r.intersects(testRect);
-    testRect.reshape(cx-HAND_SIZE/2, cy-HAND_SIZE/2,
+    testRect.setBounds(cx-HAND_SIZE/2, cy-HAND_SIZE/2,
 		     cw+HAND_SIZE/2, HAND_SIZE);
     boolean topEdge = r.intersects(testRect);
-    testRect.reshape(cx-HAND_SIZE/2, cy+ch-HAND_SIZE/2,
+    testRect.setBounds(cx-HAND_SIZE/2, cy+ch-HAND_SIZE/2,
 		     cw+HAND_SIZE/2, HAND_SIZE);
     boolean bottomEdge = r.intersects(testRect);
     // needs-more-work: midpoints for side handles

@@ -28,7 +28,7 @@
 // File: LayerPerspective.java
 // Classes: LayerPerspective
 // Original Author: jrobbins@ics.uci.edu
-// $Id: LayerPerspective.java,v 1.6 1998/04/18 01:26:29 jrobbins Exp $
+// $Id: LayerPerspective.java,v 1.7 1998/04/21 02:54:41 jrobbins Exp $
 
 package uci.gef;
 
@@ -150,7 +150,7 @@ public class LayerPerspective extends LayerDiagram implements GraphListener {
 	int y = bounds.y;
 	if (_stagger) y += (col%2)*(bbox.height+GAP)/2;
 	newFig.setLocation(x, y);
-	bbox.move(x, y);
+	bbox.setLocation(x, y);
       }
     }
   }

@@ -28,7 +28,7 @@
 // File: FlexibleApplet.java
 // Classes: FlexibleApplet
 // Original Author: ics125b spring 1996
-// $Id: FlexibleApplet.java,v 1.6 1998/04/18 01:26:55 jrobbins Exp $
+// $Id: FlexibleApplet.java,v 1.7 1998/04/21 02:54:47 jrobbins Exp $
 
 package uci.gef.demo;
 
@@ -130,7 +130,7 @@ public class FlexibleApplet extends Applet {
   public void initWindows() {
      Dimension drawAreaSize = new Dimension(_drawAreaWidth, _drawAreaHeight);
      JGraph jg = new JGraph(gm);
-     jg.resize(drawAreaSize);
+     jg.setSize(drawAreaSize);
      jg.setPreferredSize(drawAreaSize);
 
      if (_spawnFrame) {
@@ -139,7 +139,7 @@ public class FlexibleApplet extends Applet {
        f.getContentPane().setLayout(new BorderLayout());
        f.getContentPane().add(palette, BorderLayout.NORTH);
        f.getContentPane().add(jg, BorderLayout.CENTER);
-       f.resize(drawAreaSize);
+       f.setSize(drawAreaSize);
        f.show();
      }
      else {

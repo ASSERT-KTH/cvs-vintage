@@ -16,35 +16,14 @@
 # IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED
 # WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.
 
-# File: Makefile in uci/graphedit/demo
-# Oringinal Author: jrobbins@ics.uci.edu
-# $Id: Makefile,v 1.3 1998/04/21 02:54:48 jrobbins Exp $
-
 include ../../Makefile.config
 
-# gen is not used now that GEF does not need a preprocessor
-GEN =
-
 CLASSES = \
-	BasicApplication.class \
-	EdgeData.class \
-	EdgePower.class \
-	EquipmentApplet.class \
-	EquipmentPalette.class \
-	FlexibleApplet.class \
-	NodeCPU.class \
-	NodePrinter.class \
-	NodeWall.class \
-	PortData.class \
-	PortPower.class \
-	SampleEdge.class \
-	SampleEdge2.class \
-	SampleNode.class \
-	SampleNode2.class \
-	SamplePalette.class \
-	SamplePort.class \
-	SamplePort2.class \
-	ScrollingApplet.class
+	ColorEditor.class \
+	ColorPickerGrid.class \
+	ColorTilePanel.class \
+	RectangleEditor.class
+
 
 all: $(GEN) $(CLASSES)
 

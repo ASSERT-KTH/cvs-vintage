@@ -18,7 +18,7 @@
 
 # File: Makefile in uci/graphedit/demo
 # Oringinal Author: jrobbins@ics.uci.edu
-# $Id: Makefile,v 1.3 1998/04/21 02:54:48 jrobbins Exp $
+# $Id: Makefile,v 1.1 1998/04/21 02:54:49 jrobbins Exp $
 
 include ../../Makefile.config
 
@@ -26,25 +26,9 @@ include ../../Makefile.config
 GEN =
 
 CLASSES = \
-	BasicApplication.class \
-	EdgeData.class \
-	EdgePower.class \
-	EquipmentApplet.class \
-	EquipmentPalette.class \
-	FlexibleApplet.class \
-	NodeCPU.class \
-	NodePrinter.class \
-	NodeWall.class \
-	PortData.class \
-	PortPower.class \
-	SampleEdge.class \
-	SampleEdge2.class \
-	SampleNode.class \
-	SampleNode2.class \
-	SamplePalette.class \
-	SamplePort.class \
-	SamplePort2.class \
-	ScrollingApplet.class
+	GraphSelectionEvent.class \
+	GraphSelectionListener.class
+
 
 all: $(GEN) $(CLASSES)
 

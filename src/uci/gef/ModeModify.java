@@ -28,7 +28,7 @@
 // File: ModeModify.java
 // Classes: ModeModify
 // Original Author: ics125 spring 1996
-// $Id: ModeModify.java,v 1.5 1998/04/18 01:26:37 jrobbins Exp $
+// $Id: ModeModify.java,v 1.6 1998/04/21 02:54:43 jrobbins Exp $
 
 package uci.gef;
 
@@ -130,7 +130,7 @@ public class ModeModify extends Mode {
       return;
     }
     synchronized (snapPt) {
-      snapPt.move(x, y);
+      snapPt.setLocation(x, y);
       getEditor().snap(snapPt);
       snapX = snapPt.x;
       snapY = snapPt.y;
@@ -188,7 +188,7 @@ public class ModeModify extends Mode {
     _curHandle.index = sm.hitHandle(new Rectangle(x-4, y-4, 8, 8));
     sm.endTrans();
     synchronized (snapPt) {
-      snapPt.move(x, y);
+      snapPt.setLocation(x, y);
       getEditor().snap(snapPt);
       _startX = _lastX = snapPt.x;
       _startY = _lastY = snapPt.y;

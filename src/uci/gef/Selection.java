@@ -28,7 +28,7 @@
 // File: Selection.java
 // Classes: Selection
 // Original Author: jrobbins@ics.uci.edu
-// $Id: Selection.java,v 1.6 1998/04/18 02:08:46 jrobbins Exp $
+// $Id: Selection.java,v 1.7 1998/04/21 02:54:46 jrobbins Exp $
 
 package uci.gef;
 
@@ -156,7 +156,7 @@ implements Serializable, MouseListener, MouseMotionListener, KeyListener {
   /** Returns my bounding box in the given Rectangle.  This avoids
    *  memory allocation. */
   public void stuffBounds(Rectangle r) {
-    r.reshape(_content.getX() - HAND_SIZE/2,
+    r.setBounds(_content.getX() - HAND_SIZE/2,
 	      _content.getY() - HAND_SIZE/2,
 	      _content.getWidth() + HAND_SIZE,
 	      _content.getHeight() + HAND_SIZE);

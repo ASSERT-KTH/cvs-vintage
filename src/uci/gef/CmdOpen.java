@@ -28,7 +28,7 @@
 // File: CmdOpen.java
 // Classes: CmdOpen
 // Original Author: jrobbins@ics.uci.edu
-// $Id: CmdOpen.java,v 1.4 1998/04/18 01:25:59 jrobbins Exp $
+// $Id: CmdOpen.java,v 1.5 1998/04/21 02:54:33 jrobbins Exp $
 
 package uci.gef;
 
@@ -77,7 +77,7 @@ public class CmdOpen extends Cmd implements FilenameFilter {
     	Globals.showStatus("Read " + path + filename);
 	JGraphFrame jgf = new JGraphFrame(path + filename, ed);
 	Object d = getArg("dimension");
-	if (d instanceof Dimension) jgf.resize((Dimension)d);
+	if (d instanceof Dimension) jgf.setSize((Dimension)d);
 	jgf.setVisible(true);
      }
     }

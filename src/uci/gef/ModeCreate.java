@@ -28,7 +28,7 @@
 // File: ModeCreate.java
 // Classes: ModeCreate
 // Original Author: jrobbins@ics.uci.edu
-// $Id: ModeCreate.java,v 1.5 1998/04/18 01:26:30 jrobbins Exp $
+// $Id: ModeCreate.java,v 1.6 1998/04/21 02:54:43 jrobbins Exp $
 
 package uci.gef;
 
@@ -102,7 +102,7 @@ public abstract class ModeCreate extends Mode {
     if (me.getModifiers() == InputEvent.BUTTON3_MASK) return;
     start();
     synchronized (snapPt) {
-      snapPt.move(me.getX(), me.getY());
+      snapPt.setLocation(me.getX(), me.getY());
       _editor.snap(snapPt);
       anchorX = snapPt.x;
       anchorY = snapPt.y;
@@ -151,7 +151,7 @@ public abstract class ModeCreate extends Mode {
   protected void creationDrag(int x, int y) {
     int snapX, snapY;
     synchronized (snapPt) {
-      snapPt.move(x, y);
+      snapPt.setLocation(x, y);
       _editor.snap(snapPt);
       snapX = snapPt.x;
       snapY = snapPt.y;

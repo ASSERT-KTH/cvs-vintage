@@ -27,7 +27,7 @@
 // File: CmdSpawn.java
 // Classes: CmdSpawn
 // Original Author: ics125 spring 1996
-// $Id: CmdSpawn.java,v 1.4 1998/04/18 01:26:08 jrobbins Exp $
+// $Id: CmdSpawn.java,v 1.5 1998/04/21 02:54:34 jrobbins Exp $
 
 package uci.gef;
 
@@ -52,7 +52,7 @@ public class CmdSpawn extends Cmd {
     JGraphFrame jgf = new JGraphFrame(title, ed);
     // use clone because ce may be of a subclass of Editor
     Object d = getArg("dimension");
-    if (d instanceof Dimension) jgf.resize((Dimension)d);
+    if (d instanceof Dimension) jgf.setSize((Dimension)d);
     jgf.show();
   }
 

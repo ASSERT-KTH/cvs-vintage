@@ -18,16 +18,13 @@
 
 include ../Makefile.config
 
-GEN = 	SERIALIZABLE.java
+# gen is not used now that GEF does not use a preprocessor
+GEN = 	
 
-CLASSES = 	SERIALIZABLE.class \
-		UTIL.class \
-		EventQueue.class \
-		EventHandler.class \
-		IEventHandler.class \
-		DebugLog.class \
+CLASSES =	Dbg.class \
 		Set.class \
 		ChildGenerator.class \
+		Progress.class \
 		Predicate.class \
 		PredicateTrue.class \
 		EnumerationComposite.class \
@@ -44,9 +41,6 @@ all: $(GEN) $(CLASSES)
 gen: $(GEN)
 
 classes: $(CLASSES)
-
-
-SERIALIZABLE.java: SERIALIZABLE.m4 ../Makefile.config
 
 clean:
 	$(RM) *.class $(GEN)
