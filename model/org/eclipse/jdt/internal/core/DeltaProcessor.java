@@ -792,9 +792,6 @@ private boolean isOnClasspath(IClasspathEntry[] classpath, IResource res) {
 			while (projects.hasMoreElements()) {
 				JavaProject project = (JavaProject) projects.nextElement();
 				try {
-					if (project.getElementName().equals("Compiler")){
-						System.out.println();
-					}
 					project.updateClassPath(null, canChangeResource);
 					if (canChangeResource)
 						project.saveClasspath(false);
@@ -844,7 +841,7 @@ protected void updateIndex(Openable element, IResourceDelta delta) {
 						IPackageFragment pkg = null;
 						if (element instanceof IPackageFragmentRoot) {
 							IPackageFragmentRoot root = (IPackageFragmentRoot)element;
-							pkg = root.getPackageFragment("");
+							pkg = root.getPackageFragment(""); //$NON-NLS-1$
 						} else {
 							pkg = (IPackageFragment)element;
 						}
