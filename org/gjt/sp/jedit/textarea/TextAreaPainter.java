@@ -49,7 +49,7 @@ import org.gjt.sp.util.Log;
  * @see JEditTextArea
  *
  * @author Slava Pestov
- * @version $Id: TextAreaPainter.java,v 1.105 2004/11/08 04:01:22 spestov Exp $
+ * @version $Id: TextAreaPainter.java,v 1.106 2004/12/22 22:39:30 spestov Exp $
  */
 public class TextAreaPainter extends JComponent implements TabExpander
 {
@@ -248,8 +248,7 @@ public class TextAreaPainter extends JComponent implements TabExpander
 	public final void setSelectionColor(Color selectionColor)
 	{
 		this.selectionColor = selectionColor;
-		if(textArea.getBuffer() != null)
-			textArea.invalidateSelectedLines();
+		textArea.repaint();
 	} //}}}
 
 	//{{{ getMultipleSelectionColor() method
@@ -271,8 +270,7 @@ public class TextAreaPainter extends JComponent implements TabExpander
 	public final void setMultipleSelectionColor(Color multipleSelectionColor)
 	{
 		this.multipleSelectionColor = multipleSelectionColor;
-		if(textArea.getBuffer() != null)
-			textArea.invalidateSelectedLines();
+		textArea.repaint();
 	} //}}}
 
 	//{{{ getLineHighlightColor() method
@@ -314,8 +312,7 @@ public class TextAreaPainter extends JComponent implements TabExpander
 	public final void setLineHighlightEnabled(boolean lineHighlight)
 	{
 		this.lineHighlight = lineHighlight;
-		if(textArea.getBuffer() != null)
-			textArea.invalidateSelectedLines();
+		textArea.repaint();
 	} //}}}
 
 	//{{{ getStructureHighlightColor() method
