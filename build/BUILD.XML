@@ -35,7 +35,7 @@
   <property name="javac.deprecation" value="off"/>
   <property name="javac.includes" value="**/*.java"/>
 
-  <property name="manifest.name" value="JHotdraw.mf"/>
+  <property name="manifest.name" value="jhotdraw.mf"/>
 
   <!-- Dependencies on optional packages                                   -->  
   <!--<property name="needs.batik.src" value="CH/ifa/draw/contrib/SVG*.java"/>
