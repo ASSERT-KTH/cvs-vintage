@@ -49,6 +49,7 @@ public class GroupFolder extends AbstractFolder implements ContactStorage {
 	public GroupFolder(String name, String dir) {
 		super(name, dir);
 
+		group = new Group();
 	}
 
 	/**

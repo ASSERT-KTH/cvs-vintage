@@ -40,7 +40,13 @@ public class AddressCollector implements ItemProvider {
 
 	}
 
-	public void addAllContacts(int uid) {
+	/**
+	 * Add all contacts and group items to hashmap.
+	 * 
+	 * @param uid			selected folder uid
+	 * @param includeGroup	add groups if true. No groups, otherwise.
+	 */
+	public void addAllContacts(int uid, boolean includeGroup) {
 		HeaderItemList list = null;
 
 		try {
@@ -67,10 +73,12 @@ public class AddressCollector implements ItemProvider {
 
 				addAddress(item.getAddress(), item);
 			} else {
-				// group item
-				GroupItem item = (GroupItem) headerItem;
+				if (includeGroup) {
+					// group item
+					GroupItem item = (GroupItem) headerItem;
 
-				addAddress(item.getDisplayName(), item);
+					addAddress(item.getDisplayName(), item);
+				}
 			}
 		}
 	}

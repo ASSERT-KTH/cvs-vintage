@@ -53,9 +53,9 @@ public class HeaderController {
 		// clear autocomplete hashmap
 		AddressCollector.getInstance().clear();
 
-		// fill hashmap with all available contacts
-		AddressCollector.getInstance().addAllContacts(101);
-		AddressCollector.getInstance().addAllContacts(102);
+		// fill hashmap with all available contacts and groups
+		AddressCollector.getInstance().addAllContacts(101, true);
+		AddressCollector.getInstance().addAllContacts(102, true);
 		
 		view.initAutocompletion();
 
