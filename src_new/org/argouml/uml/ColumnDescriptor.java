@@ -1,4 +1,4 @@
-// $Id: ColumnDescriptor.java,v 1.19 2003/08/20 22:27:32 alexb Exp $
+// $Id: ColumnDescriptor.java,v 1.20 2003/08/22 17:34:47 bobtarling Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -352,7 +352,7 @@ class ColumnSrcMultiplicity extends ColumnDescriptor {
 	Vector conns = new Vector(((MAssociation) target).getConnections());
 	if (conns.size() == 2) {
 	    MAssociationEnd ae = (MAssociationEnd) conns.elementAt(0);
-	    MMultiplicity m = ParserDisplay.SINGLETON.parseMultiplicity(s);
+	    MMultiplicity m = (MMultiplicity)ParserDisplay.SINGLETON.parseMultiplicity(s);
 	    ae.setMultiplicity(m);
 	}
     }  
@@ -458,7 +458,7 @@ class ColumnDstMultiplicity extends ColumnDescriptor {
 	Vector conns = new Vector(((MAssociation) target).getConnections());
 	if (conns.size() == 2) {
 	    MAssociationEnd ae = (MAssociationEnd) conns.elementAt(1);
-	    MMultiplicity m = ParserDisplay.SINGLETON.parseMultiplicity(s);
+	    MMultiplicity m = (MMultiplicity)ParserDisplay.SINGLETON.parseMultiplicity(s);
 	    ae.setMultiplicity(m);
 	}
     }  
