@@ -35,7 +35,7 @@ import org.gjt.sp.util.Log;
 /**
  * Local filesystem VFS.
  * @author Slava Pestov
- * @version $Id: FileVFS.java,v 1.11 2001/11/23 11:16:42 spestov Exp $
+ * @version $Id: FileVFS.java,v 1.12 2001/11/24 02:27:08 spestov Exp $
  */
 public class FileVFS extends VFS
 {
@@ -107,7 +107,7 @@ public class FileVFS extends VFS
 	//{{{ load() method
 	public boolean load(View view, Buffer buffer, String path)
 	{
-		File file = buffer.getFile();
+		File file = new File(MiscUtilities.canonPath(path));
 
 		//{{{ Check if file is valid
 		if(!file.exists())
@@ -357,7 +357,8 @@ public class FileVFS extends VFS
 		String backupPrefix = jEdit.getProperty("backup.prefix");
 		String backupSuffix = jEdit.getProperty("backup.suffix");
 
-		String backupDirectory = jEdit.getProperty("backup.directory");
+		String backupDirectory = MiscUtilities.canonPath(
+			jEdit.getProperty("backup.directory"));
 
 		File file = new File(path);
 

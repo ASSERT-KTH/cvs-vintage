@@ -38,7 +38,7 @@ import org.gjt.sp.util.*;
 /**
  * Wraps the VFS browser in a modal dialog.
  * @author Slava Pestov
- * @version $Id: VFSFileChooserDialog.java,v 1.6 2001/11/16 05:32:11 spestov Exp $
+ * @version $Id: VFSFileChooserDialog.java,v 1.7 2001/11/24 02:27:08 spestov Exp $
  */
 public class VFSFileChooserDialog extends EnhancedDialog
 implements WorkThreadProgressListener
@@ -63,7 +63,7 @@ implements WorkThreadProgressListener
 			path = vfs.getParentOfPath(path);
 		}
 
-		browser = new VFSBrowser(view,path,mode,multipleSelection);
+		browser = new VFSBrowser(view,path,mode,multipleSelection,true);
 		browser.addBrowserListener(new BrowserHandler());
 		content.add(BorderLayout.CENTER,browser);
 
@@ -175,11 +175,15 @@ implements WorkThreadProgressListener
 
 		if(browser.getMode() == VFSBrowser.SAVE_DIALOG)
 		{
-			VFS vfs = VFSManager.getVFSForPath(directory);
-			filename = vfs.constructPath(directory,filename);
+			if(!MiscUtilities.isURL(directory)
+				&& !MiscUtilities.isURL(filename))
+			{
+				filename = MiscUtilities.constructPath(directory,
+					MiscUtilities.canonPath(filename));
 
-			if(vfs instanceof FileVFS && doFileExistsWarning(filename))
-				return;
+				if(doFileExistsWarning(filename))
+					return;
+			}
 		}
 
 		isOK = true;
@@ -201,8 +205,7 @@ implements WorkThreadProgressListener
 		if(filename != null)
 		{
 			String path = browser.getDirectory();
-			VFS vfs = VFSManager.getVFSForPath(path);
-			return new String[] { vfs.constructPath(
+			return new String[] { MiscUtilities.constructPath(
 				path,filename) };
 		}
 		else

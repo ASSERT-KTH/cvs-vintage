@@ -48,7 +48,7 @@ import org.gjt.sp.util.*;
  * <code>getLineStartOffset()</code>, and so on).
  *
  * @author Slava Pestov
- * @version $Id: Buffer.java,v 1.36 2001/11/23 11:16:41 spestov Exp $
+ * @version $Id: Buffer.java,v 1.37 2001/11/24 02:27:08 spestov Exp $
  */
 public class Buffer implements EBComponent
 {
@@ -423,6 +423,11 @@ public class Buffer implements EBComponent
 					{
 						writeUnlock();
 					}
+				}
+				else
+				{
+					// have to set mode according to path name only
+					setMode();
 				}
 
 				unsetProperty(BufferIORequest.LOAD_DATA);
