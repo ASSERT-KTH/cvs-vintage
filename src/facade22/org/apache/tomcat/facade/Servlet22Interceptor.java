@@ -176,7 +176,7 @@ public final class Servlet22Interceptor
 	    // expired
 	    HttpSession httpSess=(HttpSession)sess.getFacade();
 
-	    Vector removed=new Vector();
+	    Vector removed=null; // lazy 
 	    Enumeration e = sess.getAttributeNames();
 	    // announce all values with listener that we'll remove them
 	    while( e.hasMoreElements() )   {
@@ -186,14 +186,17 @@ public final class Servlet22Interceptor
 		if( value instanceof  HttpSessionBindingListener) {
 		    ((HttpSessionBindingListener) value).valueUnbound
 			(new HttpSessionBindingEvent(httpSess , key));
+		    if( removed=null) removed=new Vector();
 		    removed.addElement( key );
 		}
 	    }
-	    // remove
-	    e=removed.elements();
-	    while( e.hasMoreElements() ) {
-		String key = (String) e.nextElement();
-		sess.removeAttribute( key );
+	    if( removed!=null ) {
+		// remove
+		e=removed.elements();
+		while( e.hasMoreElements() ) {
+		    String key = (String) e.nextElement();
+		    sess.removeAttribute( key );
+		}
 	    }
 	} 
 	return 0;
