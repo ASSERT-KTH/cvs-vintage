@@ -186,6 +186,15 @@ public class JspInterceptor extends BaseInterceptor {
     public void setProperty( String n, String v ) {
 	args.put( n, v );
     }
+
+    public void setJikesClasspath( String cp ) {
+        if( cp != null ) {
+            System.getProperties().put("jikes.class.path", cp);
+            if( debug > 0 )
+                log("Setting jikes.class.path to " + cp);
+        }
+    }
+
     // -------------------- JspInterceptor properties --------------------
 
     /** Use the old JspServlet to execute Jsps, instead of the
@@ -701,7 +710,19 @@ final class JasperLiaison {
 	javac.setClassDebugInfo(options.getClassDebugInfo());
 
 	javac.setEncoding(javaEncoding);
-	String cp=System.getProperty("java.class.path")+ sep + 
+
+        String cp="";
+        if( javac instanceof JikesJavaCompiler ) {
+            if( !System.getProperty("java.version").startsWith("1.1") ) {
+                cp=System.getProperty("java.home") + File.separator +
+                        "lib" + File.separator + "rt.jar" + sep;
+            }
+            String jikesCP = System.getProperty("jikes.class.path");
+            if( jikesCP != null && jikesCP.length() > 0 )
+              cp+=jikesCP + sep;
+        }
+
+	cp+=System.getProperty("java.class.path")+ sep + 
 	    ctxt.getClassPath() + sep + ctxt.getOutputDir();
         javac.setClasspath( cp );
 	javac.setOutputDir(ctxt.getOutputDir());
