@@ -475,17 +475,17 @@ try{
         {
             if (templateInfo == null)
             {
-                String issueId = data.getParameters()
-                    .getString("issue_id"); 
+                String templateId = data.getParameters()
+                    .getString("templateId"); 
 
-                if ( issueId == null || issueId.length() == 0 )
+                if ( templateId == null || templateId.length() == 0 )
                 {
                     templateInfo = IssueTemplateInfo.getInstance();
                 }
                 else 
                 {
                     templateInfo = IssueTemplateInfoPeer
-                        .retrieveByPK(new NumberKey(issueId));
+                        .retrieveByPK(new NumberKey(templateId));
                 }
             }        
         }        
@@ -494,6 +494,60 @@ try{
             e.printStackTrace();
         }
         return templateInfo;
+    }
+
+    /**
+     * An Enter issue template.
+     */
+    public Issue getIssueTemplate()
+     throws Exception
+    {
+        Issue template = null;
+        String templateId = data.getParameters()
+            .getString("templateId"); 
+        try
+        {
+            if ( templateId == null || templateId.length() == 0 )
+            {
+                data.setMessage("No template id specified.");
+            }
+            else 
+            {
+                template = IssuePeer
+                    .retrieveByPK(new NumberKey(templateId));
+            }
+        }        
+        catch (Exception e)
+        {
+            e.printStackTrace();
+        }
+        return template;
+    }
+
+    /**
+     * An Enter issue template.
+     */
+    public Issue getIssueTemplate(String templateId)
+     throws Exception
+    {
+        Issue template = null;
+        try
+        {
+            if ( templateId == null || templateId.length() == 0 )
+            {
+                data.setMessage("No template id specified.");
+            }
+            else 
+            {
+                template = IssuePeer
+                    .retrieveByPK(new NumberKey(templateId));
+            }
+        }        
+        catch (Exception e)
+        {
+            e.printStackTrace();
+        }
+        return template;
     }
 
     /**
