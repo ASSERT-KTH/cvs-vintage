@@ -65,6 +65,7 @@ import org.tigris.scarab.om.RModuleIssueTypeTest;
 import org.tigris.scarab.om.RModuleOptionTest;
 import org.tigris.scarab.om.ScarabUserTest;
 import org.tigris.scarab.services.email.VelocityEmailServiceTest;
+import org.tigris.scarab.services.hsql.HSQLServiceTest;
 import org.tigris.scarab.services.yaaficomponent.YaafiComponentServiceTest;
 import org.tigris.scarab.util.EmailLinkTest;
 import org.tigris.scarab.util.ScarabUtilTest;
@@ -95,12 +96,13 @@ public class AllScarabTests extends BaseScarabOMTestCase {
 		suite.addTestSuite(AttributeAccessTest.class);
 
 		// org.tigris.scarab.om tests 
-		suite.addTestSuite(ActivityTest.class);
-		suite.addTestSuite(ActivitySetTest.class);
-		suite.addTestSuite(AttachmentTest.class);
-        	suite.addTestSuite(AttributeTest.class);
-		// suite.addTestSuite(AttributeGroupTest.class);
+        suite.addTestSuite(ActivitySetTest.class);
+		suite.addTestSuite(ActivityTest.class);		
+		suite.addTestSuite(AttachmentTest.class);        	
+        // suite.addTestSuite(AttributeGroupTest.class);
+        // suite.addTestSuite(AttributeOptionTest.class);        
 		//suite.addTestSuite(AttributeValueTest.class);
+        suite.addTestSuite(AttributeTest.class);
 		suite.addTestSuite(IssueTest.class);
 		suite.addTestSuite(IssueTypeTest.class);
 		suite.addTestSuite(QueryTest.class);
@@ -113,6 +115,9 @@ public class AllScarabTests extends BaseScarabOMTestCase {
 		// org.tigris.scarab.services.email tests 
 		suite.addTestSuite(VelocityEmailServiceTest.class);
         
+        // org.tigris.scarab.services.hsql tests 
+        //suite.addTestSuite(HSQLServiceTest.class);
+        
         // org.tigris.scarab.services.yaaficomponent tests 
         suite.addTestSuite(YaafiComponentServiceTest.class);        
 
@@ -123,7 +128,7 @@ public class AllScarabTests extends BaseScarabOMTestCase {
 		suite.addTestSuite(SubsetIteratorWithSizeTest.class);
 		
 		// org.tigris.scarab.util.word
-		//suite.addTestSuite(IssueSearchFactoryTest.class);
+		//suite.addTestSuite(IssueSearchFactoryTest.class);  // Seems to kill thigns
 		suite.addTestSuite(IssueSearchTest.class);
 		
 		// org.tigris.scarab.util.xmlissues
