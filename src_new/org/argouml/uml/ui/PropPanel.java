@@ -1,4 +1,4 @@
-// $Id: PropPanel.java,v 1.109 2005/02/21 20:48:15 mvw Exp $
+// $Id: PropPanel.java,v 1.110 2005/03/05 01:54:39 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -621,6 +621,9 @@ public abstract class PropPanel
         // we can neglect this, the TabProps allways selects the first target
 	// in a set of targets. The first target can only be
 	// changed in a targetRemoved or a TargetSet event
+        if (listenerList == null) {
+            listenerList = registrateTargetListeners(this);
+        }
         fireTargetAdded(e);
     }
 
