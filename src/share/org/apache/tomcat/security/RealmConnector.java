@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/security/Attic/RealmConnector.java,v 1.1 1999/10/17 00:19:39 craigmcc Exp $
- * $Revision: 1.1 $
- * $Date: 1999/10/17 00:19:39 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/security/Attic/RealmConnector.java,v 1.2 1999/10/29 06:13:15 craigmcc Exp $
+ * $Revision: 1.2 $
+ * $Date: 1999/10/29 06:13:15 $
  *
  * ====================================================================
  *
@@ -101,7 +101,7 @@ import org.apache.tomcat.core.Context;
  * 
  * @author Harish Prabandham
  * @author Craig R. McClanahan
- * @version $Revision: 1.1 $ $Date: 1999/10/17 00:19:39 $
+ * @version $Revision: 1.2 $ $Date: 1999/10/29 06:13:15 $
  */
 
 //
@@ -118,13 +118,25 @@ public interface RealmConnector {
      *
      * @param username Username of the Principal to look up
      * @param credentials Password or other credentials to use in
-     *	authenticating this username (XXX: Is a String sufficient
-     *  for all possible cases?)
+     *	authenticating this username
      *
      * @exception IllegalStateException if called before <code>start()</code>
      *  has been called, or after <code>stop()</code> has been called
      */
     public Principal authenticate(String username, String credentials);
+
+
+    /**
+     * Returns the Principal associated with the specified username and
+     * credentials, if there is one, or <code>null</code> otherwise.
+     *
+     * @param username Username of the Principal to look up
+     * @param credentials Credentials to use in authenticating this username
+     *
+     * @exception IllegalStateException if called before <code>start()</code>
+     *  has been called, or after <code>stop()</code> has been called
+     */
+    public Principal authenticate(String username, byte[] credentials);
 
 
     /**
