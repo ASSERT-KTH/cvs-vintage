@@ -280,7 +280,8 @@ public  class AttributeGroup
                     .add(RAttributeAttributeGroupPeer.GROUP_ID, getAttributeGroupId());
                 RAttributeAttributeGroupPeer.doDelete(crit);
 
-               // Delete the attribute group
+                // Delete the attribute group
+                int order = getOrder();
                 crit = new Criteria()
                     .add(AttributeGroupPeer.ATTRIBUTE_GROUP_ID, getAttributeGroupId());
                 AttributeGroupPeer.doDelete(crit);
@@ -295,6 +296,18 @@ public  class AttributeGroup
                     attrGroups = module.getAttributeGroups(getIssueType(), false);
                 }
                 attrGroups.remove(this);
+                // Adjust the orders for the other attribute groups
+                for (int i=0; i<attrGroups.size(); i++)
+                {
+                    AttributeGroup tempGroup = (AttributeGroup)attrGroups.get(i);
+                    int tempOrder = tempGroup.getOrder();
+                    if (tempGroup.getOrder() > order)
+                    { 
+                        tempGroup.setOrder(tempOrder - 1);
+                        tempGroup.save();
+                    }
+                }
+                    
                 ScarabCache.clear();
             } 
         } 
