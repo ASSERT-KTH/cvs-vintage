@@ -411,8 +411,8 @@ public class ContextManager {
     public void addLogger(Logger logger) {
 	// Will use this later once I feel more sure what I want to do here.
 	// -akv
-	firstLog=false;
-	//cmLog=logger;
+	// firstLog=false;
+	//	if("tc_log".equals( logger.getName()) cmLog=logger;
     }
 
 
