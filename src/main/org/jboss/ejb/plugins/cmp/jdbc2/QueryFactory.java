@@ -22,7 +22,7 @@ import java.util.Iterator;
 
 /**
  * @author <a href="mailto:alex@jboss.org">Alexey Loubyansky</a>
- * @version <tt>$Revision: 1.4 $</tt>
+ * @version <tt>$Revision: 1.5 $</tt>
  */
 public class QueryFactory
 {
@@ -73,7 +73,7 @@ public class QueryFactory
          }
          catch(NoSuchMethodException e)
          {
-            throw new DeploymentException("Local home interface " + home.getClass().getName() +
+            throw new DeploymentException("Local home interface " + local.getClass().getName() +
                " does not contain findByPrimaryKey(" + entity.getPrimaryKeyClass().getName() + ")");
          }
 
