@@ -57,6 +57,10 @@ public class SelectionOptionsPlugin extends AbstractFolderOptionsPlugin {
         TableController tableController = ((TableViewOwner) getMediator())
                 .getTableController();
 
+        if ( tableController.getView().getSelectedNodes() == null ) return;
+        
+        if ( tableController.getView().getSelectedNodes().length == 0 ) return;
+        
         MessageNode node = tableController.getView().getSelectedNodes()[0];
         if ( (node != null) && (folder != null) ) folder.setLastSelection(node);
     }
