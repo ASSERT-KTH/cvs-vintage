@@ -7,14 +7,14 @@
 package org.jboss.ejb;
 
 import java.rmi.RemoteException;
-import javax.ejb.NoSuchEntityException;
+import java.rmi.NoSuchObjectException;
 
 /**
- *	<description> 
+ *	The plugin that gives a container a cache for bean instances.
  *      
- *	@see <related>
  *	@author Rickard Öberg (rickard.oberg@telkel.com)
- *	@version $Revision: 1.3 $
+ *  @author Simone Bordet (simone.bordet@compaq.com)
+ *	@version $Revision: 1.4 $
  */
 public interface InstanceCache
    extends ContainerPlugin
@@ -30,30 +30,46 @@ public interface InstanceCache
    // Public --------------------------------------------------------
 
    /**
-    *   Get an instance of a particular identity. 
-    *   This may involve activation if necessary.
-    *
+    *   Gets a bean instance from this cache given the identity.
+    *   This method may involve activation if the instance is not in the cache.
+    *	Implementation should have O(1) complexity.
     *   This method is never called for stateless session beans.
     *
-    * @param   id  
-    * @return     Context /w instance
-    * @exception   RemoteException  
+    * @param id the primary key of the bean 
+    * @return the EnterpriseContext related to the given id
+    * @exception RemoteException in case of illegal calls (concurrent / reentrant),
+	*			 NoSuchObjectException if the bean cannot be found.
+	* @see #release  
     */
    public EnterpriseContext get(Object id)
-      throws Exception;
+      throws RemoteException, NoSuchObjectException;
 
    /**
-    *   Insert an active instance after creation or activation. Write-lock is required.
+    *   Inserts an active bean instance after creation or activation. 
+	* 	Implementation should guarantee proper locking and O(1) complexity.
     *
-    * @param   ctx  
+    * @param ctx the EnterpriseContext to insert in the cache
+	* @see #remove
     */
    public void insert(EnterpriseContext ctx);
 
-   
    /**
-    *   Remove an instance corresponding to the given id after removal
+    *   Releases the given bean instance from this cache.
+	*	This method may passivate the bean to get it out of the cache.
+	*	Implementation should return almost immediately leaving the
+	*	passivation to be executed by another thread.
     *
-    * @param   ctx  
+    * @param ctx the EnterpriseContext to release
+	* @see #get
+    */
+   public void release(EnterpriseContext ctx);
+
+   /**
+    *   Removes a bean instance from this cache given the identity.
+	*	Implementation should have O(1) complexity and guarantee proper locking.
+    *
+    * @param id the pimary key of the bean
+	* @see #insert
     */
    public void remove(Object id);
    
