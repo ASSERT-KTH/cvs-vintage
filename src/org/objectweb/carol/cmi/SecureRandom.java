@@ -21,7 +21,7 @@ package org.objectweb.carol.cmi;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 
-class SecureRandom {
+public class SecureRandom {
     private static java.security.SecureRandom sr = null;
 
     private static java.security.SecureRandom getSR() {
@@ -49,6 +49,12 @@ class SecureRandom {
         return getSR().nextInt();
     }
 
+    /**
+     * Returns a random number between 0 (inclusive) and the specified value
+     * (exclusive).
+     * @param n the bound on the random number. Must be positive.
+     * @return the random number.
+     */
     public static int getInt(int n) {
         return getSR().nextInt(n);
     }

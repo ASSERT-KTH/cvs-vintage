@@ -18,11 +18,14 @@
  */
 package org.objectweb.carol.cmi;
 
-import java.rmi.Remote;
+import java.rmi.RemoteException;
 
 /**
- * Stubs to clustered objects this marker interface.
- * @author Simon Nieuviarts
+ * @author nieuviar
+ *
  */
-public interface ClusterStub extends Remote {
+public class NoMoreStubException extends RemoteException {
+    public NoMoreStubException() {
+        super();
+    }
 }

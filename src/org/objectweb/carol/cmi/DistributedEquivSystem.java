@@ -46,28 +46,32 @@ import org.javagroups.View;
 import org.objectweb.carol.util.configuration.TraceCarol;
 
 class ExportMsg implements Serializable {
-    public transient ClusterId i;
-    public transient Serializable k;
+    public transient ClusterId id;
+    public transient Serializable key;
     public transient Remote stub;
+    public transient int factor;
 
-    public ExportMsg(ClusterId serverId, Serializable key, Remote stub) {
-        i = serverId;
-        k = key;
+    public ExportMsg(ClusterId serverId, Serializable key, Remote stub, int factor) {
+        this.id = serverId;
+        this.key = key;
         this.stub = stub;
+        this.factor = factor;
     }
 
     private void writeObject(java.io.ObjectOutputStream out)
         throws IOException {
-        i.write(out);
-        out.writeObject(k);
+        id.write(out);
+        out.writeObject(key);
         out.writeObject(stub);
+        out.writeInt(factor);
     }
 
     private void readObject(java.io.ObjectInputStream in)
         throws IOException, ClassNotFoundException {
-        i = ClusterId.read(in);
-        k = (Serializable) in.readObject();
+        id = ClusterId.read(in);
+        key = (Serializable) in.readObject();
         stub = (Remote) in.readObject();
+        factor = in.readInt();
     }
 }
 
@@ -133,49 +137,34 @@ class UnexportMsg implements Serializable {
 //}
 
 class GlobalExports {
+    /**
+     * Maps keys to ClusterStubData objects.
+     */
     private HashMap table = new HashMap();
 
     public GlobalExports() {
     }
 
-    private static Class[] cnstr_params =
-        new Class[] { ClusterId.class, Remote.class };
-
     public synchronized void put(
         ClusterId serverId,
         Serializable key,
-        Remote stub)
+        Remote stub, int factor)
         throws RemoteException {
-        ClusterStub cs = (ClusterStub) table.get(key);
-        if (cs == null) {
-            Class clusterStubClass =
-                ClusterObject.getClusterStubClass(stub.getClass());
-            if (clusterStubClass == null)
-                throw new RemoteException("no valid cluster stub class");
-
-            java.lang.reflect.Constructor cnstr;
-            try {
-                cnstr = clusterStubClass.getConstructor(cnstr_params);
-                cs =
-                    (ClusterStub) cnstr.newInstance(
-                        new Object[] { serverId, stub });
-            } catch (Exception e) {
-                throw new RemoteException(
-                    "Can not instanciate cluster stub",
-                    e);
-            }
-            table.put(key, cs);
-        } else if (!cs.setStub(serverId, stub))
+        ClusterStubData csd = (ClusterStubData) table.get(key);
+        if (csd == null) {
+            csd = new ClusterStubData(serverId, stub, factor);
+            table.put(key, csd);
+        } else if (!csd.setStub(serverId, stub, factor))
             if (Trace.DES)
                 Trace.out(
                     "DES: Warning: Object registered in the cluster as two distinct types");
     }
 
     public synchronized void remove(ClusterId serverId, Serializable key) {
-        ClusterStub cs = (ClusterStub) table.get(key);
-        if (cs == null)
+        ClusterStubData csd = (ClusterStubData) table.get(key);
+        if (csd == null)
             return;
-        if (cs.removeStub(serverId))
+        if (csd.removeStub(serverId))
             return;
         table.remove(key);
     }
@@ -195,15 +184,18 @@ class GlobalExports {
     public synchronized void zapExports(ClusterId serverId) {
         Iterator i = table.values().iterator();
         while (i.hasNext()) {
-            ClusterStub cs = (ClusterStub) i.next();
-            if (!cs.removeStub(serverId))
+            ClusterStubData csd = (ClusterStubData) i.next();
+            if (!csd.removeStub(serverId))
                 i.remove();
         }
     }
 
+    //TODO May return null. Check if OK.
     public ClusterStub getClusterStub(Serializable key) {
         synchronized (this) {
-            return (ClusterStub) table.get(key);
+            ClusterStubData csd = (ClusterStubData) table.get(key);
+            if (csd == null) return null;
+            return csd.getClusterStub();
         }
     }
 
@@ -668,7 +660,7 @@ class DistributedEquivSystem {
         //        } else
         if (o instanceof ExportMsg) {
             ExportMsg pm = (ExportMsg) o;
-            ClusterId id = checkServer(pm.i, from);
+            ClusterId id = checkServer(pm.id, from);
             if (id == null)
                 return;
             if (Trace.DES)
@@ -676,12 +668,12 @@ class DistributedEquivSystem {
                     "DES: Put message received from server "
                         + from
                         + ", ID : "
-                        + pm.k);
+                        + pm.key);
             if (!self(id)) {
                 try {
                     Remote stub = pm.stub;
                     if (stub != null)
-                        globalExports.put(id, pm.k, stub);
+                        globalExports.put(id, pm.key, stub, pm.factor);
                 } catch (RemoteException e) {
                 }
             }
@@ -710,7 +702,8 @@ class DistributedEquivSystem {
                     new ExportMsg(
                         my_id,
                         (String) e.getKey(),
-                        (Remote) e.getValue()));
+                        (Remote) e.getValue(),
+                        Config.getLoadFactor()));
             }
 
             //	    broadcast(new ExportsMsg(my_id, localExports));
@@ -735,14 +728,16 @@ class DistributedEquivSystem {
                     + ", "
                     + obj.getClass().getName()
                     + ")");
+        int factor;
         synchronized (localExports) {
             Object cur = localExports.get(key);
             if (cur != null)
                 return false;
             localExports.put(key, obj);
-            globalExports.put(my_id, key, obj);
+            factor = Config.getLoadFactor();
+            globalExports.put(my_id, key, obj, factor);
         }
-        broadcast(new ExportMsg(my_id, key, obj));
+        broadcast(new ExportMsg(my_id, key, obj, factor));
         return true;
     }
 

@@ -33,12 +33,16 @@ public class Config {
     private static String multicastGroupName = null;
     //private static Vector membersIp = null;
     private static String localHost = null;
+    public final static int DEFAULT_LOAD_FACTOR = 100;
+    private static int loadFactor = DEFAULT_LOAD_FACTOR;
+
     public static final String MULTICAST_ADDRESS_PROPERTY =
         "carol.cmi.multicast.address";
     public static final String MULTICAST_ITF_PROPERTY =
         "carol.cmi.multicast.itf";
     public static final String MULTICAST_GROUPNAME_PROPERTY =
         "carol.cmi.multicast.groupname";
+    public static final String LOAD_FACTOR_PROPERTY = "carol.cmi.loadfactor";
 
     /**
      * Set properties
@@ -53,7 +57,8 @@ public class Config {
         while (i.hasNext()) {
             Map.Entry e = (Map.Entry) i.next();
             String s = (String) e.getValue();
-            if (e.getKey().equals(MULTICAST_ADDRESS_PROPERTY)) {
+            Object k = e.getKey();
+            if (k.equals(MULTICAST_ADDRESS_PROPERTY)) {
                 s = s.trim();
                 try {
                     int l = s.indexOf(':');
@@ -69,10 +74,12 @@ public class Config {
                     throw new RMIConfigurationException(
                         "Invalid multicast address (" + s + ")");
                 }
-            } else if (e.getKey().equals(MULTICAST_GROUPNAME_PROPERTY)) {
+            } else if (k.equals(MULTICAST_GROUPNAME_PROPERTY)) {
                 multicastGroupName = s.trim();
-            } else if (e.getKey().equals(MULTICAST_ITF_PROPERTY)) {
+            } else if (k.equals(MULTICAST_ITF_PROPERTY)) {
                 multicastItf = s.trim();
+            } else if (k.equals(LOAD_FACTOR_PROPERTY)) {
+                loadFactor = new Integer(s.trim()).intValue();
             }
         }
         configured = true;
@@ -98,5 +105,9 @@ public class Config {
 
     public static String getMulticastItf() {
         return multicastItf;
+    }
+
+    public static int getLoadFactor() {
+        return loadFactor;
     }
 }

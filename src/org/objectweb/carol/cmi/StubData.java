@@ -19,10 +19,41 @@
 package org.objectweb.carol.cmi;
 
 import java.rmi.Remote;
+import java.rmi.RemoteException;
 
 /**
- * Stubs to clustered objects this marker interface.
- * @author Simon Nieuviarts
+ * @author nieuviar
+ *
  */
-public interface ClusterStub extends Remote {
+public class StubData {
+    private ClusterId id;
+    private Remote stub;
+    private int factor;
+    private double loadIncr; // Is lower or equal to 1.0
+
+    public StubData(ClusterId id, Remote stub, int factor) throws RemoteException {
+        if (factor < 1) {
+            throw new RemoteException("bad load factor : " + factor);
+        }
+        this.id = id;
+        this.stub = stub;
+        this.factor = factor;
+        this.loadIncr = 1.0 / (double)factor;
+    }
+
+    public ClusterId getId() {
+        return id;
+    }
+
+    public Remote getStub() {
+        return stub;
+    }
+
+    public double getLoadIncr() {
+        return loadIncr;
+    }
+
+    public int getFactor() {
+        return factor;
+    }
 }

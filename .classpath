@@ -14,5 +14,6 @@
     <classpathentry kind="lib" path="externals/ow_util_log_wrp_log4j.jar"/>
     <classpathentry kind="lib" path="externals/xercesimpl-2.1.0.jar"/>
     <classpathentry kind="lib" path="externals/xercesxmlapi-2.1.0.jar"/>
+    <classpathentry kind="lib" path="externals/velocity/velocity-dep.jar"/>
     <classpathentry kind="output" path="eclipse-bin"/>
 </classpath>

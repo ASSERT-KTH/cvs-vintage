@@ -60,10 +60,10 @@ public class XMLTree extends DefaultHandler {
         throws SAXException {
         flushChars();
         if (!name.equals(cur.name))
-            throw new SAXException("endElement name not corresponding with the name of startElement");
+            throw new SAXException("endElement \"" + name + "\" not corresponding with the startElement \"" + cur.name + "\"");
         cur = cur.parent;
         if (cur == null)
-            throw new SAXException("endElement with no corresponding startElement");
+            throw new SAXException("endElement \"" + name + "\" with no corresponding startElement");
     }
 
     public void characters(char ch[], int start, int length)
@@ -93,10 +93,10 @@ public class XMLTree extends DefaultHandler {
     public void fatalError(SAXParseException ex) throws SAXException {
         System.err.println(
             "[Fatal Error] " + getLocationString(ex) + ": " + ex.getMessage());
-        System.exit(1);
+        throw ex;
     }
 
-    private String getLocationString(SAXParseException ex) {
+    public static String getLocationString(SAXParseException ex) {
         StringBuffer str = new StringBuffer();
         String systemId = ex.getSystemId();
         if (systemId != null) {

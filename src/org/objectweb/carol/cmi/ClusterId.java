@@ -51,14 +51,11 @@ public class ClusterId implements Serializable {
 
     private void redoHash() {
         int h = 0;
-        int l = (id.length < 4) ? id.length : 4;
+        int l = id.length;
+        int n = 1;
         for (int i=0; i<l; i++) {
-            h <<= 8;
-            int n = id[i];
-            if (n < 0) {
-                n += 256;
-            }
-            h += n;
+            h += id[i] * n;
+            n *= 31;
         }
         hash = h;
     }

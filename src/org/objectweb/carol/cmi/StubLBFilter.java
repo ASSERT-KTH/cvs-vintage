@@ -18,11 +18,40 @@
  */
 package org.objectweb.carol.cmi;
 
-import java.rmi.Remote;
+import java.util.Collection;
+import java.util.HashSet;
 
 /**
- * Stubs to clustered objects this marker interface.
- * @author Simon Nieuviarts
+ * @author nieuviar
+ *
  */
-public interface ClusterStub extends Remote {
+public class StubLBFilter extends HashSet {
+    /**
+     * 
+     */
+    public StubLBFilter() {
+        super();
+    }
+
+    /**
+     * @param c
+     */
+    public StubLBFilter(Collection c) {
+        super(c);
+    }
+
+    /**
+     * @param initialCapacity
+     * @param loadFactor
+     */
+    public StubLBFilter(int initialCapacity, float loadFactor) {
+        super(initialCapacity, loadFactor);
+    }
+
+    /**
+     * @param initialCapacity
+     */
+    public StubLBFilter(int initialCapacity) {
+        super(initialCapacity);
+    }
 }

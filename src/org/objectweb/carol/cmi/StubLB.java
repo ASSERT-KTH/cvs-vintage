@@ -20,9 +20,15 @@ package org.objectweb.carol.cmi;
 
 import java.rmi.Remote;
 
+
 /**
- * Stubs to clustered objects this marker interface.
- * @author Simon Nieuviarts
+ * @author nieuviar
+ *
  */
-public interface ClusterStub extends Remote {
+public abstract class StubLB {
+    abstract void add(StubData sd);
+    abstract void remove(StubData sd);
+    public abstract Remote get() throws NoMoreStubException;
+    public abstract Remote get(StubLBFilter f) throws NoMoreStubException;
+    public abstract void remove(Remote stub);
 }

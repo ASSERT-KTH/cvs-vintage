@@ -16,13 +16,27 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
  * USA
  */
-package org.objectweb.carol.cmi;
-
-import java.rmi.Remote;
+package org.objectweb.carol.cmi.compiler;
 
 /**
- * Stubs to clustered objects this marker interface.
- * @author Simon Nieuviarts
+ * @author nieuviar
+ * Any error in the compiler is translated into a CompilerException catched at the
+ * highest level
  */
-public interface ClusterStub extends Remote {
+public class CompilerException extends Exception {
+    CompilerException() {
+        super();
+    }
+
+    CompilerException(String message) {
+        super(message);
+    }
+
+    CompilerException(String message, Throwable cause) {
+        super(message + cause.toString());
+    }
+
+    CompilerException(Throwable cause) {
+        super(cause.toString());
+    }
 }

@@ -18,70 +18,95 @@
  */
 package org.objectweb.carol.cmi;
 
-import java.rmi.Remote;
+import java.rmi.ConnectException;
+import java.rmi.ConnectIOException;
 import java.rmi.RemoteException;
 
 /**
  * Cluster standard stub for ClusterRegistryImpl
  */
 public class ClusterRegistryImpl_Cluster
-    extends ClusterStub
-    implements ClusterRegistry {
-    // constructors
-    public ClusterRegistryImpl_Cluster(Remote stub) throws RemoteException {
-        super(stub);
+    implements ClusterStub, ClusterRegistry {
+    private ClusterStubData csd;
+    private StubLB lb;
+
+    // constructor
+    public ClusterRegistryImpl_Cluster(ClusterStubData csd)
+        throws RemoteException {
+        this.csd = csd;
+        lb = csd.getRandom();
     }
 
     public java.lang.String[] list() throws java.rmi.RemoteException {
-        StubListRandomChooser chooser = getRandomChooser();
+        ClusterRegistry stub = (ClusterRegistry) lb.get();
+        StubLBFilter filter = null;
         do {
-            ClusterRegistry stub = (ClusterRegistry) chooser.next();
             try {
                 java.lang.String[] result = stub.list();
                 return result;
-            } catch (java.rmi.ConnectException e) {
-                if (Trace.CSTUB)
+            } catch (RemoteException e) {
+                if (!(e instanceof ConnectException)
+                    && !(e instanceof ConnectIOException)) {
+                    throw e;
+                }
+                if (Trace.CSTUB) {
                     Trace.out("CSTUB: Connection to registry refused, retry");
-            } catch (java.rmi.ConnectIOException e) {
-                if (Trace.CSTUB)
-                    Trace.out("CSTUB: Connection to registry refused, retry");
+                }
+                if (filter == null) {
+                    filter = new StubLBFilter();
+                }
+                filter.add(stub);
+                stub = (ClusterRegistry) lb.get(filter);
             }
         } while (true);
     }
 
-    /* Used only to test if a registry is started. Could also be used to test
-     * which registries are started.
+    /* Used only to test if a registry is started.
      */
     public void test() throws java.rmi.RemoteException {
-        StubListRandomChooser chooser = getRandomChooser();
+        ClusterRegistry stub = (ClusterRegistry) lb.get();
+        StubLBFilter filter = null;
         do {
-            ClusterRegistry stub = (ClusterRegistry) chooser.next();
             try {
                 stub.test();
-            } catch (java.rmi.ConnectException e) {
-                if (Trace.CSTUB)
+            } catch (RemoteException e) {
+                if (!(e instanceof ConnectException)
+                    && !(e instanceof ConnectIOException)) {
+                    throw e;
+                }
+                if (Trace.CSTUB) {
                     Trace.out("CSTUB: Connection to registry refused, retry");
-            } catch (java.rmi.ConnectIOException e) {
-                if (Trace.CSTUB)
-                    Trace.out("CSTUB: Connection to registry refused, retry");
+                }
+                if (filter == null) {
+                    filter = new StubLBFilter();
+                }
+                filter.add(stub);
+                stub = (ClusterRegistry) lb.get(filter);
             }
         } while (true);
     }
 
     public java.rmi.Remote lookup(java.lang.String name)
         throws java.rmi.NotBoundException, java.rmi.RemoteException {
-        StubListRandomChooser chooser = getRandomChooser();
+        ClusterRegistry stub = (ClusterRegistry) lb.get();
+        StubLBFilter filter = null;
         do {
-            ClusterRegistry stub = (ClusterRegistry) chooser.next();
             try {
                 java.rmi.Remote result = stub.lookup(name);
                 return result;
-            } catch (java.rmi.ConnectException e) {
-                if (Trace.CSTUB)
+            } catch (RemoteException e) {
+                if (!(e instanceof ConnectException)
+                    && !(e instanceof ConnectIOException)) {
+                    throw e;
+                }
+                if (Trace.CSTUB) {
                     Trace.out("CSTUB: Connection to registry refused, retry");
-            } catch (java.rmi.ConnectIOException e) {
-                if (Trace.CSTUB)
-                    Trace.out("CSTUB: Connection to registry refused, retry");
+                }
+                if (filter == null) {
+                    filter = new StubLBFilter();
+                }
+                filter.add(stub);
+                stub = (ClusterRegistry) lb.get(filter);
             }
         } while (true);
     }
@@ -106,5 +131,4 @@ public class ClusterRegistryImpl_Cluster
         //        ClusterRegistry stub = (ClusterRegistry) getFirst();
         //        stub.unbind(name);
     }
-
 }

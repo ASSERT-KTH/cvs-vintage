@@ -28,7 +28,8 @@ public final class ClusterObject {
      * @return The cluster stub class corresponding to the parameter class or
      * <code>null</code> if this object has no cluster stub class.
      */
-    public static Class getClusterStubClass(Class cl) {
+    public static Class getClusterStubClass(Class cl)
+        throws ClassNotFoundException {
         String stub_name = cl.getName();
         String cstub_name = stub_name;
         if (stub_name.endsWith("_Stub"))
@@ -37,12 +38,8 @@ public final class ClusterObject {
             cstub_name = cstub_name.substring(0, cstub_name.length() - 7);
         cstub_name += "_Cluster";
         ClassLoader loader = cl.getClassLoader();
-        try {
-            Class cstub_class = loader.loadClass(cstub_name);
-            return cstub_class;
-        } catch (ClassNotFoundException e) {
-            return null;
-        }
+        Class cstub_class = loader.loadClass(cstub_name);
+        return cstub_class;
     }
 
     public static Class getClusterConfigClass(Remote obj)
