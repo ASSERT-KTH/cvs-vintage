@@ -7,18 +7,11 @@
 package org.jboss.ejb.plugins;
 
 import java.rmi.RemoteException;
-import java.util.Map;
-import java.util.HashMap;
-
 import javax.ejb.EJBException;
 
 import org.jboss.deployment.DeploymentException;
-import org.jboss.ejb.Container;
-import org.jboss.ejb.InstancePool;
 import org.jboss.ejb.EnterpriseContext;
 import org.jboss.ejb.StatelessSessionEnterpriseContext;
-
-import org.jboss.metadata.XmlLoadable;
 import org.jboss.metadata.MetaData;
 import org.w3c.dom.Element;
 
@@ -26,18 +19,14 @@ import org.w3c.dom.Element;
  *  Singleton pool for session beans. This lets you have
  * singletons in EJB!
  *
- *  @see <related>
- *  @author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
- *  @version $Revision: 1.23 $
+ *  @author Rickard Oberg
+ *  @version $Revision: 1.24 $
  */
-public class SingletonStatelessSessionInstancePool
-   implements InstancePool, XmlLoadable
+public class SingletonStatelessSessionInstancePool extends AbstractInstancePool
 {
    // Constants -----------------------------------------------------
 
    // Attributes ----------------------------------------------------
-   Container con;
-
    EnterpriseContext ctx;
    boolean inUse = false;
    boolean isSynchronized = true;
@@ -47,17 +36,6 @@ public class SingletonStatelessSessionInstancePool
    // Constructors --------------------------------------------------
 
    // Public --------------------------------------------------------
-
-   /**
-    *   Set the callback to the container. This is for initialization.
-    *   The pool may extract the configuration from the container.
-    *
-    * @param   c
-    */
-   public void setContainer(Container c)
-   {
-      this.con = c;
-   }
 
    public void create()
       throws Exception
@@ -97,7 +75,7 @@ public class SingletonStatelessSessionInstancePool
       {
          try
          {
-            ctx = create(con.createBeanClassInstance(), con);
+            ctx = create(getContainer().createBeanClassInstance());
          } catch (InstantiationException e)
          {
             throw new EJBException("Could not instantiate bean", e);
@@ -131,7 +109,7 @@ public class SingletonStatelessSessionInstancePool
       this.notifyAll();
    }
 
-   public void discard(EnterpriseContext ctx)
+   public synchronized void discard(EnterpriseContext ctx)
    {
       // Throw away
       try
@@ -178,15 +156,14 @@ public class SingletonStatelessSessionInstancePool
    // Package protected ---------------------------------------------
 
    // Protected -----------------------------------------------------
-   protected EnterpriseContext create(Object instance, Container con)
+   protected EnterpriseContext create(Object instance)
       throws Exception
    {
-      return new StatelessSessionEnterpriseContext(instance, con);
+      // The instance is created by the caller and is a newInstance();
+      return new StatelessSessionEnterpriseContext(instance, getContainer());
    }
-
    // Private -------------------------------------------------------
 
    // Inner classes -------------------------------------------------
 
 }
-
