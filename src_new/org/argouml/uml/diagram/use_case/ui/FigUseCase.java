@@ -24,7 +24,7 @@
 // File: FigUseCase.java
 // Classes: FigUseCase
 // Original Author: your email address here
-// $Id: FigUseCase.java,v 1.8 2002/10/08 20:04:33 kataka Exp $
+// $Id: FigUseCase.java,v 1.9 2002/11/08 08:21:39 mkl Exp $
 
 // 8 Apr 2002: Jeremy Bennett (mail@jeremybennett.com). Extended to support
 // the display of extension points.
@@ -559,7 +559,9 @@ public class FigUseCase extends FigNodeModelElement {
 
          Dimension textSize = _getTextSize();
 
-         return _calcEllipse(textSize, _MIN_VERT_PADDING);
+         Dimension _size = _calcEllipse(textSize, _MIN_VERT_PADDING);
+
+         return new Dimension(Math.max(_size.width,100), Math.max(_size.height,60));
      }
 
 
