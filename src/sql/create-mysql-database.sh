@@ -2,6 +2,8 @@
 
 # The directory which the SQL scripts have been pre-processed into
 POPULATION_SCRIPT_DIR='../../target/webapps/scarab/WEB-INF/sql'
+# The settings file for defining values.
+DB_SETTINGS="dbsettings.props"
 
 # Sanity check
 if [ ! -d "${POPULATION_SCRIPT_DIR}" ] ; then
@@ -20,6 +22,11 @@ echo "If you change a .sql file in the scarab/src/sql directory,"
 echo "then you need to make sure to re-run the Ant build system."
 echo "-----------------------------------------------------"
 echo ""
+
+# execute the settings file
+if [ -f "${DB_SETTINGS}" ] ; then
+    . "./${DB_SETTINGS}"
+fi
 
 # Define these values if you need to
 if [ "$1" != "" ] ; then

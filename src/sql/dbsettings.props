@@ -1,0 +1,15 @@
+#
+# Fill out this file for use with the
+# upgrade-mysql-database.sh and create-mysql-database.sh scripts
+#
+# $Id: dbsettings.props,v 1.1 2002/02/01 00:53:10 jon Exp $
+#
+# Username to connect to MySQL with
+USER=
+# Password to use to connect to MySQL with
+PASS=
+# Database name to use to connect to MySQL with
+DB_NAME=
+# The file which specifies the load order for 
+# creating the database
+LOAD_ORDER=
