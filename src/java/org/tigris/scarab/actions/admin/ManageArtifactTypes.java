@@ -68,7 +68,7 @@ import org.tigris.scarab.services.cache.ScarabCache;
 
 /**
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
- * @version $Id: ManageArtifactTypes.java,v 1.22 2002/10/23 21:41:20 jon Exp $
+ * @version $Id: ManageArtifactTypes.java,v 1.23 2002/10/24 17:59:52 elicia Exp $
  */
 public class ManageArtifactTypes extends RequireLoginFirstAction
 {
@@ -208,14 +208,6 @@ public class ManageArtifactTypes extends RequireLoginFirstAction
                                 RModuleIssueType rmit = module
                                    .getRModuleIssueType(issueType);
                                 rmit.delete(user);
-                                // delete module-issue type mappings
-                                // for template type
-                                IssueType template = scarabR
-                                        .getIssueType(issueType
-                                        .getTemplateId().toString());
-                                RModuleIssueType rmit2 = module
-                                   .getRModuleIssueType(template);
-                                rmit2.delete(user);
                                 success = true;
                                 module.getNavIssueTypes().remove(issueType);
                             }

@@ -134,7 +134,7 @@ import org.tigris.scarab.services.cache.ScarabCache;
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: AbstractScarabModule.java,v 1.58 2002/10/09 22:28:10 jmcnally Exp $
+ * @version $Id: AbstractScarabModule.java,v 1.59 2002/10/24 17:59:52 elicia Exp $
  */
 public abstract class AbstractScarabModule
     extends BaseObject
@@ -1885,7 +1885,7 @@ try{
     public List getTemplateTypes()
         throws Exception
     {
-        List types = null;
+        List templateTypes = new ArrayList();
         Object obj = ScarabCache.get(this, GET_TEMPLATE_TYPES); 
         if ( obj == null ) 
         {        
@@ -1893,17 +1893,21 @@ try{
             crit.add(RModuleIssueTypePeer.MODULE_ID, getModuleId())
                 .addJoin(RModuleIssueTypePeer.ISSUE_TYPE_ID, 
                      IssueTypePeer.ISSUE_TYPE_ID)
-                .add(IssueTypePeer.PARENT_ID, 0, Criteria.NOT_EQUAL)
-                .add(IssueTypePeer.DELETED, 0)
-                .addAscendingOrderByColumn(RModuleIssueTypePeer.PREFERRED_ORDER);
-            types = RModuleIssueTypePeer.doSelect(crit);
-            ScarabCache.put(types, this, GET_TEMPLATE_TYPES);
+                .add(IssueTypePeer.DELETED, 0);
+            List rmits = RModuleIssueTypePeer.doSelect(crit);
+            for (int i=0; i<rmits.size(); i++)
+            {
+                RModuleIssueType rmit = (RModuleIssueType)rmits.get(i);
+                IssueType templateType = rmit.getIssueType().getTemplateIssueType();
+                templateTypes.add(templateType);
+            }
+            ScarabCache.put(templateTypes, this, GET_TEMPLATE_TYPES);
         }
         else 
         {
-            types = (List)obj;
+            templateTypes = (List)obj;
         }
-        return types;
+        return templateTypes;
     }
 
     /**
@@ -2013,20 +2017,11 @@ try{
         RModuleAttribute rma1 = null;
         RModuleAttribute rma2 = null;
             
-        // create enter issue template types
+        //save RModuleAttributes for template types.
         List templateTypes = parentModule.getTemplateTypes();
         for (int i=0; i<templateTypes.size(); i++)
         {
-            RModuleIssueType template1 = 
-                (RModuleIssueType)templateTypes.get(i);
-            RModuleIssueType template2 = template1.copy();
-            template2.setModuleId(newModuleId);
-            log().debug("[ASM] Saving new template type: " + template2.getModuleId()
-                                + "-" + template2.getIssueTypeId());
-            template2.save();
-            
-            //save RModuleAttributes for template types.
-            IssueType it = template1.getIssueType();
+            IssueType it = (IssueType)templateTypes.get(i);
             List rmas = parentModule.getRModuleAttributes(it);
             for (int j=0; j<rmas.size(); j++)
             {
