@@ -330,7 +330,7 @@ public class EmbededTomcat {
 	processArgs(args);
 	
 	// Configure the server
-	tryConfigSnapshot();
+	//	tryConfigSnapshot();
 	// 	tryProperties();
 	// 	tryServerXml();
 	// 	tryDefault();
@@ -341,83 +341,11 @@ public class EmbededTomcat {
 	if( ! initialized ) {
 	    initContextManager();
 
-	    // Save config for later use
-	    writeSnapshot();
 	}
 	
 	// Start
 	start();
     }
-
-    // -------------------- Snapshot --------------------
-    String confSnap="tomcatconfig.snapshot";
-    boolean modified=true;
-    protected boolean fastStart=false; // default
-    
-    /** Save a snapshot of the server config, for fast start
-     */
-    public void writeSnapshot() throws TomcatException {
-	if( fastStart && modified ) {
-	    try {
-		long time1=System.currentTimeMillis();
-		OutputStream out=
-		    new BufferedOutputStream(new FileOutputStream( confSnap ));
-		ObjectOutputStream oos=new ObjectOutputStream( out );
-		oos.writeObject( contextM );
-		oos.close();
-		long time2=System.currentTimeMillis();
-		log( "Snapshot save time " + ( time2-time1));
-	    } catch( IOException ex ) {
-		log("Error saving state ", ex );
-	    }
-	}
-    }
-
-    public void tryConfigSnapshot() {
-	if( fastStart ) { // && ! modified
-	    try {
-		long time1=System.currentTimeMillis();
-			
-		File f=new File( confSnap );
-		if( ! f.exists() ) {
-		    return;
-		}
-		// Check if f is newer than server.xml, etc
-		
-		InputStream in=
-		    new BufferedInputStream(new FileInputStream( confSnap ));
-		ObjectInputStream ois=new ObjectInputStream( in );
-		contextM=(ContextManager)ois.readObject();
-
-		// check dependencies
-		
-		// Post read fixes
-		ois.close();
-		long time2=System.currentTimeMillis();
-		System.out.println( "Snapshot read time " + ( time2-time1));
-		initialized=true;
-	    } catch( Exception ex ) {
-		ex.printStackTrace();
-		log( "Error reading snapshot ", ex );
-	    }
-	}
-    }
-
-    private boolean isFastStart() {
-	return fastStart && ! modified;
-    }
-
-    private void checkConfigSnapshot() {
-	try {
-	    FileInputStream in=new FileInputStream( confSnap );
-	    ObjectInputStream ois=new ObjectInputStream( in );
-	    ContextManager cm=(ContextManager)ois.readObject();
-	} catch( Exception ex ) {
-	    log("Error reading state ", ex );
-	}
-	modified=true;
-    }
-    
 
 
     // -------------------- Main --------------------
@@ -433,8 +361,6 @@ public class EmbededTomcat {
 
 	    if (arg.equals("-sandbox")) {
 		sandbox=true;
-	    } else if (arg.equals("-fastStart")) {
-		fastStart=true;
 	    } else if (arg.equals("-h") || arg.equals("-home")) {
 		i++;
 		if (i < args.length)
@@ -454,7 +380,6 @@ public class EmbededTomcat {
     
     public static void main(String args[] ) {
 	EmbededTomcat tomcat=new EmbededTomcat();
-	tomcat.fastStart=true;
 	try {
 	    tomcat.setArgs( args );
             tomcat.execute();
