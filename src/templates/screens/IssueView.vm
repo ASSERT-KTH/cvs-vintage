@@ -125,7 +125,7 @@
          <tr>
           <td><strong>add url:</strong></td>
 
-#set( $urlGroup = $intake.Attachment.setKey("urlkey") )
+#set( $urlGroup = $intake.Attachment.setKey("urlKey") )
           <td><input type="text" size="25" class="text" name="$urlGroup.Name.Key" /></td>
 
           <td><input type="text" size="25" class="text" name="$urlGroup.DataAsString.Key" /></td>
@@ -135,8 +135,7 @@
         </table>
        </div>
 
-           <input type = "hidden" name="attachment_type_id" value="3">
-           <p><input type="submit" value="add url" name="eventSubmit_doSubmitattachment"  class="button" />&#160;<input type="submit" value="delete url"  name="eventSubmit_doDeleteurl" class="button" /></p>
+           <p><input type="submit" value="add url" name="eventSubmit_doSubmiturl"  class="button" />&#160;<input type="submit" value="delete url"  name="eventSubmit_doDeleteurl" class="button" /></p>
       </div>
 
 ## PARENT ISSUES
@@ -291,9 +290,10 @@
          <tr>
           <td width="120" class="a"><strong>add comment:</strong></td>
           <td class="b">
-           <textarea rows="2" cols="35" class="text" name ="$intakeAttachment.DataAsString.Key_comment">$!Attachment.DataAsString</textarea>
-           <input type = "hidden" name="attachment_type_id" value="2">
-           <p><input type="submit" value="add comment" name="eventSubmit_doSubmitattachment"  class="button" /></p>
+#set( $commentGroup = $intake.Attachment.setKey("commentKey") )
+           <textarea rows="2" cols="35" class="text" name ="$commentGroup.DataAsString.Key"></textarea>
+           <input type="hidden" name="$commentGroup.Name.Key" value="comment">
+           <p><input type="submit" value="add comment" name="eventSubmit_doSubmitcomment"  class="button" /></p>
           </td>
          </tr>
         </table>
