@@ -4,7 +4,7 @@
  * Distributable under LGPL license.
  * See terms of license at gnu.org.
  */
- 
+
 package org.jboss.ejb.plugins;
 
 import java.lang.reflect.Constructor;
@@ -46,18 +46,18 @@ import org.jboss.monitor.client.BeanCacheSnapshot;
 
 /**
  * Base class for caches of entity and stateful beans. <p>
- * It manages the cache entries through a {@link CachePolicy} object; 
+ * It manages the cache entries through a {@link CachePolicy} object;
  * the implementation of the cache policy object must respect the following
  * requirements:
  * <ul>
- * <li> Have a public constructor that takes a single argument of type 
+ * <li> Have a public constructor that takes a single argument of type
  * AbstractInstanceCache.class or a subclass
  * </ul>
  *
  * @author Simone Bordet (simone.bordet@compaq.com)
- * @version $Revision: 1.2 $
+ * @version $Revision: 1.3 $
  */
-public abstract class AbstractInstanceCache 
+public abstract class AbstractInstanceCache
 	implements InstanceCache, XmlLoadable, Monitorable
 {
 	// Constants -----------------------------------------------------
@@ -90,12 +90,12 @@ public abstract class AbstractInstanceCache
 	// Monitorable implementation ------------------------------------
 	public void sample(Object s)
 	{
-		synchronized (getCacheLock()) 
+		synchronized (getCacheLock())
 		{
 			BeanCacheSnapshot snapshot = (BeanCacheSnapshot)s;
 			snapshot.m_passivatingBeans = m_passivationHelper.m_passivationJobs.size();
 			CachePolicy policy = getCache();
-			if (policy instanceof Monitorable) 
+			if (policy instanceof Monitorable)
 			{
 				((Monitorable)policy).sample(s);
 			}
@@ -105,24 +105,24 @@ public abstract class AbstractInstanceCache
 	// Public --------------------------------------------------------
 	public void setJMSMonitoringEnabled(boolean enable) {m_jmsMonitoring = enable;}
 	public boolean isJMSMonitoringEnabled() {return m_jmsMonitoring;}
-	
-	public void sendMessage(Message message) 
+
+	public void sendMessage(Message message)
 	{
-		try 
+		try
 		{
 			message.setJMSExpiration(5000);
 			message.setLongProperty("TIME", System.currentTimeMillis());
 			m_jmsPublisher.publish(m_jmsTopic, message);
 		}
-		catch (JMSException x) 
+		catch (JMSException x)
 		{
 			Logger.exception(x);
 		}
 	}
-	public Message createMessage(Object id) 
+	public Message createMessage(Object id)
 	{
-		Message message = null; 
-		try 
+		Message message = null;
+		try
 		{
 			message = m_jmsSession.createMessage();
 			message.setStringProperty("APPLICATION", getContainer().getApplication().getName());
@@ -132,28 +132,28 @@ public abstract class AbstractInstanceCache
 				message.setStringProperty("PRIMARY_KEY", id.toString());
 			}
 		}
-		catch (JMSException x) 
+		catch (JMSException x)
 		{
 			Logger.exception(x);
 		}
 		return message;
 	}
-	
+
 	/* From InstanceCache interface */
-	public EnterpriseContext get(Object id) 
-		throws RemoteException, NoSuchObjectException 
+	public EnterpriseContext get(Object id)
+		throws RemoteException, NoSuchObjectException
 	{
 		if (id == null) throw new IllegalArgumentException("Can't get an object with a null key");
 
 		EnterpriseContext ctx = null;
-		synchronized (getCacheLock()) 
+		synchronized (getCacheLock())
 		{
 			ctx = (EnterpriseContext)getCache().get(id);
-			if (ctx == null) 
+			if (ctx == null)
 			{
 				// Here I block if the bean is passivating now
 				ctx = unschedulePassivation(id);
-				
+
 				// Already passivated ?
 				if (ctx == null)
 				{
@@ -171,7 +171,7 @@ public abstract class AbstractInstanceCache
 						throw new NoSuchObjectException(x.getMessage());
 					}
 				}
-				else 
+				else
 				{
 					insert(ctx);
 				}
@@ -188,16 +188,16 @@ public abstract class AbstractInstanceCache
 		CachePolicy cache = getCache();
 		synchronized (getCacheLock())
 		{
-			// This call must be inside the sync block, otherwise can happen that I get the 
+			// This call must be inside the sync block, otherwise can happen that I get the
 			// key, then the context is passivated and I will insert in cache a meaningless
 			// context.
 			Object key = getKey(ctx);
-			
+
 			if (cache.peek(key) == null)
 			{
 				cache.insert(key, ctx);
 			}
-			else 
+			else
 			{
 				// Here it is a bug.
 				// Check for all places where insert is called, and ensure that they cannot
@@ -207,7 +207,7 @@ public abstract class AbstractInstanceCache
 		}
 	}
 	/* From InstanceCache interface */
-	public void release(EnterpriseContext ctx) 
+	public void release(EnterpriseContext ctx)
 	{
 		if (ctx == null) throw new IllegalArgumentException("Can't release a null object");
 
@@ -221,10 +221,10 @@ public abstract class AbstractInstanceCache
 			{
 				getCache().remove(id);
 			}
-			// This call, executed anyway, leaves door open to multiple scheduling 
-			// of the same context, which I take care in other places, in 
+			// This call, executed anyway, leaves door open to multiple scheduling
+			// of the same context, which I take care in other places, in
 			// PassivationHelper.schedule. I'm not sure that moving the call below
-			// just after getCache().remove above would not lead to other 
+			// just after getCache().remove above would not lead to other
 			// problems, so I leave it here.
 			schedulePassivation(ctx);
 		}
@@ -233,7 +233,7 @@ public abstract class AbstractInstanceCache
 	public void remove(Object id)
 	{
 		if (id == null) throw new IllegalArgumentException("Can't remove an object using a null key");
-		
+
 		synchronized (getCacheLock())
 		{
 			if (getCache().peek(id) != null)
@@ -243,7 +243,7 @@ public abstract class AbstractInstanceCache
 		}
 		removeLock(id);
 	}
-   
+
 	public boolean isActive(Object id)
 	{
 		// Check whether an object with the given id is available in the cache
@@ -256,10 +256,10 @@ public abstract class AbstractInstanceCache
 	 * the cache, either by passivation or by removal.
 	 * This method must be synchronized with its dual, {@link #removeLock}.
 	 */
-	public synchronized Sync getLock(Object id) 
+	public synchronized Sync getLock(Object id)
 	{
 		Sync mutex = (Sync)m_lockMap.get(id);
-		if (mutex == null) 
+		if (mutex == null)
 		{
 			mutex = new Semaphore(1);
 			m_lockMap.put(id, mutex);
@@ -270,57 +270,57 @@ public abstract class AbstractInstanceCache
 	 * Removes the mutex associated with the given id.
 	 * This method must be synchronized with its dual, {@link #getLock}.
 	 */
-	protected synchronized void removeLock(Object id) 
+	protected synchronized void removeLock(Object id)
 	{
 		Object mutex = m_lockMap.get(id);
-		if (mutex != null) 
+		if (mutex != null)
 		{
 			m_lockMap.remove(id);
 		}
 	}
 
 	// XmlLoadable implementation ----------------------------------------------
-	public void importXml(Element element) throws DeploymentException 
+	public void importXml(Element element) throws DeploymentException
 	{
 		// This one is mandatory
 		String p = MetaData.getElementContent(MetaData.getUniqueChild(element, "cache-policy"));
-		try 
+		try
 		{
 			Class cls = Thread.currentThread().getContextClassLoader().loadClass(p);
 			Constructor ctor = cls.getConstructor(new Class[] {AbstractInstanceCache.class});
 			m_cache = (CachePolicy)ctor.newInstance(new Object[] {this});
 		}
-		catch (Exception x) 
+		catch (Exception x)
 		{
 			throw new DeploymentException("Can't create cache policy", x);
 		}
-		
+
 		Element policyConf = MetaData.getOptionalChild(element, "cache-policy-conf");
 		if (policyConf != null)
 		{
 			if (m_cache instanceof XmlLoadable)
 			{
-				try 
+				try
 				{
 					((XmlLoadable)m_cache).importXml(policyConf);
 				}
-				catch (Exception x) 
+				catch (Exception x)
 				{
 					throw new DeploymentException("Can't import policy configuration", x);
 				}
 			}
 		}
-	}	
-	
+	}
+
 	/* From Service interface*/
-	public void init() throws Exception 
+	public void init() throws Exception
 	{
 		getCache().init();
 		m_passivationHelper = new PassivationHelper();
 		String threadName = "Passivator Thread for " + getContainer().getBeanMetaData().getEjbName();
 		ClassLoader cl = getContainer().getClassLoader();
 		m_passivator = new PassivatorQueue(threadName, cl);
-		
+
 		// Setup JMS for cache monitoring
 		Context namingContext = new InitialContext();
 		Object factoryRef = namingContext.lookup("TopicConnectionFactory");
@@ -331,10 +331,10 @@ public abstract class AbstractInstanceCache
 		Object topicRef = namingContext.lookup("topic/beancache");
 		m_jmsTopic = (Topic)PortableRemoteObject.narrow(topicRef, Topic.class);
 		m_jmsSession = m_jmsConnection.createTopicSession(false, Session.DUPS_OK_ACKNOWLEDGE);
-		m_jmsPublisher = m_jmsSession.createPublisher(m_jmsTopic);     
+		m_jmsPublisher = m_jmsSession.createPublisher(m_jmsTopic);
 	}
 	/* From Service interface*/
-	public void start() throws Exception 
+	public void start() throws Exception
 	{
 		getCache().start();
 		m_passivator.start();
@@ -342,7 +342,7 @@ public abstract class AbstractInstanceCache
 		m_jmsConnection.start();
 	}
 	/* From Service interface*/
-	public void stop() 
+	public void stop()
 	{
 		// Empty the cache
 		synchronized (getCacheLock())
@@ -350,19 +350,19 @@ public abstract class AbstractInstanceCache
 			getCache().stop();
 		}
 		m_passivator.stop();
-		
-		try 
+
+		try
 		{
 			m_jmsConnection.stop();
 		}
 		catch (JMSException ignored) {}
 	}
 	/* From Service interface*/
-	public void destroy() 
+	public void destroy()
 	{
 		getCache().destroy();
 
-		try 
+		try
 		{
 			m_jmsConnection.close();
 		}
@@ -378,23 +378,23 @@ public abstract class AbstractInstanceCache
 	 * Schedules the given EnterpriseContext for passivation
 	 * @see PassivationHelper#schedule
 	 */
-	protected void schedulePassivation(EnterpriseContext ctx) 
+	protected void schedulePassivation(EnterpriseContext ctx)
 	{
 		m_passivationHelper.schedule(ctx);
 		logPassivationScheduled(getKey(ctx));
 	}
 	/**
 	 * Tries to unschedule the given EnterpriseContext for passivation; returns
-	 * the unscheduled context if it wasn't passivated yet, null if the 
+	 * the unscheduled context if it wasn't passivated yet, null if the
 	 * passivation already happened.
 	 * @see PassivationHelper#unschedule
 	 */
-	protected EnterpriseContext unschedulePassivation(Object id) 
+	protected EnterpriseContext unschedulePassivation(Object id)
 	{
 		return m_passivationHelper.unschedule(id);
 	}
 
-	protected void logActivation(Object id) 
+	protected void logActivation(Object id)
 	{
 		m_buffer.setLength(0);
 		m_buffer.append("Activated bean ");
@@ -402,26 +402,26 @@ public abstract class AbstractInstanceCache
 		m_buffer.append(" with id = ");
 		m_buffer.append(id);
 		Logger.debug(m_buffer.toString());
-		
-		if (isJMSMonitoringEnabled()) 
+
+		if (isJMSMonitoringEnabled())
 		{
 			// Prepare JMS message
 			Message message = createMessage(id);
-			try 
+			try
 			{
 				message.setStringProperty("TYPE", "ACTIVATION");
 			}
-			catch (JMSException x) 
+			catch (JMSException x)
 			{
 				Logger.exception(x);
 			}
-			
+
 			// Send JMS Message
 			sendMessage(message);
 		}
 	}
-	
-	protected void logPassivationScheduled(Object id) 
+
+	protected void logPassivationScheduled(Object id)
 	{
 		m_buffer.setLength(0);
 		m_buffer.append("Scheduled passivation of bean ");
@@ -429,27 +429,27 @@ public abstract class AbstractInstanceCache
 		m_buffer.append(" with id = ");
 		m_buffer.append(id);
 		Logger.debug(m_buffer.toString());
-		
-		if (isJMSMonitoringEnabled()) 
+
+		if (isJMSMonitoringEnabled())
 		{
 			// Prepare JMS message
 			Message message = createMessage(id);
-			try 
+			try
 			{
 				message.setStringProperty("TYPE", "PASSIVATION");
 				message.setStringProperty("ACTIVITY", "SCHEDULED");
 			}
-			catch (JMSException x) 
+			catch (JMSException x)
 			{
 				Logger.exception(x);
 			}
-			
+
 			// Send JMS Message
 			sendMessage(message);
 		}
 	}
-	
-	protected void logPassivation(Object id) 
+
+	protected void logPassivation(Object id)
 	{
 		m_buffer.setLength(0);
 		m_buffer.append("Passivated bean ");
@@ -457,27 +457,27 @@ public abstract class AbstractInstanceCache
 		m_buffer.append(" with id = ");
 		m_buffer.append(id);
 		Logger.debug(m_buffer.toString());
-		
-		if (isJMSMonitoringEnabled()) 
+
+		if (isJMSMonitoringEnabled())
 		{
 			// Prepare JMS message
 			Message message = createMessage(id);
-			try 
+			try
 			{
 				message.setStringProperty("TYPE", "PASSIVATION");
 				message.setStringProperty("ACTIVITY", "PASSIVATED");
 			}
-			catch (JMSException x) 
+			catch (JMSException x)
 			{
 				Logger.exception(x);
 			}
-			
+
 			// Send JMS Message
 			sendMessage(message);
 		}
 	}
-	
-	protected void logPassivationPostponed(Object id) 
+
+	protected void logPassivationPostponed(Object id)
 	{
 		m_buffer.setLength(0);
 		m_buffer.append("Postponed passivation of bean ");
@@ -485,26 +485,26 @@ public abstract class AbstractInstanceCache
 		m_buffer.append(" with id = ");
 		m_buffer.append(id);
 		Logger.debug(m_buffer.toString());
-		
-		if (isJMSMonitoringEnabled()) 
+
+		if (isJMSMonitoringEnabled())
 		{
 			// Prepare JMS message
 			Message message = createMessage(id);
-			try 
+			try
 			{
 				message.setStringProperty("TYPE", "PASSIVATION");
 				message.setStringProperty("ACTIVITY", "POSTPONED");
 			}
-			catch (JMSException x) 
+			catch (JMSException x)
 			{
 				Logger.exception(x);
 			}
-			
+
 			// Send JMS Message
 			sendMessage(message);
 		}
 	}
-	
+
 	/**
 	 * Returns the container for this cache.
 	 */
@@ -516,7 +516,7 @@ public abstract class AbstractInstanceCache
 	/**
 	 * Returns the mutex used to sync access to the cache policy object
 	 */
-	public Object getCacheLock() 
+	public Object getCacheLock()
 	{
 		return m_cacheLock;
 	}
@@ -548,7 +548,7 @@ public abstract class AbstractInstanceCache
 	 * Returns whether the given context can be passivated or not
 	 */
 	protected abstract boolean canPassivate(EnterpriseContext ctx);
-	
+
 	// Private -------------------------------------------------------
 
 	// Inner classes -------------------------------------------------
@@ -559,8 +559,8 @@ public abstract class AbstractInstanceCache
 	{
 		/* The map that holds the passivation jobs posted */
 		private Map m_passivationJobs;
-		
-		protected PassivationHelper() 
+
+		protected PassivationHelper()
 		{
 			m_passivationJobs = Collections.synchronizedMap(new HashMap());
 		}
@@ -568,11 +568,11 @@ public abstract class AbstractInstanceCache
 		/**
 		 * Creates and schedules a {@link PassivationJob} for passivation
 		 */
-		protected void schedule(EnterpriseContext bean) 
+		protected void schedule(EnterpriseContext bean)
 		{
 			// Register only once the job to be able to unschedule its passivation
 			Object key = getKey(bean);
-			if (m_passivationJobs.get(key) == null) 
+			if (m_passivationJobs.get(key) == null)
 			{
 				// Create the passivation job
 				PassivationJob job = new PassivationJob(bean)
@@ -581,18 +581,18 @@ public abstract class AbstractInstanceCache
 					{
 						EnterpriseContext ctx = getEnterpriseContext();
 						Object id = getKey(ctx);
-						
-						if (id == null) 
+
+						if (id == null)
 						{
-							// Here is a bug. Multiple passivation requests for the 
-							// same bean must be scheduled only once.
-							throw new IllegalStateException("Trying to passivate an already passivated bean");
+							// If this happens, then a passivation request for this bean was issued
+							// but not yet executed, and in the meanwhile the bean has been removed.
+							return;
 						}
 
 						/**
 						 * Synchronization / Passivation explanations:
 						 * The instance interceptor (II) first acquires the Sync object associated
-						 * with the given id, then asks to the instance cache (IC) for an enterprise 
+						 * with the given id, then asks to the instance cache (IC) for an enterprise
 						 * context.
 						 * The IC, if the context is not present, activates it and returns it.
 						 * If the context is not in the IC then or it has already been
@@ -607,20 +607,20 @@ public abstract class AbstractInstanceCache
 						 * exact order.
 						 */
 						Sync mutex = (Sync)getLock(id);
-						
-						try 
+
+						try
 						{
 							mutex.acquire();
-	
+
 							synchronized (getCacheLock())
 							{
 								// This is absolutely fundamental: the job must be removed from
-								// the map in every case. If it remains there, the call to 
+								// the map in every case. If it remains there, the call to
 								// PassivationHelper.unschedule() will cause the corrispondent
 								// context to be reinserted in the cache, and if then is passivated
 								// we have a context without meaning in the cache
 								m_passivationJobs.remove(id);
-								
+
 								synchronized (this)
 								{
 									if (!canPassivate(ctx))
@@ -633,31 +633,35 @@ public abstract class AbstractInstanceCache
 										{
 											getCache().insert(id, ctx);
 										}
-										
+
 										logPassivationPostponed(id);
-										
+
 										return;
 									}
-									else 
+									else
 									{
 										if (!isCancelled())
 										{
 											try
 											{
-												// If the next call throws RemoteException we can 
-												// remove the context from the cache
+												// If the next call throws RemoteException we reinsert
+												// the bean in the cache; every successive passivation
+												// attempt will fail. The other policy would have been
+												// to remove it, but then clients unexpectedly won't
+												// find it anymore. On the other hand, on the server
+												// log it is possible to see that passivation for the
+												// bean failed, and fix it. See EJB 1.1, 6.4.1
 												passivate(ctx);
 												executed();
 												removeLock(id);
 												freeContext(ctx);
-		
+
 												logPassivation(id);
-											} 
+											}
 											catch (RemoteException x)
 											{
-												// Can't passivate this bean, remove it
-												// EJB 1.1, 6.4.1
-												getCache().remove(id);
+												// Can't passivate this bean, reinsert it in the cache
+												getCache().insert(id, ctx);
 												throw x;
 											}
 										}
@@ -666,41 +670,57 @@ public abstract class AbstractInstanceCache
 							}
 						}
 						catch (InterruptedException ignored) {}
-						finally 
+						finally
 						{
 							mutex.release();
 						}
 					}
 				};
 
-				// Register job
-				m_passivationJobs.put(key, job);
-			
-				// Schedule the job for passivation
-				m_passivator.putJob(job);
+				// This method is entered only by one thread at a time, since the only caller
+				// call it only after having sync on the cache lock via getCacheLock().
+				// However, enforce this sync'ing on the passivation job's map
+				synchronized (m_passivationJobs)
+				{
+					if (m_passivationJobs.get(key) == null)
+					{
+						// Register job
+						m_passivationJobs.put(key, job);
+
+						// Schedule the job for passivation
+						m_passivator.putJob(job);
+					}
+					else
+					{
+						// Here is definitely a bug.
+						// This method should be accessed only from 1 point and one thread
+						// at a time; check why it isn't so.
+						throw new IllegalStateException("Trying to schedule 2 passivation jobs for the same bean");
+					}
+				}
 			}
 		}
 		/**
 		 * Tries to unschedule a job paired with the given context's id
-		 * @return null if the bean has been passivated, the context 
+		 * @return null if the bean has been passivated, the context
 		 * paired with the given id otherwise
 		 */
-		protected EnterpriseContext unschedule(Object id) 
+		protected EnterpriseContext unschedule(Object id)
 		{
 			// I chose not to remove canceled job here because multiple
 			// unscheduling requests can arrive. This way all will be served
-			
+
 			// Is the passivation job for id still to be executed ?
 			PassivationJob job = (PassivationJob)m_passivationJobs.get(id);
-			if (job != null) 
+			if (job != null)
 			{
 				// Still to execute or executing now, cancel the job
 				job.cancel();
-				// Sync to not allow method execute to be executed after 
+				// Sync to not allow method execute to be executed after
 				// the if statement below but before the return
 				synchronized (job)
 				{
-					if (!job.isExecuted()) 
+					if (!job.isExecuted())
 					{
 						// Still to be executed, return the bean
 						return job.getEnterpriseContext();
@@ -710,7 +730,7 @@ public abstract class AbstractInstanceCache
 			// Unscheduling request arrived too late, bean already passivated
 			return null;
 		}
-	}	
+	}
 }
 
 /**
@@ -726,21 +746,21 @@ abstract class PassivationJob implements Executable
 	private EnterpriseContext m_context;
 	private boolean m_cancelled;
 	private boolean m_executed;
-	
-	PassivationJob(EnterpriseContext ctx) 
+
+	PassivationJob(EnterpriseContext ctx)
 	{
 		m_context = ctx;
 	}
-	
+
 	public abstract void execute() throws Exception;
 
 	/**
 	 * Returns the EnterpriseContext associated with this passivation job,
 	 * so the bean that will be passivated.
-	 * No need to synchronize access to this method, since the returned 
+	 * No need to synchronize access to this method, since the returned
 	 * reference is immutable
 	 */
-	final EnterpriseContext getEnterpriseContext() 
+	final EnterpriseContext getEnterpriseContext()
 	{
 		return m_context;
 	}
@@ -748,7 +768,7 @@ abstract class PassivationJob implements Executable
 	 * Mark this job for cancellation.
 	 * @see #isCancelled
 	 */
-	final synchronized void cancel() 
+	final synchronized void cancel()
 	{
 		m_cancelled = true;
 	}
@@ -756,7 +776,7 @@ abstract class PassivationJob implements Executable
 	 * Returns whether this job has been marked for cancellation
 	 * @see #cancel
 	 */
-	final synchronized boolean isCancelled() 
+	final synchronized boolean isCancelled()
 	{
 		return m_cancelled;
 	}
@@ -764,7 +784,7 @@ abstract class PassivationJob implements Executable
 	 * Mark this job as executed
 	 * @see #isExecuted
 	 */
-	final synchronized void executed() 
+	final synchronized void executed()
 	{
 		m_executed = true;
 	}
@@ -772,7 +792,7 @@ abstract class PassivationJob implements Executable
 	 * Returns whether this job has been executed
 	 * @see #executed
 	 */
-	final synchronized boolean isExecuted() 
+	final synchronized boolean isExecuted()
 	{
 		return m_executed;
 	}
@@ -784,12 +804,12 @@ class PassivatorQueue extends WorkerQueue
 	 * Used for debug purposes, holds the scheduled passivation jobs
 	 */
 //	private Map m_map = new HashMap();
-	
+
 	/**
 	 * Creates a new passivator queue with default thread name of
 	 * "Passivator Thread".
 	 */
-	PassivatorQueue() 
+	PassivatorQueue()
 	{
 		this("Passivator Thread", null);
 	}
@@ -799,10 +819,10 @@ class PassivatorQueue extends WorkerQueue
 	 * @param threadName the name of the passivator thread
 	 * @param cl the context class loader; if null the context class loader is not set.
 	 */
-	PassivatorQueue(String threadName, ClassLoader cl) 
+	PassivatorQueue(String threadName, ClassLoader cl)
 	{
 		super(threadName);
-		if (cl != null) 
+		if (cl != null)
 		{
 			m_queueThread.setContextClassLoader(cl);
 		}
@@ -810,7 +830,7 @@ class PassivatorQueue extends WorkerQueue
 	/**
 	 * Overridden for debug purposes
 	 *//*
-	protected Executable getJobImpl() throws InterruptedException 
+	protected Executable getJobImpl() throws InterruptedException
 	{
 		PassivationJob j = (PassivationJob)super.getJobImpl();
 		EnterpriseContext ctx = j.getEnterpriseContext();
@@ -822,12 +842,12 @@ class PassivatorQueue extends WorkerQueue
 	/**
 	 * Overridden for debug purposes
 	 *//*
-	protected void putJobImpl(Executable job) 
+	protected void putJobImpl(Executable job)
 	{
 		PassivationJob j = (PassivationJob)job;
 		EnterpriseContext ctx = j.getEnterpriseContext();
 		Object id = ctx.getId();
-		if (m_map.get(id) != null) 
+		if (m_map.get(id) != null)
 		{
 			// Here is a bug, job requests are scheduled only once per bean.
 			System.err.println("DUPLICATE PASSIVATION JOB INSERTION FOR ID = " + ctx.getId());
@@ -835,7 +855,7 @@ class PassivatorQueue extends WorkerQueue
 			System.err.println("CTX transaction: " + ctx.getTransaction());
 			throw new IllegalStateException();
 		}
-		else 
+		else
 		{
 			m_map.put(id, job);
 		}
@@ -845,7 +865,7 @@ class PassivatorQueue extends WorkerQueue
 	/**
 	 * Logs exceptions thrown during job execution.
 	 */
-	protected void logJobException(Exception x) 
+	protected void logJobException(Exception x)
 	{
 		// Log system exceptions
 		if (x instanceof EJBException)
