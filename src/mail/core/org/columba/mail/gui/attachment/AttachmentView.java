@@ -55,7 +55,7 @@ public class AttachmentView extends IconPanel {
     public boolean setMimePartTree(MimeTree collection) {
         String contentType;
         String contentSubtype;
-        String text = new String();
+        String text = "";
         boolean output = false;
 
         removeAll();

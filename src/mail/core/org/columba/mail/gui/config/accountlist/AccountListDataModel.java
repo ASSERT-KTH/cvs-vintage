@@ -50,13 +50,13 @@ class AccountListDataModel extends AbstractTableModel {
         AccountItem item = accountList.get(row);
 
         if (item == null) {
-            return new String();
+            return "";
         }
 
         if (col == 0) {
             /*
             String description = item.getName();
-            if ( description == null ) return new String();
+            if ( description == null ) return "";
             return description;
             */
             return item;

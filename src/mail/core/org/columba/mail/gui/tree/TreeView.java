@@ -32,7 +32,7 @@ import javax.swing.tree.TreePath;
  * this class does all the dirty work for the TreeController
  */
 public class TreeView extends DndTree {
-    private String selectedLeaf = new String();
+    private String selectedLeaf = "";
     private JTextField textField;
 
     public TreeView(AbstractMailFrameController frameController, TreeModel model) {

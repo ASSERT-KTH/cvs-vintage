@@ -26,7 +26,7 @@ public class PGPItem extends DefaultItem {
     public PGPItem(XmlElement e) {
         super(e);
 
-        passphrase = new String();
+        passphrase = "";
     }
 
     public String getPassphrase() {
@@ -34,7 +34,7 @@ public class PGPItem extends DefaultItem {
     }
 
     public void clearPassphrase() {
-        passphrase = new String();
+        passphrase = "";
     }
 
     public void setPassphrase(String s) {

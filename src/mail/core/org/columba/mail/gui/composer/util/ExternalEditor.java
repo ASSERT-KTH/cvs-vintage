@@ -135,7 +135,7 @@ public class ExternalEditor {
         //      int i = FI.available();
         char[] buf = new char[1000];
         int i;
-        String message = new String("");
+        String message = "";
 
         try {
             while ((i = FI.read(buf)) >= 0) {

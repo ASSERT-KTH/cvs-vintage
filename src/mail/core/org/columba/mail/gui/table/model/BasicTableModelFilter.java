@@ -46,7 +46,7 @@ public class BasicTableModelFilter extends TreeTableModelDecorator {
     protected boolean attachmentFlag = false;
 
     //protected String patternItem = new String("subject");
-    protected String patternString = new String();
+    protected String patternString = "";
     protected boolean dataFiltering = false;
 
     public BasicTableModelFilter(TreeTableModelInterface tableModel) {

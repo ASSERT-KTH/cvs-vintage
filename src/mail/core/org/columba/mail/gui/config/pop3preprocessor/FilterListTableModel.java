@@ -54,7 +54,7 @@ class FilterListTableModel extends AbstractTableModel {
             String description = filter.getAttribute("name");
 
             if (description == null) {
-                return new String();
+                return "";
             }
 
             return description;

@@ -78,7 +78,7 @@ public class ColumbaHeader {
             attributes.put("columba.from", new Address(""));
         }
 
-        attributes.put("columba.host", new String());
+        attributes.put("columba.host", "");
         attributes.put("columba.date", basicHeader.getDate());
 
         String subject = basicHeader.getSubject();

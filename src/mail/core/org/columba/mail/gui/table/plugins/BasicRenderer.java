@@ -45,7 +45,7 @@ public class BasicRenderer extends DefaultLabelRenderer {
             str = (String) ((MessageNode) value).getHeader().get(key);
         } catch (ClassCastException ex) {
             System.out.println("headertablecommonrenderer: " + ex.getMessage());
-            str = new String();
+            str = "";
         }
 
         setText(str);

@@ -90,7 +90,7 @@ public class ColumbaMessage {
         if (o != null) {
             columbaHeader.set("columba.uid", o);
         } else {
-            columbaHeader.set("columba.uid", new String(""));
+            columbaHeader.set("columba.uid", "");
         }
 
         //uid = o;

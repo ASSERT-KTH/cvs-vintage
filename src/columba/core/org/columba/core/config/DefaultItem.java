@@ -288,8 +288,8 @@ public class DefaultItem implements Cloneable {
 
     public String getTextValue(AdapterNode node)
     {
-            String s = new String("");
-            String t = new String();
+            String s = "";
+            String t = "";
 
             org.w3c.dom.NodeList nodeList = node.domNode.getChildNodes();
 
@@ -325,7 +325,7 @@ public class DefaultItem implements Cloneable {
 
     public String getCDATAValue(AdapterNode node)
     {
-            String s = new String("");
+            String s = "";
             org.w3c.dom.NodeList nodeList = node.domNode.getChildNodes();
 
             if (nodeList.getLength() >= 1)

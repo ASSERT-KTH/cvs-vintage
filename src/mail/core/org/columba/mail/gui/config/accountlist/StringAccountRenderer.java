@@ -83,7 +83,7 @@ public class StringAccountRenderer extends JLabel implements TableCellRenderer {
             str = (String) value;
         } catch (ClassCastException ex) {
             System.out.println(" filter renderer: " + ex.getMessage());
-            str = new String();
+            str = "";
         }
 
         if (b == true) {

@@ -55,7 +55,7 @@ class FilterListDataModel extends AbstractTableModel {
         Filter filter = filterList.get(row);
 
         if (filter == null) {
-            return new String();
+            return "";
         }
 
         if (col == 0) {
@@ -63,7 +63,7 @@ class FilterListDataModel extends AbstractTableModel {
             String description = filter.get("description");
 
             if (description == null) {
-                return new String();
+                return "";
             }
 
             return description;
