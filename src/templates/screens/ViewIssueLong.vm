@@ -2,7 +2,6 @@
 
 #set ($action = $link.setPage("ViewIssueLong.vm").addPathInfo("$scarabG.Constant.NEXT_TEMPLATE", "ViewIssueLong.vm").toString())
 #set ($issueList = $data.Parameters.getStrings("issue_ids"))
-#set ($currentModule = $scarabR.CurrentModule)
 #set ($tab = "all")
 
 
@@ -16,7 +15,7 @@
     #end
 #printCollisionInfo()
     $intake.newForm()
-    #viewIssue ($currentIssue $currentModule)
+    #viewIssue ($currentIssue)
   $intake.declareGroups()
   </form>
   #end

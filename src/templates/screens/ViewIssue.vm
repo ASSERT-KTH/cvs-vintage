@@ -2,12 +2,8 @@
 
 #set ($currentIssueId = $data.Parameters.getString("id"))
 #set ($currentIssue = $scarabR.getIssue($currentIssueId))
-#set ($currentIssueModuleId = $currentIssue.ModuleId)
-#set ($currentModule = $currentIssue.Module)
-#set ($currentModuleId = $scarabR.CrrrentModule.ModuleId)
-#set ($currentModuleName = $currentModule.Name)
 
-#if ($currentIssueModuleId != $scarabR.CurrentModule.ModuleId)
+#if ($currentIssue.Module != $scarabR.CurrentModule)
 
 <p class="alert">
 You are viewing an issue in a different Module than is currently selected.
@@ -78,7 +74,7 @@ You are viewing an issue in a different Module than is currently selected.
 </div>
 #end
 
- #viewIssue($currentIssue $currentModule)
+ #viewIssue($currentIssue)
 
  $intake.declareGroups()
  </form>

@@ -17,19 +17,19 @@
 <option value="application/octet-stream" #if ($mimeA == "application/octet-stream")selected="selected"#end>Generic binary file (application/octet-stream)</option>
 #end
 
-#macro (viewIssue $currentIssue $module)
+#macro (viewIssue $currentIssue)
 
-#set ($issueType = $scarabR.CurrentIssueType)
+#set ($module = $currentIssue.Module)
+#set ($issueType = $currentIssue.IssueType)
 #set ($fullHistory = $data.Parameters.getString("fullhistory",""))
 #set ($fullComments = $data.Parameters.getString("fullcomments",""))
 #set ($canEdit = $scarabR.hasPermission($scarabG.Permission.ISSUE__EDIT, $module))
 #set ($attrValues = $currentIssue.ModuleAttributeValuesMap)
 #set ($currentIssueId = $currentIssue.UniqueId)
-#set ($attrValues = $currentIssue.ModuleAttributeValuesMap)
 
 <input type="hidden" name="action" value="ModifyIssue" />
 <input type="hidden" name="mod_ts" value="$scarabG.Now.Time" />
-<input type="hidden" name="id" value="$currentIssue.UniqueId" />
+<input type="hidden" name="id" value="$currentIssueId" />
 
 <div class="functnbar">
 #if ($data.User.hasPermission($scarabG.Permission.MODULE__EDIT, $module))
@@ -163,7 +163,7 @@
       <td><input type="checkbox"></td>
       <td>
         $!assignedUser.Name
-        #if (!$assignedUser.hasPermission($attVal.Attribute.Permission, $scarabR.CurrentModule))
+        #if (!$assignedUser.hasPermission($attVal.Attribute.Permission, $module))
             <strong>(disabled)</strong>
         #end
       </td>
