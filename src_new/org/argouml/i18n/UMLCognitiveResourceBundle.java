@@ -25,7 +25,7 @@
 // File: UMLCognitiveResourceBundle.java
 // Classes: UMLCognitiveResourceBundle
 // Original Author: Curt Arnold
-// $Id: UMLCognitiveResourceBundle.java,v 1.6 2002/09/14 06:06:51 linus Exp $
+// $Id: UMLCognitiveResourceBundle.java,v 1.7 2002/10/30 10:06:17 mkl Exp $
 
 // 4 Feb 2002: Jeremy Bennett (mail@jeremybennett.com). Fixed description of
 // CrConstructorNeeded, CrConsiderSingleton and CrSingletonViolated.
@@ -590,7 +590,7 @@ public class UMLCognitiveResourceBundle extends ListResourceBundle {
         { "CrMultipleRealization_desc" ,
                 "<ocl>self</ocl> implements multiple interfaces. Though this is legal in UML this code will not compile in java. Replace the multiple realizations with generalizations if you want to create compilable and error free code." }, 
         { "CrIllegalName_head" ,
-                "Choose a Legal Name" },
+                "Choose a Legal Name for <ocl>self</ocl>" },
         { "CrIllegalName_desc" ,
                 "The names of model elements must be sequences of letters, numbers, and underscores.  They cannot contain punctuation.\n\nCode generation requires legal names for the resulting code to compile correctly. \n\nTo fix this, use the \"Next>\" button, or manually select the highlighted element and use the Properties tab to give it a different name." },
 
