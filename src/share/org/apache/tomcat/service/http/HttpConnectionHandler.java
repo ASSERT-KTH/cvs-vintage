@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/service/http/Attic/HttpConnectionHandler.java,v 1.8 1999/12/13 20:32:38 costin Exp $
- * $Revision: 1.8 $
- * $Date: 1999/12/13 20:32:38 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/service/http/Attic/HttpConnectionHandler.java,v 1.9 1999/12/13 21:07:23 costin Exp $
+ * $Revision: 1.9 $
+ * $Date: 1999/12/13 21:07:23 $
  *
  * ====================================================================
  *
@@ -75,6 +75,7 @@ import javax.servlet.http.*;
 
 
 public class HttpConnectionHandler  implements  TcpConnectionHandler {
+    
     ContextManager contextM;
     
     public HttpConnectionHandler() {
