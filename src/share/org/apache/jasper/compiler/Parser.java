@@ -782,7 +782,7 @@ public class Parser {
 		else
 		    throw new ParseException(start, "Body is supposed to be empty for "+tag);
 		
-		listener.handleTagBegin(start, attrs, prefix,
+		listener.handleTagBegin(start, reader.mark(), attrs, prefix,
 					shortTagName, tli, ti);
 		listener.handleTagEnd(start, reader.mark(), prefix, 
 				      shortTagName, attrs, tli, ti);
@@ -793,7 +793,7 @@ public class Parser {
 		if (reader.matches(CLOSE)) {
 		    reader.advance(CLOSE.length());
 		    bodyStart = reader.mark();
-		    listener.handleTagBegin(bodyStart, attrs, prefix, 
+		    listener.handleTagBegin(start, bodyStart, attrs, prefix, 
 					    shortTagName, tli, ti);
                     if (bc.equalsIgnoreCase(TagInfo.BODY_CONTENT_TAG_DEPENDENT) ||
                         bc.equalsIgnoreCase(TagInfo.BODY_CONTENT_JSP)) 

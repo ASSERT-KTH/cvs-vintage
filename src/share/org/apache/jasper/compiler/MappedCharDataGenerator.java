@@ -1,6 +1,6 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/jasper/Options.java,v 1.10 2000/02/23 02:23:44 mandar Exp $
- * $Revision: 1.10 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/jasper/compiler/MappedCharDataGenerator.java,v 1.1 2000/02/23 02:23:44 mandar Exp $
+ * $Revision: 1.1 $
  * $Date: 2000/02/23 02:23:44 $
  *
  * ====================================================================
@@ -59,66 +59,67 @@
  *
  */ 
 
-package org.apache.jasper;
-
-import java.io.File;
-
-import javax.servlet.ServletConfig;
-import javax.servlet.ServletContext;
+package org.apache.jasper.compiler;
 
 /**
- * A class to hold all init parameters specific to the JSP engine. 
+ * CharDataGenerator generates the character data present in the JSP
+ * file. Typically this is HTML which lands up as strings in
+ * out.println(...).
+ * 
+ * This generator will print the HTML line-by-line. This is a
+ * feature desired by lots of tool vendors.
  *
- * @author Anil K. Vijendran
- * @author Hans Bergsten
+ * @author Mandar Raje
  */
-public interface Options {
-    /**
-     * Are we keeping generated code around?
-     */
-    public boolean getKeepGenerated();
+public class MappedCharDataGenerator 
+    extends GeneratorBase
+    implements ServiceMethodPhase
+{
+    char[] chars;
     
-    /**
-     * Are we supporting large files?
-     */
-    public boolean getLargeFile();
+    public MappedCharDataGenerator(char[] chars) {
+	this.chars = chars;
+    }
 
-    /**
-     * Are we supporting HTML mapped servlets?
-     */
-    public boolean getMappedFile();
-    
-    
-    /**
-     * Should errors be sent to client or thrown into stderr?
-     */
-    public boolean getSendErrorToClient();
- 
-    /**
-     * Class ID for use in the plugin tag when the browser is IE. 
-     */
-    public String getIeClassId();
-    
-    /**
-     * What is my scratch dir?
-     */
-    public File getScratchDir();
-
-    /**
-     * What classpath should I use while compiling the servlets
-     * generated from JSP files?
-     */
-    public String getClassPath();
-
-    /**
-     * What compiler plugin should I use to compile the servlets
-     * generated from JSP files?
-     */
-    public Class getJspCompilerPlugin();
-
-    /**
-     * Path of the compiler to use for compiling JSP pages.
-     */
-    public String getJspCompilerPath();
-    
+    public void generate(ServletWriter writer, Class phase) {
+	writer.indent();
+	writer.print("out.write(\"");
+	// Generate the char data:
+	int limit       = chars.length;
+	StringBuffer sb = new StringBuffer();
+	for (int i = 0 ; i < limit ; i++) {
+	    int ch = chars[i];
+	    switch(ch) {
+	    case '"':
+		sb.append("\\\"");
+		break;
+	    case '\\':
+		sb.append("\\\\");
+		break;
+	    case '\r':
+		continue;
+		/*
+		  case '\'':
+		  sb.append('\\');
+		  sb.append('\'');
+		  break;
+		*/
+	    case '\n':
+		sb.append("\\r\\n");
+		writer.print(sb.toString());
+		writer.print("\");\n");
+		sb = new StringBuffer();
+		writer.indent();
+		writer.print("out.write(\"");
+		break;
+	    case '\t':
+		sb.append("\\t");
+		break;
+	    default:
+		sb.append((char) ch);
+	    }
+	}
+	writer.print(sb.toString());
+	writer.print("\");\n");
+    }
 }

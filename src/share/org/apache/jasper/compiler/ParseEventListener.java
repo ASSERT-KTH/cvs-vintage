@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/jasper/compiler/ParseEventListener.java,v 1.3 1999/12/21 16:32:31 rubys Exp $
- * $Revision: 1.3 $
- * $Date: 1999/12/21 16:32:31 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/jasper/compiler/ParseEventListener.java,v 1.4 2000/02/23 02:23:44 mandar Exp $
+ * $Revision: 1.4 $
+ * $Date: 2000/02/23 02:23:44 $
  *
  * ====================================================================
  * 
@@ -105,7 +105,7 @@ public interface ParseEventListener {
      *        is the start of the body after the "/>" if content type is tag dependent
      * stop: can be null if the body contained JSP tags... 
      */
-    void handleTagBegin(Mark start, Hashtable attrs, String prefix, String shortTagName,
+    void handleTagBegin(Mark start, Mark stop, Hashtable attrs, String prefix, String shortTagName,
 			TagLibraryInfoImpl tli, TagInfo ti) 
 	throws JasperException;
 

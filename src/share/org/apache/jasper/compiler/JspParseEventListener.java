@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/jasper/compiler/JspParseEventListener.java,v 1.7 2000/02/13 06:25:24 akv Exp $
- * $Revision: 1.7 $
- * $Date: 2000/02/13 06:25:24 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/jasper/compiler/JspParseEventListener.java,v 1.8 2000/02/23 02:23:44 mandar Exp $
+ * $Revision: 1.8 $
+ * $Date: 2000/02/23 02:23:44 $
  *
  * ====================================================================
  * 
@@ -833,10 +833,14 @@ public class JspParseEventListener extends BaseJspListener {
     
     public void handleCharData(char[] chars) throws JasperException {
         GeneratorBase cdg;
+
         if (ctxt.getOptions().getLargeFile())
             cdg = new StoredCharDataGenerator(vector, dataFile, stringId++, chars);
-        else
-            cdg = new CharDataGenerator(chars);
+        else if(ctxt.getOptions().getMappedFile()) 
+            cdg = new MappedCharDataGenerator(chars);
+	else
+	    cdg = new CharDataGenerator(chars);
+
         
         // FIXME: change null
         Generator gen
@@ -846,7 +850,7 @@ public class JspParseEventListener extends BaseJspListener {
 	addGenerator(gen);
     }
     
-    public void handleTagBegin(Mark start, Hashtable attrs, String prefix, 
+    public void handleTagBegin(Mark start, Mark stop, Hashtable attrs, String prefix, 
 			       String shortTagName, TagLibraryInfoImpl tli, 
 			       TagInfo ti)
 	throws JasperException
@@ -855,7 +859,7 @@ public class JspParseEventListener extends BaseJspListener {
         Generator gen
             = new GeneratorWrapper(new TagBeginGenerator(prefix, shortTagName, attrs,
 							 tli, ti),
-                                   null, null);
+                                   start, stop);
 
 	addGenerator(gen);
 
@@ -869,7 +873,7 @@ public class JspParseEventListener extends BaseJspListener {
 	// FIXME: null's
         Generator gen
             = new GeneratorWrapper(new TagEndGenerator(prefix, shortTagName, attrs, tli, ti),
-                                   null, null);
+                                   start, stop);
 
 	addGenerator(gen);
     }

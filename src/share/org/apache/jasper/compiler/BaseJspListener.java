@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/jasper/compiler/BaseJspListener.java,v 1.3 1999/12/21 16:32:30 rubys Exp $
- * $Revision: 1.3 $
- * $Date: 1999/12/21 16:32:30 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/jasper/compiler/BaseJspListener.java,v 1.4 2000/02/23 02:23:44 mandar Exp $
+ * $Revision: 1.4 $
+ * $Date: 2000/02/23 02:23:44 $
  *
  * ====================================================================
  * 
@@ -158,7 +158,7 @@ public class BaseJspListener implements ParseEventListener {
 	throw new JasperException(Constants.getString("jsp.error.not.impl.include"));
     }
 
-    public void handleTagBegin(Mark start, Hashtable attrs, String prefix, 
+    public void handleTagBegin(Mark start, Mark stop, Hashtable attrs, String prefix, 
 			       String shortTagName, TagLibraryInfoImpl tli, 
 			       TagInfo ti)
 	throws JasperException
