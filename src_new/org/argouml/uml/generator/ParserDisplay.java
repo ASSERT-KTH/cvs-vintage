@@ -24,7 +24,7 @@
 // File: ParserDisplay.java
 // Classes: ParserDisplay
 // Original Author:
-// $Id: ParserDisplay.java,v 1.22 2002/08/17 12:42:16 d00mst Exp $
+// $Id: ParserDisplay.java,v 1.23 2002/08/17 17:01:43 d00mst Exp $
 
 // 12 Apr 2002: Jeremy Bennett (mail@jeremybennett.com). Extended to support
 // extension points.
@@ -95,7 +95,8 @@ public class ParserDisplay extends Parser {
   protected static final Category _cat = 
     Category.getInstance(ParserDisplay.class);
 
-  PropertySpecialString _attributeSpecialStrings[];
+  private PropertySpecialString _attributeSpecialStrings[];
+  private Vector _attributeCustomSep;
 
   private ParserDisplay() {
     _attributeSpecialStrings = new PropertySpecialString[1];
@@ -109,6 +110,9 @@ public class ParserDisplay extends Parser {
 		    ((MStructuralFeature)element).setChangeability(kind);
 	    }
 	});
+    _attributeCustomSep = new Vector();
+    _attributeCustomSep.add(MyTokenizer.SINGLE_QUOTED_SEPARATOR);
+    _attributeCustomSep.add(MyTokenizer.DOUBLE_QUOTED_SEPARATOR);
   }
 
   ////////////////////////////////////////////////////////////////
@@ -467,7 +471,7 @@ protected String parseOutMultiplicity(MAttribute f, String s) {
     }
 
     try {
-	st = new MyTokenizer(s, " ,\t,<<,>>,[,],:,=,{,},\\,");
+	st = new MyTokenizer(s, " ,\t,<<,>>,[,],:,=,{,},\\,", _attributeCustomSep);
 	while (st.hasMoreTokens()) {
 	    token = st.nextToken();
 	    if (" ".equals(token) || "\t".equals(token) || ",".equals(token)) {
