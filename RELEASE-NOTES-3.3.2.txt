@@ -3,7 +3,7 @@
                                  Release Notes
                                  =============
 
-$Id: RELEASE-NOTES-3.3.2.txt,v 1.5 2002/04/30 05:06:24 billbarker Exp $
+$Id: RELEASE-NOTES-3.3.2.txt,v 1.6 2002/04/30 05:25:22 billbarker Exp $
 
 
 This document describes the changes that have been made since the
@@ -22,6 +22,9 @@ Bug No.  Description
 8099     Preserve the query string when redirecting to the welcome page.
 
          Removed '.sh' extension from Unix shell scripts.
+
+	 (Re-) Open the log files with "append", so that log rotation can
+	 be configured to be other than daily.
 
 Server:
 
