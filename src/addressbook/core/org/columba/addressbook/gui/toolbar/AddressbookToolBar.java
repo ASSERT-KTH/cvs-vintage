@@ -54,7 +54,7 @@ public class AddressbookToolBar extends JToolBar
             setFloatable(false);
         }
 
-    public void addButton( CButton button )
+    public void addButton( ToolbarButton button )
     {
         add( button  );
         button.setRolloverEnabled( true );
@@ -67,22 +67,22 @@ public class AddressbookToolBar extends JToolBar
 
 
 	    //MouseAdapter handler = MainInterface.statusBar.getHandler();
-	    CButton button;
+	    ToolbarButton button;
 
 	    addSeparator();
 
-	    button = new CButton( addressbookInterface.actionListener.addContactAction);
+	    button = new ToolbarButton( addressbookInterface.actionListener.addContactAction);
 	    addButton( button  );
 
-            button = new CButton( addressbookInterface.actionListener.addGroupAction);
+            button = new ToolbarButton( addressbookInterface.actionListener.addGroupAction);
 	    addButton( button  );
 
             addSeparator();
 
-            button = new CButton( addressbookInterface.actionListener.propertiesAction);
+            button = new ToolbarButton( addressbookInterface.actionListener.propertiesAction);
 	    addButton( button  );
 
-            button = new CButton( addressbookInterface.actionListener.removeAction);
+            button = new ToolbarButton( addressbookInterface.actionListener.removeAction);
 	    addButton( button  );
 
             addSeparator();

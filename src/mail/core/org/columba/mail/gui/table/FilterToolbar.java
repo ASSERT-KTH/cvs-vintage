@@ -31,12 +31,12 @@ import javax.swing.JTextField;
 import javax.swing.JToggleButton;
 
 import org.columba.core.gui.util.ImageLoader;
-import org.columba.main.MainInterface;
+import org.columba.core.gui.util.ToolbarToggleButton;
 import org.columba.mail.command.FolderCommandReference;
-import org.columba.mail.config.FolderItem;
 import org.columba.mail.folder.Folder;
 import org.columba.mail.gui.table.util.TableModelFilteredView;
 import org.columba.mail.util.MailResourceLoader;
+import org.columba.main.MainInterface;
 
 public class FilterToolbar extends JPanel implements ActionListener {
 	public JToggleButton newButton;
@@ -79,7 +79,7 @@ public class FilterToolbar extends JPanel implements ActionListener {
 
 		//addSeparator();
 		newButton =
-			new JToggleButton(ImageLoader.getSmallImageIcon("mail-new.png"));
+			new ToolbarToggleButton(ImageLoader.getSmallImageIcon("mail-new.png"));
 		newButton.setToolTipText(
 			MailResourceLoader.getString(
 				"menu",
@@ -99,7 +99,7 @@ public class FilterToolbar extends JPanel implements ActionListener {
 		add(newButton);
 
 		/*
-		oldButton = new JToggleButton(ImageLoader.getSmallImageIcon("mail-read.png"));
+		oldButton = new ToolbarToggleButton(ImageLoader.getSmallImageIcon("mail-read.png"));
 		oldButton.setToolTipText( GlobalResourceLoader.getString("menu","mainframe","filtertoolbar_read") );
 		oldButton.addActionListener(this);
 		oldButton.setActionCommand("OLD");
@@ -111,7 +111,7 @@ public class FilterToolbar extends JPanel implements ActionListener {
 		//addSeparator();
 
 		answeredButton =
-			new JToggleButton(ImageLoader.getSmallImageIcon("reply_small.png"));
+			new ToolbarToggleButton(ImageLoader.getSmallImageIcon("reply_small.png"));
 		answeredButton.addActionListener(this);
 		answeredButton.setToolTipText(
 			MailResourceLoader.getString(
@@ -126,7 +126,7 @@ public class FilterToolbar extends JPanel implements ActionListener {
 		add(answeredButton);
 
 		flaggedButton =
-			new JToggleButton(
+			new ToolbarToggleButton(
 				ImageLoader.getSmallImageIcon("mark-as-important-16.png"));
 		flaggedButton.setToolTipText(
 			MailResourceLoader.getString(
@@ -142,7 +142,7 @@ public class FilterToolbar extends JPanel implements ActionListener {
 		add(flaggedButton);
 
 		expungedButton =
-			new JToggleButton(
+			new ToolbarToggleButton(
 				ImageLoader.getSmallImageIcon("stock_delete-16.png"));
 		expungedButton.setToolTipText(
 			MailResourceLoader.getString(
@@ -157,7 +157,7 @@ public class FilterToolbar extends JPanel implements ActionListener {
 		add(expungedButton);
 
 		attachmentButton =
-			new JToggleButton(ImageLoader.getSmallImageIcon("attachment.png"));
+			new ToolbarToggleButton(ImageLoader.getSmallImageIcon("attachment.png"));
 		attachmentButton.setToolTipText(
 			MailResourceLoader.getString(
 				"menu",
@@ -281,7 +281,7 @@ public class FilterToolbar extends JPanel implements ActionListener {
 		/*
 		addSeparator();
 		
-		threadButton = new JToggleButton(ImageLoader.getImageIcon("org/columba/core/images/Export16.gif") );
+		threadButton = new ToolbarToggleButton(ImageLoader.getImageIcon("org/columba/core/images/Export16.gif") );
 		threadButton.setEnabled( false );
 		threadButton.setMargin( new Insets(0,0,0,0) );
 		add(threadButton);

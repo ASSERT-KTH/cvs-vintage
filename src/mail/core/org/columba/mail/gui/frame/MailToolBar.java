@@ -23,7 +23,7 @@ import java.util.ResourceBundle;
 import javax.swing.Box;
 import javax.swing.JToolBar;
 
-import org.columba.core.gui.util.CButton;
+import org.columba.core.gui.util.ToolbarButton;
 
 public class MailToolBar extends JToolBar {
 
@@ -47,7 +47,7 @@ public class MailToolBar extends JToolBar {
 		setFloatable(false);
 	}
 
-	public void addButton(CButton button) {
+	public void addButton(ToolbarButton button) {
 
 		button.setRolloverEnabled(true);
 
@@ -58,49 +58,49 @@ public class MailToolBar extends JToolBar {
 	public void addCButtons() {
 
 		MouseAdapter handler = frame.getMouseTooltipHandler();
-		CButton button;
+		ToolbarButton button;
 
 		i = 0;
 
-		button = new CButton(frame.globalActionCollection.newMessageAction);
+		button = new ToolbarButton(frame.globalActionCollection.newMessageAction);
 
 		addButton(button);
 
-		button = new CButton(frame.globalActionCollection.receiveSendAction);
+		button = new ToolbarButton(frame.globalActionCollection.receiveSendAction);
 
 		addButton(button);
 
 		addSeparator();
 
 		button =
-			new CButton(frame.tableController.getActionListener().replyAction);
+			new ToolbarButton(frame.tableController.getActionListener().replyAction);
 		addButton(button);
 
 		button =
-			new CButton(
+			new ToolbarButton(
 				frame.tableController.getActionListener().forwardAction);
 		addButton(button);
 
 		addSeparator();
 
 		button =
-			new CButton(
+			new ToolbarButton(
 				frame.tableController.getActionListener().copyMessageAction);
 		addButton(button);
 
 		button =
-			new CButton(
+			new ToolbarButton(
 				frame.tableController.getActionListener().moveMessageAction);
 		addButton(button);
 
 		button =
-			new CButton(
+			new ToolbarButton(
 				frame.tableController.getActionListener().deleteMessageAction);
 		addButton(button);
 
 		addSeparator();
 
-		button = new CButton(frame.getStatusBar().getCancelAction());
+		button = new ToolbarButton(frame.getStatusBar().getCancelAction());
 
 		addButton(button);
 

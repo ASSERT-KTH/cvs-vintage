@@ -18,7 +18,7 @@ import java.awt.Insets;
 
 import javax.swing.JToolBar;
 
-import org.columba.core.gui.util.CButton;
+import org.columba.core.gui.util.ToolbarButton;
 
 /**
  * @author frd
@@ -43,7 +43,7 @@ public class ComposerToolbar extends JToolBar{
 		*/
 	
 		
-		CButton toolButton;
+		ToolbarButton toolButton;
 
 //		
 		putClientProperty("JToolBar.isRollover", Boolean.TRUE);
@@ -52,12 +52,12 @@ public class ComposerToolbar extends JToolBar{
 		
 
 		toolButton =
-			new CButton(
+			new ToolbarButton(
 				composerInterface.composerActionListener.sendAction);
 		add(toolButton);
 
 		toolButton =
-			new CButton(
+			new ToolbarButton(
 				composerInterface.composerActionListener.attachFileAction);
 		add(toolButton);
 
@@ -65,28 +65,28 @@ public class ComposerToolbar extends JToolBar{
 		addSeparator();
 
 		toolButton =
-			new CButton(
+			new ToolbarButton(
 				composerInterface.composerActionListener.undoAction);
 		add(toolButton);
 		
 		toolButton =
-			new CButton(
+			new ToolbarButton(
 				composerInterface.composerActionListener.redoAction);
 		add(toolButton);
 		
 		
 		toolButton =
-			new CButton(
+			new ToolbarButton(
 				composerInterface.composerActionListener.cutAction);
 		add(toolButton);
 
 		toolButton =
-			new CButton(
+			new ToolbarButton(
 				composerInterface.composerActionListener.copyAction);
 		add(toolButton);
 
 		toolButton =
-			new CButton(
+			new ToolbarButton(
 				composerInterface.composerActionListener.pasteAction);
 		add(toolButton);
 
@@ -96,13 +96,13 @@ public class ComposerToolbar extends JToolBar{
 
 		
 		toolButton =
-			new CButton(
+			new ToolbarButton(
 				composerInterface.composerActionListener.spellCheckAction);
 		add(toolButton);
 		
 		
 		toolButton =
-			new CButton(
+			new ToolbarButton(
 				composerInterface.composerActionListener.addressbookAction);
 		add(toolButton);
 		
@@ -111,7 +111,7 @@ public class ComposerToolbar extends JToolBar{
 
 		addSeparator();
 		/*
-		toolButton = new CButton(composerInterface.composerActionListener.exitAction);
+		toolButton = new ToolbarButton(composerInterface.composerActionListener.exitAction);
 		add( toolButton );
 		*/
 		//add(Box.createHorizontalGlue());
