@@ -14,6 +14,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
+import org.dom4j.Document;
 import org.jboss.aspect.internal.AspectSupport;
 import org.jboss.aspect.spi.AspectDefinition;
 import org.jboss.aspect.spi.AspectObject;
@@ -170,28 +171,66 @@ public class AspectFactory
             throw new NullPointerException("configuration source was null.");
 
         Map map = AspectSupport.loadAspects(source);
+        addAspects(map);
+        return this;
+    }
+    
+    /**
+     * Adds the the set of aspect definitions contained in the DOM document. 
+     * <p>
+     * If the source contains a definition for a previously configured aspect,
+     * a AspectInitizationException will be thrown.
+     * 
+     * @throws AspectInitizationException - if the source file is invalid or some aspects could not be initialized.
+     */
+    public AspectFactory configure(Document source) throws AspectInitizationException
+    {
+        if (source == null)
+            throw new NullPointerException("configuration source was null.");
+
+        Map map = AspectSupport.loadAspects(source);
+        addAspects(map);
+        return this;
+    }
+    
+    protected void addAspects(Map map) throws AspectInitizationException {
         Iterator i = map.keySet().iterator();
         while (i.hasNext())
         {
-            Object aspectName = i.next();
-            Object composition = map.get(aspectName);
-            Object previous = aspects.put(aspectName, composition);
-            if (previous != null)
-                throw new AspectInitizationException("Invalid Aspect configuration file: " + source);
+            String aspectName = (String)i.next();
+            AspectDefinition composition = (AspectDefinition)map.get(aspectName);
+	         if( getDefinition(aspectName) != null )
+         		throw new AspectInitizationException("Aspect allready defined: "+aspectName);
+            setDefinition(aspectName, composition);
         }
-        return this;
+    }
+    
+    protected AspectDefinition setDefinition(String name, AspectDefinition ad) {
+         return (AspectDefinition)aspects.put(name, ad);
+    }
+
+    protected AspectDefinition getDefinition(String name) {
+         return (AspectDefinition)aspects.get(name);
+    }
+
+    protected AspectDefinition removeDefinition(String name) {
+         return (AspectDefinition)aspects.remove(name);
+    }
+
+    protected Iterator getDefinitions() {
+         return aspects.values().iterator();
     }
 
     /**
-     * Gives you back the AspectDefinition for a given aspect name.
+     * Finds the AspectDefinition for a given aspect name.
      * If not defined in the AspectFactory, the parent is searched for
      * the definition.
      */
-    public AspectDefinition getDefinition(String aspect)
+    public AspectDefinition findDefinition(String aspect)
     {
-        AspectDefinition rc = (AspectDefinition) aspects.get(aspect);
+        AspectDefinition rc = getDefinition(aspect);
         if (rc == null && parent != null)
-            rc = parent.getDefinition(aspect);
+            rc = parent.findDefinition(aspect);
         return rc;
     }
 
@@ -208,7 +247,7 @@ public class AspectFactory
     public Object createAspect(Object targetObject) throws AspectNotFoundException
     {
         String aspectName = targetObject.getClass().getName();
-        AspectDefinition composition = getDefinition(aspectName);
+        AspectDefinition composition = findDefinition(aspectName);
         if (composition == null)
             throw new AspectNotFoundException(aspectName);
         return createAspect(composition, targetObject);
@@ -227,7 +266,7 @@ public class AspectFactory
      */
     public Object createAspect(String aspectName, Object targetObject) throws AspectNotFoundException
     {
-        AspectDefinition composition = getDefinition(aspectName);
+        AspectDefinition composition = findDefinition(aspectName);
         if (composition == null)
             throw new AspectNotFoundException(aspectName);
         return createAspect(composition, targetObject);
