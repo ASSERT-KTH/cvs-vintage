@@ -19,7 +19,7 @@ import org.jboss.logging.Logger;
  *      
  *   @see <related>
  *   @author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>.
- *   @version $Revision: 1.6 $
+ *   @version $Revision: 1.7 $
  */
 public class Executor
    implements ExecutorMBean, MBeanRegistration
@@ -47,7 +47,7 @@ public class Executor
       Process p = Runtime.getRuntime().exec(exec);
       
       p.getErrorStream().close();
-      DataInputStream in = new DataInputStream(p.getInputStream());
+      BufferedReader in = new BufferedReader(new InputStreamReader(p.getInputStream()));
       String line;
       while ((line = in.readLine()) != null)
          log.info(line);

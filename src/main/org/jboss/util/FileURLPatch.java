@@ -24,7 +24,7 @@ import java.net.URLConnection;
  * all file based URLs when externalized with have spaces replaced with pluses.
  *      
  *   @author <a href="mailto:hiram.chirino@jboss.org">Hiram Chirino</a>.
- *   @version $Revision: 1.2 $
+ *   @version $Revision: 1.3 $
  */
 public class FileURLPatch implements FileURLPatchMBean, MBeanRegistration {
 
@@ -69,7 +69,9 @@ public class FileURLPatch implements FileURLPatchMBean, MBeanRegistration {
 	  protected void parseURL(URL u, String spec, int start, int limit) {
 		 super.parseURL(u, spec, start, limit);
 		 if (enabled) {
-			setURL(u, u.getProtocol(), u.getHost(), u.getPort(), u.getFile().replace('+', ' '), u.getRef());
+		     //			setURL(u, u.getProtocol(), u.getHost(), u.getPort(), u.getFile().replace('+', ' '), u.getRef());
+		     setURL(u, u.getProtocol(), u.getHost(), u.getPort(), u.getAuthority(), u.getUserInfo(),
+			    u.getPath().replace('+',' '), u.getQuery().replace('+',' '), u.getRef());
 		 }
 	  }
    }
