@@ -87,10 +87,47 @@ import org.xbill.DNS.Type;
  * Action.
  *   
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: Register.java,v 1.31 2002/09/04 23:01:04 jon Exp $
+ * @version $Id: Register.java,v 1.32 2002/10/08 18:31:33 jon Exp $
  */
 public class Register extends ScarabTemplateAction
 {
+
+    private boolean checkRFC2505(String email)
+    {
+        // try just the end portion of the domain
+        String domain = getDomain(email);
+        if (domain != null)
+        {
+            // try to find any A records for the domain
+            Record[] records = dns.getRecords(domain, Type.A);
+            if (records != null || records.length > 0)
+            {
+                return true;
+            }
+            // now try just the domain after the @
+            // this is for domains like foo.co.uk
+            String fullDomain = email.substring(email.indexOf('@')+1);
+            records = dns.getRecords(fullDomain, Type.A);
+            if (records != null || records.length > 0)
+            {
+                return true;
+            }
+            // now try to find any MX records for the domain
+            records = dns.getRecords(domain, Type.MX);
+            if (records != null || records.length > 0)
+            {
+                return true;
+            }
+            // now try to find any MX records for the fullDomain
+            records = dns.getRecords(fullDomain, Type.MX);
+            if (records != null || records.length > 0)
+            {
+                return true;
+            }
+        }
+        return false;
+    }
+
     /**
      * This manages clicking the "Register" button in the Register.vm
      * template. As a result, the user will go to the 
@@ -157,33 +194,18 @@ public class Register extends ScarabTemplateAction
             String email = su.getEmail();
             // check to see if the email is a valid domain (has A records)
             if (Turbine.getConfiguration()
-                    .getBoolean("scarab.register.email.checkValidA", false))
+                    .getBoolean("scarab.register.email.checkRFC2505", false))
             {
-                // try just the end portion of the domain
-                String domain = getDomain(email);
-                Record[] records = null;
-                if (domain != null)
+                if (!checkRFC2505(email))
                 {
-                    records = dns.getRecords(domain, Type.A);
-                    if (records == null || records.length == 0)
-                    {
-                        // now try just the domain after the @
-                        // this is for domains like foo.co.uk
-                        domain = email.substring(email.indexOf('@')+1);
-                        records = dns.getRecords(domain, Type.A);
-                        if (records == null || records.length == 0)
-                        {
-                        
-                            setTarget(data, template);
-                            getScarabRequestTool(context).setAlertMessage(
-                                "Sorry, the domain (" + domain + ") for that email (" + email + ") " + 
-                                "does not have a DNS A record defined. " + 
-                                "It is likely that the domain is invalid and that we cannot send you email. " + 
-                                "Please see ftp://ftp.isi.edu/in-notes/rfc2505.txt for more details. " + 
-                                "Please try another email address or contact your system administrator.");
-                            return;
-                        }
-                    }
+                    setTarget(data, template);
+                    getScarabRequestTool(context).setAlertMessage(
+                        "Sorry, the email you submitted (" + email + ") " + 
+                        "does not have a DNS A or MX record defined. " + 
+                        "It is likely that the domain is invalid and that we cannot send you email. " + 
+                        "Please see ftp://ftp.isi.edu/in-notes/rfc2505.txt for more details. " + 
+                        "Please try another email address or contact your system administrator.");
+                    return;
                 }
             }
             String[] badEmails = Turbine.getConfiguration().getStringArray("scarab.register.email.badEmails");

@@ -6,7 +6,7 @@
 <body bgcolor="#ffffff">
 
 <h2>Scarab - Frequently Asked Questions</h2>
-<h4>$Id: faq.html,v 1.11 2002/10/08 13:30:41 thierrylach Exp $</h4>
+<h4>$Id: faq.html,v 1.12 2002/10/08 18:29:09 jon Exp $</h4>
 
 <hr noshade="noshade" size="1" />
 
@@ -417,7 +417,7 @@ so that when you build again, your settings remain intact.
 <p><strong>
 I tried to register for Scarab's issue tracker and got the following error:
 <br />
-Alert! Sorry, the domain (aslkdjf.com) does not have a DNS A record
+Alert! Sorry, the email you submitted (EMAIL) does not have a DNS A or MX record
 defined. It is likely that the domain is invalid and that we cannot send
 you email. Please see ftp://ftp.isi.edu/in-notes/rfc2505.txt for more
 details. Please try another email address or contact your system
@@ -426,17 +426,16 @@ administrator.
 
 <p>
 Scarab has an optional feature which is enabled by setting the
-scarab.register.email.checkValidA=true property in your
+scarab.register.email.checkRFC2505=true property in your
 build.properties. This feature uses DNS to check that the domain which
-is being registered has a valid A record which is the minimum required
-to send email to a domain name. Some people only have MX records and
-this is actually invalid according to the RFC. This feature is enabled
+is being registered has a valid A or MX record which is the minimum required
+to send email to a domain name. This feature is enabled
 to help try to prevent people from creating bogus accounts on the
 server.
 </p>
 
 <p>
-The fix is simple, create an A record for your domain entry.
+The fix is simple, create an A or MX record for your domain entry.
 </p>
 
 <hr noshade="noshade" size="1" />
