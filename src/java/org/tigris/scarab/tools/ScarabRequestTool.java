@@ -2855,7 +2855,7 @@ e.printStackTrace();
      * @return a <code>List</code> value
      * @exception Exception if an error occurs
      */
-    public List getUserAttributes(List issues)
+    public List getUserAttributes(List issues, boolean activeOnly)
         throws Exception
     {        
         List attributes = null;
@@ -2867,7 +2867,7 @@ e.printStackTrace();
         }
         else 
         {
-            attributes = getMITList(issues).getCommonUserAttributes();
+            attributes = getMITList(issues).getCommonUserAttributes(activeOnly);
         }
         
         return attributes;
