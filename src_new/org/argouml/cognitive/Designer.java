@@ -1,4 +1,4 @@
-// $Id: Designer.java,v 1.40 2005/03/10 09:33:24 mkl Exp $
+// $Id: Designer.java,v 1.41 2005/03/10 19:34:04 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -37,8 +37,10 @@ import org.apache.log4j.Logger;
 import org.argouml.application.api.Argo;
 import org.argouml.cognitive.critics.Agency;
 import org.argouml.cognitive.critics.Critic;
+import org.argouml.ui.ActionGoToCritique;
 import org.tigris.gef.util.ChildGenerator;
 import org.tigris.gef.util.EnumerationEmpty;
+
 
 /**
  * This class models the designer who is building a complex design in
@@ -855,7 +857,10 @@ public final class Designer
      * @param item the todoitem
      */
     public synchronized void disruptivelyWarn(ToDoItem item) {
-        // open a window or do something with item
+        toDoList.addElement(item);
+        // and keep nagging until the user solves the problem:
+        // This seems a nice way to nag:
+        (new ActionGoToCritique(item)).actionPerformed(null);
     }
 
     /**
