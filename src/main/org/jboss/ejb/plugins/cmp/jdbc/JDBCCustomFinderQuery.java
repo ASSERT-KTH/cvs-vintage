@@ -30,9 +30,9 @@ import org.jboss.util.FinderResults;
  *
  * @see org.jboss.ejb.plugins.cmp.jdbc.JDBCFindEntitiesCommand
  * @author <a href="mailto:michel.anke@wolmail.nl">Michel de Groot</a>
- * @version $Revision: 1.3 $
+ * @version $Revision: 1.4 $
  */
-public class JDBCCustomFinderQuery {
+public class JDBCCustomFinderQuery implements JDBCQueryCommand {
    private Logger log;
 
    /**
