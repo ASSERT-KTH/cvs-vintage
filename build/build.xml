@@ -843,6 +843,9 @@
                 <exclude name="**/target/**"/>
                 <exclude name="**/www/**"/>
             </fileset>
+            <fileset dir="../">
+              <include name="www/repository/**"/>
+            </fileset>
         </copy>     
 
     </target>
