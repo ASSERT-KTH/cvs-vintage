@@ -24,7 +24,7 @@
 // File: FigUseCase.java
 // Classes: FigUseCase
 // Original Author: your email address here
-// $Id: FigUseCase.java,v 1.6 2002/08/19 08:18:17 kataka Exp $
+// $Id: FigUseCase.java,v 1.7 2002/08/20 21:21:01 kataka Exp $
 
 // 8 Apr 2002: Jeremy Bennett (mail@jeremybennett.com). Extended to support
 // the display of extension points.
@@ -1111,7 +1111,7 @@ public class FigUseCase extends FigNodeModelElement {
         highlightedFigText.setHighlighted(true);
 
         MExtensionPoint ep   = 
-            (MExtensionPoint) (highlightedFigText.getModelElement());
+            (MExtensionPoint) (highlightedFigText.getOwner());
         String          text = highlightedFigText.getText().trim();
         
         ParserDisplay.SINGLETON.parseExtensionPointFig(useCase, ep, text);
@@ -1375,7 +1375,7 @@ public class FigUseCase extends FigNodeModelElement {
 		    epText = "";
 		}
                 epFig.setText(epText);
-                epFig.setModelElement(ep);
+                epFig.setOwner(ep);
 
                 epCount++;
             }
