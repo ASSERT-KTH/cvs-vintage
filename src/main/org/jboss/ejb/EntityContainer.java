@@ -35,7 +35,7 @@ import org.jboss.util.SerializableEnumeration;
  *   @author Rickard Öberg (rickard.oberg@telkel.com)
  *   @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
  *   @author <a href="mailto:sebastien.alborini@m4x.org">Sebastien Alborini</a>
- *   @version $Revision: 1.19 $
+ *   @version $Revision: 1.20 $
  */
 public class EntityContainer
    extends Container
@@ -363,13 +363,12 @@ public class EntityContainer
       throws java.rmi.RemoteException, FinderException
    {
       
-	  System.out.println("***************************** I make it in the find");
 	  // Multi-finder?
       if (!mi.getMethod().getReturnType().equals(getRemoteClass()))
       {
          // Iterator finder
          Collection c = getPersistenceManager().findEntities(mi.getMethod(), mi.getArguments(), (EntityEnterpriseContext)mi.getEnterpriseContext());
-         Collection ec = containerInvoker.getEntityCollection(c);
+		 Collection ec = containerInvoker.getEntityCollection(c);
 		 
 		 // BMP entity finder methods are allowed to return java.util.Enumeration.
 		 // We need a serializable Enumeration, so we can't use Collections.enumeration()
