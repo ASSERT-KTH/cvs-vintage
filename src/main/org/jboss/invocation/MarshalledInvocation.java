@@ -58,7 +58,7 @@ import javax.transaction.Transaction;
 *
 *   @see <related>
 *   @author  <a href="mailto:marc@jboss.org">Marc Fleury</a>
-*   @version $Revision: 1.2 $
+*   @version $Revision: 1.3 $
 *   Revisions:
 *
 *   <p><b>Revisions:</b>
@@ -66,6 +66,14 @@ import javax.transaction.Transaction;
 *   <p><b>2001120 marc fleury:</b>
 *   <ul>
 *   <li> Initial check-in
+*   </ul>
+*   <p><b>20020113 Sacha Labourey:</b>
+*   <ul>
+*   <li> Make Externalizable calls (writeExternal) idempotent: until now,
+*  serialization on a MarshalledInvocation could only performed once (transaction was removed 
+*  and METHOD type was modified). If another call was re-using the same object (in 
+*  clustering for example), the call was making a ClassCastException because of 
+*  the changed METHOD type in the Map that occured in the previous call to writeExternal)
 *   </ul>
 */
 public class MarshalledInvocation
@@ -286,10 +294,8 @@ implements java.io.Externalizable
       
       // Write the TPC, not the local transaction
       out.writeObject(tpc);
-      payload.remove(TRANSACTION);
-   
-      // We write the hash instead of the method
-      payload.put(METHOD, new Long(calculateHash((Method) payload.remove(METHOD))));
+      
+      HashMap sentData = new HashMap ();
       
       // Everything else is possibly tied to classloaders that exist inside the server but not in 
       // the generic JMX land. 
@@ -309,11 +315,18 @@ implements java.io.Externalizable
          // Bench the above for speed.
          
          //Replace the current object with a Marshalled representation
-         payload.put(currentKey, new MarshalledObject(payload.get(currentKey)));
+         if (currentKey != TRANSACTION)
+         {
+            if (currentKey == METHOD)
+               // We write the hash instead of the method
+               sentData.put(METHOD, new Long(calculateHash((Method) payload.get(METHOD))));
+            else
+               sentData.put (currentKey, new MarshalledObject(payload.get(currentKey)));
+         }
       }
       
       // The map contains only serialized representations of every other object
-      out.writeObject(payload);
+      out.writeObject(sentData);
    }
    
    public void readExternal(java.io.ObjectInput in)
