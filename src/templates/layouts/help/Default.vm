@@ -1,22 +1,20 @@
 <!DOCTYPE html PUBLIC "-//CollabNet//DTD XHTML 1.0 Transitional//EN"
     "http://www.collabnet.com/dtds/collabnet_transitional_10.dtd">
-
 #set ($page.Title = $l10n.Title)
-
 <html>
  <head>
   <title>$page.Title</title>
   <meta http-equiv="Content-type" content="$data.ContentType" />
 
   <style type="text/css">
-  @import url($data.Request.ContextPath/style/ns4_toxins.css);
+  @import url($data.Request.ContextPath/style/help_ns4_toxins.css);
   </style>
 
-  <link rel="stylesheet" type="text/css" href="$data.Request.ContextPath/style/main.css" />
+  <link rel="stylesheet" type="text/css" href="$data.Request.ContextPath/style/help.css" />
   <link rel="stylesheet" type="text/css" href="$data.Request.ContextPath/style/print.css" media="print" />
   <link rel="alternate stylesheet" title="compact" type="text/css" href="$data.Request.ContextPath/style/compact.css" />
  </head>
 <body marginwidth="10" marginheight="10">
 $renderer.render("screens", $template)
-</body
+</body>
 </html>

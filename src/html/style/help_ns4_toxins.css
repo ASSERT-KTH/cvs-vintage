@@ -1,106 +1,155 @@
-/* SoucreCast v1.2 TOXINS STYLE SHEET */
-
-/* SoucreCast - styles start here */
 html body, body div, body p, body th, body td, body li, body dl, body dd, input, select, textarea, .app h3, .app h4 	{
 	font-family:	Verdana, Helvetica, Arial, sans-serif;
 	}
-	
-html body, body th, body td, textarea, .app h3, .app h4 	{
-	font-size: x-small;
-	voice-family: "\"}\"";
-	voice-family: inherit;
-	font-size: small;
+html body, body th, body td, textarea, .app h3, #rightcol h3, .app pre, .app code 	{
+	font-size:	x-small;
+	voice-family:	"\"}\"";
+	voice-family:	inherit;
+	font-size:	small
 	}
-html>body, html>body th, html>body td, html>body input, html>body select, html>body textarea, html>body .app h3, html>body .app h4	{
-	font-size: x-small;
+html>body, html>body th, html>body td, html>body input, html>body select, html>body textarea, html>body .app h3, html>body #rightcol h3, html>body .app pre, html>body .app code	{
+	font-size:	small
 	}
-	
-small, div#footer, #leftcol div *, div#login, div#helptext th, div#helptext td, div.tabs th, div.tabs td, input, select {
-	font-size: xx-small !important;
-	line-height: 140%;
-	voice-family: "\"}\"";
-	voice-family: inherit;
-	font-size: x-small !important;
+small, div#footer td, div#login, div#helptext th, div#helptext td, div.tabs th, div.tabs td, input, select {
+	font-size:	xx-small !important;
+	voice-family:	"\"}\"";
+	voice-family:	inherit;
+	font-size:	x-small !important
 	}
-html>body small, html>body div#footer, html>body div#leftcol, html>body div#login, html>body div#helptext td, html>body div#helptext th, html>body div.tabs th, html>body div.tabs td, html>body input, html>body select,   {
-	font-size: x-small !important;
+html>body small, html>body div#footer td, html>body div#login, html>body div#helptext td, html>body div#helptext th, html>body div.tabs th, html>body div.tabs td, html>body input, html>body select   {
+	font-size:	x-small !important
 	}
-		
-p, ul, ol, dl {
+p, ul, ol, dl	{
 	margin-top:	.67em;
 	margin-bottom: .67em;
-	line-height: 1.4;
+	}
+#bodycol	{
+	line-height: 1.3;
+	padding-left: 1em;
+	width: 100%;
+	voice-family:	"\"}\"";
+	voice-family:	inherit;
+	width: auto;
+	}
+html>body #bodycol	{
+	width: auto;
 	}
 table, th, td	{
-	border: none;
+	border: none
 	}
-code, pre {
-	font-family: 'Andale Mono', monospace;
+#leftcol div div {
+ margin-top: .3em
+ }
+.app h3 {
+	background: #036 url(../images/nw_min.gif) no-repeat;
+ }
+.app h3, .app h4, .functnbar	 {
+	padding: 5px;
+	margin-right: 2px;
+	margin-left: 2px;
+	color: #fff;
+ }
+.app h4 {	
+  background: #ccc url(../images/nw_min.gif) no-repeat;
+  color: #000;
+	}
+.app h3 a {
+ color: white;
+ text-decoration: none
+ }
+#apphead h2 {
+ margin-top: 0;
+ margin-bottom: .2em
+ }
+form {
+	margin-top:	0;
+	margin-bottom: 0;
 	}
 dt	{
-	font-weight: bold;
+	font-weight:	bold
 	}
 h3, h4	{
 	margin-bottom: 0;
 	}
-h2 {
-	font-size: 16px;
- 	}
-h3 {
-	font-size: 14px;
- 	}
-ul, ol, dd	{
-	margin-left: 0;
-	padding-left: 5%;
+h4 	{
+	font-size: 1em;
 	}
-#helptop {
-	vertical-align: middle;
-	color: #404030;
-	margin-left: 150px;
-	}	
-#helptop a:link, #helptop a:visited {
-	color: #404030;
-	font-weight: bold;
+	.mtb {
+ border-top: solid 1px #ccc;
+ }
+.courtesylinks {
+ margin: 1.5em 0
+ }
+.docs .toc {
+ border: 1px solid #666; 
+ padding: .5em; 
+ background: #efefef;
+ }
+.docs .toc h3 {
+ border: none; 
+ margin-top: 0
+ }
+.docs p+p {
+	text-indent: 5%;
+	margin-top: -.67em
 	}
-#helptop a:active, #helptop a:hover {
-	color: red;
-	font-weight: bold;
-	}
-#helpbanner {
-	border-top: 1px solid #ffffcc;
-	border-bottom: 1px solid #999966;
-	background: #cccc99 url($data.Request.ContextPath/images/help_logo.gif) no-repeat left;
-	}
-.bttn {
-	color: black;
-	}
-#topmodule {
+.docs .courtesylinks p {
+ text-indent: 0
+ }
+.docs h3, .docs h4 {
+	margin-bottom: .1em;
+ }
+.docs h3 {
+	border-top: solid 1px #666; 
+ }
+.docs h4 {
+	border-top: solid 1px #ccc; 
+ }
+#banner {
 	border-top: 1px solid white;
 	border-bottom: 1px solid #999;
 	}
-#leftcol {
-	border-bottom: 1px solid #cccc99;
+#helptext th {
+	border-bottom: 1px solid #996;
+	border-right: 1px solid #996;
 	}
-	
-#topblock {
-	font-weight: bold;
-	padding: 10px;
-	background: #e6e6b4;
-	border-bottom: 1px solid #999966;
+#helptext td {
+	border-bottom: 1px solid #cc9;
+	border-right: 1px solid #cc9;
 	}
-#topblock a:link, #topblock a:visited {
-	color: #404030;
-	font-weight: bold;
+ul.tasks {
+ padding-left: 0;
+ margin-left: 2px;
+ }
+ul.tasks li {
+ display: inline;
+ margin-right: 1.5em;
+ }
+.tabs { 
+ border-bottom: 1em #999 solid;
+ margin-top:	.67em;
+ margin-right: 2px;
+ margin-left: 2px;
+ }
+.tabs th {
+	background: url(../images/nw_min.gif) no-repeat top left;
+	border-right: 1px solid #666;
 	}
-#topblock a:active, #topblock a:hover {
-	color: red;
-	font-weight: bold;
+.tabs td {
+	background: url(../images/nw_min.gif) no-repeat top left;
+	border-bottom: 1px solid #ccc;
+	border-right: 1px solid #666;
 	}
-.seperator {
-	background: #e6e6b4;
-	border-right: 1px solid #999966;
-	border-bottom: 1px solid #999966;
-	}
-.line {
-	border-top: 1px solid #ccc;
-	}
+#navcolumn div div {
+	background-image: url(../images/strich.gif);
+	background-repeat: no-repeat;
+	background-position:  .5em .5em;
+ }
+#rightcol div.www { border: 1px solid #ccc; padding: .5em }
+
+/* div#navcolumn div.focus { 
+ padding: .2em 0 .2em .3em; 	
+ border-top: 1px solid #999;
+	border-left: 1px solid #999;
+	background: #fff;
+ } */
