@@ -1,4 +1,4 @@
-// $Id: WizAddInstanceVariable.java,v 1.9 2004/12/28 04:42:06 bobtarling Exp $
+// $Id: WizAddInstanceVariable.java,v 1.10 2004/12/28 19:33:19 mvw Exp $
 // Copyright (c) 2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -30,12 +30,9 @@ import javax.swing.JPanel;
 
 import org.argouml.cognitive.ui.WizStepTextField;
 import org.argouml.i18n.Translator;
-import org.argouml.kernel.Project;
 import org.argouml.kernel.ProjectManager;
 import org.argouml.model.ModelFacade;
 import org.argouml.model.uml.UmlFactory;
-
-import ru.novosoft.uml.foundation.core.MClassifier;
 
 /**
  * A wizard to add attributes to a classifier
@@ -69,11 +66,14 @@ public class WizAddInstanceVariable extends UMLWizard {
             if (step1 != null)
         	newName = step1.getText();
             Object me = getModelElement();
-            Collection propertyChangeListeners = 
-                ProjectManager.getManager().getCurrentProject().findFigsForMember(me);
-            Object intType = ProjectManager.getManager().getCurrentProject().findType("int");
-            Object model = ProjectManager.getManager().getCurrentProject().getModel();
-            attr = UmlFactory.getFactory().getCore().buildAttribute(me, model, intType, propertyChangeListeners);
+            Collection propertyChangeListeners = ProjectManager.getManager()
+                .getCurrentProject().findFigsForMember(me);
+            Object intType = ProjectManager.getManager()
+                .getCurrentProject().findType("int");
+            Object model = ProjectManager.getManager()
+                .getCurrentProject().getModel();
+            attr = UmlFactory.getFactory().getCore()
+                .buildAttribute(me, model, intType, propertyChangeListeners);
             ModelFacade.setName(attr, newName);
         }
     }
