@@ -20,7 +20,7 @@ import javax.management.*;
  *
  *   @see <related>
  *   @author Rickard Öberg (rickard.oberg@telkel.com)
- *   @version $Revision: 1.6 $
+ *   @version $Revision: 1.7 $
  */
 public class FileLogging
    implements FileLoggingMBean, MBeanRegistration, NotificationListener
@@ -114,19 +114,22 @@ public class FileLogging
    public ObjectName preRegister(MBeanServer server, ObjectName name)
       throws java.lang.Exception
    {
+      String objectName;
+
+      objectName = OBJECT_NAME + ",sources=" + (sources == null ? "All" : sources);
       try
       {
          openLogFile();
          server.addNotificationListener(new ObjectName(server.getDefaultDomain(),"service","Log"),this,null,null);
 
          log.log("Logging started");
-         return new ObjectName(OBJECT_NAME);
+         return new ObjectName(objectName);
 
       } catch (Throwable e)
       {
          Logger.exception(e);
       }
-      return new ObjectName(OBJECT_NAME);
+      return new ObjectName(objectName);
    }
 
    public void postRegister(java.lang.Boolean registrationDone)
