@@ -1,4 +1,4 @@
-// $Id: UmlFactory.java,v 1.55 2004/12/09 19:09:14 mvw Exp $
+// $Id: UmlFactory.java,v 1.56 2004/12/13 18:51:07 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -807,6 +807,7 @@ public class UmlFactory extends AbstractUmlModelFactory {
             ((MBase) elem).remove();
             // TODO: (MVW) How do we replace next statement? Model.getPump()...
             UmlModelEventPump.getPump().cleanUp((MBase) elem);
+            UmlModelListener.getInstance().deleteElement(elem);
         }        
     }
 

@@ -1,4 +1,4 @@
-// $Id: UmlModelListener.java,v 1.21 2004/12/12 19:30:16 mvw Exp $
+// $Id: UmlModelListener.java,v 1.22 2004/12/13 18:51:07 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -97,6 +97,10 @@ public class UmlModelListener implements PropertyChangeListener {
      */
     public void newElement(Object elm) {
         Model.getPump().addModelEventListener(this, elm);
+    }
+    
+    public void deleteElement(Object elm) {
+        Model.getPump().removeModelEventListener(this, elm);
     }
 }
 

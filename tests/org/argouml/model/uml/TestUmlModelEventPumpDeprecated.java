@@ -1,4 +1,4 @@
-// $Id: TestUmlModelEventPumpDeprecated.java,v 1.3 2004/12/13 13:28:00 mvw Exp $
+// $Id: TestUmlModelEventPumpDeprecated.java,v 1.4 2004/12/13 18:51:06 mvw Exp $
 // Copyright (c) 2002-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -228,8 +228,6 @@ public class TestUmlModelEventPumpDeprecated extends TestCase {
     public void testCreateDelete() {
         WeakReference ref = new WeakReference(elem);
         UmlFactory.getFactory().delete(elem);
-        Model.getPump().removeModelEventListener(
-                UmlModelListener.getInstance(), elem);
         elem = null;
         System.gc();
         assertNull(ref.get());
