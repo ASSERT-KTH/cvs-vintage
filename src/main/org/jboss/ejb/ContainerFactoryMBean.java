@@ -15,7 +15,7 @@ import java.net.MalformedURLException;
  *   @author Rickard Öberg (rickard.oberg@telkel.com)
  *   @author Juha Lindfors (jplindfo@helsinki.fi)
  *
- *   @version $Revision: 1.6 $
+ *   @version $Revision: 1.7 $
  */
 public interface ContainerFactoryMBean
 	extends org.jboss.util.ServiceMBean
@@ -73,6 +73,20 @@ public interface ContainerFactoryMBean
     * @return  true if the verbose mode is enabled; false otherwise
     */
    public boolean getVerifierVerbose();
+
+   /**
+   * Enables/disables the metrics interceptor for containers.
+   *
+   * @param enable  true to enable; false to disable
+   */
+   public void setMetricsEnabled(boolean enable);
+   
+   /**
+    * Checks if this container factory initializes the metrics interceptor.
+    *
+    * @return   true if metrics are enabled; false otherwise
+    */
+   public boolean isMetricsEnabled();
    
 	/**
 	 *	is the aplication with this url deployed

@@ -76,7 +76,7 @@ import org.jboss.logging.Logger;
 *   @author <a href="mailto:jplindfo@helsinki.fi">Juha Lindfors</a>
 *   @author <a href="mailto:sebastien.alborini@m4x.org">Sebastien Alborini</a>
 *
-*   @version $Revision: 1.56 $
+*   @version $Revision: 1.57 $
 */
 public class ContainerFactory
     extends org.jboss.util.ServiceMBeanSupport
@@ -103,6 +103,9 @@ public class ContainerFactory
    boolean verifyDeployments = false;
    boolean verifierVerbose   = false;
 
+   // Enable metrics interceptor
+   boolean metricsEnabled    = false;
+   
    // Public --------------------------------------------------------
 
    /**
@@ -236,6 +239,24 @@ public class ContainerFactory
       return verifierVerbose;
    }
 
+   /**
+   * Enables/disables the metrics interceptor for containers.
+   *
+   * @param enable  true to enable; false to disable
+   */
+   public void setMetricsEnabled(boolean enable) {
+       metricsEnabled = enable;
+   }
+   
+   /**
+    * Checks if this container factory initializes the metrics interceptor.
+    *
+    * @return   true if metrics are enabled; false otherwise
+    */
+   public boolean isMetricsEnabled() {
+       return metricsEnabled;
+   }
+   
    /**
    *   Deploy the file at this URL. This method is typically called from remote administration
    *   tools that cannot handle java.net.URL's as parameters to methods
@@ -456,14 +477,20 @@ public class ContainerFactory
                   {
                      // CMT
                      container.addInterceptor(new TxInterceptorCMT());
+                     
+                     if (metricsEnabled)
+                         container.addInterceptor(new MetricsInterceptor());
+                     
                      container.addInterceptor(new StatelessSessionInstanceInterceptor());
-
                   }
                   else
                   {
                      // BMT
                      container.addInterceptor(new StatelessSessionInstanceInterceptor());
                      container.addInterceptor(new TxInterceptorBMT());
+                     
+                     if (metricsEnabled)
+                         container.addInterceptor(new MetricsInterceptor());
                   }
 
                   // Finally we add the last interceptor from the container
@@ -555,6 +582,10 @@ public class ContainerFactory
                   {
                      // CMT
                      container.addInterceptor(new TxInterceptorCMT());
+                     
+                     if (metricsEnabled)
+                        container.addInterceptor(new MetricsInterceptor());
+                     
                      container.addInterceptor(new StatefulSessionInstanceInterceptor());
 
                   }
@@ -563,6 +594,9 @@ public class ContainerFactory
                      // BMT : the tx interceptor needs the context from the instance interceptor
                      container.addInterceptor(new StatefulSessionInstanceInterceptor());
                      container.addInterceptor(new TxInterceptorBMT());
+                     
+                     if (metricsEnabled)
+                         container.addInterceptor(new MetricsInterceptor());
                   }
 
                   container.addInterceptor(new SecurityInterceptor());
@@ -678,9 +712,12 @@ public class ContainerFactory
                // Create interceptors
                container.addInterceptor(new LogInterceptor());
                container.addInterceptor(new SecurityInterceptor());
-
+               
                // entity beans are always CMT
                container.addInterceptor(new TxInterceptorCMT());
+               
+               if (metricsEnabled)
+                   container.addInterceptor(new MetricsInterceptor());
 
                container.addInterceptor(new EntityInstanceInterceptor());
                container.addInterceptor(new EntitySynchronizationInterceptor());
