@@ -1,13 +1,12 @@
 #set ($module = $scarabR.CurrentModule)
 #set ($attribute = $scarabR.Attribute)
-#set ($attType = $attribute.AttributeType)
-#set ($attgroup = $intake.Attribute.Default )
-#set ($atttgroup = $intake.AttributeType.Default )
 
 #if ($attribute.AttributeId)
+   #set ($attgroup = $intake.Attribute.mapTo($attribute))
    #set ($createNew = "false")
    $page.setTitle("Edit Global Attribute '$attribute.Name'")
 #else
+   #set ($attgroup = $intake.Attribute.Default)
    #set ($createNew = "true")
    $page.setTitle("Create New Global Attribute")
 #end
@@ -25,10 +24,8 @@ Back to $link.setPage("admin,GlobalAttributeShow.vm").setLabel("Attribute Select
 
 <form action="$link.setPage("admin,GlobalAttributeEdit.vm")" method="get">
 <input type="hidden" name="action" value="admin.GlobalAttributeEdit" />
-#if ($createNew.equals("true"))
-   <input type="hidden" name="$attgroup.Id.Key" value="$!attgroup.Id" />
-#else
-   <input type="hidden" name="$attgroup.Id.Key" value="$attribute.AttributeId" />
+#if ($createNew.equals("false"))
+   <input type="hidden" name="attId" value="$attribute.AttributeId" />
 #end
 
 <input type="hidden" name="groupId" value="$data.Parameters.getString("groupId")" />
@@ -48,9 +45,11 @@ Back to $link.setPage("admin,GlobalAttributeShow.vm").setLabel("Attribute Select
  <tr>
   <th>Input type</th>
   <td>
-    <select name="$atttgroup.AttributeTypeId.Key" size="1">
+    <select name="$attgroup.TypeId.Key" size="1">
     #foreach ( $atype in $attribute.AllAttributeTypes )
-      <option value="$atype.AttributeTypeId" #if($attType.AttributeTypeId == $atype.AttributeTypeId)selected#end>$atype.Name</option>
+      #if (!$atype.Name.equals("user"))
+      <option value="$atype.AttributeTypeId" #if($attribute.TypeId == $atype.AttributeTypeId)selected#end>$atype.Name</option>
+      #end
     #end
     </select>
   </td>
@@ -94,7 +93,7 @@ Back to $link.setPage("admin,GlobalAttributeShow.vm").setLabel("Attribute Select
 </div>
 
 
-#if ($attType.AttributeClass.Name.equals("select-one"))
+#if ($attribute.AttributeType.AttributeClass.Name.equals("select-one"))
 #datatitle ("Attribute Options")
 #set ($pcaos = $attribute.ParentChildAttributeOptions)
 #set ($maxNum = $pcaos.size())

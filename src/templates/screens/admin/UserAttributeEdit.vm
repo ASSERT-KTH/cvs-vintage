@@ -1,0 +1,101 @@
+<div class="app" id="div3-0-3-0"">
+#set ($module = $scarabR.CurrentModule)
+#set ($attribute = $scarabR.Attribute)
+
+#if ($attribute.AttributeId)
+   #set ($attgroup = $intake.Attribute.mapTo($attribute))
+   #set ($createNew = "false")
+   $page.setTitle("Edit Global Attribute '$attribute.Name'")
+#else
+   #set ($attgroup = $intake.Attribute.Default )
+   #set ($createNew = "true")
+   $page.setTitle("Create New Global Attribute")
+#end
+
+
+<h2>$page.Title</h2>
+
+#set ($module = $scarabR.CurrentModule)
+
+<div class="functnbar">
+<input type="submit" value="Done" name="eventSubmit_doDone" />&#160;
+<input type="submit" value="Cancel" name="eventSubmit_doCancel"/>
+</div>
+
+<form action="$link.setPage("admin,UserAttributeEdit.vm")" method="get">
+<input type="hidden" name="action" value="admin.GlobalAttributeEdit" />
+##<input type="hidden" name="$attgroup.TypeId.Key" value="$attribute.TypeId">
+<input type="hidden" name="$attgroup.TypeId.Key" value="8">
+#if ($createNew.equals("false"))
+   <input type="hidden" name="attId" value="$attribute.AttributeId" />
+#end
+<input type="hidden" name="groupId" value="$data.Parameters.getString("groupId")" />
+<input type="hidden" name="issueTypeId" value="$data.Parameters.getString("issueTypeId")"  //>
+
+<h3>User attribute information</h3>
+<div class="axial">
+<table width="100%" cellpadding="3" cellspacing="2" border="1"> <tr>
+  <th width="120">User attribute name</th> 
+  <td class="b">
+    <input type="text" name="$attgroup.Name.Key" value="$!attribute.Name" />
+    #fieldErrorMsg($attgroup.Name "")
+  </td>
+</tr>
+<tr>
+  <th width="120">User attribute description</th> 
+  <td class="b">
+    <textarea rows="4" cols="40" name="$attgroup.Description.Key">$!attribute.Description</textarea>
+    #fieldErrorMsg($attgroup.Description "")
+  </td>
+</tr>
+<tr>
+  <th width="120">Creation date</th> <td class="b">3 may 2001</td>
+</tr>
+</table>
+</div>
+
+
+<h3>User attribute properties</h3>
+<div class="axial">
+<table width="100%" cellpadding="3" cellspacing="2" border="1">
+<tr>
+  <th width="120">Email action</th> 
+  <td class="b">
+   #fieldErrorMsg($attgroup.Action "")
+		<select name="$attgroup.Action.Key" size="">
+   		<option value="">Select...</option>
+   		<option value="none" #if ($attgroup.Action.Value.equals("none")) selected="selected" #end>None</option>
+   		<option value="to" #if ($attgroup.Action.Value.equals("to")) selected="selected" #end>To:</option>
+        <option value="cc" #if ($attgroup.Action.Value.equals("cc")) selected="selected" #end>CC:</option>
+        </select>
+ </select></td>
+</tr>
+
+<tr>
+  <th width="120">Permissions settings</th> 
+  <td class="b">
+   #fieldErrorMsg($attgroup.Permission "")
+        <select name="$attgroup.Permission.Key">
+  #foreach ($permission in $securityAdmin.Permissions)
+         <option value="$permission.Name"
+          #if ($permission.Name.equals($attgroup.Permission.Value))
+             selected="selected"
+          #end
+          >$permission.Name</option>
+  #end
+  </td>
+</tr>
+</table>
+</div>
+
+<div class="functnbar3">
+<input type="submit" value="Save" name="eventSubmit_doSaveattributedata" />&#160;
+</div>
+
+<div class="functnbar2">
+<input type="submit" value="Done" name="eventSubmit_doDone" />&#160;
+<input type="submit" value="Cancel" name="eventSubmit_doCancel"/>
+</div>
+
+$intake.declareGroups()
+</form>
