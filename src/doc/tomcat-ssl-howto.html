@@ -628,6 +628,10 @@ specified that we don't want to enforce client authentication. Also, note the
 case difference between Tomcat 3.2 and Tomcat 3.3 (i.e. &quot;clientAuth&quot;
 versus &quot;clientauth&quot;).
 <P>
+For JSSE, the <i>presence</i> of the clientauth parameter will enforce
+client authentication, regardless of the parameter value.  For PureTLS,
+this decision is based on the <i>value</i> of the clientauth parameter.
+<P>
 By default, Tomcat chooses whatever SSL implementation is available,
 with preference given to PureTLS over JSSE if both are available. You
 can specify the exact implementation you want using the <code>SSLImplementation</code>
