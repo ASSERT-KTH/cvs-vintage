@@ -532,7 +532,22 @@ public final class Context {
 
     
     // -------------------- Basic properties --------------------
+    String name;
+    
+    /** Return a name ( id ) for this context. Currently it's composed
+	from the virtual host and path, or set explicitely by the app.
+    */
+    public String getName() {
+	if(name!=null ) return name;
+	name=(vhost==null ? "DEFAULT:" : vhost + ":" )  +
+	    ("".equals(path)  ? "/ROOT" :  path);
+	return name;
+    }
 
+    public void setName( String s ) {
+	name=s;
+    }
+    
     /** Base URL for this context
      */
     public final  String getPath() {
@@ -549,6 +564,7 @@ public final class Context {
 	this.path = path;
 	loghelper=Log.getLog("org/apache/tomcat/core",
 			     "Ctx("+ getId() +") ");
+	name=null;
     }
 
     /**
@@ -557,6 +573,7 @@ public final class Context {
      */
     public final  void setHost( String h ) {
 	vhost=h;
+	name=null;
     }
 
     /**
@@ -992,8 +1009,7 @@ public final class Context {
     }
 
     public final  String toString() {
-	return (vhost==null ? "DEFAULT:" : vhost + ":" )  +
-	       ("".equals(path)  ? "/ROOT" :  path);
+	return getName();
     }
 
     // ------------------- Logging ---------------

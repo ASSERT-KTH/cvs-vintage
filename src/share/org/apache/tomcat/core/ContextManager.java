@@ -190,6 +190,7 @@ public final class ContextManager {
     // All contexts managed by the server ( can belong to different
     // virtual hosts )
     private Vector contextsV=new Vector();
+    private Hashtable contexts=new Hashtable();
 
     private int debug=0;
 
@@ -673,6 +674,14 @@ public final class ContextManager {
 	return contextsV.elements();
     }
 
+    public final Enumeration getContextNames() {
+	return contexts.keys();
+    }
+
+    public Context getContext(String name ) {
+	return (Context)contexts.get( name );
+    }
+    
     /**
      * Adds a new Context to the set managed by this ContextManager.
      * It'll also init the server if it hasn't been already.
@@ -689,6 +698,7 @@ public final class ContextManager {
 	ctx.setState( Context.STATE_NEW );
 
 	contextsV.addElement( ctx );
+	contexts.put( ctx.getName(), ctx );
 
 	if( getState() == STATE_NEW )
 	    return;
@@ -718,6 +728,7 @@ public final class ContextManager {
 	log( "Removing context " + context.toString());
 
 	contextsV.removeElement(context);
+	contexts.remove( context.getName());
 
 	if( getState() == STATE_NEW )
 	    return; // we are not even initialized
