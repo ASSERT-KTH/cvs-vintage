@@ -567,6 +567,7 @@ public class IMAPStore {
 		try {
 
 			int count = messageFolderInfo.getExists();
+			if ( count==0 ) return null;
 			
 			printStatusMessage("Fetching UID list...", worker);
 			
@@ -897,7 +898,7 @@ public class IMAPStore {
 						+ set.getString().trim()
 						+ " BODY[HEADER.FIELDS ("
 						+ headerFields.toString().trim()
-						+ ")] ",
+						+ ")]",
 					null);
 		} catch (IOException ex) {
 			// disconnect exception
