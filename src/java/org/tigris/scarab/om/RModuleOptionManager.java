@@ -53,9 +53,16 @@ public class RModuleOptionManager
         };
         return getInstance( new ComboKey(keys) );
     }
+
+    public static final RModuleOption getInstance(Module module, 
+        IssueType issueType, AttributeOption option)
+        throws TorqueException
+    {
+        SimpleKey[] keys = {
+            module.getModuleId(),
+            issueType.getIssueTypeId(),
+            option.getOptionId()
+        };
+        return getInstance( new ComboKey(keys) );
+    }
 }
-
-
-
-
-
