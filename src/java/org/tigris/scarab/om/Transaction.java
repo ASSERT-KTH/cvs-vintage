@@ -48,21 +48,20 @@ package org.tigris.scarab.om;
 
 import java.util.Date;
 import java.util.List;
-import java.util.Vector;
 import java.util.Iterator;
 
-// Turbine classes
 import org.apache.torque.util.Criteria; 
 import org.apache.torque.om.NumberKey;
 import org.apache.commons.util.ObjectUtils;
 import org.apache.commons.util.StringUtils;
-import org.apache.turbine.ParameterParser;
+
 import org.apache.fulcrum.template.TemplateContext;
 import org.apache.fulcrum.template.DefaultTemplateContext;
+import org.apache.fulcrum.template.TemplateEmail;
+
 import org.apache.turbine.Turbine;
 import org.apache.turbine.util.Log;
 import org.apache.torque.om.Persistent;
-import org.apache.fulcrum.template.TemplateEmail;
 
 import org.tigris.scarab.util.ScarabException;
 
@@ -80,7 +79,10 @@ public class Transaction
     extends BaseTransaction
     implements Persistent
 {
-    private Attachment aAttachment;                 
+    /**
+     * The Attachment associated with this Transaction
+     */
+    private Attachment aAttachment = null;                 
 
     /**
      * Populates a new transaction object.
@@ -96,7 +98,10 @@ public class Transaction
         }
         setCreatedBy(user.getUserId());
         setCreatedDate(new Date());
-        if (attachment != null) setAttachment(attachment); 
+        if (attachment != null)
+        {
+            setAttachment(attachment);
+        }
         save();
     }
 
@@ -105,21 +110,23 @@ public class Transaction
      */
     public Attachment getAttachment() throws Exception
     {
-      try{
-        if ( aAttachment==null && (getAttachmentId() != null) )
+        try
         {
-            aAttachment = AttachmentPeer.
-                retrieveByPK(new NumberKey(getAttachmentId()));
-            
-            // make sure the parent attribute is in synch.
-            super.setAttachment(aAttachment);            
+            if ( aAttachment == null && getAttachmentId() != null )
+            {
+                aAttachment = AttachmentPeer.
+                    retrieveByPK(new NumberKey(getAttachmentId()));
+                
+                // make sure the parent attribute is in synch.
+                super.setAttachment(aAttachment);            
+            }
         }
-      } catch (Exception e) {
-         aAttachment = null;
-      }
+        catch (Exception e)
+        {
+            aAttachment = null;
+        }
         return aAttachment;
     }
-
 
     /**
      * Sets the Attachment associated with this Transaction record
@@ -133,11 +140,11 @@ public class Transaction
     /**
      * Returns a list of Activity objects associated with this Transaction.
      */
-    public Vector getActivityList() throws Exception
+    public List getActivityList() throws Exception
     {
         Criteria crit = new Criteria()
             .add(ActivityPeer.TRANSACTION_ID, getTransactionId());
-        return  ActivityPeer.doSelect(crit);
+        return (List) ActivityPeer.doSelect(crit);
     }
 
     /** 
@@ -172,7 +179,9 @@ public class Transaction
         if (subject == null)
         {
             te.setSubject("Issue #" + issue.getIssueId() + " modified");
-        } else {
+        }
+        else
+        {
             te.setSubject(subject);
         }
 
@@ -181,7 +190,9 @@ public class Transaction
            te.setTemplate(Turbine.getConfiguration().
                getString("scarab.email.modifyissue.template",
                          "email/ModifyIssue.vm"));
-        } else {
+        }
+        else
+        {
            te.setTemplate(template);
         }
 
