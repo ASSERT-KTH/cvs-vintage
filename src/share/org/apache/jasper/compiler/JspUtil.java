@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/jasper/compiler/JspUtil.java,v 1.5 1999/12/23 08:30:20 mode Exp $
- * $Revision: 1.5 $
- * $Date: 1999/12/23 08:30:20 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/jasper/compiler/JspUtil.java,v 1.6 1999/12/24 04:40:04 rubys Exp $
+ * $Revision: 1.6 $
+ * $Date: 1999/12/24 04:40:04 $
  *
  * ====================================================================
  * 
@@ -88,8 +88,8 @@ public class JspUtil {
 
     private static final String OPEN_EXPR  = "<%=";
     private static final String CLOSE_EXPR = "%>";
-    private static final String OPEN_EXPR_2	 = "<jsp:expression";
-    private static final String CLOSE_EXPR_2 = "/>";
+    private static final String OPEN_EXPR_2 = "<jsp:expression>";
+    private static final String CLOSE_EXPR_2 = "</jsp:expression>";
 
     public static char[] removeQuotes(char []chars) {
 	CharArrayWriter caw = new CharArrayWriter();
@@ -108,29 +108,29 @@ public class JspUtil {
     // Checks if the token is a runtime expression.
     public static boolean isExpression (String token) {
 	
-	if ((token.startsWith(OPEN_EXPR) || token.startsWith(OPEN_EXPR_2)) &&
-	    (token.endsWith(CLOSE_EXPR) || token.endsWith(CLOSE_EXPR_2)))
+	if (token.startsWith(OPEN_EXPR) && token.endsWith(CLOSE_EXPR))
 	    return true;
+
+	if (token.startsWith(OPEN_EXPR_2) && token.endsWith(CLOSE_EXPR_2))
+	    return true;
+
 	return false;
     }
 
     // Returns the "expression" part -- takin <%= and %> out.
     public static String getExpr (String expression) {
-	String returnString = "";
+	String returnString;
+	int length = expression.length();
 	
-	if (expression.startsWith(OPEN_EXPR))
-	    returnString = expression.substring (OPEN_EXPR.length());
-	else if (expression.startsWith(OPEN_EXPR_2))
-	    returnString = expression.substring (OPEN_EXPR_2.length()); 
+	if (expression.startsWith(OPEN_EXPR) && expression.endsWith(CLOSE_EXPR))
+	    returnString = expression.substring (OPEN_EXPR.length(), length - CLOSE_EXPR.length());
+
+	else if (expression.startsWith(OPEN_EXPR_2) && expression.endsWith(CLOSE_EXPR_2))
+	    returnString = expression.substring (OPEN_EXPR_2.length(), length - CLOSE_EXPR_2.length());
 	
-	int length = returnString.length();
-	if (expression.endsWith(CLOSE_EXPR))
-	    returnString = returnString.substring (0, length - 
-	    						CLOSE_EXPR.length());
-	else if (expression.endsWith(CLOSE_EXPR_2))
-	    returnString = returnString.substring (0, length - 
-	    						CLOSE_EXPR_2.length());
-	
+	else
+	    returnString = "";
+
 	return returnString;
     }
 
