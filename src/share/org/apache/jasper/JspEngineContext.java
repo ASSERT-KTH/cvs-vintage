@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/jasper/JspEngineContext.java,v 1.2 1999/10/21 01:48:40 akv Exp $
- * $Revision: 1.2 $
- * $Date: 1999/10/21 01:48:40 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/jasper/JspEngineContext.java,v 1.3 1999/12/28 13:25:31 rubys Exp $
+ * $Revision: 1.3 $
+ * $Date: 1999/12/28 13:25:31 $
  *
  * ====================================================================
  * 
@@ -77,6 +77,7 @@ import org.apache.jasper.compiler.TagLibraries;
 import org.apache.jasper.compiler.Compiler;
 import org.apache.jasper.compiler.JspCompiler;
 import org.apache.jasper.compiler.SunJavaCompiler;
+import org.apache.jasper.compiler.PluginJavaCompiler;
 
 /**
  * A place holder for various things that are used through out the JSP
@@ -281,13 +282,20 @@ public class JspEngineContext {
     }
 
     /**
-     * Create a "Compiler" object based on some init param data. This
-     * is not done yet. Right now we're just hardcoding the actual
-     * compilers that are created. 
+     * Create a "Compiler" object based on some init param data. If	
+     * jspCompilerPath is not specified or is not available, the 
+     * SunJavaCompiler is used.
      */
     public Compiler createCompiler() throws JasperException {
         Compiler jspCompiler = new JspCompiler(this);
-        jspCompiler.setJavaCompiler(new SunJavaCompiler());
+	String compilerPath = options.getJspCompilerPath();
+
+	if (compilerPath != null) {
+	    jspCompiler.setJavaCompiler(new PluginJavaCompiler(compilerPath));
+	} else {
+	    jspCompiler.setJavaCompiler(new SunJavaCompiler());
+	}
+
         return jspCompiler;
     }
 }

@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/jasper/Options.java,v 1.4 1999/10/15 00:09:18 akv Exp $
- * $Revision: 1.4 $
- * $Date: 1999/10/15 00:09:18 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/jasper/Options.java,v 1.5 1999/12/28 13:25:31 rubys Exp $
+ * $Revision: 1.5 $
+ * $Date: 1999/12/28 13:25:31 $
  *
  * ====================================================================
  * 
@@ -117,6 +117,11 @@ public final class Options {
      */
     public String classpath = null;
     
+    /**
+     * Path of the compiler to use for compiling JSP pages.
+     */
+    public String jspCompilerPath = null;
+
 
     /**
      * Are we keeping generated code around?
@@ -166,6 +171,13 @@ public final class Options {
      */
     public String getClassPath() {
         return classpath;
+    }
+
+    /**
+     * Path of the compiler to use for compiling JSP pages.
+     */
+    public String getJspCompilerPath() {
+	return jspCompilerPath;
     }
 
     /**
@@ -246,6 +258,17 @@ public final class Options {
                                   scratchDir.getAbsolutePath()
                               }, Constants.FATAL_ERRORS);
 				  
+	String jspCompilerPath = config.getInitParameter("jspCompilerPath");
+	if (jspCompilerPath != null) {
+	    if (new File(jspCompilerPath).exists()) {
+		this.jspCompilerPath = jspCompilerPath;
+	    } else { 
+		Constants.message("jsp.warning.compiler.notfound",
+				  new Object[] { jspCompilerPath }, 
+				  Constants.FATAL_ERRORS);
+	    }
+	}
+  
     }
 }
 
