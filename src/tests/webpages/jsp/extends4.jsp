@@ -1,4 +1,4 @@
-<%@ page extends="pageextends.Extends" %>
+<%@ page extends="pageextends.ExtendServlet" %>
 <html>
 <title>page extends test</title>
 <body>
