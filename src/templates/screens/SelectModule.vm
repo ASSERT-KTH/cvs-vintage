@@ -46,6 +46,7 @@ $page.setTitle("Select Module")
     <th>Module desc</th>
 </tr>
 
+#set ($nextTemplate = $data.Parameters.getString($scarabG.Constant.NEXT_TEMPLATE))
 #if ($nextTemplate && $nextTemplate.length() > 0)
 #set ($tmpNext = $nextTemplate)
 #else
