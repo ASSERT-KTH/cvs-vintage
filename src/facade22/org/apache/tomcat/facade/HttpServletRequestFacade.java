@@ -110,26 +110,20 @@ final class HttpServletRequestFacade implements HttpServletRequest {
         this.request = request;
 	isFacade.setRequest( request );
 	try {
-	    // we may create facades more often than requests 
-	    Object o=request.getNote( "req.dateFormats" );
-	    if( o==null ) {
-		o=new DateFormat[] {
+	    // we may create facades more often than requests
+	    if( dateFormats==null ) {
+		dateFormats=new DateFormat[] {
 		    new SimpleDateFormat(DateTool.RFC1123_PATTERN, Locale.US),
 		    new SimpleDateFormat(DateTool.rfc1036Pattern, Locale.US),
 		    new SimpleDateFormat(DateTool.asctimePattern, Locale.US)
 		};
-		request.setNote( "req.dateFormats", o );
 	    }
-	    dateFormats=(DateFormat[])o;
-	    o=request.getNote( "req.uencoder" );
-	    if( o==null ) {
+	    if( uencoder==null ) {
 		uencoder=new UEncoder();
 		uencoder.addSafeCharacter(';');
 		uencoder.addSafeCharacter('/');
 		request.setNote( "req.uencoder", uencoder );
-	    } else {
-		uencoder=(UEncoder)o;
-	    }
+	    } 
 	} catch( TomcatException ex ) {
 	    ex.printStackTrace();
 	}
