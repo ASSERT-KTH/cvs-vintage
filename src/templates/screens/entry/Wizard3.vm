@@ -9,8 +9,7 @@
 <p>Please review the attributes you have set so far and fill out the remaining
 attributes to submit the issue.</p>
 
-#foreach ( $attKey in $attrValues )
-  #set ( $attVal = $attrValues.get($attKey.toString().toUpperCase()) )
+#foreach ( $attVal in $attrValues )
   #set ( $attrInput = $intake.AttributeValue.mapTo($attVal) ) 
 
   #if ( $attVal.Attribute.AttributeType.ValidationKey )
@@ -60,8 +59,7 @@ attributes to submit the issue.</p>
 
 <hr><br>Please fill in the following:<br><br>
 
-#foreach ( $attKey in $attrValues )
-  #set ( $attVal = $attrValues.get($attKey.toString().toUpperCase()) )
+#foreach ( $attVal in $attrValues )
   #set ( $attrInput = $intake.AttributeValue.mapTo($attVal) ) 
 
   #if ( $attVal.Attribute.AttributeType.ValidationKey )
