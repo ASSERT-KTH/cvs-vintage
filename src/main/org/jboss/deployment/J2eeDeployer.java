@@ -66,7 +66,7 @@ import org.w3c.dom.Element;
 *   @author <a href="mailto:daniel.schulze@telkel.com">Daniel Schulze</a>
 *   @author <a href="mailto:toby.allsopp@peace.com">Toby Allsopp</a>
 *   @author <a href="mailto:Scott_Stark@displayscape.com">Scott Stark</a>.
-*   @version $Revision: 1.34 $
+*   @version $Revision: 1.35 $
 */
 public class J2eeDeployer 
 extends ServiceMBeanSupport
@@ -435,6 +435,7 @@ implements J2eeDeployerMBean
 	{
 		log.log ("Destroying application " + _d.name);
 		installer.uninstall(_d);
+		log.log ("Destroyed");
 	}
 
 
