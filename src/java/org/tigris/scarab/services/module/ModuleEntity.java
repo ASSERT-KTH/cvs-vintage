@@ -51,12 +51,12 @@ import java.util.List;
 import org.tigris.scarab.om.Attribute;
 import org.tigris.scarab.om.Issue;
 
-import org.apache.turbine.om.ObjectKey;
-import org.apache.turbine.om.NumberKey;
+import org.apache.turbine.services.db.om.ObjectKey;
+import org.apache.turbine.services.db.om.NumberKey;
 import org.apache.turbine.om.security.Role;
 import org.apache.turbine.om.security.User;
 import org.apache.turbine.util.RunData;
-import org.apache.turbine.util.db.Criteria;
+import org.apache.turbine.services.db.util.Criteria;
 
 import org.tigris.scarab.om.Module;
 
@@ -64,7 +64,7 @@ import org.tigris.scarab.om.Module;
  * This class describes a Module
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: ModuleEntity.java,v 1.4 2001/05/27 06:38:02 jmcnally Exp $
+ * @version $Id: ModuleEntity.java,v 1.5 2001/06/29 01:57:26 jmcnally Exp $
  */
 public interface ModuleEntity
 {

@@ -54,7 +54,7 @@ import org.apache.turbine.services.db.util.Criteria;
 import org.apache.turbine.util.Log;
 import org.apache.turbine.util.TurbineException;
 import org.apache.turbine.services.security.TurbineSecurity;
-import org.apache.turbine.om.Persistent;
+import org.apache.turbine.services.db.om.Persistent;
 //import org.apache.turbine.om.security.User;
 //import org.apache.turbine.om.security.Group;
 import org.apache.turbine.om.security.*;
@@ -67,7 +67,7 @@ import org.tigris.scarab.om.ScarabUserPeer;
  * Security wrapper around turbine's implementation
  *
  * @author <a href="mailto:jmcnally@collab.net">John D. McNally</a>
- * @version $Id: TurbineDBScarabSecurity.java,v 1.5 2001/06/29 00:49:08 jmcnally Exp $
+ * @version $Id: TurbineDBScarabSecurity.java,v 1.6 2001/06/29 01:57:26 jmcnally Exp $
 */
 public class TurbineDBScarabSecurity 
     extends DefaultScarabSecurity
@@ -171,13 +171,14 @@ public class TurbineDBScarabSecurity
     {
         Criteria crit = new Criteria();
         crit.setDistinct();
-        crit.add(PermissionPeer.NAME, permission);
-        crit.addJoin(PermissionPeer.PERMISSION_ID, 
-                     RolePermissionPeer.PERMISSION_ID);
-        crit.addJoin(RolePermissionPeer.ROLE_ID, UserGroupRolePeer.ROLE_ID);
-        crit.add(UserGroupRolePeer.GROUP_ID, 
+        crit.add(TurbinePermissionPeer.NAME, permission);
+        crit.addJoin(TurbinePermissionPeer.PERMISSION_ID, 
+                     TurbineRolePermissionPeer.PERMISSION_ID);
+        crit.addJoin(TurbineRolePermissionPeer.ROLE_ID, 
+                     TurbineUserGroupRolePeer.ROLE_ID);
+        crit.add(TurbineUserGroupRolePeer.GROUP_ID, 
                  ((Persistent)module).getPrimaryKey());
-        crit.addJoin(ScarabUserPeer.USER_ID, UserGroupRolePeer.USER_ID);
+        crit.addJoin(ScarabUserPeer.USER_ID, TurbineUserGroupRolePeer.USER_ID);
         ScarabUser[] scarabUsers = null;
         try
         {

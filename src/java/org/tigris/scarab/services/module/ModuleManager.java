@@ -50,19 +50,19 @@ import java.util.Vector;
 import org.tigris.scarab.om.Module;
 import org.tigris.scarab.om.ModulePeer;
 
-import org.apache.turbine.om.ObjectKey;
+import org.apache.turbine.services.db.om.ObjectKey;
 import org.apache.turbine.om.security.User;
 import org.apache.turbine.services.TurbineServices;
 import org.apache.turbine.services.security.TurbineSecurity;
 import org.apache.turbine.util.StringUtils;
 import org.apache.turbine.util.RunData;
-import org.apache.turbine.util.db.Criteria;
+import org.apache.turbine.services.db.util.Criteria;
 
 /**
  * This class has static methods for working with a Module object
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: ModuleManager.java,v 1.4 2001/05/24 02:39:21 jmcnally Exp $
+ * @version $Id: ModuleManager.java,v 1.5 2001/06/29 01:57:26 jmcnally Exp $
  */
 public abstract class ModuleManager
 {

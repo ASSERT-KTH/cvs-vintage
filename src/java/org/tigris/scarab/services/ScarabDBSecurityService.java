@@ -61,7 +61,7 @@ import org.apache.turbine.util.db.Criteria;
 import org.apache.turbine.util.Log;
 
 import org.apache.turbine.om.security.*;
-import org.apache.turbine.om.*;
+import org.apache.turbine.services.db.om.*;
 
 import org.tigris.scarab.util.*;
 import org.tigris.scarab.om.ModulePeer;
@@ -73,7 +73,7 @@ import org.tigris.scarab.services.module.ModuleEntity;
  * being the Group implementation.
  *
  * @author <a href="mailto:jmcnally@collab.net">John D. McNally</a>
- * @version $Id: ScarabDBSecurityService.java,v 1.1 2001/05/27 06:38:02 jmcnally Exp $
+ * @version $Id: ScarabDBSecurityService.java,v 1.2 2001/06/29 01:57:26 jmcnally Exp $
  */
 public class ScarabDBSecurityService extends DBSecurityService
 {

@@ -48,7 +48,7 @@ package org.tigris.scarab.tools;
 
 // Turbine
 import org.apache.turbine.om.security.User;
-import org.apache.turbine.om.*;
+import org.apache.turbine.services.db.om.*;
 import org.apache.turbine.util.RunData;
 import org.apache.turbine.services.intake.IntakeTool;
 import org.apache.turbine.services.intake.model.Group;

@@ -3,6 +3,9 @@ package org.tigris.scarab.om;
 // JDK classes
 import java.util.*;
 
+// Village
+import com.workingdogs.village.Record;
+
 // Turbine classes
 import org.apache.turbine.services.db.om.*;
 import org.apache.turbine.util.*;

@@ -47,7 +47,7 @@ package org.tigris.scarab.services.module;
  */ 
 
 import org.apache.turbine.services.Service;
-import org.apache.turbine.om.ObjectKey;
+import org.apache.turbine.services.db.om.ObjectKey;
 
 import org.tigris.scarab.om.Module;
 
@@ -55,7 +55,7 @@ import org.tigris.scarab.om.Module;
  * This is the interface that describes a ModuleService implementation
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: ModuleService.java,v 1.3 2001/05/24 02:39:21 jmcnally Exp $
+ * @version $Id: ModuleService.java,v 1.4 2001/06/29 01:57:26 jmcnally Exp $
  */
 public interface ModuleService extends Service
 {

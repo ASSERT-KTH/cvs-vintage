@@ -51,7 +51,7 @@ import java.util.*;
 
 // Turbine
 import org.apache.turbine.services.db.om.*;
-import org.apache.turbine.services.om.security.*;
+import org.apache.turbine.om.security.*;
 import org.apache.turbine.util.*;
 import org.apache.turbine.services.db.util.*;
 import org.apache.turbine.services.security.*;
@@ -65,7 +65,7 @@ import org.tigris.scarab.services.module.ModuleEntity;
     implementation needs.
 
     @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
-    @version $Id: ScarabUser.java,v 1.20 2001/06/29 01:08:12 jon Exp $
+    @version $Id: ScarabUser.java,v 1.21 2001/06/29 01:57:26 jmcnally Exp $
 */
 public class ScarabUser extends BaseScarabUser
 {    

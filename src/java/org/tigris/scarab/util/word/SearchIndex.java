@@ -50,7 +50,7 @@ package org.tigris.scarab.util.word;
 import java.util.*;
 
 // Turbine classes
-import org.apache.turbine.om.*;
+import org.apache.turbine.services.db.om.*;
 
 // Scarab classes
 import org.tigris.scarab.om.*;
@@ -60,7 +60,7 @@ import org.tigris.scarab.util.ScarabConstants;
  * Support for searching/indexing text
  *
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: SearchIndex.java,v 1.1 2001/05/05 03:57:28 jmcnally Exp $
+ * @version $Id: SearchIndex.java,v 1.2 2001/06/29 01:57:27 jmcnally Exp $
  */
 public interface SearchIndex
 {

@@ -51,9 +51,9 @@ import java.util.*;
 import java.math.BigDecimal;
 
 // Turbine classes
-import org.apache.turbine.util.db.Criteria;
-import org.apache.turbine.om.peer.*;
-import org.apache.turbine.om.*;
+import org.apache.turbine.services.db.util.Criteria;
+import org.apache.turbine.services.db.om.peer.*;
+import org.apache.turbine.services.db.om.*;
 
 //Village classes
 import com.workingdogs.village.*;
@@ -66,7 +66,7 @@ import org.tigris.scarab.util.ScarabConstants;
  * This class handles vocabulary information for a single issue
  *
  * @author <a href="mailto:fedor.karpelevitch@home.com">Fedor Karpelevitch</a>
- * @version $Id: Vocabulary.java,v 1.3 2001/05/05 03:57:28 jmcnally Exp $
+ * @version $Id: Vocabulary.java,v 1.4 2001/06/29 01:57:27 jmcnally Exp $
  */
 public class Vocabulary
     implements SearchIndex

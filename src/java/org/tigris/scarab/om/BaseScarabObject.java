@@ -61,7 +61,7 @@ import org.tigris.scarab.services.module.*;
     across all of the Scarab db objects.
     
     @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
-    @version $Id: BaseScarabObject.java,v 1.5 2001/06/29 00:49:07 jmcnally Exp $    
+    @version $Id: BaseScarabObject.java,v 1.6 2001/06/29 01:57:26 jmcnally Exp $    
 */
 public class BaseScarabObject extends BaseObject
 {
@@ -158,7 +158,7 @@ public class BaseScarabObject extends BaseObject
         {               
               org.tigris.scarab.services.module.ModuleEntity module = 
               ModuleManager.getInstance(
-                  new org.apache.turbine.om.NumberKey("5"));
+                  new org.apache.turbine.services.db.om.NumberKey("5"));
               scarab.getUser().setCurrentModule(module);
         }
     }

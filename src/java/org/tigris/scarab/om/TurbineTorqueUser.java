@@ -1,7 +1,7 @@
 package org.tigris.scarab.om;
 
 // Turbine classes
-import org.apache.turbine.services.db.om.security.TurbineUser;
+import org.apache.turbine.om.security.TurbineUser;
 import org.apache.turbine.services.db.om.NumberKey;
 
 /** 
