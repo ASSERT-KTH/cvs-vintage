@@ -9,7 +9,7 @@
 #end
 
 <div class="app" id="div2-4-1-step1">
-<div id="apphead"><h2>Report builder</h2></div>
+<div id="apphead"><h2>$l10n.ReportBuilder</h2></div>
 
 <div class="tabs">
   <table cellpadding="3" cellspacing="0" border="0">
@@ -67,7 +67,7 @@
       <tr>
     #if ($multiHeading)
         <th>$l10n.Select</th>
-        <th>Heading Level</th>
+        <th>$l10n.HeadingLevel</th>
     #end
         <th>$l10n.HeadingSummary</th>
       </tr>
@@ -117,7 +117,7 @@
 <div class="axial">
   <table width="100%" cellpadding="3" cellspacing="2" border="1">			
     <tr>
-      <th width="120">select content type</th>
+      <th width="120">$l10n.SelectContentType</th>
       <td>
 #if ($selectedHeading && $selectedHeading.size() > 0)
   #set ($selectedType = $selectedHeading.calculateType())
@@ -133,7 +133,7 @@
           <option value="2" #if ($selectedType == 2)selected="selected"#end>Date(s) / date range(s)</option>
   #end
         </select>
-        &nbsp;<input type="submit" name="eventSubmit_doSettype" value="go">
+        &nbsp;<input type="submit" name="eventSubmit_doSettype" value="$l10n.Go">
       </td>
     </tr>
   </table>
