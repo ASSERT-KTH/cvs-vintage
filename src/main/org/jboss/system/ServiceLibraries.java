@@ -1,9 +1,10 @@
 /*
-* JBoss, the OpenSource J2EE webOS
-*
-* Distributable under LGPL license.
-* See terms of license at gnu.org.
-*/
+ * JBoss, the OpenSource J2EE webOS
+ *
+ * Distributable under LGPL license.
+ * See terms of license at gnu.org.
+ */
+
 package org.jboss.system;
 
 import java.net.URL;
@@ -19,31 +20,33 @@ import javax.management.MBeanServer;
 import javax.management.ObjectName;
 
 /**
-* Service Libraries. The service libraries is a central repository of all
-* classes loaded by the ClassLoaders
-*
-* @see <related>
-* @author <a href="mailto:marc@jboss.org">Marc Fleury</a>
-* @author <a href="mailto:osh@sparre.dk">Ole Husgaard</a>
-* @version $Revision: 1.14 $ <p>
-*
-*      <b>20010830 marc fleury:</b>
-*      <ul>initial import
-*        <li>
-*      </ul>
-*      <b>20010908 david jencks:</b>
-*      <ul>Modified to make undeploy work better.
-*        <li>
-*      <b>20011003 Ole Husgaard:</b>
-*      <ul>Changed synchronization to avoid deadlock with SUNs
-*          java.lang.Classloader implementation. Kudos to Dr. Christoph Jung
-*          and Sacha Labourey for identifying this problem.
-*        <li>
-*      </ul>
-*
-*/
+ * Service Libraries. The service libraries is a central repository of all
+ * classes loaded by the ClassLoaders
+ *
+ * @see <related>
+ * @author <a href="mailto:marc@jboss.org">Marc Fleury</a>
+ * @author <a href="mailto:osh@sparre.dk">Ole Husgaard</a>
+ * @version $Revision: 1.15 $ <p>
+ *
+ * <p><b>20010830 marc fleury:</b>
+ * <ul>
+ *   <li>initial import
+ * </ul>
+ *
+ * <p><b>20010908 david jencks:</b>
+ * <ul>
+ *   <li>Modified to make undeploy work better.
+ * </ul>
+ *
+ * <p><b>20011003 Ole Husgaard:</b>
+ * <ul>
+ *   <li>Changed synchronization to avoid deadlock with UNs
+ *       java.lang.Classloader implementation. Kudos to Dr. Christoph Jung
+ *       and Sacha Labourey for identifying this problem.
+ * </ul>
+ */
 public class ServiceLibraries
-implements ServiceLibrariesMBean, MBeanRegistration
+   implements ServiceLibrariesMBean, MBeanRegistration
 {
    /** The bootstrap interface to the log4j system */
    private static BootstrapLogger log = BootstrapLogger.getLogger(ServiceLibraries.class);
@@ -58,49 +61,49 @@ implements ServiceLibrariesMBean, MBeanRegistration
    
    
    /**
-   *  The classloaders we use for loading classes here.
-   */
+    * The classloaders we use for loading classes here.
+    */
    private Set classLoaders;
    
-   /*
-   *  Maps class names of the classes loaded here to the classes.
-   */
+   /**
+    * Maps class names of the classes loaded here to the classes.
+    */
    private Map classes;
    
-   /*
-   *  Maps class loaders to the set of classes they loaded here.
-   */
+   /**
+    * Maps class loaders to the set of classes they loaded here.
+    */
    private Map clToClassSetMap;
    
    /**
-   *  The version number of the {@link #clToClassSetMap} map.
-   *  If a lookup of a class detects a change in this while calling
-   *  the classloaders with locks removed, the {@link #clToClassSetMap}
-   *  and {@link #classes} fields should <em>only</em> be modified
-   *  if the classloader used for loading the class is still in the
-   *  {@link #classLoaders} set.
-   */
+    * The version number of the {@link #clToClassSetMap} map.
+    * If a lookup of a class detects a change in this while calling
+    * the classloaders with locks removed, the {@link #clToClassSetMap}
+    * and {@link #classes} fields should <em>only</em> be modified
+    * if the classloader used for loading the class is still in the
+    * {@link #classLoaders} set.
+    */
    private long clToClassSetMapVersion = 0;
    
-   /*
-   *  Maps resource names of resources looked up here to the URLs used to
-   *  load them.
-   */
+   /**
+    * Maps resource names of resources looked up here to the URLs used to
+    * load them.
+    */
    private Map resources;
    
-   /*
-   *  Maps class loaders to the set of resource names they looked up here.
-   */
+   /**
+    * Maps class loaders to the set of resource names they looked up here.
+    */
    private Map clToResourceSetMap;
    
    /**
-   *  The version number of the {@link #clToResourceSetMap} map.
-   *  If a lookup of a resource detects a change in this while
-   *  calling the classloaders with locks removed, the
-   *  {@link #clToResourceSetMap} and {@link #resources} fields should
-   *  <em>only</em> be modified if the classloader used for loading
-   *  the class is still in the {@link #classLoaders} set.
-   */
+    * The version number of the {@link #clToResourceSetMap} map.
+    * If a lookup of a resource detects a change in this while
+    * calling the classloaders with locks removed, the
+    * {@link #clToResourceSetMap} and {@link #resources} fields should
+    * <em>only</em> be modified if the classloader used for loading
+    * the class is still in the {@link #classLoaders} set.
+    */
    private long clToResourceSetMapVersion = 0;
    
    // Constructors --------------------------------------------------
@@ -108,10 +111,10 @@ implements ServiceLibrariesMBean, MBeanRegistration
    // Public --------------------------------------------------------
    
    /**
-   * Gets the Libraries attribute of the ServiceLibraries class
-   *
-   * @return The Libraries value
-   */
+    * Gets the Libraries attribute of the ServiceLibraries class
+    *
+    * @return The Libraries value
+    */
    public static ServiceLibraries getLibraries()
    {
       if (libraries == null)
@@ -123,23 +126,23 @@ implements ServiceLibrariesMBean, MBeanRegistration
    // ServiceClassLoaderMBean implementation ------------------------
    
    /**
-   * Gets the Name attribute of the ServiceLibraries object.
-   *
-   * @return The Name value
-   */
+    * Gets the Name attribute of the ServiceLibraries object.
+    *
+    * @return The Name value
+    */
    public String getName()
    {
       return "ServiceLibraries";
    }
 
    /**
-   *  Find a resource in the ServiceLibraries object.
-   *
-   *  @param name The name of the resource
-   *  @param scl The asking class loader
-   *  @return An URL for reading the resource, or <code>null</code> if the
-   *          resource could not be found.
-   */
+    * Find a resource in the ServiceLibraries object.
+    *
+    * @param name The name of the resource
+    * @param scl The asking class loader
+    * @return An URL for reading the resource, or <code>null</code> if the
+    *          resource could not be found.
+    */
    public URL getResource(String name, ClassLoader scl)
    {
       Set classLoaders2;
@@ -209,16 +212,19 @@ implements ServiceLibrariesMBean, MBeanRegistration
                }
             } // if we found it
          }
-      } // for all ClassLoaders, If we reach here, all of the classloaders currently in the VM don't know about the resource
+      }
+
+      // for all ClassLoaders, If we reach here, all of the classloaders currently in the VM 
+      // don't know about the resource
       
       return resource;
    }
 
    /**
-   *  Add a ClassLoader to the ServiceLibraries object.
-   *
-   *  @param cl The class loader to be added.
-   */
+    * Add a ClassLoader to the ServiceLibraries object.
+    *
+    * @param cl The class loader to be added.
+    */
    public synchronized void addClassLoader(UnifiedClassLoader cl)
    {
       // we allow for duplicate class loader definitions in the services.xml files
@@ -233,21 +239,21 @@ implements ServiceLibrariesMBean, MBeanRegistration
          if( trace )
          {
             log.trace("Libraries adding UnifiedClassLoader " + cl.hashCode() +
-               " key URL " + cl.getURL().toString());
+		      " key URL " + cl.getURL().toString());
          }
       }
       else if( trace )
       {
          log.trace("Libraries skipping duplicate UnifiedClassLoader for key URL " +
-            cl.getURL().toString());
+		   cl.getURL().toString());
       }
    }
    
    /**
-   *  Remove a ClassLoader from the ServiceLibraries object.
-   *
-   *  @param cl The ClassLoader to be removed.
-   */
+    * Remove a ClassLoader from the ServiceLibraries object.
+    *
+    * @param cl The ClassLoader to be removed.
+    */
    public synchronized void removeClassLoader(UnifiedClassLoader cl)
    {
       boolean trace = log.isTraceEnabled();
@@ -295,17 +301,17 @@ implements ServiceLibrariesMBean, MBeanRegistration
    }
 
    /**
-   *  Load a class in the ServiceLibraries object.
-   *
-   *  @param name The name of the class
-   *  @param resolve If <code>true</code>, the class will be resolved
-   *  @param scl The asking class loader
-   *  @return The loaded class.
-   *          resource could not be found.
-   *  @throws ClassNotFoundException If the class could not be found.
-   */
+    * Load a class in the ServiceLibraries object.
+    *
+    * @param name The name of the class
+    * @param resolve If <code>true</code>, the class will be resolved
+    * @param scl The asking class loader
+    * @return The loaded class.
+    *          resource could not be found.
+    * @throws ClassNotFoundException If the class could not be found.
+    */
    public Class loadClass(String name, boolean resolve, ClassLoader scl)
-   throws ClassNotFoundException
+      throws ClassNotFoundException
    {
       Class foundClass;
       Set classLoaders2;
