@@ -106,6 +106,7 @@
         </field>
         <field name="Template" key="tem" type="boolean" mapToProperty=""/>
         <field name="Deleted" key="del" type="boolean"/>
+        <field name="Dedupe" key="dup" type="boolean"/>
 </group>
 
 <group name="AttributeType" key="attt" mapToObject="om.AttributeType">
@@ -159,6 +160,21 @@
         </field>
 </group>
 
+<group name="RIssueTypeAttribute" key="ria" mapToObject="om.RIssueTypeAttribute">
+        <field name="AttributeId" key="attid" type="NumberKey">
+           <rule name="mask" value="^$|[0-9]+">Please select a valid choice</rule>
+        </field>
+        <field name="Active" key="active" type="boolean"/>
+        <field name="Required" key="req" type="boolean"/>
+        <field name="QuickSearch" key="qs" type="boolean"/>
+        <field name="IsDefaultText" key="dt" type="boolean"/>
+        <field name="Order" key="order" type="int" 
+                mapToProperty="Order">
+           <rule name="maxValue" value="99">Please enter a value less than 99</rule>
+           <rule name="minValue" value="1">Please enter a value greater than 0</rule>
+        </field>
+</group>
+
 <group name="RQueryUser" key="rqu" mapToObject="om.RQueryUser">
         <field name="Subscribed" key="sub" type="boolean" mapToProperty="IsSubscribed" />
         <field name="Frequency" key="freq" type="NumberKey" 
@@ -172,6 +188,20 @@
         <field name="DisplayValue" key="name" type="String">
             <rule name="maxLength" value="255"/>
         </field>
+        <field name="Active" key="active" type="boolean"/>
+        <field name="Order" key="order" type="int" 
+                mapToProperty="Order">
+           <rule name="maxValue" value="99">Please enter a value less than 99</rule>
+           <rule name="minValue" value="1">Please enter a value greater than 0</rule>
+        </field>
+        <field name="Weight" key="weight" type="int" 
+                mapToProperty="Weight">
+           <rule name="maxValue" value="99">Please enter a value less than 99</rule>
+           <rule name="minValue" value="1">Please enter a value greater than 0</rule>
+        </field>
+</group>
+
+<group name="RIssueTypeOption" key="rio" mapToObject="om.RIssueTypeOption">
         <field name="Active" key="active" type="boolean"/>
         <field name="Order" key="order" type="int" 
                 mapToProperty="Order">
