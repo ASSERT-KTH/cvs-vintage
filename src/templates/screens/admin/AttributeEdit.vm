@@ -1,7 +1,111 @@
 $page.setTitle("Attribute Editor")
 
 #set ($attribute = $scarabR.Attribute)
-#set ($attOptions = $attribute.getAttributeOptions())
+#set ($attOptions = $attribute.AttributeOptions)
+#set ($attType = $attribute.AttributeType)
+#set ($attgroup = $intake.Attribute.Default )
+#set ($atttgroup = $intake.AttributeType.Default )
+
+<h1>Add / Edit Attribute</h1>
+
+<p>Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper suscipit lobortis nisl ut aliquip</p>
+
+  <form action="$link.setPage("admin,AttributeEdit.vm")" method="GET">
+
+<div class="functnbar">
+<table width="100%" cellpadding="3" cellspacing="2" border="1">
+<tr>
+<td>edit&#160;<input type="submit" value="previous" class="buttonfunc" />&#160;<input type="submit" value="next" class="buttonfunc" />&#160;attribute</td>
+</tr>
+</table>
+</div>
+
+<div class="grouper">
+<div class="datatitle">
+<table width="100%" cellpadding="3" cellspacing="2" border="1">
+<tr>
+<td>General Info</td>
+</tr>
+</table>
+</div>
+
+<div class="listtable">
+<table width="100%" cellpadding="3" cellspacing="2" border="1">
+ <tr>
+  <td width="120" class="a"><strong>input type:</strong></td>
+  <td class="b">
+    <select name="$atttgroup.AttributeTypeId.Key" size="1">
+    #foreach ( $atype in $attribute.AllAttributeTypes )
+      <option value="$atype.AttributeTypeId" #if($attType.AttributeTypeId == $atype.AttributeTypeId)selected#end>$atype.Name</option>
+    #end
+    </select>
+  </td>
+
+ <tr>
+  <td width="120" class="a"><strong>attribute name:</strong></td>
+  <td class="b">
+    <input type="text" name="$attgroup.Name.Key" value="$attribute.Name"/>
+  </td>
+ </tr>
+
+ <tr>
+  <td width="120" class="a"><strong>attribute description:</strong></td>
+  <td class="b">
+    <textarea rows="4" cols="40" name="$attgroup.Description.Key" class="text">$!attribute.Description</textarea>
+  </td>
+ </tr>
+
+ <tr>
+  <td width="120" class="a"><strong>creation date:</strong></td>
+  <td class="b">
+    $attribute.CreatedDate</textarea>
+  </td>
+ </tr>
+
+</tr>
+</table>
+</div>
+</div>
+
+<div class="grouper">
+<div class="datatable">
+<table width="70%" border="0" cellspacing="2" cellpadding="2">
+<tr>
+ <th>delete:</th>
+ <th>id:</th>
+ <th>parent id:</th>
+ <th>attribute option:</th>
+ <th>numeric order:</th>
+</tr>
+
+#set ( $maxNum = $attOptions.size() )
+#foreach ($option in $attOptions)
+#set ( $intakeOption = $intake.AttributeOption.mapTo($option) )
+
+#if ( $velocityCount % 2 > 0 )<tr class="a">#else<tr class="b">#end
+
+     <td>#booleanCheckbox ($intakeOption.Deleted)</td>
+     <td>$option.PrimaryKey</td>
+     <td>
+        <input type="text" name="$intakeOption.ParentIds.Key" 
+                value="$intakeOption.ParentIds" size="5">
+     </td>
+     <td><input type="text" size="25" class="text" name="$intakeOption.Name.Key" value="$intakeOption.Name"/></td>
+     <td>
+        #numericSelect( $intakeOption.NumericValue.Key 1 $maxNum $intakeOption.NumericValue.Value 1 )
+     </td>
+</tr>
+#end
+
+</table>
+</div>
+</div>
+
+</form>
+
+#*
+
+
 
 <p><b>Editing Attribute</b>: <i>$attribute.Name</i></p>
 <p>Each Attribute can have zero or more Attribute Options.</p>
@@ -79,3 +183,4 @@ In order to modify this attribute, please choose from the options below:
     <input type="submit" name="eventSubmit_doAlldone" value="All Done">
   </form>
 </p>
+*#
