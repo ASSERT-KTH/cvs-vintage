@@ -37,6 +37,7 @@ import org.jboss.metadata.SecurityRoleRefMetaData;
 import org.jboss.security.RealmMapping;
 import org.jboss.security.RunAsIdentity;
 import org.jboss.security.SimplePrincipal;
+import org.jboss.tm.TransactionTimeoutConfiguration;
 import org.jboss.tm.usertx.client.ServerVMClientUserTransaction;
 
 /**
@@ -47,13 +48,13 @@ import org.jboss.tm.usertx.client.ServerVMClientUserTransaction;
  * @see StatelessSessionEnterpriseContext
  * @see EntityEnterpriseContext
  * 
- * @author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
+ * @author <a href="mailto:rickard.oberg@telkel.com">Rickard Ã–berg</a>
  * @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
  * @author <a href="mailto:sebastien.alborini@m4x.org">Sebastien Alborini</a>
  * @author <a href="mailto:juha@jboss.org">Juha Lindfors</a>
  * @author <a href="mailto:osh@sparre.dk">Ole Husgaard</a>
  * @author <a href="mailto:thomas.diesler@jboss.org">Thomas Diesler</a>
- * @version $Revision: 1.76 $
+ * @version $Revision: 1.77 $
  */
 public abstract class EnterpriseContext
         implements AllowedOperationsFlags
@@ -464,16 +465,17 @@ public abstract class EnterpriseContext
    protected class UserTransactionImpl
            implements UserTransaction
    {
-      /**
-       * Timeout value in seconds for new transactions started
-       * by this bean instance.
-       */
+      /** Timeout value in seconds for new transactions started by this bean instance. */
       private int timeout = 0;
+
+      /** Whether trace is enabled */
+      boolean trace;
 
       public UserTransactionImpl()
       {
-         if (log.isDebugEnabled())
-            log.debug("new UserTx: " + this);
+         trace = log.isTraceEnabled();
+         if (trace)
+            log.trace("new UserTx: " + this);
       }
 
       public void begin()
@@ -481,36 +483,47 @@ public abstract class EnterpriseContext
       {
          TransactionManager tm = con.getTransactionManager();
 
+         int oldTimeout = -1;   
+         if (tm instanceof TransactionTimeoutConfiguration)
+            oldTimeout = ((TransactionTimeoutConfiguration) tm).getTransactionTimeout();
+
          // Set the timeout value
          tm.setTransactionTimeout(timeout);
 
-         // Start the transaction
-         tm.begin();
-
-         //notify checked out connections
-         if (tsl != null)
+         try
          {
-            tsl.userTransactionStarted();
-         } // end of if ()
-         
-         Transaction tx = tm.getTransaction();
-         if (log.isDebugEnabled())
-            log.debug("UserTx begin: " + tx);
+            // Start the transaction
+            tm.begin();
 
-         // keep track of the transaction in enterprise context for BMT
-         setTransaction(tx);
+            //notify checked out connections
+            if (tsl != null)
+               tsl.userTransactionStarted();
+         
+            Transaction tx = tm.getTransaction();
+            if (trace)
+               log.trace("UserTx begin: " + tx);
+
+            // keep track of the transaction in enterprise context for BMT
+            setTransaction(tx);
+         }
+         finally
+         {
+            // Reset the transaction timeout (if we know what it was)
+            if (oldTimeout != -1)
+               tm.setTransactionTimeout(oldTimeout);
+         }
       }
 
       public void commit()
               throws RollbackException, HeuristicMixedException, HeuristicRollbackException,
               SecurityException, IllegalStateException, SystemException
       {
+         TransactionManager tm = con.getTransactionManager();
          try
          {
-            TransactionManager tm = con.getTransactionManager();
             Transaction tx = tm.getTransaction();
-            if (log.isDebugEnabled())
-               log.debug("UserTx commit: " + tx);
+            if (trace)
+               log.trace("UserTx commit: " + tx);
 
             int status = tm.getStatus();
             tm.commit();
@@ -529,12 +542,12 @@ public abstract class EnterpriseContext
       public void rollback()
               throws IllegalStateException, SecurityException, SystemException
       {
+         TransactionManager tm = con.getTransactionManager();
          try
          {
-            TransactionManager tm = con.getTransactionManager();
             Transaction tx = tm.getTransaction();
-            if (log.isDebugEnabled())
-               log.debug("UserTx rollback: " + tx);
+            if (trace)
+               log.trace("UserTx rollback: " + tx);
             tm.rollback();
          }
          finally
@@ -553,8 +566,8 @@ public abstract class EnterpriseContext
       {
          TransactionManager tm = con.getTransactionManager();
          Transaction tx = tm.getTransaction();
-         if (log.isDebugEnabled())
-            log.debug("UserTx setRollbackOnly: " + tx);
+         if (trace)
+            log.trace("UserTx setRollbackOnly: " + tx);
 
          tm.setRollbackOnly();
       }
@@ -573,14 +586,7 @@ public abstract class EnterpriseContext
       public void setTransactionTimeout(int seconds)
               throws SystemException
       {
-         TransactionManager tm = con.getTransactionManager();
-         Transaction tx = tm.getTransaction();
-         if (log.isDebugEnabled())
-            log.debug("UserTx setTransactionTimeout(" + seconds + "): " + tx);
-         if (tx != null)
-         {
-            tm.setTransactionTimeout(seconds);
-         }
+         timeout = seconds;
       }
    }
 }
