@@ -48,6 +48,8 @@ public class XmlDataStorage implements DataStorage {
 
 		Document doc = XmlNewIO.load(file);
 
+		if ( doc == null) return null;
+		
 		Contact contact = new Contact(doc, uid);
 		
 
