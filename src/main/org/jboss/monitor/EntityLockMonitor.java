@@ -8,42 +8,28 @@ package org.jboss.monitor;
 
 
 
-import java.net.URL;
 import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Iterator;
-import java.util.Map;
-import java.util.HashMap;
-import java.util.Set;
 import java.util.Arrays;
-import javax.management.JMException;
+import java.util.HashMap;
+import java.util.Iterator;
 import javax.management.MBeanRegistration;
 import javax.management.MBeanServer;
-import javax.management.ObjectInstance;
 import javax.management.ObjectName;
-import org.jboss.ejb.Container;
-import org.jboss.ejb.EJBDeployer;
-import org.jboss.ejb.EJBDeployerMBean;
-import org.jboss.ejb.EjbModule;
-import org.jboss.ejb.EntityContainer;
-import org.jboss.ejb.InstanceCache;
-import org.jboss.ejb.StatefulSessionContainer;
-import org.jboss.logging.Logger;
-import org.jboss.system.ServiceMBeanSupport;
-import org.jboss.naming.NonSerializableFactory;
-import javax.naming.NamingException;
-import javax.naming.InitialContext;
 import javax.naming.Context;
-import javax.naming.Name;
-import javax.naming.NameNotFoundException;
-import javax.naming.StringRefAddr;
+import javax.naming.InitialContext;
+import javax.naming.NamingException;
 import javax.naming.Reference;
+import javax.naming.StringRefAddr;
+
+import org.jboss.logging.Logger;
+import org.jboss.naming.NonSerializableFactory;
+import org.jboss.system.ServiceMBeanSupport;
 
 /**
  *
  * @see Monitorable
  * @author <a href="mailto:bill@jboss.org">Bill Burke</a>
- * @version $Revision: 1.6 $
+ * @version $Revision: 1.7 $
  */
 public class EntityLockMonitor
    extends ServiceMBeanSupport
