@@ -25,7 +25,6 @@ import java.util.*;
 
 import javax.swing.JOptionPane;
 
-import org.columba.core.gui.util.ExceptionDialog;
 import org.columba.core.loader.DefaultClassLoader;
 import org.columba.core.main.MainInterface;
 import org.columba.core.util.GlobalResourceLoader;
@@ -205,8 +204,6 @@ public abstract class AbstractPluginHandler implements PluginHandler {
             return PluginLoader.loadExternalPlugin(className, type, pluginDir,
             args);
         } catch (InvocationTargetException ex) {
-            new ExceptionDialog(ex.getTargetException());
-            
             ex.getTargetException().printStackTrace();
             throw ex;
         }
