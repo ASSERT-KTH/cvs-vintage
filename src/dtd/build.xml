@@ -1,0 +1,23 @@
+<?xml version="1.0"?>
+
+<!-- Bugzilla -> Scarab Transform -->
+<project name="main" default="transform" basedir=".">
+
+  <!-- Build classpath -->
+  <path id="classpath">
+    <fileset dir="../../lib">
+      <include name="*.jar"/>
+    </fileset>
+  </path>
+
+  <target name="transform">
+    <style basedir="." destdir="." 
+           in="bugzilla-sample-bug.xml"
+           out="transform.xml"
+           style="bugzilla-scarab.xsl"
+           >
+      <classpath refid="classpath"/>
+    </style>
+  </target>
+
+</project>
