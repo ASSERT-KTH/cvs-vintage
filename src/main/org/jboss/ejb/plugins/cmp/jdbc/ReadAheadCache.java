@@ -20,6 +20,7 @@ import org.jboss.ejb.EntityEnterpriseContext;
 import org.jboss.ejb.plugins.cmp.jdbc.bridge.JDBCFieldBridge;
 import org.jboss.ejb.plugins.cmp.jdbc.bridge.JDBCCMPFieldBridge;
 import org.jboss.ejb.plugins.cmp.jdbc.bridge.JDBCCMRFieldBridge;
+import org.jboss.ejb.plugins.cmp.jdbc.metadata.JDBCReadAheadMetaData;
 import org.jboss.logging.Logger;
 import org.jboss.util.FinderResults;
 import org.jboss.util.LRUCachePolicy;
@@ -30,7 +31,7 @@ import org.jboss.util.LRUCachePolicy;
  * basis. The read ahead data for each entity is stored with a soft reference.
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
- * @version $Revision: 1.1 $
+ * @version $Revision: 1.2 $
  */
 public class ReadAheadCache {
    /**
@@ -168,7 +169,13 @@ public class ReadAheadCache {
       if(entry != null) {
          listCache.promote(entry.finderResults);
 
-         int pageSize = 1000;
+         int pageSize;
+         Object queryData = entry.finderResults.getQueryData();
+         if(queryData instanceof JDBCReadAheadMetaData) {
+            pageSize = ((JDBCReadAheadMetaData)queryData).getPageSize();
+         } else {
+            pageSize = manager.getMetaData().getReadAhead().getPageSize();
+         }
          int from = entry.index;
          int to = Math.min(entry.finderResults.size(), entry.index + pageSize);
          List loadKeys = 
@@ -248,7 +255,7 @@ public class ReadAheadCache {
                ReadAheadCache relatedReadAheadCache = 
                      relatedManager.getReadAheadCache();
                relatedReadAheadCache.addFinderResult(new FinderResults(
-                     (List)value, null, null, null));
+                     (List)value, cmrField.getReadAhead(), null, null));
             } else {
                log.debug("CMRField already loaded:" +
                      " entity="+manager.getEntityBridge().getEntityName()+

@@ -33,7 +33,7 @@ import org.jboss.util.FinderResults;
  * Loads relations for a particular entity from a relation table.
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
- * @version $Revision: 1.12 $
+ * @version $Revision: 1.13 $
  */
 public class JDBCLoadRelationCommand {
    private final JDBCStoreManager manager;
@@ -170,7 +170,7 @@ public class JDBCLoadRelationCommand {
 
          // Convert the pk collection into finder results
          FinderResults finderResults = new FinderResults(
-               result, null, null, null);
+               result, cmrField.getReadAhead(), null, null);
 
          // add results to the cache
          if(!cmrField.getReadAhead().isNone()) {
