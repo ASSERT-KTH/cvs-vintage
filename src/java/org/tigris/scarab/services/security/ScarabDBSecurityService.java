@@ -72,7 +72,7 @@ import org.tigris.scarab.util.Log;
  * being the Group implementation.
  *
  * @author <a href="mailto:jmcnally@collab.net">John D. McNally</a>
- * @version $Id: ScarabDBSecurityService.java,v 1.4 2002/04/26 23:34:52 jmcnally Exp $
+ * @version $Id: ScarabDBSecurityService.java,v 1.5 2002/08/14 21:43:34 jon Exp $
  */
 public class ScarabDBSecurityService extends DBSecurityService
 {
@@ -121,23 +121,6 @@ public class ScarabDBSecurityService extends DBSecurityService
             throw new DataBackendException("saveGroup(Group) failed" ,e);
         }
         throw new UnknownEntityException("Unknown group '" + group + "'");
-    }
-
-    /**
-     * Retrieves a new Group. It creates
-     * a new Group based on the Services Group implementation. It does not
-     * create a new Group in the system though. Use create for that.
-     *
-     * @param groupName The name of the Group to be retrieved.
-     */
-    public Group getNewGroup( String groupName )
-    {
-        throw new RuntimeException("getNewGroup NOT implemented.");
-            /*    
-        Module module = ModuleManager.getInstance();
-        module.setName(groupName);
-        return (Group) module;
-            */
     }
 
     /**
