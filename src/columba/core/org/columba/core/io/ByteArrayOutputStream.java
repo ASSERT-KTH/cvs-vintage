@@ -58,13 +58,6 @@ public class ByteArrayOutputStream extends OutputStream {
 	}
 
 	/**
-	 * @see java.io.OutputStream#close()
-	 */
-	public void close() throws IOException {
-		buffer = null;
-	}
-
-	/**
 	 * @see java.io.OutputStream#write(byte[], int, int)
 	 */
 	public void write(byte[] b, int off, int len) throws IOException {
