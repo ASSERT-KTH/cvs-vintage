@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+ - The contents of this file are subject to the LGPL Licence 
+ -
+ - <a href="Guillaume.Riviere@inrialpes.fr">Guillaume RIVIERE</a>
+ -
+ - Compilation directive for sun rmic 
+ - 
+ -->
+
+<project name="rmic_sun" default="compile.sun" basedir=".">
+  
+  <!-- Building of a path which contains carol jars for tests compilation-->
+  <path id="sun.classpath">
+    <fileset dir="${carol.dist}/lib">
+      <include name="**/*.jar"/>
+    </fileset>  
+    <fileset dir="${test.externals}">
+      <include name="**/*.jar"/>
+    </fileset>
+    <pathelement location="${test.build}/classes"/>
+  </path>
+
+  
+  <target name="compile.sun">
+    <condition property="is.jvm.1.4">
+      <equals  arg1="${ant.java.version}" arg2="1.4"/>
+    </condition>
+    <antcall target="compile.sunjrmp1.1"/> 
+    <antcall target="compile.sunjrmp1.2"/> 
+    <antcall target="compile.suniiop"/>  
+  </target>
+
+  <!-- Compile Remote Interface Stub/Skel target for Sun Rmi -->
+  <target name="compile.sunjrmp1.1">
+    <mkdir   dir="${test.build.stub}/sunjrmp1.1"/>
+    <rmic base="${test.build.stub}/sunjrmp1.1"
+      compiler="sun"
+      stubversion="1.1"
+      classname="org.objectweb.carol.jtests.conform.basic.server.BasicObject"
+      sourcebase="${test.build.stub}/sunjrmp1.1">
+      <classpath refid="sun.classpath"/>
+    </rmic>
+    <rmic base="${test.build.stub}/sunjrmp1.1"
+      compiler="sun"     
+      stubversion="1.1"
+      classname="org.objectweb.carol.jtests.conform.basic.server.BasicMultiObject"
+      sourcebase="${test.build.stub}/sunjrmp1.1">
+      <classpath refid="sun.classpath"/>
+    </rmic> 
+    <jar destfile="${test.dist.lib}/sunjrmp1.1.jar" basedir="${test.build.stub}/sunjrmp1.1" />	  
+  </target>
+
+ <!-- Compile Remote Interface Stub/Skel target for Sun Rmi -->
+  <target name="compile.sunjrmp1.2">
+    <mkdir   dir="${test.build.stub}/sunjrmp1.2"/>
+    <rmic base="${test.build.stub}/sunjrmp1.2"
+      compiler="sun"
+      stubversion="1.2"
+      classname="org.objectweb.carol.jtests.conform.basic.server.BasicObject"
+      sourcebase="${test.build.stub}/sunjrmp1.2">
+      <classpath refid="sun.classpath"/>
+    </rmic>
+    <rmic base="${test.build.stub}/sunjrmp1.2"
+      compiler="sun"     
+      stubversion="1.2"
+      classname="org.objectweb.carol.jtests.conform.basic.server.BasicMultiObject"
+      sourcebase="${test.build.stub}/sunjrmp1.2">
+      <classpath refid="sun.classpath"/>
+    </rmic>
+    <jar destfile="${test.dist.lib}/sunjrmp1.2.jar" basedir="${test.build.stub}/sunjrmp1.2" />	  
+  </target>
+
+  <!--  Compile Remote Interface Stub/Skel target for Sun Rmi iiop -->
+  <target name="compile.suniiop" if="is.jvm.1.4">
+    <mkdir   dir="${test.build.stub}/suniiop"/>
+    <rmic base="${test.build.stub}/suniiop" iiop="true"
+      compiler="sun"
+      stubversion="1.2"
+      classname="org.objectweb.carol.jtests.conform.basic.server.BasicObject"
+      sourcebase="${test.build.stub}/suniiop">
+      <classpath refid="sun.classpath"/>
+    </rmic>
+    <rmic base="${test.build.stub}/suniiop" iiop="true"
+      compiler="sun"     
+      stubversion="1.2"
+      classname="org.objectweb.carol.jtests.conform.basic.server.BasicMultiObject"
+      sourcebase="${test.build.stub}/suniiop">
+      <classpath refid="sun.classpath"/>
+    </rmic>
+    <jar destfile="${test.dist.lib}/suniiop.jar" basedir="${test.build.stub}/suniiop" />	  
+  </target>
+</project>

@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+ - The contents of this file are subject to the LGPL Licence 
+ -
+ - <a href="Guillaume.Riviere@inrialpes.fr">Guillaume RIVIERE</a>
+ -
+ - Compilation directive for david rmic and jeremie rmic 
+ - this task did not use the rmic ant task because this 
+ - task is not supporded with the david or jeremie rmic 
+ - and so we use a java task ...
+ -
+ -->
+
+<project name="rmic_jonathan" default="compile.all" basedir=".">
+
+  <!-- Building of a path which contains carol jars for tests compilation-->
+  <path id="jonathan.classpath">
+    <fileset dir="${carol.dist}/lib">
+      <include name="**/*.jar"/>
+    </fileset>  
+    <fileset dir="${test.externals}">
+      <include name="**/*.jar"/>
+    </fileset>
+    <pathelement location="${test.build}/classes"/>
+  </path>
+
+  <property name="compiler.jeremie" value="org.objectweb.jeremie.tools.jrmic.JRMICompiler" />
+  <property name="compiler.david"   value="org.objectweb.david.tools.jrmic.JRMICompiler" />
+  <property name="jonathan.jvmarg"  value="-Xbootclasspath/p:${test.externals}/jonathan.jar:${test.externals}/kilim.jar:${test.externals}/kilim-tools.jar:${test.externals}/nanoxml-lite-2.2.1.jar:${test.build}/classes"/>
+
+  <target name="compile.all"> 
+    <antcall target="compile.jeremie"/>
+    <antcall target="compile.david"/>
+  </target>
+
+
+  <!-- Compile Remote Interface Stub/Skel target for Jeremie-->
+  <target name="compile.jeremie">
+    <mkdir dir="${test.build.stub}/jeremie"/>
+    <java classname="${compiler.jeremie}" fork="true" failonerror="true" jvmargs="${jonathan.jvmarg}">
+            <arg value="-opt"/>
+            <arg value="-d"/>
+            <arg path="${test.build.stub}/jeremie"/>
+            <arg value="org.objectweb.carol.jtests.conform.basic.server.BasicObject"/>
+            <classpath refid="jonathan.classpath"/>
+    </java>
+    <java classname="${compiler.jeremie}" fork="true" failonerror="true" jvmargs="${jonathan.jvmarg}">
+            <arg value="-opt"/>
+            <arg value="-d"/>
+            <arg path="${test.build.stub}/jeremie"/>
+            <arg value="org.objectweb.carol.jtests.conform.basic.server.BasicMultiObject"/>
+            <classpath refid="jonathan.classpath"/>
+    </java>
+    <jar destfile="${test.dist.lib}/jeremie.jar" basedir="${test.build.stub}/jeremie" />
+  </target>   
+
+  <!-- Compile Remote Interface Stub/Skel target for David-->
+  <target name="compile.david">
+    <mkdir   dir="${test.build.stub}/david"/>
+    <java classname="${compiler.david}" fork="true" failonerror="true" jvmargs="${jonathan.jvmarg}">
+      <arg value="-opt"/>
+      <arg value="-iiop"/>
+      <arg value="-d"/>
+      <arg path="${test.build.stub}/david"/>
+      <arg value="org.objectweb.carol.jtests.conform.basic.server.BasicObject"/>
+      <classpath refid="jonathan.classpath"/>
+    </java>
+    <java classname="${compiler.david}" fork="true" failonerror="true" jvmargs="${jonathan.jvmarg}">
+      <arg value="-opt"/>
+      <arg value="-iiop"/>
+      <arg value="-d"/>
+      <arg path="${test.build.stub}/david"/>
+      <arg value="org.objectweb.carol.jtests.conform.basic.server.BasicMultiObject"/>
+      <classpath refid="jonathan.classpath"/>
+    </java>
+    <jar destfile="${test.dist.lib}/david.jar" basedir="${test.build.stub}/david" />
+  </target>
+</project>

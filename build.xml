@@ -1,0 +1,168 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+ - The contents of this file are subject to the LGPL Licence 
+ - 
+ - Autor:               <a href="sebastien.chassande@inriaples.fr">Sebastien Chassande</a>
+ - Carol Modifications :<a href="Guillaume.Riviere@inrialpes.fr">Guillaume RIVIERE</a>
+ -
+ - Compilation directive for Common Architecture for RMI ObjectWeb Layer (CAROL)  
+ - 
+ -->
+
+<project name="carol" default="compile">
+
+
+  <!-- directories source definition -->
+  <property name="src" 		  value="${basedir}/src"/>
+  <property name="doc" 		  value="${basedir}/doc"/>
+  <property name="jdoc" 	  value="${basedir}/jdoc"/>
+  <property name="config" 	  value="${basedir}/config"/>
+  <property name="archive" 	  value="${basedir}/archive"/>
+  <property name="test" 	  value="${basedir}/test"/>
+
+  <!--======================================================
+  load the following user properties from a file:
+  - build.compiler: Wich compiler do you want use ? (optional)
+  - build: Where do you want generate compilate object ?
+  - dist: Where do you want put the distribution ?
+  - testResult: Where do you want put the test results ?
+  =======================================================-->
+  <property file="${config}/configure.properties"/>
+
+  <!-- directories target definition -->
+  <property name="dist.lib"        value="${dist}/lib"/>
+  <property name="dist.jdoc"  	   value="${dist}/jdoc"/>
+  <property name="dist.config"     value="${dist}/config"/>
+  <property name="dist.doc"  	   value="${dist}/doc"/> 
+ 
+
+  <!-- Building of carol compilation classpath (no externals needed) -->
+  <path id="carol.classpath">
+    <pathelement location="${build}/classes"/>
+  </path>
+
+  <taskdef name="multipleAnt"
+    classname="org.objectweb.util.ant.MultipleAnt"
+    classpath="${config}/ow_util_ant_tasks.jar"/>
+  
+  <taskdef name="javadocMultipleLink"
+    classname="org.objectweb.util.ant.JavadocMultipleLink"
+    classpath="${config}/ow_util_ant_tasks.jar"/>
+  
+  <!-- **********************************-->
+  <!-- *********    COMPILE    **********-->
+  <!-- **********************************-->
+  <!-- compile all -->
+  <target name="compile" depends="compile.base, compile.stub" description="Compiles carol" />
+
+  <!-- Compile base file -->
+  <target name="compile.base" description="Compiles carol base classes">
+    <mkdir dir="${build}/classes"/>
+    <javac 
+      srcdir="${src}"
+      destdir="${build}/classes"
+      deprecation="${deprecation}"
+      debug="${compile.debug}"
+      nowarn="${compile.nowarn}"
+      optimize="${compile.optimize}">
+      <classpath refid="carol.classpath"/>
+      <include name="**/*.java"/>
+    </javac> 
+  </target>
+
+  <!-- Compile Specific Remote Interface Stub/Skek -->
+  <target name="compile.stub" depends="compile.stub.iiop, compile.base"/> 
+
+  <!-- Compile Remote Interface Stub/Skel target for IIOP -->
+  <target name="compile.stub.iiop">
+    <rmic base="${build}/classes" iiop="true" compiler="sun"
+          classname="org.objectweb.carol.jndi.iiop.IIOPResourceWrapper">
+    <classpath refid="carol.classpath"/>
+    </rmic>
+  </target> 
+  
+
+  <!-- **************************************-->
+  <!-- *********        DIST       **********-->
+  <!-- **************************************-->
+  <target name="dist">
+    <antcall target="jar"/>
+    <antcall target="jdoc"/>
+    <antcall target="doc"/>
+    <antcall target="config"/>
+  </target>
+
+  <target name="test.dist" depends="dist" description="Make a test distribution (carol jar is needed)">
+    <ant antfile="${test}/build.xml" dir="${test}" target="dist"/>
+  </target>
+
+  <target name="test.all" description="Make a test distribution (carol jar is needed)">
+    <ant antfile="${test}/build.xml" dir="${test}" target="test.all"/>
+  </target>
+
+  <!-- *************************************-->
+  <!-- *********        JAR       **********-->
+  <!-- *************************************-->
+  <!-- This target call every default target of each xml file
+       present in ${archive} directory -->
+  <target name="jar" depends="compile">
+    <mkdir dir="${dist.lib}"/>
+    <multipleAnt dir="${archive}" />
+  </target>
+
+
+  <!-- *************************************-->
+  <!-- *********        JDOC      **********-->
+  <!-- *************************************-->
+  <!-- This target call every default target of each xml file
+  present in ${jdoc} directory -->
+  <target name="jdoc">
+    <mkdir dir="${dist.jdoc}"/>
+    <multipleAnt dir="${jdoc}" />
+  </target>
+
+
+  <!-- *************************************-->
+  <!-- *********        DOC      **********-->
+  <!-- *************************************-->
+  <!-- This target simply copy the present in ${doc} directory  -->
+  <target name="doc">
+    <mkdir dir="${dist.doc}"/>
+  </target>
+
+  <!-- *************************************-->
+  <!-- *********      CONFIG    ************-->
+  <!-- *************************************-->
+  <!-- This target simply copy the present ext 
+  in ${dist.config} directory and copy the ext/README 
+  in the ${dist} directory -->
+  <target name="config">
+    <mkdir dir="${dist.config}"/>
+  </target>
+
+
+  <!-- ************************************-->
+  <!-- *********     CLEAN       **********-->
+  <!-- ************************************-->
+  <target name="clean" description="Make a clean (carol and carol tests)">
+    <delete dir="${build}"/>
+    <delete dir="${dist}"/>
+  </target>
+
+  <!-- **********************************-->
+  <!-- *********     HELP       **********-->
+  <!-- **********************************-->
+  <!-- print the usage of this ant file -->
+  <target name="help">
+    <echo message="The available target is the following:"/>
+    <echo message="  compile: compiles the product into ${build}"/>
+    <echo message="  dist: creates all distributions of the product into ${dist}"/>
+    <echo message="  clean: removes all produced files (carol and test)"/>
+    <echo message="  jar: creates all jars ${dist.lib}"/>
+    <echo message="The available test building target is the following:"/>
+    <echo message="  test.dist: creates all distributions of the product into ${dist.test}"/>
+    <echo message="  test.all:  launch all tests distributions of the product into ${dist.test}"/>
+  </target>
+
+</project>

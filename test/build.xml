@@ -1,0 +1,205 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+ - The contents of this file are subject to the LGPL Licence 
+ - 
+ - Autor:               <a href="sebastien.chassande@inriaples.fr">Sebastien Chassande</a>
+ - Carol Modifications :<a href="Guillaume.Riviere@inrialpes.fr">Guillaume RIVIERE</a>
+ -
+ - Compilation directive for Common Architecture for RMI ObjectWeb Layer (CAROL) tests 
+ - This library need the carol.jar
+ - 
+ - For the moment the rmic jonathan task is not intgrate in ant, so use ant 1.5.0 with the externals ant.jar and optional.jar
+ - Int externals/ant you can find the ant modification summary   
+ - 
+ -->
+
+
+
+<project name="carol.test" default="compile">
+  
+
+  <!-- directories source definition -->
+  <property name="test.src" 		 value="${basedir}/src"/>
+  <property name="test.doc" 		 value="${basedir}/doc"/>
+  <property name="test.jdoc" 	         value="${basedir}/jdoc"/>
+  <property name="test.config" 	         value="${basedir}/config"/>
+  <property name="test.archive" 	 value="${basedir}/archive"/>
+  <property name="test.ext"              value="${basedir}/ext"/>  
+  <property name="test.externals"        value="${basedir}/externals"/>
+  <property name="test.genstub"          value="${basedir}/genstub"/>
+
+  <!--======================================================
+  load the following user properties from a file:
+  - build.compiler: Wich compiler do you want use ? (optional)
+  - build: Where do you want generate compilate object ?
+  - dist: Where do you want put the distribution ?
+  - testResult: Where do you want put the test results ?
+  =======================================================-->
+  <property file="${test.config}/configure.properties"/> 
+
+  <!-- directories target definition -->
+  <property name="test.dist.lib"           value="${test.dist}/lib"/>
+  <property name="test.dist.jdoc"  	   value="${test.dist}/jdoc"/>
+  <property name="test.dist.config"        value="${test.dist}/config"/>
+  <property name="test.dist.doc"  	   value="${test.dist}/doc"/> 
+  <property name="test.dist.results"  	   value="${test.dist}/results"/>
+  <property name="test.conform"            value="conform"/>
+  <property name="test.conform.src"        value="${test.src}/org/objectweb/carol/jtests/conform"/>
+
+  <!-- tmp directories for tests lauhing -->
+  <property name="test.tmp"                value="${test.dist}/tmp"/> 
+ 
+   
+  <property name="test.build.stub"          value="${test.build}/test/stub"/>
+
+  <!-- Building of a path which contains carol jars for tests compilation-->
+  <path id="test.classpath">
+    <fileset dir="${carol.dist}/lib">
+      <include name="**/*.jar"/>
+    </fileset>  
+    <fileset dir="${test.externals}">
+      <include name="**/*.jar"/>
+    </fileset>
+    <pathelement location="${test.build}/classes"/>
+  </path>
+
+  <!-- Multiple xml file task def -->
+  <taskdef name="multipleAnt"
+    classname="org.objectweb.util.ant.MultipleAnt"
+    classpath="${test.config}/ow_util_ant_tasks.jar"/>
+  
+  <taskdef name="javadocMultipleLink"
+    classname="org.objectweb.util.ant.JavadocMultipleLink"
+    classpath="${test.config}/ow_util_ant_tasks.jar"/>
+  
+  <taskdef name="ls"
+    classname="org.objectweb.util.ant.Ls"
+    classpath="${test.config}/ow_util_ant_tasks.jar"/>
+  
+  
+  <!-- **********************************-->
+  <!-- *********    COMPILE    **********-->
+  <!-- **********************************-->
+  <!-- compile all -->
+  <target name="compile" depends="compile.base, compile.stub" description="Compiles carol test" />  
+
+  <!-- **************************************-->
+  <!-- *********    COMPILE TEST   **********-->
+  <!-- **************************************-->
+  <target name="compile.base" description="Compiles tests base classes">
+    <condition property="test.conform.dir.exist">
+      <available file="${test.conform.src}"/>
+    </condition>
+    <antcall target="compile.conform"/>
+  </target>  
+
+  <target name="compile.conform" if="test.conform.dir.exist">
+    <javac 
+      srcdir="${test.src}"
+      destdir="${test.build}/classes"
+      deprecation="${deprecation}"
+      debug="${compile.debug}"
+      nowarn="${compile.nowarn}"
+      optimize="${compile.optimize}">
+      <classpath refid="test.classpath"/>
+      <include name="**/conform/**/*.java"/>    
+    </javac>
+  </target>
+  
+  <target name="compile.stub">      
+    <mkdir dir="${test.dist.lib}"/>
+    <mkdir dir="${test.build.stub}"/>
+    <multipleAnt dir="${test.genstub}" />
+  </target>
+
+  <!-- **************************************-->
+  <!-- *********        DIST       **********-->
+  <!-- **************************************-->
+  <target name="dist">  
+    <antcall target="jar"/>
+    <antcall target="jdoc"/>
+    <antcall target="doc"/>
+    <antcall target="config"/>
+  </target>
+
+  <!-- *************************************-->
+  <!-- *********    
+    <multipleAnt dir="${test.genstub}" />    JAR       **********-->
+  <!-- *************************************-->
+  <!-- This target call every default target of each xml file
+       present in ${archive} directory. -->
+  <target name="jar" depends="compile">
+    <mkdir dir="${test.dist.lib}"/>
+    <multipleAnt dir="${test.archive}" />
+  </target>
+
+  <!-- *************************************-->
+  <!-- *********        JDOC      **********-->
+  <!-- *************************************-->
+  <!-- This target call every default target of each xml file
+  present in ${jdoc} directory.
+  -->
+  <target name="jdoc">
+    <mkdir dir="${test.dist.jdoc}"/>
+    <multipleAnt dir="${test.jdoc}" />
+  </target>
+
+  <!-- *************************************-->
+  <!-- *********        DOC      **********-->
+  <!-- *************************************-->
+  <!-- This target simply copy the present in ${doc} directory  -->
+  <target name="doc">
+    <mkdir dir="${test.dist.doc}"/>
+  </target>
+
+  <!-- *************************************-->
+  <!-- *********      CONFIG    ************-->
+  <!-- *************************************-->
+  <!-- This target simply copy the present ext 
+  in ${dist.config} directory and copy the ext/README 
+  in the ${dist} directory -->
+  <target name="config">
+    <mkdir dir="${test.dist.config}"/>
+  </target>
+
+  <!-- ************************************-->
+  <!-- *********     CLEAN       **********-->
+  <!-- ************************************-->
+  <target name="clean">
+    <delete dir="${test.dist}"/>
+    <delete dir="${test.dist.result}"/>
+  </target>
+
+  <!-- ************************************-->
+  <!-- *********     TEST ALL    **********-->
+  <!-- ************************************-->
+  <target name="test.all">   
+    <multipleAnt dir="${test.conform}" />
+  </target> 
+
+  <!-- **********************************-->
+  <!-- *********     HELP       **********-->
+  <!-- **********************************-->
+  <!-- print the usage of this ant file -->
+  <target name="help">
+    <echo message="The available target is the following:"/>
+    <echo message="  compile: compiles the product into ${build}"/>
+    <echo message="  dist: creates all distributions of the product into ${dist}"/>
+    <echo message="  zip: creates all zip files of the product distributions into ${zip}"/>
+    <echo message="  clean: removes all produced files."/>
+    <echo message="  jar: creates all jars ${dist.lib}"/>
+    <echo message="  test: run all test"/>
+    <echo message=""/>
+    <echo message="There are some options to run tests:"/>
+    <echo message="  -Dtest.group=&lt;group name&gt;  Only a group of test: The default target of"/>
+    <echo message="    the xml file is called the test.group contains the xml file name with"/>
+    <echo message="    directory ex: ant -Dtest.group=conform/toto test =&gt; calls the default"/>
+    <echo message="    target of the file ${test}/conform/toto.xml"/>
+    <echo message="  -Dtest.type=&lt;type name&gt;  Only a type of test: conform, deviance, stress,"/>
+    <echo message="    thread or perf. The test.type properties contains the directory name of"/>
+    <echo message="    the test type ex: ant -Dtest.type=conform test"/>
+    <echo message="  -Dtest.name=&lt;test name&gt;  Only a single test. The target &lt;test name&gt; is called"/>
+  </target>
+
+</project>

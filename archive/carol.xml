@@ -1,0 +1,9 @@
+<project name="carol.archive" default="dist.jar">
+  <target name="dist.jar">
+    <!-- CAROL JAR -->
+    <jar jarfile="${dist.lib}/carol.jar" basedir="${build}/classes"
+      manifest="${archive}/carol.mf"
+      includes="**/*.class"
+      excludes="**/jtests/**/*.class"/>
+  </target>
+</project>
