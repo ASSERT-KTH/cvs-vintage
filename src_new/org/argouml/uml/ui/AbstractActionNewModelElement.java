@@ -1,4 +1,4 @@
-// $Id: AbstractActionNewModelElement.java,v 1.9 2003/10/12 08:55:24 linus Exp $
+// $Id: AbstractActionNewModelElement.java,v 1.10 2004/08/16 19:30:57 mvw Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -22,7 +22,7 @@
 // CALIFORNIA HAS NO OBLIGATIONS TO PROVIDE MAINTENANCE, SUPPORT,
 // UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 
-// $Id: AbstractActionNewModelElement.java,v 1.9 2003/10/12 08:55:24 linus Exp $
+// $Id: AbstractActionNewModelElement.java,v 1.10 2004/08/16 19:30:57 mvw Exp $
 package org.argouml.uml.ui;
 
 import org.argouml.i18n.Translator;
@@ -33,8 +33,11 @@ import org.argouml.i18n.Translator;
  */
 public abstract class AbstractActionNewModelElement extends UMLChangeAction {
 
-    private Object/*MModelElement*/ _target;
+    private Object/*MModelElement*/ target;
     
+    /**
+     *  The constructor.
+     */
     protected AbstractActionNewModelElement() {
         super(Translator.localize("action.new"), true, NO_ICON);
     }  
@@ -44,15 +47,15 @@ public abstract class AbstractActionNewModelElement extends UMLChangeAction {
      * @return MModelElement
      */
     public Object/*MModelElement*/ getTarget() {
-        return _target;
+        return target;
     }
 
     /**
      * Sets the target.
-     * @param target The target to set
+     * @param theTarget The target to set
      */
-    public void setTarget(Object target) {
-        _target = target;
+    public void setTarget(Object theTarget) {
+        target = theTarget;
     }
        
 }

@@ -1,4 +1,4 @@
-// $Id: ActionCut.java,v 1.12 2004/07/26 22:40:10 mkl Exp $
+// $Id: ActionCut.java,v 1.13 2004/08/16 19:30:57 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -48,7 +48,7 @@ import org.tigris.gef.base.Globals;
  */
 public class ActionCut extends AbstractAction implements CaretListener {
 
-    private static ActionCut _Instance = new ActionCut();
+    private static ActionCut instance = new ActionCut();
 
     private static final String LOCALIZE_KEY = "action.cut";
 
@@ -70,21 +70,26 @@ public class ActionCut extends AbstractAction implements CaretListener {
 		 Translator.localize(LOCALIZE_KEY) + " ");
     }
 
+    /**
+     * @return the singleton
+     */
     public static ActionCut getInstance() {
-        return _Instance;
+        return instance;
     }
 
-    private JTextComponent _textSource;
+    private JTextComponent textSource;
 
     /**
      * Cuts some text or a fig
+     *
+     * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
      */
     public void actionPerformed(ActionEvent ae) {
-        if (_textSource == null) {
+        if (textSource == null) {
             CmdCut cmd = new CmdCut();
             cmd.doIt();
         } else {
-            _textSource.cut();
+            textSource.cut();
         }
         if (isSystemClipBoardEmpty()
             && Globals.clipBoard == null
@@ -102,7 +107,7 @@ public class ActionCut extends AbstractAction implements CaretListener {
     public void caretUpdate(CaretEvent e) {
         if (e.getMark() != e.getDot()) { // there is a selection        
             setEnabled(true);
-            _textSource = (JTextComponent) e.getSource();
+            textSource = (JTextComponent) e.getSource();
         } else {
             Collection figSelection =
                 Globals.curEditor().getSelectionManager().selections();
@@ -110,7 +115,7 @@ public class ActionCut extends AbstractAction implements CaretListener {
                 setEnabled(false);
             } else
                 setEnabled(true);
-            _textSource = null;
+            textSource = null;
         }
 
     }

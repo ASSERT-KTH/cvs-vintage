@@ -1,4 +1,4 @@
-// $Id: ActionGenerateOne.java,v 1.9 2004/07/20 01:37:22 d00mst Exp $
+// $Id: ActionGenerateOne.java,v 1.10 2004/08/16 19:30:57 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -42,11 +42,17 @@ public class ActionGenerateOne extends UMLAction {
     ////////////////////////////////////////////////////////////////
     // static variables
 
+    /**
+     * The singleton.
+     */
     public static ActionGenerateOne SINGLETON = new ActionGenerateOne();
 
     ////////////////////////////////////////////////////////////////
     // constructors
 
+    /**
+     * The constructor.
+     */
     protected ActionGenerateOne() {
         super("action.generate-selected-classes", NO_ICON);
     }
@@ -54,6 +60,9 @@ public class ActionGenerateOne extends UMLAction {
     ////////////////////////////////////////////////////////////////
     // main methods
 
+    /**
+     * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
+     */
     public void actionPerformed(ActionEvent ae) {
         ProjectBrowser pb = ProjectBrowser.getInstance();
         Vector classes = new Vector();
@@ -92,6 +101,9 @@ public class ActionGenerateOne extends UMLAction {
         cgd.show();
     }
 
+    /**
+     * @see org.argouml.uml.ui.UMLAction#shouldBeEnabled()
+     */
     public boolean shouldBeEnabled() {
         if (!super.shouldBeEnabled())
             return false;
@@ -118,7 +130,8 @@ public class ActionGenerateOne extends UMLAction {
             while (figs.hasMoreElements()) {
         	Fig f = (Fig) figs.nextElement();
         	Object owner = f.getOwner();
-        	if (!(owner instanceof MClass) && !(owner instanceof MInterface))
+        	if (!(owner instanceof MClass) 
+        	    && !(owner instanceof MInterface))
         	    continue;
         	MClassifier cls = (MClassifier) owner;
         	String name = cls.getName();

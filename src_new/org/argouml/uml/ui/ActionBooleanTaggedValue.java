@@ -1,4 +1,4 @@
-// $Id: ActionBooleanTaggedValue.java,v 1.1 2004/05/17 15:57:07 mkl Exp $
+// $Id: ActionBooleanTaggedValue.java,v 1.2 2004/08/16 19:30:57 mvw Exp $
 // Copyright (c) 2003-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -39,18 +39,18 @@ import org.argouml.model.uml.UmlFactory;
  */
 public class ActionBooleanTaggedValue extends UMLChangeAction {
 
-    private String _tagName;
+    private String tagName;
 
     /**
      * The constructor takes the name of the tagged value as a string, which
      * will hold boolean data.
      * 
-     * @param tagName
+     * @param theTagName
      *            the name of the taggedvalue containing boolean values.
      */
-    public ActionBooleanTaggedValue(String tagName) {
+    public ActionBooleanTaggedValue(String theTagName) {
         super("Set", NO_ICON);
-        _tagName = tagName;
+        tagName = theTagName;
     }
 
     /**
@@ -70,11 +70,11 @@ public class ActionBooleanTaggedValue extends UMLChangeAction {
 
         boolean newState = source.isSelected();
 
-        Object taggedValue = ModelFacade.getTaggedValue(obj, _tagName);
+        Object taggedValue = ModelFacade.getTaggedValue(obj, tagName);
         if (taggedValue == null) {
             taggedValue = UmlFactory.getFactory().getExtensionMechanisms()
                     .createTaggedValue();
-            ModelFacade.setTag(taggedValue, _tagName);
+            ModelFacade.setTag(taggedValue, tagName);
             ModelFacade.addTaggedValue(obj, taggedValue);
         }
         if (newState) {

@@ -1,4 +1,4 @@
-// $Id: ActionNavigateNamespace.java,v 1.1 2004/07/26 22:33:41 mkl Exp $
+// $Id: ActionNavigateNamespace.java,v 1.2 2004/08/16 19:30:57 mvw Exp $
 // Copyright (c) 2003-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -35,6 +35,9 @@ import org.argouml.model.ModelFacade;
  */
 public class ActionNavigateNamespace extends AbstractActionNavigate {
        
+    /**
+     * @see org.argouml.uml.ui.AbstractActionNavigate#navigateTo(java.lang.Object)
+     */
     protected Object navigateTo(Object elem) {
         return ModelFacade.getNamespace(elem);
     }

@@ -1,4 +1,4 @@
-// $Id: ActionAddTopLevelPackage.java,v 1.10 2003/09/18 23:35:13 bobtarling Exp $
+// $Id: ActionAddTopLevelPackage.java,v 1.11 2004/08/16 19:30:58 mvw Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -37,6 +37,9 @@ public class ActionAddTopLevelPackage extends UMLChangeAction {
     ////////////////////////////////////////////////////////////////
     // static variables
     
+    /**
+     * The singleton.
+     */
     public static ActionAddTopLevelPackage SINGLETON =
 	new ActionAddTopLevelPackage(); 
 
@@ -44,6 +47,9 @@ public class ActionAddTopLevelPackage extends UMLChangeAction {
     ////////////////////////////////////////////////////////////////
     // constructors
 
+    /**
+     *  The constructor.
+     */
     public ActionAddTopLevelPackage() {
 	super("action.add-top-level-package", NO_ICON);
     }
@@ -52,6 +58,9 @@ public class ActionAddTopLevelPackage extends UMLChangeAction {
     ////////////////////////////////////////////////////////////////
     // main methods
 
+    /**
+     * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
+     */
     public void actionPerformed(ActionEvent ae) {
 	Project p = ProjectManager.getManager().getCurrentProject();	
         int numPacks = p.getUserDefinedModels().size();

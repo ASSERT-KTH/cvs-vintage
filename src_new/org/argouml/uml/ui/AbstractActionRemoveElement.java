@@ -1,4 +1,4 @@
-// $Id: AbstractActionRemoveElement.java,v 1.4 2004/02/29 12:35:46 linus Exp $
+// $Id: AbstractActionRemoveElement.java,v 1.5 2004/08/16 19:30:58 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -41,9 +41,9 @@ public class AbstractActionRemoveElement extends UMLChangeAction {
      * The object that owns the object that must be removed (the
      * object that is the target of the projectbrowser in most cases).
      */
-    private Object _target;
+    private Object target;
     
-    private Object _objectToRemove;
+    private Object objectToRemove;
     
     /**
      * Constructor for AbstractActionRemoveElement.
@@ -52,6 +52,10 @@ public class AbstractActionRemoveElement extends UMLChangeAction {
         this(Translator.localize("Delete From Model"));
     }
     
+    /**
+     *  The constructor.
+     * @param name the name for this action
+     */
     protected AbstractActionRemoveElement(String name) {
         super(name, true, NO_ICON);
     }
@@ -62,16 +66,16 @@ public class AbstractActionRemoveElement extends UMLChangeAction {
      * @return MModelElement
      */
     public Object getTarget() {
-        return _target;
+        return target;
     }
 
     /**
      * Sets the target.
      *
-     * @param target The target to set
+     * @param theTarget The target to set
      */
-    public void setTarget(Object target) {
-        _target = target;
+    public void setTarget(Object theTarget) {
+        target = theTarget;
     }
     
     /**
@@ -80,16 +84,16 @@ public class AbstractActionRemoveElement extends UMLChangeAction {
      * @return Object
      */
     public Object getObjectToRemove() {
-        return _objectToRemove;
+        return objectToRemove;
     }
 
     /**
      * Sets the objectToRemove.
      *
-     * @param objectToRemove The objectToRemove to set
+     * @param theObjectToRemove The objectToRemove to set
      */
-    public void setObjectToRemove(Object objectToRemove) {
-        _objectToRemove = objectToRemove;
+    public void setObjectToRemove(Object theObjectToRemove) {
+        objectToRemove = theObjectToRemove;
     }
     
     

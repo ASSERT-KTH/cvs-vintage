@@ -1,4 +1,4 @@
-// $Id: ActionSetSourcePath.java,v 1.16 2004/03/02 18:35:43 mvw Exp $
+// $Id: ActionSetSourcePath.java,v 1.17 2004/08/16 19:30:57 mvw Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -46,14 +46,20 @@ public class ActionSetSourcePath extends UMLAction {
     ////////////////////////////////////////////////////////////////
     // static variables
 
+    /**
+     * The singleton.
+     */
     public static ActionSetSourcePath SINGLETON = new ActionSetSourcePath();
 
-    public static final String separator = "/";
+    //public static final String separator = "/";
     //System.getProperty("file.separator");
 
     ////////////////////////////////////////////////////////////////
     // constructors
 
+    /**
+     * The constructor.
+     */
     protected ActionSetSourcePath() {
 	super("action.set-source-path", NO_ICON);
     }
@@ -62,16 +68,22 @@ public class ActionSetSourcePath extends UMLAction {
     ////////////////////////////////////////////////////////////////
     // main methods
 
+    /**
+     * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
+     */
     public void actionPerformed(ActionEvent e) {
 	File f = getNewDirectory();
 	if (f != null) {
 	    Object obj = TargetManager.getInstance().getTarget();
 	    if (ModelFacade.isAModelElement(obj)) {
-		ModelFacade.setTaggedValue(obj, "src_path",f.getPath());
+		ModelFacade.setTaggedValue(obj, "src_path", f.getPath());
 	    }
 	}
     }
 
+    /**
+     * @return the new source path directory
+     */
     protected File getNewDirectory() {
 	Project p = ProjectManager.getManager().getCurrentProject();
 	Object obj = TargetManager.getInstance().getTarget();
@@ -125,6 +137,9 @@ public class ActionSetSourcePath extends UMLAction {
 	}
     }
 
+    /**
+     * @see org.argouml.uml.ui.UMLAction#shouldBeEnabled()
+     */
     public boolean shouldBeEnabled() {
 	return true;
     }

@@ -1,4 +1,4 @@
-// $Id: ActionRemoveModelElement.java,v 1.9 2004/07/17 13:10:30 kataka Exp $
+// $Id: ActionRemoveModelElement.java,v 1.10 2004/08/16 19:30:57 mvw Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -40,7 +40,10 @@ import org.argouml.kernel.ProjectManager;
  */
 public class ActionRemoveModelElement extends AbstractActionRemoveElement {
     
-    public final static ActionRemoveModelElement SINGLETON =
+    /**
+     * The singleton.
+     */
+    public static final ActionRemoveModelElement SINGLETON =
 	new ActionRemoveModelElement();
     
     /**
@@ -56,7 +59,8 @@ public class ActionRemoveModelElement extends AbstractActionRemoveElement {
     public void actionPerformed(ActionEvent e) {
         super.actionPerformed(e);
         Project p = ProjectManager.getManager().getCurrentProject();
-        if (getObjectToRemove() != null && ActionRemoveFromModel.sureRemove(getObjectToRemove()))
+        if (getObjectToRemove() != null 
+                && ActionRemoveFromModel.sureRemove(getObjectToRemove()))
             p.moveToTrash(getObjectToRemove());
         setObjectToRemove(null);
     }

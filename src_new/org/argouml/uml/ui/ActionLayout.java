@@ -1,4 +1,4 @@
-// $Id: ActionLayout.java,v 1.9 2004/06/24 06:25:45 linus Exp $
+// $Id: ActionLayout.java,v 1.10 2004/08/16 19:30:57 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -37,19 +37,27 @@ import org.tigris.gef.base.Globals;
 import org.tigris.gef.base.SelectionManager;
 import org.tigris.gef.presentation.Fig;
 
+/**
+ * Action to layout a diagram.
+ *
+ */
 public class ActionLayout extends UMLAction {
 
     ////////////////////////////////////////////////////////////////
     // instance variables
 
-    protected String _tabName;
+    private String tabName;
 
     ////////////////////////////////////////////////////////////////
     // constructors
 
-    public ActionLayout(String tabName) {
-        super(tabName, NO_ICON);
-        _tabName = tabName;
+    /**
+     * The constructor.
+     * @param theTabName the name of the tab
+     */
+    public ActionLayout(String theTabName) {
+        super(theTabName, NO_ICON);
+        tabName = theTabName;
     }
 
     ////////////////////////////////////////////////////////////////
@@ -67,11 +75,13 @@ public class ActionLayout extends UMLAction {
                 && (ProjectManager.getManager().getCurrentProject()
                         .getActiveDiagram()
                     instanceof UMLClassDiagram)
-                && "action.layout-automatic".equals(_tabName));
+                && "action.layout-automatic".equals(tabName));
     }
 
     /** This action performs the layout and triggers a redraw
      * of the editor pane.
+     *
+     * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
      */
     public void actionPerformed(ActionEvent ae) {
         ClassdiagramLayouter layouter =

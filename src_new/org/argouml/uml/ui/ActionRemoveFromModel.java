@@ -1,4 +1,4 @@
-// $Id: ActionRemoveFromModel.java,v 1.42 2004/08/09 05:48:37 linus Exp $
+// $Id: ActionRemoveFromModel.java,v 1.43 2004/08/16 19:30:58 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -191,7 +191,7 @@ public class ActionRemoveFromModel extends UMLChangeAction {
      * A utility method that asks the user if he is sure to remove the selected
      * target.<p>
      *
-     * @param target
+     * @param target the object that will be removed
      * @return boolean
      */
     public static boolean sureRemove(Object target) {
@@ -243,7 +243,7 @@ public class ActionRemoveFromModel extends UMLChangeAction {
      * modelement.<p>
      *
      * @see ActionRemoveFromModel#sureRemove(Object)
-     * @param me
+     * @param me the modelelement that may be removed
      * @return boolean
      */
     public static boolean sureRemoveModelElement(Object/*MModelElement*/ me) {
@@ -303,6 +303,9 @@ public class ActionRemoveFromModel extends UMLChangeAction {
         return (response == JOptionPane.YES_OPTION);
     }
 
+    /**
+     * @return the complete array of targets
+     */
     protected Object[] getTargets() {
         /*
 	  Vector figs = null; try { Editor ce = Globals.curEditor();

@@ -1,4 +1,4 @@
-// $Id: ActionSaveProject.java,v 1.31 2004/08/16 18:04:45 mvw Exp $
+// $Id: ActionSaveProject.java,v 1.32 2004/08/16 19:30:57 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -60,6 +60,9 @@ public class ActionSaveProject extends UMLAction {
     ////////////////////////////////////////////////////////////////
     // static variables
 
+    /**
+     * The singleton.
+     */
     public static ActionSaveProject SINGLETON = new ActionSaveProject(); 
 
     /**

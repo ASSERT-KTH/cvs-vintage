@@ -1,4 +1,4 @@
-// $Id: ActionCopy.java,v 1.10 2004/07/26 22:40:10 mkl Exp $
+// $Id: ActionCopy.java,v 1.11 2004/08/16 19:30:58 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -49,7 +49,7 @@ public class ActionCopy extends AbstractAction implements CaretListener {
     ////////////////////////////////////////////////////////////////
     // static variables
 
-    private static ActionCopy _Instance = new ActionCopy();
+    private static ActionCopy instance = new ActionCopy();
 
     private static final String LOCALIZE_KEY = "action.copy";
 
@@ -71,18 +71,23 @@ public class ActionCopy extends AbstractAction implements CaretListener {
 		 Translator.localize(LOCALIZE_KEY) + " ");
     }
 
+    /**
+     * @return the singleton
+     */
     public static ActionCopy getInstance() {
-        return _Instance;
+        return instance;
     }
 
-    private JTextComponent _textSource;
+    private JTextComponent textSource;
 
     /**
      * Copies some text or a fig
+     *
+     * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
      */
     public void actionPerformed(ActionEvent ae) {
-        if (_textSource != null) {
-            _textSource.copy();
+        if (textSource != null) {
+            textSource.copy();
             Globals.clipBoard = null;            
         } else {
             CmdCopy cmd = new CmdCopy();
@@ -104,10 +109,10 @@ public class ActionCopy extends AbstractAction implements CaretListener {
     public void caretUpdate(CaretEvent e) {
         if (e.getMark() != e.getDot()) { // there is a selection        
             setEnabled(true);
-            _textSource = (JTextComponent) e.getSource();
+            textSource = (JTextComponent) e.getSource();
         } else {
             setEnabled(false);
-            _textSource = null;
+            textSource = null;
         }
     }
 
