@@ -93,7 +93,7 @@ import org.apache.commons.lang.StringUtils;
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
- * @version $Id: Issue.java,v 1.270 2003/02/12 21:39:14 jmcnally Exp $
+ * @version $Id: Issue.java,v 1.271 2003/02/13 02:15:43 jon Exp $
  */
 public class Issue 
     extends BaseIssue
@@ -2672,10 +2672,8 @@ public class Issue
 
 
     /**
-     * if this RMA is the chosen attribute for email subjects then return
-     * true.  if not explicitly chosen, check the other RMA's for this module
-     * and if none is chosen as the email attribute, choose the highest
-     * ordered text attribute.
+     * This method will return the AttributeValue which represents
+     * the default text attribute.
      *
      * @return the AttributeValue to use as the email subject, or null
      * or null if no suitable AttributeValue could be found. 
@@ -2689,19 +2687,9 @@ public class Issue
         {        
             Attribute defaultTextAttribute = 
                 getModule().getDefaultTextAttribute(getIssueType());
-            
             if (defaultTextAttribute != null) 
             {
-                ObjectKey attributeId = defaultTextAttribute.getAttributeId();
-                List avs = getAttributeValues();
-                for (int i=0; i<avs.size(); i++) 
-                {
-                    AttributeValue testAV = (AttributeValue)avs.get(i);
-                    if (attributeId.equals(testAV.getAttributeId())) 
-                    {
-                        result = testAV;
-                    }
-                }
+                result = getAttributeValue(defaultTextAttribute);
             }
             ScarabCache.put(result, this, GET_DEFAULT_TEXT_ATTRIBUTEVALUE);
         }
@@ -2712,7 +2700,11 @@ public class Issue
         return result;
     }
 
-
+    /**
+     * This calls getDefaultTextAttributeValue() and then returns the
+     * String value of the Attribute. This method is used to get the
+     * subject of an email.
+     */
     public String getDefaultText()
         throws Exception
     {
