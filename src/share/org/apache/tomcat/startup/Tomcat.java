@@ -86,7 +86,13 @@ public class Tomcat extends Log {
     boolean doGenerate=false;
     
     public static void printUsage() {
-	System.out.println(sm.getString("tomcat.usage"));
+	//System.out.println(sm.getString("tomcat.usage"));
+	System.out.println("Usage: java org.apache.tomcat.startup.Tomcat {options}");
+	System.out.println("  Options are:");
+	System.out.println("    -config file (or -f file)  Use this fileinstead of server.xml");
+	System.out.println("    -help (or help)            Show this usage report");
+	System.out.println("    -home dir (or -h dir)      Use this directory as tomcat.home");
+	System.out.println("    -stop                      Shut down currently running Tomcat");
     }
 
     /** Process arguments - set object properties from the list of args.
@@ -107,10 +113,14 @@ public class Tomcat extends Log {
 		i++;
 		if( i < args.length )
 		    configFile = args[i];
+		else
+		    return false;
 	    } else if (arg.equals("-h") || arg.equals("-home")) {
 		i++;
 		if (i < args.length)
 		    System.getProperties().put("tomcat.home", args[i]);
+		else
+		    return false;
 	    }
 	}
 	return true;

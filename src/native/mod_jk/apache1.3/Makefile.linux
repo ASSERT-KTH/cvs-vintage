@@ -6,7 +6,9 @@ OS=linux
 
 JAVA_INCL=-I ${JAVA_HOME}/include -I ${JAVA_HOME}/include/${OS}
 JAVA_LIB=-L ${JAVA_HOME}/jre/lib/${ARCH} -L ${JAVA_HOME}/lib/${ARCH}/native_threads
+#ifndef APXS
 APXS=/usr/sbin/apxs
+#endif
 
 JK=../common/
 SRCS=${JK}/jk_ajp12_worker.c ${JK}/jk_connect.c ${JK}/jk_msg_buff.c ${JK}/jk_util.c ${JK}/jk_ajp13.c \
