@@ -173,7 +173,7 @@ import ru.novosoft.uml.model_management.MModel;
  *
  * <p>Perspectives are now built here.
  *
- * $Id: NavigatorPane.java,v 1.33 2003/04/28 21:17:43 alexb Exp $
+ * $Id: NavigatorPane.java,v 1.34 2003/04/28 22:18:58 alexb Exp $
  */
 public class NavigatorPane
     extends JPanel
@@ -234,7 +234,7 @@ public class NavigatorPane
     public NavigatorPane(boolean doSplash) {
         
         _combo = new JComboBox();
-        _tree = new DisplayTextTree();
+        _tree = new DisplayTextTree();// _tree = new DnDNavigatorTree();//
         _toolbar = new Toolbar();
         JPanel toolbarPanel = new JPanel(new BorderLayout());
         
