@@ -1,5 +1,5 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/jasper/compiler/TagPoolManagerGenerator.java,v 1.3 2001/05/11 18:42:57 clucas Exp $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/jasper/compiler/TagPoolManagerGenerator.java,v 1.4 2002/10/09 05:56:09 billbarker Exp $
  *
  * ====================================================================
  *
@@ -90,7 +90,7 @@ public class TagPoolManagerGenerator extends GeneratorBase
             writer.pushIndent();
             // writer.println("org.apache.jasper.runtime.TagPoolManager.getDefaultPoolManager();");
             writer.println("(" + Constants.JSP_RUNTIME_PACKAGE
-			   + ".TagPoolManager) getServletContext().getAttribute(\"" +
+			   + ".TagPoolManager) getServletConfig().getServletContext().getAttribute(\"" +
                 TagPoolManager.CONTEXT_ATTRIBUTE_NAME + "\");");
             writer.popIndent();
         }
