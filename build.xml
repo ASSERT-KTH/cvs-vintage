@@ -175,7 +175,6 @@
 	<pathelement location="${tomcat.build}/lib/tomcat_util.jar" />
 	<pathelement location="${tomcat.build}/lib/tomcat_core.jar" />
       </classpath>
-      <include name="org/apache/tomcat/util/**" />    
       <include name="org/apache/tomcat/task/**" />    
       <include name="org/apache/tomcat/startup/**" />    
       <include name="org/apache/tomcat/loader/**" />    
@@ -188,7 +187,6 @@
     </copydir>
     <jar jarfile="${tomcat.build}/lib/tomcat_config.jar"
       basedir="${tomcat.build}/classes" > 
-      <include name="org/apache/tomcat/util/**" />    
       <include name="org/apache/tomcat/task/**" />    
       <include name="org/apache/tomcat/startup/**" />    
       <include name="org/apache/tomcat/loader/**" />    
