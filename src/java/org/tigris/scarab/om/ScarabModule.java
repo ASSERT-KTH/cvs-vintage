@@ -142,6 +142,23 @@ public class ScarabModule
     }
 
     /**
+     * List of Issue Template objects associated with this module.
+     *
+     */
+    public Vector getIssueTemplates()
+        throws Exception
+    {
+        Vector templates = null;
+        Criteria crit = new Criteria(2)
+            .add(IssueTemplatePeer.MODULE_ID, getModuleId())
+            .add(IssueTemplatePeer.DELETED, 0);
+        templates = IssueTemplatePeer.doSelect(crit);
+
+        return templates;
+    }
+
+
+    /**
      * gets a list of all of the Attributes in a Module based on the Criteria.
      */
     public Attribute[] getAttributes(Criteria criteria)
@@ -727,6 +744,18 @@ try{
         return QueryPeer.doSelect(crit);
     }
 
+    /**
+     * Returns list of enter issue templates needing approval.
+     */
+    public Vector getUnapprovedTemplates() throws Exception
+    {
+        Criteria crit = new Criteria(3);
+        crit.add(IssueTemplatePeer.APPROVED, 0)
+           .add(IssueTemplatePeer.DELETED, 0);
+        return IssueTemplatePeer.doSelect(crit);
+    }
+
+    /**
     /**
      * Saves the module into the database
     public void save() throws Exception
