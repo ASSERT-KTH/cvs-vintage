@@ -34,50 +34,49 @@ import org.jboss.logging.Log;
  * @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
  * @author <a href="mailto:shevlandj@kpi.com.au">Joe Shevland</a>
  * @author <a href="mailto:justin@j-m-f.demon.co.uk">Justin Forder</a>
- * @version $Revision: 1.23 $
+ * @version $Revision: 1.24 $
  */
 public class JAWSPersistenceManager
    implements EntityPersistenceStore
 {
    // Attributes ----------------------------------------------------
-   
+
    EntityContainer container;
-   
+
    JPMCommandFactory commandFactory;
-   
+
    JPMInitCommand initCommand;
    JPMStartCommand startCommand;
    JPMStopCommand stopCommand;
    JPMDestroyCommand destroyCommand;
-   
+
    JPMFindEntityCommand findEntityCommand;
    JPMFindEntitiesCommand findEntitiesCommand;
    JPMCreateEntityCommand createEntityCommand;
    JPMRemoveEntityCommand removeEntityCommand;
    JPMLoadEntityCommand loadEntityCommand;
    JPMStoreEntityCommand storeEntityCommand;
-   
+
    JPMActivateEntityCommand activateEntityCommand;
    JPMPassivateEntityCommand passivateEntityCommand;
-   
+
    Log log = new Log("JAWS");
-   
+
    // EntityPersistenceStore implementation -------------------------
-    
+
    public void setContainer(Container c)
    {
       container = (EntityContainer)c;
    }
-   
+
    public void init() throws Exception
    {
-      log.debug("Initializing JAWS plugin for " + 
+      log.debug("Initializing JAWS plugin for " +
                 container.getBeanMetaData().getEjbName());
-      
+
       // Set up Commands
-      
       commandFactory = new JDBCCommandFactory(container, log);
-      
+
       initCommand = commandFactory.createInitCommand();
       startCommand = commandFactory.createStartCommand();
       stopCommand = commandFactory.createStopCommand();
@@ -92,12 +91,12 @@ public class JAWSPersistenceManager
 
       activateEntityCommand = commandFactory.createActivateEntityCommand();
       passivateEntityCommand = commandFactory.createPassivateEntityCommand();
-      
+
       // Execute the init Command
-      
+
       initCommand.execute();
    }
-   
+
    public void start() throws Exception
    {
       startCommand.execute();
@@ -105,32 +104,34 @@ public class JAWSPersistenceManager
 
    public void stop()
    {
-      stopCommand.execute();
+      if(stopCommand != null) // On deploy errors, sometimes JAWS was never initialized!
+         stopCommand.execute();
    }
-   
+
    public void destroy()
    {
-      destroyCommand.execute();
+      if(destroyCommand != null) // On deploy errors, sometimes JAWS was never initialized!
+         destroyCommand.execute();
    }
-   
-   public Object createEntity(Method m, 
-                            Object[] args, 
+
+   public Object createEntity(Method m,
+                            Object[] args,
                             EntityEnterpriseContext ctx)
       throws RemoteException, CreateException
    {
       return createEntityCommand.execute(m, args, ctx);
    }
-   
-   public Object findEntity(Method finderMethod, 
-                            Object[] args, 
+
+   public Object findEntity(Method finderMethod,
+                            Object[] args,
                             EntityEnterpriseContext ctx)
       throws RemoteException, FinderException
    {
       return findEntityCommand.execute(finderMethod, args, ctx);
    }
-     
-   public Collection findEntities(Method finderMethod, 
-                                  Object[] args, 
+
+   public Collection findEntities(Method finderMethod,
+                                  Object[] args,
                                   EntityEnterpriseContext ctx)
       throws RemoteException, FinderException
    {
@@ -142,13 +143,13 @@ public class JAWSPersistenceManager
    {
       activateEntityCommand.execute(ctx);
    }
-   
+
    public void loadEntity(EntityEnterpriseContext ctx)
       throws RemoteException
    {
       loadEntityCommand.execute(ctx);
    }
-      
+
    public void storeEntity(EntityEnterpriseContext ctx)
       throws RemoteException
    {
@@ -160,17 +161,17 @@ public class JAWSPersistenceManager
    {
       passivateEntityCommand.execute(ctx);
    }
-      
+
    public void removeEntity(EntityEnterpriseContext ctx)
       throws RemoteException, RemoveException
    {
       removeEntityCommand.execute(ctx);
    }
-   
+
    // Inner classes -------------------------------------------------
-   
+
    // This class supports tuned updates and read-only entities
-   
+
    public static class PersistenceContext
    {
       public Object[] state;
