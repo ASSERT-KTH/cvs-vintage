@@ -6,7 +6,7 @@
     <meta http-equiv=Content-Type content="text/html">
     <link rel="stylesheet" href="style.css">
     <style type="text/css">
-    td {
+    .inlinetd {
         background-color: #E0E0E0;
         vertical-align: text-top;
         border-top: thick black;
@@ -14,81 +14,195 @@
         border-bottom: thick black;
         border-left: thick black;
     }
-    th {
+    .inlineth {
         background-color: #d0d0d0;
         border-top: thick black;
         border-right: thick black;
         border-bottom: thick black;
         border-left: thick black;
     }
-    table {
+    .inlinetable {
         width: 75%;
         border: thick;
         background-color: #000000;
     }
+    .subsection { margin:20pt; }
+    .note { margin:20pt; padding:5pt; background-color:#e0e0ff; }
+
     </style>
 
 <title>Working with mod_jk</title>
 </head>
 
 <body>
+<!-- Banner element, all hail the Project! -->
+<table border="0" width="100%" cellspacing="0" cellpadding="0">
+  <tr>
+    <td width="50%" align="left">
+        <a href="http://jakarta.apache.org/index.html">
+          <img src="uguide/images/banner.gif" width="350" height="100" alt="The Jakarta Project" border="0">
+        </a>
+    </td>
+    <td width="50%" align="right">
+      <img border="0" src="uguide/images/tomcat.gif" width="100" height="71" alt="The mighty Tomcat - Meow!">
+    </td>
+  </tr>
+</table>
 
 <h1>Working with mod_jk</h1>
-<p>By Gal Shachor <tt>&lt;<a href="mailto:shachor@il.ibm.com">
-shachor@il.ibm.com</a>&gt;</tt></p>
+<p>By Gal Shachor <tt>&lt;<a href="mailto:shachor@il.ibm.com">shachor@il.ibm.com</a>&gt;</tt></p>
 
-<h2>What is mod_jk</h2>
+<h2>Table of Contents</h2>
+<ul>
+<li><a href="#s2">What is mod_jk?</a></li>
+<li><a href="#s3">Why mod_jk?</a></li>
+<li><a href="#s4">What does it mean to me?</a></li>
+<li><a href="#s5">Definitions and Terminology</a></li>
+<li><a href="#s6">Configuring Apache to use mod_jk</a>
+<ul>
+<li><a href="#s61">Removing the mod_jserv directives</a></li>
+<li><a href="#s62">Obtaining mod_jk</a></li>
+<li><a href="#s63">Configuring Tomcat to use the Ajpv13 protocol</a></li>
+<li><a href="#s64">Defining workers for mod_jk</a></li>
+<li><a href="#s65">Configuring Apache to use mod_jk</a></li>
+<li><a href="#s66">Assigning URLs to be redirected to Tomcat</a></li>
+</ul></li>
+<li><a href="#s7">An example configuration</a></li>
+<li><a href="#s8">Troubleshooting and F.A.Q's</a></li>
+<li><a href="#s9">Credits</a></li>
+</ul>
+<hr>
+<h2><a name=s2>What is mod_jk?</a></h2>
 
-<p>mod_jk is a replacement to the elderly mod_jeserv. It is a completely new
-Tomcat-Apache plugin that passed adaptation to Tomcat. With some luck working
-with it is going to be simpler for everyone.</p>
-
-<h2>Why mod_jk?</h2>
+<p>mod_jk is a replacement to the elderly mod_jserv. It is a completely new
+Tomcat-Apache plugin that handles the communication between Tomcat and Apache</p>
+<hr>
+<h2><a name=s3>Why mod_jk?</a></h2>
 
 <p>Several reasons: </p>
 
 <ul>
- <li>mod_jserv was too complex
-     because it supported Jserv specific requirements that Tomcat does not
-     pose.</li>
- <li>mod_jserv supported only
-     Apache; on the other hand Tomcat supports many web servers through a
-     compatibility layer named the jk library. Supporting two different modes
-     of work became problematic in terms of support, documentation and bug
+ <li><b>mod_jserv was too complex</b>. Because it was ported from Apache/JServ, it
+ brought with it lots of JServ specific bits that aren't needed by Apache.
+ <li><b>mod_jserv supported only Apache</b>. Tomcat supports many web servers
+     through a compatibility layer named the jk library. Supporting two different
+     modes of work became problematic in terms of support, documentation and bug
      fixes. mod_jk should fix that.</li>
  <li>The layered approach provided
-     by the jk library makes it easier to support both Apache1.3.x and
-     Apache2.xx.</li>
+     by the jk library makes it easier to support both <b>Apache1.3.x <i>and</i>
+     Apache2.xx.</b></li>
+ <li><b>Better support for SSL</b>. mod_jserv couldn't reliably identify whether a
+ request was made via HTTP or HTTPS. mod_jk can, using the newer Ajpv13 protocol.</li>
 </ul>
-
-<h2>What does it means to me?</h2>
+<hr>
+<h2><a name=s4>What does it mean to me?</a></h2>
 
 <p>You will need to get to know a new simplified configuration mechanism. The
 advantage is that learning this mechanism will give you a head start if you
 want to deploy Tomcat on other web servers such as IIS and Netscape (oops,
 iPlanet).</p>
 
-<h2>Configuring Apache to use mod_jk</h2>
+<hr>
+<h2><a name=s5>Definitions and terminology</a></h2>
+
+<p>During this document I am going to use a few terms, so lets define them:</p>
+
+<table class=inlinetable>
+ <tr>
+  <th class=inlineth>
+  <p>Term</p>
+  </th>
+  <th class=inlineth>
+  <p>Meaning</p>
+  </th>
+ </tr>
+ <tr>
+  <td class=inlinetd>
+  <p>Worker process</p>
+  </td>
+  <td class=inlinetd>
+  <p>A worker is a tomcat instance that is running to serve
+  servlet requests coming from the web server. In most cases there is only a
+  single worker (the one and only tomcat process) but sometimes you will run
+  multiple workers to achieve load balancing or site partitioning. Each worker
+  is identified to the web server by the host were it is located, the port
+  where it listens and the communication protocol used to exchange messages.</p>
+  </td>
+ </tr>
+ <tr>
+  <td class=inlinetd>
+  <p>In process worker</p>
+  </td>
+  <td class=inlinetd>
+  <p>This is a special worker. Instead of working with a Tomcat
+  process residing on another process, the web server opens a JVM and executes
+  Tomcat inside the web server process address space. Our discussion in this
+  document is not going to get into this special worker.</p>
+  </td>
+ </tr>
+ <tr>
+  <td class=inlinetd>
+  <p>Web server plugin/tomcat redirector</p>
+  </td>
+  <td class=inlinetd>
+  <p>For Tomcat to cooperate with any web server it needs an
+  &quot;agent&quot; to reside in the web server and send him servlet requests.
+  This is the web server plugin, and in our case the web server plugin is
+  mod_jk. The redirector usually comes in the shape of a DLL/shared object
+  module that you should plug into the web server.</p>
+  </td>
+ </tr>
+ <tr>
+  <td class=inlinetd>
+  <p>Plugin configuration</p>
+  </td>
+  <td class=inlinetd>
+  <p>We need to configure the web server plugin so that it will
+  know where are the different Tomcat workers and to which of them it should
+  forward requests. This information accompanied with some internal parameter
+  such as the log level comprises the plugin configuration. </p>
+  </td>
+ </tr>
+ <tr>
+  <td class=inlinetd>
+  <p>Web server configuration</p>
+  </td>
+  <td class=inlinetd>
+  <p>Each web server has some configuration that defines how
+  behave, e.g. on which port to listen, what files to serve, what web server
+  plugins to load, etc. You will need to modify your web server configuration
+  to instruct it to load the tomcat redirector.</p>
+  </td>
+ </tr>
+</table>
+	
+<hr>
+<h2><a name=s6>Configuring Apache to use mod_jk</a></h2>
 
 <p>The configuration includes the following steps: </p>
 
 <ol>
- <li>Remove your old mod_jserv
-     configuration. mod_jk and mod_jserv cannot coexist !!</li>
+ <li>Remove your old mod_jserv configuration. mod_jk and mod_jserv cannot coexist !!</li>
  <li>Obtaining mod_jk</li>
- <li>Defining workers for mod_jk
-     (or selecting the quick start option)</li>
- <li>Configuring Apache to use
-     mod_jk and configure mod_jk internals (or selecting the quick start
-     option)</li>
- <li>Assigning URLs to be
-     redirected to Tomcat (or selecting the quick start option)</li>
+ <li><i>(optional)</i> Configuring Tomcat to use the Ajpv13 protocol</li>
+ <li>Defining workers for mod_jk (or selecting the quick start option)</li>
+ <li>Configuring Apache to use mod_jk and configure mod_jk internals (or selecting the quick start option)</li>
+ <li>Assigning URLs to be redirected to Tomcat (or selecting the quick start option)</li>
 </ol>
 
-<h2>Obtaining mod_jk</h2>
+<h3><a name=s61>1. Removing the mod_jserv directives</a></h3>
+<p class=subsection>
+If you've already configured Apache to use mod_jserv, remove any <tt>ApJServMount</tt> directives from your httpd.conf. If you're including <tt>tomcat-apache.conf</tt> or <tt>tomcat.conf</tt>, you'll want to remove them as well - they are specific to mod_jserv.
+</p>
 
-<p>There are no prebuilt mod_jk distribution for now, so you will need to build
-it yourself.</p>
+<h3><a name=s62>2. Obtaining and building mod_jk</a></h3>
+<div class=subsection>
+Binaries are available for Linux and Win32 under the bin directory where you obtained
+the Tomcat distribution file. For Linux, mod_jk is available as mod_jk.so. For Win32,
+mod_jk is available as mod_jk.dll.  If there isn't a prebuilt mod_jk available or
+you wish to build your own copy, you can build it yourself from the source.
+First, download the <b>Source Distribution</b> for Tomcat. There are a large number
+of files in the download directory, but the only one you need is <tt>jakarta-tomcat</tt>.
 
 <h3>On NT</h3>
 
@@ -100,10 +214,15 @@ environment is a prereq if you want to perform a custom build.</p>
 <ol>
  <li>Change directory to the
      apache1.3/apache2.0 source directory. </li>
+ <li>Set an APACHE1_HOME environment variable which points to where your Apache is
+   installed.</li>
  <li>Execute the following
-     command:<br>
-     <tt><span>MSDEV mod_jk.dsp /MAKE ALL</span></tt><br>
-     If msdev is not in your path, enter the full path to msdev.exe </li>
+     command:<br><br>
+     <tt><span>MSDEV mod_jk.dsp /MAKE ALL</span></tt><br><br>
+     If msdev is not in your path, enter the full path to msdev.exe. Also, ApacheCore.lib
+     is expected to exist in the APACHE1_HOME\src\CoreD and APACHE1_HOME\src\CoreR
+     directories before linking will succeed. You will need to build enough of the
+     Apache source to create these libraries.</li>
  <li>Copy mod_jk.dll to Apache's modules directory.</li>
 </ol>
 
@@ -115,168 +234,269 @@ menu.</p>
 
 <h3>On UNIX</h3>
 
-<p>For apache1.3</p>
+<h4>For Apache</h4>
 
 <ol>
- <li>Change directory to the
-     apache1.3/ apache2.0 source directory.</li>
- <li>Use apxs in the following
-     manner: <br>
-     <tt><span>apxs -o mod_jk.so -c *.c ../jk/ *.c -I ../jk/</span></tt></li>
+ <li>Make sure you have Perl 5 installed. The <tt>apxs</tt> script used to build the module is written in Perl.
+ <li>Change directory to <tt>jakarta-tomcat/src/native/apache1.3</tt> (or <tt>apache2.0</tt>).
+  <li>Run the <tt>apxs</tt> command that came with your apache distribution (hint: look in /usr/local/apache/bin, /usr/sbin, or wherever you intalled apache). Type the command all on one line.<BR><BR>
+  For Solaris:<BR>
+  <blockquote><tt>apxs -o mod_jk.so -DSOLARIS -I../jk -I/usr/java/include -I/usr/java/include/solaris -c *.c ../jk/*.c</tt></blockquote>
+  <i>On some systems, this will build the module correctly, but will fail at runtime with a </i>"<tt>symbol "fdatasync" not found</tt>"<i>. To fix, add </i><tt>-lposix4</tt><i> just before the </i><tt>-c</tt><i> in the above command.</i><BR><BR>
+  For Linux:
+  <blockquote><tt>apxs -o mod_jk.so -I../jk -I/usr/local/jdk/include -I/usr/local/jdk/include/linux -c *.c ../jk/*.c</tt></blockquote>
+  <i>Your build may fail because the object files from the <tt>../jk</tt> directory have been compiled to the current directory, rather than their source directory. Running </i><tt>gcc -shared -o mod_jk.so *.o</tt><i> should finish the build.</i><BR><BR>
+  (If you've installed Java in another directory, adjust accordingly). For other *nixes you should be able to work it out, but remember that <b>the order of the arguments to <tt>apxs</tt> is important!</b>.
+  </li>
  <li>Copy mod_jk.so to Apache's libexec directory</li>
 </ol>
 
-<h2>Quick start?</h2>
+<h4>For other Webservers</h4>
 
-<p>In most of simple cases Tomcat can generate the needed Apache configuration.
+There are several Makefiles in the other directories under the <tt>jakarta-tomcat/src/native</tt> directory.
+</div>
+
+<h3><a name=s63>3. (optional) Configuring Tomcat to use the Ajpv13 protocol</a></h3>
+<div class=subsection>
+mod_jk can use either the original Ajpv12 protocol or the newer Ajpv13 protocol.
+If you choose the latter, you need to activate the &quot;Ajp13&quot; Connection Handler in Tomcat. This
+will give you the benefit of a faster protocol and the ability to identify requests made via HTTPS.<BR><BR>
+Add the following block to your <tt>TOMCAT_HOME/conf/server.xml</tt> file.
+<blockquote><pre>
+&lt;Connector className=&quot;org.apache.tomcat.service.PoolTcpConnector&quot;&gt;
+  &lt;Parameter name=&quot;handler&quot; value=&quot;org.apache.tomcat.service.connector.Ajp13ConnectionHandler&quot;/&gt;
+  &lt;Parameter name=&quot;port&quot; value=&quot;8009&quot;/&gt;
+&lt;/Connector&gt;
+</pre></blockquote>
+The <tt>servlet.xml</tt> file already has a block similar to this for Ajp12 connections on port 8007 (as delivered by mod_jserv). Even if you think you're only using Ajp13, you probably don't want to delete this connector - it's required to shut down Tomcat.
+</div>
+<h3><a name=s64>4. Defining &quot;workers&quot;</a></h3>
+
+<h4>Quick start?</h4>
+<div class=subsection>
+<p>
+In most of simple cases Tomcat can generate the needed Apache configuration.
 When Tomcat starts up it will automatically generate
-a configuration file for Apache in<tt>TOMCAT_HOME/conf/mod_jk.conf-auto</tt>.
+a configuration file for Apache in <tt>TOMCAT_HOME/conf/mod_jk.conf-auto</tt>.
 Most of the time you don't need to do anything but
 include this file (appending <tt>&quot;Include TOMCAT_HOME/conf/mod_jk.conf-auto&quot;</tt>)
-in your httpd.conf. That’s it, you can
-now start Tomact and Apache and access Tomcat from the Apache server.</p>
-
-<p>If you have special needs, for example mounting
+in your httpd.conf. That's it, you can
+now start Tomcat and Apache and access Tomcat from the Apache server.
+</p>
+<p>
+If you have special needs, for example mounting
 URL prefixes that are not the default, you can use this file as a base for your
 customized configuration and save the results in another file. If you manage
 the Apache configuration yourself you'll need to update it whenever you add a
-new context. </p>
-
-<p style="background-color: #E0E0E0;"><b>Tomcat 3.2:</b> you must restart tomcat and apache after adding a new
+new context.
+</p>
+<p class=note><b>Tomcat 3.2:</b> you must restart tomcat and apache after adding a new
 context; Apache doesn't support configuration changes without a restart. Also
 the file <tt>TOMCAT_HOME/conf/mod_jk.conf-auto</tt> is generated when
 tomcat starts, so you'll need to start Tomcat before Apache. Tomcat will
 overwrite <tt>TOMCAT_HOME/conf/mod_jk.conf-auto</tt> each startup so
 customized configuration should be kept elsewhere.</p>
+</div>
 
-<h2>Definitions and terminology </h2>
+<h4>Configuring workers manually.</h4>
+<div class=subsection>
+<p>
+Workers are configured using the file <tt>TOMCAT_HOME/conf/workers.properties</tt>.
+There is a great deal of information in the
+<a href="Tomcat-Workers-HowTo.html">workers.properties howto</a> document, and you
+should really look at that first. If you're in a hurry however, you can probably get away
+with editing the file <tt>workers.properties</tt> and setting the <tt>workers.tomcat_home</tt>, <tt>workers.java_home</tt> and <tt>ps</tt> variables to the correct values for your system.
+</p>
+</div>
 
-<p>During this document I am going to use a few terms, so lets define them:<o:p></o:p></p>
-
-<table>
- <tr>
-  <th>
-  <p><pp>Term</p>
-  </th>
-  <th>
-  <p>Meaning</p>
-  </th>
- </tr>
- <tr>
-  <td>
-  <p>Worker process</p>
-  </td>
-  <td>
-  <p>A worker is a tomcat instance that is running to serve
-  servlet requests coming from the web server. In most cases there is only a
-  single worker (the one and only tomcat process) but sometimes you will run
-  multiple workers to achieve load balancing or site partitioning. Each worker
-  is identified to the web server by the host were it is located, the port
-  where it listens and the communication protocol used to exchange messages.</p>
-  </td>
- </tr>
- <tr>
-  <td>
-  <p>In process worker</p>
-  </td>
-  <td>
-  <p>This is a special worker. Instead of working with a Tomcat
-  process residing on another process, the web server opens a JVM and executes
-  Tomcat inside the web server process address space. Our discussion in this
-  document is not going to get into this special worker.</p>
-  </td>
- </tr>
- <tr>
-  <td>
-  <p>Web server plugin/tomcat redirector</p>
-  </td>
-  <td>
-  <p>For Tomcat to cooperate with any web server it needs an
-  &quot;agent&quot; to reside in the web server and send him servlet requests.
-  This is the web server plugin, and in our case the web server plugin is
-  mod_jk. The redirector usually comes in the shape of a DLL/shared object
-  module that you should plug into the web server.</p>
-  </td>
- </tr>
- <tr>
-  <td>
-  <p>Plugin configuration</p>
-  </td>
-  <td>
-  <p>We need to configure the web server plugin so that it will
-  know where are the different Tomcat workers and to which of them it should
-  forward requests. This information accompanied with some internal parameter
-  such as the log level comprises the plugin configuration. </p>
-  </td>
- </tr>
- <tr>
-  <td>
-  <p>Web server configuration</p>
-  </td>
-  <td>
-  <p>Each web server has some configuration that defines how
-  behave, e.g. on which port to listen, what files to serve, what web server
-  plugins to load, etc. You will need to modify your web server configuration
-  to instruct it to load the tomcat redirector.</p>
-  </td>
- </tr>
-</table>
-
-<h2>Configuring workers</h2>
-
-<p>Workers are configured using the file workers.properties, look into the <a
-href="Tomcat-Workers-HowTo.html">workers.properties howto</a> document for
-further documentation.</p>
-
-<h2>Configure Apache to use mod_jk</h2>
-
+<h3><a name=s65>5. Configure Apache to use mod_jk</a></h3>
+<div class=subsection>
 <p>Configuring Apache to use mod_jk is done using the Apache server
-configuration directives; to assist you in your first steps, please take a look
-into the auto-generated <tt>mod_jk.conf-auto</tt> available in Tomcat's conf directory.</p>
+configuration directives; to get you started, look at the auto-generated
+<tt>mod_jk.conf-auto</tt> available in Tomcat's <tt>conf</tt> directory.</p>
 
 <ul>
- <li>You will need to instruct
-     Apache to load Tomcat. This can be done with Apache's LoadModule
-     configuration directive.</li>
- <li>You must inform mod_jk the
-     location of your workers.properties file. Use mod_jk's JkWorkersFile
-     configuration directive.</li>
- <li>You should specify a location
-     where mod_jk is going to place its log file and a log level to be used.
-     Use the JkLogFile and JkLogLevel configuration directives. Possible log
-     levels are debug, warn, error and emerg, but warn should be your default
+ <li>You will need to instruct Apache to load Tomcat. This can be done with
+ Apache's <tt>LoadModule</tt> and <tt>AddModule</tt> configuration directives.</li>
+ <li>You must inform mod_jk the location of your <tt>workers.properties</tt> file.
+     Use mod_jk's <tt>JkWorkersFile</tt> configuration directive.</li>
+ <li>You should specify a location where mod_jk is going to place its log file
+     and a log level to be used. Use the <tt>JkLogFile</tt> and <tt>JkLogLevel</tt>
+     configuration directives. Possible log levels are <i>debug</i>, <i>warn</i>,
+     <i>error</i> and <i>emerg</i>, but <i>warn</i> should be your default
      selection.</li>
 </ul>
+A simple example would be to include the following lines in your <tt>httpd.conf</tt> file:
+<blockquote><pre>
+LoadModule    jk_module  libexec/mod_jk.so
+AddModule     mod_jk.c
+JkWorkersFile /usr/local/jakarta-tomcat/conf/workers.properties
+JkLogFile     /usr/local/apache/logs/mod_jk.log
+JkLogLevel    warn
+</pre></blockquote>
+</div>
 
-<p>That's it. Now you should assign URLs to be redirected to Tomcat.</p>
-
-<h2>Assigning URLs to Tomcat</h2>
-
+<h3><a name=s66>6. Assigning URLs to Tomcat</a></h3>
+<div class=subsection>
 <p>Use mod_jk's JkMount directive to assign specific URLs to Tomcat. In general
 the structure of a JkMount directive is:</p>
 
 <pre>
-JkMount &lt;URL prefix&gt; &lt;Worker name&gt;
+JkMount <i>&lt;URL prefix&gt;</i> <i>&lt;Worker name&gt;</i>
 </pre>
 
-<p>For example the following directives will send all the .jsp suffixed
-requests to localworker, but jsp requests to files located in /otherworker will
-go to remoteworker. Additionally any requests prefixed by /servlet/ will go to
-localworker</p>
+<p>For example the following directives will send all requests ending in
+<tt>.jsp</tt> or beginning with <tt>/servlet</tt> to the &quot;<tt>ajp13</tt>&quot; worker,
+but jsp requests to files located in /otherworker will go to &quot;<tt>remoteworker</tt>&quot;.
 
-<pre>
-JkMount /*.jsp localworker
+<blockquote><pre>
+JkMount /*.jsp ajp13
+JkMount /servlet/* ajp13
 JkMount /otherworker/*.jsp remoteworker
-JkMount /servlet/* localworker
-</pre>
+</pre></blockquote>
+You  can use the <tt>JkMount</tt> directive at the top level or inside <tt>&lt;VirtualHost&gt;</tt>
+sections of your httpd.conf file.
+</div>
 
-<p>You should of course adjust the mounts points to reflect
-your own topology.</p>
+You're done! You should now be able to start Tomcat and apache and have them cooperate
+to serve servlets and JSP files.
+<hr>
+<h2><a name=s7>An example configuration</a></h2>
+Here's an example configuration which probably reflects many real-world setups. A site
+is using Tomcat and Apache with two virtual hosts (one of them using HTTPS as well, which
+we're assuming is being handled by mod_ssl).
+<BR><BR>
+URLs ending in .jsp and beginning with /servlet are handled by Tomcat, the rest are
+handled by Apache. The files for each Host are server out of /web/host1 and /web/host2
+respectively.<BR><BR>
+The example are over-simplified and incomplete but should get you started. Also note the
+virtual host setup is new in Tomcat 3.2 - <i>this example won't work with Tomcat 3.1</i>.<BR><BR>
 
-<h2>Running Apache with Tomcat </h2>
+<table class=inlinetable><tr><td class=inlinetd>
+<blockquote><pre>
+.
+.
+&lt;Connector className=&quot;org.apache.tomcat.service.PoolTcpConnector&quot;&gt;
+  &lt;Parameter name=&quot;handler&quot; value=&quot;org.apache.tomcat.service.connector.Ajp12ConnectionHandler&quot;/&gt;
+  &lt;Parameter name=&quot;port&quot; value=&quot;8007&quot;/&gt;
+&lt;/Connector&gt;
 
-<p>That's it; you are done. You should now be able to start Tomcat and apache
-and have tomcat and apache cooperate to serve servlets and JSP files.</p>
+&lt;Connector className=&quot;org.apache.tomcat.service.PoolTcpConnector&quot;&gt;
+  &lt;Parameter name=&quot;handler&quot;  value=&quot;org.apache.tomcat.service.connector.Ajp13ConnectionHandler&quot;/&gt;
+  &lt;Parameter name=&quot;port&quot; value=&quot;8009&quot;/&gt;
+&lt;/Connector&gt;
 
+&lt;Host name=&quot;host1.apache.org&quot;&gt;
+  &lt;Context path=&quot;&quot; docBase=&quot;/web/host1&quot; debug=&quot;0&quot;/&gt;
+&lt;/Host&gt;
+&lt;Host name=&quot;host2.apache.org&quot;&gt;
+  &lt;Context path=&quot;&quot; docBase=&quot;/web/host2&quot; debug=&quot;0&quot;/&gt;
+&lt;/Host&gt;
+.
+.
+</pre></blockquote>
+</td></tr></table>
+<i>Table 1 - Excerpt from server.xml showing the Ajp13 Connector and two virtual
+hosts.</i>
+<BR><BR>
+<table class=inlinetable><tr><td class=inlinetd>
+<blockquote><pre>
+# Setup for Solaris system
+#
+workers.tomcat_home=/usr/local/jakarta-tomcat
+workers.java_home=/usr/java
+ps=/
+worker.list=ajp12, ajp13
+
+# Definition for Ajp13 worker (Ajp12 left to readers imagination)
+#
+worker.ajp13.port=8009
+worker.ajp13.host=localhost
+worker.ajp13.type=ajp13
+</pre></blockquote>
+</td></tr></table>
+<i>Table 2 - Excerpt from workers.properties showing the Ajp13 worker</i>
+<BR><BR>
+<table class=inlinetable><tr><td class=inlinetd>
+<blockquote><pre>
+# Load mod_jk
+#
+LoadModule    jk_module  libexec/mod_jk.so
+AddModule     mod_jk.c
+
+# Configure mod_jk
+#
+JkWorkersFile /usr/local/jakarta-tomcat/conf/workers.properties
+JkLogFile     /usr/local/apache/logs/mod_jk.log
+JkLogLevel    warn
+
+# First Virtual Host.
+#
+&lt;VirtualHost 10.0.0.1:80&gt;
+  DocumentRoot /web/host1
+  ServerName host1.apache.org
+  JkMount /*.jsp ajp13
+  JkMount /servlet/* ajp13
+&lt;/VirtualHost&gt;
+
+# Second Virtual Host. Also accessible via HTTPS
+#
+&lt;VirtualHost 10.0.0.2:80&gt;
+  DocumentRoot /web/host2
+  ServerName host2.apache.org
+  JkMount /*.jsp ajp13
+  JkMount /servlet/* ajp13
+&lt;/VirtualHost&gt;
+
+&lt;VirtualHost 10.0.0.2:443&gt;
+  DocumentRoot /web/host2
+  ServerName host2.apache.org
+  SSLEngine On
+  JkMount /*.jsp ajp13
+  JkMount /servlet/* ajp13
+&lt;/VirtualHost&gt;
+
+</pre></blockquote>
+</td></tr></table>
+<i>Table 3 - Excerpt from Apaches httpd.conf showing JK directives.</i>
+
+<HR>
+<h2><a name=s8>Troubleshooting and F.A.Q.s</a></h2>
+
+<h3>Q. I can't find mod_jk anywhere. Where is it?</h3>
+A. You need to download the <b>Source Distribution</b> of Tomcat and build it yourself.
+See <a href="#s62">this section</a> for more information.
+
+<h3>Q. Which protocol should I use? Ajp12 or Ajp13?</h3>
+A. Ajp13 is a newer protocol, it's faster, and it works better with SSL. You almost
+certainly want to use that. There is more information in the
+<a href="Tomcat-Workers-HowTo.html">workers.properties howto</a> document
+
+<h3>Q. Whenever I restart Tomcat, Apache locks up!</h3>
+A. The Ajp13 protocol keeps an open socket between Tomcat and Apache. When you restart
+Tomcat, you need to restart Apache as well.
+
+<h3>Q. Where can I get more information?</h3>
+A. The <a href="Tomcat-Workers-HowTo.html">workers.properties howto</a> document has
+considerably more in-depth information than this one, and is worth a look. You could
+also try searching the mailing list archives for &quot;mod_jk&quot; or look at the source.
+
+
+<hr>
+<h2><a name=s9>Credits</a></h2>
+<p>This document was created by
+<a href="mailto:shachor@il.ibm.com">Gal Shachor</a>, and was revised by Mike Bremford with help from the countless many on the tomcat-dev and tomcat-user lists!</p>
+
+<table width="100%" border="0" cellpadding="10" cellspacing="0">
+  <tr>
+    <td>
+      <p class="fineprint">
+        Copyright &copy;1999-2000 The Apache Software Foundation<br>
+        <a href="http://jakarta.apache.org/legal.html">Legal Stuff They Make Us Say</a><br>
+        <a href="http://jakarta.apache.org/contact.html">Contact Information</a> </p>
+    </td>
+  </tr>
+</table>
 </body>
 </html>
+
