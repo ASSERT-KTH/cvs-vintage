@@ -38,7 +38,7 @@ import org.gjt.sp.util.Log;
  * Class with several useful miscellaneous functions.
  *
  * @author Slava Pestov
- * @version $Id: MiscUtilities.java,v 1.11 2001/12/02 11:40:50 spestov Exp $
+ * @version $Id: MiscUtilities.java,v 1.12 2001/12/22 08:39:54 spestov Exp $
  */
 public class MiscUtilities
 {
@@ -882,18 +882,21 @@ loop:		for(int i = 0; i < str.length(); i++)
 
 		//{{{ 3. Check whether it is in jEdit's system jars folder:
 		String jEditDir = jEdit.getJEditHome();
-		String toolsPath = constructPath(jEditDir, "jars", "tools.jar");
-		paths.addElement(toolsPath);
-		if(new File(toolsPath).exists())
+		if(jEditDir != null)
 		{
-			Log.log(Log.DEBUG, MiscUtilities.class,
-				"- is in jEdit's system jars folder. Fine.");
-			// jEdit will load it automatically
-			return true;
+			String toolsPath = constructPath(jEditDir, "jars", "tools.jar");
+			paths.addElement(toolsPath);
+			if(new File(toolsPath).exists())
+			{
+				Log.log(Log.DEBUG, MiscUtilities.class,
+					"- is in jEdit's system jars folder. Fine.");
+				// jEdit will load it automatically
+				return true;
+			}
 		} //}}}
 
 		//{{{ 4. Check whether it is in <java.home>/lib:
-		toolsPath = System.getProperty("java.home");
+		String toolsPath = System.getProperty("java.home");
 		if(toolsPath.toLowerCase().endsWith(File.separator + "jre"))
 			toolsPath = toolsPath.substring(0, toolsPath.length() - 4);
 		toolsPath = constructPath(toolsPath, "lib", "tools.jar");
