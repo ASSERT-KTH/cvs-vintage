@@ -1,4 +1,4 @@
-// $Id: LastRecentlyUsedMenuList.java,v 1.3 2004/08/29 19:48:40 mvw Exp $
+// $Id: LastRecentlyUsedMenuList.java,v 1.1 2004/09/28 19:45:05 mvw Exp $
 // Copyright (c) 2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -22,7 +22,7 @@
 // CALIFORNIA HAS NO OBLIGATIONS TO PROVIDE MAINTENANCE, SUPPORT,
 // UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 
-package org.argouml.ui.menubar;
+package org.argouml.ui.cmd;
 
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;

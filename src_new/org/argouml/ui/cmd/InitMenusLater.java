@@ -1,4 +1,4 @@
-// $Id: InitMenusLater.java,v 1.20 2004/09/09 18:07:17 mvw Exp $
+// $Id: InitMenusLater.java,v 1.1 2004/09/28 19:45:05 mvw Exp $
 // Copyright (c) 1996-2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -22,7 +22,7 @@
 // CALIFORNIA HAS NO OBLIGATIONS TO PROVIDE MAINTENANCE, SUPPORT,
 // UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 
-package org.argouml.ui.menubar;
+package org.argouml.ui.cmd;
 
 import java.awt.Toolkit;
 import java.awt.event.KeyEvent;

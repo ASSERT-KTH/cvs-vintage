@@ -1,4 +1,4 @@
-// $Id: ArgoParser.java,v 1.28 2004/09/28 11:12:22 bobtarling Exp $
+// $Id: ArgoParser.java,v 1.29 2004/09/28 19:45:06 mvw Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -24,7 +24,6 @@
 
 package org.argouml.xml.argo;
 
-import java.io.BufferedInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
@@ -68,9 +67,9 @@ public class ArgoParser extends SAXParserBase {
 
     private String lastLoadMessage;
 
-    ////////////////////////////////////////////////////////////////
-    // constructors
-
+    /**
+     * @return the singleton
+     */
     public static final ArgoParser getInstance() {
         return INSTANCE;   
     }

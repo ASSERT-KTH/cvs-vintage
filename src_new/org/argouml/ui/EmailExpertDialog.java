@@ -1,4 +1,4 @@
-// $Id: EmailExpertDialog.java,v 1.17 2004/09/21 19:03:28 mvw Exp $
+// $Id: EmailExpertDialog.java,v 1.18 2004/09/28 19:45:06 mvw Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -124,7 +124,7 @@ public class EmailExpertDialog extends ArgoDialog {
     /**
      * @param t the target object
      */
-    protected void setTarget(Object t) {
+    public void setTarget(Object t) {
 	target = (ToDoItem) t;
 	Poster p = target.getPoster();
 	emailTo.setText(p.getExpertEmail());

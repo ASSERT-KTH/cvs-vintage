@@ -1,4 +1,4 @@
-// $Id: ProjectBrowser.java,v 1.133 2004/09/21 19:03:28 mvw Exp $
+// $Id: ProjectBrowser.java,v 1.134 2004/09/28 19:45:06 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -57,7 +57,7 @@ import org.argouml.swingext.BorderSplitPane;
 import org.argouml.swingext.Horizontal;
 import org.argouml.swingext.Orientation;
 import org.argouml.swingext.Vertical;
-import org.argouml.ui.menubar.GenericArgoMenuBar;
+import org.argouml.ui.cmd.GenericArgoMenuBar;
 import org.argouml.ui.targetmanager.TargetEvent;
 import org.argouml.ui.targetmanager.TargetListener;
 import org.argouml.ui.targetmanager.TargetManager;
