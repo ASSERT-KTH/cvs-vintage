@@ -53,6 +53,7 @@ import java.util.ArrayList;
 
 // Turbine classes
 import org.apache.turbine.Turbine;
+import org.apache.turbine.Log;
 import org.apache.torque.om.NumberKey;
 
 // import org.apache.fulcrum.servlet.TurbineServlet;
@@ -78,7 +79,7 @@ import com.lucene.search.Hits;
  * Support for searching/indexing text
  *
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: LuceneAdaptor.java,v 1.9 2001/08/15 06:17:13 jmcnally Exp $
+ * @version $Id: LuceneAdaptor.java,v 1.10 2001/10/16 17:54:49 jmcnally Exp $
  */
 public class LuceneAdaptor 
     implements SearchIndex
@@ -179,10 +180,10 @@ public class LuceneAdaptor
                         .append(')');
                 }
             }
-            System.out.println("Querybefore=" + fullQuery);
+            Log.debug("Querybefore=" + fullQuery);
             Query q = QueryParser.parse(fullQuery.toString(), TEXT, 
                                         new StandardAnalyzer());
-            System.out.println("Queryafter=" + q.toString("text"));
+            Log.debug("Queryafter=" + q.toString("text"));
             
         /*
         System.out.println("Query: " + q.toString(TEXT));
