@@ -43,7 +43,8 @@ import org.jboss.logging.Log;
  * JAWSPersistenceManager JDBCCommandFactory
  *
  * @author <a href="mailto:justin@j-m-f.demon.co.uk">Justin Forder</a>
- * @version $Revision: 1.7 $
+ * @author <a href="danch@nvisia.com">danch (Dan Christopherson</a>
+ * @version $Revision: 1.8 $
  */
 public class JDBCCommandFactory implements JPMCommandFactory
 {
@@ -144,7 +145,7 @@ public class JDBCCommandFactory implements JPMCommandFactory
    public JPMFindEntitiesCommand createFindByCommand(Method finderMethod, FinderMetaData f)
       throws IllegalArgumentException
    {
-      return new JDBCFindByCommand(this, finderMethod);
+      return new JDBCFindByCommand(this, finderMethod, f);
    }
    
    // JPMCommandFactory implementation ------------------------------

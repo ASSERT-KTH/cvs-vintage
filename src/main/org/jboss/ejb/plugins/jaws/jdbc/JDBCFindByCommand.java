@@ -16,6 +16,7 @@ import java.util.Iterator;
 import org.jboss.logging.Logger;
 
 import org.jboss.ejb.plugins.jaws.metadata.CMPFieldMetaData;
+import org.jboss.ejb.plugins.jaws.metadata.FinderMetaData;
 
 /**
  * JAWSPersistenceManager JDBCFindByCommand
@@ -25,7 +26,8 @@ import org.jboss.ejb.plugins.jaws.metadata.CMPFieldMetaData;
  * @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
  * @author <a href="mailto:shevlandj@kpi.com.au">Joe Shevland</a>
  * @author <a href="mailto:justin@j-m-f.demon.co.uk">Justin Forder</a>
- * @version $Revision: 1.7 $
+ * @author <a href="mailto:danch@nvisia.com">danch (Dan Christopherson)</a>
+ * @version $Revision: 1.8 $
  */
 public class JDBCFindByCommand extends JDBCFinderCommand
 {
@@ -36,10 +38,10 @@ public class JDBCFindByCommand extends JDBCFinderCommand
    
    // Constructors --------------------------------------------------
    
-   public JDBCFindByCommand(JDBCCommandFactory factory, Method finderMethod)
+   public JDBCFindByCommand(JDBCCommandFactory factory, Method finderMethod, FinderMetaData md)
       throws IllegalArgumentException
    {
-      super(factory, finderMethod.getName());
+      super(factory, md);
       
       String cmpFieldName = finderMethod.getName().substring(6).toLowerCase();
       Logger.debug("Finder:"+cmpFieldName);
