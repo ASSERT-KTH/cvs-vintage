@@ -5,6 +5,9 @@ echo y |mysqladmin drop scarab
 echo Create Scarab database...
 mysqladmin create scarab
 
+echo Importing mysql-scarab.sql...
+mysql scarab < mysql-scarab.sql
+
 echo Importing mysql-turbine.sql...
 mysql scarab < mysql-turbine.sql
 
@@ -16,9 +19,6 @@ mysql scarab < mysql-turbine-id-table-init.sql
 
 echo Importing mysql-turbine-security.sql...
 mysql scarab < mysql-turbine-security.sql
-
-echo Importing mysql-scarab.sql...
-mysql scarab < mysql-scarab.sql
 
 echo Importing mysql-scarab-id-table-init.sql...
 mysql scarab < mysql-scarab-id-table-init.sql
