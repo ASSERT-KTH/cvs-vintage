@@ -238,6 +238,7 @@
         <tstamp/>
         <filter token="BUILD_DATE" value="${DSTAMP}${TSTAMP}"/>
         <filter token="TEMPLATE_PATH" value="${template.path}"/>
+        <filter token="HOMEPAGE" value="${scarab.homepage}"/>
         <filter token="PIPELINE_DESCRIPTOR"
             value="${scarab.default.pipeline.descriptor}"/>
         <filter token="ADMIN_USERNAME" value="${scarab.user.username}"/>
