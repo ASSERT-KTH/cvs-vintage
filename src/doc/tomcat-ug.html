@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
 <html>
 <head>
-    <!-- $Id: tomcat-ug.html,v 1.16 2001/09/27 10:33:21 bojan Exp $ -->
+    <!-- $Id: tomcat-ug.html,v 1.17 2001/10/10 17:37:30 larryi Exp $ -->
     <!-- Copyright 1999-2001 Apache Software Foundation -->
     <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
     <link rel="stylesheet" type="text/css" href="style.css">
@@ -833,7 +833,7 @@ scope of their availability when Tomcat 3.3 is running.  You may wish to add
 additional classes and jars.  Also, a web application may need some modification
 based on what Tomcat 3.3 makes available by default.</p>
 
-<p>The available classes is determined by the classloader hierarchy that
+<p>The available classes are determined by the classloader hierarchy that
 Tomcat 3.3 creates when it starts up.  The classloader hierarchy built by
 Tomcat 3.3 looks like this:</p>
 
@@ -897,28 +897,32 @@ Tomcat 3.3 looks like this:</p>
 <p>In this classloader hierarchy, classloaders can access classes in
 classloaders beneath them. They can not access classes in classloaders to the
 side or above! With this in mind, a brief inspection should reveal that in
-Tomcat 3.3, web applications do not have access to an XML parser by default.
-The <code>jaxp.jar</code> and <code>crimson.jar</code> are tucked away in the
-<b>Server Classloader</b> where they are accessible only within that classloader.</p>
+Tomcat 3.3, web applications, without some intervention, would not have access
+to an XML parser by default. The <code>crimson.jar</code> and
+<code>xalan.jar</code> are tucked away in the <b>Server Classloader</b> where
+they are accessible only within that classloader. However, &quot;intervention&quot;
+is provided by default. The default configuration for the
+<a href="serverxml.html#LoaderInterceptor11">LoaderInterceptor11</a> is to
+provide an XML parser to web applications that don't already contain one.</p>
 
-<p>Also note that if you have a jar containing classes which depends on
-<code>servlet.jar</code>, putting it on the CLASSPATH wouldn't work.
+<p>Also note that if you have a jar containing classes that depend on
+<code>servlet.jar</code>, putting that jar on the CLASSPATH wouldn't work.
 <code>servlet.jar</code> isn't accessible to the <b>Application Classloader</b>.
 This is why in Tomcat 3.3, your CLASSPATH envronment variable is ignored.  You
-must put such a jar in the <b>Common Classloader</b> or above.</p>
+must place such a jar in the <b>Common Classloader</b> or above.</p>
 
-<p>For classes to are used solely by a web application, they should be placed
-in the web application's <code>WEB-INF/classes</code> or in a jar in the
-<code>WEB-INF/lib</code> as defined by the Servlet 2.2 specifications.  If you
+<p>Classes that are used in one particular web application should be placed
+in that web application's <code>WEB-INF/classes</code> or in a jar in the
+<code>WEB-INF/lib</code> as defined by the Servlet 2.2 specification.  If you
 want to give the classes wider scope, place the classes in a jar if they aren't
 already.  Then place the jar in the directory that corresponds to the
-classloader with the scope you desired.  In the <b>Apps Classloader</b>, the
+classloader with the scope you desire.  In the <b>Apps Classloader</b>, the
 classes are shared among all the web applications.  In the <b>Common Classloader</b>,
-the classes are shared among all the web applications and the web server classes.</p>
+the classes are shared among all the web applications and the web server.</p>
 
 <p>A second method is available for adding classes to the <b>Common Classloader</b>
 and <b>Apps Classloader</b>.  Entries found in an <code>org.apache.tomcat.common.classpath</code>
-system property are added to the <b>Common Classloader</b> and entries found in
+System property are added to the <b>Common Classloader</b> and entries found in
 an <code>org.apache.tomcat.apps.classpath</code> are added to the <b>Apps CLassloader</b>.</p>
 
 <h3><a name="configuring_server">Configuring the Server</a></h3>
