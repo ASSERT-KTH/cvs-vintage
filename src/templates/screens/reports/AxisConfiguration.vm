@@ -56,15 +56,17 @@
 
 ## don't show the headings section if the axis is Dates 
 ##if (($singleHeading && $headings.get(0).calculateType() != 2) || $multiHeading)
-#if ($multiHeading)
+#if ($singleHeading || $multiHeading)
   #if ($headingIndex == -1)
     #set ($headingIndex = 0)
   #end
   <h3>$l10n.get("${rowCol}Headings")</h3>
+  #if ($multiHeading)
   <div class="colbar">
     $l10n.format("DefineHeaderInstructions", "$l10n.EditSelectedHeading")
     "$l10n.format("SelectOptionsHeader", $axisIndex)" $l10n.ToSetThe $l10n.HeadingSummary.toLowerCase().
   </div>
+  #end
   <div>
     <table width="100%" cellpadding="3" cellspacing="2" border="1">		
       <tr>
@@ -78,6 +80,7 @@
     #set ($index = $velocityCount - 1)
     #if ($headingIndex == $index)
       #set ($selectedHeading = $heading)
+      <input type="hidden" name="prevheading" value="$headingIndex" />
     #end
     #indexedRows($velocityCount)
     #if ($multiHeading)

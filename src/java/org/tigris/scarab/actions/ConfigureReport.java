@@ -86,7 +86,7 @@ import org.apache.commons.betwixt.io.BeanWriter;
 /**
     This class is responsible for report generation forms
     @author <a href="mailto:jmcnally@collab.net">John D. McNally</a>
-    @version $Id: ConfigureReport.java,v 1.6 2003/02/04 11:25:59 jon Exp $
+    @version $Id: ConfigureReport.java,v 1.7 2003/02/07 00:55:45 jmcnally Exp $
 */
 public class ConfigureReport 
     extends RequireLoginFirstAction
@@ -121,10 +121,27 @@ public class ConfigureReport
             if (intakeReport != null) 
             {   
                 intakeReport.setValidProperties(report);
-                getScarabRequestTool(context).setConfirmMessage(
-                    l10n.get("ChangesSaved"));
+
+                if (report.isReadyForCalculation()) 
+                {
+                    scarabR.setConfirmMessage(l10n.get("ChangesSaved"));
+                    setTarget(data, "reports,Info.vm");     
+                }
+                else 
+                {
+                    scarabR.setConfirmMessage(
+                        l10n.get("ChangesSavedPleaseAddRowAndColumnCriteria"));
+                    setTarget(data, "reports,AxisConfiguration.vm");
+                }
             }
-            setTarget(data, "reports,Info.vm");            
+            else 
+            {
+                // FIXME! i don't know that the intakeReport should ever be 
+                // null, but since the conditional was here, don't fail silently
+                scarabR.setAlertMessage(
+                    l10n.get("ThisShouldNotHappenPleaseContactAdmin"));
+                setTarget(data, "reports,Info.vm");
+            }            
         }
         else 
         {
@@ -141,6 +158,17 @@ public class ConfigureReport
         // to remove old intake data
         Intake intake = getIntakeTool(context);
         intake.removeAll();
+        // give the user a message if they are already on the selected
+        // heading, in the event they are confused.
+        ValueParser params = data.getParameters();
+        int level = params.getInt("heading", -1);
+        int prevLevel = params.getInt("prevheading", -2);
+        if (level == prevLevel) 
+        {
+            getScarabRequestTool(context).setInfoMessage(
+                getLocalizationTool(context)
+                .format("AlreadyEditingSelectedHeading", new Integer(level+1)));
+        }        
     }
 
     public void doSettype(RunData data, TemplateContext context)
@@ -284,6 +312,19 @@ public class ConfigureReport
             {
                 params.setString("heading", "0");
             }
+
+            if (report.isReadyForCalculation()) 
+            {
+                scarabR.setConfirmMessage(
+                    l10n.get("OptionsSavedDoMoreOrCalculate"));                
+            }
+            else 
+            {
+                scarabR.setConfirmMessage(
+                    l10n.get("OptionsSavedDoMore"));
+                
+            }
+
 /*
             //testing
             java.io.FileWriter fw = new java.io.FileWriter("/tmp/Report.xml");
@@ -372,7 +413,17 @@ public class ConfigureReport
             {
                 params.setString("heading", "0");
             }
-            scarabR.setConfirmMessage(l10n.get("SelectedUsersWereAdded"));
+            if (report.isReadyForCalculation()) 
+            {
+                scarabR.setConfirmMessage(
+                    l10n.get("SelectedUsersWereAddedDoMoreOrCalculate")); 
+            }
+            else 
+            {
+                scarabR.setConfirmMessage(
+                    l10n.get("SelectedUsersWereAddedDoMore"));
+            }
+
         }
         else 
         {
@@ -474,7 +525,7 @@ public class ConfigureReport
             || heading.getReportGroups() != null) 
         {
             heading.reset();
-            scarabR.setAlertMessage(l10n.get("CouldNotMakeRequestedChange"));                
+            scarabR.setAlertMessage(l10n.get("CouldNotMakeRequestedChange"));
         }
         else 
         {
@@ -603,6 +654,9 @@ public class ConfigureReport
         // remove old intake data
         Intake intake = getIntakeTool(context);
         intake.removeAll();
+        scarabR.setConfirmMessage(getLocalizationTool(context)
+            .get("HeadingAddedNowAddContent"));
+
     }        
 
     public void doAddgroup(RunData data, TemplateContext context)
