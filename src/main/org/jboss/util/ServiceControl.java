@@ -19,7 +19,7 @@ import org.jboss.logging.Log;
  *      
  *   @see <related>
  *   @author Rickard Öberg (rickard.oberg@telkel.com)
- *   @version $Revision: 1.1 $
+ *   @version $Revision: 1.2 $
  */
 public class ServiceControl
    implements ServiceControlMBean, MBeanRegistration, NotificationListener
@@ -62,6 +62,10 @@ public class ServiceControl
          } catch (ReflectionException e)
          {
            // Not a service - ok 
+         } catch (RuntimeMBeanException e)
+         {
+            log.error("Could not initialize "+name);
+            log.exception(e.getTargetException());
          } catch (Exception e)
          {
             log.error("Could not initialize "+name);

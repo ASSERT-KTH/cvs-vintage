@@ -28,6 +28,16 @@ import org.jboss.util.ServiceMBean;
  * @version
  */
 
-public interface ServerSessionPoolLoaderMBean extends ServiceMBean {
-    public static final String OBJECT_NAME = ":service=ServerSessionPoolMBean";
-} // ServerSessionPoolLoaderMBean
+public interface ServerSessionPoolLoaderMBean 
+   extends ServiceMBean 
+{
+   public static final String OBJECT_NAME = ":service=ServerSessionPoolMBean";
+
+   public void setPoolName(String name);
+   
+   public String getPoolName();
+   
+   public void setPoolFactoryClass(String clazz);
+   
+   public String getPoolFactoryClass();
+}

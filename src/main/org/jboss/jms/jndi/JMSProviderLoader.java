@@ -39,98 +39,114 @@ import org.jboss.logging.Logger;
  * @version
  */
 
-public class JMSProviderLoader extends ServiceMBeanSupport
-        implements JMSProviderLoaderMBean {
-    JMSProviderAdapter providerAdapter;
-    
-    public JMSProviderLoader(String name, String jmsProviderAdapterClass) {
-        try {
-            Class cls = Class.forName(jmsProviderAdapterClass);
-            providerAdapter = (JMSProviderAdapter)cls.newInstance();
-        } catch(Exception e) {
-            Logger.exception(e);
-            throw new RuntimeException("Unable to initialize ProviderAdapter '"+name+"': "+e);
-        }
-	providerAdapter.setName(name);
-	
-    }
-
-    public void setProviderUrl(String url) {
-	providerAdapter.setProviderUrl(url);
-    }
-
-    public String getProviderUrl() {
-	return providerAdapter.getProviderUrl();
-    }
-    public ObjectName getObjectName(MBeanServer parm1, ObjectName parm2) throws javax.management.MalformedObjectNameException {
-        return (parm2 == null) ? new ObjectName(OBJECT_NAME+",name="+providerAdapter.getName()) : parm2;
-    }
-
-    public String getName() {
-        return providerAdapter.getName();
-    }
-    public void startService() throws Exception {
-    
-        initializeAdapter();
-    }
-
-    public void stopService() {
-        // Unbind from JNDI
-        try {
-            String name = providerAdapter.getName();
-            new InitialContext().unbind("java:/"+name);
-            log.log("JMA Provider Adapter "+name+" removed from JNDI");
-            //source.close();
-            //log.log("XA Connection pool "+name+" shut down");
-        } catch (NamingException e) {
-            // Ignore
-        }
-    }
-
-	// Private -------------------------------------------------------
-
-    private void initializeAdapter() throws NamingException {
-        Context ctx = null;
-        Object mgr = null;
-
-	/*
-        source.setTransactionManagerJNDIName("java:/TransactionManager");
-        try {
-            ctx = new InitialContext();
-            mgr = ctx.lookup("java:/TransactionManager");
-        } catch(NamingException e) {
-            throw new IllegalStateException("Cannot start XA Connection Pool; there is no TransactionManager in JNDI!");
-        }
-        source.initialize();
-	*/
-
-        // Bind in JNDI
-        bind(new InitialContext(), "java:/"+providerAdapter.getName(), providerAdapter);
-
-        log.log("JMS provider Adapter "+providerAdapter.getName()+" bound to java:/"+providerAdapter.getName());
-
+public class JMSProviderLoader 
+   extends ServiceMBeanSupport
+   implements JMSProviderLoaderMBean 
+{
+   JMSProviderAdapter providerAdapter;
    
-    }
+   String url;
+   String providerName;
+   String providerAdapterClass;
 
-    private void bind(Context ctx, String name, Object val) throws NamingException {
-        // Bind val to name in ctx, and make sure that all intermediate contexts exist
-        Name n = ctx.getNameParser("").parse(name);
-        while (n.size() > 1) {
-            String ctxName = n.get(0);
-            try {
-                ctx = (Context)ctx.lookup(ctxName);
-            } catch (NameNotFoundException e) {
-                ctx = ctx.createSubcontext(ctxName);
-            }
-            n = n.getSuffix(1);
-        }
+   public void setProviderName(String name)
+   {
+      this.providerName = name;
+   }
+   
+   public String getProviderName()
+   {
+      return providerName;
+   }
+   
+   public void setProviderAdapterClass(String clazz)
+   {
+      providerAdapterClass = clazz;
+   }
+   
+   public String getProviderAdapterClass()
+   {
+      return providerAdapterClass;
+   }
+   
+   public void setProviderUrl(String url)
+   {
+      this.url = url;
+   }
 
-        ctx.bind(n.get(0), val);
-    }
+   public String getProviderUrl()
+   {
+      return url;
+   }
+   public ObjectName getObjectName(MBeanServer parm1, ObjectName parm2) 
+      throws javax.management.MalformedObjectNameException
+   {
+      return (parm2 == null) ? new ObjectName(OBJECT_NAME) : parm2;
+   }
+
+   public String getName()
+   {
+      return providerName;
+   }
+   
+   public void initService() 
+      throws Exception
+   {
+      Class cls = Class.forName(providerAdapterClass);
+      providerAdapter = (JMSProviderAdapter)cls.newInstance();
+      providerAdapter.setName(providerName);
+      providerAdapter.setProviderUrl(url);
+   }
+   
+   public void startService() 
+      throws Exception
+   {
+      // Bind in JNDI
+      bind(new InitialContext(), "java:/"+providerAdapter.getName(), providerAdapter);
+
+      log.log("JMS provider Adapter "+providerAdapter.getName()+" bound to java:/"+providerAdapter.getName());
+   }
+
+   public void stopService()
+   {
+      // Unbind from JNDI
+      try {
+         String name = providerAdapter.getName();
+         new InitialContext().unbind("java:/"+name);
+         log.log("JMA Provider Adapter "+name+" removed from JNDI");
+         //source.close();
+         //log.log("XA Connection pool "+name+" shut down");
+      } catch (NamingException e)
+      {
+         // Ignore
+      }
+   }
+
+   // Private -------------------------------------------------------
+   private void bind(Context ctx, String name, Object val) throws NamingException
+   {
+      // Bind val to name in ctx, and make sure that all intermediate contexts exist
+      Name n = ctx.getNameParser("").parse(name);
+      while (n.size() > 1)
+      {
+         String ctxName = n.get(0);
+         try
+         {
+            ctx = (Context)ctx.lookup(ctxName);
+         } catch (NameNotFoundException e)
+         {
+            ctx = ctx.createSubcontext(ctxName);
+         }
+         n = n.getSuffix(1);
+      }
+
+      ctx.bind(n.get(0), val);
+   }
 
 
 
-} // JMSProviderLoader
+}
+
 
 
 

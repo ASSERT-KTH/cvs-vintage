@@ -28,7 +28,17 @@ import org.jboss.util.ServiceMBean;
  * @version
  */
 
-public interface JMSProviderLoaderMBean  extends ServiceMBean{
+public interface JMSProviderLoaderMBean  
+   extends ServiceMBean
+{
     public static final String OBJECT_NAME = ":service=JMSProviderLoader";
+
+    public void setProviderName(String name);
     
-} // JMSProviderLoaderMBean
+    public String getProviderName();
+    
+    public void setProviderAdapterClass(String clazz);
+    
+    public String getProviderAdapterClass();
+    
+}
