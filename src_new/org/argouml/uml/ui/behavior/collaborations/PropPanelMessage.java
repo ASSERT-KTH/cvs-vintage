@@ -1,4 +1,4 @@
-// $Id: PropPanelMessage.java,v 1.33 2003/06/30 21:59:35 linus Exp $
+// $Id: PropPanelMessage.java,v 1.34 2003/07/01 06:45:38 linus Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -27,7 +27,7 @@
 // File: PropPanelMessage.java
 // Classes: PropPanelMessage
 // Original Author: agauthie@ics.uci.edu
-// $Id: PropPanelMessage.java,v 1.33 2003/06/30 21:59:35 linus Exp $
+// $Id: PropPanelMessage.java,v 1.34 2003/07/01 06:45:38 linus Exp $
 
 package org.argouml.uml.ui.behavior.collaborations;
 
@@ -98,7 +98,7 @@ public class PropPanelMessage extends PropPanelModelElement {
 
 	addSeperator();
 
-	addField(Argo.localize("UMLMenu", "label.activator"
+	addField(Argo.localize("UMLMenu", "label.activator"),
 		 new UMLMessageActivatorComboBox(this,
 			 new UMLMessageActivatorComboBoxModel()));
 
