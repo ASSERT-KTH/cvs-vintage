@@ -1,4 +1,4 @@
-// $Id: FigInterface.java,v 1.51 2003/10/12 00:32:39 d00mst Exp $
+// $Id: FigInterface.java,v 1.52 2003/10/12 08:53:58 linus Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -417,7 +417,7 @@ public class FigInterface extends FigNodeModelElement {
 
     public void mouseClicked(MouseEvent me) {
         super.mouseClicked(me);
-	if ((me.getModifiersEx() & MouseEvent.SHIFT_DOWN_MASK) != 0
+	if (me.isShiftDown()
 	    && TargetManager.getInstance().getTargets().size() > 0)
 	    return;
 
