@@ -21,6 +21,15 @@ if [ "$OSTYPE" = "cygwin32" ] || [ "$OSTYPE" = "cygwin" ] ; then
    CLASSPATH=`cygpath --path --unix "$CLASSPATH"`
 fi
 
+# OSX hack to make it work with jikes
+OSXHACK="/System/Library/Frameworks/JavaVM.framework/Versions/CurrentJDK/Classes"
+if [ -d ${OSXHACK} ] ; then
+for i in ${OSXHACK}/*.jar
+do
+    CLASSPATH=${CLASSPATH}:$i
+done
+fi
+
 # order of the for loops matters here
 for i in `find ../src -name "crimson*.jar" -print | tail -1` ; do
    CLASSPATH="$CLASSPATH:$i"
