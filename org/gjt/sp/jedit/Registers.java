@@ -55,7 +55,7 @@ import org.gjt.sp.util.Log;
  *
  * @author Slava Pestov
  * @author John Gellene (API documentation)
- * @version $Id: Registers.java,v 1.14 2003/05/09 23:42:24 spestov Exp $
+ * @version $Id: Registers.java,v 1.15 2003/05/10 02:47:59 spestov Exp $
  */
 public class Registers
 {
@@ -419,7 +419,7 @@ public class Registers
 					buf.append('\n');
 				}
 				// remove trailing \n
-				if(!trailingEOL)
+				if(!trailingEOL && buf.length() != 0)
 					buf.setLength(buf.length() - 1);
 				return buf.toString();
 			}

@@ -33,7 +33,7 @@ import java.beans.*;
 import java.io.*;
 import java.net.*;
 import org.gjt.sp.jedit.gui.RolloverButton;
-import org.gjt.sp.jedit.msg.PropertiesChanged;
+import org.gjt.sp.jedit.msg.PluginUpdate;
 import org.gjt.sp.jedit.*;
 import org.gjt.sp.util.Log;
 //}}}
@@ -42,9 +42,9 @@ import org.gjt.sp.util.Log;
  * jEdit's searchable help viewer. It uses a Swing JEditorPane to display the HTML,
  * and implements a URL history.
  * @author Slava Pestov
- * @version $Id: HelpViewer.java,v 1.10 2003/04/11 00:59:48 spestov Exp $
+ * @version $Id: HelpViewer.java,v 1.11 2003/05/10 02:47:59 spestov Exp $
  */
-public class HelpViewer extends JFrame //implements EBComponent
+public class HelpViewer extends JFrame implements EBComponent
 {
 	//{{{ HelpViewer constructor
 	/**
@@ -147,7 +147,7 @@ public class HelpViewer extends JFrame //implements EBComponent
 		pack();
 		GUIUtilities.loadGeometry(this,"helpviewer");
 
-		//EditBus.addToBus(this);
+		EditBus.addToBus(this);
 
 		show();
 
@@ -242,6 +242,8 @@ public class HelpViewer extends JFrame //implements EBComponent
 			return;
 		}
 
+		this.shortURL = shortURL;
+
 		// select the appropriate tree node.
 		if(shortURL != null)
 			toc.selectNode(shortURL);
@@ -250,7 +252,7 @@ public class HelpViewer extends JFrame //implements EBComponent
 	//{{{ dispose() method
 	public void dispose()
 	{
-		//EditBus.removeFromBus(this);
+		EditBus.removeFromBus(this);
 		jEdit.setIntegerProperty("helpviewer.splitter",
 			splitter.getDividerLocation());
 		GUIUtilities.saveGeometry(this,"helpviewer");
@@ -258,11 +260,21 @@ public class HelpViewer extends JFrame //implements EBComponent
 	} //}}}
 
 	//{{{ handleMessage() method
-	/* public void handleMessage(EBMessage msg)
+	public void handleMessage(EBMessage msg)
 	{
-		if(msg instanceof PropertiesChanged)
+		if(msg instanceof PluginUpdate)
+		{
+			PluginUpdate pmsg = (PluginUpdate)msg;
+			if(pmsg.getWhat() == PluginUpdate.LOADED
+				|| pmsg.getWhat() == PluginUpdate.UNLOADED)
+			{
+				if(!queuedTOCReload)
+					queueTOCReload();
+				queuedTOCReload = true;
+			}
 			SwingUtilities.updateComponentTreeUI(getRootPane());
-	} */ //}}}
+		}
+	} //}}}
 
 	//{{{ getBaseURL() method
 	public String getBaseURL()
@@ -270,8 +282,17 @@ public class HelpViewer extends JFrame //implements EBComponent
 		return baseURL;
 	} //}}}
 
+	//{{{ getShortURL() method
+	String getShortURL()
+	{
+		return shortURL;
+	} //}}}
+
 	//{{{ Private members
+
+	//{{{ Instance members
 	private String baseURL;
+	private String shortURL;
 	private JButton back;
 	private JButton forward;
 	private JEditorPane viewer;
@@ -280,6 +301,22 @@ public class HelpViewer extends JFrame //implements EBComponent
 	private String[] history;
 	private int historyPos;
 	private HelpTOCPanel toc;
+	private boolean queuedTOCReload;
+	//}}}
+
+	//{{{ queueTOCReload() method
+	public void queueTOCReload()
+	{
+		SwingUtilities.invokeLater(new Runnable()
+		{
+			public void run()
+			{
+				queuedTOCReload = false;
+				toc.load();
+			}
+		});
+	} //}}}
+
 	//}}}
 
 	//{{{ Inner classes

@@ -45,13 +45,14 @@ import org.gjt.sp.util.Log;
  * <li><code>editPane</code> - the currently active {@link EditPane}.</li>
  * <li><code>textArea</code> - the edit pane's {@link JEditTextArea}.</li>
  * <li><code>buffer</code> - the edit pane's {@link Buffer}.</li>
- * <li><code>wm</code> - the view's {@link DockableWindowManager}.</li>
+ * <li><code>wm</code> - the view's {@link
+ * org.gjt.sp.jedit.gui.DockableWindowManager}.</li>
  * <li><code>scriptPath</code> - the path name of the currently executing
  * BeanShell script.</li>
  * </ul>
  *
  * @author Slava Pestov
- * @version $Id: BeanShell.java,v 1.38 2003/05/08 20:37:40 spestov Exp $
+ * @version $Id: BeanShell.java,v 1.39 2003/05/10 02:47:59 spestov Exp $
  */
 public class BeanShell
 {
