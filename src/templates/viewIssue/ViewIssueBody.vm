@@ -6,8 +6,12 @@
 #set ($canEdit = $scarabR.hasPermission($scarabG.Permission.ISSUE__EDIT, $module) && $rmit.Active)
 #set ($attrValues = $currentIssue.ModuleAttributeValuesMap)
 #set ($currentIssueId = $currentIssue.UniqueId)
-#set ($copyToModules = $data.User.getCopyToModules($module, "copy"))
-#set ($moveToModules = $data.User.getCopyToModules($module, "move"))
+
+# TODO: The getCopyToModules() can be expensive (PCN20967).  Add APIs
+# which perform the "should show" check without retrieving all the
+# associated data.
+#set ($copyToModules = $data.User.getCopyToModules($module, 'copy'))
+#set ($moveToModules = $data.User.getCopyToModules($module, 'move'))
 #set ($showCopyButton = $copyToModules && !$copyToModules.isEmpty())
 #set ($showMoveButton = $moveToModules && !$moveToModules.isEmpty())
 
