@@ -49,6 +49,17 @@ document.write('<link rel="stylesheet" type="text/css" href="$staticLink.setPath
 #if ($scarabR.CurrentModule)
 <a href="$link.setPage("SelectModule.vm")">$l10n.Modules</a> > 
  $scarabR.CurrentModule.Name
+
+ #if ($data.Parameters.getString("id"))
+  #set ($currentIssueId = $data.parameters.getString("id"))
+  #set ($currentIssue = $scarabR.getIssue($currentIssueId))
+  #if ($currentIssue)
+   &gt; <strong>Issue $currentIssue.UniqueId:</strong>
+   (<strong>$currentIssue.DefaultText</strong>)
+  #end
+ #end
+
+
 #else
 <a href="$link.setPage("SelectModule.vm")">$l10n.Modules</a>
 #end
