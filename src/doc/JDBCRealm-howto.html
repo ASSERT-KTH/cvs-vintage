@@ -131,8 +131,7 @@ mysql>
 <td>
 <blockquote>
 <p><code><br>
-&lt;RequestInterceptor 
-	className="org.apache.tomcat.request.JDBCRealm"<br>
+&lt;JDBCRealm"<br>
  
 	debug="99"      
 	driverName="org.gjt.mm.mysql.Driver" <br>
@@ -210,23 +209,52 @@ mysql>
 </td>
 </tr>
 <tr>
-<td height="32">Digest       </td>
-<td>The algorithm used for digest passwords or &quot;No&quot; for plain passwords, the values can be &quot;MD5&quot;, etc... (Optional) </td>
+<td height="32">digest       </td>
+<td>The algorithm used for digest passwords or &quot;No&quot; for
+	      plain passwords, the values can be
+	      &quot;MD5&quot;, &quot;MD2&quot;, &quot;SHA&quot;,
+	      etc...
+<a href=
+"http://java.sun.com/products/jdk/1.2/docs/guide/security/CryptoSpec.html#AppA"
+>(Optional)</a></td>
 </tr>
 </table>
 <p>&nbsp;</p>
 <p>Done!!
 </p>
 <h2>Using digested passwords</h2>
-<p>To use digested password you need to store them digested.
-To achieve this, you will  need to use the same digest strategies that JDBCrealm uses to store the passwords, inside JDBCRealm there is a static method with signature <code>final public static String Digest(String password,String algorithm)</code> this method is provided as a tool to be used outside JDBCRealm by an application that want to store passwords readable by JDBCRealm.</p>
+
+<p>
+  To use digested password you need to store them digested.  To
+  achieve this, you will need to use the same digest strategies that
+  JDBCrealm uses to store the passwords. Iinside JDBCRealm there is a
+  static method with signature <code>final public static String
+  digest(String password,String algorithm)</code>. This method is
+  provided as a tool to be used outside JDBCRealm by an application
+  that wants to generate digested passwords readable by JDBCRealm.
+</p>
+
+<p>
+  The class JDBCRealm contains a main method, so it can be used as an
+  application to generate digests and print them to stdout.  Usage
+  is:<br>
+
+  <code>java org.apache.tomcat.modules.aaa.JDBCRealm -a
+  &lt;<i>algorithm</i>&gt; &lt;<i>password</i>&gt;
+  [&lt;<i>password</i>&gt; ...]</code><br>
+
+  where &lt;<i>algorithm</i>&gt; is a supported message digest
+  algorithm, e.g. MD5, and &lt;<i>password</i>&gt; is a plaintext
+  password to be digested.
+</p>
+
 <h2>Hints</h2>
 <p>
    
    - Make sure that the JDBC driver is in the lib directory.
 <br>
 - If you have problem connecting you can specify connectionName and connectionPassword</p>
-<div align="center">$Header: /tmp/cvs-vintage/tomcat/src/doc/JDBCRealm-howto.html,v 1.2 2000/09/05 17:57:42 nacho Exp $
+<div align="center">$Header: /tmp/cvs-vintage/tomcat/src/doc/JDBCRealm-howto.html,v 1.3 2001/07/21 00:44:25 nacho Exp $
 </div>
 </body>
 </html>
