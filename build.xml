@@ -12,7 +12,7 @@
 <!--                                                                        -->
 <!-- ====================================================================== -->
 
-<!-- $Id: build.xml,v 1.66 2002/02/17 06:13:29 user57 Exp $ -->
+<!-- $Id: build.xml,v 1.67 2002/02/17 08:39:05 starksm Exp $ -->
 
 <project default="main" name="JBoss/Server">
 
@@ -410,9 +410,22 @@
   <!-- Compile etc files (manifests and such) -->
   <target name="compile-etc" depends="init">
     <mkdir dir="${build.etc}"/>
+    <!-- Copy with filtering to replace the following tokens that are
+         used to make up the jar manifest version information.
+     -->
+    <filter token="version.major" value="${version.major}"/>
+    <filter token="version.minor" value="${version.minor}"/>
+    <filter token="version.revision" value="${version.revision}"/>
+    <filter token="version.tag" value="${version.tag}"/>
+    <filter token="version.name" value="${version.name}"/>
     <copy todir="${build.etc}" filtering="yes">
       <fileset dir="${source.etc}">
          <include name="**/*"/>
+      </fileset>
+    </copy>
+    <copy todir="${build.etc}/manifest" filtering="yes">
+      <fileset dir="${project.root}/build/etc">
+         <include name="version.mf"/>
       </fileset>
     </copy>
   </target>
@@ -453,7 +466,7 @@
     <mkdir dir="${build.lib}"/>
 
     <!-- jboss.jar -->
-    <jar jarfile="${build.lib}/jboss.jar" manifest="${build.etc}/manifest/jboss.mf">
+    <jar jarfile="${build.lib}/jboss.jar" manifest="${build.etc}/manifest/version.mf">
       <fileset dir="${build.classes}">
         <include name="org/jboss/**"/>
         
@@ -485,7 +498,7 @@
        | This file is always local and contains the basic classed required
        | to start the server and setup network service loading.
      -->
-    <jar jarfile="${build.lib}/jboss-boot.jar">
+    <jar jarfile="${build.lib}/jboss-boot.jar" manifest="${build.etc}/manifest/version.mf">
       <fileset dir="${build.classes}">
         <include name="org/jboss/Version.class"/>
         <include name="org/jboss/system/BootstrapLogger.class"/>
@@ -511,7 +524,7 @@
     </jar>
 
     <!-- jboss-spine.jar -->
-    <jar jarfile="${build.lib}/jboss-spine.jar">
+    <jar jarfile="${build.lib}/jboss-spine.jar" manifest="${build.etc}/manifest/version.mf">
       <fileset dir="${build.classes}">
         <include name="org/jboss/logging/**"/>
         <include name="org/jboss/system/Service.class"/>
@@ -533,7 +546,7 @@
 	 
     <!-- jboss-client.jar -->
     <jar jarfile="${build.lib}/jboss-client.jar"
-         manifest="${build.etc}/manifest/jboss-client.mf">
+         manifest="${build.etc}/manifest/version.mf">
       <fileset dir="${build.classes}">
         <include name="org/jboss/deployment/DeploymentException.class"/>
         <include name="org/jboss/proxy/**"/>
@@ -581,7 +594,8 @@
     </jar>
 
     <!-- jmx-rmi-adaptor.sar --> 
-    <jar jarfile="${build.lib}/jmx-rmi-adaptor.sar">
+    <jar jarfile="${build.lib}/jmx-rmi-adaptor.sar"
+         manifest="${build.etc}/manifest/version.mf">
       <fileset dir="${build.classes}">
         <include name="org/jboss/jmx/adaptor/rmi/**"/>
         <include name="org/jboss/jmx/connector/notification/**"/>
@@ -593,7 +607,8 @@
     </jar>
 
     <!-- jmx-ejb-adaptor.jar --> 
-    <jar jarfile="${build.lib}/jmx-ejb-adaptor.jar">
+    <jar jarfile="${build.lib}/jmx-ejb-adaptor.jar"
+         manifest="${build.etc}/manifest/version.mf">
       <fileset dir="${build.classes}">
         <include name="org/jboss/jmx/ObjectHandler**"/>
         <include name="org/jboss/jmx/adaptor/ejb/**"/>
@@ -608,7 +623,8 @@
     <!-- ejb-management.jar --> 
     <!-- (should try to use jlink for this) -->  
     <unjar src="${sun.jsr77.lib}/jsr77.jar" dest="${build.classes}"/> 
-    <jar jarfile="${build.lib}/ejb-management.jar">
+    <jar jarfile="${build.lib}/ejb-management.jar"
+         manifest="${build.etc}/manifest/version.mf">
       <fileset dir="${build.classes}">
         <include name="org/jboss/management/mejb/**"/>
         <include name="javax/management/j2ee/Management*.class"/>
@@ -620,7 +636,7 @@
 
     <!-- jmx-ejb-connector-client.jar -->
     <jar jarfile="${build.lib}/jmx-ejb-connector-client.jar"
-         manifest="${build.etc}/manifest/ejb-connector-client.mf">
+         manifest="${build.etc}/manifest/version.mf">
       <fileset dir="${build.classes}">
         <include name="org/jboss/jmx/ObjectHandler**"/>
         <include name="org/jboss/jmx/connector/notification/**"/>
@@ -632,8 +648,8 @@
     </jar>
 
     <!-- jmx-ejb-connector-server.sar --> 
-    <jar jarfile="${build.lib}/jmx-ejb-connector-server.sar">
-         <!-- manifest="${build.etc}/manifest/ejb-connector-server.mf"> -->
+    <jar jarfile="${build.lib}/jmx-ejb-connector-server.sar"
+         manifest="${build.etc}/manifest/version.mf">
       <fileset dir="${build.classes}">
         <include name="org/jboss/jmx/connector/notification/**"/>
         <include name="org/jboss/jmx/connector/ejb/**Stub.class"/>
@@ -677,7 +693,7 @@
 
     <!-- jmx-rmi-connector-client.jar -->
     <jar jarfile="${build.lib}/jmx-rmi-connector-client.jar"
-         manifest="${build.etc}/manifest/rmi-connector-client.mf">
+         manifest="${build.etc}/manifest/version.mf">
       <fileset dir="${build.classes}">
         <include name="org/jboss/jmx/adaptor/rmi/*Stub.class"/>
         <include name="org/jboss/jmx/adaptor/rmi/RMIAdaptor*.class"/>
