@@ -62,7 +62,6 @@ import java.sql.Statement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.text.DateFormat;
-import java.text.DateFormatSymbols;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 
@@ -116,7 +115,7 @@ import org.tigris.scarab.services.security.ScarabSecurity;
  * not a more specific type of Issue.
  *
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: IssueSearch.java,v 1.123 2004/03/27 00:40:06 pledbrook Exp $
+ * @version $Id: IssueSearch.java,v 1.124 2004/04/04 10:52:03 dep4b Exp $
  */
 public class IssueSearch 
     extends Issue
