@@ -57,7 +57,7 @@
  * Description: Experimental bi-directionl protocol.                       *
  * Author:      Costin <costin@costin.dnt.ro>                              *
  * Author:      Gal Shachor <shachor@il.ibm.com>                           *
- * Version:     $Revision: 1.2 $                                           *
+ * Version:     $Revision: 1.3 $                                           *
  ***************************************************************************/
 
 #include "jk_pool.h"
@@ -267,7 +267,7 @@ static int read_into_msg_buff(ajp13_endpoint_t *ep,
     read_buf += 4; /* leave some space for the buffer headers */
     read_buf += 2; /* leave some space for the read length */
 
-    if(read_fully_from_server(r, read_buf, len) <= 0) {
+    if(read_fully_from_server(r, read_buf, len) < 0) {
         jk_log(l, JK_LOG_ERROR, 
                "read_into_msg_buff: Error - read_fully_from_server failed\n");
         return JK_FALSE;                        
@@ -331,7 +331,7 @@ static int ajp13_process_callback(jk_msg_buf_t *msg,
 
         case JK_AJP13_GET_BODY_CHUNK:
             {
-	            unsigned len = (unsigned)jk_b_get_int(msg);
+		unsigned len = (unsigned)jk_b_get_int(msg);
 
                 if(len > MAX_SEND_BODY_SZ) {
                     len = MAX_SEND_BODY_SZ;
@@ -339,15 +339,17 @@ static int ajp13_process_callback(jk_msg_buf_t *msg,
                 if(len > ep->left_bytes_to_send) {
                     len = ep->left_bytes_to_send;
                 }
-                if(len > 0) {
-                    if(read_into_msg_buff(ep, r, msg, l, len)) {
-                        return JK_AJP13_HAS_RESPONSE;
-                    }                  
+		if(len < 0) {
+		    len = 0;
+		}
 
-                    jk_log(l, JK_LOG_ERROR, 
-                           "Error ajp13_process_callback - read_into_msg_buff failed\n");
-                    return JK_INTERNAL_ERROR;
-                }
+		if(read_into_msg_buff(ep, r, msg, l, len)) {
+		    return JK_AJP13_HAS_RESPONSE;
+		}                  
+
+		jk_log(l, JK_LOG_ERROR, 
+		       "Error ajp13_process_callback - read_into_msg_buff failed\n");
+		return JK_INTERNAL_ERROR;	    
             }
 	    break;
 
