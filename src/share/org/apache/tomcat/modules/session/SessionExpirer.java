@@ -105,6 +105,10 @@ public final class SessionExpirer  extends BaseInterceptor {
 	checkInterval=secs;
     }
 
+    public Expirer getExpirer() {
+	return expirer;
+    }
+
     // -------------------- Tomcat request events --------------------
     public void engineInit( ContextManager cm ) throws TomcatException {
 	expirer.setCheckInterval( checkInterval );

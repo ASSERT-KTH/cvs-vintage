@@ -86,6 +86,8 @@ import java.security.*;
 public final class SimpleSessionStore  extends BaseInterceptor {
     int manager_note;
     int maxActiveSessions = -1;
+    int size=16;
+    int max=256;
     
     public SimpleSessionStore() {
     }
@@ -96,6 +98,14 @@ public final class SimpleSessionStore  extends BaseInterceptor {
 	maxActiveSessions=count;
     }
 
+    public void setInitialPool( int initial ) {
+	size=initial;
+    }
+
+    public void setMaxPool( int max ) {
+	this.max=max;
+    }
+    
     // -------------------- Tomcat request events --------------------
     public void engineInit( ContextManager cm ) throws TomcatException {
 	// set-up a per/container note for StandardManager
@@ -230,6 +240,11 @@ public final class SimpleSessionStore  extends BaseInterceptor {
 	return sm.getSessionIds();
     }
     
+    public Enumeration getSessions(Context ctx) {
+	SimpleSessionManager sm= getManager( ctx );
+	return sm.getSessions();
+    }
+    
     public int getSessionCount(Context ctx) {
 	SimpleSessionManager sm= getManager( ctx );
 	return sm.getSessionCount();
@@ -239,6 +254,13 @@ public final class SimpleSessionStore  extends BaseInterceptor {
 	SimpleSessionManager sm= getManager( ctx );
 	return sm.getRecycledCount();
     }
+
+    public ServerSession findSession( Context ctx, String sessionId)
+    {
+	SimpleSessionManager sM = getManager( ctx );    
+	return sM.findSession( sessionId );
+    }
+
     // -------------------- Internal methods --------------------
 
     
@@ -271,12 +293,16 @@ public final class SimpleSessionStore  extends BaseInterceptor {
 	    return sessions.keys();
 	}
 
+	public Enumeration getSessions() {
+	    return sessions.elements();
+	}
+
 	public int getSessionCount() {
 	    return sessions.size();
 	}
 
 	public int getRecycledCount() {
-	    return recycled.getMax();
+	    return recycled.getCount();
 	}
 	
 	public ServerSession findSession(String id) {
