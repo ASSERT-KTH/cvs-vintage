@@ -1,4 +1,4 @@
-// $Id: ModelFacade.java,v 1.228 2004/12/22 21:39:42 mvw Exp $
+// $Id: ModelFacade.java,v 1.229 2004/12/23 14:43:02 mvw Exp $
 // Copyright (c) 2003-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -5714,6 +5714,25 @@ public class ModelFacade {
 	illegalArgument(handle);
     }
 
+    /**
+     * Sets the list of connections of the given association or link.
+     *
+     * @param handle the given association or link
+     * @param elems the list of association-ends or link-ends
+     */
+    public static void setConnections(Object handle, Collection elems) {
+        if (handle instanceof MAssociation && elems instanceof List) {
+            ((MAssociation) handle).setConnections((List) elems);
+            return;
+        }
+        if (handle instanceof MLink && elems instanceof List) {
+                ((MLink) handle).setConnections((List) elems);
+                return;
+            }
+        illegalArgument(handle);
+    }
+
+    
     /**
      * Sets a name of some modelelement.
      *

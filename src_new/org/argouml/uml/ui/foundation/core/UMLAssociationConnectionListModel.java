@@ -1,4 +1,4 @@
-// $Id: UMLAssociationConnectionListModel.java,v 1.9 2004/09/14 17:35:11 mvw Exp $
+// $Id: UMLAssociationConnectionListModel.java,v 1.10 2004/12/23 14:43:01 mvw Exp $
 // Copyright (c) 1996-2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -24,8 +24,11 @@
 
 package org.argouml.uml.ui.foundation.core;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.argouml.model.ModelFacade;
-import org.argouml.uml.ui.UMLModelElementListModel2;
+import org.argouml.uml.ui.UMLModelElementOrderedListModel2;
 
 /**
  * 
@@ -33,7 +36,7 @@ import org.argouml.uml.ui.UMLModelElementListModel2;
  * @since Jan 4, 2003
  */
 public class UMLAssociationConnectionListModel 
-    extends UMLModelElementListModel2 {
+    extends UMLModelElementOrderedListModel2 {
 
     /**
      * Constructor for UMLModelElementClientDependencyListModel.
@@ -59,4 +62,17 @@ public class UMLAssociationConnectionListModel
     }
 
 
+    /**
+     * @see org.argouml.uml.ui.UMLModelElementOrderedListModel2#swap(int, int)
+     */
+    public void swap(int index1, int index2) {
+        Object assoc = getTarget();
+        List c = new ArrayList(ModelFacade.getConnections(assoc));
+        Object mem1 = c.get(index1);
+        Object mem2 = c.get(index2);
+        c.set(index1, mem2);
+        c.set(index2, mem1);
+        ModelFacade.setConnections(assoc, c);
+        buildModelList();
+    }
 }
