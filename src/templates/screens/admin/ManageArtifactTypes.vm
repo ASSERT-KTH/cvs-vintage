@@ -20,6 +20,7 @@ $page.setTitle("Manage artifact types")
     <td nowrap="nowrap">
       <div>Artifact type management:</div>      
       <input type="submit" value="Add existing" name="eventSubmit_doGotoothertemplate" />&#160;
+      <input type="submit" value="Add new " name="eventSubmit_doCreateartifacttype" />&#160;
       <!-- FIXME: <input type="submit" value="Copy" />&#160; -->
       <!-- FIXME: <input type="submit" value="Resort" /> -->
     </td>

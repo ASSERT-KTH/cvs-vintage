@@ -8,7 +8,6 @@ $page.setTitle("Artifact Type Select")
 <form action="$link.setPage("admin,ArtifactTypeSelect.vm")" method="get">
 <input type="hidden" name="action" value="admin.ModifyModuleAttributes" />
 <input type="hidden" name="$scarabG.Constant.CANCEL_TEMPLATE" value="admin,ManageArtifactTypes.vm" />
-<input type="hidden" name="$scarabG.Constant.OTHER_TEMPLATE" value="admin,ArtifactTypeEdit.vm" />
 
 #set ($issueTypes = $scarabR.CurrentModule.AvailableIssueTypes)
 #if ($issueTypes.isEmpty())
@@ -19,7 +18,7 @@ $page.setTitle("Artifact Type Select")
     <td class="firstchild">
        <div>General functions</div>
     #if ($canEditDomain)
-      <input type="submit" value="Create new" name="eventSubmit_doGotoothertemplate" />&#160;
+      <input type="submit" value="Create new" name="eventSubmit_doCreateartifacttype" />&#160;
     #end
     <input type="submit" value="Cancel" name="eventSubmit_doCancel" />
     </td>
@@ -38,7 +37,7 @@ $page.setTitle("Artifact Type Select")
     <td class="firstchild">
        <div>General functions</div>
     #if ($canEditDomain)
-      <input type="submit" value="Create new" name="eventSubmit_doGotoothertemplate" />&#160;
+      <input type="submit" value="Create new" name="eventSubmit_doCreateartifacttype" />&#160;
     #end
     <input type="submit" value="Cancel" name="eventSubmit_doCancel" />
     </td>
@@ -59,7 +58,7 @@ $page.setTitle("Artifact Type Select")
     <td>
     <div>General functions:</div>
     #if ($canEditDomain)
-      <input type="submit" value="Create new" name="eventSubmit_doGotoothertemplate" />&#160;
+      <input type="submit" value="Create new" name="eventSubmit_doCreateartifacttype" />&#160;
     #end
     <input type="submit" value="Cancel" name="eventSubmit_doCancel" />
     </td>
@@ -99,7 +98,7 @@ $page.setTitle("Artifact Type Select")
     <td>
     <div>General functions:</div>
     #if ($canEditDomain)
-       <input type="submit" value="Create new" name="eventSubmit_doGotoothertemplate" />&#160;
+       <input type="submit" value="Create new" name="eventSubmit_doCreateartifacttype" />&#160;
     #end
     <input type="submit" value="Cancel" name="eventSubmit_doCancel" />
     </td>
