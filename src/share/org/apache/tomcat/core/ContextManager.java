@@ -145,7 +145,7 @@ import java.util.Enumeration;
   @author Costin Manolache
   @author Hans Bergsten [hans@gefionsoftware.com]
  */
-public final class ContextManager implements LogAware{
+public final class ContextManager {
     /** Official name and version
      */
     public static final String TOMCAT_VERSION = "3.3 dev";
@@ -208,10 +208,6 @@ public final class ContextManager implements LogAware{
 
     // the embedding application loader. @see getParentLoader
     private ClassLoader parentLoader;
-
-    // Store Loggers that are used in this server
-    // XXX use Log.getLog() instead!!
-    private Hashtable loggers=new Hashtable();
 
     private Hashtable properties=new Hashtable();
     
@@ -510,6 +506,7 @@ public final class ContextManager implements LogAware{
 	Enumeration enum = getContexts();
 	while (enum.hasMoreElements()) {
 	    Context ctx = (Context)enum.nextElement();
+	    ctx.setContextManager( this );
 	    try {
 		for( int i=0; i<existingI.length; i++ ) {
 		    existingI[i].addContext( this, ctx );
@@ -1027,41 +1024,22 @@ public final class ContextManager implements LogAware{
     }
     
     // -------------------- Logging and debug --------------------
-    private Log loghelper = new Log("tc_log", "ContextManager");
 
-    /**
-     * Get the Logger object that the context manager is writing to (necessary?)
-     **/
-    public final Logger getLogger() {
-	return loghelper.getLogger();
-    }
-
+    // default, is going to console until replaced (unless aleady configured)
+    private Log loghelper = Log.getLog("org/apache/tomcat/core",
+				       "ContextManager");
     /**
      * So other classes can piggyback on the context manager's log
-     * stream, using Logger.Helper.setProxy()
+     * stream.
      **/
     public final Log getLog() {
 	return loghelper;
     }
+
+    public final void setLog(Log log) {
+	loghelper=log;
+    }
  
-    /**
-     * Force this object to use the given Logger.
-     **/
-    public final void setLogger( Logger logger ) {
-	log("!!!! setLogger: " + logger, Logger.DEBUG);
-	loghelper.setLogger(logger);
-    }
-
-    public final void addLogger(Logger l) {
-	if (debug>20)
-	    log("addLogger: " + l, new Throwable("trace"), Logger.DEBUG);
-        loggers.put(l.toString(),l);
-    }
-
-    public final Hashtable getLoggers(){
-        return loggers;
-    }
-
     public final void log(String msg) {
 	loghelper.log(msg);
     }

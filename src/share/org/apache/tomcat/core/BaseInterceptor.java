@@ -102,7 +102,7 @@ public class BaseInterceptor
     protected int debug=0;
 
     //  loghelper will use name of actual impl subclass
-    protected Log loghelper = new Log("tc_log", this);
+    protected Log loghelper = Log.getLog("org/apache/tomcat/core", this);
 
     public BaseInterceptor() {
     }
@@ -537,7 +537,6 @@ public class BaseInterceptor
     public final void setContextManager( ContextManager cm ) {
 	this.cm=cm;
 	this.ct=cm.getContainer();
-	loghelper.setLogger(cm.getLogger());
     }
 
     public final ContextManager getContextManager() {
@@ -551,7 +550,6 @@ public class BaseInterceptor
 	this.ctx=ctx;
 	this.cm=ctx.getContextManager();
 	this.ct=ctx.getContainer();
-	loghelper.setLogger(ctx.getLog().getLogger());
     }
 
     public Context getContext() {

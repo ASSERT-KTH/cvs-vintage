@@ -98,7 +98,7 @@ import java.util.Enumeration;
  * @author costin@dnt.ro
  * @author Gal Shachor shachor@il.ibm.com
  */
-public final class Context implements LogAware {
+public final class Context {
     // -------------------- Constants --------------------
     
     // Proprietary attribute names for contexts - defined
@@ -236,7 +236,7 @@ public final class Context implements LogAware {
     private boolean trusted=false;
 
     // log channels for context and servlets 
-    private Log loghelper = new Log("tc_log", this);
+    private Log loghelper = Log.getLog("org/apache/tomcat/core", this);
     private Log loghelperServlet;
 
     // servlet API implemented by this Context
@@ -420,7 +420,7 @@ public final class Context implements LogAware {
 	// check if we can access this attribute.
 	if( isTrusted() ) return true;
 	log( "Attempt to access internal attribute in untrusted app",
-	     null, Logger.ERROR);
+	     null, Log.ERROR);
 	return false;
     }
 
@@ -1070,7 +1070,7 @@ public final class Context implements LogAware {
     public final  void logServlet( String msg , Throwable t ) {
 	if (loghelperServlet == null) {
 	    String pr= getId();
-	    loghelperServlet = new Log("servlet_log", pr );
+	    loghelperServlet = Log.getLog("org/apache/tomcat/facade", pr );
 	}
 	if (t == null)
 	    loghelperServlet.log(msg);	// uses level INFORMATION
@@ -1078,20 +1078,12 @@ public final class Context implements LogAware {
 	    loghelperServlet.log(msg, t); // uses level ERROR
     }
 
-    public final  void setLogger(Logger logger) {
-	if (loghelper == null) {
-	    String pr=getId();
-	    loghelper = new Log("tc_log", pr );
-	}
-	loghelper.setLogger(logger);
+    public final  void setLog(Log logger) {
+	loghelper=logger;
     }
 
-    public final  void setServletLogger(Logger logger) {
-	if (loghelperServlet == null) {
-	    String pr=getId();
-	    loghelperServlet = new Log("servlet_log",pr);
-	}
-	loghelperServlet.setLogger(logger);
+    public final  void setServletLog(Logger logger) {
+	loghelperServlet=logger;
     }
 
     public final  Log getLog() {
