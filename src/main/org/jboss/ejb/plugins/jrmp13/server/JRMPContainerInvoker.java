@@ -35,7 +35,7 @@ import org.jboss.logging.Logger;
  *	@see <related>
  *	@author Rickard Öberg (rickard.oberg@telkel.com)
  *  @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
- *	@version $Revision: 1.8 $
+ *	@version $Revision: 1.9 $
  */
 public final class JRMPContainerInvoker
    implements ContainerInvoker
@@ -82,9 +82,10 @@ public final class JRMPContainerInvoker
             new Class[] { ((ContainerInvokerContainer)container).getRemoteClass() } ,
             new StatelessSessionProxy(ci.getJndiName(), ci, ci.isOptimized()));
       }
-      
-      System.out.println("JRMP 1.2.2 CI initialized");
+   
+   		     Logger.debug("JRMP 1.3 CI initialized");
    }
+   
 
    public void start()
    {
@@ -149,7 +150,7 @@ public final class JRMPContainerInvoker
  *	@see <related>
  *	@author Rickard Öberg (rickard.oberg@telkel.com)
  *  @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
- *	@version $Revision: 1.8 $
+ *	@version $Revision: 1.9 $
  */
  
  /*
@@ -186,7 +187,6 @@ public final class JRMPContainerInvoker
                new StatelessSessionProxy(jndiName, this, optimize));
        }
        
-       System.out.println("JRMP 1.2.2 CI initialized");
     }
  
     public void start()
