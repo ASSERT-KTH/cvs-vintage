@@ -1,4 +1,4 @@
-// $Id: PluggableImport.java,v 1.3 2003/09/16 23:58:01 thierrylach Exp $
+// $Id: PluggableImport.java,v 1.4 2004/10/06 05:44:16 linus Exp $
 // Copyright (c) 1996-2001 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -22,7 +22,7 @@
 // CALIFORNIA HAS NO OBLIGATIONS TO PROVIDE MAINTENANCE, SUPPORT,
 // UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 
-//$Id: PluggableImport.java,v 1.3 2003/09/16 23:58:01 thierrylach Exp $
+//$Id: PluggableImport.java,v 1.4 2004/10/06 05:44:16 linus Exp $
 
 package org.argouml.application.api;
 
@@ -48,16 +48,18 @@ public interface PluggableImport extends Pluggable {
      * Create chooser for objects we are to import.
      * Chooser must have a button for object selection
      * and optionally a button for cancel action.
-     * To close dialog window use _import.disposeDialog(). 
-     * @param importElement - current import session
-     * @return the panel to show in import dialog
+     * To close dialog window use importElement.disposeDialog().
+     *
+     * @param importElement The current import session.
+     * @return The panel to show in import dialog.
      */
     public JComponent getChooser(Import  importElement);
     
     /** 
      * Provide pannel added to JTabbedPane after general panel.
-     *@return the panel with configuration info for plugin
-     *or null if no parameters are needed.
+     *
+     * @return the panel with configuration info for plugin
+     *         or null if no parameters are needed.
      */
     public JComponent getConfigPanel();
     
