@@ -76,7 +76,7 @@ import org.tigris.scarab.om.IssueType;
  * duplication of code.
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: Default.java,v 1.60 2002/07/18 02:04:02 jon Exp $
+ * @version $Id: Default.java,v 1.61 2002/08/27 21:37:12 jmcnally Exp $
  */
 public class Default extends TemplateSecureScreen
 {
@@ -168,6 +168,7 @@ public class Default extends TemplateSecureScreen
                                     "that has permissions to " +
                                     "access this page.");
                     setTargetLogin(data);
+                    scarabR.setCurrentModule(null);
                     return false;
                 }
                 else if (currentModule == null)
