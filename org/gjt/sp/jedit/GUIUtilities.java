@@ -51,7 +51,7 @@ import org.gjt.sp.util.Log;
  * </ul>
  *
  * @author Slava Pestov
- * @version $Id: GUIUtilities.java,v 1.5 2001/09/21 08:09:51 spestov Exp $
+ * @version $Id: GUIUtilities.java,v 1.6 2001/09/22 03:21:35 spestov Exp $
  */
 public class GUIUtilities
 {
@@ -157,7 +157,7 @@ public class GUIUtilities
 	public static JMenuItem loadMenuItem(String name, boolean setMnemonic)
 	{
 		EditAction action = jEdit.getAction(name);
-		String label = action.getLabel();
+		String label = (action == null ? name : action.getLabel());
 		if(label == null)
 			label = name;
 

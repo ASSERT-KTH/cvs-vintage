@@ -32,7 +32,7 @@ import org.gjt.sp.jedit.*;
 /**
  * Wraps the VFS browser in a modal dialog.
  * @author Slava Pestov
- * @version $Id: VFSFileChooserDialog.java,v 1.2 2001/09/21 08:09:51 spestov Exp $
+ * @version $Id: VFSFileChooserDialog.java,v 1.3 2001/09/22 03:21:35 spestov Exp $
  */
 public class VFSFileChooserDialog extends EnhancedDialog
 {
@@ -174,10 +174,11 @@ public class VFSFileChooserDialog extends EnhancedDialog
 
 		if(filename != null)
 		{
-			String path = browser.getPath();
+			String path = browser.getDirectory();
 			VFS vfs = VFSManager.getVFSForPath(path);
 			return new String[] { vfs.constructPath(
 				path,filename) };
+		}
 		else
 		{
 			Vector vector = new Vector();
