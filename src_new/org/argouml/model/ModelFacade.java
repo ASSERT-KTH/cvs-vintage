@@ -1,4 +1,4 @@
-// $Id: ModelFacade.java,v 1.179 2004/03/08 08:33:02 linus Exp $
+// $Id: ModelFacade.java,v 1.180 2004/04/04 17:11:26 d00mst Exp $
 // Copyright (c) 2003-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -5081,7 +5081,7 @@ public class ModelFacade {
             return;
         }
         if (handle instanceof MTransition
-            && element instanceof MClassifierRole) {
+            && element instanceof MStateVertex) {
             ((MTransition) handle).setTarget((MStateVertex) element);
             return;
         }
@@ -5740,10 +5740,10 @@ public class ModelFacade {
      * @param state the source state
      */
     public static void setSource(Object handle, Object state) {
-        if (handle instanceof MMessage && state instanceof MClassifierRole) {
-            ((MTransition) handle).setSource((MState) state);
-            return;
-        }
+	if (handle instanceof MTransition && state instanceof MStateVertex) {
+	    ((MTransition) handle).setSource((MStateVertex) state);
+	    return;
+	}
 	illegalArgument(handle, state);
     }
 
