@@ -1,17 +1,17 @@
 #set ( $queryId = $data.Parameters.getString("queryId"))
-#set ( $query = $scarabR.getQuery() )
-#set ( $queryGroup = $intake.Query.mapTo($query)) 
+#set ( $currentQuery = $scarabR.getQuery() )
+#set ( $queryGroup = $intake.Query.mapTo($currentQuery)) 
 #set ($module = $scarabR.CurrentModule)
 
       <div class="app" id="search.vm">
-       <h2>Edit Query '$query.Name'</h2>
+       <h2>Edit Query '$currentQuery.Name'</h2>
 
 
 #set ($action = $link.setPage("EditQuery.vm").setAction("Search").addPathInfo("nextTemplate", "EditQuery.vm"))
 
 <form action="$action" method="post">
 <input type="hidden" name="queryId" value="$queryId">
-<input type="hidden" name="$queryGroup.Value.Key" value="$query.Value">
+<input type="hidden" name="$queryGroup.Value.Key" value="$currentQuery.Value">
       <div class="axial">
        <table width="100%" cellpadding="3" cellspacing="2" border="1">
         <tr>
@@ -29,7 +29,7 @@
         <tr>
          <th width="120">Availability:</th>
 
-         <td>#queryTypeSelectBox ($query)
+         <td>#queryTypeSelectBox ($currentQuery)
            </td>
         
         </tr>
@@ -65,6 +65,51 @@
 
 #advancedQuery()
 
+#if ($currentQuery.QueryType.Name.equals("All users"))
+ <h3>Subscription info</h3>
+
+<div class="axial">
+       <table width="100%" border="1" cellspacing="2" cellpadding="3">
+        <tr>
+         <th width="120">Default frequency</th>
+         <td>
+         <select name="$queryGroup.Frequency.Key">
+         #frequencySelectBox ($currentQuery $currentQuery.SubscriptionFrequency)
+         </select></td>
+        </tr>
+
+        </table>
+</div>
+
+
+#if (!$currentQuery.RQueryUsers.isEmpty())
+      <h3>Current subscriber list</h3>  
+      
+       <table width="100%" border="1" cellspacing="2" cellpadding="3">
+        <tr>
+         <th>&nbsp;</th>
+
+         <th>User</th>
+
+         <th>User selected frequency</th>
+
+        </tr>
+#foreach ($su in $currentQuery.RQueryUsers)
+  #set ($user = $su.ScarabUserImpl)
+        #rows ()
+         <td><input type="checkbox" name="subscribed_user_$user.UserId" /></td>
+         
+         <td><a href="mailto:$user.Email">$user.UserName</a></td>
+
+         <td>$su.Frequency.Name</td>
+
+        </tr>
+#end
+
+        </table>
+        <input type="submit" value="revoke subscription" name="eventSubmit_doUnsubscribeusers" />
+   #end
+#end
        <p class="functnbar">
         <input type="submit" name="eventSubmit_doEditstoredquery" 
             value="Save Query" />&#160;
