@@ -211,11 +211,12 @@
             </fileset>
         </copy>
 
-        <copy todir="${build.project}/dtd" filtering="yes">
-            <fileset dir="${src.dtd.dir}">
-                <include name="**/scarab.dtd"/>
-                <include name="**/scarab-settings.dtd"/>
-            </fileset>
+        <!-- Copy DTDs. -->
+        <copy todir="${build.dest.scarab}/org/tigris/scarab" filtering="yes">
+          <fileset dir="${src.dtd.dir}">
+            <include name="scarab.dtd"/>
+            <include name="scarab-settings.dtd"/>
+          </fileset>
         </copy>
 
         <!-- Conditionally copy templates -->
@@ -818,13 +819,12 @@
 	    <exclude name="torque/**"/>
         </javac>
 
+        <!-- Copy pipeline definitions. -->
         <copy todir="${build.dest.scarab}/org" filtering="no">
             <fileset dir="${src.java.dir.scarab}/org">
                 <include name="**/*.xml"/>
-                <include name="**/*.properties"/>
             </fileset>
         </copy>
-
     </target>
 
     <target name="compile-tests" depends="compile">

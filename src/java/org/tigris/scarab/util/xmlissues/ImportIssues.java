@@ -99,7 +99,7 @@ import org.tigris.scarab.om.Module;
  *
  * @author <a href="mailto:jon@latchkey.com">Jon S. Stevens</a>
  * @author <a href="mailto:dlr@collab.net">Daniel Rall</a>
- * @version $Id: ImportIssues.java,v 1.21 2003/07/28 21:21:26 dlr Exp $
+ * @version $Id: ImportIssues.java,v 1.22 2003/07/29 04:49:17 dlr Exp $
  */
 public class ImportIssues
     implements ErrorHandler
@@ -113,7 +113,7 @@ public class ImportIssues
      * Scarab's DTD in an XML file's <code>DOCTYPE</code> declaration.
      */
     public static final String SYSTEM_DTD_URI =
-        "http://scarab.tigris.org/dtd/scarab-0.16.28.dtd";
+        "http://scarab.tigris.org/dtd/scarab-0.16.29.dtd";
 
     /**
      * The absolute URL to the document type definition (DTD) used
@@ -125,8 +125,7 @@ public class ImportIssues
     /**
      * The resource location of the DTD in the classpath.
      */
-    private static final String DTD_RESOURCE =
-        "/org/tigris/scarab/dtd/scarab-0.16.28.dtd";
+    private static final String DTD_RESOURCE = "/org/tigris/scarab/scarab.dtd";
 
     /** 
      * Name of the properties file.
@@ -561,22 +560,12 @@ public class ImportIssues
                     InputSource input = null;
                     if (publicId == null && systemId != null)
                     {
-                        // Resolve SYSTEM DOCTYPE (untested).
+                        // Resolve SYSTEM DOCTYPE.
                         if (SYSTEM_DTD_URI.equalsIgnoreCase(systemId) ||
                             INTERNAL_DTD_URI.equalsIgnoreCase(systemId))
                         {
                             // First look for the DTD in the classpath.
-                            Class c = getClass();
-                            try
-                            {
-                                input = new InputSource
-                                    (c.getResourceAsStream(DTD_RESOURCE));
-                            }
-                            catch (Exception e)
-                            {
-                                LOG.debug("DTD not found in classpath: " +
-                                          e.getMessage());
-                            }
+                            input = resolveDTDResource();
 
                             if (input == null)
                             {
@@ -587,6 +576,30 @@ public class ImportIssues
                         }
                     }
                     return input;
+                }
+
+                /**
+                 * Looks for the DTD in the classpath as resouce
+                 * {@link #DTD_RESOURCE}.
+                 *
+                 * @return The DTD, or <code>null</code> if not found.
+                 */
+                private InputSource resolveDTDResource()
+                {
+                    InputStream stream =
+                        getClass().getResourceAsStream(DTD_RESOURCE);
+                    if (stream != null)
+                    {
+                        LOG.debug("Located DTD in classpath using " +
+                                  "resource path '" + DTD_RESOURCE + '\'');
+                        return new InputSource(stream);
+                    }
+                    else
+                    {
+                        LOG.debug("DTD resource '" + DTD_RESOURCE + "' not " +
+                                  "found in classpath");
+                        return null;
+                    }
                 }
             };
 
