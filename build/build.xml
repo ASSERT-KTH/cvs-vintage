@@ -175,7 +175,7 @@
             unless="turbine.jar.uptodate">
         <echo message="+------------------------------------------+"/>
         <echo message="|                                          |"/>
-        <echo message="|           Rebuilding Turbine             |"/>
+        <echo message="|     Rebuilding Turbine CVS Version       |"/>
         <echo message="|                                          |"/>
         <echo message="+------------------------------------------+"/>
         <ant antfile="build-turbine.xml" 
@@ -186,18 +186,13 @@
         </ant>
         <copy file="${turbine.dir}/bin/${turbine.latest.jar}" overwrite="true"
             todir="${src.lib.dir}"/>
-        <echo message="+------------------------------------------+"/>
-        <echo message="|                                          |"/>
-        <echo message="|        Done Rebuilding Turbine           |"/>
-        <echo message="|                                          |"/>
-        <echo message="+------------------------------------------+"/>
     </target>
 
     <target name="build-torque"  depends="prepare-turbine,skip-turbine"
             unless="torque.uptodate">
         <echo message="+------------------------------------------+"/>
         <echo message="|                                          |"/>
-        <echo message="|           Rebuilding Torque              |"/>
+        <echo message="|      Rebuilding Torque CVS Version       |"/>
         <echo message="|                                          |"/>
         <echo message="+------------------------------------------+"/>
         <ant antfile="build-torque.xml" 
@@ -206,11 +201,6 @@
             <property name="build.dest" value="../bin/classes"/>
         </ant>
         <copy file="${turbine.dir}/bin/torque.zip" todir="${src.lib.dir}"/>
-        <echo message="+------------------------------------------+"/>
-        <echo message="|                                          |"/>
-        <echo message="|        Done Rebuilding Torque            |"/>
-        <echo message="|                                          |"/>
-        <echo message="+------------------------------------------+"/>
     </target>
 
     <target name="torque-expanded-check" depends="build-torque">
@@ -251,8 +241,8 @@
                 dir="${torque.dir.scarab}" target="project-sql">
             <property name="torque.home" value="${torque.dir.scarab}"/>
         </ant>
-        <copy file="${torque.dir.scarab}/output/${project}-schema.sql" 
-              overwrite="true" todir="${src.sql.dir}"/>
+<!--        <copy file="${torque.dir.scarab}/output/${project}-schema.sql" 
+              overwrite="true" todir="${src.sql.dir}" quiet="true"/> -->
     </target>
 
     <!-- ================================================================== -->
