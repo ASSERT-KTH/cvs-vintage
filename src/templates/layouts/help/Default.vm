@@ -5,16 +5,13 @@
  <head>
   <title>$page.Title</title>
   <meta http-equiv="Content-type" content="$data.ContentType" />
-
   <style type="text/css">
   @import url($data.Request.ContextPath/style/ns4_toxins.css);
   </style>
-
   <link rel="stylesheet" type="text/css" href="$data.Request.ContextPath/style/main.css" />
   <link rel="stylesheet" type="text/css" href="$data.Request.ContextPath/style/print.css" media="print" />
-  <link rel="alternate stylesheet" title="compact" type="text/css" href="$data.Request.ContextPath/style/compact.css" />
  </head>
-<body marginwidth="10" marginheight="10">
+<body class="docs">
 $renderer.render("screens", $template)
 </body>
 </html>
