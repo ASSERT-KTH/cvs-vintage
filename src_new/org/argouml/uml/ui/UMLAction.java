@@ -1,4 +1,4 @@
-// $Id: UMLAction.java,v 1.23 2004/02/29 12:35:46 linus Exp $
+// $Id: UMLAction.java,v 1.24 2004/07/26 22:43:51 mkl Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -102,7 +102,6 @@ public class UMLAction extends AbstractAction {
 	if (iconName != null && Action.SMALL_ICON.equals(key)) {
 	    Icon icon =
 		ResourceLoaderWrapper
-		    .getResourceLoaderWrapper()
 		    .lookupIconResource(Translator.getImageBinding(iconName),
 				    Translator.localize(iconName));
 

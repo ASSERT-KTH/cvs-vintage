@@ -1,4 +1,4 @@
-// $Id: PropPanel.java,v 1.84 2004/07/24 15:49:35 mkl Exp $
+// $Id: PropPanel.java,v 1.85 2004/07/26 22:43:51 mkl Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -116,10 +116,10 @@ public abstract class PropPanel
     private JPanel captionPanel = new JPanel();
 
     protected static ImageIcon _deleteIcon =
-	ResourceLoaderWrapper.getResourceLoaderWrapper()
+	ResourceLoaderWrapper
 	    .lookupIconResource("RedDelete");
     protected static ImageIcon _navUpIcon =
-	ResourceLoaderWrapper.getResourceLoaderWrapper()
+	ResourceLoaderWrapper
 	    .lookupIconResource("NavigateUp");
 
     protected Font smallFont = LookAndFeelMgr.getInstance().getSmallFont();
