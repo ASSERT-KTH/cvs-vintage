@@ -29,12 +29,12 @@
   <!-- JMS XA Resource adapter, use this to get transacted JMS in beans -->
 
   <!--new configuration for new ConnectionManager-->
-  <mbean code="org.jboss.resource.connectionmanager.XATxConnectionManager" name="jboss.jca:service=JmsXACM">
+  <mbean code="org.jboss.resource.connectionmanager.XATxConnectionManager" name="jboss.jca:service=XaTxCM,name=jmsra">
     <!--make the rar deploy!-->
     <depends>jboss.jca:service=RARDeployer</depends>
 
     <depends optional-attribute-name="ManagedConnectionFactoryName">
-      <mbean code="org.jboss.resource.connectionmanager.RARDeployment" name="jboss.jca:service=JmsXADS">
+      <mbean code="org.jboss.resource.connectionmanager.RARDeployment" name="jboss.jca:service=XaTxDS,name=jmsra">
         <!--hack till better deployment system-->
         <depends optional-attribute-name="OldRarDeployment">jboss.jca:service=RARDeployment,name=JMS Adapter</depends>
 
@@ -53,7 +53,7 @@
     </depends>
 
     <depends optional-attribute-name="ManagedConnectionPool">
-      <mbean code="org.jboss.resource.connectionmanager.JBossManagedConnectionPool" name="jboss.jca:service=JmsXAPool">
+      <mbean code="org.jboss.resource.connectionmanager.JBossManagedConnectionPool" name="jboss.jca:service=XaTxPool,name=jmsra">
         <attribute name="MinSize">0</attribute>
         <attribute name="MaxSize">50</attribute>
         <attribute name="BlockingTimeoutMillis">5000</attribute>

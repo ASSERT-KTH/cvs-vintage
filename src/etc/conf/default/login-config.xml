@@ -18,7 +18,7 @@ The outline of the application-policy is:
   </authentication>
 </application-policy>
 
-$Revision: 1.1 $
+$Revision: 1.2 $
 -->
 
 <policy>
@@ -76,7 +76,7 @@ $Revision: 1.1 $
              <module-option name = "principal">guest</module-option>
              <module-option name = "userName">guest</module-option>
              <module-option name = "password">guest</module-option>
-             <module-option name = "managedConnectionFactoryName">jboss.jca:service=JmsXACM</module-option>
+             <module-option name = "managedConnectionFactoryName">jboss.jca:service=XaTxCM,name=jmsra</module-option>
           </login-module>
        </authentication>
     </application-policy>
