@@ -32,7 +32,7 @@
       <name>SuffixOrder</name>
       <type>[Ljava.lang.String;</type>
       <descriptors>
-         <value value="deployer,deployer.xml,sar,rar,ds.xml,service.xml,har,jar,war,wsr,ear,zip,last"/>
+         <value value="deployer,deployer.xml,sar,rar,ds.xml,service.xml,har,jar,war,wsr,ear,zip,bsh,last"/>
       </descriptors>
    </attribute>
    <attribute access='read-write' setMethod='setTempDir' getMethod='getTempDir'>
