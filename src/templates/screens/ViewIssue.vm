@@ -31,12 +31,12 @@ $l10n.format("ViewIssueInDifferentModule", $currentIssue.Module.Name)
 #end
 
 #if ($tab.equals("all"))
-    <div align="right"><small><a href="$link.setPage("ViewIssue.vm").addPathInfo("id", "$currentIssue.UniqueId").addPathInfo("tab", "1").addPathInfo("action", "ModifyIssue").addPathInfo("eventSubmit_doSetissueview", "foo")">View as tabs</a></small></div>
+    <div align="right"><small><a href="$link.setPage("ViewIssue.vm").addPathInfo("id", "$currentIssue.UniqueId").addPathInfo("tab", "1").addPathInfo("action", "ModifyIssue").addPathInfo("eventSubmit_doSetissueview", "foo").addPathInfo("issueList", $issueList)">View as tabs</a></small></div>
     #if ($data.User.hasMostRecentQuery() && $issueList.equals("true"))
         #navigate()
     #end
 #elseif (!$multiple.equals("true"))
-    <div align="right"><small><a href="$link.setPage("ViewIssue.vm").addPathInfo("id", "$currentIssue.UniqueId").addPathInfo("tab", "all").addPathInfo("action", "ModifyIssue").addPathInfo("eventSubmit_doSetissueview", "foo")">View as single screen</a></small></div>
+    <div align="right"><small><a href="$link.setPage("ViewIssue.vm").addPathInfo("id", "$currentIssue.UniqueId").addPathInfo("tab", "all").addPathInfo("action", "ModifyIssue").addPathInfo("eventSubmit_doSetissueview", "foo").addPathInfo("issueList", $issueList)">View as single screen</a></small></div>
     #if ($data.User.hasMostRecentQuery() && $issueList.equals("true"))
         #navigate()
     #end
@@ -47,27 +47,27 @@ $l10n.format("ViewIssueInDifferentModule", $currentIssue.Module.Name)
 #if ($tab.equals("1"))
 <th>$l10n.Attributes</th>
 #else
-<td><a href="$link.setPage("ViewIssue.vm").addPathInfo("id", "$currentIssue.UniqueId").addPathInfo("tab", "1").addPathInfo("action", "ModifyIssue").addPathInfo("eventSubmit_doSetissueview", "foo")">Attributes</a></td>
+<td><a href="$link.setPage("ViewIssue.vm").addPathInfo("id", "$currentIssue.UniqueId").addPathInfo("tab", "1").addPathInfo("action", "ModifyIssue").addPathInfo("eventSubmit_doSetissueview", "foo").addPathInfo("issueList", $issueList)">Attributes</a></td>
 #end
 #if ($tab.equals("2"))
 <th>$l10n.Personnel</th>
 #else
-<td><a href="$link.setPage("ViewIssue.vm").addPathInfo("id", "$currentIssue.UniqueId").addPathInfo("tab", "2").addPathInfo("action", "ModifyIssue").addPathInfo("eventSubmit_doSetissueview", "foo")">$l10n.Personnel</a></td>
+<td><a href="$link.setPage("ViewIssue.vm").addPathInfo("id", "$currentIssue.UniqueId").addPathInfo("tab", "2").addPathInfo("action", "ModifyIssue").addPathInfo("eventSubmit_doSetissueview", "foo").addPathInfo("issueList", $issueList)">$l10n.Personnel</a></td>
 #end
 #if ($tab.equals("3"))
 <th>$l10n.Comments</th>
 #else
-<td><a href="$link.setPage("ViewIssue.vm").addPathInfo("id", "$currentIssue.UniqueId").addPathInfo("tab", "3").addPathInfo("action", "ModifyIssue").addPathInfo("eventSubmit_doSetissueview", "foo")">$l10n.Comments</a></td>
+<td><a href="$link.setPage("ViewIssue.vm").addPathInfo("id", "$currentIssue.UniqueId").addPathInfo("tab", "3").addPathInfo("action", "ModifyIssue").addPathInfo("eventSubmit_doSetissueview", "foo").addPathInfo("issueList", $issueList)">$l10n.Comments</a></td>
 #end
 #if ($tab.equals("4"))
 <th>$l10n.URLsAttachmentsDependencies</th>
 #else
-<td><a href="$link.setPage("ViewIssue.vm").addPathInfo("id", "$currentIssue.UniqueId").addPathInfo("tab", "4").addPathInfo("action", "ModifyIssue").addPathInfo("eventSubmit_doSetissueview", "foo")">$l10n.URLsAttachmentsDependencies</a></td>
+<td><a href="$link.setPage("ViewIssue.vm").addPathInfo("id", "$currentIssue.UniqueId").addPathInfo("tab", "4").addPathInfo("action", "ModifyIssue").addPathInfo("eventSubmit_doSetissueview", "foo").addPathInfo("issueList", $issueList)">$l10n.URLsAttachmentsDependencies</a></td>
 #end
 #if ($tab.equals("5"))
 <th>History</th>
 #else
-<td><a href="$link.setPage("ViewIssue.vm").addPathInfo("id", "$currentIssue.UniqueId").addPathInfo("tab", "5").addPathInfo("action", "ModifyIssue").addPathInfo("eventSubmit_doSetissueview", "foo")">$l10n.History</a></td>
+<td><a href="$link.setPage("ViewIssue.vm").addPathInfo("id", "$currentIssue.UniqueId").addPathInfo("tab", "5").addPathInfo("action", "ModifyIssue").addPathInfo("eventSubmit_doSetissueview", "foo").addPathInfo("issueList", $issueList)">$l10n.History</a></td>
 #end
 </tr>
 </table>
