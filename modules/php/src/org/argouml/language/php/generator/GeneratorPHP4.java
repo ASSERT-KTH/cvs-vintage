@@ -1,4 +1,4 @@
-// $Id: GeneratorPHP4.java,v 1.11 2004/08/27 14:44:11 mvw Exp $
+// $Id: GeneratorPHP4.java,v 1.12 2004/08/27 14:59:46 mvw Exp $
 // Copyright (c) 2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -53,29 +53,6 @@ import org.argouml.model.ModelFacade;
 
 import org.argouml.uml.generator.FileGenerator;
 import org.argouml.uml.generator.Generator2;
-
-import ru.novosoft.uml.behavior.collaborations.MAssociationRole;
-import ru.novosoft.uml.behavior.collaborations.MMessage;
-
-import ru.novosoft.uml.behavior.state_machines.MGuard;
-import ru.novosoft.uml.behavior.state_machines.MState;
-import ru.novosoft.uml.behavior.state_machines.MTransition;
-
-import ru.novosoft.uml.behavior.use_cases.MExtensionPoint;
-
-import ru.novosoft.uml.foundation.core.MAssociation;
-import ru.novosoft.uml.foundation.core.MAssociationEnd;
-import ru.novosoft.uml.foundation.core.MAttribute;
-import ru.novosoft.uml.foundation.core.MClassifier;
-import ru.novosoft.uml.foundation.core.MOperation;
-import ru.novosoft.uml.foundation.core.MParameter;
-
-import ru.novosoft.uml.foundation.data_types.MMultiplicity;
-import ru.novosoft.uml.foundation.data_types.MVisibilityKind;
-
-import ru.novosoft.uml.foundation.extension_mechanisms.MTaggedValue;
-
-import ru.novosoft.uml.model_management.MPackage;
 
 /**
  * Generator class for PHP 4.x source code

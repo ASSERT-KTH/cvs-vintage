@@ -1,4 +1,4 @@
-// $Id: TestFigClonable.java,v 1.4 2003/06/29 23:16:09 linus Exp $
+// $Id: TestFigClonable.java,v 1.5 2004/08/27 14:59:52 mvw Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -26,8 +26,16 @@ package org.argouml.uml.diagram.state.ui;
 
 import junit.framework.*;
 
-/** Tests whether Figs in state.ui are clonable, apart from FigStateVertex which is abstract. */
+/** Tests whether Figs in state.ui are clonable, 
+ * apart from FigStateVertex which is abstract. 
+ */
 public class TestFigClonable extends TestCase {
+    
+    /**
+     * The constructor.
+     * 
+     * @param name the test name
+     */
     public TestFigClonable(String name) {
         super(name);
     }

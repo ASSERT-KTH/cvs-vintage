@@ -1,4 +1,4 @@
-// $Id: TestMain.java,v 1.3 2003/06/29 23:16:09 linus Exp $
+// $Id: TestMain.java,v 1.4 2004/08/27 14:59:46 mvw Exp $
 // Copyright (c) 1996-2001 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -26,10 +26,18 @@ package org.argouml.application;
 import junit.framework.*;
 
 public class TestMain extends TestCase {
+    /**
+     * The constructor.
+     * 
+     * @param name the test name
+     */
     public TestMain(String name) {
 	super(name);
     }
 
+    /**
+     * Test nothing.
+     */
     public void testNothing() {
 	/* Test nothing. */
     }
