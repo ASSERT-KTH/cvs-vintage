@@ -38,7 +38,7 @@ import org.gjt.sp.util.Log;
  * or font style for painting that token.
  *
  * @author Slava Pestov, mike dillon
- * @version $Id: TokenMarker.java,v 1.14 2002/05/19 07:00:26 spestov Exp $
+ * @version $Id: TokenMarker.java,v 1.15 2002/05/19 07:31:11 spestov Exp $
  *
  * @see org.gjt.sp.jedit.syntax.Token
  * @see org.gjt.sp.jedit.syntax.TokenHandler
@@ -376,9 +376,9 @@ public class TokenMarker
 
 	//{{{ Private members
 	private static final int SOFT_SPAN = MARK_FOLLOWING | NO_WORD_BREAK;
-	private static Hashtable ruleSets;
 
 	//{{{ Instance variables
+	private Hashtable ruleSets;
 	private String name;
 	private String rulePfx;
 	private ParserRuleSet mainRuleSet;
