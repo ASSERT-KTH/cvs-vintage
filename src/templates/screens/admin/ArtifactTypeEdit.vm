@@ -159,7 +159,7 @@ $link.setPage("admin,ManageArtifactTypes.vm").setLabel("here") to proceed.
  #indexedRows($velocityCount)
  <td><input type="checkbox" name="att_delete_$userAttr.AttributeId" /></td>
  #if ($scarabR.hasPermission($scarabG.Permission.DOMAIN__EDIT))
- <td>$link.setPage("admin,ModuleAttributeEdit.vm").addPathInfo("att_0id", "$userAttr.AttributeId").addPathInfo("issueTypeId", $issueTypeId).setLabel("$userAttr.Name")</td>
+ <td>$link.setPage("admin,ModuleAttributeEdit.vm").addPathInfo("att_0id", "$userAttr.AttributeId").addPathInfo("issueTypeId", $issueTypeId).setLabel("$userAttr.Name").addPathInfo("$scarabG.Constant.CANCEL_TEMPLATE", "admin,ArtifactTypeEdit.vm")</td>
  #else
  <td>$userAttr.Name</td>
  #end

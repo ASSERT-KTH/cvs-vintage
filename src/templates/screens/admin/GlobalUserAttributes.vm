@@ -15,7 +15,7 @@
 <form action="$link.setPage("admin,GlobalUserAttributes.vm")" method="post">
 <input type="hidden" name="action" value="admin.GlobalAttributes" />
 <input type="hidden" name="$scarabG.Constant.OTHER_TEMPLATE" value="admin,UserAttributeEdit.vm" />
-<input type="hidden" name="$scarabG.Constant.LAST_TEMPLATE" value="global" />
+<input type="hidden" name="$scarabG.Constant.LAST_TEMPLATE" value="admin,GlobalUserAttributes.vm" />
 <input type="hidden" name="attributeType" value="user" />
 
         
@@ -70,7 +70,7 @@
   #set ($attgroup = $intake.Attribute.mapTo($attr))
   #indexedRows($velocityCount)
   <td><input type="checkbox" name="action_$attr.AttributeId"></td>
-  <td>$link.setPage("admin,UserAttributeEdit.vm").addPathInfo("att_0id", "$attgroup.Id").addPathInfo("$scarabG.Constant.LAST_TEMPLATE", "global").setLabel("$attr.Name")</td>
+  <td>$link.setPage("admin,UserAttributeEdit.vm").addPathInfo("att_0id", "$attgroup.Id").addPathInfo("$scarabG.Constant.LAST_TEMPLATE", "admin,GlobalUserAttributes.vm").setLabel("$attr.Name")</td>
   <td>$attr.Description</td>
   <td>
     #fieldErrorMsg($attgroup.Action "")
