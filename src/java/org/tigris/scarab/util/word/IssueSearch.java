@@ -1199,6 +1199,9 @@ public class IssueSearch
     {
         // List matchingIssues = null;
         Criteria crit = new Criteria();
+        crit.add(IssuePeer.MODULE_ID, getModule().getModuleId());
+        crit.add(IssuePeer.TYPE_ID, getIssueType().getIssueTypeId());
+        //crit.addJoin(IssuePeer.ISSUE_ID, AttributeValuePeer.ISSUE_ID);
 
         // add option values
         Criteria tempCrit = new Criteria(2)
