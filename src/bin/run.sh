@@ -5,7 +5,7 @@
 ##                                                                          ##
 ### ====================================================================== ###
 
-### $Id: run.sh,v 1.26 2001/08/28 04:49:10 user57 Exp $ ###
+### $Id: run.sh,v 1.27 2001/08/30 02:50:57 mnf999 Exp $ ###
 
 DIRNAME=`dirname $0`
 PROGNAME=`basename $0`
@@ -35,9 +35,9 @@ fi
 # Setup the classpath
 JBOSS_BOOT_CLASSPATH="$JBOSS_HOME/bin/run.jar"
 if [ "x$JBOSS_CLASSPATH" = "x" ]; then
-    JBOSS_CLASSPATH="$JBOSS_BOOT_CLASSPATH"
+    JBOSS_CLASSPATH="$JBOSS_BOOT_CLASSPATH:"
 else
-    JBOSS_CLASSPATH="${JBOSS_CLASSPATH}:$JBOSS_BOOT_CLASSPATH"
+    JBOSS_CLASSPATH="${JBOSS_CLASSPATH}:$JBOSS_BOOT_CLASSPATH:"
 fi
 
 # Check for SUN(tm) JVM w/ HotSpot support
