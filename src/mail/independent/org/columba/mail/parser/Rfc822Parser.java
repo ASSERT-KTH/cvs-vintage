@@ -19,6 +19,7 @@ package org.columba.mail.parser;
 import java.util.Date;
 import java.util.TimeZone;
 
+import org.columba.core.logging.ColumbaLogger;
 import org.columba.mail.coder.EncodedWordDecoder;
 import org.columba.mail.message.ColumbaHeader;
 import org.columba.mail.message.Message;
@@ -106,7 +107,9 @@ public class Rfc822Parser extends AbstractParser
 			output.setHeader(header);
 		}
 
-		String mimeValue = (String) output.getHeader().get("mime-version");
+		String mimeValue = (String) output.getHeader().get("Mime-Version");
+		ColumbaLogger.log.debug("mimeValue="+mimeValue);
+		
 		//System.out.println( mimeValue );
 
 		if (mimeValue != null)
@@ -132,7 +135,12 @@ public class Rfc822Parser extends AbstractParser
 		{
 			//System.out.println("---------------------------NOT Parsing MIME");
 			mime = false;
+			
+			
 		}
+		
+		// TODO fix issues with lower-case headerfields
+		mime=true;
 
 		if (mime)
 		{
@@ -152,72 +160,6 @@ public class Rfc822Parser extends AbstractParser
 		output.setMimePartTree(mimeParts);
 
 		return output;
-	}
-
-	// Private Methods
-
-	// Method that returns the Code for the Rfc822 Header-Entity
-
-	private int getCode(String par)
-	{
-		if (par.equals("Return-Path"))
-			return RETURN_PATH;
-		if (par.equals("Received"))
-			return RECEIVED;
-		if (par.equals("From"))
-			return FROM;
-		if (par.equals("Sender"))
-			return SENDER;
-		if (par.equals("Reply-To"))
-			return REPLY_TO;
-		if (par.equals("Resent-From"))
-			return RESENT_FROM;
-		if (par.equals("Resent-Sender"))
-			return RESENT_SENDER;
-		if (par.equals("Resent-Reply-To"))
-			return RESENT_REPLY_TO;
-		if (par.equals("Date"))
-			return DATE;
-		if (par.equals("Resent-Date"))
-			return RESENT_DATE;
-		if (par.equals("To"))
-			return TO;
-		if (par.equals("Resent-To"))
-			return RESENT_TO;
-		if (par.equals("cc"))
-			return CC;
-		if (par.equals("Resent-cc"))
-			return RESENT_CC;
-		if (par.equals("bcc"))
-			return BCC;
-		if (par.equals("Resent-bcc"))
-			return RESENT_BCC;
-		if (par.equals("Message-ID"))
-			return MESSAGE_ID;
-		if (par.equals("Resent-Message-ID"))
-			return RESENT_MESSAGE_ID;
-		if (par.equals("In-Reply-To"))
-			return IN_REPLY_TO;
-		if (par.equals("References"))
-			return REFERENCES;
-		if (par.equals("Keywords"))
-			return KEYWORDS;
-		if (par.equals("Subject"))
-			return SUBJECT;
-		if (par.equals("Comments"))
-			return COMMENTS;
-		if (par.equals("Encrypted"))
-			return ENCRYPTED;
-
-		if (par.equals("Mime-Version"))
-			return Mime_VERSION;
-
-		if (par.startsWith("x"))
-			return X_ADDITIONAL;
-		if (par.startsWith("X"))
-			return X_ADDITIONAL;
-
-		return -1;
 	}
 
 	// This Method is the Heart of the class as it parses the Header

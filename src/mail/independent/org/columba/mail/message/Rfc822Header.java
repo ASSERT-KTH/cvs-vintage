@@ -19,8 +19,6 @@ package org.columba.mail.message;
 import java.util.Enumeration;
 import java.util.Hashtable;
 
-import org.columba.core.logging.ColumbaLogger;
-
 /**
  * represents a Rfc822-compliant header
  * every headeritem is saved in a hashtable-structure
@@ -111,6 +109,11 @@ public class Rfc822Header implements HeaderInterface {
 		if (hashTable.containsKey(s) == true) {
 			result = hashTable.get(s);
 		}
+		else if ( hashTable.containsKey(s.toLowerCase()) == true )
+		{
+			result = hashTable.get(s);
+		}
+		
 		
 		/*
 		else

@@ -639,7 +639,7 @@ public class Imap4Parser {
 		// Message-ID
 		nextItem = tokenizer.getNextItem();
 		if( nextItem.getType() == Item.STRING )
-			result.set( "Message-Id", (String) nextItem.getValue() );
+			result.set( "Message-ID", (String) nextItem.getValue() );
 				
 			
 		return result;

@@ -87,7 +87,7 @@ public class MimeParser extends AbstractParser {
 
               // Parsing the Mime-Content-Types
 
-            if( actLine.toLowerCase().startsWith("content-type") ) {
+            if( actLine.startsWith("Content-Type") ) {
                 charPos = actLine.indexOf(':');
                 if( charPos != -1 ) {
                     paramTokenizer = new StringTokenizer(actLine.substring(charPos+1),";");
@@ -111,25 +111,25 @@ public class MimeParser extends AbstractParser {
 
                 }
             }
-            else if( actLine.toLowerCase().startsWith("content-transfer-encoding") ) {
+            else if( actLine.startsWith("Content-Transfer-Encoding") ) {
                 charPos = actLine.indexOf(':');
                 if( charPos != -1 ) {
                     output.contentTransferEncoding = actLine.substring(charPos+1).trim().toLowerCase();
                 }
             }
-            else if( actLine.toLowerCase().startsWith("content-id") ) {
+            else if( actLine.startsWith("Content-ID") ) {
                 charPos = actLine.indexOf(':');
                 if( charPos != -1 ) {
                     output.contentID = actLine.substring(charPos+1).trim();
                 }
             }
-            else if( actLine.toLowerCase().startsWith("content-description") ) {
+            else if( actLine.startsWith("Content-Description") ) {
                 charPos = actLine.indexOf(':');
                 if( charPos != -1 ) {
                     output.contentDescription = actLine.substring(charPos+1).trim();
                 }
             }
-            else if( actLine.toLowerCase().startsWith("content-disposition") ) {
+            else if( actLine.startsWith("Content-Disposition") ) {
                 charPos = actLine.indexOf(':');
                 if( charPos != -1 ) {
                     paramTokenizer = new StringTokenizer(actLine.substring(charPos+1),";");

@@ -101,7 +101,7 @@ public class MessageComposer {
 			header.set("Reply-To", replyAddress);
 
 		String messageID = MessageIDGenerator.generate();
-		header.set("Message-Id", messageID);
+		header.set("Message-ID", messageID);
 
 		String inreply = model.getHeaderField("In-Reply-To");
 		if (inreply != null)

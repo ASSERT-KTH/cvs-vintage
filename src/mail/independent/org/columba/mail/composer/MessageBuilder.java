@@ -273,7 +273,7 @@ public class MessageBuilder {
 	private static void createMailingListHeaderItems(
 		ColumbaHeader header,
 		ComposerModel model) {
-		String messageId = (String) header.get("Message-Id");
+		String messageId = (String) header.get("Message-ID");
 		if (messageId != null) {
 			model.setHeaderField("In-Reply-To", messageId);
 
