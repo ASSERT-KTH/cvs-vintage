@@ -69,9 +69,10 @@ public class AboutDialog implements ActionListener {
 				GlobalResourceLoader.getString(RESOURCE_BUNDLE_PATH, "about", "title")
 					+ org.columba.core.main.MainInterface.version);
 
+		dialog.setModal(false);
 		tabbedPane = new JTabbedPane();
 		tabbedPane.setFocusable(false);
-		tabbedPane.setBorder(BorderFactory.createEmptyBorder(0, 5, 0, 5));
+		tabbedPane.setBorder(BorderFactory.createEmptyBorder(12, 12, 12, 12));
 
 		JPanel contentPane = (JPanel)dialog.getContentPane();
 		contentPane.setLayout(new BorderLayout(0, 0));
@@ -244,6 +245,7 @@ public class AboutDialog implements ActionListener {
 			setBorder(new EmptyBorder(new Insets(5, 5, 5, 5)));
 			southPanel.setLayout(new java.awt.GridBagLayout());
 
+			progressBar.setPreferredSize(gcButton.getPreferredSize());
 			progressBar.setStringPainted(true);
 			gridBagConstraints = new GridBagConstraints();
 			gridBagConstraints.fill = GridBagConstraints.HORIZONTAL;
@@ -251,13 +253,14 @@ public class AboutDialog implements ActionListener {
 			gridBagConstraints.weightx = 1.0;
 			southPanel.add(progressBar, gridBagConstraints);
 
+			gcButton.setContentAreaFilled(false);
 			gcButton.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent evt) {
 					System.gc();
 				}
 			});
 			gridBagConstraints = new GridBagConstraints();
-			gridBagConstraints.insets = new Insets(0, 4, 0, 0);
+			gridBagConstraints.insets = new Insets(0, 6, 0, 0);
 			gridBagConstraints.anchor = GridBagConstraints.WEST;
 			southPanel.add(gcButton, gridBagConstraints);
 
@@ -295,7 +298,7 @@ public class AboutDialog implements ActionListener {
 			gridBagConstraints = new GridBagConstraints();
 			gridBagConstraints.gridx = 4;
 			gridBagConstraints.gridy = 0;
-			gridBagConstraints.insets = new Insets(0, 4, 0, 4);
+			gridBagConstraints.insets = new Insets(6, 4, 0, 4);
 			gridBagConstraints.anchor = GridBagConstraints.WEST;
 			centerPanel.add(totalMemoryTextField, gridBagConstraints);
 
@@ -310,7 +313,7 @@ public class AboutDialog implements ActionListener {
 			gridBagConstraints = new GridBagConstraints();
 			gridBagConstraints.gridx = 0;
 			gridBagConstraints.gridy = 1;
-			gridBagConstraints.insets = new Insets(4, 0, 0, 0);
+			gridBagConstraints.insets = new Insets(6, 0, 0, 0);
 			gridBagConstraints.anchor = GridBagConstraints.WEST;
 			centerPanel.add(maxMemoryLabel, gridBagConstraints);
 
