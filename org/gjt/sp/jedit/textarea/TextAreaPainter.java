@@ -39,7 +39,7 @@ import org.gjt.sp.util.Log;
  * The text area repaint manager. It performs double buffering and paints
  * lines of text.
  * @author Slava Pestov
- * @version $Id: TextAreaPainter.java,v 1.9 2001/10/17 12:14:12 spestov Exp $
+ * @version $Id: TextAreaPainter.java,v 1.10 2001/11/08 03:32:27 spestov Exp $
  */
 public class TextAreaPainter extends JComponent implements TabExpander
 {
@@ -652,12 +652,10 @@ public class TextAreaPainter extends JComponent implements TabExpander
 		if(textArea.getBuffer() == null)
 			return;
 
-		tabSize = fm.charWidth(' ') * ((Integer)textArea
-			.getBuffer().getProperty(
-			PlainDocument.tabSizeAttribute)).intValue();
+		tabSize = fm.charWidth(' ') * textArea.getBuffer().getTabSize();
 
-		int _maxLineLen = ((Integer)textArea.getBuffer()
-			.getProperty("maxLineLen")).intValue();
+		int _maxLineLen = textArea.getBuffer()
+			.getIntegerProperty("maxLineLen",0);
 
 		if(_maxLineLen <= 0)
 			maxLineLen = 0;

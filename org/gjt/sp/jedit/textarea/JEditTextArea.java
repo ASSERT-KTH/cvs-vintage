@@ -46,7 +46,7 @@ import org.gjt.sp.util.Log;
  * jEdit's text component.
  *
  * @author Slava Pestov
- * @version $Id: JEditTextArea.java,v 1.23 2001/11/07 06:31:50 spestov Exp $
+ * @version $Id: JEditTextArea.java,v 1.24 2001/11/08 03:32:27 spestov Exp $
  */
 public class JEditTextArea extends JComponent
 {
@@ -4455,7 +4455,7 @@ loop:			for(int i = lineNo + 1; i < getLineCount(); i++)
 		{
 			// Return each row of the selection on a new line
 			int start = s.start - getLineStartOffset(s.startLine);
-			int end = s.end - getLineEndOffset(s.endLine);
+			int end = s.end - getLineStartOffset(s.endLine);
 
 			// Certain rectangles satisfy this condition...
 			if(end < start)
