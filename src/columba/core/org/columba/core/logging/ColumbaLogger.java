@@ -32,14 +32,15 @@ import org.columba.core.main.MainInterface;
 public class ColumbaLogger {
 	public static Logger log;
 	
-	public ColumbaLogger()
+	static
 	{
 		log = Logger.getLogger("org.columba");
 		PropertyConfigurator.configure( Config.getLoggingPropertyFile().toString() );
 		
-		if ( MainInterface.DEBUG.equals(Boolean.TRUE) )
+		if ( MainInterface.DEBUG) {
 			log.setLevel(Level.DEBUG);
-		else
+    }	else {
 			log.setLevel(Level.INFO);
+    }
 	}
 }
