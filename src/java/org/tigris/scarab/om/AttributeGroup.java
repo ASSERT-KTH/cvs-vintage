@@ -397,7 +397,9 @@ public  class AttributeGroup
                 rmo2.save();
             }
         }
-        ScarabCache.clear();
+        issueType.getAvailableAttributes("data").remove(attribute);
+        issueType.getAttributes("data").add(attribute);
+        getAttributes().add(attribute);
     }
 
     public void deleteAttribute( Attribute attribute, ScarabUser user,
