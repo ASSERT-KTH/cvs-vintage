@@ -1,7 +1,7 @@
 
 <html>
   <head>
-    <!-- $Id: tomcat_ug.html,v 1.7 2000/05/02 20:00:35 costin Exp $ -->
+    <!-- $Id: tomcat_ug.html,v 1.8 2000/06/15 19:02:40 ed Exp $ -->
     <!-- Copyright 1999, Apache Software Foundation -->
     <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
     <link rel="stylesheet" href=style.css>
@@ -589,7 +589,7 @@
         it tries to provide explanations as well as insight for the
  	    configuration directives that you should use. You can find
 	    additional information in the
-	    <a href="in http://java.apache.org/jserv/install/index.html">
+	    <a href="http://java.apache.org/jserv/install/index.html">
         jserv install page </a>.
     </p>
 
@@ -618,7 +618,7 @@
     <ul>
       <li> In general you can distinguish between the two directive
            "families" by noting that all the Jserv unique directives start
-           with an "Ajp" prefix. </li>
+           with an "ApJServ" prefix. </li>
       <li> The entire Tomcat related configuration is concentrated in a
            single configuration file named tomcat.conf, or the automatically
            generated tomcat-apache.conf, so you can look at a single file.
@@ -868,7 +868,7 @@ ApJServMount /servlet /ROOT
     <p>
       As you can see, the beginning of this configuration file is the same
       as seen in the previous example. The last step (mounting a context),
-      however,  was replaced in a long series of Apache and Ajp
+      however,  was replaced in a long series of Apache and ApJServ
       configuration directives that will now be explained:
       <ol>
         <li> This step informs Apache of the context location and aliases it
@@ -952,7 +952,7 @@ ApJServMount /bill ajpv12://bill.corp.com:8007/bill
     <p>
     As you can see in the previous example, using several JVMs (even even 
 	those that run on different machines) can be accomplished easily by 
-	using a full Ajp URL mount. In this full URL we actually specify the 
+	using a full ajp URL mount. In this full URL we actually specify the 
 	host where the Tomcat process is located and it's port.
     </p>
     <p>
@@ -996,7 +996,7 @@ ApJServMount /bill ajpv12://localhost:8009/bill
       </tr> 
     </table>
     <p>
-    Looking at the above file you can see that we have two explicit Ajp
+    Looking at the above file you can see that we have two explicit ApJServ
     mount points each pointing to a different port on the same machine. It
     is clear that this configuration requires support from the configuration
     found in the server.xml files. We will need in these files different
@@ -1374,7 +1374,7 @@ ApJServMount /examples ajpv12://localhost:8009/examples
                 value="8080"/&gt;
         &lt;/Connector&gt;
 
-        &lt;!-- (2) AJPV12 Connector for out-of-processs operation --&gt;
+        &lt;!-- (2) AJPV12 Connector for out-of-process operation --&gt;
         &lt;Connector className="org.apache.tomcat.service.SimpleTcpConnector"&gt;
             &lt;Parameter
                 name="handler"
@@ -1430,7 +1430,7 @@ ApJServMount /examples ajpv12://localhost:8009/examples
         <ol>
             <li> Keeping threads "open" and reusing them over and over
                  again. This saves the trouble associated with creating and 
-				 destructing threads continuously.
+				 destroying threads continuously.
                  <ul> <li>
                  Usually the administrator can instruct the pool not to keep
                  too many idle threads, freeing them if needed.
@@ -1470,7 +1470,7 @@ ApJServMount /examples ajpv12://localhost:8009/examples
           <tr>
             <td bgcolor="#c0c0c0">
                 <pre>
-        &lt;!-- A pooled AJPV12 Connector for out-of-processs operation --&gt;
+        &lt;!-- A pooled AJPV12 Connector for out-of-process operation --&gt;
         &lt;Connector className="org.apache.tomcat.service.PoolTcpConnector"&gt;
             &lt;Parameter
                 name="handler"
@@ -1511,7 +1511,7 @@ ApJServMount /examples ajpv12://localhost:8009/examples
           <tr>
             <td bgcolor="#c0c0c0">
                 <pre>
-        &lt;!-- A pooled AJPV12 Connector for out-of-processs operation --&gt;
+        &lt;!-- A pooled AJPV12 Connector for out-of-process operation --&gt;
         &lt;Connector className="org.apache.tomcat.service.PoolTcpConnector"&gt;
             &lt;Parameter
                 name="handler"
@@ -1534,7 +1534,7 @@ ApJServMount /examples ajpv12://localhost:8009/examples
           </tr>
         </table>
         </p>
-        As can be seen the pool has 3 configuration parametes:
+        As can be seen the pool has 3 configuration parameters:
         <ul>
             <li> max_threads - defines the upper bound to the for the 
 			     concurrency, the pool will not create more then this number 
