@@ -4,9 +4,10 @@ $page.setTitle("Stored query list")
 
 <h2>$page.Title</h2>
 #set ($module = $scarabR.CurrentModule)
+#set ($issueType = $scarabR.CurrentIssueType)
 #set ($user = $data.User)
 
-#if ($module.getAllUserQueries($user).isEmpty())
+#if ($module.getAllUserQueries($user, $issueType).isEmpty())
 <h3>Saved Queries</h3>
  <p><strong class="alert">There are no stored queries.
  Please go to <a href="$link.setPage("AdvancedQuery.vm")">Advanced query</a>
@@ -60,7 +61,7 @@ $page.setTitle("Stored query list")
   <th>Subscribed?</th>
   <th>Subscription frequency</th>
  </tr>
- #foreach ( $query in $module.getAllUserQueries($user) )
+ #foreach ( $query in $module.getAllUserQueries($user, $issueType) )
   #set ($rqu = $query.getRQueryUser($user))
   #indexedRows($velocityCount)
   <td><input type="checkbox" name="action_$query.QueryId" /></td>
