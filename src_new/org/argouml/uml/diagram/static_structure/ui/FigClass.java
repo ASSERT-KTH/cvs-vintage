@@ -1,4 +1,4 @@
-// $Id: FigClass.java,v 1.105 2004/08/09 05:48:36 linus Exp $
+// $Id: FigClass.java,v 1.106 2004/08/09 08:34:52 bobtarling Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -374,19 +374,21 @@ public class FigClass extends FigNodeModelElement {
      */
     public void setAttributeVisible(boolean isVisible) {
         Rectangle rect = getBounds();
-        int h =
-	    isCheckSize()
-	    ? ((ROWHEIGHT * Math
-	            .max(1, getAttributesFig().getFigs(null).size() - 1) + 2)
-	       * rect.height
-	       / getMinimumSize().height)
-	    : 0;
+        int h;
+    	if (isCheckSize()) {
+    	    h = ((ROWHEIGHT * 
+                Math.max(1, getAttributesFig().getFigs(null).size() - 1) + 2)
+                * rect.height
+                / getMinimumSize().height);
+        } else {
+            h= 0;
+        }
         if (getAttributesFig().isVisible()) {
             if (!isVisible) {  // hide compartment
                 damage();
                 Iterator it = getAttributesFig().getFigs(null).iterator();
                 while (it.hasNext()) {
-		    ((Fig) (it.next())).setVisible(false);
+                    ((Fig) (it.next())).setVisible(false);
                 }
                 getAttributesFig().setVisible(false);
                 Dimension aSize = this.getMinimumSize();
@@ -397,7 +399,7 @@ public class FigClass extends FigNodeModelElement {
             if (isVisible) { // show compartement
                 Iterator it = getAttributesFig().getFigs(null).iterator();
                 while (it.hasNext()) {
-		    ((Fig) (it.next())).setVisible(true);
+                    ((Fig) (it.next())).setVisible(true);
                 }
                 getAttributesFig().setVisible(true);
                 Dimension aSize = this.getMinimumSize();
@@ -414,20 +416,20 @@ public class FigClass extends FigNodeModelElement {
     public void setOperationVisible(boolean isVisible) {
         Rectangle rect = getBounds();
         int h =
-	    isCheckSize()
-	    ? ((ROWHEIGHT * Math
-	            .max(1, getOperationsFig().getFigs(null).size() - 1) + 2)
-	       * rect.height
-	       / getMinimumSize().height)
-	    : 0;
+    	    isCheckSize()
+    	    ? ((ROWHEIGHT * 
+                Math.max(1, getOperationsFig().getFigs(null).size() - 1) + 2)
+    	        * rect.height
+    	        / getMinimumSize().height)
+    	    : 0;
         if (isOperationVisible()) { // if displayed
             if (!isVisible) {
                 damage();
                 Iterator it = getOperationsFig().getFigs(null).iterator();
                 while (it.hasNext()) {
-		    ((Fig) (it.next())).setVisible(false);
+                    ((Fig) (it.next())).setVisible(false);
                 }
-                setOperationVisible(false);
+                getOperationsFig().setVisible(false);
                 Dimension aSize = this.getMinimumSize();
                 setBounds(rect.x, rect.y,
 			  (int) aSize.getWidth(), (int) aSize.getHeight());
@@ -436,12 +438,12 @@ public class FigClass extends FigNodeModelElement {
             if (isVisible) {
                 Iterator it = getOperationsFig().getFigs(null).iterator();
                 while (it.hasNext()) {
-		    ((Fig) (it.next())).setVisible(true);
+                    ((Fig) (it.next())).setVisible(true);
                 }
-                setOperationVisible(true);
+                getOperationsFig().setVisible(true);
                 Dimension aSize = this.getMinimumSize();
                 setBounds(rect.x, rect.y,
-			  (int) aSize.getWidth(), (int) aSize.getHeight());
+                    (int) aSize.getWidth(), (int) aSize.getHeight());
                 damage();
             }
         }
