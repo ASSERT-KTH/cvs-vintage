@@ -1,5 +1,5 @@
-// $Id: ActionDeleteFromDiagram.java,v 1.13 2005/01/01 19:47:40 bobtarling Exp $
-// Copyright (c) 1996-2004 The Regents of the University of California. All
+// $Id: ActionDeleteFromDiagram.java,v 1.14 2005/01/02 16:43:45 linus Exp $
+// Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
 // agreement is hereby granted, provided that the above copyright notice
@@ -118,7 +118,7 @@ public class ActionDeleteFromDiagram extends UMLAction {
     public void actionPerformed(ActionEvent ae) {
         int size = 0;
         Editor ce = Globals.curEditor();
-        MutableGraphSupport graph = (MutableGraphSupport)ce.getGraphModel();
+        MutableGraphSupport graph = (MutableGraphSupport) ce.getGraphModel();
         try {
             Vector figs = ce.getSelectionManager().getFigs();
             size = figs.size();

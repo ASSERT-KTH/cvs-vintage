@@ -1,5 +1,5 @@
-// $Id: ProjectMemberTodoList.java,v 1.7 2005/01/02 04:08:32 bobtarling Exp $
-// Copyright (c) 1996-2004 The Regents of the University of California. All
+// $Id: ProjectMemberTodoList.java,v 1.8 2005/01/02 16:43:55 linus Exp $
+// Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
 // agreement is hereby granted, provided that the above copyright notice

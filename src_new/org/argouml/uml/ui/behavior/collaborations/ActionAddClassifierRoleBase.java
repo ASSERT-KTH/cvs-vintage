@@ -1,5 +1,5 @@
-// $Id: ActionAddClassifierRoleBase.java,v 1.13 2005/01/02 10:08:16 linus Exp $
-// Copyright (c) 1996-99 The Regents of the University of California. All
+// $Id: ActionAddClassifierRoleBase.java,v 1.14 2005/01/02 16:43:44 linus Exp $
+// Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
 // agreement is hereby granted, provided that the above copyright notice
@@ -22,7 +22,6 @@
 // CALIFORNIA HAS NO OBLIGATIONS TO PROVIDE MAINTENANCE, SUPPORT,
 // UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 
-// $Id: ActionAddClassifierRoleBase.java,v 1.13 2005/01/02 10:08:16 linus Exp $
 package org.argouml.uml.ui.behavior.collaborations;
 
 import java.util.Vector;

@@ -1,5 +1,5 @@
-// $Id: StylePanelFigInterface.java,v 1.11 2005/01/01 20:48:50 mvw Exp $
-// Copyright (c) 1996-99 The Regents of the University of California. All
+// $Id: StylePanelFigInterface.java,v 1.12 2005/01/02 16:43:47 linus Exp $
+// Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
 // agreement is hereby granted, provided that the above copyright notice
