@@ -44,9 +44,9 @@
 
         <!-- Generate includeable Apache configuration files for mod_jserv
              and mod_jk.
-          -->
         <ContextInterceptor
             className="org.apache.tomcat.modules.config.ApacheConfig" />
+          -->
 
         <ContextInterceptor 
             className="org.apache.tomcat.facade.WebXmlReader" />
@@ -242,15 +242,15 @@
             docBase="webapps/examples" 
             debug="0" 
 	    reloadable="true" > 
-              <RequestInterceptor 
+              <Interceptor 
                   className="org.apache.tomcat.modules.aaa.SimpleRealm" 
                   filename="conf/users/example-users.xml"
                   debug="0" />
-              <ContextInterceptor  name="example_tc_log" 
+              <Interceptor  name="example_tc_log" 
                   className="org.apache.tomcat.modules.config.LogSetter"
                   verbosityLevel = "INFORMATION"
                   path="logs/examples.log" />
-              <ContextInterceptor  name="example_servlet_log" 
+              <Interceptor  name="example_servlet_log" 
                  className="org.apache.tomcat.modules.config.LogSetter"
                  verbosityLevel = "INFORMATION"
                  path="logs/servlet_examples.log" servletLogger="true"/>
@@ -269,7 +269,7 @@
                  debug="0" 
                  reloadable="true" 
                  trusted="false" > 
-        <RequestInterceptor 
+        <Interceptor 
             className="org.apache.tomcat.modules.aaa.SimpleRealm" 
             filename="conf/users/admin-users.xml"
             debug="0" />
