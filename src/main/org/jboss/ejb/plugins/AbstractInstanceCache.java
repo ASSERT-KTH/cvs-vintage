@@ -59,14 +59,16 @@ import org.jboss.monitor.MetricsConstants;
 *
 * @author <a href="mailto:simone.bordet@compaq.com">Simone Bordet</a>
 * @author <a href="bill@burkecentral.com">Bill Burke</a>
-* @author <a href="mailto:marc@jboss.org">Marc Fleury</a>
+* @author <a href="marc.fleury@jboss.org">Marc Fleury</a>
 *
-* 
-*   Revisions:
+* @version $Revision: 1.13 $
 *
-*   20010626 marc fleury: Cache should be working with the MethodInvocation  
-* 
-* @version $Revision: 1.12 $
+*   <p><b>Revisions:</b>
+*
+*   <p><b>20010703 marcf:</b>
+*   <ul>
+*   <li> Synchronization is on the context and not on the mutex any longer  
+*   </ul>
 */
 public abstract class AbstractInstanceCache
 implements InstanceCache, XmlLoadable, Monitorable, MetricsConstants
@@ -165,9 +167,6 @@ implements InstanceCache, XmlLoadable, Monitorable, MetricsConstants
 			if (ctx == null)
 			{
 				// Here I block if the bean is passivating now
-				
-				// FIXME marcf: I am REALLY against locking on passivation, we are locking the 
-				// whole cache for the passivation of one guy. it doesn't make sense!!!!!!!!
 				ctx = unschedulePassivation(id);
 				
 				// Already passivated ?
@@ -177,9 +176,9 @@ implements InstanceCache, XmlLoadable, Monitorable, MetricsConstants
 					{
 						ctx = acquireContext();
 						setKey(id, ctx);
-						//FIXME marcf: in the case of session we are saying that the WHOLE
-						// cache will be locked (see synchronized statement) until this guy completes
-						// DO YOU SEE IT? THE *WHOLE* APP LOCKED ON A ACTIVATION??? WTF?
+						// FIXME marcf: in the case of entity the activation is a cheap call but 
+						// in the case of stateful this a very expensive call (read from file) 
+						// Locking on the whole cache lock?
 						activate(ctx);
 						logActivation(id);
 						insert(ctx);
@@ -196,8 +195,9 @@ implements InstanceCache, XmlLoadable, Monitorable, MetricsConstants
 				}
 			}
 		}
+		// FIXME marcf: How can this ever be reached? the ctx is always assigned
 		if (ctx == null) throw new NoSuchObjectException("Can't find bean with id = " + id);
-		
+			
 		return ctx;
 	}
 	/* From InstanceCache interface */
@@ -588,7 +588,7 @@ implements InstanceCache, XmlLoadable, Monitorable, MetricsConstants
 	
 	// Private -------------------------------------------------------
 	
-	// Inner classes -------------------------------------------------
+	// Inner classes ------------------------------------------------- 
 	/**
 	* Helper class that schedules, unschedules, and executes the passivation jobs.
 	*/
@@ -614,7 +614,7 @@ implements InstanceCache, XmlLoadable, Monitorable, MetricsConstants
 				// (Bill Burke) We can't rely on the EnterpriseContext to provide PassivationJob
 				// with a valid key because it may get freed to the InstancePool, then
 				// reused before the PassivationJob executes.
-				//
+				// marcf, actually for simplicity I have removed the "freed" call in the pool (check entity pool)
 				PassivationJob job = new PassivationJob(bean, key)
 				{
 					public void execute() throws Exception
@@ -645,12 +645,17 @@ implements InstanceCache, XmlLoadable, Monitorable, MetricsConstants
 						* 3) the passivation job, since cancel() is synchronized.
 						* To avoid deadlock, here we MUST acquire these resources in the same
 						* exact order.
+						*
+						* marcf: this is still very valid but the first lock is on the ctx directly
+						* this is part of the rework of the buzy wait bug
 						*/
-						Sync mutex = (Sync)getLock(id);
-						
-						try
-						{
-							mutex.acquire();
+						//Sync mutex = (Sync)getLock(id);
+						synchronized (ctx) {
+							
+							// marcf: the mutex is not good as we need a thread reentrant one, for now we
+							// use straight synchronization on the ctx as there is a one-one relationship
+							// Also the ctx are not reused any longer so no chance of using the wrong ctx
+							// mutex.acquire();
 							
 							synchronized (getCacheLock())
 							{
@@ -673,6 +678,12 @@ implements InstanceCache, XmlLoadable, Monitorable, MetricsConstants
 											return;
 										}
 									}
+									// Can passivate checks that the ctx is not locked and that there is no 
+									// transaction.  
+									// The reason is that we can have a ctx scheduled for passivation 
+									// but the moment we reach the passivation we can acquire all 
+									// the temporary locks but there might be a running thread in the container
+									// (signified by the ctx.lock) and/or a long running transaction.
 									if (!canPassivate(ctx))
 									{
 										// This check is done because there could have been
@@ -715,17 +726,13 @@ implements InstanceCache, XmlLoadable, Monitorable, MetricsConstants
 												throw x;
 											}
 										}
-									}
-								}
-							}
-						}
-						catch (InterruptedException ignored) {}
-						finally
-						{
-							mutex.release();
-						}
-					}
-				};
+									} // can passivate
+								} // synchronized(job)
+							}// synchronized(cacheLock)
+						
+						}//synchronized(ctx)
+					}//execute
+				};// Passivation job definition
 				
 				// This method is entered only by one thread at a time, since the only caller
 				// call it only after having sync on the cache lock via getCacheLock().
@@ -748,8 +755,8 @@ implements InstanceCache, XmlLoadable, Monitorable, MetricsConstants
 						throw new IllegalStateException("Trying to schedule 2 passivation jobs for the same bean");
 					}
 				}
-			}
-		}
+			} 
+		}// schedule
 		/**
 		* Tries to unschedule a job paired with the given context's id
 		* @return null if the bean has been passivated, the context
@@ -874,7 +881,7 @@ class PassivatorQueue extends WorkerQueue
 	{
 		this("Passivator Thread", null);
 	}
-	/**
+	/** 
 	* Creates a new passivator queue with the given thread name and given
 	* context class loader. <br>
 	* @param threadName the name of the passivator thread
