@@ -35,6 +35,7 @@ import org.jboss.naming.NonSerializableFactory;
 import org.jboss.naming.Util;
 import org.jboss.security.AuthenticationManager;
 import org.jboss.security.RealmMapping;
+import org.jboss.security.AnybodyPrincipal;
 import org.jboss.system.ServiceMBeanSupport;
 import org.jboss.util.NestedError;
 import org.jboss.util.NestedRuntimeException;
@@ -44,6 +45,8 @@ import org.omg.CORBA.ORB;
 import javax.ejb.EJBException;
 import javax.ejb.EJBObject;
 import javax.ejb.TimerService;
+import javax.ejb.Timer;
+import javax.ejb.TimedObject;
 import javax.ejb.spi.HandleDelegate;
 import javax.management.MBeanException;
 import javax.management.MalformedObjectNameException;
@@ -63,6 +66,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
+import java.util.HashSet;
 import java.security.PrivilegedExceptionAction;
 import java.security.AccessController;
 import java.security.PrivilegedActionException;
@@ -87,7 +91,7 @@ import java.security.PrivilegedActionException;
  * @author <a href="bill@burkecentral.com">Bill Burke</a>
  * @author <a href="mailto:d_jencks@users.sourceforge.net">David Jencks</a>
  * @author <a href="mailto:christoph.jung@infor.de">Christoph G. Jung</a>
- * @version $Revision: 1.164 $
+ * @version $Revision: 1.165 $
  *
  * @jmx.mbean extends="org.jboss.system.ServiceMBean"
  */
@@ -104,6 +108,8 @@ public abstract class Container
            ObjectNameFactory.create(BASE_EJB_CONTAINER_NAME + ",*");
 
    protected static final Method EJBOBJECT_REMOVE;
+   /** A reference to {@link javax.ejb.TimedObject#ejbTimeout}. */
+   protected static final Method EJB_TIMEOUT;
 
    /** This is the application that this container is a part of */
    protected EjbModule ejbModule;
@@ -205,6 +211,7 @@ public abstract class Container
       try
       {
          EJBOBJECT_REMOVE = EJBObject.class.getMethod("remove", new Class[0]);
+         EJB_TIMEOUT = TimedObject.class.getMethod("ejbTimeout", new Class[]{Timer.class});
       }
       catch (Throwable t)
       {
@@ -532,6 +539,13 @@ public abstract class Container
       if (methodPermissionsCache.containsKey(m))
       {
          permissions = (Set) methodPermissionsCache.get(m);
+      }
+      else if( m.equals(EJB_TIMEOUT) )
+      {
+         // No role is required to access the ejbTimeout as this is 
+         permissions = new HashSet();
+         permissions.add(AnybodyPrincipal.ANYBODY_PRINCIPAL);
+         methodPermissionsCache.put(m, permissions);
       }
       else
       {
