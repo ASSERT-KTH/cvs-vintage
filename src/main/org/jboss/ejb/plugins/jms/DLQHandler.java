@@ -26,7 +26,7 @@ import org.w3c.dom.Element;
 import org.jboss.logging.Logger;
 import org.jboss.deployment.DeploymentException;
 import org.jboss.metadata.MetaData;
-
+import org.jboss.jms.jndi.JMSProviderAdapter;
 
 /**
  * Places redeliveded messages on a Dead Letter Queue.
@@ -52,8 +52,9 @@ import org.jboss.metadata.MetaData;
  * Created: Thu Aug 23 21:17:26 2001
  *
  * @author
- * @version $Revision: 1.6 $ $Date: 2002/01/05 12:08:52 $
+ * @version $Revision: 1.7 $ $Date: 2002/01/07 20:54:19 $
  */
+
 public class DLQHandler
 {
    /** Class logger. */
@@ -101,29 +102,36 @@ public class DLQHandler
    private QueueConnection connection;
    private Queue dlq;
    private Hashtable resentBuffer = new Hashtable();
-   
+   private JMSProviderAdapter providerAdapter = null;
+
    public DLQHandler()
    {
       
    }
-   
-   
-   //--- Service
+
+  // Fix: set the JMS provider adapter to handle DLQ stuff
+  public DLQHandler(JMSProviderAdapter providerAdapter)
+  {
+    this.providerAdapter = providerAdapter;
+  }
+
+  //--- Service
    /**
     * Initalize the service.
     *
     * @throws Exception    Service failed to initalize.
     */
-   void create() throws Exception {
-
-      Context ctx = new InitialContext();
+   void create() throws Exception
+   {
+      // Fix: use provider adapter eventually
+      Context ctx = providerAdapter != null? providerAdapter.getInitialContext(): new InitialContext();
       QueueConnectionFactory factory = (QueueConnectionFactory)
       ctx.lookup(FACTORY_JNDI);
       
       connection = factory.createQueueConnection();
       dlq = (Queue)ctx.lookup(destinationJNDI);
       if (log.isDebugEnabled())
-         log.debug("Created Dead Letter Queue connection " + dlq);
+      log.debug("Created Dead Letter Queue connection " + dlq);
    }
    
    /**
@@ -152,8 +160,10 @@ public class DLQHandler
       try
       {
          connection.stop();
-      }catch(Exception ex)
-      {}
+      }
+      catch(Exception ex)
+      {
+      }
    }
    
    //--- Logic
@@ -188,13 +198,12 @@ public class DLQHandler
       catch(JMSException ex)
       {
          // If we can't send it ahead, we do not dare to just drop it...or?
-         log.error("Could not send message to Dead Letter Queue " + ex,ex);
+         log.error("Could not send message to Dead Letter Queue", ex);
          return false;
       }
       return false;
-      
    }
-   
+
    //--- Private helper stuff
    /**
     * Increment the counter for the specific JMS message id.
@@ -208,18 +217,17 @@ public class DLQHandler
       if(!resentBuffer.containsKey(id))
       {
          if (debug)
-            log.debug("Making new entry for id " + id);
+         log.debug("Making new entry for id " + id);
          entry = new BufferEntry();
          entry.id = id;
          entry.count = 1;
          resentBuffer.put(id,entry);
-      }
-      else
+      } else
       {
          entry = (BufferEntry)resentBuffer.get(id);
          entry.count++;
          if (debug)
-            log.debug("Incremented old entry for id " + id + " count " + entry.count);
+         log.debug("Incremented old entry for id " + id + " count " + entry.count);
       }
       return entry.count;
    }
@@ -251,7 +259,7 @@ public class DLQHandler
          ses = connection.createQueueSession(false,Session.AUTO_ACKNOWLEDGE);
          sender = ses.createSender(dlq);
          if (log.isDebugEnabled())
-            log.debug("Resending DLQ message to destination" + dlq);
+         log.debug("Resending DLQ message to destination" + dlq);
          sender.send(msg,deliveryMode,priority,timeToLive);
       }
       finally
@@ -265,6 +273,7 @@ public class DLQHandler
          {
          }
       }
+      
    }
    
    /**
@@ -312,7 +321,6 @@ public class DLQHandler
          String ttl = MetaData.getElementContent
          (MetaData.getUniqueChild(element, "TimeToLive"));
          timeToLive = Long.parseLong(ttl);
-         // A timeToLive < 0 means the msg is unusable so use default instead
          if( timeToLive < 0 )
             timeToLive = Message.DEFAULT_TIME_TO_LIVE;
       }
@@ -324,8 +332,9 @@ public class DLQHandler
       {
          //Noop will take default value
       }
+      
    }
-
+   
    public String toString()
    {
       StringBuffer buff = new StringBuffer();
@@ -343,3 +352,15 @@ public class DLQHandler
       String id;
    }
 } // DLQHandler
+
+
+
+
+
+
+
+
+
+
+
+
