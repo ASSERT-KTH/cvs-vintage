@@ -10,9 +10,9 @@
 
 #if ($currentIssueModuleId != $currentModuleId)
 <p><strong class="alert">
-The issue id, $currentIssueId, is not valid for the $currentModuleName Module	
+You are viewing an issue in a different Module than is currently selected.
 </strong></p>
-#else
+#end
 
 #if ($currentIssue)
     #set ($attrValues = $currentIssue.ModuleAttributeValuesMap)
@@ -40,5 +40,4 @@ $intake.declareGroups()
         </strong></p>
     #end
 
-#end
 #end
