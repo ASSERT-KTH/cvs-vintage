@@ -56,7 +56,7 @@
 /***************************************************************************
  * Description: Utility functions (mainly configuration)                   *
  * Author:      Gal Shachor <shachor@il.ibm.com>                           *
- * Version:     $Revision: 1.2 $                                               *
+ * Version:     $Revision: 1.3 $                                               *
  ***************************************************************************/
 
 

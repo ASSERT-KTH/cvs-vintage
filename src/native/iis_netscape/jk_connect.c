@@ -57,7 +57,7 @@
  * Description: Socket/Naming manipulation functions                       *
  * Author:      Gal Shachor <shachor@il.ibm.com>                           *
  * Based on:    Various Jserv files                                        *
- * Version:     $Revision: 1.2 $                                               *
+ * Version:     $Revision: 1.3 $                                               *
  ***************************************************************************/
 
 

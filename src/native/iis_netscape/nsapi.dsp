@@ -107,6 +107,10 @@ SOURCE=.\jk_jni_worker.c
 # End Source File
 # Begin Source File
 
+SOURCE=.\jk_lb_worker.c
+# End Source File
+# Begin Source File
+
 SOURCE=.\jk_map.c
 # ADD CPP /I "$(JAVA_HOME)\include" /I "$(JAVA_HOME)\include\win32"
 # End Source File
@@ -150,6 +154,14 @@ SOURCE=.\jk_connect.h
 # Begin Source File
 
 SOURCE=.\jk_global.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\jk_jni_worker.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\jk_lb_worker.h
 # End Source File
 # Begin Source File
 

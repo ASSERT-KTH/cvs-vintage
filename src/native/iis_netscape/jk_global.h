@@ -57,7 +57,7 @@
  * Description: Global definitions and include files that should exist     *
  *              anywhere                                                   *
  * Author:      Gal Shachor <shachor@il.ibm.com>                           *
- * Version:     $Revision: 1.2 $                                               *
+ * Version:     $Revision: 1.3 $                                               *
  ***************************************************************************/
 
 #ifndef JK_GLOBAL_H
@@ -110,6 +110,8 @@ extern "C" {
 
 #define JK_LF (10)
 #define JK_CR (13)
+
+#define JK_SESSION_IDENTIFIER "JSESSIONID"
 
 #ifdef WIN32
     #define JK_METHOD __stdcall

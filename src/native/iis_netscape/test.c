@@ -57,7 +57,7 @@
  * Description: ajpv1.2 protocol, used to call local or remote jserv hosts *
  * Author:      Gal Shachor <shachor@il.ibm.com>                           *
  * Based on:                                                               *
- * Version:     $Revision: 1.2 $                                               *
+ * Version:     $Revision: 1.3 $                                               *
  ***************************************************************************/
 
 #include <stdio.h>
@@ -87,10 +87,10 @@ static int JK_METHOD start_response(jk_ws_service_t *s,
                                     unsigned num_of_headers)
 {
     unsigned i;
-    printf("Final results \n");
-    printf("Status %d %s\n", status, reason ? reason : "NULL");
+//    printf("Final results \n");
+//    printf("Status %d %s\n", status, reason ? reason : "NULL");
     for(i = 0 ; i < num_of_headers ; i++) {
-        printf("Header %s is %s\n", header_names[i], header_values[i]);
+//        printf("Header %s is %s\n", header_names[i], header_values[i]);
     }
 
     return JK_TRUE;
@@ -101,7 +101,7 @@ static int JK_METHOD write(jk_ws_service_t *s,
                            const void *buf,
                            unsigned len)
 {
-    fwrite(buf, 1, len, stdout);
+//    fwrite(buf, 1, len, stdout);
     return JK_TRUE;
 }
 
@@ -109,7 +109,8 @@ void main(void)
 {
     char *names[] = {"content-type", "content-length", "Accept-Language", "Connection", "User-Agent", "Host", "Accept-Encoding", "Accept", "Cookie"};
     char *values[] = {"application/x-www-form-urlencoded", "26", "en-us", "Keep-Alive", "Mozilla/4.0 (compatible; MSIE 4.01; Windows NT)", "localhost:8080", "gzip, deflate", "image/gif, image/x-xbitmap, image/jpeg, image/pjpeg, application/vnd.ms-excel, application/msword, application/vnd.ms-powerpoint, */*", "JSESSIONID=To1021mC22584319650438112At"};
-
+    int is_recoverable = JK_FALSE;
+    int i;
     jk_map_t *map;
     jk_worker_t *worker;
     jk_endpoint_t *e;
@@ -194,20 +195,26 @@ void main(void)
     
     map_alloc(&map);   
 
+
+    map_read_properties(map,                         
+                        "d:\\Microsoft Visual Studio\\VC98\\MyProjects\\jk\\test.properties");
     /*
     map_read_properties(map,                         
-                        "d:\\temp\\native\\iis_netscape\\test.properties");
-                        */
-    map_read_properties(map,                         
                         "d:\\jk_release\\src\\native\\iis_netscape\\test.properties");
-    wc_open(map, NULL);
-    worker = wc_get_worker_for_name("jni", NULL);
-    
-    worker->get_endpoint(worker, &e, NULL);
+    */
 
-    Sleep(10*1000);
-    e->service(e, &s, NULL);
-    e->done(&e, NULL);
+    wc_open(map, NULL);
+    worker = wc_get_worker_for_name("loadbalancer", NULL);
+    
+
+    //Sleep(10*1000);
+
+    for(i = 0 ; i < 10000 ; i++) {
+        worker->get_endpoint(worker, &e, NULL);
+        e->service(e, &s, NULL, &is_recoverable);
+        e->done(&e, NULL);
+    }
+    
     worker->destroy(&worker, NULL);
     
 

@@ -112,6 +112,10 @@ SOURCE=.\jk_jni_worker.c
 # End Source File
 # Begin Source File
 
+SOURCE=.\jk_lb_worker.c
+# End Source File
+# Begin Source File
+
 SOURCE=.\jk_map.c
 # End Source File
 # Begin Source File
@@ -153,6 +157,10 @@ SOURCE=.\jk_global.h
 # Begin Source File
 
 SOURCE=.\jk_jni_worker.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\jk_lb_worker.h
 # End Source File
 # Begin Source File
 

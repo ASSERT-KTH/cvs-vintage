@@ -54,46 +54,29 @@
  */
 
 /***************************************************************************
- * Description: URI to worker mapper header file                           *
+ * Description: load balance worker header file                                 *
  * Author:      Gal Shachor <shachor@il.ibm.com>                           *
- * Version:     $Revision: 1.3 $                                               *
+ * Version:     $Revision: 1.1 $                                               *
  ***************************************************************************/
 
-#ifndef JK_URI_WORKER_MAP_H
-#define JK_URI_WORKER_MAP_H
+#ifndef JK_LB_WORKER_H
+#define JK_LB_WORKER_H
 
+#include "jk_logger.h"
+#include "jk_service.h"
 
 #ifdef __cplusplus
 extern "C" {
 #endif /* __cplusplus */
 
-#include "jk_global.h"
-#include "jk_map.h"
-#include "jk_logger.h"
+#define JK_LB_WORKER_NAME ("lb")
 
-struct jk_uri_worker_map;
-typedef struct jk_uri_worker_map jk_uri_worker_map_t;
-
-int uri_worker_map_alloc(jk_uri_worker_map_t **uw_map,
-                         jk_map_t *init_data,
-                         jk_logger_t *l);
-
-int uri_worker_map_free(jk_uri_worker_map_t **uw_map,
-                        jk_logger_t *l);
-
-int uri_worker_map_open(jk_uri_worker_map_t *uw_map,
-                        jk_map_t *init_data,
-                        jk_logger_t *l);
-
-int uri_worker_map_close(jk_uri_worker_map_t *uw_map,
-                         jk_logger_t *l);
-
-char *map_uri_to_worker(jk_uri_worker_map_t *uw_map,
-                        const char *uri,
-                        jk_logger_t *l);
+int JK_METHOD lb_worker_factory(jk_worker_t **w,
+                                const char *name,
+                                jk_logger_t *l);
 
 #ifdef __cplusplus
 }
 #endif /* __cplusplus */
 
-#endif /* JK_URI_WORKER_MAP_H */
+#endif /* JK_LB_WORKER_H */

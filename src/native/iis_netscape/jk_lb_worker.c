@@ -58,18 +58,29 @@
  *              several workers.                                           *
  * Author:      Gal Shachor <shachor@il.ibm.com>                           *
  * Based on:                                                               *
- * Version:     $Revision: 1.2 $                                               *
+ * Version:     $Revision: 1.3 $                                               *
  ***************************************************************************/
-
 
 #include "jk_pool.h"
 #include "jk_service.h"
 #include "jk_util.h"
 #include "jk_worker.h"
+#include "jk_lb_worker.h"
+
+/*
+ * The load balancing code in this 
+ */
+
+
+/* 
+ * Time to wait before retry...
+ */
+#define WAIT_BEFORE_RECOVER (60*1) 
+#define ADDITINAL_WAIT_LOAD (20)
 
 struct worker_record {
     char    *name;
-    double  lb_factors;
+    double  lb_factor;
     double  lb_value;
     int     in_error_state;
     int     in_recovering;
@@ -99,6 +110,108 @@ struct lb_endpoint {
 typedef struct lb_endpoint lb_endpoint_t;
 
 
+/* ========================================================================= */
+/* Retrieve the parameter with the given name                                */
+static char *get_param(jk_ws_service_t *s,
+                       const char *name)
+{
+    if(s->query_string) {
+        char *id_start = NULL;
+        for(id_start = strstr(s->query_string, name) ; 
+            id_start ; 
+            id_start = strstr(id_start + 1, name)) {
+            if('=' == id_start[strlen(name)]) {
+                /*
+                 * Session cookie was found, get it's value
+                 */
+                id_start += (1 + strlen(name));
+                if(strlen(id_start)) {
+                    char *id_end;
+                    id_start = jk_pool_strdup(s->pool, id_start);
+                    if(id_end = strchr(id_start, '&')) {
+                        id_end = NULL;
+                    }
+                    return id_start;
+                }
+            }
+        }
+    }
+  
+    return NULL;
+}
+
+/* ========================================================================= */
+/* Retrieve the cookie with the given name                                   */
+static char *get_cookie(jk_ws_service_t *s,
+                        const char *name)
+{
+    unsigned i;
+
+    for(i = 0 ; i < s->num_headers ; i++) {
+        if(0 == stricmp(s->headers_names[i], "cookie")) {
+
+            char *id_start;
+            for(id_start = strstr(s->headers_values[i], name) ; 
+                id_start ; 
+                id_start = strstr(id_start + 1, name)) {
+                if('=' == id_start[strlen(name)]) {
+                    /*
+                     * Session cookie was found, get it's value
+                     */
+                    id_start += (1 + strlen(name));
+                    if(strlen(id_start)) {
+                        char *id_end;
+                        id_start = jk_pool_strdup(s->pool, id_start);
+                        if(id_end = strchr(id_start, ';')) {
+                            id_end = NULL;
+                        }
+                        return id_start;
+                    }
+                }
+            }
+        }
+    }
+
+    return NULL;
+}
+
+
+/* ========================================================================= */
+/* Retrieve session id from the cookie or the parameter                      */
+/* (parameter first)                                                         */
+static char *get_sessionid(jk_ws_service_t *s)
+{
+    char *val;
+    val = get_param(s, JK_SESSION_IDENTIFIER);
+    if(!val) {
+        val = get_cookie(s, JK_SESSION_IDENTIFIER);
+    }
+    return val;
+}
+
+static char *get_session_route(jk_ws_service_t *s)
+{
+    char *sessionid = get_sessionid(s);
+    char *ch;
+
+    if(!sessionid) {
+        return NULL;
+    }
+
+    /*
+     * Balance parameter is appended to the end
+     */  
+    ch = strrchr(sessionid, '.');
+    if(!ch) {
+        return 0;
+    }
+    ch++;
+    if(*ch == '\0') {
+        return NULL;
+    }
+    return ch;
+}
+
 static void close_workers(lb_worker_t *p, 
                           int num_of_workers,
                           jk_logger_t *l)
@@ -110,49 +223,141 @@ static void close_workers(lb_worker_t *p,
     }
 }
 
+static double get_max_lb(lb_worker_t *p) 
+{
+    unsigned i;
+    double rc = 0.0;    
+
+    for(i = 0 ; i < p->num_of_workers ; i++) {
+        if(!p->lb_workers[i].in_error_state) {
+            if(p->lb_workers[i].lb_value > rc) {
+                rc = p->lb_workers[i].lb_value;
+            }
+        }            
+    }
+
+    return rc;
+
+}
 
 static worker_record_t *get_most_suitable_worker(lb_worker_t *p, 
                                                  jk_ws_service_t *s)
 {
-    return NULL;
+    worker_record_t *rc = NULL;
+    double lb_min = 0.0;    
+    unsigned i;
+    char *session_route = get_session_route(s);
+       
+    if(session_route) {
+        for(i = 0 ; i < p->num_of_workers ; i++) {
+            if(0 == strcmp(session_route, p->lb_workers[i].name)) {
+                if(p->lb_workers[i].in_error_state) {
+                   break;
+                } else {
+                    return &(p->lb_workers[i]);
+                }
+            }
+        }
+    }
+
+    for(i = 0 ; i < p->num_of_workers ; i++) {
+        if(p->lb_workers[i].in_error_state) {
+            if(!p->lb_workers[i].in_recovering) {
+                time_t now = time(0);
+                
+                if((now - p->lb_workers[i].error_time) > WAIT_BEFORE_RECOVER) {
+                    
+                    p->lb_workers[i].in_recovering  = JK_TRUE;
+                    p->lb_workers[i].error_time     = now;
+                    rc = &(p->lb_workers[i]);
+
+                    break;
+                }
+            }
+        } else {
+            if(p->lb_workers[i].lb_value < lb_min || !rc) {
+                lb_min = p->lb_workers[i].lb_value;
+                rc = &(p->lb_workers[i]);
+            }
+        }            
+    }
+
+    if(rc) {
+        rc->lb_value += rc->lb_factor;                
+    }
+
+    return rc;
 }
     
 static int JK_METHOD service(jk_endpoint_t *e, 
                              jk_ws_service_t *s,
-                             jk_logger_t *l)
+                             jk_logger_t *l,
+                             int *is_recoverable_error)
 {
-    if(e && e->endpoint_private && s) {
+    if(e && e->endpoint_private && s && is_recoverable_error) {
         lb_endpoint_t *p = e->endpoint_private;
         jk_endpoint_t *end = NULL;
+
+        /* you can not recover on another load balancer */
+        *is_recoverable_error = JK_FALSE;
+
 
         while(1) {
             worker_record_t *rec = get_most_suitable_worker(p->worker, s);
             int rc;
+
             if(rec) {
+                int is_recoverable = JK_FALSE;
+                
+                s->jvm_route = jk_pool_strdup(s->pool,  rec->name);
+
                 rc = rec->w->get_endpoint(rec->w, &end, l);
-                if(!rc || !end) {
-                    rec->in_error_state = JK_TRUE;
-                    rec->error_time = time(0);
-                    continue;
+                if(rc && end) {
+                    int src = end->service(end, s, l, &is_recoverable);
+                    end->done(&end, l);
+                    if(src) {                        
+                        if(rec->in_recovering) {
+                            rec->lb_value = get_max_lb(p->worker) + ADDITINAL_WAIT_LOAD;
+                        }
+                        rec->in_error_state = JK_FALSE;
+                        rec->in_recovering  = JK_FALSE;
+                        rec->error_time     = 0;                        
+                        return JK_TRUE;
+                    } 
                 }
 
-                if(end->service(end, s, l)) {
-                    rec->in_error_state = JK_FALSE;
-                    rec->in_recovering = JK_FALSE;
-                    return JK_TRUE;
-                } 
+                /*
+                 * Service failed !!!
+                 *
+                 * Time for fault tolerance (if possible)...
+                 */
 
                 rec->in_error_state = JK_TRUE;
-                rec->error_time = time(0);
-                // FIXME: 
-                //if(end->should_recover_on_other()) {
-                //  continue; 
-                //}                                
+                rec->in_recovering  = JK_FALSE;
+                rec->error_time     = time(0);
+
+                if(!is_recoverable) {
+                    /*
+                     * Error is not recoverable - break with an error.
+                     */
+                    jk_log(l, JK_LOG_ERROR, 
+                           "In jk_endpoint_t::service, none recoverable error...\n");
+                    break;
+                }
+
+                /* 
+                 * Error is recoverable by submitting the request to
+                 * another worker... Lets try to do that.
+                 */
+                 jk_log(l, JK_LOG_DEBUG, 
+                        "In jk_endpoint_t::service, recoverable error... will try to recover on other host\n");
+            } else {
+                /* NULL record, no more workers left ... */
+                 jk_log(l, JK_LOG_ERROR, 
+                        "In jk_endpoint_t::service, No more workers left, can not submit the request\n");
+                break;
             }
-
-            break;
         }
-
     }
     return JK_FALSE;
 }
@@ -199,8 +404,9 @@ static int JK_METHOD validate(jk_worker_t *pThis,
 
             for(i = 0 ; i < num_of_workers ; i++) {
                 p->lb_workers[i].name = jk_pool_strdup(&p->p, worker_names[i]);
-                p->lb_workers[i].lb_factors = jk_get_lb_factor(props, 
+                p->lb_workers[i].lb_factor = jk_get_lb_factor(props, 
                                                                worker_names[i]);
+                p->lb_workers[i].lb_factor = 1/p->lb_workers[i].lb_factor;
                 p->lb_workers[i].lb_value = 0.0;
                 p->lb_workers[i].in_error_state = JK_FALSE;
                 p->lb_workers[i].in_recovering  = JK_FALSE;
@@ -234,8 +440,10 @@ static int JK_METHOD init(jk_worker_t *pThis,
 
 static int JK_METHOD get_endpoint(jk_worker_t *pThis,
                                   jk_endpoint_t **pend,
-                                  jk_logger_t *log)
+                                  jk_logger_t *l)
 {
+    jk_log(l, JK_LOG_DEBUG, "Into jk_worker_t::get_endpoint\n");
+
     if(pThis && pThis->worker_private && pend) {        
         lb_endpoint_t *p = (lb_endpoint_t *)malloc(sizeof(lb_endpoint_t));
         if(p) {
@@ -248,6 +456,9 @@ static int JK_METHOD get_endpoint(jk_worker_t *pThis,
 
             return JK_TRUE;
         }
+        jk_log(l, JK_LOG_ERROR, "In jk_worker_t::get_endpoint, malloc failed\n");
+    } else {
+        jk_log(l, JK_LOG_ERROR, "In jk_worker_t::get_endpoint, NULL parameters\n");
     }
 
     return JK_FALSE;
@@ -256,6 +467,7 @@ static int JK_METHOD get_endpoint(jk_worker_t *pThis,
 static int JK_METHOD destroy(jk_worker_t **pThis,
                              jk_logger_t *l)
 {
+    jk_log(l, JK_LOG_DEBUG, "Into jk_worker_t::destroy\n");
     if(pThis && *pThis && (*pThis)->worker_private) {
         lb_worker_t *private_data = (*pThis)->worker_private;
 
@@ -269,11 +481,13 @@ static int JK_METHOD destroy(jk_worker_t **pThis,
         return JK_TRUE;
     }
 
+    jk_log(l, JK_LOG_ERROR, "In jk_worker_t::destroy, NULL parameters\n");
     return JK_FALSE;
 }
 
 int JK_METHOD lb_worker_factory(jk_worker_t **w,
-                                char *name)
+                                const char *name,
+                                jk_logger_t *l)
 {
     if(NULL != name && NULL != w) {
         lb_worker_t *private_data = 
@@ -303,6 +517,9 @@ int JK_METHOD lb_worker_factory(jk_worker_t **w,
             jk_close_pool(&private_data->p);
             free(private_data);
         }
+        jk_log(l, JK_LOG_ERROR, "In lb_worker_factory, malloc failed\n");
+    } else {
+        jk_log(l, JK_LOG_ERROR, "In lb_worker_factory, NULL parameters\n");
     }
 
     return JK_FALSE;

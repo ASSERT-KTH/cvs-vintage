@@ -57,7 +57,7 @@
  * Description: ajpv1.2 worker, used to call local or remote jserv hosts   *
  * Author:      Gal Shachor <shachor@il.ibm.com>                           *
  * Based on:    jserv_ajpv12.c from Jserv                                  *
- * Version:     $Revision: 1.2 $                                               *
+ * Version:     $Revision: 1.3 $                                               *
  ***************************************************************************/
 
 #include "jk_ajp12_worker.h"
@@ -115,13 +115,16 @@ static int ajpv12_handle_request(ajp12_endpoint_t *p,
 
 static int JK_METHOD service(jk_endpoint_t *e, 
                              jk_ws_service_t *s,
-                             jk_logger_t *l)
+                             jk_logger_t *l,
+                             int *is_recoverable_error)
 {
     jk_log(l, JK_LOG_DEBUG, "Into jk_endpoint_t::service\n");
 
-    if(e && e->endpoint_private && s) {
+    if(e && e->endpoint_private && s && is_recoverable_error) {
         ajp12_endpoint_t *p = e->endpoint_private;
         unsigned attempt;
+
+        *is_recoverable_error = JK_TRUE;
 
         for(attempt = 0 ; attempt < p->worker->connect_retry_attempts ; attempt++) {
             p->sd = jk_open_socket(&p->worker->worker_inet_addr, 
@@ -134,6 +137,12 @@ static int JK_METHOD service(jk_endpoint_t *e,
             }
         }
         if(p->sd >= 0) {
+
+            /*
+             * After we are connected, each error that we are going to
+             * have is probably unrecoverable
+             */
+            *is_recoverable_error = JK_FALSE;
             jk_sb_open(&p->sb, p->sd);
             if(ajpv12_handle_request(p, s, l)) {
                 jk_log(l, JK_LOG_DEBUG, "In jk_endpoint_t::service, sent request\n");

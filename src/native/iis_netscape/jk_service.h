@@ -58,7 +58,7 @@
  *              These are the web server (ws) the worker and the connection*
  *              JVM connection point                                       *
  * Author:      Gal Shachor <shachor@il.ibm.com>                           *
- * Version:     $Revision: 1.2 $                                               *
+ * Version:     $Revision: 1.3 $                                               *
  ***************************************************************************/
 
 #ifndef JK_SERVICE_H
@@ -164,7 +164,8 @@ struct jk_endpoint {
 
     int (JK_METHOD *service)(jk_endpoint_t *e, 
                              jk_ws_service_t *s,
-                             jk_logger_t *l);
+                             jk_logger_t *l,
+                             int *is_recoverable_error);
 
     int (JK_METHOD *done)(jk_endpoint_t **p,
                           jk_logger_t *l);

@@ -151,6 +151,10 @@ SOURCE=.\jk_jni_worker.h
 # End Source File
 # Begin Source File
 
+SOURCE=.\jk_lb_worker.h
+# End Source File
+# Begin Source File
+
 SOURCE=.\jk_logger.h
 # End Source File
 # Begin Source File

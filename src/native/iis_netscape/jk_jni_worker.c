@@ -57,7 +57,7 @@
  * Description: In process JNI worker                                      *
  * Author:      Gal Shachor <shachor@il.ibm.com>                           *
  * Based on:                                                               *
- * Version:     $Revision: 1.1 $                                               *
+ * Version:     $Revision: 1.2 $                                               *
  ***************************************************************************/
 
 #include <jni.h>
@@ -171,9 +171,10 @@ static void append_libpath(jk_pool_t *p,
   
 static int JK_METHOD service(jk_endpoint_t *e, 
                              jk_ws_service_t *s,
-                             jk_logger_t *l)
+                             jk_logger_t *l,
+                             int *is_recoverable_error)
 {
-    if(e && e->endpoint_private && s) {
+    if(e && e->endpoint_private && s && is_recoverable_error) {
         jni_endpoint_t *p = e->endpoint_private;
 
         if(p->attached ||
@@ -181,6 +182,12 @@ static int JK_METHOD service(jk_endpoint_t *e,
             jint rc = 0;
 
             p->attached = JK_TRUE;
+
+            /* 
+             * When we call the JVM we can not know what happen 
+             * So we can not recover !!!
+             */
+            *is_recoverable_error = JK_FALSE;
 
             rc = (*(p->env))->CallIntMethod(p->env,
                                             p->worker->jk_java_bridge_object,
@@ -190,6 +197,7 @@ static int JK_METHOD service(jk_endpoint_t *e,
 
             return rc == 0 ? JK_FALSE : JK_TRUE;
         }
+        *is_recoverable_error = JK_TRUE;
         
     }
     return JK_FALSE;
