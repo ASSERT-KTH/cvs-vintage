@@ -1,4 +1,4 @@
-// $Id: CrConstructorNeeded.java,v 1.11 2003/12/04 08:55:38 mkl Exp $
+// $Id: CrConstructorNeeded.java,v 1.12 2004/02/07 00:41:41 d00mst Exp $
 // Copyright (c) 1996-2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -32,7 +32,9 @@ import java.util.Collection;
 import java.util.Iterator;
 
 import org.argouml.cognitive.Designer;
+import org.argouml.cognitive.ToDoItem;
 import org.argouml.cognitive.critics.Critic;
+import org.argouml.kernel.Wizard;
 import org.argouml.model.ModelFacade;
 
 /**
@@ -144,4 +146,23 @@ public class CrConstructorNeeded extends CrUML {
         return NO_PROBLEM;
     }
 
+    
+    public void initWizard(Wizard w) {
+	if (w instanceof WizAddConstructor) {
+	    ToDoItem item = w.getToDoItem();
+	    Object me = /*(MModelElement)*/ item.getOffenders().elementAt(0);
+	    String ins = "Set the name of the new constructor.";
+	    String sug = null;
+	    if (me != null)
+		sug = ModelFacade.getName(me);
+	    if ("".equals(sug))
+		sug = "newOperation";
+	    ((WizAddConstructor) w).setInstructions(ins);
+	    ((WizAddConstructor) w).setSuggestion(sug);
+	}
+    }
+    
+    public Class getWizardClass(ToDoItem item) {
+	return WizAddConstructor.class;
+    }
 } /* end class CrConstructorNeeded */
