@@ -1,5 +1,5 @@
 <?xml version='1.0'?>
-<kawaproject timestamp="Sun May 14 07:25:27 2000">
+<kawaproject timestamp="Mon May 15 09:18:23 2000">
 <versioninfo>
 <documentversion>
 <major>"0"</major>
@@ -9,7 +9,7 @@
 <value>"121"</value>
 </productversion>
 </versioninfo>
-<path>"H:\projects\jboss\jboss\src\etc\"</path>
+<path>"H:\projects\jboss\src\etc\"</path>
 <classpaths>
 <classpath enabled="1">
 <value>"&lt;Project Directory&gt;\..\..\dist\bin\run.jar"</value>
@@ -24,7 +24,7 @@
 <items>
 <folder>
 <name>"jboss"</name>
-<relativepath>"jboss\jboss\src\etc\jboss.kpx"</relativepath>
+<relativepath>"jboss\src\etc\jboss.kpx"</relativepath>
 <scmstatus id="0">
 <userstring>""</userstring>
 <userinteger>"0"</userinteger>
@@ -301,14 +301,6 @@
 <name>"etc"</name>
 <file>
 <dirty>"1"</dirty>
-<relativepath>"build.xml"</relativepath>
-<scmstatus id="0">
-<userstring>""</userstring>
-<userinteger>"0"</userinteger>
-</scmstatus>
-</file>
-<file>
-<dirty>"1"</dirty>
 <relativepath>"ejxjaws.mf"</relativepath>
 <scmstatus id="0">
 <userstring>""</userstring>
@@ -356,6 +348,41 @@
 </scmstatus>
 </file>
 </virtualfolder>
+<virtualfolder>
+<name>"build"</name>
+<file>
+<dirty>"0"</dirty>
+<relativepath>"..\build\build.bat"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"0"</userinteger>
+</scmstatus>
+</file>
+<file>
+<dirty>"0"</dirty>
+<relativepath>"..\build\build.sh"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"0"</userinteger>
+</scmstatus>
+</file>
+<file>
+<dirty>"1"</dirty>
+<relativepath>"..\build\build.xml"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"0"</userinteger>
+</scmstatus>
+</file>
+</virtualfolder>
+<file>
+<dirty>"1"</dirty>
+<relativepath>"..\..\docs\index.html"</relativepath>
+<scmstatus id="0">
+<userstring>""</userstring>
+<userinteger>"0"</userinteger>
+</scmstatus>
+</file>
 <virtualfolder>
 <name>"jboss"</name>
 <virtualfolder>
