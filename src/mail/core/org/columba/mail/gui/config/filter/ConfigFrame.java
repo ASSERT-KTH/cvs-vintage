@@ -16,13 +16,7 @@
 
 package org.columba.mail.gui.config.filter;
 
-import java.awt.BorderLayout;
-import java.awt.Color;
-import java.awt.Component;
-import java.awt.Dimension;
-import java.awt.GridBagConstraints;
-import java.awt.GridBagLayout;
-import java.awt.GridLayout;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
@@ -31,25 +25,14 @@ import java.awt.event.WindowEvent;
 import java.net.MalformedURLException;
 import java.net.URL;
 
-import javax.swing.BorderFactory;
-import javax.swing.Box;
-import javax.swing.BoxLayout;
-import javax.swing.DefaultListSelectionModel;
-import javax.swing.JButton;
-import javax.swing.JComponent;
-import javax.swing.JDialog;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.JTextField;
-import javax.swing.KeyStroke;
+import javax.swing.*;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
 import org.columba.core.config.Config;
 import org.columba.core.gui.util.wizard.WizardTopBorder;
 import org.columba.core.main.MainInterface;
+
 import org.columba.mail.filter.Filter;
 import org.columba.mail.filter.FilterList;
 import org.columba.mail.folder.Folder;
@@ -86,9 +69,9 @@ public class ConfigFrame extends JDialog
 	private Filter filter;
 	//private JDialog dialog;
 
-	JPanel centerPanel = new JPanel();
-	JPanel eastPanel = new JPanel();
-	JPanel jPanel1 = new JPanel();
+	JPanel centerPanel;
+	JPanel eastPanel;
+	JPanel jPanel1;
 
 	JTextField nameTextField = new JTextField();
 	JLabel nameLabel = new JLabel();
@@ -109,12 +92,6 @@ public class ConfigFrame extends JDialog
 		this.filterList = folder.getFilterList();
 
 		config = MainInterface.config;
-
-		addWindowListener(new WindowAdapter() {
-			public void windowClosing(WindowEvent e) {
-				setVisible(false);
-			}
-		});
 
 		initComponents();
 		pack();
@@ -298,8 +275,7 @@ public class ConfigFrame extends JDialog
 		mainPanel.add(centerPanel, BorderLayout.CENTER);
 
 		JPanel bottomPanel = new JPanel(new BorderLayout());
-		bottomPanel.setBorder(
-			BorderFactory.createCompoundBorder(
+		bottomPanel.setBorder(BorderFactory.createCompoundBorder(
 				new WizardTopBorder(),
 				BorderFactory.createEmptyBorder(17, 12, 11, 11)));
 		JPanel buttonPanel = new JPanel(new GridLayout(1, 2, 5, 0));
@@ -342,44 +318,26 @@ public class ConfigFrame extends JDialog
 
 			setSelected(filterList.get(index));
 		}
-
 	}
 
 	public void showFilterDialog() {
-
 		Filter parent = getSelected();
 
 		if (parent != null) {
 
 			FilterDialog dialog = new FilterDialog(parent);
-
-			/*
-			java.awt.Dimension dim = new Dimension( 400,400 );
-			
-			Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-			
-			setLocation(screenSize.width/2 - dim.width/2, screenSize.height/2 - dim.height/2);
-			
-			showDialog();
-			*/
-
 		}
-
 	}
 
 	public void actionPerformed(ActionEvent e) {
 		String action = e.getActionCommand();
 
-		if (action.equals("OK")) {
-			System.out.println("ok");
-		} else if (action.equals("CLOSE")) {
+                if (action.equals("CLOSE")) {
 			// FIXME
 			//Config.save();
 
 			setVisible(false);
 		} else if (action.equals("ADD")) {
-			System.out.println("add");
-
 			Filter filter = FilterList.createEmptyFilter();
 			filterList.add(filter);
 
@@ -392,8 +350,6 @@ public class ConfigFrame extends JDialog
 			listView.update();
 
 		} else if (action.equals("REMOVE")) {
-			System.out.println("remove");
-
 			filterList.remove(index);
 
 			removeButton.setEnabled(false);
@@ -408,10 +364,8 @@ public class ConfigFrame extends JDialog
 		} else if (action.equals("HELP")) {
 			URLController c = new URLController();
 			try {
-				c.open(
-					new URL("http://columba.sourceforge.net/phpwiki/index.php/User%20manual#x34.x2e.5"));
-			} catch (MalformedURLException mue) {
-			}
+				c.open(new URL("http://columba.sourceforge.net/phpwiki/index.php/User%20manual#x34.x2e.5"));
+			} catch (MalformedURLException mue) {}
 		}
 	}
 }
