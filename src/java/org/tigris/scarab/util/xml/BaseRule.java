@@ -50,21 +50,25 @@ import org.apache.commons.digester.Digester;
 import org.apache.log4j.Category;
 
 /**
- * Handler for the xpath "scarab/module/issue/transaction/activity/activity-attribute/name"
+ * This is a base class where commonly used code goes.
  *
  * @author <a href="mailto:kevin.minshull@bitonic.com">Kevin Minshull</a>
  * @author <a href="mailto:richard.han@bitonic.com">Richard Han</a>
+ * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
  */
-public class ActivityAttributeNameRule extends BaseRule
+public class BaseRule extends Rule
 {
-    /**
-     * Constructor just calls super
-     */
-    public ActivityAttributeNameRule(Digester digester, String state)
-    {
-        super(digester, state);
-    }
+    protected String state = null;
 
+    /**
+     * Sets the state and calls super(digester)
+     */
+    public BaseRule(Digester digester, String state)
+    {
+        super(digester);
+        this.state = state;
+    }
+    
     /**
      * This method is called when the body of a matching XML element
      * is encountered.  If the element has no body, this method is
@@ -74,8 +78,9 @@ public class ActivityAttributeNameRule extends BaseRule
      */
     public void body(String text) throws Exception
     {
-        Category cat = Category.getInstance(org.tigris.scarab.util.xml.DBImport.class);
-        cat.debug("(" + state + ") activity attribute name body: " + text);
-        super.body(text);
+        if(state.equals(DBImport.STATE_DB_INSERTION))
+        {
+            digester.push(text);
+        }
     }
 }
