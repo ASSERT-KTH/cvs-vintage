@@ -10,6 +10,7 @@ import java.sql.CallableStatement;
 import java.sql.Connection;
 import java.sql.DatabaseMetaData;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.SQLWarning;
 import java.sql.Statement;
@@ -28,7 +29,7 @@ import org.jboss.minerva.pools.PoolEventListener;
  * outstanding statements are closed, and the connection is rolled back.  This
  * class is also used by statements, etc. to update the last used time for the
  * connection.
- * @version $Revision: 1.3 $
+ * @version $Revision: 1.4 $
  * @author Aaron Mulder (ammulder@alumni.princeton.edu)
  */
 public class ConnectionInPool implements PooledObject, ConnectionWrapper {
@@ -113,6 +114,21 @@ public class ConnectionInPool implements PooledObject, ConnectionWrapper {
      */
     public void statementClosed(Statement st) {
         statements.remove(st);
+        if (st instanceof PreparedStatementInPool) {
+            // Now return the "real" statement to the pool
+            PreparedStatementInPool ps = (PreparedStatementInPool) st;
+            int rsType = ResultSet.TYPE_FORWARD_ONLY;
+            int rsConcur = ResultSet.CONCUR_READ_ONLY;
+            // We may have JDBC 1.0 driver
+            try {
+                rsType = ps.getResultSetType();
+                rsConcur = ps.getResultSetConcurrency();
+            } catch (Throwable th) {
+            }
+            PreparedStatementInPool.preparedStatementCache.put(
+                    new PSCacheKey(con, ps.getSql(), rsType, rsConcur),
+                    ps.getUnderlyingPreparedStatement());
+        }
     }
 
     /**
@@ -164,14 +180,16 @@ public class ConnectionInPool implements PooledObject, ConnectionWrapper {
     public PreparedStatement prepareStatement(String sql) throws SQLException {
         if(con == null) throw new SQLException(CLOSED);
         try {
-            PreparedStatement ps = (PreparedStatement)PreparedStatementInPool.preparedStatementCache.get(
+            // Seek in the pool and remove if found: the same "real" PreparedStatement
+            // cannot be used by two wrappers since ps.executeQuery() closes all
+            // ResultSets of the PreparedStatement that may be in use through other wrappers.
+            // The "real" statement will be returned to the pool on PreparedStatementInPool.close().
+            PreparedStatement ps = (PreparedStatement)PreparedStatementInPool.preparedStatementCache.remove(
                                         new PSCacheKey(con, sql));
             if(ps == null) {
                 ps = con.prepareStatement(sql);
-                PreparedStatementInPool.preparedStatementCache.put(
-                                        new PSCacheKey(con, sql), ps);
             }
-            PreparedStatementInPool wrapper = new PreparedStatementInPool(ps, this);
+            PreparedStatementInPool wrapper = new PreparedStatementInPool(ps, this, sql);
             statements.add(wrapper);
             return wrapper;
         } catch(SQLException e) {
@@ -361,14 +379,16 @@ public class ConnectionInPool implements PooledObject, ConnectionWrapper {
     public PreparedStatement prepareStatement(String sql, int resultSetType, int resultSetConcurrency) throws SQLException {
         if(con == null) throw new SQLException(CLOSED);
         try {
-            PreparedStatement ps = (PreparedStatement)PreparedStatementInPool.preparedStatementCache.get(
-                                        new PSCacheKey(con, sql));
+            // Seek in the pool and remove if found: the same "real" PreparedStatement
+            // cannot be used by two wrappers since ps.executeQuery() closes all
+            // ResultSets of the PreparedStatement that may be in use through other wrappers.
+            // The "real" statement will be returned to the pool on PreparedStatementInPool.close().
+            PreparedStatement ps = (PreparedStatement)PreparedStatementInPool.preparedStatementCache.remove(
+                                        new PSCacheKey(con, sql, resultSetType, resultSetConcurrency));
             if(ps == null) {
                 ps = con.prepareStatement(sql, resultSetType, resultSetConcurrency);
-                PreparedStatementInPool.preparedStatementCache.put(
-                                        new PSCacheKey(con, sql), ps);
             }
-            PreparedStatementInPool wrapper = new PreparedStatementInPool(ps, this);
+            PreparedStatementInPool wrapper = new PreparedStatementInPool(ps, this, sql);
             statements.add(wrapper);
             return wrapper;
         } catch(SQLException e) {

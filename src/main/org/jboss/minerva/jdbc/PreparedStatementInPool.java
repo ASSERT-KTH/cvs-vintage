@@ -31,15 +31,17 @@ public class PreparedStatementInPool extends StatementInPool implements Prepared
     private final static String CLOSED = "PreparedStatement has been closed!";
     private PreparedStatement impl;
     private ConnectionWrapper con;
+    private String sql;
 
     /**
      * Creates a new statement from a source statement and wrapper connection.
      */
-    public PreparedStatementInPool(PreparedStatement source, ConnectionWrapper owner) {
+    public PreparedStatementInPool(PreparedStatement source, ConnectionWrapper owner, String sql) {
         super(source, owner);
         if(source == null || owner == null) throw new NullPointerException();
         impl = source;
         con = owner;
+        this.sql = sql;
     }
 
     /**
@@ -50,6 +52,13 @@ public class PreparedStatementInPool extends StatementInPool implements Prepared
      */
     public PreparedStatement getUnderlyingPreparedStatement() {
         return impl;
+    }
+
+    /**
+     * Returns the SQL Statement string.
+     */
+    public String getSql() {
+        return sql;
     }
 
     // ---- Implementation of java.sql.Statement ----
@@ -412,5 +421,6 @@ public class PreparedStatementInPool extends StatementInPool implements Prepared
         con.statementClosed(this);
         con = null;
         impl = null;
+        sql = null;
     }
 }
