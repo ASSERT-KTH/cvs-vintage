@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!-- ===================================================================== -->
+<!--                                                                       -->
+<!--  Object Copier Service Configuration                                  -->
+<!--                                                                       -->
+<!-- ===================================================================== -->
+<server>
+  <classpath codebase="lib" archives="jboss.jar"/>
+
+  <mbean code="org.jboss.copy.ObjectCopier"
+         name="jboss:service=ObjectCopier">
+  </mbean>
+
+</server>
