@@ -61,8 +61,8 @@
 package org.apache.tomcat.core;
 
 import org.apache.tomcat.util.*;
-import org.apache.tomcat.session.*;
 import org.apache.tomcat.helper.*;
+import org.apache.tomcat.session.ServerSession;
 import java.io.IOException;
 import java.io.*;
 import java.net.*;
@@ -248,26 +248,6 @@ public class Request {
     }
 
     // -------------------- Request data --------------------
-
-//     public MessageBytes getSchemeMB() {
-// 	return schemeMB;
-//     }
-
-//     public String getScheme() {
-//         return schemeMB.toString();
-//     }
-
-//     public void setScheme( String scheme ) {
-// 	schemeMB.setString(scheme);
-//     }
-
-//     public String getMethod() {
-//         return methodMB.toString();
-//     }
-
-//     public void setMethod( String method ) {
-// 	methodMB.setString(method);
-//     }
 
     public MessageBytes scheme() {
 	return schemeMB;

@@ -59,12 +59,10 @@
 
 package org.apache.tomcat.core;
 
-import org.apache.tomcat.context.*;
 import org.apache.tomcat.util.*;
 import java.io.*;
 import java.net.*;
 import java.util.*;
-import org.apache.tomcat.core.*;
 
 // XXX better names: Location, URLPattern,  
 
