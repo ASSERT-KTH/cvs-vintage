@@ -375,6 +375,8 @@ public  class AttributeGroup
 
         List allOptions = attribute.getAttributeOptions(false);
         // remove duplicate options
+        // FIXME! why would we ever want Attribute.getAttributeOptions to
+        // return dupes, should this code be in that method?
         ArrayList options = new ArrayList();
         for (int i=0; i<allOptions.size(); i++)
         {

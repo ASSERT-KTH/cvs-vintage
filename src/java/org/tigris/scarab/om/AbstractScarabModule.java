@@ -99,6 +99,7 @@ import org.tigris.scarab.om.AttributeGroupPeer;
 import org.tigris.scarab.om.RAttributeAttributeGroup;
 import org.tigris.scarab.om.RAttributeAttributeGroupPeer;
 import org.tigris.scarab.util.ScarabException;
+import org.tigris.scarab.util.ValidationException;
 import org.tigris.scarab.util.ScarabConstants;
 import org.tigris.scarab.services.security.ScarabSecurity;
 import org.tigris.scarab.services.cache.ScarabCache;
@@ -123,7 +124,7 @@ import org.tigris.scarab.reports.ReportBridge;
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: AbstractScarabModule.java,v 1.97 2003/04/29 23:58:49 jon Exp $
+ * @version $Id: AbstractScarabModule.java,v 1.98 2003/05/02 16:18:49 jmcnally Exp $
  */
 public abstract class AbstractScarabModule
     extends BaseObject
@@ -1765,6 +1766,14 @@ public abstract class AbstractScarabModule
         rmo2.save();
     }
 
+    protected String getValidationMessage(String typeName, String detail)
+    {
+        // TODO: i18n 
+        return "The issue type, " + typeName + ", failed its integrity check and " 
+            + "has not been added to module, " + getName() + ".  Error message was '" + 
+            detail + "'."; 
+    }
+
     /**
      * Adds an issue type to a module
      * Copies properties from the global issue type's settings
@@ -1772,6 +1781,91 @@ public abstract class AbstractScarabModule
     public void addIssueType(IssueType issueType)
         throws Exception
     {
+        // do some validation, refuse to add an issue type that is in a bad
+        // state
+        if (issueType == null) 
+        {
+            throw new ValidationException(getValidationMessage("NULL", "Issue type was null"));
+        }
+        String typeName = issueType.getName();
+        // check attribute groups
+        List testGroups = issueType.getAttributeGroups(false);
+        try
+        {
+            if (testGroups == null) 
+            {
+                throw new ValidationException(getValidationMessage(typeName, 
+                    "List of groups was null"));
+            }
+            else 
+            {
+                for (Iterator i = testGroups.iterator(); i.hasNext();)
+                {
+                    AttributeGroup group = (AttributeGroup)i.next();
+                    // check attributes
+                    List attrs = group.getAttributes();
+                    if (attrs != null)
+                    {
+                        for (Iterator j = attrs.iterator(); j.hasNext();)
+                        {
+                            // check attribute-attribute group maps
+                            Attribute attr = (Attribute)j.next();
+                            if (attr == null) 
+                            {
+                                throw new ValidationException(getValidationMessage(typeName, 
+                                    "List of attributes contained a null"));
+                            }                            
+                            
+                            // TODO: add workflow validation
+
+                            RAttributeAttributeGroup raag = group.getRAttributeAttributeGroup(attr);
+                            if (raag == null) 
+                            {
+                                throw new ValidationException(getValidationMessage(typeName, 
+                                    "Attribute to AttributeGroup mapping is missing for " + 
+                                    attr.getName()));
+                            }
+
+                            // check attribute-issue type maps
+                            RIssueTypeAttribute ria = issueType.getRIssueTypeAttribute(attr);
+                            if (ria == null) 
+                            {
+                                throw new ValidationException(getValidationMessage(typeName, 
+                                    "Attribute to IssueType mapping is missing for " + 
+                                    attr.getName()));
+                            }
+
+                            // check options
+                            List rios = issueType.getRIssueTypeOptions(attr, false);
+                            if (rios != null)
+                            {
+                                for (Iterator k=rios.iterator(); k.hasNext();)
+                                {
+                                    if (k.next() == null) 
+                                    {
+                                        throw new ValidationException(getValidationMessage(typeName, 
+                                            "List of options for " + attr.getName() +
+                                            " contained a null"));
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }            
+            }
+        }
+        catch (ValidationException ve)
+        {
+            throw ve;
+        }
+        catch (Exception e)
+        {
+            throw new ValidationException("threw general exception during validation. " +
+                                          e.getMessage(), e);
+        }
+
+        // okay we passed, start modifying tables
+
         // add module-issue type mapping
         RModuleIssueType rmit = new RModuleIssueType();
         rmit.setModuleId(getModuleId());
@@ -1810,8 +1904,7 @@ public abstract class AbstractScarabModule
             ag2.save();
         }
         else
-        {
-            
+        {            
             // Inherit attribute groups from issue type
             for (int i=0; i<groups.size(); i++)
             {
@@ -1993,15 +2086,40 @@ public abstract class AbstractScarabModule
         List parentIssueTypes = parentModule.getIssueTypes(false);
 
         List defaultIssueTypes = IssueTypePeer.getDefaultIssueTypes();
+        // if one issue type is bad, continue with the rest, if more than
+        // one bad issue type is found, stop.
+        ValidationException ve = null;
         for (int i=0; i< defaultIssueTypes.size(); i++)
         {
             IssueType defaultIssueType = (IssueType)defaultIssueTypes.get(i);
             if (!parentIssueTypes.contains(defaultIssueType))
             {
-                addIssueType(defaultIssueType);
-            } 
-        } 
+                try
+                {
+                    addIssueType(defaultIssueType);
+                }
+                catch (ValidationException e)
+                {
+                    if (ve == null) 
+                    {
+                        ve = e;
+                    }
+                    else 
+                    {
+                        ve = new ValidationException("Multiple problems encountered: '"
+                             + ve.getMessage() + "' and '" +
+                             e.getMessage() + "'", e);
+                        isInitializing = false;
+                        throw ve;
+                    }                    
+                }
+            }
+        }
         isInitializing = false;
+        if (ve != null) 
+        {
+            throw ve;
+        }
     }
     
     /**
