@@ -40,7 +40,7 @@ import org.jboss.security.SecurityAssociation;
  * @author <a href="mailto:andreas.schaefer@madplanet.com">Andreas Schaefer</a>
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
  * @author <a href="mailto:d_jencks@users.sourceforge.net">David Jencks</a>
- * @version $Revision: 1.97 $
+ * @version $Revision: 1.98 $
  */
 public class EntityContainer
    extends Container implements
@@ -150,6 +150,9 @@ public class EntityContainer
     */
    protected void typeSpecificCreate()  throws Exception
    {
+      // Make some additional validity checks with regards to the container configuration
+      checkCoherency ();
+
       ConfigurationMetaData conf = getBeanMetaData().getContainerConfiguration();
       setInstanceCache( createInstanceCache( conf, false, getClassLoader() ) );
       setInstancePool( createInstancePool( conf, getClassLoader() ) );
@@ -645,6 +648,28 @@ public class EntityContainer
    Interceptor createContainerInterceptor()
    {
       return null;
+   }
+
+   protected void checkCoherency () throws Exception
+   {
+      // Check clustering cohrency wrt metadata
+      //
+      if (metaData.isClustered())
+      {
+         boolean clusteredProxyFactoryFound = false;
+         for (Iterator it = proxyFactories.keySet().iterator(); it.hasNext(); )
+         {
+            String invokerBinding = (String)it.next();
+            EJBProxyFactory ci = (EJBProxyFactory)proxyFactories.get(invokerBinding);
+            if (ci instanceof org.jboss.proxy.ejb.ClusterProxyFactory)
+               clusteredProxyFactoryFound = true;
+         }
+
+         if (!clusteredProxyFactoryFound)
+         {
+            log.warn("*** EJB '" + this.metaData.getEjbName() + "' deployed as CLUSTERED but not a single clustered-invoker is bound to container ***");
+         }
+      }
    }
 
    private class OptionDInvalidator extends Thread

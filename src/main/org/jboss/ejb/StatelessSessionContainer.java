@@ -39,7 +39,7 @@ import org.jboss.util.MethodHashing;
  * @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
  * @author <a href="mailto:docodan@mvcsoft.com">Daniel OConnor</a>
  * @author <a href="mailto:d_jencks@users.sourceforge.net">David Jencks</a>
- * @version $Revision: 1.46 $
+ * @version $Revision: 1.47 $
  */
 public class StatelessSessionContainer extends Container
 {
@@ -58,6 +58,9 @@ public class StatelessSessionContainer extends Container
 
    protected void typeSpecificCreate()  throws Exception
    {
+      // Make some additional validity checks with regards to the container configuration
+      checkCoherency ();
+
       setupBeanMapping();
       setupHomeMapping();
       ConfigurationMetaData conf = getBeanMetaData().getContainerConfiguration();
@@ -495,6 +498,28 @@ public class StatelessSessionContainer extends Container
       setInstancePool( createInstancePool( conf, cl ) );
    }
 */
+
+   protected void checkCoherency () throws Exception
+   {
+      // Check clustering cohrency wrt metadata
+      //
+      if (metaData.isClustered())
+      {
+         boolean clusteredProxyFactoryFound = false;
+         for (Iterator it = proxyFactories.keySet().iterator(); it.hasNext(); )
+         {
+            String invokerBinding = (String)it.next();
+            EJBProxyFactory ci = (EJBProxyFactory)proxyFactories.get(invokerBinding);
+            if (ci instanceof org.jboss.proxy.ejb.ClusterProxyFactory)
+               clusteredProxyFactoryFound = true;
+         }
+
+         if (!clusteredProxyFactoryFound)
+         {
+            log.warn("*** EJB '" + this.metaData.getEjbName() + "' deployed as CLUSTERED but not a single clustered-invoker is bound to container ***");
+         }
+      }
+   }
 
    /**
     * This is the last step before invocation - all interceptors are done
