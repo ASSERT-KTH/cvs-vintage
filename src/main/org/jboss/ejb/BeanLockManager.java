@@ -22,7 +22,7 @@ import javax.naming.InitialContext;
  * @author <a href="bill@burkecentral.com">Bill Burke</a>
  * @author <a href="marc.fleury@jboss.org">Marc Fleury</a>
  *
- * @version $Revision: 1.9 $
+ * @version $Revision: 1.10 $
  * <p><b>Revisions:</b><br>
  * <p><b>20010802: marcf</b>
  * <ol>
@@ -84,7 +84,6 @@ public class BeanLockManager
             lock = (BeanLock) lockClass.newInstance();
             
             lock.setId(id);
-            lock.setReentrant(reentrant);
             lock.setTimeout(txTimeout);
 	    lock.setContainer(container);
             lock.setConfiguration(config);

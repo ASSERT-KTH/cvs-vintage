@@ -26,17 +26,12 @@ import org.w3c.dom.Element;
  *
  * @author <a href="bill@burkecentral.com">Bill Burke</a>
  * @author <a href="marc.fleury@jboss.org">Marc Fleury</a>
- * @version $Revision: 1.18 $
+ * @version $Revision: 1.19 $
  */
 public abstract class BeanLockSupport
    implements BeanLock
 {
    protected Container container = null;
-   /**
-    * Number of threads invoking methods on this bean
-    * (1 normally >1 if reentrant)
-    */
-   protected int numMethodLocks = 0;
    
    /**
     * Number of threads that retrieved this lock from the manager
@@ -46,9 +41,6 @@ public abstract class BeanLockSupport
    
    /** The Cachekey corresponding to this Bean */
    protected Object id = null;
- 
-   /** Are reentrant calls allowed? */
-   protected boolean reentrant;
  
    /** Logger instance */
    static Logger log = Logger.getLogger(BeanLock.class);
@@ -67,7 +59,6 @@ public abstract class BeanLockSupport
 
    public void setId(Object id) { this.id = id;}
    public Object getId() { return id;}
-   public void setReentrant(boolean reentrant) {this.reentrant = reentrant;}
    public void setTimeout(int timeout) {txTimeout = timeout;}
    public void setContainer(Container container) { this.container = container; }
    public void setConfiguration(Element config) { this.config = config; }
@@ -105,72 +96,12 @@ public abstract class BeanLockSupport
    public abstract void endTransaction(Transaction tx);
    public abstract void wontSynchronize(Transaction tx);
 	
-   public boolean isMethodLocked() { return numMethodLocks > 0;}
-   public int getNumMethodLocks() { return numMethodLocks;}
-   public void addMethodLock() { numMethodLocks++; }
-	
    public abstract void endInvocation(Invocation mi);
    
    public void addRef() { refs++;}
    public void removeRef() { refs--;}
    public int getRefs() { return refs;}
    
-   // Private --------------------------------------------------------
-   
-   private static final Method getEJBHome;
-   private static final Method getHandle;
-   private static final Method getPrimaryKey;
-   private static final Method isIdentical;
-   private static final Method remove;
-   
-   static
-   {
-      try
-      {
-         Class[] noArg = new Class[0];
-         getEJBHome = EJBObject.class.getMethod("getEJBHome", noArg);
-         getHandle = EJBObject.class.getMethod("getHandle", noArg);
-         getPrimaryKey = EJBObject.class.getMethod("getPrimaryKey", noArg);
-         isIdentical = EJBObject.class.getMethod("isIdentical", new Class[] {EJBObject.class});
-         remove = EJBObject.class.getMethod("remove", noArg);
-      }
-      catch (Exception e) {
-         e.printStackTrace();
-         throw new ExceptionInInitializerError(e);
-      }
-   }
-   
-   protected boolean isCallAllowed(Invocation mi)
-   {
-      // is this a reentrant bean
-      if (reentrant)
-      {
-         return true;
-      }
-
-      // is this a known non-entrant method
-      Method m = mi.getMethod();
-      if (m != null && (
-             m.equals(getEJBHome) ||
-             m.equals(getHandle) ||
-             m.equals(getPrimaryKey) ||
-             m.equals(isIdentical) ||
-             m.equals(remove)))
-      {
-         return true;
-      }
-
-      // if this is a non-entrant message to the container let it through
-      Entrancy entrancy = (Entrancy)mi.getValue(Entrancy.ENTRANCY_KEY);
-      if(entrancy == Entrancy.NON_ENTRANT)
-      {
-         log.trace("NON_ENTRANT invocation");
-         return true;
-      }
-  
-      return false;
-   }
-
    // This following is for deadlock detection
    protected static HashMap waiting = new HashMap();
 

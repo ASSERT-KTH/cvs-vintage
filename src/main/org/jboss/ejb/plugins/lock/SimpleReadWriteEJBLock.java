@@ -36,7 +36,7 @@ import org.jboss.invocation.Invocation;
  *
  * @author <a href="pete@subx.com">Peter Murray</a>
  *
- * @version $Revision: 1.2 $
+ * @version $Revision: 1.3 $
  *
  * <p><b>Revisions:</b><br>
  * <p><b>2002/6/4: yarrumretep</b>
@@ -66,39 +66,44 @@ public class SimpleReadWriteEJBLock extends BeanLockSupport
 	    log.trace("LOCK(" + id + "):" + message + " : " +  tx);
     }
 
-    public void schedule(Invocation mi) throws Exception
+    public void schedule(Invocation mi)
     {
 	boolean reading = container.getBeanMetaData().isMethodReadOnly(mi.getMethod().getName());
 	Transaction miTx = mi.getTransaction();
 
-	sync();
-	try
-	{
-	    if(reading)
-	    {
-		if(trace)
+        try
+        {
+           sync();
+           try
+           {
+              if(reading)
+              {
+                 if(trace)
 		    trace(miTx, "READ  (RQ)", mi.getMethod());
-		getReadLock(miTx);
-		if(trace)
+                 getReadLock(miTx);
+                 if(trace)
 		    trace(miTx, "READ  (GT)", mi.getMethod());
-	    }
-	    else
-	    {
-		if(trace)
+              }
+              else
+              {
+                 if(trace)
 		    trace(miTx, "WRITE (RQ)", mi.getMethod());
-		getWriteLock(miTx);
-		if(trace)
+                 getWriteLock(miTx);
+                 if(trace)
 		    trace(miTx, "WRITE (GT)", mi.getMethod());
-	    }
-	    getMethodLock(mi);
-	}
-	finally
-	{
-	    releaseSync();
-	}
+              }
+           }
+           finally
+           {
+              releaseSync();
+           }
+        }
+        catch (Exception ignored)
+        {
+        }
     }
 
-    private void getReadLock(Transaction tx) throws InterruptedException
+    private void getReadLock(Transaction tx)
     {
 	boolean done = false;
 
@@ -142,7 +147,7 @@ public class SimpleReadWriteEJBLock extends BeanLockSupport
 	}
     }
 
-    private void getWriteLock(Transaction tx) throws InterruptedException
+    private void getWriteLock(Transaction tx)
     {
 	boolean done = false;
 	boolean isReader;
@@ -190,7 +195,7 @@ public class SimpleReadWriteEJBLock extends BeanLockSupport
      * Use readers as a semaphore object to avoid
      * creating another object
      */
-    private void waitAWhile(Transaction tx) throws InterruptedException
+    private void waitAWhile(Transaction tx)
     {
 	releaseSync();
 	try
@@ -208,7 +213,11 @@ public class SimpleReadWriteEJBLock extends BeanLockSupport
 	}
 	finally
 	{
-	    sync();
+           try
+           {
+              sync();
+           }
+           catch (Exception ignored) {}
 	}
     }
     
@@ -260,42 +269,8 @@ public class SimpleReadWriteEJBLock extends BeanLockSupport
 	releaseWriteLock(transaction);
     }
 
-    private void getMethodLock(Invocation mi) throws InterruptedException
-    {
-	boolean gotMethodLock = false;
-	while(!gotMethodLock)
-	{
-	    if (isMethodLocked() && !isCallAllowed(mi)) 
-	    {
-		synchronized(methodLock)
-		{
-		    releaseSync();
-		    try
-		    {
-			methodLock.wait(txTimeout);
-		    }
-		    catch (InterruptedException ignored) {}
-		}
-		this.sync();
-	    }
-	    else
-	    { 
-		addMethodLock();
-		gotMethodLock = true;
-	    }
-	}
-    }
-
     public void endInvocation(Invocation mi)
     {
-	numMethodLocks--;
-	if(numMethodLocks == 0)
-	{
-	    synchronized(methodLock)
-	    {
-		methodLock.notify();
-	    }
-	}
     }
 
     private static Stack kRecycledRelievers = new Stack();
@@ -353,7 +328,9 @@ public class SimpleReadWriteEJBLock extends BeanLockSupport
               }
               recycle();
            }
-           catch (InterruptedException ignored) {}
+           catch (Exception ex)
+           {
+           }
 	}
     }
     

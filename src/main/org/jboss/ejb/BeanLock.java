@@ -19,7 +19,7 @@ import org.w3c.dom.Element;
  * @author <a href="bill@burkecentral.com">Bill Burke</a>
  * @author <a href="marc.fleury@jboss.org">Marc Fleury</a>
  *
- * @version $Revision: 1.15 $
+ * @version $Revision: 1.16 $
  *
  * <p><b>Revisions:</b><br>
 *  <p><b>2001/07/29: marcf</b>
@@ -48,11 +48,6 @@ public interface BeanLock
     *  @param id The cache key for the bean instance we are locking for.
     */
    public void setId(Object id);
-
-   /**
-    *  Change the reentrant flag.
-    */
-   public void setReentrant(boolean reentrant);
 
    /**
     *  Change long we should wait for a lock.
@@ -121,33 +116,6 @@ public interface BeanLock
     *  transaction has terminated?
     */
    public void wontSynchronize(Transaction tx);
-
-   /**
-    *  Check if any threads have been allowed into the bean instance
-    *  through this lock.
-    *
-    *  @return <code>true</code> if any thread have been allowed into
-    *          the bean instance code through this lock, otherwise
-    *          <code>false</code>.
-    */
-   public boolean isMethodLocked(); 
-
-   /**
-    *  Get the number of threads have been allowed into the bean instance
-    *  through this lock.
-    *
-    *  @return The number of threads that have been allowed into
-    *          the bean instance code through this lock.
-    */
-   public int getNumMethodLocks(); 
-
-   /**
-    *  Increment the number of locks that have been allowed into the bean
-    *  instance code through this lock,
-    *
-    *  OSH: Should this method really be part of this interface?
-    */
-   public void addMethodLock(); 
 
    /**
     *  Callback to the BeanLock to inform it that a method invocation has ended.

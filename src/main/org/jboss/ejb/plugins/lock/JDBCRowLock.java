@@ -28,11 +28,10 @@ import javax.naming.InitialContext;
  *
  * @author <a href="bill@burkecentral.com">Bill Burke</a>
  *
- * @version $Revision: 1.1 $
+ * @version $Revision: 1.2 $
  */
 public class JDBCRowLock extends BeanLockSupport
 {
-   protected Object methodLock = new Object();
    protected DataSource ds = null;
    protected String preparedStatementString = null;
 
@@ -105,47 +104,6 @@ public class JDBCRowLock extends BeanLockSupport
          waitForTx(trace);
       }
 
-      this.sync();
-      try
-      {
-         if( trace ) log.trace("Begin schedule, key="+mi.getId());
-         // Here, we are trying to get the methodLock on the bean
-         boolean acquiredMethodLock = false;
-         while (!acquiredMethodLock)
-         {
-            acquiredMethodLock = attemptMethodLock(mi, trace);
-            if (!acquiredMethodLock)
-            {
-               if (miTx != null)
-               {
-                  // This thread is involved with a transaction
-                  // We need to check whether the transaction has timed
-                  // out because we may have waited awhile in attemptMethodLock.
-                  if (isTxExpired(miTx))
-                  {
-                     log.error("Saw rolled back tx="+miTx+" waiting for methodLock."
-                               // +" On method: " + mi.getMethod().getName()
-                               // +" txWaitQueue size: " + txWaitQueue.size()
-                               );
-                     throw new RuntimeException("Transaction marked for rollback, possibly a timeout");
-                  }
-               }
-               else // non-transactional
-               {
-                  // we're non-transactional so we must return false
-                  // and re-do lock acquisition logic
-                  return false;
-               }
-            }
-         } // end while(acquiredMethodLock)
-         
-         // We successfully acquired method lock!
-      }
-      finally
-      {
-         this.releaseSync();
-      }
-      
       //If we reach here we are properly scheduled to go through so return true
       return true;
    } 
@@ -178,49 +136,6 @@ public class JDBCRowLock extends BeanLockSupport
       
    }
 
-   /**
-    * Attempt to acquire a method lock.
-    */
-   protected boolean attemptMethodLock(Invocation mi, boolean trace) throws Exception
-   {
-      if (isMethodLocked()) 
-      {
-         // It is locked but re-entrant calls permitted (reentrant home ones are ok as well)
-         if (!isCallAllowed(mi)) 
-         {
-            // This instance is in use and you are not permitted to reenter
-            // Go to sleep and wait for the lock to be released
-            // Threads finishing invocation will notify() on the lock
-            if( trace ) log.trace("Thread contention on methodLock, Begin lock.wait(), id="+mi.getId());
-            synchronized(methodLock)
-            {
-               releaseSync();
-               try
-               {
-                  methodLock.wait(txTimeout);
-               }
-               catch (InterruptedException ignored) {}
-            }
-            this.sync();
-            if( trace ) log.trace("End lock.wait(), id="+mi.getId()+", isLocked="+isMethodLocked());
-            return false;
-         }
-         else
-         { 
-            //We are in a valid reentrant call so add a method lock
-            addMethodLock();
-         }
-      }
-      // No one is using that instance
-      else 
-      {
-         // We are now using the instance
-         addMethodLock();
-      }
-      // if we got here addMethodLock was called
-      return true;
-   }
-
    /*
     * nextTransaction()
     *
@@ -249,11 +164,6 @@ public class JDBCRowLock extends BeanLockSupport
     */
    public void endInvocation(Invocation mi)
    { 
-      numMethodLocks--;
-      if (numMethodLocks == 0)
-      {
-         synchronized(methodLock) {methodLock.notify();}
-      }
    }
    
 }

@@ -45,12 +45,10 @@ import org.jboss.monitor.LockMonitor;
  * @author <a href="bill@burkecentral.com">Bill Burke</a>
  * @author <a href="pete@subx.com">Peter Murray</a>
  *
- * @version $Revision: 1.14 $
+ * @version $Revision: 1.15 $
  */
 public class QueuedPessimisticEJBLock extends BeanLockSupport
 {
-   private Object methodLock = new Object();
-
    private HashMap txLocks = new HashMap();
    private LinkedList txWaitQueue = new LinkedList();
    private boolean isReadOnlyTxLock = true;
@@ -59,15 +57,15 @@ public class QueuedPessimisticEJBLock extends BeanLockSupport
    private class TxLock
    {
 
-      public Transaction tx = null;
+      public Transaction waitingTx = null;
       public int id = 0;
       public String threadName;
       public boolean isQueued;
-      public TxLock(Transaction tx)
+      public TxLock(Transaction trans)
       {
          this.threadName = Thread.currentThread().toString();
-         this.tx = tx;
-         if (tx == null)
+         this.waitingTx = trans;
+         if (trans == null)
          {
             if (txIdGen < 0) txIdGen = 0;
             this.id = txIdGen++;
@@ -81,13 +79,13 @@ public class QueuedPessimisticEJBLock extends BeanLockSupport
 
          TxLock lock = (TxLock)obj;
 
-         if (lock.tx == null && this.tx == null)
+         if (lock.waitingTx == null && this.waitingTx == null)
          {
             return lock.id == this.id;
          }
-         else if (lock.tx != null && this.tx != null)
+         else if (lock.waitingTx != null && this.waitingTx != null)
          {
-            return lock.tx.equals(this.tx);
+            return lock.waitingTx.equals(this.waitingTx);
          }
          return false;
       }
@@ -213,51 +211,6 @@ public class QueuedPessimisticEJBLock extends BeanLockSupport
             }
             throw throwable;
          }
-
-         // Here, we are trying to get the methodLock on the bean
-         try
-         {
-            boolean acquiredMethodLock = false;
-            while (!acquiredMethodLock)
-            {
-               acquiredMethodLock = attemptMethodLock(mi, trace);
-               if (!acquiredMethodLock)
-               {
-                  if (miTx != null)
-                  {
-                     // This thread is involved with a transaction
-                     // We need to check whether the transaction has timed
-                     // out because we may have waited awhile in attemptMethodLock.
-                     if (isTxExpired(miTx))
-                     {
-                        log.error("Saw rolled back tx="+miTx+" waiting for methodLock."
-                                  // +" On method: " + mi.getMethod().getName()
-                                  // +" txWaitQueue size: " + txWaitQueue.size()
-                                  );
-                        throw new RuntimeException("Transaction marked for rollback, possibly a timeout");
-                     }
-                  }
-                  else // non-transactional
-                  {
-                     // we're non-transactional so we must return false
-                     // and re-do lock acquisition logic
-                     return false;
-                  }
-               }
-            } // end while(acquiredMethodLock)
-
-            // We successfully acquired method lock!
-         }
-         catch (Exception ex)
-         {
-            if (miTx != null)
-            {
-               // we have tx mutex so we must 
-               // wakeup next transaction
-               nextTransaction();
-            }
-            throw ex;
-         }
       }
       finally
       {
@@ -288,9 +241,9 @@ public class QueuedPessimisticEJBLock extends BeanLockSupport
       // We loop here until either until success or until transaction timeout
       // If we get out of the loop successfully, we can successfully
       // set the transaction on this puppy.
-      while (this.tx != null &&
+      while (getTransaction() != null &&
              // And are we trying to enter with another transaction?
-             !this.tx.equals(miTx))
+             !getTransaction().equals(miTx))
       {
          // For deadlock detection.
          // miTx is waiting for this.tx to finish so put it
@@ -299,7 +252,7 @@ public class QueuedPessimisticEJBLock extends BeanLockSupport
          {
             synchronized (waiting)
             {
-               waiting.put(miTx, this.tx);
+               waiting.put(miTx, getTransaction());
             }
          }
          deadlockDetection(miTx);
@@ -307,11 +260,11 @@ public class QueuedPessimisticEJBLock extends BeanLockSupport
          // That's no good, only one transaction per context
          // Let's put the thread to sleep the transaction demarcation will wake them up
          if( trace ) log.trace("Transactional contention on context"+id);
-	    
+         
          TxLock txLock = getTxLock(miTx);
-	    
-         if( trace ) log.trace("Begin wait on Tx="+this.tx);
-	    
+         
+         if( trace ) log.trace("Begin wait on Tx="+getTransaction());
+         
          // And lock the threads on the lock corresponding to the Tx in MI
          synchronized(txLock)
          {
@@ -321,10 +274,10 @@ public class QueuedPessimisticEJBLock extends BeanLockSupport
                txLock.wait(txTimeout);
             } catch (InterruptedException ignored) {}
          } // end synchronized(txLock)
-	    
+         
          this.sync();
-	    
-         if( trace ) log.trace("End wait on TxLock="+this.tx);
+         
+         if( trace ) log.trace("End wait on TxLock="+getTransaction());
          if (isTxExpired(miTx))
          {
             log.error(Thread.currentThread() + "Saw rolled back tx="+miTx+" waiting for txLock"
@@ -339,7 +292,7 @@ public class QueuedPessimisticEJBLock extends BeanLockSupport
                txLocks.remove(txLock);
                txWaitQueue.remove(txLock);
             }
-            else if (this.tx != null && tx.equals(miTx))
+            else if (getTransaction() != null && getTransaction().equals(miTx))
             {
                // We're not qu
                nextTransaction();
@@ -354,54 +307,11 @@ public class QueuedPessimisticEJBLock extends BeanLockSupport
             throw new RuntimeException("Transaction marked for rollback, possibly a timeout");
          }
       } // end while(tx!=miTx)
-
+   
       // If we get here, this means that we have the txlock
-      this.tx = miTx;
+      if (!wasScheduled) setTransaction(miTx);
       this.holdingThread = Thread.currentThread();
       return wasScheduled;
-   }
-
-   /**
-    * Attempt to acquire a method lock.
-    */
-   protected boolean attemptMethodLock(Invocation mi, boolean trace) throws Exception
-   {
-      if (isMethodLocked()) 
-      {
-         // It is locked but re-entrant calls permitted (reentrant home ones are ok as well)
-         if (!isCallAllowed(mi)) 
-         {
-            // This instance is in use and you are not permitted to reenter
-            // Go to sleep and wait for the lock to be released
-            // Threads finishing invocation will notify() on the lock
-            if( trace ) log.trace("Thread contention on methodLock, Begin lock.wait(), id="+mi.getId());
-            synchronized(methodLock)
-            {
-               releaseSync();
-               try
-               {
-                  methodLock.wait(txTimeout);
-               }
-               catch (InterruptedException ignored) {}
-            }
-            this.sync();
-            if( trace ) log.trace("End lock.wait(), id="+mi.getId()+", isLocked="+isMethodLocked());
-            return false;
-         }
-         else
-         { 
-            //We are in a valid reentrant call so add a method lock
-            addMethodLock();
-         }
-      }
-      // No one is using that instance
-      else 
-      {
-         // We are now using the instance
-         addMethodLock();
-      }
-      // if we got here addMethodLock was called
-      return true;
    }
 
    /*
@@ -419,7 +329,7 @@ public class QueuedPessimisticEJBLock extends BeanLockSupport
          throw new IllegalStateException("do not call nextTransaction while not synched!");
       }
 
-      this.tx = null;
+      setTransaction(null);
       this.holdingThread = null;
       this.isReadOnlyTxLock = true;
       // is there a waiting list?
@@ -430,14 +340,14 @@ public class QueuedPessimisticEJBLock extends BeanLockSupport
          thelock.isQueued = false;
          // The new transaction is the next one, important to set it up to avoid race with 
          // new incoming calls
-         if (thelock.tx != null)
+         if (thelock.waitingTx != null)
          {
             synchronized (waiting)
             {
-               waiting.remove(thelock.tx);
+               waiting.remove(thelock.waitingTx);
             }
          }
-         this.tx = thelock.tx;
+         setTransaction(thelock.waitingTx);
          //         log.debug(Thread.currentThread()+" handing off to "+lock.threadName);
          synchronized(thelock) 
          { 
@@ -470,16 +380,11 @@ public class QueuedPessimisticEJBLock extends BeanLockSupport
     */
    public void endInvocation(Invocation mi)
    { 
-      numMethodLocks--;
-      if (numMethodLocks == 0)
+      if (isReadOnlyTxLock && mi.getTransaction() != null)
       {
-         synchronized(methodLock) {methodLock.notify();}
-         if (isReadOnlyTxLock && mi.getTransaction() != null)
+         if (isReadOnlyTxLock)
          {
-            if (isReadOnlyTxLock)
-            {
-               endTransaction(mi.getTransaction());
-            }
+            endTransaction(mi.getTransaction());
          }
       }
    }
@@ -491,13 +396,10 @@ public class QueuedPessimisticEJBLock extends BeanLockSupport
       {
          throw new IllegalStateException("removing bean lock and it has tx's in QUEUE!");
       }
-      else if (refs == 0 && this.tx != null) 
+      else if (refs == 0 && getTransaction() != null) 
       {
-         throw new IllegalStateException("removing bean lock and it has tx set!");
+         throw new IllegalStateException("removing bean lock and it has tx set!" + container.getBeanMetaData().getEjbName() + " " + this.id.toString());
       }
-      /*      else if (refs == 0)
-              log.debug(Thread.currentThread() + " removing lock!");
-      */
    }
 
 }
