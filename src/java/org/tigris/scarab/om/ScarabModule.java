@@ -105,7 +105,7 @@ import org.apache.fulcrum.security.impl.db.entity
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: ScarabModule.java,v 1.97 2002/03/19 02:32:19 jon Exp $
+ * @version $Id: ScarabModule.java,v 1.98 2002/03/19 06:53:10 jon Exp $
  */
 public class ScarabModule
     extends BaseScarabModule
@@ -333,7 +333,28 @@ public class ScarabModule
     {
         try
         {
+            boolean newModule = isNew();
             super.save();
+
+            if (newModule)
+            {
+                if ( getOwnerId() == null ) 
+                {
+                    throw new TorqueException( new ScarabException(
+                        "Can't save a project without first assigning an owner."));
+                }
+                try
+                {
+                    grant (ScarabUserManager.getInstance(getOwnerId()), 
+                           TurbineSecurity.getRole("Project Owner"));
+            
+                    setInitialAttributesAndIssueTypes();
+                }
+                catch (Exception e)
+                {
+                    throw new TorqueException(e);
+                }
+            }
         }
         catch (Exception e)
         {
@@ -388,29 +409,10 @@ public class ScarabModule
             // need to do this before the relationship save below
             // in order to set the moduleid for the new module.
             super.save(dbCon);
-            dbCon.commit();
-            
-            if ( getOwnerId() == null ) 
-            {
-                throw new TorqueException( new ScarabException(
-                    "Can't save a project without first assigning an owner."));
-            }
-            try
-            {
-                grant (ScarabUserManager.getInstance(getOwnerId()), 
-                       TurbineSecurity.getRole("Project Owner"));
-        
-                setInitialAttributesAndIssueTypes();
-            }
-            catch (Exception e)
-            {
-                throw new TorqueException(e);
-            }
         }
         else
         {
             super.save(dbCon);
-            dbCon.commit();
         }
         // clear out the cache beause we want to make sure that
         // things get updated properly.
