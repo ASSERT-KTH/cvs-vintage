@@ -70,7 +70,7 @@
 	<!-- compile the classes -->
 	<target name="compile" depends="init,copy-required">
 		<echo message="the classes are going to ${dest} "/> 
-		<javac srcdir="${src}" destdir="${dest}"	classpath="${classpath}" encoding="ISO-8859-1"/>
+		<javac srcdir="${src}" destdir="${dest}"	classpath="${classpath}" encoding="ISO-8859-1" debug="yes"/>
 	</target>
 
 	<!-- pack the files into one jar file with automatic manifest file -->
@@ -91,9 +91,10 @@
 			<exclude name="run_source.sh"/>
 			<exclude name="run_source_jdk13.bat"/>
 			<exclude name="run_source_jdk13.sh"/>
+      <exclude name="**/*.zip"/>
 			<manifest>
 				<attribute name="Main-Class" value="org.columba.main.Main"/>
-				<attribute name="Class-Path" value="ext/xalan.jar ext/jaxp.jar ext/crimson.jar"/>
+				<attribute name="Class-Path" value="ext/xalan.jar ext/jaxp.jar ext/crimson.jar ext/log4j.jar"/>
 				<attribute name="Sealed" value="true"/>
 			</manifest>
 		</jar>
