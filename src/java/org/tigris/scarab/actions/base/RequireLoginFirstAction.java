@@ -51,6 +51,7 @@ import org.apache.turbine.RunData;
 import org.apache.turbine.TemplateContext;
 import org.apache.turbine.TemplateSecureAction;
 import org.apache.turbine.tool.IntakeTool;
+import org.apache.fulcrum.intake.model.Group;
 
 // Scarab Stuff
 import org.tigris.scarab.util.ScarabConstants;
@@ -62,7 +63,7 @@ import org.tigris.scarab.screens.Default;
  * Default.java Screen except that it has a few helper methods.
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: RequireLoginFirstAction.java,v 1.16 2001/11/28 23:59:41 elicia Exp $    
+ * @version $Id: RequireLoginFirstAction.java,v 1.17 2001/12/12 20:06:07 elicia Exp $    
  */
 public abstract class RequireLoginFirstAction extends TemplateSecureAction
 {
@@ -202,6 +203,14 @@ public abstract class RequireLoginFirstAction extends TemplateSecureAction
     public void doRefresh( RunData data, TemplateContext context )
         throws Exception
     {
+        setTarget(data, getCurrentTemplate(data));            
+    }
+
+    public void doReset( RunData data, TemplateContext context )
+        throws Exception
+    {
+        IntakeTool intake = getIntakeTool(context);
+        intake.removeAll();
         setTarget(data, getCurrentTemplate(data));            
     }
         

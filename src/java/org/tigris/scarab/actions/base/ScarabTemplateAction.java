@@ -61,7 +61,7 @@ import org.tigris.scarab.tools.ScarabRequestTool;
  *  a couple methods useful for Scarab.
  *   
  *  @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- *  @version $Id: ScarabTemplateAction.java,v 1.8 2001/11/10 02:22:17 elicia Exp $
+ *  @version $Id: ScarabTemplateAction.java,v 1.9 2001/12/12 20:06:07 elicia Exp $
  */
 public abstract class ScarabTemplateAction extends TemplateAction
 {
@@ -197,5 +197,12 @@ public abstract class ScarabTemplateAction extends TemplateAction
         setTarget(data, getCurrentTemplate(data));            
     }
         
+    public void doReset( RunData data, TemplateContext context )
+        throws Exception
+    {
+        IntakeTool intake = getIntakeTool(context);
+        intake.removeAll();
+        setTarget(data, getCurrentTemplate(data));            
+    }
         
 }
