@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<!-- $Id: ref_entities.xml,v 1.21 2003/11/08 21:35:14 mvw Exp $ -->
+<!-- $Id: ref_entities.xml,v 1.22 2003/11/16 13:18:11 mvw Exp $ -->
 
 <!--
 
@@ -1577,6 +1577,9 @@ E.g. Link is not listed here, but implemented. -->
             or that artifact.</para></listitem>
         </varlistentry>
 
+        <!-- Entry for Icon -->
+        <!-- TODO: Missing feature from ArgoUML. See enhancement issue ... -->
+        
         <!-- Entry for Namespace -->
 
         <varlistentry>
