@@ -7,59 +7,54 @@
 
 package org.jboss.system;
 
+import org.jboss.util.NestedException;
+
 /**
- * Throw to indicate a non-fatal configuration related problem.
+ * Thrown to indicate a non-fatal configuration related problem.
  *
  * @see ConfigurationService
  *
  * @author  <a href="mailto:jason@planet57.com">Jason Dillon</a>
- * @version <pre>$Revision: 1.3 $</pre>
+ * @version <tt>$Revision: 1.4 $</tt>
  */
 public class ConfigurationException
-   extends Exception
+   extends NestedException
 {
-   /** The root cause of this exception */
-   protected Throwable cause;
-   
    /**
-    * Construct a <tt>ConfigurationException</tt>.
+    * Construct a <tt>ConfigurationException</tt> with the specified detail 
+    * message.
     *
-    * @param message    The exception detail message.
+    * @param msg  Detail message.
     */
-   public ConfigurationException(final String message) {
-      super(message);
+   public ConfigurationException(String msg) {
+      super(msg);
    }
-   
+
    /**
-    * Construct a <tt>ConfigurationException</tt>.
+    * Construct a <tt>ConfigurationException</tt> with the specified detail 
+    * message and nested <tt>Throwable</tt>.
     *
-    * @param message    The exception detail message.
-    * @param cause      The detail cause of the exception.
+    * @param msg     Detail message.
+    * @param nested  Nested <tt>Throwable</tt>.
     */
-   public ConfigurationException(final String message, 
-      final Throwable cause) 
-   {
-      super(message);
-      this.cause = cause;
+   public ConfigurationException(String msg, Throwable nested) {
+      super(msg, nested);
    }
-   
+
    /**
-    * Get the cause of the exception.
+    * Construct a <tt>ConfigurationException</tt> with the specified
+    * nested <tt>Throwable</tt>.
     *
-    * @return  The cause of the exception or null if there is none.
+    * @param nested  Nested <tt>Throwable</tt>.
     */
-   public Throwable getCause() { 
-      return cause; 
+   public ConfigurationException(Throwable nested) {
+      super(nested);
    }
-   
+
    /**
-    * Return a string representation of the exception.
-    *
-    * @return  A string representation.
+    * Construct a <tt>ConfigurationException</tt> with no detail.
     */
-   public String toString() {
-      return cause == null ? 
-         super.toString() : 
-         super.toString() + ", Cause: " + cause;
+   public ConfigurationException() {
+      super();
    }
 }
