@@ -1,4 +1,4 @@
-// $Id: Import.java,v 1.43 2003/12/13 21:48:44 alexb Exp $
+// $Id: Import.java,v 1.44 2003/12/14 17:16:56 alexb Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -36,6 +36,8 @@ import java.util.Enumeration;
 import java.util.Hashtable;
 import java.util.ListIterator;
 import java.util.Vector;
+import java.net.URLClassLoader;
+import java.net.URL;
 
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
@@ -72,12 +74,15 @@ import org.tigris.gef.base.Globals;
  *
  * <p>Supports recursive search in folder for all .java classes.
  *
- * <p>$Id: Import.java,v 1.43 2003/12/13 21:48:44 alexb Exp $
+ * <p>$Id: Import.java,v 1.44 2003/12/14 17:16:56 alexb Exp $
  *
  * @author Andreas Rueckert <a_rueckert@gmx.net>
  */
 public class Import {
     
+		/** logger */
+		private Logger cat = Logger.getLogger(Import.class);
+                
     /** Imported directory */
     private String src_path;
     
@@ -284,6 +289,12 @@ public class Import {
      * @param f The file or directory, we want to parse.
      */
     public void doFile() {
+        
+//        try{
+//        URL[] urls = {new URL("file://localhost/opt/hibernate/hibernate-2.1/lib/odmg.jar")};
+//        URLClassLoader loader = new URLClassLoader(urls);
+//        }catch(Exception e){cat.warn("error in class loader: "+e.toString());}
+        
         Vector files = module.getList(this);
 	files.addAll(files); // for the second pass
         _diagram = getCurrentDiagram();
@@ -485,13 +496,15 @@ public class Import {
                     _nextPassFiles.addElement(curFile);
                     
                     // RuntimeExceptions should be reported here!
-                    if (e1 instanceof RuntimeException)
+                    if (e1 instanceof RuntimeException){
                         cat.error("program bug encountered in reverese engineering, the project file will be corrupted\n"
 				  + e1);
+                        
+                        e1.printStackTrace();
+                    }
                     else
                         cat.warn("exception encountered in reverese engineering, the project file will be corrupted\n"
 				 + e1);
-                    e1.printStackTrace();
                 }
                 
                 if (!isCancelled()) {
