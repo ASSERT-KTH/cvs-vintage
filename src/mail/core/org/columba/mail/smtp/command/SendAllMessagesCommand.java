@@ -19,6 +19,7 @@ import java.util.List;
 import java.util.Vector;
 
 import javax.swing.Action;
+import javax.swing.JOptionPane;
 
 import org.columba.core.command.DefaultCommandReference;
 import org.columba.core.command.Worker;
@@ -93,7 +94,7 @@ public class SendAllMessagesCommand extends FolderCommand {
 
 		SMTPServer smtpServer = null;
 		MessageFolder sentFolder = null;
-
+		
 		// send all messages
 		while (sendListManager.hasMoreMessages()) {
 			SendableMessage message = sendListManager.getNextMessage();
@@ -104,6 +105,12 @@ public class SendAllMessagesCommand extends FolderCommand {
 
 				AccountItem accountItem = MailInterface.config.getAccountList()
 						.uidGet(actAccountUid);
+
+				if (accountItem == null)
+				{
+					//use the default account
+				  accountItem = MailInterface.config.getAccountList().getDefaultAccount();
+				}
 
 				// Sent folder
 				sentFolder = (MessageFolder) MailInterface.treeModel
@@ -130,6 +137,7 @@ public class SendAllMessagesCommand extends FolderCommand {
 			moveToSentFolder(sentList, sentFolder);
 			sentList.clear();
 		}
+		
 	}
 
 	/**
