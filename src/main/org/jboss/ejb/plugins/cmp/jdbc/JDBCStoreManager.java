@@ -65,7 +65,7 @@ import org.jboss.ejb.plugins.lock.JDBCOptimisticLock;
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
  * @see org.jboss.ejb.EntityPersistenceStore
- * @version $Revision: 1.48 $
+ * @version $Revision: 1.49 $
  */
 public class JDBCStoreManager implements EntityPersistenceStore
 {
@@ -383,28 +383,28 @@ public class JDBCStoreManager implements EntityPersistenceStore
             JDBCStoreManager manager = (JDBCStoreManager)iter.next();
             manager.startStoreManager();
          }
+      }
 
-         // optimistic lock
-         if(entityBridge.getMetaData().getOptimisticLocking() != null) {
-            JDBCOptimisticLock.setJDBCStoreManager(this);
-            JDBCOptimisticLockingMetaData lockingMetaData =
-               entityBridge.getMetaData().getOptimisticLocking();
-            JDBCOptimisticLock.setLockMetaData(getContainer(), lockingMetaData);
+      // optimistic lock
+      if(entityBridge.getMetaData().getOptimisticLocking() != null) {
+         JDBCOptimisticLock.setJDBCStoreManager(this);
+         JDBCOptimisticLockingMetaData lockingMetaData =
+            entityBridge.getMetaData().getOptimisticLocking();
+         JDBCOptimisticLock.setLockMetaData(getContainer(), lockingMetaData);
 
-            // look up key generator factory
-            if(lockingMetaData.getKeyGeneratorFactory() != null) {
-               try {
-                  InitialContext ic = new InitialContext();
-                  KeyGeneratorFactory factory = (KeyGeneratorFactory)ic.lookup(
-                     lockingMetaData.getKeyGeneratorFactory()
-                  );
-                  JDBCOptimisticLock.setKeyGenerator(container, factory.getKeyGenerator());
-               } catch(NamingException ne) {
-                  throw new DeploymentException(
-                     "Error: failed to look up key generator factory: "
-                        + lockingMetaData.getKeyGeneratorFactory()
-                  );
-               }
+         // look up key generator factory
+         if(lockingMetaData.getKeyGeneratorFactory() != null) {
+            try {
+               InitialContext ic = new InitialContext();
+               KeyGeneratorFactory factory = (KeyGeneratorFactory)ic.lookup(
+                  lockingMetaData.getKeyGeneratorFactory()
+               );
+               JDBCOptimisticLock.setKeyGenerator(container, factory.getKeyGenerator());
+            } catch(NamingException ne) {
+               throw new DeploymentException(
+                  "Error: failed to look up key generator factory: "
+                     + lockingMetaData.getKeyGeneratorFactory()
+               );
             }
          }
       }
