@@ -26,7 +26,7 @@
 
 ## PAGINATION
 ## if results exceed limit, get subset list
-#set ($resultsPerPage = $data.Parameters.getInt("resultsPerPage", 2))
+#set ($resultsPerPage = $data.Parameters.getInt("resultsPerPage", 25))
 #set ($pageNum = $data.Parameters.getInt("pageNum", 1))
 #if ($resultsPerPage > 0 && $attributes.size() > $resultsPerPage)
  #set ($paginated = "true")
