@@ -1,4 +1,4 @@
-// $Id: UMLClassifierRoleAvailableContentsListModel.java,v 1.23 2005/01/09 14:59:05 linus Exp $
+// $Id: UMLClassifierRoleAvailableContentsListModel.java,v 1.24 2005/01/11 13:03:44 bobtarling Exp $
 // Copyright (c) 2002-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -31,6 +31,7 @@ import org.argouml.model.Model;
 import org.argouml.model.ModelFacade;
 import org.argouml.model.uml.UmlModelEventPump;
 import org.argouml.uml.ui.UMLModelElementListModel2;
+import org.tigris.gef.base.Diagram;
 import org.tigris.gef.presentation.Fig;
 
 import ru.novosoft.uml.MElementEvent;
@@ -92,7 +93,7 @@ public class UMLClassifierRoleAvailableContentsListModel
         theNewTarget = theNewTarget instanceof Fig
             ? ((Fig) theNewTarget).getOwner() : theNewTarget;
         if (ModelFacade.isABase(theNewTarget)
-                || ModelFacade.isADiagram(theNewTarget)) {
+                || theNewTarget instanceof Diagram) {
             if (getTarget() != null) {
                 Collection bases = ModelFacade.getBases(getTarget());
                 Iterator it = bases.iterator();

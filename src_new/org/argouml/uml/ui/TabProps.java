@@ -1,4 +1,4 @@
-// $Id: TabProps.java,v 1.54 2005/01/09 14:59:02 linus Exp $
+// $Id: TabProps.java,v 1.55 2005/01/11 13:03:16 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -75,6 +75,7 @@ import org.argouml.uml.diagram.use_case.ui.UMLUseCaseDiagram;
 import org.argouml.uml.ui.behavior.state_machines.PropPanelSimpleState;
 import org.argouml.uml.ui.foundation.core.PropPanelClass;
 import org.argouml.util.ConfigLoader;
+import org.tigris.gef.base.Diagram;
 import org.tigris.gef.presentation.Fig;
 import org.tigris.gef.presentation.FigText;
 
@@ -414,7 +415,7 @@ public class TabProps
      */
     public boolean shouldBeEnabled(Object t) {
         t = (t instanceof Fig) ? ((Fig) t).getOwner() : t;
-        if (ModelFacade.isADiagram(t) || ModelFacade.isABase(t)) {
+        if (t instanceof Diagram || ModelFacade.isABase(t)) {
             shouldBeEnabled = true;
         } else {
             shouldBeEnabled = false;

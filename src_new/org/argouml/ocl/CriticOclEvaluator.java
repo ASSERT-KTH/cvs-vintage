@@ -1,4 +1,4 @@
-// $Id: CriticOclEvaluator.java,v 1.3 2005/01/09 14:58:07 linus Exp $
+// $Id: CriticOclEvaluator.java,v 1.4 2005/01/11 13:03:41 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -27,6 +27,7 @@ package org.argouml.ocl;
 import java.util.*;
 
 import org.argouml.model.ModelFacade;
+import org.tigris.gef.base.Diagram;
 import org.tigris.gef.ocl.ExpansionException;
 
 
@@ -70,11 +71,11 @@ public class CriticOclEvaluator extends org.tigris.gef.ocl.OCLEvaluator {
             res = ModelFacade.getName(self);
             if (res == null || "".equals(res)) res = "(anon)";
         }
-        if (GET_NAME_EXPR_1.equals(expr) && ModelFacade.isADiagram(self)) {
+        if (GET_NAME_EXPR_1.equals(expr) && self instanceof Diagram) {
             res = ModelFacade.getName(self);
             if (res == null || "".equals(res)) res = "(anon)";
         }
-        if (GET_NAME_EXPR_2.equals(expr) && ModelFacade.isADiagram(self)) {
+        if (GET_NAME_EXPR_2.equals(expr) && self instanceof Diagram) {
             res = ModelFacade.getName(self);
             if (res == null || "".equals(res)) res = "(anon)";
         }

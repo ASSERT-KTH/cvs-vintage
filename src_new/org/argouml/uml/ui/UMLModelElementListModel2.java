@@ -1,4 +1,4 @@
-// $Id: UMLModelElementListModel2.java,v 1.29 2005/01/09 14:59:03 linus Exp $
+// $Id: UMLModelElementListModel2.java,v 1.30 2005/01/11 13:03:16 bobtarling Exp $
 // Copyright (c) 2002-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -34,6 +34,7 @@ import org.argouml.model.ModelFacade;
 import org.argouml.model.uml.UmlModelEventPump;
 import org.argouml.ui.targetmanager.TargetEvent;
 import org.argouml.ui.targetmanager.TargetListener;
+import org.tigris.gef.base.Diagram;
 import org.tigris.gef.presentation.Fig;
 
 import ru.novosoft.uml.MElementEvent;
@@ -271,7 +272,7 @@ public abstract class UMLModelElementListModel2
         theNewTarget = theNewTarget instanceof Fig
             ? ((Fig) theNewTarget).getOwner() : theNewTarget;
         if (ModelFacade.isABase(theNewTarget)
-                || ModelFacade.isADiagram(theNewTarget)) {
+                || theNewTarget instanceof Diagram) {
             if (ModelFacade.isABase(listTarget)) {
                 UmlModelEventPump.getPump()
 		    .removeModelEventListener(this,

@@ -1,4 +1,4 @@
-// $Id: ActionRemoveFromModel.java,v 1.52 2005/01/09 14:59:01 linus Exp $
+// $Id: ActionRemoveFromModel.java,v 1.53 2005/01/11 13:03:14 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -161,7 +161,7 @@ public class ActionRemoveFromModel extends UMLAction {
         }
         if (ModelFacade.isABase(target)) {
             newTarget = ModelFacade.getModelElementContainer(target);
-        } else if (ModelFacade.isADiagram(target)) {
+        } else if (target instanceof Diagram) {
             Diagram firstDiagram = (Diagram) p.getDiagrams().get(0);
             if (target != firstDiagram) {
                 newTarget = firstDiagram;

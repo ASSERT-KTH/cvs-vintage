@@ -1,4 +1,4 @@
-// $Id: UMLComboBoxModel2.java,v 1.48 2005/01/09 14:59:03 linus Exp $
+// $Id: UMLComboBoxModel2.java,v 1.49 2005/01/11 13:03:16 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -40,6 +40,7 @@ import org.argouml.model.ModelFacade;
 import org.argouml.model.uml.UmlModelEventPump;
 import org.argouml.ui.targetmanager.TargetEvent;
 import org.argouml.ui.targetmanager.TargetListener;
+import org.tigris.gef.base.Diagram;
 import org.tigris.gef.presentation.Fig;
 
 import ru.novosoft.uml.MElementEvent;
@@ -362,7 +363,7 @@ public abstract class UMLComboBoxModel2
      */
     protected void setTarget(Object target) {
         target = target instanceof Fig ? ((Fig) target).getOwner() : target;
-        if (ModelFacade.isABase(target) || ModelFacade.isADiagram(target)) {
+        if (ModelFacade.isABase(target) || target instanceof Diagram) {
             UmlModelEventPump eventPump = UmlModelEventPump.getPump();
             if (ModelFacade.isABase(comboBoxTarget)) {
                 eventPump.removeModelEventListener(this, comboBoxTarget,

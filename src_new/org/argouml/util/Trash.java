@@ -1,4 +1,4 @@
-// $Id: Trash.java,v 1.20 2004/12/04 08:22:33 linus Exp $
+// $Id: Trash.java,v 1.21 2005/01/11 13:03:44 bobtarling Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -28,6 +28,7 @@ import java.util.Vector;
 
 import org.apache.log4j.Logger;
 import org.argouml.model.ModelFacade;
+import org.tigris.gef.base.Diagram;
 
 /**
  * In the future this will be a trash can icon in the project
@@ -84,7 +85,7 @@ public final class Trash {
 	    // me.setNamespace(Trash_Model);
 	    LOG.debug("added " + obj + " to trash");
 	}
-	if (ModelFacade.isADiagram(obj)) {
+	if (obj instanceof Diagram) {
 	    TrashItem ti = new TrashItem(obj, places);
 	    contents.addElement(ti);
 	}

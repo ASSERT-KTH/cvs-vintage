@@ -1,4 +1,4 @@
-// $Id: ToDoTreeRenderer.java,v 1.14 2005/01/09 14:58:05 linus Exp $
+// $Id: ToDoTreeRenderer.java,v 1.15 2005/01/11 13:03:43 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -33,6 +33,7 @@ import javax.swing.JTree;
 import javax.swing.plaf.metal.MetalIconFactory;
 import javax.swing.tree.DefaultTreeCellRenderer;
 
+import org.tigris.gef.base.Diagram;
 import org.tigris.gef.base.Globals;
 import org.tigris.gef.presentation.Fig;
 
@@ -130,7 +131,7 @@ public class ToDoTreeRenderer extends DefaultTreeCellRenderer {
             else if (value instanceof KnowledgeTypeNode) {
                 lab.setIcon(MetalIconFactory.getTreeFolderIcon());
             }
-            else if (org.argouml.model.ModelFacade.isADiagram(value)) {
+            else if (value instanceof Diagram) {
                 return treeCellRenderer.getTreeCellRendererComponent(tree,
 								 value,
 								 sel,
