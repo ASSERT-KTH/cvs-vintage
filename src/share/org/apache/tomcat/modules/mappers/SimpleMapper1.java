@@ -67,7 +67,7 @@ import java.util.*;
 import java.io.*;
 /**
  *  This class will set up the data structures used by a simple patern matching
- *  alghoritm and use it to extract the path components from the request URI.
+ *  algorithm and use it to extract the path components from the request URI.
  *
  *  This particular implementation does the following:
  *  - extract the information that is relevant to matching from the Request
@@ -357,11 +357,11 @@ public class SimpleMapper1 extends  BaseInterceptor  {
      */
     //    public int requestMap(Request req) {
 	// No op. All mapping is done in the first step - it's better because
-	// the alghoritm is more efficient. The only case where those 2 are
+	// the algorithm is more efficient. The only case where those 2 are
 	// not called togheter is in getContext( "path" ). 
 	// 
 	// We can split it again later if that creates problems - but right
-	// now it's important to have a clear alghoritm. Note that requestMap
+	// now it's important to have a clear algorithm. Note that requestMap
 	// is _allways_ called after contextMap ( it was asserted in  all
 	// implementations).
 	
@@ -465,7 +465,7 @@ public class SimpleMapper1 extends  BaseInterceptor  {
 }
 
 
-/** Prefix and exact mapping alghoritm.
+/** Prefix and exact mapping algorithm.
  *XXX finish factoring out the creation of the map ( right now direct field access is
  *  used, since the code was just cut out from SimpleMapper).
  *  XXX make sure the code is useable as a general path mapper - or at least a bridge
@@ -701,7 +701,7 @@ class PrefixMapper  {
 		s=FileUtil.removeLast( s );
 	    }  else {
 		if( myMap.mapCacheEnabled ) {
-		    // XXX implement LRU or another replacement alghoritm
+		    // XXX implement LRU or another replacement algorithm
 		    myMap.mapCache.put( path, container );
 		}
 		return container;
