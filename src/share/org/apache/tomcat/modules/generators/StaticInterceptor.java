@@ -517,9 +517,10 @@ final class FileHandler extends Handler  {
 	Enumeration headers = req.getHeaderNames();
 	while( headers.hasMoreElements() ) {
 	    String hName = (String)headers.nextElement();
-	    String hValue = (String)req.getHeader(hName);
+	    String hValue = req.getMimeHeaders().getHeader(name);
 	    resp.append(CRLF).append(hName).append(": ").append(hValue);
 	}
+	resp.append(CRLF);
 	res.setContentLength(resp.length());
 	Writer out = res.getBuffer();
 	out.write(resp.toString());
