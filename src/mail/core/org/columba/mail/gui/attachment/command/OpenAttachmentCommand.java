@@ -72,7 +72,7 @@ public class OpenAttachmentCommand extends FolderCommand {
 	public void updateGUI() throws Exception {
 		MimeHeader header = part.getHeader();
 
-		if (header.getContentType().toLowerCase().indexOf("message") != -1) {
+		if (header.getMimeType().getType().toLowerCase().indexOf("message") != -1) {
 
 			MessageFrameController c = new MessageFrameController();
 
@@ -116,7 +116,7 @@ public class OpenAttachmentCommand extends FolderCommand {
 		// If part is Message/Rfc822 we do not need to download anything because
 		// we have already parsed the subMessage and can directly access the mime-parts
 
-		if (part.getHeader().getContentType().equals("message")) {
+		if (part.getHeader().getMimeType().getType().equals("message")) {
 			tempFolder = MainInterface.treeModel.getTempFolder();
 			tempMessageUid =
 				tempFolder.addMessage( part.getInputStream() );

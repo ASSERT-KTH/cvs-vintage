@@ -68,8 +68,8 @@ public class AttachmentView extends IconPanel {
 		for (int i = 0; i < displayedMimeParts.size(); i++) {
 			StreamableMimePart mp = (StreamableMimePart) displayedMimeParts.get(i);
 
-			contentType = mp.getHeader().getContentType();
-			contentSubtype = mp.getHeader().getContentSubtype();
+			contentType = mp.getHeader().getMimeType().getType();
+			contentSubtype = mp.getHeader().getMimeType().getSubtype();
 
 			if (mp.getHeader().getFileName() != null) {
 				text =
@@ -82,8 +82,8 @@ public class AttachmentView extends IconPanel {
 
 			icon =
 				AttachmentImageIconLoader.getImageIcon(
-					mp.getHeader().getContentType(),
-					mp.getHeader().getContentSubtype());
+					mp.getHeader().getMimeType().getType(),
+					mp.getHeader().getMimeType().getSubtype());
 
 			add(icon, text);
 			output = true;

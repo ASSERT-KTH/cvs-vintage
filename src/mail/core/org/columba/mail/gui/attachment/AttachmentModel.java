@@ -83,7 +83,8 @@ public class AttachmentModel {
 			if (bodyParent != null) {
 				if (bodyParent
 					.getHeader()
-					.getContentSubtype()
+					.getMimeType()
+					.getSubtype()
 					.equals("alternative")) {
 					List bodyParts = bodyParent.getChilds();
 					displayedMimeParts.removeAll(bodyParts);
