@@ -3,7 +3,7 @@
 <h2>$currentIssue.IssueType.Name ID: $currentIssue.UniqueId</h2>
 
 <div class="functnbar">
-<input type="submit" value="Done" name="#" />&#160;
+<input type="submit" value="Done" name="eventSubmit_doDone" />&#160;
 <input type="submit" value="Move" name="eventSubmit_doGotoothertemplate"  />&#160;
 <input type="submit" value="Copy" name="eventSubmit_doGotoothertemplate"  />&#160;issue
 <input type="hidden" name="$scarabG.Constant.OTHER_TEMPLATE" value="MoveIssue.vm" />
@@ -93,39 +93,42 @@
 </div>
 #end
 
-### ASSIGNEES
-<h3>Assignee</h3>
-<div class="axial">
-<table cellpadding="3" cellspacing="2" border="0">
- <tr>
-  <th>Committed by</th>
+### PERSONNEL
+<h3>Personel associated with issue</h3>
+<table width="100%" border="1" cellspacing="2" cellpadding="3">
+<tr>
+  <th>Name</th>
+  <th>Email</th>
+  <th>Association</th>
+</tr>
+
+<tr class="a">
   #set ($createdUser = $currentIssue.CreatedBy)
-  <td><a href="mailTo:$createdUser.Email">$createdUser.FirstName $createdUser.LastName</a></td>
- </tr>
- <tr>
-  <th>Assignee(s)</th>
-  <td>
-  #if ($currentIssue.AssigneeAttributeValues.isEmpty())
-     None assigned.
-  #else
-    #foreach ($assignee in $currentIssue.AssigneeAttributeValues)
-      #if ($velocityCount == $currentIssue.AssigneeAttributeValues.size())
-        #set ($comma = "")
-      #else
-        #set ($comma = ",")
-      #end
-      #set ($assignedUser = $scarabR.getUser($assignee.UserId))
-      <a href="mailto:$assignedUser.Email">$assignedUser.FirstName $assignedUser.LastName</a>$comma
-    #end
-  #end
-  </td>
- </tr>
+  <td>$createdUser.FirstName $createdUser.LastName</td>
+  <td><a href="mailTo:$createdUser.Email">$createdUser.Email</a></td>
+  <td><strong>Committed by:</strong></td>
+</tr>
+
+#set ($userAttVals = $currentIssue.UserAttributeValues)
+#if ($userAttVals.isEmpty())
+  <tr><td colspan="3">None assigned.</td></tr>
+#else
+   #foreach ($attVal in $userAttVals)
+      #indexedRows($velocityCount)
+      #set ($userId = $attVal.UserId)
+      #set ($assignedUser = $scarabR.getUser($userId))
+      <td>$assignedUser.FirstName $assignedUser.LastName</td>
+      <td><a href="mailto:$assignedUser.Email">$assignedUser.Email</td>
+      <td>$scarabR.getAttribute($attVal.AttributeId).Name </td>
+      </tr>
+   #end
+#end
 </table>
 </div>
 
 #if ($canEdit)
 <div class="functnbar3">
-<input type="submit" value="Edit assignees" name="eventSubmit_doEditassignees" />
+<input type="submit" value="Edit list" name="eventSubmit_doEditassignees" />
 </div>
 #end
 
@@ -445,8 +448,10 @@
 
      <td>
      #if ($act.Transaction.Attachment)
-       $act.Transaction.Attachment.DataAsString
-     #else &#160; #end
+       #if ($act.Transaction.Attachment.DataAsString)
+         $act.Transaction.Attachment.DataAsString
+       #else Not provided. #end
+     #else Not provided. #end
      </td>
      <td>
      #set ($user = $scarabR.getUser($act.Transaction.CreatedBy))
