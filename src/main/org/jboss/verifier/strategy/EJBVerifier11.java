@@ -19,7 +19,7 @@ package org.jboss.verifier.strategy;
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  *
  * This package and its source code is available at www.jboss.org
- * $Id: EJBVerifier11.java,v 1.13 2000/08/20 20:29:16 juha Exp $
+ * $Id: EJBVerifier11.java,v 1.14 2000/08/26 20:14:14 juha Exp $
  */
 
 
@@ -58,7 +58,7 @@ import org.jboss.metadata.EntityMetaData;
  * @see     org.jboss.verifier.strategy.AbstractVerifier
  *
  * @author 	Juha Lindfors (jplindfo@helsinki.fi)
- * @version $Revision: 1.13 $
+ * @version $Revision: 1.14 $
  * @since  	JDK 1.3
  */
 public class EJBVerifier11 extends AbstractVerifier {
@@ -946,8 +946,12 @@ public class EJBVerifier11 extends AbstractVerifier {
              *
              * Spec 9.2.5
              */
-            if (!hasEJBFindByPrimaryKey(bean)) {
-                
+            if (entity.isBMP() && (!hasEJBFindByPrimaryKey(bean))) {
+                /* Even though the spec states that all entities must have the
+                 * ejbFindByPrimaryKey() implementation, we only check BMP.
+                 * For CMP it is the responsibility of the container to
+                 * provide the implementation. */
+                 
                 fireSpecViolationEvent(entity, new Section("9.2.5.a"));
                 
                 status = false;
