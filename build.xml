@@ -10,7 +10,7 @@
 <!--                                                                        -->
 <!-- ====================================================================== -->
 
-<!-- $Id: build.xml,v 1.4 2001/08/12 02:55:53 starksm Exp $ -->
+<!-- $Id: build.xml,v 1.5 2001/08/13 18:52:25 starksm Exp $ -->
 
 <project default="main">
 
@@ -320,10 +320,6 @@
         <!-- ??? -->
         <exclude name="org/jboss/tm/GlobalId.class"/>
 
-        <!-- Exclude the security classes that must be on the classpath -->
-        <exclude name="org/jboss/security/AnybodyPrincipal.class"/>
-        <exclude name="org/jboss/security/NobodyPrincipal.class"/>
-        <exclude name="org/jboss/security/SimplePrincipal.class"/>
       </fileset>
 
       <fileset dir="${build.resources}">
