@@ -80,12 +80,73 @@ public class ExternalClassLoader extends URLClassLoader {
 	public Object instanciate(String className, Object[] args)
 		throws Exception {
 		
+		/*
 		//ColumbaLogger.log.debug("class="+className);
 
 		Class actClass = findClass(className);
 
 		Constructor[] constructors = actClass.getConstructors();
 		Constructor constructor = constructors[0];
+
+		return constructor.newInstance(args);
+		*/
+		
+		Class actClass = findClass(className);
+
+		Constructor constructor = null;
+
+		// FIXME
+		//
+		// we can't just load the first constructor 
+		//  -> go find the correct constructor based
+		//  -> based on the arguments
+		//
+		//    old solution and wrong:
+		//Constructor constructor = actClass.getConstructors()[0];//argClazz);
+		//
+		if (args.length == 0) {
+			constructor = actClass.getConstructors()[0];
+			
+			return constructor.newInstance(args);
+		}
+
+		Constructor[] list = actClass.getConstructors();
+
+		Class[] classes = new Class[args.length];
+
+		for (int i = 0; i < list.length; i++) {
+			Constructor c = list[i];
+
+			Class[] parameterTypes = c.getParameterTypes();
+
+			// this constructor has the correct number 
+			// of arguments
+			if (parameterTypes.length == args.length) {
+				boolean success = true;
+				for (int j = 0; j < parameterTypes.length; j++) {
+					Class parameter = parameterTypes[j];
+
+					if (args[j] == null)
+						success = true;
+
+					else if (!parameter.isAssignableFrom(args[j].getClass()))
+						success = false;
+				}
+
+				// ok, we found a matching constructor
+				// -> create correct list of arguments
+				if (success) {
+					constructor = actClass.getConstructor(parameterTypes);
+				}
+
+			}
+		}
+
+		
+
+		// couldn't find correct constructor
+		if (constructor == null)
+			return null;
 
 		return constructor.newInstance(args);
 	}
