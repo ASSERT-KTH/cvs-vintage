@@ -351,8 +351,9 @@ else echo "cannot find columba.jar in `pwd`"; fi
            <include name="lib/jargs.jar"/>
            <include name="lib/plastic.jar"/>
            <include name="lib/forms.jar"/>
-	   <include name="lib/jwizz-0.1.1.jar"/>
-	   <include name="lib/jhall.jar"/>
+	        <include name="lib/jwizz-0.1.1.jar"/>
+	        <include name="lib/jhall.jar"/>
+	        <include name="lib/usermanual.jar"/>
           </fileset>
          </signjar>
         </target>

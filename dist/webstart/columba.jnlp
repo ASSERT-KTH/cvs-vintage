@@ -30,6 +30,8 @@
    <jar href="lib/jakarta-oro-2.0.6.jar"/>
    <jar href="lib/jwizz-0.1.0.jar"/>
    <jar href="lib/plastic.jar"/>
+   <jar href="lib/usermanual.jar"/>
+   <jar href="lib/jhall.jar"/>
  </resources>
  <application-desc main-class="org.columba.core.main.Main"/>
 </jnlp>
