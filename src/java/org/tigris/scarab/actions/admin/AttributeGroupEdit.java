@@ -84,7 +84,7 @@ import org.tigris.scarab.util.Log;
  * action methods on RModuleAttribute or RIssueTypeAttribute tables
  *      
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
- * @version $Id: AttributeGroupEdit.java,v 1.54 2003/07/26 18:26:57 jmcnally Exp $
+ * @version $Id: AttributeGroupEdit.java,v 1.55 2003/08/22 18:20:51 venkatesh Exp $
  */
 public class AttributeGroupEdit extends RequireLoginFirstAction
 {
@@ -155,6 +155,15 @@ public class AttributeGroupEdit extends RequireLoginFirstAction
             return false;
         }
         IntakeTool intake = getIntakeTool(context);
+        // Check for duplicate sequence numbers
+        if (areThereDupeSequences(ag.getRAttributeAttributeGroups(), intake,
+                "RAttributeAttributeGroup", "Order", 0))
+        {
+            scarabR.setAlertMessage(l10n.format("DuplicateSequenceNumbersFound",
+                l10n.get("Attributes").toLowerCase()));
+            return false;
+        }
+
         List attributes = ag.getAttributes();
         Module module = scarabR.getCurrentModule();
         ArrayList lockedAttrs = new ArrayList();
@@ -271,7 +280,14 @@ public class AttributeGroupEdit extends RequireLoginFirstAction
             scarabR.setAlertMessage(l10n.get("IssueTypeNotFound"));
             return false;
         }
-
+        // Check for duplicate sequence numbers
+        if (areThereDupeSequences(ag.getRAttributeAttributeGroups(), intake,
+                                       "RAttributeAttributeGroup", "Order",0))
+        {
+            scarabR.setAlertMessage(l10n.format("DuplicateSequenceNumbersFound",
+                l10n.get("Attributes").toLowerCase()));
+            return false;
+        }
         String msg = DEFAULT_MSG;
 
         if (intake.isAllValid())
@@ -303,7 +319,7 @@ public class AttributeGroupEdit extends RequireLoginFirstAction
                 // Set properties for attribute-attribute group mapping
                 RAttributeAttributeGroup raag = 
                     ag.getRAttributeAttributeGroup(attribute);
-                Group raagGroup = intake.get("RAttributeAttributeGroup", 
+                Group raagGroup = intake.get("RAttributeAttributeGroup",
                                  raag.getQueryKey(), false);
                 raagGroup.setProperties(raag);
                 raag.save();

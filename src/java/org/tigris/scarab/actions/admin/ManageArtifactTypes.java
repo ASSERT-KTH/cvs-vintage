@@ -74,7 +74,7 @@ import org.tigris.scarab.util.Log;
  * here. 
  *
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
- * @version $Id: ManageArtifactTypes.java,v 1.33 2003/08/19 23:58:45 jmcnally Exp $
+ * @version $Id: ManageArtifactTypes.java,v 1.34 2003/08/22 18:20:51 venkatesh Exp $
  */
 public class ManageArtifactTypes extends RequireLoginFirstAction
 {
@@ -92,6 +92,13 @@ public class ManageArtifactTypes extends RequireLoginFirstAction
         List rmits = module.getRModuleIssueTypes();
         int navCount = 0;
         Group rmitGroup = null;
+
+        if (areThereDupeSequences(rmits, intake, "RModuleIssueType", "Order", 0))
+        {
+            scarabR.setAlertMessage(l10n.format("DuplicateSequenceNumbersFound",
+                                     l10n.get("IssueTypes").toLowerCase()));
+            return;
+        }
 
         if (intake.isAllValid())
         {

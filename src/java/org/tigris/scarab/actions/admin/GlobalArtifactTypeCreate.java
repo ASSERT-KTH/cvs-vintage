@@ -75,7 +75,7 @@ import org.tigris.scarab.util.ScarabConstants;
  * This class deals with modifying Global Artifact Types.
  *
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
- * @version $Id: GlobalArtifactTypeCreate.java,v 1.37 2003/07/26 18:26:57 jmcnally Exp $
+ * @version $Id: GlobalArtifactTypeCreate.java,v 1.38 2003/08/22 18:20:51 venkatesh Exp $
  */
 public class GlobalArtifactTypeCreate extends RequireLoginFirstAction
 {
@@ -183,66 +183,38 @@ public class GlobalArtifactTypeCreate extends RequireLoginFirstAction
         List attGroups = issueType.getAttributeGroups(false);
         int nbrAttGroups = attGroups.size();
         String errorMsg = ERROR_MESSAGE;
-        boolean isValid = true;
-        Field order1 = null;
-        Field order2 = null;
-        int dupeOrder = 0;
+        int dupeOrder = 2;
 
         // Manage attribute groups, only seeking sequence collisions
         // when there is more than one active group.
         if (issueType.getAttributeGroups(true).size() > 1)
         {
-            boolean haveSequenceCollisions = false;
             dupeOrder = data.getParameters().getInt("dupe_order");
-
-            // Check for duplicate sequence numbers
-            for (int i = 0; i < nbrAttGroups; i++) 
-            {
-                AttributeGroup ag1 = (AttributeGroup)attGroups.get(i);
-                Group agGroup1 = intake.get("AttributeGroup", 
-                                 ag1.getQueryKey(), false);
-                order1 = agGroup1.get("Order");
-                if (order1.toString().equals(Integer.toString(dupeOrder)))
-                {
-                    haveSequenceCollisions = true;
-                    break;
-                }
-
-                for (int j = i - 1; j >= 0; j--)
-                {
-                    AttributeGroup ag2 = (AttributeGroup)attGroups.get(j);
-                    Group agGroup2 = intake.get("AttributeGroup", 
-                                 ag2.getQueryKey(), false);
-                    order2 = agGroup2.get("Order");
-
-                    if (order1.toString().equals(order2.toString()))
-                    {
-                        haveSequenceCollisions = true;
-                        break;
-                    }
-                }
-            }
-            if (haveSequenceCollisions)
-            {
-               errorMsg = "DuplicateSequenceNumbersForAttributeGroups";
-               isValid = false;
-            }
 
             // Check that duplicate check is not at the beginning.
             if (dupeOrder == 1)
             {
-                errorMsg = "CannotPositionDuplicateCheckFirst";
-                isValid = false;
+                scarabR.setAlertMessage(l10n.get("CannotPositionDuplicateCheckFirst"));;
+                return false;
+            }
+
+            // Check for duplicate sequence numbers
+            if (areThereDupeSequences(attGroups, intake, "AttributeGroup",
+                    "Order", dupeOrder))
+            {
+                scarabR.setAlertMessage(l10n.format("DuplicateSequenceNumbersFound",
+                    l10n.get("AttributeGroups").toLowerCase()));
+                return false;
             }
         }
 
-        if (intake.isAllValid() && isValid)
+        if (intake.isAllValid())
         {
             // Set properties for attribute groups
             for (int i = nbrAttGroups - 1; i >= 0; i--)
             {
                 AttributeGroup attGroup = (AttributeGroup)attGroups.get(i);
-                Group agGroup = intake.get("AttributeGroup", 
+                Group agGroup = intake.get("AttributeGroup",
                                  attGroup.getQueryKey(), false);
                 agGroup.setProperties(attGroup);
 
@@ -460,7 +432,7 @@ public class GlobalArtifactTypeCreate extends RequireLoginFirstAction
     /**
      * Adds or modifies user attributes' properties
      */
-    public void doSaveuserattributes (RunData data, TemplateContext context)
+    public boolean doSaveuserattributes (RunData data, TemplateContext context)
         throws Exception
     {
         IntakeTool intake = getIntakeTool(context);
@@ -470,45 +442,53 @@ public class GlobalArtifactTypeCreate extends RequireLoginFirstAction
         if (issueType.isSystemDefined())
         {
             scarabR.setAlertMessage(l10n.get("SystemSpecifiedIssueType"));
-            return;
+            return false;
         }
         if (intake.isAllValid())
         {
-            List userAttributes = issueType.getUserAttributes(false);
-            for (int i=0; i < userAttributes.size(); i++)
+            List rias = issueType.getRIssueTypeAttributes(false,"user");
+            if (areThereDupeSequences(rias, intake, "RIssueTypeAttribute",
+                                          "Order", 0))
+            {
+                scarabR.setAlertMessage(l10n.format("DuplicateSequenceNumbersFound",
+                    l10n.get("UserAttributes").toLowerCase()));
+                return false;
+            }
+            for (int i=0; i < rias.size(); i++)
             {
                 // Set properties for issue type-attribute mapping
-                Attribute attribute = (Attribute)userAttributes.get(i);
-                RIssueTypeAttribute ria = issueType
-                        .getRIssueTypeAttribute(attribute);
-                Group riaGroup = intake.get("RIssueTypeAttribute", 
+                RIssueTypeAttribute ria = (RIssueTypeAttribute)rias.get(i);
+                Group riaGroup = intake.get("RIssueTypeAttribute",
                                  ria.getQueryKey(), false);
                 riaGroup.setProperties(ria);
                 ria.save();
             }
             getScarabRequestTool(context)
-                .setConfirmMessage(l10n.get(DEFAULT_MSG));  
+                .setConfirmMessage(l10n.get(DEFAULT_MSG));
         }
+        return true;
     }
 
-    /*
+    /**
      * Manages clicking of the AllDone button
      */
     public void doDone(RunData data, TemplateContext context)
         throws Exception
     {
-        boolean infoSuccess = doSaveinfo(data, context);
-        boolean groupSuccess = true;
-        if (infoSuccess)
+        boolean success = doSaveinfo(data, context) &&
+                              doSavegroups(data, context) &&
+                                  doSaveuserattributes(data, context);
+        if (success)
         {
-            groupSuccess = doSavegroups(data, context);
-            doSaveuserattributes(data, context);
-            if (groupSuccess)
-            {
-                doCancel(data, context);
-            }
+            doCancel(data, context);
+        }
+        //Reset confirm message in case some of the changes got saved
+        else
+        {
+            getScarabRequestTool(context).setConfirmMessage(null);
         }
     }
+
     /**
      * Overridden method to check for system defined issue types
      * and prevent New attributes from being added to them.

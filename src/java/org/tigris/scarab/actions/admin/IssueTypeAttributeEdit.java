@@ -70,7 +70,7 @@ import org.tigris.scarab.services.cache.ScarabCache;
 
 /**
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
- * @version $Id: IssueTypeAttributeEdit.java,v 1.12 2003/07/26 18:26:57 jmcnally Exp $
+ * @version $Id: IssueTypeAttributeEdit.java,v 1.13 2003/08/22 18:20:51 venkatesh Exp $
  */
 public class IssueTypeAttributeEdit extends RequireLoginFirstAction
 {
@@ -82,6 +82,7 @@ public class IssueTypeAttributeEdit extends RequireLoginFirstAction
     {
         IntakeTool intake = getIntakeTool(context);
         ScarabRequestTool scarabR = getScarabRequestTool(context);
+        ScarabLocalizationTool l10n = getLocalizationTool(context);
         Attribute attribute = scarabR.getAttribute();
         IssueType issueType =  scarabR.getIssueType();
         if (issueType.isSystemDefined())
@@ -93,20 +94,29 @@ public class IssueTypeAttributeEdit extends RequireLoginFirstAction
         if (intake.isAllValid())
         {
             List rios = issueType.getRIssueTypeOptions(attribute, false);
+            // Check for duplicate sequence numbers
+            if (areThereDupeSequences(rios, intake,
+                    "RIssueTypeOption","Order", 0))
+            {
+                scarabR.setAlertMessage(l10n.format("DuplicateSequenceNumbersFound",
+                         l10n.get("AttributeOptions").toLowerCase()));
+                return;
+            }
+
             if (rios != null)
             {
                 for (int i=rios.size()-1; i>=0; i--) 
                 {
                     RIssueTypeOption rio = (RIssueTypeOption)rios.get(i);
-                    Group rioGroup = intake.get("RIssueTypeOption", 
+                    Group rioGroup = intake.get("RIssueTypeOption",
                                      rio.getQueryKey(), false);
                     rioGroup.setProperties(rio);
                     rio.save();
                     ScarabCache.clear();
-                    scarabR.setConfirmMessage(getLocalizationTool(context).get(DEFAULT_MSG));
+                    scarabR.setConfirmMessage(l10n.get(DEFAULT_MSG));
                 }
             }
-        } 
+        }
     }
 
     /**
@@ -217,6 +227,19 @@ public class IssueTypeAttributeEdit extends RequireLoginFirstAction
             return;
         }
         super.doGotoothertemplate(data,context);
+    }
+
+    /**
+     * Manages clicking of the Done button
+     */
+    public void doDone( RunData data, TemplateContext context )
+        throws Exception
+    {
+        doSave(data, context);
+        if (getScarabRequestTool(context).getAlertMessage() == null)
+        {
+            doCancel( data, context);
+        }
     }
 
 }

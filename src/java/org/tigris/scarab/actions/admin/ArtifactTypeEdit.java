@@ -2,7 +2,7 @@ package org.tigris.scarab.actions.admin;
 
 /* ================================================================
  * Copyright (c) 2000-2002 CollabNet.  All rights reserved.
- * 
+ *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are
  * met:
@@ -56,6 +56,7 @@ import org.apache.torque.om.NumberKey;
 import org.apache.turbine.tool.IntakeTool;
 import org.apache.fulcrum.intake.model.Group;
 import org.apache.fulcrum.intake.model.Field;
+import org.apache.fulcrum.intake.Retrievable;
 
 // Scarab Stuff
 import org.tigris.scarab.actions.base.RequireLoginFirstAction;
@@ -77,7 +78,7 @@ import org.tigris.scarab.services.cache.ScarabCache;
  * action methods on RModuleAttribute table
  *      
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
- * @version $Id: ArtifactTypeEdit.java,v 1.54 2003/07/26 18:26:57 jmcnally Exp $
+ * @version $Id: ArtifactTypeEdit.java,v 1.55 2003/08/22 18:20:51 venkatesh Exp $
  */
 public class ArtifactTypeEdit extends RequireLoginFirstAction
 {
@@ -148,7 +149,7 @@ public class ArtifactTypeEdit extends RequireLoginFirstAction
             {
                 rmitGroup.setProperties(rmit);
                 rmit.save();
-                scarabR.setConfirmMessage(l10n.get(DEFAULT_MSG));  
+                scarabR.setConfirmMessage(l10n.get(DEFAULT_MSG));
             }
         }
         else
@@ -180,7 +181,7 @@ public class ArtifactTypeEdit extends RequireLoginFirstAction
         if (issueType.getLocked())
         {
             scarabR.setAlertMessage(l10n.get("LockedIssueType"));
-            success = false;
+            return false;
         }
 
         Module module = scarabR.getCurrentModule();
@@ -193,10 +194,6 @@ public class ArtifactTypeEdit extends RequireLoginFirstAction
         }
         List attGroups = module.getAttributeGroups(issueType, false);
 
-        boolean isValid = true;
-        boolean areThereDupes = false;
-        Field order1 = null;
-        Field order2 = null;
         int dupeOrder = 2;
         boolean areThereDedupeAttrs = false;
 
@@ -206,105 +203,74 @@ public class ArtifactTypeEdit extends RequireLoginFirstAction
         {
             dupeOrder = data.getParameters().getInt("dupe_order");
 
-            // Check for duplicate sequence numbers
-            for (int i=0; i<attGroups.size(); i++) 
-            {
-                AttributeGroup ag1 = (AttributeGroup)attGroups.get(i);
-                Group agGroup1 = intake.get("AttributeGroup", 
-                                 ag1.getQueryKey(), false);
-                order1 = agGroup1.get("Order");
-                if (order1.toString().equals(Integer.toString(dupeOrder)))
-                {
-                    areThereDupes = true;
-                    break;
-                }
-
-                for (int j=i-1; j>=0; j--) 
-                {
-                    AttributeGroup ag2 = (AttributeGroup)attGroups.get(j);
-                    Group agGroup2 = intake.get("AttributeGroup", 
-                                 ag2.getQueryKey(), false);
-                    order2 = agGroup2.get("Order");
-
-                    if (order1.toString().equals(order2.toString()))
-                    {
-                        areThereDupes = true;
-                        break;
-                    }
-                }
-            }
-            if (areThereDupes)
-            {
-               msg = "DuplicateSequenceNumbersForAttributeGroups";
-               isValid = false;
-            }
-  
             // Check that duplicate check is not at the beginning.
             if (dupeOrder == 1)
             {
-                msg = "CannotPositionDuplicateCheckFirst";
-                isValid = false;
+                scarabR.setAlertMessage(l10n.get("CannotPositionDuplicateCheckFirst"));;
+                return false;
+            }
+            // Check for duplicate sequence numbers
+            if (areThereDupeSequences(attGroups, intake, "AttributeGroup",
+                   "Order", dupeOrder))
+            {
+               scarabR.setAlertMessage(l10n.format("DuplicateSequenceNumbersFound",
+                   l10n.get("AttributeGroups").toLowerCase()));
+               return false;
             }
         }
-        if (isValid) 
+
+        // Set properties for attribute groups
+        for (int i=attGroups.size()-1; i>=0; i--)
         {
-            // Set properties for attribute groups
-            for (int i=attGroups.size()-1; i>=0; i--) 
-            {
-                AttributeGroup attGroup = (AttributeGroup)attGroups.get(i);
-                Group agGroup = intake.get("AttributeGroup", 
+            AttributeGroup attGroup = (AttributeGroup)attGroups.get(i);
+            Group agGroup = intake.get("AttributeGroup",
                                  attGroup.getQueryKey(), false);
-                agGroup.setProperties(attGroup);
+            agGroup.setProperties(attGroup);
 
-                // If an attribute group falls before the dedupe screen,
-                // Mark it as a dedupe group
-                if (attGroup.getOrder() < dupeOrder)
-                {
-                     areThereDedupeAttrs = true;
-                     attGroup.setDedupe(true);
-                     List dedupeGroups = module.
-                         getDedupeGroupsWithAttributes(issueType);
-                     if (!dedupeGroups.contains(attGroup))
-                     {
-                         dedupeGroups.add(attGroup);
-                     }
-                }
-                else
-                {
-                    attGroup.setDedupe(false);
-                }
-                attGroup.save();
-            }
-
-            // Set dedupe property for module-issueType
-            if (!areThereDedupeAttrs
-                || module.getAttributeGroups(issueType).size() < 2)
+            // If an attribute group falls before the dedupe screen,
+            // Mark it as a dedupe group
+            if (attGroup.getOrder() < dupeOrder)
             {
-                rmit.setDedupe(false);
+                areThereDedupeAttrs = true;
+                attGroup.setDedupe(true);
+                List dedupeGroups = module.
+                         getDedupeGroupsWithAttributes(issueType);
+                if (!dedupeGroups.contains(attGroup))
+                {
+                    dedupeGroups.add(attGroup);
+                }
             }
             else
             {
-                Group rmitGroup = intake.get("RModuleIssueType", 
-                                        rmit.getQueryKey(), false);
-                Field dedupe = rmitGroup.get("Dedupe");
-                dedupe.setProperty(rmit);
+                attGroup.setDedupe(false);
             }
-            rmit.save();
-            ScarabCache.clear();
-            scarabR.setConfirmMessage(l10n.get(DEFAULT_MSG));  
+            attGroup.save();
+        }
+
+            // Set dedupe property for module-issueType
+        if (!areThereDedupeAttrs
+                || module.getAttributeGroups(issueType).size() < 2)
+        {
+            rmit.setDedupe(false);
         }
         else
         {
-            scarabR.setAlertMessage(l10n.get(msg));
-            success = false;
+            Group rmitGroup = intake.get("RModuleIssueType",
+                                        rmit.getQueryKey(), false);
+            Field dedupe = rmitGroup.get("Dedupe");
+            dedupe.setProperty(rmit);
         }
-        return success;
+        rmit.save();
+        ScarabCache.clear();
+        scarabR.setConfirmMessage(l10n.get(DEFAULT_MSG));
+
+        return true;
     }
 
     /**
      * Adds or modifies user attributes' properties
      */
-    public void doSaveuserattributes (RunData data, TemplateContext context)
+    public boolean doSaveuserattributes (RunData data, TemplateContext context)
         throws Exception
     {
         IntakeTool intake = getIntakeTool(context);
@@ -314,23 +280,27 @@ public class ArtifactTypeEdit extends RequireLoginFirstAction
         if (issueType.isSystemDefined())
         {
             scarabR.setAlertMessage(l10n.get("SystemSpecifiedIssueType"));
-            return;
+            return false;
         }
         if (issueType.getLocked())
         {
             scarabR.setAlertMessage(l10n.get("LockedIssueType"));
-            return;
+            return false;
         }
 
         Module module = scarabR.getCurrentModule();
-        List userAttributes = module.getUserAttributes(issueType, false);
-        for (int i=0; i < userAttributes.size(); i++)
+        List rmas = module.getRModuleAttributes(issueType, false,"user");
+        if (areThereDupeSequences(rmas, intake, "RModuleAttribute", "Order", 0))
+        {
+            scarabR.setAlertMessage(l10n.format("DuplicateSequenceNumbersFound",
+                l10n.get("UserAttributes").toLowerCase()));
+            return false;
+        }
+        for (int i=0; i < rmas.size(); i++)
         {
             // Set properties for module-attribute mapping
-            Attribute attribute = (Attribute)userAttributes.get(i);
-            RModuleAttribute rma = module
-                    .getRModuleAttribute(attribute, issueType);
-            Group rmaGroup = intake.get("RModuleAttribute", 
+            RModuleAttribute rma = (RModuleAttribute)rmas.get(i);
+            Group rmaGroup = intake.get("RModuleAttribute",
                              rma.getQueryKey(), false);
             // if attribute gets set to inactive, delete dependencies
             String newActive = rmaGroup.get("Active").toString();
@@ -338,12 +308,13 @@ public class ArtifactTypeEdit extends RequireLoginFirstAction
             if (newActive.equals("false") && oldActive.equals("true"))
             {
                 WorkflowFactory.getInstance().deleteWorkflowsForAttribute(
-                                              attribute, module, issueType);
+                                              rma.getAttribute(), module, issueType);
             }
             rmaGroup.setProperties(rma);
             rma.save();
         }
-        scarabR.setConfirmMessage(l10n.get(DEFAULT_MSG));  
+        scarabR.setConfirmMessage(l10n.get(DEFAULT_MSG));
+        return true;
     }
 
     /**
@@ -554,25 +525,24 @@ public class ArtifactTypeEdit extends RequireLoginFirstAction
         }
     }
 
-    /*
+    /**
      * Manages clicking of the AllDone button
      */
     public void doDone(RunData data, TemplateContext context)
         throws Exception
     {
-        boolean groupSuccess = false;
-        boolean infoSuccess = doSaveinfo(data, context);
-        if (infoSuccess)
-        {
-            groupSuccess = doSavegroups(data, context);
-            if (groupSuccess)
-            {
-                doSaveuserattributes(data, context);
-            }
-        }
-        if (infoSuccess && groupSuccess)
+        boolean success = doSaveinfo(data, context) &&
+                              doSavegroups(data, context) &&
+                                  doSaveuserattributes(data, context);
+        if (success)
         {
             doCancel(data, context);
         }
+        //Reset confirm message in case some of the changes got saved
+        else
+        {
+            getScarabRequestTool(context).setConfirmMessage(null);
+        }
     }
+
 }

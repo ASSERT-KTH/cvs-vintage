@@ -72,7 +72,7 @@ import org.tigris.scarab.services.cache.ScarabCache;
 
 /**
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
- * @version $Id: ModuleAttributeEdit.java,v 1.29 2003/06/06 00:33:02 jmcnally Exp $
+ * @version $Id: ModuleAttributeEdit.java,v 1.30 2003/08/22 18:20:51 venkatesh Exp $
  */
 public class ModuleAttributeEdit extends RequireLoginFirstAction
 {
@@ -104,12 +104,20 @@ public class ModuleAttributeEdit extends RequireLoginFirstAction
         {
             Module me = scarabR.getCurrentModule();
             List rmos = me.getRModuleOptions(attribute, issueType, false);
+            // Check for duplicate sequence numbers
+            if (areThereDupeSequences(rmos, intake, "RModuleOption", "Order", 0))
+
+            {
+                scarabR.setAlertMessage(l10n.format("DuplicateSequenceNumbersFound",
+                         l10n.get("AttributeOptions").toLowerCase()));
+                return;
+            }
             if (rmos != null)
             {
                 for (int i=rmos.size()-1; i>=0; i--) 
                 {
                     RModuleOption rmo = (RModuleOption)rmos.get(i);
-                    Group rmoGroup = intake.get("RModuleOption", 
+                    Group rmoGroup = intake.get("RModuleOption",
                                      rmo.getQueryKey(), false);
                     // if option gets set to inactive, delete dependencies
                     if (rmoGroup != null)
@@ -129,7 +137,8 @@ public class ModuleAttributeEdit extends RequireLoginFirstAction
                     scarabR.setConfirmMessage(l10n.get(DEFAULT_MSG));  
                 }
             }
-        } 
+        }
+
     }
 
     /**
@@ -234,6 +243,18 @@ public class ModuleAttributeEdit extends RequireLoginFirstAction
             ScarabCache.clear();
             scarabR.setConfirmMessage(l10n.get(DEFAULT_MSG));  
             doCancel(data, context);
+        }
+    }
+    /**
+     * Manages clicking of the Done button
+     */
+    public void doDone( RunData data, TemplateContext context )
+        throws Exception
+    {
+        doSave(data, context);
+        if (getScarabRequestTool(context).getAlertMessage() == null)
+        {
+            doCancel( data, context);
         }
     }
 }

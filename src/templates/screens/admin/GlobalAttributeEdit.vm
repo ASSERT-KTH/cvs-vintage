@@ -196,6 +196,7 @@
      <td>
      #if($immutableOption)
         $pcaoGroup.PreferredOrder.Value
+        <input type="hidden" size="25" name="$pcaoGroup.PreferredOrder.Key" value="$pcaoGroup.PreferredOrder.Value" />
      #else
         #numericSelect($pcaoGroup.PreferredOrder.Key 1 $maxNum $pcaoGroup.PreferredOrder.Value 1)
      #end

@@ -47,15 +47,17 @@ package org.tigris.scarab.actions.base;
  */ 
 
 // Java Stuff
-
+import java.util.List;
 // Turbine Stuff
 import org.apache.log4j.Logger;
 import org.apache.turbine.RunData;
 import org.apache.turbine.TemplateContext;
 import org.apache.turbine.TemplateSecureAction;
 import org.apache.turbine.tool.IntakeTool;
+import org.apache.fulcrum.intake.model.Group;
+import org.apache.fulcrum.intake.model.Field;
+import org.apache.fulcrum.intake.Retrievable;
 import org.apache.fulcrum.util.parser.ValueParser;
-
 // Scarab Stuff
 import org.tigris.scarab.util.ScarabConstants;
 import org.tigris.scarab.tools.ScarabRequestTool;
@@ -70,7 +72,7 @@ import org.tigris.scarab.om.Module;
  * Default.java Screen except that it has a few helper methods.
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: RequireLoginFirstAction.java,v 1.50 2003/08/07 00:55:34 elicia Exp $    
+ * @version $Id: RequireLoginFirstAction.java,v 1.51 2003/08/22 18:20:51 venkatesh Exp $    
  */
 public abstract class RequireLoginFirstAction extends TemplateSecureAction
 {
@@ -344,5 +346,51 @@ public abstract class RequireLoginFirstAction extends TemplateSecureAction
     protected String getRequiredPermission(RunData data)
     {
         return ScarabSecurity.getActionPermission(data.getAction());
+    }
+
+    /**
+     * Check if the objects have duplicate sequence numbers set
+     * @param list List of 'om' objects that need to be checked for duplicate
+     *                                                          sequence.
+     * @param intake IntakeTool
+     * @param groupName Intake group name
+     * @param fieldName Intake field name
+     * @param dedupeSeq sequence number set for Duplicate Check element in the
+     *                   case of attribute groups
+     * @return boolean TRUE if there are duplicate sequence numbers.
+     */
+    public boolean areThereDupeSequences(List list, IntakeTool intake,
+               String groupName, String fieldName, int dedupeSeq)
+        throws Exception
+    {
+        boolean dupeSequenceFound = false;
+        int listSize = list.size();
+        Field order1 = null;
+        Field order2 = null;
+        for (int i = 0; i < listSize && !dupeSequenceFound; i++)
+        {
+            Retrievable obj1 = (Retrievable)list.get(i);
+            Group group1 = intake.get(groupName,obj1.getQueryKey(),false);
+            order1 = group1.get(fieldName);
+
+            if (dedupeSeq > 0 && order1.toString().equals(
+                                          Integer.toString(dedupeSeq)))
+            {
+                dupeSequenceFound = true;
+            }
+
+            for (int j = i - 1; j >= 0 && !dupeSequenceFound; j--)
+            {
+                Retrievable obj2 = (Retrievable)list.get(j);
+                Group group2 = intake.get(groupName,obj2.getQueryKey(),
+                                             false);
+                order2 = group2.get(fieldName);
+                if (order1.toString().equals(order2.toString()))
+                {
+                    dupeSequenceFound = true;
+                }
+            }
+        }
+        return dupeSequenceFound;
     }
 }
