@@ -1,4 +1,4 @@
-$Id: README.txt,v 1.24 2002/01/17 02:49:11 dlr Exp $
+$Id: README.txt,v 1.25 2002/01/18 16:50:32 dlr Exp $
 
 Welcome to Scarab!
 
@@ -149,7 +149,7 @@ mysql binaries into your PATH environment variable. Once you have done
 that and you have MySQL up and running with no username/password for
 localhost access, you can simply execute the following:
 
-cd target/webapps/scarab/WEB-INF/sql
+cd src/sql
 ./create-mysql-database.sh   <-- Unix
 create-mysql-database.bat    <-- Win32
 
