@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/core/Attic/BufferedServletOutputStream.java,v 1.3 1999/10/31 19:27:56 costin Exp $
- * $Revision: 1.3 $
- * $Date: 1999/10/31 19:27:56 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/core/Attic/BufferedServletOutputStream.java,v 1.4 1999/11/01 20:09:19 costin Exp $
+ * $Revision: 1.4 $
+ * $Date: 1999/11/01 20:09:19 $
  *
  * ====================================================================
  * 
@@ -106,6 +106,11 @@ public class BufferedServletOutputStream extends ServletOutputStream {
     
     protected BufferedServletOutputStream() {
 	//	System.out.println("new BOS " + closed);
+    }
+
+    protected BufferedServletOutputStream(ResponseAdapter resA) {
+	//	System.out.println("new BOS " + closed);
+	this.resA=resA;
     }
 
     public void setResponseAdapter( ResponseAdapter resA ) {
