@@ -34,7 +34,7 @@ import java.util.Map;
  * basis. The read ahead data for each entity is stored with a soft reference.
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
- * @version $Revision: 1.21 $
+ * @version $Revision: 1.22 $
  */
 public final class ReadAheadCache
 {
@@ -52,19 +52,6 @@ public final class ReadAheadCache
       protected Object initialValue()
       {
          return new HashMap();
-      }
-
-      protected Transaction getTransaction()
-      {
-         try
-         {
-            return transactionManager.getTransaction();
-         }
-         catch(SystemException e)
-         {
-            throw new IllegalStateException("An error occured while getting the " +
-               "transaction associated with the current thread: " + e);
-         }
       }
    };
 
@@ -608,19 +595,6 @@ public final class ReadAheadCache
          protected Object initialValue()
          {
             return new LinkedList();
-         }
-
-         protected Transaction getTransaction()
-         {
-            try
-            {
-               return transactionManager.getTransaction();
-            }
-            catch(SystemException e)
-            {
-               throw new IllegalStateException("An error occured while getting the " +
-                  "transaction associated with the current thread: " + e);
-            }
          }
       };
 
