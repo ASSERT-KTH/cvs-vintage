@@ -11,7 +11,9 @@ import java.util.HashMap;
 
 import org.jboss.ejb.Container;
 import org.w3c.dom.Element;
-
+import org.jboss.monitor.LockMonitor;
+import org.jboss.monitor.EntityLockMonitor;
+import javax.naming.InitialContext;
 /**
  * Manages BeanLocks.  All BeanLocks have a reference count.
  * When the reference count goes to 0, the lock is released from the
@@ -20,7 +22,7 @@ import org.w3c.dom.Element;
  * @author <a href="bill@burkecentral.com">Bill Burke</a>
  * @author <a href="marc.fleury@jboss.org">Marc Fleury</a>
  *
- * @version $Revision: 1.8 $
+ * @version $Revision: 1.9 $
  * <p><b>Revisions:</b><br>
  * <p><b>20010802: marcf</b>
  * <ol>
@@ -41,6 +43,29 @@ public class BeanLockManager
 	
    public Class lockClass;
    public Element config;
+   protected LockMonitor monitor = null;
+
+   public BeanLockManager(Container container)
+   {
+      this.container = container;
+      try
+      {
+         InitialContext ctx = new InitialContext();
+         EntityLockMonitor elm = (EntityLockMonitor)ctx.lookup(EntityLockMonitor.JNDI_NAME);
+         String ejbName = container.getBeanMetaData().getEjbName();
+         monitor = elm.getEntityLockMonitor(ejbName);
+         //         if (monitor == null) System.out.println("----- monitor is null ------");
+      }
+      catch (Exception ignored)
+      {
+         //         ignored.printStackTrace();
+      }
+   }
+
+   public LockMonitor getLockMonitor()
+   {
+      return monitor;
+   }
 
    /**
     * returns the lock associated with the key passed.  If there is

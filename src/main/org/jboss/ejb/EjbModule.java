@@ -95,7 +95,7 @@ import org.w3c.dom.Element;
  * @author <a href="mailto:reverbel@ime.usp.br">Francisco Reverbel</a>
  * @author <a href="mailto:Adrian.Brock@HappeningTimes.com">Adrian.Brock</a>
  * @author <a href="mailto:Scott.Stark@jboss.org">Scott Stark</a>
- * @version $Revision: 1.37 $
+ * @version $Revision: 1.38 $
  *
  * @jmx:mbean extends="org.jboss.system.ServiceMBean"
  */
@@ -629,7 +629,7 @@ public class EjbModule
       // Set persistence manager
       container.setPersistenceManager( (StatefulSessionPersistenceManager) cl.loadClass( conf.getPersistenceManager() ).newInstance() );
       //Set the bean Lock Manager
-      container.setLockManager(createBeanLockManager(false,conf.getLockConfig(), cl));
+      container.setLockManager(createBeanLockManager(container, false,conf.getLockConfig(), cl));
       
       return container;
    }
@@ -653,7 +653,7 @@ public class EjbModule
       container.setInstanceCache( createInstanceCache( conf, false, cl ) );
       container.setInstancePool( createInstancePool( conf, cl ) );
       //Set the bean Lock Manager
-      container.setLockManager(createBeanLockManager(((EntityMetaData) bean).isReentrant(),conf.getLockConfig(), cl));
+      container.setLockManager(createBeanLockManager(container, ((EntityMetaData) bean).isReentrant(),conf.getLockConfig(), cl));
       
       // Set persistence manager
       if( ( (EntityMetaData) bean ).isBMP() )
@@ -979,12 +979,12 @@ public class EjbModule
    }
    
    
-   private static BeanLockManager createBeanLockManager( boolean reentrant, Element config,
+   private static BeanLockManager createBeanLockManager( Container container, boolean reentrant, Element config,
                                                          ClassLoader cl )
       throws Exception
    {
       // The bean lock manager
-      BeanLockManager lockManager = new BeanLockManager();
+      BeanLockManager lockManager = new BeanLockManager(container);
       String beanLock = MetaData.getElementContent(config, "org.jboss.ejb.plugins.lock.QueuedPessimisticEJBLock");
       Class lockClass = null;
       try

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE server>
-<!-- $Id: jboss-service.xml,v 1.62 2002/08/13 09:10:31 lqd Exp $ -->
+<!-- $Id: jboss-service.xml,v 1.63 2002/09/11 23:22:51 patriot1burke Exp $ -->
 
 <!-- ===================================================================== -->
 <!--                                                                       -->
@@ -146,9 +146,13 @@
 
   <!-- Uncomment to enable JMX monitoring of the bean cache
   <mbean code="org.jboss.monitor.BeanCacheMonitor" 
-         name="jboss.jmx:name=BeanCacheMonitor"/>
+         name="jboss.monitor:name=BeanCacheMonitor"/>
   -->
 
+  <!-- Uncomment to enable JMX monitoring of the entity bean locking
+  <mbean code="org.jboss.monitor.EntityLockMonitor" 
+         name="jboss.monitor:name=EntityLockMonitor"/>
+  -->
 
   <!-- ==================================================================== -->
   <!-- Invokers to the JMX node                                             -->

@@ -17,6 +17,7 @@ import javax.transaction.Status;
 import org.jboss.invocation.Invocation;
 import org.jboss.ejb.Container;
 import org.jboss.ejb.EntityContainer;
+import org.jboss.monitor.LockMonitor;
 
 /**
  * This class is holds threads awaiting the transactional lock to be free
@@ -44,7 +45,7 @@ import org.jboss.ejb.EntityContainer;
  * @author <a href="bill@burkecentral.com">Bill Burke</a>
  * @author <a href="pete@subx.com">Peter Murray</a>
  *
- * @version $Revision: 1.12 $
+ * @version $Revision: 1.13 $
  */
 public class QueuedPessimisticEJBLock extends BeanLockSupport
 {
@@ -186,7 +187,32 @@ public class QueuedPessimisticEJBLock extends BeanLockSupport
 
          //Next test is independent of whether the context is locked or not, it is purely transactional
          // Is the instance involved with another transaction? if so we implement pessimistic locking
-         wasThreadScheduled = waitForTx(miTx, trace);
+         LockMonitor lockMonitor = container.getLockManager().getLockMonitor();
+         try
+         {
+            long startWait = System.currentTimeMillis();
+            wasThreadScheduled = waitForTx(miTx, trace);
+            if (wasThreadScheduled && lockMonitor != null)
+            {
+               long endWait = System.currentTimeMillis() - startWait;
+               synchronized (lockMonitor)
+               {
+                  lockMonitor.total_time += endWait;
+                  lockMonitor.num_contentions++;
+               }
+            }
+         }
+         catch (Exception throwable)
+         {
+            if (lockMonitor != null && isTxExpired(miTx))
+            {
+               synchronized(lockMonitor)
+               {
+                  lockMonitor.timeouts++;
+               }
+            }
+            throw throwable;
+         }
 
          // Here, we are trying to get the methodLock on the bean
          try
