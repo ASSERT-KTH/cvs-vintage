@@ -27,17 +27,6 @@ $page.setTitle("Enter issue")
 <form method="post" action="$link.setPage("entry,Wizard1.vm").setAction("ReportIssue")">
 <input type="hidden" name="$scarabG.Constant.NEXT_TEMPLATE" value="entry,Wizard3.vm" />
 
-<div class="functnbar">
-<table cellpadding="4" cellspacing="0" border="1">
- <tr>
-  <td class="firstchild">
-  <input type="submit" name="eventSubmit_doCheckforduplicates" value="Check for duplicates" />&#160;
-  <input type="reset" value="Reset" />
-  </td>
- </tr>
-</table>
-</div>
-
 #set ($privateTemplateList = $module.getPrivateTemplates($user,$issueType))
 #set ($globalTemplateList = $module.getGlobalTemplates($issueType))
 #if ($privateTemplateList.size() > 0 || $globalTemplateList.size() > 0)
@@ -62,8 +51,10 @@ $page.setTitle("Enter issue")
  </table>
  </div>
 #end
+</form>
 
-
+<form method="post" action="$link.setPage("entry,Wizard1.vm").setAction("ReportIssue")">
+<input type="hidden" name="$scarabG.Constant.NEXT_TEMPLATE" value="entry,Wizard3.vm" />
 <h3>Input your issue</h3>
 
 <div class="axial">
