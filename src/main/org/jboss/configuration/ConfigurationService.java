@@ -29,7 +29,7 @@ import org.jboss.util.ServiceMBeanSupport;
  *
  *   @see <related>
  *   @author Rickard Öberg (rickard.oberg@telkel.com)
- *   @version $Revision: 1.16 $
+ *   @version $Revision: 1.17 $
  */
 public class ConfigurationService
    extends ServiceMBeanSupport
@@ -231,20 +231,6 @@ public class ConfigurationService
     public void loadConfiguration()
        throws Exception
     {
-java.net.URLClassLoader loader = (java.net.URLClassLoader) Thread.currentThread().getContextClassLoader();
-System.out.println("loadConfiguration, java.class.path="+System.getProperty("java.class.path"));
-while( loader != null )
-{
-System.out.println("loader:"+loader+", classpath:");
-java.net.URL[] urls = loader.getURLs();
-for(int u = 0; u < urls.length; u ++)
-    System.out.println("\t"+urls[u]);
-ClassLoader parent = loader.getParent();
-loader = null;
-if( parent instanceof java.net.URLClassLoader )
-    loader = (java.net.URLClassLoader) parent;
-}
-
       // This is a 3-step process
       // 1) Load user conf. and create MBeans from that
       // 2) Load auto-saved conf and apply to created MBeans
