@@ -41,7 +41,7 @@ import org.gjt.sp.jedit.syntax.*;
  * </ul>
  *
  * @author Slava Pestov
- * @version $Id: TextUtilities.java,v 1.25 2002/03/24 06:11:16 spestov Exp $
+ * @version $Id: TextUtilities.java,v 1.26 2002/04/01 04:56:37 spestov Exp $
  */
 public class TextUtilities
 {
@@ -113,6 +113,9 @@ public class TextUtilities
 
 		Segment lineText = new Segment();
 		buffer.getLineText(line,lineText);
+
+		if(lineText.count == 0)
+			return -1;
 
 		if(offset < 0 || offset >= lineText.count)
 		{
