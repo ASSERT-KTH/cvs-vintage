@@ -63,7 +63,7 @@ import org.jboss.security.SecurityAssociation;
  *      One for each role that entity has.
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
- * @version $Revision: 1.58 $
+ * @version $Revision: 1.59 $
  */
 public class JDBCCMRFieldBridge implements JDBCFieldBridge, CMRFieldBridge {
    /**
@@ -779,7 +779,7 @@ public class JDBCCMRFieldBridge implements JDBCFieldBridge, CMRFieldBridge {
          invocation.setPrincipal(SecurityAssociation.getPrincipal());
          invocation.setCredential(SecurityAssociation.getCredential());
          invocation.setType(InvocationType.LOCAL);
-         return manager.getContainer().invoke(invocation);
+         return manager.getContainer().invoke(invocation).getResponse();
       } catch(EJBException e) {
          throw e;
       } catch(Exception e) {
