@@ -43,6 +43,7 @@ TURBINE="../../jakarta-turbine-3"
 TORQUE="../../jakarta-turbine-torque"
 SCARAB=".."
 
+CHECKSTYLE=1
 CVSUPDATE=1
 DEPBUILD=0
 
@@ -199,6 +200,14 @@ echo "Running the test suite..."
 cd ${DIR}; cd ${SCARAB}/build
 ant -f run-tests.xml
 Bar
+
+if [ ${CHECKSTYLE} -gt 0 ] ; then
+Bar
+  echo "Running checkstyle-mail..."
+  cd ${DIR}; cd ${SCARAB}/build
+  ant checkstyle-mail
+Bar
+fi
 
 echo "Recreating the database (to clear out the test data)..."
 cd ${DIR}; cd ${SCARAB}/src/sql

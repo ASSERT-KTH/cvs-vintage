@@ -1609,6 +1609,49 @@ diff -u -r1.5 project.xml
         <chmod dir="${final.dir}" perm="ug+rx" includes="**/*.sh" />
     </target>
 
+    <target name="checkstyle" depends="compile">
+        <echo>
+  Using: ${checkstyle.all.jar}
+        </echo>
+        <taskdef name="checkstyle"
+            classname="com.puppycrawl.tools.checkstyle.CheckStyleTask">
+            <classpath refid="classpath"/>
+            <classpath>
+                <pathelement location="${checkstyle.all.jar}"/>
+                <fileset dir="${build.project.webinf.lib}">
+                    <include name="**/torque*.jar"/>
+                </fileset>
+            </classpath>
+        </taskdef>
+        <checkstyle properties="${basedir}/checkstyle.properties"
+                    failOnViolation="false">
+            <classpath refid="classpath"/>
+            <classpath>
+                <fileset dir="${build.project.webinf.lib}">
+                    <include name="**/torque*.jar"/>
+                </fileset>
+            </classpath>
+            <property key="checkstyle.cache.file" file="${build.dir}/checkstyle.cache"/>
+            <fileset dir="${build.src.scarab}/org">
+                 <include name="**/*.java"/>
+                 <exclude name="**/Base*.java"/>
+                 <exclude name="**/*MapBuilder.java"/>
+            </fileset>
+            <formatter type="xml" toFile="${build.dir}/checkstyle.xml"/>
+        </checkstyle>
+        <style in="${build.dir}/checkstyle.xml" 
+              out="${build.dir}/checkstyle.txt"
+            style="${basedir}/checkstyle2txt.xsl"/>
+    </target>
+
+    <target name="checkstyle-mail" depends="checkstyle">
+        <mail from="jon@latchkey.com"
+              tolist="jon@latchkey.com"
+              mailhost="${scarab.system.mail.host}"
+              subject="Checkstyle violation(s) in project ${Name}"
+              messagefile="${build.dir}/checkstyle.txt"/>
+    </target>
+
 <!-- ============================================================= -->
 <!-- Targets beyond this point are currently considered broken or  -->
 <!-- experimental - User Beware!                                  -->
