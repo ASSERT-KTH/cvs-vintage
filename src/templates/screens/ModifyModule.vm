@@ -36,12 +36,12 @@ module you have <a href="$link.setPage("SelectModule.vm")">currently selected</a
 
 #else
 
-#ModifyModuleBar("")
-  
 <h3>Module Details</h3>
 <form action="$link.setPage("ModifyModule.vm")" method="post">
 <input type="hidden" name="action" value="ModifyModule" /> 
 <input type="hidden" name="$scarabG.Constant.CANCEL_TEMPLATE" value="SelectModule.vm" /> 
+
+#ModifyModuleBar("")
 
 #if ($createNew && $createNew.equals("true"))
 #set ($moduleGroup = $intake.Module.Default)
