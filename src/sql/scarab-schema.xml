@@ -2,7 +2,7 @@
 <!DOCTYPE database SYSTEM
           "http://jakarta.apache.org/turbine/dtd/database.dtd">
 
-<!-- $Id: scarab-schema.xml,v 1.114 2002/10/14 23:02:34 jmcnally Exp $ -->
+<!-- $Id: scarab-schema.xml,v 1.115 2002/10/18 15:54:39 thierrylach Exp $ -->
 
 <database name="@DATABASE_PROP_NAME@">
 <!--
@@ -1598,7 +1598,8 @@
     </foreign-key>
 </table>
 
-<table name="SCARAB_GLOBAL_PARAMETER" javaName="GlobalParameter">
+<table name="SCARAB_GLOBAL_PARAMETER" idMethod="idbroker" 
+       javaName="GlobalParameter">
     <column name="PARAMETER_ID" required="true" primaryKey="true" 
         type="INTEGER"/>
     <column name="NAME" required="true" type="VARCHAR" size="255"/>
