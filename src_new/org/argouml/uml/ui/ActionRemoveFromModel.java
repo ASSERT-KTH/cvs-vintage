@@ -1,4 +1,4 @@
-// $Id: ActionRemoveFromModel.java,v 1.40 2004/07/25 18:41:04 kataka Exp $
+// $Id: ActionRemoveFromModel.java,v 1.41 2004/07/26 22:41:43 mkl Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -102,6 +102,9 @@ public class ActionRemoveFromModel extends UMLChangeAction {
             && target.equals(ProjectManager.getManager().getCurrentProject()
 			     .getModel())) {
             return false;
+        }
+        if (ModelFacade.isAAssociationEnd(target)) {
+            return ModelFacade.getOtherAssociationEnds(target).size() > 1;
         }
         if (StateMachinesHelper.getHelper().isTopState(target))
             /* we can not delete a "top" state, 
