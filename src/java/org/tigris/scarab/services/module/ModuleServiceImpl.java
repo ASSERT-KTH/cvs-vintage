@@ -48,6 +48,13 @@ package org.tigris.scarab.services.module;
 
 import org.apache.turbine.services.InitializationException;
 import org.apache.turbine.services.TurbineBaseService;
+import org.apache.turbine.om.ObjectKey;
+import org.apache.turbine.services.cache.*;
+import org.apache.turbine.services.*;
+
+import org.tigris.scarab.om.Module;
+import org.tigris.scarab.om.ModulePeer;
+import org.tigris.scarab.util.ScarabException;
 
 /**
  * This is the implementation of a ModuleService. It knows how to
@@ -55,7 +62,7 @@ import org.apache.turbine.services.TurbineBaseService;
  * Scarab.properties file.
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: ModuleServiceImpl.java,v 1.2 2001/05/21 23:09:13 jon Exp $
+ * @version $Id: ModuleServiceImpl.java,v 1.3 2001/05/24 02:39:21 jmcnally Exp $
  */
 public class ModuleServiceImpl extends TurbineBaseService 
                             implements ModuleService
@@ -70,7 +77,7 @@ public class ModuleServiceImpl extends TurbineBaseService
     {
         String moduleEntityClassName = getProperties().getProperty(
             ModuleService.MODULE_SERVICE_CLASS_KEY,
-            ModuleService.SCARAB_MODULE_CLASS_DEFAULT);
+            ModuleService.DEFAULT_MODULE_CLASS);
         try
         {
             moduleEntityClass = Class.forName(moduleEntityClassName);
@@ -90,11 +97,50 @@ public class ModuleServiceImpl extends TurbineBaseService
     }
     
     /**
-     * Get a fresh instance of a ModuleEntity
+     * Get a fresh instance of a Module
      */
     public ModuleEntity getInstance()
         throws Exception
     {
         return (ModuleEntity) moduleEntityClass.newInstance();
     }
+
+    /**
+     * Return an instance of Module based on the passed in module id
+     */
+    public ModuleEntity getInstance(ObjectKey modId) 
+        throws Exception
+    {
+        TurbineGlobalCacheService tgcs = 
+            (TurbineGlobalCacheService)TurbineServices
+            .getInstance().getService(GlobalCacheService.SERVICE_NAME);
+
+        String key = getCacheKey(modId);
+        ModuleEntity module = null;
+        try
+        {
+            module = (ModuleEntity)tgcs.getObject(key).getContents();
+        }
+        catch (ObjectExpiredException oee)
+        {
+            module = ModulePeer.retrieveByPK(modId);
+            if ( module == null) // is this check needed?
+            {
+                throw new ScarabException("Module with ID " + modId + 
+                                          " can not be found");
+            }
+            tgcs.addObject(key, new CachedObject(module));
+        }
+        
+        return module;
+    }
+
+    private static final String className = "Module";
+    private String getCacheKey(ObjectKey key)
+    {
+         String keyString = key.getValue().toString();
+         return new StringBuffer(className.length() + keyString.length())
+             .append(className).append(keyString).toString();
+    }
+
 }

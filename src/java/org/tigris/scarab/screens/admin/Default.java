@@ -69,9 +69,9 @@ import org.tigris.scarab.tools.*;
     for the Issue Entry templates.
 
     @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
-    @version $Id: Default.java,v 1.1 2001/04/07 00:50:38 jon Exp $
+    @version $Id: Default.java,v 1.2 2001/05/24 02:39:21 jmcnally Exp $
 */
-public class Default extends VelocityScreen
+public class Default extends VelocitySecureScreen
 {
     /**
         builds up the context for display of variables on the page.
@@ -79,9 +79,23 @@ public class Default extends VelocityScreen
     public void doBuildTemplate( RunData data, Context context ) 
         throws Exception 
     {   
-        // make sure the user has a module
-        BaseScarabObject.tempWorkAround(data, context);
     }
+
+    /**
+     * sets the template to ScarabLogin.vm if the user hasn't logged in yet
+     */
+    protected boolean isAuthorized( RunData data ) throws Exception
+    {
+        if (!data.getUser().hasLoggedIn())
+        {
+            getContext(data).put( ScarabConstants.NEXT_TEMPLATE, 
+                                  data.getTemplateInfo().getScreenTemplate() );
+            doRedirect(data, "Login.vm");
+            return false;
+        }
+        return true;
+    }
+
 }
 
 

@@ -62,7 +62,7 @@ import org.tigris.scarab.om.BaseScarabObject;
     for the Default Screen.
 
     @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
-    @version $Id: Default.java,v 1.8 2001/05/14 21:43:55 jon Exp $
+    @version $Id: Default.java,v 1.9 2001/05/24 02:39:21 jmcnally Exp $
 */
 public class Default extends VelocityScreen
 {
@@ -71,5 +71,19 @@ public class Default extends VelocityScreen
     */
     public void doBuildTemplate( RunData data, Context context ) throws Exception 
     {
+        //context.put("startTime", new Long(System.currentTimeMillis()));
     }
+
+    /*
+    public void doPostBuildTemplate( RunData data )
+    {
+        Context context = TurbineVelocity.getContext(data);
+        long startTime = ((Long)context.get("startTime")).longValue();
+        Thread t = Thread.currentThread();
+        long now = System.currentTimeMillis();
+        System.out.println(t + "Default Screen time: " +
+                           (now-startTime) + " ms");
+    }
+    */
+    
 }

@@ -15,7 +15,7 @@ Welcome to Scarab, a Bug Tracking and Issue Reporting Tool
     #if ($data.Parameters.nextTemplate)
     <input type="hidden" name="nextTemplate" value="$data.Parameters.nextTemplate">
     #else
-    <input type="hidden" name="nextTemplate" value="Start.vm">    
+    <input type="hidden" name="nextTemplate" value="Links.vm">    
     #end
 
 <p>
@@ -37,7 +37,7 @@ Password:
         $login.Password.Message<br>
     #end
    <input name= "$login.Password.Key"
-        value="" size="25" type="password" onchange="document.login.submit();">
+        value="" size="25" type="password"> <!-- onchange="document.login.submit();"> -->
 </p>
 
 <input type="submit" name="eventSubmit_doLogin" value="Login">

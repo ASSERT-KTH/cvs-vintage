@@ -57,6 +57,7 @@ import org.apache.turbine.util.db.*;
 import org.apache.turbine.services.security.*;
 import org.apache.turbine.services.uniqueid.*;
 // Scarab
+import org.tigris.scarab.services.module.ModuleEntity;
 
 /**
     This class is an abstraction that is currently based around
@@ -65,7 +66,7 @@ import org.apache.turbine.services.uniqueid.*;
     implementation needs.
 
     @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
-    @version $Id: ScarabUser.java,v 1.15 2001/05/01 00:03:37 jmcnally Exp $
+    @version $Id: ScarabUser.java,v 1.16 2001/05/24 02:39:21 jmcnally Exp $
 */
 public class ScarabUser extends BaseScarabUser
 {    
@@ -294,7 +295,7 @@ public class ScarabUser extends BaseScarabUser
         return (Module) getTemp(CURRENT_MODULE);
     }
 
-    public void setCurrentModule(Module m)
+    public void setCurrentModule(ModuleEntity m)
     {
         setTemp(CURRENT_MODULE, m);
     }
@@ -310,5 +311,4 @@ public class ScarabUser extends BaseScarabUser
         
         return issue;
     }
-
 }    

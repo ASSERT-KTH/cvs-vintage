@@ -58,11 +58,13 @@ import org.apache.turbine.om.security.User;
 import org.apache.turbine.util.RunData;
 import org.apache.turbine.util.db.Criteria;
 
+import org.tigris.scarab.om.Module;
+
 /**
  * This class describes a Module
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: ModuleEntity.java,v 1.2 2001/05/21 23:09:13 jon Exp $
+ * @version $Id: ModuleEntity.java,v 1.3 2001/05/24 02:39:21 jmcnally Exp $
  */
 public interface ModuleEntity
 {
@@ -93,6 +95,10 @@ public interface ModuleEntity
     public void setOwnerId(NumberKey v ) throws Exception;
 
     public void save() throws Exception;
+
+    public void setModuleRelatedByParentId(Module module) throws Exception;
+
+    public String getQueryKey();
 
 /*    
     

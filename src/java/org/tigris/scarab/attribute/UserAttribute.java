@@ -57,52 +57,31 @@ import org.apache.turbine.util.db.Criteria;
 /**
  *
  * @author <a href="mailto:jmcnally@collab.net">John D. McNally</a>
- * @version $Revision: 1.2 $ $Date: 2001/05/01 02:09:02 $
+ * @version $Revision: 1.3 $ $Date: 2001/05/24 02:39:20 $
  */
 public class UserAttribute extends AttributeValue
 {
     //private Hashtable usersById;
     //private Vector users;
     //private ScarabUser user;
-    private Role[] validRoles;
-    private Role[] invalidRoles;
-
+    String[] permissions;
     
     /**
-     * Get the value of validRoles.
-     * @return value of validRoles.
+     * Get the value of permissions.
+     * @return value of permissions.
      */
-    public Role[] getValidRoles() 
+    public String[] getPermissions() 
     {
-        return validRoles;
+        return permissions;
     }
     
     /**
-     * Set the value of validRoles.
-     * @param v  Value to assign to validRoles.
+     * Set the value of permissions.
+     * @param v  Value to assign to permissions.
      */
-    public void setValidRoles(Role[]  v) 
+    public void setPermissions(String[]  v) 
     {
-        this.validRoles = v;
-    }
-    
-    
-    /**
-     * Get the value of invalidRoles.
-     * @return value of invalidRoles.
-     */
-    public Role[] getInvalidRoles() 
-    {
-        return invalidRoles;
-    }
-    
-    /**
-     * Set the value of invalidRoles.
-     * @param v  Value to assign to invalidRoles.
-     */
-    public void setInvalidRoles(Role[]  v) 
-    {
-        this.invalidRoles = v;
+        this.permissions = v;
     }
     
     /**
@@ -114,10 +93,10 @@ public class UserAttribute extends AttributeValue
     {
         // exclude users with Roles Guest or Observer 
         // !FIXME! these roles need to be defined
-        Role[] excludeRoles = null;
+        String[] permissions = null;
 
         List matches = 
-            module.getUsers(partialUserName, null, excludeRoles);
+            module.getUsers(partialUserName, (String)null);
         
         return matches;
     }
@@ -131,7 +110,7 @@ public class UserAttribute extends AttributeValue
         {
             // see if value contains a valid username
             List matches = getIssue().getModule()
-                .getUsers(getUserName(), getValidRoles(), getInvalidRoles());
+                .getUsers(getUserName(), getPermissions());
         }
         
         return isSet;   

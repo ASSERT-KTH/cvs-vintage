@@ -19,6 +19,7 @@ import org.apache.turbine.services.cache.*;
 import org.apache.turbine.services.*;
 
 import org.tigris.scarab.util.*;
+//import org.tigris.scarab.services.module.ModuleService;
 import org.tigris.scarab.services.module.ModuleEntity;
 
 /** 
@@ -35,9 +36,7 @@ public abstract class Module
     extends BaseModule
     implements Persistent, ModuleEntity
 {
-    private static final String className = "Module";
-
-    private static final NumberKey ROOT_ID = new NumberKey("0");
+    protected static final NumberKey ROOT_ID = new NumberKey("0");
 
     private Attribute[] activeAttributes;
     private Attribute[] dedupeAttributes;
@@ -45,12 +44,27 @@ public abstract class Module
     private List allRModuleAttributes;
     private List activeRModuleAttributes;
 
-    
-    static String getCacheKey(ObjectKey key)
+
+    /* *
+     * Get a fresh instance of a Module
+     * /
+    public static ModuleEntity getInstance()
+        throws Exception
     {
-         String keyString = key.getValue().toString();
-         return new StringBuffer(className.length() + keyString.length())
-             .append(className).append(keyString).toString();
+        return ((ModuleService)TurbineServices
+                .getInstance().getService(ModuleService.SERVICE_NAME))
+                .getInstance();
+    }
+
+    /* *
+     * Return an instance of Module based on the passed in module id
+     * /
+    public static ModuleEntity getInstance(ObjectKey modId) 
+        throws Exception
+    {
+        return ((ModuleService)TurbineServices
+                .getInstance().getService(ModuleService.SERVICE_NAME))
+                .getInstance(modId);
     }
 
     /**
@@ -69,36 +83,6 @@ public abstract class Module
         issue.setCreatedDate(now);
         issue.setDeleted(false);
         return issue;
-    }
-
-    /**
-     * Return an instance of Module based on the passed in module id
-     */
-    public static Module getInstance(ObjectKey modId) 
-        throws Exception
-    {
-        TurbineGlobalCacheService tgcs = 
-            (TurbineGlobalCacheService)TurbineServices
-            .getInstance().getService(GlobalCacheService.SERVICE_NAME);
-
-        String key = getCacheKey(modId);
-        Module module = null;
-        try
-        {
-            module = (Module)tgcs.getObject(key).getContents();
-        }
-        catch (ObjectExpiredException oee)
-        {
-            module = ModulePeer.retrieveByPK(modId);
-            if ( module == null) // is this check needed?
-            {
-                throw new ScarabException("Module with ID " + modId + 
-                                          " can not be found");
-            }
-            tgcs.addObject(key, new CachedObject(module));
-        }
-        
-        return module;
     }
 
     /**
@@ -474,83 +458,59 @@ try{
 
     }
 
+
     /**
      * Gets users which are currently associated (relationship has not 
-     * been deleted) with this module with Roles specified in includeRoles
-     * and excluding Roles in the exclude list. 
+     * been deleted) with this module who have the given permssion. 
      *
      * @param partialUserName username fragment to match against
-     * @param includeRoles a <code>Role[]</code> value
-     * @param excludeRoles a <code>Role[]</code> value
+     * @param permissions a <code>String[]</code> permission
      * @return a <code>List</code> of ScarabUsers
      * @exception Exception if an error occurs
      */
-    public List getUsers(String partialUserName, 
-                         Role[] includeRoles, Role[] excludeRoles) 
+    public List getUsers(String permission)
         throws Exception
     {
-        Criteria crit = new Criteria(3)
-            .add(RModuleUserRolePeer.DELETED, false);
-        Criteria.Criterion c = null;
-        if ( includeRoles != null ) 
-        {            
-            crit.addIn(RModuleUserRolePeer.ROLE_ID, includeRoles);
-            c = crit.getCriterion(RModuleUserRolePeer.ROLE_ID);
-        }
-        if ( excludeRoles != null ) 
-        {   
-            if ( c == null ) 
-            {
-                crit.addNotIn(RModuleUserRolePeer.ROLE_ID, excludeRoles);
-            }
-            else 
-            {
-                c.and(crit
-                      .getNewCriterion(RModuleUserRolePeer.ROLE_ID, 
-                                       excludeRoles, Criteria.NOT_IN));
-            }
-        }
-        if ( partialUserName != null && partialUserName.length() != 0 ) 
-        {
-            crit.add(ScarabUserPeer.USERNAME, 
-                     (Object)("%" + partialUserName + "%"), Criteria.LIKE);
-        }
-
-        List moduleRoles = getRModuleUserRolesJoinScarabUser(crit);
-
-        // rearrange so list contains Users
-        List users = new ArrayList(moduleRoles.size());
-        Iterator i = moduleRoles.iterator();
-        while (i.hasNext()) 
-        {
-            ScarabUser user = ((RModuleUserRole)i.next()).getScarabUser();
-            users.add(user);
-        }
-        
-        return users;
+        return getUsers(null, permission);
     }
+
+    /**
+     * Gets users which are currently associated (relationship has not 
+     * been deleted) with this module who have the given permssion. 
+     *
+     * @param partialUserName username fragment to match against
+     * @param permissions a <code>String[]</code> permission
+     * @return a <code>List</code> of ScarabUsers
+     * @exception Exception if an error occurs
+     */
+    public List getUsers(String partialUserName, String permission)
+        throws Exception
+    {
+        String[] perms = new String[1];
+        perms[0] = permission;
+        return getUsers(partialUserName, perms);
+    }
+
+    /**
+     * Gets users which are currently associated (relationship has not 
+     * been deleted) with this module who have the given permssions. 
+     *
+     * @param partialUserName username fragment to match against
+     * @param permissions a <code>String[]</code> permissions
+     * @return a <code>List</code> of ScarabUsers
+     * @exception Exception if an error occurs
+     */
+    public abstract List getUsers(String partialUserName, String[] permissions)
+        throws Exception;
 
     /**
      * Saves the module into the database
      */
     public void save() throws Exception
     {
-        // if new, relate the Module to the user who created it.
+        // if new, make sure the code has a value.
         if ( isNew() ) 
         {
-            RModuleUserRole relation = new RModuleUserRole();
-            if ( getOwnerId() == null ) 
-            {
-                throw new ScarabException("Can't save a project without" + 
-                    "first assigning an owner.");
-            }         
-            relation.setUserId(getOwnerId());
-            // !FIXME! this needs to be set to the Module Owner Role
-            relation.setRoleId(new NumberKey("1"));
-            relation.setDeleted(false);
-            addRModuleUserRole(relation);
-
-            // make sure the code has a value;
             String code = getCode();
             if ( code == null || code.length() == 0 ) 
             {
@@ -569,65 +529,12 @@ try{
                     .add(IDBroker.NEXT_ID, 1)
                     .add(IDBroker.QUANTITY, 1);
                 BasePeer.doInsert(criteria);
-            }
-            
+            }            
         }
         super.save();        
     }
 
-    /**
-        calls the doPopulate() method with validation false
-    */
-    public Module doPopulate(RunData data)
-        throws Exception
-    {
-        return doPopulate(data, false);
-    }
-
-    /**
-        populates project based on the existing project data from POST
-    */
-    public Module doPopulate(RunData data, boolean validate)
-        throws Exception
-    {
-        String prefix = ""; //getQueryKey().toLowerCase();
-
-        if ( isNew() ) 
-        {
-            String project_id = data.getParameters()
-                .getString(prefix + "id", null); 
-            if (validate)
-            {
-                if (project_id == null)
-                    throw new Exception ( "Missing project_id!" );
-            }
-            setPrimaryKey(new NumberKey(project_id));
-            // setCreatedBy( ((ScarabUser)data.getUser()).getPrimaryKey() );
-            // setCreatedDate( new Date() );
-        }
-
-        String name = data.getParameters().getString(prefix + "name",null);
-        String desc = data.getParameters()
-            .getString(prefix + "description",null);
-        
-        if (validate)
-        {
-            if (! StringUtils.isValid(name))
-                throw new Exception ( "Missing project name!" );
-            if (! StringUtils.isValid(desc))
-                throw new Exception ( "Missing project description!" );
-        }
-
-        setName( StringUtils.makeString( name ));
-        setDescription( StringUtils.makeString( desc ));
-        setUrl( StringUtils.makeString(
-            data.getParameters().getString(prefix + "url") ));
-        setOwnerId( new NumberKey(data.getParameters().getString(prefix + "ownerid") ));
-        setQaContactId( new NumberKey(data.getParameters()
-                        .getString(prefix + "qacontactid") ));
-        return this;
-    }
-
+    /*
     public class OptionInList
     {
         public int Level;
@@ -679,7 +586,5 @@ try{
             }
         }
     }
-
-
-
+    */
 }

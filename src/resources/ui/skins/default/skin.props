@@ -1,0 +1,21 @@
+# These are the default properties
+
+bgcolor=#ffffff
+sansSerifFonts=verdana,geneva,helvetica
+formLabelColor=#b3cc99
+formFieldColor=#b3bb99
+labelColor=#b3cc99
+dataColor=#b3bb99
+vlink=#00ff00
+alink=#0000ff
+
+tableCellSpacing=0
+tableCellPadding=0
+
+buttonAlignment=center
+buttonColor=#ffcc00
+
+# Images
+alertImage = alert1.gif
+logo = logo-green.jpg
+line = line.gif

@@ -87,7 +87,7 @@ public class ScarabRequestTool implements ScarabRequestScope,
     private Attribute attribute = null;
 
     /**
-     * A Module object for use within the Scarab API.
+     * A ModuleEntity object for use within the Scarab API.
      */
     private ModuleEntity module = null;
 
@@ -211,7 +211,7 @@ try{
     /**
      * A Module object for use within the Scarab API.
      */
-    public void setModule(Module module)
+    public void setModule(ModuleEntity module)
     {
         this.module = module;
     }
@@ -233,7 +233,7 @@ try{
             }
             else 
             {
-                module = Module.getInstance(new NumberKey(modId));
+                module = ModuleManager.getInstance(new NumberKey(modId));
             }
       }catch(Exception e){e.printStackTrace();}
         return module;
@@ -283,7 +283,7 @@ try{
      * Get a specific module by key value.
      *
      * @param key a <code>String</code> value
-     * @return a <code>ModuleEntity</code> value
+     * @return a <code>Module</code> value
      */
     public ModuleEntity getModule(String key) throws Exception
     {
@@ -343,7 +343,7 @@ try{
         {
             // was not a primary key, try fid
             Issue.FederatedId fid = new Issue.FederatedId(key);
-            if ( fid.getInstance() == null ) 
+            if ( fid.getDomain() == null ) 
             {
                 // handle null (always null right now)
             }

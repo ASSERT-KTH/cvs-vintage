@@ -62,7 +62,7 @@ import org.apache.turbine.util.db.Criteria;
  * This class has static methods for working with a Module object
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: ModuleManager.java,v 1.3 2001/05/21 23:09:13 jon Exp $
+ * @version $Id: ModuleManager.java,v 1.4 2001/05/24 02:39:21 jmcnally Exp $
  */
 public abstract class ModuleManager
 {
@@ -82,6 +82,12 @@ public abstract class ModuleManager
         throws Exception
     {
         return getService().getInstance();
+    }
+
+    public static ModuleEntity getInstance(ObjectKey id)
+        throws Exception
+    {
+        return getService().getInstance(id);
     }
 
     public static Class getModuleClass()

@@ -71,7 +71,7 @@ import org.tigris.scarab.om.ScarabUser;
     Action.
     
     @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
-    @version $Id: Login.java,v 1.8 2001/05/09 01:51:34 jmcnally Exp $
+    @version $Id: Login.java,v 1.9 2001/05/24 02:39:20 jmcnally Exp $
 */
 public class Login extends VelocityAction
 {
@@ -80,6 +80,8 @@ public class Login extends VelocityAction
     */
     public void doLogin( RunData data, Context context ) throws Exception
     {
+        data.setACL(null);
+
         IntakeTool intake = (IntakeTool)context
             .get(ScarabConstants.INTAKE_TOOL);
 
@@ -98,7 +100,6 @@ public class Login extends VelocityAction
         {
             failAction(data);
         }
-        
     }
 
     /**

@@ -54,19 +54,23 @@ import org.apache.velocity.context.*;
 import org.apache.turbine.util.*;
 import org.apache.turbine.modules.*;
 import org.apache.turbine.modules.actions.*;
+import org.apache.turbine.services.intake.IntakeTool;
+import org.apache.turbine.services.intake.model.Group;
+
 // Scarab Stuff
 import org.tigris.scarab.actions.base.*;
 import org.tigris.scarab.om.*;
 import org.tigris.scarab.services.module.ModuleEntity;
 import org.tigris.scarab.services.module.ModuleManager;
+import org.tigris.scarab.util.ScarabConstants;
 
 /**
     This class will store the form data for a project modification
         
     @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
-    @version $Id: ModifyProject.java,v 1.6 2001/05/21 23:09:11 jon Exp $
+    @version $Id: ModifyModule.java,v 1.1 2001/05/24 02:39:20 jmcnally Exp $
 */
-public class ModifyProject extends RequireLoginFirstAction
+public class ModifyModule extends RequireLoginFirstAction
 {
     /**
         This manages clicking the Modify button
@@ -89,6 +93,42 @@ public class ModifyProject extends RequireLoginFirstAction
             data.setMessage(e.getMessage());
         }
     }
+
+
+    /**
+        This manages clicking the Insert button
+    */
+    public void doInsert( RunData data, Context context ) throws Exception
+    {
+        IntakeTool intake = (IntakeTool)context
+           .get(ScarabConstants.INTAKE_TOOL);
+
+        if ( intake.isAllValid() ) 
+        {
+            // get a populated ScarabModule and do validation
+            ModuleEntity module = ModuleManager.getInstance();
+            
+            Group group = intake.get("Module", module.getQueryKey(), false);
+            group.setProperties(module);
+
+            Module parent = ((ScarabUser)data.getUser()).getCurrentModule();
+            module.setModuleRelatedByParentId(parent);
+
+            try
+            {
+                // check to see if we have a duplicate name!
+                ModuleManager.checkForDuplicateProject(module);
+                module.save();
+                data.setMessage("Modification Successful!");
+            }
+            catch (Exception e)
+            {
+                // display the error message
+                data.setMessage(e.getMessage());
+            }
+        }
+    }
+
     /**
         This manages clicking the cancel button
     */

@@ -47,12 +47,15 @@ package org.tigris.scarab.services.module;
  */ 
 
 import org.apache.turbine.services.Service;
+import org.apache.turbine.om.ObjectKey;
+
+import org.tigris.scarab.om.Module;
 
 /**
  * This is the interface that describes a ModuleService implementation
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: ModuleService.java,v 1.2 2001/05/21 23:09:13 jon Exp $
+ * @version $Id: ModuleService.java,v 1.3 2001/05/24 02:39:21 jmcnally Exp $
  */
 public interface ModuleService extends Service
 {
@@ -64,12 +67,15 @@ public interface ModuleService extends Service
         "scarab.module.class";
    
     /** "org.tigris.scarab.om.HelmModule" */
-    public static final String HELM_MODULE_CLASS_DEFAULT = 
-        "org.tigris.scarab.om.HelmModuleEntity";
+    public static final String HELM_MODULE_CLASS = 
+        "org.tigris.scarab.om.HelmModule";
 
-    /** "org.tigris.scarab.om.ScarabModule" */
-    public static final String SCARAB_MODULE_CLASS_DEFAULT = 
+    /** "org.tigris.scarab.om.TurbineModule" */
+    public static final String TURBINE_MODULE_CLASS = 
         "org.tigris.scarab.om.ScarabModule";
+
+    /** TurbineModule is default */
+    public static final String DEFAULT_MODULE_CLASS = TURBINE_MODULE_CLASS;
 
     /**
      * Get the Class instance
@@ -77,4 +83,6 @@ public interface ModuleService extends Service
     public Class getModuleClass();
 
     public ModuleEntity getInstance() throws Exception;
+
+    public ModuleEntity getInstance(ObjectKey key) throws Exception;
 }
