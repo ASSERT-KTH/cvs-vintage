@@ -67,6 +67,8 @@ import org.columba.core.util.GlobalResourceLoader;
  */
 public class ShutdownManager {
     
+    protected static final String RESOURCE_PATH = "org.columba.core.i18n.dialog";
+    
     /**
      * The singleton instance of this class.
      */
@@ -102,11 +104,24 @@ public class ShutdownManager {
                 while (!isShutdownHook() && 
                         MainInterface.processor.getTaskManager().count() > 0) {
                     // ask user to kill pending running commands or wait
-                    //TODO: i18n
-                    Object[] options = { "Wait", "Exit" };
+                    Object[] options = { 
+                        GlobalResourceLoader.getString(
+                            RESOURCE_PATH,
+                            "dialog",
+                            "tasks_wait"),
+                        GlobalResourceLoader.getString(
+                            RESOURCE_PATH,
+                            "dialog",
+                            "tasks_exit") };
                     int n = JOptionPane.showOptionDialog(null,
-                            "Some tasks seem to be running. \nWould you like to wait for these to finish or just exit Columba?",
-                            "Wait or exit Columba", JOptionPane.YES_NO_OPTION,
+                            GlobalResourceLoader.getString(
+                                RESOURCE_PATH,
+                                "dialog",
+                                "tasks_msg"),
+                            GlobalResourceLoader.getString(
+                                RESOURCE_PATH,
+                                "dialog",
+                                "tasks_title"), JOptionPane.YES_NO_OPTION,
                             JOptionPane.QUESTION_MESSAGE, null, options, options[0]);
                     if (n == 0) {
                         //wait 10 seconds and check for pending commands again
@@ -195,9 +210,14 @@ public class ShutdownManager {
      * Returns a component notifying the user of the shutdown procedure.
      */
     protected Component createShutdownDialog() {
-        //TODO: i18n
-        JFrame dialog = new JFrame("Exiting Columba...");
-        dialog.getContentPane().add(new JButton("Saving Folders..."));
+        JFrame dialog = new JFrame(GlobalResourceLoader.getString(
+                RESOURCE_PATH,
+                "dialog",
+                "exit_title"));
+        dialog.getContentPane().add(new JButton(GlobalResourceLoader.getString(
+                RESOURCE_PATH, 
+                "dialog",
+                "exit_msg")));
         dialog.setSize(new Dimension(300, 50));
         dialog.setLocationRelativeTo(null);
         return dialog;
