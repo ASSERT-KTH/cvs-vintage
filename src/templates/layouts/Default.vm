@@ -11,7 +11,9 @@
 	<div id="banner">
 		<table border="0" cellspacing="12" cellpadding="0" width="100%">
 		<tr>
-		
+		<td>
+		 <h3>Scarab</h3>
+		</td>
 		<td>
 		<div align="right" id="login">
 		    #if ($data.User.FirstName)
