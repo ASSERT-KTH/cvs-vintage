@@ -22,7 +22,7 @@ import java.util.Map;
 
 import javax.swing.JTabbedPane;
 
-import org.columba.chat.AlturaInterface;
+import org.columba.chat.AlturaComponent;
 import org.columba.chat.frame.AlturaFrameMediator;
 import org.jivesoftware.smack.Chat;
 
@@ -55,7 +55,7 @@ public class ConversationController extends JTabbedPane {
 			m = (ChatMediator) chatMap.get(jabberId);
 		} else {
 			//			 create chat connection
-			Chat chat = AlturaInterface.connection.createChat(jabberId);
+			Chat chat = AlturaComponent.connection.createChat(jabberId);
 
 			m = new ChatMediator(mediator, chat);
 

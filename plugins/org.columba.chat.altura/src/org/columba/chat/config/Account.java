@@ -33,12 +33,15 @@ public class Account {
     private int port;
     private boolean enableSSL;
     
-    public Account(String id) {
-        this.id = id;
-        
+    public Account() {
         host = "jabber.org";
         port = 5222;
         enableSSL = false;
+    }
+    
+    public Account(String id) {
+    	this();
+        this.id = id;
     }
     
     public Account(String id, String host) {

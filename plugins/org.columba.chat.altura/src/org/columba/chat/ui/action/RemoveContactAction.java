@@ -21,7 +21,7 @@ import java.awt.event.ActionEvent;
 
 import javax.swing.JOptionPane;
 
-import org.columba.chat.AlturaInterface;
+import org.columba.chat.AlturaComponent;
 import org.columba.chat.frame.AlturaFrameMediator;
 import org.columba.chat.jabber.BuddyStatus;
 import org.columba.core.action.AbstractColumbaAction;
@@ -63,7 +63,7 @@ public class RemoveContactAction extends AbstractColumbaAction {
 			jabberId = JOptionPane.showInputDialog(null, "Enter jabber ID");
 		}
 
-		RosterEntry entry = AlturaInterface.connection.getRoster().getEntry(
+		RosterEntry entry = AlturaComponent.connection.getRoster().getEntry(
 				jabberId);
 
 		int option = JOptionPane.showConfirmDialog(null,
@@ -72,7 +72,7 @@ public class RemoveContactAction extends AbstractColumbaAction {
 				JOptionPane.YES_NO_OPTION);
 
 		if (option == JOptionPane.YES_OPTION) {
-			AlturaInterface.connection.getRoster().removeEntry(entry);
+			AlturaComponent.connection.getRoster().removeEntry(entry);
 			System.out.println("update tree");
 			((AlturaFrameMediator) frameMediator).getBuddyTree().populate();
 		}

@@ -26,7 +26,7 @@ import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
-import org.columba.chat.AlturaInterface;
+import org.columba.chat.AlturaComponent;
 import org.columba.chat.frame.AlturaFrameMediator;
 import org.columba.core.gui.util.ImageLoader;
 import org.jivesoftware.smack.packet.Presence;
@@ -103,7 +103,7 @@ public class PresenceComboBox extends JPanel implements ItemListener {
         	 
                 p = new Presence(Presence.Type.AVAILABLE);
                 p.setStatus("Available");
-                AlturaInterface.connection.sendPacket(p);
+                AlturaComponent.connection.sendPacket(p);
                 break;
             }
         case 2:
@@ -112,7 +112,7 @@ public class PresenceComboBox extends JPanel implements ItemListener {
         	 
                 p = new Presence(Presence.Type.UNAVAILABLE);
                 p.setStatus("Away");
-                AlturaInterface.connection.sendPacket(p);
+                AlturaComponent.connection.sendPacket(p);
                 break;
             }
         }

@@ -43,14 +43,17 @@ public class Config {
 
 	private Properties properties;
 
-	private static Config instance = new Config();
+	private static Config instance;
 
 	/**
 	 *  
 	 */
-	public Config() {
+	private Config() {
 
-		load();
+		if ( file.exists()  )
+			load();
+		else
+			account = new Account();
 
 		ShutdownManager.getShutdownManager().register(new Runnable() {
 
@@ -65,6 +68,9 @@ public class Config {
 	}
 
 	public static Config getInstance() {
+		if ( instance == null ) {
+			instance = new Config();
+		}
 		return instance;
 	}
 
@@ -87,10 +93,10 @@ public class Config {
 	 * Load configuration from disk. Automatically called on application
 	 * startup.
 	 */
-	public void load() {
+	private void load() {
 		// use key/value properties file
 		properties = new Properties();
-
+		
 		// load configuraation
 		try {
 			// open stream to file
@@ -143,7 +149,10 @@ public class Config {
 	 * shutdown hook.
 	 *  
 	 */
-	public void save() {
+	private void save() {
+		if ( properties == null)
+			properties = new Properties();
+		
 		// store account data in properties
 		put("host", account.getHost());
 		put("id", account.getId());

@@ -21,7 +21,7 @@ import java.awt.event.ActionEvent;
 
 import javax.swing.JOptionPane;
 
-import org.columba.chat.AlturaInterface;
+import org.columba.chat.AlturaComponent;
 import org.columba.chat.frame.AlturaFrameMediator;
 import org.columba.core.action.AbstractColumbaAction;
 import org.columba.core.gui.frame.FrameMediator;
@@ -60,7 +60,7 @@ public class AddContactAction extends AbstractColumbaAction {
         
         try {
             // add contact to roaster, nickname="", group=null
-        	AlturaInterface.connection.getRoster().createEntry(jabberId, "",
+        	AlturaComponent.connection.getRoster().createEntry(jabberId, "",
                     null);
             System.out.println("update tree");
             ((AlturaFrameMediator)frameMediator).getBuddyTree().populate();

@@ -19,7 +19,7 @@ package org.columba.chat.command;
 
 import javax.swing.JOptionPane;
 
-import org.columba.chat.AlturaInterface;
+import org.columba.chat.AlturaComponent;
 import org.columba.chat.config.Account;
 import org.columba.chat.config.Config;
 import org.columba.chat.frame.AlturaFrameMediator;
@@ -57,10 +57,10 @@ public class ConnectCommand extends Command {
 		try {
 
 			if (account.isEnableSSL())
-				AlturaInterface.connection = new SSLXMPPConnection(account
+				AlturaComponent.connection = new SSLXMPPConnection(account
 						.getHost(), account.getPort());
 			else
-				AlturaInterface.connection = new XMPPConnection(account
+				AlturaComponent.connection = new XMPPConnection(account
 						.getHost(), account.getPort());
 
 		} catch (XMPPException e) {
@@ -95,7 +95,7 @@ public class ConnectCommand extends Command {
 			}
 
 			try {
-				AlturaInterface.connection.login(account.getId(), new String(
+				AlturaComponent.connection.login(account.getId(), new String(
 						password));
 				success = true;
 			} catch (XMPPException e) {
@@ -108,14 +108,14 @@ public class ConnectCommand extends Command {
 		if (!success)
 			return;
 
-		AlturaInterface.connection.getRoster().setSubscriptionMode(
+		AlturaComponent.connection.getRoster().setSubscriptionMode(
 				Roster.SUBSCRIPTION_MANUAL);
 
-		AlturaInterface.connection.addPacketListener(new MessageListener(
+		AlturaComponent.connection.addPacketListener(new MessageListener(
 				mediator), new PacketTypeFilter(Message.class));
-		AlturaInterface.connection.addPacketListener(new PresenceListener(
+		AlturaComponent.connection.addPacketListener(new PresenceListener(
 				mediator), new PacketTypeFilter(Presence.class));
-		AlturaInterface.connection.addPacketListener(new SubscriptionListener(
+		AlturaComponent.connection.addPacketListener(new SubscriptionListener(
 				mediator), new PacketTypeFilter(Presence.class));
 
 	}

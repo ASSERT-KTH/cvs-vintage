@@ -19,7 +19,7 @@ package org.columba.chat.ui.action;
 
 import java.awt.event.ActionEvent;
 
-import org.columba.chat.AlturaInterface;
+import org.columba.chat.AlturaComponent;
 import org.columba.chat.frame.AlturaFrameMediator;
 import org.columba.core.action.AbstractColumbaAction;
 import org.columba.core.gui.frame.FrameMediator;
@@ -44,7 +44,7 @@ public class DisconnectAction extends AbstractColumbaAction {
 	 */
 	public void actionPerformed(ActionEvent arg0) {
 
-		AlturaInterface.connection.close();
+		AlturaComponent.connection.close();
 
 		((AlturaFrameMediator) frameMediator).getBuddyTree().setEnabled(false);
 	}

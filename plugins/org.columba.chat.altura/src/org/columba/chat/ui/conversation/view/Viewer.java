@@ -22,7 +22,7 @@ import org.jivesoftware.smack.packet.Message;
 
 
 /**
- * Viewer used by the conversation/chat window to present messages.
+ * IViewer used by the conversation/chat window to present messages.
  * 
  * @author fdietz
  *

@@ -19,7 +19,7 @@ package org.columba.chat.jabber;
 
 import javax.swing.JOptionPane;
 
-import org.columba.chat.AlturaInterface;
+import org.columba.chat.AlturaComponent;
 import org.columba.chat.frame.AlturaFrameMediator;
 import org.jivesoftware.smack.PacketListener;
 import org.jivesoftware.smack.XMPPException;
@@ -70,13 +70,13 @@ public class SubscriptionListener implements PacketListener {
 
 			if (option == JOptionPane.YES_OPTION) {
 				//              if already in roster
-				if (AlturaInterface.connection.getRoster().contains(
+				if (AlturaComponent.connection.getRoster().contains(
 						normalizedFrom))
 					return;
 
 				Presence packet = new Presence(Presence.Type.SUBSCRIBED);
 				packet.setTo(normalizedFrom);
-				AlturaInterface.connection.sendPacket(packet);
+				AlturaComponent.connection.sendPacket(packet);
 
 			} else {
 				return;
@@ -89,7 +89,7 @@ public class SubscriptionListener implements PacketListener {
 			if (option == JOptionPane.YES_OPTION) {
 				try {
 					// add contact to roaster, nickname="", group=null
-					AlturaInterface.connection.getRoster().createEntry(from,
+					AlturaComponent.connection.getRoster().createEntry(from,
 							"", null);
 
 					frameMediator.getBuddyTree().populate();

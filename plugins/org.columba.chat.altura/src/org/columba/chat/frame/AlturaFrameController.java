@@ -31,9 +31,6 @@ import org.columba.core.config.ViewItem;
 import org.columba.core.gui.frame.ContentPane;
 import org.columba.core.gui.frame.DefaultFrameController;
 import org.columba.core.io.DiskIO;
-import org.columba.core.plugin.PluginHandlerNotFoundException;
-import org.columba.core.plugin.PluginManager;
-import org.columba.core.pluginhandler.ActionPluginHandler;
 import org.columba.core.xml.XmlElement;
 import org.columba.core.xml.XmlIO;
 
@@ -61,16 +58,8 @@ public class AlturaFrameController extends DefaultFrameController implements
 		presence = new PresenceComboBox(this);
 		conversation = new ConversationController(this);
 
-		try {
-			((ActionPluginHandler) PluginManager.getInstance()
-					.getHandler("org.columba.core.action"))
-					.addActionList("org/columba/chat/action/action.xml");
-		} catch (PluginHandlerNotFoundException ex) {
-		}
-
-		new ConnectAction(this).actionPerformed(null);
-
-		//c.setContentPane(this);
+		// connect to server
+		//new ConnectAction(this).actionPerformed(null);
 
 	}
 

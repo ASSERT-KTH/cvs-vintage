@@ -25,7 +25,7 @@ import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.TreePath;
 
-import org.columba.chat.AlturaInterface;
+import org.columba.chat.AlturaComponent;
 import org.columba.chat.frame.AlturaFrameMediator;
 import org.columba.chat.jabber.BuddyList;
 import org.columba.chat.jabber.BuddyStatus;
@@ -97,7 +97,7 @@ public class RoasterTree extends JTree {
 	public void populate() {
 		root = new DefaultMutableTreeNode("Roster");
 
-		roster = AlturaInterface.connection.getRoster();
+		roster = AlturaComponent.connection.getRoster();
 
 		// add all groups as folder to JTree
 		Iterator it = roster.getGroups();

@@ -93,7 +93,7 @@ public class HTMLViewer extends JEditorPane implements Viewer {
 	}
 
 	/**
-	 * @see org.altura.ui.conversation.view.Viewer#displayReceivedMessage(org.jivesoftware.smack.packet.Message,
+	 * @see org.altura.ui.conversation.view.IViewer#displayReceivedMessage(org.jivesoftware.smack.packet.Message,
 	 *      org.altura.jabber.BuddyStatus)
 	 */
 	public void displayReceivedMessage(Message message, BuddyStatus buddy) {
@@ -110,7 +110,7 @@ public class HTMLViewer extends JEditorPane implements Viewer {
 
 	}
 	/**
-	 * @see org.altura.ui.conversation.view.Viewer#displaySendMessage(org.jivesoftware.smack.packet.Message,
+	 * @see org.altura.ui.conversation.view.IViewer#displaySendMessage(org.jivesoftware.smack.packet.Message,
 	 *      org.altura.jabber.BuddyStatus)
 	 */
 	public void displaySendMessage(Message message, BuddyStatus buddy) {
