@@ -37,7 +37,7 @@ import org.gjt.sp.jedit.*;
  * Files changed on disk dialog.
  *
  * @author Slava Pestov
- * @version $Id: FilesChangedDialog.java,v 1.5 2003/10/22 04:38:22 spestov Exp $
+ * @version $Id: FilesChangedDialog.java,v 1.6 2003/10/23 00:57:37 spestov Exp $
  */
 public class FilesChangedDialog extends EnhancedDialog
 {
@@ -253,28 +253,40 @@ public class FilesChangedDialog extends EnhancedDialog
 						return;
 
 					buffer.reload(view);
-					((DefaultMutableTreeNode)node.getParent())
-						.remove(node);
-
-					// remove empty category branches
-					for(int j = 0; j < root.getChildCount();
-						j++)
-					{
-						node = (DefaultMutableTreeNode)
-							root.getChildAt(j);
-						if(root.getChildAt(j)
-							.getChildCount() == 0)
-						{
-							root.remove(j);
-							j--;
-						}
-					}
-
-					if(root.getChildCount() == 0)
-						dispose();
-
-					bufferTreeModel.reload(root);
+					DefaultMutableTreeNode parent =
+						(DefaultMutableTreeNode)
+						node.getParent();
+					parent.remove(node);
 				}
+
+				bufferTreeModel.reload(root);
+
+				// we expand those that are non-empty, and
+				// remove those that are empty
+				TreeNode[] nodes = { root, null };
+
+				// remove empty category branches
+				for(int j = 0; j < root.getChildCount(); j++)
+				{
+					DefaultMutableTreeNode node
+						= (DefaultMutableTreeNode)
+						root.getChildAt(j);
+					if(root.getChildAt(j)
+						.getChildCount() == 0)
+					{
+						root.remove(j);
+						j--;
+					}
+					else
+					{
+						nodes[1] = node;
+						bufferTree.expandPath(
+							new TreePath(nodes));
+					}
+				}
+
+				if(root.getChildCount() == 0)
+					dispose();
 			}
 			else if(source == close)
 				dispose();
