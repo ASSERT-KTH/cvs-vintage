@@ -101,21 +101,25 @@
     	<tr>
 			<th width="120">committed by:</th>
 			<td>
-            <select multiple="multiple">
-			<option>user@users.com</option>
-			<option>user@users.com</option>
-			<option>user@users.com</option>
+            <select name="$query.CreatedBy.Key" multiple="multiple">
+
+#foreach ( $createdBy in $module.EligibleIssueReporters )
+    <option value="$createdBy.UserName">$createdBy.UserName</option>
+#end
 			</select>
             </td>
 	    </tr>
 			
 		<tr>
 			<th width="120">assignee(s):</th>
-			<td><select multiple="multiple">
-			<option>user@users.com</option>
-			<option>user@users.com</option>
-			<option>user@users.com</option>
-			</select></td>
+			<td>
+            <select name="$query.Assignees.Key" multiple="multiple">
+
+#foreach ( $userAssignee in $module.EligibleAssignees )
+    <option value="$userAssignee.UserName">$userAssignee.UserName</option>
+#end
+			</select>
+            </td>
 		</tr>
 	</table>
 </div>

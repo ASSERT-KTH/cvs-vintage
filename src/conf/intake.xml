@@ -182,6 +182,8 @@
             <rule name="mask" 
                 value="[0-1]?[0-9]/[0-3]?[0-9]/[1-2]?[0-9]?[0-9][0-9]( [0-2]?[0-9]:[0-5][0-9])?">Invalid To Date</rule>
         </field>
+        <field name="CreatedBy" key="cb" type="String" multiValued="true"/>
+        <field name="Assignees" key="asgnee" type="String" multiValued="true"/>
         <field name="StateChangeAttributeId" key="scai" type="NumberKey"/>
         <field name="StateChangeFromOptionId" key="scfoi" type="NumberKey"/>
         <field name="StateChangeToOptionId" key="sctoi" type="NumberKey"/>

@@ -208,7 +208,10 @@ public abstract class AttributeValue
                 RModuleOption option = (RModuleOption)options.get(i);
                 if ( option.getOptionId().equals(optionId) ) 
                 {
-                    setValue(option.getDisplayValue());
+                    if ( !option.getDisplayValue().equals(getValue()) ) 
+                    {
+                        setValue(option.getDisplayValue());
+                    }
                     break;
                 }
             }
@@ -223,6 +226,44 @@ public abstract class AttributeValue
         super.setOptionId(optionId);
     }
 
+    
+    /**
+     * Makes sure to set the Value as well, to make display of the
+     * user easier
+     *
+     * @param userId a <code>NumberKey</code> value
+     */
+    /*
+    public void setUserId(NumberKey userId)
+        throws Exception
+    {
+        if ( userId != null && userId.getValue() != null ) 
+        {
+            List users = getIssue().getScarabModule()
+                .getRModuleOptions(getAttribute());
+            for ( int i=users.size()-1; i>=0; i-- ) 
+            {
+                RModuleOption user = (RModuleOption)users.get(i);
+                if ( user.getUserId().equals(userId) ) 
+                {
+                    if ( !user.getDisplayValue().equals(getValue()) ) 
+                    {
+                        setValue(user.getDisplayValue());
+                    }
+                    break;
+                }
+            }
+        }
+        // if the value is set multiple times before saving only
+        // save the last saved value
+        if ( !isNew() && !oldUserIdIsSet ) 
+        {
+            oldUserId = new NumberKey(getUserId());
+            oldUserIdIsSet = true;
+        }
+        super.setUserId(userId);
+    }
+*/
 
     public void setValue(String value)
     {

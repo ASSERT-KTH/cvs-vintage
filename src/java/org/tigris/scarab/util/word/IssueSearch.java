@@ -78,6 +78,7 @@ import org.tigris.scarab.om.RModuleOptionPeer;
 import org.tigris.scarab.util.ScarabConstants;
 import org.tigris.scarab.util.ScarabException;
 import org.tigris.scarab.attribute.OptionAttribute;
+import org.tigris.scarab.attribute.UserAttribute;
 import org.tigris.scarab.attribute.StringAttribute;
 
 
@@ -330,7 +331,59 @@ public class IssueSearch
         this.minVotes = v;
     }
     
-
+    private String[] assignees;
+    private String[] createdBy;
+    
+    /**
+     * Get the value of Assignees.
+     * @return value of Assignees.
+     */
+    public String[] getAssignees() 
+    {
+        return assignees;
+    }
+    
+    /**
+     * Set the value of Assignees.
+     * @param v  Value to assign to Assignees.
+     */
+    public void setAssignees(String[]  v) 
+    {
+        if ( v != null && (v.length == 0 || v[0].length() == 0) ) 
+        {
+            this.assignees = null;
+        }
+        else 
+        {
+            this.assignees = v;            
+        }
+    }
+        
+    /**
+     * Get the value of createdBy.
+     * @return value of createdBy.
+     */
+    public String[] getCommitedBy() 
+    {
+        return this.createdBy;
+    }
+    
+    /**
+     * Set the value of createdBy.
+     * @param v  Value to assign to createdBy.
+     */
+    public void setCommitedBy(String[] v) 
+    {
+        if ( v != null && (v.length == 0 || v[0].length() == 0) ) 
+        {
+            this.createdBy = null;
+        }
+        else 
+        {
+            this.createdBy = v;            
+        }
+    }
+    
     /**
      * Get the value of resultsPerPage.
      * @return value of resultsPerPage.
@@ -818,22 +871,21 @@ public class IssueSearch
      *
      * @param attValues a <code>List</code> value
      */
-    private void addOptionAttributes(Criteria crit, List attValues)
+    private void addSelectedAttributes(Criteria crit, List attValues)
         throws Exception
     {
         Criteria.Criterion c = null;
         boolean atLeastOne = false;
-        // int[] alias_indices = new int[attValues.size()];
-        // StringStackBuffer aliasIndices = 
-        //    new StringStackBuffer(attValues.size());
         HashMap aliasIndices = new HashMap((int)(attValues.size()*1.25));
         for ( int i=0; i<attValues.size(); i++ ) 
         {
             AttributeValue aval = (AttributeValue)attValues.get(i);
-            if ( aval instanceof OptionAttribute ) 
+            if ( aval instanceof OptionAttribute 
+                 || aval instanceof UserAttribute) 
             {
                 // we will add at least one option attribute to the criteria
                 atLeastOne = true;
+                Criteria.Criterion c2 = null;
                 // check if this is a new attribute or another possible value
                 String index = aval.getAttributeId().toString();
                 if ( aliasIndices.containsKey(index) ) 
@@ -842,7 +894,15 @@ public class IssueSearch
                     // OR it to the other possibilities
                     Criteria.Criterion prevCrit = 
                         (Criteria.Criterion )aliasIndices.get(index);
-                    Criteria.Criterion c2 = buildOptionCriterion(aval);
+                    if ( aval instanceof OptionAttribute ) 
+                    {
+                        c2 = buildOptionCriterion(aval);
+                    }
+                    else 
+                    {
+                        c2 = buildUserCriterion(aval);
+                    }
+                    
                     prevCrit.or(c2);
                 }
                 else
@@ -851,7 +911,14 @@ public class IssueSearch
                         AV_ISSUE_ID, "av" + index + "." + AV_ISSUE_ID + "=" + 
                         IssuePeer.ISSUE_ID, Criteria.CUSTOM); 
                     crit.addAlias("av"+index, AttributeValuePeer.TABLE_NAME);
-                    Criteria.Criterion c2 = buildOptionCriterion(aval);
+                    if ( aval instanceof OptionAttribute ) 
+                    {
+                        c2 = buildOptionCriterion(aval);
+                    }
+                    else 
+                    {
+                        c2 = buildUserCriterion(aval);
+                    }
                     c1.and(c2);
                     aliasIndices.put(index, c2);
                     if ( c == null ) 
@@ -905,6 +972,27 @@ public class IssueSearch
         }
         
         return criterion;
+    }
+
+    /**
+     * This method builds a Criterion for a single user attribute value.
+     * It is used in the addSelectedAttributes method
+     *
+     * @param aval an <code>AttributeValue</code> value
+     * @return a <code>Criteria.Criterion</code> value
+     */
+    private Criteria.Criterion buildUserCriterion(AttributeValue aval)
+        throws Exception
+    {
+        /*
+        Criteria crit = new Criteria();
+        Criteria.Criterion criterion = null;        
+        String index = aval.getAttributeId().toString();
+            criterion = crit.getNewCriterion( "av"+index, AV_USER_ID,
+                                              ids, Criteria.IN);
+        */
+        
+        return null; //criterion;
     }
 
     private NumberKey[] addTextMatches(Criteria crit, List attValues)
@@ -1083,7 +1171,7 @@ public class IssueSearch
         List attValues = getAttributeValues(tempCrit);
         // remove unset AttributeValues before searching
         removeUnsetValues(attValues);        
-        addOptionAttributes(crit, attValues);
+        addSelectedAttributes(crit, attValues);
         // search for issues based on text
         NumberKey[] matchingIssueIds = addTextMatches(crit, attValues);
 
