@@ -66,7 +66,7 @@ import org.jboss.verifier.event.VerificationListener;
 *   @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
 *   @author <a href="mailto:jplindfo@helsinki.fi">Juha Lindfors</a>
 *
-*   @version $Revision: 1.21 $
+*   @version $Revision: 1.22 $
 */
 public class ContainerFactory
 	extends org.jboss.util.ServiceMBeanSupport
@@ -259,6 +259,9 @@ public class ContainerFactory
 						// Set metadata
 						container.setMetaData(bean);
 						
+						// Set transaction manager
+						container.setTransactionManager((TransactionManager)new InitialContext().lookup("TransactionManager"));
+						
 						// Get container configuration
 						ContainerConfiguration conf = bean.getContainerConfiguration();
 						
@@ -307,6 +310,9 @@ public class ContainerFactory
 						// Set metadata
 						container.setMetaData(bean);
 						
+						// Set transaction manager
+						container.setTransactionManager((TransactionManager)new InitialContext().lookup("TransactionManager"));
+						
 						// Get container configuration
 						ContainerConfiguration conf = bean.getContainerConfiguration();
 						
@@ -354,6 +360,9 @@ public class ContainerFactory
 					
 					// Set metadata
 					container.setMetaData(bean);
+					
+					// Set transaction manager
+					container.setTransactionManager((TransactionManager)new InitialContext().lookup("TransactionManager"));
 					
 					// Get container configuration
 					ContainerConfiguration conf = bean.getContainerConfiguration();

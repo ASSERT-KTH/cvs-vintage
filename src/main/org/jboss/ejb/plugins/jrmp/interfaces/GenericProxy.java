@@ -21,7 +21,7 @@ import java.util.HashMap;
  *      
  *      @see <related>
  *      @author Rickard Öberg (rickard.oberg@telkel.com)
- *      @version $Revision: 1.3 $
+ *      @version $Revision: 1.4 $
  */
 public class GenericProxy
    implements java.io.Serializable
@@ -66,26 +66,22 @@ public class GenericProxy
       return containerStartup == ContainerRemote.startup;
    }
     
-   // Private -------------------------------------------------------
-   private void writeObject(java.io.ObjectOutputStream out)
+   protected void writeObject(java.io.ObjectOutputStream out)
       throws IOException
    {
-      if (!isLocal())
-      {
-			ContainerRemote old = container;
-         container = null;
-	      out.defaultWriteObject();
-	      container = old;
-      } else
-      {
-	      out.defaultWriteObject();
-      }
+   	out.writeUTF(name);
+   	out.writeObject(isLocal() ? container : null);
+      out.writeLong(containerStartup);
+      out.writeBoolean(optimize);
    }
-	
-   private void readObject(java.io.ObjectInputStream in)
+   
+   protected void readObject(java.io.ObjectInputStream in)
       throws IOException, ClassNotFoundException
    {
-      in.defaultReadObject();
+   	name = in.readUTF();
+   	container = (ContainerRemote)in.readObject();
+   	containerStartup = in.readLong();
+   	optimize = in.readBoolean();
       
       if (isLocal())
       {
@@ -93,6 +89,7 @@ public class GenericProxy
          container = getLocal(name);
       }
    }
+   // Private -------------------------------------------------------
    
    // Inner classes -------------------------------------------------
 }

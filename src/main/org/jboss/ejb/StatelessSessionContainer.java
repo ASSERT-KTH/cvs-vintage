@@ -26,7 +26,7 @@ import javax.ejb.RemoveException;
 *   @see <related>
 *   @author Rickard Öberg (rickard.oberg@telkel.com)
 *   @author <a href="marc.fleury@telkel.com">Marc Fleury</a>
-*   @version $Revision: 1.8 $
+*   @version $Revision: 1.9 $
 */
 public class StatelessSessionContainer
     extends Container
@@ -353,7 +353,7 @@ public class StatelessSessionContainer
         Method[] m = remoteInterface.getMethods();
         for (int i = 0; i < m.length; i++)
         {
-            if (!m[i].getDeclaringClass().getName().equals(EJB_OBJECT))
+            if (!m[i].getDeclaringClass().getName().equals("javax.ejb.EJBObject"))
             {
                 // Implemented by bean
                 map.put(m[i], beanClass.getMethod(m[i].getName(), m[i].getParameterTypes()));
@@ -408,10 +408,6 @@ public class StatelessSessionContainer
                return m.invoke(StatelessSessionContainer.this, mi.getArguments());
             } catch (InvocationTargetException e)
             {
-                //Debug
-                e.printStackTrace();
-                System.out.println("Home Exception seen  "+e.getMessage());
-                
                 Throwable ex = e.getTargetException();
                if (ex instanceof Exception)
                   throw (Exception)ex;
@@ -434,25 +430,25 @@ public class StatelessSessionContainer
                     return m.invoke(StatelessSessionContainer.this, new Object[] { mi });
                 } catch (InvocationTargetException e) 
                 {
-                Throwable ex = e.getTargetException();
-               
-                if (ex instanceof Exception) throw (Exception)ex;
-                    else throw (Error)ex;
-            }
+	                Throwable ex = e.getTargetException();
+	               
+	                if (ex instanceof Exception) throw (Exception)ex;
+	                    else throw (Error)ex;
+		          }
             } else // we have a method that needs to be done by a bean instance
             {
                 // Invoke and handle exceptions
-            try 
+      		    try 
                 {
-                return m.invoke(mi.getEnterpriseContext().getInstance(), mi.getArguments());
+            	    return m.invoke(mi.getEnterpriseContext().getInstance(), mi.getArguments());
                 } catch (InvocationTargetException e) 
                 {
                     Throwable ex = e.getTargetException();
                     
                     if (ex instanceof Exception) throw (Exception)ex;
                     else throw (Error)ex;
-            }
-        }
+	             }
+  	         }
         }
     }
 }

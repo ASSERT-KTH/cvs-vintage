@@ -47,7 +47,7 @@ import org.jboss.logging.Logger;
  *      
  *   @see <related>
  *   @author Rickard Öberg (rickard.oberg@telkel.com)
- *   @version $Revision: 1.5 $
+ *   @version $Revision: 1.6 $
  */
 public class EntitySynchronizationInterceptor
    extends AbstractInterceptor
@@ -149,10 +149,13 @@ public class EntitySynchronizationInterceptor
       {
          // Anonymous was sent in, so if it has an id it was created
 			EnterpriseContext ctx = mi.getEnterpriseContext();
-         if (ctx.getId() != null && mi.getTransaction().getStatus() == Status.STATUS_ACTIVE)
+         if (ctx.getId() != null)
          {
-            // Set tx
-            register(ctx, mi.getTransaction());
+				if (mi.getTransaction().getStatus() == Status.STATUS_ACTIVE)
+				{
+					// Set tx
+					register(ctx, mi.getTransaction());
+				}
             
             // Currently synched with underlying storage
             ((EntityEnterpriseContext)ctx).setSynchronized(true);
@@ -174,9 +177,9 @@ public class EntitySynchronizationInterceptor
       if (current.getStatus() == Status.STATUS_ACTIVE)
       {
          // Synchronize with DB
-//DEBUG         Logger.debug("SYNCH");
          if (!ctx.isSynchronized())
          {
+//DEBUG	         Logger.debug("SYNCH");
             ((EntityContainer)getContainer()).getPersistenceManager().loadEntity(ctx);
             ctx.setSynchronized(true);
          }
@@ -209,9 +212,9 @@ public class EntitySynchronizationInterceptor
          // No tx
          
          // Synchronize with DB
-//DEBUG         Logger.debug("SYNCH");
          if (!ctx.isSynchronized())
          {
+//DEBUG            Logger.debug("SYNCH");
             ((EntityContainer)getContainer()).getPersistenceManager().loadEntity(ctx);
             ctx.setSynchronized(true);
          }

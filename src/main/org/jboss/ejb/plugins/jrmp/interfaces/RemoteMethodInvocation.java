@@ -27,7 +27,7 @@ import javax.transaction.Transaction;
  *	@author Rickard Öberg (rickard.oberg@telkel.com)
  *  @author <a href="mailto:Richard.Monson-Haefel@jGuru.com">Richard Monson-Haefel</a>.
  *  @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>.
- *	@version $Revision: 1.1 $
+ *	@version $Revision: 1.2 $
  */
 public final class RemoteMethodInvocation
    implements java.io.Serializable
@@ -44,7 +44,7 @@ public final class RemoteMethodInvocation
 	Transaction tx;
 	Principal identity;
 	
-	Map methodMap;
+	transient Map methodMap;
 
    // Static --------------------------------------------------------
 
@@ -135,6 +135,28 @@ public final class RemoteMethodInvocation
    // Package protected ---------------------------------------------
 
    // Protected -----------------------------------------------------
+   protected void writeObject(java.io.ObjectOutputStream out)
+      throws IOException
+   {
+   	out.writeObject(id);
+		out.writeUTF(className);
+		out.writeInt(hash);
+		out.writeObject(args);
+//		out.writeObject(tx);
+//		out.writeObject(identity);
+   }
+   
+   protected void readObject(java.io.ObjectInputStream in)
+      throws IOException, ClassNotFoundException
+   {
+   	id = in.readObject();
+		className = in.readUTF();
+		hash = in.readInt();
+		args = (Object[])in.readObject();
+		
+		tx = (Transaction)in.readObject();
+		identity = (Principal)in.readObject();
+   }
 
    // Private -------------------------------------------------------
 	

@@ -19,7 +19,7 @@ import org.jboss.ejb.plugins.jrmp.server.JRMPContainerInvoker;
  *      
  *      @see <related>
  *      @author Rickard Öberg (rickard.oberg@telkel.com)
- *      @version $Revision: 1.9 $
+ *      @version $Revision: 1.10 $
  */
 public class EntityProxy
    extends GenericProxy
@@ -58,6 +58,9 @@ public class EntityProxy
    {
 		super(name, container, optimize);
 
+		if (id == null)
+			throw new NullPointerException("Id may not be null");
+			
       this.id = id;
    }
    
@@ -119,6 +122,19 @@ public class EntityProxy
    // Package protected ---------------------------------------------
     
    // Protected -----------------------------------------------------
+   protected void writeObject(java.io.ObjectOutputStream out)
+      throws IOException
+   {
+		super.writeObject(out);
+   	out.writeObject(id);
+   }
+   
+   protected void readObject(java.io.ObjectInputStream in)
+      throws IOException, ClassNotFoundException
+   {
+   	super.readObject(in);
+   	id = in.readObject();
+   }
     
    // Private -------------------------------------------------------
 

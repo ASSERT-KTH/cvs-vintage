@@ -13,10 +13,10 @@ import javax.transaction.xa.Xid;
  *      
  *	@see <related>
  *	@author Rickard Öberg (rickard.oberg@telkel.com)
- *	@version $Revision: 1.1 $
+ *	@version $Revision: 1.2 $
  */
 public class XidImpl
-   implements Xid
+   implements Xid, java.io.Serializable
 {
    // Constants -----------------------------------------------------
     

@@ -26,7 +26,7 @@ import javax.management.loading.*;
  *      
  *   @see <related>
  *   @author Rickard Öberg (rickard.oberg@telkel.com)
- *   @version $Revision: 1.5 $
+ *   @version $Revision: 1.6 $
  */
 public class Main
 {
@@ -61,7 +61,7 @@ public class Main
       }
       
       System.setProperty("java.security.policy", serverPolicy);
-//      System.setSecurityManager(new SecurityManager());
+      System.setSecurityManager(new SecurityManager());
       
       // Start server - Main does not have the proper permissions
       AccessController.doPrivileged(new PrivilegedAction()

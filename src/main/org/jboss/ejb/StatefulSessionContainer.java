@@ -31,7 +31,7 @@ import org.jboss.logging.Logger;
  *      
  *   @see <related>
  *   @author Rickard Öberg (rickard.oberg@telkel.com)
- *   @version $Revision: 1.12 $
+ *   @version $Revision: 1.13 $
  */
 public class StatefulSessionContainer
    extends Container
@@ -363,29 +363,22 @@ public class StatefulSessionContainer
    }
 
    // EJBHome implementation ----------------------------------------
-   public void removeHome(Handle handle)
+   public void removeHome(MethodInvocation mi)
     throws java.rmi.RemoteException, RemoveException
    {
-    // TODO
-   }
+		throw new Error("Not Yet Implemented");
+	}
    
-   public void removeHome(Object primaryKey)
-    throws java.rmi.RemoteException, RemoveException
-   {
-    // TODO
-   }
-   
-   public EJBMetaData getEJBMetaDataHome()
+   public EJBMetaData getEJBMetaDataHome(MethodInvocation mi)
     throws java.rmi.RemoteException
    {
-    return getContainerInvoker().getEJBMetaData();
+	   return getContainerInvoker().getEJBMetaData();
    }
    
-   public HomeHandle getHomeHandleHome()
-    throws java.rmi.RemoteException   
+   public HomeHandle getHomeHandleHome(MethodInvocation mi)
+	   throws java.rmi.RemoteException   
    {
-    // TODO
-    return null;
+	   throw new Error("Not Yet Implemented");
    }
       
    // Private -------------------------------------------------------
@@ -400,15 +393,7 @@ public class StatefulSessionContainer
          try
          {
             // Implemented by container
-            if (m[i].getName().equals("create"))
-            {
-               map.put(m[i], getClass().getMethod("createHome", new Class[] { MethodInvocation.class }));
-            }
-            else
-            {
-               map.put(m[i], getClass().getMethod(m[i].getName()+"Home", m[i].getParameterTypes()));
-            
-            }
+            map.put(m[i], getClass().getMethod(m[i].getName()+"Home", new Class[] { MethodInvocation.class }));
          } catch (NoSuchMethodException e)
          {
             System.out.println(m[i].getName() + " in bean has not been mapped");
@@ -428,11 +413,10 @@ public class StatefulSessionContainer
       {
          try
          {
-            if (!m[i].getDeclaringClass().getName().equals(EJB_OBJECT))
+            if (!m[i].getDeclaringClass().getName().equals("javax.ejb.EJBObject"))
             {
                 // Implemented by bean
                 map.put(m[i], beanClass.getMethod(m[i].getName(), m[i].getParameterTypes()));
-         
             }
             else
             {

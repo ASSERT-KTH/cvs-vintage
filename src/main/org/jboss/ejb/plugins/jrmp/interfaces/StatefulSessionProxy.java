@@ -6,6 +6,7 @@
  */
 package org.jboss.ejb.plugins.jrmp.interfaces;
 
+import java.io.IOException;
 import java.lang.reflect.Method;
 import java.rmi.MarshalledObject;
 
@@ -18,7 +19,7 @@ import org.jboss.ejb.plugins.jrmp.server.JRMPContainerInvoker;
  *      
  *      @see <related>
  *      @author Rickard Öberg (rickard.oberg@telkel.com)
- *      @version $Revision: 1.7 $
+ *      @version $Revision: 1.8 $
  */
 public class StatefulSessionProxy
    extends GenericProxy
@@ -68,6 +69,19 @@ public class StatefulSessionProxy
    // Package protected ---------------------------------------------
     
    // Protected -----------------------------------------------------
+   protected void writeObject(java.io.ObjectOutputStream out)
+      throws IOException
+   {
+   	super.writeObject(out);
+   	out.writeObject(id);
+   }
+   
+   protected void readObject(java.io.ObjectInputStream in)
+      throws IOException, ClassNotFoundException
+   {
+   	super.readObject(in);
+   	id = in.readObject();
+   }
     
    // Private -------------------------------------------------------
 	

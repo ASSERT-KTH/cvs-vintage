@@ -36,7 +36,7 @@ import org.jboss.util.ServiceMBeanSupport;
  *      
  *   @see TxManager
  *   @author Rickard Öberg (rickard.oberg@telkel.com)
- *   @version $Revision: 1.1 $
+ *   @version $Revision: 1.2 $
  */
 public class TransactionManagerService
    extends ServiceMBeanSupport
@@ -69,14 +69,16 @@ public class TransactionManagerService
    {
 	   // Create a new TM
 	   tm = new TxManager();
+		
+	   // Bind reference to TM in JNDI
+		// TODO: Move this to start when relationships are in place
+	   Reference ref = new Reference(tm.getClass().toString(), getClass().getName(), null);
+	   new InitialContext().bind(JNDI_NAME, ref);
    }
 	
    protected void startService()
       throws Exception
    {
-		// Bind reference to TM in JNDI
-	   Reference ref = new Reference(tm.getClass().toString(), getClass().getName(), null);
-	   new InitialContext().bind(JNDI_NAME, ref);
    }
    
    protected void stopService()

@@ -62,7 +62,7 @@ import org.jboss.logging.Logger;
  *      
  *      @see <related>
  *      @author Rickard Öberg (rickard.oberg@telkel.com)
- *      @version $Revision: 1.7 $
+ *      @version $Revision: 1.8 $
  */
 public abstract class JRMPContainerInvoker
    extends RemoteServer
@@ -122,7 +122,12 @@ public abstract class JRMPContainerInvoker
 	      RemoteMethodInvocation rmi = (RemoteMethodInvocation)mimo.get();
 	      rmi.setMethodMap(homeMethodInvokerMap);
 		
-			return invokeHome(rmi.getMethod(), rmi.getArguments(), rmi.getTransaction(), rmi.getPrincipal());
+			Transaction tx = rmi.getTransaction();
+			System.out.println(container.getTransactionManager());
+			if (tx == null)
+				tx = container.getTransactionManager().getTransaction();
+		
+			return invokeHome(rmi.getMethod(), rmi.getArguments(), tx, rmi.getPrincipal());
       } catch (Exception e)
       {
       	e.printStackTrace();
@@ -144,7 +149,11 @@ public abstract class JRMPContainerInvoker
          RemoteMethodInvocation rmi = (RemoteMethodInvocation)mimo.get();
          rmi.setMethodMap(beanMethodInvokerMap);
 			
-         return invoke(rmi.getId(), rmi.getMethod(), rmi.getArguments(), rmi.getTransaction(), rmi.getPrincipal());
+         Transaction tx = rmi.getTransaction();
+         if (tx == null)
+         	tx = container.getTransactionManager().getTransaction();
+				
+         return invoke(rmi.getId(), rmi.getMethod(), rmi.getArguments(), tx, rmi.getPrincipal());
       } finally
       {
          Thread.currentThread().setContextClassLoader(oldCl);

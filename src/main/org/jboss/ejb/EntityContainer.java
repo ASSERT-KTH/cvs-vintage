@@ -33,7 +33,7 @@ import org.jboss.logging.Logger;
  *   @see EntityEnterpriseContext
  *   @author Rickard Öberg (rickard.oberg@telkel.com)
  *   @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
- *   @version $Revision: 1.10 $
+ *   @version $Revision: 1.11 $
  */
 public class EntityContainer
    extends Container
@@ -428,7 +428,7 @@ public class EntityContainer
       {
             try
             {
-             if (!m[i].getDeclaringClass().getName().equals(EJB_OBJECT))
+             if (!m[i].getDeclaringClass().getName().equals("javax.ejb.EJBObject"))
              {
                 // Implemented by bean
                 map.put(m[i], beanClass.getMethod(m[i].getName(), m[i].getParameterTypes()));
@@ -470,23 +470,15 @@ public class EntityContainer
       public Object invokeHome(MethodInvocation mi)
          throws Exception
       {
-         
-            //Debug
-            System.out.println("Invoking Home "+mi.getMethod().getName());
-         
          // Invoke and handle exceptions
          Method m = (Method)homeMapping.get(mi.getMethod());
          
-            try
+         try
          {
-            return m.invoke(EntityContainer.this, new Object[] { mi.getArguments() });
+            return m.invoke(EntityContainer.this, new Object[] { mi });
          } catch (InvocationTargetException e)
          {
-                //Debug
-                e.printStackTrace();
-                System.out.println("Home Exception seen  "+e.getMessage());
-                
-                Throwable ex = e.getTargetException();
+				Throwable ex = e.getTargetException();
             if (ex instanceof Exception)
                throw (Exception)ex;
             else
@@ -509,10 +501,7 @@ public class EntityContainer
                return m.invoke(EntityContainer.this, new Object[] { mi });
             } catch (InvocationTargetException e)
             {
-               //Debug
-                   System.out.println("Bean Exception seen  "+e.getMessage());
-                    
-                   Throwable ex = e.getTargetException();
+					Throwable ex = e.getTargetException();
                if (ex instanceof Exception)
                   throw (Exception)ex;
                else
