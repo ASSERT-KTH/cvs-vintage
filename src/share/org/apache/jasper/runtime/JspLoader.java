@@ -119,7 +119,7 @@ public abstract class JspLoader extends ClassLoader {
         if (!jars.contains(jarFileName)) {
             Constants.message("jsp.message.adding_jar",
                               new Object[] { jarFileName },
-                              Log.INFORMATION);
+                              Log.DEBUG);
             
             jars.addElement(jarFileName);
         }

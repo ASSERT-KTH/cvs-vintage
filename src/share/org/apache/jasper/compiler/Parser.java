@@ -1095,7 +1095,9 @@ public class Parser {
 		}
 		String s = reader.nextContent();
 		tmplStop = reader.mark();
+		try {
 		caw.write(s, 0, s.length());
+		}catch(Exception ex ) {}
 	    }
 	}
 	flushCharData(tmplStart, tmplStop);

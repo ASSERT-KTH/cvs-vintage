@@ -68,7 +68,6 @@ import java.util.Enumeration;
 import org.apache.jasper.Constants;
 import org.apache.jasper.JasperException;
 
-
 import org.w3c.dom.*;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -91,6 +90,7 @@ public class JspUtil {
 
     public static char[] removeQuotes(char []chars) {
 	CharArrayWriter caw = new CharArrayWriter();
+	try {
 	for (int i = 0; i < chars.length; i++) {
 	    if (chars[i] == '%' && chars[i+1] == '\\' &&
 		chars[i+2] == '\\' && chars[i+3] == '>') {
@@ -100,6 +100,7 @@ public class JspUtil {
 	    }
 	    else caw.write(chars[i]);
 	}
+	} catch( Exception ex ) {}
 	return caw.toCharArray();
     }
 
@@ -158,11 +159,13 @@ public class JspUtil {
 	    tld = builder.parse(in);
 	    return tld;
 	} catch( ParserConfigurationException ex ) {
+	    ex.printStackTrace();
             throw new JasperException(Constants.
 				      getString("jsp.error.parse.error.in.TLD",
 						new Object[] {
 						    ex.getMessage()
 						}));
+	    
 	} catch ( SAXException sx ) {
             throw new JasperException(Constants.
 				      getString("jsp.error.parse.error.in.TLD",
