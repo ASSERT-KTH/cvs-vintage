@@ -1,4 +1,4 @@
-// $Id: ClassDiagramGraphModel.java,v 1.73 2005/02/03 21:50:39 mvw Exp $
+// $Id: ClassDiagramGraphModel.java,v 1.74 2005/02/04 20:32:48 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -270,8 +270,7 @@ public class ClassDiagramGraphModel extends UMLMutableGraphSupport
 	return Model.getFacade().isAClass(node)
 		|| Model.getFacade().isAInterface(node)
 		|| Model.getFacade().isAModel(node)
-		|| Model.getFacade().isAPackage(node)
-		|| Model.getFacade().isAInstance(node);
+		|| Model.getFacade().isAPackage(node);
     }
 
     /**
