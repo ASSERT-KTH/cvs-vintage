@@ -1,10 +1,10 @@
-$page.setTitle("Scarab XML Export")
+$page.setTitle("XML Export")
 
-<div id="register" class="app">
+<div id="xmlexportselect" class="app">
 
 <h2>$page.Title</h2>
 
-<h3>XML Export</h3>
+<h3>$page.Title</h3>
 
 <form action="$link.setPage("admin,XMLExportSelect.vm")" method="post" name="xmlexportselect">
 <input type="hidden" name="action" value="admin.XMLExportSelect" />
@@ -14,13 +14,15 @@ $page.setTitle("Scarab XML Export")
 <div class="axial">
 <table cellpadding="3" cellspacing="2" border="0">
 <tr>
- <th> Issues</th>
+ <th>Issues</th>
  <td>
-  <input name="$xmlExportSelectGroup.FederatedIds.Key" value="$!xmlExportSelectGroup.FederatedIds.value" type="text" size="100" />
-  <br />
+  <input name="$xmlExportSelectGroup.FederatedIds.Key" 
+        value="$!xmlExportSelectGroup.FederatedIds.value" type="text" size="50" />
+  <p>
   Specify a comma separated list of issues and/or issue ranges.  A range
   is a starting issue followed by a &quot;-&quot; and finally the end
   issue.
+  </p>
   #fieldErrorMsg($xmlExportSelectGroup.FederatedIds "")
  </td>
 </tr>
@@ -28,22 +30,16 @@ $page.setTitle("Scarab XML Export")
 </div>
 
 <div class="functnbar2">
-<table cellpadding="4" cellspacing="0" border="1">
- <tr>
-  <td class="firstchild">
-   <input type="submit" name="eventSubmit_doCancel" value="Cancel" />&#160;
-   <input type="submit" name="eventSubmit_doXmlissues" value="XML Issues" />
-  </td>
- </tr>
-</table>
+  <input type="submit" name="eventSubmit_doXmlissues" value="XML Issues" />&#160;
+  <input type="submit" name="eventSubmit_doCancel" value="Cancel" />
 </div>
 
 #if ($federatedIds)
 <div>
-    #xmlExportCheckNotExists($federatedIds)
+  #xmlExportCheckNotExists($federatedIds)
 </div>
 <div>
-    <textarea rows="20" cols="100" wrap="off">#xmlExport($federatedIds)</textarea>
+  <textarea rows="20" cols="100" wrap="off">#xmlExport($federatedIds)</textarea>
 </div>
 #end
 
