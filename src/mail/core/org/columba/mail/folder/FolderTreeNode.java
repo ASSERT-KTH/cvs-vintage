@@ -26,6 +26,7 @@ import org.columba.core.gui.util.ImageLoader;
 import org.columba.core.logging.ColumbaLogger;
 import org.columba.core.util.Lock;
 import org.columba.core.xml.XmlElement;
+import org.columba.mail.command.FolderCommandReference;
 import org.columba.mail.config.FolderItem;
 
 /**
@@ -326,6 +327,16 @@ public abstract class FolderTreeNode
 		FolderItem item = getFolderItem();
 		item.set("property", "name", newName);
 	
+	}
+
+	/**
+	 * Method getCommandReference.
+	 * 
+	 * @param r
+	 * @return FolderCommandReference[]
+	 */
+	public FolderCommandReference[] getCommandReference(FolderCommandReference[] r) {
+		return r;
 	}
 
 	/*

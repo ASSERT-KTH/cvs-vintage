@@ -31,11 +31,11 @@ public class DefaultProcessor extends Thread {
 	private Mutex workerMutex;
 
 	private boolean isBusy;
-	
+
 	private UndoManager undoManager;
-	
+
 	private TaskManager taskManager;
-	
+
 	private int timeStamp;
 
 	public DefaultProcessor() {
@@ -46,50 +46,51 @@ public class DefaultProcessor extends Thread {
 		for (int i = 0; i < MAX_WORKERS; i++) {
 			worker.add(new Worker(this));
 		}
-		
+
 		isBusy = true;
-		
+
 		operationMutex = new Mutex("operationMutex");
 		workerMutex = new Mutex("workerMutex");
 
 		taskManager = new TaskManager();
-		
-		undoManager = new UndoManager( this );
+
+		undoManager = new UndoManager(this);
 		timeStamp = 0;
-		
+
 	}
 
-	public void addOp( Command op ) {
-		addOp( op, Command.FIRST_EXECUTION );	
+	public void addOp(Command op) {
+		addOp(op, Command.FIRST_EXECUTION);
 	}
 
-	synchronized void addOp(Command op, int operationMode) {		
+	synchronized void addOp(Command op, int operationMode) {
 		//ColumbaLogger.log.debug( "Adding Operation..." );
-        boolean needToRelease = false;
-        try {
-            needToRelease = operationMutex.getMutex();
-		
-		int p = operationQueue.size() - 1;
-		OperationItem nextOp;
+		boolean needToRelease = false;
+		try {
+			needToRelease = operationMutex.getMutex();
 
-		// Sort in with respect to priority
-		while (p != -1) {
-			nextOp = (OperationItem) operationQueue.get(p);
-			if ((nextOp.operation.getPriority() < op.getPriority()) && !nextOp.operation.isSynchronize())
-				p--;
-			else
-				break;
+			int p = operationQueue.size() - 1;
+			OperationItem nextOp;
+
+			// Sort in with respect to priority
+			while (p != -1) {
+				nextOp = (OperationItem) operationQueue.get(p);
+				if ((nextOp.operation.getPriority() < op.getPriority())
+					&& !nextOp.operation.isSynchronize())
+					p--;
+				else
+					break;
+			}
+
+			operationQueue.add(p + 1, new OperationItem(op, operationMode));
+		} finally {
+			if (needToRelease) {
+				operationMutex.releaseMutex();
+			}
 		}
-
-		operationQueue.add( p + 1, new OperationItem(op,operationMode));
-        } finally {
-            if (needToRelease) {
-		operationMutex.releaseMutex();
-            }
-        }
 		//ColumbaLogger.log.debug( "Operation added" );
-		
-        notify();
+
+		notify();
 	}
 
 	private boolean canBeProcessed(OperationItem opItem) {
@@ -98,64 +99,64 @@ public class DefaultProcessor extends Thread {
 
 	private OperationItem getNextOpItem() {
 		OperationItem nextOp = null;
-        boolean needToRelease = false;
-        try {
-		    needToRelease = operationMutex.getMutex();
-		 for (int i = 0; i < operationQueue.size(); i++) {
-			 nextOp = (OperationItem) operationQueue.get(i);
-			if( ( i!=0 ) && (nextOp.operation.isSynchronize()) ) {
-				nextOp = null;
-				break;	
-                } else if (canBeProcessed(nextOp)) {
-				operationQueue.remove(i);
-				break;
-			} else {
-				nextOp.operation.incPriority();
-				if( nextOp.operation.getPriority() >= Command.DEFINETLY_NEXT_OPERATION_PRIORITY ) {					
+		boolean needToRelease = false;
+		try {
+			needToRelease = operationMutex.getMutex();
+			for (int i = 0; i < operationQueue.size(); i++) {
+				nextOp = (OperationItem) operationQueue.get(i);
+				if ((i != 0) && (nextOp.operation.isSynchronize())) {
 					nextOp = null;
 					break;
+				} else if (canBeProcessed(nextOp)) {
+					operationQueue.remove(i);
+					break;
 				} else {
-					nextOp = null;					
+					nextOp.operation.incPriority();
+					if (nextOp.operation.getPriority()
+						>= Command.DEFINETLY_NEXT_OPERATION_PRIORITY) {
+						nextOp = null;
+						break;
+					} else {
+						nextOp = null;
+					}
 				}
 			}
+		} finally {
+			if (needToRelease) {
+				operationMutex.releaseMutex();
+			}
 		}
-        } finally {
-            if (needToRelease) {
-		operationMutex.releaseMutex();
-            }
-        }
 		return nextOp;
 	}
 
-
 	public synchronized void operationFinished(Command op, Worker w) {
-        boolean needToRelease = false;
-        try {
-    		needToRelease = workerMutex.getMutex();
-		
-		worker.add(w);
-        } finally {
-            if (needToRelease) {
-		workerMutex.releaseMutex();
-            }
-        }
+		boolean needToRelease = false;
+		try {
+			needToRelease = workerMutex.getMutex();
+
+			worker.add(w);
+		} finally {
+			if (needToRelease) {
+				workerMutex.releaseMutex();
+			}
+		}
 		//ColumbaLogger.log.debug( "Operation finished" );
 		notify();
 	}
 
 	private Worker getWorker() {
 		Worker result = null;
-        boolean needToRelease = false;
-        try {
-    		needToRelease = workerMutex.getMutex();
+		boolean needToRelease = false;
+		try {
+			needToRelease = workerMutex.getMutex();
 
-		if (worker.size() > 0)
-			result = (Worker) worker.remove(0);
-        } finally {
-            if (needToRelease) {
-		workerMutex.releaseMutex();
-            }
-        }
+			if (worker.size() > 0)
+				result = (Worker) worker.remove(0);
+		} finally {
+			if (needToRelease) {
+				workerMutex.releaseMutex();
+			}
+		}
 		return result;
 	}
 
@@ -189,34 +190,34 @@ public class DefaultProcessor extends Thread {
 			worker.register(taskManager);
 			//ColumbaLogger.log.debug( "Starting Worker" );
 			worker.start();
-			
+
 			//ColumbaLogger.log.debug( "New Operation started..." );
 		}
 	}
-	
+
 	public boolean isBusy() {
 		return isBusy();
 	}
-	
+
 	public boolean hasFinishedCommands() {
 		boolean result;
-        boolean needToRelease = false;
-        try {
-		    needToRelease = workerMutex.getMutex();
-		result = (worker.size() == MAX_WORKERS);
-        } finally {
-            if (needToRelease) {
-		workerMutex.releaseMutex();
-            }
-        }
-        try {
-		    needToRelease = operationMutex.getMutex();
-		result = result && (operationQueue.size() == 0);
-        } finally {
-            if (needToRelease) {
-		operationMutex.releaseMutex();
-            }
-        }
+		boolean needToRelease = false;
+		try {
+			needToRelease = workerMutex.getMutex();
+			result = (worker.size() == MAX_WORKERS);
+		} finally {
+			if (needToRelease) {
+				workerMutex.releaseMutex();
+			}
+		}
+		try {
+			needToRelease = operationMutex.getMutex();
+			result = result && (operationQueue.size() == 0);
+		} finally {
+			if (needToRelease) {
+				operationMutex.releaseMutex();
+			}
+		}
 		return result;
 	}
 
@@ -248,10 +249,10 @@ public class DefaultProcessor extends Thread {
 
 class OperationItem {
 	public Command operation;
-	public int operationMode;		
-	
-	public OperationItem( Command op, int opMode ) {
+	public int operationMode;
+
+	public OperationItem(Command op, int opMode) {
 		operation = op;
-		operationMode = opMode;	
+		operationMode = opMode;
 	}
 }

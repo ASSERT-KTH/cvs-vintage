@@ -18,6 +18,7 @@ import org.columba.core.gui.selection.SelectionListener;
 import org.columba.mail.command.FolderCommandReference;
 import org.columba.mail.config.FolderItem;
 import org.columba.mail.folder.Folder;
+import org.columba.mail.folder.FolderTreeNode;
 import org.columba.mail.gui.config.folder.FolderOptionsDialog;
 import org.columba.mail.gui.frame.AbstractMailFrameController;
 import org.columba.mail.gui.tree.selection.TreeSelectionChangedEvent;
@@ -114,7 +115,7 @@ public class RenameFolderAction
 
 		if (((TreeSelectionChangedEvent) e).getSelected().length > 0) {
 
-			Folder folder = ((TreeSelectionChangedEvent) e).getSelected()[0];
+			FolderTreeNode folder = ((TreeSelectionChangedEvent) e).getSelected()[0];
 
 			if (folder != null) {
 

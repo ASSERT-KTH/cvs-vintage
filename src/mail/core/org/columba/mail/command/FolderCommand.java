@@ -18,7 +18,6 @@ package org.columba.mail.command;
 import org.columba.core.command.Command;
 import org.columba.core.command.DefaultCommandReference;
 import org.columba.core.gui.frame.AbstractFrameController;
-import org.columba.mail.folder.Folder;
 
 /**
  * Adds an array of folder references  
@@ -50,11 +49,7 @@ public abstract class FolderCommand extends Command {
 	public DefaultCommandReference[] getReferences() {
 		FolderCommandReference[] r = (FolderCommandReference[]) super.getReferences();
 
-		Folder folder = (Folder) r[0].getFolder();
-
-		r = folder.getCommandReference(r);
-
-		return r;
+		return r[0].getFolder().getCommandReference(r);
 	}
 
 

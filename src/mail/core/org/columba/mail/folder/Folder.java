@@ -489,16 +489,6 @@ public abstract class Folder extends FolderTreeNode {
 		throws Exception;
 
 	/**
-	 * Method getCommandReference.
-	 * 
-	 * @param r
-	 * @return FolderCommandReference[]
-	 */
-	public FolderCommandReference[] getCommandReference(FolderCommandReference[] r) {
-		return r;
-	}
-	
-	/**
 	 * save messagefolderinfo to xml-configuration
 	 * 
 	 */

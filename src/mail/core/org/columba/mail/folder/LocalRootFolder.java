@@ -19,12 +19,6 @@ import javax.swing.ImageIcon;
 
 import org.columba.core.gui.util.ImageLoader;
 import org.columba.mail.config.FolderItem;
-import org.columba.mail.filter.Filter;
-import org.columba.mail.message.ColumbaHeader;
-import org.columba.mail.message.ColumbaMessage;
-import org.columba.mail.message.HeaderList;
-import org.columba.ristretto.message.MimePart;
-import org.columba.ristretto.message.MimeTree;
 
 /**
  * @author freddy
@@ -34,7 +28,7 @@ import org.columba.ristretto.message.MimeTree;
  * To enable and disable the creation of type comments go to
  * Window>Preferences>Java>Code Generation.
  */
-public class LocalRootFolder extends Folder {
+public class LocalRootFolder extends FolderTreeNode {
 
 	protected final static ImageIcon rootIcon =
 		ImageLoader.getSmallImageIcon("localhost.png");
@@ -50,123 +44,6 @@ public class LocalRootFolder extends Folder {
 
 	public ImageIcon getExpandedIcon() {
 		return rootIcon;
-	}
-	/**
-	 * @see org.columba.mail.folder.Folder#addMessage(org.columba.mail.message.AbstractMessage, org.columba.core.command.WorkerStatusController)
-	 */
-	public Object addMessage(
-		ColumbaMessage message)
-		throws Exception {
-		return null;
-	}
-
-	/**
-	 * @see org.columba.mail.folder.Folder#addMessage(java.lang.String, org.columba.core.command.WorkerStatusController)
-	 */
-	public Object addMessage(String source)
-		throws Exception {
-		return null;
-	}
-
-	/**
-	 * @see org.columba.mail.folder.Folder#exists(java.lang.Object, org.columba.core.command.WorkerStatusController)
-	 */
-	public boolean exists(Object uid)
-		throws Exception {
-		return false;
-	}
-
-	/**
-	 * @see org.columba.mail.folder.Folder#expungeFolder(java.lang.Object, org.columba.core.command.WorkerStatusController)
-	 */
-	public void expungeFolder()
-		throws Exception {
-	}
-
-	/**
-	 * @see org.columba.mail.folder.Folder#getHeaderList(org.columba.core.command.WorkerStatusController)
-	 */
-	public HeaderList getHeaderList()
-		throws Exception {
-		return null;
-	}
-
-	/**
-	 * @see org.columba.mail.folder.Folder#getMessageHeader(java.lang.Object, org.columba.core.command.WorkerStatusController)
-	 */
-	public ColumbaHeader getMessageHeader(
-		Object uid)
-		throws Exception {
-		return null;
-	}
-
-	/**
-	 * @see org.columba.mail.folder.Folder#getMessageSource(java.lang.Object, org.columba.core.command.WorkerStatusController)
-	 */
-	public String getMessageSource(Object uid)
-		throws Exception {
-		return null;
-	}
-
-	/**
-	 * @see org.columba.mail.folder.Folder#getMimePart(java.lang.Object, java.lang.Integer, org.columba.core.command.WorkerStatusController)
-	 */
-	public MimePart getMimePart(
-		Object uid,
-		Integer[] address)
-		throws Exception {
-		return null;
-	}
-
-	/**
-	 * @see org.columba.mail.folder.Folder#getMimePartTree(java.lang.Object, org.columba.core.command.WorkerStatusController)
-	 */
-	public MimeTree getMimePartTree(
-		Object uid)
-		throws Exception {
-		return null;
-	}
-
-	/**
-	 * @see org.columba.mail.folder.Folder#markMessage(java.lang.Object, int, org.columba.core.command.WorkerStatusController)
-	 */
-	public void markMessage(
-		Object[] uids,
-		int variant)
-		throws Exception {
-	}
-
-	/**
-	 * @see org.columba.mail.folder.Folder#removeMessage(java.lang.Object, org.columba.core.command.WorkerStatusController)
-	 */
-	public void removeMessage(Object uid)
-		throws Exception {
-	}
-
-	/**
-	 * @see org.columba.mail.folder.Folder#searchMessages(org.columba.mail.filter.Filter, java.lang.Object, org.columba.core.command.WorkerStatusController)
-	 */
-	public Object[] searchMessages(
-		Filter filter,
-		Object[] uids)
-		throws Exception {
-		return null;
-	}
-
-	/**
-	 * @see org.columba.mail.folder.Folder#searchMessages(org.columba.mail.filter.Filter, org.columba.core.command.WorkerStatusController)
-	 */
-	public Object[] searchMessages(
-		Filter filter)
-		throws Exception {
-		return null;
-	}
-
-	/**
-	 * @see org.columba.mail.folder.FolderTreeNode#getDefaultChild()
-	 */
-	public String getDefaultChild() {
-		return null;
 	}
 
 

@@ -39,4 +39,11 @@ public class Root extends FolderTreeNode {
 
 
 
+	/* (non-Javadoc)
+	 * @see org.columba.mail.folder.FolderTreeNode#getName()
+	 */
+	public String getName() {
+		return "Root";
+	}
+
 }

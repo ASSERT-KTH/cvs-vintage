@@ -102,21 +102,22 @@ public class FolderTreeCellRenderer
 			row,
 			hasFocusVar);
 
-		Folder folder = null;
+		FolderTreeNode treeNode = (FolderTreeNode) value;
 
-		// try to cast the given value to Folder
-		try {
-			folder = (Folder) value;
-			// if there is an Exception, then set for the Label (this) the String from the FolderTreeNode. The value MUST BE HERE
-			// a tree node
-			// TODO i don't know if in any case the value is a FolderTreeNode if it is not a Folder (waffel)
-		} catch (Exception ex) {
-			setText(((FolderTreeNode) value).toString());
-			return this;
+		setText( treeNode.getName() );
+
+		// set defaul icons 
+		// -> use icons from folders
+		if (expanded) {
+			setIcon(treeNode.getExpandedIcon());
+		} else {
+			setIcon(treeNode.getCollapsedIcon());
 		}
 
+
 		// if the value was an folder
-		if (folder != null) {
+		if (value instanceof Folder) {
+			Folder folder = (Folder) value;
 			// getting folder info
 			MessageFolderInfo info = folder.getMessageFolderInfo();
 			// getting unseen value
@@ -146,13 +147,6 @@ public class FolderTreeCellRenderer
 
 				setText(name);
 
-				// set defaul icons 
-				// -> use icons from folders
-				if (expanded) {
-					setIcon(folder.getExpandedIcon());
-				} else {
-					setIcon(folder.getCollapsedIcon());
-				}
 				
 				// overwrite special folders with custom icons
 				// TODO: add same for IMAP folders

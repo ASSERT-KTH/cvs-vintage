@@ -22,6 +22,7 @@ import org.columba.core.action.InternAction;
 import org.columba.core.gui.frame.AbstractFrameController;
 import org.columba.core.main.MainInterface;
 import org.columba.mail.command.FolderCommandReference;
+import org.columba.mail.folder.Folder;
 import org.columba.mail.gui.table.command.ViewHeaderListCommand;
 
 public class ViewHeaderListAction extends InternAction {
@@ -37,8 +38,8 @@ public class ViewHeaderListAction extends InternAction {
 	 * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
 	 */
 	public void actionPerformed(ActionEvent evt) {
-		FolderCommandReference[] references  = (FolderCommandReference[]) getFrameController().getSelectionManager().getSelection("mail.tree");
-		if( references.length == 1) {
+		FolderCommandReference[] references  = (FolderCommandReference[]) getFrameController().getSelectionManager().getSelection("mail.tree");		
+		if( (references.length == 1) && (references[0].getFolder() instanceof Folder) ) {
 			MainInterface.processor.addOp(
 				new ViewHeaderListCommand(
 					getFrameController(),references));

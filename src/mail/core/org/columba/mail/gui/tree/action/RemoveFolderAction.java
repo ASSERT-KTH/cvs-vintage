@@ -21,6 +21,7 @@ import org.columba.core.main.MainInterface;
 import org.columba.mail.command.FolderCommandReference;
 import org.columba.mail.config.FolderItem;
 import org.columba.mail.folder.Folder;
+import org.columba.mail.folder.FolderTreeNode;
 import org.columba.mail.folder.command.RemoveFolderCommand;
 import org.columba.mail.gui.frame.AbstractMailFrameController;
 import org.columba.mail.gui.tree.selection.TreeSelectionChangedEvent;
@@ -84,7 +85,7 @@ public class RemoveFolderAction
 				.getSelectionManager()
 				.getSelection(
 				"mail.tree");
-		Folder folder = (Folder) r[0].getFolder();
+		FolderTreeNode folder = r[0].getFolder();
 
 		if (!folder.isLeaf()) {
 
@@ -103,7 +104,7 @@ public class RemoveFolderAction
 	public void selectionChanged(SelectionChangedEvent e) {
 
 		if (((TreeSelectionChangedEvent) e).getSelected().length > 0) {
-			Folder folder = ((TreeSelectionChangedEvent) e).getSelected()[0];
+			FolderTreeNode folder = ((TreeSelectionChangedEvent) e).getSelected()[0];
 
 			if (folder != null) {
 

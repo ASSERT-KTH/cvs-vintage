@@ -75,8 +75,9 @@ public class FolderOptionsAction
 	}
 
 	public void selectionChanged(SelectionChangedEvent e) {
+		FolderTreeNode[] r = ((TreeSelectionChangedEvent) e).getSelected();
 
-		if (((TreeSelectionChangedEvent) e).getSelected().length > 0)
+		if (r.length > 0 && r[0] instanceof Folder )
 			setEnabled(true);
 		else
 			setEnabled(false);

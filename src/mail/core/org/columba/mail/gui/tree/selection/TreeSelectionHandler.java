@@ -28,6 +28,7 @@ import org.columba.core.gui.selection.SelectionHandler;
 import org.columba.core.logging.ColumbaLogger;
 import org.columba.mail.command.FolderCommandReference;
 import org.columba.mail.folder.Folder;
+import org.columba.mail.folder.FolderTreeNode;
 import org.columba.mail.gui.tree.TreeView;
 
 /**
@@ -49,7 +50,7 @@ public class TreeSelectionHandler
 	private TreeView view;
 	private LinkedList selectedFolders;
 
-	private final static Folder[] folderArray = { null };
+	private final static FolderTreeNode[] folderArray = { null };
 
 	public TreeSelectionHandler(TreeView view) {
 		super("mail.tree");
@@ -67,7 +68,7 @@ public class TreeSelectionHandler
 		ListIterator it = selectedFolders.listIterator();
 		int i = 0;
 		while (it.hasNext()) {
-			references[i++] = new FolderCommandReference((Folder) it.next());
+			references[i++] = new FolderCommandReference((FolderTreeNode) it.next());
 		}
 
 		return references;
@@ -84,8 +85,8 @@ public class TreeSelectionHandler
 		
 
 		for (int i = 0; i < e.getPaths().length; i++) {
-			if (e.getPaths()[i].getLastPathComponent() instanceof Folder) {
-				Folder folder = (Folder) e.getPaths()[i].getLastPathComponent();
+			if (e.getPaths()[i].getLastPathComponent() instanceof FolderTreeNode) {
+				FolderTreeNode folder = (FolderTreeNode) e.getPaths()[i].getLastPathComponent();
 				if (e.isAddedPath(i)) {
 					ColumbaLogger.log.debug(
 						"Folder added to Selection= " + folder.getName());
@@ -100,7 +101,7 @@ public class TreeSelectionHandler
 
 		fireSelectionChanged(
 			new TreeSelectionChangedEvent(
-				(Folder[]) selectedFolders.toArray(folderArray)));
+				(FolderTreeNode[]) selectedFolders.toArray(folderArray)));
 	}
 
 	public void setSelection(DefaultCommandReference[] selection) {

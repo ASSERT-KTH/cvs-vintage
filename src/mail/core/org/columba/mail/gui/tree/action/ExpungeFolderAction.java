@@ -17,6 +17,8 @@ import org.columba.core.gui.selection.SelectionChangedEvent;
 import org.columba.core.gui.selection.SelectionListener;
 import org.columba.core.main.MainInterface;
 import org.columba.mail.command.FolderCommandReference;
+import org.columba.mail.config.FolderItem;
+import org.columba.mail.folder.FolderTreeNode;
 import org.columba.mail.folder.command.ExpungeFolderCommand;
 import org.columba.mail.gui.frame.AbstractMailFrameController;
 import org.columba.mail.gui.tree.selection.TreeSelectionChangedEvent;
@@ -86,9 +88,18 @@ public class ExpungeFolderAction
 					 */
 	public void selectionChanged(SelectionChangedEvent e) {
 
-		if (((TreeSelectionChangedEvent) e).getSelected().length > 0)
-			setEnabled(true);
-		else
+		if (((TreeSelectionChangedEvent) e).getSelected().length > 0) {
+			FolderTreeNode folder = ((TreeSelectionChangedEvent) e).getSelected()[0];
+
+			if (folder != null) {
+
+				FolderItem item = folder.getFolderItem();
+				if (item.get("property", "accessrights").equals("user"))
+					setEnabled(true);
+				else
+					setEnabled(false);
+			}
+		} else
 			setEnabled(false);
 
 	}
