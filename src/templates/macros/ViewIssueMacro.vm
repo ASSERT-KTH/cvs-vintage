@@ -466,7 +466,7 @@ $l10n.NoDependencies
 #else
 <table width="100%" border="1" cellspacing="2" cellpadding="3">
 <tr>
-#if ($canEdit && !$issueParents.isEmpty())
+#if ($canEdit && (!$issueParents.isEmpty() || !$issueChildren.isEmpty()))
  <th>$l10n.Select</th>
 #end
  <th>$l10n.Issue $l10n.ID #</th>
