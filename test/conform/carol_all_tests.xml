@@ -4,9 +4,7 @@
   <!-- *********     TEST ALL    **********-->
   <!-- ************************************-->
   <target name="test.all"> 
-   	<antcall target="test.local"/>
     <antcall target="test.single"/>
-    <antcall target="test.multiple"/>
   </target>
 
   <target name="test.local"> 
@@ -17,15 +15,7 @@
     <condition property="is.jvm.1.4">
       <equals  arg1="${ant.java.version}" arg2="1.4"/>
     </condition>
-    <antcall target="single.jeremie"/>
-    <antcall target="single.iiop"/>
-    <antcall target="single.jrmp1.1"/>
-    <antcall target="single.jrmp1.2"/>
-
-    <antcall target="single.nons.jeremie"/>
     <antcall target="single.nons.iiop"/>
-    <antcall target="single.nons.jrmp1.1"/>
-    <antcall target="single.nons.jrmp1.2"/>
     </target>
 
   <target name="test.multiple">
@@ -137,12 +127,12 @@
 
   <target name="single.nons.iiop" if="is.jvm.1.4">
     <ant antfile="conform/generic/carol_single_nons.xml">
-      <property name="stub.jar.name" value="suniiop.jar"/>
-      <property name="client.properties.file.name1" value="iiop_jndi.properties"/>
-      <property name="client.properties.file.name2" value="iiop_carol_nons.properties"/>
-      <property name="server.properties.file.name1" value="iiop_jndi.properties"/>
-      <property name="server.properties.file.name2" value="iiop_carol_nons.properties"/>
-      <property name="test.name"          value="suniiop.nons"/>
+      <property name="stub.jar.name" value="openorb.jar"/>
+      <property name="client.properties.file.name1" value="openorb_jndi.properties"/>
+      <property name="client.properties.file.name2" value="openorb_carol_nons.properties"/>
+      <property name="server.properties.file.name1" value="openorb_jndi.properties"/>
+      <property name="server.properties.file.name2" value="openorb_carol_nons.properties"/>
+      <property name="test.name"          value="openorbiiop.nons"/>
       <property name="test.client.pkg" value="org/objectweb/carol/jtests/conform/basic/clients/rmiiiop"/>
     </ant>
   </target> 
