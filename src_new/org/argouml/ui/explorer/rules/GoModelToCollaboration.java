@@ -1,4 +1,4 @@
-// $Id: GoModelToCollaboration.java,v 1.16 2005/01/30 20:47:47 linus Exp $
+// $Id: GoModelToCollaboration.java,v 1.17 2005/02/10 21:06:17 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -62,8 +62,8 @@ public class GoModelToCollaboration extends AbstractPerspectiveRule {
             while (it.hasNext()) {
                 Object collab = /*(MCollaboration)*/ it.next();
                 if (Model.getFacade().getRepresentedClassifier(collab) == null
-                    && Model.getFacade().getRepresentedOperation(collab) == null) {
-
+                    && Model.getFacade().getRepresentedOperation(collab) 
+                        == null) {
                     returnList.add(collab);
                 }
             }

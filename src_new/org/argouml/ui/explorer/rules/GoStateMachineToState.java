@@ -1,4 +1,4 @@
-// $Id: GoStateMachineToState.java,v 1.3 2005/01/30 20:47:47 linus Exp $
+// $Id: GoStateMachineToState.java,v 1.4 2005/02/10 21:06:17 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -55,7 +55,8 @@ public class GoStateMachineToState extends AbstractPerspectiveRule {
 
         if (Model.getFacade().isAStateMachine(parent)) {
             if (Model.getFacade().getTop(parent) != null) {
-                return Model.getFacade().getSubvertices(Model.getFacade().getTop(parent));
+                return Model.getFacade().getSubvertices(
+                        Model.getFacade().getTop(parent));
             }
         }
         return null;

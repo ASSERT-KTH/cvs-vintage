@@ -1,4 +1,4 @@
-// $Id: ExplorerTree.java,v 1.29 2005/01/30 20:48:15 linus Exp $
+// $Id: ExplorerTree.java,v 1.30 2005/02/10 21:10:37 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -220,15 +220,16 @@ public class ExplorerTree
             }
 
             if (name == null || name.equals("")) {
-                name = "(anon " + Model.getFacade().getUMLClassName(value) + ")";
+                name = 
+                    "(anon " + Model.getFacade().getUMLClassName(value) + ")";
             }
 
             // Look for stereotype
             if (showStereotype) {
                 Object stereo = null;
                 if (Model.getFacade().getStereotypes(value).size() > 0) {
-                    stereo =
-			Model.getFacade().getStereotypes(value).iterator().next();
+                    stereo = Model.getFacade().getStereotypes(value)
+                        .iterator().next();
                 }
                 if (stereo != null) {
                     name += " " + GeneratorDisplay.getInstance()

@@ -1,4 +1,4 @@
-// $Id: GoNamespaceToClassifierAndPackage.java,v 1.10 2005/01/30 20:47:47 linus Exp $
+// $Id: GoNamespaceToClassifierAndPackage.java,v 1.11 2005/02/10 21:06:17 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -57,7 +57,8 @@ public class GoNamespaceToClassifierAndPackage
         if (!Model.getFacade().isANamespace(parent))
             return null;
 
-        Iterator elements = Model.getFacade().getOwnedElements(parent).iterator();
+        Iterator elements = 
+            Model.getFacade().getOwnedElements(parent).iterator();
         List result = new ArrayList();
 
         while (elements.hasNext()) {
