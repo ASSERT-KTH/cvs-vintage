@@ -1,5 +1,5 @@
 
-// $Id: UMLComboBoxModel2.java,v 1.34 2003/09/28 19:10:53 bobtarling Exp $
+// $Id: UMLComboBoxModel2.java,v 1.35 2003/10/04 23:23:18 d00mst Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -132,10 +132,12 @@ public abstract class UMLComboBoxModel2
     public void propertySet(MElementEvent e) {
         if (e.getName().equals(_propertySetName)
             && e.getSource() == getTarget()
-            && (contains(getChangedElement(e)) 
-		|| getChangedElement(e) == null))
+	    && (_clearable || getChangedElement(e) != null))
 	{
-            setSelectedItem(getChangedElement(e));
+	    Object elem = getChangedElement(e);
+	    if (!contains(elem))
+		addElement(elem);
+            setSelectedItem(elem);
         }
     }
 
