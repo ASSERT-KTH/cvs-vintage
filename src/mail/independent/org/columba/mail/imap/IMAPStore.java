@@ -137,7 +137,8 @@ public class IMAPStore {
 	}
 
 	public void logout() throws Exception {
-		if( state != STATE_NONAUTHENTICATE) getProtocol().logout();
+		if (state != STATE_NONAUTHENTICATE)
+			getProtocol().logout();
 	}
 
 	public int getState() {
@@ -288,24 +289,30 @@ public class IMAPStore {
 		}
 	}
 
-	private void ensureState(int state ) throws Exception {
-		if( state == state) return;
-		
+	private void ensureState(int state) throws Exception {
+		if (state == state)
+			return;
+
 		login();
 	}
 
 	public boolean select(String path) throws Exception {
 		ensureState(STATE_AUTHENTICATE);
-		
+
 		ColumbaLogger.log.info("selecting path=" + path);
 
-		try {
-			getProtocol().close();
-		} catch (CommandFailedException ex) {
-		} catch (DisconnectedException ex) {
-			state = STATE_NONAUTHENTICATE;
-			select(path);
+		if (getSelectedFolderPath() != null) {
+			// if another folder is selected, close this one first
+			// -> this is necessary, because the close command
+			// -> also deletes are messages that are marked as expunged
+			try {
+				getProtocol().close();
+			} catch (CommandFailedException ex) {
+			} catch (DisconnectedException ex) {
+				state = STATE_NONAUTHENTICATE;
+				select(path);
 
+			}
 		}
 
 		try {
@@ -333,6 +340,7 @@ public class IMAPStore {
 			selectedFolderPath = path;
 		} catch (BadCommandException ex) {
 			state = STATE_AUTHENTICATE;
+			selectedFolderPath = null;
 			JOptionPane.showMessageDialog(
 				null,
 				"Error while selecting mailbox: " + path);
@@ -342,8 +350,10 @@ public class IMAPStore {
 				"Error while selecting mailbox: " + path + ex.getMessage());
 
 			state = STATE_AUTHENTICATE;
+			selectedFolderPath = null;
 		} catch (DisconnectedException ex) {
 			state = STATE_NONAUTHENTICATE;
+			selectedFolderPath = null;
 			select(path);
 
 		}
