@@ -40,152 +40,172 @@ import org.columba.mail.gui.view.AbstractMailView;
 import org.columba.mail.main.MailInterface;
 
 /**
- *  Mail frame controller which contains a tree, table and a message
- *  viewer.
- *
- *  @author fdietz
+ * Mail frame controller which contains a tree, table and a message viewer.
+ * 
+ * @author fdietz
  */
 public class ThreePaneMailFrameController extends AbstractMailFrameController
-    implements TableViewOwner, TreeViewOwner {
-    public TreeController treeController;
-    public TableController tableController;
-    public HeaderController headerController;
-    public FilterToolbar filterToolbar;
-    public FolderInfoPanel folderInfoPanel;
-    protected AbstractMailView view;
+		implements TableViewOwner, TreeViewOwner {
+	public TreeController treeController;
 
-    /**
- * @param viewItem
- */
-    public ThreePaneMailFrameController(ViewItem viewItem) {
-        super("ThreePaneMail", viewItem);
+	public TableController tableController;
 
-        TableUpdater.add(this);
-    }
+	public HeaderController headerController;
 
-    protected void initActions() {
-        /*
-        // Register UP key so its easy to move through messages in the list
-        tableController.getView().getInputMap().put(KeyStroke.getKeyStroke(
-                KeyEvent.VK_UP, 0), "UP");
+	public FilterToolbar filterToolbar;
 
-        UpAction upAction = new UpAction(this);
-        tableController.getView().getActionMap().put("UP", upAction);
+	public FolderInfoPanel folderInfoPanel;
 
-        // Register DOWN key so its easy to move through messages in the list
-        tableController.getView().getInputMap().put(KeyStroke.getKeyStroke(
-                KeyEvent.VK_DOWN, 0), "DOWN");
+	protected AbstractMailView view;
 
-        DownAction downAction = new DownAction(this);
-        tableController.getView().getActionMap().put("DOWN", downAction);
-        */
-        
-        RenameFolderAction renameFolderAction = new RenameFolderAction(this);
+	/**
+	 * @param viewItem
+	 */
+	public ThreePaneMailFrameController(ViewItem viewItem) {
+		super("ThreePaneMail", viewItem);
 
-        // Register F2 hotkey for renaming folder when the message panel has focus
-        tableController.getView().getActionMap().put("F2", renameFolderAction);
-        tableController.getView().getInputMap().put(KeyStroke.getKeyStroke(
-                KeyEvent.VK_F2, 0), "F2");
+		TableUpdater.add(this);
+	}
 
-        // Register F2 hotkey for renaming folder when the folder tree itself has focus
-        treeController.getView().getActionMap().put("F2", renameFolderAction);
-        treeController.getView().getInputMap().put(KeyStroke.getKeyStroke(
-                KeyEvent.VK_F2, 0), "F2");
+	protected void initActions() {
+		/*
+		 * // Register UP key so its easy to move through messages in the list
+		 * tableController.getView().getInputMap().put(KeyStroke.getKeyStroke(
+		 * KeyEvent.VK_UP, 0), "UP");
+		 * 
+		 * UpAction upAction = new UpAction(this);
+		 * tableController.getView().getActionMap().put("UP", upAction);
+		 *  // Register DOWN key so its easy to move through messages in the
+		 * list
+		 * tableController.getView().getInputMap().put(KeyStroke.getKeyStroke(
+		 * KeyEvent.VK_DOWN, 0), "DOWN");
+		 * 
+		 * DownAction downAction = new DownAction(this);
+		 * tableController.getView().getActionMap().put("DOWN", downAction);
+		 */
 
-        ApplyFilterAction applyFilterAction = new ApplyFilterAction(this);
+		RenameFolderAction renameFolderAction = new RenameFolderAction(this);
 
-        // Register ALT-A hotkey for apply filter on folder when the folder tree itself has focus
-        treeController.getView().getActionMap().put("ALT_A", applyFilterAction);
-        treeController.getView().getInputMap().put(KeyStroke.getKeyStroke(
-                KeyEvent.VK_A, KeyEvent.ALT_DOWN_MASK), "ALT_A");
-        tableController.getView().getActionMap().put("ALT_A", applyFilterAction);
-        tableController.getView().getInputMap().put(KeyStroke.getKeyStroke(
-                KeyEvent.VK_A, KeyEvent.ALT_DOWN_MASK), "ALT_A");
+		// Register F2 hotkey for renaming folder when the message panel has
+		// focus
+		tableController.getView().getActionMap().put("F2", renameFolderAction);
+		tableController.getView().getInputMap().put(
+				KeyStroke.getKeyStroke(KeyEvent.VK_F2, 0), "F2");
 
-        //register the markasread timer as selection listener
-        ((MailFrameMediator)tableController.getFrameController()).registerTableSelectionListener(tableController.getMarkAsReadTimer());
-    }
+		// Register F2 hotkey for renaming folder when the folder tree itself
+		// has focus
+		treeController.getView().getActionMap().put("F2", renameFolderAction);
+		treeController.getView().getInputMap().put(
+				KeyStroke.getKeyStroke(KeyEvent.VK_F2, 0), "F2");
 
-    public AbstractView createView() {
-        //MailFrameView view = new MailFrameView(this);
-        // Load "plugin" view instead
-        ViewPluginHandler handler = null;
+		ApplyFilterAction applyFilterAction = new ApplyFilterAction(this);
 
-        try {
-            handler = (ViewPluginHandler) MainInterface.pluginManager.getHandler(
-                    "org.columba.core.view");
-        } catch (PluginHandlerNotFoundException ex) {
-            throw new RuntimeException(ex);
-        }
+		// Register ALT-A hotkey for apply filter on folder when the folder tree
+		// itself has focus
+		treeController.getView().getActionMap().put("ALT_A", applyFilterAction);
+		treeController.getView().getInputMap().put(
+				KeyStroke.getKeyStroke(KeyEvent.VK_A, KeyEvent.ALT_DOWN_MASK),
+				"ALT_A");
+		tableController.getView().getActionMap()
+				.put("ALT_A", applyFilterAction);
+		tableController.getView().getInputMap().put(
+				KeyStroke.getKeyStroke(KeyEvent.VK_A, KeyEvent.ALT_DOWN_MASK),
+				"ALT_A");
 
-        // get view using the plugin handler found above
-        Object[] args = {this};
+		//register the markasread timer as selection listener
+		((MailFrameMediator) tableController.getFrameController())
+				.registerTableSelectionListener(tableController
+						.getMarkAsReadTimer());
+	}
 
-        try {
-            view = (AbstractMailView) handler.getPlugin(
-                getViewItem().getRoot().getAttribute("frame", id), args);
-        } catch (Exception ex) {
-            ex.printStackTrace();
-        }
+	public AbstractView createView() {
+		//MailFrameView view = new MailFrameView(this);
+		// Load "plugin" view instead
+		ViewPluginHandler handler = null;
 
-        view.setFolderInfoPanel(folderInfoPanel);
+		try {
+			handler = (ViewPluginHandler) MainInterface.pluginManager
+					.getHandler("org.columba.core.view");
+		} catch (PluginHandlerNotFoundException ex) {
+			throw new RuntimeException(ex);
+		}
 
-        view.init(treeController.getView(), tableController.getView(),
-            filterToolbar, messageController.getView(), statusBar);
+		// get view using the plugin handler found above
+		Object[] args = { this };
 
-        return view;
-    }
+		try {
+			view = (AbstractMailView) handler.getPlugin(getViewItem().getRoot()
+					.getAttribute("frame", id), args);
+		} catch (Exception ex) {
+			ex.printStackTrace();
+		}
 
-    protected void init() {
-        super.init();
+		view.setFolderInfoPanel(folderInfoPanel);
 
-        treeController = new TreeController(this, MailInterface.treeModel);
-        tableController = new TableController(this);
-        folderInfoPanel = new FolderInfoPanel();
+		view.init(treeController.getView(), tableController.getView(),
+				filterToolbar, messageController.getView(), statusBar);
 
-        //treeController.getTreeSelectionManager().addFolderSelectionListener(folderInfoPanel);
-        filterToolbar = new FilterToolbar(tableController);
+		return view;
+	}
 
-        new DialogStore((MailFrameView) view);
+	protected void init() {
+		super.init();
 
-        // create selection handlers
-        TableSelectionHandler tableHandler = new TableSelectionHandler(tableController.getView());
-        getSelectionManager().addSelectionHandler(tableHandler);
+		treeController = new TreeController(this, MailInterface.treeModel);
+		tableController = new TableController(this);
+		folderInfoPanel = new FolderInfoPanel();
 
-        TreeSelectionHandler treeHandler = new TreeSelectionHandler(treeController.getView());
-        getSelectionManager().addSelectionHandler(treeHandler);
+		//treeController.getTreeSelectionManager().addFolderSelectionListener(folderInfoPanel);
+		filterToolbar = new FilterToolbar(tableController);
 
-        getSelectionManager().addSelectionHandler(new AttachmentSelectionHandler(
-                attachmentController.getView()));
+		new DialogStore((MailFrameView) view);
 
-        /*
-treeController.getTreeSelectionManager().registerSelectionListener(""
-        tableController.getTableSelectionManager());
-*/
-        tableController.createPopupMenu();
-        treeController.createPopupMenu();
-        messageController.createPopupMenu();
-        attachmentController.createPopupMenu();
-    }
+		// create selection handlers
+		TableSelectionHandler tableHandler = new TableSelectionHandler(
+				tableController.getView());
+		getSelectionManager().addSelectionHandler(tableHandler);
 
-    /* (non-Javadoc)
- * @see org.columba.mail.gui.frame.AbstractMailFrameController#hasTable()
- */
-    public boolean hasTable() {
-        return true;
-    }
+		TreeSelectionHandler treeHandler = new TreeSelectionHandler(
+				treeController.getView());
+		getSelectionManager().addSelectionHandler(treeHandler);
 
-    /* (non-Javadoc)
- * @see org.columba.mail.gui.frame.ViewHeaderListInterface#getTableController()
- */
-    public TableController getTableController() {
-        return tableController;
-    }
+		getSelectionManager().addSelectionHandler(
+				new AttachmentSelectionHandler(attachmentController.getView()));
 
-    /* (non-Javadoc)
- * @see org.columba.mail.gui.frame.TreeOwner#getTreeController()
- */
-    public TreeController getTreeController() {
-        return treeController;
-    }
+		/*
+		 * treeController.getTreeSelectionManager().registerSelectionListener(""
+		 * tableController.getTableSelectionManager());
+		 */
+		tableController.createPopupMenu();
+		treeController.createPopupMenu();
+		messageController.createPopupMenu();
+		attachmentController.createPopupMenu();
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.columba.mail.gui.frame.AbstractMailFrameController#hasTable()
+	 */
+	public boolean hasTable() {
+		return true;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.columba.mail.gui.frame.ViewHeaderListInterface#getTableController()
+	 */
+	public TableController getTableController() {
+		return tableController;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.columba.mail.gui.frame.TreeOwner#getTreeController()
+	 */
+	public TreeController getTreeController() {
+		return treeController;
+	}
 }

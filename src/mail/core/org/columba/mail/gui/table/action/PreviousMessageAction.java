@@ -22,9 +22,11 @@ import org.columba.core.gui.frame.FrameMediator;
 import org.columba.core.gui.selection.SelectionChangedEvent;
 import org.columba.core.gui.selection.SelectionListener;
 import org.columba.core.gui.util.ImageLoader;
+import org.columba.core.main.MainInterface;
 import org.columba.mail.command.FolderCommandReference;
 import org.columba.mail.gui.frame.MailFrameMediator;
 import org.columba.mail.gui.frame.TableViewOwner;
+import org.columba.mail.gui.message.command.ViewMessageCommand;
 import org.columba.mail.gui.table.TableController;
 import org.columba.mail.gui.table.model.MessageNode;
 import org.columba.mail.gui.table.selection.TableSelectionChangedEvent;
@@ -32,6 +34,13 @@ import org.columba.mail.util.MailResourceLoader;
 
 /**
  * Select previous message in message list.
+ * 
+ * <p>
+ * Note that this action is also used in the message-frame (frame without
+ * folder tree and without message list), which depends on the parent frame
+ * for referencing messages.
+ * 
+ * @see org.columba.mail.gui.messageframe.MessageFrameController
  * 
  * @author fdietz
  */
@@ -75,7 +84,8 @@ public class PreviousMessageAction extends AbstractColumbaAction implements
 				.getTableSelection();
 		TableController table = ((TableViewOwner) getFrameMediator())
 				.getTableController();
-
+		if ( table == null ) return;
+		
 		if (r == null)
 			return;
 
@@ -88,6 +98,13 @@ public class PreviousMessageAction extends AbstractColumbaAction implements
 		if (previousNode == null)
 			return;
 
+		//		 necessary for the message-frame only
+		r.setUids(new Object[] { previousNode.getUid() });
+		((MailFrameMediator) getFrameMediator()).setTableSelection(r);
+		MainInterface.processor.addOp(new ViewMessageCommand(
+				getFrameMediator(), r));
+
+		//		 select message in message list
 		table.setSelected(new Object[] { previousNode.getUid() });
 	}
 

@@ -9,11 +9,11 @@
 	<button action="MoveMessage"/>
 	<button action="DeleteMessage"/>
 	<separator/>
-	<!--
+	
 	<button action="PreviousMessage" />
 	<button action="NextMessage" />
 	<separator/>
-	-->
+	
 	<!--
 	<button action="ShowContextSpecificHelp"/>
 	<separator/>

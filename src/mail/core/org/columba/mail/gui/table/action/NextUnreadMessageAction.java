@@ -16,17 +16,16 @@
 package org.columba.mail.gui.table.action;
 
 import java.awt.event.ActionEvent;
-import java.awt.event.KeyEvent;
-
-import javax.swing.KeyStroke;
 
 import org.columba.core.action.AbstractColumbaAction;
 import org.columba.core.gui.frame.FrameMediator;
 import org.columba.core.gui.selection.SelectionChangedEvent;
 import org.columba.core.gui.selection.SelectionListener;
+import org.columba.core.main.MainInterface;
 import org.columba.mail.command.FolderCommandReference;
 import org.columba.mail.gui.frame.MailFrameMediator;
 import org.columba.mail.gui.frame.TableViewOwner;
+import org.columba.mail.gui.message.command.ViewMessageCommand;
 import org.columba.mail.gui.table.TableController;
 import org.columba.mail.gui.table.model.MessageNode;
 import org.columba.mail.gui.table.selection.TableSelectionChangedEvent;
@@ -35,6 +34,12 @@ import org.columba.mail.util.MailResourceLoader;
 
 /**
  * Select next unread message in message list.
+ * <p>
+ * Note that this action is also used in the message-frame (frame without
+ * folder tree and without message list), which depends on the parent frame
+ * for referencing messages.
+ * 
+ * @see org.columba.mail.gui.messageframe.MessageFrameController 
  * 
  * @author fdietz
  */
@@ -60,7 +65,8 @@ public class NextUnreadMessageAction extends AbstractColumbaAction implements
 				"&", ""));
 
 		// Shortcut key
-		//putValue(ACCELERATOR_KEY, KeyStroke.getKeyStroke(KeyEvent.VK_BRACELEFT,0));
+		//putValue(ACCELERATOR_KEY,
+		// KeyStroke.getKeyStroke(KeyEvent.VK_BRACELEFT,0));
 
 		//setEnabled(false);
 
@@ -82,6 +88,7 @@ public class NextUnreadMessageAction extends AbstractColumbaAction implements
 
 		TableController table = ((TableViewOwner) getFrameMediator())
 				.getTableController();
+		if ( table == null ) return;
 
 		if (r == null)
 			return;
@@ -101,7 +108,13 @@ public class NextUnreadMessageAction extends AbstractColumbaAction implements
 			ColumbaHeader h = nextNode.getHeader();
 			seen = h.getFlags().getSeen();
 		}
-		
+
+		//		 necessary for the message-frame only
+		r.setUids(new Object[] { nextNode.getUid() });
+		((MailFrameMediator) getFrameMediator()).setTableSelection(r);
+		MainInterface.processor.addOp(new ViewMessageCommand(
+				getFrameMediator(), r));
+		//		 select message in message list
 		table.setSelected(new Object[] { nextNode.getUid() });
 	}
 

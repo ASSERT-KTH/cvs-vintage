@@ -27,16 +27,27 @@ import org.columba.mail.command.FolderCommandReference;
 import org.columba.mail.folder.MessageFolder;
 import org.columba.mail.gui.attachment.AttachmentSelectionHandler;
 import org.columba.mail.gui.frame.AbstractMailFrameController;
+import org.columba.mail.gui.frame.TableViewOwner;
+import org.columba.mail.gui.frame.ThreePaneMailFrameController;
 import org.columba.mail.gui.message.command.ViewMessageCommand;
+import org.columba.mail.gui.table.TableController;
 import org.columba.mail.gui.view.AbstractMessageFrameView;
 import org.columba.mail.main.MailInterface;
 
 /**
  * Mail frame controller which contains a message viewer only.
+ * <p>
+ * Note that this frame depends on its parent frame controller for
+ * viewing messages.
+ * 
+ * @see org.columba.mail.gui.action.NextMessageAction
+ * @see org.columba.mail.gui.action.PreviousMessageAction
+ * @see org.columba.mail.gui.action.NextUnreadMessageAction
+ * @see org.columba.mail.gui.action.PreviousMessageAction
  * 
  * @author fdietz
  */
-public class MessageFrameController extends AbstractMailFrameController {
+public class MessageFrameController extends AbstractMailFrameController implements TableViewOwner{
 	FolderCommandReference treeReference;
 
 	FolderCommandReference tableReference;
@@ -45,18 +56,30 @@ public class MessageFrameController extends AbstractMailFrameController {
 
 	protected AbstractMessageFrameView view;
 
+	private ThreePaneMailFrameController parentController;
+	
 	/**
 	 * @param viewItem
 	 */
 	public MessageFrameController() {
 		super("MessageFrame", new ViewItem(MailInterface.config.get("options")
 				.getElement("/options/gui/messageframe/view")));
-
+		
 		getView().loadPositions();
 
 		if (getView().getFrame() != null) {
 			getView().getFrame().setVisible(true);
 		}
+	}
+	
+	/**
+	 * @param parent 	parent frame controller
+	 */
+	public MessageFrameController(ThreePaneMailFrameController parent) {
+		this();
+
+		this.parentController = parent;	
+		
 	}
 
 	protected void init() {
@@ -197,5 +220,15 @@ public class MessageFrameController extends AbstractMailFrameController {
 	 */
 	public boolean hasTable() {
 		return false;
+	}
+
+	/**
+	 * @see org.columba.mail.gui.frame.TableViewOwner#getTableController()
+	 */
+	public TableController getTableController() {
+		if  ( parentController == null ) return null;
+		
+		// pass it along to parent frame
+		return parentController.getTableController();
 	}
 }
