@@ -90,5 +90,11 @@ public class CheckableList extends JTable {
 		
 		initColumns();
 	}
+	
+	public CheckableItem getSelected() {
+		int row = getSelectedRow();
+		
+		return ((CheckableItemListTableModel) getModel()).getElement(row);
+	}
 
 }
