@@ -1,0 +1,57 @@
+<html>
+<head>
+<title>UserTemplates</title>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+</head>
+
+<body bgcolor="#FFFFFF">
+<h3><b><a name="issueentrytemplates"></a>Issue entry templates</b></h3>
+<p>Often enter same values for attributes. short cut for this is the template 
+  functionality. Templates store descriptive dataset that can be used to populate 
+  values in future issues. Templates use the same attributes as are available 
+  for entering an issue. </p>
+<p>For instance, a user, jdoe, is responsible for creating and implementing test 
+  plans for all functionality on the UNIX operating system. Since jdoe will be 
+  entering the same values for each issue relating to test plans, jdoe can define 
+  a template with those common values. When creating issues, jdoe can use the 
+  template to populate the common data points. Fields populated using a template 
+  can be edited in the <b>Enter New</b> form.</p>
+<p>Templates can be available on a global or individual basis. Personal templates 
+  can be made by any user and are available only to the creator. Global templates 
+  require permission to create. Users with the create permission can suggest new 
+  templates to the domain administrator. The administrator is responsible for 
+  reviewing all suggested templates and approving those that have global use.</p>
+<p>To access your templates from the left naviagtion bar click on the <i>Template 
+  list</i> link under your issue type. On the <b> Template list</b> screen you 
+  will find a list of any templates currently available.You can either manage 
+  the templates there or create a new template.</p>
+<p><b><a name="creatingtemplates"></a>Creating a template</b></p>
+<ol>
+  <li>From the <i>Template list</i> screen click the <b>Create new</b> button.</li>
+  <li>Enter values into the Template details section. The name of your template 
+    should be short and descriptive. For instance, to create a template to enter 
+    defects affecting performance, you could name it &quot;Performance&quot; and 
+    use the description field to detail the types of performance issues this template 
+    covers. </li>
+  <li>Select the level of availability for the the template. Selecting personal 
+    will render the template available to the creator only. To make the template 
+    available globally you must have the permission to do so and/or go through 
+    an approval process (see Approvals).</li>
+  <li>Enter appropriate values in the Template Attributes section. Attributes 
+    appearing in this section are the same as appear in the<b> Enter New</b> screen. 
+  </li>
+  <li>Click the <b>Done</b> button to save your template.</li>
+</ol>
+<p><b><a name="usingtemplates"></a>Using templates</b></p>
+<p>To use templates, on the <b>Enter New</b> screen click on the name of the template 
+  and click the <b>Select</b> button. If you're not sure which template to select 
+  use the <i>View all templates</i> link. Make sure to use the <b>Done</b> button 
+  to return to the Enter new screen. Alternatively, you can access the <b>Template 
+  list </b>screen, select the template in which you are interested and click the 
+  <b>Use template</b> button. The <b>Enter new</b> form will be populated with 
+  data from the template. At this point you can enter the issue as you normally 
+  would (see enter issue). Template data may be edited while you are entering 
+  the rest of the values.</p>
+<p>&nbsp;</p>
+</body>
+</html>
