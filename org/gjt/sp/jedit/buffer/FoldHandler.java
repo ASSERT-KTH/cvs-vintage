@@ -35,7 +35,7 @@ import org.gjt.sp.util.Log;
  * {@link #unregisterFoldHandler(FoldHandler)} methods.
  *
  * @author Slava Pestov
- * @version $Id: FoldHandler.java,v 1.6 2003/02/08 18:53:02 spestov Exp $
+ * @version $Id: FoldHandler.java,v 1.7 2003/02/08 20:13:27 spestov Exp $
  * @since jEdit 4.0pre1
  */
 public abstract class FoldHandler
@@ -81,7 +81,9 @@ public abstract class FoldHandler
 
 	//{{{ registerFoldHandler() method
 	/**
-	 * Adds a fold handler to the list of registered handlers
+	 * Adds a fold handler to the list of registered handlers.
+	 * Typically this will be called from a plugin's
+	 * {@link org.gjt.sp.jedit.EditPlugin#start()} method.
 	 * @param handler The fold handler to add
 	 * @since jEdit 4.0pre6
 	 */
@@ -99,7 +101,9 @@ public abstract class FoldHandler
 
 	//{{{ unregisterFoldHandler() method
 	/**
-	 * Removes a fold handler from the list of registered handlers
+	 * Removes a fold handler from the list of registered handlers.
+	 * Typically this will be called from a plugin's
+	 * {@link org.gjt.sp.jedit.EditPlugin#stop()} method.
 	 * @param handler The fold handler to add
 	 * @since jEdit 4.1pre2
 	 */

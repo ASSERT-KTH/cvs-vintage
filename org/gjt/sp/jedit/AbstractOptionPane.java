@@ -50,9 +50,12 @@ import java.awt.*;
  * <li>{@link #addSeparator(String)}</li>
  * </ul>
  *
+ * @see OptionGroup
+ * @see org.gjt.sp.jedit.gui.OptionsDialog#addOptionPane(OptionPane)
+ *
  * @author Slava Pestov
  * @author John Gellene (API documentation)
- * @version $Id: AbstractOptionPane.java,v 1.12 2003/02/08 18:53:01 spestov Exp $
+ * @version $Id: AbstractOptionPane.java,v 1.13 2003/02/08 20:13:27 spestov Exp $
  */
 // even though this class is called AbstractOptionPane, it is not really
 // abstract, since BufferOptions uses an instance of it to lay out its

@@ -87,7 +87,7 @@ import org.gjt.sp.util.Log;
  *
  * @author Slava Pestov
  * @author John Gellene (API documentation)
- * @version $Id: EditPlugin.java,v 1.11 2003/02/08 18:53:02 spestov Exp $
+ * @version $Id: EditPlugin.java,v 1.12 2003/02/08 20:13:27 spestov Exp $
  * @since jEdit 2.1pre1
  */
 public abstract class EditPlugin
@@ -137,7 +137,7 @@ public abstract class EditPlugin
 	 * file and implement <code>createMenuItems()</code> with a
 	 * call to the {@link GUIUtilities#loadMenu(String)}
 	 * method:
-	 * <pre>public void createMenuItems(Vector menuItems)
+	 * <pre> public void createMenuItems(Vector menuItems)
 	 * {
 	 *     menuItems.addElement(GUIUtilities.loadMenu(
 	 *         "myplugin.menu"));
@@ -166,7 +166,7 @@ public abstract class EditPlugin
 	 * option pane class and implement <code>createOptionPane()</code>
 	 * as follows:
 	 *
-	 * <pre>public void createOptionPanes(OptionsDialog optionsDialog)
+	 * <pre> public void createOptionPanes(OptionsDialog optionsDialog)
 	 * {
 	 *     dialog.addOptionPane(new MyPluginOptionPane());
 	 * }</pre>
@@ -180,6 +180,7 @@ public abstract class EditPlugin
 	 * @param optionsDialog The plugin options dialog box
 	 *
 	 * @see OptionPane
+	 * @see AbstractOptionPane
 	 * @see OptionsDialog#addOptionPane(OptionPane)
 	 * @see OptionGroup
 	 * @see OptionsDialog#addOptionGroup(OptionGroup)

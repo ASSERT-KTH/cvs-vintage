@@ -33,9 +33,12 @@ import org.gjt.sp.util.Log;
  * options dialog tree. The member option panes will appear as
  * leaf nodes under the group's node.
  *
+ * @see OptionPane
+ * @see org.gjt.sp.jedit.gui.OptionsDialog#addOptionGroup(OptionGroup)
+ *
  * @author Mike Dillon
  * @author John Gellene (API documentation)
- * @version $Id: OptionGroup.java,v 1.3 2003/02/08 18:53:02 spestov Exp $
+ * @version $Id: OptionGroup.java,v 1.4 2003/02/08 20:13:27 spestov Exp $
  */
 public class OptionGroup
 {
@@ -44,6 +47,7 @@ public class OptionGroup
 	 * @param name The internal name of the option group, used to key a
 	 * property <code>options.<i>name</i>.label</code> which is the
 	 * label displayed in the options dialog.
+	 * @see jEdit#getProperty(String)
 	 */
 	public OptionGroup(String name)
 	{
