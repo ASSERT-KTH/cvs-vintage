@@ -2,32 +2,32 @@ package org.tigris.scarab.test;
 
 /* ================================================================
  * Copyright (c) 2000-2001 CollabNet.  All rights reserved.
- * 
+ *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are
  * met:
- * 
+ *
  * 1. Redistributions of source code must retain the above copyright
  * notice, this list of conditions and the following disclaimer.
- * 
+ *
  * 2. Redistributions in binary form must reproduce the above copyright
  * notice, this list of conditions and the following disclaimer in the
  * documentation and/or other materials provided with the distribution.
- * 
+ *
  * 3. The end-user documentation included with the redistribution, if
  * any, must include the following acknowlegement: "This product includes
  * software developed by Collab.Net <http://www.Collab.Net/>."
  * Alternately, this acknowlegement may appear in the software itself, if
  * and wherever such third-party acknowlegements normally appear.
- * 
+ *
  * 4. The hosted project names must not be used to endorse or promote
  * products derived from this software without prior written
  * permission. For written permission, please contact info@collab.net.
- * 
- * 5. Products derived from this software may not use the "Tigris" or 
- * "Scarab" names nor may "Tigris" or "Scarab" appear in their names without 
+ *
+ * 5. Products derived from this software may not use the "Tigris" or
+ * "Scarab" names nor may "Tigris" or "Scarab" appear in their names without
  * prior written permission of Collab.Net.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND ANY EXPRESSED OR IMPLIED
  * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
  * MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
@@ -41,10 +41,10 @@ package org.tigris.scarab.test;
  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *
  * ====================================================================
- * 
+ *
  * This software consists of voluntary contributions made by many
  * individuals on behalf of Collab.Net.
- */ 
+ */
 
 import java.io.File;
 
@@ -62,15 +62,17 @@ import org.tigris.scarab.services.module.ModuleEntity;
  *
  * @author <a href="mailto:jon@latchkey.com">Jon S. Stevens</a>
  * @author <a href="mailto:dlr@finemaltcoding.com">Daniel Rall</a>
- * @version $Id: BaseTestCase.java,v 1.3 2001/09/22 17:29:06 mumbly Exp $
+ * @version $Id: BaseTestCase.java,v 1.4 2001/09/29 16:26:02 mumbly Exp $
  */
 public class BaseTestCase extends TestCase
 {
     /** name of the TR.props file */
     private static final String TR_PROPS = "/WEB-INF/conf/TurbineResourcesTest.properties";
 
-    private ModuleEntity module = null;
-    
+    private static ModuleEntity module = null;
+
+    private static boolean initialized = false;
+
     /**
      * Default constructor.
      */
@@ -82,16 +84,21 @@ public class BaseTestCase extends TestCase
     protected void setUp()
         throws Exception
     {
-        String configDir = System.getProperty("config.dir");
-        if (configDir != null)
+        if (!initialized)
         {
-            initTurbine(configDir);
-            initScarab();
-        }
-        else
-        {
-            System.out.println (
-                "config.dir System property was not defined");
+            String configDir = System.getProperty("config.dir");
+            if (configDir != null)
+            {
+                initTurbine(configDir);
+                initScarab();
+                initialized = true;
+            }
+            else
+            {
+                System.out.println (
+                    "config.dir System property was not defined");
+				System.exit(-1);
+            }
         }
     }
 
@@ -126,7 +133,7 @@ public class BaseTestCase extends TestCase
     {
         return this.module;
     }
-    
+
     /**
      * Concatenates the file name parts together appropriately.
      *
@@ -164,5 +171,5 @@ public class BaseTestCase extends TestCase
                 fail(errMsg);
             }
         }
-    }    
+    }
 }

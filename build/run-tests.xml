@@ -36,7 +36,20 @@
     </exec>  
   </target>
 
-  <target name="test-all" depends="test-issue,
+  <target name="test-all" depends="compile">
+    <echo>Running All OM tests...</echo>
+
+    <java classname="${test.runner}" fork="yes" 
+          failonerror="${testbed.failonerror}">
+      <jvmarg value="${config.dir}"/>
+      <arg value="org.tigris.scarab.om.AllTest"/>
+      <classpath>
+        <path refid="classpath"/>
+      </classpath>
+    </java>
+  </target>
+
+  <target name="test-all-old" depends="test-issue,
                                    test-attribute,
                                    test-query"/>
 
