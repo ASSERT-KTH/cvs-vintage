@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/core/Attic/ServletWrapper.java,v 1.46 2000/05/23 16:56:46 costin Exp $
- * $Revision: 1.46 $
- * $Date: 2000/05/23 16:56:46 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/core/Attic/ServletWrapper.java,v 1.47 2000/05/30 16:06:00 costin Exp $
+ * $Revision: 1.47 $
+ * $Date: 2000/05/30 16:06:00 $
  *
  * ====================================================================
  *
@@ -334,11 +334,12 @@ public class ServletWrapper {
 	    //	System.out.println("Loading " + servletClassName + " " + servlet );
 
 	    checkInternal(servlet, servletClassName);
-	    
+
 	    try {
+		if( initialized ) return;
+		
 		final Servlet sinstance = servlet;
 		final ServletConfig servletConfig = configF;
-		
 		ContextInterceptor cI[]=context.getContextInterceptors();
 		for( int i=0; i<cI.length; i++ ) {
 		    try {
@@ -356,17 +357,13 @@ public class ServletWrapper {
 		    try {
 			cI[i].postServletInit( context, this ); // ignore the error - like in the original code
 		    } catch( TomcatException ex) {
-			ex.printStackTrace();
+			    ex.printStackTrace();
 		    }
 		    
 		}
 		initialized=true;
 		// successfull initialization
 		unavailable=null;
-		//	} catch(IOException ioe) {
-		//	    ioe.printStackTrace();
-		// Should never come here...
-		//	}
 	    } catch( UnavailableException ex ) {
 		unavailable=ex;
 		unavailableTime=System.currentTimeMillis();
@@ -441,6 +438,49 @@ public class ServletWrapper {
 	    servlet = subRequest.getWrapper().getServlet();
 	}
     }
+
+    /** Check if we can try again an init
+     */
+    private boolean stillUnavailable() {
+	// we have a timer - maybe we can try again - how much
+	// do we have to wait - (in mSec)
+	long moreWaitTime=unavailableTime - System.currentTimeMillis();
+	if( unavailableTime > 0 && ( moreWaitTime < 0 )) {
+	    // we can try again
+	    unavailable=null;
+	    unavailableTime=-1;
+	    context.log(getServletName() + " unavailable time expired, try again ");
+	    return false;
+	} else {
+	    return true;
+	}
+    }
+    
+    /** Send 503. Should be moved in ErrorHandling
+     */
+    private void handleUnavailable( Request req, Response res ) {
+	if( unavailable instanceof UnavailableException ) {
+	    int unavailableTime = ((UnavailableException)unavailable).getUnavailableSeconds();
+	    if( unavailableTime > 0 ) {
+		res.setHeader("Retry-After", Integer.toString(unavailableTime));
+	    }
+	}
+
+	String msg=unavailable.getMessage();
+	long moreWaitTime=unavailableTime - System.currentTimeMillis();
+	context.log( "Error in " + getServletName() + "init(), error happened at " +
+		     unavailableTime + " wait " + moreWaitTime + " : " + msg, unavailable);
+	req.setAttribute("javax.servlet.error.message", msg );
+	res.setStatus(HttpServletResponse.SC_SERVICE_UNAVAILABLE); // 503
+	contextM.handleStatus( req, res,  HttpServletResponse.SC_SERVICE_UNAVAILABLE );
+	return;
+    }
+
+    private void handleNotFound( Request req, Response res) {
+	context.log( "Can't find servet " + getServletName() + " " + getServletClass() );
+	res.setStatus( 404 );
+	contextM.handleStatus( req, res,  404 );
+    }
     
     public void handleRequest(Request req, Response res)
     {
@@ -450,70 +490,43 @@ public class ServletWrapper {
 	}
 	
 	handleReload();
-	
-	if( ! initialized ) {
+
+	// Special case - we're not ready to run
+	if( ! initialized || servlet == null || unavailable!=null  ) {
 	    // Don't load if Unavailable timer is in place
-	    if(  unavailable != null ) {
-		// we have a timer - maybe we can try again - how much
-		// do we have to wait - (in mSec)
-		long moreWaitTime=unavailableTime - System.currentTimeMillis();
-		if( unavailableTime > 0 && ( moreWaitTime < 0 )) {
-		    // we can try again
-		    unavailable=null;
-		    unavailableTime=-1;
-		    context.log(getServletName() + " unavailable time expired, try again ");
-		} else {
-		    // bad news... More wait for us - but let the client know
-		    //
-		    if( unavailableTime > 0 )
-			res.setHeader("Retry-After", Long.toString( moreWaitTime/1000 ));
-		    String msg=unavailable.getMessage();
-		    context.log( "Error in " + getServletName() + "init(), error happened at " +
-				 unavailableTime + " wait " + moreWaitTime + " : " + msg, unavailable);
-		    req.setAttribute("javax.servlet.error.message", msg );	
-		    res.setStatus(HttpServletResponse.SC_SERVICE_UNAVAILABLE); // 503
-		    contextM.handleStatus( req, res, HttpServletResponse.SC_SERVICE_UNAVAILABLE );
-		    return;
-		}
-	    }
-	    // init - only if unavailable was null or unavailable period expired
-	    try {
-		initServlet();
-	    } catch(ClassNotFoundException ex ) {
-		// return not found
-		context.log( "Class Not Found in init", ex );
-		res.setStatus( 404 );
-		contextM.handleStatus( req, res,  404 );
+	    if(  unavailable != null && stillUnavailable() ) {
+		handleUnavailable( req, res );
 		return;
-	    } catch( Exception ex ) {
-		context.log("Exception in init servlet " + ex.getMessage(), ex );
-		// any other exception will be set in unavailable - no need to do anything
 	    }
-	}
-
-	// If servlet was not initialized
-	if( unavailable!=null ) {
-	    res.setStatus(HttpServletResponse.SC_SERVICE_UNAVAILABLE); // 503
-	    if( unavailable instanceof UnavailableException ) {
-		int secs= ((UnavailableException)unavailable).getUnavailableSeconds();
-		if( secs > 0 ) {
-		    res.setHeader("Retry-After", Integer.toString(secs));
+	    
+	    // if multiple threads will call the same servlet at once,
+	    // we should have only one init 
+	    synchronized( this ) {
+		// init - only if unavailable was null or unavailable period expired
+		try {
+		    initServlet();
+		} catch(ClassNotFoundException ex ) {
+		    handleNotFound( req, res );
+		    return;
+		} catch( Exception ex ) {
+		    context.log("Exception in init servlet " + ex.getMessage(), ex );
+		    // any other exception will be set in unavailable - no need to do anything
 		}
 	    }
-	    String msg=unavailable.getMessage();
-	    context.log( "Error in " + getServletName() + " init(): " + msg, unavailable);
-	    req.setAttribute("javax.servlet.error.message", msg );
-	    contextM.handleStatus( req, res,  HttpServletResponse.SC_SERVICE_UNAVAILABLE );
-	    return;
-	}
 
-	if( servlet == null ) {
-	    context.log( "Can't find servet " + getServletName() );
-	    res.setStatus( 404 );
-	    contextM.handleStatus( req, res,  404 );
-	    return;
+	    if( servlet == null ) {
+		handleNotFound( req, res );
+		return;
+	    }
+
+	    // If servlet was not initialized
+	    if( unavailable!=null ) {
+		handleUnavailable(req, res);
+		return;
+	    }
 	}
-	
+	    
+	// We are initialized and fine
 	try {
 	    RequestInterceptor cI[]=context.getRequestInterceptors();
 	    for( int i=0; i<cI.length; i++ ) {
