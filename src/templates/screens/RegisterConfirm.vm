@@ -46,14 +46,8 @@ email cannot be sent to you.
 </div>
 
 <div class="functnbar2">
-<table cellpadding="4" cellspacing="0" border="1">
- <tr>
-  <td class="firstchild">
 <input type="submit" name="eventSubmit_doBack" value="Back" />&#160;
 <input type="submit" name="eventSubmit_doConfirmRegistration" value="Confirm registration" />
-  </td>
- </tr>
-</table>
 </div>
 
 </form>

@@ -70,14 +70,8 @@
 <p>* Required field</p>
 
 <div class="functnbar2">
-<table cellpadding="4" cellspacing="0" border="1">
- <tr>
-  <td class="firstchild">
- <input type="submit" name="eventSubmit_doRegister" value="Register" tabindex="6"/>
- <input type="submit" name="eventSubmit_doCancel" value="Cancel" tabindex="7"/>&#160;
-  </td>
- </tr>
-</table>
+ <input type="submit" name="eventSubmit_doRegister" value="Register" tabindex="6"/>&#160;
+ <input type="submit" name="eventSubmit_doCancel" value="Cancel" tabindex="7"/>
 </div>
 
 $intake.declareGroups()
