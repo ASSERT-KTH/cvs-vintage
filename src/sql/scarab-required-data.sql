@@ -102,7 +102,7 @@ insert into SCARAB_SCOPE(SCOPE_ID, SCOPE_NAME)
  * root module
  */
 insert into SCARAB_MODULE(MODULE_ID, MODULE_NAME, MODULE_CODE, MODULE_DESCRIPTION, MODULE_URL, PARENT_ID, CLASS_KEY)
-        values(0, 'Global', 'GLO', 'Built-in root module, parent for all top-level modules(projects)', '/', 0, 1);
+        values(0, 'Global', 'GLO', 'Built-in root module, parent for all top-level modules (projects)', '/', 0, 1);
 
 /*
  * for issues entered against the global module, if any are allowed
