@@ -22,7 +22,6 @@ import java.rmi.MarshalledObject;
 import org.jboss.invocation.Invocation;
 import org.jboss.logging.Logger;
 import java.util.LinkedList;
-import java.lang.reflect.Method;
 
 /**
  * This Thread object hold a single Socket connection to a client
@@ -54,21 +53,6 @@ public class ServerThread extends Thread
    protected boolean handlingResponse = false;
    protected boolean shutdown = false;
    protected static int id = 0;
-   protected static Method resetStream;
-
-   static
-   {
-      Method[] methods = ObjectInputStream.class.getDeclaredMethods();
-      for (int i = 0; i < methods.length; i++)
-      {
-         if (methods[i].getName().equals("resetStream")) 
-         {
-            resetStream = methods[i];
-            break;
-         }
-      }
-      resetStream.setAccessible(true);
-   }
 
    public ServerThread(Socket socket, PooledInvoker invoker, LRUPool clientpool, LinkedList threadpool, int timeout) throws Exception
    {
