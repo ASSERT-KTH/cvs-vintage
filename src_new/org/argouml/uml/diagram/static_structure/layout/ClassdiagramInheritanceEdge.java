@@ -1,4 +1,4 @@
-// $Id: ClassdiagramInheritanceEdge.java,v 1.6 2004/07/23 17:53:54 linus Exp $
+// $Id: ClassdiagramInheritanceEdge.java,v 1.7 2004/09/09 18:07:19 mvw Exp $
 // Copyright (c) 1996-2001 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -41,7 +41,7 @@ public abstract class ClassdiagramInheritanceEdge extends ClassdiagramEdge {
     /**
      * Constructor.
      *
-     * @param edge
+     * @param edge the fig edge
      */
     public ClassdiagramInheritanceEdge(FigEdge edge) {
         super(edge);
@@ -65,6 +65,9 @@ public abstract class ClassdiagramInheritanceEdge extends ClassdiagramEdge {
         LOG.debug("Low : " + low.classNameAndBounds());
     }
     
+    /**
+     * @return the vertical offset
+     */
     public abstract int getVerticalOffset();
         
     public int getCenterHigh() {

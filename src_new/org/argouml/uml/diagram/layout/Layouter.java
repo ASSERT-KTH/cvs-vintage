@@ -1,4 +1,4 @@
-// $Id: Layouter.java,v 1.2 2003/06/29 23:52:16 linus Exp $
+// $Id: Layouter.java,v 1.3 2004/09/09 18:07:17 mvw Exp $
 // Copyright (c) 1996-2001 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -59,6 +59,7 @@ public interface Layouter {
      * Operation getObject returns one object from the diagram.
      *
      * @param index represents the index of this object.
+     * @return the object
      */
     LayoutedObject getObject(int index);
 
@@ -71,6 +72,8 @@ public interface Layouter {
      * Operation getMinimumDiagramSize returns the minimum
      * diagram size after the layout, so the diagram could
      * be resized to this size.
+     *
+     * @return the size/dimension
      */
     Dimension getMinimumDiagramSize();
 }

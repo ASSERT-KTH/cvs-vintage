@@ -1,4 +1,4 @@
-// $Id: ClassdiagramModelElementFactory.java,v 1.7 2003/09/04 20:11:50 thierrylach Exp $
+// $Id: ClassdiagramModelElementFactory.java,v 1.8 2004/09/09 18:07:19 mvw Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -36,9 +36,12 @@ import org.argouml.uml.diagram.ui.*;
 */
 public class ClassdiagramModelElementFactory 
 {
-    protected static Logger cat =
+    private static final Logger LOG =
 	Logger.getLogger(ClassdiagramModelElementFactory.class);
 
+    /**
+     * The singleton.
+     */
     public static ClassdiagramModelElementFactory SINGLETON =
 	new ClassdiagramModelElementFactory();
     
@@ -52,14 +55,15 @@ public class ClassdiagramModelElementFactory
     public ClassdiagramEdge getInstance(Object f) {
         if (f instanceof FigEdge) {
 	    if (f instanceof FigGeneralization)
-		return new ClassdiagramGeneralizationEdge((FigGeneralization) f);
+		return new ClassdiagramGeneralizationEdge(
+		        (FigGeneralization) f);
 	    if (f instanceof FigRealization)
 		return (new ClassdiagramRealizationEdge((FigRealization) f));
 	    if (f instanceof FigAssociation)
 		return (new ClassdiagramAssociationEdge((FigAssociation) f));
-	    cat.debug("Do not know how to deal with: " +
-		      f.getClass().getName() +
-		      "\nUsing standard layout");
+	    LOG.debug("Do not know how to deal with: " 
+		      + f.getClass().getName() 
+		      + "\nUsing standard layout");
         }
         return null;
     }

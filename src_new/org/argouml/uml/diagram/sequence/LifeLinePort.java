@@ -1,4 +1,4 @@
-// $Id: LifeLinePort.java,v 1.1 2003/12/02 20:46:26 kataka Exp $
+// $Id: LifeLinePort.java,v 1.2 2004/09/09 18:07:17 mvw Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -36,7 +36,7 @@ public class LifeLinePort {
      */
     public LifeLinePort() {
         super();
-        // TODO Auto-generated constructor stub
+        // TODO: Auto-generated constructor stub
     }
 
 }

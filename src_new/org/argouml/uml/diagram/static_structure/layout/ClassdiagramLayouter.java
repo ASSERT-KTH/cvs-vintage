@@ -1,4 +1,4 @@
-// $Id: ClassdiagramLayouter.java,v 1.24 2004/09/07 18:50:06 mvw Exp $
+// $Id: ClassdiagramLayouter.java,v 1.25 2004/09/09 18:07:19 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -642,7 +642,8 @@ public class ClassdiagramLayouter implements Layouter {
             if ((getClassdiagramNode(i)).getRank() == row) {
                 // If the object is in this row
                 if ((getClassdiagramNode(i)).getSize().height > currentHeight)
-                        currentHeight = (getClassdiagramNode(i)).getSize().height;
+                        currentHeight = 
+                            (getClassdiagramNode(i)).getSize().height;
             }
         }
 

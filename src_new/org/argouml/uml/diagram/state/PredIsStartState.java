@@ -1,4 +1,4 @@
-// $Id: PredIsStartState.java,v 1.6 2003/09/13 22:06:06 alexb Exp $
+// $Id: PredIsStartState.java,v 1.7 2004/09/09 18:07:20 mvw Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -30,13 +30,20 @@ import org.argouml.model.ModelFacade;
 
 public class PredIsStartState implements Predicate {
 
-    public static PredIsStartState TheInstance = new PredIsStartState();
+    /**
+     * theInstance is the singleton
+     */
+    public static PredIsStartState theInstance = new PredIsStartState();
 
     private PredIsStartState() { }
 
+    /**
+     * @see org.tigris.gef.util.Predicate#predicate(java.lang.Object)
+     */
     public boolean predicate(Object obj) {
-	return (org.argouml.model.ModelFacade.isAPseudostate(obj)) &&
-	    (ModelFacade.INITIAL_PSEUDOSTATEKIND.equals(ModelFacade.getKind(obj)));
+	return (org.argouml.model.ModelFacade.isAPseudostate(obj)) 
+	    && (ModelFacade.INITIAL_PSEUDOSTATEKIND.equals(
+                ModelFacade.getKind(obj)));
     }
   
 } /* end class PredIsStartpackage */

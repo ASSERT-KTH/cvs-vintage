@@ -1,4 +1,4 @@
-// $Id: FigCallActionLink.java,v 1.3 2003/12/05 23:12:04 kataka Exp $
+// $Id: FigCallActionLink.java,v 1.4 2004/09/09 18:07:17 mvw Exp $
 // Copyright (c) 1996-2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -40,7 +40,7 @@ import org.tigris.gef.presentation.ArrowHeadTriangle;
 public class FigCallActionLink extends FigLink {
 
     /**
-     * @param owner
+     * @param owner the owner object
      */
     public FigCallActionLink(Object owner) {
         super(owner);
@@ -78,7 +78,7 @@ public class FigCallActionLink extends FigLink {
                 ((ActivationNode) getSrcLinkPort()).setCutOffBottom(false);
                 ((ActivationNode) getSrcLinkPort()).setCutOffTop(false);
             } else {
-            	
+            	;
             }
         }
         getDestFigObject().makeActivation(

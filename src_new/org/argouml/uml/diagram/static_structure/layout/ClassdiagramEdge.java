@@ -1,4 +1,4 @@
-// $Id: ClassdiagramEdge.java,v 1.5 2003/11/10 12:35:00 jhraigniac Exp $
+// $Id: ClassdiagramEdge.java,v 1.6 2004/09/09 18:07:19 mvw Exp $
 // Copyright (c) 1996-2001 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -36,8 +36,8 @@ public abstract class ClassdiagramEdge implements LayoutedEdge {
     
     /** the layout is oriented on a grid. These are our grid spaces.
      */
-    static int _vGap;
-    static int _hGap;
+    private static int vGap;
+    private static int hGap;
     
     
     FigEdge currentEdge = null;
@@ -66,11 +66,11 @@ public abstract class ClassdiagramEdge implements LayoutedEdge {
      */
     public abstract void layout();  
  
-    public static void setHGap(int hGap) { _hGap = hGap; }
-    public static void setVGap(int vGap) { _vGap = vGap; }
+    public static void setHGap(int h) { hGap = h; }
+    public static void setVGap(int v) { vGap = v; }
     
-    public static int getHGap() { return _hGap; }
-    public static int getVGap() { return _vGap; }
+    public static int getHGap() { return hGap; }
+    public static int getVGap() { return vGap; }
     
 }
       

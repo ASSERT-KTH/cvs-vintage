@@ -1,4 +1,4 @@
-// $Id: ActionAddObject.java,v 1.4 2004/05/20 11:12:22 linus Exp $
+// $Id: ActionAddObject.java,v 1.5 2004/09/09 18:07:17 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -48,6 +48,10 @@ import ru.novosoft.uml.behavior.common_behavior.MObject;
  */
 public class ActionAddObject extends CmdCreateNode {
 
+    /**
+     * The constructor.
+     * 
+     */
     public ActionAddObject() {
         super(MObject.class, false, "Object");
     }

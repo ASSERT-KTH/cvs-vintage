@@ -1,4 +1,4 @@
-// $Id: FigLink.java,v 1.5 2004/03/08 07:07:50 linus Exp $
+// $Id: FigLink.java,v 1.6 2004/09/09 18:07:17 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -167,18 +167,30 @@ public abstract class FigLink
      */
     protected abstract void layoutActivations();
 
+    /**
+     * @return the destination link port
+     */
     public LinkPort getDestLinkPort() {
         return (LinkPort) getDestPortFig().getOwner();
     }
 
+    /**
+     * @return the source linkport
+     */
     public LinkPort getSrcLinkPort() {
         return (LinkPort) getSourcePortFig().getOwner();
     }
 
+    /**
+     * @return the source figobject
+     */
     public FigObject getSrcFigObject() {
         return (FigObject) getSourceFigNode();
     }
 
+    /**
+     * @return the destination fig object
+     */
     public FigObject getDestFigObject() {
         return (FigObject) getDestFigNode();
     }

@@ -1,4 +1,4 @@
-// $Id: ProjectMemberModel.java,v 1.23 2004/09/05 16:57:49 bobtarling Exp $
+// $Id: ProjectMemberModel.java,v 1.24 2004/09/09 18:07:18 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -170,7 +170,7 @@ public class ProjectMemberModel extends ProjectMember {
         } catch (Exception ex) {
             logNotContainedElements(xmiwriter);
             if (ex instanceof SaveException) {
-                throw (SaveException)ex;
+                throw (SaveException) ex;
             }
             throw new SaveException(ex);
         } finally {

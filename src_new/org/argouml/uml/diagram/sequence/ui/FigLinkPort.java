@@ -1,4 +1,4 @@
-// $Id: FigLinkPort.java,v 1.3 2004/03/08 07:07:50 linus Exp $
+// $Id: FigLinkPort.java,v 1.4 2004/09/09 18:07:17 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -73,7 +73,7 @@ public class FigLinkPort extends FigLine {
      */
     public static final int ACTIVATION_CONTINUOUS_STATUS = 2;
 
-    private int _activationStatus;
+    private int activationStatus;
 
     /**
      * Creates a new horizontal FigLinkPort that's not displayed
@@ -103,7 +103,7 @@ public class FigLinkPort extends FigLine {
      * @return the activation status.
      */
     public int getActivationStatus() {
-        return _activationStatus;
+        return activationStatus;
     }
 
     /**
@@ -116,7 +116,7 @@ public class FigLinkPort extends FigLine {
      * @param i is the new activation status.
      */
     public void setActivationStatus(int i) {
-        _activationStatus = i;
+        activationStatus = i;
     }
 
 }

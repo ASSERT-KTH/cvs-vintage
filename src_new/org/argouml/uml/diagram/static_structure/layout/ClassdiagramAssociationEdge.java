@@ -1,4 +1,4 @@
-// $Id: ClassdiagramAssociationEdge.java,v 1.5 2003/11/10 12:35:00 jhraigniac Exp $
+// $Id: ClassdiagramAssociationEdge.java,v 1.6 2004/09/09 18:07:19 mvw Exp $
 // Copyright (c) 1996-2001 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -33,13 +33,19 @@ import java.awt.*;
  * @author  mkl
  */
 public class ClassdiagramAssociationEdge extends ClassdiagramEdge {
-
     
+    /**
+     * The constructor.
+     * 
+     * @param edge the fig of the edge
+     */
     public ClassdiagramAssociationEdge(FigEdge edge) {
         super(edge);
     }
-    
 
+    /**
+     * @see org.argouml.uml.diagram.layout.LayoutedEdge#layout()
+     */
     public void layout() {
         // self associations are special cases. No need to let the maze
         // runner find the way.
@@ -60,7 +66,7 @@ public class ClassdiagramAssociationEdge extends ClassdiagramEdge {
             currentEdge.setFig(underlyingFig);  
         }
         else {
-            // brute force rectangular layout
+            ;// brute force rectangular layout
             /*
             Point centerSource = sourceFigNode.center();
             Point centerDest   = destFigNode.center();

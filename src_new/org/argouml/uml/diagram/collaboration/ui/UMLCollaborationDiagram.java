@@ -1,4 +1,4 @@
-// $Id: UMLCollaborationDiagram.java,v 1.47 2004/08/14 15:26:11 mvw Exp $
+// $Id: UMLCollaborationDiagram.java,v 1.48 2004/09/09 18:07:19 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -68,7 +68,7 @@ public class UMLCollaborationDiagram extends UMLDiagram {
     ////////////////
     // actions for toolbar
 
-    protected static Action _actionClassifierRole = new RadioAction(
+    private static Action _actionClassifierRole = new RadioAction(
         new CmdCreateNode(ModelFacade.CLASSIFIER_ROLE, "ClassifierRole"));
 
     protected static Action _actionAssoc = new RadioAction(

@@ -1,4 +1,4 @@
-// $Id: ClassDiagramGraphModel.java,v 1.58 2004/08/24 18:51:06 bobtarling Exp $
+// $Id: ClassDiagramGraphModel.java,v 1.59 2004/09/09 18:07:19 mvw Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,7 +25,7 @@
 // File: ClassDiagramGraphModel.java
 // Classes: ClassDiagramGraphModel
 // Original Author: jrobbins@ics.uci.edu
-// $Id: ClassDiagramGraphModel.java,v 1.58 2004/08/24 18:51:06 bobtarling Exp $
+// $Id: ClassDiagramGraphModel.java,v 1.59 2004/09/09 18:07:19 mvw Exp $
 
 
 package org.argouml.uml.diagram.static_structure;
@@ -357,11 +357,11 @@ public class ClassDiagramGraphModel extends UMLMutableGraphSupport
     }
 
     /**
-     * @see org.tigris.gef.graph.MutableGraphModel#addEdge(java.lang.Object)
-     *
      * Add the given edge to the graph, if of the correct type.
-     * @throws IllegalArgumentException if edge is null or either of its
+     * Throws IllegalArgumentException if edge is null or either of its
      * ends are null.
+     *
+     * @see org.tigris.gef.graph.MutableGraphModel#addEdge(java.lang.Object)
      */
     public void addEdge(Object edge) {
         if (edge == null) {
@@ -369,7 +369,8 @@ public class ClassDiagramGraphModel extends UMLMutableGraphSupport
         }
         
         if (getDestPort(edge) == null || getSourcePort(edge) == null) {
-            throw new IllegalArgumentException("The source and dest port should be provided on an edge");
+            throw new IllegalArgumentException(
+                    "The source and dest port should be provided on an edge");
         }
         
         if (LOG.isInfoEnabled()) {

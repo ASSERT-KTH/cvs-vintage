@@ -1,4 +1,4 @@
-// $Id: PredIsFinalState.java,v 1.5 2004/05/20 11:12:22 linus Exp $
+// $Id: PredIsFinalState.java,v 1.6 2004/09/09 18:07:20 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -28,10 +28,16 @@ import org.tigris.gef.util.Predicate;
 
 public class PredIsFinalState implements Predicate {
 
-    public static PredIsFinalState TheInstance = new PredIsFinalState();
+    /**
+     * TheInstance is the singleton.
+     */
+    public static PredIsFinalState theInstance = new PredIsFinalState();
 
     private PredIsFinalState() { }
 
+    /**
+     * @see org.tigris.gef.util.Predicate#predicate(java.lang.Object)
+     */
     public boolean predicate(Object obj) {
 	return (org.argouml.model.ModelFacade.isAFinalState(obj));
     }
