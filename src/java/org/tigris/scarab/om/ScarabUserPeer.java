@@ -62,60 +62,10 @@ import org.apache.turbine.services.db.pool.DBConnection;
     implementation needs.
 
     @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
-    @version $Id: ScarabUserPeer.java,v 1.5 2001/06/29 01:57:26 jmcnally Exp $
+    @version $Id: ScarabUserPeer.java,v 1.6 2001/07/02 23:30:34 jmcnally Exp $
 */
 public class ScarabUserPeer extends BaseScarabUserPeer
 {
-
-    /* * 
-     * Retrieve a single object by pk
-     *
-     * @param ObjectKey pk
-     * /
-    public static ScarabUser retrieveByPK( ObjectKey pk )
-        throws Exception
-    {
-        DBConnection db = null;
-        ScarabUser retVal = null;
-       try
-        {
-           db = TurbineDB
-               .getConnection( getTableMap().getDatabaseMap().getName() );
-           retVal = retrieveByPK( pk, db );
-        }
-        finally
-        {
-           if (db != null)
-              TurbineDB.releaseConnection(db);
-        }
-        return(retVal);
-    }
-    */
-
-
-    /* * 
-     * Retrieve a single object by pk
-     *
-     * @param ObjectKey pk
-     * @param DBConnection dbcon
-     * /
-    public static ScarabUser retrieveByPK( ObjectKey pk, DBConnection dbcon )
-        throws Exception
-    {
-
-        Criteria criteria = new Criteria();
-            criteria.add( TurbineUserPeer.USER_ID, pk );
-        Vector v = doSelect(criteria, dbcon);
-        if ( v.size() != 1)
-        {
-            throw new Exception("Failed to select one and only one row.");
-        }
-        else
-        {
-            return (ScarabUser)v.firstElement();
-        }
-    }
-    */
 }    
 
 
