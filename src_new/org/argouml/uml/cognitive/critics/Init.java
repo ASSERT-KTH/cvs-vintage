@@ -24,7 +24,7 @@
 // File: Init.java
 // Classes: Init
 // Original Author: jrobbins@ics.uci.edu
-// $Id: Init.java,v 1.6 2002/07/09 11:55:36 linus Exp $
+// $Id: Init.java,v 1.7 2002/07/11 05:27:03 mkl Exp $
 
 // 8 Mar 2002: Jeremy Bennett (mail@jeremybennett.com). CrCrossNamespaceAssoc
 // registration corrected to Association, rather than AssociationClass
@@ -160,7 +160,7 @@ public class Init {
   public static Critic crClassMustBeAbstract = new CrClassMustBeAbstract();
   public static Critic crReservedName = new CrReservedName();
   public static Critic crMultiInherit = new CrMultipleInheritance();
-
+  public static Critic crMultiRealization = new CrMultipleRealization();
   // code generation
   public static Critic crIllegalName = new CrIllegalName();
 
@@ -293,6 +293,7 @@ public class Init {
       Agency.register(crReservedName, stateCls);
       Agency.register(crReservedName, assocCls);
       Agency.register(crMultiInherit, classCls);
+      Agency.register(crMultiRealization, interfaceCls);
 //      Agency.register(crConflictingComposites, classifierCls);
       Agency.register(crTooManyAssoc, classCls);
       Agency.register(crTooManyAttr, classCls);
