@@ -61,7 +61,7 @@
 package org.apache.tomcat.facade;
 
 import org.apache.tomcat.core.*;
-import org.apache.tomcat.util.StringManager;
+import org.apache.tomcat.util.res.StringManager;
 import java.io.*;
 import javax.servlet.ServletOutputStream;
 

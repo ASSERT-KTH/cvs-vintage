@@ -64,8 +64,8 @@ import java.util.*;
 import java.io.*;
 import java.net.*;
 
-import org.apache.tomcat.util.log.*;
-import org.apache.tomcat.util.*;
+import org.apache.tomcat.util.log.Log;
+import org.apache.tomcat.util.res.StringManager;
 import org.apache.tomcat.util.depend.*;
 import org.apache.tomcat.util.compat.*;
 
@@ -273,9 +273,9 @@ public class JspInterceptor extends BaseInterceptor {
 		//enable jasperServlet logging
 		log( "Seetting debug on jsp servlet");
 		org.apache.jasper.Constants.jasperLog=
-		    org.apache.tomcat.util.log.Logger.getDefaultLogger();
-		org.apache.jasper.Constants.jasperLog.
-		    setVerbosityLevel("debug");
+		    loghelper;
+		// 		org.apache.jasper.Constants.jasperLog.
+		// 		    setVerbosityLevel("debug");
 	    }
 
 	    jspServlet.setServletClassName(jspServletCN);
@@ -700,7 +700,7 @@ final class JasperLiaison {
             } catch (Exception ex) {
 		Constants.message("jsp.warning.compiler.class.cantcreate",
 				  new Object[] { jspCompilerPlugin, ex }, 
-				  Logger.FATAL);
+				  Log.FATAL);
                 javac = new SunJavaCompiler();
 	    }
 	} else {

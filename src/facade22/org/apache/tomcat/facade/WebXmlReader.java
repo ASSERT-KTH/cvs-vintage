@@ -1,7 +1,8 @@
 package org.apache.tomcat.facade;
 
 import org.apache.tomcat.core.*;
-import org.apache.tomcat.util.*;
+import org.apache.tomcat.util.res.StringManager;
+import org.apache.tomcat.util.io.FileUtil;
 import org.apache.tomcat.util.xml.*;
 import java.beans.*;
 import java.io.*;

@@ -60,9 +60,8 @@
 package org.apache.tomcat.facade;
 
 import org.apache.tomcat.core.*;
-import org.apache.tomcat.util.*;
-import org.apache.tomcat.facade.*;
-import org.apache.tomcat.util.log.*;
+import org.apache.tomcat.util.res.StringManager;
+import org.apache.tomcat.util.log.Log;
 import java.io.*;
 import java.net.*;
 import java.util.*;
@@ -124,7 +123,7 @@ public class LoadOnStartupInterceptor extends BaseInterceptor {
 		    ctx.log("Loading " + key + " "  + servletName );
 		if(result==null)
 		    log("Warning: we try to load an undefined servlet " +
-			servletName, Logger.WARNING);
+			servletName, Log.WARNING);
 		else {
 		    try {
 			// special case for JSP - should be dealed with in
