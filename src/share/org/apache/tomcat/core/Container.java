@@ -390,13 +390,15 @@ public class Container implements Cloneable{
     public static final int H_afterBody=8;
     public static final int H_postService=9;
     public static final int H_postRequest=10;
-    public static final int H_engineInit=11;
+    public static final int H_handleError=11;
+    public static final int H_engineInit=12;
 
     public static final String PREDEFINED_I[]= {
 	"requestMap", "contextMap", "authenticate",
 	"authorize", "preService", "beforeBody",
 	"newSessionRequest", "beforeCommit",
 	"afterBody", "postService", "postRequest",
+	"handleError",
 	// special case - all interceptors will be added to the "context"
 	// chain. We plan to use a simpler Event/Listener model for
 	// all context hooks, since they don't have any performance requirement

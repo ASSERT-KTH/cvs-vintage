@@ -267,10 +267,30 @@ public class BaseInterceptor
 	return 0;
     }
 
-    public String []getMethods()  {
-	return methods;
-    }
 
+    /** This callback is called whenever an exception happen.
+     *  If t is null assume this is a "status" report ( 500, 404, etc).
+     *
+     *  During this hook it is possible to create a sub-request
+     *  and call the handler, and it is possible that the sub-request
+     *  will also generate an exception. The handler must insure
+     *  no loops will happen - but it's free to choose whatever method
+     *  it wants.
+     *
+     *  It's also the handler responsiblity to insure correct
+     *  servlet API semantics - if the spec becomes incopmatible
+     *  with previous versions ( or multiple interpretations are
+     *  possible) that can be made a context-specific handler.
+     *
+     *  @returns 200 if the error was handled ( similar with Apache's
+     *           OK )
+     *           0   if this handler can't deal with the error ( to
+     *           allow chaining )
+     */
+    public int handleError( Request request, Response response, Throwable t) {
+	return 0;
+    }
+    
     // -------------------- Context notifications --------------------
     /** Notify when a context is initialized.
      *  The first interceptor in the chain for contextInit must read web.xml

@@ -524,6 +524,12 @@ public final class ContextManager implements LogAware{
 	}
     }
 
+    /** Return the "default" context for the "default" host.
+     */
+    public Context getDefaultContext() {
+	return rootContext;
+    }
+
     /** Return the list of contexts managed by this server
      */
     public final Enumeration getContexts() {
@@ -817,173 +823,32 @@ public final class ContextManager implements LogAware{
     /** Called for error-codes
      */
     public final void handleStatus( Request req, Response res, int code ) {
-	String errorPath=null;
-	Handler errorServlet=null;
-
-	if( code==0 )
-	    code=res.getStatus();
-	else
-	    res.setStatus(code);
-
-	Context ctx = req.getContext();
-	if(ctx==null) ctx=rootContext;
-
-	// don't log normal cases ( redirect and need_auth ), they are not
-	// error
-	// XXX this log was intended to debug the status code generation.
-	// it can be removed for all cases.
-	if( code != 302 && code != 401 && code!=400  ) // tuneme
-	    ctx.log( "Status code:" + code + " request:"  + req + " msg:" +
-		     req.getAttribute("javax.servlet.error.message"));
+	if( code!=0 )
+	    res.setStatus( code );
 	
-	errorPath = ctx.getErrorPage( code );
-	if( errorPath != null ) {
-	    errorServlet=getHandlerForPath( ctx, errorPath );
-
-	    // Make sure Jsps will work
-	    req.setAttribute( "javax.servlet.include.request_uri",
-				  ctx.getPath()  + "/" + errorPath );
-	    req.setAttribute( "javax.servlet.include.servlet_path", errorPath );
+	BaseInterceptor ri[];
+	int status;
+	ri=getInterceptors( req, Container.H_handleError );
+	
+	for( int i=0; i< ri.length; i++ ) {
+	    status=ri[i].handleError( req, res, null );
+	    if( status!=0 ) return;
 	}
-
-	boolean isDefaultHandler = false;
-	if( errorServlet==null ) {
-	    errorServlet=ctx.getServletByName( "tomcat.statusHandler");
-	    isDefaultHandler = true;
-	}
-
-	if (errorServlet == null) {
-	    ctx.log( "Handler errorServlet is null! errorPath:" + errorPath);
-	    return;
-	}
-
-	if (!isDefaultHandler)
-	    res.resetBuffer();
-
-	req.setAttribute("javax.servlet.error.status_code",new Integer( code));
-	req.setAttribute("tomcat.servlet.error.request", req);
-
-	if( debug>0 )
-	    ctx.log( "Handler " + errorServlet + " " + errorPath);
-
-	errorServlet.service( req, res );
     }
 
-    // XXX XXX Security - we should log the message, but nothing
-    // should show up  to the user - it gives up information
-    // about the internal system !
-    // Developers can/should use the logs !!!
-
-    /** General error handling mechanism. It will try to find an error handler
-     * or use the default handler.
+    /**
+     *  Call error hook
      */
     void handleError( Request req, Response res , Throwable t  ) {
-	Context ctx = req.getContext();
-	if(ctx==null) {
-	    ctx=rootContext;
+	BaseInterceptor ri[];
+	int status;
+	ri=getInterceptors( req, Container.H_handleError );
+	
+	for( int i=0; i< ri.length; i++ ) {
+	    status=ri[i].handleError( req, res, t );
+	    if( status!=0 ) return;
 	}
-
-	/** The exception must be available to the user.
-	    Note that it is _WRONG_ to send the trace back to
-	    the client. AFAIK the trace is the _best_ debugger.
-	*/
-	if( t instanceof IllegalStateException ) {
-	    ctx.log("IllegalStateException in " + req, t);
-	    // Nothing special in jasper exception treatement, no deps
-	    //} else if( t instanceof org.apache.jasper.JasperException ) {
-	    // 	    ctx.log("JasperException in " + req, t);
-	} else if( t instanceof IOException ) {
-            if( "Broken pipe".equals(t.getMessage()))
-	    {
-		ctx.log("Broken pipe in " + req, t, Logger.DEBUG);  // tuneme
-		return;
-	    }
-	    ctx.log("IOException in " + req, t );
-	} else {
-	    ctx.log("Exception in " + req , t );
-	}
-
-	if(null!=req.getAttribute("tomcat.servlet.error.defaultHandler")){
-	    // we are in handleRequest for the "default" error handler
-	    log("ERROR: can't find default error handler, or error in default error page", t);
-	}
-
-	String errorPath=null;
-	Handler errorServlet=null;
-
-	// Scan the exception's inheritance tree looking for a rule
-	// that this type of exception should be forwarded
-	Class clazz = t.getClass();
-	while (errorPath == null && clazz != null) {
-	    String name = clazz.getName();
-	    errorPath = ctx.getErrorPage(name);
-	    clazz = clazz.getSuperclass();
-	}
-
-	if( errorPath != null ) {
-	    errorServlet=getHandlerForPath( ctx, errorPath );
-
-	    // Make sure Jsps will work
-	    req.setAttribute( "javax.servlet.include.request_uri",
-				  ctx.getPath()  + "/" + errorPath );
-	    req.setAttribute( "javax.servlet.include.servlet_path", errorPath );
-	}
-
-	boolean isDefaultHandler = false;
-	if( errorLoop( ctx, req ) || errorServlet==null) {
-	    errorServlet = ctx.getServletByName("tomcat.exceptionHandler");
-	    isDefaultHandler = true;
-	}
-
-	if (errorServlet == null) {
-	    ctx.log( "Handler errorServlet is null! errorPath:" + errorPath);
-	    return;
-	}
-
-	if (!isDefaultHandler)
-	    res.resetBuffer();
-
-	req.setAttribute("javax.servlet.error.exception_type", t.getClass());
-	req.setAttribute("javax.servlet.error.message", t.getMessage());
-	req.setAttribute("tomcat.servlet.error.throwable", t);
-	req.setAttribute("tomcat.servlet.error.request", req);
-
-	if( debug>0 )
-	    ctx.log( "Handler " + errorServlet + " " + errorPath);
-
-	errorServlet.service( req, res );
     }
-
-    public final Handler getHandlerForPath( Context ctx, String path ) {
-	if( ! path.startsWith( "/" ) ) {
-	    return ctx.getServletByName( path );
-	}
-	Request req1=new Request();
-	Response res1=new Response();
-	initRequest( req1, res1 );
-
-	req1.setRequestURI( ctx.getPath() + path );
-	processRequest( req1 );
-	return req1.getWrapper();
-    }
-
-    /** Handle the case of error handler generating an error or special status
-     */
-    private boolean errorLoop( Context ctx, Request req ) {
-	if( req.getAttribute("javax.servlet.error.status_code") != null
-	    || req.getAttribute("javax.servlet.error.exception_type")!=null) {
-
-	    if( ctx.getDebug() > 0 )
-		ctx.log( "Error: exception inside exception servlet " +
-			 req.getAttribute("javax.servlet.error.status_code") +
-			 " " + req.
-			 getAttribute("javax.servlet.error.exception_type"));
-
-	    return true;
-	}
-	return false;
-    }
-
 
     // -------------------- Support for notes --------------------
 

@@ -101,6 +101,18 @@ public class TomcatException extends Exception {
      *         that caused this connector exception
      */
     public Throwable getRootCause() {
+	// Does any other Exception have a "getRootCause" ?
+        return rootCause;
+    }
+
+    /**
+     * Get the underlying exception that caused this ConnectorException.
+     * Follow the pattern from SQLException, etc.
+     *
+     * @return the <code>Throwable</code>
+     *         that caused this connector exception
+     */
+    public Throwable getNextException() {
         return rootCause;
     }
 }

@@ -124,6 +124,12 @@
         <ContextInterceptor 
             className="org.apache.tomcat.context.LoaderInterceptor11" />
 
+        <!-- Default Error handler 
+          -->
+        <ContextInterceptor 
+            className="org.apache.tomcat.context.ErrorHandler" />
+
+
         <ContextInterceptor 
             className="org.apache.tomcat.context.WorkDirInterceptor" />
 
