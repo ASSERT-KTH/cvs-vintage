@@ -35,12 +35,44 @@ import org.columba.core.main.MainInterface;
 
 
 /**
- * @author freddy
- *
- * To change this generated comment edit the template variable "typecomment":
- * Window>Preferences>Java>Templates.
- * To enable and disable the creation of type comments go to
- * Window>Preferences>Java>Code Generation.
+ * Manages all tasks which are responsible for doing clean-up work
+ * when shutting down Columba.
+ * <p>
+ * This includes saving the xml configuration, saving folder data, etc.
+ * <p>
+ * Tasks use <code>register</code> to the managers shutdown queue.
+ * <p>
+ * When shutting down Columba, the tasks will be running in the opposite
+ * order the have registered at.<br>
+ * Currently this is the following:<br>
+ * <ul>
+ *  <li>addressbook folders header cache</li>
+ *  <li>POP3 header cache</li>
+ *  <li>email folders header cache</li>
+ *  <li>core tasks (no core tasks used currently)!</li>
+ * <ul>
+ * <p>
+ * Note, that I used the opposite ordering to make sure that core tasks are
+ * executed first. But, currently there are no core tasks available which
+ * would demand this behaviour.
+ * <p>
+ * Saving email folder header cache is running as a {@link Command}. Its therefore
+ * a background thread, where we don't know when its finished. This is the reason
+ * why we use <code>MainInterface.processor.getTaskManager().count()</code> to check
+ * if no more commands are running. This happens in <code>defaultTimerCheck()</code>
+ * and <code>delayedTimerCheck()</code>.  
+ * <p>
+ * <code>delayedTimerCheck()</code> is more special, because its a fail-safe timer,
+ * which asks the user to kill all pending running tasks, instead of waiting
+ * forever for tasks which are broken for whatever reason.
+ * <p>
+ * Finally, note that the {@link ColumbaServer} is stopped first, then the
+ * background manager, afterwards all registered shutdown tasks and finally
+ * the xml configuration is saved. Note, that the xml configuration has to
+ * be saved <b>after</b> the email folders where saved.
+ *  
+ * 
+ * @author fdietz
  */
 public class ShutdownManager {
     private static final int ONE_SECOND = 1000;
