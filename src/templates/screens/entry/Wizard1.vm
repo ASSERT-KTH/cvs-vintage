@@ -12,18 +12,33 @@
    #set ($templ = $scarabR.IssueTemplate)
 #end
 
+#macro(functionBar $id)
+<div class="functnbar$id">
+<input type="submit" name="eventSubmit_doCheckforduplicates" value="Next" />&#160;
+<input type="reset" value="Reset" />
+</div>
+#end
+
 <form method="post" action="$link.setPage("entry,Wizard1.vm").setAction("ReportIssue")">
 <input type="hidden" name="$scarabG.Constant.NEXT_TEMPLATE" value="entry,Wizard3.vm" />
 <input type="hidden" name="$scarabG.Constant.CURRENT_ISSUE_TYPE" 
     value="$issueType.QueryKey" />
 
-<div class="functnbar">
-<input type="submit" name="eventSubmit_doCheckforduplicates" value="Next" />&#160;
-<input type="reset" value="Reset" />
-</div>
+#set ($moduleAttributeGroups = $module.getDedupeGroupsWithAttributes($issueType))
+#set ($magSize = $moduleAttributeGroups.size())
+
+#if ($magSize > 0)
+functionBar()
+#end
+
+#if ($magSize == 0)
+<h3>$title</h3>
+<p class="alert">Sorry, there are no attributes defined for this issue type yet.
+Therefore, it is not possible to enter a new issue.</p>
+#end
 
 #set ($allTemplates = $scarabR.IssueTemplates)
-#if ($allTemplates.size() > 0 )
+#if ($allTemplates.size() > 0 && $magSize > 0)
 <h3>Apply a $scarabR.CurrentRModuleIssueType.DisplayName.toLowerCase() template</h3>
 <div class="axial">
  <table cellpadding="3" cellspacing="2" border="0">
@@ -49,15 +64,17 @@ $link.setPage("TemplateList.vm").setLabel("View all $scarabR.CurrentIssueType.Na
  </div>
 #end
 </form>
+
+#if ($magSize > 0)
 #asterisk()
+#end
 
 <form method="post" action="$link.setPage("entry,Wizard1.vm").setAction("ReportIssue")">
 #if ($templateId)
  <input type="hidden" name="templateId" value="$templateId"/>
 #end
 <div class="axial">
-#foreach ($group in $module.getAttributeGroups($issueType))
-    #if ($group.Dedupe && !$group.Attributes.isEmpty())
+#foreach ($group in $moduleAttributeGroups)
     <h3>$group.Name</h3>
     <table cellpadding="3" cellspacing="2" border="0">
   #foreach ($att in $group.Attributes)
@@ -107,13 +124,11 @@ $link.setPage("TemplateList.vm").setLabel("View all $scarabR.CurrentIssueType.Na
     #end
 </table>
   #end
- #end
 </div>
 
-<div class="functnbar2">
-<input type="submit" name="eventSubmit_doCheckforduplicates" value="Next" />&#160;
-<input type="reset" value="Reset" />
-</div>
+#if ($magSize > 0)
+functionBar("2")
+#end
 
 $intake.declareGroups()
 

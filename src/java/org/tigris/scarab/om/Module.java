@@ -69,7 +69,7 @@ import org.apache.torque.util.Criteria;
  * This class describes a Module within the Scarab system
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: Module.java,v 1.50 2002/07/08 19:45:28 jon Exp $
+ * @version $Id: Module.java,v 1.51 2002/07/31 23:58:19 jon Exp $
  */
 public interface Module
     extends Serializable
@@ -183,6 +183,14 @@ public interface Module
      */
     public AttributeGroup getAttributeGroup(IssueType issueType, 
                                             Attribute attribute)
+        throws Exception;
+
+    /**
+     * This method is used within Wizard1.vm to get a list of attribute
+     * groups which are marked as dedupe and have a list of attributes
+     * in them.
+     */
+    public List getDedupeGroupsWithAttributes(IssueType issueType)
         throws Exception;
 
     /**
