@@ -7,7 +7,7 @@
 <!--                                                                       -->
 <!-- ===================================================================== -->
 
-<!-- $Id: hsqldb-default-service.xml,v 1.5 2001/11/20 22:15:23 d_jencks Exp $ -->
+<!-- $Id: hsqldb-default-service.xml,v 1.6 2001/12/18 21:41:25 mnf999 Exp $ -->
 
 
 <server>
@@ -30,15 +30,15 @@
     <attribute name="JndiName">DefaultDS</attribute>
     <attribute name="TransactionManagerName">java:/TransactionManager</attribute>
 
-    <!--Anonymous mbean-ref to database being started -->
+    <!--Anonymous depends to database being started -->
     <!--WARNING: DO NOT COPY BLINDLY! This is useful only if the database is
         started by an mbean in the jboss jmx framework! The only example of this 
         we have right now is hsqldb! Do not use a line like this for external 
         databases. -->
-    <mbean-ref>JBOSS-SYSTEM:service=Hypersonic</mbean-ref>
+    <depends>JBOSS-SYSTEM:service=Hypersonic</depends>
 
-    <mbean-ref name="ResourceAdapterName">JCA:service=RARDeployment,name=Minerva JDBC LocalTransaction ResourceAdapter</mbean-ref>
-    <mbean-ref name="ConnectionManagerFactoryLoaderName">JCA:service=ConnectionManagerFactoryLoader,name=MinervaSharedLocalCMFactory</mbean-ref>
+    <depends optional-attribute-name="ResourceAdapterName">JCA:service=RARDeployment,name=Minerva JDBC LocalTransaction ResourceAdapter</depends>
+    <depends optional-attribute-name="ConnectionManagerFactoryLoaderName">JCA:service=ConnectionManagerFactoryLoader,name=MinervaSharedLocalCMFactory</depends>
     <attribute name="ConnectionManagerProperties">#
       #Wed Aug 15 16:17:29 EDT 2001
       MinSize=0
@@ -63,11 +63,11 @@
     <attribute name="JndiName">NoTransDS</attribute>
     <attribute name="TransactionManagerName">java:/TransactionManager</attribute>
 
-    <!--Anonymous mbean-ref to database being started -->
-    <mbean-ref>JBOSS-SYSTEM:service=Hypersonic</mbean-ref>
+    <!--Anonymous depends to database being started -->
+    <depends>JBOSS-SYSTEM:service=Hypersonic</depends>
 
-    <mbean-ref name="ResourceAdapterName">JCA:service=RARDeployment,name=Minerva JDBC LocalTransaction ResourceAdapter</mbean-ref>
-    <mbean-ref name="ConnectionManagerFactoryLoaderName">JCA:service=ConnectionManagerFactoryLoader,name=MinervaNoTransCMFactory</mbean-ref>
+    <depends optional-attribute-name="ResourceAdapterName">JCA:service=RARDeployment,name=Minerva JDBC LocalTransaction ResourceAdapter</depends>
+    <depends optional-attribute-name="ConnectionManagerFactoryLoaderName">JCA:service=ConnectionManagerFactoryLoader,name=MinervaNoTransCMFactory</depends>
     <attribute name="ConnectionManagerProperties">#
       #Wed Aug 15 16:17:29 EDT 2001
       MinSize=0
@@ -83,7 +83,7 @@
     <attribute name="PrincipalMappingProperties">UserName=sa</attribute>
   </mbean>
 
-  <!-- Moved to end to test anonymous mbean-refs -->
+  <!-- Moved to end to test anonymous dependss -->
 
   <mbean code="org.jboss.jdbc.HypersonicDatabase" 
 	 name="JBOSS-SYSTEM:service=Hypersonic">
