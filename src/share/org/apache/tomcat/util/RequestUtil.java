@@ -86,7 +86,7 @@ public class RequestUtil {
         String contentType=request.getContentType();
 	if (contentType != null) {
             if (contentType.indexOf(";")>0)
-                contentType=contentType.substring(0,contentType.indexOf(";")-1);
+                contentType=contentType.substring(0,contentType.indexOf(";"));
             contentType = contentType.toLowerCase().trim();
         }
 
