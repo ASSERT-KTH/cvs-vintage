@@ -71,7 +71,7 @@ import org.w3c.dom.Element;
 *   @author <a href="mailto:daniel.schulze@telkel.com">Daniel Schulze</a>
 *   @author Toby Allsopp (toby.allsopp@peace.com)
 *   @author Scott_Stark@displayscape.com
-*   @version $Revision: 1.27 $
+*   @version $Revision: 1.28 $
 */
 public class J2eeDeployer 
 extends ServiceMBeanSupport
@@ -186,24 +186,16 @@ implements J2eeDeployerMBean
    {
       URL url = new URL (_url);
       
-      ObjectName lCollector = null;
-      try {
-         lCollector = new ObjectName( "Management", "service", "Collector" );
-      }
-      catch( Exception e ) {
-      }
+      // <comment author="cgjung">factored out for subclass access </comment>
+      ObjectName lCollector = createCollectorName();
       
       // undeploy first if it is a redeploy
       try
       {
          undeploy (_url);
          // Remove application data by its id
-         server.invoke(
-            lCollector,
-            "removeApplication",
-            new Object[] { _url },
-            new String[] { "java.lang.String" }
-         );
+         // <comment author="cgjung"> factored out for subclass access </comment>
+         removeFromCollector(_url,lCollector);
       }
       catch (Exception _e)
       {}
@@ -215,25 +207,9 @@ implements J2eeDeployerMBean
 
 	  try
 	  {
-        try {
-            // Now the application is deployed add it to the server data collector
-            Application lApplication = new Application( d.getName(), "DD:Fix later" );
-            server.invoke(
-               lCollector,
-               "saveApplication",
-               new Object[] {
-                  d.getName(),
-                  lApplication
-               },
-               new String[] {
-                  "java.lang.String",
-                  lApplication.getClass().getName()
-               }
-            );
-        }
-        catch( Exception e ) {
-           log.log ("Report of deployment of J2EE application: " + d.getName() + " could not be reported.");
-        }
+              // <comment author="cgjung"> factored out for subclass access
+            addToCollector(d,lCollector);
+            
 		  startApplication (d);
 		  log.log ("J2EE application: " + _url + " is deployed.");
       } 
@@ -269,6 +245,64 @@ implements J2eeDeployerMBean
 			  throw new J2eeDeploymentException ("fatal error: "+_e);
 		  }
 	  }
+   }
+
+   /** creation of collector name  factored out.
+    *  @author schaefera
+    *  @author cgjung
+    */
+   protected ObjectName createCollectorName() {
+        try {
+         return new ObjectName( "Management", "service", "Collector" );
+      }
+      catch( Exception e ) {
+        return null;
+      }
+   }
+   
+   /** report of addition to data collector factored out for less
+    *  redundancy with subclasses
+    *  @author schaefera
+    *  @author cgjung
+    */
+   protected void addToCollector(Deployment d, ObjectName lCollector) {
+       try {
+           // Now the application is deployed add it to the server data collector
+           Application lApplication = new Application( d.getName(), "DD:Fix later" );
+           server.invoke(
+           lCollector,
+           "saveApplication",
+           new Object[] {
+               d.getName(),
+               lApplication
+           },
+           new String[] {
+               "java.lang.String",
+               lApplication.getClass().getName()
+           }
+           );
+       }
+       catch( Exception e ) {
+           log.log("Report of deployment of J2EE application: " + d.getName() + " could not be reported.");
+       }
+   }
+   
+   /** report of removal to data collector factored out for subclass access 
+    *  a try/catch for dealing with an uninstalled collector has been added.
+    *  @author schaefera
+    *  @author cgjung
+    */
+   protected void removeFromCollector(String _url, ObjectName lCollector)  {
+       try{
+           server.invoke(
+            lCollector,
+            "removeApplication",
+            new Object[] { _url },
+            new String[] { "java.lang.String" }
+         );
+       } catch(Exception e) {
+           log.log("Report of undeployment of J2EE application: " + _url + " could not be reported.");
+       }       
    }
    
    /** Undeploys the given URL (if it is deployed).
@@ -456,73 +490,75 @@ implements J2eeDeployerMBean
       // save the application classloader for later
       ClassLoader appCl = Thread.currentThread().getContextClassLoader();
 
+       // <comment author="cgjung">module deployment factored out for subclass
+      // access </comment>
       // redirect all modules to the responsible deployers
-      Deployment.Module m = null;
-      String moduleName = null;
-      String message;
-      try
-      {
-         // Deploy the ejb modules
-         moduleName = _d.name;
-         Vector tmp = new java.util.Vector();
-         Iterator it = _d.ejbModules.iterator();
-         while( it.hasNext() )
-         {
-             m = (Deployment.Module) it.next();
-             tmp.add( m.localUrls.firstElement().toString() );
-         }
-         String[] jarUrls = new String[ tmp.size() ];
-         tmp.toArray( jarUrls );
-         // Call the ContainerFactory that is loaded in the JMX server
-         server.invoke(jarDeployer, "deploy",
-            new Object[]{ _d.localUrl.toString(), jarUrls, moduleName },
-            new String[]{ String.class.getName(), String[].class.getName(), String.class.getName() } );
-
-         // Deploy the web application modules
-         it = _d.webModules.iterator ();
-		 if (it.hasNext() && !warDeployerAvailable())
-			 throw new J2eeDeploymentException ("application contains war files but no web container available");
-
-         while( it.hasNext() )
-         {
-            m = (Deployment.Module)it.next ();
-            moduleName = m.name;
-            log.log ("Starting module " + moduleName);
-            
-            // Call the TomcatDeployer that is loaded in the JMX server
-            server.invoke(warDeployer, "deploy",
-               new Object[] { m.webContext, m.localUrls.firstElement().toString ()}, new String[] { "java.lang.String", "java.lang.String" });
-
-            // since tomcat changes the context classloader...
-            Thread.currentThread().setContextClassLoader (appCl);
-         }
-      }
-      catch (MBeanException _mbe)
-      {
-         log.error ("Starting "+moduleName+" failed!");
-         throw new J2eeDeploymentException ("Error while starting "+moduleName+": " + _mbe.getTargetException ().getMessage (), _mbe.getTargetException ());
-      }
-      catch (RuntimeErrorException e)
-      {
-         log.error ("Starting "+moduleName+" failed!");
-         e.getTargetError().printStackTrace();
-         throw new J2eeDeploymentException ("Error while starting "+moduleName+": " + e.getTargetError ().getMessage (), e.getTargetError ());
-      }
-      catch (RuntimeMBeanException e)
-      {
-         log.error ("Starting "+moduleName+" failed!");
-         e.getTargetException ().printStackTrace();
-         throw new J2eeDeploymentException ("Error while starting "+moduleName+": " + e.getTargetException ().getMessage (), e.getTargetException ());
-      }
-      catch (JMException _jme)
-      {
-         log.error ("Starting failed!");
-         throw new J2eeDeploymentException ("Fatal error while interacting with deployer MBeans... " + _jme.getMessage ());
-      }
-      finally
-      {
-         Thread.currentThread().setContextClassLoader (oldCl);
-      }
+      startModules(_d,appCl,oldCl);     
+   }
+   
+   /** factored out method to start individual modules and reinstall
+    *  context classloader afterwards
+    */
+   protected void startModules(Deployment _d, ClassLoader appCl, ClassLoader oldCl) throws J2eeDeploymentException {
+       Deployment.Module m = null;
+       String moduleName = null;
+       String message;
+       try {
+           // Deploy the ejb modules
+           moduleName = _d.name;
+           Vector tmp = new java.util.Vector();
+           Iterator it = _d.ejbModules.iterator();
+           while( it.hasNext() ) {
+               m = (Deployment.Module) it.next();
+               tmp.add( m.localUrls.firstElement().toString() );
+           }
+           String[] jarUrls = new String[ tmp.size() ];
+           tmp.toArray( jarUrls );
+           // Call the ContainerFactory that is loaded in the JMX server
+           server.invoke(jarDeployer, "deploy",
+           new Object[]{ _d.localUrl.toString(), jarUrls, moduleName },
+           new String[]{ String.class.getName(), String[].class.getName(), String.class.getName() } );
+           
+           // Deploy the web application modules
+           it = _d.webModules.iterator();
+           if (it.hasNext() && !warDeployerAvailable())
+               throw new J2eeDeploymentException("application contains war files but no web container available");
+           
+           while( it.hasNext() ) {
+               m = (Deployment.Module)it.next();
+               moduleName = m.name;
+               log.log("Starting module " + moduleName);
+               
+               // Call the TomcatDeployer that is loaded in the JMX server
+               server.invoke(warDeployer, "deploy",
+               new Object[] { m.webContext, m.localUrls.firstElement().toString()}, new String[] { "java.lang.String", "java.lang.String" });
+               
+               // since tomcat changes the context classloader...
+               Thread.currentThread().setContextClassLoader(appCl);
+           }
+       }
+       catch (MBeanException _mbe) {
+           log.error("Starting "+moduleName+" failed!");
+           throw new J2eeDeploymentException("Error while starting "+moduleName+": " + _mbe.getTargetException().getMessage(), _mbe.getTargetException());
+       }
+       catch (RuntimeErrorException e) {
+           log.error("Starting "+moduleName+" failed!");
+           e.getTargetError().printStackTrace();
+           throw new J2eeDeploymentException("Error while starting "+moduleName+": " + e.getTargetError().getMessage(), e.getTargetError());
+       }
+       catch (RuntimeMBeanException e) {
+           log.error("Starting "+moduleName+" failed!");
+           e.getTargetException().printStackTrace();
+           throw new J2eeDeploymentException("Error while starting "+moduleName+": " + e.getTargetException().getMessage(), e.getTargetException());
+       }
+       catch (JMException _jme) {
+           log.error("Starting failed!");
+           throw new J2eeDeploymentException("Fatal error while interacting with deployer MBeans... " + _jme.getMessage());
+       }
+       finally {
+           Thread.currentThread().setContextClassLoader(oldCl);
+       }
+       
    }
    
    /** Stops a running deployment. <br>
