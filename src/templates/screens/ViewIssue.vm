@@ -23,13 +23,7 @@
       </div>
 
       <div class="grouper">
-       <div class="datatitle">
-        <table width="100%" cellpadding="3" cellspacing="2" border="1">
-         <tr>
-          <td>Issue ID #$currentIssue.UniqueId</td>
-         </tr>
-        </table>
-       </div>
+       #datatitle ("Issue ID #$currentIssue.UniqueId")
 
        <div class="listtable">
         <table width="100%" cellpadding="3" cellspacing="2" border="1">
@@ -92,8 +86,7 @@
            </td>
         </tr>
         <tr>
-           <td><input type="submit" value="edit attributes" name="eventSubmit_doSubmitattributes" class="button" /></td>
-           <td></td>
+           <td colspan="2"><input type="submit" value="edit attributes" name="eventSubmit_doSubmitattributes" class="button" /></td>
          </tr>
         </table>
        </div>
@@ -102,13 +95,7 @@
 
 ## URLS
       <div class="grouper">
-       <div class="datatitle">
-        <table width="100%" cellpadding="3" cellspacing="2" border="1">
-         <tr>
-          <td>Related Links</td>
-         </tr>
-        </table>
-       </div>
+       #datatitle ("Related Links")
 
        <div class="datatable">
         <table width="100%" border="1" cellspacing="2" cellpadding="3">
@@ -156,13 +143,8 @@
 
 ## ADD DEPENDENCY
 <div class="grouper">
-<div class="datatitle">
-<table width="100%" cellpadding="3" cellspacing="2" border="1">
- <tr>
-  <td>Add Dependency</td>
- </tr>
-</table>
-</div>
+
+#datatitle ("Add Dependency")
 
 <div class="datatable">
 <table width="100%" border="1" cellspacing="2" cellpadding="3">
@@ -187,23 +169,17 @@
 #if (!$currentIssue.Parents.isEmpty() )
 
       <div class="grouper">
-       <div class="datatitle">
-        <table width="100%" cellpadding="3" cellspacing="2" border="1">
-         <tr>
-          <td>Parent Issues</td>
-         </tr>
-        </table>
-       </div>
+       #datatitle ("Parent Issues")
 
        <div class="datatable">
         <table width="100%" border="1" cellspacing="2" cellpadding="3">
          <tr>
 
-          <th width="20%"><a href="#">issue id#:</a></th>
+          <th width="20%">issue id#:</th>
 
-          <th width="40%"><a href="#">issue summary:</a></th>
+          <th width="40%">issue summary:</th>
 
-          <th><a href="#">dependency type:</a></th>
+          <th>dependency type:</th>
          </tr>
 
        #foreach( $parent in $currentIssue.Parents )
@@ -247,23 +223,17 @@
 ## CHILD ISSUES
 #if (!$currentIssue.Children.isEmpty() )
       <div class="grouper">
-       <div class="datatitle">
-        <table width="100%" cellpadding="3" cellspacing="2" border="1">
-         <tr>
-          <td>Child Issues</td>
-         </tr>
-        </table>
-       </div>
+       #datatitle ("Child Issues")
 
        <div class="datatable">
         <table width="100%" border="1" cellspacing="2" cellpadding="3">
          <tr>
 
-          <th width="20%"><a href="#">issue id#:</a></th>
+          <th width="20%">issue id#:</th>
 
-          <th width="40%"><a href="#" width="40%">issue summary:</a></th>
+          <th width="40%">issue summary:</th>
 
-          <th><a href="#">dependency type:</a></th>
+          <th>dependency type:</th>
          </tr>
 
        #foreach( $child in $currentIssue.Children )
@@ -308,13 +278,8 @@
 
 ## COMMENTS
       <div class="grouper">
-       <div class="datatitle">
-        <table width="100%" cellpadding="3" cellspacing="2" border="1">
-         <tr>
-          <td>Comments <a href="#">hide section</a></td>
-         </tr>
-        </table>
-       </div>
+       #datatitle ("Comments")
+       
        <div class="listtable">
         <table width="100%" cellpadding="3" cellspacing="2" border="1">
     #foreach($comment in $currentIssue.Comments)
@@ -347,13 +312,7 @@
 
 ## ISSUE HISTORY
       <div class="grouper">
-       <div class="datatitle">
-        <table width="100%" cellpadding="3" cellspacing="2" border="1">
-         <tr>
-          <td>Issue History (up to first ten)</td>
-         </tr>
-        </table>
-       </div>
+       #datatitle ("Issue History (up to first ten)")
 
        <div class="datatable">
         <table width="100%" cellpadding="3" cellspacing="2" border="1">
@@ -390,7 +349,7 @@
        </div>
       </div>
 
-      <p><a href="#">view complete history</a></p>
+      <p>view complete history</p>
 
       <p><input type="submit" value="submit append" class="button" />&#160;<input type="submit" value="cancel" class="button" />&#160;<input type="reset" value="reset" class="button" /></p>
 
