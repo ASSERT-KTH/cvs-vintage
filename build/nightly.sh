@@ -17,10 +17,18 @@ MYSQL=/usr/local/mysql/bin
 DEPBUILD=0
 
 ## Environment variables
-JAVA_HOME="/System/Library/Frameworks/JavaVM.framework/Home"
-export JAVA_HOME
-ANT_HOME="/usr/local/ant"
-export ANT_HOME
+if [ -z ${JAVA_HOME} ] ; then
+    if [ ${OSTYPE} = "macos" ] ; then
+        JAVA_HOME="/System/Library/Frameworks/JavaVM.framework/Home"
+    elif [ ${OSTYPE} = "linux" ] ; then
+        JAVA_HOME="/usr/local/java"
+    fi
+    export JAVA_HOME
+fi
+if [ -z ${ANT_HOME} ] ; then
+    ANT_HOME="/usr/local/ant"
+    export ANT_HOME
+fi
 PATH=${PATH}:/usr/local/bin:${ANT_HOME}/bin:${MYSQL}
 export PATH
 echo "Path: $PATH"
