@@ -1297,7 +1297,7 @@ public class ContextManager implements LogAware{
 	Context context = (Context)contexts.get(name);
 	log( "Removing context " + context.toString());
 
-	ContextInterceptor cI[]=getContextInterceptors();
+	ContextInterceptor cI[]=getContextInterceptors(context);
 	for( int i=0; i< cI.length; i++ ) {
 	    cI[i].removeContext( this, context );
 	}
@@ -1324,7 +1324,7 @@ public class ContextManager implements LogAware{
     public void doPostServletInit(Context ctx, Handler sw)
 	throws TomcatException
     {
-	ContextInterceptor cI[]=getContextInterceptors();
+	ContextInterceptor cI[]=getContextInterceptors(ctx);
 	for( int i=0; i< cI.length; i++ ) {
 	    try {
 		cI[i].postServletInit( ctx, sw );
@@ -1337,7 +1337,7 @@ public class ContextManager implements LogAware{
     public void doPreServletDestroy(Context ctx, Handler sw)
 	throws TomcatException
     {
-	ContextInterceptor cI[]=getContextInterceptors();
+	ContextInterceptor cI[]=getContextInterceptors(ctx);
 	for( int i=0; i< cI.length; i++ ) {
 	    try {
 		cI[i].preServletDestroy( ctx, sw );
@@ -1350,7 +1350,7 @@ public class ContextManager implements LogAware{
     public void doPostServletDestroy(Context ctx, Handler sw)
 	throws TomcatException
     {
-	ContextInterceptor cI[]=getContextInterceptors();
+	ContextInterceptor cI[]=getContextInterceptors(ctx);
 	for( int i=0; i< cI.length; i++ ) {
 	    try {
 		cI[i].postServletDestroy( ctx, sw );
