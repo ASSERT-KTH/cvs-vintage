@@ -1,4 +1,4 @@
-// $Id: CollaborationsFactory.java,v 1.4 2005/01/04 21:41:06 linus Exp $
+// $Id: CollaborationsFactory.java,v 1.5 2005/01/31 20:54:35 linus Exp $
 // Copyright (c) 2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -169,34 +169,4 @@ public interface CollaborationsFactory {
      * @return the newly build message
      */
     Object buildActivator(Object owner, Object interaction);
-
-    /**
-     * @param elem the associationendrole
-     */
-    void deleteAssociationEndRole(Object elem);
-
-    /**
-     * @param elem the associationrole
-     */
-    void deleteAssociationRole(Object elem);
-
-    /**
-     * @param elem the UML element to be deleted
-     */
-    void deleteClassifierRole(Object elem);
-
-    /**
-     * @param elem the UML element to be delete
-     */
-    void deleteCollaboration(Object elem);
-
-    /**
-     * @param elem the UML element to be delete
-     */
-    void deleteInteraction(Object elem);
-
-    /**
-     * @param elem the UML element to be delete
-     */
-    void deleteMessage(Object elem);
 }

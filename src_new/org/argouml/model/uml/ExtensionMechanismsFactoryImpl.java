@@ -1,4 +1,4 @@
-// $Id: ExtensionMechanismsFactoryImpl.java,v 1.3 2005/01/07 22:43:39 linus Exp $
+// $Id: ExtensionMechanismsFactoryImpl.java,v 1.4 2005/01/31 20:54:36 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -202,7 +202,7 @@ public class ExtensionMechanismsFactoryImpl
     /**
      * @param elem the stereotype
      */
-    public void deleteStereotype(Object elem) {
+    void deleteStereotype(Object elem) {
         if (!(elem instanceof MStereotype)) {
             throw new IllegalArgumentException();
         }
@@ -212,7 +212,7 @@ public class ExtensionMechanismsFactoryImpl
     /**
      * @param elem the taggedvalue
      */
-    public void deleteTaggedValue(Object elem) {
+    void deleteTaggedValue(Object elem) {
         if (!(elem instanceof MTaggedValue)) {
             throw new IllegalArgumentException();
         }

@@ -1,4 +1,4 @@
-// $Id: ModelManagementFactory.java,v 1.2 2005/01/08 00:39:39 linus Exp $
+// $Id: ModelManagementFactory.java,v 1.3 2005/01/31 20:54:34 linus Exp $
 // Copyright (c) 2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -68,26 +68,6 @@ public interface ModelManagementFactory {
      * @return an initialized UML Subsystem instance.
      */
     Object createSubsystem();
-
-    /**
-     * @param elem to be deleted
-     */
-    void deleteElementImport(Object elem);
-
-    /**
-     * @param elem to be deleted
-     */
-    void deleteModel(Object elem);
-
-    /**
-     * @param elem to be deleted
-     */
-    void deletePackage(Object elem);
-
-    /**
-     * @param elem to be deleted
-     */
-    void deleteSubsystem(Object elem);
 
     /**
      * Copies a package, but not any elements within it. This does however

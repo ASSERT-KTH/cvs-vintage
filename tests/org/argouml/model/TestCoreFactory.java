@@ -1,4 +1,4 @@
-// $Id: TestCoreFactory.java,v 1.4 2005/01/30 20:48:11 linus Exp $
+// $Id: TestCoreFactory.java,v 1.5 2005/01/31 20:54:36 linus Exp $
 // Copyright (c) 2002-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -134,16 +134,6 @@ public class TestCoreFactory extends TestCase {
 					     this,
 					     Model.getCoreFactory(),
 					     objs);
-    }
-
-    /**
-     * Test complete deletion.
-     */
-    public void testDeleteComplete() {
-	CheckUMLModelHelper.deleteComplete(
-					   this,
-					   Model.getCoreFactory(),
-					   allModelElements);
     }
 
     /**

@@ -1,4 +1,4 @@
-// $Id: UseCasesFactory.java,v 1.2 2005/01/08 15:36:16 linus Exp $
+// $Id: UseCasesFactory.java,v 1.3 2005/01/31 20:54:35 linus Exp $
 // Copyright (c) 2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -139,34 +139,4 @@ public interface UseCasesFactory {
      * @return MActor the newly build actor
      */
     Object buildActor(Object actor, Object model);
-
-    /**
-     * @param elem the UML element to be deleted
-     */
-    void deleteActor(Object elem);
-
-    /**
-     * @param elem the UML element to be deleted
-     */
-    void deleteExtend(Object elem);
-
-    /**
-     * @param elem the UML element to be deleted
-     */
-    void deleteExtensionPoint(Object elem);
-
-    /**
-     * @param elem the UML element to be deleted
-     */
-    void deleteInclude(Object elem);
-
-    /**
-     * @param elem the UML element to be deleted
-     */
-    void deleteUseCase(Object elem);
-
-    /**
-     * @param elem the UML element to be deleted
-     */
-    void deleteUseCaseInstance(Object elem);
 }

@@ -1,4 +1,4 @@
-// $Id: CollaborationsFactoryImpl.java,v 1.12 2005/01/30 20:48:14 linus Exp $
+// $Id: CollaborationsFactoryImpl.java,v 1.13 2005/01/31 20:54:36 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -545,7 +545,7 @@ public class CollaborationsFactoryImpl
     /**
      * @param elem the associationendrole
      */
-    public void deleteAssociationEndRole(Object elem) {
+    void deleteAssociationEndRole(Object elem) {
         if (!(elem instanceof MAssociationEndRole)) {
             throw new IllegalArgumentException();
         }
@@ -555,7 +555,7 @@ public class CollaborationsFactoryImpl
     /**
      * @param elem the associationrole
      */
-    public void deleteAssociationRole(Object elem) {
+    void deleteAssociationRole(Object elem) {
         if (!(elem instanceof MAssociationRole)) {
             throw new IllegalArgumentException();
         }
@@ -569,7 +569,7 @@ public class CollaborationsFactoryImpl
     /**
      * @param elem the UML element to be deleted
      */
-    public void deleteClassifierRole(Object elem) {
+    void deleteClassifierRole(Object elem) {
         if (!(elem instanceof MClassifierRole)) {
             throw new IllegalArgumentException();
         }
@@ -579,7 +579,7 @@ public class CollaborationsFactoryImpl
     /**
      * @param elem the UML element to be delete
      */
-    public void deleteCollaboration(Object elem) {
+    void deleteCollaboration(Object elem) {
         if (!(elem instanceof MCollaboration)) {
             throw new IllegalArgumentException();
         }
@@ -589,7 +589,7 @@ public class CollaborationsFactoryImpl
     /**
      * @param elem the UML element to be delete
      */
-    public void deleteInteraction(Object elem) {
+    void deleteInteraction(Object elem) {
         if (!(elem instanceof MInteraction)) {
             throw new IllegalArgumentException();
         }
@@ -599,7 +599,7 @@ public class CollaborationsFactoryImpl
     /**
      * @param elem the UML element to be delete
      */
-    public void deleteMessage(Object elem) {
+    void deleteMessage(Object elem) {
         if (!(elem instanceof MMessage)) {
             throw new IllegalArgumentException();
         }

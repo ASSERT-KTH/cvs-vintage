@@ -1,4 +1,4 @@
-// $Id: ActivityGraphsFactory.java,v 1.2 2005/01/03 16:31:09 linus Exp $
+// $Id: ActivityGraphsFactory.java,v 1.3 2005/01/31 20:54:35 linus Exp $
 // Copyright (c) 2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -110,39 +110,4 @@ public interface ActivityGraphsFactory {
      * @return the newly build classifierInState
      */
     Object buildClassifierInState(Object classifier, Object state);
-
-    /**
-     * @param elem the ActionState to be deleted
-     */
-    void deleteActionState(Object elem);
-
-    /**
-     * @param elem the ActivityGraph to be deleted
-     */
-    void deleteActivityGraph(Object elem);
-
-    /**
-     * @param elem the CallState to be deleted
-     */
-    void deleteCallState(Object elem);
-
-    /**
-     * @param elem the ClassifierInState to be deleted
-     */
-    void deleteClassifierInState(Object elem);
-
-    /**
-     * @param elem ObjectFlowState
-     */
-    void deleteObjectFlowState(Object elem);
-
-    /**
-     * @param elem Partition
-     */
-    void deletePartition(Object elem);
-
-    /**
-     * @param elem SubactivityState
-     */
-    void deleteSubactivityState(Object elem);
 }

@@ -1,4 +1,4 @@
-// $Id: TestUseCasesFactory.java,v 1.6 2005/01/11 21:03:30 mvw Exp $
+// $Id: TestUseCasesFactory.java,v 1.7 2005/01/31 20:54:35 linus Exp $
 // Copyright (c) 2002-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -90,25 +90,18 @@ public class TestUseCasesFactory extends TestCase {
     }
 
     /**
-     * Test deleteComplete().
-     */
-    public void testDeleteComplete() {
-        CheckUMLModelHelper.deleteComplete(this,
-					   Model.getUseCasesFactory(),
-					   allModelElements);
-    }
-
-    /**
      * Test building extensions.
      */
     public void testBuildExtend1() {
         MUseCase base = (MUseCase) Model.getUseCasesFactory().createUseCase();
-        MUseCase extension = 
+        MUseCase extension =
             (MUseCase) Model.getUseCasesFactory().createUseCase();
-        MExtensionPoint point = (MExtensionPoint) Model.getUseCasesFactory()
-            .buildExtensionPoint(base);
-        MExtend extend = (MExtend) Model.getUseCasesFactory()
-            .buildExtend(base, extension, point);
+        MExtensionPoint point =
+            (MExtensionPoint) Model.getUseCasesFactory()
+            	.buildExtensionPoint(base);
+        MExtend extend =
+            (MExtend) Model.getUseCasesFactory()
+            	.buildExtend(base, extension, point);
         assertTrue("extensionpoint not added to base",
 		   !base.getExtensionPoints().isEmpty());
         assertTrue("extend not added to base", !base.getExtends2().isEmpty());

@@ -1,4 +1,4 @@
-// $Id: TestCommonBehaviorFactory.java,v 1.1 2005/01/05 13:36:55 linus Exp $
+// $Id: TestCommonBehaviorFactory.java,v 1.2 2005/01/31 20:54:37 linus Exp $
 // Copyright (c) 2002-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -108,16 +108,6 @@ public class TestCommonBehaviorFactory extends TestCase {
 					     Model.getCommonBehaviorFactory(),
 					     objs);
 
-    }
-
-    /**
-     * Test for deletion.
-     */
-    public void testDeleteComplete() {
-	CheckUMLModelHelper.deleteComplete(
-					   this,
-					   Model.getCommonBehaviorFactory(),
-					   allModelElements);
     }
 
     /**

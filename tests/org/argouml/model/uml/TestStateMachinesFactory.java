@@ -1,4 +1,4 @@
-// $Id: TestStateMachinesFactory.java,v 1.4 2005/01/02 16:43:41 linus Exp $
+// $Id: TestStateMachinesFactory.java,v 1.5 2005/01/31 20:54:35 linus Exp $
 // Copyright (c) 2002-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -110,16 +110,6 @@ public class TestStateMachinesFactory extends TestCase {
 					     this,
 					     Model.getStateMachinesFactory(),
 					     objs);
-    }
-
-    /**
-     * Test deletion.
-     */
-    public void testDeleteComplete() {
-	CheckUMLModelHelper.deleteComplete(
-					   this,
-					   Model.getStateMachinesFactory(),
-					   allModelElements);
     }
 
     /**
