@@ -6,19 +6,7 @@
  */
 package org.jboss.ejb.plugins.jrmp.interfaces;
 
-import java.io.ByteArrayOutputStream;
-import java.io.ObjectOutputStream;
 import java.io.IOException;
-import java.rmi.server.RemoteObject;
-import java.rmi.MarshalledObject;
-import javax.ejb.EJBObject;
-import javax.naming.Reference;
-import javax.naming.BinaryRefAddr;
-import javax.naming.Referenceable;
-import javax.naming.Name;
-import java.lang.reflect.Method;
-import java.lang.reflect.InvocationHandler;
-import java.lang.reflect.Proxy;
 
 import org.jboss.ejb.plugins.jrmp.server.JRMPContainerInvoker;
 
@@ -27,7 +15,7 @@ import org.jboss.ejb.plugins.jrmp.server.JRMPContainerInvoker;
  *      
  *      @see <related>
  *      @author Rickard Öberg (rickard.oberg@telkel.com)
- *      @version $Revision: 1.1 $
+ *      @version $Revision: 1.2 $
  */
 public class GenericProxy
    implements java.io.Serializable
