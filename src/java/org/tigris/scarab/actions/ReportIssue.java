@@ -87,7 +87,7 @@ import org.tigris.scarab.tools.ScarabRequestTool;
  * This class is responsible for report issue forms.
  *
  * @author <a href="mailto:jmcnally@collab.net">John D. McNally</a>
- * @version $Id: ReportIssue.java,v 1.65 2001/11/27 01:02:50 jon Exp $
+ * @version $Id: ReportIssue.java,v 1.66 2001/11/27 19:55:01 jon Exp $
  */
 public class ReportIssue extends RequireLoginFirstAction
 {
@@ -295,7 +295,17 @@ public class ReportIssue extends RequireLoginFirstAction
                 while (i.hasNext()) 
                 {
                     AttributeValue aval = (AttributeValue)avMap.get(i.next());
-                    aval.startTransaction(transaction);
+                    try
+                    {
+                        aval.startTransaction(transaction);
+                    }
+                    catch (ScarabException se)
+                    {
+                        data.setMessage("Fatal Error: " + se.getMessage() 
+                            + " Please start over.");
+                        setTarget(data, "entry,Wizard1.vm");
+                        return;
+                    }
                 }
                 issue.save();
 
