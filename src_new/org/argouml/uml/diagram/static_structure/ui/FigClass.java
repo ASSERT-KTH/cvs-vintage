@@ -1,4 +1,4 @@
-// $Id: FigClass.java,v 1.118 2004/11/01 16:10:55 mvw Exp $
+// $Id: FigClass.java,v 1.119 2004/11/04 14:57:37 bobtarling Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -167,12 +167,12 @@ public class FigClass extends FigNodeModelElement
         getNameFig().setFilled(true);
 
         // Attributes inside. First one is the attribute box itself.
-        FigCompartment attrVec = 
+        FigCompartment attributeFigCompartment = 
             new FigAttributesCompartment(10, 30, 60, ROWHEIGHT + 2);
 
         // this rectangle marks the operation section; all operations
         // are inside it
-        FigCompartment operVec = 
+        FigCompartment operatorFigCompartment = 
             new FigOperationsCompartment(10, 31 + ROWHEIGHT, 60, ROWHEIGHT + 2);
 
         // Set properties of the stereotype box. Make it 1 pixel higher than
@@ -219,8 +219,8 @@ public class FigClass extends FigNodeModelElement
         addFig(getNameFig());
         addFig(bigPort);
         addFig(stereoLineBlinder);
-        addFig(operVec);
-        addFig(attrVec);
+        addFig(operatorFigCompartment);
+        addFig(attributeFigCompartment);
 
         setSuppressCalcBounds(false);
         // Set the bounds of the figure to the total of the above (hardcoded)
