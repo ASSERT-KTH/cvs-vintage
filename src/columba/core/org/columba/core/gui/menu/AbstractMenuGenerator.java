@@ -199,7 +199,10 @@ public abstract class AbstractMenuGenerator {
 								next.getAttribute("action"),
 								frameController);
 						if (action != null) {
-							menu.add(action);
+							// use our custom CMenuItem here
+							// -> in order to support JavaHelp support
+							// -> @see CMenuItem for more details
+							menu.add(new CMenuItem(action));
 							lastWasSeparator = false;
 						}
 

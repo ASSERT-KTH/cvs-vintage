@@ -120,7 +120,7 @@ public class HelpManager {
 	public static HelpBroker getHelpBroker() {
 		return hb;
 	}
-	
+
 	/**
 	 * 
 	 * Associate button with topic ID.
@@ -131,9 +131,9 @@ public class HelpManager {
 	 * @param c			component 
 	 * @param helpID	helpID 
 	 */
-	public static void enableHelpOnButton(Component c, String helpID)
-	{
+	public static void enableHelpOnButton(Component c, String helpID) {
 		getHelpBroker().enableHelpOnButton(c, helpID, hs);
 	}
 
+	
 }

@@ -30,8 +30,8 @@ import org.columba.core.config.ConfigPath;
 import org.columba.core.config.ThemeItem;
 import org.columba.core.gui.statusbar.event.WorkerListChangeListener;
 import org.columba.core.gui.statusbar.event.WorkerListChangedEvent;
+import org.columba.core.gui.toolbar.ToolbarButton;
 import org.columba.core.gui.util.ImageLoader;
-import org.columba.core.gui.util.ToolbarButton;
 import org.columba.core.main.MainInterface;
 
 /**

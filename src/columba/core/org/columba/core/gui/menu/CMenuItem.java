@@ -13,34 +13,30 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
 //
 //All Rights Reserved.
-package org.columba.core.gui.util;
 
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
+package org.columba.core.gui.menu;
 
-import javax.swing.JProgressBar;
+import javax.swing.AbstractAction;
+import javax.swing.JMenuItem;
 
-public class CProgressBar extends JProgressBar
-{
-	public CProgressBar()
+import org.columba.core.action.BasicAction;
+import org.columba.core.help.HelpManager;
+
+/**
+ * Default MenuItem which automatically sets a JavaHelp topic ID
+ * based on the AbstractAction name attribute.
+ * <p>
+ * This is necessary to provide a complete context-specific help.
+ * 
+ *
+ * @author fdietz
+ */
+public class CMenuItem extends JMenuItem {
+
+	public CMenuItem( AbstractAction action )
 	{
-		super();
-		setRequestFocusEnabled(false);
-	}
-	
-	public boolean isFocusTraversable() {
-		return isRequestFocusEnabled();
-	}
-
-	public void setIndeterminate(boolean status)
-	{
-		try
-		{
-			Method method = getClass().getSuperclass().getMethod("setIndeterminate",new Class[]{Boolean.TYPE});
-			method.invoke(this,new Object[]{new Boolean(status)});
-		}
-		catch(NoSuchMethodException nsme){}
-		catch(IllegalAccessException iae){}
-		catch(InvocationTargetException ite){}
+		super(action);
+		
+		HelpManager.enableHelpOnButton(this, ((BasicAction) action).getName());
 	}
 }

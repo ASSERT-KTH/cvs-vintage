@@ -23,7 +23,7 @@ import java.io.FileWriter;
 import javax.swing.JOptionPane;
 
 import org.columba.core.config.Config;
-import org.columba.core.util.TempFileStore;
+import org.columba.core.io.TempFileStore;
 import org.columba.mail.gui.composer.EditorView;
 import org.columba.mail.gui.mimetype.MimeTypeViewer;
 import org.columba.mail.message.MimeHeader;

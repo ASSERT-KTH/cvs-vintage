@@ -18,9 +18,9 @@ package org.columba.core.facade;
 import java.io.File;
 
 import org.columba.core.config.Config;
+import org.columba.core.io.TempFileStore;
 import org.columba.core.main.MainInterface;
 import org.columba.core.plugin.PluginResourceLoader;
-import org.columba.core.util.TempFileStore;
 import org.columba.core.xml.XmlElement;
 import org.columba.core.xml.XmlIO;
 

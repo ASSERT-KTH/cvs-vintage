@@ -13,25 +13,26 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
 //
 //All Rights Reserved.
-package org.columba.core.gui.util;
+package org.columba.core.gui.toolbar;
 
 import java.awt.Insets;
 
 import javax.swing.Icon;
-import javax.swing.JButton;
 import javax.swing.SwingConstants;
 
 import org.columba.core.action.BasicAction;
 import org.columba.core.config.Config;
 import org.columba.core.config.GuiItem;
+import org.columba.core.gui.menu.CButton;
 
-public class ToolbarButton extends JButton {
+public class ToolbarButton extends CButton {
 	String buttonText;
 
 	static boolean WITH_ICON = true;
 	static boolean WITH_TEXT = false;
 	static boolean ALIGNMENT = true;
 
+	
 	public ToolbarButton()
 	{
 		
@@ -44,6 +45,7 @@ public class ToolbarButton extends JButton {
 		super(icon);
 		setRequestFocusEnabled(false);
 	}
+	
 	
 	public ToolbarButton(BasicAction a) {
 		super(a);

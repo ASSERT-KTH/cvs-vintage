@@ -13,12 +13,11 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
 //
 //All Rights Reserved.
-package org.columba.core.util;
+package org.columba.core.io;
 
 import java.io.File;
 
 import org.columba.core.config.ConfigPath;
-import org.columba.core.io.DiskIO;
 
 public class TempFileStore
 {

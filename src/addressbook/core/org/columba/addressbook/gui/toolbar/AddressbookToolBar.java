@@ -22,7 +22,7 @@ import java.util.ResourceBundle;
 import javax.swing.JToolBar;
 
 import org.columba.addressbook.main.AddressbookInterface;
-import org.columba.core.gui.util.ToolbarButton;
+import org.columba.core.gui.toolbar.ToolbarButton;
 
 
 

@@ -19,7 +19,7 @@
 	Comments: this class provides some methods to enlarge or maximise a java.awt.Component object.
 	
 */
-package org.columba.core.util;
+package org.columba.core.gui.frame;
 
 //Resizing
 import java.awt.Dimension;

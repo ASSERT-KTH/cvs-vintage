@@ -38,8 +38,8 @@ import org.columba.core.gui.statusbar.event.WorkerListChangeListener;
 import org.columba.core.gui.statusbar.event.WorkerListChangedEvent;
 import org.columba.core.gui.statusbar.event.WorkerStatusChangeListener;
 import org.columba.core.gui.statusbar.event.WorkerStatusChangedEvent;
+import org.columba.core.gui.toolbar.ToolbarButton;
 import org.columba.core.gui.util.ImageLoader;
-import org.columba.core.gui.util.ToolbarButton;
 
 public class StatusBar
 	extends JComponent

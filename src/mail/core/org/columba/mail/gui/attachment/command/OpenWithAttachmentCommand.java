@@ -22,7 +22,7 @@ import java.io.FileOutputStream;
 import org.columba.core.command.Command;
 import org.columba.core.command.DefaultCommandReference;
 import org.columba.core.command.Worker;
-import org.columba.core.util.TempFileStore;
+import org.columba.core.io.TempFileStore;
 import org.columba.mail.coder.CoderRouter;
 import org.columba.mail.coder.Decoder;
 import org.columba.mail.command.FolderCommand;

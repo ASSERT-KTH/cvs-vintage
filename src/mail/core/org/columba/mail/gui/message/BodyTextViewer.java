@@ -26,8 +26,8 @@ import javax.swing.text.html.HTMLEditorKit;
 
 import org.columba.core.config.Config;
 import org.columba.core.io.DiskIO;
+import org.columba.core.io.TempFileStore;
 import org.columba.core.logging.ColumbaLogger;
-import org.columba.core.util.TempFileStore;
 import org.columba.core.xml.XmlElement;
 import org.columba.mail.gui.message.util.DocumentParser;
 import org.columba.mail.parser.text.HtmlParser;
