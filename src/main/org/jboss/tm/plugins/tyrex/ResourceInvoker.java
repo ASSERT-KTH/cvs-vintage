@@ -30,7 +30,7 @@ import org.jboss.logging.Logger;
  *        ResourceRemote,
  *        CoordinatorRemote
  *   @author <a href="mailto:akkerman@cs.nyu.edu">Anatoly Akkerman</a>
- *   @version $Revision: 1.1 $
+ *   @version $Revision: 1.2 $
  */
 
 public class ResourceInvoker implements InvocationHandler, Externalizable {
@@ -85,8 +85,7 @@ public class ResourceInvoker implements InvocationHandler, Externalizable {
 
     if (method.equals(prepare)) {
       // DEBUG      Logger.debug("ResourceInvoker: calling prepare()");
-      remoteResource.prepare();
-      return null;
+      return remoteResource.prepare();
     }
     else if (method.equals(rollback)) {
       // DEBUG      Logger.debug("ResourceInvoker: calling rollback()");

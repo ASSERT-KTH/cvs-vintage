@@ -33,10 +33,10 @@ import org.jboss.logging.Logger;
  *        CoordinatorRemote,
  *        ResourceRemote
  *   @author <a href="mailto:akkerman@cs.nyu.edu">Anatoly Akkerman</a>
- *   @version $Revision: 1.1 $
+ *   @version $Revision: 1.2 $
  */
 
-class CoordinatorInvoker implements InvocationHandler, Externalizable {
+class CoordinatorInvoker implements InvocationHandler {
 
     private static Method register_resource;
 
@@ -52,25 +52,8 @@ class CoordinatorInvoker implements InvocationHandler, Externalizable {
 
     private CoordinatorRemoteInterface remoteCoordinator;
 
-    public CoordinatorInvoker() {
-      // for externalization to work
-    }
-
-    protected CoordinatorInvoker (Coordinator coord) {
-      try {
-        remoteCoordinator = new CoordinatorRemote(coord);
-      } catch (Exception e) {
-        e.printStackTrace();
-        Logger.warning("CoordinatorInvoker could not instantiate properly, there will be problems with this transaction!");
-      }
-    }
-
-    public void writeExternal(java.io.ObjectOutput out) throws IOException {
-      out.writeObject(remoteCoordinator);
-    }
-
-    public void readExternal(java.io.ObjectInput in) throws IOException, ClassNotFoundException{
-      remoteCoordinator = (CoordinatorRemoteInterface) in.readObject();
+    protected CoordinatorInvoker (CoordinatorRemoteInterface coord) {
+      remoteCoordinator = coord;
     }
 
     public Object invoke (Object proxy, Method method, Object[] args)
@@ -87,8 +70,9 @@ class CoordinatorInvoker implements InvocationHandler, Externalizable {
           // DEBUG          Logger.debug("TyrexTxPropagationContex: Created Proxy for Resource, calling Proxy for Coordinator");
           // call our Coordinator
           remoteCoordinator.register_resource(serializableResource);
-          // register_resource in our remoteCoordinator is a 'void' method call
-          // we ignore the RecoveryCoordinator for now
+          // register_resource in RemoteCoordinator is a 'void' method call
+          // while the actual Coordinator returns a RecoveryCoordinator
+          // for simplicity we ignore the RecoveryCoordinator for now
           return null;
         }
         else {

@@ -10,6 +10,7 @@ import java.io.Externalizable;
 import java.io.ObjectOutput;
 import java.io.ObjectInput;
 import java.io.IOException;
+import java.rmi.RemoteException;
 
 import org.jboss.logging.Logger;
 
@@ -37,7 +38,7 @@ import java.lang.reflect.Proxy;
  *        org.omg.CosTransactions.Coordinator,
  *        java.lang.reflect.Proxy
  *   @author <a href="mailto:akkerman@cs.nyu.edu">Anatoly Akkerman</a>
- *   @version $Revision: 1.1 $
+ *   @version $Revision: 1.2 $
  */
 
 public class TyrexTxPropagationContext implements Externalizable {
@@ -49,22 +50,32 @@ public class TyrexTxPropagationContext implements Externalizable {
   }
 
   protected TyrexTxPropagationContext (PropagationContext tpc) {
-    this.isNull = false; // this is not a null Propagation Context
-    this.timeout = tpc.timeout;
-    this.coord = (Coordinator) Proxy.newProxyInstance(getClass().getClassLoader(),
-                                        new Class[] {Coordinator.class},
-                                        new CoordinatorInvoker(tpc.current.coord));
-    this.otid = tpc.current.otid;
-    // DEBUG    Logger.debug("TyrexTxPropagationContext: created new tpc");
+    try {
+      this.isNull = false; // this is not a null Propagation Context
+      this.timeout = tpc.timeout;
+      this.coord = new CoordinatorRemote(tpc.current.coord);
+      this.otid = tpc.current.otid;
+      // DEBUG    Logger.debug("TyrexTxPropagationContext: created new tpc");
+    } catch (RemoteException e) {
+      // should never happen, we are instantiating the RemoteCoordinator
+      // locally
+      e.printStackTrace();
+      Logger.warning("Impossible, CoordinatorRemote threw a RemoteException!");
+    }
   }
 
   // this is called on the remote side
   protected PropagationContext getPropagationContext() {
 
-    if ( !isNull && (tpc == null) ) {
-      // create once
+    if ( !isNull && (tpc == null)) {
+      // create these guys once
+      // perhaps the coordinator Proxy can be cached and not recreated each
+      // time we come in with the same tpc
+      coordProxy = (Coordinator) Proxy.newProxyInstance(getClass().getClassLoader(),
+                                        new Class[] {Coordinator.class},
+                                        new CoordinatorInvoker(this.coord));
       tpc = new PropagationContext( this.timeout,
-                                    new TransIdentity(this.coord,
+                                    new TransIdentity(this.coordProxy,
                                                       null,
                                                       this.otid),
                                     new TransIdentity[0], // no parents, but not null
@@ -81,8 +92,8 @@ public class TyrexTxPropagationContext implements Externalizable {
       if (! isNull) {
         out.writeInt(this.timeout);
         // DEBUG       Logger.debug("TPC: wrote timeout");
-        out.writeObject((Proxy) this.coord);
-        // DEBUG       Logger.debug("TPC: wrote CoordinatorProxy");
+        out.writeObject(this.coord);
+        // DEBUG       Logger.debug("TPC: wrote CoordinatorRemote stub");
         out.writeObject(this.otid); // otid implements IDLEntity which extends Serializable
         // DEBUG       Logger.debug("TPC: wrote otid");
       }
@@ -99,8 +110,8 @@ public class TyrexTxPropagationContext implements Externalizable {
       if (!isNull) {
         this.timeout = in.readInt();
         // DEBUG      Logger.debug("TPC: read timeout");
-        this.coord = (Coordinator) in.readObject();
-        // DEBUG      Logger.debug("TPC: read coordinator");
+        this.coord = (CoordinatorRemoteInterface) in.readObject();
+        // DEBUG      Logger.debug("TPC: read coordinator stub");
         this.otid = (otid_t) in.readObject();
         // DEBUG      Logger.debug("TPC: read otid");
       }
@@ -115,9 +126,7 @@ public class TyrexTxPropagationContext implements Externalizable {
    */
 
   protected int timeout;
-  // this is a Proxy for the local transaction coordinator
-  // since we need to serialize the Coordinator and it is not serializable
-  protected Coordinator coord;
+  protected CoordinatorRemoteInterface coord;
   protected otid_t otid;
 
   // this is a special field that gets propagated to the remote side to
@@ -130,4 +139,14 @@ public class TyrexTxPropagationContext implements Externalizable {
   // cached copy of tpc, so that we need to create it only once
   // on the remote side
   protected PropagationContext tpc = null;
+
+  // proxy that wraps the coordinator remote stub on the remote side
+  // This proxy is created when the tpc arrives to the remote side and
+  // it is given to the Tyrex TM as part of the recreated tpc
+  // to register the subordinate transaction with the originator as a Resource.
+  // When Tyrex invokes coordinator.register_resource, this Proxy wraps the Resource
+  // with a dynamic Proxy and calls the coordinator remote object passing
+  // it the Resource proxy instead of the actual Resource, so that the
+  // coordination can proceed through RMI rather than CORBA
+  protected Coordinator coordProxy = null;
 }
