@@ -1,4 +1,4 @@
-// $Id: TargetManager.java,v 1.19 2003/06/30 18:00:25 linus Exp $
+// $Id: TargetManager.java,v 1.20 2003/09/04 19:45:21 thierrylach Exp $
 // Copyright (c) 2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -271,6 +271,10 @@ public final class TargetManager {
                 // times in history
             }
             if (oldCurrentTarget != _currentTarget) {
+            	/* TODO updateAllEnabled() has been deprecated, and the replacement
+            	 * is to use updateAllEnabled(TargetEvent e), but what TargetEvent
+            	 * would be passed?
+            	 */
                 Actions.updateAllEnabled();
             }
         }
