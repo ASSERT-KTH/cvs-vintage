@@ -38,7 +38,7 @@ import org.gjt.sp.util.Log;
  * or font style for painting that token.
  *
  * @author Slava Pestov, mike dillon
- * @version $Id: TokenMarker.java,v 1.45 2003/01/12 03:08:25 spestov Exp $
+ * @version $Id: TokenMarker.java,v 1.46 2003/01/20 02:02:28 spestov Exp $
  *
  * @see org.gjt.sp.jedit.syntax.Token
  * @see org.gjt.sp.jedit.syntax.TokenHandler
@@ -348,14 +348,15 @@ main_loop:	for(pos = line.offset; pos < lineLength; pos++)
 
 			markKeyword(true);
 
+			context = (LineContext)context.parent.clone();
+
 			tokenHandler.handleToken(
-				(context.parent.inRule.action & ParserRule.EXCLUDE_MATCH)
+				(context.inRule.action & ParserRule.EXCLUDE_MATCH)
 				== ParserRule.EXCLUDE_MATCH
-				? context.parent.rules.getDefault()
-				: context.parent.inRule.token,
+				? context.rules.getDefault()
+				: context.inRule.token,
 				pos - line.offset,pattern.count,context);
 
-			context = (LineContext)context.parent.clone();
 			keywords = context.rules.getKeywords();
 			context.inRule = null;
 			lastOffset = pos + pattern.count;
