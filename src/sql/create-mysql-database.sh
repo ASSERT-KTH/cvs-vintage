@@ -51,8 +51,8 @@ FILES="mysql-scarab.sql \
        mysql-scarab-id-table-init.sql \
        mysql-scarab-required-data.sql \
        mysql-scarab-default-data.sql \
-       mysql-scarab-sample-data.sql \
        mysql-scarab-security.sql \
+       mysql-scarab-sample-data.sql
        "
 
 for i in ${FILES} ; do
