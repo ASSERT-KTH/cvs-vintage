@@ -457,8 +457,8 @@ class FormAuthHandler extends Handler {
 	Context ctx=req.getContext();
 
 	ServerSession session=req.getSession( false );
-	if( session == null ) {
-	}
+	// we didn't had a session
+	boolean noSession= ( session==null );
 
 	String page=ctx.getFormLoginPage();
 	String errorPage=ctx.getFormErrorPage();
@@ -485,11 +485,13 @@ class FormAuthHandler extends Handler {
                 && !req.queryString().toString().equals(""))
 	    originalLocation += "?" + req.queryString().toString();
         //XXX is needed to put the JVM route too?
-        if (req.getSessionIdSource().equals(Request.SESSIONID_FROM_URL)){
-            String id=";jsessionid="+req.getSessionId() ;
+        if (noSession 
+	    || Request.SESSIONID_FROM_URL.equals(req.getSessionIdSource()))  {
+	    // If new session we have no way to know if cookies are supported
+	    String id=";jsessionid="+req.getSessionId() ;
             originalLocation += id ;
             page += id ;
-        }
+	}
 	session.setAttribute( "tomcat.auth.originalLocation",
 			      originalLocation);
 	if( debug > 0 )

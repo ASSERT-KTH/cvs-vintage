@@ -732,6 +732,7 @@ public class Request {
     // -------------------- Sub requests --------------------
 
     /** If this is a sub-request, return the parent
+     *  ( the request embeding this request )
      */
     public Request getParent() {
 	return parent;

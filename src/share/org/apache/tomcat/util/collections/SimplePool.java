@@ -1,8 +1,4 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/util/collections/Attic/SimplePool.java,v 1.3 2001/03/23 02:25:32 costin Exp $
- * $Revision: 1.3 $
- * $Date: 2001/03/23 02:25:32 $
- *
  * ====================================================================
  *
  * The Apache Software License, Version 1.1
@@ -157,6 +153,10 @@ public final class SimplePool  {
 	return current+1;
     }
 
+
+    public void shutdown() {
+    }
+    
     private void log( String s ) {
 	System.out.println("SimplePool: " + s );
     }
