@@ -59,8 +59,8 @@ public class PriorityView extends JComboBox {
 
 		private ImageIcon image1 =
 			ImageLoader.getSmallImageIcon("priority-high.png");
-		private ImageIcon image2 = null;
-		private ImageIcon image3 = null;
+		//private ImageIcon image2 = null;
+		//private ImageIcon image3 = null;
 		private ImageIcon image4 =
 			ImageLoader.getSmallImageIcon("priority-low.png");
 
