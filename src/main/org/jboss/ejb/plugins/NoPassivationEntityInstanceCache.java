@@ -24,14 +24,14 @@ import org.jboss.ejb.EntityPersistenceManager;
 import org.jboss.ejb.EnterpriseContext;
 import org.jboss.ejb.EntityEnterpriseContext;
 
-import org.jboss.ejb.deployment.jBossEntity;
+import org.jboss.metadata.EntityMetaData;
 
 /**
  *	<description> 
  *      
  *	@see <related>
  *	@author Rickard Öberg (rickard.oberg@telkel.com)
- *	@version $Revision: 1.5 $
+ *	@version $Revision: 1.6 $
  */
 public class NoPassivationEntityInstanceCache
    implements InstanceCache
@@ -64,7 +64,7 @@ public class NoPassivationEntityInstanceCache
    public void init()
       throws Exception
    {
-      isReentrant = ((jBossEntity)con.getMetaData()).getReentrant().equals("True");
+      isReentrant = ((EntityMetaData)con.getBeanMetaData()).isReentrant();
    }
    
    public void start()

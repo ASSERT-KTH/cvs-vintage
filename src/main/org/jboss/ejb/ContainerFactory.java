@@ -32,16 +32,6 @@ import javax.management.MBeanRegistration;
 import javax.management.ObjectName;
 import javax.transaction.TransactionManager;
 
-import org.jboss.ejb.deployment.jBossEjbJar;
-import org.jboss.ejb.deployment.jBossFileManager;
-import org.jboss.ejb.deployment.jBossFileManagerFactory;
-import org.jboss.ejb.deployment.jBossEnterpriseBean;
-import org.jboss.ejb.deployment.jBossEnterpriseBeans;
-import org.jboss.ejb.deployment.jBossSession;
-import org.jboss.ejb.deployment.jBossEntity;
-import org.jboss.ejb.deployment.ContainerConfiguration;
-import org.jboss.ejb.deployment.ContainerConfigurations;
-
 import org.jboss.logging.Log;
 import org.jboss.logging.ConsoleLogging;
 import org.jboss.logging.ConsoleLoggingMBean;
@@ -58,6 +48,15 @@ import org.jboss.verifier.event.VerificationListener;
 import org.jboss.system.EJBSecurityManager;
 import org.jboss.system.RealmMapping;
 
+import org.jboss.metadata.ApplicationMetaData;
+import org.jboss.metadata.BeanMetaData;
+import org.jboss.metadata.SessionMetaData;
+import org.jboss.metadata.EntityMetaData;
+import org.jboss.metadata.ConfigurationMetaData;
+import org.jboss.metadata.XmlLoadable;
+import org.jboss.metadata.XmlFileLoader;
+
+
 /**
 *   A ContainerFactory is used to deploy EJB applications. It can be given a URL to
 *  an EJB-jar or EJB-JAR XML file, which will be used to instantiate containers and make
@@ -68,7 +67,7 @@ import org.jboss.system.RealmMapping;
 *   @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
 *   @author <a href="mailto:jplindfo@helsinki.fi">Juha Lindfors</a>
 *
-*   @version $Revision: 1.27 $
+*   @version $Revision: 1.28 $
 */
 public class ContainerFactory
 	extends org.jboss.util.ServiceMBeanSupport
@@ -226,7 +225,26 @@ public class ContainerFactory
 			if (deployments.containsKey(url))
 				undeploy(url);
 
-            // Check validity
+            
+			app.setURL(url);
+
+			log.log("Deploying:"+url);
+            
+			// Create the ClassLoader for this application
+			// TODO : the ClassLoader should come from the JMX manager if we want to be able to share it (tomcat)
+			ClassLoader cl = new URLClassLoader(new URL[] { url }, Thread.currentThread().getContextClassLoader());
+
+			// Create a file loader with which to load the files
+			XmlFileLoader efm = new XmlFileLoader();
+
+			// the file manager gets its file from the classloader
+		    efm.setClassLoader(cl);
+
+			// Load XML
+			ApplicationMetaData metaData = efm.load();
+
+            
+			// Check validity
             Log.setLog(new Log("Verifier"));
             
             // wrapping this into a try - catch block to prevent errors in
@@ -248,7 +266,7 @@ public class ContainerFactory
                     
                     Log.getLog().log("Verifying " + url);
                     
-                    verifier.verify(url);
+                    verifier.verify(url, metaData);
                 }
             }
             catch (Throwable t) {
@@ -258,51 +276,21 @@ public class ContainerFactory
             // unset verifier log
             Log.unsetLog();
             
-            
-			app.setURL(url);
-
-			log.log("Deploying:"+url);
-
-			// Create a file manager with which to load the files
-			jBossFileManagerFactory fact = new jBossFileManagerFactory();
-			jBossFileManager efm = (jBossFileManager)fact.createFileManager();
-
-			// Setup beancontext
-			BeanContextServicesSupport beanCtx = new BeanContextServicesSupport();
-			beanCtx.add(Beans.instantiate(getClass().getClassLoader(), "com.dreambean.ejx.xml.ProjectX"));
-			beanCtx.add(efm);
-
-			// Load XML
-			jBossEjbJar jar;
-			if (url.getProtocol().startsWith("file"))
-			{
-				// This will copy the jar first so it isn't locked by the CL
-				efm.load(new File(url.getFile()));
-				jar = efm.getEjbJar();
-			}
-			else
-			{
-				jar = efm.load(url);
-			}
-
-			// Create classloader for this application
-//			ClassLoader cl = new EJBClassLoader(new URL[] {url}, null, jar.isSecure());
-			ClassLoader cl = efm.getClassLoader();
 
 			// Get list of beans for which we will create containers
-			Iterator beans = jar.getEnterpriseBeans().iterator();
+			Iterator beans = metaData.getEnterpriseBeans();
 
 			// Deploy beans
 			Context ctx = new InitialContext();
 			while(beans.hasNext())
 			{
-				jBossEnterpriseBean bean = (jBossEnterpriseBean)beans.next();
+				BeanMetaData bean = (BeanMetaData)beans.next();
 
 				log.log("Deploying "+bean.getEjbName());
 
-				if (bean instanceof jBossSession) // Is session?
+				if (bean.isSession()) // Is session?
 				{
-					if (((jBossSession)bean).getSessionType().equals("Stateless")) // Is stateless?
+					if (((SessionMetaData)bean).isStateless()) // Is stateless?
 					{
 						// Create container
 						StatelessSessionContainer container = new StatelessSessionContainer();
@@ -311,43 +299,35 @@ public class ContainerFactory
 						container.setClassLoader(new BeanClassLoader(cl));
 
 						// Set metadata
-						container.setMetaData(bean);
+						container.setBeanMetaData(bean);
 
-                        // use the new metadata classes in org.jboss.metadata
-                        container.setBeanMetaData(efm.getMetaData().getBean(bean.getEjbName()));
-
-            // set assembly descriptor info
-            container.setAssemblyDescriptor(jar.getAssemblyDescriptor() );
-
+						// get the container configuration for this bean
+						// a default configuration is now always provided
+						ConfigurationMetaData conf = bean.getContainerConfiguration();
+						
 						// Set transaction manager
-						container.setTransactionManager((TransactionManager)new InitialContext().lookup("TransactionManager"));
-
+						container.setTransactionManager((TransactionManager)cl.loadClass(conf.getTransactionManager()).newInstance());
+                        
 						// Set security manager (should be chosen based on container config)
 						container.setSecurityManager((EJBSecurityManager)new InitialContext().lookup("EJBSecurityManager"));
 
-            // Set realm mapping (should be chosen based on container config)
-            container.setRealmMapping( (RealmMapping)new InitialContext().lookup("SimpleRealmMapping"));
-
-						// Get container configuration
-						ContainerConfiguration conf = bean.getContainerConfiguration();
-
-						// Make sure we have a default configuration
-						if (conf == null)
-						{
-							log.warning("No configuration chosen. Using default configuration");
-
-							// Get the container default configuration
-							conf = jar.getContainerConfigurations().getContainerConfiguration(DEFAULT_STATELESS_CONFIGURATION);
-
-							// Make sure this bean knows the configuration he is using
-							bean.setConfigurationName(DEFAULT_STATELESS_CONFIGURATION);
-						}
+			            // Set realm mapping (should be chosen based on container config)
+            			container.setRealmMapping( (RealmMapping)new InitialContext().lookup("SimpleRealmMapping"));
 
 						// Set container invoker
-						container.setContainerInvoker((ContainerInvoker)cl.loadClass(conf.getContainerInvoker()).newInstance());
+						ContainerInvoker ci = (ContainerInvoker)cl.loadClass(conf.getContainerInvoker()).newInstance();
+						if (ci instanceof XmlLoadable) {
+							// the container invoker can load its configuration from the jboss.xml element
+							((XmlLoadable)ci).importXml(conf.getContainerInvokerConf());
+						}
+						container.setContainerInvoker(ci);
 
 						// Set instance pool
-						container.setInstancePool((InstancePool)cl.loadClass(conf.getInstancePool()).newInstance());
+						InstancePool ip = (InstancePool)cl.loadClass(conf.getInstancePool()).newInstance();
+					    if (ip instanceof XmlLoadable) {
+							((XmlLoadable)ip).importXml(conf.getContainerPoolConf());
+						}
+						container.setInstancePool(ip);
 
 						// Create interceptors
 
@@ -363,10 +343,6 @@ public class ContainerFactory
 						app.addContainer(container);
 					} else // Stateful
 					{
-						boolean implemented = false;
-
-						//if (!implemented) throw new Error("Stateful Container not implemented yet");
-
 						// Create container
 						StatefulSessionContainer container = new StatefulSessionContainer();
 
@@ -374,34 +350,37 @@ public class ContainerFactory
 						container.setClassLoader(new BeanClassLoader(cl));
 
 						// Set metadata
-						container.setMetaData(bean);
-                        container.setBeanMetaData(efm.getMetaData().getBean(bean.getEjbName()));
+						container.setBeanMetaData(bean);
 
 						// Set transaction manager
 						container.setTransactionManager((TransactionManager)new InitialContext().lookup("TransactionManager"));
 
+						// Set security manager (should be chosen based on container config)
+						container.setSecurityManager((EJBSecurityManager)new InitialContext().lookup("EJBSecurityManager"));
+
+			            // Set realm mapping (should be chosen based on container config)
+            			container.setRealmMapping( (RealmMapping)new InitialContext().lookup("SimpleRealmMapping"));
+
 						// Get container configuration
-						ContainerConfiguration conf = bean.getContainerConfiguration();
-
-						// Make sure we have a default configuration
-						if (conf == null)
-						{
-							log.warning("No configuration chosen. Using default configuration");
-
-							conf =  jar.getContainerConfigurations().getContainerConfiguration(DEFAULT_STATEFUL_CONFIGURATION);
-
-							// Make sure this bean knows the configuration he is using
-							bean.setConfigurationName(DEFAULT_STATEFUL_CONFIGURATION);
-						}
+						ConfigurationMetaData conf = bean.getContainerConfiguration();
 
 						// Set container invoker
-						container.setContainerInvoker((ContainerInvoker)cl.loadClass(conf.getContainerInvoker()).newInstance());
+						ContainerInvoker ci = (ContainerInvoker)cl.loadClass(conf.getContainerInvoker()).newInstance();
+						if (ci instanceof XmlLoadable) {
+							// the container invoker can load its configuration from the jboss.xml element
+							((XmlLoadable)ci).importXml(conf.getContainerInvokerConf());
+						}
+						container.setContainerInvoker(ci);
 
 						// Set instance cache
-						container.setInstanceCache((InstanceCache)cl.loadClass(conf.getInstanceCache()).newInstance());
+						InstanceCache ic = (InstanceCache)cl.loadClass(conf.getInstanceCache()).newInstance(); 
+						if (ic instanceof XmlLoadable) {
+							((XmlLoadable)ic).importXml(conf.getContainerCacheConf());
+						}
+						container.setInstanceCache(ic);
 
-						// Set instance pool
-						container.setInstancePool((InstancePool)cl.loadClass(conf.getInstancePool()).newInstance());
+						// No real instance pool, use the shadow class 
+						container.setInstancePool(new StatefulSessionInstancePool());
 
 						// Set persistence manager
 						container.setPersistenceManager((StatefulSessionPersistenceManager)cl.loadClass(conf.getPersistenceManager()).newInstance());
@@ -426,50 +405,44 @@ public class ContainerFactory
 					container.setClassLoader(new BeanClassLoader(cl));
 
 					// Set metadata
-					container.setMetaData(bean);
-                    container.setBeanMetaData(efm.getMetaData().getBean(bean.getEjbName()));
+					container.setBeanMetaData(bean);
 
 					// Set transaction manager
 					container.setTransactionManager((TransactionManager)new InitialContext().lookup("TransactionManager"));
 
+					// Set security manager (should be chosen based on container config)
+					container.setSecurityManager((EJBSecurityManager)new InitialContext().lookup("EJBSecurityManager"));
+
+					// Set realm mapping (should be chosen based on container config)
+					container.setRealmMapping( (RealmMapping)new InitialContext().lookup("SimpleRealmMapping"));
+
 					// Get container configuration
-					ContainerConfiguration conf = bean.getContainerConfiguration();
-
-					// Make sure we have a default configuration
-					if (conf == null)
-					{
-						log.warning("No configuration chosen. Using default configuration");
-						if (((jBossEntity) bean).getPersistenceType().equals("Bean"))
-						{
-							// BMP case
-							conf =  jar.getContainerConfigurations().getContainerConfiguration(DEFAULT_ENTITY_BMP_CONFIGURATION);
-
-							// Make sure this bean knows the configuration he is using
-							bean.setConfigurationName(DEFAULT_ENTITY_BMP_CONFIGURATION);
-
-						}
-						else
-						{
-							// CMP case
-							conf =  jar.getContainerConfigurations().getContainerConfiguration(DEFAULT_ENTITY_CMP_CONFIGURATION);
-
-							// Make sure this bean knows the configuration he is using
-							bean.setConfigurationName(DEFAULT_ENTITY_CMP_CONFIGURATION);
-						
-						}
-					}
+					ConfigurationMetaData conf = bean.getContainerConfiguration();
 
 					// Set container invoker
-					container.setContainerInvoker((ContainerInvoker)cl.loadClass(conf.getContainerInvoker()).newInstance());
+					ContainerInvoker ci = (ContainerInvoker)cl.loadClass(conf.getContainerInvoker()).newInstance();
+					if (ci instanceof XmlLoadable) {
+						// the container invoker can load its configuration from the jboss.xml element
+						((XmlLoadable)ci).importXml(conf.getContainerInvokerConf());
+					}
+					container.setContainerInvoker(ci);
 
 					// Set instance cache
-					container.setInstanceCache((InstanceCache)cl.loadClass(conf.getInstanceCache()).newInstance());
+					InstanceCache ic = (InstanceCache)cl.loadClass(conf.getInstanceCache()).newInstance(); 
+					if (ic instanceof XmlLoadable) {
+						((XmlLoadable)ic).importXml(conf.getContainerCacheConf());
+					}
+					container.setInstanceCache(ic);
 
 					// Set instance pool
-					container.setInstancePool((InstancePool)cl.loadClass(conf.getInstancePool()).newInstance());
+					InstancePool ip = (InstancePool)cl.loadClass(conf.getInstancePool()).newInstance();
+					if (ip instanceof XmlLoadable) {
+						((XmlLoadable)ip).importXml(conf.getContainerPoolConf());
+					}
+					container.setInstancePool(ip);
 
 					// Set persistence manager 
-					if (((jBossEntity) bean).getPersistenceType().equals("Bean")) {
+					if (((EntityMetaData) bean).isBMP()) {
 						
 						//Should be BMPPersistenceManager
 						container.setPersistenceManager((EntityPersistenceManager)cl.loadClass(conf.getPersistenceManager()).newInstance());

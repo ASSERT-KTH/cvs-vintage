@@ -18,15 +18,21 @@ import org.jboss.ejb.Container;
 import org.jboss.ejb.InstancePool;
 import org.jboss.ejb.EnterpriseContext;
 
+import org.w3c.dom.Element;
+import org.jboss.ejb.DeploymentException;
+import org.jboss.metadata.MetaData;
+import org.jboss.metadata.XmlLoadable;
+
+
 /**
  *	<description> 
  *      
  *	@see <related>
  *	@author Rickard Öberg (rickard.oberg@telkel.com)
- *	@version $Revision: 1.1 $
+ *	@version $Revision: 1.2 $
  */
 public abstract class AbstractInstancePool
-   implements InstancePool
+   implements InstancePool, XmlLoadable
 {
    // Constants -----------------------------------------------------
     
@@ -142,7 +148,17 @@ public abstract class AbstractInstancePool
    }
    
    // Z implementation ----------------------------------------------
-    
+   
+	// XmlLoadable implementation
+	public void importXml(Element element) throws DeploymentException {
+		String maximumSize = MetaData.getElementContent(MetaData.getUniqueChild(element, "MaximumSize"));
+	    try {
+			maxSize = Integer.parseInt(maximumSize);
+		} catch (NumberFormatException e) {
+			throw new DeploymentException("Invalid MaximumSize value for instance pool configuration");
+		}
+	}
+	
    // Package protected ---------------------------------------------
     
    // Protected -----------------------------------------------------

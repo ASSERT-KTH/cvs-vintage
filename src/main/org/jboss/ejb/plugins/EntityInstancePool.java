@@ -8,8 +8,6 @@ package org.jboss.ejb.plugins;
 
 import java.rmi.RemoteException;
 
-import org.jboss.ejb.deployment.EntityInstancePoolConfiguration;
-   
 import org.jboss.ejb.Container;
 import org.jboss.ejb.EnterpriseContext;
 import org.jboss.ejb.EntityEnterpriseContext;
@@ -19,7 +17,7 @@ import org.jboss.ejb.EntityEnterpriseContext;
  *      
  *	@see <related>
  *	@author Rickard Öberg (rickard.oberg@telkel.com)
- *	@version $Revision: 1.3 $
+ *	@version $Revision: 1.4 $
  */
 public class EntityInstancePool
    extends AbstractInstancePool
@@ -56,8 +54,6 @@ public class EntityInstancePool
    public void start()
       throws Exception
    {
-      EntityInstancePoolConfiguration conf = (EntityInstancePoolConfiguration)getContainer().getMetaData().getContainerConfiguration().getInstancePoolConfiguration();
-      maxSize = conf.getMaximumSize();
    }
     
    // Package protected ---------------------------------------------

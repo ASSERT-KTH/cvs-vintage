@@ -20,7 +20,7 @@ import org.jboss.util.Service;
  *   @see Container
  *   @see ContainerFactory
  *   @author Rickard Öberg (rickard.oberg@telkel.com)
- *   @version $Revision: 1.5 $
+ *   @version $Revision: 1.6 $
  */
 public class Application
 	implements Service
@@ -50,7 +50,7 @@ public class Application
 	 */
    public void addContainer(Container con)
    {
-       containers.put(con.getMetaData().getEjbName(), con);
+       containers.put(con.getBeanMetaData().getEjbName(), con);
 	   con.setApplication(this);
    }
    
@@ -62,7 +62,7 @@ public class Application
 	 */
    public void removeContainer(Container con)
    {
-      containers.remove(con.getMetaData().getEjbName());
+      containers.remove(con.getBeanMetaData().getEjbName());
    }
    
 

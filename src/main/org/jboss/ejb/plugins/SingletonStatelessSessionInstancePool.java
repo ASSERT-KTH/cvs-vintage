@@ -15,8 +15,11 @@ import org.jboss.ejb.Container;
 import org.jboss.ejb.InstancePool;
 import org.jboss.ejb.EnterpriseContext;
 import org.jboss.ejb.StatelessSessionEnterpriseContext;
+import org.jboss.ejb.DeploymentException;
 
-import org.jboss.ejb.deployment.SingletonStatelessSessionInstancePoolConfiguration;
+import org.jboss.metadata.XmlLoadable;
+import org.jboss.metadata.MetaData;
+import org.w3c.dom.Element;
 
 /**
  *	Singleton pool for session beans. This lets you have
@@ -24,10 +27,10 @@ import org.jboss.ejb.deployment.SingletonStatelessSessionInstancePoolConfigurati
  *      
  *	@see <related>
  *	@author Rickard Öberg (rickard.oberg@telkel.com)
- *	@version $Revision: 1.2 $
+ *	@version $Revision: 1.3 $
  */
 public class SingletonStatelessSessionInstancePool
-   implements InstancePool
+   implements InstancePool, XmlLoadable
 {
    // Constants -----------------------------------------------------
     
@@ -58,8 +61,6 @@ public class SingletonStatelessSessionInstancePool
    public void init()
       throws Exception
    {
-	   SingletonStatelessSessionInstancePoolConfiguration conf = (SingletonStatelessSessionInstancePoolConfiguration)con.getMetaData().getContainerConfiguration().getInstancePoolConfiguration();
-	   isSynchronized = conf.getSynchronized();
    }
    
    public void start()
@@ -143,7 +144,12 @@ public class SingletonStatelessSessionInstancePool
    }
    
    // Z implementation ----------------------------------------------
-    
+   
+    // XmlLoadable implementation
+	public void importXml(Element element) throws DeploymentException {
+		isSynchronized = Boolean.valueOf(MetaData.getElementContent(MetaData.getUniqueChild(element, "Synchronized"))).booleanValue();
+	}
+	
    // Package protected ---------------------------------------------
     
    // Protected -----------------------------------------------------

@@ -8,8 +8,6 @@ package org.jboss.ejb.plugins;
 
 import java.rmi.RemoteException;
 
-import org.jboss.ejb.deployment.StatelessSessionInstancePoolConfiguration;
-
 import org.jboss.ejb.Container;
 import org.jboss.ejb.EnterpriseContext;
 import org.jboss.ejb.StatelessSessionEnterpriseContext;
@@ -19,7 +17,7 @@ import org.jboss.ejb.StatelessSessionEnterpriseContext;
  *      
  *	@see <related>
  *	@author Rickard Öberg (rickard.oberg@telkel.com)
- *	@version $Revision: 1.1 $
+ *	@version $Revision: 1.2 $
  */
 public class StatelessSessionInstancePool
    extends AbstractInstancePool
@@ -38,8 +36,6 @@ public class StatelessSessionInstancePool
    public void init()
       throws Exception
    {
-      StatelessSessionInstancePoolConfiguration conf = (StatelessSessionInstancePoolConfiguration)getContainer().getMetaData().getContainerConfiguration().getInstancePoolConfiguration();
-      maxSize = conf.getMaximumSize();
    }
     
    // Package protected ---------------------------------------------

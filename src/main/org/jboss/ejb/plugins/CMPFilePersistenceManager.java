@@ -42,7 +42,7 @@ import org.jboss.ejb.EntityEnterpriseContext;
  *	@see <related>
  *	@author Rickard Öberg (rickard.oberg@telkel.com)
  *  @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
- *	@version $Revision: 1.2 $
+ *	@version $Revision: 1.3 $
  */
 public class CMPFilePersistenceManager
    implements EntityPersistenceStore
@@ -84,7 +84,7 @@ public class CMPFilePersistenceManager
       ejbRemove = EntityBean.class.getMethod("ejbRemove", new Class[0]);
 	  */
        
-      String ejbName = con.getMetaData().getEjbName();
+      String ejbName = con.getBeanMetaData().getEjbName();
       dir = new File(getClass().getResource("/db/"+ejbName+"/db.properties").getFile()).getParentFile();
       idField = con.getBeanClass().getField("id");
    }

@@ -37,7 +37,7 @@ import org.jboss.ejb.plugins.jaws.deployment.JawsCMPField;
  * @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
  * @author <a href="mailto:shevlandj@kpi.com.au">Joe Shevland</a>
  * @author <a href="mailto:justin@j-m-f.demon.co.uk">Justin Forder</a>
- * @version $Revision: 1.1 $
+ * @version $Revision: 1.2 $
  */
 public class MetaInfo
 {
@@ -57,7 +57,7 @@ public class MetaInfo
    
    public MetaInfo(EntityContainer container) throws Exception
    {
-      ejbName = container.getMetaData().getEjbName();
+      ejbName = container.getBeanMetaData().getEjbName();
       JawsEjbJar jar = readJawsEjbJar(container);
       entity = (JawsEntity)jar.getEnterpriseBeans().getEjb(ejbName);
 

@@ -58,7 +58,7 @@ import org.jboss.ejb.StatefulSessionEnterpriseContext;
  *	@see <related>
  *	@author Rickard Öberg (rickard.oberg@telkel.com)
  *  @author <a href="marc.fleury@telkel.com">Marc Fleury</a>
- *	@version $Revision: 1.3 $
+ *	@version $Revision: 1.4 $
  */
 public class StatefulSessionFilePersistenceManager
    implements StatefulSessionPersistenceManager
@@ -96,7 +96,7 @@ public class StatefulSessionFilePersistenceManager
 		ejbRemove = SessionBean.class.getMethod("ejbRemove", new Class[0]);
       
         // Initialize the dataStore
-	  	String ejbName = con.getMetaData().getEjbName();
+	  	String ejbName = con.getBeanMetaData().getEjbName();
 	  
 	  	File database = new File("database");
 	  

@@ -35,10 +35,6 @@ import javax.naming.NameNotFoundException;
 import javax.transaction.Transaction;
 
 import org.jboss.ejb.MethodInvocation;
-import org.jboss.ejb.deployment.jBossEntity;
-import org.jboss.ejb.deployment.jBossSession;
-import org.jboss.ejb.deployment.ContainerConfiguration;
-import org.jboss.ejb.deployment.JRMPContainerInvokerConfiguration;
 
 import org.jboss.ejb.Container;
 import org.jboss.ejb.ContainerInvokerContainer;
@@ -49,7 +45,7 @@ import org.jboss.ejb.plugins.jrmp.interfaces.HomeProxy;
 import org.jboss.ejb.plugins.jrmp.interfaces.HomeHandleImpl;
 import org.jboss.ejb.plugins.jrmp.interfaces.StatelessSessionProxy;
 import org.jboss.ejb.plugins.jrmp.interfaces.StatefulSessionProxy;
-import org.jboss.ejb.plugins.jrmp.interfaces.EntityProxy;
+import org.jboss.ejb.plugins.jrmp.interfaces.EntityProxy;           
 import org.jboss.ejb.plugins.jrmp.interfaces.GenericProxy;
 import org.jboss.ejb.plugins.jrmp.interfaces.ContainerRemote;
 import org.jboss.ejb.plugins.jrmp.interfaces.IteratorImpl;
@@ -58,16 +54,27 @@ import org.jboss.ejb.plugins.jrmp.interfaces.SecureSocketFactory;
 
 import org.jboss.logging.Logger;
 
+import org.jboss.ejb.DeploymentException;
+import org.jboss.metadata.XmlLoadable;
+import org.jboss.metadata.MetaData;
+import org.jboss.metadata.EntityMetaData;
+import org.jboss.metadata.SessionMetaData;
+
+import org.w3c.dom.Element;
+
+
+
 /**
  *      <description> 
  *      
  *      @see <related>
  *      @author Rickard Öberg (rickard.oberg@telkel.com)
- *      @version $Revision: 1.11 $
+ *		@author <a href="mailto:sebastien.alborini@m4x.org">Sebastien Alborini</a>
+ *      @version $Revision: 1.12 $
  */
 public abstract class JRMPContainerInvoker
    extends RemoteServer
-   implements ContainerRemote, ContainerInvoker
+   implements ContainerRemote, ContainerInvoker, XmlLoadable
 {
    // Constants -----------------------------------------------------
     
@@ -185,7 +192,7 @@ public abstract class JRMPContainerInvoker
    public void setContainer(Container con)
    {
       this.container = con;
-      jndiName = container.getMetaData().getJndiName();
+      jndiName = container.getBeanMetaData().getJndiName();
    }
    
    public void init()
@@ -195,13 +202,6 @@ public abstract class JRMPContainerInvoker
       GenericProxy.setTransactionManager(container.getTransactionManager());
       // Unfortunately this be a problem if many TM's are to be used
       // How to solve???
-		
-      ContainerConfiguration conConf = container.getMetaData().getContainerConfiguration();
-      if (conConf != null)
-      {
-         JRMPContainerInvokerConfiguration conf = (JRMPContainerInvokerConfiguration)conConf.getContainerInvokerConfiguration();
-         optimize = conf.isOptimized();
-      }
       
       // Create method mappings for container invoker
       Method[] methods = ((ContainerInvokerContainer)container).getRemoteClass().getMethods();
@@ -219,13 +219,13 @@ public abstract class JRMPContainerInvoker
       }
 		
       // Create metadata
-      if (container.getMetaData() instanceof jBossEntity)
+      if (container.getBeanMetaData() instanceof EntityMetaData)
       {
-         ejbMetaData = new EJBMetaDataImpl(((ContainerInvokerContainer)container).getRemoteClass(), ((ContainerInvokerContainer)container).getHomeClass(), container.getClassLoader().loadClass(((jBossEntity)container.getMetaData()).getPrimaryKeyClass()), false, false, new HomeHandleImpl(jndiName));
+         ejbMetaData = new EJBMetaDataImpl(((ContainerInvokerContainer)container).getRemoteClass(), ((ContainerInvokerContainer)container).getHomeClass(), container.getClassLoader().loadClass(((EntityMetaData)container.getBeanMetaData()).getPrimaryKeyClass()), false, false, new HomeHandleImpl(jndiName));
       }
       else
       {
-         if (((jBossSession)container.getMetaData()).getSessionType().equals("Stateless"))
+         if (((SessionMetaData)container.getBeanMetaData()).isStateless())
             ejbMetaData = new EJBMetaDataImpl(((ContainerInvokerContainer)container).getRemoteClass(), ((ContainerInvokerContainer)container).getHomeClass(), null, true, false, new HomeHandleImpl(jndiName));
          else
             ejbMetaData = new EJBMetaDataImpl(((ContainerInvokerContainer)container).getRemoteClass(), ((ContainerInvokerContainer)container).getHomeClass(), null, true, true, new HomeHandleImpl(jndiName));
@@ -244,11 +244,11 @@ public abstract class JRMPContainerInvoker
                                           new SecureSocketFactory());
 */         
          UnicastRemoteObject.exportObject(this,4444);
-         GenericProxy.addLocal(container.getMetaData().getJndiName(), this);
+         GenericProxy.addLocal(container.getBeanMetaData().getJndiName(), this);
          
-	      rebind(new InitialContext(), container.getMetaData().getJndiName(), ((ContainerInvokerContainer)container).getContainerInvoker().getEJBHome());
+	      rebind(new InitialContext(), container.getBeanMetaData().getJndiName(), ((ContainerInvokerContainer)container).getContainerInvoker().getEJBHome());
 			
-			Logger.log("Bound "+container.getMetaData().getEjbName() + " to " + container.getMetaData().getJndiName());
+			Logger.log("Bound "+container.getBeanMetaData().getEjbName() + " to " + container.getBeanMetaData().getJndiName());
       } catch (IOException e)
       {
          throw new ServerException("Could not create secure socket factory", e);
@@ -257,12 +257,19 @@ public abstract class JRMPContainerInvoker
    
    public void stop()
    {
-      GenericProxy.removeLocal(container.getMetaData().getJndiName());
+      GenericProxy.removeLocal(container.getBeanMetaData().getJndiName());
    }
 
    public void destroy()
    {
    }
+   
+   // XmlLoadable implementation
+   public void importXml(Element element) throws DeploymentException {
+		String opt = MetaData.getElementContent(MetaData.getUniqueChild(element, "Optimized"));
+		optimize = Boolean.valueOf(opt).booleanValue();
+   }
+	   
    
    // Package protected ---------------------------------------------
     

@@ -27,8 +27,10 @@ import org.jboss.ejb.EnterpriseContext;
 import org.jboss.ejb.MethodInvocation;
 import org.jboss.tm.TxManager;
 import org.jboss.logging.Logger;
-import org.jboss.metadata.*;
-import org.jboss.metadata.ejbjar.EJBMethod;
+
+import org.jboss.metadata.MetaData;
+import org.jboss.metadata.BeanMetaData;
+import org.jboss.metadata.MethodMetaData;
 
 /**
 *   <description>
@@ -36,7 +38,7 @@ import org.jboss.metadata.ejbjar.EJBMethod;
 *   @see <related>
 *   @author Rickard Öberg (rickard.oberg@telkel.com)
 *   @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
-*   @version $Revision: 1.9 $
+*   @version $Revision: 1.10 $
 */
 public class TxInterceptor
 extends AbstractInterceptor
@@ -47,8 +49,6 @@ extends AbstractInterceptor
 	private HashMap methodTx = new HashMap();
 	
 	protected Container container;
-	private RunInvoke invoker = new RunInvoke();
-	private RunInvokeHome invokeHomer = new RunInvokeHome();
 	
 	// Static --------------------------------------------------------
 	
@@ -80,10 +80,7 @@ extends AbstractInterceptor
 	public Object invokeHome(MethodInvocation mi)
 	throws Exception
 	{
-		// TODO
-		//      return getNext().invokeHome(mi);
-		invokeHomer.mi = mi;
-		return runWithTransactions(invokeHomer, mi);
+		return runWithTransactions(false, mi);
 	}
 	
 	/**
@@ -96,29 +93,28 @@ extends AbstractInterceptor
 	* @exception   Exception
 	*/
 	public Object invoke(MethodInvocation mi) throws Exception {
-		invoker.mi = mi;
-		return runWithTransactions(invoker, mi);
+		return runWithTransactions(true, mi);
 	}
 	
 	private void printMethod(Method m, byte type) {
 		String name;
 		switch(type) {
-			case EJBMethod.TX_MANDATORY:
+			case MetaData.TX_MANDATORY:
 				name = "TX_MANDATORY";
 			break;
-			case EJBMethod.TX_NEVER:
+			case MetaData.TX_NEVER:
 				name = "TX_NEVER";
 			break;
-			case EJBMethod.TX_NOT_SUPPORTED:
+			case MetaData.TX_NOT_SUPPORTED:
 				name = "TX_NOT_SUPPORTED";
 			break;
-			case EJBMethod.TX_REQUIRED:
+			case MetaData.TX_REQUIRED:
 				name = "TX_REQUIRED";
 			break;
-			case EJBMethod.TX_REQUIRES_NEW:
+			case MetaData.TX_REQUIRES_NEW:
 				name = "TX_REQUIRES_NEW";
 			break;
-			case EJBMethod.TX_SUPPORTS:
+			case MetaData.TX_SUPPORTS:
 				name = "TX_SUPPORTS";
 			break;
 			default:
@@ -127,8 +123,16 @@ extends AbstractInterceptor
 		Logger.debug(name+" for "+m.getName());
 	}
 	
+	private Object invokeNext(boolean remoteInvocation, MethodInvocation mi) throws Exception {
+		if (remoteInvocation) {
+			return getNext().invoke(mi);
+		} else {
+			return getNext().invokeHome(mi);
+		}
+	}
 	
-	private Object runWithTransactions(Doable runner, MethodInvocation mi) throws Exception {
+	
+	private Object runWithTransactions(boolean remoteInvocation, MethodInvocation mi) throws Exception {
 		
 		// Old transaction is the transaction that comes with the MI
 		Transaction oldTransaction = mi.getTransaction();
@@ -137,13 +141,13 @@ extends AbstractInterceptor
 		
 //DEBUG	System.out.println("Current transaction in MI is "+mi.getTransaction()); 
 		           
-		byte transType = getTransactionMethod(mi.getMethod(), runner);
+		byte transType = getTransactionMethod(mi.getMethod(), remoteInvocation);
 
 // DEBUG  	printMethod(mi.getMethod(), transType);
 		
 		switch (transType) {
 			
-			case EJBMethod.TX_NOT_SUPPORTED: {
+			case MetaData.TX_NOT_SUPPORTED: {
 				
 				
 				// Thread arriving must be clean (jboss doesn't set the thread previously)
@@ -151,13 +155,13 @@ extends AbstractInterceptor
 				tm.disassociateThread();
 				
 				// Do not set a transaction on the thread even if in MI, just run
-				return runner.run();
+				return invokeNext(remoteInvocation,mi );
 				
 				// We don't have to do anything since we don't deal with transactions
 			}
 		
 				
-			case EJBMethod.TX_REQUIRED:      {
+			case MetaData.TX_REQUIRED:      {
 					
 				if (oldTransaction == null) { // No tx running
 						
@@ -182,7 +186,7 @@ extends AbstractInterceptor
 				// Continue invocation
 				try	{
 				
-					return runner.run();
+					return invokeNext(remoteInvocation,mi );
 				} 
 				catch (RemoteException e) {
 					
@@ -242,7 +246,7 @@ extends AbstractInterceptor
 				}
 			}
 				
-			case EJBMethod.TX_SUPPORTS: {
+			case MetaData.TX_SUPPORTS: {
 					
 				if (oldTransaction != null) { // We have a tx propagated
 						
@@ -255,7 +259,7 @@ extends AbstractInterceptor
 				// Continue invocation
 				try	{
 				
-					return runner.run();
+					return invokeNext(remoteInvocation,mi );
 				} 
 				catch (RuntimeException e) {
 						
@@ -270,7 +274,7 @@ extends AbstractInterceptor
 				
 			}
 				
-			case EJBMethod.TX_REQUIRES_NEW: {
+			case MetaData.TX_REQUIRES_NEW: {
 					
 				// Always begin a transaction 
 				tm.begin();
@@ -284,7 +288,7 @@ extends AbstractInterceptor
 				// Continue invocation
 				try {
 					
-					return runner.run();
+					return invokeNext(remoteInvocation,mi );
 				} 
 				catch (RemoteException e) {
 					
@@ -329,7 +333,7 @@ extends AbstractInterceptor
 				}	
 			}
 				
-			case EJBMethod.TX_MANDATORY: {
+			case MetaData.TX_MANDATORY: {
 				
 				if (oldTransaction == null) { // no transaction = bad! 
 					
@@ -341,19 +345,19 @@ extends AbstractInterceptor
 					tm.associateThread(oldTransaction);
 						
 					// That's it
-					return runner.run();
+					return invokeNext(remoteInvocation,mi );
 				}
 			}
 				
-			case EJBMethod.TX_NEVER: {
-				
+			case MetaData.TX_NEVER: {
+				                                   
 				if (oldTransaction != null) { // Transaction = bad!
 						
 					throw new RemoteException("Transaction not allowed");
 				} 
 				else {
 						
-					return runner.run();
+					return invokeNext(remoteInvocation,mi );
 				}
 			}
 		}
@@ -364,63 +368,21 @@ extends AbstractInterceptor
 	// Protected  ----------------------------------------------------
 	
 	// This should be cached, since this method is called very often
-	protected byte getTransactionMethod(Method m, Doable d) {
+	protected byte getTransactionMethod(Method m, boolean remoteInvocation) {
 		Byte b = (Byte)methodTx.get(m);
 		if(b != null) return b.byteValue();
 			
-		try {
-			BeanMetaData bmd = container.getBeanMetaData();
-			System.out.println("Found metadata for bean '"+bmd.getName()+"'"+" method is "+m);
-			try {
-				MethodMetaData mmd;
-				if(d == invoker)
-					mmd = bmd.getMethod(m.getName(), m.getParameterTypes());
-				else
-					mmd = bmd.getHomeMethod(m.getName(), m.getParameterTypes());
-				//System.out.println("Found metadata for method '"+mmd.getName()+"'");
-				byte result = ((Byte)mmd.getProperty("transactionAttribute")).byteValue();
-				methodTx.put(m, new Byte(result));
-				return result;
-			} catch(IllegalArgumentException e2) {
-				try {
-					MethodMetaData mmd;
-					if(d == invoker)
-						mmd = bmd.getMethod("*", new Class[0]);
-					else
-						mmd = bmd.getHomeMethod("*", new Class[0]);
-					//System.out.println("Found metadata for '*'");
-					byte result = ((Byte)mmd.getProperty("transactionAttribute")).byteValue();
-					methodTx.put(m, new Byte(result));
-					return result;
-				} catch(IllegalArgumentException e3) {
-					//System.out.println("Couldn't find method metadata for "+m+" in "+bmd.getName());
-				}
-			}
-		} catch(IllegalArgumentException e) {
-			System.out.println("Couldn't find bean '"+container.getMetaData().getEjbName()+"'");
-		}
-		methodTx.put(m, new Byte(EJBMethod.TX_SUPPORTS));
-		return EJBMethod.TX_SUPPORTS;
+		BeanMetaData bmd = container.getBeanMetaData();
+		System.out.println("Found metadata for bean '"+bmd.getEjbName()+"'"+" method is "+m);
+		byte result = bmd.getMethodTransactionType(m.getName(), m.getParameterTypes(), remoteInvocation);
+		
+		// provide default if method is not found in descriptor 
+		if (result == MetaData.TX_UNKNOWN) result = MetaData.TX_SUPPORTS;
+		
+		methodTx.put(m, new Byte(result));
+		return result;
 	}
+	
 	// Inner classes -------------------------------------------------
-	interface Doable {
-		public Object run() throws Exception;
-	}
 	
-	class RunInvoke implements Doable {
-		MethodInvocation mi;
-		public Object run() throws Exception {
-//DEBUG			System.out.println("Calling the next invoker in runInvoke");
-			return getNext().invoke(mi);
-		}
-	}
-	
-	class RunInvokeHome implements Doable {
-		MethodInvocation mi;
-		public Object  run() throws Exception {
-			
-//DEBUG		System.out.println("Calling the next invoker in runInvokeHome");
-			return getNext().invokeHome(mi);
-		}
-	}
 }

@@ -34,7 +34,7 @@ import org.jboss.logging.Log;
  * @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
  * @author <a href="mailto:shevlandj@kpi.com.au">Joe Shevland</a>
  * @author <a href="mailto:justin@j-m-f.demon.co.uk">Justin Forder</a>
- * @version $Revision: 1.22 $
+ * @version $Revision: 1.23 $
  */
 public class JAWSPersistenceManager
    implements EntityPersistenceStore
@@ -72,7 +72,7 @@ public class JAWSPersistenceManager
    public void init() throws Exception
    {
       log.debug("Initializing JAWS plugin for " + 
-                container.getMetaData().getEjbName());
+                container.getBeanMetaData().getEjbName());
       
       // Set up Commands
       

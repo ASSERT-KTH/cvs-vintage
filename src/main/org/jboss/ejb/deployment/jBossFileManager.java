@@ -25,17 +25,13 @@ import com.dreambean.ejx.Util;
 import com.dreambean.ejx.FileManager;
 import com.dreambean.ejx.FileManagerFactory;
 
-import org.jboss.metadata.*;
-import org.jboss.metadata.aggregate.*;
-import org.jboss.metadata.ejbjar.EJBXMLReader;
-
 /**
  *   <description>
  *
  *   @see <related>
  *   @author Rickard Öberg (rickard.oberg@telkel.com)
  *   @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
- *   @version $Revision: 1.9 $
+ *   @version $Revision: 1.10 $
  */
 public class jBossFileManager
    extends BeanContextServicesSupport
@@ -54,8 +50,6 @@ public class jBossFileManager
 
    ClassLoader cl;
 
-   ServerMetaData metaData;
-
    // Static --------------------------------------------------------
 
    // Constructors --------------------------------------------------
@@ -69,10 +63,6 @@ public class jBossFileManager
    {
       return ejbJar;
    }
-
-    public ServerMetaData getMetaData() {
-        return metaData;
-    }
 
 	/*
 	* load(URL file)
@@ -111,12 +101,6 @@ public class jBossFileManager
          doc = xm.load(in);
          in.close();
          ejbJar.importXml(doc.getDocumentElement());
-
-         in = new BufferedReader(new InputStreamReader(file.openStream()));
-         EJBXMLReader xml = new EJBXMLReader();
-         ServerMetaData ejbContainer = xml.readXML(in);
-         in.close();
-         metaData = new AggregateServer(new ServerMetaData[]{ejbContainer});
 
          // Load jBoss XML
          try
@@ -161,13 +145,6 @@ public class jBossFileManager
          ejbJar.importXml(doc.getDocumentElement());
 
 
-         ejbXml = getClassLoader().getResourceAsStream("META-INF/ejb-jar.xml");
-         in = new BufferedReader(new InputStreamReader(ejbXml));
-         EJBXMLReader xml = new EJBXMLReader();
-         ServerMetaData ejbContainer = xml.readXML(in);
-         in.close();
-         metaData = new AggregateServer(new ServerMetaData[]{ejbContainer});
-
 
          // Load jBoss XML
          InputStream jbossXml = getClassLoader().getResourceAsStream("META-INF/jboss.xml");
@@ -201,13 +178,6 @@ public class jBossFileManager
          doc = xm.load(in);
          ejbXml.close();
          ejbJar.importXml(doc.getDocumentElement());
-
-         ejbXml = getClassLoader().getResourceAsStream("META-INF/ejb-jar.xml");
-         in = new BufferedReader(new InputStreamReader(ejbXml));
-         EJBXMLReader xml = new EJBXMLReader();
-         ServerMetaData ejbContainer = xml.readXML(in);
-         in.close();
-         metaData = new AggregateServer(new ServerMetaData[]{ejbContainer});
 
          // Load jBoss XML
          InputStream jbossXml = getClassLoader().getResourceAsStream("META-INF/jboss.xml");

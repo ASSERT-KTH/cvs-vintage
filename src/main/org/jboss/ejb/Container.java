@@ -39,30 +39,19 @@ import javax.naming.spi.ObjectFactory;
 import javax.transaction.TransactionManager;
 import javax.sql.DataSource;
 
-import javax.swing.tree.TreeModel;
-import javax.swing.tree.DefaultMutableTreeNode;
-import javax.swing.JCheckBox;
-
-import org.jboss.ejb.deployment.jBossEnterpriseBean;
-import com.dreambean.ejx.ejb.EnvironmentEntry;
-import org.jboss.ejb.deployment.jBossEjbJar;
-import org.jboss.ejb.deployment.jBossEjbReference;
-import org.jboss.ejb.deployment.jBossResourceReference;
-import org.jboss.ejb.deployment.ResourceManagers;
-import org.jboss.ejb.deployment.ResourceManager;
-import org.jboss.ejb.deployment.JDBCResource;
-import org.jboss.ejb.deployment.URLResource;
 import org.jboss.logging.Logger;
-import org.jboss.metadata.BeanMetaData;
 import org.jboss.system.EJBSecurityManager;
 import org.jboss.system.RealmMapping;
+
+import org.jboss.metadata.BeanMetaData;
+import org.jboss.metadata.EnvEntryMetaData;
+import org.jboss.metadata.EjbRefMetaData;
+import org.jboss.metadata.ResourceRefMetaData;
+import org.jboss.metadata.ApplicationMetaData;
 
 import org.jnp.interfaces.Naming;
 import org.jnp.interfaces.java.javaURLContextFactory;
 import org.jnp.server.NamingServer;
-
-import com.dreambean.ejx.ejb.AssemblyDescriptor;
-import com.dreambean.ejx.ejb.MethodPermission;
 
 /**
  *    This is the base class for all EJB-containers in jBoss. A Container
@@ -78,7 +67,7 @@ import com.dreambean.ejx.ejb.MethodPermission;
  *   @see ContainerFactory
  *   @author Rickard Öberg (rickard.oberg@telkel.com)
  *   @author <a href="marc.fleury@telkel.com">Marc Fleury</a>
- *   @version $Revision: 1.21 $
+ *   @version $Revision: 1.22 $
  */
 public abstract class Container
 {
@@ -93,11 +82,9 @@ public abstract class Container
     // the bean uses will be loaded from here. By doing this we make the bean re-deployable
    protected ClassLoader classLoader;
 
-    // This is the jBoss-specific metadata. Note that it extends the generic EJB 1.1 class from EJX
-   protected jBossEnterpriseBean metaData;
-
-   // This is the assembly descriptor information
-   protected AssemblyDescriptor assemblyDescriptor;
+    // This is the new metadata. it includes information from both ejb-jar and jboss.xml
+	// the metadata for the application can be accessed trough metaData.getApplicationMetaData()
+   protected BeanMetaData metaData;
 
     // This is the Home interface class
    protected Class homeInterface;
@@ -116,9 +103,6 @@ public abstract class Container
 
    // This is the realm mapping
    protected RealmMapping rm;
-
-   // This is the new MetaData construct
-   protected BeanMetaData newMetaData;
 
    // This is a cache for method permissions
    private HashMap methodPermissionsCache = new HashMap();
@@ -219,7 +203,7 @@ public abstract class Container
      *
      * @param   metaData
      */
-    public void setMetaData(jBossEnterpriseBean metaData)
+    public void setBeanMetaData(BeanMetaData metaData)
     {
         this.metaData = metaData;
     }
@@ -229,151 +213,25 @@ public abstract class Container
      *
      * @return metaData;
      */
-    public jBossEnterpriseBean getMetaData()
+    public BeanMetaData getBeanMetaData()
     {
         return metaData;
     }
 
     /**
-     * Sets the assembly descriptor for this container. The meta data consists of the
-     * properties found in the XML descriptors.
-     *
-     * @param   assemblyDescriptor
-     */
-    public void setAssemblyDescriptor(AssemblyDescriptor assemblyDescriptor)
-    {
-        this.assemblyDescriptor = assemblyDescriptor;
-    }
-
-    /**
-     * Returns the assembly descriptor of this container.
-     *
-     * @return assemblyDescriptor;
-     */
-    public AssemblyDescriptor getAssemblyDescriptor()
-    {
-        return assemblyDescriptor;
-    }
-
-    private void addRoles( Collection roles, Set permissions )
-    {
-      Iterator iter = roles.iterator();
-      while (iter.hasNext())
-      {
-        JCheckBox checkBox = (JCheckBox) iter.next();
-        if (checkBox.isSelected())
-          permissions.add( checkBox.getLabel() );
-      }
-    }
-
-    /**
-     * Returns the permissions for a method.
+     * Returns the permissions for a method. (a set of roles)
      *
      * @return assemblyDescriptor;
      */
     public Set getMethodPermissions( Method m, boolean home )
     {
       Set permissions = (Set) methodPermissionsCache.get( m );
-      if (permissions != null)
-        return permissions;
-      permissions = new HashSet();
-
-      Iterator iterPermissions = assemblyDescriptor.getMethodPermissions();
-      // go fishing in ejx's tree to build method permissions
-      while (iterPermissions.hasNext())
-      {
-        MethodPermission methodPermission =
-          (MethodPermission) iterPermissions.next();
-        Collection roles = methodPermission.getRoles();
-        TreeModel model = methodPermission.getMethods();
-        int count = model.getChildCount( model.getRoot() );
-        // look at the specific grants in a method permission
-        boolean rolesAdded_shouldBreak = false; // if we're in an inner loop
-        for (int iter=0; iter<count; iter++)
-        {
-          DefaultMutableTreeNode beannode =
-            (DefaultMutableTreeNode) model.getChild( model.getRoot(), iter );
-          com.dreambean.ejx.ejb.Method bean =
-            (com.dreambean.ejx.ejb.Method)beannode.getUserObject();
-
-          // check if this is the bean under consideration
-          if (!bean.getEjbName().equals( metaData.getEjbName() ))
-            continue;
-
-          // see if everything in the bean is selected regardless of interface
-          if (bean.isSelected())
-          {
-            addRoles( roles, permissions );
-            break;
-          }
-
-          // depends on ejb ordering home then remote (could check name)
-          DefaultMutableTreeNode interfaceNode = (DefaultMutableTreeNode)
-            beannode.getChildAt( home ? 0 : 1 );
-          com.dreambean.ejx.ejb.Method beaninterface =
-            (com.dreambean.ejx.ejb.Method) interfaceNode.getUserObject();
-          // see if everything in the interface is selected regardless of method
-          if (beaninterface.isSelected())
-          {
-            addRoles( roles, permissions );
-            break;
-          }
-
-          // check the method
-          Enumeration enumMethods = interfaceNode.children();
-          while (enumMethods.hasMoreElements())
-          {
-            DefaultMutableTreeNode methodNode =
-              (DefaultMutableTreeNode) enumMethods.nextElement();
-            com.dreambean.ejx.ejb.Method beanmethod =
-              (com.dreambean.ejx.ejb.Method) methodNode.getUserObject();
-
-            // name doesn't match
-            if (!beanmethod.getMethodName().equals( m.getName() ))
-              continue;
-
-            String[] descriptorParams = beanmethod.getParams();
-            Class[] declaredParams = m.getParameterTypes();
-
-            // different number of parameters
-            if (descriptorParams.length != declaredParams.length)
-              continue;
-
-            boolean paramDoesntMatch = false;
-            for (int iterParams=0; iterParams<descriptorParams.length; iterParams++)
-            {
-              if (!descriptorParams[iterParams].equals( declaredParams[iterParams].getName() ))
-              {
-                paramDoesntMatch = true;
-                break;
-              }
-            }
-            if (paramDoesntMatch)
-              continue;
-
-            if (beanmethod.isSelected())
-            {
-              addRoles( roles, permissions );
-              rolesAdded_shouldBreak = true; // outer loop
-              // (could also use label)
-            }
-            break; // we've already found the method
-          }
-          if (rolesAdded_shouldBreak)
-            break;
-        }
-      }
-      methodPermissionsCache.put( m, permissions );
-      return permissions;
-    }
-
-    // the following two methods use the new metadata structures from
-    // package org.jboss.metadata
-    public void setBeanMetaData(BeanMetaData metaData) {
-        newMetaData = metaData;
-    }
-    public BeanMetaData getBeanMetaData() {
-        return newMetaData;
+      if (permissions == null) {
+	  		permissions = getBeanMetaData().getMethodPermissions(m.getName(), m.getParameterTypes(), !home);
+	  		methodPermissionsCache.put(m, permissions);
+	  }
+	  return permissions;
+	  
     }
 
     /**
@@ -497,10 +355,10 @@ public abstract class Container
 
           // Bind environment properties
           {
-             Iterator enum = getMetaData().getEnvironmentEntries();
+             Iterator enum = getBeanMetaData().getEnvironmentEntries();
              while(enum.hasNext())
              {
-                EnvironmentEntry entry = (EnvironmentEntry)enum.next();
+                EnvEntryMetaData entry = (EnvEntryMetaData)enum.next();
                 if (entry.getType().equals("java.lang.Integer"))
                 {
                    bind(ctx, entry.getName(), new Integer(entry.getValue()));
@@ -533,62 +391,48 @@ public abstract class Container
 
           // Bind EJB references
           {
-             Iterator enum = getMetaData().getEjbReferences();
+             Iterator enum = getBeanMetaData().getEjbReferences();
              while(enum.hasNext())
              {
 
-                jBossEjbReference ref = (jBossEjbReference)enum.next();
-                System.out.println("Binding an EJBReference "+ref);
+                EjbRefMetaData ref = (EjbRefMetaData)enum.next();
+                System.out.println("Binding an EJBReference "+ref.getName());
 
-                Name n = ctx.getNameParser("").parse(ref.getLink());
-
-                if (!ref.getJndiName().equals(""))
+                if (ref.getLink() != null)
                 {
                    // External link
-                   Logger.debug("Binding "+ref.getName()+" to external JNDI source: "+ref.getJndiName());
-                   bind(ctx, ref.getName(), new LinkRef(ref.getJndiName()));
+                   Logger.debug("Binding "+ref.getName()+" to external JNDI source: "+ref.getLink());
+                   bind(ctx, ref.getName(), new LinkRef(ref.getLink()));
                 }
                 else
                 {
                    // Internal link
-                   Logger.debug("Bind "+ref.getName() +" to "+ref.getLink());
-
-                        final Container con = getApplication().getContainer(ref.getLink());
-
-                        // Use Reference to link to ensure lazyloading.
-                        // Otherwise we might try to get EJBHome from not yet initialized container
-                        // will would result in nullpointer exception
-                        RefAddr refAddr = new RefAddr("EJB")
-                        {
-                            public Object getContent()
-                            {
-                                 return con;
-                            }
-                        };
-                        Reference reference = new Reference("javax.ejb.EJBObject",refAddr, new EjbReferenceFactory().getClass().getName(), null);
-
-                        bind(ctx, ref.getName(), reference);
+                   String link = getBeanMetaData().getApplicationMetaData().getJndiFromHome(ref.getHome());
+				   Logger.debug("Binding "+ref.getName()+" to internal JNDI source: "+link);
+                   bind(ctx, ref.getName(), new LinkRef(link));
                 }
              }
           }
 
           // Bind resource references
           {
-             Iterator enum = getMetaData().getResourceReferences();
+             Iterator enum = getBeanMetaData().getResourceReferences();
              
              // let's play guess the cast game ;)  New metadata should fix this.
-             ResourceManagers rms = ((jBossEjbJar)getMetaData().getBeanContext().getBeanContext()).getResourceManagers();
+			 ApplicationMetaData application = getBeanMetaData().getApplicationMetaData();
+			 
              while(enum.hasNext())
              {
-                jBossResourceReference ref = (jBossResourceReference)enum.next();
+                ResourceRefMetaData ref = (ResourceRefMetaData)enum.next();
 
-                ResourceManager rm = rms.getResourceManager(ref.getResourceName());
-
-                    if (rm == null)
-                    {
-                        // Try to locate defaults
-                        if (ref.getType().equals("javax.sql.DataSource"))
-                        {
+                String resourceName = ref.getResourceName();
+				String finalName = application.getResourceByName(resourceName);
+				
+				if (finalName == null) {
+					// the application assembler did not provide a resource manager
+					// if the type is javax.sql.Datasoure we try to find default
+					
+					if (ref.getType().equals("javax.sql.DataSource")) {
                             // Go through JNDI and look for DataSource - use the first one
                             Context dsCtx = new InitialContext();
                             NamingEnumeration list = dsCtx.list("");
@@ -602,8 +446,7 @@ public abstract class Container
                                     {
                                         // Found it!!
                                         Logger.log("Using default DataSource:"+pair.getName());
-                                        rm = new JDBCResource();
-                                        ((JDBCResource)rm).setJndiName(pair.getName());
+                                        finalName = pair.getName();
                                         list.close();
                                         break;
                                     }
@@ -617,25 +460,23 @@ public abstract class Container
 
                         // Default failed? Warn user and move on
                         // POTENTIALLY DANGEROUS: should this be a critical error?
-                        if (rm == null)
+                        if (finalName == null)
                         {
                             Logger.warning("No resource manager found for "+ref.getResourceName());
                             continue;
                         }
                     }
 
-                if (rm.getType().equals("javax.sql.DataSource"))
+                if (ref.getType().equals("javax.sql.DataSource"))
                 {
                    // Datasource bindings
-                   JDBCResource res = (JDBCResource)rm;
-                   bind(ctx, ref.getName(), new LinkRef(res.getJndiName()));
-                } else if (rm.getType().equals("java.net.URL"))
+                   bind(ctx, ref.getRefName(), new LinkRef(finalName));
+                } else if (ref.getType().equals("java.net.URL"))
                 {
                    // URL bindings
                    try
                    {
-                      URLResource res = (URLResource)rm;
-                      bind(ctx, ref.getName(), new URL(res.getUrl()));
+                      bind(ctx, ref.getRefName(), new URL(finalName));
                    } catch (MalformedURLException e)
                    {
                       throw new NamingException("Malformed URL:"+e.getMessage());

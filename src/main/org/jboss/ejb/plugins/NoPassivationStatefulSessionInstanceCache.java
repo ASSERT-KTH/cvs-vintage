@@ -24,15 +24,13 @@ import org.jboss.ejb.StatefulSessionPersistenceManager;
 import org.jboss.ejb.EnterpriseContext;
 import org.jboss.ejb.StatefulSessionEnterpriseContext;
 
-import org.jboss.ejb.deployment.jBossSession;
-
 /**
 *	<description> 
 *      
 *	@see <related>
 *	@author Rickard Öberg (rickard.oberg@telkel.com)
 *   @author <a href="marc.fleury@telkel.com">Marc Fleury</a>
-*	@version $Revision: 1.5 $
+*	@version $Revision: 1.6 $
 */
 public class NoPassivationStatefulSessionInstanceCache
 implements InstanceCache
