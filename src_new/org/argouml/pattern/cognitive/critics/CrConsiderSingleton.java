@@ -26,7 +26,7 @@
 // File: CrConsiderSingleton.java
 // Classes: CrConsiderSingleton
 // Original Author: jrobbins@ics.uci.edu
-// $Id: CrConsiderSingleton.java,v 1.3 2001/02/03 23:49:42 carnold Exp $
+// $Id: CrConsiderSingleton.java,v 1.4 2001/10/19 13:22:30 mkl Exp $
 
 package org.argouml.pattern.cognitive.critics;
 
@@ -51,6 +51,7 @@ public class CrConsiderSingleton extends CrUML {
     addTrigger("stereotype");
     addTrigger("structuralFeature");
     addTrigger("associationEnd");
+    setResource("CrConsiderSingleton");
   }
 
   protected void sd(String s) { setDescription(s); }
