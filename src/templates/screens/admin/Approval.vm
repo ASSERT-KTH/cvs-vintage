@@ -56,7 +56,7 @@ $page.setTitle("Approve/reject user submitted items")
   <td><a href="mailTo:$createdUser.Email">$createdUser.FirstName $createdUser.LastName</a></td>
   <td><a href="$query.getEditLink($link.toString())">$query.Name</a></td>
   <td>#if ($query.Description) $query.Description #else &#160; #end</td>
-  <td> <textarea rows="2" cols="20" name="query_comment_$query.QueryId"></textarea></td>
+  <td> <#textAreaSmall() name="query_comment_$query.QueryId"></textarea></td>
   <td><select name="query_action_$query.QueryId">
    <option value="none">No action</option>
    <option value="comment">Comment only</option>
@@ -82,7 +82,7 @@ $page.setTitle("Approve/reject user submitted items")
    #set ($editLink = $link.setPathInfo("id", $template.UniqueId.toString()).setPage("SaveTemplate.vm").toString())
    <td><a href="$editLink">$template.TemplateInfo.Name</a></td>
    <td>#if ($template.TemplateInfo.Description) $template.TemplateInfo.Description #else &#160; #end</td>
-   <td><textarea rows="2" cols="20" name="template_comment_$template.IssueId"></textarea></td>
+   <td><#textAreaSmall() name="template_comment_$template.IssueId"></textarea></td>
    <td>
     <select name="template_action_$template.IssueId">
     <option>No action</option>
@@ -99,7 +99,7 @@ $page.setTitle("Approve/reject user submitted items")
  <table border="0" cellspacing="2" cellpadding="3">
   <tr>
    <th width="120">Comments (sent to selected submittees)</th>
-   <td><textarea rows="4" cols="40" name="global_comment"></textarea></td>
+   <td><#textAreaMedium() name="global_comment"></textarea></td>
   </tr>
  </table>
 </div>

@@ -45,7 +45,7 @@ Back to <a href="$link.setPage("admin,GlobalAttributeShow.vm")">Attribute Select
  <tr>
   <th>Attribute description</th>
   <td>
-    <textarea rows="4" cols="40" name="$attgroup.Description.Key">$!attribute.Description</textarea>
+    <#textAreaMedium() name="$attgroup.Description.Key">$!attribute.Description</textarea>
     #fieldErrorMsg($attgroup.Description "")
   </td>
  </tr>

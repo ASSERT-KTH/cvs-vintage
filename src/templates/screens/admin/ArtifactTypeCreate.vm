@@ -33,7 +33,7 @@ $page.setTitle("Create artifact type")
     </tr>
     <tr>
     <th>Artifact type desc</th>
-    <td><textarea rows="4" cols="40" name="$group.Description.Key">$!group.Description.Value</textarea></td>
+    <td><#textAreaMedium() name="$group.Description.Key">$!group.Description.Value</textarea></td>
     </tr>
   </table>
 </div>

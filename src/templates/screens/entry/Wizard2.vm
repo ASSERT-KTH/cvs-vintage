@@ -121,8 +121,8 @@ $page.setTitle("Identified as duplicate")
 <tr>
 <th width="120">Note</th>
 <td>
-<textarea name="$intakeAttachment.DataAsString.Key" rows="4"
- cols="40">$!intakeAttachment.DataAsString</textarea>
+<#textAreaMedium() name="$intakeAttachment.DataAsString.Key"
+     >$!intakeAttachment.DataAsString</textarea>
 <p>
 <input type="submit" name="eventSubmit_doAddnote" value="Submit note" />
 </p>

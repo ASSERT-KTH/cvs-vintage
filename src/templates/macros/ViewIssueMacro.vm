@@ -43,8 +43,8 @@
     #else
         #attrValueErrorMsg($attVal "Value")
         #if ($attVal.Attribute.AttributeType.Name == "long-string")
-           <textarea name="$attrInput.Value.Key" cols="40"
-               rows="5">$!attrInput.Value</textarea>
+           <#textAreaMedium() name="$attrInput.Value.Key"
+               >$!attrInput.Value</textarea>
         #else
            <input name= "$attrInput.Value.Key"
                value="$!attrInput.Value" size="20" type="text" />
@@ -82,7 +82,8 @@
 <td>Please enter a reason for the changes made above before saving.
    #fieldErrorMsg($attCommentGroup.DataAsString "")
    
-   <p><textarea rows="4" cols="60" name ="$attCommentGroup.DataAsString.Key">$!attCommentGroup.DataAsString.Value</textarea></p>
+   <p>< #textAreaMedium() name="$attCommentGroup.DataAsString.Key"
+           >$!attCommentGroup.DataAsString.Value</textarea></p>
    <input type="hidden" name="$attCommentGroup.Name.Key" value="comment" />
 </td>
 </tr>
@@ -316,7 +317,7 @@
      #set ($commentUser = $scarabR.getUser($comment.CreatedBy))
      <h4>$format.getDate($scarabR.DateFormat, $comment.CreatedDate)&nbsp;|&nbsp;<a href="mailto:$commentUser.Email">$commentUser.FirstName $commentUser.LastName</a></h4>
     #if ($scarabR.hasPermission($scarabG.Permission.MODULE__EDIT))
-     <P>   <textarea rows="10" cols="90" name="edit_comment_$comment.AttachmentId">$comment.DataAsString</textarea>
+     <P>   <#textAreaLarge() name="edit_comment_$comment.AttachmentId">$comment.DataAsString</textarea>
     #else
         $comment.DataAsString
     #end
@@ -328,7 +329,7 @@
      <tr>
        <td>
           #set ($commentGroup = $intake.Attachment.setKey("commentKey"))
-          <textarea rows="10" cols="90" name ="$commentGroup.DataAsString.Key"></textarea>
+          <#textAreaLarge() name ="$commentGroup.DataAsString.Key"></textarea>
           #fieldErrorMsg($commentGroup.DataAsString "")
           <input type="hidden" name="$commentGroup.Name.Key" value="comment" />
        </td>

@@ -39,7 +39,7 @@
  </tr>
  <tr>
  <th>Group desc</th>
- <td><textarea rows="4" cols="40" name="$agGroup.Description.Key">$!agGroup.Description.Value</textarea></td>
+ <td><#textAreaMedium() name="$agGroup.Description.Key">$!agGroup.Description.Value</textarea></td>
  </tr>
  </table>
 </div>

@@ -42,8 +42,8 @@ Go to your <a href="$link.setPage("ReportList.vm")">Stored Reports List</a>.
   <tr>
    <th width="120">Query description</th>
    <td>
-        <textarea name="$intakeReport.Description.Key" rows="4" 
-            cols="30">$intakeReport.Description</textarea>
+        <#textAreaMedium() name="$intakeReport.Description.Key" 
+            >$intakeReport.Description</textarea>
    </td>
   </tr>
 #*

@@ -33,7 +33,8 @@ Go to your <a href="$link.setPage("QueryList.vm")">Stored Query List</a>.
   </tr>
   <tr>
    <th width="120">Query description</th>
-   <td><textarea name="$queryGroup.Description.Key" rows="4" cols="40">$!queryGroup.Description</textarea></td>
+   <td><#textAreaMedium() name="$queryGroup.Description.Key"
+            >$!queryGroup.Description</textarea></td>
   </tr>
   <tr>
    <th width="120">Availability</th>

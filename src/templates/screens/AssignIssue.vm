@@ -132,7 +132,8 @@ $page.setTitle("Assign users to artifact")
        <td>
                 This message is emailed to the assignees, and is appended as a note on the issue's change history
                 <p>
-                <textarea name="$intakeAttachment.DataAsString.Key" rows="2" cols="35">$!intakeAttachment.DataAsString</textarea>
+                <#textAreaMedium name="$intakeAttachment.DataAsString.Key"
+                     >$!intakeAttachment.DataAsString</textarea>
        </td>
      </tr>
       </table>

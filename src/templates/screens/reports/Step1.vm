@@ -42,7 +42,8 @@ later).</p>
   <tr>
    <th width="120">Report description (optional)</th>
    <td>
-     <textarea name="$intakeReport.Description.Key" rows="3" cols="30">$intakeReport.Description</textarea>
+     <#textAreaMedium() name="$intakeReport.Description.Key"
+          >$intakeReport.Description</textarea>
    </td>
   </tr>
  </table>

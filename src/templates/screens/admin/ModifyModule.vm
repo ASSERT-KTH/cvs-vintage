@@ -64,7 +64,8 @@
   <tr>
    <th>* Description:</th>
    <td>
-    <textarea name="$moduleGroup.Description.Key"  type="text" rows="5" cols="60">$moduleGroup.Description</textarea>
+    <#textAreaMedium() name="$moduleGroup.Description.Key"  type="text"
+         >$moduleGroup.Description</textarea>
     #fieldErrorMsg($moduleGroup.Description "")
    </td>
   </tr>

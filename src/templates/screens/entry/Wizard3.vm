@@ -125,7 +125,7 @@ $page.setTitle("Enter issue")
 #if ( !$intakeAttachment.Name.isValid())
 <p><strong class="alert">$intakeAttachment.Name.Message</strong></p>
 #end
-       <textarea name="$intakeAttachment.Name.Key" cols="45" rows="2"
+       <#textAreaMedium() name="$intakeAttachment.Name.Key"
            >$!intakeAttachment.Name</textarea>
         <p>
           Please provide a short (less than 250 characters) description

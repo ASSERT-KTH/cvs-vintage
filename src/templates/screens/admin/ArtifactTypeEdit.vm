@@ -39,7 +39,7 @@ $page.setTitle("Attribute Editor")
     </tr>
     <tr>
     <th>Artifact type desc</th>
-    <td><textarea rows="4" cols="40" name="$rmitGroup.DisplayDesc.Key">#if($rmitGroup.DisplayDesc.Value.toString().length() != 0)$rmitGroup.DisplayDesc.Value#else$!issueType.Description#end</textarea></td>
+    <td><#textAreaMedium() name="$rmitGroup.DisplayDesc.Key">#if($rmitGroup.DisplayDesc.Value.toString().length() != 0)$rmitGroup.DisplayDesc.Value#else$!issueType.Description#end</textarea></td>
     </tr>
     </table>
 </div>
