@@ -34,7 +34,7 @@ import org.gjt.sp.util.Log;
  * Manages low-level text display tasks.
  * @since jEdit 4.2pre1
  * @author Slava Pestov
- * @version $Id: DisplayManager.java,v 1.66 2003/08/20 17:52:19 spestov Exp $
+ * @version $Id: DisplayManager.java,v 1.67 2003/08/20 20:23:53 spestov Exp $
  */
 public class DisplayManager
 {
@@ -1465,9 +1465,6 @@ loop:		for(;;)
 
 				lastfvmget = -1;
 			}
-
-			if(!buffer.isTransactionInProgress())
-				transactionComplete(buffer);
 		} //}}}
 
 		//{{{ preContentRemoved() method
@@ -1524,19 +1521,8 @@ loop:		for(;;)
 				lastfvmget = -1;
 				fvmdump();
 			}
-		} //}}}
-
-		//{{{ contentRemoved() method
-		public void contentRemoved(Buffer buffer, int startLine,
-			int offset, int numLines, int length)
-		{
-			if(!buffer.isLoaded())
-				return;
 
 			delayedUpdate(startLine,startLine);
-
-			if(!buffer.isTransactionInProgress())
-				transactionComplete(buffer);
 		} //}}}
 
 		//{{{ transactionComplete() method

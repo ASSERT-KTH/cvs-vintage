@@ -57,7 +57,7 @@ import org.gjt.sp.util.Log;
  *
  * @author Slava Pestov
  * @author John Gellene (API documentation)
- * @version $Id: JEditTextArea.java,v 1.280 2003/08/18 18:28:12 spestov Exp $
+ * @version $Id: JEditTextArea.java,v 1.281 2003/08/20 20:23:53 spestov Exp $
  */
 public class JEditTextArea extends JComponent
 {
@@ -6130,11 +6130,6 @@ loop:			for(int i = lineNo + 1; i < getLineCount(); i++)
 				}
 			} //}}}
 
-			// ... otherwise,buffer will call transactionComplete()
-			// later on
-			if(!buffer.isTransactionInProgress())
-				transactionComplete(buffer);
-
 			if(caret >= start)
 			{
 				int scrollMode = (caretAutoScroll()
@@ -6199,10 +6194,6 @@ loop:			for(int i = lineNo + 1; i < getLineCount(); i++)
 				// will update bracket highlight
 				moveCaretPosition(caret,scrollMode);
 			}
-
-			// ... otherwise, it will be called by the buffer
-			if(!buffer.isTransactionInProgress())
-				transactionComplete(buffer);
 		}
 		//}}}
 

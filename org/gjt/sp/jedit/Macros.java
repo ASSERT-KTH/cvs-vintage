@@ -52,7 +52,7 @@ import org.gjt.sp.util.Log;
  * the methods in the {@link GUIUtilities} class instead.
  *
  * @author Slava Pestov
- * @version $Id: Macros.java,v 1.36 2003/08/12 03:47:52 spestov Exp $
+ * @version $Id: Macros.java,v 1.37 2003/08/20 20:23:53 spestov Exp $
  */
 public class Macros
 {
@@ -555,13 +555,19 @@ file_loop:			for(int i = 0; i < paths.length; i++)
 
 		if(settings == null)
 		{
-			GUIUtilities.error(view,"no-settings",new String[0]);
+			GUIUtilities.error(view,"no-settings",null);
 			return;
 		}
 
 		String path = MiscUtilities.constructPath(
 			jEdit.getSettingsDirectory(),"macros",
 			"Temporary_Macro.bsh");
+
+		if(jEdit.getBuffer(path) == null)
+		{
+			GUIUtilities.error(view,"no-temp-macro",null);
+			return;
+		}
 
 		Handler handler = getHandler("beanshell");
 		Macro temp = handler.createMacro(path,path);
