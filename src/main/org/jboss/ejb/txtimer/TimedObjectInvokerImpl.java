@@ -6,7 +6,7 @@
  */
 package org.jboss.ejb.txtimer;
 
-// $Id: TimedObjectInvokerImpl.java,v 1.3 2004/04/14 13:18:40 tdiesler Exp $
+// $Id: TimedObjectInvokerImpl.java,v 1.4 2004/04/22 01:49:22 patriot1burke Exp $
 
 import org.jboss.ejb.Container;
 import org.jboss.ejb.EntityContainer;
@@ -33,7 +33,6 @@ public class TimedObjectInvokerImpl implements TimedObjectInvoker
 
    private Container container;
    private TimedObjectId timedObjectId;
-   private String invokerProxyBinding;
    private Method method;
 
    public TimedObjectInvokerImpl(TimedObjectId timedObjectId, Container container)
@@ -44,12 +43,6 @@ public class TimedObjectInvokerImpl implements TimedObjectInvoker
          this.timedObjectId = timedObjectId;
          this.method = TimedObject.class.getMethod("ejbTimeout", new Class[]{Timer.class});
 
-         if (container instanceof EntityContainer)
-            invokerProxyBinding = "entity-rmi-invoker";
-         else if (container instanceof StatelessSessionContainer)
-            invokerProxyBinding = "stateless-rmi-invoker";
-         else if (container instanceof MessageDrivenContainer)
-            invokerProxyBinding = "message-driven-bean";
       }
       catch (NoSuchMethodException ignore)
       {
@@ -69,7 +62,7 @@ public class TimedObjectInvokerImpl implements TimedObjectInvoker
       {
          Thread.currentThread().setContextClassLoader(container.getClassLoader());
          Invocation inv = new Invocation(timedObjectId.getInstancePk(), method, new Object[]{timer}, null, null, null);
-         inv.setValue(InvocationKey.INVOKER_PROXY_BINDING, invokerProxyBinding, PayloadKey.AS_IS);
+         inv.setValue(InvocationKey.INVOKER_PROXY_BINDING, null, PayloadKey.AS_IS);
          inv.setType(InvocationType.LOCAL);
          container.invoke(inv);
       }
