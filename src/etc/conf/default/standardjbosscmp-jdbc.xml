@@ -7,7 +7,7 @@
 <!--                                                                       -->
 <!-- ===================================================================== -->
 
-<!-- $Id: standardjbosscmp-jdbc.xml,v 1.37 2002/06/25 16:07:35 dsundstrom Exp $ -->
+<!-- $Id: standardjbosscmp-jdbc.xml,v 1.38 2002/06/27 20:00:23 dsundstrom Exp $ -->
 
 <jbosscmp-jdbc>
    
@@ -314,7 +314,7 @@
          </mapping>
          <mapping>
             <java-type>java.lang.Object</java-type>
-            <jdbc-type>BLOB</jdbc-type>
+            <jdbc-type>JAVA_OBJECT</jdbc-type>
             <sql-type>BLOB</sql-type>
             <!--
             | Change this from BLOB to RAW(255) if you know your
