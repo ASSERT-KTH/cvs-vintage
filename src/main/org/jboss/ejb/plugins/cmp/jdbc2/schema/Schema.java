@@ -27,7 +27,7 @@ import java.sql.DatabaseMetaData;
 
 /**
  * @author <a href="mailto:alex@jboss.org">Alexey Loubyansky</a>
- * @version <tt>$Revision: 1.4 $</tt>
+ * @version <tt>$Revision: 1.5 $</tt>
  */
 public class Schema
 {
@@ -96,10 +96,6 @@ public class Schema
       RelationTable table = new RelationTable(leftField, rightField, this, relationTables.length - 1);
       relationTables[relationTables.length - 1] = table;
       return table;
-   }
-
-   public void resolveTableReferences() throws DeploymentException
-   {
    }
 
    public Table.View getView(EntityTable table)

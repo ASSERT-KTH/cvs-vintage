@@ -48,7 +48,7 @@ import java.util.List;
  * todo refactor optimistic locking
  *
  * @author <a href="mailto:alex@jboss.org">Alexey Loubyansky</a>
- * @version <tt>$Revision: 1.11 $</tt>
+ * @version <tt>$Revision: 1.12 $</tt>
  */
 public class EntityTable
    implements Table
@@ -975,11 +975,6 @@ public class EntityTable
             rowsWithNullFks = new ArrayList();
          }
          rowsWithNullFks.add(row);
-      }
-
-      public void parentRemoved(View view)
-      {
-         //todo
       }
 
       private Row createCleanRow(Object pk)
