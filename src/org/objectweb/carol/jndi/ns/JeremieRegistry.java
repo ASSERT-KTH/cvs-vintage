@@ -22,7 +22,7 @@
  * USA
  *
  * --------------------------------------------------------------------------
- * $Id: JeremieRegistry.java,v 1.7 2005/02/17 16:48:44 benoitf Exp $
+ * $Id: JeremieRegistry.java,v 1.8 2005/03/03 16:10:32 benoitf Exp $
  * --------------------------------------------------------------------------
  */
 package org.objectweb.carol.jndi.ns;
@@ -34,6 +34,8 @@ import java.util.Properties;
 import org.objectweb.jeremie.binding.moa.UnicastRemoteObject;
 import org.objectweb.jeremie.services.registry.LocateRegistry;
 
+import org.objectweb.carol.rmi.util.PortNumber;
+import org.objectweb.carol.util.configuration.CarolDefaultValues;
 import org.objectweb.carol.util.configuration.TraceCarol;
 
 /**
@@ -59,6 +61,11 @@ public class JeremieRegistry implements NameService {
     public Registry registry = null;
 
     /**
+     * Configuration properties (of carol.properties)
+     */
+    private Properties configurationProperties = null;
+
+    /**
      * start Method, Start a new NameService or do nothing if the name service
      * is all ready start
      * @param int port is port number
@@ -68,6 +75,25 @@ public class JeremieRegistry implements NameService {
         if (TraceCarol.isDebugJndiCarol()) {
             TraceCarol.debugJndiCarol("JeremieRegistry.start() on port:" + port);
         }
+
+        // Fix jeremie port if running inside a server
+        if (System.getProperty(CarolDefaultValues.SERVER_MODE, "false").equalsIgnoreCase("true")) {
+            if (configurationProperties != null) {
+                String propertyName = CarolDefaultValues.SERVER_JEREMIE_PORT;
+                int jeremiePort = PortNumber.strToint(configurationProperties.getProperty(propertyName, "0"), propertyName);
+                if (jeremiePort > 0) {
+                    TraceCarol.infoCarol("Using Jeremie fixed server port number '" + jeremiePort + "'.");
+                    System.setProperty("org.objectweb.jeremie.stub_factories.defaultport", String.valueOf(jeremiePort));
+                }
+            } else {
+                TraceCarol.debugCarol("No properties '" + CarolDefaultValues.SERVER_IIOP_PORT + "' defined in carol.properties file.");
+            }
+        }
+
+
+
+
+
         try {
             if (!isStarted()) {
                 if (port >= 0) {
@@ -121,6 +147,7 @@ public class JeremieRegistry implements NameService {
      * @return boolean true if the name service is started
      */
     public boolean isStarted() {
+
         if (registry != null) return true;
         try {
             LocateRegistry.getRegistry(port).list();
@@ -171,6 +198,6 @@ public class JeremieRegistry implements NameService {
       * @param p configuration properties
       */
      public void setConfigProperties(Properties p) {
-
+         this.configurationProperties = p;
      }
 }

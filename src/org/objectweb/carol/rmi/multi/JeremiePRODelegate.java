@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2002,2004 - INRIA (www.inria.fr)
+ * Copyright (C) 2002,2005 - INRIA (www.inria.fr)
  *
  * CAROL: Common Architecture for RMI ObjectWeb Layer
  *
@@ -22,21 +22,26 @@
  * USA
  *
  * --------------------------------------------------------------------------
- * $Id: JeremiePRODelegate.java,v 1.13 2004/09/22 12:28:23 benoitf Exp $
+ * $Id: JeremiePRODelegate.java,v 1.14 2005/03/03 16:10:32 benoitf Exp $
  * --------------------------------------------------------------------------
  */
 package org.objectweb.carol.rmi.multi;
 
-//java import
 import java.lang.reflect.Method;
 import java.rmi.NoSuchObjectException;
 import java.rmi.Remote;
 import java.rmi.RemoteException;
+import java.util.Properties;
 
 import javax.rmi.CORBA.PortableRemoteObjectDelegate;
 
+import org.objectweb.carol.rmi.util.PortNumber;
+import org.objectweb.carol.util.configuration.CarolConfiguration;
 import org.objectweb.carol.util.configuration.CarolCurrentConfiguration;
 import org.objectweb.carol.util.configuration.CarolDefaultValues;
+import org.objectweb.carol.util.configuration.RMIConfiguration;
+import org.objectweb.carol.util.configuration.RMIConfigurationException;
+import org.objectweb.carol.util.configuration.TraceCarol;
 
 /**
  * class <code>JeremiePRODelegate</code> for the mapping between Jeremie
@@ -49,7 +54,7 @@ public class JeremiePRODelegate implements PortableRemoteObjectDelegate {
     /**
      * Extension of Jeremie Stubs
      */
-    private final static String JEREMIE_STUB_EXTENSION = "_OWStub";
+    private static final String JEREMIE_STUB_EXTENSION = "_OWStub";
 
     /**
      * port number
@@ -77,7 +82,17 @@ public class JeremiePRODelegate implements PortableRemoteObjectDelegate {
     public JeremiePRODelegate() throws Exception {
         // class for name
         unicastClass = Thread.currentThread().getContextClassLoader().loadClass(className);
-        this.port = new Integer(System.getProperty(CarolDefaultValues.PORT_NUMBER_PROPERTY, "0")).intValue();
+        try {
+            RMIConfiguration rmiConfig = CarolConfiguration.getDefaultProtocol();
+            String propertyName = CarolDefaultValues.SERVER_JEREMIE_PORT;
+            Properties p = rmiConfig.getConfigProperties();
+            if (p != null) {
+                this.port = PortNumber.strToint(p.getProperty(propertyName, "0"), propertyName);
+            }
+        } catch (RMIConfigurationException rmice) {
+            TraceCarol.error("Could not get current carol configuration, rmi port will use random port.");
+            this.port = 0;
+        }
     }
 
     /**
@@ -178,8 +193,14 @@ public class JeremiePRODelegate implements PortableRemoteObjectDelegate {
         // Construct name of a jeremie stub of a remote object
         String stubName = r.getClass().getName() + JEREMIE_STUB_EXTENSION;
 
-        // return true if found
-        return (Thread.currentThread().getContextClassLoader().getResource(stubName) != null);
+        // Convert . into / as we check the resource name
+        String resourceName = stubName.replace('.', '/');
+
+        // suffix it by the classname
+        resourceName += ".class";
+
+        // return true if the resource is found
+        return (Thread.currentThread().getContextClassLoader().getResource(resourceName) != null);
 
     }
 
