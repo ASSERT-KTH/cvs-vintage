@@ -332,14 +332,14 @@ public class PrintMessageCommand extends FolderCommand {
 		// try to fix broken html-strings
 		DocumentParser parser = new DocumentParser();
 		String validated = parser.validateHTMLString(decodedBody);
-		ColumbaLogger.log.debug("validated bodytext:\n" + validated);
+		//ColumbaLogger.log.debug("validated bodytext:\n" + validated);
 
 		try {
 			// create temporary file and save validated body
 			File tempFile = TempFileStore.createTempFileWithSuffix("html");
 			DiskIO.saveStringInFile(tempFile, validated);
 			URL url = tempFile.toURL();
-			cHTMLPart htmlBody = new cHTMLPart();
+			cHTMLPart htmlBody = new cHTMLPart(true); // true ~ scaling allowed
 			htmlBody.setTopMargin(new cCmUnit(1.0));
 			htmlBody.setHTML(url);
 			return htmlBody;

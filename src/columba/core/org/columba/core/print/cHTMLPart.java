@@ -29,6 +29,8 @@ import javax.swing.text.View;
 import javax.swing.text.html.HTMLDocument;
 import javax.swing.text.html.HTMLEditorKit;
 
+import org.columba.core.logging.ColumbaLogger;
+
 
 /**
  * Class for representing a HTML print object. Objects of this
@@ -43,12 +45,24 @@ public class cHTMLPart extends cPrintObject {
 	private JTextPane mPane = null;
 	/** Y-coordinate in mPane to start printing at */
 	private cUnit mStartY = new cCmUnit(0.0);
+	/** Flag indicating whether scaling of the print is allowed (default is no) */
+	private boolean mScaleAllowed;
 
     /**
      * Creates a new empty HTML print object.
+     * As default, scaling the print to fit is not allowed
      */
     public cHTMLPart() {
-        super();
+        this(false);
+    }
+    
+    /**
+     * Creates a new empty HTML print object and sets whether scaling is allowed
+     * @param scaleAllowed	If true, the print is allowed to "scale to fit"
+     */
+    public cHTMLPart(boolean scaleAllowed) {
+    	super();
+    	mScaleAllowed = scaleAllowed;
     }
 
 	/**
@@ -102,9 +116,13 @@ public class cHTMLPart extends cPrintObject {
      * @see org.columba.core.print.cPrintObject#print(java.awt.Graphics2D)
      */
     public void print(Graphics2D g) {
+    	/*
+    	 * *20030609, karlpeder* Introduced scaling 
+    	 */
+		
 		computePositionAndSize();
 		
-		// get origin / size information (height as "total" height minus current pos.)
+		// get origin & size information (height as "total" height minus current pos.)
 		cPoint origin = getDrawingOrigin();
 		double width  = getDrawingSize().getWidth().getPoints();
 		double height = 
@@ -125,11 +143,16 @@ public class cHTMLPart extends cPrintObject {
 		mPane.validate();
 		View rootView = mPane.getUI().getRootView(mPane);
 
+		// scale the graphics
+		double scale = scaleFactor(new cPointUnit(width));
+		g.scale(scale, scale);
+		
 		// set clipping for the graphics object
 		Shape oldClip = g.getClip();
-		g.setClip((int) origin.getX().getPoints(), 
-				  (int) origin.getY().getPoints(),
-				  (int) width, (int) height);
+		g.setClip((int) (origin.getX().getPoints() / scale), 
+				  (int) (origin.getY().getPoints() / scale),
+				  (int) (width / scale),
+				  (int) (height / scale));
 
 		// translate g to line up with origin of print area (trans 1)
 		Point2D.Double trans = new Point2D.Double(
@@ -144,10 +167,11 @@ public class cHTMLPart extends cPrintObject {
 						(int) -mStartY.getPoints(),
 						(int) mPane.getMinimumSize().getWidth(),
 						(int) mPane.getPreferredSize().getHeight());
-		printView(g, rootView, allocation, height);
+		printView(g, rootView, allocation, height / scale);
 		
-		// translate graphics object back to original position and reset clip
+		// translate graphics object back to original position and reset clip and scaling
 		g.translate(-trans.getX(), -trans.getY());
+		g.scale(1/scale, 1/scale);
 		g.setClip(oldClip);
 	}
 
@@ -191,6 +215,9 @@ public class cHTMLPart extends cPrintObject {
     /**
      * Returns the size of this HTML print object subject to the
      * given width.<br>
+     * If scaling is allowed, and the contents can not be fitted inside
+     * the given width, the content is scaled to fit before the size is
+     * returned, i.e. the scaled size is returned.<br>
      * NB: The height returned will always be from the starting point 
      * (which could be different from the top) to the end of the current 
      * content, independent on whether everything will or can be printed
@@ -201,24 +228,61 @@ public class cHTMLPart extends cPrintObject {
      * @see org.columba.core.print.cPrintObject#getSize(org.columba.core.print.cUnit)
      */
     public cSize getSize(cUnit maxWidth) {
+    	/*
+    	 * *20030609, karlpeder* Introduced scaling
+    	 */
+    	
 		// resize jTextPane component to calculate height and get it
 		double width = maxWidth.sub(leftMargin).sub(rightMargin).getPoints();
 		mPane.setSize((int) width, Integer.MAX_VALUE);
 		mPane.validate();
 		double height = mPane.getPreferredSize().getHeight();
+
 		// correct for starting position if printing should not start at the top
 		height = height - mStartY.getPoints();
-		
+	
+
 		// calculate size and return it
+		double scale = scaleFactor(new cPointUnit(width));
 		cUnit w = new cCmUnit(maxWidth);	// width unchanged
 		cUnit h = new cCmUnit();
 		h.setPoints(height);				// height of content
 		h.addI(topMargin);					// + top margin
 		h.addI(bottomMargin);				// + bottom margin
-		
+		h.setPoints(h.getPoints() * scale);	// height corrected for scaling		
+
 		return new cSize(w, h);
     }
 
+	/**
+	 * Returns the scale, which should be applied to the content to make it
+	 * fit inside the given width.<br>
+	 * If scaling is not allowed, 1.0 will be returned.<br>
+	 * If the content fits inside the given width, or is smaller, 1.0 will
+	 * be returned.
+	 * @author  Karl Peder Olesen (karlpeder), 20030609
+     * @param	maxWidth		Max. allowable width this print object can occupy
+	 * @return  scale to be applied to make the contents fit inside the given width 
+	 */
+	private double scaleFactor(cUnit maxWidth) {
+		mPane.validate();	// ensure contents is layed out properly
+
+		if (!mScaleAllowed) {
+			ColumbaLogger.log.debug("Scaling not active - returning scale=1.0");
+			return 1.0;
+		}
+		else {
+			// calculate scaling and return it
+			double width = maxWidth.sub(leftMargin).sub(rightMargin).getPoints();
+			double scale;
+			if (mPane.getMinimumSize().getWidth() > width)
+				scale = width / mPane.getMinimumSize().getWidth();
+			else
+				scale = 1.0;	// do not scale up, i.e. no scale factor above 1.0
+			ColumbaLogger.log.debug("Returning scale=" + scale);
+			return scale;				
+		}
+	}
 
     /**
      * Divides (breaks) this HTML print object into a remainder (which fits
@@ -232,11 +296,15 @@ public class cHTMLPart extends cPrintObject {
      * @see org.columba.core.print.cPrintObject#breakBlock(org.columba.core.print.cUnit, org.columba.core.print.cUnit)
      */
     public cPrintObject breakBlock(cUnit w, cUnit maxHeight) {
-    	
-		// get size of content
-		cSize contentSize = this.getSize(w);
-		int width  = (int) contentSize.getWidth().getPoints();
-		int height = (int) contentSize.getHeight().getPoints();
+    	/*
+    	 * *20030609, karlpeder* Introduced scaling 
+    	 */
+		
+		// get size of content (width, height is size without scaling)
+		cSize contentSize = this.getSize(w); // scaled size
+		double scale = scaleFactor(w);
+		int width  = (int) (contentSize.getWidth().getPoints() / scale);
+		int height = (int) (contentSize.getHeight().getPoints() / scale);
 		int startY = (int) mStartY.getPoints();
 		
 		// define allocation rectangle (startY is used to compensate for
@@ -244,7 +312,7 @@ public class cHTMLPart extends cPrintObject {
 		Rectangle allocation = new Rectangle(0, -startY, width, height + startY);
 
 		// set initial value for height where this print object should be broken
-    	double breakHeight = maxHeight.getPoints();	// in points
+    	double breakHeight = maxHeight.getPoints() / scale;	// in points, without scale
 		
 		/*
 		 * calculate a new break height according to the contents, possibly
@@ -255,17 +323,16 @@ public class cHTMLPart extends cPrintObject {
 		breakHeight = calcBreakHeightFromView(rootView, allocation, breakHeight);
 		
 		// create remainder
-		cHTMLPart remainder = new cHTMLPart();
+		cHTMLPart remainder = new cHTMLPart(mScaleAllowed);
 		remainder.setHTML((HTMLDocument) mPane.getDocument());
 		remainder.setStartY(mStartY);
 		// modify "this" to start where remainder ends
 		cUnit newStartY = new cCmUnit();
-		if (breakHeight < height) {
+		if (breakHeight < height)
 			newStartY.setPoints(mStartY.getPoints() + breakHeight);
-		}
-		else {	// this happends if there's nothing left for the next page
+		else	// this happends if there's nothing left for the next page
 			newStartY = mStartY.add(contentSize.getHeight());
-		}
+
 		this.setStartY(newStartY);
 		
 		return remainder;    	 	
