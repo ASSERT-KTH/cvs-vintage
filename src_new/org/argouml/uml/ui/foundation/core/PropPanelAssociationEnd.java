@@ -1,4 +1,4 @@
-// $Id: PropPanelAssociationEnd.java,v 1.63 2005/01/30 20:47:34 linus Exp $
+// $Id: PropPanelAssociationEnd.java,v 1.64 2005/03/27 15:40:21 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -196,7 +196,8 @@ public class PropPanelAssociationEnd extends PropPanelModelElement {
         qualifiersScroll = new JScrollPane(new UMLLinkedList(
                 new UMLAssociationEndQualifiersListModel()));
         qualifierButton = new PropPanelButton2(new ActionAddAttribute());
-        qualifierButton.setToolTipText("new Qualifier");
+        qualifierButton.setToolTipText(
+                Translator.localize("button.new-qualifier"));
 
     }
 
