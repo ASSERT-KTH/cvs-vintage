@@ -74,7 +74,7 @@ import org.tigris.scarab.util.Log;
     @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
     @author <a href="mailto:jmcnally@collab.net">John McNally</a>
     @author <a href="mailto:maartenc@tigris.org">Maarten Coene</a>
-    @version $Id: ScarabLink.java,v 1.52 2002/08/01 20:25:54 jon Exp $
+    @version $Id: ScarabLink.java,v 1.53 2002/10/08 05:38:32 jmcnally Exp $
 */
 public class ScarabLink extends TemplateLink
                         implements InitableRecyclable
@@ -87,6 +87,8 @@ public class ScarabLink extends TemplateLink
     private String currentModuleId;
     private Module currentModule;
     private ScarabRequestTool scarabR;
+    private boolean isOmitModule;
+    private boolean isOmitIssueType;
 
     /**
      * Constructor.
@@ -126,6 +128,8 @@ public class ScarabLink extends TemplateLink
         scarabR = null;
         super.setPage(null);
         super.removePathInfo(TEMPLATE_KEY);
+        isOmitModule = false;
+        isOmitIssueType = false;
     }
 
     /**
@@ -139,7 +143,31 @@ public class ScarabLink extends TemplateLink
         String moduleid = data.getParameters().getString(ScarabConstants.CURRENT_MODULE);
         return setPage(t, moduleid);
     }
-     
+   
+    /**
+     * Causes the link to not include the module id.  Useful for templates
+     * where a module is not required or desired.
+     *
+     * @return a <code>ScarabLink</code> value
+     */
+    public ScarabLink omitModule()
+    {
+        isOmitModule = true;
+        return this;
+    }
+  
+    /**
+     * Causes the link to not include the issue type id.  Useful for templates
+     * where a issue type is not required or desired.
+     *
+     * @return a <code>ScarabLink</code> value
+     */
+    public ScarabLink omitIssueType()
+    {
+        isOmitIssueType = true;
+        return this;
+    }
+  
     /**
      * Sets the template variable used by the Template Service. The
      * module id of the new selected module is given.
@@ -151,13 +179,13 @@ public class ScarabLink extends TemplateLink
     protected TemplateLink setPage(String t, String moduleid)
     {
         currentModuleId = moduleid;
-        if (isSet(moduleid))
+        if (isSet(moduleid) && !isOmitModule)
         {
             addPathInfo(ScarabConstants.CURRENT_MODULE, moduleid);
         }
         String issuetypeid = data.getParameters()
             .getString(ScarabConstants.CURRENT_ISSUE_TYPE);
-        if (isSet(issuetypeid))
+        if (isSet(issuetypeid) && !isOmitIssueType)
         {
             addPathInfo(ScarabConstants.CURRENT_ISSUE_TYPE, issuetypeid);
         }
