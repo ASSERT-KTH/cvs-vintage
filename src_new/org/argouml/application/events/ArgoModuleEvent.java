@@ -1,4 +1,4 @@
-// $Id: ArgoModuleEvent.java,v 1.4 2003/09/17 00:51:07 thierrylach Exp $
+// $Id: ArgoModuleEvent.java,v 1.5 2003/09/17 21:08:21 thierrylach Exp $
 // Copyright (c) 1996-2001 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -41,5 +41,8 @@ public class ArgoModuleEvent extends ArgoEvent {
         super(eventType, src);
     }
 
+    /** Indicates the start of the range for events.
+     * @return the first id reserved for module events. 
+     */
     public int getEventStartRange() { return ANY_MODULE_EVENT; }
 }
