@@ -12,7 +12,7 @@
 <!--                                                                        -->
 <!-- ====================================================================== -->
 
-<!-- $Id: build.xml,v 1.56 2002/02/13 04:22:31 user57 Exp $ -->
+<!-- $Id: build.xml,v 1.57 2002/02/13 23:20:11 patriot1burke Exp $ -->
 
 <project default="main" name="JBoss/Server">
 
@@ -575,6 +575,7 @@
         <include name="org/jboss/ejb/CacheKey.class"/>
         <include name="org/jboss/ejb/ListCacheKey.class"/>
         <include name="org/jboss/ejb/FastKey.class"/>
+        <include name="org/jboss/ejb/plugins/lock/ApplicationDeadlockException.class"/>
         <include name="org/jboss/logging/Logger.class"/>
         <include name="org/jboss/logging/TracePriority.class"/>
         <include name="org/jboss/monitor/client/*.class"/>
