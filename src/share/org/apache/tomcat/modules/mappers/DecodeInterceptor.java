@@ -407,24 +407,17 @@ public class DecodeInterceptor extends  BaseInterceptor  {
     private boolean isSafeURI(MessageBytes pathMB) {
         int start = pathMB.indexOf('%');
         if( start >= 0 ) {
-            int end = pathMB.indexOf(";jsessionid=");
-            if( end < 0 || start < end ) {
-                int percent = pathMB.indexOfIgnoreCase("%25",start);
-                if( percent >= 0 && ( end < 0 || percent < end ) )
-                    return false;
+            if( pathMB.indexOfIgnoreCase("%25",start) >= 0 )
+                return false;
 
-                int period = pathMB.indexOfIgnoreCase("%2E",start);
-                if( period >= 0 && ( end < 0 || period < end ) )
-                    return false;
+            if( pathMB.indexOfIgnoreCase("%2E",start) >= 0 )
+                return false;
 
-                int fslash = pathMB.indexOfIgnoreCase("%2F",start);
-                if( fslash >= 0 && ( end < 0 || fslash < end ) )
-                    return false;
+            if( pathMB.indexOfIgnoreCase("%2F",start) >= 0 )
+                return false;
 
-                int bslash = pathMB.indexOfIgnoreCase("%5C",start);
-                if( bslash >= 0 && ( end < 0 || bslash < end ) )
-                    return false;
-            }
+            if( pathMB.indexOfIgnoreCase("%5C",start) >= 0 )
+                return false;
         }
 
         return true;
