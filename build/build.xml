@@ -234,13 +234,6 @@
             <fileset dir="${src.templates.dir}" defaultexcludes="no"/>
         </copy>
     </target>
-    <target name="check-requested-template-dir">
-        <condition property="copy.templates">
-            <not>
-                <equals arg1="${templates.dir}" arg2="cvs"/>
-            </not>
-        </condition>
-    </target>
 
     <!-- ================================================================== -->
     <!-- Adds Lucene adaptor code to source directory                       -->
