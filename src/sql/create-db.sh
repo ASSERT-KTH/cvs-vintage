@@ -1,7 +1,7 @@
 #!/bin/sh
 
 #
-# $Id: create-db.sh,v 1.13 2002/07/12 00:29:34 jon Exp $
+# $Id: create-db.sh,v 1.14 2002/08/09 01:21:27 jon Exp $
 #
 
 CMDNAME=`basename "$0"`
@@ -140,11 +140,11 @@ if [ ! -z "$password" -a "${dbtype}" = 'mysql' ] ; then
         ECHO_C='\c'
     fi
 
-	$ECHO_N "Enter password for \"${DB_USER}\": "$ECHO_C
+    $ECHO_N "Enter password for \"${DB_USER}\": "$ECHO_C
     stty -echo >/dev/null 2>&1
     read FirstPw
     stty echo >/dev/null 2>&1
-	password="$FirstPw"
+    password="$FirstPw"
     echo
 fi
 
