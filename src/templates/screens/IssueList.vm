@@ -11,7 +11,7 @@
 #set ($issueListSize = $issueList.size())
 
 #if ($issueListSize == 0)
-  <h3>$page.Title for $scarabR.CurrentIssueType.Name</h3>
+  <h3>$page.Title for $scarabR.CurrentRModuleIssueType.DisplayName</h3>
   <p class="alert">There are no matching issues.</p>
 #else
 
@@ -51,7 +51,7 @@
 </div>
 #end
 
-<h3>$page.Title for $scarabR.CurrentIssueType.Name 
+<h3>$page.Title for $scarabR.CurrentRModuleIssueType.DisplayName
 ($issueListSize #if ($issueListSize == 1)issue#else issues#end)</h3>
 
 <div class="colbar">
@@ -89,12 +89,9 @@ $link.setPage("ConfigureIssueList.vm").setLabel("Add/remove attributes from view
         <a href="$sortLink">Issue ID</a>
      #end
   </th>
-#set ($rmuas = $user.getRModuleUserAttributes($module, $scarabR.CurrentIssueType))
-#if ($rmuas.isEmpty())
- #set ($rmuas = $module.getDefaultRModuleUserAttributes($scarabR.CurrentIssueType))
-#end
 
 ## ISSUE ATTRIBUTE VALUES
+#set ($rmuas = $scarabR.RModuleUserAttributes)
 #foreach ($rmua in $rmuas)
  #set ($userAttribute = $rmua.Attribute)
  <th>
