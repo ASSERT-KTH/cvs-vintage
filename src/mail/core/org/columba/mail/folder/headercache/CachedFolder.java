@@ -29,6 +29,7 @@ import org.columba.mail.folder.command.MarkMessageCommand;
 import org.columba.mail.message.ColumbaHeader;
 import org.columba.mail.message.ColumbaMessage;
 import org.columba.mail.message.HeaderList;
+import org.columba.ristretto.message.Flags;
 import org.columba.ristretto.message.Header;
 import org.columba.ristretto.message.HeaderInterface;
 import org.columba.ristretto.message.Message;
@@ -514,6 +515,32 @@ public abstract class CachedFolder extends LocalFolder {
 		getHeaderCacheInstance().add(strippedHeader);
 
 		return newUid;
+	}
+
+	/* (non-Javadoc)
+	 * @see org.columba.mail.folder.MailboxInterface#setFlags(java.lang.Object, org.columba.ristretto.message.Flags)
+	 */
+	public void setFlags(Object uid, Flags flags) throws Exception {
+		ColumbaHeader h = (ColumbaHeader) getCachedHeaderList().get(uid);
+		
+		Flags oldFlags = h.getFlags();
+		h.setFlags(flags);
+		
+		// update MessageFolderInfo
+		if( oldFlags.get(Flags.RECENT) && !flags.get(Flags.RECENT)) {
+			getMessageFolderInfo().decRecent();
+		}
+		if( !oldFlags.get(Flags.RECENT) && flags.get(Flags.RECENT)) {
+			getMessageFolderInfo().incRecent();
+		}
+		
+		if( oldFlags.get(Flags.SEEN) && !flags.get(Flags.SEEN)) {
+			getMessageFolderInfo().incUnseen();
+		}
+		if( !oldFlags.get(Flags.SEEN) && flags.get(Flags.SEEN)) {
+			getMessageFolderInfo().decUnseen();
+		}
+		
 	}
 
 }

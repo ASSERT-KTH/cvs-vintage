@@ -193,7 +193,7 @@ public abstract class LocalFolder extends Folder implements MailboxInterface {
 	 */
 	public Object addMessage(String source) throws Exception {
 
-		Message message = MessageParser.parse( new CharSequenceSource(source));
+		Message message = MessageParser.parse(new CharSequenceSource(source));
 
 		// generate message object 
 		ColumbaMessage m = new ColumbaMessage(message);
@@ -241,10 +241,10 @@ public abstract class LocalFolder extends Folder implements MailboxInterface {
 				//return (AbstractMessage) aktMessage.clone();
 			}
 		}
-		
 
 		Source source = getDataStorageInstance().getFileSource(uid);
-		ColumbaMessage message = new ColumbaMessage(MessageParser.parse(source));
+		ColumbaMessage message =
+			new ColumbaMessage(MessageParser.parse(source));
 
 		message.setUID(uid);
 		message.setStringSource(source.toString());
@@ -328,7 +328,7 @@ public abstract class LocalFolder extends Folder implements MailboxInterface {
 
 		return searchEngine;
 	}
-	
+
 	/**
 	 * Set new search engine
 	 * 
@@ -336,8 +336,7 @@ public abstract class LocalFolder extends Folder implements MailboxInterface {
 	 * 
 	 * @param engine		new search engine
 	 */
-	public void setSearchEngine( AbstractSearchEngine engine)
-	{
+	public void setSearchEngine(AbstractSearchEngine engine) {
 		this.searchEngine = engine;
 	}
 
@@ -370,7 +369,7 @@ public abstract class LocalFolder extends Folder implements MailboxInterface {
 	 */
 	public LocalFolder(String name, String type) {
 		super(name, type);
-		
+
 		// create filterlist datastructure
 		XmlElement filterListElement = node.getElement("filterlist");
 		if (filterListElement == null) {
@@ -381,10 +380,8 @@ public abstract class LocalFolder extends Folder implements MailboxInterface {
 		}
 
 		filterList = new FilterList(filterListElement);
-		
+
 	}
-	
-	
 
 	/* (non-Javadoc)
 	 * @see org.columba.mail.folder.MailboxInterface#expungeFolder()
@@ -398,7 +395,7 @@ public abstract class LocalFolder extends Folder implements MailboxInterface {
 	public Object getAttribute(Object uid, String key) throws Exception {
 		// get message with UID
 		ColumbaMessage message = getMessage(uid);
-		
+
 		return message.getAttribute(key);
 	}
 
@@ -408,7 +405,7 @@ public abstract class LocalFolder extends Folder implements MailboxInterface {
 	public Flags getFlags(Object uid) throws Exception {
 		// get message with UID
 		ColumbaMessage message = getMessage(uid);
-		
+
 		return message.getFlags();
 	}
 
@@ -420,16 +417,16 @@ public abstract class LocalFolder extends Folder implements MailboxInterface {
 		ColumbaMessage message = getMessage(uid);
 
 		Header header = message.getHeader();
-		
+
 		Header subHeader = new Header();
 		String value;
-		for( int i=0; i<keys.length; i++) {
+		for (int i = 0; i < keys.length; i++) {
 			value = header.get(keys[i]);
-			if( value != null) {
+			if (value != null) {
 				subHeader.set(keys[i], value);
 			}
 		}
-		
+
 		return subHeader;
 	}
 
@@ -437,7 +434,8 @@ public abstract class LocalFolder extends Folder implements MailboxInterface {
 	 * @see org.columba.mail.folder.MailboxInterface#getMessageSourceStream(java.lang.Object)
 	 */
 	public InputStream getMessageSourceStream(Object uid) throws Exception {
-		return new SourceInputStream( getDataStorageInstance().getFileSource(uid) );
+		return new SourceInputStream(
+			getDataStorageInstance().getFileSource(uid));
 	}
 
 	/* (non-Javadoc)
@@ -445,12 +443,13 @@ public abstract class LocalFolder extends Folder implements MailboxInterface {
 	 */
 	public InputStream getMimePartBodyStream(Object uid, Integer[] address)
 		throws Exception {
-			// get message with UID
-			ColumbaMessage message = getMessage(uid);
-			
-			// Get the mimepart
-			LocalMimePart mimepart = (LocalMimePart) message.getMimePartTree().getFromAddress(address);
-			
+		// get message with UID
+		ColumbaMessage message = getMessage(uid);
+
+		// Get the mimepart
+		LocalMimePart mimepart =
+			(LocalMimePart) message.getMimePartTree().getFromAddress(address);
+
 		return mimepart.getInputStream();
 	}
 
@@ -459,13 +458,14 @@ public abstract class LocalFolder extends Folder implements MailboxInterface {
 	 */
 	public InputStream getMimePartSourceStream(Object uid, Integer[] address)
 		throws Exception {
-			// get message with UID
-			ColumbaMessage message = getMessage(uid);
-			
-			// Get the mimepart
-			LocalMimePart mimepart = (LocalMimePart) message.getMimePartTree().getFromAddress(address);
-		
-		return new SourceInputStream( mimepart.getSource() );
+		// get message with UID
+		ColumbaMessage message = getMessage(uid);
+
+		// Get the mimepart
+		LocalMimePart mimepart =
+			(LocalMimePart) message.getMimePartTree().getFromAddress(address);
+
+		return new SourceInputStream(mimepart.getSource());
 	}
 
 	/* (non-Javadoc)
@@ -473,16 +473,17 @@ public abstract class LocalFolder extends Folder implements MailboxInterface {
 	 */
 	public void innerCopy(MailboxInterface destFolder, Object[] uids)
 		throws Exception {
-			
-			for( int i=0; i<uids.length; i++) {
-				destFolder.addMessage(getMessageSourceStream(uids[i]));
-			}
+		for (int i = 0; i < uids.length; i++) {
+			Object destuid = destFolder.addMessage(getMessageSourceStream(uids[i]));
+			((LocalFolder)destFolder).setFlags(destuid, (Flags)getFlags(uids[i]).clone());
+		}
 	}
 
 	/* (non-Javadoc)
 	 * @see org.columba.mail.folder.MailboxInterface#markMessage(java.lang.Object[], int)
 	 */
-	public abstract void markMessage(Object[] uids, int variant) throws Exception;
+	public abstract void markMessage(Object[] uids, int variant)
+		throws Exception;
 
 	/* (non-Javadoc)
 	 * @see org.columba.mail.folder.MailboxInterface#addMessage(java.io.InputStream)
@@ -490,7 +491,7 @@ public abstract class LocalFolder extends Folder implements MailboxInterface {
 	public Object addMessage(InputStream in) throws Exception {
 		// generate UID for new message
 		Object newUid = generateNextMessageUid();
-		
+
 		getDataStorageInstance().saveInputStream(newUid, in);
 
 		// increase total count of messages
@@ -501,8 +502,14 @@ public abstract class LocalFolder extends Folder implements MailboxInterface {
 
 		// this folder has changed
 		changed = true;
-		
+
 		return newUid;
+	}
+
+	/* (non-Javadoc)
+	 * @see org.columba.mail.folder.MailboxInterface#setFlags(java.lang.Object, org.columba.ristretto.message.Flags)
+	 */
+	public void setFlags(Object uid, Flags flags) throws Exception {
 	}
 
 }
