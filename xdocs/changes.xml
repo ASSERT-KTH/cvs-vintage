@@ -7,6 +7,15 @@
 
   <body>
     <release version="b19" date="in cvs">
+	  <action dev="pledbrook" type="fix">
+        SCB1072 getRModuleAttributes() and getRIssueTypeAttributes()
+        have been modified to return empty lists, rather than
+		null, if no attributes exist in the group.
+      </action>       
+	  <action dev="epugh" type="update">
+        Reorganized all the webapp assets under /src/webapp.  Allows easy inplace development.
+        Additionally, you can now use either Ant or Maven!
+      </action>        
       <action dev="vprus" type="add">
         <a href="http://scarab.collab.net/scarab/issues/id/SCB132">SCB132</a>, 
         <a href="http://scarab.collab.net/scarab/issues/id/SCB613">SCB613</a>
