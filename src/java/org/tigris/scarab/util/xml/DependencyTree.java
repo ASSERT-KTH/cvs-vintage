@@ -107,13 +107,13 @@ public class DependencyTree
     public String getIssueXmlId(NumberKey dbIssueId)
     {
         Enumeration xmlIdList = issueIdTable.keys();
-        while(xmlIdList.hasMoreElements())
+        while (xmlIdList.hasMoreElements())
         {
             String xmlId = (String)xmlIdList.nextElement();
-            if(xmlId != null )
+            if (xmlId != null )
             {
                 NumberKey issueId = getIssueId(xmlId);
-                if(issueId.equals(dbIssueId))
+                if (issueId.equals(dbIssueId))
                 {
                     return xmlId;
                 }
@@ -135,10 +135,10 @@ public class DependencyTree
     public boolean isIssueDependencyValid(DependencyNode node)
     {
         Enumeration xmlIdList = issueDependTree.keys();
-        while(xmlIdList.hasMoreElements())
+        while (xmlIdList.hasMoreElements())
         {
             String xmlId = (String)xmlIdList.nextElement();
-            if(xmlId.equals(node.getParentOrChildId()))
+            if (xmlId.equals(node.getParentOrChildId()))
             {
                 return(isDependTypesMatch(xmlId,node.getIssueId(), node.getDependType()));
             }
@@ -149,11 +149,11 @@ public class DependencyTree
     private boolean isDependTypesMatch(String xmlId1, String xmlId2, DependType dependType)
     {
         ArrayList dependencies = getIssueDependencies(xmlId1);
-        for(int i = 0; i < dependencies.size(); i++)
+        for (int i = 0; i < dependencies.size(); i++)
         {
             DependencyNode node = (DependencyNode)dependencies.get(i);
             
-            if(node != null && node.getParentOrChildId().equals(xmlId2))
+            if (node != null && node.getParentOrChildId().equals(xmlId2))
             {
                 return node.getDependType().getName().equals(dependType.getName());
             }
@@ -164,14 +164,14 @@ public class DependencyTree
     public boolean isIssueDependencyResolved(String xmlIssueId)
     {
         ArrayList dependencyList = (ArrayList) getIssueDependencies(xmlIssueId);
-        if(dependencyList == null)
+        if (dependencyList == null)
         {
             return true;
         }
-        for(int i = 0; i < dependencyList.size(); i++)
+        for (int i = 0; i < dependencyList.size(); i++)
         {
             DependencyNode node = (DependencyNode) dependencyList.get(i);
-            if(!node.isResolved())
+            if (!node.isResolved())
             {
                 return false;
             }
@@ -182,10 +182,10 @@ public class DependencyTree
     public boolean isModuleDependencyValid(NumberKey parentModuleId)
     {
         Enumeration childModuleIdList = moduleDependTree.keys();
-        while(childModuleIdList.hasMoreElements())
+        while (childModuleIdList.hasMoreElements())
         {
             NumberKey childModuleId = (NumberKey) childModuleIdList.nextElement();
-            if(childModuleId.equals(parentModuleId))
+            if (childModuleId.equals(parentModuleId))
             { 
                 return true;
             }
@@ -197,17 +197,17 @@ public class DependencyTree
     {
         ArrayList invalidList = new ArrayList();
         Enumeration xmlIdList = issueDependTree.keys();
-        while(xmlIdList.hasMoreElements())
+        while (xmlIdList.hasMoreElements())
         {
             String xmlIssueId = (String) xmlIdList.nextElement();
             ArrayList dependencyList = getIssueDependencies(xmlIssueId);
-            for(int i = 0; i < dependencyList.size(); i++)
+            for (int i = 0; i < dependencyList.size(); i++)
             {
                 DependencyNode node = (DependencyNode)dependencyList.get(i);
-                if(node != null)
+                if (node != null)
                 {
                     String dependencyXmlId = node.getParentOrChildId();
-                    if(!isIssueDependencyValid(node))
+                    if (!isIssueDependencyValid(node))
                     {
                         invalidList.add(node);
                     }
@@ -221,10 +221,10 @@ public class DependencyTree
     {
         ArrayList unresolvedList = new ArrayList();
         Enumeration xmlIdList = issueDependTree.keys();
-        while(xmlIdList.hasMoreElements())
+        while (xmlIdList.hasMoreElements())
         {
             String xmlIssueId = (String) xmlIdList.nextElement();
-            if(!isIssueDependencyResolved(xmlIssueId))
+            if (!isIssueDependencyResolved(xmlIssueId))
             {
                 unresolvedList.add(xmlIssueId);
             }
@@ -234,22 +234,22 @@ public class DependencyTree
     
     public boolean isAllIssueDependencyResolved()
     {
-        return (getUnresolvedDependencyIssues().size() == 0 );
+        return (getUnresolvedDependencyIssues().size() == 0);
     }
     
     public void resolveIssueDependencies() throws Exception
     {
-        if(!isAllIssueDependencyResolved())
+        if (!isAllIssueDependencyResolved())
         {
             cat.debug("resolving remaining issue dependencies ...");
             
             ArrayList unresolvedIssueList = getUnresolvedDependencyIssues();
             
-            for(int i = 0; i < unresolvedIssueList.size(); i++)
+            for (int i = 0; i < unresolvedIssueList.size(); i++)
             {
                 String unresolvedIssueId = (String)unresolvedIssueList.get(i);
                 ArrayList unresolvedDependencies = getIssueDependencies(unresolvedIssueId);
-                for(int j = 0; j < unresolvedDependencies.size(); j++)
+                for (int j = 0; j < unresolvedDependencies.size(); j++)
                 {
                     DependencyNode node = (DependencyNode)unresolvedDependencies.get(j);
                     Depend depend = Depend.getInstance();
@@ -269,11 +269,11 @@ public class DependencyTree
     {
         ArrayList invalidList = new ArrayList();
         Enumeration childModuleIdList = moduleDependTree.keys();
-        while(childModuleIdList.hasMoreElements())
+        while (childModuleIdList.hasMoreElements())
         {
             NumberKey childModuleId = (NumberKey) childModuleIdList.nextElement();
             NumberKey parentModuleId = getModuleDependency(childModuleId);
-            if(!isModuleDependencyValid(parentModuleId))
+            if (!isModuleDependencyValid(parentModuleId))
             {
                 invalidList.add(childModuleId);
             }
@@ -285,7 +285,7 @@ public class DependencyTree
     {
         StringBuffer info = new StringBuffer();
         ArrayList dependencies = getInvalidIssueDependencies();
-        for(int i = 0; i < dependencies.size(); i++)
+        for (int i = 0; i < dependencies.size(); i++)
         {
             int errorNo = i + 1;
             DependencyNode node = (DependencyNode) dependencies.get(i);
@@ -300,7 +300,7 @@ public class DependencyTree
     {
         StringBuffer info = new StringBuffer();
         ArrayList dependencies = getInvalidModuleDependencies();
-        for(int i = 0; i < dependencies.size(); i++)
+        for (int i = 0; i < dependencies.size(); i++)
         {
             NumberKey childModuleId = (NumberKey) dependencies.get(i);
             info.append("<validation error> module: " + childModuleId + " has an unresolved parent module: " + getModuleDependency(childModuleId) + "\n");
@@ -321,7 +321,7 @@ public class DependencyTree
     
     public boolean isIssueResolvedYet(String xmlIssueId)
     {
-        if(getIssueId(xmlIssueId) != null)
+        if (getIssueId(xmlIssueId) != null)
         {
             return true;
         }

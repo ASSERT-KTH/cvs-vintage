@@ -47,6 +47,7 @@ package org.tigris.scarab.util.xml;
  */
 
 import org.tigris.scarab.om.DependType;
+import org.tigris.scarab.om.DependTypeManager;
 
 /**
  * Handler for the xpath "scarab/module/issue/dependency/type"
@@ -72,7 +73,7 @@ public class DependencyTypeRule extends BaseRule
         throws Exception
     {
         log().debug("(" + getImportBean().getState() + ") dependency type body: " + text);
-        DependType dependType = DependType.findDependTypeByName(text);
-        getDigester().push(dependType);
+        DependType dependType = DependTypeManager.getInstance(text);
+        getImportBean().setDependType(dependType);
     }
 }

@@ -50,23 +50,25 @@ import java.util.List;
 import java.util.ArrayList;
 
 import org.tigris.scarab.om.Attachment;
-import org.tigris.scarab.om.Transaction;
-import org.tigris.scarab.om.TransactionType;
+import org.tigris.scarab.om.DependType;
 import org.tigris.scarab.om.Issue;
 import org.tigris.scarab.om.Module;
 import org.tigris.scarab.om.ScarabUser;
+import org.tigris.scarab.om.Transaction;
+import org.tigris.scarab.om.TransactionType;
 import org.apache.commons.digester.Digester;
 
 /**
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: ImportBean.java,v 1.4 2002/05/03 01:48:38 jon Exp $
+ * @version $Id: ImportBean.java,v 1.5 2002/05/06 22:12:09 jon Exp $
  */
 public class ImportBean
 {
     private String state = null;
     private Digester digester = null;
     private DependencyTree dependencyTree = null;
+    private DependType dependType = null;
     private List roleList = null;
     private List userList = null;
     private Module module = null;
@@ -108,6 +110,16 @@ public class ImportBean
     public void setDependencyTree(DependencyTree value)
     {
         this.dependencyTree = value;
+    }
+
+    public DependType getDependType()
+    {
+        return this.dependType;
+    }
+    
+    public void setDependType(DependType value)
+    {
+        this.dependType = value;
     }
 
     public ActivityInfo getActivityInfo()
