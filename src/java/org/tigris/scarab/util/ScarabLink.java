@@ -51,6 +51,7 @@ import java.util.Enumeration;
 // Turbine
 import org.apache.turbine.tool.TemplateLink;
 import org.apache.turbine.RunData;
+import org.apache.turbine.DynamicURI;
 import org.apache.turbine.ParameterParser;
 import org.apache.turbine.Turbine;
 import org.apache.fulcrum.util.parser.ValueParser;
@@ -73,7 +74,7 @@ import org.tigris.scarab.util.Log;
     @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
     @author <a href="mailto:jmcnally@collab.net">John McNally</a>
     @author <a href="mailto:maartenc@tigris.org">Maarten Coene</a>
-    @version $Id: ScarabLink.java,v 1.48 2002/07/20 01:32:25 jmcnally Exp $
+    @version $Id: ScarabLink.java,v 1.49 2002/07/20 06:45:17 jmcnally Exp $
 */
 public class ScarabLink extends TemplateLink
                         implements InitableRecyclable
@@ -239,6 +240,19 @@ public class ScarabLink extends TemplateLink
     public ScarabLink addPathInfo(String key, ParameterParser pp)
     {
         addPathInfo(key, pp);
+        return this;
+    }
+
+    /**
+     * Adds a name=value pair to the path_info string.  This method is missing
+     * in DynamicURI, but should be there.
+     *
+     * @param name A String with the name to add.
+     * @param value A double with the value to add.
+     */
+    public DynamicURI addPathInfo(String name, boolean value)
+    {
+        addPathInfo(name, (value ? "true" : "false"));
         return this;
     }
 

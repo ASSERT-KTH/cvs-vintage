@@ -206,6 +206,9 @@
 
 ## COMMENTS
 #if ($tab.equals("3") || $tab.equals("all"))
+#set ($canAddComment = $canEdit)
+#set ($canEditComments = $scarabR.hasPermission($scarabG.Permission.MODULE__EDIT))
+#set ($isEditComments = $canEditComments && $data.Parameters.getBoolean("edit_comments"))
 #if ($fullComments.equals("true"))
   #set ($comments = $currentIssue.getComments(true))
 #else
@@ -213,20 +216,30 @@
 #end
 
 <h3>$l10n.Comments</h3>
-#if ($comments.isEmpty() && !$canEdit)
+#if ($comments.isEmpty() && !$canAddComment)
 $l10n.NoComments
 #else
   #foreach ($comment in $comments)
      #set ($commentUser = $scarabR.getUser($comment.CreatedBy))
      <h4>$format.getDate($scarabR.DateFormat, $comment.CreatedDate)&#160;|&#160;Added by: <a href="mailto:$commentUser.Email">$!commentUser.Name</a></h4>
-    #if ($scarabR.hasPermission($scarabG.Permission.MODULE__EDIT))
+    #if ($isEditComments)
       <p>#textAreaLarge( "edit_comment_$comment.AttachmentId" $comment.DataAsString)</p>
     #else
         <p>$comment.DataAsString</p>
     #end
   #end
 
-  #if ($canEdit)
+  #if ($isEditComments)
+   <div class="functnbar3">
+   <input type="submit" value="Edit comment(s)" name="eventSubmit_doEditcomment" />
+   </div>
+      #elseif ($canEditComments && !$comments.isEmpty())
+         <div align="right"><small>
+         $link.setPage("ViewIssue.vm").addPathInfo("id", $currentIssue.UniqueId).setLabel("Edit comments").addPathInfo("edit_comments", true)
+         </small></div>
+  #end
+
+  #if ($canAddComment && !$isEditComments)
    <h4>$l10n.EnterComment</h4>
    <table cellspacing="2" cellpadding="3" border="0">
      <tr>
@@ -238,16 +251,11 @@ $l10n.NoComments
        </td>
      </tr>
    </table>
-   #end
-
-   #if ($canEdit)
    <div class="functnbar3">
       <input type="submit" value="Save" name="eventSubmit_doSubmitcomment" />
-      #if ($scarabR.hasPermission($scarabG.Permission.MODULE__EDIT) && $comments.size() > 0)
-        &#160;<input type="submit" value="Edit comment(s)" name="eventSubmit_doEditcomment" />
-      #end
    </div>
   #end
+
 #end
 
 #if ($currentIssue.isCommentsLong())
