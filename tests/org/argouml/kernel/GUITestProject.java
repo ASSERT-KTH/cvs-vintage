@@ -1,4 +1,4 @@
-// $Id: GUITestProject.java,v 1.1 2004/11/04 13:30:52 mkl Exp $
+// $Id: GUITestProject.java,v 1.2 2004/11/11 14:56:43 mkl Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -101,6 +101,33 @@ public class GUITestProject extends TestCase {
         p.moveToTrash(aClass);
         assertTrue("Statemachine not in trash", p.isInTrash(machine));
         assertTrue("Class not int trash", p.isInTrash(aClass));
+        assertEquals(sizeDiagrams, p.getDiagrams().size());
+        assertEquals(sizeMembers, p.getMembers().size());
+    }
+    
+    public void testDeleteStateDiagram() {
+        Project p = ProjectManager.getManager().getCurrentProject();
+        assertEquals(2, p.getDiagrams().size());
+        
+        int sizeMembers = p.getMembers().size();
+        int sizeDiagrams = p.getDiagrams().size();
+        
+        // test with a class and class diagram
+        Object package1 = ModelManagementFactory.getFactory().buildPackage(
+                "test1", null);
+        Object aClass = CoreFactory.getFactory().buildClass(package1);
+        
+        
+        // try with Statediagram
+        Object machine = StateMachinesFactory.getFactory().buildStateMachine(
+                aClass);
+        UMLStateDiagram d = new UMLStateDiagram(ModelFacade
+                .getNamespace(machine), machine);
+        p.addMember(d);
+        assertEquals(sizeDiagrams + 1, p.getDiagrams().size());
+        assertEquals(sizeMembers + 1, p.getMembers().size());
+        p.moveToTrash(d);
+        assertTrue("Statediagram not in trash", p.isInTrash(d));
         assertEquals(sizeDiagrams, p.getDiagrams().size());
         assertEquals(sizeMembers, p.getMembers().size());
     }
