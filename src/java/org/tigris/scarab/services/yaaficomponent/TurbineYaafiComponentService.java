@@ -1,4 +1,4 @@
-package org.tigris.scarab.services.yafficomponent;
+package org.tigris.scarab.services.yaaficomponent;
 
 /* ====================================================================
  * The Apache Software License, Version 1.1
@@ -92,7 +92,7 @@ import org.apache.turbine.Turbine;
  *
  * @author <a href="mailto:epugh@upstate.com">Eric Pugh</a>
  * @author <a href="mailto:hps@intermeta.de">Henning P. Schmiedehausen</a>
- * @version $Id: TurbineYaafiComponentService.java,v 1.1 2004/10/25 12:55:24 dep4b Exp $
+ * @version $Id: TurbineYaafiComponentService.java,v 1.1 2004/10/25 13:49:14 dep4b Exp $
  */
 public class TurbineYaafiComponentService
         extends BaseService
@@ -195,12 +195,14 @@ public class TurbineYaafiComponentService
                 parametersFileName,
                 context
                 );
+            
         }
         catch (Throwable t)
         {
-            t.printStackTrace();
-            log.error(t);
+            throw new InitializationException(
+                    "Failed to initialize YaafiComponentService",t); //EXCEPTION
         }
+        setInit(true);
     }
 
     /**

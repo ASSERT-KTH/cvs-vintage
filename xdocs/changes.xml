@@ -6,7 +6,13 @@
   </properties>
 
   <body>
-    <release version="b20" date="in dev">                
+    <release version="b20" date="in dev">  
+      <action dev="epugh" type="add">
+        Add Yaafi: Yet Another Avalon Framework Implementation.  Yaafi is a 
+        lightweight container that we can use as we port to Avalon components on
+        the way to Turbine 2.4.  This is a tool that will faciliatate adding your
+        own components into Scarab.
+      </action>                        
       <action dev="epugh" type="add">
         Import Fulcrum PRE_AVALON branch of code into Scarab CVS.
       </action>          

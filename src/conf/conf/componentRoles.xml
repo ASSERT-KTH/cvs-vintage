@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+
+<role-list>
+	<role
+        default-class="org.apache.fulcrum.yaafi.service.servicemanager.ServiceManagerService"
+        early-init="true"
+    />    
+    <role
+        name="org.apache.fulcrum.yaafi.service.systemproperty.SystemPropertyService"
+        shorthand="SystemPropertyService"
+        default-class="org.apache.fulcrum.yaafi.service.systemproperty.SystemPropertyServiceImpl"
+        early-init="true"
+    />    
+    <!--role
+        name="org.apache.fulcrum.yaafi.TestComponent"
+        shorthand="test"
+        default-class="org.apache.fulcrum.yaafi.TestComponentImpl"
+        early-init="false"
+    /-->        
+</role-list>

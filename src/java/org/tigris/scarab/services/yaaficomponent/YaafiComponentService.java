@@ -1,4 +1,4 @@
-package org.tigris.scarab.services.yafficomponent;
+package org.tigris.scarab.services.yaaficomponent;
 
 /* ====================================================================
  * The Apache Software License, Version 1.1
@@ -60,7 +60,7 @@ import org.apache.fulcrum.yaafi.framework.container.ServiceConstants;
 /**
  * This service allows access to avalon components.
  *
- * @version $Id: YaafiComponentService.java,v 1.1 2004/10/25 12:55:24 dep4b Exp $
+ * @version $Id: YaafiComponentService.java,v 1.1 2004/10/25 13:49:14 dep4b Exp $
  */
 public interface YaafiComponentService
         extends Service, ServiceConstants

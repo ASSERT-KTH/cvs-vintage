@@ -65,6 +65,7 @@ import org.tigris.scarab.om.RModuleIssueTypeTest;
 import org.tigris.scarab.om.RModuleOptionTest;
 import org.tigris.scarab.om.ScarabUserTest;
 import org.tigris.scarab.services.email.VelocityEmailServiceTest;
+import org.tigris.scarab.services.yaaficomponent.YaafiComponentServiceTest;
 import org.tigris.scarab.util.EmailLinkTest;
 import org.tigris.scarab.util.ScarabUtilTest;
 import org.tigris.scarab.util.SubsetIteratorTest;
@@ -111,6 +112,9 @@ public class AllScarabTests extends BaseScarabOMTestCase {
 		
 		// org.tigris.scarab.services.email tests 
 		suite.addTestSuite(VelocityEmailServiceTest.class);
+        
+        // org.tigris.scarab.services.yaaficomponent tests 
+        suite.addTestSuite(YaafiComponentServiceTest.class);        
 
 		// org.tigris.scarab.util
 		suite.addTestSuite(EmailLinkTest.class);
