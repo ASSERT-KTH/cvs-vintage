@@ -116,7 +116,9 @@ public class HandleRoleRequests extends RequireLoginFirstAction
                 {
                     TurbineSecurity.grant( user, 
                         (org.apache.fulcrum.security.entity.Group)module, 
-                        TurbineSecurity.getRole(role) );                    
+                        TurbineSecurity.getRole(role) );
+                    getScarabRequestTool(context).setConfirmMessage(
+                        "Your role request was granted.");    
                 }
                 else 
                 {
@@ -125,6 +127,8 @@ public class HandleRoleRequests extends RequireLoginFirstAction
                     pend.setUserId(user.getUserId());
                     pend.setRoleName(role);
                     pend.save();
+                    getScarabRequestTool(context).setInfoMessage(
+                        "Your role request is awaiting approval.");    
                 }                
             }
         }
