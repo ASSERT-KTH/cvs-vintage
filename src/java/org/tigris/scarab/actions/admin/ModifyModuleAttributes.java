@@ -82,7 +82,7 @@ import org.tigris.scarab.tools.ScarabRequestTool;
  * action methods on RModuleAttribute table
  *      
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
- * @version $Id: ModifyModuleAttributes.java,v 1.47 2001/11/28 19:50:25 elicia Exp $
+ * @version $Id: ModifyModuleAttributes.java,v 1.48 2001/11/28 20:17:26 jon Exp $
  */
 public class ModifyModuleAttributes extends RequireLoginFirstAction
 {
@@ -880,7 +880,7 @@ public class ModifyModuleAttributes extends RequireLoginFirstAction
         throws Exception
     {
         data.getParameters().remove("issueTypeId");
-	setTarget(data, "admin,ArtifactTypeCreate.vm");
+        setTarget(data, "admin,ArtifactTypeCreate.vm");
     }
 
     /**
