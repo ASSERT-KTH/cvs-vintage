@@ -77,6 +77,7 @@ final class ServletInputStreamFacade extends ServletInputStream {
     private int bytesRead = 0;
     // Stop after reading ContentLength bytes. 
     private int limit = -1;
+    private boolean closed=false;
 
     private Request reqA;
     
@@ -98,12 +99,15 @@ final class ServletInputStreamFacade extends ServletInputStream {
 
     void recycle() {
 	limit=-1;
+	closed=false;
     }
 
     // -------------------- ServletInputStream methods 
 
     public int read() throws IOException {
 	if( dL>0) debug("read() " + limit + " " + bytesRead );
+	if(closed)
+	    throw new IOException("Stream closed");
 	if (limit == -1) {
 	    // Ask the adapter for more data. We are in the 'no content-length'
 	    // case - i.e. chunked encoding ( acording to http spec CL is required
@@ -137,6 +141,8 @@ final class ServletInputStreamFacade extends ServletInputStream {
 
     public int read(byte[] b, int off, int len) throws IOException {
 	if( dL>0) debug("read(" +  len + ") " + limit + " " + bytesRead );
+	if(closed)
+	    throw new IOException("Stream closed");
 	if (limit == -1) {
 	    int numRead = reqA.doRead(b, off, len);
 	    if (numRead > 0) {
@@ -166,6 +172,14 @@ final class ServletInputStreamFacade extends ServletInputStream {
 
     public int readLine(byte[] b, int off, int len) throws IOException {
 	return super.readLine(b, off, len);
+    }
+
+    /** Close the stream
+     *  Since we re-cycle, we can't allow the call to super.close()
+     *  which would permantely disable us.
+     */
+    public void close() {
+	closed=true;
     }
 
     private static int dL=0;
