@@ -71,6 +71,7 @@ import org.apache.tomcat.util.http.*;
 import org.apache.tomcat.util.net.*;
 import org.apache.tomcat.util.net.ServerSocketFactory;
 import org.apache.tomcat.util.log.*;
+import org.apache.tomcat.util.compat.*;
 
 /** Standalone http.
  *
@@ -204,9 +205,16 @@ class HttpRequest extends Request {
     Http10 http=new Http10();
     private boolean moreRequests = false;
     Socket socket;
+    static CertCompat certcompat = CertCompat.getCertCompat();
     
     public HttpRequest() {
         super();
+    }
+    public Object getAttribute(String name) {
+        if (name.equals("javax.servlet.request.X509Certificate")) {
+            return(certcompat.getX509Certificates(socket));
+	}
+        return(super.getAttribute(name));
     }
 
     public void recycle() {
