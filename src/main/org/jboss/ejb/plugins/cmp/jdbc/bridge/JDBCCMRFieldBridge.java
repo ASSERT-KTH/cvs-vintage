@@ -28,6 +28,7 @@ import org.jboss.ejb.plugins.EntityInstanceCache;
 import org.jboss.ejb.plugins.cmp.CMPStoreManager;
 import org.jboss.ejb.plugins.cmp.bridge.CMRFieldBridge;
 import org.jboss.ejb.plugins.cmp.jdbc.JDBCStoreManager;
+import org.jboss.ejb.plugins.cmp.jdbc.metadata.JDBCCMPFieldMetaData;
 import org.jboss.ejb.plugins.cmp.jdbc.metadata.JDBCRelationshipRoleMetaData;
 import org.jboss.logging.Log;
 import org.jboss.security.SecurityAssociation;
@@ -43,7 +44,7 @@ import org.jboss.security.SecurityAssociation;
  *		One for each role that entity has. 		
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
- * @version $Revision: 1.2 $
+ * @version $Revision: 1.3 $
  */                            
 public class JDBCCMRFieldBridge implements CMRFieldBridge {
 	// ------ Invocation messages ------
@@ -105,12 +106,12 @@ public class JDBCCMRFieldBridge implements CMRFieldBridge {
 	/**
 	 * The key fields that this entity maintains in the relation table.
 	 */
-	protected JDBCCMPFieldBridge[] keyFields;
+	protected JDBCCMPFieldBridge[] tableKeyFields;
 	
 	/**
 	 * Foreign key fields of this entity (i.e., related entities pk fields)
 	 */
-	protected JDBCForeignKeyField[] foreignKeyFields;
+	protected JDBCCMPFieldBridge[] foreignKeyFields;
 
 	/**
 	 * The related entity's container.
@@ -155,15 +156,16 @@ public class JDBCCMRFieldBridge implements CMRFieldBridge {
 	/**
 	 * Creates a cmr field for the entity based on the metadata.
 	 */
-	public JDBCCMRFieldBridge(JDBCEntityBridge entity, JDBCStoreManager manager, JDBCRelationshipRoleMetaData metadata, Log log) throws DeploymentException {
+	public JDBCCMRFieldBridge(JDBCEntityBridge entity, JDBCStoreManager manager, JDBCRelationshipRoleMetaData metadata) throws DeploymentException {
 		this.entity = entity;
 		this.manager = manager;
 		this.metadata = metadata;
-		this.log = log;
+		this.log = manager.getLog();
 
-		// set keyFields to none so it always returns atleat an 0 length array
-		keyFields = new JDBCCMPFieldBridge[0];
-
+		//
+		// Set handles to the related entity's container, cache, manager, and invoker
+		//
+		
 		// name of the related entity, name used in ejb-jar.xml
 		String relatedName = metadata.getRelatedRole().getEntity().getName();
 		
@@ -189,24 +191,31 @@ public class JDBCCMRFieldBridge implements CMRFieldBridge {
 		
 		// get the related container invoker		
 		relatedInvoker = relatedContainer.getLocalContainerInvoker();
-		
-		// check mapping style
-		if(metadata.getRelationMetaData().isForeignKeyMappingStyle()) {
-			hasForeignKey = isSingleValued();
-		}
-		
-		// initialize key fields
-		JDBCCMPFieldBridge[] pkFields = entity.getJDBCPrimaryKeyFields();
-		keyFields = new JDBCCMPFieldBridge[pkFields.length];
-		for(int i=0; i<pkFields.length; i++) {
-			if(pkFields[i] instanceof JDBCCMP2xFieldBridge) {
-				keyFields[i] = new JDBCRelationKeyField(
-						(JDBCCMP2xFieldBridge)pkFields[i],
-						metadata.getRelatedRole().getCMRFieldName(),
-						log);
-			} else {
-				throw new DeploymentException("Relationships are only allowed with CMP 2.x PK fields");
+
+		// 
+		// Initialize the key fields
+		//
+		if(metadata.getRelationMetaData().isTableMappingStyle()) {
+			// initialize key fields
+			Collection tableKeys = metadata.getTableKeyFields();
+			Set keys = new HashSet();
+			for(Iterator i=tableKeys.iterator(); i.hasNext(); ) {
+				JDBCCMPFieldMetaData cmpFieldMetaData = (JDBCCMPFieldMetaData)i.next();
+				keys.add(new JDBCCMP2xFieldBridge(manager, cmpFieldMetaData));
 			}
+			tableKeyFields = new JDBCCMPFieldBridge[tableKeys.size()];
+			tableKeyFields = (JDBCCMPFieldBridge[])keys.toArray(tableKeyFields);
+		} else {		
+			// initialize foreign key fields
+			Collection foreignKeys = metadata.getForeignKeyFields();
+			Set keys = new HashSet();
+			for(Iterator i=foreignKeys.iterator(); i.hasNext(); ) {
+				JDBCCMPFieldMetaData cmpFieldMetaData = (JDBCCMPFieldMetaData)i.next();
+				keys.add(new JDBCCMP2xFieldBridge(manager, cmpFieldMetaData, manager.getJDBCTypeFactory().getFieldJDBCType(cmpFieldMetaData)));
+			}
+			foreignKeyFields = new JDBCCMPFieldBridge[foreignKeys.size()];
+			foreignKeyFields = (JDBCCMPFieldBridge[])keys.toArray(foreignKeyFields);
+			hasForeignKey = foreignKeyFields.length > 0;
 		}
 	}
 		
@@ -246,23 +255,6 @@ public class JDBCCMRFieldBridge implements CMRFieldBridge {
 		}
 		if(relatedCMRField == null) {
 			throw new DeploymentException("Related CMR field not found.");
-		}
-
-		// initialize foreign key fields
-		if(hasForeignKey()) {
-			JDBCCMPFieldBridge[] pkFields = relatedEntity.getJDBCPrimaryKeyFields();
-			foreignKeyFields = new JDBCForeignKeyField[pkFields.length];
-			for(int i=0; i<pkFields.length; i++) {
-				if(pkFields[i] instanceof JDBCCMP2xFieldBridge) {
-					foreignKeyFields[i] = new JDBCForeignKeyField(
-							(JDBCCMP2xFieldBridge)pkFields[i],
-							getFieldName(),
-							manager,
-							log);
-				} else {
-					throw new DeploymentException("Relationships are only allowed with CMP 2.x PK fields");
-				}
-			}
 		}
 	}
 
@@ -311,14 +303,14 @@ public class JDBCCMRFieldBridge implements CMRFieldBridge {
 	/**
 	 * Gets the key fields that this entity maintains in the relation table.
 	 */
-	public JDBCCMPFieldBridge[] getKeyFields() {
-		return keyFields;
+	public JDBCCMPFieldBridge[] getTableKeyFields() {
+		return tableKeyFields;
 	}
 	
 	/**
 	 * Gets the foreign key fields of this entity (i.e., related entities pk fields)
 	 */
-	public JDBCForeignKeyField[] getForeignKeyFields() {
+	public JDBCCMPFieldBridge[] getForeignKeyFields() {
 		return foreignKeyFields;
 	}
 	
@@ -630,7 +622,12 @@ public class JDBCCMRFieldBridge implements CMRFieldBridge {
 			}
 		} else if(relatedCMRField.hasForeignKey()) {
 			// related cmr field has fk, so use it to find my related
-			fieldState = new FieldState(myCtx, relatedManager.findByForeignKey(myCtx, relatedCMRField.getForeignKeyFields()));
+			fieldState = new FieldState(
+					myCtx, 
+					relatedManager.findByForeignKey(
+							entity.extractPrimaryKeyFromInstance(myCtx), 
+							relatedCMRField.getForeignKeyFields())
+					);
 		} else {
 			// no FKs, must use relation table
 			fieldState = new FieldState(myCtx, manager.loadRelation(this, myCtx.getId()));
