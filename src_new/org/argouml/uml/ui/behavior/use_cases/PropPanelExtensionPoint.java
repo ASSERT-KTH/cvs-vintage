@@ -1,4 +1,4 @@
-// $Id: PropPanelExtensionPoint.java,v 1.19 2003/05/10 15:22:40 bobtarling Exp $
+// $Id: PropPanelExtensionPoint.java,v 1.20 2003/05/28 06:55:37 mkl Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -87,7 +87,7 @@ public class PropPanelExtensionPoint extends PropPanelModelElement {
 
         JList usecaseList = new UMLLinkedList(new UMLExtensionPointUseCaseListModel());
         usecaseList.setVisibleRowCount(1);
-        addField(Argo.localize("UMLMenu", "label.usecase"),
+        addField(Argo.localize("UMLMenu", "label.usecase-base"),
             new JScrollPane(usecaseList));
 
         JList extendList = new UMLLinkedList(new UMLExtensionPointExtendListModel());
