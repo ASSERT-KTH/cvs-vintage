@@ -1,22 +1,22 @@
 html body, body div, body p, body th, body td, body li, body dl, body dd, input, select, textarea, .app h3, .app h4 	{
 	font-family:	Verdana, Helvetica, Arial, sans-serif;
 	}
-html body, body th, body td, textarea, .app h3, .app h4, .app pre, .app code 	{
+html body, body th, body td, textarea, .app h3, .app h4, #rightcol h3, .app pre, .app code 	{
 	font-size:	x-small;
 	voice-family:	"\"}\"";
 	voice-family:	inherit;
 	font-size:	small
 	}
-html>body, html>body th, html>body td, html>body input, html>body select, html>body textarea, html>body .app h3, html>body .app h4, html>body .app pre, html>body .app code	{
+html>body, html>body th, html>body td, html>body input, html>body select, html>body textarea, html>body .app h3, html>body .app h4, html>body #rightcol h3, html>body .app pre, html>body .app code {
 	font-size:	small
 	}
-small, div#footer td, div#login, div#helptext th, div#helptext td, div.tabs th, div.tabs td, input, select {
+small, div#footer td, div#login, div#helptext th, div#helptext td, div.tabs th, div.tabs td, input, select, .paginate, .functnbar, .functnbar2, .functnbar3 {
 	font-size:	xx-small !important;
 	voice-family:	"\"}\"";
 	voice-family:	inherit;
 	font-size:	x-small !important
 	}
-html>body small, html>body div#footer td, html>body div#login, html>body div#helptext td, html>body div#helptext th, html>body div.tabs th, html>body div.tabs td, html>body input, html>body select   {
+html>body small, html>body div#footer td, html>body div#login, html>body div#helptext td, html>body div#helptext th, html>body div.tabs th, html>body div.tabs td, html>body input, html>body select, html>body .paginate, html>body .functnbar, html>body .functnbar2, html>body .functnbar3  {
 	font-size:	x-small !important
 	}
 p, ul, ol, dl	{
@@ -24,35 +24,34 @@ p, ul, ol, dl	{
 	margin-bottom: .67em;
 	}
 #bodycol	{
-	line-height: 1.4
+	line-height: 1.4;
 	}
 table, th, td	{
 	border: none
+	}
+.alert { 
+	border: solid 1px red;
+	padding: .3em;
 	}
 #leftcol div div {
  margin-top: .4em
  }
 .app h3 {
-	background: #036 url(/@SCARAB_CONTEXT@/images/nw_min.gif) no-repeat;
+	background: #036 url(../images/nw_min.gif) no-repeat;
  }
-.app h4 {	
- background: #999 url(/@SCARAB_CONTEXT@/images/nw_min.gif) no-repeat;
-	color: #fff;
-	}
 .app h3, .app h4, .functnbar	 {
 	padding: 5px;
 	margin-right: 2px;
 	margin-left: 2px;
 	color: #fff;
  }
-.app h3 a, .app h4 a {
+.app h3 a {
  color: white;
  text-decoration: none
  }
-.functnbar {
-	padding: 3px;
-	font-weight: bold;
-	background: #000
+.app h4 {	
+ background: #ccc url(../images/nw_min.gif) no-repeat;
+	color: #000;
 	}
 #apphead h2 {
  margin-top: 0;
@@ -130,41 +129,57 @@ ul.tasks li {
  margin-left: 2px;
  }
 .tabs th {
-	background: url(/@SCARAB_CONTEXT@/images/nw_min.gif) no-repeat top left;
+	background: url(../images/nw_min.gif) no-repeat top left;
 	border-right: 1px solid #666;
 	}
 .tabs td {
-	background: url(/@SCARAB_CONTEXT@/images/nw_min.gif) no-repeat top left;
+	background: url(../images/nw_min.gif) no-repeat top left;
 	border-bottom: 1px solid #ccc;
 	border-right: 1px solid #666;
 	}
 #navcolumn div div {
-	background-image: url(/@SCARAB_CONTEXT@/images/strich.gif);
 	background-repeat: no-repeat;
-	background-position:  .5em .5em;
  }
+#navcolumn div div div, #navcolumn div.selected {
+	background-image: none;
+	background-color: white;
+	padding-bottom: .1em;
+ }
+
 /* Scarab/App - styles start here */
+.modbar {
+	background: #ccc;
+	}
+.modbar {
+	padding: 5px;
+	border-bottom: 1px solid #999; 
+	}
 .functnbar {
-	background: #666 url(/@SCARAB_CONTEXT@/images/nw_min.gif) no-repeat top left;
+	background: #999 url(../images/nw_min.gif) no-repeat top left;
 	}
 .functnbar2 {
-	background: #666 url(/@SCARAB_CONTEXT@/images/sw_min.gif) no-repeat bottom left;
+	background: #999 url(../images/sw_min.gif) no-repeat bottom left;
 	}
-.functnbar, .functnbar2 {
+.functnbar3 {
+	background: #ccc url(../images/sw_min.gif) no-repeat bottom left;
+	}
+.functnbar, .functnbar2, {
  padding: 2px;
 	margin-top: .67em;
 	margin-bottom: .67em;
 	}
-.functnbar td, .functnbar2 td {
-	color: #fff;
-	border-left: 2px groove #ccc;
+.functnbar3 {
+ padding: 5px;
+	margin-left: 2px;
+	margin-right: 2px;
+	margin-bottom: .67em;
 	}
-.functnbar td a, .functnbar2 td a {
-	color: #fff;
+.functnbar, .functnbar2 {
+	color: #000;
+	}
+.functnbar a, .functnbar2 a {
+	color: #000;
 	text-decoration: underline;
-	}
-.functnbar td.firstchild, .functnbar2 td.firstchild {
-	border-left: none;
 	}
 #topmodule {
 	border-top: 1px solid white;

@@ -69,7 +69,7 @@ ul, ol, dd	{
 #helpbanner {
 	border-top: 1px solid #ffffcc;
 	border-bottom: 1px solid #999966;
-	background: #cccc99 url(/@SCARAB_CONTEXT@/images/help_logo.gif) no-repeat left;
+	background: #cccc99 url(../images/help_logo.gif) no-repeat left;
 	}
 .bttn {
 	color: black;
