@@ -169,18 +169,25 @@ public class CachedHeaderfields {
 
         //		copy all internally used headerfields
         for (int i = 0; i < DEFAULT_HEADERFIELDS.length; i++) {
+            if(h.get(DEFAULT_HEADERFIELDS[i]) != null ) {
+            
             strippedHeader.set(DEFAULT_HEADERFIELDS[i],
                 h.get(DEFAULT_HEADERFIELDS[i]));
+            }
         }
 
         for (int i = 0; i < INTERNAL_HEADERFIELDS.length; i++) {
+            if( h.get(INTERNAL_HEADERFIELDS[i]) != null ) {
             strippedHeader.set(INTERNAL_HEADERFIELDS[i],
                 h.get(INTERNAL_HEADERFIELDS[i]));
+            }
         }
 
         for (int i = 0; i < INTERNAL_COMPRESSED_HEADERFIELDS.length; i++) {
+            if(h.get(INTERNAL_COMPRESSED_HEADERFIELDS[i])!=null ) {
             strippedHeader.set(INTERNAL_COMPRESSED_HEADERFIELDS[i],
                 h.get(INTERNAL_COMPRESSED_HEADERFIELDS[i]));
+            }
         }
 
         // copy all user defined headerfields

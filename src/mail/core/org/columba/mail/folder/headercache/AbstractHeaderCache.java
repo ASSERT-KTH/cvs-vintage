@@ -170,24 +170,34 @@ public abstract class AbstractHeaderCache {
 
         // load other internal headerfields, non-boolean type
         String[] columnNames = CachedHeaderfields.INTERNAL_HEADERFIELDS;
-
+        Object value;
+        
         for (int j = 0; j < columnNames.length; j++) {
-            h.set(columnNames[j], reader.readObject());
+            value = reader.readObject();
+            if( value != null ) {
+                h.set(columnNames[j], value);
+            }
         }
 
         //		load default headerfields, as defined in RFC822
         columnNames = CachedHeaderfields.getDefaultHeaderfields();
 
         for (int j = 0; j < columnNames.length; j++) {
-            h.set(columnNames[j], reader.readObject());
+            value = reader.readObject();
+            if( value != null ) {
+                h.set(columnNames[j], value);
+            }
         }
 
         // load user-specified additional headerfields
         // Note, that we use keys loaded from the headercache
         // file.
         for (int j = 0; j < additionalHeaderfields.size(); j++) {
-            h.set((String) additionalHeaderfields.get(j),
-                (String) reader.readObject());
+            value = reader.readObject();
+            if( value != null ) {
+                h.set((String) additionalHeaderfields.get(j),
+                        (String) value);
+            }
         }
     }
 
