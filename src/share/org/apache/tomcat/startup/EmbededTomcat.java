@@ -682,6 +682,9 @@ public class EmbededTomcat {
 	this.containerCL=cl;
     }
 
+    public ClassLoader getContainerClassLoader() {
+	return containerCL;
+    }
     // -------------------- Class loader methods --------------------
 
     static final Jdk11Compat jdk11Compat=Jdk11Compat.getJdkCompat();
@@ -750,7 +753,8 @@ public class EmbededTomcat {
 	if( modulesCP!= null )
 	    cp=IntrospectionUtils.classPathAdd(modulesCP,cp);
 	cp=IntrospectionUtils.classPathAdd(appsCP,cp);
-	System.getProperties().put("tc_path_add",cp);
+	if( cp != null ) 
+	    System.getProperties().put("tc_path_add",cp);
 	
 	contextM.setParentLoader(parentCL);
 	contextM.setCommonLoader(modulesCL);
@@ -809,7 +813,7 @@ public class EmbededTomcat {
 	if( t!=null) t.printStackTrace();
     }
 
-    protected BaseInterceptor createModule( String classN ) {
+    public BaseInterceptor createModule( String classN ) {
 	try {
 	    Class c=containerCL.loadClass( classN );
 	    return (BaseInterceptor)c.newInstance();
