@@ -65,7 +65,7 @@ import org.gjt.sp.util.*;
  * </ul>
  *
  * @author Slava Pestov
- * @version $Id: Buffer.java,v 1.146 2003/04/02 03:32:50 spestov Exp $
+ * @version $Id: Buffer.java,v 1.147 2003/04/09 02:33:39 spestov Exp $
  */
 public class Buffer
 {
@@ -3735,7 +3735,14 @@ loop:		for(int i = 0; i < seg.count; i++)
 					setMode();
 				}
 				else
-					propertiesChanged();
+				{
+					// if user adds mode buffer-local property
+					String newMode = getStringProperty("mode");
+					if(!newMode.equals(getMode().getName()))
+						setMode();
+					else
+						propertiesChanged();
+				}
 
 				EditBus.send(new BufferUpdate(Buffer.this,
 					view,BufferUpdate.DIRTY_CHANGED));
@@ -3859,15 +3866,11 @@ loop:		for(int i = 0; i < seg.count; i++)
 
 		this.foldHandler = foldHandler;
 
-		// don't do this on initial fold handler creation
-		if(oldFoldHandler != null)
-		{
-			offsetMgr.lineInfoChangedFrom(0);
+		offsetMgr.lineInfoChangedFrom(0);
 
-			int collapseFolds = getIntegerProperty("collapseFolds",0);
-			offsetMgr.expandFolds(collapseFolds);
-			offsetMgr.resetAnchors();
-		}
+		int collapseFolds = getIntegerProperty("collapseFolds",0);
+		offsetMgr.expandFolds(collapseFolds);
+		offsetMgr.resetAnchors();
 	} //}}}
 
 	//{{{ getPriorNonEmptyLine() method
