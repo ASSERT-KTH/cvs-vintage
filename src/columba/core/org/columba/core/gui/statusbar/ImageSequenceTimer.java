@@ -47,7 +47,7 @@ public class ImageSequenceTimer extends ToolbarButton implements ActionListener 
 
 	private Dimension scale;
 
-	private static int DELAY = 50;
+	private static int DELAY = 100;
 
 	private int imageWidth;
 	private int imageHeight;
