@@ -16,8 +16,6 @@
 
 package org.columba.core.main;
 
-import javax.swing.LookAndFeel;
-
 import org.columba.addressbook.gui.tree.AddressbookTreeModel;
 import org.columba.core.command.DefaultProcessor;
 import org.columba.core.config.Config;
@@ -43,8 +41,6 @@ public class MainInterface {
 
 	public static AddressbookTreeModel addressbookTreeModel;
 
-	public static LookAndFeel lookAndFeel;
-
 	public static DefaultProcessor processor;
 
 	public static PGPController pgpController;
@@ -59,5 +55,4 @@ public class MainInterface {
 
 	public MainInterface() {
 	}
-
 }

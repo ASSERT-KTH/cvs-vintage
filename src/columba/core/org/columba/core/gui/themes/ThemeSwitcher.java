@@ -21,6 +21,7 @@ import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 import javax.swing.plaf.FontUIResource;
 import javax.swing.plaf.metal.MetalLookAndFeel;
+import javax.swing.plaf.metal.DefaultMetalTheme;
 
 import org.columba.core.config.Config;
 import org.columba.core.config.GuiItem;
@@ -30,9 +31,6 @@ import org.columba.core.main.MainInterface;
 
 
 public class ThemeSwitcher {
-	public ThemeSwitcher() {
-	}
-
 	public static void setTheme() {
 		ThemeItem item = Config.getOptionsConfig().getThemeItem();
 		try {
@@ -41,25 +39,18 @@ public class ThemeSwitcher {
 					{
 						break;
 					}
-				case 1 :
-					{
-
-						UIManager.setLookAndFeel(
-							UIManager.getCrossPlatformLookAndFeelClassName());
-
-						break;
-					}
 				case 2 :
 					{
 						
-						
-						MainInterface.lookAndFeel = new MetalLookAndFeel();
-						MetalLookAndFeel.setCurrentTheme(new ThinColumbaTheme(Config.getOptionsConfig().getGuiItem())
-							);
-						UIManager.setLookAndFeel(MainInterface.lookAndFeel);
-						
-						
+						MetalLookAndFeel.setCurrentTheme(new ThinColumbaTheme(Config.getOptionsConfig().getGuiItem()));
 
+					}
+				case 1 :
+					{
+
+						MetalLookAndFeel.setCurrentTheme(new DefaultMetalTheme());
+                                                UIManager.setLookAndFeel(
+							UIManager.getCrossPlatformLookAndFeelClassName());
 
 						break;
 					}
@@ -158,5 +149,4 @@ public class ThemeSwitcher {
 		// set messageviewer and composer textcomponent fonts
 		//MainInterface.messageViewer.setFont();
 	}
-
 }
