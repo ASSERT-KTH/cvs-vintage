@@ -20,7 +20,7 @@ import org.w3c.dom.Element;
  *
  * @author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
  * @author <a href="mailto:jason@planet57.com">Jason Dillon</a>
- * @version $Revision: 1.17 $
+ * @version $Revision: 1.18 $
  */
 public abstract class AbstractInterceptor implements Interceptor
 {
@@ -39,6 +39,9 @@ public abstract class AbstractInterceptor implements Interceptor
     */
    protected Logger log = Logger.getLogger(this.getClass());
 
+   /**
+    * The configuration element of this interceptor.
+    */
    protected Element config;
 
    public final void setConfiguration(Element config) 
