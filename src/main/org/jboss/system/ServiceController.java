@@ -42,7 +42,7 @@ import org.jboss.logging.Logger;
 * @see org.jboss.system.Service
 * @author <a href="mailto:marc.fleury@jboss.org">Marc Fleury</a>
 * @author <a href="mailto:d_jencks@users.sourceforge.net">David Jencks</a>
-* @version $Revision: 1.24 $ <p>
+* @version $Revision: 1.25 $ <p>
 *
 * <b>Revisions:</b> <p>
 *
@@ -539,7 +539,7 @@ implements ServiceControllerMBean, MBeanRegistration
       int serviceCounter = 0;
       ObjectName name = null;
       
-      ListIterator i = servicesCopy.listIterator(servicesCopy.size() - 1);
+      ListIterator i = servicesCopy.listIterator(servicesCopy.size());
       while (i.hasPrevious()) 
       {
          name = ((ServiceContext)i.previous()).objectName;
