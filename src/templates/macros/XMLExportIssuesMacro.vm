@@ -148,6 +148,7 @@
             <modified-by>$!scarabR.getUser($attachment.ModifiedBy).UserName</modified-by>
             #end
 
+            <deleted>$attachment.Deleted</deleted>
           </attachment>
   #end
   #set ($attachment = "")
