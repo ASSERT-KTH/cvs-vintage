@@ -277,7 +277,8 @@ public class GTest  extends Task {
         StringBuffer expResult = new StringBuffer("NONE");
 
         try {
-            InputStream in = this.getClass().getResourceAsStream(goldenFile);
+	    //	    InputStream in = this.getClass().getResourceAsStream(goldenFile);
+	    InputStream in = new FileInputStream( goldenFile );
 	    return readBody ( in );
         } catch (Exception ex) {
             System.out.println("\tGolden file not found: " + goldenFile);

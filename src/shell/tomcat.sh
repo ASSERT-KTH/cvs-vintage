@@ -1,6 +1,6 @@
 #!/bin/sh
 #
-# $Id: tomcat.sh,v 1.7 2000/01/26 20:12:31 costin Exp $
+# $Id: tomcat.sh,v 1.8 2000/01/26 22:59:59 costin Exp $
 
 # Shell script to start and stop the server
 
@@ -124,6 +124,7 @@ else
   echo "        start - start tomcat in the background"
   echo "        run   - start tomcat in the foreground"
   echo "        stop  - stop tomcat"
+  echo "        env  -  set CLASSPATH and TOMCAT_HOME env. variables"
 
   exit 0
 fi

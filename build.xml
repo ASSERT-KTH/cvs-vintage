@@ -17,7 +17,10 @@
     <copydir src="src/shell" dest="${tomcat.build}/bin" />
     <copydir src="src/etc" dest="${tomcat.build}/conf"/>
     <copydir src="src/doc" dest="${tomcat.build}/doc"/>
-    <copydir src="src/share/javax" dest="${tomcat.home}/src/javax"/>
+    <copydir src="src/share/javax" dest="${tomcat.build}/src/javax"/>
+    <mkdir dir="${tomcat.build}/lib/test"/>
+    <mkdir dir="${tomcat.build}/lib/test/Golden"/>
+    <copydir src="src/tests/share/tests/jsp/Golden" dest="${tomcat.build}/lib/test/Golden"/>
 
     <!-- include ant, it is used for testing and will be used for
          configuration and few other tasks -->
@@ -35,6 +38,7 @@
     <chmod perm="+x" src="${tomcat.build}/bin/ant"/>
     <chmod perm="+x" src="${tomcat.build}/bin/startup.sh"/>
     <chmod perm="+x" src="${tomcat.build}/bin/shutdown.sh"/>
+    <chmod perm="+x" src="${tomcat.build}/bin/test-tomcat.sh"/>
   </target>
 
   <!-- ==================== Build tomcat ==================== -->

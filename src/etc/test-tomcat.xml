@@ -1,12 +1,11 @@
-<project name="TestRun" default="main" basedir="." init="init">
+<project name="TestRun" default="main" init="init">
 
    <target name="init">
      <property name="host" value="localhost" />
      <property name="port"     value="8080" />
-     <property name="gdir" value="jsp/Golden" />
+     <property name="gdir" value="${tomcat.home}/lib/test/Golden" />
 
-     <taskdef name="test" class="tests.Test" />
-     <taskdef name="gtest" class="tests.GTest" />
+     <taskdef name="gtest" class="org.apache.tomcat.task.GTest" />
    </target>
 
   <!-- ==================== File tests ==================== -->
