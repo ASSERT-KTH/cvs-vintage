@@ -88,7 +88,7 @@ import org.tigris.scarab.security.SecurityFactory;
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: ScarabModule.java,v 1.54 2001/10/23 17:04:04 jmcnally Exp $
+ * @version $Id: ScarabModule.java,v 1.55 2001/10/23 19:12:27 elicia Exp $
  */
 public class ScarabModule
     extends BaseScarabModule
@@ -910,6 +910,19 @@ try{
             rmit = (RModuleIssueType)results.get(0);
         }
         return rmit;
+    }
+
+    public List getTemplateTypes()
+        throws Exception
+    {
+        Criteria crit = new Criteria();
+        crit.add(RModuleIssueTypePeer.MODULE_ID, getModuleId())
+        .addJoin(RModuleIssueTypePeer.ISSUE_TYPE_ID, 
+                     IssueTypePeer.ISSUE_TYPE_ID)
+        .add(IssueTypePeer.PARENT_ID, 0, Criteria.NOT_EQUAL)
+        .add(IssueTypePeer.DELETED, 0)
+        .addAscendingOrderByColumn(RModuleIssueTypePeer.PREFERRED_ORDER);
+        return (List)RModuleIssueTypePeer.doSelect(crit);
     }
 
     /**

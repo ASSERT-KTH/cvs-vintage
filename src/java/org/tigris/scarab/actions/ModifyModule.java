@@ -76,7 +76,7 @@ import org.tigris.scarab.services.module.ModuleManager;
  * This class is responsible for creating / updating Scarab Modules
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: ModifyModule.java,v 1.5 2001/10/23 01:26:51 elicia Exp $
+ * @version $Id: ModifyModule.java,v 1.6 2001/10/23 19:12:27 elicia Exp $
  */
 public class ModifyModule extends RequireLoginFirstAction
 {
@@ -164,7 +164,8 @@ public class ModifyModule extends RequireLoginFirstAction
                 data.setMessage(e.getMessage());
                 return;
             }
-            // Add defaults for issue types and attributes from parent module
+            // Add defaults for issue types and attributes 
+            // from parent module
             NumberKey newModuleId = me.getModuleId();
             String parentId = moduleGroup.get("ParentId").toString();
             intake.remove(moduleGroup);
@@ -172,19 +173,25 @@ public class ModifyModule extends RequireLoginFirstAction
                 .retrieveByPK(new NumberKey(parentId));
             AttributeGroup ag1;
             AttributeGroup ag2;
-            // First set module-issue type mappings
+
+            // create enter issue template types
+            List templateTypes = parentModule.getTemplateTypes();
+            for (int i=0; i<templateTypes.size(); i++)
+            {
+                RModuleIssueType template1 = 
+                     (RModuleIssueType)templateTypes.get(i);
+                RModuleIssueType template2 = template1.copy();
+                template2.setModuleId(newModuleId);
+                template2.save();
+            }
+
+            // set module-issue type mappings
             List rmits = parentModule.getRModuleIssueTypes();
             for (int i=0; i<rmits.size(); i++)
             {
                 RModuleIssueType rmit1 = (RModuleIssueType)rmits.get(i);
                 RModuleIssueType rmit2 = rmit1.copy();
                 rmit2.setModuleId(newModuleId);
-                rmit2.setIssueTypeId(rmit1.getIssueTypeId());
-                rmit2.setActive(rmit1.getActive());
-                rmit2.setDisplay(rmit1.getDisplay());
-                rmit2.setOrder(rmit1.getOrder());
-                rmit2.setHistory(rmit1.getHistory());
-                rmit2.setComments(rmit1.getComments());
                 rmit2.save();
                 IssueType issueType = rmit1.getIssueType();
                 

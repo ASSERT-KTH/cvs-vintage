@@ -69,4 +69,20 @@ public  class RModuleIssueType
         }            
     }
 
+    /**
+     * Copies object.
+     */
+    public RModuleIssueType copy()
+         throws Exception
+    {                
+        RModuleIssueType rmit2 = new RModuleIssueType();
+        rmit2.setModuleId(getModuleId());
+        rmit2.setIssueTypeId(getIssueTypeId());
+        rmit2.setActive(getActive());
+        rmit2.setDisplay(getDisplay());
+        rmit2.setOrder(getOrder());
+        rmit2.setHistory(getHistory());
+        rmit2.setComments(getComments());
+        return rmit2;
+    }
 }
