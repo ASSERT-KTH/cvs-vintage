@@ -13,6 +13,7 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
 //
 //All Rights Reserved.
+
 package org.columba.mail.gui.composer.util;
 
 import java.awt.Color;
@@ -30,20 +31,12 @@ import org.columba.mail.config.IdentityItem;
 
 public class IdentityInfoPanel extends CInfoPanel {
 	private JLabel label;
-	private int exists;
-	private int unseen;
-	private int recent;
 
 	private ImageIcon image1;
 	private ImageIcon image2;
-	private ImageIcon image3;
-	private ImageIcon image4;
-	private ImageIcon image5;
-	private ImageIcon image6;
 
 	public IdentityInfoPanel() {
 		super();
-
 	}
 
 	public void initComponents() {
@@ -74,7 +67,6 @@ public class IdentityInfoPanel extends CInfoPanel {
 		gridbagLayout.setConstraints(label, gridbagConstraints);
 
 		panel.add(label);
-
 	}
 
 	public void resetRenderer() {
@@ -98,5 +90,4 @@ public class IdentityInfoPanel extends CInfoPanel {
 		revalidate();
 		repaint();
 	}
-
 }
