@@ -80,4 +80,6 @@ public interface FrameMediator {
 	String getString(String sPath, String sName, String sID);
 	
 	public ContentPane getContentPane();
+	
+	public void setFrameTitle(String title);
 }

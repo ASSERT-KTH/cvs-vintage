@@ -32,6 +32,7 @@ import org.columba.core.util.GlobalResourceLoader;
  */
 public class DefaultFrameController implements FrameMediator {
 
+	
 	private static final Logger LOG = Logger
 			.getLogger("org.columba.core.gui.frame");
 
@@ -153,6 +154,14 @@ public class DefaultFrameController implements FrameMediator {
 	 */
 	public ContentPane getContentPane() {
 		return new EmptyContentPane();
+	}
+	
+	/**
+	 * @see org.columba.core.gui.frame.FrameMediator#setFrameTitle(java.lang.String)
+	 */
+	public void setFrameTitle(String title) {
+		getContainer().setTitle(title);
+
 	}
 
 	class EmptyContentPane implements ContentPane {

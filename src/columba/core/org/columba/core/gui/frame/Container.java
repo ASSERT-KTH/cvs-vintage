@@ -260,4 +260,10 @@ public interface Container {
 	 */
 	void extendToolbar(FrameMediator mediator, XmlElement element);
 
+	/**
+	 * Set frame title.
+	 * 
+	 * @param title
+	 */
+	void setTitle(String title);
 }
