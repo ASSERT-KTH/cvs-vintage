@@ -3,7 +3,7 @@
                                  Release Notes
                                  =============
 
-$Id: RELEASE-NOTES-3.3.1.txt,v 1.16 2001/12/20 03:49:14 billbarker Exp $
+$Id: RELEASE-NOTES-3.3.1.txt,v 1.17 2001/12/21 19:14:25 keith Exp $
 
 
 This document describes the changes that have been made since the
@@ -110,6 +110,9 @@ Bug No.  Description
 	 response.  Now it is before the query string instead of after.
 
 5497	 Ignore the If-Modified-Since header when including a static page.
+
+	 Do not return a body with 304 responses (forbidden by HTTP/1.x and
+	 confusing to NS < 6.x).
 
 Configuration:
 
