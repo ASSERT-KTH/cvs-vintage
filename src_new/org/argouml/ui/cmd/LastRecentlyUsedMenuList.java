@@ -1,4 +1,4 @@
-// $Id: LastRecentlyUsedMenuList.java,v 1.2 2004/11/29 22:13:12 mvw Exp $
+// $Id: LastRecentlyUsedMenuList.java,v 1.3 2004/11/29 22:15:27 mvw Exp $
 // Copyright (c) 2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -77,7 +77,7 @@ public class LastRecentlyUsedMenuList {
     
     /**     * menuitems actually created and added to menu
      */
-    private JMenuItem[] menuItems = new JMenuItem[maxCount];
+    private JMenuItem[] menuItems;
 
     /**
      * Array of conf keys for accessing the stored entries
