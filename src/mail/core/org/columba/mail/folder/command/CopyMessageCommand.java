@@ -115,6 +115,8 @@ public class CopyMessageCommand extends FolderCommand {
 			Object[] uids = r[i].getUids();
 
 			Folder srcFolder = (Folder) r[i].getFolder();
+			// setting lastSelection for srcFolder to null
+			srcFolder.setLastSelection(null);
 
 			ColumbaLogger.log.debug("src=" + srcFolder + " dest=" + destFolder);
 
