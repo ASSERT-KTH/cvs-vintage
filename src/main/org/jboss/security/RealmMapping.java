@@ -18,7 +18,7 @@ environment Principal belongs via the {@link #getPrincipal(Principal) getPrincip
 method.
 
 @author <a href="mailto:Scott_Stark@displayscape.com">Scott Stark</a>.
-@version $Revision: 1.5 $
+@version $Revision: 1.6 $
 */
 public interface RealmMapping
 {
@@ -40,4 +40,10 @@ public interface RealmMapping
         false otherwise.
      */
     public boolean doesUserHaveRole(Principal principal, Set roles);
+
+    /** Return the set of domain roles the principal has been assigned.
+    @return The Set<Principal> for the application domain roles that the
+     principal has been assigned.
+     */
+    public Set getUserRoles(Principal principal);
 }
