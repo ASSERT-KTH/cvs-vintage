@@ -49,6 +49,7 @@ public class RuleList {
         addRule(new SubjectIsAllCapitalsRule());
         addRule(new MixedCharactersAddressRule());
         addRule(new MissingToHeaderRule());
+        addRule(new SubjectContainsSpamRule());
     }
 
     public static RuleList getInstance() {
