@@ -15,7 +15,6 @@
         early tests.
     -->
   
-   <target name="init">
      <property name="host" value="localhost" />
      <property name="port"     value="8080" />
      <property name="tomcat.home" value="." />
@@ -23,7 +22,6 @@
      <property name="http.protocol" value="HTTP/1.0" />
      
      <taskdef name="gtest" classname="org.apache.tomcat.task.GTest" />
-   </target>
 
   <!-- ==================== File tests ==================== -->
   <target name="file">
