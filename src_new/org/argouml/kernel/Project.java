@@ -1,4 +1,4 @@
-// $Id: Project.java,v 1.70 2003/06/08 08:25:28 kataka Exp $
+// $Id: Project.java,v 1.71 2003/06/16 06:19:37 mkl Exp $
 // Copyright (c) 1996-2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -817,8 +817,10 @@ public class Project implements java.io.Serializable, TargetListener {
         }
         cls = findTypeInModel(s, _defaultModel);
         // hey, now we should move it to the model the user is working in
-        cls = (MClassifier)ModelManagementHelper.getHelper().getCorrespondingElement(cls, getRoot());
-
+        if (cls != null) {
+            cls = (MClassifier)ModelManagementHelper.
+                getHelper().getCorrespondingElement(cls, getRoot());
+        }
         if (cls == null && defineNew) {
             cat.debug("new Type defined!");
             cls =
