@@ -7,16 +7,21 @@
 
 package org.jboss.metadata;
 
+import java.net.URL;
+import java.net.URLClassLoader;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.Set;
+
+import javax.management.MBeanServer;
+import javax.management.ObjectName;
+
 import org.jboss.deployment.DeploymentException;
 import org.jboss.mx.util.MBeanServerLocator;
 import org.w3c.dom.DocumentType;
 import org.w3c.dom.Element;
-
-import javax.management.MBeanServer;
-import javax.management.ObjectName;
-import java.net.URL;
-import java.net.URLClassLoader;
-import java.util.*;
 
 /**
  * The top level meta data from the jboss.xml and ejb-jar.xml descriptor.
@@ -28,7 +33,7 @@ import java.util.*;
  * @author <a href="mailto:Christoph.Jung@infor.de">Christoph G. Jung</a>.
  * @author <a href="mailto:Thomas.Diesler@jboss.org">Thomas Diesler</a>.
  *
- * @version $Revision: 1.52 $
+ * @version $Revision: 1.53 $
  */
 public class ApplicationMetaData
    extends MetaData
@@ -232,6 +237,11 @@ public class ApplicationMetaData
    public boolean isExcludeMissingMethods()
    {
       return excludeMissingMethods;
+   }
+
+   public MessageDestinationMetaData getMessageDestination(String name)
+   {
+      return assemblyDescriptor.getMessageDestinationMetaData(name);
    }
    
    /**
@@ -618,6 +628,24 @@ public class ApplicationMetaData
                bean.addExcludedMethod(method);
             }
          }
+
+         // set the message destinations (optional)
+         iterator = getChildrenByTagName(descrElement, "message-destination");
+         while (iterator.hasNext())
+         {
+            Element messageDestination = (Element) iterator.next();
+            try
+            {
+               MessageDestinationMetaData messageDestinationMetaData = new MessageDestinationMetaData();
+               messageDestinationMetaData.importEjbJarXml(messageDestination);
+               assemblyDescriptor.addMessageDestinationMetaData(messageDestinationMetaData);
+            }
+            catch (Throwable t)
+            {
+               throw new DeploymentException("Error in ejb-jar.xml " +
+                  "for message destination: " + t.getMessage());
+            }
+         }
       }
    }
 
@@ -882,6 +910,26 @@ public class ApplicationMetaData
             {
                String principalName = getElementContent((Element)itPrincipalNames.next());
                securityRoleMetaData.addPrincipalName(principalName);
+            }
+         }
+
+         // set the message destinations (optional)
+         iterator = getChildrenByTagName(descrElement, "message-destination");
+         while (iterator.hasNext())
+         {
+            Element messageDestination = (Element) iterator.next();
+            try
+            {
+               String messageDestinationName = getUniqueChildContent(messageDestination, "message-destination-name");
+               MessageDestinationMetaData messageDestinationMetaData = getMessageDestination(messageDestinationName);
+               if (messageDestinationMetaData == null)
+                  throw new DeploymentException("message-destination " + messageDestinationName + " found in jboss.xml but not in ejb-jar.xml");
+               messageDestinationMetaData.importJbossXml(messageDestination);
+            }
+            catch (Throwable t)
+            {
+               throw new DeploymentException("Error in ejb-jar.xml " +
+                  "for message destination: " + t.getMessage());
             }
          }
       }

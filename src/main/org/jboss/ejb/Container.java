@@ -23,6 +23,8 @@ import org.jboss.metadata.BeanMetaData;
 import org.jboss.metadata.EjbLocalRefMetaData;
 import org.jboss.metadata.EjbRefMetaData;
 import org.jboss.metadata.EnvEntryMetaData;
+import org.jboss.metadata.MessageDestinationMetaData;
+import org.jboss.metadata.MessageDestinationRefMetaData;
 import org.jboss.metadata.ResourceEnvRefMetaData;
 import org.jboss.metadata.ResourceRefMetaData;
 import org.jboss.mx.util.ObjectNameConverter;
@@ -85,7 +87,7 @@ import java.security.PrivilegedActionException;
  * @author <a href="bill@burkecentral.com">Bill Burke</a>
  * @author <a href="mailto:d_jencks@users.sourceforge.net">David Jencks</a>
  * @author <a href="mailto:christoph.jung@infor.de">Christoph G. Jung</a>
- * @version $Revision: 1.162 $
+ * @version $Revision: 1.163 $
  *
  * @jmx.mbean extends="org.jboss.system.ServiceMBean"
  */
@@ -1226,6 +1228,48 @@ public abstract class Container
                        " to JDNI ENC as: " + jndiName);
             }
             Util.bind(envCtx, encName, new LinkRef(jndiName));
+         }
+      }
+
+      // Bind message destination references
+      {
+         Iterator enum = beanMetaData.getMessageDestinationReferences();
+
+         ApplicationMetaData application = beanMetaData.getApplicationMetaData();
+
+         while (enum.hasNext())
+         {
+            MessageDestinationRefMetaData ref = (MessageDestinationRefMetaData) enum.next();
+
+            String refName = ref.getRefName();
+            String resType = ref.getType();
+            String jndiName = ref.getJNDIName();
+            String link = ref.getLink();
+            if (link != null)
+            {
+               if (jndiName == null)
+               {
+                  MessageDestinationMetaData messageDestination = application.getMessageDestination(link);
+                  if (messageDestination == null)
+                     throw new DeploymentException("message-destination-ref '" + refName + 
+                        "' message-destination-link '" + link + "' not found and no jndi-name in jboss.xml");
+                  else
+                  {
+                     String linkJNDIName = messageDestination.getJNDIName();
+                     if (linkJNDIName == null)
+                        log.warn("message-destination '" + link + "' has no jndi-name in jboss.xml");
+                     else
+                        jndiName = linkJNDIName;
+                  }
+               }
+               else
+                  log.warn("message-destination-ref '" + refName + 
+                     "' ignoring message-destination-link '" + link + "' because it has a jndi-name in jboss.xml");
+            }
+            else if (jndiName == null)
+               throw new DeploymentException("message-destination-ref '" + refName + 
+                     "' has no message-destination-link in ejb-jar.xml and no jndi-name in jboss.xml");
+            Util.bind(envCtx, refName, new LinkRef(jndiName));
          }
       }
 

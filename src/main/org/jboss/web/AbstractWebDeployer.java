@@ -34,9 +34,12 @@ import org.jboss.deployment.J2eeApplicationMetaData;
 import org.jboss.ejb.Container;
 import org.jboss.ejb.EjbUtil;
 import org.jboss.logging.Logger;
+import org.jboss.metadata.ApplicationMetaData;
 import org.jboss.metadata.EjbLocalRefMetaData;
 import org.jboss.metadata.EjbRefMetaData;
 import org.jboss.metadata.EnvEntryMetaData;
+import org.jboss.metadata.MessageDestinationMetaData;
+import org.jboss.metadata.MessageDestinationRefMetaData;
 import org.jboss.metadata.ResourceEnvRefMetaData;
 import org.jboss.metadata.ResourceRefMetaData;
 import org.jboss.metadata.WebMetaData;
@@ -142,7 +145,7 @@ thread context ClassLoader as was used to dispatch the http service request.
    extends="org.jboss.deployment.SubDeployerMBean"
 
 @author  Scott.Stark@jboss.org
-@version $Revision: 1.20 $
+@version $Revision: 1.21 $
 */
 public abstract class AbstractWebDeployer
 {
@@ -505,6 +508,8 @@ public abstract class AbstractWebDeployer
       Iterator resourceRefs = metaData.getResourceReferences();
       log.debug("linkResourceRefs");
       linkResourceRefs(resourceRefs, envCtx);
+      log.debug("linkMessageDestinationRefs");
+      linkMessageDestinationRefs(metaData, envCtx);
       Iterator ejbRefs = metaData.getEjbReferences();
       log.debug("linkEjbRefs");
       linkEjbRefs(ejbRefs, envCtx, di);
@@ -607,6 +612,47 @@ public abstract class AbstractWebDeployer
             throw new NamingException("resource-ref: "+refName
                +" has no valid JNDI binding. Check the jboss-web/resource-ref.");
          }
+      }
+   }
+
+   protected void linkMessageDestinationRefs(WebMetaData metaData, Context envCtx)
+      throws NamingException, DeploymentException
+   {
+      Iterator enum = metaData.getMessageDestinationReferences();
+
+      while (enum.hasNext())
+      {
+         MessageDestinationRefMetaData ref = (MessageDestinationRefMetaData) enum.next();
+
+         String refName = ref.getRefName();
+         String resType = ref.getType();
+         String jndiName = ref.getJNDIName();
+         String link = ref.getLink();
+         if (link != null)
+         {
+            if (jndiName == null)
+            {
+               MessageDestinationMetaData messageDestination = metaData.getMessageDestination(link);
+               if (messageDestination == null)
+                  throw new DeploymentException("message-destination-ref '" + refName + 
+                     "' message-destination-link '" + link + "' not found and no jndi-name in jboss-web.xml");
+               else
+               {
+                  String linkJNDIName = messageDestination.getJNDIName();
+                  if (linkJNDIName == null)
+                     log.warn("message-destination '" + link + "' has no jndi-name in jboss-web.xml");
+                  else
+                     jndiName = linkJNDIName;
+               }
+            }
+            else
+               log.warn("message-destination-ref '" + refName + 
+                  "' ignoring message-destination-link '" + link + "' because it has a jndi-name in jboss-web.xml");
+         }
+         else if (jndiName == null)
+            throw new DeploymentException("message-destination-ref '" + refName + 
+                  "' has no message-destination-link in web.xml and no jndi-name in jboss-web.xml");
+         Util.bind(envCtx, refName, new LinkRef(jndiName));
       }
    }
 

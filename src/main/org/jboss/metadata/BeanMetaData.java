@@ -7,6 +7,15 @@
 
 package org.jboss.metadata;
 
+import java.lang.reflect.Method;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.Set;
+
 import org.jboss.deployment.DeploymentException;
 import org.jboss.invocation.InvocationType;
 import org.jboss.mx.util.ObjectNameFactory;
@@ -15,9 +24,6 @@ import org.jboss.security.NobodyPrincipal;
 import org.jboss.security.SimplePrincipal;
 import org.jboss.webservice.metadata.ServiceRefMetaData;
 import org.w3c.dom.Element;
-
-import java.lang.reflect.Method;
-import java.util.*;
 
 
 /**
@@ -32,7 +38,7 @@ import java.util.*;
  * @author <a href="mailto:criege@riege.com">Christian Riege</a>
  * @author <a href="mailto:Thomas.Diesler@jboss.org">Thomas Diesler</a>
  *
- * @version $Revision: 1.70 $
+ * @version $Revision: 1.71 $
  */
 public abstract class BeanMetaData
         extends MetaData
@@ -68,7 +74,7 @@ public abstract class BeanMetaData
     bean's local interface */
    private String localClass;
    /** The service-endpoint element contains the fully-qualified
-    *  name of the bean´s service endpoint interface (SEI) */
+    *  name of the beanï¿½s service endpoint interface (SEI) */
    protected String serviceEndpointClass;
    /** The ejb-class element contains the fully-qualified name of the
     enterprise bean's class. */
@@ -96,6 +102,8 @@ public abstract class BeanMetaData
    private HashMap resourceReferences = new HashMap();
    /** The resource-env-ref element(s) info */
    private HashMap resourceEnvReferences = new HashMap();
+   /** The message destination references */
+   private HashMap messageDestinationReferences = new HashMap();
    /** The method attributes */
    private ArrayList methodAttributes = new ArrayList();
    private HashMap cachedMethodAttributes = new HashMap();
@@ -282,6 +290,11 @@ public abstract class BeanMetaData
    public Iterator getResourceEnvReferences()
    {
       return resourceEnvReferences.values().iterator();
+   }
+
+   public Iterator getMessageDestinationReferences()
+   {
+      return messageDestinationReferences.values().iterator();
    }
 
    /**
@@ -774,6 +787,18 @@ public abstract class BeanMetaData
          refMetaData.importEjbJarXml(resourceRef);
          resourceEnvReferences.put(refMetaData.getRefName(), refMetaData);
       }
+
+      // set the message destination references
+      iterator = getChildrenByTagName(element, "message-destination-ref");
+      while (iterator.hasNext())
+      {
+         Element messageDestinationRef = (Element) iterator.next();
+
+         MessageDestinationRefMetaData messageDestinationRefMetaData = new MessageDestinationRefMetaData();
+         messageDestinationRefMetaData.importEjbJarXml(messageDestinationRef);
+
+         messageDestinationReferences.put(messageDestinationRefMetaData.getRefName(), messageDestinationRefMetaData);
+      }
    }
 
    /** Called to parse the jboss.xml enterprise-beans child ejb elements
@@ -832,6 +857,18 @@ public abstract class BeanMetaData
             throw new DeploymentException("resource-env-ref " + resRefName + " found in jboss.xml but not in ejb-jar.xml");
          }
          refMetaData.importJbossXml(resourceRef);
+      }
+
+      // update the message destination references (optional)
+      iterator = getChildrenByTagName(element, "message-destination-ref");
+      while (iterator.hasNext())
+      {
+         Element messageDestinationRef = (Element) iterator.next();
+         String messageDestinationRefName = getElementContent(getUniqueChild(messageDestinationRef, "message-destination-ref-name"));
+         MessageDestinationRefMetaData messageDestinationRefMetaData = (MessageDestinationRefMetaData) messageDestinationReferences.get(messageDestinationRefName);
+         if (messageDestinationRefMetaData == null)
+            throw new DeploymentException("message-destination-ref " + messageDestinationRefName + " found in jboss.xml but not in ejb-jar.xml");
+         messageDestinationRefMetaData.importJbossXml(messageDestinationRef);
       }
 
       // set the external ejb-references (optional)

@@ -4,7 +4,7 @@
 This is the XML DTD for the JBoss 4.0 EJB deployment descriptor.
 The DOCTYPE is:
 
-$Id: jboss_4_0.dtd,v 1.21 2004/10/08 07:16:04 tdiesler Exp $
+$Id: jboss_4_0.dtd,v 1.22 2004/10/14 06:48:29 ejort Exp $
 
   <!DOCTYPE jboss PUBLIC
       "-//JBoss//DTD JBOSS 4.0//EN"
@@ -402,7 +402,7 @@ jnp-context?)>
 -->
 <!ELEMENT entity (ejb-name , jndi-name? , local-jndi-name? , call-by-value?, read-only? ,
  configuration-name? , invoker-bindings?, security-proxy? , ejb-ref* , ejb-local-ref* , service-ref*, security-identity? ,
- resource-ref* , resource-env-ref* , method-attributes? , clustered? , cluster-config?,
+ resource-ref* , resource-env-ref*, message-destination-ref* , method-attributes? , clustered? , cluster-config?,
  cache-invalidation? , cache-invalidation-config?, depends*, ior-security-config?)>
 
 <!--
@@ -416,7 +416,7 @@ jnp-context?)>
 -->
 <!ELEMENT session (ejb-name , jndi-name? , local-jndi-name?, call-by-value?, configuration-name?,
  invoker-bindings?, security-proxy? , ejb-ref* ,  ejb-local-ref* , service-ref*, security-identity? ,
- resource-ref* , resource-env-ref* , clustered? , cluster-config?, method-attributes?, depends*,
+ resource-ref* , resource-env-ref*, message-destination-ref* , clustered? , cluster-config?, method-attributes?, depends*,
  ior-security-config?, port-component*)>
 
 <!--
@@ -432,7 +432,7 @@ jnp-context?)>
  mdb-user?,  mdb-passwd? , mdb-client-id? , mdb-subscription-id? , resource-adapter-name? ,
  configuration-name? , invoker-bindings?,
  security-proxy? , ejb-ref* ,  ejb-local-ref*, service-ref*, security-identity?, resource-ref*,
- resource-env-ref*, depends*, ior-security-config?)>
+ resource-env-ref*, message-destination-ref*, depends*, ior-security-config?)>
 
 <!--
   The ejb-name element gives the name of the bean, it must correspond to
@@ -448,8 +448,9 @@ jnp-context?)>
   message-driven elements. If it is not provided jboss will assume
   "jndi-name" = "ejb-name"
 
-  When used in the ejb-ref,  ejb-local-ref, resource-ref, resource-env-ref elements
-  this specifies the jndi name to which the reference should link.
+  When used in the ejb-ref,  ejb-local-ref, resource-ref, resource-env-ref, 
+  message-destination-ref, message-destination elements this specifies the jndi name to 
+  which the reference should link.
 
   Used in: entity, session and message-driven
     ejb-ref, resource-ref, resource-env-ref
@@ -908,6 +909,22 @@ of a URL, you can use the jndi-name to do so.
 <!ELEMENT res-url (#PCDATA)>
 
 <!--
+  The message-destination-ref element is used to configure the
+  jndi-name for a message-destination-ref in ejb-jar.xml
+
+  Used in: entity, session, and message-driven
+-->
+<!ELEMENT message-destination-ref (message-destination-ref-name, jndi-name)>
+
+<!--
+  The message-destination-ref-name element identifies the
+  message-destination-ref. It must match the name in ejb-jar.xml
+
+  Used in: message-destination-ref
+-->
+<!ELEMENT message-destination-ref-name (#PCDATA)>
+
+<!--
   The assembly-descriptor element contains application-assembly information.
 
   The definition of security roles allows you to map assembly roles to one or more
@@ -918,7 +935,7 @@ of a URL, you can use the jndi-name to do so.
 
   Used in: jboss
 -->
-<!ELEMENT assembly-descriptor (security-role*)>
+<!ELEMENT assembly-descriptor (security-role*, message-destination*)>
 
 <!--
   The security-role element contains the definition of a security role.
@@ -949,6 +966,22 @@ Example:
   Used in: security-role
 -->
 <!ELEMENT principal-name (#PCDATA)>
+
+<!--
+  The message-destination element is used to configure the
+  jndi-name for a message-destination in ejb-jar.xml
+
+  Used in: assembly-descriptor
+-->
+<!ELEMENT message-destination (message-destination-name, jndi-name)>
+
+<!--
+  The message-destination-name element identifies the
+  message-destination. It must match the name in ejb-jar.xml
+
+  Used in: message-destination
+-->
+<!ELEMENT message-destination-name (#PCDATA)>
 
 <!--
   The container-configurations element declares the different possible

@@ -31,7 +31,7 @@ import org.w3c.dom.Element;
  * @see org.jboss.web.AbstractWebContainer
  *
  * @author Scott.Stark@jboss.org
- * @version $Revision: 1.34 $
+ * @version $Revision: 1.35 $
  */
 public class WebMetaData extends MetaData
 {
@@ -43,6 +43,10 @@ public class WebMetaData extends MetaData
    private HashMap resourceReferences = new HashMap();
    /** The web.xml resource-env-refs <String, String> */
    private HashMap resourceEnvReferences = new HashMap();
+   /** The web.xml message-destination-refs <String, MessageDestinationRefMetaData> */
+   private HashMap messageDestinationReferences = new HashMap();
+   /** The web.xml message-destination <String, MessageDestinationMetaData> */
+   private HashMap messageDestinations = new HashMap();
    /** web.xml env-entrys */
    private ArrayList environmentEntries = new ArrayList();
    /** web.xml security-constraint <WebSecurityMetaData> */
@@ -159,6 +163,27 @@ public class WebMetaData extends MetaData
    public Iterator getResourceEnvReferences()
    {
       return resourceEnvReferences.values().iterator();
+   }
+
+   /**
+    * Return an iterator of message-destination-refs.
+    * 
+    * @return Iterator of MessageDestinationRefMetaData objects.
+    */
+   public Iterator getMessageDestinationReferences()
+   {
+      return messageDestinationReferences.values().iterator();
+   }
+
+   /** 
+    * Get a message destination metadata
+    * 
+    * @param name the name of the message destination
+    * @return the message destination metadata
+    */
+   public MessageDestinationMetaData getMessageDestination(String name)
+   {
+      return (MessageDestinationMetaData) messageDestinations.get(name);
    }
 
    /** Return an iterator of the service-ref mappings.
@@ -411,6 +436,34 @@ public class WebMetaData extends MetaData
          resourceEnvReferences.put(refMetaData.getRefName(), refMetaData);
       }
 
+      // set the message destination references
+      iterator = getChildrenByTagName(webApp, "message-destination-ref");
+      while (iterator.hasNext())
+      {
+         Element messageDestinationRef = (Element) iterator.next();
+         MessageDestinationRefMetaData messageDestinationRefMetaData = new MessageDestinationRefMetaData();
+         messageDestinationRefMetaData.importEjbJarXml(messageDestinationRef);
+         messageDestinationReferences.put(messageDestinationRefMetaData.getRefName(), messageDestinationRefMetaData);
+      }
+
+      // set the message destinations (optional)
+      iterator = getChildrenByTagName(webApp, "message-destination");
+      while (iterator.hasNext())
+      {
+         Element messageDestination = (Element) iterator.next();
+         try
+         {
+            MessageDestinationMetaData messageDestinationMetaData = new MessageDestinationMetaData();
+            messageDestinationMetaData.importEjbJarXml(messageDestination);
+            messageDestinations.put(messageDestinationMetaData.getName(), messageDestinationMetaData);
+         }
+         catch (Throwable t)
+         {
+            throw new DeploymentException("Error in web.xml " +
+               "for message destination: " + t.getMessage());
+         }
+      }
+
       // Parse the web-app/env-entry elements
       iterator = getChildrenByTagName(webApp, "env-entry");
       while( iterator.hasNext() )
@@ -585,6 +638,38 @@ public class WebMetaData extends MetaData
                + " found in jboss-web.xml but not in web.xml");
          }
          refMetaData.importJbossXml(resourceRef);
+      }
+
+      // update the message destination references (optional)
+      iterator = getChildrenByTagName(jbossWeb, "message-destination-ref");
+      while (iterator.hasNext())
+      {
+         Element messageDestinationRef = (Element) iterator.next();
+         String messageDestinationRefName = getElementContent(getUniqueChild(messageDestinationRef, "message-destination-ref-name"));
+         MessageDestinationRefMetaData messageDestinationRefMetaData = (MessageDestinationRefMetaData) messageDestinationReferences.get(messageDestinationRefName);
+         if (messageDestinationRefMetaData == null)
+            throw new DeploymentException("message-destination-ref " + messageDestinationRefName + " found in jboss-web.xml but not in web.xml");
+         messageDestinationRefMetaData.importJbossXml(messageDestinationRef);
+      }
+
+      // set the message destinations (optional)
+      iterator = getChildrenByTagName(jbossWeb, "message-destination");
+      while (iterator.hasNext())
+      {
+         Element messageDestination = (Element) iterator.next();
+         try
+         {
+            String messageDestinationName = getUniqueChildContent(messageDestination, "message-destination-name");
+            MessageDestinationMetaData messageDestinationMetaData = (MessageDestinationMetaData) messageDestinations.get(messageDestinationName);
+            if (messageDestinationMetaData == null)
+               throw new DeploymentException("message-destination " + messageDestinationName + " found in jboss-web.xml but not in web.xml");
+            messageDestinationMetaData.importJbossXml(messageDestination);
+         }
+         catch (Throwable t)
+         {
+            throw new DeploymentException("Error in web.xml " +
+               "for message destination: " + t.getMessage());
+         }
       }
 
       // set the security roles (optional)

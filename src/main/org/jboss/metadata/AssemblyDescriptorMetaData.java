@@ -6,20 +6,27 @@
  */
 package org.jboss.metadata;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.Set;
 
 /**
  * The meta data object for the assembly-descriptor element.
  * This implementation only contains the security-role meta data
  *
  * @author Thomas.Diesler@jboss.org
- * @version $Revision: 1.3 $
+ * @version $Revision: 1.4 $
  */
 public class AssemblyDescriptorMetaData extends MetaData
 {
    /** The assembly-descriptor/security-roles */
    private HashMap securityRoles = new HashMap();
 
+   /** The message destinations */
+   private HashMap messageDestinations = new HashMap();
+   
    public void addSecurityRoleMetaData(SecurityRoleMetaData srMetaData)
    {
       securityRoles.put(srMetaData.getRoleName(), srMetaData);
@@ -71,5 +78,15 @@ public class AssemblyDescriptorMetaData extends MetaData
             roleNames.add(srMetaData.getRoleName());
       }
       return roleNames;
+   }
+   
+   public void addMessageDestinationMetaData(MessageDestinationMetaData metaData)
+   {
+      messageDestinations.put(metaData.getName(), metaData);
+   }
+   
+   public MessageDestinationMetaData getMessageDestinationMetaData(String name)
+   {
+      return (MessageDestinationMetaData) messageDestinations.get(name);
    }
 }
