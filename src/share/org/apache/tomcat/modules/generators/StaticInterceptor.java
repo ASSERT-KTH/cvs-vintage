@@ -355,7 +355,9 @@ public class StaticInterceptor extends BaseInterceptor {
 		status=ri[j].contextMap( req );
 		if( status!=0 ) break;
 	    }
-	    if(status == 0 && req.servletPath() != null && !req.servletPath().equals("")) {
+	    if(status == 0 && req.servletPath() != null && 
+	       ! req.servletPath().equals("") && 
+	       req.getContainer().getMapType() != Container.EXTENSION_MAP) {
 		return req.servletPath().toString().substring(pathInfo.length());
 	    }
 	}
