@@ -109,7 +109,7 @@ import org.tigris.scarab.util.ScarabConstants;
     This class is responsible for edit issue forms.
     ScarabIssueAttributeValue
     @author <a href="mailto:elicia@collab.net">Elicia David</a>
-    @version $Id: ModifyIssue.java,v 1.72 2002/02/06 00:37:06 elicia Exp $
+    @version $Id: ModifyIssue.java,v 1.73 2002/02/06 01:17:44 jon Exp $
 */
 public class ModifyIssue extends RequireLoginFirstAction
 {
@@ -415,7 +415,7 @@ public class ModifyIssue extends RequireLoginFirstAction
                 mimeType = mimeA;
             }
             
-            if ( group.isAllValid() ) 
+            if (group.isAllValid()) 
             {
                 group.setProperties(attachment);
                 attachment.setMimeType(mimeType);
@@ -613,43 +613,43 @@ public class ModifyIssue extends RequireLoginFirstAction
                 // User is changing dependency type
                 if (!newValue.equals(oldValue))
                 {
-                   Issue otherIssue = null;
-                   if (currentIssue.getIssueId().toString()
-                       .equals(depend.getObservedId().toString()))
-                   {
-                       otherIssue = (Issue)IssuePeer.
-                                    retrieveByPK(depend.getObserverId());
-                   }
-                   else
-                   {
-                       otherIssue = (Issue)IssuePeer.
-                                    retrieveByPK(depend.getObservedId());
-                   }
+                    Issue otherIssue = null;
+                    if (currentIssue.getIssueId().toString()
+                        .equals(depend.getObservedId().toString()))
+                    {
+                        otherIssue = (Issue)IssuePeer.
+                                     retrieveByPK(depend.getObserverId());
+                    }
+                    else
+                    {
+                        otherIssue = (Issue)IssuePeer.
+                                     retrieveByPK(depend.getObservedId());
+                    }
 
-                   // Save transaction record
-                   Transaction transaction = new Transaction();
-                   transaction.create(TransactionTypePeer.EDIT_ISSUE__PK, 
-                                      user, null);
+                    // Save transaction record
+                    Transaction transaction = new Transaction();
+                    transaction.create(TransactionTypePeer.EDIT_ISSUE__PK, 
+                                       user, null);
 
-                   // Save activity record
-                   Activity activity = new Activity();
-                   StringBuffer descBuf = new StringBuffer("changed dependency " 
-                                                           + "type on Issue ");
-                   descBuf.append(otherIssue.getUniqueId());
-                   descBuf.append(" from ").append(oldValue);
-                   descBuf.append(" to ").append(newValue.toString());
-                   String desc = descBuf.toString();
-                   activity.create(currentIssue, null, desc, transaction,
-                                   oldValue, newValue.toString());
-                   currentIssue.save();
-                   if (!transaction.sendEmail(new ContextAdapter(context), 
-                                              currentIssue))
-                   {
-                        data.setMessage("Your changes were saved, but could "
-                                        + "not send notification "
-                                        + "email due to a sendmail error.");
-                   }
-               }
+                    // Save activity record
+                    Activity activity = new Activity();
+                    StringBuffer descBuf = new StringBuffer("changed dependency " 
+                                                            + "type on Issue ");
+                    descBuf.append(otherIssue.getUniqueId());
+                    descBuf.append(" from ").append(oldValue);
+                    descBuf.append(" to ").append(newValue.toString());
+                    String desc = descBuf.toString();
+                    activity.create(currentIssue, null, desc, transaction,
+                                    oldValue, newValue.toString());
+                    currentIssue.save();
+                    if (!transaction.sendEmail(new ContextAdapter(context), 
+                                               currentIssue))
+                    {
+                         data.setMessage("Your changes were saved, but could "
+                                         + "not send notification "
+                                         + "email due to a sendmail error.");
+                    }
+                }
             }
         }
         else
@@ -657,7 +657,6 @@ public class ModifyIssue extends RequireLoginFirstAction
             data.setMessage(ERROR_MESSAGE);
         }
     }
-
 
     /**
     *  Adds a dependency between this issue and another issue.
@@ -780,7 +779,7 @@ public class ModifyIssue extends RequireLoginFirstAction
         {
             try
             {
-                parentIssue =  getScarabRequestTool(context)
+                parentIssue = getScarabRequestTool(context)
                                .getIssue(observedId.toString());
             }
             catch (Exception e)
@@ -837,9 +836,9 @@ public class ModifyIssue extends RequireLoginFirstAction
             issue.save();
             if (!transaction.sendEmail(new ContextAdapter(context), issue))
             {
-                    data.setMessage("Your changes were saved, but could "
-                                    + "not send notification email "
-                                    + "due to a sendmail error.");
+                data.setMessage("Your changes were saved, but could "
+                                + "not send notification email "
+                                + "due to a sendmail error.");
             }
         }
         else
@@ -882,8 +881,3 @@ public class ModifyIssue extends RequireLoginFirstAction
         setTarget(data, "MoveIssue.vm");            
     }
 }
-
-
-
-
-
