@@ -264,8 +264,6 @@ public class TagBeginGenerator
             return Long.valueOf(s).toString() + "l";
         } else if (c == Long.class) {
             return "new Long(" + Long.valueOf(s).toString() + "l)";
-        } else if (c == Object.class) {
-            return writer.quoteString(s);
         } else {
              throw new CompileException
                     (start, Constants.getString
