@@ -222,11 +222,6 @@ body.docs {
 	padding-left: 85px;
 	}
 /* Scarab/App - styles start here */
-.modbar {
-	background: #ccc;
-	padding: 5px;
-	border-bottom: 1px solid #999; 
-	}
 .functnbar {
 	background: #999 url(/@SCARAB_CONTEXT@/images/nw_min.gif) no-repeat top left;
 	}
