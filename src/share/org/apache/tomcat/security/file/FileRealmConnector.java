@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/security/file/Attic/FileRealmConnector.java,v 1.2 1999/10/23 22:30:17 craigmcc Exp $
- * $Revision: 1.2 $
- * $Date: 1999/10/23 22:30:17 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/security/file/Attic/FileRealmConnector.java,v 1.3 1999/10/29 06:14:41 craigmcc Exp $
+ * $Revision: 1.3 $
+ * $Date: 1999/10/29 06:14:41 $
  *
  * ====================================================================
  *
@@ -83,7 +83,7 @@ import org.xml.sax.SAXParseException;
  * XML-stored database of users and their associated roles.
  *
  * @author Craig R. McClanahan
- * @version $Revision: 1.2 $ $Date: 1999/10/23 22:30:17 $
+ * @version $Revision: 1.3 $ $Date: 1999/10/29 06:14:41 $
  */
 
 public final class FileRealmConnector
@@ -123,8 +123,7 @@ public final class FileRealmConnector
      *
      * @param username Username of the Principal to look up
      * @param credentials Password or other credentials to use in
-     *	authenticating this username (XXX: Is a String sufficient
-     *  for all possible cases?)
+     *	authenticating this username
      *
      * @exception IllegalStateException if called before <code>start()</code>
      *  has been called, or after <code>stop()</code> has been called
@@ -142,6 +141,26 @@ public final class FileRealmConnector
 	    return ((Principal) user);
 	else
 	    return (null);
+
+    }
+
+
+    /**
+     * Returns the Principal associated with the specified username and
+     * credentials, if there is one, or <code>null</code> otherwise.
+     *
+     * @param username Username of the Principal to look up
+     * @param credentials Credentials to use in authenticating this username
+     *
+     * @exception IllegalStateException if called before <code>start()</code>
+     *  has been called, or after <code>stop()</code> has been called
+     */
+    public Principal authenticate(String username, byte[] credentials) {
+
+	StringBuffer password = new StringBuffer();
+	for (int i = 0; i < credentials.length; i++)
+	    password.append((char) credentials[i]);
+	return (authenticate(username, password.toString()));
 
     }
 
