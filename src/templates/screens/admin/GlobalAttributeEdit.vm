@@ -22,7 +22,7 @@ Back to <a href="$link.setPage("admin,GlobalAttributeShow.vm")">Global Attribute
 <form action="$link.setPage("admin,GlobalAttributeEdit.vm")" method="get">
     <input type="hidden" name="action" value="admin.GlobalAttributes"/>
     <input type="hidden" name="nextTemplate" value="admin,GlobalAttributeEdit.vm"/>
-    <input type="hidden" name="$attgroup.Id.Key" value="$attgroup.Id.Value"/>
+    <input type="hidden" name="$attgroup.Id.Key" value="$!attgroup.Id"/>
 
 #datatitle ( "Attribute Info" )
 
@@ -41,7 +41,7 @@ Back to <a href="$link.setPage("admin,GlobalAttributeShow.vm")">Global Attribute
  <tr>
   <th width="120">attribute name:</th>
   <td>
-    <input type="text" name="$attgroup.Name.Key" value="$attribute.Name"/>
+    <input type="text" name="$attgroup.Name.Key" value="$!attribute.Name"/>
     #fieldErrorMsg($attgroup.Name "")
   </td>
  </tr>
@@ -54,6 +54,7 @@ Back to <a href="$link.setPage("admin,GlobalAttributeShow.vm")">Global Attribute
   </td>
  </tr>
 
+  #if ($attribute.CreatedDate)
  <tr>
   <th width="120">created by:</th>
   <td>
@@ -61,13 +62,16 @@ Back to <a href="$link.setPage("admin,GlobalAttributeShow.vm")">Global Attribute
   <a href="mailto:$createdUser.Email">$createdUser.FirstName $createdUser.LastName</a>
   </td>
  </tr>
+  #end
 
+  #if ($attribute.CreatedDate)
  <tr>
   <th width="120">creation date:</th>
   <td>
     $attribute.CreatedDate
   </td>
  </tr>
+  #end
 
 </tr>
 </table>
@@ -80,12 +84,12 @@ Back to <a href="$link.setPage("admin,GlobalAttributeShow.vm")">Global Attribute
 $intake.declareGroups()
 </form>
 
+#if ($attType.AttributeClass.Name.equals("select-one"))
+
 <form action="$link.setPage("admin,GlobalAttributeEdit.vm")" method="get">
     <input type="hidden" name="action" value="admin.GlobalAttributes"/>
     <input type="hidden" name="nextTemplate" value="admin,GlobalAttributeEdit.vm"/>
-    <input type="hidden" name="$attgroup.Id.Key" value="$attgroup.Id.Value"/>
-
-#if ($attType.AttributeClass.Name.equals("select-one"))
+    <input type="hidden" name="$attgroup.Id.Key" value="$!attgroup.Id"/>
 
 #datatitle ("Attribute Options")
 
@@ -99,7 +103,7 @@ $intake.declareGroups()
 #if ($maxNum > 0)
  <th>Deleted:</th>
 #else
- <th colspan="2">&nbsp;</th>
+ <th>&nbsp;</th>
 #end
  <th>Parent Attribute Option:</th>
  <th>Attribute Option:</th>

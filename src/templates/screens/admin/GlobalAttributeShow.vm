@@ -1,54 +1,49 @@
 <div id="globalattributeshow" class="app">
 $page.setTitle("Global Attribute Editor")
 
-<h2>Global Attributes</h2>
+<h2>$page.Title</h2>
 
 <p>
 This page is for editing the Global Attributes.
 </p>
 
-<form>
+<form action="$link.setPage("admin,GlobalAttributeShow.vm")" method="get">
+    <input type="hidden" name="action" value="admin.GlobalAttributes">
+    <input type="hidden" name="nextTemplate" value="admin,GlobalAttributeEdit.vm">
+
 <p class="functnbar">
-<input type="submit" value="create" class="buttonfunc"/>&#160;new attribute
+<input type="submit" value="Create New Attribute" name="eventSubmit_doCreatenew" class="buttonfunc"/>
+<input type="submit" value="Delete Selected Attributes" name="eventSubmit_doDeleteaelectedattributes" class="buttonfunc"/>
 </p>
-</form>
 
 <div class="grouper">
 
 #datatitle("Attributes")
 
-<p>#actionErrorMsg()</p>
-
 <div class="datatable">
-
-<form action="$link.setPage("admin,AttributeShow.vm")" method="get">
-    <input type="hidden" name="action" value="admin.ModifyAttributes">
-    <input type="hidden" name="nextTemplate" value="admin,AttributeEdit.vm">
 
 <table width="100%" border="1" cellspacing="2" cellpadding="3">
 <tr>
-<th>
-<img src="/scarab/images/icon_uparrow.gif" width="13" height="8" alt="sort" border="0"/>
-<img src="/scarab/images/icon_downarrow.gif" width="13" height="8" alt="sort" border="0"/>
-</th>
-<th>attribute name:</th>
-<th>input type:</th>
-<th>description:</th>
-<th>author:</th>
-<th>creation date:</th>
+<th>Deleted:</th>
+<th>Attribute Name:</th>
+<th>Input Type:</th>
+<th>Description:</th>
+<th>Author:</th>
+<th>Creation Date:</th>
 </tr>
 
-#set ($attgroup = $intake.Attribute.Default) 
+#* #set ($attgroup = $intake.Attribute.Default) *#
 #set ($allAttributes = $scarabG.AllAttributes)
 
 #foreach( $attribute in $allAttributes )
+#set ($attgroup = $intake.Attribute.mapTo($attribute))
 #if ( $velocityCount % 2 > 0 )
 <tr class="a">
 #else
 <tr class="b">
 #end
-<td><input type="checkbox"/></td>
-<td>$attribute.Name (<a href="$link.setPage("admin,GlobalAttributeShow.vm").setAction("admin.GlobalAttributes").addPathInfo("nextTemplate","admin,GlobalAttributeEdit.vm").addPathInfo("eventSubmit_doSelectattribute", "foo").addPathInfo("intake-grp", "att").addPathInfo("att", "_0").addPathInfo("$attgroup.Id.Key", "$attribute.AttributeId")">edit</a>)</td>
+<td>#booleanCheckbox ($attgroup.Deleted)</td>
+<td>$attribute.Name (<a href="$link.setPage("admin,GlobalAttributeShow.vm").setAction("admin.GlobalAttributes").addPathInfo("nextTemplate","admin,GlobalAttributeEdit.vm").addPathInfo("eventSubmit_doSelectattribute", "foo").addPathInfo("intake-grp", "att").addPathInfo("att", "_0").addPathInfo("att_0id", "$attgroup.Id")">edit</a>)</td>
 <td>
     #set ($attType = $attribute.AttributeType)
     #foreach ( $atype in $attribute.AllAttributeTypes )
@@ -67,11 +62,10 @@ This page is for editing the Global Attributes.
 </div>
 
 $intake.declareGroups()
-</form>
 
-<form>
 <p class="functnbar">
-<input type="submit" value="create" class="buttonfunc"/>&#160;new attribute
+<input type="submit" value="Create New Attribute" name="eventSubmit_doCreatenew" class="buttonfunc"/>
+<input type="submit" value="Delete Selected Attributes" name="eventSubmit_doDeleteaelectedattributes" class="buttonfunc"/>
 </p>
 </form>
 

@@ -77,7 +77,7 @@ import org.tigris.scarab.util.ScarabException;
   * and AttributeOption objects.
   *
   * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
-  * @version $Id: Attribute.java,v 1.30 2001/09/24 21:29:46 jon Exp $
+  * @version $Id: Attribute.java,v 1.31 2001/09/26 01:09:05 jon Exp $
   */
 public class Attribute 
     extends BaseAttribute
@@ -164,11 +164,54 @@ public class Attribute
 
     /**
      * Return an instance based on the passed in attribute id as an int
+     * It will return a cached instance if possible.
      */
-    public static Attribute getInstance(int id) 
+    public static Attribute getInstance(int id)
         throws Exception
     {
         return getInstance((ObjectKey)new NumberKey(id));
+    }
+
+    /**
+     * Return an instance based on the passed in 
+     * attribute name as a String. It will return 
+     * the first match if the number of Attributes found > 0
+     * Note: The business logic dicates that there should 
+     * never be duplicate Attributes. Therefore, the checkForDuplicate
+     * method will return true if the number of Attributes found
+     * is > 0
+     */
+    public static Attribute getInstance(String attributeName)
+        throws Exception
+    {
+        Criteria crit = new Criteria();
+        crit.add (AttributePeer.ATTRIBUTE_NAME, attributeName);
+        List attributes = (List) AttributePeer.doSelect(crit);
+        Attribute result = null;
+        if (attributes.size() > 0)
+        {
+            result = (Attribute) attributes.get(0);
+        }
+        return result;
+    }
+
+    /**
+     * Checks to see if there is another attribute with the same name
+     * already in the database. Returns true if there is another
+     * Attribute of the same name.
+     */
+    public static boolean checkForDuplicate(String attributeName)
+        throws Exception
+    {
+        return getInstance(attributeName) != null ? true : false;
+    }
+
+    /**
+     * Helper method that takes a NumberKey
+     */
+    public void setCreatedBy (NumberKey key)
+    {
+        super.setCreatedBy(new Integer(key.toString()).intValue());
     }
 
     /**

@@ -55,11 +55,14 @@ import org.apache.torque.om.NumberKey;
 import org.apache.turbine.tool.IntakeTool;
 import org.apache.fulcrum.intake.model.Group;
 import org.apache.fulcrum.intake.model.Field;
+import org.apache.fulcrum.intake.model.BooleanField;
 
 import org.tigris.scarab.actions.base.RequireLoginFirstAction;
 import org.tigris.scarab.om.Attribute;
+import org.tigris.scarab.om.AttributePeer;
 import org.tigris.scarab.om.ROptionOption;
 import org.tigris.scarab.om.ParentChildAttributeOption;
+import org.tigris.scarab.om.ScarabUser;
 import org.tigris.scarab.util.ScarabConstants;
 import org.tigris.scarab.util.ScarabException;
 import org.tigris.scarab.tools.ScarabRequestTool;
@@ -68,7 +71,7 @@ import org.tigris.scarab.tools.ScarabRequestTool;
  * This class deals with modifying Global Attributes.
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: GlobalAttributes.java,v 1.3 2001/09/20 10:35:56 jon Exp $
+ * @version $Id: GlobalAttributes.java,v 1.4 2001/09/26 01:09:05 jon Exp $
  */
 public class GlobalAttributes extends RequireLoginFirstAction
 {
@@ -90,10 +93,66 @@ public class GlobalAttributes extends RequireLoginFirstAction
         id.setRequired(true);
         // FIXME: Add some security checking to make sure that the
         // User can actually edit a particular Attribute.
-        if ( id.isValid() ) 
+        if (id.isValid())
         {
+            String attributeID = id.toString();
+            Attribute attr = null;
+            if (attributeID != null && attributeID.length() > 0)
+            {
+                try
+                {
+                    attr = Attribute.getInstance((ObjectKey)new NumberKey(attributeID));
+                }
+                catch (Exception e)
+                {
+                    data.setMessage("Could not find requested Attribute");
+                    return;
+                }
+            }
+            ScarabRequestTool scarabR = (ScarabRequestTool)context
+                .get(ScarabConstants.SCARAB_REQUEST_TOOL);
+            scarabR.setAttribute(attr);
             setTarget(data, nextTemplate);                
         }
+    }
+
+    /**
+     * On the admin,GlobalAttributeShow.vm page, delete the selected attributes.
+     */
+    public void doDeleteaelectedattributes( RunData data, TemplateContext context ) 
+        throws Exception
+    {
+        String template = data.getParameters()
+            .getString(ScarabConstants.TEMPLATE, null);
+        String nextTemplate = data.getParameters().getString(
+            ScarabConstants.NEXT_TEMPLATE, template );
+
+        IntakeTool intake = (IntakeTool)context
+            .get(ScarabConstants.INTAKE_TOOL);
+        if ( intake.isAllValid() ) 
+        {
+            List allAttributes = AttributePeer.getAllAttributes();
+            for (int i=0;i<allAttributes.size();i++)
+            {
+                Attribute attr = (Attribute) allAttributes.get(i);
+                Group attrGroup = intake.get("Attribute", attr.getQueryKey(),false);
+                try
+                {
+                    if (attrGroup != null)
+                    {
+                        attrGroup.setProperties(attr);
+                        attr.save();
+                        intake.remove(attrGroup);
+                    }
+                }
+                catch (Exception e)
+                {
+                    data.setMessage("Failure: " + e.getMessage());
+                    return;
+                }
+            }
+        }
+        setTarget(data, template);
     }
 
     /**
@@ -116,11 +175,35 @@ public class GlobalAttributes extends RequireLoginFirstAction
             String attributeDesc = attribute.get("Description").toString();
             String attributeTypeID = attributeType.get("AttributeTypeId").toString();
 
-            Attribute attr = Attribute.getInstance((ObjectKey)new NumberKey(attributeID));
+            Attribute attr = null;
+            if (attributeID != null && attributeID.length() > 0)
+            {
+                attr = Attribute.getInstance((ObjectKey)new NumberKey(attributeID));
+            }
+            else
+            {
+                if (Attribute.checkForDuplicate(attributeName))
+                {
+                    data.setMessage("Cannot create a duplicate Attribute with the same name!");
+                    intake.remove(attribute);
+                    return;
+                }
+    
+                attr = Attribute.getInstance();
+                attr.setCreatedBy(((ScarabUser)data.getUser()).getUserId());
+                data.setMessage("New Attribute Created!");
+                // FIXME: this probably shouldn't be hardwired here
+                setTarget(data,"admin,GlobalAttributeShow.vm");
+            }
             attr.setName(attributeName);
             attr.setDescription(attributeDesc);
             attr.setTypeId(new NumberKey(attributeTypeID));
             attr.save();
+
+            // put the new attribute back into the context.
+            ScarabRequestTool scarabR = (ScarabRequestTool)context
+                .get(ScarabConstants.SCARAB_REQUEST_TOOL);
+            scarabR.setAttribute(attr);
         }
     }
 
@@ -235,9 +318,28 @@ public class GlobalAttributes extends RequireLoginFirstAction
     }
 
     /**
+     * Manages clicking of the create new button
+     */
+    public void doCreatenew( RunData data, TemplateContext context )
+        throws Exception
+    {
+        String template = data.getParameters()
+            .getString(ScarabConstants.TEMPLATE, null);
+        String nextTemplate = data.getParameters().getString(
+            ScarabConstants.NEXT_TEMPLATE, template );
+        setTarget(data, nextTemplate);
+
+        ScarabRequestTool scarabR = (ScarabRequestTool)context
+            .get(ScarabConstants.SCARAB_REQUEST_TOOL);
+
+        scarabR.setAttribute(Attribute.getInstance());        
+    }
+    
+    /**
      * Manages clicking of the AllDone button
      */
-    public void doAlldone( RunData data, TemplateContext context ) throws Exception
+    public void doAlldone( RunData data, TemplateContext context )
+        throws Exception
     {
         String nextTemplate = data.getParameters().getString(
             ScarabConstants.NEXT_TEMPLATE );
@@ -248,7 +350,8 @@ public class GlobalAttributes extends RequireLoginFirstAction
     /**
         This manages clicking the cancel button
     */
-    public void doCancel( RunData data, TemplateContext context ) throws Exception
+    public void doCancel( RunData data, TemplateContext context )
+        throws Exception
     {
         data.setMessage("Changes were not saved!");
     }
@@ -256,7 +359,8 @@ public class GlobalAttributes extends RequireLoginFirstAction
     /**
         does nothing.
     */
-    public void doPerform( RunData data, TemplateContext context ) throws Exception
+    public void doPerform( RunData data, TemplateContext context )
+        throws Exception
     {
         doCancel(data, context);
     }
