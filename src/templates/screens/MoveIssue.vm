@@ -87,21 +87,24 @@ elseif ($copyToModules.isEmpty())
 
 #set ($index = 0)
 #foreach ($module in $moduleList)
- #set ($index = $index + 1)
- #indexedRows($index)
- #if ($module.ModuleId == $issueModule.ModuleId)
-   <td>$l10n.format("SameModule", $issueModule.Name)</td>
- #else
-   <td>$module.Name</td>
+ #set ($moduleIssueTypes = $module.IssueTypes)
+ #if (!$moduleIssueTypes.isEmpty())
+   #set ($index = $index + 1)
+   #indexedRows($index)
+   #if ($module.ModuleId == $issueModule.ModuleId)
+     <td>$l10n.format("SameModule", $issueModule.Name)</td>
+   #else
+     <td>$module.Name</td>
+   #end
+   <td>
+   <select name="mod_issuetype">
+     <option value="">$l10n.Choose</option>
+       #foreach ($issueType in $moduleIssueTypes)
+          <option value="${module.ModuleId}_${issueType.IssueTypeId}">$module.getRModuleIssueType($issueType).DisplayName</option>
+       #end
+   </select>
+   </td>
  #end
- <td>
- <select name="mod_issuetype">
-  <option value="">$l10n.Choose</option>
-    #foreach ($issueType in $module.IssueTypes)
-       <option value="${module.ModuleId}_${issueType.IssueTypeId}">$module.getRModuleIssueType($issueType).DisplayName</option>
-    #end
- </select>
- </td>
  </tr>
 #end
 </table>
