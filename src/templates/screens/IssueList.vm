@@ -72,7 +72,7 @@ $link.setPage("ConfigureIssueList.vm").setLabel("Add/remove attributes from view
 
  <table width="100%" border="1" cellspacing="2" cellpadding="3">
   <tr>
-  <th>Select</th>
+  <th width="70">Select</th>
   <th>
      #if (!$sortColumn || $sortColumn.length() == 0)
         #if ($sortPolarity.equals("desc"))
