@@ -24,7 +24,7 @@
 // File: FigComponent.java
 // Classes: FigComponent
 // Original Author: 5eichler@informatik.uni-hamburg.de
-// $Id: FigComponent.java,v 1.1 2000/09/04 12:50:19 1sturm Exp $
+// $Id: FigComponent.java,v 1.2 2000/09/18 12:57:25 1sturm Exp $
 
 package org.argouml.uml.diagram.deployment.ui;
 
@@ -207,15 +207,17 @@ public class FigComponent extends FigNodeModelElement {
     super.setEnclosingFig(encloser);
 
     Vector figures = getEnclosedFigs();
-    elementOrdering(figures);
 
-    Vector contents = getLayer().getContents();
-    int contentsSize = contents.size();
-    for (int j=0; j<contentsSize; j++) {
-      Object o = contents.elementAt(j);
-      if (o instanceof FigEdgeModelElement) {
-        FigEdgeModelElement figedge = (FigEdgeModelElement) o;
-        figedge.getLayer().bringToFront(figedge);
+    if (getLayer() != null) {
+      elementOrdering(figures);
+      Vector contents = getLayer().getContents();
+      int contentsSize = contents.size();
+      for (int j=0; j<contentsSize; j++) {
+        Object o = contents.elementAt(j);
+        if (o instanceof FigEdgeModelElement) {
+          FigEdgeModelElement figedge = (FigEdgeModelElement) o;
+          figedge.getLayer().bringToFront(figedge);
+        }
       }
     }
 

@@ -24,7 +24,7 @@
 // File: ModeCreateEdgeAndNode.java
 // Classes: ModeCreateEdgeAndNode
 // Original Author: jrobbins
-// $Id: ModeCreateEdgeAndNode.java,v 1.3 2000/09/14 09:42:46 toby Exp $
+// $Id: ModeCreateEdgeAndNode.java,v 1.4 2000/09/18 12:57:25 1sturm Exp $
 
 package org.argouml.uml.diagram.ui;
 
@@ -135,7 +135,7 @@ public class ModeCreateEdgeAndNode extends ModeCreate {
 
   public void done() {
     super.done();
-    if (_newItem != null) editor.damaged(_newItem);
+    if (_newItem != null) _editor.damaged(_newItem);
     _newItem = null;// use this as the fig for the new FigEdge
     _sourceFigNode = null;
     _startPort = null;
@@ -197,10 +197,10 @@ public class ModeCreateEdgeAndNode extends ModeCreate {
 				((GraphNodeHooks)newNode).initialize(_args);
 
 			if (mgm.canAddNode(newNode)) {
-				GraphNodeRenderer renderer = editor.getGraphNodeRenderer();
-				Layer lay = editor.getLayerManager().getActiveLayer();
+				GraphNodeRenderer renderer = _editor.getGraphNodeRenderer();
+				Layer lay = _editor.getLayerManager().getActiveLayer();
 				_fn = renderer.getFigNodeFor(gm, lay, newNode);
-				editor.add(_fn);
+				_editor.add(_fn);
 				mgm.addNode(newNode);
 				Fig encloser = null;
 				Rectangle bbox = _fn.getBounds();
@@ -218,8 +218,8 @@ public class ModeCreateEdgeAndNode extends ModeCreate {
 				}
 				_fn.setEnclosingFig(encloser);
 				if (newNode instanceof GraphNodeHooks)
-					((GraphNodeHooks)newNode).postPlacement(editor);
-				editor.getSelectionManager().select(_fn);
+					((GraphNodeHooks)newNode).postPlacement(_editor);
+				_editor.getSelectionManager().select(_fn);
 				nodeWasCreated = true;
 				f = _fn;
 				f.setLocation(x - f.getWidth() / 2, y - f.getHeight() / 2);
@@ -242,7 +242,7 @@ public class ModeCreateEdgeAndNode extends ModeCreate {
 			}
 			System.out.println("fignode "+_startPort+" "+foundPort);
 			FigPoly p = (FigPoly) _newItem;
-			editor.damaged(p);
+			_editor.damaged(p);
 			p._isComplete = true;
 
 			if (foundPort != null && foundPort != _startPort) {
@@ -319,12 +319,12 @@ public class ModeCreateEdgeAndNode extends ModeCreate {
 		//if (_npoints == 0) { me.consume(); return; }
 		if (_newItem == null) { me.consume(); return; }
 		FigPoly p = (FigPoly)_newItem;
-		editor.damaged(_newItem); // startTrans?
+		_editor.damaged(_newItem); // startTrans?
 		Point snapPt = new Point(x, y);
-		editor.snap(snapPt);
+		_editor.snap(snapPt);
 		_handle.index = p.getNumPoints() - 1;
 		p.moveVertex(_handle, snapPt.x, snapPt.y, true);
-		editor.damaged(_newItem); // endTrans?
+		_editor.damaged(_newItem); // endTrans?
 		me.consume();
 	}
 
