@@ -59,7 +59,6 @@
 package org.apache.tomcat.core;
 
 import org.apache.tomcat.util.*;
-import org.apache.tomcat.util.log.*;
 import java.io.*;
 import java.net.*;
 import java.util.*;
@@ -72,17 +71,19 @@ import java.util.*;
  * @author costin@dnt.ro
  */
 public class Handler {
-    protected Context context;
-    protected ContextManager contextM;
-
-    protected String name;
-
-    /** True if it can handle requests.
-	404 or error if not.
+    /** ServletWrapper counts. The accounting design is not
+	final, but all this is needed to tune up tomcat
+	( and to understand and be able to implement a good
+	solution )
     */
-    protected boolean initialized=false;
+    public static final int ACC_LAST_ACCESSED=0;
+    public static final int ACC_INVOCATION_COUNT=1;
+    public static final int ACC_SERVICE_TIME=2;
+    public static final int ACC_ERRORS=3;
+    public static final int ACC_OVERHEAD=4;
+    public static final int ACC_IN_INCLUDE=5;
     
-    Hashtable initArgs=null;
+    public static final int ACCOUNTS=6;
 
     /** The servlet was declared in web.xml
      */
@@ -100,13 +101,32 @@ public class Handler {
 	preferably in web.xml
     */
     public static final int ORIGIN_ADMIN=4;
+
+    // -------------------- Properties --------------------
+    protected Context context;
+    protected ContextManager contextM;
+
+    protected String name;
+
+    /** True if it can handle requests.
+	404 or error if not.
+    */
+    protected boolean initialized=false;
+    
+    Hashtable initArgs=null;
+
     
     // who creates the servlet definition
     protected int origin;
+
     protected boolean internal=false;
+
     protected String path;
+
     protected String servletClassName;
+
     protected String servletName;
+
     protected int loadOnStartup=-1;
     protected boolean loadingOnStartup=false;
     
@@ -114,6 +134,10 @@ public class Handler {
     protected int debug=0;
     protected String debugHead=null;
 
+    private Counters cntr=new Counters( ACCOUNTS );
+    private Object notes[]=new Object[ContextManager.MAX_NOTES];
+
+    // -------------------- Constructor --------------------
     
     public Handler() {
     }
@@ -121,7 +145,6 @@ public class Handler {
     public void setContext( Context context) {
         this.context = context;
 	contextM=context.getContextManager();
-	loghelper.setLogger(context.getLog().getLogger());
     }
 
     public Context getContext() {
@@ -141,6 +164,27 @@ public class Handler {
 
     public void setName(String servletName) {
         this.name=servletName;
+    }
+
+    /** Who created this servlet definition - default is 0, i.e. the
+	web.xml mapping. It can also be the Invoker, the admin ( by using a
+	web interface), JSP engine or something else.
+	
+	Tomcat can do special actions - for example remove non-used
+	mappings if the source is the invoker or a similar component
+    */
+    public void setOrigin( int origin ) {
+	this.origin=origin;
+    }
+
+    public int getOrigin() {
+	return origin;
+    }
+
+    /** Accounting
+     */
+    public final Counters getCounters() {
+	return cntr;
     }
 
     // -------------------- Common servlet attributes
@@ -215,14 +259,7 @@ public class Handler {
 	}
     }
 
-    /** This method will be called when the handler
-	is removed ( by admin or timeout ). Various handlers
-	can implement this, but it can't be called from outside.
-	( the "guarded" doDestroy is public )
-    */
-    protected void doDestroy() throws Exception {
-
-    }
+    // -------------------- Methods --------------------
 
     /** Destroy a handler, and notify all the interested interceptors
      */
@@ -236,14 +273,6 @@ public class Handler {
 
     }
 
-    /** Initialize the handler. Handler can override this
-	method to initialize themself.
-	The method must set initialised=true if successfull.
-     */
-    protected void doInit() throws Exception
-    {
-	
-    }
 
     /** Call the init method, and notify all interested listeners.
      */
@@ -257,15 +286,6 @@ public class Handler {
 	} catch( Exception ex ) {
 	    initialized=false;
 	}
-    }
-
-    /** This is the actual content generator. Can't be called
-	from outside.
-     */
-    protected void doService(Request req, Response res)
-	throws Exception
-    {
-
     }
 
     /** Call the service method, and notify all listeners
@@ -318,20 +338,33 @@ public class Handler {
 	contextM.handleError( req, res, t );
     }
 
-    // -------------------- Origin 
-    /** Who created this servlet definition - default is 0, i.e. the
-	web.xml mapping. It can also be the Invoker, the admin ( by using a
-	web interface), JSP engine or something else.
-	
-	Tomcat can do special actions - for example remove non-used
-	mappings if the source is the invoker or a similar component
+    // -------------------- Abstract methods --------------------
+        
+    /** This method will be called when the handler
+	is removed ( by admin or timeout ). Various handlers
+	can implement this, but it can't be called from outside.
+	( the "guarded" doDestroy is public )
     */
-    public void setOrigin( int origin ) {
-	this.origin=origin;
+    protected void doDestroy() throws Exception {
+
     }
 
-    public int getOrigin() {
-	return origin;
+    /** Initialize the handler. Handler can override this
+	method to initialize themself.
+	The method must set initialised=true if successfull.
+     */
+    protected void doInit() throws Exception
+    {
+	
+    }
+
+    /** This is the actual content generator. Can't be called
+	from outside.
+     */
+    protected void doService(Request req, Response res)
+	throws Exception
+    {
+
     }
 
     // -------------------- Debug --------------------
@@ -340,52 +373,25 @@ public class Handler {
 	return name;
     }
 
-    Log loghelper = new Log("tc_log", this);
-    
-    public void setDebug( int d ) {
+    public final void setDebug( int d ) {
 	debug=d;
     }
 
-    protected void log( String s ) {
-	loghelper.log(s);
+    protected final void log( String s ) {
+	context.log(s);
     }
 
-    protected void log( String s, Throwable t ) {
-	loghelper.log(s, t);
+    protected final void log( String s, Throwable t ) {
+	context.log(s, t);
     }
 
 
-
-    // -------------------- Accounting --------------------
-
-    /** ServletWrapper counts. The accounting design is not
-	final, but all this is needed to tune up tomcat
-	( and to understand and be able to implement a good
-	solution )
-    */
-    public static final int ACC_LAST_ACCESSED=0;
-    public static final int ACC_INVOCATION_COUNT=1;
-    public static final int ACC_SERVICE_TIME=2;
-    public static final int ACC_ERRORS=3;
-    public static final int ACC_OVERHEAD=4;
-    public static final int ACC_IN_INCLUDE=5;
-    
-    public static final int ACCOUNTS=6;
-
-    private Counters cntr=new Counters( ACCOUNTS );
-
-    public final Counters getCounters() {
-	return cntr;
-    }
-
-    // -------------------- Notes
-    Object notes[]=new Object[ContextManager.MAX_NOTES];
-
-    public void setNote( int pos, Object value ) {
+    // -------------------- Notes --------------------
+    public final void setNote( int pos, Object value ) {
 	notes[pos]=value;
     }
 
-    public Object getNote( int pos ) {
+    public final Object getNote( int pos ) {
 	return notes[pos];
     }
 

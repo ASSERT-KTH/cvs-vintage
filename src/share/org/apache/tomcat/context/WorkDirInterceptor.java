@@ -120,10 +120,10 @@ public class WorkDirInterceptor extends BaseInterceptor {
 	sb.append(File.separator);
 	String host=ctx.getHost();
 	if( host==null ) 
-	    sb.append(cm.getHostName() );
+	    sb.append( "DEFAULT" );
 	else
 	    sb.append( host );
-	sb.append("_").append(cm.getPort());
+	//	sb.append("_").append(cm.getPort());
 	sb.append(URLEncoder.encode( ctx.getPath() ));
 	
 	ctx.setWorkDir( new File(sb.toString()));

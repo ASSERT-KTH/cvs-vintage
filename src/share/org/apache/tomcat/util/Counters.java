@@ -85,4 +85,7 @@ public final class Counters {
 	return accTable[pos];
     }
 
+    public void recycle() {
+	for( int i=0; i<accTable.length; i++ ) accTable[i]=0;
+    }
 }

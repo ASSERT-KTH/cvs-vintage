@@ -12,6 +12,9 @@ import org.apache.tomcat.util.log.*;
 import java.security.*;
 import java.util.*;
 
+// XXX XXX This started as a hack to integrate with J2EE,
+// need a major rewrite
+
 /**
  *  Use this class to embed tomcat in your application.
  *  The order is important:
@@ -222,9 +225,14 @@ public class EmbededTomcat { // extends WebService
     {
 	// We don't support virtual hosts in embeded tomcat
 	// ( it's not difficult, but can be done later )
-	Context ctx=contextM.getContext( cpath );
-	if( ctx==null ) return null;
-	return ctx.getFacade();
+	Enumeration ctxE=contextM.getContexts();
+	while( ctxE.hasMoreElements() ) {
+	    Context ctx=(Context)ctxE.nextElement();
+	    // XXX check host too !
+	    if( ctx.getPath().equals( cpath ))
+		return ctx.getFacade();
+	}
+	return null;
     }
 
     /** This will make the context available.

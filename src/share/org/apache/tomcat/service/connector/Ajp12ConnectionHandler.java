@@ -239,10 +239,11 @@ class AJP12RequestAdapter extends Request {
 		    // if("ROOT".equals( contextPath ) ) contextPath="";
 		    if("ROOT".equalsIgnoreCase( contextPath ) ) contextPath=null;
 		    if( doLog ) d("AJP: CP=" + contextPath);
-		    
-		    if( contextPath!= null )
-			context=contextM.getContext( contextPath );
-		    if( doLog ) d("AJP: context=" + context );
+
+		    // XXX That wasn't used afaik, need to do something in ajp13
+		    // 		    if( contextPath!= null )
+		    // 			context=contextM.getContext( contextPath );
+		    // 		    if( doLog ) d("AJP: context=" + context );
 		    
 		    servletName = readString(ajpin, null);         //Servlet
 		    if( doLog ) d("AJP: servlet=" + servletName );

@@ -105,21 +105,21 @@ public class AccountingInterceptor extends  BaseInterceptor {
 
     public int requestMap(Request request ) {
 	if( acc ) {
-	    request.setAccount( Request.ACC_PRE_RMAP, System.currentTimeMillis() );
+	    request.getCounters().setCounter( Request.ACC_PRE_RMAP, System.currentTimeMillis() );
 	}
 	return 0;
     }
 
     public int contextMap( Request request ) {
 	if( acc ) {
-	    request.setAccount( Request.ACC_PRE_CMAP, System.currentTimeMillis() );
+	    request.getCounters().setCounter( Request.ACC_PRE_CMAP, System.currentTimeMillis() );
 	}
 	return 0;
     }
 
     public int authenticate(Request request, Response response) {
 	if( acc  ) {
-	    request.setAccount( Request.ACC_POST_MAP, System.currentTimeMillis() );
+	    request.getCounters().setCounter( Request.ACC_POST_MAP, System.currentTimeMillis() );
 	}
 	return 0;
     }
@@ -131,7 +131,7 @@ public class AccountingInterceptor extends  BaseInterceptor {
 
     public int preService(Request request, Response response) {
 	if( acc ) {
-	    request.setAccount( Request.ACC_PRE_SERVICE, System.currentTimeMillis() );
+	    request.getCounters().setCounter( Request.ACC_PRE_SERVICE, System.currentTimeMillis() );
 	}
 	return 0;
     }
@@ -151,20 +151,20 @@ public class AccountingInterceptor extends  BaseInterceptor {
 
     public int postService(Request request, Response response) {
 	if( acc  ) {
-	    request.setAccount( Request.ACC_POST_SERVICE, System.currentTimeMillis() );
+	    request.getCounters().setCounter( Request.ACC_POST_SERVICE, System.currentTimeMillis() );
 
-	    long t1=request.getAccount( Request.ACC_PRE_CMAP );
-	    long t2=request.getAccount( Request.ACC_PRE_RMAP );
-	    long t3=request.getAccount( Request.ACC_POST_MAP );
-	    long t4=request.getAccount( Request.ACC_PRE_SERVICE );
-	    long t5=request.getAccount( Request.ACC_POST_SERVICE );
+	    long t1=request.getCounters().getCounter( Request.ACC_PRE_CMAP );
+	    long t2=request.getCounters().getCounter( Request.ACC_PRE_RMAP );
+	    long t3=request.getCounters().getCounter( Request.ACC_POST_MAP );
+	    long t4=request.getCounters().getCounter( Request.ACC_PRE_SERVICE );
+	    long t5=request.getCounters().getCounter( Request.ACC_POST_SERVICE );
 
 	    long t21=t2-t1;
 	    long t31=t3-t1;
 	    long t54=t5-t4;
 	    long t41=t4-t1;
 
-	    long tout=request.getAccount( Request.ACC_OUT_COUNT );
+	    long tout=request.getCounters().getCounter( Request.ACC_OUT_COUNT );
 	    StringBuffer sb=new StringBuffer();
 	    // ContextMap, Map, Service, Pre-Service-Overhead
 	    sb.append(t21).append(",");

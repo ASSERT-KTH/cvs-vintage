@@ -79,10 +79,26 @@ import java.util.*;
  * @author Hans Bergsten [hans@gefionsoftware.com]
  */
 public class Request {
+    public static final int ACC_PRE_CMAP=0;
+    public static final int ACC_PRE_RMAP=1;
+    public static final int ACC_POST_MAP=2;
+    public static final int ACC_PRE_SERVICE=3;
+    public static final int ACC_POST_SERVICE=4;
+    public static final int ACC_IN_OUT=5;
+    public static final int ACC_OUT_COUNT=6;
+
+    public static final int ACCOUNTS=7;
+
+    public static final String SESSIONID_FROM_COOKIE="cookie";
+    public static final String SESSIONID_FROM_URL="url";
+    public static final int MAX_INCLUDE=10;
+
     /** Magic attribute that allows access to the real request from
      *  facade - for trusted applications
      */
     public static final String ATTRIB_REAL_REQUEST="org.apache.tomcat.request";
+
+    // -------------------- properties --------------------
 
     protected int serverPort;
     protected String remoteAddr;
@@ -176,11 +192,14 @@ public class Request {
     // Need to distinguish between null pathTranslated and
     // lazy-computed pathTranlsated
     protected boolean pathTranslatedIsSet=false;
+    protected Vector cookies = new Vector();
+    protected boolean didCookies;
 
-    public static final String SESSIONID_FROM_COOKIE="cookie";
-    public static final String SESSIONID_FROM_URL="url";
-    public static final int MAX_INCLUDE=10;
-    
+    private Object notes[]=new Object[ContextManager.MAX_NOTES];
+    // Accounting
+    private Counters cntr=new Counters(ACCOUNTS);
+
+    // -------------------- Constructor --------------------
 
     public Request() {
  	headers = new MimeHeaders();
@@ -207,6 +226,32 @@ public class Request {
 	return contextM;
     }
 
+    public Object getFacade() {
+	return requestFacade;
+    }
+
+    public void setFacade(Object facade ) {
+	requestFacade=facade;
+    }
+
+    public void setResponse(Response response) {
+	this.response = response;
+    }
+
+    public Response getResponse() {
+	return response;
+    }
+
+    public MimeHeaders getMimeHeaders() {
+	return headers;
+    }
+
+    public final Counters getCounters() {
+	return cntr;
+    }
+
+    // -------------------- Request data --------------------
+
     public MessageBytes getSchemeMB() {
 	return schemeMB;
     }
@@ -223,43 +268,42 @@ public class Request {
         return method;
     }
 
+    public void setMethod( String method ) {
+	this.method=method;
+    }
+
     public String getRequestURI() {
 	return requestURI;
     }
 
-    // XXX used by forward
+    public void setRequestURI( String r ) {
+ 	this.requestURI=r;
+    }
+
     public String getQueryString() {
         return queryString;
+    }
+
+    public void setQueryString(String queryString) {
+	this.queryString = queryString;
     }
 
     public String getProtocol() {
         return protocol;
     }
 
+    public void setProtocol( String protocol ) {
+	this.protocol=protocol;
+    }
+
+
     /** Return the server name. If none was set,
      *  extract it from the host header.
      *
      */
     public String getServerName() {
-	if(serverName!=null) return serverName;
-
-	String hostHeader = this.getHeader("host");
-	if (hostHeader != null) {
-	    int i = hostHeader.indexOf(':');
-	    if (i > -1) {
-		hostHeader = hostHeader.substring(0,i);
-	    }
-	    serverName=hostHeader;
-	    return serverName;
-	}
-
-	if( localHost != null ) {
-	    serverName = localHost;
-	    return serverName;
-	}
-	// default to localhost - and warn
-	//	log("No server name, defaulting to localhost");
-	serverName="localhost";
+	if(serverName==null) 
+	    serverName=findServerName();
 	return serverName;
     }
 
@@ -268,6 +312,52 @@ public class Request {
 	this.serverName = serverName;
     }
 
+    
+    public int getServerPort() {
+        return serverPort;
+    }
+
+    public String getRemoteAddr() {
+        return remoteAddr;
+    }
+
+    public String getRemoteHost() {
+	return remoteHost;
+    }
+
+    public void setPathInfo(String pathInfo) {
+        this.pathInfo = pathInfo;
+    }
+
+//     // What's between context path and servlet name ( /servlet )
+//     // A smart server may use arbitrary prefixes and rewriting
+//     public String getServletPrefix() {
+// 	return null;
+//     }
+
+    public void setServerPort(int serverPort ) {
+	this.serverPort=serverPort;
+    }
+
+    public void setRemoteAddr( String remoteAddr ) {
+	this.remoteAddr=remoteAddr;
+    }
+
+    public void setRemoteHost(String remoteHost) {
+	this.remoteHost=remoteHost;
+    }
+
+    public String getLocalHost() {
+	return localHost;
+    }
+
+    public void setLocalHost(String host) {
+	this.localHost = host;
+    }
+
+
+    // -------------------- Parameters --------------------
+    
     // XXX optimize for common case ( single params )
     public String getParameter(String name ) {
 	String[] values = getParameterValues(name);
@@ -288,6 +378,12 @@ public class Request {
         return parameters.keys();
     }
 
+    // --------------------
+
+    public void setAuthType(String authType) {
+        this.authType = authType;
+    }
+    
     public String getAuthType() {
     	return authType;
     }
@@ -296,6 +392,14 @@ public class Request {
         if(charEncoding!=null) return charEncoding;
         charEncoding = RequestUtil.getCharsetFromContentType( getContentType());
 	return charEncoding;
+    }
+
+    public void setCharEncoding( String enc ) {
+	this.charEncoding=enc;
+    }
+
+    public void setContentLength( int  len ) {
+	this.contentLength=len;
     }
 
     public int getContentLength() {
@@ -314,6 +418,10 @@ public class Request {
 	if(contentType != null) return contentType;
 	// can be null!! -
 	return contentType;
+    }
+
+    public void setContentType( String type ) {
+	this.contentType=type;
     }
 
 
@@ -365,6 +473,8 @@ public class Request {
 	if( notAuthenticated ) {
 	    notAuthenticated=false;
 
+	    // Call all authentication callbacks. If any of them is able to
+	    // 	identify the user it will set the principal in req.
 	    int status=0;
 	    BaseInterceptor reqI[]= context.getContainer().
 		getInterceptors(Container.H_authenticate);
@@ -374,8 +484,6 @@ public class Request {
 		    break;
 		}
 	    }
-
-	    //contextM.doAuthenticate(this, response);
 	    // 	    context.log("Auth " + remoteUser );
 	}
 	return remoteUser;
@@ -419,52 +527,30 @@ public class Request {
     String checkRoles[]=new String[1];
     public boolean isUserInRole(String role) {
 	checkRoles[0]=role;
-	int status=contextM.doAuthorize(this, response, checkRoles);
+
+	int status=0;
+	BaseInterceptor reqI[]= context.getContainer().
+	    getInterceptors(Container.H_authorize);
+
+	// Call all authorization callbacks. 
+	for( int i=0; i< reqI.length; i++ ) {
+	    status = reqI[i].authorize( this, response, checkRoles );
+	    if ( status != 0 ) {
+		break;
+	    }
+	}
 	return status==0;
     }
 
     public String getServletPath() {
-	// contextM.log( "GetServletPath " + servletPath );
         return servletPath;
     }
 
     public void setServletPath(String servletPath) {
-	//	contextM.log( "SetServletPath " + servletPath );
 	this.servletPath = servletPath;
     }
 
 
-
-    // End hints
-
-    // -------------------- Request methods ( high level )
-    public Object getFacade() {
-	// some requests are internal, and will never need a
-	// facade - no need to create a new object unless needed.
-//         if( requestFacade==null ) {
-// 	    if( context==null ) {
-// 		// wrong request
-// 		// XXX the will go away after we remove the one-one relation between
-// 		// request and facades ( security, etc)
-// 		requestFacade = contextM.getContext("" ).getFacadeManager().createHttpServletRequestFacade(this );
-// 		return requestFacade;
-// 	    }
-// 	    requestFacade = context.getFacadeManager().createHttpServletRequestFacade(this);
-// 	}
-	return requestFacade;
-    }
-
-    public void setFacade(Object facade ) {
-	requestFacade=facade;
-    }
-
-    public void setResponse(Response response) {
-	this.response = response;
-    }
-
-    public Response getResponse() {
-	return response;
-    }
 
     // -------------------- Session --------------------
     // GS - return the jvm load balance route
@@ -545,9 +631,6 @@ public class Request {
     }
 
     // -------------------- Cookies --------------------
-    protected Vector cookies = new Vector();
-    protected boolean didCookies;
-
     public int getCookieCount() {
 	if( ! didCookies ) {
 	    didCookies=true;
@@ -594,64 +677,25 @@ public class Request {
 	this.container=container;
     }
 
-    /** The file - result of mapping the request ( using aliases and other
-     *  mapping rules. Usefull only for static resources.
-     */
-    public String getMappedPath() {
-	return mappedPath;
-    }
+//     /** The file - result of mapping the request ( using aliases and other
+//      *  mapping rules. Usefull only for static resources.
+//      */
+//     public String getMappedPath() {
+// 	return mappedPath;
+//     }
 
-    public void setMappedPath( String m ) {
-	mappedPath=m;
-    }
-
-    public void setRequestURI( String r ) {
- 	this.requestURI=r;
-    }
+//     public void setMappedPath( String m ) {
+// 	mappedPath=m;
+//     }
 
     public void setParameters( Hashtable h ) {
 	if(h!=null)
 	    this.parameters=h;
-	// XXX Should we override query parameters ??
     }
 
     public Hashtable getParameters() {
 	return parameters;
     }
-
-    public void setContentLength( int  len ) {
-	this.contentLength=len;
-    }
-
-    public void setContentType( String type ) {
-	this.contentType=type;
-    }
-
-    public void setCharEncoding( String enc ) {
-	this.charEncoding=enc;
-    }
-
-    public void setAuthType(String authType) {
-        this.authType = authType;
-    }
-
-
-    public void setPathInfo(String pathInfo) {
-        this.pathInfo = pathInfo;
-    }
-
-    /** Set query string - will be called by forward
-     */
-    public void setQueryString(String queryString) {
-	// the query will be processed when getParameter() will be called.
-	// Or - if you alredy have it parsed, call setParameters()
-	this.queryString = queryString;
-    }
-
-
-    // XXX
-    // the server name should be pulled from a server object of some
-    // sort, not just set and got.
 
     // -------------------- Attributes
     
@@ -660,11 +704,7 @@ public class Request {
 	if( value != null )
 	    return value;
 
-	// 	// allow access to FacadeManager for servlets
-	// 	// ( this way you don't need to deal with init ).
-	// 	if( name.equals(FacadeManager.FACADE_ATTRIBUTE)) {
-	// 	    return context.getAttribute( name );
-	// 	}
+	// allow access to FacadeManager for servlets
 	if(name.equals(ATTRIB_REAL_REQUEST)) {
 	    if( ! context.allowAttribute(name) ) return null;
 	    return this;
@@ -688,7 +728,7 @@ public class Request {
     }
     // End Attributes
 
-    // -------------------- Sub requests
+    // -------------------- Sub requests --------------------
 
     /** If this is a sub-request, return the parent
      */
@@ -735,6 +775,14 @@ public class Request {
 	return getMimeHeaders().values(name);
     }
 
+    public String getHeader(String name) {
+        return headers.getHeader(name);
+    }
+
+    public Enumeration getHeaderNames() {
+        return headers.names();
+    }
+
     // -------------------- Utils - facade for RequestUtil
     private void handleParameters() {
    	if(!didParameters) {
@@ -752,18 +800,93 @@ public class Request {
 	}
     }
 
-    // -------------------- End utils
-    public void recycle() {
-        if( requestFacade != null && context!=null ) {
-	    //            context.getFacadeManager().recycle(this);
+
+    // -------------------- Computed fields --------------------
+    
+    protected String findServerName() {
+	String hostHeader = this.getHeader("host");
+	if (hostHeader != null) {
+	    int i = hostHeader.indexOf(':');
+	    if (i > -1) {
+		hostHeader = hostHeader.substring(0,i);
+	    }
+	    serverName=hostHeader;
+	    return serverName;
+	}
+
+	if( localHost != null ) {
+	    serverName = localHost;
+	    return serverName;
+	}
+	// default to localhost - and warn
+	//	log("No server name, defaulting to localhost");
+	serverName="localhost";
+	return serverName;
+    }
+
+    // -------------------- For adapters --------------------
+    
+    /** Fill in the buffer. This method is probably easier to implement than
+	previous.
+	This method should only be called from SerlvetInputStream implementations.
+	No need to implement it if your adapter implements ServletInputStream.
+     */
+    // you need to override this method if you want non-empty InputStream
+    public  int doRead( byte b[], int off, int len ) throws IOException {
+	return -1; // not implemented - implement getInputStream
+    }
+
+
+    // This method must be removed and replaced with a real buffer !!!
+    byte b[]=new byte[1]; // read operations happen in the same thread.
+    // if needed, upper layer can synchronize ( well, 2 threads reading
+    // the input stream is not good anyway )
+    
+    public int doRead() throws IOException {
+        byte []b = new byte[1];
+        int rc = doRead(b, 0, 1);
+
+        if(rc <= 0) {
+            return -1;
         }
 
+	return b[0];
+	// ??
+	//return ((int)b[0]) & 0x000000FF;
+    }
+
+    // -------------------- debug --------------------
+    
+    public String toString() {
+	StringBuffer sb=new StringBuffer();
+	sb.append( "R( ");
+	if( context!=null) {
+	    sb.append( context.getPath() );
+	    if( getServletPath() != null )
+		sb.append( " + " + getServletPath() + " + " + getPathInfo());
+	} else {
+	    sb.append(getRequestURI());
+	}
+	sb.append(")");
+	return sb.toString();
+    }
+
+    // -------------------- Per-Request "notes" --------------------
+
+    public final void setNote( int pos, Object value ) {
+	notes[pos]=value;
+    }
+
+    public final Object getNote( int pos ) {
+	return notes[pos];
+    }
+
+    // -------------------- Recycling -------------------- 
+    public void recycle() {
         context = null;
         attributes.clear();
         parameters.clear();
         cookies.removeAllElements();
-	//        requestURI = null;
-	//        queryString = null;
         contentLength = -1;
         contentType = null;
         charEncoding = null;
@@ -795,7 +918,7 @@ public class Request {
         remoteAddr="127.0.0.1";
         remoteHost="localhost";
         localHost="localhost";
-        for( int i=0; i<ACCOUNTS; i++ ) accTable[i]=0;
+        cntr.recycle();
         for( int i=0; i<ContextManager.MAX_NOTES; i++ ) notes[i]=null;
 	parent=null;
 	child=null;
@@ -803,7 +926,6 @@ public class Request {
         notAuthenticated=true;
 	userRoles=null;
 	reqRoles=null;
-	//	in=null;
 
 	uriMB.recycle();
 	contextMB.recycle();
@@ -815,151 +937,4 @@ public class Request {
         schemeMB.setString("http");
 
     }
-
-    public MimeHeaders getMimeHeaders() {
-	return headers;
-    }
-
-    public String getHeader(String name) {
-        return headers.getHeader(name);
-    }
-
-    public Enumeration getHeaderNames() {
-        return headers.names();
-    }
-
-    // Bad design, use upper layer. We already have doRead()
-//     public ServletInputStream getInputStream() throws IOException {
-// 	return getFacade().getInputStream();
-//     }
-
-    public int getServerPort() {
-        return serverPort;
-    }
-
-    public String getRemoteAddr() {
-        return remoteAddr;
-    }
-
-    public String getRemoteHost() {
-	return remoteHost;
-    }
-
-    /** Fill in the buffer. This method is probably easier to implement than
-	previous.
-	This method should only be called from SerlvetInputStream implementations.
-	No need to implement it if your adapter implements ServletInputStream.
-     */
-    // you need to override this method if you want non-empty InputStream
-    public  int doRead( byte b[], int off, int len ) throws IOException {
-	return -1; // not implemented - implement getInputStream
-    }
-
-
-    // This method must be removed and replaced with a real buffer !!!
-    public int doRead() throws IOException {
-        byte []b = new byte[1];
-        int rc = doRead(b, 0, 1);
-
-        if(rc <= 0) {
-            return -1;
-        }
-
-	return b[0];
-	// ??
-	//return ((int)b[0]) & 0x000000FF;
-    }
-
-    // -------------------- "cooked" info --------------------
-    // Hints = return null if you don't know,
-    // and Tom will find the value. You can also use the static
-    // methods in Request
-
-    // What's between context path and servlet name ( /servlet )
-    // A smart server may use arbitrary prefixes and rewriting
-    public String getServletPrefix() {
-	return null;
-    }
-
-    public void setMethod( String method ) {
-	this.method=method;
-    }
-
-    public void setProtocol( String protocol ) {
-	this.protocol=protocol;
-    }
-
-    // 1 mime headers per request, you change the content of
-    // MimeHeaders instead of replacing them.
-    //     public void setMimeHeaders( MimeHeaders headers ) {
-    // 	this.headers=headers;
-    //     }
-
-    public void setServerPort(int serverPort ) {
-	this.serverPort=serverPort;
-    }
-
-    public void setRemoteAddr( String remoteAddr ) {
-	this.remoteAddr=remoteAddr;
-    }
-
-    public void setRemoteHost(String remoteHost) {
-	this.remoteHost=remoteHost;
-    }
-
-    public String getLocalHost() {
-	return localHost;
-    }
-
-    public void setLocalHost(String host) {
-	this.localHost = host;
-    }
-
-
-    public String toString() {
-	StringBuffer sb=new StringBuffer();
-	sb.append( "R( ");
-	if( context!=null) {
-	    sb.append( context.getPath() );
-	    if( getServletPath() != null )
-		sb.append( " + " + getServletPath() + " + " + getPathInfo());
-	} else {
-	    sb.append(getRequestURI());
-	}
-	sb.append(")");
-	return sb.toString();
-    }
-
-    // -------------------- Accounting --------------------
-    // XXX Will be implemented as a note !
-    public static final int ACC_PRE_CMAP=0;
-    public static final int ACC_PRE_RMAP=1;
-    public static final int ACC_POST_MAP=2;
-    public static final int ACC_PRE_SERVICE=3;
-    public static final int ACC_POST_SERVICE=4;
-    public static final int ACC_IN_OUT=5;
-    public static final int ACC_OUT_COUNT=6;
-
-    public static final int ACCOUNTS=7;
-    long accTable[]=new long[ACCOUNTS];
-
-    public void setAccount( int pos, long value ) {
-	accTable[pos]=value;
-    }
-
-    public long getAccount( int pos ) {
-	return accTable[pos];
-    }
-
-    // -------------------- Per-Request "notes"
-    Object notes[]=new Object[ContextManager.MAX_NOTES];
-
-    public void setNote( int pos, Object value ) {
-	notes[pos]=value;
-    }
-
-    public Object getNote( int pos ) {
-	return notes[pos];
-    }
-
 }

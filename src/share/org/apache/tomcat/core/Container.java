@@ -67,6 +67,8 @@ import java.net.*;
 import java.util.*;
 import org.apache.tomcat.core.*;
 
+// XXX better names: Location, URLPattern,  
+
 /**
  * A group of resources, with some common properties.
  * Container is similar with Apache "dir_conf" structue.
@@ -493,7 +495,7 @@ public class Container implements Cloneable{
 
     
     // debug
-    public static final int dL=4;
+    public static final int dL=0;
     private void debug( String s ) {
 	System.out.println("Container: " + s );
     }

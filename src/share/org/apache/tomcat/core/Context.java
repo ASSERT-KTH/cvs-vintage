@@ -128,6 +128,19 @@ public final class Context implements LogAware {
      */
     public static final String ATTRIB_REAL_CONTEXT="org.apache.tomcat.context";
 
+    /** Context is new, not even added to server. ContextManager is not
+	set, and most of the paths are not fixed
+    */
+    public static final int STATE_PRE_ADD=0;
+    /** Context was added to the server. Relative paths are fixed, based
+	on server base, and CM is set.
+     */
+    public static final int STATE_ADD=1;
+    /** Context is initialized and ready to serve. We have all mappings
+	and configs from web.xml.
+    */
+    public static final int STATE_INIT=2;
+    
     // -------------------- internal properties
     // context "id"
     private String path = "";
@@ -137,6 +150,8 @@ public final class Context implements LogAware {
 
     // Absolute path to docBase if file-system based
     private String absPath;
+
+    private int state=STATE_PRE_ADD;
     
     // internal state / related objects
     private ContextManager contextM;
@@ -439,6 +454,10 @@ public final class Context implements LogAware {
 	return defaultContainer;
     }
 
+    public final int getState() {
+	return state;
+    }
+    
     // -------------------- Basic properties --------------------
 
     /** Base URL for this context

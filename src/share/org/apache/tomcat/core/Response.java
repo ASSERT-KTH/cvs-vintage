@@ -75,71 +75,69 @@ import org.apache.tomcat.helper.*;
  * @author Hans Bergsten <hans@gefionsoftware.com>
  */
 public class Response {
-    public static final String DEFAULT_CONTENT_TYPE = "text/plain";
-    public static final String DEFAULT_CHAR_ENCODING = "8859_1";
-    public static final String LOCALE_DEFAULT="en";
-    public static final Locale DEFAULT_LOCALE=new Locale(LOCALE_DEFAULT, "");
     
+    public static final String DEFAULT_CONTENT_TYPE = "text/plain";
+
+    public static final String DEFAULT_CHAR_ENCODING = "8859_1";
+
+    public static final String LOCALE_DEFAULT="en";
+
+    public static final Locale DEFAULT_LOCALE=new Locale(LOCALE_DEFAULT, "");
+
+    // -------------------- fields --------------------
     protected static StringManager sm =
         StringManager.getManager("org.apache.tomcat.resources");
 
+    // associated request 
     protected Request request;
+
+    // facade
     protected Object responseFacade;
 
-    protected Vector userCookies = new Vector();
+    // Response components
+    protected int status = 200;
+    protected MimeHeaders headers = new MimeHeaders();
+    protected OutputBuffer oBuffer;
+
+    // state
+    protected boolean commited = false;
+    protected boolean usingStream = false;
+    protected boolean usingWriter = false;
+    protected boolean included=false;
+
+    // 
     protected String contentType = DEFAULT_CONTENT_TYPE;
     protected String contentLanguage = null;
     protected String characterEncoding = DEFAULT_CHAR_ENCODING;
     protected int contentLength = -1;
-    protected int status = 200;
     private Locale locale = DEFAULT_LOCALE;
 
-    protected MimeHeaders headers = new MimeHeaders();
-
-    // When getWriter is called on facade, both sos and writer are
-    // set.
-    // usingStream== ( sos!=null && writer ==null)
-    // usingWriter== ( writer != null )
-    // started == ( sos!=null )
-    //    protected ServletOutputStream sos;
-    protected PrintWriter writer;
-
-    protected boolean commited = false;
-
-    //    protected ByteBuffer bBuffer;
-    protected OutputBuffer oBuffer;
-
-    // @deprecated
-    protected boolean usingStream = false;
-    protected boolean usingWriter = false;
-    protected boolean started = false;
-    
-    boolean included=false;
+    // -------------------- Constructor --------------------
     
     public Response() {
     }
 
+    // --------------------  --------------------
+    
+    /**  Init is called from CM when the object is added
+	 to tomcat.
+     */
     void init() {
-	// init must be called from CM - we need req, etc.
 	oBuffer=new OutputBuffer( this );
     }
     
     public Object getFacade() {
-//         if( responseFacade==null ) {
-// 	    Context ctx= request.getContext();
-// 	    if( ctx == null ) {
-// 		ctx=request.getContextManager().getContext("");
-// 	    }
-// 	    responseFacade = ctx.getFacadeManager().
-// 		createHttpServletResponseFacade(this);
-// 	}
 	return responseFacade;
     }
 
+    /** Higher-level layer
+     */
     public void setFacade(Object facade ) {
 	responseFacade=facade;
     }
 
+    /** Associated request
+     */
     public void setRequest(Request request) {
 	this.request = request;
     }
@@ -148,7 +146,15 @@ public class Response {
 	return request;
     }
 
-    /* -------------------- */
+    public OutputBuffer getBuffer() {
+	return oBuffer;
+    }
+    
+    public MimeHeaders getMimeHeaders() {
+	return headers;
+    }
+
+    // -------------------- State --------------------
 
     // Included response behavior
     public boolean isIncluded() {
@@ -157,54 +163,17 @@ public class Response {
 
     public void setIncluded( boolean incl ) {
 	included= incl;
-	if( incl ) {
-	    // included behavior, no header output,
-	    // no status change on errors.
-	    // XXX we can optimize a bit - replace headers with
-	    // an new Hashtable we can throw away. 
-	} else {
-	    // move back to normal behavior.
-
-	}
     }
 
-    /** If the writer/output stream was requested
-     */
-    public boolean isStarted() {
-	return started;
+    public int getStatus() {
+        return status;
     }
     
-    public void recycle() {
-	userCookies.removeAllElements(); // XXX reuse !!!
-	contentType = DEFAULT_CONTENT_TYPE;
-	contentLanguage = null;
-        locale = DEFAULT_LOCALE;
-	characterEncoding = DEFAULT_CHAR_ENCODING;
-	contentLength = -1;
-	status = 200;
-	usingWriter = false;
-	usingStream = false;
-	writer=null;
-	started = false;
-	commited = false;
-	included=false;
-	if ( oBuffer != null ) oBuffer.recycle();
-	headers.clear();
-    }
-
-    public void finish() throws IOException {
-        oBuffer.close();
-	ContextManager cm=request.getContextManager();
-	BaseInterceptor reqI[]= cm.
-	    getInterceptors(request, Container.H_afterBody);
-
-	for( int i=0; i< reqI.length; i++ ) {
-	    reqI[i].afterBody( request, this );
-	}
-    }
-
-    public boolean containsHeader(String name) {
-	return headers.getHeader(name) != null;
+    /** Set the response status 
+     */ 
+    public void setStatus( int status ) {
+	if( included ) return;
+	this.status=status;
     }
 
     public boolean isUsingStream() {
@@ -223,14 +192,53 @@ public class Response {
 	usingWriter=writer;
     }
 
-    public OutputBuffer getBuffer() {
-	return oBuffer;
+    public boolean isBufferCommitted() {
+	return commited;
     }
+
+    public void setBufferCommitted( boolean v ) {
+	this.commited=v;
+    }
+
+    // -------------------- Methods --------------------
     
+    
+    public void reset() throws IllegalStateException {
+	// Force the PrintWriter to flush its data to the output
+        // stream before resetting the output stream
+        //
+	contentType = DEFAULT_CONTENT_TYPE;
+        locale = DEFAULT_LOCALE;
+	characterEncoding = DEFAULT_CHAR_ENCODING;
+	contentLength = -1;
+	status = 200;
+
+	// Reset the stream
+	if( commited ) {
+	    String msg = sm.getString("servletOutputStreamImpl.reset.ise"); 
+	    throw new IllegalStateException(msg);
+	}
+	oBuffer.reset();
+
+        // Clear the headers
+        if( ! included) headers.clear();
+    }
+
+    public void finish() throws IOException {
+        oBuffer.close();
+	ContextManager cm=request.getContextManager();
+	BaseInterceptor reqI[]= cm.
+	    getInterceptors(request, Container.H_afterBody);
+
+	for( int i=0; i< reqI.length; i++ ) {
+	    reqI[i].afterBody( request, this );
+	}
+    }
+
 
     // -------------------- Headers --------------------
-    public MimeHeaders getMimeHeaders() {
-	return headers;
+    public boolean containsHeader(String name) {
+	return headers.getHeader(name) != null;
     }
 
     public void setHeader(String name, String value) {
@@ -281,81 +289,6 @@ public class Response {
 	return false;
     }
 
-    public int getBufferSize() {
-	return oBuffer.getBufferSize();
-    }
-
-    public void setBufferSize(int size) throws IllegalStateException {
-	// Force the PrintWriter to flush the data to the OutputStream.
-	if (usingWriter == true && writer != null ) writer.flush();
-        try{
-            oBuffer.flushChars();
-        }catch(IOException ex){
-                ;
-        }
-	if( oBuffer.getBytesWritten() >0) {
-	    throw new IllegalStateException ( sm.getString("servletOutputStreamImpl.setbuffer.ise"));
-	}
-	oBuffer.setBufferSize( size );
-    }
-
-    /*
-     * Methodname "isCommitted" already taken by Response class.
-     */
-    public boolean isBufferCommitted() {
-	return commited;
-	//	return out.isCommitted();
-    }
-
-    public void setBufferCommitted( boolean v ) {
-	this.commited=v;
-    }
-    
-    public void reset() throws IllegalStateException {
-	// Force the PrintWriter to flush its data to the output
-        // stream before resetting the output stream
-        //
-	userCookies.removeAllElements();  // keep system (session) cookies
-	contentType = DEFAULT_CONTENT_TYPE;
-        locale = DEFAULT_LOCALE;
-	characterEncoding = DEFAULT_CHAR_ENCODING;
-	contentLength = -1;
-	status = 200;
-
-	// XXX XXX What happens here ? flush() on writer will flush
-	// to client !!!!!!!!
-	if (usingWriter == true && writer != null)
-	    writer.flush();
-
-	// Reset the stream
-	if( commited ) {
-	    String msg = sm.getString("servletOutputStreamImpl.reset.ise"); 
-	    throw new IllegalStateException(msg);
-	}
-	oBuffer.reset();
-        // Clear the cookies and such
-
-        // Clear the headers
-        if( ! included) headers.clear();
-    }
-
-    // Reset the response buffer but not headers and cookies
-    public void resetBuffer() throws IllegalStateException {
-	if( usingWriter && writer != null )
-	    writer.flush();
-
-	if( commited ) {
-	    String msg = sm.getString("servletOutputStreamImpl.reset.ise"); 
-	    throw new IllegalStateException(msg);
-	}
-	oBuffer.reset();
-    }
-
-    public void flushBuffer() throws IOException {
-      oBuffer.flush();
-    }
-
-
     /** Signal that we're done with the headers, and body will follow.
      *  Any implementation needs to notify ContextManager, to allow
      *  interceptors to fix headers.
@@ -390,11 +323,48 @@ public class Response {
 	// No action.. 
     }
 
+    // -------------------- Buffer --------------------
+    
+    public int getBufferSize() {
+	return oBuffer.getBufferSize();
+    }
+
+    public void setBufferSize(int size) throws IllegalStateException {
+	// Force the PrintWriter to flush the data to the OutputStream.
+	//	if (usingWriter == true && writer != null ) writer.flush();
+        try{
+            oBuffer.flushChars();
+        }catch(IOException ex){
+                ;
+        }
+	if( oBuffer.getBytesWritten() >0) {
+	    throw new IllegalStateException ( sm.getString("servletOutputStreamImpl.setbuffer.ise"));
+	}
+	oBuffer.setBufferSize( size );
+    }
+
+
+    // Reset the response buffer but not headers and cookies
+    public void resetBuffer() throws IllegalStateException {
+
+	if( commited ) {
+	    String msg = sm.getString("servletOutputStreamImpl.reset.ise"); 
+	    throw new IllegalStateException(msg);
+	}
+	oBuffer.reset();
+    }
+
+    public void flushBuffer() throws IOException {
+      oBuffer.flush();
+    }
+
+
+    // -------------------- I18N --------------------
+    
     public Locale getLocale() {
         return locale;
     }
 
-    // XXX XXX Need rewrite
     public void setLocale(Locale locale) {
         if (locale == null || included) {
             return;  // throw an exception?
@@ -444,17 +414,8 @@ public class Response {
 	return contentLength;
     }
 
-    public int getStatus() {
-        return status;
-    }
+    // -------------------- Extend --------------------
     
-    /** Set the response status 
-     */ 
-    public void setStatus( int status ) {
-	if( included ) return;
-	this.status=status;
-    }
-
     /** Write a chunk of bytes. Should be called only from ServletOutputStream implementations,
      *	No need to implement it if your adapter implements ServletOutputStream.
      *  Headers and status will be written before this method is exceuted.
@@ -468,15 +429,21 @@ public class Response {
     }
 
 
-    /*
-      Changes:
+    // --------------------
+    
+    public void recycle() {
+	contentType = DEFAULT_CONTENT_TYPE;
+	contentLanguage = null;
+        locale = DEFAULT_LOCALE;
+	characterEncoding = DEFAULT_CHAR_ENCODING;
+	contentLength = -1;
+	status = 200;
+	usingWriter = false;
+	usingStream = false;
+	commited = false;
+	included=false;
+	if ( oBuffer != null ) oBuffer.recycle();
+	headers.clear();
+    }
 
-      - removed StringBuffer body. It was broken ( used DEFAULT_CHAR_ENCODING, the
-      output is already bytes... ). No known usage, it's easy to create a
-      response that stores the response.
-      
-      - replaced notIncluded with included, remove all ugly ! notIncluded
-
-
-     */
 }
