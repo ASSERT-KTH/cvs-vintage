@@ -1,4 +1,4 @@
-// $Id: ModelManagementHelper.java,v 1.37 2003/11/10 12:35:46 jhraigniac Exp $
+// $Id: ModelManagementHelper.java,v 1.38 2003/12/03 23:54:29 alexb Exp $
 // Copyright (c) 1996-2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -26,6 +26,7 @@ package org.argouml.model.uml.modelmanagement;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
@@ -119,14 +120,54 @@ public class ModelManagementHelper {
     public Collection getAllNamespaces(Object ns) {
         if (ns == null || !(ns instanceof MNamespace))
             return new ArrayList();
-        Iterator it = ((MNamespace) ns).getOwnedElements().iterator();
-        List list = new ArrayList();
-        while (it.hasNext()) {
-            Object o = it.next();
-            if (o instanceof MNamespace) {
-                list.add(o);
-                list.addAll(getAllNamespaces(o));
+        
+        Collection namespaces = ((MNamespace) ns).getOwnedElements();
+        // the list of namespaces to return
+        List list = Collections.EMPTY_LIST;
+        
+        // if there are no owned elements then return empty list
+        if(namespaces == Collections.EMPTY_LIST ||
+           namespaces.size() == 0){
+            return Collections.EMPTY_LIST;
+        }
+        else{
+            
+            // work with an array instead of iterator.
+            Object[] nsArray = namespaces.toArray();
+            
+            for(int i=0;i<nsArray.length;i++){
+            
+                Object o = nsArray[i];
+                if (o instanceof MNamespace) {
+                    
+                    // only build a namepace if needed, with 
+                    if(list == Collections.EMPTY_LIST){
+                        list = new ArrayList(nsArray.length);
+                    }
+                    
+                    list.add(o);
+                    
+                    Collection namespaces1 = getAllNamespaces(o);
+                    // only add all if there are some to add.
+                    if(namespaces1 != Collections.EMPTY_LIST){
+                        list.addAll(namespaces1);
+                    }
+                }
             }
+            
+//            Iterator it = ((MNamespace) ns).getOwnedElements().iterator();
+//            list = new ArrayList();
+//            while (it.hasNext()) {
+//                Object o = it.next();
+//                if (o instanceof MNamespace) {
+//                    list.add(o);
+//                    
+//                    Collection namespaces1 = getAllNamespaces(o);
+//                    if(namespaces1 != Collections.EMPTY_LIST){
+//                        list.addAll(namespaces1);
+//                    }
+//                }
+//            }
         }
         return list;
     }
