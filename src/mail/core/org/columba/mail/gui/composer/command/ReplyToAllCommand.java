@@ -18,33 +18,18 @@
 
 package org.columba.mail.gui.composer.command;
 
-import java.io.IOException;
-import java.io.InputStream;
-
-import java.nio.charset.Charset;
-
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.LinkedList;
 
 import org.columba.core.command.DefaultCommandReference;
-import org.columba.core.command.Worker;
-import org.columba.core.io.StreamUtils;
-import org.columba.core.xml.XmlElement;
-import org.columba.mail.command.FolderCommandReference;
 import org.columba.mail.composer.MessageBuilderHelper;
 import org.columba.mail.config.AccountItem;
-import org.columba.mail.main.MailInterface;
 import org.columba.mail.folder.Folder;
-import org.columba.mail.gui.composer.ComposerModel;
-import org.columba.mail.gui.composer.util.QuoteFilterInputStream;
 import org.columba.ristretto.message.Address;
 import org.columba.ristretto.message.BasicHeader;
 import org.columba.ristretto.message.Header;
-import org.columba.ristretto.message.MimeHeader;
-import org.columba.ristretto.message.MimePart;
-import org.columba.ristretto.message.MimeTree;
 
 /**
  * Reply to All senders.

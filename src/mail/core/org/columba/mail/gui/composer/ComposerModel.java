@@ -110,7 +110,7 @@ public class ComposerModel {
         for (int i=0; i<a.length; i++) {
             HeaderItem item = new HeaderItem(HeaderItem.CONTACT);
             String displayName = a[i].getDisplayName();
-            if( displayName != null ) {
+            if( !displayName.equals("") ) {
                 item.add("displayname", displayName);
             } else {
                 item.add("displayname", a[i].getMailAddress());
