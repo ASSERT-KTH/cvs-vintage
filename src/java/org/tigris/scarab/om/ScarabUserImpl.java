@@ -53,7 +53,7 @@ import java.util.Map;
 import java.util.Calendar;
 import java.util.Collections;
 
-import org.apache.commons.util.GenerateUniqueId;
+import org.apache.commons.lang.RandomStringUtils;
 import org.apache.fulcrum.security.entity.User;
 import org.apache.fulcrum.security.entity.Group;
 import org.apache.fulcrum.security.TurbineSecurity;
@@ -81,7 +81,7 @@ import org.apache.log4j.Logger;
  * implementation needs.
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: ScarabUserImpl.java,v 1.112 2003/10/14 04:59:23 jmcnally Exp $
+ * @version $Id: ScarabUserImpl.java,v 1.113 2003/11/13 19:40:35 mpoeschl Exp $
  */
 public class ScarabUserImpl 
     extends BaseScarabUserImpl 
@@ -561,11 +561,8 @@ public class ScarabUserImpl
         throws Exception
     {
         // get a unique id for validating the user
-        String uniqueId = GenerateUniqueId.getIdentifier();
-        if (uniqueId.length() > UNIQUE_ID_MAX_LEN)
-        {
-            uniqueId = uniqueId.substring(0, UNIQUE_ID_MAX_LEN);
-        }
+        String uniqueId = RandomStringUtils
+                .randomAlphanumeric(UNIQUE_ID_MAX_LEN);
         // add it to the perm table
         setConfirmed(uniqueId);
         TurbineSecurity.addUser (this, getPassword());

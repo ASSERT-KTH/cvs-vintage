@@ -60,7 +60,7 @@ import org.apache.fulcrum.intake.model.Group;
 import org.apache.fulcrum.security.util.TurbineSecurityException;
 import org.apache.fulcrum.template.TemplateEmail;
 
-import org.apache.commons.util.GenerateUniqueId;
+import org.apache.commons.lang.RandomStringUtils;
 
 // Scarab Stuff
 import org.tigris.scarab.om.ScarabUser;
@@ -113,11 +113,8 @@ public class ForgotPassword extends ScarabTemplateAction
         {
             user = (ScarabUser) TurbineSecurity.getUser(username);
             
-            String tempPassword = GenerateUniqueId.getIdentifier();
-            if (tempPassword.length() > UNIQUE_ID_MAX_LEN)
-            {
-                tempPassword = tempPassword.substring(0, UNIQUE_ID_MAX_LEN);
-            }
+            String tempPassword = RandomStringUtils
+                    .randomAlphanumeric(UNIQUE_ID_MAX_LEN);
             
             // first we need to save the user out of the session
             user.setPasswordExpire(Calendar.getInstance());
