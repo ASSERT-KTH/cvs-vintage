@@ -64,7 +64,7 @@ import org.tigris.scarab.services.cache.ScarabCache;
  *
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: Activity.java,v 1.38 2002/10/24 22:59:26 jon Exp $
+ * @version $Id: Activity.java,v 1.39 2002/12/14 00:12:48 elicia Exp $
  */
 public class Activity 
     extends BaseActivity
@@ -146,25 +146,31 @@ public class Activity
         if (isNew()) 
         {
             Criteria crit = new Criteria();
-            crit.add(ActivityPeer.ISSUE_ID, getIssueId());
-            crit.add(ActivityPeer.ATTRIBUTE_ID, getAttributeId());
-            crit.add(ActivityPeer.ATTACHMENT_ID, getAttachmentId());
-            crit.add(ActivityPeer.END_DATE, null);
+            // If there are previous activities on this attribute and value
+            // Set End Date
+            if (this.getOldUserId() != null || this.getOldOptionId() != null)
+            {
+                crit.add(ActivityPeer.ISSUE_ID, getIssueId());
+                crit.add(ActivityPeer.ATTRIBUTE_ID, getAttributeId());
+                crit.add(ActivityPeer.ATTACHMENT_ID, getAttachmentId());
+                crit.add(ActivityPeer.END_DATE, null);
+                if (this.getOldUserId() != null)
+                {
+                   crit.add(ActivityPeer.NEW_USER_ID, this.getOldUserId());
+                }
+                else if (this.getOldOptionId() != null)
+                {
+                   crit.add(ActivityPeer.NEW_OPTION_ID, this.getOldOptionId());
+                }
+            }
             List result = ActivityPeer.doSelect(crit);
-            if (result.size() == 1) 
+            if (result.size() > 0)
             {
                 Activity a = (Activity)result.get(0);
                 a.setEndDate(getActivitySet().getCreatedDate());
                 a.save(dbCon);
             }
-            else if (result.size() > 1) 
-            {
-                // something is wrong with database
-                throw new TorqueException(
-                    new ScarabException("Multiple activities on the same"
-                                        +" attribute are active."));
-            }
-            else if (result.size() == 0) 
+            else 
             {
                 // this is okay if the issue is new or has had no previous
                 // activity on this attribute.  Go ahead and check that

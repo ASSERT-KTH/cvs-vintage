@@ -58,6 +58,7 @@ import org.apache.torque.om.ObjectKey;
 import org.apache.torque.om.NumberKey;
 import java.sql.Connection;
 
+import org.apache.torque.util.Criteria;
 import org.apache.fulcrum.cache.TurbineGlobalCacheService;
 import org.apache.fulcrum.cache.GlobalCacheService;
 import org.apache.fulcrum.cache.ObjectExpiredException;
@@ -75,7 +76,7 @@ import org.tigris.scarab.om.Module;
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
- * @version $Id: AttributeValue.java,v 1.78 2002/11/27 23:02:08 jmcnally Exp $
+ * @version $Id: AttributeValue.java,v 1.79 2002/12/14 00:12:48 elicia Exp $
  */
 public abstract class AttributeValue 
     extends BaseAttributeValue
@@ -226,7 +227,7 @@ public abstract class AttributeValue
      * the value is saved.
      */
     public void startActivitySet(ActivitySet activitySet)
-        throws ScarabException
+        throws ScarabException, Exception
     {
         if ( activitySet == null ) 
         {
@@ -247,6 +248,23 @@ public abstract class AttributeValue
         oldValueIsSet = false;
         oldOptionId = null;
         oldValue = null;
+
+        // Check for previous active activities on this attribute 
+        // If they exist, set old value for this activity
+        Criteria crit = new Criteria();
+        crit.add(ActivityPeer.ISSUE_ID, getIssueId());
+        crit.add(ActivityPeer.ATTRIBUTE_ID, getAttributeId());
+        crit.add(ActivityPeer.END_DATE, null);
+        List result = ActivityPeer.doSelect(crit);
+        if (result.size() > 0)
+        {
+            for (int i=0; i<result.size(); i++)
+            {
+                Activity a = (Activity)result.get(i);
+                oldOptionId = a.getNewOptionId();
+                oldValue = a.getNewValue();
+            }
+        }
         if ( chainedValue != null ) 
         {
             chainedValue.startActivitySet(activitySet);
