@@ -7,7 +7,7 @@
 <!--                                                                       -->
 <!-- ===================================================================== -->
 
-<!-- $Id: log4j.xml,v 1.17 2003/05/13 12:32:11 ejort Exp $ -->
+<!-- $Id: log4j.xml,v 1.18 2003/07/11 04:15:04 starksm Exp $ -->
 
 <!--
    | For more configuration infromation and examples see the Jakarta Log4j
@@ -133,6 +133,11 @@
   <!-- ================ -->
   <!-- Limit categories -->
   <!-- ================ -->
+
+   <!-- Limit the org.apache.commons category to INFO as its DEBUG is verbose -->
+   <category name="org.apache.commons">
+      <priority value="INFO"/>
+   </category>
 
   <!-- Limit JBoss categories to INFO
   <category name="org.jboss">
