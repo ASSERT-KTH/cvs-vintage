@@ -67,7 +67,7 @@
       <input type="hidden" name="old_attr_$userId" value="$attr.AttributeId" />
     </td>
     <td><a href="mailto:$user.Email">$user.UserName</a></td>
-    <td><strong>$!user.Name</strong></td>
+    <td>$!user.Name</td>
     <td><select name="asso_user_{$userId}_issue_{$issue.IssueId}">
      #foreach ($selectUserAttr in $userAttrs)
       #if ($user.hasPermission($selectUserAttr.Permission, $modules))

@@ -623,7 +623,7 @@ $scarabR.IssuePosInList of $scarabR.CurrentSearchResultsSize
     #indexedRows($velocityCount)
     <td><input type="checkbox" name="add_user" value="$user.UserId" /></td>
     <td><a href="mailTo:$user.Email">$user.UserName</a></td>
-    <td><strong>$user.Name</strong></td>
+    <td>$user.Name</td>
     <td><select name="user_attr_$user.UserId">
      #foreach ($userAttr in $userAttrs)
       #if ($user.hasPermission($userAttr.Permission, $modules))
