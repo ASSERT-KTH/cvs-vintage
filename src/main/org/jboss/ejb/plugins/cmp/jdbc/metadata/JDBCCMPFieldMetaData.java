@@ -31,7 +31,7 @@ import org.w3c.dom.Element;
  * @author <a href="mailto:loubyansky@hotmail.com">Alex Loubyansky</a>
  * @author <a href="mailto:heiko.rupp@cellent.de">Heiko W.Rupp</a>
  *
- * @version $Revision: 1.21 $
+ * @version $Revision: 1.22 $
  */
 public final class JDBCCMPFieldMetaData {
    /**

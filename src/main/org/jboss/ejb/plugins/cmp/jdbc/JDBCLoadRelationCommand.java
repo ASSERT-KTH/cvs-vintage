@@ -25,15 +25,13 @@ import org.jboss.ejb.plugins.cmp.jdbc.bridge.JDBCCMRFieldBridge;
 import org.jboss.ejb.plugins.cmp.jdbc.bridge.JDBCEntityBridge; 
 import org.jboss.ejb.plugins.cmp.jdbc.metadata.JDBCFunctionMappingMetaData;
 import org.jboss.ejb.plugins.cmp.jdbc.metadata.JDBCReadAheadMetaData;
-import org.jboss.ejb.plugins.cmp.jdbc.metadata.JDBCRelationMetaData;
-import org.jboss.ejb.plugins.cmp.jdbc.metadata.JDBCTypeMappingMetaData;
 import org.jboss.logging.Logger;
 
 /**
  * Loads relations for a particular entity from a relation table.
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
- * @version $Revision: 1.23 $
+ * @version $Revision: 1.24 $
  */
 public class JDBCLoadRelationCommand {
    private final JDBCStoreManager manager;
@@ -56,12 +54,10 @@ public class JDBCLoadRelationCommand {
 
       // get the read ahead cahces
       ReadAheadCache readAheadCache = manager.getReadAheadCache();
-      ReadAheadCache relatedReadAheadCache = 
-            cmrField.getRelatedManager().getReadAheadCache();
+      ReadAheadCache relatedReadAheadCache = cmrField.getRelatedManager().getReadAheadCache();
       
       // get the finder results associated with this context, if it exists
-      ReadAheadCache.EntityReadAheadInfo info =
-            readAheadCache.getEntityReadAheadInfo(pk);
+      ReadAheadCache.EntityReadAheadInfo info = readAheadCache.getEntityReadAheadInfo(pk);
       List loadKeys = info.getLoadKeys();
 
       // generate the sql
@@ -69,12 +65,14 @@ public class JDBCLoadRelationCommand {
   
       Connection con = null;
       PreparedStatement ps = null;
+      ResultSet rs = null;
       try {
+         // create the statement
+         if(log.isDebugEnabled())
+            log.debug("Executing SQL: " + sql);
+
          // get the connection
          con = cmrField.getDataSource().getConnection();
-         
-         // create the statement
-         log.debug("Executing SQL: " + sql);
          ps = con.prepareStatement(sql.toString());
 
          // Set the fetch size of the statement
@@ -89,21 +87,21 @@ public class JDBCLoadRelationCommand {
          
          // set the parameters
          int paramIndex = 1;
-         for(Iterator iter = loadKeys.iterator(); iter.hasNext();) {
-            Object key = iter.next();
-            for(Iterator fields = myKeyFields.iterator(); fields.hasNext(); ) {
-               JDBCCMPFieldBridge field = (JDBCCMPFieldBridge)fields.next();
+         for(int i = 0; i < loadKeys.size(); i++) {
+            Object key = loadKeys.get(i);
+            for(int j = 0; j < myKeyFields.size(); ++j) {
+               JDBCCMPFieldBridge field = (JDBCCMPFieldBridge)myKeyFields.get(j);
                paramIndex = field.setPrimaryKeyParameters(ps, paramIndex, key);
             }
          }
 
          // execute statement
-         ResultSet rs = ps.executeQuery();
+         rs = ps.executeQuery();
 
          // initialize the results map
          Map resultsMap = new HashMap(loadKeys.size());
-         for(Iterator iter = loadKeys.iterator(); iter.hasNext();) {
-            resultsMap.put(iter.next(), new ArrayList());
+         for(int i = 0; i < loadKeys.size(); ++i) {
+            resultsMap.put(loadKeys.get(i), new ArrayList());
          }
 
          // load the results
@@ -119,8 +117,8 @@ public class JDBCLoadRelationCommand {
             Object loadedPk = pk;
             if(loadKeys.size() > 1) {
                // load the pk
-               for(Iterator fields=myKeyFields.iterator(); fields.hasNext();) {
-                  JDBCCMPFieldBridge field = (JDBCCMPFieldBridge)fields.next();
+               for(int i = 0; i < myKeyFields.size(); ++i) {
+                  JDBCCMPFieldBridge field = (JDBCCMPFieldBridge)myKeyFields.get(i);
                   index = field.loadPrimaryKeyResults(rs, index, ref);
                }      
                loadedPk = ref[0];
@@ -128,9 +126,8 @@ public class JDBCLoadRelationCommand {
  
             // load the fk
             ref[0] = null;
-            for(Iterator fields = relatedKeyFields.iterator();
-                     fields.hasNext();) {
-               JDBCCMPFieldBridge field = (JDBCCMPFieldBridge)fields.next();
+            for(int i = 0; i < relatedKeyFields.size(); ++i) {
+               JDBCCMPFieldBridge field = (JDBCCMPFieldBridge)relatedKeyFields.get(i);
                index = field.loadPrimaryKeyResults(rs, index, ref);
             }      
             Object loadedFk = ref[0];
@@ -150,8 +147,8 @@ public class JDBCLoadRelationCommand {
                }
 
                // read the preload fields
-               for(Iterator iter=preloadFields.iterator(); iter.hasNext();) {
-                  JDBCFieldBridge field = (JDBCFieldBridge)iter.next();
+               for(int i = 0; i < preloadFields.size(); ++i) {
+                  JDBCFieldBridge field = (JDBCFieldBridge)preloadFields.get(i);
                   ref[0] = null;
 
                   // read the value and store it in the readahead cache
@@ -186,6 +183,7 @@ public class JDBCLoadRelationCommand {
       } catch(Exception e) {
          throw new EJBException("Load relation failed", e);
       } finally {
+         JDBCUtil.safeClose(rs);
          JDBCUtil.safeClose(ps);
          JDBCUtil.safeClose(con);
       }
@@ -205,8 +203,8 @@ public class JDBCLoadRelationCommand {
          && !relationTable.equals(relatedTable);
 
       // aliases for the tables, only required if we are joining the tables
-      String relationTableAlias = "";
-      String relatedTableAlias = "";
+      String relationTableAlias = SQLUtil.EMPTY_STRING;
+      String relatedTableAlias = SQLUtil.EMPTY_STRING;
       if(join) {
          relationTableAlias = relationTable;
          relatedTableAlias = relatedTable;
@@ -215,54 +213,54 @@ public class JDBCLoadRelationCommand {
       //
       // column names clause
       // 
-      StringBuffer columnNamesClause = new StringBuffer();
+      StringBuffer columnNamesClause = new StringBuffer(100);
       if(keyCount > 1) {
-         columnNamesClause.append(
-               SQLUtil.getColumnNamesClause(myKeyFields, relationTableAlias));
-         columnNamesClause.append(", ");
+         columnNamesClause.append(SQLUtil.getColumnNamesClause(myKeyFields, relationTableAlias))
+            .append(SQLUtil.COMMA);
       }
-      columnNamesClause.append(
-            SQLUtil.getColumnNamesClause(relatedKeyFields, relationTableAlias));
+      columnNamesClause.append(SQLUtil.getColumnNamesClause(relatedKeyFields, relationTableAlias));
       if(preloadFields.size() > 0) {
-         columnNamesClause.append(", ");
-         columnNamesClause.append(
-               SQLUtil.getColumnNamesClause(preloadFields, relatedTableAlias));
+         columnNamesClause.append(SQLUtil.COMMA).
+            append(SQLUtil.getColumnNamesClause(preloadFields, relatedTableAlias));
       }
 
       //
       // from clause
       //
-      StringBuffer fromClause = new StringBuffer();
+      StringBuffer fromClause = new StringBuffer(100);
       fromClause.append(relationTable);
       if(join) {
-         fromClause.append(", ").append(relatedTable);
+         fromClause.append(SQLUtil.COMMA).append(relatedTable);
       }
 
       //
       // where clause
       // 
-      StringBuffer whereClause = new StringBuffer();
+      StringBuffer whereClause = new StringBuffer(150);
       // add the join 
       if(join) {
          // join the tables
-         whereClause.append("(");
-         whereClause.append(SQLUtil.getJoinClause(
+         whereClause
+            .append('(')
+            .append(
+               SQLUtil.getJoinClause(
                   relatedKeyFields,
                   relationTable,
                   cmrField.getRelatedJDBCEntity().getPrimaryKeyFields(),
-                  relatedTable));
-         whereClause.append(") AND (");
+                  relatedTable))
+            .append(')').append(SQLUtil.AND).append('(');
       }
-      // add the keys 
+
+      // add the keys
       String pkWhere = SQLUtil.getWhereClause(myKeyFields, relationTableAlias);
       for(int i=0; i<keyCount; i++) {
          if(i > 0) {
-            whereClause.append(" OR ");
+            whereClause.append(SQLUtil.OR);
          }
-         whereClause.append("(").append(pkWhere).append(")");
+         whereClause.append('(').append(pkWhere).append(')');
       }
       if(join) {
-         whereClause.append(")");
+         whereClause.append(')');
       }
       
       //
@@ -281,9 +279,9 @@ public class JDBCLoadRelationCommand {
                6 + fromClause.length() +
                7 + whereClause.length());
 
-         sql.append("SELECT ").append(columnNamesClause.toString());
-         sql.append(" FROM ").append(fromClause.toString());
-         sql.append(" WHERE ").append(whereClause.toString());
+         sql.append(SQLUtil.SELECT).append(columnNamesClause.toString())
+            .append(SQLUtil.FROM).append(fromClause.toString())
+            .append(SQLUtil.WHERE).append(whereClause.toString());
          return sql.toString();
       }
    }
@@ -325,8 +323,8 @@ public class JDBCLoadRelationCommand {
       
       // add all the eagerload fields except for the related cmr field
       List preloadFields = new ArrayList(eagerLoad.size());
-      for(Iterator fields = eagerLoad.iterator(); fields.hasNext();) {
-         JDBCFieldBridge field = (JDBCFieldBridge)fields.next();
+      for(int i = 0; i < eagerLoad.size(); ++i) {
+         JDBCFieldBridge field = (JDBCFieldBridge)eagerLoad.get(i);
          if(!field.equals(relatedCMRField)) {
             preloadFields.add(field);
          }
@@ -347,8 +345,7 @@ public class JDBCLoadRelationCommand {
       }
    }
 
-   private JDBCFunctionMappingMetaData getSelectTemplate(
-         JDBCCMRFieldBridge cmrField) {
+   private JDBCFunctionMappingMetaData getSelectTemplate(JDBCCMRFieldBridge cmrField) {
 
       JDBCFunctionMappingMetaData selectTemplate = null;
       if(cmrField.getRelationMetaData().isTableMappingStyle()) {
@@ -357,8 +354,8 @@ public class JDBCLoadRelationCommand {
             selectTemplate =
                cmrField.getRelationMetaData().getTypeMapping().getRowLockingTemplate();
             if(selectTemplate == null) {
-               throw new IllegalStateException("row-locking is not allowed " +
-                     "for this type of datastore");
+               throw new IllegalStateException(
+                  "row-locking is not allowed for this type of datastore");
             }
          }
       } else if(cmrField.getRelatedCMRField().hasForeignKey()) {
@@ -367,18 +364,17 @@ public class JDBCLoadRelationCommand {
             selectTemplate =
                cmrField.getRelatedJDBCEntity().getMetaData().getTypeMapping().getRowLockingTemplate();
             if(selectTemplate == null) {
-               throw new IllegalStateException("row-locking is not allowed " +
-                     "for this type of datastore");
+               throw new IllegalStateException(
+                  "row-locking is not allowed for this type of datastore");
             }
          }
       } else {
          // i have foreign key
          if(entity.getMetaData().hasRowLocking()) {
-            selectTemplate =
-               entity.getMetaData().getTypeMapping().getRowLockingTemplate();
+            selectTemplate = entity.getMetaData().getTypeMapping().getRowLockingTemplate();
             if(selectTemplate == null) {
-               throw new IllegalStateException("row-locking is not allowed " +
-                     "for this type of datastore");
+               throw new IllegalStateException(
+                  "row-locking is not allowed for this type of datastore");
             }
          }
       }

@@ -12,6 +12,8 @@ import java.sql.PreparedStatement;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.sql.CallableStatement;
+import java.util.List;
+import java.util.Arrays;
 
 import org.jboss.ejb.plugins.cmp.jdbc.JDBCIdentityColumnCreateCommand;
 import org.jboss.ejb.plugins.cmp.jdbc.SQLUtil;
@@ -49,18 +51,19 @@ public class JDBCOracleCreateCommand extends JDBCIdentityColumnCreateCommand
 
    protected void initInsertSQL()
    {
-      pkIndex = 1 + insertFields.size();
+      pkIndex = 1 + insertFields.length;
       jdbcType = pkField.getJDBCType().getJDBCTypes()[0];
 
+      List insertFieldsList = Arrays.asList(insertFields);
       StringBuffer sql = new StringBuffer();
       sql.append("{call INSERT INTO ").append(entity.getTableName());
       sql.append(" (");
       sql.append(SQLUtil.getColumnNamesClause(pkField)).append(", ");
-      sql.append(SQLUtil.getColumnNamesClause(insertFields));
+      sql.append(SQLUtil.getColumnNamesClause(insertFieldsList));
       sql.append(")");
       sql.append(" VALUES (");
       sql.append(sequence+".NEXTVAL, ");
-      sql.append(SQLUtil.getValuesClause(insertFields));
+      sql.append(SQLUtil.getValuesClause(insertFieldsList));
       sql.append(")");
       sql.append(" RETURNING ");
       sql.append(SQLUtil.getColumnNamesClause(pkField)).append(" INTO ? }");

@@ -23,13 +23,15 @@ import org.jboss.metadata.EntityMetaData;
 import org.jboss.metadata.MetaData;
 import org.jboss.metadata.RelationMetaData;
 
+import org.jboss.ejb.plugins.cmp.jdbc.SQLUtil;
+
 /**
  * This immutable class contains information about the application
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
  * @author <a href="sebastien.alborini@m4x.org">Sebastien Alborini</a>
  * @author <a href="alex@jboss.org">Alexey Loubyansky</a>
- * @version $Revision: 1.19 $
+ * @version $Revision: 1.20 $
  */
 public final class JDBCApplicationMetaData
 {
@@ -276,6 +278,18 @@ public final class JDBCApplicationMetaData
                new JDBCEntityCommandMetaData(entityCommandElement);
             entityCommands.put(entityCommand.getCommandName(), entityCommand);
          }
+      }
+      
+      // reserved words: (optional, always set in standardjbosscmp-jdbc.xml)
+      // list of reserved words that should be escaped in table names 
+      Element rWords = MetaData.getOptionalChild(element,"reserved-words");
+      if (rWords!=null) 
+      {
+      	for (Iterator i = MetaData.getChildrenByTagName(rWords,"word"); i.hasNext() ; ) 
+      	{
+      			Element rWord = (Element)i.next();
+      			SQLUtil.addToRwords(MetaData.getElementContent(rWord));      				
+      	}
       }
 
       // defaults: apply defaults for entities (optional, always

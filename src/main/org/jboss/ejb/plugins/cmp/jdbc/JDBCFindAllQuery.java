@@ -21,7 +21,7 @@ import org.jboss.ejb.plugins.cmp.jdbc.metadata.JDBCReadAheadMetaData;
  * @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
  * @author <a href="mailto:shevlandj@kpi.com.au">Joe Shevland</a>
  * @author <a href="mailto:justin@j-m-f.demon.co.uk">Justin Forder</a>
- * @version $Revision: 1.3 $
+ * @version $Revision: 1.4 $
  */
 public class JDBCFindAllQuery extends JDBCAbstractQueryCommand {
    
@@ -43,9 +43,9 @@ public class JDBCFindAllQuery extends JDBCAbstractQueryCommand {
       loadFields.addAll(getPreloadFields());
       
       // generate the sql
-      StringBuffer sql = new StringBuffer();
-      sql.append("SELECT ").append(SQLUtil.getColumnNamesClause(loadFields));
-      sql.append(" FROM ").append(entity.getTableName());
+      StringBuffer sql = new StringBuffer(300);
+      sql.append(SQLUtil.SELECT).append(SQLUtil.getColumnNamesClause(loadFields))
+         .append(SQLUtil.FROM).append(entity.getTableName());
       
       setSQL(sql.toString());
    }

@@ -11,9 +11,14 @@ package org.jboss.ejb.plugins.cmp.ejbql;
  * This abstract syntax node represents an approximate numeric literal.
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
- * @version $Revision: 1.1 $
+ * @version $Revision: 1.2 $
  */                            
 public class ASTApproximateNumericLiteral extends SimpleNode {
+   private static final String UPPER_F = "UPPER_F";
+   private static final String LOWER_F = "LOWER_F";
+   private static final String LOWER_D = "LOWER_D";
+   private static final String UPPER_D = "UPPER_D";
+
    public double value;
    public String literal;
 
@@ -29,13 +34,13 @@ public class ASTApproximateNumericLiteral extends SimpleNode {
       literal = number;
 
       // float suffix
-      if(number.endsWith("f") || number.endsWith("F")) {
+      if(number.endsWith(LOWER_F) || number.endsWith(UPPER_F)) {
          // chop off the suffix
          number = number.substring(0, number.length()-1);
          value = Float.parseFloat(number);
       } else {
-         // ends with a d suffix, chop it off
-         if(number.endsWith("d") || number.endsWith("D")) {
+         // ends with a LOWER_D suffix, chop it off
+         if(number.endsWith(LOWER_D) || number.endsWith(UPPER_D)) {
             number = number.substring(0, number.length()-1);
          }
 

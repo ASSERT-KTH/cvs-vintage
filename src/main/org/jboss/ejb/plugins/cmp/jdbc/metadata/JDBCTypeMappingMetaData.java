@@ -19,18 +19,29 @@ import org.w3c.dom.Element;
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
  * @author <a href="sebastien.alborini@m4x.org">Sebastien Alborini</a>
  * @author <a href="mailto:loubyansky@ua.fm">Alex Loubyansky</a>
- * @version $Revision: 1.17 $
+ * @version $Revision: 1.18 $
  */
 public final class JDBCTypeMappingMetaData
 {
-
    private static final String[] PRIMITIVES = {
-      "boolean", "byte", "char", "short", "int", "long", "float", "double"};
+      "boolean", "byte", "char", "short", "int", "long", "float", "double"
+   };
 
    private static final String[] PRIMITIVE_CLASSES = {
       "java.lang.Boolean", "java.lang.Byte", "java.lang.Character",
       "java.lang.Short", "java.lang.Integer", "java.lang.Long",
-      "java.lang.Float", "java.lang.Double"};
+      "java.lang.Float", "java.lang.Double"
+   };
+
+   public static final String CONCAT = "concat";
+   public static final String SUBSTRING = "substring";
+   public static final String LCASE = "lcase";
+   public static final String UCASE = "ucase";
+   public static final String LENGTH = "length";
+   public static final String LOCATE = "locate";
+   public static final String ABS = "abs";
+   public static final String SQRT = "sqrt";
+   public static final String COUNT = "count";
 
    private final String name;
 

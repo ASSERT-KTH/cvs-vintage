@@ -23,7 +23,7 @@ import org.jboss.ejb.plugins.cmp.jdbc.metadata.JDBCReadAheadMetaData;
  * @author <a href="mailto:shevlandj@kpi.com.au">Joe Shevland</a>
  * @author <a href="mailto:justin@j-m-f.demon.co.uk">Justin Forder</a>
  * @author <a href="mailto:danch@nvisia.com">danch (Dan Christopherson)</a>
- * @version $Revision: 1.3 $
+ * @version $Revision: 1.4 $
  */
 public class JDBCFindByQuery extends JDBCAbstractQueryCommand {
    
@@ -41,11 +41,10 @@ public class JDBCFindByQuery extends JDBCAbstractQueryCommand {
       
       // finder name will be like findByFieldName
       // we need to convert it to fieldName.
-      String cmpFieldName = Character.toLowerCase(finderName.charAt(6)) +
-            finderName.substring(7);
+      String cmpFieldName = Character.toLowerCase(finderName.charAt(6)) + finderName.substring(7);
 
       // get the field
-      cmpField = (JDBCCMPFieldBridge)entity.getCMPFieldByName(cmpFieldName);
+      cmpField = entity.getCMPFieldByName(cmpFieldName);
       if(cmpField == null) {
          throw new IllegalArgumentException(
                "No finder for this method: " + finderName);
@@ -64,7 +63,7 @@ public class JDBCFindByQuery extends JDBCAbstractQueryCommand {
       loadFields.addAll(getPreloadFields());
 
       // generate the sql
-      StringBuffer sql = new StringBuffer();
+      StringBuffer sql = new StringBuffer(300);
       sql.append("SELECT ").append(SQLUtil.getColumnNamesClause(loadFields));
       sql.append(" FROM ").append(entity.getTableName());
       sql.append(" WHERE ").append(SQLUtil.getWhereClause(cmpField));

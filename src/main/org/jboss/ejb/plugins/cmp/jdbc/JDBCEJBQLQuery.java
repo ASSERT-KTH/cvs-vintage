@@ -18,7 +18,7 @@ import org.jboss.ejb.plugins.cmp.jdbc.metadata.JDBCReadAheadMetaData;
  * This class generates a query from EJB-QL.
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
- * @version $Revision: 1.9 $
+ * @version $Revision: 1.10 $
  */
 public class JDBCEJBQLQuery extends JDBCAbstractQueryCommand {
 
@@ -33,8 +33,7 @@ public class JDBCEJBQLQuery extends JDBCAbstractQueryCommand {
          getLog().debug("EJB-QL: " + metadata.getEjbQl());
       }
 
-      JDBCEJBQLCompiler compiler = new JDBCEJBQLCompiler(
-            (Catalog)manager.getApplicationData("CATALOG"));
+      JDBCEJBQLCompiler compiler = new JDBCEJBQLCompiler(manager.getCatalog());
 
       try {
          compiler.compileEJBQL(

@@ -23,7 +23,7 @@ import org.w3c.dom.Element;
  * the ejb-jar.xml file's ejb-relation elements.
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
- * @version $Revision: 1.17 $
+ * @version $Revision: 1.18 $
  */
 public final class JDBCRelationshipRoleMetaData
 {

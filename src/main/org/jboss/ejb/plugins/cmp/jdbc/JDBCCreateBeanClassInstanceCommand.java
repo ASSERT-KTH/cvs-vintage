@@ -30,7 +30,7 @@ import org.jboss.deployment.DeploymentException;
  * <FIX-ME>should not generat a subclass for ejb 1.1</FIX-ME>
  *    
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
- * @version $Revision: 1.6 $
+ * @version $Revision: 1.7 $
  */
  
 public class JDBCCreateBeanClassInstanceCommand {
@@ -105,10 +105,10 @@ public class JDBCCreateBeanClassInstanceCommand {
 
       Map abstractAccessors = getAbstractAccessors();
 
-      Collection fields = entityBridge.getFields();
+      List fields = entityBridge.getFields();
       Map map = new HashMap(fields.size() * 2);
-      for(Iterator iter = fields.iterator(); iter.hasNext();) {
-         FieldBridge field = (FieldBridge)iter.next();
+      for(int i = 0; i < fields.size(); i++) {
+         FieldBridge field = (FieldBridge)fields.get(i);
 
          // get the names
          String fieldName = field.getFieldName();

@@ -10,7 +10,6 @@ package org.jboss.ejb.plugins.cmp.ejbql;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 import org.jboss.ejb.plugins.cmp.bridge.EntityBridge;
 import org.jboss.ejb.plugins.cmp.bridge.CMRFieldBridge;
@@ -19,7 +18,7 @@ import org.jboss.ejb.plugins.cmp.bridge.CMRFieldBridge;
  * This class manages a symbol table for the EJB-QL parser.
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
- * @version $Revision: 1.2 $
+ * @version $Revision: 1.3 $
  */                            
 public class IdentifierManager {
    private Catalog catalog;

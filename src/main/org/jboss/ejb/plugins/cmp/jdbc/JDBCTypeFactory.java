@@ -30,7 +30,7 @@ import org.jboss.deployment.DeploymentException;
  * this class is to flatten the JDBCValueClassMetaData into columns.
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
- * @version $Revision: 1.13 $
+ * @version $Revision: 1.14 $
  */
 public class JDBCTypeFactory
 {
@@ -195,11 +195,11 @@ public class JDBCTypeFactory
 
       // create a map of the overrides based on flat property name
       HashMap overrides = new HashMap();
-      Iterator iterator = cmpField.getPropertyOverrides().iterator();
-      while(iterator.hasNext())
+
+      for (int i = 0; i < cmpField.getPropertyOverrides().size(); ++i)
       {
          JDBCCMPFieldPropertyMetaData p =
-            (JDBCCMPFieldPropertyMetaData)iterator.next();
+            (JDBCCMPFieldPropertyMetaData)cmpField.getPropertyOverrides().get(i);
          overrides.put(p.getPropertyName(), p);
       }
 

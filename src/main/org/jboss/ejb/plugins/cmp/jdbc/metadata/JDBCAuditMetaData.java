@@ -15,7 +15,7 @@ import org.w3c.dom.Element;
  * Audit field meta data
  *
  * @author <a href="mailto:Adrian.Brock@HappeningTimes.com">Adrian Brock</a>
- * @version $Revision: 1.2 $
+ * @version $Revision: 1.3 $
  */
 public final class JDBCAuditMetaData
 {

@@ -6,11 +6,9 @@
  */
 package org.jboss.ejb.plugins.cmp.jdbc.metadata;
 
-import java.lang.reflect.Array;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
@@ -27,7 +25,7 @@ import org.jboss.util.Classes;
  * on the query specifiection type.
  *    
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
- * @version $Revision: 1.17 $
+ * @version $Revision: 1.18 $
  */
 public class JDBCQueryMetaDataFactory {
    private JDBCEntityMetaData entity;
@@ -270,8 +268,19 @@ public class JDBCQueryMetaDataFactory {
          }
       }          
 
-      if(methods.size() == 0) {
-         throw new DeploymentException("Query method not found: " + methodName);
+      if(methods.size() == 0)
+      {
+         StringBuffer sb = new StringBuffer(300);
+         sb.append("Query method not found: ")
+            .append(methodName).append('(');
+         for(int i = 0; i < parameters.length; i++)
+         {
+            if(i > 0)
+               sb.append(',');
+            sb.append(parameters[i].getName());
+         }
+         sb.append(')');
+         throw new DeploymentException(sb.toString());
       }
       return (Method[])methods.toArray(new Method[methods.size()]);
    }
@@ -296,6 +305,3 @@ public class JDBCQueryMetaDataFactory {
    }
 
 }
-/*
-vim:ts=3:sw=3:et
-*/

@@ -16,7 +16,7 @@ import org.jboss.metadata.QueryMetaData;
  * Immutable class which contains information about an DynamicQL query.
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
- * @version $Revision: 1.6 $
+ * @version $Revision: 1.7 $
  */
 public final class JDBCDynamicQLQueryMetaData implements JDBCQueryMetaData {
    /**

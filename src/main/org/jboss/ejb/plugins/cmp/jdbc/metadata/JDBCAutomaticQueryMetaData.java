@@ -16,7 +16,7 @@ import java.lang.reflect.Method;
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
  *   @author <a href="sebastien.alborini@m4x.org">Sebastien Alborini</a>
- *   @version $Revision: 1.7 $
+ *   @version $Revision: 1.8 $
  */
 public final class JDBCAutomaticQueryMetaData implements JDBCQueryMetaData {
    /**

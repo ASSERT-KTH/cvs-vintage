@@ -32,7 +32,7 @@ import EDU.oswego.cs.dl.util.concurrent.FIFOSemaphore;
  *  @author <a href="mailto:andreas.schaefer@madplanet.com">Andreas Schaefer</a>
  *  @author <a href="mailto:sacha.labourey@cogito-info.ch">Sacha Labourey</a>
  *  @author <a href="mailto:scott.stark@jboss.org">Scott Stark/a>
- *  @version $Revision: 1.33 $
+ *  @version $Revision: 1.34 $
  *
  * @jmx:mbean extends="org.jboss.system.ServiceMBean"
  */
@@ -276,9 +276,9 @@ public abstract class AbstractInstancePool
    private void freeAll()
    {
       LinkedList clone = (LinkedList)pool.clone();
-      for (Iterator i = clone.iterator(); i.hasNext(); )
+      for (int i = 0; i < clone.size(); i++)
       {
-         EnterpriseContext ec = (EnterpriseContext)i.next();
+         EnterpriseContext ec = (EnterpriseContext)clone.get(i);
          // Clear TX so that still TX entity pools get killed as well
          ec.clear();
          discard(ec);

@@ -24,7 +24,7 @@ import javax.ejb.EJBException;
  * details on how this is done.
  * 
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
- * @version $Revision: 1.10 $
+ * @version $Revision: 1.11 $
  */
 public class JDBCTypeComplex implements JDBCType {
    private JDBCTypeComplexProperty[] properties;
@@ -33,6 +33,7 @@ public class JDBCTypeComplex implements JDBCType {
    private int[] jdbcTypes;   
    private String[] sqlTypes;
    private boolean[] notNull;
+   private JDBCUtil.ResultSetReader[] resultSetReaders;
    private Class fieldType;
    private HashMap propertiesByName = new HashMap();
 
@@ -42,36 +43,25 @@ public class JDBCTypeComplex implements JDBCType {
 
       this.properties = properties;
       this.fieldType = fieldType;
-      
-      columnNames = new String[properties.length];
-      for(int i=0; i<columnNames.length; i++) {
-         columnNames[i] = properties[i].getColumnName();
-      }
-      
-      javaTypes = new Class[properties.length];
-      for(int i=0; i<javaTypes.length; i++) {
-         javaTypes[i] = properties[i].getJavaType();
-      }
-      
-      jdbcTypes = new int[properties.length];
-      for(int i=0; i<jdbcTypes.length; i++) {
-         jdbcTypes[i] = properties[i].getJDBCType();
-      }
-      
-      sqlTypes = new String[properties.length];
-      for(int i=0; i<sqlTypes.length; i++) {
-         sqlTypes[i] = properties[i].getSQLType();
-      }
-      
-      notNull = new boolean[properties.length];
-      for(int i=0; i<notNull.length; i++) {
-         notNull[i] = properties[i].isNotNull();
-      }
 
-      for(int i=0; i<properties.length; i++) {
-         propertiesByName.put(properties[i].getPropertyName(), properties[i]);
+      int propNum = properties.length;
+      columnNames = new String[propNum];
+      javaTypes = new Class[propNum];
+      jdbcTypes = new int[propNum];
+      sqlTypes = new String[propNum];
+      notNull = new boolean[propNum];
+      resultSetReaders = new JDBCUtil.ResultSetReader[propNum];
+      for(int i=0; i<properties.length; i++)
+      {
+         JDBCTypeComplexProperty property = properties[i];
+         columnNames[i] = property.getColumnName();
+         javaTypes[i] = property.getJavaType();
+         jdbcTypes[i] = property.getJDBCType();
+         sqlTypes[i] = property.getSQLType();
+         notNull[i] = property.isNotNull();
+         resultSetReaders[i] = property.getResulSetReader();
+         propertiesByName.put(property.getPropertyName(), property);
       }
-      
    }
 
    public String[] getColumnNames() {
@@ -98,22 +88,30 @@ public class JDBCTypeComplex implements JDBCType {
       return new boolean[] {false};
    }
 
+   public Object getColumnValue(int index, Object value) {
+      return getColumnValue(properties[index], value);
+   }
+
+   public Object setColumnValue(int index, Object value, Object columnValue) {
+      return setColumnValue(properties[index], value, columnValue);
+   }
+
+   public JDBCUtil.ResultSetReader[] getResultSetReaders()
+   {
+      return resultSetReaders;
+   }
+
    public JDBCTypeComplexProperty[] getProperties() {
       return properties;
    }
 
    public JDBCTypeComplexProperty getProperty(String propertyName) {
-      JDBCTypeComplexProperty prop = 
-            (JDBCTypeComplexProperty )propertiesByName.get(propertyName);
+      JDBCTypeComplexProperty prop = (JDBCTypeComplexProperty)propertiesByName.get(propertyName);
       if(prop == null) {
-         throw new EJBException(fieldType.getName() + 
+         throw new EJBException(fieldType.getName() +
                " does not have a property named " + propertyName);
       }
       return prop;
-   }
-   
-   public Object getColumnValue(int index, Object value) {
-      return getColumnValue(properties[index], value);
    }
 
    public Object getColumnValue(String propertyName, Object value) {
@@ -131,10 +129,6 @@ public class JDBCTypeComplex implements JDBCType {
       } catch(Exception e) {
          throw new EJBException("Error getting column value", e);
       }
-   }
-
-   public Object setColumnValue(int index, Object value, Object columnValue) {
-      return setColumnValue(properties[index], value, columnValue);
    }
 
    public Object setColumnValue(

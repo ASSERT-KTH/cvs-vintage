@@ -18,7 +18,7 @@ import org.jboss.metadata.MetaData;
  * Imutable class contains information about a declated query.
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
- *   @version $Revision: 1.14 $
+ *   @version $Revision: 1.15 $
  */
 public final class JDBCDeclaredQueryMetaData implements JDBCQueryMetaData {
    /**

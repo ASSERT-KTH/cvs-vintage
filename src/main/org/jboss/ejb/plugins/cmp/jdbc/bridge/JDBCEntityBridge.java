@@ -57,7 +57,7 @@ import org.jboss.proxy.compiler.InvocationHandler;
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
  * @author <a href="mailto:loubyansky@ua.fm">Alex Loubyansky</a>
  * @author <a href="mailto:heiko.rupp@cellent.de">Heiko W. Rupp</a>
- * @version $Revision: 1.35 $
+ * @version $Revision: 1.36 $
  */
 public class JDBCEntityBridge implements EntityBridge
 {

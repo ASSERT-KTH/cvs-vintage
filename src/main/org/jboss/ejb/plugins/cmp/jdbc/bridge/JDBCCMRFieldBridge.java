@@ -43,6 +43,7 @@ import org.jboss.ejb.plugins.cmp.jdbc.JDBCContext;
 import org.jboss.ejb.plugins.cmp.jdbc.JDBCStoreManager;
 import org.jboss.ejb.plugins.cmp.jdbc.JDBCType;
 import org.jboss.ejb.plugins.cmp.jdbc.SQLUtil;
+import org.jboss.ejb.plugins.cmp.jdbc.JDBCUtil;
 import org.jboss.tm.TransactionLocal;
 import org.jboss.ejb.plugins.cmp.jdbc.metadata.JDBCCMPFieldMetaData;
 import org.jboss.ejb.plugins.cmp.jdbc.metadata.JDBCReadAheadMetaData;
@@ -69,7 +70,7 @@ import org.jboss.security.SecurityAssociation;
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
  * @author <a href="mailto:alex@jboss.org">Alex Loubyansky</a>
- * @version $Revision: 1.66 $
+ * @version $Revision: 1.67 $
  */
 public class JDBCCMRFieldBridge implements JDBCFieldBridge, CMRFieldBridge
 {
@@ -1739,12 +1740,9 @@ public class JDBCCMRFieldBridge implements JDBCFieldBridge, CMRFieldBridge
                notNullList.add(new Boolean(type.getNotNull()[i]));
             }
          }
-         columnNames = (String[])columnNamesList.toArray(
-            new String[columnNamesList.size()]);
-         javaTypes = (Class[])javaTypesList.toArray(
-            new Class[javaTypesList.size()]);
-         sqlTypes = (String[])sqlTypesList.toArray(
-            new String[sqlTypesList.size()]);
+         columnNames = (String[])columnNamesList.toArray(new String[columnNamesList.size()]);
+         javaTypes = (Class[])javaTypesList.toArray(new Class[javaTypesList.size()]);
+         sqlTypes = (String[])sqlTypesList.toArray(new String[sqlTypesList.size()]);
 
          jdbcTypes = new int[jdbcTypesList.size()];
          for(int i = 0; i < jdbcTypes.length; i++)
@@ -1796,6 +1794,12 @@ public class JDBCCMRFieldBridge implements JDBCFieldBridge, CMRFieldBridge
 
       public Object setColumnValue(int index, Object value, Object columnValue)
       {
+         throw new UnsupportedOperationException();
+      }
+
+      public JDBCUtil.ResultSetReader[] getResultSetReaders()
+      {
+         // foreign key fields has their result set readers
          throw new UnsupportedOperationException();
       }
    }

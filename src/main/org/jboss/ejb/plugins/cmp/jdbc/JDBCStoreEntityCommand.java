@@ -35,7 +35,7 @@ import org.jboss.logging.Logger;
  * @author <a href="mailto:shevlandj@kpi.com.au">Joe Shevland</a>
  * @author <a href="mailto:justin@j-m-f.demon.co.uk">Justin Forder</a>
  * @author <a href="mailto:sebastien.alborini@m4x.org">Sebastien Alborini</a>
- * @version $Revision: 1.16 $
+ * @version $Revision: 1.17 $
  */
 public class JDBCStoreEntityCommand {
    private JDBCStoreManager manager;
@@ -101,7 +101,7 @@ public class JDBCStoreEntityCommand {
       }
 
       // generate sql
-      StringBuffer sql = new StringBuffer(); 
+      StringBuffer sql = new StringBuffer(200);
       sql.append("UPDATE ").append(entity.getTableName());
       sql.append(" SET ").append(SQLUtil.getSetClause(setFields));
       sql.append(" WHERE ").append(SQLUtil.getWhereClause(whereFields));
@@ -110,19 +110,19 @@ public class JDBCStoreEntityCommand {
       PreparedStatement ps = null;
       int rowsAffected  = 0;
       try {
-         // get the connection
-         con = entity.getDataSource().getConnection();
-         
          // create the statement
          if(log.isDebugEnabled()) {
             log.debug("Executing SQL: " + sql);
          }
+
+         // get the connection
+         con = entity.getDataSource().getConnection();
          ps = con.prepareStatement(sql.toString());
 
          // SET: set the dirty fields parameters
          int index = 1;
-         for(Iterator iter = dirtyFields.iterator(); iter.hasNext(); ) {
-            JDBCFieldBridge field = (JDBCFieldBridge)iter.next();
+         for(int i = 0; i < dirtyFields.size(); ++i) {
+            JDBCFieldBridge field = (JDBCFieldBridge)dirtyFields.get(i);
             index = field.setInstanceParameters(ps, index, ctx);
          }
 
@@ -138,10 +138,13 @@ public class JDBCStoreEntityCommand {
          index = entity.setPrimaryKeyParameters(ps, index, ctx.getId());
 
          // WHERE: set optimistically locked field values
-         for(Iterator iter = lockedFields.iterator(); iter.hasNext();) {
-            JDBCCMPFieldBridge field = (JDBCCMPFieldBridge)iter.next();
-            Object lockedValue = optimisticLock.getLockedFieldValue(field, ctx);
-            index = field.setArgumentParameters(ps, index, lockedValue);
+         if(!lockedFields.isEmpty())
+         {
+            for(Iterator iter = lockedFields.iterator(); iter.hasNext();) {
+               JDBCCMPFieldBridge field = (JDBCCMPFieldBridge)iter.next();
+               Object lockedValue = optimisticLock.getLockedFieldValue(field, ctx);
+               index = field.setArgumentParameters(ps, index, lockedValue);
+            }
          }
 
          if(optimisticLock != null)
@@ -169,8 +172,8 @@ public class JDBCStoreEntityCommand {
       }
 
       // Mark the inserted fields as clean.
-      for(Iterator iter = setFields.iterator(); iter.hasNext(); ) {
-         JDBCFieldBridge field = (JDBCFieldBridge)iter.next();
+      for(int i = 0; i < setFields.size(); ++i) {
+         JDBCFieldBridge field = (JDBCFieldBridge)setFields.get(i);
          field.setClean(ctx);
       }
    }

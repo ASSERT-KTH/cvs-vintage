@@ -21,20 +21,21 @@ import org.jboss.ejb.plugins.cmp.jdbc.metadata.JDBCReadAheadMetaData;
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
  * @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
  * @author <a href="mailto:justin@j-m-f.demon.co.uk">Justin Forder</a>
- * @version $Revision: 1.4 $
+ * @author <a href="mailto:alex@jboss.org">Alex Loubyansky</a>
+ * @version $Revision: 1.5 $
  */
-public class JDBCFindByPrimaryKeyQuery extends JDBCAbstractQueryCommand {
-
-   public JDBCFindByPrimaryKeyQuery(
-         JDBCStoreManager manager, JDBCQueryMetaData q) {
-
+public class JDBCFindByPrimaryKeyQuery extends JDBCAbstractQueryCommand
+{
+   public JDBCFindByPrimaryKeyQuery(JDBCStoreManager manager, JDBCQueryMetaData q)
+   {
       super(manager, q);
 
       JDBCEntityBridge entity = manager.getEntityBridge();
 
       // set the preload fields
       JDBCReadAheadMetaData readAhead = q.getReadAhead();
-      if(readAhead.isOnFind()) {
+      if(readAhead.isOnFind())
+      {
          String eagerLoadGroupName = readAhead.getEagerLoadGroup();
          setPreloadFields(entity.getLoadGroup(eagerLoadGroupName));
       }
@@ -45,12 +46,11 @@ public class JDBCFindByPrimaryKeyQuery extends JDBCAbstractQueryCommand {
       loadFields.addAll(getPreloadFields());
 
       // generate the sql
-      StringBuffer sql = new StringBuffer();
-      sql.append("SELECT ").append(SQLUtil.getColumnNamesClause(loadFields));
-      sql.append(" FROM ").append(entity.getTableName());
-      sql.append(" WHERE ").append(SQLUtil.getWhereClause(
-               entity.getPrimaryKeyFields()));
-      
+      StringBuffer sql = new StringBuffer(300);
+      sql.append(SQLUtil.SELECT).append(SQLUtil.getColumnNamesClause(loadFields))
+         .append(SQLUtil.FROM).append(entity.getTableName())
+         .append(SQLUtil.WHERE).append(SQLUtil.getWhereClause(entity.getPrimaryKeyFields()));
+
       setSQL(sql.toString());
       setParameterList(QueryParameter.createPrimaryKeyParameters(0, entity));
    }

@@ -42,7 +42,7 @@ import org.jboss.logging.Logger;
  * @author <a href="mailto:justin@j-m-f.demon.co.uk">Justin Forder</a>
  * @author <a href="mailto:alex@jboss.org">Alex Loubyansky</a>
  *
- * @version $Revision: 1.16 $
+ * @version $Revision: 1.17 $
  */
 public abstract class JDBCAbstractQueryCommand implements JDBCQueryCommand
 {
@@ -124,11 +124,9 @@ public abstract class JDBCAbstractQueryCommand implements JDBCQueryCommand
 
       Connection con = null;
       PreparedStatement ps = null;
+      ResultSet rs = null;
       try
       {
-         // get the connection
-         con = manager.getEntityBridge().getDataSource().getConnection();
-
          // create the statement
          if(log.isDebugEnabled())
          {
@@ -138,6 +136,9 @@ public abstract class JDBCAbstractQueryCommand implements JDBCQueryCommand
                log.debug("Query offset=" + offset + ", limit=" + limit);
             }
          }
+
+         // get the connection
+         con = manager.getEntityBridge().getDataSource().getConnection();
          ps = con.prepareStatement(sql);
 
          // Set the fetch size of the statement
@@ -154,7 +155,7 @@ public abstract class JDBCAbstractQueryCommand implements JDBCQueryCommand
          }
 
          // execute statement
-         ResultSet rs = ps.executeQuery();
+         rs = ps.executeQuery();
 
          // skip 'offset' results
          int count = offset;
@@ -181,9 +182,9 @@ public abstract class JDBCAbstractQueryCommand implements JDBCQueryCommand
                results.add(ref[0]);
 
                // read the preload fields
-               for(Iterator iter = preloadFields.iterator(); iter.hasNext();)
+               for(int i = 0; i < preloadFields.size(); i++)
                {
-                  JDBCFieldBridge field = (JDBCFieldBridge)iter.next();
+                  JDBCFieldBridge field = (JDBCFieldBridge)preloadFields.get(i);
                   ref[0] = null;
 
                   // read the value and store it in the readahead cache
@@ -221,6 +222,7 @@ public abstract class JDBCAbstractQueryCommand implements JDBCQueryCommand
       }
       finally
       {
+         JDBCUtil.safeClose(rs);
          JDBCUtil.safeClose(ps);
          JDBCUtil.safeClose(con);
       }
@@ -245,15 +247,12 @@ public abstract class JDBCAbstractQueryCommand implements JDBCQueryCommand
       EntityContainer selectContainer = selectManager.getContainer();
       if(queryMetaData.isResultTypeMappingLocal())
       {
-         LocalProxyFactory localFactory;
-         localFactory = selectContainer.getLocalProxyFactory();
-
+         LocalProxyFactory localFactory = selectContainer.getLocalProxyFactory();
          return localFactory.getEntityLocalCollection(results);
       }
       else
       {
-         EJBProxyFactory factory;
-         factory = selectContainer.getProxyFactory();
+         EJBProxyFactory factory = selectContainer.getProxyFactory();
          return factory.getEntityCollection(results);
       }
    }

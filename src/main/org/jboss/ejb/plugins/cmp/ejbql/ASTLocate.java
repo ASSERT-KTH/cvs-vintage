@@ -11,14 +11,13 @@ import org.jboss.ejb.plugins.cmp.jdbc.JDBCUtil;
 
 import java.sql.SQLException;
 import java.sql.ResultSet;
-import java.sql.Types;
 
 /**
  * This abstract syntax node represents a locate function.
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
  * @author <a href="mailto:alex@jboss.org">Alex Loubyansky</a>
- * @version $Revision: 1.2 $
+ * @version $Revision: 1.3 $
  */
 public class ASTLocate
    extends SimpleNode
@@ -49,6 +48,6 @@ public class ASTLocate
     */
    public Object readResult(ResultSet rs) throws SQLException
    {
-      return JDBCUtil.getFunctionResult(rs, Types.INTEGER, Long.class);
+      return JDBCUtil.LONG_READER.getFirst(rs, Long.class);
    }
 }

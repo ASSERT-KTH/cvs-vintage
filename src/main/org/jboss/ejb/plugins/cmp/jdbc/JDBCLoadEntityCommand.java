@@ -39,7 +39,8 @@ import org.jboss.logging.Logger;
  * @author <a href="mailto:justin@j-m-f.demon.co.uk">Justin Forder</a>
  * @author <a href="mailto:dirk@jboss.de">Dirk Zimmermann</a>
  * @author <a href="mailto:danch@nvisia.com">danch (Dan Christopherson)</a>
- * @version $Revision: 1.27 $
+ * @author <a href="mailto:alex@jboss.org">Alexey Loubyansky</a>
+ * @version $Revision: 1.28 $
  */
 public class JDBCLoadEntityCommand
 {
@@ -138,14 +139,15 @@ public class JDBCLoadEntityCommand
 
       Connection con = null;
       PreparedStatement ps = null;
+      ResultSet rs = null;
       try {
-         // get the connection
-         con = entity.getDataSource().getConnection();
-
          // create the statement
          if(log.isDebugEnabled()) {
             log.debug("Executing SQL: " + sql);
          }
+
+         // get the connection
+         con = entity.getDataSource().getConnection();
          ps = con.prepareStatement(sql);
 
          // Set the fetch size of the statement
@@ -154,15 +156,13 @@ public class JDBCLoadEntityCommand
          }
 
          // set the parameters
-
          int paramIndex = 1;
-         for(Iterator iter = loadKeys.iterator(); iter.hasNext();) {
-            paramIndex = entity.setPrimaryKeyParameters(
-                  ps, paramIndex, iter.next());
+         for(int i = 0; i < loadKeys.size(); i++) {
+            paramIndex = entity.setPrimaryKeyParameters(ps, paramIndex, loadKeys.get(i));
          }
 
          // execute statement
-         ResultSet rs = ps.executeQuery();
+         rs = ps.executeQuery();
 
          // load results
          boolean mainEntityLoaded = false;
@@ -185,16 +185,16 @@ public class JDBCLoadEntityCommand
             // is this the main entity or a preload entity
             if(loadKeys.size()==1 || pk.equals(ctx.getId())) {
                // main entity; load the values into the context
-               for(Iterator iter = loadFields.iterator(); iter.hasNext();) {
-                  JDBCFieldBridge field = (JDBCFieldBridge)iter.next();
+               for(int i = 0; i < loadFields.size(); ++i) {
+                  JDBCFieldBridge field = (JDBCFieldBridge)loadFields.get(i);
                   index = field.loadInstanceResults(rs, index, ctx);
                   field.setClean(ctx);
                }
                mainEntityLoaded = true;
             } else {
                // preload entity; load the values into the read ahead cahce
-               for(Iterator iter = loadFields.iterator(); iter.hasNext();) {
-                  JDBCFieldBridge field = (JDBCFieldBridge)iter.next();
+               for(int i = 0; i < loadFields.size(); ++i) {
+                  JDBCFieldBridge field = (JDBCFieldBridge)loadFields.get(i);
 
                   // ref must be reset to null before load
                   ref[0] = null;
@@ -223,6 +223,7 @@ public class JDBCLoadEntityCommand
       } catch(Exception e) {
          throw new EJBException("Load failed", e);
       } finally {
+         JDBCUtil.safeClose(rs);
          JDBCUtil.safeClose(ps);
          JDBCUtil.safeClose(con);
       }
@@ -231,14 +232,13 @@ public class JDBCLoadEntityCommand
    private String getSQL(List loadFields, int keyCount) {
       //
       // column names clause
-      StringBuffer columnNamesClause = new StringBuffer();
+      StringBuffer columnNamesClause = new StringBuffer(300);
       // if we are loading more then one entity we need to add the primry
       // key to the load fields to match up the results with the correct
       // entity.
       if(keyCount > 1) {
-         columnNamesClause.append(SQLUtil.getColumnNamesClause(
-                  entity.getPrimaryKeyFields()));
-         columnNamesClause.append(",");
+         columnNamesClause.append(SQLUtil.getColumnNamesClause(entity.getPrimaryKeyFields()))
+            .append(SQLUtil.COMMA);
       }
       columnNamesClause.append(SQLUtil.getColumnNamesClause(loadFields));
 
@@ -253,9 +253,9 @@ public class JDBCLoadEntityCommand
             (pkWhere.length() + 6) * keyCount + 4);
       for(int i=0; i<keyCount; i++) {
          if(i > 0) {
-            whereClause.append(" OR ");
+            whereClause.append(SQLUtil.OR);
          }
-         whereClause.append("(").append(pkWhere).append(")");
+         whereClause.append('(').append(pkWhere).append(')');
       }
 
       //
@@ -264,8 +264,8 @@ public class JDBCLoadEntityCommand
          JDBCFunctionMappingMetaData rowLocking =
                manager.getMetaData().getTypeMapping().getRowLockingTemplate();
          if(rowLocking == null) {
-            throw new IllegalStateException("row-locking is not allowed for " +
-                  "this type of datastore");
+            throw new IllegalStateException(
+               "row-locking is not allowed for this type of datastore");
          } else {
             String[] args = new String[] {
                columnNamesClause.toString(),
@@ -279,12 +279,11 @@ public class JDBCLoadEntityCommand
                6 + tableName.length() +
                7 + whereClause.length());
 
-         sql.append("SELECT ").append(columnNamesClause.toString());
-         sql.append(" FROM ").append(tableName);
-         sql.append(" WHERE ").append(whereClause.toString());
+         sql.append(SQLUtil.SELECT).append(columnNamesClause.toString())
+            .append(SQLUtil.FROM).append(tableName)
+            .append(SQLUtil.WHERE).append(whereClause.toString());
          return sql.toString();
       }
-
    }
 
    private List getLoadFields(
@@ -314,8 +313,8 @@ public class JDBCLoadEntityCommand
          for(Iterator groups = entity.getLazyLoadGroups(); groups.hasNext();) {
             List group = (List)groups.next();
             if(group.contains(requiredField)) {
-               for(Iterator fields = group.iterator(); fields.hasNext();) {
-                  JDBCFieldBridge field = (JDBCFieldBridge)fields.next();
+               for(int i = 0; i < group.size(); ++i) {
+                  JDBCFieldBridge field = (JDBCFieldBridge)group.get(i);
                   if(!loadFields.contains(field)) {
                      loadFields.add(field);
                   }

@@ -59,7 +59,7 @@ import org.jboss.tm.TransactionLocal;
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
  * @author <a href="mailto:alex@jboss.org">Alex Loubyansky</a>
  * @see org.jboss.ejb.EntityPersistenceStore
- * @version $Revision: 1.56 $
+ * @version $Revision: 1.57 $
  */
 public class JDBCStoreManager implements EntityPersistenceStore
 {
@@ -391,9 +391,9 @@ public class JDBCStoreManager implements EntityPersistenceStore
          //
          //
          // Start Phase 2: resolve relationships
-         for (Iterator iter = managers.iterator(); iter.hasNext();)
+         for (int i = 0; i < managers.size(); ++i)
          {
-            JDBCStoreManager manager = (JDBCStoreManager) iter.next();
+            JDBCStoreManager manager = (JDBCStoreManager)managers.get(i);
             manager.resolveRelationships();
 
             // optimistic lock initialization
@@ -409,9 +409,9 @@ public class JDBCStoreManager implements EntityPersistenceStore
          //
          //
          // Start Phase 3: create tables and compile queries
-         for (Iterator iter = managers.iterator(); iter.hasNext();)
+         for (int i = 0; i < managers.size(); ++i)
          {
-            JDBCStoreManager manager = (JDBCStoreManager) iter.next();
+            JDBCStoreManager manager = (JDBCStoreManager) managers.get(i);
             manager.startStoreManager();
          }
       }

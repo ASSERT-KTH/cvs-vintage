@@ -11,7 +11,7 @@ package org.jboss.ejb.plugins.cmp.ejbql;
  * Parent class of all abstract syntax tree nodes.
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
- * @version $Revision: 1.1 $
+ * @version $Revision: 1.2 $
  */                            
 public class SimpleNode implements Node {
    protected Node parent;
@@ -89,7 +89,7 @@ public class SimpleNode implements Node {
          for (int i = 0; i < children.length; ++i) {
             SimpleNode n = (SimpleNode)children[i];
             if (n != null) {
-               n.dump(prefix + " ");
+               n.dump(prefix + ' ');
             }
          }
       }

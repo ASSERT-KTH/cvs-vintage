@@ -32,7 +32,7 @@ import java.util.Set;
  * Entities are stored in an ArrayList to ensure specific ordering.
  *
  * @author <a href="bill@burkecentral.com">Bill Burke</a>
- * @version $Revision: 1.9 $
+ * @version $Revision: 1.10 $
  *
  * <p><b>Revisions:</b>
  *
@@ -102,7 +102,7 @@ public class GlobalTxEntityMap
     */
    public void synchronizeEntities(Transaction tx)
    {
-      Collection entities = (Collection)entitiesFifoMap.get(tx);
+      ArrayList entities = (ArrayList)entitiesFifoMap.get(tx);
 
       //There should be only one thread associated with this tx at a time.
       //Therefore we should not need to synchronize on entityFifoList to ensure exclusive
@@ -122,7 +122,7 @@ public class GlobalTxEntityMap
       EntityEnterpriseContext ctx = null;
       try
       {
-         for (Iterator i = entities.iterator(); i.hasNext(); )
+         for (int i = 0; i < entities.size(); i++)
          {
             // any one can mark the tx rollback at any time so check
             // before continuing to the next store
@@ -133,7 +133,7 @@ public class GlobalTxEntityMap
             }
 
             // read-only entities will never get into this list.
-            ctx = (EntityEnterpriseContext)i.next();
+            ctx = (EntityEnterpriseContext)entities.get(i);
 
             // only synchronize if the id is not null.  A null id means
             // that the entity has been removed.

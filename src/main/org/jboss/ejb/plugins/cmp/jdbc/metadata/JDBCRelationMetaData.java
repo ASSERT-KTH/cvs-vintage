@@ -27,7 +27,7 @@ import org.w3c.dom.Element;
  *    
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
  * @author <a href="mailto:heiko.rupp@cellent.de">Heiko W. Rupp</a>
- * @version $Revision: 1.17 $
+ * @version $Revision: 1.18 $
  */
 public final class JDBCRelationMetaData {
    private final static int TABLE = 1;

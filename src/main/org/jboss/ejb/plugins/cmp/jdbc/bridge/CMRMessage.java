@@ -14,7 +14,7 @@ import java.io.ObjectStreamException;
  * interceptor chain and caught by the JDBCRelationInterceptor.
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
- * @version $Revision: 1.7 $
+ * @version $Revision: 1.8 $
  */
 public final class CMRMessage implements Serializable {
    private static int nextOrdinal = 0;

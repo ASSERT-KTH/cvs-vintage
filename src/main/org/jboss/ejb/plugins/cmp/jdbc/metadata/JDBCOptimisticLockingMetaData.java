@@ -15,7 +15,7 @@ import org.w3c.dom.Element;
  * Optimistick locking metadata
  *
  * @author <a href="mailto:aloubyansky@hotmail.com">Alex Loubyansky</a>
- * @version $Revision: 1.3 $
+ * @version $Revision: 1.4 $
  */
 public final class JDBCOptimisticLockingMetaData
 {

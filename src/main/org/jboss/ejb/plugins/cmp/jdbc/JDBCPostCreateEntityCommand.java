@@ -22,7 +22,7 @@ import org.jboss.ejb.plugins.cmp.jdbc.bridge.JDBCEntityBridge;
  *
  * @author <a href="mailto:aloubyansky@hotmail.com">Alex Loubyansky</a>
  *
- * @version $Revision: 1.4 $
+ * @version $Revision: 1.5 $
  */
 public class JDBCPostCreateEntityCommand
 {
@@ -41,9 +41,10 @@ public class JDBCPostCreateEntityCommand
                          EntityEnterpriseContext ctx)
       throws CreateException
    {
-      for(Iterator cmrFieldsIter = entity.getCMRFields().iterator(); cmrFieldsIter.hasNext();)
+      java.util.List cmrFields = entity.getCMRFields();
+      for(int i = 0; i < cmrFields.size(); ++i)
       {
-         JDBCCMRFieldBridge cmrField = (JDBCCMRFieldBridge)cmrFieldsIter.next();
+         JDBCCMRFieldBridge cmrField = (JDBCCMRFieldBridge)cmrFields.get(i);
          if(cmrField.hasFKFieldsMappedToCMPFields())
          {
             Object relatedId = cmrField.getRelatedIdFromContextCMP(ctx);

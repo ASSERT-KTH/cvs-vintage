@@ -46,11 +46,11 @@ public abstract class JDBCInsertPKCreateCommand extends JDBCAbstractCreateComman
 
    protected void initExistsSQL()
    {
-      StringBuffer sql = new StringBuffer();
-      sql.append("SELECT COUNT(*) FROM ");
-      sql.append(entity.getTableName());
-      sql.append(" WHERE ");
-      sql.append(SQLUtil.getWhereClause(entity.getPrimaryKeyFields()));
+      StringBuffer sql = new StringBuffer(300);
+      sql.append(SQLUtil.SELECT).append("COUNT(*)").append(SQLUtil.FROM)
+         .append(entity.getTableName())
+         .append(SQLUtil.WHERE)
+         .append(SQLUtil.getWhereClause(entity.getPrimaryKeyFields()));
       existsSQL = sql.toString();
       if (debug) {
          log.debug("Entity Exists SQL: " + existsSQL);
@@ -65,7 +65,9 @@ public abstract class JDBCInsertPKCreateCommand extends JDBCAbstractCreateComman
          PreparedStatement ps = null;
          ResultSet rs = null;
          try {
-            log.debug("Executing SQL: " + existsSQL);
+            if(debug)
+               log.debug("Executing SQL: " + existsSQL);
+
             c = entity.getDataSource().getConnection();
             ps = c.prepareStatement(existsSQL);
 

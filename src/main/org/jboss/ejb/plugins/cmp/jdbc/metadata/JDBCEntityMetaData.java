@@ -33,7 +33,7 @@ import org.w3c.dom.Element;
  * @author <a href="mailto:loubyansky@hotmail.com">Alex Loubyansky</a>
  * @author <a href="mailto:heiko.rupp@cellent.de">Heiko W. Rupp</a>
  *
- * @version $Revision: 1.30 $
+ * @version $Revision: 1.31 $
  */
 public final class JDBCEntityMetaData {
    /**

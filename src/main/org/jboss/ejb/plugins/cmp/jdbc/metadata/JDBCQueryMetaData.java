@@ -17,7 +17,7 @@ import java.lang.reflect.Method;
  * @author <a href="sebastien.alborini@m4x.org">Sebastien Alborini</a>
  * @author <a href="danch@nvisia.com">danch</a>
  * @author <a href="on@ibis.odessa.ua">Oleg Nitz</a>
- * @version $Revision: 1.8 $
+ * @version $Revision: 1.9 $
  */
 public interface JDBCQueryMetaData {
    /**

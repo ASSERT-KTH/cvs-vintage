@@ -13,7 +13,7 @@ import java.lang.reflect.Method;
  * A raw sql query allows you to do anything sql allows you to do.
  *    
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
- *   @version $Revision: 1.8 $
+ *   @version $Revision: 1.9 $
  */
 public final class JDBCRawSqlQueryMetaData implements JDBCQueryMetaData {
    private final Method method;

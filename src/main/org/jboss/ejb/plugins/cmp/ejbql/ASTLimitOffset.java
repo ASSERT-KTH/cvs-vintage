@@ -11,7 +11,7 @@ package org.jboss.ejb.plugins.cmp.ejbql;
  * This abstract syntax node represents a query limit and offset
  *
  * @author <a href="mailto:jeremy@boynes.com">Jeremy Boynes</a>
- * @version $Revision: 1.2 $
+ * @version $Revision: 1.3 $
  */                            
 public class ASTLimitOffset extends SimpleNode {
    public boolean hasOffset;

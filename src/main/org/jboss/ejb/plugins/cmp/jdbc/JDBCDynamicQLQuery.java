@@ -24,7 +24,7 @@ import org.jboss.ejb.plugins.cmp.jdbc.metadata.JDBCReadAheadMetaData;
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
  * @author <a href="mailto:alex@jboss.org">Alex Loubyansky</a>
- * @version $Revision: 1.4 $
+ * @version $Revision: 1.5 $
  */
 public class JDBCDynamicQLQuery extends JDBCAbstractQueryCommand
 {
@@ -37,7 +37,7 @@ public class JDBCDynamicQLQuery extends JDBCAbstractQueryCommand
    {
 
       super(manager, q);
-      catalog = (Catalog)manager.getApplicationData("CATALOG");
+      catalog = manager.getCatalog();
       metadata = (JDBCDynamicQLQueryMetaData)q;
    }
 
@@ -88,7 +88,6 @@ public class JDBCDynamicQLQuery extends JDBCAbstractQueryCommand
       }
       catch(Throwable t)
       {
-         t.printStackTrace();
          throw new FinderException("Error compiling ejbql: " + t);
       }
 

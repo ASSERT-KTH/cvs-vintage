@@ -35,7 +35,7 @@ import org.jboss.ejb.plugins.cmp.jdbc.metadata.JDBCCMPFieldMetaData;
  *      One for each entity bean cmp field.       
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
- * @version $Revision: 1.15 $
+ * @version $Revision: 1.16 $
  */                            
 public class JDBCCMP1xFieldBridge extends JDBCAbstractCMPFieldBridge {
    private Field field;

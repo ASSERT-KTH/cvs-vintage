@@ -20,7 +20,7 @@ import org.w3c.dom.Element;
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
  * @author <a href="sebastien.alborini@m4x.org">Sebastien Alborini</a>
- * @version $Revision: 1.9 $
+ * @version $Revision: 1.10 $
  */
 public final class JDBCMappingMetaData
 {

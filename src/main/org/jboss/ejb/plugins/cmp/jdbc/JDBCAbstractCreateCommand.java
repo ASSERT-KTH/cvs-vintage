@@ -16,6 +16,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Arrays;
 import javax.ejb.CreateException;
 import javax.ejb.DuplicateKeyException;
 import javax.management.MalformedObjectNameException;
@@ -51,7 +52,7 @@ public abstract class JDBCAbstractCreateCommand implements JDBCCreateCommand
    protected boolean createAllowed;
    protected SQLExceptionProcessorMBean exceptionProcessor;
    protected String insertSQL;
-   protected List insertFields;
+   protected JDBCFieldBridge[] insertFields;
    protected boolean insertAfterEjbPostCreate;
 
    // Generated fields
@@ -63,7 +64,7 @@ public abstract class JDBCAbstractCreateCommand implements JDBCCreateCommand
 
    public void init(JDBCStoreManager manager) throws DeploymentException
    {
-      log = Logger.getLogger(getClass().getName() + "." + manager.getMetaData().getName());
+      log = Logger.getLogger(getClass().getName() + '.' + manager.getMetaData().getName());
       debug = log.isDebugEnabled();
       trace = log.isTraceEnabled();
 
@@ -77,8 +78,8 @@ public abstract class JDBCAbstractCreateCommand implements JDBCCreateCommand
       // set create allowed
       createAllowed = true;
       List fields = entity.getFields();
-      for (Iterator iter = fields.iterator(); iter.hasNext();) {
-         JDBCFieldBridge field = (JDBCFieldBridge) iter.next();
+      for (int i = 0; i < fields.size(); i++) {
+         JDBCFieldBridge field = (JDBCFieldBridge) fields.get(i);
          if (field.isPrimaryKeyMember() && field.isReadOnly()) {
             createAllowed = false;
             log.debug("Create will not be allowed because pk field " + field.getFieldName() + "is read only.");
@@ -192,11 +193,14 @@ public abstract class JDBCAbstractCreateCommand implements JDBCCreateCommand
       }
 
       // Audit time fields
-      Date date = new Date();
+      Date date = null;
       if (createdTime != null && createdTime.getInstanceValue(ctx) == null) {
+         date = new Date();
          createdTime.setInstanceValue(ctx, date);
       }
       if (updatedTime != null && updatedTime.getInstanceValue(ctx) == null) {
+         if(date == null)
+            date = new Date();
          updatedTime.setInstanceValue(ctx, date);
       }
    }
@@ -204,10 +208,10 @@ public abstract class JDBCAbstractCreateCommand implements JDBCCreateCommand
    protected void initInsertFields()
    {
       List fields = entity.getFields();
-      insertFields = new ArrayList(fields.size());
+      List insertFieldsList = new ArrayList(fields.size());
 
-      for (Iterator iter = fields.iterator(); iter.hasNext();) {
-         JDBCFieldBridge field = (JDBCFieldBridge) iter.next();
+      for (int i = 0; i < fields.size(); i++) {
+         JDBCFieldBridge field = (JDBCFieldBridge) fields.get(i);
 
          if (!isInsertField(field)) {
             continue;
@@ -223,23 +227,26 @@ public abstract class JDBCAbstractCreateCommand implements JDBCCreateCommand
 
             // if CMR field has no FK fields mapped to CMP fields then add it itself
             if (!cmrField.hasFKFieldsMappedToCMPFields()) {
-               insertFields.add(field);
+               insertFieldsList.add(field);
             } else {
                // Add the foreign key fields that are not mapped to CMP fields
-               Iterator fkFieldIter = cmrField.getForeignKeyFields().iterator();
-               while (fkFieldIter.hasNext()) {
-                  JDBCCMP2xFieldBridge fkField = (JDBCCMP2xFieldBridge) fkFieldIter.next();
+               List fkFieldIter = cmrField.getForeignKeyFields();
+               for (int j = 0; j < fkFieldIter.size(); ++j) {
+                  JDBCCMP2xFieldBridge fkField = (JDBCCMP2xFieldBridge) fkFieldIter.get(j);
                   if (!fkField.isFKFieldMappedToCMPField()) {
                      // this field is not mapped to a CMP field
-                     insertFields.add(fkField);
+                     insertFieldsList.add(fkField);
                   }
                }
             }
          } else {
             // ordinary cmp field
-            insertFields.add(field);
+            insertFieldsList.add(field);
          }
       }
+
+      insertFields = new JDBCFieldBridge[insertFieldsList.size()];
+      insertFieldsList.toArray(insertFields);
    }
 
    protected boolean isInsertField(JDBCFieldBridge field)
@@ -249,18 +256,20 @@ public abstract class JDBCAbstractCreateCommand implements JDBCCreateCommand
 
    protected void initInsertSQL()
    {
-      StringBuffer sql = new StringBuffer();
-      sql.append("INSERT INTO ").append(entity.getTableName());
-      sql.append(" (");
-      sql.append(SQLUtil.getColumnNamesClause(insertFields));
-      sql.append(")");
-      sql.append(" VALUES (");
-      sql.append(SQLUtil.getValuesClause(insertFields));
-      sql.append(")");
+      List insertFieldsList = Arrays.asList(insertFields);
+      StringBuffer sql = new StringBuffer(250);
+      sql.append(SQLUtil.INSERT_INTO)
+         .append(entity.getTableName())
+         .append('(')
+         .append(SQLUtil.getColumnNamesClause(insertFieldsList))
+         .append(')')
+         .append(SQLUtil.VALUES).append('(')
+         .append(SQLUtil.getValuesClause(insertFieldsList))
+         .append(')');
       insertSQL = sql.toString();
-      if (debug) {
+
+      if(debug)
          log.debug("Insert Entity SQL: " + insertSQL);
-      }
    }
 
    protected void beforeInsert(EntityEnterpriseContext ctx) throws CreateException
@@ -271,10 +280,10 @@ public abstract class JDBCAbstractCreateCommand implements JDBCCreateCommand
    {
       Connection c = null;
       PreparedStatement ps = null;
-      try {
-         if (debug) {
+      try
+      {
+         if(debug)
             log.debug("Executing SQL: " + insertSQL);
-         }
 
          DataSource dataSource = entity.getDataSource();
          c = dataSource.getConnection();
@@ -282,9 +291,9 @@ public abstract class JDBCAbstractCreateCommand implements JDBCCreateCommand
 
          // set the parameters
          int index = 1;
-         for (Iterator iter = insertFields.iterator(); iter.hasNext();) {
-            JDBCFieldBridge field = (JDBCFieldBridge) iter.next();
-            index = field.setInstanceParameters(ps, index, ctx);
+         for(int fieldInd = 0; fieldInd < insertFields.length; ++fieldInd)
+         {
+            index = insertFields[fieldInd].setInstanceParameters(ps, index, ctx);
          }
 
          // execute statement
@@ -306,9 +315,9 @@ public abstract class JDBCAbstractCreateCommand implements JDBCCreateCommand
       }
 
       // Mark the inserted fields as clean.
-      for (Iterator iter = insertFields.iterator(); iter.hasNext();) {
-         JDBCFieldBridge field = (JDBCFieldBridge) iter.next();
-         field.setClean(ctx);
+      for(int fieldInd = 0; fieldInd < insertFields.length; ++fieldInd)
+      {
+         insertFields[fieldInd].setClean(ctx);
       }
    }
 

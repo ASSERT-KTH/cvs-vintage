@@ -13,7 +13,7 @@ import org.jboss.metadata.QueryMetaData;
  * Immutable class which contains information about an EJB QL query.
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
- * @version $Revision: 1.10 $
+ * @version $Revision: 1.11 $
  */
 public final class JDBCQlQueryMetaData implements JDBCQueryMetaData {
    /**

@@ -16,7 +16,7 @@ import org.jboss.metadata.QueryMetaData;
  * Immutable class which contains information about an JBossQL query.
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
- * @version $Revision: 1.4 $
+ * @version $Revision: 1.5 $
  */
 public final class JDBCJBossQLQueryMetaData implements JDBCQueryMetaData {
    /**

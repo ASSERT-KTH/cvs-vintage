@@ -33,7 +33,7 @@ import org.jboss.ejb.plugins.cmp.jdbc.metadata.JDBCCMPFieldMetaData;
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
  * @author <a href="mailto:loubyansky@hotmail.com">Alex Loubyansky</a>
  *
- * @version $Revision: 1.15 $
+ * @version $Revision: 1.16 $
  */
 public interface JDBCCMPFieldBridge extends JDBCFieldBridge, CMPFieldBridge {
 

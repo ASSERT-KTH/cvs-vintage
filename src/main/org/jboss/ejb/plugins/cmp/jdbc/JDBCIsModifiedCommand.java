@@ -16,7 +16,7 @@ import org.jboss.ejb.plugins.cmp.jdbc.bridge.JDBCEntityBridge;
  *    
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
  * @author <a href="mailto:alex@jboss.org">Alexey Loubyansky</a>
- * @version $Revision: 1.2 $
+ * @version $Revision: 1.3 $
  */
  
 public class JDBCIsModifiedCommand

@@ -29,7 +29,7 @@ import org.jboss.ejb.plugins.cmp.jdbc.metadata.JDBCReadAheadMetaData;
  * @author <a href="mailto:justin@j-m-f.demon.co.uk">Justin Forder</a>
  * @author <a href="mailto:michel.anke@wolmail.nl">Michel de Groot</a>
  * @author <a href="danch@nvisia.com">danch (Dan Christopherson</a>
- * @version $Revision: 1.10 $
+ * @version $Revision: 1.11 $
  */
 public class JDBCDeclaredSQLQuery extends JDBCAbstractQueryCommand {
    
@@ -76,10 +76,9 @@ public class JDBCDeclaredSQLQuery extends JDBCAbstractQueryCommand {
          return;
       }
 
-      Catalog catalog = (Catalog)manager.getApplicationData("CATALOG");
+      Catalog catalog = manager.getCatalog();
 
-      JDBCEntityBridge entity = 
-            (JDBCEntityBridge)catalog.getEntityByEJBName(entityName);
+      JDBCEntityBridge entity = (JDBCEntityBridge)catalog.getEntityByEJBName(entityName);
       if(entity == null) {
          throw new DeploymentException("Unknown entity: " + entityName);
       }
@@ -101,11 +100,11 @@ public class JDBCDeclaredSQLQuery extends JDBCAbstractQueryCommand {
     * @return the sql statement for this query
     */
    private String buildSQL() {
-      StringBuffer sql = new StringBuffer();
+      StringBuffer sql = new StringBuffer(300);
 
-      sql.append("SELECT ");
+      sql.append(SQLUtil.SELECT);
       if(metadata.isSelectDistinct()) {
-         sql.append("DISTINCT ");
+         sql.append(SQLUtil.DISTINCT);
       }
 
       String alias = metadata.getAlias();
@@ -135,7 +134,7 @@ public class JDBCDeclaredSQLQuery extends JDBCAbstractQueryCommand {
       if (additionalColumns != null) {
          sql.append(additionalColumns);
       }
-      sql.append(" FROM ").append(table);
+      sql.append(SQLUtil.FROM).append(table);
       if (alias != null) {
          sql.append(' ').append(alias);
       }
@@ -145,17 +144,17 @@ public class JDBCDeclaredSQLQuery extends JDBCAbstractQueryCommand {
 
       String where = metadata.getWhere();
       if(where != null && where.trim().length() > 0) {
-         sql.append(" WHERE ").append(where);
+         sql.append(SQLUtil.WHERE).append(where);
       }
       
       String order = metadata.getOrder();
       if(order != null && order.trim().length() > 0) {
-         sql.append(" ORDER BY ").append(order);
+         sql.append(SQLUtil.ORDERBY).append(order);
       }
 
       String other = metadata.getOther();
       if(other != null && other.trim().length() > 0) {
-         sql.append(" ").append(other);
+         sql.append(' ').append(other);
       }
       return sql.toString();
    }
@@ -168,7 +167,7 @@ public class JDBCDeclaredSQLQuery extends JDBCAbstractQueryCommand {
       } else if (from != null) {
          tableAlias = table;
       } else {
-         tableAlias = "";
+         tableAlias = SQLUtil.EMPTY_STRING;
       }
       return tableAlias;
    }

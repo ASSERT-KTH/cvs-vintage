@@ -19,7 +19,7 @@ import org.w3c.dom.Element;
  * It loads its data from standardjbosscmp-jdbc.xml and jbosscmp-jdbc.xml
  *
  * @author <a href="mailto:on@ibis.odessa.ua">Oleg Nitz</a>
- * @version $Revision: 1.8 $
+ * @version $Revision: 1.9 $
  */
 public final class JDBCReadAheadMetaData {
 

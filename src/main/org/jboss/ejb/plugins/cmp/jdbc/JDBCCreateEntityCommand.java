@@ -20,7 +20,7 @@ package org.jboss.ejb.plugins.cmp.jdbc;
  * @author <a href="mailto:justin@j-m-f.demon.co.uk">Justin Forder</a>
  * @author <a href="mailto:loubyansky@hotmail.com">Alex Loubyansky</a>
  *
- * @version $Revision: 1.25 $
+ * @version $Revision: 1.26 $
  */
 public class JDBCCreateEntityCommand extends JDBCInsertPKCreateCommand
 {

@@ -11,13 +11,13 @@ import org.jboss.ejb.plugins.cmp.jdbc.JDBCUtil;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Types;
+
 
 /**
  * This abstract syntax node represents a count function.
  *
  * @author <a href="mailto:alex@jboss.org">Alex Loubyansky</a>
- * @version $Revision: 1.2 $
+ * @version $Revision: 1.3 $
  */                            
 public class ASTCount
    extends SimpleNode
@@ -41,6 +41,6 @@ public class ASTCount
 
    public Object readResult(ResultSet rs) throws SQLException
    {
-      return JDBCUtil.getFunctionResult(rs, Types.INTEGER, Long.class);
+      return JDBCUtil.LONG_READER.getFirst(rs, Long.class);
    }
 }

@@ -16,7 +16,7 @@ import org.w3c.dom.Element;
  * This immutable class contains information about entity command
  *
  * @author <a href="mailto:loubyansky@ua.fm">Alex Loubyansky</a>
- * @version $Revision: 1.4 $
+ * @version $Revision: 1.5 $
  */
 public final class JDBCEntityCommandMetaData
 {

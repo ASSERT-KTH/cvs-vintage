@@ -7,11 +7,13 @@
  
 package org.jboss.ejb.plugins.cmp.ejbql;
 
+import org.jboss.ejb.plugins.cmp.jdbc.SQLUtil;
+
 /**
  * This abstract syntax node represents a like opperator.
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
- * @version $Revision: 1.1 $
+ * @version $Revision: 1.2 $
  */                            
 public class ASTLike extends SimpleNode {
    public boolean not;
@@ -25,7 +27,7 @@ public class ASTLike extends SimpleNode {
    }
 
    public String toString() {
-      return (not ? "NOT " : "") + "LIKE";
+      return (not ? SQLUtil.NOT : SQLUtil.EMPTY_STRING) + SQLUtil.LIKE;
    }
 
    /** Accept the visitor. **/

@@ -28,7 +28,7 @@ import org.jboss.ejb.plugins.cmp.jdbc.JDBCUtil;
  *
  * @author <a href="mailto:loubyansky@hotmail.com">Alex Loubyansky</a>
  *
- * @version $Revision: 1.2 $
+ * @version $Revision: 1.3 $
  */
 public class JDBCPkSqlCreateCommand extends JDBCInsertPKCreateCommand
 {

@@ -19,7 +19,7 @@ import org.jboss.ejb.plugins.cmp.jdbc.metadata.JDBCReadAheadMetaData;
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
  * @author <a href="mailto:alex@jboss.org">Alex Loubyansky</a>
- * @version $Revision: 1.4 $
+ * @version $Revision: 1.5 $
  */
 public class JDBCJBossQLQuery extends JDBCAbstractQueryCommand {
 
@@ -34,8 +34,7 @@ public class JDBCJBossQLQuery extends JDBCAbstractQueryCommand {
          getLog().debug("JBossQL: " + metadata.getJBossQL());
       }
 
-      JDBCEJBQLCompiler compiler = new JDBCEJBQLCompiler(
-            (Catalog)manager.getApplicationData("CATALOG"));
+      JDBCEJBQLCompiler compiler = new JDBCEJBQLCompiler(manager.getCatalog());
 
       try {
          compiler.compileJBossQL(
@@ -44,7 +43,6 @@ public class JDBCJBossQLQuery extends JDBCAbstractQueryCommand {
                metadata.getMethod().getParameterTypes(),
                metadata.getReadAhead());
       } catch(Throwable t) {
-         t.printStackTrace();
          throw new DeploymentException("Error compiling JBossQL " +
             "statement '" + metadata.getJBossQL() + "'", t);
       }
@@ -75,7 +73,6 @@ public class JDBCJBossQLQuery extends JDBCAbstractQueryCommand {
       {
          setSelectFunction(compiler.getSelectFunction(), compiler.getStoreManager());
       }
-
 
       // get the parameter order
       setParameterList(compiler.getInputParameters());

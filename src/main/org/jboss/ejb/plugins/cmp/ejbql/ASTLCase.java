@@ -11,14 +11,13 @@ import org.jboss.ejb.plugins.cmp.jdbc.JDBCUtil;
 
 import java.sql.SQLException;
 import java.sql.ResultSet;
-import java.sql.Types;
 
 /**
  * This abstract syntax node represents a LCase function.
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
  * @author <a href="mailto:alex@jboss.org">Alex Loubyansky</a>
- * @version $Revision: 1.2 $
+ * @version $Revision: 1.3 $
  */
 public class ASTLCase
    extends SimpleNode
@@ -48,6 +47,6 @@ public class ASTLCase
     */
    public Object readResult(ResultSet rs) throws SQLException
    {
-      return JDBCUtil.getFunctionResult(rs, Types.VARCHAR, String.class);
+      return JDBCUtil.STRING_READER.getFirst(rs, String.class);
    }
 }
