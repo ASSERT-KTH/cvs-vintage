@@ -49,7 +49,7 @@ import org.gjt.sp.util.Log;
  * jEdit's text component.
  *
  * @author Slava Pestov
- * @version $Id: JEditTextArea.java,v 1.14 2001/10/13 13:32:19 spestov Exp $
+ * @version $Id: JEditTextArea.java,v 1.15 2001/10/14 09:06:27 spestov Exp $
  */
 public class JEditTextArea extends JComponent
 {
@@ -528,8 +528,6 @@ public class JEditTextArea extends JComponent
 	 */
 	public void scrollToCaret(boolean doElectricScroll)
 	{
-		foldVisibilityManager.expandFold(caretLine,false);
-
 		int offset = caret - getLineStartOffset(caretLine);
 		int virtualCaretLine = physicalToVirtual(caretLine);
 
@@ -2160,16 +2158,20 @@ forward_scan:		do
 
 		magicCaret = -1;
 
-		// call invalidateLine() twice, as opposed to calling
-		// invalidateLineRange(), because invalidateLineRange()
-		// doesn't handle start > end
 		invalidateLine(caretLine);
-		invalidateLine(newCaretLine);
 
-		buffer.addUndoableEdit(new CaretUndo(caret));
+		if(caretLine != newCaretLine)
+		{
+			invalidateLine(newCaretLine);
+
+			if(!foldVisibilityManager.isLineVisible(newCaretLine))
+				foldVisibilityManager.expandFold(newCaretLine,false);
+		}
 
 		caret = newCaret;
 		caretLine = newCaretLine;
+
+		buffer.addUndoableEdit(new CaretUndo(caret));
 
 		if(focusedComponent == this)
 			scrollToCaret(doElectricScroll);
@@ -3056,6 +3058,14 @@ loop:		for(int i = lineNo - 1; i >= 0; i--)
 
 	//{{{ User input
 
+	public void userInputTest()
+	{
+		long start = System.currentTimeMillis();
+		for(int i = 0; i < 70; i++)
+			userInput('m');
+		System.err.println((System.currentTimeMillis() - start) / 70);
+	}
+
 	//{{{ userInput() method
 	/**
 	 * Handles the insertion of the specified character. Performs
@@ -3136,12 +3146,12 @@ loop:		for(int i = lineNo - 1; i >= 0; i--)
 
 			try
 			{
-				buffer.beginCompoundEdit();
-
 				// Don't overstrike if we're on the end of
 				// the line
 				if(overwrite)
 				{
+					buffer.beginCompoundEdit();
+
 					int caretLineEnd = getLineEndOffset(caretLine);
 					if(caretLineEnd - caret > 1)
 						buffer.remove(caret,1);
@@ -3155,7 +3165,8 @@ loop:		for(int i = lineNo - 1; i >= 0; i--)
 			}
 			finally
 			{
-				buffer.endCompoundEdit();
+				if(overwrite)
+					buffer.endCompoundEdit();
 			}
 		}
 
@@ -4057,6 +4068,8 @@ loop:			for(int i = lineNo + 1; i < getLineCount(); i++)
 		{
 			Log.log(Log.ERROR,this,bl);
 		}
+
+		setCaretPosition(end - 1);
 	} //}}}
 
 	//{{{ showWordCountDialog() method

@@ -49,7 +49,7 @@ import org.gjt.sp.util.Log;
  * from jEdit's global properties.
  *
  * @author Slava Pestov
- * @version $Id: Buffer.java,v 1.13 2001/10/13 13:32:19 spestov Exp $
+ * @version $Id: Buffer.java,v 1.14 2001/10/14 09:06:27 spestov Exp $
  */
 public class Buffer extends PlainDocument implements EBComponent
 {
@@ -2297,6 +2297,8 @@ public class Buffer extends PlainDocument implements EBComponent
 		inUseFVMs[mgr._getIndex()] = null;
 		mgr._release();
 	} //}}}
+
+	//}}}
 
 	//{{{ Marker methods
 
