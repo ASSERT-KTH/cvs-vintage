@@ -25,7 +25,7 @@
 // File: PropPanelComponent.java
 // Classes: PropPanelComponent
 // Original Author: 5eichler@informatik.uni-hamburg.de
-// $Id: PropPanelComponent.java,v 1.9 2002/04/04 13:28:54 jeremybennett Exp $
+// $Id: PropPanelComponent.java,v 1.10 2002/06/07 07:35:31 mkl Exp $
 
 // 21 Mar 2002: Jeremy Bennett (mail@jeremybennett.com). Changed to use the
 // labels "Generalizes:" and "Specializes:" for inheritance.
@@ -81,7 +81,11 @@ public class PropPanelComponent extends PropPanelClassifier {
   }
 
     protected boolean isAcceptibleBaseMetaClass(String baseClass) {
-        return baseClass.equals("Component");
+        return (baseClass.equals("Component") || 
+                baseClass.equals("Classifier") ||
+                baseClass.equals("GeneralizableElement") ||
+                baseClass.equals("Namespace")
+                );
     }
 
 
