@@ -61,11 +61,11 @@ import org.tigris.scarab.om.IssueType;
  *
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
  * @since 0.16.25
- * @version $Id: IssueSearchFactory.java,v 1.2 2003/07/25 17:35:15 thierrylach Exp $
+ * @version $Id: IssueSearchFactory.java,v 1.3 2003/08/04 17:09:35 thierrylach Exp $
  */
 public class IssueSearchFactory
 {
-    public static IssueSearchFactory INSTANCE = new IssueSearchFactory();
+    public static final IssueSearchFactory INSTANCE = new IssueSearchFactory();
     
     private final int maxInstances;
     private final int maxWait;
