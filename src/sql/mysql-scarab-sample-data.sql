@@ -45,10 +45,10 @@ insert into SCARAB_R_MODULE_ATTRIBUTE(MODULE_ID, ATTRIBUTE_ID) values(2,10);
  * Insert a relationship between user_id 2 and module_id 1
  * Insert a relationship between user_id 2 and module_id 3
  */
-insert into SCARAB_R_MODULE_VISITOR(USER_ID, MODULE_ID) values (1, 1);
-insert into SCARAB_R_MODULE_VISITOR(USER_ID, MODULE_ID) values (1, 3);
-insert into SCARAB_R_MODULE_VISITOR(USER_ID, MODULE_ID) values (2, 1);
-insert into SCARAB_R_MODULE_VISITOR(USER_ID, MODULE_ID) values (2, 3);
+insert into SCARAB_R_MODULE_USER(USER_ID, MODULE_ID) values (1, 1);
+insert into SCARAB_R_MODULE_USER(USER_ID, MODULE_ID) values (1, 3);
+insert into SCARAB_R_MODULE_USER(USER_ID, MODULE_ID) values (2, 1);
+insert into SCARAB_R_MODULE_USER(USER_ID, MODULE_ID) values (2, 3);
 
 
 /*
