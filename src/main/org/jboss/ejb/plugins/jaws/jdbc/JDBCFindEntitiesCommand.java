@@ -33,7 +33,7 @@ import org.jboss.util.FinderResults;
  * @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
  * @author <a href="mailto:shevlandj@kpi.com.au">Joe Shevland</a>
  * @author <a href="mailto:justin@j-m-f.demon.co.uk">Justin Forder</a>
- * @version $Revision: 1.9 $
+ * @version $Revision: 1.10 $
  */
 public class JDBCFindEntitiesCommand implements JPMFindEntitiesCommand
 {
@@ -74,7 +74,8 @@ public class JDBCFindEntitiesCommand implements JPMFindEntitiesCommand
 			 }
 		  }
 	  } catch (Exception e) {
-	  	// for some reason, this failed; try to use defined or automatic instead
+        // for some reason, this failed; try to use defined or automatic instead
+        factory.getLog().warning("Error initializing custom finder "+e.getMessage());
 	  }
 
       // Make commands for the defined finders

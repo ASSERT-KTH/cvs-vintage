@@ -27,7 +27,8 @@ import org.jboss.ejb.plugins.jaws.metadata.FinderMetaData;
  * @author <a href="mailto:shevlandj@kpi.com.au">Joe Shevland</a>
  * @author <a href="mailto:justin@j-m-f.demon.co.uk">Justin Forder</a>
  * @author <a href="mailto:danch@nvisia.com">danch (Dan Christopherson)</a>
- * @version $Revision: 1.9 $
+ * @author <a href="mailto:jaeger@oio.de">Torben Jäger</a>
+ * @version $Revision: 1.10 $
  */
 public class JDBCFindByCommand extends JDBCFinderCommand
 {
@@ -55,7 +56,9 @@ public class JDBCFindByCommand extends JDBCFinderCommand
       {
          CMPFieldMetaData fi = (CMPFieldMetaData)iter.next();
          
-         if (cmpFieldName.equals(fi.getName().toLowerCase()))
+         String lastComponentOfName = 
+            CMPFieldMetaData.getLastComponent(fi.getName()).toLowerCase();
+         if (cmpFieldName.equals(lastComponentOfName))
          {
             cmpField = fi;
          }

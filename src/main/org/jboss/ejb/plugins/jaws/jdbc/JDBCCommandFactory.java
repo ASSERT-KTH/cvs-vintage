@@ -8,11 +8,15 @@
 package org.jboss.ejb.plugins.jaws.jdbc;
 
 import java.lang.reflect.Method;
+import java.lang.ref.SoftReference;
+import java.lang.ref.WeakReference;
+import java.lang.ref.ReferenceQueue;
 import java.util.Map;
 import java.util.HashMap;
 import java.util.List;
 import java.util.LinkedList;
 import java.util.Iterator;
+import java.util.WeakHashMap;
 
 import javax.naming.Context;
 import javax.naming.InitialContext;
@@ -46,13 +50,25 @@ import org.jboss.ejb.plugins.jaws.metadata.FinderMetaData;
 
 import org.jboss.logging.Log;
 import org.jboss.util.FinderResults;
+import org.jboss.util.TimerTask;
+import org.jboss.util.TimerQueue;
 
 /**
- * JAWSPersistenceManager JDBCCommandFactory
+ * Command factory for the JAWS JDBC layer. This class is primarily responsible
+ * for creating instances of the JDBC implementations for the various JPM 
+ * commands so that the JAWSPersistenceManager (actually an persistence store)
+ * can delegate to them in a decoupled manner.
+ * <p>This class also acts as the manager for the read-ahead buffer added in 
+ * version 2.3/2.4. In order to manage this buffer, it must register itself
+ * with any transaction that is active when a finder is called so that the 
+ * data that was read ahead can be discarded before completion of the 
+ * transaction. The read ahead buffer is managed using Soft references, with
+ * a ReferenceQueue being used to tell when the VM has garbage collected an
+ * object so that we can keep the hashtables clean.
  *
  * @author <a href="mailto:justin@j-m-f.demon.co.uk">Justin Forder</a>
  * @author <a href="danch@nvisia.com">danch (Dan Christopherson</a>
- * @version $Revision: 1.9 $
+ * @version $Revision: 1.10 $
  */
 public class JDBCCommandFactory implements JPMCommandFactory
 {
@@ -63,6 +79,14 @@ public class JDBCCommandFactory implements JPMCommandFactory
    private JawsEntityMetaData metadata;
    private Log log;
    private boolean debug = false;
+
+   /** Timer queue used to time polls on the preloadRefQueue on all JAWS 
+    *  handled entities
+    */
+   private static TimerQueue softRefHandler;
+   
+   /** Timer queue used to get references to preload data who've been GC'ed */
+   private ReferenceQueue preloadRefQueue = new ReferenceQueue();
    
    /** a map of data preloaded within some transaction for some entity. This map
     *  is keyed by Transaction and the data are hashmaps with key = entityKey and
@@ -81,7 +105,13 @@ public class JDBCCommandFactory implements JPMCommandFactory
    // These support singletons (within the scope of this factory)
    private JDBCBeanExistsCommand beanExistsCommand;
    private JPMFindEntitiesCommand findEntitiesCommand;
-   
+
+   //static initializer to kick off our softRefhandler 
+   static {
+      softRefHandler = new TimerQueue("JAWS Preload reference handler");
+      softRefHandler.start();
+   }
+      
    // Constructors --------------------------------------------------
    
    public JDBCCommandFactory(EntityContainer container,
@@ -93,24 +123,26 @@ public class JDBCCommandFactory implements JPMCommandFactory
 	  
       this.javaCtx = (Context)new InitialContext().lookup("java:comp/env");
       
-	  String ejbName = container.getBeanMetaData().getEjbName();
-	  ApplicationMetaData amd = container.getBeanMetaData().getApplicationMetaData();
-	  JawsApplicationMetaData jamd = (JawsApplicationMetaData)amd.getPluginData("JAWS");
-	  
-	  if (jamd == null) {
-	     // we are the first cmp entity to need jaws. Load jaws.xml for the whole application
-		 JawsXmlFileLoader jfl = new JawsXmlFileLoader(amd, container.getClassLoader(), container.getLocalClassLoader(), log);
-       jamd = jfl.load();
-		 amd.addPluginData("JAWS", jamd);
-	  }
-     debug = jamd.getDebug();
-		  
-	  metadata = jamd.getBeanByEjbName(ejbName);
-	  if (metadata == null) {
-		  throw new DeploymentException("No metadata found for bean " + ejbName);
-	  }
+      String ejbName = container.getBeanMetaData().getEjbName();
+      ApplicationMetaData amd = container.getBeanMetaData().getApplicationMetaData();
+      JawsApplicationMetaData jamd = (JawsApplicationMetaData)amd.getPluginData("JAWS");
+           
+      if (jamd == null) {
+         // we are the first cmp entity to need jaws. Load jaws.xml for the whole application
+         JawsXmlFileLoader jfl = new JawsXmlFileLoader(amd, container.getClassLoader(), container.getLocalClassLoader(), log);
+         jamd = jfl.load();
+         amd.addPluginData("JAWS", jamd);
+      }
+      debug = jamd.getDebug();
+              
+      metadata = jamd.getBeanByEjbName(ejbName);
+      if (metadata == null) {
+         throw new DeploymentException("No metadata found for bean " + ejbName);
+      }
+            
+      tm = (TransactionManager) container.getTransactionManager();
       
-     tm = (TransactionManager) container.getTransactionManager();
+      softRefHandler.schedule(new PreloadRefQueueHandlerTask(), 50);
    }
    
    // Public --------------------------------------------------------
@@ -262,10 +294,10 @@ public class JDBCCommandFactory implements JPMCommandFactory
       try {
          trans = tm.getTransaction();
       } catch (javax.transaction.SystemException sysE) {
-         log.warning("System exception getting transaction for preload - can't get preloaded data for "+entityKey);
+         log.warning("System exception getting transaction for preload - can't preload data for "+entityKey);
          return;
       }
-//log.debug("PRELOAD: adding preload for "+entityKey+" in transaction "+(trans != null ? trans.toString() : "NONE"));
+//log.debug("PRELOAD: adding preload for "+entityKey+" in transaction "+(trans != null ? trans.toString() : "NONE")+" entityData="+entityData);
       
       if (trans != null) {
          synchronized (preloadedData) {
@@ -283,11 +315,13 @@ public class JDBCCommandFactory implements JPMCommandFactory
                entitiesInTransaction = new HashMap();
                preloadedData.put(trans, entitiesInTransaction);
             }
-            entitiesInTransaction.put(entityKey, entityData);
+            PreloadData preloadData = new PreloadData(trans, entityKey, entityData, preloadRefQueue);
+            entitiesInTransaction.put(entityKey, preloadData);
          }
       } else {
          synchronized (nonTransactionalPreloadData) {
-            nonTransactionalPreloadData.put(entityKey, entityData);
+            PreloadData preloadData = new PreloadData(null, entityKey, entityData, preloadRefQueue);
+            nonTransactionalPreloadData.put(entityKey, preloadData);
          }
       }
    }
@@ -306,19 +340,36 @@ public class JDBCCommandFactory implements JPMCommandFactory
       }
       
       Object[] result = null;
+      PreloadData preloadData = null;
       if (trans != null) {
-         synchronized (preloadedData) {
-            Map entitiesInTransaction = (Map)preloadedData.get(trans);
-            if (entitiesInTransaction != null)
-               result = (Object[])entitiesInTransaction.get(entityKey);
-            //remove it now?
+         Map entitiesInTransaction = null;
+         // Do we really need this to be syncrhonized? What is the effect of 
+         //    another thread trying to modify this map? It won't be to remove
+         //    our transaction (we're in it here!, trying to call a business 
+         //    method), and who cares if another is added/removed?
+//         synchronized (preloadedData) {
+            entitiesInTransaction = (Map)preloadedData.get(trans);
+//         }
+         if (entitiesInTransaction != null) {
+            synchronized (entitiesInTransaction) {
+               preloadData = (PreloadData)entitiesInTransaction.get(entityKey);
+               entitiesInTransaction.remove(entityKey);
+            }
          }
       } else {
          synchronized (nonTransactionalPreloadData) {
-            result = (Object[])nonTransactionalPreloadData.get(entityKey);
+            preloadData = (PreloadData)nonTransactionalPreloadData.get(entityKey);
+            nonTransactionalPreloadData.remove(entityKey);
          }
       }
-//log.debug("PRELOAD: returning "+result+" as preload for "+entityKey);
+      if (preloadData != null) {
+         result = preloadData.getData();
+      } /*else {
+         log.debug("PRELOAD: preloadData == null for "+entityKey);
+      }
+if (result == null)
+   log.debug("PRELOAD: returning null as preload for "+entityKey);
+   */
       return result;
    }
    
@@ -333,38 +384,71 @@ public class JDBCCommandFactory implements JPMCommandFactory
    
    
    // Private -------------------------------------------------------
-   /** an inner class used to key the FinderResults by their finder method and
-    *  the transaction they're invoked within
-    */
-   private static class PreloadDataKey {
-      private Object entityKey;
-      private Transaction transaction;
-      
-      private int hashCode;
-      
-      public PreloadDataKey(Object entityKey, Transaction transaction) {
-         this.entityKey = entityKey;
-         this.transaction = transaction;
-         
-         //accumulate the hashcode. 
-         /** @todo investigate ways of combining these that will give the least collisions */
-         this.hashCode = entityKey.hashCode();
-         if (transaction != null)
-            this.hashCode += transaction.hashCode();
-      }
-      
-      public int hashCode() {
-         return hashCode;
-      }
-      public boolean equals(Object o) {
-         if (o instanceof PreloadDataKey) {
-            PreloadDataKey other = (PreloadDataKey)o;
-            return (other.entityKey.equals(this.entityKey)) &&
-                   ( (other.transaction == null && this.transaction == null) ||
-                     ( (other.transaction != null && this.transaction != null) &&
-                       (other.transaction.equals(this.transaction)) ) );
+   
+   /** Inner class that handles our reference queue. I didn't think this would 
+    *  be neccessary, but for some reason the VM won't call an override of 
+    *  Reference.clear() 
+   */
+   private class PreloadRefQueueHandlerTask extends TimerTask {
+   	public void execute() throws Exception {
+         PreloadData preloadData = (PreloadData)preloadRefQueue.poll();
+         int handled = 0;
+         while (preloadData != null && handled < 10) {
+            log.debug("PRELOAD: clearing "+preloadData.getKey());
+            if (preloadData.getTransaction() != null) {
+               Map entitiesInTransaction = null;
+               // Do we really need this to be syncrhonized? What is the effect of 
+               //    another thread trying to modify this map? It won't be to remove
+               //    our transaction (we're in it here!, trying to call a business 
+               //    method), and who cares if another is added/removed?
+      //         synchronized (preloadedData) {
+                  entitiesInTransaction = (Map)preloadedData.get(preloadData.getTransaction());
+      //         }
+               if (entitiesInTransaction != null) {
+                  synchronized (entitiesInTransaction) {
+                     entitiesInTransaction.remove(preloadData.getKey());
+                  }
+               }
+            } else {
+               synchronized (nonTransactionalPreloadData) {
+                  nonTransactionalPreloadData.remove(preloadData.getKey());
+               }
+            }
+            preloadData.empty();
+            handled++;
+            
+            preloadData = (PreloadData)preloadRefQueue.poll();
          }
-         return false;
+      }
+   }
+   /** Inner class used in the preload Data hashmaps so that we can wrap a 
+    *  SoftReference around the data and still have enough information to remove
+    *  the reference from the appropriate hashMap.
+    */
+   private class PreloadData extends SoftReference {
+      private Object key;
+      private Transaction trans;
+      
+      PreloadData(Transaction trans, Object key, Object[] data, ReferenceQueue queue) {
+         super(data, queue);
+         this.trans = trans;
+         this.key = key;
+      }
+      
+      Transaction getTransaction() {
+         return trans;
+      }
+      Object getKey() {
+         return key;
+      }
+      Object[] getData() {
+         return (Object[])get();
+      }
+      
+      /** Named empty to not collide with superclass clear */
+      public void empty() {
+         key = null;
+         trans = null;
       }
    }
    

@@ -57,7 +57,7 @@ import org.jboss.logging.Logger;
  *
  * @author <a href="mailto:justin@j-m-f.demon.co.uk">Justin Forder</a>
  * @author <a href="mailto:dirk@jboss.de">Dirk Zimmermann</a>
- * @version $Revision: 1.32 $
+ * @version $Revision: 1.33 $
  */
 public abstract class JDBCCommand
 {
@@ -386,7 +386,7 @@ public abstract class JDBCCommand
     protected Object getResultObject(ResultSet rs, int idx, Class destination)
         throws SQLException{
 
-log.debug("getting a "+destination.getName()+" from resultset at index "+idx);
+// log.debug("getting a "+destination.getName()+" from resultset at index "+idx);
         Object result = null;
 
         Method method = (Method)rsTypes.get(destination.getName());
