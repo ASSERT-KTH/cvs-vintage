@@ -104,9 +104,9 @@ public class RModuleAttributeManager
         throws TorqueException
     {
         SimpleKey[] keys = {
-            new NumberKey(moduleId.toString()), 
-            new NumberKey(attributeId.toString()), 
-            new NumberKey(issueTypeId.toString())
+            SimpleKey.keyFor(moduleId), 
+            SimpleKey.keyFor(attributeId), 
+            SimpleKey.keyFor(issueTypeId)
         };
         return getInstance(new ComboKey(keys));
     }
