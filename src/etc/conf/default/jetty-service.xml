@@ -4,6 +4,12 @@
 
   <depends>JBOSS-SYSTEM:service=Naming</depends>
 
+  <classpath archives="
+	javac.jar, 
+	javax.servlet.jar,
+	org.apache.jasper.jar,
+	org.mortbay.jetty.jar"/>
+
   <!-- ==================================================================== -->
   <!-- Web Container                                                        -->
   <!-- ==================================================================== -->
@@ -17,13 +23,11 @@
    -->
   <mbean code="org.jboss.jetty.JettyService"
 	 name=":service=Jetty">
-    <attribute name="JettyHome">your-Jetty-3.1.RC9-home</attribute>
+    <attribute name="JettyHome">dummy</attribute>
     <attribute name="Configuration">../conf/default/jetty.xml</attribute>
     <attribute name="WebDefault">../conf/default/webdefault.xml</attribute>
     <attribute name="UnpackWars">true</attribute>
     <attribute name="PublishMBeans">true</attribute>
   </mbean>
-
-
 
 </server>
