@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/util/io/FileUtil.java,v 1.2 2001/03/01 18:05:00 larryi Exp $
- * $Revision: 1.2 $
- * $Date: 2001/03/01 18:05:00 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/util/io/FileUtil.java,v 1.3 2001/03/02 04:11:37 costin Exp $
+ * $Revision: 1.3 $
+ * $Date: 2001/03/02 04:11:37 $
  *
  * ====================================================================
  *
@@ -126,7 +126,9 @@ public class FileUtil {
 	return lookupPath + "/" + path;
     }
 
-    static Log loghelper = new Log("tc_log", "FileUtil");
+    // XXX tc_log is the default channel in tomcat, this component
+    //should be able to log in a specific channel.
+    static Log loghelper = Log.getLog("tc/FileUtil", "FileUtil");
     
     /** All the safety checks from getRealPath() and
 	DefaultServlet.

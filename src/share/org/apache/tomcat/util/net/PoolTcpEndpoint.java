@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/util/net/Attic/PoolTcpEndpoint.java,v 1.8 2001/02/20 03:14:12 costin Exp $
- * $Revision: 1.8 $
- * $Date: 2001/02/20 03:14:12 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/util/net/Attic/PoolTcpEndpoint.java,v 1.9 2001/03/02 04:11:48 costin Exp $
+ * $Revision: 1.9 $
+ * $Date: 2001/03/02 04:11:48 $
  *
  * ====================================================================
  *
@@ -119,7 +119,7 @@ public class PoolTcpEndpoint { // implements Endpoint {
     static final int debug=0;
 
     ThreadPool tp;
-    protected Log _log=new Log("tc_log");
+    protected Log _log=Log.getLog("tc/PoolTcpEndpoint", "PoolTcpEndpoint");
     
     public PoolTcpEndpoint() {
 	//	super("tc_log");	// initialize default logger
@@ -253,7 +253,7 @@ public class PoolTcpEndpoint { // implements Endpoint {
     	    listener = new TcpWorkerThread(this);
             tp.runIt(listener);
         } else {
-	    log("XXX Error - need pool !", null, Logger.ERROR);
+	    log("XXX Error - need pool !", null, Log.ERROR);
 	}
     }
 
@@ -306,7 +306,7 @@ public class PoolTcpEndpoint { // implements Endpoint {
     	    if (running != false) {
 		String msg = sm.getString("endpoint.err.nonfatal",
 					  serverSocket, e);
-		log(msg, e, Logger.INFORMATION);
+		log(msg, e, Log.INFORMATION);
     	    }
 
     	} 
@@ -319,11 +319,11 @@ public class PoolTcpEndpoint { // implements Endpoint {
             // on an AccessControlException.
 	    if( e.getClass().getName().equals("java.security.AccessControlException") ) {
 		String msg = "Socket: "+ serverSocket + " AccessControlException: " + e.toString();
-		log(msg, Logger.ERROR);
+		log(msg, Log.ERROR);
 	    } else {
 		String msg = sm.getString("endpoint.err.fatal",
 					serverSocket, e);    
-		log(msg, e, Logger.ERROR);
+		log(msg, e, Log.ERROR);
 		stopEndpoint();	// safe to call this from inside thread pool?
 	    }
     	}
@@ -333,12 +333,12 @@ public class PoolTcpEndpoint { // implements Endpoint {
 
     public void log(String msg) 
     {
-	_log.log(msg, null, Logger.INFORMATION);
+	_log.log(msg, null, Log.INFORMATION);
     }
     
     public void log(String msg, Throwable t) 
     {
-	_log.log(msg, t, Logger.ERROR);
+	_log.log(msg, t, Log.ERROR);
     }
 
     public void log(String msg, int level) 

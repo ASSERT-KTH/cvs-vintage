@@ -62,11 +62,10 @@ import java.util.*;
 
 
 /**
- * Corresponds to a log chanel - this is the main class
- * seen by objects that need to log. 
+ * This is the main class seen by objects that need to log. 
  * 
- * It has a preferred log name to write to; if
- * it can't find a log with that name, it outputs to the default
+ * It has a log channel to write to; if it can't find a log with that name,
+ * it outputs to the default
  * sink.  Also prepends a descriptive name to each message
  * (usually the toString() of the calling object), so it's easier
  * to identify the source.<p>
@@ -74,10 +73,7 @@ import java.util.*;
  * Intended for use by client classes to make it easy to do
  * reliable, consistent logging behavior, even if you don't
  * necessarily have a context, or if you haven't registered any
- * log files yet, or if you're in a non-Tomcat application.  Not
- * intended to supplant Logger, but to allow client objects a
- * consistent bit of code that prepares log messages before they
- * reach logger (and does the right thing if there is no logger).
+ * log files yet, or if you're in a non-Tomcat application.
  * <p>
  * Usage: <pre>
  * class Foo {
@@ -92,11 +88,20 @@ import java.util.*;
  *       log.log("While doing something", e);
  *     }
  * </pre>
+ * 
+ *  As a special feature ( required in tomcat operation ) the
+ *  Log can be modified at run-time, by changing and configuring the logging
+ *  implementation ( without requiring any special change in the user code ).
+ *  That means that the  user can do a Log.getLog() at any time,
+ *  even before the logging system is fully configured. The
+ *  embeding application can then set up or change the logging details,
+ *  without any action from the log user.
  *
  * @author Alex Chaffee [alex@jguru.com]
  * @author Costin Manolache
  **/
 public class Log {
+
     /**
      * Verbosity level codes.
      */
@@ -109,69 +114,54 @@ public class Log {
 
     // name of the logger ( each logger has a unique name,
     // used as a key internally )
-    private String logname;
+    protected String logname;
 
     // string displayed at the beginning of each log line,
     // to identify the source
-    private String prefix;
+    protected String prefix;
+
+    /* The "real" logger. This allows the manager to change the
+       sink/logger at runtime, and without requiring the log
+       user to do any special action or be aware of the changes
+    */
+    private LogHandler proxy=new LogHandler(); // the default
+
+    // Used to get access to other logging channels.
+    // Can be replaced with an application-specific impl.
+    private static LogManager logManager=new LogManager();
+
 
     // -------------------- Various constructors --------------------
 
-    public Log() {
+    protected Log(String channel, String prefix, Object owner) {
+	this.logname=channel;
+	this.prefix=prefix;
     }
 
-    /**
-     * Subclass constructor, for classes that want to *be* a
-     * LogHelper, and get the log methods for free (like a mixin)
-     **/
-    public Log(String logname) {
-	this.logname = logname;
-	String cname=this.getClass().getName();
-	this.prefix = cname.substring( cname.lastIndexOf(".") +1);
-    }
-    
     /**
      * @param logname name of log to use
      * @param owner object whose class name to use as prefix
      **/
-    public Log(String logname, Object owner) 
-    {
-	this.logname = logname;
-	String cname = owner.getClass().getName();
-	this.prefix = cname.substring( cname.lastIndexOf(".") +1);
-    }	
+    public static Log getLog( String channel, String prefix ) {
+	return logManager.getLog( channel, prefix, null );
+    }
     
     /**
      * @param logname name of log to use
      * @param prefix string to prepend to each message
      **/
-    public Log(String logname, String prefix) 
-    {
-	this.logname = logname;
-	this.prefix = prefix;
-    }
-
-    public static Log getLog( String channel, String prefix ) {
-	Log log=new Log( channel, prefix );
-	return log;
-    }
-    
     public static Log getLog( String channel, Object owner ) {
-	// XXX return singleton
-	Log log=new Log( channel, owner );
-	return log;
+	return logManager.getLog( channel, null, owner );
     }
     
     // -------------------- Log messages. --------------------
-    // That all a client needs to know about logging !
-    // --------------------
     
     /**
      * Logs the message with level INFORMATION
      **/
     public void log(String msg) 
     {
-	log(msg, null, Logger.INFORMATION);
+	log(msg, null, INFORMATION);
     }
     
     /**
@@ -180,7 +170,7 @@ public class Log {
      **/
     public void log(String msg, Throwable t) 
     {
-	log(msg, t, Logger.ERROR);
+	log(msg, t, ERROR);
     }
     
     /**
@@ -198,88 +188,87 @@ public class Log {
      **/
     public void log(String msg, Throwable t, int level)
     {
-	if (prefix != null) {
-	    // tuneme
-	    msg = prefix + ": " + msg;
-	}
-	
-	
-	// activate logname fetch if necessary
-	if (logger == null) {
-	    if (logname != null)
-		logger = Logger.getLogger(logname);
-	}
-	
-	// if all else fails, use default logger (writes to default sink)
-	Logger loggerTemp = logger;
-	if (loggerTemp == null) {
-	    loggerTemp = Logger.defaultLogger;
-	}
-	loggerTemp.log(msg, t, level);
+	log( prefix, msg, t, level );
     }
 
+    /** 
+     */
+    public void log( String prefix, String msg, Throwable t, int level ) {
+	proxy.log( prefix, msg, t, level );
+    }
+    
+    /** Flush any buffers.
+     *  Override if needed.
+     */
     public void flush() {
-	if( logger!=null )
-	    logger.flush();
+	proxy.flush();
     }
 
+    public void close() {
+	proxy.close();
+    }
+
+    /** The configured logging level for this channel
+     */
     public int getLevel() {
-	if( logger==null ) return Log.DEBUG;
-	return logger.getVerbosityLevel();
+	return proxy.getLevel();
     }
-    
-    // -------------------- Extra configuration stuff --------------------
-    // The real logger object ( that knows to write to
-    // files, optimizations, etc)
-    private Logger logger;
 
-    public Logger getLogger() {
-	return logger;
-    }
+    // -------------------- Management --------------------
+
+    // No getter for the log manager ( user code shouldn't be
+    // able to control the logger )
     
-    /**
-     * Set a logger explicitly.  Also resets the logname property to
-     * match that of the given log.
+    /** Used by the embeding application ( tomcat ) to manage
+     *  the logging.
      *
-     * <p>(Note that setLogger(null) will not necessarily redirect log
-     * output to System.out; if there is a logger named logname it
-     * will fall back to using it, or trying to.)
-     **/
-    public void setLogger(Logger logger) {
-	if (logger != null)
-	    setLogname(logger.getName());
-	this.logger = logger;
+     *  Initially, the Log is not managed, and the default
+     *  manager is used. The application can find what loggers
+     *  have been created from the default LogManager, and 
+     *  provide a special manager implemetation.
+     */
+    public static void setLogManager( LogManager lm ) {
+	// can be changed only once - so that user
+	// code can't change the log manager in running servers
+	if( logManager.getClass() == LogManager.class ) {
+	    logManager=lm;
+	}
     }
-    
-    /**
-     * Set the logger by name.  Will throw away current idea of what
-     * its logger is, and next time it's asked, will locate the global
-     * Logger object if the given name.
-     **/	
-    public void setLogname(String logname) {
-	logger = null;	// prepare to locate a new logger
-	this.logname = logname;
+
+    public void setProxy( LogManager lm, LogHandler l ) {
+	// only the manager can change the proxy
+	if( lm!= logManager ) return;
+	proxy=l;
     }
+
+    /** Security notes:
+
+    Log acts as a facade to an actual logger ( which has setters, etc).
     
-    /**
-     * Set the prefix string to be prepended to each message
-     **/
-    public void setLogPrefix(String prefix) {
-	this.prefix = prefix;
-    }
+    The "manager" ( embeding application ) can set the handler, and
+    edit/modify all the properties at run time.
+
+    Applications can log if they get a Log instance. From Log there is
+    no way to get an instance of the LogHandler or LogManager.
+
+    LogManager controls access to the Log channels - a 1.2 implementation
+    would check for LogPermissions ( or other mechanisms - like
+    information about the current thread, etc ) to determine if the
+    code can get a Log.
     
-    // 	/**
-    // 	 * Set a "proxy" Log -- whatever that one says its
-    // 	 * Logger is, use it
-    // 	 **/
-    // 	public void setProxy(Log helper) {
-    // 	    this.proxy = helper;
-    // 	}
+    The "managing application" ( tomcat for example ) can control
+    any aspect of the logging and change the actual logging
+    implementation behind the scenes.
+
+    One typical usage is that various components will use Log.getLog()
+    at various moments. The "manager" ( tomcat ) will initialize the
+    logging system by setting a LogManager implementation ( which
+    can't be changed by user code after that ). It can then set the
+    actual implementation of the logger at any time. ( or provide
+    access to trusted code to it ).
+
+    Please review.
+    */
     
     
-    // ???
-    // 	public Log getLog() {
-    // 	    return this;
-    // 	}
-    
-    }    
+}    

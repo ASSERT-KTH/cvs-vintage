@@ -54,8 +54,9 @@
  * <http://www.apache.org/>.
  *
  */ 
-package org.apache.tomcat.util.log;
+package org.apache.tomcat.util.qlog;
 
+import org.apache.tomcat.util.log.*;
 import java.io.Writer;
 import java.io.PrintWriter;
 import java.io.FileWriter;
@@ -79,69 +80,17 @@ import java.text.SimpleDateFormat;
  * @author Ignacio J. Ortega (nacho@siapi.es)
  * @since  Tomcat 3.1
  */
-public abstract class Logger {
-    // ----- static content -----
-    
-    /**
-     * Verbosity level codes.
-     */
-    public static final int FATAL = Integer.MIN_VALUE;
-    public static final int ERROR = 1;
-    public static final int WARNING = 2;
-    public static final int INFORMATION = 3;
-    public static final int DEBUG = 4;
-
+public abstract class Logger extends LogHandler {
     // -------------------- Internal fields --------------------
 
     protected static Writer defaultSink = new OutputStreamWriter(System.err);
 
-    // registered loggers
-    protected static Hashtable loggers = new Hashtable(5);
-    // default logger
-    public static Logger defaultLogger = new DefaultLogger();
-    static {
-	defaultLogger.setVerbosityLevel(DEBUG);
-    }
     protected long day;
+    
     // Usefull for subclasses
-    private static final String separator = System.getProperty("line.separator", "\n");
+    private static final String separator =
+	System.getProperty("line.separator", "\n");
     public static final char[] NEWLINE=separator.toCharArray();
-
-
-
-    /**
-     * Prints the log message on a specified logger.
-     *
-     * @param	name		the name of the logger.
-     * @param	message		the message to log.
-     * @param	verbosityLevel	what type of message is this?
-     *				(WARNING/DEBUG/INFO etc)
-     */
-    /*
-      public static void log(String logName, String message,
-			   int verbosityLevel)
-    {
-	Logger logger = getLogger(logName);
-	if (logger != null)
-	    logger.log(message, verbosityLevel);
-    }
-    */
-
-    /**
-     * Prints the log message on a specified logger at the "default"
-     * log leve: INFORMATION
-     *
-     * @param	name		the name of the logger.
-     * @param	message		the message to log.
-     */
-    /*
-      public static void log(String logName, String message)
-    {
-	Logger logger = getLogger(logName);
-	if (logger != null)
-	    logger.log(message);
-    }
-    */
 
     /**
      * Set the default output stream that is used by all logging
@@ -153,30 +102,254 @@ public abstract class Logger {
 	defaultSink = w;
     }
 
-    public static Logger getLogger(String name) {
-	return (Logger) loggers.get(name);
+
+    // ----- instance (non-static) content -----
+    
+    protected boolean custom = true;
+    protected Writer sink = defaultSink;
+    protected String path;
+    
+    /**
+     * Should we timestamp this log at all?
+     **/
+    protected boolean timestamp = true;
+
+    /**
+     * true = The timestamp format is raw msec-since-epoch <br>
+     * false = The timestamp format is a custom string to pass to
+     *         SimpleDateFormat
+     **/
+    protected boolean timestampRaw = false;
+
+    /**
+     * The timestamp format string, default is "yyyy-MM-dd hh:mm:ss"
+     **/
+    protected String timestampFormat = "yyyy-MM-dd HH:mm:ss";
+
+    protected DateFormat timestampFormatter
+	= new FastDateFormat(new SimpleDateFormat(timestampFormat));
+
+    /**
+     * Prints log message and stack trace.
+     *
+     * @param	message		the message to log. 
+     * @param	t		the exception that was thrown.
+     * @param	verbosityLevel	what type of message is this?
+     * 				(WARNING/DEBUG/INFO etc)
+     */
+    public final void log(String prefix, String message, Throwable t,
+			  int verbosityLevel)
+    {
+	if (prefix != null) {
+	    message = prefix + ": " + message;
+	}
+
+	if (verbosityLevel <= getVerbosityLevel()) {
+            // check wheter we are logging to a file
+            if (path!= null){
+                // If the date has changed, switch log files
+                if (day!=getDay(System.currentTimeMillis())) {
+                    synchronized (this) {
+                        close();
+                        open();
+                    }
+                }
+            }
+	    realLog(message,t);
+	}
+    }
+
+    /** 
+     * Subclasses implement these methods which are called by the
+     * log(..) methods internally. 
+     *
+     * @param	message		the message to log. 
+     * @param	t		the exception that was thrown.
+     */
+    protected abstract void realLog(String message, Throwable t);
+
+    /**
+     * Set the path name for the log output file.
+     *
+     * @param	path		The path to the log file.
+     */
+    public void setPath(String path) {
+        if (File.separatorChar == '/')
+            this.path = path.replace('\\', '/');
+        else if (File.separatorChar == '\\')
+            this.path = path.replace('/', '\\');
+    }
+
+    public String getPath() {
+	return path;
+    }
+
+    /** Open the log - will create the log file and all the parent directories.
+     *  You must open the logger before use, or it will write to System.err
+     */
+    public void open() {
+	if (path == null)
+            return;
+	// use default sink == System.err
+        long date=System.currentTimeMillis();
+        day=getDay(date);
+	try {
+	    File file = new File(path);
+            String logName=file.getParent()+File.separator+
+		getDatePrefix(date,file.getName());
+            file=new File(logName);
+	    if (!file.exists())
+		new File(file.getParent()).mkdirs();
+	    this.sink = new FileWriter(logName);
+	} catch (IOException ex) {
+	    System.err.print("Unable to open log file: "+path+"! ");
+	    System.err.println(" Using stderr as the default.");
+	    this.sink = defaultSink;
+	}
+    }
+
+    
+
+    /**
+     * Set the verbosity level for this logger. This controls how the
+     * logs will be filtered. 
+     *
+     * @param	level		one of the verbosity level strings. 
+     */
+    public void setVerbosityLevel(String level) {
+	if ("warning".equalsIgnoreCase(level))
+	    this.level = Log.WARNING;
+	else if ("fatal".equalsIgnoreCase(level))
+	    this.level = Log.FATAL;
+	else if ("error".equalsIgnoreCase(level))
+	    this.level = Log.ERROR;
+	else if ("information".equalsIgnoreCase(level))
+	    this.level = Log.INFORMATION;
+	else if ("debug".equalsIgnoreCase(level))
+	    this.level = Log.DEBUG;
     }
 
     /**
-     * Get the logger that prints to the default sink
-     * (usu. System.err)
+     * Set the verbosity level for this logger. This controls how the
+     * logs will be filtered. 
+     *
+     * @param	level		one of the verbosity level codes. 
+     */
+    public void setVerbosityLevel(int level) {
+	this.level = level;
+    }
+    
+    /**
+     * Get the current verbosity level.
+     */
+    public int getVerbosityLevel() {
+	return this.level;
+    }
+
+    /**
+     * Get the current verbosity level.
+     */
+    public int getLevel() {
+	return this.level;
+    }
+
+    /**
+     * Do we need to time stamp this or not?
+     *
+     * @param	value		"yes/no" or "true/false"
+     */
+    public void setTimestamp(String value) {
+	if ("true".equalsIgnoreCase(value) ||
+	    "yes".equalsIgnoreCase(value))
+	    timestamp = true;
+	else if ("false".equalsIgnoreCase(value) ||
+		 "no".equalsIgnoreCase(value))
+	    timestamp = false;
+    }
+
+    public  boolean isTimestamp() {
+	return timestamp;
+    }
+
+    /**
+     * If we are timestamping at all, what format do we use to print
+     * the timestamp? See java.text.SimpleDateFormat.
+     *
+     * Default = "yyyy-MM-dd hh:mm:ss". Special case: "msec" => raw
+     * number of msec since epoch, very efficient but not
+     * user-friendly
      **/
-    public static Logger getDefaultLogger() {
-	return defaultLogger;
+    public void setTimestampFormat(String value)
+    {
+	if (value.equalsIgnoreCase("msec"))
+	    timestampRaw = true;
+	else {
+	    timestampRaw = false;
+	    timestampFormat = value;
+	    timestampFormatter =
+		new FastDateFormat(new SimpleDateFormat(timestampFormat));
+	}
+    }
+    
+    public String getTimestampFormat()
+    {
+	if (timestampRaw)
+	    return "msec";
+	else
+	    return timestampFormat;
     }
 
-    public static Enumeration getLoggerNames() {
-	return loggers.keys();
+    protected String formatTimestamp(long msec) {
+	StringBuffer buf = new StringBuffer();
+	formatTimestamp(msec, buf);
+	return buf.toString();
     }
 
-    public static void putLogger(Logger logger) {
-	loggers.put(logger.getName(), logger);
+    // dummy variable to make SimpleDateFormat work right
+    private static java.text.FieldPosition position =
+	new java.text.FieldPosition(DateFormat.YEAR_FIELD);
+
+    protected void formatTimestamp(long msec, StringBuffer buf) {
+	if (!timestamp)
+	    return;
+	else if (timestampRaw) {
+	    buf.append(Long.toString(msec));
+	    return;
+	}
+	else {
+	    Date d = new Date(msec);
+	    timestampFormatter.format(d, buf, position);
+	    return;
+	}
     }
 
-    public static void removeLogger(Logger logger) {
-	loggers.remove(logger.getName());
+    // ----- utility methods; -----
+    static final String START_FORMAT="${";
+    static final String END_FORMAT="}";
+
+    private String getDatePrefix(long millis,String format) {
+        try{
+            int pos=format.indexOf(Logger.START_FORMAT);
+            int lpos=format.lastIndexOf(Logger.END_FORMAT);
+            if( pos != -1 && lpos != -1){
+                String f="'"+format.substring(0,pos)+"'"
+                        +format.substring(pos+2,lpos)
+                        +"'"+format.substring(lpos+1)+"'";
+                SimpleDateFormat sdf=new SimpleDateFormat(f);
+                return sdf.format(new Date(millis));
+            }
+        }catch(Exception ex){
+        }
+        return format;
     }
 
+    private long getDay(long millis){
+        return (millis+TimeZone.getDefault().getRawOffset()) /
+	    ( 24*60*60*1000 );
+    }
+
+    // -------------------- Public Utilities --------------------
+    
     /**
      * Converts a Throwable to a printable stack trace, including the
      * nested root cause for a ServletException or TomcatException if
@@ -216,7 +389,9 @@ public abstract class Logger {
 
     private static Object[] emptyObjectArray=new Object[0];
 
-    private static void printThrowable(PrintWriter w, Throwable t, String rootcause, int depth ) {
+    private static void printThrowable(PrintWriter w, Throwable t,
+				       String rootcause, int depth )
+    {
 
 	if (t != null) {
 	    // XXX XXX XXX Something seems wrong - DOS, permissions. Need to
@@ -243,7 +418,8 @@ public abstract class Logger {
 
 	    if( nextThrowableMethod != null ) {
 		try {
-		    Throwable nextT=(Throwable)nextThrowableMethod.invoke( t , emptyObjectArray );
+		    Throwable nextT=(Throwable)nextThrowableMethod.
+			invoke( t , emptyObjectArray );
 		    if( nextT != null ) {
 			w.println(rootcause);
 			if( depth > 0 ) {
@@ -257,367 +433,34 @@ public abstract class Logger {
 	}
     }
     
-    /**
-     * General purpose nasty hack to determine if an exception can be
-     * safely ignored -- specifically, if it's an IOException or
-     * SocketException that is thrown in the normal course of a socket
-     * closing halfway through a connection, or if it's a weird
-     * unknown type of exception.  This is an intractable problem, and
-     * this is a bad solution, but at least it's centralized.
-     **/
-    public static boolean canIgnore(Throwable t) {
-	String msg = t.getMessage();
-	if (t instanceof java.io.InterruptedIOException) {
-	    return true;
-	}
-	else if (t instanceof java.io.IOException) {
-	    // Streams throw Broken Pipe exceptions if their
-	    // underlying sockets close
-	    if( "Broken pipe".equals(msg))
-		return true;
-	}
-	else if (t instanceof java.net.SocketException) {
-	    // TCP stacks can throw SocketExceptions when the client
-	    // disconnects.  We don't want this to shut down the
-	    // endpoint, so ignore it. Is there a more robust
-	    // solution?  Should we compare the message string to
-	    // "Connection reset by peer"?
-	    return true;
-	}
-	return false;
-    }
-
-
-    // ----- instance (non-static) content -----
-    
-    protected boolean custom = true;
-    protected Writer sink = defaultSink;
-    protected String path;
-    protected String name;
-    
-    private int level = WARNING;
-
-    /**
-     * Should we timestamp this log at all?
-     **/
-    protected boolean timestamp = true;
-
-    /**
-     * true = The timestamp format is raw msec-since-epoch <br>
-     * false = The timestamp format is a custom string to pass to SimpleDateFormat
-     **/
-    protected boolean timestampRaw = false;
-
-    /**
-     * The timestamp format string, default is "yyyy-MM-dd hh:mm:ss"
-     **/
-    protected String timestampFormat = "yyyy-MM-dd HH:mm:ss";
-
-    protected DateFormat timestampFormatter
-	= new FastDateFormat(new SimpleDateFormat(timestampFormat));
-
-    /**
-     * Is this Log usable?
-     */
-    public boolean isOpen() {
-	return this.sink != null;
-    }
-
-    /**
-     * Prints the log message at the "default" log level: INFORMATION
-     * @param message 		the message to log.*/
-    public final void log(String message) {
-	log(message, Logger.INFORMATION);
-    }
-        
-    /**
-     * Prints the log message.
-     * 
-     * @param	message		the message to log.
-     * @param	verbosityLevel	what type of message is this?
-     * 				(WARNING/DEBUG/INFO etc)
-     */
-    public final void log(String message, int verbosityLevel) {
-	log(message, null, level);
-    }
-
-    /**
-     * Prints log message and stack trace, with verbosityLevel ERROR.
-     * This makes the assumption that throwables are exceptions which
-     * are errors by nature; if you disagree, you can always call
-     * log(msg, t, Logger.INFORMATION) or whatever.
-     *
-     * @param	message		the message to log. 
-     * @param t the exception that was thrown.  */
-    public final void log(String message, Throwable t)
-    {
-	log(message, t, ERROR);
-    }
-    
-    /**
-     * Prints log message and stack trace.
-     *
-     * @param	message		the message to log. 
-     * @param	t		the exception that was thrown.
-     * @param	verbosityLevel	what type of message is this?
-     * 				(WARNING/DEBUG/INFO etc)
-     */
-    public final void log(String message, Throwable t,
-			  int verbosityLevel)
-    {
-	if (matchVerbosityLevel(verbosityLevel)) {
-            // check wheter we are logging to a file
-            if (path!= null){
-                // If the date has changed, switch log files
-                if (day!=getDay(System.currentTimeMillis())) {
-                    synchronized (this) {
-                        close();
-                        open();
-                    }
-                }
-            }
-	    if (t == null) {
-		realLog(message);
-	    }
-	    else {
-		realLog(message, t);
-	    }
-	}
-    }
-
-    public boolean matchVerbosityLevel(int verbosityLevel) {
-	return verbosityLevel <= getVerbosityLevel();
-    }
-
-    /**
-     * Subclasses implement these methods which are called by the
-     * log(..) methods internally.
-     *
-     * @param	message		the message to log.
-     */
-    protected abstract void realLog(String message);
-
-    /** 
-     * Subclasses implement these methods which are called by the
-     * log(..) methods internally. 
-     *
-     * @param	message		the message to log. 
-     * @param	t		the exception that was thrown.
-     */
-    protected abstract void realLog(String message, Throwable t);
-
-    /**
-     * Flush the log. 
-     */
-    public abstract void flush();
-
-
-    /**
-     * Close the log. 
-     */
-    public synchronized void close() {
-	this.sink = null;
-	loggers.remove(getName());
-    }
-    
-    /**
-     * Get name of this log channel. 
-     */
-    public String getName() {
-	return this.name;
-    }
-
-    /**
-     * Set name of this log channel.
-     *
-     * @param	name		Name of this logger.
-     */
-    public void setName(String name) {
-	this.name = name;
-
-	// Once the name of this logger is set, we add it to the list
-	// of loggers...
-	putLogger(this);
-    }
-
-    /**
-     * Set the path name for the log output file.
-     *
-     * @param	path		The path to the log file.
-     */
-    public void setPath(String path) {
-        if (File.separatorChar == '/')
-            this.path = path.replace('\\', '/');
-        else if (File.separatorChar == '\\')
-            this.path = path.replace('/', '\\');
-    }
-
-    public String getPath() {
-	return path;
-    }
-
-    public String toString() {
-	return "Logger(" + getName() + ", " + getPath() + ")";
-    }
-
-    /** Open the log - will create the log file and all the parent directories.
-     *  You must open the logger before use, or it will write to System.err
-     */
-    public void open() {
-	if (path == null)
-            return;
-	// use default sink == System.err
-        long date=System.currentTimeMillis();
-        day=getDay(date);
-	try {
-	    File file = new File(path);
-            String logName=file.getParent()+File.separator+getDatePrefix(date,file.getName());
-            file=new File(logName);
-	    if (!file.exists())
-		new File(file.getParent()).mkdirs();
-	    this.sink = new FileWriter(logName);
-	} catch (IOException ex) {
-	    System.err.print("Unable to open log file: "+path+"! ");
-	    System.err.println(" Using stderr as the default.");
-	    this.sink = defaultSink;
-	}
-    }
-
-    
-
-    /**
-     * Set the verbosity level for this logger. This controls how the
-     * logs will be filtered. 
-     *
-     * @param	level		one of the verbosity level strings. 
-     */
-    public void setVerbosityLevel(String level) {
-	if ("warning".equalsIgnoreCase(level))
-	    this.level = WARNING;
-	else if ("fatal".equalsIgnoreCase(level))
-	    this.level = FATAL;
-	else if ("error".equalsIgnoreCase(level))
-	    this.level = ERROR;
-	else if ("information".equalsIgnoreCase(level))
-	    this.level = INFORMATION;
-	else if ("debug".equalsIgnoreCase(level))
-	    this.level = DEBUG;
-    }
-
-    /**
-     * Set the verbosity level for this logger. This controls how the
-     * logs will be filtered. 
-     *
-     * @param	level		one of the verbosity level codes. 
-     */
-    public void setVerbosityLevel(int level) {
-	this.level = level;
-    }
-    
-    /**
-     * Get the current verbosity level.
-     */
-    public int getVerbosityLevel() {
-	return this.level;
-    }
-
-    /**
-     * Do we need to time stamp this or not?
-     *
-     * @param	value		"yes/no" or "true/false"
-     */
-    public void setTimestamp(String value) {
-	if ("true".equalsIgnoreCase(value) || "yes".equalsIgnoreCase(value))
-	    timestamp = true;
-	else if ("false".equalsIgnoreCase(value) || "no".equalsIgnoreCase(value))
-	    timestamp = false;
-    }
-
-    public  boolean isTimestamp() {
-	return timestamp;
-    }
-
-    /**
-     * If we are timestamping at all, what format do we use to print
-     * the timestamp? See java.text.SimpleDateFormat.
-     *
-     * Default = "yyyy-MM-dd hh:mm:ss". Special case: "msec" => raw
-     * number of msec since epoch, very efficient but not
-     * user-friendly
-     **/
-    public void setTimestampFormat(String value)
-    {
-	if (value.equalsIgnoreCase("msec"))
-	    timestampRaw = true;
-	else {
-	    timestampRaw = false;
-	    timestampFormat = value;
-	    timestampFormatter =
-		new FastDateFormat(new SimpleDateFormat(timestampFormat));
-	}
-    }
-    
-    public String getTimestampFormat()
-    {
-	if (timestampRaw)
-	    return "msec";
-	else
-	    return timestampFormat;
-    }
-    
-//     public void setCustomOutput( String value ) {
-// 	if ("true".equalsIgnoreCase(value) || "yes".equalsIgnoreCase(value))
-// 	    custom = true;
-// 	else if ("false".equalsIgnoreCase(value) || "no".equalsIgnoreCase(value))
-// 	    custom = false;
+//     /**
+//      * General purpose nasty hack to determine if an exception can be
+//      * safely ignored -- specifically, if it's an IOException or
+//      * SocketException that is thrown in the normal course of a socket
+//      * closing halfway through a connection, or if it's a weird
+//      * unknown type of exception.  This is an intractable problem, and
+//      * this is a bad solution, but at least it's centralized.
+//      **/
+//     public static boolean canIgnore(Throwable t) {
+// 	String msg = t.getMessage();
+// 	if (t instanceof java.io.InterruptedIOException) {
+// 	    return true;
+// 	}
+// 	else if (t instanceof java.io.IOException) {
+// 	    // Streams throw Broken Pipe exceptions if their
+// 	    // underlying sockets close
+// 	    if( "Broken pipe".equals(msg))
+// 		return true;
+// 	}
+// 	else if (t instanceof java.net.SocketException) {
+// 	    // TCP stacks can throw SocketExceptions when the client
+// 	    // disconnects.  We don't want this to shut down the
+// 	    // endpoint, so ignore it. Is there a more robust
+// 	    // solution?  Should we compare the message string to
+// 	    // "Connection reset by peer"?
+// 	    return true;
+// 	}
+// 	return false;
 //     }
-
-    protected String formatTimestamp(long msec) {
-	StringBuffer buf = new StringBuffer();
-	formatTimestamp(msec, buf);
-	return buf.toString();
-    }
-
-    // dummy variable to make SimpleDateFormat work right
-    private static java.text.FieldPosition position = new java.text.FieldPosition(DateFormat.YEAR_FIELD);
-
-    protected void formatTimestamp(long msec, StringBuffer buf) {
-	if (!timestamp)
-	    return;
-	else if (timestampRaw) {
-	    buf.append(Long.toString(msec));
-	    return;
-	}
-	else {
-	    Date d = new Date(msec);
-	    timestampFormatter.format(d, buf, position);
-	    return;
-	}
-    }
-
-    // ----- utility methods; -----
-    static final String START_FORMAT="${";
-    static final String END_FORMAT="}";
-
-    private String getDatePrefix(long millis,String format) {
-        try{
-            int pos=format.indexOf(Logger.START_FORMAT);
-            int lpos=format.lastIndexOf(Logger.END_FORMAT);
-            if( pos != -1 && lpos != -1){
-                String f="'"+format.substring(0,pos)+"'"
-                        +format.substring(pos+2,lpos)
-                        +"'"+format.substring(lpos+1)+"'";
-                SimpleDateFormat sdf=new SimpleDateFormat(f);
-                return sdf.format(new Date(millis));
-            }
-        }catch(Exception ex){
-        }
-        return format;
-    }
-
-    private long getDay(long millis){
-        return (millis+TimeZone.getDefault().getRawOffset()) / ( 24*60*60*1000 );
-    }
-
 
 }

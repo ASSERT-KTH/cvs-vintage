@@ -54,7 +54,7 @@
  * <http://www.apache.org/>.
  *
  */ 
-package org.apache.tomcat.util.log;
+package org.apache.tomcat.util.qlog;
 
 import java.io.Writer;
 import java.io.StringWriter;
@@ -88,17 +88,6 @@ public class QueueLogger extends Logger {
     }
     
     /**
-     * Adds a log message to the queue and returns immediately. The
-     * logger daemon thread will pick it up later and actually print
-     * it out.
-     * 
-     * @param	message		the message to log.
-     */
-    final protected void realLog(String message) {
-	realLog( message, null );
-    }
-    
-    /**
      * Adds a log message and stack trace to the queue and returns
      * immediately. The logger daemon thread will pick it up later and
      * actually print it out. 
@@ -123,10 +112,8 @@ public class QueueLogger extends Logger {
 	logDaemon.flush();
     }
 
-    public String toString() {
-	return "QueueLogger(" + getName() + ", " + getPath() + ")";
-    }
 }
+
 /**
  * The daemon thread that looks in a queue and if it is not empty
  * writes out everything in the queue to the sink.

@@ -56,55 +56,62 @@
  */ 
 package org.apache.tomcat.util.log;
 
-import java.io.Writer;
-import java.io.StringWriter;
-import java.io.PrintWriter;
+import java.io.*;
+import java.lang.reflect.*;
+import java.util.*;
 
-import java.util.Date;
 
 /**
- * This is an entry that is created in response to every
- * Logger.log(...) call.
+ * Allows the control the log properties at runtime.
+ * Normal applications will just use Log, without having to
+ * deal with the way the log is configured or managed.
  *
- * @author Anil V (akv@eng.sun.com)
- * @since  Tomcat 3.1
- */
-public final  class LogEntry {
-    String logName;
-    long date=0;
-    String message;
-    Throwable t;
-    QueueLogger l;
+ *
+ * @author Alex Chaffee [alex@jguru.com]
+ * @author Costin Manolache
+ **/
+public class LogManager {
+
+    static LogHandler defaultChannel=null;
     
-    LogEntry(QueueLogger l, long date, String message, Throwable t) {
-	this.date = date;
-	this.message = message;
-	this.t = t;
-	this.l=l;
-    }
-    
-    LogEntry( QueueLogger l, String message, Throwable t) {
-	this.message = message;
-	this.t = t;
-	this.l=l;
+    protected Hashtable loggers=new Hashtable();
+    protected Hashtable channels=new Hashtable();
+
+    public static void setDefault( LogHandler l ) {
+	if( defaultChannel==null)
+	    defaultChannel=l;
     }
 
-    // XXX should move to LogFormat !!!
-    public void print( StringBuffer outSB) {
-	if (date!=0) {
-	    l.formatTimestamp( date, outSB );
-	    outSB.append(" - ");
-	}
-	
-	if (message != null) 
-	    outSB.append(message);
-	
-	if (t != null) {
-	    outSB.append(" - ");
-	    outSB.append(l.throwableToString( t ));
-	}
+    public void addChannel( String name, LogHandler logH ) {
+	if(name==null) name="";
+
+	channels.put( name, logH );
     }
     
-    
+    /** Default method to create a log facade.
+     */
+    public Log getLog( String channel, String prefix,
+			  Object owner ) {
+	if( prefix==null && owner!=null ) {
+	    String cname = owner.getClass().getName();
+	    prefix = cname.substring( cname.lastIndexOf(".") +1);
+	}
 
-}
+	// user-level loggers
+	Log log=new Log( channel, prefix, owner );
+	loggers.put( channel + ":" + prefix, log );
+
+	// channels 
+	LogHandler proxy=(LogHandler)channels.get(channel);
+	if( proxy!= null ) {
+	    log.setProxy( this, proxy );
+	} else {
+	    if( defaultChannel!=null )
+		log.setProxy( this, defaultChannel );
+	}
+
+	return log;
+    }
+
+
+}    

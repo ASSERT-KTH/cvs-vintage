@@ -56,69 +56,117 @@
  */ 
 package org.apache.tomcat.util.log;
 
+import org.apache.tomcat.util.log.*;
 import java.io.Writer;
+import java.io.PrintWriter;
+import java.io.FileWriter;
+import java.io.File;
+import java.io.OutputStreamWriter;
 import java.io.IOException;
+import java.io.StringWriter;
+
+import java.util.*;
+
 
 /**
- * Trivial logger that sends all messages to the default sink.  To
- * change default sink, call Logger.setDefaultSink(Writer)
+ * Log destination ( or channel ). This is the base class that will be
+ * extended by log handlers - tomcat uses util.qlog.QueueLogger,
+ * in future we'll use log4j or java.util.logger adapters.
  *
+ * The base class writes to a (default) writer, and it can
+ * be used for very simple logging.
+ * 
+ * @author Anil Vijendran (akv@eng.sun.com)
  * @author Alex Chaffee (alex@jguru.com)
- * @since  Tomcat 3.1
- **/
-public class DefaultLogger extends Logger {
+ * @author Ignacio J. Ortega (nacho@siapi.es)
+ * @author Costin Manolache
+ */
+public  class LogHandler {
 
-    /**
-     * Prints log message to default sink
-     * 
-     * @param	message		the message to log.
-     */
-    protected void realLog(String message) {
-	try {
-	    defaultSink.write(message);
-	    defaultSink.write(NEWLINE);
-	    flush();
-	}
-	catch (IOException e) {
-	    bad(e, message, null);
-	}
-    }
+    protected PrintWriter sink = defaultSink;
+    protected int level = Log.WARNING;
+
     
     /**
-     * Prints log message to default sink
-     * 
-     * @param	message		the message to log.
+     * Prints log message and stack trace.
+     * This method should be overriden by real logger implementations
+     *
+     * @param	prefix		optional prefix. 
+     * @param	message		the message to log. 
      * @param	t		the exception that was thrown.
+     * @param	verbosityLevel	what type of message is this?
+     * 				(WARNING/DEBUG/INFO etc)
      */
-    protected void realLog(String message, Throwable t) {
-	try {
-	    defaultSink.write(message);
-	    defaultSink.write(NEWLINE);
-	    defaultSink.write(throwableToString(t));
-	    defaultSink.write(NEWLINE);
-	    flush();
-	}
-	catch (IOException e) {
-	    bad(e, message, t);
-	}
+    public void log(String prefix, String msg, Throwable t,
+		    int verbosityLevel)
+    {
+	if( sink==null ) return;
+	// default implementation ( in case no real logging is set up  )
+	if( verbosityLevel > this.level ) return;
+	
+	if (prefix != null) 
+	    sink.println(prefix + ": " + msg );
+	else 
+	    sink.println(  msg );
+	
+	if( t!=null )
+	    t.printStackTrace( sink );
     }
 
-    private void bad(Throwable t1, String message, Throwable t2)
-    {
-	System.err.println("Default sink is unwritable! Reason:");
-	if (t1 != null) t1.printStackTrace();
-	if (message != null) System.err.println(message);
-	if (t2 != null) t2.printStackTrace();
-    }	
-    
     /**
      * Flush the log. 
      */
     public void flush() {
-	try {
-	    defaultSink.flush();
-	}
-	catch (IOException e) {
-	}
-    }    
+	if( sink!=null)
+	    sink.flush();
+    }
+
+
+    /**
+     * Close the log. 
+     */
+    public synchronized void close() {
+	this.sink = null;
+    }
+    
+    /**
+     * Set the verbosity level for this logger. This controls how the
+     * logs will be filtered. 
+     *
+     * @param	level		one of the verbosity level codes. 
+     */
+    public void setLevel(int level) {
+	this.level = level;
+    }
+    
+    /**
+     * Get the current verbosity level.
+     */
+    public int getLevel() {
+	return this.level;
+    }
+
+
+    // -------------------- Default sink
+    
+    protected static PrintWriter defaultSink =
+	new PrintWriter( new OutputStreamWriter(System.err));
+
+    /**
+     * Set the default output stream that is used by all logging
+     * channels.
+     *
+     * @param	w		the default output stream.
+     */
+    public static void setDefaultSink(Writer w) {
+	if( w instanceof PrintWriter )
+	    defaultSink=(PrintWriter)w;
+	else 
+	    defaultSink = new PrintWriter(w);
+    }
+
+    // -------------------- General purpose utilitiy --------------------
+
+    
+
 }

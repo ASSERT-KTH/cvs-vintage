@@ -53,24 +53,58 @@
  * information on the Apache Software Foundation, please see
  * <http://www.apache.org/>.
  *
- */
-package org.apache.tomcat.util.log;
+ */ 
+package org.apache.tomcat.util.qlog;
 
-/** Interface used by components that use Log services, and
- *  allow a controller to set the log destination and
- *  childs to log to their log channel.
+import java.io.Writer;
+import java.io.StringWriter;
+import java.io.PrintWriter;
+
+import java.util.Date;
+
+/**
+ * This is an entry that is created in response to every
+ * Logger.log(...) call.
  *
- *  The asymetry is intentional.
+ * @author Anil V (akv@eng.sun.com)
+ * @since  Tomcat 3.1
  */
-public interface LogAware {
-    /** Set the real logging destination.
-     *  Called by a parrent to control where the component
-     *  logs.
-     */
-    public void setLogger(Logger logger);
+public final  class LogEntry {
+    String logName;
+    long date=0;
+    String message;
+    Throwable t;
+    QueueLogger l;
+    
+    LogEntry(QueueLogger l, long date, String message, Throwable t) {
+	this.date = date;
+	this.message = message;
+	this.t = t;
+	this.l=l;
+    }
+    
+    LogEntry( QueueLogger l, String message, Throwable t) {
+	this.message = message;
+	this.t = t;
+	this.l=l;
+    }
 
-    /**
-     *  Returns the log channel used by this component.
-     */
-    public Log getLog();
+    // XXX should move to LogFormat !!!
+    public void print( StringBuffer outSB) {
+	if (date!=0) {
+	    l.formatTimestamp( date, outSB );
+	    outSB.append(" - ");
+	}
+	
+	if (message != null) 
+	    outSB.append(message);
+	
+	if (t != null) {
+	    outSB.append(" - ");
+	    outSB.append(l.throwableToString( t ));
+	}
+    }
+    
+    
+
 }

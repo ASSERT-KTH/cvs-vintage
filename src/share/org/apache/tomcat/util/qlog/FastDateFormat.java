@@ -59,7 +59,7 @@
  *
  */
 
-package org.apache.tomcat.util.log;
+package org.apache.tomcat.util.qlog;
 
 import java.util.Date;
 
