@@ -91,7 +91,7 @@ import org.apache.log4j.Category;
  * implementation needs.
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: ScarabUserImpl.java,v 1.49 2002/02/19 05:03:39 jmcnally Exp $
+ * @version $Id: ScarabUserImpl.java,v 1.50 2002/02/20 22:47:47 maartenc Exp $
  */
 public class ScarabUserImpl 
     extends BaseScarabUserImpl 
@@ -297,7 +297,8 @@ public class ScarabUserImpl
         // candidates are the TurbineGlobalCacheService or JCS.  But keeping
         // this in place for the moment while investigating other sql, so
         // turbine's security sql does not dominate.
-        Object obj = getTemp("hasPermission" + perm + module.getQueryKey());
+        String moduleKey = (module == null) ? null : module.getQueryKey();
+        Object obj = getTemp("hasPermission" + perm + moduleKey);
         if ( obj == null ) 
         {        
         try
@@ -328,7 +329,7 @@ public class ScarabUserImpl
         }
         
         Boolean b = hasPermission ? Boolean.TRUE : Boolean.FALSE;
-        setTemp("hasPermission" + perm + module.getQueryKey(), b);
+        setTemp("hasPermission" + perm + moduleKey, b);
         }
         else 
         {
