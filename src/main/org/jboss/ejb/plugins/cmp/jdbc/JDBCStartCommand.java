@@ -43,7 +43,7 @@ import org.jboss.logging.Logger;
  * @author <a href="mailto:shevlandj@kpi.com.au">Joe Shevland</a>
  * @author <a href="mailto:justin@j-m-f.demon.co.uk">Justin Forder</a>
  * @author <a href="mailto:michel.anke@wolmail.nl">Michel de Groot</a>
- * @version $Revision: 1.27 $
+ * @version $Revision: 1.28 $
  */
 public class JDBCStartCommand {
 
@@ -155,9 +155,6 @@ public class JDBCStartCommand {
       }
 
       try {
-         // start the new transaction
-         tm.begin();
-
          Connection con = null;
          Statement statement = null;
          try {        
@@ -173,26 +170,11 @@ public class JDBCStartCommand {
             JDBCUtil.safeClose(statement);
             JDBCUtil.safeClose(con);
          }
-
-         // commit the new transaction
-         tm.commit();
       } catch(Exception e) {
          log.debug("Could not create table " + tableName);
-
-         // try to rollback the new transaction
-         try {
-            if(tm.getStatus() != Status.STATUS_NO_TRANSACTION) {
-               tm.rollback();
-            }
-         } catch(Exception _e) {
-            log.error("Could not roll back transaction: ", e);
-         }
          throw new DeploymentException("Error while creating table", e);
       } finally {
          try {
-            // suspend the new transaction
-            tm.suspend();
-
             // resume the old transaction
             if(oldTransaction != null) {
                tm.resume(oldTransaction);
@@ -379,9 +361,6 @@ public class JDBCStartCommand {
       }
 
       try {
-         // start the new transaction
-         tm.begin();
-
          Connection con = null;
          Statement statement = null;
          try {
@@ -400,27 +379,12 @@ public class JDBCStartCommand {
             JDBCUtil.safeClose(statement);
             JDBCUtil.safeClose(con);
          }
-
-         // commit the new transaction
-         tm.commit();
       } catch(Exception e) {
          log.debug("Could not add foreign key constriant: table=" + tableName);
-
-         // try to rollback the new transaction
-         try {
-            if(tm.getStatus() != Status.STATUS_NO_TRANSACTION) {
-               tm.rollback();
-            }
-         } catch(Exception _e) {
-            log.error("Could not roll back transaction: ", e);
-         }
          throw new DeploymentException("Error while adding foreign key " +
                "constraint", e);
       } finally {
          try {
-            // suspend the new transaction
-            tm.suspend();
-
             // resume the old transaction
             if(oldTransaction != null) {
                tm.resume(oldTransaction);

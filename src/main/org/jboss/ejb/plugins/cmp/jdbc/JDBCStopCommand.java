@@ -32,7 +32,7 @@ import org.jboss.logging.Logger;
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
  * @author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
  * @author <a href="mailto:justin@j-m-f.demon.co.uk">Justin Forder</a>
- * @version $Revision: 1.14 $
+ * @version $Revision: 1.15 $
  */
 public class JDBCStopCommand {
 
@@ -113,9 +113,6 @@ public class JDBCStopCommand {
       }
 
       try {
-         // start the new transaction
-         tm.begin();
-
          Statement statement = null;
          try {
             con = dataSource.getConnection();
@@ -132,24 +129,10 @@ public class JDBCStopCommand {
             JDBCUtil.safeClose(con);
          }
 
-         // commit the new transaction
-         tm.commit();
       } catch(Exception e) {
          log.debug("Could not drop table " + tableName);
-
-         // try to rollback the new transaction
-         try {
-            if(tm.getStatus() != Status.STATUS_NO_TRANSACTION) {
-               tm.rollback();
-            }
-         } catch(Exception _e) {
-            log.error("Could not roll back transaction: ", e);
-         }
       } finally {
          try {
-            // suspend the new transaction
-            tm.suspend();
-
             // resume the old transaction
             if(oldTransaction != null) {
                tm.resume(oldTransaction);
