@@ -62,7 +62,7 @@ import org.tigris.scarab.screens.Default;
  * Default.java Screen except that it has a few helper methods.
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: RequireLoginFirstAction.java,v 1.10 2001/10/02 23:51:40 jon Exp $    
+ * @version $Id: RequireLoginFirstAction.java,v 1.11 2001/10/08 03:33:42 jmcnally Exp $    
  */
 public abstract class RequireLoginFirstAction extends TemplateSecureAction
 {
@@ -79,8 +79,7 @@ public abstract class RequireLoginFirstAction extends TemplateSecureAction
      */
     public IntakeTool getIntakeTool(TemplateContext context)
     {
-        return (IntakeTool)context
-            .get(ScarabConstants.INTAKE_TOOL);
+        return (IntakeTool)context.get(ScarabConstants.INTAKE_TOOL);
     }
 
     /**
