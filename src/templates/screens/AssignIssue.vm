@@ -164,14 +164,8 @@
 </div>
 
 ## SORTING
-#set ($sortColumn = $data.Parameters.getString("sortColumn",""))
-#set ($sortPolarity = $data.Parameters.getString("sortPolarity",""))
-#if (!$sortColumn || $sortColumn.length() == 0)
-   #set ($sortColumn = "name")
-#end
-#if (!$sortPolarity || $sortPolarity.length() == 0)
-   #set ($sortPolarity = "asc")
-#end
+#set ($sortColumn = $data.Parameters.getString("sortColumn","name"))
+#set ($sortPolarity = $data.Parameters.getString("sortPolarity","asc"))
 #set ($allAttributes = $scarabG.getAllAttributes($sortColumn, $sortPolarity))
 
 #macro (userSort $shortName $longName)
