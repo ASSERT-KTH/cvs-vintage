@@ -70,29 +70,6 @@ basePrefix=Base
 
 # -------------------------------------------------------------------
 # 
-#  I N T A K E  I N P U T  O B J E C T  M O D E L
-#
-# -------------------------------------------------------------------
-# These settings will allow you to customize the way your
-# input object model is created.
-# -------------------------------------------------------------------
-
-intakeExtends=
-intakeSuffix=Input
-
-# there is now one target package and there
-# will be package under the main target package
-# for generated files like the OM, and intake.
-#targetPackage=org.tigris.scarab.intake
-
-# This property is currently only used by intake, but
-# we will probably keep all XML schema/config info
-# in this directory.
-
-xmlDirectory = ./xml
-
-# -------------------------------------------------------------------
-# 
 #  D A T A B A S E  S E T T I N G S
 #
 # -------------------------------------------------------------------

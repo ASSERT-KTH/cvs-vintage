@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="ISO-8859-1" standalone="no" ?>
+
+<!--
 <!DOCTYPE input-data SYSTEM
           "http://jakarta.apache.org/turbine/dtd/intake.dtd">
-
-<!-- PUBLIC "-//Apache//Apache-Turbine-Intake Application Data//EN" --> 
+-->
 
 <!-- ==================================================================== -->
 <!--                                                                      -->
@@ -91,10 +92,13 @@
            <required-message>This module requires a valid url.</required-message>
         </field>
         <field name="Deleted" key="del" type="boolean" />
-        <field name="Order" key="order" type="int">
+<!--
+        <field name="Order" key="order" type="int" 
+               mapToProperty="NumericValue">
            <rule maxValue="99">Please enter a value less than 99</rule>
            <rule minValue="1">Please enter a value greater than 0</rule>
         </field>
+-->
 </group>
 
 <group name="Issue" key="issue" mapToObject="om.Issue">
