@@ -4,7 +4,7 @@
 elements into a JBoss deployment. This version applies to the JBoss 3.2.x
 releases.
 
-$Id: jboss-web_4_0.dtd,v 1.8 2004/09/11 16:24:37 starksm Exp $
+$Id: jboss-web_4_0.dtd,v 1.9 2004/09/16 01:31:06 starksm Exp $
 
   <!DOCTYPE jboss-web PUBLIC
     "-//JBoss//DTD Web Application 2.4//EN"
@@ -86,6 +86,14 @@ manager that implements the org.jboss.security.AuthenticationManager and
 org.jboss.security.RealmMapping interfaces for the domain.
 -->
 <!ELEMENT security-domain (#PCDATA)>
+
+<!-- The flushOnSessionInvalidation attribute is a boolean indicating whether
+the associated security domain cache should be flushed when the web session is
+invalidated. If true, the security manager service 
+flushAuthenticationCache(String, java.security.Principal) is called when the
+session is seen to be invalid due to expiration or explicit invalidation.
+-->
+<!ATTLIST security-domain flushOnSessionInvalidation (true|false) 'false'>
 
 <!-- The virtual-host element allows one to specify which virtual host the war
 should be deployed to. Example, to specify that a war should be deployed to the

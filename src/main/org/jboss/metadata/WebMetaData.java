@@ -31,7 +31,7 @@ import org.w3c.dom.Element;
  * @see org.jboss.web.AbstractWebContainer
  *
  * @author Scott.Stark@jboss.org
- * @version $Revision: 1.33 $
+ * @version $Revision: 1.34 $
  */
 public class WebMetaData extends MetaData
 {
@@ -71,6 +71,9 @@ public class WebMetaData extends MetaData
    private ArrayList virtualHosts = new ArrayList();
    /** The jboss-web.xml JNDI name of the security domain implementation */
    private String securityDomain;
+
+   /** The jboss-web.xml securityDomain flushOnSessionInvalidation attribute */
+   private boolean flushOnSessionInvalidation;
    /** A HashMap<String, String> for webservice description publish locations */
    private HashMap webserviceDescriptions = new HashMap();
 
@@ -209,6 +212,23 @@ public class WebMetaData extends MetaData
    public void setSecurityDomain(String securityDomain)
    {
       this.securityDomain = securityDomain;
+   }
+
+   /** The flag indicating whether the associated security domain cache
+    * should be flushed when the session is invalidated.
+    * @return true if the flush should occur, false otherwise.
+    */ 
+   public boolean isFlushOnSessionInvalidation()
+   {
+      return flushOnSessionInvalidation;
+   }
+   /** The flag indicating whether the associated security domain cache
+    * should be flushed when the session is invalidated.
+    * @param flag - true if the flush should occur, false otherwise.
+    */ 
+   public void setFlushOnSessionInvalidation(boolean flag)
+   {
+      this.flushOnSessionInvalidation = flag;
    }
 
    /** Get the security-constraint settings
@@ -521,7 +541,12 @@ public class WebMetaData extends MetaData
       // Parse the jboss-web/security-domain element
       Element securityDomainElement = getOptionalChild(jbossWeb, "security-domain");
       if( securityDomainElement != null )
+      {
          securityDomain = getElementContent(securityDomainElement);
+         // Check the flushOnSessionInvalidation attribute
+         Boolean flag = Boolean.valueOf(securityDomainElement.getAttribute("flushOnSessionInvalidation"));
+         flushOnSessionInvalidation = flag.booleanValue();
+      }
 
       // Parse the jboss-web/depends elements
       for( Iterator virtualHostElements = getChildrenByTagName(jbossWeb, "virtual-host");
