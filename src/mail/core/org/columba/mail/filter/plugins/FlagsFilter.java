@@ -19,7 +19,6 @@ package org.columba.mail.filter.plugins;
 
 import org.columba.mail.filter.FilterCriteria;
 import org.columba.mail.folder.Folder;
-import org.columba.mail.message.ColumbaHeader;
 
 /**
  * @author freddy
@@ -75,9 +74,7 @@ public class FlagsFilter extends AbstractFilter {
 			searchHeaderField = new String("columba.flags.seen");
 		}
 
-		ColumbaHeader header = folder.getMessageHeader(uid);
-
-		Boolean flags = (Boolean) header.get(searchHeaderField);
+		Boolean flags = (Boolean) folder.getAttribute(uid, searchHeaderField);
 		if (flags == null) {
 
 			return false;

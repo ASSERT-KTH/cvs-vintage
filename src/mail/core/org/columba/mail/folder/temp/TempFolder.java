@@ -92,8 +92,7 @@ public class TempFolder extends Folder {
 		for (int i = 0; i < uids.length; i++) {
 			Object uid = uids[i];
 
-			ColumbaHeader h = getMessageHeader(uid);
-			Boolean expunged = (Boolean) h.get("columba.flags.expunged");
+			Boolean expunged = (Boolean) getAttribute(uid, "columba.flags.expunged");
 
 			//ColumbaLogger.log.debug("expunged=" + expunged);
 

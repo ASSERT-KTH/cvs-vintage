@@ -83,8 +83,7 @@ public abstract class CachedFolder extends LocalFolder {
 		// this message was already parsed and so we
 		// re-use the header to save us some cpu time
 		ColumbaHeader h =
-			(ColumbaHeader) ((ColumbaHeader) message.getHeader())
-				.clone();
+			(ColumbaHeader) ((ColumbaHeader) message.getHeader()).clone();
 
 		// decode all headerfields:
 
@@ -144,9 +143,8 @@ public abstract class CachedFolder extends LocalFolder {
 				continue;
 			}
 
-			// retrieve header of messages
-			ColumbaHeader h = getMessageHeader(uid);
-			Boolean expunged = (Boolean) h.get("columba.flags.expunged");
+			Boolean expunged =
+				(Boolean) getAttribute(uid, "columba.flags.expunged");
 
 			if (expunged.equals(Boolean.TRUE)) {
 				// move message to trash if marked as expunged
@@ -324,39 +322,42 @@ public abstract class CachedFolder extends LocalFolder {
 		switch (variant) {
 			case MarkMessageCommand.MARK_AS_READ :
 				{
-					if (h.get("columba.flags.recent").equals(Boolean.TRUE))
+					if (getAttribute(uid, "columba.flags.recent")
+						.equals(Boolean.TRUE))
 						getMessageFolderInfo().decRecent();
 
-					if (h.get("columba.flags.seen").equals(Boolean.FALSE))
+					if (getAttribute(uid, "columba.flags.seen")
+						.equals(Boolean.FALSE))
 						getMessageFolderInfo().decUnseen();
 
-					h.set("columba.flags.seen", Boolean.TRUE);
-					h.set("columba.flags.recent", Boolean.FALSE);
+					setAttribute(uid, "columba.flags.seen", Boolean.TRUE);
+					setAttribute(uid, "columba.flags.recent", Boolean.FALSE);
 					break;
 				}
 			case MarkMessageCommand.MARK_AS_UNREAD :
 				{
-					h.set("columba.flags.seen", Boolean.FALSE);
+					setAttribute(uid, "columba.flags.seen", Boolean.FALSE);
 					getMessageFolderInfo().incUnseen();
 					break;
 				}
 			case MarkMessageCommand.MARK_AS_FLAGGED :
 				{
-					h.set("columba.flags.flagged", Boolean.TRUE);
+					setAttribute(uid, "columba.flags.flagged", Boolean.TRUE);
 					break;
 				}
 			case MarkMessageCommand.MARK_AS_UNFLAGGED :
 				{
-					h.set("columba.flags.flagged", Boolean.FALSE);
+					setAttribute(uid, "columba.flags.flagged", Boolean.FALSE);
 					break;
 				}
 			case MarkMessageCommand.MARK_AS_EXPUNGED :
 				{
-					if (h.get("columba.flags.seen").equals(Boolean.FALSE))
+					if (getAttribute(uid, "columba.flags.seen")
+						.equals(Boolean.FALSE))
 						getMessageFolderInfo().decUnseen();
 
-					h.set("columba.flags.seen", Boolean.TRUE);
-					h.set("columba.flags.recent", Boolean.FALSE);
+					setAttribute(uid, "columba.flags.seen", Boolean.TRUE);
+					setAttribute(uid, "columba.flags.recent", Boolean.FALSE);
 
 					h.set("columba.flags.expunged", Boolean.TRUE);
 					break;
@@ -364,26 +365,27 @@ public abstract class CachedFolder extends LocalFolder {
 			case MarkMessageCommand.MARK_AS_UNEXPUNGED :
 				{
 
-					h.set("columba.flags.expunged", Boolean.FALSE);
+					setAttribute(uid, "columba.flags.expunged", Boolean.FALSE);
 					break;
 				}
 			case MarkMessageCommand.MARK_AS_ANSWERED :
 				{
-					h.set("columba.flags.answered", Boolean.TRUE);
+					setAttribute(uid, "columba.flags.answered", Boolean.TRUE);
 					break;
 				}
 			case MarkMessageCommand.MARK_AS_SPAM :
 				{
-					h.set("columba.spam", Boolean.TRUE);
+					setAttribute(uid, "columba.spam", Boolean.TRUE);
 					break;
 				}
 			case MarkMessageCommand.MARK_AS_NOTSPAM :
 				{
-					h.set("columba.spam", Boolean.FALSE);
+					setAttribute(uid, "columba.spam", Boolean.FALSE);
 					break;
 				}
 		}
 
+		// message data has changed
 		changed = true;
 	}
 
@@ -402,31 +404,21 @@ public abstract class CachedFolder extends LocalFolder {
 		}
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.columba.mail.folder.Folder#removeMessage(java.lang.Object,
-	 *      org.columba.core.command.WorkerStatusController)
-	 */
 	public void removeMessage(Object uid) throws Exception {
-		ColumbaHeader header = (ColumbaHeader) getMessageHeader(uid);
-		if (header == null)
-			return;
 
-		if (header.get("columba.flags.seen").equals(Boolean.FALSE))
+		// update message folder info
+		if (getAttribute(uid, "columba.flags.seen").equals(Boolean.FALSE))
 			getMessageFolderInfo().decUnseen();
-		if (header.get("columba.flags.recent").equals(Boolean.TRUE))
+		if (getAttribute(uid, "columba.flags.recent").equals(Boolean.TRUE))
 			getMessageFolderInfo().decRecent();
 
+		// remove message from headercache
 		getHeaderCacheInstance().remove(uid);
+
+		// call LocalFolder->removeMessage
 		super.removeMessage(uid);
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.columba.mail.folder.Folder#save(org.columba.core.command.WorkerStatusController)
-	 */
 	public void save() throws Exception {
 		// only save header-cache if folder data changed
 		if (hasChanged() == true) {
@@ -493,14 +485,14 @@ public abstract class CachedFolder extends LocalFolder {
 		h = null;
 
 		// set UID for new message
-		strippedHeader.set("columba.uid", newUid);
+		strippedHeader.getAttributes().put("columba.uid", newUid);
 
 		// increment recent count of messages if appropriate
-		if (strippedHeader.get("columba.flags.recent").equals(Boolean.TRUE))
+		if (strippedHeader.getAttributes().get("columba.flags.recent").equals(Boolean.TRUE))
 			getMessageFolderInfo().incRecent();
 
 		// increment unseen count of messages if appropriate
-		if (strippedHeader.get("columba.flags.seen").equals(Boolean.FALSE))
+		if (strippedHeader.getAttributes().get("columba.flags.seen").equals(Boolean.FALSE))
 			getMessageFolderInfo().incUnseen();
 
 		// add header to header-cache list
@@ -551,7 +543,7 @@ public abstract class CachedFolder extends LocalFolder {
 		ColumbaHeader header = (ColumbaHeader) getHeaderList().get(uid);
 
 		header.getAttributes().put(key, value);
-		
+
 		// set folder changed flag
 		// -> if not, the header cache wouldn't notice that something
 		// -> has changed. And wouldn't save the changes.

@@ -61,11 +61,10 @@ public class SizeFilter extends AbstractFilter {
 
 		boolean result = false;
 
-		ColumbaHeader header = folder.getMessageHeader(uid);
 		int condition = FilterCriteria.getCriteria((String) args[0]);
 		Integer size = transformSize((String) args[1]);
 
-		Integer s = (Integer) header.get("columba.size");
+		Integer s = (Integer) folder.getAttribute(uid, "columba.size");
 
 		if (s == null)
 			return false;

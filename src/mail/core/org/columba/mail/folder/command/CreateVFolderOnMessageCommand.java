@@ -35,7 +35,7 @@ import org.columba.mail.folder.FolderFactory;
 import org.columba.mail.folder.virtual.VirtualFolder;
 import org.columba.mail.gui.frame.AbstractMailFrameController;
 import org.columba.mail.main.MailInterface;
-import org.columba.mail.message.ColumbaHeader;
+import org.columba.ristretto.message.Header;
 
 /**
  * This class is used to create a virtual folder based on the currently
@@ -117,7 +117,7 @@ public class CreateVFolderOnMessageCommand extends FolderCommand {
 		//		register for status events
 		((StatusObservableImpl) parentFolder.getObservable()).setWorker(worker);
 		// get value of Subject, From or To header
-		ColumbaHeader header = parentFolder.getMessageHeader(uid);
+		Header header = parentFolder.getHeaderFields(uid, new String[] {"Subject", "From", "To"});
 		String headerValue = (String) header.get(vfolderType);
 
 		if (headerValue == null) {

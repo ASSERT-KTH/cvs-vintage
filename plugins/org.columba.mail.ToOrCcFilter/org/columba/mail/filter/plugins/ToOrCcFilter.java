@@ -46,7 +46,7 @@ public class ToOrCcFilter extends HeaderfieldFilter {
 		throws Exception {
 
 		// get the header of the message
-		ColumbaHeader header = folder.getMessageHeader(uid);
+		Header header = folder.getHeaderFields(uid, new String[] {"To", "Cc"});
 		if ( header == null ) return false;
 		
 		// convert the condition string to an int which is easier to handle

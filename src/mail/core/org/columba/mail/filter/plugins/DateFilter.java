@@ -71,7 +71,7 @@ public class DateFilter extends AbstractFilter {
 	 */
 	public boolean process(Object[] args, Folder folder, Object uid)
 		throws Exception {
-		ColumbaHeader header = folder.getMessageHeader(uid);
+		
 
 		int condition = FilterCriteria.getCriteria((String) args[0]);
 		Date date = transformDate((String) args[1]);
@@ -80,7 +80,7 @@ public class DateFilter extends AbstractFilter {
 
 		//((Rfc822Header) header).printDebug();
 
-		Date d = (Date) header.get("columba.date");
+		Date d = (Date) folder.getAttribute(uid, "columba.date");
 
 		if (d == null) {
 			ColumbaLogger.log.error("field date not found");

@@ -76,13 +76,11 @@ public class PriorityFilter extends AbstractFilter {
 
 		boolean result = false;
 
-		ColumbaHeader header = folder.getMessageHeader(uid);
-
 		int condition = FilterCriteria.getCriteria((String) args[0]);
 		String s = (String) args[1];
 		Integer searchPattern = transformPriority(s);
 
-		Integer priority = (Integer) header.get("columba.priority");
+		Integer priority = (Integer) folder.getAttribute(uid, "columba.priority");
 		if (priority == null)
 			return false;
 

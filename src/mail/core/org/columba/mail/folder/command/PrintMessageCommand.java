@@ -54,12 +54,12 @@ import org.columba.mail.config.MailConfig;
 import org.columba.mail.folder.Folder;
 import org.columba.mail.gui.attachment.AttachmentModel;
 import org.columba.mail.message.ColumbaMessage;
-import org.columba.mail.message.ColumbaHeader;
 import org.columba.mail.parser.text.HtmlParser;
 import org.columba.mail.util.MailResourceLoader;
 import org.columba.ristretto.coder.Base64DecoderInputStream;
 import org.columba.ristretto.coder.CharsetDecoderInputStream;
 import org.columba.ristretto.coder.QuotedPrintableDecoderInputStream;
+import org.columba.ristretto.message.Header;
 import org.columba.ristretto.message.LocalMimePart;
 import org.columba.ristretto.message.MimeHeader;
 import org.columba.ristretto.message.MimePart;
@@ -193,7 +193,8 @@ public class PrintMessageCommand extends FolderCommand {
 			ColumbaLogger.log.debug("Printing UID=" + uid);
 
 			ColumbaMessage message = new ColumbaMessage();
-			ColumbaHeader header = srcFolder.getMessageHeader(uid);
+			Header header = srcFolder.getHeaderFields(uids[j], getHeaderKeys());
+			
 			MimeTree mimePartTree = srcFolder.getMimePartTree(uid);
 
 			// Does the user prefer html or plain text?
@@ -211,7 +212,7 @@ public class PrintMessageCommand extends FolderCommand {
 				bodyPart = mimePartTree.getFirstTextPart("plain");
 
 			if (bodyPart == null) {
-				bodyPart = new LocalMimePart(new MimeHeader(header.getHeader()));
+				bodyPart = new LocalMimePart(new MimeHeader(header));
 				((LocalMimePart)bodyPart).setBody(new CharSequenceSource("<No Message-Text>"));
 			} else
 				bodyPart = srcFolder.getMimePart(uid, bodyPart.getAddress());

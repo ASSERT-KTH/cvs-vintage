@@ -31,7 +31,7 @@ import org.columba.mail.command.FolderCommandReference;
 import org.columba.mail.filter.Filter;
 import org.columba.mail.folder.Folder;
 import org.columba.mail.gui.config.filter.FilterDialog;
-import org.columba.mail.message.ColumbaHeader;
+import org.columba.ristretto.message.Header;
 
 /**
  * This class is used to create a filter based on the currently selected
@@ -113,7 +113,7 @@ public class CreateFilterOnMessageCommand extends FolderCommand {
 		 ((StatusObservableImpl) srcFolder.getObservable()).setWorker(worker);
 
 		// get value of Subject, From or To header
-		ColumbaHeader header = srcFolder.getMessageHeader(uid);
+		Header header = srcFolder.getHeaderFields(uid, new String[] {"Subject", "From", "To"});
 		String headerValue = (String) header.get(filterType);
 
 		if (headerValue == null) {
