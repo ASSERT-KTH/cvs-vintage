@@ -83,7 +83,7 @@ import org.tigris.scarab.util.ScarabConstants;
  * inValidationMode set to false will do actual insert of the xml issues.
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: ScarabIssues.java,v 1.37 2003/05/20 19:32:17 jmcnally Exp $
+ * @version $Id: ScarabIssues.java,v 1.38 2003/06/26 17:58:14 jmcnally Exp $
  */
 public class ScarabIssues implements java.io.Serializable
 {
@@ -897,6 +897,7 @@ public class ScarabIssues implements java.io.Serializable
             for (Iterator itrb = activities.iterator(); itrb.hasNext();)
             {
                 XmlActivity activity = (XmlActivity) itrb.next();
+                LOG.debug("Looking at activity id: " + activity.getId());
 
                 // Get the Attribute associated with the Activity
                 Attribute attributeOM = Attribute.getInstance(activity.getAttribute());
@@ -983,120 +984,152 @@ public class ScarabIssues implements java.io.Serializable
                                             issueOM, attributeOM, activitySetOM);
 
                 // check to see if this is a new activity or an update activity
-                for (Iterator moduleAttributeValueItr = avMap.iterator();moduleAttributeValueItr.hasNext();)
+                AttributeValue avalOM = null;
+                for (Iterator moduleAttributeValueItr = avMap.iterator(); 
+                     moduleAttributeValueItr.hasNext() && avalOM == null;)
                 {
-                    AttributeValue avalOM = 
-                        (AttributeValue)avMap.get(moduleAttributeValueItr.next());
-                    Attribute avalAttributeOM = avalOM.getAttribute();
-
-                    AttributeValue avalOM2 = null;
-                    if (!activity.isNewActivity())
-                    {
-                        avalOM2 = AttributeValue
-                            .getNewInstance(avalAttributeOM.getAttributeId(), 
-                                                          avalOM.getIssue());
-                        avalOM2.setProperties(avalOM);
-                    }
+                    AttributeValue testAvalOM = (AttributeValue)
+                        avMap.get(moduleAttributeValueItr.next());
+                    Attribute avalAttributeOM = testAvalOM.getAttribute();
 
                     LOG.debug("Checking Attribute match: " + avalAttributeOM.getName() + 
                               " against: " + attributeOM.getName());
                     if (avalAttributeOM.equals(attributeOM))
                     {
-                        LOG.debug("Attributes match!");
+                        avalOM = testAvalOM;
+                    }
+                }
 
-                        if (avalAttributeOM.isOptionAttribute())
+                if (avalOM != null) 
+                {
+                    Attribute avalAttributeOM = avalOM.getAttribute();
+                    LOG.debug("Attributes match!");
+                    AttributeValue avalOM2 = null;
+                    if (!activity.isNewActivity())
+                    {
+                        LOG.debug("Activity is not new.");
+                        avalOM2 = AttributeValue.getNewInstance(
+                            avalAttributeOM.getAttributeId(), 
+                            avalOM.getIssue());
+                        avalOM2.setProperties(avalOM);
+                    }
+
+                    if (avalAttributeOM.isOptionAttribute())
+                    {
+                        LOG.debug("We have an Option Attribute: " + 
+                                  avalAttributeOM.getName());
+                        AttributeOption newAttributeOptionOM = AttributeOption
+                            .getInstance(attributeOM, activity.getNewOption());
+                        if (activity.isNewActivity())
                         {
-                            LOG.debug("We have an Option Attribute: " + avalAttributeOM.getName());
-                            AttributeOption newAttributeOptionOM = AttributeOption
-                                .getInstance(attributeOM, activity.getNewOption());
-                            if (activity.isNewActivity())
+                            if(newAttributeOptionOM != null)
                             {
-                                if(newAttributeOptionOM != null)
-                                {
-                                    avalOM.setOptionId(newAttributeOptionOM.getOptionId());
-                                }
-                                else
-                                {
-                                    LOG.debug("NewAttributeOptionOM is null.");
-                                }
+                                avalOM.setOptionId(newAttributeOptionOM.getOptionId());
+                                avalOM.startActivitySet(activitySetOM);
+                                avalOM.setAttribute(attributeOM);
+                                avalOM.setActivityDescription(
+                                    activity.getDescription());
+                                avalOM.save();
+                                LOG.debug("-------------Saved Attribute Value-------------");
                             }
                             else
                             {
-                                HashMap map = new HashMap();
-                                map.put(avalOM.getAttributeId(), avalOM2);
-                                issueOM.setAttributeValues(activitySetOM, map, null, activitySetCreatedByOM);
-                                LOG.debug("-------------Saved Option Attribute Change-------------");
-                                break;
+                                LOG.warn("NewAttributeOptionOM is null for " +
+                                         activity.getNewOption());
                             }
                         }
-                        else if (avalAttributeOM.isUserAttribute())
+                        else
                         {
-                            LOG.debug("We have a User Attribute: " 
-                                + avalAttributeOM.getName());
-                            if (activity.isNewActivity())
-                            {
-                                // Don't need to pass in the attachment because
-                                // it is already in the activitySetOM.
-                                // If we can't get an assignee new-user, then 
-                                // use the activity set creator as assignee.
-                                ScarabUser assigneeOM 
-                                    = ScarabUserManager
-                                    .getInstance(activity.getNewUser(), 
-                                    module.getDomain());
-                                assigneeOM = (assigneeOM != null)
-                                    ? assigneeOM: activitySetCreatedByOM;
-                                issueOM.assignUser(activitySetOM, 
-                                    activity.getDescription(), 
-                                    assigneeOM, null, avalAttributeOM, null);
-                                LOG.debug("-------------Saved User Assign-------------");
-                                break;
-                            }
-                            else
-                            {
-                                // remove a user activity
-                                if (activity.isRemoveUserActivity())
-                                {
-                                    ScarabUser oldUserOM = ScarabUserManager
-                                        .getInstance(activity.getOldUser(), module.getDomain());
-                                    // need to reset the aval because the current one is
-                                    // marked as new for some reason which causes an insert
-                                    // and that isn't the right behavior here (we want an update)
-                                    avalOM = issueOM.getAttributeValue(avalAttributeOM);
-                                    // don't need to pass in the attachment because it is already
-                                    // in the activitySetOM
-                                    issueOM.deleteUser(activitySetOM, oldUserOM, activitySetCreatedByOM, 
-                                                       avalOM, null);
-                                    LOG.debug("-------------Saved User Remove-------------");
-                                    break;
-                                }
-                            }
+                            avalOM2.setOptionId(newAttributeOptionOM.getOptionId());
+                            HashMap map = new HashMap();
+                            map.put(avalOM.getAttributeId(), avalOM2);
+                            issueOM.setAttributeValues(activitySetOM, map, null, activitySetCreatedByOM);
+                            LOG.debug("-------------Saved Option Attribute Change-------------");
                         }
-                        else if (avalAttributeOM.isTextAttribute())
+                    }
+                    else if (avalAttributeOM.isUserAttribute())
+                    {
+                        LOG.debug("We have a User Attribute: " 
+                                  + avalAttributeOM.getName());
+                        if (activity.isNewActivity())
                         {
-                            LOG.debug("We have a Text Attribute: " + avalAttributeOM.getName());
-                            if (activity.isNewActivity())
-                            {
-                                avalOM.setValue(activity.getNewValue());
-                            }
-                            else
-                            {
-                                if (!activity.getNewValue()
-                                    .equals(avalOM.getValue()))
-                                {
-                                    avalOM2.setValue(activity.getNewValue());
-                                }
-                            }
+                            // Don't need to pass in the attachment because
+                            // it is already in the activitySetOM.
+                            // If we can't get an assignee new-user, then 
+                            // use the activity set creator as assignee.
+                            ScarabUser assigneeOM = ScarabUserManager
+                                .getInstance(activity.getNewUser(), 
+                                             module.getDomain());
+                            assigneeOM = (assigneeOM != null)
+                                ? assigneeOM: activitySetCreatedByOM;
+                            issueOM.assignUser(activitySetOM, 
+                                activity.getDescription(), 
+                                assigneeOM, null, avalAttributeOM, null);
+                            LOG.debug("-------------Saved User Assign-------------");
                         }
+                        else if (activity.isRemoveUserActivity())
+                        {
+                            // remove a user activity
+                            ScarabUser oldUserOM = ScarabUserManager
+                                .getInstance(activity.getOldUser(), module.getDomain());
+                            // need to reset the aval because the current one
+                            // is marked as new for some reason which causes an
+                            // insert and that isn't the right behavior here 
+                            // (we want an update)
+                            avalOM = null;
+                            for (Iterator i = issueOM.getAttributeValues(
+                                 avalAttributeOM).iterator(); 
+                                 i.hasNext() && avalOM == null;) 
+                            {
+                                AttributeValue av = (AttributeValue)i.next();
+                                if (oldUserOM.getUserId().equals(av.getUserId())) 
+                                {
+                                    avalOM = av;
+                                }                                
+                            }
+
+                            if (avalOM == null) 
+                            {
+                                if (LOG.isDebugEnabled()) 
+                                {
+                                    LOG.debug("Could not find previous AttributeValue assigning " +
+                                        (oldUserOM == null ? "NULL" : 
+                                        oldUserOM.getUserName()) + 
+                                        " to attribute " + 
+                                              avalAttributeOM.getName());
+                                }                                
+                            }
+                            else 
+                            {
+                                // don't need to pass in the attachment because
+                                // it is already in the activitySetOM
+                                issueOM.deleteUser(activitySetOM, oldUserOM, 
+                                    activitySetCreatedByOM, avalOM, null);
+                                LOG.debug("-------------Saved User Remove-------------");
+                            }                            
+                        }
+                    }
+                    else if (avalAttributeOM.isTextAttribute())
+                    {
+                        LOG.debug("We have a Text Attribute: " + avalAttributeOM.getName());
+
                         avalOM.startActivitySet(activitySetOM);
                         avalOM.setAttribute(attributeOM);
                         avalOM.setActivityDescription(activity.getDescription());
-                        if (!activity.isNewActivity())
+
+                        if (activity.isNewActivity())
                         {
+                            avalOM.setValue(activity.getNewValue());
+                        }
+                        else if (!activity.getNewValue()
+                                .equals(avalOM.getValue()))
+                        {
+                            avalOM2.setValue(activity.getNewValue());
                             avalOM.setProperties(avalOM2);
                         }
+
                         avalOM.save();
                         LOG.debug("-------------Saved Attribute Value-------------");
-                        break;
                     }
                 }
                 issueOM.save();

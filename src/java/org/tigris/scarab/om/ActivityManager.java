@@ -59,13 +59,11 @@ import org.tigris.scarab.util.ScarabConstants;
  *
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: ActivityManager.java,v 1.17 2003/05/01 22:34:04 jon Exp $
+ * @version $Id: ActivityManager.java,v 1.18 2003/06/26 17:58:13 jmcnally Exp $
  */
 public class ActivityManager
     extends BaseActivityManager
 {
-    private static final Integer ZERO = new Integer(0);
-
     /**
      * Creates a new <code>ActivityManager</code> instance.
      *
@@ -130,7 +128,7 @@ public class ActivityManager
             newUsername = ((ScarabUser)ScarabUserManager.getInstance(newUserId)).getUserName();
         }
         return create(issue,attribute,activitySet,description,attachment,
-                      ZERO, ZERO,
+                      null, null,
                       oldUserId, newUserId, 
                       null, null, oldUsername, newUsername);
     }
@@ -142,7 +140,7 @@ public class ActivityManager
         throws TorqueException
     {
         return create(issue,null,activitySet,description,null,depend,
-                      ZERO, ZERO,
+                      null, null,
                       null, null,
                       null, null,
                       null, depend.getDependType().getName(), null);
@@ -157,7 +155,7 @@ public class ActivityManager
         throws TorqueException
     {
         return create(issue,null,activitySet,description,null,depend,
-                      ZERO, ZERO,
+                      null, null,
                       null, null,
                       null, null,
                       oldTextValue, newTextValue, null);
@@ -170,7 +168,7 @@ public class ActivityManager
         throws TorqueException
     {
         return create(issue,null,activitySet,description,null,depend,
-                      ZERO, ZERO,
+                      null, null,
                       null, null,
                       null, null,
                       depend.getDependType().getName(), null, null);
@@ -185,7 +183,7 @@ public class ActivityManager
         throws TorqueException
     {
         return create(issue,attribute,activitySet,description,attachment,
-                      ZERO, ZERO,
+                      null, null,
                       null, null,
                       oldOptionId, newOptionId,
                       null, null);
@@ -198,7 +196,7 @@ public class ActivityManager
         throws TorqueException
     {
         return create(issue,null,activitySet,description,null,
-                      ZERO, ZERO,
+                      null, null,
                       null, null,
                       null, null,
                       null, newTextValue);
@@ -211,7 +209,7 @@ public class ActivityManager
         throws TorqueException
     {
         return create(issue,null,activitySet,description,attachment,
-                      ZERO, ZERO,
+                      null, null,
                       null, null,
                       null, null,
                       null, null);
@@ -225,7 +223,7 @@ public class ActivityManager
         throws TorqueException
     {
         return create(issue,attribute,activitySet,description,null,
-                      ZERO, ZERO,
+                      null, null,
                       null, null,
                       null, null,
                       oldTextValue, newTextValue);
@@ -240,7 +238,7 @@ public class ActivityManager
         throws TorqueException
     {
         return create(issue,null,activitySet,description,attachment,
-                      ZERO, ZERO,
+                      null, null,
                       null, null,
                       null, null,
                       oldTextValue, newTextValue);
@@ -255,7 +253,7 @@ public class ActivityManager
         throws TorqueException
     {
         return create(issue,attribute,activitySet,description,attachment,
-                      ZERO, ZERO,
+                      null, null,
                       null, null,
                       null, null,
                       oldTextValue, newTextValue);
@@ -271,7 +269,7 @@ public class ActivityManager
     {
         return create(issue, AttributeManager.getInstance(ScarabConstants.INTEGER_0), 
                       activitySet, message, null,
-                      ZERO, ZERO, null, null, null, null, null, null);
+                      null, null, null, null, null, null, null, null);
     }
 
     /**

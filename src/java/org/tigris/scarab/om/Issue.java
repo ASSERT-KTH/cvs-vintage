@@ -85,6 +85,7 @@ import org.tigris.scarab.util.ScarabException;
 import org.tigris.scarab.attribute.TotalVotesAttribute;
 import org.tigris.scarab.attribute.OptionAttribute;
 import org.tigris.scarab.util.ScarabConstants;
+import org.tigris.scarab.util.Log;
 import org.tigris.scarab.workflow.WorkflowFactory;
 import org.tigris.scarab.om.IssuePeer;
 
@@ -96,7 +97,7 @@ import org.apache.commons.lang.StringUtils;
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
- * @version $Id: Issue.java,v 1.307 2003/06/17 15:34:11 venkatesh Exp $
+ * @version $Id: Issue.java,v 1.308 2003/06/26 17:58:13 jmcnally Exp $
  */
 public class Issue 
     extends BaseIssue
@@ -962,6 +963,7 @@ public class Issue
             if (isNew()) 
             {
                 List avals = getAttributeValues();
+                result = new ArrayList();
                 if (avals != null) 
                 {
                     Iterator i = avals.iterator();
@@ -970,9 +972,7 @@ public class Issue
                         AttributeValue tempAval = (AttributeValue)i.next();
                         if (tempAval.getAttribute().equals(attribute)) 
                         {
-                            result = new ArrayList();
                             result.add(tempAval);
-                            break;
                         }
                     }
                 }
@@ -1361,7 +1361,13 @@ public class Issue
     public ActivitySet getInitialActivitySet()
         throws Exception
     {
-        return getActivitySet();
+        ActivitySet activitySet = getActivitySet();
+        if (activitySet == null) 
+        {
+            Log.get().warn("Creation ActivitySet is null for " + this);
+        }
+        
+        return activitySet;
     }
 
     /**
@@ -2861,11 +2867,15 @@ public class Issue
             }
             if (result == null) 
             {
-                Attachment reason = getInitialActivitySet().getAttachment();
-                if (reason != null && reason.getData() != null 
-                    && reason.getData().trim().length() > 0) 
+                ActivitySet activitySet = getInitialActivitySet();
+                if (activitySet != null)
                 {
-                    result = reason.getData();
+                    Attachment reason = activitySet.getAttachment();
+                    if (reason != null && reason.getData() != null 
+                        && reason.getData().trim().length() > 0) 
+                    {
+                        result = reason.getData();
+                    }        
                 }                
             }
             result = (result == null) ? 
@@ -3605,6 +3615,11 @@ public class Issue
             oldAttVal = (AttributeValue)avMap.get(attr.getName().toUpperCase());
             newAttVal = (AttributeValue)newAttVals.get(attrId);
             String newAttValValue = newAttVal.getValue();
+            if (Log.get().isDebugEnabled()) 
+            {
+                Log.get().debug("Attribute: " + attr.getName() + 
+                                " has newAttValValue = " + newAttValValue);
+            }
             if (newAttValValue != null && newAttValValue.length() > 0)
             {
                 oldAttVal.setProperties(newAttVal);
@@ -3612,6 +3627,7 @@ public class Issue
             else
             {
                 oldAttVal.setDeleted(true);
+                Log.get().debug("setDeleted(true)");
             }
             oldAttVal.startActivitySet(activitySet);
             oldAttVal.save();
@@ -3885,4 +3901,19 @@ public class Issue
     }
 
 
+    public String toString()
+    {
+        String id = null;
+        try 
+        {
+            id = isNew() ? "New issue" : getUniqueId();
+        }
+        catch (Exception e)
+        {
+            id = "Error in getting unique id";
+            Log.get().warn(id, e);
+        }
+        
+        return super.toString() + '{' + id + '}';
+    }
 }
