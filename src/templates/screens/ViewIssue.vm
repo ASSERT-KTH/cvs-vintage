@@ -4,16 +4,15 @@
 #if ($currentIssue)
     #set ($attrValues = $currentIssue.ModuleAttributeValuesMap)
 
+#if ($data.Message)
+    <font color="red">$data.Message</font>
+#end
 
 <form name="IssueForm" method="post" action="$action" >
 <input type="hidden" name="id" value="$currentIssue.IssueId">
 #set($attVal =  $attrValues.get("DESCRIPTION"))
 #set ( $attrInput = $intake.AttributeValue.mapTo($attVal) ) 
  
-#set($attVal =  $attrValues.get("OPERATING SYSTEM"))
-#set ( $attrInput = $intake.AttributeValue.mapTo($attVal) ) 
-
-
       <div class="functnbar">
        <table width="100%" cellpadding="3" cellspacing="2" border="1">
         <tr>
@@ -45,7 +44,7 @@
         #set ( $field = "Value" )  
   #end
 
-  #if ($attVal.Value )
+#if ($attVal.Value )
          <tr>
           <td width="120" class="a">
              <strong>$attVal.Attribute.Name:</strong>
@@ -126,12 +125,12 @@
 #set( $urlGroup = $intake.Attachment.setKey("urlKey") )
           <td>
          #fieldErrorMsg($urlGroup.Name "<br>")
-         <input type="text" size="25" class="text" name="$urlGroup.Name.Key" value="$!urlGroup.Name" />
+         <input type="text" size="25" class="text" name="$urlGroup.DataAsString.Key" value="$!urlGroup.DataAsString" />
          </td>
 
           <td>
          #fieldErrorMsg($urlGroup.DataAsString "<br>")
-         <input type="text" size="25" class="text" name="$urlGroup.DataAsString.Key" value="$!urlGroup.DataAsString"/>
+         <input type="text" size="25" class="text" name="$urlGroup.Name.Key" value="$!urlGroup.Name"/>
           </td>
 
          </tr>
@@ -144,20 +143,27 @@
 ## ADD DEPENDENCY
 <div class="grouper">
 
+#set( $dependGroup = $intake.Depend.setKey("dependKey") )
+<input type="hidden" name="$dependGroup.ObserverId.Key" value="$currentIssue.IssueId">
+
 #datatitle ("Add Dependency")
 
 <div class="datatable">
 <table width="100%" border="1" cellspacing="2" cellpadding="3">
  <tr>
   <td>Add dependency on issue #</td>
-  <td><input type="text" size="3" class="text" name="parent_id"></td>
   <td>
-  <select name="add_depend_type_id" class="select">
-    <option value="0">Choose dependency type</option>
+     <font color="red">$dependGroup.ObservedId.Message</font><BR>
+     <input type="text" size="3" class="text" name="$dependGroup.ObservedId.Key" value = "$!dependGroup.ObservedId"></td>
+  <td>
+     <font color="red">$dependGroup.TypeId.Message</font><BR>
+  <select name="$dependGroup.TypeId.Key" class="select">
+    <option >Choose dependency type</option>
     #foreach ($dependType in $currentIssue.getAllDependencyTypes())
       <option value="$dependType.DependTypeId">
           $dependType.Name</option>
     #end
+  </select>
     </td>
  </tr>
 </table>
