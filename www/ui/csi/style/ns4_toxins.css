@@ -1,14 +1,31 @@
 /* SoucreCast v1.2 TOXINS STYLE SHEET */
 
 /* SoucreCast - styles start here */
-body, body div, body p, body th, body td, body li, body dl, body dd, input, select, textarea, .app h3, .app h4 	{
-	font-family: Verdana, Lucida, Arial, Helvetica, sans-serif;
-	font-size:	x-small;
-	line-height: 140%;
+html body, body div, body p, body th, body td, body li, body dl, body dd, input, select, textarea, .app h3, .app h4 	{
+	font-family:	Verdana, Helvetica, Arial, sans-serif;
 	}
-html>body, html>body div, html>body p, html>body th, html>body td, html>body li, html>body dl, html>body dd, input, select, textarea, .app h3, .app h4	{
+	
+html body, body th, body td, textarea, .app h3, .app h4 	{
+	font-size: x-small;
+	voice-family: "\"}\"";
+	voice-family: inherit;
+	font-size: small;
+	}
+html>body, html>body th, html>body td, html>body input, html>body select, html>body textarea, html>body .app h3, html>body .app h4	{
 	font-size: x-small;
 	}
+	
+small, div#footer, #leftcol div *, div#login, div#helptext th, div#helptext td, div.tabs th, div.tabs td, input, select {
+	font-size: xx-small !important;
+	line-height: 140%;
+	voice-family: "\"}\"";
+	voice-family: inherit;
+	font-size: x-small !important;
+	}
+html>body small, html>body div#footer, html>body div#leftcol, html>body div#login, html>body div#helptext td, html>body div#helptext th, html>body div.tabs th, html>body div.tabs td, html>body input, html>body select,   {
+	font-size: x-small !important;
+	}
+		
 p, ul, ol, dl {
 	margin-top:	.67em;
 	margin-bottom: .67em;
@@ -46,17 +63,6 @@ h3, h4	{
 h2 {
 	font-size: 16px;
  	}
-body #footer div, body #leftcol div * {
-	font-family: Verdana, Lucida, Arial, Helvetica, sans-serif;
-	font-size:	x-small;
-	line-height: 140%;
-	voice-family: "\"}\"";
-	voice-family: inherit;
-	font-size: x-small;
-	}
-html>body #footer div, html>body #leftcol div {
-	font-size:	x-small;
-	}
 .mtb { 
 	border-top: solid 1px #ccc;
 	}

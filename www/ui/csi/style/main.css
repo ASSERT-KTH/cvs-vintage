@@ -6,7 +6,6 @@
 body {
 	background: white;
 	color: black;
-	font-size:	x-small;
 	margin: 0;
 	padding: 0;
 	line-height: 140%; 
@@ -86,18 +85,18 @@ dd	{
 	margin: 12px;
 	padding: 1px;
 	}
-#navcol {
+#navcolumn {
 	color: gray;
 	line-height: 140%;
 	margin: 12px;
 	}
-#navcol strong, th {
+#navcolumn strong, th {
 	color: black;
 	}
-#navcol div {
+#navcolumn div {
 	padding: 2px;
 	}
-#navcol table	{
+#navcolumn table	{
 	margin-bottom: 1em;
 	}
 #banner h3 {
