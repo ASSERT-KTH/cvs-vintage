@@ -90,27 +90,7 @@ public class SimpleRealm extends  BaseInterceptor {
     public SimpleRealm() {
     }
 
-    /** Set the context manager. To keep it simple we don't support
-     *  dynamic add/remove for this interceptor.
-     */
-    public void setContextManager( ContextManager cm ) {
-	super.setContextManager( cm );
-
-	this.cm=cm;
-	// set-up a per/container note for maps
-	try {
-	    // XXX make the name a "global" static -
-	    reqRolesNote = cm.getNoteId( ContextManager.REQUEST_NOTE,
-					 "required.roles");
-            reqRealmSignNote = cm.getNoteId( ContextManager.REQUEST_NOTE
-                                   , "realm.sign");
-	} catch( TomcatException ex ) {
-	    log("getting note for " + cm, ex);
-	    throw new RuntimeException( "Invalid state ");
-	}
-    }
-
-    public void contextInit( Context ctx)
+    public void contextInit(Context ctx)
 	throws TomcatException
     {
 	if( memoryRealm==null) {
@@ -148,16 +128,16 @@ public class SimpleRealm extends  BaseInterceptor {
 
     public int authorize( Request req, Response response, String roles[] )
     {
-	if( roles==null || roles.length==0 ) {
-	    // request doesn't need authentication
-	    return 0;
-	}
+        if( roles==null || roles.length==0 ) {
+            // request doesn't need authentication
+            return 0;
+        }
 
-	Context ctx=req.getContext();
+        Context ctx=req.getContext();
 
-	String userRoles[]=null;
-	String user=req.getRemoteUser();
-	if( user==null )
+        String userRoles[]=null;
+        String user=req.getRemoteUser();
+        if( user==null )
 	    return 401;
 
         if( ! this.equals(req.getNote(reqRealmSignNote)) ){
@@ -166,19 +146,19 @@ public class SimpleRealm extends  BaseInterceptor {
 
 
 
-	if( debug > 0 ) log( "Controled access for " + user + " " +
-			     req + " " + req.getContainer() );
+        if( debug > 0 ) log( "Controled access for " + user + " " +
+                     req + " " + req.getContainer() );
 
-	userRoles = memoryRealm.getUserRoles( user );
-        if ( userRoles == null )
+        userRoles = memoryRealm.getUserRoles( user );
+            if ( userRoles == null )
+                return 0;
+        req.setUserRoles( userRoles );
+
+        if( SecurityTools.haveRole( userRoles, roles ))
             return 0;
-	req.setUserRoles( userRoles );
 
-	if( SecurityTools.haveRole( userRoles, roles ))
-	    return 0;
-
-	if( debug > 0 ) log( "UnAuthorized " + roles[0] );
- 	return 401;
+        if( debug > 0 ) log( "UnAuthorized " + roles[0] );
+        return 401;
     }
 
     public String getFilename() {
@@ -187,6 +167,23 @@ public class SimpleRealm extends  BaseInterceptor {
 
     public void setFilename(String newFilename) {
         filename = newFilename;
+    }
+
+    /** Called when the ContextManger is started
+     */
+    public void engineInit(ContextManager cm) throws TomcatException {
+        super.engineInit(cm);
+        // set-up a per/container note for maps
+        try {
+            // XXX make the name a "global" static -
+            reqRolesNote = cm.getNoteId( ContextManager.REQUEST_NOTE,
+                         "required.roles");
+                reqRealmSignNote = cm.getNoteId( ContextManager.REQUEST_NOTE
+                                       , "realm.sign");
+        } catch( TomcatException ex ) {
+            log("getting note for " + cm, ex);
+            throw new RuntimeException( "Invalid state ");
+        }
     }
 }
 

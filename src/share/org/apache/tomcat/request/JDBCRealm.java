@@ -1,7 +1,7 @@
-/* 
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/request/Attic/JDBCRealm.java,v 1.22 2000/10/23 15:17:57 nacho Exp $
- * $Revision: 1.22 $
- * $Date: 2000/10/23 15:17:57 $
+/*
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/request/Attic/JDBCRealm.java,v 1.23 2000/11/02 00:38:02 nacho Exp $
+ * $Revision: 1.23 $
+ * $Date: 2000/11/02 00:38:02 $
  *
  * The Apache Software License, Version 1.1
  *
@@ -473,6 +473,7 @@ public final class JDBCRealm extends BaseInterceptor {
 	// Validate and update our current component state
       if (!started) {
           started = true;
+      // set-up a per/container note for maps
           try {
             Class.forName(driverName);
             if ((connectionName == null || connectionName.equals("")) &&
@@ -508,22 +509,6 @@ public final class JDBCRealm extends BaseInterceptor {
       }
     }
 
-    public void setContextManager( ContextManager cm ) {
-      super.setContextManager( cm );
-
-      this.cm=cm;
-      // set-up a per/container note for maps
-      try {
-          // XXX make the name a "global" static - after everything is stable!
-          reqRolesNote = cm.getNoteId( ContextManager.REQUEST_NOTE
-                , "required.roles");
-          reqRealmSignNote = cm.getNoteId( ContextManager.REQUEST_NOTE
-                , "realm.sign");
-      } catch( TomcatException ex ) {
-          log("setting up note for " + cm, ex);
-          throw new RuntimeException( "Invalid state ");
-      }
-    }
 
     public int authenticate( Request req, Response response ) {
         // Extract the credentials
@@ -623,6 +608,23 @@ public final class JDBCRealm extends BaseInterceptor {
             }
         }
 
+    }
+
+    /** Called when the ContextManger is started
+     */
+    public void engineInit(ContextManager cm) throws TomcatException {
+        //TODO:  Override this org.apache.tomcat.core.BaseInterceptor method
+        super.engineInit(cm);
+        try {
+          // XXX make the name a "global" static - after everything is stable!
+          reqRolesNote = cm.getNoteId( ContextManager.REQUEST_NOTE
+                , "required.roles");
+          reqRealmSignNote = cm.getNoteId( ContextManager.REQUEST_NOTE
+                , "realm.sign");
+        } catch( TomcatException ex ) {
+          log("setting up note for " + cm, ex);
+          throw new RuntimeException( "Invalid state ");
+        }
     }
 
 
