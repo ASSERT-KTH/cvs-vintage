@@ -22,7 +22,7 @@ rem                implementation, and the "tools.jar" from the JDK.
 rem
 rem   JAVA_HOME    Must point at your Java Development Kit installation.
 rem
-rem $Id: tomcat.bat,v 1.32 2001/01/08 12:11:46 larryi Exp $
+rem $Id: tomcat.bat,v 1.33 2001/01/11 19:13:18 larryi Exp $
 rem -------------------------------------------------------------------------
 
 
@@ -152,7 +152,7 @@ goto cleanup
 
 :startSecure
 echo Starting Tomcat with a SecurityManager
-%_SECSTARTJAVA% %TOMCAT_OPTS% -Djava.security.manager -Djava.security.policy="%TOMCAT_HOME%/conf/tomcat.policy" -Dtomcat.home="%TOMCAT_HOME%" org.apache.tomcat.startup.Tomcat %3 %4 %5 %6 %7 %8 %9
+%_SECSTARTJAVA% %TOMCAT_OPTS% -Djava.security.manager -Djava.security.policy=="%TOMCAT_HOME%/conf/tomcat.policy" -Dtomcat.home="%TOMCAT_HOME%" org.apache.tomcat.startup.Tomcat %3 %4 %5 %6 %7 %8 %9
 goto cleanup
 
 :runServer
