@@ -22,7 +22,6 @@ import javax.swing.table.TableColumn;
 import org.columba.core.config.Config;
 import org.columba.mail.filter.FilterList;
 import org.columba.mail.gui.config.filter.util.FilterHeaderRenderer;
-import org.columba.mail.gui.config.filter.util.StringFilterRenderer;
 import org.columba.mail.util.MailResourceLoader;
 import org.columba.core.main.MainInterface;
 
@@ -52,13 +51,7 @@ class FilterListTable extends JTable {
 					"dialog",
 					"filter",
 					"enabled_tableheader"));
-		//tc.setCellRenderer( new BooleanFilterRenderer() );
-		tc.setHeaderRenderer(
-			new FilterHeaderRenderer(
-				MailResourceLoader.getString(
-					"dialog",
-					"filter",
-					"enabled_tableheader")));
+		tc.setHeaderRenderer(new FilterHeaderRenderer());
 		tc.setMaxWidth(80);
 		tc.setMinWidth(80);
 
@@ -68,20 +61,12 @@ class FilterListTable extends JTable {
 					"dialog",
 					"filter",
 					"description_tableheader"));
-		tc.setCellRenderer(new StringFilterRenderer());
-		tc.setHeaderRenderer(
-			new FilterHeaderRenderer(
-				MailResourceLoader.getString(
-					"dialog",
-					"filter",
-					"description_tableheader")));
+		tc.setHeaderRenderer(new FilterHeaderRenderer());
 
 		sizeColumnsToFit(AUTO_RESIZE_NEXT_COLUMN);
 	}
 
 	public void update() {
 		model.fireTableDataChanged();
-
 	}
-
 }

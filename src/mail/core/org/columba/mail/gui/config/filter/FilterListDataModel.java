@@ -94,7 +94,9 @@ class FilterListDataModel extends AbstractTableModel
 
     public void setValueAt(Object value, int row, int col)
     {
-        Filter filter = filterList.get(row);
-        filter.getEnabled();
+        if (col == 1) {
+            Filter filter = filterList.get(row);
+            filter.setEnabled(((Boolean)value).booleanValue());
+        }
     }
 }

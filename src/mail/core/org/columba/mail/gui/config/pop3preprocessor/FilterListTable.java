@@ -23,7 +23,6 @@ import org.columba.core.config.Config;
 import org.columba.core.main.MainInterface;
 import org.columba.core.xml.XmlElement;
 import org.columba.mail.gui.config.filter.util.FilterHeaderRenderer;
-import org.columba.mail.gui.config.filter.util.StringFilterRenderer;
 import org.columba.mail.util.MailResourceLoader;
 
 class FilterListTable extends JTable {
@@ -52,30 +51,19 @@ class FilterListTable extends JTable {
 					"dialog",
 					"filter",
 					"enabled_tableheader"));
-		//tc.setCellRenderer( new BooleanFilterRenderer() );
-		tc.setHeaderRenderer(
-			new FilterHeaderRenderer(
-				MailResourceLoader.getString(
-					"dialog",
-					"filter",
-					"enabled_tableheader")));
+		tc.setHeaderRenderer(new FilterHeaderRenderer());
 		tc.setMaxWidth(80);
 		tc.setMinWidth(80);
 
 		tc =
 			getColumn(
 				"Name");
-		tc.setCellRenderer(new StringFilterRenderer());
-		tc.setHeaderRenderer(
-			new FilterHeaderRenderer(
-				"Name"));
+		tc.setHeaderRenderer(new FilterHeaderRenderer());
 
 		sizeColumnsToFit(AUTO_RESIZE_NEXT_COLUMN);
 	}
 
 	public void update() {
 		model.fireTableDataChanged();
-
 	}
-
 }

@@ -31,11 +31,8 @@ public class FilterHeaderRenderer extends JButton implements TableCellRenderer
         Border unselectedBorder = null;
         Border selectedBorder = null;
         boolean isBordered = true;
-        String str,name;
         //private String fontName;
         //private int fontSize;
-
-
 
         public void updateUI()
         {
@@ -44,17 +41,10 @@ public class FilterHeaderRenderer extends JButton implements TableCellRenderer
             setBorder( UIManager.getBorder( "TableHeader.cellBorder" ) );
         }
 
-
-
-        public FilterHeaderRenderer( String name )
-            {
+        public FilterHeaderRenderer() {
                 super();
-                //this.str = str;
-                this.name = name;
-
 
                 //this.tableModelSorter = tableModelSorter;
-
 
 		setHorizontalAlignment( SwingConstants.LEFT );
                 setHorizontalTextPosition( SwingConstants.LEFT );
@@ -64,27 +54,19 @@ public class FilterHeaderRenderer extends JButton implements TableCellRenderer
                 setBorder( UIManager.getBorder( "TableHeader.cellBorder" ) );
 
                   //setMargin( new Insets(0,0,0,0) );
-
             }
 
-
-
-
-        public Component getTableCellRendererComponent(
+            public Component getTableCellRendererComponent(
                                 JTable table, Object str,
                                 boolean isSelected, boolean hasFocus,
                                 int row, int column)
-        {
-
+            {
 
 
               //setBorder( new CTableBorder(true) );
                 //super.setFont( new Font("Helvetica", Font.PLAIN, 9) );
 
-            setText( this.name );
-
-            return this;
-        }
+                    setText((String)str);
+                    return this;
+            }
     }
-
-
