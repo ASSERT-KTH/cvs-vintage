@@ -1,4 +1,4 @@
-// $Id: ActionNewAction.java,v 1.6 2004/09/07 18:50:05 mvw Exp $
+// $Id: ActionNewAction.java,v 1.7 2004/09/19 14:24:15 mvw Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -46,6 +46,10 @@ public abstract class ActionNewAction extends AbstractActionNewModelElement {
      */
     public static final String ROLE = "role";
     
+    /**
+     * Contains the roles definitions for UML actions.
+     *
+     */
     public static interface Roles {
         
         /**

@@ -1,4 +1,4 @@
-// $Id: UMLChangeAction.java,v 1.8 2004/09/18 09:34:45 mvw Exp $
+// $Id: UMLChangeAction.java,v 1.9 2004/09/19 14:24:33 mvw Exp $
 // Copyright (c) 1996-2001 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -55,7 +55,7 @@ public class UMLChangeAction extends UMLAction {
      * The constructor.
      * 
      * @param s the to be localized description string
-     * @param global
+     * @param global true if this is a global action
      * @param hasIcon true if an icon is to be shown
      */
     protected UMLChangeAction(String s, boolean global, boolean hasIcon) { 

@@ -1,4 +1,4 @@
-// $Id: ActionNewReturnAction.java,v 1.3 2003/11/25 10:58:13 jhraigniac Exp $
+// $Id: ActionNewReturnAction.java,v 1.4 2004/09/19 14:24:15 mvw Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -36,14 +36,16 @@ import org.argouml.model.uml.behavioralelements.commonbehavior.CommonBehaviorFac
  */
 public class ActionNewReturnAction extends ActionNewAction {
 
-    public static ActionNewReturnAction SINGLETON = new ActionNewReturnAction();
+    private static final ActionNewReturnAction SINGLETON =
+        new ActionNewReturnAction();
     
     /**
      * Constructor for ActionNewReturnAction.
      */
     protected ActionNewReturnAction() {
         super();
-        putValue(Action.NAME, Translator.localize("UMLMenu", "button.new-returnaction"));
+        putValue(Action.NAME, Translator.localize("UMLMenu", 
+                "button.new-returnaction"));
     }
     
     
@@ -52,6 +54,14 @@ public class ActionNewReturnAction extends ActionNewAction {
      */
     protected Object createAction() {
         return CommonBehaviorFactory.getFactory().createReturnAction();
+    }
+
+
+    /**
+     * @return Returns the SINGLETON.
+     */
+    public static ActionNewReturnAction getInstance() {
+        return SINGLETON;
     }
 
 }
