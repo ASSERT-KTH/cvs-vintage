@@ -34,7 +34,7 @@ import org.w3c.dom.Element;
  *
  * @author <a href="mailto:marc.fleury@jboss.org">Marc Fleury</a>
  * @author Scott.Stark@jboss.org
- * @version $Revision: 1.31 $
+ * @version $Revision: 1.32 $
  */
 public class EARDeployer
    extends SubDeployerSupport
@@ -76,6 +76,8 @@ public class EARDeployer
          in = di.localCl.getResourceAsStream("META-INF/jboss-app.xml");
          if( in != null )
          {
+            // Create a new parser with validation enabled for jboss-app.xml
+            xfl = new XmlFileLoader(true);
             Element jbossApp = xfl.getDocument(in, "META-INF/jboss-app.xml").getDocumentElement();
             in.close();
             // Import module/service archives to metadata
