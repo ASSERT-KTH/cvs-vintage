@@ -937,10 +937,10 @@ diff -u -r1.5 project.xml
     <!-- ================================================================== -->
     <target name="build-commons-sandbox-util">
         <exec executable="ant" dir="${commons-sandbox-util.dir}">
-            <arg line="clean"/>
+            <arg line="maven:clean"/>
         </exec>
         <exec executable="ant" dir="${commons-sandbox-util.dir}">
-            <arg line="install-jar"/>
+            <arg line="maven:install-jar"/>
         </exec>
     </target>
 
@@ -949,10 +949,10 @@ diff -u -r1.5 project.xml
     <!-- ================================================================== -->
     <target name="build-commons-sandbox-email">
         <exec executable="ant" dir="${commons-sandbox-email.dir}">
-            <arg line="clean"/>
+            <arg line="maven:clean"/>
         </exec>
         <exec executable="ant" dir="${commons-sandbox-email.dir}">
-            <arg line="install-jar"/>
+            <arg line="maven:install-jar"/>
         </exec>
     </target>
 
