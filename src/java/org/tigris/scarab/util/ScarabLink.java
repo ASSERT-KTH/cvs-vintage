@@ -74,7 +74,7 @@ import org.tigris.scarab.util.ScarabConstants;
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
  * @author <a href="mailto:maartenc@tigris.org">Maarten Coene</a>
- * @version $Id: ScarabLink.java,v 1.65 2003/05/01 00:35:05 jon Exp $
+ * @version $Id: ScarabLink.java,v 1.66 2003/07/10 23:08:43 jmcnally Exp $
  */
 public class ScarabLink extends TemplateLink
     implements InitableRecyclable, SkipFiltering
@@ -613,11 +613,8 @@ public class ScarabLink extends TemplateLink
                     }
                 }
                 ScarabUser user = (ScarabUser)data.getUser();
-                if (user.hasLoggedIn() 
-                    && user.hasPermission(perm, currentModule))
-                {
-                    allowed = true;
-                }
+                allowed = currentModule != null && user.hasLoggedIn() 
+                    && user.hasPermission(perm, currentModule);
             }
             else 
             {

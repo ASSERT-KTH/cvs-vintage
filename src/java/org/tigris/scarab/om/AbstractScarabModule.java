@@ -125,7 +125,7 @@ import org.tigris.scarab.reports.ReportBridge;
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: AbstractScarabModule.java,v 1.101 2003/06/30 18:11:06 dlr Exp $
+ * @version $Id: AbstractScarabModule.java,v 1.102 2003/07/10 23:08:43 jmcnally Exp $
  */
 public abstract class AbstractScarabModule
     extends BaseObject
@@ -1769,12 +1769,26 @@ public abstract class AbstractScarabModule
             detail + "'."; 
     }
 
+    public boolean includesIssueType(IssueType issueType)
+        throws Exception
+    {
+        Criteria crit = new Criteria();
+        crit.add(RModuleIssueTypePeer.MODULE_ID,
+                 getModuleId());
+        crit.add(RModuleIssueTypePeer.ISSUE_TYPE_ID,
+                 issueType.getIssueTypeId());
+        crit.addSelectColumn("count(" + 
+                             RModuleIssueTypePeer.ISSUE_TYPE_ID + ")");
+        return ((Record)RModuleIssueTypePeer.doSelectVillageRecords(crit)
+            .get(0)).getValue(1).asInt() > 0;
+    }
+
     /**
      * Adds an issue type to a module
      * Copies properties from the global issue type's settings
      */
     public void addIssueType(IssueType issueType)
-        throws Exception
+        throws Exception, ValidationException
     {
         // do some validation, refuse to add an issue type that is in a bad
         // state
@@ -1782,6 +1796,14 @@ public abstract class AbstractScarabModule
         {
             throw new ValidationException(getValidationMessage("NULL", "Issue type was null"));
         }
+
+        // check that the issueType is not already added.
+        if (includesIssueType(issueType)) 
+        {
+            throw new ValidationException("Attempted double add issue type "
+                + issueType + " to module " + this);
+        }
+
         String typeName = issueType.getName();
         // check attribute groups
         List testGroups = issueType.getAttributeGroups(false);
@@ -2074,6 +2096,9 @@ public abstract class AbstractScarabModule
         throws Exception
     {
         isInitializing = true;
+        ValidationException ve = null;
+        try
+        {
         // Add defaults for issue types and attributes 
         // from parent module
         Module parentModule = ModuleManager.getInstance(getParentId());
@@ -2081,13 +2106,10 @@ public abstract class AbstractScarabModule
         List parentIssueTypes = parentModule.getIssueTypes(false);
 
         List defaultIssueTypes = IssueTypePeer.getDefaultIssueTypes();
-        // if one issue type is bad, continue with the rest, if more than
-        // one bad issue type is found, stop.
-        ValidationException ve = null;
         for (int i=0; i< defaultIssueTypes.size(); i++)
         {
             IssueType defaultIssueType = (IssueType)defaultIssueTypes.get(i);
-            if (!parentIssueTypes.contains(defaultIssueType))
+            if (!includesIssueType(defaultIssueType))
             {
                 try
                 {
@@ -2095,6 +2117,8 @@ public abstract class AbstractScarabModule
                 }
                 catch (ValidationException e)
                 {
+                    // if one issue type is bad, continue with the rest, if 
+                    // more than one bad issue type is found, stop.
                     if (ve == null) 
                     {
                         ve = e;
@@ -2110,7 +2134,11 @@ public abstract class AbstractScarabModule
                 }
             }
         }
-        isInitializing = false;
+        }
+        finally
+        {
+            isInitializing = false;
+        }
         if (ve != null) 
         {
             throw ve;

@@ -77,7 +77,7 @@ import org.tigris.scarab.util.ScarabConstants;
  * 
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: AbstractScarabUser.java,v 1.83 2003/06/09 17:03:34 jmcnally Exp $
+ * @version $Id: AbstractScarabUser.java,v 1.84 2003/07/10 23:08:43 jmcnally Exp $
  */
 public abstract class AbstractScarabUser 
     extends BaseObject 
@@ -789,6 +789,11 @@ public abstract class AbstractScarabUser
     public void setHomePage(String homePage)
         throws Exception
     {
+        if ("ModuleNotReady.vm".equals(homePage)) 
+        {
+            throw new ScarabException(
+                "ModueNotReady.vm is not a valid homepage.");
+        }
         UserPreference up = UserPreferenceManager.getInstance(getUserId());
         up.setHomePage(homePage);
         up.save();

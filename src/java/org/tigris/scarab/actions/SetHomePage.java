@@ -52,20 +52,30 @@ import org.apache.turbine.RunData;
 
 import org.tigris.scarab.om.ScarabUser;
 import org.tigris.scarab.actions.base.RequireLoginFirstAction;
+import org.tigris.scarab.util.Log;
 
 /**
  * Sets the home page to the current target
  *  
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: SetHomePage.java,v 1.4 2003/02/04 11:26:00 jon Exp $
+ * @version $Id: SetHomePage.java,v 1.5 2003/07/10 23:08:42 jmcnally Exp $
  */
 public class SetHomePage extends RequireLoginFirstAction
 {
     /**
-       Sets the home page to the current target
-    */
+     * Sets the home page to the current target
+     */
     public void doPerform(RunData data, TemplateContext context) throws Exception
     {
-        ((ScarabUser)data.getUser()).setHomePage(data.getTarget());
+        String target = data.getTarget();
+        if ("ModuleNotReady.vm".equals(target)) 
+        {
+            Log.get()
+                .debug("Setting homepage to ModuleNotReady.vm was avoided");
+        }
+        else 
+        {
+            ((ScarabUser)data.getUser()).setHomePage(target);
+        }
     }
 }
