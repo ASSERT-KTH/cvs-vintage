@@ -54,7 +54,7 @@ class LocationStep extends AbstractStep implements ActionListener {
                                 return sourceFiles;
                         }
                 });
-                data.registerDataLookup("Location.desctination", new DataLookup() {
+                data.registerDataLookup("Location.destination", new DataLookup() {
                         public Object lookupData() {
                                 return destinationFolder;
                         }
