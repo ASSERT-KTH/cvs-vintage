@@ -24,7 +24,7 @@
 // File: PropPanel.java
 // Classes: PropPanel
 // Original Author:
-// $Id: PropPanel.java,v 1.42 2003/01/03 16:44:25 kataka Exp $
+// $Id: PropPanel.java,v 1.43 2003/01/04 16:48:38 kataka Exp $
 
 // 23 Apr 2002: Jeremy Bennett (mail@jeremybennett.com). Added the third party
 // event listener.
@@ -52,6 +52,7 @@ import java.util.Vector;
 
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
+import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.SwingConstants;
@@ -293,7 +294,7 @@ abstract public class PropPanel extends TabSpawnable implements TabModelTarget, 
      *   @param label the required string label
      *   @param component Component to be added
      */
-    public final void addLinkField(String label, Component component) {
+    public final void addLinkField(String label, JComponent component) {
         component.setBackground(getBackground());
         component.setForeground(Color.blue);
         addField(label, component);

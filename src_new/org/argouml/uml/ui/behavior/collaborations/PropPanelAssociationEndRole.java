@@ -1,4 +1,4 @@
-// $Id: PropPanelAssociationEndRole.java,v 1.7 2003/01/01 16:06:38 kataka Exp $
+// $Id: PropPanelAssociationEndRole.java,v 1.8 2003/01/04 16:48:38 kataka Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -34,22 +34,10 @@ import org.argouml.uml.ui.UMLLinkedList;
 import org.argouml.uml.ui.foundation.core.PropPanelAssociationEnd;
 import org.argouml.util.ConfigLoader;
 
-import ru.novosoft.uml.behavior.collaborations.MAssociationEndRole;
-import ru.novosoft.uml.foundation.core.MAssociation;
-import ru.novosoft.uml.foundation.core.MClassifier;
-import ru.novosoft.uml.foundation.extension_mechanisms.MStereotype;
-
 public class PropPanelAssociationEndRole extends PropPanelAssociationEnd {
 
     public PropPanelAssociationEndRole() {
-        super("AssociationEndRole", _assocEndRoleIcon, ConfigLoader.getTabPropsOrientation());
-        Class mclass = MAssociationEndRole.class;
-        
-        //   this will cause the components on this page to be notified
-        //      anytime a stereotype, namespace, operation, etc
-        //      has its name changed or is removed anywhere in the model
-        Class[] namesToWatch = { MStereotype.class, MAssociation.class,MClassifier.class };
-        setNameEventListening(namesToWatch);
+        super("AssociationEndRole", ConfigLoader.getTabPropsOrientation());
         
         addField(Argo.localize("UMLMenu", "label.name"), nameField);
         addField(Argo.localize("UMLMenu", "label.stereotype"), new UMLComboBoxNavigator(this, Argo.localize("UMLMenu", "tooltip.nav-stereo"),stereotypeBox));
@@ -67,10 +55,6 @@ public class PropPanelAssociationEndRole extends PropPanelAssociationEnd {
         // makeFields(mclass);
     }
 
-    protected void makeFields(Class mclass) {
-        super.makeFields(mclass);
-        associationsLabel.setText("AssociationRole:");
-    }
-
+    
 } /* end class PropPanelAssociationEndRole */
 
