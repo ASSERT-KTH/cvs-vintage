@@ -62,7 +62,7 @@ import org.tigris.scarab.migration.JDBCTask;
  * SCARAB_TRANSACTION table. 
  *
  * @author <a href="mailto:jon@collab.net">John McNally</a>
- * @version $Id: DB_1_MoveIssueCreateInfo.java,v 1.4 2003/07/06 17:46:13 jmcnally Exp $
+ * @version $Id: DB_1_MoveIssueCreateInfo.java,v 1.5 2003/07/25 21:43:44 jmcnally Exp $
  */
 public class DB_1_MoveIssueCreateInfo extends JDBCTask
 {
@@ -84,6 +84,7 @@ public class DB_1_MoveIssueCreateInfo extends JDBCTask
             Statement stmt = null;
             try 
             {
+                setAutocommit(true);
                 conn = getConnection();
                 String sql = "SELECT CREATED_TRANS_ID FROM SCARAB_ISSUE";
                 stmt = conn.createStatement();
@@ -161,6 +162,10 @@ public class DB_1_MoveIssueCreateInfo extends JDBCTask
         Statement stmt = null;
         try 
         {
+            // could try to do this as a transaction for db's that support
+            // it, but db's should be backed up prior to migration so taking
+            // the easy way out.
+            setAutocommit(true);
             conn = getConnection();
             String dbtype = getCanonicalDBProductName(conn);
             String longType = (String)longTypes.get(dbtype);
