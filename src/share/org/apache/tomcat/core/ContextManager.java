@@ -67,65 +67,78 @@ import java.util.Enumeration;
 
 
 /**
-  ContextManager is the entry point and "controler" of the servlet execution.
+  ContextManager controls requests processing and server configuration.
   It maintains a list of Contexts ( web applications )  and a list of
-  interceptors (hooks) that are set up to handle the actual execution.
+  global modules that deal with server configuration and request processing,
+  and global properties ( directories, general settings, etc ).
 
-  The execution is modeled after Apache2.0 and other web servers, with
-  interceptors serving the same role as modules.
-
-  The "core" is composed of representation of "Request", "Response",
-  "Container" ( a set of URLs with shared properties - like a Location
-  in Apache), "Context" ( web application - the deployment unit ).
-
-  "ContextManager" will  store properties that are global to the servlet
-  container - like root directory, install dir, work dir and act as the
-  top level controler.
+  The request processing is similar with Apache and other servers, with the
+  addition of a "contextMap" chain that will select a tomcat-specific.
  
-  The server functionality is implemented in modules ( "BaseInterceptor" ).
+  <h2>Configuration and startup</h2>
 
-  Hooks are provided for request parsing and mapping, auth, autorization,
-  pre/post service, actual invocation and logging - similar with Apache and all
-  other web servers.
-
-  <h2>Using tomcat</h2>
-
+  Starting tomcat involves a number of actions and states. In order to
+  start tomcat:
+  
   <ol>
-  <li> Create ContextManager.
+  <li> Create ContextManager. The server state is STATE_NEW
 
   <li> Set properties for ContextManager ( home, debug, etc).
 
-  <li> Add the initial set of modules. Modules can also be added and removed
-     after the server is started. ( engineInit() and addInterceptor() hooks
-     will be called ). An interceptor can add/remove other interceptors
-     during the engineInit  hook, or change/set server properties.
-     XXX web applications should be added at a later stage.
-     
-  <li> Add the initial set of web applications ( Contexts ). Applications can
-     be added and removed after the server is started. ( addContext() hook
-     will be called )
+  <li> Add the initial set of modules ( addInterceptor() ). ContextManager
+       will call setContextManager() and then the addInterceptor() hook.
 
-  <li>init(). All contexts will be ready to run ( contextInit() hook is called)
+  <li> Add the initial set of web applications ( Contexts ). Configuration
+       modules can also add web applications - but no "addContext" hook
+       will be called ( since the server is not initialized ).
 
-  <li>start(). engineStart() hook will be called, the connector modules
-  should accept and serve requests.
+  <li> Call init().
+       <ol>
+         <li>Init will notify all modules using the engineInit() hook. At
+	 this point the ContextManager will be in STATE_CONFIG.
+	 <li>It'll then call addContext() hooks for each context that were
+	 added by config modules. Contexts will be in STATE_ADDED.
+	 <li>It'll then call context.init() hooks for each context that were
+	 added by config modules. Contexts will be in STATE_READY.
+	 <li>After all contexts are added and initialized, server will be
+	 in STATE_INIT.
+       </ol>
+  XXX Do we need finer control ? ( like initModules(), initContexts() ? )
+       
+  <li> At this point the server is fully configured, but not started.
+       The user can add/remove modules and applications - the rules are
+       defined in "run-time configuration".
 
-  <li>While tomcat is running, you can add/remove interceptors ( you must
-  insure the server is temporarily stoped ). engineInit(), addInterceptor()
-  will be called, then addContext() for all existing contexts and
-  initContext() if server is in INIT state. 
+  <li> Call start(). The engineStart() hook will be called,
+  the connector modules should accept and serve requests. 
 
-  <li>While tomcat is running, you can temporarily disable web applications,
-  remove and add new applications. If an application is disabled you can
-  add local modules, that will affect only that application. Modules can
-  also add and remove webapplications automatically ( like ~user ).
+  <li> Call stop() to stop the server ( engineStop() hook will be called,
+  no requests more will be accepted )
 
-  <li>stop() will stop the server ( engineStop() hook will be called )
+  <li> Call shutdown() to clean up all resources in use by web applications
+  and modules. The server will revert to STATE_CONFIG.
+       <ol>
+         <li>contextShutdown() will be called for each application. Modules
+	 must clean any resources allocated for that context. 
 
-  <li>shutdown() will clean up all resources in use by web applications
-  ( contextShutdown() ) and remove all contexts ( removeContext() hook )
+	 <li>removeContext() will be called for each application.
+
+	 <li>engineShutdown() will be called for each module
+       </ol>
+
   </ol>
 
+
+  <h2>Runtime configuration</h2>
+
+  XXX The only "supported" feature is adding/removing web applications.
+  Since each module can have a set of local modules, you can change the
+  configuration or modules for each context. Changing "global" modules may
+  work, but it's not finalized or tested.
+  
+  While tomcat is running, you can temporarily disable web applications,
+  remove and add new applications.
+  
   @author James Duncan Davidson [duncan@eng.sun.com]
   @author James Todd [gonzo@eng.sun.com]
   @author Harish Prabandham
@@ -148,33 +161,27 @@ public final class ContextManager implements LogAware{
 
     /**
      *  Server is beeing configured - modules are added.
-     *  This is the inital state. As soon as init() is called or the
-     *  first context is added the server will move to init state.
      */
-    public static final int STATE_CONFIG=0;
+    public static final int STATE_NEW=0;
 
     /**
-     *  Server is initialized, web applications can be added.
+     *  Server and global modules are initialized and stable.
      */
-    public static final int STATE_INIT=1;
+    public static final int STATE_CONFIG=1;
+
+    /**
+     *  Web applications are  configured and initialized.
+     */
+    public static final int STATE_INIT=2;
  
     /**
-     *  Server is able to run requests.
+     *  Server is started and may process requests.
      */
-    public static final int STATE_START=2;
+    public static final int STATE_START=3;
 
-    /** Engine is stoped ( temporarily disabled ). 
-     */
-    public static final int STATE_STOP=3;
-
-    /** Engine is shutdown. This is the final state, modules should clean
-	up all resources.
-     */
-    public static final int STATE_SHUTDOWN=4;
-    
     // -------------------- local variables --------------------
 
-    private int state=STATE_CONFIG;
+    private int state=STATE_NEW;
     
     // All contexts managed by the server ( can belong to different
     // virtual hosts )
@@ -363,49 +370,78 @@ public final class ContextManager implements LogAware{
         defaultContainer = newDefaultContainer;
     }
 
-    /** Add a global interceptor. It's hooks will be called for
-     *  all requests.
+    /** Add a global interceptor. The addInterceptor() hook will be called.
+     *  If the module is added after STATE_CONFIG, the engineInit() hook will
+     *  be called ( otherwise we wait for init() ).
+     *  If the module is added after STATE_INIT, the addContext and
+     *  initContext hooks will be called.
+     *  If the module is added after STATE_START, the engineStart hooks will
+     *  be called.
      */
     public final void addInterceptor( BaseInterceptor ri )
 	throws TomcatException
     {
 	ri.setContextManager( this );
 
-	BaseInterceptor existingI[]=defaultContainer.getInterceptors();
-	for( int i=0; i<existingI.length; i++ ) {
-	    existingI[i].addInterceptor( this, null, ri );
-	}
-	ri.addInterceptor( this, null, ri ); // should know about itself
-	
+	// first, add the module ( addInterceptor may change the ordering )
         defaultContainer.addInterceptor(ri);
 
-	if( state==STATE_CONFIG ) return;
+	// second, let the module know it's added. It may look at
+	// other module and even choose to remove himself and throw exception.
+	ri.addInterceptor( this, null, ri ); // should know about itself
 
-	// we are at last initialized, call engineInit hook
+	// let other modules know about the new friend.
+	BaseInterceptor existingI[]=defaultContainer.getInterceptors();
+	for( int i=0; i<existingI.length; i++ ) {
+	    if( existingI[i] != ri )
+		existingI[i].addInterceptor( this, null, ri );
+	}
+	
+	// startup module, server is not initialized
+	if( state==STATE_NEW ) return;
+
+	// we are at last initialized, call engineInit hook ( a module
+	// at runtime will get the same calls as a setup module )
 	ri.engineInit( this );
 
-	// make sure the interceptor knows about all existing contexts.
+	if( state== STATE_CONFIG ) return;
+	
+	// addContext hook for all existing contexts
 	Enumeration enum = getContexts();
 	while (enum.hasMoreElements()) {
 	    Context ctx = (Context)enum.nextElement();
 	    try {
 		ri.addContext( this, ctx ); 
-		if( state==STATE_START ) {
-		    ri.contextInit( ctx );
-		}
+	    } catch( TomcatException ex ) {
+		log( "Error adding context " +ctx + " to " + ri ); // ignore
+	    }
+	}
+	
+	// contextInit hook if we're started
+	enum = getContexts();
+	while (enum.hasMoreElements()) {
+	    Context ctx = (Context)enum.nextElement();
+	    try {
+		ri.contextInit( ctx );
 	    } catch( TomcatException ex ) {
 		log( "Error adding context " +ctx + " to " + ri );
-		// ignore it
+		    // ignore it
 	    }
 	}
 
-	if( state==STATE_START )
-	    ri.engineStart(this);
+	if( state==STATE_INIT ) return;
+
+	// we are running - let the module know about that.
+	ri.engineStart(this);
     }
 
+    /** Remove a module. Hooks will be called to allow the module to
+     *  free the resources. 
+     */
     public final void removeInterceptor( BaseInterceptor ri )
 	throws TomcatException
     {
+	
 	BaseInterceptor existingI[]=defaultContainer.getInterceptors();
 	for( int i=0; i<existingI.length; i++ ) {
 	    existingI[i].removeInterceptor( this, null, ri );
@@ -414,24 +450,35 @@ public final class ContextManager implements LogAware{
 	
 	defaultContainer.removeInterceptor( ri );
 
-	if( state==STATE_CONFIG ) return;
-	
-	Enumeration enum = getContexts();
-	while (enum.hasMoreElements()) {
-	    Context ctx = (Context)enum.nextElement();
-	    try {
-		if( state==STATE_START ) {
-		    ri.contextShutdown( ctx );
-		}
-		ri.removeContext( this, ctx ); 
-	    } catch( TomcatException ex ) {
-		log( "Error adding context " +ctx + " to " + ri );
-		// ignore it
-	    }
-	}
+	if( state==STATE_NEW ) return;
 
 	if( state==STATE_START )
 	    ri.engineStop(this);
+
+	if( state >= STATE_INIT ) {
+	    Enumeration enum = getContexts();
+	    while (enum.hasMoreElements()) {
+		Context ctx = (Context)enum.nextElement();
+		try {
+		    ri.contextShutdown( ctx );
+		} catch( TomcatException ex ) {
+		    log( "Error shuting down context " +ctx + " to " + ri );
+		}
+	    }
+	    
+	    enum = getContexts();
+	    while (enum.hasMoreElements()) {
+		Context ctx = (Context)enum.nextElement();
+		try {
+		    ri.removeContext( this, ctx ); 
+		} catch( TomcatException ex ) {
+		    log( "Error removing context " +ctx + " to " + ri );
+		    // ignore it
+		}
+	    }
+	}
+
+	ri.engineShutdown( this );
     }
 
     // -------------------- Server functions --------------------
@@ -445,42 +492,60 @@ public final class ContextManager implements LogAware{
      * 
      */
     public final void init()  throws TomcatException {
-	if( state == STATE_INIT  )
+	if( state >= STATE_CONFIG  ) // already initialized
 	    return;
-	if(debug>0 ) log( "Tomcat init");
 	
-	setState(STATE_INIT);
+	if(debug>0 ) log( "Tomcat init");
 	
 	BaseInterceptor existingI[]=defaultContainer.getInterceptors();
 	for( int i=0; i<existingI.length; i++ ) {
 	    existingI[i].engineInit( this );
 	}
 
+	// The server is configured, all modules are ready
+	setState(STATE_CONFIG);
+
+	// deal with contexts that were added before init()
+	// ( by user or modules during engineInit )
+	Enumeration enum = getContexts();
+	while (enum.hasMoreElements()) {
+	    Context ctx = (Context)enum.nextElement();
+	    try {
+		for( int i=0; i<existingI.length; i++ ) {
+		    existingI[i].addContext( this, ctx );
+		}
+		ctx.setState( Context.STATE_ADDED );
+		log("Adding context " +  ctx.toString());
+	    } catch( TomcatException ex ) {
+		log( "Error adding context " + ctx , ex );
+		continue; 
+	    }
+	}
+
+	// Initialize the contexts
+	enum = getContexts();
+	while (enum.hasMoreElements()) {
+	    Context ctx = (Context)enum.nextElement();
+	    try {
+		ctx.init();
+	    } catch( TomcatException ex ) {
+		// just log the error - the context will not serve requests
+		log( "Error initializing " + ctx , ex );
+		continue; 
+	    }
+	}
+
+	setState( STATE_INIT );
     }
 
     /** Will start the connectors and begin serving requests.
      *  It must be called after init.
      */
     public final void start() throws TomcatException {
-	if( state==STATE_CONFIG ) {
+	if( state==STATE_NEW ) {
 	    init();
 	}
 
-	// make sure all context are ready
-	Enumeration enum = getContexts();
-	while (enum.hasMoreElements()) {
-	    Context ctx = (Context)enum.nextElement();
-	    try {
-		ctx.init();
-	    } catch( TomcatException ex ) {
-		// just log the error, the context will not serve
-		// requests but we go on
-		log( "Error initializing " + ctx , ex );
-		continue; 
-	    }
-	}
-
-	//XXX before or after state=START ?
 	BaseInterceptor cI[]=defaultContainer.getInterceptors();
 	for( int i=0; i< cI.length; i++ ) {
 	    cI[i].engineStart( this );
@@ -515,7 +580,7 @@ public final class ContextManager implements LogAware{
 
 	BaseInterceptor cI[]=defaultContainer.getInterceptors();
 	for( int i=0; i< cI.length; i++ ) {
-	    cI[i].engineShutdown( this );
+	    removeInterceptor( cI[i] );
 	}
     }
 
@@ -534,19 +599,14 @@ public final class ContextManager implements LogAware{
 
     /**
      * Adds a new Context to the set managed by this ContextManager.
+     * It'll also init the server if it hasn't been already.
      *
-     * If the server is initialized ( ContextManager.init() was called )
-     * the addContext() hook will be called, otherwise the call will
-     * be delayed until the server enters INIT state.
-     *
-     * The context will be in DISABLED state until start() is called.
+     * All addContext hooks will be called. The context will be
+     * in STATE_ADDED - it'll not serve requests.
      *
      * @param ctx context to be added.
      */
     public final void addContext( Context ctx ) throws TomcatException {
-	if( state==STATE_CONFIG) {
-	    init();
-	}
 	// Make sure context knows about its manager.
 	// this will also initialized all context-specific modules.
 	ctx.setContextManager( this );
@@ -554,6 +614,10 @@ public final class ContextManager implements LogAware{
 
 	contextsV.addElement( ctx );
 
+	if( getState() == STATE_NEW )
+	    return;
+
+	// we are at least configured, can call the hook
 	try {
 	    BaseInterceptor cI[]=ctx.getContainer().getInterceptors();
 	    for( int i=0; i< cI.length; i++ ) {
@@ -579,6 +643,11 @@ public final class ContextManager implements LogAware{
 
 	contextsV.removeElement(context);
 
+	if( getState() == STATE_NEW )
+	    return; // we are not even initialized
+	// modules can add/remove contexts at init time, but no
+	// action will take place until the server is stable.
+	
 	// if it's already disabled - or was never activated,
 	// no need to shutdown and remove
 	if( context.getState() == Context.STATE_NEW )
@@ -734,6 +803,14 @@ public final class ContextManager implements LogAware{
 	    if( status!=0 ) return status;
 	}
 	req.setState(Request.STATE_CONTEXT_MAPPED );
+
+	if( req.getContext() == null ||
+	    req.getContext().getState() != Context.STATE_READY ) {
+	    // the context is not fully initialized.
+	    req.setAttribute("javax.servlet.error.message",
+			     "Application not available");
+	    handleStatus( req, req.getResponse(), 503 ); // service unavailable
+	}
 	
 	ri=defaultContainer.getInterceptors(Container.H_requestMap);
 	for( int i=0; i< ri.length; i++ ) {

@@ -525,7 +525,7 @@ public final class Context implements LogAware {
 	
 	// no action if ContextManager is not initialized
 	if( contextM==null ||
-	    contextM.getState() == ContextManager.STATE_CONFIG ) {
+	    contextM.getState() == ContextManager.STATE_NEW ) {
 	    log( "ContextManager is not yet initialized ");
 	    return;
 	}
