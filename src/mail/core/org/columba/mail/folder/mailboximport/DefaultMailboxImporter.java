@@ -168,9 +168,7 @@ public abstract class DefaultMailboxImporter {
         
         /* 
          * *20031231, karlpeder* Using InputStream instead of rawString
-         * directly. Ensures size is set correctly by addMessage (bug #??????)
-         * 
-         * TODO: Add correct bug id
+         * directly. Ensures size is set correctly by addMessage (bug #843657)
          */
 		//destFolder.addMessage(rawString);
 		SourceInputStream in =

@@ -13,6 +13,7 @@
 - fixed bug which caused attachments to be dupplicated when 
   switching between html and plain text in the composer (karlpeder)
 - fixed open file handles of attachments after sending
+- fixed bug which caused message size to be zero after import (karlpeder)
 
 
 Columba v1.0 M1.1
