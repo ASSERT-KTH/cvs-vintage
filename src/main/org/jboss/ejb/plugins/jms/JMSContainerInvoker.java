@@ -1,7 +1,7 @@
 /*
  * jBoss, the OpenSource EJB server
  *
- * Distributable under GPL license.
+ * Distributable under LGPL license.
  * See terms of license at gnu.org.
  */
 package org.jboss.ejb.plugins.jms;
@@ -59,7 +59,7 @@ import org.w3c.dom.Element;
  *      @author Rickard Öberg (rickard.oberg@telkel.com)
  *		@author <a href="mailto:sebastien.alborini@m4x.org">Sebastien Alborini</a>
  *      @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
- *      @version $Revision: 1.4 $
+ *      @version $Revision: 1.5 $
  */
 public class JMSContainerInvoker implements
 ContainerInvoker, XmlLoadable

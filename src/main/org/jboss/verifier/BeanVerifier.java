@@ -4,22 +4,22 @@ package org.jboss.verifier;
  * Class org.jboss.verifier.BeanVerifier
  * Copyright (C) 2000  Juha Lindfors
  *
- * This program is free software; you can redistribute it and/or
- * modify it under the terms of the GNU General Public License
- * as published by the Free Software Foundation; either version 2
- * of the License, or (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
+ * This library is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU Lesser General Public
+ * License as published by the Free Software Foundation; either
+ * version 2 of the License, or (at your option) any later version
  * 
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
+ * This library is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ * Lesser General Public License for more details.
+ * 
+ * You should have received a copy of the GNU Lesser General Public
+ * License along with this library; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  *
  * This package and its source code is available at www.jboss.org
- * $Id: BeanVerifier.java,v 1.9 2000/12/08 22:47:11 juha Exp $
+ * $Id: BeanVerifier.java,v 1.10 2001/01/03 08:28:40 tobias Exp $
  */
 
  
@@ -61,7 +61,7 @@ import org.jboss.metadata.MessageDrivenMetaData;
  * @see     org.jboss.verifier.factory.VerificationEventFactory
  *
  * @author  Juha Lindfors (jplindfo@helsinki.fi)
- * @version $Revision: 1.9 $
+ * @version $Revision: 1.10 $
  * @since   JDK 1.3
  */
 public class BeanVerifier implements VerificationContext {

@@ -1,7 +1,7 @@
 /*
  * jBoss, the OpenSource EJB server
  *
- * Distributable under GPL license.
+ * Distributable under LGPL license.
  * See terms of license at gnu.org.
  */
 package org.jboss.deployment;
@@ -57,7 +57,7 @@ import org.w3c.dom.Element;
  *      
  *	@see <related>
  *	@author <a href="mailto:daniel.schulze@telkel.com">Daniel Schulze</a>
- *	@version $Revision: 1.1 $
+ *	@version $Revision: 1.2 $
  */
 public class InstallerFactory
 {

@@ -1,7 +1,7 @@
 /*
  * jBoss, the OpenSource EJB server
  *
- * Distributable under GPL license.
+ * Distributable under LGPL license.
  * See terms of license at gnu.org.
  */
 package org.jboss.ejb.plugins;
@@ -18,7 +18,7 @@ import org.jboss.ejb.MessageDrivenEnterpriseContext;
  *	@see <related>
  *	@author Rickard Öberg (rickard.oberg@telkel.com)
  *      @author Peter Antman (peter.antman@tim.se)
- *	@version $Revision: 1.1 $
+ *	@version $Revision: 1.2 $
  */
 public class MessageDrivenInstancePool
    extends AbstractInstancePool

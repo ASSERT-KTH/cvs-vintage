@@ -1,6 +1,6 @@
 /*
 * jBoss, the OpenSource EJB server
-* Distributable under GPL license.
+* Distributable under LGPL license.
 * See terms of license at gnu.org.
 */
 package test.jboss.jmx;

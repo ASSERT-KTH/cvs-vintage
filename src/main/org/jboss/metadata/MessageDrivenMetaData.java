@@ -1,7 +1,7 @@
 /*
  * jBoss, the OpenSource EJB server
  *
- * Distributable under GPL license.
+ * Distributable under LGPL license.
  * See terms of license at gnu.org.
  */
 package org.jboss.metadata;
@@ -22,7 +22,7 @@ import org.jboss.ejb.DeploymentException;
 ' *   @author <a href="mailto:sebastien.alborini@m4x.org">Sebastien Alborini</a>
  *   @author Peter Antman (peter.antman@tim.se)
 
- *   @version $Revision: 1.2 $
+ *   @version $Revision: 1.3 $
  */
 public class MessageDrivenMetaData extends BeanMetaData {
     // Constants -----------------------------------------------------

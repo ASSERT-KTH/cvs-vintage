@@ -4,22 +4,22 @@ package org.jboss.verifier;
  * Class org.jboss.verifier.Section
  * Copyright (C) 2000  Juha Lindfors
  *
- * This program is free software; you can redistribute it and/or
- * modify it under the terms of the GNU General Public License
- * as published by the Free Software Foundation; either version 2
- * of the License, or (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
+ * This library is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU Lesser General Public
+ * License as published by the Free Software Foundation; either
+ * version 2 of the License, or (at your option) any later version
  * 
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
+ * This library is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ * Lesser General Public License for more details.
+ * 
+ * You should have received a copy of the GNU Lesser General Public
+ * License along with this library; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  *
  * This package and its source code is available at www.jboss.org
- * $Id: Section.java,v 1.3 2000/10/15 20:52:27 juha Exp $
+ * $Id: Section.java,v 1.4 2001/01/03 08:28:41 tobias Exp $
  */
 
 // standard imports
@@ -35,7 +35,7 @@ import java.text.ParseException;
  * Represents a section in the EJB spec.
  *
  * @author 	Juha Lindfors
- * @version $Revision: 1.3 $
+ * @version $Revision: 1.4 $
  * @since  	JDK 1.3
  */
 public class Section {

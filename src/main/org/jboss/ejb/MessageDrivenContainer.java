@@ -1,7 +1,7 @@
 /*
 * jBoss, the OpenSource EJB server
 *
-* Distributable under GPL license.
+* Distributable under LGPL license.
 * See terms of license at gnu.org.
 */
 package org.jboss.ejb;
@@ -30,7 +30,7 @@ import org.jboss.logging.Logger;
 *   @author Peter Antman (peter.antman@tim.se)
 *   @author Rickard Öberg (rickard.oberg@telkel.com)
 *   @author <a href="marc.fleury@telkel.com">Marc Fleury</a>
-*   @version $Revision: 1.1 $
+*   @version $Revision: 1.2 $
 *    extends StatelessSessionContainer
 */
 public class MessageDrivenContainer
