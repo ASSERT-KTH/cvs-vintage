@@ -7,6 +7,7 @@
 
 package org.jboss.metadata;
 
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -36,7 +37,7 @@ import org.jboss.ejb.plugins.TxSupport;
  * @author <a href="mailto:bill@burkecentral.com">Bill Burke</a>
  * @author <a href="mailto:d_jencks@users.sourceforge.net">David Jencks</a>
  *
- * @version $Revision: 1.44 $
+ * @version $Revision: 1.45 $
  */
 public abstract class BeanMetaData
    extends MetaData
@@ -512,6 +513,15 @@ public abstract class BeanMetaData
    {
       return methodAttributesForMethod(methodName).readOnly;
    }
+   public boolean isMethodReadOnly(Method method)
+   {
+      if(method == null)
+      {
+         return false;
+      }
+      return methodAttributesForMethod(method.getName()).readOnly;
+   }
+
 
    /**
     * A somewhat tedious method that builds a Set<Principal> of the
