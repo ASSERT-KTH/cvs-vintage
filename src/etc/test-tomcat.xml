@@ -427,7 +427,7 @@
 
    <target name="get">
       <gtest host="${host}" port="${port}"  request="GET /test/servlet/Cookie25 HTTP/1.0"
-             expectHeaders="Set-Cookie2:foo=bar;Version=1;MaxAge=8640000"
+             expectHeaders="Set-Cookie2:foo=bar;Version=1;Max-Age=8640000"
       />
 
       <gtest host="${host}" port="${port}"  request="GET /test/servlet/ResponseError HTTP/1.0"

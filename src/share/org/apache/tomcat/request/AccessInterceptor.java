@@ -183,7 +183,7 @@ public class AccessInterceptor extends  BaseInterceptor  {
 	String path=reqURI.substring( ctxPath.length());
 	String method=req.getMethod();
 
-	log( "ACCESS: checking " + path );
+	if( ctx.getDebug() > 0 ) log( "ACCESS: checking " + path );
 	
 	for( int i=0; i< ctxSec.patterns ; i++ ) {
 	    Container ct=ctxSec.securityPatterns[i];

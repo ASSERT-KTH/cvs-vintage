@@ -346,8 +346,15 @@ public class RequestImpl  implements Request {
     public HttpServletRequest getFacade() {
 	// some requests are internal, and will never need a
 	// facade - no need to create a new object unless needed.
-        if( requestFacade==null )
+        if( requestFacade==null ) {
+	    if( context==null ) {
+		// wrong request
+		// XXX the will go away after we remove the one-one relation between
+		// request and facades ( security, etc) 
+		requestFacade = contextM.getContext("/" ).getFacadeManager().createHttpServletRequestFacade(this );
+	    }
 	    requestFacade = context.getFacadeManager().createHttpServletRequestFacade(this);
+	}
 	return requestFacade;
     }
 

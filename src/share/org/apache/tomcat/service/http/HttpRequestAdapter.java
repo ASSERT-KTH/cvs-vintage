@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/service/http/Attic/HttpRequestAdapter.java,v 1.11 2000/04/25 17:54:26 costin Exp $
- * $Revision: 1.11 $
- * $Date: 2000/04/25 17:54:26 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/service/http/Attic/HttpRequestAdapter.java,v 1.12 2000/05/24 04:41:55 costin Exp $
+ * $Revision: 1.12 $
+ * $Date: 2000/05/24 04:41:55 $
  *
  * ====================================================================
  *
@@ -77,10 +77,15 @@ public class HttpRequestAdapter extends RequestImpl {
     private boolean moreRequests = false;
     InputStream sin;
     byte[] buf;
+    int bufSize=2048; // default
+    int off=0;
+    int count=0;
+    public static final String DEFAULT_CHARACTER_ENCODING = "8859_1";
+
     
     public HttpRequestAdapter() {
         super();
-	buf=new byte[Constants.RequestBufferSize];
+	buf=new byte[bufSize];
     }
 
     public void setSocket(Socket socket) throws IOException {
@@ -92,6 +97,8 @@ public class HttpRequestAdapter extends RequestImpl {
 
     public void recycle() {
 	super.recycle();
+	off=0;
+	count=0;
     }
     
     public Socket getSocket() {
@@ -111,36 +118,126 @@ public class HttpRequestAdapter extends RequestImpl {
     }
 
     public void readNextRequest(Response response) throws IOException {
-	int count = in.readLine(buf, 0, buf.length);
+	count = in.readLine(buf, 0, buf.length);
+
 	if (count < 0 ) {
 	    response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
 	    return;
 	}
 	
-	processRequestLine(response, buf, 0, count );
-
-	// XXX
-	//    return if an error was detected in processing the
-	//    request line
-
-	// read headers if at least we have a protocol >=1.0, or the
-	// error will be reported to early
-	//         if (response.getStatus() >=
-	// 	    HttpServletResponse.SC_BAD_REQUEST) {
-	//             return;
-	// 	}
+	processRequestLine(response  );
 
 	// for 0.9, we don't have headers!
 	if ((protocol!=null) &&
-            !protocol.toLowerCase().startsWith("http/0."))
-	    headers.read(in);
+            !protocol.toLowerCase().startsWith("http/0.")) {
+	    readHeaders( headers, in  );
+	}
 
 	// XXX
 	// detect for real whether or not we have more requests
 	// coming
 	moreRequests = false;	
-    }    
-    
+    }
+
+
+    /**
+     * Reads header fields from the specified servlet input stream until
+     * a blank line is encountered.
+     * @param in the servlet input stream
+     * @exception IllegalArgumentException if the header format was invalid 
+     * @exception IOException if an I/O error has occurred
+     */
+    public void readHeaders( MimeHeaders headers, ServletInputStream in )  throws IOException {
+	// use pre-allocated buffer if possible
+	off = count; // where the request line ended
+	
+	while (true) {
+	    int start = off;
+
+	    while (true) {
+		int len = buf.length - off;
+
+		if (len > 0) {
+		    len = in.readLine(buf, off, len);
+
+		    if (len == -1) {
+                        String msg =
+                            sm.getString("mimeHeader.connection.ioe");
+
+			throw new IOException (msg);
+		    }
+		}
+
+		off += len;
+
+		if (len == 0 || buf[off-1] == '\n') {
+		    break;
+		}
+
+		// overflowed buffer, so temporarily expand and continue
+
+		// XXX DOS - if the length is too big - stop and throw exception
+		byte[] tmp = new byte[buf.length * 2];
+
+		System.arraycopy(buf, 0, tmp, 0, buf.length);
+		buf = tmp;
+	    }
+
+	    // strip off trailing "\r\n"
+	    if (--off > start && buf[off-1] == '\r') {
+		--off;
+	    }
+
+	    if (off == start) {
+		break;
+	    }
+	    
+	    // XXX this does not currently handle headers which
+	    // are folded to take more than one line.
+	    MimeHeaderField mhf=headers.putHeader();
+	    if( ! parseHeaderFiled(mhf, buf, start, off - start) ) {
+		// error parsing header
+		return;
+	    }
+	}
+    }
+
+    /**
+     * Parses a header field from a subarray of bytes.
+     * @param b the bytes to parse
+     * @param off the start offset of the bytes
+     * @param len the length of the bytes
+     * @exception IllegalArgumentException if the header format was invalid
+     */
+    public boolean parseHeaderFiled(MimeHeaderField mhf, byte[] b, int off, int len)
+    {
+	int start = off;
+	byte c;
+
+	while ((c = b[off++]) != ':' && c != ' ') {
+	    if (c == '\n') {
+		System.out.println("Parse error, empty line: " + new String( b, off, len ));
+		return false;
+	    }
+	}
+
+	mhf.setName(b, start, off - start - 1);
+
+	while (c == ' ') {
+	    c = b[off++];
+	}
+
+	if (c != ':') {
+	    System.out.println("Parse error, missing : in  " + new String( b, off, len ));
+	    return false;
+	}
+
+	while ((c = b[off++]) == ' ');
+
+	mhf.setValue(b, off - 1, len - (off - start - 1));
+	return true;
+    }
+
     public int getServerPort() {
         return socket.getLocalPort();
     }
@@ -176,98 +273,96 @@ public class HttpRequestAdapter extends RequestImpl {
     public String getRemoteHost() {
 	return socket.getInetAddress().getHostName();
     }    
-    
-    public void processRequestLine(Response response, byte buf[], int start, int count)
+
+    /** Advance to first non-space
+     */
+    private  final int skipSpaces() {
+	while (off < count) {
+	    if ((buf[off] != (byte) ' ') 
+		&& (buf[off] != (byte) '\t')) {
+		return off;
+	    }
+	    off++;
+	}
+	return -1;
+    }
+
+    /** Advance to the first space
+     */
+    private  int findSpace() {
+	while (off < count) {
+	    if ((buf[off] == (byte) ' ') 
+		|| (buf[off] == (byte) '\t')) {
+		return off;
+	    }
+	    off++;
+	}
+	return -1;
+    }
+
+    /** Find a character, no side effects
+     */
+    private  int findChar( char c, int start, int end ) {
+	byte b=(byte)c;
+	int offset = start;
+	while (offset < end) {
+	    if (buf[offset] == b) {
+		return offset;
+	    }
+	    offset++;
+	}
+	return -1;
+    }
+
+    public void processRequestLine(Response response)
 	throws IOException
     {
+	off=0;
 
-	String line=new String(buf, 0, count, Constants.CharacterEncoding.Default);
-        String buffer = line.trim();
-
-	int firstDelim = buffer.indexOf(' ');
-	int lastDelim = buffer.lastIndexOf(' ');
-	// default - set it to HTTP/0.9 or null if we can parse the request
-	//protocol = "HTTP/1.0";
-
-	if (firstDelim == -1 && lastDelim == -1) {
-	    if (buffer.trim().length() > 0) {
-	        firstDelim = buffer.trim().length();
-		lastDelim = buffer.trim().length();
-	    }
-	}
-
-	if (firstDelim != lastDelim) {
-	    String s = buffer.substring(firstDelim, lastDelim);
-
-	    if (s.trim().length() == 0) {
-	        firstDelim = lastDelim;
-	    }
-	}
-
-	String requestString=null;
+	// if end of line is reached before we scan all 3 components -
+	// we're fine, off=count and remain unchanged
 	
-	if (firstDelim != lastDelim) {
-	    method = buffer.substring(0, firstDelim).trim();
-	    protocol = buffer.substring(lastDelim + 1).trim();
-	    requestString = buffer.substring(firstDelim + 1, lastDelim).trim();
-	} else if (firstDelim != -1 && lastDelim != -1) {
-	    method = buffer.substring(0, firstDelim).trim();
-	    protocol = null;
-	    if (lastDelim < buffer.length()) {
-	        requestString = buffer.substring(lastDelim + 1).trim();
-	    }
-	}
+	if( buf[count-1]!= '\r' && buf[count-1]!= '\n' ) {
+	    response.setStatus(HttpServletResponse.SC_REQUEST_URI_TOO_LONG);
+	    return;
+	}	    
+	
+	int startMethod=skipSpaces();
+	int endMethod=findSpace();
 
-	if (protocol != null &&
-	    ! protocol.toLowerCase().startsWith("http/")) {
-	    requestString += " " + protocol;
-	    protocol = null;
-	}
+	int startReq=skipSpaces();
+	int endReq=findSpace();
 
-        int requestErrorCode = 0; 
+	int startProto=skipSpaces();
+	int endProto=findSpace();
 
-	// see if request looks right
-
-	try {
-	    int len = line.length();
-
-	    if (len < 2) {
-	        requestErrorCode = HttpServletResponse.SC_BAD_REQUEST;
-	    } else if (/* line.charAt(len - 2) != '\r' || Correct, but will break C clients */
-                line.charAt(len - 1) != '\n') {
-	        requestErrorCode =
-		    HttpServletResponse.SC_REQUEST_URI_TOO_LONG;
-		// XXX
-		// For simplicity we assume there's an HTTP/1.0 on the end
-		// We should check to be sure.
-		protocol = "HTTP/1.0";
-	    }
-	} catch (StringIndexOutOfBoundsException siobe) {
-	}
-
-	// see if uri is well formed
-
-	String msg="";
-	if (requestErrorCode == 0 &&
-	    (requestString == null || requestString.indexOf(' ') > -1 ||
-	        requestString.indexOf('/') != 0)) {
-	    requestErrorCode = HttpServletResponse.SC_BAD_REQUEST;
-	    msg="Bad request: " + requestString + " " + requestErrorCode;
-	}
-
-	if (requestErrorCode != 0) {
-	    response.setStatus(requestErrorCode);
+	if( startReq < 0   ) {
+	    // we don't have 2 "words", probably only method
+	    // startReq>0 => method is fine, request has at least one char
+	    response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
 	    return;
 	}
+	
+	method= new String( buf, startMethod, endMethod - startMethod );
 
-	int indexQ=requestString.indexOf("?");
-	int rLen=requestString.length();
-	if ( (indexQ >-1) && ( indexQ  < rLen) ) {
-	    queryString = requestString.substring(indexQ + 1, requestString.length());
-	    requestURI = requestString.substring(0, indexQ);
+	if( endReq < 0 ) {
+	    protocol=null;
+	    endReq=count;
 	} else {
-	    requestURI= requestString;
+	    if( endProto < 0 ) endProto = count;
+	    protocol=new String( buf, startProto, endProto-startProto );
 	}
+
+	int qryIdx= findChar( '?', startReq, endReq );
+	if( qryIdx <0 ) {
+	    requestURI = new String( buf, startReq, endReq - startReq );
+	} else {
+	    requestURI = new String( buf, startReq, qryIdx - startReq );
+	    queryString = new String( buf, qryIdx+1, endReq - qryIdx -1 );
+	}
+
+	System.out.println("XXX " + method + " " + requestURI + " " + queryString + " " + protocol );
+
     }
 
     

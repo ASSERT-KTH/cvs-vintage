@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/util/Attic/MimeHeaders.java,v 1.6 2000/05/23 20:58:27 costin Exp $
- * $Revision: 1.6 $
- * $Date: 2000/05/23 20:58:27 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/util/Attic/MimeHeaders.java,v 1.7 2000/05/24 04:41:57 costin Exp $
+ * $Revision: 1.7 $
+ * $Date: 2000/05/24 04:41:57 $
  *
  * ====================================================================
  *
@@ -494,75 +494,6 @@ public class MimeHeaders {
     }
 
     
-    /**
-     * Reads header fields from the specified servlet input stream until
-     * a blank line is encountered.
-     * @param in the servlet input stream
-     * @exception IllegalArgumentException if the header format was invalid 
-     * @exception IOException if an I/O error has occurred
-     */
-    public void read(ServletInputStream in) throws IOException {
-	// use pre-allocated buffer if possible
-	byte[] b;
-
-	if (count == 0) {
-	    if( buf==null ) buf=new byte[bufSize];
-	    b = buf;
-	} else {
-	    b = new byte[buf.length];
-	}
-
-	int off = 0;
-
-	while (true) {
-	    int start = off;
-
-	    while (true) {
-		int len = b.length - off;
-
-		if (len > 0) {
-		    len = in.readLine(b, off, len);
-
-		    if (len == -1) {
-                        String msg =
-                            sm.getString("mimeHeader.connection.ioe");
-
-			throw new IOException (msg);
-		    }
-		}
-
-		off += len;
-
-		if (len == 0 || b[off-1] == '\n') {
-		    break;
-		}
-
-		// overflowed buffer, so temporarily expand and continue
-		byte[] tmp = new byte[b.length * 2];
-
-		System.arraycopy(b, 0, tmp, 0, b.length);
-		b = tmp;
-	    }
-
-	    // strip off trailing "\r\n"
-	    if (--off > start && b[off-1] == '\r') {
-		--off;
-	    }
-
-	    if (off == start) {
-		break;
-	    }
-	    
-	    // XXX this does not currently handle headers which
-	    // are folded to take more than one line.
-	    MimeHeaderField mhf=putHeader();
-	    if( ! mhf.parse(b, start, off - start) ) {
-		// error parsing header
-		return;
-	    }
-	}
-    }
-
     /**
      * Returns a lengthly string representation of the current header fields.
      */
