@@ -192,4 +192,11 @@ public class ColumbaMessage  {
 	public Object getAttribute(String key) {
 		return attributes.get(key);
 	}
+	/**
+	 * @return
+	 */
+	public Flags getFlags() {
+		return flags;
+	}
+
 }

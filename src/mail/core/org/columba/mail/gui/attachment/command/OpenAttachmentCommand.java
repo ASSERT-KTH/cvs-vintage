@@ -119,8 +119,7 @@ public class OpenAttachmentCommand extends FolderCommand {
 		if (part.getHeader().getContentType().equals("message")) {
 			tempFolder = MainInterface.treeModel.getTempFolder();
 			tempMessageUid =
-				tempFolder.addMessage(//(AbstractMessage) part.getContent(),
-				StreamUtils.readInString(part.getInputStream()).toString());
+				tempFolder.addMessage( part.getInputStream() );
 
 			inline = true;
 		} else {

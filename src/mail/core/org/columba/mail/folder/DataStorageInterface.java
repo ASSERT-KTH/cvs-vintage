@@ -15,6 +15,10 @@
 //All Rights Reserved.
 package org.columba.mail.folder;
 
+import java.io.InputStream;
+
+import org.columba.ristretto.message.io.FileSource;
+
 
 /**
  * @author freddy
@@ -30,6 +34,9 @@ public interface DataStorageInterface {
 	
 	public String loadMessage( Object uid ) throws Exception ;
 	public void removeMessage( Object uid );
+	
+	public FileSource getFileSource( Object uid ) throws Exception;
+	public void saveInputStream( Object uid, InputStream source) throws Exception;
 	
 	public int getMessageCount();
 	

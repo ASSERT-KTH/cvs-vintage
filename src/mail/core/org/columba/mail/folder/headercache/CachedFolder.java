@@ -15,6 +15,7 @@
 //All Rights Reserved.
 package org.columba.mail.folder.headercache;
 
+import java.io.InputStream;
 import java.util.Enumeration;
 import java.util.List;
 import java.util.Vector;
@@ -25,12 +26,15 @@ import org.columba.mail.config.FolderItem;
 import org.columba.mail.folder.Folder;
 import org.columba.mail.folder.LocalFolder;
 import org.columba.mail.folder.command.MarkMessageCommand;
-import org.columba.mail.message.ColumbaMessage;
 import org.columba.mail.message.ColumbaHeader;
+import org.columba.mail.message.ColumbaMessage;
 import org.columba.mail.message.HeaderList;
+import org.columba.ristretto.message.Header;
 import org.columba.ristretto.message.HeaderInterface;
 import org.columba.ristretto.message.Message;
 import org.columba.ristretto.message.io.CharSequenceSource;
+import org.columba.ristretto.message.io.Source;
+import org.columba.ristretto.parser.HeaderParser;
 import org.columba.ristretto.parser.MessageParser;
 
 /**
@@ -466,6 +470,50 @@ public abstract class CachedFolder extends LocalFolder {
 		
 		mutex = new Mutex(getName());
 		
+	}
+
+	/* (non-Javadoc)
+	 * @see org.columba.mail.folder.MailboxInterface#addMessage(java.io.InputStream)
+	 */
+	public Object addMessage(InputStream in) throws Exception {
+		// get headerlist before adding a message
+		getHeaderList();
+
+		// call addMessage of superclass LocalFolder
+		// to do the dirty work
+		Object newUid = super.addMessage(in);
+		if ( newUid == null ) return null;
+		
+		Source source = getDataStorageInstance().getFileSource(newUid);
+		
+		Header header = HeaderParser.parse(source);		
+		ColumbaHeader h = new ColumbaHeader( header ); 
+
+		// decode all headerfields:
+
+		// remove all unnecessary headerfields which doesn't
+		// need to be cached
+		// -> saves much memory
+		ColumbaHeader strippedHeader = CachedHeaderfieldOwner.stripHeaders(h);
+
+		// free memory
+		h = null;
+
+		// set UID for new message
+		strippedHeader.set("columba.uid", newUid);
+
+		// increment recent count of messages if appropriate
+		if (strippedHeader.get("columba.flags.recent").equals(Boolean.TRUE))
+			getMessageFolderInfo().incRecent();
+
+		// increment unseen count of messages if appropriate
+		if (strippedHeader.get("columba.flags.seen").equals(Boolean.FALSE))
+			getMessageFolderInfo().incUnseen();
+
+		// add header to header-cache list
+		getHeaderCacheInstance().add(strippedHeader);
+
+		return newUid;
 	}
 
 }

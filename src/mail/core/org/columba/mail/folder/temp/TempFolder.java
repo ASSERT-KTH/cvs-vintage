@@ -16,12 +16,14 @@
 package org.columba.mail.folder.temp;
 
 import java.io.File;
+import java.io.InputStream;
 import java.util.Enumeration;
 import java.util.Hashtable;
 
 import org.columba.core.command.StatusObservableImpl;
 import org.columba.core.config.ConfigPath;
 import org.columba.core.io.DiskIO;
+import org.columba.core.io.StreamUtils;
 import org.columba.core.logging.ColumbaLogger;
 import org.columba.mail.filter.Filter;
 import org.columba.mail.folder.DataStorageInterface;
@@ -31,10 +33,15 @@ import org.columba.mail.folder.search.DefaultSearchEngine;
 import org.columba.mail.message.ColumbaHeader;
 import org.columba.mail.message.ColumbaMessage;
 import org.columba.mail.message.HeaderList;
+import org.columba.ristretto.message.Flags;
+import org.columba.ristretto.message.Header;
+import org.columba.ristretto.message.LocalMimePart;
+import org.columba.ristretto.message.Message;
 import org.columba.ristretto.message.MessageFolderInfo;
 import org.columba.ristretto.message.MimePart;
 import org.columba.ristretto.message.MimeTree;
 import org.columba.ristretto.message.io.CharSequenceSource;
+import org.columba.ristretto.message.io.SourceInputStream;
 import org.columba.ristretto.parser.MessageParser;
 
 /**
@@ -128,6 +135,7 @@ public class TempFolder extends Folder {
 	public Object addMessage(
 		ColumbaMessage message)
 		throws Exception {
+		/*
 		Object newUid = generateNextUid();
 
 		ColumbaLogger.log.debug("new UID=" + newUid);
@@ -141,7 +149,8 @@ public class TempFolder extends Folder {
 
 		messageList.put(newUid, message);
 
-		return newUid;
+		return newUid;*/
+		return null;
 	}
 
 	/**
@@ -149,15 +158,7 @@ public class TempFolder extends Folder {
 	 */
 	public Object addMessage(String source)
 		throws Exception {
-		Object newUid = generateNextUid();
-
-		ColumbaMessage m = new ColumbaMessage( MessageParser.parse(new CharSequenceSource(source)));
-
-		headerList.add(m.getHeaderInterface(), newUid);
-
-		messageList.put(newUid, m);
-
-		return newUid;
+		return null;
 	}
 
 	/**
@@ -199,7 +200,7 @@ public class TempFolder extends Folder {
 		Object uid,
 		Integer[] address)
 		throws Exception {
-		ColumbaMessage message = (ColumbaMessage) messageList.get(uid);
+		Message message = (Message) messageList.get(uid);
 
 		MimePart mimePart = message.getMimePartTree().getFromAddress(address);
 
@@ -233,11 +234,7 @@ public class TempFolder extends Folder {
 	public MimeTree getMimePartTree(
 		Object uid)
 		throws Exception {
-		ColumbaMessage message = (ColumbaMessage) messageList.get(uid);
-
-		MimeTree mptree = message.getMimePartTree();
-
-		return mptree;
+		return ((Message)messageList.get(uid)).getMimePartTree();
 	}
 
 	/**
@@ -302,6 +299,90 @@ public class TempFolder extends Folder {
 
 	public String toString() {
 		return (String) getUserObject();
+	}
+
+	/* (non-Javadoc)
+	 * @see org.columba.mail.folder.MailboxInterface#addMessage(java.io.InputStream)
+	 */
+	public Object addMessage(InputStream in) throws Exception {
+		StringBuffer source = StreamUtils.readInString( in );
+		Message message = MessageParser.parse( new CharSequenceSource( source ) );
+
+		Object newUid = generateNextUid();
+
+		ColumbaLogger.log.debug("new UID=" + newUid);
+
+		ColumbaHeader h = new ColumbaHeader( message.getHeader() );
+		h.set("columba.uid", newUid);
+
+		headerList.add(h, newUid);
+
+		messageList.put(newUid, message);
+
+		return newUid;
+	}
+
+	/* (non-Javadoc)
+	 * @see org.columba.mail.folder.MailboxInterface#getAttribute(java.lang.Object, java.lang.String)
+	 */
+	public Object getAttribute(Object uid, String key) throws Exception {
+		return ((ColumbaHeader)headerList.getHeader(uid)).getAttributes().get(key);
+	}
+
+	/* (non-Javadoc)
+	 * @see org.columba.mail.folder.MailboxInterface#getFlags(java.lang.Object)
+	 */
+	public Flags getFlags(Object uid) throws Exception {
+		return ((ColumbaHeader)headerList.getHeader(uid)).getFlags();
+	}
+
+	/* (non-Javadoc)
+	 * @see org.columba.mail.folder.MailboxInterface#getHeaderFields(java.lang.Object, java.lang.String[])
+	 */
+	public Header getHeaderFields(Object uid, String[] keys) throws Exception {
+		Header header = ((Message)messageList.get(uid)).getHeader();
+		
+		Header subHeader = new Header();
+		String value;
+		for( int i=0; i<keys.length; i++) {
+			value = header.get(keys[i]);
+			if( value != null) {
+				subHeader.set(keys[i], value);
+			}
+		}
+		
+		return subHeader;
+	}
+
+	/* (non-Javadoc)
+	 * @see org.columba.mail.folder.MailboxInterface#getMessageSourceStream(java.lang.Object)
+	 */
+	public InputStream getMessageSourceStream(Object uid) throws Exception {
+		return new SourceInputStream( ((Message)messageList.get(uid)).getSource() );
+	}
+
+	/* (non-Javadoc)
+	 * @see org.columba.mail.folder.MailboxInterface#getMimePartBodyStream(java.lang.Object, java.lang.Integer[])
+	 */
+	public InputStream getMimePartBodyStream(Object uid, Integer[] address)
+		throws Exception {
+			Message message = (Message)messageList.get(uid);
+			
+			LocalMimePart mimepart = (LocalMimePart) message.getMimePartTree().getFromAddress(address);
+			
+		return mimepart.getInputStream();
+	}
+
+	/* (non-Javadoc)
+	 * @see org.columba.mail.folder.MailboxInterface#getMimePartSourceStream(java.lang.Object, java.lang.Integer[])
+	 */
+	public InputStream getMimePartSourceStream(Object uid, Integer[] address)
+		throws Exception {
+			Message message = (Message)messageList.get(uid);
+			
+			LocalMimePart mimepart = (LocalMimePart) message.getMimePartTree().getFromAddress(address);
+			
+			return new SourceInputStream( mimepart.getSource() );
 	}
 
 }

@@ -15,6 +15,7 @@
 //All Rights Reserved.
 package org.columba.mail.folder.virtual;
 
+import java.io.InputStream;
 import java.util.Enumeration;
 import java.util.Hashtable;
 import java.util.List;
@@ -39,6 +40,8 @@ import org.columba.mail.gui.frame.AbstractMailFrameController;
 import org.columba.mail.message.ColumbaHeader;
 import org.columba.mail.message.ColumbaMessage;
 import org.columba.mail.message.HeaderList;
+import org.columba.ristretto.message.Flags;
+import org.columba.ristretto.message.Header;
 import org.columba.ristretto.message.HeaderInterface;
 import org.columba.ristretto.message.MimePart;
 import org.columba.ristretto.message.MimeTree;
@@ -642,6 +645,57 @@ public class VirtualFolder extends Folder {
 			getFolderItem().getRoot().addElement(f.getRoot());
 		}
 		
+	}
+
+	/* (non-Javadoc)
+	 * @see org.columba.mail.folder.MailboxInterface#addMessage(java.io.InputStream)
+	 */
+	public Object addMessage(InputStream in) throws Exception {
+		return null;
+	}
+
+	/* (non-Javadoc)
+	 * @see org.columba.mail.folder.MailboxInterface#getAttribute(java.lang.Object, java.lang.String)
+	 */
+	public Object getAttribute(Object uid, String key) throws Exception {
+		return null;
+	}
+
+	/* (non-Javadoc)
+	 * @see org.columba.mail.folder.MailboxInterface#getFlags(java.lang.Object)
+	 */
+	public Flags getFlags(Object uid) throws Exception {
+		return null;
+	}
+
+	/* (non-Javadoc)
+	 * @see org.columba.mail.folder.MailboxInterface#getHeaderFields(java.lang.Object, java.lang.String[])
+	 */
+	public Header getHeaderFields(Object uid, String[] keys) throws Exception {
+		return null;
+	}
+
+	/* (non-Javadoc)
+	 * @see org.columba.mail.folder.MailboxInterface#getMessageSourceStream(java.lang.Object)
+	 */
+	public InputStream getMessageSourceStream(Object uid) throws Exception {
+		return null;
+	}
+
+	/* (non-Javadoc)
+	 * @see org.columba.mail.folder.MailboxInterface#getMimePartBodyStream(java.lang.Object, java.lang.Integer[])
+	 */
+	public InputStream getMimePartBodyStream(Object uid, Integer[] address)
+		throws Exception {
+		return null;
+	}
+
+	/* (non-Javadoc)
+	 * @see org.columba.mail.folder.MailboxInterface#getMimePartSourceStream(java.lang.Object, java.lang.Integer[])
+	 */
+	public InputStream getMimePartSourceStream(Object uid, Integer[] address)
+		throws Exception {
+		return null;
 	}
 
 }

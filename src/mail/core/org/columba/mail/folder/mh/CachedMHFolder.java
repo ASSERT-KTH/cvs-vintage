@@ -15,7 +15,6 @@
 //All Rights Reserved.
 package org.columba.mail.folder.mh;
 
-import org.columba.core.xml.XmlElement;
 import org.columba.mail.config.FolderItem;
 import org.columba.mail.folder.DataStorageInterface;
 import org.columba.mail.folder.headercache.CachedFolder;

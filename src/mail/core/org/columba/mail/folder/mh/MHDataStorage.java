@@ -16,10 +16,18 @@
 package org.columba.mail.folder.mh;
 
 import java.io.File;
+import java.io.FileOutputStream;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 import org.columba.core.io.DiskIO;
+import org.columba.core.io.StreamUtils;
 import org.columba.mail.folder.DataStorageInterface;
 import org.columba.mail.folder.LocalFolder;
+import org.columba.ristretto.message.io.FileSource;
 
 /**
  * @author freddy
@@ -97,12 +105,45 @@ public class MHDataStorage implements DataStorageInterface {
 		File[] list = folder.getDirectoryFile().listFiles(MHMessageFileFilter.getInstance());
 		// A list of all files that seem to be messages (only numbers in the name)
 
-		Object[] result = new Object[list.length];
+		List result = new ArrayList(list.length);//new Object[list.length];
 		for( int i=0; i< list.length; i++) {
-			result[i] = new Integer(list[i].getName());
+			result.add( i, new Integer(list[i].getName()) );
 		}
 
-		return result;
+		Collections.sort( result );
+
+		return result.toArray();
+	}
+
+	/* (non-Javadoc)
+	 * @see org.columba.mail.folder.DataStorageInterface#getFileSource(java.lang.Object)
+	 */
+	public FileSource getFileSource(Object uid) throws Exception {
+		File file =
+			new File(
+				folder.getDirectoryFile()
+					+ File.separator
+					+ ((Integer) uid).toString());
+		
+		
+		return new FileSource(file);
+	}
+
+	/* (non-Javadoc)
+	 * @see org.columba.mail.folder.DataStorageInterface#saveInputStream(java.lang.Object, java.io.InputStream)
+	 */
+	public void saveInputStream(Object uid, InputStream source)
+		throws Exception {
+			File file =
+				new File(
+					folder.getDirectoryFile() + File.separator + (Integer) uid);
+
+
+			OutputStream out = new FileOutputStream( file );
+			
+			StreamUtils.streamCopy(source, out);
+			
+			out.close();	
 	}
 
 }

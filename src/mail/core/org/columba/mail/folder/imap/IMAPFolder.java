@@ -18,6 +18,7 @@
 //
 package org.columba.mail.folder.imap;
 
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.Iterator;
@@ -26,6 +27,7 @@ import java.util.List;
 
 import org.columba.core.command.StatusObservable;
 import org.columba.core.command.WorkerStatusController;
+import org.columba.core.io.StreamUtils;
 import org.columba.core.logging.ColumbaLogger;
 import org.columba.core.util.ListTools;
 import org.columba.core.xml.XmlElement;
@@ -44,9 +46,13 @@ import org.columba.mail.message.HeaderList;
 import org.columba.mail.util.MailResourceLoader;
 import org.columba.ristretto.imap.IMAPFlags;
 import org.columba.ristretto.message.Flags;
+import org.columba.ristretto.message.Header;
 import org.columba.ristretto.message.MessageFolderInfo;
 import org.columba.ristretto.message.MimePart;
 import org.columba.ristretto.message.MimeTree;
+import org.columba.ristretto.message.StreamableMimePart;
+import org.columba.ristretto.message.io.CharSequenceSource;
+import org.columba.ristretto.message.io.SourceInputStream;
 
 public class IMAPFolder extends RemoteFolder {
 
@@ -301,7 +307,7 @@ public class IMAPFolder extends RemoteFolder {
 		if (hasChanged()) {
 			cache.save();
 			setChanged(false);
-		}		
+		}
 	}
 
 	/**
@@ -694,7 +700,7 @@ public class IMAPFolder extends RemoteFolder {
 
 		FolderItem item = getFolderItem();
 		item.set("property", "accessrights", "user");
-		item.set("property", "subfolder", "true");		
+		item.set("property", "subfolder", "true");
 	}
 
 	/* (non-Javadoc)
@@ -703,17 +709,86 @@ public class IMAPFolder extends RemoteFolder {
 	public void addSubfolder(FolderTreeNode child) throws Exception {
 		super.addSubfolder(child);
 
-		String path = getImapPath() + getStore().getDelimiter() + child.getName();
+		String path =
+			getImapPath() + getStore().getDelimiter() + child.getName();
 
 		boolean result = getStore().createFolder(path);
-		
+
 	}
 
 	/* (non-Javadoc)
 	 * @see org.columba.mail.folder.Folder#getObservable()
 	 */
 	public StatusObservable getObservable() {
-		return ((IMAPRootFolder)getRootFolder()).getObservable();
+		return ((IMAPRootFolder) getRootFolder()).getObservable();
+	}
+
+	/* (non-Javadoc)
+	 * @see org.columba.mail.folder.MailboxInterface#addMessage(java.io.InputStream)
+	 */
+	public Object addMessage(InputStream in) throws Exception {
+		StringBuffer stringSource = StreamUtils.readInString(in);
+
+		getStore().append(getImapPath(), stringSource.toString());
+
+		return null;
+	}
+
+	/* (non-Javadoc)
+	 * @see org.columba.mail.folder.MailboxInterface#getAttribute(java.lang.Object, java.lang.String)
+	 */
+	public Object getAttribute(Object uid, String key) throws Exception {
+		ColumbaHeader header = (ColumbaHeader) cache.getHeaderList().get(uid);
+
+		return header.getAttributes();
+	}
+
+	/* (non-Javadoc)
+	 * @see org.columba.mail.folder.MailboxInterface#getFlags(java.lang.Object)
+	 */
+	public Flags getFlags(Object uid) throws Exception {
+		ColumbaHeader header = (ColumbaHeader) cache.getHeaderList().get(uid);
+
+		return header.getFlags();
+	}
+
+	/* (non-Javadoc)
+	 * @see org.columba.mail.folder.MailboxInterface#getHeaderFields(java.lang.Object, java.lang.String[])
+	 */
+	public Header getHeaderFields(Object uid, String[] keys) throws Exception {
+		return null;
+	}
+
+	/* (non-Javadoc)
+	 * @see org.columba.mail.folder.MailboxInterface#getMessageSourceStream(java.lang.Object)
+	 */
+	public InputStream getMessageSourceStream(Object uid) throws Exception {
+		String stringSource = getStore().getMessageSource(uid, getImapPath());
+
+		return new SourceInputStream((new CharSequenceSource(stringSource)));
+	}
+
+	/* (non-Javadoc)
+	 * @see org.columba.mail.folder.MailboxInterface#getMimePartSourceStream(java.lang.Object, java.lang.Integer[])
+	 */
+	public InputStream getMimePartSourceStream(Object uid, Integer[] address)
+		throws Exception {
+		//TODO Implement this with the IMAP protocol
+		return null;
+	}
+
+	/* (non-Javadoc)
+	 * @see org.columba.mail.folder.MailboxInterface#getMimePartBodyStream(java.lang.Object, java.lang.Integer[])
+	 */
+	public InputStream getMimePartBodyStream(Object uid, Integer[] address)
+		throws Exception {
+		return (
+			(StreamableMimePart) getStore().getMimePart(
+				uid,
+				address,
+				getImapPath()))
+			.getInputStream();
+		;
 	}
 
 }

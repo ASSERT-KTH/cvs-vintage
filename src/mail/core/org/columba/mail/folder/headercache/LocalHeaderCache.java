@@ -18,6 +18,7 @@ package org.columba.mail.folder.headercache;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.util.Calendar;
+import java.util.Collections;
 import java.util.Date;
 import java.util.Enumeration;
 
@@ -273,6 +274,7 @@ public class LocalHeaderCache extends AbstractFolderHeaderCache {
 				ColumbaLogger.log.error(
 					"Error syncing HeaderCache :" + ex.getLocalizedMessage());
 			}
+			((LocalFolder) folder).setNextMessageUid(((Integer)uids[uids.length-1]).intValue() +1);
 
 		}
 	}

@@ -19,6 +19,7 @@
 package org.columba.mail.folder;
 
 import java.io.File;
+import java.io.InputStream;
 
 import javax.swing.JDialog;
 import javax.swing.tree.TreeNode;
@@ -28,15 +29,16 @@ import org.columba.core.command.StatusObservableImpl;
 import org.columba.core.config.ConfigPath;
 import org.columba.core.io.DiskIO;
 import org.columba.core.xml.XmlElement;
-import org.columba.mail.command.FolderCommandReference;
 import org.columba.mail.config.FolderItem;
 import org.columba.mail.filter.Filter;
 import org.columba.mail.filter.FilterList;
 import org.columba.mail.gui.config.filter.ConfigFrame;
 import org.columba.mail.gui.frame.AbstractMailFrameController;
-import org.columba.mail.message.ColumbaMessage;
 import org.columba.mail.message.ColumbaHeader;
+import org.columba.mail.message.ColumbaMessage;
 import org.columba.mail.message.HeaderList;
+import org.columba.ristretto.message.Flags;
+import org.columba.ristretto.message.Header;
 import org.columba.ristretto.message.MessageFolderInfo;
 import org.columba.ristretto.message.MimePart;
 import org.columba.ristretto.message.MimeTree;
@@ -70,7 +72,7 @@ import org.columba.ristretto.message.MimeTree;
  * @author       freddy
  * @created      19. Juni 2001
  */
-public abstract class Folder extends FolderTreeNode {
+public abstract class Folder extends FolderTreeNode implements MailboxInterface {
 
 	/**
 	 * total/unread/recent count of messages in this folder
@@ -160,29 +162,6 @@ public abstract class Folder extends FolderTreeNode {
 		return new ConfigFrame(this);
 	}
 
-	/**
-	 * Copy messages identified by UID to this folder.
-	 * 
-	 * This method is necessary for optimization reasons.
-	 * 
-	 * Think about using local and remote folders. If we would have only
-	 * methods to add/remove messages this wouldn't be very efficient
-	 * when moving messages between for example IMAP folders on the same
-	 * server. We would have to download a complete message to remove it
-	 * and then upload it again to add it to the destination folder.
-	 * 
-	 * Using the innercopy method the IMAP server can use its COPY 
-	 * command to move the message on the server-side.
-	 * 
-	 * @param destFolder		the destination folder of the copy operation
-	 * @param uids				an array of UID's identifying the messages
-	 * @throws Exception
-	 */
-	public void innerCopy(
-		Folder destFolder,
-		Object[] uids)
-		throws Exception {
-	}
 
 	/**
 	 * Return the root folder of this folder.
@@ -266,132 +245,6 @@ public abstract class Folder extends FolderTreeNode {
 	}
 
 	
-	/**
-	 * Removes all messages which are marked as expunged
-	 * 	
-	 * @throws Exception
-	 */
-	public abstract void expungeFolder()
-		throws Exception;
-
-	/**
-	 * Add message to this folder.
-	 * 
-	 * @param message Message object can be null 
-	 * @param source  raw string of message 
-	 * @return Object UID of message
-	 * @throws Exception
-	 */
-	public abstract Object addMessage(
-		ColumbaMessage message)
-		throws Exception;
-
-	/**
-	 * Add message to folder.
-	 * 
-	 * @param source
-	 * @return Object
-	 * @throws Exception
-	 */
-	public abstract Object addMessage(
-		String source)
-		throws Exception;
-		
-	/**
-	 * 
-	 * 
-	 * @param uid 			UID of message
-	 * @return boolean 		true, if message exists
-	 * @throws Exception
-	 */
-	public abstract boolean exists(Object uid)
-		throws Exception;
-
-	/**
-	 * Return list of headers.
-	 * 
-	 * @return HeaderList		list of headers 
-	 * @throws Exception
-	 */
-	public abstract HeaderList getHeaderList()
-		throws Exception;
-
-	/**
-	 * Mark messages as read/flagged/expunged/etc.
-	 * 
-	 * See <class>MarkMessageCommand</class> for more information especially
-	 * concerning the variant value.
-	 * 
-	 * @param uid		array of UIDs 
-	 * @param variant	variant can be a value between 0 and 6
-	 * @throws Exception
-	 */
-	public abstract void markMessage(
-		Object[] uids,
-		int variant)
-		throws Exception;
-
-	/**
-	 * Remove message from folder.
-	 * 
-	 * @param uid		UID identifying the message to remove
-	 * @throws Exception
-	 */
-	public abstract void removeMessage(
-		Object uid)
-		throws Exception;
-
-	/**
-	 * 
-	 * Read <class>MimePart</class> and <class>MimePartTree</class> for
-	 * more details. Especially on the address parameter.
-	 * 
-	 * @param uid			UID of message
-	 * @param address		array of Integer, addressing the MimePart
-	 * @return MimePart		MimePart of message
-	 * @throws Exception
-	 */
-	public abstract MimePart getMimePart(
-		Object uid,
-		Integer[] address)
-		throws Exception;
-
-	/**
-	 * Return the source of the message.
-	 * 
-	 * @param uid		UID of message
-	 * @return String		the source of the message
-	 * @throws Exception
-	 */
-	public abstract String getMessageSource(
-		Object uid)
-		throws Exception;
-
-	/**
-	 * Return mimepart structure. See <class>MimePartTree</class> for
-	 * more details.
-	 * 
-	 * @param uid				UID of message
-	 * @return MimePartTree		return mimepart structure
-	 * @throws Exception
-	 */
-	public abstract MimeTree getMimePartTree(
-		Object uid)
-		throws Exception;
-
-	/**
-	 * Return header of message
-	 * 
-	 * @param uid					UID of message
-	 * @return ColumbaHeader		header of message
-	 * @throws Exception
-	 */
-	public abstract ColumbaHeader getMessageHeader(
-		Object uid)
-		throws Exception;
-
-	
-
 	/**
 	 * @see javax.swing.tree.DefaultMutableTreeNode#getPathToRoot(TreeNode, int)
 	 */
@@ -581,5 +434,109 @@ public abstract class Folder extends FolderTreeNode {
 		observable = new StatusObservableImpl();
 
 	}
+
+	/* (non-Javadoc)
+	 * @see org.columba.mail.folder.MailboxInterface#addMessage(org.columba.mail.message.ColumbaMessage)
+	 */
+	public abstract Object addMessage(ColumbaMessage message) throws Exception;
+
+	/* (non-Javadoc)
+	 * @see org.columba.mail.folder.MailboxInterface#addMessage(java.lang.String)
+	 */
+	public abstract Object addMessage(String source) throws Exception;
+
+	/* (non-Javadoc)
+	 * @see org.columba.mail.folder.MailboxInterface#exists(java.lang.Object)
+	 */
+	public abstract boolean exists(Object uid) throws Exception;
+
+	/* (non-Javadoc)
+	 * @see org.columba.mail.folder.MailboxInterface#expungeFolder()
+	 */
+	public abstract void expungeFolder() throws Exception;
+	
+	/* (non-Javadoc)
+	 * @see org.columba.mail.folder.MailboxInterface#getHeaderList()
+	 */
+	public abstract HeaderList getHeaderList() throws Exception;
+
+	/* (non-Javadoc)
+	 * @see org.columba.mail.folder.MailboxInterface#getMessageHeader(java.lang.Object)
+	 */
+	public abstract ColumbaHeader getMessageHeader(Object uid) throws Exception;
+
+	/* (non-Javadoc)
+	 * @see org.columba.mail.folder.MailboxInterface#getMessageSource(java.lang.Object)
+	 */
+	public abstract String getMessageSource(Object uid) throws Exception;
+
+	/* (non-Javadoc)
+	 * @see org.columba.mail.folder.MailboxInterface#getMimePart(java.lang.Object, java.lang.Integer[])
+	 */
+	public abstract MimePart getMimePart(Object uid, Integer[] address)
+		throws Exception;
+
+	/* (non-Javadoc)
+	 * @see org.columba.mail.folder.MailboxInterface#getMimePartTree(java.lang.Object)
+	 */
+	public abstract MimeTree getMimePartTree(Object uid) throws Exception;
+
+	/* (non-Javadoc)
+	 * @see org.columba.mail.folder.MailboxInterface#innerCopy(org.columba.mail.folder.MailboxInterface, java.lang.Object[])
+	 */
+	public void innerCopy(MailboxInterface destFolder, Object[] uids)
+		throws Exception {
+			
+			for( int i=0; i<uids.length; i++) {
+				destFolder.addMessage(getMessageSourceStream(uids[i]));
+			}
+
+	}
+
+	/* (non-Javadoc)
+	 * @see org.columba.mail.folder.MailboxInterface#markMessage(java.lang.Object[], int)
+	 */
+	public abstract void markMessage(Object[] uids, int variant) throws Exception;
+
+	/* (non-Javadoc)
+	 * @see org.columba.mail.folder.MailboxInterface#removeMessage(java.lang.Object)
+	 */
+	public abstract void removeMessage(Object uid) throws Exception;
+
+	/* (non-Javadoc)
+	 * @see org.columba.mail.folder.MailboxInterface#getAttribute(java.lang.Object, java.lang.String)
+	 */
+	public abstract Object getAttribute(Object uid, String key) throws Exception;
+
+	/* (non-Javadoc)
+	 * @see org.columba.mail.folder.MailboxInterface#getFlags(java.lang.Object)
+	 */
+	public abstract Flags getFlags(Object uid) throws Exception;
+
+	/* (non-Javadoc)
+	 * @see org.columba.mail.folder.MailboxInterface#getHeaderFields(java.lang.String[])
+	 */
+	public abstract Header getHeaderFields(Object uid, String[] keys) throws Exception;
+
+	/* (non-Javadoc)
+	 * @see org.columba.mail.folder.MailboxInterface#getMessageSourceStream(java.lang.Object)
+	 */
+	public abstract InputStream getMessageSourceStream(Object uid) throws Exception;
+	/* (non-Javadoc)
+	 * @see org.columba.mail.folder.MailboxInterface#getMimePartBodyStream(java.lang.Object, java.lang.Integer[])
+	 */
+	public abstract InputStream getMimePartBodyStream(Object uid, Integer[] address)
+		throws Exception;
+		
+	/* (non-Javadoc)
+	 * @see org.columba.mail.folder.MailboxInterface#getMimePartSourceStream(java.lang.Object, java.lang.Integer[])
+	 */
+	public abstract InputStream getMimePartSourceStream(Object uid, Integer[] address)
+		throws Exception;
+
+	/* (non-Javadoc)
+	 * @see org.columba.mail.folder.MailboxInterface#addMessage(java.io.InputStream)
+	 */
+	public abstract Object addMessage(InputStream in) throws Exception;
 
 }
