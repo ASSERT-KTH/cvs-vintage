@@ -74,7 +74,7 @@ import org.tigris.scarab.om.RModuleIssueType;
  * This valve clears any stale data out of the user due to aborted wizards.  
  *
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: FreshenUserValve.java,v 1.22 2003/04/07 18:47:54 jmcnally Exp $
+ * @version $Id: FreshenUserValve.java,v 1.23 2003/06/06 05:14:46 dlr Exp $
  */
 public class FreshenUserValve 
     extends AbstractValve
@@ -251,11 +251,14 @@ public class FreshenUserValve
         IssueType issueType = null;
         ParameterParser parameters = data.getParameters();
         String key = parameters.getString(ScarabConstants.CURRENT_ISSUE_TYPE);
-        if (key != null) 
+        if (key != null && key.length() > 0)
         {
             try
             {
                 issueType = IssueTypeManager.getInstance(new Integer(key));
+            }
+            catch (NumberFormatException noIssueType)
+            {
             }
             catch (Exception e)
             {
@@ -281,18 +284,20 @@ public class FreshenUserValve
         }
 
         boolean isActive = false;
-        try 
+        if (issueType != null) 
         {
-            if (issueType != null) 
+            try 
             {
                 RModuleIssueType rmit = user.getCurrentModule()
                     .getRModuleIssueType(issueType);
                 isActive = rmit != null && rmit.getActive();
             }
-        }
-        catch (Exception e)
-        {
-            Log.get().error("", e);
+            catch (Exception e)
+            {
+                Log.get().warn("Unable to locate a mapping between the " +
+                               "specified issue type and the current module",
+                               e);
+            }
         }
         
         if (isActive)
