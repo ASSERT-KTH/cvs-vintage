@@ -7,7 +7,7 @@
 <!--                                                                       -->
 <!-- ===================================================================== -->
 
-<!-- $Id: standardjbosscmp-jdbc.xml,v 1.11 2001/12/05 05:04:19 patriot1burke Exp $ -->
+<!-- $Id: standardjbosscmp-jdbc.xml,v 1.12 2001/12/30 19:09:39 dsundstrom Exp $ -->
 
 <jbosscmp-jdbc>
    
@@ -29,6 +29,8 @@
       <type-mapping>
 	 <name>InterBase</name>
 	 <row-locking-template>SELECT ?1 FROM ?2 WHERE ?3 FOR UPDATE</row-locking-template>
+    <pk-constraint-template>CONSTRAINT ?1 PRIMARY KEY (?2)</pk-constraint-template>
+    <fk-constraint-template>ALTER TABLE ?1 ADD CONSTRAINT ?2 FOREIGN KEY (?3) REFERENCES ?4 (?5)</fk-constraint-template>
 	 <mapping>
 	    <java-type>java.lang.Boolean</java-type>
 	    <jdbc-type>BIT</jdbc-type>
@@ -99,6 +101,8 @@
       <type-mapping>
 	 <name>DB2</name>
 	 <row-locking-template/>
+    <pk-constraint-template>CONSTRAINT ?1 PRIMARY KEY (?2)</pk-constraint-template>
+    <fk-constraint-template>ALTER TABLE ?1 ADD CONSTRAINT ?2 FOREIGN KEY (?3) REFERENCES ?4 (?5)</fk-constraint-template>
 	 <mapping>
 	    <java-type>java.lang.Boolean</java-type>
 	    <jdbc-type>BIT</jdbc-type>
@@ -172,6 +176,8 @@
       <type-mapping>
 	 <name>Oracle8</name>
 	 <row-locking-template>SELECT ?1 FROM ?2 WHERE ?3 FOR UPDATE</row-locking-template>
+    <pk-constraint-template>CONSTRAINT ?1 PRIMARY KEY (?2)</pk-constraint-template>
+    <fk-constraint-template>ALTER TABLE ?1 ADD CONSTRAINT ?2 FOREIGN KEY (?3) REFERENCES ?4 (?5)</fk-constraint-template>
 	 <function-mapping>
 	 	<function-name>concat</function-name>
 		<function-sql>(?1 || ?2)</function-sql>
@@ -274,6 +280,8 @@
       <type-mapping>
 	 <name>Oracle7</name>
 	 <row-locking-template>SELECT ?1 FROM ?2 WHERE ?3 FOR UPDATE</row-locking-template>
+    <pk-constraint-template>CONSTRAINT ?1 PRIMARY KEY (?2)</pk-constraint-template>
+    <fk-constraint-template>ALTER TABLE ?1 ADD CONSTRAINT ?2 FOREIGN KEY (?3) REFERENCES ?4 (?5)</fk-constraint-template>
 	 <function-mapping>
 	 	<function-name>concat</function-name>
 		<function-sql>(?1 || ?2)</function-sql>
@@ -371,6 +379,8 @@
       <type-mapping>
 	 <name>Sybase</name>
 	 <row-locking-template/>
+    <pk-constraint-template>CONSTRAINT ?1 PRIMARY KEY (?2)</pk-constraint-template>
+    <fk-constraint-template>ALTER TABLE ?1 ADD CONSTRAINT ?2 FOREIGN KEY (?3) REFERENCES ?4 (?5)</fk-constraint-template>
 	 <mapping>
 	    <java-type>java.lang.Boolean</java-type>
 	    <jdbc-type>BIT</jdbc-type>
@@ -444,6 +454,8 @@
       <type-mapping>
 	 <name>PostgreSQL</name>
 	 <row-locking-template>SELECT ?1 FROM ?2 WHERE ?3 FOR UPDATE</row-locking-template>
+    <pk-constraint-template>CONSTRAINT ?1 PRIMARY KEY (?2)</pk-constraint-template>
+    <fk-constraint-template>ALTER TABLE ?1 ADD CONSTRAINT ?2 FOREIGN KEY (?3) REFERENCES ?4 (?5)</fk-constraint-template>
 	 <function-mapping>
 	 	<function-name>concat</function-name>
 		<function-sql>(?1 || ?2)</function-sql>
@@ -539,6 +551,8 @@
       <type-mapping>
 	 <name>Hypersonic SQL</name>
 	 <row-locking-template/>	 
+    <pk-constraint-template>CONSTRAINT ?1 PRIMARY KEY (?2)</pk-constraint-template>
+    <fk-constraint-template/>
 	 <mapping>
 	    <java-type>java.lang.Byte</java-type>
 	    <jdbc-type>SMALLINT</jdbc-type>
@@ -604,6 +618,8 @@
       <type-mapping>
 	 <name>PointBase</name>
 	 <row-locking-template/>
+    <pk-constraint-template>CONSTRAINT ?1 PRIMARY KEY (?2)</pk-constraint-template>
+    <fk-constraint-template>ALTER TABLE ?1 ADD CONSTRAINT ?2 FOREIGN KEY (?3) REFERENCES ?4 (?5)</fk-constraint-template>
 	 <mapping>
 	    <java-type>java.lang.Character</java-type>
 	    <jdbc-type>CHAR</jdbc-type>
@@ -659,6 +675,8 @@
       <type-mapping>
 	 <name>SOLID</name>
 	 <row-locking-template/>
+    <pk-constraint-template>CONSTRAINT ?1 PRIMARY KEY (?2)</pk-constraint-template>
+    <fk-constraint-template>ALTER TABLE ?1 ADD CONSTRAINT ?2 FOREIGN KEY (?3) REFERENCES ?4 (?5)</fk-constraint-template>
 	 <mapping>
 	    <java-type>java.lang.Character</java-type>
 	    <jdbc-type>CHAR</jdbc-type>
@@ -724,6 +742,8 @@
       <type-mapping>
 	 <name>mySQL</name>
 	 <row-locking-template>SELECT ?1 FROM ?2 WHERE ?3 FOR UPDATE</row-locking-template>
+    <pk-constraint-template>CONSTRAINT ?1 PRIMARY KEY (?2)</pk-constraint-template>
+    <fk-constraint-template>ALTER TABLE ?1 ADD CONSTRAINT ?2 FOREIGN KEY (?3) REFERENCES ?4 (?5)</fk-constraint-template>
 	 <function-mapping>
 	 	<function-name>concat</function-name>
 		<function-sql>concat(?1, ?2)</function-sql>
@@ -824,6 +844,8 @@
       <type-mapping>
 	 <name>MS SQLSERVER</name>
 	 <row-locking-template>SELECT ?1 FROM ?2 with (rowlock) WHERE ?3</row-locking-template>
+    <pk-constraint-template>CONSTRAINT ?1 PRIMARY KEY (?2)</pk-constraint-template>
+    <fk-constraint-template>ALTER TABLE ?1 ADD CONSTRAINT ?2 FOREIGN KEY (?3) REFERENCES ?4 (?5)</fk-constraint-template>
 	 <function-mapping>
 	 	<function-name>concat</function-name>
 		<function-sql>(?1 + ?2)</function-sql>
@@ -929,6 +951,8 @@
       <type-mapping> 
 	 <name>MS SQLSERVER2000</name> 
 	 <row-locking-template>SELECT ?1 FROM ?2 with (rowlock) WHERE ?3</row-locking-template>
+    <pk-constraint-template>CONSTRAINT ?1 PRIMARY KEY (?2)</pk-constraint-template>
+    <fk-constraint-template>ALTER TABLE ?1 ADD CONSTRAINT ?2 FOREIGN KEY (?3) REFERENCES ?4 (?5)</fk-constraint-template>
 	 <function-mapping>
 	 	<function-name>concat</function-name>
 		<function-sql>(?1 + ?2)</function-sql>
@@ -1048,6 +1072,8 @@
       <type-mapping>
 	 <name>DB2/400</name>
 	 <row-locking-template/>
+    <pk-constraint-template>CONSTRAINT ?1 PRIMARY KEY (?2)</pk-constraint-template>
+    <fk-constraint-template>ALTER TABLE ?1 ADD CONSTRAINT ?2 FOREIGN KEY (?3) REFERENCES ?4 (?5)</fk-constraint-template>
 	 <mapping>
 	    <java-type>java.lang.Character</java-type>
 	    <jdbc-type>CHAR</jdbc-type>
@@ -1120,6 +1146,8 @@
       <type-mapping>
 	 <name>SapDB</name>
 	 <row-locking-template>SELECT ?1 FROM ?2 WHERE ?3 FOR UPDATE</row-locking-template>
+    <pk-constraint-template>CONSTRAINT ?1 PRIMARY KEY (?2)</pk-constraint-template>
+    <fk-constraint-template>ALTER TABLE ?1 ADD CONSTRAINT ?2 FOREIGN KEY (?3) REFERENCES ?4 (?5)</fk-constraint-template>
 	 <mapping>
 	    <java-type>java.lang.Integer</java-type>
 	    <jdbc-type>INTEGER</jdbc-type>
@@ -1190,6 +1218,8 @@
       <type-mapping>
 	 <name>Cloudscape</name>
 	 <row-locking-template/>
+    <pk-constraint-template>CONSTRAINT ?1 PRIMARY KEY (?2)</pk-constraint-template>
+    <fk-constraint-template>ALTER TABLE ?1 ADD CONSTRAINT ?2 FOREIGN KEY (?3) REFERENCES ?4 (?5)</fk-constraint-template>
 	 <mapping>
 	    <java-type>java.math.BigDecimal</java-type>
 	    <jdbc-type>LONGVARCHAR</jdbc-type>
@@ -1266,6 +1296,8 @@
       <type-mapping> 
 	 <name>InformixDB</name> 
 	 <row-locking-template/>
+    <pk-constraint-template>PRIMARY KEY (?2) CONSTRAINT ?1</pk-constraint-template>
+    <fk-constraint-template>ALTER TABLE ?1 ADD CONSTRAINT FOREIGN KEY (?3) REFERENCES ?4 (?5) CONSTRAINT ?2</fk-constraint-template>
 	 <mapping> 
 	    <java-type>java.lang.Character</java-type> 
 	    <jdbc-type>CHAR</jdbc-type> 
