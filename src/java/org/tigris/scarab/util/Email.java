@@ -56,6 +56,8 @@ import java.util.Locale;
 import java.io.StringWriter;
 import javax.mail.SendFailedException;
 
+import org.apache.commons.lang.StringUtils;
+
 import org.apache.fulcrum.template.TurbineTemplate;
 import org.apache.fulcrum.template.TemplateContext;
 import org.apache.fulcrum.template.TemplateEmail;
@@ -81,7 +83,7 @@ import org.tigris.scarab.services.email.VelocityEmail;
  * @author <a href="mailto:jon@collab.net">Jon Scott Stevens</a>
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: Email.java,v 1.28 2003/04/24 23:02:57 jon Exp $
+ * @version $Id: Email.java,v 1.29 2003/04/25 19:10:34 dlr Exp $
  */
 public class Email extends TemplateEmail
 {
@@ -266,6 +268,16 @@ public class Email extends TemplateEmail
         return result;
     }
 
+    /**
+     * @param context The context in which to send mail, or
+     * <code>null</code> to create a new context.
+     * @param fromUser Can be any of the following: ScarabUser, two
+     * element String[] composed of name and address, base portion of
+     * the key used for a name and address property lookup.
+     * @param replyToUser Can be any of the following: ScarabUser, two
+     * element String[] composed of name and address, base portion of
+     * the key used for a name and address property lookup.
+     */
     private static Email getEmail(EmailContext context,
         Object fromUser, Object replyToUser, String template)
         throws Exception
@@ -277,57 +289,11 @@ public class Email extends TemplateEmail
         }        
         te.setContext(context);
         
-        if (fromUser instanceof ScarabUser)
-        {
-            ScarabUser u = (ScarabUser)fromUser;
-            te.setFrom(u.getName(), u.getEmail());
-        }
-        else if (fromUser instanceof String[])
-        {
-            String[] s = (String[])fromUser;
-            te.setFrom(s[0], s[1]);
-        }
-        else
-        {
-            // assume string
-            String key = (String)fromUser;      
-            if (fromUser == null)
-            {
-                key = "scarab.email.default";
-            } 
-            
-            te.setFrom(Turbine.getConfiguration().getString
-                       (key + ".fromName", "Scarab System"), 
-                       Turbine.getConfiguration().getString
-                       (key + ".fromAddress",
-                        "help@localhost"));
-        }
+        String[] nameAndAddr = getNameAndAddress(fromUser);
+        te.setFrom(nameAndAddr[0], nameAndAddr[1]);
 
-        if (replyToUser instanceof ScarabUser)
-        {
-            ScarabUser u = (ScarabUser)replyToUser;
-            te.addReplyTo(u.getName(), u.getEmail());
-        }
-        else if (replyToUser instanceof String[])
-        {
-            String[] s = (String[])replyToUser;
-            te.addReplyTo(s[0], s[1]);
-        }
-        else
-        {
-            // assume string
-            String key = (String)replyToUser;       
-            if (fromUser == null)
-            {
-                key = "scarab.email.default";
-            } 
-            
-            te.addReplyTo(Turbine.getConfiguration()
-                          .getString(key + ".fromName", "Scarab System"), 
-                          Turbine.getConfiguration()
-                          .getString(key + ".fromAddress",
-                                     "help@localhost"));
-        }
+        nameAndAddr = getNameAndAddress(replyToUser);
+        te.addReplyTo(nameAndAddr[0], nameAndAddr[1]);
         
         if (template == null)
         {
@@ -339,6 +305,7 @@ public class Email extends TemplateEmail
         String subjectTemplate = context.getSubjectTemplate();
         if (subjectTemplate == null) 
         {
+            // TODO: Clarify what the magic number "7" represents.
             StringBuffer templateSB = 
                 new StringBuffer(template.length() + 7);
             templateSB.append(
@@ -348,6 +315,53 @@ public class Email extends TemplateEmail
 
         te.setSubject(getSubject(context, subjectTemplate));
         return te;
+    }
+
+    /**
+     * Leverages the <code>fromName</code> and
+     * <code>fromAddress</code> properties when <code>input</code> is
+     * neither a <code>ScarabUser</code> nor <code>String[]</code>.
+     */
+    private static String[] getNameAndAddress(Object input)
+    {
+        String[] nameAndAddr;
+        if (input instanceof ScarabUser)
+        {
+            ScarabUser u = (ScarabUser) input;
+            nameAndAddr = new String[] { u.getName(), u.getEmail() };
+        }
+        else if (input instanceof String[])
+        {
+            nameAndAddr = (String []) input;
+        }
+        else
+        {
+            // Assume we want a property lookup, and the base portion
+            // of the key to use for that lookup was passed in.
+            String keyBase = (String) input;
+            if (keyBase == null)
+            {
+                keyBase = "scarab.email.default";
+            } 
+            nameAndAddr = new String[2];
+            nameAndAddr[0] =
+                Turbine.getConfiguration().getString(keyBase + ".fromName");
+            if (StringUtils.isEmpty(nameAndAddr[0]))
+            {
+                // L10N?
+                nameAndAddr[0] = "Scarab System";
+            }
+
+            nameAndAddr[1] =
+                Turbine.getConfiguration().getString(keyBase + ".fromAddress");
+            if (StringUtils.isEmpty(nameAndAddr[1]))
+            {
+                // TODO: Discover a better sending host/domain than
+                // "localhost"
+                nameAndAddr[1] = "help@localhost";
+            }
+        }
+        return nameAndAddr;
     }
 
     private static String getSubject(TemplateContext context, String template)
