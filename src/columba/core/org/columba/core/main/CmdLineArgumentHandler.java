@@ -13,6 +13,7 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
 //
 //All Rights Reserved.
+
 package org.columba.core.main;
 
 import org.columba.core.logging.ColumbaLogger;
@@ -20,7 +21,6 @@ import org.columba.core.logging.ColumbaLogger;
 import org.columba.mail.gui.composer.ComposerController;
 import org.columba.mail.gui.composer.ComposerModel;
 import org.columba.mail.parser.MailUrlParser;
-
 
 /**
  * This class handles given arguments (in style of commandline arguments. If for example the
@@ -53,16 +53,14 @@ public class CmdLineArgumentHandler {
             }
         }
 
-        if (MainInterface.DEBUG) {
-            ColumbaLogger.log.info("Option Debug: " +
-                cmdLineParser.getComposerOption());
-            ColumbaLogger.log.info("Option subject: " +
-                cmdLineParser.getSubjectOption());
-            ColumbaLogger.log.info("Option composer: " +
-                cmdLineParser.getComposerOption());
-            ColumbaLogger.log.info("Option mailurl: " +
-                cmdLineParser.getMailurlOption());
-        }
+        ColumbaLogger.log.info("Option Debug: " +
+            cmdLineParser.getComposerOption());
+        ColumbaLogger.log.info("Option subject: " +
+            cmdLineParser.getSubjectOption());
+        ColumbaLogger.log.info("Option composer: " +
+            cmdLineParser.getComposerOption());
+        ColumbaLogger.log.info("Option mailurl: " +
+            cmdLineParser.getMailurlOption());
 
         if (cmdLineParser.getComposerOption()) {
             ComposerModel model = new ComposerModel();
