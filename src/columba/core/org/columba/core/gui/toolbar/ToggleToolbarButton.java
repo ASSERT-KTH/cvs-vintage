@@ -21,6 +21,8 @@ import org.columba.core.gui.util.ButtonStateAdapter;
 import org.columba.core.gui.util.ImageUtil;
 
 import java.awt.Insets;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
 
 import java.beans.PropertyChangeListener;
 
@@ -79,6 +81,14 @@ public class ToggleToolbarButton extends JToggleButton {
             // apply transparent icon
             setDisabledIcon(ImageUtil.createTransparentIcon((ImageIcon) icon));
         }
+        getModel().addItemListener(new ItemListener() {
+            public void itemStateChanged(ItemEvent e) {
+                AbstractSelectableAction a = (AbstractSelectableAction)getAction();
+                if (a != null) {
+                    a.setState(e.getStateChange() == ItemEvent.SELECTED);
+                }
+            }
+        });
     }
 
     public boolean isFocusTraversable() {
@@ -101,15 +111,5 @@ public class ToggleToolbarButton extends JToggleButton {
     protected void configurePropertiesFromAction(Action a) {
         super.configurePropertiesFromAction(a);
         setSelected(((AbstractSelectableAction)a).getState());
-    }
-
-    /**
-     * Overridden to pass state information to the underlying action.
-     */
-    public void setSelected(boolean b) {
-        AbstractSelectableAction a = (AbstractSelectableAction)getAction();
-        if (a != null) {
-            a.setState(b);
-        }
     }
 }

@@ -20,6 +20,9 @@ import org.columba.core.action.AbstractSelectableAction;
 import org.columba.core.gui.util.ButtonStateAdapter;
 import org.columba.core.gui.util.MnemonicSetter;
 
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
+
 import java.beans.PropertyChangeListener;
 
 import java.lang.reflect.Proxy;
@@ -56,6 +59,14 @@ public class CCheckBoxMenuItem extends JCheckBoxMenuItem {
         // Set text, possibly with a mnemonic if defined using &
         MnemonicSetter.setTextWithMnemonic(this,
             (String) action.getValue(Action.NAME));
+        getModel().addItemListener(new ItemListener() {
+            public void itemStateChanged(ItemEvent e) {
+                AbstractSelectableAction a = (AbstractSelectableAction)getAction();
+                if (a != null) {
+                    a.setState(e.getStateChange() == ItemEvent.SELECTED);
+                }
+            }
+        });
     }
     
     /**
@@ -74,15 +85,5 @@ public class CCheckBoxMenuItem extends JCheckBoxMenuItem {
     protected void configurePropertiesFromAction(Action a) {
         super.configurePropertiesFromAction(a);
         setSelected(((AbstractSelectableAction)a).getState());
-    }
-
-    /**
-     * Overridden to pass state information to the underlying action.
-     */
-    public void setSelected(boolean b) {
-        AbstractSelectableAction a = (AbstractSelectableAction)getAction();
-        if (a != null) {
-            a.setState(b);
-        }
     }
 }
