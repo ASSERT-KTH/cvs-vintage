@@ -124,10 +124,12 @@ public class MHDataStorage implements DataStorageInterface {
 			
 
 			if ((file.exists()) && (file.length() > 0)) {
+				/*
                 if (file.getName().indexOf('~') >= 0) {
                     // "rename all mh files in folder" either recursing or previously corrupted
                     throw new RuntimeException("\"rename all mh files in folder\" either recursing or separate process or previously corrupted, thread =" + Thread.currentThread().getName());
                 }
+                */
 				renamedFile =
 					new File(file.getParentFile(), file.getName() + '~');
 				file.renameTo(renamedFile);
