@@ -40,7 +40,6 @@ public class CloneStreamMaster {
     private List streamList;
     private File tempFile;
     private byte[] buffer;
-    private byte[] copyBuffer;
     private int openClones;
     private boolean usesFile;
     private int size;
@@ -54,7 +53,6 @@ public class CloneStreamMaster {
     public CloneStreamMaster(InputStream master) throws IOException {
         super();
         this.master = master;
-        copyBuffer = new byte[8000];
 
         streamList = new ArrayList(2);
 
