@@ -1,4 +1,4 @@
-<!-- $Id: changes.html,v 1.179 2002/07/09 22:01:37 jmcnally Exp $ -->
+<!-- $Id: changes.html,v 1.180 2002/07/09 22:31:29 jmcnally Exp $ -->
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2//EN">
 <html>
 
@@ -29,6 +29,13 @@
         <td width="100%" height="100" bgcolor="#F0F0F0"> 
             <h3>Fixes since 1.0b8</h3>
             <ul>
+                <li>Show the key for a missing resource instead of a 
+                    stacktrace.  This had been fixed earlier for simple
+                    text, but those using MessageFormat syntax were still
+                    giving a stacktrace
+                    For more information, see Bug Report
+                    #<a href="http://scarab.tigris.org/issues/show_bug.cgi?id=347">
+                    347</a>. (JDM)</li>
                 <li>If the default data was not loaded, Issue.getClosedDate()
                     would throw an exception.  It now returns null, if the
                     Status attribute does not exist.     
