@@ -1,4 +1,4 @@
-// $Id: Project.java,v 1.137 2005/01/02 10:08:28 linus Exp $
+// $Id: Project.java,v 1.138 2005/01/02 10:37:55 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -352,10 +352,10 @@ public class Project implements java.io.Serializable, TargetListener {
         
         if (m instanceof ArgoDiagram) {
             LOG.info("Adding diagram member");
-            addDiagramMember((ArgoDiagram)m);
+            addDiagramMember((ArgoDiagram) m);
         } else if (m instanceof ProjectMemberTodoList) {
             LOG.info("Adding todo member");
-            addTodoMember((ProjectMemberTodoList)m);
+            addTodoMember((ProjectMemberTodoList) m);
         } else if (ModelFacade.isAModel(m)) {
             LOG.info("Adding model member");
             addModelMember(m);
@@ -589,8 +589,8 @@ public class Project implements java.io.Serializable, TargetListener {
         cls = findTypeInModel(s, defaultModel);
         // hey, now we should move it to the model the user is working in
         if (cls != null) {
-            cls = Model.
-                getModelManagementHelper().getCorrespondingElement(cls, getRoot());
+            cls = Model.getModelManagementHelper().getCorrespondingElement(cls, 
+                    getRoot());
         }
         if (cls == null && defineNew) {
             LOG.debug("new Type defined!");
