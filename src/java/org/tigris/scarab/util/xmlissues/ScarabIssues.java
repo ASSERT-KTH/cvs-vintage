@@ -65,7 +65,7 @@ import org.apache.commons.logging.LogFactory;
  * This class manages the validation and importing of issues.
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: ScarabIssues.java,v 1.19 2003/02/01 02:56:34 jon Exp $
+ * @version $Id: ScarabIssues.java,v 1.20 2003/02/01 03:35:39 jon Exp $
  */
 public class ScarabIssues implements java.io.Serializable
 {
@@ -469,10 +469,6 @@ public class ScarabIssues implements java.io.Serializable
 
                 if (attributeOM != null)
                 {
-                    if (moduleAttributeList != null && !moduleAttributeList.contains(attributeOM))
-                    {
-                        log.debug("Could not find RModuleAttribute: " + activityAttribute);
-                    }
                     if (attributeOM.equals(NULL_ATTRIBUTE))
                     {
                         // add any dependency activities to a list for later processing
@@ -484,6 +480,14 @@ public class ScarabIssues implements java.io.Serializable
                                 log.debug("-------------Stored Dependency # " + allDependencies.size() + "-------------");
                             }
                             continue;
+                        }
+                    }
+                    else
+                    {
+                        // the null attribute will never be in this list, so don't check for it.
+                        if (moduleAttributeList != null && !moduleAttributeList.contains(attributeOM))
+                        {
+                            importErrors.add("Could not find RModuleAttribute: " + activityAttribute);
                         }
                     }
                 }
