@@ -24,7 +24,6 @@ import java.util.Vector;
 import java.util.jar.JarFile;
 import java.util.zip.ZipInputStream;
 
-
 import javax.management.MBeanServer;
 import javax.management.MBeanException;
 import javax.management.JMException;
@@ -32,14 +31,10 @@ import javax.management.ObjectName;
 import javax.management.RuntimeMBeanException;
 import javax.management.RuntimeErrorException;
 
-
 import org.jboss.logging.Logger;
 import org.jboss.system.ServiceMBeanSupport;
 
-
 import org.jboss.management.j2ee.J2EEApplication;
-
-
 
 /**
  * J2eeDeployer allows to deploy single EJB.jars as well as Web.wars
@@ -60,9 +55,8 @@ import org.jboss.management.j2ee.J2EEApplication;
  * @author <a href="mailto:toby.allsopp@peace.com">Toby Allsopp</a>
  * @author <a href="mailto:Scott_Stark@displayscape.com">Scott Stark</a>.
  * @author <a href="mailto:Christoph.Jung@infor.de">Christoph G. Jung</a>.
- * @version $Revision: 1.49 $
+ * @version $Revision: 1.50 $
  */
-
 public class J2eeDeployer
 extends ServiceMBeanSupport
 implements J2eeDeployerMBean
@@ -94,16 +88,10 @@ implements J2eeDeployerMBean
    protected ObjectName rarDeployer;
    protected ObjectName javaDeployer;
    
-   /*String jarDeployerName;
-    String warDeployerName;
-    String rarDeployerName;
-    String javaDeployerName;*/
-   
    int classpathPolicy = EASY;
    
    // <comment author="cgjung"> better be protected for subclassing </comment>
    protected InstallerFactory installer;
-   
    
    
    // Constructors --------------------------------------------------
@@ -112,11 +100,9 @@ implements J2eeDeployerMBean
    {
    }
    
-   public void setDeployerName(String name)
+   public void setDeployerName(final String name)
    {
-      this.log = Logger.getLogger(this.getClass().getName() + "#" + name);
-      // what is this for?
-      name = name.equals("") ? "" : " "+name;
+      this.log = Logger.getLogger(getClass().getName() + "#" + name);
       this.name = name;
    }
    
@@ -206,7 +192,7 @@ implements J2eeDeployerMBean
       }
       
       // now try to deploy
-      log.info("Deploy J2EE application: " + _url);
+      log.info("Deploying J2EE application: " + _url);
       
       Deployment d = installApplication(url);
       
@@ -214,7 +200,7 @@ implements J2eeDeployerMBean
       {
          // <comment author="cgjung"> factored out for subclass access
          startApplication(d);
-         log.info("J2EE application: " + _url + " is deployed.");
+         log.info("Deployed J2EE application: " + _url);
       }
       catch (Exception _e)
       {
@@ -224,7 +210,7 @@ implements J2eeDeployerMBean
          }
          catch (Exception _e2)
          {
-            log.error("unable to stop application "+d.name+": "+_e2);
+            log.error("unable to stop application " + d.name, _e2);
          }
          finally
          {
@@ -234,7 +220,7 @@ implements J2eeDeployerMBean
             }
             catch (Exception _e3)
             {
-               log.error("unable to uninstall application "+d.name+": "+_e3);
+               log.error("unable to uninstall application " + d.name, _e3);
             }
          }
          
@@ -245,7 +231,7 @@ implements J2eeDeployerMBean
          else
          {
             log.error("fatal error:", _e);
-            throw new J2eeDeploymentException("fatal error: "+_e);
+            throw new J2eeDeploymentException("fatal error", _e);
          }
       }
    }
@@ -305,34 +291,36 @@ implements J2eeDeployerMBean
    // ServiceMBeanSupport overrides ---------------------------------
    public String getName()
    {
-      return "J2EE Deployer" + this.name;
+      return "J2EE Deployer " + name;
    }
    
    protected ObjectName getObjectName(MBeanServer server, ObjectName name)
-   throws javax.management.MalformedObjectNameException
+      throws javax.management.MalformedObjectNameException
    {
       this.server = server;
       return name == null ? new ObjectName(OBJECT_NAME+this.name) : name;
    }
+
+   protected File getTempDir() throws IOException {
+      File dir = new File(System.getProperty("jboss.system.home"));
+      dir = new File(dir, "tmp");
+      dir = new File(dir, "deploy");
+      dir = new File(dir, name);
+
+      if (!dir.exists() && !dir.mkdirs()) {
+         throw new IOException
+            ("failed to create temp directory: " + dir);
+      }
+
+      return dir;
+   }
    
-   
-   /** */
-   protected void startService()
-   throws Exception
+   protected void startService() throws Exception
    {
+      File dir = getTempDir();
+      log.info("Using temporary directory: " + dir);
       
-      
-      File jbossHomeDir = new File(System.getProperty("jboss.system.home"));
-      File tmpDir = new File(jbossHomeDir, "tmp"+File.separator);
-      
-      if (!tmpDir.exists())
-         throw new IOException("Failed to get /tmp.properties URL; Temporary directory does not exist!");
-      
-      File dir = new File(jbossHomeDir, "deploy"+File.separator+getDeployerName());
-      if (!dir.exists() && !dir.mkdirs())
-         throw new IOException("Temporary directory '"+dir.getCanonicalPath()+"' does not exist!");
-      
-      installer = new InstallerFactory(dir, log);
+      installer = new InstallerFactory(dir);
       
       if (warDeployer == null)
          log.info("No web container found - only EJB deployment available...");
@@ -469,7 +457,9 @@ implements J2eeDeployerMBean
          String[] jarUrls = new String[ tmp.size() ];
          tmp.toArray( jarUrls );
          // Call the ContainerFactory that is loaded in the JMX server
-         getLog().info("about to invoke deploy on jardeployer:" + jarDeployer);
+         if (log.isDebugEnabled()) {
+            log.debug("about to invoke deploy on jardeployer:" + jarDeployer);
+         }
          server.invoke(jarDeployer, "deploy",
             new Object[]{
                _d.getName(),
