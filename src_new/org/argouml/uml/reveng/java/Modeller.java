@@ -1,4 +1,4 @@
-// $Id: Modeller.java,v 1.65 2003/03/15 22:51:23 alexb Exp $
+// $Id: Modeller.java,v 1.66 2003/03/16 02:17:17 alexb Exp $
 
 /*
   JavaRE - Code generation and reverse engineering for UML and Java
@@ -393,10 +393,10 @@ public class Modeller
         // add the current classifier to the diagram.
         Object classifier = parseState.getClassifier();
         if(ModelFacade.isAInterface(classifier)) {
-            if (getDiagram() != null && Import.isCreateDiagramsChecked()) _diagram.addInterface(classifier);
+            if (getDiagram() != null && Import.isCreateDiagramsChecked()) _diagram.addInterface(classifier,Import.isMinimiseFigsChecked());
         } else {
             if(ModelFacade.isAClass(classifier)) {
-                if (getDiagram() != null && Import.isCreateDiagramsChecked()) _diagram.addClass(classifier);
+                if (getDiagram() != null && Import.isCreateDiagramsChecked()) _diagram.addClass(classifier,Import.isMinimiseFigsChecked());
             }
         }
 
