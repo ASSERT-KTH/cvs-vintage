@@ -84,6 +84,7 @@ import org.tigris.scarab.attribute.TotalVotesAttribute;
 import org.tigris.scarab.attribute.OptionAttribute;
 import org.tigris.scarab.util.ScarabConstants;
 import org.tigris.scarab.tools.ScarabRequestTool;
+import org.tigris.scarab.workflow.WorkflowFactory;
 
 import org.apache.commons.lang.StringUtils;
 
@@ -93,7 +94,7 @@ import org.apache.commons.lang.StringUtils;
  * @author <a href="mailto:jmcnally@collab.new">John McNally</a>
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
- * @version $Id: Issue.java,v 1.176 2002/08/01 18:16:31 elicia Exp $
+ * @version $Id: Issue.java,v 1.177 2002/08/08 01:37:34 elicia Exp $
  */
 public class Issue 
     extends BaseIssue
@@ -2525,8 +2526,9 @@ public class Issue
                 {
                     AttributeOption fromOption = oldAttVal.getAttributeOption();
                     AttributeOption toOption = newAttVal.getAttributeOption();
-                    msg = user.checkWorkflow(fromOption, toOption, this, 
-                                             newAttVals, user);
+                    msg = WorkflowFactory.getInstance().checkTransition(fromOption, 
+                                                        toOption, this, 
+                                                        newAttVals, user);
                 }
                 if (msg == null)
                 {
