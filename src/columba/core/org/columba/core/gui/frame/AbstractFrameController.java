@@ -25,8 +25,6 @@ import org.columba.core.gui.statusbar.StatusBar;
 import org.columba.core.gui.view.AbstractView;
 import org.columba.core.main.MainInterface;
 import org.columba.core.xml.XmlElement;
-import org.columba.mail.gui.frame.AbstractMailFrameController;
-import org.columba.mail.gui.frame.ThreePaneMailFrameController;
 import org.columba.mail.gui.frame.TooltipMouseHandler;
 
 

@@ -23,7 +23,6 @@ import java.awt.Window;
 import javax.swing.JPopupMenu;
 import javax.swing.JWindow;
 
-import org.columba.core.io.DiskIO;
 import org.columba.core.main.MainInterface;
 
 import com.jniwrapper.DefaultLibraryLoader;

@@ -49,7 +49,6 @@ import javax.swing.ListSelectionModel;
 import javax.swing.SwingConstants;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
-import javax.swing.filechooser.FileFilter;
 
 import net.javaprog.ui.wizard.plaf.basic.SingleSideEtchedBorder;
 
@@ -59,7 +58,6 @@ import org.columba.core.help.HelpManager;
 import org.columba.core.io.DiskIO;
 import org.columba.core.profiles.Profile;
 import org.columba.core.profiles.ProfileManager;
-import org.columba.core.util.GlobalResourceLoader;
 import org.columba.core.xml.XmlElement;
 
 /**

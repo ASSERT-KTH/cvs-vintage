@@ -29,13 +29,11 @@ import java.util.Map;
 import java.util.Vector;
 import java.util.logging.Logger;
 
-import org.columba.core.gui.plugin.AbstractConfigPlugin;
 import org.columba.core.gui.util.NotifyDialog;
 import org.columba.core.io.DiskIO;
 import org.columba.core.main.MainInterface;
 import org.columba.core.xml.XmlElement;
 import org.columba.core.xml.XmlIO;
-import org.xml.sax.SAXParseException;
 
 /**
  * 
