@@ -48,6 +48,12 @@ public class OptionsXmlConfig extends DefaultXmlConfig {
         }
 
         convert();
+        
+        XmlElement proxy = getRoot().getElement("/options/proxy");
+        if (proxy != null) {
+            System.setProperty("http.proxyHost", proxy.getAttribute("host"));
+            System.setProperty("http.proxyPort", proxy.getAttribute("port"));
+        }
 
         return result;
     }

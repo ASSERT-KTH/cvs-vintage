@@ -39,6 +39,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 
 import java.util.Locale;
+import java.util.Properties;
 
 import javax.swing.*;
 
@@ -78,6 +79,12 @@ public class GeneralOptionsDialog extends JDialog implements ActionListener {
     protected JComboBox languageComboBox;
     protected JFrame frame;
     protected ConfigPluginHandler configHandler;
+    
+    // HTTP proxy
+    protected JLabel proxyLabel;
+    protected JButton proxyButton;
+    protected String proxyHost;
+    protected int proxyPort;
 
     // ID of configuration plugin of this theme plugin
     protected String configID;
@@ -120,7 +127,6 @@ public class GeneralOptionsDialog extends JDialog implements ActionListener {
         XmlElement themeElement = gui.getElement("theme");
 
         XmlElement fonts = gui.getElement("fonts");
-
         if (fonts == null) {
             fonts = gui.addSubElement("fonts");
         }
@@ -128,13 +134,11 @@ public class GeneralOptionsDialog extends JDialog implements ActionListener {
         String overwrite = fonts.getAttribute("overwrite", "false");
 
         XmlElement mainFontElement = fonts.getElement("main");
-
         if (mainFontElement == null) {
             mainFontElement = fonts.addSubElement("main");
         }
 
         XmlElement textFontElement = fonts.getElement("text");
-
         if (textFontElement == null) {
             textFontElement = fonts.addSubElement("text");
         }
@@ -175,14 +179,6 @@ public class GeneralOptionsDialog extends JDialog implements ActionListener {
                 mainFontLabel.setEnabled(false);
             }
 
-            /*
-            actionPerformed(
-                    new ActionEvent(
-                            overwriteCheckBox,
-                            ActionEvent.ACTION_PERFORMED,
-                            null));
-            */
-
             // language
             Locale[] available = GlobalResourceLoader.getAvailableLocales();
             languageComboBox.setModel(new DefaultComboBoxModel(available));
@@ -191,33 +187,37 @@ public class GeneralOptionsDialog extends JDialog implements ActionListener {
             for (int i = 0; i < available.length; i++) {
                 if (available[i].equals(Locale.getDefault())) {
                     languageComboBox.setSelectedIndex(i);
-
                     break;
                 }
             }
 
             boolean enableText = false;
-
             if (item.getBoolean("toolbar", "enable_text")) {
                 enableText = true;
             }
 
             boolean alignment = false;
-
             if (item.getBoolean("toolbar", "text_position")) {
                 alignment = true;
             }
 
             int state = 0;
-
             if (enableText) {
                 if (alignment) {
                     state = 1;
                 } else {
                     state = 2;
                 }
-
                 toolbarComboBox.setSelectedIndex(state);
+            }
+            
+            proxyHost = System.getProperty("http.proxyHost");
+            String proxyPortString = System.getProperty("http.proxyPort", "-1");
+            proxyPort = Integer.parseInt(proxyPortString);
+            if (proxyHost != null) {
+                proxyButton.setText(proxyHost + ":" + proxyPortString);
+            } else {
+                proxyButton.setText("-");
             }
         } else {
             // fonts
@@ -253,17 +253,33 @@ public class GeneralOptionsDialog extends JDialog implements ActionListener {
             locale.addAttribute("variant", l.getVariant());
 
             int state = toolbarComboBox.getSelectedIndex();
-
             if (state == 0) {
                 item.set("toolbar", "enable_text", Boolean.FALSE.toString());
             } else {
                 item.set("toolbar", "enable_text", Boolean.TRUE.toString());
-
                 if (state == 1) {
                     item.set("toolbar", "text_position", Boolean.TRUE.toString());
                 } else {
                     item.set("toolbar", "text_position",
                         Boolean.FALSE.toString());
+                }
+            }
+            
+            XmlElement proxy = options.getElement("proxy");
+            if (proxyHost != null && proxyPort > 0) {
+                System.setProperty("http.proxyHost", proxyHost);
+                System.setProperty("http.proxyPort", Integer.toString(proxyPort));
+                if (proxy == null) {
+                    proxy = options.addSubElement("proxy");
+                }
+                proxy.addAttribute("host", proxyHost);
+                proxy.addAttribute("port", Integer.toString(proxyPort));
+            } else {
+                Properties properties = System.getProperties();
+                properties.remove("http.proxyHost");
+                properties.remove("http.proxyPort");
+                if (proxy != null) {
+                    options.removeElement(proxy);
                 }
             }
         }
@@ -302,6 +318,10 @@ public class GeneralOptionsDialog extends JDialog implements ActionListener {
 
         builder.append(toolbarLabel);
         builder.append(toolbarComboBox, 3);
+        builder.nextLine();
+        
+        builder.append(proxyLabel);
+        builder.append(proxyButton, 3);
         builder.nextLine();
 
         builder.appendSeparator(GlobalResourceLoader.getString(RESOURCE_PATH,
@@ -390,6 +410,12 @@ public class GeneralOptionsDialog extends JDialog implements ActionListener {
         languageComboBox = new JComboBox();
         languageLabel.setLabelFor(languageComboBox);
         languageComboBox.setRenderer(new LocaleComboBoxRenderer());
+        
+        proxyLabel = new LabelWithMnemonic(GlobalResourceLoader.getString(
+                    RESOURCE_PATH, "general", "proxy"));
+        proxyButton = new JButton();
+        proxyButton.addActionListener(this);
+        proxyLabel.setLabelFor(proxyButton);
 
         // button panel
         okButton = new ButtonWithMnemonic(GlobalResourceLoader.getString("",
@@ -473,6 +499,19 @@ public class GeneralOptionsDialog extends JDialog implements ActionListener {
             mainFontButton.setEnabled(enabled);
             textFontLabel.setEnabled(enabled);
             textFontButton.setEnabled(enabled);
+        } else if (source == proxyButton) {
+            ProxyConfigurationDialog dialog = new ProxyConfigurationDialog(this);
+            dialog.setProxyHost(proxyHost);
+            dialog.setProxyPort(proxyPort);
+            if (dialog.showDialog() == ProxyConfigurationDialog.APPROVE_OPTION) {
+                proxyHost = dialog.getProxyHost();
+                proxyPort = dialog.getProxyPort();
+                if (proxyHost != null) {
+                    proxyButton.setText(proxyHost + ":" + Integer.toString(proxyPort));
+                } else {
+                    proxyButton.setText("-");
+                }
+            }
         }
     }
 
