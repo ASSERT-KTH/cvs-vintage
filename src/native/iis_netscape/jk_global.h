@@ -57,7 +57,7 @@
  * Description: Global definitions and include files that should exist     *
  *              anywhere                                                   *
  * Author:      Gal Shachor <shachor@il.ibm.com>                           *
- * Version:     $Revision: 1.1 $                                               *
+ * Version:     $Revision: 1.2 $                                               *
  ***************************************************************************/
 
 #ifndef JK_GLOBAL_H
@@ -71,6 +71,9 @@
 #include <time.h>
 #include <ctype.h>
 
+#include <sys/types.h>
+#include <sys/stat.h>
+
 #ifdef WIN32
     #include <windows.h>
     #include <winsock.h>
@@ -83,8 +86,6 @@
 
     #include <sys/un.h>
     #include <sys/socket.h>
-    #include <sys/types.h>
-    #include <sys/stat.h>
     #include <sys/time.h>
     #include <sys/socketvar.h>
     #include <sys/select.h>
@@ -111,17 +112,23 @@ extern "C" {
 #define JK_CR (13)
 
 #ifdef WIN32
-#define JK_METHOD __stdcall
-#define C_LEVEL_TRY_START       __try {
-#define C_LEVEL_TRY_END         }
-#define C_LEVEL_FINALLY_START   __finally {
-#define C_LEVEL_FINALLY_END     }
+    #define JK_METHOD __stdcall
+    #define C_LEVEL_TRY_START       __try {
+    #define C_LEVEL_TRY_END         }
+    #define C_LEVEL_FINALLY_START   __finally {
+    #define C_LEVEL_FINALLY_END     }
+    #define PATH_SEPERATOR          (';')
+    #define FILE_SEPERATOR          ('\\')
+    #define PATH_ENV_VARIABLE       ("PATH")
 #else
-#define JK_METHOD
-#define C_LEVEL_TRY_START       
-#define C_LEVEL_TRY_END         
-#define C_LEVEL_FINALLY_START   
-#define C_LEVEL_FINALLY_END     
+    #define JK_METHOD
+    #define C_LEVEL_TRY_START       
+    #define C_LEVEL_TRY_END         
+    #define C_LEVEL_FINALLY_START   
+    #define C_LEVEL_FINALLY_END     
+    #define PATH_SEPERATOR          (':')
+    #define FILE_SEPERATOR          ('/')
+    #define PATH_ENV_VARIABLE       ("LD_LIBRARY_PATH")
 #endif
 
 #ifdef __cplusplus

@@ -57,7 +57,7 @@
  * Description: ajpv1.2 protocol, used to call local or remote jserv hosts *
  * Author:      Gal Shachor <shachor@il.ibm.com>                           *
  * Based on:                                                               *
- * Version:     $Revision: 1.1 $                                               *
+ * Version:     $Revision: 1.2 $                                               *
  ***************************************************************************/
 
 #include <stdio.h>
@@ -68,9 +68,20 @@
 #include "jk_worker.h"
 #include "jk_uri_worker_map.h"
 
+
+static int JK_METHOD read(jk_ws_service_t *s,
+                          char *b,
+                          unsigned len,
+                          unsigned *acc)
+{
+    strcpy(b, "firstname=gal&lastname=lag");
+    *acc = strlen("firstname=gal&lastname=lag");
+    return JK_TRUE;
+}
+
 static int JK_METHOD start_response(jk_ws_service_t *s,
                                     int status,
-                                    char *reason,
+                                    const char *reason,
                                     const char * const *header_names,
                                     const char * const *header_values,
                                     unsigned num_of_headers)
@@ -96,46 +107,50 @@ static int JK_METHOD write(jk_ws_service_t *s,
 
 void main(void)
 {
-    char *names[] = {"Accept-Language", "Connection", "User-Agent", "Host", "Accept-Encoding", "Accept", "Cookie"};
-    char *values[] = {"en-us", "Keep-Alive", "Mozilla/4.0 (compatible; MSIE 4.01; Windows NT)", "localhost:8080", "gzip, deflate", "image/gif, image/x-xbitmap, image/jpeg, image/pjpeg, application/vnd.ms-excel, application/msword, application/vnd.ms-powerpoint, */*", "JSESSIONID=To1021mC22584319650438112At"};
+    char *names[] = {"content-type", "content-length", "Accept-Language", "Connection", "User-Agent", "Host", "Accept-Encoding", "Accept", "Cookie"};
+    char *values[] = {"application/x-www-form-urlencoded", "26", "en-us", "Keep-Alive", "Mozilla/4.0 (compatible; MSIE 4.01; Windows NT)", "localhost:8080", "gzip, deflate", "image/gif, image/x-xbitmap, image/jpeg, image/pjpeg, application/vnd.ms-excel, application/msword, application/vnd.ms-powerpoint, */*", "JSESSIONID=To1021mC22584319650438112At"};
 
     jk_map_t *map;
     jk_worker_t *worker;
     jk_endpoint_t *e;
     jk_ws_service_t s = {
         NULL,
-        "http",
-        "GET",
-        "http",
-        "/examples/snoop",
+        NULL,
+        "POST",
+        "HTTP/1.0",
+        "/examples/servlet/RequestParamExample",
         "127.0.0.1",
         "localhost",
         "gal",
         "my",
-        "gal=lag",
+        "gal=lag1",
         "galserver",
         8007,
         "gal/1.1",
+        strlen("firstname=gal&lastname=lag"),
 
         FALSE,
         NULL,
         0,
         NULL,
-
         NULL,
-        0,
     
         names,
         values,
-        7,
-
-        start_response, NULL, write
+        9,
+        NULL,
+        start_response, read, write
     };
 
     WORD wVersionRequested;
     WSADATA wsaData;
     int err; 
     jk_uri_worker_map_t *uw_map;
+    jk_pool_atom_t buf[SMALL_POOL_SIZE];
+    jk_pool_t pool;
+
+    jk_open_pool(&pool, buf, sizeof(buf));
+    s.pool = &pool;
 
     wVersionRequested = MAKEWORD( 2, 0 ); 
     err = WSAStartup( wVersionRequested, &wsaData );
@@ -163,6 +178,7 @@ void main(void)
     fprintf(stderr, "version is %d %d \n", LOBYTE( wsaData.wVersion ),HIBYTE( wsaData.wVersion ));
 
 
+    /*
     map_alloc(&map);   
     map_read_properties(map, 
                         "d:\\Microsoft Visual Studio\\VC98\\MyProjects\\jk\\uwmap.properties");
@@ -174,21 +190,26 @@ void main(void)
     printf("The worker for %s is %s\n", "/gal/", map_uri_to_worker(uw_map, "/gal/", NULL));
     printf("The worker for %s is %s\n", "/gal/tt.jsp", map_uri_to_worker(uw_map, "/gal/tt.jsp", NULL));
     printf("The worker for %s is %s\n", "/gal/gil/t.jsp", map_uri_to_worker(uw_map, "/gal/gil/t.jsp", NULL));
-
-    /*
+    */
+    
     map_alloc(&map);   
 
-    map_read_properties(map, 
-                        "d:\\Microsoft Visual Studio\\VC98\\MyProjects\\jk\\test.properties");
-
+    /*
+    map_read_properties(map,                         
+                        "d:\\temp\\native\\iis_netscape\\test.properties");
+                        */
+    map_read_properties(map,                         
+                        "d:\\jk_release\\src\\native\\iis_netscape\\test.properties");
     wc_open(map, NULL);
-    worker = wc_get_worker_for_name("ajp12", NULL);
+    worker = wc_get_worker_for_name("jni", NULL);
     
     worker->get_endpoint(worker, &e, NULL);
-    e->service(e, &s, NULL);
-    e->done(&e);
 
-    */
+    Sleep(10*1000);
+    e->service(e, &s, NULL);
+    e->done(&e, NULL);
+    worker->destroy(&worker, NULL);
+    
 
     WSACleanup( );
 }

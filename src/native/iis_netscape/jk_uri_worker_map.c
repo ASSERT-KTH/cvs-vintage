@@ -65,7 +65,7 @@
  * servlet container.                                                      *
  *                                                                         *
  * Author:      Gal Shachor <shachor@il.ibm.com>                           *
- * Version:     $Revision: 1.1 $                                               *
+ * Version:     $Revision: 1.2 $                                               *
  ***************************************************************************/
 
 #include "jk_pool.h"
@@ -203,7 +203,6 @@ int uri_worker_map_open(jk_uri_worker_map_t *uw_map,
                                     jk_log(l, JK_LOG_DEBUG, 
                                            "Into jk_uri_worker_map_t::uri_worker_map_open, suffix rule %s.%s=%s was added\n", 
                                            uri, asterisk + 3, worker);    
-
                                     j++;
                                 } else {
                                     /* context based */
@@ -318,8 +317,13 @@ char *map_uri_to_worker(jk_uri_worker_map_t *uw_map,
                         ;
                     if('.' == uri[suffix_start]) {
                         const char *suffix = uri + suffix_start + 1;
-                        
+
+                        /* for WinXX, fix the JsP != jsp problems */
+#ifdef WIN32                        
+                        if(0 == stricmp(suffix, uw_map->maps[i].suffix)) {
+#else
                         if(0 == strcmp(suffix, uw_map->maps[i].suffix)) {
+#endif
                             if(uw_map->maps[i].ctxt_len >= longest_match) {
                                 longest_match = uw_map->maps[i].ctxt_len;
                                 best_match = i;

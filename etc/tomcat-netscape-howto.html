@@ -10,64 +10,74 @@
 
 <p>By Gal Shachor &lt;shachor@il.ibm.com&gt;</p>
 
-<p>This document explains how to set up Netscape web servers to cooperate with Tomcat.
-Normally the Netscape web servers come with their own Servlet engine, but you can also
-configure them to send servlet and JSP requests to Tomcat using the Tomcat redirector
-plugin.</p>
+<p>This document explains how to set up Netscape web servers to cooperate with
+Tomcat. Normally the Netscape web servers come with their own Servlet engine,
+but you can also configure them to send servlet and JSP requests to Tomcat
+using the Tomcat redirector plugin.</p>
 
 <h2>Document Conventions and Assumptions</h2>
 
-<p>&lt;tomcat_root&gt; is the root directory of tomcat. Your Tomcat installation should
-have the following subdirectories: 
+<p>&lt;tomcat_root&gt; is the root directory of tomcat. Your Tomcat
+installation should have the following subdirectories:
 
 <ol>
-  <li>&lt;tomcat_root&gt;\etc - Where you can place various configuration files</li>
-  <li>&lt;tomcat_root&gt;\examples - The /examples context directory</li>
+  <li>&lt;tomcat_root&gt;\conf - Where you can place various configuration files</li>
+  <li>&lt;tomcat_root&gt;\webapps - Containing example applications </li>
   <li>&lt;tomcat_root&gt;\bin - Where you place web server plugins </li>
 </ol>
 
 <p>In all the examples in this document &lt;tomcat_root&gt; will be d:\tomcat.</p>
 
-<p>A <tt>worker</tt> is defined to be a tomcat process that accepts work from the Netscape
-server.</p>
+<p>A <tt>worker</tt> is defined to be a tomcat process that accepts work from
+the Netscape server.</p>
 
 <h2>Supported Configuration</h2>
 
-<p>The Netscape-Tomcat redirector was developed and tested on: 
+<p>The Netscape-Tomcat redirector was developed and tested on:
 
 <ol>
-  <li>WinNT4.0-i386 SP4/SP5 (it should be able to work on other versions of the NT service
-    pack UNIX) </li>
+  <li>WinNT4.0-i386 SP4/SP5/SP6a (it should be able to work on other versions 
+  of the NT service pack and also UNIX) </li>
   <li>Netscape Enterprise 3.0 and 3.61</li>
-  <li>Tomcat3.0 - Tomcat3.1 RC1</li>
+  <li>Tomcat3.0 - Tomcat3.1 build of 02/07/2000</li>
 </ol>
 
-<p>The redirector uses <b>ajp12</b> to send requests to the Tomcat containers.</p>
+<p>The redirector uses <b>ajp12</b> to send requests to the Tomcat
+containers. There is also an option to use Tomcat in process, more about the
+in-process mode can be found in the in process howto.</p>
 
 <h2>Installation</h2>
 
-<p>The Tomcat redirector requires two entities: 
+<p>The Netscape redirector is not part of the "official" build of Jakarta, You
+can obtain the code and binaries needed for it by either accessing the
+anonymous CVS or downloading the source distribution of tomcat. The redirector
+related files are under the <tt>jakarta-tomcat/bin</tt> and
+<tt>jakarta-tomcat/etc</tt> <tt>jakarta-tomcat/src/native</tt> directories.</p>
+
+<p>The Tomcat redirector requires two entities:
 
 <ol>
-  <li>nsapi_redirect.dll - The Netscape server plugin, either obtain a pre-built DLL or build
-    it yourself (see the build section).</li>
-  <li>worker.properties - A file that describes the host(s) and port(s) used by the workers
-    (Tomcat processes)</li>
+  <li>nsapi_redirect.dll - The Netscape server plugin, either obtain a
+   pre-built DLL or build it yourself (see the build section).</li>
+  <li>worker.properties - A file that describes the host(s) and port(s)
+   used by the workers (Tomcat processes). You should copy this file from
+   the CVS (<tt>jakarta-tomcat/etc/worker.properties</tt>) and place it in
+   your conf directory.</li>
 </ol>
 
-<p>The installation includes the following parts: 
+<p>The installation includes the following parts:
 
 <ol>
-  <li>Configuring the NSAPI redirector with a default /examples context and checking that you
-    can serve servlets with Netscape.</li>
+  <li>Configuring the NSAPI redirector with a default /examples context and 
+    checking that you can serve servlets with Netscape.</li>
   <li>Adding more contexts to the configuration.</li>
 </ol>
 
 <h3>Configuring the NSAPI Redirector</h3>
 
 <p>In this document I will assume that nsapi_redirect.dll is placed in
-d:\tomcat\bin\netscape\nt4\i386\nsapi_redirect.dll and that the properties files are in
-d:\tomcat\etc 
+d:\tomcat\bin\netscape\nt4\i386\nsapi_redirect.dll and that you created the
+properties files are in d:\tomcat\conf.</p>
 
 <ol>
   <li>If the Netscape built in servlet support is working disable it.</li>
@@ -77,7 +87,7 @@ d:\tomcat\etc
     <li>In the Init section:<br>
       <tt>Init fn=&quot;load-modules&quot; funcs=&quot;jk_init,jk_service&quot;
       shlib=&quot;d:/tomcat/bin/netscape/nt4/i386/nsapi_redirect.dll&quot;<br>
-      Init fn=&quot;jk_init&quot; worker_file=&quot;d:/tomcat/etc/workers.properties&quot;
+      Init fn=&quot;jk_init&quot; worker_file=&quot;d:/tomcat/conf/workers.properties&quot;
       log_level=&quot;debug&quot; log_file=&quot;d:/tomcat/nsapi.log&quot;</tt> </li>
     <li>In the default object NameTrans section<br>
       <tt>NameTrans fn=&quot;assign-name&quot; from=&quot;/servlet/*&quot;
@@ -99,7 +109,7 @@ http://server:port/examples/</p>
 <h3>Adding additional Contexts</h3>
 
 <p>The examples context is useful for verifying your installation, but you will also need
-to add your own contexts. Adding a new context requires two operations: 
+to add your own contexts. Adding a new context requires two operations:
 
 <ol>
   <li>Adding the context to Tomcat (I am not going to talk about this).</li>
@@ -159,10 +169,10 @@ it using the build menu.</p>
 <p>Sometimes it is better to have Netscape serve the static pages (html, gif, jpeg etc.)
 even if these files are part of a context served by Tomcat. For example, consider the html
 and gif files in the examples context, there is no need to serve them from the Tomcat
-process, Netscape will suffice&#133;</p>
+process, Netscape will suffice.</p>
 
 <p>Making Netscape serve static files that are part of the Tomcat contexts requires the
-following: 
+following:
 
 <ol>
   <li>Configuring Netscape to know about the Tomcat contexts</li>
@@ -171,12 +181,14 @@ following:
     JSP/Servlet handling.</li>
 </ol>
 
-<p>Adding a Tomcat context to Netscape requires the addition of a new Netscape virtual
-directory that covers the Tomcat context. For example, adding a /example Netscape virtual
-directory that covers the d:\tomkat\examples directory. To add a new virtual directory add
-the following line to your obj.conf:</p>
+<p>Adding a Tomcat context to Netscape requires the addition of a new Netscape 
+virtual directory that covers the Tomcat context. For example, adding a 
+/example Netscape virtual directory that covers the d:\tomkat\webapps\examples 
+directory.
 
-<p><tt>NameTrans fn=pfx2dir from=/examples dir=&quot;d:/tomcat/examples&quot;</tt></p>
+To add a new virtual directory add the following line to your obj.conf:</p>
+
+<p><tt>NameTrans fn=pfx2dir from=/examples dir=&quot;d:/tomcat/webapps/examples&quot;</tt></p>
 
 <p>WEB-INF protection requires some explanation; Each servlet application (context) has a
 special directory named WEB-INF, this directory contains sensitive configurations data and

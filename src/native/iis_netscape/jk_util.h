@@ -56,13 +56,14 @@
 /***************************************************************************
  * Description: Various utility functions                                  *
  * Author:      Gal Shachor <shachor@il.ibm.com>                           *
- * Version:     $Revision: 1.1 $                                               *
+ * Version:     $Revision: 1.2 $                                               *
  ***************************************************************************/
 #ifndef _JK_UTIL_H
 #define _JK_UTIL_H
 
 #include "jk_global.h"
 #include "jk_map.h"
+#include "jk_pool.h"
 #include "jk_logger.h"
 
 
@@ -96,6 +97,64 @@ int jk_get_worker_list(jk_map_t *m,
                        char ***list,
                        unsigned *num_of_wokers);
 
+double jk_get_lb_factor(jk_map_t *m, 
+                        const char *wname);
+
+int jk_get_lb_worker_list(jk_map_t *m, 
+                          const char *lb_wname,
+                          char ***list, 
+                          unsigned *num_of_wokers);
+
+int jk_get_worker_mx(jk_map_t *m, 
+                     const char *wname,
+                     unsigned *mx);
+
+int jk_get_worker_ms(jk_map_t *m, 
+                     const char *wname,
+                     unsigned *ms);
+
+int jk_get_worker_classpath(jk_map_t *m, 
+                            const char *wname, 
+                            char **cp);
+
+
+int jk_get_worker_jvm_path(jk_map_t *m, 
+                           const char *wname, 
+                           char **vm_path);
+
+int jk_get_worker_callback_dll(jk_map_t *m, 
+                               const char *wname, 
+                               char **cb_path);
+
+int jk_get_worker_cmd_line(jk_map_t *m, 
+                           const char *wname, 
+                           char **cmd_line);
+
+int jk_file_exists(const char *f);
+
+int jk_is_path_poperty(const char *prp_name);
+
+int jk_is_cmd_line_poperty(const char *prp_name);
+
+int jk_get_worker_stdout(jk_map_t *m, 
+                         const char *wname, 
+                         char **stdout_name);
+
+int jk_get_worker_stderr(jk_map_t *m, 
+                         const char *wname, 
+                         char **stderr_name);
+
+int jk_get_worker_sysprops(jk_map_t *m, 
+                           const char *wname, 
+                           char **sysprops);
+
+int jk_get_worker_libpath(jk_map_t *m, 
+                          const char *wname, 
+                          char **libpath);
+
+char **jk_parse_sysprops(jk_pool_t *p, 
+                         const char *sysprops);
+        
 
 #ifdef __cplusplus
 extern "C" {

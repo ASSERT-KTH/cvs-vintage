@@ -56,7 +56,7 @@
 /***************************************************************************
  * Description: Map object header file                                     *
  * Author:      Gal Shachor <shachor@il.ibm.com>                           *
- * Version:     $Revision: 1.1 $                                               *
+ * Version:     $Revision: 1.2 $                                               *
  ***************************************************************************/
 
 #ifndef JK_MAP_H
@@ -86,6 +86,10 @@ void *map_get(jk_map_t *m,
 int map_get_int(jk_map_t *m,
                 const char *name,
                 int def);
+
+double map_get_double(jk_map_t *m,
+                      const char *name,
+                      double def);
 
 char *map_get_string(jk_map_t *m,
                      const char *name,

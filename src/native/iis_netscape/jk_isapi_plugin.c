@@ -56,7 +56,7 @@
 /***************************************************************************
  * Description: ISAPI plugin for IIS/PWS                                   *
  * Author:      Gal Shachor <shachor@il.ibm.com>                           *
- * Version:     $Revision: 1.1 $                                               *
+ * Version:     $Revision: 1.2 $                                               *
  ***************************************************************************/
 
 #include <httpext.h>
@@ -78,6 +78,7 @@
 #define EXTENSION_URI_TAG       ("extension_uri")
 
 #define GET_SERVER_VARIABLE_VALUE(name, place) {    \
+    place = NULL;                                   \
     huge_buf_sz = sizeof(huge_buf);                 \
     if(get_server_value(private_data->lpEcb,        \
                         (name),                     \
@@ -141,7 +142,7 @@ typedef struct isapi_private_data isapi_private_data_t;
 
 static int JK_METHOD start_response(jk_ws_service_t *s,
                                     int status,
-                                    char *reason,
+                                    const char *reason,
                                     const char * const *header_names,
                                     const char * const *header_values,
                                     unsigned num_of_headers);
@@ -177,7 +178,7 @@ static int get_server_value(LPEXTENSION_CONTROL_BLOCK lpEcb,
 
 static int JK_METHOD start_response(jk_ws_service_t *s,
                                     int status,
-                                    char *reason,
+                                    const char *reason,
                                     const char * const *header_names,
                                     const char * const *header_values,
                                     unsigned num_of_headers)
@@ -476,6 +477,7 @@ DWORD WINAPI HttpExtensionProc(LPEXTENSION_CONTROL_BLOCK  lpEcb)
         private_data.lpEcb = lpEcb;
 
         s.ws_private = &private_data;
+        s.pool = &private_data.p;
 
         if(init_ws_service(&private_data, &s, &worker_name)) {
             jk_worker_t *worker = wc_get_worker_for_name(worker_name, logger);
@@ -689,6 +691,8 @@ static int init_ws_service(isapi_private_data_t *private_data,
     DWORD huge_buf_sz;
     filter_ext_record_t *from_filt = (filter_ext_record_t *)TlsGetValue(tls_index);
 
+    s->jvm_route = NULL;
+
     s->start_response = start_response;
     s->read = read;
     s->write = write;
@@ -697,7 +701,7 @@ static int init_ws_service(isapi_private_data_t *private_data,
     GET_SERVER_VARIABLE_VALUE("REMOTE_USER", s->remote_user);
     GET_SERVER_VARIABLE_VALUE("SERVER_PROTOCOL", s->protocol);
     GET_SERVER_VARIABLE_VALUE("REMOTE_HOST", s->remote_host);
-    GET_SERVER_VARIABLE_VALUE("REMOTE_ADDR", s->remote_ip);
+    GET_SERVER_VARIABLE_VALUE("REMOTE_ADDR", s->remote_addr);
     GET_SERVER_VARIABLE_VALUE("SERVER_NAME", s->server_name);
     GET_SERVER_VARIABLE_VALUE_INT("SERVER_PORT", s->server_port, 80)
     GET_SERVER_VARIABLE_VALUE("SERVER_SOFTWARE", s->server_software);
@@ -705,7 +709,6 @@ static int init_ws_service(isapi_private_data_t *private_data,
 
     s->method           = private_data->lpEcb->lpszMethod;
     s->content_length   = private_data->lpEcb->cbTotalBytes;
-    s->content_type     = private_data->lpEcb->lpszContentType;
 
     if(from_filt) {
         char *t = strchr(from_filt->uri, '?');
@@ -729,12 +732,7 @@ static int init_ws_service(isapi_private_data_t *private_data,
     s->ssl_cert     = NULL;
     s->ssl_cert_len = 0;
     s->ssl_cipher   = NULL;
-
-    if(s->is_ssl) {
-        s->scheme = "https";
-    } else {
-        s->scheme = "http";
-    }
+    s->ssl_session  = NULL;
 
     s->headers_names    = NULL;
     s->headers_values   = NULL;

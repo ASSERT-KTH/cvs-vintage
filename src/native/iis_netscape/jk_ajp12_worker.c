@@ -57,7 +57,7 @@
  * Description: ajpv1.2 worker, used to call local or remote jserv hosts   *
  * Author:      Gal Shachor <shachor@il.ibm.com>                           *
  * Based on:    jserv_ajpv12.c from Jserv                                  *
- * Version:     $Revision: 1.1 $                                               *
+ * Version:     $Revision: 1.2 $                                               *
  ***************************************************************************/
 
 #include "jk_ajp12_worker.h"
@@ -66,12 +66,14 @@
 #include "jk_util.h"
 #include "jk_sockbuf.h"
 
-#define AJP_DEF_HOST    ("localhost")
-#define AJP_DEF_PORT    (8007)
-#define READ_BUF_SIZE   (8*1024)
+#define AJP_DEF_HOST            ("localhost")
+#define AJP_DEF_PORT            (8007)
+#define READ_BUF_SIZE           (8*1024)
+#define DEF_RETRY_ATTEMPTS      (1)
 
 struct ajp12_worker {
     struct sockaddr_in worker_inet_addr;
+    unsigned connect_retry_attempts;
     char *name; 
     jk_worker_t worker;
 };
@@ -83,9 +85,6 @@ struct ajp12_endpoint {
     
     int sd;
     jk_sockbuf_t sb;
-
-    jk_pool_t p;
-    jk_pool_atom_t buf[TINY_POOL_SIZE];
 
     jk_endpoint_t endpoint;
 };
@@ -122,16 +121,18 @@ static int JK_METHOD service(jk_endpoint_t *e,
 
     if(e && e->endpoint_private && s) {
         ajp12_endpoint_t *p = e->endpoint_private;
+        unsigned attempt;
 
-        /*
-         * FIXME: add retry attempts if sd == -1
-         */
-        p->sd = jk_open_socket(&p->worker->worker_inet_addr, 
-                               JK_TRUE, 
-                               l);
+        for(attempt = 0 ; attempt < p->worker->connect_retry_attempts ; attempt++) {
+            p->sd = jk_open_socket(&p->worker->worker_inet_addr, 
+                                   JK_TRUE, 
+                                   l);
 
-        jk_log(l, JK_LOG_DEBUG, "In jk_endpoint_t::service, sd = %d\n", p->sd);
-
+            jk_log(l, JK_LOG_DEBUG, "In jk_endpoint_t::service, sd = %d\n", p->sd);
+            if(p->sd >= 0) {
+                break;
+            }
+        }
         if(p->sd >= 0) {
             jk_sb_open(&p->sb, p->sd);
             if(ajpv12_handle_request(p, s, l)) {
@@ -156,7 +157,6 @@ static int JK_METHOD done(jk_endpoint_t **e,
         if(p->sd > 0) {
             jk_close_socket(p->sd);
         }
-        jk_close_pool(&p->p);
         free(p);
         *e = NULL;
         return JK_TRUE;
@@ -217,7 +217,6 @@ static int JK_METHOD get_endpoint(jk_worker_t *pThis,
         ajp12_endpoint_t *p = (ajp12_endpoint_t *)malloc(sizeof(ajp12_endpoint_t));
         if(p) {
             p->sd = -1;         
-            jk_open_pool(&p->p, p->buf, sizeof(jk_pool_atom_t) * TINY_POOL_SIZE);
             p->worker = pThis->worker_private;
             p->endpoint.endpoint_private = p;
             p->endpoint.service = service;
@@ -262,7 +261,9 @@ int JK_METHOD ajp12_worker_factory(jk_worker_t **w,
             private_data->name = strdup(name);          
 
             if(private_data->name) {
+                private_data->connect_retry_attempts= DEF_RETRY_ATTEMPTS;
                 private_data->worker.worker_private = private_data;
+
                 private_data->worker.validate       = validate;
                 private_data->worker.init           = init;
                 private_data->worker.get_endpoint   = get_endpoint;
@@ -359,7 +360,7 @@ static int ajpv12_handle_request(ajp12_endpoint_t *p,
            ajpv12_sendstring(p, 0) &&   /* path info */
            ajpv12_sendstring(p, 0) &&   /* path translated */
            ajpv12_sendstring(p, s->query_string)&&
-           ajpv12_sendstring(p, s->remote_ip)   &&
+           ajpv12_sendstring(p, s->remote_addr) &&
            ajpv12_sendstring(p, s->remote_host) &&
            ajpv12_sendstring(p, s->remote_user) &&
            ajpv12_sendstring(p, s->auth_type)   &&
@@ -373,7 +374,7 @@ static int ajpv12_handle_request(ajp12_endpoint_t *p,
            ajpv12_sendstring(p, s->protocol)    &&
            ajpv12_sendstring(p, 0)              && /* SERVER_SIGNATURE */ 
            ajpv12_sendstring(p, s->server_software) &&
-           ajpv12_sendstring(p, 0)); /* JSERV_ROUTE" */
+           ajpv12_sendstring(p, s->jvm_route)); /* JSERV_ROUTE" */
 
     if(!ret) {
         jk_log(l, JK_LOG_ERROR, "In ajpv12_handle_request, failed to send the ajp12 start sequence\n");
@@ -510,11 +511,11 @@ static int ajpv12_handle_response(ajp12_endpoint_t *p,
         } else {
             if(headers_capacity == headers_len) {
                 jk_log(l, JK_LOG_DEBUG, "ajpv12_handle_response, allocating header arrays\n");
-                names = (char **)jk_pool_realloc(&p->p,  
+                names = (char **)jk_pool_realloc(s->pool,  
                                                  sizeof(char *) * (headers_capacity + 5),
                                                  names,
                                                  sizeof(char *) * headers_capacity);
-                values = (char **)jk_pool_realloc(&p->p,  
+                values = (char **)jk_pool_realloc(s->pool,  
                                                   sizeof(char *) * (headers_capacity + 5),
                                                   values,
                                                   sizeof(char *) * headers_capacity);
@@ -524,8 +525,8 @@ static int ajpv12_handle_response(ajp12_endpoint_t *p,
                 }
                 headers_capacity = headers_capacity + 5;
             }
-            names[headers_len] = jk_pool_strdup(&p->p, name);
-            values[headers_len] = jk_pool_strdup(&p->p, value);
+            names[headers_len] = jk_pool_strdup(s->pool, name);
+            values[headers_len] = jk_pool_strdup(s->pool, value);
             headers_len++;
         }
     }

@@ -56,7 +56,7 @@
 /***************************************************************************
  * Description: NSAPI plugin for Netscape servers                          *
  * Author:      Gal Shachor <shachor@il.ibm.com>                           *
- * Version:     $Revision: 1.1 $                                               *
+ * Version:     $Revision: 1.2 $                                               *
  ***************************************************************************/
 
 
@@ -83,11 +83,14 @@ struct nsapi_private_data {
 };
 typedef struct nsapi_private_data nsapi_private_data_t;
 
+static int init_on_other_thread_is_done = JK_FALSE;
+static int init_on_other_thread_is_ok = JK_FALSE;
+
 static jk_logger_t *logger = NULL;
 
 static int JK_METHOD start_response(jk_ws_service_t *s,
                                     int status,
-                                    char *reason,
+                                    const char *reason,
                                     const char * const *header_names,
                                     const char * const *header_values,
                                     unsigned num_of_headers);
@@ -117,9 +120,21 @@ static int init_ws_service(nsapi_private_data_t *private_data,
 static int setup_http_headers(nsapi_private_data_t *private_data,
                               jk_ws_service_t *s);
 
+static void init_workers_on_other_threads(void *init_d) 
+{
+    jk_map_t *init_map = (jk_map_t *)init_d;
+    if(wc_open(init_map, logger)) {
+        init_on_other_thread_is_ok = JK_TRUE;
+    } else {
+        jk_log(logger, JK_LOG_EMERG, "In init_workers_on_other_threads, failed\n");
+    }
+
+    init_on_other_thread_is_done = JK_TRUE;
+}
+
 static int JK_METHOD start_response(jk_ws_service_t *s,
                                     int status,
-                                    char *reason,
+                                    const char *reason,
                                     const char * const *header_names,
                                     const char * const *header_values,
                                     unsigned num_of_headers)
@@ -149,7 +164,7 @@ static int JK_METHOD start_response(jk_ws_service_t *s,
             protocol_status(p->sn,
                             p->rq,
                             status,
-                            reason);
+                            (char *)reason);
 
             protocol_start_response(p->sn, p->rq);
         }
@@ -243,10 +258,32 @@ NSAPI_PUBLIC int jk_init(pblock *pb,
 
     if(map_alloc(&init_map)) {
         if(map_read_properties(init_map, worker_prp_file)) {
-            if(wc_open(init_map, logger)) {
+            int sleep_cnt;
+            SYS_THREAD s;
+            
+            s = systhread_start(SYSTHREAD_DEFAULT_PRIORITY, 
+                                0, 
+                                init_workers_on_other_threads, 
+                                init_map);
+            for(sleep_cnt = 0 ; sleep_cnt < 60 ; sleep_cnt++) {
+                systhread_sleep(1000);
+                jk_log(logger, JK_LOG_DEBUG, "jk_init, a second passed\n");
+                if(init_on_other_thread_is_done) {
+                    break;
+                }
+            }
+
+            if(init_on_other_thread_is_done &&
+               init_on_other_thread_is_ok) {
                 magnus_atrestart(jk_term, NULL);
                 rc = REQ_PROCEED;
             }
+
+/*            if(wc_open(init_map, logger)) {
+                magnus_atrestart(jk_term, NULL);
+                rc = REQ_PROCEED;
+            }
+*/
         }
         
         map_free(&init_map);
@@ -298,6 +335,7 @@ NSAPI_PUBLIC int jk_service(pblock *pb,
         private_data.rq = rq;
 
         s.ws_private = &private_data;
+        s.pool = &private_data.p;
 
         if(init_ws_service(&private_data, &s)) {
             jk_endpoint_t *e = NULL;
@@ -320,6 +358,7 @@ static int init_ws_service(nsapi_private_data_t *private_data,
     char *tmp;
     int rc;
 
+    s->jvm_route = NULL;
     s->start_response = start_response;
     s->read = read;
     s->write = write;
@@ -337,21 +376,12 @@ static int init_ws_service(nsapi_private_data_t *private_data,
     if((rc != REQ_ABORTED) && tmp) {
         s->content_length = atoi(tmp);
     }
-    s->content_type     = NULL;
-    tmp = NULL;
-    rc  = request_header("content-type", 
-                         &tmp, 
-                         private_data->sn, 
-                         private_data->rq);
-    if(rc != REQ_ABORTED) {
-        s->content_type = tmp;
-    }
     
     s->method           = pblock_findval("method", private_data->rq->reqpb);
     s->protocol         = pblock_findval("protocol", private_data->rq->reqpb);
     
     s->remote_host      = session_dns(private_data->sn);
-    s->remote_ip        = pblock_findval("ip", private_data->sn->client);
+    s->remote_addr      = pblock_findval("ip", private_data->sn->client);
     
     s->req_uri          = pblock_findval("uri", private_data->rq->reqpb);
     s->query_string     = pblock_findval("query", private_data->rq->reqpb);
@@ -369,12 +399,7 @@ static int init_ws_service(nsapi_private_data_t *private_data,
     s->ssl_cert     = NULL;
     s->ssl_cert_len = 0;
     s->ssl_cipher   = NULL;
-
-    if(s->is_ssl) {
-        s->scheme = "https";
-    } else {
-        s->scheme = "http";
-    }
+    s->ssl_session  = NULL;
 
     return setup_http_headers(private_data, s);
 }

@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+
+<Server>
+    <ContextManager port="8080" hostName="" inet="">
+
+        <!--
+		     JNI connector, make sure that you update the native_lib
+             Parameter to point to your jni_connect.dll
+		 -->
+        <Connector className="org.apache.tomcat.service.JNIEndpointConnector">
+            <Parameter name="native_lib" value="D:\tomcat\bin\jni_connect\nt4\i386\jni_connect.dll"/>
+        </Connector>
+
+        <!--
+            Setting the contexts explicitly
+		 -->
+        <Context path="/" docBase="D:\tomcat\webapps\ROOT" />
+        <Context path="/examples" docBase="D:\tomcat\webapps\examples" />
+        <Context path="/test" docBase="D:\tomcat\webapps\test" />
+
+    </ContextManager>
+</Server>

@@ -56,13 +56,14 @@
 /***************************************************************************
  * Description: General purpose map object                                 *
  * Author:      Gal Shachor <shachor@il.ibm.com>                           *
- * Version:     $Revision: 1.1 $                                               *
+ * Version:     $Revision: 1.2 $                                               *
  ***************************************************************************/
 
 #include "jk_global.h"
 #include "jk_map.h"
 #include "jk_pool.h"
 #include "jk_map.h"
+#include "jk_util.h"
 
 #define CAPACITY_INC_SIZE (50)
 #define LENGTH_OF_LINE    (1024)
@@ -151,18 +152,47 @@ void *map_get(jk_map_t *m,
     return rc;
 }
 
-
 int map_get_int(jk_map_t *m,
                 const char *name,
                 int def)
 {
     char buf[100];
     char *rc;
+    int  len;
+    int  int_res;
+    int  multit = 1;
 
     sprintf(buf, "%d", def);
     rc = map_get_string(m, name, buf);
 
-    return atoi(rc);
+    len = strlen(rc);
+    if(len) {        
+        char *lastchar = rc + len - 1;
+        if('m' == *lastchar || 'M' == *lastchar) {
+            *lastchar = '\0';
+            multit = 1024 * 1024;
+        } else if('k' == *lastchar || 'K' == *lastchar) {
+            *lastchar = '\0';
+            multit = 1024;
+        }
+    }
+
+    int_res = atoi(rc);
+
+    return int_res * multit;
+}
+
+double map_get_double(jk_map_t *m,
+                      const char *name,
+                      double def)
+{
+    char buf[100];
+    char *rc;
+
+    sprintf(buf, "%f", def);
+    rc = map_get_string(m, name, buf);
+
+    return atof(rc);
 }
 
 char *map_get_string(jk_map_t *m,
@@ -271,9 +301,27 @@ int map_read_properties(jk_map_t *m,
                         *v = '\0';
                         v++;                        
                         if(strlen(v) && strlen(prp)) {
-                            void *old = NULL;
-                            v = jk_pool_strdup(&m->p, v);
+                            char *oldv = map_get_string(m, prp, NULL);
+                            if(oldv) {
+                                char *tmpv = jk_pool_alloc(&m->p, 
+                                                           strlen(v) + strlen(oldv) + 3);
+                                if(tmpv) {
+                                    char sep = ',';
+                                    if(jk_is_path_poperty(prp)) {
+                                        sep = PATH_SEPERATOR;
+                                    } else if(jk_is_cmd_line_poperty(prp)) {
+                                        sep = ' ';
+                                    }
+
+                                    sprintf(tmpv, "%s%c%s", 
+                                            oldv, sep, v);
+                                }                                
+                                v = tmpv;
+                            } else {
+                                v = jk_pool_strdup(&m->p, v);
+                            }
                             if(v) {
+                                void *old = NULL;
                                 map_put(m, prp, v, &old);
                             } else {
                                 rc = JK_FALSE;

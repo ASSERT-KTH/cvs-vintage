@@ -54,37 +54,29 @@
  */
 
 /***************************************************************************
- * Description: Socket buffer header file                                  *
+ * Description: jni worker header file                                 *
  * Author:      Gal Shachor <shachor@il.ibm.com>                           *
- * Version:     $Revision: 1.2 $                                               *
+ * Version:     $Revision: 1.1 $                                               *
  ***************************************************************************/
 
-#include "jk_global.h"
+#ifndef JK_JNI_WORKER_H
+#define JK_JNI_WORKER_H
 
-#define SOCKBUF_SIZE (8*1024)
+#include "jk_logger.h"
+#include "jk_service.h"
 
-struct jk_sockbuf {
-    char buf[SOCKBUF_SIZE];
-    unsigned start;
-    unsigned end;
-    int  sd;
-};
-typedef struct jk_sockbuf jk_sockbuf_t;
+#ifdef __cplusplus
+extern "C" {
+#endif /* __cplusplus */
 
-int jk_sb_open(jk_sockbuf_t *sb,
-               int sd);
+#define JK_JNI_WORKER_NAME ("jni")
 
-int jk_sb_write(jk_sockbuf_t *sb,
-                const void *buf, 
-                unsigned sz);
+int JK_METHOD jni_worker_factory(jk_worker_t **w,
+                                 const char *name,
+                                 jk_logger_t *l);
 
-int jk_sb_read(jk_sockbuf_t *sb,
-               char **buf, 
-               unsigned sz,
-               unsigned *ac);
+#ifdef __cplusplus
+}
+#endif /* __cplusplus */
 
-int jk_sb_flush(jk_sockbuf_t *sb);
-
-int jk_sb_gets(jk_sockbuf_t *sb,
-               char **ps);
-
+#endif /* JK_JNI_WORKER_H */

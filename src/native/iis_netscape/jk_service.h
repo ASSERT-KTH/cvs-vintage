@@ -58,7 +58,7 @@
  *              These are the web server (ws) the worker and the connection*
  *              JVM connection point                                       *
  * Author:      Gal Shachor <shachor@il.ibm.com>                           *
- * Version:     $Revision: 1.1 $                                               *
+ * Version:     $Revision: 1.2 $                                               *
  ***************************************************************************/
 
 #ifndef JK_SERVICE_H
@@ -67,6 +67,7 @@
 #include "jk_map.h"
 #include "jk_global.h"
 #include "jk_logger.h"
+#include "jk_pool.h"
 
 #ifdef __cplusplus
 extern "C" {
@@ -82,56 +83,68 @@ typedef struct jk_worker     jk_worker_t;
 struct jk_ws_service {
     void *ws_private;
     
-    char    *scheme;
-    char    *method;
-    char    *protocol;
-    char    *req_uri;
-    char    *remote_ip;
-    char    *remote_host;
-    char    *remote_user;
-    char    *auth_type;
-    char    *query_string;
+    /*
+     * Alive as long as the request is alive.
+     */
+    jk_pool_t *pool;
 
-    char    *server_name;
-    unsigned server_port;
+    /* 
+     * CGI Environment needed by servlets
+     */
+    char    *method;        
+    char    *protocol;      
+    char    *req_uri;       
+    char    *remote_addr;   
+    char    *remote_host;   
+    char    *remote_user;   
+    char    *auth_type;     
+    char    *query_string;  
+    char    *server_name;   
+    unsigned server_port;   
     char    *server_software;
+    unsigned content_length;    /* integer that represents the content  */
+                                /* length should be 0 if unknown.        */
 
     /*
-     * SSL info
+     * SSL information
      *
      * is_ssl       - True if request is in ssl connection
-     * ssl_cert     - If available, ASN.1 encoded client certificates.
+     * ssl_cert     - If available, base64 ASN.1 encoded client certificates.
      * ssl_cert_len - Length of ssl_cert, 0 if certificates are not available.
      * ssl_cipher   - The ssl cipher suite in use.
+     * ssl_session  - The ssl session string
      *
-     * To be defined :
-     * What about the ssl session ? can we get it from any native server.
-     *
+     * In some servers it is impossible to extract all this information, in this 
+     * case, we are passing NULL.
      */
     int      is_ssl;
     char     *ssl_cert;
     unsigned ssl_cert_len;
     char     *ssl_cipher;
+    char     *ssl_session;
 
     /*
-     * Headers for this request
-     *
-     * content_type and content_length are important headers that are needed
-     * by the servlet environment. While parsing the headers the plugin should
-     * extract them for engine quiqe access.
+     * Headers, names and values.
      */
-    char    *content_type;      /* integer that represents the content  */
-    unsigned content_length;    /* integer that represents the content  */
-                                /* lengthshould be 0 if unknown.        */
-
     char    **headers_names;    /* Names of the request headers  */
     char    **headers_values;   /* Values of the request headers */
     unsigned num_headers;       /* Number of request headers     */
 
 
+    /*
+     * The jvm route is in use when the adapter load balance among
+     * several JVMs. It is the ID of a specific JVM in the load balance
+     * group. We are using this variable to implement JVM session 
+     * affinity
+     */
+    char    *jvm_route;
+
+    /*
+     * Callbacks into the web server.
+     */
     int (JK_METHOD *start_response)(jk_ws_service_t *s,
                                     int status,
-                                    char *reason,
+                                    const char *reason,
                                     const char * const *header_names,
                                     const char * const *header_values,
                                     unsigned num_of_headers);

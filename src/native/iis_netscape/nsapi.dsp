@@ -93,34 +93,47 @@ LINK32=link.exe
 # Begin Source File
 
 SOURCE=.\jk_ajp12_worker.c
+# ADD CPP /I "$(JAVA_HOME)\include" /I "$(JAVA_HOME)\include\win32"
 # End Source File
 # Begin Source File
 
 SOURCE=.\jk_connect.c
+# ADD CPP /I "$(JAVA_HOME)\include" /I "$(JAVA_HOME)\include\win32"
+# End Source File
+# Begin Source File
+
+SOURCE=.\jk_jni_worker.c
+# ADD CPP /I "$(JAVA_HOME)\include" /I "$(JAVA_HOME)\include\win32"
 # End Source File
 # Begin Source File
 
 SOURCE=.\jk_map.c
+# ADD CPP /I "$(JAVA_HOME)\include" /I "$(JAVA_HOME)\include\win32"
 # End Source File
 # Begin Source File
 
 SOURCE=.\jk_nsapi_plugin.c
+# ADD CPP /I "$(JAVA_HOME)\include" /I "$(JAVA_HOME)\include\win32"
 # End Source File
 # Begin Source File
 
 SOURCE=.\jk_pool.c
+# ADD CPP /I "$(JAVA_HOME)\include" /I "$(JAVA_HOME)\include\win32"
 # End Source File
 # Begin Source File
 
 SOURCE=.\jk_sockbuf.c
+# ADD CPP /I "$(JAVA_HOME)\include" /I "$(JAVA_HOME)\include\win32"
 # End Source File
 # Begin Source File
 
 SOURCE=.\jk_util.c
+# ADD CPP /I "$(JAVA_HOME)\include" /I "$(JAVA_HOME)\include\win32"
 # End Source File
 # Begin Source File
 
 SOURCE=.\jk_worker.c
+# ADD CPP /I "$(JAVA_HOME)\include" /I "$(JAVA_HOME)\include\win32"
 # End Source File
 # End Group
 # Begin Group "Header Files"

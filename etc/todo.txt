@@ -1,0 +1,11 @@
+ Todo
+------
+
+1. Add load balancing worker
+2. Check other ajp versions
+3. Improve HowTos
+4. Test the Netscape plugin on other Oss and Netscape servers
+5. Test the IIS plugin on W2K and IIS5
+6. Add configuration wizard for IIS !!!
+7. Improve logging in Netscape
+8. Improve code documentation

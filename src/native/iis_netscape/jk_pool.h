@@ -56,7 +56,7 @@
 /***************************************************************************
  * Description: Memory Pool object header file                             *
  * Author:      Gal Shachor <shachor@il.ibm.com>                           *
- * Version:     $Revision: 1.1 $                                               *
+ * Version:     $Revision: 1.2 $                                               *
  ***************************************************************************/
 #ifndef _JK_POOL_H
 #define _JK_POOL_H

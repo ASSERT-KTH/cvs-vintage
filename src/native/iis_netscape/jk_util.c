@@ -56,23 +56,35 @@
 /***************************************************************************
  * Description: Utility functions (mainly configuration)                   *
  * Author:      Gal Shachor <shachor@il.ibm.com>                           *
- * Version:     $Revision: 1.1 $                                               *
+ * Version:     $Revision: 1.2 $                                               *
  ***************************************************************************/
 
 
 #include "jk_util.h"
-#include "jk_pool.h"
 #include "jk_ajp12_worker.h"
 
+#define SYSPROPS_OF_WORKER          ("sysprops")
+#define STDERR_OF_WORKER            ("stderr")
+#define STDOUT_OF_WORKER            ("stdout")
+#define MX_OF_WORKER                ("mx")
+#define MS_OF_WORKER                ("ms")
+#define CP_OF_WORKER                ("class_path")
+#define JVM_OF_WORKER               ("jvm_lib")
+#define LIBPATH_OF_WORKER           ("ld_path")
+#define CMD_LINE_OF_WORKER          ("cmd_line")
+#define NATIVE_LIB_OF_WORKER        ("native_lib")
 #define PREFIX_OF_WORKER            ("worker")
 #define HOST_OF_WORKER              ("host")
 #define PORT_OF_WORKER              ("port")
 #define TYPE_OF_WORKER              ("type")
+#define LOAD_FACTOR_OF_WORKER       ("lbfactor")
+#define BALANCED_WORKERS            ("balanced_workers")
 #define WORKER_AJP12                ("ajp12")
 #define DEFAULT_WORKER_TYPE         JK_AJP12_WORKER_NAME
 
 #define DEFAULT_WORKER              JK_AJP12_WORKER_NAME
 #define WORKER_LIST_PROPERTY_NAME   ("worker.list")
+#define DEFAULT_LB_FACTOR           (1.0)
 
 #define HUGE_BUFFER_SIZE (8*1024)
 #define LOG_LINE_SIZE    (1024)
@@ -256,4 +268,302 @@ int jk_get_worker_list(jk_map_t *m,
     }
 
     return JK_FALSE;
+}
+
+double jk_get_lb_factor(jk_map_t *m, 
+                        const char *wname)
+{
+    char buf[1024];
+    
+    if(!m || !wname) {
+        return DEFAULT_LB_FACTOR;
+    }
+
+    sprintf(buf, "%s.%s.%s", PREFIX_OF_WORKER, wname, LOAD_FACTOR_OF_WORKER);
+
+    return map_get_double(m, buf, DEFAULT_LB_FACTOR);
+}
+
+int jk_get_lb_worker_list(jk_map_t *m, 
+                          const char *lb_wname,
+                          char ***list, 
+                          unsigned *num_of_wokers)
+{
+    char buf[1024];
+
+    if(m && list && num_of_wokers && lb_wname) {
+        char **ar = NULL;
+
+        sprintf(buf, "%s.%s.%s", PREFIX_OF_WORKER, lb_wname, BALANCED_WORKERS);
+        ar = map_get_string_list(m, 
+                                 buf, 
+                                 num_of_wokers, 
+                                 NULL);
+        if(ar)  {
+            *list = ar;     
+            return JK_TRUE;
+        }
+        *list = NULL;   
+        *num_of_wokers = 0;
+    }
+
+    return JK_FALSE;
+}
+
+int jk_get_worker_mx(jk_map_t *m, 
+                     const char *wname,
+                     unsigned *mx)
+{
+    char buf[1024];
+    
+    if(m && mx && wname) {
+        int i;
+        sprintf(buf, "%s.%s.%s", PREFIX_OF_WORKER, wname, MX_OF_WORKER);
+
+        i = map_get_int(m, buf, -1);
+        if(-1 != i) {
+            *mx = (unsigned)i;
+            return JK_TRUE;
+        }
+    }
+
+    return JK_FALSE;
+}
+
+int jk_get_worker_ms(jk_map_t *m, 
+                     const char *wname,
+                     unsigned *ms)
+{
+    char buf[1024];
+    
+    if(m && ms && wname) {
+        int i;
+        sprintf(buf, "%s.%s.%s", PREFIX_OF_WORKER, wname, MS_OF_WORKER);
+
+        i = map_get_int(m, buf, -1);
+        if(-1 != i) {
+            *ms = (unsigned)i;
+            return JK_TRUE;
+        }
+    }
+
+    return JK_FALSE;
+}
+
+int jk_get_worker_classpath(jk_map_t *m, 
+                            const char *wname, 
+                            char **cp)
+{
+    char buf[1024];
+    
+    if(m && cp && wname) {
+        sprintf(buf, "%s.%s.%s", PREFIX_OF_WORKER, wname, CP_OF_WORKER);
+
+        *cp = map_get_string(m, buf, NULL);
+        if(*cp) {
+            return JK_TRUE;
+        }
+    }
+
+    return JK_FALSE;
+}
+
+int jk_get_worker_jvm_path(jk_map_t *m, 
+                           const char *wname, 
+                           char **vm_path)
+{
+    char buf[1024];
+    
+    if(m && vm_path && wname) {
+        sprintf(buf, "%s.%s.%s", PREFIX_OF_WORKER, wname, JVM_OF_WORKER);
+
+        *vm_path = map_get_string(m, buf, NULL);
+        if(*vm_path) {
+            return JK_TRUE;
+        }
+    }
+
+    return JK_FALSE;
+}
+
+int jk_get_worker_callback_dll(jk_map_t *m, 
+                               const char *wname, 
+                               char **cb_path)
+{
+    char buf[1024];
+
+    if(m && cb_path && wname) {
+        sprintf(buf, "%s.%s.%s", PREFIX_OF_WORKER, wname, NATIVE_LIB_OF_WORKER);
+
+        *cb_path = map_get_string(m, buf, NULL);
+        if(*cb_path) {
+            return JK_TRUE;
+        }
+    }
+
+    return JK_FALSE;
+}
+
+int jk_get_worker_cmd_line(jk_map_t *m, 
+                           const char *wname, 
+                           char **cmd_line)
+{
+    char buf[1024];
+
+    if(m && cmd_line && wname) {
+        sprintf(buf, "%s.%s.%s", PREFIX_OF_WORKER, wname, CMD_LINE_OF_WORKER);
+
+        *cmd_line = map_get_string(m, buf, NULL);
+        if(*cmd_line) {
+            return JK_TRUE;
+        }
+    }
+
+    return JK_FALSE;
+}
+
+
+int jk_file_exists(const char *f)
+{
+    if(f) {
+        struct stat st;
+        if((0 == stat(f, &st)) && (st.st_mode & S_IFREG)) {
+            return JK_TRUE;
+        }
+    }
+    return JK_FALSE;
+}
+
+int jk_is_path_poperty(const char *prp_name)
+{
+    char *path_suffix = "path";
+    if(prp_name && (strlen(prp_name) >= strlen(path_suffix))) {
+        const char *suffix = prp_name + strlen(prp_name) - strlen(path_suffix);
+        if(0 == strcmp(suffix, path_suffix)) {
+            return JK_TRUE;
+        }
+    }
+
+    return JK_FALSE;
+}
+
+int jk_is_cmd_line_poperty(const char *prp_name)
+{
+    if(prp_name && (strlen(prp_name) >= strlen(CMD_LINE_OF_WORKER))) {
+        const char *suffix = prp_name + strlen(prp_name) - strlen(CMD_LINE_OF_WORKER);
+        if(0 == strcmp(suffix, CMD_LINE_OF_WORKER)) {
+            return JK_TRUE;
+        }
+    }
+
+    return JK_FALSE;
+}
+
+int jk_get_worker_stdout(jk_map_t *m, 
+                         const char *wname, 
+                         char **stdout_name)
+
+{
+    char buf[1024];
+
+    if(m && stdout_name && wname) {
+        sprintf(buf, "%s.%s.%s", PREFIX_OF_WORKER, wname, STDOUT_OF_WORKER);
+
+        *stdout_name = map_get_string(m, buf, NULL);
+        if(*stdout_name) {
+            return JK_TRUE;
+        }
+    }
+
+    return JK_FALSE;
+}
+
+int jk_get_worker_stderr(jk_map_t *m, 
+                         const char *wname, 
+                         char **stderr_name)
+
+{
+    char buf[1024];
+
+    if(m && stderr_name && wname) {
+        sprintf(buf, "%s.%s.%s", PREFIX_OF_WORKER, wname, STDERR_OF_WORKER);
+
+        *stderr_name = map_get_string(m, buf, NULL);
+        if(*stderr_name) {
+            return JK_TRUE;
+        }
+    }
+
+    return JK_FALSE;
+}
+
+int jk_get_worker_sysprops(jk_map_t *m, 
+                           const char *wname, 
+                           char **sysprops)
+
+{
+    char buf[1024];
+
+    if(m && sysprops && wname) {
+        sprintf(buf, "%s.%s.%s", PREFIX_OF_WORKER, wname, SYSPROPS_OF_WORKER);
+
+        *sysprops = map_get_string(m, buf, NULL);
+        if(*sysprops) {
+            return JK_TRUE;
+        }
+    }
+
+    return JK_FALSE;
+}
+
+int jk_get_worker_libpath(jk_map_t *m, 
+                          const char *wname, 
+                          char **libpath)
+{
+    char buf[1024];
+
+    if(m && libpath && wname) {
+        sprintf(buf, "%s.%s.%s", PREFIX_OF_WORKER, wname, LIBPATH_OF_WORKER);
+
+        *libpath = map_get_string(m, buf, NULL);
+        if(*libpath) {
+            return JK_TRUE;
+        }
+    }
+
+    return JK_FALSE;
+}
+
+char **jk_parse_sysprops(jk_pool_t *p, 
+                         const char *sysprops)
+{
+    char **rc = NULL;
+
+    if(p && sysprops) {
+        char *prps = jk_pool_strdup(p, sysprops);
+        if(prps && strlen(prps)) {
+            unsigned num_of_prps;
+
+            for(num_of_prps = 1; *sysprops ; sysprops++) {
+                if(',' == *sysprops) {
+                    num_of_prps++;
+                }
+            }            
+
+            rc = jk_pool_alloc(p, (num_of_prps + 1) * sizeof(char *));
+            if(rc) {
+                unsigned i = 0;
+                char *tmp = strtok(prps, ",");
+
+                while(tmp && i < num_of_prps) {
+                    rc[i] = tmp;
+                    tmp = strtok(NULL, ",");
+                    i++;
+                }
+                rc[i] = NULL;
+            }
+        }
+    }
+
+    return rc;
 }
