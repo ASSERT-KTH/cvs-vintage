@@ -28,7 +28,7 @@ import java.util.*;
  * @author <a href="mailto:Christoph.Jung@infor.de">Christoph G. Jung</a>.
  * @author <a href="mailto:Thomas.Diesler@arcor.de">Thomas Diesler</a>.
  *
- * @version $Revision: 1.50 $
+ * @version $Revision: 1.51 $
  */
 public class ApplicationMetaData
    extends MetaData
@@ -62,8 +62,10 @@ public class ApplicationMetaData
    private String securityDomain;
    /** The  unauthenticated-principal value assigned to the application */
    private String unauthenticatedPrincipal;
-
+   /** An unused flag if the spec security restrictions should be enforced */
    private boolean enforceEjbRestrictions;
+   /** The missing-method-permissions-excluded-mode value */
+   private boolean excludeMissingMethods = true;
 
    /** The ClassLoader to load additional resources */
    private URLClassLoader resourceCl;
@@ -222,6 +224,11 @@ public class ApplicationMetaData
       return enforceEjbRestrictions;
    }
 
+   public boolean isExcludeMissingMethods()
+   {
+      return excludeMissingMethods;
+   }
+   
    /**
     * Import data provided by ejb-jar.xml
     *
@@ -639,6 +646,10 @@ public class ApplicationMetaData
       {
          securityDomain = getElementContent(securityDomainElement);
       }
+
+      // Get the missing-method-permissions-excluded-mode flag
+      excludeMissingMethods = MetaData.getOptionalChildBooleanContent(element,
+         "missing-method-permissions-excluded-mode", true);
 
       // Get the unauthenticated-principal name
       Element unauth = getOptionalChild(element,
