@@ -34,7 +34,7 @@ import org.gjt.sp.jedit.syntax.*;
 /**
  * Class with several text utility functions.
  * @author Slava Pestov
- * @version $Id: TextUtilities.java,v 1.16 2001/12/30 07:35:03 spestov Exp $
+ * @version $Id: TextUtilities.java,v 1.17 2001/12/31 03:24:59 spestov Exp $
  */
 public class TextUtilities
 {
@@ -85,6 +85,8 @@ public class TextUtilities
 		TabExpander e, float wrapMargin, java.util.List out)
 	{
 		float x = 0.0f;
+		boolean seenNonWhiteSpace = false;
+		float firstNonWhiteSpace = 0.0f;
 
 		Chunk first = null;
 		Chunk current = null;
@@ -113,7 +115,9 @@ public class TextUtilities
 							if(first != null)
 								out.add(first);
 							first = null;
-							x = newChunk.width;
+							newChunk.x = firstNonWhiteSpace;
+							x = firstNonWhiteSpace
+								+ newChunk.width;
 						}
 						else
 						{
@@ -128,6 +132,8 @@ public class TextUtilities
 							current.next = newChunk;
 							current = newChunk;
 						}
+
+						seenNonWhiteSpace = true;
 					}
 
 					if(ch == ' ')
@@ -164,6 +170,9 @@ public class TextUtilities
 						current.width = x - current.x;
 						current.length = 1;
 					}
+
+					if(!seenNonWhiteSpace)
+						firstNonWhiteSpace = x;
 
 					if(first == null)
 						first = current;
