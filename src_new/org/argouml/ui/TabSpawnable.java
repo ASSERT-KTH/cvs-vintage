@@ -1,4 +1,4 @@
-// $Id: TabSpawnable.java,v 1.21 2004/09/01 18:48:04 mvw Exp $
+// $Id: TabSpawnable.java,v 1.22 2004/09/04 07:47:51 mvw Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -24,22 +24,11 @@
 
 package org.argouml.ui;
 
-import java.awt.BorderLayout;
-import java.awt.Point;
-import java.awt.Rectangle;
-
-import javax.swing.JDialog;
 import javax.swing.JPanel;
-import javax.swing.JTabbedPane;
-import javax.swing.SwingUtilities;
 
 import org.apache.log4j.Logger;
-import org.argouml.cognitive.ui.TabToDoTarget;
-import org.argouml.i18n.Translator;
 import org.argouml.swingext.Orientable;
 import org.argouml.swingext.Orientation;
-import org.argouml.uml.diagram.ui.TabDiagram;
-import org.argouml.uml.ui.TabModelTarget;
 
 /**
  * A subclass of JPanel that can act as a tab in the DetailsPane or
@@ -168,9 +157,9 @@ public class TabSpawnable extends JPanel implements Cloneable, Orientable {
     public TabSpawnable spawn() {
 
         // TODO: this disables spawning
-        if (true) return null;
+        return null;
         
-        JDialog f = new JDialog(ProjectBrowser.getInstance());
+/*        JDialog f = new JDialog(ProjectBrowser.getInstance());
         f.getContentPane().setLayout(new BorderLayout());
         f.setTitle(Translator.localize(BUNDLE, title));
         TabSpawnable newPanel = (TabSpawnable) clone();
@@ -207,6 +196,7 @@ public class TabSpawnable extends JPanel implements Cloneable, Orientable {
                 ((JTabbedPane) getParent()).remove(this);
 
         return newPanel;
+*/    
     }
 
 } /* end class TabSpawnable */

@@ -1,4 +1,4 @@
-// $Id: DetailsPane.java,v 1.42 2004/08/20 19:28:26 mvw Exp $
+// $Id: DetailsPane.java,v 1.43 2004/09/04 07:47:51 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -214,8 +214,8 @@ public class DetailsPane
         enableTabs(item);
         for (int i = 0; i < tabPanelList.size(); i++) {
             JPanel t = (JPanel) tabPanelList.elementAt(i);
-            if (t instanceof TabToDoTarget) {
-                ((TabToDoTarget) t).setTarget(selectedTodoItem);
+            if (t instanceof TabToDo) {
+                ((TabToDo) t).setTarget(selectedTodoItem);
                 topLevelTabbedPane.setSelectedComponent(t);
                 return true;
             }
@@ -457,8 +457,8 @@ public class DetailsPane
         Object target = TargetManager.getInstance().getTarget();
         
         if (!(sel instanceof TargetListener)) {
-            if (sel instanceof TabToDoTarget)
-		((TabToDoTarget) sel).refresh();
+            if (sel instanceof TabToDo)
+		((TabToDo) sel).refresh();
 
             else if (sel instanceof TabTarget)
 		((TabTarget) sel).setTarget(target);

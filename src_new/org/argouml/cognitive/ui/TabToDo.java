@@ -1,4 +1,4 @@
-// $Id: TabToDo.java,v 1.19 2004/09/01 18:48:04 mvw Exp $
+// $Id: TabToDo.java,v 1.20 2004/09/04 07:47:52 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -43,7 +43,7 @@ import org.argouml.uml.ui.UMLAction;
 import org.tigris.toolbar.ToolBar;
 
 /**
- * The toDo Tab.
+ * The ToDo Tab.
  *
  */
 public class TabToDo extends TabSpawnable implements TabToDoTarget {
@@ -188,8 +188,9 @@ public class TabToDo extends TabSpawnable implements TabToDoTarget {
         return target;
     }
 
+
     /**
-     * @see org.argouml.cognitive.ui.TabToDoTarget#refresh()
+     * Set the target again to what it was before.
      */
     public void refresh() {
         setTarget(TargetManager.getInstance().getTarget());
