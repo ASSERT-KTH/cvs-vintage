@@ -22,7 +22,10 @@ import java.io.IOException;
 import java.net.*;
 import java.text.MessageFormat;
 
+import javax.swing.JOptionPane;
+
 import org.columba.core.gui.util.ErrorDialog;
+import org.columba.core.main.MainInterface;
 import org.columba.mail.util.MailResourceLoader;
 import org.columba.ristretto.imap.IMAPDisconnectedException;
 import org.columba.ristretto.imap.IMAPException;
@@ -56,7 +59,7 @@ public class ExceptionHandler {
             // show error dialog, with exception message and stack-trace
             // -> dialog also provides a button for the user to easily
             // -> report a bug
-            new ErrorDialog(e.getMessage(), e);
+            showErrorDialog(e.getMessage(),e);
         }
     }
 
@@ -150,6 +153,12 @@ public class ExceptionHandler {
      *            exception to process
      */
     private void showErrorDialog(String details, Exception e) {
-    	new ErrorDialog(details, e);
+    	//new ErrorDialog(details, e);
+      JOptionPane.showMessageDialog(MainInterface.frameModel.getActiveFrame(),
+                                    details,
+                                    "Columba Error",
+                                    JOptionPane.ERROR_MESSAGE,
+                                    null);
+      
     }
 }
