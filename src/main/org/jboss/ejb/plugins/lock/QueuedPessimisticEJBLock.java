@@ -45,7 +45,7 @@ import org.jboss.monitor.LockMonitor;
  * @author <a href="bill@burkecentral.com">Bill Burke</a>
  * @author <a href="pete@subx.com">Peter Murray</a>
  *
- * @version $Revision: 1.24 $
+ * @version $Revision: 1.25 $
  */
 public class QueuedPessimisticEJBLock extends BeanLockSupport
 {
@@ -279,7 +279,7 @@ public class QueuedPessimisticEJBLock extends BeanLockSupport
          {
             synchronized (waiting)
             {
-               waiting.put(miTx, getTransaction());
+               waiting.put(miTx, this);
             }
          }
          deadlockDetection(miTx);

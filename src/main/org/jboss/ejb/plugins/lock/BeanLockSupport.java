@@ -26,7 +26,7 @@ import org.w3c.dom.Element;
  *
  * @author <a href="bill@burkecentral.com">Bill Burke</a>
  * @author <a href="marc.fleury@jboss.org">Marc Fleury</a>
- * @version $Revision: 1.24 $
+ * @version $Revision: 1.25 $
  */
 public abstract class BeanLockSupport
    implements BeanLock
@@ -116,6 +116,8 @@ public abstract class BeanLockSupport
 	 while (checkTx != null)
 	 {
 	    Object waitingFor = waiting.get(checkTx);
+          if (waitingFor != null)
+             waitingFor = ((BeanLock) waitingFor).getTransaction();
 	    if (waitingFor != null)
 	    {
 	       if (set.contains(waitingFor))
