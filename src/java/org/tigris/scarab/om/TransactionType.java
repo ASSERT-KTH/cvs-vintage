@@ -45,60 +45,29 @@ package org.tigris.scarab.om;
  * This software consists of voluntary contributions made by many
  * individuals on behalf of Collab.Net.
  */ 
-// Java classes
-import java.util.List;
 
 // Turbine classes
 import org.apache.torque.om.Persistent;
-import org.apache.torque.util.Criteria;
-import org.tigris.scarab.util.ScarabException;
-import org.tigris.scarab.services.cache.ScarabCache;
 
 /** 
  * You should add additional methods to this class to meet the
  * application requirements.  This class will only be generated as
  * long as it does not already exist in the output directory.
+ *
+ * @author <a href="mailto:jmcnally@collab.new">JohnMcNally</a>
+ * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
+ * @version $Id: TransactionType.java,v 1.5 2002/06/20 22:05:12 jon Exp $
  */
 public  class TransactionType 
     extends org.tigris.scarab.om.BaseTransactionType
     implements Persistent
 {
-    // the following Strings are method names that are used in caching results
-    private static final String TRANSACTION_TYPE =
-        "TransactionType";
-    private static final String GET_INSTANCE =
-        "getInstance";
-
+    /**
+     * @deprecated Use TransactionTypeManager.getInstance(String)
+     */
     public static TransactionType getInstance(String transactionTypeName) 
         throws Exception
     {
-        TransactionType ttype = null; 
-        Object obj = ScarabCache.get(TRANSACTION_TYPE, GET_INSTANCE, 
-                                     transactionTypeName);
-        if ( obj == null ) 
-        {        
-            Criteria crit = new Criteria();
-            crit.add(TransactionTypePeer.NAME, transactionTypeName);
-            List transactionTypes = TransactionTypePeer.doSelect(crit);
-            if(transactionTypes.size() < 1) 
-            {
-                throw new ScarabException("Transaction type name: " + 
-                                          transactionTypeName + " not found.");
-            }
-            if(transactionTypes.size() > 1)
-            {
-                throw new ScarabException(
-                    "duplicate transaction type name found");
-            }
-            ttype = (TransactionType)transactionTypes.get(0);
-            ScarabCache.put(ttype, "TransactionType", "getInstance", 
-                            transactionTypeName);
-        }
-        else 
-        {
-            ttype = (TransactionType)obj;
-        }
-        
-        return ttype;
+        return TransactionTypeManager.getInstance(transactionTypeName);
     }
 }
