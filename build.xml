@@ -10,7 +10,7 @@
 <!--                                                                        -->
 <!-- ====================================================================== -->
 
-<!-- $Id: build.xml,v 1.6 2001/08/14 03:12:57 starksm Exp $ -->
+<!-- $Id: build.xml,v 1.7 2001/08/19 04:48:41 d_jencks Exp $ -->
 
 <project default="main">
 
@@ -191,6 +191,26 @@
   <!-- Disable execution of the init-hook target -->
   <target name="disable-init-hook">
     <property name="bypass-init-hook" value="true"/>
+  </target>
+
+  <!-- ================================================================== -->
+  <!-- Pretty                                                             -->
+  <!-- ================================================================== -->
+
+  <!-- 
+     |  Pretty print everything.
+     |
+     |  This uses the jedit JavaStyle plugin via the ejbdoclet pretty ant task.
+     |  cvs="true" only pretties files you have already modified.
+     |  cvs="false" pretties all files.
+    -->
+
+  <target name="pretty" depends="init">
+    <pretty settingsDir="${project.config}/etc" cvs="true">
+      <fileset dir="${source.java}">
+        <include name="**/*.java"/>
+      </fileset>
+    </pretty>
   </target>
 
 
