@@ -8,7 +8,7 @@
    <description>The J2EE Application Client Deployer</description>
    <class>org.jboss.deployment.ClientDeployer</class>
 
-   &defattr;
+   &defaultAttributes;
 
    <!-- Attributes -->
    <attribute access="read-only" getMethod="getStateString">
@@ -22,7 +22,7 @@
       <type>int</type>
    </attribute>
 
-   &defops;
+   &defaultOperations;
 
    <!-- Operations -->
    <operation>
