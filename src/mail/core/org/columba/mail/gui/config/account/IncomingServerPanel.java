@@ -17,30 +17,13 @@
 //All Rights Reserved.
 package org.columba.mail.gui.config.account;
 
-import com.jgoodies.forms.layout.FormLayout;
-
-import org.columba.core.config.DefaultItem;
-import org.columba.core.gui.util.ButtonWithMnemonic;
-import org.columba.core.gui.util.CheckBoxWithMnemonic;
-import org.columba.core.gui.util.DefaultFormBuilder;
-import org.columba.core.gui.util.LabelWithMnemonic;
-
-import org.columba.mail.config.AccountItem;
-import org.columba.mail.main.MailInterface;
-import org.columba.mail.util.MailResourceLoader;
-
-import org.columba.ristretto.pop3.protocol.POP3Exception;
-import org.columba.ristretto.pop3.protocol.POP3Protocol;
-
 import java.awt.Font;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-
 import java.io.IOException;
-
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
@@ -57,6 +40,20 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
+
+import org.columba.core.command.ExceptionHandler;
+import org.columba.core.config.DefaultItem;
+import org.columba.core.gui.util.ButtonWithMnemonic;
+import org.columba.core.gui.util.CheckBoxWithMnemonic;
+import org.columba.core.gui.util.DefaultFormBuilder;
+import org.columba.core.gui.util.LabelWithMnemonic;
+import org.columba.mail.config.AccountItem;
+import org.columba.mail.main.MailInterface;
+import org.columba.mail.util.MailResourceLoader;
+import org.columba.ristretto.pop3.protocol.POP3Exception;
+import org.columba.ristretto.pop3.protocol.POP3Protocol;
+
+import com.jgoodies.forms.layout.FormLayout;
 
 /**
  * @author freddy
@@ -430,15 +427,13 @@ public class IncomingServerPanel extends DefaultPanel implements ActionListener 
             if (isPopAccount()) {
                 try {
                     list = getAuthPOP3();
-                } catch (IOException e1) {
-                    String name = e1.getClass().getName();
-                    JOptionPane.showMessageDialog(null, e1
-                            .getLocalizedMessage(), name.substring(name
-                            .lastIndexOf(".")), JOptionPane.ERROR_MESSAGE);
-                } catch (POP3Exception e1) {
+                }  catch (POP3Exception e) {
                     LOG.fine("Server does not support the CAPA command");
 
                     //TODO Server does not support CAPA
+                } catch (Exception e) {
+//                  let exception handler process other errors
+                    new ExceptionHandler().processException(e);
                 }
             }
 

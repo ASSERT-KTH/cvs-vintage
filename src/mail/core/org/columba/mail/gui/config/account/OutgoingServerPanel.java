@@ -15,34 +15,14 @@
 //All Rights Reserved.
 package org.columba.mail.gui.config.account;
 
-import com.jgoodies.forms.layout.FormLayout;
-
-import org.columba.core.gui.util.ButtonWithMnemonic;
-import org.columba.core.gui.util.CheckBoxWithMnemonic;
-import org.columba.core.gui.util.DefaultFormBuilder;
-import org.columba.core.gui.util.LabelWithMnemonic;
-import org.columba.core.util.ListTools;
-
-import org.columba.mail.config.AccountItem;
-import org.columba.mail.config.SmtpItem;
-import org.columba.mail.main.MailInterface;
-import org.columba.mail.util.MailResourceLoader;
-
-import org.columba.ristretto.auth.AuthenticationFactory;
-import org.columba.ristretto.smtp.SMTPException;
-import org.columba.ristretto.smtp.SMTPProtocol;
-
 import java.awt.Font;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-
 import java.io.IOException;
-
 import java.net.InetAddress;
-
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -60,6 +40,22 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 import javax.swing.JTextField;
+
+import org.columba.core.command.ExceptionHandler;
+import org.columba.core.gui.util.ButtonWithMnemonic;
+import org.columba.core.gui.util.CheckBoxWithMnemonic;
+import org.columba.core.gui.util.DefaultFormBuilder;
+import org.columba.core.gui.util.LabelWithMnemonic;
+import org.columba.core.util.ListTools;
+import org.columba.mail.config.AccountItem;
+import org.columba.mail.config.SmtpItem;
+import org.columba.mail.main.MailInterface;
+import org.columba.mail.util.MailResourceLoader;
+import org.columba.ristretto.auth.AuthenticationFactory;
+import org.columba.ristretto.smtp.SMTPException;
+import org.columba.ristretto.smtp.SMTPProtocol;
+
+import com.jgoodies.forms.layout.FormLayout;
 
 
 /**
@@ -422,17 +418,15 @@ public class OutgoingServerPanel extends DefaultPanel implements ActionListener 
                 // If the server doesn't support an AUTH -> POP before SMTP is only choice
                 ListTools.intersect_astable(list,
                     AuthenticationFactory.getInstance().getSupportedMechanisms());
-            } catch (IOException e1) {
-                String name = e1.getClass().getName();
-                JOptionPane.showMessageDialog(null, e1.getLocalizedMessage(),
-                    name.substring(name.lastIndexOf(".")),
-                    JOptionPane.ERROR_MESSAGE);
-            } catch (SMTPException e1) {
+            }  catch (SMTPException e1) {
                 LOG.severe("Server does not support the CAPA command");
 
                 // Let the user choose
                 list = AuthenticationFactory.getInstance()
                                             .getSupportedMechanisms();
+            } catch (Exception e) {
+                // let exception handler process other errors
+                new ExceptionHandler().processException(e);
             }
 
             // Save the authentication modes
