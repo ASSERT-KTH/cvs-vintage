@@ -94,7 +94,7 @@ public class Module
             }         
             relation.setUserId(getOwnerId());
             relation.setDeleted(false);
-            addRModuleUsers(relation);
+            addRModuleUser(relation);
 
             // make sure the code has a value;
             String code = getCode();

@@ -38,7 +38,8 @@
                mapToProperty="DisplayValue">
             <rule maxLength="255"/>
         </field>
-        <field name="Deleted" key="del" type="boolean" mapToObject=""/>
+        <field name="Deleted" key="del" type="boolean" 
+               mapToObject="" mapToProperty=""/>
 </group>
 <group class="AttributeType" key="attt" mapToObject="om.AttributeType">
         <field name="AttributeTypeId" key="atttid" type="NumberKey">

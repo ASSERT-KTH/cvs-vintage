@@ -7,6 +7,7 @@ $page.setTitle("Attribute Editor")
 </p>
 <form action="$link.setPage("admin,AttributeEditOptions.vm")" method="GET">
     <input type="hidden" name="action" value="admin.ModifyAttributes">
+    <input type="hidden" name="nextTemplate" value="admin,AttributeEdit.vm">
 
   <table width="35%" border="1">
     <tr>
@@ -111,7 +112,7 @@ $page.setTitle("Attribute Editor")
       </td>
       <td width="75%">          
         <div align="center">
-          <input type="submit" name="eventSubmit_doModifyattributeoptions" 
+          <input type="submit" name="eventSubmit_doAddormodifyattributeoptions" 
                 value="Save">
       </div>
       </td>

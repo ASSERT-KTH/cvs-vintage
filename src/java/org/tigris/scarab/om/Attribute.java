@@ -31,11 +31,22 @@ public class Attribute
     implements Persistent
 {
     private static String className = "Attribute";
+
+    private static Criteria allOptionsCriteria;
+
+    static
+    {
+        allOptionsCriteria = new Criteria();
+        allOptionsCriteria.addOrderByColumn(AttributeOptionPeer.NUMERIC_VALUE);
+        allOptionsCriteria.addOrderByColumn(AttributeOptionPeer.DISPLAY_VALUE);
+    }
+
+
     static String getCacheKey(ObjectKey key)
     {
-        String keyString = key.getValue().toString();
-        return new StringBuffer(className.length() + keyString.length())
-            .append(className).append(keyString).toString();
+         String keyString = key.getValue().toString();
+         return new StringBuffer(className.length() + keyString.length())
+             .append(className).append(keyString).toString();
     }
 
     /**
@@ -72,18 +83,78 @@ public class Attribute
         } 
         return attribute;
     }
-    
+
     /**
-     * Little method to return a Vector of all Attribute Type's.
+     * return the options (for attributes that have them).  They are put
+     * into order by the numeric value.
+     */
+    public Vector getAttributeOptions()
+        throws Exception
+    {
+        return getAttributeOptions(allOptionsCriteria);  
+    }
+
+    /**
+     * Adds a new option.  The list is resorted.
+     */
+    public synchronized void addAttributeOption(AttributeOption option)
+        throws Exception
+    {        
+        Vector v = getAttributeOptions();
+        
+        // Check that a duplicate name is not being added
+        int size = v.size();
+        for (int i=0; i<size; i++) 
+        {
+            AttributeOption opt = (AttributeOption)v.get(i);
+            if ( option.getDisplayValue()
+                 .equalsIgnoreCase(opt.getDisplayValue()) ) 
+            {
+                throw new ScarabException("Adding option " + 
+                    option.getDisplayValue() + 
+                    " failed due to a non-unique name." );
+            }
+        }
+
+        
+        Vector sortedOptions = (Vector)v.clone();
+        sortedOptions.add(option);
+        option.setAttribute(this);
+        sortOptions(sortedOptions);
+
+    }
+
+    /**
+     * Sorts the options and renumbers any with duplicate numeric values
+     */
+    public synchronized void sortOptions(Vector v)
+        throws Exception
+    {
+        Vector sortedOptions = (Vector)v.clone();
+        Collections.sort( sortedOptions, AttributeOption.getComparator() );
+
+        // set new numeric values in case any options duplicated
+        // a numeric value
+        int size = sortedOptions.size();
+        for (int i=0; i<size; i++) 
+        {
+            AttributeOption opt = (AttributeOption)sortedOptions.get(i);
+            opt.setNumericValue(i+1);
+            opt.save();
+        }
+
+        collAttributeOptions = sortedOptions;
+    }
+
+    /**
+     * Little method to return a List of all Attribute Type's.
      * It is here for convenience with regards to needing this
      * functionality from within a Template.
      */
-    public static Vector getAllAttributeTypes()
+    public static List getAllAttributeTypes()
         throws Exception
     {
         return AttributeTypePeer.doSelect(new Criteria());
     }
 }
-
-
 

@@ -27,6 +27,36 @@ public class AttributeOption
     extends BaseAttributeOption
     implements Persistent
 {
+
+    private static final Comparator comparator = new Comparator()
+        {
+            public int compare(Object obj1, Object obj2)
+            {
+                int result = 1;
+                AttributeOption opt1 = (AttributeOption)obj1; 
+                AttributeOption opt2 = (AttributeOption)obj2;
+                if (opt1.getNumericValue() < opt2.getNumericValue()) 
+                {
+                    result = -1;
+                }
+                else if (opt1.getNumericValue() == opt2.getNumericValue()) 
+                {
+                    result = opt1.getDisplayValue()
+                        .compareTo(opt2.getDisplayValue()); 
+                }
+                return result;
+            }            
+        };
+
+    /**
+     * Compares numeric value and in cases where the numeric value
+     * is the same it compares the diplay values.
+     */
+    public static Comparator getComparator()
+    {
+        return comparator;
+    }
+
     // need a local reference
     private Attribute aAttribute;                 
     public Attribute getAttribute() throws Exception

@@ -72,7 +72,7 @@ public class Issue
             {
                 AttributeValue aval = AttributeValue
                     .getNewInstance(attributes[i], this);
-                addAttributeValues(aval);
+                addAttributeValue(aval);
                 map.put( key, aval );
             }
         }

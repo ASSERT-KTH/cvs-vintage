@@ -46,7 +46,7 @@ package org.tigris.scarab.actions.admin;
  * individuals on behalf of Collab.Net.
  */ 
 
-import java.util.Iterator;
+import java.util.Vector;
 
 // Velocity Stuff 
 import org.apache.turbine.services.velocity.*; 
@@ -61,19 +61,21 @@ import org.apache.turbine.om.ObjectKey;
 import org.apache.turbine.om.NumberKey;
 import org.apache.turbine.services.intake.IntakeTool;
 import org.apache.turbine.services.intake.model.Group;
+import org.apache.turbine.services.intake.model.BooleanField;
 import org.apache.turbine.services.pull.ApplicationTool;
 import org.apache.turbine.services.pull.TurbinePull;
 // Scarab Stuff
 import org.tigris.scarab.actions.base.*;
 import org.tigris.scarab.om.*;
 import org.tigris.scarab.util.ScarabConstants;
+import org.tigris.scarab.util.ScarabException;
 import org.tigris.scarab.tools.ScarabRequestTool;
 
 /**
     This class will store the form data for a project modification
         
     @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
-    @version $Id: ModifyAttributes.java,v 1.4 2001/04/10 06:23:48 jmcnally Exp $
+    @version $Id: ModifyAttributes.java,v 1.5 2001/04/11 05:23:58 jmcnally Exp $
 */
 public class ModifyAttributes extends VelocityAction
 {
@@ -204,12 +206,10 @@ public class ModifyAttributes extends VelocityAction
      * Used on AttributeEditOptions.vm to change the name of an existing
      * AttributeOption or add a new one if the name doesn't already exist.
      */
-    public void doAddormodifyattributeoptions( RunData data, Context context )
+    public synchronized void 
+        doAddormodifyattributeoptions( RunData data, Context context )
         throws Exception
     {
-        String template = data.getParameters()
-            .getString(ScarabConstants.TEMPLATE, null);
-
         IntakeTool intake = (IntakeTool)context
            .get(ScarabConstants.INTAKE_TOOL);
 
@@ -219,18 +219,43 @@ public class ModifyAttributes extends VelocityAction
                 .get(ScarabConstants.SCARAB_REQUEST_TOOL)).getAttribute();
 
             AttributeOption option = null;
-            Iterator i = attribute.getAttributeOptions().iterator();
-            while (i.hasNext()) 
+            Vector attributeOptions = (Vector)attribute
+                .getAttributeOptions().clone(); 
+            // go in reverse because we may be removing from the list
+            for (int i=attributeOptions.size()-1; i>=0; i--) 
             {
-                option = (AttributeOption)i.next();
+                option = (AttributeOption)attributeOptions.get(i);
                 Group group = intake.get("AttributeOption", 
                                          option.getQueryKey());
+                // in case the template is not showing all the options at once
                 if ( group != null ) 
                 {
                     group.setProperties(option);
+
+                    // check for a deleted flag.  AttributeOptions are removed
+                    // from the db when deleted.
+                    BooleanField deletedField = 
+                        (BooleanField)group.get("Deleted");
+                    if ( deletedField != null && deletedField.booleanValue() ) 
+                    {
+                        // remove from the Attribute's list
+                        attributeOptions.remove(i);
+                        // delete from the db
+                        AttributeOptionPeer.doDelete(option);
+                    }
+                    else 
+                    {
+                        option.save();
+                    }
+
+                    // we need this because we are accepting duplicate
+                    // numeric values and resorting, so we do not want
+                    // to show the actual value entered by the user.
+                    intake.remove(group);
                 }                
             }
-            
+            attribute.sortOptions(attributeOptions);
+
             // was a new option added?
             option = new AttributeOption();
             Group group = intake.get("AttributeOption", 
@@ -238,10 +263,36 @@ public class ModifyAttributes extends VelocityAction
             if ( group != null ) 
             {
                 group.setProperties(option);
-                attribute.addAttributeOptions(option);
-            }                
+                if ( option.getDisplayValue() != null 
+                     && option.getDisplayValue().length() != 0 ) 
+                {
+                    try
+                    {
+                        attribute.addAttributeOption(option);
+                    }
+                    catch (ScarabException se)
+                    {
+                        group.get("DisplayValue")
+                            .setMessage("Please select a unique name.");
+                    }
+                }
 
-            // attribute.save();            
+                // we need this because we are accepting duplicate
+                // numeric values and resorting, so we do not want
+                // to show the actual value entered by the user.
+                intake.remove(group);
+                for (int i=attributeOptions.size()-1; i>=0; i--) 
+                {
+                    option = (AttributeOption)attributeOptions.get(i);
+                    group = intake.get("AttributeOption", 
+                                             option.getQueryKey());
+                    // in case the template is not showing all the options
+                    if ( group != null ) 
+                    {
+                        intake.remove(group);
+                    }
+                }
+            }                           
         }
     }
 
