@@ -73,8 +73,7 @@ import org.tigris.scarab.tools.ScarabLocalizationTool;
  * Loads XML into Scarab via import, returning XML-formatted results
  *
  * @author     <a href="mailto:mmurphy@collab.net">Mark L. Murphy</a>
- * @created    December 4, 2002
- * @version    $Id: XMLImportIssuesResults.java,v 1.4 2003/03/25 20:15:21 jon Exp $
+ * @version    $Id: XMLImportIssuesResults.java,v 1.5 2003/03/26 00:24:13 jon Exp $
  */
 public class XMLImportIssuesResults extends Default
 {

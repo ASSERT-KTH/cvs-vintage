@@ -71,25 +71,24 @@ import org.tigris.scarab.util.xmlissues.ScarabIssues;
 
 
 /**
- * This is a bean'ish object which allows one to set values for importing 
- * issues, and then run the actual import. 
+ * <p>This is a bean'ish object which allows one to set values for importing 
+ * issues, and then run the actual import.</p>
  *
- * Amenable to the ant task wrapper {@link AntTaskWrapper AntTaskWrapper} or
+ * <p>Amenable to the ant task wrapper or
  * you can pass an explicit file for explicit import if turbine is already 
- * up and running.
+ * up and running.</p>
  * 
  * <p>The way the ant task wrapper works is simple: call all the appropriate
  * set methods to define the properties. Then you will need to call the init()
  * and execute methods to start running things. Note: If Turbine is already
- * initialized, there is no need to call the init() method.
+ * initialized, there is no need to call the init() method.</p>
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: ImportIssues.java,v 1.8 2003/03/22 18:35:51 jon Exp $
+ * @version $Id: ImportIssues.java,v 1.9 2003/03/26 00:24:13 jon Exp $
  */
 public class ImportIssues
 {
     private static final Log log = LogFactory.getLog(ImportIssues.class);
-
 
     /** 
      * Name of the TR.props file.
@@ -212,7 +211,6 @@ public class ImportIssues
                     reader);
             }
         }
-
         catch(Exception e)
         {
             log.debug("\nThe following error(s) were found: " 
@@ -220,7 +218,6 @@ public class ImportIssues
                 + e.getMessage());
             throw e;
         }
-
         finally
         {
             // Renable workflow
@@ -234,7 +231,7 @@ public class ImportIssues
      * Run an import.
      *
      * Assumes we're up and running inside of turbine.  Awkwardly duplicates 
-     * {@link import(File) import} but duplication is so we can do the reget of
+     * {@link #runImport(File)} but duplication is so we can do the reget of
      * the input stream; FileInput "manages" backing up the Upload for us on the
      * second get of the input stream (It creates new ByteArrayInputStream 
      * w/ the src being a byte array of the file its kept in memory or in 
