@@ -4,7 +4,7 @@
 
 <h3>Registration</h3>
 
-<form name="RegisterForm" action="$link.setPage("Register.vm")" method="post">
+<form name="register" action="$link.setPage("Register.vm")" method="post">
 <input type="hidden" name="action" value="Register" />
 <input type="hidden" name="$scarabG.Constant.NEXT_TEMPLATE" value="RegisterConfirm.vm" />
 <input type="hidden" name="$scarabG.Constant.CANCEL_TEMPLATE" value="Login.vm" />
@@ -75,5 +75,12 @@
 </div>
 
 $intake.declareGroups()
+
+<script lang="JavaScript">
+<!--
+document.register.${regGroup.FirstName.Key}.focus();
+// -->
+</script>
+
 </form>
 </div>
