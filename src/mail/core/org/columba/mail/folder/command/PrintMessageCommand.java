@@ -364,8 +364,6 @@ public class PrintMessageCommand extends FolderCommand {
 	 * body of a html message.<br>
 	 * Precondition: Mime subtype is "html".
 	 * 
-	 * NB: HTML printing is still only experimental
-	 *
 	 * @param	bodyPart	Body part of message
 	 * @return	Print object ready to be appended to the print document
 	 * @author	Karl Peder Olesen (karlpeder), 20030531
@@ -428,16 +426,21 @@ public class PrintMessageCommand extends FolderCommand {
 				bodyStream = new Base64DecoderInputStream( bodyStream );
 			}
 		}
-		
-		Charset charset;
-		try {
-			charset = Charset.forName(charsetToUse );
-		} catch (UnsupportedCharsetException ex) {
-			// decode using default charset
-			charset = Charset.forName(System.getProperty("file.encoding"));
-		}
 
-		bodyStream = new CharsetDecoderInputStream( bodyStream, charset);
+		// charset may be null if not specified properly in Content-Type header 
+		if (charsetToUse != null) {
+			Charset charset;
+			try {
+				charset = Charset.forName(charsetToUse );
+			} catch (UnsupportedCharsetException ex) {
+				// decode using default charset
+				charset = Charset.forName(System.getProperty("file.encoding"));
+			}
+			bodyStream = new CharsetDecoderInputStream( bodyStream, charset);
+		} else {
+			ColumbaLogger.log.debug("No charset specified " + 
+					"- no decoding will be performed");
+		}
 
 		return StreamUtils.readInString(bodyStream).toString();
 	}
