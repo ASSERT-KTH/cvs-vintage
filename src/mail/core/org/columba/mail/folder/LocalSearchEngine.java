@@ -6,6 +6,7 @@ import org.columba.core.command.WorkerStatusController;
 import org.columba.mail.filter.FilterCriteria;
 import org.columba.mail.message.AbstractMessage;
 import org.columba.mail.message.ColumbaHeader;
+import org.columba.mail.message.HeaderInterface;
 
 /**
  * @author freddy
@@ -24,15 +25,13 @@ public class LocalSearchEngine extends AbstractLocalSearchEngine {
 	/**************************** filter methods ***********************/
 
 	public boolean processHeader(
-		AbstractMessage message,
+		HeaderInterface header,
 		String headerField,
 		String pattern,
 		int condition,
 		WorkerStatusController worker)
 		throws Exception {
 		boolean result = false;
-
-		ColumbaHeader header = (ColumbaHeader) message.getHeader();
 
 		String headerItem = (String) header.get(headerField);
 		if (headerItem == null)
@@ -94,14 +93,12 @@ public class LocalSearchEngine extends AbstractLocalSearchEngine {
 	}
 
 	public boolean processDate(
-		AbstractMessage message,
+		HeaderInterface header,
 		Date date,
 		int condition,
 		WorkerStatusController worker)
 		throws Exception {
 		boolean result = false;
-
-		ColumbaHeader header = (ColumbaHeader) message.getHeader();
 
 		Date d = (Date) header.get("columba.date");
 		if (d == null)
@@ -126,14 +123,12 @@ public class LocalSearchEngine extends AbstractLocalSearchEngine {
 	}
 
 	public boolean processSize(
-		AbstractMessage message,
+		HeaderInterface header,
 		Integer size,
 		int condition,
 		WorkerStatusController worker)
 		throws Exception {
 		boolean result = false;
-
-		ColumbaHeader header = (ColumbaHeader) message.getHeader();
 
 		Integer s = (Integer) header.get("columba.size");
 		if (s == null)
@@ -158,15 +153,13 @@ public class LocalSearchEngine extends AbstractLocalSearchEngine {
 	}
 
 	public boolean processFlags(
-		AbstractMessage message,
+		HeaderInterface header,
 		String pattern,
 		int condition,
 		WorkerStatusController worker)
 		throws Exception {
 
 		boolean result = false;
-
-		ColumbaHeader header = (ColumbaHeader) message.getHeader();
 
 		Boolean flags = (Boolean) header.get(pattern);
 		if (flags == null)
@@ -197,14 +190,12 @@ public class LocalSearchEngine extends AbstractLocalSearchEngine {
 	}
 
 	public boolean processPriority(
-		AbstractMessage message,
+		HeaderInterface header,
 		Integer searchPattern,
 		int condition,
 		WorkerStatusController worker)
 		throws Exception {
 		boolean result = false;
-
-		ColumbaHeader header = (ColumbaHeader) message.getHeader();
 
 		Integer priority = (Integer) header.get("columba.priority");
 		if (priority == null)
@@ -235,29 +226,13 @@ public class LocalSearchEngine extends AbstractLocalSearchEngine {
 	}
 
 	public boolean processBody(
-		AbstractMessage message,
+		String body,
 		String pattern,
 		int condition,
 		WorkerStatusController worker)
 		throws Exception {
 		boolean result = false;
 		String bodyText = pattern;
-
-		ColumbaHeader header = (ColumbaHeader) message.getHeader();
-		Object uid = header.get("columba.uid");
-
-		String body = message.getSource();
-		if (body == null) {
-			try {
-				body = folder.getMessageSource(uid, null);
-			} catch (Exception ex) {
-
-				ex.printStackTrace();
-			}
-		}
-
-		if (body == null)
-			return false;
 
 		switch (condition) {
 			case FilterCriteria.CONTAINS :

@@ -9,7 +9,7 @@ import org.columba.mail.filter.Filter;
 import org.columba.mail.filter.FilterCriteria;
 import org.columba.mail.filter.FilterRule;
 import org.columba.mail.message.AbstractMessage;
-import org.columba.mail.message.Message;
+import org.columba.mail.message.HeaderInterface;
 
 /**
  * @author freddy
@@ -38,7 +38,7 @@ public abstract class AbstractLocalSearchEngine
 	 */
 
 	public abstract boolean processHeader(
-		AbstractMessage message,
+		HeaderInterface header,
 		String headerField,
 		String pattern,
 		int condition,
@@ -46,35 +46,35 @@ public abstract class AbstractLocalSearchEngine
 		throws Exception;
 
 	public abstract boolean processDate(
-		AbstractMessage message,
+		HeaderInterface header,
 		Date date,
 		int condition,
 		WorkerStatusController worker)
 		throws Exception;
 
 	public abstract boolean processSize(
-		AbstractMessage message,
+		HeaderInterface header,
 		Integer size,
 		int condition,
 		WorkerStatusController worker)
 		throws Exception;
 
 	public abstract boolean processFlags(
-		AbstractMessage message,
+		HeaderInterface header,
 		String pattern,
 		int condition,
 		WorkerStatusController worker)
 		throws Exception;
 
 	public abstract boolean processPriority(
-		AbstractMessage message,
+		HeaderInterface header,
 		Integer searchPattern,
 		int condition,
 		WorkerStatusController worker)
 		throws Exception;
 
 	public abstract boolean processBody(
-		AbstractMessage message,
+		String messageSource,
 		String pattern,
 		int condition,
 		WorkerStatusController worker)
@@ -95,9 +95,9 @@ public abstract class AbstractLocalSearchEngine
 			if (folder.exists(uids[i], worker) == false)
 				continue;
 
-			AbstractMessage message = folder.getMessage(uids[i], worker);
+			HeaderInterface header = folder.getMessageHeader(uids[i], worker);
 			boolean b =
-				processHeader(message, headerField, pattern, condition, worker);
+				processHeader(header, headerField, pattern, condition, worker);
 			if (b == true)
 				v.add(uids[i]);
 
@@ -120,8 +120,8 @@ public abstract class AbstractLocalSearchEngine
 			if (folder.exists(uids[i], worker) == false)
 				continue;
 
-			AbstractMessage message = folder.getMessage(uids[i], worker);
-			boolean b = processDate(message, searchPattern, condition, worker);
+			HeaderInterface header = folder.getMessageHeader(uids[i], worker);
+			boolean b = processDate(header, searchPattern, condition, worker);
 			if (b == true)
 				v.add(uids[i]);
 
@@ -138,7 +138,7 @@ public abstract class AbstractLocalSearchEngine
 		} catch (java.text.ParseException ex) {
 			System.out.println("exception: " + ex.getMessage());
 			ex.printStackTrace();
-		
+
 			//return new Vector();
 		}
 		return searchPattern;
@@ -157,8 +157,8 @@ public abstract class AbstractLocalSearchEngine
 		for (int i = 0; i < uids.length; i++) {
 			if (folder.exists(uids[i], worker) == false)
 				continue;
-			AbstractMessage message = folder.getMessage(uids[i], worker);
-			boolean b = processSize(message, searchPattern, condition, worker);
+			HeaderInterface header = folder.getMessageHeader(uids[i], worker);
+			boolean b = processSize(header, searchPattern, condition, worker);
 			if (b == true)
 				v.add(uids[i]);
 
@@ -204,9 +204,9 @@ public abstract class AbstractLocalSearchEngine
 		for (int i = 0; i < uids.length; i++) {
 			if (folder.exists(uids[i], worker) == false)
 				continue;
-			AbstractMessage message = folder.getMessage(uids[i], worker);
+			HeaderInterface header = folder.getMessageHeader(uids[i], worker);
 			boolean b =
-				processFlags(message, searchHeaderField, condition, worker);
+				processFlags(header, searchHeaderField, condition, worker);
 			if (b == true)
 				v.add(uids[i]);
 		}
@@ -227,8 +227,8 @@ public abstract class AbstractLocalSearchEngine
 		for (int i = 0; i < uids.length; i++) {
 			if (folder.exists(uids[i], worker) == false)
 				continue;
-			AbstractMessage message = folder.getMessage(uids[i], worker);
-			boolean b = processPriority(message, priority, condition, worker);
+			HeaderInterface header = folder.getMessageHeader(uids[i], worker);
+			boolean b = processPriority(header, priority, condition, worker);
 			if (b == true)
 				v.add(uids[i]);
 
@@ -256,8 +256,8 @@ public abstract class AbstractLocalSearchEngine
 		for (int i = 0; i < uids.length; i++) {
 			if (folder.exists(uids[i], worker) == false)
 				continue;
-			AbstractMessage message = folder.getMessage(uids[i], worker);
-			boolean b = processBody(message, pattern, condition, worker);
+			String source = folder.getMessageSource(uids[i], worker);
+			boolean b = processBody(source, pattern, condition, worker);
 			if (b == true)
 				v.add(uids[i]);
 
