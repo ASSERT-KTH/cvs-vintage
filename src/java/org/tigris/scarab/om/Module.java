@@ -71,7 +71,7 @@ import org.apache.torque.util.Criteria;
  * This class describes a Module within the Scarab system
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: Module.java,v 1.56 2002/10/24 22:59:26 jon Exp $
+ * @version $Id: Module.java,v 1.57 2003/02/01 01:54:13 jon Exp $
  */
 public interface Module
     extends Serializable
@@ -173,6 +173,18 @@ public interface Module
     public void setOwnerId(NumberKey v ) throws Exception;
 
     public void save() throws Exception;
+
+    /**
+     * gets a list of all of the Attributes in a Module based on the Criteria.
+     */
+    public List getAttributes(Criteria criteria)
+        throws Exception;
+
+    /**
+     * Gets a list of all of the Attributes in this module.
+     */
+    public List getAllAttributes()
+        throws Exception;
 
     /**
      * Creates new attribute group.
@@ -329,16 +341,16 @@ public interface Module
      * Array of Attributes used for quick search given the specified <code>issueType</code>
      *
      * @param issueType
-     * @return an <code>Attribute[]</code> value
+     * @return an <code>List</code> of Attribute objects
      */
-    public Attribute[] getQuickSearchAttributes(IssueType issueType)
+    public List getQuickSearchAttributes(IssueType issueType)
         throws Exception;
 
     /**
      * Array of Attributes which are active and required for an Issue Type.
      *
      * @param issueType
-     * @return an <code>Attribute[]</code> value
+     * @return an <code>List</code> of Attribute objects
      */
     public List getRequiredAttributes(IssueType issueType)
         throws Exception;
@@ -346,9 +358,9 @@ public interface Module
     /**
      * Array of active Attributes for an Issue Type.
      *
-     * @return an <code>Attribute[]</code> value
+     * @return an <code>List</code> of Attribute objects
      */
-    public Attribute[] getActiveAttributes(IssueType issueType)
+    public List getActiveAttributes(IssueType issueType)
         throws Exception;
 
     public List getUserAttributes(IssueType issueType, boolean activeOnly)

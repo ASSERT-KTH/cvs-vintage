@@ -65,7 +65,7 @@ import org.apache.commons.logging.LogFactory;
  * This class manages the validation and importing of issues.
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: ScarabIssues.java,v 1.17 2003/01/31 02:15:08 jon Exp $
+ * @version $Id: ScarabIssues.java,v 1.18 2003/02/01 01:54:13 jon Exp $
  */
 public class ScarabIssues implements java.io.Serializable
 {
@@ -353,20 +353,22 @@ public class ScarabIssues implements java.io.Serializable
     private void doIssueValidateEvent(Module module, Issue issue)
     {
         // check for existing module
+        @OM@.Module moduleOM = null;
         try
         {
-            @OM@.Module moduleOM = @OM@.ModuleManager.getInstance(module.getDomain(), module.getName(), module.getCode());
+            moduleOM = @OM@.ModuleManager.getInstance(module.getDomain(), module.getName(), module.getCode());
             if (moduleOM == null)
             {
                 throw new Exception();
             }
+// commented out for now cause this isn't really necessary/required data            
 //            importUsers.add(module.getOwner());
         }
         catch (Exception e)
         {
             importErrors.add("Could not find Module: " + module.getName() + " Code: " + module.getCode() + " in domain " + module.getDomain());
         }
-        
+
         // get the instance of the issue type
         try
         {
@@ -380,6 +382,13 @@ public class ScarabIssues implements java.io.Serializable
         {
             importErrors.add("Could not find Issue type: " + issue.getArtifactType());
         }
+/*
+        List rModuleAttributeList = null;
+        if (moduleOM != null)
+        {
+            rModuleAttributeList = moduleOM.getRModuleAttributes();
+        }
+*/
 
         List activitySets = issue.getActivitySets();
         for (Iterator itr = activitySets.iterator(); itr.hasNext();)
@@ -443,9 +452,10 @@ public class ScarabIssues implements java.io.Serializable
 
                 // Get the Attribute associated with the Activity
                 @OM@.Attribute attributeOM = null;
+                String activityAttribute = activity.getAttribute();
                 try
                 {
-                    attributeOM = @OM@.Attribute.getInstance(activity.getAttribute());
+                    attributeOM = @OM@.Attribute.getInstance(activityAttribute);
                     if (attributeOM == null)
                     {
                         throw new Exception();
@@ -453,20 +463,29 @@ public class ScarabIssues implements java.io.Serializable
                 }
                 catch (Exception e)
                 {
-                    importErrors.add("Could not find Attribute: " + activity.getAttribute());
+                    importErrors.add("Could not find Attribute: " + activityAttribute);
                 }
 
-                if (attributeOM != null && attributeOM.equals(NULL_ATTRIBUTE))
+                if (attributeOM != null)
                 {
-                    // add any dependency activities to a list for later processing
-                    if (isDependencyActivity(activity))
+                /*
+                    if (rModuleAttributeList != null && ! rModuleAttributeList.contains(attributeOM))
                     {
-                        if (!isDuplicateDependency(activitySet))
+                        log.debug("Could not find RModuleAttribute: " + allDependencies.size() + "-------------");
+                    }
+*/
+                    if (attributeOM.equals(NULL_ATTRIBUTE))
+                    {
+                        // add any dependency activities to a list for later processing
+                        if (isDependencyActivity(activity))
                         {
-                            allDependencies.add(activity);
-                            log.debug("-------------Stored Dependency # " + allDependencies.size() + "-------------");
+                            if (!isDuplicateDependency(activitySet))
+                            {
+                                allDependencies.add(activity);
+                                log.debug("-------------Stored Dependency # " + allDependencies.size() + "-------------");
+                            }
+                            continue;
                         }
-                        continue;
                     }
                 }
                 else if (activity.getNewOption() != null)
@@ -696,7 +715,7 @@ public class ScarabIssues implements java.io.Serializable
             log.debug("Number of Activities in ActivitySet: " + activities.size());
 
             SequencedHashMap avMap = issueOM.getModuleAttributeValuesMap();
-            
+            log.debug("Total Module Attribute Values: " + avMap.size());
             for (Iterator itrb = activities.iterator(); itrb.hasNext();)
             {
                 Activity activity = (Activity) itrb.next();
@@ -758,8 +777,8 @@ public class ScarabIssues implements java.io.Serializable
                             allDependencies.add(obj);
                             dependActivitySetId.add(activitySet.getId());
                             log.debug("-------------Stored Dependency # " + allDependencies.size() + "-------------");
+                            continue;
                         }
-                        continue;
                     }
                     else
                     {

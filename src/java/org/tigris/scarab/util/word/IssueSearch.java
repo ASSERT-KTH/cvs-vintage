@@ -354,7 +354,7 @@ public class IssueSearch
         SequencedHashMap result = null;
 
         List attributes = mitList.getCommonAttributes();
-        HashMap siaValuesMap = getAttributeValuesMap();
+        Map siaValuesMap = getAttributeValuesMap();
         if (attributes != null) 
         {
             result = new SequencedHashMap((int)(1.25*attributes.size() + 1));

@@ -93,7 +93,7 @@ import org.apache.commons.lang.StringUtils;
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
- * @version $Id: Issue.java,v 1.258 2003/01/27 17:45:16 jmcnally Exp $
+ * @version $Id: Issue.java,v 1.259 2003/02/01 01:54:13 jon Exp $
  */
 public class Issue 
     extends BaseIssue
@@ -801,16 +801,12 @@ public class Issue
         Object obj = getMethodResult().get(this, GET_MODULE_ATTRVALUES_MAP);
         if ( obj == null ) 
         {        
-            Attribute[] attributes = null;
-            HashMap siaValuesMap = null;
-
-            attributes = getModule().getActiveAttributes(getIssueType());
-            siaValuesMap = getAttributeValuesMap();
-
-            result = new SequencedHashMap((int)(1.25*attributes.length + 1));
-            for ( int i=0; i<attributes.length; i++ ) 
+            List attributes = getModule().getActiveAttributes(getIssueType());
+            Map siaValuesMap = getAttributeValuesMap();
+            result = new SequencedHashMap((int)(1.25*attributes.size() + 1));
+            for ( int i=0; i<attributes.size(); i++ ) 
             {
-                String key = attributes[i].getName().toUpperCase();
+                String key = ((Attribute)attributes.get(i)).getName().toUpperCase();
                 if ( siaValuesMap.containsKey(key) ) 
                 {
                     result.put( key, siaValuesMap.get(key) );
@@ -818,7 +814,7 @@ public class Issue
                 else 
                 {
                     AttributeValue aval = AttributeValue
-                        .getNewInstance(attributes[i], this);
+                        .getNewInstance( ((Attribute)attributes.get(i)), this);
                     addAttributeValue(aval);
                     siaValuesMap.put(
                         aval.getAttribute().getName().toUpperCase(), aval);
@@ -957,11 +953,11 @@ public class Issue
      * AttributeValues that are set for this Issue in the order
      * that is preferred for this module
      */
-    public AttributeValue[] getOrderedAttributeValues()
+    public List getOrderedAttributeValues()
         throws Exception
     {        
         Map values = getAttributeValuesMap();
-        Attribute[] attributes = getModule()
+        List attributes = getModule()
             .getActiveAttributes(getIssueType());
 
         return orderAttributeValues(values, attributes);
@@ -970,30 +966,26 @@ public class Issue
 
     /**
      * Extract the AttributeValues from the Map according to the 
-     * order in the Attribute[]
+     * order in the List
      */
-    private AttributeValue[] orderAttributeValues(Map values, 
-                                                  Attribute[] attributes) 
+    private List orderAttributeValues(Map values, List attributes) 
         throws Exception
     {
-        AttributeValue[] orderedValues = new AttributeValue[values.size()];
-
-        int i=0;
-        for ( int j=0; j<attributes.length; j++ ) 
+        List orderedValues = new ArrayList(values.size());
+        for ( int j=0; j<attributes.size(); j++ ) 
         {
             AttributeValue av = (AttributeValue) values
-                .remove( attributes[j].getName().toUpperCase() );
+                .remove(  ((Attribute)attributes.get(j)).getName().toUpperCase() );
             if ( av != null ) 
             {
-                orderedValues[i++] = av;                
+                orderedValues.add(av);
             }
         }
         Iterator iter = values.values().iterator();
         while ( iter.hasNext() ) 
         {
-            orderedValues[i++] = (AttributeValue)iter.next();
+            orderedValues.add((AttributeValue)iter.next());
         }
-
         return orderedValues;
     }
 
@@ -1001,9 +993,9 @@ public class Issue
     /**
      * AttributeValues that are set for this Issue
      */
-    public HashMap getAttributeValuesMap() throws Exception
+    public Map getAttributeValuesMap() throws Exception
     {
-        HashMap result = null;
+        Map result = null;
         Object obj = ScarabCache.get(this, GET_ATTRIBUTE_VALUES_MAP); 
         if ( obj == null ) 
         {
@@ -1022,30 +1014,28 @@ public class Issue
         }
         else
         {
-            result = (HashMap)obj;
+            result = (Map)obj;
         }
         return result;
     }
-
 
     /**
      * AttributeValues that are set for this issue and
      * Empty AttributeValues that are relevant for the module, but have 
      * not been set for the issue are included.
      */
-    public HashMap getAllAttributeValuesMap() 
+    public Map getAllAttributeValuesMap() 
         throws Exception
     {
         Map moduleAtts = getModuleAttributeValuesMap();
         Map issueAtts = getAttributeValuesMap();
-        HashMap allValuesMap = new HashMap( (int)(1.25*(moduleAtts.size() + 
+        Map allValuesMap = new HashMap( (int)(1.25*(moduleAtts.size() + 
                                             issueAtts.size())+1) );
 
         allValuesMap.putAll(moduleAtts);
         allValuesMap.putAll(issueAtts);
         return allValuesMap;
     }
-
 
     /**
      * Describe <code>containsMinimumAttributeValues</code> method here.
@@ -1083,10 +1073,8 @@ public class Issue
                 }
             }
         }
-
         return result;
     }       
-
 
     /**
      * Users who are valid values to the attribute this issue.  
@@ -1343,7 +1331,6 @@ public class Issue
         return result;
     }
 
-
     /**
      * The user that created the issue.
      * @return a <code>ScarabUser</code> value
@@ -1423,7 +1410,6 @@ public class Issue
         return t;
     }
 
-
     /**
      * The date issue was last modified.
      *
@@ -1502,10 +1488,11 @@ public class Issue
                     .getComments();
         }
         catch (Exception e)
-        {}
+        {
+            // ignored (return 0 by default)
+        }
         return limit;
     }
-
 
     /**
      * Returns a list of Attachment objects with type "Comment"
@@ -2494,7 +2481,6 @@ public class Issue
         voteValue.save();
     }
 
-
     /**
      * Gets a list of non-user AttributeValues which match a given Module.
      * It is used in the MoveIssue2.vm template
@@ -2503,14 +2489,11 @@ public class Issue
                                                IssueType newIssueType)
           throws Exception
     {
-        AttributeValue aval = null;
         List matchingAttributes = new ArrayList();
-
-        HashMap setMap = this.getAttributeValuesMap();
-        Iterator iter = setMap.keySet().iterator();
-        while ( iter.hasNext() ) 
+        Map setMap = this.getAttributeValuesMap();
+        for (Iterator iter = setMap.keySet().iterator(); iter.hasNext();) 
         {
-            aval = (AttributeValue)setMap.get(iter.next());
+            AttributeValue aval = (AttributeValue)setMap.get(iter.next());
             List values = getAttributeValues(aval.getAttribute());
             // loop thru the values for this attribute
             for (int i = 0; i<values.size(); i++)
@@ -2545,6 +2528,7 @@ public class Issue
                         }
                         catch (Exception e)
                         {
+                            log().error(e);
                             e.printStackTrace();
                         }
                         Attribute attr = attVal.getAttribute();
@@ -2586,9 +2570,8 @@ public class Issue
         List orphanAttributes = new ArrayList();
         AttributeValue aval = null;
             
-        HashMap setMap = this.getAttributeValuesMap();
-        Iterator iter = setMap.keySet().iterator();
-        while ( iter.hasNext() ) 
+        Map setMap = this.getAttributeValuesMap();
+        for (Iterator iter = setMap.keySet().iterator(); iter.hasNext();) 
         {
             aval = (AttributeValue)setMap.get(iter.next());
             List values = getAttributeValues(aval.getAttribute());

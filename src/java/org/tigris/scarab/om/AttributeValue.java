@@ -70,7 +70,7 @@ import org.tigris.scarab.om.Module;
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
- * @version $Id: AttributeValue.java,v 1.86 2003/01/24 20:00:46 jmcnally Exp $
+ * @version $Id: AttributeValue.java,v 1.87 2003/02/01 01:54:12 jon Exp $
  */
 public abstract class AttributeValue 
     extends BaseAttributeValue
@@ -668,17 +668,16 @@ Leaving here so that John can remove or fix.
         throws Exception
     {
         boolean result = false;
-        Attribute[] qsAttributes = getIssue().getModule()
+        List qsAttributes = getIssue().getModule()
             .getQuickSearchAttributes(getIssue().getIssueType());
-        for (int i=qsAttributes.length-1; i>=0; i--) 
+        for (int i=qsAttributes.size()-1; i>=0; i--) 
         {
-            if (qsAttributes[i].equals(getAttribute())) 
+            if (((Attribute)qsAttributes.get(i)).equals(getAttribute())) 
             {
                 result = true;
                 break;
             }
         }
-        
         return result;
     }
 
