@@ -41,7 +41,7 @@ import org.jboss.metadata.SecurityRoleRefMetaData;
  *  @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
  *  @author <a href="mailto:sebastien.alborini@m4x.org">Sebastien Alborini</a>
  *  @author <a href="mailto:juha@jboss.org">Juha Lindfors</a>
- *  @version $Revision: 1.28 $
+ *  @version $Revision: 1.29 $
  */
 public abstract class EnterpriseContext
 {
@@ -208,14 +208,20 @@ public abstract class EnterpriseContext
       { 
          if (con instanceof EntityContainer)
          {
+          if (((EntityContainer)con).getContainerInvoker()==null)
+             throw new IllegalStateException( "No remote home defined." );
           return ((EntityContainer)con).getContainerInvoker().getEJBHome(); 
          } 
          else if (con instanceof StatelessSessionContainer)
          {
+          if (((StatelessSessionContainer)con).getContainerInvoker()==null)
+             throw new IllegalStateException( "No remote home defined." );
           return ((StatelessSessionContainer)con).getContainerInvoker().getEJBHome(); 
          } 
          else if (con instanceof StatefulSessionContainer) 
          {
+          if (((StatefulSessionContainer)con).getContainerInvoker()==null)
+             throw new IllegalStateException( "No remote home defined." );
               return ((StatefulSessionContainer)con).getContainerInvoker().getEJBHome();
          }
          {
@@ -226,7 +232,28 @@ public abstract class EnterpriseContext
 
       public EJBLocalHome getEJBLocalHome()
       { 
-          throw new EJBException("Not implemented yet");
+         if (con instanceof EntityContainer)
+         {
+          if (((EntityContainer)con).getLocalHomeClass()==null)
+             throw new IllegalStateException( "No local home defined." );
+          return ((EntityContainer)con).getLocalContainerInvoker().getEJBLocalHome(); 
+         } 
+         else if (con instanceof StatelessSessionContainer)
+         {
+          if (((StatelessSessionContainer)con).getLocalHomeClass()==null)
+             throw new IllegalStateException( "No local home defined." );
+          return ((StatelessSessionContainer)con).getLocalContainerInvoker().getEJBLocalHome(); 
+         } 
+         else if (con instanceof StatefulSessionContainer) 
+         {
+          if (((StatefulSessionContainer)con).getLocalHomeClass()==null)
+             throw new IllegalStateException( "No local home defined." );
+              return ((StatefulSessionContainer)con).getLocalContainerInvoker().getEJBLocalHome();
+         }
+         {
+          // Should never get here
+          throw new EJBException("No EJBLocalHome available (BUG!)");
+         }
       }
       
       /**
