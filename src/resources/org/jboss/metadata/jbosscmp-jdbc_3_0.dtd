@@ -467,7 +467,8 @@ This includes both type mapping and function mapping.
 
 
 Should be:
-<!ELEMENT type-mapping (name, row-locking-template, (function-mapping, mapping)+)>
+<!ELEMENT type-mapping (name, row-locking-template, fk-constraint-template, 
+      fk-constraint-template, (function-mapping, mapping)+)>
 -->
 <!ELEMENT type-mapping ANY>
 
@@ -477,9 +478,52 @@ Name of the type-mapping.
 <!ELEMENT name (#PCDATA)>
 
 <!-- 
-Specifies the java class type to be mapped.
+This is the template used to create a row lock on the selected rows. The 
+arguments supplied are as follows:
+
+1. Select clause
+2. From clasue; the order of the tables is currently not guarenteed
+3. Where clause
+
+If row locking is not supported in select statement this element should be 
+empty. The most common form of row locking is select for update as in the 
+example that follows:
+
+SELECT ?1 FROM ?2 WHERE ?3 FOR UPDATE
 -->
 <!ELEMENT row-locking-template (#PCDATA)>
+
+<!-- 
+This is the template used to create a primary key constraint in the create 
+table statement. The arguments supplied are as follows:
+
+1. Primary key constraint name; which is always pk_{table-name}
+2. Comma sepperated list of primary key column names
+
+If a primary key constraint clause is not supported in a create table statement
+this element should be empty. The most common form of a primary key constraint 
+follows:
+
+CONSTRAINT ?1 PRIMARY KEY (?2)
+-->
+<!ELEMENT pk-constraint-template (#PCDATA)>
+
+<!-- 
+This is the template used to create a foreign key constraint in sepperate 
+statement. The arguments supplied are as follows:
+
+1. Table name
+2. Foreign key constraint name; which is always fk_{table-name}_{cmr-field-name}
+3. Comma sepperated list of foreign key column names
+4. References table name
+5. Comma sepperated list of the referenced primary key column names
+
+If the datasource does not support foreign key constraints this element should
+be empty. The most common form of a foreign key constraint follows:
+
+ALTER TABLE ?1 ADD CONSTRAINT ?2 FOREIGN KEY (?3) REFERENCES ?4 (?5)
+-->
+<!ELEMENT fk-constraint-template (#PCDATA)>
 
 <!--
 Specifies the mapping from a java type to a jdbc and a sql type.
