@@ -1,4 +1,4 @@
-// $Id: UUIDManager.java,v 1.13 2004/08/29 09:29:51 mvw Exp $
+// $Id: UUIDManager.java,v 1.14 2004/10/13 11:13:07 mkl Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -94,15 +94,15 @@ public class UUIDManager {
      */
     public synchronized String getNewUUID() {
 	UID uid = new UID();
-	String s = "";
+	StringBuffer s = new StringBuffer();
 	if (address != null) {
 	    byte[] b = address.getAddress();
 	    for (int i = 0; i < b.length; i++)
-		s += (new Byte(b[i])).longValue() + "-";
+		s.append((new Byte(b[i])).longValue()).append("-");
 	}
-	s += uid.toString();
+	s.append(uid.toString());
 //	LOG.debug("new UUID: " + s);
-	return s;
+	return s.toString();
     }
 
     /**
