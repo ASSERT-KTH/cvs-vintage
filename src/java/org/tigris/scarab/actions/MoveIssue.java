@@ -74,7 +74,6 @@ import org.tigris.scarab.om.IssueManager;
 import org.tigris.scarab.util.ScarabConstants;
 import org.tigris.scarab.util.Email;
 import org.tigris.scarab.util.EmailContext;
-import org.tigris.scarab.util.ScarabLink;
 import org.tigris.scarab.services.security.ScarabSecurity;
 
 /**
@@ -83,7 +82,7 @@ import org.tigris.scarab.services.security.ScarabSecurity;
  *
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: MoveIssue.java,v 1.56 2003/04/17 22:49:06 elicia Exp $
+ * @version $Id: MoveIssue.java,v 1.57 2003/04/30 01:08:15 jon Exp $
  */
 public class MoveIssue extends RequireLoginFirstAction
 {
@@ -278,7 +277,7 @@ public class MoveIssue extends RequireLoginFirstAction
                     .getAttribute(new Integer(key.substring(17))));
             }
         }
-        String reason = data.getParameters().getString("reason");
+        String reason = params.getString("reason");
         if (reason == null || reason.trim().length() == 0)
         {
             scarabR.setAlertMessage(l10n.get("ReasonRequired"));
@@ -305,10 +304,10 @@ public class MoveIssue extends RequireLoginFirstAction
             
             // Send notification email
             EmailContext ectx = new EmailContext();
-            ectx.setLinkTool((ScarabLink)context.get("link"));
             ectx.setIssue(newIssue);
             ectx.setModule(newModule);
             // placed in the context for the email to be able to access them
+            // from within the email template
             ectx.put("reason", reason);
             ectx.put("action", selectAction);
             ectx.put("oldModule", oldModule);
