@@ -491,13 +491,11 @@ public class Issue
             .add(AttributeValuePeer.ATTRIBUTE_ID,AttributePeer.ASSIGNED_TO__PK)
             .add(AttributeValuePeer.DELETED, false);
         List attValues = getAttributeValues(crit);
-        /*
         for ( int i=0; i<attValues.size(); i++ ) 
         {
             AttributeValue attVal = (AttributeValue) attValues.get(i);
             assignees.add(attVal.getValue());
         }
-        */
         return attValues;
     }
 
@@ -511,11 +509,13 @@ public class Issue
         List associatedUsers = new ArrayList();
         associatedUsersIds.add(getCreatedBy());
         associatedUsersIds.add(getModifiedBy());
-        Criteria crit = new Criteria()
-            .add(AttributeValuePeer.ATTRIBUTE_ID,
-                                    AttributePeer.ASSIGNED_TO__PK)
-            .add(AttributeValuePeer.DELETED, false);
-        associatedUsersIds.addAll(AttributeValuePeer.doSelect(crit));
+
+        Iterator iter =  getAssigneeAttributeValues().iterator();   
+        while ( iter.hasNext() ) 
+        {
+           associatedUsersIds.add(((AttributeValue)iter.next()).getUserId()); 
+        }
+
         for ( int i=0; i<associatedUsersIds.size(); i++ ) 
         {
             ScarabUser user = (ScarabUser) ScarabUserImplPeer
