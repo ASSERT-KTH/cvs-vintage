@@ -1,4 +1,4 @@
-// $Id: ArgoDialog.java,v 1.13 2004/08/09 05:48:35 linus Exp $
+// $Id: ArgoDialog.java,v 1.14 2004/10/28 17:12:51 mvw Exp $
 // Copyright (c) 2003-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -40,12 +40,8 @@ public class ArgoDialog extends Dialog {
     
     /**
      * Suffix to calculate the mnemonic key from the key.
-     *
-     * @deprecated by Linus Tolke as of 0.17.1. 
-     *             Use the {@link #nameButton(AbstractButton, String)} call
-     *             to do this translation. This will become private.
      */
-    protected static final String MNEMONIC_KEY_SUFFIX = ".mnemonic";
+    private static final String MNEMONIC_KEY_SUFFIX = ".mnemonic";
     
     /**
      * @see Dialog#Dialog(Frame, String, boolean)

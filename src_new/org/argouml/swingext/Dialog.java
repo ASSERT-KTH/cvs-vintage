@@ -1,4 +1,4 @@
-// $Id: Dialog.java,v 1.10 2004/09/21 19:03:28 mvw Exp $
+// $Id: Dialog.java,v 1.11 2004/10/28 17:12:50 mvw Exp $
 // Copyright (c) 2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -43,7 +43,10 @@ import javax.swing.JDialog;
 import javax.swing.JPanel;
 
 /**
- * Base class for all dialogs, setting borders and component spacing.
+ * Base class for all dialogs, setting borders and component spacing.<p>
+ * 
+ * This class is supposed to be an extension of swing, 
+ * without any knowledge of the remainder of ArgoUML.
  *
  * @author Bob Tarling
  * @author Jeremy Jones
