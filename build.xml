@@ -10,7 +10,7 @@
 <!--                                                                        -->
 <!-- ====================================================================== -->
 
-<!-- $Id: build.xml,v 1.13 2001/08/27 08:30:07 user57 Exp $ -->
+<!-- $Id: build.xml,v 1.14 2001/08/27 09:01:37 user57 Exp $ -->
 
 <project default="main">
 
@@ -946,7 +946,7 @@
   <!-- Clean up all generated files -->
   <target name="clobber" depends="clean"
 	  description="Cleans up all generated files.">
-    <!-- nothing to clobber -->
+    <delete file="${module.root}/build.log"/>
   </target>
 
 
