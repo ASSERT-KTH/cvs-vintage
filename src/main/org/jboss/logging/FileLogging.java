@@ -22,7 +22,7 @@ import org.jboss.util.ServiceMBeanSupport;
  *
  *   @see <related>
  *   @author Rickard Öberg (rickard.oberg@telkel.com)
- *   @version $Revision: 1.11 $
+ *   @version $Revision: 1.12 $
  */
 public class FileLogging
    implements FileLoggingMBean, NotificationListener, MBeanRegistration
@@ -121,8 +121,15 @@ public class FileLogging
    {
       openLogFile();
       server.addNotificationListener(new ObjectName(server.getDefaultDomain(),"service","Log"),this,null,null);
-      return name == null ? new ObjectName(OBJECT_NAME + (sources == null ? "" : ",sources=" + sources))
-                               : name;
+      if (name != null) {
+         return name; 
+      } else {
+         if (sources == null || sources.equals("")) {
+            return new ObjectName(OBJECT_NAME);
+         } else { 
+	    return new ObjectName(OBJECT_NAME + ",sources=" + sources);
+	 }
+      } 
    }
    
    public void postRegister(java.lang.Boolean registrationDone) 
