@@ -1,5 +1,9 @@
 #macro( advancedQuery )
-#set ($search = $scarabR.Search)
+#if ($searchPutInContext)
+  #set ($search = $searchPutInContext)
+#else
+  #set ($search = $scarabR.Search)
+#end
 #set ($intake = $scarabR.getConditionalIntake($scarabG.Constant.CURRENT_QUERY))
 #set ($searchGroup = $intake.SearchIssue.mapTo($search))
 #set ($attrValues = $search.CommonAttributeValuesMap)
