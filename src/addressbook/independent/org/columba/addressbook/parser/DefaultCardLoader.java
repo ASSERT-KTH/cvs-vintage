@@ -13,6 +13,7 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
 //
 //All Rights Reserved.
+
 package org.columba.addressbook.parser;
 
 import org.columba.addressbook.config.AdapterNode;
@@ -37,7 +38,6 @@ import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
-
 
 /**
  * @version         1.0
@@ -65,8 +65,6 @@ public class DefaultCardLoader {
         AdapterNode child = rootNode.getChildAt(0);
 
         if (child != null) {
-            System.out.println("iscontact() ----->" + child.getName());
-
             if (child.getName().equals("vcard")) {
                 return true;
             } else {
