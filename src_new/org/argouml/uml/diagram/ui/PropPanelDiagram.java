@@ -1,4 +1,4 @@
-// $Id: PropPanelDiagram.java,v 1.11 2003/05/01 08:49:40 kataka Exp $
+// $Id: PropPanelDiagram.java,v 1.12 2003/05/03 15:27:12 kataka Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -30,7 +30,6 @@ import org.argouml.application.api.Argo;
 import org.argouml.kernel.Project;
 import org.argouml.kernel.ProjectManager;
 import org.argouml.ui.ArgoDiagram;
-import org.argouml.ui.targetmanager.TargetEvent;
 import org.argouml.uml.ui.PropPanel;
 import org.argouml.uml.ui.PropPanelButton;
 import org.argouml.uml.ui.UMLTextField;
@@ -83,28 +82,5 @@ public class PropPanelDiagram extends PropPanel {
         }
     }
 
-    /* (non-Javadoc)
-     * @see org.argouml.ui.targetmanager.TargetListener#targetAdded(org.argouml.ui.targetmanager.TargetEvent)
-     */
-    public void targetAdded(TargetEvent e) {
-        // TODO Auto-generated method stub
-
-    }
-
-    /* (non-Javadoc)
-     * @see org.argouml.ui.targetmanager.TargetListener#targetRemoved(org.argouml.ui.targetmanager.TargetEvent)
-     */
-    public void targetRemoved(TargetEvent e) {
-        // TODO Auto-generated method stub
-
-    }
-
-    /* (non-Javadoc)
-     * @see org.argouml.ui.targetmanager.TargetListener#targetSet(org.argouml.ui.targetmanager.TargetEvent)
-     */
-    public void targetSet(TargetEvent e) {
-        // TODO Auto-generated method stub
-
-    }
 
 } /* end class PropPanelDiagram */

@@ -24,7 +24,7 @@
 // File: PropPanel.java
 // Classes: PropPanel
 // Original Author:
-// $Id: PropPanel.java,v 1.51 2003/05/03 11:59:24 kataka Exp $
+// $Id: PropPanel.java,v 1.52 2003/05/03 15:27:12 kataka Exp $
 
 // 23 Apr 2002: Jeremy Bennett (mail@jeremybennett.com). Added the third party
 // event listener.
@@ -736,7 +736,7 @@ abstract public class PropPanel extends TabSpawnable implements TabModelTarget, 
          // changed in a targetRemoved or a TargetSet event
         fireTargetAdded(e);
     }
-
+    
     /**
      * @see org.argouml.ui.targetmanager.TargetListener#targetRemoved(org.argouml.ui.targetmanager.TargetEvent)
      */
