@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/jasper/compiler/TagLibraryInfoImpl.java,v 1.28 2000/10/05 22:46:56 larryi Exp $
- * $Revision: 1.28 $
- * $Date: 2000/10/05 22:46:56 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/jasper/compiler/TagLibraryInfoImpl.java,v 1.29 2000/10/06 11:10:15 larryi Exp $
+ * $Revision: 1.29 $
+ * $Date: 2000/10/06 11:10:15 $
  *
  * The Apache Software License, Version 1.1
  *
@@ -122,8 +122,9 @@ public class TagLibraryInfoImpl extends TagLibraryInfo {
         print("tlibversion", tlibversion, out);
         print("jspversion", jspversion, out);
         print("shortname", shortname, out);
-        print("uri", uri, out);
+        print("urn", urn, out);
         print("info", info, out);
+        print("uri", uri, out);
 
         for(int i = 0; i < tags.length; i++)
             out.println(tags[i].toString());
