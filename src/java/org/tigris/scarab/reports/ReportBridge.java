@@ -242,12 +242,6 @@ public  class ReportBridge
             }
         }
     }
-        
-    public IssueType getIssueType()
-        throws TorqueException
-    {
-        return torqueReport.getIssueType();
-    }
 
     /**
      * Set the value of module.
