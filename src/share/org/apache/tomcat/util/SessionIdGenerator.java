@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/util/SessionIdGenerator.java,v 1.1 1999/10/09 00:20:56 duncan Exp $
- * $Revision: 1.1 $
- * $Date: 1999/10/09 00:20:56 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/util/SessionIdGenerator.java,v 1.2 2000/05/23 00:43:47 jon Exp $
+ * $Revision: 1.2 $
+ * $Date: 2000/05/23 00:43:47 $
  *
  * ====================================================================
  *
@@ -65,44 +65,99 @@
 package org.apache.tomcat.util;
 
 /**
- * Generates sesssion ids for the system. The ids produced by this
- * class aren't very sophisticated being just a random number followed
- * by a synchronized counter.
+ * This class generates a unique 10+ character id. This is good 
+ * for authenticating users or tracking users around.
+ * <p>
+ * This code was borrowed from Apache JServ.JServServletManager.java.
+ * It is what Apache JServ uses to generate session ids for users. 
+ * Unfortunately, it was not included in Apache JServ as a class
+ * so I had to create one here in order to use it.
  *
  * @author James Duncan Davidson [duncan@eng.sun.com]
  * @author Jason Hunter [jhunter@acm.org]
+ * @author Jon S. Stevens <a href="mailto:jon@latchkey.com">jon@latchkey.com</a>
  */
-
 public class SessionIdGenerator {
 
-    private static int counter = 1010;
+    /*
+     * Create a suitable string for session identification
+     * Use synchronized count and time to ensure uniqueness.
+     * Use random string to ensure timestamp cannot be guessed
+     * by programmed attack.
+     *
+     * format of id is <6 chars random><3 chars time><1+ char count>
+     */
+    static private int session_count = 0;
+    static private long lastTimeVal = 0;
+    static private java.util.Random randomSource = new java.util.Random();
+
+    // MAX_RADIX is 36
+    /*
+     * we want to have a random string with a length of
+     * 6 characters. Since we encode it BASE 36, we've to
+     * modulo it with the following value:
+     */
+    public final static long maxRandomLen = 2176782336L; // 36 ** 6
+
+    /*
+     * The session identifier must be unique within the typical lifespan
+     * of a Session, the value can roll over after that. 3 characters:
+     * (this means a roll over after over an day which is much larger
+     *  than a typical lifespan)
+     */
+    public final static long maxSessionLifespanTics = 46656; // 36 ** 3
+
+    /*
+     *  millisecons between different tics. So this means that the
+     *  3-character time string has a new value every 2 seconds:
+     */
+    public final static long ticDifference = 2000;
+
+    // ** NOTE that this must work together with get_jserv_session_balance()
+    // ** in jserv_balance.c
+    static synchronized public String getIdentifier (String jsIdent)
+    {
+        StringBuffer sessionId = new StringBuffer();
     
+        // random value ..
+        long n = randomSource.nextLong();
+        if (n < 0) n = -n;
+        n %= maxRandomLen;
+        // add maxLen to pad the leading characters with '0'; remove
+        // first digit with substring.
+        n += maxRandomLen;
+        sessionId.append (Long.toString(n, Character.MAX_RADIX)
+                  .substring(1));
+    
+        long timeVal = (System.currentTimeMillis() / ticDifference);
+        // cut..
+        timeVal %= maxSessionLifespanTics;
+        // padding, see above
+        timeVal += maxSessionLifespanTics;
+    
+        sessionId.append (Long.toString (timeVal, Character.MAX_RADIX)
+                  .substring(1));
+
+        /*
+         * make the string unique: append the session count since last
+         * time flip.
+         */
+        // count sessions only within tics. So the 'real' session count
+        // isn't exposed to the public ..
+        if (lastTimeVal != timeVal) {
+          lastTimeVal = timeVal;
+          session_count = 0;
+        }
+        sessionId.append (Long.toString (++session_count, 
+                     Character.MAX_RADIX));
+        
+        if (jsIdent != null && jsIdent.length() > 0) {
+            return sessionId.toString()+"."+jsIdent;
+        }
+        return sessionId.toString();
+    }
+
     public static synchronized String generateId() {
-
-	// XXX
-	// This code is not very secure at all. It's good enough
-	// for a reference implementation where you want to make
-	// sure to not repeat under most circumstances -- but its
-	// not anything that could be considered to be safe for
-	// military or banking use.
-
-	// maybe.....
-	// replace with some sort of MD5 hash so that it is impossible
-	// to figure out which is the counter and which is the random
-	
-        Integer i = new Integer(counter++);
-        StringBuffer buf = new StringBuffer();
-        String dString = Double.toString(Math.abs(Math.random()));
-
-        // we do the substring to get rid of the initial '0.'
-        // characters.
-
-        buf.append("To");
-        buf.append(i);
-        buf.append("mC");
-        buf.append(dString.substring(2, dString.length()));
-        buf.append("At");
-
-        return buf.toString();
+        return getIdentifier(null);
     }
 }
