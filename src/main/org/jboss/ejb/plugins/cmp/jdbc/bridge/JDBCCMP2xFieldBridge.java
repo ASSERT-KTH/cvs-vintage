@@ -33,7 +33,7 @@ import org.jboss.ejb.plugins.cmp.jdbc.metadata.JDBCCMPFieldMetaData;
  *      One for each entity bean cmp field.       
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
- * @version $Revision: 1.13 $
+ * @version $Revision: 1.14 $
  */                            
 public class JDBCCMP2xFieldBridge extends JDBCAbstractCMPFieldBridge {
 
@@ -51,6 +51,36 @@ public class JDBCCMP2xFieldBridge extends JDBCAbstractCMPFieldBridge {
 
       super(manager, metadata, jdbcType);
    } 
+
+   /**
+    * This constructor is used to create a foreign key field that is
+    * a part of primary key field. See JDBCCMRFieldBridge.
+    */
+   public JDBCCMP2xFieldBridge(
+      JDBCStoreManager manager,
+      String fieldName,
+      Class fieldType,
+      JDBCType jdbcType,
+      boolean readOnly,
+      long readTimeOut,
+      boolean primaryKeyMember,
+      Class primaryKeyClass,
+      Field primaryKeyField,
+      boolean isUnknownPk)
+   throws DeploymentException {
+      super(
+         manager,
+         fieldName,
+         fieldType,
+         jdbcType,
+         readOnly,
+         readTimeOut,
+         primaryKeyMember,
+         primaryKeyClass,
+         primaryKeyField,
+         isUnknownPk
+      );
+   }
 
    public Object getInstanceValue(EntityEnterpriseContext ctx) {
       FieldState fieldState = getFieldState(ctx);
