@@ -115,7 +115,7 @@ import org.tigris.scarab.services.security.ScarabSecurity;
  * not a more specific type of Issue.
  *
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: IssueSearch.java,v 1.98 2003/05/13 16:50:18 jmcnally Exp $
+ * @version $Id: IssueSearch.java,v 1.99 2003/06/12 20:47:47 dlr Exp $
  */
 public class IssueSearch 
     extends Issue
@@ -2196,6 +2196,7 @@ public class IssueSearch
             finally
             {
                 Torque.closeConnection(this.conn);
+                this.conn = null;
             }
         }
     }
