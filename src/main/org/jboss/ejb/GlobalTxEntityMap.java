@@ -31,7 +31,7 @@ import java.security.AccessController;
  *
  * @author <a href="bill@burkecentral.com">Bill Burke</a>
  * @author <a href="alex@jboss.org">Alexey Loubyansky</a>
- * @version $Revision: 1.12 $
+ * @version $Revision: 1.13 $
  */
 public class GlobalTxEntityMap
 {
@@ -70,6 +70,15 @@ public class GlobalTxEntityMap
        */
       void synchronize(Thread thread, Transaction tx, EntityEnterpriseContext instance)
          throws Exception;
+
+      /**
+       * Invokes ejbStore if needed
+       * @param thread  current thread
+       * @param instance  the instance to be synchronized
+       * @throws Exception  thrown if synchronization failed
+       */
+      void invokeEjbStore(Thread thread, EntityEnterpriseContext instance)
+         throws Exception;
    }
 
    public static final TxAssociation NONE = new TxAssociation()
@@ -82,7 +91,11 @@ public class GlobalTxEntityMap
       }
 
       public void synchronize(Thread thread, Transaction tx, EntityEnterpriseContext instance)
-         throws Exception
+      {
+         throw new UnsupportedOperationException();
+      }
+
+      public void invokeEjbStore(Thread thread, EntityEnterpriseContext instance)
       {
          throw new UnsupportedOperationException();
       }
@@ -92,6 +105,19 @@ public class GlobalTxEntityMap
    {
       public void scheduleSync(Transaction tx, EntityEnterpriseContext instance)
       {
+      }
+
+      public void invokeEjbStore(Thread thread, EntityEnterpriseContext instance) throws Exception
+      {
+         if(instance.getId() != null)
+         {
+            EntityContainer container = (EntityContainer) instance.getContainer();
+            // set the context class loader before calling the store method
+            SetTCLAction.setContextClassLoader(container.getClassLoader(), thread);
+
+            // store it
+            container.invokeEjbStore(instance);
+         }
       }
 
       public void synchronize(Thread thread, Transaction tx, EntityEnterpriseContext instance)
@@ -119,6 +145,10 @@ public class GlobalTxEntityMap
       public void scheduleSync(Transaction tx, EntityEnterpriseContext instance)
       {
          instance.setTxAssociation(SYNC_SCHEDULED);
+      }
+
+      public void invokeEjbStore(Thread thread, EntityEnterpriseContext instance)
+      {
       }
 
       public void synchronize(Thread thread, Transaction tx, EntityEnterpriseContext instance)
@@ -204,7 +234,19 @@ public class GlobalTxEntityMap
                // before continuing to the next store
                if(tx.getStatus() == Status.STATUS_MARKED_ROLLBACK)
                {
-                  // nothing else to do here
+                  return;
+               }
+
+               instance = (EntityEnterpriseContext) instances.get(i);
+               instance.getTxAssociation().invokeEjbStore(currentThread, instance);
+            }
+
+            for(int i = 0; i < instances.size(); i++)
+            {
+               // any one can mark the tx rollback at any time so check
+               // before continuing to the next store
+               if(tx.getStatus() == Status.STATUS_MARKED_ROLLBACK)
+               {
                   return;
                }
 

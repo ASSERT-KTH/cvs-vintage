@@ -39,7 +39,7 @@ import org.jboss.metadata.ConfigurationMetaData;
  * @author <a href="mailto:andreas.schaefer@madplanet.com">Andreas Schaefer</a>
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
  * @author <a href="mailto:alex@jboss.org">Alex Loubyansky</a>
- * @version $Revision: 1.53 $
+ * @version $Revision: 1.54 $
  */
 public class CMPPersistenceManager
    implements EntityPersistenceManager
@@ -399,11 +399,36 @@ public class CMPPersistenceManager
       return store.isModified(ctx);
    }
 
+   public void invokeEjbStore(EntityEnterpriseContext ctx) throws RemoteException
+   {
+      // update the db only if the instance is dirty
+      boolean modified = false;
+      try
+      {
+         modified = isModified(ctx);
+      }
+      catch(Exception e)
+      {
+         throwRemoteException(e);
+      }
+
+      if(modified)
+      {
+         AllowedOperationsAssociation.pushInMethodFlag(IN_EJB_STORE);
+         try
+         {
+            store.storeEntity(ctx);
+         }
+         finally
+         {
+            AllowedOperationsAssociation.popInMethodFlag();
+         }
+      }
+   }
+
    public void storeEntity(EntityEnterpriseContext ctx)
       throws RemoteException
    {
-      boolean modified = false;
-
       AllowedOperationsAssociation.pushInMethodFlag(IN_EJB_STORE);
 
       try
@@ -411,20 +436,12 @@ public class CMPPersistenceManager
          // if call-ejb-store-for-clean=true then invoke ejbStore first (the last chance to modify the instance)
          if(ejbStoreForClean)
          {
-            invokeEjbStore(ctx);
-
-            try
-            {
-               modified = isModified(ctx);
-            }
-            catch(Exception e)
-            {
-               throwRemoteException(e);
-            }
+            ejbStore(ctx);
          }
          else
          {
-            // else check whether the instance dirty and invoke ejbStore only if it is really dirty
+            // else check whether the instance is dirty and invoke ejbStore only if it is really dirty
+            boolean modified = false;
             try
             {
                modified = isModified(ctx);
@@ -436,14 +453,8 @@ public class CMPPersistenceManager
 
             if(modified)
             {
-               invokeEjbStore(ctx);
+               ejbStore(ctx);
             }
-         }
-
-         // update the db only if the instance is dirty
-         if(modified)
-         {
-            store.storeEntity(ctx);
          }
       }
       finally
@@ -525,7 +536,7 @@ public class CMPPersistenceManager
 
    // Private
 
-   private void invokeEjbStore(EntityEnterpriseContext ctx)
+   private void ejbStore(EntityEnterpriseContext ctx)
       throws RemoteException
    {
       try

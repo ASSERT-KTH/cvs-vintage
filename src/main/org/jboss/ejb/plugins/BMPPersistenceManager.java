@@ -17,7 +17,6 @@ import org.jboss.logging.Logger;
 
 import javax.ejb.CreateException;
 import javax.ejb.EJBException;
-import javax.ejb.EJBObject;
 import javax.ejb.EntityBean;
 import javax.ejb.FinderException;
 import javax.ejb.RemoveException;
@@ -38,7 +37,7 @@ import java.util.Iterator;
 *  @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
 *  @author <a href="mailto:andreas.schaefer@madplanet.com">Andreas Schaefer</a>
 *  @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
-*  @version $Revision: 1.52 $
+*  @version $Revision: 1.53 $
 */
 public class BMPPersistenceManager
    implements EntityPersistenceManager
@@ -458,7 +457,7 @@ public class BMPPersistenceManager
       return modified.booleanValue();
    }
 
-   public void storeEntity(EntityEnterpriseContext ctx)
+   public void invokeEjbStore(EntityEnterpriseContext ctx)
       throws RemoteException
    {
       try
@@ -503,6 +502,11 @@ public class BMPPersistenceManager
       finally{
          AllowedOperationsAssociation.popInMethodFlag();
       }
+   }
+
+   public void storeEntity(EntityEnterpriseContext ctx)
+      throws RemoteException
+   {
    }
 
    public void passivateEntity(EntityEnterpriseContext ctx)

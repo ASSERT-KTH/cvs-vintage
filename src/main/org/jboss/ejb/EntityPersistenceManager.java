@@ -25,7 +25,7 @@ import javax.ejb.RemoveException;
  * 
  * @author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
- * @version $Revision: 1.19 $
+ * @version $Revision: 1.20 $
  */
 public interface EntityPersistenceManager extends ContainerPlugin
 {
@@ -151,6 +151,15 @@ public interface EntityPersistenceManager extends ContainerPlugin
    void storeEntity(EntityEnterpriseContext instance)
       throws RemoteException;
 
+   /**
+    * Invokes ejbStore on the instance.
+    *
+    * @param instance
+    * @throws RemoteException
+    */
+   void invokeEjbStore(EntityEnterpriseContext instance)
+      throws RemoteException;
+   
    /**
     * This method is called when an entity shall be passivate. The persistence
     * manager must call the ejbPassivate method on the instance.

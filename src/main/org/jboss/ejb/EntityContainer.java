@@ -52,7 +52,7 @@ import org.jboss.util.collection.SerializableEnumeration;
  * @author <a href="mailto:bill@burkecentral.com">Bill Burke</a>
  * @author <a href="mailto:andreas.schaefer@madplanet.com">Andreas Schaefer</a>
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
- * @version $Revision: 1.121 $
+ * @version $Revision: 1.122 $
  *
  * @jmx.mbean extends="org.jboss.ejb.ContainerMBean"
  */
@@ -717,14 +717,26 @@ public class EntityContainer
    }
 
    /**
-    * store entity
+    * Invokes ejbStore method on the instance
+    * @param ctx  the instance to invoke ejbStore on
+    * @throws Exception
+    */
+   public void invokeEjbStore(EntityEnterpriseContext ctx) throws Exception
+   {
+      if (ctx.getId() != null)
+      {
+         final EntityPersistenceManager pm = getPersistenceManager();
+         pm.invokeEjbStore(ctx);
+      }
+   }
+
+   /**
+    * For CMP actually stores the instance
     */
    public void storeEntity(EntityEnterpriseContext ctx) throws Exception
    {
       if (ctx.getId() != null)
       {
-         // by the spec we have to call ejbStore at sync time even on clean instances
-         // but UPDATE will be issued only if there is changed data 
          getPersistenceManager().storeEntity(ctx);
       }
    }

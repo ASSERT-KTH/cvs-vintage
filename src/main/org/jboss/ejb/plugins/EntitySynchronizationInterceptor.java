@@ -40,7 +40,7 @@ import org.jboss.util.NestedRuntimeException;
  * @author <a href="mailto:marc.fleury@jboss.org">Marc Fleury</a>
  * @author <a href="mailto:Scott.Stark@jboss.org">Scott Stark</a>
  * @author <a href="mailto:bill@burkecentral.com">Bill Burke</a>
- * @version $Revision: 1.82 $
+ * @version $Revision: 1.83 $
  */
 public class EntitySynchronizationInterceptor
         extends AbstractInterceptor
@@ -363,13 +363,15 @@ public class EntitySynchronizationInterceptor
                      // for CMP NotSupported
                      synchronized(pctx)
                      {
+                        container.invokeEjbStore(ctx);
                         container.storeEntity(ctx);
                      }
                   }
                   else
                   {
                      // BMP
-                     container.storeEntity(ctx);
+                     container.invokeEjbStore(ctx);
+                     //container.storeEntity(ctx);
                   }
                }
 
