@@ -121,11 +121,15 @@ public final class ErrorHandler extends BaseInterceptor {
 	ctx.addServlet( new StatusHandler(this, showDebugInfo));
 
 	// Default status handlers
+        // Assume existing error pages are valid.  Don't overwrite with default.
 	ctx.addServlet( new RedirectHandler(this));
-	ctx.addErrorPage( "302", "tomcat.redirectHandler");
-	ctx.addErrorPage( "301", "tomcat.redirectHandler");
+        if (ctx.getErrorPage("302") == null)
+            ctx.addErrorPage( "302", "tomcat.redirectHandler");
+        if (ctx.getErrorPage("301") == null)
+            ctx.addErrorPage( "301", "tomcat.redirectHandler");
 	ctx.addServlet( new NotFoundHandler(this, showDebugInfo));
-	ctx.addErrorPage( "404", "tomcat.notFoundHandler");
+        if (ctx.getErrorPage("404") == null)
+            ctx.addErrorPage( "404", "tomcat.notFoundHandler");
 
 	if( debug > 0 ) log( "Init " + ctx + " " + showDebugInfo);
     }
