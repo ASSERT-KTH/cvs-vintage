@@ -76,7 +76,7 @@ import org.jboss.logging.Logger;
 *   @author <a href="mailto:jplindfo@helsinki.fi">Juha Lindfors</a>
 *   @author <a href="mailto:sebastien.alborini@m4x.org">Sebastien Alborini</a>
 *
-*   @version $Revision: 1.53 $
+*   @version $Revision: 1.54 $
 */
 public class ContainerFactory
     extends org.jboss.util.ServiceMBeanSupport
@@ -137,6 +137,7 @@ public class ContainerFactory
    */
    public void initService()
    {
+/*
       URL tmpFile = getClass().getResource("/tmp.properties");
       if (tmpFile != null)
       {
@@ -162,6 +163,7 @@ public class ContainerFactory
       {
          log.debug("Using the systems temporary directory");
       }
+*/
    }
 
    /**
@@ -296,99 +298,17 @@ public class ContainerFactory
          log.log("Deploying:"+url);
 
          // URL's to put in classloader
-         URL[] urls;
+         URL[] urls = new URL[] { url };
 
          // save the name of the jar before copying -> undeploy with the same name
          URL origUrl = url;
 
-         // copy the jar file to prevent locking - redeploy failure
-         if (url.getProtocol().startsWith("file") && !url.getFile().endsWith("/"))
-         {
 
-            File jarFile = new File(url.getFile());
-            File tmp;
-            if (tmpDir == null)
-            {
-               tmp = File.createTempFile("tmpejbjar",".jar");
-            }
-            else
-            {
-               tmp = File.createTempFile("tmpejbjar",".jar", tmpDir);
-            }
-            tmp.deleteOnExit();
-            FileInputStream fin = new FileInputStream(jarFile);
-            byte[] bytes = new byte[(int)jarFile.length()];
-            fin.read(bytes);
-            FileOutputStream fout = new FileOutputStream(tmp);
-            fout.write(bytes);
-            fin.close();
-            fout.close();
-
-            // Get the URL's from the deployments Class-Path: manifest file.
-            // These should be added to the classloader
-            JarFile jar = new JarFile(tmp);
-            Manifest mf = jar.getManifest();
-            ArrayList urlList = new ArrayList();
-            if (mf != null)
-            {
-               Attributes attributes = mf.getMainAttributes();
-               String classPath = attributes.getValue(Attributes.Name.CLASS_PATH);
-               if (classPath != null)
-               {
-                  StringTokenizer classPathTokens = new StringTokenizer(classPath, " ");
-                  while (classPathTokens.hasMoreTokens())
-                  {
-                     String classPathEntry = classPathTokens.nextToken();
-                     try
-                     {
-
-                        URL u;
-                        File dir;
-
-                        // Extension to "Class-Path:" format: dir/*
-                        // add jar files in the dir to the classpath
-                        if (classPathEntry.endsWith("/*"))
-                        {
-                           classPathEntry = classPathEntry.substring(0, classPathEntry.length() - 1);
-                           dir = new File((new URL(url, classPathEntry)).getFile());
-                           String[] files = dir.list();
-                           for (int i = 0; i < files.length; i++)
-                           {
-                              if (files[i].endsWith(".jar") || files[i].endsWith(".zip"))
-                              {
-                                 urlList.add(new URL(dir.toURL(), files[i]));
-                                 log.debug("Added " + dir + File.separator + files[i]);
-                              }
-                           }
-                        }
-                        else
-                        {
-                           urlList.add(new URL(url, classPathEntry));
-                           log.debug("Added "+ classPathEntry);
-                        }
-                     } catch (MalformedURLException e)
-                     {
-                        log.error("Could not add " + classPathEntry);
-                     }
-                  }
-               }
-            }
-
-            // Add URL to tmp file
-            url = tmp.toURL();
-            urlList.add(url);
-
-            urls = new URL[urlList.size()];
-            urls = (URL[])urlList.toArray(urls);
-         }
-         else
-         {
-            urls = new URL[] { url };
-         }
-
-         // Create the ClassLoader for this application
-         // TODO : the ClassLoader should come from the JMX manager if we want to be able to share it (tomcat)
-         ClassLoader cl = new URLClassLoader(urls, Thread.currentThread().getContextClassLoader());
+         // create a classloader that to access the metadata
+         // this one dont has the contextclassloader as parent
+         // in case of the contextclassloader has a ejb package in its
+         //classpath the metadata of this package would be used.
+         ClassLoader cl = new URLClassLoader(urls);
 
          // Create a file loader with which to load the files
          XmlFileLoader efm = new XmlFileLoader();
@@ -399,7 +319,8 @@ public class ContainerFactory
          // Load XML
          ApplicationMetaData metaData = efm.load();
 
-
+         // create the _real_ classloader for this app
+         cl = new URLClassLoader(urls, Thread.currentThread().getContextClassLoader ()); 
 
          // Check validity
          Log.setLog(new Log("Verifier"));

@@ -24,6 +24,8 @@ import javax.management.ObjectName;
 import org.jboss.logging.Log;
 import org.jboss.util.MBeanProxy;
 import org.jboss.util.ServiceMBeanSupport;
+import org.jboss.deployment.J2eeDeployerMBean;
+
 
 /**
  *   The AutoDeployer is used to automatically deploy EJB-jars.
@@ -38,7 +40,7 @@ import org.jboss.util.ServiceMBeanSupport;
  *
  *   @see ContainerFactory
  *   @author Rickard Öberg (rickard.oberg@telkel.com)
- *   @version $Revision: 1.7 $
+ *   @version $Revision: 1.8 $
  */
 public class AutoDeployer
 	extends ServiceMBeanSupport
@@ -90,7 +92,7 @@ public class AutoDeployer
          File urlFile = new File(url);
          if (urlFile.exists() && urlFile.isDirectory())
          {
-            File metaFile = new File(urlFile, "META-INF/ejb-jar.xml");
+            File metaFile = new File(urlFile, "META-INF"+File.separator+"ejb-jar.xml");
             if (metaFile.exists()) // It's unpackaged
             {
                try
@@ -116,9 +118,12 @@ public class AutoDeployer
          } else if (urlFile.exists()) // It's a file
          {
                // Check if it's a JAR or zip
-               if (!(url.endsWith(".jar") || url.endsWith(".zip")))
+               if (!(url.endsWith(".jar") ||
+                     url.endsWith(".ear") ||
+                     url.endsWith(".war") ||
+                     url.endsWith(".zip")))
                   continue; // Was not a JAR or zip - skip it...
-               
+
                try
                {
                   watchedURLs.add(new Deployment(urlFile.getCanonicalFile().toURL()));
@@ -130,9 +135,12 @@ public class AutoDeployer
          } else // It's a real URL (probably http:)
          {
             // Check if it's a JAR or zip
-            if (!(url.endsWith(".jar") || url.endsWith(".zip")))
+            if (!(url.endsWith(".jar") ||
+                  url.endsWith(".ear") ||
+                  url.endsWith(".war") ||
+                  url.endsWith(".zip")))
                continue; // Was not a JAR or zip - skip it...
-               
+
             try
             {
                watchedURLs.add(new Deployment(new URL(url)));
@@ -166,11 +174,14 @@ public class AutoDeployer
                for (int idx = 0; idx < files.length; idx++)
                {
                   URL fileUrl = files[idx].toURL();
-                  
-                  // Check if it's a JAR or zip
-                  if (!(fileUrl.getFile().endsWith(".jar") || fileUrl.getFile().endsWith(".zip")))
+
+                  // Check if it's a JAR or zip or ear or war
+                  if (!(fileUrl.getFile().endsWith(".jar") ||
+                        fileUrl.getFile().endsWith(".ear") ||
+                        fileUrl.getFile().endsWith(".war") ||
+                        fileUrl.getFile().endsWith(".zip")))
                      continue; // Was not a JAR or zip - skip it...
-                     
+
                   if (deployedURLs.get(fileUrl) == null)
                   {
 							// This file has not been seen before
@@ -228,6 +239,18 @@ public class AutoDeployer
                // Check old timestamp -- always deploy if first check
                if ((deployment.lastModified == 0) || (deployment.lastModified < lm))
                {
+                  // in case of file first check if it is really completely copied
+                  // (check file size wait 1 second and compare new with old file size)
+                  long size = new File(deployment.watch.getFile()).length ();
+                  try {
+                     Thread.currentThread().sleep (1000L);
+                  } catch (InterruptedException _ie) {}
+                  if (size != new File(deployment.watch.getFile()).length ())
+                  {
+                     log.log (deployment.url+" is not yet ready for deploy...");
+                     continue;
+                  }
+                  
                   log.log("Auto deploy of "+deployment.url);
                   deployment.lastModified = lm;
                   try
@@ -269,7 +292,7 @@ public class AutoDeployer
       throws Exception
    {
       // Save JMX name of ContainerFactory
-      factoryName = new ObjectName(ContainerFactoryMBean.OBJECT_NAME);
+      factoryName = new ObjectName(J2eeDeployerMBean.OBJECT_NAME);
    }
 
    protected void startService()
@@ -342,7 +365,9 @@ public class AutoDeployer
          throws MalformedURLException
       {
          this.url = url;
-         if (url.getFile().endsWith(".jar"))
+         if (url.getFile().endsWith(".jar") ||
+             url.getFile().endsWith(".ear") ||
+             url.getFile().endsWith(".war"))
             watch = url;
          else
             watch = new URL(url, "META-INF/ejb-jar.xml");
