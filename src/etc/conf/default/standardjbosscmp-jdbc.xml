@@ -9,7 +9,7 @@
 <!--                                                                       -->
 <!-- ===================================================================== -->
 
-<!-- $Id: standardjbosscmp-jdbc.xml,v 1.74 2004/03/23 16:58:07 triathlon98 Exp $ -->
+<!-- $Id: standardjbosscmp-jdbc.xml,v 1.75 2004/03/25 21:54:30 loubyansky Exp $ -->
 
 <jbosscmp-jdbc>
 
@@ -1618,6 +1618,11 @@ Mapping proposed by Computer Associates, but does not work with JBoss properly
             <java-type>java.lang.Integer</java-type>
             <jdbc-type>INTEGER</jdbc-type>
             <sql-type>INTEGER</sql-type>
+         </mapping>
+         <mapping>
+            <java-type>java.util.Date</java-type>
+            <jdbc-type>DATE</jdbc-type>
+            <sql-type>DATE</sql-type>
          </mapping>
       </type-mapping>
 
