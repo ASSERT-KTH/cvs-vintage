@@ -20,6 +20,7 @@ import org.columba.mail.folder.Folder;
 import org.columba.mail.folder.FolderFactory;
 import org.columba.mail.folder.FolderTreeNode;
 import org.columba.mail.folder.mailboximport.DefaultMailboxImporter;
+import org.columba.core.facade.DialogFacade;
 
 /**
  * @author frd
@@ -162,8 +163,9 @@ public class MozillaMailImportFilter extends DefaultMailboxImporter {
 					}
 
 				} catch (Exception ex) {
-					ExceptionDialog d = new ExceptionDialog();
-					d.showDialog(ex);
+					//ExceptionDialog d = new ExceptionDialog();
+					//d.showDialog(ex);
+					DialogFacade.showExceptionDialog(ex);
 				}
 			}
 
@@ -196,8 +198,9 @@ public class MozillaMailImportFilter extends DefaultMailboxImporter {
 					NotifyDialog dialog = new NotifyDialog();
 					dialog.showDialog("Source File not found:");
 				} else {
-					ExceptionDialog dialog = new ExceptionDialog();
-					dialog.showDialog(ex);
+					//ExceptionDialog dialog = new ExceptionDialog();
+					//dialog.showDialog(ex);
+					DialogFacade.showExceptionDialog(ex);
 				}
 			}
 
