@@ -76,7 +76,7 @@ import org.tigris.scarab.services.cache.ScarabCache;
  * TurbineGlobalCache service.
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: AttributeOption.java,v 1.39 2003/08/21 01:56:10 jmcnally Exp $
+ * @version $Id: AttributeOption.java,v 1.40 2003/12/08 00:45:46 thierrylach Exp $
  */
 public class AttributeOption 
     extends BaseAttributeOption
@@ -250,10 +250,19 @@ public class AttributeOption
 
         if (ao == null)
         {
+            // TODO Make this work properly under Oracle.
+            // Either we need to ignore case, or we need to fix the import list.
+            // Must determine which approach to take.
+            
+            // TODO It seems that we might not necessarily get the global option.
+            // Do we want to add a criteria to limit to getting the global option?
+            // This would be either "= 0" or "is null".
+             
             crit = new Criteria(2);
             crit.add(AttributeOptionPeer.OPTION_NAME, name);
             crit.add(AttributeOptionPeer.ATTRIBUTE_ID,
                      attribute.getAttributeId());
+            // crit.setIgnoreCase(true);
             List options = AttributeOptionPeer.doSelect(crit);
             if (options.size() == 1)
             {
