@@ -1,4 +1,6 @@
-#set ( $action = $link.setPage("secure,ConfigureIssueList.vm").setAction("ConfigureIssueList").addPathInfo("nextTemplate", "secure,ConfigureIssueList.vm") )
+$page.setTitle("Attribute Editor")
+
+#set ( $action = $link.setPage("secure,ConfigureIssueList.vm").setAction("secure.ConfigureIssueList").addPathInfo("nextTemplate", "secure,ConfigureIssueList.vm") )
 
 #set ($user = $data.User)
 #set ($module = $scarabR.CurrentModule)
@@ -8,7 +10,7 @@
 #set ($moduleAttributes = $module.getRModuleAttributes(true))
 #set ($maxNum = $moduleAttributes.size() )
 
-<form action=$action method="post">
+<form action="$action" method="post">
 <input type="hidden" name="user_id" value="$user.UserId">
 <input type="hidden" name="module_id" value="$module.ModuleId">
       <div class="app" id="div2-6-1">
