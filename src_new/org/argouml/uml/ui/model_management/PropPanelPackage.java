@@ -1,4 +1,4 @@
-// $Id: PropPanelPackage.java,v 1.28 2003/01/18 09:58:32 mkl Exp $
+// $Id: PropPanelPackage.java,v 1.29 2003/01/18 10:05:27 mkl Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -92,7 +92,7 @@ public class PropPanelPackage extends PropPanelNamespace implements PluggablePro
         addField(Argo.localize("UMLMenu", "label.stereotype"), new UMLComboBoxNavigator(this, Argo.localize("UMLMenu", "tooltip.nav-stereo"), getStereotypeBox()));
         addField(Argo.localize("UMLMenu", "label.namespace"), getNamespaceComboBox());
 
-        addField(Argo.localize("UMLMenu", "label.namespace"), getNamespaceVisibilityPanel());
+        addField(Argo.localize("UMLMenu", "label.visibility"), getNamespaceVisibilityPanel());
 
         // TODO: facilitate importedElements.
         // TODO: facilitate the fact that Package is a generalizable element.
