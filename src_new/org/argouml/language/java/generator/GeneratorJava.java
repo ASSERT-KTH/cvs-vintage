@@ -1,4 +1,4 @@
-// $Id: GeneratorJava.java,v 1.103 2004/10/12 06:57:06 mkl Exp $
+// $Id: GeneratorJava.java,v 1.104 2004/11/21 20:20:09 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -114,17 +114,6 @@ public class GeneratorJava
 				    "Java",
 				    null,
 				    Argo.lookupIconResource("JavaNotation")));
-    }
-
-    /**
-     * @deprecated by Linus Tolke for 0.17.1. 
-     *             Replace by call to {@link #generate(Object)}.
-     *
-     * @param o the object to generate
-     * @return the generated string
-     */
-    public static String Generate(Object o) {
-        return SINGLETON.generate(o);
     }
 
     /** 
@@ -1579,12 +1568,12 @@ public class GeneratorJava
         Object doAction = ModelFacade.getDoActivity(m);
 
         if (entryAction != null) {
-            String entryStr = Generate(entryAction);
+            String entryStr = generate(entryAction);
             if (entryStr.length() > 0)
                 sb.append("entry / ").append(entryStr);
         }
         if (doAction != null) {
-            String doStr = Generate(doAction);
+            String doStr = generate(doAction);
             if (doStr.length() > 0) {
                 if (sb.length() > 0)
                     sb.append(LINE_SEPARATOR);
@@ -1592,7 +1581,7 @@ public class GeneratorJava
             }
         }
         if (exitAction != null) {
-            String exitStr = Generate(exitAction);
+            String exitStr = generate(exitAction);
             if (sb.length() > 0)
                 sb.append(LINE_SEPARATOR);
             if (exitStr.length() > 0)

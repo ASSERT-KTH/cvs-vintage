@@ -1,4 +1,4 @@
-// $Id: ObjectNode.java,v 1.4 2004/09/09 18:07:17 mvw Exp $
+// $Id: ObjectNode.java,v 1.5 2004/11/21 20:20:09 mvw Exp $
 // Copyright (c) 2003-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -27,6 +27,10 @@ package org.argouml.uml.diagram.sequence;
 import org.argouml.uml.diagram.sequence.ui.FigLinkPort;
 
 
+/**
+ * An Object Node for the sequence diagram.
+ *
+ */
 public class ObjectNode extends ActivationNode implements LinkPort {
     private FigLinkPort figLinkPort;
     private Object ownerObject;

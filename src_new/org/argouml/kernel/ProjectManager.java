@@ -1,4 +1,4 @@
-// $Id: ProjectManager.java,v 1.36 2004/11/01 10:55:21 mkl Exp $
+// $Id: ProjectManager.java,v 1.37 2004/11/21 20:20:09 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -247,7 +247,7 @@ public final class ProjectManager implements PropertyChangeListener {
         oldProject.remove();
     }
 
-    /* react to PropertyChangeEvents, e.g. send by the Designer.
+    /** React to PropertyChangeEvents, e.g. send by the Designer.
      * @see java.beans.PropertyChangeListener#propertyChange(java.beans.PropertyChangeEvent)
      */
     public void propertyChange(PropertyChangeEvent pce) {

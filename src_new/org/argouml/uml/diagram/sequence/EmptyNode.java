@@ -1,4 +1,4 @@
-// $Id: EmptyNode.java,v 1.2 2004/09/09 18:07:16 mvw Exp $
+// $Id: EmptyNode.java,v 1.3 2004/11/21 20:20:09 mvw Exp $
 // Copyright (c) 2003-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -27,6 +27,10 @@
 package org.argouml.uml.diagram.sequence;
 
 
+/**
+ * An Empty Node for the sequence diagram.
+ *
+ */
 public class EmptyNode extends Node {
     /**
      * The constructor.

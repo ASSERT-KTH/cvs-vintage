@@ -1,4 +1,4 @@
-// $Id: ClassdiagramInheritanceEdge.java,v 1.9 2004/09/29 18:46:28 mvw Exp $
+// $Id: ClassdiagramInheritanceEdge.java,v 1.10 2004/11/21 20:20:10 mvw Exp $
 // Copyright (c) 1996-2001 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -85,6 +85,9 @@ public abstract class ClassdiagramInheritanceEdge extends ClassdiagramEdge {
         return (int) (low.getLocation().getX() + low.getSize().getWidth() / 2);
     }
     
+    /**
+     * @return the gap with the node one level down
+     */
     public int getDownGap() {
         return (int) (low.getLocation().getY() - getVerticalOffset());
     }

@@ -1,4 +1,4 @@
-// $Id: ArgoFilePersister.java,v 1.15 2004/11/10 13:20:27 bobtarling Exp $
+// $Id: ArgoFilePersister.java,v 1.16 2004/11/21 20:20:09 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -116,7 +116,8 @@ public class ArgoFilePersister extends AbstractFilePersister {
                         stream, "UTF-8")));
     
             try {
-                Hashtable templates = TemplateReader.SINGLETON.read(ARGO_TEE);
+                Hashtable templates = TemplateReader.getInstance()
+                    .read(ARGO_TEE);
                 OCLExpander expander = new OCLExpander(templates);
                 expander.expand(writer, project, "", "");
             } catch (ExpansionException e) {

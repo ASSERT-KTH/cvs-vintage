@@ -1,4 +1,4 @@
-// $Id: FigCompartment.java,v 1.5 2004/11/11 09:47:02 bobtarling Exp $
+// $Id: FigCompartment.java,v 1.6 2004/11/21 20:20:08 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -35,13 +35,13 @@ public abstract class FigCompartment extends FigGroup {
      * @see org.tigris.gef.presentation.Fig#getLineWidth()
      */
     public int getLineWidth() {
-        return _lineWidth;
+        return getLineWidth();
     }
     
     /**
      * @see org.tigris.gef.presentation.Fig#setLineWidth(int)
      */
     public void setLineWidth(int w) {
-        _lineWidth = w;
+        setLineWidth(w);
     }
 }

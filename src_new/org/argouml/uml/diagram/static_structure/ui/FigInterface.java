@@ -1,4 +1,4 @@
-// $Id: FigInterface.java,v 1.78 2004/11/12 13:39:29 mkl Exp $
+// $Id: FigInterface.java,v 1.79 2004/11/21 20:20:09 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -641,7 +641,7 @@ public class FigInterface extends FigNodeModelElement
         if (cls == null) {
             return;
         }
-        ActionAddOperation.getSingleton().actionPerformed(null);
+        new ActionAddOperation().actionPerformed(null);
         // TODO: in future version of GEF call getFigs returning array
         CompartmentFigText ft =
             (CompartmentFigText) new Vector(fg.getFigs(null)).lastElement();

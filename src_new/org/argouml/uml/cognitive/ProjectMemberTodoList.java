@@ -1,4 +1,4 @@
-// $Id: ProjectMemberTodoList.java,v 1.3 2004/11/10 13:20:27 bobtarling Exp $
+// $Id: ProjectMemberTodoList.java,v 1.4 2004/11/21 20:20:09 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -167,7 +167,8 @@ public class ProjectMemberTodoList extends ProjectMember {
         
         OCLExpander expander;
         try {
-            expander = new OCLExpander(TemplateReader.SINGLETON.read(TO_DO_TEE));
+            expander = new OCLExpander(TemplateReader.getInstance()
+                    .read(TO_DO_TEE));
         } catch (FileNotFoundException e) {
             throw new SaveException(e);
         }
