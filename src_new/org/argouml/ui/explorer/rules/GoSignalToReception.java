@@ -1,4 +1,4 @@
-// $Id: GoSignalToReception.java,v 1.9 2004/08/31 18:50:07 mvw Exp $
+// $Id: GoSignalToReception.java,v 1.10 2004/09/04 06:59:49 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -44,7 +44,7 @@ public class GoSignalToReception extends AbstractPerspectiveRule {
      * @see org.argouml.ui.explorer.rules.PerspectiveRule#getRuleName()
      */
     public String getRuleName() {
-    	return Translator.localize ("Tree", "Signal->Reception");
+    	return Translator.localize ("Signal->Reception");
     }
 
     /**

@@ -1,4 +1,4 @@
-// $Id: GoModelElementToComment.java,v 1.7 2004/08/31 20:11:14 mvw Exp $
+// $Id: GoModelElementToComment.java,v 1.8 2004/09/04 06:59:49 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -22,7 +22,7 @@
 // CALIFORNIA HAS NO OBLIGATIONS TO PROVIDE MAINTENANCE, SUPPORT,
 // UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 
-// $Id: GoModelElementToComment.java,v 1.7 2004/08/31 20:11:14 mvw Exp $
+// $Id: GoModelElementToComment.java,v 1.8 2004/09/04 06:59:49 mvw Exp $
 package org.argouml.ui.explorer.rules;
 
 import java.util.Collection;
@@ -54,7 +54,7 @@ public class GoModelElementToComment extends AbstractPerspectiveRule {
      * @see org.argouml.ui.AbstractGoRule#getRuleName()
      */
     public String getRuleName() {
-        return Translator.localize ("Tree", "misc.model-element.comment");
+        return Translator.localize ("misc.model-element.comment");
     }
 
     /**

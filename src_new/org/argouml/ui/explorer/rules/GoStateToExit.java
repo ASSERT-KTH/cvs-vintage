@@ -1,4 +1,4 @@
-// $Id: GoStateToExit.java,v 1.7 2004/08/31 20:11:14 mvw Exp $
+// $Id: GoStateToExit.java,v 1.8 2004/09/04 06:59:49 mvw Exp $
 // Copyright (c) 2003-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -69,6 +69,6 @@ public class GoStateToExit extends AbstractPerspectiveRule {
      * @see org.argouml.ui.AbstractGoRule#getRuleName()
      */
     public String getRuleName() {
-        return Translator.localize ("Tree", "misc.state.exit");
+        return Translator.localize ("misc.state.exit");
     }
 }

@@ -1,4 +1,4 @@
-// $Id: GoStateToIncomingTrans.java,v 1.7 2004/08/31 20:11:14 mvw Exp $
+// $Id: GoStateToIncomingTrans.java,v 1.8 2004/09/04 06:59:49 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -41,7 +41,7 @@ public class GoStateToIncomingTrans extends AbstractPerspectiveRule {
      * @see org.argouml.ui.explorer.rules.PerspectiveRule#getRuleName()
      */
     public String getRuleName() {
-        return Translator.localize ("Tree", "misc.state.incoming-transitions");
+        return Translator.localize ("misc.state.incoming-transitions");
     }
 
     /**
