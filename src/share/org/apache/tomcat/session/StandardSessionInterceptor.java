@@ -62,8 +62,6 @@ import java.io.*;
 import java.util.Enumeration;
 import java.util.Hashtable;
 import java.util.Vector;
-import javax.servlet.http.Cookie;
-import javax.servlet.http.HttpSession;
 import org.apache.tomcat.util.*;
 import org.apache.tomcat.util.threads.*;
 import org.apache.tomcat.core.*;
@@ -244,7 +242,7 @@ public final class StandardSessionInterceptor  extends BaseInterceptor {
     public void contextShutdown( Context ctx )
 	throws TomcatException
     {
-	if( ctx.getDebug() > 0 ) ctx.log("Removing sessions from " + ctx );
+	if( debug > 0 ) ctx.log("Removing sessions from " + ctx );
 	ServerSessionManager sm=getManager(ctx);
 	sm.getExpirer().stop();
 	sm.removeAllSessions();

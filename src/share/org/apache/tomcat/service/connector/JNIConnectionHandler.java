@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/service/connector/Attic/JNIConnectionHandler.java,v 1.17 2000/08/29 03:44:29 costin Exp $
- * $Revision: 1.17 $
- * $Date: 2000/08/29 03:44:29 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/service/connector/Attic/JNIConnectionHandler.java,v 1.18 2000/09/25 07:21:00 costin Exp $
+ * $Revision: 1.18 $
+ * $Date: 2000/09/25 07:21:00 $
  *
  * ====================================================================
  *
@@ -67,7 +67,6 @@ import java.io.IOException;
 import org.apache.tomcat.core.*;
 import org.apache.tomcat.util.*;
 import org.apache.tomcat.helper.*;
-import javax.servlet.ServletInputStream;
 import java.util.Vector;
 import java.io.File;
 

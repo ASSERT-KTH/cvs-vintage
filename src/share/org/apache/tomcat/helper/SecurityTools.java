@@ -59,9 +59,9 @@
 package org.apache.tomcat.helper;
 
 import org.apache.tomcat.core.*;
+import org.apache.tomcat.session.*;
 import org.apache.tomcat.util.*;
 import org.apache.tomcat.util.xml.*;
-import javax.servlet.http.HttpSession;
 import java.io.*;
 import java.net.*;
 import java.util.*;
@@ -172,7 +172,7 @@ public class SecurityTools {
 	String authMethod=ctx.getAuthMethod();
 
 	if( "FORM".equals( authMethod ) ) {
-	    HttpSession session=(HttpSession)req.getSession( false );
+	    ServerSession session=(ServerSession)req.getSession( false );
 
 	    if( session == null )
 		return; // not authenticated

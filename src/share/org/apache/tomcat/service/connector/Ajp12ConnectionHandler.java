@@ -76,8 +76,6 @@ import org.apache.tomcat.service.http.*;
 import org.apache.tomcat.service.http.HttpResponseAdapter;
 import org.apache.tomcat.service.http.HttpRequestAdapter;
 import org.apache.tomcat.service.*;
-import javax.servlet.*;
-import javax.servlet.http.*;
 
 /* Deprecated - must be rewriten to the connector model.
  */

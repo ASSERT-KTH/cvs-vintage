@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/service/connector/Attic/MsgBuffer.java,v 1.7 2000/05/23 16:56:55 costin Exp $
- * $Revision: 1.7 $
- * $Date: 2000/05/23 16:56:55 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/service/connector/Attic/MsgBuffer.java,v 1.8 2000/09/25 07:21:00 costin Exp $
+ * $Revision: 1.8 $
+ * $Date: 2000/09/25 07:21:00 $
  *
  * ====================================================================
  *
@@ -69,9 +69,6 @@ import java.net.*;
 import java.util.*;
 import org.apache.tomcat.core.*;
 import org.apache.tomcat.util.*;
-//import org.apache.tomcat.server.*;
-import javax.servlet.*;
-import javax.servlet.http.*;
 
 // XXX check limits?
 

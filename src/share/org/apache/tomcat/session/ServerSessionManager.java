@@ -64,8 +64,6 @@ import java.io.IOException;
 import java.util.Enumeration;
 import java.util.Hashtable;
 import java.util.Vector;
-import javax.servlet.http.Cookie;
-import javax.servlet.http.HttpSession;
 import org.apache.tomcat.util.*;
 import org.apache.tomcat.util.threads.*;
 import org.apache.tomcat.helper.*;

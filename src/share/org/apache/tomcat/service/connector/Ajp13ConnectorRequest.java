@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/service/connector/Attic/Ajp13ConnectorRequest.java,v 1.11 2000/08/29 03:44:29 costin Exp $
- * $Revision: 1.11 $
- * $Date: 2000/08/29 03:44:29 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/service/connector/Attic/Ajp13ConnectorRequest.java,v 1.12 2000/09/25 07:20:58 costin Exp $
+ * $Revision: 1.12 $
+ * $Date: 2000/09/25 07:20:58 $
  *
  * ====================================================================
  *
@@ -68,8 +68,6 @@ import java.net.*;
 import java.util.*;
 import org.apache.tomcat.core.*;
 import org.apache.tomcat.util.*;
-import javax.servlet.*;
-import javax.servlet.http.*;
 
 public class Ajp13ConnectorRequest extends Request 
 {

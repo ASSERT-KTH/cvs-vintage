@@ -169,7 +169,6 @@
       deprecation="off"
       srcdir="src/share" >
       <classpath>
-	<pathelement location="${servlet.jar}" />
 	<pathelement location="${tomcat.build}/lib/tomcat_util.jar" />
       </classpath>
       <include name="org/apache/tomcat/core/**" />    
@@ -201,7 +200,6 @@
       deprecation="off"
       srcdir="src/share" >
       <classpath>
-	<pathelement location="${servlet.jar}" />
 	<pathelement location="${tomcat.build}/lib/tomcat_util.jar" />
 	<pathelement location="${tomcat.build}/lib/tomcat_core.jar" />
       </classpath>
@@ -267,7 +265,6 @@
       optimize="${optimize}"
       deprecation="off" >
       <classpath>
-	<pathelement location="${servlet.jar}" />
 	<pathelement location="${tomcat.build}/lib/tomcat_util.jar" />
 	<pathelement location="${tomcat.build}/lib/tomcat_core.jar" />
       </classpath>

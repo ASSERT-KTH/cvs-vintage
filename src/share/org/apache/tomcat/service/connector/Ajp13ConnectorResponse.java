@@ -1,8 +1,8 @@
 
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/service/connector/Attic/Ajp13ConnectorResponse.java,v 1.6 2000/08/12 04:55:47 costin Exp $
- * $Revision: 1.6 $
- * $Date: 2000/08/12 04:55:47 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/service/connector/Attic/Ajp13ConnectorResponse.java,v 1.7 2000/09/25 07:20:59 costin Exp $
+ * $Revision: 1.7 $
+ * $Date: 2000/09/25 07:20:59 $
  *
  * ====================================================================
  *
@@ -69,8 +69,6 @@ import java.net.*;
 import java.util.*;
 import org.apache.tomcat.core.*;
 import org.apache.tomcat.util.*;
-import javax.servlet.*;
-import javax.servlet.http.*;
 
 
 public class Ajp13ConnectorResponse extends Response 

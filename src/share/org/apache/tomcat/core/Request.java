@@ -61,6 +61,7 @@
 package org.apache.tomcat.core;
 
 import org.apache.tomcat.util.*;
+import org.apache.tomcat.session.*;
 import org.apache.tomcat.logging.*;
 import org.apache.tomcat.helper.*;
 import java.io.IOException;
@@ -144,7 +145,7 @@ public class Request {
     protected String sessionId;
         
     // cache- avoid calling SessionManager for each getSession()
-    protected Object serverSession;
+    protected ServerSession serverSession;
 
     protected Handler handler = null;
     Container container;
@@ -488,12 +489,12 @@ public class Request {
 	cleanly separate the layers, and will be improved soon - the
 	whole session management will follow after core is done )
     */
-    public void setSession(Object serverSession) {
+    public void setSession(ServerSession serverSession) {
 	this.serverSession = serverSession;
     }
 
     
-    public Object getSession(boolean create) {
+    public ServerSession getSession(boolean create) {
 	if( serverSession!=null ) {
 	    // if not null, it is validated by the session module
 	    return serverSession;

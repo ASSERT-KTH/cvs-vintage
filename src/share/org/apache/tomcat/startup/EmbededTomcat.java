@@ -6,13 +6,10 @@ import java.io.*;
 import org.apache.tomcat.core.*;
 import org.apache.tomcat.request.*;
 import org.apache.tomcat.modules.server.*;
-//import org.apache.tomcat.service.*;
-//import org.apache.tomcat.service.http.*;
 import org.apache.tomcat.session.StandardSessionInterceptor;
 import org.apache.tomcat.context.*;
 import org.apache.tomcat.logging.*;
 import java.security.*;
-import javax.servlet.ServletContext;
 import java.util.*;
 
 /**
@@ -144,7 +141,7 @@ public class EmbededTomcat { // extends WebService
     
     /** Add and init a context
      */
-    public ServletContext addContext( String ctxPath, URL docRoot ) {
+    public Object addContext( String ctxPath, URL docRoot ) {
 	if(debug>0) log( "add context \"" + ctxPath + "\" " + docRoot );
 	if( contextM == null )
 	    initContextManager();
@@ -164,7 +161,7 @@ public class EmbededTomcat { // extends WebService
 	    ctx.setDocBase( docRoot.getFile());
 	    contextM.addContext( ctx );
 	    if( facadeM == null ) facadeM=ctx.getFacadeManager();
-	    return (ServletContext)ctx.getFacade();
+	    return ctx.getFacade();
 	} catch( Exception ex ) {
 	    log("exception adding context " + ctxPath + "/" + docRoot, ex);
 	}
@@ -173,7 +170,7 @@ public class EmbededTomcat { // extends WebService
 
     /** Remove a context
      */
-    public void removeContext( ServletContext sctx ) {
+    public void removeContext( Object sctx ) {
 	if(debug>0) log( "remove context " + sctx );
 	try {
 	    if( facadeM==null ) {
@@ -192,8 +189,8 @@ public class EmbededTomcat { // extends WebService
     /** The application may want to add an application-specific path
 	to the context.
     */
-    public void addClassPath( ServletContext context, String cpath ) {
-	if(debug>0) log( "addClassPath " + context.getRealPath("") + " " +
+    public void addClassPath( Object context, String cpath ) {
+	if(debug>0) log( "addClassPath " + context + " " +
 			  cpath );
 
 	try {
@@ -217,19 +214,19 @@ public class EmbededTomcat { // extends WebService
 	Right now virtual hosts are not supported in
 	embeded tomcat.
     */
-    public ServletContext getServletContext( String host,
-					     String cpath )
+    public Object getServletContext( String host,
+				     String cpath )
     {
 	// We don't support virtual hosts in embeded tomcat
 	// ( it's not difficult, but can be done later )
 	Context ctx=contextM.getContext( cpath );
 	if( ctx==null ) return null;
-	return (ServletContext)ctx.getFacade();
+	return ctx.getFacade();
     }
 
     /** This will make the context available.
      */
-    public void initContext( ServletContext sctx ) {
+    public void initContext( Object sctx ) {
 	try {
 	    if( facadeM==null ) {
 		log("XXX ERROR: no facade manager");
@@ -265,7 +262,7 @@ public class EmbededTomcat { // extends WebService
 	}
     }
 
-    public void destroyContext( ServletContext ctx ) {
+    public void destroyContext( Object ctx ) {
 
     }
 
@@ -412,7 +409,7 @@ public class EmbededTomcat { // extends WebService
 	    EmbededTomcat tc=new EmbededTomcat();
 	    tc.setWorkDir( pwd + "/work"); // relative to pwd
 
-	    ServletContext sctx;
+	    Object sctx;
 	    sctx=tc.addContext("", new URL
 		( "file", null, pwd + "/webapps/ROOT"));
 	    tc.initContext( sctx );

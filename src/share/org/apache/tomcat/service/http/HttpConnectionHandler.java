@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/service/http/Attic/HttpConnectionHandler.java,v 1.30 2000/08/14 21:54:27 costin Exp $
- * $Revision: 1.30 $
- * $Date: 2000/08/14 21:54:27 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/service/http/Attic/HttpConnectionHandler.java,v 1.31 2000/09/25 07:21:17 costin Exp $
+ * $Revision: 1.31 $
+ * $Date: 2000/09/25 07:21:17 $
  *
  * ====================================================================
  *
@@ -72,9 +72,6 @@ import org.apache.tomcat.core.*;
 import org.apache.tomcat.util.*;
 import org.apache.tomcat.util.net.*;
 import org.apache.tomcat.logging.*;
-import javax.servlet.*;
-import javax.servlet.http.*;
-
 
 public class HttpConnectionHandler  implements  TcpConnectionHandler {
     

@@ -1,8 +1,4 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/helper/Attic/CookieTools.java,v 1.2 2000/09/24 18:09:48 costin Exp $
- * $Revision: 1.2 $
- * $Date: 2000/09/24 18:09:48 $
- *
  * ====================================================================
  *
  * The Apache Software License, Version 1.1
@@ -66,8 +62,6 @@ import  org.apache.tomcat.util.*;
 import java.text.*;
 import java.util.*;
 
-import javax.servlet.http.Cookie;
-
 // XXX use only one Date instance/request, reuse it.
 
 /**
@@ -81,9 +75,7 @@ public class CookieTools {
     /** Return the header name to set the cookie, based on cookie
      *  version
      */
-    public static String getCookieHeaderName(Cookie cookie) {
-        int version = cookie.getVersion();
-
+    public static String getCookieHeaderName(int version) {
         if (version == 1) {
 	    return "Set-Cookie2";
         } else {
@@ -94,7 +86,7 @@ public class CookieTools {
     /** Return the header value used to set this cookie
      *  @deprecated Use StringBuffer version
      */
-    public static String getCookieHeaderValue(Cookie cookie) {
+    public static String getCookieHeaderValue(ServerCookie cookie) {
         StringBuffer buf = new StringBuffer();
 	getCookieHeaderValue( cookie, buf );
 	return buf.toString();
@@ -102,14 +94,15 @@ public class CookieTools {
 
     /** Return the header value used to set this cookie
      */
-    public static void getCookieHeaderValue(Cookie cookie, StringBuffer buf) {
+    public static void getCookieHeaderValue(ServerCookie cookie,
+					    StringBuffer buf) {
         int version = cookie.getVersion();
 
         // this part is the same for all cookies
 
         buf.append(cookie.getName());
         buf.append("=");
-        maybeQuote(version, buf, cookie.getValue());
+        maybeQuote(version, buf, cookie.getValue().toString());
 
  	// add version 1 specific information
 	if (version == 1) {
@@ -119,7 +112,7 @@ public class CookieTools {
 	    // Comment=comment
 	    if (cookie.getComment() != null) {
 		buf.append (";Comment=");
-		maybeQuote (version, buf, cookie.getComment());
+		maybeQuote (version, buf, cookie.getComment().toString());
 	    }
 	}
 
@@ -127,7 +120,7 @@ public class CookieTools {
 
 	if (cookie.getDomain() != null) {
 	    buf.append(";Domain=");
-	    maybeQuote (version, buf, cookie.getDomain());
+	    maybeQuote (version, buf, cookie.getDomain().toString());
 	}
 
 	// Max-Age=secs/Discard ... or use old "Expires" format
@@ -147,7 +140,7 @@ public class CookieTools {
 	// Path=path
 	if (cookie.getPath() != null) {
 	    buf.append (";Path=");
-	    maybeQuote (version, buf, cookie.getPath());
+	    maybeQuote (version, buf, cookie.getPath().toString());
 	}
 
 	// Secure

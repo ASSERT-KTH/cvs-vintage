@@ -66,7 +66,6 @@ import org.apache.tomcat.helper.*;
 import java.io.*;
 import java.net.*;
 import java.util.*;
-import javax.servlet.http.Cookie;
 
 /**
  * Will process the request and determine the session Id, and set it

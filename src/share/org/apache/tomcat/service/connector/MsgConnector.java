@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/service/connector/Attic/MsgConnector.java,v 1.5 2000/06/12 09:45:22 shachor Exp $
- * $Revision: 1.5 $
- * $Date: 2000/06/12 09:45:22 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/service/connector/Attic/MsgConnector.java,v 1.6 2000/09/25 07:21:01 costin Exp $
+ * $Revision: 1.6 $
+ * $Date: 2000/09/25 07:21:01 $
  *
  * ====================================================================
  *
@@ -69,9 +69,6 @@ import java.net.*;
 import java.util.*;
 import org.apache.tomcat.core.*;
 import org.apache.tomcat.util.*;
-//import org.apache.tomcat.server.*;
-import javax.servlet.*;
-import javax.servlet.http.*;
 
 /** Message based connector
  */

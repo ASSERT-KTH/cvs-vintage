@@ -68,7 +68,6 @@ import java.net.*;
 import java.text.*;
 import java.util.*;
 import java.security.*;
-import javax.servlet.ServletOutputStream;
 
 import org.apache.tomcat.logging.*;
 

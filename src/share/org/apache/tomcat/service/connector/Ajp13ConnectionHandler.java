@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/service/connector/Attic/Ajp13ConnectionHandler.java,v 1.6 2000/08/14 21:54:24 costin Exp $
- * $Revision: 1.6 $
- * $Date: 2000/08/14 21:54:24 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/service/connector/Attic/Ajp13ConnectionHandler.java,v 1.7 2000/09/25 07:20:57 costin Exp $
+ * $Revision: 1.7 $
+ * $Date: 2000/09/25 07:20:57 $
  *
  * ====================================================================
  *
@@ -72,9 +72,6 @@ import org.apache.tomcat.core.*;
 import org.apache.tomcat.util.net.*;
 import org.apache.tomcat.util.*;
 import org.apache.tomcat.logging.*;
-import javax.servlet.*;
-import javax.servlet.http.*;
-
 
 public class Ajp13ConnectionHandler implements  TcpConnectionHandler
 {

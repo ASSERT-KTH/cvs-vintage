@@ -60,18 +60,10 @@ package org.apache.tomcat.request;
 
 import org.apache.tomcat.util.*;
 import org.apache.tomcat.core.*;
-//import org.apache.tomcat.facade.ServletWrapper;
-//import org.apache.tomcat.facade.*;
 import org.apache.tomcat.logging.*;
 import org.apache.tomcat.core.Constants;
 import java.io.IOException;
 import java.io.PrintWriter;
-import javax.servlet.ServletException;
-import javax.servlet.ServletOutputStream;
-import javax.servlet.UnavailableException;
-import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 
 /**
  *

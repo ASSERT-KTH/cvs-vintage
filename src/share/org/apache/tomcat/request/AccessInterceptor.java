@@ -62,10 +62,9 @@ package org.apache.tomcat.request;
 
 import org.apache.tomcat.core.*;
 import org.apache.tomcat.helper.*;
+import org.apache.tomcat.session.*;
 import org.apache.tomcat.core.Constants;
 import org.apache.tomcat.util.*;
-import javax.servlet.*;
-import javax.servlet.http.*;
 import java.util.*;
 import java.io.*;
 
@@ -390,7 +389,7 @@ class FormAuthHandler extends Handler {
     {
 	Context ctx=req.getContext();
 
-	HttpSession session=(HttpSession)req.getSession( false );
+	ServerSession session=req.getSession( false );
 	if( session == null ) {
 	}
 	
@@ -399,7 +398,7 @@ class FormAuthHandler extends Handler {
 	// assert errorPage!=null ( AccessInterceptor will check
 	// that and enable form login only if everything is ok
 
-	session=(HttpSession)req.getSession( true );
+	session=(ServerSession)req.getSession( true );
 	String username=(String)session.getAttribute( "j_username" );
 
 	if( debug>0) log( "Username = " + username);
@@ -463,7 +462,7 @@ class FormSecurityCheckHandler extends Handler {
 	if( debug > 0 )
 	    log( " user/pass= " + username + " " + password );
 	    
-	HttpSession session=(HttpSession)req.getSession( false );
+	ServerSession session=(ServerSession)req.getSession( false );
 	if( session == null ) {
 	    ctx.log("From login without a session ");
 	    req.setAttribute("javax.servlet.error.message",
