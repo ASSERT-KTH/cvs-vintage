@@ -1,4 +1,4 @@
-// $Id: FigActionState.java,v 1.17 2004/07/25 20:53:41 kataka Exp $
+// $Id: FigActionState.java,v 1.18 2004/07/26 10:48:21 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -262,7 +262,8 @@ public class FigActionState extends FigStateVertex {
      */
     protected void textEdited(FigText ft) throws PropertyVetoException {
         if (ft == getNameFig() && this.getOwner() != null) {
-            ParserDisplay.SINGLETON.parseActionState(ft.getText(), this.getOwner());
+            ParserDisplay.SINGLETON.parseActionState(ft.getText(), 
+                    this.getOwner());
         } else
             super.textEdited(ft);
     }
