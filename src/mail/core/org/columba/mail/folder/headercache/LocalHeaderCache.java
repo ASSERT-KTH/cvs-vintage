@@ -17,30 +17,22 @@ package org.columba.mail.folder.headercache;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Enumeration;
-import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.List;
 import java.util.logging.Logger;
-
-import javax.swing.JOptionPane;
 
 import org.columba.core.command.StatusObservable;
 import org.columba.core.main.Main;
-import org.columba.core.util.ListTools;
+import org.columba.mail.folder.AbstractLocalFolder;
 import org.columba.mail.folder.AbstractMessageFolder;
 import org.columba.mail.folder.IDataStorage;
-import org.columba.mail.folder.AbstractLocalFolder;
 import org.columba.mail.message.ColumbaHeader;
 import org.columba.mail.message.HeaderList;
 import org.columba.mail.message.IColumbaHeader;
 import org.columba.mail.util.MailResourceLoader;
 import org.columba.ristretto.io.Source;
 import org.columba.ristretto.message.Flags;
-import org.columba.ristretto.message.Header;
 import org.columba.ristretto.message.MailboxInfo;
 import org.columba.ristretto.parser.HeaderParser;
 
@@ -142,14 +134,6 @@ public class LocalHeaderCache extends AbstractHeaderCache {
 				}
 			}
 
-			String[] userDefinedHeaders = CachedHeaderfields
-					.getUserDefinedHeaderfields();
-
-			if ((userDefinedHeaders != null)
-					&& (userDefinedHeaders.length >= additionalHeaderfieldsCount)) {
-				configurationChanged = true;
-			}
-
 			headerList = new HeaderList(capacity);
 
 			//System.out.println("Number of Messages : " + capacity);
@@ -218,17 +202,6 @@ public class LocalHeaderCache extends AbstractHeaderCache {
 			reader.close();
 		}
 
-		if (configurationChanged) {
-			// headerfield cache configuration changed
-			// -> try to properly fill the cache again
-			reorganizeCache();
-		}
-
-		/*
-		 * // we are done if (getObservable() != null) {
-		 * getObservable().clearMessageWithDelay();
-		 * getObservable().resetCurrent(); }
-		 */
 	}
 
 	/**
@@ -259,25 +232,6 @@ public class LocalHeaderCache extends AbstractHeaderCache {
 		LOG.fine("capacity=" + count);
 		writer.writeObject(new Integer(count));
 
-		// write keys of user specified headerfields in file
-		// -> this allows a much more failsafe handling, when
-		// -> users add/remove headerfields from the cache
-		String[] userDefinedHeaderFields = CachedHeaderfields
-				.getUserDefinedHeaderfields();
-
-		if (userDefinedHeaderFields != null) {
-			// write number of additional headerfields to file
-			writer.writeObject(new Integer(userDefinedHeaderFields.length));
-
-			// write keys to file
-			for (int i = 0; i < userDefinedHeaderFields.length; i++) {
-				writer.writeObject(userDefinedHeaderFields[i]);
-			}
-		} else {
-			// no additionally headerfields
-			writer.writeObject(new Integer(0));
-		}
-
 		ColumbaHeader h;
 
 		//Message message;
@@ -302,7 +256,8 @@ public class LocalHeaderCache extends AbstractHeaderCache {
 					folder.getName() + ": Syncing headercache...");
 		}
 
-		IDataStorage ds = ((AbstractLocalFolder) folder).getDataStorageInstance();
+		IDataStorage ds = ((AbstractLocalFolder) folder)
+				.getDataStorageInstance();
 
 		Object[] uids = ds.getMessageUids();
 
@@ -420,53 +375,5 @@ public class LocalHeaderCache extends AbstractHeaderCache {
 
 	private boolean isOlderThanOneWeek(Date arg0, Date arg1) {
 		return (arg0.getTime() - WEEK) > arg1.getTime();
-	}
-
-	/**
-	 * Method tries to fill the headercache with proper values.
-	 * <p>
-	 * This is needed after the user changed the headerfield caching setup.
-	 *  
-	 */
-	protected void reorganizeCache() throws Exception {
-		List list = new LinkedList(Arrays.asList(CachedHeaderfields
-				.getUserDefinedHeaderfields()));
-		ListTools.substract(list, additionalHeaderfields);
-
-		if (list.size() == 0) {
-			return;
-		}
-
-		JOptionPane
-				.showMessageDialog(
-						null,
-						"<html></body><p>Columba recognized that you just changed the headerfield caching setup."
-								+ " This makes it necessary to reorganize the cache and will take a bit longer than generally.</p></body></html>");
-
-		IDataStorage ds = ((AbstractLocalFolder) folder).getDataStorageInstance();
-
-		Object[] uids = ds.getMessageUids();
-		Header helper;
-		ColumbaHeader header;
-
-		for (int i = 0; i < uids.length; i++) {
-			header = (ColumbaHeader) headerList.get(uids[i]);
-
-			Source source = ds.getMessageSource(uids[i]);
-
-			if (source.length() == 0) {
-				continue;
-			}
-
-			helper = HeaderParser.parse(source);
-			source.close();
-
-			Iterator it = list.iterator();
-
-			while (it.hasNext()) {
-				String h = (String) it.next();
-				header.set(h, helper.get(h));
-			}
-		}
 	}
 }

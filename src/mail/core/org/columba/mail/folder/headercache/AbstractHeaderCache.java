@@ -253,17 +253,6 @@ public abstract class AbstractHeaderCache {
 			writer.writeObject(h.get(columnNames[j]));
 		}
 
-		// -> also save additional headerfields specified by user
-		// we use the keys as specified in CachedHeaderfields
-		// Note: This is different from loading, where we use the
-		// keys from the headercache file
-		columnNames = CachedHeaderfields.getUserDefinedHeaderfields();
-
-		if (columnNames != null) {
-			for (int j = 0; j < columnNames.length; j++) {
-				writer.writeObject((String) h.get(columnNames[j]));
-			}
-		}
 	}
 
 	/**

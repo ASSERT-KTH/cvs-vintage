@@ -305,7 +305,7 @@ public class VirtualFolder extends AbstractMessageFolder {
 		AbstractMessageFolder folder = parent;
 
 		Object[] resultUids = folder.searchMessages(filter);
-		String[] headerfields = CachedHeaderfields.getCachedHeaderfields();
+		String[] headerfields = CachedHeaderfields.getDefaultHeaderfields();
 
 		if (resultUids != null) {
 			for (int i = 0; i < resultUids.length; i++) {

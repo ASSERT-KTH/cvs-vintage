@@ -522,7 +522,7 @@ public abstract class AbstractLocalFolder extends AbstractMessageFolder {
 	public Header getHeaderFields(Object uid, String[] keys) throws Exception {
 		// cached headerfield list
 		List cachedList = Arrays.asList(CachedHeaderfields
-				.getCachedHeaderfields());
+				.getDefaultHeaderfields());
 
 		LinkedList keyList = new LinkedList(Arrays.asList(keys));
 

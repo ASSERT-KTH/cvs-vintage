@@ -852,7 +852,7 @@ public class IMAPFolder extends AbstractRemoteFolder {
 		boolean parsingNeeded = false;
 
 		// cached headerfield list
-		List list = Arrays.asList(CachedHeaderfields.getCachedHeaderfields());
+		List list = Arrays.asList(CachedHeaderfields.getDefaultHeaderfields());
 
 		for (int i = 0; i < keys.length; i++) {
 			if (header.get(keys[i]) != null) {

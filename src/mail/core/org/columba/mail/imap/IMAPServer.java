@@ -1100,7 +1100,7 @@ public class IMAPServer implements IMAPListener {
 			ensureSelectedState(folder);
 
 			//get list of user-defined headerfields
-			String[] headerFields = CachedHeaderfields.getCachedHeaderfields();
+			String[] headerFields = CachedHeaderfields.getDefaultHeaderfields();
 
 			IMAPHeader[] headers = protocol.uidFetchHeaderFields(
 					new SequenceSet(list), headerFields);

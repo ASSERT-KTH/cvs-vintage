@@ -104,10 +104,6 @@ public class MailMain implements IComponentPlugin {
 		BackgroundTaskManager.getInstance().register(plugin);
 		ShutdownManager.getShutdownManager().register(plugin);
 
-		// initialize cached headers which can be configured by the user
-		// -> see documentation in class
-		CachedHeaderfields.addConfiguration();
-
 		ServiceManager.getInstance().register(
 				"org.columba.mail.facade.IConfigFactory",
 				"org.columba.mail.facade.ConfigFactory");

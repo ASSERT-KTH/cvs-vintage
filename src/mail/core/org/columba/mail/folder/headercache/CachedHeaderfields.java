@@ -17,230 +17,130 @@
 //All Rights Reserved.
 package org.columba.mail.folder.headercache;
 
-import java.util.Arrays;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.StringTokenizer;
-
-import org.columba.core.xml.XmlElement;
-import org.columba.mail.config.MailConfig;
 import org.columba.mail.message.ColumbaHeader;
 import org.columba.mail.message.IColumbaHeader;
 
-
 /**
- *
- *
- * Holds a collection of all cached headerfields, which Columba needs to be
- * able to quickly show the message summary, etc. to the user.
- *
+ * 
+ * 
+ * Holds a collection of all cached headerfields, which Columba needs to be able
+ * to quickly show the message summary, etc. to the user.
+ * 
  * @author fdietz
  */
 public class CachedHeaderfields {
-    protected static XmlElement headercache;
 
-    static {
-        // initialize user-defined element as empty 
-        // -> this is necessary to also work with testcases
-        // -> which don't use Columba's configuration
-        headercache = new XmlElement("headercache");
-    }
+	// internally used headerfields
+	// these are all boolean values, which are saved using
+	// a single int value
+	public static final String[] INTERNAL_COMPRESSED_HEADERFIELDS = {
 
-    // internally used headerfields
-    // these are all boolean values, which are saved using
-    // a single int value
-    public static final String[] INTERNAL_COMPRESSED_HEADERFIELDS = {
-        
-        // message flags
-        "columba.flags.seen", "columba.flags.recent", "columba.flags.answered",
-        "columba.flags.flagged", "columba.flags.expunged", "columba.flags.draft",
-        
+	// message flags
+			"columba.flags.seen", "columba.flags.recent",
+			"columba.flags.answered", "columba.flags.flagged",
+			"columba.flags.expunged", "columba.flags.draft",
 
-        //	true, if message has attachments, false otherwise
-        "columba.attachment", 
-        //	true/false
-        "columba.spam"
-    };
+			//	true, if message has attachments, false otherwise
+			"columba.attachment",
+			//	true/false
+			"columba.spam" };
 
-    // this internally used headerfields can be of every basic
-    // type, including String, Integer, Boolean, Date, etc.
-    public static final String[] INTERNAL_HEADERFIELDS = {
-        
-        // priority as integer value
-        "columba.priority",
-        
+	// this internally used headerfields can be of every basic
+	// type, including String, Integer, Boolean, Date, etc.
+	public static final String[] INTERNAL_HEADERFIELDS = {
 
-        // short from, containing only name of person
-        "columba.from",
-        
+	// priority as integer value
+			"columba.priority",
 
-        // host from which this message was downloaded
-        "columba.host",
-        
+			// short from, containing only name of person
+			"columba.from",
 
-        // date
-        "columba.date",
-        
+			// host from which this message was downloaded
+			"columba.host",
 
-        // size of message
-        "columba.size",
-        
+			// date
+			"columba.date",
 
-        // properly decoded subject
-        "columba.subject",
-        
+			// size of message
+			"columba.size",
 
-        // message color
-        "columba.color",
-        
+			// properly decoded subject
+			"columba.subject",
 
-        // account ID
-        "columba.accountuid",
-        
+			// message color
+			"columba.color",
 
-        // to
-        "columba.to",
-        
+			// account ID
+			"columba.accountuid",
 
-        // Cc
-        "columba.cc",
-        
+			// to
+			"columba.to",
 
-        // from
-        "columba.from"
-    };
+			// Cc
+			"columba.cc",
 
-    // these are cached by default
-    // -> options.xml: /options/headercache
-    // -> attribute: additional
-    // -> whitespace separated list of additionally
-    // -> to be cached headerfields
-    // -----> only for power-users who want to tweak their search speed
-    public static final String[] DEFAULT_HEADERFIELDS = {
-        "Subject", "From", "To", "Cc", "Date", "Message-ID", "In-Reply-To",
-        "References", "Content-Type"
-    };
-    public static final String[] POP3_HEADERFIELDS = {
-        "Subject", "From", "columba.date", "columba.size",
-        
+			// from
+			"columba.from" };
 
-        // POP3 message UID
-        "columba.pop3uid",
-        
+	// these are cached by default
+	public static final String[] DEFAULT_HEADERFIELDS = { "Subject", "From",
+			"To", "Cc", "Date", "Message-ID", "In-Reply-To", "References",
+			"Content-Type" };
 
-        // was this message already fetched from the server?
-        "columba.alreadyfetched"
-    };
+	public static final String[] POP3_HEADERFIELDS = { "Subject", "From",
+			"columba.date", "columba.size",
 
-    /**
- * No need for creating instances of this class.
- */
-    private CachedHeaderfields() {
-    }
+			// POP3 message UID
+			"columba.pop3uid",
 
-    /**
- * Call this from MailMain to add user-defined headerfields
- *
- */
-    public static void addConfiguration() {
-        // see if we have to cache additional headerfields
-        // which are added by the user
-        XmlElement options = MailConfig.getInstance().get("options").getElement("/options");
-        headercache = options.getElement("headercache");
+			// was this message already fetched from the server?
+			"columba.alreadyfetched" };
 
-        if (headercache == null) {
-            // create xml-node
-            headercache = new XmlElement("headercache");
-            options.addElement(headercache);
-        }
-    }
+	/**
+	 * No need for creating instances of this class.
+	 */
+	private CachedHeaderfields() {
+	}
 
-    /**
- *
- * create new header which only contains headerfields needed by Columba
- * (meaning they also get cached)
- *
- * @param h
- * @return
- */
-    public static IColumbaHeader stripHeaders(IColumbaHeader h) {
-        //return h;
-    	IColumbaHeader strippedHeader = new ColumbaHeader();
+	/**
+	 * 
+	 * create new header which only contains headerfields needed by Columba
+	 * (meaning they also get cached)
+	 * 
+	 * @param h
+	 * @return
+	 */
+	public static IColumbaHeader stripHeaders(IColumbaHeader h) {
+		//return h;
+		IColumbaHeader strippedHeader = new ColumbaHeader();
 
-        //		copy all internally used headerfields
-        for (int i = 0; i < DEFAULT_HEADERFIELDS.length; i++) {
-            if(h.get(DEFAULT_HEADERFIELDS[i]) != null ) {
-            
-            strippedHeader.set(DEFAULT_HEADERFIELDS[i],
-                h.get(DEFAULT_HEADERFIELDS[i]));
-            }
-        }
+		//		copy all internally used headerfields
+		for (int i = 0; i < DEFAULT_HEADERFIELDS.length; i++) {
+			if (h.get(DEFAULT_HEADERFIELDS[i]) != null) {
 
-        for (int i = 0; i < INTERNAL_HEADERFIELDS.length; i++) {
-            if( h.get(INTERNAL_HEADERFIELDS[i]) != null ) {
-            strippedHeader.set(INTERNAL_HEADERFIELDS[i],
-                h.get(INTERNAL_HEADERFIELDS[i]));
-            }
-        }
+				strippedHeader.set(DEFAULT_HEADERFIELDS[i], h
+						.get(DEFAULT_HEADERFIELDS[i]));
+			}
+		}
 
-        for (int i = 0; i < INTERNAL_COMPRESSED_HEADERFIELDS.length; i++) {
-            if(h.get(INTERNAL_COMPRESSED_HEADERFIELDS[i])!=null ) {
-            strippedHeader.set(INTERNAL_COMPRESSED_HEADERFIELDS[i],
-                h.get(INTERNAL_COMPRESSED_HEADERFIELDS[i]));
-            }
-        }
+		for (int i = 0; i < INTERNAL_HEADERFIELDS.length; i++) {
+			if (h.get(INTERNAL_HEADERFIELDS[i]) != null) {
+				strippedHeader.set(INTERNAL_HEADERFIELDS[i], h
+						.get(INTERNAL_HEADERFIELDS[i]));
+			}
+		}
 
-        // copy all user defined headerfields
-        String[] userList = getUserDefinedHeaderfields();
+		for (int i = 0; i < INTERNAL_COMPRESSED_HEADERFIELDS.length; i++) {
+			if (h.get(INTERNAL_COMPRESSED_HEADERFIELDS[i]) != null) {
+				strippedHeader.set(INTERNAL_COMPRESSED_HEADERFIELDS[i], h
+						.get(INTERNAL_COMPRESSED_HEADERFIELDS[i]));
+			}
+		}
 
-        if (userList != null) {
-            for (int i = 0; i < userList.length; i++) {
-                Object item = h.get(userList[i]);
+		return strippedHeader;
+	}
 
-                strippedHeader.set(userList[i], item);
-            }
-        }
-
-        return strippedHeader;
-    }
-
-    /**
- * @return array containing all user defined headerfields
- */
-    public static String[] getUserDefinedHeaderfields() {
-        List list = new LinkedList();
-        String additionalHeaderfields = headercache.getAttribute("headerfields");
-
-        if ((additionalHeaderfields != null) &&
-                (additionalHeaderfields.length() > 0)) {
-            StringTokenizer tok = new StringTokenizer(additionalHeaderfields,
-                    " ");
-
-            while (tok.hasMoreTokens()) {
-                String s = (String) tok.nextToken();
-                list.add(s);
-            }
-        }
-
-        return (String[]) list.toArray(new String[0]);
-    }
-
-    /**
- * @return array containing default + user-defined headerfields
- */
-    public static String[] getCachedHeaderfields() {
-        List list = new LinkedList(Arrays.asList(DEFAULT_HEADERFIELDS));
-
-        String[] userList = getUserDefinedHeaderfields();
-
-        if (userList != null) {
-            list.addAll(Arrays.asList(userList));
-        }
-
-        return (String[]) list.toArray(new String[0]);
-    }
-
-    public static String[] getDefaultHeaderfields() {
-        return DEFAULT_HEADERFIELDS;
-    }
+	public static String[] getDefaultHeaderfields() {
+		return DEFAULT_HEADERFIELDS;
+	}
 }

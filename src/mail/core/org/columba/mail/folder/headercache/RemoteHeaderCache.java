@@ -16,22 +16,15 @@
 package org.columba.mail.folder.headercache;
 
 import java.io.File;
-import java.util.Arrays;
 import java.util.Enumeration;
-import java.util.LinkedList;
-import java.util.List;
 import java.util.logging.Logger;
-
-import javax.swing.JOptionPane;
 
 import org.columba.core.command.StatusObservable;
 import org.columba.core.main.Main;
-import org.columba.core.util.ListTools;
 import org.columba.mail.folder.AbstractMessageFolder;
 import org.columba.mail.message.ColumbaHeader;
 import org.columba.mail.message.HeaderList;
 import org.columba.mail.util.MailResourceLoader;
-import org.columba.ristretto.message.Header;
 
 /**
  * IMAP-specific implementation of a header cache.
@@ -90,10 +83,6 @@ public class RemoteHeaderCache extends AbstractHeaderCache {
 			for (int i = 0; i < additionalHeaderfieldsCount; i++) {
 				additionalHeaderfields.add((String) reader.readObject());
 			}
-		}
-
-		if (CachedHeaderfields.getUserDefinedHeaderfields().length >= additionalHeaderfieldsCount) {
-			configurationChanged = true;
 		}
 
 		if (getObservable() != null) {
@@ -156,25 +145,6 @@ public class RemoteHeaderCache extends AbstractHeaderCache {
 
 		writer.writeObject(new Integer(count));
 
-		//write keys of user specified headerfields in file
-		// -> this allows a much more failsafe handling, when
-		// -> users add/remove headerfields from the cache
-		String[] userDefinedHeaderFields = CachedHeaderfields
-				.getUserDefinedHeaderfields();
-
-		if (userDefinedHeaderFields != null) {
-			// write number of additional headerfields to file
-			writer.writeObject(new Integer(userDefinedHeaderFields.length));
-
-			// write keys to file
-			for (int i = 0; i < userDefinedHeaderFields.length; i++) {
-				writer.writeObject(userDefinedHeaderFields[i]);
-			}
-		} else {
-			// no additionally headerfields
-			writer.writeObject(new Integer(0));
-		}
-
 		ColumbaHeader h;
 
 		for (Enumeration e = headerList.keys(); e.hasMoreElements();) {
@@ -186,45 +156,6 @@ public class RemoteHeaderCache extends AbstractHeaderCache {
 		}
 
 		writer.close();
-	}
-
-	/**
-	 * Method tries to fill the headercache with proper values.
-	 * <p>
-	 * This is needed after the user changed the headerfield caching setup.
-	 *  
-	 */
-	protected void reorganizeCache() throws Exception {
-		List list = new LinkedList(Arrays.asList(CachedHeaderfields
-				.getUserDefinedHeaderfields()));
-		ListTools.substract(list, additionalHeaderfields);
-
-		if (list.size() == 0) {
-			return;
-		}
-
-		JOptionPane
-				.showMessageDialog(
-						null,
-						"<html></body><p>Columba recognized that you just changed the headerfield caching setup. "
-								+ " This makes it necessary to reorganize the cache and will take a bit longer than generally.</p></body></html>");
-
-		Object[] uids = folder.getUids();
-
-		ColumbaHeader header;
-
-		for (int i = 0; i < uids.length; i++) {
-			header = (ColumbaHeader) headerList.get(uids[i]);
-
-			Header helper = folder.getHeaderFields(uids[i], (String[]) list
-					.toArray());
-			Enumeration enumeration = helper.getKeys();
-
-			while (enumeration.hasMoreElements()) {
-				String key = (String) enumeration.nextElement();
-				header.set((String) key, helper.get(key));
-			}
-		}
 	}
 
 	protected void loadHeader(ColumbaHeader h) throws Exception {
