@@ -286,7 +286,12 @@ public class JasperEngineContext implements JspCompilationContext {
     public String resolveRelativeUri(String uri)
     {
 	if( debug>0 ) log("resolveRelativeUri " + uri);
-	return null;
+	if (uri.charAt(0) == '/') {
+	    return uri;
+        } else {
+            String baseURI = jspFile.substring(0, jspFile.lastIndexOf('/'));
+            return baseURI + '/' + uri;
+        }
     }
 
     public java.io.InputStream getResourceAsStream(String res)
