@@ -6,7 +6,7 @@
  */
 package org.jboss.webservice.metadata.jaxrpcmapping;
 
-// $Id: JavaWsdlMappingFactory.java,v 1.4 2004/06/10 11:04:35 tdiesler Exp $
+// $Id: JavaWsdlMappingFactory.java,v 1.5 2004/06/11 14:53:31 tdiesler Exp $
 
 import org.jboss.logging.Logger;
 import org.jboss.xml.binding.ContentNavigator;
@@ -172,7 +172,7 @@ public class JavaWsdlMappingFactory implements ObjectModelFactory
       else if ("root-type-qname".equals(localName))
          typeMapping.setRootTypeQName(navigator.resolveQName(value));
       else if ("anonymous-type-qname".equals(localName))
-         typeMapping.setAnonymousTypeQName(value);
+         typeMapping.setAnonymousTypeQName(navigator.resolveQName(value));
       else if ("qname-scope".equals(localName))
          typeMapping.setQnameScope(value);
    }
