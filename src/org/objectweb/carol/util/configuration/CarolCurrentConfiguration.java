@@ -22,7 +22,7 @@
  * USA
  *
  * --------------------------------------------------------------------------
- * $Id: CarolCurrentConfiguration.java,v 1.3 2004/12/13 16:24:14 benoitf Exp $
+ * $Id: CarolCurrentConfiguration.java,v 1.4 2005/03/11 13:57:39 benoitf Exp $
  * --------------------------------------------------------------------------
  */
 package org.objectweb.carol.util.configuration;
@@ -49,22 +49,22 @@ public class CarolCurrentConfiguration {
     /**
      * Protocols Portable Remote Object Delegate
      */
-    private static Hashtable prodHashtable = null;
+    private static Hashtable proDelegateTable = null;
 
     /**
      * Context Array for each protocol
      */
-    private static Hashtable icHashtable = null;
+    private static Hashtable protocolsTable = null;
 
     /**
      * Protocol for default
      */
-    private static String defaultRMI;
+    private static String defaultRMI = null;
 
     /**
      * Thread Local for protocol context propagation
      */
-    private static InheritableThreadLocal threadCtx;
+    private static InheritableThreadLocal threadCtx = null;
 
     /**
      * private constructor for singleton
@@ -79,8 +79,8 @@ public class CarolCurrentConfiguration {
         try {
 
             threadCtx = new InheritableThreadLocal();
-            prodHashtable = new Hashtable();
-            icHashtable = new Hashtable();
+            proDelegateTable = new Hashtable();
+            protocolsTable = new Hashtable();
             //get rmi configuration hashtable
             Hashtable allRMIConfiguration = CarolConfiguration.getAllRMIConfiguration();
             //int nbProtocol = allRMIConfiguration.size();
@@ -88,9 +88,9 @@ public class CarolCurrentConfiguration {
                 RMIConfiguration currentConf = (RMIConfiguration) e.nextElement();
                 String rmiName = currentConf.getName();
                 // get the PRO
-                prodHashtable.put(rmiName, Class.forName(currentConf.getPro())
+                proDelegateTable.put(rmiName, Class.forName(currentConf.getPro())
                         .newInstance());
-                icHashtable.put(rmiName, currentConf.getJndiProperties());
+                protocolsTable.put(rmiName, currentConf.getJndiProperties());
             }
             defaultRMI = CarolConfiguration.getDefaultProtocol().getName();
             // set the default protocol
@@ -99,7 +99,7 @@ public class CarolCurrentConfiguration {
             // trace Protocol current
             if (TraceCarol.isDebugCarol()) {
                 TraceCarol.debugCarol("CarolCurrentConfiguration.CarolCurrentConfiguration()");
-                TraceCarol.debugCarol("Number of rmi:" + icHashtable.size());
+                TraceCarol.debugCarol("Number of rmi:" + protocolsTable.size());
                 TraceCarol.debugCarol("Default:" + defaultRMI);
             }
 
@@ -138,23 +138,25 @@ public class CarolCurrentConfiguration {
      * @return Hashtable the hashtable of PROD
      */
     public Hashtable getPortableRemoteObjectHashtable() {
-        return prodHashtable;
+        return proDelegateTable;
     }
 
     /**
      * Get the Context Hashtable
+     * @param env the JNDI environment
      * @return Hashtable the hashtable of Context
+     * @throws NamingException if InitialContext cannot be built
      */
     public Hashtable getNewContextHashtable(Hashtable env) throws NamingException {
 
         // build a new hashtable of context
         Hashtable result = new Hashtable();
 
-        for (Enumeration e = icHashtable.keys(); e.hasMoreElements();) {
+        for (Enumeration e = protocolsTable.keys(); e.hasMoreElements();) {
             String k = (String) e.nextElement();
 
             // Get protocol env
-            Hashtable protocolEnv = (Hashtable) icHashtable.get(k);
+            Hashtable protocolEnv = (Hashtable) protocolsTable.get(k);
 
             // Add properties which are not already defined (not JNDI env)
             for (Enumeration enu = env.keys(); enu.hasMoreElements();) {
@@ -177,31 +179,33 @@ public class CarolCurrentConfiguration {
      */
     public PortableRemoteObjectDelegate getCurrentPortableRemoteObject() {
         if (threadCtx.get() == null) {
-            return (PortableRemoteObjectDelegate) prodHashtable.get(defaultRMI);
+            return (PortableRemoteObjectDelegate) proDelegateTable.get(defaultRMI);
         } else {
-            return (PortableRemoteObjectDelegate) prodHashtable.get(threadCtx.get());
+            return (PortableRemoteObjectDelegate) proDelegateTable.get(threadCtx.get());
         }
     }
 
     /**
      * Get current protocol Initial Context
      * @return InitialContext the initial Context
+     * @throws NamingException if InitialContext cannot be built
      */
     public Context getCurrentInitialContext() throws NamingException {
         if (threadCtx.get() == null) {
-            return new InitialContext((Properties) icHashtable.get(defaultRMI));
+            return new InitialContext((Properties) protocolsTable.get(defaultRMI));
         } else {
-            return new InitialContext((Properties) icHashtable.get(threadCtx.get()));
+            return new InitialContext((Properties) protocolsTable.get(threadCtx.get()));
         }
     }
 
     /**
      * Get RMI properties
+     * @param name protocol name
      * @return the corresponding RMI properties (null if RMI name not exists)
      */
-    public Properties getRMIProperties(String name) throws NamingException {
+    public Properties getRMIProperties(String name) {
 
-        return (Properties) icHashtable.get(name);
+        return (Properties) protocolsTable.get(name);
     }
 
     /**
@@ -217,9 +221,9 @@ public class CarolCurrentConfiguration {
     }
 
     /**
-     * To string method
+     * @return string representation of the object
      */
     public String toString() {
-        return "\nnumber of rmi:" + icHashtable.size() + "\ndefault:" + defaultRMI;
+        return "\nnumber of rmi:" + protocolsTable.size() + "\ndefault:" + defaultRMI;
     }
 }
