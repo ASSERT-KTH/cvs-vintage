@@ -84,7 +84,7 @@ import org.tigris.scarab.tools.ScarabRequestTool;
     This class is responsible for report issue forms.
     ScarabIssueAttributeValue
     @author <a href="mailto:jmcnally@collab.net">John D. McNally</a>
-    @version $Id: ReportIssue.java,v 1.40 2001/08/28 02:55:56 jon Exp $
+    @version $Id: ReportIssue.java,v 1.41 2001/08/30 19:24:27 jmcnally Exp $
 */
 public class ReportIssue extends TemplateAction
 {
@@ -359,9 +359,7 @@ public class ReportIssue extends TemplateAction
                 transaction.sendEmail(context, issue, subj.toString(),
                                       "email/NewIssueNotification.vm"); 
                 setTarget(data, template);
-                // !FIXME! this should be uncommented to allow jumping 
-                // directly back to entering another issue, but an easy
-                // update of intake is difficult at the moment
+
                 intake.removeAll();
                 data.getParameters().add("issue_id", 
                                          issue.getIssueId().toString());
