@@ -44,7 +44,7 @@ import org.gjt.sp.util.Log;
 /**
  * The main class of the VFS browser.
  * @author Slava Pestov
- * @version $Id: VFSBrowser.java,v 1.19 2001/12/02 11:40:50 spestov Exp $
+ * @version $Id: VFSBrowser.java,v 1.20 2001/12/26 05:32:34 spestov Exp $
  */
 public class VFSBrowser extends JPanel implements EBComponent
 {
@@ -333,7 +333,12 @@ public class VFSBrowser extends JPanel implements EBComponent
 			if(requestRunning)
 				return;
 
-			browserView.maybeReloadDirectory(((VFSUpdate)msg).getPath());
+			// save a file -> sends vfs update. if a VFS file dialog box
+			// is shown from the same event frame as the save, the
+			// VFSUpdate will be delivered before the directory is loaded,
+			// and before the path is set.
+			if(path != null)
+				browserView.maybeReloadDirectory(((VFSUpdate)msg).getPath());
 		}
 	} //}}}
 
@@ -1241,11 +1246,8 @@ public class VFSBrowser extends JPanel implements EBComponent
 						VFS.DirectoryEntry file = selected[i];
 						if(file.type == VFS.DirectoryEntry.FILE)
 						{
-							GUIUtilities.error(
-								VFSBrowser.this,
-								"vfs.browser.files-favorites",
-								null);
-							return;
+							toAdd.addElement(MiscUtilities
+								.getParentOfPath(file.path));
 						}
 						else
 							toAdd.addElement(file.path);

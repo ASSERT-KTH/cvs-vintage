@@ -47,7 +47,7 @@ import org.gjt.sp.util.Log;
 /**
  * The main class of the jEdit text editor.
  * @author Slava Pestov
- * @version $Id: jEdit.java,v 1.32 2001/12/25 03:06:50 spestov Exp $
+ * @version $Id: jEdit.java,v 1.33 2001/12/26 05:32:34 spestov Exp $
  */
 public class jEdit
 {
@@ -287,6 +287,21 @@ public class jEdit
 
 		initUserProperties();
 		initPLAF();
+
+		if(System.getProperty("java.version").compareTo("1.4") >= 0)
+		{
+			try
+			{
+				java.lang.reflect.Method meth
+					= Class.forName("org.gjt.sp.jedit.Java14")
+					.getMethod("init",new Class[0]);
+				meth.invoke(null,new Object[0]);
+			}
+			catch(Exception e)
+			{
+				Log.log(Log.ERROR,jEdit.class,e);
+			}
+		}
 
 		initActions();
 		initDockables();

@@ -48,7 +48,7 @@ import org.gjt.sp.util.*;
  * <code>getLineStartOffset()</code>, and so on).
  *
  * @author Slava Pestov
- * @version $Id: Buffer.java,v 1.49 2001/12/25 08:07:14 spestov Exp $
+ * @version $Id: Buffer.java,v 1.50 2001/12/26 05:32:34 spestov Exp $
  */
 public class Buffer implements EBComponent
 {
@@ -2594,7 +2594,7 @@ public class Buffer implements EBComponent
 				else
 					line++;
 			}
-			end = line;
+			end = line - 1;
 		}
 		else
 		{
@@ -2616,6 +2616,8 @@ public class Buffer implements EBComponent
 				else
 					end++;
 			}
+
+			end--;
 		}
 
 		while(getLineLength(end) == 0 && end > start)
