@@ -56,7 +56,6 @@
   <property name="ant.home" value="${install.dir}/jakarta-ant"/>
   <property name="jsse.home" value="${install.dir}/jsse1.0.2"/>
   <property name="jaxp.home" location="bin" />
-  <property name="crimson.home" value="${install.dir}/jaxp-1.1"/>
   <property name="ant.bin" value="${ant.home}/bin"/>
   <property name="ant.lib" value="${ant.home}/lib"/>
   <property name="jsse.lib" value="${jsse.home}/lib"/>
@@ -635,9 +634,6 @@
     </fileset>
     <fileset dir="${java.home}">
       <include name="lib/classes.zip"/>
-    </fileset>
-    <fileset dir="${jsse.lib}">
-      <include name="*.jar" if="jdk12.present"/>
     </fileset>
   </path>
 
