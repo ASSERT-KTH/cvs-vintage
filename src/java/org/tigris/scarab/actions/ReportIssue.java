@@ -84,11 +84,11 @@ import org.tigris.scarab.util.word.IssueSearch;
 import org.tigris.scarab.tools.ScarabRequestTool;
 
 /**
-    This class is responsible for report issue forms.
-    ScarabIssueAttributeValue
-    @author <a href="mailto:jmcnally@collab.net">John D. McNally</a>
-    @version $Id: ReportIssue.java,v 1.48 2001/09/30 18:31:38 jon Exp $
-*/
+ * This class is responsible for report issue forms.
+ *
+ * @author <a href="mailto:jmcnally@collab.net">John D. McNally</a>
+ * @version $Id: ReportIssue.java,v 1.49 2001/10/03 19:52:10 jon Exp $
+ */
 public class ReportIssue extends RequireLoginFirstAction
 {
 
@@ -125,7 +125,6 @@ public class ReportIssue extends RequireLoginFirstAction
         {
             aval = (AttributeValue)avMap.get(iter.next());
 
-            
             group = intake.get("AttributeValue", aval.getQueryKey(), false);
             if ( group != null ) 
             {            
@@ -290,23 +289,21 @@ public class ReportIssue extends RequireLoginFirstAction
             }
         }
 
-        if ( intake.isAllValid() ) 
+        if (intake.isAllValid())
         {
             Iterator i = avMap.iterator();
             while (i.hasNext()) 
             {
                 aval = (AttributeValue)avMap.get(i.next());
                 Group group = 
-                    intake.get("AttributeValue", aval.getQueryKey(),false);
-
+                    intake.get("AttributeValue", aval.getQueryKey(), false);
                 if ( group != null ) 
                 {
-//                    System.out.println("Parameters: "+data.getParameters());
                     group.setProperties(aval);
                 }                
             }
             
-            if ( issue.containsMinimumAttributeValues() ) 
+            if (issue.containsMinimumAttributeValues())
             {
                 // Save transaction record
                 Transaction transaction = new Transaction();
@@ -329,11 +326,11 @@ public class ReportIssue extends RequireLoginFirstAction
                 Attachment attachment = new Attachment();
                 Group group = intake.get("Attachment", 
                                    attachment.getQueryKey(), false);
-                if ( group != null ) 
+                if (group != null) 
                 {
                     group.setProperties(attachment);
-                    if ( attachment.getData() != null 
-                         && attachment.getData().length > 0 ) 
+                    if (attachment.getData() != null 
+                         && attachment.getData().length > 0)
                     {
                         attachment.setIssue(issue);
                         attachment.setTypeId(new NumberKey(1));
@@ -344,8 +341,8 @@ public class ReportIssue extends RequireLoginFirstAction
                 // set the template to the user selected value
                 String template = data.getParameters()
                     .getString(ScarabConstants.NEXT_TEMPLATE, 
-                               "entry,Wizard4.vm");
-                if ( template.equals("AssignIssue.vm") ) 
+                    "entry,Wizard3.vm");
+                if (template != null && template.equals("AssignIssue.vm"))
                 {
                     data.getParameters().add("intake-grp", "issue"); 
                     data.getParameters().add("issue", "_0"); 
@@ -372,21 +369,20 @@ public class ReportIssue extends RequireLoginFirstAction
         }
     }
 
-    public void doAddnote( RunData data, TemplateContext context ) 
+    public void doAddnote(RunData data, TemplateContext context) 
         throws Exception
     {
-        IntakeTool intake = getIntakeTool(context);
-        
-        if ( intake.isAllValid() ) 
+        IntakeTool intake = getIntakeTool(context);        
+        if (intake.isAllValid())
         {
             // save the attachment
             Attachment attachment = new Attachment();
             Group group = intake.get("Attachment", 
                                      attachment.getQueryKey(), false);
-            if ( group != null ) 
+            if (group != null)
             {
                 group.setProperties(attachment);
-                if ( attachment.getData().length > 0 ) 
+                if (attachment.getData().length > 0)
                 {
                     ScarabRequestTool scarabR = getScarabRequestTool(context);
                     Issue issue = scarabR.getIssue();
@@ -401,8 +397,8 @@ public class ReportIssue extends RequireLoginFirstAction
                                     " has been added.");
                     String nextTemplate = Turbine.getConfiguration()
                         .getString("template.homepage", "Start.vm");
-                    if ( ! reusedSearchStuff(data, context, 
-                             "eventSubmit_doAddnote",1, nextTemplate) ) 
+                    if (! reusedSearchStuff(data, context, 
+                             "eventSubmit_doAddnote",1, nextTemplate))
                     {
                         ((ScarabUser)data.getUser()).setReportingIssue(null);
                     }
@@ -416,14 +412,13 @@ public class ReportIssue extends RequireLoginFirstAction
         }
     }
 
-    public void doAddvote( RunData data, TemplateContext context ) 
+    public void doAddvote(RunData data, TemplateContext context)
         throws Exception
     {
         IntakeTool intake = getIntakeTool(context);
-        Group group = intake.get("Issue", IntakeTool.DEFAULT_KEY);
-        
         if ( intake.isAllValid() ) 
         {
+            Group group = intake.get("Issue", IntakeTool.DEFAULT_KEY);        
             Issue issue = IssuePeer
                 .retrieveByPK((NumberKey)group.get("Id").getValue());
             try
@@ -433,8 +428,8 @@ public class ReportIssue extends RequireLoginFirstAction
                                 + " has been accepted.");
                 String nextTemplate = Turbine.getConfiguration()
                     .getString("template.homepage", "Start.vm");
-                if ( ! reusedSearchStuff(data, context, 
-                          "eventSubmit_doAddvote",1, nextTemplate) ) 
+                if (! reusedSearchStuff(data, context, 
+                          "eventSubmit_doAddvote",1, nextTemplate))
                 {
                     ((ScarabUser)data.getUser()).setReportingIssue(null);
                 }
@@ -454,8 +449,7 @@ public class ReportIssue extends RequireLoginFirstAction
         }
     }
 
-
-    public void doGotowizard3( RunData data, TemplateContext context )
+    public void doGotowizard3(RunData data, TemplateContext context)
         throws Exception
     {
         setTarget(data, "entry,Wizard3.vm");
@@ -464,16 +458,17 @@ public class ReportIssue extends RequireLoginFirstAction
     /**
         This manages clicking the Cancel button
     */
-    public void doCancel( RunData data, TemplateContext context ) throws Exception
+    public void doCancel(RunData data, TemplateContext context) throws Exception
     {
         String template = Turbine.getConfiguration()
             .getString("template.homepage", "Start.vm");
         setTarget(data, template);
     }
+
     /**
         calls doCancel()
     */
-    public void doPerform( RunData data, TemplateContext context ) throws Exception
+    public void doPerform(RunData data, TemplateContext context) throws Exception
     {
         doCancel(data, context);
     }

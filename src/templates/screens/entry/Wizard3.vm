@@ -1,6 +1,6 @@
 $page.setTitle("Enter Issue")
 
-#set ($action = $link.setPage("entry,Wizard3.vm").setAction("ReportIssue").addPathInfo("nextTemplate", "entry,Wizard4.vm"))
+#set ($action = $link.setPage("entry,Wizard3.vm").setAction("ReportIssue"))
 #set ($module = $scarabR.CurrentModule)
 #set ($issue = $data.User.getReportingIssue($module))
 #set ($attrValues = $issue.ModuleAttributeValuesMap)

@@ -4,9 +4,9 @@
 <div id="selectmodule" class="app">
 
 <div class="grouper">
-<h3>Current Module</h3>
 
 #if ($currentModule)
+<h3>Current Module</h3>
 <div class="axial">
 <div class="datatable">
 <table cellpadding="3" cellspacing="2" border="1">

@@ -10,7 +10,7 @@ $page.setTitle("Enter New Issue")
 <form name="ReportForm" method="get" action="$action">
 
 <p class="functnbar">
-<input type="submit" name="eventSubmit_doSubmitattributes" value="next" />&#160;
+<input type="submit" name="eventSubmit_doSubmitattributes" value="Check For Duplicates" />&#160;
 <input type="reset" value="reset" /></p>
 
 <h3>Input your issue</h3>

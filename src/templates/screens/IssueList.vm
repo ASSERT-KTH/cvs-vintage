@@ -14,9 +14,6 @@
    #set ($issueList = $scarabR.getPaginatedList($issueList, $pageNum, $resultsPerPage))
 #end
 
-	
-<p>
-
 <form name="IssueListForm" action="$action" method="post">
 <input type="hidden" name="$scarabG.Constant.CURRENT_QUERY" value="$queryString">
 <input type="hidden" name="pageNum" value="$pageNum" /> 
@@ -58,25 +55,25 @@
 	
 
 	<h3>Search Results</h3>
-    (<a href="ConfigureIssueList.vm">add/remove attributes from view</a>)</div>
+    (<a href="$link.setPage("ConfigureIssueList.vm")">add/remove attributes from view</a>)</div>
 
 	<div class="datatable">
 		<table width="100%" border="1" cellspacing="2" cellpadding="3">
 		<tr>
-		<th nowrap="nowrap"><a href="#"><img 
-            src="/scarab/images/icon_uparrow.gif" width="13" height="8" 
-            alt="sort" border="0" /></a><a href="#"><img 
-            src="/scarab/images/icon_downarrow.gif" width="13" height="8" 
-            alt="sort" border="0" /></a></th>
-		<th><a href="#" class="header" title="sort">issue ID:</a></th>
+		<th>
+            <img src="/scarab/images/icon_uparrow.gif" width="13" height="8" 
+                alt="sort" border="0" />
+            <img src="/scarab/images/icon_downarrow.gif" width="13" height="8" 
+                alt="sort" border="0" />
+        </th>
+		<th>Issue ID:</th>
 #foreach( $userAttribute in $user.getAttributesForIssueList($module))
-		<th><a href="#" class="header" title="sort">$userAttribute.Name:</a></th>
+		<th>$userAttribute.Name:</th>
 #end
 		</tr>
 		
 #foreach ($issue in $issueList)
-
-    #set ( $issueLink = $link.addPathInfo($data.Parameters).setPathInfo("id", $issue.IssueId.toString()).setPage("ViewIssue.vm").toString() )
+    #set ( $issueLink = $link.setPage("ViewIssue.vm").setPathInfo("id", $issue.IssueId.toString()))
         #rows ()
 		<td><input type="checkbox" name="selected_$issue.IssueId" /></td>
 		<td><a href="$issueLink">$issue.UniqueId</a></td>
@@ -91,18 +88,17 @@
        #end
     </td>
 #end
-		</tr>
-		
+		</tr>		
 #end
 		</table>
 	</div>
 
 	<div class="misc">
         issues per page:&#160; 
-        <input type="radio"  value="2" name="resultsPerPage" #if( $resultsPerPage == 2 ) checked="checked" #end /> 2 
-        <input type="radio" " name="resultsPerPage" value="50" #if( $resultsPerPage == 50 ) checked="checked" #end /> 50 
-        <input type="radio" name="resultsPerPage"  value="75" #if( $resultsPerPage == 75 ) checked="checked" #end /> 75 
-        <input type="radio"  name="resultsPerPage" value="100" #if( $resultsPerPage == 100 ) checked="checked" #end /> 100&nbsp; 
+        <input type="radio" value="2" name="resultsPerPage" #if( $resultsPerPage == 2 ) checked="checked" #end /> 2 
+        <input type="radio" name="resultsPerPage" value="50" #if( $resultsPerPage == 50 ) checked="checked" #end /> 50 
+        <input type="radio" name="resultsPerPage" value="75" #if( $resultsPerPage == 75 ) checked="checked" #end /> 75 
+        <input type="radio" name="resultsPerPage" value="100" #if( $resultsPerPage == 100 ) checked="checked" #end /> 100
         <input type="submit" name="eventSubmit_doSearch" value="Refresh">
     </div>
 
@@ -124,19 +120,17 @@
 #end
 </p>
 	
-	
 #if( $paginated)
 	<div class="misc">
   #if( $scarabR.PrevPage != 0 )
-    #set ( $prevLink = $link.setPathInfo("resultsperpage", $resultsPerPage.toString()).setPathInfo("pageNum", $scarabR.PrevPage.toString()).setPage("IssueList.vm"))
+    #set ( $prevLink = $link.setPage("IssueList.vm").setPathInfo("resultsperpage", $resultsPerPage.toString()).setPathInfo("pageNum", $scarabR.PrevPage.toString()))
     <a href="$prevLink">&laquo;</a> previous |
   #end
      $pageNum of $scarabR.NbrPages 
   #if( $scarabR.NextPage != 0)
-    #set ( $nextLink = $link.setPathInfo("resultsperpage", $resultsPerPage.toString()).setPathInfo("pageNum", $scarabR.NextPage.toString()).setPage("IssueList.vm"))
+    #set ( $nextLink = $link.setPage("IssueList.vm").setPathInfo("resultsperpage", $resultsPerPage.toString()).setPathInfo("pageNum", $scarabR.NextPage.toString()))
     | <a href="$nextLink">&raquo;</a> next
   #end
-    (<a href="ConfigureIssueList.vm">add/remove attributes from view</a>)</div>
 #end
 $intake.declareGroups()
 </form>
