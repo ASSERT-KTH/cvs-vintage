@@ -1,4 +1,4 @@
-<!-- $Id: changes.html,v 1.32 2002/02/09 02:46:32 elicia Exp $ -->
+<!-- $Id: changes.html,v 1.33 2002/02/11 02:08:00 jmcnally Exp $ -->
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2//EN">
 <html>
 
@@ -105,6 +105,13 @@
                 <li>SelectArtifactType.vm was showing inactive issue types (JSS)</li>
                 <li>admin,GlobalArtifactTypeEdit.vm artifact -&gt; issue terminology fix (JSS)</li>
                 <li>Doing permission check before displaying assign buttons on IssueList. (EWD)</li>
+                <li>Current Module hierarchy shown in the top left of screen 
+                    fixed so that it shows changes to the hierarchy. It used to 
+                    require restarting the server to get it changed. (JDM)</li>
+                <li>Several changes that were possible on the ModifyIssue were
+                    not generating activity records.  Add attachment, 
+                    add/edit comment, add dependency now generate Activities.
+                    (JDM)</li> 
             </ul>
         </td>
     </tr>
