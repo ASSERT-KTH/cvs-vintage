@@ -72,7 +72,7 @@ import org.tigris.scarab.tools.ScarabRequestTool;
  * This class deals with modifying Global Attributes.
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: GlobalAttributeEdit.java,v 1.6 2002/01/18 22:26:04 jon Exp $
+ * @version $Id: GlobalAttributeEdit.java,v 1.7 2002/02/15 23:29:38 elicia Exp $
  */
 public class GlobalAttributeEdit extends RequireLoginFirstAction
 {
@@ -254,8 +254,35 @@ public class GlobalAttributeEdit extends RequireLoginFirstAction
         throws Exception
     {
         doSaveattributedata(data, context);
-        //doSaveoptions(data, context);
+        if (getScarabRequestTool(context).getAttribute().isOptionAttribute())
+        {
+            doSaveoptions(data, context);
+        }
         doCancel(data, context);
     }
     
+    /*
+     * Manages clicking of the AllDone button
+     */
+    public void doCancel( RunData data, TemplateContext context )
+        throws Exception
+    {
+        // If they came from the AttributeGroup page,
+        // Add the attribute and return there.
+        String lastTemplate = data.getParameters().getString("lastTemplate");
+        if (lastTemplate != null && 
+            lastTemplate.equals("admin,AttributeSelect.vm"))
+        {
+            String groupId = data.getParameters().getString("groupId");
+            if (groupId != null)
+            {
+                ScarabRequestTool scarabR = getScarabRequestTool(context);
+                scarabR.getAttributeGroup(groupId)
+                       .addAttribute(scarabR.getAttribute());
+                 data.setMessage("The attribute has been added.");
+                super.doCancel(data, context);
+            }
+        }
+        super.doCancel(data, context);
+    }
 }
