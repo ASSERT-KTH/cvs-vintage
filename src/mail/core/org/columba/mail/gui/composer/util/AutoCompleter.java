@@ -72,15 +72,9 @@ public class AutoCompleter implements KeyListener, ItemListener {
 		_options = options;
 	}
 
-	public void keyTyped(KeyEvent e) {
-		char ch = e.getKeyChar();
+	public void keyTyped(KeyEvent e) {}
 
-	}
-
-	public void keyPressed(KeyEvent e) {
-		char ch = e.getKeyChar();
-
-	}
+	public void keyPressed(KeyEvent e) {}
 
 	public void keyReleased(KeyEvent e) {
 
@@ -199,9 +193,6 @@ public class AutoCompleter implements KeyListener, ItemListener {
 				}
 			}
 
-		} else {
-			//System.out.println("not selected state");
 		}
 	}
-
 }

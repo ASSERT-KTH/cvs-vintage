@@ -238,16 +238,10 @@ public class AddressbookTableView extends JTable {
 	}
 
 	public void appendRow() {
-		int rowCount = getRowCount();
-		int selected = getSelectedRow();
-
-		if (emptyRowExists() == false) {
-
+		if (!emptyRowExists()) {
 			addEmptyRow();
-			editLastRow();
-		} else
-			editLastRow();
-
+		}
+		editLastRow();
 	}
 
 	public void cleanupHeaderItemList() {
