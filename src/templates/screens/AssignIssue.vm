@@ -7,7 +7,7 @@
 #set ($issueListSize = $scarabG.sizeOfArray($issueList))
 #set ($searchString = $data.Parameters.getString("searchString" , ""))
 #set ($searchField = $data.Parameters.getString("searchField" , ""))
-#set ($now = $scarabG.Now.Time)
+##set ($now = $scarabG.Now.Time)
 
 #if ($userAttrs.isEmpty())
  <p><strong class="alert">
@@ -25,18 +25,36 @@
   #set ($actionLink = $link.setPage("AssignIssue.vm").toString())
 #end
 
-<form action="$actionLink" method="post">
+<form action="$actionLink" method="get">
 <input type="hidden" name="action" value="AssignIssue" />
 #set ($cancelPage = $data.Parameters.getString("$scarabG.Constant.CANCEL_TEMPLATE", "IssueList.vm"))
 <input type="hidden" name="$scarabG.Constant.CANCEL_TEMPLATE" value="$cancelPage" />
+## pass issue id's
 #foreach ($issueId in $issueList)
   <input type="hidden" name="issue_ids" value="$issueId" />
 #end
+## pass user id's of users in temporary working list
+## if no working list yet, pass user id's of assigned users
+#if ($tempList)
+   #foreach ($pair in $tempList)
+      #foreach ($id in $pair)
+         #if ($velocityCount == 1)
+            #set ($attrId = $id)
+         #else
+            #set ($userId = $id)
+         #end
+      #end
+          <input type=hidden name="temp_user_attr_$userId" value=$attrId>
+   #end
+#else
+   #foreach( $attval in $issue.UserAttributeValues)
+    <input type=hidden name="temp_user_attr_$attval.UserId" value=$attval.AttributeId>
+   #end
+#end 
   
 <div class="functnbar">
 <input type="submit" value="Done" name="eventSubmit_doDone" />
 </div>
-</form>
 
 
 
@@ -45,22 +63,18 @@
 #foreach ($issueId in $issueList)
  #set ($issue = $scarabR.getIssueByPk($issueId.toString()))
  #if ($issue)
-<form action="$actionLink" method="post">
-<input type="hidden" name="action" value="AssignIssue" />
-<input type="hidden" name="id" value="$issue.UniqueId" />
-#foreach ($issueId in $issueList)
-  <input type="hidden" name="issue_ids" value="$issueId" />
-#end
-<input type="hidden" name="mod_ts" value="$now" />
-#set ($cancelPage = $data.Parameters.getString("$scarabG.Constant.CANCEL_TEMPLATE", "IssueList.vm"))
-<input type="hidden" name="$scarabG.Constant.CANCEL_TEMPLATE" value="$cancelPage" />
 
 <h3>Personnel associated with the issue $issue.UniqueId</h3>
 
-    #set ($noUsers = "true")
-    #foreach ($userAttr in $userAttrs)
-      #if (!$issue.getAttributeValues($userAttr).isEmpty())
-        #set ($noUsers = "false")
+    ## if there is no temporary list, use list of already-assigned users
+    #set ($noUsers = "false")
+    #if ($tempList)
+      #if ($tempList.isEmpty())
+        #set ($noUsers = "true")
+      #end
+    #else
+      #if ($issue.UserAttributeValues.isEmpty())
+        #set ($noUsers = "true")
       #end
     #end
 
@@ -77,49 +91,83 @@
 		<th>Association</th>
 		</tr>
 
-	  #foreach ($userAttr in $userAttrs)
-		#set ($assignees = $issue.getAttributeValues($userAttr))
-		#foreach ($assignee in $assignees)
-		  #set ($attrInput = $intake.AttributeValue.mapTo($assignee))
-		  #set ($assignedUser = $scarabR.getUser($assignee.UserId))
+#if (!$tempList)
+  #foreach ($attVal in $issue.UserAttributeValues)
+    #set ($attrId = $attVal.Attribute.AttributeId)
+    #set ($userId = $attVal.UserId)
+    #set ($assignedUser = $scarabR.getUser($userId))
+    <tr class="a">
+    <td><input type="checkbox" name="remove_user_$userId" value=$attrId>
+    <td><strong>$!assignedUser.Name</strong></td>
+    <td><a href="mailto:$assignedUser.Email">$assignedUser.Email</a></td>
+    <td><select name="temp_user_attr_$userId">
+     #foreach ($selectUserAttr in $userAttrs)
+        #set ($selected = "")
+        #if ($attrId.equals($selectUserAttr.AttributeId.toString())) 
+            #set ($selected = 'selected')
+        #end
+        <option value="$selectUserAttr.AttributeId" $selected >$selectUserAttr.Name</option>
+     #end
+       </select></td>
+    </tr>
+  #end
+
+#else
+      #foreach ($pair in $tempList)
+	    #foreach ($id in $pair)
+         #if ($velocityCount == 1)
+            #set ($attrId = $id)
+         #else
+            #set ($userId = $id)
+         #end
+        #end
+		 #set ($assignedUser = $scarabR.getUser($userId))
 			<tr class="a">
-			<td>#booleanCheckbox($attrInput.Deleted)</td>
+			<td><input type="checkbox" name="remove_user_$userId" value=$attrId>
 			<td><strong>$!assignedUser.Name</strong></td>
 			<td><a href="mailto:$assignedUser.Email">$assignedUser.Email</a></td>
-			<td><select name="$attrInput.AttributeId.Key">
+			<td><select name="temp_user_attr_$userId">
 			 #foreach ($selectUserAttr in $userAttrs)
                 #set ($selected = "")
-				#if ($attrInput.AttributeId.toString().equals($selectUserAttr.AttributeId.toString())) 
+				#if ($attrId.equals($selectUserAttr.AttributeId.toString())) 
                     #set ($selected = 'selected')
                 #end
 				<option value="$selectUserAttr.AttributeId" $selected >$selectUserAttr.Name</option>
 			 #end
 			   </select></td>
 			</tr>
-		#end
-	  #end
-			
+      #end
+#end
    </table>  
 
 <div class="functnbar3">
- <input type="submit" name="eventSubmit_doSavevalues" value="Save changes" />&#160;
- <input type="submit" name="eventSubmit_doSavevalues" value="Remove selected from assignee list" />
+ <input type="submit" name="eventSubmit_doRemove" value="Remove selected from assignee list" />
 </div>
   #end
-$intake.declareGroups()
-</form>
+
+
 #else
  <p class="alert"> The issue Id, $issueId, is not valid.</p>
 #end
 #end
 
-<form action="$actionLink" method="post">
-<input type="hidden" name="action" value="AssignIssue" />
-#foreach ($issueId in $issueList)
- <input type="hidden" name="issue_ids" value="$issueId" />
+#if ($tempList)
+<div class="axial">
+ <table cellpadding="3" cellspacing="2" border="0">
+    
+ <tr>
+   <th>Reason for change</th>
+   <td>Please enter a reason for the changes made above before selecting "Done"   
+         <p><textarea rows="4" cols="60" name ="reason"></textarea></p>
+   </td>
+ </tr>
+   
+ </table>
+</div>
+<div class="functnbar2">
+ <input type="submit" value="Done" name="eventSubmit_doDone" />
+</div>
 #end
-</form>
-
 
 ## SORTING
 #set ($sortColumn = $data.Parameters.getString("sortColumn",""))
@@ -193,13 +241,6 @@ $intake.declareGroups()
 
 
 ## USER SEARCH
-<form action="$actionLink" method="post">
-<input type="hidden" name="action" value="AssignIssue" />
-#foreach ($issueId in $issueList)
- <input type="hidden" name="issue_ids" value="$issueId" />
-#end
-<input type="hidden" name="mod_ts" value="$now" />
-
 
 <a name="add"><h3>Possible users</h3></a> 
 <div class="axial">
@@ -246,7 +287,7 @@ $intake.declareGroups()
 	<th>Association</th>
 	</tr>
    #foreach ($user in $searchResults)
-	#indexedRows($velocityCount)
+    #indexedRows($velocityCount)
     <td><input type="checkbox" name="add_user_$user.UserId" value="$user.UserId" /></td>
     <td><strong>$user.Name</strong></td>
     <td><a href="mailTo:$user.Email">$user.Email</a></td>
@@ -261,6 +302,7 @@ $intake.declareGroups()
    #end
    </table>
 
+##passValues()
 <div class="functnbar3">
  <input type="submit" name="eventSubmit_doAdd" value="Add selected to assignee list" />
 </div>
@@ -290,7 +332,8 @@ $intake.declareGroups()
 </div>
 
 $intake.declareGroups()
-</form>
 
 #end
 </div>
+</form>
+
