@@ -15,15 +15,16 @@
 //All Rights Reserved.
 package org.columba.mail.gui.table.action;
 
+import java.awt.event.ActionEvent;
+import java.util.logging.Logger;
+
 import org.columba.core.action.AbstractColumbaAction;
 import org.columba.core.gui.frame.FrameMediator;
 import org.columba.core.main.MainInterface;
-
 import org.columba.mail.command.FolderCommandReference;
+import org.columba.mail.gui.frame.MessageViewOwner;
+import org.columba.mail.gui.message.MessageController;
 import org.columba.mail.gui.message.command.ViewMessageCommand;
-
-import java.awt.event.ActionEvent;
-import java.util.logging.Logger;
 
 
 public class ViewMessageAction extends AbstractColumbaAction {
@@ -50,6 +51,7 @@ public class ViewMessageAction extends AbstractColumbaAction {
         Object[] uids = references[0].getUids();
 
         if (uids.length == 1) {
+        	// one message is selected
             if (oldUid == uids[0]) {
                 LOG.info("this message was already selected, don't fire any event");
 
@@ -58,8 +60,14 @@ public class ViewMessageAction extends AbstractColumbaAction {
 
             oldUid = uids[0];
 
+            // show selected message
             MainInterface.processor.addOp(new ViewMessageCommand(
                     getFrameMediator(), references));
+        } else if ( uids.length == 0){
+        	// no message selected
+        	
+        	MessageController c = ((MessageViewOwner)getFrameMediator()).getMessageController();
+        	c.clear();
         }
     }
 }

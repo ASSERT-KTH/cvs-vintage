@@ -21,7 +21,9 @@ import org.columba.core.config.DefaultItem;
 import org.columba.core.xml.XmlElement;
 import org.columba.mail.folder.MessageFolder;
 import org.columba.mail.gui.frame.MailFrameMediator;
+import org.columba.mail.gui.frame.MessageViewOwner;
 import org.columba.mail.gui.frame.TableViewOwner;
+import org.columba.mail.gui.message.MessageController;
 import org.columba.mail.gui.table.TableController;
 import org.columba.mail.gui.table.TableView;
 import org.columba.mail.gui.table.model.MessageNode;
@@ -93,7 +95,9 @@ public class SelectionOptionsPlugin extends AbstractFolderOptionsPlugin {
         int row = view.getTree().getRowCount();
 
         // row count == 0 --> empty table
-        if (row == 0) { return; }
+        if (row == 0) {      	
+        	return; 
+        }
 
         // if the last selection for the current folder is null, then we show
         // the

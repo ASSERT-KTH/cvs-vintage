@@ -143,6 +143,7 @@ public class TableSelectionHandler extends SelectionHandler
 
         if (lsm.isSelectionEmpty()) {
             //no rows are selected
+        	
         } else {
             int[] rows = view.getSelectedRows();
 

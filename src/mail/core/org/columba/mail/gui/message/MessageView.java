@@ -52,6 +52,11 @@ public class MessageView extends JScrollPane {
         getViewport().setBackground(Color.white);
 
     }
+    
+    public void clear() {
+    	panel = new MessagePanel();
+    	setViewportView(panel);
+    }
 
     public void layoutComponents(HeaderController headerController,
             SpamStatusController spamStatusController,

@@ -529,6 +529,11 @@ public class MessageController implements HyperlinkListener, MouseListener,
                 attachmentController.getView());
 
     }
+    
+    public void clear() {
+    	getView().clear();
+    	
+    }
 
     /**
      * @return Returns the pgpFilter.

@@ -468,10 +468,7 @@ public class TableController implements FocusOwner, ListSelectionListener {
      *  
      */
     public void clear() {
-
-        System.out.println("--> clear");
-
-        //	send an update notification to the table model
+      //	send an update notification to the table model
         TableModelChangedEvent ev = new TableModelChangedEvent(
                 TableModelChangedEvent.SET, previouslySelectedFolder,
                 new HeaderList());
@@ -679,8 +676,10 @@ public class TableController implements FocusOwner, ListSelectionListener {
         // -> wait until the final selection is available
         if (arg0.getValueIsAdjusting()) return;
 
+        /*
         // skip if no message selected
         if ( getView().getSelectedNodes().length == 0 ) return;
+        */
         
         // show message
         new ViewMessageAction(getFrameController()).actionPerformed(null);
