@@ -1,4 +1,4 @@
-// $Id: GeneratorJava.java,v 1.94 2004/06/30 00:23:17 d00mst Exp $
+// $Id: GeneratorJava.java,v 1.95 2004/07/05 08:38:25 d00mst Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -1715,11 +1715,19 @@ public class GeneratorJava
         return "";
     }
 
+    /**
+     * Generates a String representation of a Multiplicity.
+     *
+     * @param m the Multiplicity.
+     * @return a human readable String.
+     * @see #ANY_RANGE
+     * @see #generateMultiplicityRange
+     */
     public String generateMultiplicity(Object m) {
         if (m == null) {
             return "";
         }
-        if (ModelFacade.M0_N_MULTIPLICITY.equals(ModelFacade.getMultiplicity(m))) {
+        if (ModelFacade.M0_N_MULTIPLICITY.equals(m)) {
             return ANY_RANGE;
 	}
         Iterator rangeEnum = ModelFacade.getRanges(m);
