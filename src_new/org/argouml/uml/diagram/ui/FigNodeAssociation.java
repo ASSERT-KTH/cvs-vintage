@@ -1,4 +1,4 @@
-// $Id: FigNodeAssociation.java,v 1.5 2005/01/30 20:47:53 linus Exp $
+// $Id: FigNodeAssociation.java,v 1.6 2005/03/05 08:53:29 mvw Exp $
 // Copyright (c) 2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -148,7 +148,8 @@ public class FigNodeAssociation extends FigNodeModelElement {
                         GraphEdgeRenderer renderer =
                             editor.getGraphEdgeRenderer();
                         Layer lay = editor.getLayerManager().getActiveLayer();
-                        figEdge = renderer.getFigEdgeFor(gm, lay, association, null);
+                        figEdge = 
+                            renderer.getFigEdgeFor(gm, lay, association, null);
                         editor.add(figEdge);
                         if (gm instanceof MutableGraphModel) {
                             MutableGraphModel mutableGraphModel =

@@ -1,4 +1,4 @@
-// $Id: FigEdgeModelElement.java,v 1.89 2005/02/18 21:16:07 mvw Exp $
+// $Id: FigEdgeModelElement.java,v 1.90 2005/03/05 08:53:29 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -77,8 +77,8 @@ import org.tigris.gef.presentation.FigPoly;
 import org.tigris.gef.presentation.FigText;
 
 /**
- * Abstract class to display diagram arcs for UML ModelElements that
- * look like arcs and that have editiable names.
+ * Abstract class to display diagram lines (edges) for UML ModelElements that
+ * look like lines and that have editable names.
  */
 public abstract class FigEdgeModelElement
     extends FigEdgePoly
