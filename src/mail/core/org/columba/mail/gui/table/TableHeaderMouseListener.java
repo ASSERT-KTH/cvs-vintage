@@ -45,6 +45,10 @@ public class TableHeaderMouseListener extends MouseAdapter {
 	private TableModelSorter sorter;
 	private SortingStateObservable observable;
 	
+	
+	private ImageIcon ascending = new AscendingIcon();
+	private ImageIcon descending = new DescendingIcon();
+
 	/**
 	 * 
 	 */
@@ -67,9 +71,9 @@ public class TableHeaderMouseListener extends MouseAdapter {
 
 			ImageIcon icon = null;
 			if (sorter.getSortingOrder() == true)
-				icon = new AscendingIcon();
+				icon = ascending;
 			else
-				icon = new DescendingIcon();
+				icon = descending;
 
 			// disable every icon
 			// -> set appropriate icon for selected column

@@ -22,8 +22,11 @@ import javax.swing.event.TreeWillExpandListener;
 import javax.swing.tree.ExpandVetoException;
 import javax.swing.tree.TreePath;
 
+import org.columba.core.logging.ColumbaLogger;
 import org.columba.core.main.MainInterface;
+import org.columba.core.xml.XmlElement;
 import org.columba.mail.command.FolderCommandReference;
+import org.columba.mail.config.FolderItem;
 import org.columba.mail.folder.Folder;
 import org.columba.mail.folder.FolderTreeNode;
 import org.columba.mail.gui.frame.AbstractMailFrameController;
@@ -81,29 +84,8 @@ public class TreeController implements TreeWillExpandListener {
 
 		getView().setTransferHandler(
 			new MessageTransferHandler(
-				((TableOwner) getMailFrameController())
-					.getTableController()));
+				((TableOwner) getMailFrameController()).getTableController()));
 
-	}
-
-	public void treeWillExpand(TreeExpansionEvent e)
-		throws ExpandVetoException {
-
-		System.out.println("treeWillExpand=" + e.getPath().toString());
-
-		FolderTreeNode treeNode =
-			(FolderTreeNode) e.getPath().getLastPathComponent();
-
-		if (treeNode == null)
-			return;
-
-		FolderCommandReference[] cr = new FolderCommandReference[1];
-		cr[0] = new FolderCommandReference(treeNode);
-
-		MainInterface.processor.addOp(new FetchSubFolderListCommand(cr));
-	}
-
-	public void treeWillCollapse(TreeExpansionEvent e) {
 	}
 
 	public TreeModel getModel() {
@@ -154,4 +136,52 @@ public class TreeController implements TreeWillExpandListener {
 		return mailFrameController;
 	}
 
+	/******************** TreeWillExpand Interface *******************************/
+
+	public void treeWillExpand(TreeExpansionEvent e)
+		throws ExpandVetoException {
+
+		ColumbaLogger.log.debug("treeWillExpand=" + e.getPath().toString());
+
+		FolderTreeNode treeNode =
+			(FolderTreeNode) e.getPath().getLastPathComponent();
+
+		if (treeNode == null)
+			return;
+
+		// fetch new sub folder list
+		// -> this is a hack for imap folder:
+		// -> when expanding the IMAPRootFolder the
+		// -> list of folders gets synchronized 
+		FolderCommandReference[] cr = new FolderCommandReference[1];
+		cr[0] = new FolderCommandReference(treeNode);
+
+		MainInterface.processor.addOp(new FetchSubFolderListCommand(cr));
+
+		// save expanded state
+		saveExpandedState(treeNode, e.getPath());
+	}
+
+	public void treeWillCollapse(TreeExpansionEvent e) {
+		FolderTreeNode treeNode =
+			(FolderTreeNode) e.getPath().getLastPathComponent();
+
+		if (treeNode == null)
+			return;
+
+		// save expanded state
+		saveExpandedState(treeNode, e.getPath());
+	}
+
+	private void saveExpandedState(FolderTreeNode folder, TreePath path) {
+		FolderItem item = folder.getFolderItem();
+
+		XmlElement property = item.getElement("property");
+		// Note: we negate the expanded state because this is 
+		//       a will-expand/collapse listener
+		if (!getView().isExpanded(path))
+			property.addAttribute("expanded", "true");
+		else
+			property.addAttribute("expanded", "false");
+	}
 }

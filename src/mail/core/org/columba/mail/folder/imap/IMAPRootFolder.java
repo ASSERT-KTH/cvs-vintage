@@ -45,7 +45,8 @@ import org.columba.ristretto.imap.protocol.IMAPProtocol;
 public class IMAPRootFolder extends FolderTreeNode implements ActionListener {
 	
 	protected final static ImageIcon imapRootIcon =
-		ImageLoader.getSmallImageIcon("imap-16.png");
+		//ImageLoader.getSmallImageIcon("imap-16.png");
+	ImageLoader.getSmallImageIcon("stock_internet-16.png");
 
 	private IMAPProtocol imap;
 	//private boolean select=false;

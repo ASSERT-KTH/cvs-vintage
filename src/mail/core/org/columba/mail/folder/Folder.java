@@ -434,7 +434,14 @@ public abstract class Folder extends FolderTreeNode implements MailboxInterface 
 		observable = new StatusObservableImpl();
 
 	}
-
+	
+	
+	
+	
+	/******************************** MailboxInterface ****************************/
+	
+	
+	
 	/* (non-Javadoc)
 	 * @see org.columba.mail.folder.MailboxInterface#addMessage(org.columba.mail.message.ColumbaMessage)
 	 */

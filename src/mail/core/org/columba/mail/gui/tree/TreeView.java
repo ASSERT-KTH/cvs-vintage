@@ -18,36 +18,27 @@ package org.columba.mail.gui.tree;
 import javax.swing.BorderFactory;
 import javax.swing.JTextField;
 import javax.swing.ToolTipManager;
+import javax.swing.tree.TreePath;
 
+import org.columba.core.xml.XmlElement;
+import org.columba.mail.config.FolderItem;
 import org.columba.mail.folder.Folder;
+import org.columba.mail.folder.FolderTreeNode;
 import org.columba.mail.gui.frame.AbstractMailFrameController;
 
 /**
  * this class does all the dirty work for the TreeController
  */
-public class TreeView extends DndTree 
-//, TreeNodeChangeListener
-{
-
-	//protected AdapterNode rootNode;
-
-	//public FolderModel treeModel;
-
-	// protected JTree tree;
+public class TreeView extends DndTree {
 
 	private String selectedLeaf = new String();
 
-	//private Folder selectedFolder;
-
 	private JTextField textField;
 
-	//private TreeModel model;
-
-	public TreeView(AbstractMailFrameController frameController, TreeModel model) {
+	public TreeView(
+		AbstractMailFrameController frameController,
+		TreeModel model) {
 		super(frameController, model);
-		//this.model = model;            
-
-		//tree = new JTree( treeModel );
 
 		ToolTipManager.sharedInstance().registerComponent(this);
 
@@ -56,39 +47,52 @@ public class TreeView extends DndTree
 		setShowsRootHandles(true);
 		setRootVisible(false);
 
-		
-
-		/*
-		    //rootFolder.addTreeNodeListener( this );
-		    addTreeNodeChangeListener( rootFolder );
-		*/
-
-		
-		
-		
 		setBorder(BorderFactory.createEmptyBorder(2, 0, 2, 0));
 
-		expand();
+		FolderTreeNode root = (FolderTreeNode) treeModel.getRoot();
+		
+		
+		expand(root);
 
+		repaint();
 	}
 
 	public Folder getSelected() {
 		return null;
 	}
 
-	
+	public void expand(FolderTreeNode parent) {
 
+		// get configuration from tree.xml file
+		FolderItem item = parent.getFolderItem();
 
-	public void expand() {
+		XmlElement property = item.getElement("property");
+		if (property != null) {
+			String expanded = property.getAttribute("expanded");
+			if ( expanded == null ) expanded = "true";
+			
+			// expand folder 
+			int row = getRowForPath(new TreePath(parent.getPath()));
+			if (expanded.equals("true"))
+				expandRow(row);
+			
+		}
+		// recursivly expand all children
+		for (int i = 0; i < parent.getChildCount(); i++) {
+			FolderTreeNode child = (FolderTreeNode) parent.getChildAt(i);
+			expand(child);
+		}
+
+		/*
 		int rowCount = getRowCount();
-
+		
 		expandRow(0);
 		rowCount = getRowCount();
-
+		
 		expandRow(1);
-
+		
 		repaint();
-
+		*/
 	}
 
 }

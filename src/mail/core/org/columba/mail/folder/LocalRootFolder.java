@@ -32,6 +32,7 @@ public class LocalRootFolder extends FolderTreeNode {
 
 	protected final static ImageIcon rootIcon =
 		ImageLoader.getSmallImageIcon("localhost.png");
+	//ImageLoader.getSmallImageIcon("16_computer.png");
 
 	public LocalRootFolder(FolderItem item) {
 		super(item);	
