@@ -1,4 +1,6 @@
 #set ($page.Title = $l10n.Title)
-$renderer.render("navigations", "SearchNav.vm")
+#if (!$data.Parameters.getBoolean("nonav") && !$data.Parameters.getBoolean("nosearchnav"))
+    $renderer.render("navigations", "SearchNav.vm")
+#end
 #actionErrorMsg()
 $renderer.render("screens", $template)
