@@ -24,7 +24,7 @@
 // File: GeneratorJava.java
 // Classes: GeneratorJava
 // Original Author:
-// $Id: GeneratorJava.java,v 1.60 2003/02/06 10:06:19 thn Exp $
+// $Id: GeneratorJava.java,v 1.61 2003/02/08 22:07:07 kataka Exp $
 
 // 12 Apr 2002: Jeremy Bennett (mail@jeremybennett.com). Extended to support
 // extension points.
@@ -819,7 +819,7 @@ public class GeneratorJava
         if ((start != null) && (start.length() > 0)) {
             StringBuffer body = generateClassifierBody(cls);
             StringBuffer end = generateClassifierEnd(cls);
-            returnValue.append(start);
+            returnValue.append(start.toString());
             if ((body != null) && (body.length() > 0)) {
                 returnValue.append(LINE_SEPARATOR);
                 returnValue.append(body);
