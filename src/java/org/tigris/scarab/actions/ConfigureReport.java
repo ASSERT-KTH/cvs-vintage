@@ -53,15 +53,14 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.ArrayList;
 
-// Turbine Stuff 
-import org.apache.turbine.TemplateContext;
-import org.apache.turbine.RunData;
+import org.apache.commons.collections.SequencedHashMap;
+import org.apache.commons.lang.StringUtils;
 import org.apache.fulcrum.util.parser.ValueParser;
-
-import org.apache.torque.om.NumberKey;
 import org.apache.fulcrum.intake.Intake;
 import org.apache.fulcrum.intake.model.Group;
-import org.apache.commons.collections.SequencedHashMap;
+import org.apache.turbine.TemplateContext;
+import org.apache.turbine.RunData;
+import org.apache.torque.om.NumberKey;
 
 // Scarab Stuff
 import org.tigris.scarab.om.ScarabUser;
@@ -88,7 +87,7 @@ import org.tigris.scarab.util.export.ExportFormat;
 /**
  * This class is responsible for report generation forms
  * @author <a href="mailto:jmcnally@collab.net">John D. McNally</a>
- * @version $Id: ConfigureReport.java,v 1.19 2003/06/04 22:16:43 dlr Exp $
+ * @version $Id: ConfigureReport.java,v 1.20 2003/06/11 01:32:56 dlr Exp $
  */
 public class ConfigureReport 
     extends RequireLoginFirstAction
@@ -113,13 +112,7 @@ public class ConfigureReport
         }
         else if (intake.isAllValid()) 
         {
-            Group intakeReport = 
-                intake.get("Report", report.getQueryKey(), false);
-            if (intakeReport == null) 
-            {   
-                intakeReport = intake.get("Report", "", false);
-            }  
-            
+            Group intakeReport = getIntakeReportGroup(intake, report);
             if (intakeReport != null) 
             {   
                 intakeReport.setValidProperties(report);
@@ -1097,7 +1090,30 @@ public class ConfigureReport
     public void doGeneratereport(RunData data, TemplateContext context)
          throws Exception
     {
+        // Determine the report display format, looking first at the
+        // request parameters.
         String format = ScarabUtil.findValue(data, ExportFormat.KEY_NAME);
+        if (StringUtils.isEmpty(format))
+        {
+            // Next, examine the request for the Intake parameter
+            // (which we'll allow to override a persisted pref).
+            ReportBridge report = getScarabRequestTool(context).getReport();
+            Group intakeReport = getIntakeReportGroup(getIntakeTool(context),
+                                                      report);
+            // Exports from the "Report output" screen have a null
+            // Intake Group.
+            if (intakeReport != null)
+            {
+                format = (String) intakeReport.get("Format").getValue();
+            }
+
+            if (format == null)
+            {
+                // Lastly, look at the persisted report format.
+                format = report.getFormat();
+            }
+        }
+
         if (ExportFormat.EXCEL_FORMAT.equalsIgnoreCase(format)
             || ExportFormat.TSV_FORMAT.equalsIgnoreCase(format))
         {
@@ -1140,13 +1156,7 @@ public class ConfigureReport
             // make sure report has a name
             if (report.getName() == null || report.getName().trim().length() == 0) 
             {
-                Group intakeReport = 
-                    intake.get("Report", report.getQueryKey(), false);
-                if (intakeReport == null) 
-                {   
-                    intakeReport = intake.get("Report", "", false);
-                }  
-            
+                Group intakeReport = getIntakeReportGroup(intake, report);
                 if (intakeReport != null) 
                 {   
                     intakeReport.setValidProperties(report);
@@ -1228,5 +1238,21 @@ public class ConfigureReport
     {
         getScarabRequestTool(context).setAlertMessage(
             getLocalizationTool(context).get(NO_PERMISSION_MESSAGE));
+    }
+
+    /**
+     * @param intake The instance of Intake used for lookup.
+     * @param report A specific report.
+     * @return The <code>Report</code> group.
+     */
+    private Group getIntakeReportGroup(Intake intake, ReportBridge report)
+        throws Exception
+    {
+        Group intakeReport = intake.get("Report", report.getQueryKey(), false);
+        if (intakeReport == null) 
+        {   
+            intakeReport = intake.get("Report", "", false);
+        }
+        return intakeReport;
     }
 }

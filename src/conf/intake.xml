@@ -546,6 +546,8 @@
         <field name="Description" key="desc" type="String"> 
             <rule name="maxLength" value="255">intake_DescriptionMustBeLessThan256Characters</rule>
         </field>
+        <field name="Format" key="format" type="String">
+        </field>
         <field name="ScopeId" key="scp" type="int"/>
         <field name="DefaultDate" key="dd" type="DateString">
            <rule name="format1" value="MM/dd/yy HH:mm"/>

@@ -484,16 +484,21 @@ $scarabR.IssuePosInList of $scarabR.CurrentSearchResultsSize
 </noscript>
 #end
 
-#macro (exportFormatsRow)
+#* -------------------------------------------------------------------------
+$paramName - The name to use for the form field.
+
+$format - The current value for the form field which indicates
+selected the radio button.
+------------------------------------------------------------------------- *#
+#macro (exportFormatsRow $paramName $format)
 <tr>
 <th>$l10n.Format</th>
 <td>
-#set ($format = $data.Parameters.getString('format', ''))
- <input type="radio" name="format" value=""
- #if ($format == '')checked="checked"#end />$l10n.Web
- <input type="radio" name="format" value="excel"
+ <input type="radio" name="$paramName" value=""
+ #if ($!format == '')checked="checked"#end />$l10n.Web
+ <input type="radio" name="$paramName" value="excel"
  #if ($format.equalsIgnoreCase('excel'))checked="checked"#end />$l10n.Excel
- <input type="radio" name="format" value="tsv"
+ <input type="radio" name="$paramName" value="tsv"
  #if ($format.equalsIgnoreCase('tsv'))checked="checked"#end
  />$l10n.TabSeparatedValues
 </td>

@@ -65,40 +65,15 @@ import org.tigris.scarab.om.AttributeOptionManager;
 import org.tigris.scarab.om.AttributeManager;
 
 /**
- * This class is the container for the information used to generate
- * a report.  It is the outermost tag in an xml representation.
- *
- * the following xml does not mean much; it's just some notes
- * <report>
- *   <name>Foo</name>
- *   <description>foobar</description>
- *   <x-axis>
- *     <cells>
- *       <group name="open">
- *         <option id="1" name="New"/>
- *       </group>
- *       <group name="closed">
- *         <option id="6" name="Fixed"/>
- *       </group>
- *     </cells>
- *     <cells>
- *       <attribute id="20" name="OS"/>
- *         <option id="31" name="Windows"/>
- *         <option id="34" name="Linux"/>
- *       </attribute>
- *     </cells>
- *   </x-axis>
- *   <y-axis>
- *     <cells>
- *       <date value="20020101000000"/>
- *       <date value="20020201000000"/>
- *       <date value="20020301000000"/>
- *     </cells>
- *   </y-axis>
- * </report>
+ * This class is the container for the information used to generate a
+ * report.  It is the outermost tag of the XML representation defined
+ * by <a
+ * href="http://scarab.tigris.org/source/browse/scarab/src/dtd/report.dtd?rev=1&content-type=text/x-cvsweb-markup">report.dtd</a>
+ * (please see this file for an example).
  *
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: ReportDefinition.java,v 1.10 2003/05/19 23:40:24 dlr Exp $
+ * @version $Id: ReportDefinition.java,v 1.11 2003/06/11 01:32:56 dlr Exp $
+ * @see <a href="http://scarab.tigris.org/source/browse/scarab/src/dtd/report.dtd?rev=1&content-type=text/x-cvsweb-markup">report.dtd</a>
  */
 public class ReportDefinition
     implements java.io.Serializable
@@ -107,6 +82,8 @@ public class ReportDefinition
     private String name;
 
     private String description;
+
+    private String format;
 
     private List moduleIssueTypes;
 
@@ -148,6 +125,24 @@ public class ReportDefinition
     public void setDescription(String newDescription)
     {
         this.description = newDescription;
+    }
+
+    /**
+     * Get the format value.
+     * @return The format value.
+     */
+    public String getFormat()
+    {
+        return format;
+    }
+
+    /**
+     * Set the format value.
+     * @param format The new format value.
+     */
+    public void setFormat(String format)
+    {
+        this.format = format;
     }
 
     /**
@@ -352,7 +347,7 @@ public class ReportDefinition
         String s;
         try 
         {
-            StringWriter sw = new StringWriter();
+            StringWriter sw = new StringWriter(1024);
             BeanWriter bw = new BeanWriter(sw);
                 /*
                 {

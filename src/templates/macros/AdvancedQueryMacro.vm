@@ -301,7 +301,7 @@ $l10n.From:&#160;<input type="text" size="20"
 #resultsPerPageRadioSelect($data.getParameters().getInt("resultsperpage", 25) true)
 </td>
 </tr>
-#exportFormatsRow()
+#exportFormatsRow('format' $data.Parameters.getString('format', ''))
 </table>
 </div>
 

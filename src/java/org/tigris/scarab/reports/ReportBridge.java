@@ -55,6 +55,8 @@ import java.util.Map;
 import java.util.HashMap;
 import java.io.StringReader;
 
+import org.apache.log4j.Logger;
+
 // Turbine classes
 import org.apache.torque.TorqueException;
 
@@ -157,6 +159,17 @@ public  class ReportBridge
         torqueReport.setDescription(name);
         reportDefn.setDescription(name);
     }
+
+    public String getFormat()
+    {
+        return reportDefn.getFormat();
+    }
+
+    public void setFormat(String format)
+    {
+        reportDefn.setFormat(format);
+    }
+
     public boolean getDeleted()
     {
         return torqueReport.getDeleted();
@@ -546,9 +559,13 @@ public  class ReportBridge
             reportDefn = (ReportDefinition) 
                 reader.parse(new StringReader(v));
 
-            Log.get().debug("Created a new report using:\n " + v + 
-                            "; and it resulted in:\n " + 
-                            reportDefn.toXmlString());
+            Logger log = Log.get();
+            if (log.isDebugEnabled())
+            {
+                log.debug("Created a new report using:\n " + v + 
+                          "; and it resulted in:\n " + 
+                          reportDefn.toXmlString());
+            }
         }
     }
 
