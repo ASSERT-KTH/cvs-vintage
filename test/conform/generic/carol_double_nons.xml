@@ -122,7 +122,7 @@
       </sequential>
 
       <sequential>
-	<sleep seconds="5"/>
+	<sleep seconds="10"/>
 	<delete dir="${report.dir}" />
 	<mkdir dir="${report.dir}" />
 	<mkdir dir="${report.dir}/html" />
@@ -141,7 +141,7 @@
       </sequential>
 
       <sequential>
-	<sleep seconds="5"/>
+	<sleep seconds="10"/>
 	<mkdir dir="${report.dir}" />
 	<mkdir dir="${report.dir}/html" />
 	<junit printsummary="yes" 

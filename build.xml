@@ -42,6 +42,8 @@
 
   <!-- joanthan jar properties -->
   <property name="jonathan.jar"   value="${externals}/jonathan.jar"/> 
+  <property name="compiler.jeremie" value="org.objectweb.jeremie.tools.jrmic.JRMICompiler" />
+  <property name="jonathan.jvmarg"  value="-Xbootclasspath/p:${test.externals}/jonathan.jar:${test.externals}/kilim.jar:${test.externals}/kilim-tools.jar:${test.externals}/nanoxml-lite-2.2.1.jar:${test.build}/classes:${test.ext}/jonathan.xml"/>
 
   <!-- externals classpath -->
   <path id="externals.classpath">
@@ -107,24 +109,23 @@
     
     <!-- for sun jrmp  -->
     <rmic base="${build}/classes" compiler="sun"
-      classname="org.objectweb.carol.jndi.reference.JNDIResourceWrapper">
+      classname="org.objectweb.carol.jndi.wrapping.JNDIResourceWrapper">
       <classpath refid="carol.classpath"/>
     </rmic> 
     <rmic base="${build}/classes" compiler="sun"
-      classname="org.objectweb.carol.jndi.reference.JNDIReferenceWrapper">
+      classname="org.objectweb.carol.jndi.wrapping.JNDIReferenceWrapper">
       <classpath refid="carol.classpath"/>
     </rmic>
     
      <!-- for sun iiop  -->
     <rmic base="${build}/classes" iiop="true" compiler="sun"
-      classname="org.objectweb.carol.jndi.reference.JNDIResourceWrapper">
+      classname="org.objectweb.carol.jndi.wrapping.JNDIResourceWrapper">
       <classpath refid="carol.classpath"/>
     </rmic> 
     <rmic base="${build}/classes" iiop="true" compiler="sun"
-      classname="org.objectweb.carol.jndi.reference.JNDIReferenceWrapper">
+      classname="org.objectweb.carol.jndi.wrapping.JNDIReferenceWrapper">
       <classpath refid="carol.classpath"/>
     </rmic>
-        
     <javac 
       srcdir="${src}"
       destdir="${build}/classes"
@@ -135,6 +136,19 @@
       <classpath refid="carol.classpath"/>
       <include name="**/org/objectweb/carol/jndi/iiop/_*.java"/>
     </javac> 
+    
+    <!-- for jeremie -->
+      <java classname="${compiler.jeremie}" fork="true" failonerror="true">
+      <jvmarg line="${jonathan.jvmarg}"/>
+      <arg value="-opt"/>
+      <arg value="-owext"/>
+      <arg value="-d"/>
+      <arg path="${build}/classes"/>
+      <arg value="org.objectweb.carol.jndi.wrapping.JNDIResourceWrapper"/>
+      <arg value="org.objectweb.carol.jndi.wrapping.JNDIReferenceWrapper"/>
+      <classpath refid="carol.classpath"/>
+    </java>
+   
     
   </target>
 

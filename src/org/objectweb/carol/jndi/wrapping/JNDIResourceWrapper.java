@@ -24,7 +24,7 @@
  * USA
  *
  */
-package org.objectweb.carol.jndi.reference;
+package org.objectweb.carol.jndi.wrapping;
 
 // java import
 import java.io.Serializable;

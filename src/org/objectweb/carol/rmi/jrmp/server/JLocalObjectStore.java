@@ -1,40 +1,59 @@
-/*
- * Created on Oct 7, 2003
+/**
+ * Copyright (C) 2001-2002 INRIA
  *
- * To change the template for this generated file go to
- * Window - Preferences - Java - Code Generation - Code and Comments
+ * This library is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU Lesser General Public
+ * License as published by the Free Software Foundation; either
+ * version 2 of the License, or (at your option) any later version.
+ *
+ * This library is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ * Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public
+ * License along with this library; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ *
+ * Authors: Guillaume Riviere
+ *
  */
 package org.objectweb.carol.rmi.jrmp.server;
 
 import java.util.ArrayList;
 
 /**
- * @author riviereg
+ * The class is a naming context allocating integer identifier. This integer
+ * value is divided in two parts in order to reduce the synchronizaion
+ * conflicts. The 8 (MAX_SIZE constant) right bits are used to hash
+ * identifiers.
+ * The null value are stored with a special identifier: -1
  *
- * To change the template for this generated type comment go to
- * Window - Preferences - Java - Code Generation - Code and Comments
+ * @author riviereg, sebastien chassande-barrioz
+ *
  */
 public class JLocalObjectStore {
-	private static int counter = 0;
 
-	public static ArrayList lists = new ArrayList();
+	private static int counter = 0;
 
 	// The number of arraylists MAX must be less that MASK
 	private static final int MAX = 100;
 	// MASK is used to divide the key into the two indexes.
-	private static final int MASK = 256;
+	private static final int MASK = 255;
+	private static final int MASK_SIZE = 8;
+	private static final Object EMPTY_SLOT = Boolean.FALSE;
+
+	public static ArrayList[] lists = new ArrayList[MAX];
 
 	static {
-		int i = 0;
-		while (i != MAX) {
-			lists.add(new ArrayList());
-			i++;
+		for(int i = 0; i<MAX; i++) {
+			lists[i] = new ArrayList();
 		}
 
 	}
 
 	/**
-	 * Stote an object 
+	 * Exports an object and allocates an integer identifier.
 	 */
 	public static int storeObject(Object ob) {
 		// The context is often null so return a key that can be decoded
@@ -43,67 +62,79 @@ public class JLocalObjectStore {
 			return -1;
 		}
 
-		int i = 0;
-		ArrayList ar;
-
 		// pick the next array list to use
-		synchronized (lists) {
+		int i = 0;
+		synchronized(lists) {
 			counter++;
 			if (counter == MAX) {
 				counter = 0;
 			}
 			i = counter;
 		}
+		ArrayList ar = lists[i];
 
-		ar = (ArrayList) lists.get(i);
-
-		// add the object at position j.
 		int j;
-		synchronized (ar) {
-			ar.add(ob);
-			j = ar.size() - 1;
+		synchronized(ar) {
+			j = ar.indexOf(EMPTY_SLOT);
+			if (j == -1) {
+				// add the object at the end of the list
+				j = ar.size();
+				ar.add(ob);
+			} else {
+				// reuse an empty slot in order reduce the
+				// memory cost
+				ar.set(j, ob);
+			}
 		}
-
-		i = j * MASK + i;
-		return i;
+		return i + (j << MASK_SIZE);
 	}
 
 
 	/**
-	 * Get an object from the store
+	 * lookup an object by its integer identifier.
 	 *
+	 * @param key is the object identifier
+	 * @return the Object associated to the identifier, or a null value
+	 *         if no object was found.
 	 */
 	public static Object getObject(int key) {
 		if (key==-1) {
 			return null;
 		}
-		int i = key % MASK;
-		int j = key / MASK;
-		return ((ArrayList) lists.get(i)).get(j);
+		int j = key >> MASK_SIZE;
+		ArrayList ar = lists[key & MASK];
+		try {
+			//First attemp without synchronization in order to
+			// optimize the lookup
+			return ar.get(j);
+		} catch(RuntimeException e) {
+			//When new elements are stored, the ArrayList can be
+			// resized and then produces an Exception. With a
+			// synchronized, access this bad case is avoided.
+			synchronized(ar) {
+				return (ar.size() > j ? ar.get(j) : null);
+			}
+		}
 	}
 
 	/**
-	 * Remove object from the arrayList. Mark
-	 * empty slots in the arrayList with Boolean.FALSE.
-	 *
+	 * Unexport an object from the NamingContext.
+	 * Empty slots are full with EMPTY_SLOT.
 	 */
 	public static Object removeObject(int key) {
-		if (key==-1) {
+		if (key < 0) {
 			return null;
 		}
 		Object ob;
-		int i = key % MASK;
-		int j = key / MASK;
-		ArrayList ar = (ArrayList) lists.get(i);
-
+		ArrayList ar = lists[key & MASK];
+		int j = key >> MASK_SIZE;
 		synchronized (ar) {
 			ob = ar.get(j);
-			ar.set(j, Boolean.FALSE);
+			ar.set(j, EMPTY_SLOT);
 			int k = ar.size() - 1;
 
-			// only remove keys from the end so as not to alter
-			// the index of other keys.
-			while (k != -1 && (ar.get(k) == Boolean.FALSE)) {
+			// clean up last elements if possible
+			while (k != -1 && (ar.get(k) == EMPTY_SLOT)) {
 				ar.remove(k);
 				k--;
 			}

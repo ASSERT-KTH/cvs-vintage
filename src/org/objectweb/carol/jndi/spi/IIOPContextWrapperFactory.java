@@ -1,5 +1,5 @@
 /*
- * @(#)JNDIRessourceWrapper.java	1.0 02/07/15
+ * @(#)IIOPContextWrapper.java	1.0 02/07/15
  *
  * Copyright (C) 2002 - INRIA (www.inria.fr)
  *
@@ -24,44 +24,35 @@
  * USA
  *
  */
-package org.objectweb.carol.jndi.reference;
+package org.objectweb.carol.jndi.spi;
 
 // java import
-import java.rmi.RemoteException;
+import java.util.Hashtable;
 
-import javax.naming.Reference;
-
+import javax.naming.Context;
+import javax.naming.NamingException;
+import javax.naming.spi.InitialContextFactory;
 /*
- * Class <code>JNDIReferenceWrapper</code> is the CAROL Remote Reference implementation. This implementation make the 
- * iiop reference wrapping to/from a remote object
+ * Class <code>IIOPRemoteReferenceContextWrapperFactory</code> is the CAROL JNDI Context factory. This context factory
+ * build the iiop context for reference wrapping to/from a remote object
  * 
  * @author  Guillaume Riviere (Guillaume.Riviere@inrialpes.fr)
+ * @see javax.naming.spi.InitialContextFactory
  * @version 1.0, 15/07/2002
  */
-public class JNDIReferenceWrapper implements JNDIRemoteReference {
-    
-    /**
-     * <code>Reference</code> reference to wrap
-     */
-    protected Reference reference;	
+public class IIOPContextWrapperFactory implements InitialContextFactory {
 
+	/**
+	 * Get/Build the IIOP Wrapper InitialContext
+	 *
+	 * @param env the inital IIOP environement
+	 * @return a <code>Context</code> coresponding to the inital IIOP environement with 
+	 *         IIOP Serializable ressource wrapping
+	 *
+	 * @throws NamingException if a naming exception is encountered
+	 */
+	public Context getInitialContext(Hashtable env) throws NamingException {
+		return IIOPContext.getSingleInstance(env);
+	}
 
-    /**
-     * constructor, export this object
-     *
-     * @param reference the <code>Reference</code> reference to wrap
-     */
-    public JNDIReferenceWrapper(Reference reference) throws RemoteException {
-	super();
-	this.reference = reference;
-    }
-
-    /**
-     * Get the <code>Reference</code> reference 
-     *
-     * @return the <code>Reference</code> reference
-     */
-    public Reference getReference() throws RemoteException {
-	return reference;
-    }
 }

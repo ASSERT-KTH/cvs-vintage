@@ -99,7 +99,7 @@
 
       <!-- launch the client -->
       <sequential>
-	<sleep seconds="5"/>
+	<sleep seconds="10"/>
 	<mkdir dir="${report.dir}" />
 	<mkdir dir="${report.dir}/html" />
 	<junit printsummary="yes" 

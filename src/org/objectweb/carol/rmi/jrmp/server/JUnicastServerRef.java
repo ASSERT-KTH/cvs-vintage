@@ -36,7 +36,6 @@ import java.rmi.Remote;
 import java.rmi.RemoteException;
 import java.rmi.server.RemoteCall;
 import java.rmi.server.RemoteRef;
-import java.rmi.server.RemoteStub;
 
 import org.objectweb.carol.rmi.jrmp.interceptor.JClientRequestInterceptor;
 import org.objectweb.carol.rmi.jrmp.interceptor.JInterceptorStore;

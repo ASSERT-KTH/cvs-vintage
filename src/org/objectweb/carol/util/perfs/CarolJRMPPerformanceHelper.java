@@ -30,14 +30,14 @@ import java.io.ByteArrayOutputStream;
 
 import sun.rmi.server.MarshalOutputStream;
 /**
- * Class <code>CarolJRMPPerfomanceHelper</code>Provide an Helper for perfs mesures
+ * Class <code>CarolJRMPPerformanceHelper</code>Provide an Helper for perfs mesures
  * 
  * 
  * @author  Simon Nieuviarts 
  * @version 1.0, 15/03/2003
  *
  */
-public class CarolJRMPPerfomanceHelper
+public class CarolJRMPPerformanceHelper
 {
 	/**
 	 * See a marshalled object 

@@ -1,5 +1,5 @@
 /*
- * @(#)JNDIRemoteReference.java	1.0 02/07/15
+ * @(#)JNDIRemoteResource.java	1.0 02/07/15
  *
  * CAROL: Common Architecture for RMI ObjectWeb Layer
  *
@@ -22,26 +22,26 @@
  * USA
  *
  */
-package org.objectweb.carol.jndi.reference;
+package org.objectweb.carol.jndi.wrapping;
 
 // java import
+import java.io.Serializable;
 import java.rmi.Remote;
 import java.rmi.RemoteException;
 
-import javax.naming.Reference;
 /**
- * Interface <code>JNDIRemoteReference</code> is the CAROL remote interface for reference ressources 
+ * Interface <code>JNDIRemoteResource</code> is the CAROL remote interface for serializable ressources 
  * wrapping. This wrapping provide simple way to bind/lookup those ressource in the CORBA Name Service 
  * (like a CosNaming)
  * 
  * @author  Guillaume Riviere (Guillaume.Riviere@inrialpes.fr)
  * @version 1.0, 15/07/2002
  */
-public interface JNDIRemoteReference extends Remote {
+public interface JNDIRemoteResource extends Remote {
     
     /**
-     * Get the reference ressource object
-     * @return the reference resource
+     * Get the serializable ressource object
+     * @return the serializable resource
      */
-    public Reference getReference() throws RemoteException;
+    public Serializable getResource() throws RemoteException;
 }

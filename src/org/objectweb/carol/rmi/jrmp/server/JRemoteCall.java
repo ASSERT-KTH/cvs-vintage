@@ -34,7 +34,6 @@ import java.rmi.UnmarshalException;
 import java.rmi.server.ObjID;
 
 import org.objectweb.carol.rmi.jrmp.interceptor.JClientInterceptorHelper;
-import org.objectweb.carol.rmi.jrmp.interceptor.JClientRequestInfo;
 import org.objectweb.carol.rmi.jrmp.interceptor.JClientRequestInterceptor;
 
 import sun.rmi.transport.Connection;

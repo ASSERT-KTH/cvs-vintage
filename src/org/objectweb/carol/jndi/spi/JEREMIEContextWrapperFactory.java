@@ -1,5 +1,5 @@
 /*
- * @(#)IIOPReferenceContextWrapper.java	1.0 02/07/15
+ * @(#)JEREMIEContextWrapper.java	1.0 02/07/15
  *
  * Copyright (C) 2002 - INRIA (www.inria.fr)
  *
@@ -24,14 +24,13 @@
  * USA
  *
  */
-package org.objectweb.carol.jndi.iiop;
+package org.objectweb.carol.jndi.spi;
 
 // java import
 import java.util.Hashtable;
 
 import javax.naming.Context;
 import javax.naming.NamingException;
-
 import javax.naming.spi.InitialContextFactory;
 /*
  * Class <code>IIOPRemoteReferenceContextWrapperFactory</code> is the CAROL JNDI Context factory. This context factory
@@ -41,20 +40,20 @@ import javax.naming.spi.InitialContextFactory;
  * @see javax.naming.spi.InitialContextFactory
  * @version 1.0, 15/07/2002
  */
-public class IIOPReferenceContextWrapperFactory implements InitialContextFactory {
-	
-    /**
-     * Get/Build the IIOP Wrapper InitialContext
-     *
-     * @param env the inital IIOP environement
-     * @return a <code>Context</code> coresponding to the inital IIOP environement with 
-     *         IIOP Serializable ressource wrapping
-     *
-     * @throws NamingException if a naming exception is encountered
-     */   
-    public Context getInitialContext(Hashtable env) throws NamingException {
-	return IIOPReferenceContextWrapper.getSingleInstance(env);
-    }
+public class JEREMIEContextWrapperFactory implements InitialContextFactory {
 
+	/**
+	 * Get/Build the IIOP Wrapper InitialContext
+	 *
+	 * @param env the inital IIOP environement
+	 * @return a <code>Context</code> coresponding to the inital IIOP environement with 
+	 *         IIOP Serializable ressource wrapping
+	 *
+	 * @throws NamingException if a naming exception is encountered
+	 */
+	public Context getInitialContext(Hashtable env) throws NamingException {
+		return JEREMIEContext.getSingleInstance(env);
+	}
 
 }
+

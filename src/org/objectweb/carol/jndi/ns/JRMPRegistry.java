@@ -45,12 +45,12 @@ public class JRMPRegistry implements NameService {
     /**
      * port number (1099 for default)
      */
-    public int port=1099;
+    public static int port=1099;
 
     /**
      * registry 
      */
-    public Registry registry = null; 
+    public static Registry registry = null; 
 
     /**
      * start Method, Start a new NameService or do nothing if the name service is all ready start
@@ -107,19 +107,30 @@ public class JRMPRegistry implements NameService {
     }
 
     /**
-     * isStarted Method, check if a name service is started
-     * @return boolean true if the name service is started
+     * isStarted Method, check if a name service is local
+     * @return boolean true if the name service is local
      */
-    public boolean isStarted() {
-	if (registry != null) return true;
-	try {
-	    LocateRegistry.getRegistry(port).list();   
-	} catch (RemoteException re) {
-	    return false;
+    public static boolean isLocal() {
+	if (registry != null) {
+		return true;
+    } else {
+    	return false;
 	}
-	return true;
     }
 
+	/**
+	 * isStarted Method, check if a name service is started
+	 * @return boolean true if the name service is started
+	 */
+	public boolean isStarted() {
+	if (registry != null) return true;
+	try {
+		LocateRegistry.getRegistry(port).list();   
+	} catch (RemoteException re) {
+		return false;
+	}
+	return true;
+	}
     /**
      * set port method, set the port for the name service
      * @param int port number
