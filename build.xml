@@ -395,13 +395,14 @@
       optimize="${optimize}"
       destdir="${tomcat.build}/webapps/examples/jsp/plugin/applet"/>
 
+    <!-- Tomcat profiling webapp - not ready for check in yet
     <mkdir dir="${tomcat.build}/webapps/prof"/>
     <copydir src="src/prof" dest="${tomcat.build}/webapps/prof"/>
     <javac srcdir="src/prof/WEB-INF/src"
       optimize="${optimize}"
       destdir="${tomcat.build}/webapps/prof/WEB-INF/classes"
       classpath="${tomcat.build}/classes;${servlet.jar}"/>
-
+     -->
       <!-- Root context -->
     <mkdir dir="${tomcat.build}/webapps/ROOT"/>
     <copydir src="src/webpages" dest="${tomcat.build}/webapps/ROOT"/>
