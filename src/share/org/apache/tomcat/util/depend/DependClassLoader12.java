@@ -65,7 +65,6 @@ import java.util.zip.*;
 import java.security.*;
 
 import org.apache.tomcat.util.compat.*;
-
 /** 
  * 1.2 support for DependClassLoader
  * 
@@ -115,19 +114,19 @@ public class DependClassLoader12 extends DependClassLoader {
           if ( p == null ) {
             if ( "jar".equals(res.getProtocol()) ) {
               try {
-                JarURLConnection juconn = 
-                          (JarURLConnection)res.openConnection();
-                Manifest mf = juconn.getManifest();
-		if(mf == null) // Jar may not be Java2
-		   throw new IOException("No Manifest");
-                Attributes main = mf.getMainAttributes();
-                Attributes pkg = mf.getAttributes(
-                  pkgname.replace('.', '/').concat("/")
-                );
-                boolean sealed = Boolean.valueOf(
-                  getAttribute(Attributes.Name.SEALED, main, pkg)
+		  String JarN = res.getFile();
+		  JarFile JarF = new JarFile(JarN);
+		  Manifest mf = JarF.getManifest();
+		  if(mf == null) // Jar may not be Java2
+		      throw new IOException("No Manifest");
+		  Attributes main = mf.getMainAttributes();
+		  Attributes pkg = mf.getAttributes(
+			 pkgname.replace('.', '/').concat("/")
+		  );
+		  boolean sealed = Boolean.valueOf(
+			    getAttribute(Attributes.Name.SEALED, main, pkg)
                   ).booleanValue();
-                definePackage(
+		  definePackage(
                   pkgname, 
                   getAttribute(Attributes.Name.SPECIFICATION_TITLE, main, pkg),
                   getAttribute(Attributes.Name.SPECIFICATION_VERSION, main, pkg),
@@ -137,6 +136,7 @@ public class DependClassLoader12 extends DependClassLoader {
                   getAttribute(Attributes.Name.IMPLEMENTATION_VENDOR, main, pkg),
                   sealed ? res : null
                 );
+		  JarF.close();
               } catch ( IOException e ) {
                 definePackage(pkgname, null, null, null, null, null, null, null);
               }
