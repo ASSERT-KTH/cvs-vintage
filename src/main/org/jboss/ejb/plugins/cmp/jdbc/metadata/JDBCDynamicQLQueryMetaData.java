@@ -14,7 +14,7 @@ import org.jboss.deployment.DeploymentException;
  * Immutable class which contains information about an DynamicQL query.
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
- * @version $Revision: 1.9 $
+ * @version $Revision: 1.10 $
  */
 public final class JDBCDynamicQLQueryMetaData implements JDBCQueryMetaData
 {
@@ -53,7 +53,8 @@ public final class JDBCDynamicQLQueryMetaData implements JDBCQueryMetaData
     */
    public JDBCDynamicQLQueryMetaData(JDBCQueryMetaData jdbcQueryMetaData,
                                      Method method,
-                                     JDBCReadAheadMetaData readAhead)
+                                     JDBCReadAheadMetaData readAhead,
+                                     Class qlCompilerImpl)
       throws DeploymentException
    {
 
@@ -70,7 +71,7 @@ public final class JDBCDynamicQLQueryMetaData implements JDBCQueryMetaData
             "parameters of type String and Object[].");
       }
 
-      this.compiler = jdbcQueryMetaData.getQLCompilerClass();
+      this.compiler = qlCompilerImpl;
    }
 
    // javadoc in parent class

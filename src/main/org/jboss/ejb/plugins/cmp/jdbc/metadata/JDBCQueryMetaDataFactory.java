@@ -19,13 +19,14 @@ import org.jboss.deployment.DeploymentException;
 import org.jboss.metadata.MetaData;
 import org.jboss.metadata.QueryMetaData;
 import org.jboss.util.Classes;
+import org.jboss.ejb.plugins.cmp.jdbc.JDBCQueryManager;
 
 /**
  * JDBCQueryMetaDataFactory constructs a JDBCQueryMetaData object based
  * on the query specifiection type.
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
- * @version $Revision: 1.19 $
+ * @version $Revision: 1.20 $
  */
 public class JDBCQueryMetaDataFactory
 {
@@ -151,39 +152,41 @@ public class JDBCQueryMetaDataFactory
          return new JDBCRawSqlQueryMetaData(method);
       }
 
+      final Class qlCompiler = JDBCQueryManager.getQLCompiler(queryElement);
+
       // JBOSS-QL
-      Element jbossQL =
-         MetaData.getOptionalChild(queryElement, "jboss-ql");
+      Element jbossQL = MetaData.getOptionalChild(queryElement, "jboss-ql");
       if(jbossQL != null)
       {
          return new JDBCJBossQLQueryMetaData(
             jdbcQueryMetaData,
             jbossQL,
             method,
-            readAhead);
+            readAhead,
+            qlCompiler);
       }
 
       // DYNAMIC-SQL
-      Element dynamicQL =
-         MetaData.getOptionalChild(queryElement, "dynamic-ql");
+      Element dynamicQL = MetaData.getOptionalChild(queryElement, "dynamic-ql");
       if(dynamicQL != null)
       {
          return new JDBCDynamicQLQueryMetaData(
             jdbcQueryMetaData,
             method,
-            readAhead);
+            readAhead,
+            qlCompiler);
       }
 
       // DECLARED-SQL
-      Element delcaredSql =
-         MetaData.getOptionalChild(queryElement, "declared-sql");
+      Element delcaredSql = MetaData.getOptionalChild(queryElement, "declared-sql");
       if(delcaredSql != null)
       {
          return new JDBCDeclaredQueryMetaData(
             jdbcQueryMetaData,
             delcaredSql,
             method,
-            readAhead);
+            readAhead,
+            qlCompiler);
       }
 
       // EJB-QL: default

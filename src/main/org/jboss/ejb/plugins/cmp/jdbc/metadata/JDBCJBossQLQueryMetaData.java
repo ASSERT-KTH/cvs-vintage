@@ -17,7 +17,7 @@ import org.jboss.ejb.plugins.cmp.jdbc.JDBCQueryManager;
  * Immutable class which contains information about an JBossQL query.
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
- * @version $Revision: 1.7 $
+ * @version $Revision: 1.8 $
  */
 public final class JDBCJBossQLQueryMetaData implements JDBCQueryMetaData
 {
@@ -65,7 +65,8 @@ public final class JDBCJBossQLQueryMetaData implements JDBCQueryMetaData
    public JDBCJBossQLQueryMetaData(JDBCQueryMetaData jdbcQueryMetaData,
                                    Element element,
                                    Method method,
-                                   JDBCReadAheadMetaData readAhead)
+                                   JDBCReadAheadMetaData readAhead,
+                                   Class compiler)
       throws DeploymentException
    {
       this.method = method;
@@ -77,7 +78,7 @@ public final class JDBCJBossQLQueryMetaData implements JDBCQueryMetaData
       }
       resultTypeMappingLocal = jdbcQueryMetaData.isResultTypeMappingLocal();
 
-      compiler = JDBCQueryManager.getQLCompiler(element);
+      this.compiler = compiler;
    }
 
    // javadoc in parent class

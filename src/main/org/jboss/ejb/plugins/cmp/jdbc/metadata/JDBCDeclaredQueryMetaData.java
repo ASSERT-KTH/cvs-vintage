@@ -19,7 +19,7 @@ import org.jboss.ejb.plugins.cmp.jdbc.JDBCQueryManager;
  * Imutable class contains information about a declated query.
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
- *   @version $Revision: 1.17 $
+ *   @version $Revision: 1.18 $
  */
 public final class JDBCDeclaredQueryMetaData implements JDBCQueryMetaData
 {
@@ -126,13 +126,14 @@ public final class JDBCDeclaredQueryMetaData implements JDBCQueryMetaData
    public JDBCDeclaredQueryMetaData(JDBCQueryMetaData jdbcQueryMetaData,
                                     Element queryElement,
                                     Method method,
-                                    JDBCReadAheadMetaData readAhead)
+                                    JDBCReadAheadMetaData readAhead,
+                                    Class compiler)
       throws DeploymentException
    {
       this.method = method;
       this.readAhead = readAhead;
 
-      this.compiler = JDBCQueryManager.getQLCompiler(queryElement);
+      this.compiler = compiler;
 
       from = nullIfEmpty(MetaData.getOptionalChildContent(queryElement, "from"));
       where = nullIfEmpty(MetaData.getOptionalChildContent(queryElement, "where"));

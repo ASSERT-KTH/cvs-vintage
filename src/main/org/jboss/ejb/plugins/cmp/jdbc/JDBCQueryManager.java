@@ -25,9 +25,9 @@ import org.jboss.ejb.plugins.cmp.jdbc.metadata.JDBCQlQueryMetaData;
 import org.jboss.ejb.plugins.cmp.jdbc.metadata.JDBCReadAheadMetaData;
 import org.jboss.ejb.plugins.cmp.ejbql.Catalog;
 import org.jboss.logging.Logger;
+import org.jboss.metadata.MetaData;
 import org.w3c.dom.Element;
-import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
+
 
 /**
  * Maintains a map from a query method to query command.
@@ -38,7 +38,7 @@ import org.w3c.dom.NodeList;
  * @author <a href="mailto:shevlandj@kpi.com.au">Joe Shevland</a>
  * @author <a href="mailto:justin@j-m-f.demon.co.uk">Justin Forder</a>
  * @author <a href="mailto:alex@jboss.org">Alex Loubyansky</a>
- * @version $Revision: 1.14 $
+ * @version $Revision: 1.15 $
  */
 public final class JDBCQueryManager
 {
@@ -58,36 +58,7 @@ public final class JDBCQueryManager
    public static final Class getQLCompiler(Element query)
       throws DeploymentException
    {
-      String compiler = null;
-      final Node parentNode = query.getParentNode();
-      final NodeList childNodes = parentNode.getChildNodes();
-      for(int i = 0; i < childNodes.getLength(); ++i)
-      {
-         final Node node = childNodes.item(i);
-         if("ql-compiler".equals(node.getLocalName()))
-         {
-            NodeList children = node.getChildNodes();
-            compiler = "";
-            for (int ind = 0; ind < children.getLength(); ind++)
-            {
-               if (children.item(ind).getNodeType() == Node.TEXT_NODE ||
-                   children.item(ind).getNodeType() == Node.CDATA_SECTION_NODE)
-               {
-                  compiler += children.item(ind).getNodeValue();
-               }
-               else if( children.item(ind).getNodeType() == Node.COMMENT_NODE )
-               {
-                  // Ignore comment nodes
-               }
-               else
-               {
-                  compiler += children.item(ind).getFirstChild();
-               }
-            }
-            break;
-         }
-      }
-
+      String compiler = MetaData.getOptionalChildContent(query, "ql-compiler");
       Class impl;
 
       if(compiler == null || compiler.trim().length() == 0)
