@@ -18,7 +18,6 @@ import java.util.ArrayList;
 import javax.management.*;
 
 import org.jboss.logging.Log;
-import org.jboss.cluster.*;
 import org.jboss.util.MBeanProxy;
 
 /**
@@ -26,7 +25,7 @@ import org.jboss.util.MBeanProxy;
  *      
  *   @see <related>
  *   @author Rickard Öberg (rickard.oberg@telkel.com)
- *   @version $Revision: 1.1 $
+ *   @version $Revision: 1.2 $
  */
 public class AutoDeployer
    implements AutoDeployerMBean, MBeanRegistration, Runnable
