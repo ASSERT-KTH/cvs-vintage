@@ -64,7 +64,6 @@ import org.apache.tomcat.core.*;
 import org.apache.tomcat.core.Constants;
 import org.apache.tomcat.request.*;
 import org.apache.tomcat.util.*;
-import org.apache.tomcat.deployment.*;
 import java.io.*;
 import java.net.*;
 import java.util.*;

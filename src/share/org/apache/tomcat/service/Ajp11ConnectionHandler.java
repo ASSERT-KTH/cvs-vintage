@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/service/Attic/Ajp11ConnectionHandler.java,v 1.14 2000/02/01 22:53:32 costin Exp $
- * $Revision: 1.14 $
- * $Date: 2000/02/01 22:53:32 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/service/Attic/Ajp11ConnectionHandler.java,v 1.15 2000/02/11 02:21:48 costin Exp $
+ * $Revision: 1.15 $
+ * $Date: 2000/02/11 02:21:48 $
  *
  * ====================================================================
  *
@@ -72,7 +72,6 @@ import java.net.*;
 import java.util.*;
 import org.apache.tomcat.core.*;
 import org.apache.tomcat.util.*;
-import org.apache.tomcat.server.*;
 import org.apache.tomcat.service.http.*;
 import org.apache.tomcat.service.http.HttpResponseAdapter;
 import org.apache.tomcat.service.http.HttpRequestAdapter;
