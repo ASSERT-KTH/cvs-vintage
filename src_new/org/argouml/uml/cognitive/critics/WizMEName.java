@@ -1,4 +1,4 @@
-// $Id: WizMEName.java,v 1.17 2005/01/09 14:58:36 linus Exp $
+// $Id: WizMEName.java,v 1.18 2005/01/20 23:20:35 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -29,7 +29,7 @@ import javax.swing.JPanel;
 import org.apache.log4j.Logger;
 import org.argouml.cognitive.ui.WizStepTextField;
 import org.argouml.i18n.Translator;
-import org.argouml.model.ModelFacade;
+import org.argouml.model.Model;
 
 /**
  * A non-modal wizard to help the user change the name of a
@@ -124,7 +124,7 @@ public class WizMEName extends UMLWizard {
 	    if (step1 != null) newName = step1.getText();
 	    try {
 		Object me = getModelElement();
-		ModelFacade.setName(me, newName);
+		Model.getCoreHelper().setName(me, newName);
 	    }
 	    catch (Exception pve) {
 		LOG.error("could not set name", pve);

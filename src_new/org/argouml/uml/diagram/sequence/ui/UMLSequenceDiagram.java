@@ -1,4 +1,4 @@
-// $Id: UMLSequenceDiagram.java,v 1.38 2005/01/02 10:08:27 linus Exp $
+// $Id: UMLSequenceDiagram.java,v 1.39 2005/01/20 23:20:40 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -201,7 +201,7 @@ public class UMLSequenceDiagram extends UMLDiagram {
             lay.setGraphNodeRenderer(rend);
             setLayer(lay);
         }
-        ModelFacade.setNamespace(
+        Model.getCoreHelper().setNamespace(
             ((SequenceDiagramGraphModel) getLayer().getGraphModel())
                 .getCollaboration(),
             ns);

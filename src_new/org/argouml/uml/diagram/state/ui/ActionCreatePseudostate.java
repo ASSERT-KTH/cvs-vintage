@@ -1,4 +1,4 @@
-// $Id: ActionCreatePseudostate.java,v 1.13 2005/01/09 14:58:39 linus Exp $
+// $Id: ActionCreatePseudostate.java,v 1.14 2005/01/20 23:20:30 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -26,11 +26,12 @@ package org.argouml.uml.diagram.state.ui;
 
 import java.util.Hashtable;
 
-import org.argouml.ui.CmdCreateNode;
+import org.argouml.model.Model;
 import org.argouml.model.ModelFacade;
+import org.argouml.ui.CmdCreateNode;
 
 /**
- * An Action to create a Pseudostate of some kind
+ * An Action to create a Pseudostate of some kind.
  *
  *
  * @author jrobbins
@@ -69,7 +70,7 @@ public class ActionCreatePseudostate extends CmdCreateNode {
     public Object makeNode() {
 	Object newNode = super.makeNode();
 	Object kind = _args.get("kind");
-	ModelFacade.setKind(newNode, kind);
+	Model.getCoreHelper().setKind(newNode, kind);
 
 	return newNode;
     }

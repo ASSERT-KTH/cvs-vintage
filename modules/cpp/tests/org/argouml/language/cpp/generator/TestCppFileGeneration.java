@@ -1,4 +1,4 @@
-// $Id: TestCppFileGeneration.java,v 1.8 2005/01/14 01:02:33 euluis Exp $
+// $Id: TestCppFileGeneration.java,v 1.9 2005/01/20 23:20:41 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -27,6 +27,7 @@ package org.argouml.language.cpp.generator;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
+
 import junit.framework.Test;
 import junit.framework.TestSuite;
 
@@ -107,7 +108,7 @@ public class TestCppFileGeneration extends BaseTestGeneratorCpp {
         String packageName = "pack";
         Object aPackage = Model.getModelManagementFactory().
             buildPackage(packageName, UUIDManager.getInstance().getNewUUID());
-        ModelFacade.setNamespace(getAClass(), aPackage);
+        Model.getCoreHelper().setNamespace(getAClass(), aPackage);
 
         tmpDir = new File(System.getProperty(SYSPROPNAME_TMPDIR));
     }
@@ -249,7 +250,7 @@ public class TestCppFileGeneration extends BaseTestGeneratorCpp {
     private void setUpOtherClassInOtherPackage() {
         otherPack = Model.getModelManagementFactory().buildPackage(
                         "otherpack", UUIDManager.getInstance().getNewUUID());
-        ModelFacade.setNamespace(otherPack, getModel());
+        Model.getCoreHelper().setNamespace(otherPack, getModel());
         otherClass = getFactory().buildClass("OtherClass", otherPack);
     }
 
@@ -259,8 +260,8 @@ public class TestCppFileGeneration extends BaseTestGeneratorCpp {
      * @param modelName name to give to the model
      */
     private void setUpNamespaces(String modelName) {
-        ModelFacade.setName(getModel(), modelName);
-        ModelFacade.setNamespace(getPack(), getModel());
+        Model.getCoreHelper().setName(getModel(), modelName);
+        Model.getCoreHelper().setNamespace(getPack(), getModel());
     }
 
     /**

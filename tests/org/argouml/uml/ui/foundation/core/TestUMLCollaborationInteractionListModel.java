@@ -1,4 +1,4 @@
-// $Id: TestUMLCollaborationInteractionListModel.java,v 1.12 2005/01/04 16:54:36 linus Exp $
+// $Id: TestUMLCollaborationInteractionListModel.java,v 1.13 2005/01/20 23:20:33 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,7 +25,6 @@
 package org.argouml.uml.ui.foundation.core;
 
 import org.argouml.model.Model;
-import org.argouml.model.ModelFacade;
 import org.argouml.uml.ui.AbstractUMLModelElementListModel2Test;
 import org.argouml.uml.ui.behavior.collaborations.UMLCollaborationInteractionListModel;
 
@@ -68,7 +67,7 @@ public class TestUMLCollaborationInteractionListModel
         Object[] inter = new Object[10];
         for (int i = 0; i < 10; i++) {
             inter[i] = Model.getCollaborationsFactory().createInteraction();
-            ModelFacade.setContext(inter[i], getElem());
+            Model.getCollaborationsHelper().setContext(inter[i], getElem());
         }
         return inter;
     }

@@ -1,4 +1,4 @@
-// $Id: FigInterface.java,v 1.86 2005/01/12 15:37:00 bobtarling Exp $
+// $Id: FigInterface.java,v 1.87 2005/01/20 23:20:39 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -521,7 +521,7 @@ public class FigInterface extends FigNodeModelElement
             if (encloser != null
                     && oldEncloser != encloser
                     && ModelFacade.isAPackage(encloser.getOwner())) {
-                ModelFacade.setNamespace(me,
+                Model.getCoreHelper().setNamespace(me,
 					 /*(MNamespace)*/ encloser.getOwner());
             }
 
@@ -532,7 +532,7 @@ public class FigInterface extends FigNodeModelElement
                 m = /*(MNamespace)*/
 		    ((UMLDiagram) TargetManager.getInstance().getTarget())
 		    .getNamespace();
-                ModelFacade.setNamespace(me, m);
+                Model.getCoreHelper().setNamespace(me, m);
             }
         } catch (Exception e) {
             LOG.error("could not set package due to:" + e
@@ -546,11 +546,11 @@ public class FigInterface extends FigNodeModelElement
 	        && (ModelFacade.isAComponent(encloser.getOwner()))) {
             Object component = /*(MComponent)*/ encloser.getOwner();
             Object in = /*(MInterface)*/ getOwner();
-            ModelFacade.setImplementationLocation(resident, component);
-            ModelFacade.setResident(resident, in);
+            Model.getCoreHelper().setImplementationLocation(resident, component);
+            Model.getCoreHelper().setResident(resident, in);
         } else {
-            ModelFacade.setImplementationLocation(resident, null);
-            ModelFacade.setResident(resident, null);
+            Model.getCoreHelper().setImplementationLocation(resident, null);
+            Model.getCoreHelper().setResident(resident, null);
         }
     }
 

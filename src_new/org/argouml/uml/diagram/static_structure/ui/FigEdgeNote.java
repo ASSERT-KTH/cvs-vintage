@@ -1,4 +1,4 @@
-// $Id: FigEdgeNote.java,v 1.15 2005/01/09 14:58:44 linus Exp $
+// $Id: FigEdgeNote.java,v 1.16 2005/01/20 23:20:39 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -33,7 +33,7 @@ import java.beans.VetoableChangeListener;
 import org.argouml.i18n.Translator;
 import org.argouml.kernel.DelayedVChangeListener;
 import org.argouml.kernel.ProjectManager;
-import org.argouml.model.ModelFacade;
+import org.argouml.model.Model;
 import org.argouml.uml.UUIDHelper;
 import org.argouml.uml.diagram.ui.FigEdgeModelElement;
 import org.tigris.gef.base.Layer;
@@ -149,7 +149,7 @@ public class FigEdgeNote
         }
         owner = newOwner;
         if (UUIDHelper.getInstance().getUUID(newOwner) == null) {
-            ModelFacade.setUUID(newOwner,
+            Model.getCoreHelper().setUUID(newOwner,
 				UUIDHelper.getInstance().getNewUUID());
 	}
     }

@@ -1,4 +1,4 @@
-// $Id: UseCaseDiagramGraphModel.java,v 1.48 2005/01/09 14:58:57 linus Exp $
+// $Id: UseCaseDiagramGraphModel.java,v 1.49 2005/01/20 23:20:28 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -468,7 +468,7 @@ public class UseCaseDiagramGraphModel
 	    // end NEW CODE
 	    LOG.debug("setting namespace " + model
 		      + " to element " + node);
-            ModelFacade.addOwnedElement(model, /*(MModelElement)*/ node);
+            Model.getCoreHelper().addOwnedElement(model, /*(MModelElement)*/ node);
         }
 
         // Tell GEF its changed
@@ -500,7 +500,7 @@ public class UseCaseDiagramGraphModel
 
         if (ModelFacade.isAModelElement(edge)
                 && ModelFacade.getNamespace(edge) == null) {
-            ModelFacade.addOwnedElement(model, /*(MModelElement)*/ edge);
+            Model.getCoreHelper().addOwnedElement(model, /*(MModelElement)*/ edge);
         }
 
         // Tell GEF

@@ -1,4 +1,4 @@
-// $Id: ActionNewAction.java,v 1.9 2005/01/09 14:59:07 linus Exp $
+// $Id: ActionNewAction.java,v 1.10 2005/01/20 23:20:36 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -27,6 +27,7 @@ package org.argouml.uml.ui.behavior.common_behavior;
 
 import java.awt.event.ActionEvent;
 
+import org.argouml.model.Model;
 import org.argouml.model.ModelFacade;
 import org.argouml.uml.ui.AbstractActionNewModelElement;
 
@@ -96,19 +97,19 @@ public abstract class ActionNewAction extends AbstractActionNewModelElement {
         super.actionPerformed(e);
         Object action = createAction();
         if (getValue(ROLE).equals(Roles.EXIT)) {
-            ModelFacade.setExit(getTarget(), action);
+            Model.getStateMachinesHelper().setExit(getTarget(), action);
         } else
 	    if (getValue(ROLE).equals(Roles.ENTRY)) {
-		ModelFacade.setEntry(getTarget(), action);
+		Model.getStateMachinesHelper().setEntry(getTarget(), action);
 	    } else
 		if (getValue(ROLE).equals(Roles.DO)) {
-		    ModelFacade.setDoActivity(getTarget(), action);
+		    Model.getStateMachinesHelper().setDoActivity(getTarget(), action);
 		} else
 		    if (getValue(ROLE).equals(Roles.ACTION)) {
-			ModelFacade.setAction(getTarget(), action);
+			Model.getCollaborationsHelper().setAction(getTarget(), action);
 		    } else
 			if (getValue(ROLE).equals(Roles.EFFECT)) {
-			    ModelFacade.setEffect(getTarget(), action);
+			    Model.getStateMachinesHelper().setEffect(getTarget(), action);
 			}
 
     }

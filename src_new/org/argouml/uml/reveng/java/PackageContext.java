@@ -1,4 +1,4 @@
-// $Id: PackageContext.java,v 1.26 2005/01/09 14:58:59 linus Exp $
+// $Id: PackageContext.java,v 1.27 2005/01/20 23:20:37 linus Exp $
 // Copyright (c) 2003-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -76,7 +76,7 @@ class PackageContext extends Context {
 		    mInterface =
 			Model.getCoreFactory()
 			    .buildInterface(name, mPackage);
-		    ModelFacade.setTaggedValue(mInterface,
+		    Model.getCoreHelper().setTaggedValue(mInterface,
 					       ModelFacade.GENERATED_TAG,
 					       "yes");
 		}
@@ -100,7 +100,7 @@ class PackageContext extends Context {
 			mInterface =
 			    Model.getCoreFactory()
 			        .buildInterface(name, mPackage);
-			ModelFacade.setTaggedValue(mInterface,
+			Model.getCoreHelper().setTaggedValue(mInterface,
 						   ModelFacade.GENERATED_TAG,
 						   "yes");
 		    }
@@ -159,7 +159,7 @@ class PackageContext extends Context {
 			Model.getCoreFactory()
 			    .buildClass(name, mPackage);
 		}
-		ModelFacade.setTaggedValue(mClassifier,
+		Model.getCoreHelper().setTaggedValue(mClassifier,
 					   ModelFacade.GENERATED_TAG,
 					   "yes");
 	    }
@@ -188,7 +188,7 @@ class PackageContext extends Context {
 			    Model.getCoreFactory()
 			        .buildClass(name, mPackage);
 		    }
-		    ModelFacade.setTaggedValue(mClassifier,
+		    Model.getCoreHelper().setTaggedValue(mClassifier,
 					       ModelFacade.GENERATED_TAG,
 					       "yes");
                 }

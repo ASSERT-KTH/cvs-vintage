@@ -1,4 +1,4 @@
-// $Id: FigComponent.java,v 1.33 2005/01/10 16:24:19 mvw Exp $
+// $Id: FigComponent.java,v 1.34 2005/01/20 23:20:29 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -34,6 +34,7 @@ import java.util.Iterator;
 import java.util.Vector;
 
 import org.argouml.application.api.Notation;
+import org.argouml.model.Model;
 import org.argouml.model.ModelFacade;
 import org.argouml.uml.diagram.ui.FigEdgeModelElement;
 import org.argouml.uml.diagram.ui.FigNodeModelElement;
@@ -248,7 +249,7 @@ public class FigComponent extends FigNodeModelElement {
 	    Object node = /*(MNode)*/ encloser.getOwner();
 	    Object comp = /*(MComponent)*/ getOwner();
 	    if (!ModelFacade.getDeploymentLocations(comp).contains(node)) {
-		ModelFacade.addDeploymentLocation(comp, node);
+		Model.getCoreHelper().addDeploymentLocation(comp, node);
 	    }
 	    super.setEnclosingFig(encloser);
 

@@ -1,4 +1,4 @@
-// $Id: ActionNewExtendExtensionPoint.java,v 1.14 2005/01/09 14:59:08 linus Exp $
+// $Id: ActionNewExtendExtensionPoint.java,v 1.15 2005/01/20 23:20:27 linus Exp $
 // Copyright (c) 2002-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -60,7 +60,7 @@ public class ActionNewExtendExtensionPoint
             Object point =
                 Model.getUseCasesFactory().buildExtensionPoint(
                         ModelFacade.getBase(getTarget()));
-            ModelFacade.addExtensionPoint(getTarget(), point);
+            Model.getUseCasesHelper().addExtensionPoint(getTarget(), point);
         }
     }
 

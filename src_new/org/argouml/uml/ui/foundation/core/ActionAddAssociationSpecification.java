@@ -1,4 +1,4 @@
-// $Id: ActionAddAssociationSpecification.java,v 1.16 2005/01/11 21:03:31 mvw Exp $
+// $Id: ActionAddAssociationSpecification.java,v 1.17 2005/01/20 23:20:25 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -54,7 +54,7 @@ public class ActionAddAssociationSpecification
      * @see org.argouml.uml.ui.AbstractActionAddModelElement#doIt(java.util.Vector)
      */
     protected void doIt(Vector selected) {
-        ModelFacade.setSpecifications(getTarget(), selected);
+        Model.getCoreHelper().setSpecifications(getTarget(), selected);
     }
 
     /**

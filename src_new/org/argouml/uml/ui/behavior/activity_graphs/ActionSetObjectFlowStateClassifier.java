@@ -1,4 +1,4 @@
-// $Id: ActionSetObjectFlowStateClassifier.java,v 1.4 2005/01/09 14:59:04 linus Exp $
+// $Id: ActionSetObjectFlowStateClassifier.java,v 1.5 2005/01/20 23:20:35 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -27,6 +27,7 @@ package org.argouml.uml.ui.behavior.activity_graphs;
 import java.awt.event.ActionEvent;
 
 import org.argouml.i18n.Translator;
+import org.argouml.model.Model;
 import org.argouml.model.ModelFacade;
 import org.argouml.uml.ui.UMLAction;
 import org.argouml.uml.ui.UMLComboBox2;
@@ -39,7 +40,7 @@ import org.argouml.uml.ui.UMLComboBox2;
 public class ActionSetObjectFlowStateClassifier extends UMLAction {
 
     /**
-     * <code>SINGLETON</code>
+     * <code>SINGLETON</code>.
      */
     public static final ActionSetObjectFlowStateClassifier SINGLETON =
         new ActionSetObjectFlowStateClassifier();
@@ -74,7 +75,7 @@ public class ActionSetObjectFlowStateClassifier extends UMLAction {
         if (newClassifier != oldClassifier
                 && m != null
                 && newClassifier != null) {
-            ModelFacade.setType(m, newClassifier);
+            Model.getCoreHelper().setType(m, newClassifier);
             super.actionPerformed(e);
         }
     }

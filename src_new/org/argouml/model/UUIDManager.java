@@ -1,4 +1,4 @@
-// $Id: UUIDManager.java,v 1.4 2005/01/09 14:58:07 linus Exp $
+// $Id: UUIDManager.java,v 1.5 2005/01/20 23:20:34 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,10 +25,10 @@
 package org.argouml.model;
 
 import java.net.InetAddress;
-import java.util.Collection;
-import java.util.Iterator;
 import java.net.UnknownHostException;
 import java.rmi.server.UID;
+import java.util.Collection;
+import java.util.Iterator;
 
 import org.apache.log4j.Logger;
 
@@ -126,7 +126,7 @@ public class UUIDManager {
 
         String uuid = ModelFacade.getUUID(model);
         if (uuid == null) {
-	    ModelFacade.setUUID(model, getNewUUID());
+	    Model.getCoreHelper().setUUID(model, getNewUUID());
 	}
 
 	while (oeIterator.hasNext()) {
@@ -148,7 +148,7 @@ public class UUIDManager {
 
                 uuid = ModelFacade.getUUID(me);
                 if (uuid == null) {
-                    ModelFacade.setUUID(me, getNewUUID());
+                    Model.getCoreHelper().setUUID(me, getNewUUID());
                 }
 
             }

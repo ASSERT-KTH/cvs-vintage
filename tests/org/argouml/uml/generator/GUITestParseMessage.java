@@ -1,4 +1,4 @@
-// $Id: GUITestParseMessage.java,v 1.11 2005/01/08 23:27:27 linus Exp $
+// $Id: GUITestParseMessage.java,v 1.12 2005/01/20 23:20:42 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -30,7 +30,6 @@ import java.util.Iterator;
 import junit.framework.TestCase;
 
 import org.argouml.model.Model;
-import org.argouml.model.ModelFacade;
 
 import ru.novosoft.uml.behavior.collaborations.MMessage;
 
@@ -62,11 +61,11 @@ public class GUITestParseMessage extends TestCase {
         Object cl3 = Model.getCollaborationsFactory().createClassifierRole();
         Object cl4 = Model.getCollaborationsFactory().createClassifierRole();
         Object cl5 = Model.getCollaborationsFactory().createClassifierRole();
-        ModelFacade.setNamespace(cl1, coll);
-        ModelFacade.setNamespace(cl2, coll);
-        ModelFacade.setNamespace(cl3, coll);
-        ModelFacade.setNamespace(cl4, coll);
-        ModelFacade.setNamespace(cl5, coll);
+        Model.getCoreHelper().setNamespace(cl1, coll);
+        Model.getCoreHelper().setNamespace(cl2, coll);
+        Model.getCoreHelper().setNamespace(cl3, coll);
+        Model.getCoreHelper().setNamespace(cl4, coll);
+        Model.getCoreHelper().setNamespace(cl5, coll);
 
         Object r1to2 =
             Model.getCollaborationsFactory().buildAssociationRole(cl1, cl2);

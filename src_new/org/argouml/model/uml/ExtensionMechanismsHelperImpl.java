@@ -1,4 +1,4 @@
-// $Id: ExtensionMechanismsHelperImpl.java,v 1.4 2005/01/07 22:43:39 linus Exp $
+// $Id: ExtensionMechanismsHelperImpl.java,v 1.5 2005/01/20 23:20:36 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -32,9 +32,11 @@ import java.util.List;
 import org.argouml.model.ExtensionMechanismsHelper;
 import org.argouml.model.ModelFacade;
 
+import ru.novosoft.uml.behavior.use_cases.MExtensionPoint;
 import ru.novosoft.uml.foundation.core.MModelElement;
 import ru.novosoft.uml.foundation.core.MNamespace;
 import ru.novosoft.uml.foundation.extension_mechanisms.MStereotype;
+import ru.novosoft.uml.foundation.extension_mechanisms.MTaggedValue;
 import ru.novosoft.uml.model_management.MModel;
 
 /**
@@ -303,9 +305,7 @@ class ExtensionMechanismsHelperImpl implements ExtensionMechanismsHelper {
 			ModelFacade.getModel(modelElement),
 			true);
 	}
-        ModelFacade.setStereotype(
-		modelElement,
-		stereotype);
+        nsmodel.getCoreHelper().setStereotype(modelElement, stereotype);
     }
 
     /**
@@ -356,6 +356,85 @@ class ExtensionMechanismsHelperImpl implements ExtensionMechanismsHelper {
 	    }
 	}
 	return false;
+    }
+
+    /**
+     * Add an extended element to a stereotype.
+     *
+     * @param handle Stereotype
+     * @param extendedElement ExtensionPoint
+     */
+    public void addExtendedElement(
+        Object handle,
+        Object extendedElement) {
+        if (handle instanceof MStereotype
+            && extendedElement instanceof MExtensionPoint) {
+            ((MStereotype) handle).addExtendedElement(
+                (MModelElement) extendedElement);
+            return;
+        }
+        throw new IllegalArgumentException("handle: " + handle
+                + " or extendedElement: " + extendedElement);
+    }
+
+    /**
+     * Set the baseclass of some stereotype.
+     *
+     * @param handle the stereotype
+     * @param baseClass the baseclass
+     */
+    public void setBaseClass(Object handle, Object baseClass) {
+        if (ModelFacade.isAStereotype(handle) && baseClass instanceof String) {
+            ((MStereotype) handle).setBaseClass((String) baseClass);
+            return;
+        }
+        throw new IllegalArgumentException("handle: " + handle
+                + " or baseClass: " + baseClass);
+    }
+
+    /**
+     * Set the icon for a stereotype.
+     *
+     * @param handle Stereotype
+     * @param icon String
+     */
+    public void setIcon(Object handle, Object icon) {
+        if (handle instanceof MStereotype
+                && (icon == null || icon instanceof String)) {
+            ((MStereotype) handle).setIcon((String) icon);
+            return;
+        }
+        throw new IllegalArgumentException("handle: " + handle
+                + " or icon: " + icon);
+    }
+
+    /**
+     * Set the Tag of a TaggedValue.
+     *
+     * @param handle TaggedValue
+     * @param tag String
+     */
+    public void setTag(Object handle, Object tag) {
+        if (handle instanceof MTaggedValue && tag instanceof String) {
+            ((MTaggedValue) handle).setTag((String) tag);
+            return;
+        }
+        throw new IllegalArgumentException("handle: " + handle
+                + " or tag: " + tag);
+    }
+
+    /**
+     * Sets a value of some taggedValue.
+     *
+     * @param handle is the tagged value
+     * @param value is the value
+     */
+    public void setValueOfTag(Object handle, String value) {
+        if (handle instanceof MTaggedValue) {
+            ((MTaggedValue) handle).setValue(value);
+            return;
+        }
+    throw new IllegalArgumentException("handle: " + handle);
     }
 }
 

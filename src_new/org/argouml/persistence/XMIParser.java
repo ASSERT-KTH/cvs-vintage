@@ -1,4 +1,4 @@
-// $Id: XMIParser.java,v 1.2 2005/01/09 14:58:08 linus Exp $
+// $Id: XMIParser.java,v 1.3 2005/01/20 23:20:34 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -32,6 +32,7 @@ import java.util.Iterator;
 
 import org.apache.log4j.Logger;
 import org.argouml.kernel.Project;
+import org.argouml.model.Model;
 import org.argouml.model.ModelFacade;
 import org.argouml.model.uml.XmiReader;
 import org.xml.sax.InputSource;
@@ -154,7 +155,7 @@ public class XMIParser {
         while (oeIterator.hasNext()) {
             Object me = /*(MModelElement)*/ oeIterator.next();
             if (ModelFacade.getName(me) == null)
-                ModelFacade.setName(me, "");
+                Model.getCoreHelper().setName(me, "");
 	    /*
 	      if (me instanceof MClass) {
 	      // _proj.defineType((MClass) me);

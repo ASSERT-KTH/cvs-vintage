@@ -1,4 +1,4 @@
-// $Id: ActionAddPackage.java,v 1.13 2005/01/09 14:59:01 linus Exp $
+// $Id: ActionAddPackage.java,v 1.14 2005/01/20 23:20:37 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -27,7 +27,6 @@ package org.argouml.uml.ui;
 import java.awt.event.ActionEvent;
 
 import org.argouml.model.Model;
-import org.argouml.model.ModelFacade;
 import org.argouml.ui.targetmanager.TargetManager;
 
 /**
@@ -51,7 +50,9 @@ public class ActionAddPackage  extends UMLAction {
     ////////////////////////////////////////////////////////////////
     // constructors
 
-    /** Creates a new instance of ActionAddPackage */
+    /**
+     * Creates a new instance of ActionAddPackage.
+     */
     public ActionAddPackage() {
 
         super("Add package", NO_ICON);
@@ -65,7 +66,7 @@ public class ActionAddPackage  extends UMLAction {
     public void actionPerformed(ActionEvent e) {
         Object namespace =
 	    TargetManager.getInstance().getModelTarget();
-        ModelFacade.addOwnedElement(namespace,
+        Model.getCoreHelper().addOwnedElement(namespace,
             Model.getModelManagementFactory().createPackage());
     }
 

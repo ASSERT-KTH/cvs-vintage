@@ -1,4 +1,4 @@
-// $Id: TestGeneratorCpp.java,v 1.8 2005/01/09 14:57:59 linus Exp $
+// $Id: TestGeneratorCpp.java,v 1.9 2005/01/20 23:20:41 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,10 +25,12 @@
 package org.argouml.language.cpp.generator;
 
 import java.util.Collection;
+
 import junit.framework.Test;
 import junit.framework.TestSuite;
-import org.apache.log4j.Logger;
 
+import org.apache.log4j.Logger;
+import org.argouml.model.Model;
 import org.argouml.model.ModelFacade;
 
 /**
@@ -91,8 +93,8 @@ public class TestGeneratorCpp extends BaseTestGeneratorCpp {
         Collection params = ModelFacade.getParameters(getFooMethod());
         assertEquals(1, params.size());
         Object returnVal = params.iterator().next();
-        ModelFacade.setTaggedValue(returnVal, "pointer", "true");
-        ModelFacade.setType(returnVal, getAClass());
+        Model.getCoreHelper().setTaggedValue(returnVal, "pointer", "true");
+        Model.getCoreHelper().setType(returnVal, getAClass());
         String genOp = getGenerator().generateOperation(getFooMethod(), false);
         LOG.info(genOp);
         assertTrue(genOp.indexOf("*") != -1);

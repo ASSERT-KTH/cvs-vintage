@@ -1,4 +1,4 @@
-// $Id: ActionSetStructuralFeatureType.java,v 1.14 2005/01/02 16:43:46 linus Exp $
+// $Id: ActionSetStructuralFeatureType.java,v 1.15 2005/01/20 23:20:24 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -59,12 +59,12 @@ public class ActionSetStructuralFeatureType extends UMLAction {
         if (source instanceof UMLComboBox2) {
             UMLComboBox2 box = (UMLComboBox2) source;
             Object o = box.getTarget();
-            if (org.argouml.model.ModelFacade.isAStructuralFeature(o)) {
+            if (ModelFacade.isAStructuralFeature(o)) {
                 attr = /*(MAttribute)*/ o;
                 oldClassifier = ModelFacade.getType(attr);
             }
             o = box.getSelectedItem();
-            if (org.argouml.model.ModelFacade.isAClassifier(o)) {
+            if (ModelFacade.isAClassifier(o)) {
                 newClassifier = /*(MClassifier)*/ o;
             }
         }
@@ -76,7 +76,7 @@ public class ActionSetStructuralFeatureType extends UMLAction {
                                     ModelFacade.getModel(attr));
             }
 
-            ModelFacade.setType(attr, newClassifier);
+            Model.getCoreHelper().setType(attr, newClassifier);
         }
     }
 

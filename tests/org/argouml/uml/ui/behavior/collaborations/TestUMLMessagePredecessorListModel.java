@@ -1,4 +1,4 @@
-// $Id: TestUMLMessagePredecessorListModel.java,v 1.13 2005/01/04 16:54:28 linus Exp $
+// $Id: TestUMLMessagePredecessorListModel.java,v 1.14 2005/01/20 23:20:26 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,7 +25,6 @@
 package org.argouml.uml.ui.behavior.collaborations;
 
 import org.argouml.model.Model;
-import org.argouml.model.ModelFacade;
 import org.argouml.uml.ui.AbstractUMLModelElementListModel2Test;
 
 /**
@@ -64,7 +63,7 @@ public class TestUMLMessagePredecessorListModel
         Object[] pres = new Object[10];
         for (int i = 0; i < pres.length; i++) {
             pres[i] = Model.getCollaborationsFactory().createMessage();
-            ModelFacade.addPredecessor(getElem(), pres[i]);
+            Model.getCollaborationsHelper().addPredecessor(getElem(), pres[i]);
         }
         return pres;
     }
@@ -74,7 +73,7 @@ public class TestUMLMessagePredecessorListModel
      */
     protected void removeHalfModel(Object[] elements) {
 	for (int i = 0; i < 5; i++) {
-	    ModelFacade.removePredecessor(getElem(), elements[i]);
+	    Model.getCollaborationsHelper().removePredecessor(getElem(), elements[i]);
         }
     }
 

@@ -1,4 +1,4 @@
-// $Id: ActionSetChangeability.java,v 1.7 2005/01/09 14:59:08 linus Exp $
+// $Id: ActionSetChangeability.java,v 1.8 2005/01/20 23:20:25 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -29,6 +29,7 @@ import java.awt.event.ActionEvent;
 import javax.swing.JRadioButton;
 
 import org.argouml.i18n.Translator;
+import org.argouml.model.Model;
 import org.argouml.model.ModelFacade;
 import org.argouml.uml.ui.UMLAction;
 import org.argouml.uml.ui.UMLRadioButtonPanel;
@@ -84,7 +85,7 @@ public class ActionSetChangeability extends UMLAction {
                 } else {
                     kind = ModelFacade.FROZEN_CHANGEABLEKIND;
                 }
-                ModelFacade.setChangeability(m, kind);
+                Model.getCoreHelper().setChangeability(m, kind);
             }
         }
     }

@@ -1,4 +1,4 @@
-// $Id: ExtensionMechanismsHelper.java,v 1.3 2005/01/07 22:43:39 linus Exp $
+// $Id: ExtensionMechanismsHelper.java,v 1.4 2005/01/20 23:20:34 linus Exp $
 // Copyright (c) 2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -144,4 +144,44 @@ public interface ExtensionMechanismsHelper {
      *	desired characteristics.
      */
     boolean isStereotypeInh(Object object, String name, String base);
+
+    /**
+     * Add an extended element to a stereotype.
+     *
+     * @param handle Stereotype
+     * @param extendedElement ExtensionPoint
+     */
+    void addExtendedElement(Object handle, Object extendedElement);
+
+    /**
+     * Set the baseclass of some stereotype.
+     *
+     * @param handle the stereotype
+     * @param baseClass the baseclass
+     */
+    void setBaseClass(Object handle, Object baseClass);
+
+    /**
+     * Set the icon for a stereotype.
+     *
+     * @param handle Stereotype
+     * @param icon String
+     */
+    void setIcon(Object handle, Object icon);
+
+    /**
+     * Set the Tag of a TaggedValue.
+     *
+     * @param handle TaggedValue
+     * @param tag String
+     */
+    void setTag(Object handle, Object tag);
+
+    /**
+     * Sets a value of some taggedValue.
+     *
+     * @param handle is the tagged value
+     * @param value is the value
+     */
+    void setValueOfTag(Object handle, String value);
 }

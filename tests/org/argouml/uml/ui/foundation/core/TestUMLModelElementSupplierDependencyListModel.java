@@ -1,4 +1,4 @@
-// $Id: TestUMLModelElementSupplierDependencyListModel.java,v 1.13 2005/01/09 21:10:35 linus Exp $
+// $Id: TestUMLModelElementSupplierDependencyListModel.java,v 1.14 2005/01/20 23:20:34 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -26,7 +26,6 @@
 package org.argouml.uml.ui.foundation.core;
 
 import org.argouml.model.Model;
-import org.argouml.model.ModelFacade;
 import org.argouml.uml.ui.AbstractUMLModelElementListModel2Test;
 
 /**
@@ -65,7 +64,7 @@ public class TestUMLModelElementSupplierDependencyListModel
         Object[] ext = new Object[10];
         for (int i = 0; i < 10; i++) {
             ext[i] = Model.getCoreFactory().createDependency();
-            ModelFacade.addSupplierDependency(getElem(), ext[i]);
+            Model.getCoreHelper().addSupplierDependency(getElem(), ext[i]);
         }
         return ext;
     }
@@ -75,7 +74,7 @@ public class TestUMLModelElementSupplierDependencyListModel
      */
     protected void removeHalfModel(Object[] elements) {
         for (int i = 0; i < 5; i++) {
-            ModelFacade.removeSupplierDependency(getElem(), elements[i]);
+            Model.getCoreHelper().removeSupplierDependency(getElem(), elements[i]);
         }
     }
 

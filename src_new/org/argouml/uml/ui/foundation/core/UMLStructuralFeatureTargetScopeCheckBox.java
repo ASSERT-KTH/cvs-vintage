@@ -1,4 +1,4 @@
-// $Id: UMLStructuralFeatureTargetScopeCheckBox.java,v 1.11 2005/01/09 14:59:09 linus Exp $
+// $Id: UMLStructuralFeatureTargetScopeCheckBox.java,v 1.12 2005/01/20 23:20:24 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,6 +25,7 @@
 package org.argouml.uml.ui.foundation.core;
 
 import org.argouml.i18n.Translator;
+import org.argouml.model.Model;
 import org.argouml.model.ModelFacade;
 import org.argouml.uml.ui.UMLCheckBox2;
 
@@ -50,7 +51,7 @@ public class UMLStructuralFeatureTargetScopeCheckBox extends UMLCheckBox2 {
     public void buildModel() {
         // repair action for possible NP after load
         if (ModelFacade.getTargetScope(getTarget()) == null) {
-            ModelFacade.setTargetScope(getTarget(),
+            Model.getCoreHelper().setTargetScope(getTarget(),
                     ModelFacade.INSTANCE_SCOPEKIND);
         }
         setSelected(ModelFacade.getTargetScope(getTarget()).equals(

@@ -1,4 +1,4 @@
-// $Id: ModeCreateEdgeAndNode.java,v 1.30 2005/01/09 14:58:56 linus Exp $
+// $Id: ModeCreateEdgeAndNode.java,v 1.31 2005/01/20 23:20:40 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -421,7 +421,7 @@ public class ModeCreateEdgeAndNode extends ModeCreate {
             Collection conns = ModelFacade.getConnections(newEdge);
             Iterator iter = conns.iterator();
             Object associationEnd0 = iter.next();
-            ModelFacade.setAggregation(associationEnd0,
+            Model.getCoreHelper().setAggregation(associationEnd0,
                     ModelFacade.COMPOSITE_AGGREGATIONKIND);
         }
     }

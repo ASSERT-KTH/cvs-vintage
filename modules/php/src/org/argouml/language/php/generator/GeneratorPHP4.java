@@ -1,4 +1,4 @@
-// $Id: GeneratorPHP4.java,v 1.18 2005/01/09 21:10:45 linus Exp $
+// $Id: GeneratorPHP4.java,v 1.19 2005/01/20 23:20:40 linus Exp $
 // Copyright (c) 2004-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -28,9 +28,7 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
-
 import java.rmi.server.UID;
-
 import java.util.Collection;
 import java.util.Comparator;
 import java.util.Iterator;
@@ -40,20 +38,16 @@ import java.util.TreeSet;
 import javax.swing.Icon;
 
 import org.apache.log4j.Logger;
-
 import org.argouml.application.ArgoVersion;
-
 import org.argouml.application.api.Argo;
 import org.argouml.application.api.Notation;
 import org.argouml.application.api.PluggableNotation;
-
 import org.argouml.language.php.PHPDocumentor;
-
+import org.argouml.model.Model;
 import org.argouml.model.ModelFacade;
-
+import org.argouml.uml.UUIDHelper;
 import org.argouml.uml.generator.FileGenerator;
 import org.argouml.uml.generator.Generator2;
-import org.argouml.uml.UUIDHelper;
 
 /**
  * Generator class for PHP 4.x source code
@@ -1176,7 +1170,7 @@ public class GeneratorPHP4
         String uuid = UUIDHelper.getInstance().getUUID(modelElement);
         if (uuid == null) {
             uuid = (new UID().toString());
-            ModelFacade.setUUID(modelElement, uuid);
+            Model.getCoreHelper().setUUID(modelElement, uuid);
         }
 
         if (sSuffix != null && sSuffix.trim() != "") {

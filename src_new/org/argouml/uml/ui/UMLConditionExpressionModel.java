@@ -1,4 +1,4 @@
-// $Id: UMLConditionExpressionModel.java,v 1.6 2005/01/09 14:59:03 linus Exp $
+// $Id: UMLConditionExpressionModel.java,v 1.7 2005/01/20 23:20:37 linus Exp $
 // Copyright (c) 2003-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -63,7 +63,8 @@ public class UMLConditionExpressionModel extends UMLExpressionModel2 {
     public void setExpression(Object expression) {
         LOG.debug("setting condidtion");
         LOG.debug(expression);
-        ModelFacade.setCondition(getContainer().getTarget(), expression);
+        Model.getUseCasesHelper()
+        	.setCondition(getContainer().getTarget(), expression);
     }
 
     /**

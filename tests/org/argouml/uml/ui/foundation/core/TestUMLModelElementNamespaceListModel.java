@@ -1,4 +1,4 @@
-// $Id: TestUMLModelElementNamespaceListModel.java,v 1.13 2005/01/06 23:04:48 linus Exp $
+// $Id: TestUMLModelElementNamespaceListModel.java,v 1.14 2005/01/20 23:20:33 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -27,7 +27,6 @@ package org.argouml.uml.ui.foundation.core;
 import junit.framework.TestCase;
 
 import org.argouml.model.Model;
-import org.argouml.model.ModelFacade;
 
 /**
  * @since Oct 30, 2002
@@ -71,7 +70,7 @@ public class TestUMLModelElementNamespaceListModel extends TestCase {
      */
     public void testSetNamespace() {
         Object ns = Model.getCoreFactory().createNamespace();
-        ModelFacade.setNamespace(elem, ns);
+        Model.getCoreHelper().setNamespace(elem, ns);
         assertEquals(1, model.getSize());
         assertEquals(ns, model.getElementAt(0));
     }
@@ -81,8 +80,8 @@ public class TestUMLModelElementNamespaceListModel extends TestCase {
      */
     public void testRemoveNamespace() {
         Object ns = Model.getCoreFactory().createNamespace();
-        ModelFacade.setNamespace(elem, ns);
-        ModelFacade.setNamespace(elem, null);
+        Model.getCoreHelper().setNamespace(elem, ns);
+        Model.getCoreHelper().setNamespace(elem, null);
         assertEquals(0, model.getSize());
         assertTrue(model.isEmpty());
     }

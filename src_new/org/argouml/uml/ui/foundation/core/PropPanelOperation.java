@@ -1,4 +1,4 @@
-// $Id: PropPanelOperation.java,v 1.77 2005/01/09 14:59:09 linus Exp $
+// $Id: PropPanelOperation.java,v 1.78 2005/01/20 23:20:24 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -129,9 +129,9 @@ public class PropPanelOperation extends PropPanelFeature {
                     .createSignal();
                     //((MOperation)oper).getFactory().createSignal();
 
-            ModelFacade.addOwnedElement(ModelFacade.getNamespace(ModelFacade
+            Model.getCoreHelper().addOwnedElement(ModelFacade.getNamespace(ModelFacade
                     .getOwner(oper)), newSignal);
-            ModelFacade.addRaisedSignal(oper, newSignal);
+            Model.getCoreHelper().addRaisedSignal(oper, newSignal);
             TargetManager.getInstance().setTarget(newSignal);
         }
     }
@@ -171,7 +171,8 @@ public class PropPanelOperation extends PropPanelFeature {
 
 
     /**
-     * Appropriate namespace is the namespace of our class, not the class itself
+     * Appropriate namespace is the namespace of our class,
+     * not the class itself.
      *
      * @see org.argouml.uml.ui.PropPanel#getDisplayNamespace()
      */

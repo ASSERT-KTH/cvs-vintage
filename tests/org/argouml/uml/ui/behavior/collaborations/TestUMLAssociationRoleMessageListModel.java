@@ -1,4 +1,4 @@
-// $Id: TestUMLAssociationRoleMessageListModel.java,v 1.12 2005/01/04 21:41:06 linus Exp $
+// $Id: TestUMLAssociationRoleMessageListModel.java,v 1.13 2005/01/20 23:20:26 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -26,7 +26,6 @@
 package org.argouml.uml.ui.behavior.collaborations;
 
 import org.argouml.model.Model;
-import org.argouml.model.ModelFacade;
 import org.argouml.uml.ui.AbstractUMLModelElementListModel2Test;
 
 /**
@@ -66,7 +65,7 @@ public class TestUMLAssociationRoleMessageListModel
         Object[] messages = new Object[10];
         for (int i = 0; i < messages.length; i++) {
             messages[i] = Model.getCollaborationsFactory().createMessage();
-            ModelFacade.addMessage(getElem(), messages[i]);
+            Model.getCollaborationsHelper().addMessage(getElem(), messages[i]);
         }
         return messages;
     }
@@ -76,7 +75,7 @@ public class TestUMLAssociationRoleMessageListModel
      */
     protected void removeHalfModel(Object[] elements) {
         for (int i = 0; i < 5; i++) {
-            ModelFacade.removeMessage(getElem(), elements[i]);
+            Model.getCollaborationsHelper().removeMessage(getElem(), elements[i]);
         }
     }
 

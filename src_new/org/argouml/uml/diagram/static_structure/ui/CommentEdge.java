@@ -1,4 +1,4 @@
-// $Id: CommentEdge.java,v 1.5 2005/01/09 14:58:42 linus Exp $
+// $Id: CommentEdge.java,v 1.6 2005/01/20 23:20:39 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -24,6 +24,7 @@
 
 package org.argouml.uml.diagram.static_structure.ui;
 
+import org.argouml.model.Model;
 import org.argouml.model.ModelFacade;
 import org.argouml.model.UUIDManager;
 
@@ -44,7 +45,8 @@ public class CommentEdge {
     private Object uuid;
 
     /**
-     * Constructor
+     * Constructor.
+     *
      * @param s the source
      * @param d the destination
      */
@@ -55,7 +57,8 @@ public class CommentEdge {
     }
 
     /**
-     * The source of this CommentEdge
+     * The source of this CommentEdge.
+     *
      * @return the source
      */
     public Object getSource() {
@@ -63,7 +66,8 @@ public class CommentEdge {
     }
 
     /**
-     * The destination of this CommentEdge
+     * The destination of this CommentEdge.
+     *
      * @return the destination
      */
     public Object getDestination() {
@@ -96,10 +100,10 @@ public class CommentEdge {
      */
     public void delete() {
         if (ModelFacade.isAComment(source)) {
-            ModelFacade.removeAnnotatedElement(source, dest);
+            Model.getCoreHelper().removeAnnotatedElement(source, dest);
         } else {
             // save to presume the destination is the comment
-            ModelFacade.removeAnnotatedElement(dest, source);
+            Model.getCoreHelper().removeAnnotatedElement(dest, source);
         }
     }
 }

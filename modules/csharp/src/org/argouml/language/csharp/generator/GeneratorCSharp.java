@@ -1,4 +1,4 @@
-// $Id: GeneratorCSharp.java,v 1.25 2005/01/09 14:57:59 linus Exp $
+// $Id: GeneratorCSharp.java,v 1.26 2005/01/20 23:20:41 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -1516,7 +1516,7 @@ public class GeneratorCSharp extends Generator2
 	if (id == null) {
 	    id = (new UID().toString());
 	    // id = cls.getName() + "__" + static_count;
-	    ModelFacade.setUUID(cls, id);
+	    Model.getCoreHelper().setUUID(cls, id);
         }
 	// String s = "";
 	// s += INDENT + "// section " + id + " begin\n";

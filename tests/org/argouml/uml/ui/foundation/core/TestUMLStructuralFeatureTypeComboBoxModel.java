@@ -1,4 +1,4 @@
-// $Id: TestUMLStructuralFeatureTypeComboBoxModel.java,v 1.13 2005/01/06 23:04:47 linus Exp $
+// $Id: TestUMLStructuralFeatureTypeComboBoxModel.java,v 1.14 2005/01/20 23:20:33 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -28,7 +28,6 @@ import junit.framework.TestCase;
 
 import org.argouml.kernel.ProjectManager;
 import org.argouml.model.Model;
-import org.argouml.model.ModelFacade;
 import org.argouml.ui.targetmanager.TargetEvent;
 
 /**
@@ -61,12 +60,12 @@ public class TestUMLStructuralFeatureTypeComboBoxModel extends TestCase {
         types = new Object[10];
         Object m = Model.getModelManagementFactory().createModel();
         ProjectManager.getManager().getCurrentProject().setRoot(m);
-        ModelFacade.setNamespace(elem, m);
+        Model.getCoreHelper().setNamespace(elem, m);
         for (int i = 0; i < 10; i++) {
             types[i] = Model.getCoreFactory().createClassifier();
-            ModelFacade.addOwnedElement(m, types[i]);
+            Model.getCoreHelper().addOwnedElement(m, types[i]);
         }
-        ModelFacade.setType(elem, types[0]);
+        Model.getCoreHelper().setType(elem, types[0]);
     }
 
     /**
@@ -94,7 +93,7 @@ public class TestUMLStructuralFeatureTypeComboBoxModel extends TestCase {
      * Test the setType function.
      */
     public void testSetType() {
-        ModelFacade.setType(elem, types[0]);
+        Model.getCoreHelper().setType(elem, types[0]);
         assertTrue(model.getSelectedItem() == types[0]);
     }
 
@@ -105,7 +104,7 @@ public class TestUMLStructuralFeatureTypeComboBoxModel extends TestCase {
      * a not null value.
      */
     public void testSetTypeToNull() {
-        ModelFacade.setType(elem, null);
+        Model.getCoreHelper().setType(elem, null);
         assertNotNull(model.getSelectedItem());
     }
 

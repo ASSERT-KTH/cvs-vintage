@@ -1,4 +1,4 @@
-// $Id: UMLInitialValueComboBox.java,v 1.41 2005/01/08 20:46:36 linus Exp $
+// $Id: UMLInitialValueComboBox.java,v 1.42 2005/01/20 23:20:37 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -103,13 +103,13 @@ public class UMLInitialValueComboBox extends JComboBox
                     Object itemExpr =
 			Model.getDataTypesFactory()
 			    .createExpression("Java", item);
-                    ModelFacade.setInitialValue(target, itemExpr);
+                    Model.getCoreHelper().setInitialValue(target, itemExpr);
                     update();
                 } else if (ModelFacade.isAParameter(target)) {
                     Object itemExpr =
 			Model.getDataTypesFactory()
 			    .createExpression("Java", item);
-                    ModelFacade.setDefaultValue(target, itemExpr);
+                    Model.getCoreHelper().setDefaultValue(target, itemExpr);
                     update();
                 }
             }
@@ -230,7 +230,7 @@ public class UMLInitialValueComboBox extends JComboBox
             if (classifier == null) {
                 return;
             }
-            ModelFacade.setFeatures(classifier,
+            Model.getCoreHelper().setFeatures(classifier,
 				    ModelFacade.getFeatures(classifier));
         } else if (ModelFacade.isAParameter(target)) {
             if (ModelFacade.isACallEvent(target)) {
@@ -242,7 +242,7 @@ public class UMLInitialValueComboBox extends JComboBox
                 if (classifier == null) {
                     return;
                 }
-                ModelFacade.setFeatures(classifier,
+                Model.getCoreHelper().setFeatures(classifier,
 					ModelFacade.getFeatures(classifier));
             }
         }

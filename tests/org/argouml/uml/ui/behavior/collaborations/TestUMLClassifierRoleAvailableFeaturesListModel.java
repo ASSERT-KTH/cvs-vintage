@@ -1,4 +1,4 @@
-// $Id: TestUMLClassifierRoleAvailableFeaturesListModel.java,v 1.13 2005/01/06 23:04:52 linus Exp $
+// $Id: TestUMLClassifierRoleAvailableFeaturesListModel.java,v 1.14 2005/01/20 23:20:26 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,7 +25,6 @@
 package org.argouml.uml.ui.behavior.collaborations;
 
 import org.argouml.model.Model;
-import org.argouml.model.ModelFacade;
 import org.argouml.uml.ui.AbstractUMLModelElementListModel2Test;
 
 /**
@@ -67,7 +66,7 @@ public class TestUMLClassifierRoleAvailableFeaturesListModel
         Object[] features = new Object[10];
         for (int i = 0; i < features.length; i++) {
             features[i] = Model.getCoreFactory().createOperation();
-            ModelFacade.addFeature(base, features[i]);
+            Model.getCoreHelper().addFeature(base, features[i]);
         }
         return features;
     }
@@ -77,7 +76,7 @@ public class TestUMLClassifierRoleAvailableFeaturesListModel
      */
     protected void removeHalfModel(Object[] elements) {
         for (int i = 0; i < 5; i++) {
-            ModelFacade.removeFeature(base, elements[i]);
+            Model.getCoreHelper().removeFeature(base, elements[i]);
         }
     }
 

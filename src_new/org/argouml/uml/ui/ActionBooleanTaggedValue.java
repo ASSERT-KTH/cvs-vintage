@@ -1,4 +1,4 @@
-// $Id: ActionBooleanTaggedValue.java,v 1.7 2005/01/08 20:46:36 linus Exp $
+// $Id: ActionBooleanTaggedValue.java,v 1.8 2005/01/20 23:20:37 linus Exp $
 // Copyright (c) 2003-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -77,13 +77,13 @@ public class ActionBooleanTaggedValue extends UMLAction {
         if (taggedValue == null) {
             taggedValue =
                 Model.getExtensionMechanismsFactory().createTaggedValue();
-            ModelFacade.setTag(taggedValue, tagName);
-            ModelFacade.addTaggedValue(obj, taggedValue);
+            Model.getExtensionMechanismsHelper().setTag(taggedValue, tagName);
+            Model.getCoreHelper().addTaggedValue(obj, taggedValue);
         }
         if (newState) {
-            ModelFacade.setValue(taggedValue, "true");
+            Model.getCommonBehaviorHelper().setValue(taggedValue, "true");
         } else {
-            ModelFacade.setValue(taggedValue, "false");
+            Model.getCommonBehaviorHelper().setValue(taggedValue, "false");
         }
     }
 }

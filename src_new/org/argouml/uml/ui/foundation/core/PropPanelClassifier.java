@@ -1,4 +1,4 @@
-// $Id: PropPanelClassifier.java,v 1.56 2005/01/09 14:59:08 linus Exp $
+// $Id: PropPanelClassifier.java,v 1.57 2005/01/20 23:20:25 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -200,10 +200,10 @@ public abstract class PropPanelClassifier extends PropPanelNamespace {
      */
     public void addDataType() {
         Object target = getTarget();
-        if (org.argouml.model.ModelFacade.isANamespace(target)) {
+        if (ModelFacade.isANamespace(target)) {
             Object ns = /*(MNamespace)*/ target;
             Object ownedElem = Model.getCoreFactory().createDataType();
-            ModelFacade.addOwnedElement(ns, ownedElem);
+            Model.getCoreHelper().addOwnedElement(ns, ownedElem);
             TargetManager.getInstance().setTarget(ownedElem);
         }
     }

@@ -1,4 +1,4 @@
-// $Id: UMLClassifierParameterListModel.java,v 1.12 2005/01/09 14:59:09 linus Exp $
+// $Id: UMLClassifierParameterListModel.java,v 1.13 2005/01/20 23:20:24 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -27,6 +27,7 @@ package org.argouml.uml.ui.foundation.core;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.argouml.model.Model;
 import org.argouml.model.ModelFacade;
 import org.argouml.uml.ui.UMLModelElementOrderedListModel2;
 
@@ -82,13 +83,13 @@ public class UMLClassifierParameterListModel
         List cc = new ArrayList(c);
         cc.remove(mem1);
         cc.remove(mem2);
-        ModelFacade.setParameters(classifier, cc);
+        Model.getCoreHelper().setParameters(classifier, cc);
         // TODO: If we stop supporting java 1.3 ...
         // the next line will replace the following 2
         // Collections.swap(c, index1, index2);
         c.set(index1, mem2);
         c.set(index2, mem1);
-        ModelFacade.setParameters(classifier, c);
+        Model.getCoreHelper().setParameters(classifier, c);
         buildModelList();
     }
 

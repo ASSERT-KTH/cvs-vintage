@@ -1,4 +1,4 @@
-// $Id: StateDiagramGraphModel.java,v 1.55 2005/01/13 20:21:28 mvw Exp $
+// $Id: StateDiagramGraphModel.java,v 1.56 2005/01/20 23:20:42 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -251,7 +251,7 @@ public class StateDiagramGraphModel extends UMLMutableGraphSupport implements
         Object top = /* (MCompositeState) */Model.getStateMachinesHelper()
                 .getTop(getMachine());
 
-        ModelFacade.addSubvertex(top, sv);
+        Model.getStateMachinesHelper().addSubvertex(top, sv);
         //       sv.setParent(top); this is done in setEnclosingFig!!
         //      if ((sv instanceof MState) &&
         //      (sv.getNamespace()==null))
@@ -441,9 +441,9 @@ public class StateDiagramGraphModel extends UMLMutableGraphSupport implements
             Object edge, boolean isSource) {
 
         if (isSource)
-            ModelFacade.setSource(edge, newNode);
+            Model.getStateMachinesHelper().setSource(edge, newNode);
         else
-            ModelFacade.setTarget(edge, newNode);
+            Model.getCommonBehaviorHelper().setTarget(edge, newNode);
 
     }
 

@@ -1,4 +1,4 @@
-// $Id: TestUMLModelElementClientDependencyListModel.java,v 1.16 2005/01/08 00:39:38 linus Exp $
+// $Id: TestUMLModelElementClientDependencyListModel.java,v 1.17 2005/01/20 23:20:34 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -27,7 +27,6 @@ package org.argouml.uml.ui.foundation.core;
 import junit.framework.TestCase;
 
 import org.argouml.model.Model;
-import org.argouml.model.ModelFacade;
 
 /**
  * @since Oct 26, 2002
@@ -97,7 +96,7 @@ public class TestUMLModelElementClientDependencyListModel extends TestCase {
                 Model.getCoreFactory().buildDependency(elem, suppliers[i]);
         }
         for (int i = 0; i < 5; i++) {
-            ModelFacade.removeClientDependency(elem, dependencies[i]);
+            Model.getCoreHelper().removeClientDependency(elem, dependencies[i]);
         }
         assertEquals(5, model.getSize());
         assertEquals(dependencies[5], model.getElementAt(0));

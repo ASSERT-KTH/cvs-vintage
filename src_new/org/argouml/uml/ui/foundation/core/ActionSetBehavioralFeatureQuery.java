@@ -1,4 +1,4 @@
-// $Id: ActionSetBehavioralFeatureQuery.java,v 1.4 2005/01/09 14:59:08 linus Exp $
+// $Id: ActionSetBehavioralFeatureQuery.java,v 1.5 2005/01/20 23:20:25 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -27,7 +27,7 @@ package org.argouml.uml.ui.foundation.core;
 import java.awt.event.ActionEvent;
 
 import org.argouml.i18n.Translator;
-import org.argouml.model.ModelFacade;
+import org.argouml.model.Model;
 import org.argouml.uml.ui.UMLAction;
 import org.argouml.uml.ui.UMLCheckBox2;
 
@@ -57,7 +57,7 @@ public class ActionSetBehavioralFeatureQuery extends UMLAction {
             Object target = source.getTarget();
             if (org.argouml.model.ModelFacade.isABehavioralFeature(target)) {
                 Object m = /*(MGeneralizableElement)*/ target;
-                ModelFacade.setQuery(m, source.isSelected());
+                Model.getCoreHelper().setQuery(m, source.isSelected());
             }
         }
     }

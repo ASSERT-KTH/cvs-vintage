@@ -1,4 +1,4 @@
-// $Id: ActionRemoveClassifierRoleBase.java,v 1.8 2005/01/09 14:59:05 linus Exp $
+// $Id: ActionRemoveClassifierRoleBase.java,v 1.9 2005/01/20 23:20:31 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -24,10 +24,10 @@
 
 package org.argouml.uml.ui.behavior.collaborations;
 
-import org.argouml.i18n.Translator;
-import org.argouml.model.ModelFacade;
 import java.awt.event.ActionEvent;
 
+import org.argouml.i18n.Translator;
+import org.argouml.model.Model;
 import org.argouml.uml.ui.AbstractActionRemoveElement;
 
 /**
@@ -56,7 +56,8 @@ public class ActionRemoveClassifierRoleBase
      */
     public void actionPerformed(ActionEvent e) {
         super.actionPerformed(e);
-        ModelFacade.removeBase(getTarget(), getObjectToRemove());
+        Model.getCollaborationsHelper()
+        	.removeBase(getTarget(), getObjectToRemove());
     }
 
 

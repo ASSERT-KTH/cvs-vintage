@@ -1,4 +1,4 @@
-// $Id: WizAddInstanceVariable.java,v 1.13 2005/01/08 23:27:27 linus Exp $
+// $Id: WizAddInstanceVariable.java,v 1.14 2005/01/20 23:20:35 linus Exp $
 // Copyright (c) 2004-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -32,7 +32,6 @@ import org.argouml.cognitive.ui.WizStepTextField;
 import org.argouml.i18n.Translator;
 import org.argouml.kernel.ProjectManager;
 import org.argouml.model.Model;
-import org.argouml.model.ModelFacade;
 
 /**
  * A wizard to add attributes to a classifier.
@@ -80,7 +79,7 @@ public class WizAddInstanceVariable extends UMLWizard {
                 Model.getCoreFactory()
                 	.buildAttribute(me, model, intType,
                 	        propertyChangeListeners);
-            ModelFacade.setName(attr, newName);
+            Model.getCoreHelper().setName(attr, newName);
         }
     }
 

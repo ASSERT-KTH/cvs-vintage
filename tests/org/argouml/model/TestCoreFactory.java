@@ -1,4 +1,4 @@
-// $Id: TestCoreFactory.java,v 1.1 2005/01/06 23:04:54 linus Exp $
+// $Id: TestCoreFactory.java,v 1.2 2005/01/20 23:20:35 linus Exp $
 // Copyright (c) 2002-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -172,7 +172,7 @@ public class TestCoreFactory extends TestCase {
         Object class2 = Model.getCoreFactory().buildClass(model);
         Object assoc =
             Model.getCoreFactory().buildAssociation(class1, class2);
-        ModelFacade.addConnection(assoc,
+        Model.getCoreHelper().addConnection(assoc,
                 Model.getCoreFactory().createAssociationEnd());
         WeakReference class1wr = new WeakReference(class1);
         WeakReference assocwr = new WeakReference(assoc);
@@ -213,7 +213,7 @@ public class TestCoreFactory extends TestCase {
         Object dep =
             Model.getCoreFactory().buildDependency(class1, class2);
         Object class3 = Model.getCoreFactory().buildClass(model);
-        ModelFacade.addClient(dep, class3);
+        Model.getCoreHelper().addClient(dep, class3);
         WeakReference class1wr = new WeakReference(class1);
         WeakReference depwr = new WeakReference(dep);
         Model.getUmlFactory().delete(class1);
@@ -234,7 +234,7 @@ public class TestCoreFactory extends TestCase {
         Object dep =
             Model.getCoreFactory().buildDependency(class1, class2);
         Object class3 = Model.getCoreFactory().buildClass(model);
-        ModelFacade.addSupplier(dep, class3);
+        Model.getCoreHelper().addSupplier(dep, class3);
         WeakReference class1wr = new WeakReference(class1);
         WeakReference depwr = new WeakReference(dep);
         Model.getUmlFactory().delete(class1);
@@ -288,7 +288,7 @@ public class TestCoreFactory extends TestCase {
 		   !ModelFacade.getConstrainedElements(con).isEmpty());
 	assertTrue("Constraint is not set",
 	        !ModelFacade.getConstraints(elem).isEmpty());
-	ModelFacade.setNamespace(elem,
+	Model.getCoreHelper().setNamespace(elem,
 	        Model.getCoreFactory().createNamespace());
 	con = Model.getCoreFactory().buildConstraint(elem);
 	assertNotNull("Namespace is not set", ModelFacade.getNamespace(con));

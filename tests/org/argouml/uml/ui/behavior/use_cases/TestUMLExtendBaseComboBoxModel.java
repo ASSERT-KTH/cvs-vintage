@@ -1,4 +1,4 @@
-// $Id: TestUMLExtendBaseComboBoxModel.java,v 1.15 2005/01/09 21:10:38 linus Exp $
+// $Id: TestUMLExtendBaseComboBoxModel.java,v 1.16 2005/01/20 23:20:32 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -28,7 +28,6 @@ import junit.framework.TestCase;
 
 import org.argouml.kernel.ProjectManager;
 import org.argouml.model.Model;
-import org.argouml.model.ModelFacade;
 import org.argouml.ui.targetmanager.TargetEvent;
 
 /**
@@ -61,7 +60,7 @@ public class TestUMLExtendBaseComboBoxModel extends TestCase {
         ProjectManager.getManager().getCurrentProject().setRoot(m);
         for (int i = 0; i < 10; i++) {
             bases[i] = Model.getUseCasesFactory().createUseCase();
-            ModelFacade.addOwnedElement(m, bases[i]);
+            Model.getCoreHelper().addOwnedElement(m, bases[i]);
         }
         model.targetSet(new TargetEvent(this, "set", new Object[0],
                 new Object[] {elem}));
@@ -93,7 +92,7 @@ public class TestUMLExtendBaseComboBoxModel extends TestCase {
      * Test setBase().
      */
     public void testSetBase() {
-        ModelFacade.setBase(elem, bases[0]);
+        Model.getCollaborationsHelper().setBase(elem, bases[0]);
         assertTrue(model.getSelectedItem() == bases[0]);
     }
 
@@ -101,7 +100,7 @@ public class TestUMLExtendBaseComboBoxModel extends TestCase {
      * Test setBase() with null argument.
      */
     public void testSetBaseToNull() {
-        ModelFacade.setBase(elem, null);
+        Model.getCollaborationsHelper().setBase(elem, null);
         assertNull(model.getSelectedItem());
     }
 

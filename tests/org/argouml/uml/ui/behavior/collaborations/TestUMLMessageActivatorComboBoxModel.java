@@ -1,4 +1,4 @@
-// $Id: TestUMLMessageActivatorComboBoxModel.java,v 1.15 2005/01/04 21:41:06 linus Exp $
+// $Id: TestUMLMessageActivatorComboBoxModel.java,v 1.16 2005/01/20 23:20:26 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -27,7 +27,6 @@ package org.argouml.uml.ui.behavior.collaborations;
 import junit.framework.TestCase;
 
 import org.argouml.model.Model;
-import org.argouml.model.ModelFacade;
 import org.argouml.ui.targetmanager.TargetEvent;
 
 /**
@@ -60,12 +59,12 @@ public class TestUMLMessageActivatorComboBoxModel extends TestCase {
             Model.getCollaborationsFactory().createInteraction();
         Object col =
             Model.getCollaborationsFactory().createCollaboration();
-        ModelFacade.setContext(inter, col);
-        ModelFacade.setNamespace(col, m);
-        ModelFacade.addMessage(inter, elem);
+        Model.getCollaborationsHelper().setContext(inter, col);
+        Model.getCoreHelper().setNamespace(col, m);
+        Model.getCollaborationsHelper().addMessage(inter, elem);
         for (int i = 0; i < 10; i++) {
             activators[i] = Model.getCollaborationsFactory().createMessage();
-            ModelFacade.addMessage(inter, activators[i]);
+            Model.getCollaborationsHelper().addMessage(inter, activators[i]);
         }
         model = new UMLMessageActivatorComboBoxModel();
         model.targetSet(new TargetEvent(this, "set", new Object[0],
@@ -98,7 +97,7 @@ public class TestUMLMessageActivatorComboBoxModel extends TestCase {
      * Test setActivator().
      */
     public void testSetActivator() {
-        ModelFacade.setActivator(elem, activators[0]);
+        Model.getCollaborationsHelper().setActivator(elem, activators[0]);
         assertTrue(model.getSelectedItem() == activators[0]);
     }
 
@@ -106,7 +105,7 @@ public class TestUMLMessageActivatorComboBoxModel extends TestCase {
      * Test setActivator() with null argument.
      */
     public void testSetActivatorToNull() {
-        ModelFacade.setActivator(elem, null);
+        Model.getCollaborationsHelper().setActivator(elem, null);
         assertNull(model.getSelectedItem());
     }
 

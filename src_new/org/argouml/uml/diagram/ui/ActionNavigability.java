@@ -1,4 +1,4 @@
-// $Id: ActionNavigability.java,v 1.7 2005/01/09 14:58:56 linus Exp $
+// $Id: ActionNavigability.java,v 1.8 2005/01/20 23:20:40 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -26,6 +26,7 @@ package org.argouml.uml.diagram.ui;
 
 import java.awt.event.ActionEvent;
 
+import org.argouml.model.Model;
 import org.argouml.model.ModelFacade;
 import org.argouml.uml.ui.UMLAction;
 
@@ -133,9 +134,9 @@ public class ActionNavigability extends UMLAction {
      * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
      */
     public void actionPerformed(ActionEvent ae) {
-	ModelFacade.setNavigable(assocStart,
+	Model.getCoreHelper().setNavigable(assocStart,
 	        (nav == BIDIRECTIONAL || nav == ENDTOSTART));
-        ModelFacade.setNavigable(assocEnd,
+        Model.getCoreHelper().setNavigable(assocEnd,
                 (nav == BIDIRECTIONAL || nav == STARTTOEND));
     }
 

@@ -1,4 +1,4 @@
-// $Id: UMLExpressionExpressionModel.java,v 1.4 2005/01/09 14:59:03 linus Exp $
+// $Id: UMLExpressionExpressionModel.java,v 1.5 2005/01/20 23:20:39 linus Exp $
 // Copyright (c) 2004-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -57,7 +57,8 @@ public class UMLExpressionExpressionModel extends UMLExpressionModel2 {
      * @see org.argouml.uml.ui.UMLExpressionModel2#setExpression(java.lang.Object)
      */
     public void setExpression(Object expr) {
-        ModelFacade.setExpression(getContainer().getTarget(), expr);
+        Model.getStateMachinesHelper()
+        	.setExpression(getContainer().getTarget(), expr);
     }
 
     /**

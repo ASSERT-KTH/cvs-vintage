@@ -1,4 +1,4 @@
-// $Id: TestUMLFeatureOwnerScopeCheckBox.java,v 1.13 2005/01/06 23:04:51 linus Exp $
+// $Id: TestUMLFeatureOwnerScopeCheckBox.java,v 1.14 2005/01/20 23:20:34 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -93,9 +93,9 @@ public class TestUMLFeatureOwnerScopeCheckBox extends TestCase {
 	}
         boolean selected = box.isSelected();
         if (selected) {
-            ModelFacade.setOwnerScope(elem, MScopeKind.INSTANCE);
+            Model.getCoreHelper().setOwnerScope(elem, MScopeKind.INSTANCE);
         } else {
-            ModelFacade.setOwnerScope(elem, MScopeKind.CLASSIFIER);
+            Model.getCoreHelper().setOwnerScope(elem, MScopeKind.CLASSIFIER);
         }
         assertEquals(!selected, box.isSelected());
     }

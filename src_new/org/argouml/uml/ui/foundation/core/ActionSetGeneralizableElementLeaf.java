@@ -1,4 +1,4 @@
-// $Id: ActionSetGeneralizableElementLeaf.java,v 1.10 2005/01/09 14:59:08 linus Exp $
+// $Id: ActionSetGeneralizableElementLeaf.java,v 1.11 2005/01/20 23:20:25 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -22,12 +22,13 @@
 // CALIFORNIA HAS NO OBLIGATIONS TO PROVIDE MAINTENANCE, SUPPORT,
 // UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 
-// $Id: ActionSetGeneralizableElementLeaf.java,v 1.10 2005/01/09 14:59:08 linus Exp $
+// $Id: ActionSetGeneralizableElementLeaf.java,v 1.11 2005/01/20 23:20:25 linus Exp $
 package org.argouml.uml.ui.foundation.core;
 
 import java.awt.event.ActionEvent;
 
 import org.argouml.i18n.Translator;
+import org.argouml.model.Model;
 import org.argouml.model.ModelFacade;
 import org.argouml.uml.ui.UMLAction;
 import org.argouml.uml.ui.UMLCheckBox2;
@@ -57,9 +58,9 @@ public class ActionSetGeneralizableElementLeaf extends UMLAction {
         if (e.getSource() instanceof UMLCheckBox2) {
             UMLCheckBox2 source = (UMLCheckBox2) e.getSource();
             Object target = source.getTarget();
-            if (org.argouml.model.ModelFacade.isAGeneralizableElement(target)
+            if (ModelFacade.isAGeneralizableElement(target)
                     || ModelFacade.isAOperation(target)) {
-                ModelFacade.setLeaf(target, source.isSelected());
+                Model.getCoreHelper().setLeaf(target, source.isSelected());
             }
         }
     }

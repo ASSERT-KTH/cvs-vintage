@@ -1,4 +1,4 @@
-// $Id: PropPanelInclude.java,v 1.33 2005/01/09 14:59:08 linus Exp $
+// $Id: PropPanelInclude.java,v 1.34 2005/01/20 23:20:27 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -27,6 +27,7 @@ package org.argouml.uml.ui.behavior.use_cases;
 import javax.swing.JComboBox;
 
 import org.argouml.i18n.Translator;
+import org.argouml.model.Model;
 import org.argouml.model.ModelFacade;
 import org.argouml.uml.ui.ActionNavigateNamespace;
 import org.argouml.uml.ui.ActionRemoveFromModel;
@@ -137,7 +138,7 @@ public class PropPanelInclude extends PropPanelModelElement {
         // than setBase() to set the base use case.
 
         if (ModelFacade.isAInclude(target)) {
-            ModelFacade.setAddition(target, base);
+            Model.getUseCasesHelper().setAddition(target, base);
         }
     }
 
@@ -180,7 +181,7 @@ public class PropPanelInclude extends PropPanelModelElement {
         // than setAddition() to set the addition use case.
 
         if (ModelFacade.isAInclude(target)) {
-            ModelFacade.setAddition(target, addition);
+            Model.getUseCasesHelper().setAddition(target, addition);
         }
     }
 

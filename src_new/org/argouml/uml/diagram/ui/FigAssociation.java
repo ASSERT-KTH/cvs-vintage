@@ -1,4 +1,4 @@
-// $Id: FigAssociation.java,v 1.78 2005/01/08 21:39:40 bobtarling Exp $
+// $Id: FigAssociation.java,v 1.79 2005/01/20 23:20:40 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -243,22 +243,22 @@ public class FigAssociation extends FigEdgeModelElement {
 
 	if (ft == srcRole) {
 	    Object srcAE = (conn.toArray())[0];
-	    ModelFacade.setName(srcAE, srcRole.getText());
+	    Model.getCoreHelper().setName(srcAE, srcRole.getText());
 	} else if (ft == destRole) {
 	    Object destAE = (conn.toArray())[1];
-	    ModelFacade.setName(destAE, destRole.getText());
+	    Model.getCoreHelper().setName(destAE, destRole.getText());
 	} else if (ft == srcMult) {
 	    Object srcAE = (conn.toArray())[0];
 	    Object multi =
 	        Model.getDataTypesFactory()
 	        	.createMultiplicity(srcMult.getText());
-	    ModelFacade.setMultiplicity(srcAE, multi);
+	    Model.getCoreHelper().setMultiplicity(srcAE, multi);
 	} else if (ft == destMult) {
 	    Object destAE = (conn.toArray())[1];
 	    Object multi =
 	        Model.getDataTypesFactory()
 	        	.createMultiplicity(destMult.getText());
-	    ModelFacade.setMultiplicity(destAE, multi);
+	    Model.getCoreHelper().setMultiplicity(destAE, multi);
 	}
     }
 

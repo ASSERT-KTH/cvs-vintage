@@ -1,4 +1,4 @@
-// $Id: UMLAssociationEndQualifiersListModel.java,v 1.2 2005/01/14 19:38:31 mvw Exp $
+// $Id: UMLAssociationEndQualifiersListModel.java,v 1.3 2005/01/20 23:20:25 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -28,6 +28,7 @@ package org.argouml.uml.ui.foundation.core;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.argouml.model.Model;
 import org.argouml.model.ModelFacade;
 import org.argouml.uml.ui.UMLModelElementOrderedListModel2;
 
@@ -48,15 +49,16 @@ public class UMLAssociationEndQualifiersListModel
      * @see org.argouml.uml.ui.UMLModelElementListModel2#buildModelList()
      */
     protected void buildModelList() {
-        if (getTarget() != null)
+        if (getTarget() != null) {
             setAllElements(ModelFacade.getQualifiers(getTarget()));
+        }
     }
 
     /**
      * @see org.argouml.uml.ui.UMLModelElementListModel2#isValidElement(Object)
      */
     protected boolean isValidElement(Object o) {
-        return org.argouml.model.ModelFacade.isAAttribute(o)
+        return ModelFacade.isAAttribute(o)
             && ModelFacade.getQualifiers(getTarget()).contains(o);
     }
 
@@ -71,7 +73,7 @@ public class UMLAssociationEndQualifiersListModel
         Object mem2 = c.get(index2);
         c.set(index1, mem2);
         c.set(index2, mem1);
-        ModelFacade.setQualifiers(assocEnd, c);
+        Model.getCoreHelper().setQualifiers(assocEnd, c);
         buildModelList();
     }
 }

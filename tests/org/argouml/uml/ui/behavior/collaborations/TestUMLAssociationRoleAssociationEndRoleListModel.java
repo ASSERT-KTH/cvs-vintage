@@ -1,4 +1,4 @@
-// $Id: TestUMLAssociationRoleAssociationEndRoleListModel.java,v 1.12 2005/01/03 18:21:19 linus Exp $
+// $Id: TestUMLAssociationRoleAssociationEndRoleListModel.java,v 1.13 2005/01/20 23:20:26 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,7 +25,6 @@
 package org.argouml.uml.ui.behavior.collaborations;
 
 import org.argouml.model.Model;
-import org.argouml.model.ModelFacade;
 import org.argouml.uml.ui.AbstractUMLModelElementListModel2Test;
 
 import ru.novosoft.uml.behavior.collaborations.MAssociationRole;
@@ -69,7 +68,7 @@ public class TestUMLAssociationRoleAssociationEndRoleListModel
         for (int i = 0; i < ends.length; i++) {
             ends[i] =
 		Model.getCollaborationsFactory().createAssociationEndRole();
-            ModelFacade.setAssociation(ends[i], getElem());
+            Model.getCoreHelper().setAssociation(ends[i], getElem());
         }
         return ends;
     }

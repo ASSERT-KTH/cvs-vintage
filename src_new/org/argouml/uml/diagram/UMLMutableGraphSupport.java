@@ -1,4 +1,4 @@
-// $Id: UMLMutableGraphSupport.java,v 1.21 2005/01/09 21:10:37 linus Exp $
+// $Id: UMLMutableGraphSupport.java,v 1.22 2005/01/20 23:20:43 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -320,7 +320,7 @@ public abstract class UMLMutableGraphSupport extends MutableGraphSupport {
         }
 
         CommentEdge connection = new CommentEdge(from, to);
-        ModelFacade.addAnnotatedElement(comment, annotatedElement);
+        Model.getCoreHelper().addAnnotatedElement(comment, annotatedElement);
         return connection;
 
     }

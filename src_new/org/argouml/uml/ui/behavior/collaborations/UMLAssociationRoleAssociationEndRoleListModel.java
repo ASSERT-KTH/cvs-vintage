@@ -1,4 +1,4 @@
-// $Id: UMLAssociationRoleAssociationEndRoleListModel.java,v 1.15 2005/01/09 14:59:05 linus Exp $
+// $Id: UMLAssociationRoleAssociationEndRoleListModel.java,v 1.16 2005/01/20 23:20:31 linus Exp $
 // Copyright (c) 2002-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -27,6 +27,7 @@ package org.argouml.uml.ui.behavior.collaborations;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.argouml.model.Model;
 import org.argouml.model.ModelFacade;
 import org.argouml.uml.ui.UMLModelElementOrderedListModel2;
 
@@ -71,7 +72,7 @@ public class UMLAssociationRoleAssociationEndRoleListModel
         Object mem2 = c.get(index2);
         c.set(index1, mem2);
         c.set(index2, mem1);
-        ModelFacade.setConnections(assocrole, c);
+        Model.getCoreHelper().setConnections(assocrole, c);
         buildModelList();
     }
 }

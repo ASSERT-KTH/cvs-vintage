@@ -1,4 +1,4 @@
-// $Id: DocumentationManager.java,v 1.21 2005/01/09 14:58:33 linus Exp $
+// $Id: DocumentationManager.java,v 1.22 2005/01/20 23:20:27 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -26,6 +26,8 @@ package org.argouml.uml;
 
 import java.util.Collection;
 import java.util.Iterator;
+
+import org.argouml.model.Model;
 import org.argouml.model.ModelFacade;
 import org.argouml.util.MyTokenizer;
 
@@ -37,7 +39,9 @@ import org.argouml.util.MyTokenizer;
  */
 public class DocumentationManager {
 
-    /** The system's native line-ends, for when things are written to file */
+    /**
+     * The system's native line-ends, for when things are written to file.
+     */
     private static final String LINE_SEPARATOR =
 	System.getProperty("line.separator");
 
@@ -113,7 +117,7 @@ public class DocumentationManager {
      * @param s the string representing the documentation
      */
     public static void setDocs(Object o, String s) {
-        ModelFacade.setTaggedValue(o, "documentation", s);
+        Model.getCoreHelper().setTaggedValue(o, "documentation", s);
     }
 
     /**

@@ -1,4 +1,4 @@
-// $Id: GUITestProject.java,v 1.8 2005/01/09 14:59:14 linus Exp $
+// $Id: GUITestProject.java,v 1.9 2005/01/20 23:20:33 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -304,10 +304,10 @@ public class GUITestProject extends TestCase {
         // test with a package and a class and activity diagram
         Object package1 =
             Model.getModelManagementFactory().buildPackage("test1", null);
-        ModelFacade.setNamespace(package1, p.getModel());
+        Model.getCoreHelper().setNamespace(package1, p.getModel());
         Object package2 =
             Model.getModelManagementFactory().buildPackage("test2", null);
-        ModelFacade.setNamespace(package2, package1);
+        Model.getCoreHelper().setNamespace(package2, package1);
 
         // build the Activity Diagram
         Object actgrph =

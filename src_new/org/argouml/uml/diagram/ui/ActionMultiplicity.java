@@ -1,4 +1,4 @@
-// $Id: ActionMultiplicity.java,v 1.5 2005/01/09 14:58:56 linus Exp $
+// $Id: ActionMultiplicity.java,v 1.6 2005/01/20 23:20:40 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -29,6 +29,7 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.Vector;
 
+import org.argouml.model.Model;
 import org.argouml.model.ModelFacade;
 import org.argouml.uml.ui.UMLAction;
 import org.tigris.gef.base.Globals;
@@ -110,7 +111,7 @@ public class ActionMultiplicity extends UMLAction {
                     ascEnd = iter.next();
                 }
             }
-	    ModelFacade.setMultiplicity(ascEnd, mult);
+	    Model.getCoreHelper().setMultiplicity(ascEnd, mult);
 	}
     }
 

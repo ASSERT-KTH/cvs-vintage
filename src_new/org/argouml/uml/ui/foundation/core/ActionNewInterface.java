@@ -1,4 +1,4 @@
-// $Id: ActionNewInterface.java,v 1.5 2005/01/09 14:59:08 linus Exp $
+// $Id: ActionNewInterface.java,v 1.6 2005/01/20 23:20:25 linus Exp $
 // Copyright (c) 2004-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -56,11 +56,11 @@ class ActionNewInterface extends AbstractActionNewModelElement {
      */
     public void actionPerformed(ActionEvent e) {
         Object target = TargetManager.getInstance().getModelTarget();
-        if (org.argouml.model.ModelFacade.isAInterface(target)) {
+        if (ModelFacade.isAInterface(target)) {
             Object iface = /*(MInterface)*/ target;
             Object newInterface = Model.getCoreFactory()
                 .createInterface();
-            ModelFacade.addOwnedElement(ModelFacade.getNamespace(iface),
+            Model.getCoreHelper().addOwnedElement(ModelFacade.getNamespace(iface),
                     newInterface);
             TargetManager.getInstance().setTarget(newInterface);
             super.actionPerformed(e);

@@ -1,4 +1,4 @@
-// $Id: PropPanelPackage.java,v 1.63 2005/01/09 14:59:12 linus Exp $
+// $Id: PropPanelPackage.java,v 1.64 2005/01/20 23:20:27 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -138,14 +138,16 @@ public class PropPanelPackage extends PropPanelNamespace  {
                 lookupIcon("Delete")));
     }
 
-    /** add a package to the current package. */
+    /**
+     * Add a package to the current package.
+     */
     public void addPackage() {
         Object target = getTarget();
-        if (org.argouml.model.ModelFacade.isAPackage(target)) {
+        if (ModelFacade.isAPackage(target)) {
             Object/*MPackage*/ newPackage =
                 Model.getModelManagementFactory().createPackage();
             Object/*MPackage*/ currentPackage = target;
-            ModelFacade.addOwnedElement(currentPackage, newPackage);
+            Model.getCoreHelper().addOwnedElement(currentPackage, newPackage);
             TargetManager.getInstance().setTarget(newPackage);
         }
     }

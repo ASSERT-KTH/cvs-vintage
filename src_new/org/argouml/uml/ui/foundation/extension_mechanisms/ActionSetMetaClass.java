@@ -1,4 +1,4 @@
-// $Id: ActionSetMetaClass.java,v 1.5 2005/01/09 14:59:10 linus Exp $
+// $Id: ActionSetMetaClass.java,v 1.6 2005/01/20 23:20:40 linus Exp $
 // Copyright (c) 2003-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -26,6 +26,7 @@ package org.argouml.uml.ui.foundation.extension_mechanisms;
 
 import java.awt.event.ActionEvent;
 
+import org.argouml.model.Model;
 import org.argouml.model.ModelFacade;
 import org.argouml.uml.ui.UMLAction;
 import org.argouml.uml.ui.UMLComboBox2;
@@ -70,10 +71,10 @@ public class ActionSetMetaClass extends UMLAction {
                 newBase = /* (MUseCase) */o;
                 oldBase = ModelFacade.getBaseClass(stereo);
                 if (newBase != oldBase) {
-                    ModelFacade.setBaseClass(stereo, newBase);
+                    Model.getExtensionMechanismsHelper().setBaseClass(stereo, newBase);
                 } else {
                     if (o != null && o.equals("")) {
-                        ModelFacade.setBaseClass(stereo, "ModelElement");
+                        Model.getExtensionMechanismsHelper().setBaseClass(stereo, "ModelElement");
                     }
                 }
             }

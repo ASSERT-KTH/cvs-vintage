@@ -1,4 +1,4 @@
-// $Id: CollaborationsFactoryImpl.java,v 1.8 2005/01/08 20:46:36 linus Exp $
+// $Id: CollaborationsFactoryImpl.java,v 1.9 2005/01/20 23:20:36 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -387,8 +387,8 @@ public class CollaborationsFactoryImpl
                     + "null");
         }
         Object associationRole = createAssociationRole();
-        ModelFacade.setNamespace(associationRole, collaboration);
-        ModelFacade.addLink(associationRole, link);
+        nsmodel.getCoreHelper().setNamespace(associationRole, collaboration);
+        nsmodel.getCoreHelper().addLink(associationRole, link);
         return associationRole;
     }
 

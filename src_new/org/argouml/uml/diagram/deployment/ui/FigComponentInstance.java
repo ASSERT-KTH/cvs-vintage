@@ -1,4 +1,4 @@
-// $Id: FigComponentInstance.java,v 1.32 2005/01/10 16:24:18 mvw Exp $
+// $Id: FigComponentInstance.java,v 1.33 2005/01/20 23:20:29 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -22,7 +22,7 @@
 // CALIFORNIA HAS NO OBLIGATIONS TO PROVIDE MAINTENANCE, SUPPORT,
 // UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 
-// $Id: FigComponentInstance.java,v 1.32 2005/01/10 16:24:18 mvw Exp $
+// $Id: FigComponentInstance.java,v 1.33 2005/01/20 23:20:29 linus Exp $
 package org.argouml.uml.diagram.deployment.ui;
 
 import java.awt.Color;
@@ -36,6 +36,7 @@ import java.util.Iterator;
 import java.util.Vector;
 
 import org.argouml.application.api.Notation;
+import org.argouml.model.Model;
 import org.argouml.model.ModelFacade;
 import org.argouml.uml.diagram.ui.FigEdgeModelElement;
 import org.argouml.uml.diagram.ui.FigNodeModelElement;
@@ -227,7 +228,7 @@ public class FigComponentInstance extends FigNodeModelElement {
             Object node = /*(MNodeInstance)*/ encloser.getOwner();
             Object comp = /*(MComponentInstance)*/ getOwner();
             if (ModelFacade.getNodeInstance(comp) != node) {
-                ModelFacade.setNodeInstance(comp, node);
+                Model.getCommonBehaviorHelper().setNodeInstance(comp, node);
             }
             super.setEnclosingFig(encloser);
 

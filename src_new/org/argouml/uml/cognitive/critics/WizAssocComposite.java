@@ -1,4 +1,4 @@
-// $Id: WizAssocComposite.java,v 1.21 2005/01/09 14:58:36 linus Exp $
+// $Id: WizAssocComposite.java,v 1.22 2005/01/20 23:20:35 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -31,6 +31,8 @@ import javax.swing.JPanel;
 
 import org.apache.log4j.Logger;
 import org.argouml.cognitive.ui.WizStepChoice;
+import org.argouml.cognitive.ui.Wizard;
+import org.argouml.model.Model;
 import org.argouml.model.ModelFacade;
 
 /**
@@ -314,10 +316,10 @@ public class WizAssocComposite extends UMLWizard {
 
                     // Start is a composite aggregation of end
 
-                    ModelFacade.setAggregation(
+                    Model.getCoreHelper().setAggregation(
 			    ae0,
 			    ModelFacade.COMPOSITE_AGGREGATIONKIND);
-                    ModelFacade.setAggregation(
+                    Model.getCoreHelper().setAggregation(
 			    ae1,
 			    ModelFacade.NONE_AGGREGATIONKIND);
                     break;
@@ -326,10 +328,10 @@ public class WizAssocComposite extends UMLWizard {
 
                     // Start is a shared aggregation of end
 
-                    ModelFacade.setAggregation(
+                    Model.getCoreHelper().setAggregation(
 			    ae0,
 			    ModelFacade.AGGREGATE_AGGREGATIONKIND);
-                    ModelFacade.setAggregation(
+                    Model.getCoreHelper().setAggregation(
 			    ae1,
 			    ModelFacade.NONE_AGGREGATIONKIND);
                     break;
@@ -338,10 +340,10 @@ public class WizAssocComposite extends UMLWizard {
 
                     // End is a composite aggregation of start
 
-                    ModelFacade.setAggregation(
+                    Model.getCoreHelper().setAggregation(
 			    ae0,
 			    ModelFacade.NONE_AGGREGATIONKIND);
-                    ModelFacade.setAggregation(
+                    Model.getCoreHelper().setAggregation(
 			    ae1,
 			    ModelFacade.COMPOSITE_AGGREGATIONKIND);
                     break;
@@ -349,10 +351,10 @@ public class WizAssocComposite extends UMLWizard {
                 case 3:
 
                     // End is a shared aggregation of start
-                    ModelFacade.setAggregation(
+                    Model.getCoreHelper().setAggregation(
 			    ae0,
 			    ModelFacade.NONE_AGGREGATIONKIND);
-                    ModelFacade.setAggregation(
+                    Model.getCoreHelper().setAggregation(
 			    ae1,
 			    ModelFacade.AGGREGATE_AGGREGATIONKIND);
                     break;
@@ -360,10 +362,10 @@ public class WizAssocComposite extends UMLWizard {
                 case 4:
 
                     // No aggregation
-                    ModelFacade.setAggregation(
+                    Model.getCoreHelper().setAggregation(
 			    ae0,
 			    ModelFacade.NONE_AGGREGATIONKIND);
-                    ModelFacade.setAggregation(
+                    Model.getCoreHelper().setAggregation(
 			    ae1,
 			    ModelFacade.NONE_AGGREGATIONKIND);
                     break;

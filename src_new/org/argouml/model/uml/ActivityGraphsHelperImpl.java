@@ -1,4 +1,4 @@
-// $Id: ActivityGraphsHelperImpl.java,v 1.3 2005/01/08 20:46:36 linus Exp $
+// $Id: ActivityGraphsHelperImpl.java,v 1.4 2005/01/20 23:20:36 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -30,6 +30,7 @@ import java.util.Iterator;
 import org.argouml.model.ActivityGraphsHelper;
 import org.argouml.model.ModelFacade;
 
+import ru.novosoft.uml.behavior.activity_graphs.MClassifierInState;
 import ru.novosoft.uml.behavior.activity_graphs.MObjectFlowState;
 import ru.novosoft.uml.behavior.state_machines.MCompositeState;
 import ru.novosoft.uml.behavior.state_machines.MState;
@@ -165,6 +166,20 @@ class ActivityGraphsHelperImpl implements ActivityGraphsHelper {
         return context instanceof MBehavioralFeature
             || context instanceof MClassifier
             || context instanceof MPackage;
+    }
+
+    /**
+     * @author mvw
+     * @param classifierInState the classifierInState
+     * @param state the state that will be linked
+     */
+    public void addInState(Object classifierInState, Object state) {
+        if (classifierInState instanceof MClassifierInState
+                && state instanceof MState) {
+            ((MClassifierInState) classifierInState).addInState((MState) state);
+        } else {
+            throw new IllegalArgumentException("classifierInState: " + classifierInState + " or state: " + state);
+        }
     }
 }
 

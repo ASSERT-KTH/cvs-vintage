@@ -1,4 +1,4 @@
-// $Id: Project.java,v 1.143 2005/01/16 09:15:56 mvw Exp $
+// $Id: Project.java,v 1.144 2005/01/20 23:20:41 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -200,7 +200,7 @@ public class Project implements java.io.Serializable, TargetListener {
         }
         Object model =
             Model.getModelManagementFactory().createModel();
-        ModelFacade.setName(model, "untitledModel");
+        Model.getCoreHelper().setName(model, "untitledModel");
         setRoot(model);
         setCurrentNamespace(model);
         addMember(model);
@@ -595,7 +595,7 @@ public class Project implements java.io.Serializable, TargetListener {
             LOG.debug("new Type defined!");
             cls =
                 Model.getCoreFactory().buildClass(getCurrentNamespace());
-            ModelFacade.setName(cls, s);
+            Model.getCoreHelper().setName(cls, s);
         }
         return cls;
     }

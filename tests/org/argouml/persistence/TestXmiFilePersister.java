@@ -1,4 +1,4 @@
-// $Id: TestXmiFilePersister.java,v 1.10 2005/01/17 20:26:18 bobtarling Exp $
+// $Id: TestXmiFilePersister.java,v 1.11 2005/01/20 23:20:41 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -69,7 +69,7 @@ public class TestXmiFilePersister extends TestCase {
                 .getCurrentProject().findType("void");
             Object oper = Model.getCoreFactory().buildOperation(clazz, model,
                         voidType, propertyChangeListeners);
-            ModelFacade.setType(ModelFacade.getParameter(oper, 0),
+            Model.getCoreHelper().setType(ModelFacade.getParameter(oper, 0),
                     p.findType("String"));
             File file = new File("test.xmi");
             XmiFilePersister persister = new XmiFilePersister();

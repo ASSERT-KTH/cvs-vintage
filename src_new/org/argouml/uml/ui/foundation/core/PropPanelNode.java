@@ -1,4 +1,4 @@
-// $Id: PropPanelNode.java,v 1.41 2005/01/09 14:59:09 linus Exp $
+// $Id: PropPanelNode.java,v 1.42 2005/01/20 23:20:25 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -30,6 +30,7 @@ import javax.swing.JList;
 import javax.swing.JScrollPane;
 
 import org.argouml.i18n.Translator;
+import org.argouml.model.Model;
 import org.argouml.model.ModelFacade;
 import org.argouml.uml.ui.ActionNavigateContainerElement;
 import org.argouml.uml.ui.ActionRemoveFromModel;
@@ -103,7 +104,7 @@ public class PropPanelNode extends PropPanelClassifier {
     public void setResidents(Collection components) {
         Object target = getTarget();
         if (ModelFacade.isANode(target)) {
-            ModelFacade.setResidents(target, components);
+            Model.getCoreHelper().setResidents(target, components);
         }
     }
 } /* end class PropPanelNode */

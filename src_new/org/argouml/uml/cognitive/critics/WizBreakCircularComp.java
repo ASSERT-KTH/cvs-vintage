@@ -1,4 +1,4 @@
-// $Id: WizBreakCircularComp.java,v 1.15 2004/12/26 18:48:07 linus Exp $
+// $Id: WizBreakCircularComp.java,v 1.16 2005/01/20 23:20:35 linus Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -36,6 +36,7 @@ import org.apache.log4j.Logger;
 import org.argouml.cognitive.ToDoItem;
 import org.argouml.cognitive.ui.WizStepChoice;
 import org.argouml.cognitive.ui.WizStepConfirm;
+import org.argouml.model.Model;
 import org.argouml.model.ModelFacade;
 import org.argouml.uml.generator.GeneratorDisplay;
 import org.tigris.gef.util.VectorSet;
@@ -205,9 +206,9 @@ public class WizBreakCircularComp extends UMLWizard {
 		Object ae0 = /*(MAssociationEnd)*/ conns.get(0);
 		Object ae1 = /*(MAssociationEnd)*/ conns.get(1);
 		try {
-		    ModelFacade.setAggregation(ae0,
+		    Model.getCoreHelper().setAggregation(ae0,
 		                        ModelFacade.NONE_AGGREGATIONKIND);
-		    ModelFacade.setAggregation(ae1,
+		    Model.getCoreHelper().setAggregation(ae1,
 		                        ModelFacade.NONE_AGGREGATIONKIND);
 		} catch (Exception pve) {
 		    LOG.error("could not set aggregation", pve);

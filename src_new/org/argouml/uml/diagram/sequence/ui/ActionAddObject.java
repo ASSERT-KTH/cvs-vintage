@@ -1,4 +1,4 @@
-// $Id: ActionAddObject.java,v 1.8 2005/01/02 10:08:27 linus Exp $
+// $Id: ActionAddObject.java,v 1.9 2005/01/20 23:20:40 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -59,7 +59,7 @@ public class ActionAddObject extends CmdCreateNode {
             Object clasrole =
                 Model.getCollaborationsFactory().buildClassifierRole(
                     sgm.getCollaboration());
-            ModelFacade.addInstance(clasrole, node);
+            Model.getCollaborationsHelper().addInstance(clasrole, node);
         } else {
             throw new IllegalStateException("Graphmodel is not a "
 					    + "sequence diagram graph model");

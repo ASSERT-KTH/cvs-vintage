@@ -1,4 +1,4 @@
-// $Id: PropPanelExtend.java,v 1.49 2005/01/08 20:46:39 linus Exp $
+// $Id: PropPanelExtend.java,v 1.50 2005/01/20 23:20:27 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -169,13 +169,13 @@ public class PropPanelExtend extends PropPanelModelElement {
 
         Object target = getTarget();
 
-        if (!(org.argouml.model.ModelFacade.isAExtend(target))) {
+        if (!(ModelFacade.isAExtend(target))) {
             return;
         }
 
         // Set the condition body.
 
-        ModelFacade.setCondition(target,
+        Model.getUseCasesHelper().setCondition(target,
 				 Model.getDataTypesFactory()
 				     .createBooleanExpression(null, condBody));
     }
@@ -206,7 +206,7 @@ public class PropPanelExtend extends PropPanelModelElement {
          */
         public void actionPerformed(ActionEvent e) {
             Object target = TargetManager.getInstance().getModelTarget();
-            if (org.argouml.model.ModelFacade.isAExtend(target)) {
+            if (ModelFacade.isAExtend(target)) {
                 Object ns = ModelFacade.getNamespace(target);
                 if (ns != null) {
                     if (ModelFacade.getBase(target) != null) {
@@ -214,7 +214,7 @@ public class PropPanelExtend extends PropPanelModelElement {
                             Model.getUseCasesFactory()
                             	.buildExtensionPoint(
                             	        ModelFacade.getBase(target));
-                        ModelFacade.addExtensionPoint(target, extensionPoint);
+                        Model.getUseCasesHelper().addExtensionPoint(target, extensionPoint);
                         TargetManager.getInstance().setTarget(extensionPoint);
                         super.actionPerformed(e);
                     }

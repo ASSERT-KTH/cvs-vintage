@@ -1,4 +1,4 @@
-// $Id: FigAssociationEnd.java,v 1.3 2005/01/11 21:03:30 mvw Exp $
+// $Id: FigAssociationEnd.java,v 1.4 2005/01/20 23:20:40 linus Exp $
 // Copyright (c) 2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -149,12 +149,12 @@ public class FigAssociationEnd extends FigEdgeModelElement {
         super.textEdited(ft);
 
         if (ft == srcRole) {
-            ModelFacade.setName(getOwner(), srcRole.getText());
+            Model.getCoreHelper().setName(getOwner(), srcRole.getText());
         } else if (ft == srcMult) {
             Object multi =
                 Model.getDataTypesFactory()
                     .createMultiplicity(srcMult.getText());
-            ModelFacade.setMultiplicity(getOwner(), multi);
+            Model.getCoreHelper().setMultiplicity(getOwner(), multi);
         }
     }
 

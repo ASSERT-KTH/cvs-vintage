@@ -1,4 +1,4 @@
-// $Id: ClassGenerationDialog.java,v 1.42 2005/01/09 21:10:44 linus Exp $
+// $Id: ClassGenerationDialog.java,v 1.43 2005/01/20 23:20:39 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -59,6 +59,7 @@ import org.argouml.application.notation.NotationProviderFactory;
 import org.argouml.i18n.Translator;
 import org.argouml.kernel.Project;
 import org.argouml.kernel.ProjectManager;
+import org.argouml.model.Model;
 import org.argouml.model.ModelFacade;
 import org.argouml.ui.ArgoDialog;
 import org.argouml.ui.FileChooserFactory;
@@ -348,7 +349,7 @@ public class ClassGenerationDialog
                             if (taggedValue == null || !language
                                 .getConfigurationValue()
                                 .equals(savedLang)) {
-                                ModelFacade.setTaggedValue(
+                                Model.getCoreHelper().setTaggedValue(
                                     node,
                                     "src_lang",
                                     language.getConfigurationValue());
@@ -424,7 +425,7 @@ public class ClassGenerationDialog
                 // 0.14alpha1) names were not initialized correctly.  this
                 // is a patch for that.
                 if (name == null || name.length() == 0) {
-                    ModelFacade.setName(cls, "");
+                    Model.getCoreHelper().setName(cls, "");
                     // continue;
                 }
 

@@ -1,4 +1,4 @@
-// $Id: ActionAddTopLevelPackage.java,v 1.17 2005/01/09 14:59:01 linus Exp $
+// $Id: ActionAddTopLevelPackage.java,v 1.18 2005/01/20 23:20:37 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -29,8 +29,9 @@ import java.awt.event.ActionEvent;
 import org.argouml.kernel.Project;
 import org.argouml.kernel.ProjectManager;
 import org.argouml.model.Model;
-import org.argouml.model.ModelFacade;
-/** @stereotype singleton
+
+/**
+ * @stereotype singleton
  */
 public class ActionAddTopLevelPackage extends UMLAction {
 
@@ -67,7 +68,7 @@ public class ActionAddTopLevelPackage extends UMLAction {
         String nameStr = "package_" + (numPacks + 1);
         Object/*MModel*/ model =
 	    Model.getModelManagementFactory().createModel();
-        ModelFacade.setName(model, nameStr);
+        Model.getCoreHelper().setName(model, nameStr);
         p.addMember(model);
         super.actionPerformed(ae);
         ActionClassDiagram.SINGLETON.actionPerformed(ae);

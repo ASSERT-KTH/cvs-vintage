@@ -1,4 +1,4 @@
-// $Id: ActionAddMessagePredecessor.java,v 1.16 2005/01/09 14:59:05 linus Exp $
+// $Id: ActionAddMessagePredecessor.java,v 1.17 2005/01/20 23:20:31 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -89,7 +89,7 @@ public class ActionAddMessagePredecessor extends AbstractActionAddModelElement {
 	    throw new IllegalStateException(
                 "doIt may not be called with null target");
 	Object message = /*(MMessage)*/ getTarget();
-	ModelFacade.setPredecessors(message, selected);
+	Model.getCollaborationsHelper().setPredecessors(message, selected);
     }
 
     /**

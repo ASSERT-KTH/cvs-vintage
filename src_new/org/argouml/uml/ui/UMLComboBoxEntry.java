@@ -1,4 +1,4 @@
-// $Id: UMLComboBoxEntry.java,v 1.21 2005/01/09 14:59:03 linus Exp $
+// $Id: UMLComboBoxEntry.java,v 1.22 2005/01/20 23:20:37 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -177,8 +177,8 @@ public class UMLComboBoxEntry implements Comparable {
             if (ns == null) {
                 ns = Model.getModelManagementFactory()
                     .createPackage();
-                ModelFacade.setName(ns, phantomName);
-                ModelFacade.addOwnedElement(targetParentNS, ns);
+                Model.getCoreHelper().setName(ns, phantomName);
+                Model.getCoreHelper().addOwnedElement(targetParentNS, ns);
             }
         }
         return ns;
@@ -200,18 +200,18 @@ public class UMLComboBoxEntry implements Comparable {
             try {
                 clone = element.getClass().getConstructor(
                         new Class[] {}).newInstance(new Object[] {});
-                ModelFacade.setName(clone, ModelFacade.getName(element));
+                Model.getCoreHelper().setName(clone, ModelFacade.getName(element));
                 Object stereo = null;
                 if (ModelFacade.getStereotypes(element).size() > 0) {
                     stereo =
                         ModelFacade.getStereotypes(element).iterator().next();
                 }
-                ModelFacade.setStereotype(clone, stereo);
+                Model.getCoreHelper().setStereotype(clone, stereo);
                 if (ModelFacade.isAStereotype(clone)) {
-                    ModelFacade.setBaseClass(clone,
+                    Model.getExtensionMechanismsHelper().setBaseClass(clone,
                             ModelFacade.getBaseClass(element));
                 }
-                ModelFacade.addOwnedElement(targetNS, clone);
+                Model.getCoreHelper().addOwnedElement(targetNS, clone);
                 element = clone;
             }
             catch (Exception ex) {

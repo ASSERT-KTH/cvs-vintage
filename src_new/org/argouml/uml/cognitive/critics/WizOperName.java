@@ -1,4 +1,4 @@
-// $Id: WizOperName.java,v 1.23 2005/01/08 23:27:27 linus Exp $
+// $Id: WizOperName.java,v 1.24 2005/01/20 23:20:35 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -165,7 +165,7 @@ public class WizOperName extends WizMEName {
             Object oper = getModelElement();
 
             if (oldStereotypeIsSet) {
-                ModelFacade.setStereotype(oper, oldStereotype);
+                Model.getCoreHelper().setStereotype(oper, oldStereotype);
             }
         }
     }
@@ -235,18 +235,18 @@ public class WizOperName extends WizMEName {
                     theStereotype =
                         Model.getExtensionMechanismsFactory()
                         	.createStereotype();
-                    ModelFacade.setName(theStereotype, "create");
+                    Model.getCoreHelper().setName(theStereotype, "create");
                     // theStereotype.setStereotype(???);
-                    ModelFacade
+                    Model.getExtensionMechanismsHelper()
                             .setBaseClass(theStereotype, "BehavioralFeature");
                     Object targetNS =
                         findNamespace(ModelFacade.getNamespace(oper),
                                       ModelFacade.getModel(oper));
-                    ModelFacade.addOwnedElement(targetNS, theStereotype);
+                    Model.getCoreHelper().addOwnedElement(targetNS, theStereotype);
                 }
 
                 try {
-                    ModelFacade.setStereotype(oper, theStereotype);
+                    Model.getCoreHelper().setStereotype(oper, theStereotype);
                 } catch (Exception pve) {
                     LOG.error("could not set stereotype", pve);
                 }
@@ -308,8 +308,8 @@ public class WizOperName extends WizMEName {
             }
             if (ns == null) {
                 ns = Model.getCoreFactory().createNamespace();
-                ModelFacade.setName(ns, phantomName);
-                ModelFacade.addOwnedElement(targetParentNS, ns);
+                Model.getCoreHelper().setName(ns, phantomName);
+                Model.getCoreHelper().addOwnedElement(targetParentNS, ns);
             }
         }
         return ns;

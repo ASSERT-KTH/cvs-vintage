@@ -1,4 +1,4 @@
-// $Id: ActionNewStereotype.java,v 1.7 2005/01/09 14:59:10 linus Exp $
+// $Id: ActionNewStereotype.java,v 1.8 2005/01/20 23:20:40 linus Exp $
 // Copyright (c) 2004-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -72,8 +72,9 @@ public class ActionNewStereotype extends AbstractActionNewModelElement {
             );
         if (ModelFacade.isAModelElement(t)) {
             Object ns = ModelFacade.getNamespace(t);
-            if (ModelFacade.isANamespace(ns))
-                ModelFacade.setNamespace(newStereo, ns);
+            if (ModelFacade.isANamespace(ns)) {
+                Model.getCoreHelper().setNamespace(newStereo, ns);
+            }
         }
         TargetManager.getInstance().setTarget(newStereo);
         super.actionPerformed(e);

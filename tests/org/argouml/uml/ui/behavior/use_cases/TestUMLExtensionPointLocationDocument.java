@@ -1,4 +1,4 @@
-// $Id: TestUMLExtensionPointLocationDocument.java,v 1.14 2005/01/08 15:36:16 linus Exp $
+// $Id: TestUMLExtensionPointLocationDocument.java,v 1.15 2005/01/20 23:20:31 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -76,7 +76,7 @@ public class TestUMLExtensionPointLocationDocument extends TestCase {
      */
     public void testSetName()
 	throws BadLocationException {
-        ModelFacade.setLocation(elem, "test");
+        Model.getUseCasesHelper().setLocation(elem, "test");
 	assertEquals("test", model.getText(0, model.getLength()));
     }
 
@@ -87,8 +87,8 @@ public class TestUMLExtensionPointLocationDocument extends TestCase {
      */
     public void testRemoveName()
 	throws BadLocationException {
-        ModelFacade.setLocation(elem, "test");
-        ModelFacade.setLocation(elem, null);
+        Model.getUseCasesHelper().setLocation(elem, "test");
+        Model.getUseCasesHelper().setLocation(elem, null);
 	assertEquals("", model.getText(0, model.getLength()));
     }
 
@@ -122,7 +122,7 @@ public class TestUMLExtensionPointLocationDocument extends TestCase {
      */
     public void testAppendString()
 	throws BadLocationException {
-        ModelFacade.setLocation(elem, "test");
+        Model.getUseCasesHelper().setLocation(elem, "test");
 	model.insertString(model.getLength(), "test", null);
         assertEquals("testtest", ModelFacade.getLocation(elem));
     }
@@ -134,7 +134,7 @@ public class TestUMLExtensionPointLocationDocument extends TestCase {
      */
     public void testInsertStringHalfway()
 	throws BadLocationException {
-        ModelFacade.setLocation(elem, "test");
+        Model.getUseCasesHelper().setLocation(elem, "test");
 	model.insertString(1, "test", null);
         assertEquals("ttestest", ModelFacade.getLocation(elem));
     }
@@ -146,7 +146,7 @@ public class TestUMLExtensionPointLocationDocument extends TestCase {
      */
     public void testRemoveStringHalfway()
 	throws BadLocationException {
-        ModelFacade.setLocation(elem, "test");
+        Model.getUseCasesHelper().setLocation(elem, "test");
 	model.remove(1, model.getLength() - 2);
         assertEquals("tt", ModelFacade.getLocation(elem));
     }

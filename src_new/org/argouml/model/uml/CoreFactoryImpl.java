@@ -1,4 +1,4 @@
-// $Id: CoreFactoryImpl.java,v 1.14 2005/01/14 19:28:14 mvw Exp $
+// $Id: CoreFactoryImpl.java,v 1.15 2005/01/20 23:20:36 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -143,7 +143,7 @@ public class CoreFactoryImpl
         }
         MAbstraction abstraction = (MAbstraction) createAbstraction();
         super.initialize(abstraction);
-        ModelFacade.setName(abstraction, name);
+        nsmodel.getCoreHelper().setName(abstraction, name);
         abstraction.addClient((MClassifier) client);
         abstraction.addSupplier((MClassifier) supplier);
         return abstraction;
@@ -1005,7 +1005,7 @@ public class CoreFactoryImpl
     public Object buildClass(Object owner) {
         Object clazz = buildClass();
         if (owner instanceof MNamespace) {
-            ModelFacade.setNamespace(clazz, /*MNamespace*/ owner);
+            nsmodel.getCoreHelper().setNamespace(clazz, /*MNamespace*/ owner);
         }
         return clazz;
     }
@@ -1019,7 +1019,7 @@ public class CoreFactoryImpl
      */
     public Object buildClass(String name) {
         Object clazz = buildClass();
-        ModelFacade.setName(clazz, name);
+        nsmodel.getCoreHelper().setName(clazz, name);
         return clazz;
     }
 
@@ -1033,9 +1033,9 @@ public class CoreFactoryImpl
      */
     public Object buildClass(String name, Object owner) {
         Object clazz = buildClass();
-        ModelFacade.setName(clazz, name);
+        nsmodel.getCoreHelper().setName(clazz, name);
         if (owner instanceof MNamespace) {
-            ModelFacade.setNamespace(clazz, /*MNamespace*/ owner);
+            nsmodel.getCoreHelper().setNamespace(clazz, /*MNamespace*/ owner);
         }
         return clazz;
     }
@@ -1461,8 +1461,8 @@ public class CoreFactoryImpl
 	}
 	nsmodel.getExtensionMechanismsFactory().buildStereotype(realization,
 								"realize", ns);
-	ModelFacade.addClientDependency(client, realization);
-	ModelFacade.addSupplierDependency(supplier, realization);
+	nsmodel.getCoreHelper().addClientDependency(client, realization);
+	nsmodel.getCoreHelper().addSupplierDependency(supplier, realization);
 	return realization;
     }
 

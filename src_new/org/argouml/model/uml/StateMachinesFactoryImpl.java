@@ -1,4 +1,4 @@
-// $Id: StateMachinesFactoryImpl.java,v 1.4 2005/01/08 20:46:36 linus Exp $
+// $Id: StateMachinesFactoryImpl.java,v 1.5 2005/01/20 23:20:36 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -27,7 +27,6 @@ package org.argouml.model.uml;
 import java.util.Collection;
 import java.util.Iterator;
 
-import org.argouml.model.ModelFacade;
 import org.argouml.model.StateMachinesFactory;
 
 import ru.novosoft.uml.MFactory;
@@ -553,12 +552,12 @@ public class StateMachinesFactoryImpl
             (name.indexOf("(") > 0)
             ? name.substring(0, name.indexOf("(")).trim()
             : name.trim();
-        ModelFacade.setName(evt, operationName);
+        nsmodel.getCoreHelper().setName(evt, operationName);
         Object op =
             nsmodel.getStateMachinesHelper()
             	.findOperationByName(trans, operationName);
         if (op != null) {
-            ModelFacade.setOperation(evt, op);
+            nsmodel.getCommonBehaviorHelper().setOperation(evt, op);
         }
         return evt;
     }
@@ -618,7 +617,7 @@ public class StateMachinesFactoryImpl
         Object te =
             nsmodel.getDataTypesFactory()
             	.createTimeExpression("", s);
-        ModelFacade.setWhen(event, te);
+        nsmodel.getStateMachinesHelper().setWhen(event, te);
         return event;
     }
 
@@ -649,7 +648,7 @@ public class StateMachinesFactoryImpl
         Object ce =
             nsmodel.getDataTypesFactory()
             	.createBooleanExpression("", s);
-        ModelFacade.setExpression(event, ce);
+        nsmodel.getStateMachinesHelper().setExpression(event, ce);
 
         return event;
     }
@@ -664,7 +663,7 @@ public class StateMachinesFactoryImpl
     public Object/*MGuard*/ buildGuard(Object transition) {
         if (transition instanceof MTransition) {
             Object guard = createGuard();
-            ModelFacade.setTransition(guard, transition);
+            nsmodel.getCommonBehaviorHelper().setTransition(guard, transition);
             return guard;
         }
         return null;

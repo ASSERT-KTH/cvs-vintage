@@ -1,4 +1,4 @@
-// $Id: TestUMLAssociationEndRoleBaseListModel.java,v 1.14 2005/01/06 23:04:52 linus Exp $
+// $Id: TestUMLAssociationEndRoleBaseListModel.java,v 1.15 2005/01/20 23:20:26 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -27,7 +27,6 @@ package org.argouml.uml.ui.behavior.collaborations;
 import junit.framework.TestCase;
 
 import org.argouml.model.Model;
-import org.argouml.model.ModelFacade;
 import org.argouml.uml.ui.UMLModelElementListModel2;
 
 import ru.novosoft.uml.MFactoryImpl;
@@ -65,9 +64,9 @@ public class TestUMLAssociationEndRoleBaseListModel extends TestCase {
         baseEnd = Model.getCoreFactory().createAssociationEnd();
         assocRole = Model.getCollaborationsFactory().createAssociationRole();
         baseAssoc = Model.getCoreFactory().createAssociation();
-        ModelFacade.setAssociation(elem, assocRole);
-        ModelFacade.setBase(assocRole, baseAssoc);
-        ModelFacade.setAssociation(baseEnd, baseAssoc);
+        Model.getCoreHelper().setAssociation(elem, assocRole);
+        Model.getCollaborationsHelper().setBase(assocRole, baseAssoc);
+        Model.getCoreHelper().setAssociation(baseEnd, baseAssoc);
         oldEventPolicy = MFactoryImpl.getEventPolicy();
         MFactoryImpl.setEventPolicy(MFactoryImpl.EVENT_POLICY_IMMEDIATE);
         model = new UMLAssociationEndRoleBaseListModel();
@@ -91,7 +90,7 @@ public class TestUMLAssociationEndRoleBaseListModel extends TestCase {
      * Test setting the Base.
      */
     public void testAdd() {
-        ModelFacade.setBase(elem, baseEnd);
+        Model.getCollaborationsHelper().setBase(elem, baseEnd);
         assertEquals(1, model.getSize());
         assertEquals(baseEnd, model.getElementAt(0));
     }
@@ -113,7 +112,7 @@ public class TestUMLAssociationEndRoleBaseListModel extends TestCase {
      * Test removing.
      */
     public void testRemove() {
-        ModelFacade.setBase(elem, baseEnd);
+        Model.getCollaborationsHelper().setBase(elem, baseEnd);
 
         // TODO: Find or create a ModelFacade method for this?
         ((MAssociationEndRole) elem).setBase(null);

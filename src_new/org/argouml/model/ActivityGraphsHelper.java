@@ -1,4 +1,4 @@
-// $Id: ActivityGraphsHelper.java,v 1.1 2005/01/02 10:08:16 linus Exp $
+// $Id: ActivityGraphsHelper.java,v 1.2 2005/01/20 23:20:34 linus Exp $
 // Copyright (c) 2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -73,4 +73,11 @@ public interface ActivityGraphsHelper {
      * @return boolean true if an activitygraph may be added
      */
     boolean isAddingActivityGraphAllowed(Object context);
+
+    /**
+     * @author mvw
+     * @param classifierInState the classifierInState
+     * @param state the state that will be linked
+     */
+    void addInState(Object classifierInState, Object state);
 }

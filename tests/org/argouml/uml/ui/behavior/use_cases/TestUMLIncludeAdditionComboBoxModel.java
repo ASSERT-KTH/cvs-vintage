@@ -1,4 +1,4 @@
-// $Id: TestUMLIncludeAdditionComboBoxModel.java,v 1.15 2005/01/08 00:39:39 linus Exp $
+// $Id: TestUMLIncludeAdditionComboBoxModel.java,v 1.16 2005/01/20 23:20:32 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -28,7 +28,6 @@ import junit.framework.TestCase;
 
 import org.argouml.kernel.ProjectManager;
 import org.argouml.model.Model;
-import org.argouml.model.ModelFacade;
 import org.argouml.ui.targetmanager.TargetEvent;
 
 /**
@@ -61,10 +60,10 @@ public class TestUMLIncludeAdditionComboBoxModel extends TestCase {
         additions = new Object[10];
         Object m = Model.getModelManagementFactory().createModel();
         ProjectManager.getManager().getCurrentProject().setRoot(m);
-        ModelFacade.setNamespace(elem, m);
+        Model.getCoreHelper().setNamespace(elem, m);
         for (int i = 0; i < 10; i++) {
             additions[i] = Model.getUseCasesFactory().createUseCase();
-            ModelFacade.addOwnedElement(m, additions[i]);
+            Model.getCoreHelper().addOwnedElement(m, additions[i]);
         }
     }
 
@@ -98,7 +97,7 @@ public class TestUMLIncludeAdditionComboBoxModel extends TestCase {
         // Issue 2034.
         // The following line was:
         // ((MInclude) elem).setBase((MUseCase) additions[0]);
-        ModelFacade.setAddition(elem, additions[0]);
+        Model.getUseCasesHelper().setAddition(elem, additions[0]);
         assertTrue(model.getSelectedItem() == additions[0]);
     }
 
@@ -106,7 +105,7 @@ public class TestUMLIncludeAdditionComboBoxModel extends TestCase {
      * Test setAddition() with null argument.
      */
     public void testSetBaseToNull() {
-        ModelFacade.setAddition(elem, null);
+        Model.getUseCasesHelper().setAddition(elem, null);
         assertNull(model.getSelectedItem());
     }
 

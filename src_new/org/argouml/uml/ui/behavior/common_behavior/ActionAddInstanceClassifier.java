@@ -1,4 +1,4 @@
-// $Id: ActionAddInstanceClassifier.java,v 1.10 2005/01/09 19:09:55 bobtarling Exp $
+// $Id: ActionAddInstanceClassifier.java,v 1.11 2005/01/20 23:20:36 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -68,7 +68,7 @@ public class ActionAddInstanceClassifier extends AbstractActionAddModelElement {
      * @see org.argouml.uml.ui.AbstractActionAddModelElement#doIt(java.util.Vector)
      */
     protected void doIt(Vector selected) {
-        ModelFacade.setClassifiers(getTarget(), selected);
+        Model.getCommonBehaviorHelper().setClassifiers(getTarget(), selected);
     }
 
     /**

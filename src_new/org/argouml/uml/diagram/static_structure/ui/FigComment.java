@@ -1,4 +1,4 @@
-// $Id: FigComment.java,v 1.35 2005/01/10 16:24:15 mvw Exp $
+// $Id: FigComment.java,v 1.36 2005/01/20 23:20:39 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -177,7 +177,7 @@ public class FigComment
 	    Model.getCoreFactory().createComment();
         setOwner(comment); // Set it as the owner of the figure.
 	// Tell the annotated element, that it has a comment now.
-        ModelFacade.addComment(element, comment);
+        Model.getCoreHelper().addComment(element, comment);
 
         // Notes in statechart diagrams need a special treatment, cause
         // the nodes in them don't necessary have a namespace, where
@@ -195,11 +195,11 @@ public class FigComment
 		    (((UMLStateDiagram) TargetManager.getInstance()
 		            .getTarget()).getGraphModel());
 		// We are editing, so we set the Namespace directly.
-                ModelFacade.setNamespace(comment, gm.getNamespace());
+                Model.getCoreHelper().setNamespace(comment, gm.getNamespace());
             }
         } else {
 	    // Add the comment to the same namespace as the annotated element.
-            ModelFacade.setNamespace(comment,
+            Model.getCoreHelper().setNamespace(comment,
                     ModelFacade.getNamespace(element));
         }
 
@@ -459,7 +459,7 @@ public class FigComment
      */
     public final void storeNote(String note) {
         if (getOwner() != null) {
-            ModelFacade.setName(getOwner(), note);
+            Model.getCoreHelper().setName(getOwner(), note);
         }
     }
 

@@ -1,4 +1,4 @@
-// $Id: ActionSetStructuralFeatureMultiplicity.java,v 1.7 2005/01/09 14:59:08 linus Exp $
+// $Id: ActionSetStructuralFeatureMultiplicity.java,v 1.8 2005/01/20 23:20:25 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -22,9 +22,10 @@
 // CALIFORNIA HAS NO OBLIGATIONS TO PROVIDE MAINTENANCE, SUPPORT,
 // UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 
-// $Id: ActionSetStructuralFeatureMultiplicity.java,v 1.7 2005/01/09 14:59:08 linus Exp $
+// $Id: ActionSetStructuralFeatureMultiplicity.java,v 1.8 2005/01/20 23:20:25 linus Exp $
 package org.argouml.uml.ui.foundation.core;
 
+import org.argouml.model.Model;
 import org.argouml.model.ModelFacade;
 import org.argouml.uml.ui.ActionSetMultiplicity;
 
@@ -52,11 +53,12 @@ public class ActionSetStructuralFeatureMultiplicity
      */
     public void setSelectedItem(Object item, Object target) {
         if (target != null
-                && org.argouml.model.ModelFacade.isAStructuralFeature(target)) {
-            if (org.argouml.model.ModelFacade.isAMultiplicity(item)) {
-                ModelFacade.setMultiplicity(target, item);
-            } else
-                 ModelFacade.setMultiplicity(target, null);
+                && ModelFacade.isAStructuralFeature(target)) {
+            if (ModelFacade.isAMultiplicity(item)) {
+                Model.getCoreHelper().setMultiplicity(target, item);
+            } else {
+                Model.getCoreHelper().setMultiplicity(target, null);
+            }
 
         }
     }

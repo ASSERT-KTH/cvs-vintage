@@ -1,4 +1,4 @@
-// $Id: TestUMLFeatureOwnerComboBoxModel.java,v 1.15 2005/01/09 21:10:35 linus Exp $
+// $Id: TestUMLFeatureOwnerComboBoxModel.java,v 1.16 2005/01/20 23:20:34 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -28,7 +28,6 @@ import junit.framework.TestCase;
 
 import org.argouml.kernel.ProjectManager;
 import org.argouml.model.Model;
-import org.argouml.model.ModelFacade;
 import org.argouml.ui.targetmanager.TargetEvent;
 
 /**
@@ -63,7 +62,7 @@ public class TestUMLFeatureOwnerComboBoxModel extends TestCase {
 	ProjectManager.getManager().getCurrentProject().setRoot(m);
         for (int i = 0; i < 10; i++) {
             types[i] = Model.getCoreFactory().createClassifier();
-            ModelFacade.addOwnedElement(m, types[i]);
+            Model.getCoreHelper().addOwnedElement(m, types[i]);
         }
     }
 
@@ -93,7 +92,7 @@ public class TestUMLFeatureOwnerComboBoxModel extends TestCase {
      * Test setOwner().
      */
     public void testSetOwner() {
-        ModelFacade.setOwner(elem, types[0]);
+        Model.getCoreHelper().setOwner(elem, types[0]);
         assertTrue(model.getSelectedItem() == types[0]);
     }
 
@@ -101,7 +100,7 @@ public class TestUMLFeatureOwnerComboBoxModel extends TestCase {
      * Test setOwner() with null argument.
      */
     public void testSetOwnerToNull() {
-        ModelFacade.setOwner(elem, null);
+        Model.getCoreHelper().setOwner(elem, null);
         assertNull(model.getSelectedItem());
     }
 

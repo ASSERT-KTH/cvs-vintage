@@ -1,4 +1,4 @@
-// $Id: UMLExpressionModel2.java,v 1.3 2005/01/09 14:59:03 linus Exp $
+// $Id: UMLExpressionModel2.java,v 1.4 2005/01/20 23:20:37 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -24,6 +24,7 @@
 
 package org.argouml.uml.ui;
 import org.apache.log4j.Logger;
+import org.argouml.model.Model;
 import org.argouml.model.ModelFacade;
 
 import ru.novosoft.uml.MElementEvent;
@@ -169,9 +170,11 @@ public abstract class UMLExpressionModel2  {
      * @param body the body text of the expression
      */
     private void setExpression(String lang, Object body) {
-        if (expression == null) expression = newExpression();
-        ModelFacade.setLanguage(expression, lang);
-        ModelFacade.setBody(expression, body);
+        if (expression == null) {
+            expression = newExpression();
+        }
+        Model.getDataTypesHelper().setLanguage(expression, lang);
+        Model.getCoreHelper().setBody(expression, body);
         setExpression(expression);
     }
 

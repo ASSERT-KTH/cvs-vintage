@@ -1,4 +1,4 @@
-// $Id: GeneratorCpp.java,v 1.31 2005/01/19 23:52:04 euluis Exp $
+// $Id: GeneratorCpp.java,v 1.32 2005/01/20 23:20:35 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -1842,7 +1842,7 @@ public class GeneratorCpp extends Generator2
         String id = UUIDHelper.getInstance().getUUID(op);
         if (id == null) {
             id = (new UID().toString());
-            ModelFacade.setUUID(op, id);
+            Model.getCoreHelper().setUUID(op, id);
         }
         return Section.generateTop(id, localIndent);
     }
@@ -1851,7 +1851,7 @@ public class GeneratorCpp extends Generator2
         String id = UUIDHelper.getInstance().getUUID(op);
         if (id == null) {
             id = (new UID().toString());
-            ModelFacade.setUUID(op, id);
+            Model.getCoreHelper().setUUID(op, id);
         }
         return Section.generateBottom(id, localIndent);
     }

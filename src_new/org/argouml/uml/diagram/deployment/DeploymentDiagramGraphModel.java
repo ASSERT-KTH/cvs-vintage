@@ -1,4 +1,4 @@
-// $Id: DeploymentDiagramGraphModel.java,v 1.41 2005/01/09 14:58:38 linus Exp $
+// $Id: DeploymentDiagramGraphModel.java,v 1.42 2005/01/20 23:20:34 linus Exp $
 // Copyright (c) 2003-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -293,7 +293,7 @@ public class DeploymentDiagramGraphModel extends UMLMutableGraphSupport
 	//do I have to check the namespace here? (Toby)
 	if (ModelFacade.isAModelElement(node)
             && (ModelFacade.getNamespace(node) == null)) {
-	    ModelFacade.addOwnedElement(model, node);
+	    Model.getCoreHelper().addOwnedElement(model, node);
 	}
 	fireNodeAdded(node);
     }
@@ -309,7 +309,7 @@ public class DeploymentDiagramGraphModel extends UMLMutableGraphSupport
 	getEdges().add(edge);
 	// TODO: assumes public
 	if (ModelFacade.isAModelElement(edge)) {
-	    ModelFacade.addOwnedElement(model, edge);
+	    Model.getCoreHelper().addOwnedElement(model, edge);
 	}
 	fireEdgeAdded(edge);
     }

@@ -1,4 +1,4 @@
-// $Id: PropPanelStimulus.java,v 1.51 2005/01/09 14:59:07 linus Exp $
+// $Id: PropPanelStimulus.java,v 1.52 2005/01/20 23:20:36 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -118,7 +118,7 @@ public class PropPanelStimulus extends PropPanelModelElement {
     public void setSender(Object/*MInstance*/ element) {
         Object target = getTarget();
         if (org.argouml.model.ModelFacade.isAStimulus(target)) {
-            ModelFacade.setSender(target, element);
+            Model.getCollaborationsHelper().setSender(target, element);
         }
     }
 
@@ -141,7 +141,7 @@ public class PropPanelStimulus extends PropPanelModelElement {
     public void setReceiver(Object/*MInstance*/ element) {
         Object target = getTarget();
         if (org.argouml.model.ModelFacade.isAStimulus(target)) {
-            ModelFacade.setReceiver(target, element);
+            Model.getCommonBehaviorHelper().setReceiver(target, element);
         }
     }
 
@@ -181,13 +181,13 @@ public class PropPanelStimulus extends PropPanelModelElement {
                 link = Model.getCommonBehaviorFactory().createLink();
                 //((MStimulus)stimulus).getFactory().createLink();
                 if (link != null) {
-                    ModelFacade.addStimulus(link, stimulus);
-                    ModelFacade.setCommunicationLink(stimulus, /*(MLink)*/link);
+                    Model.getCommonBehaviorHelper().addStimulus(link, stimulus);
+                    Model.getCommonBehaviorHelper().setCommunicationLink(stimulus, /*(MLink)*/link);
                 }
             }
             Object oldAssoc = ModelFacade.getAssociation(link);
             if (oldAssoc != element) {
-                ModelFacade.setAssociation(link, element);
+                Model.getCoreHelper().setAssociation(link, element);
                 //
                 //  TODO: more needs to go here
                 //

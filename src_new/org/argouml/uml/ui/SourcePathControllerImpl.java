@@ -1,4 +1,4 @@
-// $Id: SourcePathControllerImpl.java,v 1.7 2005/01/09 19:09:57 bobtarling Exp $
+// $Id: SourcePathControllerImpl.java,v 1.8 2005/01/20 23:20:37 linus Exp $
 // Copyright (c) 2004-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -86,7 +86,7 @@ public class SourcePathControllerImpl implements SourcePathController {
      * java.lang.Object, java.io.File)
      */
     public void setSourcePath(Object modelElement, File sourcePath) {
-        ModelFacade.setTaggedValue(modelElement, SRC_PATH_TAG,
+        Model.getCoreHelper().setTaggedValue(modelElement, SRC_PATH_TAG,
             sourcePath.toString());
     }
 
@@ -101,7 +101,7 @@ public class SourcePathControllerImpl implements SourcePathController {
      * @see org.argouml.uml.ui.SourcePathController#deleteSourcePath(java.lang.Object)
      */
     public void deleteSourcePath(Object modelElement) {
-        ModelFacade.removeTaggedValue(modelElement, SRC_PATH_TAG);
+        Model.getCoreHelper().removeTaggedValue(modelElement, SRC_PATH_TAG);
     }
 
     /**

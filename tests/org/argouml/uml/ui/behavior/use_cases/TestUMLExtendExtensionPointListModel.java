@@ -1,4 +1,4 @@
-// $Id: TestUMLExtendExtensionPointListModel.java,v 1.12 2005/01/08 15:36:16 linus Exp $
+// $Id: TestUMLExtendExtensionPointListModel.java,v 1.13 2005/01/20 23:20:32 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,7 +25,6 @@
 package org.argouml.uml.ui.behavior.use_cases;
 
 import org.argouml.model.Model;
-import org.argouml.model.ModelFacade;
 import org.argouml.uml.ui.AbstractUMLModelElementListModel2Test;
 
 /**
@@ -64,7 +63,7 @@ public class TestUMLExtendExtensionPointListModel
         Object[] points = new Object[10];
         for (int i = 0; i < 10; i++) {
             points[i] = Model.getUseCasesFactory().createExtensionPoint();
-            ModelFacade.addExtensionPoint(getElem(), points[i]);
+            Model.getUseCasesHelper().addExtensionPoint(getElem(), points[i]);
         }
         return points;
     }
@@ -74,7 +73,7 @@ public class TestUMLExtendExtensionPointListModel
      */
     protected void removeHalfModel(Object[] elements) {
         for (int i = 0; i < 5; i++) {
-            ModelFacade.removeExtensionPoint(getElem(),  elements[i]);
+            Model.getUseCasesHelper().removeExtensionPoint(getElem(),  elements[i]);
         }
     }
 

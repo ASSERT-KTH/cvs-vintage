@@ -1,4 +1,4 @@
-// $Id: TabTaggedValues.java,v 1.38 2005/01/09 14:59:03 linus Exp $
+// $Id: TabTaggedValues.java,v 1.39 2005/01/20 23:20:37 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -383,11 +383,11 @@ class TableModelTaggedValues extends AbstractTableModel
 	    Object tv =
 		Model.getExtensionMechanismsFactory().createTaggedValue();
 	    if (columnIndex == 0) {
-	        ModelFacade.setTag(tv, aValue);
+	        Model.getExtensionMechanismsHelper().setTag(tv, aValue);
 	    }
 	    if (columnIndex == 1) {
-		ModelFacade.setTag(tv, "");
-		ModelFacade.setValue(tv, aValue);
+		Model.getExtensionMechanismsHelper().setTag(tv, "");
+		Model.getCommonBehaviorHelper().setValue(tv, aValue);
 	    }
 	    tvs.addElement(tv);
 
@@ -404,14 +404,14 @@ class TableModelTaggedValues extends AbstractTableModel
 	} else {
 	    Object tv = tvs.elementAt(rowIndex);
 	    if (columnIndex == 0) {
-	        ModelFacade.setTag(tv, aValue);
+	        Model.getExtensionMechanismsHelper().setTag(tv, aValue);
 	    }
 	    if (columnIndex == 1)  {
-                ModelFacade.setValue(tv, aValue);
+                Model.getCommonBehaviorHelper().setValue(tv, aValue);
             }
 	    mEvent = new TableModelEvent(this, rowIndex);
 	}
-	ModelFacade.setTaggedValues(target, tvs);
+	Model.getCoreHelper().setTaggedValues(target, tvs);
 	if (mEvent != null) {
 	    fireTableChanged(mEvent);
 	}
@@ -472,7 +472,7 @@ class ActionRemoveTaggedValue extends AbstractAction {
                 ModelFacade.getTaggedValuesCollection(tab.getTarget()));
         if ((row != -1) && (c.size() > row)) {
             c.remove(row);
-            ModelFacade.setTaggedValues(tab.getTarget(), c);
+            Model.getCoreHelper().setTaggedValues(tab.getTarget(), c);
             model.fireTableChanged(new TableModelEvent(model));
         }
     }

@@ -1,4 +1,4 @@
-// $Id: UMLStimulusActionTextProperty.java,v 1.10 2005/01/09 14:59:03 linus Exp $
+// $Id: UMLStimulusActionTextProperty.java,v 1.11 2005/01/20 23:20:39 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -23,6 +23,7 @@
 // UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 
 package org.argouml.uml.ui;
+import org.argouml.model.Model;
 import org.argouml.model.ModelFacade;
 
 import ru.novosoft.uml.MElementEvent;
@@ -67,11 +68,11 @@ public class UMLStimulusActionTextProperty  {
 		if (newValue != oldValue) {
 		    // Object[] args = { newValue };
 		    Object action = ModelFacade.getDispatchAction(stimulus);
-		    ModelFacade.setName(action, newValue);
+		    Model.getCoreHelper().setName(action, newValue);
 		    // to rupdate the diagram set the stimulus name again
 		    String dummyStr =
 		        new String(ModelFacade.getName(stimulus));
-		    ModelFacade.setName(stimulus, dummyStr);
+		    Model.getCoreHelper().setName(stimulus, dummyStr);
 
 
 

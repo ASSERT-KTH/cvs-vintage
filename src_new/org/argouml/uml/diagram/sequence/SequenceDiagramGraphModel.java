@@ -1,4 +1,4 @@
-// $Id: SequenceDiagramGraphModel.java,v 1.38 2005/01/08 23:27:29 linus Exp $
+// $Id: SequenceDiagramGraphModel.java,v 1.39 2005/01/20 23:20:42 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -616,7 +616,7 @@ public class SequenceDiagramGraphModel
             Object clasrole =
                 Model.getCollaborationsFactory().buildClassifierRole(
                     collaboration);
-            ModelFacade.addInstance(clasrole, node);
+            Model.getCollaborationsHelper().addInstance(clasrole, node);
             fireNodeAdded(node);
         }
 
@@ -788,15 +788,15 @@ public class SequenceDiagramGraphModel
                         Model.getCommonBehaviorFactory().buildStimulus(link);
                 }
             }
-            ModelFacade.setDispatchAction(stimulus, action);
+            Model.getCommonBehaviorHelper().setDispatchAction(stimulus, action);
 
             Object message =
                 Model.getCollaborationsFactory().buildMessage(
                     getInteraction(),
                     associationRole);
-            ModelFacade.setAction(message, action);
-            ModelFacade.setSender(message, classifierRoleFrom);
-            ModelFacade.setReceiver(message, classifierRoleTo);
+            Model.getCollaborationsHelper().setAction(message, action);
+            Model.getCollaborationsHelper().setSender(message, classifierRoleFrom);
+            Model.getCommonBehaviorHelper().setReceiver(message, classifierRoleTo);
             addEdge(link);
             edge = link;
         }
