@@ -114,7 +114,7 @@ import org.apache.turbine.Log;
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: AbstractScarabModule.java,v 1.16 2002/01/20 20:33:49 elicia Exp $
+ * @version $Id: AbstractScarabModule.java,v 1.17 2002/01/22 00:37:43 elicia Exp $
  */
 public abstract class AbstractScarabModule
     extends BaseObject
@@ -794,15 +794,16 @@ public abstract class AbstractScarabModule
                             IssueType issueType)
         throws Exception
     {
-        return getRModuleAttribute(attribute, issueType, "non-user");
-    }
-
-    public RModuleAttribute getRModuleAttribute(Attribute attribute, 
-                            IssueType issueType, String attributeType)
-        throws Exception
-    {
         RModuleAttribute rma = null;
-        List rmas = getRModuleAttributes(issueType, false, attributeType);
+        List rmas = null;
+        if (attribute.isUserAttribute())
+        {
+            rmas = getRModuleAttributes(issueType, false, "user");
+        }
+        else
+        {
+            rmas = getRModuleAttributes(issueType, false, "non-user");
+        }
         Iterator i = rmas.iterator();
         while ( i.hasNext() )
         {

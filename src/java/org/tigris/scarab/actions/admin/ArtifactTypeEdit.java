@@ -82,7 +82,7 @@ import org.tigris.scarab.tools.ScarabRequestTool;
  * action methods on RModuleAttribute table
  *      
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
- * @version $Id: ArtifactTypeEdit.java,v 1.3 2002/01/18 22:26:04 jon Exp $
+ * @version $Id: ArtifactTypeEdit.java,v 1.4 2002/01/22 00:37:42 elicia Exp $
  */
 public class ArtifactTypeEdit extends RequireLoginFirstAction
 {
@@ -198,8 +198,7 @@ public class ArtifactTypeEdit extends RequireLoginFirstAction
                 // Set properties for module-attribute mapping
                 Attribute attribute = (Attribute)userAttributes.get(i);
                 RModuleAttribute rma = (RModuleAttribute)module
-                                       .getRModuleAttribute(attribute, 
-                                        issueType, "user");
+                        .getRModuleAttribute(attribute, issueType);
                 Group rmaGroup = intake.get("RModuleAttribute", 
                                  rma.getQueryKey(), false);
                 rmaGroup.setProperties(rma);
