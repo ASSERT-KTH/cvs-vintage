@@ -22,17 +22,13 @@ import java.util.*;
 import javax.management.*;
 import javax.management.loading.*;
 
-import javax.xml.parsers.DocumentBuilderFactory;
-
-import org.jboss.security.SecurityAssociation;
-
 /**
  *
  *   @see <related>
  *   @author Rickard Öberg (rickard.oberg@telkel.com)
  *   @author <a href="mailto:docodan@nycap.rr.com">Daniel O'Connor</a>.
  *   @author Scott_Stark@displayscape.com
- *   @version $Revision: 1.34 $
+ *   @version $Revision: 1.35 $
  */
 public class Main
 {
@@ -110,9 +106,6 @@ public class Main
       // Optional for better performance
       if (System.getProperty("java.security.manager") != null)
          System.setSecurityManager((SecurityManager)Class.forName(System.getProperty("java.security.manager")).newInstance());
-
-      // use thread-local principal and credential propagation
-      SecurityAssociation.setServer();
 
       // Start server - Main does not have the proper permissions
       AccessController.doPrivileged(new PrivilegedAction()
@@ -203,8 +196,6 @@ public class Main
             else if (obj instanceof Throwable)
                ((Throwable)obj).printStackTrace(err);
          }
-
-         DocumentBuilderFactory.newInstance();
 
          // Load configuration
          server.invoke(new ObjectName(":service=Configuration"), "loadConfiguration", new Object[0], new String[0]);
