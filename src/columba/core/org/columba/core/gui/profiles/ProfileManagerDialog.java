@@ -279,7 +279,8 @@ implements ActionListener, ListSelectionListener {
         } else if (action.equals("ADD")) {
             JFileChooser fc = new JFileChooser();
             fc.setMultiSelectionEnabled(true);
-            fc.setFileSelectionMode(JFileChooser.FILES_ONLY);
+            // bug #996381 (fdietz), directories only!!
+            fc.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
             fc.setFileHidingEnabled(false);
             
             if (fc.showOpenDialog(this) == JFileChooser.APPROVE_OPTION) {
