@@ -65,9 +65,7 @@ import org.tigris.scarab.om.AttributePeer;
 import org.tigris.scarab.om.RModuleUserAttribute;
 import org.tigris.scarab.om.RModuleUserAttributePeer;
 import org.tigris.scarab.om.ScarabUser;
-import org.tigris.scarab.om.ScarabModule;
 import org.tigris.scarab.om.IssueType;
-import org.tigris.scarab.om.ScarabUserImplPeer;
 import org.tigris.scarab.util.ScarabConstants;
 import org.tigris.scarab.services.module.ModuleEntity;
 import org.tigris.scarab.tools.ScarabRequestTool;
@@ -76,7 +74,7 @@ import org.tigris.scarab.actions.base.RequireLoginFirstAction;
 /**
     This class is responsible for the user configuration of the issue list.
     @author <a href="mailto:elicia@collab.net">Elicia David</a>
-    @version $Id: ConfigureIssueList.java,v 1.14 2001/10/20 00:23:51 elicia Exp $
+    @version $Id: ConfigureIssueList.java,v 1.15 2001/10/24 23:03:41 jon Exp $
 */
 public class ConfigureIssueList extends RequireLoginFirstAction
 {
@@ -131,7 +129,7 @@ public class ConfigureIssueList extends RequireLoginFirstAction
                                          queryKey, false);
 
                 
-                mua = user.getRModuleUserAttribute((ScarabModule)module, 
+                mua = user.getRModuleUserAttribute(module, 
                                                    attribute, issueType);
                 Field order = group.get("Order");
                 order.setProperty(mua);

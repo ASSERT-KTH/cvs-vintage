@@ -51,6 +51,7 @@ import org.apache.torque.om.NumberKey;
 import org.apache.torque.util.Criteria;
 import org.apache.torque.om.UnsecurePersistent;
 
+import org.tigris.scarab.services.module.ModuleEntity;
 import org.tigris.scarab.util.ScarabException;
 
 /** 
@@ -60,7 +61,7 @@ import org.tigris.scarab.util.ScarabException;
  *
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: IssueType.java,v 1.5 2001/10/18 02:00:02 elicia Exp $
+ * @version $Id: IssueType.java,v 1.6 2001/10/24 23:03:41 jon Exp $
  */
 public  class IssueType 
     extends org.tigris.scarab.om.BaseIssueType
@@ -74,7 +75,7 @@ public  class IssueType
     /**
      * List of attribute groups associated with this module and issue type.
      */
-    public List getAttributeGroups(ScarabModule module)
+    public List getAttributeGroups(ModuleEntity module)
         throws Exception
     {
         Criteria crit = new Criteria()
@@ -87,7 +88,7 @@ public  class IssueType
     /**
      * Gets the sequence where the dedupe screen fits between groups.
      */
-    public int getDedupeSequence(ScarabModule module)
+    public int getDedupeSequence(ModuleEntity module)
         throws Exception
     {
         int sequence = 1;
@@ -114,7 +115,6 @@ public  class IssueType
         return sequence;
     }    
 
-
     /**
      * Gets the id of the template that corresponds to the issue type.
      */
@@ -134,6 +134,5 @@ public  class IssueType
             templateId = ((IssueType)results.get(0)).getIssueTypeId();
         }
         return templateId;
-    }
-        
+    }        
 }

@@ -55,6 +55,7 @@ import org.tigris.scarab.om.Issue;
 import org.tigris.scarab.om.IssueType;
 import org.tigris.scarab.om.ScarabUser;
 import org.tigris.scarab.om.RModuleAttribute;
+import org.tigris.scarab.om.RModuleIssueType;
 
 import org.apache.torque.om.ObjectKey;
 import org.apache.torque.om.NumberKey;
@@ -64,7 +65,7 @@ import org.apache.torque.util.Criteria;
  * This class describes a Module within the Scarab system
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: ModuleEntity.java,v 1.31 2001/10/23 01:29:24 elicia Exp $
+ * @version $Id: ModuleEntity.java,v 1.32 2001/10/24 23:03:42 jon Exp $
  */
 public interface ModuleEntity
 {
@@ -253,6 +254,9 @@ public interface ModuleEntity
      * @return an <code>Attribute[]</code> value
      */
     public Attribute[] getActiveAttributes(IssueType issueType)
+        throws Exception;
+
+    public RModuleIssueType getRModuleIssueType(IssueType issueType)
         throws Exception;
 
     /**
