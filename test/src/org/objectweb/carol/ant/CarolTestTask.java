@@ -18,7 +18,7 @@
  * USA
  *
  * --------------------------------------------------------------------------
- * $Id: CarolTestTask.java,v 1.3 2005/02/08 22:51:39 el-vadimo Exp $
+ * $Id: CarolTestTask.java,v 1.4 2005/02/09 16:27:35 el-vadimo Exp $
  * --------------------------------------------------------------------------
  */
 
@@ -42,16 +42,17 @@ import org.apache.tools.ant.taskdefs.Ant;
 import org.apache.tools.ant.taskdefs.Property;
 
 public final class CarolTestTask extends Task {
-    private final List configs;
+    public final static String IIOP    = "iiop";
+    public final static String JEREMIE = "jeremie";
+    public final static String JRMP    = "jrmp";
+
+    private final static String[] PROTOCOLS = {IIOP, JEREMIE, JRMP};
+
     private String antfile;
     private String propDestination;
     private String propSource;
     private File propDestDir;
     private File propSourceDir;
-
-    public CarolTestTask() {
-        configs = new LinkedList();
-    }
 
     public void setAntfile(String antfile) {
         this.antfile = antfile;
@@ -65,12 +66,6 @@ public final class CarolTestTask extends Task {
         this.propSource = propSource;
     }
 
-    public CarolProtocols createCarolProtocols() {
-        CarolProtocols config = new CarolProtocols();
-        configs.add(config);
-        return config;
-    }
-
     private void checkSettings() throws BuildException {
         if (antfile == null) {
             throw new BuildException("antfile is not set");
@@ -80,9 +75,6 @@ public final class CarolTestTask extends Task {
         }
         if (propSource == null) {
             throw new BuildException("propSource is not set");
-        }
-        if (configs.size() == 0) {
-            throw new BuildException("no nested config elements found");
         }
     }
 
@@ -95,14 +87,8 @@ public final class CarolTestTask extends Task {
         propSourceDir = new File(propSource);
         assertIsDirectory("propSource", propSourceDir);
 
-        for (Iterator ii=configs.iterator(); ii.hasNext(); ) {
-            CarolProtocols config = (CarolProtocols) ii.next();
-            if (config.getProto2() == null) {
-                executeSingle(config.getProto1());
-            } else {
-                // executeMulti(ant, config.getProto1(), config.getProto2());
-                throw new Error("not implemented");
-            }
+        for (int ii=0; ii<PROTOCOLS.length; ii++) {
+            executeSingle(PROTOCOLS[ii]);
         }
     }
 
@@ -134,7 +120,7 @@ public final class CarolTestTask extends Task {
         targetProps.setProperty("client.properties.file.name1", clientPropsFilename);
         targetProps.setProperty("server.properties.file.name", clientPropsFilename);
 
-        int nVariations = CarolProtocols.JRMP.equals(proto) ? 2 : 1;
+        int nVariations = JRMP.equals(proto) ? 2 : 1;
 
         // in the case of JRMP, we need to test two variations:
         // "jrmp 1.1" and "jrmp 1.2"
@@ -166,7 +152,7 @@ public final class CarolTestTask extends Task {
                 Property antProp = ant.createProperty();
                 StringBuffer testname = new StringBuffer(proto);
 
-                if (CarolProtocols.JRMP.equals(proto)) {
+                if (JRMP.equals(proto)) {
                     testname.append("1.").append(ii);
                 }
 
@@ -192,7 +178,7 @@ public final class CarolTestTask extends Task {
     }
 
     private static String alter(String proto, int variation, String name, String value) {
-        if (!CarolProtocols.JRMP.equals(proto)) {
+        if (!JRMP.equals(proto)) {
             return value;
         }
         String suffix = variation == 1 ? "1.1" : "1.2";

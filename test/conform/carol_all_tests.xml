@@ -18,11 +18,6 @@
     classname="org.objectweb.carol.ant.CarolTestTask"
     classpath="${test.build}/classes"/>
 
-  <typedef name="carolProtocols"
-    classname="org.objectweb.carol.ant.CarolProtocols"
-    classpath="${test.build}/classes"/>
-
-
   <!-- ************************************-->
   <!-- *********     TEST ALL    **********-->
   <!-- ************************************-->
@@ -33,10 +28,6 @@
       antfile="conform/generic/carol_double.xml"
       propDestination="${test.build.properties}"
       propSource="${test.ext}">
-
-      <carolProtocols name="jeremie"/>
-      <carolProtocols name="iiop"/>
-      <carolProtocols name="jrmp"/>
 
      <!--
       <carolProtocols name="multi.suniiop.jeremie"/>
