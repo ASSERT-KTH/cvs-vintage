@@ -84,7 +84,7 @@ public class MailConfig extends DefaultConfig {
 			new PopManageOptionsXmlConfig(popManageOptionsFile));
 		*/
 		
-		composerOptionsFile = new File(configDirectory, "composeroptions.xml");
+		composerOptionsFile = new File(configDirectory, "composer_options.xml");
 		registerPlugin(
 			composerOptionsFile.getName(),
 			new ComposerOptionsXmlConfig(composerOptionsFile));
