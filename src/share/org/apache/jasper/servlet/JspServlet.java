@@ -129,7 +129,13 @@ public class JspServlet extends HttpServlet {
         {
             try{
                 incrementCount();
-                servlet.service(req, res);
+                if(servlet instanceof SingleThreadModel){
+                    synchronized(servlet){
+                        servlet.service(req, res);
+                    }
+                } else {
+                    servlet.service(req, res);
+                }
             }catch(NullPointerException e){
                 throw new JasperException(e);
             }finally{
