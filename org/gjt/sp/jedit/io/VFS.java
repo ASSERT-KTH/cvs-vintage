@@ -91,7 +91,7 @@ import org.gjt.sp.util.Log;
  * @see VFSManager#getVFSForProtocol(String)
  *
  * @author Slava Pestov
- * @author $Id: VFS.java,v 1.38 2003/08/04 00:23:07 spestov Exp $
+ * @author $Id: VFS.java,v 1.39 2003/09/08 01:24:11 spestov Exp $
  */
 public abstract class VFS
 {
@@ -596,6 +596,12 @@ public abstract class VFS
 		//{{{ Instance variables
 		public String name;
 		public String path;
+
+		/**
+		 * @since jEdit 4.2pre5
+		 */
+		public String symlinkPath;
+
 		public String deletePath;
 		public int type;
 		public long length;
@@ -619,6 +625,7 @@ public abstract class VFS
 			this.name = name;
 			this.path = path;
 			this.deletePath = deletePath;
+			this.symlinkPath = path;
 			this.type = type;
 			this.length = length;
 			this.hidden = hidden;

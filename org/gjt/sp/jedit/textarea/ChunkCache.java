@@ -35,7 +35,7 @@ import org.gjt.sp.util.Log;
  * Manages low-level text display tasks.
  *
  * @author Slava Pestov
- * @version $Id: ChunkCache.java,v 1.89 2003/08/29 04:35:39 spestov Exp $
+ * @version $Id: ChunkCache.java,v 1.90 2003/09/08 01:24:11 spestov Exp $
  */
 class ChunkCache
 {
@@ -528,7 +528,6 @@ class ChunkCache
 	private void updateChunksUpTo(int lastScreenLine)
 	{
 		// this method is a nightmare
-
 		if(lastScreenLine >= lineInfo.length)
 		{
 			throw new ArrayIndexOutOfBoundsException(lastScreenLine);

@@ -35,7 +35,7 @@ import org.gjt.sp.util.Log;
 /**
  * Local filesystem VFS.
  * @author Slava Pestov
- * @version $Id: FileVFS.java,v 1.41 2003/08/28 22:05:24 spestov Exp $
+ * @version $Id: FileVFS.java,v 1.42 2003/09/08 01:24:11 spestov Exp $
  */
 public class FileVFS extends VFS
 {
@@ -155,6 +155,7 @@ public class FileVFS extends VFS
 			this.modified = file.lastModified();
 			this.canRead = file.canRead();
 			this.canWrite = file.canWrite();
+			this.symlinkPath = MiscUtilities.resolveSymlinks(path);
 		}
 
 		public String getExtendedAttribute(String name)

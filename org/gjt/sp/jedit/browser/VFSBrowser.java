@@ -44,7 +44,7 @@ import org.gjt.sp.util.Log;
 /**
  * The main class of the VFS browser.
  * @author Slava Pestov
- * @version $Id: VFSBrowser.java,v 1.95 2003/08/04 00:23:07 spestov Exp $
+ * @version $Id: VFSBrowser.java,v 1.96 2003/09/08 01:24:11 spestov Exp $
  */
 public class VFSBrowser extends JPanel implements EBComponent, DefaultFocusComponent
 {
@@ -382,7 +382,9 @@ public class VFSBrowser extends JPanel implements EBComponent, DefaultFocusCompo
 		}
 		else if(msg instanceof VFSUpdate)
 		{
-			maybeReloadDirectory(((VFSUpdate)msg).getPath());
+			maybeReloadDirectory(
+				MiscUtilities.resolveSymlinks(
+				((VFSUpdate)msg).getPath()));
 		}
 	} //}}}
 

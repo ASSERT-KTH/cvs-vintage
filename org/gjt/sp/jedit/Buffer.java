@@ -66,7 +66,7 @@ import org.gjt.sp.util.*;
  * </ul>
  *
  * @author Slava Pestov
- * @version $Id: Buffer.java,v 1.199 2003/08/20 20:23:53 spestov Exp $
+ * @version $Id: Buffer.java,v 1.200 2003/09/08 01:24:11 spestov Exp $
  */
 public class Buffer
 {
@@ -3654,7 +3654,6 @@ loop:		for(int i = 0; i < seg.count; i++)
 	private void setPath(String path)
 	{
 		this.path = path;
-		this.symlinkPath = path;
 		VFS vfs = VFSManager.getVFSForPath(path);
 		if((vfs.getCapabilities() & VFS.WRITE_CAP) == 0)
 			setFlag(READ_ONLY,true);
@@ -3678,6 +3677,7 @@ loop:		for(int i = 0; i < seg.count; i++)
 			// past?
 			file = null;
 			autosaveFile = null;
+			symlinkPath = path;
 		}
 	} //}}}
 

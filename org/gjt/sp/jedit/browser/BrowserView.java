@@ -37,7 +37,7 @@ import org.gjt.sp.jedit.*;
 /**
  * VFS browser tree view.
  * @author Slava Pestov
- * @version $Id: BrowserView.java,v 1.75 2003/06/22 01:09:47 spestov Exp $
+ * @version $Id: BrowserView.java,v 1.76 2003/09/08 01:24:11 spestov Exp $
  */
 class BrowserView extends JPanel
 {
@@ -218,6 +218,15 @@ class BrowserView extends JPanel
 	public void maybeReloadDirectory(String path)
 	{
 		String browserDir = browser.getDirectory();
+		String symlinkBrowserDir;
+		if(MiscUtilities.isURL(browserDir))
+		{
+			symlinkBrowserDir = browserDir;
+		}
+		else
+		{
+			MiscUtilities.resolveSymlinks(browserDir);
+		}
 
 		if(VFSBrowser.pathsEqual(path,browserDir))
 		{

@@ -2,6 +2,7 @@
  * jEdit.java - Main class of the jEdit editor
  * :tabSize=8:indentSize=8:noTabs=false:
  * :folding=explicit:collapseFolds=1:
+ *
  * Copyright (C) 1998, 2003 Slava Pestov
  *
  * This program is free software; you can redistribute it and/or
@@ -45,7 +46,7 @@ import org.gjt.sp.util.Log;
 /**
  * The main class of the jEdit text editor.
  * @author Slava Pestov
- * @version $Id: jEdit.java,v 1.193 2003/08/12 20:36:34 spestov Exp $
+ * @version $Id: jEdit.java,v 1.194 2003/09/08 01:24:11 spestov Exp $
  */
 public class jEdit
 {
@@ -206,6 +207,8 @@ public class jEdit
 		{
 			settingsDirectory = MiscUtilities.constructPath(
 				System.getProperty("user.home"),
+				settingsDirectory);
+			settingsDirectory = MiscUtilities.resolveSymlinks(
 				settingsDirectory);
 		}
 
@@ -2918,6 +2921,8 @@ public class jEdit
 				}
 			}
 		}
+
+		jEditHome = MiscUtilities.resolveSymlinks(jEditHome);
 
 		Log.log(Log.MESSAGE,jEdit.class,"jEdit home directory is " + jEditHome);
 

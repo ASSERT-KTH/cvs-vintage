@@ -57,7 +57,7 @@ import org.gjt.sp.util.Log;
  *
  * @author Slava Pestov
  * @author John Gellene (API documentation)
- * @version $Id: JEditTextArea.java,v 1.285 2003/08/31 00:43:59 spestov Exp $
+ * @version $Id: JEditTextArea.java,v 1.286 2003/09/08 01:24:11 spestov Exp $
  */
 public class JEditTextArea extends JComponent
 {
@@ -4703,7 +4703,7 @@ loop:			for(int i = lineNo + 1; i < getLineCount(); i++)
 	public void joinLines()
 	{
 		int end = getLineEndOffset(caretLine);
-		if(end > buffer.getLength())
+		if(!buffer.isEditable() || end > buffer.getLength())
 		{
 			getToolkit().beep();
 			return;
