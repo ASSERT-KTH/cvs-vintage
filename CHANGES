@@ -56,6 +56,7 @@ Fixed bugs:
 - #999289, IMAP:All MSGs have size of 0KB; added fecth of RFC822.SIZE (tstich)
 - textpart was shown as attachment with 'open message in composer' (tstich)
 - all composed messages where tagged as having attachments (tstich)
+- #1009952, trayicon not visible if using columba.jar/webstart (fdietz)
 
 Columba v1.0 RC1-test4
 
