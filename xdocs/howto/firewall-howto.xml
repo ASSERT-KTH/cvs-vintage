@@ -1,0 +1,115 @@
+<?xml version="1.0"?>
+
+<document>
+
+<properties>
+    <title>Scarab Behind a Firewall</title>
+    <author email="epugh@upstate.com">Eric Pugh</author>
+    <author email="dabbous@saxess.de">Hussayn Dabbous</author>    
+</properties>
+
+<body>
+
+<section name="The problem">
+<ul>
+<li>You want to setup Scarab in your company.</li>
+<li>You want Scarab to be accessible from the internet
+   throug your company firewall.</li>
+<li>The only open port to the internet is port 80,
+   and this port occuppied by your company webserver</li>   
+</ul>
+</section>
+
+<section name="The solution (for unix/linux based servers)">
+<p>
+<pre>
+1.) Add a "webspace" to your company webserver.
+     for apache the simplest way is as follows:
+
+     Add following two lines to your server conf,
+     e.g. within your virtual host config:
+
+     ProxyPass        /scarab http://ScarabHost:8080/scarab
+     ProxyPassReverse /scarab http://ScarabHost:8080/scarab
+
+     You need to adjust the host:port settings to your environment.
+     I also assume, you have mod_proxy added in your apache
+     configuration.
+     You can attach scarab in multiple ways to your webserver,
+     but this is by far the easiest approach...
+
+2.) Setup your "build.properties" for scarab as follows:
+
+     The following build properties are essential. You might
+     want to change others too. Please follow the instructions
+     in the scarab-installation manual and adjust the values below
+     according to your environment:
+
+     scarab.context=scarab
+     scarab.http.domain=www.yourCompany.com
+     scarab.http.port=80
+     scarab.email.domain=yourCompany.com
+     scarab.tomcat.port=8080
+     scarab.tomcat.proxy.name="www.yourCompany.com"
+     scarab.tomcat.proxy.port="80"
+
+     Note: The trick is to set scarab.http.port to 80, NOT to 8080
+     The other trick is to surround the proxy settings with double quotes
+
+3.) build scarab as described in thje installation manual
+
+4.) go to target/conf/server.xml
+     check that you have the following lines:
+    			<source>
+<![CDATA[
+     <Connector className="org.apache.coyote.tomcat4.CoyoteConnector"
+                port="9023" minProcessors="5" maxProcessors="75"
+                enableLookups="true" redirectPort="8443"
+                acceptCount="10" debug="0" connectionTimeout="60000"
+                proxyName="www.yourCompany.com"
+                proxyPort="80" />
+]]>
+				</source>
+
+     Sometimes the scarab build drops these (erroneous) lines instead:
+    			<source>
+<![CDATA[
+     <Connector className="org.apache.coyote.tomcat4.CoyoteConnector"
+                port="9023" minProcessors="5" maxProcessors="75"
+                enableLookups="true" redirectPort="8443"
+                acceptCount="10" debug="0" connectionTimeout="60000"
+                "www.yourCompany.com"
+                "80" />
+]]>
+				</source>
+     Note: proxyPort and proxyName are missing. Correct this manually if
+     necessary.
+
+
+5.) build the database as described in the installation manual.
+     If you already have a database, skip this point.
+
+     cd $root/src/sql
+     ./create-db.sh
+
+
+6.) (re-)start scarab
+
+     cd target/bin
+     ./catalina.sh start
+
+7.) restart your webserver
+
+
+Now you can access your scarab from
+
+	http://www.yourCompany.com/scarab/issues
+
+from within your intranet AND from the internet.
+</pre>     
+
+</p>
+</section>
+
+</body>
+</document>

@@ -1,0 +1,589 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<faqs title="Frequently Asked Questions">
+
+  <part id="general">
+    <title>General</title>
+   
+    <faq id="1">
+      <question>
+        Is there suitable 'propaganda' material that I could use in my company demo to try to convince my boss that it is a good idea to use Scarab?
+      </question>
+      <answer>
+The website and use of Scarab itself are all we currently have.
+Scarab is very easy to <a href="http://scarab.tigris.org/unbranded-source/browse/*checkout*/scarab/README.txt?rev=1">install and setup</a>, 
+so it should not take you much time to become comfortable with 
+Scarab so that you can perform your own demonstration.
+      </answer>
+    </faq>
+    <faq id="2">
+      <question>
+        Is Scarab ready for production use?
+      </question>
+      <answer>
+Scarab is in pre-1.0 beta. It has been in development for over
+two years now and there is quite a lot of features in it. On
+July 9th, 2002, we became self hosting. This means that we now
+use Scarab to track Scarab so we feel it is ready enough for
+usage. We also know that there are several large corporations
+using Scarab. Please note that we do not promise anything. If
+Scarab eats your database, then we hope you have good backups.
+      </answer>
+    </faq>   
+    <faq id="3">
+      <question>
+        Is Scarab ready for production use?
+      </question>
+      <answer>
+Scarab is in pre-1.0 beta. It has been in development for over
+two years now and there is quite a lot of features in it. On
+July 9th, 2002, we became self hosting. This means that we now
+use Scarab to track Scarab so we feel it is ready enough for
+usage. We also know that there are several large corporations
+using Scarab. Please note that we do not promise anything. If
+Scarab eats your database, then we hope you have good backups.
+      </answer>
+    </faq>    
+    <faq id="4">
+      <question>
+        What are Scarab's disadvantages over Bugzilla?
+      </question>
+      <answer>
+<p>     
+Scarab has many features and advantages over Bugzilla, which we
+are not going to get into here, but the primary disadvantages are:
+</p>
+
+<p>
+#1. implementation of workflow<br />
+        This means that Scarab does not have any logic
+        implemented within it that allows you to say things
+        like: when the State is changed to closed, change the 
+        resolution to resolved. There is an API for allowing
+        this to happen, however, it has not been implemented
+        in the Open Source version of Scarab yet. We are hoping
+        that the community will implement this for us since 
+        CollabNet is not making this part available at this time.
+        
+        <strong>Update: the beginnings of workflow have been checked
+        into a branch of CVS by a member of our community. it is not
+        complete, but it is a start.</strong>
+</p>
+
+<p>
+#2. testing and deployment as wide as Bugzilla<br />
+        Bugzilla has been deployed far and wide over a number
+        of years and has undergone a great amount of testing
+        and visibility on the Mozilla.org website. Scarab has 
+        not had the same level of testing and usage.
+</p>
+      </answer>
+    </faq>    
+    <faq id="5">
+      <question>
+        What problems might arise if I deploy Scarab now?
+      </question>
+      <answer>
+<p>
+We have not heard of any major data integrity issues. In other words, we
+have not heard of Scarab destroying its own database. However, we have
+found several bugs along the way where things were not being logged
+properly or other such annoyances.
+</p>
+
+<p>
+We recommend strongly that you make regular backups of your database by
+doing full dumps. That way, if something does go wrong, not only can you
+send us a copy of your database (if appropriate) but you can also revert
+to the previous state.
+</p>
+
+<p>
+We provide database upgrade scripts for each revision of Scarab. That 
+way you can be sure that if you start using Scarab now, you will be able
+to forward migrate your data when there are Scarab updates. Please see
+the upgrade instructions below for more information.
+</p>
+
+<p>
+You may also run into various bugs or missing features within Scarab. It
+is best to first search our <a
+href="http://scarab.tigris.org/issues.html">issue database</a> and <a
+href="http://scarab.tigris.org/unbranded-source/browse/*checkout*/scarab/KNOWN_ISSUES.txt?rev=1">KNOWN_ISSUES.txt</a> file to see if we know about the
+issue. If not, please let us know by reporting it to the issue tracker.
+Whatever you do, please don't send it to the mailing lists.
+</p>
+
+<p>
+Remember, Scarab is still pre-1.0 beta software and is still under
+heavy development.
+</p>
+      </answer>
+    </faq>   
+    <faq id="6">
+      <question>
+        What documentation is available?
+      </question>
+      <answer>
+<p>
+There is three types of documentation for Scarab.
+<ol>
+<li>This page.</li>
+<li>There is <a
+href="http://scarab.tigris.org/project_docs.html">what is available on
+the website</a> (which tends towards administration and other
+questions).</li>
+<li>There is user level documentation that is built into the
+application itself and is available in the left side navigation.</li>
+</ol>
+</p>
+      </answer>
+    </faq>    
+    <faq id="7">
+      <question>
+        Why am I getting an error connecting to MySQL?
+      </question>
+      <answer>
+<p>
+From the <a
+href="http://scarab.tigris.org/unbranded-source/browse/*checkout*/scarab/README.txt?rev=1">README.txt</a> file:
+</p>
+
+<p>
+NOTE: If you get a 'Server configuration denies access to data source'
+      or 'access denied' or 'Invalid authorization' or
+      'java.lang.NullPointerException: Connection object was null.'
+      error from MySQL in the log files, please read the MySQL
+      documentation on how to fix this error. We will not provide
+      support for this since it is really a MySQL configuration issue.
+</p>
+
+<p>
+    Hint: On some operating systems, there seems to be a weird
+    interation between the JVM, DNS resolution and the MySQL driver
+    where a JDBC url pointing to 'localhost' will resolve as 
+    'localhost.localdomain' and will prevent the connection to MySQL
+    from authenticating correctly because most people configure MySQL
+    for 'localhost'. One way to get around this is to use IP addresses
+    in both the MySQL ACL as well as in the JDBC url.
+</p>
+<p>
+      At least one person has reported that using '127.0.0.1' instead of 'localhost'
+      resolved a 'Server configuration denies access to data source' connection issue.
+</p>
+<p>
+      In order to setup the right permissions in MySQL, you may wish to
+      try executing this command on a Unix command line (it has been
+      reported to work for one person):
+</p>
+
+<p>
+        echo "GRANT ALL ON scarab.* to ''@localhost" | mysql mysql
+</p>
+      
+<p>
+NOTE: Sometimes it may be useful to use "ant create-db" rather than "create-db.sh"
+      to diagnose connection issues since ant uses jdbc and the same URL
+      that Scarab does while running.
+ 
+</p>
+      
+<p>
+      Here is a couple links to also help you solve the permissions
+      problem:
+</p>
+
+<p>      
+ <a href="http://www.mysql.com/documentation/mysql/bychapter/manual_MySQL_Database_Administration.html#Access_denied">MySQL documentation</a>
+</p>
+<p>
+ <a href="http://sourceforge.net/docman/display_doc.php?docid=8968&amp;group_id=15923">MySQL driver documentation</a>
+</p>
+      </answer>
+    </faq>    
+    <faq id="8">
+      <question>
+        How can I contribute to Scarab and why?
+      </question>
+      <answer>
+<p>
+How: Please see our <a href="http://scarab.tigris.org/project_members.html">Getting involved</a> document.
+</p>
+
+<p>
+Why: Because the need for a first class issue tracking system that 
+is open source is badly needed.
+</p>
+      </answer>
+    </faq>    
+    <faq id="9">
+      <question>
+        How do I hook Scarab up to (or behind) Apache?
+      </question>
+      <answer>
+<p>
+Here is my configuration for the 
+<a href="http://scarab.collab.net/">Scarab Live Server</a>:
+</p>
+
+<pre>
+NameVirtualHost 157.22.245.3
+&lt;VirtualHost 157.22.245.3&gt;
+    ServerName scarab.collab.net
+    RewriteEngine on
+    RewriteRule /(.+) http://scarab.collab.net:8081/$1 [P]
+    ProxyPassReverse / http://scarab.collab.net:8081/s/
+&lt;/VirtualHost&gt;
+</pre>
+
+<p>
+The above might not be optimal or even correct, but it works for
+me. You will need to have mod_rewrite and mod_proxy enabled on your
+server. A 'faster' method of doing the same thing would be to use
+Tomcat's mod_jk/mod_webapp with some rewrite rules (to get the short
+url's), but I'm not doing that, so I don't have configuration to show
+for it. Contributions welcome.
+</p>
+
+<p>
+For hiding Scarab behind Apache SSL, a similar setup as above would
+work, you would just want to make sure to listen to the https port 443
+in the VirtualHost declaration.
+</p>
+      </answer>
+    </faq> 
+    <faq id="10">
+      <question>
+        How do I populate the database with my own issue types, attributes
+and attribute options?
+      </question>
+      <answer>
+<p>
+When you first install Scarab using the ./create-db.sh -e script,
+you will get an empty database that is only populated with the
+required data. Therefore, you will need to setup your installation
+with new Modules, Issue types, Attributes and Attribute options.
+</p>
+
+<p>
+Login as the Scarab Administer account that you created/defined
+in your build.properties when you built Scarab.
+</p>
+
+<p>
+#1. Create a new module.<br />
+    Admin -> Modules -> Manage modules -> Create new module
+</p>
+
+<p>
+#2. Select the module by clicking the 'Modules' link in the top-left
+    of the screen.
+</p>
+
+<p>
+#3. Now, create a new global issue type.<br />
+    Admin -> Global -> Global issue types
+</p>
+
+<p>
+#4. Add the new issue type to the module.<br />
+    Admin -> Modules -> Manage issue types -> Create new
+</p>
+
+<p>
+#5. Set the issue type to be active and shown in the left hand nav.<br />
+    (should be the next screen after #4. if not, then it is:
+    Admin -> Modules -> Manage issue types)
+</p>
+
+<p>
+#6. Edit the issue type and create attributes and attribute options.<br />
+    Admin -> Modules -> Manage issue types (click the issue type name).
+</p>
+
+<p>
+#7. Add attributes to an attribute group.<br />
+    (click the attribute group name on the 'Edit issue type' screen
+    and then click the 'Add new' button. If there are no global attributes
+    to add (most likely in this case), click the 'Create new' button to
+    define a global attribute.)
+</p>
+    
+<p>
+#8. Defining an attribute and its options.<br />
+    (Set the name/description/type of the attribute and then save it.
+     If you have created a Dropdown list, then the ability to create
+     attribute options will show up below. Simply add options and click
+     Save. When you are done, click done and it will take you back to
+     step #7. The attribute should also appear in the group.)
+</p>
+
+<p>
+Continue to repeat the steps above until all of your issue types, attributes
+and attribute options have been defined.
+</p>
+      </answer>
+    </faq>  
+    <faq id="11">
+      <question>
+        How do I setup Scarab so that it will send a copy of each issue
+change to a particular email address (ie: a mailing list or the project leader)?
+      </question>
+      <answer>
+As either the module administrator or the domain administrator user, go
+to the Admin->Modules->Manage modules screen and edit the particular
+module that you are interested in tracking issue changes in. Set the
+'Archive email' address to the email address that you want. Please note, do
+not try to do this in the Global module, only modules which are children of 
+the Global module. If you want this email to go to multiple people, setup
+a mailing list and subscribe the people to that mailing list and then
+set the 'Archive email' address to be the address of the mailing list.
+      </answer>
+    </faq>  
+    <faq id="12">
+      <question>
+       When I receive notification email from scarab, the url to the
+       issue starts with http://localhost:8080/. Clearly that is bad because I
+       want the email to point to the server that Scarab is on. How to I make
+it say the server domain name instead?
+      </question>
+      <answer>
+In order to have one fewer thing to have to configure, Scarab uses
+whatever you type into the browser url as the url that is sent in the
+emails. So, if your server name is foo.com, then going to
+http://foo.com:8080/ instead of http://localhost:8080/ will generate the
+right url in the emails.
+      </answer>
+    </faq>  
+    <faq id="13">
+      <question>
+        How can I set defaults for the various attributes on
+issue entry?
+      </question>
+      <answer>
+Right now, that is what issue templates do. Click on the 'Templates'
+link in the left hand side navigation, create the template and it will
+then show up when you go to enter a new issue. You can create as many
+templates as you wish and just 'apply' them when you enter a new issue.
+A nice feature addition would be to have a setting on the template
+administration screen that denotes which one should be automatically
+applied.
+      </answer>
+    </faq>  
+    <faq id="14">
+      <question>
+        What is the process for upgrading Scarab?
+      </question>
+      <answer>
+<p>      
+The  Scarab developers provide MySQL database upgrade scripts
+for each new version of Scarab. We also take contributions for other
+databases. These scripts reside in the scarab/src/sql/upgrade directory.
+Some of these scripts are .sql files and some are unix shell .sh files.
+If you are using another database or operating system, we welcome your
+contributions to port these files.
+</p>
+
+<p>
+To execute the .sql scripts you should type something along the lines
+of:
+</p>
+
+<p>
+mysql DATABASE_NAME &lt; mysql-upgrade-1.0b8-1.0b9-1.sql
+</p>
+
+<p>
+To execute the .sh scripts you should type something along the lines
+of:
+</p>
+
+<p>
+./mysql-upgrade-1.0b8-1.0b9-3.sh --password
+</p>
+
+<p>
+Note that you will need to execute ALL of the scripts in order of
+upgrade version number and script order. For example, if you are
+upgrading from 1.0b8 to 1.0b9, then you should execute
+mysql*b8*b9-1.sql, mysql*b8*b9-2.sql, etc. Also note that the --password
+argument to the shell script is optional and not required if you do not
+need to specify a password.
+</p>
+
+<p>
+If you have deployed Scarab with the default settings and are running
+out of the default target directory, then you should download the new
+version of Scarab, move the target directory into the new version of
+Scarab, cd into target/webapps/scarab/WEB-INF and backup and remove the
+following directories: classes, conf, lib, sql, src. You should be
+careful to not remove the indexes and attachments directories (if they
+exist). Once you have done that, you can build Scarab again following
+the directions in the README.txt file. You should take note to create a
+~/build.properties file which stores your changes to the Scarab settings
+so that when you build again, your settings remain intact.
+</p>
+      </answer>
+    </faq>  
+    <faq id="15">
+      <question>
+        I tried to register for Scarab's issue tracker and got the following error:
+      </question>
+      <answer>
+Alert! Sorry, the email you submitted (EMAIL) does not have a DNS A or MX record
+defined. It is likely that the domain is invalid and that we cannot send
+you email. Please see ftp://ftp.isi.edu/in-notes/rfc2505.txt for more
+details. Please try another email address or contact your system
+administrator.
+<p>
+Scarab has an optional feature which is enabled by setting the
+scarab.register.email.checkRFC2505=true property in your
+build.properties. This feature uses DNS to check that the domain which
+is being registered has a valid A or MX record which is the minimum required
+to send email to a domain name. This feature is enabled
+to help try to prevent people from creating bogus accounts on the
+server.
+</p>
+
+<p>
+The fix is simple, create an A or MX record for your domain entry.
+</p>
+      </answer>
+    </faq> 
+    <faq id="16">
+      <question>
+        Can I see Scarab in action without installing it myself?
+      </question>
+      <answer>
+<p>
+.Scarab self-hosts as its own issue tracker and you can view a limited set of 
+the functionality at 
+<a href="http://scarab.collab.net/">http://scarab.collab.net/</a> 
+Please do not use it for testing. 
+
+
+If you want to use
+a Scarab instance for testing, please use this address of the instance which is
+rebuilt nightly from CVS: 
+<a href="http://www.saxess.com/en/components/scarab/testserver.page">http://www.saxess.com/en/components/scarab/testserver.page</a>.
+
+</p>
+      </answer>
+    </faq> 
+    <faq id="17">
+      <question>
+        I get a funny error when trying to run Scarab on Tomcat 4.1.x:
+      </question>
+      <answer>
+<pre>
+java.lang.VerifyError: (class:
+org/apache/fulcrum/intake/transform/XmlToAppData, method: parseFile
+signature:
+(Ljava/lang/String;Z)Lorg/apache/fulcrum/intake/xmlmodel/AppData;)
+Incompatible object argument for function call
+</pre>
+
+<p>
+Tomcat has several directories setup in order to create different
+'levels' of classpaths. There is a classpath that is specific to Tomcat
+and a classpath that is shared by all of the webapplications that Tomcat
+is running. Since Scarab still depends on Xerces 1.x, we need to make
+sure that that is the only Xerces available to Scarab at runtime.
+</p>
+
+<p>
+In order to make Scarab work with Tomcat 4.1.x, you will need to move
+the xercesImpl.jar from tomcat/common/endorsed to tomcat/server/lib.
+This makes it so that the Xerces 2.x that comes with Tomcat is only used
+by Tomcat. You will also need to make sure that if you have any other
+webapplications which depend on Xerces (1.x or 2.x), that they include a
+copy of the .jar file in their WEB-INF/lib directory.
+</p>
+
+<p>
+It is sad that this needs to be this way, but due to Xerces
+incompatibility issues, that is the way it is. Note that we will
+eventually make Scarab dependent on Xerces 2.x so that this is not an
+issue, but we are not quite there yet.
+</p>
+      </answer>
+    </faq> 
+    <faq id="18">
+      <question>
+        I want the Velocity templates to be copied into the webapp directory so that
+I can deploy Scarab as a WAR.
+      </question>
+      <answer>
+<p>
+In your build.properties, add the line: <code>scarab.copy.templates=true</code>
+</p>
+  </answer>
+    </faq> 
+    <faq id="19">
+      <question>
+What is the best way to make duplicate installations of Scarab on multiple
+machines/databases? In other words, I want to have multiple installations
+of Scarab and I don't want to have to setup each one by hand.
+      </question>
+      <answer>
+<p>
+Right now, the easiest way is to setup one installation of Scarab, then
+mysqldump the database and import it into the other database.
+Eventually, we will have the ability to export/import the Scarab
+'settings'.
+</p>
+      </answer>
+    </faq> 
+    <faq id="20">
+      <question>
+        I see a lot of little temp files created on disk.
+      </question>
+      <answer>
+<p>
+The reason for this is because when you upload a file attachment, the
+upload system also sends the form data. Because of this, each little bit
+of data will get a file created for it. You can adjust the size of the
+memory cache so that more of this data is held in temp memory (and not
+created as files) with this property:
+</p>
+
+<pre>
+# The maximum size of a request that will have it's elements cached in
+# memory by TurbineUploadService class.
+#
+services.UploadService.size.threshold=8192
+</pre>
+
+<p>
+These files should get cleaned up as the object is garbage collected, or
+the Java Virtual Machine is shutdown. If they persist after a shutdown,
+you can most likely safely remove them.
+</p>
+      </answer>
+    </faq>     
+    <faq id="21">
+      <question>
+        Is there a way to turn off the auto-logoff feature or
+        extend the amount of time before it automatically
+invalidates a user and forces them to log in again?
+      </question>
+      <answer>
+<p>
+In your build.properties, define the following by removing the #:
+</p>
+
+<pre>
+# This is the timeout in seconds for sessions. If the value is 
+# left commented out, the servlet container's default timeout 
+# will be left as is.
+scarab.session.timeout = # session.timeout = 1800
+</pre>
+
+<p>
+If you want to disable logging people off, just set the value to 
+a very high number.
+</p>
+      </answer>
+    </faq>   
+   
+  </part>  
+</faqs>
