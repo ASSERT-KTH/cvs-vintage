@@ -36,7 +36,7 @@ import org.gjt.sp.jedit.*;
 /**
  * Text field with an arrow-key accessable history.
  * @author Slava Pestov
- * @version $Id: HistoryTextField.java,v 1.14 2004/09/02 04:55:36 spestov Exp $
+ * @version $Id: HistoryTextField.java,v 1.15 2005/01/21 23:04:14 spestov Exp $
  */
 public class HistoryTextField extends JTextField
 {
@@ -90,7 +90,7 @@ public class HistoryTextField extends JTextField
 	public HistoryTextField(String name, boolean instantPopups,
 		boolean enterAddsToHistory)
 	{
-		controller = new HistoryText(this,name)
+		controller = new HistoryText(this,null)
 		{
 			public void fireActionPerformed()
 			{
@@ -98,6 +98,7 @@ public class HistoryTextField extends JTextField
 			}
 		};
 
+		setModel(name);
 		MouseHandler mouseHandler = new MouseHandler();
 		addMouseListener(mouseHandler);
 		addMouseMotionListener(mouseHandler);
