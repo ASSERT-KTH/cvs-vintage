@@ -21,20 +21,14 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Vector;
 
-import org.columba.addressbook.folder.ContactStorage;
-import org.columba.addressbook.folder.GroupFolder;
-import org.columba.addressbook.main.AddressbookInterface;
-import org.columba.addressbook.model.Contact;
 import org.columba.addressbook.model.ContactItem;
-import org.columba.addressbook.model.ContactItemMap;
-import org.columba.addressbook.model.HeaderItem;
-import org.columba.addressbook.model.HeaderItemList;
-import org.columba.addressbook.model.VCARD;
-import org.columba.core.main.MainInterface;
+
 
 /**
- * @version 1.0
- * @author
+ * Provides parsers for creating String representations from List 
+ * objects and vice versa.
+ * 
+ * @author fdietz
  */
 public class ListParser {
 
@@ -85,118 +79,6 @@ public class ListParser {
 
 		String address = buf.toString();
 		result.add(address);
-
-		return result;
-	}
-
-	/**
-	 * Flatten mixed list containing contacts and groups to a new list
-	 * containing only contacts.
-	 * 
-	 * @param list
-	 *            mixed list
-	 * @return list containing only contacts
-	 */
-	public static List flattenList(List list) {
-		List result = new Vector();
-
-		for (Iterator it = list.iterator(); it.hasNext();) {
-			String s = (String) it.next();
-			GroupFolder groupFolder = AddressbookInterface.addressbookTreeModel
-					.getGroupFolder(s);
-			// if its a group item
-			if (groupFolder != null) {
-				ContactItemMap map = null;
-				try {
-					map = groupFolder.getContactItemMap();
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-				if (map == null)
-					continue;
-
-				Iterator it2 = map.iterator();
-				while (it2.hasNext()) {
-					ContactItem i = (ContactItem) it2.next();
-					String address = i.getAddress();
-
-					if (address == null) {
-						continue;
-					}
-
-					result.add(address);
-				}
-			} else {
-				// contact item
-
-				// check if valid email address
-				if ( AddressParser.isValid(s)) {
-					// add address to list
-					result.add(s);
-					continue;
-				}
-				
-				// this is not a valid email address
-				// -> check if its a contact displayname
-				// -> if so, retrieve email address from contact folder
-				
-				// look into both folders
-				ContactStorage personal = (ContactStorage) AddressbookInterface.addressbookTreeModel
-						.getFolder(101);
-				ContactStorage collected = (ContactStorage) AddressbookInterface.addressbookTreeModel
-						.getFolder(102);
-
-				// try to find a matching contact item
-				Contact item = null;
-				try {
-
-					Object uid = personal.exists(s);
-					if (uid != null) {
-						item = personal.get(uid);
-					}
-
-					uid = collected.exists(s);
-					if (uid != null)
-						item = collected.get(uid);
-
-				} catch (Exception e) {
-					if (MainInterface.DEBUG)
-						e.printStackTrace();
-				}
-
-				// if match found
-				if (item != null)
-					result
-							.add(item.get(VCARD.EMAIL,
-									VCARD.EMAIL_TYPE_INTERNET));
-
-			}
-
-		}
-
-		return result;
-	}
-
-	/**
-	 * Create list containing only strings from a HeaderItemList containing
-	 * HeaderItem objects.
-	 * 
-	 * @param list
-	 *            HeaderItemList containing HeaderItem objects
-	 * @return list containing only strings
-	 */
-	public static List createStringListFromItemList(HeaderItemList list) {
-		List result = new Vector();
-
-		for (Iterator it = list.iterator(); it.hasNext();) {
-			HeaderItem item = (HeaderItem) it.next();
-
-			if (item == null) {
-				continue;
-			}
-
-			result.add(item.getDisplayName());
-		}
 
 		return result;
 	}

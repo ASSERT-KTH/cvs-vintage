@@ -25,6 +25,7 @@ import org.columba.addressbook.gui.autocomplete.AddressCollector;
 import org.columba.addressbook.model.ContactItem;
 import org.columba.addressbook.model.HeaderItem;
 import org.columba.addressbook.model.HeaderItemList;
+import org.columba.addressbook.parser.ListBuilder;
 import org.columba.addressbook.parser.ListParser;
 import org.columba.core.gui.focus.FocusOwner;
 import org.columba.core.gui.util.NotifyDialog;
@@ -188,13 +189,13 @@ public class HeaderController implements FocusOwner {
 	}
 
 	public void setHeaderItemLists(HeaderItemList[] lists) {
-		((ComposerModel) controller.getModel()).setToList(ListParser
+		((ComposerModel) controller.getModel()).setToList(ListBuilder
 				.createStringListFromItemList(lists[0]));
 
-		((ComposerModel) controller.getModel()).setCcList(ListParser
+		((ComposerModel) controller.getModel()).setCcList(ListBuilder
 				.createStringListFromItemList(lists[1]));
 
-		((ComposerModel) controller.getModel()).setBccList(ListParser
+		((ComposerModel) controller.getModel()).setBccList(ListBuilder
 				.createStringListFromItemList(lists[2]));
 
 		updateComponents(true);

@@ -21,8 +21,9 @@ import java.util.StringTokenizer;
 import java.util.Vector;
 
 /**
- * @version 1.0
- * @author
+ * Parsers for email address in RFC822 format.
+ * 
+ * @author fdietz
  */
 public class AddressParser {
 	public static boolean isValid(String str) {

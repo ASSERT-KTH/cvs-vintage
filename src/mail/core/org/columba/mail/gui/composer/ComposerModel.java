@@ -21,6 +21,7 @@ import java.util.Vector;
 import java.util.logging.Logger;
 
 import org.columba.addressbook.parser.AddressParser;
+import org.columba.addressbook.parser.ListBuilder;
 import org.columba.addressbook.parser.ListParser;
 import org.columba.mail.command.FolderCommandReference;
 import org.columba.mail.config.AccountItem;
@@ -371,14 +372,14 @@ public class ComposerModel {
 	public List getRCPTVector() {
 		List output = new Vector();
 
-		output.addAll(AddressParser.normalizeRCPTVector(ListParser
-				.flattenList(getToList())));
+		output.addAll(AddressParser.normalizeRCPTVector(ListBuilder
+				.createFlatList(getToList())));
 
-		output.addAll(AddressParser.normalizeRCPTVector(ListParser
-				.flattenList(getCcList())));
+		output.addAll(AddressParser.normalizeRCPTVector(ListBuilder
+				.createFlatList(getCcList())));
 
-		output.addAll(AddressParser.normalizeRCPTVector(ListParser
-				.flattenList(getBccList())));
+		output.addAll(AddressParser.normalizeRCPTVector(ListBuilder
+				.createFlatList(getBccList())));
 
 		return output;
 	}

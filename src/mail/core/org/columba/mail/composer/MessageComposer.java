@@ -30,6 +30,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.logging.Logger;
 
+import org.columba.addressbook.parser.ListBuilder;
 import org.columba.addressbook.parser.ListParser;
 import org.columba.core.command.WorkerStatusController;
 import org.columba.core.main.MainInterface;
@@ -72,18 +73,18 @@ public class MessageComposer {
 
 		// RFC822 - Header
 		if (model.getToList().size() > 0) {
-			header.set("To", ListParser.createStringFromList(ListParser
-					.flattenList(model.getToList())));
+			header.set("To", ListParser.createStringFromList(ListBuilder
+					.createFlatList(model.getToList())));
 		}
 
 		if (model.getCcList().size() > 0) {
-			header.set("Cc", ListParser.createStringFromList(ListParser
-					.flattenList(model.getCcList())));
+			header.set("Cc", ListParser.createStringFromList(ListBuilder
+					.createFlatList(model.getCcList())));
 		}
 
 		if (model.getBccList().size() > 0) {
-			header.set("Bcc", ListParser.createStringFromList(ListParser
-					.flattenList(model.getBccList())));
+			header.set("Bcc", ListParser.createStringFromList(ListBuilder
+					.createFlatList(model.getBccList())));
 		}
 
 		header.set("columba.subject", model.getSubject());
