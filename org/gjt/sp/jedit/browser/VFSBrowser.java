@@ -44,7 +44,7 @@ import org.gjt.sp.util.Log;
 /**
  * The main class of the VFS browser.
  * @author Slava Pestov
- * @version $Id: VFSBrowser.java,v 1.112 2005/02/05 20:34:39 spestov Exp $
+ * @version $Id: VFSBrowser.java,v 1.113 2005/03/09 23:46:07 spestov Exp $
  */
 public class VFSBrowser extends JPanel implements EBComponent, DefaultFocusComponent
 {
@@ -882,20 +882,6 @@ check_selected: for(int i = 0; i < selectedFiles.length; i++)
 	//{{{ Package-private members
 	String currentEncoding;
 	boolean autoDetectEncoding;
-
-	//{{{ pathsEqual() method
-	/**
-	 * This will be made public at some stage, in the io package, but not
-	 * yet.
-	 */
-	static boolean pathsEqual(String p1, String p2)
-	{
-		if(p1.endsWith("/") || p1.endsWith(File.separator))
-			p1 = p1.substring(0,p1.length() - 1);
-		if(p2.endsWith("/") || p2.endsWith(File.separator))
-			p2 = p2.substring(0,p2.length() - 1);
-		return p1.equals(p2);
-	} //}}}
 
 	//{{{ updateFilenameFilter() method
 	void updateFilenameFilter()

@@ -32,7 +32,7 @@ import org.gjt.sp.util.*;
 /**
  * A browser I/O request.
  * @author Slava Pestov
- * @version $Id: BrowserIORequest.java,v 1.21 2005/02/05 20:34:39 spestov Exp $
+ * @version $Id: BrowserIORequest.java,v 1.22 2005/03/09 23:46:07 spestov Exp $
  */
 class BrowserIORequest extends WorkRequest
 {
@@ -247,12 +247,10 @@ class BrowserIORequest extends WorkRequest
 				path1 = vfs._canonPath(session,path1,browser);
 				path2 = vfs._canonPath(session,path2,browser);
 
-				VFSFile file = vfs._getFile(
-					session,path2,browser);
+				VFSFile file = vfs._getFile(session,path2,browser);
 				if(file != null)
 				{
-					if((OperatingSystem.isDOSDerived()
-						|| OperatingSystem.isMacOS())
+					if((OperatingSystem.isCaseInsensitiveFS())
 						&& path1.equalsIgnoreCase(path2))
 					{
 						// allow user to change name

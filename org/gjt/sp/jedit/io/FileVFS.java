@@ -36,7 +36,7 @@ import org.gjt.sp.util.Log;
 /**
  * Local filesystem VFS.
  * @author Slava Pestov
- * @version $Id: FileVFS.java,v 1.51 2005/02/10 22:35:17 spestov Exp $
+ * @version $Id: FileVFS.java,v 1.52 2005/03/09 23:46:07 spestov Exp $
  */
 public class FileVFS extends VFS
 {
@@ -47,8 +47,7 @@ public class FileVFS extends VFS
 	{
 		super("file",READ_CAP | WRITE_CAP | DELETE_CAP
 			| RENAME_CAP | MKDIR_CAP | LOW_LATENCY_CAP
-			| ((OperatingSystem.isMacOS()
-			|| OperatingSystem.isDOSDerived())
+			| ((OperatingSystem.isCaseInsensitiveFS())
 			? CASE_INSENSITIVE_CAP : 0),
 			new String[] { EA_TYPE, EA_SIZE, EA_STATUS,
 			EA_MODIFIED });

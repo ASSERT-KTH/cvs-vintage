@@ -48,7 +48,7 @@ import org.gjt.sp.util.Log;
 /**
  * The main class of the jEdit text editor.
  * @author Slava Pestov
- * @version $Id: jEdit.java,v 1.246 2005/03/05 04:25:52 spestov Exp $
+ * @version $Id: jEdit.java,v 1.247 2005/03/09 23:46:07 spestov Exp $
  */
 public class jEdit
 {
@@ -3687,11 +3687,8 @@ loop:		for(int i = 0; i < list.length; i++)
 		{
 			bufferCount--;
 
-			boolean caseInsensitiveFilesystem =
-				OperatingSystem.isDOSDerived()
-				|| OperatingSystem.isMacOS();
 			String path = buffer.getPath();
-			if(caseInsensitiveFilesystem)
+			if(OperatingSystem.isCaseInsensitiveFS())
 				path = path.toLowerCase();
 
 			bufferHash.remove(path);

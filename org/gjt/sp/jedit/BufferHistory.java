@@ -3,7 +3,7 @@
  * :tabSize=8:indentSize=8:noTabs=false:
  * :folding=explicit:collapseFolds=1:
  *
- * Copyright (C) 2000, 2003 Slava Pestov
+ * Copyright (C) 2000, 2005 Slava Pestov
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -34,7 +34,7 @@ import org.gjt.sp.util.Log;
 /**
  * Recent file list.
  * @author Slava Pestov
- * @version $Id: BufferHistory.java,v 1.17 2005/01/09 01:47:37 spestov Exp $
+ * @version $Id: BufferHistory.java,v 1.18 2005/03/09 23:46:07 spestov Exp $
  */
 public class BufferHistory
 {
@@ -45,16 +45,8 @@ public class BufferHistory
 		while(iter.hasNext())
 		{
 			Entry entry = (Entry)iter.next();
-			if(pathsCaseInsensitive)
-			{
-				if(entry.path.equalsIgnoreCase(path))
-					return entry;
-			}
-			else
-			{
-				if(entry.path.equals(path))
-					return entry;
-			}
+			if(MiscUtilities.pathsEqual(entry.path,path))
+				return entry;
 		}
 
 		return null;
@@ -248,15 +240,12 @@ public class BufferHistory
 
 	//{{{ Private members
 	private static LinkedList history;
-	private static boolean pathsCaseInsensitive;
 	private static long recentModTime;
 
 	//{{{ Class initializer
 	static
 	{
 		history = new LinkedList();
-		pathsCaseInsensitive = OperatingSystem.isDOSDerived()
-			|| OperatingSystem.isMacOS();
 	} //}}}
 
 	//{{{ addEntry() method
@@ -275,21 +264,10 @@ public class BufferHistory
 		while(iter.hasNext())
 		{
 			Entry entry = (Entry)iter.next();
-			if(pathsCaseInsensitive)
+			if(MiscUtilities.pathsEqual(path,entry.path))
 			{
-				if(entry.path.equalsIgnoreCase(path))
-				{
-					iter.remove();
-					return;
-				}
-			}
-			else
-			{
-				if(entry.path.equals(path))
-				{
-					iter.remove();
-					return;
-				}
+				iter.remove();
+				return;
 			}
 		}
 	} //}}}

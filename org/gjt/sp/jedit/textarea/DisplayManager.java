@@ -28,9 +28,6 @@ import java.util.*;
 import org.gjt.sp.jedit.buffer.*;
 import org.gjt.sp.jedit.Buffer;
 import org.gjt.sp.jedit.Debug;
-import org.gjt.sp.jedit.GUIUtilities;
-import org.gjt.sp.jedit.jEdit;
-import org.gjt.sp.jedit.View;
 import org.gjt.sp.util.Log;
 //}}}
 
@@ -38,7 +35,7 @@ import org.gjt.sp.util.Log;
  * Manages low-level text display tasks.
  * @since jEdit 4.2pre1
  * @author Slava Pestov
- * @version $Id: DisplayManager.java,v 1.118 2005/02/21 07:52:16 spestov Exp $
+ * @version $Id: DisplayManager.java,v 1.119 2005/03/09 23:46:08 spestov Exp $
  */
 public class DisplayManager
 {
@@ -500,8 +497,7 @@ public class DisplayManager
 
 		// Hack... need a more direct way of obtaining a view?
 		// JEditTextArea.getView() method?
-		GUIUtilities.getView(textArea).getStatus().setMessageAndClear(
-			jEdit.getProperty("view.status.narrow"));
+		textArea.fireNarrowActive();
 
 		notifyScreenLineChanges();
 		textArea.foldStructureChanged();

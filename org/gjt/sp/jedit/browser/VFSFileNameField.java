@@ -35,7 +35,7 @@ import org.gjt.sp.jedit.OperatingSystem;
 
 /**
  * @author Slava Pestov
- * @version $Id: VFSFileNameField.java,v 1.23 2005/02/05 20:34:40 spestov Exp $
+ * @version $Id: VFSFileNameField.java,v 1.24 2005/03/09 23:46:07 spestov Exp $
  * @since jEdit 4.2pre1
  */
 class VFSFileNameField extends HistoryTextField
@@ -230,7 +230,7 @@ class VFSFileNameField extends HistoryTextField
 		}
 		else
 		{
-			if(VFSBrowser.pathsEqual(parent,browser.getDirectory()))
+			if(MiscUtilities.pathsEqual(parent,browser.getDirectory()))
 				newText = name;
 			else
 				newText = path;

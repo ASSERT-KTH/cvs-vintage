@@ -53,7 +53,7 @@ import org.gjt.sp.util.Log;
  * </ul>
  *
  * @author Slava Pestov
- * @version $Id: GUIUtilities.java,v 1.87 2004/12/31 21:10:16 spestov Exp $
+ * @version $Id: GUIUtilities.java,v 1.88 2005/03/09 23:46:07 spestov Exp $
  */
 public class GUIUtilities
 {
@@ -1274,8 +1274,6 @@ public class GUIUtilities
 		{
 			if((modifiers & MouseEvent.BUTTON1_MASK) != 0)
 				return ((modifiers & MouseEvent.ALT_MASK) != 0);
-			if(!OperatingSystem.hasJava14())
-				return ((modifiers & MouseEvent.BUTTON3_MASK) != 0);
 			else
 				return ((modifiers & MouseEvent.BUTTON2_MASK) != 0);
 		}
@@ -1294,8 +1292,6 @@ public class GUIUtilities
 		{
 			if((modifiers & MouseEvent.BUTTON1_MASK) != 0)
 				return ((modifiers & MouseEvent.CTRL_MASK) != 0);
-			if(!OperatingSystem.hasJava14())
-				return ((modifiers & MouseEvent.BUTTON2_MASK) != 0);
 			else
 				return ((modifiers & MouseEvent.BUTTON3_MASK) != 0);
 		}
