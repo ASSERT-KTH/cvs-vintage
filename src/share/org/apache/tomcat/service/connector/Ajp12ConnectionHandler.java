@@ -158,14 +158,6 @@ public class Ajp12ConnectionHandler implements  TcpConnectionHandler {
 		return;
 	    }
 
-	    // resolve the server that we are for
-	    int contentLength = reqA.getMimeHeaders().getIntHeader("content-length");
-	    if (contentLength != -1) {
-		BufferedServletInputStream sis =
-		    (BufferedServletInputStream)reqA.getInputStream();
-		sis.setLimit(contentLength);
-	    }
-
 	    contextM.service( reqA, resA );
 	    //resA.finish(); // is part of contextM !
 	    socket.close();
@@ -184,7 +176,7 @@ class AJP12RequestAdapter extends RequestImpl {
     StringManager sm = StringManager.getManager("org.apache.tomcat.service");
     Socket socket;
     InputStream sin;
-    Ajpv12InputStream ajpin;
+    BufferedInputStream ajpin;
     boolean shutdown=false;
     boolean isPing=false;
     boolean doLog;
@@ -194,7 +186,7 @@ class AJP12RequestAdapter extends RequestImpl {
     }
 
     public  int doRead( byte b[], int off, int len ) throws IOException {
-	return ajpin.read(b,off,len);
+	return ajpin.read( b,off,len);
     }
 
     public AJP12RequestAdapter() {
@@ -208,16 +200,14 @@ class AJP12RequestAdapter extends RequestImpl {
     public void setSocket( Socket s ) throws IOException {
 	this.socket = s;
 	sin = s.getInputStream();
-	in = new BufferedServletInputStream( this );
-	ajpin = new Ajpv12InputStream(sin);
+	ajpin = new BufferedInputStream(sin);
     }
     
     public AJP12RequestAdapter(ContextManager cm, Socket s) throws IOException {
 	this.socket = s;
 	this.contextM=cm;
 	sin = s.getInputStream();
-	in = new BufferedServletInputStream( this );
-	ajpin = new Ajpv12InputStream(sin);
+	ajpin = new BufferedInputStream(sin);
 	doLog=contextM.getDebug() > 10;
     }
 
@@ -236,9 +226,9 @@ class AJP12RequestAdapter extends RequestImpl {
 		    break;
 		    
 		case 1: //beginning of request
-		    method = ajpin.readString(null);              //Method
+		    method = readString(ajpin, null);              //Method
 		    
-		    contextPath = ajpin.readString(null);               //Zone
+		    contextPath = readString(ajpin, null);               //Zone
 		    // GS, the following commented line causes the Apache + Jserv + Tomcat
 		    // combination to hang with a 404!!!
 		    // if("ROOT".equals( contextPath ) ) contextPath="";
@@ -249,42 +239,42 @@ class AJP12RequestAdapter extends RequestImpl {
 			context=contextM.getContext( contextPath );
 		    if( doLog ) log("AJP: context=" + context );
 		    
-		    servletName = ajpin.readString(null);         //Servlet
+		    servletName = readString(ajpin, null);         //Servlet
 		    if( doLog ) log("AJP: servlet=" + servletName );
 		    
-		    serverName = ajpin.readString(null);            //Server hostname
+		    serverName = readString(ajpin, null);            //Server hostname
 		    if( doLog ) log("AJP: serverName=" + serverName );
 		    
-		    dummy = ajpin.readString(null);               //Apache document root
+		    dummy = readString(ajpin, null);               //Apache document root
 		    
-		    pathInfo = ajpin.readString(null);               //Apache parsed path-info
+		    pathInfo = readString(ajpin, null);               //Apache parsed path-info
 		    if( doLog ) log("AJP: PI=" + pathInfo );
 		    
 		    // XXX Bug in mod_jserv !!!!!
-		    pathTranslated = ajpin.readString(null);               //Apache parsed path-translated
+		    pathTranslated = readString(ajpin, null);               //Apache parsed path-translated
 		    if( doLog ) log("AJP: PT=" + pathTranslated );
 		    
-		    queryString = ajpin.readString(null);         //query string
+		    queryString = readString(ajpin, null);         //query string
 		    if( doLog ) log("AJP: QS=" + queryString );
 		    
-		    remoteAddr = ajpin.readString("");            //remote address
+		    remoteAddr = readString(ajpin, "");            //remote address
 		    if( doLog ) log("AJP: RA=" + remoteAddr );
 		    
-		    remoteHost = ajpin.readString("");            //remote host
+		    remoteHost = readString(ajpin, "");            //remote host
 		    if( doLog ) log("AJP: RH=" + remoteHost );
 		    
-		    remoteUser = ajpin.readString(null);                 //remote user
+		    remoteUser = readString(ajpin, null);                 //remote user
 		    if( doLog ) log("AJP: RU=" + remoteUser);
 		    
-		    authType = ajpin.readString(null);                 //auth type
+		    authType = readString(ajpin, null);                 //auth type
 		    if( doLog ) log("AJP: AT=" + authType);
 		    
-		    dummy = ajpin.readString(null);                 //remote port
+		    dummy = readString(ajpin, null);                 //remote port
 		    
-		    method = ajpin.readString(null);                //request method
+		    method = readString(ajpin, null);                //request method
 		    if( doLog ) log("AJP: Meth=" + method );
 		    
-		    requestURI = ajpin.readString("");             //request uri
+		    requestURI = readString(ajpin, "");             //request uri
 		    if( doLog ) log("AJP: URI: " + requestURI + " CP:" + contextPath + " LP: " + lookupPath);
 
 		    // XXX don't set lookup path - problems with URL rewriting.
@@ -293,27 +283,27 @@ class AJP12RequestAdapter extends RequestImpl {
 		    //		    lookupPath=requestURI.substring( contextPath.length() + 1 );
 		    if( doLog ) log("AJP: URI: " + requestURI + " CP:" + contextPath + " LP: " + lookupPath);
 		    
-		    dummy = ajpin.readString(null);                   //script filename
+		    dummy = readString(ajpin, null);                   //script filename
 		    //		System.out.println("AJP: Script filen=" + dummy);
 		    
-		    dummy = ajpin.readString(null);                   //script name
+		    dummy = readString(ajpin, null);                   //script name
 		    //		System.out.println("AJP: Script name=" + dummy);
 
-		    serverName = ajpin.readString("");                //server name
+		    serverName = readString(ajpin, "");                //server name
 		    if( doLog ) log("AJP: serverName=" + serverName );
 		    try {
-			serverPort = Integer.parseInt(ajpin.readString("80")); //server port
+			serverPort = Integer.parseInt(readString(ajpin, "80")); //server port
 		    } catch (Exception any) {
 			serverPort = 80;
 		    }
 
-		    dummy = ajpin.readString("");                     //server protocol
+		    dummy = readString(ajpin, "");                     //server protocol
 		    //		System.out.println("AJP: Server proto=" + dummy);
-		    dummy = ajpin.readString("");                     //server signature
+		    dummy = readString(ajpin, "");                     //server signature
 		    //		System.out.println("AJP: Server sign=" + dummy);
-		    dummy = ajpin.readString("");                     //server software
+		    dummy = readString(ajpin, "");                     //server software
 		    //		System.out.println("AJP: Server softw=" + dummy);
-		    jvmRoute = ajpin.readString("");                     //JSERV ROUTE
+		    jvmRoute = readString(ajpin, "");                     //JSERV ROUTE
 		    if(jvmRoute.length() == 0) {
 			jvmRoute = null;
 		    }
@@ -330,8 +320,8 @@ class AJP12RequestAdapter extends RequestImpl {
                      * Theses env vars are simply ignored. (just here for compatibility)
                      *                                            - jluc
                      */
-                     dummy = ajpin.readString("");
-                     dummy = ajpin.readString("");
+                     dummy = readString(ajpin, "");
+                     dummy = readString(ajpin, "");
 		    // XXX all dummy fields will be used after core is changed to make use
 		    // of them!
 
@@ -350,8 +340,8 @@ class AJP12RequestAdapter extends RequestImpl {
                      *                                            - jluc
                      */
                 case 5: // Environment vars
-                    token1 = ajpin.readString(null);
-                    token2 = ajpin.readString("");
+                    token1 = readString(ajpin, null);
+                    token2 = readString(ajpin, "");
                     /*
                      * Env variables should go into the request attributes
                      * table. 
@@ -366,8 +356,8 @@ class AJP12RequestAdapter extends RequestImpl {
                     break;
 
 		case 3: // Header
-		    token1 = ajpin.readString(null);
-		    token2 = ajpin.readString("");
+		    token1 = readString(ajpin, null);
+		    token2 = readString(ajpin, "");
 		    headers.putHeader(token1.toLowerCase(), token2);
 		    break;
 
@@ -496,6 +486,44 @@ class AJP12RequestAdapter extends RequestImpl {
 
     }
 
+    
+    public int readWord(InputStream in ) throws java.io.IOException {
+        int b1 = in.read();
+        if( b1 == -1)
+            return -1;
+
+        int b2 = in.read();
+        if ( b2==-1)
+            return -1;
+
+        return ((int)((b1 << 8) | b2)) & 0xffff;
+    }
+
+    // UTF8 is a strict superset of ASCII.
+    final static String CHARSET = "UTF8";
+
+    public String readString(InputStream in, String def) throws java.io.IOException {
+        int len = readWord(in);
+
+        if( len == 0xffff)
+            return def;
+
+        if( len == -1)
+            throw new java.io.IOException("Stream broken");
+
+        byte[] b = new byte[len];
+        int p = 0;
+        int r;
+        while(p<len) {
+            r = in.read(b,p, len - p);
+            if( r< 0) {
+                throw new java.io.IOException("Stream broken, couldn't demarshal string :"+len+":"+p);
+            }
+            p = p+r;
+        }
+        return new String(b, CHARSET);
+    }
+
 }
 
 
@@ -521,54 +549,3 @@ class AJP12ResponseAdapter extends HttpResponseAdapter {
 
     }
 }
-
-class Ajpv12InputStream extends BufferedInputStream {
-
-    // UTF8 is a strict superset of ASCII.
-    final static String CHARSET = "UTF8";
-
-    public Ajpv12InputStream(InputStream in) {
-        super(in);
-    }
-
-    public Ajpv12InputStream(InputStream in, int bufsize) {
-        super(in,bufsize);
-    }
-
-
-    public int readWord() throws java.io.IOException {
-        int b1 = read();
-        if( b1 == -1)
-            return -1;
-
-        int b2 = read();
-        if ( b2==-1)
-            return -1;
-
-        return ((int)((b1 << 8) | b2)) & 0xffff;
-    }
-
-    public String readString(String def) throws java.io.IOException {
-        int len = readWord();
-
-        if( len == 0xffff)
-            return def;
-
-        if( len == -1)
-            throw new java.io.IOException("Stream broken");
-
-        byte[] b = new byte[len];
-        int p = 0;
-        int r;
-        while(p<len) {
-            r = read(b,p, len - p);
-            if( r< 0) {
-                throw new java.io.IOException("Stream broken, couldn't demarshal string :"+len+":"+p);
-            }
-            p = p+r;
-        }
-        return new String(b, CHARSET);
-    }
-}
-
-
