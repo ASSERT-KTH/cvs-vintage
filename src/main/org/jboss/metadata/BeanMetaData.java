@@ -18,6 +18,9 @@ import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 
 import org.jboss.ejb.DeploymentException;
+import org.jboss.security.AnybodyPrincipal;
+import org.jboss.security.NobodyPrincipal;
+import org.jboss.security.SimplePrincipal;
 
 /** A common meta data class for the entity, message-driven and session beans.
  *
@@ -25,7 +28,7 @@ import org.jboss.ejb.DeploymentException;
  *   @author Peter Antman (peter.antman@tim.se)
  *   @author Daniel OConnor (docodan@mvcsoft.com)
  *   @author Scott_Stark@displayscape.com
- *   @version $Revision: 1.21 $
+ *   @version $Revision: 1.22 $
  */
 public abstract class BeanMetaData extends MetaData {
     // Constants -----------------------------------------------------
@@ -181,8 +184,13 @@ public abstract class BeanMetaData extends MetaData {
 		transactionMethods.add(method);
 	}
 	
-	public void addPermissionMethod(MethodMetaData method) { 
-		permissionMethods.add(method);
+	public void addPermissionMethod(MethodMetaData method)
+    {
+        // Insert unchecked methods into the front of the list to speed up their validation
+        if( method.isUnchecked() )
+            permissionMethods.add(0, method);
+        else
+            permissionMethods.add(method);
 	}
 	public void addExcludedMethod(MethodMetaData method) { 
 		excludedMethods.add(method);
@@ -207,23 +215,70 @@ public abstract class BeanMetaData extends MetaData {
 		return result;
 	}
 
-   // d.s.> PERFORMANCE !!! 
-	public Set getMethodPermissions(String methodName, Class[] params, boolean remote) {
-		Set result = new HashSet ();
-      Iterator iterator = getPermissionMethods();
-		while (iterator.hasNext()) {
-			MethodMetaData m = (MethodMetaData)iterator.next();
-			if (m.patternMatches(methodName, params, remote))
-         {
-            Iterator i = m.getRoles().iterator ();
-            while (i.hasNext ())
-               result.add (i.next ());
-         }
+    /** A somewhat tedious method that builds a Set<Principal> of the roles
+     that have been assigned permission to execute the indicated method. The
+     work performed is tedious because of the wildcard style of declaring
+     method permission allowed in the ejb-jar.xml descriptor. This method is
+     called by the Container.getMethodPermissions() when it fails to find the
+     prebuilt set of method roles in its cache.
+     @return The Set<Principal> for the application domain roles that
+        caller principal's are to be validated against.
+     @see org.jboss.ejb.Container#getMethodPermissions(Method, boolean)
+    */
+	public Set getMethodPermissions(String methodName, Class[] params, boolean remote)
+    {
+		Set result = new HashSet();
+        // First check the excluded method list as this takes priority over all other assignments
+        Iterator iterator = getExcludedMethods();
+        while( iterator.hasNext() )
+        {
+			MethodMetaData m = (MethodMetaData) iterator.next();
+			if( m.patternMatches(methodName, params, remote) )
+            {
+                /* No one is allowed to execute this method so add a role that
+                 fails to equate to any Principal or Principal name and return.
+                 We don't return null to differentiate between an explicit
+                 assignment of no access and no assignment information.
+                */
+                result.add(NobodyPrincipal.NOBODY_PRINCIPAL);
+                return result;
+            }
+        }
+
+        // Check the permissioned methods list
+        iterator = getPermissionMethods();
+        while( iterator.hasNext() )
+        {
+			MethodMetaData m = (MethodMetaData) iterator.next();
+			if( m.patternMatches(methodName, params, remote) )
+            {
+                /* If this is an unchecked method anyone can access it so
+                 set the result set to a role that equates to any Principal or
+                 Principal name and return.
+                */
+                if( m.isUnchecked() )
+                {
+                    result.clear();
+                    result.add(AnybodyPrincipal.ANYBODY_PRINCIPAL);
+                    break;
+                }
+                // Else, add all roles
+                else
+                {
+                    Iterator rolesIterator = m.getRoles().iterator();
+                    while( rolesIterator.hasNext() )
+                    {
+                        String roleName = (String) rolesIterator.next();
+                        result.add(new SimplePrincipal(roleName));
+                    }
+                }
+            }
 		}
-		if (result.isEmpty ()) // no method-permission specified
-         return null;
-      else
-         return result;
+
+        // If no permissions were assigned to the method return null to indicate no access
+		if( result.isEmpty() )
+            result = null;
+        return result;
 	}
 
 	public void importEjbJarXml(Element element) throws DeploymentException {
