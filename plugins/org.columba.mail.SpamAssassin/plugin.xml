@@ -19,11 +19,8 @@
  
 <!-- actions -->
  <extension name="org.columba.core.action">
-  <action name="LearnSpam" class="LearnSpamAction" />
-  <action name="LearnHam" class="LearnHamAction" />
   <action name="MarkMessageAsSpam" class="MarkMessageAsSpamAction" />
   <action name="MarkMessageAsHam" class="MarkMessageAsHamAction" />
-  <action name="AnalyzeFolder" class="AnalyzeFolderAction" />
   <action name="AnalyzeMessage" class="AnalyzeMessageAction" />
   <action name="AddAddressToWhitelist" class="AddAddressToWhiteListAction" />
   <action name="AddAddressToBlacklist" class="AddAddressToBlackListAction" />
@@ -34,16 +31,10 @@
  <extension name="org.columba.mail.menu">
   <menu name="menu_utilities" extensionpoint="mail_bottom">
     <menu name="SpamAssassin">
-     <menu name="Train Bayesian Filter">
-  	  <menuitem action="LearnSpam"/>
-  	  <menuitem action="LearnHam"/>
-  	 </menu>
-  	 <separator/>
   	 <menuitem action="AddAddressToWhitelist"/>
   	 <menuitem action="AddAddressToBlacklist"/>
   	 <menuitem action="RemoveAddressFromWhitelist"/>
   	 <separator/>
-  	  <menuitem action="AnalyzeFolder"/>
   	  <menuitem action="AnalyzeMessage"/>
   	 <separator/>
   	  <menuitem action="MarkMessageAsSpam"/>
