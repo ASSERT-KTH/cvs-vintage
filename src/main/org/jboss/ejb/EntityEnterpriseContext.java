@@ -15,6 +15,7 @@ import javax.ejb.EJBLocalObject;
 import javax.ejb.EJBObject;
 import javax.ejb.EntityBean;
 import javax.ejb.EntityContext;
+import javax.ejb.TimerService;
 
 
 /**
@@ -26,7 +27,7 @@ import javax.ejb.EntityContext;
  * @author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
  * @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
  * @author <a href="mailto:docodan@mvcsoft.com">Daniel OConnor</a>
- * @version $Revision: 1.27 $
+ * @version $Revision: 1.28 $
  *
  * <p><b>Revisions</b>
  * <p>20010703 marcf
@@ -209,6 +210,12 @@ public class EntityEnterpriseContext
       public Object getPrimaryKey()
       {
          return id;
+      }
+      
+      public TimerService getTimerService()
+         throws IllegalStateException
+      {
+         return getContainer().createTimerService( id );
       }
    }
 }

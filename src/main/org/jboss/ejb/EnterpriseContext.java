@@ -52,7 +52,7 @@ import org.jboss.tm.usertx.interfaces.UserTransactionStartedListener;
  * @author <a href="mailto:sebastien.alborini@m4x.org">Sebastien Alborini</a>
  * @author <a href="mailto:juha@jboss.org">Juha Lindfors</a>
  * @author <a href="mailto:osh@sparre.dk">Ole Husgaard</a>
- * @version $Revision: 1.52 $
+ * @version $Revision: 1.53 $
  *
  * Revisions:
  * 2001/06/29: marcf
@@ -432,14 +432,11 @@ public abstract class EnterpriseContext
          return userTransaction;
       }
       
-      /**
-       * @return EJB Timer Service to manage Timers
-       **/
-       public TimerService getTimerService()
-          throws IllegalStateException
-       {
-           return getContainer().createTimerService( this );
-       }
+      public TimerService getTimerService()
+         throws IllegalStateException
+      {
+         return getContainer().createTimerService( null );
+      }
    }
    
    // Inner classes -------------------------------------------------

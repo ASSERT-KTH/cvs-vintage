@@ -6,9 +6,11 @@
  */
 package org.jboss.ejb.timer;
 
+import java.io.Serializable;
 import java.util.Date;
 import java.util.HashMap;
 
+import javax.ejb.TimerService;
 import javax.management.JMException;
 import javax.management.MalformedObjectNameException;
 import javax.management.ObjectName;
@@ -38,7 +40,7 @@ public class SchedulerTimerSource
        return false;
    }
    
-   public String createTimer( String pContainerId, Date pStartDate, long pInterval ) {
+   public String createTimer( String pContainerId, Object pKey, Date pStartDate, long pInterval, Serializable pInfo ) {
        try {
            int lId = addSchedule(
               serviceName,
@@ -49,11 +51,29 @@ public class SchedulerTimerSource
               -1
            );
            synchronized( mTimerList ) {
-               mTimerList.put( new Integer( lId ), pContainerId );
+              mTimerList.put( new Integer( lId ), new Item( pContainerId, pKey ) );
+              log.info( "Call add() on : " + mPersistenceManager
+                 + ", container id: " + pContainerId
+                 + ", id: " + lId
+              );
+              server.invoke(
+                 mPersistenceManager,
+                 "add",
+                 new Object[] { pContainerId, lId + "", pKey, pStartDate, new Long( pInterval ), pInfo },
+                 new String[] {
+                     String.class.getName(),
+                     String.class.getName(),
+                     Object.class.getName(),
+                     Date.class.getName(),
+                     Long.TYPE.getName(),
+                     Serializable.class.getName()
+                 }
+              );
            }
            return lId + "";
        }
        catch( JMException jme ) {
+           log.error( "Could not create a timer", jme );
            throw new RuntimeException( "Could not create the required timer" );
        }
    }
@@ -64,18 +84,46 @@ public class SchedulerTimerSource
     * @param pId Id returned from {@link #createTimer createTimer()}
     **/
    public void removeTimer( String pId ) {
-       try {
-           synchronized( mTimerList ) {
-               mTimerList.remove( pId );
-           }
-           removeSchedule( new Integer( pId ).intValue() );
-       }
-       catch( JMException jme ) {
-           throw new RuntimeException( "Could not remove the required timer" );
-       }
+      try {
+         synchronized( mTimerList ) {
+            Item lItem = (Item) mTimerList.remove( new Integer( pId ) );
+            log.info( "Remove timer: " + pId + ", of container: " + lItem.getId() );
+            server.invoke(
+               mPersistenceManager,
+               "remove",
+               new Object[] { lItem.getId(), pId },
+               new String[] {
+                  String.class.getName(),
+                  String.class.getName()
+               }
+            );
+         }
+         removeSchedule( new Integer( pId ).intValue() );
+      }
+      catch( JMException jme ) {
+         throw new RuntimeException( "Could not remove the required timer" );
+      }
    }
    
-   public void recover( long pContainerId ) {
+   public void recover( String pContainerId, ContainerTimerService pTimerService ) {
+      log.info( "===============> recover(), id: " + pContainerId
+         + ", timer service: " + pTimerService
+      );
+      try {
+         server.invoke(
+            mPersistenceManager,
+            "restore",
+            new Object[] { pContainerId, pTimerService },
+            new String[] {
+               String.class.getName(),
+               ContainerTimerService.class.getName()
+            }
+         );
+      }
+      catch( Exception e ) {
+         log.error( "recover(), could not recover all timers", e );
+         //AS ToDo: Ignore Exception for now 
+      }
    }
    
    /**
@@ -86,19 +134,20 @@ public class SchedulerTimerSource
     * @jmx:managed-operation
     */
    public void handleTimedEvent( Integer pId ) {
-      String lContainerId = null;
+      Item lItem = null;
       synchronized( mTimerList ) {
-         lContainerId = (String) mTimerList.get( pId );
+         lItem = (Item) mTimerList.get( pId );
       }
-      if( lContainerId != null ) {
-          ContainerTimerService lTarget = (ContainerTimerService) getTimerService( lContainerId );
+      if( lItem != null ) {
+          ContainerTimerService lTarget = (ContainerTimerService) getTimerService( lItem );
           if( lTarget != null ) {
               lTarget.handleTimedEvent( pId + "" );
           } else {
-              log.error( "Container found but no Timer Service. Container ID: " + lContainerId );
+              log.error( "Container found but no Timer Service. Container ID: " + lItem );
           }
       } else {
-          // If no Container is found then container did not recover so far
+         // If no Container is found then container did not recover so far
+         log.info( "SchedulerTimerSource.handleTimedEvent(), no timer found for id: " + pId );
       }
    }
    
@@ -193,6 +242,7 @@ public class SchedulerTimerSource
    protected void startService()
         throws Exception
    {
+      super.startService();
       server.invoke(
          mScheduleManagerName,
          "registerProvider",

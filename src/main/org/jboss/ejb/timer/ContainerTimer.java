@@ -26,14 +26,20 @@ public class ContainerTimer
 {
    private ContainerTimerService mTimerService;
    private String mId;
-   private EJBContext mContext;
+//AS   private EJBContext mContext;
+   private Object mKey;
    private Serializable mInfo;
    
-   public ContainerTimer( ContainerTimerService pTimerService, String pId, EJBContext pContext, Serializable pInfo ) {
-       mTimerService = pTimerService;
-       mId = pId;
-       mContext = pContext;
-       mInfo = pInfo;
+   public ContainerTimer(
+      ContainerTimerService pTimerService,
+      String pId,
+      Object pKey,
+      Serializable pInfo
+   ) {
+      mTimerService = pTimerService;
+      mId = pId;
+      mKey = pKey;
+      mInfo = pInfo;
    }
    
    public void cancel()
@@ -84,9 +90,13 @@ public class ContainerTimer
    }
    
    /**
-    * @return The EJB Context of the target EJB
+    * @return The Key of the EJB it is assigned to (Entity Beans)
     **/
-   public EJBContext getContext() {
-      return mContext;
+   public Object getKey() {
+      return mKey;
+   }
+   
+   public String getId() {
+      return mId;
    }
 }

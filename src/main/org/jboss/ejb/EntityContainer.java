@@ -73,7 +73,7 @@ import org.jboss.util.collection.SerializableEnumeration;
  * @author <a href="mailto:bill@burkecentral.com">Bill Burke</a>
  * @author <a href="mailto:andreas.schaefer@madplanet.com">Andreas Schaefer</a>
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
- * @version $Revision: 1.85 $
+ * @version $Revision: 1.86 $
  */
 public class EntityContainer
    extends Container implements EJBProxyFactoryContainer, 
@@ -452,8 +452,8 @@ public class EntityContainer
    
    public void handleEjbTimeout( Timer pTimer ) {
       EntityCache cache = (EntityCache) getInstanceCache();
-      EntityContext lContext = (EntityContext) ( (ContainerTimer) pTimer ).getContext();
-      Object cacheKey = cache.createCacheKey( lContext.getPrimaryKey() );
+//AS      EntityContext lContext = (EntityContext) ( (ContainerTimer) pTimer ).getContext();
+      Object cacheKey = cache.createCacheKey( ( (ContainerTimer) pTimer ).getKey() );
       
       ClassLoader oldCl = Thread.currentThread().getContextClassLoader();
       Thread.currentThread().setContextClassLoader( getClassLoader() );

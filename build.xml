@@ -8,7 +8,7 @@
   <!ENTITY targets    SYSTEM "../tools/etc/buildfragments/targets.ent">
 ]>
 
-<!-- $Id: build.xml,v 1.129 2002/12/12 16:02:45 mnewcomb Exp $ -->
+<!-- $Id: build.xml,v 1.130 2002/12/14 06:28:41 stormy_sky Exp $ -->
 
 <!--+======================================================================+-->
 <!--| JBoss (The OpenSource J2EE WebOS) Build File                         |-->
@@ -194,6 +194,7 @@
         <include name="org/jboss/ejb/EJBDeployer.java"/>
         <include name="org/jboss/ejb/plugins/StatefulSessionFilePersistenceManager.java"/>
         <include name="org/jboss/ejb/timer/*TimerSource.java"/>
+        <include name="org/jboss/ejb/timer/*PersistenceManager.java"/>
         <include name="org/jboss/invocation/**/*.java"/>
         <include name="org/jboss/proxy/**/*.java"/>
         <include name="org/jboss/jms/**/*.java"/>

@@ -6,6 +6,7 @@
  */
 package org.jboss.ejb.timer;
 
+import java.io.IOException;
 import java.io.Serializable;
 import java.util.Collection;
 import java.util.Date;
@@ -13,12 +14,14 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
-import javax.ejb.EJBContext;
+//AS import javax.ejb.EJBContext;
 import javax.ejb.EJBException;
 import javax.ejb.Timer;
 import javax.ejb.TimerService;
 
 import org.jboss.ejb.Container;
+import org.jboss.logging.Logger;
+import org.jboss.mx.util.SerializationHelper;
 
 /**
  * Timer Service of a Container acting also as bridge between
@@ -31,9 +34,11 @@ public class ContainerTimerService
    private AbstractTimerSource mTimerSource;
    private String mContainerName;
    private Container mContainer;
-   private EJBContext mContext;
+//AS   private EJBContext mContext;
+   private Object mKey;
    
    private Map mTimerList = new HashMap();
+   private Logger mLog = Logger.getLogger( this.getClass().getName() );
    
    /**
     * Create a Container Timer Service
@@ -41,13 +46,18 @@ public class ContainerTimerService
     * @param ??
     **/
 //AS   public ContainerTimerService( AbstractTimerSourceMBean pSource, String pName, Container pContainer ) {
-   public ContainerTimerService( AbstractTimerSource pSource, String pName, Container pContainer, EJBContext pContext ) {
+   public ContainerTimerService( AbstractTimerSource pSource, String pName, Container pContainer, Object pKey ) {
        mTimerSource = pSource;
        mContainerName = pName;
        mContainer = pContainer;
-       mContext = pContext;
+//AS       mContext = pContext;
+       mKey = pKey;
    }
    
+   public void startRecovery() {
+      // Start Recover Process 
+      mTimerSource.recover( mContainerName, this );
+   }
    //--------------- Timer Service Implementation -----------------------------------
    
    public Timer createTimer( long duration, Serializable info )
@@ -130,6 +140,7 @@ public class ContainerTimerService
     * @see javax.ejb.TimerService#cancel
     **/
    protected void cancel( String pId ) {
+      mLog.debug( "cancel(), cancel timer: " + pId );
       mTimerSource.removeTimer( pId );
       mTimerList.remove( pId );
    }
@@ -172,12 +183,68 @@ public class ContainerTimerService
     * and remove itself from the Timer Source.
     **/
    public void stopService() {
-       Iterator i = getTimers().iterator();
-       while( i.hasNext() ) {
-           Timer lTimer = (Timer) i.next();
-           lTimer.cancel();
+       Timer[] lTimers = (Timer[]) getTimers().toArray( new Timer[] {} );
+       for( int i = 0; i < lTimers.length; i++ ) {
+           lTimers[ i ].cancel();
        }
-       mTimerSource.removeTimerService( mContainerName );
+       mTimerSource.removeTimerService( mContainerName, mKey );
+   }
+   
+   //--------------- Protected Methods ---------------------------------------------
+   
+   /**
+    * Restore a Timer. If the given key is not null this method will also create a
+    * new Timer Service with the given key and inform the Entity Container about it.
+    *
+    * @param pKey Primary Key if it is a Entity Timer otherwise null
+    * @param pStartDate Date when the timer is the first time invoked.
+    * @param pInterval Time between interval calls. A negative value indicates
+    *                  a single time timer
+    * @param pInfo User defined object passed back by the timer
+    **/
+   protected Timer restoreTimer( Object pKey, Date pStartDate, long pInterval, Object pInfo )
+      throws
+         IllegalArgumentException,
+         IllegalStateException,
+         EJBException
+   {
+       Timer lTimer = null;
+       Serializable lInfo = (Serializable) recreateObject( pInfo );
+       if( pKey != null ) {
+          // First we have to try to restore the key if a byte arrray
+          pKey = recreateObject( pKey );
+          if( pKey instanceof byte[] ) {
+             try {
+                pKey = SerializationHelper.deserialize( (byte[]) pKey, mContainer.getClassLoader() );
+             }
+             catch( IOException ioe ) {
+                ioe.printStackTrace();
+                // Ingore it
+             }
+             catch( ClassNotFoundException cnfe ) {
+                cnfe.printStackTrace();
+                // Ingore it
+             }
+          }
+          // If a Key is given then let the Container to create a new Timer Service and
+          // then let this timer service create the timer
+          TimerService lTimerService = mContainer.createTimerService(
+             pKey
+          );
+          if( pInterval < 0 ) {
+             lTimer = lTimerService.createTimer( pStartDate, lInfo );
+             mLog.debug( "restoreTimer(), created entity timer: " + lTimer
+                + ", timer source: " + lTimerService );
+          } else {
+             lTimer = lTimerService.createTimer( pStartDate, pInterval, lInfo );
+          }
+       } else {
+           String lId = mTimerSource.createTimer( mContainerName, mKey, pStartDate, pInterval, lInfo );
+           lTimer = new ContainerTimer( this, lId, mKey, lInfo );
+           mTimerList.put( lId, lTimer );
+       }
+       
+       return lTimer;
    }
    
    //--------------- Private Methods ------------------------------------------------
@@ -196,10 +263,36 @@ public class ContainerTimerService
          IllegalStateException,
          EJBException
    {
-       String lId = mTimerSource.createTimer( mContainerName, pStartDate, pInterval );
-       Timer lTimer = new ContainerTimer( this, lId, mContext, pInfo );
+       String lId = mTimerSource.createTimer( mContainerName, mKey, pStartDate, pInterval, pInfo );
+       Timer lTimer = new ContainerTimer( this, lId, mKey, pInfo );
        mTimerList.put( lId, lTimer );
        
        return lTimer;
+   }
+   
+   /**
+    * Tries to recreate an object if the given object is a byte array
+    *
+    * @param pBytes Object that could represents a byte array that could represent an object
+    *
+    * @return Recreated Object or the given object if the given object is not an byte array
+    *         or the recreation failed
+    **/
+   private Object recreateObject( Object pBytes ) {
+      Object lReturn = pBytes;
+      if( pBytes instanceof byte[] ) {
+         try {
+            lReturn = SerializationHelper.deserialize( (byte[]) pBytes, mContainer.getClassLoader() );
+         }
+         catch( IOException ioe ) {
+            ioe.printStackTrace();
+            // Ingore it
+         }
+         catch( ClassNotFoundException cnfe ) {
+            cnfe.printStackTrace();
+            // Ingore it
+         }
+      }
+      return lReturn;
    }
 }

@@ -20,6 +20,7 @@ import java.util.Map;
 import java.util.Set;
 import javax.ejb.EJBContext;
 import javax.ejb.EJBException;
+import javax.ejb.EntityContext;
 import javax.ejb.TimedObject;
 import javax.ejb.Timer;
 import javax.ejb.TimerService;
@@ -106,7 +107,7 @@ import org.w3c.dom.Element;
  * @author <a href="mailto:Scott.Stark@jboss.org">Scott Stark</a>.
  * @author <a href="bill@burkecentral.com">Bill Burke</a>
  * @author <a href="mailto:d_jencks@users.sourceforge.net">David Jencks</a>
- * @version $Revision: 1.107 $
+ * @version $Revision: 1.108 $
  *
  * @todo convert all the deployment/service lifecycle stuff to an 
  * aspect/interceptor.  Make this whole stack into a model mbean.
@@ -299,7 +300,7 @@ public abstract class Container extends ServiceMBeanSupport
    /**
     * Timer Service for this Container
     **/
-   public TimerService timerService;
+   public HashMap timerServices = new HashMap();
    
    /**
     * Get the Di value.
@@ -720,36 +721,45 @@ public abstract class Container extends ServiceMBeanSupport
     *
     * @see javax.ejb.EJBContext#getTimerService
     **/
-   public TimerService createTimerService( EJBContext pContext )
+   public TimerService createTimerService( Object pKey )
       throws IllegalStateException
    {
-       if( this instanceof StatefulSessionContainer ) {
-           throw new IllegalStateException( "Statefull Session Beans are not allowed to access Timer Service" );
-       }
-       if( timerService == null ) {
-           try {
-               timerService = (TimerService) server.invoke(
-                  new ObjectName( "jboss:service=EJBTimerService" ),
-                  "createTimerService",
-                  new Object[] { getJmxName().toString(), this, pContext },
-                  new String[] { String.class.getName(), Container.class.getName(), EJBContext.class.getName() }
-               );
-           }
-           catch( Exception e ) {
-               throw new RuntimeException( "Could not create timer service: " + e );
-           }
-       }
-       return timerService;
+      if( this instanceof StatefulSessionContainer ) {
+         throw new IllegalStateException( "Statefull Session Beans are not allowed to access Timer Service" );
+      }
+      TimerService timerService = (TimerService) timerServices.get(
+         ( pKey == null ? "null" : pKey )
+      );
+      if( timerService == null ) {
+         try {
+            timerService = (TimerService) server.invoke(
+               new ObjectName( "jboss:service=EJBTimerService" ),
+               "createTimerService",
+               new Object[] { getJmxName().toString(), this, pKey },
+               new String[] { String.class.getName(), Container.class.getName(), Object.class.getName() }
+            );
+            timerServices.put(
+               ( pKey == null ? "null" : pKey ),
+               timerService
+            );
+         }
+         catch( Exception e ) {
+            throw new RuntimeException( "Could not create timer service: " + e );
+         }
+      }
+      return timerService;
    }
    
    /**
     * Stops all the timers created by beans of this container
     **/
    public void stopTimers() {
-       if( timerService != null ) {
-          ( (ContainerTimerService) timerService ).stopService();
-          timerService = null;
-       }
+      Iterator i = timerServices.values().iterator();
+      while( i.hasNext() ) {
+         TimerService timerService = (TimerService) i.next();
+         ( (ContainerTimerService) timerService ).stopService();
+         i.remove();
+      }
    }
    
    /**
@@ -832,6 +842,12 @@ public abstract class Container extends ServiceMBeanSupport
       int jmxHash = jmxName.hashCode();
       Registry.bind(new Integer(jmxHash), jmxName);
       log.debug("Bound jmxName="+jmxName+", hash="+jmxHash+"into Registry");
+      if( !( this instanceof StatefulSessionContainer ) ) {
+         // Restore Timers
+         ContainerTimerService temp = (ContainerTimerService) createTimerService( null );
+         // Start Recovery
+         temp.startRecovery();
+      }
    }
    
    /**
@@ -846,6 +862,8 @@ public abstract class Container extends ServiceMBeanSupport
 
       started = false;
       localProxyFactory.stop();
+      log.info( "=======================> Stop Timers" );
+      stopTimers();
       teardownEnvironment();
       WebServiceMBean webServer = 
          (WebServiceMBean)MBeanProxy.create(WebServiceMBean.class, 
