@@ -24,7 +24,7 @@
 // File: UMLClassDiagram.java
 // Classes: UMLClassDiagram
 // Original Author: jrobbins@ics.uci.edy
-// $Id: UMLClassDiagram.java,v 1.16 2003/01/09 20:35:23 kataka Exp $
+// $Id: UMLClassDiagram.java,v 1.17 2003/01/27 04:51:30 thn Exp $
 
 package org.argouml.uml.diagram.static_structure.ui;
 
@@ -106,11 +106,11 @@ public class UMLClassDiagram extends UMLDiagram {
         super();
     }
 
-    public UMLClassDiagram(String name, MNamespace m) {
-        super(name, m);
+    public UMLClassDiagram(String name, Object m) {
+        super(name, (MNamespace)m);
     }
 
-    public UMLClassDiagram(MNamespace m) {
+    public UMLClassDiagram(Object m) {
         this(getNewDiagramName(), m);
     }
 
