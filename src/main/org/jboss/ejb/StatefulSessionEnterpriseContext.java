@@ -19,7 +19,7 @@ import javax.ejb.SessionContext;
  *      
  *	@see <related>
  *	@author Rickard Öberg (rickard.oberg@telkel.com)
- *	@version $Revision: 1.3 $
+ *	@version $Revision: 1.4 $
  */
 public class StatefulSessionEnterpriseContext
    extends EnterpriseContext
@@ -51,6 +51,12 @@ public class StatefulSessionEnterpriseContext
    {
 		// Do nothing
    }
+   
+   // During activation of stateful session beans we replace the instance by the one read from the file
+   public void setInstance(Object instance) 
+    { 
+       this.instance = instance; 
+    }
    
    public void setEJBObject(EJBObject eo) { ejbObject = eo; }
    public EJBObject getEJBObject() { return ejbObject; }
