@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/jasper/compiler/Compiler.java,v 1.4 1999/12/21 16:32:30 rubys Exp $
- * $Revision: 1.4 $
- * $Date: 1999/12/21 16:32:30 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/jasper/compiler/Compiler.java,v 1.5 1999/12/28 16:25:54 rubys Exp $
+ * $Revision: 1.5 $
+ * $Date: 1999/12/28 16:25:54 $
  *
  * ====================================================================
  * 
@@ -98,13 +98,14 @@ public abstract class Compiler {
     public boolean compile()
         throws FileNotFoundException, JasperException, Exception 
     {
-        if (!isOutDated())
-            return false;
-        
         String pkgName = mangler.getPackageName();
         String className = mangler.getClassName();
         String javaFileName = mangler.getJavaFileName();
         String classFileName = mangler.getClassFileName();
+
+        ctxt.setServletClassName(className);
+        ctxt.setServletPackageName(pkgName);
+        ctxt.setServletJavaFileName(javaFileName);
 
         Constants.message("jsp.message.package_name_is",
                           new Object[] { pkgName },
@@ -119,6 +120,9 @@ public abstract class Compiler {
                           new Object[] { classFileName },
                           Constants.MED_VERBOSITY);
 
+        if (!isOutDated())
+            return false;
+        
         JspReader reader = JspReader.createJspReader(ctxt.getJspFile(), ctxt.getServletContext());
 
         ServletWriter writer = 
@@ -129,9 +133,6 @@ public abstract class Compiler {
 
         ctxt.setReader(reader);
         ctxt.setWriter(writer);
-        ctxt.setServletClassName(className);
-        ctxt.setServletPackageName(pkgName);
-        ctxt.setServletJavaFileName(javaFileName);
         
         ParseEventListener listener = new JspParseEventListener(ctxt);
         

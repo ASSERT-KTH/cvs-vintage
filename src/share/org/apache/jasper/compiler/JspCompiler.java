@@ -272,23 +272,20 @@ public class JspCompiler extends Compiler implements Mangler {
         } else  {
             outDated = classFile.lastModified() < jspReal.lastModified();
 	    if (outDated) {
-                String classNameFromFile = ClassName.getClassName(classFileName);
 		cfd = new ClassFileData(outDated, classFileName, className);
                 cfd.incrementNumber();
                 
-                String cn = cfd.getClassName();
-                int lastDot = cn.lastIndexOf('.');
-                if (lastDot != -1)
-                    className = cn.substring(lastDot+1,
-                                             classNameFromFile.length());
-                else
-                    className = cn;
 	    } else {
-		// cn ( Class Name ) is extracted from class data.
-		// If the file is not out-dated, it is not needed, and will
-		// be computed only if someone ask for it.
 		cfd = new ClassFileData(outDated, classFileName, null);
 	    }
+            String classNameFromFile = ClassName.getClassName(classFileName);
+            String cn = cfd.getClassName();
+            int lastDot = cn.lastIndexOf('.');
+            if (lastDot != -1)
+                className = cn.substring(lastDot+1,
+                                         classNameFromFile.length());
+            else
+                className = cn;
         }
     }
 }

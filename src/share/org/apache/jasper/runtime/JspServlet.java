@@ -124,10 +124,10 @@ public class JspServlet extends HttpServlet {
             String accordingto;
 
             if (cp == null || cp.equals("")) {
-                accordingto = "according to the init parameter is";
+                accordingto = "according to the init parameter";
                 cp = options.getClassPath();
             } else 
-                accordingto = "according to the Servlet Engine is";
+                accordingto = "according to the Servlet Engine";
             
             
             Constants.message("jsp.message.cp_is", 
