@@ -1,4 +1,4 @@
-// $Id: UmlFilePersister.java,v 1.6 2004/12/22 14:36:08 bobtarling Exp $
+// $Id: UmlFilePersister.java,v 1.7 2004/12/23 02:53:45 bobtarling Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -27,7 +27,6 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.net.URL;
@@ -206,13 +205,13 @@ public class UmlFilePersister extends AbstractFilePersister {
      */
     public Project loadProject(URL url) throws OpenException {
         try {
-            InputStream inputStream =
+            XmlInputStream inputStream =
                         new XmlInputStream(url.openStream(), "argo");
 
             ArgoParser parser = new ArgoParser();
             Project p = new Project(url);
             parser.readProject(p, inputStream);
-            inputStream.close();
+            inputStream.realClose();
             
             List memberList = parser.getMemberList();
             
@@ -240,7 +239,7 @@ public class UmlFilePersister extends AbstractFilePersister {
                         new XmlInputStream(url.openStream(),
                                            "pgml",
                                            instanceCount.getIntValue());
-                    //inputStream.reopen("pgml");
+                    inputStream.reopen();
                     persister = new DiagramMemberFilePersister(p, inputStream);
                 } else if (memberList.get(i).equals("todo")) {
                     inputStream =
@@ -254,7 +253,7 @@ public class UmlFilePersister extends AbstractFilePersister {
                     persister = new ModelMemberFilePersister(p, inputStream);
                 }
                 persister.load();
-                inputStream.close();
+                inputStream.realClose();
                 //the above line will go when reopen is available
                 instanceCount.increment();
                 instanceCountByType.put(type, instanceCount);
