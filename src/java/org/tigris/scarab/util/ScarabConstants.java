@@ -53,7 +53,7 @@ import org.apache.torque.om.NumberKey;
  * A place to put public final static strings and other constants.
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: ScarabConstants.java,v 1.49 2002/10/09 18:26:01 jmcnally Exp $
+ * @version $Id: ScarabConstants.java,v 1.50 2002/11/13 03:43:48 jmcnally Exp $
  */
 public interface ScarabConstants
 {
@@ -106,6 +106,11 @@ public interface ScarabConstants
      * Primary System Object
      */
     String SCARAB_REQUEST_TOOL = "scarabR";
+
+    /**
+     * Collection of useful methods
+     */
+    String SCARAB_GLOBAL_TOOL = "scarabG";
 
     /**
      * The name used for the Intake tool

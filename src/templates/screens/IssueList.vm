@@ -156,7 +156,17 @@ $link.setPage("ConfigureIssueList.vm").setLabel("Add/remove attributes from view
 
 #foreach ($issueId in $issueIdList)
  #set ($issue = $scarabR.getIssue($issueId))
- #set ($issueLink = $link.setPage("ViewIssue.vm").setPathInfo("id", $issue.UniqueId.toString()).setPathInfo("issueList", "true"))
+ ## append some of the neighbor ids, so that we do not always have to rerun
+ ## the query to create prev/next links
+ #set ($min = $velocityCount - 5)
+ #set ($max = $velocityCount + 10)
+ #set ($prevNextList = $scarabG.subset($issueIdList, $min, $max))
+ #set ($issueLink = $link.setPage("ViewIssue.vm").setPathInfo("id", $issue.UniqueId.toString()))
+ #set ($dummy = $issueLink.addPathInfo("issueList", $min))
+ #set ($dummy = $issueLink.addPathInfo("issueList", $totalCount))
+ #foreach ($prevNextId in $prevNextList)
+    #set ($dummy = $issueLink.addPathInfo("issueList", $prevNextId))
+ #end
  #indexedRows($velocityCount)
   <td>
    <input type="hidden" name="all_issue_ids" value="$issueId" />

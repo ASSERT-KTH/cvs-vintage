@@ -1737,6 +1737,30 @@ try{
         return matchingIssueIds;
     }
 
+    public int getCurrentSearchResultsSize()
+    {
+        int result = 0;
+        String[] prevNextList = data.getParameters().getStrings("issueList");
+        if (prevNextList == null) 
+        {
+            result = getCurrentSearchResults().size();
+        }
+        else 
+        {
+            result = Integer.parseInt(prevNextList[1]);
+        }
+        return result;
+    }
+
+    private String listStringArray(String[] s)
+    {
+        String result = "";
+        for (int i=0; i<s.length; i++) 
+        {
+            result += s[i] + " ";
+        }
+        return result;
+    }
 
     /**
      * Returns index of issue's position in current issue list.
@@ -1744,18 +1768,36 @@ try{
     public int getIssuePosInList()
         throws Exception, ScarabException
     {
-        List srchResults = getCurrentSearchResults();
-        Issue issue = getIssue();
-        int issuePos = 0;
-        for (int i = 0; i<srchResults.size(); i++)
+        int issuePos = -1;
+        String[] prevNextList = data.getParameters().getStrings("issueList");
+        if (prevNextList != null) 
         {
-            if (srchResults.get(i).equals(issue.getUniqueId()))
+            String id = getIssue().getUniqueId();
+            int listOffset = Math.max(0, Integer.parseInt(prevNextList[0]));
+            for (int i=2; i<prevNextList.length; i++)
             {
-                issuePos = i + 1;
-                break;
+                if (prevNextList[i].equals(id)) 
+                {
+                    issuePos = listOffset + i - 1;
+                    break;
+                }
+            }        
+        }
+
+        if (issuePos == -1) 
+        {
+            List srchResults = getCurrentSearchResults();
+            Issue issue = getIssue();
+            for (int i = 0; i<srchResults.size(); i++)
+            {
+                if (srchResults.get(i).equals(issue.getUniqueId()))
+                {
+                    issuePos = i + 1;
+                    break;
+                }
             }
         }
-        return issuePos;
+        return (issuePos == -1) ? 0 : issuePos;
     }
 
     /**
@@ -1765,10 +1807,29 @@ try{
         throws Exception, ScarabException
     {
         String nextIssueId = null;
-        int issuePos = getIssuePosInList();
-        if (issuePos < getCurrentSearchResults().size())
+        String[] prevNextList = data.getParameters().getStrings("issueList");
+        if (prevNextList != null) 
         {
-            nextIssueId = getCurrentSearchResults().get(getIssuePosInList()).toString();
+            String id = getIssue().getUniqueId();
+            for (int i=2; i<prevNextList.length-1; i++)
+            {
+                if (prevNextList[i].equals(id)) 
+                {
+                    nextIssueId = prevNextList[i+1];
+                    break;
+                }
+            }
+        }
+
+        if (nextIssueId == null) 
+        {
+            int issuePos = getIssuePosInList();
+            List idList = getCurrentSearchResults();
+            if (issuePos < idList.size())
+            {
+                nextIssueId = idList.get(issuePos).toString();
+            }
+            resetIssueIdList(idList, issuePos);
         }
         return nextIssueId;
     }
@@ -1780,13 +1841,46 @@ try{
         throws Exception, ScarabException
     {
         String prevIssueId = null;
-        int issuePos = getIssuePosInList();
-        if (issuePos > 1)
+        String[] prevNextList = data.getParameters().getStrings("issueList");
+        if (prevNextList != null) 
         {
-            prevIssueId = getCurrentSearchResults()
-                                          .get(getIssuePosInList() - 2).toString();
+            String id = getIssue().getUniqueId();
+            for (int i=3; i<prevNextList.length; i++)
+            {
+                if (prevNextList[i].equals(id)) 
+                {
+                    prevIssueId = prevNextList[i-1];
+                    break;
+                }
+            }
+        }
+
+        if (prevIssueId == null) 
+        {
+            int issuePos = getIssuePosInList();
+            if (issuePos > 1)
+            {
+                List idList = getCurrentSearchResults();
+                prevIssueId = idList.get(issuePos - 2).toString();
+                resetIssueIdList(idList, issuePos);
+            }
         }
         return prevIssueId;
+    }
+
+    private void resetIssueIdList(List idList, int pos)
+    {
+        ValueParser pp = data.getParameters();
+        pp.remove("issueList");
+        Integer min = new Integer(pos-5);
+        Iterator prevNextList = getGlobalTool()
+            .subset(idList, min, new Integer(pos+10)).iterator();
+        pp.add("issueList", min.toString());
+        pp.add("issueList", idList.size());        
+        while (prevNextList.hasNext()) 
+        {
+            pp.add("issueList", prevNextList.next().toString());
+        }
     }
 
     /**
@@ -2417,6 +2511,15 @@ try{
     {
         return (ScarabLocalizationTool)org.apache.turbine.modules.Module
             .getTemplateContext(data).get(ScarabConstants.LOCALIZATION_TOOL);
+    }
+
+    /**
+     * Helper method to retrieve the ScarabGlobalTool from the Context
+     */
+    private ScarabGlobalTool getGlobalTool()
+    {
+        return (ScarabGlobalTool)org.apache.turbine.modules.Module
+            .getTemplateContext(data).get(ScarabConstants.SCARAB_GLOBAL_TOOL);
     }
 
     /**
