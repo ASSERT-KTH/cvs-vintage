@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE options SYSTEM "mainframeoptions.dtd">
+<!-- <!DOCTYPE options SYSTEM "mainframeoptions.dtd"> -->
 
 <options>
  <gui>
@@ -28,4 +28,5 @@
    </view>
   </viewlist>
  </gui>
+ <html prefer="true" />
 </options>
