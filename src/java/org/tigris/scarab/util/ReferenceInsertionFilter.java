@@ -69,7 +69,7 @@ import org.tigris.scarab.screens.SelectModule;
  * showing up in the log files.
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: ReferenceInsertionFilter.java,v 1.14 2002/11/07 00:16:52 jmcnally Exp $
+ * @version $Id: ReferenceInsertionFilter.java,v 1.15 2002/11/07 01:41:03 jmcnally Exp $
  */
 public class ReferenceInsertionFilter
     implements ReferenceInsertionEventHandler, NullSetEventHandler
@@ -151,7 +151,7 @@ public class ReferenceInsertionFilter
                     result.append("&gt;");
                     break;
                 case '&':
-                    if (i+1 <= content.length && content[i+1] == '#') 
+                    if (i+1 < content.length && content[i+1] == '#') 
                     {
                         result.append('&');
                     }
