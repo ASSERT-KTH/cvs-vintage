@@ -48,20 +48,17 @@ public class Query
         {
             setApproved(true);
         }
+        else if (security.hasPermission(ScarabSecurity.ITEM__APPROVE,
+                                               user, module))
+        {
+            setApproved(true);
+        } 
         else
         {
-            setApproved(security.hasPermission(ScarabSecurity.ITEM__APPROVE, 
-                                               user, module));
-        } 
+            setApproved(false);
+            setTypeId(USER__PK);
 
-        save();
-
-        if (!security.hasPermission(ScarabSecurity.ITEM__APPROVE, 
-                                    user, module) 
-            && getQueryType().getQueryTypeId().equals(GLOBAL__PK))
-        {
-            // Send Email
-            // add data to context for email template
+            // Send Email to module owner to approve new query
             context.put("user", user);
             context.put("module", module);
 
@@ -74,6 +71,7 @@ public class Query
             Email.sendEmail(context, null, toUser,
                             subject, template);
         }
+        save();
     }
 
     /**
@@ -104,19 +102,24 @@ public class Query
     }
 
     /**
-     * Checks if user has permission to approve query. 
+     * Checks permission and approves or rejects query. 
+     * If query is approved, query type set to "global", else set to "personal".
      */
-    public void setApproved( ScarabUser user, ScarabModule module,
-                            boolean approved)
+    public void approve( ScarabUser user, boolean approved )
          throws Exception
     {                
         ScarabSecurity security = SecurityFactory.getInstance();
+        ScarabModule module = getScarabModule();
 
         if (security.hasPermission(ScarabSecurity.ITEM__APPROVE, user,
                                    module))
         {
-            super.setApproved(approved);
-            super.save();
+            setApproved(true);
+            if (approved)
+            {
+                setTypeId(GLOBAL__PK);
+            }
+            save();
         } 
         else
         {
@@ -124,21 +127,23 @@ public class Query
         }            
     }
 
+
     /**
-     * Checks if user has permission to reject query.
+     * Checks if user has permission to delete query.
+     * Only the creating user can delete a personal query.
+     * Only project owner or admin can delete a project-wide query.
      */
-    public void setDeleted( ScarabUser user, ScarabModule module,
-                            boolean deleted)
+    public void delete( ScarabUser user )
          throws Exception
     {                
-        boolean hasPerm = false;
+        ScarabModule module = getScarabModule();
         ScarabSecurity security = SecurityFactory.getInstance();
 
-        if (security.hasPermission(ScarabSecurity.ITEM__APPROVE, user,
-                                   module))
+        if (security.hasPermission(ScarabSecurity.ITEM__APPROVE, user, module)
+             || (user.getUserId().equals(getUserId())))
         {
-            super.setDeleted(deleted);
-            super.save();
+            setDeleted(true);
+            save();
         } 
         else
         {
