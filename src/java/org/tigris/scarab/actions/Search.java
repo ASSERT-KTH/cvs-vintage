@@ -89,7 +89,7 @@ import org.tigris.scarab.util.export.ExportFormat;
  * @author <a href="mailto:jmcnally@collab.net">John D. McNally</a>
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: Search.java,v 1.132 2003/05/08 05:46:51 dlr Exp $
+ * @version $Id: Search.java,v 1.133 2003/05/14 21:13:09 elicia Exp $
  */
 public class Search extends RequireLoginFirstAction
 {
@@ -516,8 +516,12 @@ public class Search extends RequireLoginFirstAction
                     String[] values = data.getParameters().getStrings(key);
                     for (int j=0; j<values.length; j++)
                     {
-                        buf.append('&').append(key);
-                        buf.append('=').append(ScarabUtil.urlEncode(values[j]));
+                        String value = values[j];
+                        if (StringUtils.isNotEmpty(value))
+                        {
+                            buf.append('&').append(key);
+                            buf.append('=').append(ScarabUtil.urlEncode(value));
+                        }
                     }
                 }
             }
