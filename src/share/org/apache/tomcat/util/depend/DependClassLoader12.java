@@ -173,7 +173,11 @@ class DependClassLoader12Impl extends URLClassLoader {
     }
 
     public URL[] getURLs() {
-        return ((URLClassLoader)parent).getURLs();
+        if( parent instanceof URLClassLoader )
+            return ((URLClassLoader)parent).getURLs();
+        if( parent instanceof SimpleClassLoader ) 
+            return ((SimpleClassLoader)parent).getURLs();
+        return super.getURLs();
     }
     
     private String getAttribute(Attributes.Name key, Attributes main, Attributes pkg)
