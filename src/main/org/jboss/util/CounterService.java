@@ -1,3 +1,10 @@
+/*
+ * JBoss, the OpenSource J2EE webOS
+ *
+ * Distributable under LGPL license.
+ * See terms of license at gnu.org.
+ */
+
 package org.jboss.util;
 
 import java.text.DecimalFormat;
@@ -11,10 +18,13 @@ import javax.naming.StringRefAddr;
 import org.jboss.system.ServiceMBeanSupport;
 import org.jboss.naming.NonSerializableFactory;
 
-/** A service offering accumulator style counters to help in diagnosing
- *  performance issues.
- *  @author <a href="mailto:danch@nvisia.com">Dan Christopherson</href>
- *  */
+/**
+ * A service offering accumulator style counters to help in diagnosing
+ * performance issues.
+ * 
+ * @author <a href="mailto:danch@nvisia.com">Dan Christopherson</href>
+ * @version $Revision: 1.4 $
+ */
 public class CounterService
    extends ServiceMBeanSupport
    implements CounterServiceMBean
@@ -39,10 +49,8 @@ public class CounterService
       counter.addToCount(add);
    }
    
-   protected void startService() throws java.lang.Exception
+   protected void startService() throws Exception
    {
-      super.startService();
-      
       InitialContext ctx = new InitialContext();
       
       //bind myself into JNDI, at java:/CounterService
@@ -51,24 +59,12 @@ public class CounterService
       Reference ref = new Reference(this.getClass().getName(), addr, NonSerializableFactory.class.getName(), null);
       ctx.bind("java:/CounterService", ref);
    }
-   protected void stopService()
-   {
-      super.stopService();
-      try
-      {
-         InitialContext ctx = new InitialContext();
-         ctx.unbind("java:/CounterService");
-         NonSerializableFactory.unbind("java:/CounterService");
-      }
-      catch (NamingException ne)
-      {
-         log.error("Coulnd't unbind CounterService", ne);
-      }
-   }
    
-   public String getName()
+   protected void stopService() throws Exception
    {
-      return "Counter Service";
+      InitialContext ctx = new InitialContext();
+      ctx.unbind("java:/CounterService");
+      NonSerializableFactory.unbind("java:/CounterService");
    }
    
    public String list()

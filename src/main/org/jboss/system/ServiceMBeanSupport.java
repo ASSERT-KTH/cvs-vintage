@@ -30,7 +30,8 @@ import org.apache.log4j.NDC;
  * @author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
  * @author <a href="mailto:Scott_Stark@displayscape.com">Scott Stark</a>
  * @author <a href="mailto:andreas@jboss.org">Andreas Schaefer</a>
- * @version $Revision: 1.11 $
+ * @author <a href="mailto:jason@planet57.com">Jason Dillon</a>
+ * @version $Revision: 1.12 $
  *   
  * <p><b>Revisions:</b>
  *
@@ -49,25 +50,32 @@ public abstract class ServiceMBeanSupport
    implements ServiceMBean, MBeanRegistration
 {
    // Attributes ----------------------------------------------------
-   
-   protected int state;
-   protected MBeanServer server;
 
    /**
-    * Own Object Name this MBean is registered with,
-    * see {@link #preRegister preRegister()}.
+    * The instance logger for the service.  Not using a class logger
+    * because we want to dynamically obtain the logger name from
+    * concreate sub-classes.
     */
-   protected ObjectName mServiceName;
-   
-   private int id = 0;
-   
    protected Logger log;
    
-   // Static --------------------------------------------------------
-   
-   // Constructors --------------------------------------------------
-   
-   public ServiceMBeanSupport()
+   /** The MBeanServer which we have been register with. */
+   protected MBeanServer server;
+
+   /** The object name which we are registsred under. */
+   protected ObjectName serviceName;
+
+   /** The current state this service is in. */
+   private int state;
+
+   /** Indentifier tracker for notifications we send out. */ 
+   private int id = 0;
+
+   /**
+    * Initialize <t>ServiceMBeanSupport</tt>.
+    *
+    * <p>Sets up logging.
+    */
+   protected ServiceMBeanSupport()
    {
       log = Logger.getLogger(getClass());
    }
@@ -78,13 +86,16 @@ public abstract class ServiceMBeanSupport
     * Use the short class name as the default for the service name.
     */
    public String getName() {
+      //
+      // TODO: Check if this gets called often, if so cache this
+      //
       String classname = this.getClass().getName();
       return classname.substring(classname.lastIndexOf(".") + 1,
                                  classname.length());
    }
    
    public ObjectName getServiceName() {
-      return mServiceName;
+      return serviceName;
    }
    
    public MBeanServer getServer()
@@ -106,12 +117,17 @@ public abstract class ServiceMBeanSupport
    {
       return log;
    }
+
+
+   ///////////////////////////////////////////////////////////////////////////
+   //                             State Mutators                            //
+   ///////////////////////////////////////////////////////////////////////////
    
-   public void create()
-   throws Exception
+   public void create() throws Exception
    {
       NDC.push(getName());
       log.info("Creating");
+      
       try
       {
          createService();
@@ -125,11 +141,11 @@ public abstract class ServiceMBeanSupport
       {
          NDC.pop();
       }
+      
       log.info("Created");
    }
-   
-   public void start()
-   throws Exception
+
+   public void start() throws Exception
    {
       if (getState() != STOPPED && getState() != FAILED)
          return;
@@ -139,6 +155,7 @@ public abstract class ServiceMBeanSupport
       sendNotification(new AttributeChangeNotification(this, id++, new Date().getTime(), getName()+" starting", "State", "java.lang.Integer", new Integer(STOPPED), new Integer(STARTING)));
       log.info("Starting");
       NDC.push(getName());
+      
       try
       {
          startService();
@@ -148,13 +165,14 @@ public abstract class ServiceMBeanSupport
          state = FAILED;
          //AS It seems that the first attribute is not needed anymore and use a long instead of a Date
          sendNotification(new AttributeChangeNotification(this, id++, new Date().getTime(), getName()+" failed", "State", "java.lang.Integer", new Integer(STARTING), new Integer(FAILED)));
-         log.error("Failed", e);
+         log.error("Starting failed", e);
          throw e;
       }
       finally
       {
          NDC.pop();
       }
+      
       state = STARTED;
       //AS It seems that the first attribute is not needed anymore and use a long instead of a Date
       sendNotification(new AttributeChangeNotification(this, id++, new Date().getTime(), getName()+" started", "State", "java.lang.Integer", new Integer(STARTING), new Integer(STARTED)));
@@ -181,61 +199,71 @@ public abstract class ServiceMBeanSupport
          state = FAILED;
          //AS It seems that the first attribute is not needed anymore and use a long instead of a Date
          sendNotification(new AttributeChangeNotification(this, id++, new Date().getTime(), getName()+" failed", "State", "java.lang.Integer", new Integer(STOPPING), new Integer(FAILED)));
-         log.error("Failed", e);
+         log.error("Stopping failed", e);
          return;
       }
       finally
       {
          NDC.pop();
       }
+      
       state = STOPPED;
       //AS It seems that the first attribute is not needed anymore and use a long instead of a Date
       sendNotification(new AttributeChangeNotification(this, id++, new Date().getTime(), getName()+" stopped", "State", "java.lang.Integer", new Integer(STOPPING), new Integer(STOPPED)));
       log.info("Stopped");
    }
-   
+
    public void destroy()
    {
       if (getState() != STOPPED)
          stop();
       
       log.info("Destroying");
+      
       NDC.push(getName());
+      
       try
       {
          destroyService();
-      } catch (Exception e)
+      }
+      catch (Throwable t)
       {
-         log.error(e);
+         log.error("Destroying failed", t);
+      }
+      finally
+      {
+         NDC.pop();
       }
       
       log.info("Destroyed");
-      NDC.pop();
    }
+
+
+   ///////////////////////////////////////////////////////////////////////////
+   //                                JMX Hooks                              //
+   ///////////////////////////////////////////////////////////////////////////
    
    /**
-   * Callback method of {@link javax.management.MBeanRegistration MBeanRegistration}
-   * before the MBean is registered at the JMX Agent.
-   * <br>
-   * <b>Attention</b>: Always call this method when you overwrite it in a subclass
-   *                   because it saves the Object Name of the MBean.
-   *
-   * @param server Reference to the JMX Agent this MBean is registered on
-   * @param name Name specified by the creator of the MBean. Note that you can
-   *             overwrite it when the given ObjectName is null otherwise the
-   *             change is discarded (maybe a bug in JMX-RI).
-   **/
+    * Callback method of {@link MBeanRegistration}
+    * before the MBean is registered at the JMX Agent.
+    * 
+    * <p>
+    * <b>Attention</b>: Always call this method when you overwrite it in a subclass
+    *                   because it saves the Object Name of the MBean.
+    *
+    * @param server    Reference to the JMX Agent this MBean is registered on
+    * @param name      Name specified by the creator of the MBean. Note that you can
+    *                  overwrite it when the given ObjectName is null otherwise the
+    *                  change is discarded (maybe a bug in JMX-RI).
+    */
    public ObjectName preRegister(MBeanServer server, ObjectName name)
-   throws Exception
+      throws Exception
    {
-      ObjectName lName = getObjectName(server, name);
-      if( name == null ) {
-         mServiceName = lName;
-      } else {
-         mServiceName = name;
-      }
       this.server = server;
-      return lName;
+
+      serviceName = getObjectName(server, name);
+      
+      return serviceName;
    }
    
    public void postRegister(Boolean registrationDone)
@@ -247,31 +275,70 @@ public abstract class ServiceMBeanSupport
       }
    }
    
-   public void preDeregister()
-   throws Exception
+   public void preDeregister() throws Exception
    {
+      // nothing to do
    }
    
    public void postDeregister()
    {
-      stop();//this is presumably redundant.... ServiceController should have called
-      //stop already.
+      // this is presumably redundant.... 
+      // ServiceController should have called stop already.
+      stop();
    }
-   
-   // Protected -----------------------------------------------------
-   
+
+
+   ///////////////////////////////////////////////////////////////////////////
+   //                       Concrete Service Overrides                      //
+   ///////////////////////////////////////////////////////////////////////////
+
+   /**
+    * Sub-classes should override this method if they only need to set their
+    * object name during MBean pre-registration.
+    */
    protected ObjectName getObjectName(MBeanServer server, ObjectName name)
-   throws MalformedObjectNameException
+      throws MalformedObjectNameException
    {
       return name;
    }
-   
+
+   /**
+    * Sub-classes should override this method to provide
+    * custum 'create' logic.
+    *
+    * <p>This method is empty, and is provided for convenience
+    *    when concrete service classes do not need to perform
+    *    anything specific for this state change.
+    */
    protected void createService() throws Exception {}
    
-   protected void startService()throws Exception {}
+   /**
+    * Sub-classes should override this method to provide
+    * custum 'start' logic.
+    * 
+    * <p>This method is empty, and is provided for convenience
+    *    when concrete service classes do not need to perform
+    *    anything specific for this state change.
+    */
+   protected void startService() throws Exception {}
    
-   protected void stopService(){}
+   /**
+    * Sub-classes should override this method to provide
+    * custum 'stop' logic.
+    * 
+    * <p>This method is empty, and is provided for convenience
+    *    when concrete service classes do not need to perform
+    *    anything specific for this state change.
+    */
+   protected void stopService() throws Exception {}
    
-   protected void destroyService() {}
-
+   /**
+    * Sub-classes should override this method to provide
+    * custum 'destroy' logic.
+    * 
+    * <p>This method is empty, and is provided for convenience
+    *    when concrete service classes do not need to perform
+    *    anything specific for this state change.
+    */
+   protected void destroyService() throws Exception {}
 }
