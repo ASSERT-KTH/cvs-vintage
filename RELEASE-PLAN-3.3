@@ -1,4 +1,4 @@
-NOTE: This document is the first cut at a release plan for the next
+NOTE: This document is a draft of a release plan for the next
 dot release of Tomcat. Nothing in this document should be
 considered authoritative until it has been discussed and approved
 on the TOMCAT-DEV mailing list.
@@ -26,31 +26,14 @@ Changes:
     Most of the changes are related with continuing the refactoring of the 
     3.x and performance enhancements that couldn't make it into 3.2. 
 
-Open items ( XXX move to STATUS ):
- 
-    This list includes changes that need to be done in 3.3 
-
-    1. Integrate the bug fixes from 3.2 that haven't been integrated/fixed
-       so far.
-
-    2. Review the code changes and do the required changes, and produce 
-       documentation for the resulting code.
-
-    3. If time permits, enable the use of the Parameters and Headers classes. 
-
-    4. Fix the encoding bugs ( reported by Larry )
-
-    5. Improve the test suite.
-
-    6. Add a "credits.html" ( or similar ) with information about the 
-       +1 commiters that made the release possible and all the volunteers 
-       that contribute to it. Given the ammount of responsiblity and
-       work that is required I think this is an absolute requirement.
 
 Tomcat 3.3 Milestone 1 Release:
 
-	Code Freeze/Tag Date:	Feb 1, 2001 (?)
-	Release Manager:	???
+	Code Freeze/Tag Date:	Feb 1, 2001
+	Release Manager:	Larry Isaacs
+
+    To help insure widespread testing, this build must include an acceptably
+    simple way of running the internal Tomcat tests and Watchdog in some form.
 
     The build must pass all watchdog and all existing test suites. It should
     work on both JDK1.1 and JDK1.2. 
@@ -71,16 +54,23 @@ Tomcat 3.3 Milestone 1 Release:
 
     We must test and make sure that JspServlet still function properly.
 
-Tomcat 3.3 periodical milestones:
-    
-    After the first milestone, we will periodically build milestones in
-    order to track the evolution. ( see also the testing plan at the end ).
-    The release manager will build and make them available.
+Tomcat 3.3 Milestone 2 Release:
+
+	Code Freeze/Tag Date:	Feb 8, 2001 
+	Release Manager:	Larry Isaacs
+
+    This release is optional depending on the amount of bug fixing that
+	occurs since the milestone 1 release.  The major goal of the week
+    following milestone 1 will be to identify what further work is needed
+    based on the feedback.  During this time it is hoped that there will
+    be enough bug fixes	and tests added to make this release worthwhile.
+	Should that not be the case, this release may be skipped since the
+	beta release is expected a week later.
 
 Tomcat 3.3 Beta:
 
-	Code Freeze/Tag Date:	March 15, 2001 (?)
-	Release Manager:	???
+	Code Freeze/Tag Date:	March 15, 2001
+	Release Manager:	Larry Isaacs
 
      No major change will be done after the Beta is build without a 
      vote. The release team can reject any change they feel is too big
@@ -92,10 +82,18 @@ Tomcat 3.3 Beta:
      During the beta period we will fix all remaining bugs and run the manual
      tests for the bugs that have no automated test case.
 
+Tomcat 3.3 Addition Betas:
+
+	Code Freeze/Tag Date:	Weekly from March 15, 2001
+	Release Manager:	Larry Isaacs
+ 
+    After the first beta, we will periodically build beta releases in
+    order to track the evolution.
+
 Tomcat 3.3 Final Release
 
-	Code Freeze Date:	Apr 5, 2001 (?)
-	Release Manager:	???
+	Code Freeze Date:	Apr 5, 2001
+	Release Manager:	Larry Isaacs
 
     The final build. The pre-requisite for the release is having no bugs in
     the test suite, resolution for all known bugs and aproval by the community.
@@ -179,14 +177,3 @@ One of the team members will act as "Release Manager" and will be
 responsible for building the milestones, making the announcements about
 the release progress and all other roles that will be set by PMC and 
 commiters.
-
-Larry Isaacs has volunteered as a Release Manager, and Henri Gomez has
- volunteered to act as a backup and help on the Unix side. So far, 4 people
-had volunteered to be part of the release team - Ignacio Ortega (Nacho)
-and Costin Manolache are the other 2. The final team will be determined
-by the vote that will take place, any commiter voting a binding +1 becoming 
-a member of the Release Team. It is possible for a team member to retire as
- long as the minimum of 3 members is maintained, and one of the members agrees
-to act as Release Manager. 
-
-
