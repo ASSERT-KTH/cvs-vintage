@@ -3,11 +3,23 @@
 #set ($module = $scarabR.CurrentModule)
 #set ($user = $data.User)
 
+
 <form method="post" action="$action" >
   <h2>Saved query list</h2>
 
-#if ( (!$module.getPrivateQueries($user).isEmpty())
-   || (!$module.GlobalQueries.isEmpty())) 
+#if (!$user.UserId)
+    If you wish to see your personal queries, <a href="$link.setPage("Login.vm")">log in.</a>
+  #if ( $module.GlobalQueries.isEmpty() )
+    #set ($noQueries = "true")
+  #end
+#elseif ( ($module.getPrivateQueries($user).isEmpty())
+     && ($module.GlobalQueries.isEmpty())) 
+    #set ($noQueries = "true")
+#end
+
+#if ($noQueries.equals("true"))
+    <div class="alert">There are no stored queries.</div>
+#else
 
  ##      <p>&#171; previous | 1 of 1 | next &#187; </p>
 
@@ -32,7 +44,7 @@
 
         </tr>
 
-#if ($user.UserId)
+
 #foreach ( $query in $module.getPrivateQueries($user) )
 
          #if( $velocityCount % 2 > 0 )
@@ -57,10 +69,6 @@
         #set ($createdUser = $scarabR.getUser($query.UserId.toString()) )
          <td><a href="mailTo:$createdUser.Email">$createdUser.UserName</a></td>
         </tr>
-#end
-#else
-    If you wish to see your personal queries, <a href="$link.setPage("Login.vm")">log in.</a>
-#end
 
 #foreach ( $query in $module.GlobalQueries )
 
@@ -115,7 +123,6 @@
      </td>
     </tr>
    </table>
-#else
-    <div class="alert">There are no stored queries.</div>
+#end
 #end
   </form>
