@@ -1,4 +1,4 @@
-// $Id: PropPanelClass.java,v 1.58 2004/09/22 17:27:46 mvw Exp $
+// $Id: PropPanelClass.java,v 1.59 2004/10/02 12:43:31 mvw Exp $
 // Copyright (c) 1996-2001 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -44,7 +44,6 @@ import org.argouml.uml.ui.ActionRemoveFromModel;
 import org.argouml.uml.ui.PropPanelButton;
 import org.argouml.uml.ui.PropPanelButton2;
 import org.argouml.uml.ui.UMLLinkedList;
-import org.argouml.uml.ui.behavior.common_behavior.ActionNewReception;
 import org.argouml.util.ConfigLoader;
 
 /**
