@@ -365,7 +365,7 @@ commit-option? , (role-mapping-manager, authentication-module?)?)>
 
 <!--
       The call-logging element tells if the container must log every method
-      invocation for this bean or not. Its value must be trus or false.
+      invocation for this bean or not. Its value must be true or false.
 
       Used in: container-configuration
       -->

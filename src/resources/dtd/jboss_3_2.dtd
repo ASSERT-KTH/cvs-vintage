@@ -7,8 +7,8 @@ The DOCTYPE is:
       "-//JBoss//DTD JBOSS 3.2//EN"
       "http://www.jboss.org/j2ee/dtd/jboss_3_2.dtd">
 
-$Id: jboss_3_2.dtd,v 1.6 2004/05/21 17:40:02 ejort Exp $
-$Revision: 1.6 $
+$Id: jboss_3_2.dtd,v 1.7 2004/08/22 08:08:27 pilhuhn Exp $
+$Revision: 1.7 $
 
 Overview of the architecture of jboss.xml
 
@@ -811,7 +811,7 @@ the other duplicate configuration info.
 
 <!--
   The call-logging element tells if the container must log every method
-  invocation for this bean or not. Its value must be trus or false.
+  invocation for this bean or not. Its value must be true or false.
 
   Used in: container-configuration
 -->

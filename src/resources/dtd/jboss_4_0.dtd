@@ -4,7 +4,7 @@
 This is the XML DTD for the JBoss 4.0 EJB deployment descriptor.
 The DOCTYPE is:
 
-$Id: jboss_4_0.dtd,v 1.16 2004/08/11 20:29:41 ejort Exp $
+$Id: jboss_4_0.dtd,v 1.17 2004/08/22 08:08:27 pilhuhn Exp $
 
   <!DOCTYPE jboss PUBLIC
       "-//JBoss//DTD JBOSS 4.0//EN"
@@ -999,7 +999,7 @@ the other duplicate configuration info.
 
 <!--
   The call-logging element tells if the container must log every method
-  invocation for this bean or not. Its value must be trus or false.
+  invocation for this bean or not. Its value must be true or false.
 
   Used in: container-configuration
 -->
