@@ -46,7 +46,7 @@ import org.w3c.dom.Element;
  *
  * @see Container
  *
- * @version <tt>$Revision: 1.47 $</tt>
+ * @version <tt>$Revision: 1.48 $</tt>
  * @author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
  * @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
  * @author <a href="mailto:jplindfo@helsinki.fi">Juha Lindfors</a>
@@ -509,14 +509,6 @@ public class EJBDeployer
                "Beans failed, see above for error messages." );
          }
 
-      }
-
-      // Look for webservicesclient.xml descriptor
-      URL webservicesclient = di.localCl.getResource("META-INF/webservicesclient.xml");
-      if (webservicesclient != null)
-      {
-         WebserviceClientDeployer wscDeployer = new WebserviceClientDeployer();
-         metaData.setWebservicesClient(wscDeployer.create(di));
       }
 
       // Create an MBean for the EJB module

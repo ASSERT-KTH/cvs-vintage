@@ -5,12 +5,13 @@
  * See terms of license at gnu.org.
  */
 
-// $Id: WebserviceClientDeployer.java,v 1.2 2003/11/23 18:24:57 tdiesler Exp $
+// $Id: WebserviceClientDeployer.java,v 1.3 2004/02/17 22:53:22 patriot1burke Exp $
 
 package org.jboss.deployment;
 
 import org.jboss.logging.Logger;
 import org.jboss.mx.util.MBeanServerLocator;
+import org.w3c.dom.Element;
 
 import javax.naming.Context;
 import javax.naming.NamingException;
@@ -26,7 +27,7 @@ import javax.management.ReflectionException;
  *
  * @since 10-Nov-2003
  * @author <a href="mailto:thomas.diesler@arcor.de">Thomas Diesler</a>
- * @version $Revision: 1.2 $
+ * @version $Revision: 1.3 $
  */
 public class WebserviceClientDeployer
 {
@@ -53,6 +54,39 @@ public class WebserviceClientDeployer
          else
          {
             log.warn ("This is a webservice client deployment, but '" + JSR109_CLIENT_SERVICE_NAME + "' is not registered: " + di.url);
+         }
+      }
+      catch (Exception e)
+      {
+         throw new DeploymentException("Cannot create webservice client", e);
+      }
+
+      return webservicesClient;
+   }
+   /**
+    * Create service-refs for ejb-jar.xml
+    * todo web.xml should use the same interface in future
+    * @param element
+    * @param loader
+    * @return
+    * @throws DeploymentException
+    */
+   public Object createServiceRefs(Element element, ClassLoader loader) throws DeploymentException
+   {
+      log.debug("createEjbjarRefs");
+
+      Object webservicesClient = null;
+      try
+      {
+         MBeanServer server = MBeanServerLocator.locateJBoss();
+         ObjectName objectName = new ObjectName(JSR109_CLIENT_SERVICE_NAME);
+         if (server.isRegistered(objectName))
+         {
+            webservicesClient = server.invoke(objectName, "createServiceRefs", new Object[]{element, loader}, new String[]{Element.class.getName(), ClassLoader.class.getName()});
+         }
+         else
+         {
+            log.warn ("This is a webservice client deployment, but '" + JSR109_CLIENT_SERVICE_NAME + "' is not registered.");
          }
       }
       catch (Exception e)

@@ -34,7 +34,7 @@ import org.jboss.logging.Logger;
  * @author <a href="mailto:Darius.D@jbees.com">Darius Davidavicius</a>
  * @author <a href="mailto:scott.stark@jboss.org">Scott Stark</a>
  * @author <a href="mailto:Christoph.Jung@infor.de">Christoph G. Jung</a>.
- * @version $Revision: 1.41 $
+ * @version $Revision: 1.42 $
  */
 public class XmlFileLoader
 {
@@ -127,6 +127,7 @@ public class XmlFileLoader
    {
       // create the metadata
       metaData = new ApplicationMetaData();
+      metaData.setClassLoader(classLoader);
       // Load ejb-jar.xml
       // we can always find the files in the classloader
       URL ejbjarUrl = getClassLoader().getResource("META-INF/ejb-jar.xml");

@@ -41,7 +41,7 @@ import org.w3c.dom.Element;
  @author  Scott.Stark@jboss.org
  @author  Christoph.Jung@infor.de
  @author  Thomas.Diesler@arcor.de
- @version $Revision: 1.78 $
+ @version $Revision: 1.79 $
  */
 public abstract class AbstractWebContainer
    extends SubDeployerSupport
@@ -217,6 +217,7 @@ public abstract class AbstractWebContainer
          }
 
          WebMetaData metaData = new WebMetaData();
+         metaData.setWarClassLoader(di.localCl);
          metaData.setJava2ClassLoadingCompliance(this.java2ClassLoadingCompliance);
          di.metaData = metaData;
          // Check for a loader-repository
@@ -243,14 +244,6 @@ public abstract class AbstractWebContainer
                   di.setRepositoryInfo(config);
                }
             }
-         }
-
-         // Look for webservicesclient.xml descriptor
-         URL webservicesclient = di.localCl.getResource("WEB-INF/webservicesclient.xml");
-         if (webservicesclient != null)
-         {
-            WebserviceClientDeployer wscDeployer = new WebserviceClientDeployer();
-            metaData.setWebservicesClient(wscDeployer.create(di));
          }
 
          // Generate an event for the initialization

@@ -7,6 +7,7 @@
 package org.jboss.metadata;
 
 import org.jboss.deployment.DeploymentException;
+import org.jboss.deployment.WebserviceClientDeployer;
 import org.jboss.logging.Logger;
 import org.jboss.mx.util.ObjectNameFactory;
 import org.w3c.dom.Document;
@@ -30,7 +31,7 @@ import java.util.Iterator;
  * @see org.jboss.web.AbstractWebContainer
  
  * @author Scott.Stark@jboss.org
- * @version $Revision: 1.17 $
+ * @version $Revision: 1.18 $
  */
 public class WebMetaData implements XmlLoadable
 {
@@ -63,6 +64,10 @@ public class WebMetaData implements XmlLoadable
 
    /** The web context class loader used to create the java:comp context */
    private ClassLoader encLoader;
+
+   /** The war classloader so that web services can find wsdl files and such */
+   private ClassLoader warClassLoader;
+
    private ArrayList depends = new ArrayList();
 
    /** Should the context use session cookies or use default */
@@ -177,10 +182,6 @@ public class WebMetaData implements XmlLoadable
    {
       return webservicesClient;
    }
-   public void setWebservicesClient(Object webservicesClient)
-   {
-      this.webservicesClient = webservicesClient;
-   }
 
    /** A flag indicating if the normal Java2 parent first class loading model
     * should be used over the servlet 2.3 web container first model.
@@ -202,6 +203,11 @@ public class WebMetaData implements XmlLoadable
    public void setENCLoader(ClassLoader encLoader)
    {
       this.encLoader = encLoader;
+   }
+
+   public void setWarClassLoader(ClassLoader warClassLoader)
+   {
+      this.warClassLoader = warClassLoader;
    }
 
    public int getSessionCookies()
@@ -292,6 +298,10 @@ public class WebMetaData implements XmlLoadable
       {
          distributable=true;
       }
+      // Parse webservices service-refs
+      WebserviceClientDeployer wscDeployer = new WebserviceClientDeployer();
+      webservicesClient = wscDeployer.createServiceRefs(webApp, warClassLoader);
+
    }
 
    /** Parse the elements of the jboss-web element used by the integration layer.

@@ -28,7 +28,7 @@ import java.util.Set;
  * @author <a href="mailto:Christoph.Jung@infor.de">Christoph G. Jung</a>.
  * @author <a href="mailto:Thomas.Diesler@arcor.de">Thomas Diesler</a>.
  *
- * @version $Revision: 1.40 $
+ * @version $Revision: 1.41 $
  */
 public class ApplicationMetaData
    extends MetaData
@@ -62,8 +62,8 @@ public class ApplicationMetaData
    /** The  unauthenticated-principal value assigned to the application */
    private String  unauthenticatedPrincipal;
    private boolean enforceEjbRestrictions;
-   /** The webservicesclient.xml metadata */
-   private Object webservicesClient;
+   /** ClassLoader is needed for webservices service-ref to lookup wsdl and other required files */
+   private ClassLoader classLoader;
 
    public ApplicationMetaData(URL u)
    {
@@ -73,6 +73,17 @@ public class ApplicationMetaData
    public ApplicationMetaData()
    {
    }
+
+   public ClassLoader getClassLoader()
+   {
+      return classLoader;
+   }
+
+   public void setClassLoader(ClassLoader classLoader)
+   {
+      this.classLoader = classLoader;
+   }
+
 
    public URL getUrl()
    {
@@ -194,16 +205,6 @@ public class ApplicationMetaData
    public boolean getEnforceEjbRestrictions()
    {
       return enforceEjbRestrictions;
-   }
-
-   /** Get the webservicesclient.xml metadata, null if there is none */
-   public Object getWebservicesClient()
-   {
-      return webservicesClient;
-   }
-   public void setWebservicesClient(Object webservicesClient)
-   {
-      this.webservicesClient = webservicesClient;
    }
 
    /**

@@ -67,7 +67,7 @@ import org.jboss.mx.util.ObjectNameConverter;
  * @author <a href="bill@burkecentral.com">Bill Burke</a>
  * @author <a href="mailto:d_jencks@users.sourceforge.net">David Jencks</a>
  * @author <a href="mailto:christoph.jung@infor.de">Christoph G. Jung</a>
- * @version $Revision: 1.130 $
+ * @version $Revision: 1.131 $
  *
  * @jmx:mbean extends="org.jboss.system.ServiceMBean"
  */
@@ -1064,13 +1064,11 @@ public abstract class Container
                new LinkRef(securityDomain+"/subject"));
       }
 
-      // Bind the webservices clients to the ENC. It does this if the deployment contains
-      // a META-INF/webservicesclient.xml, see the JSR109 spec for details.
-      ApplicationMetaData application = beanMetaData.getApplicationMetaData();
-      if (application.getWebservicesClient() != null)
+      // Bind the webservice service-refs to the ENC.
+      if (beanMetaData.getWebservicesClient() != null)
       {
          WebserviceClientDeployer wscDeployer = new WebserviceClientDeployer();
-         wscDeployer.setupEnvironment(envCtx, di, application.getWebservicesClient());
+         wscDeployer.setupEnvironment(envCtx, di, beanMetaData.getWebservicesClient());
       }
 
       if (debug)
