@@ -17,6 +17,7 @@
 package org.columba.mail.gui.composer;
 
 import java.awt.Color;
+import java.awt.Dimension;
 
 import javax.swing.JScrollPane;
 
@@ -47,11 +48,10 @@ public class HeaderView extends JScrollPane {
 		table = new AddressbookTableView();
 
 		getViewport().setBackground(Color.white);	
-		
-		
-		
+				
 		setViewportView( table );
 		
+		setPreferredSize( new Dimension(200,100));
 		
 	}
 

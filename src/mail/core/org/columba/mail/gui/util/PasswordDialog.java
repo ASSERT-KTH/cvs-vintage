@@ -41,7 +41,7 @@ import org.columba.mail.util.MailResourceLoader;
 
 public class PasswordDialog implements ActionListener {
 	private char[] password;
-	private JFrame frame;
+	//private JFrame frame;
 	private JDialog dialog;
 	private boolean bool = false;
 	private JPasswordField passwordField;
@@ -133,7 +133,7 @@ public class PasswordDialog implements ActionListener {
 					"save_password"));
                 checkbox.setSelected(save);
 
-		dialog = new JDialog(frame, true);
+		dialog = new JDialog(new JFrame(), true);
 		dialog.setTitle(
 			MailResourceLoader.getString("dialog", "password", "dialog_title"));
 

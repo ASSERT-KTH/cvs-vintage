@@ -19,9 +19,12 @@ package org.columba.mail.composer;
 import java.io.UnsupportedEncodingException;
 import java.util.Enumeration;
 import java.util.Hashtable;
+import java.util.Iterator;
+import java.util.List;
 
 import org.columba.addressbook.folder.ContactCard;
 import org.columba.addressbook.parser.AddressParser;
+import org.columba.addressbook.parser.ListParser;
 import org.columba.mail.coder.CoderRouter;
 import org.columba.mail.coder.Decoder;
 import org.columba.mail.config.AccountItem;
@@ -225,40 +228,12 @@ public class MessageBuilder {
 	 * */
 	private static String createToMailinglist(ColumbaHeader header) {
 
-		String sender = (String) header.get("List-Post");
-		if (sender != null) {
-			// example: List-Post: <mailto:frd@localhost>
-			// we have to remove the "mailto:" substring
+		// example: X-BeenThere: columba-devel@lists.sourceforge.net
+		String sender = (String) header.get("X-BeenThere");
 
-			int pos = 0;
-			StringBuffer list = new StringBuffer(sender);
-			while (pos < list.length()) {
-				char ch = list.charAt(pos);
-				if (ch == '<') {
-					pos++;
-					char ch2 = '<';
-					while (ch2 != ':') {
-						System.out.println("char:" + ch2);
-						if (pos >= list.length())
-							break;
-
-						ch2 = list.charAt(pos);
-						list.deleteCharAt(pos);
-					}
-
-					if (list.charAt(pos + 1) == ':')
-						list.deleteCharAt(pos + 1);
-				}
-				pos++;
-			}
-
-			sender = list.toString();
-		} else
-			sender = (String) header.get("To");
-
-		if ( sender == null )
+		if (sender == null)
 			sender = (String) header.get("Reply-To");
-			
+
 		if (sender == null)
 			sender = (String) header.get("From");
 
@@ -333,7 +308,6 @@ public class MessageBuilder {
 	 */
 	private static String createBodyText(Message message) {
 		String bodyText = "";
-		
 
 		MimePart bodyPart = message.getBodyPart();
 
@@ -406,12 +380,13 @@ public class MessageBuilder {
 		int operation) {
 
 		ColumbaHeader header = (ColumbaHeader) message.getHeader();
-		
+
 		MimePart bodyPart = message.getBodyPart();
 
-		if( bodyPart != null ) {
-			String charset = bodyPart.getHeader().getContentParameter("charset");
-			if( charset != null ) {
+		if (bodyPart != null) {
+			String charset =
+				bodyPart.getHeader().getContentParameter("charset");
+			if (charset != null) {
 				model.setCharsetName(charset);
 			}
 		}
@@ -497,8 +472,8 @@ public class MessageBuilder {
 			}
 
 		}
-		
-		model.setTo( (String) header.get("To"));
+
+		model.setTo((String) header.get("To"));
 
 		AccountItem accountItem = getAccountItem(header);
 		model.setAccountItem(accountItem);
@@ -554,8 +529,6 @@ public class MessageBuilder {
 
 	}
 
-	
-
 	/********************** addressbook stuff ***********************/
 
 	/**
@@ -570,22 +543,34 @@ public class MessageBuilder {
 			if (sender.length() > 0) {
 
 				org.columba.addressbook.folder.Folder selectedFolder =
-				org.columba.addressbook.facade.FolderFacade.getCollectedAddresses();
+					org
+						.columba
+						.addressbook
+						.facade
+						.FolderFacade
+						.getCollectedAddresses();
 
-				String address = AddressParser.getAddress(sender);
-				System.out.println("address:" + address);
+				// this can be a list of recipients
+				List list = ListParser.parseString(sender);
+				Iterator it = list.iterator();
+				while (it.hasNext()) {
+					String address =
+						AddressParser.getAddress((String) it.next());
+					System.out.println("address:" + address);
 
-				if (!selectedFolder.exists(address)) {
-					ContactCard card = new ContactCard();
+					if (!selectedFolder.exists(address)) {
+						ContactCard card = new ContactCard();
 
-					String fn = AddressParser.getDisplayname(sender);
-					System.out.println("fn=" + fn);
+						String fn = AddressParser.getDisplayname(sender);
+						System.out.println("fn=" + fn);
 
-					card.set("fn", fn);
-					card.set("displayname", fn);
-					card.set("email", "internet", address);
+						card.set("fn", fn);
+						card.set("displayname", fn);
+						card.set("email", "internet", address);
 
-					selectedFolder.add(card);
+						selectedFolder.add(card);
+					}
+
 				}
 
 			}

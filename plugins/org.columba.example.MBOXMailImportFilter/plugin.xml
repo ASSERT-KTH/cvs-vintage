@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+
+<plugin id="org.columba.example.MBOXMailImportFilter" name="MBOXMail Importfilter" description="Import MBOX file" version="1.0" >
+ <extension name="org.columba.mail.import">
+  <filter name="ExampleMBOXMailImportFilter" class="MBOXMailImportFilter"/>
+ </extension>
+ <runtime type="java"/>
+</plugin>

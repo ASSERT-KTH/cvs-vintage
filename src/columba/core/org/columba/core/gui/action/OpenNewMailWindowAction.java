@@ -39,7 +39,7 @@ public class OpenNewMailWindowAction extends FrameAction {
 	 * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
 	 */
 	public void actionPerformed(ActionEvent evt) {
-		FrameModel.openView("Mail");
+		FrameModel.openView("ThreePaneMail");
 		//getFrameController().getModel().openView();
 	}
 

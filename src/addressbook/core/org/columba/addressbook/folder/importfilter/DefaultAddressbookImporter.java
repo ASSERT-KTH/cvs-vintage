@@ -19,17 +19,21 @@ package org.columba.addressbook.folder.importfilter;
 import java.io.File;
 import java.io.FileNotFoundException;
 
+import javax.swing.JOptionPane;
+
 import org.columba.addressbook.folder.ContactCard;
 import org.columba.addressbook.folder.Folder;
 import org.columba.addressbook.main.AddressbookInterface;
 import org.columba.core.gui.util.ExceptionDialog;
+import org.columba.core.gui.util.ImageLoader;
 import org.columba.core.gui.util.NotifyDialog;
+import org.columba.core.plugin.PluginInterface;
 
 /**
  * @version 	1.0
  * @author
  */
-public abstract class DefaultAddressbookImporter {
+public abstract class DefaultAddressbookImporter implements PluginInterface {
 	public static int TYPE_FILE = 0;
 	public static int TYPE_DIRECTORY = 1;
 
@@ -42,6 +46,14 @@ public abstract class DefaultAddressbookImporter {
 	//protected AddressbookFolder tempFolder;
 
 	protected int counter;
+
+	public DefaultAddressbookImporter(
+		File sourceFile,
+		Folder destinationFolder) {
+		this.sourceFile = sourceFile;
+		this.destinationFolder = destinationFolder;
+
+	}
 
 	public void init() {
 		counter = 0;
@@ -121,8 +133,12 @@ public abstract class DefaultAddressbookImporter {
 		}
 
 		if (getCount() > 0) {
-			NotifyDialog dialog = new NotifyDialog();
-			dialog.showDialog("Addressbook import was successful!");
+			JOptionPane.showMessageDialog(
+				null,
+				"Addressbook import was successfull!",
+				"Information",
+				JOptionPane.INFORMATION_MESSAGE,
+				ImageLoader.getImageIcon("stock_dialog_info_48.png"));
 
 			addressbookInterface.table.setFolder(destinationFolder);
 		}

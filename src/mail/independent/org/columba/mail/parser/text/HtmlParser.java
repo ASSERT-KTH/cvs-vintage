@@ -466,7 +466,7 @@ public class HtmlParser {
 
 		String urls = "(http|https|ftp)";
 		String letters = "\\w";
-		String gunk = "/#~:.?+=&@!\\-%";
+		String gunk = "/#~:;.?+=&@!\\-%";
 		String punc = ".:?\\-";
 		String any = "${" + letters + "}${" + gunk + "}${" + punc + "}";
 

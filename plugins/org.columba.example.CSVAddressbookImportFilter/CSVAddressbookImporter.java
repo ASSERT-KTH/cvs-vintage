@@ -14,35 +14,39 @@
 //
 //All Rights Reserved.
 
-package org.columba.addressbook.folder.importfilter;
-
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 
 import org.columba.addressbook.folder.ContactCard;
 import org.columba.addressbook.folder.Folder;
+import org.columba.addressbook.folder.importfilter.DefaultAddressbookImporter;
 
 /**
+ *
+ * Import a CSV, comma separated list of contacts 
+ *
  * @version 	1.0
- * @author
+ * @author 	   fdietz
  */
-public class MozillaCSVAddressbookImporter extends DefaultAddressbookImporter {
-	public MozillaCSVAddressbookImporter(
+public class CSVAddressbookImporter extends DefaultAddressbookImporter {
+	public CSVAddressbookImporter(
 		File sourceFile,
 		Folder destinationFolder) {
 		super(sourceFile, destinationFolder);
 	}
 
 	public void importAddressbook(File file) throws Exception {
-		System.out.println("importing addressbook::::");
-
+		
+		// open file
 		BufferedReader in = new BufferedReader(new FileReader(file));
 		String str;
 
 		while ((str = in.readLine()) != null) {
 			// start parsing line
 			int counter = -1;
+			
+			// create new contact card
 			ContactCard card = new ContactCard();
 
 			StringBuffer token = new StringBuffer();
@@ -89,6 +93,7 @@ public class MozillaCSVAddressbookImporter extends DefaultAddressbookImporter {
 
 			}
 
+			// add contact to addressbook
 			saveContact(card);
 
 		}

@@ -148,7 +148,13 @@ public abstract class AbstractFrameController {
 
 	public void openView() {
 		view.loadWindowPosition();
+		
+
 		view.setVisible(true);
+		
+		// set the position afterwards
+		// if not the maximization fails
+		view.loadWindowPosition();
 	}
 
 	/**

@@ -81,6 +81,8 @@ public class SelectFolderDialog
 		//tree.getTree().addTreeSelectionListener( this );
 
 		tree = new JTree(MainInterface.treeModel);
+		tree.expandRow(0);
+		tree.expandRow(1);
 		tree.putClientProperty("JTree.lineStyle", "Angled");
 		tree.setShowsRootHandles(true);
 		tree.setRootVisible(false);

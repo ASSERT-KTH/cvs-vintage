@@ -132,6 +132,8 @@ public class SelectAddressbookFolderDialog
 		centerPanel.setLayout(new BorderLayout());
 
 		tree = new JTree(model);
+		tree.expandRow(0);
+		tree.expandRow(1);
 		tree.putClientProperty("JTree.lineStyle", "Angled");
 		tree.setShowsRootHandles(true);
 		tree.setRootVisible(false);

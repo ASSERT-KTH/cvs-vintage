@@ -63,6 +63,8 @@ public abstract class CachedFolder extends LocalFolder {
 		WorkerStatusController worker)
 		throws Exception {
 
+		if ( message == null ) return null;
+		
 		// get headerlist before adding a message
 		getHeaderList(worker);
 
@@ -346,8 +348,8 @@ public abstract class CachedFolder extends LocalFolder {
 
 			if (exists(uid, worker)) {
 				AbstractMessage message = getMessage(uid, worker);
-
-				destFolder.addMessage(message, worker);
+				if ( message != null )
+					destFolder.addMessage(message, worker);
 			}
 
 			worker.setProgressBarValue(i);

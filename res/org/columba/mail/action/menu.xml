@@ -14,9 +14,10 @@
 		<separator/>
 		<menuitem action="ReceiveSend"/>	
 		<menuitem action="Receive"/>	
-		<menuitem action="SendAll"/>	
+		<menuitem action="SendAll"/>
+		<!--	
 		<separator/>
-		<menuitem imenu="ManageServerMenu" />
+		<menuitem imenu="ManageServerMenu" />-->
 	</menu>
 
 	<menu name="menu_edit" extensionpoint="bottom">
@@ -30,7 +31,9 @@
 	</menu>
 	
 	<menu name="menu_view" extensionpoint="top">
+	    <!--
 		<menuitem imenu="SortMessagesMenu"/>
+		-->
 		<separator/>
 		<menuitem checkboxaction="ThreadedView"/>
 		<separator/>

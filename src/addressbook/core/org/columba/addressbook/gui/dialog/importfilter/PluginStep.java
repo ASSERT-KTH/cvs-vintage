@@ -36,7 +36,6 @@ import net.javaprog.ui.wizard.DefaultDataLookup;
 import org.columba.addressbook.plugin.ImportPluginHandler;
 import org.columba.addressbook.util.AddressbookResourceLoader;
 import org.columba.core.gui.util.MultiLineLabel;
-import org.columba.mail.gui.config.mailboximport.PluginListCellRenderer;
 
 class PluginStep extends AbstractStep implements ListSelectionListener {
 	protected DataModel data;

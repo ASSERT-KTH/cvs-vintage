@@ -45,30 +45,22 @@ public class ComposerView extends AbstractFrameView {
 
 	public static final String ACCOUNTINFOPANEL = "accountinfopanel";
 
+	
 	private JSplitPane rightSplitPane;
-	private JSplitPane mainSplitPane;
-
+	
 	public ComposerView(AbstractFrameController controller) {
 		super(controller);
 		setTitle(MailResourceLoader.getString("dialog", "composer", "composerview_title")); //$NON-NLS-1$
-	}
-
-	public void setMainDividerLocation(int i) {
-		mainSplitPane.setDividerLocation(i);
 	}
 
 	public void setRightDividerLocation(int i) {
 		rightSplitPane.setDividerLocation(i);
 	}
 
-	public int getMainDividerLocation() {
-		return mainSplitPane.getDividerLocation();
-	}
-
 	public int getRightDividerLocation() {
 		return rightSplitPane.getDividerLocation();
 	}
-
+	
 	public void init() {
 		super.init();
 		
@@ -77,20 +69,7 @@ public class ComposerView extends AbstractFrameView {
 		contentPane = getContentPane();
 
 		ComposerController controller = (ComposerController) frameController;
-		/*
-		setJMenuBar( new ComposerMenu(composerInterface) );
 		
-		contentPane.setLayout(new BorderLayout());
-		
-		JPanel toolbarPanel = new JPanel();
-		toolbarPanel.setLayout( new BorderLayout() );
-		
-		
-		toolbarPanel.add( new ComposerToolbar(composerInterface), BorderLayout.NORTH );
-		toolbarPanel.add( composerInterface.identityInfoPanel, BorderLayout.CENTER );
-		contentPane.add(toolbarPanel, BorderLayout.NORTH);
-		*/
-
 		
 		if ( isAccountInfoPanelVisible() )
 			toolbarPane.add(controller.getIdentityInfoPanel());
@@ -106,7 +85,7 @@ public class ComposerView extends AbstractFrameView {
 			JSplitPane.RIGHT);
 		rightSplitPane.setDividerSize(5);
 		rightSplitPane.setDividerLocation(400);
-
+		
 		JPanel topPanel = new JPanel();
 		topPanel.setBorder(BorderFactory.createEmptyBorder(0, 5, 0, 0));
 
@@ -180,27 +159,17 @@ public class ComposerView extends AbstractFrameView {
 		centerPanel.add(topPanel, BorderLayout.NORTH);
 		centerPanel.add(editorPanel, BorderLayout.CENTER);
 
-		mainSplitPane = new JSplitPane(JSplitPane.VERTICAL_SPLIT);
-		mainSplitPane.setBorder(null);
-		mainSplitPane.add(rightSplitPane, JSplitPane.TOP);
-
-		mainSplitPane.add(centerPanel, JSplitPane.BOTTOM);
-		mainSplitPane.setDividerSize(5);
-		mainSplitPane.setDividerLocation(150);
-
-		contentPane.add(mainSplitPane, BorderLayout.CENTER);
-
-		/*
-		JLabel statusBar = new JLabel(MailResourceLoader.getString("dialog","composer","statusbar_label")); //$NON-NLS-1$
-		Border border = BorderFactory.createEtchedBorder(1);
-		Border margin = new EmptyBorder(2, 0, 2, 0);
-		statusBar.setBorder(new CompoundBorder(margin, border));
+		JPanel mainPanel = new JPanel();
+		mainPanel.setLayout( new BorderLayout() );
 		
-		contentPane.add(statusBar, BorderLayout.SOUTH);
-		*/
+		mainPanel.add( rightSplitPane, BorderLayout.NORTH);
+		mainPanel.add( centerPanel, BorderLayout.CENTER);
+		
+		contentPane.add( mainPanel, BorderLayout.CENTER);
+		
 		pack();
 
-		//setSize( new Dimension(580,640) );
+		
 	}
 
 	/* (non-Javadoc)

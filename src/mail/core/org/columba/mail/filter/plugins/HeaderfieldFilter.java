@@ -18,6 +18,8 @@ package org.columba.mail.filter.plugins;
 import org.columba.core.command.WorkerStatusController;
 import org.columba.mail.filter.FilterCriteria;
 import org.columba.mail.folder.Folder;
+import org.columba.mail.folder.headercache.CachedFolder;
+import org.columba.mail.message.AbstractMessage;
 import org.columba.mail.message.HeaderInterface;
 
 /**
@@ -73,6 +75,26 @@ public class HeaderfieldFilter extends AbstractFilter{
 		
 		// get headerfield to search in (for example: Subject)
 		String headerItem = (String) header.get((String) args[0]);
+		if ( headerItem == null )
+		{
+			// this headerfield isn't in the message
+			// or it isn't in the headercache
+			
+			// -> load the message in memory again
+			// -> so, that we have all headerfields available
+			
+			if ( folder instanceof CachedFolder )
+			{
+				CachedFolder f = (CachedFolder) folder;
+				
+				// parse message
+				AbstractMessage m = f.getMessage(uid, worker);
+				HeaderInterface h = m.getHeader();
+				
+				headerItem = (String) h.get( (String) args[0]);
+				
+			}
+		}
 		
 		// get condition and convert it to constant as defined in FilterCriteria
 		int condition = FilterCriteria.getCriteria((String) args[1]);

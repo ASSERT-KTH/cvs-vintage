@@ -80,33 +80,25 @@ public class OpenWithAttachmentCommand extends FolderCommand {
 
 		header = part.getHeader();
 
-		// If part is Message/Rfc822 we do not need to download anything because
-		// we have already parsed the subMessage and can directly access the mime-parts
+		try {
+			String filename = part.getHeader().getFileName();
+			if (filename != null) {
+				tempFile = TempFileStore.createTempFile(filename);
+			} else
+				tempFile = TempFileStore.createTempFile();
 
-		if (!part.getHeader().getContentType().equals("message")) {
+			decoder = CoderRouter.getDecoder(header.contentTransferEncoding);
 
-			try {
-				String filename = part.getHeader().getFileName();
-				if (filename != null) {
-					tempFile = TempFileStore.createTempFile(filename);
-				} else
-					tempFile = TempFileStore.createTempFile();
+			decoder.decode(
+				new ByteArrayInputStream(part.getBody().getBytes("ISO_8859_1")),
+				new FileOutputStream(tempFile));
 
-				decoder =
-					CoderRouter.getDecoder(header.contentTransferEncoding);
+			//decoder.run();
 
-				decoder.decode(
-					new ByteArrayInputStream(
-						part.getBody().getBytes("ISO_8859_1")),
-					new FileOutputStream(tempFile));
-
-				//decoder.run();
-
-			} catch (Exception ex) {
-				ex.printStackTrace();
-
-			}
+		} catch (Exception ex) {
+			ex.printStackTrace();
 
 		}
+
 	}
 }

@@ -36,15 +36,21 @@ class AddressbookImporter implements WizardModelListener {
 		DefaultAddressbookImporter importer = null;
 		Object[] args =
 			new Object[] {
-				data.getData("Location.destination"),
-				data.getData("Location.source")};
+				data.getData("Location.source"),
+				data.getData("Location.destination")};
 		try {
+			String pluginID = (String) data.getData("Plugin.ID");
 			importer =
 				(DefaultAddressbookImporter) pluginHandler.getPlugin(
-					(String) data.getData("Plugin.ID"),
+					pluginID,
 					args);
+					
+			importer.run();
+			
 		} catch (Exception ex) {
 			ex.printStackTrace();
+			if ( ex.getCause() != null ) ex.getCause().printStackTrace();
+			
 			return;
 		}
 	}

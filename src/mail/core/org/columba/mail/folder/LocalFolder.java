@@ -152,6 +152,8 @@ public abstract class LocalFolder extends Folder {
 		WorkerStatusController worker)
 		throws Exception {
 
+		if ( message == null ) return null;
+		
 		// load headerlist before adding a message
 		getHeaderList(worker);
 
