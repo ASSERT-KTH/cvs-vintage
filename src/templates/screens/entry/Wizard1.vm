@@ -27,9 +27,11 @@
 #set ($moduleAttributeGroups = $module.getDedupeGroupsWithAttributes($issueType))
 #set ($magSize = $moduleAttributeGroups.size())
 
+#* FIXME :Commenting out for now until can figure out how to make this work
 #if ($magSize > 0)
 #functionBar("")
 #end
+*#
 
 #if ($magSize == 0)
 <h3>$title</h3>
