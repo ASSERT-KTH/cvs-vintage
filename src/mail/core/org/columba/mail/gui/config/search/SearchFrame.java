@@ -16,33 +16,12 @@
 
 package org.columba.mail.gui.config.search;
 
-import java.awt.BorderLayout;
-import java.awt.Color;
-import java.awt.Dimension;
-import java.awt.Font;
-import java.awt.GridBagConstraints;
-import java.awt.GridBagLayout;
-import java.awt.GridLayout;
-import java.awt.Insets;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 
-import javax.swing.BorderFactory;
-import javax.swing.Box;
-import javax.swing.BoxLayout;
-import javax.swing.ImageIcon;
-import javax.swing.JButton;
-import javax.swing.JCheckBox;
-import javax.swing.JComboBox;
-import javax.swing.JComponent;
-import javax.swing.JDialog;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.JTextField;
-import javax.swing.KeyStroke;
-import javax.swing.SwingConstants;
-import javax.swing.UIManager;
+import javax.swing.*;
 import javax.swing.border.CompoundBorder;
 
 import net.javaprog.ui.wizard.plaf.basic.SingleSideEtchedBorder;
@@ -326,12 +305,9 @@ public class SearchFrame extends JDialog implements ActionListener {
 				f = (Folder) MainInterface.treeModel.getFolder(uid);
 			}
 
-			String treePath = f.getTreePath();
-
-			selectButton.setText(treePath);
+			selectButton.setText(f.getTreePath());
 
 			criteriaList.updateComponents(b);
-
 		} else {
 			// get values from components
 
@@ -364,24 +340,17 @@ public class SearchFrame extends JDialog implements ActionListener {
 	}
 
 	public void setSourceFolder(Folder f) {
-		String treePath = f.getTreePath();
-
-		selectButton.setText(treePath);
-		System.out.println("selected path:" + treePath);
+		selectButton.setText(f.getTreePath());
 	}
 
 	public void actionPerformed(ActionEvent e) {
 		String action = e.getActionCommand();
 
 		if (action.equals("CLOSE")) {
-
 			updateComponents(false);
 			setVisible(false);
 		} else if (action.equals("ADD_CRITERION")) {
-			//System.out.println( "add" );
-
 			criteriaList.add();
-
 		} else if (action.equals("SELECT")) {
 
 			SelectFolderDialog dialog =
@@ -393,11 +362,8 @@ public class SearchFrame extends JDialog implements ActionListener {
 
 				selectButton.setText(path);
 			}
-
 		} else if (action.equals("SEARCH")) {
-
 			updateComponents(false);
-
 			setVisible(false);
 
 			try {
@@ -413,7 +379,6 @@ public class SearchFrame extends JDialog implements ActionListener {
 
 			MainInterface.processor.addOp(new ViewHeaderListCommand(frameController, r));
 			//frameController.treeController.setSelected(destFolder);
-
 		}
 	}
 }

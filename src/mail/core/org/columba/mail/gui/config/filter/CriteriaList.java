@@ -13,15 +13,10 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
 //
 //All Rights Reserved.
+
 package org.columba.mail.gui.config.filter;
 
-import java.awt.BorderLayout;
-import java.awt.Component;
-import java.awt.Dimension;
-import java.awt.GridBagConstraints;
-import java.awt.GridBagLayout;
-import java.awt.GridLayout;
-import java.awt.Insets;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.Iterator;
@@ -88,7 +83,7 @@ public class CriteriaList extends JPanel implements ActionListener {
 	}
 
 	public void updateComponents(boolean b) {
-		if (b == false) {
+		if (!b) {
 			for (Iterator it = list.iterator(); it.hasNext();) {
 				DefaultCriteriaRow row = (DefaultCriteriaRow)  it.next();
 			// for (int i = 0; i < list.size(); i++) {
@@ -96,7 +91,6 @@ public class CriteriaList extends JPanel implements ActionListener {
 				row.updateComponents(false);
 			}
 		}
-
 	}
 
 	public void add() {
@@ -105,9 +99,7 @@ public class CriteriaList extends JPanel implements ActionListener {
 		rule.addEmptyCriteria();
 
 		updateComponents(false);
-
 		update();
-
 	}
 
 	public void remove(int i) {
@@ -116,19 +108,14 @@ public class CriteriaList extends JPanel implements ActionListener {
 
 		if (rule.count() > 1) {
 			updateComponents(false);
-
 			rule.remove(i);
-
 			update();
 		}
-
 	}
 
 	public void update() {
 		panel.removeAll();
 		list.clear();
-
-		System.out.println("CriteriaList -> update() ");
 
 		GridBagLayout gridbag = new GridBagLayout();
 		GridBagConstraints c = new GridBagConstraints();
@@ -264,12 +251,9 @@ public class CriteriaList extends JPanel implements ActionListener {
 
 		validate();
 		repaint();
-
 	}
 
 	public void actionPerformed(ActionEvent e) {
-		System.out.println("actionperformed");
-
 		updateComponents(false);
 		update();
 	}
