@@ -40,7 +40,7 @@ import org.jboss.logging.Logger;
  * @author <a href="mailto:justin@j-m-f.demon.co.uk">Justin Forder</a>
  * @author <a href="mailto:dirk@jboss.de">Dirk Zimmermann</a>
  * @author <a href="mailto:danch@nvisia.com">danch (Dan Christopherson)</a>
- * @version $Revision: 1.21 $
+ * @version $Revision: 1.22 $
  */
 public class JDBCLoadEntityCommand {
    private final JDBCStoreManager manager;
@@ -286,7 +286,8 @@ public class JDBCLoadEntityCommand {
          // - it is already loaded
          // - it is a read-only _already_loaded_ field that isn't timed out yet
          if( field.isPrimaryKeyMember()
-            || ( field.isLoaded( ctx ) && !field.isReadTimedOut( ctx ) )) {
+            || (field.isLoaded( ctx )
+            && (!field.isReadOnly() || !field.isReadTimedOut( ctx )))) {
             fields.remove();
          }
       }
