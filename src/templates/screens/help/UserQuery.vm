@@ -15,8 +15,8 @@
        <ul>
       <li>Scarab Help 
         <ul>
-          <li><a href="file:///C%7C/My%20Documents/scarab/help%20doc/Introduction.vm">Introduction to Scarab</a></li>
-          <li><a href="file:///C%7C/My%20Documents/scarab/help%20doc/UserIssues.vm">Managing Issues</a></li>
+          <li><a href="Introduction.vm">Introduction to Scarab</a></li>
+          <li><a href="UserIssues.vm">Managing Issues</a></li>
           <li>Searching the database 
             <ul>
              <li><strong>Overview</strong>
@@ -25,15 +25,15 @@
                <li><a href="#issueid">Searching by issue id</a></li>
               </ul>
              </li>
-            <li><a href="file:///C%7C/My%20Documents/scarab/help%20doc/UserAdvancedQuery.vm">Advanced queries</a></li>
-            <li><a href="file:///C%7C/My%20Documents/scarab/help%20doc/UserCustomQuery.vm">Custom queries</a></li>
-            <li><a href="file:///C%7C/My%20Documents/scarab/help%20doc/UserSavedQuery.vm">Saved queries</a></li>
+            <li><a href="UserAdvancedQuery.vm">Advanced queries</a></li>
+            <li><a href="UserCustomQuery.vm">Custom queries</a></li>
+            <li><a href="UserSavedQuery.vm">Saved queries</a></li>
            </ul>
            </li>
-          <li><a href="file:///C%7C/My%20Documents/scarab/help%20doc/UserReports.vm">Reports</a></li>
-          <li><a href="file:///C%7C/My%20Documents/scarab/help%20doc/ScarabBestPractices.vm">Best Practices</a></li>
-          <li><a href="file:///C%7C/My%20Documents/scarab/help%20doc/ScarabFaq.vm">FAQ</a></li>
-          <li><a href="file:///C%7C/My%20Documents/scarab/help%20doc/ScarabGlossary.vm">Glossary</a></li>
+          <li><a href="UserReports.vm">Reports</a></li>
+          <li><a href="ScarabBestPractices.vm">Best Practices</a></li>
+          <li><a href="ScarabFaq.vm">FAQ</a></li>
+          <li><a href="ScarabGlossary.vm">Glossary</a></li>
         </ul>
       </li>
     </ul>  
