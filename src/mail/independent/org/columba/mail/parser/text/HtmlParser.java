@@ -40,8 +40,18 @@ public class HtmlParser {
 		Pattern.compile("\\<[/]?br\\>", Pattern.CASE_INSENSITIVE);
 	private static final Pattern pToDoubleNLPattern =
 		Pattern.compile("\\</p\\>", Pattern.CASE_INSENSITIVE);
+	private static final Pattern divToDoubleNLPattern =
+		Pattern.compile("\\</div\\>", Pattern.CASE_INSENSITIVE);
+	private static final Pattern hToDoubleNLPattern =
+		Pattern.compile("\\</h\\d\\>", Pattern.CASE_INSENSITIVE);
+	private static final Pattern whiteSpaceRemovalPattern =
+		Pattern.compile("\\s+", Pattern.CASE_INSENSITIVE);
+	private static final Pattern headerRemovalPattern = 
+		Pattern.compile("\\<html(.|\n|\r)*?\\<body(.|\n|\r)*?\\>", 
+			Pattern.CASE_INSENSITIVE);
 	private static final Pattern stripTagsPattern =
 		Pattern.compile("\\<(.|\\n)*?\\>", Pattern.CASE_INSENSITIVE);
+
 	private static final Pattern emailPattern =
 		Pattern.compile("([\\w.\\-]*\\@([\\w\\-]+\\.*)+[a-zA-Z0-9]{2,})");
 		
@@ -79,6 +89,70 @@ public class HtmlParser {
 	+ any
 	+ "]|$)");
 
+	// TODO: Add more special entities - e.g. accenture chars such as é
+
+	/** Special entities recognized by restore special entities */
+	private static String[] SPECIAL_ENTITIES = {
+	 	"&lt;",		"&gt;",		"&amp;",	"&nbsp;",	"&#160;",
+		"&quot;",	"&apos;",	"&aelig;",	"&#230;",	"&oslash;",
+		"&#248;",	"&aring;",	"&#229;",	"&AElig;",	"&#198;",
+		"&Oslash;",	"&#216;",	"&Aring;",	"&#197;"
+		};
+			
+	/** Normal chars corresponding to the defined special entities */
+	private static char[] ENTITY_CHARS = {
+		'<',		'>',		'&',		' ',		' ',
+		'"',		'\'',		'æ',		'æ',		'ø',
+		'ø',		'å',		'å',		'Æ',		'Æ',
+		'Ø',		'Ø',		'Å',		'Å'
+		};
+
+	/**
+	 * Strips html tags and removes extra spaces which occurs due
+	 * to e.g. indentation of the html and the head section, which does 
+	 * not contain any textual information.
+	 * <br>
+	 * The conversion rutine does the following:<br>
+	 * 1. Removes the header from the html file, i.e. everything from
+	 *    the html tag until and including the starting body tag.<br>
+	 * 2. Replaces multiple consecutive whitespace characters with a single
+	 *    space (since extra whitespace should be ignored in html).<br>
+	 * 3. Replaces ending br tags with a single newline character<br>
+	 * 4. Replaces ending p, div and heading tags with two newlines characters; 
+	 *    resulting in a single empty line btw. paragraphs.<br>
+	 * 5. Strips remaining html tags.<br>
+	 * <br>
+	 * NB: The tag stripping is done using a very simple regular expression,
+	 * which removes everything between &lt and &gt. Therefore too much text
+	 * could in some (hopefully rare!?) cases be removed.
+	 * 
+	 * @param	s		Input string
+	 * @return	Input stripped for html tags
+	 * @author	Karl Peder Olesen (karlpeder)
+	 */
+	public static String stripHtmlTags(String s) {
+		// initial check of input:
+		if (s == null)
+			return null;
+
+		// remove header
+		s = headerRemovalPattern.matcher(s).replaceAll("");
+
+		// remove extra whitespace
+		s = whiteSpaceRemovalPattern.matcher(s).replaceAll(" ");
+		
+		// replace br, p and heading tags with newlines
+		s = breakToNLPattern.matcher(s).replaceAll("\n");
+		s = pToDoubleNLPattern.matcher(s).replaceAll("\n\n");
+		s = divToDoubleNLPattern.matcher(s).replaceAll("\n\n");
+		s = hToDoubleNLPattern.matcher(s).replaceAll("\n\n");
+		
+		// strip remaining tags
+		s = stripTagsPattern.matcher(s).replaceAll("");
+		
+		return s;
+	}
+
 	/**
 	 * Strips html tags. The method used is very simple:
 	 * Everything between tag-start (&lt) and tag-end (&gt) is removed.
@@ -89,15 +163,12 @@ public class HtmlParser {
 	 * @param	breakToNl	if true, newlines are inserted for br and p tags
 	 * @return	output without html tags (null on error)
 	 * @author	karlpeder, 20030623
-	 * 			(moved from org.columba.mail.gui.message.util.DocumentParser) 
+	 * 			(moved from org.columba.mail.gui.message.util.DocumentParser)
+	 * 
+	 * @deprecated	Please use the more advanced and correct 
+	 *              @see stripHtmlTags(String) method 
 	 */
 	public static String stripHtmlTags(String s, boolean breakToNl) {
-
-		// TODO: The stripping of html tags adds far too much whitespace and extra lines
-		//       ... especially when the original html is indented and
-		//       p tags are placed on separate lines...
-
-		// TODO: Headings (h1, h2, h3) needs to be handled the same way as p tags
 
 		// initial check of input:
 		if (s == null)
@@ -133,8 +204,6 @@ public class HtmlParser {
 	 */
 	public static String restoreSpecialCharacters(String s) {
 
-		// TODO: Handling of special char codes ala &#230; needs to be handled
-
 		// initial check of input:
 		if (s == null)
 			return null;
@@ -151,36 +220,41 @@ public class HtmlParser {
 				while (pos < ss.length()) {
 					char c = ss.charAt(pos);
 					if (c == '&') {
-						if (ss.substring(pos).startsWith("&lt;")) {
-							sb.append('<');
-							pos = pos + 4;
-						} else if (ss.substring(pos).startsWith("&gt;")) {
-							sb.append('>');
-							pos = pos + 4;
-						} else if (ss.substring(pos).startsWith("&amp;")) {
-							sb.append('&');
-							pos = pos + 5;
-						} else if (ss.substring(pos).startsWith("&quot;")) {
-							sb.append('"');
-							pos = pos + 6;
-						} else if (
-							ss.substring(pos).startsWith(
-								"&nbsp;&nbsp;&nbsp;&nbsp;")) {
-							sb.append('\t');
-							pos = pos + 24;
-						} else if (ss.substring(pos).startsWith("&nbsp;")) {
-							sb.append(' ');
-							pos = pos + 6;
+						// a special character is possibly found
+						
+						if (ss.substring(pos).startsWith("&nbsp;&nbsp;&nbsp;&nbsp;") ||
+						    ss.substring(pos).startsWith("&#160;&#160;&#160;&#160;")) {
+						    	// 4 spaces -> tab character
+						    	sb.append('\t');
+						    	pos = pos + 24;
+						    	
 						} else {
-							// unknown special entity - just keep it as-is
-							sb.append(c);
-							pos++;
+							// seach among know special entities
+							boolean found = false;
+							for (int i=0; i<SPECIAL_ENTITIES.length; i++) {
+								if (ss.substring(pos).
+										startsWith(SPECIAL_ENTITIES[i])) {
+									sb.append(ENTITY_CHARS[i]);
+									pos = pos + SPECIAL_ENTITIES[i].length();
+									found = true;
+									break;
+								}
+							}
+							if (!found) {
+								// unknown special char - just keep it as-is
+								sb.append(c);
+								pos++;
+							}
+					
 						}
+						
 					} else {
+						// a "normal" char - keep it as is
 						sb.append(c);
 						pos++;
 					}
 				}
+				// end of line
 				sb.append('\n');
 			}
 
@@ -194,7 +268,7 @@ public class HtmlParser {
 
 	/**
 	 * Strips html tags. and replaces special entities with their
-	 * "normal" counter parts, e.g. &gt; => >.<br>
+	 * "normal" counter parts, e.g. <code>&gt; => ></code>.<br>
 	 * Calling this method is the same as calling first stripHtmlTags
 	 * and then restoreSpecialCharacters.
 	 * 
@@ -206,7 +280,7 @@ public class HtmlParser {
 	 */
 	public static String htmlToText(String html) {
 		// stripHtmlTags called with true ~ p & br => newlines
-		String text = stripHtmlTags(html, true);
+		String text = stripHtmlTags(html);
 		return restoreSpecialCharacters(text);
 	}
 
@@ -279,6 +353,8 @@ public class HtmlParser {
 		StringReader sr = new StringReader(s);
 		BufferedReader br = new BufferedReader(sr);
 		String ss = null;
+
+		// TODO: Extend handling of special entities as in restoreSpecialCharacters
 
 		/*
 		 * *20030618, karlpeder* Changed the way multiple spaces are 
@@ -367,6 +443,8 @@ public class HtmlParser {
 		StringReader sr = new StringReader(s);
 		BufferedReader br = new BufferedReader(sr);
 		String ss = null;
+
+		// TODO: Extend handling of special entities as in restoreSpecialCharacters
 
 		/*
 		 * *20030623, karlpeder* " and space handled also
