@@ -1,4 +1,4 @@
-// $Id: TestCoreHelper.java,v 1.7 2005/01/27 21:42:31 linus Exp $
+// $Id: TestCoreHelper.java,v 1.8 2005/01/29 20:08:22 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -27,7 +27,6 @@ package org.argouml.model.uml;
 import junit.framework.TestCase;
 
 import org.argouml.model.Model;
-import org.argouml.model.ModelFacade;
 import org.argouml.util.CheckUMLModelHelper;
 
 import ru.novosoft.uml.foundation.core.MClassifierImpl;
@@ -77,17 +76,17 @@ public class TestCoreHelper extends TestCase {
     	assertTrue("Is not a subtype",
                        Model.getCoreHelper().
                        isSubType(
-                               ModelFacade.getClassifierToken(),
-                               ModelFacade.getClassToken()));
+                               Model.getMetaTypes().getClassifier(),
+                               Model.getMetaTypes().getUMLClass()));
         assertTrue("Is not a parent type",
                         !Model.getCoreHelper().
                         isSubType(
-                                ModelFacade.getClassToken(),
-                                ModelFacade.getClassifierToken()));
+                                Model.getMetaTypes().getUMLClass(),
+                                Model.getMetaTypes().getClassifier()));
         assertTrue("Is not a parent type",
                         !Model.getCoreHelper().
-                        isSubType(ModelFacade.getClassToken(),
-                                  ModelFacade.getAggregationKindToken()));
+                        isSubType(Model.getMetaTypes().getUMLClass(),
+                                  Model.getMetaTypes().getAggregationKind()));
     }
 
     /**

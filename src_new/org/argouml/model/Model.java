@@ -1,4 +1,4 @@
-// $Id: Model.java,v 1.7 2005/01/09 14:58:07 linus Exp $
+// $Id: Model.java,v 1.8 2005/01/29 20:08:29 linus Exp $
 // Copyright (c) 2004-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -250,5 +250,14 @@ public final class Model {
      */
     public static UseCasesHelper getUseCasesHelper() {
         return impl.getUseCasesHelper();
+    }
+
+    /**
+     * Getter for the MetaTypes object.
+     *
+     * @return the MetaTypes object.
+     */
+    public static MetaTypes getMetaTypes() {
+        return impl.getMetaTypes();
     }
 }

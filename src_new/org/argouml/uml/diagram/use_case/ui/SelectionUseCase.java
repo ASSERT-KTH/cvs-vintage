@@ -1,4 +1,4 @@
-// $Id: SelectionUseCase.java,v 1.24 2005/01/27 21:42:30 linus Exp $
+// $Id: SelectionUseCase.java,v 1.25 2005/01/29 20:08:27 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -33,7 +33,6 @@ import javax.swing.Icon;
 import org.apache.log4j.Logger;
 import org.argouml.application.helpers.ResourceLoaderWrapper;
 import org.argouml.model.Model;
-import org.argouml.model.ModelFacade;
 import org.argouml.uml.diagram.ui.ModeCreateEdgeAndNode;
 import org.argouml.uml.diagram.ui.SelectionWButtons;
 import org.tigris.gef.base.Editor;
@@ -162,32 +161,32 @@ public class SelectionUseCase extends SelectionWButtons {
         Class edgeClass = null;
         Class nodeClass = null;
         if (hand.index == 10 || hand.index == 11) {
-            nodeClass = (Class) ModelFacade.getUseCaseToken();
+            nodeClass = (Class) Model.getMetaTypes().getUseCase();
         } else {
-            nodeClass = (Class) ModelFacade.getActorToken();
+            nodeClass = (Class) Model.getMetaTypes().getActor();
         }
 
         int bx = mX, by = mY;
         boolean reverse = false;
         switch (hand.index) {
 	case 10 : //add superclass
-	    edgeClass = (Class) ModelFacade.getGeneralizationToken();
+	    edgeClass = (Class) Model.getMetaTypes().getGeneralization();
 	    by = cy;
 	    bx = cx + cw / 2;
 	    break;
 	case 11 : //add subclass
-	    edgeClass = (Class) ModelFacade.getGeneralizationToken();
+	    edgeClass = (Class) Model.getMetaTypes().getGeneralization();
 	    reverse = true;
 	    by = cy + ch;
 	    bx = cx + cw / 2;
 	    break;
 	case 12 : //add assoc
-	    edgeClass = (Class) ModelFacade.getAssociationToken();
+	    edgeClass = (Class) Model.getMetaTypes().getAssociation();
 	    by = cy + ch / 2;
 	    bx = cx + cw;
 	    break;
 	case 13 : // add assoc
-	    edgeClass = (Class) ModelFacade.getAssociationToken();
+	    edgeClass = (Class) Model.getMetaTypes().getAssociation();
 	    reverse = true;
 	    by = cy + ch / 2;
 	    bx = cx;
@@ -215,7 +214,7 @@ public class SelectionUseCase extends SelectionWButtons {
      */
     protected Object createEdgeAbove(MutableGraphModel gm, Object newNode) {
         return gm.connect(_content.getOwner(), newNode,
-			  (Class) ModelFacade.getGeneralizationToken());
+			  (Class) Model.getMetaTypes().getGeneralization());
     }
 
     /**
@@ -224,7 +223,7 @@ public class SelectionUseCase extends SelectionWButtons {
      */
     protected Object createEdgeLeft(MutableGraphModel gm, Object newNode) {
         return gm.connect(newNode, _content.getOwner(),
-			  (Class) ModelFacade.getAssociationToken());
+			  (Class) Model.getMetaTypes().getAssociation());
     }
 
     /**
@@ -233,7 +232,7 @@ public class SelectionUseCase extends SelectionWButtons {
      */
     protected Object createEdgeRight(MutableGraphModel gm, Object newNode) {
         return gm.connect(_content.getOwner(), newNode,
-			  (Class) ModelFacade.getAssociationToken());
+			  (Class) Model.getMetaTypes().getAssociation());
     }
 
     /**
@@ -242,7 +241,7 @@ public class SelectionUseCase extends SelectionWButtons {
      */
     protected Object createEdgeUnder(MutableGraphModel gm, Object newNode) {
         return gm.connect(newNode, _content.getOwner(),
-			  (Class) ModelFacade.getGeneralizationToken());
+			  (Class) Model.getMetaTypes().getGeneralization());
     }
 
     /**

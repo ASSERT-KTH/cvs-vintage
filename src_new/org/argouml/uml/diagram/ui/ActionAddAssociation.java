@@ -1,4 +1,4 @@
-// $Id: ActionAddAssociation.java,v 1.11 2005/01/27 21:42:28 linus Exp $
+// $Id: ActionAddAssociation.java,v 1.12 2005/01/29 20:08:27 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -30,7 +30,7 @@
 package org.argouml.uml.diagram.ui;
 
 
-import org.argouml.model.ModelFacade;
+import org.argouml.model.Model;
 import org.argouml.ui.CmdSetMode;
 
 /**
@@ -54,7 +54,7 @@ public class ActionAddAssociation extends CmdSetMode {
     public ActionAddAssociation(Object aggregationKind, boolean unidirectional,
 				String name) {
         super(ModeCreateAssociation.class, "edgeClass",
-	      ModelFacade.getAssociationToken(), name);
+	      Model.getMetaTypes().getAssociation(), name);
         _modeArgs.put("aggregation", aggregationKind);
         _modeArgs.put("unidirectional", new Boolean(unidirectional));
     }

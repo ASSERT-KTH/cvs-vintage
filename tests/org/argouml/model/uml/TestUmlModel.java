@@ -1,4 +1,4 @@
-// $Id: TestUmlModel.java,v 1.9 2005/01/27 21:42:31 linus Exp $
+// $Id: TestUmlModel.java,v 1.10 2005/01/29 20:08:22 linus Exp $
 // Copyright (c) 2003-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -37,7 +37,7 @@ public class TestUmlModel extends GenericUmlObjectTestFixture {
      * @param arg0 test name
      */
     public TestUmlModel(String arg0) {
-	super(arg0, ModelFacade.getModelToken());
+	super(arg0, Model.getMetaTypes().getModel());
 	validateTestClassIsGeneric(this);
     }
 
@@ -45,7 +45,8 @@ public class TestUmlModel extends GenericUmlObjectTestFixture {
      * Test the creation of a namespace.
      */
     public void testNamespace() {
-	Object o = Model.getUmlFactory().buildNode(ModelFacade.getModelToken());
+	Object o =
+	    Model.getUmlFactory().buildNode(Model.getMetaTypes().getModel());
 	assertNotNull("Didn't create object", o);
 	assertTrue("Should be a base", ModelFacade.isABase(o));
 	assertTrue("Should be a model", ModelFacade.isAModel(o));
@@ -57,10 +58,10 @@ public class TestUmlModel extends GenericUmlObjectTestFixture {
      */
     protected void setUp() throws Exception {
         super.setUp();
-        setTruth(ModelFacade.getModelElementToken(), true);
-        setTruth(ModelFacade.getGeneralizableElementToken(), true);
-        setTruth(ModelFacade.getNamespaceToken(), true);
-        setTruth(ModelFacade.getPackageToken(), true);
-        setTruth(ModelFacade.getModelToken(), true);
+        setTruth(Model.getMetaTypes().getModelElement(), true);
+        setTruth(Model.getMetaTypes().getGeneralizableElement(), true);
+        setTruth(Model.getMetaTypes().getNamespace(), true);
+        setTruth(Model.getMetaTypes().getPackage(), true);
+        setTruth(Model.getMetaTypes().getModel(), true);
     }
 }

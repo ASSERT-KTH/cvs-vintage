@@ -1,4 +1,4 @@
-// $Id: ActionAddAssociationRole.java,v 1.10 2005/01/27 21:42:28 linus Exp $
+// $Id: ActionAddAssociationRole.java,v 1.11 2005/01/29 20:08:27 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -24,9 +24,8 @@
 
 package org.argouml.uml.diagram.ui;
 
-import org.argouml.model.ModelFacade;
+import org.argouml.model.Model;
 import org.argouml.ui.CmdSetMode;
-
 import org.tigris.gef.base.ModeCreatePolyEdge;
 
 /**
@@ -53,7 +52,7 @@ public class ActionAddAssociationRole extends CmdSetMode {
                                     String name) {
         super(ModeCreatePolyEdge.class,
               "edgeClass",
-              ModelFacade.getAssociationRoleToken(),
+              Model.getMetaTypes().getAssociationRole(),
               name);
         _modeArgs.put("aggregation", aggregationKind);
         _modeArgs.put("unidirectional", new Boolean(unidirectional));

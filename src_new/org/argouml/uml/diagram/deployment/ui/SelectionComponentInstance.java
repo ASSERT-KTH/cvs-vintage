@@ -1,4 +1,4 @@
-// $Id: SelectionComponentInstance.java,v 1.21 2005/01/27 21:42:29 linus Exp $
+// $Id: SelectionComponentInstance.java,v 1.22 2005/01/29 20:08:25 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -33,7 +33,6 @@ import javax.swing.Icon;
 import org.apache.log4j.Logger;
 import org.argouml.application.helpers.ResourceLoaderWrapper;
 import org.argouml.model.Model;
-import org.argouml.model.ModelFacade;
 import org.argouml.uml.diagram.ui.ModeCreateEdgeAndNode;
 import org.argouml.uml.diagram.ui.SelectionWButtons;
 import org.tigris.gef.base.Editor;
@@ -148,30 +147,30 @@ public class SelectionComponentInstance extends SelectionWButtons {
 	Dimension minSize = _content.getMinimumSize();
 	int minWidth = minSize.width, minHeight = minSize.height;
 	Class edgeClass = null;
-	Class nodeClass = (Class) ModelFacade.getComponentInstanceToken();
+	Class nodeClass = (Class) Model.getMetaTypes().getComponentInstance();
 	int bx = mX, by = mY;
 	boolean reverse = false;
 	switch (hand.index) {
 	case 10: //add dep
-	    edgeClass = (Class) ModelFacade.getDependencyToken();
+	    edgeClass = (Class) Model.getMetaTypes().getDependency();
 	    // reverse = true;
 	    by = cy;
 	    bx = cx + cw / 2;
 	    break;
 	case 11: //add dep
-	    edgeClass = (Class) ModelFacade.getDependencyToken();
+	    edgeClass = (Class) Model.getMetaTypes().getDependency();
 	    reverse = true;
 	    by = cy + ch;
 	    bx = cx + cw / 2;
 	    break;
 	case 12: //add dep
-	    edgeClass = (Class) ModelFacade.getDependencyToken();
+	    edgeClass = (Class) Model.getMetaTypes().getDependency();
 	    // reverse = true;
 	    by = cy + ch / 2;
 	    bx = cx + cw;
 	    break;
 	case 13: // add dep
-	    edgeClass = (Class) ModelFacade.getDependencyToken();
+	    edgeClass = (Class) Model.getMetaTypes().getDependency();
 	    reverse = true;
 	    by = cy + ch / 2;
 	    bx = cx;
@@ -207,7 +206,7 @@ public class SelectionComponentInstance extends SelectionWButtons {
      */
     protected Object createEdgeAbove(MutableGraphModel gm, Object newNode) {
         return gm.connect(_content.getOwner(), newNode,
-			  (Class) ModelFacade.getDependencyToken());
+			  (Class) Model.getMetaTypes().getDependency());
     }
 
     /**
@@ -216,7 +215,7 @@ public class SelectionComponentInstance extends SelectionWButtons {
      */
     protected Object createEdgeLeft(MutableGraphModel gm, Object newNode) {
         return gm.connect(newNode, _content.getOwner(),
-			  (Class) ModelFacade.getDependencyToken());
+			  (Class) Model.getMetaTypes().getDependency());
     }
 
     /**
@@ -225,7 +224,7 @@ public class SelectionComponentInstance extends SelectionWButtons {
      */
     protected Object createEdgeRight(MutableGraphModel gm, Object newNode) {
         return gm.connect(_content.getOwner(), newNode,
-			  (Class) ModelFacade.getDependencyToken());
+			  (Class) Model.getMetaTypes().getDependency());
     }
 
 
@@ -236,7 +235,7 @@ public class SelectionComponentInstance extends SelectionWButtons {
      */
     protected Object createEdgeUnder(MutableGraphModel gm, Object newNode) {
         return gm.connect(newNode, _content.getOwner(),
-			  (Class) ModelFacade.getDependencyToken());
+			  (Class) Model.getMetaTypes().getDependency());
     }
 
 

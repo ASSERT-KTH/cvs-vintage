@@ -1,4 +1,4 @@
-// $Id: PropPanel.java,v 1.105 2005/01/27 21:42:26 linus Exp $
+// $Id: PropPanel.java,v 1.106 2005/01/29 20:08:23 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -593,18 +593,19 @@ public abstract class PropPanel
         */
         for (int i = 0; i < metaclasses.length; i++) {
             Object clazz = metaclasses[i];
-            if (Model.getCoreHelper().isSubType(ModelFacade.getNamespaceToken(),
-                                                 clazz)) {
+            if (Model.getCoreHelper().isSubType(
+                    Model.getMetaTypes().getNamespace(),
+                    clazz)) {
                 UmlModelEventPump.getPump()
 		    .addClassModelEventListener(this, clazz, "ownedElement");
             }
             if (Model.getCoreHelper().isSubType(
-                    ModelFacade.getModelElementToken(),
+                    Model.getMetaTypes().getModelElement(),
                     clazz)) {
                 UmlModelEventPump.getPump()
 		    .addClassModelEventListener(this, clazz, "name");
             }
-            if (clazz.equals(ModelFacade.getStereotypeToken())) {
+            if (clazz.equals(Model.getMetaTypes().getStereotype())) {
                 UmlModelEventPump.getPump()
 		    .addClassModelEventListener(this, clazz, "baseClass");
             }

@@ -1,4 +1,4 @@
-// $Id: UMLDeploymentDiagram.java,v 1.44 2005/01/27 21:42:29 linus Exp $
+// $Id: UMLDeploymentDiagram.java,v 1.45 2005/01/29 20:08:26 linus Exp $
 // Copyright (c) 2003-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -31,6 +31,7 @@ import javax.swing.Action;
 import org.apache.log4j.Logger;
 import org.argouml.i18n.Translator;
 import org.argouml.kernel.ProjectManager;
+import org.argouml.model.Model;
 import org.argouml.model.ModelFacade;
 import org.argouml.ui.CmdCreateNode;
 import org.argouml.ui.CmdSetMode;
@@ -240,7 +241,7 @@ public class UMLDeploymentDiagram extends UMLDiagram {
         if (actionMAssociation == null) {
             actionMAssociation = new RadioAction(new CmdSetMode(
                         ModeCreatePolyEdge.class, "edgeClass",
-                        ModelFacade.getAssociationToken(), "Association"));
+                        Model.getMetaTypes().getAssociation(), "Association"));
         }
         return actionMAssociation;
     }
@@ -250,8 +251,10 @@ public class UMLDeploymentDiagram extends UMLDiagram {
      */
     protected Action getActionMClass() {
         if (actionMClass == null) {
-            actionMClass = new RadioAction(
-                    new CmdCreateNode(ModelFacade.getClassToken(), "Class"));
+            actionMClass =
+                new RadioAction(
+                        new CmdCreateNode(Model.getMetaTypes().getUMLClass(),
+                                "Class"));
         }
         return actionMClass;
     }
@@ -264,7 +267,8 @@ public class UMLDeploymentDiagram extends UMLDiagram {
             actionMComponent =
                 new RadioAction(
                         new CmdCreateNode(
-                                ModelFacade.getComponentToken(), "Component"));
+                                Model.getMetaTypes().getComponent(),
+                                "Component"));
         }
         return actionMComponent;
     }
@@ -274,8 +278,10 @@ public class UMLDeploymentDiagram extends UMLDiagram {
      */
     protected Action getActionMComponentInstance() {
         if (actionMComponentInstance == null) {
-            actionMComponentInstance = new RadioAction(new CmdCreateNode(
-                ModelFacade.getComponentInstanceToken(), "ComponentInstance"));
+            actionMComponentInstance =
+                new RadioAction(new CmdCreateNode(
+                        Model.getMetaTypes().getComponentInstance(),
+                	"ComponentInstance"));
         }
         return actionMComponentInstance;
     }
@@ -287,7 +293,7 @@ public class UMLDeploymentDiagram extends UMLDiagram {
         if (actionMDependency == null) {
             actionMDependency = new RadioAction(new CmdSetMode(
                         ModeCreatePolyEdge.class, "edgeClass",
-                        ModelFacade.getDependencyToken(), "Dependency"));
+                        Model.getMetaTypes().getDependency(), "Dependency"));
         }
         return actionMDependency;
     }
@@ -300,7 +306,7 @@ public class UMLDeploymentDiagram extends UMLDiagram {
             actionMInterface =
                 new RadioAction(
                         new CmdCreateNode(
-                                ModelFacade.getInterfaceToken(),
+                                Model.getMetaTypes().getInterface(),
                                 "Interface"));
         }
         return actionMInterface;
@@ -313,7 +319,7 @@ public class UMLDeploymentDiagram extends UMLDiagram {
         if (actionMLink == null) {
             actionMLink = new RadioAction(new CmdSetMode(
                         ModeCreatePolyEdge.class, "edgeClass",
-                        ModelFacade.getLinkToken(), "Link"));
+                        Model.getMetaTypes().getLink(), "Link"));
         }
         return actionMLink;
     }
@@ -324,7 +330,7 @@ public class UMLDeploymentDiagram extends UMLDiagram {
     protected Action getActionMNode() {
         if (actionMNode == null) {
             actionMNode = new RadioAction(new CmdCreateNode(
-                    ModelFacade.getNodeToken(), "Node"));
+                    Model.getMetaTypes().getNode(), "Node"));
         }
         return actionMNode;
     }
@@ -335,7 +341,7 @@ public class UMLDeploymentDiagram extends UMLDiagram {
     protected Action getActionMNodeInstance() {
         if (actionMNodeInstance == null) {
             actionMNodeInstance = new RadioAction(new CmdCreateNode(
-                    ModelFacade.getNodeInstanceToken(), "NodeInstance"));
+                    Model.getMetaTypes().getNodeInstance(), "NodeInstance"));
         }
         return actionMNodeInstance;
     }
@@ -345,8 +351,10 @@ public class UMLDeploymentDiagram extends UMLDiagram {
      */
     protected Action getActionMObject() {
         if (actionMObject == null) {
-            actionMObject = new RadioAction(
-                    new CmdCreateNode(ModelFacade.getObjectToken(), "Object"));
+            actionMObject =
+                new RadioAction(
+                        new CmdCreateNode(Model.getMetaTypes().getObject(),
+                                "Object"));
         }
         return actionMObject;
     }

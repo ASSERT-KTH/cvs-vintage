@@ -1,4 +1,4 @@
-// $Id: SelectionInterface.java,v 1.26 2005/01/27 21:42:28 linus Exp $
+// $Id: SelectionInterface.java,v 1.27 2005/01/29 20:08:21 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -146,12 +146,12 @@ public class SelectionInterface extends SelectionWButtons {
 	Dimension minSize = _content.getMinimumSize();
 	int minWidth = minSize.width, minHeight = minSize.height;
 	Class edgeClass = null;
-	Class nodeClass = (Class) ModelFacade.getClassToken();
+	Class nodeClass = (Class) Model.getMetaTypes().getUMLClass();
 	int bx = mX, by = mY;
 	boolean reverse = false;
 	switch (hand.index) {
 	case 11: //add realization
-	    edgeClass = (Class) ModelFacade.getAbstractionToken();
+	    edgeClass = (Class) Model.getMetaTypes().getAbstraction();
 	    reverse = true;
 	    by = cy + ch;
 	    bx = cx + cw / 2;
@@ -188,7 +188,7 @@ public class SelectionInterface extends SelectionWButtons {
 	}
 
 	return mgm.connect(cl4ss, interf4ce,
-	        (Class) ModelFacade.getAbstractionToken());
+	        (Class) Model.getMetaTypes().getAbstraction());
     }
 
     /**
@@ -197,7 +197,7 @@ public class SelectionInterface extends SelectionWButtons {
      */
     protected Object createEdgeUnder(MutableGraphModel gm, Object newNode) {
         return gm.connect(newNode, _content.getOwner(),
-			  (Class) ModelFacade.getAbstractionToken());
+			  (Class) Model.getMetaTypes().getAbstraction());
     }
 
     /**

@@ -1,4 +1,4 @@
-// $Id: PropPanelNodeInstance.java,v 1.42 2005/01/27 21:42:30 linus Exp $
+// $Id: PropPanelNodeInstance.java,v 1.43 2005/01/29 20:08:21 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -28,7 +28,7 @@ import javax.swing.JList;
 import javax.swing.JScrollPane;
 
 import org.argouml.i18n.Translator;
-import org.argouml.model.ModelFacade;
+import org.argouml.model.Model;
 import org.argouml.uml.ui.AbstractActionAddModelElement;
 import org.argouml.uml.ui.ActionNavigateContainerElement;
 import org.argouml.uml.ui.ActionRemoveFromModel;
@@ -75,7 +75,7 @@ public class PropPanelNodeInstance extends PropPanelInstance {
 
         addSeperator();
         AbstractActionAddModelElement a =
-            new ActionAddInstanceClassifier(ModelFacade.getNodeToken());
+            new ActionAddInstanceClassifier(Model.getMetaTypes().getNode());
         JScrollPane classifierScroll =
                 new JScrollPane(new UMLMutableLinkedList(
 	                new UMLInstanceClassifierListModel(),

@@ -1,4 +1,4 @@
-// $Id: UMLUseCaseDiagram.java,v 1.50 2005/01/27 21:42:30 linus Exp $
+// $Id: UMLUseCaseDiagram.java,v 1.51 2005/01/29 20:08:27 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -31,14 +31,15 @@ import javax.swing.Action;
 import org.apache.log4j.Logger;
 import org.argouml.i18n.Translator;
 import org.argouml.kernel.ProjectManager;
+import org.argouml.model.Model;
 import org.argouml.model.ModelFacade;
 import org.argouml.ui.CmdCreateNode;
 import org.argouml.ui.CmdSetMode;
 import org.argouml.uml.diagram.ui.ActionAddAssociation;
-import org.argouml.uml.diagram.ui.UMLDiagram;
-import org.argouml.uml.diagram.use_case.UseCaseDiagramGraphModel;
 import org.argouml.uml.diagram.ui.ActionAddExtensionPoint;
 import org.argouml.uml.diagram.ui.RadioAction;
+import org.argouml.uml.diagram.ui.UMLDiagram;
+import org.argouml.uml.diagram.use_case.UseCaseDiagramGraphModel;
 import org.tigris.gef.base.LayerPerspective;
 import org.tigris.gef.base.LayerPerspectiveMutable;
 import org.tigris.gef.base.ModeCreatePolyEdge;
@@ -267,7 +268,7 @@ public class UMLUseCaseDiagram extends UMLDiagram {
     protected Action getActionActor() {
         if (actionActor == null) {
             actionActor = new RadioAction(new CmdCreateNode(
-                    ModelFacade.getActorToken(), "Actor"));
+                    Model.getMetaTypes().getActor(), "Actor"));
         }
         return actionActor;
     }
@@ -319,7 +320,7 @@ public class UMLUseCaseDiagram extends UMLDiagram {
                     new CmdSetMode(
                         ModeCreatePolyEdge.class,
                         "edgeClass",
-                        ModelFacade.getDependencyToken(),
+                        Model.getMetaTypes().getDependency(),
                         "Dependency"));
         }
         return actionDependency;
@@ -333,7 +334,7 @@ public class UMLUseCaseDiagram extends UMLDiagram {
                     new CmdSetMode(
                         ModeCreatePolyEdge.class,
                         "edgeClass",
-                        ModelFacade.getExtendToken(),
+                        Model.getMetaTypes().getExtend(),
                         "Extend"));
         }
         return actionExtend;
@@ -347,7 +348,7 @@ public class UMLUseCaseDiagram extends UMLDiagram {
                     new CmdSetMode(
                         ModeCreatePolyEdge.class,
                         "edgeClass",
-                        ModelFacade.getGeneralizationToken(),
+                        Model.getMetaTypes().getGeneralization(),
                         "Generalization"));
         }
         return actionGeneralize;
@@ -361,7 +362,7 @@ public class UMLUseCaseDiagram extends UMLDiagram {
                     new CmdSetMode(
                         ModeCreatePolyEdge.class,
                         "edgeClass",
-                        ModelFacade.getIncludeToken(),
+                        Model.getMetaTypes().getInclude(),
                         "Include"));
         }
         return actionInclude;
@@ -411,7 +412,7 @@ public class UMLUseCaseDiagram extends UMLDiagram {
     protected Action getActionUseCase() {
         if (actionUseCase == null) {
             actionUseCase = new RadioAction(new CmdCreateNode(
-                    ModelFacade.getUseCaseToken(), "UseCase"));
+                    Model.getMetaTypes().getUseCase(), "UseCase"));
         }
         return actionUseCase;
     }

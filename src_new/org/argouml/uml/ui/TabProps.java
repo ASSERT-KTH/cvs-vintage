@@ -1,4 +1,4 @@
-// $Id: TabProps.java,v 1.56 2005/01/27 21:42:26 linus Exp $
+// $Id: TabProps.java,v 1.57 2005/01/29 20:08:22 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -41,9 +41,8 @@ import org.argouml.application.events.ArgoEventPump;
 import org.argouml.application.events.ArgoEventTypes;
 import org.argouml.application.events.ArgoModuleEvent;
 import org.argouml.application.events.ArgoModuleEventListener;
+import org.argouml.model.Model;
 import org.argouml.model.ModelFacade;
-import org.tigris.swidgets.Orientable;
-import org.tigris.swidgets.Orientation;
 import org.argouml.ui.ArgoDiagram;
 import org.argouml.ui.TabSpawnable;
 import org.argouml.ui.targetmanager.TargetEvent;
@@ -71,6 +70,8 @@ import org.argouml.util.ConfigLoader;
 import org.tigris.gef.base.Diagram;
 import org.tigris.gef.presentation.Fig;
 import org.tigris.gef.presentation.FigText;
+import org.tigris.swidgets.Orientable;
+import org.tigris.swidgets.Orientation;
 
 /**
  * This is the tab on the details panel (DetailsPane) that holds the property
@@ -174,7 +175,7 @@ public class TabProps
      */
     protected void initPanels() {
 
-        panels.put(ModelFacade.getClassToken(), new PropPanelClass());
+        panels.put(Model.getMetaTypes().getUMLClass(), new PropPanelClass());
         panels.put(ArgoDiagram.class, new PropPanelDiagram());
 
         // Put all the diagram PropPanels here explicitly. They would eventually
@@ -207,7 +208,7 @@ public class TabProps
         //important: MStateImpl corresponds to PropPanelSimpleState
         //               not to PropPanelState!!
         //otherwise, spawing will not be successful!!
-        panels.put(ModelFacade.getStateImplToken(),
+        panels.put(Model.getMetaTypes().getStateImpl(),
                 new PropPanelSimpleState());
     }
 
@@ -324,8 +325,9 @@ public class TabProps
                 return null;
             }
 
-        } else
+        } else {
             LOG.info("found props for " + targetClass.getName());
+        }
         return p;
     }
 

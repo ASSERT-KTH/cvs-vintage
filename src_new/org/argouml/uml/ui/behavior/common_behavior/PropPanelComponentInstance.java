@@ -1,4 +1,4 @@
-// $Id: PropPanelComponentInstance.java,v 1.41 2005/01/27 21:42:30 linus Exp $
+// $Id: PropPanelComponentInstance.java,v 1.42 2005/01/29 20:08:21 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -28,7 +28,7 @@ import javax.swing.JList;
 import javax.swing.JScrollPane;
 
 import org.argouml.i18n.Translator;
-import org.argouml.model.ModelFacade;
+import org.argouml.model.Model;
 import org.argouml.uml.ui.AbstractActionAddModelElement;
 import org.argouml.uml.ui.ActionNavigateContainerElement;
 import org.argouml.uml.ui.ActionRemoveFromModel;
@@ -51,8 +51,9 @@ public class PropPanelComponentInstance extends PropPanelInstance {
         super("Component Instance", lookupIcon("ComponentInstance"),
                 ConfigLoader.getTabPropsOrientation());
 
-        Object[] namesToWatch = {ModelFacade.getStereotypeToken(),
-            ModelFacade.getNamespaceToken(), ModelFacade.getClassifierToken(),
+        Object[] namesToWatch = {Model.getMetaTypes().getStereotype(),
+            Model.getMetaTypes().getNamespace(),
+            Model.getMetaTypes().getClassifier(),
 	};
 
         setNameEventListening(namesToWatch);
@@ -77,8 +78,10 @@ public class PropPanelComponentInstance extends PropPanelInstance {
 
         addSeperator();
         AbstractActionAddModelElement action =
-            new ActionAddInstanceClassifier(ModelFacade.getComponentToken());
-        JScrollPane classifierScroll = new JScrollPane(
+            new ActionAddInstanceClassifier(
+                    Model.getMetaTypes().getComponent());
+        JScrollPane classifierScroll =
+            new JScrollPane(
                 new UMLMutableLinkedList(new UMLInstanceClassifierListModel(),
                         action, null, null, true));
         addField(Translator.localize("label.classifiers"),

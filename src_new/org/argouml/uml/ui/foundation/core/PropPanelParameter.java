@@ -1,4 +1,4 @@
-// $Id: PropPanelParameter.java,v 1.58 2005/01/27 21:42:26 linus Exp $
+// $Id: PropPanelParameter.java,v 1.59 2005/01/29 20:08:22 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -28,7 +28,7 @@ import javax.swing.JList;
 import javax.swing.JScrollPane;
 
 import org.argouml.i18n.Translator;
-import org.argouml.model.ModelFacade;
+import org.argouml.model.Model;
 import org.argouml.uml.ui.ActionNavigateContainerElement;
 import org.argouml.uml.ui.ActionRemoveFromModel;
 import org.argouml.uml.ui.PropPanelButton2;
@@ -57,11 +57,12 @@ public class PropPanelParameter extends PropPanelModelElement {
 	      lookupIcon("Parameter"),
 	      ConfigLoader.getTabPropsOrientation());
         Object[] namesToWatch = {
-	    ModelFacade.getStereotypeToken(),
-	    ModelFacade.getOperationToken(),
-	    ModelFacade.getParameterToken(),
-	    ModelFacade.getClassifierToken(),
+	    Model.getMetaTypes().getStereotype(),
+	    Model.getMetaTypes().getOperation(),
+	    Model.getMetaTypes().getParameter(),
+	    Model.getMetaTypes().getClassifier(),
 	};
+
         setNameEventListening(namesToWatch);
 
         addField(Translator.localize("label.name"),
@@ -80,7 +81,7 @@ public class PropPanelParameter extends PropPanelModelElement {
                         ActionSetParameterType.getInstance()));
 
         addField(Translator.localize("label.parameter.default-value"),
-                new UMLInitialValueComboBox(this));
+                 new UMLInitialValueComboBox(this));
 
         add(new UMLParameterDirectionKindRadioButtonPanel(
                 Translator.localize("label.parameter.kind"), true));

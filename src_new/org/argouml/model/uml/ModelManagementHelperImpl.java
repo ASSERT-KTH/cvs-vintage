@@ -1,4 +1,4 @@
-// $Id: ModelManagementHelperImpl.java,v 1.8 2005/01/27 21:42:31 linus Exp $
+// $Id: ModelManagementHelperImpl.java,v 1.9 2005/01/29 20:08:22 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -156,6 +156,7 @@ class ModelManagementHelperImpl implements ModelManagementHelper {
     /**
      * Returns all modelelements of the given kind.
      *
+     * @param model The model where we search.
      * @param type is the class kind
      * @return Collection
      */
@@ -299,7 +300,9 @@ class ModelManagementHelperImpl implements ModelManagementHelper {
      */
     public Collection getAllBehavioralFeatures(Object ns) {
         Collection classifiers =
-            getAllModelElementsOfKind(ns, ModelFacade.getClassifierToken());
+            getAllModelElementsOfKind(
+                    ns,
+                    nsmodel.getMetaTypes().getClassifier());
         ArrayList features = new ArrayList();
         Iterator i = classifiers.iterator();
         while (i.hasNext()) {

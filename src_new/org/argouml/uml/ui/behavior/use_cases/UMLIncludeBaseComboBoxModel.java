@@ -1,4 +1,4 @@
-// $Id: UMLIncludeBaseComboBoxModel.java,v 1.23 2005/01/27 21:42:27 linus Exp $
+// $Id: UMLIncludeBaseComboBoxModel.java,v 1.24 2005/01/29 20:08:22 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -46,7 +46,7 @@ public class UMLIncludeBaseComboBoxModel extends UMLComboBoxModel2 {
         // listens for addition modelevents
         super("addition", false);
         UmlModelEventPump.getPump().addClassModelEventListener(this,
-                ModelFacade.getNamespaceToken(), "ownedElement");
+                Model.getMetaTypes().getNamespace(), "ownedElement");
     }
 
     /**
@@ -60,7 +60,9 @@ public class UMLIncludeBaseComboBoxModel extends UMLComboBoxModel2 {
         List list = new ArrayList();
         Object ns = ModelFacade.getNamespace(inc);
         list.addAll(Model.getModelManagementHelper()
-                .getAllModelElementsOfKind(ns, ModelFacade.getUseCaseToken()));
+                .getAllModelElementsOfKind(
+                        ns,
+                        Model.getMetaTypes().getUseCase()));
         list.remove(ModelFacade.getAddition(inc));
         addAll(list);
     }

@@ -1,4 +1,4 @@
-// $Id: PropPanelMessage.java,v 1.61 2005/01/27 21:42:34 linus Exp $
+// $Id: PropPanelMessage.java,v 1.62 2005/01/29 20:08:27 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -32,7 +32,6 @@ import javax.swing.JScrollPane;
 
 import org.argouml.i18n.Translator;
 import org.argouml.model.Model;
-import org.argouml.model.ModelFacade;
 import org.argouml.ui.targetmanager.TargetManager;
 import org.argouml.uml.ui.AbstractActionNewModelElement;
 import org.argouml.uml.ui.ActionNavigateContainerElement;
@@ -57,10 +56,11 @@ public class PropPanelMessage extends PropPanelModelElement {
 	super("Message", ConfigLoader.getTabPropsOrientation());
 
 	Object[] namesToWatch = {
-	    ModelFacade.getStereotypeToken(),
-	    ModelFacade.getClassifierRoleToken(),
-	    ModelFacade.getActionToken(),
+	    Model.getMetaTypes().getStereotype(),
+	    Model.getMetaTypes().getClassifierRole(),
+	    Model.getMetaTypes().getAction(),
 	};
+
 	setNameEventListening(namesToWatch);
 
 	addField(Translator.localize("label.name"),

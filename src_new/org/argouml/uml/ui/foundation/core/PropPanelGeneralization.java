@@ -1,4 +1,4 @@
-// $Id: PropPanelGeneralization.java,v 1.52 2005/01/27 21:42:26 linus Exp $
+// $Id: PropPanelGeneralization.java,v 1.53 2005/01/29 20:08:22 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -29,6 +29,7 @@ import javax.swing.JScrollPane;
 import javax.swing.JTextField;
 
 import org.argouml.i18n.Translator;
+import org.argouml.model.Model;
 import org.argouml.model.ModelFacade;
 import org.argouml.ui.targetmanager.TargetManager;
 import org.argouml.uml.ui.ActionNavigateContainerElement;
@@ -67,10 +68,11 @@ public class PropPanelGeneralization extends PropPanelModelElement {
     public PropPanelGeneralization() {
         super("Generalization", ConfigLoader.getTabPropsOrientation());
         Object[] namesToWatch = {
-            ModelFacade.getStereotypeToken(),
-            ModelFacade.getNamespaceToken(),
-            ModelFacade.getClassifierToken(),
+            Model.getMetaTypes().getStereotype(),
+            Model.getMetaTypes().getNamespace(),
+            Model.getMetaTypes().getClassifier(),
         };
+
         setNameEventListening(namesToWatch);
 
         addField(Translator.localize("label.name"),
@@ -134,9 +136,10 @@ public class PropPanelGeneralization extends PropPanelModelElement {
         if (parentScroll == null) {
             JList list = new UMLLinkedList(parentListModel);
             list.setVisibleRowCount(1);
-            parentScroll = new JScrollPane(list,
-                    JScrollPane.VERTICAL_SCROLLBAR_NEVER,
-                    JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+            parentScroll =
+                new JScrollPane(list,
+                        JScrollPane.VERTICAL_SCROLLBAR_NEVER,
+                        JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
         }
         return parentScroll;
     }
@@ -148,9 +151,10 @@ public class PropPanelGeneralization extends PropPanelModelElement {
         if (childScroll == null) {
             JList list = new UMLLinkedList(childListModel);
             list.setVisibleRowCount(1);
-            childScroll = new JScrollPane(list,
-                    JScrollPane.VERTICAL_SCROLLBAR_NEVER,
-                    JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+            childScroll =
+                new JScrollPane(list,
+                        JScrollPane.VERTICAL_SCROLLBAR_NEVER,
+                        JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
         }
         return childScroll;
     }

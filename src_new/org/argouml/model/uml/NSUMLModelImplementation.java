@@ -1,4 +1,4 @@
-// $Id: NSUMLModelImplementation.java,v 1.3 2005/01/07 09:11:01 linus Exp $
+// $Id: NSUMLModelImplementation.java,v 1.4 2005/01/29 20:08:22 linus Exp $
 // Copyright (c) 2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -36,6 +36,7 @@ import org.argouml.model.DataTypesFactory;
 import org.argouml.model.DataTypesHelper;
 import org.argouml.model.ExtensionMechanismsFactory;
 import org.argouml.model.ExtensionMechanismsHelper;
+import org.argouml.model.MetaTypes;
 import org.argouml.model.ModelEventPump;
 import org.argouml.model.ModelImplementation;
 import org.argouml.model.ModelManagementFactory;
@@ -86,6 +87,7 @@ public class NSUMLModelImplementation implements ModelImplementation {
     private UseCasesFactory theUseCasesFactory = new UseCasesFactoryImpl(this);
     private UseCasesHelper theUseCasesHelper = new UseCasesHelperImpl(this);
     private ModelEventPump theModelEventPump = new NSUMLModelEventPump(this);
+    private MetaTypesImpl theMetaTypesObject = new MetaTypesImpl();
 
     /**
      * @see org.argouml.model.ModelImplementation#getModelEventPump()
@@ -242,6 +244,15 @@ public class NSUMLModelImplementation implements ModelImplementation {
      */
     public UseCasesHelper getUseCasesHelper() {
         return theUseCasesHelper;
+    }
+
+    /**
+     * Getter for the MetaTypes object.
+     *
+     * @return The MetaTypes object.
+     */
+    public MetaTypes getMetaTypes() {
+        return theMetaTypesObject;
     }
 }
 

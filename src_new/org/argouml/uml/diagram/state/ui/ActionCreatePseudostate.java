@@ -1,4 +1,4 @@
-// $Id: ActionCreatePseudostate.java,v 1.15 2005/01/27 21:42:27 linus Exp $
+// $Id: ActionCreatePseudostate.java,v 1.16 2005/01/29 20:08:26 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -55,7 +55,7 @@ public class ActionCreatePseudostate extends CmdCreateNode {
             throw new IllegalArgumentException();
 	}
 
-	setArg("className", ModelFacade.getPseudostateToken());
+	setArg("className", Model.getMetaTypes().getPseudostate());
 	setArg("kind", kind);
     }
 

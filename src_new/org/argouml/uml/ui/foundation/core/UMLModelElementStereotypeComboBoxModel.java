@@ -1,4 +1,4 @@
-// $Id: UMLModelElementStereotypeComboBoxModel.java,v 1.26 2005/01/27 21:42:26 linus Exp $
+// $Id: UMLModelElementStereotypeComboBoxModel.java,v 1.27 2005/01/29 20:08:22 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -50,7 +50,7 @@ public class UMLModelElementStereotypeComboBoxModel extends UMLComboBoxModel2 {
         super("stereotype", true);
         UmlModelEventPump.getPump()
 	    .addClassModelEventListener(this,
-					ModelFacade.getNamespaceToken(),
+					Model.getMetaTypes().getNamespace(),
 					"ownedElement");
     }
 

@@ -1,4 +1,4 @@
-// $Id: ActivityGraphsHelperImpl.java,v 1.5 2005/01/27 21:42:31 linus Exp $
+// $Id: ActivityGraphsHelperImpl.java,v 1.6 2005/01/29 20:08:22 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -28,7 +28,6 @@ import java.util.Collection;
 import java.util.Iterator;
 
 import org.argouml.model.ActivityGraphsHelper;
-import org.argouml.model.ModelFacade;
 
 import ru.novosoft.uml.behavior.activity_graphs.MClassifierInState;
 import ru.novosoft.uml.behavior.activity_graphs.MObjectFlowState;
@@ -91,7 +90,7 @@ class ActivityGraphsHelperImpl implements ActivityGraphsHelper {
             Collection c =
                 nsmodel.getModelManagementHelper()
                 	.getAllModelElementsOfKind(ns,
-                	        ModelFacade.getClassifierToken());
+                	        nsmodel.getMetaTypes().getClassifier());
             Iterator i = c.iterator();
             while (i.hasNext()) {
                 MModelElement classifier = (MModelElement) i.next();

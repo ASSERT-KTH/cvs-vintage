@@ -1,4 +1,4 @@
-// $Id: ModeCreateAssociation.java,v 1.7 2005/01/27 21:42:28 linus Exp $
+// $Id: ModeCreateAssociation.java,v 1.8 2005/01/29 20:08:27 linus Exp $
 // Copyright (c) 2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -98,7 +98,7 @@ public class ModeCreateAssociation extends ModeCreatePolyEdge {
             setSourceFigNode(newFigNodeAssociation);
             setStartPort(newFigNodeAssociation.getOwner());
             setStartPortFig(newFigNodeAssociation);
-            setArg("edgeClass", ModelFacade.getAssociationEndToken());
+            setArg("edgeClass", Model.getMetaTypes().getAssociationEnd());
         } else {
             if (!(underMouse instanceof FigNode) && _npoints == 0) {
                 done();
@@ -106,9 +106,9 @@ public class ModeCreateAssociation extends ModeCreatePolyEdge {
                 return;
             }
             if (underMouse instanceof FigNodeAssociation) {
-                setArg("edgeClass", ModelFacade.getAssociationEndToken());
+                setArg("edgeClass", Model.getMetaTypes().getAssociationEnd());
             } else {
-                setArg("edgeClass", ModelFacade.getAssociationToken());
+                setArg("edgeClass", Model.getMetaTypes().getAssociation());
             }
             if (getSourceFigNode() == null) { //_npoints == 0) {
                 setSourceFigNode((FigNode) underMouse);
@@ -155,10 +155,11 @@ public class ModeCreateAssociation extends ModeCreatePolyEdge {
             Object assoc = f.getOwner();
             Class edgeClass = (Class) getArg("edgeClass");
             if (edgeClass != null
-                    && edgeClass.equals(ModelFacade.getAssociationToken())) {
+                    && edgeClass.equals(
+                            Model.getMetaTypes().getAssociation())) {
                 boolean isValid =
                     Model.getUmlFactory().isConnectionValid(
-                        ModelFacade.getAssociationEndToken(),
+                        Model.getMetaTypes().getAssociationEnd(),
                         getStartPort(),
                         assoc);
                 if (isValid) {
@@ -204,9 +205,10 @@ public class ModeCreateAssociation extends ModeCreatePolyEdge {
                 p._isComplete = true;
 
                 Class edgeClass = (Class) getArg("edgeClass");
-                if (edgeClass.equals(ModelFacade.getAssociationToken())
+                if (edgeClass.equals(Model.getMetaTypes().getAssociation())
                         && ModelFacade.isAAssociation(foundPort)) {
-                    edgeClass = (Class) ModelFacade.getAssociationEndToken();
+                    edgeClass =
+                        (Class) Model.getMetaTypes().getAssociationEnd();
                 }
                 if (edgeClass != null) {
                     setNewEdge(mutableGraphModel.connect(

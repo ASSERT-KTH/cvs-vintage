@@ -1,4 +1,4 @@
-// $Id: UMLReceptionSignalComboBoxModel.java,v 1.24 2005/01/27 21:42:30 linus Exp $
+// $Id: UMLReceptionSignalComboBoxModel.java,v 1.25 2005/01/29 20:08:21 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -43,7 +43,7 @@ public class UMLReceptionSignalComboBoxModel extends UMLComboBoxModel2 {
     public UMLReceptionSignalComboBoxModel() {
         super("signal", false);
         UmlModelEventPump.getPump().addClassModelEventListener(this,
-                ModelFacade.getNamespaceToken(), "ownedElement");
+                Model.getMetaTypes().getNamespace(), "ownedElement");
     }
 
     /**
@@ -59,7 +59,7 @@ public class UMLReceptionSignalComboBoxModel extends UMLComboBoxModel2 {
             setElements(Model.getModelManagementHelper()
                     .getAllModelElementsOfKindWithModel(
                             model,
-                            ModelFacade.getSignalToken()));
+                            Model.getMetaTypes().getSignal()));
             setSelectedItem(ModelFacade.getSignal(rec));
         }
 

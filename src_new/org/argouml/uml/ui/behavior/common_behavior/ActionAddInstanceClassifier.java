@@ -1,4 +1,4 @@
-// $Id: ActionAddInstanceClassifier.java,v 1.12 2005/01/27 21:42:30 linus Exp $
+// $Id: ActionAddInstanceClassifier.java,v 1.13 2005/01/29 20:08:21 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -43,7 +43,7 @@ import org.argouml.uml.ui.AbstractActionAddModelElement;
  */
 public class ActionAddInstanceClassifier extends AbstractActionAddModelElement {
 
-    private Object choiceClass = ModelFacade.getClassifierToken();
+    private Object choiceClass = Model.getMetaTypes().getClassifier();
 
     /**
      * The constructor for ActionAddExtendExtensionPoint.

@@ -1,4 +1,4 @@
-// $Id: UMLStructuralFeatureTypeComboBoxModel.java,v 1.17 2005/01/27 21:42:26 linus Exp $
+// $Id: UMLStructuralFeatureTypeComboBoxModel.java,v 1.18 2005/01/29 20:08:22 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -52,7 +52,7 @@ public class UMLStructuralFeatureTypeComboBoxModel extends UMLComboBoxModel2 {
         super("type", false);
         UmlModelEventPump.getPump()
 	    .addClassModelEventListener(this,
-					ModelFacade.getNamespaceToken(),
+					Model.getMetaTypes().getNamespace(),
 					"ownedElement");
     }
 
@@ -115,7 +115,7 @@ public class UMLStructuralFeatureTypeComboBoxModel extends UMLComboBoxModel2 {
 		paths,
 		Model.getModelManagementHelper().getAllModelElementsOfKind(
 			model,
-			ModelFacade.getClassifierToken()));
+			Model.getMetaTypes().getClassifier()));
         }
 
 	addAllUniqueModelElementsFrom(
@@ -123,7 +123,7 @@ public class UMLStructuralFeatureTypeComboBoxModel extends UMLComboBoxModel2 {
 	    paths,
 	    Model.getModelManagementHelper().getAllModelElementsOfKind(
 		    p.getDefaultModel(),
-		    ModelFacade.getClassifierToken()));
+		    Model.getMetaTypes().getClassifier()));
 
         setElements(elements);
     }

@@ -1,4 +1,4 @@
-// $Id: UMLStateDiagram.java,v 1.69 2005/01/28 21:41:37 linus Exp $
+// $Id: UMLStateDiagram.java,v 1.70 2005/01/29 20:08:27 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -295,8 +295,10 @@ public class UMLStateDiagram extends UMLDiagram {
      */
     protected Action getActionCompositeState() {
         if (actionCompositeState == null) {
-            actionCompositeState = new RadioAction(new CmdCreateNode(
-                    ModelFacade.getCompositeStateToken(), "CompositeState"));
+            actionCompositeState =
+                new RadioAction(new CmdCreateNode(
+                        Model.getMetaTypes().getCompositeState(),
+                        "CompositeState"));
         }
         return actionCompositeState;
     }
@@ -320,7 +322,7 @@ public class UMLStateDiagram extends UMLDiagram {
             actionFinalPseudoState =
                 new RadioAction(
                         new CmdCreateNode(
-                                ModelFacade.getFinalStateToken(),
+                                Model.getMetaTypes().getFinalState(),
                                 "FinalState"));
         }
         return actionFinalPseudoState;
@@ -387,8 +389,10 @@ public class UMLStateDiagram extends UMLDiagram {
      */
     protected Action getActionState() {
         if (actionState == null) {
-            actionState = new RadioAction(
-                    new CmdCreateNode(ModelFacade.getStateToken(), "State"));
+            actionState =
+                new RadioAction(
+                        new CmdCreateNode(Model.getMetaTypes().getState(),
+                                	  "State"));
         }
         return actionState;
     }
@@ -401,7 +405,7 @@ public class UMLStateDiagram extends UMLDiagram {
             actionSynchState =
                 new RadioAction(
                         new CmdCreateNode(
-                                ModelFacade.getSynchStateToken(),
+                                Model.getMetaTypes().getSynchState(),
                                 "SynchState"));
         }
         return actionSynchState;
@@ -416,7 +420,7 @@ public class UMLStateDiagram extends UMLDiagram {
                     new CmdSetMode(
                         ModeCreatePolyEdge.class,
                         "edgeClass",
-                        ModelFacade.getTransitionToken(),
+                        Model.getMetaTypes().getTransition(),
                         "Transition"));
         }
         return actionTransition;
