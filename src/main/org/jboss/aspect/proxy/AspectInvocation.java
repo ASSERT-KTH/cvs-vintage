@@ -9,6 +9,8 @@ package org.jboss.aspect.proxy;
 import java.lang.reflect.Method;
 import java.lang.reflect.UndeclaredThrowableException;
 
+import org.jboss.aspect.IAspectInterceptor;
+
 /**
  * A method call performed on an aspect will get encapsulated
  * into an AspectInvocation by the AspectInvocationHandler and
@@ -21,8 +23,8 @@ import java.lang.reflect.UndeclaredThrowableException;
  */
 final public class AspectInvocation {
 	
-	private AspectInvocationHandler handler;
-	private int currentInterceptor=-1;
+	public AspectInvocationHandler handler;
+	public int currentInterceptor=-1;
 	
 	/** the aspect object that the invocation was performed on */
 	public Object aspectObject;
@@ -47,34 +49,61 @@ final public class AspectInvocation {
 	 * in the interceptor list.
 	 */
 	public Object invokeNext() throws Throwable {
-		currentInterceptor++;
-		try {
-         // have we reached the aspectObject object??
-			if(currentInterceptor==handler.composition.interceptors.length) {
-            // Do we need to lazy load the aspectObject object.
-            if( handler.targetObject == null ) {
-               // test again in a synchronized block because we only want to lazyload once
-               // even if called concurrently.
-               synchronized( handler ) {
-                  if( handler.targetObject == null ) {
-                     Class clazz = handler.targetClass;
-                     if( clazz == null )
-                        clazz = handler.composition.targetClass;
-                     if( clazz == null )
-                        throw new RuntimeException("Cannot lazyload aspect aspectObject object (aspectObject class not set)");
       
-                     // create an instance of the class               
-                     handler.targetObject = clazz.newInstance();
+      IAspectInterceptor interceptors[] = handler.composition.interceptors;
+      int storeInterceptorIndex = currentInterceptor;
+      try {
+         
+         // Iterate until we find an interceptor that wants to process the 
+         // method call.
+         while( true ) {
+            currentInterceptor++;
+                        
+            // have we reached the targetObject??
+   			if(currentInterceptor==interceptors.length) {
+               // Do we need to lazy load the aspectObject object.
+               if( handler.targetObject == null ) {
+                  // test again in a synchronized block because we only want to lazyload once
+                  // even if called concurrently.
+                  synchronized( handler ) {
+                     if( handler.targetObject == null ) {
+                        Class clazz = handler.targetClass;
+                        if( clazz == null )
+                           clazz = handler.composition.targetClass;
+                        if( clazz == null )
+                           throw new RuntimeException("Cannot lazyload aspect aspectObject object (aspectObject class not set)");
+         
+                        // create an instance of the class               
+                        handler.targetObject = clazz.newInstance();
+                     }
                   }
                }
+   				return method.invoke(handler.targetObject, args);
             }
-				return method.invoke(handler.targetObject, args);
+            
+            if( isIntrestedInMethodCall() )
+            	return handler.composition.interceptors[currentInterceptor].invoke(this);
          }
-			return handler.composition.interceptors[currentInterceptor].invoke(this);
 		} finally {
-			currentInterceptor--;
+			currentInterceptor=storeInterceptorIndex;
 		}
 	}
+
+   public boolean isNextIntrestedInMethodCall() {
+      for( int i=currentInterceptor+1; i < handler.composition.interceptors.length; i++ ) {
+         IAspectInterceptor ai = handler.composition.interceptors[currentInterceptor];
+         Object config = handler.composition.interceptorConfigs[currentInterceptor];
+         if( ai.isIntrestedInMethodCall(config,method) )
+            return true;
+      }
+      return false;
+   }
+
+   private boolean isIntrestedInMethodCall() {
+      IAspectInterceptor i = handler.composition.interceptors[currentInterceptor];
+      Object config = handler.composition.interceptorConfigs[currentInterceptor];
+      return i.isIntrestedInMethodCall(config,method);
+   }
 	
 	/**
 	 * Returns the configuration Object that the current 

@@ -12,7 +12,8 @@ import org.jboss.proxy.compiler.InvocationHandler;
 import org.jboss.proxy.compiler.ProxyImplementationFactory;
 
 import org.jboss.aspect.AspectDefinition;
-import org.jboss.aspect.proxy.*;
+import org.jboss.aspect.IAspectInterceptor;
+import org.jboss.aspect.util.IAspectEditor;
 
 /**
  * An aspect object is in reality a Dynamic Proxy which forwards all
@@ -25,7 +26,7 @@ import org.jboss.aspect.proxy.*;
  * 
  * @author <a href="mailto:hchirino@jboss.org">Hiram Chirino</a>
  */
-public class AspectInvocationHandler implements InvocationHandler {
+public class AspectInvocationHandler implements InvocationHandler, IAspectEditor {
 	
 	AspectDefinition composition;
 	private Object attachments[];
@@ -56,4 +57,83 @@ public class AspectInvocationHandler implements InvocationHandler {
 		return attachments;
 	}
 	
+   /////////////////////////////////////////////////////////////////
+   //
+   // Methods that implement the IAspectEditor interface
+   //
+   /////////////////////////////////////////////////////////////////   
+   public int getInterceptorListSize()
+   {
+      return composition.interceptors.length;
+   }
+
+   public void insertInterceptor(int position, IAspectInterceptor interceptor, Object config, Object attachment)
+      throws AspectInitizationException
+   {
+      if( interceptor.getInterfaces(config).length > 0 )
+         throw new IllegalArgumentException("Only detyped interceptors can be added.");
+      
+      IAspectInterceptor interceptors[] = new IAspectInterceptor[getInterceptorListSize()+1];
+      arrayinsert( composition.interceptors, interceptors, position );
+      interceptors[position] = interceptor;
+      
+      Object interceptorConfigs[] = new Object[getInterceptorListSize()+1];
+      arrayinsert( composition.interceptorConfigs, interceptorConfigs, position );
+      interceptorConfigs[position] = config;
+
+      Object attachments[] = new Object[getInterceptorListSize()+1];
+      arrayinsert( this.attachments, attachments, position );
+      attachments[position] = attachment;
+      this.attachments = attachments;
+      
+      composition = new AspectDefinition(
+         composition.name,
+         interceptors,
+         interceptorConfigs,
+         composition.interfaces,
+         composition.targetClass);
+         
+   }
+   
+   public void removeInterceptor(int position)
+   {
+      
+      if( composition.interceptors[position].getInterfaces(
+            composition.interceptorConfigs[position]).length > 0 )
+         throw new IllegalArgumentException("Only detyped interceptors can be removed.");
+      
+      IAspectInterceptor interceptors[] = new IAspectInterceptor[getInterceptorListSize()-1];
+      arrayremove( composition.interceptors, interceptors, position );
+      
+      Object interceptorConfigs[] = new Object[getInterceptorListSize()-1];
+      arrayremove( composition.interceptorConfigs, interceptorConfigs, position );
+
+      Object attachments[] = new Object[getInterceptorListSize()-1];
+      arrayremove( this.attachments, attachments, position );
+      this.attachments = attachments;
+      
+      composition = new AspectDefinition(
+         composition.name,
+         interceptors,
+         interceptorConfigs,
+         composition.interfaces,
+         composition.targetClass);
+   }
+   
+   private static void arrayinsert( Object src[], Object dest[], int position) {
+      System.arraycopy(src,0,dest,0,position);
+      System.arraycopy(src,position,dest,position+1,src.length-position);
+   }
+   
+   private static void arrayremove( Object src[], Object dest[], int position) {
+      System.arraycopy(src,0,dest,0,position);
+      System.arraycopy(src,position+1,dest,position,(src.length-position)-1);
+   }
+
+
+   public void setTargetObject(Object targetObject)
+   {
+        this.targetObject=targetObject;
+   }
+
 }

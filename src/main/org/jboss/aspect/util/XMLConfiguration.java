@@ -45,7 +45,7 @@ final public class XMLConfiguration {
 				AspectDefinition c = loadAspectObjectDefinition(aspectXML);
 				Object previous = aspects.put(c.name,c);
 				if( previous!=null ) {
-					throw new AspectInitizationException("Invalid Aspect configuration file: "+configSource); 
+					throw new AspectInitizationException("Invalid Aspect configuration file, aspect defined multipled times ("+c.name+") : "+configSource); 
 				}
 	    	}		
 			return aspects;
@@ -62,8 +62,8 @@ final public class XMLConfiguration {
 	final static public AspectDefinition loadAspectObjectDefinition(Element aoXML) throws AspectInitizationException {
 		
 		String name = aoXML.attribute("name").getValue();
-		String targetClass = aoXML.attribute("aspectObject-class")==null 
-			? null : aoXML.attribute("aspectObject-class").getValue();
+		String targetClass = aoXML.attribute("target-class")==null 
+			? null : aoXML.attribute("target-class").getValue();
 		
 		ArrayList interceptorList = new ArrayList();
 		ArrayList interceptorConfigList = new ArrayList();
@@ -80,9 +80,9 @@ final public class XMLConfiguration {
 	    	Iterator k = interceptorXML.elements("attribute").iterator();
 	    	while( k.hasNext() ) {
 	    		Element attribute = (Element)k.next();
-	    		String attname=attribute.attribute("name").getValue();
-	    		String attvalue=attribute.attribute("value").getValue();
-	    		interceptorConfig.put( attname, attvalue );
+	    		String n=attribute.attribute("name").getValue();
+	    		String v=attribute.attribute("value").getValue();
+	    		interceptorConfig.put( n, v );
 	    	}
 	    	interceptorConfigList.add( interceptorConfig );
     	}			

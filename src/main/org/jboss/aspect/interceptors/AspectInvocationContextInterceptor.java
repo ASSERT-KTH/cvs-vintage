@@ -16,7 +16,7 @@ import java.util.Stack;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 
-import org.jboss.aspect.AspectInterceptor;
+import org.jboss.aspect.IAspectInterceptor;
 import org.jboss.aspect.proxy.AspectInitizationException;
 import org.jboss.aspect.proxy.AspectInvocation;
 
@@ -26,13 +26,13 @@ import org.jboss.aspect.proxy.AspectInvocation;
  * object. The current AspectInvocation can then be retrieved by 
  * any object by calling the <code>getCurrentAspectInvocation()</code>
  * 
- * This interceptor does not require any configuration attributes.
+ * It accepts the configuration attributes defined in DetypedInterceptor
  * 
  * @see #getCurrentAspectInvocation()
  * 
  * @author <a href="mailto:hchirino@jboss.org">Hiram Chirino</a>
  */
-public class AspectInvocationContextInterceptor implements AspectInterceptor {
+public class AspectInvocationContextInterceptor extends DetypedInterceptor {
 
 	private static ThreadLocal invocationStackTL = new ThreadLocal();
 
@@ -64,19 +64,5 @@ public class AspectInvocationContextInterceptor implements AspectInterceptor {
 		} finally {
 			invocationStack.pop();
 		}
-	}
-
-	/**
-	 * @see AspectInterceptor#translateConfiguration(Map)
-	 */
-	public Object translateConfiguration(Map properties) throws AspectInitizationException  {
-		return null;
-	}
-	
-	/**
-	 * @see AspectInterceptor#getInterfaces(Object)
-	 */
-	public Class[] getInterfaces(Object chainConfiguration) {
-		return new Class[]{};
-	}
+	}   
 }

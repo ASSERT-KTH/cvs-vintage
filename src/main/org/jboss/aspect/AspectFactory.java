@@ -16,6 +16,7 @@ import java.util.Map;
 import org.jboss.aspect.proxy.AspectInitizationException;
 import org.jboss.aspect.proxy.AspectInvocationHandler;
 import org.jboss.aspect.util.AspectSupport;
+import org.jboss.aspect.util.IAspectEditor;
 import org.jboss.aspect.util.XMLConfiguration;
 import org.jboss.proxy.compiler.InvocationHandler;
 import org.jboss.proxy.compiler.Proxy;
@@ -200,9 +201,7 @@ public class AspectFactory {
 	 * 
 	 */
 	static public Object createAspect(AspectDefinition composition) {
-		InvocationHandler h = new AspectInvocationHandler(composition, null);
-		Class interfaces[] = composition.interfaces;
-		return Proxy.newProxyInstance(Thread.currentThread().getContextClassLoader(), interfaces, h);
+		return createAspect(composition, (Class)null);
 	}
 
 	/**
@@ -244,4 +243,5 @@ public class AspectFactory {
 	private AspectDefinition getDefinition(String aspect) {
 		return (AspectDefinition)aspects.get(aspect);
 	}	
+      
 }

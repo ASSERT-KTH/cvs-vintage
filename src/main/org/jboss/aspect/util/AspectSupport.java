@@ -15,8 +15,9 @@ import java.util.Set;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 
-import org.jboss.aspect.AspectInterceptor;
+import org.jboss.aspect.IAspectInterceptor;
 import org.jboss.aspect.proxy.AspectInvocation;
+import org.jboss.aspect.proxy.AspectInvocationHandler;
 
 /**
  *
@@ -76,6 +77,13 @@ final public class AspectSupport {
       interfaces = (Class[])interfaceList.toArray(interfaces);
       
       return interfaces;
+   }
+
+   static public Object createAwareInstance( Class clazz, AspectInvocationHandler aih) throws IllegalAccessException, InstantiationException {
+      Object o = clazz.newInstance();
+      if( o instanceof IAspectInvocationHandlerAware )
+         ((IAspectInvocationHandlerAware)o).setAspectInvocationHandler(aih);
+      return o;
    }
 
 }

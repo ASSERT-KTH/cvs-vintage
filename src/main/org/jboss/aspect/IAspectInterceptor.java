@@ -6,6 +6,7 @@
  */
 package org.jboss.aspect;
 
+import java.lang.reflect.Method;
 import java.util.Map;
 
 import org.jboss.aspect.proxy.AspectInitizationException;
@@ -30,7 +31,7 @@ import org.jboss.aspect.proxy.AspectInvocation;
  *
  * @author <a href="mailto:hchirino@jboss.org">Hiram Chirino</a>
  */
-public interface AspectInterceptor {
+public interface IAspectInterceptor {
 
 	/**
 	 * Used to translate the interceptor configuration attributes into 
@@ -67,6 +68,14 @@ public interface AspectInterceptor {
 	 * @return the list of interfaces that this interceptor will be implementing.
 	 */	
 	public Class[] getInterfaces(Object configuration);
+
+   /**
+    * Used to know if an Interceptor would be doing some
+    * processing of a method call.
+    * 
+    * @return true if the interceptor is interested in the method call.
+    */   
+   public boolean isIntrestedInMethodCall(Object configuration, Method method);
 
 	/**
 	 * Process or filter through a method invocation made on an aspect

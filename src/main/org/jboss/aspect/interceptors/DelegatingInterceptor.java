@@ -15,7 +15,7 @@ import java.util.Set;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 
-import org.jboss.aspect.AspectInterceptor;
+import org.jboss.aspect.IAspectInterceptor;
 import org.jboss.aspect.proxy.AspectInitizationException;
 import org.jboss.aspect.proxy.AspectInvocation;
 import org.jboss.aspect.util.*;
@@ -32,7 +32,7 @@ import org.jboss.aspect.util.*;
  * <ul>
  * <li>delegate - class name of the object that will be used to delegate
  *                method calls to.  This is a required attribute.
- * <li>singlton - if set to "true", then the method calls of multiple
+ * <li>singleton - if set to "true", then the method calls of multiple
  *                aspect object will be directed to a single instance of
  *                the delegate.  This makes the delegate a singleton. 
  * </ul>
@@ -40,7 +40,7 @@ import org.jboss.aspect.util.*;
  * @author <a href="mailto:hchirino@jboss.org">Hiram Chirino</a>
  * 
  */
-public class DelegatingInterceptor implements AspectInterceptor {
+public class DelegatingInterceptor implements IAspectInterceptor {
 
 	private static class Config {
 		public Object singeltonObject;
@@ -54,27 +54,20 @@ public class DelegatingInterceptor implements AspectInterceptor {
 	 */
 	public Object invoke(AspectInvocation invocation) throws Throwable {
 		Config c = (Config)invocation.getInterceptorConfig();
-		Object o = null;
-		
+            
+		Object delegate = null;		
 		if( c.singeltonObject != null) {
-			o = c.singeltonObject;
+			delegate = c.singeltonObject;
 		} else {
-			o = invocation.getInterceptorAttachment();
-			if( o == null ) {
-				o = c.implementingClass.newInstance();
-				invocation.setInterceptorAttachment(o);
+			delegate = invocation.getInterceptorAttachment();
+			if( delegate == null ) {
+				delegate = AspectSupport.createAwareInstance(c.implementingClass, invocation.handler);
+				invocation.setInterceptorAttachment(delegate);
 			}
 		}
-		if( c.exposedMethods.contains(invocation.method) ) 
-			return invocation.method.invoke(o, invocation.args);
+		return invocation.method.invoke(delegate, invocation.args);
 	
-		return invokeNext(invocation);
 	}
-	
-	public Object invokeNext(AspectInvocation invocation) throws Throwable {
-		return invocation.invokeNext();
-	}
-
 
 	/**
 	 * Builds a Config object for the interceptor.
@@ -90,7 +83,7 @@ public class DelegatingInterceptor implements AspectInterceptor {
 			rc.interfaces = rc.implementingClass.getInterfaces();
 			rc.exposedMethods = AspectSupport.getExposedMethods(rc.interfaces);				
 			
-			String singlton = (String)properties.get("singlton");
+			String singlton = (String)properties.get("singleton");
 			if( "true".equals(singlton) )
 				rc.singeltonObject = rc.implementingClass.newInstance();
 				
@@ -107,6 +100,10 @@ public class DelegatingInterceptor implements AspectInterceptor {
 		Config c = (Config)configuration;
 		return c.interfaces;
 	}
-
+   
+   public boolean isIntrestedInMethodCall(Object configuration, Method method)
+   {
+      return ((Config)configuration).exposedMethods.contains(method);
+   }
 
 }

@@ -50,12 +50,12 @@ final public class AspectDefinition {
 			throw new AspectInitizationException("Invalid Aspect aspectObject class : "+targetClassName+": "+e);
 		}
 		
-		this.interceptors = new AspectInterceptor[interceptorNames.length];
+		this.interceptors = new IAspectInterceptor[interceptorNames.length];
 		this.interceptorConfigs = new Object[interceptorNames.length];
 		ArrayList interfaceList = new ArrayList();
 		for( int i=0; i < interceptorNames.length; i++ ) {
 			try {
-				this.interceptors[i] = (AspectInterceptor)cl.loadClass(interceptorNames[i]).newInstance();
+				this.interceptors[i] = (IAspectInterceptor)cl.loadClass(interceptorNames[i]).newInstance();
 			} catch ( Exception e ) {
 				throw new AspectInitizationException("Invalid Aspect Interceptor: "+interceptorNames[i]+": "+e);
 			}
@@ -71,9 +71,20 @@ final public class AspectDefinition {
 		this.interfaces = new Class[interfaceList.size()];
 		interfaceList.toArray(this.interfaces);
 	}
+   
+   /**
+    * Constructor.
+    */
+   public AspectDefinition(String name, IAspectInterceptor[] interceptors, Object[] interceptorConfigs, Class interfaces[], Class targetClass) {
+      this.name=name;
+      this.interceptors=interceptors;      
+      this.interceptorConfigs=interceptorConfigs;      
+      this.interfaces=interfaces;
+      this.targetClass=targetClass;
+   }
 
 	final public String                     name;
-	final public AspectInterceptor 		 interceptors[];
+	final public IAspectInterceptor 		    interceptors[];
 	final public Object                     interceptorConfigs[];
 	final public Class                      interfaces[];
 	final public Class                      targetClass;
